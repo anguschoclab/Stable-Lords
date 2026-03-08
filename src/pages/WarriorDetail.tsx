@@ -129,6 +129,28 @@ function SkillBar({ label, value, max = 20 }: { label: string; value: number; ma
   );
 }
 
+function WarriorStatementsPanel({ warrior }: { warrior: Warrior }) {
+  if (!warrior.baseSkills) return null;
+  const statements = generateWarriorStatements(
+    warrior.attributes.WT, warrior.attributes.SP, warrior.attributes.DF, warrior.baseSkills
+  );
+  const lines = [
+    statements.initiative, statements.riposte, statements.attack,
+    statements.parry, statements.defense, statements.endurance,
+    statements.coordination, statements.quickness, statements.activity,
+  ].filter(Boolean);
+
+  if (lines.length === 0) return <p className="text-xs text-muted-foreground italic">No notable observations.</p>;
+
+  return (
+    <ul className="space-y-1.5">
+      {lines.map((line, i) => (
+        <li key={i} className="text-xs text-muted-foreground italic leading-relaxed">• {line}</li>
+      ))}
+    </ul>
+  );
+}
+
 function WarriorFightHistory({ warriorName, arenaHistory }: { warriorName: string; arenaHistory: FightSummary[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const fights = arenaHistory.filter((f) => f.a === warriorName || f.d === warriorName);

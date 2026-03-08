@@ -181,14 +181,17 @@ export default function Orphanage() {
       graveyard: [...state.graveyard, ...deadWarriors],
       arenaHistory: boutResult ? [boutResult.summary] : [],
       rivals,
+      recruitPool,
       scoutReports: [],
       newsletter: [
         {
           week: 1,
-          title: "Arena Gazette",
+          title: "Arena Gazette — Grand Opening",
           items: [
-            `${stableName} enters the arena under ${ownerName}'s command!`,
-            `${rivals.length} rival stables have entered the arena!`,
+            `🏟️ ${stableName} enters the arena under ${ownerName}'s command!`,
+            `⚔️ ${rivals.length} rival stables with ${totalWarriors} warriors compete for glory!`,
+            `🏋️ ${totalTrainers} trainers stand ready across all stables.`,
+            `📋 ${recruitPool.length} orphans await in the recruitment pool.`,
             ...(boutResult
               ? [
                   `First bout: ${boutResult.a.name} vs ${boutResult.d.name} — ${

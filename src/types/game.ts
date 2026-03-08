@@ -235,6 +235,27 @@ export interface NewsletterItem {
 // ─── Game State ─────────────────────────────────────────────────────────────
 
 export type Season = "Spring" | "Summer" | "Fall" | "Winter";
+export type CrowdMoodType = "Calm" | "Bloodthirsty" | "Theatrical" | "Solemn" | "Festive";
+
+export interface TournamentEntry {
+  id: string;
+  season: Season;
+  week: number;
+  name: string;
+  bracket: TournamentBout[];
+  champion?: string;
+  completed: boolean;
+}
+
+export interface TournamentBout {
+  round: number;
+  matchIndex: number;
+  a: string; // warrior name
+  d: string;
+  winner?: "A" | "D" | null;
+  by?: FightOutcomeBy;
+  fightId?: string;
+}
 
 export interface GameState {
   meta: {
@@ -248,9 +269,13 @@ export interface GameState {
   week: number;
   season: Season;
   roster: Warrior[];
+  graveyard: Warrior[];
+  retired: Warrior[];
   arenaHistory: FightSummary[];
   newsletter: NewsletterItem[];
   hallOfFame: HallEntry[];
+  crowdMood: CrowdMoodType;
+  tournaments: TournamentEntry[];
   settings: {
     featureFlags: {
       tournaments: boolean;

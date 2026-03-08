@@ -12,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Dumbbell, Check, X, Trophy, Heart, AlertTriangle, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { computeGainChance } from "@/engine/training";
+import { WarriorLink } from "@/components/EntityLink";
 
 function WarriorTrainingCard({ warrior, assignment, seasonalGains, trainers, onAssign, onAssignRecovery, onClear }: {
   warrior: Warrior;

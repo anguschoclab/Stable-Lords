@@ -49,6 +49,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   useEffect(() => { migrateLegacySave(); }, []);
 
   const [activeSlotId, setActiveSlotId] = useState<string | null>(() => getActiveSlot());
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
   const [state, setStateRaw] = useState<GameState>(() => {
     const slotId = getActiveSlot();
@@ -56,21 +57,22 @@ export function GameProvider({ children }: { children: ReactNode }) {
       const loaded = loadFromSlot(slotId);
       if (loaded) return loaded;
     }
-    // No active slot — return a sentinel fresh state; title screen will show
     return createFreshState();
   });
 
   const atTitleScreen = !activeSlotId || !listSaveSlots().some((s) => s.slotId === activeSlotId);
 
+  const markSaved = useCallback(() => setLastSavedAt(new Date().toISOString()), []);
+
   const setState = useCallback((next: GameState) => {
     setStateRaw(next);
-    // Persist to active slot
     const slotId = getActiveSlot();
     if (slotId) {
       saveToSlot(slotId, next);
       setActiveSlotId(slotId);
+      markSaved();
     }
-  }, []);
+  }, [markSaved]);
 
   const doAdvanceWeek = useCallback(() => {
     setStateRaw((prev) => {

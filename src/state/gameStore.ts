@@ -86,6 +86,7 @@ export function createFreshState(): GameState {
     rivalries: [],
     matchHistory: [],
     recruitPool: [],
+    rosterBonus: 0,
     settings: {
       featureFlags: {
         tournaments: true,

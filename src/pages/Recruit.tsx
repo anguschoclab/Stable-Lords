@@ -27,7 +27,6 @@ import {
 import { toast } from "sonner";
 
 const CUSTOM_COST = 200;
-const MAX_ROSTER = 10;
 
 const TIER_COLORS: Record<RecruitTier, string> = {
   Common: "bg-secondary text-secondary-foreground",

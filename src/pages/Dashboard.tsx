@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useGame } from "@/state/GameContext";
 import { STYLE_DISPLAY_NAMES, STYLE_ABBREV, type Warrior } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Swords, Trophy, Users, Flame, Star, TrendingUp } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Swords, Trophy, Users, Flame, Star, TrendingUp, UserPlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate, Link } from "react-router-dom";
+import { MOOD_DESCRIPTIONS, MOOD_ICONS } from "@/engine/crowdMood";
+import { computeMetaDrift, getMetaLabel, getMetaColor } from "@/engine/metaDrift";
 
 function StatChip({ label, value, icon }: { label: string; value: number | string; icon?: React.ReactNode }) {
   return (
@@ -70,6 +73,22 @@ export default function Dashboard() {
   const { state } = useGame();
   const navigate = useNavigate();
 
+  const moodIcon = MOOD_ICONS[state.crowdMood as keyof typeof MOOD_ICONS] ?? "😐";
+  const moodDesc = MOOD_DESCRIPTIONS[state.crowdMood as keyof typeof MOOD_DESCRIPTIONS] ?? "";
+
+  const metaDrift = useMemo(
+    () => computeMetaDrift(state.arenaHistory),
+    [state.arenaHistory]
+  );
+
+  // Only show styles that have drift != 0
+  const activeStyles = useMemo(
+    () => Object.entries(metaDrift)
+      .filter(([, drift]) => drift !== 0)
+      .sort(([, a], [, b]) => b - a),
+    [metaDrift]
+  );
+
   return (
     <div className="space-y-6">
       {/* Hero Banner */}
@@ -92,13 +111,60 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Crowd Mood & Meta */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="font-display text-lg flex items-center gap-2">
+              <span className="text-xl">{moodIcon}</span> Crowd Mood
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-lg font-display font-semibold">{state.crowdMood}</div>
+            <p className="text-sm text-muted-foreground mt-1">{moodDesc}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="font-display text-lg flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-primary" /> Meta Pulse
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {activeStyles.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No meta shift detected yet. Run more rounds.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {activeStyles.map(([style, drift]) => (
+                  <Badge
+                    key={style}
+                    variant="outline"
+                    className={`text-xs ${getMetaColor(drift)}`}
+                  >
+                    {STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}: {getMetaLabel(drift)} ({drift > 0 ? "+" : ""}{drift})
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Roster Table */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-3">
           <CardTitle className="font-display text-xl">Roster</CardTitle>
-          <Badge variant="outline" className="text-muted-foreground">
-            {state.roster.length} warriors
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-muted-foreground">
+              {state.roster.length} warriors
+            </Badge>
+            <Link to="/recruit">
+              <Button variant="outline" size="sm" className="gap-1.5">
+                <UserPlus className="h-3.5 w-3.5" /> Recruit
+              </Button>
+            </Link>
+          </div>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-auto">

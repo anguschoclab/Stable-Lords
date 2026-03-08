@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { useGame } from "@/state/GameContext";
 import { simulateFight, defaultPlanForWarrior, fameFromTags } from "@/engine";
 import { sendSignal } from "@/engine/signals";
+import { computeCrowdMood, getMoodModifiers } from "@/engine/crowdMood";
+import { killWarrior } from "@/state/gameStore";
 import type { FightSummary, Warrior } from "@/types/game";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Swords, Zap } from "lucide-react";
+import { Swords, Zap, Skull } from "lucide-react";
 import { toast } from "sonner";
 
 export default function RunRound() {
-  const { state, setState, doAdvanceWeek } = useGame();
+  const { state, setState } = useGame();
   const [results, setResults] = useState<
     { a: Warrior; d: Warrior; outcome: ReturnType<typeof simulateFight> }[]
   >([]);
@@ -21,29 +23,30 @@ export default function RunRound() {
     if (running || state.roster.length < 2) return;
     setRunning(true);
 
-    // Simple matchmaking: pair roster warriors against AI opponents
     const weekResults: typeof results = [];
     let updatedState = { ...state };
+    const moodMods = getMoodModifiers(state.crowdMood as any);
 
     for (let i = 0; i < state.roster.length; i++) {
-      const warrior = state.roster[i];
-      // Create a simple AI opponent
-      const opponentIdx = (i + 1) % state.roster.length;
-      const opponent = state.roster[opponentIdx];
+      const warrior = updatedState.roster[i];
+      if (!warrior || warrior.status !== "Active") continue;
+      const opponentIdx = (i + 1) % updatedState.roster.length;
+      const opponent = updatedState.roster[opponentIdx];
+      if (!opponent || opponent.status !== "Active") continue;
 
-      const planA = defaultPlanForWarrior(warrior);
-      const planD = defaultPlanForWarrior(opponent);
+      const planA = warrior.plan ?? defaultPlanForWarrior(warrior);
+      const planD = opponent.plan ?? defaultPlanForWarrior(opponent);
       const outcome = simulateFight(planA, planD);
 
       const tags = outcome.post?.tags ?? [];
-      const { fame: fameA, pop: popA } = fameFromTags(
-        outcome.winner === "A" ? tags : []
-      );
-      const { fame: fameD, pop: popD } = fameFromTags(
-        outcome.winner === "D" ? tags : []
-      );
+      const rawFameA = fameFromTags(outcome.winner === "A" ? tags : []);
+      const rawFameD = fameFromTags(outcome.winner === "D" ? tags : []);
+      const fameA = Math.round(rawFameA.fame * moodMods.fameMultiplier);
+      const popA = Math.round(rawFameA.pop * moodMods.popMultiplier);
+      const fameD = Math.round(rawFameD.fame * moodMods.fameMultiplier);
+      const popD = Math.round(rawFameD.pop * moodMods.popMultiplier);
 
-      // Update warriors
+      // Update warrior records
       updatedState = {
         ...updatedState,
         roster: updatedState.roster.map((w) => {
@@ -63,11 +66,30 @@ export default function RunRound() {
                 : w.flair,
             };
           }
+          if (w.id === opponent.id) {
+            return {
+              ...w,
+              fame: Math.max(0, w.fame + fameD),
+              popularity: Math.max(0, w.popularity + popD),
+              career: {
+                ...w.career,
+                wins: w.career.wins + (outcome.winner === "D" ? 1 : 0),
+                losses: w.career.losses + (outcome.winner === "A" ? 1 : 0),
+                kills: w.career.kills + (outcome.by === "Kill" && outcome.winner === "D" ? 1 : 0),
+              },
+            };
+          }
           return w;
         }),
       };
 
-      // Fight summary
+      // Handle death
+      if (outcome.by === "Kill") {
+        const deadId = outcome.winner === "A" ? opponent.id : warrior.id;
+        const killerName = outcome.winner === "A" ? warrior.name : opponent.name;
+        updatedState = killWarrior(updatedState, deadId, killerName, "Killed in arena combat");
+      }
+
       const summary: FightSummary = {
         id: `fight_${Date.now()}_${i}`,
         week: state.week,
@@ -88,21 +110,16 @@ export default function RunRound() {
       };
       updatedState.arenaHistory = [...updatedState.arenaHistory, summary];
       weekResults.push({ a: warrior, d: opponent, outcome });
-
-      // Narrative toast
-      const winnerName = outcome.winner === "A" ? warrior.name : outcome.winner === "D" ? opponent.name : "No one";
-      sendSignal({
-        type: "ui:toast",
-        payload: {
-          title: `${winnerName} ${outcome.by === "Kill" ? "slays" : outcome.by === "KO" ? "knocks out" : "defeats"} their opponent!`,
-        },
-      });
     }
 
-    // Add newsletter
+    // Update crowd mood
+    updatedState.crowdMood = computeCrowdMood(updatedState.arenaHistory);
+
+    // Newsletter
     const highlights = weekResults.map((r) => {
       const winner = r.outcome.winner === "A" ? r.a.name : r.outcome.winner === "D" ? r.d.name : "Draw";
-      return `${r.a.name} vs ${r.d.name}: ${winner} ${r.outcome.by ? `by ${r.outcome.by}` : "(Draw)"}`;
+      const deathNote = r.outcome.by === "Kill" ? " ☠️" : "";
+      return `${r.a.name} vs ${r.d.name}: ${winner} ${r.outcome.by ? `by ${r.outcome.by}` : "(Draw)"}${deathNote}`;
     });
     updatedState.newsletter = [
       ...updatedState.newsletter,
@@ -119,7 +136,10 @@ export default function RunRound() {
     setResults(weekResults);
     setRunning(false);
 
-    toast.success(`Week ${state.week} complete! ${weekResults.length} bouts resolved.`);
+    const deaths = weekResults.filter((r) => r.outcome.by === "Kill").length;
+    toast.success(
+      `Week ${state.week} complete! ${weekResults.length} bouts resolved.${deaths > 0 ? ` ${deaths} death(s)!` : ""}`
+    );
   };
 
   return (
@@ -128,12 +148,13 @@ export default function RunRound() {
         <div>
           <h1 className="text-2xl font-display font-bold">Run Round</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Week {state.week}, {state.season} — {state.roster.length} warriors ready
+            Week {state.week}, {state.season} — {state.roster.filter(w => w.status === "Active").length} warriors ready ·
+            Crowd: {state.crowdMood}
           </p>
         </div>
         <Button
           onClick={runWeek}
-          disabled={running || state.roster.length < 2}
+          disabled={running || state.roster.filter(w => w.status === "Active").length < 2}
           className="gap-2 bg-primary hover:bg-primary/90"
           size="lg"
         >
@@ -165,12 +186,13 @@ export default function RunRound() {
                     variant={r.outcome.winner ? "default" : "secondary"}
                     className={
                       r.outcome.by === "Kill"
-                        ? "bg-arena-blood text-white"
+                        ? "bg-arena-blood text-white gap-1"
                         : r.outcome.by === "KO"
                         ? "bg-arena-gold text-black"
                         : ""
                     }
                   >
+                    {r.outcome.by === "Kill" && <Skull className="h-3 w-3" />}
                     {r.outcome.winner
                       ? `${r.outcome.winner === "A" ? r.a.name : r.d.name} — ${r.outcome.by}`
                       : "Draw"}

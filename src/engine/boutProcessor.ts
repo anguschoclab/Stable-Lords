@@ -323,7 +323,6 @@ function resolveBout(
   s.arenaHistory = [...s.arenaHistory, fightSummary];
 
   // ── Side-effect singletons ──
-  StyleMeter.recordFight({ styleA: warrior.style, styleD: opponent.style, winner: outcome.winner, by: outcome.by });
   StyleRollups.addFight({ week, styleA: warrior.style, styleD: opponent.style, winner: outcome.winner, by: outcome.by });
   ArenaHistory.append(fightSummary);
   LoreArchive.signalFight(fightSummary);

@@ -608,10 +608,10 @@ export function simulateFight(
       // ── Endurance cost for attempt ──
       attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attOE, attAL) * 0.5)) + attOffMods.endCost;
 
-      // Defender may riposte on whiff — harder than after parry (off-tempo)
-      // ── 4. RIPOSTE CHECK — with passive RIP ──
+      // Defender may riposte on whiff — HARD check (off-tempo, attacker recovering)
+      // BALANCE v5: Increased penalty from -3 to -6 to reduce free counter-damage
       const defAntiSynRip = Math.round((defAntiSyn.defMult - 1) * 3);
-      const ripCheck = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 3 + defDefMods.ripBonus + defPassive.ripBonus + defAntiSynRip);
+      const ripCheck = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 6 + defDefMods.ripBonus + defPassive.ripBonus + defAntiSynRip);
       if (ripCheck) {
         const ripLoc = rollHitLocation(rng, defTactics.target, attacker.plan.protect);
         const ripDmgRaw = computeHitDamage(rng, defender.derived.damage + defPassive.dmgBonus, ripLoc);

@@ -239,7 +239,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="icon"
             className="h-8 w-8 m-1 text-muted-foreground hover:text-foreground"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={toggleSidebar}
             title={sidebarOpen ? "Hide event log" : "Show event log"}
           >
             {sidebarOpen ? <PanelLeftClose className="h-3.5 w-3.5" /> : <PanelLeft className="h-3.5 w-3.5" />}

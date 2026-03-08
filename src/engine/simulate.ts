@@ -543,8 +543,8 @@ export function simulateFight(
     }
 
     // ── 7. ENDURANCE & FATIGUE UPDATE ──
-    attacker.endurance -= enduranceCost(attacker.plan.OE, attacker.plan.AL);
-    defender.endurance -= Math.max(1, Math.floor(enduranceCost(defender.plan.OE, defender.plan.AL) * 0.6));
+    attacker.endurance -= enduranceCost(attOE, attAL);
+    defender.endurance -= Math.max(1, Math.floor(enduranceCost(defOE, defAL) * 0.6));
 
     // Clamp endurance
     fA.endurance = Math.max(0, fA.endurance);

@@ -12,7 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import {
   Swords, Trophy, Users, Flame, Star, TrendingUp, UserPlus,
   ScrollText, Coins, ArrowUpRight, ArrowDownRight, Calendar,
-  Zap, Heart, Shield, ChevronRight, Skull, GripVertical, RotateCcw,
+  Zap, Heart, Shield, ChevronRight, Skull, GripVertical, RotateCcw, Dumbbell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";

@@ -227,6 +227,13 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
 }
 
 // ─── OE/AL Effects ────────────────────────────────────────────────────────
+// BALANCE: Global offense/defense tuning constants.
+// The combat chain (ATT→PAR→DEF→DMG) inherently favors defense because
+// defenders get TWO independent checks (PAR then DEF). These constants
+// compensate so aggressive styles remain viable.
+const GLOBAL_ATT_BONUS = 3;   // All attacks get +3 to offset double-defense
+const GLOBAL_PAR_PENALTY = -2; // Parry is slightly harder to reward aggression
+
 function oeAttMod(oe: number): number { return Math.floor((oe - 5) * 0.8); }
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * 0.5); }
 function alIniMod(al: number): number { return Math.floor((al - 5) * 0.6); }

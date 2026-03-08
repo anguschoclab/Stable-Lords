@@ -210,6 +210,12 @@ export function generateWeeklyGazette(
     } else {
       headline = `Week ${week}: ${top.name} Rides a ${top.streak}-Win Streak Into Glory!`;
     }
+  } else if (rivalryPair) {
+    if (rivalryPair.count >= 5) {
+      headline = `Week ${week}: RIVALRY ERUPTS! ${rivalryPair.a} vs ${rivalryPair.b} — Chapter ${rivalryPair.count}!`;
+    } else {
+      headline = `Week ${week}: Old Foes Meet Again — ${rivalryPair.a} vs ${rivalryPair.b} (Bout ${rivalryPair.count})`;
+    }
   } else if (kills.length >= 2) {
     headline = `Week ${week}: Blood Runs Deep — ${kills.length} Warriors Fall!`;
   } else if (kills.length === 1) {

@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useGame } from "@/state/GameContext";
 import { STYLE_DISPLAY_NAMES, STYLE_ABBREV, type Warrior } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
+import TagBadge from "@/components/TagBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Swords, Trophy, Users, Flame, Star, TrendingUp, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";

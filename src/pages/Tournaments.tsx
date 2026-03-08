@@ -255,19 +255,33 @@ export default function Tournaments() {
     );
 
     if (isComplete && champion) {
+      // Check if champion is a player warrior (not AI)
+      const isPlayerChampion = updatedState.roster.some((w) => w.name === champion);
+
       // Award champion
-      updatedState.roster = updatedState.roster.map((w) =>
-        w.name === champion
-          ? {
-              ...w,
-              champion: true,
-              fame: w.fame + 5,
-              popularity: w.popularity + 3,
-              titles: [...w.titles, updatedTournament.name],
-            }
-          : w
-      );
-      toast.success(`🏆 ${champion} wins the ${updatedTournament.name}!`);
+      if (isPlayerChampion) {
+        updatedState.roster = updatedState.roster.map((w) =>
+          w.name === champion
+            ? {
+                ...w,
+                champion: true,
+                fame: w.fame + 5,
+                popularity: w.popularity + 3,
+                titles: [...w.titles, updatedTournament.name],
+              }
+            : w
+        );
+
+        // +1 stable slot reward
+        updatedState.rosterBonus = (updatedState.rosterBonus ?? 0) + 1;
+        updatedState.fame = (updatedState.fame ?? 0) + 10;
+        updatedState.player = { ...updatedState.player, titles: (updatedState.player.titles ?? 0) + 1 };
+
+        toast.success(`🏆 ${champion} wins the ${updatedTournament.name}! +1 stable slot earned!`);
+      } else {
+        // AI champion
+        toast(`${champion} (rival) wins the ${updatedTournament.name}.`);
+      }
 
       // Mark fight of tournament & close newsletter
       const tourneyFights = updatedState.arenaHistory.filter(f => f.tournamentId === currentTournament.id);

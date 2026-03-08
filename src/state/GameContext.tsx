@@ -127,7 +127,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   return (
     <GameContext.Provider
-      value={{ state, atTitleScreen, setState, doAdvanceWeek, doAppendFight, doUpdateWarrior, doReset, returnToTitle }}
+      value={{ state, atTitleScreen, lastSavedAt, setState, doAdvanceWeek, doAppendFight, doUpdateWarrior, doReset, returnToTitle }}
     >
       {children}
     </GameContext.Provider>

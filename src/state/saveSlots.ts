@@ -83,6 +83,9 @@ export function loadFromSlot(slotId: string): GameState | null {
         if (!parsed.hiringPool) parsed.hiringPool = [];
         if (parsed.ftueComplete === undefined) parsed.ftueComplete = true;
         if (!parsed.coachDismissed) parsed.coachDismissed = [];
+        if (!parsed.rivals) parsed.rivals = [];
+        if (!parsed.scoutReports) parsed.scoutReports = [];
+        if (!parsed.trainingAssignments) parsed.trainingAssignments = [];
         parsed.roster = (parsed.roster || []).map((w: any) => ({ ...w, status: w.status || "Active" }));
         return parsed as GameState;
       }

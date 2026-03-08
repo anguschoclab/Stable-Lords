@@ -390,8 +390,12 @@ export function simulateFight(
   const trainerModsD = trainers ? getTrainerMods(trainers, planD.style) : null;
 
   // Apply bonuses to effective skills
+  // Classic weapon bonus (compendium: each style has a canonical weapon)
+  const classicBonusA = getClassicWeaponBonus(planA.style, (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon);
+  const classicBonusD = getClassicWeaponBonus(planD.style, (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon);
+
   const effSkillsA: BaseSkills = {
-    ATT: skillsA.ATT + equipA.attMod + (trainerModsA?.attMod ?? 0),
+    ATT: skillsA.ATT + equipA.attMod + (trainerModsA?.attMod ?? 0) + classicBonusA,
     PAR: skillsA.PAR + equipA.parMod + (trainerModsA?.parMod ?? 0),
     DEF: skillsA.DEF + equipA.defMod + (trainerModsA?.defMod ?? 0),
     INI: skillsA.INI + equipA.iniMod + (trainerModsA?.iniMod ?? 0),
@@ -399,7 +403,7 @@ export function simulateFight(
     DEC: skillsA.DEC + (trainerModsA?.decMod ?? 0),
   };
   const effSkillsD: BaseSkills = {
-    ATT: skillsD.ATT + equipD.attMod + (trainerModsD?.attMod ?? 0),
+    ATT: skillsD.ATT + equipD.attMod + (trainerModsD?.attMod ?? 0) + classicBonusD,
     PAR: skillsD.PAR + equipD.parMod + (trainerModsD?.parMod ?? 0),
     DEF: skillsD.DEF + equipD.defMod + (trainerModsD?.defMod ?? 0),
     INI: skillsD.INI + equipD.iniMod + (trainerModsD?.iniMod ?? 0),

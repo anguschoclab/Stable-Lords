@@ -261,6 +261,8 @@ export default function WarriorDetail() {
     : streakVal < 0
     ? `${Math.abs(streakVal)}L streak`
     : null;
+
+  return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">

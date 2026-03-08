@@ -10,6 +10,7 @@ import { isTooInjuredToFight, type Injury } from "./injuries";
 import { simulateFight } from "./simulate";
 import { aiPlanForWarrior } from "./ownerAI";
 import { computeMetaDrift } from "./metaDrift";
+import { pickRivalOpponent } from "./rivals";
 
 /** Stablemates cannot fight each other */
 function disallowStablemates(aStableId: string, dStableId: string): boolean {

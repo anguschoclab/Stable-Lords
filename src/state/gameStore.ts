@@ -141,12 +141,13 @@ export function resetGameState(): GameState {
 const SEASONS: Season[] = ["Spring", "Summer", "Fall", "Winter"];
 
 export function advanceWeek(state: GameState): GameState {
-  // Process training before advancing
+  // Process training and economy before advancing
   const trained = processTraining(state);
-  const newWeek = trained.week + 1;
+  const economized = processEconomy(trained);
+  const newWeek = economized.week + 1;
   const seasonIdx = Math.floor((newWeek - 1) / 13) % 4;
   return {
-    ...trained,
+    ...economized,
     week: newWeek,
     season: SEASONS[seasonIdx],
   };

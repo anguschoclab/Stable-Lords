@@ -16,17 +16,19 @@ export interface TempoProfile {
   enduranceMult: number; // multiplier on endurance drain (>1 = burns faster)
 }
 
+// BALANCE v2: Compressed endurance multiplier range from 0.70-1.20 to 0.88-1.08.
+// Previous range created 3x+ endurance advantage for TP, making offense unviable.
 const STYLE_TEMPO: Record<FightingStyle, TempoProfile> = {
-  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  1, enduranceMult: 0.90 },
-  [FightingStyle.BashingAttack]:   { opening:  1, mid:  0, late: -1, enduranceMult: 1.15 },
-  [FightingStyle.LungingAttack]:   { opening:  2, mid:  0, late: -2, enduranceMult: 1.20 },
+  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  1, enduranceMult: 0.92 },
+  [FightingStyle.BashingAttack]:   { opening:  1, mid:  0, late: -1, enduranceMult: 1.06 },
+  [FightingStyle.LungingAttack]:   { opening:  2, mid:  0, late: -2, enduranceMult: 1.08 },
   [FightingStyle.ParryLunge]:      { opening:  0, mid:  1, late:  0, enduranceMult: 1.00 },
   [FightingStyle.ParryRiposte]:    { opening: -1, mid:  0, late:  1, enduranceMult: 0.95 },
-  [FightingStyle.ParryStrike]:     { opening:  0, mid:  0, late:  0, enduranceMult: 0.95 },
-  [FightingStyle.SlashingAttack]:  { opening:  1, mid:  0, late: -1, enduranceMult: 1.10 },
-  [FightingStyle.StrikingAttack]:  { opening:  1, mid:  0, late:  0, enduranceMult: 1.05 },
-  [FightingStyle.TotalParry]:      { opening: -1, mid:  0, late:  1, enduranceMult: 0.70 },
-  [FightingStyle.WallOfSteel]:     { opening:  0, mid:  0, late:  1, enduranceMult: 0.80 },
+  [FightingStyle.ParryStrike]:     { opening:  0, mid:  0, late:  0, enduranceMult: 0.96 },
+  [FightingStyle.SlashingAttack]:  { opening:  1, mid:  0, late: -1, enduranceMult: 1.04 },
+  [FightingStyle.StrikingAttack]:  { opening:  1, mid:  0, late:  0, enduranceMult: 1.02 },
+  [FightingStyle.TotalParry]:      { opening: -1, mid:  0, late:  1, enduranceMult: 0.88 },
+  [FightingStyle.WallOfSteel]:     { opening:  0, mid:  0, late:  1, enduranceMult: 0.90 },
 };
 
 export type Phase = "OPENING" | "MID" | "LATE";
@@ -178,13 +180,15 @@ export function getStylePassive(
     }
 
     // ── Parry-Riposte: Riposte Specialist ──
-    // RIP bonus after ripostes (escalating but capped low)
+    // RIP bonus after ripostes (capped conservatively — identity is counter, not wall)
     case FightingStyle.ParryRiposte: {
-      const ripEscalation = Math.min(2 + m.bonus, context.ripostes);
+      const ripEscalation = Math.min(1 + m.bonus, context.ripostes);
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        ripBonus: scale(1 + ripEscalation),
+        ripBonus: scale(ripEscalation),
+        // PR OE paradox flavor: low OE grants slight parry boost (counter-ready stance)
+        parBonus: context.endRatio > 0.6 ? 1 : 0,
         narrative: context.ripostes >= 3
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}has found the rhythm — each counter deadlier than the last!`
           : undefined,
@@ -225,14 +229,14 @@ export function getStylePassive(
       };
 
     // ── Total Parry: Endurance Wall ──
-    // Small PAR/DEF bonuses (their base skills already dominate); endurance efficiency is the real advantage
+    // Modest PAR bonus (seeds already give defense); real advantage is endurance efficiency
     case FightingStyle.TotalParry: {
       const lateBonus = context.phase === "LATE" ? 1 : 0;
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        parBonus: 1 + lateBonus + m.bonus,
-        defBonus: lateBonus,
+        parBonus: lateBonus + m.bonus,  // Reduced from 1+lateBonus — seeds carry the weight
+        defBonus: 0,                     // Removed — seeds already provide DEF 4
         ripBonus: context.phase === "LATE" ? 1 : 0,
         narrative: context.phase === "LATE" && context.endRatio > 0.5
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}stands fresh as the opponent gasps for breath!`
@@ -241,15 +245,15 @@ export function getStylePassive(
     }
 
     // ── Wall of Steel: Blade Barrier ──
-    // DEF/PAR scale slowly over exchanges (cap 2 base, +1 mastery)
+    // DEF scales slowly (cap 1 base, +1 mastery); identity is endurance + zone, not raw defense
     case FightingStyle.WallOfSteel: {
-      const wallBonus = Math.min(2 + m.bonus, Math.floor(context.exchange / 4));
+      const wallBonus = Math.min(1 + m.bonus, Math.floor(context.exchange / 5));
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        defBonus: scale(1 + wallBonus),
-        parBonus: wallBonus,
-        narrative: wallBonus >= 2
+        defBonus: scale(wallBonus),
+        parBonus: 0,  // Removed — WS identity is constant motion, not parry
+        narrative: wallBonus >= 1
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}the constant blade motion becomes an impenetrable wall!`
           : undefined,
       };

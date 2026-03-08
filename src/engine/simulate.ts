@@ -44,18 +44,21 @@ const STYLE_ORDER = [
 ];
 
 // Row = attacker style, Col = defender style
+// BALANCE v2: Capped at ±1, anti-symmetric (A[i][j] = -A[j][i]).
+// Row sums near 0 so no style has massive aggregate advantage.
+// Per compendium: matchups are "edges" not guarantees.
 const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
-  [ 0, +1,  0, -1, -2, -2, +1,  0, -2, -2], // AB
-  [-1,  0, +1,  0, -1, -1, +2, +1, -2, -2], // BA
-  [ 0, -1,  0, +1,  0, -1, +1, +1, -1, -2], // LU
-  [+1,  0, -1,  0, +1,  0,  0, -1, -1, -2], // PL
-  [+2, +1,  0, -1,  0, +1, -1, -2, -1, -2], // PR
-  [+2, +1, +1,  0, -1,  0, -1, -2, -1, -2], // PS
-  [-1, -2, -1,  0, +1, +1,  0, +1, -1, -2], // SL
-  [ 0, -1, -1, +1, +2, +2, -1,  0, -1, -2], // ST
-  [+2, +2, +1, +1, +1, +1, +1, +1,  0, -1], // TP
-  [+2, +2, +2, +2, +2, +2, +2, +2, +1,  0], // WS
+  [ 0, +1,  0,  0, -1,  0, +1,  0, -1,  0], // AB: beats BA/SL (predictable), loses to PR/TP
+  [-1,  0, -1,  0,  0, -1, +1, +1,  0, +1], // BA: beats SL/ST/WS (power), loses to AB/LU/PS
+  [ 0, +1,  0, +1,  0, -1, +1,  0, -1, -1], // LU: beats BA/PL/SL (speed), loses to PS/TP/WS
+  [ 0,  0, -1,  0, +1,  0,  0, -1, +1,  0], // PL: beats PR/TP (patience), loses to LU/ST
+  [+1,  0,  0, -1,  0, +1, +1, -1, -1,  0], // PR: beats AB/PS/SL (counter), loses to PL/ST/TP
+  [ 0, +1, +1,  0, -1,  0, +1, -1,  0, -1], // PS: beats BA/LU/SL, loses to PR/ST/WS
+  [-1, -1, -1,  0, -1, -1,  0, +1, +1, +1], // SL: risky (low parry), beats ST/TP/WS (aggression)
+  [ 0, -1,  0, +1, +1, +1, -1,  0, -1, -1], // ST: beats PL/PR/PS (efficiency), loses to BA/TP/WS
+  [+1,  0, +1, -1, +1,  0, -1, +1,  0,  0], // TP: outlasts AB/LU/PR/ST, loses to PL/SL
+  [ 0, -1, +1,  0,  0, +1, -1, +1,  0,  0], // WS: beats LU/PS/ST (zone), loses to BA/SL
 ];
 
 function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): number {
@@ -232,25 +235,24 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
 // The combat chain (ATT→PAR→DEF→DMG) inherently favors defense because
 // defenders get TWO independent checks (PAR then DEF). These constants
 // compensate so aggressive styles remain viable.
-const GLOBAL_ATT_BONUS = 3;   // All attacks get +3 to offset double-defense
-const GLOBAL_PAR_PENALTY = -2; // Parry is slightly harder to reward aggression
+const GLOBAL_ATT_BONUS = 5;   // All attacks get +5 to ensure hits land frequently
+const GLOBAL_PAR_PENALTY = -3; // Parry harder to reward aggression
 
 function oeAttMod(oe: number, style?: FightingStyle): number {
   // PR OE Paradox: PR attacks MORE at low OE via counterstrikes (compendium §PR)
-  // "PR may attack more with low OE by counterstriking than with high OE"
   if (style === FightingStyle.ParryRiposte) {
-    // Invert: low OE = bonus (counter-ready), high OE = penalty (loses identity)
-    if (oe <= 3) return 2;   // Low OE: +2 ATT from counter-focus
-    if (oe <= 5) return 1;   // Mid-low: +1
-    if (oe <= 7) return 0;   // Mid: neutral
-    return -1;               // High OE: loses counter identity
+    if (oe <= 3) return 1;   // Low OE: +1 ATT from counter-focus
+    if (oe <= 5) return 0;   // Mid: neutral
+    if (oe <= 7) return -1;  // High OE: loses counter identity
+    return -2;               // Very high OE: completely wrong for PR
   }
   return Math.floor((oe - 5) * 0.8);
 }
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * 0.5); }
 function alIniMod(al: number): number { return Math.floor((al - 5) * 0.6); }
 function enduranceCost(oe: number, al: number): number {
-  return Math.max(1, Math.round((oe * 0.6 + al * 0.4)));
+  // BALANCE v2: Reduced from (oe*0.6 + al*0.4) to prevent offensive styles collapsing
+  return Math.max(1, Math.round((oe * 0.35 + al * 0.25)));
 }
 
 // ─── Fatigue Penalties ────────────────────────────────────────────────────
@@ -621,22 +623,48 @@ export function simulateFight(
       }
     } else {
       // Attack lands — defender tries to stop it
+      // BALANCE v2: PAR and DEF are MUTUALLY EXCLUSIVE.
+      // - Dodge tactic → skip PAR, use DEF at full skill
+      // - Otherwise → PAR only; if PAR fails, the hit lands (no second chance)
+      // This eliminates the multiplicative double-defense that crushed offensive styles.
 
-      // ── 3a. PARRY CHECK — with passive PAR + anti-synergy + Bash bypass ──
       const defOEmod = oeDefMod(defOE);
       const defAntiSynPar = Math.round((defAntiSyn.defMult - 1) * 3);
-      // Bash tactic: "attack through a parry" — reduces defender's parry effectiveness (compendium §BA)
       const bashBypass = attOffMods.parryBypass ?? 0;
-      const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus + defPassive.parBonus + defAntiSynPar - attOffMods.defPenalty + GLOBAL_PAR_PENALTY - bashBypass - tacticOveruseDef);
 
-      if (parrySuccess) {
-        attacker.consecutiveHits = 0;
+      const isDodging = defTactics.defTactic === "Dodge";
 
-        if (rng() < 0.3) {
-          log.push({ minute: min, text: `${name(defender)} ${pickText(rng, verbs(defender).parry)}.` });
+      let defended = false;
+      let canRiposte = false;
+
+      if (isDodging) {
+        // ── 3b. DODGE PATH — full DEF skill, no parry attempt ──
+        const defSuccess = skillCheck(rng, defender.skills.DEF, defOEmod + defMatchup + defFat + defDefMods.defBonus + defPassive.defBonus - tacticOveruseDef);
+        if (defSuccess) {
+          defended = true;
+          attacker.consecutiveHits = 0;
+          if (rng() < 0.3) {
+            log.push({ minute: min, text: `${name(defender)} dodges the attack with quick footwork.` });
+          }
+          // Dodge doesn't enable riposte (you're out of position)
         }
+      } else {
+        // ── 3a. PARRY PATH — PAR check; if it fails, the hit lands ──
+        const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus + defPassive.parBonus + defAntiSynPar - attOffMods.defPenalty + GLOBAL_PAR_PENALTY - bashBypass - tacticOveruseDef);
 
-        // Parry succeeds — defender may riposte (with passive RIP bonus)
+        if (parrySuccess) {
+          defended = true;
+          canRiposte = true;
+          attacker.consecutiveHits = 0;
+
+          if (rng() < 0.3) {
+            log.push({ minute: min, text: `${name(defender)} ${pickText(rng, verbs(defender).parry)}.` });
+          }
+        }
+      }
+
+      if (defended && canRiposte) {
+        // Parry succeeds — defender may riposte
         const ripAfterParry = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 4 + defDefMods.ripBonus + defPassive.ripBonus);
         if (ripAfterParry) {
           const ripLoc = rollHitLocation(rng, defTactics.target, attacker.plan.protect);
@@ -652,19 +680,9 @@ export function simulateFight(
             text: `${name(defender)} ${pickText(rng, verbs(defender).riposte)} to the ${ripLoc} for ${ripDmg}!`,
           });
         }
-      } else {
-        // ── 3b. DEFENSE CHECK — with passive DEF ──
-        // BALANCE: After a failed parry attempt, the defender is off-balance.
-        // DEF skill is reduced to 40% to prevent PAR+DEF multiplicative stacking.
-        const defSkillAfterParry = Math.round(defender.skills.DEF * 0.4);
-        const defSuccess = skillCheck(rng, defSkillAfterParry, oeDefMod(defOE) + defMatchup + defFat + defDefMods.defBonus + defPassive.defBonus);
+      }
 
-        if (defSuccess) {
-          attacker.consecutiveHits = 0;
-          if (rng() < 0.2) {
-            log.push({ minute: min, text: `${name(defender)} dodges the attack with quick footwork.` });
-          }
-        } else {
+      if (!defended) {
           // ── 5. DAMAGE APPLICATION — with passive DMG + crit ──
           const hitLoc = rollHitLocation(rng, attTactics.target, defender.plan.protect);
           let rawDamage = computeHitDamage(rng, attacker.derived.damage + attOffMods.dmgBonus + attPassive.dmgBonus, hitLoc);
@@ -749,7 +767,6 @@ export function simulateFight(
               text: `${name(defender)} collapses from accumulated damage! ${name(attacker)} wins by knockout!`,
             });
             break;
-          }
         }
       }
     }

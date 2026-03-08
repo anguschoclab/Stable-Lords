@@ -10,16 +10,20 @@ import { FightingStyle, type Attributes, type BaseSkills, type DerivedStats } fr
 // ─── Style Seed Offsets (canonical approximations from Terrablood) ────────
 // Each style has base offsets for [ATT, PAR, DEF, INI, RIP, DEC]
 const STYLE_SEEDS: Record<FightingStyle, [number, number, number, number, number, number]> = {
-  [FightingStyle.AimedBlow]:       [ 4,  2,  4,  2,  1,  5],
-  [FightingStyle.BashingAttack]:   [ 6,  1,  1,  5,  0,  3],
-  [FightingStyle.LungingAttack]:   [ 5,  1,  2,  6,  1,  3],
-  [FightingStyle.ParryLunge]:      [ 3,  4,  3,  4,  3,  3],
-  [FightingStyle.ParryRiposte]:    [ 1,  5,  4,  2,  6,  2],
-  [FightingStyle.ParryStrike]:     [ 3,  5,  3,  3,  3,  3],
-  [FightingStyle.SlashingAttack]:  [ 5,  1,  3,  5,  1,  3],
-  [FightingStyle.StrikingAttack]:  [ 5,  2,  2,  4,  2,  3],
-  [FightingStyle.TotalParry]:      [ 0,  6,  6,  1,  4,  1],
-  [FightingStyle.WallOfSteel]:     [ 2,  4,  5,  2,  4,  3],
+  //                                          ATT PAR DEF INI RIP DEC
+  // BALANCE v3: PAR compressed to 3-4 range (was 2-5). Only 1 point separates
+  // best/worst parry so raw PAR no longer dominates. Style identity comes from
+  // ATT, RIP, INI, DEC, endurance, and passives instead.
+  [FightingStyle.AimedBlow]:       [ 5,  3,  3,  3,  2,  4],  // 20 — precision via crit
+  [FightingStyle.BashingAttack]:   [ 6,  3,  2,  4,  2,  3],  // 20 — ATT+INI offense
+  [FightingStyle.LungingAttack]:   [ 6,  3,  3,  5,  2,  3],  // 22 — fast, aggressive
+  [FightingStyle.ParryLunge]:      [ 4,  4,  3,  3,  3,  3],  // 20 — balanced hybrid
+  [FightingStyle.ParryRiposte]:    [ 3,  4,  3,  3,  4,  2],  // 19 — RIP identity (reduced from 5)
+  [FightingStyle.ParryStrike]:     [ 4,  4,  3,  3,  3,  3],  // 20 — efficient, consistent
+  [FightingStyle.SlashingAttack]:  [ 6,  3,  2,  4,  2,  3],  // 20 — offensive, reduced DEF
+  [FightingStyle.StrikingAttack]:  [ 6,  3,  2,  4,  2,  3],  // 20 — reliable power
+  [FightingStyle.TotalParry]:      [ 2,  4,  4,  2,  3,  2],  // 17 — defensive but low ATT
+  [FightingStyle.WallOfSteel]:     [ 3,  3,  4,  3,  3,  3],  // 19 — DEF+endurance identity
 };
 
 // ─── Attribute → Skill Breakpoint Contributions ──────────────────────────
@@ -78,10 +82,10 @@ export function computeHP(attrs: Attributes): number {
   return Math.max(10, Math.round(CN * 1.5 + SZ * 0.5 + WL * 0.3 + 5));
 }
 
-/** Endurance = f(CN, WL, ST) per pid=40 */
+/** Endurance = f(CN, WL, ST) per pid=40 — BALANCE v2: increased base for longer fights */
 export function computeEndurance(attrs: Attributes): number {
   const { CN, WL, ST } = attrs;
-  return Math.max(5, Math.round(CN * 0.8 + WL * 1.2 + ST * 0.3));
+  return Math.max(10, Math.round(CN * 1.2 + WL * 1.5 + ST * 0.5 + 8));
 }
 
 /** Damage class = f(ST, SZ) per pid=41 — returns 1-5 scale */

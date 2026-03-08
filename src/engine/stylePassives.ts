@@ -191,14 +191,14 @@ export function getStylePassive(
     }
 
     // ── Parry-Riposte: Riposte Specialist ──
-    // BALANCE v5: Removed ripBonus escalation and free parBonus.
-    // PR identity comes from OE paradox + riposte checks, not stacking passives.
+    // BALANCE v6: Added ATT penalty (-1). PR should NOT attack well — its damage comes from ripostes only.
     case FightingStyle.ParryRiposte: {
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        ripBonus: context.ripostes >= 2 ? 1 : 0, // Modest bonus only after landing 2+ ripostes
-        parBonus: 0, // Removed — PR shouldn't get free parry bonuses
+        attBonus: -1,  // PR attacks poorly — its identity is counter-damage, not proactive striking
+        ripBonus: context.ripostes >= 2 ? 1 : 0,
+        parBonus: 0,
         narrative: context.ripostes >= 3
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}has found the rhythm — each counter deadlier than the last!`
           : undefined,

@@ -654,15 +654,15 @@ export function generateRivalStables(count: number, seed: number): RivalStable[]
   return rivals;
 }
 
-/** Pick a random rival warrior for matchmaking */
+/** Pick a random eligible rival warrior for matchmaking (works with serialized RivalStableData) */
 export function pickRivalOpponent(
-  rivals: RivalStable[],
+  rivals: RivalStableData[],
   excludeNames: Set<string>
-): { rival: RivalStable; warrior: Warrior } | null {
-  const eligible: { rival: RivalStable; warrior: Warrior }[] = [];
+): { rival: RivalStableData; warrior: Warrior } | null {
+  const eligible: { rival: RivalStableData; warrior: Warrior }[] = [];
   for (const r of rivals) {
     for (const w of r.roster) {
-      if (w.status === "Active" && !excludeNames.has(w.name)) {
+      if (w.status === "Active" && !excludeNames.has(w.name) && !excludeNames.has(w.id)) {
         eligible.push({ rival: r, warrior: w });
       }
     }

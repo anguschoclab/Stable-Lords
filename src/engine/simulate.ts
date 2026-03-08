@@ -189,6 +189,14 @@ function fatiguePenalty(endurance: number, maxEndurance: number): number {
   return -7; // collapse territory
 }
 
+// ─── Damage Calculation ──────────────────────────────────────────────────
+function computeHitDamage(rng: () => number, damageClass: number, location: HitLocation): number {
+  const base = damageClass + 1; // 2-6 range
+  const locMult = location === "head" ? 1.5 : location === "chest" ? 1.2 : location === "abdomen" ? 1.1 : 0.8;
+  const variance = 0.7 + rng() * 0.6; // 0.7-1.3
+  return Math.max(1, Math.round(base * locMult * variance));
+}
+
 // ─── Equipment Bonuses ────────────────────────────────────────────────────
 function getEquipmentMods(loadout: EquipmentLoadout, carryCap: number) {
   const weapon = getItemById(loadout.weapon);

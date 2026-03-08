@@ -39,6 +39,9 @@ export default function RunRound() {
     { a: Warrior; d: Warrior; outcome: ReturnType<typeof simulateFight>; announcement?: string; isRivalry: boolean; rivalStable?: string }[]
   >([]);
   const [running, setRunning] = useState(false);
+  const [autosimming, setAutosimming] = useState(false);
+  const [autosimProgress, setAutosimProgress] = useState<{ current: number; total: number; lastSummary?: WeekSummary } | null>(null);
+  const [autosimResult, setAutosimResult] = useState<AutosimResult | null>(null);
 
   const fightReady = state.roster.filter(w => {
     if (w.status !== "Active") return false;

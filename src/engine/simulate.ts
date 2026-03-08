@@ -419,7 +419,7 @@ export function simulateFight(
     DEC: skillsA.DEC + (trainerModsA?.decMod ?? 0),
   };
   const effSkillsD: BaseSkills = {
-    ATT: skillsD.ATT + equipD.attMod + (trainerModsD?.attMod ?? 0) + classicBonusD,
+    ATT: skillsD.ATT + equipD.attMod + (trainerModsD?.attMod ?? 0) + classicBonusD + favWeaponD,
     PAR: skillsD.PAR + equipD.parMod + (trainerModsD?.parMod ?? 0),
     DEF: skillsD.DEF + equipD.defMod + (trainerModsD?.defMod ?? 0),
     INI: skillsD.INI + equipD.iniMod + (trainerModsD?.iniMod ?? 0),

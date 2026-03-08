@@ -130,6 +130,15 @@ export default function WarriorDetail() {
         </CardContent>
       </Card>
 
+      {/* Strategy / Plan Builder */}
+      {currentPlan && (
+        <PlanBuilder
+          plan={currentPlan}
+          onPlanChange={handlePlanChange}
+          warriorName={warrior.name}
+        />
+      )}
+
       {/* Fight History (from arena) */}
       <Card>
         <CardHeader className="pb-3">

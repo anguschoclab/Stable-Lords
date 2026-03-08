@@ -278,13 +278,24 @@ export default function WorldOverview() {
                     <TableRow key={row.id} className={row.isPlayer ? "bg-primary/5" : ""}>
                       <TableCell className="font-mono text-muted-foreground text-xs">{i + 1}</TableCell>
                       <TableCell>
-                        <Link
-                          to={row.isPlayer ? "/" : `/stable/${row.id}`}
-                          className="font-semibold hover:text-primary transition-colors"
-                        >
-                          {row.name}
-                          {row.isPlayer && <span className="ml-1.5 text-[10px] text-primary">(You)</span>}
-                        </Link>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Link
+                                to={row.isPlayer ? "/" : `/stable/${row.id}`}
+                                className="font-semibold hover:text-primary transition-colors"
+                              >
+                                {row.name}
+                                {row.isPlayer && <span className="ml-1.5 text-[10px] text-primary">(You)</span>}
+                              </Link>
+                            </TooltipTrigger>
+                            {row.motto && (
+                              <TooltipContent side="right" className="text-xs italic max-w-48">
+                                "{row.motto}"
+                              </TooltipContent>
+                            )}
+                          </Tooltip>
+                        </TooltipProvider>
                         <p className="text-[11px] text-muted-foreground">{row.ownerName}</p>
                       </TableCell>
                       <TableCell className="hidden md:table-cell">

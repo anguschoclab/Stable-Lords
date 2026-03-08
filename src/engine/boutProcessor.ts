@@ -15,6 +15,8 @@ import { NewsletterFeed } from "@/engine/newsletter/feed";
 import { StyleRollups } from "@/engine/stats/styleRollups";
 import { commentatorFor } from "@/ui/commentator";
 import { recapLine } from "@/ui/fightVariety";
+import { blurb, type AnnounceTone } from "@/lore/AnnouncerAI";
+import { disallowStablemates } from "@/guards/matchmaking";
 import { rollForInjury, isTooInjuredToFight, type Injury } from "@/engine/injuries";
 import { calculateXP, applyXP } from "@/engine/progression";
 import {

@@ -121,43 +121,48 @@ export default function Dashboard() {
 
       {/* Overview Tab */}
       {activeTab === "overview" && (
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="font-display text-lg flex items-center gap-2">
-                <span className="text-xl">{moodIcon}</span> Crowd Mood
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-lg font-display font-semibold">{state.crowdMood}</div>
-              <p className="text-sm text-muted-foreground mt-1">{moodDesc}</p>
-            </CardContent>
-          </Card>
+        <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <span className="text-xl">{moodIcon}</span> Crowd Mood
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg font-display font-semibold">{state.crowdMood}</div>
+                <p className="text-sm text-muted-foreground mt-1">{moodDesc}</p>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="font-display text-lg flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-primary" /> Meta Pulse
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {activeStyles.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No meta shift detected yet. Run more rounds.</p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {activeStyles.map(([style, drift]) => (
-                    <Badge
-                      key={style}
-                      variant="outline"
-                      className={`text-xs ${getMetaColor(drift)}`}
-                    >
-                      {STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}: {getMetaLabel(drift)} ({drift > 0 ? "+" : ""}{drift})
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" /> Meta Pulse
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {activeStyles.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No meta shift detected yet. Run more rounds.</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {activeStyles.map(([style, drift]) => (
+                      <Badge
+                        key={style}
+                        variant="outline"
+                        className={`text-xs ${getMetaColor(drift)}`}
+                      >
+                        {STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}: {getMetaLabel(drift)} ({drift > 0 ? "+" : ""}{drift})
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Finances Panel */}
+          <FinancesPanel />
         </div>
       )}
 

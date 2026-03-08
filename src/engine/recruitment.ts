@@ -164,12 +164,14 @@ export function generateRecruit(
   usedNames.add(name);
 
   const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
+  const potential = generatePotential(attributes, tier, rng);
 
   return {
     id: `recruit_${Date.now()}_${Math.floor(rng() * 1e6)}`,
     name,
     style,
     attributes,
+    potential,
     baseSkills,
     derivedStats,
     tier,

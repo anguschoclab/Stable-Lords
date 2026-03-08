@@ -10,16 +10,19 @@ import { FightingStyle, type Attributes, type BaseSkills, type DerivedStats } fr
 // ─── Style Seed Offsets (canonical approximations from Terrablood) ────────
 // Each style has base offsets for [ATT, PAR, DEF, INI, RIP, DEC]
 const STYLE_SEEDS: Record<FightingStyle, [number, number, number, number, number, number]> = {
-  [FightingStyle.AimedBlow]:       [ 4,  2,  4,  2,  1,  5],
-  [FightingStyle.BashingAttack]:   [ 6,  1,  1,  5,  0,  3],
-  [FightingStyle.LungingAttack]:   [ 5,  1,  2,  6,  1,  3],
-  [FightingStyle.ParryLunge]:      [ 3,  4,  3,  4,  3,  3],
-  [FightingStyle.ParryRiposte]:    [ 1,  5,  4,  2,  6,  2],
-  [FightingStyle.ParryStrike]:     [ 3,  5,  3,  3,  3,  3],
-  [FightingStyle.SlashingAttack]:  [ 5,  1,  3,  5,  1,  3],
-  [FightingStyle.StrikingAttack]:  [ 5,  2,  2,  4,  2,  3],
-  [FightingStyle.TotalParry]:      [ 0,  6,  6,  1,  4,  1],
-  [FightingStyle.WallOfSteel]:     [ 2,  4,  5,  2,  4,  3],
+  //                                          ATT PAR DEF INI RIP DEC
+  // BALANCE v2: Compressed to 2-6 range. Offensive styles get more ATT,
+  // defensive styles get modest PAR/DEF (not extreme). Total ~19-21 per style.
+  [FightingStyle.AimedBlow]:       [ 5,  3,  3,  3,  2,  4],  // 20 — precision identity via crit, not raw ATT
+  [FightingStyle.BashingAttack]:   [ 6,  2,  2,  4,  2,  3],  // 19 — high ATT, low defense
+  [FightingStyle.LungingAttack]:   [ 6,  2,  3,  5,  2,  3],  // 21 — fast, aggressive, fragile
+  [FightingStyle.ParryLunge]:      [ 4,  4,  3,  3,  3,  3],  // 20 — balanced hybrid
+  [FightingStyle.ParryRiposte]:    [ 3,  4,  3,  3,  5,  2],  // 20 — RIP identity, not PAR wall
+  [FightingStyle.ParryStrike]:     [ 4,  4,  3,  3,  3,  3],  // 20 — efficient, consistent
+  [FightingStyle.SlashingAttack]:  [ 6,  2,  2,  4,  2,  3],  // 19 — offensive, reduced parry
+  [FightingStyle.StrikingAttack]:  [ 6,  3,  2,  4,  2,  3],  // 20 — reliable power
+  [FightingStyle.TotalParry]:      [ 2,  5,  4,  2,  3,  2],  // 18 — defensive but not impenetrable
+  [FightingStyle.WallOfSteel]:     [ 3,  3,  4,  3,  3,  3],  // 19 — balanced defense + endurance identity
 };
 
 // ─── Attribute → Skill Breakpoint Contributions ──────────────────────────

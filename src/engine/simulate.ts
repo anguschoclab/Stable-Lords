@@ -235,7 +235,7 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
 // The combat chain (ATT→PAR→DEF→DMG) inherently favors defense because
 // defenders get TWO independent checks (PAR then DEF). These constants
 // compensate so aggressive styles remain viable.
-const GLOBAL_ATT_BONUS = 3;   // All attacks get +3 to offset double-defense
+const GLOBAL_ATT_BONUS = 4;   // All attacks get +4 to offset double-defense chain
 const GLOBAL_PAR_PENALTY = -2; // Parry is slightly harder to reward aggression
 
 function oeAttMod(oe: number, style?: FightingStyle): number {

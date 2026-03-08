@@ -243,15 +243,15 @@ export function getStylePassive(
     }
 
     // ── Wall of Steel: Blade Barrier ──
-    // DEF/PAR scale slowly over exchanges (cap 2 base, +1 mastery)
+    // DEF scales slowly (cap 1 base, +1 mastery); identity is endurance + zone, not raw defense
     case FightingStyle.WallOfSteel: {
-      const wallBonus = Math.min(2 + m.bonus, Math.floor(context.exchange / 4));
+      const wallBonus = Math.min(1 + m.bonus, Math.floor(context.exchange / 5));
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        defBonus: scale(1 + wallBonus),
-        parBonus: wallBonus,
-        narrative: wallBonus >= 2
+        defBonus: scale(wallBonus),
+        parBonus: 0,  // Removed — WS identity is constant motion, not parry
+        narrative: wallBonus >= 1
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}the constant blade motion becomes an impenetrable wall!`
           : undefined,
       };

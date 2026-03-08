@@ -100,7 +100,9 @@ export function loadGameState(): GameState {
         if (!parsed.trainers) parsed.trainers = [];
         if (!parsed.hiringPool) parsed.hiringPool = [];
         if (!parsed.trainingAssignments) parsed.trainingAssignments = [];
-        if (parsed.ftueComplete === undefined) parsed.ftueComplete = true; // existing saves already past FTUE
+        if (parsed.gold === undefined) parsed.gold = 500;
+        if (!parsed.ledger) parsed.ledger = [];
+        if (parsed.ftueComplete === undefined) parsed.ftueComplete = true;
         if (!parsed.coachDismissed) parsed.coachDismissed = [];
         // Ensure all warriors have status
         parsed.roster = (parsed.roster || []).map((w: any) => ({

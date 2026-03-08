@@ -416,6 +416,7 @@ export function simulateFight(
   const minute = (ex: number) => Math.floor(ex / EXCHANGES_PER_MINUTE) + 1;
 
   // Opening narration
+  let lastPhase: Phase | null = null;
   log.push({ minute: 1, text: `The crowd falls silent as ${nameA} (${styleNameA}) faces ${nameD} (${styleNameD}).` });
 
   for (let ex = 0; ex < MAX_EXCHANGES; ex++) {

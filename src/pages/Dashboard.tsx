@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 
 // ─── Widget: Season & Calendar ─────────────────────────────────────────────
 
-function SeasonWidget() {
+const SeasonWidget = React.memo(function SeasonWidget() {
   const { state, doAdvanceWeek } = useGame();
   const moodIcon = MOOD_ICONS[state.crowdMood as keyof typeof MOOD_ICONS] ?? "😐";
   const moodDesc = MOOD_DESCRIPTIONS[state.crowdMood as keyof typeof MOOD_DESCRIPTIONS] ?? "";

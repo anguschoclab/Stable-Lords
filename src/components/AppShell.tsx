@@ -33,6 +33,7 @@ const navItems = [
   { to: "/tournaments", label: "Tournaments", icon: Trophy },
   { to: "/world", label: "World", icon: Globe },
   { to: "/hall-of-fights", label: "Chronicle", icon: ScrollText },
+  { to: "/gazette", label: "Gazette", icon: Newspaper },
   { to: "/graveyard", label: "Hall of Warriors", icon: Skull },
   { to: "/help", label: "Help", icon: HelpCircle },
 ];

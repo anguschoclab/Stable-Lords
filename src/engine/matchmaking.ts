@@ -7,7 +7,8 @@ import type {
   RestState, Rivalry, MatchRecord,
 } from "@/types/game";
 import { isTooInjuredToFight, type Injury } from "./injuries";
-import { simulateFight, defaultPlanForWarrior } from "./simulate";
+import { simulateFight } from "./simulate";
+import { aiPlanForWarrior } from "./ownerAI";
 
 // ─── Eligibility ──────────────────────────────────────────────────────────
 

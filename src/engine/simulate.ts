@@ -604,9 +604,8 @@ export function simulateFight(
       } else {
         // ── 3b. DEFENSE CHECK — with passive DEF ──
         // BALANCE: After a failed parry attempt, the defender is off-balance.
-        // DEF skill is reduced to 60% (rounded) to prevent multiplicative stacking
-        // of two independent defensive checks favoring high-defense styles.
-        const defSkillAfterParry = Math.round(defender.skills.DEF * 0.6);
+        // DEF skill is reduced to 40% to prevent PAR+DEF multiplicative stacking.
+        const defSkillAfterParry = Math.round(defender.skills.DEF * 0.4);
         const defSuccess = skillCheck(rng, defSkillAfterParry, oeDefMod(defOE) + defMatchup + defFat + defDefMods.defBonus + defPassive.defBonus);
 
         if (defSuccess) {

@@ -564,7 +564,7 @@ function RivalsWidget() {
                       {topWarrior && (
                         <>
                           <span>·</span>
-                          <span className="truncate">★ {topWarrior.name}</span>
+                          <span className="truncate">★ <WarriorLink name={topWarrior.name} id={topWarrior.id}>{topWarrior.name}</WarriorLink></span>
                         </>
                       )}
                     </div>

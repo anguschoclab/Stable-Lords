@@ -218,6 +218,23 @@ export default function StartGame() {
               <span className="text-xs text-muted-foreground ml-2">(Max {MAX_SAVE_SLOTS} saves)</span>
             )}
           </Button>
+          {/* Import Save */}
+          <input
+            ref={importRef}
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={handleImport}
+          />
+          <Button
+            variant="ghost"
+            onClick={() => importRef.current?.click()}
+            className="w-full gap-2 h-10 text-muted-foreground"
+            size="sm"
+          >
+            <Upload className="h-4 w-4" />
+            Import Save File
+          </Button>
         </div>
 
         {/* Save Slots */}

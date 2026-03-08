@@ -231,13 +231,13 @@ export function getStylePassive(
     }
 
     // ── Striking Attack: Reliable Power ──
-    // Consistent ATT bonus, dmg vs hurt opponents
+    // BALANCE v6: Unconditional ATT +2, dmgBonus always +1 (reliable identity)
     case FightingStyle.StrikingAttack:
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        attBonus: 1 + m.bonus,
-        dmgBonus: context.hpRatio > 0.7 ? 0 : 1,
+        attBonus: 2 + m.bonus,   // Reliable, always-on attack bonus
+        dmgBonus: 1,             // Consistent damage (not conditional on opponent HP)
       };
 
     // ── Total Parry: Endurance Wall ──

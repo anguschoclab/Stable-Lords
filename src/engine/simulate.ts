@@ -25,6 +25,14 @@ import { getTrainingBonus, TRAINER_FOCUSES, type TrainerFocus } from "@/engine/t
 import { getOffensiveSuitability, getDefensiveSuitability, suitabilityMultiplier } from "./tacticSuitability";
 import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, type Phase as StylePhase } from "./stylePassives";
 import { getFavoriteWeaponBonus, getFavoriteRhythmBonus } from "./favorites";
+import {
+  narrateAttack, narrateParry, narrateDodge, narrateCounterstrike,
+  narrateHit, narrateParryBreak, damageSeverityLine, stateChangeLine,
+  fatigueLine, crowdReaction, narrateInitiative, minuteStatusLine,
+  narrateBoutEnd, tradingBlowsLine, tauntLine, conservingLine,
+  pressingLine, generateWarriorIntro, battleOpener, getWeaponDisplayName,
+  popularityLine, skillLearnLine,
+} from "./narrativePBP";
 
 // ─── Seeded PRNG (mulberry32) ─────────────────────────────────────────────
 function mulberry32(seed: number) {
@@ -81,60 +89,8 @@ function getPhase(exchange: number, maxExchanges: number): Phase {
   return "LATE";
 }
 
-// ─── Narrative Templates ──────────────────────────────────────────────────
-const STYLE_VERBS: Record<string, { attack: string[]; parry: string[]; riposte: string[] }> = {
-  [FightingStyle.AimedBlow]: {
-    attack: ["takes careful aim and strikes", "finds the opening and jabs precisely", "targets a weak point with surgical precision"],
-    parry: ["deflects with measured control", "brushes the strike aside"],
-    riposte: ["capitalizes on the misstep with a precise counter"],
-  },
-  [FightingStyle.BashingAttack]: {
-    attack: ["smashes forward with brutal force", "drives a crushing blow", "hammers down relentlessly"],
-    parry: ["catches the blow on a heavy guard", "absorbs the impact and stands firm"],
-    riposte: ["turns the block into a savage counterstrike"],
-  },
-  [FightingStyle.LungingAttack]: {
-    attack: ["lunges with blinding speed", "thrusts from an unexpected angle", "darts forward with a rapid jab"],
-    parry: ["dances back to deflect", "redirects the thrust with quick footwork"],
-    riposte: ["springs forward with a lightning counter-thrust"],
-  },
-  [FightingStyle.ParryLunge]: {
-    attack: ["waits for the opening, then explodes into a lunge", "converts defense into a sudden thrust"],
-    parry: ["sets the parry with practiced patience", "reads the attack and deflects cleanly"],
-    riposte: ["flows from parry to a devastating lunge"],
-  },
-  [FightingStyle.ParryRiposte]: {
-    attack: ["probes for a counterstrike opportunity", "feints and waits for the error"],
-    parry: ["catches the blade with elegant precision", "turns the attack aside effortlessly"],
-    riposte: ["punishes the overcommitment with a flashing riposte", "counter-attacks with lethal timing"],
-  },
-  [FightingStyle.ParryStrike]: {
-    attack: ["strikes with economical efficiency", "delivers a swift blow through the shortest arc"],
-    parry: ["deflects with minimal motion", "guards the line with disciplined economy"],
-    riposte: ["converts the parry into a swift counterstrike"],
-  },
-  [FightingStyle.SlashingAttack]: {
-    attack: ["slashes in a wide cutting arc", "whirls the blade in a vicious sweep", "carves a brutal slash"],
-    parry: ["barely catches the incoming blow", "struggles to parry through the arc"],
-    riposte: ["turns the miss into a sweeping counter-slash"],
-  },
-  [FightingStyle.StrikingAttack]: {
-    attack: ["strikes downward with decisive force", "delivers a clean, efficient blow", "hammers home a direct strike"],
-    parry: ["blocks with practiced efficiency", "catches the strike and holds ground"],
-    riposte: ["redirects into a punishing counterstrike"],
-  },
-  [FightingStyle.TotalParry]: {
-    attack: ["probes cautiously", "offers a tentative thrust"],
-    parry: ["locks into an impenetrable defensive wall", "denies the attack with total commitment to defense"],
-    riposte: ["punishes the frustrated attacker with a measured counter"],
-  },
-  [FightingStyle.WallOfSteel]: {
-    attack: ["attacks through the constant blade motion", "finds an opening in the rhythmic arc"],
-    parry: ["maintains the whirling guard, catching the blow", "the constant blade motion deflects the strike"],
-    riposte: ["the blade arc reverses into a punishing counter"],
-  },
-};
-
+// ─── Legacy narrative helpers (replaced by narrativePBP.ts) ───────────────
+// Kept as fallback only
 function pickText(rng: () => number, texts: string[]): string {
   return texts[Math.floor(rng() * texts.length)];
 }
@@ -471,12 +427,45 @@ export function simulateFight(
   // Narration helpers
   const name = (f: FighterState) => f.label === "A" ? nameA : nameD;
   const styleName = (f: FighterState) => f.label === "A" ? styleNameA : styleNameD;
-  const verbs = (f: FighterState) => STYLE_VERBS[f.style] ?? STYLE_VERBS[FightingStyle.StrikingAttack];
+  const weaponOf = (f: FighterState) => f.label === "A" ? (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon : (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon;
   const minute = (ex: number) => Math.floor(ex / EXCHANGES_PER_MINUTE) + 1;
+
+  // Track HP ratios for state-change narration
+  let prevHpRatioA = 1.0;
+  let prevHpRatioD = 1.0;
+
+  // ── Pre-bout warrior introductions (canonical DM PBP) ──
+  const introA = generateWarriorIntro(rng, {
+    name: nameA,
+    style: planA.style,
+    weaponId: (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon,
+    armorId: (warriorA?.equipment ?? DEFAULT_LOADOUT).armor,
+    helmId: (warriorA?.equipment ?? DEFAULT_LOADOUT).helm,
+  }, warriorA?.attributes?.SZ);
+  const introD = generateWarriorIntro(rng, {
+    name: nameD,
+    style: planD.style,
+    weaponId: (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon,
+    armorId: (warriorD?.equipment ?? DEFAULT_LOADOUT).armor,
+    helmId: (warriorD?.equipment ?? DEFAULT_LOADOUT).helm,
+  }, warriorD?.attributes?.SZ);
+
+  // Add intro lines
+  for (const line of introA) log.push({ minute: 0, text: line });
+  log.push({ minute: 0, text: "" });
+  for (const line of introD) log.push({ minute: 0, text: line });
+  log.push({ minute: 0, text: "" });
+
+  // Battle opener
+  log.push({ minute: 1, text: battleOpener(rng) });
+
+  // Low-OE conserving line
+  if (planA.OE <= 3) log.push({ minute: 1, text: conservingLine(nameA) });
+  if (planD.OE <= 3) log.push({ minute: 1, text: conservingLine(nameD) });
 
   // Opening narration
   let lastPhase: Phase | null = null;
-  log.push({ minute: 1, text: `The crowd falls silent as ${nameA} (${styleNameA}) faces ${nameD} (${styleNameD}).` });
+  let lastMinuteMarker = 0;
 
   for (let ex = 0; ex < MAX_EXCHANGES; ex++) {
     const phase = getPhase(ex, MAX_EXCHANGES);
@@ -583,11 +572,18 @@ export function simulateFight(
     const attDefMods = aGoesFirst ? defModsA : defModsD;
     const defDefMods = aGoesFirst ? defModsD : defModsA;
 
-    // Narrate initiative swings
+    // Narrate initiative swings (canonical PBP style)
     if (ex === 0 || (ex > 0 && rng() < 0.3)) {
-      if (aGoesFirst && ex <= 1) {
-        log.push({ minute: min, text: `${name(attacker)} seizes the initiative!` });
+      if (aGoesFirst) {
+        log.push({ minute: min, text: narrateInitiative(rng, name(attacker), rng() < 0.3) });
       }
+    }
+
+    // Minute markers with status assessment (canonical: "MINUTE 2. The warriors appear equal in skill.")
+    if (min > lastMinuteMarker && min > 1) {
+      lastMinuteMarker = min;
+      log.push({ minute: min, text: `MINUTE ${min}.` });
+      log.push({ minute: min, text: minuteStatusLine(rng, min, nameA, nameD, fA.hitsLanded, fD.hitsLanded) });
     }
 
     // ── TACTIC OVERUSE PENALTY (compendium: "tactics sparingly") ──
@@ -619,8 +615,9 @@ export function simulateFight(
       // Attack whiffs — reset consecutive hits
       attacker.consecutiveHits = 0;
 
-      if (rng() < 0.25) {
-        log.push({ minute: min, text: `${name(attacker)} probes but finds no opening.` });
+       if (rng() < 0.25) {
+        log.push({ minute: min, text: narrateAttack(rng, name(attacker), weaponOf(attacker)) });
+        log.push({ minute: min, text: narrateDodge(rng, name(defender)) });
       }
       // ── Endurance cost for attempt ──
       attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attOE, attAL) * 0.5)) + attOffMods.endCost;
@@ -640,10 +637,12 @@ export function simulateFight(
         defender.consecutiveHits++;
         attacker.consecutiveHits = 0;
 
-        log.push({
-          minute: min,
-          text: `${pickText(rng, verbs(defender).riposte)} — striking the ${ripLoc} for ${ripDmg} damage!`,
-        });
+        // Canonical PBP: counterstrike + attack + hit
+        log.push({ minute: min, text: narrateCounterstrike(rng, name(defender)) });
+        log.push({ minute: min, text: narrateAttack(rng, name(defender), weaponOf(defender)) });
+        log.push({ minute: min, text: narrateHit(rng, name(attacker), ripLoc) });
+        const sevLine = damageSeverityLine(rng, ripDmg, attacker.maxHp);
+        if (sevLine) log.push({ minute: min, text: sevLine });
 
         if (defender.ripostes >= 3 && !tags.includes("RiposteChain")) tags.push("RiposteChain");
       }
@@ -669,8 +668,8 @@ export function simulateFight(
         if (defSuccess) {
           defended = true;
           attacker.consecutiveHits = 0;
-          if (rng() < 0.3) {
-            log.push({ minute: min, text: `${name(defender)} dodges the attack with quick footwork.` });
+          if (rng() < 0.5) {
+            log.push({ minute: min, text: narrateDodge(rng, name(defender)) });
           }
           // Dodge doesn't enable riposte (you're out of position)
         }
@@ -683,8 +682,9 @@ export function simulateFight(
           canRiposte = true;
           attacker.consecutiveHits = 0;
 
-          if (rng() < 0.3) {
-            log.push({ minute: min, text: `${name(defender)} ${pickText(rng, verbs(defender).parry)}.` });
+          if (rng() < 0.5) {
+            log.push({ minute: min, text: narrateAttack(rng, name(attacker), weaponOf(attacker)) });
+            log.push({ minute: min, text: narrateParry(rng, name(defender), weaponOf(defender)) });
           }
         }
       }
@@ -702,10 +702,12 @@ export function simulateFight(
           defender.hitsLanded++;
           defender.ripostes++;
           defender.consecutiveHits++;
-          log.push({
-            minute: min,
-            text: `${name(defender)} ${pickText(rng, verbs(defender).riposte)} to the ${ripLoc} for ${ripDmg}!`,
-          });
+          // Canonical PBP: counterstrike after parry
+          log.push({ minute: min, text: narrateCounterstrike(rng, name(defender)) });
+          log.push({ minute: min, text: narrateAttack(rng, name(defender), weaponOf(defender)) });
+          log.push({ minute: min, text: narrateHit(rng, name(attacker), ripLoc) });
+          const sevLine2 = damageSeverityLine(rng, ripDmg, attacker.maxHp);
+          if (sevLine2) log.push({ minute: min, text: sevLine2 });
         }
       }
 
@@ -728,17 +730,37 @@ export function simulateFight(
           attacker.consecutiveHits++;
           defender.consecutiveHits = 0;
 
-          log.push({
-            minute: min,
-            text: `${name(attacker)} ${pickText(rng, verbs(attacker).attack)} to the ${hitLoc} for ${damage} damage!`,
-          });
+          // Canonical PBP narration: attack + hit + damage severity + state changes
+          log.push({ minute: min, text: narrateAttack(rng, name(attacker), weaponOf(attacker)) });
+          log.push({ minute: min, text: narrateHit(rng, name(defender), hitLoc) });
+
+          const sevLine3 = damageSeverityLine(rng, damage, defender.maxHp);
+          if (sevLine3) log.push({ minute: min, text: sevLine3 });
+
+          // State change narration (desperation, bleeding, etc.)
+          const defHpRatio = defender.hp / defender.maxHp;
+          const prevDefHpRatio = defender.label === "A" ? prevHpRatioA : prevHpRatioD;
+          const stateLine = stateChangeLine(rng, name(defender), defHpRatio, prevDefHpRatio);
+          if (stateLine) log.push({ minute: min, text: stateLine });
+          if (defender.label === "A") prevHpRatioA = defHpRatio;
+          else prevHpRatioD = defHpRatio;
+
+          // Crowd reactions
+          const crowd = crowdReaction(rng, name(defender), name(attacker), defHpRatio);
+          if (crowd) log.push({ minute: min, text: crowd });
+
+          // Taunts (rare)
+          const taunt = tauntLine(rng, name(attacker), true);
+          if (taunt) log.push({ minute: min, text: taunt });
+
+          // Consecutive hits pressing line
+          if (attacker.consecutiveHits >= 3 && rng() < 0.4) {
+            log.push({ minute: min, text: pressingLine(rng, name(attacker)) });
+          }
 
           // Check for significant hit
           if (damage >= 5) {
             if (rng() < 0.5) tags.push("Flashy");
-          }
-          if (hitLoc === "head" && damage >= 4) {
-            log.push({ minute: min, text: `A devastating blow to the head staggers ${name(defender)}!` });
           }
 
           // ── 6. DECISIVENESS CHECK — Style-specific kill mechanics ──
@@ -770,10 +792,9 @@ export function simulateFight(
                 by = "Kill";
                 tags.push("Kill");
 
-                log.push({
-                  minute: min,
-                  text: `${name(attacker)} ${killMech.killNarrative}`,
-                });
+                // KILL — canonical PBP narration
+                const endLines = narrateBoutEnd(rng, "Kill", name(attacker), name(defender));
+                for (const l of endLines) log.push({ minute: min, text: l });
                 break;
               } else {
                 log.push({
@@ -789,10 +810,8 @@ export function simulateFight(
             winner = attacker.label as "A" | "D";
             by = "KO";
             tags.push("KO");
-            log.push({
-              minute: min,
-              text: `${name(defender)} collapses from accumulated damage! ${name(attacker)} wins by knockout!`,
-            });
+            const koLines = narrateBoutEnd(rng, "KO", name(attacker), name(defender));
+            for (const l of koLines) log.push({ minute: min, text: l });
             break;
         }
       }
@@ -815,47 +834,43 @@ export function simulateFight(
     if (fA.endurance <= 0 && fD.endurance <= 0 && !winner) {
       winner = fA.hp >= fD.hp ? "A" : fD.hp > fA.hp ? "D" : null;
       by = "Exhaustion";
-      log.push({
-        minute: min,
-        text: winner
-          ? `Both warriors are spent! ${winner === "A" ? nameA : nameD} is awarded the bout on points.`
-          : `Both warriors collapse from exhaustion! The bout is declared a draw.`,
-      });
+      if (winner) {
+        const exLines = narrateBoutEnd(rng, "Exhaustion", winner === "A" ? nameA : nameD, winner === "A" ? nameD : nameA);
+        for (const l of exLines) log.push({ minute: min, text: l });
+      } else {
+        log.push({ minute: min, text: `Both warriors collapse from exhaustion! The bout is declared a draw.` });
+      }
       break;
     }
 
     if (attacker.endurance <= 0 && !winner) {
-      // Stoppage
       winner = defender.label as "A" | "D";
       by = "Stoppage";
-      log.push({
-        minute: min,
-        text: `${name(attacker)} can no longer continue! ${name(defender)} wins by stoppage!`,
-      });
+      const stLines = narrateBoutEnd(rng, "Stoppage", name(defender), name(attacker));
+      for (const l of stLines) log.push({ minute: min, text: l });
       break;
     }
 
     if (defender.endurance <= 0 && !winner) {
       winner = attacker.label as "A" | "D";
       by = "Stoppage";
-      log.push({
-        minute: min,
-        text: `${name(defender)} staggers and cannot continue! ${name(attacker)} wins by stoppage!`,
-      });
+      const stLines = narrateBoutEnd(rng, "Stoppage", name(attacker), name(defender));
+      for (const l of stLines) log.push({ minute: min, text: l });
       break;
     }
 
-    // Fatigue narration
+    // Fatigue narration (canonical PBP style)
     if (ex > 0 && ex % 4 === 0) {
-      const fatigued = [fA, fD].filter(f => f.endurance < f.maxEndurance * 0.3);
-      for (const f of fatigued) {
-        if (rng() < 0.5) {
-          log.push({
-            minute: min,
-            text: `${name(f)} is visibly tiring, movements growing sluggish.`,
-          });
-        }
+      for (const f of [fA, fD]) {
+        const endRatio = f.endurance / f.maxEndurance;
+        const fLine = fatigueLine(rng, name(f), endRatio);
+        if (fLine) log.push({ minute: min, text: fLine });
       }
+    }
+
+    // Trading blows filler (canonical: "The two warriors fiercely trade attacks and parrys.")
+    if (ex > 2 && rng() < 0.15) {
+      log.push({ minute: min, text: tradingBlowsLine(rng) });
     }
   }
 

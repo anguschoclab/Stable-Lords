@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Swords, Zap, Skull, Megaphone, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import BoutViewer from "@/components/BoutViewer";
 
 export default function RunRound() {
   const { state, setState } = useGame();

@@ -413,8 +413,7 @@ export default function Tournaments() {
         updatedState.arenaHistory = [...updatedState.arenaHistory, summary];
         ArenaHistory.append(summary);
         LoreArchive.signalFight(summary);
-        StyleRollups.addFight({ week: state.week, styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by });
-        StyleMeter.recordFight({ styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by, isTournament: currentTournament.id });
+        StyleRollups.addFight({ week: state.week, styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by, isTournament: currentTournament.id });
       }
 
       // Create next round

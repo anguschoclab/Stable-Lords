@@ -237,17 +237,21 @@ function SuitabilityBadge({ rating }: { rating: SuitabilityRating }) {
 }
 
 function PhaseSliders({
-  phase, baseOE, baseAL, baseKD, onChange,
+  phase, baseOE, baseAL, baseKD, style, basePlan, onChange,
 }: {
   phase: PhaseStrategy | undefined; baseOE: number; baseAL: number; baseKD: number;
+  style: FightingStyle; basePlan: FightPlan;
   onChange: (p: PhaseStrategy | undefined) => void;
 }) {
   const oe = phase?.OE ?? baseOE;
   const al = phase?.AL ?? baseAL;
   const kd = phase?.killDesire ?? baseKD;
+  const offTactic = phase?.offensiveTactic ?? basePlan.offensiveTactic ?? "none";
+  const defTactic = phase?.defensiveTactic ?? basePlan.defensiveTactic ?? "none";
+  const phaseTarget = phase?.target ?? basePlan.target ?? "Any";
 
-  const update = (field: keyof PhaseStrategy, val: number) => {
-    onChange({ OE: oe, AL: al, killDesire: kd, [field]: val });
+  const update = (field: keyof PhaseStrategy, val: any) => {
+    onChange({ OE: oe, AL: al, killDesire: kd, offensiveTactic: phase?.offensiveTactic, defensiveTactic: phase?.defensiveTactic, target: phase?.target, [field]: val });
   };
 
   return (
@@ -256,6 +260,49 @@ function PhaseSliders({
         <SliderField label="OE" value={oe} onChange={v => update("OE", v)} icon={<Swords className="h-3 w-3 text-arena-gold" />} color="text-arena-gold" />
         <SliderField label="AL" value={al} onChange={v => update("AL", v)} icon={<Flame className="h-3 w-3 text-arena-fame" />} color="text-arena-fame" />
         <SliderField label="KD" value={kd} onChange={v => update("killDesire", v)} icon={<Crosshair className="h-3 w-3 text-destructive" />} color="text-destructive" />
+      </div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="space-y-1">
+          <Label className="text-xs flex items-center gap-1"><Crosshair className="h-3 w-3" /> Target</Label>
+          <Select value={phaseTarget} onValueChange={v => update("target", v as BodyTarget)}>
+            <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {BODY_TARGETS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs flex items-center gap-1"><Swords className="h-3 w-3" /> Off. Tactic</Label>
+          <Select value={offTactic} onValueChange={v => update("offensiveTactic", v as OffensiveTactic)}>
+            <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {OFFENSIVE_TACTICS.map(t => (
+                <SelectItem key={t} value={t}>
+                  <span className="flex items-center gap-1.5">
+                    {t === "none" ? "(none)" : t}
+                    {t !== "none" && <SuitabilityBadge rating={getOffensiveSuitability(style, t)} />}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1">
+          <Label className="text-xs flex items-center gap-1"><Shield className="h-3 w-3" /> Def. Tactic</Label>
+          <Select value={defTactic} onValueChange={v => update("defensiveTactic", v as DefensiveTactic)}>
+            <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {DEFENSIVE_TACTICS.map(t => (
+                <SelectItem key={t} value={t}>
+                  <span className="flex items-center gap-1.5">
+                    {t === "none" ? "(none)" : t}
+                    {t !== "none" && <SuitabilityBadge rating={getDefensiveSuitability(style, t)} />}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       {!!phase && (
         <Button variant="ghost" size="sm" className="text-xs text-muted-foreground" onClick={() => onChange(undefined)}>

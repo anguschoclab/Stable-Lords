@@ -13,6 +13,7 @@ import WarriorDetail from "@/pages/WarriorDetail";
 import HallOfFights from "@/lore/HallOfFights";
 import Recruit from "@/pages/Recruit";
 import Graveyard from "@/pages/Graveyard";
+import Trainers from "@/pages/Trainers";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

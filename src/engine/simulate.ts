@@ -432,13 +432,21 @@ export function simulateFight(
     const effAL_D = fD.plan.phases?.[phaseKeyD]?.AL ?? fD.plan.AL;
     const effKD_D = fD.plan.phases?.[phaseKeyD]?.killDesire ?? fD.plan.killDesire ?? 5;
 
+    // Per-phase tactic & target resolution
+    const tacticsA = resolveEffectiveTactics(fA.plan, phaseKeyA);
+    const tacticsD = resolveEffectiveTactics(fD.plan, phaseKeyD);
+    const offModsA = getOffensiveTacticMods(tacticsA.offTactic, fA.style);
+    const defModsA = getDefensiveTacticMods(tacticsA.defTactic, fA.style);
+    const offModsD = getOffensiveTacticMods(tacticsD.offTactic, fD.style);
+    const defModsD = getDefensiveTacticMods(tacticsD.defTactic, fD.style);
+
     // Fatigue penalties
     const fatA = fatiguePenalty(fA.endurance, fA.maxEndurance);
     const fatD = fatiguePenalty(fD.endurance, fD.maxEndurance);
 
     // ── 1. INITIATIVE CONTEST ──
-    const iniA = fA.skills.INI + alIniMod(effAL_A) + matchupA + fatA;
-    const iniD = fD.skills.INI + alIniMod(effAL_D) + matchupD + fatD;
+    const iniA = fA.skills.INI + alIniMod(effAL_A) + matchupA + fatA + defModsA.iniBonus;
+    const iniD = fD.skills.INI + alIniMod(effAL_D) + matchupD + fatD + defModsD.iniBonus;
     const aGoesFirst = contestCheck(rng, iniA, iniD);
 
     const attacker = aGoesFirst ? fA : fD;

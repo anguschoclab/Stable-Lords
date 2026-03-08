@@ -19,38 +19,42 @@ export interface EquipmentItem {
   twoHanded?: boolean;     // weapons only — blocks shield slot
   restrictedStyles?: FightingStyle[]; // styles that CANNOT use this
   preferredStyles?: FightingStyle[];  // styles that get a bonus with this
+  // Weapon stat requirements (canonical minimums)
+  reqST?: number;          // minimum Strength
+  reqDF?: number;          // minimum Deftness
+  reqSP?: number;          // minimum Speed
 }
 
 // ─── Single-Handed Weapons ──────────────────────────────────────────────────
 
 export const WEAPONS: EquipmentItem[] = [
-  // Light weapons (weight 1-2)
-  { id: "dagger",       code: "DA", name: "Dagger",         slot: "weapon", weight: 1, description: "Fast, light. Favored by aimed-blow and lungers.", preferredStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack] },
-  { id: "epee",         code: "EP", name: "Epée",           slot: "weapon", weight: 2, description: "Thrusting weapon for precise styles.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.ParryLunge, FightingStyle.ParryRiposte] },
-  { id: "hatchet",      code: "HA", name: "Hatchet",        slot: "weapon", weight: 2, description: "Light chopping weapon. Quick and versatile.", preferredStyles: [FightingStyle.StrikingAttack] },
-  { id: "short_sword",  code: "SH", name: "Shortsword",     slot: "weapon", weight: 2, description: "Versatile light blade. No restrictions." },
-  { id: "small_shield", code: "SM", name: "Small Shield",   slot: "weapon", weight: 2, description: "Off-hand small shield used as weapon-slot blocker.", preferredStyles: [FightingStyle.TotalParry, FightingStyle.WallOfSteel] },
-  { id: "war_hammer",   code: "WH", name: "War Hammer",     slot: "weapon", weight: 2, description: "Light crushing weapon. Armor-piercing.", preferredStyles: [FightingStyle.BashingAttack], restrictedStyles: [FightingStyle.AimedBlow] },
+  // Light weapons (weight 1-2) — low requirements
+  { id: "dagger",       code: "DA", name: "Dagger",         slot: "weapon", weight: 1, reqST: 3, reqDF: 7, reqSP: 3, description: "Fast, light. Favored by aimed-blow and lungers.", preferredStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack] },
+  { id: "epee",         code: "EP", name: "Epée",           slot: "weapon", weight: 2, reqST: 5, reqDF: 11, reqSP: 7, description: "Thrusting weapon for precise styles.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.ParryLunge, FightingStyle.ParryRiposte] },
+  { id: "hatchet",      code: "HA", name: "Hatchet",        slot: "weapon", weight: 2, reqST: 5, reqDF: 5, reqSP: 3, description: "Light chopping weapon. Quick and versatile.", preferredStyles: [FightingStyle.StrikingAttack] },
+  { id: "short_sword",  code: "SH", name: "Shortsword",     slot: "weapon", weight: 2, reqST: 5, reqDF: 7, reqSP: 5, description: "Versatile light blade. No restrictions." },
+  { id: "small_shield", code: "SM", name: "Small Shield",   slot: "weapon", weight: 2, reqST: 5, reqDF: 3, reqSP: 3, description: "Off-hand small shield used as weapon-slot blocker.", preferredStyles: [FightingStyle.TotalParry, FightingStyle.WallOfSteel] },
+  { id: "war_hammer",   code: "WH", name: "War Hammer",     slot: "weapon", weight: 2, reqST: 9, reqDF: 5, reqSP: 3, description: "Light crushing weapon. Armor-piercing.", preferredStyles: [FightingStyle.BashingAttack], restrictedStyles: [FightingStyle.AimedBlow] },
 
   // Medium weapons (weight 3-4)
-  { id: "scimitar",     code: "SC", name: "Scimitar",       slot: "weapon", weight: 3, description: "Curved slashing blade.", preferredStyles: [FightingStyle.SlashingAttack, FightingStyle.StrikingAttack] },
-  { id: "mace",         code: "MA", name: "Mace",           slot: "weapon", weight: 3, description: "Crushing weapon. Reliable and brutal.", preferredStyles: [FightingStyle.BashingAttack], restrictedStyles: [FightingStyle.AimedBlow] },
-  { id: "longsword",    code: "LO", name: "Longsword",      slot: "weapon", weight: 3, description: "Versatile blade, good reach.", preferredStyles: [FightingStyle.ParryStrike, FightingStyle.ParryLunge, FightingStyle.SlashingAttack] },
-  { id: "battle_axe",   code: "BA", name: "Battle Axe",     slot: "weapon", weight: 4, description: "Devastating chopping weapon.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow] },
-  { id: "broadsword",   code: "BS", name: "Broadsword",     slot: "weapon", weight: 4, description: "Standard arena sword. Well-balanced.", preferredStyles: [FightingStyle.ParryStrike, FightingStyle.WallOfSteel, FightingStyle.StrikingAttack] },
-  { id: "medium_shield",code: "ME", name: "Medium Shield",  slot: "weapon", weight: 4, description: "Standard shield. +2 DEF.", preferredStyles: [FightingStyle.TotalParry, FightingStyle.WallOfSteel], restrictedStyles: [FightingStyle.LungingAttack] },
-  { id: "morning_star", code: "MS", name: "Morning Star",   slot: "weapon", weight: 4, description: "Spiked crushing weapon.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.WallOfSteel], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack] },
-  { id: "short_spear",  code: "SS", name: "Short Spear",    slot: "weapon", weight: 4, description: "Thrusting polearm. Good reach.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.StrikingAttack] },
-  { id: "war_flail",    code: "WF", name: "War Flail",      slot: "weapon", weight: 4, description: "Chained striking weapon. Hard to parry.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow] },
-  { id: "large_shield", code: "LG", name: "Large Shield",   slot: "weapon", weight: 6, description: "Tower shield. +3 DEF, -1 ATT.", preferredStyles: [FightingStyle.TotalParry], restrictedStyles: [FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.AimedBlow] },
+  { id: "scimitar",     code: "SC", name: "Scimitar",       slot: "weapon", weight: 3, reqST: 7, reqDF: 11, reqSP: 7, description: "Curved slashing blade.", preferredStyles: [FightingStyle.SlashingAttack, FightingStyle.StrikingAttack] },
+  { id: "mace",         code: "MA", name: "Mace",           slot: "weapon", weight: 3, reqST: 9, reqDF: 3, reqSP: 3, description: "Crushing weapon. Reliable and brutal.", preferredStyles: [FightingStyle.BashingAttack], restrictedStyles: [FightingStyle.AimedBlow] },
+  { id: "longsword",    code: "LO", name: "Longsword",      slot: "weapon", weight: 3, reqST: 9, reqDF: 11, reqSP: 5, description: "Versatile blade, good reach.", preferredStyles: [FightingStyle.ParryStrike, FightingStyle.ParryLunge, FightingStyle.SlashingAttack] },
+  { id: "battle_axe",   code: "BA", name: "Battle Axe",     slot: "weapon", weight: 4, reqST: 11, reqDF: 5, reqSP: 3, description: "Devastating chopping weapon.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow] },
+  { id: "broadsword",   code: "BS", name: "Broadsword",     slot: "weapon", weight: 4, reqST: 9, reqDF: 9, reqSP: 5, description: "Standard arena sword. Well-balanced.", preferredStyles: [FightingStyle.ParryStrike, FightingStyle.WallOfSteel, FightingStyle.StrikingAttack] },
+  { id: "medium_shield",code: "ME", name: "Medium Shield",  slot: "weapon", weight: 4, reqST: 7, reqDF: 3, reqSP: 3, description: "Standard shield. +2 DEF.", preferredStyles: [FightingStyle.TotalParry, FightingStyle.WallOfSteel], restrictedStyles: [FightingStyle.LungingAttack] },
+  { id: "morning_star", code: "MS", name: "Morning Star",   slot: "weapon", weight: 4, reqST: 11, reqDF: 5, reqSP: 3, description: "Spiked crushing weapon.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.WallOfSteel], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack] },
+  { id: "short_spear",  code: "SS", name: "Short Spear",    slot: "weapon", weight: 4, reqST: 7, reqDF: 7, reqSP: 5, description: "Thrusting polearm. Good reach.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.StrikingAttack] },
+  { id: "war_flail",    code: "WF", name: "War Flail",      slot: "weapon", weight: 4, reqST: 11, reqDF: 5, reqSP: 5, description: "Chained striking weapon. Hard to parry.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow] },
+  { id: "large_shield", code: "LG", name: "Large Shield",   slot: "weapon", weight: 6, reqST: 11, reqDF: 3, reqSP: 3, description: "Tower shield. +3 DEF, -1 ATT.", preferredStyles: [FightingStyle.TotalParry], restrictedStyles: [FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.AimedBlow] },
 
-  // Two-handed weapons
-  { id: "quarterstaff", code: "QS", name: "Quarterstaff",   slot: "weapon", weight: 4, twoHanded: true, description: "Balanced staff. Fast two-handed option.", preferredStyles: [FightingStyle.AimedBlow, FightingStyle.ParryStrike, FightingStyle.WallOfSteel] },
-  { id: "great_axe",    code: "GA", name: "Great Axe",      slot: "weapon", weight: 5, twoHanded: true, description: "Massive chopping weapon. No shield.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.TotalParry] },
-  { id: "greatsword",   code: "GS", name: "Greatsword",     slot: "weapon", weight: 6, twoHanded: true, description: "Massive two-handed blade. No shield.", preferredStyles: [FightingStyle.SlashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.TotalParry] },
-  { id: "long_spear",   code: "LS", name: "Long Spear",     slot: "weapon", weight: 6, twoHanded: true, description: "Maximum reach polearm. No shield.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.TotalParry, FightingStyle.ParryRiposte] },
-  { id: "halberd",      code: "HL", name: "Halberd",        slot: "weapon", weight: 8, twoHanded: true, description: "Polearm with devastating reach. No shield.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.TotalParry, FightingStyle.ParryRiposte] },
-  { id: "maul",         code: "ML", name: "Maul",           slot: "weapon", weight: 8, twoHanded: true, description: "Giant war hammer. No shield.", preferredStyles: [FightingStyle.BashingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack, FightingStyle.TotalParry, FightingStyle.ParryRiposte] },
+  // Two-handed weapons — higher requirements
+  { id: "quarterstaff", code: "QS", name: "Quarterstaff",   slot: "weapon", weight: 4, reqST: 7, reqDF: 7, reqSP: 5, twoHanded: true, description: "Balanced staff. Fast two-handed option.", preferredStyles: [FightingStyle.AimedBlow, FightingStyle.ParryStrike, FightingStyle.WallOfSteel] },
+  { id: "great_axe",    code: "GA", name: "Great Axe",      slot: "weapon", weight: 5, reqST: 13, reqDF: 5, reqSP: 3, twoHanded: true, description: "Massive chopping weapon. No shield.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.TotalParry] },
+  { id: "greatsword",   code: "GS", name: "Greatsword",     slot: "weapon", weight: 6, reqST: 13, reqDF: 9, reqSP: 5, twoHanded: true, description: "Massive two-handed blade. No shield.", preferredStyles: [FightingStyle.SlashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.TotalParry] },
+  { id: "long_spear",   code: "LS", name: "Long Spear",     slot: "weapon", weight: 6, reqST: 9, reqDF: 7, reqSP: 7, twoHanded: true, description: "Maximum reach polearm. No shield.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.TotalParry, FightingStyle.ParryRiposte] },
+  { id: "halberd",      code: "HL", name: "Halberd",        slot: "weapon", weight: 8, reqST: 15, reqDF: 7, reqSP: 5, twoHanded: true, description: "Polearm with devastating reach. No shield.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.TotalParry, FightingStyle.ParryRiposte] },
+  { id: "maul",         code: "ML", name: "Maul",           slot: "weapon", weight: 8, reqST: 17, reqDF: 3, reqSP: 3, twoHanded: true, description: "Giant war hammer. No shield.", preferredStyles: [FightingStyle.BashingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack, FightingStyle.TotalParry, FightingStyle.ParryRiposte] },
 ];
 
 // ─── Armor ──────────────────────────────────────────────────────────────────
@@ -127,6 +131,45 @@ export const DEFAULT_LOADOUT: EquipmentLoadout = {
 export function getLoadoutWeight(loadout: EquipmentLoadout): number {
   return [loadout.weapon, loadout.armor, loadout.shield, loadout.helm]
     .reduce((sum, id) => sum + (getItemById(id)?.weight ?? 0), 0);
+}
+
+/** Check weapon stat requirements against warrior attributes. Returns penalty details. */
+export interface WeaponReqCheck {
+  stat: "ST" | "DF" | "SP";
+  label: string;
+  required: number;
+  current: number;
+  deficit: number;
+}
+export interface WeaponReqResult {
+  met: boolean;
+  failures: WeaponReqCheck[];
+  attPenalty: number;        // -2 per failed requirement
+  endurancePenalty: number;  // +10% per failed requirement (as multiplier, e.g. 1.2)
+}
+
+export function checkWeaponRequirements(
+  weaponId: string,
+  attrs: { ST: number; DF: number; SP: number }
+): WeaponReqResult {
+  const item = getItemById(weaponId);
+  if (!item || item.slot !== "weapon") return { met: true, failures: [], attPenalty: 0, endurancePenalty: 1 };
+
+  const checks: WeaponReqCheck[] = [];
+  if (item.reqST && attrs.ST < item.reqST)
+    checks.push({ stat: "ST", label: "Strength", required: item.reqST, current: attrs.ST, deficit: item.reqST - attrs.ST });
+  if (item.reqDF && attrs.DF < item.reqDF)
+    checks.push({ stat: "DF", label: "Deftness", required: item.reqDF, current: attrs.DF, deficit: item.reqDF - attrs.DF });
+  if (item.reqSP && attrs.SP < item.reqSP)
+    checks.push({ stat: "SP", label: "Speed", required: item.reqSP, current: attrs.SP, deficit: item.reqSP - attrs.SP });
+
+  const failCount = checks.length;
+  return {
+    met: failCount === 0,
+    failures: checks,
+    attPenalty: failCount * -2,
+    endurancePenalty: 1 + failCount * 0.1,
+  };
 }
 
 export function isOverEncumbered(loadout: EquipmentLoadout, carryCap: number): boolean {

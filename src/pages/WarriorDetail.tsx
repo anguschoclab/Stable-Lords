@@ -514,6 +514,7 @@ export default function WarriorDetail() {
           loadout={currentLoadout}
           style={warrior.style}
           carryCap={warrior.derivedStats.encumbrance}
+          warriorAttrs={{ ST: warrior.attributes.ST, DF: warrior.attributes.DF, SP: warrior.attributes.SP }}
           onChange={handleEquipmentChange}
         />
       )}

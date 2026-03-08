@@ -730,17 +730,37 @@ export function simulateFight(
           attacker.consecutiveHits++;
           defender.consecutiveHits = 0;
 
-          log.push({
-            minute: min,
-            text: `${name(attacker)} ${pickText(rng, verbs(attacker).attack)} to the ${hitLoc} for ${damage} damage!`,
-          });
+          // Canonical PBP narration: attack + hit + damage severity + state changes
+          log.push({ minute: min, text: narrateAttack(rng, name(attacker), weaponOf(attacker)) });
+          log.push({ minute: min, text: narrateHit(rng, name(defender), hitLoc) });
+
+          const sevLine3 = damageSeverityLine(rng, damage, defender.maxHp);
+          if (sevLine3) log.push({ minute: min, text: sevLine3 });
+
+          // State change narration (desperation, bleeding, etc.)
+          const defHpRatio = defender.hp / defender.maxHp;
+          const prevDefHpRatio = defender.label === "A" ? prevHpRatioA : prevHpRatioD;
+          const stateLine = stateChangeLine(rng, name(defender), defHpRatio, prevDefHpRatio);
+          if (stateLine) log.push({ minute: min, text: stateLine });
+          if (defender.label === "A") prevHpRatioA = defHpRatio;
+          else prevHpRatioD = defHpRatio;
+
+          // Crowd reactions
+          const crowd = crowdReaction(rng, name(defender), name(attacker), defHpRatio);
+          if (crowd) log.push({ minute: min, text: crowd });
+
+          // Taunts (rare)
+          const taunt = tauntLine(rng, name(attacker), true);
+          if (taunt) log.push({ minute: min, text: taunt });
+
+          // Consecutive hits pressing line
+          if (attacker.consecutiveHits >= 3 && rng() < 0.4) {
+            log.push({ minute: min, text: pressingLine(rng, name(attacker)) });
+          }
 
           // Check for significant hit
           if (damage >= 5) {
             if (rng() < 0.5) tags.push("Flashy");
-          }
-          if (hitLoc === "head" && damage >= 4) {
-            log.push({ minute: min, text: `A devastating blow to the head staggers ${name(defender)}!` });
           }
 
           // ── 6. DECISIVENESS CHECK — Style-specific kill mechanics ──

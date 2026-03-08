@@ -452,7 +452,34 @@ export default function RunRound() {
     );
   };
 
-  const activeRivalries = (state.rivalries || []).filter(r => r.intensity > 0);
+  const startAutosim = useCallback(async (weeks: number) => {
+    if (autosimming || running) return;
+    setAutosimming(true);
+    setAutosimResult(null);
+    setResults([]);
+    setAutosimProgress({ current: 0, total: weeks });
+
+    const result = await runAutosim(state, weeks, (current, total, summary) => {
+      setAutosimProgress({ current, total, lastSummary: summary });
+    });
+
+    setState(result.finalState);
+    setAutosimResult(result);
+    setAutosimming(false);
+    setAutosimProgress(null);
+
+    const stopEmoji: Record<string, string> = {
+      death: "💀",
+      player_death: "☠️",
+      injury: "🩹",
+      rivalry_escalation: "🔥",
+      tournament_week: "🏆",
+      max_weeks: "✅",
+      no_pairings: "⚠️",
+    };
+    toast(`${stopEmoji[result.stopReason] ?? "⏹"} Autosim stopped after ${result.weeksSimmed} week(s): ${result.stopDetail}`);
+  }, [autosimming, running, state, setState]);
+
 
   return (
     <div className="space-y-6">

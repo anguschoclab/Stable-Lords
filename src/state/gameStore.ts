@@ -107,6 +107,8 @@ export function loadGameState(): GameState {
         if (!parsed.ledger) parsed.ledger = [];
         if (parsed.ftueComplete === undefined) parsed.ftueComplete = true;
         if (!parsed.coachDismissed) parsed.coachDismissed = [];
+        if (!parsed.rivals) parsed.rivals = [];
+        if (!parsed.scoutReports) parsed.scoutReports = [];
         // Ensure all warriors have status
         parsed.roster = (parsed.roster || []).map((w: any) => ({
           ...w,

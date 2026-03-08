@@ -12,6 +12,7 @@ import { Trophy, Swords, Skull, Sparkles, ScrollText, Zap } from "lucide-react";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { WarriorLink } from "@/components/EntityLink";
 
 export const HallOfFights: React.FC = () => {
   const { state } = useGame();

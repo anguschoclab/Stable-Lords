@@ -146,6 +146,27 @@ function computeStreaks(allFights: FightSummary[]): Map<string, number> {
   return streaks;
 }
 
+/** Detect if any fight this week involves warriors who have faced each other 3+ times */
+function detectRivalryMatchup(
+  weekFights: FightSummary[],
+  allFights: FightSummary[]
+): { a: string; b: string; count: number } | null {
+  const pairCounts = new Map<string, number>();
+  for (const f of allFights) {
+    const key = [f.a, f.d].sort().join("||");
+    pairCounts.set(key, (pairCounts.get(key) ?? 0) + 1);
+  }
+  let best: { a: string; b: string; count: number } | null = null;
+  for (const f of weekFights) {
+    const key = [f.a, f.d].sort().join("||");
+    const count = pairCounts.get(key) ?? 0;
+    if (count >= 3 && (!best || count > best.count)) {
+      best = { a: f.a, b: f.d, count };
+    }
+  }
+  return best;
+}
+
 export function generateWeeklyGazette(
   fights: FightSummary[],
   mood: CrowdMoodType,

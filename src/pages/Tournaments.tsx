@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useGame } from "@/state/GameContext";
 import { simulateFight, defaultPlanForWarrior, fameFromTags } from "@/engine";
 import { killWarrior } from "@/state/gameStore";
+import { StyleMeter } from "@/metrics/StyleMeter";
 import type { TournamentEntry, TournamentBout, FightSummary } from "@/types/game";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

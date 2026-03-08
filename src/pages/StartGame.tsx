@@ -1,0 +1,279 @@
+/**
+ * Stable Lords — Start Game Page (Title Screen)
+ * New Game → name stable → Orphanage | Continue | Load | Delete saves
+ */
+import React, { useState, useCallback, useMemo } from "react";
+import { useGame } from "@/state/GameContext";
+import { createFreshState } from "@/state/gameStore";
+import {
+  listSaveSlots,
+  loadFromSlot,
+  deleteSlot,
+  saveToSlot,
+  newSlotId,
+  MAX_SAVE_SLOTS,
+  type SaveSlotMeta,
+} from "@/state/saveSlots";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Swords,
+  Plus,
+  Play,
+  Trash2,
+  ArrowRight,
+  ArrowLeft,
+  Shield,
+  Clock,
+  Users,
+  Flame,
+} from "lucide-react";
+
+type Screen = "title" | "newGame";
+
+export default function StartGame() {
+  const { setState } = useGame();
+  const [screen, setScreen] = useState<Screen>("title");
+  const [slots, setSlots] = useState<SaveSlotMeta[]>(() => listSaveSlots());
+  const [deleteTarget, setDeleteTarget] = useState<SaveSlotMeta | null>(null);
+
+  // ── New Game fields ──────────────────────────────────────────────────────
+  const [ownerName, setOwnerName] = useState("");
+  const [stableName, setStableName] = useState("");
+  const canCreate = ownerName.trim().length >= 2 && stableName.trim().length >= 2;
+
+  const refreshSlots = useCallback(() => setSlots(listSaveSlots()), []);
+
+  // ── Continue: load the most recent save ──────────────────────────────────
+  const mostRecent = useMemo(
+    () => (slots.length > 0 ? [...slots].sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime())[0] : null),
+    [slots]
+  );
+
+  const loadSlot = useCallback(
+    (slotId: string) => {
+      const state = loadFromSlot(slotId);
+      if (state) setState(state);
+    },
+    [setState]
+  );
+
+  const handleDelete = useCallback(() => {
+    if (!deleteTarget) return;
+    deleteSlot(deleteTarget.slotId);
+    refreshSlots();
+    setDeleteTarget(null);
+  }, [deleteTarget, refreshSlots]);
+
+  const handleNewGame = useCallback(() => {
+    const fresh = createFreshState();
+    fresh.player.name = ownerName.trim();
+    fresh.player.stableName = stableName.trim();
+    const slotId = newSlotId();
+    saveToSlot(slotId, fresh);
+    setState(fresh);
+  }, [ownerName, stableName, setState]);
+
+  const formatDate = (iso: string) => {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    } catch { return iso; }
+  };
+
+  // ── New Game Screen ──────────────────────────────────────────────────────
+  if (screen === "newGame") {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="w-full max-w-lg space-y-6">
+          <Button variant="ghost" size="sm" onClick={() => setScreen("title")} className="gap-1.5 text-muted-foreground">
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Button>
+
+          <Card className="border-primary/30">
+            <CardContent className="p-8 space-y-6">
+              <div className="text-center space-y-2">
+                <Swords className="h-10 w-10 mx-auto text-primary" />
+                <h2 className="text-2xl font-display font-bold">Forge Your Stable</h2>
+                <p className="text-muted-foreground text-sm">
+                  The orphanage doors creak open. Beyond them lies the roar of the crowd, the clash of steel,
+                  and a chance to forge legends.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Your Name</label>
+                  <Input
+                    placeholder="Enter your name"
+                    value={ownerName}
+                    onChange={(e) => setOwnerName(e.target.value)}
+                    maxLength={24}
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium">Stable Name</label>
+                  <Input
+                    placeholder="e.g. The Iron Wolves, House of Blades"
+                    value={stableName}
+                    onChange={(e) => setStableName(e.target.value)}
+                    maxLength={30}
+                  />
+                </div>
+              </div>
+
+              <Button onClick={handleNewGame} disabled={!canCreate} className="w-full gap-2" size="lg">
+                Enter the Orphanage <ArrowRight className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Title Screen ─────────────────────────────────────────────────────────
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-lg space-y-8">
+        {/* Logo / Title */}
+        <div className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <Swords className="h-10 w-10 text-accent" />
+          </div>
+          <h1 className="text-5xl font-display font-bold tracking-wide text-foreground">
+            Stable Lords
+          </h1>
+          <p className="text-muted-foreground text-sm max-w-xs mx-auto">
+            Build a stable. Train warriors. Fight for glory. Forge legends in the arena.
+          </p>
+        </div>
+
+        {/* Actions */}
+        <div className="space-y-3">
+          {/* Continue — most recent save */}
+          {mostRecent && mostRecent.ftueComplete && (
+            <Button
+              onClick={() => loadSlot(mostRecent.slotId)}
+              className="w-full gap-2 h-14 text-base"
+              size="lg"
+            >
+              <Play className="h-5 w-5" />
+              Continue — {mostRecent.stableName}
+            </Button>
+          )}
+
+          {/* New Game */}
+          <Button
+            onClick={() => setScreen("newGame")}
+            variant={mostRecent ? "outline" : "default"}
+            className={`w-full gap-2 ${mostRecent ? "h-12" : "h-14 text-base"}`}
+            size="lg"
+            disabled={slots.length >= MAX_SAVE_SLOTS}
+          >
+            <Plus className="h-5 w-5" />
+            New Game
+            {slots.length >= MAX_SAVE_SLOTS && (
+              <span className="text-xs text-muted-foreground ml-2">(Max {MAX_SAVE_SLOTS} saves)</span>
+            )}
+          </Button>
+        </div>
+
+        {/* Save Slots */}
+        {slots.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              Saved Games
+            </h3>
+            {slots
+              .sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime())
+              .map((slot) => (
+                <Card
+                  key={slot.slotId}
+                  className="cursor-pointer transition-all hover:border-primary/40"
+                  onClick={() => loadSlot(slot.slotId)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1 flex-1">
+                        <div className="flex items-center gap-2">
+                          <Shield className="h-4 w-4 text-accent" />
+                          <span className="font-display font-bold">{slot.stableName}</span>
+                          {!slot.ftueComplete && (
+                            <Badge variant="secondary" className="text-[10px]">New</Badge>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Users className="h-3 w-3" /> {slot.rosterSize} warriors
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Flame className="h-3 w-3" /> {slot.fame} fame
+                          </span>
+                          <span>Wk {slot.week} · {slot.season}</span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" /> {formatDate(slot.savedAt)}
+                          </span>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground hover:text-destructive shrink-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeleteTarget(slot);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+          </div>
+        )}
+
+        {/* Footer */}
+        <p className="text-center text-xs text-muted-foreground">
+          Stable Lords v2.0 — Saves stored locally in your browser
+        </p>
+      </div>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-display">Delete Save?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the save for <strong>{deleteTarget?.stableName}</strong> ({deleteTarget?.ownerName}).
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Save
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}

@@ -68,6 +68,7 @@ function GameRoutes() {
         <Route path="/training-planner" element={<TrainingPlanner />} />
         <Route path="/seasonal-awards" element={<SeasonalAwards />} />
         <Route path="/tournament-awards" element={<TournamentAwards />} />
+        <Route path="/style-guide" element={<StyleGuide />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AppShell>

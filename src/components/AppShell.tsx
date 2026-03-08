@@ -42,6 +42,7 @@ const navItems = [
   { to: "/tournament-awards", label: "Tourney Awards", icon: Trophy },
   { to: "/hall-of-fame", label: "Hall of Fame", icon: Crown },
   { to: "/graveyard", label: "Hall of Warriors", icon: Skull },
+  { to: "/style-guide", label: "Style Guide", icon: BookOpen },
   { to: "/help", label: "Help", icon: HelpCircle },
 ];
 

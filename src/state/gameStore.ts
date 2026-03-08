@@ -123,9 +123,9 @@ export function saveGameState(state: GameState): void {
 
 export function resetGameState(): GameState {
   localStorage.removeItem(SAVE_KEY);
-  const demo = createDemoState();
-  saveGameState(demo);
-  return demo;
+  const fresh = createFreshState();
+  saveGameState(fresh);
+  return fresh;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

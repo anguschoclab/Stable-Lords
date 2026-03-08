@@ -279,60 +279,20 @@ export default function RunRound() {
       )}
 
       {results.length > 0 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <h2 className="text-lg font-display font-semibold">Results — Week {state.week - 1}</h2>
           {results.map((r, i) => (
-            <Card key={i} className="overflow-hidden">
-              <CardContent className="p-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Swords className="h-5 w-5 text-arena-gold shrink-0" />
-                    <span className="font-display font-semibold">{r.a.name}</span>
-                    <Badge variant="outline" className="text-xs hidden sm:inline-flex">
-                      {STYLE_DISPLAY_NAMES[r.a.style]}
-                    </Badge>
-                    <span className="text-muted-foreground">vs</span>
-                    <span className="font-display font-semibold">{r.d.name}</span>
-                    <Badge variant="outline" className="text-xs hidden sm:inline-flex">
-                      {STYLE_DISPLAY_NAMES[r.d.style]}
-                    </Badge>
-                  </div>
-                  <Badge
-                    variant={r.outcome.winner ? "default" : "secondary"}
-                    className={cn(
-                      "shrink-0 self-start sm:self-auto",
-                      r.outcome.by === "Kill"
-                        ? "bg-arena-blood text-white gap-1"
-                        : r.outcome.by === "KO"
-                        ? "bg-arena-gold text-black"
-                        : ""
-                    )}
-                  >
-                    {r.outcome.by === "Kill" && <Skull className="h-3 w-3" />}
-                    {r.outcome.winner
-                      ? `${r.outcome.winner === "A" ? r.a.name : r.d.name} — ${r.outcome.by}`
-                      : "Draw"}
-                  </Badge>
-                </div>
-
-                {/* Announcer commentary */}
-                {r.announcement && (
-                  <div className="flex items-start gap-2 mb-3 p-2.5 rounded-md bg-secondary/50 border border-border">
-                    <Megaphone className="h-4 w-4 text-arena-gold mt-0.5 shrink-0" />
-                    <p className="text-sm italic text-foreground/80">{r.announcement}</p>
-                  </div>
-                )}
-
-                <div className="space-y-1 text-sm text-muted-foreground border-l-2 border-primary/20 pl-3">
-                  {r.outcome.log.map((e, j) => (
-                    <p key={j}>
-                      <span className="text-xs text-muted-foreground/60 mr-2">Min {e.minute}</span>
-                      {e.text}
-                    </p>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <BoutViewer
+              key={i}
+              nameA={r.a.name}
+              nameD={r.d.name}
+              styleA={r.a.style}
+              styleD={r.d.style}
+              log={r.outcome.log}
+              winner={r.outcome.winner}
+              by={r.outcome.by}
+              announcement={r.announcement}
+            />
           ))}
         </div>
       )}

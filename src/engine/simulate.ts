@@ -476,9 +476,9 @@ export function simulateFight(
       }
     }
 
-    // ── 2. ATTACK ATTEMPT (ATT) ──
+    // ── 2. ATTACK ATTEMPT (ATT) — includes offensive tactic bonus ──
     const attOEmod = oeAttMod(attOE);
-    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat);
+    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus);
 
     if (!attackSuccess) {
       // Attack whiffs

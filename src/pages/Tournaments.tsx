@@ -3,6 +3,10 @@ import { useGame } from "@/state/GameContext";
 import { simulateFight, defaultPlanForWarrior, fameFromTags } from "@/engine";
 import { killWarrior } from "@/state/gameStore";
 import { StyleMeter } from "@/metrics/StyleMeter";
+import { ArenaHistory } from "@/engine/history/arenaHistory";
+import { LoreArchive } from "@/lore/LoreArchive";
+import { NewsletterFeed } from "@/engine/newsletter/feed";
+import { StyleRollups } from "@/engine/stats/styleRollups";
 import type { TournamentEntry, TournamentBout, FightSummary } from "@/types/game";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -135,6 +139,12 @@ export default function Tournaments() {
       };
       updatedState.arenaHistory = [...updatedState.arenaHistory, summary];
 
+      // Write to localStorage archives so Gazette/Chronicle can see tournament fights
+      ArenaHistory.append(summary);
+      LoreArchive.signalFight(summary);
+      StyleRollups.addFight({ week: state.week, styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by });
+      NewsletterFeed.appendFightResult({ summary, transcript: outcome.log.map((e) => e.text) });
+
       // Track metrics
       StyleMeter.recordFight({ styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by, isTournament: currentTournament.id });
 
@@ -230,6 +240,28 @@ export default function Tournaments() {
           : w
       );
       toast.success(`🏆 ${champion} wins the ${updatedTournament.name}!`);
+
+      // Mark fight of tournament & close newsletter
+      const tourneyFights = updatedState.arenaHistory.filter(f => f.tournamentId === currentTournament.id);
+      if (tourneyFights.length > 0) {
+        const best = tourneyFights.reduce((a, b) => {
+          const sa = (b.flashyTags?.length ?? 0) + (b.by === "Kill" ? 3 : b.by === "KO" ? 2 : 0);
+          const sb = (a.flashyTags?.length ?? 0) + (a.by === "Kill" ? 3 : a.by === "KO" ? 2 : 0);
+          return sa > sb ? b : a;
+        });
+        LoreArchive.markFightOfTournament(state.week, best.id);
+      }
+
+      // Add tournament summary to newsletter
+      updatedState.newsletter = [...updatedState.newsletter, {
+        week: state.week,
+        title: `${updatedTournament.name} Results`,
+        items: [
+          `🏆 ${champion} is crowned champion of the ${updatedTournament.name}!`,
+          `${tourneyFights.length} bouts fought across ${currentRound} rounds.`,
+          ...tourneyFights.filter(f => f.by === "Kill").map(f => `☠️ ${f.winner === "A" ? f.a : f.d} slew ${f.winner === "A" ? f.d : f.a} during the tournament.`),
+        ],
+      }];
     } else {
       toast.success(`Round ${currentRound} complete! ${winners.length} advance.`);
     }

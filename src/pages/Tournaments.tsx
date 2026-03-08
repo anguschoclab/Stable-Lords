@@ -279,10 +279,10 @@ export default function Tournaments() {
                       {bouts.map((bout, i) => (
                         <div
                           key={i}
-                          className="flex items-center justify-between py-2 px-3 rounded-lg bg-secondary/50 border border-border"
+                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 py-2 px-3 rounded-lg bg-secondary/50 border border-border"
                         >
-                          <div className="flex items-center gap-2">
-                            <Swords className="h-4 w-4 text-arena-gold" />
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <Swords className="h-4 w-4 text-arena-gold shrink-0" />
                             <span className={`font-medium text-sm ${bout.winner === "A" ? "text-arena-gold" : ""}`}>
                               {bout.a}
                             </span>

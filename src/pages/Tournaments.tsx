@@ -226,6 +226,8 @@ export default function Tournaments() {
     setState(updatedState);
   }, [currentTournament, state, setState]);
 
+  const [expandedBout, setExpandedBout] = useState<string | null>(null);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

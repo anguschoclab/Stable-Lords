@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield, Armchair } from "lucide-react";
 import PlanBuilder from "@/components/PlanBuilder";
+import EquipmentLoadoutUI from "@/components/EquipmentLoadout";
 import { defaultPlanForWarrior } from "@/engine/simulate";
 import { DAMAGE_LABELS } from "@/engine/skillCalc";
 import { retireWarrior } from "@/state/gameStore";
+import { DEFAULT_LOADOUT, type EquipmentLoadout } from "@/data/equipment";
 import { toast } from "sonner";
 
 function AttrBar({ label, value, max = 25 }: { label: string; value: number; max?: number }) {
@@ -64,7 +66,19 @@ export default function WarriorDetail() {
     navigate("/");
   }, [warrior, state, setState, navigate]);
 
+  const handleEquipmentChange = useCallback(
+    (newLoadout: EquipmentLoadout) => {
+      if (!warrior) return;
+      const nextRoster = state.roster.map((w) =>
+        w.id === warrior.id ? { ...w, equipment: newLoadout } : w
+      );
+      setState({ ...state, roster: nextRoster });
+    },
+    [warrior, state, setState]
+  );
+
   const currentPlan = warrior?.plan ?? (warrior ? defaultPlanForWarrior(warrior) : undefined);
+  const currentLoadout = warrior?.equipment ?? DEFAULT_LOADOUT;
 
   if (!warrior) {
     return (
@@ -218,6 +232,16 @@ export default function WarriorDetail() {
           plan={currentPlan}
           onPlanChange={handlePlanChange}
           warriorName={warrior.name}
+        />
+      )}
+
+      {/* Equipment Loadout */}
+      {warrior.derivedStats && (
+        <EquipmentLoadoutUI
+          loadout={currentLoadout}
+          style={warrior.style}
+          carryCap={warrior.derivedStats.encumbrance}
+          onChange={handleEquipmentChange}
         />
       )}
 

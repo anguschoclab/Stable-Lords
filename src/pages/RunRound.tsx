@@ -219,7 +219,7 @@ export default function RunRound() {
 
     updatedState.newsletter = [
       ...updatedState.newsletter,
-      { week: state.week, title: "Arena Chronicle", items: highlights },
+      { week: state.week, title: "Arena Gazette", items: highlights },
     ];
 
     // Advance week

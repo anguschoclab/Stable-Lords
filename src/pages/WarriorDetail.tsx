@@ -260,58 +260,7 @@ export default function WarriorDetail() {
 
       {/* History Tab */}
       {activeTab === "history" && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg flex items-center gap-2">
-              <Swords className="h-5 w-5 text-arena-gold" /> Fight History
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {state.arenaHistory.filter(
-              (f) => f.a === warrior.name || f.d === warrior.name
-            ).length === 0 ? (
-              <p className="text-sm text-muted-foreground">No recorded bouts yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {state.arenaHistory
-                  .filter((f) => f.a === warrior.name || f.d === warrior.name)
-                  .slice(-10)
-                  .reverse()
-                  .map((f) => {
-                    const isA = f.a === warrior.name;
-                    const won =
-                      (isA && f.winner === "A") || (!isA && f.winner === "D");
-                    return (
-                      <div
-                        key={f.id}
-                        className="flex items-center justify-between py-2 border-b border-border last:border-0"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant={won ? "default" : f.winner ? "destructive" : "secondary"}
-                            className="text-xs w-8 justify-center"
-                          >
-                            {won ? "W" : f.winner ? "L" : "D"}
-                          </Badge>
-                          <span className="text-sm">
-                            vs <span className="font-medium">{isA ? f.d : f.a}</span>
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {f.by && (
-                            <Badge variant="outline" className="text-xs">
-                              {f.by}
-                            </Badge>
-                          )}
-                          <span className="text-xs text-muted-foreground">Wk {f.week}</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <WarriorFightHistory warriorName={warrior.name} arenaHistory={state.arenaHistory} />
       )}
     </div>
   );

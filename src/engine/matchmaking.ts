@@ -9,9 +9,6 @@ import type {
 import { isTooInjuredToFight, type Injury } from "./injuries";
 import { simulateFight, defaultPlanForWarrior } from "./simulate";
 import { fameFromTags } from "./fame";
-import { computeCrowdMood, getMoodModifiers } from "./crowdMood";
-import { rollForInjury } from "./injuries";
-import { calculateXP, applyXP } from "./progression";
 
 // ─── Eligibility ──────────────────────────────────────────────────────────
 

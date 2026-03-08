@@ -276,6 +276,12 @@ export interface TournamentBout {
   fightId?: string;
 }
 
+/** Training assignment — which attribute a warrior is training this week */
+export interface TrainingAssignment {
+  warriorId: string;
+  attribute: keyof Attributes;
+}
+
 export interface GameState {
   meta: {
     gameName: string;
@@ -300,6 +306,7 @@ export interface GameState {
   tournaments: TournamentEntry[];
   trainers: TrainerData[];
   hiringPool: TrainerData[];
+  trainingAssignments: TrainingAssignment[];
   settings: {
     featureFlags: {
       tournaments: boolean;

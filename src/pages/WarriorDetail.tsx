@@ -253,7 +253,14 @@ export default function WarriorDetail() {
 
   const record = `${warrior.career.wins}W - ${warrior.career.losses}L - ${warrior.career.kills}K`;
 
-  return (
+  // Compute current streak
+  const streakMap = computeStreaks(state.arenaHistory);
+  const streakVal = streakMap.get(warrior.name) ?? 0;
+  const streakLabel = streakVal > 0
+    ? `🔥 ${streakVal}W streak`
+    : streakVal < 0
+    ? `${Math.abs(streakVal)}L streak`
+    : null;
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">

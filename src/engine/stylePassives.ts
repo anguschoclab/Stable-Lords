@@ -25,7 +25,7 @@ const STYLE_TEMPO: Record<FightingStyle, TempoProfile> = {
   [FightingStyle.ParryLunge]:      { opening:  0, mid:  1, late:  0, enduranceMult: 1.00 },
   [FightingStyle.ParryRiposte]:    { opening: -1, mid:  0, late:  1, enduranceMult: 0.95 },
   [FightingStyle.ParryStrike]:     { opening:  0, mid:  0, late:  0, enduranceMult: 0.96 },
-  [FightingStyle.SlashingAttack]:  { opening:  1, mid:  0, late: -1, enduranceMult: 1.04 },
+  [FightingStyle.SlashingAttack]:  { opening:  1, mid:  0, late: -1, enduranceMult: 0.98 },  // SL flurry is efficient
   [FightingStyle.StrikingAttack]:  { opening:  1, mid:  0, late:  0, enduranceMult: 1.02 },
   [FightingStyle.TotalParry]:      { opening: -1, mid:  0, late:  1, enduranceMult: 0.88 },
   [FightingStyle.WallOfSteel]:     { opening:  0, mid:  0, late:  1, enduranceMult: 0.90 },
@@ -123,14 +123,13 @@ export function getStylePassive(
     // Modest ATT bonus when targeting; crit chance is the real payoff
     case FightingStyle.AimedBlow: {
       const targeted = context.targetedLocation && context.targetedLocation !== "Any";
-      // AB vs defensive styles (TP/WS): patient precision — accuracy increases over time
       const vsDefensive = context.opponentStyle === FightingStyle.TotalParry || context.opponentStyle === FightingStyle.WallOfSteel;
       const patientBonus = vsDefensive ? Math.min(2, Math.floor(context.exchange / 3)) : 0;
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        attBonus: scale(targeted ? 1 : 0) + (targeted ? m.bonus : 0) + patientBonus,
-        critChance: targeted ? 0.10 + (context.exchange > 5 ? 0.05 : 0) + (m.bonus * 0.03) + (vsDefensive ? 0.05 : 0) : 0,
+        attBonus: scale(targeted ? 1 : 0) + patientBonus,
+        critChance: targeted ? 0.07 + (context.exchange > 5 ? 0.03 : 0) + (vsDefensive ? 0.03 : 0) : 0, // Reduced from 10%+5%
         narrative: vsDefensive && context.exchange > 4
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}studies the predictable rhythm, each probe finding deeper gaps in the defense`
           : targeted && context.exchange > 5
@@ -190,15 +189,14 @@ export function getStylePassive(
     }
 
     // ── Parry-Riposte: Riposte Specialist ──
-    // RIP bonus after ripostes (capped conservatively — identity is counter, not wall)
+    // BALANCE v5: Removed ripBonus escalation and free parBonus.
+    // PR identity comes from OE paradox + riposte checks, not stacking passives.
     case FightingStyle.ParryRiposte: {
-      const ripEscalation = Math.min(1 + m.bonus, context.ripostes);
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        ripBonus: scale(ripEscalation),
-        // PR OE paradox flavor: low OE grants slight parry boost (counter-ready stance)
-        parBonus: context.endRatio > 0.6 ? 1 : 0,
+        ripBonus: context.ripostes >= 2 ? 1 : 0, // Modest bonus only after landing 2+ ripostes
+        parBonus: 0, // Removed — PR shouldn't get free parry bonuses
         narrative: context.ripostes >= 3
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}has found the rhythm — each counter deadlier than the last!`
           : undefined,
@@ -206,27 +204,29 @@ export function getStylePassive(
     }
 
     // ── Parry-Strike: Efficient Counter ──
-    // Small consistent PAR + ATT
+    // BALANCE v5: Reduced from parBonus 1+mastery to just 1. No free ATT bonus.
     case FightingStyle.ParryStrike:
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        parBonus: 1 + m.bonus,
-        attBonus: scale(1),
+        parBonus: 1,
+        attBonus: context.hitsTaken > context.hitsLanded ? 1 : 0, // Only when behind (counter identity)
       };
 
     // ── Slashing Attack: Flurry ──
-    // Bonus ATT in opening/mid, fades in late
-    case FightingStyle.SlashingAttack:
+    // BALANCE v5: Multi-hit identity — ATT persists into late (reduced), DMG scales with hits landed
+    case FightingStyle.SlashingAttack: {
+      const flurryDmg = Math.min(2, Math.floor(context.hitsLanded / 2)); // +1 DMG per 2 hits
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        attBonus: scale(context.phase !== "LATE" ? 1 : 0) + (context.phase === "OPENING" ? m.bonus : 0),
-        dmgBonus: context.phase === "OPENING" ? 1 : 0,
-        narrative: context.phase === "OPENING" && context.hitsLanded >= 2
-          ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}unleashes a whirlwind of slashes!`
+        attBonus: scale(context.phase === "LATE" ? 0 : 1) + (context.phase === "OPENING" ? m.bonus : 0),
+        dmgBonus: (context.phase === "OPENING" ? 1 : 0) + flurryDmg,
+        narrative: context.hitsLanded >= 3
+          ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}unleashes a whirlwind of slashes, each cut deeper than the last!`
           : undefined,
       };
+    }
 
     // ── Striking Attack: Reliable Power ──
     // Consistent ATT bonus, dmg vs hurt opponents

@@ -53,16 +53,16 @@ const STYLE_ORDER = [
 // - BA loses to precision/counter styles (AB, PR — can read the charges)
 const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
-  [ 0, +1,  0,  0, -1,  0, +1,  0, +2,  0], // AB: precision destroys TP (endurance+accuracy), beats BA/SL
-  [-1,  0, -1,  0,  0, -1, +1, +1, +2, +1], // BA: hard-counters TP (bash through parry), beats SL/ST/WS
-  [ 0, +1,  0, +1,  0, -1, +1,  0, +1, -1], // LU: aggression beats TP, speed beats BA/PL/SL
-  [ 0,  0, -1,  0, +1,  0,  0, -1, -1,  0], // PL: patience beats PR, but TP outlasts PL
-  [+1,  0,  0, -1,  0, +1, +1, -1, -1,  0], // PR: counter beats AB/PS/SL, TP outlasts PR
-  [ 0, +1, +1,  0, -1,  0, +1, -1,  0, -1], // PS: beats BA/LU/SL, loses to PR/ST/WS
-  [-1, -1, -1,  0, -1, -1,  0, +1, +1, +1], // SL: aggression beats TP/ST/WS, risky vs parry styles
-  [ 0, -1,  0, +1, +1, +1, -1,  0,  0, -1], // ST: efficient, beats PL/PR/PS, neutral vs TP
-  [-2, -2, -1, +1, +1,  0, -1,  0,  0, +1], // TP: crushed by BA/AB, outlasts PL/PR, loses to aggression
-  [ 0, -1, +1,  0,  0, +1, -1, +1, -1,  0], // WS: zone control, loses to BA/TP
+  [ 0, +1,  0,  0, -1,  0,  0,  0, +2,  0], // AB: precision destroys TP, edge vs BA
+  [-1,  0,  0,  0,  0,  0, +1,  0, +2, +1], // BA: hard-counters TP, beats SL/WS
+  [ 0,  0,  0, +1,  0, -1,  0,  0, +1, -1], // LU: speed beats PL, weak vs PS/WS
+  [ 0,  0, -1,  0, +1,  0,  0, -1, -1,  0], // PL: beats PR, weak vs ST/TP
+  [+1,  0,  0, -1,  0,  0,  0, -1, -1,  0], // PR: counter beats AB, weak vs PL/ST/TP
+  [ 0,  0, +1,  0,  0,  0, +1, -1,  0, -1], // PS: beats LU/SL, loses to ST/WS
+  [ 0, -1,  0,  0,  0, -1,  0,  0, +1, +1], // SL: flurry beats TP/WS, weak vs BA/PS
+  [ 0,  0,  0, +1, +1, +1,  0,  0,  0,  0], // ST: efficient power, beats PL/PR/PS
+  [-2, -2, -1, +1, +1,  0, -1,  0,  0, +1], // TP: crushed by BA/AB, outlasts PL/PR
+  [ 0, -1, +1,  0,  0, +1, -1,  0, -1,  0], // WS: zone control, beats LU/PS, loses to BA/TP
 ];
 
 function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): number {
@@ -235,34 +235,29 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
 }
 
 // ─── OE/AL Effects ────────────────────────────────────────────────────────
-// BALANCE: Global offense/defense tuning constants.
-// The combat chain (ATT→PAR→DEF→DMG) inherently favors defense because
-// defenders get TWO independent checks (PAR then DEF). These constants
-// compensate so aggressive styles remain viable.
-const GLOBAL_ATT_BONUS = 5;   // All attacks get +5 to ensure hits land frequently
-const GLOBAL_PAR_PENALTY = -3; // Parry harder to reward aggression
+// BALANCE v5: Increased ATT bonus, steeper PAR penalty.
+// Offense needs to land consistently; defense should rely on endurance/counters.
+const GLOBAL_ATT_BONUS = 6;    // All attacks get +6 to ensure hits land frequently
+const GLOBAL_PAR_PENALTY = -4; // Parry harder — defense identity is endurance, not blocking
 
 function oeAttMod(oe: number, style?: FightingStyle): number {
-  // PR OE Paradox: PR attacks MORE at low OE via counterstrikes (compendium §PR)
+  // PR OE Paradox: PR is NOT penalized at low OE but doesn't get a bonus either
   if (style === FightingStyle.ParryRiposte) {
-    if (oe <= 3) return 1;   // Low OE: +1 ATT from counter-focus
-    if (oe <= 5) return 0;   // Mid: neutral
-    if (oe <= 7) return -1;  // High OE: loses counter identity
-    return -2;               // Very high OE: completely wrong for PR
+    if (oe <= 5) return 0;   // Low-mid OE: no penalty (counter stance)
+    return -1;               // High OE: loses counter identity
   }
-  // AB OE rule: AB doesn't get penalized for low OE (patience is a feature, not a bug)
-  // but doesn't get a BONUS either — the advantage comes from endurance conservation
+  // AB: patience is a feature — no penalty at low OE
   if (style === FightingStyle.AimedBlow) {
-    if (oe <= 5) return 0;   // Low-mid OE: no penalty (patience)
-    return -1;               // High OE: rushing undermines precision
+    if (oe <= 5) return 0;
+    return -1;
   }
   return Math.floor((oe - 5) * 0.8);
 }
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * 0.5); }
 function alIniMod(al: number): number { return Math.floor((al - 5) * 0.6); }
 function enduranceCost(oe: number, al: number): number {
-  // BALANCE v2: Reduced from (oe*0.6 + al*0.4) to prevent offensive styles collapsing
-  return Math.max(1, Math.round((oe * 0.35 + al * 0.25)));
+  // BALANCE v5: Slightly increased base cost so low-OE fighters can't stall forever
+  return Math.max(2, Math.round((oe * 0.35 + al * 0.25) + 1));
 }
 
 // ─── Fatigue Penalties ────────────────────────────────────────────────────
@@ -613,10 +608,10 @@ export function simulateFight(
       // ── Endurance cost for attempt ──
       attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attOE, attAL) * 0.5)) + attOffMods.endCost;
 
-      // Defender may riposte on whiff — harder than after parry (off-tempo)
-      // ── 4. RIPOSTE CHECK — with passive RIP ──
+      // Defender may riposte on whiff — HARD check (off-tempo, attacker recovering)
+      // BALANCE v5: Increased penalty from -3 to -6 to reduce free counter-damage
       const defAntiSynRip = Math.round((defAntiSyn.defMult - 1) * 3);
-      const ripCheck = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 3 + defDefMods.ripBonus + defPassive.ripBonus + defAntiSynRip);
+      const ripCheck = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 6 + defDefMods.ripBonus + defPassive.ripBonus + defAntiSynRip);
       if (ripCheck) {
         const ripLoc = rollHitLocation(rng, defTactics.target, attacker.plan.protect);
         const ripDmgRaw = computeHitDamage(rng, defender.derived.damage + defPassive.dmgBonus, ripLoc);
@@ -678,8 +673,9 @@ export function simulateFight(
       }
 
       if (defended && canRiposte) {
-        // Parry succeeds — defender may riposte
-        const ripAfterParry = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 4 + defDefMods.ripBonus + defPassive.ripBonus);
+        // Parry succeeds — defender may riposte (harder check than before)
+        // BALANCE v5: Penalty from -4 to -5 to reduce counter-damage frequency
+        const ripAfterParry = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 5 + defDefMods.ripBonus + defPassive.ripBonus);
         if (ripAfterParry) {
           const ripLoc = rollHitLocation(rng, defTactics.target, attacker.plan.protect);
           const ripDmgRaw = computeHitDamage(rng, defender.derived.damage + defPassive.dmgBonus, ripLoc);
@@ -786,14 +782,13 @@ export function simulateFight(
     }
 
     // ── 7. ENDURANCE & FATIGUE — with style-specific drain rates ──
-    // BALANCE v3: Defender discount reduced from 0.6 to 0.85. The old 60% discount
-    // meant TP/WS barely drained endurance while attackers exhausted themselves.
-    // Taking hits also costs endurance (damage tax) — being hit is tiring.
+    // BALANCE v5: Defender discount reduced from 0.85 to 0.92 (defense is still cheaper but not free).
+    // Damage tax increased: taking hits is exhausting regardless of style.
     const attEndMult = getEnduranceMult(attacker.style);
     const defEndMult = getEnduranceMult(defender.style);
-    const defDamageTax = defender.hitsTaken > 0 ? Math.min(2, Math.floor(defender.hitsTaken / 2)) : 0;
+    const defDamageTax = defender.hitsTaken > 0 ? Math.min(3, Math.floor(defender.hitsTaken * 0.7)) : 0;
     attacker.endurance -= Math.round(enduranceCost(attOE, attAL) * attEndMult);
-    defender.endurance -= Math.max(1, Math.round(enduranceCost(defOE, defAL) * 0.85 * defEndMult) + defDamageTax);
+    defender.endurance -= Math.max(1, Math.round(enduranceCost(defOE, defAL) * 0.92 * defEndMult) + defDamageTax);
 
     // Clamp endurance
     fA.endurance = Math.max(0, fA.endurance);

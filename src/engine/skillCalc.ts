@@ -11,19 +11,19 @@ import { FightingStyle, type Attributes, type BaseSkills, type DerivedStats } fr
 // Each style has base offsets for [ATT, PAR, DEF, INI, RIP, DEC]
 const STYLE_SEEDS: Record<FightingStyle, [number, number, number, number, number, number]> = {
   //                                          ATT PAR DEF INI RIP DEC
-  // BALANCE v4: Further compressed PAR (3 max for non-PS styles).
-  // Offensive ATT boosted to 7 for BA/LU/SL/ST. PR RIP reduced to 3.
-  // TP PAR reduced to 3 (identity is endurance, not impenetrable parry).
-  [FightingStyle.AimedBlow]:       [ 5,  3,  3,  3,  2,  4],  // 20 — precision via crit + patience
-  [FightingStyle.BashingAttack]:   [ 7,  2,  2,  4,  2,  3],  // 20 — highest ATT, lowest PAR (power over finesse)
-  [FightingStyle.LungingAttack]:   [ 7,  2,  3,  5,  2,  3],  // 22 — fast, aggressive, fragile
-  [FightingStyle.ParryLunge]:      [ 4,  3,  3,  3,  3,  3],  // 19 — balanced hybrid
-  [FightingStyle.ParryRiposte]:    [ 3,  3,  3,  3,  3,  2],  // 17 — RIP reduced from 4→3, counter identity via passives not seeds
-  [FightingStyle.ParryStrike]:     [ 4,  4,  3,  3,  3,  3],  // 20 — PS keeps PAR 4 (only style with top parry seed)
-  [FightingStyle.SlashingAttack]:  [ 7,  2,  2,  4,  2,  3],  // 20 — offensive, high ATT
-  [FightingStyle.StrikingAttack]:  [ 7,  2,  2,  4,  2,  3],  // 20 — reliable power
-  [FightingStyle.TotalParry]:      [ 2,  3,  4,  2,  3,  2],  // 16 — PAR 3 (was 4), identity is endurance not parry
-  [FightingStyle.WallOfSteel]:     [ 3,  3,  4,  3,  3,  3],  // 19 — DEF+endurance identity
+  // BALANCE v5: Offensive ATT boosted to 8, defensive PAR/DEF compressed to 2-3.
+  // Riposte seeds capped at 2 for counter styles (identity via passives).
+  // Goal: offense lands hits frequently; defense wins via endurance/counters, not blocking everything.
+  [FightingStyle.AimedBlow]:       [ 5,  2,  2,  3,  2,  4],  // 18 — precision via crit, lower ATT
+  [FightingStyle.BashingAttack]:   [ 8,  1,  2,  4,  1,  3],  // 19 — highest ATT, raw power
+  [FightingStyle.LungingAttack]:   [ 8,  1,  2,  5,  1,  3],  // 20 — fast, aggressive
+  [FightingStyle.ParryLunge]:      [ 5,  3,  2,  3,  2,  3],  // 18 — balanced hybrid
+  [FightingStyle.ParryRiposte]:    [ 3,  2,  2,  3,  2,  2],  // 14 — PAR reduced to 2, counter via passives only
+  [FightingStyle.ParryStrike]:     [ 5,  3,  3,  3,  2,  3],  // 19 — efficient counter, PAR 3 (not 4)
+  [FightingStyle.SlashingAttack]:  [ 8,  1,  2,  4,  1,  3],  // 19 — offensive, multi-hit identity
+  [FightingStyle.StrikingAttack]:  [ 8,  2,  2,  4,  1,  3],  // 20 — reliable power
+  [FightingStyle.TotalParry]:      [ 2,  3,  3,  2,  2,  2],  // 14 — DEF 3 (was 4), identity is endurance
+  [FightingStyle.WallOfSteel]:     [ 3,  2,  3,  3,  2,  3],  // 16 — DEF+endurance, moderate parry
 };
 
 // ─── Attribute → Skill Breakpoint Contributions ──────────────────────────

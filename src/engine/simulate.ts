@@ -543,7 +543,7 @@ export function simulateFight(
     // ── 2. ATTACK ATTEMPT — with passive ATT + anti-synergy ──
     const attOEmod = oeAttMod(attOE);
     const attAntiSynMod = Math.round((attAntiSyn.offMult - 1) * 5);
-    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + iniPressBonus);
+    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + iniPressBonus + GLOBAL_ATT_BONUS);
 
     if (!attackSuccess) {
       // Attack whiffs — reset consecutive hits

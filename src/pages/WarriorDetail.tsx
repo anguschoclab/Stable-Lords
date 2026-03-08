@@ -16,6 +16,7 @@ import { retireWarrior } from "@/state/gameStore";
 import { DEFAULT_LOADOUT, type EquipmentLoadout } from "@/data/equipment";
 import { toast } from "sonner";
 import SubNav, { type SubNavTab } from "@/components/SubNav";
+import BoutViewer from "@/components/BoutViewer";
 
 const TABS: SubNavTab[] = [
   { id: "overview", label: "Overview", icon: <User className="h-3.5 w-3.5" /> },
@@ -46,6 +47,79 @@ function SkillBar({ label, value, max = 20 }: { label: string; value: number; ma
         <Progress value={pct} className="h-2" />
       </div>
       <span className="text-sm font-mono font-semibold w-6 text-right">{value}</span>
+    </div>
+  );
+}
+
+function WarriorFightHistory({ warriorName, arenaHistory }: { warriorName: string; arenaHistory: import("@/types/game").FightSummary[] }) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const fights = arenaHistory.filter((f) => f.a === warriorName || f.d === warriorName);
+
+  if (fights.length === 0) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center text-muted-foreground">
+          No recorded bouts yet.
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      <h3 className="font-display text-lg font-semibold flex items-center gap-2">
+        <Swords className="h-5 w-5 text-arena-gold" /> Fight History
+      </h3>
+      {fights.slice(-10).reverse().map((f) => {
+        const isA = f.a === warriorName;
+        const won = (isA && f.winner === "A") || (!isA && f.winner === "D");
+        const isExpanded = expandedId === f.id;
+        const hasTranscript = f.transcript && f.transcript.length > 0;
+
+        return (
+          <div key={f.id}>
+            <button
+              className={`w-full flex items-center justify-between py-2.5 px-3 rounded-lg border transition-colors text-left ${
+                isExpanded ? "border-primary/40 bg-primary/5" : "border-border hover:bg-secondary/50"
+              }`}
+              onClick={() => setExpandedId(isExpanded ? null : f.id)}
+            >
+              <div className="flex items-center gap-2">
+                <Badge
+                  variant={won ? "default" : f.winner ? "destructive" : "secondary"}
+                  className="text-xs w-8 justify-center"
+                >
+                  {won ? "W" : f.winner ? "L" : "D"}
+                </Badge>
+                <span className="text-sm">
+                  vs <span className="font-medium">{isA ? f.d : f.a}</span>
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                {f.by && <Badge variant="outline" className="text-xs">{f.by}</Badge>}
+                <span className="text-xs text-muted-foreground">Wk {f.week}</span>
+                {hasTranscript && (
+                  <span className="text-[10px] text-primary">▶</span>
+                )}
+              </div>
+            </button>
+
+            {isExpanded && hasTranscript && (
+              <div className="mt-2 animate-fade-in">
+                <BoutViewer
+                  nameA={f.a}
+                  nameD={f.d}
+                  styleA={f.styleA}
+                  styleD={f.styleD}
+                  log={f.transcript!.map((text, i) => ({ minute: i + 1, text }))}
+                  winner={f.winner}
+                  by={f.by}
+                />
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -259,58 +333,7 @@ export default function WarriorDetail() {
 
       {/* History Tab */}
       {activeTab === "history" && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg flex items-center gap-2">
-              <Swords className="h-5 w-5 text-arena-gold" /> Fight History
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {state.arenaHistory.filter(
-              (f) => f.a === warrior.name || f.d === warrior.name
-            ).length === 0 ? (
-              <p className="text-sm text-muted-foreground">No recorded bouts yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {state.arenaHistory
-                  .filter((f) => f.a === warrior.name || f.d === warrior.name)
-                  .slice(-10)
-                  .reverse()
-                  .map((f) => {
-                    const isA = f.a === warrior.name;
-                    const won =
-                      (isA && f.winner === "A") || (!isA && f.winner === "D");
-                    return (
-                      <div
-                        key={f.id}
-                        className="flex items-center justify-between py-2 border-b border-border last:border-0"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant={won ? "default" : f.winner ? "destructive" : "secondary"}
-                            className="text-xs w-8 justify-center"
-                          >
-                            {won ? "W" : f.winner ? "L" : "D"}
-                          </Badge>
-                          <span className="text-sm">
-                            vs <span className="font-medium">{isA ? f.d : f.a}</span>
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {f.by && (
-                            <Badge variant="outline" className="text-xs">
-                              {f.by}
-                            </Badge>
-                          )}
-                          <span className="text-xs text-muted-foreground">Wk {f.week}</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <WarriorFightHistory warriorName={warrior.name} arenaHistory={state.arenaHistory} />
       )}
     </div>
   );

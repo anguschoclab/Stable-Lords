@@ -320,6 +320,11 @@ export interface LedgerEntry {
 export interface RivalStableData {
   owner: Owner;
   roster: Warrior[];
+  /** Stable identity metadata */
+  motto?: string;
+  origin?: string;
+  philosophy?: string;
+  tier?: "Minor" | "Established" | "Major" | "Legendary";
 }
 
 export interface ScoutReportData {

@@ -550,9 +550,9 @@ function RivalsWidget() {
                 <div key={r.owner.id} className="flex items-center gap-3 py-1">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-display font-semibold truncate">
+                      <StableLink name={r.owner.stableName} className="text-sm font-display font-semibold truncate">
                         {r.owner.stableName}
-                      </span>
+                      </StableLink>
                       <Badge variant="outline" className="text-[9px] h-4 px-1 shrink-0">
                         {r.owner.personality ?? "Unknown"}
                       </Badge>

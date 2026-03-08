@@ -834,33 +834,28 @@ export function simulateFight(
     if (fA.endurance <= 0 && fD.endurance <= 0 && !winner) {
       winner = fA.hp >= fD.hp ? "A" : fD.hp > fA.hp ? "D" : null;
       by = "Exhaustion";
-      log.push({
-        minute: min,
-        text: winner
-          ? `Both warriors are spent! ${winner === "A" ? nameA : nameD} is awarded the bout on points.`
-          : `Both warriors collapse from exhaustion! The bout is declared a draw.`,
-      });
+      if (winner) {
+        const exLines = narrateBoutEnd(rng, "Exhaustion", winner === "A" ? nameA : nameD, winner === "A" ? nameD : nameA);
+        for (const l of exLines) log.push({ minute: min, text: l });
+      } else {
+        log.push({ minute: min, text: `Both warriors collapse from exhaustion! The bout is declared a draw.` });
+      }
       break;
     }
 
     if (attacker.endurance <= 0 && !winner) {
-      // Stoppage
       winner = defender.label as "A" | "D";
       by = "Stoppage";
-      log.push({
-        minute: min,
-        text: `${name(attacker)} can no longer continue! ${name(defender)} wins by stoppage!`,
-      });
+      const stLines = narrateBoutEnd(rng, "Stoppage", name(defender), name(attacker));
+      for (const l of stLines) log.push({ minute: min, text: l });
       break;
     }
 
     if (defender.endurance <= 0 && !winner) {
       winner = attacker.label as "A" | "D";
       by = "Stoppage";
-      log.push({
-        minute: min,
-        text: `${name(defender)} staggers and cannot continue! ${name(attacker)} wins by stoppage!`,
-      });
+      const stLines = narrateBoutEnd(rng, "Stoppage", name(attacker), name(defender));
+      for (const l of stLines) log.push({ minute: min, text: l });
       break;
     }
 

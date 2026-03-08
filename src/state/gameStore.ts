@@ -247,7 +247,36 @@ export function advanceWeek(state: GameState): GameState {
   // ── Step 9: Tier Progression (on season change) ───────────────────────
   s = processTierProgression(s, newSeason, newWeek);
 
-  // ── Step 10: Clock Advance ────────────────────────────────────────────
+  // ── Step 10: AI Roster Management ─────────────────────────────────────
+  if ((s.rivals || []).length > 0) {
+    const rosterMgmt = processAIRosterManagement(s);
+    s.rivals = rosterMgmt.updatedRivals;
+    if (rosterMgmt.gazetteItems.length > 0) {
+      s.newsletter = [...s.newsletter, { week: s.week, title: "Stable Management", items: rosterMgmt.gazetteItems }];
+    }
+  }
+
+  // ── Step 11: Owner Grudges (personality-driven rivalries) ─────────────
+  const grudgeResult = processOwnerGrudges(s, s.ownerGrudges || []);
+  s.ownerGrudges = grudgeResult.grudges;
+  if (grudgeResult.gazetteItems.length > 0) {
+    s.newsletter = [...s.newsletter, { week: s.week, title: "Owner Feuds", items: grudgeResult.gazetteItems }];
+  }
+
+  // ── Step 12: Owner Narratives (on season change) ──────────────────────
+  const narratives = generateOwnerNarratives(s, newSeason);
+  if (narratives.length > 0) {
+    s.newsletter = [...s.newsletter, { week: s.week, title: `${state.season} Season Review`, items: narratives }];
+  }
+
+  // ── Step 13: Philosophy Evolution (on season change) ──────────────────
+  const philResult = evolvePhilosophies(s, newSeason);
+  s.rivals = philResult.updatedRivals;
+  if (philResult.gazetteItems.length > 0) {
+    s.newsletter = [...s.newsletter, { week: s.week, title: "Strategy Shifts", items: philResult.gazetteItems }];
+  }
+
+  // ── Step 14: Clock Advance ────────────────────────────────────────────
   return {
     ...s,
     week: newWeek,

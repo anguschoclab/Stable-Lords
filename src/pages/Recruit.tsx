@@ -140,6 +140,7 @@ function RecruitCard({
 export default function Recruit() {
   const { state, setState } = useGame();
   const navigate = useNavigate();
+  const MAX_ROSTER = BASE_ROSTER_CAP + (state.rosterBonus ?? 0);
 
   // Gather all used names (roster + graveyard + retired + rivals)
   const usedNames = useMemo(() => {

@@ -92,6 +92,28 @@ export default function StartGame() {
     setState(fresh);
   }, [ownerName, stableName, setState]);
 
+  const handleImport = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const json = ev.target?.result as string;
+        const slotId = importSaveToNewSlot(json);
+        refreshSlots();
+        toast.success("Save imported! Loading now…");
+        // Auto-load the imported save
+        const state = loadFromSlot(slotId);
+        if (state) setState(state);
+      } catch (err: any) {
+        toast.error(err?.message ?? "Failed to import save file.");
+      }
+    };
+    reader.readAsText(file);
+    // Reset input so same file can be re-imported
+    e.target.value = "";
+  }, [setState, refreshSlots]);
+
   const formatDate = (iso: string) => {
     try {
       const d = new Date(iso);

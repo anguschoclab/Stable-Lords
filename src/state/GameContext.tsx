@@ -22,6 +22,8 @@ interface GameContextValue {
   state: GameState;
   /** Whether we're on the title screen (no active game loaded) */
   atTitleScreen: boolean;
+  /** ISO timestamp of last auto-save */
+  lastSavedAt: string | null;
   setState: (next: GameState) => void;
   doAdvanceWeek: () => void;
   doAppendFight: (summary: FightSummary) => void;

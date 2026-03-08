@@ -28,6 +28,8 @@ export interface StableTemplate {
   rosterRange: [number, number];
   tier: "Minor" | "Established" | "Major" | "Legendary";
   trainerRange: [number, number];
+  /** How this owner reacts to meta shifts */
+  metaAdaptation: MetaAdaptation;
 }
 
 // ─── 24 Stable Templates ─────────────────────────────────────────────────

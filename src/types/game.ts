@@ -200,7 +200,7 @@ export const INJURY_SEVERITY_WEEKS: Record<InjurySeverity, { min: number; max: n
 };
 
 /** Body locations that can sustain injuries */
-export type InjuryLocation = "Head" | "Chest" | "Abdomen" | "Arms" | "Legs" | "General";
+export type InjuryLocation = "Head" | "Chest" | "Abdomen" | "Right Arm" | "Left Arm" | "Right Leg" | "Left Leg" | "General";
 
 export interface InjuryData {
   id: string;

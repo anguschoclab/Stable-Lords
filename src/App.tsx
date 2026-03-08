@@ -10,6 +10,7 @@ import RunRound from "@/pages/RunRound";
 import Tournaments from "@/pages/Tournaments";
 import Help from "@/pages/Help";
 import WarriorDetail from "@/pages/WarriorDetail";
+import HallOfFights from "@/lore/HallOfFights";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/tournaments" element={<Tournaments />} />
               <Route path="/help" element={<Help />} />
               <Route path="/warrior/:id" element={<WarriorDetail />} />
+              <Route path="/hall-of-fights" element={<HallOfFights />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppShell>

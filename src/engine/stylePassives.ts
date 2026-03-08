@@ -142,17 +142,16 @@ export function getStylePassive(
     }
 
     // ── Bashing Attack: Momentum ──
-    // Damage ramps with consecutive hits (cap 2 base, +1 mastery)
+    // BALANCE v6: Increased base dmgBonus (+1 always), higher momentum cap, ATT bonus from consecutive hits
     case FightingStyle.BashingAttack: {
-      const momentumDmg = Math.min(2 + m.bonus, context.consecutiveHits);
-      // BA vs TP: "attack through a parry" — static defense can't handle raw force
+      const momentumDmg = Math.min(3 + m.bonus, 1 + context.consecutiveHits);
       const vsTP = context.opponentStyle === FightingStyle.TotalParry;
-      const bashThroughBonus = vsTP ? 2 : 0;  // Flat ATT bonus vs TP
+      const bashThroughBonus = vsTP ? 2 : 0;
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
         dmgBonus: scale(momentumDmg) + (vsTP ? 1 : 0),
-        attBonus: (context.consecutiveHits >= 3 ? 1 : 0) + bashThroughBonus,
+        attBonus: scale(context.consecutiveHits >= 2 ? 2 : 1) + bashThroughBonus, // Always +1 ATT, +2 after momentum
         narrative: vsTP && context.consecutiveHits >= 2
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}hammers through the defensive stance — raw power overwhelms technique!`
           : context.consecutiveHits >= 3

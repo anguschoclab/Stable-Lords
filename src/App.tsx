@@ -22,6 +22,7 @@ import WorldOverview from "@/pages/WorldOverview";
 import StartGame from "@/pages/StartGame";
 import NotFound from "./pages/NotFound";
 import Gazette from "@/pages/Gazette";
+import HallOfFame from "@/pages/HallOfFame";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ function GameRoutes() {
         <Route path="/warrior/:id" element={<WarriorDetail />} />
         <Route path="/hall-of-fights" element={<HallOfFights />} />
         <Route path="/gazette" element={<Gazette />} />
+        <Route path="/hall-of-fame" element={<HallOfFame />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AppShell>

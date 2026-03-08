@@ -17,16 +17,16 @@ export interface TempoProfile {
 }
 
 const STYLE_TEMPO: Record<FightingStyle, TempoProfile> = {
-  [FightingStyle.AimedBlow]:       { opening: -1, mid:  1, late:  2, enduranceMult: 0.85 },
-  [FightingStyle.BashingAttack]:   { opening:  2, mid:  0, late: -2, enduranceMult: 1.25 },
-  [FightingStyle.LungingAttack]:   { opening:  3, mid:  0, late: -3, enduranceMult: 1.30 },
-  [FightingStyle.ParryLunge]:      { opening:  0, mid:  1, late:  1, enduranceMult: 1.00 },
-  [FightingStyle.ParryRiposte]:    { opening: -1, mid:  1, late:  2, enduranceMult: 0.90 },
-  [FightingStyle.ParryStrike]:     { opening:  0, mid:  1, late:  0, enduranceMult: 0.95 },
-  [FightingStyle.SlashingAttack]:  { opening:  2, mid:  1, late: -2, enduranceMult: 1.20 },
-  [FightingStyle.StrikingAttack]:  { opening:  1, mid:  1, late: -1, enduranceMult: 1.10 },
-  [FightingStyle.TotalParry]:      { opening: -2, mid:  0, late:  3, enduranceMult: 0.65 },
-  [FightingStyle.WallOfSteel]:     { opening: -1, mid:  1, late:  2, enduranceMult: 0.75 },
+  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  1, enduranceMult: 0.90 },
+  [FightingStyle.BashingAttack]:   { opening:  1, mid:  0, late: -1, enduranceMult: 1.15 },
+  [FightingStyle.LungingAttack]:   { opening:  2, mid:  0, late: -2, enduranceMult: 1.20 },
+  [FightingStyle.ParryLunge]:      { opening:  0, mid:  1, late:  0, enduranceMult: 1.00 },
+  [FightingStyle.ParryRiposte]:    { opening: -1, mid:  0, late:  1, enduranceMult: 0.95 },
+  [FightingStyle.ParryStrike]:     { opening:  0, mid:  0, late:  0, enduranceMult: 0.95 },
+  [FightingStyle.SlashingAttack]:  { opening:  1, mid:  0, late: -1, enduranceMult: 1.10 },
+  [FightingStyle.StrikingAttack]:  { opening:  1, mid:  0, late:  0, enduranceMult: 1.05 },
+  [FightingStyle.TotalParry]:      { opening: -1, mid:  0, late:  1, enduranceMult: 0.70 },
+  [FightingStyle.WallOfSteel]:     { opening:  0, mid:  0, late:  1, enduranceMult: 0.80 },
 };
 
 export type Phase = "OPENING" | "MID" | "LATE";

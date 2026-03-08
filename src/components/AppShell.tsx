@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Swords, LayoutDashboard, Zap, Trophy, HelpCircle, RotateCcw, ScrollText, UserPlus, Skull, GraduationCap, LogOut, PanelLeftClose, PanelLeft, Save, Download, Dumbbell } from "lucide-react";
@@ -20,6 +20,7 @@ import {
 import { useCoachTip } from "@/hooks/useCoachTip";
 import { getActiveSlot, deleteSlot, exportActiveSlot } from "@/state/saveSlots";
 import EventLog from "@/components/EventLog";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 const navItems = [
   { to: "/", label: "Hub", icon: LayoutDashboard },
@@ -41,7 +42,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
   const [saveFlash, setSaveFlash] = useState(false);
 
+  const toggleSidebar = useCallback(() => setSidebarOpen((v) => !v), []);
+
   useCoachTip(location.pathname);
+  useKeyboardShortcuts({ onToggleSidebar: toggleSidebar });
 
   // Flash the save indicator briefly when a save occurs
   useEffect(() => {
@@ -77,7 +81,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className="md:hidden h-8 w-8 text-muted-foreground"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
+              onClick={toggleSidebar}
             >
               {sidebarOpen ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeft className="h-4 w-4" />}
             </Button>
@@ -235,7 +239,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="icon"
             className="h-8 w-8 m-1 text-muted-foreground hover:text-foreground"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={toggleSidebar}
             title={sidebarOpen ? "Hide event log" : "Show event log"}
           >
             {sidebarOpen ? <PanelLeftClose className="h-3.5 w-3.5" /> : <PanelLeft className="h-3.5 w-3.5" />}

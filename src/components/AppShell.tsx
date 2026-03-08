@@ -38,6 +38,7 @@ const navItems = [
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const { state, doReset, returnToTitle, lastSavedAt } = useGame();
+  const { theme, setTheme } = useTheme();
   const moodIcon = MOOD_ICONS[state.crowdMood as keyof typeof MOOD_ICONS] ?? "😐";
   const [resetOpen, setResetOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);

@@ -28,6 +28,7 @@ const navItems = [
   { to: "/run-round", label: "Run Round", icon: Zap },
   { to: "/recruit", label: "Recruit", icon: UserPlus },
   { to: "/training", label: "Training", icon: Dumbbell },
+  { to: "/scouting", label: "Scouting", icon: Search },
   { to: "/trainers", label: "Trainers", icon: GraduationCap },
   { to: "/tournaments", label: "Tournaments", icon: Trophy },
   { to: "/hall-of-fights", label: "Chronicle", icon: ScrollText },

@@ -50,16 +50,15 @@ function clamp(v: number, lo: number, hi: number): number {
 }
 
 /**
- * Generate a personality-, philosophy-, and meta-aware fight plan for an AI warrior.
- * MetaChasers boost OE for dominant styles, reduce for declining.
- * Innovators do the opposite — lean into counter-meta tactics.
- * Traditionalists and Opportunists use base personality/philosophy only.
+ * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
+ * Now includes per-style matchup heuristics from the Fighting Styles Compendium.
  */
 export function aiPlanForWarrior(
   w: Warrior,
   personality: OwnerPersonality,
   philosophy: string,
-  metaContext?: { meta: StyleMeta; adaptation: MetaAdaptation }
+  metaContext?: { meta: StyleMeta; adaptation: MetaAdaptation },
+  opponentStyle?: FightingStyle
 ): FightPlan {
   const base = defaultPlanForWarrior(w);
   const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
@@ -74,27 +73,134 @@ export function aiPlanForWarrior(
 
     switch (metaContext.adaptation) {
       case "MetaChaser":
-        // If warrior's style is dominant, push harder; if declining, play safer
         metaOE = drift > 3 ? 2 : drift < -3 ? -2 : 0;
         metaAL = drift > 3 ? 1 : drift < -3 ? -1 : 0;
         metaKD = drift > 3 ? 1 : 0;
         break;
       case "Innovator":
-        // Counter-meta: if style is declining (underestimated), push aggressively
         metaOE = drift < -2 ? 2 : drift > 3 ? -1 : 0;
         metaAL = drift < -2 ? 1 : drift > 3 ? -1 : 0;
         metaKD = drift < -3 ? 1 : 0;
         break;
-      // Traditionalist & Opportunist: no mid-fight meta adjustments
     }
   }
 
+  // ── Per-style matchup heuristics (from Fighting Styles Compendium) ──
+  const matchup = opponentStyle ? getStyleMatchupMods(w.style, opponentStyle) : { oe: 0, al: 0, kd: 0 };
+
   return {
     ...base,
-    OE: clamp((base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + metaOE, 1, 10),
-    AL: clamp((base.AL ?? 5) + (pMod.AL ?? 0) + (phMod.AL ?? 0) + metaAL, 1, 10),
-    killDesire: clamp((base.killDesire ?? 5) + (pMod.killDesire ?? 0) + (phMod.killDesire ?? 0) + metaKD, 1, 10),
+    OE: clamp((base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + metaOE + matchup.oe, 1, 10),
+    AL: clamp((base.AL ?? 5) + (pMod.AL ?? 0) + (phMod.AL ?? 0) + metaAL + matchup.al, 1, 10),
+    killDesire: clamp((base.killDesire ?? 5) + (pMod.killDesire ?? 0) + (phMod.killDesire ?? 0) + metaKD + matchup.kd, 1, 10),
   };
+}
+
+/**
+ * Per-style matchup heuristics from the Fighting Styles Compendium.
+ * Returns OE/AL/KD adjustments when facing a specific opponent style.
+ */
+function getStyleMatchupMods(
+  myStyle: FightingStyle,
+  oppStyle: FightingStyle
+): { oe: number; al: number; kd: number } {
+  switch (myStyle) {
+    case FightingStyle.AimedBlow:
+      // AB vs predictable heavy-commit (BA, SL): wait for openings, don't inflate OE
+      if (oppStyle === FightingStyle.BashingAttack || oppStyle === FightingStyle.SlashingAttack)
+        return { oe: -1, al: 0, kd: 0 };
+      // AB vs deep defense (TP, PR): openings are scarce, raise OE slightly
+      if (oppStyle === FightingStyle.TotalParry || oppStyle === FightingStyle.ParryRiposte)
+        return { oe: 1, al: 1, kd: 0 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.BashingAttack:
+      // BA vs LU/WS: force engagement early before being kited
+      if (oppStyle === FightingStyle.LungingAttack || oppStyle === FightingStyle.WallOfSteel)
+        return { oe: 2, al: 1, kd: 1 };
+      // BA vs TP: add Decisiveness in mid rounds, don't spam
+      if (oppStyle === FightingStyle.TotalParry)
+        return { oe: 1, al: 0, kd: 1 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.LungingAttack:
+      // LU vs BA: kite and pick angles — classic advantage
+      if (oppStyle === FightingStyle.BashingAttack)
+        return { oe: -1, al: 2, kd: 0 };
+      // LU vs TP/PR: avoid wasteful OE, use AL to deny tempo
+      if (oppStyle === FightingStyle.TotalParry || oppStyle === FightingStyle.ParryRiposte)
+        return { oe: -2, al: 1, kd: -1 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.ParryLunge:
+      // PL vs SL: prefer defensive posture, then punish whiffs
+      if (oppStyle === FightingStyle.SlashingAttack)
+        return { oe: -1, al: 0, kd: 0 };
+      // PL vs BA: stay mobile enough to avoid being pinned
+      if (oppStyle === FightingStyle.BashingAttack)
+        return { oe: 0, al: 1, kd: 0 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.ParryRiposte:
+      // PR vs BA/SL (high error): lean into counter identity — LOW OE
+      if (oppStyle === FightingStyle.BashingAttack || oppStyle === FightingStyle.SlashingAttack)
+        return { oe: -2, al: 0, kd: 0 };
+      // PR vs TP (few openings): raise OE slightly but keep counter core
+      if (oppStyle === FightingStyle.TotalParry)
+        return { oe: 1, al: 0, kd: 0 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.ParryStrike:
+      // PS vs SL: capitalize on reduced parry — happy matchup
+      if (oppStyle === FightingStyle.SlashingAttack)
+        return { oe: 1, al: 0, kd: 1 };
+      // PS vs LU: keep OE disciplined, don't chase
+      if (oppStyle === FightingStyle.LungingAttack)
+        return { oe: -1, al: 0, kd: 0 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.StrikingAttack:
+      // ST vs BA: avoid mirror brawl if lighter, reposition
+      if (oppStyle === FightingStyle.BashingAttack)
+        return { oe: 0, al: 1, kd: 0 };
+      // ST vs WS: don't let it become a stamina race
+      if (oppStyle === FightingStyle.WallOfSteel)
+        return { oe: 2, al: 0, kd: 1 };
+      // ST vs TP/PR: Decisiveness spikes later, not early waste
+      if (oppStyle === FightingStyle.TotalParry || oppStyle === FightingStyle.ParryRiposte)
+        return { oe: -1, al: 0, kd: 0 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.SlashingAttack:
+      // SL vs TP/PR: must create openings — controlled OE ramps
+      if (oppStyle === FightingStyle.TotalParry || oppStyle === FightingStyle.ParryRiposte)
+        return { oe: 1, al: 0, kd: 0 };
+      // SL vs PS: expect stronger defense, KD spikes after wound
+      if (oppStyle === FightingStyle.ParryStrike)
+        return { oe: 0, al: 0, kd: 1 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.TotalParry:
+      // TP vs LU/WS: let them burn out, do not chase
+      if (oppStyle === FightingStyle.LungingAttack || oppStyle === FightingStyle.WallOfSteel)
+        return { oe: -2, al: -1, kd: -1 };
+      // TP vs AB: avoid giving openings, keep posture compact
+      if (oppStyle === FightingStyle.AimedBlow)
+        return { oe: -1, al: 0, kd: 0 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    case FightingStyle.WallOfSteel:
+      // WS vs ST: zone them out, punish entries
+      if (oppStyle === FightingStyle.StrikingAttack)
+        return { oe: 0, al: 1, kd: 0 };
+      // WS vs SL: manage endurance carefully — fatigue windows
+      if (oppStyle === FightingStyle.SlashingAttack)
+        return { oe: -1, al: 0, kd: 0 };
+      return { oe: 0, al: 0, kd: 0 };
+
+    default:
+      return { oe: 0, al: 0, kd: 0 };
+  }
 }
 
 // ─── 2) Owner-to-Owner Rivalries (Personality-Driven) ─────────────────────

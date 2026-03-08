@@ -37,6 +37,14 @@ const PHILOSOPHY_PLAN_MODS: Record<string, Partial<FightPlan>> = {
   "Specialist":     { OE: 0, AL: 1, killDesire: 1 },
 };
 
+/** Flavor quotes for recruitment based on meta adaptation */
+const META_RECRUIT_QUOTES: Record<MetaAdaptation, string> = {
+  MetaChaser: "\"Everyone's using this style — so will we!\"",
+  Traditionalist: "\"We train them our way, always.\"",
+  Opportunist: "\"The right warrior for the right moment.\"",
+  Innovator: "\"They won't see this coming.\"",
+};
+
 function clamp(v: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, v));
 }

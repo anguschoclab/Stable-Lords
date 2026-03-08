@@ -16,10 +16,13 @@ import {
   type BaseSkills,
   type DerivedStats,
   type TrainerData,
+  type OffensiveTactic,
+  type DefensiveTactic,
 } from "@/types/game";
 import { computeBaseSkills, computeDerivedStats } from "./skillCalc";
 import { getItemById, type EquipmentLoadout, DEFAULT_LOADOUT, getLoadoutWeight } from "@/data/equipment";
 import { getTrainingBonus, TRAINER_FOCUSES, type TrainerFocus } from "@/modules/trainers";
+import { getOffensiveSuitability, getDefensiveSuitability, suitabilityMultiplier } from "./tacticSuitability";
 
 // ─── Seeded PRNG (mulberry32) ─────────────────────────────────────────────
 function mulberry32(seed: number) {
@@ -131,15 +134,64 @@ function pickText(rng: () => number, texts: string[]): string {
 const HIT_LOCATIONS = ["head", "chest", "abdomen", "arms", "legs"] as const;
 type HitLocation = typeof HIT_LOCATIONS[number];
 
-function rollHitLocation(rng: () => number, target?: string): HitLocation {
+function rollHitLocation(rng: () => number, target?: string, protect?: string): HitLocation {
   if (target && target !== "Any") {
     const t = target.toLowerCase() as HitLocation;
     if (HIT_LOCATIONS.includes(t)) {
-      // 60% chance to hit intended target
-      if (rng() < 0.6) return t;
+      // 60% chance to hit intended target, but if defender is protecting that area, reduce to 40%
+      const hitChance = (protect && protect !== "Any" && protect.toLowerCase() === t) ? 0.4 : 0.6;
+      if (rng() < hitChance) return t;
     }
   }
   return HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)];
+}
+
+/** Protect reduces crit damage on the protected area but increases damage taken elsewhere */
+function applyProtectMod(damage: number, location: HitLocation, protect?: string): number {
+  if (!protect || protect === "Any") return damage;
+  const protectedLoc = protect.toLowerCase();
+  if (location === protectedLoc) {
+    // Protected area: reduce damage by 25%
+    return Math.max(1, Math.round(damage * 0.75));
+  } else {
+    // Unprotected areas: increase damage by 10%
+    return Math.round(damage * 1.1);
+  }
+}
+
+// ─── Tactic Modifiers ─────────────────────────────────────────────────────
+function getOffensiveTacticMods(tactic: OffensiveTactic | undefined, style: FightingStyle) {
+  if (!tactic || tactic === "none") return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 0, decBonus: 0 };
+  const mult = suitabilityMultiplier(getOffensiveSuitability(style, tactic));
+  switch (tactic) {
+    case "Lunge":        return { attBonus: Math.round(2 * mult), dmgBonus: 0, defPenalty: Math.round(1 * mult), endCost: 2, decBonus: 0 };
+    case "Slash":        return { attBonus: 0, dmgBonus: Math.round(2 * mult), defPenalty: 0, endCost: 1, decBonus: 0 };
+    case "Bash":         return { attBonus: Math.round(1 * mult), dmgBonus: Math.round(1 * mult), defPenalty: Math.round(2 * mult), endCost: 2, decBonus: 0 };
+    case "Decisiveness": return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 1, decBonus: Math.round(3 * mult) };
+    default:             return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 0, decBonus: 0 };
+  }
+}
+
+function getDefensiveTacticMods(tactic: DefensiveTactic | undefined, style: FightingStyle) {
+  if (!tactic || tactic === "none") return { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: 0 };
+  const mult = suitabilityMultiplier(getDefensiveSuitability(style, tactic));
+  switch (tactic) {
+    case "Parry":          return { parBonus: Math.round(3 * mult), defBonus: 0, ripBonus: -Math.round(1 * mult), iniBonus: 0 };
+    case "Dodge":          return { parBonus: -Math.round(1 * mult), defBonus: Math.round(3 * mult), ripBonus: 0, iniBonus: 0 };
+    case "Riposte":        return { parBonus: Math.round(1 * mult), defBonus: 0, ripBonus: Math.round(3 * mult), iniBonus: 0 };
+    case "Responsiveness": return { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: Math.round(2 * mult) };
+    default:               return { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: 0 };
+  }
+}
+
+/** Resolve effective tactics for a fighter in the current phase */
+function resolveEffectiveTactics(plan: FightPlan, phaseKey: "opening" | "mid" | "late") {
+  const phase = plan.phases?.[phaseKey];
+  return {
+    offTactic: (phase?.offensiveTactic ?? plan.offensiveTactic ?? "none") as OffensiveTactic,
+    defTactic: (phase?.defensiveTactic ?? plan.defensiveTactic ?? "none") as DefensiveTactic,
+    target: phase?.target ?? plan.target ?? "Any",
+  };
 }
 
 // ─── Fighter State ────────────────────────────────────────────────────────
@@ -380,13 +432,21 @@ export function simulateFight(
     const effAL_D = fD.plan.phases?.[phaseKeyD]?.AL ?? fD.plan.AL;
     const effKD_D = fD.plan.phases?.[phaseKeyD]?.killDesire ?? fD.plan.killDesire ?? 5;
 
+    // Per-phase tactic & target resolution
+    const tacticsA = resolveEffectiveTactics(fA.plan, phaseKeyA);
+    const tacticsD = resolveEffectiveTactics(fD.plan, phaseKeyD);
+    const offModsA = getOffensiveTacticMods(tacticsA.offTactic, fA.style);
+    const defModsA = getDefensiveTacticMods(tacticsA.defTactic, fA.style);
+    const offModsD = getOffensiveTacticMods(tacticsD.offTactic, fD.style);
+    const defModsD = getDefensiveTacticMods(tacticsD.defTactic, fD.style);
+
     // Fatigue penalties
     const fatA = fatiguePenalty(fA.endurance, fA.maxEndurance);
     const fatD = fatiguePenalty(fD.endurance, fD.maxEndurance);
 
     // ── 1. INITIATIVE CONTEST ──
-    const iniA = fA.skills.INI + alIniMod(effAL_A) + matchupA + fatA;
-    const iniD = fD.skills.INI + alIniMod(effAL_D) + matchupD + fatD;
+    const iniA = fA.skills.INI + alIniMod(effAL_A) + matchupA + fatA + defModsA.iniBonus;
+    const iniD = fD.skills.INI + alIniMod(effAL_D) + matchupD + fatD + defModsD.iniBonus;
     const aGoesFirst = contestCheck(rng, iniA, iniD);
 
     const attacker = aGoesFirst ? fA : fD;
@@ -401,6 +461,14 @@ export function simulateFight(
     const defAL = aGoesFirst ? effAL_D : effAL_A;
     const attKD = aGoesFirst ? effKD_A : effKD_D;
 
+    // Resolve per-phase tactic mods for attacker/defender
+    const attTactics = aGoesFirst ? tacticsA : tacticsD;
+    const defTactics = aGoesFirst ? tacticsD : tacticsA;
+    const attOffMods = aGoesFirst ? offModsA : offModsD;
+    const defOffMods = aGoesFirst ? offModsD : offModsA;
+    const attDefMods = aGoesFirst ? defModsA : defModsD;
+    const defDefMods = aGoesFirst ? defModsD : defModsA;
+
     // Narrate initiative swings
     if (ex === 0 || (ex > 0 && rng() < 0.3)) {
       if (aGoesFirst && ex <= 1) {
@@ -408,9 +476,9 @@ export function simulateFight(
       }
     }
 
-    // ── 2. ATTACK ATTEMPT (ATT) ──
+    // ── 2. ATTACK ATTEMPT (ATT) — includes offensive tactic bonus ──
     const attOEmod = oeAttMod(attOE);
-    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat);
+    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus);
 
     if (!attackSuccess) {
       // Attack whiffs
@@ -418,14 +486,15 @@ export function simulateFight(
         log.push({ minute: min, text: `${name(attacker)} probes but finds no opening.` });
       }
       // ── Endurance cost for attempt ──
-      attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attOE, attAL) * 0.5));
+      attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attOE, attAL) * 0.5)) + attOffMods.endCost;
 
       // Defender may riposte on whiff
       // ── 4. RIPOSTE CHECK (RIP) ──
-      const ripCheck = skillCheck(rng, defender.skills.RIP, defMatchup + defFat);
+      const ripCheck = skillCheck(rng, defender.skills.RIP, defMatchup + defFat + defDefMods.ripBonus);
       if (ripCheck) {
-        const ripLoc = rollHitLocation(rng, defender.plan.target);
-        const ripDmg = computeHitDamage(rng, defender.derived.damage, ripLoc);
+        const ripLoc = rollHitLocation(rng, defTactics.target, attacker.plan.protect);
+        const ripDmgRaw = computeHitDamage(rng, defender.derived.damage, ripLoc);
+        const ripDmg = applyProtectMod(ripDmgRaw, ripLoc, attacker.plan.protect);
         attacker.hp -= ripDmg;
         attacker.hitsTaken++;
         defender.hitsLanded++;
@@ -443,7 +512,7 @@ export function simulateFight(
 
       // ── 3a. PARRY CHECK (PAR) ──
       const defOEmod = oeDefMod(defOE);
-      const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat);
+      const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus - attOffMods.defPenalty);
 
       if (parrySuccess) {
         if (rng() < 0.3) {
@@ -451,10 +520,11 @@ export function simulateFight(
         }
 
         // Parry succeeds — defender may riposte
-        const ripAfterParry = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 2);
+        const ripAfterParry = skillCheck(rng, defender.skills.RIP, defMatchup + defFat - 2 + defDefMods.ripBonus);
         if (ripAfterParry) {
-          const ripLoc = rollHitLocation(rng, defender.plan.target);
-          const ripDmg = computeHitDamage(rng, defender.derived.damage, ripLoc);
+          const ripLoc = rollHitLocation(rng, defTactics.target, attacker.plan.protect);
+          const ripDmgRaw = computeHitDamage(rng, defender.derived.damage, ripLoc);
+          const ripDmg = applyProtectMod(ripDmgRaw, ripLoc, attacker.plan.protect);
           attacker.hp -= ripDmg;
           attacker.hitsTaken++;
           defender.hitsLanded++;
@@ -466,16 +536,17 @@ export function simulateFight(
         }
       } else {
         // ── 3b. DEFENSE CHECK (DEF) ──
-        const defSuccess = skillCheck(rng, defender.skills.DEF, oeDefMod(defOE) + defMatchup + defFat);
+        const defSuccess = skillCheck(rng, defender.skills.DEF, oeDefMod(defOE) + defMatchup + defFat + defDefMods.defBonus);
 
         if (defSuccess) {
           if (rng() < 0.2) {
             log.push({ minute: min, text: `${name(defender)} dodges the attack with quick footwork.` });
           }
         } else {
-          // ── 5. DAMAGE APPLICATION ──
-          const hitLoc = rollHitLocation(rng, attacker.plan.target);
-          const damage = computeHitDamage(rng, attacker.derived.damage, hitLoc);
+          // ── 5. DAMAGE APPLICATION — with tactic dmg bonus and protect ──
+          const hitLoc = rollHitLocation(rng, attTactics.target, defender.plan.protect);
+          const rawDamage = computeHitDamage(rng, attacker.derived.damage + attOffMods.dmgBonus, hitLoc);
+          const damage = applyProtectMod(rawDamage, hitLoc, defender.plan.protect);
           defender.hp -= damage;
           defender.hitsTaken++;
           attacker.hitsLanded++;
@@ -497,7 +568,7 @@ export function simulateFight(
           if (defender.hp <= defender.maxHp * 0.3 && defender.endurance <= defender.maxEndurance * 0.4) {
             const kdMod = Math.floor((attKD) - 5) * 0.5;
             const phaseMod = phase === "LATE" ? 3 : phase === "MID" ? 1 : 0;
-            const decSuccess = skillCheck(rng, attacker.skills.DEC, kdMod + phaseMod + attMatchup + attFat);
+            const decSuccess = skillCheck(rng, attacker.skills.DEC, kdMod + phaseMod + attMatchup + attFat + attOffMods.decBonus);
 
             if (decSuccess) {
               // Kill window — attempt execution

@@ -301,6 +301,7 @@ export function aiDraftFromPool(
         name: recruit.name,
         style: recruit.style,
         attributes: recruit.attributes,
+        potential: recruit.potential,
         baseSkills: recruit.baseSkills,
         derivedStats: recruit.derivedStats,
         fame: 0,

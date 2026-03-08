@@ -7,14 +7,22 @@
  * - +1 bonus XP for a kill
  * - +1 bonus XP for flashy tags
  * 
- * Every 5 XP, a warrior gains +1 to a random relevant skill or attribute.
+ * Every 5 XP, a warrior gains +1 to a random relevant skill or attribute,
+ * subject to their per-attribute potential ceiling. Diminishing returns
+ * apply as attributes approach their potential.
+ *
+ * Fights also progressively reveal hidden potential.
  */
 import type { Warrior, FightOutcome } from "@/types/game";
 import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from "@/types/game";
 import { computeWarriorStats } from "./skillCalc";
+import { canGrow, diminishingReturnsFactor, revealPotential } from "./potential";
 
 const XP_PER_LEVEL = 5;
 const TOTAL_ATTR_CAP = 80;
+
+/** Chance to reveal an attribute's potential after each fight */
+const POTENTIAL_REVEAL_CHANCE = 0.15;
 
 export interface XPGain {
   warriorId: string;
@@ -23,6 +31,7 @@ export interface XPGain {
   totalXp: number;
   levelUp: boolean;
   improvement?: string;
+  potentialRevealed?: string;
 }
 
 /** Calculate XP gain from a fight outcome */
@@ -52,22 +61,51 @@ export function applyXP(warrior: Warrior, xpGained: number): { warrior: Warrior;
 
   let updated = { ...warrior, xp: newXp } as Warrior & { xp: number };
   let improvement: string | undefined;
+  let potentialRevealed: string | undefined;
 
   if (levelUp) {
-    // Pick a random attribute to improve (weighted by style)
+    // Pick a random attribute to improve (only those below potential ceiling)
     const total = ATTRIBUTE_KEYS.reduce((s, k) => s + updated.attributes[k], 0);
     if (total < TOTAL_ATTR_CAP) {
-      const improvableAttrs = ATTRIBUTE_KEYS.filter(
-        (k) => updated.attributes[k] < ATTRIBUTE_MAX
-      );
+      const improvableAttrs = ATTRIBUTE_KEYS.filter((k) => {
+        if (updated.attributes[k] >= ATTRIBUTE_MAX) return false;
+        const pot = updated.potential?.[k];
+        return canGrow(updated.attributes[k], pot);
+      });
+
       if (improvableAttrs.length > 0) {
-        const chosen = improvableAttrs[Math.floor(Math.random() * improvableAttrs.length)];
+        // Weight towards attributes with more headroom
+        const weights = improvableAttrs.map((k) => {
+          const dr = diminishingReturnsFactor(updated.attributes[k], updated.potential?.[k]);
+          return Math.max(0.1, dr); // minimum weight so nothing is impossible
+        });
+        const totalWeight = weights.reduce((s, w) => s + w, 0);
+        let roll = Math.random() * totalWeight;
+        let chosen = improvableAttrs[0];
+        for (let i = 0; i < improvableAttrs.length; i++) {
+          roll -= weights[i];
+          if (roll <= 0) { chosen = improvableAttrs[i]; break; }
+        }
+
         const newAttrs = { ...updated.attributes, [chosen]: updated.attributes[chosen] + 1 };
         const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, updated.style);
         updated = { ...updated, attributes: newAttrs, baseSkills, derivedStats };
         improvement = `+1 ${chosen}`;
       }
     }
+  }
+
+  // Chance to reveal one unrevealed potential attribute after each fight
+  const unrevealed = ATTRIBUTE_KEYS.filter(
+    (k) => !updated.potentialRevealed?.[k] && updated.potential?.[k] !== undefined
+  );
+  if (unrevealed.length > 0 && Math.random() < POTENTIAL_REVEAL_CHANCE) {
+    const revealKey = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+    updated = {
+      ...updated,
+      potentialRevealed: revealPotential(updated.potentialRevealed, revealKey),
+    };
+    potentialRevealed = revealKey;
   }
 
   return {
@@ -79,6 +117,7 @@ export function applyXP(warrior: Warrior, xpGained: number): { warrior: Warrior;
       totalXp: newXp,
       levelUp,
       improvement,
+      potentialRevealed,
     },
   };
 }

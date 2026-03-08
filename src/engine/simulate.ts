@@ -24,6 +24,7 @@ import { getItemById, type EquipmentLoadout, DEFAULT_LOADOUT, getLoadoutWeight, 
 import { getTrainingBonus, TRAINER_FOCUSES, type TrainerFocus } from "@/modules/trainers";
 import { getOffensiveSuitability, getDefensiveSuitability, suitabilityMultiplier } from "./tacticSuitability";
 import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, type Phase as StylePhase } from "./stylePassives";
+import { getFavoriteWeaponBonus, getFavoriteRhythmBonus } from "./favorites";
 
 // ─── Seeded PRNG (mulberry32) ─────────────────────────────────────────────
 function mulberry32(seed: number) {

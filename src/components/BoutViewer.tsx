@@ -15,9 +15,6 @@ interface BoutViewerProps {
   winner: "A" | "D" | null;
   by: FightOutcomeBy;
   announcement?: string;
-  /** If provided, shows HP bars (estimated from log parsing) */
-  warriorA?: Warrior;
-  warriorD?: Warrior;
 }
 
 // Classify log lines for visual treatment

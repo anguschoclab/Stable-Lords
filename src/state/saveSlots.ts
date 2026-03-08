@@ -97,6 +97,7 @@ export function loadFromSlot(slotId: string): GameState | null {
           parsed.settings.featureFlags = { ...parsed.settings.featureFlags, scouting: true };
         }
         if (!parsed.seasonalGrowth) parsed.seasonalGrowth = [];
+        if (parsed.rosterBonus === undefined) parsed.rosterBonus = 0;
         // Migrate old training assignments (add type field)
         if (parsed.trainingAssignments) {
           parsed.trainingAssignments = parsed.trainingAssignments.map((a: any) => ({

@@ -792,10 +792,9 @@ export function simulateFight(
                 by = "Kill";
                 tags.push("Kill");
 
-                log.push({
-                  minute: min,
-                  text: `${name(attacker)} ${killMech.killNarrative}`,
-                });
+                // KILL — canonical PBP narration
+                const endLines = narrateBoutEnd(rng, "Kill", name(attacker), name(defender));
+                for (const l of endLines) log.push({ minute: min, text: l });
                 break;
               } else {
                 log.push({
@@ -811,10 +810,8 @@ export function simulateFight(
             winner = attacker.label as "A" | "D";
             by = "KO";
             tags.push("KO");
-            log.push({
-              minute: min,
-              text: `${name(defender)} collapses from accumulated damage! ${name(attacker)} wins by knockout!`,
-            });
+            const koLines = narrateBoutEnd(rng, "KO", name(attacker), name(defender));
+            for (const l of koLines) log.push({ minute: min, text: l });
             break;
         }
       }

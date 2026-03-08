@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useCoachTip } from "@/hooks/useCoachTip";
+import { getActiveSlot, deleteSlot } from "@/state/saveSlots";
 
 const navItems = [
   { to: "/", label: "Arena Hub", icon: LayoutDashboard },

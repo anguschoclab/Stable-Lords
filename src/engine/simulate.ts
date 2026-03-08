@@ -249,6 +249,13 @@ function oeAttMod(oe: number, style?: FightingStyle): number {
     if (oe <= 7) return -1;  // High OE: loses counter identity
     return -2;               // Very high OE: completely wrong for PR
   }
+  // AB OE Paradox: AB gains accuracy at low OE — "conserves endurance by not moving
+  // much" means each swing is deliberate and precise (compendium §AB)
+  if (style === FightingStyle.AimedBlow) {
+    if (oe <= 4) return 1;   // Low OE: +1 ATT from careful aim
+    if (oe <= 6) return 0;   // Mid: neutral
+    return -1;               // High OE: rushing undermines precision
+  }
   return Math.floor((oe - 5) * 0.8);
 }
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * 0.5); }

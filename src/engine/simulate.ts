@@ -89,60 +89,8 @@ function getPhase(exchange: number, maxExchanges: number): Phase {
   return "LATE";
 }
 
-// ─── Narrative Templates ──────────────────────────────────────────────────
-const STYLE_VERBS: Record<string, { attack: string[]; parry: string[]; riposte: string[] }> = {
-  [FightingStyle.AimedBlow]: {
-    attack: ["takes careful aim and strikes", "finds the opening and jabs precisely", "targets a weak point with surgical precision"],
-    parry: ["deflects with measured control", "brushes the strike aside"],
-    riposte: ["capitalizes on the misstep with a precise counter"],
-  },
-  [FightingStyle.BashingAttack]: {
-    attack: ["smashes forward with brutal force", "drives a crushing blow", "hammers down relentlessly"],
-    parry: ["catches the blow on a heavy guard", "absorbs the impact and stands firm"],
-    riposte: ["turns the block into a savage counterstrike"],
-  },
-  [FightingStyle.LungingAttack]: {
-    attack: ["lunges with blinding speed", "thrusts from an unexpected angle", "darts forward with a rapid jab"],
-    parry: ["dances back to deflect", "redirects the thrust with quick footwork"],
-    riposte: ["springs forward with a lightning counter-thrust"],
-  },
-  [FightingStyle.ParryLunge]: {
-    attack: ["waits for the opening, then explodes into a lunge", "converts defense into a sudden thrust"],
-    parry: ["sets the parry with practiced patience", "reads the attack and deflects cleanly"],
-    riposte: ["flows from parry to a devastating lunge"],
-  },
-  [FightingStyle.ParryRiposte]: {
-    attack: ["probes for a counterstrike opportunity", "feints and waits for the error"],
-    parry: ["catches the blade with elegant precision", "turns the attack aside effortlessly"],
-    riposte: ["punishes the overcommitment with a flashing riposte", "counter-attacks with lethal timing"],
-  },
-  [FightingStyle.ParryStrike]: {
-    attack: ["strikes with economical efficiency", "delivers a swift blow through the shortest arc"],
-    parry: ["deflects with minimal motion", "guards the line with disciplined economy"],
-    riposte: ["converts the parry into a swift counterstrike"],
-  },
-  [FightingStyle.SlashingAttack]: {
-    attack: ["slashes in a wide cutting arc", "whirls the blade in a vicious sweep", "carves a brutal slash"],
-    parry: ["barely catches the incoming blow", "struggles to parry through the arc"],
-    riposte: ["turns the miss into a sweeping counter-slash"],
-  },
-  [FightingStyle.StrikingAttack]: {
-    attack: ["strikes downward with decisive force", "delivers a clean, efficient blow", "hammers home a direct strike"],
-    parry: ["blocks with practiced efficiency", "catches the strike and holds ground"],
-    riposte: ["redirects into a punishing counterstrike"],
-  },
-  [FightingStyle.TotalParry]: {
-    attack: ["probes cautiously", "offers a tentative thrust"],
-    parry: ["locks into an impenetrable defensive wall", "denies the attack with total commitment to defense"],
-    riposte: ["punishes the frustrated attacker with a measured counter"],
-  },
-  [FightingStyle.WallOfSteel]: {
-    attack: ["attacks through the constant blade motion", "finds an opening in the rhythmic arc"],
-    parry: ["maintains the whirling guard, catching the blow", "the constant blade motion deflects the strike"],
-    riposte: ["the blade arc reverses into a punishing counter"],
-  },
-};
-
+// ─── Legacy narrative helpers (replaced by narrativePBP.ts) ───────────────
+// Kept as fallback only
 function pickText(rng: () => number, texts: string[]): string {
   return texts[Math.floor(rng() * texts.length)];
 }

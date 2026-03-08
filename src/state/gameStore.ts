@@ -4,6 +4,7 @@
 import { FightingStyle, type GameState, type Warrior, type FightSummary, type Season } from "@/types/game";
 import { computeWarriorStats } from "@/engine/skillCalc";
 import { processTraining } from "@/engine/training";
+import { processEconomy } from "@/engine/economy";
 
 const SAVE_KEY = "stablelords.save.v2";
 

@@ -208,6 +208,7 @@ interface FighterState {
   hitsLanded: number;
   hitsTaken: number;
   ripostes: number;
+  consecutiveHits: number; // for Basher momentum, etc.
 }
 
 // ─── Skill Checks ─────────────────────────────────────────────────────────

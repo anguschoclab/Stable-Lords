@@ -61,7 +61,7 @@ const STYLE_ORDER = [
 const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
   [ 0,  0,  0,  0, -1,  0,  0,  0, +1,  0], // AB: only edge vs TP, weak vs PR
-  [ 0,  0,  0, +1,  0,  0, +1, +1, +1, +1], // BA: counters TP, edge vs SL/ST/PL/WS
+  [ 0,  0,  0, +1,  0,  0, +1, +1,  0, +1], // BA: edge vs SL/ST/PL/WS, neutral vs TP (inherent advantage suffices)
   [ 0,  0,  0, +1,  0, -1,  0,  0,  0, -1], // LU: speed beats PL, weak vs PS/WS
   [ 0, -1, -1,  0,  0,  0,  0, -1,  0,  0], // PL: weak vs BA/LU/ST
   [ 0,  0,  0,  0,  0,  0,  0, -1,  0,  0], // PR: neutral vs AB now, weak vs ST

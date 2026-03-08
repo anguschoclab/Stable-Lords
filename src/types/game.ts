@@ -148,6 +148,15 @@ export interface CareerRecord {
 
 export type WarriorStatus = "Active" | "Dead" | "Retired";
 
+export interface InjuryData {
+  id: string;
+  name: string;
+  description: string;
+  severity: "Minor" | "Moderate" | "Severe";
+  weeksRemaining: number;
+  penalties: Record<string, number>;
+}
+
 export interface Warrior {
   id: string;
   name: string;
@@ -158,7 +167,7 @@ export interface Warrior {
   fame: number;
   popularity: number;
   titles: string[];
-  injuries: string[];
+  injuries: (string | InjuryData)[];
   flair: string[];
   career: CareerRecord;
   champion: boolean;
@@ -172,10 +181,12 @@ export interface Warrior {
   };
   status: WarriorStatus;
   age?: number;
+  xp?: number;
   deathWeek?: number;
   deathCause?: string;
   killedBy?: string;
   retiredWeek?: number;
+  stableId?: string; // for AI rival warriors
 }
 
 // ─── Owner / Stable ─────────────────────────────────────────────────────────

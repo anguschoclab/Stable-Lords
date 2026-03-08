@@ -512,7 +512,7 @@ export function simulateFight(
 
       // ── 3a. PARRY CHECK (PAR) ──
       const defOEmod = oeDefMod(defOE);
-      const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat);
+      const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus - attOffMods.defPenalty);
 
       if (parrySuccess) {
         if (rng() < 0.3) {

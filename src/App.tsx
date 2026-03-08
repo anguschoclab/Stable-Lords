@@ -16,6 +16,7 @@ import Graveyard from "@/pages/Graveyard";
 import Training from "@/pages/Training";
 import Trainers from "@/pages/Trainers";
 import Orphanage from "@/pages/Orphanage";
+import Scouting from "@/pages/Scouting";
 import StartGame from "@/pages/StartGame";
 import NotFound from "./pages/NotFound";
 

@@ -157,11 +157,18 @@ export interface InjuryData {
   penalties: Record<string, number>;
 }
 
+/**
+ * Per-attribute potential ceiling. Each attribute has a hidden max
+ * that limits training/XP growth. Generated at warrior creation.
+ */
+export type AttributePotential = Record<keyof Attributes, number>;
+
 export interface Warrior {
   id: string;
   name: string;
   style: FightingStyle;
   attributes: Attributes;
+  potential?: AttributePotential;
   baseSkills?: BaseSkills;
   derivedStats?: DerivedStats;
   fame: number;
@@ -182,6 +189,7 @@ export interface Warrior {
   status: WarriorStatus;
   age?: number;
   xp?: number;
+  potentialRevealed?: Partial<Record<keyof Attributes, boolean>>;
   deathWeek?: number;
   deathCause?: string;
   killedBy?: string;

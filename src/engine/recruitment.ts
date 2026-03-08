@@ -3,8 +3,9 @@
  * pool management, and AI draft behavior.
  * Implements Stable_Lords_Orphanage_Recruitment_Spec_v1.0
  */
-import { FightingStyle, type Attributes, type BaseSkills, type DerivedStats } from "@/types/game";
+import { FightingStyle, type Attributes, type AttributePotential, type BaseSkills, type DerivedStats } from "@/types/game";
 import { computeWarriorStats } from "./skillCalc";
+import { generatePotential } from "./potential";
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -15,6 +16,7 @@ export interface PoolWarrior {
   name: string;
   style: FightingStyle;
   attributes: Attributes;
+  potential: AttributePotential;
   baseSkills: BaseSkills;
   derivedStats: DerivedStats;
   tier: RecruitTier;
@@ -162,12 +164,14 @@ export function generateRecruit(
   usedNames.add(name);
 
   const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
+  const potential = generatePotential(attributes, tier, rng);
 
   return {
     id: `recruit_${Date.now()}_${Math.floor(rng() * 1e6)}`,
     name,
     style,
     attributes,
+    potential,
     baseSkills,
     derivedStats,
     tier,
@@ -297,6 +301,7 @@ export function aiDraftFromPool(
         name: recruit.name,
         style: recruit.style,
         attributes: recruit.attributes,
+        potential: recruit.potential,
         baseSkills: recruit.baseSkills,
         derivedStats: recruit.derivedStats,
         fame: 0,

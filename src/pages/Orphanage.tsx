@@ -10,6 +10,7 @@ import { simulateFight, defaultPlanForWarrior, fameFromTags } from "@/engine";
 import { generateRivalStables } from "@/engine/rivals";
 import { FightingStyle, STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type Warrior, type FightSummary } from "@/types/game";
 import { computeWarriorStats, DAMAGE_LABELS } from "@/engine/skillCalc";
+import { generatePotential } from "@/engine/potential";
 import { LoreArchive } from "@/lore/LoreArchive";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -105,12 +106,18 @@ export default function Orphanage() {
   // ── Step 2: Finalize & Enter Game ────────────────────────────────────────
 
   const finishFTUE = useCallback(() => {
+    // Simple seeded RNG for potential generation
+    let seed = Date.now();
+    const rng = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+
     const warriors = selectedWarriors.map((pw) => {
+      const potential = generatePotential(pw.attrs, "Promising", rng);
       const w = makeWarrior(
         `w_${Date.now()}_${Math.floor(Math.random() * 1e5)}_${pw.id}`,
         pw.name,
         pw.style,
-        pw.attrs
+        pw.attrs,
+        { potential }
       );
       if (boutResult) {
         const wasA = pw.name === boutResult.a.name;

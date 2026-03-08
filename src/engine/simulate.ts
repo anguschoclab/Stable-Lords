@@ -702,10 +702,12 @@ export function simulateFight(
           defender.hitsLanded++;
           defender.ripostes++;
           defender.consecutiveHits++;
-          log.push({
-            minute: min,
-            text: `${name(defender)} ${pickText(rng, verbs(defender).riposte)} to the ${ripLoc} for ${ripDmg}!`,
-          });
+          // Canonical PBP: counterstrike after parry
+          log.push({ minute: min, text: narrateCounterstrike(rng, name(defender)) });
+          log.push({ minute: min, text: narrateAttack(rng, name(defender), weaponOf(defender)) });
+          log.push({ minute: min, text: narrateHit(rng, name(attacker), ripLoc) });
+          const sevLine2 = damageSeverityLine(rng, ripDmg, attacker.maxHp);
+          if (sevLine2) log.push({ minute: min, text: sevLine2 });
         }
       }
 

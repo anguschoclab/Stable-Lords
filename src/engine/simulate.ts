@@ -768,8 +768,8 @@ export function simulateFight(
             });
             break;
           }
-        }
       }
+    }
     }
 
     // ── 7. ENDURANCE & FATIGUE — with style-specific drain rates ──

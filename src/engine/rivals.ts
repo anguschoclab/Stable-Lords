@@ -9,7 +9,7 @@
  * Each stable has a unique identity: name, motto, origin, owner personality,
  * coaching philosophy, preferred styles, attribute bias, and themed warrior names.
  */
-import { FightingStyle, type Warrior, type Owner, type OwnerPersonality } from "@/types/game";
+import { FightingStyle, type Warrior, type Owner, type OwnerPersonality, type MetaAdaptation } from "@/types/game";
 import { computeWarriorStats } from "./skillCalc";
 
 // ─── Stable Template ──────────────────────────────────────────────────────

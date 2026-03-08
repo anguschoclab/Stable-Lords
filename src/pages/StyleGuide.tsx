@@ -23,13 +23,21 @@ const ALL_STYLES = Object.values(FightingStyle);
 const OFF_TACTICS = ["Lunge", "Slash", "Bash", "Decisiveness"] as const;
 const DEF_TACTICS = ["Dodge", "Parry", "Riposte", "Responsiveness"] as const;
 
-const MASTERY_TIERS = [
-  { tier: "Novice", fights: 0, color: "bg-muted text-muted-foreground" },
-  { tier: "Practiced", fights: 10, color: "bg-secondary text-secondary-foreground" },
-  { tier: "Veteran", fights: 20, color: "bg-primary/20 text-primary" },
-  { tier: "Master", fights: 30, color: "bg-accent/20 text-accent" },
-  { tier: "Grandmaster", fights: 50, color: "bg-destructive/20 text-destructive" },
+// Mastery tier thresholds — dynamically computed from getMastery
+const MASTERY_TIER_DATA = [
+  { fights: 0, ...getMastery(0) },
+  { fights: 10, ...getMastery(10) },
+  { fights: 20, ...getMastery(20) },
+  { fights: 30, ...getMastery(30) },
+  { fights: 50, ...getMastery(50) },
 ];
+const MASTERY_TIER_COLORS: Record<MasteryTier, string> = {
+  Novice: "bg-muted text-muted-foreground",
+  Practiced: "bg-secondary text-secondary-foreground",
+  Veteran: "bg-primary/20 text-primary",
+  Master: "bg-accent/20 text-accent",
+  Grandmaster: "bg-destructive/20 text-destructive",
+};
 
 interface StyleInfo {
   style: FightingStyle;

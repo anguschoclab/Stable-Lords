@@ -235,7 +235,18 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
 const GLOBAL_ATT_BONUS = 3;   // All attacks get +3 to offset double-defense
 const GLOBAL_PAR_PENALTY = -2; // Parry is slightly harder to reward aggression
 
-function oeAttMod(oe: number): number { return Math.floor((oe - 5) * 0.8); }
+function oeAttMod(oe: number, style?: FightingStyle): number {
+  // PR OE Paradox: PR attacks MORE at low OE via counterstrikes (compendium §PR)
+  // "PR may attack more with low OE by counterstriking than with high OE"
+  if (style === FightingStyle.ParryRiposte) {
+    // Invert: low OE = bonus (counter-ready), high OE = penalty (loses identity)
+    if (oe <= 3) return 2;   // Low OE: +2 ATT from counter-focus
+    if (oe <= 5) return 1;   // Mid-low: +1
+    if (oe <= 7) return 0;   // Mid: neutral
+    return -1;               // High OE: loses counter identity
+  }
+  return Math.floor((oe - 5) * 0.8);
+}
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * 0.5); }
 function alIniMod(al: number): number { return Math.floor((al - 5) * 0.6); }
 function enduranceCost(oe: number, al: number): number {

@@ -8,8 +8,10 @@ import { LoreArchive } from "./LoreArchive";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Trophy, Swords, Skull, Sparkles, ScrollText } from "lucide-react";
+import { Trophy, Swords, Skull, Sparkles, ScrollText, Zap } from "lucide-react";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 export const HallOfFights: React.FC = () => {
   const { state } = useGame();

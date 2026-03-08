@@ -10,6 +10,7 @@ import { isTooInjuredToFight, type Injury } from "./injuries";
 import { simulateFight } from "./simulate";
 import { aiPlanForWarrior } from "./ownerAI";
 import { computeMetaDrift } from "./metaDrift";
+import { pickRivalOpponent } from "./rivals";
 
 /** Stablemates cannot fight each other */
 function disallowStablemates(aStableId: string, dStableId: string): boolean {
@@ -170,15 +171,30 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
   const paired = new Set<string>();
   const boutPairs: { a: typeof pool[0]; d: typeof pool[0] }[] = [];
 
-  // Pair warriors from DIFFERENT stables
+  // Pair warriors from DIFFERENT stables, using pickRivalOpponent as fallback
   for (const a of pool) {
     if (paired.has(a.warrior.id) || boutPairs.length >= maxBouts) break;
+    // Try direct scan first for speed
+    let found = false;
     for (const d of pool) {
       if (paired.has(d.warrior.id) || disallowStablemates(a.stableId, d.stableId)) continue;
       boutPairs.push({ a, d });
       paired.add(a.warrior.id);
       paired.add(d.warrior.id);
+      found = true;
       break;
+    }
+    // Fallback: use pickRivalOpponent for broader cross-stable search
+    if (!found && rivals.length > 0) {
+      const pick = pickRivalOpponent(rivals, paired);
+      if (pick && !disallowStablemates(a.stableId, pick.rival.owner.id)) {
+        const dIdx = pool.findIndex(p => p.warrior.id === pick.warrior.id);
+        if (dIdx >= 0) {
+          boutPairs.push({ a, d: pool[dIdx] });
+          paired.add(a.warrior.id);
+          paired.add(pool[dIdx].warrior.id);
+        }
+      }
     }
   }
 

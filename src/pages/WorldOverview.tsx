@@ -5,8 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ArrowUpDown, Crown, Skull, Swords, TrendingUp, Trophy } from "lucide-react";
 import type { RivalStableData, Warrior } from "@/types/game";
+import { getStableTemplates } from "@/engine/rivals";
 
 type SortField = "rank" | "name" | "fame" | "wins" | "losses" | "kills" | "winRate" | "roster" | "tier";
 type SortDir = "asc" | "desc";
@@ -24,6 +26,7 @@ interface StableRow {
   roster: number;
   tier: string;
   philosophy: string;
+  motto: string;
   isPlayer: boolean;
 }
 
@@ -53,6 +56,8 @@ export default function WorldOverview() {
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: SortDir }>({ field: "fame", dir: "desc" });
   const [warriorSort, setWarriorSort] = useState<{ field: WarriorSortField; dir: SortDir }>({ field: "fame", dir: "desc" });
 
+  const templates = useMemo(() => getStableTemplates(), []);
+
   const stableRows = useMemo((): StableRow[] => {
     const rows: StableRow[] = [];
 
@@ -73,6 +78,7 @@ export default function WorldOverview() {
       roster: state.roster.filter(w => w.status === "Active").length,
       tier: "Player",
       philosophy: "Your strategy",
+      motto: "",
       isPlayer: true,
     });
 
@@ -82,6 +88,7 @@ export default function WorldOverview() {
       const rLosses = r.roster.reduce((s, w) => s + w.career.losses, 0);
       const rKills = r.roster.reduce((s, w) => s + w.career.kills, 0);
       const rTotal = rWins + rLosses;
+      const tmpl = templates.find(t => t.stableName === r.owner.stableName);
       rows.push({
         id: r.owner.id,
         name: r.owner.stableName,
@@ -94,6 +101,7 @@ export default function WorldOverview() {
         roster: r.roster.filter(w => w.status === "Active").length,
         tier: r.tier || "Minor",
         philosophy: r.philosophy || "",
+        motto: tmpl?.motto ?? "",
         isPlayer: false,
       });
     }
@@ -270,13 +278,24 @@ export default function WorldOverview() {
                     <TableRow key={row.id} className={row.isPlayer ? "bg-primary/5" : ""}>
                       <TableCell className="font-mono text-muted-foreground text-xs">{i + 1}</TableCell>
                       <TableCell>
-                        <Link
-                          to={row.isPlayer ? "/" : `/stable/${row.id}`}
-                          className="font-semibold hover:text-primary transition-colors"
-                        >
-                          {row.name}
-                          {row.isPlayer && <span className="ml-1.5 text-[10px] text-primary">(You)</span>}
-                        </Link>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Link
+                                to={row.isPlayer ? "/" : `/stable/${row.id}`}
+                                className="font-semibold hover:text-primary transition-colors"
+                              >
+                                {row.name}
+                                {row.isPlayer && <span className="ml-1.5 text-[10px] text-primary">(You)</span>}
+                              </Link>
+                            </TooltipTrigger>
+                            {row.motto && (
+                              <TooltipContent side="right" className="text-xs italic max-w-48">
+                                "{row.motto}"
+                              </TooltipContent>
+                            )}
+                          </Tooltip>
+                        </TooltipProvider>
                         <p className="text-[11px] text-muted-foreground">{row.ownerName}</p>
                       </TableCell>
                       <TableCell className="hidden md:table-cell">

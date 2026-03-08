@@ -12,4 +12,4 @@ export { computeBaseSkills, computeDerivedStats, computeWarriorStats, DAMAGE_LAB
 export { computeCrowdMood, getMoodModifiers, MOOD_DESCRIPTIONS, MOOD_ICONS, type CrowdMood } from "./crowdMood";
 export { computeMetaDrift, getMetaLabel, getMetaColor, type StyleMeta } from "./metaDrift";
 export { aiPlanForWarrior, processOwnerGrudges, processAIRosterManagement, generateOwnerNarratives, evolvePhilosophies } from "./ownerAI";
-export { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, getMastery, type MasteryTier, type MasteryInfo } from "./stylePassives";
+export { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, getMastery } from "./stylePassives";

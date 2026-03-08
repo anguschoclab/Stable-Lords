@@ -10,6 +10,7 @@ import { tickInjuries } from "@/engine/injuries";
 import { clearExpiredRest, runAIvsAIBouts } from "@/engine/matchmaking";
 import { partialRefreshPool, aiDraftFromPool } from "@/engine/recruitment";
 import { processHallOfFame, processTierProgression, computeNextSeason } from "@/engine/weekPipeline";
+import { processOwnerGrudges, processAIRosterManagement, generateOwnerNarratives, evolvePhilosophies } from "@/engine/ownerAI";
 
 const SAVE_KEY = "stablelords.save.v2";
 

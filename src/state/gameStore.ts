@@ -211,6 +211,59 @@ export function advanceWeek(state: GameState): GameState {
   const seasonIdx = Math.floor((newWeek - 1) / 13) % 4;
   const newSeason = SEASONS[seasonIdx];
 
+  // ─── Hall of Fame Induction (every 52 weeks / year boundary) ──────────
+  if (newWeek % 52 === 0) {
+    const yearNum = Math.floor(newWeek / 52);
+    const hofNews: string[] = [];
+
+    // Best warrior by fame across all rosters (player + rivals)
+    const allWarriors = [
+      ...updatedState.roster,
+      ...updatedState.graveyard,
+      ...updatedState.retired,
+      ...(updatedState.rivals || []).flatMap(r => r.roster),
+    ];
+    const bestByFame = [...allWarriors].sort((a, b) => (b.fame ?? 0) - (a.fame ?? 0))[0];
+    if (bestByFame && (bestByFame.fame ?? 0) > 0) {
+      hofNews.push(`🏛️ HALL OF FAME: ${bestByFame.name} (${bestByFame.style}) inducted as Year ${yearNum}'s greatest warrior with ${bestByFame.fame} fame!`);
+    }
+
+    // Best killer
+    const bestKiller = [...allWarriors].filter(w => w.career.kills > 0).sort((a, b) => b.career.kills - a.career.kills)[0];
+    if (bestKiller && bestKiller.name !== bestByFame?.name) {
+      hofNews.push(`💀 DEADLIEST BLADE: ${bestKiller.name} earns the "Deadliest Blade" honor with ${bestKiller.career.kills} kills in Year ${yearNum}.`);
+    }
+
+    // Most wins
+    const bestWins = [...allWarriors].filter(w => w.career.wins > 0).sort((a, b) => b.career.wins - a.career.wins)[0];
+    if (bestWins && bestWins.name !== bestByFame?.name && bestWins.name !== bestKiller?.name) {
+      hofNews.push(`⚔️ IRON CHAMPION: ${bestWins.name} recorded the most victories (${bestWins.career.wins}) in Year ${yearNum}.`);
+    }
+
+    // Tournament champions this year
+    const yearTournaments = updatedState.tournaments.filter(t => t.completed && t.champion && t.week >= newWeek - 52);
+    for (const t of yearTournaments) {
+      hofNews.push(`🏆 ${t.champion} won the ${t.name} (Week ${t.week}).`);
+    }
+
+    // Best stable
+    const stables = [
+      { name: updatedState.player.stableName, fame: updatedState.player.fame ?? 0 },
+      ...(updatedState.rivals || []).map(r => ({ name: r.owner.stableName, fame: r.roster.reduce((s, w) => s + (w.fame ?? 0), 0) })),
+    ].sort((a, b) => b.fame - a.fame);
+    if (stables[0] && stables[0].fame > 0) {
+      hofNews.push(`🏟️ STABLE OF THE YEAR: ${stables[0].name} dominated Year ${yearNum} with ${stables[0].fame} total fame.`);
+    }
+
+    if (hofNews.length > 0) {
+      updatedState.newsletter = [...updatedState.newsletter, {
+        week: newWeek,
+        title: `Year ${yearNum} Hall of Fame Inductions`,
+        items: hofNews,
+      }];
+    }
+  }
+
   if (newSeason !== updatedState.season) {
     const promotionNews: string[] = [];
     updatedState.rivals = (updatedState.rivals || []).map(r => {
@@ -221,22 +274,18 @@ export function advanceWeek(state: GameState): GameState {
 
       let newTier = r.tier;
 
-      // Minor → Established: 15+ total wins, 2+ kills, 5+ active warriors
       if (r.tier === "Minor" && totalWins >= 15 && totalKills >= 2 && activeCount >= 5) {
         newTier = "Established";
         promotionNews.push(`📈 ${r.owner.stableName} has risen to Established status! Their ${totalWins} victories and growing kill count demand respect.`);
       }
-      // Established → Major: 30+ wins, 5+ kills, 7+ active, 60%+ win rate
       else if (r.tier === "Established" && totalWins >= 30 && totalKills >= 5 && activeCount >= 7 && totalFights > 0 && (totalWins / totalFights) >= 0.6) {
         newTier = "Major";
         promotionNews.push(`🏆 ${r.owner.stableName} ascends to Major stable status! ${r.owner.name}'s warriors are now a dominant force in the arena.`);
       }
-      // Demotion: Major → Established if < 4 active warriors
       else if (r.tier === "Major" && activeCount < 4) {
         newTier = "Established";
         promotionNews.push(`📉 ${r.owner.stableName} has been downgraded to Established — their roster has thinned dangerously.`);
       }
-      // Demotion: Established → Minor if < 3 active warriors
       else if (r.tier === "Established" && activeCount < 3) {
         newTier = "Minor";
         promotionNews.push(`📉 ${r.owner.stableName} falls to Minor status. Can ${r.owner.name} rebuild?`);

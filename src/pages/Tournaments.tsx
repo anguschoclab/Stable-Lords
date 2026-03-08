@@ -320,7 +320,7 @@ export default function Tournaments() {
       )}
 
       {/* Season Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {["Spring", "Summer", "Fall", "Winter"].map((s) => {
           const pastForSeason = pastTournaments.filter((t) => t.season === s);
           return (

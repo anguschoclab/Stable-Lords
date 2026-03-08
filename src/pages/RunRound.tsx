@@ -240,9 +240,9 @@ export default function RunRound() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-display font-bold">Run Round</h1>
+          <h1 className="text-xl sm:text-2xl font-display font-bold">Run Round</h1>
           <p className="text-muted-foreground text-sm mt-1">
             Week {state.week}, {state.season} — {state.roster.filter(w => w.status === "Active").length} warriors ready ·
             Crowd: {state.crowdMood}
@@ -251,7 +251,7 @@ export default function RunRound() {
         <Button
           onClick={runWeek}
           disabled={running || state.roster.filter(w => w.status === "Active").length < 2}
-          className="gap-2 bg-primary hover:bg-primary/90"
+          className="gap-2 bg-primary hover:bg-primary/90 w-full sm:w-auto"
           size="lg"
         >
           <Zap className="h-4 w-4" />

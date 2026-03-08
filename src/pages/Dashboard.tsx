@@ -92,7 +92,7 @@ export default function Dashboard() {
         <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-secondary via-card to-secondary p-8">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5" />
         <div className="relative">
-          <h1 className="text-3xl md:text-4xl font-display font-bold tracking-wide">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold tracking-wide">
             Arena Hub
           </h1>
           <p className="mt-2 text-muted-foreground">

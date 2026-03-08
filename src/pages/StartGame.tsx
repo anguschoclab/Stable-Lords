@@ -53,6 +53,7 @@ export default function StartGame() {
   const [screen, setScreen] = useState<Screen>("title");
   const [slots, setSlots] = useState<SaveSlotMeta[]>(() => listSaveSlots());
   const [deleteTarget, setDeleteTarget] = useState<SaveSlotMeta | null>(null);
+  const importRef = useRef<HTMLInputElement>(null);
 
   // ── New Game fields ──────────────────────────────────────────────────────
   const [ownerName, setOwnerName] = useState("");

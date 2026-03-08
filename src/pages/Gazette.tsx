@@ -598,6 +598,11 @@ export default function Gazette() {
       });
   }, [allFights, hallEntries]);
 
+  const PAGE_SIZE = 4;
+  const [shown, setShown] = useState(PAGE_SIZE);
+  const visibleIssues = weeklyIssues.slice(0, shown);
+  const hasMore = shown < weeklyIssues.length;
+  const loadMore = useCallback(() => setShown((s) => s + PAGE_SIZE), []);
   const hasContent = weeklyIssues.length > 0;
 
   return (

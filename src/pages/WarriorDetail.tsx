@@ -6,15 +6,31 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield } from "lucide-react";
+import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield, Armchair } from "lucide-react";
 import PlanBuilder from "@/components/PlanBuilder";
 import { defaultPlanForWarrior } from "@/engine/simulate";
+import { DAMAGE_LABELS } from "@/engine/skillCalc";
+import { retireWarrior } from "@/state/gameStore";
+import { toast } from "sonner";
 
 function AttrBar({ label, value, max = 25 }: { label: string; value: number; max?: number }) {
   const pct = (value / max) * 100;
   return (
     <div className="flex items-center gap-3">
       <span className="text-xs text-muted-foreground w-20">{label}</span>
+      <div className="flex-1">
+        <Progress value={pct} className="h-2" />
+      </div>
+      <span className="text-sm font-mono font-semibold w-6 text-right">{value}</span>
+    </div>
+  );
+}
+
+function SkillBar({ label, value, max = 20 }: { label: string; value: number; max?: number }) {
+  const pct = (value / max) * 100;
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-xs text-muted-foreground w-8 font-mono">{label}</span>
       <div className="flex-1">
         <Progress value={pct} className="h-2" />
       </div>
@@ -40,6 +56,14 @@ export default function WarriorDetail() {
     [warrior, state, setState]
   );
 
+  const handleRetire = useCallback(() => {
+    if (!warrior) return;
+    const updated = retireWarrior(state, warrior.id);
+    setState(updated);
+    toast.success(`${warrior.name} has been retired with honor.`);
+    navigate("/");
+  }, [warrior, state, setState, navigate]);
+
   const currentPlan = warrior?.plan ?? (warrior ? defaultPlanForWarrior(warrior) : undefined);
 
   if (!warrior) {
@@ -57,9 +81,14 @@ export default function WarriorDetail() {
 
   return (
     <div className="space-y-6">
-      <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
-        <ArrowLeft className="h-4 w-4" /> Back
-      </Button>
+      <div className="flex items-center justify-between">
+        <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Button>
+        <Button variant="outline" size="sm" onClick={handleRetire} className="gap-1.5 text-muted-foreground hover:text-destructive">
+          <Armchair className="h-3.5 w-3.5" /> Retire
+        </Button>
+      </div>
 
       {/* Hero */}
       <div className="relative rounded-xl border border-border bg-gradient-to-br from-secondary via-card to-secondary p-8 overflow-hidden">
@@ -78,6 +107,9 @@ export default function WarriorDetail() {
               {STYLE_DISPLAY_NAMES[warrior.style]}
             </p>
             <p className="font-mono text-sm text-muted-foreground mt-1">{record}</p>
+            {warrior.age && (
+              <p className="text-xs text-muted-foreground mt-1">Age: {warrior.age}</p>
+            )}
             <div className="flex gap-2 mt-3 flex-wrap">
               {warrior.flair.map((f) => (
                 <Badge key={f} variant="secondary" className="text-arena-gold border-arena-gold/30">
@@ -109,26 +141,76 @@ export default function WarriorDetail() {
         </div>
       </div>
 
-      {/* Attributes */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="font-display text-lg flex items-center gap-2">
-            <Shield className="h-5 w-5 text-primary" /> Attributes
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {ATTRIBUTE_KEYS.map((key) => (
-            <AttrBar
-              key={key}
-              label={ATTRIBUTE_LABELS[key]}
-              value={warrior.attributes[key]}
-            />
-          ))}
-          <div className="pt-2 text-xs text-muted-foreground">
-            Total: {ATTRIBUTE_KEYS.reduce((sum, k) => sum + warrior.attributes[k], 0)} / 70
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Attributes */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="font-display text-lg flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" /> Attributes
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {ATTRIBUTE_KEYS.map((key) => (
+              <AttrBar
+                key={key}
+                label={ATTRIBUTE_LABELS[key]}
+                value={warrior.attributes[key]}
+              />
+            ))}
+            <div className="pt-2 text-xs text-muted-foreground">
+              Total: {ATTRIBUTE_KEYS.reduce((sum, k) => sum + warrior.attributes[k], 0)} / 70
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Base Skills + Physicals */}
+        <div className="space-y-4">
+          {warrior.baseSkills && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <Swords className="h-5 w-5 text-arena-gold" /> Base Skills
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {Object.entries(warrior.baseSkills).map(([key, val]) => (
+                  <SkillBar key={key} label={key} value={val} />
+                ))}
+              </CardContent>
+            </Card>
+          )}
+
+          {warrior.derivedStats && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <Heart className="h-5 w-5 text-destructive" /> Physicals
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg bg-secondary p-3 border border-border">
+                    <div className="text-xs text-muted-foreground">Hit Points</div>
+                    <div className="text-lg font-bold">{warrior.derivedStats.hp}</div>
+                  </div>
+                  <div className="rounded-lg bg-secondary p-3 border border-border">
+                    <div className="text-xs text-muted-foreground">Endurance</div>
+                    <div className="text-lg font-bold">{warrior.derivedStats.endurance}</div>
+                  </div>
+                  <div className="rounded-lg bg-secondary p-3 border border-border">
+                    <div className="text-xs text-muted-foreground">Damage</div>
+                    <div className="text-lg font-bold">{DAMAGE_LABELS[warrior.derivedStats.damage]}</div>
+                  </div>
+                  <div className="rounded-lg bg-secondary p-3 border border-border">
+                    <div className="text-xs text-muted-foreground">Carry Cap</div>
+                    <div className="text-lg font-bold">{warrior.derivedStats.encumbrance}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
 
       {/* Strategy / Plan Builder */}
       {currentPlan && (
@@ -139,7 +221,7 @@ export default function WarriorDetail() {
         />
       )}
 
-      {/* Fight History (from arena) */}
+      {/* Fight History */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="font-display text-lg flex items-center gap-2">

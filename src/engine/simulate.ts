@@ -308,17 +308,45 @@ export function simulateFight(
   const matchupA = getMatchupBonus(planA.style, planD.style);
   const matchupD = getMatchupBonus(planD.style, planA.style);
 
+  // Equipment bonuses
+  const equipA = getEquipmentMods(warriorA?.equipment ?? DEFAULT_LOADOUT, derivedA.encumbrance);
+  const equipD = getEquipmentMods(warriorD?.equipment ?? DEFAULT_LOADOUT, derivedD.encumbrance);
+
+  // Trainer bonuses (shared stable trainers apply to both player warriors)
+  const trainerModsA = trainers ? getTrainerMods(trainers, planA.style) : null;
+  const trainerModsD = trainers ? getTrainerMods(trainers, planD.style) : null;
+
+  // Apply bonuses to effective skills
+  const effSkillsA: BaseSkills = {
+    ATT: skillsA.ATT + equipA.attMod + (trainerModsA?.attMod ?? 0),
+    PAR: skillsA.PAR + equipA.parMod + (trainerModsA?.parMod ?? 0),
+    DEF: skillsA.DEF + equipA.defMod + (trainerModsA?.defMod ?? 0),
+    INI: skillsA.INI + equipA.iniMod + (trainerModsA?.iniMod ?? 0),
+    RIP: skillsA.RIP,
+    DEC: skillsA.DEC + (trainerModsA?.decMod ?? 0),
+  };
+  const effSkillsD: BaseSkills = {
+    ATT: skillsD.ATT + equipD.attMod + (trainerModsD?.attMod ?? 0),
+    PAR: skillsD.PAR + equipD.parMod + (trainerModsD?.parMod ?? 0),
+    DEF: skillsD.DEF + equipD.defMod + (trainerModsD?.defMod ?? 0),
+    INI: skillsD.INI + equipD.iniMod + (trainerModsD?.iniMod ?? 0),
+    RIP: skillsD.RIP,
+    DEC: skillsD.DEC + (trainerModsD?.decMod ?? 0),
+  };
+
   // Fighter state
   const fA: FighterState = {
-    label: "A", style: planA.style, skills: skillsA, derived: derivedA, plan: planA,
+    label: "A", style: planA.style, skills: effSkillsA, derived: { ...derivedA, damage: derivedA.damage + equipA.dmgMod }, plan: planA,
     hp: derivedA.hp, maxHp: derivedA.hp,
-    endurance: derivedA.endurance, maxEndurance: derivedA.endurance,
+    endurance: derivedA.endurance + (trainerModsA?.endMod ?? 0) + equipA.endMod,
+    maxEndurance: derivedA.endurance + (trainerModsA?.endMod ?? 0) + equipA.endMod,
     hitsLanded: 0, hitsTaken: 0, ripostes: 0,
   };
   const fD: FighterState = {
-    label: "D", style: planD.style, skills: skillsD, derived: derivedD, plan: planD,
+    label: "D", style: planD.style, skills: effSkillsD, derived: { ...derivedD, damage: derivedD.damage + equipD.dmgMod }, plan: planD,
     hp: derivedD.hp, maxHp: derivedD.hp,
-    endurance: derivedD.endurance, maxEndurance: derivedD.endurance,
+    endurance: derivedD.endurance + (trainerModsD?.endMod ?? 0) + equipD.endMod,
+    maxEndurance: derivedD.endurance + (trainerModsD?.endMod ?? 0) + equipD.endMod,
     hitsLanded: 0, hitsTaken: 0, ripostes: 0,
   };
 

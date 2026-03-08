@@ -28,6 +28,7 @@ import EquipmentOptimizerPage from "@/pages/EquipmentOptimizerPage";
 import TrainingPlanner from "@/pages/TrainingPlanner";
 import SeasonalAwards from "@/pages/SeasonalAwards";
 import TournamentAwards from "@/pages/TournamentAwards";
+import StyleGuide from "@/pages/StyleGuide";
 
 const queryClient = new QueryClient();
 

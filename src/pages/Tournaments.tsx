@@ -12,7 +12,7 @@ import { STYLE_DISPLAY_NAMES, BASE_ROSTER_CAP } from "@/types/game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, Swords, Skull, Play, UserPlus, ChevronDown, ChevronUp } from "lucide-react";
+import { Trophy, Swords, Skull, Play, UserPlus, ChevronDown, ChevronUp, FastForward } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import BoutViewer from "@/components/BoutViewer";

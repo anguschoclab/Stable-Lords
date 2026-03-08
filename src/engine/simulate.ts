@@ -832,8 +832,11 @@ export function simulateFight(
     const attEndMult = getEnduranceMult(attacker.style);
     const defEndMult = getEnduranceMult(defender.style);
     const defDamageTax = defender.hitsTaken > 0 ? Math.min(3, Math.floor(defender.hitsTaken * 0.7)) : 0;
-    attacker.endurance -= Math.round(enduranceCost(attOE, attAL) * attEndMult);
-    defender.endurance -= Math.max(1, Math.round(enduranceCost(defOE, defAL) * 0.92 * defEndMult) + defDamageTax);
+    // Weapon requirement endurance penalty (×1.1 per failed req)
+    const attWepEndMult = attacker.label === "A" ? weaponReqA.endurancePenalty : weaponReqD.endurancePenalty;
+    const defWepEndMult = defender.label === "A" ? weaponReqA.endurancePenalty : weaponReqD.endurancePenalty;
+    attacker.endurance -= Math.round(enduranceCost(attOE, attAL) * attEndMult * attWepEndMult);
+    defender.endurance -= Math.max(1, Math.round(enduranceCost(defOE, defAL) * 0.92 * defEndMult * defWepEndMult) + defDamageTax);
 
     // Clamp endurance
     fA.endurance = Math.max(0, fA.endurance);

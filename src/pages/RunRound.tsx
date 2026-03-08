@@ -439,7 +439,7 @@ export default function RunRound() {
               {matchCard.map((mp, i) => (
                 <div key={i} className="flex items-center justify-between py-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold">{mp.playerWarrior.name}</span>
+                    <WarriorLink name={mp.playerWarrior.name} id={mp.playerWarrior.id} className="font-semibold" />
                     <Badge variant="outline" className="text-xs">{STYLE_DISPLAY_NAMES[mp.playerWarrior.style]}</Badge>
                     <span className="text-muted-foreground text-xs">Fame {mp.playerWarrior.fame}</span>
                   </div>

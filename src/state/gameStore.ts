@@ -38,53 +38,33 @@ function makeWarrior(
   };
 }
 
-export function createDemoState(): GameState {
+export function createFreshState(): GameState {
   return {
     meta: {
       gameName: "Stable Lords",
       version: "2.0.0",
       createdAt: new Date().toISOString(),
     },
+    ftueComplete: false,
+    ftueStep: 0,
+    coachDismissed: [],
     player: {
       id: "owner_1",
       name: "You",
-      stableName: "The Ivory Tower",
-      fame: 3,
-      renown: 2,
+      stableName: "My Stable",
+      fame: 0,
+      renown: 0,
       titles: 0,
-      personality: "Tactician",
     },
-    fame: 3,
-    popularity: 2,
+    fame: 0,
+    popularity: 0,
     week: 1,
     season: "Spring",
-    roster: [
-      makeWarrior("w1", "TARUL", FightingStyle.ParryStrike,
-        { ST: 16, CN: 10, SZ: 10, WT: 13, WL: 13, SP: 11, DF: 11 },
-        { fame: 2, popularity: 1, career: { wins: 0, losses: 1, kills: 0 } }
-      ),
-      makeWarrior("w2", "ORCREST", FightingStyle.ParryLunge,
-        { ST: 12, CN: 11, SZ: 11, WT: 12, WL: 12, SP: 13, DF: 12 },
-        { fame: 3, popularity: 2, titles: ["Spring Open"], injuries: ["off-hand numb"], flair: ["Flashy"], career: { wins: 1, losses: 0, kills: 0 } }
-      ),
-      makeWarrior("w3", "BLOB", FightingStyle.BashingAttack,
-        { ST: 18, CN: 19, SZ: 7, WT: 4, WL: 20, SP: 12, DF: 5 },
-        { fame: 1, injuries: ["trick knee"], career: { wins: 0, losses: 1, kills: 0 } }
-      ),
-    ],
+    roster: [],
     graveyard: [],
     retired: [],
     arenaHistory: [],
-    newsletter: [
-      {
-        week: 1,
-        title: "Arena Chronicle",
-        items: [
-          "Welcome to Stable Lords!",
-          "Your stable has been registered. Train your warriors and seek glory in the arena.",
-        ],
-      },
-    ],
+    newsletter: [],
     hallOfFame: [],
     crowdMood: "Calm",
     tournaments: [],
@@ -99,6 +79,9 @@ export function createDemoState(): GameState {
   };
 }
 
+/** Legacy alias — kept for existing imports */
+export const createDemoState = createFreshState;
+
 export function loadGameState(): GameState {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
@@ -112,6 +95,8 @@ export function loadGameState(): GameState {
         if (!parsed.tournaments) parsed.tournaments = [];
         if (!parsed.trainers) parsed.trainers = [];
         if (!parsed.hiringPool) parsed.hiringPool = [];
+        if (parsed.ftueComplete === undefined) parsed.ftueComplete = true; // existing saves already past FTUE
+        if (!parsed.coachDismissed) parsed.coachDismissed = [];
         // Ensure all warriors have status
         parsed.roster = (parsed.roster || []).map((w: any) => ({
           ...w,
@@ -123,9 +108,9 @@ export function loadGameState(): GameState {
   } catch {
     // corrupt save, re-seed
   }
-  const demo = createDemoState();
-  saveGameState(demo);
-  return demo;
+  const fresh = createFreshState();
+  saveGameState(fresh);
+  return fresh;
 }
 
 export function saveGameState(state: GameState): void {
@@ -138,9 +123,9 @@ export function saveGameState(state: GameState): void {
 
 export function resetGameState(): GameState {
   localStorage.removeItem(SAVE_KEY);
-  const demo = createDemoState();
-  saveGameState(demo);
-  return demo;
+  const fresh = createFreshState();
+  saveGameState(fresh);
+  return fresh;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

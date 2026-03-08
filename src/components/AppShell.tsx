@@ -17,13 +17,15 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+import { useCoachTip } from "@/hooks/useCoachTip";
+
 const navItems = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/", label: "Arena Hub", icon: LayoutDashboard },
   { to: "/run-round", label: "Run Round", icon: Zap },
   { to: "/recruit", label: "Recruit", icon: UserPlus },
   { to: "/trainers", label: "Trainers", icon: GraduationCap },
   { to: "/tournaments", label: "Tournaments", icon: Trophy },
-  { to: "/hall-of-fights", label: "Hall of Fights", icon: ScrollText },
+  { to: "/hall-of-fights", label: "Chronicle", icon: ScrollText },
   { to: "/graveyard", label: "Hall of Warriors", icon: Skull },
   { to: "/help", label: "Help", icon: HelpCircle },
 ];
@@ -33,6 +35,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { state, doReset } = useGame();
   const moodIcon = MOOD_ICONS[state.crowdMood as keyof typeof MOOD_ICONS] ?? "😐";
   const [resetOpen, setResetOpen] = useState(false);
+
+  // Fire coach tips based on current route
+  useCoachTip(location.pathname);
 
   return (
     <div className="min-h-screen bg-background">

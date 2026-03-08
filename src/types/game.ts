@@ -282,6 +282,9 @@ export interface GameState {
     version: string;
     createdAt: string;
   };
+  ftueComplete: boolean;
+  ftueStep?: number;
+  coachDismissed: string[]; // IDs of dismissed coach tips
   player: Owner;
   fame: number;
   popularity: number;

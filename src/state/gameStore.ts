@@ -147,23 +147,18 @@ export function resetGameState(): GameState {
 const SEASONS: Season[] = ["Spring", "Summer", "Fall", "Winter"];
 
 export function advanceWeek(state: GameState): GameState {
-  // Process training, economy, and aging before advancing
   const trained = processTraining(state);
   const economized = processEconomy(trained);
-  
-  // Process aging
-  const { processAging } = require("@/engine/aging");
   const aged = processAging(economized);
   
   // Tick injuries
-  const { tickInjuries } = require("@/engine/injuries");
   const injuryNews: string[] = [];
-  const rosterWithHealedInjuries = aged.roster.map((w: any) => {
-    const injuryObjects = (w.injuries || []).filter((i: any) => typeof i !== "string");
+  const rosterWithHealedInjuries = aged.roster.map((w) => {
+    const injuryObjects = (w.injuries || []).filter((i): i is import("@/types/game").InjuryData => typeof i !== "string");
     if (injuryObjects.length === 0) return w;
-    const { active, healed } = tickInjuries(injuryObjects);
+    const { active, healed } = tickInjuries(injuryObjects as any);
     if (healed.length > 0) injuryNews.push(`${w.name} recovered from ${healed.join(", ")}.`);
-    return { ...w, injuries: active };
+    return { ...w, injuries: active as any };
   });
   
   let updatedState = { ...aged, roster: rosterWithHealedInjuries };

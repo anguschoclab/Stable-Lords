@@ -20,7 +20,7 @@ import {
   type DefensiveTactic,
 } from "@/types/game";
 import { computeBaseSkills, computeDerivedStats } from "./skillCalc";
-import { getItemById, type EquipmentLoadout, DEFAULT_LOADOUT, getLoadoutWeight } from "@/data/equipment";
+import { getItemById, type EquipmentLoadout, DEFAULT_LOADOUT, getLoadoutWeight, getClassicWeaponBonus } from "@/data/equipment";
 import { getTrainingBonus, TRAINER_FOCUSES, type TrainerFocus } from "@/modules/trainers";
 import { getOffensiveSuitability, getDefensiveSuitability, suitabilityMultiplier } from "./tacticSuitability";
 import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, type Phase as StylePhase } from "./stylePassives";
@@ -162,14 +162,15 @@ function applyProtectMod(damage: number, location: HitLocation, protect?: string
 
 // ─── Tactic Modifiers ─────────────────────────────────────────────────────
 function getOffensiveTacticMods(tactic: OffensiveTactic | undefined, style: FightingStyle) {
-  if (!tactic || tactic === "none") return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 0, decBonus: 0 };
+  if (!tactic || tactic === "none") return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 0, decBonus: 0, parryBypass: 0 };
   const mult = suitabilityMultiplier(getOffensiveSuitability(style, tactic));
   switch (tactic) {
-    case "Lunge":        return { attBonus: Math.round(2 * mult), dmgBonus: 0, defPenalty: Math.round(1 * mult), endCost: 2, decBonus: 0 };
-    case "Slash":        return { attBonus: 0, dmgBonus: Math.round(2 * mult), defPenalty: 0, endCost: 1, decBonus: 0 };
-    case "Bash":         return { attBonus: Math.round(1 * mult), dmgBonus: Math.round(1 * mult), defPenalty: Math.round(2 * mult), endCost: 2, decBonus: 0 };
-    case "Decisiveness": return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 1, decBonus: Math.round(3 * mult) };
-    default:             return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 0, decBonus: 0 };
+    case "Lunge":        return { attBonus: Math.round(2 * mult), dmgBonus: 0, defPenalty: Math.round(1 * mult), endCost: 2, decBonus: 0, parryBypass: 0 };
+    case "Slash":        return { attBonus: 0, dmgBonus: Math.round(2 * mult), defPenalty: 0, endCost: 1, decBonus: 0, parryBypass: 0 };
+    // Bash: "attacks through a parry" — parryBypass reduces defender PAR check (per compendium §BA)
+    case "Bash":         return { attBonus: Math.round(1 * mult), dmgBonus: Math.round(1 * mult), defPenalty: Math.round(2 * mult), endCost: 2, decBonus: 0, parryBypass: Math.round(4 * mult) };
+    case "Decisiveness": return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 1, decBonus: Math.round(3 * mult), parryBypass: 0 };
+    default:             return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 0, decBonus: 0, parryBypass: 0 };
   }
 }
 
@@ -234,7 +235,18 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
 const GLOBAL_ATT_BONUS = 3;   // All attacks get +3 to offset double-defense
 const GLOBAL_PAR_PENALTY = -2; // Parry is slightly harder to reward aggression
 
-function oeAttMod(oe: number): number { return Math.floor((oe - 5) * 0.8); }
+function oeAttMod(oe: number, style?: FightingStyle): number {
+  // PR OE Paradox: PR attacks MORE at low OE via counterstrikes (compendium §PR)
+  // "PR may attack more with low OE by counterstriking than with high OE"
+  if (style === FightingStyle.ParryRiposte) {
+    // Invert: low OE = bonus (counter-ready), high OE = penalty (loses identity)
+    if (oe <= 3) return 2;   // Low OE: +2 ATT from counter-focus
+    if (oe <= 5) return 1;   // Mid-low: +1
+    if (oe <= 7) return 0;   // Mid: neutral
+    return -1;               // High OE: loses counter identity
+  }
+  return Math.floor((oe - 5) * 0.8);
+}
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * 0.5); }
 function alIniMod(al: number): number { return Math.floor((al - 5) * 0.6); }
 function enduranceCost(oe: number, al: number): number {
@@ -378,8 +390,12 @@ export function simulateFight(
   const trainerModsD = trainers ? getTrainerMods(trainers, planD.style) : null;
 
   // Apply bonuses to effective skills
+  // Classic weapon bonus (compendium: each style has a canonical weapon)
+  const classicBonusA = getClassicWeaponBonus(planA.style, (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon);
+  const classicBonusD = getClassicWeaponBonus(planD.style, (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon);
+
   const effSkillsA: BaseSkills = {
-    ATT: skillsA.ATT + equipA.attMod + (trainerModsA?.attMod ?? 0),
+    ATT: skillsA.ATT + equipA.attMod + (trainerModsA?.attMod ?? 0) + classicBonusA,
     PAR: skillsA.PAR + equipA.parMod + (trainerModsA?.parMod ?? 0),
     DEF: skillsA.DEF + equipA.defMod + (trainerModsA?.defMod ?? 0),
     INI: skillsA.INI + equipA.iniMod + (trainerModsA?.iniMod ?? 0),
@@ -387,7 +403,7 @@ export function simulateFight(
     DEC: skillsA.DEC + (trainerModsA?.decMod ?? 0),
   };
   const effSkillsD: BaseSkills = {
-    ATT: skillsD.ATT + equipD.attMod + (trainerModsD?.attMod ?? 0),
+    ATT: skillsD.ATT + equipD.attMod + (trainerModsD?.attMod ?? 0) + classicBonusD,
     PAR: skillsD.PAR + equipD.parMod + (trainerModsD?.parMod ?? 0),
     DEF: skillsD.DEF + equipD.defMod + (trainerModsD?.defMod ?? 0),
     INI: skillsD.INI + equipD.iniMod + (trainerModsD?.iniMod ?? 0),
@@ -416,6 +432,12 @@ export function simulateFight(
   const MAX_EXCHANGES = 15;
   const EXCHANGES_PER_MINUTE = 3;
   let winner: "A" | "D" | null = null;
+
+  // Tactic overuse tracking: consecutive exchanges using the same tactic (compendium: "tactics sparingly")
+  let lastTacticA: string = "none";
+  let lastTacticD: string = "none";
+  let tacticStreakA = 0;
+  let tacticStreakD = 0;
   let by: FightOutcome["by"] = null;
 
   // Narration helpers
@@ -540,10 +562,30 @@ export function simulateFight(
       }
     }
 
-    // ── 2. ATTACK ATTEMPT — with passive ATT + anti-synergy ──
-    const attOEmod = oeAttMod(attOE);
+    // ── TACTIC OVERUSE PENALTY (compendium: "tactics sparingly") ──
+    // Using the same tactic for 2+ consecutive exchanges degrades its effectiveness
+    const curTacticKeyA = (aGoesFirst ? tacticsA.offTactic : tacticsD.offTactic) + "|" + (aGoesFirst ? tacticsA.defTactic : tacticsD.defTactic);
+    const curTacticKeyD = (!aGoesFirst ? tacticsA.offTactic : tacticsD.offTactic) + "|" + (!aGoesFirst ? tacticsA.defTactic : tacticsD.defTactic);
+    if (curTacticKeyA === lastTacticA && curTacticKeyA !== "none|none") {
+      tacticStreakA++;
+    } else {
+      tacticStreakA = 0;
+      lastTacticA = curTacticKeyA;
+    }
+    if (curTacticKeyD === lastTacticD && curTacticKeyD !== "none|none") {
+      tacticStreakD++;
+    } else {
+      tacticStreakD = 0;
+      lastTacticD = curTacticKeyD;
+    }
+    // Penalty: -1 per consecutive exchange using same tactic (cap -3)
+    const tacticOveruseAtt = aGoesFirst ? Math.min(3, tacticStreakA) : Math.min(3, tacticStreakD);
+    const tacticOveruseDef = aGoesFirst ? Math.min(3, tacticStreakD) : Math.min(3, tacticStreakA);
+
+    // ── 2. ATTACK ATTEMPT — with passive ATT + anti-synergy + PR OE paradox ──
+    const attOEmod = oeAttMod(attOE, attacker.style);
     const attAntiSynMod = Math.round((attAntiSyn.offMult - 1) * 5);
-    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + iniPressBonus + GLOBAL_ATT_BONUS);
+    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + iniPressBonus + GLOBAL_ATT_BONUS - tacticOveruseAtt);
 
     if (!attackSuccess) {
       // Attack whiffs — reset consecutive hits
@@ -580,10 +622,12 @@ export function simulateFight(
     } else {
       // Attack lands — defender tries to stop it
 
-      // ── 3a. PARRY CHECK — with passive PAR + anti-synergy ──
+      // ── 3a. PARRY CHECK — with passive PAR + anti-synergy + Bash bypass ──
       const defOEmod = oeDefMod(defOE);
       const defAntiSynPar = Math.round((defAntiSyn.defMult - 1) * 3);
-      const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus + defPassive.parBonus + defAntiSynPar - attOffMods.defPenalty + GLOBAL_PAR_PENALTY);
+      // Bash tactic: "attack through a parry" — reduces defender's parry effectiveness (compendium §BA)
+      const bashBypass = attOffMods.parryBypass ?? 0;
+      const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus + defPassive.parBonus + defAntiSynPar - attOffMods.defPenalty + GLOBAL_PAR_PENALTY - bashBypass - tacticOveruseDef);
 
       if (parrySuccess) {
         attacker.consecutiveHits = 0;

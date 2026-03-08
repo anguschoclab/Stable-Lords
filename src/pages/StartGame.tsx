@@ -2,7 +2,7 @@
  * Stable Lords — Start Game Page (Title Screen)
  * New Game → name stable → Orphanage | Continue | Load | Delete saves
  */
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useRef } from "react";
 import { useGame } from "@/state/GameContext";
 import { createFreshState } from "@/state/gameStore";
 import {
@@ -12,6 +12,8 @@ import {
   saveToSlot,
   newSlotId,
   MAX_SAVE_SLOTS,
+  exportSlot,
+  importSaveToNewSlot,
   type SaveSlotMeta,
 } from "@/state/saveSlots";
 import { Card, CardContent } from "@/components/ui/card";

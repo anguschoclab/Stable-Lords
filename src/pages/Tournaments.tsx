@@ -190,7 +190,7 @@ export default function Tournaments() {
       NewsletterFeed.appendFightResult({ summary, transcript: outcome.log.map((e) => e.text) });
 
       // Track metrics
-      StyleMeter.recordFight({ styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by, isTournament: currentTournament.id });
+      StyleRollups.addFight({ week: state.week, styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by, isTournament: currentTournament.id });
 
       // Fame accumulation for stable
       if (outcome.winner) {

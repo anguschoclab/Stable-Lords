@@ -17,6 +17,7 @@ import Training from "@/pages/Training";
 import Trainers from "@/pages/Trainers";
 import Orphanage from "@/pages/Orphanage";
 import Scouting from "@/pages/Scouting";
+import StableDetail from "@/pages/StableDetail";
 import StartGame from "@/pages/StartGame";
 import NotFound from "./pages/NotFound";
 
@@ -44,6 +45,7 @@ function GameRoutes() {
         <Route path="/recruit" element={<Recruit />} />
         <Route path="/training" element={<Training />} />
         <Route path="/scouting" element={<Scouting />} />
+        <Route path="/stable/:id" element={<StableDetail />} />
         <Route path="/graveyard" element={<Graveyard />} />
         <Route path="/trainers" element={<Trainers />} />
         <Route path="/help" element={<Help />} />

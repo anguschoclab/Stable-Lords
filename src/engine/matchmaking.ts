@@ -187,6 +187,9 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
     roster: r.roster.map(w => ({ ...w, career: { ...w.career } })),
   }));
 
+  // Check for existing rivalries between AI stables
+  const rivalries = state.rivalries || [];
+
   for (const { a, d } of boutPairs) {
     const planA = a.warrior.plan ?? defaultPlanForWarrior(a.warrior);
     const planD = d.warrior.plan ?? defaultPlanForWarrior(d.warrior);
@@ -194,6 +197,12 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
 
     const isKill = outcome.by === "Kill";
     const winnerSide = outcome.winner;
+
+    // Check if this is a rivalry bout between AI stables
+    const isRivalryBout = rivalries.some(rv =>
+      (rv.stableIdA === a.stableId && rv.stableIdB === d.stableId) ||
+      (rv.stableIdB === a.stableId && rv.stableIdA === d.stableId)
+    );
 
     // Update records in updatedRivals
     const updateWarriorRecord = (stableIdx: number, wId: string, won: boolean, killed: boolean) => {
@@ -233,12 +242,26 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
     };
     results.push(result);
 
+    // Rivalry special coverage for AI vs AI bouts
+    if (isRivalryBout) {
+      const rivalryCoverageTemplates = [
+        `🔥 RIVALRY REPORT: The feud between ${a.stableName} and ${d.stableName} rages on — ${a.warrior.name} faced ${d.warrior.name} in a grudge match!`,
+        `⚔️ VENDETTA IN THE PITS: ${a.stableName} vs ${d.stableName} — ${a.warrior.name} and ${d.warrior.name} settled scores in the arena!`,
+        `🏟️ BAD BLOOD: ${a.stableName} and ${d.stableName} clashed again as ${a.warrior.name} took on ${d.warrior.name}!`,
+      ];
+      gazetteItems.push(rivalryCoverageTemplates[Math.floor(Math.random() * rivalryCoverageTemplates.length)]);
+    }
+
     // Generate gazette entry for notable outcomes
     if (isKill) {
       const killer = winnerSide === "A" ? a.warrior.name : d.warrior.name;
       const killerStable = winnerSide === "A" ? a.stableName : d.stableName;
       const victim = winnerSide === "A" ? d.warrior.name : a.warrior.name;
-      gazetteItems.push(`☠️ ${killer} (${killerStable}) killed ${victim} in rival arena action!`);
+      if (isRivalryBout) {
+        gazetteItems.push(`☠️ BLOOD FEUD DEEPENS: ${killer} (${killerStable}) slew ${victim} — this rivalry just turned deadlier!`);
+      } else {
+        gazetteItems.push(`☠️ ${killer} (${killerStable}) killed ${victim} in rival arena action!`);
+      }
     } else if (outcome.by === "KO") {
       const winner = winnerSide === "A" ? a.warrior.name : d.warrior.name;
       const wStable = winnerSide === "A" ? a.stableName : d.stableName;

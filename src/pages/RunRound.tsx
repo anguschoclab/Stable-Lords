@@ -337,12 +337,34 @@ export default function RunRound() {
     })).filter(t => t.contractWeeksLeft > 0);
 
     // Newsletter
-    const highlights = weekResults.map(r => {
+    const highlights: string[] = [];
+
+    // Rivalry special coverage
+    const rivalryBouts = weekResults.filter(r => r.isRivalry && r.rivalStable);
+    if (rivalryBouts.length > 0) {
+      const rivalryTemplates = [
+        (player: string, rival: string, stable: string) => `🔥 RIVALRY BOUT: The blood feud between ${state.player.stableName} and ${stable} continues — ${player} faced ${rival} in a grudge match!`,
+        (player: string, rival: string, stable: string) => `⚔️ VENDETTA: ${player} stepped into the arena against ${rival} of ${stable} — the crowd roared for blood!`,
+        (player: string, rival: string, stable: string) => `🏟️ GRUDGE MATCH: Tensions between ${state.player.stableName} and ${stable} boiled over as ${player} clashed with ${rival}!`,
+        (player: string, rival: string, stable: string) => `💀 BAD BLOOD: ${player} and ${rival} (${stable}) met in a rivalry bout — neither side will forgive, neither will forget.`,
+      ];
+      for (const r of rivalryBouts) {
+        const template = rivalryTemplates[Math.floor(Math.random() * rivalryTemplates.length)];
+        highlights.push(template(r.a.name, r.d.name, r.rivalStable!));
+        if (r.outcome.by === "Kill") {
+          const killer = r.outcome.winner === "A" ? r.a.name : r.d.name;
+          const victim = r.outcome.winner === "A" ? r.d.name : r.a.name;
+          highlights.push(`☠️ BLOOD FEUD ESCALATES: ${killer} slew ${victim} — this rivalry just turned deadly!`);
+        }
+      }
+    }
+
+    for (const r of weekResults) {
       const winner = r.outcome.winner === "A" ? r.a.name : r.outcome.winner === "D" ? r.d.name : "Draw";
       const deathNote = r.outcome.by === "Kill" ? " ☠️" : "";
       const rivalTag = r.rivalStable ? ` (vs ${r.rivalStable})` : "";
-      return `${r.a.name} vs ${r.d.name}${rivalTag}: ${winner} ${r.outcome.by ? `by ${r.outcome.by}` : "(Draw)"}${deathNote}`;
-    });
+      highlights.push(`${r.a.name} vs ${r.d.name}${rivalTag}: ${winner} ${r.outcome.by ? `by ${r.outcome.by}` : "(Draw)"}${deathNote}`);
+    }
 
     const fameChanges = new Map<string, { name: string; fame: number }>();
     for (const r of weekResults) {

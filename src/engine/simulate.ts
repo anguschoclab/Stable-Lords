@@ -767,9 +767,8 @@ export function simulateFight(
               text: `${name(defender)} collapses from accumulated damage! ${name(attacker)} wins by knockout!`,
             });
             break;
-          }
+        }
       }
-    }
     }
 
     // ── 7. ENDURANCE & FATIGUE — with style-specific drain rates ──

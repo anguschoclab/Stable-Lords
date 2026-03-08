@@ -87,10 +87,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setStateRaw((prev) => {
       const next = appendFightToHistory(prev, summary);
       const slotId = getActiveSlot();
-      if (slotId) saveToSlot(slotId, next);
+      if (slotId) { saveToSlot(slotId, next); markSaved(); }
       return next;
     });
-  }, []);
+  }, [markSaved]);
 
   const doUpdateWarrior = useCallback(
     (warriorId: string, won: boolean, killed: boolean, fameDelta: number, popDelta: number) => {

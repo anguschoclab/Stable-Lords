@@ -6,8 +6,10 @@ import { useGame } from "@/state/GameContext";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skull, Armchair } from "lucide-react";
+import { Skull, Armchair, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Graveyard() {
   const { state } = useGame();

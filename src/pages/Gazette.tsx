@@ -421,6 +421,85 @@ function StyleMatchupHeatmap({ allFights }: { allFights: FightSummary[] }) {
   );
 }
 
+/* ── Best Warrior by Style ───────────────────────────────── */
+
+function BestByStyle({ allFights }: { allFights: FightSummary[] }) {
+  const byStyle = useMemo(() => {
+    // For each style, track each warrior's record
+    const styleMap = new Map<string, Map<string, { wins: number; losses: number; kills: number; fame: number }>>();
+
+    for (const f of allFights) {
+      for (const side of ["A", "D"] as const) {
+        const style = side === "A" ? f.styleA : f.styleD;
+        const name = side === "A" ? f.a : f.d;
+        if (!styleMap.has(style)) styleMap.set(style, new Map());
+        const warriors = styleMap.get(style)!;
+        if (!warriors.has(name)) warriors.set(name, { wins: 0, losses: 0, kills: 0, fame: 0 });
+        const w = warriors.get(name)!;
+        w.fame += (side === "A" ? f.fameDeltaA : f.fameDeltaD) ?? 0;
+        if (f.winner === side) {
+          w.wins++;
+          if (f.by === "Kill") w.kills++;
+        } else if (f.winner !== null) {
+          w.losses++;
+        }
+      }
+    }
+
+    return [...styleMap.entries()]
+      .map(([style, warriors]) => {
+        const ranked = [...warriors.entries()]
+          .map(([name, d]) => ({ name, ...d, pct: (d.wins + d.losses) > 0 ? d.wins / (d.wins + d.losses) : 0 }))
+          .filter((w) => w.wins + w.losses >= 1)
+          .sort((a, b) => b.wins - a.wins || b.pct - a.pct || b.fame - a.fame)
+          .slice(0, 3);
+        return { style, top: ranked };
+      })
+      .filter((s) => s.top.length > 0)
+      .sort((a, b) => a.style.localeCompare(b.style));
+  }, [allFights]);
+
+  if (byStyle.length === 0) return null;
+
+  const medals = ["🥇", "🥈", "🥉"];
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-display flex items-center gap-2">
+          <Trophy className="h-4 w-4 text-arena-gold" /> Champions by Style
+        </CardTitle>
+        <p className="text-[10px] text-muted-foreground font-mono">
+          Top 3 warriors in each fighting style by wins
+        </p>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {byStyle.map(({ style, top }) => (
+            <div key={style} className="space-y-1.5">
+              <h3 className="text-xs font-display text-foreground border-b border-border/50 pb-1">{style}</h3>
+              {top.map((w, i) => (
+                <div key={w.name} className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm leading-none">{medals[i] ?? ""}</span>
+                    <span className={`text-[11px] font-display truncate max-w-[100px] ${i === 0 ? "text-foreground font-semibold" : "text-muted-foreground"}`}>
+                      {w.name}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-muted-foreground">
+                    <span>{w.wins}W-{w.losses}L</span>
+                    {w.kills > 0 && <span className="text-arena-blood">{w.kills}K</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 /* ── main page ───────────────────────────────────────────── */
 
 export default function Gazette() {
@@ -487,6 +566,9 @@ export default function Gazette() {
 
       {/* Style Matchup Heatmap */}
       {hasContent && <StyleMatchupHeatmap allFights={allFights} />}
+
+      {/* Best Warrior by Style */}
+      {hasContent && <BestByStyle allFights={allFights} />}
 
       {!hasContent && (
         <Card className="border-dashed">

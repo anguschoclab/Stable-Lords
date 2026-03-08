@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useGame } from "@/state/GameContext";
 import { advanceWeek } from "@/state/gameStore";
 import { simulateFight, defaultPlanForWarrior, fameFromTags } from "@/engine";
@@ -25,7 +25,9 @@ import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Swords, Zap, Skull, UserPlus, Flame, Shield, Clock } from "lucide-react";
+import { Swords, Zap, Skull, UserPlus, Flame, Shield, Clock, FastForward } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { runAutosim, type AutosimResult, type WeekSummary } from "@/engine/autosim";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import BoutViewer from "@/components/BoutViewer";
@@ -37,6 +39,9 @@ export default function RunRound() {
     { a: Warrior; d: Warrior; outcome: ReturnType<typeof simulateFight>; announcement?: string; isRivalry: boolean; rivalStable?: string }[]
   >([]);
   const [running, setRunning] = useState(false);
+  const [autosimming, setAutosimming] = useState(false);
+  const [autosimProgress, setAutosimProgress] = useState<{ current: number; total: number; lastSummary?: WeekSummary } | null>(null);
+  const [autosimResult, setAutosimResult] = useState<AutosimResult | null>(null);
 
   const fightReady = state.roster.filter(w => {
     if (w.status !== "Active") return false;
@@ -447,6 +452,34 @@ export default function RunRound() {
     );
   };
 
+  const startAutosim = useCallback(async (weeks: number) => {
+    if (autosimming || running) return;
+    setAutosimming(true);
+    setAutosimResult(null);
+    setResults([]);
+    setAutosimProgress({ current: 0, total: weeks });
+
+    const result = await runAutosim(state, weeks, (current, total, summary) => {
+      setAutosimProgress({ current, total, lastSummary: summary });
+    });
+
+    setState(result.finalState);
+    setAutosimResult(result);
+    setAutosimming(false);
+    setAutosimProgress(null);
+
+    const stopEmoji: Record<string, string> = {
+      death: "💀",
+      player_death: "☠️",
+      injury: "🩹",
+      rivalry_escalation: "🔥",
+      tournament_week: "🏆",
+      max_weeks: "✅",
+      no_pairings: "⚠️",
+    };
+    toast(`${stopEmoji[result.stopReason] ?? "⏹"} Autosim stopped after ${result.weeksSimmed} week(s): ${result.stopDetail}`);
+  }, [autosimming, running, state, setState]);
+
   const activeRivalries = (state.rivalries || []).filter(r => r.intensity > 0);
 
   return (
@@ -465,16 +498,102 @@ export default function RunRound() {
             )}
           </p>
         </div>
-        <Button
-          onClick={runWeek}
-          disabled={running || (fightReady.length < 1 && matchCard.length === 0)}
-          className="gap-2 bg-primary hover:bg-primary/90 w-full sm:w-auto"
-          size="lg"
-        >
-          <Zap className="h-4 w-4" />
-          Simulate Round
-        </Button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button
+            onClick={runWeek}
+            disabled={running || autosimming || (fightReady.length < 1 && matchCard.length === 0)}
+            className="gap-2 bg-primary hover:bg-primary/90 flex-1 sm:flex-none"
+            size="lg"
+          >
+            <Zap className="h-4 w-4" />
+            Simulate Round
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => startAutosim(4)}
+            disabled={running || autosimming || (fightReady.length < 1 && matchCard.length === 0)}
+            className="gap-2 flex-1 sm:flex-none"
+            size="lg"
+          >
+            <FastForward className="h-4 w-4" />
+            Autosim 4
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => startAutosim(13)}
+            disabled={running || autosimming || (fightReady.length < 1 && matchCard.length === 0)}
+            className="gap-2 flex-1 sm:flex-none"
+            size="lg"
+          >
+            <FastForward className="h-4 w-4" />
+            Autosim Season
+          </Button>
+        </div>
       </div>
+
+      {/* Autosim progress */}
+      {autosimming && autosimProgress && (
+        <Card className="border-primary/40 bg-primary/5">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-display font-semibold flex items-center gap-2">
+                <FastForward className="h-4 w-4 text-primary animate-pulse" /> Autosimming...
+              </span>
+              <span className="text-xs font-mono text-muted-foreground">
+                Week {autosimProgress.current}/{autosimProgress.total}
+              </span>
+            </div>
+            <Progress value={(autosimProgress.current / autosimProgress.total) * 100} className="h-2" />
+            {autosimProgress.lastSummary && (
+              <p className="text-xs text-muted-foreground">
+                Week {autosimProgress.lastSummary.week}: {autosimProgress.lastSummary.bouts} bouts
+                {autosimProgress.lastSummary.deaths > 0 && <span className="text-destructive"> · {autosimProgress.lastSummary.deaths} deaths</span>}
+                {autosimProgress.lastSummary.injuries > 0 && <span className="text-amber-500"> · {autosimProgress.lastSummary.injuries} injuries</span>}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Autosim results summary */}
+      {autosimResult && !autosimming && (
+        <Card className={`border-${autosimResult.stopReason === "max_weeks" ? "primary" : autosimResult.stopReason === "player_death" ? "destructive" : "amber-500"}/40`}>
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-display font-semibold">
+                Autosim Complete — {autosimResult.weeksSimmed} week{autosimResult.weeksSimmed !== 1 ? "s" : ""}
+              </h3>
+              <Badge variant={autosimResult.stopReason === "max_weeks" ? "default" : "destructive"} className="text-xs">
+                {autosimResult.stopReason === "max_weeks" ? "Completed" :
+                 autosimResult.stopReason === "death" ? "Death" :
+                 autosimResult.stopReason === "player_death" ? "Player Death!" :
+                 autosimResult.stopReason === "injury" ? "Injury" :
+                 autosimResult.stopReason === "rivalry_escalation" ? "Rivalry!" :
+                 autosimResult.stopReason === "tournament_week" ? "Tournament" :
+                 "Stopped"}
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground">{autosimResult.stopDetail}</p>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-lg bg-secondary p-2 text-center">
+                <div className="text-lg font-bold">{autosimResult.weekSummaries.reduce((s, w) => s + w.bouts, 0)}</div>
+                <div className="text-[10px] text-muted-foreground">Total Bouts</div>
+              </div>
+              <div className="rounded-lg bg-secondary p-2 text-center">
+                <div className="text-lg font-bold text-destructive">{autosimResult.weekSummaries.reduce((s, w) => s + w.deaths, 0)}</div>
+                <div className="text-[10px] text-muted-foreground">Deaths</div>
+              </div>
+              <div className="rounded-lg bg-secondary p-2 text-center">
+                <div className="text-lg font-bold text-amber-500">{autosimResult.weekSummaries.reduce((s, w) => s + w.injuries, 0)}</div>
+                <div className="text-[10px] text-muted-foreground">Injuries</div>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setAutosimResult(null)} className="w-full text-xs">
+              Dismiss
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Active Rivalries */}
       {activeRivalries.length > 0 && (

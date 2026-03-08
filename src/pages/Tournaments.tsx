@@ -12,7 +12,7 @@ import { STYLE_DISPLAY_NAMES, BASE_ROSTER_CAP } from "@/types/game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trophy, Swords, Skull, Play, UserPlus, ChevronDown, ChevronUp } from "lucide-react";
+import { Trophy, Swords, Skull, Play, UserPlus, ChevronDown, ChevronUp, FastForward } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import BoutViewer from "@/components/BoutViewer";
@@ -327,6 +327,127 @@ export default function Tournaments() {
     setState(updatedState);
   }, [currentTournament, state, setState]);
 
+  /** Auto-resolve AI-vs-AI rounds, stopping when a round has a player warrior */
+  const skipToMyBouts = useCallback(() => {
+    if (!currentTournament) return;
+    const playerNames = new Set(state.roster.map(w => w.name));
+
+    // We'll simulate multiple rounds in a single pass
+    let updatedState = { ...state };
+    let bracket = [...currentTournament.bracket];
+    let roundsSkipped = 0;
+
+    const findWarrior = (name: string) => {
+      const player = updatedState.roster.find(w => w.name === name);
+      if (player) return player;
+      for (const rival of (updatedState.rivals ?? [])) {
+        const rw = rival.roster.find(w => w.name === name);
+        if (rw) return rw;
+      }
+      return undefined;
+    };
+
+    for (let safety = 0; safety < 20; safety++) {
+      const unresolved = bracket.filter(b => b.winner === undefined);
+      if (unresolved.length === 0) break;
+
+      const currentRound = Math.min(...unresolved.map(b => b.round));
+      const roundBouts = unresolved.filter(b => b.round === currentRound);
+
+      // Stop if a player warrior is in this round
+      const hasPlayerBout = roundBouts.some(b =>
+        playerNames.has(b.a) || playerNames.has(b.d)
+      );
+      if (hasPlayerBout) break;
+
+      // Auto-resolve this AI-only round
+      const winners: string[] = [];
+      for (const bout of roundBouts) {
+        if (bout.d === "(bye)") {
+          bout.winner = "A";
+          winners.push(bout.a);
+          continue;
+        }
+        const wA = findWarrior(bout.a);
+        const wD = findWarrior(bout.d);
+        if (!wA || !wD) {
+          bout.winner = wA ? "A" : wD ? "D" : null;
+          winners.push(wA?.name ?? wD?.name ?? "");
+          continue;
+        }
+
+        const planA = wA.plan ?? defaultPlanForWarrior(wA);
+        const planD = wD.plan ?? defaultPlanForWarrior(wD);
+        const outcome = simulateFight(planA, planD, wA, wD, undefined, updatedState.trainers);
+
+        bout.winner = outcome.winner;
+        bout.by = outcome.by;
+        bout.fightId = `tf_${Date.now()}_${bout.matchIndex}_${safety}`;
+
+        const winnerName = outcome.winner === "A" ? bout.a : outcome.winner === "D" ? bout.d : null;
+        if (winnerName) winners.push(winnerName);
+
+        // Handle kills
+        if (outcome.by === "Kill") {
+          const deadId = outcome.winner === "A" ? wD.id : wA.id;
+          const killerName = outcome.winner === "A" ? wA.name : wD.name;
+          updatedState = killWarrior(updatedState, deadId, killerName, `Killed in ${currentTournament.name}`);
+        }
+
+        // Fight summary
+        const tags = outcome.post?.tags ?? [];
+        const summary: FightSummary = {
+          id: bout.fightId,
+          week: state.week,
+          tournamentId: currentTournament.id,
+          title: `${bout.a} vs ${bout.d}`,
+          a: bout.a,
+          d: bout.d,
+          winner: outcome.winner,
+          by: outcome.by,
+          styleA: wA.style,
+          styleD: wD.style,
+          flashyTags: tags,
+          transcript: outcome.log.map(e => e.text),
+          createdAt: new Date().toISOString(),
+        };
+        updatedState.arenaHistory = [...updatedState.arenaHistory, summary];
+        ArenaHistory.append(summary);
+        LoreArchive.signalFight(summary);
+        StyleRollups.addFight({ week: state.week, styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by });
+        StyleMeter.recordFight({ styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by, isTournament: currentTournament.id });
+      }
+
+      // Create next round
+      if (winners.length > 1) {
+        const nextRound = currentRound + 1;
+        for (let i = 0; i < winners.length; i += 2) {
+          if (i + 1 < winners.length) {
+            bracket.push({ round: nextRound, matchIndex: Math.floor(i / 2), a: winners[i], d: winners[i + 1] });
+          } else {
+            bracket.push({ round: nextRound, matchIndex: Math.floor(i / 2), a: winners[i], d: "(bye)", winner: "A" as const });
+          }
+        }
+      }
+
+      roundsSkipped++;
+    }
+
+    if (roundsSkipped === 0) {
+      toast("⚔️ Your warriors are already up next!");
+      return;
+    }
+
+    // Update tournament
+    const updatedTournament = { ...currentTournament, bracket };
+    updatedState.tournaments = updatedState.tournaments.map(t =>
+      t.id === currentTournament.id ? updatedTournament : t
+    );
+
+    setState(updatedState);
+    toast.success(`⏩ Skipped ${roundsSkipped} AI-only round${roundsSkipped !== 1 ? "s" : ""}. Your warriors are up next!`);
+  }, [currentTournament, state, setState]);
+
   const [expandedBout, setExpandedBout] = useState<string | null>(null);
 
   return (
@@ -457,9 +578,14 @@ export default function Tournaments() {
             })()}
 
             {currentTournament.bracket.some((b) => b.winner === undefined) && (
-              <Button onClick={runNextRound} className="w-full gap-2">
-                <Play className="h-4 w-4" /> Run Next Round
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={runNextRound} className="flex-1 gap-2">
+                  <Play className="h-4 w-4" /> Run Next Round
+                </Button>
+                <Button variant="outline" onClick={skipToMyBouts} className="flex-1 gap-2">
+                  <FastForward className="h-4 w-4" /> Skip to My Bouts
+                </Button>
+              </div>
             )}
           </CardContent>
         </Card>

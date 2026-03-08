@@ -19,7 +19,7 @@ export interface TempoProfile {
 // BALANCE v2: Compressed endurance multiplier range from 0.70-1.20 to 0.88-1.08.
 // Previous range created 3x+ endurance advantage for TP, making offense unviable.
 const STYLE_TEMPO: Record<FightingStyle, TempoProfile> = {
-  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  1, enduranceMult: 0.92 },
+  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  2, enduranceMult: 0.88 },  // AB conserves energy (low activity), dominates late
   [FightingStyle.BashingAttack]:   { opening:  1, mid:  0, late: -1, enduranceMult: 1.06 },
   [FightingStyle.LungingAttack]:   { opening:  2, mid:  0, late: -2, enduranceMult: 1.08 },
   [FightingStyle.ParryLunge]:      { opening:  0, mid:  1, late:  0, enduranceMult: 1.00 },

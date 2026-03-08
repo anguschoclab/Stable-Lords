@@ -78,6 +78,7 @@ export default function WorldOverview() {
       roster: state.roster.filter(w => w.status === "Active").length,
       tier: "Player",
       philosophy: "Your strategy",
+      motto: "",
       isPlayer: true,
     });
 

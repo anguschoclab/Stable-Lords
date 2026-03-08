@@ -19,6 +19,10 @@ export interface EquipmentItem {
   twoHanded?: boolean;     // weapons only — blocks shield slot
   restrictedStyles?: FightingStyle[]; // styles that CANNOT use this
   preferredStyles?: FightingStyle[];  // styles that get a bonus with this
+  // Weapon stat requirements (canonical minimums)
+  reqST?: number;          // minimum Strength
+  reqDF?: number;          // minimum Deftness
+  reqSP?: number;          // minimum Speed
 }
 
 // ─── Single-Handed Weapons ──────────────────────────────────────────────────

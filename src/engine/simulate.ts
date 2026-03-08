@@ -615,8 +615,9 @@ export function simulateFight(
       // Attack whiffs — reset consecutive hits
       attacker.consecutiveHits = 0;
 
-      if (rng() < 0.25) {
-        log.push({ minute: min, text: `${name(attacker)} probes but finds no opening.` });
+       if (rng() < 0.25) {
+        log.push({ minute: min, text: narrateAttack(rng, name(attacker), weaponOf(attacker)) });
+        log.push({ minute: min, text: narrateDodge(rng, name(defender)) });
       }
       // ── Endurance cost for attempt ──
       attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attOE, attAL) * 0.5)) + attOffMods.endCost;

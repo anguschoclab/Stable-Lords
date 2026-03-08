@@ -62,7 +62,7 @@ export const HallOfFights: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-display font-bold">Hall of Fights</h1>
+        <h1 className="text-2xl font-display font-bold">Chronicle</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Arena history, legendary bouts, and style analytics.
         </p>

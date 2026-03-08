@@ -196,7 +196,7 @@ export default function Dashboard() {
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-xl flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-primary" />
-              Arena Chronicle
+              Arena Gazette
             </CardTitle>
           </CardHeader>
           <CardContent>

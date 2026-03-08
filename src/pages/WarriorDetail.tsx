@@ -7,18 +7,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield, Armchair, User, Crosshair, Shirt, History, TrendingUp } from "lucide-react";
+import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield, Armchair, User, Crosshair, Shirt, History, TrendingUp, ScrollText } from "lucide-react";
 import TagBadge from "@/components/TagBadge";
 import PlanBuilder from "@/components/PlanBuilder";
 import EquipmentLoadoutUI from "@/components/EquipmentLoadout";
 import { defaultPlanForWarrior } from "@/engine/simulate";
 import { computeStreaks } from "@/engine/gazetteNarrative";
-import { DAMAGE_LABELS } from "@/engine/skillCalc";
+import { DAMAGE_LABELS, getDamageRating, getHPRating, computeEncumbranceClass, computeEnduranceTier, ENDURANCE_LABELS } from "@/engine/skillCalc";
 import { retireWarrior } from "@/state/gameStore";
 import { DEFAULT_LOADOUT, type EquipmentLoadout } from "@/data/equipment";
 import { toast } from "sonner";
 import SubNav, { type SubNavTab } from "@/components/SubNav";
 import BoutViewer from "@/components/BoutViewer";
+import { generateWarriorStatements } from "@/data/warriorStatements";
+import { ENCUMBRANCE_LABELS, type EncumbranceClass } from "@/data/terrabloodCharts";
 
 const TABS: SubNavTab[] = [
   { id: "overview", label: "Overview", icon: <User className="h-3.5 w-3.5" /> },

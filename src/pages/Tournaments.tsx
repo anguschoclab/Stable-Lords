@@ -335,8 +335,18 @@ export default function Tournaments() {
         <div>
           <h1 className="text-xl sm:text-2xl font-display font-bold">Seasonal Tournaments</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Compete for glory across the four seasons. Current: {state.season}
+            Compete for glory across the four seasons. Champion reward: <span className="text-primary font-semibold">+1 stable slot</span>
           </p>
+          {(state.rosterBonus ?? 0) > 0 && (
+            <div className="flex items-center gap-2 mt-1">
+              <Badge variant="outline" className="text-xs text-primary border-primary/30">
+                <Trophy className="h-3 w-3 mr-1" /> {state.rosterBonus ?? 0} bonus slot{(state.rosterBonus ?? 0) !== 1 ? "s" : ""} earned
+              </Badge>
+              <span className="text-[10px] text-muted-foreground font-mono">
+                Roster cap: {BASE_ROSTER_CAP + (state.rosterBonus ?? 0)}
+              </span>
+            </div>
+          )}
         </div>
         {canStart ? (
           <Button onClick={startTournament} className="gap-2">

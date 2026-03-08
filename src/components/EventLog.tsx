@@ -1,7 +1,7 @@
 /**
  * FM26-inspired Event Log sidebar.
  * Derives events from game state (fights, deaths, recruits, newsletters, training, injuries).
- * Every event is clickable → navigates to the relevant page/entity.
+ * Entity names are rendered as clickable links via WarriorLink.
  */
 import React, { useMemo } from "react";
 import { useGame } from "@/state/GameContext";
@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { WarriorLink } from "@/components/EntityLink";
 
 type EventType = "fight" | "kill" | "death" | "recruit" | "tournament" | "news" | "injury" | "retirement" | "training" | "recovery";
 
@@ -34,6 +35,8 @@ interface GameEvent {
   icon: React.ElementType;
   iconColor: string;
   linkTo: string;
+  /** Names to linkify in title/subtitle */
+  entityNames?: string[];
 }
 
 const EVENT_ICONS: Record<EventType, { icon: React.ElementType; color: string }> = {
@@ -49,29 +52,55 @@ const EVENT_ICONS: Record<EventType, { icon: React.ElementType; color: string }>
   recovery:   { icon: Heart,         color: "text-arena-pop" },
 };
 
-/** Resolve warrior ID from name across roster, graveyard, retired, rivals */
-function resolveWarriorLink(name: string, state: any): string {
-  const w = state.roster?.find((w: any) => w.name === name);
-  if (w) return `/warrior/${w.id}`;
-  const d = state.graveyard?.find((w: any) => w.name === name);
-  if (d) return `/warrior/${d.id}`;
-  const r = state.retired?.find((w: any) => w.name === name);
-  if (r) return `/warrior/${r.id}`;
-  for (const rival of state.rivals ?? []) {
-    const rw = rival.roster?.find((w: any) => w.name === name);
-    if (rw) return `/warrior/${rw.id}`;
-  }
-  return "/hall-of-fights";
+/**
+ * Renders text with known entity names replaced by clickable WarriorLink components.
+ * Names are matched longest-first to avoid partial matches.
+ */
+function LinkifiedText({ text, names }: { text: string; names: string[] }) {
+  if (!names || names.length === 0) return <>{text}</>;
+
+  // Sort longest first to avoid partial matches
+  const sorted = [...names].sort((a, b) => b.length - a.length);
+  // Escape regex special chars in names
+  const escaped = sorted.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const pattern = new RegExp(`(${escaped.join("|")})`, "g");
+
+  const parts = text.split(pattern);
+  const nameSet = new Set(names);
+
+  return (
+    <>
+      {parts.map((part, i) =>
+        nameSet.has(part) ? (
+          <WarriorLink key={i} name={part} className="font-semibold" />
+        ) : (
+          <React.Fragment key={i}>{part}</React.Fragment>
+        )
+      )}
+    </>
+  );
 }
 
 export default function EventLog() {
   const { state } = useGame();
   const navigate = useNavigate();
 
+  // Collect all known warrior names for linkification
+  const allWarriorNames = useMemo(() => {
+    const names = new Set<string>();
+    for (const w of state.roster) names.add(w.name);
+    for (const w of state.graveyard) names.add(w.name);
+    for (const w of state.retired ?? []) names.add(w.name);
+    for (const r of state.rivals ?? []) {
+      for (const w of r.roster) names.add(w.name);
+    }
+    return [...names];
+  }, [state.roster, state.graveyard, state.retired, state.rivals]);
+
   const events = useMemo(() => {
     const all: GameEvent[] = [];
 
-    // Fight results → Hall of Fights
+    // Fight results
     state.arenaHistory.forEach((f) => {
       const isKill = f.by === "Kill";
       const winnerName = f.winner === "A" ? f.a : f.winner === "D" ? f.d : null;
@@ -84,11 +113,14 @@ export default function EventLog() {
         icon: EVENT_ICONS[isKill ? "kill" : "fight"].icon,
         iconColor: EVENT_ICONS[isKill ? "kill" : "fight"].color,
         linkTo: "/hall-of-fights",
+        entityNames: [f.a, f.d],
       });
     });
 
-    // Deaths → Warrior detail (fallen)
+    // Deaths
     state.graveyard.forEach((w) => {
+      const names = [w.name];
+      if (w.killedBy) names.push(w.killedBy);
       all.push({
         id: `death-${w.id}`,
         week: w.deathWeek ?? 0,
@@ -98,10 +130,11 @@ export default function EventLog() {
         icon: EVENT_ICONS.death.icon,
         iconColor: EVENT_ICONS.death.color,
         linkTo: `/warrior/${w.id}`,
+        entityNames: names,
       });
     });
 
-    // Retirements → Warrior detail (retired)
+    // Retirements
     state.retired.forEach((w) => {
       all.push({
         id: `retire-${w.id}`,
@@ -112,28 +145,30 @@ export default function EventLog() {
         icon: EVENT_ICONS.retirement.icon,
         iconColor: EVENT_ICONS.retirement.color,
         linkTo: `/warrior/${w.id}`,
+        entityNames: [w.name],
       });
     });
 
-    // Injuries on active warriors → Warrior detail
+    // Injuries
     state.roster.forEach((w) => {
       if (!w.injuries || w.injuries.length === 0) return;
       w.injuries.forEach((inj, idx) => {
         if (typeof inj === "string") return;
         all.push({
           id: `injury-${w.id}-${inj.id ?? idx}`,
-          week: state.week, // approximate — injuries don't always store week
+          week: state.week,
           type: "injury",
           title: `${w.name} — ${inj.name}`,
           subtitle: `${inj.severity} · ${inj.weeksRemaining}w recovery`,
           icon: EVENT_ICONS.injury.icon,
           iconColor: EVENT_ICONS.injury.color,
           linkTo: `/warrior/${w.id}`,
+          entityNames: [w.name],
         });
       });
     });
 
-    // Training assignments → Training page
+    // Training
     (state.trainingAssignments ?? []).forEach((a) => {
       const w = state.roster.find((w) => w.id === a.warriorId);
       if (!w) return;
@@ -147,10 +182,11 @@ export default function EventLog() {
         icon: EVENT_ICONS[isRecovery ? "recovery" : "training"].icon,
         iconColor: EVENT_ICONS[isRecovery ? "recovery" : "training"].color,
         linkTo: "/training",
+        entityNames: [w.name],
       });
     });
 
-    // Newsletter items → Hall of Fights (closest narrative page)
+    // Newsletter
     state.newsletter.forEach((n) => {
       all.push({
         id: `news-${n.week}-${n.title}`,
@@ -164,8 +200,10 @@ export default function EventLog() {
       });
     });
 
-    // Tournaments → Tournaments page
+    // Tournaments
     state.tournaments.filter((t) => t.completed).forEach((t) => {
+      const names: string[] = [];
+      if (t.champion) names.push(t.champion);
       all.push({
         id: `tourney-${t.id}`,
         week: t.week,
@@ -175,12 +213,11 @@ export default function EventLog() {
         icon: EVENT_ICONS.tournament.icon,
         iconColor: EVENT_ICONS.tournament.color,
         linkTo: "/tournaments",
+        entityNames: names,
       });
     });
 
-    // Sort newest first
     all.sort((a, b) => b.week - a.week || b.id.localeCompare(a.id));
-
     return all;
   }, [state.arenaHistory, state.graveyard, state.retired, state.newsletter, state.tournaments, state.roster, state.trainingAssignments, state.week]);
 
@@ -240,11 +277,11 @@ export default function EventLog() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="text-xs font-medium text-foreground leading-tight truncate">
-                          {event.title}
+                          <LinkifiedText text={event.title} names={event.entityNames ?? allWarriorNames} />
                         </div>
                         {event.subtitle && (
                           <div className="text-[11px] text-muted-foreground leading-tight mt-0.5 truncate">
-                            {event.subtitle}
+                            <LinkifiedText text={event.subtitle} names={event.entityNames ?? allWarriorNames} />
                           </div>
                         )}
                       </div>

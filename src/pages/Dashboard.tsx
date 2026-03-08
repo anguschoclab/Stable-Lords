@@ -419,6 +419,96 @@ function RecentBoutsWidget() {
   );
 }
 
+// ─── Widget: Training Status ───────────────────────────────────────────────
+
+function TrainingWidget() {
+  const { state } = useGame();
+  const assignments = state.trainingAssignments ?? [];
+
+  // Map warrior IDs to warriors for display
+  const trainingWarriors = useMemo(() =>
+    assignments.map(a => ({
+      ...a,
+      warrior: state.roster.find(w => w.id === a.warriorId),
+    })).filter(a => a.warrior),
+    [assignments, state.roster]
+  );
+
+  return (
+    <Card>
+      <CardHeader className="pb-2 flex flex-row items-center justify-between">
+        <CardTitle className="font-display text-base flex items-center gap-2">
+          <Dumbbell className="h-4 w-4 text-primary" /> Training
+        </CardTitle>
+        <Link to="/training">
+          <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 text-muted-foreground">
+            Manage <ChevronRight className="h-3 w-3" />
+          </Button>
+        </Link>
+      </CardHeader>
+      <CardContent>
+        {trainingWarriors.length === 0 ? (
+          <div className="text-center py-3">
+            <p className="text-xs text-muted-foreground italic">No warriors in training.</p>
+            <Link to="/training">
+              <Button variant="outline" size="sm" className="mt-2 text-xs gap-1">
+                <Dumbbell className="h-3 w-3" /> Assign Training
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            {trainingWarriors.map(({ warriorId, attribute, warrior }) => {
+              const w = warrior!;
+              const current = w.attributes[attribute];
+              const potential = w.potential?.[attribute];
+              const atCeiling = potential !== undefined && current >= potential;
+              const nearCeiling = potential !== undefined && (potential - current) <= 2;
+
+              return (
+                <div key={warriorId} className="flex items-center gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm font-display font-semibold truncate">{w.name}</span>
+                      <Badge variant="outline" className="text-[10px] font-mono h-4 px-1">
+                        {STYLE_ABBREV[w.style]}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="text-[10px] text-muted-foreground">Training</span>
+                      <Badge
+                        variant={atCeiling ? "secondary" : "default"}
+                        className="text-[10px] h-4 px-1.5"
+                      >
+                        {ATTRIBUTE_LABELS[attribute]}
+                      </Badge>
+                      <span className="text-[10px] font-mono text-muted-foreground">
+                        ({current})
+                      </span>
+                      {atCeiling && (
+                        <span className="text-[9px] text-muted-foreground italic">at ceiling</span>
+                      )}
+                      {!atCeiling && nearCeiling && (
+                        <span className="text-[9px] text-arena-gold italic">nearing peak</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="shrink-0">
+                    <div className={`h-2 w-2 rounded-full ${atCeiling ? "bg-muted-foreground" : "bg-arena-pop animate-pulse"}`} />
+                  </div>
+                </div>
+              );
+            })}
+            <div className="text-[10px] text-muted-foreground pt-1 border-t border-border/50">
+              {trainingWarriors.length} warrior{trainingWarriors.length !== 1 ? "s" : ""} training · gains apply at week end
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 // ─── Widget Registry ───────────────────────────────────────────────────────
 
 type WidgetDef = {
@@ -432,6 +522,7 @@ const WIDGET_REGISTRY: WidgetDef[] = [
   { id: "season",   label: "Season & Schedule", component: SeasonWidget },
   { id: "stable",   label: "Stable Overview",   component: StableWidget },
   { id: "finances", label: "Finances",           component: FinancesWidget },
+  { id: "training", label: "Training Status",    component: TrainingWidget },
   { id: "rankings", label: "Warrior Rankings",   component: RankingsWidget, wide: true },
   { id: "meta",     label: "Meta Pulse",         component: MetaPulseWidget },
   { id: "bouts",    label: "Recent Bouts",       component: RecentBoutsWidget, wide: true },

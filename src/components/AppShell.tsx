@@ -20,6 +20,7 @@ import {
 import { useCoachTip } from "@/hooks/useCoachTip";
 import { getActiveSlot, deleteSlot, exportActiveSlot } from "@/state/saveSlots";
 import EventLog from "@/components/EventLog";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 const navItems = [
   { to: "/", label: "Hub", icon: LayoutDashboard },

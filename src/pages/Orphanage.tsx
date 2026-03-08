@@ -144,9 +144,13 @@ export default function Orphanage() {
         killedBy: boutResult?.outcome.winner === "A" ? boutResult.a.name : boutResult?.d.name,
       }));
 
-    const rivals = generateRivalStables(3, Date.now()).map((r) => ({
+    const rivals = generateRivalStables(8, Date.now()).map((r) => ({
       owner: r.owner,
       roster: r.roster,
+      motto: r.template.motto,
+      origin: r.template.origin,
+      philosophy: r.template.philosophy,
+      tier: r.template.tier,
     }));
 
     const newState = {

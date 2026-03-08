@@ -9,7 +9,7 @@ import { FightingStyle } from "@/types/game";
 // ─── 1) Style Tempo — Phase-based bonuses ─────────────────────────────────
 // Positive = bonus in that phase, negative = penalty
 
-export interface TempoProfile {
+interface TempoProfile {
   opening: number;  // INI/ATT bonus in opening phase
   mid: number;
   late: number;

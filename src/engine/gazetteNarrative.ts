@@ -232,6 +232,8 @@ export function generateWeeklyGazette(
     } else {
       headline = `Week ${week}: Old Foes Meet Again — ${rivalryPair.a} vs ${rivalryPair.b} (Bout ${rivalryPair.count})`;
     }
+  } else if (risingStars.length > 0) {
+    headline = `Week ${week}: RISING STAR! ${risingStars[0]} Opens Career with a Perfect 3-0!`;
   } else if (kills.length >= 2) {
     headline = `Week ${week}: Blood Runs Deep — ${kills.length} Warriors Fall!`;
   } else if (kills.length === 1) {

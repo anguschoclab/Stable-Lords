@@ -108,8 +108,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
-                      // Delete the current slot then return to title
-                      const { getActiveSlot, deleteSlot } = require("@/state/saveSlots");
                       const slotId = getActiveSlot();
                       if (slotId) deleteSlot(slotId);
                       doReset();

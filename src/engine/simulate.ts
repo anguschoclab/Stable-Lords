@@ -370,13 +370,23 @@ export function simulateFight(
     const phase = getPhase(ex, MAX_EXCHANGES);
     const min = minute(ex);
 
+    // Phase-based OE/AL/KD resolution
+    const phaseKeyA = phase === "OPENING" ? "opening" : phase === "MID" ? "mid" : "late";
+    const phaseKeyD = phase === "OPENING" ? "opening" : phase === "MID" ? "mid" : "late";
+    const effOE_A = fA.plan.phases?.[phaseKeyA]?.OE ?? fA.plan.OE;
+    const effAL_A = fA.plan.phases?.[phaseKeyA]?.AL ?? fA.plan.AL;
+    const effKD_A = fA.plan.phases?.[phaseKeyA]?.killDesire ?? fA.plan.killDesire ?? 5;
+    const effOE_D = fD.plan.phases?.[phaseKeyD]?.OE ?? fD.plan.OE;
+    const effAL_D = fD.plan.phases?.[phaseKeyD]?.AL ?? fD.plan.AL;
+    const effKD_D = fD.plan.phases?.[phaseKeyD]?.killDesire ?? fD.plan.killDesire ?? 5;
+
     // Fatigue penalties
     const fatA = fatiguePenalty(fA.endurance, fA.maxEndurance);
     const fatD = fatiguePenalty(fD.endurance, fD.maxEndurance);
 
     // ── 1. INITIATIVE CONTEST ──
-    const iniA = fA.skills.INI + alIniMod(fA.plan.AL) + matchupA + fatA;
-    const iniD = fD.skills.INI + alIniMod(fD.plan.AL) + matchupD + fatD;
+    const iniA = fA.skills.INI + alIniMod(effAL_A) + matchupA + fatA;
+    const iniD = fD.skills.INI + alIniMod(effAL_D) + matchupD + fatD;
     const aGoesFirst = contestCheck(rng, iniA, iniD);
 
     const attacker = aGoesFirst ? fA : fD;
@@ -385,6 +395,11 @@ export function simulateFight(
     const defMatchup = aGoesFirst ? matchupD : matchupA;
     const attFat = aGoesFirst ? fatA : fatD;
     const defFat = aGoesFirst ? fatD : fatA;
+    const attOE = aGoesFirst ? effOE_A : effOE_D;
+    const defOE = aGoesFirst ? effOE_D : effOE_A;
+    const attAL = aGoesFirst ? effAL_A : effAL_D;
+    const defAL = aGoesFirst ? effAL_D : effAL_A;
+    const attKD = aGoesFirst ? effKD_A : effKD_D;
 
     // Narrate initiative swings
     if (ex === 0 || (ex > 0 && rng() < 0.3)) {
@@ -394,7 +409,7 @@ export function simulateFight(
     }
 
     // ── 2. ATTACK ATTEMPT (ATT) ──
-    const attOEmod = oeAttMod(attacker.plan.OE);
+    const attOEmod = oeAttMod(attOE);
     const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat);
 
     if (!attackSuccess) {
@@ -403,7 +418,7 @@ export function simulateFight(
         log.push({ minute: min, text: `${name(attacker)} probes but finds no opening.` });
       }
       // ── Endurance cost for attempt ──
-      attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attacker.plan.OE, attacker.plan.AL) * 0.5));
+      attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attOE, attAL) * 0.5));
 
       // Defender may riposte on whiff
       // ── 4. RIPOSTE CHECK (RIP) ──
@@ -427,7 +442,7 @@ export function simulateFight(
       // Attack lands — defender tries to stop it
 
       // ── 3a. PARRY CHECK (PAR) ──
-      const defOEmod = oeDefMod(defender.plan.OE);
+      const defOEmod = oeDefMod(defOE);
       const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat);
 
       if (parrySuccess) {
@@ -451,7 +466,7 @@ export function simulateFight(
         }
       } else {
         // ── 3b. DEFENSE CHECK (DEF) ──
-        const defSuccess = skillCheck(rng, defender.skills.DEF, defOEmod + defMatchup + defFat);
+        const defSuccess = skillCheck(rng, defender.skills.DEF, oeDefMod(defOE) + defMatchup + defFat);
 
         if (defSuccess) {
           if (rng() < 0.2) {
@@ -480,7 +495,7 @@ export function simulateFight(
 
           // ── 6. DECISIVENESS CHECK (DEC) — Kill Window ──
           if (defender.hp <= defender.maxHp * 0.3 && defender.endurance <= defender.maxEndurance * 0.4) {
-            const kdMod = Math.floor((attacker.plan.killDesire ?? 5) - 5) * 0.5;
+            const kdMod = Math.floor((attKD) - 5) * 0.5;
             const phaseMod = phase === "LATE" ? 3 : phase === "MID" ? 1 : 0;
             const decSuccess = skillCheck(rng, attacker.skills.DEC, kdMod + phaseMod + attMatchup + attFat);
 
@@ -488,7 +503,7 @@ export function simulateFight(
               // Kill window — attempt execution
               const killRoll = rng();
               const healingReduction = defender.label === "A" ? (trainerModsA?.healMod ?? 0) * 0.03 : (trainerModsD?.healMod ?? 0) * 0.03;
-              const killThreshold = Math.max(0.05, 0.3 + (attacker.plan.killDesire ?? 5) * 0.04 + (phase === "LATE" ? 0.15 : 0) - healingReduction);
+              const killThreshold = Math.max(0.05, 0.3 + attKD * 0.04 + (phase === "LATE" ? 0.15 : 0) - healingReduction);
 
               if (killRoll < killThreshold) {
                 // KILL
@@ -528,8 +543,8 @@ export function simulateFight(
     }
 
     // ── 7. ENDURANCE & FATIGUE UPDATE ──
-    attacker.endurance -= enduranceCost(attacker.plan.OE, attacker.plan.AL);
-    defender.endurance -= Math.max(1, Math.floor(enduranceCost(defender.plan.OE, defender.plan.AL) * 0.6));
+    attacker.endurance -= enduranceCost(attOE, attAL);
+    defender.endurance -= Math.max(1, Math.floor(enduranceCost(defOE, defAL) * 0.6));
 
     // Clamp endurance
     fA.endurance = Math.max(0, fA.endurance);

@@ -178,13 +178,30 @@ export interface CareerRecord {
 
 export type WarriorStatus = "Active" | "Dead" | "Retired";
 
+/** Injury severity tiers (per Design Bible §Injuries) */
+export type InjurySeverity = "Minor" | "Moderate" | "Severe" | "Critical" | "Permanent";
+
+/** Recovery time ranges by severity (in weeks) */
+export const INJURY_SEVERITY_WEEKS: Record<InjurySeverity, { min: number; max: number }> = {
+  Minor: { min: 1, max: 2 },
+  Moderate: { min: 2, max: 4 },
+  Severe: { min: 4, max: 8 },
+  Critical: { min: 8, max: 16 },
+  Permanent: { min: Infinity, max: Infinity },
+};
+
+/** Body locations that can sustain injuries */
+export type InjuryLocation = "Head" | "Chest" | "Abdomen" | "Arms" | "Legs" | "General";
+
 export interface InjuryData {
   id: string;
   name: string;
   description: string;
-  severity: "Minor" | "Moderate" | "Severe";
+  severity: InjurySeverity;
+  location?: InjuryLocation;
   weeksRemaining: number;
-  penalties: Record<string, number>;
+  penalties: Partial<Record<keyof Attributes | keyof BaseSkills, number>>;
+  permanent?: boolean;
 }
 
 /**

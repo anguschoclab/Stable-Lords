@@ -227,14 +227,14 @@ export function getStylePassive(
       };
 
     // ── Total Parry: Endurance Wall ──
-    // Small PAR/DEF bonuses (their base skills already dominate); endurance efficiency is the real advantage
+    // Modest PAR bonus (seeds already give defense); real advantage is endurance efficiency
     case FightingStyle.TotalParry: {
       const lateBonus = context.phase === "LATE" ? 1 : 0;
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        parBonus: 1 + lateBonus + m.bonus,
-        defBonus: lateBonus,
+        parBonus: lateBonus + m.bonus,  // Reduced from 1+lateBonus — seeds carry the weight
+        defBonus: 0,                     // Removed — seeds already provide DEF 4
         ripBonus: context.phase === "LATE" ? 1 : 0,
         narrative: context.phase === "LATE" && context.endRatio > 0.5
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}stands fresh as the opponent gasps for breath!`

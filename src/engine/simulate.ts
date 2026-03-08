@@ -572,11 +572,18 @@ export function simulateFight(
     const attDefMods = aGoesFirst ? defModsA : defModsD;
     const defDefMods = aGoesFirst ? defModsD : defModsA;
 
-    // Narrate initiative swings
+    // Narrate initiative swings (canonical PBP style)
     if (ex === 0 || (ex > 0 && rng() < 0.3)) {
-      if (aGoesFirst && ex <= 1) {
-        log.push({ minute: min, text: `${name(attacker)} seizes the initiative!` });
+      if (aGoesFirst) {
+        log.push({ minute: min, text: narrateInitiative(rng, name(attacker), rng() < 0.3) });
       }
+    }
+
+    // Minute markers with status assessment (canonical: "MINUTE 2. The warriors appear equal in skill.")
+    if (min > lastMinuteMarker && min > 1) {
+      lastMinuteMarker = min;
+      log.push({ minute: min, text: `MINUTE ${min}.` });
+      log.push({ minute: min, text: minuteStatusLine(rng, min, nameA, nameD, fA.hitsLanded, fD.hitsLanded) });
     }
 
     // ── TACTIC OVERUSE PENALTY (compendium: "tactics sparingly") ──

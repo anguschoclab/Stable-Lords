@@ -249,11 +249,10 @@ function oeAttMod(oe: number, style?: FightingStyle): number {
     if (oe <= 7) return -1;  // High OE: loses counter identity
     return -2;               // Very high OE: completely wrong for PR
   }
-  // AB OE Paradox: AB gains accuracy at low OE — "conserves endurance by not moving
-  // much" means each swing is deliberate and precise (compendium §AB)
+  // AB OE rule: AB doesn't get penalized for low OE (patience is a feature, not a bug)
+  // but doesn't get a BONUS either — the advantage comes from endurance conservation
   if (style === FightingStyle.AimedBlow) {
-    if (oe <= 4) return 1;   // Low OE: +1 ATT from careful aim
-    if (oe <= 6) return 0;   // Mid: neutral
+    if (oe <= 5) return 0;   // Low-mid OE: no penalty (patience)
     return -1;               // High OE: rushing undermines precision
   }
   return Math.floor((oe - 5) * 0.8);

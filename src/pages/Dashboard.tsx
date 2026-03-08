@@ -89,11 +89,11 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Hero Banner */}
-      <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-secondary via-card to-secondary p-8">
+        <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-secondary via-card to-secondary p-8">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5" />
         <div className="relative">
           <h1 className="text-3xl md:text-4xl font-display font-bold tracking-wide">
-            Stable Lords
+            Arena Hub
           </h1>
           <p className="mt-2 text-muted-foreground">
             Welcome back, <span className="text-foreground font-medium">{state.player.name}</span> — 

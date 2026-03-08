@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGame } from "@/state/GameContext";
-import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type Warrior, type FightPlan } from "@/types/game";
+import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type Warrior, type FightPlan, type FightSummary } from "@/types/game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -51,7 +51,7 @@ function SkillBar({ label, value, max = 20 }: { label: string; value: number; ma
   );
 }
 
-function WarriorFightHistory({ warriorName, arenaHistory }: { warriorName: string; arenaHistory: import("@/types/game").FightSummary[] }) {
+function WarriorFightHistory({ warriorName, arenaHistory }: { warriorName: string; arenaHistory: FightSummary[] }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const fights = arenaHistory.filter((f) => f.a === warriorName || f.d === warriorName);
 

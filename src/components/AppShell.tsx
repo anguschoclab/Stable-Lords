@@ -1,22 +1,26 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Swords, LayoutDashboard, Zap, Trophy, HelpCircle, RotateCcw, ScrollText } from "lucide-react";
+import { Swords, LayoutDashboard, Zap, Trophy, HelpCircle, RotateCcw, ScrollText, UserPlus, Skull } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGame } from "@/state/GameContext";
 import { Badge } from "@/components/ui/badge";
+import { MOOD_ICONS } from "@/engine/crowdMood";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/run-round", label: "Run Round", icon: Zap },
+  { to: "/recruit", label: "Recruit", icon: UserPlus },
   { to: "/tournaments", label: "Tournaments", icon: Trophy },
-  { to: "/help", label: "Help", icon: HelpCircle },
   { to: "/hall-of-fights", label: "Hall of Fights", icon: ScrollText },
+  { to: "/graveyard", label: "Hall of Warriors", icon: Skull },
+  { to: "/help", label: "Help", icon: HelpCircle },
 ];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const { state, doReset } = useGame();
+  const moodIcon = MOOD_ICONS[state.crowdMood as keyof typeof MOOD_ICONS] ?? "😐";
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,8 +57,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="text-xs font-mono text-muted-foreground">
-              Wk {state.week} · {state.season}
+            <Badge variant="outline" className="text-xs font-mono text-muted-foreground gap-1">
+              {moodIcon} Wk {state.week} · {state.season}
             </Badge>
             <Button
               variant="ghost"

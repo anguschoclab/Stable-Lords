@@ -11,6 +11,8 @@ import Tournaments from "@/pages/Tournaments";
 import Help from "@/pages/Help";
 import WarriorDetail from "@/pages/WarriorDetail";
 import HallOfFights from "@/lore/HallOfFights";
+import Recruit from "@/pages/Recruit";
+import Graveyard from "@/pages/Graveyard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +29,8 @@ const App = () => (
               <Route path="/" element={<Dashboard />} />
               <Route path="/run-round" element={<RunRound />} />
               <Route path="/tournaments" element={<Tournaments />} />
+              <Route path="/recruit" element={<Recruit />} />
+              <Route path="/graveyard" element={<Graveyard />} />
               <Route path="/help" element={<Help />} />
               <Route path="/warrior/:id" element={<WarriorDetail />} />
               <Route path="/hall-of-fights" element={<HallOfFights />} />

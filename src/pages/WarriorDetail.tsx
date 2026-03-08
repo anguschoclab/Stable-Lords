@@ -7,18 +7,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield, Armchair, User, Crosshair, Shirt, History, TrendingUp } from "lucide-react";
+import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield, Armchair, User, Crosshair, Shirt, History, TrendingUp, ScrollText } from "lucide-react";
 import TagBadge from "@/components/TagBadge";
 import PlanBuilder from "@/components/PlanBuilder";
 import EquipmentLoadoutUI from "@/components/EquipmentLoadout";
 import { defaultPlanForWarrior } from "@/engine/simulate";
 import { computeStreaks } from "@/engine/gazetteNarrative";
-import { DAMAGE_LABELS } from "@/engine/skillCalc";
+import { DAMAGE_LABELS, getDamageRating, getHPRating, computeEncumbranceClass, computeEnduranceTier, ENDURANCE_LABELS } from "@/engine/skillCalc";
 import { retireWarrior } from "@/state/gameStore";
 import { DEFAULT_LOADOUT, type EquipmentLoadout } from "@/data/equipment";
 import { toast } from "sonner";
 import SubNav, { type SubNavTab } from "@/components/SubNav";
 import BoutViewer from "@/components/BoutViewer";
+import { generateWarriorStatements } from "@/data/warriorStatements";
+import { ENCUMBRANCE_LABELS, type EncumbranceClass } from "@/data/terrabloodCharts";
 
 const TABS: SubNavTab[] = [
   { id: "overview", label: "Overview", icon: <User className="h-3.5 w-3.5" /> },
@@ -124,6 +126,28 @@ function SkillBar({ label, value, max = 20 }: { label: string; value: number; ma
       </div>
       <span className="text-sm font-mono font-semibold w-6 text-right">{value}</span>
     </div>
+  );
+}
+
+function WarriorStatementsPanel({ warrior }: { warrior: Warrior }) {
+  if (!warrior.baseSkills) return null;
+  const statements = generateWarriorStatements(
+    warrior.attributes.WT, warrior.attributes.SP, warrior.attributes.DF, warrior.baseSkills
+  );
+  const lines = [
+    statements.initiative, statements.riposte, statements.attack,
+    statements.parry, statements.defense, statements.endurance,
+    statements.coordination, statements.quickness, statements.activity,
+  ].filter(Boolean);
+
+  if (lines.length === 0) return <p className="text-xs text-muted-foreground italic">No notable observations.</p>;
+
+  return (
+    <ul className="space-y-1.5">
+      {lines.map((line, i) => (
+        <li key={i} className="text-xs text-muted-foreground italic leading-relaxed">• {line}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -433,20 +457,41 @@ export default function WarriorDetail() {
                     <div className="rounded-lg bg-secondary p-3 border border-border">
                       <div className="text-xs text-muted-foreground">Hit Points</div>
                       <div className="text-lg font-bold">{warrior.derivedStats.hp}</div>
+                      <div className="text-[10px] text-muted-foreground">{getHPRating(warrior.derivedStats.hp)}</div>
                     </div>
                     <div className="rounded-lg bg-secondary p-3 border border-border">
                       <div className="text-xs text-muted-foreground">Endurance</div>
                       <div className="text-lg font-bold">{warrior.derivedStats.endurance}</div>
+                      <div className="text-[10px] text-muted-foreground">
+                        {ENDURANCE_LABELS[computeEnduranceTier(warrior.attributes.ST, warrior.attributes.CN, warrior.attributes.WL)]}
+                      </div>
                     </div>
                     <div className="rounded-lg bg-secondary p-3 border border-border">
                       <div className="text-xs text-muted-foreground">Damage</div>
-                      <div className="text-lg font-bold">{DAMAGE_LABELS[warrior.derivedStats.damage]}</div>
+                      <div className="text-lg font-bold">{getDamageRating(warrior.derivedStats.damage)}</div>
                     </div>
                     <div className="rounded-lg bg-secondary p-3 border border-border">
                       <div className="text-xs text-muted-foreground">Carry Cap</div>
                       <div className="text-lg font-bold">{warrior.derivedStats.encumbrance}</div>
+                      <div className="text-[10px] text-muted-foreground">
+                        {ENCUMBRANCE_LABELS[computeEncumbranceClass(warrior.attributes.ST, warrior.attributes.CN)]}
+                      </div>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Canonical Warrior Statements */}
+            {warrior.baseSkills && (
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="font-display text-lg flex items-center gap-2">
+                    <ScrollText className="h-5 w-5 text-arena-fame" /> Overview Statements
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <WarriorStatementsPanel warrior={warrior} />
                 </CardContent>
               </Card>
             )}

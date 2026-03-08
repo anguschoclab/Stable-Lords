@@ -235,34 +235,29 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
 }
 
 // ─── OE/AL Effects ────────────────────────────────────────────────────────
-// BALANCE: Global offense/defense tuning constants.
-// The combat chain (ATT→PAR→DEF→DMG) inherently favors defense because
-// defenders get TWO independent checks (PAR then DEF). These constants
-// compensate so aggressive styles remain viable.
-const GLOBAL_ATT_BONUS = 5;   // All attacks get +5 to ensure hits land frequently
-const GLOBAL_PAR_PENALTY = -3; // Parry harder to reward aggression
+// BALANCE v5: Increased ATT bonus, steeper PAR penalty.
+// Offense needs to land consistently; defense should rely on endurance/counters.
+const GLOBAL_ATT_BONUS = 6;    // All attacks get +6 to ensure hits land frequently
+const GLOBAL_PAR_PENALTY = -4; // Parry harder — defense identity is endurance, not blocking
 
 function oeAttMod(oe: number, style?: FightingStyle): number {
-  // PR OE Paradox: PR attacks MORE at low OE via counterstrikes (compendium §PR)
+  // PR OE Paradox: PR is NOT penalized at low OE but doesn't get a bonus either
   if (style === FightingStyle.ParryRiposte) {
-    if (oe <= 3) return 1;   // Low OE: +1 ATT from counter-focus
-    if (oe <= 5) return 0;   // Mid: neutral
-    if (oe <= 7) return -1;  // High OE: loses counter identity
-    return -2;               // Very high OE: completely wrong for PR
+    if (oe <= 5) return 0;   // Low-mid OE: no penalty (counter stance)
+    return -1;               // High OE: loses counter identity
   }
-  // AB OE rule: AB doesn't get penalized for low OE (patience is a feature, not a bug)
-  // but doesn't get a BONUS either — the advantage comes from endurance conservation
+  // AB: patience is a feature — no penalty at low OE
   if (style === FightingStyle.AimedBlow) {
-    if (oe <= 5) return 0;   // Low-mid OE: no penalty (patience)
-    return -1;               // High OE: rushing undermines precision
+    if (oe <= 5) return 0;
+    return -1;
   }
   return Math.floor((oe - 5) * 0.8);
 }
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * 0.5); }
 function alIniMod(al: number): number { return Math.floor((al - 5) * 0.6); }
 function enduranceCost(oe: number, al: number): number {
-  // BALANCE v2: Reduced from (oe*0.6 + al*0.4) to prevent offensive styles collapsing
-  return Math.max(1, Math.round((oe * 0.35 + al * 0.25)));
+  // BALANCE v5: Slightly increased base cost so low-OE fighters can't stall forever
+  return Math.max(2, Math.round((oe * 0.35 + al * 0.25) + 1));
 }
 
 // ─── Fatigue Penalties ────────────────────────────────────────────────────

@@ -411,6 +411,8 @@ export interface MatchRecord {
   opponentStableId: string;
 }
 
+export const BASE_ROSTER_CAP = 10;
+
 export interface GameState {
   meta: {
     gameName: string;

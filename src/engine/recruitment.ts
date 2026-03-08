@@ -25,6 +25,7 @@ export interface PoolWarrior {
   age: number;
   lore: string;
   addedWeek: number;
+  favorites: WarriorFavorites;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────

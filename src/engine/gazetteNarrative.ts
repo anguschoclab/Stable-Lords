@@ -311,6 +311,11 @@ export function generateWeeklyGazette(
     paragraphs.push(`All eyes turn to ${star}, who has burst onto the scene with three consecutive victories to open their career. A rising star — or a flash in the pan? Only the arena will tell.`);
   }
 
+  // Upset narrative
+  for (const u of upsets) {
+    paragraphs.push(`In a stunning upset, ${u.winner} (fame: ${u.winnerFame}) defeated the celebrated ${u.loser} (fame: ${u.loserFame})! The crowd roared in disbelief as the underdog proved that fame means nothing once steel is drawn.`);
+  }
+
   // Graveyard mention
   if (graveyard.length > 0) {
     const recent = graveyard.filter(w => w.deathWeek === week);

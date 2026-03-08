@@ -81,10 +81,10 @@ export function computeHP(attrs: Attributes): number {
   return Math.max(10, Math.round(CN * 1.5 + SZ * 0.5 + WL * 0.3 + 5));
 }
 
-/** Endurance = f(CN, WL, ST) per pid=40 */
+/** Endurance = f(CN, WL, ST) per pid=40 — BALANCE v2: increased base for longer fights */
 export function computeEndurance(attrs: Attributes): number {
   const { CN, WL, ST } = attrs;
-  return Math.max(5, Math.round(CN * 0.8 + WL * 1.2 + ST * 0.3));
+  return Math.max(10, Math.round(CN * 1.2 + WL * 1.5 + ST * 0.5 + 8));
 }
 
 /** Damage class = f(ST, SZ) per pid=41 — returns 1-5 scale */

@@ -217,10 +217,7 @@ export default function WarriorDetail() {
               ))}
               {warrior.injuries.map((i) => {
                 const injName = typeof i === "string" ? i : i.name;
-                const injDesc = typeof i !== "string" ? `${i.description} (${i.weeksRemaining}w left)` : undefined;
-                return (
-                  <TagBadge key={injName} tag={injName} type="injury" title={injDesc} />
-                );
+                return <TagBadge key={injName} tag={injName} type="injury" />;
               })}
             </div>
           </div>

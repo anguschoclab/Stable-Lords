@@ -428,6 +428,12 @@ export function simulateFight(
   const MAX_EXCHANGES = 15;
   const EXCHANGES_PER_MINUTE = 3;
   let winner: "A" | "D" | null = null;
+
+  // Tactic overuse tracking: consecutive exchanges using the same tactic (compendium: "tactics sparingly")
+  let lastTacticA: string = "none";
+  let lastTacticD: string = "none";
+  let tacticStreakA = 0;
+  let tacticStreakD = 0;
   let by: FightOutcome["by"] = null;
 
   // Narration helpers

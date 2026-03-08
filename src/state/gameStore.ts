@@ -97,6 +97,7 @@ export function loadGameState(): GameState {
         if (!parsed.tournaments) parsed.tournaments = [];
         if (!parsed.trainers) parsed.trainers = [];
         if (!parsed.hiringPool) parsed.hiringPool = [];
+        if (!parsed.trainingAssignments) parsed.trainingAssignments = [];
         if (parsed.ftueComplete === undefined) parsed.ftueComplete = true; // existing saves already past FTUE
         if (!parsed.coachDismissed) parsed.coachDismissed = [];
         // Ensure all warriors have status

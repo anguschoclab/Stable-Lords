@@ -427,12 +427,45 @@ export function simulateFight(
   // Narration helpers
   const name = (f: FighterState) => f.label === "A" ? nameA : nameD;
   const styleName = (f: FighterState) => f.label === "A" ? styleNameA : styleNameD;
-  const verbs = (f: FighterState) => STYLE_VERBS[f.style] ?? STYLE_VERBS[FightingStyle.StrikingAttack];
+  const weaponOf = (f: FighterState) => f.label === "A" ? (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon : (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon;
   const minute = (ex: number) => Math.floor(ex / EXCHANGES_PER_MINUTE) + 1;
+
+  // Track HP ratios for state-change narration
+  let prevHpRatioA = 1.0;
+  let prevHpRatioD = 1.0;
+
+  // ── Pre-bout warrior introductions (canonical DM PBP) ──
+  const introA = generateWarriorIntro(rng, {
+    name: nameA,
+    style: planA.style,
+    weaponId: (warriorA?.equipment ?? DEFAULT_LOADOUT).weapon,
+    armorId: (warriorA?.equipment ?? DEFAULT_LOADOUT).armor,
+    helmId: (warriorA?.equipment ?? DEFAULT_LOADOUT).helm,
+  }, warriorA?.attributes?.SZ);
+  const introD = generateWarriorIntro(rng, {
+    name: nameD,
+    style: planD.style,
+    weaponId: (warriorD?.equipment ?? DEFAULT_LOADOUT).weapon,
+    armorId: (warriorD?.equipment ?? DEFAULT_LOADOUT).armor,
+    helmId: (warriorD?.equipment ?? DEFAULT_LOADOUT).helm,
+  }, warriorD?.attributes?.SZ);
+
+  // Add intro lines
+  for (const line of introA) log.push({ minute: 0, text: line });
+  log.push({ minute: 0, text: "" });
+  for (const line of introD) log.push({ minute: 0, text: line });
+  log.push({ minute: 0, text: "" });
+
+  // Battle opener
+  log.push({ minute: 1, text: battleOpener(rng) });
+
+  // Low-OE conserving line
+  if (planA.OE <= 3) log.push({ minute: 1, text: conservingLine(nameA) });
+  if (planD.OE <= 3) log.push({ minute: 1, text: conservingLine(nameD) });
 
   // Opening narration
   let lastPhase: Phase | null = null;
-  log.push({ minute: 1, text: `The crowd falls silent as ${nameA} (${styleNameA}) faces ${nameD} (${styleNameD}).` });
+  let lastMinuteMarker = 0;
 
   for (let ex = 0; ex < MAX_EXCHANGES; ex++) {
     const phase = getPhase(ex, MAX_EXCHANGES);

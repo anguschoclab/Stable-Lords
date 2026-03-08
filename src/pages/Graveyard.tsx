@@ -74,7 +74,12 @@ export default function Graveyard() {
 
         <TabsContent value="retired" className="space-y-3 mt-4">
           {state.retired.length === 0 ? (
-            <p className="text-muted-foreground italic text-sm">No warriors have retired yet.</p>
+            <Card>
+              <CardContent className="p-6 text-center text-muted-foreground text-sm">
+                <Armchair className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                No warriors have retired yet. Warriors can be retired from their detail page.
+              </CardContent>
+            </Card>
           ) : (
             state.retired.map((w) => (
               <Card key={w.id}>

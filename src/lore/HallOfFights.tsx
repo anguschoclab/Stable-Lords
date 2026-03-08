@@ -84,7 +84,17 @@ export const HallOfFights: React.FC = () => {
         {/* Fight History */}
         <TabsContent value="history" className="space-y-4 mt-4">
           {fightsByWeek.length === 0 ? (
-            <p className="text-muted-foreground italic">No fights recorded yet. Run some rounds first.</p>
+            <Card>
+              <CardContent className="p-8 text-center space-y-3">
+                <ScrollText className="h-10 w-10 mx-auto text-muted-foreground/50" />
+                <p className="text-muted-foreground">No fights recorded yet. Run some rounds to fill the archives.</p>
+                <Link to="/run-round">
+                  <Button variant="outline" className="gap-2 mt-2">
+                    <Zap className="h-4 w-4" /> Run a Round
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           ) : (
             fightsByWeek.map(([week, fights]) => (
               <Card key={week}>

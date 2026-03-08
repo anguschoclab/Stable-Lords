@@ -234,11 +234,17 @@ export default function Tournaments() {
             Compete for glory across the four seasons. Current: {state.season}
           </p>
         </div>
-        {canStart && (
+        {canStart ? (
           <Button onClick={startTournament} className="gap-2">
             <Trophy className="h-4 w-4" /> Start {SEASON_NAMES[state.season]}
           </Button>
-        )}
+        ) : !currentTournament && state.roster.filter((w) => w.status === "Active").length < 2 ? (
+          <Link to="/recruit">
+            <Button variant="outline" className="gap-2">
+              <UserPlus className="h-4 w-4" /> Recruit Warriors
+            </Button>
+          </Link>
+        ) : null}
       </div>
 
       {/* Active Tournament */}

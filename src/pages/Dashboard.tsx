@@ -54,14 +54,10 @@ function WarriorRow({ warrior, onClick }: { warrior: Warrior; onClick: () => voi
       <td className="px-4 py-3">
         <div className="flex gap-1 flex-wrap">
           {warrior.flair.map((f) => (
-            <Badge key={f} variant="secondary" className="text-xs text-arena-gold border-arena-gold/30">
-              {f}
-            </Badge>
+            <TagBadge key={f} tag={f} type="flair" className="text-xs" />
           ))}
           {warrior.injuries.map((i) => (
-            <Badge key={i} variant="destructive" className="text-xs">
-              {i}
-            </Badge>
+            <TagBadge key={i} tag={i} type="injury" className="text-xs" />
           ))}
         </div>
       </td>

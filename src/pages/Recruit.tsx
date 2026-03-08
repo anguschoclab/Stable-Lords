@@ -184,7 +184,7 @@ export default function Recruit() {
     const warrior = makeWarrior(
       `w_${Date.now()}_${Math.floor(Math.random() * 1e5)}`,
       w.name, w.style, w.attributes,
-      { age: w.age }
+      { age: w.age, potential: w.potential }
     );
 
     const newPool = pool.filter(p => p.id !== w.id);

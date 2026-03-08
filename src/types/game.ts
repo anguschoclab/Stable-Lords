@@ -301,6 +301,25 @@ export interface LedgerEntry {
   category: "fight" | "training" | "recruit" | "trainer" | "upkeep" | "prize" | "other";
 }
 
+export interface RivalStableData {
+  owner: Owner;
+  roster: Warrior[];
+}
+
+export interface ScoutReportData {
+  id: string;
+  warriorName: string;
+  style: string;
+  quality: "Basic" | "Detailed" | "Expert";
+  week: number;
+  attributeRanges: Record<string, [number, number]>;
+  record: string;
+  knownInjuries: string[];
+  suspectedOE?: string;
+  suspectedAL?: string;
+  notes: string;
+}
+
 export interface GameState {
   meta: {
     gameName: string;
@@ -328,6 +347,8 @@ export interface GameState {
   trainers: TrainerData[];
   hiringPool: TrainerData[];
   trainingAssignments: TrainingAssignment[];
+  rivals: RivalStableData[];
+  scoutReports: ScoutReportData[];
   settings: {
     featureFlags: {
       tournaments: boolean;

@@ -177,7 +177,7 @@ describe("advanceWeek pipeline", () => {
     expect(processEconomy).toHaveBeenCalledWith(trainingOutput);
   });
 
-  it("passes economy output to aging (pipeline chaining)", () => {
+  it("passes economy output to aging (pipeline chaining)", async () => {
     const { processEconomy } = await import("@/engine/economy") as any;
     const { processAging } = await import("@/engine/aging") as any;
 

@@ -637,10 +637,12 @@ export function simulateFight(
         defender.consecutiveHits++;
         attacker.consecutiveHits = 0;
 
-        log.push({
-          minute: min,
-          text: `${pickText(rng, verbs(defender).riposte)} — striking the ${ripLoc} for ${ripDmg} damage!`,
-        });
+        // Canonical PBP: counterstrike + attack + hit
+        log.push({ minute: min, text: narrateCounterstrike(rng, name(defender)) });
+        log.push({ minute: min, text: narrateAttack(rng, name(defender), weaponOf(defender)) });
+        log.push({ minute: min, text: narrateHit(rng, name(attacker), ripLoc) });
+        const sevLine = damageSeverityLine(rng, ripDmg, attacker.maxHp);
+        if (sevLine) log.push({ minute: min, text: sevLine });
 
         if (defender.ripostes >= 3 && !tags.includes("RiposteChain")) tags.push("RiposteChain");
       }

@@ -32,6 +32,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const { state, doReset } = useGame();
   const moodIcon = MOOD_ICONS[state.crowdMood as keyof typeof MOOD_ICONS] ?? "😐";
+  const [resetOpen, setResetOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">

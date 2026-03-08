@@ -139,30 +139,39 @@ function pickText(rng: () => number, texts: string[]): string {
   return texts[Math.floor(rng() * texts.length)];
 }
 
-const HIT_LOCATIONS = ["head", "chest", "abdomen", "arms", "legs"] as const;
+const HIT_LOCATIONS = ["head", "chest", "abdomen", "right arm", "left arm", "right leg", "left leg"] as const;
 type HitLocation = typeof HIT_LOCATIONS[number];
+
+/** Maps a grouped protect target to the granular hit locations it covers */
+function protectCovers(protect?: string): string[] {
+  if (!protect || protect === "Any") return [];
+  const p = protect.toLowerCase();
+  if (p === "head") return ["head"];
+  if (p === "body") return ["chest", "abdomen"];
+  if (p === "arms") return ["right arm", "left arm"];
+  if (p === "legs") return ["right leg", "left leg"];
+  return [];
+}
 
 function rollHitLocation(rng: () => number, target?: string, protect?: string): HitLocation {
   if (target && target !== "Any") {
     const t = target.toLowerCase() as HitLocation;
     if (HIT_LOCATIONS.includes(t)) {
-      // 60% chance to hit intended target, but if defender is protecting that area, reduce to 40%
-      const hitChance = (protect && protect !== "Any" && protect.toLowerCase() === t) ? 0.4 : 0.6;
+      const covered = protectCovers(protect);
+      const hitChance = covered.includes(t) ? 0.4 : 0.6;
       if (rng() < hitChance) return t;
     }
   }
   return HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)];
 }
 
-/** Protect reduces crit damage on the protected area but increases damage taken elsewhere */
+/** Protect reduces damage on covered locations but increases damage taken elsewhere */
 function applyProtectMod(damage: number, location: HitLocation, protect?: string): number {
   if (!protect || protect === "Any") return damage;
-  const protectedLoc = protect.toLowerCase();
-  if (location === protectedLoc) {
-    // Protected area: reduce damage by 25%
+  const covered = protectCovers(protect);
+  if (covered.includes(location)) {
     return Math.max(1, Math.round(damage * 0.75));
   } else {
-    // Unprotected areas: increase damage by 10%
     return Math.round(damage * 1.1);
   }
 }
@@ -281,32 +290,40 @@ function computeHitDamage(rng: () => number, damageClass: number, location: HitL
 function getEquipmentMods(loadout: EquipmentLoadout, carryCap: number) {
   const weapon = getItemById(loadout.weapon);
   const armor = getItemById(loadout.armor);
-  const shield = getItemById(loadout.shield);
   const helm = getItemById(loadout.helm);
   const totalWeight = getLoadoutWeight(loadout);
   const overEncumbered = totalWeight > carryCap;
 
   let attMod = 0, parMod = 0, defMod = 0, iniMod = 0, dmgMod = 0, endMod = 0;
 
-  // Shield bonuses
-  if (shield?.id === "buckler") { parMod += 1; }
-  if (shield?.id === "small_shield") { parMod += 1; defMod += 1; }
-  if (shield?.id === "medium_shield") { defMod += 2; }
-  if (shield?.id === "large_shield") { defMod += 3; attMod -= 1; }
+  // Shield bonuses — shields are in the weapon list in canonical DM
+  // Check both the weapon slot (if it IS a shield) and the legacy shield slot
+  const shieldId = loadout.weapon;
+  const legacyShield = getItemById(loadout.shield);
+  const isShieldWeapon = ["small_shield", "medium_shield", "large_shield"].includes(shieldId);
+  
+  if (isShieldWeapon || legacyShield?.id === "buckler") {
+    if (shieldId === "small_shield" || legacyShield?.id === "buckler") { parMod += 1; }
+    if (shieldId === "small_shield") { defMod += 1; }
+    if (shieldId === "medium_shield") { defMod += 2; }
+    if (shieldId === "large_shield") { defMod += 3; attMod -= 1; }
+  }
 
-  // Heavy weapons boost damage
+  // Heavy weapons boost damage (canonical weight thresholds)
   if (weapon && weapon.weight >= 5) { dmgMod += 1; }
-  if (weapon && weapon.weight >= 7) { dmgMod += 1; }
+  if (weapon && weapon.weight >= 8) { dmgMod += 1; }
 
   // Light weapons boost initiative
   if (weapon && weapon.weight <= 2) { iniMod += 1; }
 
-  // Armor reduces incoming damage (applied elsewhere) but costs endurance
-  if (armor && armor.weight >= 4) { endMod -= 1; }
-  if (armor && armor.weight >= 6) { endMod -= 2; }
+  // Armor endurance cost (canonical weight thresholds)
+  if (armor && armor.weight >= 6) { endMod -= 1; }
+  if (armor && armor.weight >= 10) { endMod -= 2; }
+  if (armor && armor.weight >= 14) { endMod -= 3; }
 
-  // Full helm reduces INI
-  if (helm?.id === "full_helm") { iniMod -= 1; }
+  // Helm penalties
+  if (helm?.id === "full_helm") { iniMod -= 1; attMod -= 1; }
+  if (helm?.id === "helm") { iniMod -= 1; }
 
   // Over-encumbered penalty
   if (overEncumbered) {

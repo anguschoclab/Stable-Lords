@@ -99,13 +99,13 @@ export type ShieldSize = "None" | "Small" | "Medium" | "Large";
 /** Weight class for armor encumbrance calculations (per Design Bible §Equipment) */
 export type ArmorWeight = "None" | "Light" | "Medium" | "Heavy" | "Ultra-Heavy";
 
-/** Maps armor weight classes to encumbrance penalty ranges */
+/** Maps armor weight classes to encumbrance penalty ranges (canonical weights) */
 export const ARMOR_WEIGHT_MAP: Record<ArmorWeight, { minWeight: number; maxWeight: number; speedPenalty: number }> = {
   "None":        { minWeight: 0, maxWeight: 0, speedPenalty: 0 },
-  "Light":       { minWeight: 1, maxWeight: 2, speedPenalty: 1 },
-  "Medium":      { minWeight: 3, maxWeight: 4, speedPenalty: 2 },
-  "Heavy":       { minWeight: 5, maxWeight: 6, speedPenalty: 4 },
-  "Ultra-Heavy": { minWeight: 7, maxWeight: 10, speedPenalty: 6 },
+  "Light":       { minWeight: 1, maxWeight: 4, speedPenalty: 1 },
+  "Medium":      { minWeight: 5, maxWeight: 8, speedPenalty: 2 },
+  "Heavy":       { minWeight: 9, maxWeight: 12, speedPenalty: 4 },
+  "Ultra-Heavy": { minWeight: 13, maxWeight: 20, speedPenalty: 6 },
 };
 
 /** Equipment slot identifiers */
@@ -140,7 +140,12 @@ export interface ArmorEncumbrance {
 
 // ─── Fight Plan ─────────────────────────────────────────────────────────────
 
-export type BodyTarget = "Head" | "Chest" | "Abdomen" | "Arms" | "Legs" | "Any";
+/** Granular attack locations — individual limbs for targeting */
+export type AttackTarget = "Head" | "Chest" | "Abdomen" | "Right Arm" | "Left Arm" | "Right Leg" | "Left Leg" | "Any";
+/** Grouped protect locations — broader defensive coverage */
+export type ProtectTarget = "Head" | "Body" | "Arms" | "Legs" | "Any";
+/** @deprecated Use AttackTarget or ProtectTarget. Kept for backward compat. */
+export type BodyTarget = AttackTarget;
 export type OffensiveTactic = "Lunge" | "Slash" | "Bash" | "Decisiveness" | "none";
 export type DefensiveTactic = "Dodge" | "Parry" | "Riposte" | "Responsiveness" | "none";
 
@@ -151,7 +156,7 @@ export interface PhaseStrategy {
   killDesire: number;
   offensiveTactic?: OffensiveTactic;
   defensiveTactic?: DefensiveTactic;
-  target?: BodyTarget;
+  target?: AttackTarget;
 }
 
 export interface FightPlan {
@@ -159,8 +164,8 @@ export interface FightPlan {
   OE: number;      // Offensive Effort 1-10 (default / fallback)
   AL: number;      // Activity Level 1-10
   killDesire?: number; // Kill Desire 1-10
-  target?: BodyTarget;
-  protect?: BodyTarget;  // Prioritize defense of a body location
+  target?: AttackTarget;
+  protect?: ProtectTarget;  // Prioritize defense of a body location
   offensiveTactic?: OffensiveTactic;
   defensiveTactic?: DefensiveTactic;
   gear?: Gear;
@@ -195,7 +200,7 @@ export const INJURY_SEVERITY_WEEKS: Record<InjurySeverity, { min: number; max: n
 };
 
 /** Body locations that can sustain injuries */
-export type InjuryLocation = "Head" | "Chest" | "Abdomen" | "Arms" | "Legs" | "General";
+export type InjuryLocation = "Head" | "Chest" | "Abdomen" | "Right Arm" | "Left Arm" | "Right Leg" | "Left Leg" | "General";
 
 export interface InjuryData {
   id: string;

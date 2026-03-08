@@ -14,7 +14,7 @@ export function autoTuneFromBias(plan: FightPlan, bias: Bias): Partial<FightPlan
       tuned.killDesire = Math.max(7, plan.killDesire ?? 7);
       break;
     case "hamstring":
-      tuned.target = "Legs";
+      tuned.target = "Right Leg";
       tuned.AL = Math.max(plan.AL, 7);
       break;
     case "gut":
@@ -22,7 +22,7 @@ export function autoTuneFromBias(plan: FightPlan, bias: Bias): Partial<FightPlan
       tuned.OE = Math.max(plan.OE, 7);
       break;
     case "guard-break":
-      tuned.target = "Arms";
+      tuned.target = "Right Arm";
       tuned.OE = Math.max(plan.OE, 8);
       break;
     default:

@@ -25,7 +25,8 @@ import {
   ChevronDown, Sparkles, Activity, BookOpen,
 } from "lucide-react";
 import type {
-  FightPlan, PhaseStrategy, BodyTarget, OffensiveTactic, DefensiveTactic, Warrior,
+  FightPlan, PhaseStrategy, OffensiveTactic, DefensiveTactic, Warrior,
+  AttackTarget, ProtectTarget,
 } from "@/types/game";
 import { STYLE_DISPLAY_NAMES, FightingStyle } from "@/types/game";
 import { autoTuneFromBias, reconcileGearTwoHanded, type Bias } from "@/engine/planBias";
@@ -37,7 +38,8 @@ import {
 import { STYLE_PRESETS, type StylePreset } from "@/engine/stylePresets";
 import { loadUIPrefs, saveUIPrefs } from "@/state/uiPrefs";
 
-const BODY_TARGETS: BodyTarget[] = ["Any", "Head", "Chest", "Abdomen", "Arms", "Legs"];
+const ATTACK_TARGETS: AttackTarget[] = ["Any", "Head", "Chest", "Abdomen", "Right Arm", "Left Arm", "Right Leg", "Left Leg"];
+const PROTECT_TARGETS: ProtectTarget[] = ["Any", "Head", "Body", "Arms", "Legs"];
 const OFFENSIVE_TACTICS: OffensiveTactic[] = ["none", "Lunge", "Slash", "Bash", "Decisiveness"];
 const DEFENSIVE_TACTICS: DefensiveTactic[] = ["none", "Dodge", "Parry", "Riposte", "Responsiveness"];
 const BIASES: { value: Bias; label: string }[] = [
@@ -264,11 +266,11 @@ function PhaseSliders({
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="space-y-1">
           <Label className="text-xs flex items-center gap-1"><Crosshair className="h-3 w-3" /> Target</Label>
-          <Select value={phaseTarget} onValueChange={v => update("target", v as BodyTarget)}>
-            <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {BODY_TARGETS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-            </SelectContent>
+           <Select value={phaseTarget} onValueChange={v => update("target", v as AttackTarget)}>
+             <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+             <SelectContent>
+               {ATTACK_TARGETS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+             </SelectContent>
           </Select>
         </div>
         <div className="space-y-1">
@@ -507,21 +509,21 @@ export default function PlanBuilder({ plan, onPlanChange, warriorName, warrior }
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-1.5">
             <Label className="text-sm flex items-center gap-1.5"><Crosshair className="h-3.5 w-3.5" /> Target</Label>
-            <Select value={plan.target ?? "Any"} onValueChange={v => updateField("target", v as BodyTarget)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {BODY_TARGETS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-              </SelectContent>
+             <Select value={plan.target ?? "Any"} onValueChange={v => updateField("target", v as AttackTarget)}>
+               <SelectTrigger><SelectValue /></SelectTrigger>
+               <SelectContent>
+                 {ATTACK_TARGETS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-1.5">
             <Label className="text-sm flex items-center gap-1.5"><Shield className="h-3.5 w-3.5" /> Protect</Label>
-            <Select value={plan.protect ?? "Any"} onValueChange={v => updateField("protect", v as BodyTarget)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {BODY_TARGETS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-              </SelectContent>
+             <Select value={plan.protect ?? "Any"} onValueChange={v => updateField("protect", v as ProtectTarget)}>
+               <SelectTrigger><SelectValue /></SelectTrigger>
+               <SelectContent>
+                 {PROTECT_TARGETS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+               </SelectContent>
             </Select>
           </div>
 

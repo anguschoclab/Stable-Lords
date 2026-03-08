@@ -97,11 +97,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setStateRaw((prev) => {
         const next = updateWarriorAfterFight(prev, warriorId, won, killed, fameDelta, popDelta);
         const slotId = getActiveSlot();
-        if (slotId) saveToSlot(slotId, next);
+        if (slotId) { saveToSlot(slotId, next); markSaved(); }
         return next;
       });
     },
-    []
+    [markSaved]
   );
 
   const doReset = useCallback(() => {

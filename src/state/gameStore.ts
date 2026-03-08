@@ -126,6 +126,7 @@ export function loadGameState(): GameState {
         if (!parsed.matchHistory) parsed.matchHistory = [];
         if (!parsed.recruitPool) parsed.recruitPool = [];
         if (parsed.rosterBonus === undefined) parsed.rosterBonus = 0;
+        if (!parsed.ownerGrudges) parsed.ownerGrudges = [];
         // Ensure all warriors have status
         parsed.roster = (parsed.roster || []).map((w: any) => ({
           ...w,

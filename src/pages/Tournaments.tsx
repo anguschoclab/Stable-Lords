@@ -496,9 +496,14 @@ export default function Tournaments() {
             })()}
 
             {currentTournament.bracket.some((b) => b.winner === undefined) && (
-              <Button onClick={runNextRound} className="w-full gap-2">
-                <Play className="h-4 w-4" /> Run Next Round
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={runNextRound} className="flex-1 gap-2">
+                  <Play className="h-4 w-4" /> Run Next Round
+                </Button>
+                <Button variant="outline" onClick={skipToMyBouts} className="flex-1 gap-2">
+                  <FastForward className="h-4 w-4" /> Skip to My Bouts
+                </Button>
+              </div>
             )}
           </CardContent>
         </Card>

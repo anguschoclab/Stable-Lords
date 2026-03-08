@@ -44,21 +44,24 @@ const STYLE_ORDER = [
 ];
 
 // Row = attacker style, Col = defender style
-// BALANCE v2: Capped at ±1, anti-symmetric (A[i][j] = -A[j][i]).
-// Row sums near 0 so no style has massive aggregate advantage.
-// Per compendium: matchups are "edges" not guarantees.
+// BALANCE v3: Lore-accurate matchups from Duelmasters canon:
+// - BA hard-counters TP (bash attacks through parries, overwhelms passive defense)
+// - AB counters TP (endurance conservation + precision finds openings in static defense)
+// - SL/LU beat TP (aggression overwhelms)
+// - TP beats reactive/patient styles (PL, PR, WS — outlasts them)
+// - BA loses to precision/counter styles (AB, PR — can read the charges)
 const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
-  [ 0, +1,  0,  0, -1,  0, +1,  0, -1,  0], // AB: beats BA/SL (predictable), loses to PR/TP
-  [-1,  0, -1,  0,  0, -1, +1, +1,  0, +1], // BA: beats SL/ST/WS (power), loses to AB/LU/PS
-  [ 0, +1,  0, +1,  0, -1, +1,  0, -1, -1], // LU: beats BA/PL/SL (speed), loses to PS/TP/WS
-  [ 0,  0, -1,  0, +1,  0,  0, -1, +1,  0], // PL: beats PR/TP (patience), loses to LU/ST
-  [+1,  0,  0, -1,  0, +1, +1, -1, -1,  0], // PR: beats AB/PS/SL (counter), loses to PL/ST/TP
+  [ 0, +1,  0,  0, -1,  0, +1,  0, +2,  0], // AB: precision destroys TP (endurance+accuracy), beats BA/SL
+  [-1,  0, -1,  0,  0, -1, +1, +1, +2, +1], // BA: hard-counters TP (bash through parry), beats SL/ST/WS
+  [ 0, +1,  0, +1,  0, -1, +1,  0, +1, -1], // LU: aggression beats TP, speed beats BA/PL/SL
+  [ 0,  0, -1,  0, +1,  0,  0, -1, -1,  0], // PL: patience beats PR, but TP outlasts PL
+  [+1,  0,  0, -1,  0, +1, +1, -1, -1,  0], // PR: counter beats AB/PS/SL, TP outlasts PR
   [ 0, +1, +1,  0, -1,  0, +1, -1,  0, -1], // PS: beats BA/LU/SL, loses to PR/ST/WS
-  [-1, -1, -1,  0, -1, -1,  0, +1, +1, +1], // SL: risky (low parry), beats ST/TP/WS (aggression)
-  [ 0, -1,  0, +1, +1, +1, -1,  0, -1, -1], // ST: beats PL/PR/PS (efficiency), loses to BA/TP/WS
-  [+1,  0, +1, -1, +1,  0, -1, +1,  0,  0], // TP: outlasts AB/LU/PR/ST, loses to PL/SL
-  [ 0, -1, +1,  0,  0, +1, -1, +1,  0,  0], // WS: beats LU/PS/ST (zone), loses to BA/SL
+  [-1, -1, -1,  0, -1, -1,  0, +1, +1, +1], // SL: aggression beats TP/ST/WS, risky vs parry styles
+  [ 0, -1,  0, +1, +1, +1, -1,  0,  0, -1], // ST: efficient, beats PL/PR/PS, neutral vs TP
+  [-2, -2, -1, +1, +1,  0, -1,  0,  0, +1], // TP: crushed by BA/AB, outlasts PL/PR, loses to aggression
+  [ 0, -1, +1,  0,  0, +1, -1, +1, -1,  0], // WS: zone control, loses to BA/TP
 ];
 
 function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): number {
@@ -245,6 +248,12 @@ function oeAttMod(oe: number, style?: FightingStyle): number {
     if (oe <= 5) return 0;   // Mid: neutral
     if (oe <= 7) return -1;  // High OE: loses counter identity
     return -2;               // Very high OE: completely wrong for PR
+  }
+  // AB OE rule: AB doesn't get penalized for low OE (patience is a feature, not a bug)
+  // but doesn't get a BONUS either — the advantage comes from endurance conservation
+  if (style === FightingStyle.AimedBlow) {
+    if (oe <= 5) return 0;   // Low-mid OE: no penalty (patience)
+    return -1;               // High OE: rushing undermines precision
   }
   return Math.floor((oe - 5) * 0.8);
 }
@@ -772,10 +781,14 @@ export function simulateFight(
     }
 
     // ── 7. ENDURANCE & FATIGUE — with style-specific drain rates ──
+    // BALANCE v3: Defender discount reduced from 0.6 to 0.85. The old 60% discount
+    // meant TP/WS barely drained endurance while attackers exhausted themselves.
+    // Taking hits also costs endurance (damage tax) — being hit is tiring.
     const attEndMult = getEnduranceMult(attacker.style);
     const defEndMult = getEnduranceMult(defender.style);
+    const defDamageTax = defender.hitsTaken > 0 ? Math.min(2, Math.floor(defender.hitsTaken / 2)) : 0;
     attacker.endurance -= Math.round(enduranceCost(attOE, attAL) * attEndMult);
-    defender.endurance -= Math.max(1, Math.round(enduranceCost(defOE, defAL) * 0.6 * defEndMult));
+    defender.endurance -= Math.max(1, Math.round(enduranceCost(defOE, defAL) * 0.85 * defEndMult) + defDamageTax);
 
     // Clamp endurance
     fA.endurance = Math.max(0, fA.endurance);

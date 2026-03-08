@@ -11,18 +11,18 @@ import { FightingStyle, type Attributes, type BaseSkills, type DerivedStats } fr
 // Each style has base offsets for [ATT, PAR, DEF, INI, RIP, DEC]
 const STYLE_SEEDS: Record<FightingStyle, [number, number, number, number, number, number]> = {
   //                                          ATT PAR DEF INI RIP DEC
-  // BALANCE v3: PAR compressed to 3-4 range (was 2-5). Only 1 point separates
-  // best/worst parry so raw PAR no longer dominates. Style identity comes from
-  // ATT, RIP, INI, DEC, endurance, and passives instead.
-  [FightingStyle.AimedBlow]:       [ 5,  3,  3,  3,  2,  4],  // 20 — precision via crit
-  [FightingStyle.BashingAttack]:   [ 6,  3,  2,  4,  2,  3],  // 20 — ATT+INI offense
-  [FightingStyle.LungingAttack]:   [ 6,  3,  3,  5,  2,  3],  // 22 — fast, aggressive
-  [FightingStyle.ParryLunge]:      [ 4,  4,  3,  3,  3,  3],  // 20 — balanced hybrid
-  [FightingStyle.ParryRiposte]:    [ 3,  4,  3,  3,  4,  2],  // 19 — RIP identity (reduced from 5)
-  [FightingStyle.ParryStrike]:     [ 4,  4,  3,  3,  3,  3],  // 20 — efficient, consistent
-  [FightingStyle.SlashingAttack]:  [ 6,  3,  2,  4,  2,  3],  // 20 — offensive, reduced DEF
-  [FightingStyle.StrikingAttack]:  [ 6,  3,  2,  4,  2,  3],  // 20 — reliable power
-  [FightingStyle.TotalParry]:      [ 2,  4,  4,  2,  3,  2],  // 17 — defensive but low ATT
+  // BALANCE v4: Further compressed PAR (3 max for non-PS styles).
+  // Offensive ATT boosted to 7 for BA/LU/SL/ST. PR RIP reduced to 3.
+  // TP PAR reduced to 3 (identity is endurance, not impenetrable parry).
+  [FightingStyle.AimedBlow]:       [ 5,  3,  3,  3,  2,  4],  // 20 — precision via crit + patience
+  [FightingStyle.BashingAttack]:   [ 7,  2,  2,  4,  2,  3],  // 20 — highest ATT, lowest PAR (power over finesse)
+  [FightingStyle.LungingAttack]:   [ 7,  2,  3,  5,  2,  3],  // 22 — fast, aggressive, fragile
+  [FightingStyle.ParryLunge]:      [ 4,  3,  3,  3,  3,  3],  // 19 — balanced hybrid
+  [FightingStyle.ParryRiposte]:    [ 3,  3,  3,  3,  3,  2],  // 17 — RIP reduced from 4→3, counter identity via passives not seeds
+  [FightingStyle.ParryStrike]:     [ 4,  4,  3,  3,  3,  3],  // 20 — PS keeps PAR 4 (only style with top parry seed)
+  [FightingStyle.SlashingAttack]:  [ 7,  2,  2,  4,  2,  3],  // 20 — offensive, high ATT
+  [FightingStyle.StrikingAttack]:  [ 7,  2,  2,  4,  2,  3],  // 20 — reliable power
+  [FightingStyle.TotalParry]:      [ 2,  3,  4,  2,  3,  2],  // 16 — PAR 3 (was 4), identity is endurance not parry
   [FightingStyle.WallOfSteel]:     [ 3,  3,  4,  3,  3,  3],  // 19 — DEF+endurance identity
 };
 

@@ -19,7 +19,7 @@ export interface TempoProfile {
 // BALANCE v2: Compressed endurance multiplier range from 0.70-1.20 to 0.88-1.08.
 // Previous range created 3x+ endurance advantage for TP, making offense unviable.
 const STYLE_TEMPO: Record<FightingStyle, TempoProfile> = {
-  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  1, enduranceMult: 0.92 },
+  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  2, enduranceMult: 0.88 },  // AB conserves energy (low activity), dominates late
   [FightingStyle.BashingAttack]:   { opening:  1, mid:  0, late: -1, enduranceMult: 1.06 },
   [FightingStyle.LungingAttack]:   { opening:  2, mid:  0, late: -2, enduranceMult: 1.08 },
   [FightingStyle.ParryLunge]:      { opening:  0, mid:  1, late:  0, enduranceMult: 1.00 },
@@ -123,12 +123,17 @@ export function getStylePassive(
     // Modest ATT bonus when targeting; crit chance is the real payoff
     case FightingStyle.AimedBlow: {
       const targeted = context.targetedLocation && context.targetedLocation !== "Any";
+      // AB vs defensive styles (TP/WS): patient precision — accuracy increases over time
+      const vsDefensive = context.opponentStyle === FightingStyle.TotalParry || context.opponentStyle === FightingStyle.WallOfSteel;
+      const patientBonus = vsDefensive ? Math.min(2, Math.floor(context.exchange / 3)) : 0;
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        attBonus: scale(targeted ? 1 : 0) + (targeted ? m.bonus : 0),
-        critChance: targeted ? 0.10 + (context.exchange > 5 ? 0.05 : 0) + (m.bonus * 0.03) : 0,
-        narrative: targeted && context.exchange > 5
+        attBonus: scale(targeted ? 1 : 0) + (targeted ? m.bonus : 0) + patientBonus,
+        critChance: targeted ? 0.10 + (context.exchange > 5 ? 0.05 : 0) + (m.bonus * 0.03) + (vsDefensive ? 0.05 : 0) : 0,
+        narrative: vsDefensive && context.exchange > 4
+          ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}studies the predictable rhythm, each probe finding deeper gaps in the defense`
+          : targeted && context.exchange > 5
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}studies the opponent's rhythm, waiting for the perfect opening`
           : undefined,
       };
@@ -138,12 +143,17 @@ export function getStylePassive(
     // Damage ramps with consecutive hits (cap 2 base, +1 mastery)
     case FightingStyle.BashingAttack: {
       const momentumDmg = Math.min(2 + m.bonus, context.consecutiveHits);
+      // BA vs TP: "attack through a parry" — static defense can't handle raw force
+      const vsTP = context.opponentStyle === FightingStyle.TotalParry;
+      const bashThroughBonus = vsTP ? 2 : 0;  // Flat ATT bonus vs TP
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        dmgBonus: scale(momentumDmg),
-        attBonus: context.consecutiveHits >= 3 ? 1 : 0,
-        narrative: context.consecutiveHits >= 3
+        dmgBonus: scale(momentumDmg) + (vsTP ? 1 : 0),
+        attBonus: (context.consecutiveHits >= 3 ? 1 : 0) + bashThroughBonus,
+        narrative: vsTP && context.consecutiveHits >= 2
+          ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}hammers through the defensive stance — raw power overwhelms technique!`
+          : context.consecutiveHits >= 3
           ? `${m.tier !== "Novice" ? `[${m.tier}] ` : ""}builds devastating momentum, each blow harder than the last!`
           : undefined,
       };

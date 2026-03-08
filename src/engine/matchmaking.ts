@@ -9,6 +9,7 @@ import type {
 import { isTooInjuredToFight, type Injury } from "./injuries";
 import { simulateFight } from "./simulate";
 import { aiPlanForWarrior } from "./ownerAI";
+import { computeMetaDrift } from "./metaDrift";
 
 // ─── Eligibility ──────────────────────────────────────────────────────────
 

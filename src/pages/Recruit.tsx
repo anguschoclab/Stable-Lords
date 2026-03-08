@@ -7,6 +7,8 @@ import { useGame } from "@/state/GameContext";
 import { FightingStyle, type Attributes } from "@/types/game";
 import { makeWarrior } from "@/state/gameStore";
 import WarriorBuilder from "@/components/WarriorBuilder";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Recruit() {
@@ -25,10 +27,15 @@ export default function Recruit() {
   );
 
   return (
-    <WarriorBuilder
-      onCreateWarrior={handleCreate}
-      maxRoster={10}
-      currentRosterSize={state.roster.length}
-    />
+    <div className="space-y-4">
+      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1.5 text-muted-foreground">
+        <ArrowLeft className="h-4 w-4" /> Back
+      </Button>
+      <WarriorBuilder
+        onCreateWarrior={handleCreate}
+        maxRoster={10}
+        currentRosterSize={state.roster.length}
+      />
+    </div>
   );
 }

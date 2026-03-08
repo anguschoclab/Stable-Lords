@@ -6,8 +6,10 @@ import { useGame } from "@/state/GameContext";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skull, Armchair } from "lucide-react";
+import { Skull, Armchair, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Graveyard() {
   const { state } = useGame();
@@ -33,7 +35,17 @@ export default function Graveyard() {
 
         <TabsContent value="graveyard" className="space-y-3 mt-4">
           {state.graveyard.length === 0 ? (
-            <p className="text-muted-foreground italic text-sm">No warriors have fallen… yet.</p>
+            <Card>
+              <CardContent className="p-8 text-center space-y-3">
+                <Skull className="h-10 w-10 mx-auto text-muted-foreground/50" />
+                <p className="text-muted-foreground text-sm">No warriors have fallen… yet. Send them into the arena to tempt fate.</p>
+                <Link to="/run-round">
+                  <Button variant="outline" size="sm" className="gap-2 mt-2">
+                    <Zap className="h-4 w-4" /> Run a Round
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           ) : (
             state.graveyard.map((w) => (
               <Card key={w.id}>
@@ -62,7 +74,12 @@ export default function Graveyard() {
 
         <TabsContent value="retired" className="space-y-3 mt-4">
           {state.retired.length === 0 ? (
-            <p className="text-muted-foreground italic text-sm">No warriors have retired yet.</p>
+            <Card>
+              <CardContent className="p-6 text-center text-muted-foreground text-sm">
+                <Armchair className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                No warriors have retired yet. Warriors can be retired from their detail page.
+              </CardContent>
+            </Card>
           ) : (
             state.retired.map((w) => (
               <Card key={w.id}>

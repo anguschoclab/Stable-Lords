@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Swords, LayoutDashboard, Zap, Trophy, HelpCircle, RotateCcw, ScrollText, UserPlus, Skull, GraduationCap } from "lucide-react";
@@ -6,6 +6,16 @@ import { Button } from "@/components/ui/button";
 import { useGame } from "@/state/GameContext";
 import { Badge } from "@/components/ui/badge";
 import { MOOD_ICONS } from "@/engine/crowdMood";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -22,6 +32,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const { state, doReset } = useGame();
   const moodIcon = MOOD_ICONS[state.crowdMood as keyof typeof MOOD_ICONS] ?? "😐";
+  const [resetOpen, setResetOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,12 +75,31 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <Button
               variant="ghost"
               size="icon"
-              onClick={doReset}
+              onClick={() => setResetOpen(true)}
               title="Reset Save"
               className="text-muted-foreground hover:text-destructive"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
+            <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="font-display">Reset Save Data?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete all your warriors, trainers, fight history, and tournament progress. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => { doReset(); setResetOpen(false); }}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Reset Everything
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </header>

@@ -13,7 +13,8 @@ import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Swords, Zap, Skull, Megaphone } from "lucide-react";
+import { Swords, Zap, Skull, Megaphone, UserPlus } from "lucide-react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function RunRound() {
@@ -257,6 +258,23 @@ export default function RunRound() {
           Simulate Round
         </Button>
       </div>
+
+      {/* Empty state CTA when not enough warriors */}
+      {state.roster.filter(w => w.status === "Active").length < 2 && results.length === 0 && (
+        <Card>
+          <CardContent className="p-8 text-center space-y-3">
+            <Swords className="h-10 w-10 mx-auto text-muted-foreground/50" />
+            <p className="text-muted-foreground">
+              You need at least <span className="font-semibold text-foreground">2 active warriors</span> to run a round.
+            </p>
+            <Link to="/recruit">
+              <Button className="gap-2 mt-2">
+                <UserPlus className="h-4 w-4" /> Recruit Warriors
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
 
       {results.length > 0 && (
         <div className="space-y-3">

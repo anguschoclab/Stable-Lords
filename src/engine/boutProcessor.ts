@@ -333,8 +333,16 @@ function resolveBout(
   LoreArchive.signalFight(fightSummary);
   NewsletterFeed.appendFightResult({ summary: fightSummary, transcript: outcome.log.map(e => e.text) });
 
-  // ── Announcement ──
+  // ── Announcement (commentator + AnnouncerAI blurb) ──
   let announcement: string | undefined;
+  const announceTone: AnnounceTone = outcome.by === "Kill" ? "grim" : (tags.includes("Flashy") || tags.includes("Comeback") ? "hype" : "neutral");
+  const announcerBlurb = blurb({
+    tone: announceTone,
+    winner: outcome.winner === "A" ? warrior.name : outcome.winner === "D" ? opponent.name : undefined,
+    loser: outcome.winner === "A" ? opponent.name : outcome.winner === "D" ? warrior.name : undefined,
+    by: outcome.by ?? undefined,
+  });
+
   if (outcome.by === "Kill") announcement = commentatorFor("Kill");
   else if (outcome.by === "KO") announcement = commentatorFor("KO");
   else if (tags.includes("Flashy")) announcement = commentatorFor("Flashy");
@@ -343,6 +351,11 @@ function resolveBout(
     const winnerName = outcome.winner === "A" ? warrior.name : opponent.name;
     const loserName = outcome.winner === "A" ? opponent.name : warrior.name;
     announcement = recapLine(winnerName, loserName, outcome.minutes);
+  }
+
+  // Append announcer flavour to the fight summary transcript
+  if (announcerBlurb) {
+    fightSummary.transcript = [...fightSummary.transcript, `🎙️ ${announcerBlurb}`];
   }
 
   return {

@@ -332,39 +332,121 @@ export default function Tournaments() {
     if (!currentTournament) return;
     const playerNames = new Set(state.roster.map(w => w.name));
 
-    // Keep running rounds as long as no player warrior is in the current round
-    let iterations = 0;
-    const maxIterations = 20; // safety limit
+    // We'll simulate multiple rounds in a single pass
+    let updatedState = { ...state };
+    let bracket = [...currentTournament.bracket];
+    let roundsSkipped = 0;
 
-    const checkAndRun = () => {
-      const bracket = state.tournaments.find(t => t.id === currentTournament.id)?.bracket ?? currentTournament.bracket;
+    const findWarrior = (name: string) => {
+      const player = updatedState.roster.find(w => w.name === name);
+      if (player) return player;
+      for (const rival of (updatedState.rivals ?? [])) {
+        const rw = rival.roster.find(w => w.name === name);
+        if (rw) return rw;
+      }
+      return undefined;
+    };
+
+    for (let safety = 0; safety < 20; safety++) {
       const unresolved = bracket.filter(b => b.winner === undefined);
-      if (unresolved.length === 0) return;
+      if (unresolved.length === 0) break;
 
       const currentRound = Math.min(...unresolved.map(b => b.round));
       const roundBouts = unresolved.filter(b => b.round === currentRound);
 
-      // Check if any bout in this round involves a player warrior
+      // Stop if a player warrior is in this round
       const hasPlayerBout = roundBouts.some(b =>
         playerNames.has(b.a) || playerNames.has(b.d)
       );
+      if (hasPlayerBout) break;
 
-      if (hasPlayerBout) {
-        toast(`⚔️ Your warriors are up next in Round ${currentRound}!`);
-        return;
+      // Auto-resolve this AI-only round
+      const winners: string[] = [];
+      for (const bout of roundBouts) {
+        if (bout.d === "(bye)") {
+          bout.winner = "A";
+          winners.push(bout.a);
+          continue;
+        }
+        const wA = findWarrior(bout.a);
+        const wD = findWarrior(bout.d);
+        if (!wA || !wD) {
+          bout.winner = wA ? "A" : wD ? "D" : null;
+          winners.push(wA?.name ?? wD?.name ?? "");
+          continue;
+        }
+
+        const planA = wA.plan ?? defaultPlanForWarrior(wA);
+        const planD = wD.plan ?? defaultPlanForWarrior(wD);
+        const outcome = simulateFight(planA, planD, wA, wD, undefined, updatedState.trainers);
+
+        bout.winner = outcome.winner;
+        bout.by = outcome.by;
+        bout.fightId = `tf_${Date.now()}_${bout.matchIndex}_${safety}`;
+
+        const winnerName = outcome.winner === "A" ? bout.a : outcome.winner === "D" ? bout.d : null;
+        if (winnerName) winners.push(winnerName);
+
+        // Handle kills
+        if (outcome.by === "Kill") {
+          const deadId = outcome.winner === "A" ? wD.id : wA.id;
+          const killerName = outcome.winner === "A" ? wA.name : wD.name;
+          updatedState = killWarrior(updatedState, deadId, killerName, `Killed in ${currentTournament.name}`);
+        }
+
+        // Fight summary
+        const tags = outcome.post?.tags ?? [];
+        const summary: FightSummary = {
+          id: bout.fightId,
+          week: state.week,
+          tournamentId: currentTournament.id,
+          title: `${bout.a} vs ${bout.d}`,
+          a: bout.a,
+          d: bout.d,
+          winner: outcome.winner,
+          by: outcome.by,
+          styleA: wA.style,
+          styleD: wD.style,
+          flashyTags: tags,
+          transcript: outcome.log.map(e => e.text),
+          createdAt: new Date().toISOString(),
+        };
+        updatedState.arenaHistory = [...updatedState.arenaHistory, summary];
+        ArenaHistory.append(summary);
+        LoreArchive.signalFight(summary);
+        StyleRollups.addFight({ week: state.week, styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by });
+        StyleMeter.recordFight({ styleA: wA.style, styleD: wD.style, winner: outcome.winner, by: outcome.by, isTournament: currentTournament.id });
       }
 
-      // No player bouts — auto-resolve this round
-      runNextRound();
-      iterations++;
-      if (iterations < maxIterations) {
-        // Re-check after state update via setTimeout
-        setTimeout(checkAndRun, 10);
+      // Create next round
+      if (winners.length > 1) {
+        const nextRound = currentRound + 1;
+        for (let i = 0; i < winners.length; i += 2) {
+          if (i + 1 < winners.length) {
+            bracket.push({ round: nextRound, matchIndex: Math.floor(i / 2), a: winners[i], d: winners[i + 1] });
+          } else {
+            bracket.push({ round: nextRound, matchIndex: Math.floor(i / 2), a: winners[i], d: "(bye)", winner: "A" as const });
+          }
+        }
       }
-    };
 
-    checkAndRun();
-  }, [currentTournament, state, runNextRound]);
+      roundsSkipped++;
+    }
+
+    if (roundsSkipped === 0) {
+      toast("⚔️ Your warriors are already up next!");
+      return;
+    }
+
+    // Update tournament
+    const updatedTournament = { ...currentTournament, bracket };
+    updatedState.tournaments = updatedState.tournaments.map(t =>
+      t.id === currentTournament.id ? updatedTournament : t
+    );
+
+    setState(updatedState);
+    toast.success(`⏩ Skipped ${roundsSkipped} AI-only round${roundsSkipped !== 1 ? "s" : ""}. Your warriors are up next!`);
+  }, [currentTournament, state, setState]);
 
   const [expandedBout, setExpandedBout] = useState<string | null>(null);
 

@@ -235,6 +235,16 @@ export default function WarriorDetail() {
         />
       )}
 
+      {/* Equipment Loadout */}
+      {warrior.derivedStats && (
+        <EquipmentLoadoutUI
+          loadout={currentLoadout}
+          style={warrior.style}
+          carryCap={warrior.derivedStats.encumbrance}
+          onChange={handleEquipmentChange}
+        />
+      )}
+
       {/* Fight History */}
       <Card>
         <CardHeader className="pb-3">

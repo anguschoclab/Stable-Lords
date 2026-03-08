@@ -357,15 +357,19 @@ export default function Trainers() {
               {hiringPool.map((t) => (
                 <div key={t.id} className="relative">
                   <TrainerCard trainer={t} owned={false} />
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-4 right-4 flex items-center gap-2">
+                    <Badge variant="outline" className="font-mono text-xs gap-1">
+                      <Coins className="h-3 w-3 text-arena-gold" />
+                      {TIER_COST[t.tier as TrainerTier] ?? 50}g
+                    </Badge>
                     <Button
                       size="sm"
-                      disabled={!canHire}
+                      disabled={!canHire || (state.gold ?? 0) < (TIER_COST[t.tier as TrainerTier] ?? 50)}
                       onClick={() => hireTrainer(t)}
                       className="gap-1.5"
                     >
                       <UserPlus className="h-3.5 w-3.5" />
-                      {canHire ? "Hire" : "Full"}
+                      {!canHire ? "Full" : (state.gold ?? 0) < (TIER_COST[t.tier as TrainerTier] ?? 50) ? "Can't Afford" : "Hire"}
                     </Button>
                   </div>
                 </div>

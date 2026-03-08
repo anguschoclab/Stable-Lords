@@ -2,7 +2,7 @@
  * Stable Lords — Arena Hub (FM26-inspired modular portal)
  * Each section is a self-contained widget in a responsive grid.
  */
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { useGame } from "@/state/GameContext";
 import { STYLE_DISPLAY_NAMES, STYLE_ABBREV, ATTRIBUTE_KEYS, type Warrior } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
@@ -12,13 +12,15 @@ import { Progress } from "@/components/ui/progress";
 import {
   Swords, Trophy, Users, Flame, Star, TrendingUp, UserPlus,
   ScrollText, Coins, ArrowUpRight, ArrowDownRight, Calendar,
-  Zap, Heart, Shield, ChevronRight, Skull,
+  Zap, Heart, Shield, ChevronRight, Skull, GripVertical, RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";
 import { MOOD_DESCRIPTIONS, MOOD_ICONS } from "@/engine/crowdMood";
 import { computeMetaDrift, getMetaLabel, getMetaColor } from "@/engine/metaDrift";
 import { computeWeeklyBreakdown } from "@/engine/economy";
+import { loadUIPrefs, saveUIPrefs } from "@/state/uiPrefs";
+import { cn } from "@/lib/utils";
 
 // ─── Widget: Season & Calendar ─────────────────────────────────────────────
 

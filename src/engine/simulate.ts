@@ -53,16 +53,16 @@ const STYLE_ORDER = [
 // - BA loses to precision/counter styles (AB, PR — can read the charges)
 const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
-  [ 0, +1,  0,  0, -1,  0, +1,  0, +2,  0], // AB: precision destroys TP (endurance+accuracy), beats BA/SL
-  [-1,  0, -1,  0,  0, -1, +1, +1, +2, +1], // BA: hard-counters TP (bash through parry), beats SL/ST/WS
-  [ 0, +1,  0, +1,  0, -1, +1,  0, +1, -1], // LU: aggression beats TP, speed beats BA/PL/SL
-  [ 0,  0, -1,  0, +1,  0,  0, -1, -1,  0], // PL: patience beats PR, but TP outlasts PL
-  [+1,  0,  0, -1,  0, +1, +1, -1, -1,  0], // PR: counter beats AB/PS/SL, TP outlasts PR
-  [ 0, +1, +1,  0, -1,  0, +1, -1,  0, -1], // PS: beats BA/LU/SL, loses to PR/ST/WS
-  [-1, -1, -1,  0, -1, -1,  0, +1, +1, +1], // SL: aggression beats TP/ST/WS, risky vs parry styles
-  [ 0, -1,  0, +1, +1, +1, -1,  0,  0, -1], // ST: efficient, beats PL/PR/PS, neutral vs TP
-  [-2, -2, -1, +1, +1,  0, -1,  0,  0, +1], // TP: crushed by BA/AB, outlasts PL/PR, loses to aggression
-  [ 0, -1, +1,  0,  0, +1, -1, +1, -1,  0], // WS: zone control, loses to BA/TP
+  [ 0, +1,  0,  0, -1,  0,  0,  0, +2,  0], // AB: precision destroys TP, slight edge vs BA
+  [-1,  0,  0,  0,  0,  0, +1, +1, +2, +1], // BA: hard-counters TP, beats SL/ST/WS
+  [ 0,  0,  0, +1,  0, -1, +1,  0, +1, -1], // LU: speed beats PL/SL, weak vs PS/WS
+  [ 0,  0, -1,  0, +1,  0,  0,  0, -1,  0], // PL: beats PR, TP outlasts
+  [+1,  0,  0, -1,  0, +1,  0, -1, -1,  0], // PR: counter beats AB/PS, TP outlasts, ST overpowers
+  [ 0,  0, +1,  0, -1,  0, +1,  0,  0, -1], // PS: beats LU/SL, loses to PR/WS
+  [ 0, -1, -1,  0,  0, -1,  0, +1, +1, +1], // SL: flurry beats TP/ST/WS, weak vs BA/LU/PS
+  [ 0, -1,  0,  0, +1,  0, -1,  0,  0,  0], // ST: efficient, beats PR, weak vs BA/SL
+  [-2, -2, -1, +1, +1,  0, -1,  0,  0, +1], // TP: crushed by BA/AB, outlasts PL/PR
+  [ 0, -1, +1,  0,  0, +1, -1,  0, -1,  0], // WS: zone control, beats LU/PS, loses to BA/TP
 ];
 
 function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): number {

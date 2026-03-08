@@ -9,7 +9,7 @@ import { LoreArchive } from "@/lore/LoreArchive";
 import { blurb } from "@/lore/AnnouncerAI";
 import { commentatorFor } from "@/ui/commentator";
 import { recapLine } from "@/ui/fightVariety";
-import { rollForInjury } from "@/engine/injuries";
+import { rollForInjury, isTooInjuredToFight, type Injury } from "@/engine/injuries";
 import { calculateXP, applyXP } from "@/engine/progression";
 import { pickRivalOpponent } from "@/engine/rivals";
 import type { FightSummary, Warrior, RivalStableData } from "@/types/game";
@@ -29,6 +29,13 @@ export default function RunRound() {
   >([]);
   const [running, setRunning] = useState(false);
 
+  const fightReady = state.roster.filter(w => {
+    if (w.status !== "Active") return false;
+    const injObjs = (w.injuries || []).filter((i): i is Injury => typeof i !== "string");
+    return !isTooInjuredToFight(injObjs);
+  });
+  const tooInjuredCount = state.roster.filter(w => w.status === "Active").length - fightReady.length;
+
   const runWeek = () => {
     if (running || state.roster.length < 2) return;
     setRunning(true);
@@ -36,7 +43,12 @@ export default function RunRound() {
     const weekResults: typeof results = [];
     let updatedState = { ...state };
     const moodMods = getMoodModifiers(state.crowdMood as any);
-    const activeWarriors = updatedState.roster.filter(w => w.status === "Active");
+    const activeWarriors = updatedState.roster.filter(w => {
+      if (w.status !== "Active") return false;
+      const injuryObjects = (w.injuries || []).filter((i): i is Injury => typeof i !== "string");
+      if (isTooInjuredToFight(injuryObjects)) return false;
+      return true;
+    });
 
     // Build pairings — avoid repeat matchups where possible
     const paired = new Set<string>();
@@ -285,13 +297,18 @@ export default function RunRound() {
         <div>
           <h1 className="text-xl sm:text-2xl font-display font-bold">Run Round</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Week {state.week}, {state.season} — {state.roster.filter(w => w.status === "Active").length} warriors ready ·
+            Week {state.week}, {state.season} — {fightReady.length} warriors ready ·
             Crowd: {state.crowdMood}
+            {tooInjuredCount > 0 && (
+              <span className="text-destructive ml-1">
+                ({tooInjuredCount} too injured)
+              </span>
+            )}
           </p>
         </div>
         <Button
           onClick={runWeek}
-          disabled={running || state.roster.filter(w => w.status === "Active").length < 2}
+          disabled={running || fightReady.length < 2}
           className="gap-2 bg-primary hover:bg-primary/90 w-full sm:w-auto"
           size="lg"
         >

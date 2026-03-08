@@ -251,7 +251,8 @@ function oeAttMod(oe: number, style?: FightingStyle): number {
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * 0.5); }
 function alIniMod(al: number): number { return Math.floor((al - 5) * 0.6); }
 function enduranceCost(oe: number, al: number): number {
-  return Math.max(1, Math.round((oe * 0.6 + al * 0.4)));
+  // BALANCE v2: Reduced from (oe*0.6 + al*0.4) to prevent offensive styles collapsing
+  return Math.max(1, Math.round((oe * 0.35 + al * 0.25)));
 }
 
 // ─── Fatigue Penalties ────────────────────────────────────────────────────

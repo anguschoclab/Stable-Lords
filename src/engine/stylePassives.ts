@@ -16,19 +16,25 @@ export interface TempoProfile {
   enduranceMult: number; // multiplier on endurance drain (>1 = burns faster)
 }
 
-// BALANCE v2: Compressed endurance multiplier range from 0.70-1.20 to 0.88-1.08.
-// Previous range created 3x+ endurance advantage for TP, making offense unviable.
+// BALANCE v6: Key changes:
+// - TP endurance mult 0.88 → 0.96 (was unkillable via pure outlast)
+// - AB endurance mult 0.88 → 0.94 (still efficient but not TP-tier)
+// - PR endurance mult 0.95 → 0.98 (counter style shouldn't also outlast)
+// - BA endurance mult 1.06 → 0.98 (bashers are trained athletes, not clumsy)
+// - SL endurance mult 0.98 → 0.94 (slashers are EFFICIENT, their flurry is practiced)
+// - ST endurance mult 1.02 → 0.96 (strikers are economical with energy)
+// - LU endurance mult 1.08 → 1.02 (lungers burn energy but not THIS much)
 const STYLE_TEMPO: Record<FightingStyle, TempoProfile> = {
-  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  2, enduranceMult: 0.88 },  // AB conserves energy (low activity), dominates late
-  [FightingStyle.BashingAttack]:   { opening:  1, mid:  0, late: -1, enduranceMult: 1.06 },
-  [FightingStyle.LungingAttack]:   { opening:  2, mid:  0, late: -2, enduranceMult: 1.08 },
+  [FightingStyle.AimedBlow]:       { opening: -1, mid:  0, late:  1, enduranceMult: 0.94 },  // AB: reduced late tempo from +2 to +1
+  [FightingStyle.BashingAttack]:   { opening:  2, mid:  1, late:  0, enduranceMult: 0.98 },  // BA: stronger opening, efficient stamina
+  [FightingStyle.LungingAttack]:   { opening:  3, mid:  0, late: -2, enduranceMult: 1.02 },  // LU: explosive opener
   [FightingStyle.ParryLunge]:      { opening:  0, mid:  1, late:  0, enduranceMult: 1.00 },
-  [FightingStyle.ParryRiposte]:    { opening: -1, mid:  0, late:  1, enduranceMult: 0.95 },
+  [FightingStyle.ParryRiposte]:    { opening: -1, mid:  0, late:  0, enduranceMult: 0.98 },  // PR: removed late tempo bonus
   [FightingStyle.ParryStrike]:     { opening:  0, mid:  0, late:  0, enduranceMult: 0.96 },
-  [FightingStyle.SlashingAttack]:  { opening:  1, mid:  0, late: -1, enduranceMult: 0.98 },  // SL flurry is efficient
-  [FightingStyle.StrikingAttack]:  { opening:  1, mid:  0, late:  0, enduranceMult: 1.02 },
-  [FightingStyle.TotalParry]:      { opening: -1, mid:  0, late:  1, enduranceMult: 0.88 },
-  [FightingStyle.WallOfSteel]:     { opening:  0, mid:  0, late:  1, enduranceMult: 0.90 },
+  [FightingStyle.SlashingAttack]:  { opening:  2, mid:  1, late:  0, enduranceMult: 0.94 },  // SL: strong opening + efficient
+  [FightingStyle.StrikingAttack]:  { opening:  1, mid:  1, late:  0, enduranceMult: 0.96 },  // ST: consistent, efficient
+  [FightingStyle.TotalParry]:      { opening: -2, mid:  0, late:  1, enduranceMult: 0.96 },  // TP: nerfed endurance from 0.88
+  [FightingStyle.WallOfSteel]:     { opening:  0, mid:  0, late:  1, enduranceMult: 0.92 },
 };
 
 export type Phase = "OPENING" | "MID" | "LATE";

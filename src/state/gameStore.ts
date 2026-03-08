@@ -71,7 +71,6 @@ export function createFreshState(): GameState {
     trainers: [],
     hiringPool: [],
     trainingAssignments: [],
-    hiringPool: [],
     settings: {
       featureFlags: {
         tournaments: true,

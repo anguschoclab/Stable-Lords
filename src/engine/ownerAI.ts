@@ -257,11 +257,14 @@ export function processAIRosterManagement(
   return { updatedRivals, gazetteItems };
 }
 
-/** Generate a new warrior matching the stable's philosophy and preferred styles */
-function generateAIRecruit(rival: RivalStableData, week: number): Warrior | null {
+/** Generate a new warrior matching the stable's philosophy, favored styles, and meta awareness */
+function generateAIRecruit(rival: RivalStableData, week: number, meta?: StyleMeta): Warrior | null {
   const philosophy = rival.philosophy ?? "Balanced";
-  const preferredStyles = getPhilosophyStyles(philosophy);
-  const style = preferredStyles[Math.floor(Math.random() * preferredStyles.length)];
+  const adaptation = rival.owner.metaAdaptation ?? "Opportunist";
+  const favoredStyles = rival.owner.favoredStyles ?? [];
+
+  // Pick style based on meta adaptation behavior
+  const style = pickRecruitStyle(adaptation, philosophy, favoredStyles, meta);
 
   const attrs = generateRecruitAttrs(philosophy);
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
@@ -289,6 +292,64 @@ function generateAIRecruit(rival: RivalStableData, week: number): Warrior | null
     age: 17 + Math.floor(Math.random() * 5),
     stableId: rival.owner.id,
   };
+}
+
+/**
+ * Pick a recruit's fighting style based on the owner's meta adaptation type.
+ * - MetaChaser: recruits dominant meta styles
+ * - Traditionalist: always recruits from favored styles, ignores meta
+ * - Opportunist: blends favored styles with meta-rising styles
+ * - Innovator: recruits counter-meta styles (styles that beat what's dominant)
+ */
+function pickRecruitStyle(
+  adaptation: MetaAdaptation,
+  philosophy: string,
+  favoredStyles: FightingStyle[],
+  meta?: StyleMeta,
+): FightingStyle {
+  const philosophyStyles = getPhilosophyStyles(philosophy);
+  const allStyles = Object.values(FightingStyle);
+
+  switch (adaptation) {
+    case "Traditionalist": {
+      // Always pick from favored styles, never deviate
+      const pool = favoredStyles.length > 0 ? favoredStyles : philosophyStyles;
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+    case "MetaChaser": {
+      // Pick from the top-performing styles in the meta
+      if (meta) {
+        const sorted = allStyles.slice().sort((a, b) => (meta[b] ?? 0) - (meta[a] ?? 0));
+        const top = sorted.slice(0, 3);
+        return top[Math.floor(Math.random() * top.length)];
+      }
+      return philosophyStyles[Math.floor(Math.random() * philosophyStyles.length)];
+    }
+    case "Innovator": {
+      // Counter-meta: pick styles that are currently weak (opponents won't expect them)
+      // or styles that naturally counter the dominant ones
+      if (meta) {
+        const sorted = allStyles.slice().sort((a, b) => (meta[a] ?? 0) - (meta[b] ?? 0));
+        const underdogs = sorted.slice(0, 4);
+        return underdogs[Math.floor(Math.random() * underdogs.length)];
+      }
+      // Without meta data, innovate from non-philosophy styles
+      const nonStandard = allStyles.filter(s => !philosophyStyles.includes(s));
+      return nonStandard.length > 0
+        ? nonStandard[Math.floor(Math.random() * nonStandard.length)]
+        : philosophyStyles[Math.floor(Math.random() * philosophyStyles.length)];
+    }
+    case "Opportunist":
+    default: {
+      // 50/50 blend: half the time pick from favored, half from meta-rising
+      if (meta && Math.random() < 0.5) {
+        const rising = allStyles.filter(s => (meta[s] ?? 0) >= 2);
+        if (rising.length > 0) return rising[Math.floor(Math.random() * rising.length)];
+      }
+      const pool = favoredStyles.length > 0 ? favoredStyles : philosophyStyles;
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+  }
 }
 
 function getPhilosophyStyles(philosophy: string): FightingStyle[] {

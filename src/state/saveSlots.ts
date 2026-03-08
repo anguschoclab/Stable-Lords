@@ -89,6 +89,7 @@ export function loadFromSlot(slotId: string): GameState | null {
         if (!parsed.restStates) parsed.restStates = [];
         if (!parsed.rivalries) parsed.rivalries = [];
         if (!parsed.matchHistory) parsed.matchHistory = [];
+        if (!parsed.recruitPool) parsed.recruitPool = [];
         if (parsed.gold === undefined) parsed.gold = 500;
         if (!parsed.ledger) parsed.ledger = [];
         if (!parsed.settings) parsed.settings = { featureFlags: { tournaments: true, scouting: true } };

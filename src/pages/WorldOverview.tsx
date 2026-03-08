@@ -56,6 +56,8 @@ export default function WorldOverview() {
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: SortDir }>({ field: "fame", dir: "desc" });
   const [warriorSort, setWarriorSort] = useState<{ field: WarriorSortField; dir: SortDir }>({ field: "fame", dir: "desc" });
 
+  const templates = useMemo(() => getStableTemplates(), []);
+
   const stableRows = useMemo((): StableRow[] => {
     const rows: StableRow[] = [];
 

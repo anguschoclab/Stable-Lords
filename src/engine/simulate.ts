@@ -668,8 +668,8 @@ export function simulateFight(
         if (defSuccess) {
           defended = true;
           attacker.consecutiveHits = 0;
-          if (rng() < 0.3) {
-            log.push({ minute: min, text: `${name(defender)} dodges the attack with quick footwork.` });
+          if (rng() < 0.5) {
+            log.push({ minute: min, text: narrateDodge(rng, name(defender)) });
           }
           // Dodge doesn't enable riposte (you're out of position)
         }

@@ -568,7 +568,7 @@ export function simulateFight(
           if (defender.hp <= defender.maxHp * 0.3 && defender.endurance <= defender.maxEndurance * 0.4) {
             const kdMod = Math.floor((attKD) - 5) * 0.5;
             const phaseMod = phase === "LATE" ? 3 : phase === "MID" ? 1 : 0;
-            const decSuccess = skillCheck(rng, attacker.skills.DEC, kdMod + phaseMod + attMatchup + attFat);
+            const decSuccess = skillCheck(rng, attacker.skills.DEC, kdMod + phaseMod + attMatchup + attFat + attOffMods.decBonus);
 
             if (decSuccess) {
               // Kill window — attempt execution

@@ -11,18 +11,19 @@ import { FightingStyle, type Attributes, type BaseSkills, type DerivedStats } fr
 // Each style has base offsets for [ATT, PAR, DEF, INI, RIP, DEC]
 const STYLE_SEEDS: Record<FightingStyle, [number, number, number, number, number, number]> = {
   //                                          ATT PAR DEF INI RIP DEC
-  // BALANCE v2: Compressed to 2-6 range. Offensive styles get more ATT,
-  // defensive styles get modest PAR/DEF (not extreme). Total ~19-21 per style.
-  [FightingStyle.AimedBlow]:       [ 5,  3,  3,  3,  2,  4],  // 20 — precision identity via crit, not raw ATT
-  [FightingStyle.BashingAttack]:   [ 6,  2,  2,  4,  2,  3],  // 19 — high ATT, low defense
-  [FightingStyle.LungingAttack]:   [ 6,  2,  3,  5,  2,  3],  // 21 — fast, aggressive, fragile
+  // BALANCE v3: PAR compressed to 3-4 range (was 2-5). Only 1 point separates
+  // best/worst parry so raw PAR no longer dominates. Style identity comes from
+  // ATT, RIP, INI, DEC, endurance, and passives instead.
+  [FightingStyle.AimedBlow]:       [ 5,  3,  3,  3,  2,  4],  // 20 — precision via crit
+  [FightingStyle.BashingAttack]:   [ 6,  3,  2,  4,  2,  3],  // 20 — ATT+INI offense
+  [FightingStyle.LungingAttack]:   [ 6,  3,  3,  5,  2,  3],  // 22 — fast, aggressive
   [FightingStyle.ParryLunge]:      [ 4,  4,  3,  3,  3,  3],  // 20 — balanced hybrid
-  [FightingStyle.ParryRiposte]:    [ 3,  4,  3,  3,  5,  2],  // 20 — RIP identity, not PAR wall
+  [FightingStyle.ParryRiposte]:    [ 3,  4,  3,  3,  4,  2],  // 19 — RIP identity (reduced from 5)
   [FightingStyle.ParryStrike]:     [ 4,  4,  3,  3,  3,  3],  // 20 — efficient, consistent
-  [FightingStyle.SlashingAttack]:  [ 6,  2,  2,  4,  2,  3],  // 19 — offensive, reduced parry
+  [FightingStyle.SlashingAttack]:  [ 6,  3,  2,  4,  2,  3],  // 20 — offensive, reduced DEF
   [FightingStyle.StrikingAttack]:  [ 6,  3,  2,  4,  2,  3],  // 20 — reliable power
-  [FightingStyle.TotalParry]:      [ 2,  5,  4,  2,  3,  2],  // 18 — defensive but not impenetrable
-  [FightingStyle.WallOfSteel]:     [ 3,  3,  4,  3,  3,  3],  // 19 — balanced defense + endurance identity
+  [FightingStyle.TotalParry]:      [ 2,  4,  4,  2,  3,  2],  // 17 — defensive but low ATT
+  [FightingStyle.WallOfSteel]:     [ 3,  3,  4,  3,  3,  3],  // 19 — DEF+endurance identity
 };
 
 // ─── Attribute → Skill Breakpoint Contributions ──────────────────────────

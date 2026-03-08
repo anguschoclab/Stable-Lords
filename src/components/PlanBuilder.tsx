@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import type {
   FightPlan, PhaseStrategy, OffensiveTactic, DefensiveTactic, Warrior,
-  type AttackTarget, type ProtectTarget,
+  AttackTarget, ProtectTarget,
 } from "@/types/game";
 import { STYLE_DISPLAY_NAMES, FightingStyle } from "@/types/game";
 import { autoTuneFromBias, reconcileGearTwoHanded, type Bias } from "@/engine/planBias";

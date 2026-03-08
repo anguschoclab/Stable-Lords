@@ -166,14 +166,13 @@ describe("advanceWeek pipeline", () => {
     expect(next.season).toBe("Spring");
   });
 
-  it("passes training output to economy (pipeline chaining)", () => {
+  it("passes training output to economy (pipeline chaining)", async () => {
     const { processTraining } = await import("@/engine/training") as any;
     const { processEconomy } = await import("@/engine/economy") as any;
 
     const state = createFreshState();
     advanceWeek(state);
 
-    // processEconomy should receive the output of processTraining
     const trainingOutput = processTraining.mock.results[0].value;
     expect(processEconomy).toHaveBeenCalledWith(trainingOutput);
   });

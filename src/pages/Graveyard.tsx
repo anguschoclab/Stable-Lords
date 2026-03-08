@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skull, Armchair, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+import { WarriorLink } from "@/components/EntityLink";
 
 export default function Graveyard() {
   const { state } = useGame();
@@ -52,7 +53,7 @@ export default function Graveyard() {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="font-display font-semibold text-foreground">{w.name}</span>
+                      <WarriorLink name={w.name} id={w.id} className="font-display font-semibold text-foreground" />
                       <span className="text-sm text-muted-foreground ml-2">
                         {STYLE_DISPLAY_NAMES[w.style]}
                       </span>
@@ -64,7 +65,7 @@ export default function Graveyard() {
                   <div className="text-sm text-muted-foreground mt-2">
                     {w.career.wins}W-{w.career.losses}L-{w.career.kills}K
                     {w.deathCause && <> · {w.deathCause}</>}
-                    {w.killedBy && <> · Slain by {w.killedBy}</>}
+                    {w.killedBy && <> · Slain by <WarriorLink name={w.killedBy} /></>}
                   </div>
                 </CardContent>
               </Card>
@@ -86,7 +87,7 @@ export default function Graveyard() {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="font-display font-semibold text-foreground">{w.name}</span>
+                      <WarriorLink name={w.name} id={w.id} className="font-display font-semibold text-foreground" />
                       <span className="text-sm text-muted-foreground ml-2">
                         {STYLE_DISPLAY_NAMES[w.style]}
                       </span>

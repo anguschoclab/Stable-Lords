@@ -12,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Dumbbell, Check, X, Trophy, Heart, AlertTriangle, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { computeGainChance } from "@/engine/training";
+import { WarriorLink } from "@/components/EntityLink";
 
 function WarriorTrainingCard({ warrior, assignment, seasonalGains, trainers, onAssign, onAssignRecovery, onClear }: {
   warrior: Warrior;
@@ -33,7 +34,9 @@ function WarriorTrainingCard({ warrior, assignment, seasonalGains, trainers, onA
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CardTitle className="font-display text-base">{warrior.name}</CardTitle>
+            <CardTitle className="font-display text-base">
+              <WarriorLink name={warrior.name} id={warrior.id}>{warrior.name}</WarriorLink>
+            </CardTitle>
             {warrior.champion && <Trophy className="h-3.5 w-3.5 text-arena-gold" />}
             {hasInjury && (
               <TooltipProvider delayDuration={200}>

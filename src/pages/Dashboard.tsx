@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";
+import { WarriorLink, StableLink } from "@/components/EntityLink";
 import { MOOD_DESCRIPTIONS, MOOD_ICONS } from "@/engine/crowdMood";
 import { computeMetaDrift, getMetaLabel, getMetaColor } from "@/engine/metaDrift";
 import { computeWeeklyBreakdown } from "@/engine/economy";
@@ -397,9 +398,9 @@ function RecentBoutsWidget() {
                   </Badge>
                   <div className="flex-1 min-w-0">
                     <div className="text-xs">
-                      <span className={`font-medium ${isPlayerA ? "text-foreground" : "text-muted-foreground"}`}>{f.a}</span>
+                      <WarriorLink name={f.a} className={`font-medium ${isPlayerA ? "text-foreground" : "text-muted-foreground"}`} />
                       <span className="text-muted-foreground mx-1.5">vs</span>
-                      <span className={`font-medium ${isPlayerD ? "text-foreground" : "text-muted-foreground"}`}>{f.d}</span>
+                      <WarriorLink name={f.d} className={`font-medium ${isPlayerD ? "text-foreground" : "text-muted-foreground"}`} />
                     </div>
                     <div className="flex gap-1 mt-0.5">
                       {f.by && <Badge variant="outline" className="text-[9px] h-3.5 px-1">{f.by}</Badge>}
@@ -469,7 +470,9 @@ function TrainingWidget() {
                 <div key={warriorId} className="flex items-center gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-display font-semibold truncate">{w.name}</span>
+                      <span className="text-sm font-display font-semibold truncate">
+                        <WarriorLink name={w.name} id={w.id}>{w.name}</WarriorLink>
+                      </span>
                       <Badge variant="outline" className="text-[10px] font-mono h-4 px-1">
                         {STYLE_ABBREV[w.style]}
                       </Badge>
@@ -547,9 +550,9 @@ function RivalsWidget() {
                 <div key={r.owner.id} className="flex items-center gap-3 py-1">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-display font-semibold truncate">
+                      <StableLink name={r.owner.stableName} className="text-sm font-display font-semibold truncate">
                         {r.owner.stableName}
-                      </span>
+                      </StableLink>
                       <Badge variant="outline" className="text-[9px] h-4 px-1 shrink-0">
                         {r.owner.personality ?? "Unknown"}
                       </Badge>
@@ -561,7 +564,7 @@ function RivalsWidget() {
                       {topWarrior && (
                         <>
                           <span>·</span>
-                          <span className="truncate">★ {topWarrior.name}</span>
+                          <span className="truncate">★ <WarriorLink name={topWarrior.name} id={topWarrior.id}>{topWarrior.name}</WarriorLink></span>
                         </>
                       )}
                     </div>
@@ -589,7 +592,7 @@ function RivalsWidget() {
                         {won ? "W" : f.winner ? "L" : "D"}
                       </Badge>
                       <span className="text-[11px] truncate">
-                        {playerIsA ? f.a : f.d} vs {playerIsA ? f.d : f.a}
+                        <WarriorLink name={playerIsA ? f.a : f.d} /> vs <WarriorLink name={playerIsA ? f.d : f.a} />
                       </span>
                     </div>
                   );

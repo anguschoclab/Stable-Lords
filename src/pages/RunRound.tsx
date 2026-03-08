@@ -25,6 +25,7 @@ import { Swords, Zap, Skull, UserPlus, Flame, Shield, Clock } from "lucide-react
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import BoutViewer from "@/components/BoutViewer";
+import { WarriorLink, StableLink } from "@/components/EntityLink";
 
 export default function RunRound() {
   const { state, setState } = useGame();
@@ -438,7 +439,7 @@ export default function RunRound() {
               {matchCard.map((mp, i) => (
                 <div key={i} className="flex items-center justify-between py-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold">{mp.playerWarrior.name}</span>
+                    <WarriorLink name={mp.playerWarrior.name} id={mp.playerWarrior.id} className="font-semibold" />
                     <Badge variant="outline" className="text-xs">{STYLE_DISPLAY_NAMES[mp.playerWarrior.style]}</Badge>
                     <span className="text-muted-foreground text-xs">Fame {mp.playerWarrior.fame}</span>
                   </div>
@@ -449,8 +450,10 @@ export default function RunRound() {
                   <div className="flex items-center gap-2">
                     <span className="text-muted-foreground text-xs">Fame {mp.rivalWarrior.fame}</span>
                     <Badge variant="outline" className="text-xs">{STYLE_DISPLAY_NAMES[mp.rivalWarrior.style]}</Badge>
-                    <span className="font-semibold">{mp.rivalWarrior.name}</span>
-                    <span className="text-xs text-muted-foreground">({mp.rivalStable.owner.stableName})</span>
+                    <WarriorLink name={mp.rivalWarrior.name} id={mp.rivalWarrior.id} className="font-semibold" />
+                    <StableLink name={mp.rivalStable.owner.stableName} className="text-xs text-muted-foreground">
+                      ({mp.rivalStable.owner.stableName})
+                    </StableLink>
                   </div>
                 </div>
               ))}

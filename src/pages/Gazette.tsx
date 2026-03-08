@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Newspaper, Trophy, Swords, TrendingUp, Skull, Flame, Star, ChevronDown, BarChart3 } from "lucide-react";
+import { Newspaper, Trophy, Swords, TrendingUp, Skull, Flame, Star, ChevronDown, BarChart3, Crown, Grid3X3, Zap } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { FightSummary } from "@/types/game";
 
 /* ── helpers ─────────────────────────────────────────────── */

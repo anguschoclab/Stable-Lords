@@ -13,6 +13,7 @@ import WarriorDetail from "@/pages/WarriorDetail";
 import HallOfFights from "@/lore/HallOfFights";
 import Recruit from "@/pages/Recruit";
 import Graveyard from "@/pages/Graveyard";
+import Training from "@/pages/Training";
 import Trainers from "@/pages/Trainers";
 import Orphanage from "@/pages/Orphanage";
 import StartGame from "@/pages/StartGame";
@@ -40,6 +41,7 @@ function GameRoutes() {
         <Route path="/run-round" element={<RunRound />} />
         <Route path="/tournaments" element={<Tournaments />} />
         <Route path="/recruit" element={<Recruit />} />
+        <Route path="/training" element={<Training />} />
         <Route path="/graveyard" element={<Graveyard />} />
         <Route path="/trainers" element={<Trainers />} />
         <Route path="/help" element={<Help />} />

@@ -3,6 +3,7 @@
  */
 import { FightingStyle, type GameState, type Warrior, type FightSummary, type Season } from "@/types/game";
 import { computeWarriorStats } from "@/engine/skillCalc";
+import { processTraining } from "@/engine/training";
 
 const SAVE_KEY = "stablelords.save.v2";
 
@@ -70,6 +71,7 @@ export function createFreshState(): GameState {
     tournaments: [],
     trainers: [],
     hiringPool: [],
+    trainingAssignments: [],
     settings: {
       featureFlags: {
         tournaments: true,
@@ -95,6 +97,7 @@ export function loadGameState(): GameState {
         if (!parsed.tournaments) parsed.tournaments = [];
         if (!parsed.trainers) parsed.trainers = [];
         if (!parsed.hiringPool) parsed.hiringPool = [];
+        if (!parsed.trainingAssignments) parsed.trainingAssignments = [];
         if (parsed.ftueComplete === undefined) parsed.ftueComplete = true; // existing saves already past FTUE
         if (!parsed.coachDismissed) parsed.coachDismissed = [];
         // Ensure all warriors have status
@@ -133,10 +136,12 @@ export function resetGameState(): GameState {
 const SEASONS: Season[] = ["Spring", "Summer", "Fall", "Winter"];
 
 export function advanceWeek(state: GameState): GameState {
-  const newWeek = state.week + 1;
+  // Process training before advancing
+  const trained = processTraining(state);
+  const newWeek = trained.week + 1;
   const seasonIdx = Math.floor((newWeek - 1) / 13) % 4;
   return {
-    ...state,
+    ...trained,
     week: newWeek,
     season: SEASONS[seasonIdx],
   };

@@ -115,6 +115,12 @@ export default function RunRound() {
     // Update crowd mood
     updatedState.crowdMood = computeCrowdMood(updatedState.arenaHistory);
 
+    // Tick trainer contracts
+    updatedState.trainers = (updatedState.trainers ?? []).map((t) => ({
+      ...t,
+      contractWeeksLeft: Math.max(0, t.contractWeeksLeft - 1),
+    })).filter((t) => t.contractWeeksLeft > 0);
+
     // Newsletter
     const highlights = weekResults.map((r) => {
       const winner = r.outcome.winner === "A" ? r.a.name : r.outcome.winner === "D" ? r.d.name : "Draw";

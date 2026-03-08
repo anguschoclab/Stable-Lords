@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
-import { UserPlus, Shuffle, Shield, Swords, Heart, Zap, Eye, Brain, Dumbbell } from "lucide-react";
+import { UserPlus, Shuffle, Shield, Swords, Heart, Zap, Eye, Brain, Dumbbell, Dices } from "lucide-react";
+import { randomWarriorName } from "@/data/randomNames";
 import {
   FightingStyle,
   STYLE_DISPLAY_NAMES,

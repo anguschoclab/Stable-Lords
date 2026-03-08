@@ -3,8 +3,9 @@
  * pool management, and AI draft behavior.
  * Implements Stable_Lords_Orphanage_Recruitment_Spec_v1.0
  */
-import { FightingStyle, type Attributes, type BaseSkills, type DerivedStats } from "@/types/game";
+import { FightingStyle, type Attributes, type AttributePotential, type BaseSkills, type DerivedStats } from "@/types/game";
 import { computeWarriorStats } from "./skillCalc";
+import { generatePotential } from "./potential";
 
 // ─── Types ────────────────────────────────────────────────────────────────
 

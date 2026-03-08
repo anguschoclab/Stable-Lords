@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";
+import { WarriorLink, StableLink } from "@/components/EntityLink";
 import { MOOD_DESCRIPTIONS, MOOD_ICONS } from "@/engine/crowdMood";
 import { computeMetaDrift, getMetaLabel, getMetaColor } from "@/engine/metaDrift";
 import { computeWeeklyBreakdown } from "@/engine/economy";

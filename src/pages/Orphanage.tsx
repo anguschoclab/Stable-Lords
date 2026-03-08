@@ -8,6 +8,7 @@ import { useGame } from "@/state/GameContext";
 import { makeWarrior } from "@/state/gameStore";
 import { simulateFight, defaultPlanForWarrior, fameFromTags } from "@/engine";
 import { generateRivalStables } from "@/engine/rivals";
+import { generateRecruitPool } from "@/engine/recruitment";
 import { FightingStyle, STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type Warrior, type FightSummary } from "@/types/game";
 import { computeWarriorStats, DAMAGE_LABELS } from "@/engine/skillCalc";
 import { generatePotential } from "@/engine/potential";

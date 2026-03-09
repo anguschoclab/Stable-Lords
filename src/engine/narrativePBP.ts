@@ -459,7 +459,12 @@ export function fatigueLine(rng: RNG, name: string, endRatio: number): string | 
   if (endRatio <= 0.3) return pick(rng, [
     `${name} is breathing heavily.`,
     `${name} is still wearing with exhaustion!`,
+    `${name} pauses to regain his strength.`,
     `There is a lull in the action, as both warriors pause to catch their breath.`,
+  ]);
+  if (endRatio <= 0.5) return pick(rng, [
+    `${name} slows his pace to conserve energy.`,
+    `${name} forgoes the offensive to save his strength.`,
   ]);
   return null;
 }

@@ -180,7 +180,7 @@ describe("Plan Bias", () => {
         OE: 5,
         AL: 5,
         killDesire: 5,
-        style: "STRIKING ATTACK",
+        style: FightingStyle.StrikingAttack,
         target: "Any",
         offensiveTactic: "none",
         defensiveTactic: "none",

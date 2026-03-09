@@ -861,7 +861,7 @@ export function simulateFight(
           });
 
           const killWindowHp = defender.maxHp * killMech.killWindowHpMult;
-          const killWindowEnd = defender.maxEndurance * 0.4;
+          const killWindowEnd = defender.maxEndurance * KILL_WINDOW_ENDURANCE;
 
           if (defender.hp <= killWindowHp && defender.endurance <= killWindowEnd) {
             const kdMod = Math.floor((attKD) - 5) * 0.5;
@@ -870,8 +870,8 @@ export function simulateFight(
 
             if (decSuccess) {
               const killRoll = rng();
-              const healingReduction = defender.label === "A" ? (trainerModsA?.healMod ?? 0) * 0.03 : (trainerModsD?.healMod ?? 0) * 0.03;
-              const killThreshold = Math.max(0.05, 0.3 + attKD * 0.04 + (phase === "LATE" ? 0.15 : 0) + killMech.killBonus - healingReduction);
+              const healingReduction = defender.label === "A" ? (trainerModsA?.healMod ?? 0) * TRAINER_HEALING_REDUCTION : (trainerModsD?.healMod ?? 0) * TRAINER_HEALING_REDUCTION;
+              const killThreshold = Math.max(KILL_THRESHOLD_MIN, KILL_THRESHOLD_BASE + attKD * KILL_DESIRE_SCALING + (phase === "LATE" ? KILL_PHASE_LATE_BONUS : 0) + killMech.killBonus - healingReduction);
 
               if (killRoll < killThreshold) {
                 // KILL — style-specific narrative

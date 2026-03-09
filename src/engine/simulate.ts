@@ -198,6 +198,87 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
   return rollA > rollD;
 }
 
+// ─── Combat Constants ─────────────────────────────────────────────────────
+
+/** Global attack bonus — offenses lands frequently (fights should be violent) */
+const GLOBAL_ATT_BONUS = 8;
+/** Global parry penalty — parrying is hard (defense identity is endurance, not blocking) */
+const GLOBAL_PAR_PENALTY = -6;
+/** Initiative winner gets a pressing advantage to reward aggressive styles */
+const INITIATIVE_PRESS_BONUS = 1;
+
+// Phase detection thresholds
+const PHASE_OPENING_THRESHOLD = 0.25; // First 25% of exchanges
+const PHASE_MID_THRESHOLD = 0.65;      // Middle 40% of exchanges
+
+// Target & Protect mechanics
+const TARGET_HIT_CHANCE = 0.6;         // Chance to hit targeted location
+const TARGET_MISS_CHANCE = 0.4;        // Chance to hit elsewhere when targeting
+const PROTECT_DAMAGE_REDUCTION = 0.75; // Protected locations take 25% less damage
+const PROTECT_DAMAGE_PENALTY = 1.1;    // Unprotected locations take 10% more damage
+
+// OE/AL Modifiers
+const OE_ATT_SCALING = 0.7;            // Attack bonus per OE point above 5
+const OE_DEF_SCALING = 0.5;            // Defense penalty per OE point above 6
+const AL_INI_SCALING = 0.6;            // Initiative bonus per AL point above 5
+const ENDURANCE_OE_SCALING = 0.4;      // OE contribution to endurance cost
+const ENDURANCE_AL_SCALING = 0.2;      // AL contribution to endurance cost
+
+// Fatigue thresholds and penalties
+const FATIGUE_MODERATE_THRESHOLD = 0.5; // Endurance ratio for moderate fatigue
+const FATIGUE_HEAVY_THRESHOLD = 0.25;   // Endurance ratio for heavy fatigue
+const FATIGUE_COLLAPSE_THRESHOLD = 0.1; // Endurance ratio for near-collapse
+const FATIGUE_MODERATE_PENALTY = -2;    // Skill penalty at moderate fatigue
+const FATIGUE_HEAVY_PENALTY = -4;       // Skill penalty at heavy fatigue
+const FATIGUE_COLLAPSE_PENALTY = -7;    // Skill penalty at collapse
+
+// Damage calculations
+const DAMAGE_BASE_MIN = 1;             // Minimum damage class offset
+const DAMAGE_HEAD_MULT = 1.5;          // Head hit damage multiplier
+const DAMAGE_CHEST_MULT = 1.2;         // Chest hit damage multiplier
+const DAMAGE_ABDOMEN_MULT = 1.1;       // Abdomen hit damage multiplier
+const DAMAGE_LIMB_MULT = 0.8;          // Limb hit damage multiplier
+const DAMAGE_VARIANCE_MIN = 0.7;       // Minimum damage variance
+const DAMAGE_VARIANCE_MAX = 1.3;       // Maximum damage variance (MIN + 0.6)
+
+// Equipment weight thresholds
+const HEAVY_WEAPON_THRESHOLD_1 = 5;    // First heavy weapon damage bonus (≥5 weight)
+const HEAVY_WEAPON_THRESHOLD_2 = 8;    // Second heavy weapon damage bonus (≥8 weight)
+const LIGHT_WEAPON_THRESHOLD = 2;      // Light weapon initiative bonus (≤2 weight)
+const HEAVY_ARMOR_THRESHOLD_1 = 6;     // First armor endurance penalty (≥6 weight)
+const HEAVY_ARMOR_THRESHOLD_2 = 10;    // Second armor endurance penalty (≥10 weight)
+const HEAVY_ARMOR_THRESHOLD_3 = 14;    // Third armor endurance penalty (≥14 weight)
+
+// Riposte penalties (harder to riposte than normal attack)
+const RIPOSTE_WHIFF_PENALTY = -6;      // Penalty to riposte on whiffed attack
+const RIPOSTE_PARRY_PENALTY = -5;      // Penalty to riposte after successful parry
+
+// Endurance mechanics
+const DEFENDER_ENDURANCE_DISCOUNT = 0.92; // Defending costs 8% less endurance
+const DAMAGE_TAX_SCALING = 0.7;           // Endurance tax per hit taken
+
+// Kill window mechanics
+const KILL_WINDOW_HP_DEFAULT = 0.3;       // Default HP% threshold for kill window
+const KILL_WINDOW_ENDURANCE = 0.4;        // Endurance% threshold for kill window
+const KILL_DESIRE_SCALING = 0.04;         // Kill threshold increase per KD point
+const KILL_PHASE_LATE_BONUS = 0.15;       // Kill threshold bonus in late phase
+const KILL_THRESHOLD_MIN = 0.05;          // Minimum kill threshold
+const KILL_THRESHOLD_BASE = 0.3;          // Base kill threshold before modifiers
+const TRAINER_HEALING_REDUCTION = 0.03;   // Kill threshold reduction per healing trainer point
+
+// Tactic overuse
+const TACTIC_OVERUSE_CAP = 3;             // Maximum penalty for tactic overuse
+
+// Bout structure
+const MAX_EXCHANGES = 15;                 // Maximum exchanges before decision
+const EXCHANGES_PER_MINUTE = 3;           // Exchanges per minute
+
+// Critical hit
+const CRIT_DAMAGE_MULT = 1.5;             // Critical hit damage multiplier
+
+// Decision thresholds
+const DECISION_HIT_MARGIN = 2;            // Hits advantage needed for clear decision
+
 // ─── OE/AL Effects ────────────────────────────────────────────────────────
 // BALANCE v6: Key changes:
 // - GLOBAL_ATT_BONUS 6 → 8 (offense needs to land even more vs defensive seeds)
@@ -205,8 +286,6 @@ function contestCheck(rng: () => number, a: number, d: number, modA: number = 0,
 // - AB/PR OE paradox REMOVED — they now get a modest penalty at low OE like everyone
 // - BA/SL/ST get ATT bonus from high OE (rewarding aggressive commitment)
 // - Endurance cost formula adjusted: lower base, higher OE scaling (high OE = aggressive = tiring)
-const GLOBAL_ATT_BONUS = 8;    // Attacks land frequently — fights should be violent
-const GLOBAL_PAR_PENALTY = -6; // Parry is hard — defense identity is endurance, not blocking
 
 function oeAttMod(oe: number, style?: FightingStyle): number {
   // BALANCE v6: Removed AB/PR OE paradox. All styles use the same formula.

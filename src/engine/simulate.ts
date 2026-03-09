@@ -806,7 +806,7 @@ export function simulateFight(
 
           // Style-specific crit (e.g. Aimed Blow precision)
           if (attPassive.critChance > 0 && rng() < attPassive.critChance) {
-            rawDamage = Math.round(rawDamage * 1.5);
+            rawDamage = Math.round(rawDamage * CRIT_DAMAGE_MULT);
             log.push({ minute: min, text: `💥 CRITICAL HIT! ${name(attacker)} finds a vital weakness!` });
             if (!tags.includes("CriticalHit")) tags.push("CriticalHit");
           }

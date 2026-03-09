@@ -387,6 +387,7 @@ export function damageSeverityLine(rng: RNG, damage: number, maxHp: number): str
   if (ratio >= 0.35) return pick(rng, [
     "It was a deadly attack!",
     "What a massive blow!",
+    "What a devastating attack!",
     "Spectators cringe as the horrific power of the blow strikes home!",
   ]);
   if (ratio >= 0.25) return pick(rng, [
@@ -400,6 +401,7 @@ export function damageSeverityLine(rng: RNG, damage: number, maxHp: number): str
   ]);
   if (ratio <= 0.05) return pick(rng, [
     "The attack is a glancing blow only.",
+    "The stroke lands ineffectively.",
     "The assault fails to do much damage.",
   ]);
   return null;

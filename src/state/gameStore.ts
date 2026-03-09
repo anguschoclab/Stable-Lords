@@ -90,6 +90,7 @@ export function createFreshState(): GameState {
     recruitPool: [],
     rosterBonus: 0,
     ownerGrudges: [],
+    insightTokens: [],
     settings: {
       featureFlags: {
         tournaments: true,

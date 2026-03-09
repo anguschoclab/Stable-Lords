@@ -649,8 +649,10 @@ export function stalemateLine(rng: RNG): string {
 // ─── Taunt / Quote Lines ────────────────────────────────────────────────────
 
 const WINNER_TAUNTS = [
+  "%N says, 'Another blow and I'll send you to Ahringol!'",
   "%N says, 'And that is how a real warrior fights. Pay attention next time.'",
   "%N says, 'That was a well fought, and honorable fight.'",
+  "%N laughs, 'Oh, this is PRICELESS! Did someone actually tell you you could FIGHT?'",
   "%N growls, 'Are you even human?'",
   "%N grates, 'Try that again, dog!'",
   "%N salutes the audience, then offers a hand to his fallen foe.",
@@ -658,6 +660,7 @@ const WINNER_TAUNTS = [
 
 const LOSER_TAUNTS = [
   "%N spits 'May maggots partake of your corpse as they have with your ancestors!'",
+  "%N exclaims, 'Give it up now, wimp, before I rip your face off!'",
   "%N bellows his frustration.",
   "%N mutters a desperate prayer!",
   "%N reels with the fury of combat!",

@@ -27,7 +27,7 @@ import { useRivalryAlerts } from "@/hooks/useRivalryAlerts";
 const navItems = [
   { to: "/", label: "Hub", icon: LayoutDashboard },
   { to: "/arena-hub", label: "Arena", icon: Eye },
-  { to: "/stable-hall", label: "Stable Hall", icon: Castle },
+  { to: "/stable-hall", label: "Stable Hall", icon: Landmark },
   { to: "/stable-ledger", label: "Ledger", icon: BookOpen },
   { to: "/run-round", label: "Run Round", icon: Zap },
   { to: "/recruit", label: "Recruit", icon: UserPlus },

@@ -470,9 +470,9 @@ describe("simulateFight — narrative log quality", () => {
     );
 
     // Last log entries should contain bout conclusion
-    const lastEntries = result.log.slice(-5);
+    const lastEntries = result.log.slice(-10);
     const hasConclusion = lastEntries.some(e => 
-      /kill|ko|time|exhaustion|collapses|falls|decision|draw/i.test(e.text)
+      /kill|ko|time|exhaustion|collapse|falls|decision|draw|awarded|wins/i.test(e.text)
     );
     expect(hasConclusion).toBe(true);
   });

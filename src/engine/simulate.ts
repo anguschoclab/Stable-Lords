@@ -113,7 +113,7 @@ function rollHitLocation(rng: () => number, target?: string, protect?: string): 
     const t = target.toLowerCase() as HitLocation;
     if (HIT_LOCATIONS.includes(t)) {
       const covered = protectCovers(protect);
-      const hitChance = covered.includes(t) ? 0.4 : 0.6;
+      const hitChance = covered.includes(t) ? TARGET_MISS_CHANCE : TARGET_HIT_CHANCE;
       if (rng() < hitChance) return t;
     }
   }
@@ -125,9 +125,9 @@ function applyProtectMod(damage: number, location: HitLocation, protect?: string
   if (!protect || protect === "Any") return damage;
   const covered = protectCovers(protect);
   if (covered.includes(location)) {
-    return Math.max(1, Math.round(damage * 0.75));
+    return Math.max(1, Math.round(damage * PROTECT_DAMAGE_REDUCTION));
   } else {
-    return Math.round(damage * 1.1);
+    return Math.round(damage * PROTECT_DAMAGE_PENALTY);
   }
 }
 

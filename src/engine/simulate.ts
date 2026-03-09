@@ -633,11 +633,10 @@ export function simulateFight(
     }
 
     // ── 1. INITIATIVE CONTEST — with tempo & passive ──
-    // Initiative winner gets a pressing advantage (+1 ATT) to reward aggressive styles
     const iniA = fA.skills.INI + alIniMod(effAL_A) + matchupA + fatA + defModsA.iniBonus + tempoA + passiveA.iniBonus;
     const iniD = fD.skills.INI + alIniMod(effAL_D) + matchupD + fatD + defModsD.iniBonus + tempoD + passiveD.iniBonus;
     const aGoesFirst = contestCheck(rng, iniA, iniD);
-    const iniPressBonus = 1; // Initiative winner presses the attack
+    const iniPressBonus = INITIATIVE_PRESS_BONUS;
 
     const attacker = aGoesFirst ? fA : fD;
     const defender = aGoesFirst ? fD : fA;

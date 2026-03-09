@@ -968,11 +968,11 @@ export function simulateFight(
   // If no winner after all exchanges — decision or draw
   if (!winner) {
     const min = minute(MAX_EXCHANGES);
-    if (fA.hitsLanded > fD.hitsLanded + 2) {
+    if (fA.hitsLanded > fD.hitsLanded + DECISION_HIT_MARGIN) {
       winner = "A";
       by = "Stoppage";
       log.push({ minute: min, text: `Time! ${nameA} is awarded the decision on points.` });
-    } else if (fD.hitsLanded > fA.hitsLanded + 2) {
+    } else if (fD.hitsLanded > fA.hitsLanded + DECISION_HIT_MARGIN) {
       winner = "D";
       by = "Stoppage";
       log.push({ minute: min, text: `Time! ${nameD} is awarded the decision on points.` });

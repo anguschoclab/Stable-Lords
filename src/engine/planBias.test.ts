@@ -195,14 +195,15 @@ describe("Plan Bias", () => {
         OE: 5,
         AL: 5,
         killDesire: 5,
-        style: "STRIKING ATTACK",
+        style: FightingStyle.StrikingAttack,
         target: "Any",
         offensiveTactic: "none",
         defensiveTactic: "none",
         gear: {
-          weapon: { name: "Greatsword", twoHanded: true, damage: 10, init: 0, skill: "none" },
-          shield: "Tower Shield",
+          weapon: { name: "Greatsword", twoHanded: true },
+          shield: "Large",
           armor: "Plate",
+          helm: "None",
         },
       };
 

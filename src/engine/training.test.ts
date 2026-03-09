@@ -249,7 +249,7 @@ describe("Training System", () => {
       
       if (result.roster[0].attributes.CN > 12) {
         // HP should increase with CN
-        expect(result.roster[0].derivedStats.maxHP).toBeGreaterThan(oldHP);
+        expect(result.roster[0].derivedStats.hp).toBeGreaterThan(oldHP);
       }
     });
 

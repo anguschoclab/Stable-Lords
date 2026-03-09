@@ -692,9 +692,9 @@ export function simulateFight(
       tacticStreakD = 0;
       lastTacticD = curTacticKeyD;
     }
-    // Penalty: -1 per consecutive exchange using same tactic (cap -3)
-    const tacticOveruseAtt = aGoesFirst ? Math.min(3, tacticStreakA) : Math.min(3, tacticStreakD);
-    const tacticOveruseDef = aGoesFirst ? Math.min(3, tacticStreakD) : Math.min(3, tacticStreakA);
+    // Penalty: -1 per consecutive exchange using same tactic (cap at TACTIC_OVERUSE_CAP)
+    const tacticOveruseAtt = aGoesFirst ? Math.min(TACTIC_OVERUSE_CAP, tacticStreakA) : Math.min(TACTIC_OVERUSE_CAP, tacticStreakD);
+    const tacticOveruseDef = aGoesFirst ? Math.min(TACTIC_OVERUSE_CAP, tacticStreakD) : Math.min(TACTIC_OVERUSE_CAP, tacticStreakA);
 
     // ── 2. ATTACK ATTEMPT — with passive ATT + anti-synergy + PR OE paradox ──
     const attOEmod = oeAttMod(attOE, attacker.style);

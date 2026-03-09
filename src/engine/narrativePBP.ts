@@ -415,6 +415,7 @@ export function stateChangeLine(rng: RNG, name: string, hpRatio: number, prevHpR
     return pick(rng, [
       `${name} is on the verge of shock!!`,
       `${name} is severely hurt!!`,
+      `${name} is dangerously stunned!`,
       `${name} is badly hurt!`,
     ]);
   }
@@ -422,6 +423,9 @@ export function stateChangeLine(rng: RNG, name: string, hpRatio: number, prevHpR
     return pick(rng, [
       `${name} appears DESPERATE!`,
       `${name} appears desperate!`,
+      `${name} appears to be getting DESPERATE!`,
+      `${name}'s eyes flame with DESPERATION!`,
+      `Our ${name} fights with DESPERATION!`,
       `${name} begins to panic and fights desperately!`,
       `${name} is becoming frantic!!!`,
       `${name} is becoming frantically careless!!!`,
@@ -430,7 +434,12 @@ export function stateChangeLine(rng: RNG, name: string, hpRatio: number, prevHpR
   if (hpRatio <= 0.6 && prevHpRatio > 0.6) {
     return pick(rng, [
       `${name} has sustained serious wounds!`,
+      `${name} has been sorely wounded!`,
       `${name} whitens with the pain of his wounds.`,
+      `${name} whitens with the pain of the wounds.`,
+      `${name} falls back, eyes flaring with renewed determination!`,
+      `${name} loses composure, and cries out in pain!`,
+      `${name} gasps, 'Gods!! Please give me the strength to finish this fight!'`,
       `${name} winces and smiles feebly.`,
       `${name} is bleeding badly!`,
       `${name} falls back, unable to take the punishment.`,

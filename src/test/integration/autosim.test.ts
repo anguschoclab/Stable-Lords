@@ -5,7 +5,7 @@
  */
 import { describe, it, expect, beforeEach } from "vitest";
 import { createFreshState } from "@/state/gameStore";
-import { autoSim, type AutoSimOptions } from "@/engine/autosim";
+import { runAutosim, type AutosimResult } from "@/engine/autosim";
 import { FightingStyle, type GameState, type Warrior } from "@/types/game";
 import { computeWarriorStats } from "@/engine/skillCalc";
 

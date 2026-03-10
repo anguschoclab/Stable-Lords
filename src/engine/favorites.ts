@@ -127,7 +127,7 @@ export function checkDiscovery(warrior: Warrior): DiscoveryResult {
     }
   }
 
-  return { updated, hints };
+  return { updated, hints, weaponRevealed, rhythmRevealed };
 }
 
 // ─── Combat Bonuses ─────────────────────────────────────────────────────

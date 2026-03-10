@@ -90,6 +90,7 @@ export function checkDiscovery(warrior: Warrior): DiscoveryResult {
   if (!fav.discovered.weapon) {
     if (totalFights >= WEAPON_REVEAL_FIGHTS) {
       fav.discovered.weapon = true;
+      weaponRevealed = true;
       const weaponItem = WEAPONS.find(w => w.id === fav.weaponId);
       hints.push(`💡 ${warrior.name} has discovered their favorite weapon: ${weaponItem?.name ?? fav.weaponId}! (+1 ATT when equipped)`);
       updated = true;

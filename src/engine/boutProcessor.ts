@@ -291,7 +291,7 @@ function resolveBout(
         }
         // Create InsightTokens for full reveals
         if (disc.weaponRevealed && wA.favorites) {
-          const weaponItem = (await import("@/data/equipment")).WEAPONS.find((wp: any) => wp.id === wA.favorites!.weaponId);
+          const weaponItem = WEAPONS.find((wp) => wp.id === wA.favorites!.weaponId);
           s.insightTokens = [...(s.insightTokens || []), {
             id: `it_${wA.id}_weapon_${week}`,
             type: "Weapon" as const,

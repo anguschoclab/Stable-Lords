@@ -79,7 +79,7 @@ export interface DiscoveryResult {
 export function checkDiscovery(warrior: Warrior): DiscoveryResult {
   const totalFights = warrior.career.wins + warrior.career.losses;
   const fav = warrior.favorites;
-  if (!fav) return { updated: false, hints: [] };
+  if (!fav) return { updated: false, hints: [], weaponRevealed: false, rhythmRevealed: false };
 
   const hints: string[] = [];
   let updated = false;

@@ -17,7 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";
 import { WarriorLink, StableLink } from "@/components/EntityLink";
-import { MOOD_DESCRIPTIONS, MOOD_ICONS, CROWD_MOODS, type CrowdMood } from "@/engine/crowdMood";
+import { MOOD_DESCRIPTIONS, MOOD_ICONS, CROWD_MOODS, getMoodModifiers, type CrowdMood } from "@/engine/crowdMood";
 import { computeMetaDrift, getMetaLabel, getMetaColor } from "@/engine/metaDrift";
 import { computeWeeklyBreakdown } from "@/engine/economy";
 import { loadUIPrefs, saveUIPrefs } from "@/state/uiPrefs";

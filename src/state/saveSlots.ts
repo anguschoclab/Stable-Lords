@@ -254,6 +254,7 @@ export function parseImportedSave(json: string): GameState {
     state.settings.featureFlags = { ...state.settings.featureFlags, scouting: true };
   }
   if (state.rosterBonus === undefined) state.rosterBonus = 0;
+  if (!state.moodHistory) state.moodHistory = [];
   state.roster = (state.roster || []).map((w: any) => ({ ...w, status: w.status || "Active" }));
 
   return state as GameState;

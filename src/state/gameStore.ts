@@ -94,6 +94,7 @@ export function createFreshState(): GameState {
     rosterBonus: 0,
     ownerGrudges: [],
     insightTokens: [],
+    moodHistory: [],
     settings: {
       featureFlags: {
         tournaments: true,

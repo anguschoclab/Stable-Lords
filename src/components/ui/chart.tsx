@@ -66,13 +66,12 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   }
 
   return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(([theme, prefix]) => {
-            const safeId = id.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+    <style>
+      {Object.entries(THEMES)
+        .map(([theme, prefix]) => {
+          const safeId = id.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
 
-            return `
+          return `
 ${prefix} [data-chart=${safeId}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
@@ -84,10 +83,9 @@ ${colorConfig
   .join("\n")}
 }
 `;
-          })
-          .join("\n"),
-      }}
-    />
+        })
+        .join("\n")}
+    </style>
   );
 };
 

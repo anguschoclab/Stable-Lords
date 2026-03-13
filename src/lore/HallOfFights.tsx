@@ -18,6 +18,7 @@ export const HallOfFights: React.FC = () => {
   const { state } = useGame();
 
   // Hall entries from LoreArchive
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const hallEntries = useMemo(() => LoreArchive.allHall().slice().reverse(), [state.week]);
 
   // Build fight lookup from game state
@@ -35,7 +36,8 @@ export const HallOfFights: React.FC = () => {
       groups.set(f.week, list);
     }
     return [...groups.entries()].sort(([a], [b]) => b - a);
-  }, [state.arenaHistory]);
+
+  }, [state]);
 
   // Style stats from all history
   const styleStats = useMemo(() => {

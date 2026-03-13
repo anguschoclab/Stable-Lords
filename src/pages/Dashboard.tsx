@@ -482,16 +482,14 @@ function RecentBoutsWidget() {
 
 function TrainingWidget() {
   const { state } = useGame();
-  const assignments = state.trainingAssignments ?? [];
-
   // Map warrior IDs to warriors for display
-  const trainingWarriors = useMemo(() =>
-    assignments.map(a => ({
+  const trainingWarriors = useMemo(() => {
+    const assignments = state.trainingAssignments ?? [];
+    return assignments.map(a => ({
       ...a,
       warrior: state.roster.find(w => w.id === a.warriorId),
-    })).filter(a => a.warrior),
-    [assignments, state.roster]
-  );
+    })).filter(a => a.warrior);
+  }, [state.trainingAssignments, state.roster]);
 
   return (
     <Card>
@@ -757,6 +755,7 @@ function RivalryWidget() {
     }
 
     return [...map.values()].filter(r => r.bouts > 0).sort((a, b) => b.intensity - a.intensity);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.arenaHistory, rosterNames, rivalWarriorStable]);
 
   const mostWanted = useMemo(() => {
@@ -777,6 +776,7 @@ function RivalryWidget() {
       winCounts.set(rivalName, entry);
     }
     return [...winCounts.values()].sort((a, b) => b.wins - a.wins || b.kills - a.kills)[0] ?? null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.arenaHistory, rosterNames, rivalWarriorStable]);
 
   const intensityColor = (n: number) =>

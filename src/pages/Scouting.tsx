@@ -490,12 +490,9 @@ export default function Scouting() {
   const [selectedRival, setSelectedRival] = useState<string | null>(null);
   const [selectedWarrior, setSelectedWarrior] = useState<string | null>(null);
 
-  const rivals = state.rivals ?? [];
-  const reports = state.scoutReports ?? [];
-
   const activeRival = useMemo(
-    () => rivals.find((r) => r.owner.id === selectedRival),
-    [rivals, selectedRival]
+    () => (state.rivals ?? []).find((r) => r.owner.id === selectedRival),
+    [state.rivals, selectedRival]
   );
 
   const activeWarrior = useMemo(
@@ -504,8 +501,8 @@ export default function Scouting() {
   );
 
   const existingReport = useMemo(
-    () => activeWarrior ? reports.find((r) => r.warriorName === activeWarrior.name) : null,
-    [reports, activeWarrior]
+    () => activeWarrior ? (state.scoutReports ?? []).find((r) => r.warriorName === activeWarrior.name) : null,
+    [state.scoutReports, activeWarrior]
   );
 
   const handleScout = useCallback(

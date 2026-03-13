@@ -115,7 +115,7 @@ export default function WorldOverview() {
       const vb = b[f as keyof StableRow] as number;
       return (va - vb) * dir;
     });
-  }, [state, stableSort]);
+  }, [state, stableSort, templates]);
 
   const warriorRows = useMemo((): WarriorRow[] => {
     const rows: WarriorRow[] = [];

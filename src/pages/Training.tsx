@@ -171,13 +171,12 @@ function WarriorTrainingCard({ warrior, assignment, seasonalGains, trainers, onA
 
 export default function Training() {
   const { state, setState } = useGame();
-  const assignments = state.trainingAssignments ?? [];
 
   const assignmentMap = useMemo(() => {
     const map = new Map<string, TrainingAssignment>();
-    for (const a of assignments) map.set(a.warriorId, a);
+    for (const a of (state.trainingAssignments ?? [])) map.set(a.warriorId, a);
     return map;
-  }, [assignments]);
+  }, [state.trainingAssignments]);
 
   // Seasonal growth lookup
   const seasonalGainsMap = useMemo(() => {

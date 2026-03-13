@@ -1086,6 +1086,7 @@ const MemoMetaPulseWidget = React.memo(MetaPulseWidget);
 const MemoRecentBoutsWidget = React.memo(RecentBoutsWidget);
 const MemoGazetteWidget = React.memo(GazetteWidget);
 const MemoCrowdMoodWidget = React.memo(CrowdMoodWidget);
+const MemoStableComparisonWidget = React.memo(StableComparisonWidget);
 
 const WIDGET_REGISTRY: WidgetDef[] = [
   { id: "season",   label: "Season & Schedule", component: MemoSeasonWidget },
@@ -1094,6 +1095,7 @@ const WIDGET_REGISTRY: WidgetDef[] = [
   { id: "finances", label: "Finances",           component: MemoFinancesWidget },
   { id: "training", label: "Training Status",    component: MemoTrainingWidget },
   { id: "rivals",    label: "Rival Stables",      component: MemoRivalsWidget },
+  { id: "stableCompare", label: "Stable Comparison", component: MemoStableComparisonWidget, wide: true },
   { id: "rivalries", label: "Rivalries",          component: MemoRivalryWidget, wide: true },
   { id: "rankings", label: "Warrior Rankings",   component: MemoRankingsWidget, wide: true },
   { id: "meta",     label: "Meta Pulse",         component: MemoMetaPulseWidget },

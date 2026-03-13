@@ -857,7 +857,10 @@ export default function WarriorDetail() {
 
       {/* History Tab */}
       {activeTab === "history" && (
-        <WarriorFightHistory warriorName={warrior.name} arenaHistory={state.arenaHistory} />
+        <div className="space-y-4">
+          <CareerTimeline warrior={warrior} arenaHistory={state.arenaHistory} />
+          <WarriorFightHistory warriorName={warrior.name} arenaHistory={state.arenaHistory} />
+        </div>
       )}
     </div>
   );

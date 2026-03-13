@@ -9,12 +9,16 @@ export function loadUIPrefs(): UIPrefs {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) return JSON.parse(raw);
-  } catch {}
+  } catch {
+    // ignore
+  }
   return { autoTunePlan: true };
 }
 
 export function saveUIPrefs(p: UIPrefs) {
   try {
     localStorage.setItem(KEY, JSON.stringify(p));
-  } catch {}
+  } catch {
+    // ignore
+  }
 }

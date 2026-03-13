@@ -138,6 +138,7 @@ function InducteeCard({ warrior, title, icon, fights }: { warrior: Warrior; titl
 
 export default function HallOfFame() {
   const { state } = useGame();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const allFights = useMemo(() => ArenaHistory.all(), [state.week]);
 
   // Collect all warriors (active, dead, retired)

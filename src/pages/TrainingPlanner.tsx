@@ -269,10 +269,11 @@ export default function TrainingPlanner() {
   // Overall stable trainability
   const avgTrainability = useMemo(() => {
     if (activeWarriors.length === 0) return 0;
+    const trainers = state.trainers ?? [];
     return Math.round(
       activeWarriors.reduce((s, w) => s + computeTrainability(w, trainers), 0) / activeWarriors.length
     );
-  }, [activeWarriors, trainers]);
+  }, [activeWarriors, state.trainers]);
 
   return (
     <div className="space-y-6">

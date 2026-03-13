@@ -222,7 +222,7 @@ export default function Training() {
   };
 
   const assignedCount = assignments.length;
-  const recoveryCount = assignments.filter(a => a.type === "recovery").length;
+  const recoveryCount = assignments.reduce((count, a) => a.type === "recovery" ? count + 1 : count, 0);
   const trainingCount = assignedCount - recoveryCount;
 
   return (

@@ -60,15 +60,15 @@ const STYLE_ORDER = [
 const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
   [ 0,  0,  0,  0, -1,  0,  0,  0, +1,  0], // AB: only edge vs TP, weak vs PR
-  [ 0,  0,  0, +1,  0,  0, +1, +1,  0,  0], // BA: edge vs SL/ST/PL, neutral vs WS now
-  [ 0,  0,  0, +1,  0, -1,  0,  0, +1, -1], // LU: speed beats PL and TP, weak vs PS/WS
+  [ 0,  0,  0, +1, +1,  0, +1, +1,  0,  0], // BA: edge vs SL/ST/PL/PR — power overwhelms counters
+  [ 0,  0,  0, +1, +1, -1,  0,  0, +1, -1], // LU: speed beats PL/TP/PR, weak vs PS/WS
   [ 0, -1, -1,  0,  0,  0,  0, -1,  0,  0], // PL: weak vs BA/LU/ST
-  [ 0,  0,  0,  0,  0,  0,  0, -1,  0,  0], // PR: neutral vs AB, weak vs ST
+  [+1,  0,  0,  0,  0,  0,  0, -1,  0,  0], // PR: edge vs AB (reads precision), weak vs ST
   [ 0,  0, +1,  0,  0,  0,  0, -1,  0, -1], // PS: beats LU, loses to ST/WS
-  [ 0, -1,  0,  0,  0,  0,  0,  0, +1,  0], // SL: beats TP, weak vs BA, neutral vs WS now
+  [ 0, -1,  0,  0,  0,  0,  0,  0, +1,  0], // SL: beats TP, weak vs BA, neutral vs WS
   [ 0, -1, +1, +1, +1, +1,  0,  0, +1,  0], // ST: power beats LU/PL/PR/PS/TP, weak vs BA
-  [-1,  0, -1,  0,  0,  0, -1, -1,  0,  0], // TP: weak vs AB/LU/SL/ST (LU added)
-  [ 0,  0, +1,  0,  0, +1,  0,  0,  0,  0], // WS: zone control, beats LU/PS
+  [-1,  0, -1,  0,  0,  0, -1, -1,  0,  0], // TP: weak vs AB/LU/SL/ST
+  [ 0,  0, +1,  0, +1, +1,  0,  0,  0,  0], // WS: zone control, beats LU/PS/PR
 ];
 
 function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): number {

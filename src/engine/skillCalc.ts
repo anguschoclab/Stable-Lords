@@ -35,7 +35,7 @@ const STYLE_SEEDS: Record<FightingStyle, [number, number, number, number, number
   [FightingStyle.BashingAttack]:   [ 8,  1,  2,  4,  1,  3],  // 19 — highest ATT, raw power
   [FightingStyle.LungingAttack]:   [ 8,  1,  2,  5,  1,  3],  // 20 — fast, aggressive
   [FightingStyle.ParryLunge]:      [ 5,  3,  2,  3,  2,  3],  // 18 — balanced hybrid
-  [FightingStyle.ParryRiposte]:    [ 3,  2,  2,  3,  1,  2],  // 13 — RIP 2→1, counter via passives only
+  [FightingStyle.ParryRiposte]:    [ 3,  2,  2,  2,  1,  2],  // 12 — INI 3→2, slowest counter style
   [FightingStyle.ParryStrike]:     [ 5,  3,  3,  3,  2,  3],  // 19 — efficient counter
   [FightingStyle.SlashingAttack]:  [ 8,  1,  2,  4,  1,  3],  // 19 — offensive, multi-hit
   [FightingStyle.StrikingAttack]:  [ 8,  2,  2,  4,  1,  3],  // 20 — reliable power

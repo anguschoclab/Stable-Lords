@@ -3,9 +3,9 @@
  * phase transitions, tactic modifiers, and outcome consistency.
  */
 import { describe, it, expect } from "vitest";
-import { simulateFight, defaultPlanForWarrior } from "./simulate";
+import { simulateFight, defaultPlanForWarrior } from "@/engine/simulate";
 import { FightingStyle, type Warrior, type FightPlan } from "@/types/game";
-import { computeWarriorStats } from "./skillCalc";
+import { computeWarriorStats } from "@/engine/skillCalc";
 
 // ─── Test Helpers ─────────────────────────────────────────────────────────
 
@@ -262,8 +262,8 @@ describe("simulateFight — outcome termination types", () => {
   });
 
   it("can produce KO outcomes", () => {
-    const wStrong = makeWarrior("Strong", FightingStyle.BashingAttack, { ST: 25, CN: 25, SZ: 25, WT: 25, WL: 25, SP: 25, DF: 25 });
-    const wWeak = makeWarrior("Weak", FightingStyle.TotalParry, { ST: 3, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 3, DF: 3 });
+    const wStrong = makeWarrior("Strong", FightingStyle.BashingAttack, { ST: 20, CN: 16 });
+    const wWeak = makeWarrior("Weak", FightingStyle.LungingAttack, { CN: 6, WL: 6 });
 
     let kos = 0;
     for (let seed = 1; seed <= 50; seed++) {
@@ -274,7 +274,7 @@ describe("simulateFight — outcome termination types", () => {
       );
       if (result.by === "KO") kos++;
     }
-    expect(kos).toBeGreaterThanOrEqual(0); // v8 tuning makes this extremely rare, just assert it runs
+    expect(kos).toBeGreaterThan(0);
   });
 
   it("can produce Exhaustion outcomes", () => {
@@ -331,7 +331,7 @@ describe("simulateFight — outcome termination types", () => {
 
 describe("simulateFight — initiative and tempo", () => {
   it("high AL improves initiative", () => {
-    const w = makeWarrior("Test", FightingStyle.LungingAttack, { SP: 25, WT: 25, DF: 25 });
+    const w = makeWarrior("Test", FightingStyle.LungingAttack, { SP: 16 });
     
     let highALFirst = 0;
     let lowALFirst = 0;
@@ -341,7 +341,7 @@ describe("simulateFight — initiative and tempo", () => {
       const rHigh = simulateFight(
         makePlan(FightingStyle.LungingAttack, { OE: 6, AL: 10 }),
         makePlan(FightingStyle.StrikingAttack, { OE: 6, AL: 1 }),
-        w, makeWarrior("Slow", FightingStyle.StrikingAttack, { SP: 3, WT: 3, DF: 3 }), seed,
+        w, makeWarrior("Slow", FightingStyle.StrikingAttack), seed,
       );
       // Check first attack in log (simplified heuristic)
       const firstAttack = rHigh.log.find(e => /attacks|strikes|swings/i.test(e.text));
@@ -350,14 +350,14 @@ describe("simulateFight — initiative and tempo", () => {
     }
 
     // High AL should go first more often
-    expect(highALFirst).toBeGreaterThanOrEqual(0); // Initiative changes in v8 made this less deterministic based purely on AL
+    expect(highALFirst).toBeGreaterThanOrEqual(lowALFirst * 0.5);
   });
 });
 
 describe("simulateFight — style passives integration", () => {
   it("Basher consecutive hits build momentum", () => {
-    const wBash = makeWarrior("Basher", FightingStyle.BashingAttack, { ST: 25, CN: 25, SZ: 25, WT: 25, WL: 25, SP: 25, DF: 25 });
-    const wWeak = makeWarrior("Victim", FightingStyle.TotalParry, { ST: 3, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 3, DF: 3 });
+    const wBash = makeWarrior("Basher", FightingStyle.BashingAttack, { ST: 18, CN: 14 });
+    const wWeak = makeWarrior("Victim", FightingStyle.AimedBlow, { CN: 8, WL: 8 });
 
     let highHitCounts = 0;
     const trials = 40;
@@ -369,7 +369,7 @@ describe("simulateFight — style passives integration", () => {
         wBash, wWeak, seed,
       );
       // Basher momentum should lead to hit streaks
-      if ((result.post?.hitsA ?? 0) >= 1) highHitCounts++; // just need a hit now with the new constraints
+      if ((result.post?.hitsA ?? 0) >= 3) highHitCounts++;
     }
 
     expect(highHitCounts).toBeGreaterThan(0);
@@ -545,11 +545,11 @@ describe("simulateFight — determinism", () => {
   });
 
   it("different seeds produce varied results", () => {
-    const wA = makeWarrior("Alpha", FightingStyle.BashingAttack, { ST: 15, SP: 15, WT: 15 });
-    const wD = makeWarrior("Beta", FightingStyle.LungingAttack, { SP: 15, WT: 15, DF: 15 });
+    const wA = makeWarrior("Alpha", FightingStyle.BashingAttack, { ST: 15 });
+    const wD = makeWarrior("Beta", FightingStyle.LungingAttack, { SP: 15 });
 
     const outcomes = new Set<string>();
-    for (let seed = 1; seed <= 100; seed++) {
+    for (let seed = 1; seed <= 30; seed++) {
       const r = simulateFight(
         makePlan(FightingStyle.BashingAttack),
         makePlan(FightingStyle.LungingAttack),
@@ -559,7 +559,7 @@ describe("simulateFight — determinism", () => {
     }
 
     // Should see variation
-    expect(outcomes.size).toBeGreaterThanOrEqual(1); // v8 tuning often results in draws for identical builds
+    expect(outcomes.size).toBeGreaterThanOrEqual(2);
   });
 });
 

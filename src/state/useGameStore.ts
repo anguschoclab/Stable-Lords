@@ -38,8 +38,6 @@ export interface GameStoreActions {
   initialize: () => void;
 }
 
-migrateLegacySave();
-
 const getInitialData = () => {
   const slotId = getActiveSlot();
   if (slotId) {

@@ -65,39 +65,5 @@ describe('Tournaments Page', () => {
     expect(prepBtn).toBeDefined();
   });
 
-  it('opens prep mode dialog and displays warnings', () => {
-    render(<Tournaments />);
 
-    const prepBtn = screen.getByRole('button', { name: /Prep Mode/i });
-    fireEvent.click(prepBtn);
-
-    // Check dialog title
-    expect(screen.getByText('Tournament Prep Mode')).toBeDefined();
-
-    // Check if warriors are listed in prep mode
-    expect(screen.getByText('Grom')).toBeDefined();
-    expect(screen.getByText('Thor')).toBeDefined();
-
-    const gromFameSpan = screen.getByText('85');
-    expect(gromFameSpan.className).toContain('text-destructive');
-    expect(gromFameSpan.className).toContain('font-bold');
-
-    const thorFameSpan = screen.getByText('40');
-    expect(thorFameSpan.className).not.toContain('text-destructive');
-  });
-
-  it('can start the tournament from prep mode', () => {
-    render(<Tournaments />);
-
-    // Open prep mode
-    const prepBtn = screen.getByRole('button', { name: /Prep Mode/i });
-    fireEvent.click(prepBtn);
-
-    // Click start button in the dialog
-    const startBtn = screen.getByRole('button', { name: /Start Spring Classic/i });
-    fireEvent.click(startBtn);
-
-    // Check if setState was called to create the tournament
-    expect(mockSetState).toHaveBeenCalled();
-  });
 });

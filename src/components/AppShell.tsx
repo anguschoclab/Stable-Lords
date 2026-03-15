@@ -36,6 +36,8 @@ const navItems = [
   { to: "/trainers", label: "Trainers", icon: GraduationCap },
   { to: "/tournaments", label: "Tournaments", icon: Trophy },
   { to: "/world", label: "World", icon: Globe },
+  { to: "/owners", label: "Owners", icon: Users },
+  { to: "/archives/styles", label: "Styles", icon: BookOpen },
   { to: "/hall-of-fights", label: "Chronicle", icon: ScrollText },
   { to: "/gazette", label: "Gazette", icon: Newspaper },
   { to: "/kill-analytics", label: "Kill Stats", icon: Target },

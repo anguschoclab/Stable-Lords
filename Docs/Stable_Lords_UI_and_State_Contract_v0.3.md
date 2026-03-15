@@ -972,4 +972,3 @@ To turn the existing build into the required navigable shell (always playable):
    - 10 owners
    - at least 1 Gazette issue and 10 Chronicle entries
 4. Every placeholder route must show meaningful demo content and a “Coming soon” section.
-

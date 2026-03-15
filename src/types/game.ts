@@ -2,6 +2,9 @@
  * Stable Lords — Core Game Types
  * Ported from Duel repo + design bible specs
  */
+import type { PoolWarrior } from "@/engine/recruitment";
+import type { BoutResult } from "@/engine/boutProcessor";
+
 
 // ─── Fighting Styles ────────────────────────────────────────────────────────
 
@@ -520,7 +523,9 @@ export interface GameState {
   restStates: RestState[];
   rivalries: Rivalry[];
   matchHistory: MatchRecord[];
-  recruitPool: any[]; // PoolWarrior[] from recruitment engine
+  playerChallenges: string[]; // IDs of rival warriors or stables to prioritize
+  playerAvoids: string[]; // IDs of rival warriors or stables to avoid
+  recruitPool: PoolWarrior[]; // from recruitment engine
   rosterBonus: number; // extra roster slots from championships
   ownerGrudges: OwnerGrudge[]; // personality-driven owner rivalries
   insightTokens: InsightToken[]; // discovered weapon/rhythm insights
@@ -548,7 +553,7 @@ export interface TrainerData {
 
 // ─── Insight Tokens ─────────────────────────────────────────────────────────
 
-export type InsightTokenType = "Weapon" | "Rhythm" | "StatHint";
+export type InsightTokenType = "Weapon" | "Rhythm" | "Style" | "Attribute" | "Tactic";
 
 export interface InsightToken {
   id: string;
@@ -556,6 +561,7 @@ export interface InsightToken {
   warriorId: string;
   warriorName: string;
   detail: string; // e.g. "Favors Broadsword" or "OE 6 / AL 8"
+  targetKey?: string; // For attributes (e.g. "ST") or tactics
   discoveredWeek: number;
 }
 

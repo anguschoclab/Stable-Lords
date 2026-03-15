@@ -215,58 +215,6 @@ function computeSeasonalAwards(
   return awards.reverse(); // Most recent first
 }
 
-/* ── Award Trophy Card ───────────────────────────────────── */
-
-function AwardTrophy({ entry, title, icon, accent }: {
-  entry: AwardEntry | null;
-  title: string;
-  icon: React.ReactNode;
-  accent: string;
-}) {
-  if (!entry) return null;
-  const winRate = (entry.wins + entry.losses) > 0
-    ? Math.round((entry.wins / (entry.wins + entry.losses)) * 100) : 0;
-
-  return (
-    <Card className={cn("relative overflow-hidden border-border/60", entry.isPlayer && "ring-1 ring-primary/30")}>
-      <div className={cn("absolute top-0 left-0 right-0 h-1", accent)} />
-      <CardContent className="p-4 space-y-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2">
-            {icon}
-            <div>
-              <p className="font-display font-bold text-sm">{entry.name}</p>
-              <p className="text-[10px] text-muted-foreground font-mono">
-                {entry.style} · {entry.stableName}
-                {entry.isPlayer && <span className="text-primary ml-1">(You)</span>}
-              </p>
-            </div>
-          </div>
-          <Badge variant="outline" className="text-[9px] font-mono shrink-0">{title}</Badge>
-        </div>
-        <div className="grid grid-cols-4 gap-2 text-center">
-          <div>
-            <p className="text-base font-bold font-display">{entry.wins}</p>
-            <p className="text-[9px] text-muted-foreground">Wins</p>
-          </div>
-          <div>
-            <p className="text-base font-bold font-display text-destructive">{entry.kills}</p>
-            <p className="text-[9px] text-muted-foreground">Kills</p>
-          </div>
-          <div>
-            <p className="text-base font-bold font-display text-arena-fame">{entry.fameGained > 0 ? `+${entry.fameGained}` : entry.fameGained}</p>
-            <p className="text-[9px] text-muted-foreground">Fame</p>
-          </div>
-          <div>
-            <p className="text-base font-bold font-display">{winRate}%</p>
-            <p className="text-[9px] text-muted-foreground">Win%</p>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
 /* ── Season Section ──────────────────────────────────────── */
 
 function SeasonSection({ award }: { award: SeasonalAward }) {
@@ -304,23 +252,23 @@ function SeasonSection({ award }: { award: SeasonalAward }) {
 
       {/* Award Trophies */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <AwardTrophy
+        <AwardCard
           entry={award.mvp}
           title="Season MVP"
           icon={<Crown className="h-5 w-5 text-arena-gold" />}
-          accent="bg-arena-gold"
+          accentClass="bg-arena-gold"
         />
-        <AwardTrophy
+        <AwardCard
           entry={award.deadliest}
           title="Deadliest"
           icon={<Skull className="h-5 w-5 text-destructive" />}
-          accent="bg-destructive"
+          accentClass="bg-destructive"
         />
-        <AwardTrophy
+        <AwardCard
           entry={award.ironWill}
           title="Iron Will"
           icon={<Shield className="h-5 w-5 text-primary" />}
-          accent="bg-primary"
+          accentClass="bg-primary"
         />
       </div>
 
@@ -354,34 +302,7 @@ function SeasonSection({ award }: { award: SeasonalAward }) {
       )}
 
       {/* Biggest Upsets */}
-      {award.upsets.length > 0 && (
-        <Collapsible>
-          <CollapsibleTrigger className="flex items-center gap-2 text-sm font-display font-semibold text-muted-foreground hover:text-foreground transition-colors group w-full">
-            <Zap className="h-4 w-4 text-accent" />
-            Biggest Upsets ({award.upsets.length})
-            <ChevronDown className="h-3 w-3 transition-transform group-data-[state=open]:rotate-180 ml-auto" />
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <div className="mt-2 space-y-1.5">
-              {award.upsets.map((u, i) => (
-                <div key={i} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-secondary/40 border border-border/30">
-                  <div className="flex items-center gap-2 text-xs">
-                    <Swords className="h-3 w-3 text-muted-foreground" />
-                    <span className="font-display font-semibold">{u.winner}</span>
-                    <span className="text-muted-foreground">def.</span>
-                    <span className="font-display text-muted-foreground">{u.loser}</span>
-                    {u.by && <Badge variant="outline" className="text-[8px]">{u.by}</Badge>}
-                  </div>
-                  <div className="flex items-center gap-2 text-[10px] font-mono">
-                    <span className="text-accent">Δ{u.fameDiff} fame</span>
-                    <span className="text-muted-foreground">Wk {u.week}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      )}
+      <UpsetsList upsets={award.upsets} />
     </article>
   );
 }

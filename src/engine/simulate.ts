@@ -36,18 +36,13 @@ import {
 } from "./narrativePBP";
 
 // ─── Seeded PRNG (mulberry32) ─────────────────────────────────────────────
-// ─── High-Performance Secure PRNG Seed ────────────────────────────────────
-const secureSeedPool = new Uint32Array(256);
-let secureSeedIndex = 256;
-
-function getSecureSeed(): number {
-  if (secureSeedIndex >= 256) {
-    globalThis.crypto.getRandomValues(secureSeedPool);
-    secureSeedIndex = 0;
-  }
-  return secureSeedPool[secureSeedIndex++];
-}
-
+/**
+ * Creates a seeded pseudo-random number generator (PRNG) using the mulberry32 algorithm.
+ * Provides deterministic randomness for fight simulations.
+ *
+ * @param seed - The initial seed value.
+ * @returns A function that generates a pseudo-random float between 0 (inclusive) and 1 (exclusive).
+ */
 function mulberry32(seed: number) {
   return () => {
     seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
@@ -575,7 +570,7 @@ export function simulateFight(
   let tacticStreakA = 0;
   let tacticStreakD = 0;
   let by: FightOutcome["by"] = null;
-  let causeBucket: DeathCauseBucket | undefined = undefined;
+  let causeBucket: any = undefined;
   let fatalHitLocation: string | undefined = undefined;
   let fatalExchangeIndex: number | undefined = undefined;
 

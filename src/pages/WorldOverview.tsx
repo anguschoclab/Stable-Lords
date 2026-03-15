@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { useGame } from "@/state/GameContext";
-import { SortHeader, type SortDir } from "@/components/ui/sort-header";
 import { Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

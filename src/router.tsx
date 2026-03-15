@@ -15,9 +15,6 @@ import StableDetail from "@/pages/StableDetail";
 import WorldOverview from "@/pages/WorldOverview";
 import NotFound from "./pages/NotFound";
 import Gazette from "@/pages/Gazette";
-import DesignBible from "@/pages/DesignBible";
-import PhysicalsSimulator from "@/pages/PhysicalsSimulator";
-import AdminTools from "@/pages/AdminTools";
 import HallOfFame from "@/pages/HallOfFame";
 import KillAnalytics from "@/pages/KillAnalytics";
 import EquipmentOptimizerPage from "@/pages/EquipmentOptimizerPage";
@@ -28,13 +25,6 @@ import StyleGuide from "@/pages/StyleGuide";
 import ArenaHub from "@/pages/ArenaHub";
 import StableLedger from "@/pages/StableLedger";
 import StableHall from "@/pages/StableHall";
-import Owners from "@/pages/Owners";
-import ArchivesStyles from "@/pages/ArchivesStyles";
-import Settings from "@/pages/Settings";
-import Mods from "@/pages/Mods";
-import ImportExport from "@/pages/ImportExport";
-import Telemetry from "@/pages/Telemetry";
-
 
 // Create a root route
 const rootRoute = new RootRoute({
@@ -61,9 +51,6 @@ const helpRoute = new Route({ getParentRoute: () => rootRoute, path: "/help", co
 const warriorDetailRoute = new Route({ getParentRoute: () => rootRoute, path: "/warrior/$id", component: WarriorDetail });
 const hallOfFightsRoute = new Route({ getParentRoute: () => rootRoute, path: "/hall-of-fights", component: HallOfFights });
 const gazetteRoute = new Route({ getParentRoute: () => rootRoute, path: "/gazette", component: Gazette });
-const designBibleRoute = new Route({ getParentRoute: () => rootRoute, path: "/design-bible", component: DesignBible });
-const physicalsSimulatorRoute = new Route({ getParentRoute: () => rootRoute, path: "/physicals-simulator", component: PhysicalsSimulator });
-const adminToolsRoute = new Route({ getParentRoute: () => rootRoute, path: "/admin-tools", component: AdminTools });
 const hallOfFameRoute = new Route({ getParentRoute: () => rootRoute, path: "/hall-of-fame", component: HallOfFame });
 const killAnalyticsRoute = new Route({ getParentRoute: () => rootRoute, path: "/kill-analytics", component: KillAnalytics });
 const equipmentOptimizerRoute = new Route({ getParentRoute: () => rootRoute, path: "/equipment-optimizer", component: EquipmentOptimizerPage });
@@ -74,15 +61,6 @@ const styleGuideRoute = new Route({ getParentRoute: () => rootRoute, path: "/sty
 const arenaHubRoute = new Route({ getParentRoute: () => rootRoute, path: "/arena-hub", component: ArenaHub });
 const stableLedgerRoute = new Route({ getParentRoute: () => rootRoute, path: "/stable-ledger", component: StableLedger });
 const stableHallRoute = new Route({ getParentRoute: () => rootRoute, path: "/stable-hall", component: StableHall });
-const schedulingAssistantRoute = new Route({ getParentRoute: () => rootRoute, path: "/scheduling-assistant", component: SchedulingAssistant });
-
-
-const ownersRoute = new Route({ getParentRoute: () => rootRoute, path: "/owners", component: Owners });
-const archivesStylesRoute = new Route({ getParentRoute: () => rootRoute, path: "/archives/styles", component: ArchivesStyles });
-const settingsRoute = new Route({ getParentRoute: () => rootRoute, path: "/settings", component: Settings });
-const modsRoute = new Route({ getParentRoute: () => rootRoute, path: "/mods", component: Mods });
-const importExportRoute = new Route({ getParentRoute: () => rootRoute, path: "/import-export", component: ImportExport });
-const telemetryRoute = new Route({ getParentRoute: () => rootRoute, path: "/telemetry", component: Telemetry });
 
 // Create the route tree
 const routeTree = rootRoute.addChildren([
@@ -100,9 +78,6 @@ const routeTree = rootRoute.addChildren([
   warriorDetailRoute,
   hallOfFightsRoute,
   gazetteRoute,
-  designBibleRoute,
-  physicalsSimulatorRoute,
-  adminToolsRoute,
   hallOfFameRoute,
   killAnalyticsRoute,
   equipmentOptimizerRoute,
@@ -113,13 +88,6 @@ const routeTree = rootRoute.addChildren([
   arenaHubRoute,
   stableLedgerRoute,
   stableHallRoute,
-
-  ownersRoute,
-  archivesStylesRoute,
-  settingsRoute,
-  modsRoute,
-  importExportRoute,
-  telemetryRoute,
 ]);
 
 // Create the router

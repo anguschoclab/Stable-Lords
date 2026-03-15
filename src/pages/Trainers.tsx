@@ -124,8 +124,8 @@ export default function Trainers() {
   const { state, setState } = useGame();
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 
-  const currentTrainers = useMemo(() => state.trainers ?? [], [state.trainers]);
-  const hiringPool = useMemo(() => state.hiringPool ?? [], [state.hiringPool]);
+  const currentTrainers = state.trainers ?? [];
+  const hiringPool = state.hiringPool ?? [];
   const canHire = currentTrainers.length < TRAINER_MAX_PER_STABLE;
 
   // Auto-populate hiring pool on first visit if empty

@@ -36,7 +36,6 @@ export interface GameStoreActions {
   doReset: () => void;
   returnToTitle: () => void;
   initialize: () => void;
-  loadGame: (slotId: string, state: GameState) => void;
 }
 
 const getInitialData = () => {
@@ -56,14 +55,6 @@ export const useGameStore = create<GameStoreState & GameStoreActions>()(
     activeSlotId: initialData.activeSlotId,
     atTitleScreen: !initialData.activeSlotId || !listSaveSlots().some((s) => s.slotId === initialData.activeSlotId),
     lastSavedAt: null,
-
-    loadGame: (slotId: string, state: GameState) => {
-      set((draft) => {
-        draft.activeSlotId = slotId;
-        draft.state = state;
-        draft.atTitleScreen = false;
-      });
-    },
 
     initialize: () => {
       migrateLegacySave();

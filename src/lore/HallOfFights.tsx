@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trophy, Swords, Skull, Sparkles, ScrollText, Zap } from "lucide-react";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { WarriorLink } from "@/components/EntityLink";
 
@@ -18,6 +18,7 @@ export const HallOfFights: React.FC = () => {
   const { state } = useGame();
 
   // Hall entries from LoreArchive
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const hallEntries = useMemo(() => LoreArchive.allHall().slice().reverse(), [state.week]);
 
   // Build fight lookup from game state
@@ -35,7 +36,8 @@ export const HallOfFights: React.FC = () => {
       groups.set(f.week, list);
     }
     return [...groups.entries()].sort(([a], [b]) => b - a);
-  }, [state.arenaHistory]);
+
+  }, [state]);
 
   // Style stats from all history
   const styleStats = useMemo(() => {

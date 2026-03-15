@@ -306,7 +306,9 @@ export function loadOwners(): OwnerPersist[] {
 export function saveOwners(list: OwnerPersist[]) {
   try {
     localStorage.setItem(OWNERS_KEY, JSON.stringify(list));
-  } catch {}
+  } catch {
+    // ignore
+  }
 }
 
 export function upsertOwner(owner: OwnerPersist) {

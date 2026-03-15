@@ -490,18 +490,18 @@ export default function Scouting() {
   const [selectedRival, setSelectedRival] = useState<string | null>(null);
   const [selectedWarrior, setSelectedWarrior] = useState<string | null>(null);
 
-  const rivals = state.rivals ?? [];
-  const reports = state.scoutReports ?? [];
-
   const activeRival = useMemo(
-    () => rivals.find((r) => r.owner.id === selectedRival),
-    [rivals, selectedRival]
+    () => (state.rivals ?? []).find((r) => r.owner.id === selectedRival),
+    [state.rivals, selectedRival]
   );
 
   const activeWarrior = useMemo(
     () => activeRival?.roster.find((w) => w.id === selectedWarrior),
     [activeRival, selectedWarrior]
   );
+
+  const rivals = useMemo(() => state.rivals ?? [], [state.rivals]);
+  const reports = useMemo(() => state.scoutReports ?? [], [state.scoutReports]);
 
   const existingReport = useMemo(
     () => activeWarrior ? reports.find((r) => r.warriorName === activeWarrior.name) : null,
@@ -716,9 +716,9 @@ export default function Scouting() {
                                 <div key={key} className="flex items-center gap-2">
                                   <span className="text-xs text-muted-foreground w-8 font-mono">{key}</span>
                                   <div className="flex-1">
-                                    <Progress value={(((range[0] + range[1]) / 2) / 25) * 100} className="h-1.5" />
+                                    <div className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">{range}</div>
                                   </div>
-                                  <span className="text-xs font-mono w-12 text-right">{range[0]}-{range[1]}</span>
+
                                 </div>
                               );
                             })}

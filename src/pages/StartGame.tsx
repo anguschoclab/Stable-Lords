@@ -51,7 +51,7 @@ import { randomOwnerName, randomStableName } from "@/data/randomNames";
 type Screen = "title" | "newGame";
 
 export default function StartGame() {
-  const { setState } = useGame();
+  const { loadGame } = useGame();
   const [screen, setScreen] = useState<Screen>("title");
   const [slots, setSlots] = useState<SaveSlotMeta[]>(() => listSaveSlots());
   const [deleteTarget, setDeleteTarget] = useState<SaveSlotMeta | null>(null);
@@ -73,9 +73,9 @@ export default function StartGame() {
   const loadSlot = useCallback(
     (slotId: string) => {
       const state = loadFromSlot(slotId);
-      if (state) setState(state);
+      if (state) loadGame(slotId, state);
     },
-    [setState]
+    [loadGame]
   );
 
   const handleDelete = useCallback(() => {
@@ -91,8 +91,8 @@ export default function StartGame() {
     fresh.player.stableName = stableName.trim();
     const slotId = newSlotId();
     saveToSlot(slotId, fresh);
-    setState(fresh);
-  }, [ownerName, stableName, setState]);
+    loadGame(slotId, fresh);
+  }, [ownerName, stableName, loadGame]);
 
   const handleImport = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -106,7 +106,7 @@ export default function StartGame() {
         toast.success("Save imported! Loading now…");
         // Auto-load the imported save
         const state = loadFromSlot(slotId);
-        if (state) setState(state);
+        if (state) loadGame(slotId, state);
       } catch (err: any) {
         toast.error(err?.message ?? "Failed to import save file.");
       }
@@ -114,7 +114,7 @@ export default function StartGame() {
     reader.readAsText(file);
     // Reset input so same file can be re-imported
     e.target.value = "";
-  }, [setState, refreshSlots]);
+  }, [loadGame, refreshSlots]);
 
   const formatDate = (iso: string) => {
     try {
@@ -145,9 +145,10 @@ export default function StartGame() {
 
               <div className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">Your Name</label>
+                  <label htmlFor="owner-name" className="text-sm font-medium">Your Name</label>
                   <div className="flex gap-1.5">
                     <Input
+                      id="owner-name"
                       placeholder="Enter your name"
                       value={ownerName}
                       onChange={(e) => setOwnerName(e.target.value)}
@@ -161,6 +162,7 @@ export default function StartGame() {
                       type="button"
                       onClick={() => setOwnerName(randomOwnerName())}
                       title="Random name"
+                      aria-label="Randomize your name"
                       className="shrink-0"
                     >
                       <Dices className="h-4 w-4" />
@@ -168,9 +170,10 @@ export default function StartGame() {
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium">Stable Name</label>
+                  <label htmlFor="stable-name" className="text-sm font-medium">Stable Name</label>
                   <div className="flex gap-1.5">
                     <Input
+                      id="stable-name"
                       placeholder="e.g. The Iron Wolves, House of Blades"
                       value={stableName}
                       onChange={(e) => setStableName(e.target.value)}
@@ -183,6 +186,7 @@ export default function StartGame() {
                       type="button"
                       onClick={() => setStableName(randomStableName())}
                       title="Random name"
+                      aria-label="Randomize stable name"
                       className="shrink-0"
                     >
                       <Dices className="h-4 w-4" />
@@ -313,6 +317,7 @@ export default function StartGame() {
                             toast.success("Save exported!");
                           }}
                           title="Export save"
+                          aria-label={`Export save for ${slot.stableName}`}
                         >
                           <Download className="h-3.5 w-3.5" />
                         </Button>
@@ -325,6 +330,7 @@ export default function StartGame() {
                             setDeleteTarget(slot);
                           }}
                           title="Delete save"
+                          aria-label={`Delete save for ${slot.stableName}`}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>

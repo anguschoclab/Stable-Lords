@@ -144,8 +144,6 @@ export interface ArmorEncumbrance {
 export type AttackTarget = "Head" | "Chest" | "Abdomen" | "Right Arm" | "Left Arm" | "Right Leg" | "Left Leg" | "Any";
 /** Grouped protect locations — broader defensive coverage */
 export type ProtectTarget = "Head" | "Body" | "Arms" | "Legs" | "Any";
-/** @deprecated Use AttackTarget or ProtectTarget. Kept for backward compat. */
-export type BodyTarget = AttackTarget;
 export type OffensiveTactic = "Lunge" | "Slash" | "Bash" | "Decisiveness" | "none";
 export type DefensiveTactic = "Dodge" | "Parry" | "Riposte" | "Responsiveness" | "none";
 
@@ -295,6 +293,15 @@ export interface Owner {
 
 // ─── Fight Results ──────────────────────────────────────────────────────────
 
+
+export type DeathCauseBucket =
+  | "FATAL_DAMAGE"
+  | "EXECUTION"
+  | "CRITICAL_CHAIN"
+  | "FATIGUE_COLLAPSE"
+  | "ARMOR_FAILURE"
+  | "RIVALRY_FINISH";
+
 export type FightOutcomeBy = "Kill" | "KO" | "Exhaustion" | "Stoppage" | "Draw" | null;
 
 export interface MinuteEvent {
@@ -321,7 +328,11 @@ export interface FightOutcome {
     hitsA?: number;
     hitsD?: number;
     gotKillA?: boolean;
+
     gotKillD?: boolean;
+    causeBucket?: DeathCauseBucket;
+    fatalHitLocation?: string;
+    fatalExchangeIndex?: number;
     tags?: string[];
   };
 }
@@ -329,6 +340,14 @@ export interface FightOutcome {
 export interface FightSummary {
   id: string;
   week: number;
+  phase: "planning" | "resolution";
+  pendingResolutionData?: {
+    gazette: any[];
+    injuries: string[];
+    deaths: string[];
+    bouts: any[];
+    promotions: string[];
+  };
   tournamentId?: string | null;
   title: string;
   a: string;
@@ -425,7 +444,7 @@ export interface ScoutReportData {
   style: string;
   quality: "Basic" | "Detailed" | "Expert";
   week: number;
-  attributeRanges: Record<string, [number, number]>;
+  attributeRanges: Record<string, string>;
   record: string;
   knownInjuries: string[];
   suspectedOE?: string;
@@ -529,7 +548,7 @@ export interface TrainerData {
 
 // ─── Insight Tokens ─────────────────────────────────────────────────────────
 
-export type InsightTokenType = "Weapon" | "Rhythm";
+export type InsightTokenType = "Weapon" | "Rhythm" | "StatHint";
 
 export interface InsightToken {
   id: string;

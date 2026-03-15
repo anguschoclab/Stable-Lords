@@ -572,7 +572,9 @@ function RisingStars({ allFights, currentWeek }: { allFights: FightSummary[]; cu
 export default function Gazette() {
   const { state } = useGame();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const allFights = useMemo(() => ArenaHistory.all(), [state.week]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const hallEntries = useMemo(() => LoreArchive.allHall(), [state.week]);
 
   const weeklyIssues = useMemo(() => {

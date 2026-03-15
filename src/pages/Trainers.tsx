@@ -174,11 +174,12 @@ export default function Trainers() {
       });
       toast.success(`${trainer.name} has joined your stable! (-${cost}g)`);
     },
-    [state, setState, currentTrainers, hiringPool, canHire]
+    [state, setState, canHire]
   );
 
   const fireTrainer = useCallback(
     (trainerId: string) => {
+      const currentTrainers = state.trainers ?? [];
       const trainer = currentTrainers.find((t) => t.id === trainerId);
       setState({
         ...state,
@@ -186,14 +187,14 @@ export default function Trainers() {
       });
       if (trainer) toast.success(`${trainer.name} has been released.`);
     },
-    [state, setState, currentTrainers]
+    [state, setState]
   );
 
   const convertableRetired = useMemo(
     () => state.retired.filter(
-      (w) => !currentTrainers.some((t) => t.retiredFromWarrior === w.name)
+      (w) => !(state.trainers ?? []).some((t) => t.retiredFromWarrior === w.name)
     ),
-    [state.retired, currentTrainers]
+    [state.retired, state.trainers]
   );
 
   const convertWarrior = useCallback(
@@ -214,12 +215,12 @@ export default function Trainers() {
       };
       setState({
         ...state,
-        trainers: [...currentTrainers, trainerData],
+        trainers: [...(state.trainers ?? []), trainerData],
       });
       toast.success(`${warrior.name} returns as a ${trainer.tier} ${trainer.focus} trainer!`);
       setConvertDialogOpen(false);
     },
-    [state, setState, currentTrainers, canHire]
+    [state, setState, canHire]
   );
 
   return (

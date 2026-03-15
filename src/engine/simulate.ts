@@ -14,6 +14,7 @@ import {
   type FightOutcome,
   type MinuteEvent,
   type BaseSkills,
+  type Attributes,
   type DerivedStats,
   type TrainerData,
   type OffensiveTactic,
@@ -31,10 +32,17 @@ import {
   fatigueLine, crowdReaction, narrateInitiative, minuteStatusLine,
   narrateBoutEnd, tradingBlowsLine, tauntLine, conservingLine,
   pressingLine, generateWarriorIntro, battleOpener, getWeaponDisplayName,
-  popularityLine, skillLearnLine,
+  popularityLine, skillLearnLine, narrateInsightHint,
 } from "./narrativePBP";
 
 // ─── Seeded PRNG (mulberry32) ─────────────────────────────────────────────
+/**
+ * Creates a seeded pseudo-random number generator (PRNG) using the mulberry32 algorithm.
+ * Provides deterministic randomness for fight simulations.
+ *
+ * @param seed - The initial seed value.
+ * @returns A function that generates a pseudo-random float between 0 (inclusive) and 1 (exclusive).
+ */
 function mulberry32(seed: number) {
   return () => {
     seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
@@ -71,6 +79,14 @@ const MATCHUP_MATRIX: number[][] = [
   [ 0,  0, +1,  0, +1, +1,  0,  0,  0,  0], // WS: zone control, beats LU/PS/PR
 ];
 
+/**
+ * Retrieves the stylistic matchup bonus or penalty between an attacking and defending style.
+ * Uses the pre-defined `MATCHUP_MATRIX`.
+ *
+ * @param attStyle - The fighting style of the attacker.
+ * @param defStyle - The fighting style of the defender.
+ * @returns The bonus (+1), neutral (0), or penalty (-1) for the attacker.
+ */
 function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): number {
   const ai = STYLE_ORDER.indexOf(attStyle);
   const di = STYLE_ORDER.indexOf(defStyle);
@@ -80,6 +96,14 @@ function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): numb
 
 // ─── Phase detection ──────────────────────────────────────────────────────
 type Phase = "OPENING" | "MID" | "LATE";
+/**
+ * Determines the current phase of the fight based on the exchange ratio.
+ * Used to trigger phase-specific passive abilities and narrative events.
+ *
+ * @param exchange - The current exchange number.
+ * @param maxExchanges - The maximum expected exchanges for the bout.
+ * @returns The string literal representing the current phase ("OPENING", "MID", or "LATE").
+ */
 function getPhase(exchange: number, maxExchanges: number): Phase {
   const ratio = exchange / maxExchanges;
   if (ratio < PHASE_OPENING_THRESHOLD) return "OPENING";
@@ -97,6 +121,13 @@ const HIT_LOCATIONS = ["head", "chest", "abdomen", "right arm", "left arm", "rig
 type HitLocation = typeof HIT_LOCATIONS[number];
 
 /** Maps a grouped protect target to the granular hit locations it covers */
+/**
+ * Expands a general protection target (e.g., "head", "body", "arms", "legs", "vital")
+ * into a list of specific `HitLocation` strings it covers.
+ *
+ * @param protect - The generalized body part targeted for protection by the defender's tactic.
+ * @returns An array of specific hit locations covered by the protection, or an empty array if none.
+ */
 function protectCovers(protect?: string): string[] {
   if (!protect || protect === "Any") return [];
   const p = protect.toLowerCase();
@@ -168,6 +199,7 @@ function resolveEffectiveTactics(plan: FightPlan, phaseKey: "opening" | "mid" | 
 
 // ─── Fighter State ────────────────────────────────────────────────────────
 interface FighterState {
+  attributes: Attributes;
   label: string; // "A" or "D"
   style: FightingStyle;
   skills: BaseSkills;
@@ -181,6 +213,8 @@ interface FighterState {
   hitsTaken: number;
   ripostes: number;
   consecutiveHits: number; // for Basher momentum, etc.
+  armHits: number;
+  legHits: number;
 }
 
 // ─── Skill Checks ─────────────────────────────────────────────────────────
@@ -377,7 +411,7 @@ function getEquipmentMods(loadout: EquipmentLoadout, carryCap: number) {
 
 // ─── Trainer Bonuses ──────────────────────────────────────────────────────
 function getTrainerMods(trainers: TrainerData[], style: FightingStyle) {
-  const bonus = getTrainingBonus(trainers as any, style);
+  const bonus = getTrainingBonus(trainers as TrainerData[], style);
   return {
     attMod: bonus.Aggression,                  // Aggression → ATT
     parMod: Math.floor(bonus.Defense * 0.6),   // Defense → PAR
@@ -390,6 +424,13 @@ function getTrainerMods(trainers: TrainerData[], style: FightingStyle) {
 }
 
 // ─── Default Plan ─────────────────────────────────────────────────────────
+/**
+ * Generates a sensible default fight plan for a given warrior based on their style and capabilities.
+ * Used when a manager fails to provide a specific plan or as a fallback for AI logic.
+ *
+ * @param w - The warrior to generate the plan for.
+ * @returns A complete `FightPlan` object configured for the warrior's default strategy.
+ */
 export function defaultPlanForWarrior(w: Warrior): FightPlan {
   // Style-aware defaults from spec
   const styleDefaults: Partial<Record<FightingStyle, Partial<FightPlan>>> = {
@@ -415,6 +456,19 @@ export function defaultPlanForWarrior(w: Warrior): FightPlan {
 }
 
 // ─── Main Simulation ──────────────────────────────────────────────────────
+/**
+ * Core function to simulate a complete fight between two warriors.
+ * Processes initialization, pre-fight setups, minute-by-minute exchanges,
+ * stat tracking, and final outcome determination.
+ *
+ * @param w1 - The first warrior participating in the fight.
+ * @param w2 - The second warrior participating in the fight.
+ * @param plan1 - The tactical plan provided by the first warrior's manager.
+ * @param plan2 - The tactical plan provided by the second warrior's manager.
+ * @param seed - The random seed ensuring the fight result is deterministic.
+ * @param logPrefix - Optional string used for debugging output prefixes.
+ * @returns A comprehensive `FightOutcome` object containing the winner, detailed logs, statistics, and narrative events.
+ */
 export function simulateFight(
   planA: FightPlan,
   planD: FightPlan,
@@ -423,7 +477,7 @@ export function simulateFight(
   seed?: number,
   trainers?: TrainerData[]
 ): FightOutcome {
-  const rng = mulberry32(seed ?? (Date.now() ^ Math.floor(Math.random() * 1e9)));
+  const rng = mulberry32(seed ?? (Date.now() ^ getSecureSeed()));
 
   // Compute skills from warriors or generate defaults
   const attrsA = warriorA?.attributes ?? { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
@@ -490,18 +544,18 @@ export function simulateFight(
 
   // Fighter state
   const fA: FighterState = {
-    label: "A", style: planA.style, skills: effSkillsA, derived: { ...derivedA, damage: derivedA.damage + equipA.dmgMod }, plan: planA,
+    label: "A", attributes: attrsA, style: planA.style, skills: effSkillsA, derived: { ...derivedA, damage: derivedA.damage + equipA.dmgMod }, plan: planA,
     hp: derivedA.hp, maxHp: derivedA.hp,
     endurance: derivedA.endurance + (trainerModsA?.endMod ?? 0) + equipA.endMod,
     maxEndurance: derivedA.endurance + (trainerModsA?.endMod ?? 0) + equipA.endMod,
-    hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0,
+    hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0, armHits: 0, legHits: 0,
   };
   const fD: FighterState = {
-    label: "D", style: planD.style, skills: effSkillsD, derived: { ...derivedD, damage: derivedD.damage + equipD.dmgMod }, plan: planD,
+    label: "D", attributes: attrsD, style: planD.style, skills: effSkillsD, derived: { ...derivedD, damage: derivedD.damage + equipD.dmgMod }, plan: planD,
     hp: derivedD.hp, maxHp: derivedD.hp,
     endurance: derivedD.endurance + (trainerModsD?.endMod ?? 0) + equipD.endMod,
     maxEndurance: derivedD.endurance + (trainerModsD?.endMod ?? 0) + equipD.endMod,
-    hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0,
+    hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0, armHits: 0, legHits: 0,
   };
 
   const log: MinuteEvent[] = [];
@@ -516,6 +570,9 @@ export function simulateFight(
   let tacticStreakA = 0;
   let tacticStreakD = 0;
   let by: FightOutcome["by"] = null;
+  let causeBucket: any = undefined;
+  let fatalHitLocation: string | undefined = undefined;
+  let fatalExchangeIndex: number | undefined = undefined;
 
   // Narration helpers
   const name = (f: FighterState) => f.label === "A" ? nameA : nameD;
@@ -635,8 +692,8 @@ export function simulateFight(
     }
 
     // ── 1. INITIATIVE CONTEST — with tempo & passive ──
-    const iniA = fA.skills.INI + alIniMod(effAL_A) + matchupA + fatA + defModsA.iniBonus + tempoA + passiveA.iniBonus;
-    const iniD = fD.skills.INI + alIniMod(effAL_D) + matchupD + fatD + defModsD.iniBonus + tempoD + passiveD.iniBonus;
+    const iniA = fA.skills.INI + alIniMod(effAL_A) + matchupA + fatA + defModsA.iniBonus + tempoA + passiveA.iniBonus - fA.legHits;
+    const iniD = fD.skills.INI + alIniMod(effAL_D) + matchupD + fatD + defModsD.iniBonus + tempoD + passiveD.iniBonus - fD.legHits;
     const aGoesFirst = contestCheck(rng, iniA, iniD);
     const iniPressBonus = INITIATIVE_PRESS_BONUS;
 
@@ -701,7 +758,7 @@ export function simulateFight(
     // ── 2. ATTACK ATTEMPT — with passive ATT + anti-synergy + PR OE paradox ──
     const attOEmod = oeAttMod(attOE, attacker.style);
     const attAntiSynMod = Math.round((attAntiSyn.offMult - 1) * 5);
-    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + iniPressBonus + GLOBAL_ATT_BONUS - tacticOveruseAtt);
+    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + iniPressBonus + GLOBAL_ATT_BONUS - tacticOveruseAtt - attacker.armHits);
 
     if (!attackSuccess) {
       // Attack whiffs — reset consecutive hits
@@ -755,7 +812,7 @@ export function simulateFight(
 
       if (isDodging) {
         // ── 3b. DODGE PATH — full DEF skill, no parry attempt ──
-        const defSuccess = skillCheck(rng, defender.skills.DEF, defOEmod + defMatchup + defFat + defDefMods.defBonus + defPassive.defBonus - tacticOveruseDef);
+        const defSuccess = skillCheck(rng, defender.skills.DEF, defOEmod + defMatchup + defFat + defDefMods.defBonus + defPassive.defBonus - tacticOveruseDef - defender.legHits);
         if (defSuccess) {
           defended = true;
           attacker.consecutiveHits = 0;
@@ -766,7 +823,7 @@ export function simulateFight(
         }
       } else {
         // ── 3a. PARRY PATH — PAR check; if it fails, the hit lands ──
-        const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus + defPassive.parBonus + defAntiSynPar - attOffMods.defPenalty + GLOBAL_PAR_PENALTY - bashBypass - tacticOveruseDef);
+        const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus + defPassive.parBonus + defAntiSynPar - attOffMods.defPenalty + GLOBAL_PAR_PENALTY - bashBypass - tacticOveruseDef - defender.armHits);
 
         if (parrySuccess) {
           defended = true;
@@ -819,10 +876,29 @@ export function simulateFight(
           attacker.hitsLanded++;
           attacker.consecutiveHits++;
           defender.consecutiveHits = 0;
+          if (hitLoc === "right arm" || hitLoc === "left arm") defender.armHits++;
+          if (hitLoc === "right leg" || hitLoc === "left leg") defender.legHits++;
 
           // Canonical PBP narration: attack + hit + damage severity + state changes
           log.push({ minute: min, text: narrateAttack(rng, name(attacker), weaponOf(attacker)) });
           log.push({ minute: min, text: narrateHit(rng, name(defender), hitLoc) });
+
+          // Insight hint generation based on stat differences
+          if (damage > 0 && rng() < 0.2) {
+            let attribute = null;
+            if (attacker.attributes.ST - defender.attributes.ST > 5) attribute = "ST";
+            else if (defender.attributes.SP - attacker.attributes.SP > 5) attribute = "SP";
+            else if (defender.attributes.DF - attacker.attributes.DF > 5) attribute = "DF";
+            else if (defender.hp / defender.maxHp < 0.3) attribute = "WL";
+
+            if (attribute) {
+              const hint = narrateInsightHint(rng, attribute);
+              if (hint) {
+                log.push({ minute: min, text: `🔍 ${hint}` });
+                if (!tags.includes(`Insight_${attribute}`)) tags.push(`Insight_${attribute}`);
+              }
+            }
+          }
 
           const sevLine3 = damageSeverityLine(rng, damage, defender.maxHp);
           if (sevLine3) log.push({ minute: min, text: sevLine3 });
@@ -880,6 +956,9 @@ export function simulateFight(
                 defender.hp = 0;
                 winner = attacker.label as "A" | "D";
                 by = "Kill";
+                causeBucket = "EXECUTION";
+                fatalHitLocation = hitLoc;
+                fatalExchangeIndex = ex;
                 tags.push("Kill");
 
                 // KILL — canonical PBP narration
@@ -899,6 +978,9 @@ export function simulateFight(
           if (defender.hp <= 0) {
             winner = attacker.label as "A" | "D";
             by = "KO";
+            causeBucket = "FATAL_DAMAGE";
+            fatalHitLocation = hitLoc;
+            fatalExchangeIndex = ex;
             tags.push("KO");
             const koLines = narrateBoutEnd(rng, "KO", name(attacker), name(defender));
             for (const l of koLines) log.push({ minute: min, text: l });
@@ -1022,6 +1104,9 @@ export function simulateFight(
       gotKillA: winner === "A" && by === "Kill",
       gotKillD: winner === "D" && by === "Kill",
       tags: uniqueTags,
+      causeBucket,
+      fatalHitLocation,
+      fatalExchangeIndex,
     },
   };
 }

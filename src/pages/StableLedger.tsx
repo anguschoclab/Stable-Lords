@@ -4,7 +4,7 @@
  */
 import React, { useState, useMemo } from "react";
 import { useGame } from "@/state/GameContext";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { STYLE_DISPLAY_NAMES, type InsightToken, type TrainerData, type LedgerEntry } from "@/types/game";
 import { computeWeeklyBreakdown } from "@/engine/economy";
 import { TIER_COST as TRAINER_TIER_COST } from "@/engine/trainers";
@@ -40,29 +40,29 @@ function OverviewTab() {
   return (
     <div className="space-y-4">
       {/* Treasury */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Card>
-          <CardContent className="py-3 px-4 text-center">
-            <div className="text-2xl font-display font-bold text-arena-gold">{gold}g</div>
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Treasury</div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <Card className="border-border/40 shadow-sm bg-background">
+          <CardContent className="py-4 px-4 text-center bg-secondary/5">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Treasury</div>
+            <div className="text-3xl font-mono font-bold text-arena-gold leading-none">{gold.toLocaleString()}G</div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="py-3 px-4 text-center">
-            <div className="text-2xl font-display font-bold">{activeWarriors.length}</div>
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Active</div>
+        <Card className="border-border/40 shadow-sm bg-background">
+          <CardContent className="py-4 px-4 text-center bg-secondary/5">
+             <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Active Roster</div>
+            <div className="text-3xl font-mono font-bold leading-none text-foreground">{activeWarriors.length}</div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="py-3 px-4 text-center">
-            <div className="text-2xl font-display font-bold text-arena-pop">{totalWins}</div>
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Wins</div>
+        <Card className="border-border/40 shadow-sm bg-background">
+          <CardContent className="py-4 px-4 text-center bg-secondary/5">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Total Victories</div>
+            <div className="text-3xl font-mono font-bold text-arena-pop leading-none">{totalWins}</div>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="py-3 px-4 text-center">
-            <div className="text-2xl font-display font-bold text-destructive">{totalKills}</div>
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Kills</div>
+        <Card className="border-border/40 shadow-sm bg-background">
+          <CardContent className="py-4 px-4 text-center bg-secondary/5">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Total Fatalities</div>
+            <div className="text-3xl font-mono font-bold text-destructive leading-none">{totalKills}</div>
           </CardContent>
         </Card>
       </div>
@@ -152,6 +152,7 @@ function TokensTab() {
   const tokens = state.insightTokens ?? [];
   const weaponTokens = tokens.filter(t => t.type === "Weapon");
   const rhythmTokens = tokens.filter(t => t.type === "Rhythm");
+  const statTokens = tokens.filter(t => t.type === "StatHint");
 
   return (
     <div className="space-y-4">
@@ -168,7 +169,29 @@ function TokensTab() {
             the insight is revealed, granting permanent combat bonuses.
           </p>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-3 gap-4">
+            {/* Stat Hints */}
+            <div>
+              <h4 className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1">
+                <Shield className="h-3 w-3" /> Rival Secrets ({statTokens.length})
+              </h4>
+              {statTokens.length === 0 ? (
+                <p className="text-xs text-muted-foreground/60 italic">No rival secrets deduced.</p>
+              ) : (
+                <div className="space-y-2">
+                  {statTokens.map(t => (
+                    <div key={t.id} className="text-xs bg-muted/50 p-2 rounded border flex flex-col gap-1">
+                      <div className="font-semibold flex justify-between items-center">
+                        <span className="text-arena-gold">{t.warriorName}</span>
+                        <Badge variant="outline" className="text-[9px] py-0 h-4">W{t.discoveredWeek}</Badge>
+                      </div>
+                      <div className="text-muted-foreground">{t.detail}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Weapon Insights */}
             <div>
               <h4 className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1">

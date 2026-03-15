@@ -2,6 +2,9 @@
  * Stable Lords — Core Game Types
  * Ported from Duel repo + design bible specs
  */
+import type { PoolWarrior } from "@/engine/recruitment";
+import type { BoutResult } from "@/engine/boutProcessor";
+
 
 // ─── Fighting Styles ────────────────────────────────────────────────────────
 
@@ -144,8 +147,6 @@ export interface ArmorEncumbrance {
 export type AttackTarget = "Head" | "Chest" | "Abdomen" | "Right Arm" | "Left Arm" | "Right Leg" | "Left Leg" | "Any";
 /** Grouped protect locations — broader defensive coverage */
 export type ProtectTarget = "Head" | "Body" | "Arms" | "Legs" | "Any";
-/** @deprecated Use AttackTarget or ProtectTarget. Kept for backward compat. */
-export type BodyTarget = AttackTarget;
 export type OffensiveTactic = "Lunge" | "Slash" | "Bash" | "Decisiveness" | "none";
 export type DefensiveTactic = "Dodge" | "Parry" | "Riposte" | "Responsiveness" | "none";
 
@@ -295,6 +296,15 @@ export interface Owner {
 
 // ─── Fight Results ──────────────────────────────────────────────────────────
 
+
+export type DeathCauseBucket =
+  | "FATAL_DAMAGE"
+  | "EXECUTION"
+  | "CRITICAL_CHAIN"
+  | "FATIGUE_COLLAPSE"
+  | "ARMOR_FAILURE"
+  | "RIVALRY_FINISH";
+
 export type FightOutcomeBy = "Kill" | "KO" | "Exhaustion" | "Stoppage" | "Draw" | null;
 
 export interface MinuteEvent {
@@ -321,7 +331,11 @@ export interface FightOutcome {
     hitsA?: number;
     hitsD?: number;
     gotKillA?: boolean;
+
     gotKillD?: boolean;
+    causeBucket?: DeathCauseBucket;
+    fatalHitLocation?: string;
+    fatalExchangeIndex?: number;
     tags?: string[];
   };
 }
@@ -433,7 +447,7 @@ export interface ScoutReportData {
   style: string;
   quality: "Basic" | "Detailed" | "Expert";
   week: number;
-  attributeRanges: Record<string, [number, number]>;
+  attributeRanges: Record<string, string>;
   record: string;
   knownInjuries: string[];
   suspectedOE?: string;
@@ -509,7 +523,9 @@ export interface GameState {
   restStates: RestState[];
   rivalries: Rivalry[];
   matchHistory: MatchRecord[];
-  recruitPool: any[]; // PoolWarrior[] from recruitment engine
+  playerChallenges: string[]; // IDs of rival warriors or stables to prioritize
+  playerAvoids: string[]; // IDs of rival warriors or stables to avoid
+  recruitPool: PoolWarrior[]; // from recruitment engine
   rosterBonus: number; // extra roster slots from championships
   ownerGrudges: OwnerGrudge[]; // personality-driven owner rivalries
   insightTokens: InsightToken[]; // discovered weapon/rhythm insights

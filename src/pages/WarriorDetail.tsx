@@ -68,7 +68,7 @@ function growthNarrative(current: number, potential: number | undefined): {
   };
   return {
     label: "Raw talent",
-    color: "text-arena-pop",
+    color: "text-accent glow-neon-blue drop-shadow-md",
     tooltip: "Tremendous untapped potential. This warrior could become exceptional.",
   };
 }
@@ -114,7 +114,7 @@ function AttrBar({ label, value, potential, max = 25 }: { label: string; value: 
         </div>
       </div>
       <div className="relative">
-        <Progress value={currentPct} className="h-2" />
+        <Progress value={currentPct} className="h-2 rounded-full overflow-hidden shadow-[0_0_5px_currentColor]" />
       </div>
     </div>
   );
@@ -126,7 +126,7 @@ function SkillBar({ label, value, max = 20 }: { label: string; value: number; ma
     <div className="flex items-center gap-3">
       <span className="text-xs text-muted-foreground w-8 font-mono">{label}</span>
       <div className="flex-1">
-        <Progress value={pct} className="h-2" />
+        <Progress value={pct} className="h-2 rounded-full overflow-hidden shadow-[0_0_5px_currentColor]" />
       </div>
       <span className="text-sm font-mono font-semibold w-6 text-right">{value}</span>
     </div>
@@ -556,7 +556,7 @@ function WarriorFightHistory({ warriorName, arenaHistory }: { warriorName: strin
                 {record && (record.wins + record.losses + record.draws) >= 2 && (
                   <span className="text-[10px] font-mono text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">
                     H2H: {record.wins}-{record.losses}{record.draws > 0 ? `-${record.draws}` : ""}
-                    {record.kills > 0 && <span className="text-destructive ml-1">☠{record.kills}</span>}
+                    {record.kills > 0 && <span className="text-destructive glow-neon-red drop-shadow-md ml-1">☠{record.kills}</span>}
                   </span>
                 )}
                 {record && record.losses >= 3 && (
@@ -664,7 +664,7 @@ export default function WarriorDetail() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
         <p className="text-muted-foreground">Warrior not found.</p>
-        <Button variant="outline" onClick={() => navigate("/")}>
+        <Button variant="outline" onClick={() => navigate({ to: "/" })}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
         </Button>
       </div>
@@ -685,17 +685,17 @@ export default function WarriorDetail() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
+        <Button variant="ghost" onClick={() => navigate({ to: "/" })} className="gap-2">
           <ArrowLeft className="h-4 w-4" /> Back
         </Button>
-        <Button variant="outline" size="sm" onClick={handleRetire} className="gap-1.5 text-muted-foreground hover:text-destructive">
+        <Button variant="outline" size="sm" onClick={handleRetire} className="gap-1.5 text-muted-foreground hover:text-destructive glow-neon-red drop-shadow-md">
           <Armchair className="h-3.5 w-3.5" /> Retire
         </Button>
       </div>
 
       {/* Hero */}
       <div className="relative rounded-xl border border-border bg-gradient-to-br from-secondary via-card to-secondary p-4 sm:p-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-arena-fame/5 to-arena-gold/5" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/5 glow-neon-blue rounded-xl" />
         <div className="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
           <div className="min-w-0">
             <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
@@ -714,7 +714,7 @@ export default function WarriorDetail() {
               {streakLabel && (
                 <Badge
                   variant={streakVal > 0 ? "default" : "destructive"}
-                  className={`text-xs gap-1 ${streakVal > 0 ? "bg-arena-gold text-black" : ""}`}
+                  className={`text-xs gap-1 ${streakVal > 0 ? "bg-primary text-black glow-neon-green" : ""}`}
                 >
                   {streakLabel}
                 </Badge>
@@ -761,7 +761,7 @@ export default function WarriorDetail() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="font-display text-lg flex items-center gap-2">
-                <Shield className="h-5 w-5 text-primary" /> Attributes
+                <Shield className="h-5 w-5 text-primary drop-shadow-[0_0_8px_rgba(20,255,100,0.8)]" /> Attributes
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -809,7 +809,7 @@ export default function WarriorDetail() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="font-display text-lg flex items-center gap-2">
-                    <Heart className="h-5 w-5 text-destructive" /> Physicals
+                    <Heart className="h-5 w-5 text-destructive glow-neon-red drop-shadow-md" /> Physicals
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -850,7 +850,7 @@ export default function WarriorDetail() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="font-display text-lg flex items-center gap-2">
-                    <ScrollText className="h-5 w-5 text-arena-fame" /> Overview Statements
+                    <ScrollText className="h-5 w-5 text-primary glow-neon-green drop-shadow-md" /> Overview Statements
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

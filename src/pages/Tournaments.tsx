@@ -12,9 +12,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trophy, Swords, Skull, Play, UserPlus, ChevronDown, ChevronUp, FastForward } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import BoutViewer from "@/components/BoutViewer";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AlertCircle } from "lucide-react";
 
 const SEASON_NAMES: Record<string, string> = {
   Spring: "Spring Classic",
@@ -32,6 +35,7 @@ const SEASON_ICONS: Record<string, string> = {
 
 export default function Tournaments() {
   const { state, setState } = useGame();
+  const [prepModeOpen, setPrepModeOpen] = useState(false);
 
   const currentTournament = useMemo(
     () => state.tournaments.find((t) => t.season === state.season && !t.completed),
@@ -43,7 +47,7 @@ export default function Tournaments() {
     [state.tournaments]
   );
 
-  const canStart = !currentTournament && state.roster.filter((w) => w.status === "Active").length >= 2;
+
 
   const startTournament = useCallback(() => {
     const active = state.roster.filter((w) => w.status === "Active");
@@ -316,7 +320,12 @@ export default function Tournaments() {
         items: [
           `🏆 ${champion} is crowned champion of the ${updatedTournament.name}!`,
           `${tourneyFights.length} bouts fought across ${currentRound} rounds.`,
-          ...tourneyFights.filter(f => f.by === "Kill").map(f => `☠️ ${f.winner === "A" ? f.a : f.d} slew ${f.winner === "A" ? f.d : f.a} during the tournament.`),
+          ...tourneyFights.reduce((acc, f) => {
+          if (f.by === "Kill") {
+            acc.push(`☠️ ${f.winner === "A" ? f.a : f.d} slew ${f.winner === "A" ? f.d : f.a} during the tournament.`);
+          }
+          return acc;
+        }, [] as string[]),
         ],
       }];
     } else {
@@ -468,9 +477,55 @@ export default function Tournaments() {
           )}
         </div>
         {canStart ? (
-          <Button onClick={startTournament} className="gap-2">
-            <Trophy className="h-4 w-4" /> Start {SEASON_NAMES[state.season]}
-          </Button>
+
+          <Dialog open={prepModeOpen} onOpenChange={setPrepModeOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2 border-primary/50 text-primary hover:bg-primary/10">
+                <Shield className="h-4 w-4" /> Prep Mode
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="font-display text-xl flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-primary" /> Tournament Prep Mode
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="text-sm text-muted-foreground bg-secondary/30 p-3 rounded-lg border border-border">
+                  Review your active roster before committing to the {SEASON_NAMES[state.season]}.
+                  Ensure fame limits (FE Freeze) and equipment classes are set.
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
+                  {activeWarriors.map((w) => (
+                    <Card key={w.id} className="border-border">
+                      <CardHeader className="p-3 pb-2 border-b border-border bg-secondary/10 flex flex-row items-center justify-between">
+                        <div className="font-display font-semibold text-sm">{w.name}</div>
+                        <Badge variant="outline" className="text-[10px]">{STYLE_DISPLAY_NAMES[w.style]}</Badge>
+                      </CardHeader>
+                      <CardContent className="p-3 space-y-2">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Fame:</span>
+                          <span className={w.fame > 80 ? "text-destructive font-bold flex items-center gap-1" : "font-mono"}>
+                             {w.fame} {w.fame > 80 && <TooltipProvider><Tooltip><TooltipTrigger><AlertCircle className="h-3 w-3"/></TooltipTrigger><TooltipContent>Nearing FE Freeze</TooltipContent></Tooltip></TooltipProvider>}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-muted-foreground">Record:</span>
+                          <span className="font-mono">{w.career.wins}W - {w.career.losses}L</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                <div className="flex justify-end pt-2">
+                  <Button onClick={() => { setPrepModeOpen(false); startTournament(); }} className="gap-2">
+                    <Trophy className="h-4 w-4" /> Start {SEASON_NAMES[state.season]}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
         ) : !currentTournament && state.roster.filter((w) => w.status === "Active").length < 2 ? (
           <Link to="/recruit">
             <Button variant="outline" className="gap-2">
@@ -482,14 +537,14 @@ export default function Tournaments() {
 
       {/* Active Tournament */}
       {currentTournament && (
-        <Card className="border-primary/50 glow-primary">
+        <Card className="border-accent/40 shadow-[0_0_25px_-5px_hsl(var(--accent)/0.4)] backdrop-blur-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="font-display text-lg flex items-center justify-between">
+            <CardTitle className="font-display text-lg flex items-center justify-between text-accent drop-shadow-[0_0_8px_hsl(var(--accent)/0.6)]">
               <span className="flex items-center gap-2">
                 <span className="text-xl">{SEASON_ICONS[state.season]}</span>
                 {currentTournament.name}
               </span>
-              <Badge className="bg-primary text-primary-foreground text-xs">Active</Badge>
+              <Badge className="bg-primary text-primary-foreground text-xs animate-pulse glow-neon-green border border-primary/50 shadow-[0_0_10px_hsl(var(--primary)/0.5)]">LIVE</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -527,11 +582,11 @@ export default function Tournaments() {
                             >
                               <div className="flex items-center gap-2 flex-wrap">
                                 <Swords className="h-4 w-4 text-arena-gold shrink-0" />
-                                <span className={`font-medium text-sm ${bout.winner === "A" ? "text-arena-gold" : ""}`}>
+                                <span className={`font-medium text-sm transition-all ${bout.winner === "A" ? "text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)] scale-105" : bout.winner === "D" ? "text-muted-foreground opacity-50" : "text-foreground"}`}>
                                   {bout.a}
                                 </span>
                                 <span className="text-muted-foreground text-xs">vs</span>
-                                <span className={`font-medium text-sm ${bout.winner === "D" ? "text-arena-gold" : ""}`}>
+                                <span className={`font-medium text-sm transition-all ${bout.winner === "D" ? "text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)] scale-105" : bout.winner === "A" ? "text-muted-foreground opacity-50" : "text-foreground"}`}>
                                   {bout.d}
                                 </span>
                               </div>
@@ -596,7 +651,7 @@ export default function Tournaments() {
           return (
             <Card
               key={s}
-              className={s === state.season ? "border-primary/50 glow-primary" : "opacity-70"}
+              className={s === state.season ? "border-primary/50 shadow-[0_0_20px_hsl(var(--primary)/0.3)] bg-primary/5" : "opacity-60 grayscale hover:grayscale-0 transition-all duration-300"}
             >
               <CardHeader className="pb-2">
                 <CardTitle className="font-display text-lg flex items-center gap-2">
@@ -616,7 +671,7 @@ export default function Tournaments() {
                       <div key={t.id} className="text-sm flex items-center gap-2">
                         <Trophy className="h-3.5 w-3.5 text-arena-gold" />
                         <span className="text-muted-foreground">Champion:</span>
-                        <span className="font-semibold">{t.champion ?? "—"}</span>
+                        <span className="font-display font-semibold text-arena-gold drop-shadow-[0_0_5px_hsl(var(--arena-gold)/0.5)]">{t.champion ?? "—"}</span>
                       </div>
                     ))}
                   </div>

@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { RouterProvider } from "@tanstack/react-router";
+import { router } from "@/router";
 import { GameProvider, useGame } from "@/state/GameContext";
 import AppShell from "@/components/AppShell";
 import ResolutionReveal from "@/components/ResolutionReveal";
@@ -21,18 +22,7 @@ import Scouting from "@/pages/Scouting";
 import StableDetail from "@/pages/StableDetail";
 import WorldOverview from "@/pages/WorldOverview";
 import StartGame from "@/pages/StartGame";
-import NotFound from "./pages/NotFound";
-import Gazette from "@/pages/Gazette";
-import HallOfFame from "@/pages/HallOfFame";
-import KillAnalytics from "@/pages/KillAnalytics";
-import EquipmentOptimizerPage from "@/pages/EquipmentOptimizerPage";
-import TrainingPlanner from "@/pages/TrainingPlanner";
-import SeasonalAwards from "@/pages/SeasonalAwards";
-import TournamentAwards from "@/pages/TournamentAwards";
-import StyleGuide from "@/pages/StyleGuide";
-import ArenaHub from "@/pages/ArenaHub";
-import StableLedger from "@/pages/StableLedger";
-import StableHall from "@/pages/StableHall";
+import Orphanage from "@/pages/Orphanage";
 
 const queryClient = new QueryClient();
 
@@ -91,9 +81,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <GameProvider>
-        <BrowserRouter>
-          <GameRoutes />
-        </BrowserRouter>
+        <GameRoutes />
       </GameProvider>
     </TooltipProvider>
   </QueryClientProvider>

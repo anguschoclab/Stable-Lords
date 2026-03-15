@@ -46,24 +46,10 @@ const GameContext = createContext<GameContextValue | null>(null);
 const TITLE_SENTINEL = "__TITLE__";
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  // Run migration once
-  useEffect(() => { migrateLegacySave(); }, []);
-
-  const [activeSlotId, setActiveSlotId] = useState<string | null>(() => getActiveSlot());
-  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
-
-  const [state, setStateRaw] = useState<GameState>(() => {
-    const slotId = getActiveSlot();
-    if (slotId) {
-      const loaded = loadFromSlot(slotId);
-      if (loaded) return loaded;
-    }
-    return createFreshState();
-  });
-
-  const atTitleScreen = !activeSlotId || !listSaveSlots().some((s) => s.slotId === activeSlotId);
-
-  const markSaved = useCallback(() => setLastSavedAt(new Date().toISOString()), []);
+  const initialize = useGameStore((state) => state.initialize);
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   const setState = useCallback((next: GameState) => {
     setStateRaw(next);
@@ -146,8 +132,4 @@ export function GameProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useGame(): GameContextValue {
-  const ctx = useContext(GameContext);
-  if (!ctx) throw new Error("useGame must be used within <GameProvider>");
-  return ctx;
-}
+export { useGame };

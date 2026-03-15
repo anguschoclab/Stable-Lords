@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useGame } from "@/state/GameContext";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +11,7 @@ import type { RivalStableData, Warrior } from "@/types/game";
 import { getStableTemplates } from "@/engine/rivals";
 
 type SortField = "rank" | "name" | "fame" | "wins" | "losses" | "kills" | "winRate" | "roster" | "tier";
-type SortDir = "asc" | "desc";
+
 type WarriorSortField = "name" | "stable" | "fame" | "wins" | "losses" | "kills" | "winRate" | "style";
 
 interface StableRow {
@@ -171,12 +171,7 @@ export default function WorldOverview() {
     }));
   };
 
-  const SortHeader = ({ label, field, active, dir, onClick }: { label: string; field: string; active: boolean; dir: SortDir; onClick: () => void }) => (
-    <button onClick={onClick} className="flex items-center gap-1 hover:text-foreground transition-colors">
-      {label}
-      <ArrowUpDown className={`h-3 w-3 ${active ? "text-primary" : "text-muted-foreground/40"}`} />
-    </button>
-  );
+
 
   // Summary stats
   const totalWarriors = stableRows.reduce((s, r) => s + r.roster, 0);

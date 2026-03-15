@@ -518,7 +518,8 @@ function pickRecruitStyle(
         return underdogs[Math.floor(Math.random() * underdogs.length)];
       }
       // Without meta data, innovate from non-philosophy styles
-      const nonStandard = allStyles.filter(s => !philosophyStyles.includes(s));
+      const philosophySet = new Set(philosophyStyles);
+      const nonStandard = allStyles.filter(s => !philosophySet.has(s));
       return nonStandard.length > 0
         ? nonStandard[Math.floor(Math.random() * nonStandard.length)]
         : philosophyStyles[Math.floor(Math.random() * philosophyStyles.length)];

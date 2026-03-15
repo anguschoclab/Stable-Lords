@@ -1340,9 +1340,10 @@ function useDraggableWidgets() {
   const savedOrder = prefs.dashboardLayout ?? DEFAULT_ORDER;
   // Ensure all widgets are present (handles new widgets added after save)
   const validIds = new Set(DEFAULT_ORDER);
+  const savedOrderSet = new Set(savedOrder);
   const order = [
     ...savedOrder.filter(id => validIds.has(id)),
-    ...DEFAULT_ORDER.filter(id => !savedOrder.includes(id)),
+    ...DEFAULT_ORDER.filter(id => !savedOrderSet.has(id)),
   ];
 
   const [widgetOrder, setWidgetOrder] = useState(order);

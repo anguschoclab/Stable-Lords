@@ -345,10 +345,10 @@ export interface FightSummary {
   week: number;
   phase: "planning" | "resolution";
   pendingResolutionData?: {
-    gazette: string[];
+    gazette: any[];
     injuries: string[];
     deaths: string[];
-    bouts: BoutResult[];
+    bouts: any[];
     promotions: string[];
   };
   tournamentId?: string | null;
@@ -553,7 +553,7 @@ export interface TrainerData {
 
 // ─── Insight Tokens ─────────────────────────────────────────────────────────
 
-export type InsightTokenType = "Weapon" | "Rhythm" | "StatHint";
+export type InsightTokenType = "Weapon" | "Rhythm" | "Style" | "Attribute" | "Tactic";
 
 export interface InsightToken {
   id: string;
@@ -561,6 +561,7 @@ export interface InsightToken {
   warriorId: string;
   warriorName: string;
   detail: string; // e.g. "Favors Broadsword" or "OE 6 / AL 8"
+  targetKey?: string; // For attributes (e.g. "ST") or tactics
   discoveredWeek: number;
 }
 

@@ -34,7 +34,9 @@ function pairingScore(
   p: Warrior, r: Warrior, rivalStableId: string,
   rivalries: Rivalry[], matchHistory: MatchRecord[],
   playerStableId: string, week: number, rng: () => number,
-  recentHistory: FightSummary[]
+  recentHistory: FightSummary[],
+  playerChallenges: string[] = [],
+  playerAvoids: string[] = []
 ): number {
   let score = 100;
 
@@ -46,23 +48,45 @@ function pairingScore(
     (rv.stableIdA === playerStableId && rv.stableIdB === rivalStableId) ||
     (rv.stableIdB === playerStableId && rv.stableIdA === rivalStableId)
   );
-  if (hasRivalry) score += 50;
+  if (hasRivalry) {
+    const rivalry = rivalries.find(rv =>
+      (rv.stableIdA === playerStableId && rv.stableIdB === rivalStableId) ||
+      (rv.stableIdB === playerStableId && rv.stableIdA === rivalStableId)
+    );
+
+    // Give intense rivalries / blood feuds (intensity >= 4) a massive booking score boost
+    score += (rivalry && rivalry.intensity >= 4) ? 200 : 50;
+  }
 
   // Style diversity bonus — +20 if this style matchup hasn't occurred in last 4 weeks
-  const recentStylePairs = recentHistory
-    .filter(f => f.week >= week - 4)
-    .map(f => `${f.styleA}|${f.styleD}`);
+  const recentStylePairs = recentHistory.reduce((acc, f) => {
+    if (f.week >= week - 4) {
+      acc.push(`${f.styleA}|${f.styleD}`);
+    }
+    return acc;
+  }, [] as string[]);
   const thisPair = `${p.style}|${r.style}`;
   const reversePair = `${r.style}|${p.style}`;
   if (!recentStylePairs.includes(thisPair) && !recentStylePairs.includes(reversePair)) {
     score += 20;
   }
 
+
   // Repeat penalty — -100 if fought in last 2 weeks
   const recentMatch = matchHistory.some(m =>
     m.playerWarriorId === p.id && m.opponentWarriorId === r.id && m.week >= week - 2
   );
   if (recentMatch) score -= 100;
+
+  // Challenge / Avoid Assistant modifiers
+  // Extremely heavy weights so they basically override other considerations if possible
+  if (playerChallenges.includes(r.id) || playerChallenges.includes(rivalStableId)) {
+    score += 500;
+  }
+  if (playerAvoids.includes(r.id) || playerAvoids.includes(rivalStableId)) {
+    score -= 500;
+  }
+
 
   // Random jitter (0-15)
   score += Math.floor(rng() * 16);
@@ -116,7 +140,9 @@ export function generateMatchCard(state: GameState): MatchPairing[] {
       const s = pairingScore(
         pw, rc.warrior, rc.stable.owner.id,
         rivalries, matchHistory, state.player.id, state.week, rng,
-        state.arenaHistory
+        state.arenaHistory,
+        state.playerChallenges,
+        state.playerAvoids
       );
       if (s > bestScore) { bestScore = s; bestCandidate = rc; }
     }

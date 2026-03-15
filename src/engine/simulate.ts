@@ -14,6 +14,7 @@ import {
   type FightOutcome,
   type MinuteEvent,
   type BaseSkills,
+  type Attributes,
   type DerivedStats,
   type TrainerData,
   type OffensiveTactic,
@@ -31,7 +32,7 @@ import {
   fatigueLine, crowdReaction, narrateInitiative, minuteStatusLine,
   narrateBoutEnd, tradingBlowsLine, tauntLine, conservingLine,
   pressingLine, generateWarriorIntro, battleOpener, getWeaponDisplayName,
-  popularityLine, skillLearnLine,
+  popularityLine, skillLearnLine, narrateInsightHint,
 } from "./narrativePBP";
 
 // ─── Seeded PRNG (mulberry32) ─────────────────────────────────────────────
@@ -198,6 +199,7 @@ function resolveEffectiveTactics(plan: FightPlan, phaseKey: "opening" | "mid" | 
 
 // ─── Fighter State ────────────────────────────────────────────────────────
 interface FighterState {
+  attributes: Attributes;
   label: string; // "A" or "D"
   style: FightingStyle;
   skills: BaseSkills;
@@ -409,7 +411,7 @@ function getEquipmentMods(loadout: EquipmentLoadout, carryCap: number) {
 
 // ─── Trainer Bonuses ──────────────────────────────────────────────────────
 function getTrainerMods(trainers: TrainerData[], style: FightingStyle) {
-  const bonus = getTrainingBonus(trainers as any, style);
+  const bonus = getTrainingBonus(trainers as TrainerData[], style);
   return {
     attMod: bonus.Aggression,                  // Aggression → ATT
     parMod: Math.floor(bonus.Defense * 0.6),   // Defense → PAR
@@ -475,7 +477,7 @@ export function simulateFight(
   seed?: number,
   trainers?: TrainerData[]
 ): FightOutcome {
-  const rng = mulberry32(seed ?? (Date.now() ^ Math.floor(Math.random() * 1e9)));
+  const rng = mulberry32(seed ?? (Date.now() ^ getSecureSeed()));
 
   // Compute skills from warriors or generate defaults
   const attrsA = warriorA?.attributes ?? { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
@@ -542,14 +544,14 @@ export function simulateFight(
 
   // Fighter state
   const fA: FighterState = {
-    label: "A", style: planA.style, skills: effSkillsA, derived: { ...derivedA, damage: derivedA.damage + equipA.dmgMod }, plan: planA,
+    label: "A", attributes: attrsA, style: planA.style, skills: effSkillsA, derived: { ...derivedA, damage: derivedA.damage + equipA.dmgMod }, plan: planA,
     hp: derivedA.hp, maxHp: derivedA.hp,
     endurance: derivedA.endurance + (trainerModsA?.endMod ?? 0) + equipA.endMod,
     maxEndurance: derivedA.endurance + (trainerModsA?.endMod ?? 0) + equipA.endMod,
     hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0, armHits: 0, legHits: 0,
   };
   const fD: FighterState = {
-    label: "D", style: planD.style, skills: effSkillsD, derived: { ...derivedD, damage: derivedD.damage + equipD.dmgMod }, plan: planD,
+    label: "D", attributes: attrsD, style: planD.style, skills: effSkillsD, derived: { ...derivedD, damage: derivedD.damage + equipD.dmgMod }, plan: planD,
     hp: derivedD.hp, maxHp: derivedD.hp,
     endurance: derivedD.endurance + (trainerModsD?.endMod ?? 0) + equipD.endMod,
     maxEndurance: derivedD.endurance + (trainerModsD?.endMod ?? 0) + equipD.endMod,
@@ -880,6 +882,23 @@ export function simulateFight(
           // Canonical PBP narration: attack + hit + damage severity + state changes
           log.push({ minute: min, text: narrateAttack(rng, name(attacker), weaponOf(attacker)) });
           log.push({ minute: min, text: narrateHit(rng, name(defender), hitLoc) });
+
+          // Insight hint generation based on stat differences
+          if (damage > 0 && rng() < 0.2) {
+            let attribute = null;
+            if (attacker.attributes.ST - defender.attributes.ST > 5) attribute = "ST";
+            else if (defender.attributes.SP - attacker.attributes.SP > 5) attribute = "SP";
+            else if (defender.attributes.DF - attacker.attributes.DF > 5) attribute = "DF";
+            else if (defender.hp / defender.maxHp < 0.3) attribute = "WL";
+
+            if (attribute) {
+              const hint = narrateInsightHint(rng, attribute);
+              if (hint) {
+                log.push({ minute: min, text: `🔍 ${hint}` });
+                if (!tags.includes(`Insight_${attribute}`)) tags.push(`Insight_${attribute}`);
+              }
+            }
+          }
 
           const sevLine3 = damageSeverityLine(rng, damage, defender.maxHp);
           if (sevLine3) log.push({ minute: min, text: sevLine3 });

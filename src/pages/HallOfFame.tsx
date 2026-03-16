@@ -3,7 +3,7 @@
  * Shows yearly inductees with career stats and greatest fights.
  */
 import { useMemo } from "react";
-import { useGame } from "@/state/GameContext";
+import { useGameStore } from "@/state/useGameStore";
 import { ArenaHistory } from "@/engine/history/arenaHistory";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import type { Warrior, FightSummary, NewsletterItem } from "@/types/game";
@@ -137,7 +137,7 @@ function InducteeCard({ warrior, title, icon, fights }: { warrior: Warrior; titl
 /* ── Main Page ───────────────────────────────────────────── */
 
 export default function HallOfFame() {
-  const { state } = useGame();
+  const { state } = useGameStore();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const allFights = useMemo(() => ArenaHistory.all(), [state.week]);
 

@@ -3,7 +3,7 @@
  * Death cause chains, hit location breakdowns, aggregate kill trends.
  */
 import React, { useMemo } from "react";
-import { useGame } from "@/state/GameContext";
+import { useGameStore } from "@/state/useGameStore";
 import { ArenaHistory } from "@/engine/history/arenaHistory";
 import { StyleRollups, type StyleRecord } from "@/engine/stats/styleRollups";
 import type { FightSummary, Warrior } from "@/types/game";
@@ -362,7 +362,7 @@ function GraveyardByStyle({ graveyardByStyle }: { graveyardByStyle: [string, num
 /* ── Main Page ───────────────────────────────────────────── */
 
 export default function KillAnalytics() {
-  const { state } = useGame();
+  const { state } = useGameStore();
   const allFights = useMemo(() => {
     const hist = ArenaHistory.all();
     return hist.length > 0 ? hist : state.arenaHistory;

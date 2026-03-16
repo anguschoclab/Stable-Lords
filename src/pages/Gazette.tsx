@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from "react";
-import { useGame } from "@/state/GameContext";
+import { useGameStore } from "@/state/useGameStore";
 import { ArenaHistory } from "@/engine/history/arenaHistory";
 import { StyleRollups } from "@/engine/stats/styleRollups";
 import { LoreArchive } from "@/lore/LoreArchive";
@@ -746,7 +746,7 @@ function WeeklyIssue({
 \n/* ── main page ───────────────────────────────────────────── */
 
 export default function Gazette() {
-  const { state } = useGame();
+  const { state } = useGameStore();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const allFights = useMemo(() => ArenaHistory.all(), [state.week]);

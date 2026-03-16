@@ -44,9 +44,14 @@ export default function StableDetail() {
 
   const activeRoster = rival.roster.filter(w => w.status === "Active");
   const deadWarriors = rival.roster.filter(w => w.status === "Dead");
-  const totalWins = rival.roster.reduce((s, w) => s + w.career.wins, 0);
-  const totalLosses = rival.roster.reduce((s, w) => s + w.career.losses, 0);
-  const totalKills = rival.roster.reduce((s, w) => s + w.career.kills, 0);
+  const { wins: totalWins, losses: totalLosses, kills: totalKills } = rival.roster.reduce(
+    (acc, w) => ({
+      wins: acc.wins + w.career.wins,
+      losses: acc.losses + w.career.losses,
+      kills: acc.kills + w.career.kills,
+    }),
+    { wins: 0, losses: 0, kills: 0 }
+  );
   const totalFights = totalWins + totalLosses;
   const winRate = totalFights > 0 ? Math.round((totalWins / totalFights) * 100) : 0;
 

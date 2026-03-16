@@ -30,9 +30,14 @@ function OverviewTab() {
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);
   const gold = state.gold ?? 0;
   const activeWarriors = state.roster.filter(w => w.status === "Active");
-  const totalWins = state.roster.reduce((s, w) => s + w.career.wins, 0);
-  const totalLosses = state.roster.reduce((s, w) => s + w.career.losses, 0);
-  const totalKills = state.roster.reduce((s, w) => s + w.career.kills, 0);
+  const { wins: totalWins, losses: totalLosses, kills: totalKills } = state.roster.reduce(
+    (acc, w) => ({
+      wins: acc.wins + w.career.wins,
+      losses: acc.losses + w.career.losses,
+      kills: acc.kills + w.career.kills,
+    }),
+    { wins: 0, losses: 0, kills: 0 }
+  );
 
   // Recent ledger entries
   const recentLedger = (state.ledger ?? []).slice(-10).reverse();

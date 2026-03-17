@@ -66,12 +66,11 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   }
 
   return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id.replace(/[^a-zA-Z0-9-]/g, "")}] {
+    <style>
+      {Object.entries(THEMES)
+        .map(
+          ([theme, prefix]) => `
+${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
@@ -80,14 +79,13 @@ ${colorConfig
   .join("\n")}
 }
 `
-          )
-          .join("\n")
-          // Prevent DOM-based XSS by escaping < and > so strings cannot break out of the <style> tag.
-          // Using CSS character escape sequences allows the string to remain syntactically valid CSS if it was intended to match a literal < or >.
-          .replace(/</g, "\\3C ")
-          .replace(/>/g, "\\3E "),
-      }}
-    />
+        )
+        .join("\n")
+        // Prevent DOM-based XSS by escaping < and > so strings cannot break out of the <style> tag.
+        // Using CSS character escape sequences allows the string to remain syntactically valid CSS if it was intended to match a literal < or >.
+        .replace(/</g, "\\3C ")
+        .replace(/>/g, "\\3E ")}
+    </style>
   );
 };
 

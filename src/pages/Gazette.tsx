@@ -743,6 +743,7 @@ function WeeklyIssue({
     </article>
   );
 }
+
 /* ── main page ───────────────────────────────────────────── */
 
 export default function Gazette() {

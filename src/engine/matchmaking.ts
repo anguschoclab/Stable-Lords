@@ -19,11 +19,12 @@ function disallowStablemates(aStableId: string, dStableId: string): boolean {
 
 // ─── Eligibility ──────────────────────────────────────────────────────────
 
-function isEligible(w: Warrior, week: number, restStates: RestState[], trainingIds: Set<string>): boolean {
+function isEligible(w: Warrior, week: number, restMap: Map<string, number>, trainingIds: Set<string>): boolean {
   if (w.status !== "Active") return false;
   const injObjs = (w.injuries || []).filter((i): i is Injury => typeof i !== "string");
   if (isTooInjuredToFight(injObjs)) return false;
-  if (restStates.some(r => r.warriorId === w.id && r.restUntilWeek > week)) return false;
+  const restUntil = restMap.get(w.id);
+  if (restUntil && restUntil > week) return false;
   if (trainingIds.has(w.id)) return false;
   return true;
 }
@@ -32,11 +33,11 @@ function isEligible(w: Warrior, week: number, restStates: RestState[], trainingI
 
 function pairingScore(
   p: Warrior, r: Warrior, rivalStableId: string,
-  rivalries: Rivalry[], matchHistory: MatchRecord[],
+  rivalryMap: Map<string, number>, matchHistoryMap: Map<string, number>,
   playerStableId: string, week: number, rng: () => number,
-  recentHistory: FightSummary[],
-  playerChallenges: string[] = [],
-  playerAvoids: string[] = []
+  recentStylePairs: Set<string>,
+  playerChallengesSet: Set<string>,
+  playerAvoidsSet: Set<string>
 ): number {
   let score = 100;
 
@@ -44,27 +45,15 @@ function pairingScore(
   score += Math.max(0, 30 - Math.abs(p.fame - r.fame) * 3);
 
   // Rivalry bonus
-  const hasRivalry = rivalries.some(rv =>
-    (rv.stableIdA === playerStableId && rv.stableIdB === rivalStableId) ||
-    (rv.stableIdB === playerStableId && rv.stableIdA === rivalStableId)
-  );
-  if (hasRivalry) {
-    const rivalry = rivalries.find(rv =>
-      (rv.stableIdA === playerStableId && rv.stableIdB === rivalStableId) ||
-      (rv.stableIdB === playerStableId && rv.stableIdA === rivalStableId)
-    );
+  const rivalryKey = playerStableId < rivalStableId ? `${playerStableId}|${rivalStableId}` : `${rivalStableId}|${playerStableId}`;
+  const rivalryIntensity = rivalryMap.get(rivalryKey);
 
+  if (rivalryIntensity !== undefined) {
     // Give intense rivalries / blood feuds (intensity >= 4) a massive booking score boost
-    score += (rivalry && rivalry.intensity >= 4) ? 200 : 50;
+    score += (rivalryIntensity >= 4) ? 200 : 50;
   }
 
   // Style diversity bonus — +20 if this style matchup hasn't occurred in last 4 weeks
-  const recentStylePairs = new Set(recentHistory.reduce((acc, f) => {
-    if (f.week >= week - 4) {
-      acc.push(`${f.styleA}|${f.styleD}`);
-    }
-    return acc;
-  }, [] as string[]));
   const thisPair = `${p.style}|${r.style}`;
   const reversePair = `${r.style}|${p.style}`;
   if (!recentStylePairs.has(thisPair) && !recentStylePairs.has(reversePair)) {
@@ -73,18 +62,17 @@ function pairingScore(
 
 
   // Repeat penalty — -100 if fought in last 2 weeks
-  const recentMatch = matchHistory.some(m =>
-    m.playerWarriorId === p.id && m.opponentWarriorId === r.id && m.week >= week - 2
-  );
-  if (recentMatch) score -= 100;
+  const matchKey = `${p.id}|${r.id}`;
+  const lastMatchWeek = matchHistoryMap.get(matchKey);
+  if (lastMatchWeek !== undefined && lastMatchWeek >= week - 2) {
+      score -= 100;
+  }
 
   // Challenge / Avoid Assistant modifiers
   // Extremely heavy weights so they basically override other considerations if possible
-  const playerChallengesSet = new Set(playerChallenges);
   if (playerChallengesSet.has(r.id) || playerChallengesSet.has(rivalStableId)) {
     score += 500;
   }
-  const playerAvoidsSet = new Set(playerAvoids);
   if (playerAvoidsSet.has(r.id) || playerAvoidsSet.has(rivalStableId)) {
     score -= 500;
   }
@@ -108,22 +96,50 @@ export interface MatchPairing {
 export function generateMatchCard(state: GameState): MatchPairing[] {
   const trainingIds = new Set((state.trainingAssignments || []).map(a => a.warriorId));
   const restStates = state.restStates || [];
-  const rivalries = state.rivalries || [];
-  const matchHistory = state.matchHistory || [];
+  const restMap = new Map<string, number>();
+  for (const r of restStates) {
+      restMap.set(r.warriorId, Math.max(r.restUntilWeek, restMap.get(r.warriorId) ?? 0));
+  }
 
-  const playerPool = state.roster.filter(w => isEligible(w, state.week, restStates, trainingIds));
+  const playerPool = state.roster.filter(w => isEligible(w, state.week, restMap, trainingIds));
   
   // Collect all eligible rival warriors
   const rivalPool: { warrior: Warrior; stable: RivalStableData }[] = [];
   for (const rival of (state.rivals || [])) {
     for (const w of rival.roster) {
-      if (isEligible(w, state.week, restStates, trainingIds)) {
+      if (isEligible(w, state.week, restMap, trainingIds)) {
         rivalPool.push({ warrior: w, stable: rival });
       }
     }
   }
 
   if (playerPool.length === 0 || rivalPool.length === 0) return [];
+
+  const rivalries = state.rivalries || [];
+  const rivalryMap = new Map<string, number>();
+  for (const rv of rivalries) {
+      const key = rv.stableIdA < rv.stableIdB ? `${rv.stableIdA}|${rv.stableIdB}` : `${rv.stableIdB}|${rv.stableIdA}`;
+      rivalryMap.set(key, Math.max(rv.intensity, rivalryMap.get(key) ?? 0));
+  }
+
+  const matchHistory = state.matchHistory || [];
+  const matchHistoryMap = new Map<string, number>();
+  for (const m of matchHistory) {
+      const key = `${m.playerWarriorId}|${m.opponentWarriorId}`;
+      matchHistoryMap.set(key, Math.max(m.week, matchHistoryMap.get(key) ?? 0));
+  }
+
+  const recentHistory = state.arenaHistory || [];
+  const recentStylePairs = new Set<string>();
+  for (const f of recentHistory) {
+      if (f.week >= state.week - 4) {
+          recentStylePairs.add(`${f.styleA}|${f.styleD}`);
+      }
+  }
+
+  const playerChallengesSet = new Set(state.playerChallenges || []);
+  const playerAvoidsSet = new Set(state.playerAvoids || []);
+
 
   // Simple seeded RNG for jitter
   let seed = state.week * 7919;
@@ -141,19 +157,17 @@ export function generateMatchCard(state: GameState): MatchPairing[] {
       if (pairedRival.has(rc.warrior.id)) continue;
       const s = pairingScore(
         pw, rc.warrior, rc.stable.owner.id,
-        rivalries, matchHistory, state.player.id, state.week, rng,
-        state.arenaHistory,
-        state.playerChallenges,
-        state.playerAvoids
+        rivalryMap, matchHistoryMap, state.player.id, state.week, rng,
+        recentStylePairs,
+        playerChallengesSet,
+        playerAvoidsSet
       );
       if (s > bestScore) { bestScore = s; bestCandidate = rc; }
     }
 
     if (bestCandidate) {
-      const isRivalryBout = rivalries.some(rv =>
-        (rv.stableIdA === state.player.id && rv.stableIdB === bestCandidate!.stable.owner.id) ||
-        (rv.stableIdB === state.player.id && rv.stableIdA === bestCandidate!.stable.owner.id)
-      );
+      const key = state.player.id < bestCandidate.stable.owner.id ? `${state.player.id}|${bestCandidate.stable.owner.id}` : `${bestCandidate.stable.owner.id}|${state.player.id}`;
+      const isRivalryBout = rivalryMap.has(key);
       pairings.push({
         playerWarrior: pw,
         rivalWarrior: bestCandidate.warrior,
@@ -181,6 +195,10 @@ export interface AIBoutResult {
 
 export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
   const restStates = state.restStates || [];
+  const restMap = new Map<string, number>();
+  for (const r of restStates) {
+      restMap.set(r.warriorId, Math.max(r.restUntilWeek, restMap.get(r.warriorId) ?? 0));
+  }
   const trainingIds = new Set<string>();
 
   // Collect eligible rival warriors with stable info
@@ -189,7 +207,7 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
   
   for (let si = 0; si < rivals.length; si++) {
     for (const w of rivals[si].roster) {
-      if (isEligible(w, state.week, restStates, trainingIds)) {
+      if (isEligible(w, state.week, restMap, trainingIds)) {
         pool.push({ warrior: w, stableIdx: si, stableId: rivals[si].owner.id, stableName: rivals[si].owner.stableName });
       }
     }
@@ -239,6 +257,11 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
 
   // Check for existing rivalries between AI stables
   const rivalries = state.rivalries || [];
+  const rivalryMap = new Map<string, boolean>();
+  for (const rv of rivalries) {
+      const key = rv.stableIdA < rv.stableIdB ? `${rv.stableIdA}|${rv.stableIdB}` : `${rv.stableIdB}|${rv.stableIdA}`;
+      rivalryMap.set(key, true);
+  }
 
   for (const { a, d } of boutPairs) {
     // Use personality-driven plans for AI warriors with meta awareness
@@ -259,10 +282,8 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
     const winnerSide = outcome.winner;
 
     // Check if this is a rivalry bout between AI stables
-    const isRivalryBout = rivalries.some(rv =>
-      (rv.stableIdA === a.stableId && rv.stableIdB === d.stableId) ||
-      (rv.stableIdB === a.stableId && rv.stableIdA === d.stableId)
-    );
+    const key = a.stableId < d.stableId ? `${a.stableId}|${d.stableId}` : `${d.stableId}|${a.stableId}`;
+    const isRivalryBout = rivalryMap.has(key);
 
     // Update records in updatedRivals
     const updateWarriorRecord = (stableIdx: number, wId: string, won: boolean, killed: boolean) => {

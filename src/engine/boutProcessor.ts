@@ -102,6 +102,7 @@ export function generatePairings(state: GameState): BoutPairing[] {
 // ─── Single Bout Processing ───────────────────────────────────────────────
 
 interface BoutContext {
+  warriorMap: Map<string, Warrior>;
   warrior: Warrior;
   opponent: Warrior;
   isRivalry: boolean;
@@ -215,13 +216,14 @@ function handleFavoritesDiscovery(
   state: GameState,
   warrior: Warrior,
   opponent: Warrior,
+  warriorMap: Map<string, Warrior>,
   rivalStableId?: string,
   week?: number
 ): GameState {
   const s = { ...state };
   const currentWeek = week || s.week;
 
-  const wA = s.roster.find(w => w.id === warrior.id);
+  const wA = warriorMap.get(warrior.id);
   if (wA) {
     const disc = checkDiscovery(wA);
     if (disc.updated) {
@@ -254,7 +256,7 @@ function handleFavoritesDiscovery(
   }
 
   if (!rivalStableId) {
-    const wD = s.roster.find(w => w.id === opponent.id);
+    const wD = warriorMap.get(opponent.id);
     if (wD) {
       const disc = checkDiscovery(wD);
       if (disc.updated) {
@@ -468,18 +470,10 @@ function resolveBout(
   state: GameState,
   ctx: BoutContext
 ): { state: GameState; result: BoutResult; death: boolean; playerDeath: boolean; injured: boolean; injuredNames: string[]; deathNames: string[] } {
-  const { warrior, opponent, isRivalry, rivalStable, rivalStableId, moodMods, week, playerId } = ctx;
+  const { warrior, opponent, isRivalry, rivalStable, rivalStableId, moodMods, week, playerId, warriorMap } = ctx;
 
-  const currentW = state.roster.find(w => w.id === warrior.id);
-  let currentO: Warrior | undefined;
-  if (rivalStableId) {
-    for (const r of state.rivals || []) {
-      currentO = r.roster.find(w => w.id === opponent.id);
-      if (currentO) break;
-    }
-  } else {
-    currentO = state.roster.find(w => w.id === opponent.id);
-  }
+  const currentW = warriorMap.get(warrior.id);
+  const currentO = warriorMap.get(opponent.id);
 
   if (!currentW || currentW.status !== "Active" || !currentO) {
     return {
@@ -519,7 +513,7 @@ function resolveBout(
   s = applyBoutXP(s, warrior, opponent, outcome, tags, rivalStableId);
 
   // 5. Check and handle favorites discovery
-  s = handleFavoritesDiscovery(s, warrior, opponent, rivalStableId, week);
+  s = handleFavoritesDiscovery(s, warrior, opponent, warriorMap, rivalStableId, week);
 
   // 6. Match history
   if (rivalStableId) {
@@ -557,6 +551,12 @@ export interface ProcessedWeek {
  * resolution — used by both RunRound (manual) and Autosim.
  */
 export function processWeekBouts(state: GameState): ProcessedWeek {
+  const warriorMap = new Map<string, Warrior>();
+  for (const w of state.roster) warriorMap.set(w.id, w);
+  for (const r of (state.rivals || [])) {
+    for (const w of r.roster) warriorMap.set(w.id, w);
+  }
+
   const pairings = generatePairings(state);
   const moodMods = getMoodModifiers(state.crowdMood as any);
   const prevRivalries = (state.rivalries || []).map(r => r.intensity);
@@ -580,6 +580,7 @@ export function processWeekBouts(state: GameState): ProcessedWeek {
       week: state.week,
       playerId: state.player.id,
       playerStableName: state.player.stableName,
+      warriorMap,
     });
 
     s = boutOut.state;
@@ -588,6 +589,20 @@ export function processWeekBouts(state: GameState): ProcessedWeek {
     if (boutOut.death) { summary.deaths += boutOut.deathNames.length; summary.deathNames.push(...boutOut.deathNames); }
     if (boutOut.playerDeath) summary.hadPlayerDeath = true;
     if (boutOut.injured) { summary.injuries += boutOut.injuredNames.length; summary.injuryNames.push(...boutOut.injuredNames); }
+
+    const updatedA = s.roster.find(w => w.id === pairing.a.id);
+    if (updatedA) warriorMap.set(updatedA.id, updatedA);
+    let updatedD = s.roster.find(w => w.id === pairing.d.id);
+    if (!updatedD && pairing.rivalStableId) {
+       for(const r of (s.rivals || [])) {
+           const rivalWarrior = r.roster.find(w => w.id === pairing.d.id);
+           if (rivalWarrior) {
+               updatedD = rivalWarrior;
+               break;
+           }
+       }
+    }
+    if (updatedD) warriorMap.set(updatedD.id, updatedD);
   }
 
   // ── Newsletter highlights ──

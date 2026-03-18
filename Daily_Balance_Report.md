@@ -7,18 +7,18 @@
 
 ## ⚔️ Lethality & Combat
 *Cross-reference with Stable_Lords_Kill_Death_and_Permadeath_Spec_v0.2.md*
-- **Total Bouts:** 177
-- **Total Deaths:** 3
-- **Overall Kill Rate:** 1.69% *(Target: 8% - 15% normal)*
-- **Total Injuries:** 57
-- **Injury Rate:** 32.20%
+- **Total Bouts:** 100
+- **Total Deaths:** 6
+- **Overall Kill Rate:** 6.00% *(Target: 8% - 15% normal)*
+- **Total Injuries:** 35
+- **Injury Rate:** 35.00%
 
 ---
 
 ## 💰 Economy & Ecosystem
-- **Player Stable Wealth (Gold):** 25412
+- **Player Stable Wealth (Gold):** 11098
 - **Total Rival Stables:** 5
-- **Average Rival Roster Size:** 8.2
+- **Average Rival Roster Size:** 9.2
 
 **Stable Tier Distribution:**
 - Legendary: 0
@@ -32,16 +32,16 @@
 *Positive drift indicates the style is dominating the meta. Negative indicates struggling.*
 
 ```
-BASHING ATTACK       | Drift: +6
+WALL OF STEEL        | Drift: +10
+LUNGING ATTACK       | Drift: +6
+STRIKING ATTACK      | Drift: +6
 TOTAL PARRY          | Drift: +6
-SLASHING ATTACK      | Drift: 0
-WALL OF STEEL        | Drift: -3
-PARRY-RIPOSTE        | Drift: -4
-AIMED BLOW           | Drift: -6
-LUNGING ATTACK       | Drift: -6
-STRIKING ATTACK      | Drift: -7
-PARRY-LUNGE          | Drift: -10
-PARRY-STRIKE         | Drift: -10
+PARRY-STRIKE         | Drift: 0
+PARRY-RIPOSTE        | Drift: -2
+AIMED BLOW           | Drift: -3
+PARRY-LUNGE          | Drift: -4
+BASHING ATTACK       | Drift: -6
+SLASHING ATTACK      | Drift: -9
 ```
 
 ---

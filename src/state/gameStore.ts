@@ -121,42 +121,57 @@ function sanitizeReviver(key: string, value: any) {
   return value;
 }
 
+export function migrateGameState(parsed: any): GameState {
+  if (!parsed.graveyard) parsed.graveyard = [];
+  if (!parsed.retired) parsed.retired = [];
+  if (!parsed.crowdMood) parsed.crowdMood = "Calm";
+  if (!parsed.tournaments) parsed.tournaments = [];
+  if (!parsed.trainers) parsed.trainers = [];
+  if (!parsed.hiringPool) parsed.hiringPool = [];
+  if (!parsed.trainingAssignments) parsed.trainingAssignments = [];
+  // Migrate old training assignments (add type field) if needed
+  if (parsed.trainingAssignments) {
+    parsed.trainingAssignments = parsed.trainingAssignments.map((a: any) => ({
+      ...a,
+      type: a.type ?? "attribute",
+    }));
+  }
+  if (parsed.gold === undefined) parsed.gold = 500;
+  if (!parsed.ledger) parsed.ledger = [];
+  if (parsed.ftueComplete === undefined) parsed.ftueComplete = true;
+  if (!parsed.coachDismissed) parsed.coachDismissed = [];
+  if (!parsed.rivals) parsed.rivals = [];
+  if (!parsed.scoutReports) parsed.scoutReports = [];
+  if (!parsed.restStates) parsed.restStates = [];
+  if (!parsed.rivalries) parsed.rivalries = [];
+  if (!parsed.matchHistory) parsed.matchHistory = [];
+  if (!parsed.playerChallenges) parsed.playerChallenges = [];
+  if (!parsed.playerAvoids) parsed.playerAvoids = [];
+  if (!parsed.recruitPool) parsed.recruitPool = [];
+  if (parsed.rosterBonus === undefined) parsed.rosterBonus = 0;
+  if (!parsed.ownerGrudges) parsed.ownerGrudges = [];
+  if (!parsed.insightTokens) parsed.insightTokens = [];
+  if (!parsed.moodHistory) parsed.moodHistory = [];
+  if (!parsed.seasonalGrowth) parsed.seasonalGrowth = [];
+  if (!parsed.settings) parsed.settings = { featureFlags: { tournaments: true, scouting: true } };
+  if (parsed.settings && !parsed.settings.featureFlags?.scouting) {
+    parsed.settings.featureFlags = { ...parsed.settings.featureFlags, scouting: true };
+  }
+  // Ensure all warriors have status
+  parsed.roster = (parsed.roster || []).map((w: Partial<Warrior>) => ({
+    ...w,
+    status: w.status || "Active",
+  }));
+  return parsed as GameState;
+}
+
 export function loadGameState(): GameState {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw, sanitizeReviver);
       if (parsed && parsed.meta) {
-        // Migrate old saves
-        if (!parsed.graveyard) parsed.graveyard = [];
-        if (!parsed.retired) parsed.retired = [];
-        if (!parsed.crowdMood) parsed.crowdMood = "Calm";
-        if (!parsed.tournaments) parsed.tournaments = [];
-        if (!parsed.trainers) parsed.trainers = [];
-        if (!parsed.hiringPool) parsed.hiringPool = [];
-        if (!parsed.trainingAssignments) parsed.trainingAssignments = [];
-        if (parsed.gold === undefined) parsed.gold = 500;
-        if (!parsed.ledger) parsed.ledger = [];
-        if (parsed.ftueComplete === undefined) parsed.ftueComplete = true;
-        if (!parsed.coachDismissed) parsed.coachDismissed = [];
-        if (!parsed.rivals) parsed.rivals = [];
-        if (!parsed.scoutReports) parsed.scoutReports = [];
-        if (!parsed.restStates) parsed.restStates = [];
-        if (!parsed.rivalries) parsed.rivalries = [];
-        if (!parsed.matchHistory) parsed.matchHistory = [];
-        if (!parsed.playerChallenges) parsed.playerChallenges = [];
-        if (!parsed.playerAvoids) parsed.playerAvoids = [];
-        if (!parsed.recruitPool) parsed.recruitPool = [];
-        if (parsed.rosterBonus === undefined) parsed.rosterBonus = 0;
-        if (!parsed.ownerGrudges) parsed.ownerGrudges = [];
-        if (!parsed.insightTokens) parsed.insightTokens = [];
-        if (!parsed.moodHistory) parsed.moodHistory = [];
-        // Ensure all warriors have status
-        parsed.roster = (parsed.roster || []).map((w: Partial<Warrior>) => ({
-          ...w,
-          status: w.status || "Active",
-        }));
-        return parsed as GameState;
+        return migrateGameState(parsed);
       }
     }
   } catch {
@@ -300,8 +315,19 @@ export function advanceWeek(state: GameState): GameState {
   }
 
   // ── Step 14: Clock Advance ────────────────────────────────────────────
+  const newArenaHistory = s.arenaHistory.slice(-500);
+  const newNewsletter = s.newsletter.slice(-100);
+  const newLedger = s.ledger.slice(-500);
+  const newMatchHistory = s.matchHistory.slice(-500);
+  const newMoodHistory = s.moodHistory.slice(-50);
+
   return {
     ...s,
+    arenaHistory: newArenaHistory,
+    newsletter: newNewsletter,
+    ledger: newLedger,
+    matchHistory: newMatchHistory,
+    moodHistory: newMoodHistory,
     week: newWeek,
     season: newSeason,
   };
@@ -311,9 +337,10 @@ export function appendFightToHistory(
   state: GameState,
   summary: FightSummary
 ): GameState {
+  const newHistory = [...state.arenaHistory, summary];
   return {
     ...state,
-    arenaHistory: [...state.arenaHistory, summary],
+    arenaHistory: newHistory.length > 500 ? newHistory.slice(newHistory.length - 500) : newHistory,
   };
 }
 

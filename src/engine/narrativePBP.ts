@@ -1,3 +1,4 @@
+import { KO_TEMPLATES } from "./narrativeTemplates";
 /**
  * Stable Lords — Canonical Duelmasters PBP (Play-By-Play) Narrative Engine
  *
@@ -538,6 +539,12 @@ const STOPPAGE_TEMPLATES = [
   "%D accepts his loss, jaw clenched to keep from admitting his pain!\n%A is the victor of the match!",
   "%D compliments his victorious foe on a good fight.\n%A has won the duel!",
   "%D surrenders, and offers his hand to his foe.\n%A is the victor of the match!",
+];
+
+const KO_TEMPLATES = [
+  "{loser} crumples to the sand, entirely incapacitated. {winner} stands victorious over the fallen warrior.",
+  "The final blow drops {loser} to the arena floor! The Arenamaster waves the bout off—{winner} is the victor by knockout!",
+  "Unable to endure any more punishment, {loser} collapses. {winner} takes the win by KO!"
 ];
 
 const EXHAUSTION_TEMPLATES = [

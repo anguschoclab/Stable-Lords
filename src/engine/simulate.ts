@@ -106,6 +106,8 @@ type Phase = "OPENING" | "MID" | "LATE";
  */
 function getPhase(exchange: number, maxExchanges: number): Phase {
   const ratio = exchange / maxExchanges;
+  const PHASE_OPENING_THRESHOLD = 0.25;
+  const PHASE_MID_THRESHOLD = 0.65;
   if (ratio < PHASE_OPENING_THRESHOLD) return "OPENING";
   if (ratio < PHASE_MID_THRESHOLD) return "MID";
   return "LATE";

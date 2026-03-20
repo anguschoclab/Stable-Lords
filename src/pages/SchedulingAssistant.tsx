@@ -7,6 +7,8 @@ import { StatBadge } from "@/components/ui/StatBadge";
 import { WarriorNameTag } from "@/components/ui/WarriorNameTag";
 import { Swords, Flame, Skull, Heart, Eye, Target, AlertTriangle, Shield } from "lucide-react";
 import { WarriorLink, StableLink } from "@/components/EntityLink";
+import { WarriorNameTag } from "@/components/ui/WarriorNameTag";
+import { StatBadge } from "@/components/ui/StatBadge";
 import { getRecommendedChallenges, getMatchupsToAvoid, type MatchupScore } from "@/engine/schedulingAssistant";
 import { isTooInjuredToFight } from "@/engine/injuries";
 
@@ -17,7 +19,7 @@ function MatchupCard({ match, type }: { match: MatchupScore, type: "challenge" |
     <div className={`p-3 rounded-lg border flex flex-col gap-2 ${isChallenge ? "border-arena-pop/30 bg-arena-pop/5" : "border-destructive/30 bg-destructive/5"}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <WarriorLink name={match.rivalWarrior.name} id={match.rivalWarrior.id} className="font-display font-semibold text-sm" />
+          <WarriorNameTag id={match.rivalWarrior.id} name={match.rivalWarrior.name} />
         </div>
         <div className="text-right">
             <Badge variant="outline" className={`text-[10px] h-4 px-1 shrink-0 ${isChallenge ? "text-arena-pop border-arena-pop/40" : "text-destructive border-destructive/40"}`}>
@@ -128,9 +130,8 @@ export default function SchedulingAssistant() {
                                   <WarriorNameTag id={w.id} name={w.name} />
                                   <StatBadge styleName={w.style as FightingStyle} />
                               </div>
-                              <div className="flex justify-between text-[11px] text-muted-foreground w-full">
-                                  <span>Fame {w.fame}</span>
-                                  <span className="font-mono">{w.career.wins}W-{w.career.losses}L</span>
+                              <div className="flex justify-between items-center text-[11px] text-muted-foreground w-full mt-1">
+                                  <StatBadge styleName={w.style as FightingStyle} career={w.career} />
                               </div>
                           </button>
                       ))}

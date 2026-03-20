@@ -7,18 +7,18 @@
 
 ## ⚔️ Lethality & Combat
 *Cross-reference with Stable_Lords_Kill_Death_and_Permadeath_Spec_v0.2.md*
-- **Total Bouts:** 100
-- **Total Deaths:** 6
-- **Overall Kill Rate:** 6.00% *(Target: 8% - 15% normal)*
-- **Total Injuries:** 35
-- **Injury Rate:** 35.00%
+- **Total Bouts:** 282
+- **Total Deaths:** 7
+- **Overall Kill Rate:** 2.48% *(Target: 8% - 15% normal)*
+- **Total Injuries:** 95
+- **Injury Rate:** 33.69%
 
 ---
 
 ## 💰 Economy & Ecosystem
-- **Player Stable Wealth (Gold):** 11098
+- **Player Stable Wealth (Gold):** 32002
 - **Total Rival Stables:** 5
-- **Average Rival Roster Size:** 9.2
+- **Average Rival Roster Size:** 9.8
 
 **Stable Tier Distribution:**
 - Legendary: 0
@@ -32,17 +32,39 @@
 *Positive drift indicates the style is dominating the meta. Negative indicates struggling.*
 
 ```
-WALL OF STEEL        | Drift: +10
-LUNGING ATTACK       | Drift: +6
-STRIKING ATTACK      | Drift: +6
-TOTAL PARRY          | Drift: +6
-PARRY-STRIKE         | Drift: 0
-PARRY-RIPOSTE        | Drift: -2
-AIMED BLOW           | Drift: -3
-PARRY-LUNGE          | Drift: -4
-BASHING ATTACK       | Drift: -6
-SLASHING ATTACK      | Drift: -9
+STRIKING ATTACK      | Drift: +10
+TOTAL PARRY          | Drift: +5
+BASHING ATTACK       | Drift: +4
+LUNGING ATTACK       | Drift: +1
+PARRY-STRIKE         | Drift: +1
+AIMED BLOW           | Drift: -1
+PARRY-RIPOSTE        | Drift: -3
+SLASHING ATTACK      | Drift: -4
+WALL OF STEEL        | Drift: -4
+PARRY-LUNGE          | Drift: -7
 ```
+
+---
+
+## 🔍 Oracle Observations & Suggested Tweaks
+
+### 1. Lethality
+**Anomaly:** The Overall Kill Rate (2.48%) is below the target bounds (8% - 15%). Warriors are surviving too often.
+**Suggested Action:**
+- In `src/engine/simulate.ts`, consider increasing `KILL_THRESHOLD_BASE` (currently `0.3`) to `0.4` or `0.5` to widen the base kill window.
+- Alternatively, increase `KILL_DESIRE_SCALING` (currently `0.04`) to make high Kill Desire plans more lethal.
+
+### 2. Economy
+**Anomaly:** The Player Stable Wealth exhibits hyper-inflation (32002 gold). There is insufficient gold sink or running costs compared to income.
+**Suggested Action:**
+- In `src/engine/economy.ts`, increase `WARRIOR_UPKEEP` (currently `20`) to scale costs with roster size.
+- Alternatively, introduce new gold sinks (e.g., baseline stable maintenance fees, healing costs, or equipment degradation).
+
+### 3. Meta-Drift
+**Anomaly:** Meta is unbalanced. Dominant: STRIKING ATTACK, TOTAL PARRY. Struggling: PARRY-LUNGE.
+**Suggested Action:**
+- Review the `MATCHUP_MATRIX` in `src/engine/simulate.ts` for the struggling and dominating styles.
+- Alternatively, adjust offensive/defensive multipliers for these styles.
 
 ---
 *Report generated automatically by the Simulation Oracle.*

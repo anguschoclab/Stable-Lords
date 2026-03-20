@@ -205,15 +205,28 @@ const GLOBAL_PAR_PENALTY = -2;
 const INITIATIVE_PRESS_BONUS = 1;
 
 // Phase detection thresholds
+const PHASE_OPENING_THRESHOLD = 0.25;
+const PHASE_MID_THRESHOLD = 0.65;
 
 // Target & Protect mechanics
+const HIT_LOCATIONS = [
+  "head", "chest", "abdomen", "left arm", "right arm", "left leg", "right leg"
+] as const;
+const TARGET_HIT_CHANCE = 0.6;
+const TARGET_MISS_CHANCE = 0.2;
+const PROTECT_DAMAGE_REDUCTION = 0.5;
+const PROTECT_DAMAGE_PENALTY = 1.2;
 
 // OE/AL Modifiers
 const OE_ATT_SCALING = 0.7;            // Attack bonus per OE point above 5
 const OE_DEF_SCALING = 0.5;            // Defense penalty per OE point above 6
 const AL_INI_SCALING = 0.6;            // Initiative bonus per AL point above 5
+const ENDURANCE_OE_SCALING = 0.5;
+const ENDURANCE_AL_SCALING = 0.5;
 
 // Fatigue thresholds and penalties
+const FATIGUE_MODERATE_THRESHOLD = 0.5;
+const FATIGUE_HEAVY_THRESHOLD = 0.25;
 const FATIGUE_COLLAPSE_THRESHOLD = 0.1; // Endurance ratio for near-collapse
 const FATIGUE_MODERATE_PENALTY = -2;    // Skill penalty at moderate fatigue
 const FATIGUE_HEAVY_PENALTY = -4;       // Skill penalty at heavy fatigue
@@ -227,6 +240,24 @@ const DAMAGE_ABDOMEN_MULT = 1.1;       // Abdomen hit damage multiplier
 const DAMAGE_LIMB_MULT = 0.8;          // Limb hit damage multiplier
 const DAMAGE_VARIANCE_MIN = 0.7;       // Minimum damage variance
 const DAMAGE_VARIANCE_MAX = 1.3;       // Maximum damage variance (MIN + 0.6)
+
+function computeHitDamage(rng: () => number, baseDamage: number, location: string): number {
+  let dmg = Math.max(DAMAGE_BASE_MIN, baseDamage);
+  const variance = DAMAGE_VARIANCE_MIN + rng() * (DAMAGE_VARIANCE_MAX - DAMAGE_VARIANCE_MIN);
+  dmg *= variance;
+
+  switch (location) {
+    case "head": dmg *= DAMAGE_HEAD_MULT; break;
+    case "chest": dmg *= DAMAGE_CHEST_MULT; break;
+    case "abdomen": dmg *= DAMAGE_ABDOMEN_MULT; break;
+    case "left arm":
+    case "right arm":
+    case "left leg":
+    case "right leg":
+      dmg *= DAMAGE_LIMB_MULT; break;
+  }
+  return Math.max(1, Math.round(dmg));
+}
 
 // Equipment weight thresholds
 const HEAVY_WEAPON_THRESHOLD_1 = 5;    // First heavy weapon damage bonus (≥5 weight)

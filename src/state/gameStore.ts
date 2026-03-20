@@ -9,6 +9,7 @@ import { processEconomy } from "@/engine/economy";
 import { processAging } from "@/engine/aging";
 import { tickInjuries } from "@/engine/injuries";
 import { clearExpiredRest, runAIvsAIBouts } from "@/engine/matchmaking";
+import { generateWeeklyGazette } from "@/engine/gazetteNarrative";
 import { partialRefreshPool, aiDraftFromPool } from "@/engine/recruitment";
 import { processHallOfFame, processTierProgression, computeNextSeason } from "@/engine/weekPipeline";
 import { processOwnerGrudges } from "@/engine/ownerAI";
@@ -16,6 +17,7 @@ import { processAIRosterManagement } from "@/engine/ownerRoster";
 import { generateOwnerNarratives } from "@/engine/ownerNarrative";
 import { evolvePhilosophies } from "@/engine/ownerPhilosophy";
 
+import { generateWeeklyGazette } from "@/engine/gazetteNarrative";
 const SAVE_KEY = "stablelords.save.v2";
 
 function generateId(): string {
@@ -115,7 +117,7 @@ export function createFreshState(): GameState {
 export const createDemoState = createFreshState;
 
 // Security: Prevent prototype pollution when deserializing localStorage state
-function sanitizeReviver(key: string, value: any) {
+export function sanitizeReviver(key: string, value: any) {
   if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
     return undefined;
   }

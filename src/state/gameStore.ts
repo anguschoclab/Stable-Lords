@@ -16,6 +16,7 @@ import { processAIRosterManagement } from "@/engine/ownerRoster";
 import { generateOwnerNarratives } from "@/engine/ownerNarrative";
 import { evolvePhilosophies } from "@/engine/ownerPhilosophy";
 
+import { generateWeeklyGazette } from "@/engine/gazetteNarrative";
 const SAVE_KEY = "stablelords.save.v2";
 
 function generateId(): string {

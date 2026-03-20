@@ -82,6 +82,7 @@ export function createFreshState(): GameState {
     retired: [],
     arenaHistory: [],
     newsletter: [],
+    gazettes: [],
     hallOfFame: [],
     crowdMood: "Calm",
     tournaments: [],
@@ -338,6 +339,13 @@ export function advanceWeek(state: GameState): GameState {
   if (philResult.gazetteItems.length > 0) {
     s.newsletter = [...s.newsletter, { week: s.week, title: "Strategy Shifts", items: philResult.gazetteItems }];
   }
+
+
+  // Generate Weekly Gazette Issue
+  const weekFights = s.arenaHistory.filter(f => f.week === s.week);
+  const story = generateWeeklyGazette(weekFights, s.crowdMood, s.week, s.graveyard, s.arenaHistory);
+  s.gazettes = [...(s.gazettes || []), { ...story, week: s.week }];
+  s.gazettes = s.gazettes.slice(-50); // Keep last 50 issues
 
   // ── Step 14: Clock Advance ────────────────────────────────────────────
   const newArenaHistory = s.arenaHistory.slice(-500).map((f, i, arr) => {

@@ -490,6 +490,15 @@ export interface OwnerGrudge {
   lastEscalation: number;
 }
 
+
+export interface GazetteStory {
+  headline: string;
+  body: string;
+  mood: CrowdMoodType;
+  tags: string[];
+  week: number;
+}
+
 export interface GameState {
   meta: {
     gameName: string;
@@ -512,6 +521,7 @@ export interface GameState {
   retired: Warrior[];
   arenaHistory: FightSummary[];
   newsletter: NewsletterItem[];
+  gazettes: GazetteStory[];
   hallOfFame: HallEntry[];
   crowdMood: CrowdMoodType;
   tournaments: TournamentEntry[];

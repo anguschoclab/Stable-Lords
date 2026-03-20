@@ -540,6 +540,12 @@ const STOPPAGE_TEMPLATES = [
   "%D surrenders, and offers his hand to his foe.\n%A is the victor of the match!",
 ];
 
+const KO_TEMPLATES = [
+  "{loser} crumples to the sand, entirely incapacitated. {winner} stands victorious over the fallen warrior.",
+  "The final blow drops {loser} to the arena floor! The Arenamaster waves the bout off—{winner} is the victor by knockout!",
+  "Unable to endure any more punishment, {loser} collapses. {winner} takes the win by KO!"
+];
+
 const EXHAUSTION_TEMPLATES = [
   "%D can no longer keep fighting. Both warriors are spent.\n%A is awarded the bout on points.",
   "Neither warrior can continue! The Arenamaster awards the bout to %A.",

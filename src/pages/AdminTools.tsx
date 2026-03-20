@@ -56,6 +56,12 @@ export default function AdminTools() {
     toast.success('Advanced one week');
   };
 
+
+  const skipFTUE = () => {
+    setState({ ...state, ftueComplete: true, ftueStep: 99 });
+    toast.success('FTUE skipped. State unlocked.');
+  };
+
   const skipSeason = () => {
     // Basic skip, just bump the season. In a real scenario we'd run weekPipeline fully.
     let newState = { ...state };
@@ -146,6 +152,20 @@ export default function AdminTools() {
           </CardContent>
         </Card>
       </div>
+
+        <Card className="border-destructive/20">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2 text-destructive">
+              <ShieldAlert className="h-5 w-5" /> Debug & Development
+            </CardTitle>
+            <CardDescription>Bypass safety checks</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button onClick={skipFTUE} className="w-full gap-2" variant="destructive">
+              Skip FTUE (Unlock All)
+            </Button>
+          </CardContent>
+        </Card>
     </div>
   );
 }

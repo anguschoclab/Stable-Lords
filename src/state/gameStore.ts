@@ -115,7 +115,7 @@ export function createFreshState(): GameState {
 export const createDemoState = createFreshState;
 
 // Security: Prevent prototype pollution when deserializing localStorage state
-function sanitizeReviver(key: string, value: any) {
+export function sanitizeReviver(key: string, value: any) {
   if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
     return undefined;
   }

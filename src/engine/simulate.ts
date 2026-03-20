@@ -118,7 +118,8 @@ function pickText(rng: () => number, texts: string[]): string {
 }
 
 
-type HitLocation = typeof HIT_LOCATIONS[number];
+export const HIT_LOCATIONS = ["head", "chest", "abdomen", "left arm", "right arm", "left leg", "right leg"] as const;
+export type HitLocation = typeof HIT_LOCATIONS[number];
 
 /** Maps a grouped protect target to the granular hit locations it covers */
 /**
@@ -243,15 +244,25 @@ const GLOBAL_PAR_PENALTY = -2;
 const INITIATIVE_PRESS_BONUS = 1;
 
 // Phase detection thresholds
+const PHASE_OPENING_THRESHOLD = 0.33;  // First 33% of max exchanges
+const PHASE_MID_THRESHOLD = 0.66;      // Middle 33% of max exchanges
 
 // Target & Protect mechanics
+const TARGET_HIT_CHANCE = 0.8;         // Chance to hit a targeted location
+const TARGET_MISS_CHANCE = 0.2;        // Chance to hit targeted location if protected
+const PROTECT_DAMAGE_REDUCTION = 0.5;  // Damage multiplier when hitting protected area
+const PROTECT_DAMAGE_PENALTY = 1.2;    // Damage multiplier when hitting unprotected area
 
 // OE/AL Modifiers
 const OE_ATT_SCALING = 0.7;            // Attack bonus per OE point above 5
 const OE_DEF_SCALING = 0.5;            // Defense penalty per OE point above 6
 const AL_INI_SCALING = 0.6;            // Initiative bonus per AL point above 5
+const ENDURANCE_OE_SCALING = 0.5;      // Endurance cost per OE point
+const ENDURANCE_AL_SCALING = 0.5;      // Endurance cost per AL point
 
 // Fatigue thresholds and penalties
+const FATIGUE_MODERATE_THRESHOLD = 0.6; // Endurance ratio for moderate fatigue
+const FATIGUE_HEAVY_THRESHOLD = 0.3;    // Endurance ratio for heavy fatigue
 const FATIGUE_COLLAPSE_THRESHOLD = 0.1; // Endurance ratio for near-collapse
 const FATIGUE_MODERATE_PENALTY = -2;    // Skill penalty at moderate fatigue
 const FATIGUE_HEAVY_PENALTY = -4;       // Skill penalty at heavy fatigue
@@ -339,7 +350,16 @@ function fatiguePenalty(endurance: number, maxEndurance: number): number {
 }
 
 // ─── Damage Calculation ──────────────────────────────────────────────────
+function computeHitDamage(rng: () => number, baseDamage: number, location: HitLocation): number {
+  let locationMult = 1.0;
+  if (location === "head") locationMult = DAMAGE_HEAD_MULT;
+  else if (location === "chest") locationMult = DAMAGE_CHEST_MULT;
+  else if (location === "abdomen") locationMult = DAMAGE_ABDOMEN_MULT;
+  else if (location === "left arm" || location === "right arm" || location === "left leg" || location === "right leg") locationMult = DAMAGE_LIMB_MULT;
 
+  const variance = DAMAGE_VARIANCE_MIN + rng() * (DAMAGE_VARIANCE_MAX - DAMAGE_VARIANCE_MIN);
+  return Math.max(1, Math.round(baseDamage * locationMult * variance));
+}
 
 // ─── Equipment Bonuses ────────────────────────────────────────────────────
 function getEquipmentMods(loadout: EquipmentLoadout, carryCap: number) {

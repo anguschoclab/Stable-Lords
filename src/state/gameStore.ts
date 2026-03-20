@@ -154,6 +154,7 @@ export function migrateGameState(parsed: any): GameState {
   if (!parsed.moodHistory) parsed.moodHistory = [];
   if (!parsed.seasonalGrowth) parsed.seasonalGrowth = [];
   if (!parsed.settings) parsed.settings = { featureFlags: { tournaments: true, scouting: true } };
+  if (!parsed.phase) parsed.phase = "planning";
   if (parsed.settings && !parsed.settings.featureFlags?.scouting) {
     parsed.settings.featureFlags = { ...parsed.settings.featureFlags, scouting: true };
   }
@@ -315,11 +316,22 @@ export function advanceWeek(state: GameState): GameState {
   }
 
   // ── Step 14: Clock Advance ────────────────────────────────────────────
-  const newArenaHistory = s.arenaHistory.slice(-500);
-  const newNewsletter = s.newsletter.slice(-100);
-  const newLedger = s.ledger.slice(-500);
-  const newMatchHistory = s.matchHistory.slice(-500);
-  const newMoodHistory = s.moodHistory.slice(-50);
+  const hofFightIds = new Set((s.hallOfFame || []).map(h => h.fightId));
+  let newArenaHistory = s.arenaHistory;
+  if (newArenaHistory.length > 500) {
+    const preserved = newArenaHistory.filter(f => hofFightIds.has(f.id));
+    const recent = newArenaHistory.filter(f => !hofFightIds.has(f.id)).slice(-500);
+    // Sort logic preserves original insertion order (createdAt if available, fallback to week, or id)
+    newArenaHistory = [...preserved, ...recent].sort((a, b) => a.week - b.week || (a.createdAt || a.id).localeCompare(b.createdAt || b.id));
+  }
+
+  const newNewsletter = (s.newsletter || []).slice(-100);
+  const newLedger = (s.ledger || []).slice(-500);
+  const newMatchHistory = (s.matchHistory || []).slice(-500);
+  const newMoodHistory = (s.moodHistory || []).slice(-50);
+  const newScoutReports = (s.scoutReports || []).slice(-100);
+  const newTournaments = (s.tournaments || []).slice(-20);
+  const newSeasonalGrowth = (s.seasonalGrowth || []).slice(-200);
 
   return {
     ...s,
@@ -328,6 +340,9 @@ export function advanceWeek(state: GameState): GameState {
     ledger: newLedger,
     matchHistory: newMatchHistory,
     moodHistory: newMoodHistory,
+    scoutReports: newScoutReports,
+    tournaments: newTournaments,
+    seasonalGrowth: newSeasonalGrowth,
     week: newWeek,
     season: newSeason,
   };
@@ -337,10 +352,16 @@ export function appendFightToHistory(
   state: GameState,
   summary: FightSummary
 ): GameState {
-  const newHistory = [...state.arenaHistory, summary];
+  let newHistory = [...state.arenaHistory, summary];
+  if (newHistory.length > 500) {
+    const hofFightIds = new Set((state.hallOfFame || []).map(h => h.fightId));
+    const preserved = newHistory.filter(f => hofFightIds.has(f.id));
+    const recent = newHistory.filter(f => !hofFightIds.has(f.id)).slice(-500);
+    newHistory = [...preserved, ...recent].sort((a, b) => a.week - b.week || (a.createdAt || a.id).localeCompare(b.createdAt || b.id));
+  }
   return {
     ...state,
-    arenaHistory: newHistory.length > 500 ? newHistory.slice(newHistory.length - 500) : newHistory,
+    arenaHistory: newHistory,
   };
 }
 

@@ -37,7 +37,7 @@ export default function Graveyard() {
         <TabsContent value="graveyard" className="space-y-3 mt-4">
           {state.graveyard.length === 0 ? (
             <Card>
-              <CardContent className="p-8 text-center space-y-3">
+              <CardContent className="p-8 text-center space-y-3 bg-zinc-950/80 border-red-900/20">
                 <Skull className="h-10 w-10 mx-auto text-muted-foreground/50" />
                 <p className="text-muted-foreground text-sm">No warriors have fallen… yet. Send them into the arena to tempt fate.</p>
                 <Link to="/run-round">
@@ -49,20 +49,20 @@ export default function Graveyard() {
             </Card>
           ) : (
             state.graveyard.map((w) => (
-              <Card key={w.id}>
+              <Card key={w.id} className="border-red-950/40 bg-zinc-950/90 grayscale-[0.5] hover:grayscale-0 transition-all">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <WarriorLink name={w.name} id={w.id} className="font-display font-semibold text-foreground" />
-                      <span className="text-sm text-muted-foreground ml-2">
+                      <WarriorLink name={w.name} id={w.id} className="font-display font-semibold text-zinc-300 hover:text-red-400 transition-colors" />
+                      <span className="text-sm text-zinc-500 ml-2">
                         {STYLE_DISPLAY_NAMES[w.style]}
                       </span>
                     </div>
-                    <Badge variant="destructive" className="text-xs">
+                    <Badge variant="outline" className="text-xs border-red-900/50 text-red-500 bg-red-950/30">
                       <Skull className="h-3 w-3 mr-1" /> Week {w.deathWeek}
                     </Badge>
                   </div>
-                  <div className="text-sm text-muted-foreground mt-2">
+                  <div className="text-sm text-red-900/70 mt-2 font-medium">
                     {w.career.wins}W-{w.career.losses}L-{w.career.kills}K
                     {w.deathCause && <> · {w.deathCause}</>}
                     {w.killedBy && <> · Slain by <WarriorLink name={w.killedBy} /></>}

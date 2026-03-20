@@ -37,7 +37,7 @@ export default function Graveyard() {
         <TabsContent value="graveyard" className="space-y-3 mt-4">
           {state.graveyard.filter(w => w.stableId === state.player.id || !w.stableId).length === 0 ? (
             <Card>
-              <CardContent className="p-8 text-center space-y-3">
+              <CardContent className="p-8 text-center space-y-3 bg-zinc-950/80 border-red-900/20">
                 <Skull className="h-10 w-10 mx-auto text-muted-foreground/50" />
                 <p className="text-muted-foreground text-sm">No warriors have fallen… yet. Send them into the arena to tempt fate.</p>
                 <Link to="/run-round">
@@ -56,7 +56,7 @@ export default function Graveyard() {
                       <WarriorLink name={w.name} id={w.id} className="font-display font-semibold text-foreground text-lg" />
                       <span className="text-sm text-muted-foreground">{STYLE_DISPLAY_NAMES[w.style]}</span>
                     </div>
-                    <Badge variant="destructive" className="text-xs">
+                    <Badge variant="outline" className="text-xs border-red-900/50 text-red-500 bg-red-950/30">
                       <Skull className="h-3 w-3 mr-1" /> Week {w.deathWeek}
                     </Badge>
                   </div>

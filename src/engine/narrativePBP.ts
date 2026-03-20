@@ -542,9 +542,8 @@ const STOPPAGE_TEMPLATES = [
 ];
 
 const KO_TEMPLATES = [
-  "{loser} crumples to the sand, entirely incapacitated. {winner} stands victorious over the fallen warrior.",
-  "The final blow drops {loser} to the arena floor! The Arenamaster waves the bout off—{winner} is the victor by knockout!",
-  "Unable to endure any more punishment, {loser} collapses. {winner} takes the win by KO!"
+  "A crushing final blow sends %D crashing to the sand, unconscious!\n%A is declared the victor by knockout!",
+  "%D crumples under the assault and does not rise. %A takes the victory by KO!"
 ];
 
 const EXHAUSTION_TEMPLATES = [

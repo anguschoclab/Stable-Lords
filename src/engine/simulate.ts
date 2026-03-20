@@ -123,7 +123,49 @@ function pickText(rng: () => number, texts: string[]): string {
 }
 
 
-type HitLocation = string;
+export const HIT_LOCATIONS = ["head", "chest", "abdomen", "left arm", "right arm", "left leg", "right leg"] as const;
+export type HitLocation = typeof HIT_LOCATIONS[number];
+
+/** Maps a grouped protect target to the granular hit locations it covers */
+/**
+ * Expands a general protection target (e.g., "head", "body", "arms", "legs", "vital")
+ * into a list of specific `HitLocation` strings it covers.
+ *
+ * @param protect - The generalized body part targeted for protection by the defender's tactic.
+ * @returns An array of specific hit locations covered by the protection, or an empty array if none.
+ */
+function protectCovers(protect?: string): string[] {
+  if (!protect || protect === "Any") return [];
+  const p = protect.toLowerCase();
+  if (p === "head") return ["head"];
+  if (p === "body") return ["chest", "abdomen"];
+  if (p === "arms") return ["right arm", "left arm"];
+  if (p === "legs") return ["right leg", "left leg"];
+  return [];
+}
+
+function rollHitLocation(rng: () => number, target?: string, protect?: string): HitLocation {
+  if (target && target !== "Any") {
+    const t = target.toLowerCase() as HitLocation;
+    if (HIT_LOCATIONS.includes(t)) {
+      const covered = protectCovers(protect);
+      const hitChance = covered.includes(t) ? TARGET_MISS_CHANCE : TARGET_HIT_CHANCE;
+      if (rng() < hitChance) return t;
+    }
+  }
+  return HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)];
+}
+
+/** Protect reduces damage on covered locations but increases damage taken elsewhere */
+function applyProtectMod(damage: number, location: HitLocation, protect?: string): number {
+  if (!protect || protect === "Any") return damage;
+  const covered = protectCovers(protect);
+  if (covered.includes(location)) {
+    return Math.max(1, Math.round(damage * PROTECT_DAMAGE_REDUCTION));
+  } else {
+    return Math.round(damage * PROTECT_DAMAGE_PENALTY);
+  }
+}
 
 // ─── Tactic Modifiers ─────────────────────────────────────────────────────
 function getOffensiveTacticMods(tactic: OffensiveTactic | undefined, style: FightingStyle) {
@@ -207,28 +249,25 @@ const GLOBAL_PAR_PENALTY = -2;
 const INITIATIVE_PRESS_BONUS = 1;
 
 // Phase detection thresholds
-const PHASE_OPENING_THRESHOLD = 0.25;
-const PHASE_MID_THRESHOLD = 0.65;
+const PHASE_OPENING_THRESHOLD = 0.33;  // First 33% of max exchanges
+const PHASE_MID_THRESHOLD = 0.66;      // Middle 33% of max exchanges
 
 // Target & Protect mechanics
-const HIT_LOCATIONS = [
-  "head", "chest", "abdomen", "left arm", "right arm", "left leg", "right leg"
-] as const;
-const TARGET_HIT_CHANCE = 0.6;
-const TARGET_MISS_CHANCE = 0.2;
-const PROTECT_DAMAGE_REDUCTION = 0.5;
-const PROTECT_DAMAGE_PENALTY = 1.2;
+const TARGET_HIT_CHANCE = 0.8;         // Chance to hit a targeted location
+const TARGET_MISS_CHANCE = 0.2;        // Chance to hit targeted location if protected
+const PROTECT_DAMAGE_REDUCTION = 0.5;  // Damage multiplier when hitting protected area
+const PROTECT_DAMAGE_PENALTY = 1.2;    // Damage multiplier when hitting unprotected area
 
 // OE/AL Modifiers
 const OE_ATT_SCALING = 0.7;            // Attack bonus per OE point above 5
 const OE_DEF_SCALING = 0.5;            // Defense penalty per OE point above 6
 const AL_INI_SCALING = 0.6;            // Initiative bonus per AL point above 5
-const ENDURANCE_OE_SCALING = 0.5;
-const ENDURANCE_AL_SCALING = 0.5;
+const ENDURANCE_OE_SCALING = 0.5;      // Endurance cost per OE point
+const ENDURANCE_AL_SCALING = 0.5;      // Endurance cost per AL point
 
 // Fatigue thresholds and penalties
-const FATIGUE_MODERATE_THRESHOLD = 0.5;
-const FATIGUE_HEAVY_THRESHOLD = 0.25;
+const FATIGUE_MODERATE_THRESHOLD = 0.6; // Endurance ratio for moderate fatigue
+const FATIGUE_HEAVY_THRESHOLD = 0.3;    // Endurance ratio for heavy fatigue
 const FATIGUE_COLLAPSE_THRESHOLD = 0.1; // Endurance ratio for near-collapse
 const FATIGUE_MODERATE_PENALTY = -2;    // Skill penalty at moderate fatigue
 const FATIGUE_HEAVY_PENALTY = -4;       // Skill penalty at heavy fatigue
@@ -320,7 +359,16 @@ function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) *
 function alIniMod(al: number): number { return Math.floor((al - 5) * AL_INI_SCALING); }
 
 // ─── Damage Calculation ──────────────────────────────────────────────────
+function computeHitDamage(rng: () => number, baseDamage: number, location: HitLocation): number {
+  let locationMult = 1.0;
+  if (location === "head") locationMult = DAMAGE_HEAD_MULT;
+  else if (location === "chest") locationMult = DAMAGE_CHEST_MULT;
+  else if (location === "abdomen") locationMult = DAMAGE_ABDOMEN_MULT;
+  else if (location === "left arm" || location === "right arm" || location === "left leg" || location === "right leg") locationMult = DAMAGE_LIMB_MULT;
 
+  const variance = DAMAGE_VARIANCE_MIN + rng() * (DAMAGE_VARIANCE_MAX - DAMAGE_VARIANCE_MIN);
+  return Math.max(1, Math.round(baseDamage * locationMult * variance));
+}
 
 // ─── Equipment Bonuses ────────────────────────────────────────────────────
 function getEquipmentMods(loadout: EquipmentLoadout, carryCap: number) {

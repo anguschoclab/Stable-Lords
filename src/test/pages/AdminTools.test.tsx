@@ -12,6 +12,12 @@ describe('AdminTools Page', () => {
   const mockSetState = vi.fn();
   const mockDoReset = vi.fn();
   const mockState = {
+  newsletter: [],
+  ledger: [],
+  matchHistory: [],
+  moodHistory: [],
+  graveyard: [],
+  retired: [],
     week: 1,
     season: 'Spring',
     year: 1,

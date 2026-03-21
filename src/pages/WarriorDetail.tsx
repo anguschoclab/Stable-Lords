@@ -432,7 +432,7 @@ function CareerTimeline({ warrior, arenaHistory }: { warrior: Warrior; arenaHist
       const champFight = sorted.find(f => f.tournamentId && (
         (f.a === warrior.name && f.winner === "A") || (f.d === warrior.name && f.winner === "D")
       ));
-      events.push({ week: champFight?.week ?? displayWarrior.career.wins, label: "Champion", icon: <Star className="h-3.5 w-3.5" />, color: "bg-arena-fame" });
+      events.push({ week: champFight?.week ?? warrior.career.wins, label: "Champion", icon: <Star className="h-3.5 w-3.5" />, color: "bg-arena-fame" });
     }
 
     // Retirement

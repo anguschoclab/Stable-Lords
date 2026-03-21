@@ -420,7 +420,7 @@ function CareerTimeline({ warrior, arenaHistory }: { warrior: Warrior; arenaHist
 
     // First kill
     const firstKill = sorted.find(f => {
-      const isA = f.a === displayWarrior.name;
+      const isA = f.a === warrior.name;
       return ((isA && f.winner === "A") || (!isA && f.winner === "D")) && f.by === "Kill";
     });
     if (firstKill) {

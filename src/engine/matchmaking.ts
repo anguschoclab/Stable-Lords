@@ -7,6 +7,7 @@ import type {
   RestState, Rivalry, MatchRecord,
 } from "@/types/game";
 import { isTooInjuredToFight, type Injury } from "./injuries";
+import { isFightReady } from "./warriorStatus";
 import { simulateFight } from "./simulate";
 import { aiPlanForWarrior } from "./ownerAI";
 import { computeMetaDrift } from "./metaDrift";

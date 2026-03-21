@@ -36,6 +36,7 @@ export interface GameStoreActions {
   doReset: () => void;
   returnToTitle: () => void;
   initialize: () => void;
+  loadGame: (slotId: string, gameState: GameState) => void;
 }
 
 const getInitialData = () => {

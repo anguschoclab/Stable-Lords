@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "@tanstack/react-router";
 import { obfuscateWarrior } from "@/lib/obfuscation";
 import { useGameStore } from "@/state/useGameStore";
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type Warrior, type FightPlan, type FightSummary } from "@/types/game";

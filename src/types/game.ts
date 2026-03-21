@@ -496,6 +496,15 @@ export interface GameState {
     version: string;
     createdAt: string;
   };
+  /** Current game phase for resolution flow */
+  phase?: "planning" | "resolution";
+  pendingResolutionData?: {
+    gazette: any[];
+    injuries: string[];
+    deaths: string[];
+    bouts: any[];
+    promotions: string[];
+  };
   ftueComplete: boolean;
   ftueStep?: number;
   coachDismissed: string[];

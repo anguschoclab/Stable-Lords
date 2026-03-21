@@ -10,6 +10,23 @@ import { ArrowUpDown, Crown, Skull, Swords, TrendingUp, Trophy } from "lucide-re
 import type { RivalStableData, Warrior } from "@/types/game";
 import { getStableTemplates } from "@/engine/rivals";
 
+type SortDir = "asc" | "desc";
+
+function SortHeader({ label, field, active, dir, onClick }: {
+  label: string;
+  field: string;
+  active: boolean;
+  dir: SortDir;
+  onClick: () => void;
+}) {
+  return (
+    <button onClick={onClick} className="flex items-center gap-1 hover:text-foreground transition-colors">
+      {label}
+      <ArrowUpDown className={`h-3 w-3 ${active ? "text-primary" : "text-muted-foreground/40"}`} />
+    </button>
+  );
+}
+
 type SortField = "rank" | "name" | "fame" | "wins" | "losses" | "kills" | "winRate" | "roster" | "tier";
 
 type WarriorSortField = "name" | "stable" | "fame" | "wins" | "losses" | "kills" | "winRate" | "style";

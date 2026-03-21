@@ -24,6 +24,7 @@ import { computeBaseSkills, computeDerivedStats } from "./skillCalc";
 import { getItemById, type EquipmentLoadout, DEFAULT_LOADOUT, getLoadoutWeight, getClassicWeaponBonus, checkWeaponRequirements } from "@/data/equipment";
 import { getTrainingBonus, TRAINER_FOCUSES, type TrainerFocus } from "@/engine/trainers";
 import { getOffensiveSuitability, getDefensiveSuitability, suitabilityMultiplier } from "./tacticSuitability";
+import { computeHitDamage } from "./combat/combatDamage";
 import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, type Phase as StylePhase } from "./stylePassives";
 import { getFavoriteWeaponBonus, getFavoriteRhythmBonus } from "./favorites";
 import {

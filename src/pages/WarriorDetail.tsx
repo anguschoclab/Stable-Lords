@@ -825,7 +825,7 @@ export default function WarriorDetail() {
                       <div className="text-xs text-muted-foreground">Endurance</div>
                       <div className="text-lg font-bold">{displayWarrior.derivedStats.endurance}</div>
                       <div className="text-[10px] text-muted-foreground">
-                        {ENDURANCE_LABELS[computeEnduranceTier(displayWarrior.attributes.ST, displayWarrior.attributes.CN, displayWarrior.attributes.WL)]}
+                        {ENDURANCE_LABELS[computeEnduranceTier(warrior.attributes.ST, warrior.attributes.CN, warrior.attributes.WL)]}
                       </div>
                     </div>
                     <div className="rounded-lg bg-secondary p-3 border border-border">

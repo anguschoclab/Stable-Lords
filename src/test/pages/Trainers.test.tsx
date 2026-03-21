@@ -99,7 +99,7 @@ describe("Trainers Component", () => {
     const trainerCard = staffElement.closest(".rounded-lg")!;
 
     // The fire button only has a title 'Release trainer'
-    const fireBtn = within(trainerCard).getByTitle(/release trainer/i);
+    const fireBtn = within(trainerCard as HTMLElement).getByTitle(/release trainer/i);
     fireEvent.click(fireBtn);
 
     // Test the state mutation implicitly by observing UI removal

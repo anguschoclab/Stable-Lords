@@ -62,11 +62,7 @@ export async function runAutosim(
 
     // Check pairings exist
     const pairings = generatePairings(currentState);
-    const fightReady = currentState.roster.filter(w => {
-      if (w.status !== "Active") return false;
-      const injObjs = (w.injuries || []).filter((inj): inj is Injury => typeof inj !== "string");
-      return !isTooInjuredToFight(injObjs);
-    });
+    const fightReady = currentState.roster.filter(isFightReady);
     if (pairings.length === 0 && fightReady.length < 2) {
       return {
         finalState: currentState,

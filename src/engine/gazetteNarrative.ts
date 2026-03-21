@@ -2,15 +2,10 @@
  * Gazette Narrative Engine — generates crowd-mood-toned prose from simulation events.
  * Synthesizes weekly fight data into procedural stories.
  */
-import type { FightSummary, CrowdMoodType, Warrior } from "@/types/game";
+import type { FightSummary, CrowdMoodType, Warrior, GazetteStory } from "@/types/game";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 
-export interface GazetteStory {
-  headline: string;
-  body: string;
-  mood: CrowdMoodType;
-  tags: string[];
-}
+
 
 const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[]; closer: string[] }> = {
   Calm: {
@@ -88,7 +83,7 @@ function styleName(style: string): string {
   return STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style;
 }
 
-function generateFightNarrative(fight: FightSummary, mood: CrowdMoodType): string {
+export function generateFightNarrative(fight: FightSummary, mood: CrowdMoodType): string {
   const tone = MOOD_TONE[mood];
   const adj = pick(tone.adjectives);
   const winner = fight.winner === "A" ? fight.a : fight.winner === "D" ? fight.d : null;
@@ -174,7 +169,8 @@ export function generateWeeklyGazette(
   graveyard: Warrior[],
   allFights?: FightSummary[]
 ): GazetteStory {
-  const tone = MOOD_TONE[mood];
+  const moodKey = mood && MOOD_TONE[mood] ? mood : "Calm";
+  const tone = MOOD_TONE[moodKey];
   const kills = fights.filter(f => f.by === "Kill");
   const knockouts = fights.filter(f => f.by === "KO");
   const tags: string[] = [];
@@ -348,6 +344,7 @@ export function generateWeeklyGazette(
     body: paragraphs.join("\n\n"),
     mood,
     tags,
+    week,
   };
 }
 
@@ -377,5 +374,5 @@ export function generateSeasonSummary(
     "The arena turns its gaze to the next season. What legends will emerge?",
   ].filter(Boolean).join("\n\n");
 
-  return { headline, body, mood, tags: ["Season Review"] };
+  return { headline, body, mood, tags: ["Season Review"], week: -1 };
 }

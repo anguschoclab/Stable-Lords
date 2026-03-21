@@ -78,6 +78,15 @@ describe('AdminTools Page', () => {
     expect(mockDoReset).toHaveBeenCalled();
   });
 
+  it('provides button to skip FTUE', () => {
+    render(<AdminTools />);
+    const skipFtueBtn = screen.getByRole('button', { name: /Skip FTUE/i });
+    expect(skipFtueBtn).toBeDefined();
+
+    fireEvent.click(skipFtueBtn);
+    expect(mockSetState).toHaveBeenCalledWith(expect.objectContaining({ ftueComplete: true }));
+  });
+
   it('renders a JSON state dump', () => {
     render(<AdminTools />);
     expect(screen.getByText(/"week": 1/)).toBeDefined();

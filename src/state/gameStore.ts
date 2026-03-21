@@ -9,6 +9,7 @@ import { processEconomy } from "@/engine/economy";
 import { processAging } from "@/engine/aging";
 import { tickInjuries } from "@/engine/injuries";
 import { clearExpiredRest, runAIvsAIBouts } from "@/engine/matchmaking";
+import { generateWeeklyGazette } from "@/engine/gazetteNarrative";
 import { partialRefreshPool, aiDraftFromPool } from "@/engine/recruitment";
 import { processHallOfFame, processTierProgression, computeNextSeason } from "@/engine/weekPipeline";
 import { processOwnerGrudges } from "@/engine/ownerAI";
@@ -16,6 +17,7 @@ import { processAIRosterManagement } from "@/engine/ownerRoster";
 import { generateOwnerNarratives } from "@/engine/ownerNarrative";
 import { evolvePhilosophies } from "@/engine/ownerPhilosophy";
 
+import { generateWeeklyGazette } from "@/engine/gazetteNarrative";
 const SAVE_KEY = "stablelords.save.v2";
 
 function generateId(): string {
@@ -82,6 +84,7 @@ export function createFreshState(): GameState {
     retired: [],
     arenaHistory: [],
     newsletter: [],
+    gazettes: [],
     hallOfFame: [],
     crowdMood: "Calm",
     tournaments: [],
@@ -114,7 +117,7 @@ export function createFreshState(): GameState {
 export const createDemoState = createFreshState;
 
 // Security: Prevent prototype pollution when deserializing localStorage state
-function sanitizeReviver(key: string, value: any) {
+export function sanitizeReviver(key: string, value: any) {
   if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
     return undefined;
   }
@@ -123,6 +126,13 @@ function sanitizeReviver(key: string, value: any) {
 
 export function migrateGameState(parsed: any): GameState {
   if (!parsed.graveyard) parsed.graveyard = [];
+  if (!parsed.arenaHistory) parsed.arenaHistory = [];
+  if (!parsed.newsletter) parsed.newsletter = [];
+  if (!parsed.gazettes) parsed.gazettes = [];
+  if (!parsed.hallOfFame) parsed.hallOfFame = [];
+  if (parsed.fame === undefined) parsed.fame = 0;
+  if (parsed.popularity === undefined) parsed.popularity = 0;
+  if (!parsed.moodHistory) parsed.moodHistory = [];
   if (!parsed.retired) parsed.retired = [];
   if (!parsed.crowdMood) parsed.crowdMood = "Calm";
   if (!parsed.tournaments) parsed.tournaments = [];
@@ -339,6 +349,13 @@ export function advanceWeek(state: GameState): GameState {
     s.newsletter = [...s.newsletter, { week: s.week, title: "Strategy Shifts", items: philResult.gazetteItems }];
   }
 
+
+  // Generate Weekly Gazette Issue
+  const weekFights = s.arenaHistory.filter(f => f.week === s.week);
+  const story = generateWeeklyGazette(weekFights, s.crowdMood, s.week, s.graveyard, s.arenaHistory);
+  s.gazettes = [...(s.gazettes || []), { ...story, week: s.week }];
+  s.gazettes = s.gazettes.slice(-50); // Keep last 50 issues
+
   // ── Step 14: Clock Advance ────────────────────────────────────────────
   const newArenaHistory = s.arenaHistory.slice(-500).map((f, i, arr) => {
     // Keep transcripts only for the last 20 fights to save memory
@@ -349,14 +366,21 @@ export function advanceWeek(state: GameState): GameState {
     return f;
   });
 
-  const newNewsletter = s.newsletter.slice(-100);
-  const newLedger = s.ledger.slice(-500);
-  const newMatchHistory = s.matchHistory.slice(-500);
-  const newMoodHistory = s.moodHistory.slice(-50);
+  const newNewsletter = (s.newsletter || []).slice(-100);
+  const newLedger = (s.ledger || []).slice(-500);
+  const newMatchHistory = (s.matchHistory || []).slice(-500);
+  const newMoodHistory = (s.moodHistory || []).slice(-50);
 
   // Keep graveyard and retired lean if they grow too large
   const newGraveyard = s.graveyard.slice(-200);
   const newRetired = s.retired.slice(-200);
+
+  // Keep arrays bounded to prevent save bloat
+  const newTournaments = (s.tournaments || []).slice(-100);
+  const newScoutReports = (s.scoutReports || []).slice(-100);
+  const newHallOfFame = (s.hallOfFame || []).slice(-100);
+  const newRivalries = (s.rivalries || []).slice(-100);
+  const newOwnerGrudges = (s.ownerGrudges || []).slice(-100);
 
   return {
     ...s,
@@ -367,6 +391,11 @@ export function advanceWeek(state: GameState): GameState {
     moodHistory: newMoodHistory,
     graveyard: newGraveyard,
     retired: newRetired,
+    tournaments: newTournaments,
+    scoutReports: newScoutReports,
+    hallOfFame: newHallOfFame,
+    rivalries: newRivalries,
+    ownerGrudges: newOwnerGrudges,
     week: newWeek,
     season: newSeason,
   };
@@ -429,7 +458,8 @@ export function killWarrior(
   state: GameState,
   warriorId: string,
   killedBy: string,
-  cause: string
+  cause: string,
+  deathEvent?: DeathEvent
 ): GameState {
   const warrior = state.roster.find((w) => w.id === warriorId);
   if (!warrior) return state;
@@ -439,6 +469,7 @@ export function killWarrior(
     deathWeek: state.week,
     deathCause: cause,
     killedBy,
+    deathEvent,
   };
   return {
     ...state,

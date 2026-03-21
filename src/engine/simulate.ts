@@ -19,6 +19,7 @@ import {
   type TrainerData,
   type OffensiveTactic,
   type DefensiveTactic,
+  type DeathCauseBucket,
 } from "@/types/game";
 import { computeBaseSkills, computeDerivedStats } from "./skillCalc";
 import { getItemById, type EquipmentLoadout, DEFAULT_LOADOUT, getLoadoutWeight, getClassicWeaponBonus, checkWeaponRequirements } from "@/data/equipment";
@@ -848,7 +849,7 @@ function applyDamageAndCheckKill(
   let ended = false;
   let winner = null;
   let by = null;
-  let causeBucket: any = undefined;
+  let causeBucket: DeathCauseBucket | undefined = undefined;
   let fatalHitLocation = undefined;
   let fatalExchangeIndex = undefined;
 
@@ -1063,7 +1064,7 @@ export function simulateFight(
   trainers?: TrainerData[]
 ): FightOutcome {
   // getSecureSeed is undefined in Node environments without crypto
-  const secureSeed = typeof globalThis !== "undefined" && (globalThis as any).crypto ? (globalThis as any).crypto.getRandomValues(new Uint32Array(1))[0] : Math.floor(Math.random() * 0xFFFFFFFF);
+  const secureSeed = typeof globalThis !== "undefined" && globalThis.crypto ? globalThis.crypto.getRandomValues(new Uint32Array(1))[0] : Math.floor(Math.random() * 0xFFFFFFFF);
   const rng = mulberry32(seed ?? (Date.now() ^ secureSeed));
 
   const matchData = initializeMatchData(planA, planD, warriorA, warriorD, trainers);

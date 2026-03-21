@@ -1091,7 +1091,7 @@ export function simulateFight(
   trainers?: TrainerData[]
 ): FightOutcome {
   // getSecureSeed is undefined in Node environments without crypto
-  const secureSeed = typeof globalThis !== "undefined" && (globalThis as any).crypto ? (globalThis as any).crypto.getRandomValues(new Uint32Array(1))[0] : Math.floor(Math.random() * 0xFFFFFFFF);
+  const secureSeed = typeof globalThis !== "undefined" && globalThis.crypto ? globalThis.crypto.getRandomValues(new Uint32Array(1))[0] : Math.floor(Math.random() * 0xFFFFFFFF);
   const rng = mulberry32(seed ?? (Date.now() ^ secureSeed));
 
   const matchData = initializeMatchData(planA, planD, warriorA, warriorD, trainers);

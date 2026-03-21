@@ -75,8 +75,8 @@ function growthNarrative(current: number, potential: number | undefined): {
 
 /** Overall narrative assessment of a warrior's growth ceiling */
 function overallGrowthNarrative(warrior: Warrior): string {
-  if (!displayWarrior.potential) return "This warrior's limits are unknown.";
-  const gaps = ATTRIBUTE_KEYS.map(k => displayWarrior.potential![k] - displayWarrior.attributes[k]);
+  if (!warrior.potential) return "This warrior's limits are unknown.";
+  const gaps = ATTRIBUTE_KEYS.map(k => warrior.potential![k] - warrior.attributes[k]);
   const totalGap = gaps.reduce((s, g) => s + Math.max(0, g), 0);
   const maxedCount = gaps.filter(g => g <= 0).length;
 

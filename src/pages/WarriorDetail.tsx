@@ -650,7 +650,7 @@ export default function WarriorDetail() {
     (newLoadout: EquipmentLoadout) => {
       if (!warrior) return;
       const nextRoster = state.roster.map((w) =>
-        w.id === displayWarrior.id ? { ...w, equipment: newLoadout } : w
+        w.id === warrior?.id ? { ...w, equipment: newLoadout } : w
       );
       setState({ ...state, roster: nextRoster });
     },

@@ -640,10 +640,10 @@ export default function WarriorDetail() {
 
   const handleRetire = useCallback(() => {
     if (!warrior) return;
-    const updated = retireWarrior(state, displayWarrior.id);
+    const updated = retireWarrior(state, warrior!.id);
     setState(updated);
-    toast.success(`${displayWarrior.name} has been retired with honor.`);
-    navigate("/");
+    toast.success(`${warrior!.name} has been retired with honor.`);
+    navigate({ to: "/" });
   }, [warrior, state, setState, navigate]);
 
   const handleEquipmentChange = useCallback(

@@ -123,7 +123,7 @@ describe("HallOfFame Component", () => {
     expect(reaperCard).not.toBeNull();
 
     // Within the card, look for the 'Greatest Fight' section block
-    const greatestFightSection = within(reaperCard).getByText("Greatest Fight").closest("div")?.parentElement;
+    const greatestFightSection = within(reaperCard as HTMLElement).getByText("Greatest Fight").closest("div")?.parentElement;
     expect(greatestFightSection).not.toBeUndefined();
 
     // Search for the opponent's name within this section

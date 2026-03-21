@@ -201,7 +201,7 @@ describe("advanceWeek pipeline", () => {
     const state = createFreshState();
     state.week = 13; // Season boundary
     state.season = "Spring";
-    state.recruitPool = [{ id: "p1" }, { id: "p2" }];
+    state.recruitPool = [{ id: "p1" } as any, { id: "p2" } as any];
     const next = advanceWeek(state);
     expect(next.recruitPool).toEqual([]);
   });

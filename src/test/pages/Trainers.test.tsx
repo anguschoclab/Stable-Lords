@@ -118,7 +118,7 @@ describe("Trainers Component", () => {
     fireEvent.click(hireBtn);
 
     // Test that the Hire button within the pool row is gone (the trainer was removed from the pool)
-    expect(within(poolRow).queryByRole("button", { name: /hire/i })).not.toBeInTheDocument();
+    expect(within(poolRow as HTMLElement).queryByRole("button", { name: /hire/i })).not.toBeInTheDocument();
   });
 
 });

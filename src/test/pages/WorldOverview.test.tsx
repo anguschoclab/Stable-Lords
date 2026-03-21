@@ -85,14 +85,11 @@ describe("WorldOverview Component", () => {
     // Setup rival stable
     mockState.rivals = [
       {
-        owner: { id: "r1", name: "Rival Owner", stableName: "Rival Stable", fame: 80, renown: 0, titles: 0, personality: "Aggressive" },
+        owner: { id: "r1", name: "Rival Owner", stableName: "Rival Stable", fame: 80, renown: 0, titles: 0, personality: "Aggressive" as const },
         roster: [
           createDummyWarrior("RivalWarrior1", "Active", 20, 0, 90),
         ],
-        budget: 100,
-        philosophy: "Aggressive",
-        history: []
-      }
+      } as any
     ];
   });
 

@@ -37,21 +37,13 @@ function createRivalStable(id: string, name: string, warriors: Warrior[]): Rival
       id,
       name: `Owner ${id}`,
       stableName: name,
-      portrait: "url",
-      personality: "Pragmatic",
+      personality: "Pragmatic" as const,
       fame: 0,
-      funds: 100,
+      renown: 0,
+      titles: 0,
     },
     roster: warriors,
-    philosophy: "Balanced",
-    tier: 1,
-    facilities: {
-      trainingPits: 1,
-      apothecary: 1,
-      recruitmentNetwork: 1,
-    },
-    activityLogs: [],
-  };
+  } as RivalStableData;
 }
 
 // Base mock game state

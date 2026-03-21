@@ -131,7 +131,7 @@ describe("HallOfFame Component", () => {
     expect(opponent).toBeInTheDocument();
 
     // fight2 (Victim2) shouldn't be the top
-    expect(within(reaperCard).queryByText(/Victim2/)).not.toBeInTheDocument();
+    expect(within(reaperCard as HTMLElement).queryByText(/Victim2/)).not.toBeInTheDocument();
   });
 
 });

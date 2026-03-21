@@ -275,7 +275,7 @@ function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () =
     // Persist the change
     setState({
       ...state,
-      roster: state.roster.map(w => w.id === displayWarrior.id ? { ...w, favorites: displayWarrior.favorites } : w),
+      roster: state.roster.map(w => w.id === warrior.id ? { ...w, favorites: warrior.favorites } : w),
     });
     toast.success(msg);
     onUpdate();

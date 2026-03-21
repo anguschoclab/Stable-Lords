@@ -49,6 +49,8 @@ describe("Trainers Component", () => {
     name: "Master Splinter",
     tier: "Master",
     focus: "Fundamentals",
+    fame: 10,
+    contractWeeksLeft: 8,
   };
 
   const poolTrainer: TrainerData = {
@@ -56,6 +58,8 @@ describe("Trainers Component", () => {
     name: "Coach Rocky",
     tier: "Seasoned",
     focus: "Aggression",
+    fame: 5,
+    contractWeeksLeft: 12,
   };
 
   beforeEach(() => {

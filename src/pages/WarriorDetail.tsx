@@ -687,9 +687,9 @@ export default function WarriorDetail() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => navigate({ to: "/" })} className="gap-2">
+        <Link to="/"><Button variant="ghost" className="gap-2">
           <ArrowLeft className="h-4 w-4" /> Back
-        </Button>
+        </Button></Link>
         <Button variant="outline" size="sm" onClick={handleRetire} className="gap-1.5 text-muted-foreground hover:text-destructive glow-neon-red drop-shadow-md">
           <Armchair className="h-3.5 w-3.5" /> Retire
         </Button>

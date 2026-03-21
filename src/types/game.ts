@@ -343,7 +343,7 @@ export interface FightOutcome {
 export interface FightSummary {
   id: string;
   week: number;
-  phase: "planning" | "resolution";
+  phase?: "planning" | "resolution";
   pendingResolutionData?: {
     gazette: any[];
     injuries: string[];

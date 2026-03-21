@@ -17,7 +17,7 @@ interface WarriorLinkProps {
 }
 
 export function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
-  const { state } = useGame();
+  const { state } = useGameStore();
 
   const resolvedId = id ?? resolveWarriorId(name, state);
 
@@ -27,7 +27,7 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
 
   return (
     <Link
-      to={`/warrior/${resolvedId}`}
+      to={`/warrior/${resolvedId}` as any}
       className={cn(
         "hover:text-primary hover:underline underline-offset-2 transition-colors cursor-pointer",
         className

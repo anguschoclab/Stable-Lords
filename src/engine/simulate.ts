@@ -239,20 +239,7 @@ function oeAttMod(oe: number, style?: FightingStyle): number {
 }
 function oeDefMod(oe: number): number { return -Math.floor(Math.max(0, oe - 6) * OE_DEF_SCALING); }
 function alIniMod(al: number): number { return Math.floor((al - 5) * AL_INI_SCALING); }
-function enduranceCost(oe: number, al: number): number {
-  // BALANCE v6: Lower base cost (so low-OE styles are more efficient) but higher OE scaling
-  // OE 3 → cost ~2, OE 7 → cost ~4, OE 10 → cost ~6
-  return Math.max(1, Math.round((oe * ENDURANCE_OE_SCALING + al * ENDURANCE_AL_SCALING)));
-}
-
-// ─── Fatigue Penalties ────────────────────────────────────────────────────
-function fatiguePenalty(endurance: number, maxEndurance: number): number {
-  const ratio = endurance / maxEndurance;
-  if (ratio > FATIGUE_MODERATE_THRESHOLD) return 0;
-  if (ratio > FATIGUE_HEAVY_THRESHOLD) return FATIGUE_MODERATE_PENALTY;
-  if (ratio > FATIGUE_COLLAPSE_THRESHOLD) return FATIGUE_HEAVY_PENALTY;
-  return FATIGUE_COLLAPSE_PENALTY;
-}
+// enduranceCost and fatiguePenalty imported from combat/combatFatigue
 
 // ─── Damage Calculation ──────────────────────────────────────────────────
 

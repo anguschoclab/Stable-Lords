@@ -70,7 +70,7 @@ interface StableLinkProps {
 }
 
 export function StableLink({ name, className, children }: StableLinkProps) {
-  const { state } = useGame();
+  const { state } = useGameStore();
 
   // Resolve stable name to owner ID
   const stableId = (state.rivals ?? []).find(r => r.owner.stableName === name)?.owner.id;

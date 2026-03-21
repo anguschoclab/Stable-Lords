@@ -645,7 +645,7 @@ export function generateOwnerNarratives(
     const personality = rival.owner.personality ?? "Pragmatic";
     const names = new Set(rival.roster.map(w => w.name));
 
-    const { wins, losses } = calculateRecentRecord(recentFights, names);
+    const { wins, losses, kills, deaths } = calculateRecentRecord(recentFights, names);
 
     const totalFights = wins + losses;
     if (totalFights === 0) continue;

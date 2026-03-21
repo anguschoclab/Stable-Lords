@@ -409,7 +409,7 @@ function getEquipmentMods(loadout: EquipmentLoadout, carryCap: number) {
 
 // ─── Trainer Bonuses ──────────────────────────────────────────────────────
 function getTrainerMods(trainers: TrainerData[], style: FightingStyle) {
-  const bonus = getTrainingBonus(trainers as TrainerData[], style);
+  const bonus = getTrainingBonus(trainers as any[], style);
   return {
     attMod: bonus.Aggression,                  // Aggression → ATT
     parMod: Math.floor(bonus.Defense * 0.6),   // Defense → PAR

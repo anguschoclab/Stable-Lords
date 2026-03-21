@@ -89,7 +89,7 @@ function makeStateWithRivals(): GameState {
       philosophy: "Brute Force",
     },
   ];
-  state.recruitPool = [{ id: "pool1", name: "Orphan1" }];
+  state.recruitPool = [{ id: "pool1", name: "Orphan1" } as any];
   return state;
 }
 

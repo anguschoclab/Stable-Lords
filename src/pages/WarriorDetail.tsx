@@ -436,8 +436,8 @@ function CareerTimeline({ warrior, arenaHistory }: { warrior: Warrior; arenaHist
     }
 
     // Retirement
-    if (displayWarrior.status === "Retired" && displayWarrior.retiredWeek) {
-      events.push({ week: displayWarrior.retiredWeek, label: "Retired", icon: <Armchair className="h-3.5 w-3.5" />, color: "bg-muted-foreground" });
+    if (warrior.status === "Retired" && warrior.retiredWeek) {
+      events.push({ week: warrior.retiredWeek, label: "Retired", icon: <Armchair className="h-3.5 w-3.5" />, color: "bg-muted-foreground" });
     }
 
     // Death

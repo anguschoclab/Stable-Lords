@@ -281,7 +281,7 @@ function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () =
     onUpdate();
   };
 
-  if (!displayWarrior.favorites) return null;
+  if (!warrior.favorites) return null;
 
   return (
     <Card>

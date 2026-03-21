@@ -776,7 +776,7 @@ export default function WarriorDetail() {
                 />
               ))}
               <div className="pt-2 text-xs text-muted-foreground">
-                Total: {ATTRIBUTE_KEYS.reduce((sum, k) => sum + displayWarrior.attributes[k], 0)} / 70
+                Total: {ATTRIBUTE_KEYS.reduce((sum, k) => sum + (typeof displayWarrior.attributes[k] === 'number' ? displayWarrior.attributes[k] as number : 0), 0)} / 70
               </div>
               {/* Narrative growth assessment */}
               <div className="pt-2 border-t border-border mt-2">

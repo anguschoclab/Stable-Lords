@@ -266,7 +266,7 @@ function DiscoveryProgressBar({
 function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () => void }) {
   const { setState, state } = useGameStore();
   const favDisplay = getFavoritesDisplay(warrior);
-  const totalFights = displayWarrior.career.wins + displayWarrior.career.losses;
+  const totalFights = warrior.career.wins + warrior.career.losses;
   const mastery = getMastery(totalFights);
   const progress = getDiscoveryProgress(totalFights);
 

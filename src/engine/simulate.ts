@@ -24,6 +24,7 @@ import { computeBaseSkills, computeDerivedStats } from "./skillCalc";
 import { getItemById, type EquipmentLoadout, DEFAULT_LOADOUT, getLoadoutWeight, getClassicWeaponBonus, checkWeaponRequirements } from "@/data/equipment";
 import { getTrainingBonus, TRAINER_FOCUSES, type TrainerFocus } from "@/engine/trainers";
 import { getOffensiveSuitability, getDefensiveSuitability, suitabilityMultiplier } from "./tacticSuitability";
+import { computeHitDamage } from "./combat/combatDamage";
 import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, type Phase as StylePhase } from "./stylePassives";
 import { getFavoriteWeaponBonus, getFavoriteRhythmBonus } from "./favorites";
 import {
@@ -243,8 +244,23 @@ const GLOBAL_PAR_PENALTY = -2;
 const INITIATIVE_PRESS_BONUS = 1;
 
 // Phase detection thresholds
+const PHASE_OPENING_THRESHOLD = 0.25;
+const PHASE_MID_THRESHOLD = 0.65;
 
 // Target & Protect mechanics
+const HIT_LOCATIONS = ["head", "chest", "abdomen", "right arm", "left arm", "right leg", "left leg"] as const;
+const TARGET_HIT_CHANCE = 0.7;
+const TARGET_MISS_CHANCE = 0.3;
+const PROTECT_DAMAGE_REDUCTION = 0.5;
+const PROTECT_DAMAGE_PENALTY = 1.15;
+
+// Endurance scaling
+const ENDURANCE_OE_SCALING = 0.5;
+const ENDURANCE_AL_SCALING = 0.3;
+
+// Fatigue thresholds
+const FATIGUE_MODERATE_THRESHOLD = 0.5;
+const FATIGUE_HEAVY_THRESHOLD = 0.25;
 
 // OE/AL Modifiers
 const OE_ATT_SCALING = 0.7;            // Attack bonus per OE point above 5
@@ -393,7 +409,7 @@ function getEquipmentMods(loadout: EquipmentLoadout, carryCap: number) {
 
 // ─── Trainer Bonuses ──────────────────────────────────────────────────────
 function getTrainerMods(trainers: TrainerData[], style: FightingStyle) {
-  const bonus = getTrainingBonus(trainers as TrainerData[], style);
+  const bonus = getTrainingBonus(trainers as any[], style);
   return {
     attMod: bonus.Aggression,                  // Aggression → ATT
     parMod: Math.floor(bonus.Defense * 0.6),   // Defense → PAR

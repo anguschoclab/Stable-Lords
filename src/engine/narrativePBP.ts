@@ -24,11 +24,11 @@
 import { FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/game";
 import { getItemById, getItemByCode } from "@/data/equipment";
 import {
-  HIT_LOC_VARIANTS,
-  STYLE_PBP_DESC,
+  HIT_LOC_VARIANTS as _HIT_LOC_VARIANTS,
+  STYLE_PBP_DESC as _STYLE_PBP_DESC,
   ARMOR_INTRO_VERBS,
   WEAPON_INTRO_VERBS,
-  HELM_DESCS,
+  HELM_DESCS as _HELM_DESCS,
   BATTLE_OPENERS,
   PARRY_TEMPLATES,
   PARRY_SHIELD_TEMPLATES,

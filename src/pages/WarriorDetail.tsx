@@ -664,9 +664,11 @@ export default function WarriorDetail() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
         <p className="text-muted-foreground">Warrior not found.</p>
-        <Button variant="outline" onClick={() => navigate({ to: "/" })}>
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
-        </Button>
+        <Link to="/">
+          <Button variant="outline">
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
+          </Button>
+        </Link>
       </div>
     );
   }

@@ -631,7 +631,7 @@ export default function WarriorDetail() {
     (newPlan: FightPlan) => {
       if (!warrior) return;
       const nextRoster = state.roster.map((w) =>
-        w.id === displayWarrior.id ? { ...w, plan: newPlan } : w
+        w.id === warrior?.id ? { ...w, plan: newPlan } : w
       );
       setState({ ...state, roster: nextRoster });
     },

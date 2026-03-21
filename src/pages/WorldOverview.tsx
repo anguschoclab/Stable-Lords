@@ -294,7 +294,7 @@ export default function WorldOverview() {
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Link
-                                to={row.isPlayer ? "/" : `/stable/${row.id}`}
+                                to={row.isPlayer ? "/" : `/stable/${row.id}` as any}
                                 className="font-semibold hover:text-primary transition-colors"
                               >
                                 {row.name}

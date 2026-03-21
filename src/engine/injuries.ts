@@ -9,7 +9,7 @@
  */
 import type { Warrior, FightOutcome } from "@/types/game";
 
-export type InjurySeverity = "Minor" | "Moderate" | "Severe";
+export type InjurySeverity = "Minor" | "Moderate" | "Severe" | "Critical" | "Permanent";
 
 export interface Injury {
   id: string;

@@ -49,7 +49,7 @@ export const selectStableStats = (state: GameState): StableStats => {
 // ─── Fight History ──────────────────────────────────────────────────────
 
 export const selectFightHistory = (state: GameState): FightSummary[] =>
-  state.arenaHistory?.fights ?? [];
+  state.arenaHistory ?? [];
 
 export const selectKillFights = (state: GameState): FightSummary[] =>
   selectFightHistory(state).filter(f => f.by === "Kill");

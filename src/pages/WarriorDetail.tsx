@@ -441,8 +441,8 @@ function CareerTimeline({ warrior, arenaHistory }: { warrior: Warrior; arenaHist
     }
 
     // Death
-    if (displayWarrior.status === "Dead" && displayWarrior.deathWeek) {
-      events.push({ week: displayWarrior.deathWeek, label: displayWarrior.deathCause ?? "Fallen", icon: <Skull className="h-3.5 w-3.5" />, color: "bg-destructive" });
+    if (warrior.status === "Dead" && warrior.deathWeek) {
+      events.push({ week: warrior.deathWeek, label: warrior.deathCause ?? "Fallen", icon: <Skull className="h-3.5 w-3.5" />, color: "bg-destructive" });
     }
 
     // Deduplicate by label, keep earliest

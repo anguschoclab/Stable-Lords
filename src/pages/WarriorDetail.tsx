@@ -354,7 +354,7 @@ function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () =
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={() => handleInsight("weapon")}>
+                  <Button variant="ghost" size="sm" onClick={() => handleInsight("weapon")} aria-label="Reveal favorite weapon">
                     <Eye className="h-3.5 w-3.5" />
                   </Button>
                 </TooltipTrigger>
@@ -382,7 +382,7 @@ function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () =
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={() => handleInsight("rhythm")}>
+                  <Button variant="ghost" size="sm" onClick={() => handleInsight("rhythm")} aria-label="Reveal natural rhythm">
                     <Eye className="h-3.5 w-3.5" />
                   </Button>
                 </TooltipTrigger>

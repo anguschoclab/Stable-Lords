@@ -214,18 +214,42 @@ export function processTraining(state: GameState): GameState {
     if (Math.random() < gainChance) {
       const newAttrs = { ...warrior.attributes, [attr]: currentVal + 1 };
       const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, warrior.style);
+      
+      const newRevealed = { ...(warrior.potentialRevealed || {}) };
+      let newlyRevealed = false;
+      
+      const nearCeiling = potentialVal !== undefined && (currentVal + 1) >= potentialVal;
+      if (nearCeiling && !newRevealed[attr]) {
+        newRevealed[attr] = true;
+        newlyRevealed = true;
+      }
+
+      const ceilingNote = nearCeiling ? " (reached potential ceiling)" : "";
+      
       roster = roster.map((w, i) =>
-        i === wIdx ? { ...w, attributes: newAttrs, baseSkills, derivedStats } : w
+        i === wIdx ? { ...w, attributes: newAttrs, baseSkills, derivedStats, potentialRevealed: newRevealed } : w
       );
       seasonalGrowth = updateSeasonalGains(seasonalGrowth, warrior.id, state.season, attr);
 
-      const nearCeiling = potentialVal !== undefined && (currentVal + 1) >= potentialVal;
-      const ceilingNote = nearCeiling ? " (reached potential ceiling)" : "";
       results.push({
         type: "gain",
         warriorId: warrior.id,
-        message: `${warrior.name} improved ${attr} to ${currentVal + 1} through training.${ceilingNote}`,
+        message: `${warrior.name} improved ${attr} to ${currentVal + 1} through training.${ceilingNote}${newlyRevealed ? ` Their true potential in ${attr} is now fully revealed!` : ""}`,
       });
+    } else {
+      // Failed to gain, but might still reveal potential from hard work!
+      const isRevealed = warrior.potentialRevealed?.[attr];
+      if (!isRevealed && Math.random() < 0.20) {
+        const newRevealed = { ...(warrior.potentialRevealed || {}), [attr]: true };
+        roster = roster.map((w, i) =>
+          i === wIdx ? { ...w, potentialRevealed: newRevealed } : w
+        );
+        results.push({
+          type: "gain",
+          warriorId: warrior.id,
+          message: `${warrior.name} didn't improve their ${attr} this week, but their true potential in it was revealed from their efforts!`,
+        });
+      }
     }
 
     // ── Training Injury Roll ──

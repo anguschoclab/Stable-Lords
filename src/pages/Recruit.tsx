@@ -14,6 +14,7 @@ import {
   type PoolWarrior, type RecruitTier,
   TIER_COST, TIER_STARS, REFRESH_COST,
 } from "@/engine/recruitment";
+import { potentialRating, potentialGrade } from "@/engine/potential";
 import WarriorBuilder from "@/components/WarriorBuilder";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import {
   ArrowLeft, Coins, Star, UserPlus, RefreshCw, Hammer, Search,
-  Shield, Swords, Heart, Zap, Users,
+  Shield, Swords, Heart, Zap, Users, Eye,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -63,11 +64,13 @@ function StatBar({ label, value, max = 21 }: { label: string; value: number; max
 }
 
 function RecruitCard({
-  warrior, canAfford, rosterFull, onRecruit,
+  warrior, canAfford, rosterFull, onRecruit, isScouted, onScout, canAffordScout
 }: {
   warrior: PoolWarrior; canAfford: boolean; rosterFull: boolean; onRecruit: (w: PoolWarrior) => void;
+  isScouted: boolean; onScout: (w: PoolWarrior) => void; canAffordScout: boolean;
 }) {
   const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
+  const grade = potentialGrade(potentialRating(warrior.potential));
 
   return (
     <Card className="overflow-hidden hover:border-primary/40 transition-colors">
@@ -79,6 +82,11 @@ function RecruitCard({
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Badge variant="outline" className="text-[10px]">{styleName}</Badge>
           <span>Age {warrior.age}</span>
+          {isScouted && (
+            <Badge className={`text-[10px] ml-auto ${grade === 'S' || grade === 'A' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+              Potential: {grade}
+            </Badge>
+          )}
         </div>
       </CardHeader>
       <CardContent className="px-4 pb-4 space-y-3">
@@ -116,21 +124,35 @@ function RecruitCard({
         {/* Lore */}
         <p className="text-[11px] text-muted-foreground italic leading-relaxed">{warrior.lore}</p>
 
-        {/* Cost & Recruit Button */}
+        {/* Cost & Action Buttons */}
         <div className="flex items-center justify-between pt-1">
-          <div className="flex items-center gap-1 text-sm font-semibold">
+          <div className="flex items-center gap-1 text-sm font-semibold w-16">
             <Coins className="h-3.5 w-3.5 text-arena-gold" />
             {warrior.cost}g
           </div>
-          <Button
-            size="sm"
-            className="gap-1.5"
-            disabled={!canAfford || rosterFull}
-            onClick={() => onRecruit(warrior)}
-          >
-            <UserPlus className="h-3.5 w-3.5" />
-            Recruit
-          </Button>
+          <div className="flex items-center gap-2">
+            {!isScouted && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5 h-8 text-[11px] px-2"
+                disabled={!canAffordScout}
+                onClick={() => onScout(warrior)}
+              >
+                <Eye className="h-3 w-3" />
+                Scout (25g)
+              </Button>
+            )}
+            <Button
+              size="sm"
+              className="gap-1.5 h-8"
+              disabled={!canAfford || rosterFull}
+              onClick={() => onRecruit(warrior)}
+            >
+              <UserPlus className="h-3.5 w-3.5" />
+              Recruit
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -159,6 +181,7 @@ export default function Recruit() {
     if ((state as any).recruitPool?.length > 0) return (state as any).recruitPool;
     return generateRecruitPool(5, state.week, usedNames);
   });
+  const [scoutedIds, setScoutedIds] = useState<Set<string>>(new Set());
 
   const gold = state.gold ?? 0;
   const rosterFull = state.roster.length >= MAX_ROSTER;
@@ -208,6 +231,25 @@ export default function Recruit() {
     persistPool(newPool, updatedState);
     toast.success(`${w.name} has joined your stable! (-${w.cost}g)`);
   }, [gold, rosterFull, pool, state, persistPool]);
+
+  const handleScout = useCallback((w: PoolWarrior) => {
+    if (gold < 25) {
+      toast.error("Not enough gold to scout potential (need 25g).");
+      return;
+    }
+    setState({
+      ...state,
+      gold: gold - 25,
+      ledger: [...(state.ledger ?? []), {
+        week: state.week,
+        label: `Scout Potential: ${w.name}`,
+        amount: -25,
+        category: "other" as const,
+      }],
+    });
+    setScoutedIds(prev => new Set(prev).add(w.id));
+    toast.success(`Scouted potential for ${w.name}! (-25g)`);
+  }, [state, setState, gold]);
 
   const handleRefresh = useCallback(() => {
     if (!canRefresh) {
@@ -337,6 +379,9 @@ export default function Recruit() {
                   canAfford={gold >= w.cost}
                   rosterFull={rosterFull}
                   onRecruit={handleRecruit}
+                  isScouted={scoutedIds.has(w.id)}
+                  onScout={handleScout}
+                  canAffordScout={gold >= 25}
                 />
               ))}
             </div>

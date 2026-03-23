@@ -31,7 +31,11 @@ export function pickText(rng: () => number, texts: string[]): string {
 
 export function skillCheck(rng: () => number, skill: number, modifier: number = 0): boolean {
   const roll = Math.floor(rng() * 20) + 1;
-  return roll <= skill + modifier;
+  if (roll === 1) return true;
+  if (roll === 20) return false;
+
+  const target = Math.max(1, Math.min(19, Math.floor(skill) + modifier));
+  return roll <= target;
 }
 
 export function contestCheck(

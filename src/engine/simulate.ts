@@ -62,13 +62,13 @@ function createFighterState(
   trainers?: TrainerData[]
 ): FighterState {
   const attrs = warrior?.attributes ?? { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-  const skills = warrior?.skills ?? { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 };
-  const derived = warrior?.derived ?? { hp: 100, endurance: 100, damage: 5, protection: 0 };
+  const skills = warrior?.baseSkills ?? { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 };
+  const derived = warrior?.derivedStats ?? { hp: 100, endurance: 100, damage: 5, encumbrance: 0 };
   
   const equip = warrior?.equipment ?? DEFAULT_LOADOUT;
-  const classicBonus = getClassicWeaponBonus(equip.weapon);
+  const classicBonus = getClassicWeaponBonus(plan.style, equip.weapon);
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
-  const favWeapon = warrior ? getFavoriteWeaponBonus(warrior, equip.weapon) : 0;
+  const favWeapon = warrior ? getFavoriteWeaponBonus(warrior) : 0;
 
   const weaponReq = checkWeaponRequirements(
     equip.weapon,
@@ -76,10 +76,10 @@ function createFighterState(
   );
 
   const effSkills: BaseSkills = {
-    ATT: skills.ATT + equip.attMod + (trainerMods?.attMod ?? 0) + classicBonus + favWeapon + weaponReq.attPenalty,
-    PAR: skills.PAR + equip.parMod + (trainerMods?.parMod ?? 0),
-    DEF: skills.DEF + equip.defMod + (trainerMods?.defMod ?? 0),
-    INI: skills.INI + equip.iniMod + (trainerMods?.iniMod ?? 0),
+    ATT: skills.ATT + (trainerMods?.attMod ?? 0) + classicBonus + favWeapon + weaponReq.attPenalty,
+    PAR: skills.PAR + (trainerMods?.parMod ?? 0),
+    DEF: skills.DEF + (trainerMods?.defMod ?? 0),
+    INI: skills.INI + (trainerMods?.iniMod ?? 0),
     RIP: skills.RIP,
     DEC: skills.DEC + (trainerMods?.decMod ?? 0),
   };
@@ -89,12 +89,12 @@ function createFighterState(
     style: plan.style,
     attributes: attrs,
     skills: effSkills,
-    derived: { ...derived, damage: derived.damage + equip.dmgMod },
+    derived: { ...derived, damage: derived.damage },
     plan,
     hp: derived.hp,
     maxHp: derived.hp,
-    endurance: derived.endurance + (trainerMods?.endMod ?? 0) + equip.endMod,
-    maxEndurance: derived.endurance + (trainerMods?.endMod ?? 0) + equip.endMod,
+    endurance: derived.endurance + (trainerMods?.endMod ?? 0),
+    maxEndurance: derived.endurance + (trainerMods?.endMod ?? 0),
     hitsLanded: 0,
     hitsTaken: 0,
     ripostes: 0,
@@ -253,6 +253,8 @@ export function simulateFight(
     const l = winner === "A" ? fD : fA;
     if (w.hp < w.maxHp * 0.3 && w.hitsLanded > l.hitsLanded) tags.push("Comeback");
     if (w.hitsLanded >= 5) tags.push("Dominance");
+    if (by === "KO") tags.push("KO");
+    if (by === "Kill") tags.push("Kill");
   }
 
   return {
@@ -272,5 +274,54 @@ export function simulateFight(
       fatalHitLocation,
       fatalExchangeIndex,
     },
+  };
+}
+
+/**
+ * Returns a sane default plan for a warrior based on their fighting style.
+ * Used when a warrior has no custom plan set (e.g., orphanage, new recruits).
+ */
+export function defaultPlanForWarrior(warrior: Warrior): FightPlan {
+  const style = warrior.style;
+
+  const isAggressive = [
+    FightingStyle.BashingAttack,
+    FightingStyle.StrikingAttack,
+    FightingStyle.LungingAttack,
+    FightingStyle.SlashingAttack,
+  ].includes(style);
+
+  const isDefensive = [
+    FightingStyle.TotalParry,
+    FightingStyle.WallOfSteel,
+    FightingStyle.ParryRiposte,
+  ].includes(style);
+
+  // Default values
+  let oe = 5;
+  let al = 6;
+  let kd = 5;
+
+  if (isAggressive) {
+    oe = style === FightingStyle.BashingAttack ? 9 : 8;
+    al = 7;
+    kd = 7;
+  } else if (isDefensive) {
+    oe = style === FightingStyle.TotalParry ? 2 : 4;
+    al = 4;
+    kd = 2;
+  } else if (style === FightingStyle.AimedBlow) {
+    oe = 6;
+    al = 5;
+    kd = 8;
+  }
+
+  return {
+    style,
+    OE: oe,
+    AL: al,
+    killDesire: kd,
+    target: "Any",
+    protect: "Any",
   };
 }

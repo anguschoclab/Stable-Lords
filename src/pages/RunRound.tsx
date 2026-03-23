@@ -19,6 +19,27 @@ import { toast } from "sonner";
 import BoutViewer from "@/components/BoutViewer";
 import { WarriorLink, StableLink } from "@/components/EntityLink";
 
+function getLethalityHint(wA: Warrior, wB: Warrior, crowdMood: string): { label: string; color: string } {
+  let score = 0;
+  
+  // Lower HP = higher risk
+  if (wA.derivedStats.hp < 15 || wB.derivedStats.hp < 15) score += 2;
+  else if (wA.derivedStats.hp < 25 || wB.derivedStats.hp < 25) score += 1;
+
+  // Power styles hit harder
+  const powerStyles = ["Bashing Attack", "Striking Attack", "Slashing Attack", "Lunging Attack"];
+  if (powerStyles.includes(wA.style)) score += 1;
+  if (powerStyles.includes(wB.style)) score += 1;
+
+  // Crowd mood
+  if (crowdMood === "Bloodthirsty") score += 2;
+  else if (crowdMood === "Restless") score += 1;
+
+  if (score >= 4) return { label: "High Lethality Risk", color: "text-destructive border-destructive" };
+  if (score >= 2) return { label: "Moderate Danger", color: "text-amber-500 border-amber-500/50" };
+  return { label: "Standard Bout", color: "text-muted-foreground border-border" };
+}
+
 export default function RunRound() {
   const { state, setState } = useGameStore();
   const [results, setResults] = useState<BoutResult[]>([]);
@@ -436,17 +457,20 @@ export default function RunRound() {
             </h3>
             <div className="divide-y divide-border">
               {matchCard.map((mp, i) => (
-                <div key={i} className="flex items-center justify-between py-2 text-sm">
-                  <div className="flex items-center gap-2">
+                <div key={i} className="flex items-center justify-between py-3 text-sm">
+                  <div className="flex items-center gap-2 flex-1">
                     <WarriorLink name={mp.playerWarrior.name} id={mp.playerWarrior.id} className="font-semibold" />
                     <Badge variant="outline" className="text-xs">{STYLE_DISPLAY_NAMES[mp.playerWarrior.style]}</Badge>
-                    <span className="text-muted-foreground text-xs">Fame {mp.playerWarrior.fame}</span>
+                    <span className="text-muted-foreground text-xs hidden sm:inline">Fame {mp.playerWarrior.fame}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 flex-col px-2">
                     {mp.isRivalryBout && <Flame className="h-3.5 w-3.5 text-destructive" />}
                     <span className="text-muted-foreground font-medium">vs</span>
+                    <Badge variant="outline" className={`text-[9px] px-1 py-0 ${getLethalityHint(mp.playerWarrior, mp.rivalWarrior, state.crowdMood).color}`}>
+                      {getLethalityHint(mp.playerWarrior, mp.rivalWarrior, state.crowdMood).label}
+                    </Badge>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-1 justify-end">
                     <span className="text-muted-foreground text-xs">Fame {mp.rivalWarrior.fame}</span>
                     <Badge variant="outline" className="text-xs">{STYLE_DISPLAY_NAMES[mp.rivalWarrior.style]}</Badge>
                     <WarriorLink name={mp.rivalWarrior.name} id={mp.rivalWarrior.id} className="font-semibold" />

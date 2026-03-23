@@ -102,6 +102,10 @@ function WarriorTrainingCard({ warrior, assignment, seasonalGains, trainers, onA
                 ? Math.round(computeGainChance(warrior, key, trainers) * 100)
                 : 0;
 
+              const isRevealed = !!warrior.potentialRevealed?.[key];
+              const potVal = warrior.potential?.[key] ?? 25;
+              const displayVal = isRevealed ? `${val}/${potVal}` : `${val}/???`;
+
               return (
                 <TooltipProvider key={key} delayDuration={200}>
                   <Tooltip>
@@ -124,12 +128,12 @@ function WarriorTrainingCard({ warrior, assignment, seasonalGains, trainers, onA
                         <div className="flex-1">
                           <Progress value={(val / 25) * 100} className="h-1.5 [&>div]:bg-accent [&>div]:shadow-[0_0_8px_hsl(var(--accent))]" />
                         </div>
-                        <span className="text-xs font-mono w-5 text-right">{val}</span>
+                        <span className="text-[11px] font-mono w-10 text-right whitespace-nowrap">{displayVal}</span>
                         {!disabled && !isSelected && (
                           <span className="text-[9px] text-muted-foreground w-8 text-right">{chance}%</span>
                         )}
                         {isSelected && <Check className="h-3.5 w-3.5 text-primary drop-shadow-[0_0_5px_hsl(var(--primary))]" />}
-                        {maxed && <span className="text-[10px] text-muted-foreground">MAX</span>}
+                        {maxed && <span className="text-[10px] text-muted-foreground ml-1">MAX</span>}
                         {seasonCapped && !maxed && !isSZ && (
                           <span className="text-[9px] text-arena-gold">3/3</span>
                         )}

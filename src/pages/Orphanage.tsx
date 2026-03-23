@@ -293,6 +293,9 @@ export default function Orphanage() {
                             <Badge variant="outline" className="text-[10px] gap-1">
                               {archetype}
                             </Badge>
+                            <Badge variant="secondary" className="text-[10px] gap-1 opacity-80">
+                              Potential: ???
+                            </Badge>
                           </div>
 
                           {/* Metadata row */}

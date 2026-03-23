@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import BoutViewer from "./BoutViewer";
 import { Newspaper, Skull, Activity, Swords, ChevronRight } from "lucide-react";
 
-type RevealStep = "gazette" | "injuries" | "bouts";
+type RevealStep = "gazette" | "injuries" | "bouts" | "memorial";
 
 export default function ResolutionReveal() {
   const { state, setState } = useGameStore();
@@ -34,10 +34,16 @@ export default function ResolutionReveal() {
       setStep(hasInjuriesOrDeaths ? "injuries" : "bouts");
     } else if (step === "injuries") {
       setStep("bouts");
+    } else if (step === "bouts" && data.deaths.length > 0) {
+      setStep("memorial");
     } else {
       doClearResolution();
     }
   };
+
+  const deadWarriors = React.useMemo(() => {
+    return data.deaths.map((name: string) => state.graveyard.find(w => w.name === name)).filter(Boolean);
+  }, [data.deaths, state.graveyard]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">
@@ -54,6 +60,11 @@ export default function ResolutionReveal() {
                 2. Medical Report
               </Badge>
               <Badge variant={step === "bouts" ? "default" : "secondary"}>3. Combat Logs</Badge>
+              {data.deaths.length > 0 && (
+                <Badge variant={step === "memorial" ? "destructive" : "secondary"}>
+                  4. The Graveyard
+                </Badge>
+              )}
             </div>
           </div>
         </CardHeader>
@@ -183,12 +194,43 @@ export default function ResolutionReveal() {
                 </ScrollArea>
               </motion.div>
             )}
+
+            {step === "memorial" && deadWarriors.length > 0 && (
+              <motion.div
+                key="memorial"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="h-full p-6 flex flex-col items-center justify-center bg-zinc-950 text-zinc-50 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,0,0,0.05)_0,transparent_100%)] mix-blend-screen" />
+                <div className="z-10 flex flex-col items-center max-w-full">
+                  <Skull className="h-16 w-16 mb-4 text-zinc-600 animate-pulse drop-shadow-[0_0_15px_rgba(200,0,0,0.3)]" />
+                  <h2 className="text-3xl font-serif text-center mb-8 uppercase tracking-widest text-zinc-300">The Arena Remembers</h2>
+                  <div className="flex gap-6 overflow-x-auto pb-4 max-w-[100%]">
+                    {deadWarriors.map((w: any) => (
+                      <div key={w.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-lg text-center min-w-[280px] shadow-2xl relative">
+                         <h3 className="text-2xl font-display font-bold text-red-500 mb-1 drop-shadow-md">{w.name}</h3>
+                         <p className="text-sm text-zinc-400 mb-4 italic leading-relaxed">{w.deathCause || "Fallen in combat."}</p>
+                         <Separator className="bg-zinc-800 mb-4" />
+                         <div className="grid grid-cols-2 gap-3 text-xs text-zinc-500 text-left">
+                           <div className="bg-zinc-950 p-2 rounded">Age: <span className="text-zinc-300 font-mono inline-block ml-1">{w.age}</span></div>
+                           <div className="bg-zinc-950 p-2 rounded">Fame: <span className="text-zinc-300 font-mono inline-block ml-1">{w.fame}</span></div>
+                           <div className="bg-zinc-950 p-2 rounded">Wins: <span className="text-zinc-300 font-mono inline-block ml-1">{w.career?.wins || 0}</span></div>
+                           <div className="bg-zinc-950 p-2 rounded">Kills: <span className="text-red-400 font-mono inline-block ml-1">{w.career?.kills || 0}</span></div>
+                         </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </CardContent>
 
         <div className="p-4 bg-secondary/20 border-t shrink-0 flex justify-end">
-          <Button onClick={handleNext} className="gap-2" size="lg">
-            {step === "bouts" ? "Acknowledge & Begin Planning" : "Next Report"}
+          <Button onClick={handleNext} className="gap-2" size="lg" variant={step === "memorial" ? "destructive" : "default"}>
+            {step === "bouts" && data.deaths.length > 0 ? "Honor the Fallen" : (step === "bouts" || step === "memorial") ? "Acknowledge & Begin Planning" : "Next Report"}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

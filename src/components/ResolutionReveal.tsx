@@ -16,9 +16,14 @@ export default function ResolutionReveal() {
   const [step, setStep] = useState<RevealStep>("gazette");
 
   const latestFight = state.arenaHistory?.[state.arenaHistory.length - 1];
-  if (!latestFight?.pendingResolutionData) return null;
+  const data = latestFight?.pendingResolutionData;
 
-  const data = latestFight.pendingResolutionData;
+  const deadWarriors = React.useMemo(() => {
+    if (!data) return [];
+    return data.deaths.map((name: string) => state.graveyard.find(w => w.name === name)).filter(Boolean);
+  }, [data, state.graveyard]);
+
+  if (!data) return null;
 
   const doClearResolution = () => {
     // Clear resolution data
@@ -41,9 +46,6 @@ export default function ResolutionReveal() {
     }
   };
 
-  const deadWarriors = React.useMemo(() => {
-    return data.deaths.map((name: string) => state.graveyard.find(w => w.name === name)).filter(Boolean);
-  }, [data.deaths, state.graveyard]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm p-4">

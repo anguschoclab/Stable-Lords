@@ -25,6 +25,7 @@ export default function SubNav({ tabs, activeTab, onTabChange }: SubNavProps) {
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
+            aria-current={activeTab === tab.id ? "page" : undefined}
             className={cn(
               "flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors",
               activeTab === tab.id

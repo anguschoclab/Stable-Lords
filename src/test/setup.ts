@@ -31,15 +31,17 @@ global.ResizeObserver = class ResizeObserver {
 };
 
 // Mock OPFS FileSystem interfaces for Vitest
+const createMockDirHandle = (name) => ({
+  kind: 'directory',
+  name,
+  getDirectoryHandle: async (dirName) => createMockDirHandle(dirName),
+  getFileHandle: async () => ({}),
+  values: async function* () {}
+});
+
 Object.defineProperty(global.navigator, 'storage', {
   value: {
-    getDirectory: async () => ({
-      kind: 'directory',
-      name: 'root',
-      getDirectoryHandle: async () => ({}),
-      getFileHandle: async () => ({}),
-      values: async function* () {}
-    })
+    getDirectory: async () => createMockDirHandle('root')
   },
   configurable: true
 });

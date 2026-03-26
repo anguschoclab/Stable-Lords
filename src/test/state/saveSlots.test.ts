@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { parseImportedSave } from "../../state/saveSlots";
 
 describe("saveSlots", () => {
@@ -29,10 +29,12 @@ describe("saveSlots", () => {
     });
 
     it("should throw if missing required fields", () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const json = JSON.stringify({
         meta: { gameName: "Stable Lords", version: "1.0" },
       });
       expect(() => parseImportedSave(json)).toThrow("Save file is missing required fields (player/meta).");
+      errorSpy.mockRestore();
     });
   });
 });

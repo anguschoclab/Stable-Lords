@@ -6,7 +6,7 @@
  * Run with: npx vitest run src/test/balance.test.ts
  * Review the matrix output to identify problem matchups.
  */
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
 import { FightingStyle, type Warrior } from "@/types/game";
 import { simulateFight, defaultPlanForWarrior } from "@/engine/simulate";
 import { computeWarriorStats } from "@/engine/skillCalc";
@@ -39,7 +39,21 @@ function makeTestWarrior(style: FightingStyle, id: string): Warrior {
 
 const FIGHTS_PER_MATCHUP = 100; // 100 per matchup × 100 matchups = 10k fights (fast enough for CI)
 
+
 describe("Style Balance", () => {
+  let logSpy: any;
+  let warnSpy: any;
+
+  beforeAll(() => {
+    logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    logSpy.mockRestore();
+    warnSpy.mockRestore();
+  });
+
   // Accumulate wins per style across all matchups
   const styleWins: Record<string, number> = {};
   const styleFights: Record<string, number> = {};

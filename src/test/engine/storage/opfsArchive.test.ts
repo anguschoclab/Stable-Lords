@@ -213,6 +213,7 @@ describe('OPFS Archival System', () => {
 
   describe('Suite 5: Fallback & Quota Management', () => {
     it('Test 5.1: Graceful degradation on QuotaExceededError', async () => {
+      const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const seasonHandle = { getDirectoryHandle: vi.fn() } as any;
       const boutsHandle = { getFileHandle: vi.fn() } as any;
 
@@ -232,6 +233,7 @@ describe('OPFS Archival System', () => {
 
       // We expect it to catch the error, possibly dispatch to Zustand, and return safely
       await expect(service.archiveBoutLog(1, 'b-123', [])).resolves.toBeUndefined();
+      errorSpy.mockRestore();
     });
   });
 });

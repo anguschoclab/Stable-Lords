@@ -42,7 +42,18 @@ function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Wa
   };
 }
 
+
 describe("Autosim Integration", () => {
+  let errorSpy: any;
+
+  beforeAll(() => {
+    errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    errorSpy.mockRestore();
+  });
+
   let initialState: GameState;
 
   beforeEach(() => {

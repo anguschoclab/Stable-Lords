@@ -17,8 +17,8 @@ const FIGHT_PURSE = 75; // Increased from 60 to 75 to reward active stable manag
 const WIN_BONUS = 30;
 const FAME_MULTIPLIER = 2;
 const WARRIOR_UPKEEP = 30; // Increased from 25 to 30 to penalize large idle rosters
-const TRAINER_SALARY = 35;
 const TRAINING_COST = 20; // Increased training cost to make early-game recruits more of a risk
+import { TRAINER_WEEKLY_SALARY } from "./trainers";
 
 export interface WeeklyBreakdown {
   income: { label: string; amount: number }[];
@@ -55,7 +55,13 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
 
   const expenses: { label: string; amount: number }[] = [];
   if (state.roster.length > 0) expenses.push({ label: `Warrior upkeep (${state.roster.length})`, amount: state.roster.length * WARRIOR_UPKEEP });
-  if (state.trainers.length > 0) expenses.push({ label: `Trainer salaries (${state.trainers.length})`, amount: state.trainers.length * TRAINER_SALARY });
+  
+  const activeTrainers = state.trainers.filter(t => t.contractWeeksLeft > 0);
+  if (activeTrainers.length > 0) {
+    const trainerCost = activeTrainers.reduce((sum, t) => sum + (TRAINER_WEEKLY_SALARY[t.tier] ?? 35), 0);
+    expenses.push({ label: `Trainer salaries (${activeTrainers.length})`, amount: trainerCost });
+  }
+
   const trainingCount = (state.trainingAssignments ?? []).length;
   if (trainingCount > 0) expenses.push({ label: `Training fees (${trainingCount})`, amount: trainingCount * TRAINING_COST });
 

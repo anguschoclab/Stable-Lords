@@ -458,3 +458,22 @@ export function draftInitialRoster(state: GameState, warriors: Warrior[]): GameS
     ftueComplete: true,
   };
 }
+
+/** Update a warrior's equipment loadout */
+export function updateWarriorEquipment(
+  state: GameState,
+  warriorId: string,
+  equipment: {
+    weapon: string;
+    armor: string;
+    shield: string;
+    helm: string;
+  }
+): GameState {
+  return {
+    ...state,
+    roster: state.roster.map((w) =>
+      w.id === warriorId ? { ...w, equipment } : w
+    ),
+  };
+}

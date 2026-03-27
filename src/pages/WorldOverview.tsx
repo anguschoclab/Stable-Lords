@@ -7,9 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ArrowUpDown, Crown, Skull, Swords, TrendingUp, Trophy } from "lucide-react";
-import type { RivalStableData, Warrior } from "@/types/game";
+import { ArrowUpDown, Crown, Skull, Swords, TrendingUp, Trophy, Activity, Brain, Shield, Zap, Eye, Target } from "lucide-react";
+import type { RivalStableData, Warrior, FightingStyle } from "@/types/game";
 import { getStableTemplates } from "@/engine/rivals";
+import { MetaDriftWidget } from "@/components/widgets/MetaDriftWidget";
+import { STYLE_DISPLAY_NAMES } from "@/types/game";
 
 type SortDir = "asc" | "desc";
 
@@ -236,6 +238,7 @@ export default function WorldOverview() {
         <TabsList>
           <TabsTrigger value="stables">Stable Rankings</TabsTrigger>
           <TabsTrigger value="warriors">Warrior Leaderboard</TabsTrigger>
+          <TabsTrigger value="intel">Intelligence</TabsTrigger>
         </TabsList>
 
         {/* ── Stable League Table ── */}
@@ -399,6 +402,69 @@ export default function WorldOverview() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+        {/* ── Intelligence & Meta ── */}
+        <TabsContent value="intel" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1">
+              <MetaDriftWidget />
+            </div>
+            <div className="lg:col-span-2 space-y-4">
+              <Card>
+                <CardHeader className="pb-2 border-b">
+                  <CardTitle className="text-base font-display flex items-center gap-2">
+                    <Brain className="h-4 w-4 text-primary" /> Rival Intelligence
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4 px-0">
+                  <div className="space-y-4">
+                    {state.rivals?.map((rival) => (
+                      <div key={rival.owner.id} className="px-4 py-3 border-b border-border/40 last:border-0 hover:bg-muted/10 transition-colors">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h4 className="font-bold text-sm">{rival.owner.stableName}</h4>
+                            <p className="text-[10px] text-muted-foreground uppercase font-medium">{rival.owner.name} · {rival.owner.personality || "Unknown Personality"}</p>
+                          </div>
+                          <Badge variant="secondary" className="text-[9px] uppercase font-bold py-0 h-4">
+                            {rival.owner.metaAdaptation || "Neutral"} Adaptation
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 mt-3">
+                          <div className="space-y-1">
+                            <span className="text-[9px] uppercase font-bold text-muted-foreground block">Philosophy</span>
+                            <p className="text-xs leading-relaxed italic">"{rival.philosophy || "No recorded philosophy."}"</p>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-[9px] uppercase font-bold text-muted-foreground block">Favored Styles</span>
+                            <div className="flex flex-wrap gap-1 mt-0.5">
+                              {rival.owner.favoredStyles && rival.owner.favoredStyles.length > 0 ? (
+                                rival.owner.favoredStyles.map((s: FightingStyle) => (
+                                  <Badge key={s} variant="outline" className="text-[8px] py-0 px-1 bg-background">
+                                    {STYLE_DISPLAY_NAMES[s]}
+                                  </Badge>
+                                ))
+                              ) : (
+                                <span className="text-[10px] text-muted-foreground italic">Adaptive style focus</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-primary/5 border-primary/20">
+                <CardContent className="p-4 flex items-start gap-3">
+                  <Zap className="h-4 w-4 text-primary mt-0.5" />
+                  <div className="text-xs text-muted-foreground leading-relaxed">
+                    <span className="font-bold text-foreground">Scouting Perspective:</span> Rival owners move with the meta at different speeds. **Innovators** will pivot their training programs weeks before a style becomes dominant, while **Traditionalists** may stubbornly stick to declining styles. Use this intel to predict who will be "meta-ready" in future tournaments.
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

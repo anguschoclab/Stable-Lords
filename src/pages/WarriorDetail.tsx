@@ -9,9 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield, Armchair, User, Crosshair, Shirt, History, TrendingUp, ScrollText, Zap, Skull } from "lucide-react";
+import { ArrowLeft, Trophy, Flame, Star, Swords, Heart, Shield, Armchair, User, Crosshair, Shirt, History, TrendingUp, ScrollText, Zap, Skull, Target } from "lucide-react";
 import TagBadge from "@/components/TagBadge";
 import PlanBuilder from "@/components/PlanBuilder";
+import { SchedulingWidget } from "@/components/widgets/SchedulingWidget";
 import EquipmentLoadoutUI from "@/components/EquipmentLoadout";
 import { defaultPlanForWarrior } from "@/engine/simulate";
 import { computeStreaks } from "@/engine/gazetteNarrative";
@@ -34,6 +35,7 @@ import { cn } from "@/lib/utils";
 const TABS: SubNavTab[] = [
   { id: "overview", label: "Overview", icon: <User className="h-3.5 w-3.5" /> },
   { id: "strategy", label: "Strategy", icon: <Crosshair className="h-3.5 w-3.5" /> },
+  { id: "scouting", label: "Scouting", icon: <Target className="h-3.5 w-3.5" /> },
   { id: "equipment", label: "Equipment", icon: <Shirt className="h-3.5 w-3.5" /> },
   { id: "history", label: "History", icon: <History className="h-3.5 w-3.5" /> },
 ];
@@ -876,7 +878,15 @@ export default function WarriorDetail() {
           plan={currentPlan}
           onPlanChange={handlePlanChange}
           warriorName={displayWarrior.name}
+          warrior={warrior}
         />
+      )}
+
+      {/* Scouting Tab */}
+      {activeTab === "scouting" && (
+        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+           <SchedulingWidget warrior={warrior} />
+        </div>
       )}
 
       {/* Equipment Tab */}

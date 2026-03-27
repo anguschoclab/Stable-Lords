@@ -15,8 +15,9 @@ import { WarriorLink } from "@/components/EntityLink";
 import {
   Trophy, Swords, Flame, Star, Skull, Zap, Eye,
   TrendingUp, TrendingDown, Minus, LayoutDashboard,
-  Activity, Bell, Target, Wallet
+  Activity, Bell, Target, Wallet, Info
 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 // Import new Widgets
@@ -24,6 +25,7 @@ import { MedicalWidget } from "@/components/widgets/MedicalWidget";
 import { InboxWidget } from "@/components/widgets/InboxWidget";
 import { NextBoutWidget } from "@/components/widgets/NextBoutWidget";
 import { TreasuryWidget } from "@/components/widgets/TreasuryWidget";
+import { MetaDriftWidget } from "@/components/widgets/MetaDriftWidget";
 
 // ─── Crowd Mood Meter ──────────────────────────────────────────────────────
 
@@ -49,19 +51,37 @@ function CrowdMoodWidget() {
         </div>
         
         <div className="grid grid-cols-2 gap-2 text-center pt-1">
-          <div className="rounded border border-border/40 p-1.5 bg-secondary/20">
-            <div className={`text-xs font-bold font-mono ${mods.fameMultiplier > 1 ? "text-primary" : "text-muted-foreground"}`}>
-              ×{mods.fameMultiplier.toFixed(1)}
-            </div>
-            <div className="text-[8px] text-muted-foreground uppercase font-medium">Fame</div>
-          </div>
-          <div className="rounded border border-border/40 p-1.5 bg-secondary/20">
-            <div className={`text-xs font-bold font-mono ${mods.killChanceBonus > 0 ? "text-destructive" : "text-muted-foreground"}`}>
-              {mods.killChanceBonus > 0 ? "+" : ""}{(mods.killChanceBonus * 100).toFixed(0)}%
-            </div>
-            <div className="text-[8px] text-muted-foreground uppercase font-medium">Lethality</div>
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="rounded border border-border/40 p-1.5 bg-secondary/20 cursor-help transition-colors hover:bg-secondary/40">
+                  <div className={`text-xs font-bold font-mono ${mods.fameMultiplier > 1 ? "text-primary" : "text-muted-foreground"}`}>
+                    ×{mods.fameMultiplier.toFixed(1)}
+                  </div>
+                  <div className="text-[8px] text-muted-foreground uppercase font-medium">Fame</div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="text-[10px]">Multiplies all fame gains from this week's bouts.</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="rounded border border-border/40 p-1.5 bg-secondary/20 cursor-help transition-colors hover:bg-secondary/40">
+                  <div className={`text-xs font-bold font-mono ${mods.killChanceBonus > 0 ? "text-destructive" : "text-muted-foreground"}`}>
+                    {mods.killChanceBonus > 0 ? "+" : ""}{(mods.killChanceBonus * 100).toFixed(0)}%
+                  </div>
+                  <div className="text-[8px] text-muted-foreground uppercase font-medium">Lethality</div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="text-[10px]">Probability bonus added to all fatal blow checks.</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
+        <p className="text-[9px] text-muted-foreground italic leading-tight text-center pt-1">
+          {MOOD_DESCRIPTIONS[mood]}
+        </p>
       </CardContent>
     </Card>
   );
@@ -157,7 +177,7 @@ export default function ArenaHub() {
         <div className="flex items-center gap-4">
            <div className="text-right">
               <div className="text-[10px] text-muted-foreground font-bold uppercase">Treasury</div>
-              <div className="text-lg font-display font-bold text-arena-gold">${state.player.funds}</div>
+              <div className="text-lg font-display font-bold text-arena-gold">${state.gold}</div>
            </div>
            <Separator orientation="vertical" className="h-10" />
            <div className="text-right">
@@ -178,6 +198,7 @@ export default function ArenaHub() {
         <div className="lg:col-span-2 space-y-4">
            <MedicalWidget />
            <CrowdMoodWidget />
+           <MetaDriftWidget />
         </div>
       </div>
 

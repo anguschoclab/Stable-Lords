@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Warrior, ATTRIBUTE_LABELS, ATTRIBUTE_KEYS } from "@/types/game";
+import { Warrior, ATTRIBUTE_LABELS, ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from "@/types/game";
 
 interface WarriorRadarChartProps {
   warrior: Warrior;
@@ -30,7 +30,7 @@ export function WarriorRadarChart({ warrior }: WarriorRadarChartProps) {
     attribute: ATTRIBUTE_LABELS[key],
     current: warrior.attributes[key],
     potential: warrior.potential ? warrior.potential[key] : warrior.attributes[key],
-    fullMark: 25,
+    fullMark: ATTRIBUTE_MAX,
   }));
 
   return (
@@ -44,7 +44,7 @@ export function WarriorRadarChart({ warrior }: WarriorRadarChartProps) {
           />
           <PolarRadiusAxis
             angle={90}
-            domain={[0, 25]}
+            domain={[0, ATTRIBUTE_MAX]}
             tick={false}
             axisLine={false}
           />

@@ -627,8 +627,12 @@ function WeeklyIssue({ issue, state }: { issue: GazetteStory; state: any }) {
 
 /* ── main page ───────────────────────────────────────────── */
 
+import { useShallow } from 'zustand/react/shallow';
+
+/* ... etc ... */
+
 export default function Gazette() {
-  const { state } = useGameStore();
+  const state = useGameStore(useShallow((s) => s.state));
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const allFights = useMemo(() => ArenaHistory.all(), [state.week]);

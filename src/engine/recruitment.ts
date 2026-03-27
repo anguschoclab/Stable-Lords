@@ -264,17 +264,26 @@ export function aiDraftFromPool(
   rivals: RivalStableData[],
   week: number
 ): { updatedPool: PoolWarrior[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
-  // AI recruitment every 4 weeks
-  if (week % 4 !== 0) return { updatedPool: pool, updatedRivals: rivals, gazetteItems: [] };
+  // AI recruitment logic: 
+  // 1. Every 4 weeks, AI stablishes do a "major" draft.
+  // 2. Every week, there is a chance for a high-value recruit to be "snatched" by a rival if they've been sitting there.
 
-  const remainingPool = [...pool];
   const updatedRivals = rivals.map(r => ({ ...r, roster: [...r.roster] }));
   const gazetteItems: string[] = [];
+  let remainingPool = [...pool];
+
+  // Major Draft (Every 4 weeks)
+  const isMajorDraftWeek = week % 4 === 0;
 
   for (const rival of updatedRivals) {
     const activeCount = rival.roster.filter(w => w.status === "Active").length;
-    if (activeCount >= 4) continue; // roster full enough
-    if (remainingPool.length === 0) break;
+    if (activeCount >= 6) continue; // AI now maintains larger rosters
+    
+    // Chance to recruit: 100% on major weeks, 15% otherwise if under strength
+    const roll = Math.random();
+    const willRecruit = isMajorDraftWeek || (activeCount < 3 && roll < 0.25) || (roll < 0.05);
+    
+    if (!willRecruit || remainingPool.length === 0) continue;
 
     const personality = rival.owner.personality ?? "Pragmatic";
     const prefs = PERSONALITY_STYLE_PREFS[personality] || [];
@@ -283,45 +292,55 @@ export function aiDraftFromPool(
     // Score candidates
     let bestIdx = -1;
     let bestScore = -Infinity;
+    
     for (let i = 0; i < remainingPool.length; i++) {
-      const w = remainingPool[i];
-      let score = 0;
-      // Style fit
-      if (prefsSet.has(w.style)) score += 20;
-      // Quality
-      score += TIER_STARS[w.tier] * 10;
-      // Cost penalty (AI has implied budget)
-      score -= w.cost * 0.02;
+       const w = remainingPool[i];
+       let score = 0;
+       
+       // Quality is king for AI
+       if (w.tier === "Prodigy") score += 100;
+       if (w.tier === "Exceptional") score += 50;
+       if (w.tier === "Promising") score += 20;
+       
+       // Style preference
+       if (prefsSet.has(w.style)) score += 30;
+       
+       // Desperation factor (how long has the recruit been available?)
+       const weeksAvailable = week - w.addedWeek;
+       score += weeksAvailable * 10; 
 
-      if (score > bestScore) { bestScore = score; bestIdx = i; }
+       if (score > bestScore) {
+         bestScore = score;
+         bestIdx = i;
+       }
     }
 
-    if (bestIdx >= 0) {
-      const recruit = remainingPool[bestIdx];
-      remainingPool.splice(bestIdx, 1);
+    // AI will only take it if the score is high enough or it's a major week
+    if (bestIdx >= 0 && (bestScore > 40 || isMajorDraftWeek)) {
+       const recruit = remainingPool[bestIdx];
+       remainingPool.splice(bestIdx, 1);
 
-      // Add to rival roster as a Warrior
-      rival.roster.push({
-        id: crypto.randomUUID(),
-        name: recruit.name,
-        style: recruit.style,
-        attributes: recruit.attributes,
-        potential: recruit.potential,
-        baseSkills: recruit.baseSkills,
-        derivedStats: recruit.derivedStats,
-        fame: 0,
-        popularity: 0,
-        titles: [],
-        injuries: [],
-        flair: [],
-        career: { wins: 0, losses: 0, kills: 0 },
-        champion: false,
-        status: "Active",
-        age: recruit.age,
-        stableId: rival.owner.id,
-      });
+       rival.roster.push({
+         id: crypto.randomUUID(),
+         name: recruit.name,
+         style: recruit.style,
+         attributes: recruit.attributes,
+         potential: recruit.potential,
+         baseSkills: recruit.baseSkills,
+         derivedStats: recruit.derivedStats,
+         fame: 10, // AI recruits start with a tiny bit of hype
+         popularity: 5,
+         titles: [],
+         injuries: [],
+         flair: [],
+         career: { wins: 0, losses: 0, kills: 0 },
+         champion: false,
+         status: "Active",
+         age: recruit.age,
+         stableId: rival.owner.id,
+       });
 
-      gazetteItems.push(`${rival.owner.stableName} signed ${recruit.name} (${recruit.tier}).`);
+       gazetteItems.push(`MARKET: ${rival.owner.stableName} has signed the ${recruit.tier} prospect ${recruit.name}.`);
     }
   }
 

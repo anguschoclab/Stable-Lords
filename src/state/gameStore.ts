@@ -118,6 +118,7 @@ export function createFreshState(): GameState {
         scouting: true,
       },
     },
+    unacknowledgedDeaths: [],
   };
 }
 
@@ -182,6 +183,7 @@ export function migrateGameState(parsed: any): GameState {
   if (!parsed.season) parsed.season = "Spring";
   if (!parsed.settings) parsed.settings = { featureFlags: { tournaments: true, scouting: true } };
   if (!parsed.phase) parsed.phase = "planning";
+  if (parsed.unacknowledgedDeaths === undefined) parsed.unacknowledgedDeaths = [];
   if (parsed.settings && !parsed.settings.featureFlags?.scouting) {
     parsed.settings.featureFlags = { ...parsed.settings.featureFlags, scouting: true };
   }
@@ -415,6 +417,7 @@ export function killWarrior(
     ...state,
     roster: state.roster.filter((w) => w.id !== warriorId),
     graveyard: [...state.graveyard, dead],
+    unacknowledgedDeaths: [...(state.unacknowledgedDeaths || []), warriorId],
   };
 }
 

@@ -605,6 +605,7 @@ export interface GameState {
     };
   };
   isFTUE: boolean;
+  unacknowledgedDeaths: string[];
 }
 
 /** Trainer as stored in game state (mirrors modules/trainers Trainer shape) */

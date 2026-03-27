@@ -42,8 +42,12 @@ function getLethalityHint(wA: Warrior, wB: Warrior, crowdMood: string): { label:
   return { label: "Standard Bout", color: "text-muted-foreground border-border" };
 }
 
+import { useShallow } from 'zustand/react/shallow';
+
 export default function RunRound() {
-  const { state, setState } = useGameStore();
+  const { state, setState } = useGameStore(
+    useShallow((s) => ({ state: s.state, setState: s.setState }))
+  );
   const [results, setResults] = useState<BoutResult[]>([]);
   const [running, setRunning] = useState(false);
   const [autosimming, setAutosimming] = useState(false);
@@ -503,7 +507,7 @@ export default function RunRound() {
             <p className="text-muted-foreground">
               You need at least <span className="font-semibold text-foreground">1 active warrior</span> and rival stables to run a round.
             </p>
-            <Link to="/recruit">
+            <Link to="/stable/recruit">
               <Button className="gap-2 mt-2">
                 <UserPlus className="h-4 w-4" /> Recruit Warriors
               </Button>

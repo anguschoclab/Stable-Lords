@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import TagBadge from "@/components/TagBadge";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, SkipForward, RotateCcw, Skull, Swords, Zap, Shield, ChevronDown, ChevronUp } from "lucide-react";
+import { audioManager } from "@/lib/AudioManager";
 
 interface BoutViewerProps {
   nameA: string;
@@ -88,8 +89,21 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
   const speedMs = speed === 1 ? 800 : speed === 2 ? 400 : 150;
 
   const advanceOne = useCallback(() => {
-    setVisibleCount((c) => Math.min(c + 1, totalEvents));
-  }, [totalEvents]);
+    setVisibleCount((c) => {
+      const next = Math.min(c + 1, totalEvents);
+      if (next > c) {
+        const latestEvent = log[c];
+        if (latestEvent) {
+          const type = classifyEvent(latestEvent.text);
+          if (type === "hit") audioManager.play("hit");
+          else if (type === "crit") audioManager.play("crit");
+          else if (type === "death") audioManager.play("death");
+          else if (type === "riposte") audioManager.play("clash");
+        }
+      }
+      return next;
+    });
+  }, [totalEvents, log]);
 
   const reset = useCallback(() => {
     setIsPlaying(false);
@@ -177,7 +191,7 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
                   <Swords className="h-4 w-4 text-arena-gold" />
                 </div>
                 {isRivalry && (
-                  <TagBadge tag="BLOOD FEUD" type="destructive" className="mt-1 animate-pulse shadow-sm shadow-destructive/20" />
+                  <TagBadge tag="BLOOD FEUD" type="injury" className="mt-1 animate-pulse shadow-sm shadow-destructive/20" />
                 )}
                 {isComplete && by && (
                 <Badge

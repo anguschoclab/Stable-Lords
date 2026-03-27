@@ -8,8 +8,9 @@ import {
   LogOut, PanelLeftClose, PanelLeft, Save, Download, 
   Dumbbell, Sun, Moon, Search, Globe, Newspaper, 
   Crown, Shield, BarChart3, Target, Award, BookOpen, 
-  Eye, Landmark, Settings, Users, Activity
+  Eye, Landmark, Settings, Users, Activity, Volume2, VolumeX
 } from "lucide-react";
+import { audioManager } from "@/lib/AudioManager";
 import { Button } from "@/components/ui/button";
 import { useGameStore } from "@/state/useGameStore";
 import { Badge } from "@/components/ui/badge";
@@ -74,18 +75,38 @@ const NAV_SECTIONS = [
   }
 ];
 
+import { useShallow } from 'zustand/react/shallow';
+
+import { DeathModal } from "@/components/modals/DeathModal";
+import { CoachOverlay } from "@/components/ui/CoachOverlay";
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const { state, doReset, returnToTitle, lastSavedAt, doAdvanceWeek } = useGameStore();
+  const { state, doReset, returnToTitle, lastSavedAt, doAdvanceWeek } = useGameStore(
+    useShallow((s) => ({
+      state: s.state,
+      doReset: s.doReset,
+      returnToTitle: s.returnToTitle,
+      lastSavedAt: s.lastSavedAt,
+      doAdvanceWeek: s.doAdvanceWeek,
+    }))
+  );
   const { theme, setTheme } = useTheme();
   const moodIcon = MOOD_ICONS[state.crowdMood as keyof typeof MOOD_ICONS] ?? "😐";
   const [resetOpen, setResetOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
   const [saveFlash, setSaveFlash] = useState(false);
+  const [isMuted, setIsMuted] = useState(audioManager.isMuted());
+
+  const toggleMute = () => {
+    const next = !isMuted;
+    audioManager.setMuted(next);
+    setIsMuted(next);
+  };
 
   const toggleSidebar = useCallback(() => setSidebarOpen((v) => !v), []);
 
-  useCoachTip(location.pathname);
+  // useCoachTip removed in favor of CoachOverlay
   useKeyboardShortcuts({ onToggleSidebar: toggleSidebar });
   useRivalryAlerts();
 
@@ -178,6 +199,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <Separator orientation="vertical" className="h-6 bg-border/40 hidden sm:block" />
 
           <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={toggleMute} title={isMuted ? "Unmute" : "Mute"}>
+              {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+            </Button>
             <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
               {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
             </Button>
@@ -389,6 +413,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </AlertDialogContent>
         </motion.div>
       </AlertDialog>
+      <DeathModal />
+      <CoachOverlay />
     </div>
   );
 }

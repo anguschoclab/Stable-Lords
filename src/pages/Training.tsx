@@ -172,8 +172,14 @@ function WarriorTrainingCard({ warrior, assignment, seasonalGains, trainers, onA
   );
 }
 
+import { useShallow } from 'zustand/react/shallow';
+
+/* ... WarriorTrainingCard stay same ... */
+
 export default function Training() {
-  const { state, setState } = useGameStore();
+  const { state, setState } = useGameStore(
+    useShallow((s) => ({ state: s.state, setState: s.setState }))
+  );
 
   const assignmentMap = useMemo(() => {
     const map = new Map<string, TrainingAssignment>();

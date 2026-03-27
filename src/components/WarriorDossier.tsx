@@ -12,6 +12,8 @@ import {
   History, Swords, Heart, Zap, Skull 
 } from "lucide-react";
 import { StatBadge } from "@/components/ui/StatBadge";
+import WarriorPaperDoll from "@/components/WarriorPaperDoll";
+import { cn } from "@/lib/utils";
 
 interface WarriorDossierProps {
   warriorId: string;
@@ -53,35 +55,57 @@ export function WarriorDossier({ warriorId }: WarriorDossierProps) {
           </div>
         </div>
 
-        {/* Condition Box */}
-        <div className="grid grid-cols-2 gap-3">
-          <Card className="bg-secondary/20 border-none">
-            <CardContent className="p-3 space-y-2">
-              <div className="flex items-center justify-between text-[10px] uppercase font-bold text-muted-foreground">
-                <span>Condition</span>
-                <span>{condition}%</span>
-              </div>
-              <Progress 
-                value={condition} 
-                className={cn(
-                  "h-1.5",
-                  condition > 70 ? "[&>div]:bg-arena-fame" : condition > 30 ? "[&>div]:bg-arena-gold" : "[&>div]:bg-destructive"
-                )}
-              />
-            </CardContent>
-          </Card>
-          <Card className="bg-secondary/20 border-none">
-            <CardContent className="p-3 space-y-2">
-              <div className="flex items-center justify-between text-[10px] uppercase font-bold text-muted-foreground">
-                <span>Fame</span>
-                <span>{warrior.fame}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Flame className="h-3 w-3 text-arena-fame" />
-                <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-                   <div className="h-full bg-arena-fame" style={{ width: `${Math.min(100, (warrior.fame / 100) * 100)}%` }} />
+        {/* Condition & PaperDoll Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-4">
+             <Card className="bg-secondary/20 border-none">
+              <CardContent className="p-3 space-y-2">
+                <div className="flex items-center justify-between text-[10px] uppercase font-bold text-muted-foreground">
+                  <span>Condition</span>
+                  <span>{condition}%</span>
                 </div>
-              </div>
+                <Progress 
+                  value={condition} 
+                  className={cn(
+                    "h-1.5",
+                    condition > 70 ? "[&>div]:bg-arena-fame" : condition > 30 ? "[&>div]:bg-arena-gold" : "[&>div]:bg-destructive"
+                  )}
+                />
+              </CardContent>
+            </Card>
+            <Card className="bg-secondary/20 border-none">
+              <CardContent className="p-3 space-y-2">
+                <div className="flex items-center justify-between text-[10px] uppercase font-bold text-muted-foreground">
+                  <span>Fame</span>
+                  <span>{warrior.fame}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Flame className="h-3 w-3 text-arena-fame" />
+                  <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+                     <div className="h-full bg-arena-fame" style={{ width: `${Math.min(100, (warrior.fame / 100) * 100)}%` }} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Attributes Grid */}
+            <div className="grid grid-cols-2 gap-2">
+              {ATTRIBUTE_KEYS.map((key) => (
+                <div key={key} className="flex items-center justify-between p-2 rounded bg-secondary/10 border border-border/50">
+                  <span className="text-[10px] uppercase text-muted-foreground font-medium">{ATTRIBUTE_LABELS[key]}</span>
+                  <span className="text-sm font-mono font-bold">{warrior.attributes[key]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Card className="bg-glass border-arena-blood/10 overflow-hidden relative">
+            <CardHeader className="pb-0 pt-3 flex flex-row items-center justify-between space-y-0">
+               <CardTitle className="text-[9px] uppercase tracking-widest text-muted-foreground font-black">Trauma Mapping</CardTitle>
+               <Activity className="h-3 w-3 text-arena-blood animate-pulse" />
+            </CardHeader>
+            <CardContent className="flex justify-center p-4">
+              <WarriorPaperDoll injuries={warrior.injuries} size={140} />
             </CardContent>
           </Card>
         </div>
@@ -96,17 +120,7 @@ export function WarriorDossier({ warriorId }: WarriorDossierProps) {
           </CardContent>
         </Card>
 
-        {/* Attributes Grid */}
-        <div className="grid grid-cols-2 gap-2">
-          {ATTRIBUTE_KEYS.map((key) => (
-            <div key={key} className="flex items-center justify-between p-2 rounded bg-secondary/10 border border-border/50">
-              <span className="text-[10px] uppercase text-muted-foreground font-medium">{ATTRIBUTE_LABELS[key]}</span>
-              <span className="text-sm font-mono font-bold">{warrior.attributes[key]}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Injuries */}
+        {/* Injuries List */}
         {warrior.injuries.length > 0 && (
           <div className="space-y-2">
             <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1">
@@ -115,9 +129,21 @@ export function WarriorDossier({ warriorId }: WarriorDossierProps) {
             <div className="grid gap-2">
               {warrior.injuries.map((inj, i) => {
                 const name = typeof inj === "string" ? inj : inj.name;
+                const severity = typeof inj === "string" ? "Minor" : inj.severity;
                 return (
-                  <Badge key={i} variant="outline" className="justify-start py-1 px-2 border-destructive/30 text-destructive bg-destructive/5 text-[10px] gap-2">
-                    <Skull className="h-3 w-3 shrink-0" /> {name}
+                  <Badge 
+                    key={i} 
+                    variant="outline" 
+                    className={cn(
+                      "justify-start py-1.5 px-3 border-destructive/20 text-[10px] gap-3 font-bold uppercase tracking-wider",
+                      severity === "Minor" ? "text-arena-gold bg-arena-gold/5 border-arena-gold/20" : "text-destructive bg-destructive/5"
+                    )}
+                  >
+                    <Skull className="h-3 w-3 shrink-0" /> 
+                    <div className="flex flex-col">
+                      <span>{name}</span>
+                      {typeof inj !== "string" && <span className="text-[8px] opacity-60 font-mono italic">{inj.location || "General"}</span>}
+                    </div>
                   </Badge>
                 );
               })}
@@ -128,5 +154,3 @@ export function WarriorDossier({ warriorId }: WarriorDossierProps) {
     </ScrollArea>
   );
 }
-
-import { cn } from "@/lib/utils";

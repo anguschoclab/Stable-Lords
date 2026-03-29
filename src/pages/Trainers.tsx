@@ -21,8 +21,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { WarriorNameTag } from "@/components/ui/WarriorNameTag";
-import { StatBadge } from "@/components/ui/StatBadge";
+import { WarriorNameTag, StatBadge } from "@/components/ui/WarriorBadges";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
@@ -91,8 +90,8 @@ function TrainerCard({
               </div>
             </div>
             {owned && onFire && (
-              <Button variant="ghost" size="icon" onClick={onFire} className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0 h-8 w-8">
-                <UserMinus className="h-4 w-4" />
+              <Button variant="ghost" size="icon" onClick={onFire} className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0 h-8 w-8" title="Release trainer">
+                <UserMinus className="h-4 w-4" /><span className="sr-only">Release trainer</span>
               </Button>
             )}
           </div>

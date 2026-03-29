@@ -4,7 +4,6 @@
  * creates inherent defensive bias that requires seed compression to fully fix.
  *
  * Run with: npx vitest run src/test/balance.test.ts
- * Review the matrix output to identify problem matchups.
  */
 import { describe, it, expect } from "vitest";
 import { FightingStyle, type Warrior } from "@/types/game";
@@ -85,7 +84,6 @@ describe("Style Balance", () => {
   }
 
   it("should have no style with >65% overall win rate", () => {
-    const report: string[] = ["=== STYLE WIN RATES (vs field) ==="];
     const problems: string[] = [];
 
     for (const s of ALL_STYLES) {
@@ -111,7 +109,6 @@ describe("Style Balance", () => {
         const pct = ((wins / total) * 100).toFixed(0);
         row += `${pct.padStart(5)}% `;
       }
-      matchupReport.push(row);
     }
 
     let errorMessage = `${report.join("\n")}\n${matchupReport.join("\n")}`;

@@ -200,16 +200,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <Separator orientation="vertical" className="h-6 bg-border/40 hidden sm:block" />
 
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={toggleMute} title={isMuted ? "Unmute" : "Mute"}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={toggleMute} title={isMuted ? "Unmute" : "Mute"} aria-label={isMuted ? "Unmute" : "Mute"}>
               {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}>
               {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setResetOpen(true)}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setResetOpen(true)} title="Reset save" aria-label="Reset save">
               <RotateCcw className="h-3.5 w-3.5" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={returnToTitle}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={returnToTitle} title="Return to title menu" aria-label="Return to title menu">
               <LogOut className="h-3.5 w-3.5" />
             </Button>
           </div>

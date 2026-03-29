@@ -84,6 +84,8 @@ export function CoachOverlay() {
             size="icon"
             onClick={() => setMinimized(false)}
             className="rounded-full bg-arena-gold text-black shadow-lg hover:bg-arena-gold/90 border-2 border-black/20"
+            title="Show coach tips"
+            aria-label="Show coach tips"
           >
             <Info className="w-5 h-5" />
           </Button>

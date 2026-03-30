@@ -47,6 +47,32 @@ export const STYLE_ABBREV: Record<FightingStyle, string> = {
   [FightingStyle.WallOfSteel]: "WS",
 };
 
+// ─── UI Component Types ─────────────────────────────────────────────────────
+
+export type TagType = "flair" | "title" | "injury";
+
+export interface TagBadgeProps {
+  tag: string;
+  type: TagType;
+  className?: string;
+}
+
+export interface StatBadgeProps {
+  styleName: FightingStyle;
+  career?: CareerRecord;
+  variant?: "default" | "secondary" | "destructive" | "outline";
+  showFullName?: boolean;
+}
+
+export interface WarriorNameTagProps {
+  id?: string;
+  name: string;
+  isChampion?: boolean;
+  injuryCount?: number;
+  useCrown?: boolean;
+  isDead?: boolean;
+}
+
 // ─── Attributes ─────────────────────────────────────────────────────────────
 
 export interface Attributes {

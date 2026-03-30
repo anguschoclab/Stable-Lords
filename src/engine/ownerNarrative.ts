@@ -1,30 +1,10 @@
+import { GameState, Season } from "@/types/game";
 import { getRecentFights } from "@/engine/core/historyUtils";
+
 /**
- * Owner AI — Personality-driven decision-making, roster management,
- * owner rivalries, narrative events, and philosophy evolution.
- *
- * Consumes: Owner personalities, stable philosophies, match results, meta drift.
- * Produces: Plan adjustments, gazette events, roster changes, rivalry updates.
+ * Generate personality-driven gazette events based on recent performance.
+ * Runs once per season change.
  */
-import type {
-  GameState, Warrior, RivalStableData, FightPlan, Owner,
-  OwnerPersonality, Season, NewsletterItem, MetaAdaptation,
-} from "@/types/game";
-import { FightingStyle } from "@/types/game";
-import { defaultPlanForWarrior } from "./simulate";
-import { computeWarriorStats } from "./skillCalc";
-import { computeMetaDrift, type StyleMeta } from "./metaDrift";
-
-// ─── 1) Personality-Driven Plan Adjustments ───────────────────────────────
-
-/** Personality modifiers applied on top of style defaults */
-const PERSONALITY_PLAN_MODS: Record<OwnerPersonality, Partial<FightPlan>> = {
-  Aggressive:  { OE: 2, AL: 1, killDesire: 3 },
-  Methodical:  { OE: -1, AL: 0, killDesire: -1 },
-  Showman:     { OE: 1, AL: 2, killDesire: 1 },
-  Pragmatic:   { OE: 0, AL: 0, killDesire: 0 },
-  Tactician:   { OE: -1, AL: 1, killDesire: -2 },
-};
 export function generateOwnerNarratives(
   state: GameState,
   newSeason: Season
@@ -39,35 +19,11 @@ export function generateOwnerNarratives(
     const personality = rival.owner.personality ?? "Pragmatic";
     const names = new Set(rival.roster.map(w => w.name));
 
-    let wins = 0;
-    let losses = 0;
-    let kills = 0;
-    let deaths = 0;
-
-    for (let j = 0; j < recentFights.length; j++) {
-      const f = recentFights[j];
-      const isA = names.has(f.a);
-      const isD = names.has(f.d);
-
-      if (isA || isD) {
-        const isWin = (isA && f.winner === "A") || (isD && f.winner === "D");
-        const isLoss = (isA && f.winner === "D") || (isD && f.winner === "A");
-
-        if (isWin) wins++;
-        if (isLoss) losses++;
-
-        if (f.by === "Kill") {
-          if (isWin) kills++;
-          if (isLoss) deaths++;
-        }
-      }
-    }
+    const { wins, losses, kills, deaths } = calculateRecentRecord(recentFights, names);
 
     const totalFights = wins + losses;
     if (totalFights === 0) continue;
     const winRate = wins / totalFights;
-
-    // ── Personality-specific reactions ──
 
     // Aggressive owner losing badly
     if (personality === "Aggressive" && winRate < 0.35 && totalFights >= 4) {
@@ -109,66 +65,50 @@ export function generateOwnerNarratives(
 
     // Any owner with a dominant season
     if (winRate >= 0.8 && totalFights >= 5) {
-      gazetteItems.push(
-        `🏆 ${rival.owner.stableName} dominated ${state.season} with a record of ${wins}-${losses}!`
-      );
+      gazetteItems.push(`🏆 ${rival.owner.stableName} dominated ${state.season} with a record of ${wins}-${losses}!`);
     }
 
     // Any owner with devastating losses
     if (deaths >= 3) {
-      gazetteItems.push(
-        `⚰️ A grim ${state.season} for ${rival.owner.stableName} — ${deaths} warriors fell in the arena.`
-      );
+      gazetteItems.push(`⚰️ A grim ${state.season} for ${rival.owner.stableName} — ${deaths} warriors fell in the arena.`);
     }
   }
 
   // Add Blood Feud public taunts for player rivalry
   for (const rival of rivals) {
-    const rivalries = state.rivalries || [];
-    const rivalry = rivalries.find(rv =>
+    const rivalry = (state.rivalries || []).find(rv =>
       (rv.stableIdA === state.player.id && rv.stableIdB === rival.owner.id) ||
       (rv.stableIdB === state.player.id && rv.stableIdA === rival.owner.id)
     );
 
-    if (rivalry && rivalry.intensity >= 4 && Math.random() < 0.25) { // 25% chance per season to taunt the player if feud
+    if (rivalry && rivalry.intensity >= 4 && Math.random() < 0.25) {
         const tauntTemplates = [
             `🗣️ "${state.player.stableName} is a disgrace to the sands. I will see them bleed," vows ${rival.owner.name} (${rival.owner.stableName}).`,
             `🗣️ ${rival.owner.name} (${rival.owner.stableName}) issues a public challenge: "My warriors will hunt down the dogs of ${state.player.stableName}."`,
             `🗣️ "The feud with ${state.player.stableName} ends when their stable is ash," declares ${rival.owner.name}.`,
             `🗣️ Public Grudge: ${rival.owner.name} (${rival.owner.stableName}) was heard mocking the recent performances of ${state.player.stableName}.`
         ];
-
-        // Pick a random taunt
-        const taunt = tauntTemplates[Math.floor(Math.random() * tauntTemplates.length)];
-        gazetteItems.push(taunt);
+        gazetteItems.push(tauntTemplates[Math.floor(Math.random() * tauntTemplates.length)]);
     }
   }
 
   return gazetteItems;
 }
 
-// ─── 5) Philosophy Evolution ──────────────────────────────────────────────
-
-const PHILOSOPHY_DRIFT: Record<string, string[]> = {
-  "Brute Force":  ["Spectacle", "Balanced"],
-  "Speed Kills":  ["Cunning", "Spectacle"],
-  "Iron Defense": ["Endurance", "Balanced"],
-  "Balanced":     ["Cunning", "Iron Defense", "Brute Force"],
-  "Spectacle":    ["Speed Kills", "Brute Force"],
-  "Cunning":      ["Iron Defense", "Speed Kills"],
-  "Endurance":    ["Iron Defense", "Balanced"],
-  "Specialist":   ["Cunning", "Balanced"],
-};
-
-/**
- * Evolve stable philosophies based on season results.
- * Losing stables adapt; winning stables double down.
- * Runs on season change.
- */
-/**
- * Iterates over AI factions and slightly evolves their underlying philosophies over time.
- * Models long-term shifting strategies and trends in the AI manager pool.
- *
- * @param globalState - The global application state object.
- * @param randomSeed - Deterministic random seed used for generating philosophical drift.
- */
+function calculateRecentRecord(recentFights: import("@/types/game").FightSummary[], rosterNames: Set<string>) {
+  let wins = 0, losses = 0, kills = 0, deaths = 0;
+  for (const f of recentFights) {
+    const isA = rosterNames.has(f.a), isD = rosterNames.has(f.d);
+    if (isA || isD) {
+      const isWin = (isA && f.winner === "A") || (isD && f.winner === "D");
+      const isLoss = (isA && f.winner === "D") || (isD && f.winner === "A");
+      if (isWin) wins++;
+      if (isLoss) losses++;
+      if (f.by === "Kill") {
+        if (isWin) kills++;
+        if (isLoss) deaths++;
+      }
+    }
+  }
+  return { wins, losses, kills, deaths };
+}

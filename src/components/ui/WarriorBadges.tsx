@@ -3,18 +3,16 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Trophy, Crown, Heart, Skull } from "lucide-react";
 import { getTagDescription } from "@/data/tagDescriptions";
-import { STYLE_ABBREV, STYLE_DISPLAY_NAMES, type FightingStyle, type CareerRecord } from "@/types/game";
+import {
+  STYLE_ABBREV,
+  STYLE_DISPLAY_NAMES,
+  type TagBadgeProps,
+  type StatBadgeProps,
+  type WarriorNameTagProps
+} from "@/types/game";
 import { WarriorLink } from "@/components/EntityLink";
 
 // ─── TagBadge ─────────────────────────────────────────────────────────────
-
-type TagType = "flair" | "title" | "injury";
-
-export interface TagBadgeProps {
-  tag: string;
-  type: TagType;
-  className?: string;
-}
 
 /**
  * Reusable badge with tooltip explaining the tag's gameplay impact.
@@ -59,13 +57,6 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
 
 // ─── StatBadge ────────────────────────────────────────────────────────────
 
-export interface StatBadgeProps {
-  styleName: FightingStyle;
-  career?: CareerRecord;
-  variant?: "default" | "secondary" | "destructive" | "outline";
-  showFullName?: boolean;
-}
-
 export function StatBadge({ styleName, career, variant = "outline", showFullName = false }: StatBadgeProps) {
   return (
     <div className="flex items-center gap-2">
@@ -83,15 +74,6 @@ export function StatBadge({ styleName, career, variant = "outline", showFullName
 }
 
 // ─── WarriorNameTag ───────────────────────────────────────────────────────
-
-export interface WarriorNameTagProps {
-  id?: string;
-  name: string;
-  isChampion?: boolean;
-  injuryCount?: number;
-  useCrown?: boolean;
-  isDead?: boolean;
-}
 
 export function WarriorNameTag({
   id,

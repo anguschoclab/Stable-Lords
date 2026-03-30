@@ -62,6 +62,15 @@ export const PHILOSOPHY_TO_STYLES: Record<string, FightingStyle[]> = {
   "Specialist": [FightingStyle.AimedBlow, FightingStyle.StrikingAttack, FightingStyle.ParryStrike],
 };
 
+/** Map personality to preferred fighting styles for AI drafting */
+export const PERSONALITY_STYLE_PREFS: Record<OwnerPersonality, FightingStyle[]> = {
+  Aggressive: [FightingStyle.BashingAttack, FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.StrikingAttack],
+  Methodical: [FightingStyle.ParryStrike, FightingStyle.ParryRiposte, FightingStyle.WallOfSteel],
+  Showman: [FightingStyle.AimedBlow, FightingStyle.SlashingAttack, FightingStyle.LungingAttack],
+  Pragmatic: [FightingStyle.StrikingAttack, FightingStyle.ParryStrike, FightingStyle.WallOfSteel],
+  Tactician: [FightingStyle.ParryRiposte, FightingStyle.ParryLunge, FightingStyle.AimedBlow],
+};
+
 export function getPhilosophyStyles(philosophy: string): FightingStyle[] {
   return PHILOSOPHY_TO_STYLES[philosophy] ?? Object.values(FightingStyle);
 }

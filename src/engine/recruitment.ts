@@ -1,12 +1,9 @@
-/**
- * Recruitment Engine — procedural warrior generation with quality tiers,
- * pool management, and AI draft behavior.
- * Implements Stable_Lords_Orphanage_Recruitment_Spec_v1.0
- */
 import { FightingStyle, type Attributes, type AttributePotential, type BaseSkills, type DerivedStats, type WarriorFavorites } from "@/types/game";
 import { computeWarriorStats } from "./skillCalc";
 import { generatePotential } from "./potential";
 import { generateFavorites } from "./favorites";
+import { SeededRNG } from "@/utils/random";
+import { generateId } from "@/utils/idUtils";
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -100,77 +97,69 @@ const ORIGIN_TEMPLATES = [
   "Survived the border wars. Now fights for coin.",
 ];
 
-// ─── Seeded RNG ───────────────────────────────────────────────────────────
-
-function seededRng(seed: number) {
-  return () => {
-    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-    return seed / 0x7fffffff;
-  };
-}
+// Removed manual seededRng implementation in favor of utils/random
 
 // ─── Generation ───────────────────────────────────────────────────────────
 
-function rollTier(rng: () => number): RecruitTier {
-  const r = rng();
-  if (r < 0.05) return "Prodigy";
-  if (r < 0.20) return "Exceptional";
-  if (r < 0.50) return "Promising";
+function rollTier(rng: SeededRNG): RecruitTier {
+  if (rng.chance(0.05)) return "Prodigy";
+  if (rng.chance(0.20)) return "Exceptional";
+  if (rng.chance(0.50)) return "Promising";
   return "Common";
 }
 
-function distributeAttributes(rng: () => number, total: number): Attributes {
+function distributeAttributes(rng: SeededRNG, total: number): Attributes {
   const attrs: Attributes = { ST: 3, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 3, DF: 3 };
   let pool = total - 21; // 21 is base (7 × 3)
   const keys: (keyof Attributes)[] = ["ST", "CN", "SZ", "WT", "WL", "SP", "DF"];
 
   while (pool > 0) {
-    const key = keys[Math.floor(rng() * keys.length)];
+    const key = rng.pick(keys);
     const max = Math.min(pool, 21 - attrs[key]); // recruit cap is 21
     if (max <= 0) continue;
-    const add = Math.min(max, Math.floor(rng() * 3) + 1);
+    const add = Math.min(max, rng.roll(1, 3));
     attrs[key] += add;
     pool -= add;
   }
   return attrs;
 }
 
-function generateLore(rng: () => number, style: FightingStyle): string {
-  const origin = ORIGIN_TEMPLATES[Math.floor(rng() * ORIGIN_TEMPLATES.length)];
+function generateLore(rng: SeededRNG, style: FightingStyle): string {
+  const origin = rng.pick(ORIGIN_TEMPLATES);
   const blurbs = STYLE_BLURBS[style] || ["A fighter with something to prove."];
-  const blurb = blurbs[Math.floor(rng() * blurbs.length)];
+  const blurb = rng.pick(blurbs);
   return `${origin} ${blurb}`;
 }
 
 export function generateRecruit(
-  rng: () => number,
+  rng: SeededRNG,
   usedNames: Set<string>,
   week: number,
   forceTier?: RecruitTier
 ): PoolWarrior {
   const tier = forceTier ?? rollTier(rng);
   const [minPts, maxPts] = TIER_POINTS[tier];
-  const total = minPts + Math.floor(rng() * (maxPts - minPts + 1));
+  const total = rng.roll(minPts, maxPts);
   const attributes = distributeAttributes(rng, total);
 
   const styles = Object.values(FightingStyle);
-  const style = styles[Math.floor(rng() * styles.length)];
+  const style = rng.pick(styles);
 
   // Pick unique name
   let name: string;
   let attempts = 0;
   do {
-    name = NAME_POOL[Math.floor(rng() * NAME_POOL.length)];
+    name = rng.pick(NAME_POOL);
     attempts++;
   } while (usedNames.has(name) && attempts < 200);
   usedNames.add(name);
 
   const { baseSkills, derivedStats } = computeWarriorStats(attributes, style);
-  const potential = generatePotential(attributes, tier, rng);
-  const favorites = generateFavorites(style, rng);
+  const potential = generatePotential(attributes, tier, () => rng.next());
+  const favorites = generateFavorites(style, () => rng.next());
 
   return {
-    id: crypto.randomUUID(),
+    id: generateId(),
     name,
     style,
     attributes,
@@ -179,7 +168,7 @@ export function generateRecruit(
     derivedStats,
     tier,
     cost: TIER_COST[tier],
-    age: 16 + Math.floor(rng() * 6),
+    age: 16 + rng.roll(0, 5),
     lore: generateLore(rng, style),
     addedWeek: week,
     favorites,
@@ -194,11 +183,11 @@ export function generateRecruitPool(
   usedNames: Set<string>,
   seed?: number
 ): PoolWarrior[] {
-  const rng = seededRng(seed ?? (week * 9973 + 42));
+  const rng = new SeededRNG(seed ?? (week * 9973 + 42));
   const pool: PoolWarrior[] = [];
 
   // Guarantee at least one Promising+ warrior
-  pool.push(generateRecruit(rng, usedNames, week, rng() < 0.3 ? "Exceptional" : "Promising"));
+  pool.push(generateRecruit(rng, usedNames, week, rng.chance(0.3) ? "Exceptional" : "Promising"));
 
   for (let i = 1; i < count; i++) {
     pool.push(generateRecruit(rng, usedNames, week));
@@ -223,7 +212,7 @@ export function partialRefreshPool(
   const remainingNames = new Set(remaining.map(w => w.name));
   const allUsed = new Set([...usedNames, ...remainingNames]);
 
-  const rng = seededRng(week * 7919 + 31);
+  const rng = new SeededRNG(week * 7919 + 31);
   const newWarriors: PoolWarrior[] = [];
   for (let i = 0; i < removeCount; i++) {
     newWarriors.push(generateRecruit(rng, allUsed, week));
@@ -246,103 +235,4 @@ export function fullRefreshPool(
   return generateRecruitPool(5, week, usedNames, Date.now());
 }
 
-// ─── AI Draft ─────────────────────────────────────────────────────────────
-
-import type { RivalStableData } from "@/types/game";
-import type { OwnerPersonality } from "@/types/game";
-
-const PERSONALITY_STYLE_PREFS: Record<OwnerPersonality, FightingStyle[]> = {
-  Aggressive: [FightingStyle.BashingAttack, FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.StrikingAttack],
-  Methodical: [FightingStyle.ParryStrike, FightingStyle.ParryRiposte, FightingStyle.WallOfSteel],
-  Showman: [FightingStyle.AimedBlow, FightingStyle.SlashingAttack, FightingStyle.LungingAttack],
-  Pragmatic: [FightingStyle.StrikingAttack, FightingStyle.ParryStrike, FightingStyle.WallOfSteel],
-  Tactician: [FightingStyle.ParryRiposte, FightingStyle.ParryLunge, FightingStyle.AimedBlow],
-};
-
-export function aiDraftFromPool(
-  pool: PoolWarrior[],
-  rivals: RivalStableData[],
-  week: number
-): { updatedPool: PoolWarrior[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
-  // AI recruitment logic: 
-  // 1. Every 4 weeks, AI stablishes do a "major" draft.
-  // 2. Every week, there is a chance for a high-value recruit to be "snatched" by a rival if they've been sitting there.
-
-  const updatedRivals = rivals.map(r => ({ ...r, roster: [...r.roster] }));
-  const gazetteItems: string[] = [];
-  const remainingPool = [...pool];
-
-  // Major Draft (Every 4 weeks)
-  const isMajorDraftWeek = week % 4 === 0;
-
-  for (const rival of updatedRivals) {
-    const activeCount = rival.roster.filter(w => w.status === "Active").length;
-    if (activeCount >= 6) continue; // AI now maintains larger rosters
-    
-    // Chance to recruit: 100% on major weeks, 15% otherwise if under strength
-    const roll = Math.random();
-    const willRecruit = isMajorDraftWeek || (activeCount < 3 && roll < 0.25) || (roll < 0.05);
-    
-    if (!willRecruit || remainingPool.length === 0) continue;
-
-    const personality = rival.owner.personality ?? "Pragmatic";
-    const prefs = PERSONALITY_STYLE_PREFS[personality] || [];
-    const prefsSet = new Set(prefs);
-
-    // Score candidates
-    let bestIdx = -1;
-    let bestScore = -Infinity;
-    
-    for (let i = 0; i < remainingPool.length; i++) {
-       const w = remainingPool[i];
-       let score = 0;
-       
-       // Quality is king for AI
-       if (w.tier === "Prodigy") score += 100;
-       if (w.tier === "Exceptional") score += 50;
-       if (w.tier === "Promising") score += 20;
-       
-       // Style preference
-       if (prefsSet.has(w.style)) score += 30;
-       
-       // Desperation factor (how long has the recruit been available?)
-       const weeksAvailable = week - w.addedWeek;
-       score += weeksAvailable * 10; 
-
-       if (score > bestScore) {
-         bestScore = score;
-         bestIdx = i;
-       }
-    }
-
-    // AI will only take it if the score is high enough or it's a major week
-    if (bestIdx >= 0 && (bestScore > 40 || isMajorDraftWeek)) {
-       const recruit = remainingPool[bestIdx];
-       remainingPool.splice(bestIdx, 1);
-
-       rival.roster.push({
-         id: crypto.randomUUID(),
-         name: recruit.name,
-         style: recruit.style,
-         attributes: recruit.attributes,
-         potential: recruit.potential,
-         baseSkills: recruit.baseSkills,
-         derivedStats: recruit.derivedStats,
-         fame: 10, // AI recruits start with a tiny bit of hype
-         popularity: 5,
-         titles: [],
-         injuries: [],
-         flair: [],
-         career: { wins: 0, losses: 0, kills: 0 },
-         champion: false,
-         status: "Active",
-         age: recruit.age,
-         stableId: rival.owner.id,
-       });
-
-       gazetteItems.push(`MARKET: ${rival.owner.stableName} has signed the ${recruit.tier} prospect ${recruit.name}.`);
-    }
-  }
-
-  return { updatedPool: remainingPool, updatedRivals, gazetteItems };
-}
+// AI Draft behavior has been moved to src/engine/draftService.ts

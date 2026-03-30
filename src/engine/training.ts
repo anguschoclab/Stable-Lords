@@ -15,6 +15,9 @@ import { computeWarriorStats } from "@/engine/skillCalc";
 import { canGrow, diminishingReturnsFactor } from "@/engine/potential";
 import type { TrainerFocus } from "@/engine/trainers";
 import { TIER_BONUS } from "@/engine/trainers";
+import { SeededRNG } from "@/utils/random";
+import { generateId } from "@/utils/idUtils";
+import { updateEntityInList } from "@/utils/stateUtils";
 
 // ─── Constants ────────────────────────────────────────────────────────────
 
@@ -129,6 +132,12 @@ export function computeGainChance(
   return Math.max(GAIN_CHANCE_MIN, Math.min(GAIN_CHANCE_MAX, raw));
 }
 
+export interface TrainingImpact {
+  updatedRoster: Warrior[];
+  updatedSeasonalGrowth: SeasonalGrowth[];
+  results: TrainingResult[];
+}
+
 // ─── Main Processing ──────────────────────────────────────────────────────
 
 interface TrainingResult {
@@ -141,12 +150,12 @@ interface TrainingResult {
 // ─── Refactored Helper Functions ──────────────────────────────────────────
 
 function processRecovery(warrior: Warrior, healingBonus: number): { updatedInjuries: InjuryData[], message: string } {
-  const activeInjuries = warrior.injuries.filter(
-    i => typeof i !== "string" && i.weeksRemaining > 0
-  ) as InjuryData[];
+  const activeInjuries = (warrior.injuries || []).filter(
+    (i): i is InjuryData => typeof i !== "string" && i.weeksRemaining > 0
+  );
 
   if (activeInjuries.length === 0) {
-    return { updatedInjuries: warrior.injuries, message: `${warrior.name} rested but has no injuries to heal.` };
+    return { updatedInjuries: warrior.injuries as InjuryData[], message: `${warrior.name} rested but has no injuries to heal.` };
   }
 
   // Heal 1 + healingBonus weeks of recovery per actual week
@@ -154,7 +163,10 @@ function processRecovery(warrior: Warrior, healingBonus: number): { updatedInjur
   const updatedInjuries = warrior.injuries.map(i => {
     if (typeof i === "string") return i;
     return { ...i, weeksRemaining: Math.max(0, i.weeksRemaining - healAmount) };
-  }).filter(i => typeof i === "string" || i.weeksRemaining > 0);
+  }).filter((i): i is InjuryData => {
+    if (typeof i === "string") return false; // Clean up legacy string injuries if any
+    return i.weeksRemaining > 0;
+  });
 
   return {
     updatedInjuries,
@@ -166,7 +178,8 @@ function processAttributeTraining(
   warrior: Warrior,
   attr: keyof Attributes,
   state: GameState,
-  seasonalGrowth: SeasonalGrowth[]
+  seasonalGrowth: SeasonalGrowth[],
+  rng: SeededRNG
 ): { updatedWarrior: Warrior | null, updatedSeasonalGrowth: SeasonalGrowth[] | null, result: TrainingResult, hardCapped?: boolean } {
   // SZ cannot be trained
   if (attr === "SZ") {
@@ -199,7 +212,7 @@ function processAttributeTraining(
   const gainChance = computeGainChance(warrior, attr, state.trainers ?? []);
 
   // Roll for gain
-  if (Math.random() < gainChance) {
+  if (rng.chance(gainChance)) {
     const newAttrs = { ...warrior.attributes, [attr]: currentVal + 1 };
     const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, warrior.style);
 
@@ -229,7 +242,7 @@ function processAttributeTraining(
   } else {
     // Failed to gain, but might still reveal potential from hard work!
     const isRevealed = warrior.potentialRevealed?.[attr];
-    if (!isRevealed && Math.random() < 0.20) {
+    if (!isRevealed && rng.chance(0.20)) {
       const newRevealed = { ...(warrior.potentialRevealed || {}), [attr]: true };
       return {
         updatedWarrior: { ...warrior, potentialRevealed: newRevealed },
@@ -246,7 +259,7 @@ function processAttributeTraining(
   return { updatedWarrior: null, updatedSeasonalGrowth: null, result: { type: "blocked", warriorId: warrior.id, message: "" } };
 }
 
-function rollForTrainingInjury(warrior: Warrior, healingBonus: number): { injury: InjuryData | null, result: TrainingResult | null } {
+function rollForTrainingInjury(warrior: Warrior, healingBonus: number, rng: SeededRNG): { injury: InjuryData | null, result: TrainingResult | null } {
   const age = warrior.age ?? 18;
   const agePenalty = age > 30 ? (age - 30) * 0.005 : 0;
   const healReduce = healingBonus * 0.01;
@@ -254,12 +267,12 @@ function rollForTrainingInjury(warrior: Warrior, healingBonus: number): { injury
     BASE_TRAINING_INJURY_CHANCE + agePenalty - healReduce
   ));
 
-  if (Math.random() < injuryChance) {
-    const template = TRAINING_INJURIES[Math.floor(Math.random() * TRAINING_INJURIES.length)];
+  if (rng.chance(injuryChance)) {
+    const template = rng.pick(TRAINING_INJURIES);
     const [minW, maxW] = template.weeksRange;
-    const weeks = minW + Math.floor(Math.random() * (maxW - minW + 1));
+    const weeks = rng.roll(minW, maxW);
     const injury: InjuryData = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       name: template.name,
       description: template.description,
       severity: "Minor",
@@ -280,24 +293,32 @@ function rollForTrainingInjury(warrior: Warrior, healingBonus: number): { injury
   return { injury: null, result: null };
 }
 
-/** Process all training assignments at week-end. Returns updated state with cleared assignments. */
-export function processTraining(state: GameState): GameState {
-  if (!state.trainingAssignments || state.trainingAssignments.length === 0) return state;
+/**
+ * Compute the impact of training assignments for the current week.
+ * Returns a pure impact object without modifying game state directly.
+ */
+export function computeTrainingImpact(state: GameState): TrainingImpact {
+  if (!state.trainingAssignments || state.trainingAssignments.length === 0) {
+    return { updatedRoster: state.roster, updatedSeasonalGrowth: state.seasonalGrowth ?? [], results: [] };
+  }
 
+  const rng = new SeededRNG(state.week * 1337 + 7);
   const results: TrainingResult[] = [];
-  const roster = [...state.roster];
+  let currentRoster = [...state.roster];
   let seasonalGrowth = [...(state.seasonalGrowth ?? [])];
   const healingBonus = getHealingTrainerBonus(state.trainers ?? []);
 
   for (const assignment of state.trainingAssignments) {
-    const wIdx = roster.findIndex(w => w.id === assignment.warriorId);
-    if (wIdx === -1) continue;
-    let warrior = roster[wIdx];
+    const warrior = currentRoster.find(w => w.id === assignment.warriorId);
+    if (!warrior) continue;
 
     // ── Recovery Mode ──
     if (assignment.type === "recovery") {
       const { updatedInjuries, message } = processRecovery(warrior, healingBonus);
-      roster[wIdx] = { ...warrior, injuries: updatedInjuries };
+    currentRoster = updateEntityInList(currentRoster, warrior.id, w => ({ 
+      ...w, 
+      injuries: updatedInjuries as (string | InjuryData)[] 
+    }));
       results.push({ type: "recovery", warriorId: warrior.id, message });
       continue;
     }
@@ -306,52 +327,57 @@ export function processTraining(state: GameState): GameState {
     const attr = assignment.attribute;
     if (!attr) continue;
 
-    const { updatedWarrior, updatedSeasonalGrowth, result, hardCapped } = processAttributeTraining(warrior, attr, state, seasonalGrowth);
+    const { updatedWarrior, updatedSeasonalGrowth, result, hardCapped } = processAttributeTraining(warrior, attr, state, seasonalGrowth, rng);
 
     if (result.message !== "") {
       results.push(result);
     }
 
     if (updatedWarrior) {
-      warrior = updatedWarrior;
-      roster[wIdx] = warrior;
+      currentRoster = updateEntityInList(currentRoster, warrior.id, () => updatedWarrior);
     }
 
     if (updatedSeasonalGrowth) {
       seasonalGrowth = updatedSeasonalGrowth;
     }
 
-    // If hard capped or seasonally capped (blocked with a message), or SZ training, we skip injury rolls.
-    // In original code, SZ training returns early (continue), hard caps return early (continue),
-    // seasonal cap returns early (continue).
+    // Skip injury rolls if training was blocked/capped
     if (hardCapped || (result.type === "blocked" && result.message !== "")) {
       continue;
     }
 
     // ── Training Injury Roll ──
-    const { injury, result: injuryResult } = rollForTrainingInjury(warrior, healingBonus);
+    const { injury, result: injuryResult } = rollForTrainingInjury(updatedWarrior || warrior, healingBonus, rng);
     if (injury && injuryResult) {
-      roster[wIdx] = { ...warrior, injuries: [...warrior.injuries, injury] };
+      currentRoster = updateEntityInList(currentRoster, warrior.id, w => ({ 
+        ...w, 
+        injuries: [...w.injuries, injury] as (string | InjuryData)[] 
+      }));
       results.push(injuryResult);
     }
   }
 
-  // Build newsletter
-  const newsItems = results.reduce((acc, r) => {
-    if (r.type !== "blocked") {
-      acc.push(r.message);
-    }
+  return { updatedRoster: currentRoster, updatedSeasonalGrowth: seasonalGrowth, results };
+}
+
+/** Legacy wrapper to maintain compatibility while transition is in progress */
+export function processTraining(state: GameState): GameState {
+  const impact = computeTrainingImpact(state);
+  
+  const newsItems = impact.results.reduce((acc, r) => {
+    if (r.type !== "blocked") acc.push(r.message);
     return acc;
   }, [] as string[]);
+
   const newsletter = newsItems.length > 0
     ? [...state.newsletter, { week: state.week, title: "Training Report", items: newsItems }]
     : state.newsletter;
 
   return {
     ...state,
-    roster,
+    roster: impact.updatedRoster,
     newsletter,
-    seasonalGrowth,
+    seasonalGrowth: impact.updatedSeasonalGrowth,
     trainingAssignments: [],
   };
 }

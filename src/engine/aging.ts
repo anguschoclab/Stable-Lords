@@ -14,68 +14,92 @@ const AGING_PENALTY_START = 28;
 const FORCED_RETIRE_MIN = 30;
 const FORCED_RETIRE_MAX = 40;
 
-/** Process aging for all warriors at week-end. */
-export function processAging(state: GameState): GameState {
+import { type StateImpact } from "./impacts";
+import { SeededRNG } from "@/utils/random";
+
+/** Compute the aging impact of the current week. */
+export function computeAgingImpact(state: GameState): StateImpact {
+  const rng = new SeededRNG(state.week * 997 + 3);
   const ageEvents: string[] = [];
-  let roster = [...state.roster];
-  const graveyard = [...state.graveyard];
-  const retired = [...state.retired];
+  const rosterUpdates = new Map<string, Partial<Warrior>>();
+  const toRetire: string[] = [];
 
   // Age warriors every 52 weeks
   if (state.week % WEEKS_PER_YEAR === 0) {
-    roster = roster.map((w) => {
+    for (const w of state.roster) {
       const newAge = (w.age ?? 18) + 1;
-      let updated = { ...w, age: newAge };
+      const update: Partial<Warrior> = { age: newAge };
 
-      // Apply aging penalties after threshold
       if (newAge > AGING_PENALTY_START) {
         const penalty = Math.floor((newAge - AGING_PENALTY_START) / 3);
         if (penalty > 0) {
-          const newAttrs = { ...updated.attributes };
-          newAttrs.SP = Math.max(3, newAttrs.SP - (penalty > 0 ? 1 : 0));
-          newAttrs.DF = Math.max(3, newAttrs.DF - (penalty > 0 ? 1 : 0));
-          if (newAttrs.SP !== updated.attributes.SP || newAttrs.DF !== updated.attributes.DF) {
-            const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, updated.style);
-            updated = { ...updated, attributes: newAttrs, baseSkills, derivedStats };
-            ageEvents.push(`${updated.name} shows signs of aging (SP/DF declining).`);
-          }
+           const newAttrs = { ...w.attributes, 
+             SP: Math.max(3, w.attributes.SP - 1), 
+             DF: Math.max(3, w.attributes.DF - 1) 
+           };
+           const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, w.style);
+           Object.assign(update, { attributes: newAttrs, baseSkills, derivedStats });
+           ageEvents.push(`${w.name} shows signs of aging (SP/DF declining).`);
         }
       }
-
-      return updated;
-    });
+      rosterUpdates.set(w.id, update);
+    }
   }
 
   // Check for forced retirement
-  const toRetire: string[] = [];
-  for (const w of roster) {
-    const age = w.age ?? 18;
+  for (const w of state.roster) {
+    const age = (rosterUpdates.get(w.id)?.age ?? w.age) ?? 18;
     if (age >= FORCED_RETIRE_MAX) {
       toRetire.push(w.id);
       ageEvents.push(`${w.name} (age ${age}) has been forced to retire — too old to fight.`);
     } else if (age >= FORCED_RETIRE_MIN) {
       const retireChance = (age - FORCED_RETIRE_MIN) / (FORCED_RETIRE_MAX - FORCED_RETIRE_MIN) * 0.15;
-      if (Math.random() < retireChance) {
+      if (rng.roll(0, 1) < retireChance) {
         toRetire.push(w.id);
         ageEvents.push(`${w.name} (age ${age}) has decided to hang up the blade.`);
       }
     }
   }
 
+  // Handle retirement in impacts (Simplified for now - can refine graveyard movement later)
   if (toRetire.length > 0) {
-    for (const id of toRetire) {
-      const w = roster.find((r) => r.id === id);
-      if (w) {
-        retired.push({ ...w, status: "Retired", retiredWeek: state.week });
-      }
-    }
-    const toRetireSet = new Set(toRetire);
-    roster = roster.filter((w) => !toRetireSet.has(w.id));
+    toRetire.forEach(id => {
+       const existing = rosterUpdates.get(id) || {};
+       rosterUpdates.set(id, { ...existing, status: "Retired" as any }); // Need to handle roster removal in resolver
+    });
   }
 
-  const newsletter = ageEvents.length > 0
-    ? [...state.newsletter, { week: state.week, title: "Aging Report", items: ageEvents }]
-    : state.newsletter;
+  return {
+    rosterUpdates,
+    newsletterItems: ageEvents.length > 0 ? [{ week: state.week, title: "Aging Report", items: ageEvents }] : []
+  };
+}
 
-  return { ...state, roster, retired, graveyard, newsletter };
+/** Process aging for all warriors at week-end. Legacy wrapper. */
+export function processAging(state: GameState): GameState {
+  const impact = computeAgingImpact(state);
+  let roster = [...state.roster];
+  const retired = [...state.retired];
+
+  if (impact.rosterUpdates) {
+    impact.rosterUpdates.forEach((update, id) => {
+       const w = roster.find(r => r.id === id);
+       if (w) {
+         const updated = { ...w, ...update };
+         if (updated.status === "Retired") {
+            roster = roster.filter(r => r.id !== id);
+            retired.push({ ...updated, retiredWeek: state.week } as any);
+         } else {
+            roster = roster.map(r => r.id === id ? updated : r);
+         }
+       }
+    });
+  }
+
+  return { 
+    ...state, 
+    roster, 
+    retired, 
+    newsletter: impact.newsletterItems ? [...state.newsletter, ...impact.newsletterItems] : state.newsletter 
+  };
 }

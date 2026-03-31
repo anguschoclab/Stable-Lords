@@ -22,40 +22,7 @@ import { getTempoBonus, getStyleAntiSynergy } from "@/engine/stylePassives";
 import { getOffensiveSuitability, getDefensiveSuitability, SUITABILITY_COLORS } from "@/engine/tacticSuitability";
 import { STYLE_PRESETS } from "@/engine/stylePresets";
 
-/* ── Strategy Scoring Logic ────────────────────────────── */
-
-function computeStrategyScore(plan: FightPlan, warrior?: Warrior): number {
-  let score = 60; // Base score for a "standard" plan
-
-  // 1. Tactic Suitability
-  if (plan.offensiveTactic && plan.offensiveTactic !== 'none') {
-    const suit = getOffensiveSuitability(plan.style, plan.offensiveTactic);
-    score += suit === "WS" ? 15 : suit === "S" ? 5 : -25;
-  }
-  if (plan.defensiveTactic && plan.defensiveTactic !== 'none') {
-    const suit = getDefensiveSuitability(plan.style, plan.defensiveTactic);
-    score += suit === "WS" ? 15 : suit === "S" ? 5 : -25;
-  }
-
-  // 2. Effort Balance (OE + AL)
-  const totalEffort = plan.OE + plan.AL;
-  if (totalEffort > 16) score -= (totalEffort - 16) * 8; // Steep penalty for over-exertion
-  if (totalEffort < 6) score -= (6 - totalEffort) * 5;  // Penalty for being too passive
-
-  // 3. Style Synergy (Tempo)
-  const tempo = getTempoBonus(plan.style, "OPENING");
-  if (plan.OE >= 7 && tempo > 0) score += 10; // Synergizes with aggressive opening
-  if (plan.OE <= 4 && tempo < 0) score += 10; // Synergizes with patient opening
-
-  return Math.max(0, Math.min(100, score));
-}
-
-function getScoreColor(score: number) {
-  if (score >= 85) return "text-arena-gold shadow-[0_0_10px_rgba(var(--arena-gold-rgb),0.5)]";
-  if (score >= 70) return "text-primary";
-  if (score >= 50) return "text-arena-pop";
-  return "text-destructive";
-}
+import { computeStrategyScore, getScoreColor } from "@/engine/strategyAnalysis";
 
 /* ── DnD Types & Data ───────────────────────────────────── */
 

@@ -2,6 +2,7 @@ import { FightingStyle, type Warrior, type Owner, type RivalStableData } from "@
 import { computeWarriorStats } from "./skillCalc";
 import { STABLE_TEMPLATES, type StableTemplate } from "@/data/stableTemplates";
 import { seededRng } from "@/utils/mathUtils";
+export { seededRng };
 
 /**
  * AI Rival Stables — maintains the 23 AI stables that populate the world.

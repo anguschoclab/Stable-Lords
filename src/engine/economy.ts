@@ -76,8 +76,10 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
   return { income, expenses, totalIncome, totalExpenses, net: totalIncome - totalExpenses };
 }
 
-/** Process economy at week-end. Adds ledger entries and updates gold. */
-export function processEconomy(state: GameState): GameState {
+import { type StateImpact } from "./impacts";
+
+/** Compute the economic impact of the current week. */
+export function computeEconomyImpact(state: GameState): StateImpact {
   const breakdown = computeWeeklyBreakdown(state);
   const entries: LedgerEntry[] = [];
 
@@ -89,8 +91,17 @@ export function processEconomy(state: GameState): GameState {
   }
 
   return {
+    goldDelta: breakdown.net,
+    ledgerEntries: entries
+  };
+}
+
+/** Process economy at week-end. Adds ledger entries and updates gold. */
+export function processEconomy(state: GameState): GameState {
+  const impact = computeEconomyImpact(state);
+  return {
     ...state,
-    gold: (state.gold ?? 0) + breakdown.net,
-    ledger: [...(state.ledger ?? []), ...entries],
+    gold: (state.gold ?? 0) + (impact.goldDelta ?? 0),
+    ledger: [...(state.ledger ?? []), ...(impact.ledgerEntries ?? [])],
   };
 }

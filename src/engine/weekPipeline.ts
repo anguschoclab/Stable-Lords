@@ -5,7 +5,7 @@
 import type { GameState, Season, Warrior, RivalStableData } from "@/types/game";
 import { OPFSArchiveService } from "./storage/opfsArchive";
 import type { PoolWarrior } from "./recruitment";
-import { aiDraftFromPool } from "./recruitment";
+import { aiDraftFromPool } from "./draftService";
 import { processRivalStableWeekly, seededRng } from "./rivals";
 
 const SEASONS: Season[] = ["Spring", "Summer", "Fall", "Winter"];
@@ -152,7 +152,6 @@ export function processRivalActions(state: GameState, newWeek: number): GameStat
   // 2) Training & Management for each stable
   const finalRivals = updatedRivals.map(r => {
     const result = processRivalStableWeekly(r, rng, newWeek);
-    // filter out items already in globalGazetteItems if they somehow overlap
     return result.rival;
   });
 
@@ -172,9 +171,82 @@ export function processRivalActions(state: GameState, newWeek: number): GameStat
   return newState;
 }
 
+import { computeTrainingImpact } from "./training";
+import { computeEconomyImpact } from "./economy";
+import { computeAgingImpact } from "./aging";
+import { computeHealthImpact } from "./pipeline/health";
+import { resolveImpacts, StateImpact } from "./impacts";
+import { getFightsForWeek } from "@/engine/core/historyUtils";
+import { generateWeeklyGazette } from "@/engine/gazetteNarrative";
+import { partialRefreshPool } from "@/engine/recruitment";
+
 /**
- * Compute the next season for a given week number.
+ * Orchestrate the weekly advancement.
  */
+export function advanceWeek(state: GameState): GameState {
+  const currentWeek = state.week;
+  const nextWeek = currentWeek + 1;
+  const nextSeason = computeNextSeason(nextWeek);
+
+  // 1. Collect all "Pure" Impacts
+  const trainingImpact = computeTrainingImpact(state);
+  
+  // Transform TrainingImpact to StateImpact
+  const trainingStateImpact: StateImpact = {
+    rosterUpdates: new Map<string, any>(),
+    newsletterItems: trainingImpact.results.length > 0 ? [{ 
+      week: currentWeek, 
+      title: "Training Report", 
+      items: trainingImpact.results.map(r => r.message) 
+    }] : []
+  };
+  trainingImpact.updatedRoster.forEach(w => {
+    const original = state.roster.find(r => r.id === w.id);
+    if (original !== w) trainingStateImpact.rosterUpdates!.set(w.id, w as any);
+  });
+
+  const impacts: StateImpact[] = [
+    trainingStateImpact,
+    computeEconomyImpact(state),
+    computeAgingImpact(state),
+    computeHealthImpact(state),
+  ];
+
+  // 2. Resolve Primary Impacts
+  let newState = resolveImpacts(state, impacts);
+  newState.seasonalGrowth = trainingImpact.updatedSeasonalGrowth;
+
+  // 3. Narrative & Recruitment Pool Refresh (Procedural)
+  const usedNames = new Set<string>();
+  newState.roster.forEach(w => usedNames.add(w.name));
+  newState.graveyard.forEach(w => usedNames.add(w.name));
+  (newState.rivals || []).forEach(r => r.roster.forEach(w => usedNames.add(w.name)));
+  
+  newState.recruitPool = partialRefreshPool(newState.recruitPool || [], currentWeek, usedNames);
+
+  const weekFights = getFightsForWeek(newState.arenaHistory, currentWeek);
+  const story = generateWeeklyGazette(weekFights, newState.crowdMood, currentWeek, newState.graveyard, newState.arenaHistory);
+  newState.gazettes = [...(newState.gazettes || []), { ...story, week: currentWeek }].slice(-50);
+
+  // 4. Structural/Meta steps
+  newState = processHallOfFame(newState, nextWeek);
+  newState = processTierProgression(newState, nextSeason, nextWeek);
+  newState = processRivalActions(newState, nextWeek);
+  
+  // 5. Final state ticks
+  newState = {
+    ...newState,
+    week: nextWeek,
+    season: nextSeason,
+    trainingAssignments: [],
+  };
+
+  // 6. Archival (Side effects)
+  newState = archiveWeekLogs(newState);
+
+  return newState;
+}
+
 export function computeNextSeason(newWeek: number): Season {
   const seasonIdx = Math.floor((newWeek - 1) / 13) % 4;
   return SEASONS[seasonIdx];

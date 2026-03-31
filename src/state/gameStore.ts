@@ -1,15 +1,5 @@
 import { type GameState, type Warrior, type FightSummary, type DeathEvent } from "@/types/game";
-import { pipe } from "@/engine/pipeline";
-import { applyTraining } from "@/engine/pipeline/training";
-import { applyEconomy } from "@/engine/pipeline/economy";
-import { applyAging } from "@/engine/pipeline/aging";
-import { applyHealthUpdates } from "@/engine/pipeline/health";
-import { applyRivalAI, applyRecruitment } from "@/engine/pipeline/rivals";
-import { applyRecruitPoolRefresh } from "@/engine/pipeline/recruitment";
-import { applySeasonalUpdates } from "@/engine/pipeline/seasonal";
-import { applyNarrative } from "@/engine/pipeline/narrative";
-import { archiveWeekLogs } from '@/engine/weekPipeline';
-import { truncateState } from "@/engine/storage/truncation";
+import { advanceWeek as runPipeline } from "@/engine/weekPipeline";
 import { migrateGameState, sanitizeReviver } from "./migrations";
 import { createFreshState, makeWarrior } from "@/engine/factories";
 import { updateEntityInList, truncateArray } from "@/utils/stateUtils";
@@ -54,45 +44,11 @@ export function resetGameState(): GameState {
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 /**
- * Advance the game by one week using a strict, immutable reducer-style pipeline.
- *
- * ┌────────────────────────────────────────────────────────────────┐
- * │  WEEKLY ADVANCE PIPELINE — Guaranteed Execution Order         │
- * │                                                               │
- * │  Step 1: Training        — Apply attribute gains from drills  │
- * │  Step 2: Economy         — Process income, expenses, ledger   │
- * │  Step 3: Aging           — Tick warrior ages, apply decline   │
- * │  Step 4: Injuries        — Heal active injuries, tick timers  │
- * │  Step 5: Rest States     — Clear expired mandatory rest       │
- * │  Step 6: AI Bouts        — Rival-vs-rival background fights  │
- * │  Step 7: Recruitment     — Refresh orphan pool, AI drafting   │
- * │  Step 8: Hall of Fame    — Yearly induction (every 52 weeks)  │
- * │  Step 9: Tier Progression— Promote/demote rival stables       │
- * │  Step 10: OPFS Archival  — Save & strip PBP logs              │
- * │  Step 11: Clock Advance  — Increment week counter & season    │
- * │                                                               │
- * │  Each step receives the output of the previous step.          │
- * │  No step mutates the original state reference.                │
- * └────────────────────────────────────────────────────────────────┘
- *
- * @param state - Current immutable game state
- * @returns New game state after all pipeline steps
+ * Advance the game by one week using the consolidated engine pipeline.
+ * All logic has been migrated to the engine layer to improve testability.
  */
 export function advanceWeek(state: GameState): GameState {
-  return pipe(
-    state,
-    applyTraining,
-    applyEconomy,
-    applyAging,
-    applyHealthUpdates,
-    applyRivalAI,
-    applyRecruitPoolRefresh,
-    applyRecruitment,
-    applySeasonalUpdates,
-    applyNarrative,
-    archiveWeekLogs,
-    truncateState
-  );
+  return runPipeline(state);
 }
 
 export function appendFightToHistory(

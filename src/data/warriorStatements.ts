@@ -147,6 +147,14 @@ const GOOD_RIP_LOW: StatementEntry[] = [
 
 // GOOD WIT: ATTACK (3rd statement)
 const GOOD_ATT_HIGH: StatementEntry[] = [
+  { minBase: 35, text: "Strikes with the devastating certainty of an executioner" },
+  { minBase: 34, text: "Every swing carries the promise of shattered bone and ruined flesh" },
+  { minBase: 33, text: "Turns his weapon into a blurring arc of pure malice" },
+  { minBase: 32, text: "Forces his opponent into a desperate, crumbling defense" },
+  { minBase: 31, text: "Unleashes a horrific flurry of perfectly placed killing strokes" },
+  { minBase: 30, text: "Hunts for the vital organs with terrifying precision" },
+  { minBase: 29, text: "Pounds through armor and guard with a relentless, brutal rhythm" },
+  { minBase: 28, text: "His offensive pressure feels like a collapsing mountain" },
   { minBase: 27, text: "Paints the sands with masterful, agonizing strokes of the blade" },
   { minBase: 26, text: "Mutilates his targets with the cold, measured precision of an anatomist" },
   { minBase: 25, text: "Dismantles opponents with terrifying, surgical butchery" },
@@ -205,6 +213,11 @@ const GOOD_PAR_LOW: StatementEntry[] = [
 
 // GOOD WIT: DEFENSE (5th statement)
 const GOOD_DEF_HIGH: StatementEntry[] = [
+  { minBase: 32, text: "Displays a chilling level of situational dominance" },
+  { minBase: 31, text: "Deflects murderous strikes as if swatting away insects" },
+  { minBase: 30, text: "A fortress of terrifyingly efficient martial reflexes" },
+  { minBase: 29, text: "Turns every hostile assault into a frustrating failure" },
+  { minBase: 28, text: "Weaves through the carnage with impossible grace" },
   { minBase: 25, text: "Dances through slaughter entirely untouched" },
   { minBase: 23, text: "Anticipates the fatal blow and simply isn't there" },
   { minBase: 21, text: "He's always thinking a few steps ahead of his foes" },
@@ -276,6 +289,14 @@ const BAD_INI_HIGH: StatementEntry[] = [
   { minBase: 0, text: "He needs time to think things through before he can act" },
 ];
 const BAD_INI_LOW: StatementEntry[] = [
+  { minBase: 26, text: "Moves with the urgency of a stone sinking in mud" },
+  { minBase: 25, text: "Watches the fight happen rather than participating in it" },
+  { minBase: 24, text: "Reacts to strikes only after the blood has already begun to spill" },
+  { minBase: 23, text: "Displays a terrifying lack of situational awareness" },
+  { minBase: 22, text: "Waits for the enemy to dictate every aspect of the exchange" },
+  { minBase: 21, text: "Fights as if submerged in deep water" },
+  { minBase: 20, text: "Is consistently a half-step behind the killing blow" },
+  { minBase: 19, text: "Surrenders the initiative with grim predictability" },
   { minBase: 18, text: "Wanders the blood-soaked sand aimlessly, inviting a swift execution" },
   { minBase: 17, text: "Wanders the arena without a plan, waiting to be gutted" },
   { minBase: 16, text: "Invites absolute ruin by standing completely still when the slaughter begins" },
@@ -339,6 +360,11 @@ const BAD_ATT_HIGH: StatementEntry[] = [
   { minBase: 0, text: "He makes a lot of mistakes" },
 ];
 const BAD_ATT_LOW: StatementEntry[] = [
+  { minBase: 28, text: "Telegraphs every swing like a lumbering ox" },
+  { minBase: 27, text: "Flails his weapon with entirely misplaced, chaotic force" },
+  { minBase: 26, text: "Struggles to connect a blade to unmoving flesh" },
+  { minBase: 25, text: "His attacks are desperate, easily parried thrashing" },
+  { minBase: 24, text: "Brings absolutely no pressure to the hostile exchange" },
   { minBase: 18, text: "Swings his weapon with the grace and intelligence of a blind brute" },
   { minBase: 17, text: "Swings his steel with all the grace of a blind butcher" },
   { minBase: 16, text: "Flails his weapon in wild arcs that threaten only himself" },
@@ -415,6 +441,14 @@ const BAD_DEF_HIGH: StatementEntry[] = [
   { minBase: 0, text: "He is constantly making mistakes" },
 ];
 const BAD_DEF_LOW: StatementEntry[] = [
+  { minBase: 28, text: "Invites the enemy blade with wide open, suicidal stances" },
+  { minBase: 27, text: "Relies entirely on his armor to survive, displaying no evasive skill" },
+  { minBase: 26, text: "Seems determined to catch every hostile strike with his face" },
+  { minBase: 25, text: "Possesses a guard as structurally sound as wet parchment" },
+  { minBase: 24, text: "Flails uselessly as the opponent dismantles his footing" },
+  { minBase: 23, text: "Stumbles into the path of the weapon instead of away from it" },
+  { minBase: 22, text: "Offers no meaningful resistance once the armor fails" },
+  { minBase: 21, text: "Presents a perfectly stationary target for the butchery" },
   { minBase: 18, text: "Makes absolutely no effort to step out of the executioner's reach" },
   { minBase: 17, text: "Makes no effort to move from the inevitable path of execution" },
   { minBase: 16, text: "Makes no effort to move, standing firm like a slab of meat" },

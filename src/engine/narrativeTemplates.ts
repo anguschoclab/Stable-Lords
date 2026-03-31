@@ -365,7 +365,23 @@ export const EXECUTION_TEMPLATES = [
   "Fatigue finally breaks %D, and %A answers with a catastrophic, fatal strike from their %W!",
   "%A's %W violently separates %D from their life, ending the slaughter instantly!",
   "Too slow to react, %D's head is completely obliterated by a horrific %W strike!",
-  "%D falls into the crimson sand, put down permanently by %A's %W!"
+  "%D falls into the crimson sand, put down permanently by %A's %W!",
+
+  "A sickening blow echoes through the arena as %A ruins %D's faltering defense, securing a gruesome kill!",
+  "%A capitalizes on %D's sluggish footing, stepping in to deliver a fatal, life-ending impact with their %W!",
+  "With %D's endurance totally spent, %A violently separates them from their life with a horrific strike of their %W!",
+  "Finding the gap in %D's failing armor, %A claims a merciless victory with their %W!",
+  "%D's weary parry is battered aside, leaving them wide open for %A's butchering %W!",
+  "%A presses the advantage against a gasping %D, ending the bout with a devastating and lethal %W combination!",
+  "Exploiting a fatal misstep caused by pure exhaustion, %A brings total ruin upon %D, securing a grisly kill!",
+  "The crowd roars in terrifying unison as %A ruthlessly converts %D's broken guard into a bloodbath!",
+  "%D attempts a desperate, sloppy block, but %A drives their %W straight through it for a fatal conclusion!",
+  "With methodical cruelty, %A dissects %D's final, panicked defense and ends their life!",
+  "%A shows exactly why they are feared, using a masterful %W strike to violently execute the exhausted %D!",
+  "A horrific spray of crimson paints the sands as %A punishes %D's exposed guard with a lethal %W impact!",
+  "%D's legs finally betray them, and %A answers the collapse with a merciless, killing stroke from their %W!",
+  "%A turns a simple opening into a butchery, fatally dropping %D with sickening precision!",
+  "Unable to maintain the frantic tempo, %D suffers a catastrophic, life-ending blow from %A!"
 ];
 
 export const KO_TEMPLATES = [
@@ -440,7 +456,18 @@ export const FATIGUE_COLLAPSE_TEMPLATES = [
   "%N staggers, their arms hanging completely useless from exhaustion.",
   "Utterly spent, %N",
   "Drowned in their own sweat and blood, %N folds onto the arena floor.",
-  "Legs failing entirely, %N collapses, utterly incapable of defending themselves."
+  "Legs failing entirely, %N collapses, utterly incapable of defending themselves.",
+
+  "%N's muscles finally fail them, sending them crashing to the blood-stained sand.",
+  "With a ragged, desperate gasp, %N drops their weapon and succumbs to pure exhaustion.",
+  "%N's legs buckle under the unbearable weight of their own armor and fatigue.",
+  "Utterly drained, %N falls to their knees, no longer able to lift their arms in defense.",
+  "The relentless pace breaks %N, who collapses into the dirt, lungs burning and body defeated.",
+  "%N stumbles blindly before falling face-first into the arena floor, completely spent.",
+  "Unable to take another step, %N surrenders to the crushing weight of exhaustion.",
+  "%N's chest heaves one final, labored time before their body gives out entirely.",
+  "The fight leaves %N completely hollowed out; they sink to the ground in total collapse.",
+  "Trembling violently from fatigue, %N finally collapses, unable to continue the slaughter."
 ];
 
 export const TAUNT_TEMPLATES = [

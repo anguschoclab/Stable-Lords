@@ -529,6 +529,12 @@ const KILL_TEMPLATES = [
   "%D crumples to the ground, lifeless.\n%A's strike was unerring and final.",
   "%D falls to the arena floor. The wound is mortal.\nSilence grips the crowd.",
   "%D stumbles to the ground!!!\n%D is slain!",
+
+  "%D's armor fails entirely beneath %A's merciless execution!",
+  "The arena holds its breath as %A violently ends %D's life in the crimson sand!",
+  "%D is severed from the mortal coil by a perfectly placed killing stroke from %A!",
+  "%A turns the bout into a slaughter, claiming a gruesome and total victory over %D!",
+  "With a terrifying display of lethal force, %A leaves %D lifeless and broken!"
 ];
 
 const STOPPAGE_TEMPLATES = [

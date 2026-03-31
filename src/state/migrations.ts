@@ -103,12 +103,15 @@ export function migrateGameState(parsed: any): GameState {
   // 3. Truncation for performance (using truncateArray utility)
   // Memory Leak Prevention: Keep only the most recent data
   parsed.arenaHistory = truncateArray(parsed.arenaHistory || [], 500).map((f: any, i: number, arr: any[]) => {
+    // Strip pendingResolutionData from old histories as it takes up a lot of space
+    const { pendingResolutionData, ...fWithoutPending } = f;
+
     // Keep transcripts only for the 20 most recent fights
-    if (arr.length - i > 20 && f.transcript) {
-        const { transcript, ...rest } = f;
+    if (arr.length - i > 20 && fWithoutPending.transcript) {
+        const { transcript, ...rest } = fWithoutPending;
         return rest;
     }
-    return f;
+    return fWithoutPending;
   });
 
   parsed.newsletter = truncateArray(parsed.newsletter || [], 100);

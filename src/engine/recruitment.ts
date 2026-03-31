@@ -235,4 +235,103 @@ export function fullRefreshPool(
   return generateRecruitPool(5, week, usedNames, Date.now());
 }
 
-// AI Draft behavior has been moved to src/engine/draftService.ts
+// ─── AI Draft ─────────────────────────────────────────────────────────────
+
+import type { RivalStableData } from "@/types/game";
+import type { OwnerPersonality } from "@/types/game";
+
+const PERSONALITY_STYLE_PREFS: Record<OwnerPersonality, FightingStyle[]> = {
+  Aggressive: [FightingStyle.BashingAttack, FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.StrikingAttack],
+  Methodical: [FightingStyle.ParryStrike, FightingStyle.ParryRiposte, FightingStyle.WallOfSteel],
+  Showman: [FightingStyle.AimedBlow, FightingStyle.SlashingAttack, FightingStyle.LungingAttack],
+  Pragmatic: [FightingStyle.StrikingAttack, FightingStyle.ParryStrike, FightingStyle.WallOfSteel],
+  Tactician: [FightingStyle.ParryRiposte, FightingStyle.ParryLunge, FightingStyle.AimedBlow],
+};
+
+export function aiDraftFromPool(
+  pool: PoolWarrior[],
+  rivals: RivalStableData[],
+  week: number
+): { updatedPool: PoolWarrior[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
+  // AI recruitment logic:
+  // 1. Every 4 weeks, AI stablishes do a "major" draft.
+  // 2. Every week, there is a chance for a high-value recruit to be "snatched" by a rival if they've been sitting there.
+
+  const updatedRivals = rivals.map(r => ({ ...r, roster: [...r.roster] }));
+  const gazetteItems: string[] = [];
+  const remainingPool = [...pool];
+
+  // Major Draft (Every 4 weeks)
+  const isMajorDraftWeek = week % 4 === 0;
+
+  for (const rival of updatedRivals) {
+    const activeCount = rival.roster.filter(w => w.status === "Active").length;
+    if (activeCount >= 6) continue; // AI now maintains larger rosters
+
+    // Chance to recruit: 100% on major weeks, 15% otherwise if under strength
+    const roll = Math.random();
+    const willRecruit = isMajorDraftWeek || (activeCount < 3 && roll < 0.25) || (roll < 0.05);
+
+    if (!willRecruit || remainingPool.length === 0) continue;
+
+    const personality = rival.owner.personality ?? "Pragmatic";
+    const prefs = PERSONALITY_STYLE_PREFS[personality] || [];
+    const prefsSet = new Set(prefs);
+
+    // Score candidates
+    let bestIdx = -1;
+    let bestScore = -Infinity;
+
+    for (let i = 0; i < remainingPool.length; i++) {
+       const w = remainingPool[i];
+       let score = 0;
+
+       // Quality is king for AI
+       if (w.tier === "Prodigy") score += 100;
+       if (w.tier === "Exceptional") score += 50;
+       if (w.tier === "Promising") score += 20;
+
+       // Style preference
+       if (prefsSet.has(w.style)) score += 30;
+
+       // Desperation factor (how long has the recruit been available?)
+       const weeksAvailable = week - w.addedWeek;
+       score += weeksAvailable * 10;
+
+       if (score > bestScore) {
+         bestScore = score;
+         bestIdx = i;
+       }
+    }
+
+    // AI will only take it if the score is high enough or it's a major week
+    if (bestIdx >= 0 && (bestScore > 40 || isMajorDraftWeek)) {
+       const recruit = remainingPool[bestIdx];
+       remainingPool.splice(bestIdx, 1);
+
+       rival.roster.push({
+         id: generateId(),
+         name: recruit.name,
+         style: recruit.style,
+         attributes: recruit.attributes,
+         potential: recruit.potential,
+         baseSkills: recruit.baseSkills,
+         derivedStats: recruit.derivedStats,
+         fame: 10, // AI recruits start with a tiny bit of hype
+         popularity: 5,
+         titles: [],
+         injuries: [],
+         flair: [],
+         career: { wins: 0, losses: 0, kills: 0 },
+         champion: false,
+         status: "Active",
+         age: recruit.age,
+         stableId: rival.owner.id,
+       });
+
+       gazetteItems.push(`MARKET: ${rival.owner.stableName} has signed the ${recruit.tier} prospect ${recruit.name}.`);
+    }
+  }
+
+  return { updatedPool: remainingPool, updatedRivals, gazetteItems };
+}

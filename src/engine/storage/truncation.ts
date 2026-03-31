@@ -8,12 +8,15 @@ import { type GameState, type FightSummary } from "@/types/game";
  */
 export function truncateState(state: GameState): GameState {
   const arenaHistory = (state.arenaHistory || []).slice(-500).map((f, i, arr) => {
+    // Remove pendingResolutionData from old histories as it takes up a lot of space
+    const { pendingResolutionData, ...fWithoutPending } = f;
+
     // Keep transcripts only for the last 20 fights to save memory
-    if (arr.length - i > 20 && f.transcript) {
-      const { transcript, ...rest } = f;
+    if (arr.length - i > 20 && fWithoutPending.transcript) {
+      const { transcript, ...rest } = fWithoutPending;
       return rest as FightSummary;
     }
-    return f;
+    return fWithoutPending as FightSummary;
   });
 
   return {

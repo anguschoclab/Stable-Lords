@@ -4,7 +4,8 @@
  */
 import type { GameState } from "@/types/game";
 import { z } from "zod";
-import { migrateGameState, sanitizeReviver } from "./gameStore";
+import { sanitizeReviver } from "./gameStore";
+import { migrateGameState } from "./migrations";
 import { OPFSArchiveService } from "@/engine/storage/opfsArchive";
 
 const archiveService = new OPFSArchiveService();

@@ -1,10 +1,9 @@
 /**
  * Trainer types, constants, hiring pool generation, and retired-warrior conversion.
  */
-import { FightingStyle, STYLE_DISPLAY_NAMES, type Warrior } from "@/types/game";
+import { FightingStyle, STYLE_DISPLAY_NAMES, type Warrior, type TrainerTier, type TrainerFocus } from "@/types/game";
 
-export type TrainerTier = "Novice" | "Seasoned" | "Master";
-export type TrainerFocus = "Aggression" | "Defense" | "Endurance" | "Mind" | "Healing";
+export type { TrainerTier, TrainerFocus };
 
 export const TRAINER_FOCUSES: TrainerFocus[] = ["Aggression", "Defense", "Endurance", "Mind", "Healing"];
 export const TRAINER_MAX_PER_STABLE = 5;

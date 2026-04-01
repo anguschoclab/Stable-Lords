@@ -1,204 +1,211 @@
-import React, { useState } from 'react';
+/**
+ * Stable Lords — Administration & Telemetry Console
+ * Strictly typed utility for save management and simulation bypass.
+ */
+import React, { useCallback } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Settings, Download, Upload, Trash2, ShieldAlert, FastForward, Activity } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Settings, Download, Upload, Trash2, ShieldAlert, FastForward, Activity, Coins, Trophy, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
-import { exportActiveSlot, deleteSlot } from '@/state/saveSlots';
+import { exportActiveSlot } from '@/state/saveSlots';
 import { advanceWeek } from '@/state/gameStore';
 import { computeNextSeason } from '@/engine/weekPipeline';
-
+import type { GameState, RivalStableData } from '@/types/game';
 
 export default function AdminTools() {
   const { state, setState, doReset } = useGameStore();
 
-  const handleExport = () => {
+  const handleExport = useCallback(() => {
     exportActiveSlot();
-    toast.success('Save exported successfully');
-  };
+    toast.success('Save persistent data exported.');
+  }, []);
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImport = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const data = JSON.parse(event.target?.result as string);
-        // Basic validation
+        const content = event.target?.result;
+        if (typeof content !== 'string') throw new Error("Invalid file content");
+        const data = JSON.parse(content);
         if (data && data.state) {
-           setState(data.state);
-           toast.success('Save imported successfully');
+           setState(data.state as GameState);
+           toast.success('Temporal state synchronization restored.');
         } else {
-           toast.error('Invalid save file format');
+           toast.error('Invalid save signature detected.');
         }
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : 'Failed to parse save file');
+        toast.error(err instanceof Error ? err.message : 'Telemetry reconstruction failed.');
       }
     };
     reader.readAsText(file);
-  };
+  }, [setState]);
 
-  const skipWeek = () => {
+  const skipWeek = useCallback(() => {
     setState(advanceWeek(state));
-    toast.success('Advanced one week');
-  };
+    toast.success(`Advanced to Week ${state.week + 1}`);
+  }, [state, setState]);
 
-
-  const skipFTUE = () => {
-    setState({ 
-      ...state, 
-      ftueComplete: true, 
-      isFTUE: false,
-      player: {
-        id: state.player?.id || "admin-0",
-        name: state.player?.name || "Master Admin",
-        stableName: state.player?.stableName || "The Admin Lords",
-        fame: state.player?.fame || 0,
-        renown: state.player?.renown || 0,
-        titles: state.player?.titles || 0,
-        ...(state.player || {})
-      }
-    });
-    toast.success('FTUE skipped. State unlocked.');
-  };
-
-  const skipSeason = () => {
+  const skipSeason = useCallback(() => {
     let newState = { ...state };
     for(let i=0; i<13; i++) {
         newState = advanceWeek(newState);
     }
     newState.season = computeNextSeason(newState.week);
     setState(newState);
-    toast.success('Advanced one season');
-  };
+    toast.success('Seasonal transition forced.');
+  }, [state, setState]);
+
+  const skipFTUE = useCallback(() => {
+    const defaultPlayer = {
+      id: "admin-0",
+      name: "Master Admin",
+      stableName: "The Admin Lords",
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    };
+
+    setState({ 
+      ...state, 
+      ftueComplete: true, 
+      isFTUE: false,
+      player: {
+        ...defaultPlayer,
+        ...(state.player ?? {})
+      }
+    });
+    toast.success('FTUE constraints bypassed.');
+  }, [state, setState]);
+
+  const resetRivals = useCallback(() => {
+    import("@/engine/rivals").then(({ generateRivalStables }) => {
+      const newRivals = generateRivalStables(23, Date.now()) as RivalStableData[];
+      setState({ ...state, rivals: newRivals });
+      toast.success('Rival ecosystem regenerated.');
+    });
+  }, [state, setState]);
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <div>
-        <h1 className="text-2xl font-display font-bold flex items-center gap-2">
-          <Settings className="h-6 w-6 text-primary" /> Admin & Telemetry Tools
-        </h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Manage saves, view telemetry, and trigger system events.
-        </p>
+    <div className="space-y-6 max-w-5xl mx-auto pb-20">
+      <div className="flex items-center justify-between border-b border-border/10 pb-6">
+        <div>
+          <h1 className="text-xl sm:text-3xl font-display font-black flex items-center gap-3 uppercase tracking-tighter text-foreground">
+            <div className="p-2 bg-primary/10 rounded-xl border border-primary/20">
+              <Settings className="h-6 w-6 text-primary" />
+            </div>
+            Admin_Interface
+          </h1>
+          <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] mt-2 opacity-60">
+            Advanced system overrides and telemetry management
+          </p>
+        </div>
+        <Badge variant={state.ftueComplete ? "outline" : "destructive"} className="font-black uppercase text-[10px] tracking-widest h-6 px-4">
+          SYSTEM_{state.ftueComplete ? "UNLOCKED" : "LOCKED"}
+        </Badge>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="border-primary/20">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Download className="h-5 w-5" /> Save Management
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card className="border-primary/20 bg-glass-card shadow-lg hover:border-primary/40 transition-all">
+          <CardHeader className="pb-3 border-b border-primary/10 bg-primary/5">
+            <CardTitle className="text-sm font-display flex items-center gap-2 text-primary uppercase">
+              <Download className="h-4 w-4" /> Save_Core
             </CardTitle>
-            <CardDescription>Import or export your save data</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <Button onClick={handleExport} className="w-full gap-2" variant="outline">
-              <Download className="h-4 w-4" /> Export Current Save (JSON)
+          <CardContent className="p-6 space-y-3">
+            <Button onClick={handleExport} className="w-full h-11 gap-2 font-black uppercase text-[10px] tracking-widest shadow-sm" variant="outline">
+              Export_Persistent_Save
             </Button>
             <div className="relative">
               <input
                 type="file"
                 accept=".json"
                 onChange={handleImport}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               />
-              <Button className="w-full gap-2 pointer-events-none" variant="outline">
-                <Upload className="h-4 w-4" /> Import Save (JSON)
+              <Button className="w-full h-11 gap-2 border-border/40 font-black uppercase text-[10px] tracking-widest" variant="outline">
+                <Upload className="h-4 w-4" /> Import_State_Data
               </Button>
             </div>
-            <Button onClick={doReset} className="w-full gap-2" variant="destructive">
-              <Trash2 className="h-4 w-4" /> Hard Reset
+            <Button onClick={doReset} className="w-full h-11 gap-2 font-black uppercase text-[10px] tracking-widest bg-destructive/10 text-destructive hover:bg-destructive/20 transition-all border-none" variant="outline">
+              <Trash2 className="h-4 w-4" /> Wipe_All_Data
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="border-accent/20">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <FastForward className="h-5 w-5" /> Time Control
+        <Card className="border-accent/20 bg-glass-card shadow-lg hover:border-accent/40 transition-all">
+          <CardHeader className="pb-3 border-b border-accent/10 bg-accent/5">
+            <CardTitle className="text-sm font-display flex items-center gap-2 text-accent uppercase">
+              <FastForward className="h-4 w-4" /> temporal_Drift
             </CardTitle>
-            <CardDescription>Artificially advance the simulation</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <Button onClick={skipWeek} className="w-full gap-2" variant="secondary">
-              Skip 1 Week
+          <CardContent className="p-6 space-y-3">
+            <Button onClick={skipWeek} className="w-full h-11 font-black uppercase text-[10px] tracking-widest" variant="secondary">
+              Advance 1 Week
             </Button>
-            <Button onClick={skipSeason} className="w-full gap-2" variant="secondary">
-              Skip Season (13 Weeks)
+            <Button onClick={skipSeason} className="w-full h-11 font-black uppercase text-[10px] tracking-widest" variant="secondary">
+              Advance Season (13W)
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="border-muted/20 md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Activity className="h-5 w-5" /> Telemetry & System State
+        <Card className="border-destructive/20 bg-glass-card shadow-lg hover:border-destructive/40 transition-all">
+          <CardHeader className="pb-3 border-b border-destructive/10 bg-destructive/5">
+            <CardTitle className="text-sm font-display flex items-center gap-2 text-destructive uppercase">
+              <ShieldAlert className="h-4 w-4" /> Debug_Overrides
             </CardTitle>
-            <CardDescription>Raw state dump for debugging</CardDescription>
           </CardHeader>
-          <CardContent>
-             <div className="bg-muted p-4 rounded-md overflow-x-auto max-h-[300px] text-xs font-mono">
+          <CardContent className="p-6 space-y-3">
+             <Button onClick={skipFTUE} className="w-full h-11 font-black uppercase text-[10px] tracking-widest bg-destructive/10 text-destructive border-none hover:bg-destructive/20" variant="outline">
+               Bypass_FTUE_Gate
+             </Button>
+            <Button 
+               onClick={() => {
+                 setState({ ...state, gold: (state.gold || 0) + 5000 });
+                 toast.success('Injected 5000 gold.');
+               }} 
+               className="w-full h-11 gap-2 font-black uppercase text-[10px] tracking-widest" 
+               variant="outline"
+             >
+               <Coins className="h-3.5 w-3.5 text-arena-gold" /> Grant_5000G
+             </Button>
+             <Button 
+               onClick={resetRivals}
+               className="w-full h-11 gap-2 font-black uppercase text-[10px] tracking-widest" 
+               variant="outline"
+             >
+               <RefreshCw className="h-3.5 w-3.5 text-accent" /> Regenerate_Rivals
+             </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border/30 bg-glass-card shadow-lg md:col-span-2 lg:col-span-3 overflow-hidden">
+          <CardHeader className="pb-3 border-b border-border/10 bg-secondary/10">
+            <CardTitle className="text-xs font-display flex items-center gap-2 text-muted-foreground uppercase tracking-widest">
+              <Activity className="h-4 w-4" /> Telemetry_Output_Stream
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+             <div className="bg-background/40 p-6 overflow-x-auto max-h-[400px] text-xs font-mono leading-relaxed thin-scrollbar">
+                <pre className="text-primary/70">
                 {JSON.stringify({
-                    week: state.week,
-                    season: state.season,
-                    rosterSize: state.roster.length,
-                    gold: state.gold,
-                    activeTournaments: state.tournaments.length,
-                    rivalCount: state.rivals?.length || 0
-                }, null, 2)}
+                    temporal: { week: state.week, season: state.season },
+                    inventory: { gold: state.gold, fame: state.fame },
+                    roster: { size: state.roster.length, championCount: state.roster.filter(w=>w.champion).length },
+                    ecosystem: { rivalCount: state.rivals?.length || 0, tournamentCount: state.tournaments.length },
+                    player: state.player
+                }, null, 4)}
+                </pre>
              </div>
           </CardContent>
         </Card>
       </div>
-
-        <Card className="border-destructive/20">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2 text-destructive">
-              <ShieldAlert className="h-5 w-5" /> Debug & Development
-            </CardTitle>
-            <CardDescription>Bypass safety checks</CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Button onClick={skipFTUE} className="w-full gap-2" variant="destructive">
-              Skip FTUE (Unlock All)
-            </Button>
-            <Button 
-              onClick={() => {
-                setState({ ...state, gold: (state.gold || 0) + 5000 });
-                toast.success('Added 5000 gold');
-              }} 
-              className="w-full gap-2" 
-              variant="outline"
-            >
-              Add 5000 Gold
-            </Button>
-            <Button 
-              onClick={() => {
-                const newRoster = state.roster.map(w => ({ ...w, fame: 100, popularity: 100 }));
-                setState({ ...state, roster: newRoster });
-                toast.success('Maxed roster fame/popularity');
-              }} 
-              className="w-full gap-2" 
-              variant="outline"
-            >
-              Max Roster Fame
-            </Button>
-            <Button 
-              onClick={() => {
-                import("@/engine/rivals").then(({ generateRivalStables }) => {
-                  const newRivals = generateRivalStables(23, Date.now());
-                  setState({ ...state, rivals: newRivals });
-                  toast.success('Regenerated all 23 rivals');
-                });
-              }} 
-              className="w-full gap-2" 
-              variant="outline"
-            >
-              Regenerate Rivals
-            </Button>
-          </CardContent>
-        </Card>
     </div>
   );
 }
+
+import { RefreshCw } from "lucide-react";

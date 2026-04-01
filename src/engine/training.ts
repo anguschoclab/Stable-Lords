@@ -10,14 +10,17 @@
  * - Diminishing returns from potential system
  */
 import type { GameState, TrainingAssignment, SeasonalGrowth, Warrior, InjuryData } from "@/types/game";
-import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX, type Attributes } from "@/types/game";
+import { 
+  ATTRIBUTE_KEYS, ATTRIBUTE_MAX, type Attributes,
+  type TrainerFocus, type TrainerTier 
+} from "@/types/game";
 import { computeWarriorStats } from "@/engine/skillCalc";
 import { canGrow, diminishingReturnsFactor } from "@/engine/potential";
-import type { TrainerFocus } from "@/engine/trainers";
 import { TIER_BONUS } from "@/engine/trainers";
 import { SeededRNG } from "@/utils/random";
 import { generateId } from "@/utils/idUtils";
 import { updateEntityInList } from "@/utils/stateUtils";
+import { type StateImpact } from "./impacts";
 
 // ─── Constants ────────────────────────────────────────────────────────────
 
@@ -369,7 +372,7 @@ export function processTraining(state: GameState): GameState {
     newState.newsletter = [...newState.newsletter, ...stateImpact.newsletterItems];
   }
   
-  stateImpact.rosterUpdates?.forEach((update, id) => {
+  stateImpact.rosterUpdates?.forEach((update: Partial<Warrior>, id: string) => {
     newState.roster = updateEntityInList(newState.roster, id, w => ({ ...w, ...update }));
   });
 
@@ -379,7 +382,7 @@ export function processTraining(state: GameState): GameState {
 /**
  * Convert a TrainingImpact to a generic StateImpact for the pipeline.
  */
-export function trainingImpactToStateImpact(state: GameState, impact: TrainingImpact): { impact: any; seasonalGrowth: SeasonalGrowth[] } {
+export function trainingImpactToStateImpact(state: GameState, impact: TrainingImpact): { impact: StateImpact; seasonalGrowth: SeasonalGrowth[] } {
   const rosterUpdates = new Map<string, Partial<Warrior>>();
   
   impact.updatedRoster.forEach(w => {

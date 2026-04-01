@@ -225,15 +225,15 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
 
     const planA = a.warrior.plan ?? aiPlanForWarrior(
       a.warrior, 
-      stableA.owner.personality, 
-      stableA.philosophy, 
+      stableA.owner.personality || "Pragmatic", 
+      stableA.philosophy || "Opportunist", 
       d.warrior.style,
       stableA.strategy?.intent
     );
     const planD = d.warrior.plan ?? aiPlanForWarrior(
       d.warrior, 
-      stableD.owner.personality, 
-      stableD.philosophy, 
+      stableD.owner.personality || "Pragmatic", 
+      stableD.philosophy || "Opportunist", 
       a.warrior.style,
       stableD.strategy?.intent
     );

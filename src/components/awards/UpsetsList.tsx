@@ -6,7 +6,7 @@ import { ChevronDown, Zap, Swords } from "lucide-react";
 export interface UpsetEntry {
   winner: string;
   loser: string;
-  by?: string;
+  by?: string | null;
   fameDiff: number;
   week?: number; // Used in Seasonal
   round?: number; // Used in Tournament

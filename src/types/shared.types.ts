@@ -151,6 +151,15 @@ export interface FightPlan {
   };
 }
 
+// ─── Trainer Types ────────────────────────────────────────────────────────
+
+export type TrainerTier = "Novice" | "Seasoned" | "Master";
+export type TrainerFocus = "Aggression" | "Defense" | "Endurance" | "Mind" | "Healing";
+
+// ─── Scouting Types ───────────────────────────────────────────────────────
+
+export type ScoutQuality = "Basic" | "Detailed" | "Expert";
+
 // ─── Events ─────────────────────────────────────────────────────────────────
 
 export interface DeathEvent {

@@ -25,11 +25,11 @@ const DEF_TACTICS = ["Dodge", "Parry", "Riposte", "Responsiveness"] as const;
 
 // Mastery tier thresholds — dynamically computed from getMastery
 const MASTERY_TIER_DATA = [
-  { fights: 0, ...getMastery(0) },
-  { fights: 10, ...getMastery(10) },
-  { fights: 20, ...getMastery(20) },
-  { fights: 30, ...getMastery(30) },
-  { fights: 50, ...getMastery(50) },
+  { ...getMastery(0) },
+  { ...getMastery(10) },
+  { ...getMastery(20) },
+  { ...getMastery(30) },
+  { ...getMastery(50) },
 ];
 const MASTERY_TIER_COLORS: Record<MasteryTier, string> = {
   Novice: "bg-muted text-muted-foreground",

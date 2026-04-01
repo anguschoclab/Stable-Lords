@@ -48,8 +48,8 @@ describe("Economy Engine", () => {
       state.roster = [w1, w2];
 
       state.trainers = [{
-        contractWeeksLeft: 5, tier: "Apprentice",
-        id: "t1", name: "Trainer Dan", focus: "ST",
+        contractWeeksLeft: 5, tier: "Novice",
+        id: "t1", name: "Trainer Dan", focus: "Aggression",
         fame: 1
       }];
 

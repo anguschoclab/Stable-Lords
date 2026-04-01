@@ -3,7 +3,10 @@ import {
   type Attributes, 
   type Season, 
   type CrowdMoodType, 
-  type NewsletterItem 
+  type NewsletterItem,
+  type TrainerTier,
+  type TrainerFocus,
+  type ScoutQuality
 } from "./shared.types";
 import { type Warrior, type DeathEvent } from "./warrior.types";
 import { type FightSummary, type FightOutcomeBy } from "./combat.types";
@@ -80,8 +83,8 @@ export interface AIStrategy {
 export interface TrainerData {
   id: string;
   name: string;
-  tier: string;
-  focus: string;
+  tier: TrainerTier;
+  focus: TrainerFocus;
   fame: number;
   contractWeeksLeft: number;
   retiredFromWarrior?: string;
@@ -105,7 +108,7 @@ export interface ScoutReportData {
   id: string;
   warriorName: string;
   style: string;
-  quality: "Basic" | "Detailed" | "Expert";
+  quality: ScoutQuality;
   week: number;
   attributeRanges: Record<string, string>;
   record: string;

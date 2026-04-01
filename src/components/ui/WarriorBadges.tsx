@@ -1,5 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Trophy, Crown, Heart, Skull } from "lucide-react";
 import { getTagDescription } from "@/data/tagDescriptions";
@@ -24,7 +25,7 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
     switch (type) {
       case "flair":
         return (
-          <Badge variant="secondary" className={`text-arena-gold border-arena-gold/30 ${className ?? ""}`}>
+          <Badge variant="secondary" className={cn("text-arena-gold border-arena-gold/30", className)}>
             {tag}
           </Badge>
         );
@@ -57,9 +58,9 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
 
 // ─── StatBadge ────────────────────────────────────────────────────────────
 
-export function StatBadge({ styleName, career, variant = "outline", showFullName = false }: StatBadgeProps) {
+export function StatBadge({ styleName, career, variant = "outline", showFullName = false, className }: StatBadgeProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div className={cn("flex items-center gap-2", className)}>
       <Badge variant={variant} className="text-[10px] font-mono h-4 px-1 shrink-0">
         {showFullName ? (STYLE_DISPLAY_NAMES[styleName] || styleName) : (STYLE_ABBREV[styleName] || styleName)}
       </Badge>

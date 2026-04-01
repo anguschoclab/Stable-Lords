@@ -123,7 +123,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         window.location.href = "/welcome";
       }
     }
-  }, [state.roster, location.pathname]);
+  }, [state.roster, location.pathname, state]);
 
   useEffect(() => {
     if (!lastSavedAt) return;
@@ -378,7 +378,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.3)]"
               onClick={() => {
                 const currentSlot = getActiveSlot();
-                if (currentSlot) deleteSlot(currentSlot.id);
+                if (currentSlot) deleteSlot(currentSlot);
                 doReset();
                 setResetOpen(false);
               }}

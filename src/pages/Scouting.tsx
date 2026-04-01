@@ -6,10 +6,13 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useGameStore } from "@/state/useGameStore";
 import { generateScoutReport, getScoutCost, type ScoutQuality } from "@/engine/scouting";
 import type { ScoutReportData } from "@/types/game";
-import { Search, Eye, ArrowLeftRight, UserRoundSearch } from "lucide-react";
+import { Search, Eye, ArrowLeftRight, UserRoundSearch, Shield, Users, Target, Hexagon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Surface } from "@/components/ui/Surface";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 // Modular Components
 import { ScoutIntelTab } from "@/components/scouting/ScoutIntelTab";
@@ -77,25 +80,26 @@ export default function Scouting() {
   }, []);
 
   return (
-    <div className="space-y-6 pb-20">
-      <div>
-        <h1 className="text-xl sm:text-3xl font-display font-black flex items-center gap-3 uppercase tracking-tighter text-foreground">
-          <div className="p-2 bg-primary/10 rounded-xl border border-primary/20">
-            <Search className="h-6 w-6 text-primary" />
+    <div className="space-y-12 max-w-7xl mx-auto pb-20">
+      <PageHeader 
+        title="Tactical Reconnaissance"
+        subtitle="SURVEILLANCE // THREAT_ANALYSIS // ENEMY_INTEL"
+        icon={Search}
+        actions={
+          <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.34em] text-muted-foreground opacity-60">
+             <span>Active Protocols: {reports.length}</span>
+             <div className="h-4 w-px bg-border/40" />
+             <span className="text-primary italic animate-pulse">Scanning Data Packets...</span>
           </div>
-          Tactical Reconnaissance
-        </h1>
-        <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] mt-2 opacity-60">
-          Gathering vital intelligence on rival stables and veteran warriors
-        </p>
-      </div>
+        }
+      />
 
       <Tabs defaultValue="scout" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 max-w-md bg-secondary/20 p-1 rounded-2xl border border-border/40">
+        <TabsList className="bg-neutral-900/60 border border-white/5 p-1 mb-6 h-auto">
           <Tooltip>
             <TooltipTrigger asChild>
-              <TabsTrigger value="scout" className="gap-2 rounded-xl transition-all data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:text-primary font-black uppercase text-[10px] tracking-widest">
-                <Eye className="h-3.5 w-3.5" /> SCOUT_INTEL
+              <TabsTrigger value="scout" className="data-[state=active]:bg-primary data-[state=active]:text-white uppercase tracking-widest text-[10px] font-black py-2 px-6 rounded-none transition-all">
+                <Eye className="h-3.5 w-3.5 mr-2" /> SCOUT_INTEL
               </TabsTrigger>
             </TooltipTrigger>
             <TooltipContent side="top">
@@ -105,8 +109,8 @@ export default function Scouting() {
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <TabsTrigger value="compare" className="gap-2 rounded-xl transition-all data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:text-primary font-black uppercase text-[10px] tracking-widest">
-                <ArrowLeftRight className="h-3.5 w-3.5" /> STABLE_DYNAMICS
+              <TabsTrigger value="compare" className="data-[state=active]:bg-primary data-[state=active]:text-white uppercase tracking-widest text-[10px] font-black py-2 px-6 rounded-none transition-all">
+                <ArrowLeftRight className="h-3.5 w-3.5 mr-2" /> STABLE_DYNAMICS
               </TabsTrigger>
             </TooltipTrigger>
             <TooltipContent side="top">
@@ -116,8 +120,8 @@ export default function Scouting() {
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <TabsTrigger value="warriors" className="gap-2 rounded-xl transition-all data-[state=active]:bg-background data-[state=active]:shadow-lg data-[state=active]:text-primary font-black uppercase text-[10px] tracking-widest">
-                <UserRoundSearch className="h-3.5 w-3.5" /> WARRIOR_FACE-OFF
+              <TabsTrigger value="warriors" className="data-[state=active]:bg-primary data-[state=active]:text-white uppercase tracking-widest text-[10px] font-black py-2 px-6 rounded-none transition-all">
+                <UserRoundSearch className="h-3.5 w-3.5 mr-2" /> WARRIOR_FACE-OFF
               </TabsTrigger>
             </TooltipTrigger>
             <TooltipContent side="top">

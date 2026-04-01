@@ -9,10 +9,10 @@ import type { GazetteStory } from "@/types/game";
 
 interface GazetteArticleProps {
   issue: GazetteStory;
-  state: any;
+  season: string;
 }
 
-export function GazetteArticle({ issue, state }: GazetteArticleProps) {
+export function GazetteArticle({ issue, season }: GazetteArticleProps) {
   return (
     <motion.article 
       initial={{ opacity: 0, y: 30 }}
@@ -36,7 +36,7 @@ export function GazetteArticle({ issue, state }: GazetteArticleProps) {
                  <Newspaper className="h-4 w-4" /> 
                  VOL. {Math.floor(issue.week / 4) + 1} // NO. {issue.week}
               </span>
-              <span className="text-foreground/20 italic">{state.season} // WEEK {issue.week}</span>
+              <span className="text-foreground/20 italic">{season} // WEEK {issue.week}</span>
               <span className="hidden sm:inline">ARENA DISTRICT CORE EDITION</span>
             </div>
             

@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Users } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Surface } from "@/components/ui/Surface";
 import type { RivalStableData } from "@/types/game";
 import { cn } from "@/lib/utils";
 
@@ -23,40 +24,51 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
         {rivals.map((rival) => (
           <Tooltip key={rival.owner.id}>
             <TooltipTrigger asChild>
-              <Card
+              <button
                 className={cn(
-                  "cursor-pointer transition-all border border-border/30 hover:border-primary/40 bg-glass-card shadow-sm group",
-                  selectedRivalId === rival.owner.id 
-                    ? "border-primary bg-primary/10 ring-1 ring-primary/30 shadow-[0_0_15px_-5px_rgba(var(--primary-rgb),0.3)]" 
-                    : "hover:bg-secondary/40"
+                  "w-full text-left group relative outline-none",
+                  selectedRivalId === rival.owner.id ? "z-10" : "z-0"
                 )}
                 onClick={() => onSelectRival(rival.owner.id)}
               >
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                <Surface
+                  variant={selectedRivalId === rival.owner.id ? "paper" : "glass"}
+                  padding="none"
+                  className={cn(
+                    "transition-all border bg-neutral-900/60 overflow-hidden",
+                    selectedRivalId === rival.owner.id 
+                      ? "border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" 
+                      : "border-white/5 hover:border-white/20 hover:bg-white/5"
+                  )}
+                >
+                  <div className="p-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
                       <div className={cn(
-                        "p-2 rounded-xl border border-border/40 transition-colors",
-                        selectedRivalId === rival.owner.id ? "bg-primary/20 text-primary border-primary/20" : "bg-secondary text-muted-foreground group-hover:text-primary group-hover:border-primary/40"
+                        "h-10 w-10 flex items-center justify-center rounded-xl border transition-all",
+                        selectedRivalId === rival.owner.id 
+                          ? "bg-primary text-white border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" 
+                          : "bg-neutral-800 text-muted-foreground border-white/10 group-hover:bg-neutral-700"
                       )}>
-                        <Shield className="h-4 w-4" />
+                        <Shield className="h-5 w-5" />
                       </div>
-                      <div className="space-y-0.5">
+                      <div className="space-y-1">
                         <span className={cn(
                           "font-display font-black text-sm uppercase tracking-tight transition-colors",
                           selectedRivalId === rival.owner.id ? "text-primary" : "text-foreground"
                         )}>{rival.owner.stableName}</span>
                         <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
                           <span className="flex items-center gap-1.5 font-mono">
-                            <Users className="h-3 w-3" /> {rival.roster.filter((w) => w.status === "Active").length}
+                            <Users className="h-3 w-3" /> {rival.roster.filter((w) => w.status === "Active").length} ASSETS
                           </span>
-                          <span className="px-1.5 py-0.5 rounded-sm bg-border/20">{rival.owner.personality}</span>
+                          <span className="h-1 w-1 rounded-full bg-border/40" />
+                          <span className="text-primary/60 font-bold">{rival.owner.personality}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  {selectedRivalId === rival.owner.id && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary" />}
+                </Surface>
+              </button>
             </TooltipTrigger>
             <TooltipContent side="right" className="bg-glass-card border-border/40 shadow-xl p-3">
               <p className="text-[10px] font-black uppercase tracking-widest text-primary">SELECT_STABLE_ASSET</p>

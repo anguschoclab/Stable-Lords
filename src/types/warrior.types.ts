@@ -28,6 +28,7 @@ export interface StatBadgeProps {
   career?: CareerRecord;
   variant?: "outline" | "default" | "secondary" | "destructive";
   showFullName?: boolean;
+  className?: string;
 }
 
 export interface WarriorNameTagProps {

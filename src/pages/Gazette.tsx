@@ -12,17 +12,17 @@ import { TacticalStyleAnalysis, StyleMatchupHeatmap } from "@/components/gazette
 import { GazetteLeaderboard, BestByStyle, RisingStars } from "@/components/gazette/GazetteLeaderboards";
 
 export default function Gazette() {
-  const { state } = useGameStore(useShallow((s) => ({
+  const { week, season, gazettes } = useGameStore(useShallow((s) => ({
     week: s.state.week,
     season: s.state.season,
     gazettes: s.state.gazettes
   })));
 
-  const allFights = useMemo(() => ArenaHistory.all(), [state.week]);
+  const allFights = useMemo(() => ArenaHistory.all(), []);
 
   const weeklyIssues = useMemo(() => {
-    return [...(state.gazettes || [])].sort((a, b) => b.week - a.week);
-  }, [state.gazettes]);
+    return [...(gazettes || [])].sort((a, b) => b.week - a.week);
+  }, [gazettes]);
 
   const PAGE_SIZE = 3;
   const [shown, setShown] = useState(PAGE_SIZE);
@@ -39,7 +39,7 @@ export default function Gazette() {
         icon={Newspaper}
         actions={
           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-60">
-            <span>WEEK {state.week}</span>
+            <span>WEEK {week}</span>
             <div className="h-4 w-px bg-border/40" />
             <span>EST. 412 AE</span>
           </div>
@@ -66,7 +66,7 @@ export default function Gazette() {
                  <BestByStyle allFights={allFights} />
               </div>
               <div className="lg:col-span-4">
-                 <RisingStars allFights={allFights} currentWeek={state.week} />
+                 <RisingStars allFights={allFights} currentWeek={week} />
               </div>
            </div>
         </section>
@@ -91,7 +91,7 @@ export default function Gazette() {
           <div className="space-y-20">
             <AnimatePresence mode="popLayout">
               {visibleIssues.map((issue) => (
-                <GazetteArticle key={issue.week} issue={issue} state={state} />
+                <GazetteArticle key={issue.week} issue={issue} season={season} />
               ))}
             </AnimatePresence>
 

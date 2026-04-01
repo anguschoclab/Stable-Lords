@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Search } from "lucide-react";
+import { Search, Eye, Target, Activity } from "lucide-react";
 import type { RivalStableData, ScoutReportData, ScoutQuality } from "@/types/game";
 import { RivalStableList } from "./RivalStableList";
 import { RivalWarriorList } from "./RivalWarriorList";
 import { ScoutReportDetails } from "./ScoutReportDetails";
+import { Surface } from "@/components/ui/Surface";
 
 interface ScoutIntelTabProps {
   rivals: RivalStableData[];
@@ -44,12 +44,13 @@ export function ScoutIntelTab({
 
   if (rivals.length === 0) {
     return (
-      <Card className="border-dashed bg-glass-card border-border/40">
-        <CardContent className="py-12 text-center text-muted-foreground/40 font-black uppercase tracking-[0.2em]">
-          <Search className="h-10 w-10 mx-auto mb-4 opacity-20" />
-          <p className="text-[10px]">Zero_Rival_Signatures_Detected</p>
-        </CardContent>
-      </Card>
+      <Surface variant="glass" className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4">
+        <Search className="h-12 w-12 text-muted-foreground opacity-20" />
+        <div className="space-y-1">
+          <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">No Rivals Signatures Detected</p>
+          <p className="text-xs text-muted-foreground/60 italic">Scan the arena or progress the season to establish rival signatures.</p>
+        </div>
+      </Surface>
     );
   }
 
@@ -69,11 +70,14 @@ export function ScoutIntelTab({
         stableName={activeRival?.owner.stableName}
       />
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="flex items-center gap-3 px-2">
-          <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Scouting_Console</h3>
-          <div className="h-px flex-1 bg-border/20" />
+           <div className="p-1 px-2 rounded-md bg-primary/10 border border-primary/20">
+              <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Target_Analysis</span>
+           </div>
+           <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
         </div>
+        
         {activeWarrior ? (
           <ScoutReportDetails
             report={existingReport ?? null}
@@ -82,10 +86,13 @@ export function ScoutIntelTab({
             onScout={onScout}
           />
         ) : (
-          <div className="py-12 text-center text-muted-foreground/40 border border-dashed border-border/30 rounded-2xl">
-            <Search className="h-10 w-10 mx-auto mb-3 opacity-20" />
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">Target_Warrior_Required</p>
-          </div>
+          <Surface variant="glass" className="py-20 text-center border-dashed border-border/30 flex flex-col items-center gap-4">
+            <Target className="h-12 w-12 text-muted-foreground opacity-20" />
+            <div className="space-y-1">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">Target_Warrior_Selection_Required</p>
+              <p className="text-[9px] text-muted-foreground/20 italic uppercase tracking-tighter">Establish lock-on to proceed with deep scan</p>
+            </div>
+          </Surface>
         )}
       </div>
     </div>

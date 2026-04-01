@@ -35,7 +35,7 @@ function GameRoutes() {
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+    <TooltipProvider delayDuration={400}>
       <Toaster />
       <Sonner />
       <GameRoutes />

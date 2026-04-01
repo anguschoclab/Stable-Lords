@@ -196,12 +196,12 @@ export default function RunRound() {
             )}
           </p>
         </div>
-        <div className="flex gap-2 w-full sm:w-auto">
           <Button
             onClick={runWeek}
             disabled={running || autosimming || state.phase === "resolution" || (fightReady.length < 1 && matchCard.length === 0)}
             className="gap-2 bg-primary hover:bg-primary/90 flex-1 sm:flex-none"
             size="lg"
+            tooltip="Advance to the resolution of the current week's bouts and training."
           >
             <Zap className="h-4 w-4" />
             Submit Cycle
@@ -212,6 +212,7 @@ export default function RunRound() {
             disabled={running || autosimming || (fightReady.length < 1 && matchCard.length === 0)}
             className="gap-2 flex-1 sm:flex-none"
             size="lg"
+            tooltip="Simulate the next 4 weeks of management and combat automatically."
           >
             <FastForward className="h-4 w-4" />
             Autosim 4
@@ -222,6 +223,7 @@ export default function RunRound() {
             disabled={running || autosimming || (fightReady.length < 1 && matchCard.length === 0)}
             className="gap-2 flex-1 sm:flex-none"
             size="lg"
+            tooltip="Simulate until the end of the current season."
           >
             <FastForward className="h-4 w-4" />
             Autosim Season
@@ -340,7 +342,7 @@ export default function RunRound() {
               })}
             </div>
 
-            <Button variant="outline" size="sm" onClick={() => setAutosimResult(null)} className="w-full text-xs">
+            <Button variant="outline" size="sm" onClick={() => setAutosimResult(null)} className="w-full text-xs" tooltip="Close the recap and return to management.">
               Dismiss
             </Button>
           </CardContent>
@@ -403,9 +405,15 @@ export default function RunRound() {
                         <Badge key={id} variant="outline" className="gap-1.5 text-xs">
                           <Crosshair className="h-3 w-3 text-arena-pop" />
                           {entity ? (entity.isStable ? `[Stable] ${entity.name}` : entity.name) : id}
-                          <button onClick={() => removeChallenge(id)} className="text-muted-foreground hover:text-destructive ml-1" aria-label="Remove challenge">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => removeChallenge(id)} 
+                            className="h-6 w-6 text-muted-foreground hover:text-destructive ml-1"
+                            tooltip="Remove this challenge priority"
+                          >
                             <Trash2 className="h-3 w-3" />
-                          </button>
+                          </Button>
                         </Badge>
                       );
                     })}
@@ -438,9 +446,15 @@ export default function RunRound() {
                         <Badge key={id} variant="outline" className="gap-1.5 text-xs">
                           <Ban className="h-3 w-3 text-destructive" />
                           {entity ? (entity.isStable ? `[Stable] ${entity.name}` : entity.name) : id}
-                          <button onClick={() => removeAvoid(id)} className="text-muted-foreground hover:text-destructive ml-1" aria-label="Remove avoid target">
+                          <Button 
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeAvoid(id)} 
+                            className="h-6 w-6 text-muted-foreground hover:text-destructive ml-1"
+                            tooltip="Remove this avoid preference"
+                          >
                             <Trash2 className="h-3 w-3" />
-                          </button>
+                          </Button>
                         </Badge>
                       );
                     })}

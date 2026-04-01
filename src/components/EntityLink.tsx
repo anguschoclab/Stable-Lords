@@ -13,6 +13,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { WarriorDossier } from "@/components/WarriorDossier";
 import { StableDossier } from "@/components/StableDossier";
 import { Button } from "@/components/ui/button";
@@ -36,37 +41,44 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
   }
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <button
-          className={cn(
-            "text-primary hover:underline underline-offset-2 transition-colors cursor-pointer text-left font-bold",
-            className
-          )}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {children ?? name}
-        </button>
-      </SheetTrigger>
-      <SheetContent className="sm:max-w-md border-l-primary/20 bg-card/95 backdrop-blur-md">
-        <SheetHeader className="pb-4 border-b">
-          <SheetTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <User className="h-5 w-5 text-primary" />
-              Warrior Dossier
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Sheet>
+          <SheetTrigger asChild>
+            <button
+              className={cn(
+                "text-primary hover:underline underline-offset-2 transition-colors cursor-pointer text-left font-bold",
+                className
+              )}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {children ?? name}
+            </button>
+          </SheetTrigger>
+          <SheetContent className="sm:max-w-md border-l-primary/20 bg-card/95 backdrop-blur-md">
+            <SheetHeader className="pb-4 border-b">
+              <SheetTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5 text-primary" />
+                  Warrior Dossier
+                </div>
+                <Link to={`/warrior/${resolvedId}` as any}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="View full profile" aria-label="View full warrior profile">
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </SheetTitle>
+            </SheetHeader>
+            <div className="mt-6 h-full">
+              <WarriorDossier warriorId={resolvedId} />
             </div>
-            <Link to={`/warrior/${resolvedId}` as any}>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="View full profile" aria-label="View full warrior profile">
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </Link>
-          </SheetTitle>
-        </SheetHeader>
-        <div className="mt-6 h-full">
-          <WarriorDossier warriorId={resolvedId} />
-        </div>
-      </SheetContent>
-    </Sheet>
+          </SheetContent>
+        </Sheet>
+      </TooltipTrigger>
+      <TooltipContent side="top">
+        <p className="text-[10px] font-black uppercase tracking-widest">View Warrior Dossier</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -106,37 +118,44 @@ export function StableLink({ name, className, children }: StableLinkProps) {
   }
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <button
-          className={cn(
-            "text-arena-gold hover:underline underline-offset-2 transition-colors cursor-pointer text-left font-bold",
-            className
-          )}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {children ?? name}
-        </button>
-      </SheetTrigger>
-      <SheetContent className="sm:max-w-md border-l-arena-gold/20 bg-card/95 backdrop-blur-md">
-        <SheetHeader className="pb-4 border-b">
-          <SheetTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Landmark className="h-5 w-5 text-arena-gold" />
-              Stable Records
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Sheet>
+          <SheetTrigger asChild>
+            <button
+              className={cn(
+                "text-arena-gold hover:underline underline-offset-2 transition-colors cursor-pointer text-left font-bold",
+                className
+              )}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {children ?? name}
+            </button>
+          </SheetTrigger>
+          <SheetContent className="sm:max-w-md border-l-arena-gold/20 bg-card/95 backdrop-blur-md">
+            <SheetHeader className="pb-4 border-b">
+              <SheetTitle className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Landmark className="h-5 w-5 text-arena-gold" />
+                  Stable Records
+                </div>
+                <Link to={isPlayer ? "/stable" : (`/stable/${stableId}` as any)}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="View full stable" aria-label="View full stable">
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </SheetTitle>
+            </SheetHeader>
+            <div className="mt-6 h-full">
+              <StableDossier stableId={stableId} stableName={name} />
             </div>
-            <Link to={isPlayer ? "/stable" : (`/stable/${stableId}` as any)}>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title="View full stable" aria-label="View full stable">
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </Link>
-          </SheetTitle>
-        </SheetHeader>
-        <div className="mt-6 h-full">
-          <StableDossier stableId={stableId} stableName={name} />
-        </div>
-      </SheetContent>
-    </Sheet>
+          </SheetContent>
+        </Sheet>
+      </TooltipTrigger>
+      <TooltipContent side="top">
+        <p className="text-[10px] font-black uppercase tracking-widest">View Stable Records</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 

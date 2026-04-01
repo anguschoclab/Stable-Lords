@@ -27,6 +27,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useCoachTip } from "@/hooks/useCoachTip";
@@ -240,43 +245,44 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     const active = activePath === item.to || (item.to !== "/" && activePath.startsWith(item.to));
                     const Icon = item.icon;
                     return (
-                      <Link
-                        key={item.to}
-                        to={item.to}
-                      >
-                        <motion.div
-                          whileHover={{ x: 4, backgroundColor: active ? "var(--primary)" : "rgba(255,255,255,0.05)" }}
-                          whileTap={{ scale: 0.98 }}
-                          className={cn(
-                            "flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all group relative",
-                            active 
-                              ? "bg-primary text-background shadow-lg shadow-primary/20" 
-                              : "text-muted-foreground hover:text-foreground"
-                          )}
-                        >
-                          <Icon className={cn("h-4 w-4 shrink-0 transition-transform group-hover:scale-110", active && "text-background")} />
-                          <AnimatePresence>
-                            {sidebarOpen && (
-                              <motion.span 
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -10 }}
-                                className="whitespace-nowrap uppercase tracking-wider"
-                              >
-                                {item.label}
-                              </motion.span>
-                            )}
-                          </AnimatePresence>
-                          {active && !sidebarOpen && (
-                            <div className="absolute right-0 top-1 bottom-1 w-1 bg-background rounded-l-full" />
-                          )}
-                          {!sidebarOpen && (
-                            <div className="lg:absolute lg:left-full lg:ml-4 lg:px-2 lg:py-1 lg:bg-popover lg:text-popover-foreground lg:text-[10px] lg:rounded lg:opacity-0 lg:group-hover:opacity-100 lg:transition-opacity lg:z-50 lg:pointer-events-none lg:shadow-xl lg:border lg:border-border lg:font-black lg:uppercase lg:tracking-widest whitespace-nowrap">
-                              {item.label}
-                            </div>
-                          )}
-                        </motion.div>
-                      </Link>
+                      <Tooltip key={item.to}>
+                        <TooltipTrigger asChild>
+                          <Link to={item.to}>
+                            <motion.div
+                              whileHover={{ x: 4, backgroundColor: active ? "var(--primary)" : "rgba(255,255,255,0.05)" }}
+                              whileTap={{ scale: 0.98 }}
+                              className={cn(
+                                "flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all group relative",
+                                active 
+                                  ? "bg-primary text-background shadow-lg shadow-primary/20" 
+                                  : "text-muted-foreground hover:text-foreground"
+                              )}
+                            >
+                              <Icon className={cn("h-4 w-4 shrink-0 transition-transform group-hover:scale-110", active && "text-background")} />
+                              <AnimatePresence>
+                                {sidebarOpen && (
+                                  <motion.span 
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -10 }}
+                                    className="whitespace-nowrap uppercase tracking-wider"
+                                  >
+                                    {item.label}
+                                  </motion.span>
+                                )}
+                              </AnimatePresence>
+                              {active && !sidebarOpen && (
+                                <div className="absolute right-0 top-1 bottom-1 w-1 bg-background rounded-l-full" />
+                              )}
+                            </motion.div>
+                          </Link>
+                        </TooltipTrigger>
+                        {!sidebarOpen && (
+                          <TooltipContent side="right" sideOffset={10}>
+                            <p className="font-black uppercase tracking-widest text-[10px]">{item.label}</p>
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
                     );
                   })}
                 </div>

@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useGameStore } from "@/state/useGameStore";
 import { cn } from "@/lib/utils";
+import { getRecentFightsForWarrior } from "@/engine/core/historyUtils";
 import {
   Tooltip,
   TooltipContent,
@@ -17,11 +18,9 @@ export function FormSparkline({ warriorId, limit = 5 }: FormSparklineProps) {
   const { state } = useGameStore();
 
   const history = useMemo(() => {
-    return state.arenaHistory
-      .filter((f) => f.a === warriorId || f.d === warriorId)
-      .sort((a, b) => b.week - a.week)
-      .slice(0, limit)
-      .reverse();
+    // ⚡ Bolt: Fast O(K) lookup without spreading, sorting, or filtering
+    // the massive chronological arenaHistory array.
+    return getRecentFightsForWarrior(state.arenaHistory, warriorId, limit);
   }, [state.arenaHistory, warriorId, limit]);
 
   return (

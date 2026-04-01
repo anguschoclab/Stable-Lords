@@ -90,7 +90,7 @@ function RosterWall() {
       <CardContent>
         {sortedRoster.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-6">
-            No active warriors. <Link to="/recruit" className="text-primary hover:underline">Recruit your first.</Link>
+            No active warriors. <Link to="/stable/recruit" className="text-primary hover:underline">Recruit your first.</Link>
           </p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
@@ -102,7 +102,7 @@ function RosterWall() {
               return (
                 <button
                   key={w.id}
-                  onClick={() => navigate({ to: `/warrior/${w.id}` })}
+                  onClick={() => navigate({ to: "/warrior/$id", params: { id: w.id } })}
                   className="flex items-start gap-3 p-3 rounded-lg border border-border hover:border-primary/40 bg-card transition-colors text-left group"
                 >
                   {/* Rank badge */}
@@ -174,17 +174,17 @@ function TrainerTable() {
         <CardTitle className="font-display text-base flex items-center gap-2">
           <GraduationCap className="h-4 w-4 text-primary" /> Trainers
         </CardTitle>
-        <Link to="/trainers">
-          <Button variant="ghost" size="sm" className="text-[10px] gap-1">
-            Manage <ChevronRight className="h-3 w-3" />
-          </Button>
-        </Link>
-      </CardHeader>
-      <CardContent>
-        {trainers.length === 0 ? (
-          <p className="text-xs text-muted-foreground text-center py-4">
-            No active trainers. <Link to="/trainers" className="text-primary hover:underline">Hire one.</Link>
-          </p>
+          <Link to="/stable/trainers">
+            <Button variant="ghost" size="sm" className="text-[10px] gap-1">
+              Manage <ChevronRight className="h-3 w-3" />
+            </Button>
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {trainers.length === 0 ? (
+            <p className="text-xs text-muted-foreground text-center py-4">
+              No active trainers. <Link to="/stable/trainers" className="text-primary hover:underline">Hire one.</Link>
+            </p>
         ) : (
           <div className="space-y-2">
             {trainers.map(t => {

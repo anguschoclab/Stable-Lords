@@ -89,7 +89,7 @@ export function SeasonWidget() {
             ))}
           </div>
           <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-            <Link to="/seasonal-awards" className="hover:text-primary transition-colors">
+            <Link to="/legacy/awards" className="hover:text-primary transition-colors">
               {weeksRemaining === 0
                 ? "🏆 Awards ceremony!"
                 : `${weeksRemaining} week${weeksRemaining !== 1 ? "s" : ""} until awards`}

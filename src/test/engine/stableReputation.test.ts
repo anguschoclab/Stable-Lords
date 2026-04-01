@@ -32,7 +32,7 @@ function createMockFightSummary(overrides: Partial<FightSummary> = {}): FightSum
   return {
     id: "f1",
     by: "KO",
-    winner: "w1",
+    winner: "A",
     ...overrides
   } as unknown as FightSummary;
 }
@@ -114,9 +114,9 @@ describe("computeStableReputation", () => {
         createMockWarrior({ career: { wins: 0, losses: 0, kills: 1 } as any })
       ],
       arenaHistory: [
-        createMockFightSummary({ by: "KO", winner: "w1" }),
-        createMockFightSummary({ by: "Decision", winner: "w2" }),
-        createMockFightSummary({ by: "Kill", winner: "w3" }),
+        createMockFightSummary({ by: "KO", winner: "A" }),
+        createMockFightSummary({ by: "KO", winner: "D" }),
+        createMockFightSummary({ by: "Kill", winner: "A" }),
         createMockFightSummary({ by: "KO", winner: null }) // Draw/No winner
       ]
     });

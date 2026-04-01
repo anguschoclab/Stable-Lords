@@ -25,7 +25,8 @@ describe("Scheduling Assistant Engine", () => {
     const mockState = (rivalWarriors: Warrior[]): GameState => {
         const rivalData: RivalStableData[] = [{
             owner: { id: "rival1", name: "Rival Owner", stableName: "Rival Stable", fame: 0, renown: 0, titles: 0 },
-            roster: rivalWarriors
+            roster: rivalWarriors,
+            gold: 1000
         }];
 
         return {
@@ -38,12 +39,14 @@ describe("Scheduling Assistant Engine", () => {
             gold: 0,
             ledger: [],
             week: 1,
+            phase: "planning",
             season: "Spring",
             roster: [],
             graveyard: [],
             retired: [],
             arenaHistory: [],
             newsletter: [],
+            gazettes: [],
             hallOfFame: [],
             crowdMood: "Calm",
             tournaments: [],
@@ -61,6 +64,10 @@ describe("Scheduling Assistant Engine", () => {
             ownerGrudges: [],
             insightTokens: [],
             moodHistory: [],
+            playerChallenges: [],
+            playerAvoids: [],
+            isFTUE: false,
+            unacknowledgedDeaths: [],
             settings: { featureFlags: { tournaments: true, scouting: true } }
         };
     };

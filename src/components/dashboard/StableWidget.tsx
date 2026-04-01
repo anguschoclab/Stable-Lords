@@ -40,13 +40,13 @@ export function StableWidget() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <Link to={`/warrior/${w.id}` as any} className="text-xs font-bold truncate hover:underline">{w.name}</Link>
+                        <Link to="/warrior/$id" params={{ id: w.id }} className="text-xs font-bold truncate hover:underline">{w.name}</Link>
                         <span className="text-[10px] font-mono whitespace-nowrap">
                            <span className="text-arena-pop">{w.career.wins}</span>-<span className="text-muted-foreground">{w.career.losses}</span>-<span className="text-destructive">{w.career.kills}</span>
                         </span>
                       </div>
                       <div className="flex items-center justify-between mt-1">
-                        <span className="text-[10px] text-muted-foreground truncate">{STYLE_DISPLAY_NAMES[w.style as keyof typeof STYLE_DISPLAY_NAMES] || w.style}</span>
+                        <span className="text-[10px] text-muted-foreground truncate">{STYLE_DISPLAY_NAMES[w.style] || w.style}</span>
                         {hasInjuries ? (
                            <span className="text-[9px] uppercase tracking-wider bg-destructive/10 text-destructive px-1 rounded font-bold">Injured</span>
                         ) : (
@@ -62,12 +62,12 @@ export function StableWidget() {
         </div>
 
         <div className="p-2.5 border-t border-border/20 bg-background/50 grid grid-cols-2 gap-2 mt-auto">
-          <Link to="/recruit">
+          <Link to="/stable/recruit">
             <Button variant="secondary" size="sm" className="w-full h-7 text-[10px] uppercase tracking-wider font-bold">
               <UserPlus className="h-3 w-3 mr-1" /> Recruit
             </Button>
           </Link>
-          <Link to="/stable-hall">
+          <Link to="/stable">
             <Button variant="outline" size="sm" className="w-full h-7 text-[10px] uppercase tracking-wider font-bold">
               <Users className="h-3 w-3 mr-1" /> View All
             </Button>

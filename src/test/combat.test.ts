@@ -322,15 +322,15 @@ describe("simulateFight — hit-location lethality", () => {
 
     for (let seed = 1; seed <= trials; seed++) {
       const rHead = simulateFight(
-        makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 8, killDesire: 10, target: "head" }),
-        makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: "none_armor" }),
+        makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 8, killDesire: 10, target: "Head" }),
+        makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: "Any" }),
         wA, wD, seed,
       );
       if (rHead.by === "Kill" && rHead.winner === "A") killsHead++;
 
       const rLimb = simulateFight(
-        makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 8, killDesire: 10, target: "left arm" }),
-        makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: "none_armor" }),
+        makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 8, killDesire: 10, target: "Left Arm" }),
+        makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: "Any" }),
         wA, wD, seed,
       );
       if (rLimb.by === "Kill" && rLimb.winner === "A") killsLimb++;
@@ -352,15 +352,15 @@ describe("simulateFight — hit-location lethality", () => {
 
     for (let seed = 1; seed <= trials; seed++) {
       const rUnarmored = simulateFight(
-        makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 8, killDesire: 10, target: "head" }),
-        makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: "none_armor" }),
+        makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 8, killDesire: 10, target: "Head" }),
+        makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: "Any" }),
         wA, wD, seed,
       );
       if (rUnarmored.by === "Kill" && rUnarmored.winner === "A") killsUnarmored++;
 
       const rArmored = simulateFight(
-        makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 8, killDesire: 10, target: "head" }),
-        makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: "helm" }),
+        makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 8, killDesire: 10, target: "Head" }),
+        makePlan(FightingStyle.StrikingAttack, { OE: 5, AL: 5, killDesire: 1, protect: "Head" }),
         wA, wD, seed,
       );
       if (rArmored.by === "Kill" && rArmored.winner === "A") killsArmored++;
@@ -380,15 +380,15 @@ describe("simulateFight — hit-location lethality", () => {
 
     for (let seed = 1; seed <= trials; seed++) {
       const rChest = simulateFight(
-        makePlan(FightingStyle.LungingAttack, { OE: 9, AL: 7, killDesire: 10, target: "chest" }),
-        makePlan(FightingStyle.ParryRiposte, { OE: 4, AL: 6, killDesire: 1, protect: "none_armor" }),
+        makePlan(FightingStyle.LungingAttack, { OE: 9, AL: 7, killDesire: 10, target: "Chest" }),
+        makePlan(FightingStyle.ParryRiposte, { OE: 4, AL: 6, killDesire: 1, protect: "Any" }),
         wA, wD, seed,
       );
       if (rChest.by === "Kill" && rChest.winner === "A") killsChest++;
 
       const rLeg = simulateFight(
-        makePlan(FightingStyle.LungingAttack, { OE: 9, AL: 7, killDesire: 10, target: "left leg" }),
-        makePlan(FightingStyle.ParryRiposte, { OE: 4, AL: 6, killDesire: 1, protect: "none_armor" }),
+        makePlan(FightingStyle.LungingAttack, { OE: 9, AL: 7, killDesire: 10, target: "Left Leg" }),
+        makePlan(FightingStyle.ParryRiposte, { OE: 4, AL: 6, killDesire: 1, protect: "Any" }),
         wA, wD, seed,
       );
       if (rLeg.by === "Kill" && rLeg.winner === "A") killsLeg++;

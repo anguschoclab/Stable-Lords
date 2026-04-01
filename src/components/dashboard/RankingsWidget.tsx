@@ -31,7 +31,7 @@ export function RankingsWidget() {
       <CardContent className="p-0">
         {ranked.length === 0 ? (
           <div className="px-4 py-6 text-center text-sm text-muted-foreground">
-            No warriors yet. <Link to="/recruit" className="text-primary hover:underline">Recruit your first.</Link>
+            No warriors yet. <Link to="/stable/recruit" className="text-primary hover:underline">Recruit your first.</Link>
           </div>
         ) : (
           <div className="divide-y divide-border/50">

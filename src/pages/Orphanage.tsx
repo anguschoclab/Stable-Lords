@@ -146,15 +146,7 @@ export default function Orphanage() {
         dateOfDeath: `Week 1, ${state.season}`,
       }));
 
-    const generatedRivals = generateRivalStables(23, Date.now());
-    const rivals = generatedRivals.map((r) => ({
-      owner: r.owner,
-      roster: r.roster,
-      motto: r.template.motto,
-      origin: r.template.origin,
-      philosophy: r.template.philosophy,
-      tier: r.template.tier,
-    }));
+    const rivals = generateRivalStables(23, Date.now());
 
     const usedNames = new Set<string>();
     aliveWarriors.forEach(w => usedNames.add(w.name));

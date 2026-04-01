@@ -71,7 +71,7 @@ export function RecentBoutsWidget() {
           </table>
         </div>
         <div className="p-2 border-t border-border/20 bg-background/50 text-center">
-            <Link to="/hall-of-fights" className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors font-bold flex items-center justify-center gap-1">
+            <Link to="/world/history" className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors font-bold flex items-center justify-center gap-1">
                Full History <ChevronRight className="h-3 w-3" />
             </Link>
         </div>

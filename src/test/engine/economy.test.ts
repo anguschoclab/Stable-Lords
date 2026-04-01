@@ -49,13 +49,12 @@ describe("Economy Engine", () => {
 
       state.trainers = [{
         contractWeeksLeft: 5, tier: "Apprentice",
-        id: "t1", name: "Trainer Dan", specialty: "ST", effectTier: "Apprentice",
-        salary: 35, // Not used by the engine which hardcodes TRAINER_SALARY to 35, but providing for completeness
-        isAssigned: true, age: 40, portrait: 1, flavor: "Tough"
+        id: "t1", name: "Trainer Dan", focus: "ST",
+        fame: 1
       }];
 
       state.trainingAssignments = [
-        { warriorId: w1.id, focus: "ST", assignedTrainerId: "t1" }
+        { warriorId: w1.id, attribute: "ST", type: "attribute" }
       ];
 
       const breakdown = computeWeeklyBreakdown(state);
@@ -145,13 +144,15 @@ describe("Economy Engine", () => {
 
       state.arenaHistory = [
         {
-          id: "f1", week: 2, season: "Spring",
+          id: "f1", week: 2,
           a: "Alice", d: "Enemy",
-          aStable: "Player", dStable: "Rival",
-          winner: "D", // lost fight: +100 gold purse, +0 win bonus
-          loser: "A",
-          aInjuries: [], dInjuries: [], type: "Standard"
-        }
+          stableA: "Player", stableD: "Rival",
+          winner: "D",
+          by: "KO",
+          styleA: "StrikingAttack",
+          styleD: "ParryLunge",
+          createdAt: new Date().toISOString()
+        } as any
       ];
 
       const breakdown = computeWeeklyBreakdown(state);
@@ -175,13 +176,15 @@ describe("Economy Engine", () => {
 
       state.arenaHistory = [
         {
-          id: "f1", week: 3, season: "Spring",
+          id: "f1", week: 3,
           a: "Alice", d: "Enemy",
-          aStable: "Player", dStable: "Rival",
-          winner: "A", // won fight: +100 gold purse, +45 win bonus
-          loser: "D",
-          aInjuries: [], dInjuries: [], type: "Standard"
-        }
+          stableA: "Player", stableD: "Rival",
+          winner: "A",
+          by: "KO",
+          styleA: "StrikingAttack",
+          styleD: "ParryLunge",
+          createdAt: new Date().toISOString()
+        } as any
       ];
 
       const prevStateRef = { ...state };

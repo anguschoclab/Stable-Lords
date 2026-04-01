@@ -1,21 +1,20 @@
 import { describe, it, expect } from 'vitest';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
-import type { FightSummary } from '@/types/game';
+import { FightingStyle, type FightSummary } from '@/types/game';
 
 describe('getRecentFightsForWarrior', () => {
   const createMockFight = (overrides: Partial<FightSummary>): FightSummary => ({
     id: 'mock-id',
     a: 'Attacker',
     d: 'Defender',
-    winner: 'Attacker',
-    loser: 'Defender',
-    weaponA: 'Sword',
-    weaponD: 'Shield',
+    winner: 'A',
+    by: "KO",
+    styleA: FightingStyle.StrikingAttack,
+    styleD: FightingStyle.ParryRiposte,
     week: 1,
-    injuryA: null,
-    injuryD: null,
+    createdAt: new Date().toISOString(),
     ...overrides,
-  });
+  } as any);
 
   it('returns empty array when history is empty', () => {
     const history: FightSummary[] = [];

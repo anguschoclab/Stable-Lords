@@ -1,6 +1,6 @@
 import { type GameState } from "@/types/game";
 import { runAIvsAIBouts } from "@/engine/matchmaking";
-import { aiDraftFromPool } from "@/engine/recruitment";
+import { aiDraftFromPool } from "@/engine/draftService";
 import { processAIRosterManagement } from "@/engine/ownerRoster";
 
 export const applyRivalAI: (state: GameState) => GameState = (state) => {

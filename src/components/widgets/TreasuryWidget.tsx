@@ -11,7 +11,7 @@ export function TreasuryWidget() {
 
   const finance = useMemo(() => {
     const upkeep = state.roster.length * 5 + state.trainers.length * 15;
-    const surplus = state.player.funds - upkeep;
+    const surplus = state.gold - upkeep;
     
     // Last week's profit? (Search ledger)
     const lastWeek = state.week - 1;
@@ -26,7 +26,7 @@ export function TreasuryWidget() {
       surplus,
       weekDelta
     };
-  }, [state.player.funds, state.roster, state.trainers, state.ledger, state.week]);
+  }, [state.gold, state.roster, state.trainers, state.ledger, state.week]);
 
   return (
     <Card className="h-full border-l-4 border-l-arena-gold/50 shadow-md">
@@ -48,7 +48,7 @@ export function TreasuryWidget() {
                 Total Balance
               </span>
               <span className="text-2xl font-display font-black text-arena-gold drop-shadow-sm">
-                ${state.player.funds.toLocaleString()}
+                ${state.gold.toLocaleString()}
               </span>
             </div>
             <div className={cn(

@@ -26,7 +26,7 @@ export function TrainingWidget() {
         <CardTitle className="font-display text-base flex items-center gap-2">
           <Dumbbell className="h-4 w-4 text-primary" /> Training
         </CardTitle>
-        <Link to="/training">
+        <Link to="/stable/training">
           <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 text-muted-foreground">
             Manage <ChevronRight className="h-3 w-3" />
           </Button>
@@ -36,7 +36,7 @@ export function TrainingWidget() {
         {trainingWarriors.length === 0 ? (
           <div className="text-center py-3">
             <p className="text-xs text-muted-foreground italic">No warriors in training.</p>
-            <Link to="/training">
+            <Link to="/stable/training">
               <Button variant="outline" size="sm" className="mt-2 text-xs gap-1">
                 <Dumbbell className="h-3 w-3" /> Assign Training
               </Button>

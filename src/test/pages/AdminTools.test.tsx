@@ -28,8 +28,6 @@ describe('AdminTools Page', () => {
     arenaHistory: [],
     trainers: [],
     trainingAssignments: [],
-    graveyard: [],
-    retired: []
   };
 
   beforeEach(() => {

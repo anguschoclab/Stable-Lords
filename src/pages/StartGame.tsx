@@ -71,8 +71,8 @@ export default function StartGame() {
   );
 
   const loadSlot = useCallback(
-    (slotId: string) => {
-      const state = loadFromSlot(slotId);
+    async (slotId: string) => {
+      const state = await loadFromSlot(slotId);
       if (state) loadGame(slotId, state);
     },
     [loadGame]
@@ -98,14 +98,14 @@ export default function StartGame() {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       try {
         const json = ev.target?.result as string;
         const slotId = importSaveToNewSlot(json);
         refreshSlots();
         toast.success("Save imported! Loading now…");
         // Auto-load the imported save
-        const state = loadFromSlot(slotId);
+        const state = await loadFromSlot(slotId);
         if (state) loadGame(slotId, state);
       } catch (err: any) {
         toast.error(err?.message ?? "Failed to import save file.");

@@ -42,11 +42,11 @@ export function getStableTemplates(): StableTemplate[] {
 /**
  * Generate rival stables from templates.
  */
-export function generateRivalStables(count: number, seed: number): { owner: Owner; roster: Warrior[]; template: StableTemplate; trainers: StableTrainer[] }[] {
+export function generateRivalStables(count: number, seed: number): RivalStableData[] {
   const rng = seededRng(seed);
   const usedWarriorNames = new Set<string>();
   const usedTrainerNames = new Set<string>();
-  const rivals: { owner: Owner; roster: Warrior[]; template: StableTemplate; trainers: StableTrainer[] }[] = [];
+  const rivals: RivalStableData[] = [];
 
   const shuffled = [...STABLE_TEMPLATES].sort(() => rng() - 0.5);
   const picked = shuffled.slice(0, count);
@@ -109,22 +109,25 @@ export function generateRivalStables(count: number, seed: number): { owner: Owne
     rivals.push({ 
       owner, 
       roster: warriors, 
-      template: tmpl, 
-      trainers,
       gold: initialGold,
+      motto: tmpl.motto,
+      origin: tmpl.origin,
+      philosophy: tmpl.philosophy,
+      tier: tmpl.tier,
+      trainers,
       strategy: {
         intent: "CONSOLIDATION",
         planWeeksRemaining: 4 + Math.floor(rng() * 4)
       }
-    } as any);
+    });
   }
   return rivals;
 }
 
-function biasedAttrs(rng: () => number, bias: any) {
+function biasedAttrs(rng: () => number, bias: Record<string, number>) {
   const attrs = { ST: 3, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 3, DF: 3 };
   let pool = 70 - 21;
-  const weighted = [];
+  const weighted: (keyof typeof attrs)[] = [];
   for (const k of Object.keys(attrs) as (keyof typeof attrs)[]) {
     const w = bias[k] ?? 1;
     for (let i = 0; i < w; i++) weighted.push(k);

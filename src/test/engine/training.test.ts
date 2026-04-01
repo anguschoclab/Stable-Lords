@@ -31,6 +31,7 @@ function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
 
 function makeState(overrides?: Partial<GameState>): GameState {
   return {
+    phase: "planning",
     meta: { gameName: "Test", version: "1.0.0", createdAt: new Date().toISOString() },
     ftueComplete: true,
     ftueStep: 0,
@@ -59,11 +60,16 @@ function makeState(overrides?: Partial<GameState>): GameState {
     restStates: [],
     rivalries: [],
     matchHistory: [],
+    playerChallenges: [],
+    playerAvoids: [],
     recruitPool: [],
     rosterBonus: 0,
     ownerGrudges: [],
     insightTokens: [],
     moodHistory: [],
+    gazettes: [],
+    isFTUE: false,
+    unacknowledgedDeaths: [],
     settings: { featureFlags: { tournaments: true, scouting: true } },
     ...overrides,
   };

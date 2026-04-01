@@ -102,7 +102,7 @@ function RosterWall() {
               return (
                 <button
                   key={w.id}
-                  onClick={() => navigate({ to: "/warrior/$id", params: { id: w.id } })}
+                  onClick={() => navigate({ to: "/warrior/$id", params: { id: w.id } as any })}
                   className="flex items-start gap-3 p-3 rounded-lg border border-border hover:border-primary/40 bg-card transition-colors text-left group"
                 >
                   {/* Rank badge */}

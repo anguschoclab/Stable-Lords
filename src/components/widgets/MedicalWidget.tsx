@@ -13,14 +13,14 @@ export function MedicalWidget() {
 
   const atRisk = useMemo(() => {
     return selectActiveWarriors(state).filter(w => {
-      const fatigue = (w as any).fatigue ?? 0;
+      const fatigue = w.fatigue ?? 0;
       return (fatigue > 70 || w.injuries.length > 0);
     }).sort((a, b) => {
-      const bFatigue = (b as any).fatigue ?? 0;
-      const aFatigue = (a as any).fatigue ?? 0;
+      const bFatigue = b.fatigue ?? 0;
+      const aFatigue = a.fatigue ?? 0;
       return bFatigue - aFatigue;
     });
-  }, [state.roster]);
+  }, [state]);
 
   return (
     <Card className="h-full border-l-4 border-l-destructive/50 shadow-md transition-all hover:shadow-lg">
@@ -38,7 +38,7 @@ export function MedicalWidget() {
         ) : (
           <div className="space-y-4">
             {atRisk.map((w) => {
-              const fatigue = (w as any).fatigue ?? 0;
+              const fatigue = w.fatigue ?? 0;
               const condition = 100 - fatigue;
               const isInjured = w.injuries.length > 0;
               
@@ -47,7 +47,7 @@ export function MedicalWidget() {
                   <div className="flex items-center justify-between mb-1">
                     <WarriorLink name={w.name} id={w.id} className="text-xs font-bold truncate max-w-[120px]" />
                     <div className="flex items-center gap-1">
-                       {isInjured && <Skull className="h-3 w-3 text-destructive" title="Injured" />}
+                       {isInjured && <Skull className="h-3 w-3 text-destructive" />}
                        <span className={cn(
                          "text-[10px] font-mono font-bold",
                          condition < 30 ? "text-destructive" : "text-amber-500"

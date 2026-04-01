@@ -93,8 +93,8 @@ describe("Trainers Component", () => {
     const staffElement = (await screen.findAllByText("Master Splinter"))[0];
     const trainerCard = staffElement.closest(".rounded-lg")!;
 
-    // The fire button only has a title 'Release trainer'
-    const fireBtn = within(trainerCard as HTMLElement).getByTitle(/release trainer/i);
+    // The fire button now uses aria-label and a custom tooltip
+    const fireBtn = within(trainerCard as HTMLElement).getByLabelText(/release trainer/i);
     fireEvent.click(fireBtn);
 
     // Test the state mutation implicitly by observing UI removal

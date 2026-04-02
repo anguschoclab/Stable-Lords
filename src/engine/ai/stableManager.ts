@@ -3,8 +3,8 @@ import { processStaff } from "./workers/staffWorker";
 import { processRoster } from "./workers/rosterWorker";
 import { consolidateAgentMemory, createAgentContext } from "./agentCore";
 
-const FIGHT_PURSE = 150;
-const WIN_BONUS = 75;
+const FIGHT_PURSE = 75;
+const WIN_BONUS = 40;
 const FAME_DIVIDEND = 2;
 const WARRIOR_UPKEEP = 55;
 const BASE_OPS_COST = 20;

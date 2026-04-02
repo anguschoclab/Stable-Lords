@@ -24,6 +24,7 @@ describe('StyleRollups', () => {
       Object.defineProperty(globalThis, 'localStorage', {
         value: localStorageMock,
         writable: true,
+        configurable: true,
       });
     });
 
@@ -32,6 +33,7 @@ describe('StyleRollups', () => {
       Object.defineProperty(globalThis, 'localStorage', {
         value: originalLocalStorage,
         writable: true,
+        configurable: true,
       });
       vi.restoreAllMocks();
     });
@@ -40,22 +42,23 @@ describe('StyleRollups', () => {
       Object.defineProperty(globalThis, 'localStorage', {
         value: undefined,
         writable: true,
+        configurable: true,
       });
       expect(StyleRollups.getWeekRollup(1)).toEqual({});
     });
 
     it('returns {} if localStorage.getItem returns null', () => {
-      vi.mocked(globalThis.localStorage.getItem).mockReturnValue(null);
+      (globalThis.localStorage.getItem as any).mockReturnValue(null);
       expect(StyleRollups.getWeekRollup(1)).toEqual({});
     });
 
     it('returns {} if localStorage.getItem returns invalid JSON', () => {
-      vi.mocked(globalThis.localStorage.getItem).mockReturnValue('{ invalid json');
+      (globalThis.localStorage.getItem as any).mockReturnValue('{ invalid json');
       expect(StyleRollups.getWeekRollup(1)).toEqual({});
     });
 
     it('returns {} if localStorage.getItem throws an Error', () => {
-      vi.mocked(globalThis.localStorage.getItem).mockImplementation(() => {
+      (globalThis.localStorage.getItem as any).mockImplementation(() => {
         throw new Error('QuotaExceededError');
       });
       expect(StyleRollups.getWeekRollup(1)).toEqual({});
@@ -65,7 +68,7 @@ describe('StyleRollups', () => {
       const validData = {
         'Sword': { w: 1, l: 0, k: 0, pct: 1, fights: 1 }
       };
-      vi.mocked(globalThis.localStorage.getItem).mockReturnValue(JSON.stringify(validData));
+      (globalThis.localStorage.getItem as any).mockReturnValue(JSON.stringify(validData));
       expect(StyleRollups.getWeekRollup(1)).toEqual(validData);
     });
 
@@ -75,7 +78,7 @@ describe('StyleRollups', () => {
         'Axe': { invalid: 'data' }, // Should be ignored by validateWeekRecord
         'Spear': 'string', // Should be ignored
       };
-      vi.mocked(globalThis.localStorage.getItem).mockReturnValue(JSON.stringify(mixedData));
+      (globalThis.localStorage.getItem as any).mockReturnValue(JSON.stringify(mixedData));
       expect(StyleRollups.getWeekRollup(1)).toEqual({
         'Sword': { w: 1, l: 0, k: 0, pct: 1, fights: 1 }
       });

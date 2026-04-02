@@ -13,8 +13,8 @@
  */
 import type { GameState, LedgerEntry } from "@/types/game";
 
-const FIGHT_PURSE = 150; // Increased to heavily reward participation and risk
-const WIN_BONUS = 75; // Further incentivized to prioritize skill and victories
+const FIGHT_PURSE = 75; // Increased to heavily reward participation and risk
+const WIN_BONUS = 40; // Further incentivized to prioritize skill and victories
 const FAME_MULTIPLIER = 2;
 const WARRIOR_UPKEEP = 55; // Steeply increased to enforce rapid turnover and lean rosters, making cheap recruits from the Orphanage viable
 const TRAINER_SALARY = 35;

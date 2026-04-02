@@ -1,10 +1,16 @@
 import React, { useMemo } from "react";
 import { useGameStore } from "@/state/useGameStore";
 import { GameState } from "@/types/game";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
 import { StableLink, WarriorLink } from "@/components/EntityLink";
-import { Flame, Skull } from "lucide-react";
+import { Flame, Skull, Activity, Target, Zap, TrendingUp, AlertCircle, Sparkles, Swords } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface DerivedRivalry {
   stableName: string;
@@ -19,7 +25,7 @@ export interface DerivedRivalry {
 // Custom Hook to gather player roster names
 function usePlayerRosterNames(state: GameState): Set<string> {
   return useMemo(() =>
-    new Set(state.roster.map(w => w.name).concat(state.graveyard?.map(w => w.name) ?? [])),
+    new Set((state.roster || []).map(w => w.name).concat(state.graveyard?.map(w => w.name) ?? [])),
   [state.roster, state.graveyard]);
 }
 
@@ -28,7 +34,9 @@ function useRivalWarriorStable(state: GameState): Map<string, string> {
   return useMemo(() => {
     const m = new Map<string, string>();
     for (const r of (state.rivals ?? [])) {
-      for (const w of r.roster) m.set(w.name, r.owner.stableName);
+      if (r.roster) {
+        for (const w of r.roster) m.set(w.name, r.owner.stableName);
+      }
     }
     return m;
   }, [state.rivals]);
@@ -39,7 +47,7 @@ function useRivalriesList(state: GameState, rosterNames: Set<string>, rivalWarri
   return useMemo(() => {
     const map = new Map<string, DerivedRivalry>();
 
-    for (const bout of state.arenaHistory) {
+    for (const bout of (state.arenaHistory || [])) {
       const aIsPlayer = rosterNames.has(bout.a);
       const dIsPlayer = rosterNames.has(bout.d);
       if (!aIsPlayer && !dIsPlayer) continue;
@@ -87,15 +95,14 @@ function useRivalriesList(state: GameState, rosterNames: Set<string>, rivalWarri
     }
 
     return [...map.values()].filter(r => r.bouts > 0).sort((a, b) => b.intensity - a.intensity);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.arenaHistory, rosterNames, rivalWarriorStable]);
+  }, [state.arenaHistory, rosterNames, rivalWarriorStable, state.rivals]);
 }
 
 // Custom Hook to calculate the most wanted rival
 function useMostWantedRival(state: GameState, rosterNames: Set<string>, rivalWarriorStable: Map<string, string>) {
   return useMemo(() => {
     const winCounts = new Map<string, { name: string; stable: string; wins: number; kills: number }>();
-    for (const bout of state.arenaHistory) {
+    for (const bout of (state.arenaHistory || [])) {
       const aIsPlayer = rosterNames.has(bout.a);
       const dIsPlayer = rosterNames.has(bout.d);
       if (!aIsPlayer && !dIsPlayer) continue;
@@ -115,66 +122,11 @@ function useMostWantedRival(state: GameState, rosterNames: Set<string>, rivalWar
   }, [state.arenaHistory, rosterNames, rivalWarriorStable]);
 }
 
-const intensityColor = (n: number) =>
-  n >= 4 ? "text-destructive" : n >= 2 ? "text-arena-gold" : "text-muted-foreground";
-
 const intensityLabel = (n: number) =>
   n >= 5 ? "Blood Feud" : n >= 4 ? "Bitter" : n >= 3 ? "Heated" : n >= 2 ? "Tense" : "Simmering";
 
-// Extracted Sub-component for individual rivalries
-function RivalryItem({ r, rosterNames }: { r: DerivedRivalry; rosterNames: Set<string> }) {
-  return (
-    <div key={r.ownerId} className="space-y-1.5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <StableLink name={r.stableName} className="font-display font-semibold text-sm">
-            {r.stableName}
-          </StableLink>
-          <Badge variant="outline" className={`text-[9px] ${intensityColor(r.intensity)}`}>
-            🔥 {intensityLabel(r.intensity)}
-          </Badge>
-        </div>
-        <span className="text-[10px] font-mono text-muted-foreground">
-          {r.playerWins}W-{r.playerLosses}L
-        </span>
-      </div>
-
-      <div className="flex items-center gap-1.5">
-        <div className="flex gap-0.5">
-          {[1, 2, 3, 4, 5].map(i => (
-            <div
-              key={i}
-              className={`h-2 w-5 rounded-sm transition-colors ${
-                i <= r.intensity
-                  ? i >= 4 ? "bg-destructive" : i >= 2 ? "bg-arena-gold" : "bg-primary"
-                  : "bg-secondary"
-              }`}
-            />
-          ))}
-        </div>
-        <span className="text-[10px] text-muted-foreground">{r.bouts} bouts</span>
-      </div>
-
-      {r.kills.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {r.kills.slice(-3).map((k, i) => {
-            const playerKilled = rosterNames.has(k.killer);
-            return (
-              <Badge
-                key={i}
-                variant={playerKilled ? "default" : "destructive"}
-                className="text-[9px] gap-1 h-5"
-              >
-                <Skull className="h-2.5 w-2.5" />
-                {k.killer} → {k.victim} (Wk {k.week})
-              </Badge>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
+const intensityColor = (n: number) =>
+  n >= 4 ? "text-destructive" : n >= 2 ? "text-arena-gold" : "text-primary";
 
 // Main Widget Component
 export function RivalryWidget() {
@@ -185,54 +137,122 @@ export function RivalryWidget() {
   const mostWanted = useMostWantedRival(state as GameState, rosterNames, rivalWarriorStable);
 
   return (
-    <Card className="md:col-span-2">
-      <CardHeader className="pb-2 flex flex-row items-center justify-between">
-        <CardTitle className="font-display text-base flex items-center gap-2">
-          <Flame className="h-4 w-4 text-destructive" /> Rivalries
-        </CardTitle>
-        {rivalries.length > 0 && (
-          <Badge variant="outline" className="text-[10px] text-muted-foreground">
-            {rivalries.length} active
-          </Badge>
-        )}
-      </CardHeader>
-      <CardContent>
+    <Surface variant="glass" padding="none" className="md:col-span-2 border-border/10 group overflow-hidden relative flex flex-col min-h-[400px]">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+         <Flame className="h-48 w-48 text-destructive" />
+      </div>
+
+      <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
+         <div className="flex items-center gap-4">
+            <div className="p-2.5 rounded-xl bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)]">
+               <Flame className="h-5 w-5 text-destructive" />
+            </div>
+            <div>
+               <h3 className="font-display text-base font-black uppercase tracking-tight">Vendetta_Registry</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Inter-Stable_Conflict_Monitor</p>
+            </div>
+         </div>
+         <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest">
+            {rivalries.length} ACTIVE_FEUDS
+         </Badge>
+      </div>
+
+      <div className="flex-1 overflow-y-auto relative z-10 custom-scrollbar p-6">
         {rivalries.length === 0 ? (
-          <div className="text-center py-4 space-y-1">
-            <p className="text-xs text-muted-foreground italic">No rivalries yet.</p>
-            <p className="text-[10px] text-muted-foreground">Fight rival stables to forge vendettas and blood feuds.</p>
+          <div className="py-12 text-center opacity-20 italic">
+            <p className="text-[10px] uppercase tracking-[0.3em]">No_Significant_Vendettas_Detected</p>
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="space-y-3">
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {rivalries.slice(0, 4).map(r => (
-                <RivalryItem key={r.ownerId} r={r} rosterNames={rosterNames} />
+                <div key={r.ownerId} className="space-y-4 p-4 bg-white/2 rounded-xl border border-white/5 hover:border-destructive/20 transition-all group/item">
+                  <div className="flex items-center justify-between">
+                     <div className="flex flex-col">
+                        <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/item:text-destructive transition-colors">
+                           {r.stableName}
+                        </span>
+                        <div className="flex items-center gap-2">
+                           <div className={cn("h-1 w-1 rounded-full", r.intensity >= 4 ? "bg-destructive animate-pulse" : "bg-arena-gold")} />
+                           <span className={cn("text-[8px] font-black uppercase tracking-widest", intensityColor(r.intensity))}>
+                              {intensityLabel(r.intensity)}
+                           </span>
+                        </div>
+                     </div>
+                     <div className="text-right">
+                        <div className="text-[10px] font-mono font-black text-foreground opacity-60">
+                           {r.playerWins}W <span className="text-white/10 mx-0.5">/</span> {r.playerLosses}L
+                        </div>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30">Engagement_Ratio</span>
+                     </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 flex gap-1 h-1.5">
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <div
+                          key={i}
+                          className={cn(
+                             "flex-1 rounded-full transition-all duration-500",
+                             i <= r.intensity ? (i >= 4 ? "bg-destructive shadow-[0_0_8px_rgba(var(--destructive-rgb),0.5)]" : "bg-arena-gold") : "bg-white/5"
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {r.kills.length > 0 && (
+                    <div className="space-y-1.5">
+                       {r.kills.slice(-2).map((k, i) => (
+                          <div key={i} className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest">
+                             <Skull className={cn("h-3 w-3", rosterNames.has(k.killer) ? "text-primary" : "text-destructive")} />
+                             <span className="text-muted-foreground/60">{k.killer}</span>
+                             <span className="text-white/10">→</span>
+                             <span className="text-foreground/80">{k.victim}</span>
+                          </div>
+                       ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
 
             {mostWanted && (
-              <div className="border-t border-border/50 pt-3">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-1.5">
-                  ⚔ Most Wanted
+              <div className="border-t border-white/5 pt-6">
+                <div className="flex items-center gap-2 mb-4">
+                   <Target className="h-3.5 w-3.5 text-destructive opacity-60" />
+                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">High_Priority_Target</span>
                 </div>
-                <div className="flex items-center gap-3 rounded-md bg-destructive/5 border border-destructive/20 p-2.5">
-                  <Skull className="h-5 w-5 text-destructive shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <WarriorLink name={mostWanted.name} className="font-display font-bold text-sm" />
-                      <span className="text-[10px] text-muted-foreground">({mostWanted.stable})</span>
-                    </div>
-                    <div className="text-[10px] text-muted-foreground">
-                      {mostWanted.wins} win{mostWanted.wins !== 1 ? "s" : ""} vs your warriors
-                      {mostWanted.kills > 0 && <span className="text-destructive"> · {mostWanted.kills} kill{mostWanted.kills !== 1 ? "s" : ""}</span>}
-                    </div>
+                <div className="flex items-center justify-between p-4 bg-destructive/5 border border-destructive/10 rounded-xl group/wanted hover:bg-destructive/10 transition-all">
+                  <div className="flex items-center gap-4">
+                     <div className="h-10 w-10 rounded-xl bg-destructive/20 flex items-center justify-center border border-destructive/30">
+                        <Skull className="h-5 w-5 text-destructive animate-pulse" />
+                     </div>
+                     <div className="flex flex-col">
+                        <span className="text-sm font-black uppercase tracking-tight text-foreground transition-colors group-wanted:text-destructive">
+                           {mostWanted.name}
+                        </span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Stable: {mostWanted.stable}</span>
+                     </div>
+                  </div>
+                  <div className="text-right">
+                     <div className="text-xs font-mono font-black text-destructive">
+                        {mostWanted.wins} VICTORIES <span className="text-white/10 mx-1">|</span> {mostWanted.kills} TERMINATIONS
+                     </div>
+                     <span className="text-[8px] font-black uppercase tracking-widest text-destructive/40">Aggression_Rating: EXTREME</span>
                   </div>
                 </div>
               </div>
             )}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
+         <button className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group">
+            Access_Conflict_Archives <TrendingUp className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+         </button>
+      </div>
+    </Surface>
   );
 }

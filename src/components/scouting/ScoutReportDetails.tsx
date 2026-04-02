@@ -1,11 +1,13 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Coins } from "lucide-react";
+import { Eye, Coins, Target, Terminal, AlertTriangle, ShieldAlert, Microscope, Info, Swords } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Surface } from "@/components/ui/Surface";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { ScoutReportData, ScoutQuality } from "@/types/game";
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS } from "@/types/game";
 import { getScoutCost } from "@/engine/scouting";
+import { cn } from "@/lib/utils";
 
 interface ScoutReportDetailsProps {
   report: ScoutReportData | null;
@@ -19,85 +21,150 @@ export function ScoutReportDetails({ report, warriorName, gold, onScout }: Scout
 
   if (!report) {
     return (
-      <Card className="border-border/40 bg-glass-card shadow-lg">
-        <CardContent className="p-6 space-y-4">
-          <div className="space-y-1">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Tactical Analysis Pending</h4>
-            <p className="text-sm text-foreground/80 leading-relaxed font-display">
-              Commission a thorough scouting report on <span className="text-primary font-black uppercase tracking-tight">{warriorName}</span> to uncover their combat tendencies and physical limitations.
+      <Surface variant="glass" className="border-border/40 shadow-2xl relative overflow-hidden group">
+        <div className="absolute -right-12 -bottom-12 opacity-5 transform rotate-12 group-hover:scale-110 transition-transform duration-1000">
+           <Target className="h-48 w-48 text-primary" />
+        </div>
+        
+        <div className="space-y-6 relative z-10">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+               <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                  <Terminal className="h-4 w-4 text-primary" />
+               </div>
+               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary leading-none">Scouting_Protocol_Pending</h4>
+            </div>
+            <p className="text-sm text-foreground/80 leading-relaxed font-display max-w-md">
+              Establish a tactical deep-scan on <span className="text-white font-black uppercase tracking-tight decoration-primary/40 underline decoration-2 underline-offset-4">{warriorName}</span> to uncover their combat signatures and metabolic thresholds.
             </p>
           </div>
           
-          <div className="space-y-2 pt-2">
+          <div className="grid gap-3 pt-4">
             {QUALITIES.map((q) => {
               const cost = getScoutCost(q);
               const canAfford = gold >= cost;
               return (
-                <Button
+                <button
                   key={q}
-                  variant={q === "Expert" ? "default" : "outline"}
-                  className={`w-full justify-between h-11 border-border/40 font-black uppercase text-[10px] tracking-widest transition-all ${
-                    q === "Expert" ? "shadow-[0_0_20px_-5px_rgba(var(--primary-rgb),0.4)]" : "hover:border-primary/40"
-                  }`}
                   disabled={!canAfford}
                   onClick={() => onScout(q)}
+                  className={cn(
+                    "w-full flex items-center justify-between p-4 rounded-xl border transition-all relative group/btn",
+                    canAfford 
+                      ? q === "Expert" 
+                        ? "bg-primary text-white border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02]" 
+                        : "bg-neutral-900/60 border-white/5 hover:border-primary/40 hover:bg-white/5"
+                      : "bg-neutral-900/40 border-white/5 opacity-50 cursor-not-allowed"
+                  )}
                 >
-                  <span className="flex items-center gap-2.5">
-                    <Eye className="h-4 w-4" /> {q} SCOUT_INTEL
-                  </span>
-                  <Badge variant="outline" className="font-mono gap-1.5 h-6 bg-secondary/20 border-secondary/40 text-arena-gold">
-                    <Coins className="h-3 w-3" /> {cost}G
-                  </Badge>
-                </Button>
+                  <div className="flex items-center gap-4">
+                    <div className={cn(
+                      "p-2 rounded-lg transition-colors border",
+                      q === "Expert" ? "bg-white/10 border-white/20" : "bg-neutral-800 border-white/5 group-hover/btn:bg-primary/20 group-hover/btn:border-primary/20 group-hover/btn:text-primary"
+                    )}>
+                      <Eye className="h-4 w-4" />
+                    </div>
+                    <div className="text-left">
+                       <span className="text-[10px] font-black uppercase tracking-[0.2em] block leading-none mb-1">{q} INFRARED_SCAN</span>
+                       <span className="text-[9px] font-bold uppercase tracking-widest opacity-40">Precision: {q === "Expert" ? "99.9%" : q === "Detailed" ? "85%" : "60%"}</span>
+                    </div>
+                  </div>
+
+                  <div className={cn(
+                    "px-3 py-1.5 rounded-lg border flex items-center gap-2 font-mono font-black text-xs",
+                    q === "Expert" ? "bg-black/20 border-white/10 text-white" : "bg-black border-white/5 text-arena-gold"
+                  )}>
+                    <Coins className="h-3.5 w-3.5" /> {cost}G
+                  </div>
+                  
+                  {q === "Expert" && canAfford && (
+                    <div className="absolute inset-0 bg-white/5 animate-pulse rounded-xl pointer-events-none" />
+                  )}
+                </button>
               );
             })}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </Surface>
     );
   }
 
   return (
-    <Card className="border-primary/40 bg-glass-card shadow-[0_0_30px_-10px_rgba(var(--primary-rgb),0.2)] overflow-hidden">
-      <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
-      <CardHeader className="pb-3 border-b border-border/20 bg-primary/5">
-        <CardTitle className="font-display font-black uppercase text-base flex items-center gap-3 tracking-tight">
-          <Eye className="h-5 w-5 text-primary" />
-          {report.warriorName}
-          <Badge variant="secondary" className="text-[9px] font-black uppercase tracking-widest bg-primary/20 text-primary border-primary/20">{report.quality} COMPLETED</Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-6 space-y-6">
-        <div className="grid grid-cols-2 gap-6">
-          <div className="space-y-1">
-            <div className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Combat Discipline</div>
-            <div className="text-sm font-black uppercase tracking-tight text-foreground">
+    <Surface variant="glass" padding="none" className="border-primary/40 shadow-[0_0_40px_rgba(var(--primary-rgb),0.15)] overflow-hidden relative">
+      <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
+      
+      <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+           <div className="p-2.5 rounded-xl bg-primary text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]">
+              <Microscope className="h-5 w-5" />
+           </div>
+           <div>
+              <h3 className="font-display font-black uppercase text-base tracking-tight leading-none mb-1">{report.warriorName}</h3>
+              <div className="flex items-center gap-2">
+                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-primary/10 border border-primary/20">
+                    <span className="text-[8px] font-black uppercase tracking-widest text-primary leading-none">{report.quality} SCAN COMPLETED</span>
+                 </div>
+                 <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-40">PROTOCOL_ACTIVE</span>
+              </div>
+           </div>
+        </div>
+        
+        <Tooltip>
+           <TooltipTrigger asChild>
+              <button className="p-2 rounded-lg bg-neutral-900 border border-white/5 hover:border-primary/40 transition-colors">
+                 <Info className="h-4 w-4 text-muted-foreground/40" />
+              </button>
+           </TooltipTrigger>
+           <TooltipContent className="max-w-[240px] text-[10px] font-medium leading-relaxed bg-neutral-950 border-white/10 uppercase tracking-widest">
+              Deep scan report established for the current combat cycle. Intelligence degrades over time.
+           </TooltipContent>
+        </Tooltip>
+      </div>
+
+      <div className="p-8 space-y-8">
+        <div className="grid grid-cols-2 gap-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 opacity-40 group">
+               <Target className="h-3 w-3 text-primary group-hover:scale-110 transition-transform" />
+               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground leading-none">Combat Style</span>
+            </div>
+            <div className="text-sm font-black uppercase tracking-widest text-foreground ml-5 border-l-2 border-primary/20 pl-3">
               {STYLE_DISPLAY_NAMES[report.style as keyof typeof STYLE_DISPLAY_NAMES] ?? report.style}
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">Engagement Record</div>
-            <div className="text-sm font-mono font-bold text-foreground">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 opacity-40">
+               <Swords className="h-3 w-3 text-secondary" />
+               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground leading-none">Historical Loadout</span>
+            </div>
+            <div className="text-sm font-mono font-black text-foreground ml-5 border-l-2 border-secondary/20 pl-3">
               {report.record}
             </div>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
-            <div className="h-px flex-1 bg-primary/20" />
-            Estimated Attributes
-            <div className="h-px flex-1 bg-primary/20" />
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">ATTRIBUTE_MATRIX</span>
+             <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 gap-1.5">
+          
+          <div className="grid grid-cols-1 gap-2">
             {ATTRIBUTE_KEYS.map((key) => {
               const range = report.attributeRanges[key];
               if (!range) return null;
               return (
-                <div key={key} className="flex items-center gap-3 bg-secondary/10 px-3 py-2 rounded-xl border border-border/10">
-                  <span className="text-[10px] text-muted-foreground/60 w-8 font-black uppercase tracking-widest">{key}</span>
-                  <div className="flex-1">
-                    <div className="text-xs font-mono font-bold text-foreground">{range}</div>
+                <div key={key} className="flex items-center group">
+                  <div className="w-20 shrink-0">
+                     <span className="text-[9px] text-muted-foreground/40 font-black uppercase tracking-widest group-hover:text-primary/60 transition-colors">{key}</span>
+                  </div>
+                  <div className="flex-1 h-8 bg-neutral-900 rounded border border-white/5 px-4 flex items-center group-hover:border-primary/20 transition-all">
+                    <span className="text-xs font-mono font-black text-foreground">{range}</span>
+                    <div className="ml-auto flex gap-1 items-baseline">
+                       <div className="h-1.5 w-1 bg-primary/40 rounded-full" />
+                       <div className="h-2.5 w-1 bg-primary/60 rounded-full" />
+                       <div className="h-2 w-1 bg-primary/20 rounded-full" />
+                    </div>
                   </div>
                 </div>
               );
@@ -106,46 +173,65 @@ export function ScoutReportDetails({ report, warriorName, gold, onScout }: Scout
         </div>
 
         {(report.suspectedOE || report.knownInjuries.length > 0) && (
-          <div className="grid grid-cols-1 gap-4 bg-glass-card/50 p-4 rounded-2xl border border-border/20">
+          <Surface variant="glass" className="bg-black/40 border-border/20 p-6 space-y-6">
             {report.suspectedOE && (
-              <div className="flex gap-6">
-                <div className="space-y-0.5">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 block">Suspected OE</span>
-                  <span className="text-sm font-mono font-black text-primary">{report.suspectedOE}</span>
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-destructive/40">
+                     <AlertTriangle className="h-3.5 w-3.5" />
+                     <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground leading-none">Suspected OE</span>
+                  </div>
+                  <span className="text-xl font-mono font-black text-destructive/80 ml-5 block leading-none">{report.suspectedOE}</span>
                 </div>
-                <div className="space-y-0.5">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 block">Suspected AL</span>
-                  <span className="text-sm font-mono font-black text-primary">{report.suspectedAL}</span>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary/40">
+                     <ShieldAlert className="h-3.5 w-3.5" />
+                     <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground leading-none">Suspected AL</span>
+                  </div>
+                  <span className="text-xl font-mono font-black text-primary ml-5 block leading-none">{report.suspectedAL}</span>
                 </div>
               </div>
             )}
 
             {report.knownInjuries.length > 0 && (
-              <div className="space-y-1">
-                <span className="text-[9px] font-black uppercase tracking-widest text-destructive block">Documented Wounds</span>
-                <span className="text-[11px] font-bold text-destructive/80 leading-tight uppercase font-display">
-                  {report.knownInjuries.join(" // ")}
-                </span>
+              <div className="pt-4 border-t border-white/5 space-y-3">
+                <div className="flex items-center gap-2">
+                   <div className="p-1 rounded bg-destructive/10 border border-destructive/20">
+                      <ShieldAlert className="h-3 w-3 text-destructive" />
+                   </div>
+                   <span className="text-[9px] font-black uppercase tracking-widest text-destructive/60">Documented_Tissue_Damage</span>
+                </div>
+                <div className="flex flex-wrap gap-2 ml-7">
+                  {report.knownInjuries.map((injury, idx) => (
+                    <Badge key={idx} variant="outline" className="text-[9px] font-black uppercase tracking-widest bg-destructive/5 text-destructive border-destructive/30 px-2 py-0.5 rounded-none">
+                       {injury}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             )}
-          </div>
+          </Surface>
         )}
 
-        <div className="bg-secondary/5 rounded-xl p-3 border border-border/10 italic">
-          <p className="text-xs text-muted-foreground/80 leading-relaxed">"{report.notes}"</p>
+        <div className="relative group">
+          <Terminal className="absolute -left-6 top-1 h-4 w-4 text-primary/10 group-hover:text-primary transition-colors" />
+          <div className="bg-neutral-900 rounded-xl p-5 border border-white/5 border-l-4 border-l-primary/40 italic">
+            <p className="text-xs text-muted-foreground leading-relaxed font-medium">"{report.notes}"</p>
+          </div>
         </div>
 
         {report.quality !== "Expert" && (
-          <Button
-            variant="outline"
-            className="w-full h-10 border-primary/20 hover:border-primary/50 text-foreground transition-all gap-2 font-black uppercase text-[10px] tracking-widest"
+          <button
+            className="w-full h-12 bg-primary/10 border border-primary/20 rounded-xl hover:bg-primary hover:text-white transition-all group/expand"
             onClick={() => onScout(report.quality === "Basic" ? "Detailed" : "Expert")}
           >
-            <Eye className="h-4 w-4" />
-            ELEVATE_INTEL_PRECISION
-          </Button>
+            <div className="flex items-center justify-center gap-3">
+               <Eye className="h-4 w-4 group-hover/expand:scale-110 transition-transform" />
+               <span className="text-[10px] font-black uppercase tracking-[0.2em]">Elevate_Tactical_Precision</span>
+            </div>
+          </button>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </Surface>
   );
 }

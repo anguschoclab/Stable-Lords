@@ -1,12 +1,17 @@
 import React, { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
-import { Dumbbell, ChevronRight } from "lucide-react";
+import { Dumbbell, ChevronRight, Activity, Zap, Target, TrendingUp, AlertCircle, Sparkles } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Surface } from "@/components/ui/Surface";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { WarriorNameTag, StatBadge } from "@/components/ui/WarriorBadges";
+import { cn } from "@/lib/utils";
 import { ATTRIBUTE_LABELS } from "@/types/game";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function TrainingWidget() {
   const { state } = useGameStore();
@@ -14,81 +19,110 @@ export function TrainingWidget() {
   // Map warrior IDs to warriors for display
   const trainingWarriors = useMemo(() => {
     const assignments = state.trainingAssignments ?? [];
+    const roster = state.roster ?? [];
     return assignments.map(a => ({
       ...a,
-      warrior: state.roster.find(w => w.id === a.warriorId),
+      warrior: roster.find(w => w.id === a.warriorId),
     })).filter(a => a.warrior);
   }, [state.trainingAssignments, state.roster]);
 
   return (
-    <Card>
-      <CardHeader className="pb-2 flex flex-row items-center justify-between">
-        <CardTitle className="font-display text-base flex items-center gap-2">
-          <Dumbbell className="h-4 w-4 text-primary" /> Training
-        </CardTitle>
-        <Link to="/stable/training">
-          <Button variant="ghost" size="sm" className="h-6 text-[10px] gap-1 text-muted-foreground">
-            Manage <ChevronRight className="h-3 w-3" />
-          </Button>
-        </Link>
-      </CardHeader>
-      <CardContent>
+    <Surface variant="glass" padding="none" className="h-full border-border/10 group overflow-hidden relative flex flex-col">
+      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+         <Dumbbell className="h-12 w-12" />
+      </div>
+
+      <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
+         <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+               <Zap className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+               <h3 className="font-display text-sm font-black uppercase tracking-tight">Neuro_Conditioning</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Attribute_Optimization_Feed</p>
+            </div>
+         </div>
+         <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest">
+            {trainingWarriors.length} ACTIVE_TRAINEES
+         </Badge>
+      </div>
+
+      <div className="flex-1 overflow-y-auto relative z-10 space-y-4 p-6 custom-scrollbar">
         {trainingWarriors.length === 0 ? (
-          <div className="text-center py-3">
-            <p className="text-xs text-muted-foreground italic">No warriors in training.</p>
+          <div className="py-8 text-center opacity-20 italic">
+            <p className="text-[10px] uppercase tracking-[0.2em]">Training_Grounds_Idle</p>
             <Link to="/stable/training">
-              <Button variant="outline" size="sm" className="mt-2 text-xs gap-1">
-                <Dumbbell className="h-3 w-3" /> Assign Training
-              </Button>
+               <Button variant="ghost" size="sm" className="mt-4 text-[9px] uppercase tracking-widest font-black border border-white/5 hover:bg-primary/10 hover:text-primary transition-all">
+                  Assign_Modules
+               </Button>
             </Link>
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="space-y-4">
             {trainingWarriors.map(({ warriorId, attribute, warrior }) => {
               const w = warrior!;
-              const current = w.attributes[attribute as keyof typeof w.attributes];
+              const current = w.attributes[attribute as keyof typeof w.attributes] || 0;
               const potential = w.potential?.[attribute as keyof typeof w.attributes];
               const atCeiling = potential !== undefined && current >= potential;
               const nearCeiling = potential !== undefined && (potential - current) <= 2;
 
               return (
-                <div key={warriorId} className="flex items-center gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <WarriorNameTag id={w.id} name={w.name} />
-                      <StatBadge styleName={w.style} />
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="text-[10px] text-muted-foreground">Training</span>
-                      <Badge
-                        variant={atCeiling ? "secondary" : "default"}
-                        className="text-[10px] h-4 px-1.5"
-                      >
-                        {attribute ? ATTRIBUTE_LABELS[attribute as keyof typeof ATTRIBUTE_LABELS] : "Recovery"}
-                      </Badge>
-                      <span className="text-[10px] font-mono text-muted-foreground">
-                        ({current})
-                      </span>
-                      {atCeiling && (
-                        <span className="text-[9px] text-muted-foreground italic">at ceiling</span>
-                      )}
-                      {!atCeiling && nearCeiling && (
-                        <span className="text-[9px] text-arena-gold italic">nearing peak</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="shrink-0">
-                    <div className={`h-2 w-2 rounded-full ${atCeiling ? "bg-muted-foreground" : "bg-arena-pop animate-pulse"}`} />
-                  </div>
+                <div key={warriorId} className="flex items-center justify-between group/item p-3 bg-white/2 rounded-xl border border-white/5 hover:border-primary/20 transition-all">
+                   <div className="flex items-center gap-4">
+                      <div className="relative">
+                         <div className="h-8 w-8 rounded-lg bg-secondary/20 flex items-center justify-center border border-white/5">
+                            <span className="text-[10px] font-black text-white/40">{w.name.charAt(0)}</span>
+                         </div>
+                         <div className={cn(
+                            "absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border border-[#050506]",
+                            atCeiling ? "bg-muted-foreground" : "bg-primary animate-pulse"
+                         )} />
+                      </div>
+                      
+                      <div className="flex flex-col">
+                         <span className="text-[11px] font-black uppercase tracking-tight text-foreground/80 group-hover/item:text-primary transition-colors">
+                            {w.name}
+                         </span>
+                         <div className="flex items-center gap-2">
+                            <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">Training:</span>
+                            <span className={cn(
+                               "text-[9px] font-black uppercase tracking-widest transition-colors",
+                               atCeiling ? "text-muted-foreground" : "text-primary"
+                            )}>
+                               {attribute ? (ATTRIBUTE_LABELS[attribute as keyof typeof ATTRIBUTE_LABELS] || attribute) : "Recovery"}
+                            </span>
+                         </div>
+                      </div>
+                   </div>
+
+                   <div className="flex items-center gap-4">
+                      <div className="text-right">
+                         <div className="text-xs font-mono font-black text-foreground drop-shadow-sm">
+                            {current}<span className="text-[9px] text-white/10 ml-0.5">/</span>{potential || "???"}
+                         </div>
+                         {atCeiling && (
+                            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 block leading-none mt-0.5">At_Cap</span>
+                         )}
+                         {!atCeiling && nearCeiling && (
+                            <span className="text-[8px] font-black uppercase tracking-widest text-arena-gold block leading-none mt-0.5 animate-pulse">Near_Cap</span>
+                         )}
+                      </div>
+                   </div>
                 </div>
               );
             })}
-            <div className="text-[10px] text-muted-foreground pt-1 border-t border-border/50">
-              {trainingWarriors.length} warrior{trainingWarriors.length !== 1 ? "s" : ""} training · gains apply at week end
-            </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
+         <Link 
+            to="/stable/training"
+            className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
+         >
+            Sync_Training_Hub <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+         </Link>
+      </div>
+    </Surface>
   );
 }

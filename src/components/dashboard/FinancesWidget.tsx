@@ -1,8 +1,14 @@
 import React, { useMemo } from "react";
-import { Coins, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Coins, ArrowUpRight, ArrowDownRight, Wallet, Activity, TrendingUp, BarChart3 } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
 import { computeWeeklyBreakdown } from "@/engine/economy";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Surface } from "@/components/ui/Surface";
+import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function FinancesWidget() {
   const { state } = useGameStore();
@@ -10,40 +16,81 @@ export function FinancesWidget() {
   const gold = state.gold ?? 0;
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="font-display text-base flex items-center gap-2">
-          <Coins className="h-4 w-4 text-arena-gold" /> Finances
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="text-center">
-          <div className="text-3xl font-bold text-arena-gold">{gold}g</div>
-          <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Treasury</div>
+    <Surface variant="glass" className="h-full border-border/10 group overflow-hidden relative">
+      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+         <Wallet className="h-12 w-12" />
+      </div>
+
+      <div className="flex items-center gap-3 mb-6 relative z-10">
+         <div className="p-2 rounded-lg bg-arena-gold/10 border border-arena-gold/20">
+            <Coins className="h-4 w-4 text-arena-gold" />
+         </div>
+         <div>
+            <h3 className="font-display text-sm font-black uppercase tracking-tight">Fiscal_Core</h3>
+            <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Operating_Liquidity_Monitor</p>
+         </div>
+      </div>
+
+      <div className="space-y-6 relative z-10">
+        <div className="flex flex-col items-center justify-center py-4 bg-black/20 rounded-xl border border-white/5 shadow-inner">
+           <span className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40 mb-1">TOTAL_RESERVE</span>
+           <div className="flex items-center gap-2">
+              <span className="text-3xl font-display font-black text-white selection:bg-arena-gold/30 drop-shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+                 {Math.round(gold).toLocaleString()}
+              </span>
+              <span className="text-xs font-black text-arena-gold opacity-60">G</span>
+           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 text-center">
-          <div className="rounded-md bg-secondary/60 p-2 border border-border/50">
-            <div className="text-sm font-semibold text-arena-pop flex items-center justify-center gap-0.5">
-              <ArrowUpRight className="h-3 w-3" /> {breakdown.totalIncome}g
-            </div>
-            <div className="text-[10px] text-muted-foreground">Income</div>
-          </div>
-          <div className="rounded-md bg-secondary/60 p-2 border border-border/50">
-            <div className="text-sm font-semibold text-destructive flex items-center justify-center gap-0.5">
-              <ArrowDownRight className="h-3 w-3" /> {breakdown.totalExpenses}g
-            </div>
-            <div className="text-[10px] text-muted-foreground">Expenses</div>
-          </div>
+        <div className="grid grid-cols-2 gap-3">
+          <Tooltip>
+             <TooltipTrigger asChild>
+                <div className="bg-arena-pop/5 border border-arena-pop/10 rounded-xl p-3 group/stat hover:bg-arena-pop/10 transition-colors cursor-help">
+                   <div className="flex items-center gap-2 mb-1">
+                      <ArrowUpRight className="h-3 w-3 text-arena-pop opacity-60 group-hover/stat:opacity-100 transition-opacity" />
+                      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">INFLOW</span>
+                   </div>
+                   <div className="text-base font-mono font-black text-arena-pop">
+                      +{breakdown.totalIncome}G
+                   </div>
+                </div>
+             </TooltipTrigger>
+             <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+                Arena Payouts & Marketplace Revenue
+             </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+             <TooltipTrigger asChild>
+                <div className="bg-destructive/5 border border-destructive/10 rounded-xl p-3 group/stat hover:bg-destructive/10 transition-colors cursor-help">
+                   <div className="flex items-center gap-2 mb-1">
+                      <ArrowDownRight className="h-3 w-3 text-destructive opacity-60 group-hover/stat:opacity-100 transition-opacity" />
+                      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">OUTFLOW</span>
+                   </div>
+                   <div className="text-base font-mono font-black text-destructive">
+                      -{breakdown.totalExpenses}G
+                   </div>
+                </div>
+             </TooltipTrigger>
+             <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+                Personnel Salaries & Upkeep
+             </TooltipContent>
+          </Tooltip>
         </div>
 
-        <div className="flex justify-between items-center pt-1 border-t border-border/50">
-          <span className="text-xs text-muted-foreground">Net / week</span>
-          <span className={`text-sm font-mono font-bold ${breakdown.net >= 0 ? "text-arena-pop" : "text-destructive"}`}>
-            {breakdown.net >= 0 ? "+" : ""}{breakdown.net}g
-          </span>
+        <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+           <div className="flex items-center gap-2">
+              <TrendingUp className="h-3 w-3 text-muted-foreground opacity-40" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Weekly_Flux</span>
+           </div>
+           <div className={cn(
+              "text-xs font-mono font-black drop-shadow-sm",
+              breakdown.net >= 0 ? "text-arena-pop" : "text-destructive"
+           )}>
+              {breakdown.net >= 0 ? "+" : ""}{breakdown.net}G
+           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </Surface>
   );
 }

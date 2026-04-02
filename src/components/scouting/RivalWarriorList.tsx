@@ -1,8 +1,8 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Swords } from "lucide-react";
+import { Eye, Swords, Target, ChevronRight } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Surface } from "@/components/ui/Surface";
 import type { Warrior, ScoutReportData } from "@/types/game";
 import { WarriorNameTag, StatBadge } from "@/components/ui/WarriorBadges";
 import { cn } from "@/lib/utils";
@@ -17,13 +17,15 @@ interface RivalWarriorListProps {
 
 export function RivalWarriorList({ warriors, selectedWarriorId, onSelectWarrior, reports, stableName }: RivalWarriorListProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex items-center gap-3 px-2">
-        <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">{stableName ? `${stableName}_ROSTER` : "Select_Stable"}</h3>
-        <div className="h-px flex-1 bg-border/20" />
+        <div className="p-1 px-2 rounded-md bg-primary/10 border border-primary/20">
+           <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{stableName ? `${stableName}_ROSTER` : "Select_Stable"}</span>
+        </div>
+        <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
       </div>
 
-      <div className="grid grid-cols-1 gap-2 overflow-y-auto max-h-[60vh] pr-1">
+      <div className="grid grid-cols-1 gap-2 overflow-y-auto max-h-[60vh] pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
         {warriors.map((w) => {
           const hasReport = reports.some((r) => r.warriorName === w.name);
           const isSelected = selectedWarriorId === w.id;
@@ -31,50 +33,69 @@ export function RivalWarriorList({ warriors, selectedWarriorId, onSelectWarrior,
           return (
             <Tooltip key={w.id}>
               <TooltipTrigger asChild>
-                <Card
+                <button
                   className={cn(
-                    "cursor-pointer transition-all border border-border/30 hover:border-primary/40 bg-glass-card shadow-sm group",
-                    isSelected 
-                      ? "border-primary bg-primary/10 ring-1 ring-primary/30 shadow-[0_0_15px_-5px_rgba(var(--primary-rgb),0.3)]" 
-                      : "hover:bg-secondary/40"
+                    "w-full text-left group relative outline-none",
+                    isSelected ? "z-10" : "z-0"
                   )}
                   onClick={() => onSelectWarrior(w.id)}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="space-y-1.5 px-0">
-                          <div className="flex items-center gap-2">
-                             <WarriorNameTag id={w.id} name={w.name} />
-                             <StatBadge styleName={w.style} />
-                          </div>
-                          
-                          <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                            <span className="font-mono">{w.career.wins}W-{w.career.losses}L</span>
-                            {hasReport && (
-                              <Badge variant="secondary" className="h-4 p-0 px-1.5 text-[8px] font-black bg-primary/20 text-primary border-primary/20 gap-1 uppercase tracking-tight">
-                                <Eye className="h-2.5 w-2.5" /> SCOUTED
-                              </Badge>
-                            )}
-                          </div>
+                  <Surface
+                    variant={isSelected ? "paper" : "glass"}
+                    padding="none"
+                    className={cn(
+                      "transition-all border bg-neutral-900/60 overflow-hidden",
+                      isSelected 
+                        ? "border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" 
+                        : "border-white/5 hover:border-white/20 hover:bg-white/5"
+                    )}
+                  >
+                    <div className="p-4 flex items-center justify-between">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-3">
+                           <WarriorNameTag id={w.id} name={w.name} useCrown={false} />
+                           {hasReport && (
+                             <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse">
+                               <Eye className="h-2.5 w-2.5" /> INTEL_LOCKED
+                             </div>
+                           )}
+                        </div>
+                        
+                        <div className="flex items-center gap-4">
+                           <StatBadge styleName={w.style as any} />
+                           <div className="flex items-center gap-2 text-[10px] font-mono font-black text-muted-foreground/60">
+                             <span className="text-primary">{w.career.wins}W</span>
+                             <span className="opacity-20">/</span>
+                             <span className="text-destructive/60">{w.career.losses}L</span>
+                           </div>
                         </div>
                       </div>
+                      
+                      {isSelected ? (
+                        <Target className="h-4 w-4 text-primary animate-pulse" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all" />
+                      )}
                     </div>
-                  </CardContent>
-                </Card>
+                    {isSelected && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />}
+                  </Surface>
+                </button>
               </TooltipTrigger>
-              <TooltipContent side="right">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">SELECT_WARRIOR_ASSET</p>
+              <TooltipContent side="right" className="bg-neutral-950 border-white/10">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">SELECT_WARRIOR_PROTOCOL</p>
               </TooltipContent>
             </Tooltip>
           );
         })}
         
         {warriors.length === 0 && (
-          <div className="py-12 text-center text-muted-foreground/40 border border-dashed border-border/30 rounded-2xl">
-            <Swords className="h-10 w-10 mx-auto mb-3 opacity-20" />
-            <p className="text-[10px] font-black uppercase tracking-widest">Select_Stable_To_Begin_Roster_Scan</p>
-          </div>
+          <Surface variant="glass" className="py-16 text-center border-dashed border-border/30 flex flex-col items-center gap-4">
+            <Swords className="h-12 w-12 text-muted-foreground opacity-20" />
+            <div className="space-y-1">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Select_Stable_To_Begin_Roster_Scan</p>
+              <p className="text-[9px] text-muted-foreground/20 italic uppercase tracking-tighter">Awaiting host connection...</p>
+            </div>
+          </Surface>
         )}
       </div>
     </div>

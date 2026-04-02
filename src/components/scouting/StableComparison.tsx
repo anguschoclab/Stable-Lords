@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Shield, ArrowLeftRight, TrendingUp, Swords, Trophy } from "lucide-react";
+import { Shield, ArrowLeftRight, TrendingUp, Swords, Trophy, Hexagon, Crosshair, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { RivalStableData, Warrior } from "@/types/game";
+import { Badge } from "@/components/ui/badge";
+import { Surface } from "@/components/ui/Surface";
+import type { RivalStableData } from "@/types/game";
 import { ATTRIBUTE_KEYS, STYLE_DISPLAY_NAMES } from "@/types/game";
 import { ComparisonBar } from "./ComparisonBar";
 import { ComparisonHeader } from "./ComparisonHeader";
@@ -46,10 +46,15 @@ function StableSelector({
   rivals: RivalStableData[]; idA: string | null; setIdA: (id: string | null) => void; idB: string | null; setIdB: (id: string | null) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="space-y-3">
-        <label className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] px-2">TACTICAL_ASSET_A</label>
-        <div className="grid grid-cols-1 gap-1.5">
+    <div className="grid grid-cols-2 gap-8">
+      <div className="space-y-4">
+        <div className="flex items-center gap-3 px-2">
+           <div className="p-1 px-2 rounded-md bg-primary/10 border border-primary/20">
+              <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">Asset_Alpha</span>
+           </div>
+           <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
+        </div>
+        <div className="grid grid-cols-1 gap-1.5 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {rivals.map((r) => (
             <Tooltip key={r.owner.id}>
               <TooltipTrigger asChild>
@@ -57,30 +62,45 @@ function StableSelector({
                   onClick={() => setIdA(r.owner.id === idA ? null : r.owner.id)}
                   disabled={r.owner.id === idB}
                   className={cn(
-                    "w-full text-left px-4 py-2.5 rounded-xl border font-display font-black uppercase text-[10px] tracking-tight transition-all",
+                    "w-full text-left p-3 rounded-xl border transition-all relative group/alpha outline-none",
                     idA === r.owner.id
-                      ? "border-primary bg-primary/10 text-primary shadow-[0_0_15px_-5px_rgba(var(--primary-rgb),0.3)]"
+                      ? "border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]"
                       : r.owner.id === idB
-                      ? "border-border/10 text-muted-foreground/20 cursor-not-allowed grayscale"
-                      : "border-border/30 bg-glass-card hover:border-primary/40 text-muted-foreground hover:text-foreground"
+                      ? "border-white/5 opacity-10 cursor-not-allowed grayscale"
+                      : "border-white/5 bg-neutral-900/60 hover:border-white/20 hover:bg-white/5"
                   )}
                 >
-                  <div className="flex items-center gap-3">
-                    <Shield className="h-3.5 w-3.5" />
-                    {r.owner.stableName}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "h-8 w-8 flex items-center justify-center rounded-lg border transition-all",
+                        idA === r.owner.id ? "bg-primary text-white border-primary" : "bg-neutral-800 text-muted-foreground border-white/5"
+                      )}>
+                        <Shield className="h-4 w-4" />
+                      </div>
+                      <span className={cn(
+                        "font-display font-black text-xs uppercase tracking-tight transition-colors",
+                        idA === r.owner.id ? "text-primary" : "text-muted-foreground"
+                      )}>{r.owner.stableName}</span>
+                    </div>
+                    {idA === r.owner.id && <Hexagon className="h-3 w-3 text-primary animate-pulse" />}
                   </div>
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="left">
-                <p className="text-[10px] font-black uppercase tracking-widest">Compare this stable (A)</p>
-              </TooltipContent>
+              <TooltipContent side="left" className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">ASSIGN_ASSET_ALPHA</TooltipContent>
             </Tooltip>
           ))}
         </div>
       </div>
-      <div className="space-y-3">
-        <label className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] px-2">TACTICAL_ASSET_B</label>
-        <div className="grid grid-cols-1 gap-1.5">
+
+      <div className="space-y-4">
+        <div className="flex items-center gap-3 px-2 text-right">
+           <div className="h-px flex-1 bg-gradient-to-l from-accent/20 via-border/20 to-transparent" />
+           <div className="p-1 px-2 rounded-md bg-accent/10 border border-accent/20">
+              <span className="text-[9px] font-black text-accent uppercase tracking-[0.2em]">Asset_Beta</span>
+           </div>
+        </div>
+        <div className="grid grid-cols-1 gap-1.5 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {rivals.map((r) => (
             <Tooltip key={r.owner.id}>
               <TooltipTrigger asChild>
@@ -88,23 +108,32 @@ function StableSelector({
                   onClick={() => setIdB(r.owner.id === idB ? null : r.owner.id)}
                   disabled={r.owner.id === idA}
                   className={cn(
-                    "w-full text-left px-4 py-2.5 rounded-xl border font-display font-black uppercase text-[10px] tracking-tight transition-all",
+                    "w-full text-left p-3 rounded-xl border transition-all relative group/beta outline-none",
                     idB === r.owner.id
-                      ? "border-accent bg-accent/10 text-accent shadow-[0_0_15px_-5px_rgba(var(--accent-rgb),0.3)]"
+                      ? "border-accent bg-accent/10 shadow-[0_0_15px_rgba(var(--accent-rgb),0.2)]"
                       : r.owner.id === idA
-                      ? "border-border/10 text-muted-foreground/20 cursor-not-allowed grayscale"
-                      : "border-border/30 bg-glass-card hover:border-accent/40 text-muted-foreground hover:text-foreground"
+                      ? "border-white/5 opacity-10 cursor-not-allowed grayscale"
+                      : "border-white/5 bg-neutral-900/60 hover:border-white/20 hover:bg-white/5"
                   )}
                 >
-                  <div className="flex items-center gap-3">
-                    <Shield className="h-3.5 w-3.5" />
-                    {r.owner.stableName}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "h-8 w-8 flex items-center justify-center rounded-lg border transition-all",
+                        idB === r.owner.id ? "bg-accent text-white border-accent" : "bg-neutral-800 text-muted-foreground border-white/5"
+                      )}>
+                        <Shield className="h-4 w-4" />
+                      </div>
+                      <span className={cn(
+                        "font-display font-black text-xs uppercase tracking-tight transition-colors",
+                        idB === r.owner.id ? "text-accent" : "text-muted-foreground"
+                      )}>{r.owner.stableName}</span>
+                    </div>
+                    {idB === r.owner.id && <Hexagon className="h-3 w-3 text-accent animate-pulse" />}
                   </div>
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right">
-                <p className="text-[10px] font-black uppercase tracking-widest">Compare this stable (B)</p>
-              </TooltipContent>
+              <TooltipContent side="right" className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">ASSIGN_ASSET_BETA</TooltipContent>
             </Tooltip>
           ))}
         </div>
@@ -125,12 +154,13 @@ export function StableComparison({ rivals }: StableComparisonProps) {
 
   if (rivals.length < 2) {
     return (
-      <Card>
-        <CardContent className="py-8 text-center text-muted-foreground">
-          <ArrowLeftRight className="h-8 w-8 mx-auto mb-2 opacity-50" />
-          <p>Need at least 2 rival stables to compare. Run more rounds to generate rivals.</p>
-        </CardContent>
-      </Card>
+      <Surface variant="glass" className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4">
+        <ArrowLeftRight className="h-12 w-12 text-muted-foreground opacity-20" />
+        <div className="space-y-1">
+          <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">Comparative Dataset Insufficient</p>
+          <p className="text-xs text-muted-foreground/60 italic">Scan more rivals via progress to enable benchmark protocols.</p>
+        </div>
+      </Surface>
     );
   }
 
@@ -148,114 +178,157 @@ export function StableComparison({ rivals }: StableComparisonProps) {
         <div className="space-y-6">
           <ComparisonHeader rivalA={rivalA} rivalB={rivalB} />
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-display flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" /> Key Stats
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <ComparisonBar label="Roster Size" valA={statsA.rosterSize} valB={statsB.rosterSize} maxVal={maxRoster} colorA="bg-primary" colorB="bg-accent" />
-              <ComparisonBar label="Total Wins" valA={statsA.totalWins} valB={statsB.totalWins} maxVal={maxWins} colorA="bg-primary" colorB="bg-accent" />
-              <ComparisonBar label="Win Rate %" valA={statsA.winRate} valB={statsB.winRate} maxVal={100} colorA="bg-primary" colorB="bg-accent" />
-              <ComparisonBar label="Total Kills" valA={statsA.totalKills} valB={statsB.totalKills} maxVal={maxKills} colorA="bg-primary" colorB="bg-accent" />
-              <ComparisonBar label="Total Fame" valA={statsA.totalFame} valB={statsB.totalFame} maxVal={maxFame} colorA="bg-primary" colorB="bg-accent" />
-              <ComparisonBar label="Avg Fame" valA={statsA.avgFame} valB={statsB.avgFame} maxVal={Math.max(statsA.avgFame, statsB.avgFame, 1)} colorA="bg-primary" colorB="bg-accent" />
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Surface variant="glass" className="border-border/40 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                  <BarChart3 className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground leading-none mb-1">Key Metrics</h3>
+                   <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">System Efficiency Scan</span>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <ComparisonBar label="Roster Size" valA={statsA.rosterSize} valB={statsB.rosterSize} maxVal={maxRoster} colorA="bg-primary" colorB="bg-accent" />
+                <ComparisonBar label="Total Wins" valA={statsA.totalWins} valB={statsB.totalWins} maxVal={maxWins} colorA="bg-primary" colorB="bg-accent" />
+                <ComparisonBar label="Win Rate %" valA={statsA.winRate} valB={statsB.winRate} maxVal={100} colorA="bg-primary" colorB="bg-accent" />
+                <ComparisonBar label="Total Kills" valA={statsA.totalKills} valB={statsB.totalKills} maxVal={maxKills} colorA="bg-primary" colorB="bg-accent" />
+                <ComparisonBar label="Total Fame" valA={statsA.totalFame} valB={statsB.totalFame} maxVal={maxFame} colorA="bg-primary" colorB="bg-accent" />
+              </div>
+            </Surface>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-display flex items-center gap-2">
-                <Swords className="h-4 w-4 text-arena-gold" /> Average Attributes
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {ATTRIBUTE_KEYS.map((key) => (
-                <ComparisonBar
-                  key={key}
-                  label={key}
-                  valA={statsA.avgAttrs[key] ?? 0}
-                  valB={statsB.avgAttrs[key] ?? 0}
-                  maxVal={maxAttr}
-                  colorA="bg-primary"
-                  colorB="bg-accent"
-                />
-              ))}
-            </CardContent>
-          </Card>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-display">{rivalA.owner.stableName} Styles</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                {Object.entries(statsA.styleCounts).sort(([, a], [, b]) => b - a).map(([style, count]) => (
-                  <div key={style} className="flex items-center justify-between py-1 text-[11px]">
-                    <span className="text-foreground">{STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}</span>
-                    <Badge variant="outline" className="text-[9px] font-mono">{count}</Badge>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-display">{rivalB.owner.stableName} Styles</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                {Object.entries(statsB.styleCounts).sort(([, a], [, b]) => b - a).map(([style, count]) => (
-                  <div key={style} className="flex items-center justify-between py-1 text-[11px]">
-                    <span className="text-foreground">{STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}</span>
-                    <Badge variant="outline" className="text-[9px] font-mono">{count}</Badge>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-display flex items-center gap-2">
-                <Trophy className="h-4 w-4 text-arena-gold" /> Top Warriors
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                {[statsA.topWarrior, statsB.topWarrior].map((w, i) => (
-                  <div key={i} className={`p-3 rounded-lg border ${i === 0 ? "border-primary/30 bg-primary/5" : "border-accent/30 bg-accent/5"}`}>
-                    {w ? (
-                      <>
-                        <div className="font-display text-sm font-bold text-foreground">{w.name}</div>
-                        <div className="text-[10px] text-muted-foreground font-mono mt-1">
-                          {STYLE_DISPLAY_NAMES[w.style as keyof typeof STYLE_DISPLAY_NAMES] ?? w.style}
-                        </div>
-                        <div className="flex gap-3 mt-2 text-[10px] font-mono">
-                          <span>{w.career.wins}W-{w.career.losses}L</span>
-                          {w.career.kills > 0 && <span className="text-arena-blood">{w.career.kills}K</span>}
-                          <span className="text-arena-fame">{w.fame ?? 0}F</span>
-                        </div>
-                      </>
-                    ) : (
-                      <p className="text-xs text-muted-foreground italic">No active warriors</p>
-                    )}
-                  </div>
+            <Surface variant="glass" className="border-border/40 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-accent/10 border border-accent/20">
+                  <Swords className="h-4 w-4 text-accent" />
+                </div>
+                <div>
+                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground leading-none mb-1">Average Attributes</h3>
+                   <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Personnel Performance Matrix</span>
+                </div>
+              </div>
+              <div className="space-y-4">
+                {ATTRIBUTE_KEYS.map((key) => (
+                  <ComparisonBar
+                    key={key}
+                    label={key}
+                    valA={statsA.avgAttrs[key] ?? 0}
+                    valB={statsB.avgAttrs[key] ?? 0}
+                    maxVal={maxAttr}
+                    colorA="bg-primary"
+                    colorB="bg-accent"
+                  />
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </Surface>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8">
+            <Surface variant="glass" padding="none" className="border-primary/20 overflow-hidden">
+               <div className="p-4 border-b border-white/5 bg-primary/5">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{rivalA.owner.stableName} Doctrines</h3>
+               </div>
+               <div className="p-4 space-y-1">
+                  {(Object.entries(statsA.styleCounts) as [string, number][]).sort(([, a], [, b]) => b - a).map(([style, count]) => (
+                    <div key={style} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-primary/5 transition-colors group/row">
+                      <span className="text-[11px] font-bold text-foreground/80 group-hover/row:text-primary transition-colors">{STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}</span>
+                      <div className="flex items-center gap-2">
+                         <div className="h-1 w-8 bg-neutral-900 rounded-full overflow-hidden">
+                            <div className="h-full bg-primary/40" style={{ width: `${(count / statsA.rosterSize) * 100}%` }} />
+                         </div>
+                         <span className="text-[10px] font-mono font-black text-primary">{count}</span>
+                      </div>
+                    </div>
+                  ))}
+               </div>
+            </Surface>
+            <Surface variant="glass" padding="none" className="border-accent/20 overflow-hidden">
+               <div className="p-4 border-b border-white/5 bg-accent/5 text-right">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-accent">{rivalB.owner.stableName} Doctrines</h3>
+               </div>
+               <div className="p-4 space-y-1">
+                  {(Object.entries(statsB.styleCounts) as [string, number][]).sort(([, a], [, b]) => b - a).map(([style, count]) => (
+                    <div key={style} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-accent/5 transition-colors group/row">
+                      <span className="text-[11px] font-bold text-foreground/80 group-hover/row:text-accent transition-colors">{STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}</span>
+                      <div className="flex items-center gap-2">
+                         <div className="h-1 w-8 bg-neutral-900 rounded-full overflow-hidden">
+                            <div className="h-full bg-accent/40" style={{ width: `${(count / statsB.rosterSize) * 100}%` }} />
+                         </div>
+                         <span className="text-[10px] font-mono font-black text-accent">{count}</span>
+                      </div>
+                    </div>
+                  ))}
+               </div>
+            </Surface>
+          </div>
+
+          <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
+             <div className="p-4 border-b border-white/5 bg-neutral-900/60 flex items-center gap-3">
+                <div className="p-1.5 rounded bg-arena-gold/10 border border-arena-gold/20">
+                   <Trophy className="h-3.5 w-3.5 text-arena-gold" />
+                </div>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">Dominant Combatants</h3>
+             </div>
+             <div className="p-6">
+                <div className="grid grid-cols-2 gap-8">
+                  {[statsA.topWarrior, statsB.topWarrior].map((w, i) => (
+                    <div key={i} className={cn(
+                      "p-4 rounded-xl border relative overflow-hidden transition-all hover:scale-[1.02]",
+                      i === 0 ? "border-primary/20 bg-primary/5" : "border-accent/20 bg-accent/5"
+                    )}>
+                      {w ? (
+                        <>
+                          <div className={cn("text-[8px] font-black uppercase tracking-widest mb-2 opacity-60", i === 0 ? "text-primary" : "text-accent")}>{i === 0 ? "ELITE_ALPHA" : "ELITE_BETA"}</div>
+                          <div className="font-display text-lg font-black text-foreground mb-1 leading-none">{w.name}</div>
+                          <div className="text-[10px] text-muted-foreground font-black uppercase tracking-widest mb-4 opacity-40">
+                            {STYLE_DISPLAY_NAMES[w.style as keyof typeof STYLE_DISPLAY_NAMES] ?? w.style}
+                          </div>
+                          <div className="flex gap-4 items-center">
+                            <div className="flex flex-col">
+                               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-0.5">Record</span>
+                               <span className="text-xs font-mono font-black">{w.career.wins}W-{w.career.losses}L</span>
+                            </div>
+                            <div className="h-6 w-px bg-white/5" />
+                            {w.career.kills > 0 && (
+                               <div className="flex flex-col">
+                                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-0.5">Fatalities</span>
+                                  <span className="text-xs font-mono font-black text-arena-blood">{w.career.kills}K</span>
+                               </div>
+                            )}
+                            <div className="flex flex-col ml-auto text-right">
+                               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-0.5">Prestige</span>
+                               <span className="text-xs font-mono font-black text-arena-gold">{w.fame ?? 0}G</span>
+                            </div>
+                          </div>
+                          <div className={cn("absolute top-2 right-2 p-2 rounded-lg bg-black/20 opacity-20", i === 0 ? "text-primary" : "text-accent")}>
+                             <Crosshair className="h-4 w-4" />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="py-10 text-center flex flex-col items-center gap-2 opacity-20">
+                           <Hexagon className="h-8 w-8 text-muted-foreground" />
+                           <p className="text-[10px] font-black uppercase tracking-widest">No_Active_Signals</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+             </div>
+          </Surface>
 
           <HeadToHead nameA={rivalA.owner.stableName} nameB={rivalB.owner.stableName} rosterA={rivalA.roster} rosterB={rivalB.roster} />
         </div>
       )}
 
       {(!statsA || !statsB) && (
-        <Card className="border-dashed">
-          <CardContent className="py-8 text-center text-muted-foreground">
-            <ArrowLeftRight className="h-8 w-8 mx-auto mb-2 opacity-40" />
-            <p className="text-sm">Select two rival stables to compare side-by-side.</p>
-          </CardContent>
-        </Card>
+        <Surface variant="glass" className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4">
+          <Crosshair className="h-12 w-12 text-muted-foreground opacity-20" />
+          <div className="space-y-1">
+            <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">Comparative Targeting Inactive</p>
+            <p className="text-xs text-muted-foreground/60 italic">Select two rival stables from the tactile grid to begin benchmarking protocols.</p>
+          </div>
+        </Surface>
       )}
     </div>
   );

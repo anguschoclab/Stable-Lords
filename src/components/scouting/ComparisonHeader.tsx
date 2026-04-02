@@ -1,6 +1,7 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeftRight } from "lucide-react";
+import { Surface } from "@/components/ui/Surface";
 import type { RivalStableData } from "@/types/game";
 
 interface ComparisonHeaderProps {
@@ -10,20 +11,31 @@ interface ComparisonHeaderProps {
 
 export function ComparisonHeader({ rivalA, rivalB }: ComparisonHeaderProps) {
   return (
-    <div className="flex items-center justify-between bg-glass-card rounded-2xl p-6 border border-border/40 relative overflow-hidden">
+    <Surface variant="glass" padding="none" className="p-8 border-border/40 relative overflow-hidden flex items-center justify-between">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 pointer-events-none" />
-      <div className="text-center flex-1 relative z-10">
-        <h3 className="font-display font-black uppercase text-xl tracking-tighter text-foreground decoration-primary decoration-4 underline-offset-8 transition-all">{rivalA.owner.stableName}</h3>
-        <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase mt-3 border-primary/20 bg-primary/5 text-primary">{rivalA.tier}</Badge>
+      
+      <div className="text-center flex-1 relative z-10 space-y-4">
+        <h4 className="text-[10px] font-black tracking-[0.4em] text-primary uppercase leading-none opacity-60">Asset_Alpha</h4>
+        <h3 className="font-display font-black uppercase text-2xl tracking-tighter text-foreground leading-none">{rivalA.owner.stableName}</h3>
+        <div className="flex justify-center">
+           <Badge variant="outline" className="text-[10px] font-black tracking-widest uppercase border-primary/20 bg-primary/10 text-primary py-1 px-3 rounded-none">{rivalA.tier}</Badge>
+        </div>
       </div>
-      <div className="flex flex-col items-center justify-center mx-6 relative z-10">
-         <ArrowLeftRight className="h-6 w-6 text-muted-foreground/40 mb-1" />
-         <span className="text-[8px] font-black text-muted-foreground/30 tracking-widest uppercase">VS</span>
+
+      <div className="flex flex-col items-center justify-center mx-12 relative z-10">
+         <div className="p-3 rounded-full bg-neutral-900 border border-white/5 shadow-inner">
+            <ArrowLeftRight className="h-6 w-6 text-muted-foreground/40" />
+         </div>
+         <span className="text-[9px] font-black text-muted-foreground/20 tracking-[0.5em] uppercase mt-4">VS_SYNC</span>
       </div>
-      <div className="text-center flex-1 relative z-10">
-        <h3 className="font-display font-black uppercase text-xl tracking-tighter text-foreground decoration-accent decoration-4 underline-offset-8 transition-all">{rivalB.owner.stableName}</h3>
-        <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase mt-3 border-accent/20 bg-accent/5 text-accent">{rivalB.tier}</Badge>
+
+      <div className="text-center flex-1 relative z-10 space-y-4">
+        <h4 className="text-[10px] font-black tracking-[0.4em] text-accent uppercase leading-none opacity-60">Asset_Beta</h4>
+        <h3 className="font-display font-black uppercase text-2xl tracking-tighter text-foreground leading-none">{rivalB.owner.stableName}</h3>
+        <div className="flex justify-center">
+           <Badge variant="outline" className="text-[10px] font-black tracking-widest uppercase border-accent/20 bg-accent/10 text-accent py-1 px-3 rounded-none">{rivalB.tier}</Badge>
+        </div>
       </div>
-    </div>
+    </Surface>
   );
 }

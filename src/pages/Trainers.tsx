@@ -1,7 +1,3 @@
-/**
- * Stable Lords — Trainers Page
- * Hire, manage, fire trainers. Convert retired warriors to trainers.
- */
 import React, { useMemo, useCallback, useState } from "react";
 import { useGameStore } from "@/state/useGameStore";
 import type { TrainerData } from "@/types/game";
@@ -9,16 +5,13 @@ import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import {
   TRAINER_FOCUSES,
   TRAINER_MAX_PER_STABLE,
-  FOCUS_DESCRIPTIONS,
   FOCUS_ICONS,
   TIER_BONUS,
   TIER_COST,
   generateHiringPool,
   convertRetiredToTrainer,
-  type TrainerFocus,
   type TrainerTier,
 } from "@/engine/trainers";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { WarriorNameTag, StatBadge } from "@/components/ui/WarriorBadges";
@@ -28,124 +21,20 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { GraduationCap, UserPlus, UserMinus, RefreshCw, Armchair, Sparkles, Clock, Coins, Trophy, Zap, Target } from "lucide-react";
+import { GraduationCap, UserPlus, RefreshCw, Armchair, Sparkles, Trophy, Zap, Target, Briefcase, Info, Users, Clock, Coins, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Surface } from "@/components/ui/Surface";
+import { TrainerCard } from "@/components/stable/TrainerCard";
 import { toast } from "sonner";
-
-const TIER_ACCENTS: Record<string, string> = {
-  Novice: "border-border/40 text-muted-foreground",
-  Seasoned: "border-blue-500/40 text-blue-400 bg-blue-500/10",
-  Master: "border-arena-gold text-arena-gold bg-arena-gold/10 shadow-[0_0_15px_-5px_rgba(255,215,0,0.3)]",
-};
-
-function TrainerCard({
-  trainer,
-  onFire,
-  owned,
-}: {
-  trainer: TrainerData;
-  onFire?: () => void;
-  owned: boolean;
-}) {
-  const icon = FOCUS_ICONS[trainer.focus as TrainerFocus] ?? "📋";
-  const tierAccent = TIER_ACCENTS[trainer.tier] ?? "";
-  const desc = FOCUS_DESCRIPTIONS[trainer.focus as TrainerFocus] ?? "";
-  const bonus = TIER_BONUS[trainer.tier as TrainerTier] ?? 1;
-
-  return (
-    <Card className={cn(
-      "bg-glass-card border overflow-hidden transition-all duration-300 group",
-      tierAccent
-    )}>
-      <CardContent className="p-0 flex items-stretch min-h-[120px]">
-        <div className={cn("w-1.5 shrink-0", trainer.tier === "Master" ? "bg-arena-gold" : "bg-primary/40")} />
-        <div className="p-5 flex-1">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-5">
-              <div className="w-14 h-14 rounded-xl bg-background/40 border border-border/20 flex items-center justify-center shrink-0 shadow-inner text-2xl group-hover:scale-110 transition-transform">
-                {icon}
-              </div>
-              <div>
-                <div className="font-display text-xl font-black uppercase tracking-tight text-foreground flex items-center gap-2">
-                  {trainer.name}
-                  {trainer.tier === "Master" && <Badge className="bg-arena-gold text-black text-[9px] font-black h-4 px-1">ELITE</Badge>}
-                </div>
-                <div className="flex items-center gap-3 mt-1 flex-wrap">
-                  <Badge variant="outline" className={cn("text-[9px] font-black uppercase tracking-widest px-2 py-0.5", tierAccent)}>
-                    {trainer.tier} GRADE
-                  </Badge>
-                  <span className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1">
-                     <Target className="h-3 w-3" /> {trainer.focus} SPECIALIST
-                  </span>
-                  {trainer.retiredFromWarrior && (
-                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 text-arena-fame border-arena-fame/30 bg-arena-fame/5">
-                      <GraduationCap className="h-2.5 w-2.5 mr-1" /> EX-{trainer.retiredFromWarrior.toUpperCase()}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </div>
-            {owned && onFire && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={onFire} 
-                className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0 h-8 w-8" 
-                tooltip="Release trainer from contract" 
-                aria-label="Release trainer"
-              >
-                <UserMinus className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-          
-          <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-             <div className="bg-background/20 px-4 py-2.5 rounded-xl border border-border/20 flex items-center justify-between">
-                <div>
-                  <span className="text-[8px] font-black uppercase tracking-tighter text-muted-foreground block">STAFF PERFORMANCE</span>
-                  <span className="flex items-center gap-1.5 font-bold text-sm text-primary">
-                    <Sparkles className="h-3.5 w-3.5" /> +{bonus} TO {trainer.focus.toUpperCase()}
-                  </span>
-                </div>
-                {trainer.styleBonusStyle && (
-                  <div className="text-right">
-                    <span className="text-[8px] font-black uppercase tracking-tighter text-muted-foreground block">STYLE MASTERY</span>
-                    <span className="flex items-center gap-1.5 font-bold text-xs text-arena-gold">
-                       <Trophy className="h-3 w-3" /> {STYLE_DISPLAY_NAMES[trainer.styleBonusStyle as keyof typeof STYLE_DISPLAY_NAMES] ?? trainer.styleBonusStyle}
-                    </span>
-                  </div>
-                )}
-             </div>
-             
-             <div className="flex items-center h-full">
-                 {owned ? (
-                     <div className="w-full bg-secondary/10 px-4 py-2 rounded-lg border border-border/10 flex items-center justify-between">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">CONTRACT DURATION</span>
-                         <span className="font-mono font-bold text-xs flex items-center gap-1.5">
-                           <Clock className="h-3.5 w-3.5 text-arena-fame" /> {trainer.contractWeeksLeft} WEEKS
-                         </span>
-                     </div>
-                 ) : (
-                     <p className="text-[11px] text-muted-foreground italic leading-snug pl-3 border-l-2 border-primary/20">
-                       {desc}
-                     </p>
-                 )}
-             </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
 
 export default function Trainers() {
   const { state, setState } = useGameStore();
@@ -172,13 +61,11 @@ export default function Trainers() {
       }));
       setState({ ...state, hiringPool: poolData });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [state, setState]);
 
   // Refresh hiring pool
   const refreshPool = useCallback(() => {
     const pool = generateHiringPool(4, state.week * 1000 + Date.now());
-    // Convert Trainer to TrainerData
     const poolData: TrainerData[] = pool.map((t) => ({
       id: t.id,
       name: t.name,
@@ -191,7 +78,7 @@ export default function Trainers() {
       styleBonusStyle: t.styleBonusStyle,
     }));
     setState({ ...state, hiringPool: poolData });
-    toast.success("New trainers are available for hire!");
+    toast.success("Personnel registry updated. New candidates available.");
   }, [state, setState]);
 
   const hireTrainer = useCallback(
@@ -199,7 +86,7 @@ export default function Trainers() {
       if (!canHire) return;
       const cost = TIER_COST[trainer.tier as TrainerTier] ?? 50;
       if ((state.gold ?? 0) < cost) {
-        toast.error(`Not enough gold! Need ${cost}g to hire.`);
+        toast.error(`Insufficient credits. Access to ${trainer.name} requires ${cost}G.`);
         return;
       }
       setState({
@@ -209,25 +96,24 @@ export default function Trainers() {
         gold: (state.gold ?? 0) - cost,
         ledger: [...(state.ledger ?? []), {
           week: state.week,
-          label: `Hire: ${trainer.name}`,
+          label: `Acquisition: ${trainer.name}`,
           amount: -cost,
           category: "trainer" as const,
         }],
       });
-      toast.success(`${trainer.name} has joined your stable! (-${cost}g)`);
+      toast.success(`${trainer.name} has signed with your stable. Personnel synchronized.`);
     },
     [state, setState, canHire, currentTrainers, hiringPool]
   );
 
   const fireTrainer = useCallback(
     (trainerId: string) => {
-
       const trainer = (currentTrainers || []).find((t) => t.id === trainerId);
       setState({
         ...state,
         trainers: currentTrainers.filter((t) => t.id !== trainerId),
       });
-      if (trainer) toast.success(`${trainer.name} has been released.`);
+      if (trainer) toast.success(`Contract terminated for ${trainer.name}. Personnel data archived.`);
     },
     [state, setState, currentTrainers]
   );
@@ -259,193 +145,238 @@ export default function Trainers() {
         ...state,
         trainers: [...(state.trainers ?? []), trainerData],
       });
-      toast.success(`${warrior.name} returns as a ${trainer.tier} ${trainer.focus} trainer!`);
+      toast.success(`${warrior.name} confirmed for the retirement-to-trainer protocol. Tactical specialization: ${trainer.focus}.`);
       setConvertDialogOpen(false);
     },
     [state, setState, canHire]
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-display font-bold">Trainers</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage your training staff. Up to {TRAINER_MAX_PER_STABLE} trainers per stable.
-          </p>
-        </div>
-        <Badge variant="outline" className="font-mono text-sm">
-          {currentTrainers.length}/{TRAINER_MAX_PER_STABLE}
-        </Badge>
-      </div>
+    <div className="space-y-12 max-w-7xl mx-auto pb-20">
+      <PageHeader 
+        title="Personnel Management"
+        subtitle="STABLE_STAFF // TACTICAL_MASTERY // RECRUITMENT_REVEAL"
+        icon={Users}
+        actions={
+          <div className="flex flex-col md:flex-row items-center gap-6 bg-neutral-900/40 backdrop-blur-md px-6 py-3 rounded-xl border border-white/5 shadow-inner">
+             <div className="flex flex-col items-center border-r border-white/10 pr-6">
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Staff Capacity</span>
+                <span className="font-mono font-black text-primary text-lg flex items-center gap-1.5 leading-none">
+                   {currentTrainers.length} <span className="opacity-20">/</span> {TRAINER_MAX_PER_STABLE} <Users className="h-3.5 w-3.5" />
+                </span>
+             </div>
+             <div className="flex flex-col items-center">
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Personnel Budget</span>
+                <span className="font-mono font-black text-arena-gold text-lg flex items-center gap-1.5 leading-none">
+                   {state.gold} <Coins className="h-3.5 w-3.5" />
+                </span>
+             </div>
+          </div>
+        }
+      />
 
-      <Tabs defaultValue="current">
-        <TabsList>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <TabsTrigger value="current" className="gap-1.5">
-                <GraduationCap className="h-3.5 w-3.5" /> Your Staff ({currentTrainers.length})
-              </TabsTrigger>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              <p className="text-[10px] font-black uppercase tracking-widest">Manage your active trainers</p>
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <TabsTrigger value="hire" className="gap-1.5">
-                <UserPlus className="h-3.5 w-3.5" /> Hire
-              </TabsTrigger>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              <p className="text-[10px] font-black uppercase tracking-widest">Recruit new training staff</p>
-            </TooltipContent>
-          </Tooltip>
+      <Tabs defaultValue="current" className="space-y-8">
+        <TabsList className="bg-neutral-900/60 border border-white/5 p-1 h-12 rounded-xl">
+          <TabsTrigger value="current" className="gap-2 px-6 data-[state=active]:bg-primary data-[state=active]:text-white transition-all rounded-lg font-black uppercase text-[10px] tracking-widest">
+            <GraduationCap className="h-3.5 w-3.5" /> Stability Staff
+          </TabsTrigger>
+          <TabsTrigger value="hire" className="gap-2 px-6 data-[state=active]:bg-primary data-[state=active]:text-white transition-all rounded-lg font-black uppercase text-[10px] tracking-widest">
+            <UserPlus className="h-3.5 w-3.5" /> Tactical Hire
+          </TabsTrigger>
         </TabsList>
 
-        {/* Current Trainers */}
-        <TabsContent value="current" className="space-y-4 mt-4">
-          {currentTrainers.length === 0 ? (
-            <Card>
-              <CardContent className="p-6 text-center text-muted-foreground">
-                <GraduationCap className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p>No trainers hired yet. Visit the Hire tab to recruit staff.</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {currentTrainers.map((t) => (
-                <TrainerCard
-                  key={t.id}
-                  trainer={t}
-                  owned
-                  onFire={() => fireTrainer(t.id)}
-                />
-              ))}
-            </div>
-          )}
+        <TabsContent value="current" className="mt-0 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
+            {currentTrainers.length === 0 ? (
+               <Surface variant="glass" className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4">
+                  <GraduationCap className="h-12 w-12 text-muted-foreground opacity-20" />
+                  <div className="space-y-1 text-center">
+                    <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">Personnel Database Empty</p>
+                    <p className="text-xs text-muted-foreground/60 italic max-w-xs mx-auto text-center">Establish your training core by recruiting specialists from the tactical hire registry.</p>
+                  </div>
+               </Surface>
+            ) : (
+              <div className="space-y-4">
+                 <div className="flex items-center gap-3 px-1 mb-2">
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">STAFF_PERSONNEL</span>
+                    <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
+                 </div>
+                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                    {currentTrainers.map((t) => (
+                      <TrainerCard
+                        key={t.id}
+                        trainer={t}
+                        owned
+                        onFire={() => fireTrainer(t.id)}
+                      />
+                    ))}
+                 </div>
+              </div>
+            )}
+          </div>
 
-          {/* Training Bonuses Summary */}
           {currentTrainers.length > 0 && (
-            <Card className="bg-glass border-neon-gold border-2 overflow-hidden">
-              <CardHeader className="pb-3 border-b border-arena-gold/20 bg-arena-gold/5">
-                <CardTitle className="font-display font-black uppercase text-xs tracking-widest text-arena-gold flex items-center gap-2">
-                   <Zap className="h-4 w-4" /> Aggregated Training Multipliers
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 px-1">
+                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-arena-gold">AGGREGATED_SYSTEM_BONUSES</span>
+                 <div className="h-px flex-1 bg-gradient-to-r from-arena-gold/20 via-border/20 to-transparent" />
+              </div>
+              <Surface variant="glass" padding="none" className="border-border/40 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1.5 h-full bg-arena-gold opacity-40 shadow-[0_0_15px_rgba(255,215,0,0.5)]" />
+                <div className="p-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
                   {TRAINER_FOCUSES.map((focus) => {
                     const total = currentTrainers
                       .filter((t) => t.focus === focus && t.contractWeeksLeft > 0)
                       .reduce((sum, t) => sum + (TIER_BONUS[t.tier as TrainerTier] ?? 1), 0);
-                    if (total === 0) return null;
-                    return (
-                      <div key={focus} className="group relative overflow-hidden flex flex-col items-center gap-2 rounded-2xl bg-background/40 p-4 border border-border/40 hover:border-primary/50 transition-all">
-                        <div className="text-3xl filter saturate-50 group-hover:saturate-100 transition-all">
+                    
+                    return total > 0 && (
+                      <div key={focus} className="group relative flex flex-col items-center gap-6 p-4 rounded-xl hover:bg-white/5 transition-all">
+                        <div className="text-4xl filter group-hover:scale-110 group-hover:drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] transition-all duration-500">
                           {FOCUS_ICONS[focus]}
                         </div>
-                        <div className="text-center">
-                          <span className="text-2xl font-display font-black text-primary block">+{total}</span>
-                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{focus}</span>
+                        <div className="text-center relative">
+                           <div className="flex items-center justify-center gap-1.5 mb-1">
+                              <span className="text-3xl font-display font-black text-white leading-none">+{total}</span>
+                              <Zap className={cn("h-4 w-4 transition-all duration-500", total > 0 ? "text-arena-gold animate-pulse" : "text-muted-foreground/20")} />
+                           </div>
+                           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors">{focus} PROTOCOL</span>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-              </CardContent>
-            </Card>
+              </Surface>
+            </div>
           )}
 
-          {/* Convert retired warriors */}
           {convertableRetired.length > 0 && canHire && (
-            <>
-              <Separator />
+            <div className="pt-8 border-t border-white/5">
               <Dialog open={convertDialogOpen} onOpenChange={setConvertDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="w-full gap-2" tooltip="Bring back a legendary veteran as a specialist trainer">
-                    <Armchair className="h-4 w-4" />
-                    Convert Retired Warrior to Trainer ({convertableRetired.length} available)
-                  </Button>
+                  <button className="w-full h-16 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center gap-4 group hover:bg-primary/20 hover:border-primary transition-all">
+                    <div className="p-2 rounded-lg bg-primary/20 group-hover:bg-primary transition-colors">
+                       <Armchair className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="text-left">
+                       <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary block leading-none mb-1">Veteran Restoration Protocol</span>
+                       <span className="text-[9px] text-muted-foreground/60 uppercase tracking-widest leading-none italic">{convertableRetired.length} Retired Assets Ready for Re-acquisition</span>
+                    </div>
+                  </button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[480px]">
-                  <DialogHeader>
-                    <DialogTitle className="font-display">Convert Retired Warrior</DialogTitle>
+                <DialogContent className="bg-neutral-950/95 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+                  <DialogHeader className="p-6 border-b border-white/5 flex flex-col gap-4">
+                    <DialogTitle className="font-display text-2xl font-black uppercase tracking-tight flex items-center gap-4">
+                       <div className="p-2 rounded-xl bg-primary text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]">
+                          <GraduationCap className="h-6 w-6" />
+                       </div>
+                       Retired_to_Staff_Sync
+                    </DialogTitle>
+                    <p className="text-xs text-muted-foreground/60 leading-relaxed uppercase tracking-widest font-medium border-l-2 border-primary/20 pl-4 italic">
+                       Confirmed veterans are eligible for immediate tactical reassignment. This protocol restores legendary combat signatures as specialized staff assets.
+                    </p>
                   </DialogHeader>
-                  <div className="space-y-3 max-h-[400px] overflow-auto">
+                  
+                  <div className="p-6 space-y-4 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
                     {convertableRetired.map((w) => {
                       const preview = convertRetiredToTrainer(w);
                       return (
                         <div
                           key={w.id}
-                          className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 border border-border"
+                          className="flex items-center justify-between p-4 rounded-2xl bg-neutral-900 border border-white/5 group hover:border-primary/40 transition-all"
                         >
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <WarriorNameTag id={w.id} name={w.name} isChampion={w.champion} />
-                              <StatBadge styleName={w.style} career={w.career} />
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-0.5">
-                              → {preview.tier} {preview.focus} Trainer
+                          <div className="flex items-center gap-6">
+                            <div>
+                               <div className="flex items-center gap-3 mb-2">
+                                  <WarriorNameTag id={w.id} name={w.name} isChampion={w.champion} useCrown={w.champion} />
+                                  <StatBadge styleName={w.style as any} />
+                               </div>
+                               <div className="flex items-center gap-2">
+                                  <ChevronRight className="h-3 w-3 text-primary" />
+                                  <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 bg-primary/5 text-primary rounded-none">
+                                     {preview.tier} {preview.focus} SPECIALIST
+                                  </Badge>
+                               </div>
                             </div>
                           </div>
-                          <Button size="sm" onClick={() => convertWarrior(w.id)} tooltip={`Finalize ${w.name}'s return to the stable staff`}>
-                            Convert
-                          </Button>
+                          <button 
+                            onClick={() => convertWarrior(w.id)}
+                            className="bg-primary text-white px-6 py-2.5 rounded-lg font-black uppercase text-[10px] tracking-widest shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)] hover:scale-105 active:scale-95 transition-all"
+                          >
+                             ESTABLISH_Staff
+                          </button>
                         </div>
                       );
                     })}
                   </div>
                 </DialogContent>
               </Dialog>
-            </>
+            </div>
           )}
         </TabsContent>
 
-        {/* Hiring Pool */}
-        <TabsContent value="hire" className="space-y-4 mt-4">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              {hiringPool.length > 0
-                ? `${hiringPool.length} trainers available for hire.`
-                : "No trainers available. Refresh to see new candidates."}
-            </p>
-            <Button variant="outline" size="sm" onClick={refreshPool} className="gap-1.5" tooltip="Refresh the current pool of hiring candidates">
-              <RefreshCw className="h-3.5 w-3.5" /> Refresh Pool
-            </Button>
+        <TabsContent value="hire" className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between bg-neutral-900/60 p-6 rounded-2xl border border-white/5 gap-6">
+            <div className="flex items-center gap-4">
+               <div className="p-3 rounded-2xl bg-primary/10 border border-primary/20">
+                  <RefreshCw className="h-6 w-6 text-primary" />
+               </div>
+               <div>
+                  <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground leading-none mb-1.5">Candidate Database</h3>
+                  <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest leading-none">
+                    {hiringPool.length > 0 ? `Confirmed Search Result: ${hiringPool.length} Candidates Located` : "Scanning Personnel Database..."}
+                  </p>
+               </div>
+            </div>
+            <button 
+              onClick={refreshPool} 
+              className="flex items-center gap-2.5 bg-neutral-950 border border-white/10 hover:border-primary/50 px-5 py-2.5 rounded-xl transition-all group/refresh"
+            >
+              <RefreshCw className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:rotate-180 transition-all duration-700" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Update_Registry</span>
+            </button>
           </div>
 
           {hiringPool.length > 0 ? (
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               {hiringPool.map((t) => (
-                <div key={t.id} className="relative">
-                  <TrainerCard trainer={t} owned={false} />
-                  <div className="absolute top-4 right-4 flex items-center gap-2">
-                    <Badge variant="outline" className="font-mono text-xs gap-1">
-                      <Coins className="h-3 w-3 text-arena-gold" />
-                      {TIER_COST[t.tier as TrainerTier] ?? 50}g
-                    </Badge>
-                    <Button
-                      size="sm"
-                      disabled={!canHire || (state.gold ?? 0) < (TIER_COST[t.tier as TrainerTier] ?? 50)}
-                      onClick={() => hireTrainer(t)}
-                      className="gap-1.5"
-                      tooltip={!canHire ? "Staff roster is full" : (state.gold ?? 0) < (TIER_COST[t.tier as TrainerTier] ?? 50) ? "Insufficient funds" : `Hire ${t.name} for ${TIER_COST[t.tier as TrainerTier] ?? 50}g`}
-                    >
-                      <UserPlus className="h-3.5 w-3.5" />
-                      {!canHire ? "Full" : (state.gold ?? 0) < (TIER_COST[t.tier as TrainerTier] ?? 50) ? "Can't Afford" : "Hire"}
-                    </Button>
-                  </div>
-                </div>
+                <TrainerCard 
+                  key={t.id} 
+                  trainer={t} 
+                  owned={false} 
+                  action={
+                    <div className="flex items-center gap-3">
+                       <Tooltip>
+                          <TooltipTrigger asChild>
+                             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black border border-white/5 font-mono font-black text-xs text-arena-gold shadow-inner">
+                                <Coins className="h-3.5 w-3.5" /> {TIER_COST[t.tier as TrainerTier] ?? 50}G
+                             </div>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">ACQUISITION_CREDITS</TooltipContent>
+                       </Tooltip>
+                       
+                       <button
+                          disabled={!canHire || (state.gold ?? 0) < (TIER_COST[t.tier as TrainerTier] ?? 50)}
+                          onClick={() => hireTrainer(t)}
+                          className={cn(
+                            "flex items-center gap-2 px-5 py-1.5 rounded-lg font-black uppercase text-[10px] tracking-widest transition-all",
+                            !canHire || (state.gold ?? 0) < (TIER_COST[t.tier as TrainerTier] ?? 50)
+                              ? "bg-neutral-900 border border-white/5 text-muted-foreground/40 cursor-not-allowed"
+                              : "bg-primary text-white border border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)] hover:scale-105 active:scale-95"
+                          )}
+                       >
+                          <UserPlus className="h-4 w-4" />
+                          {!canHire ? "CAPACITY_FULL" : (state.gold ?? 0) < (TIER_COST[t.tier as TrainerTier] ?? 50) ? "FUNDS_LOCKED" : "Secure_Contract"}
+                       </button>
+                    </div>
+                  }
+                />
               ))}
             </div>
           ) : (
-            <Card>
-              <CardContent className="p-6 text-center text-muted-foreground">
-                <p>Click "Refresh Pool" to see available trainers.</p>
-              </CardContent>
-            </Card>
+            <Surface variant="glass" className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4">
+              <RefreshCw className="h-12 w-12 text-muted-foreground opacity-20 animate-spin duration-3000" />
+              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 italic">Waiting_for_Connection...</p>
+            </Surface>
           )}
         </TabsContent>
       </Tabs>

@@ -1,8 +1,16 @@
 import React, { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
-import { ScrollText, ChevronRight } from "lucide-react";
+import { ScrollText, ChevronRight, Swords, Trophy, Activity, Target, Zap, Shield } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Surface } from "@/components/ui/Surface";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function RecentBoutsWidget() {
   const { state } = useGameStore();
@@ -16,66 +24,106 @@ export function RecentBoutsWidget() {
   }, [state.arenaHistory, state.player.stableName]);
 
   return (
-    <Card className="flex flex-col h-full border-border/50 shadow-sm col-span-1 md:col-span-2">
-      <CardHeader className="pb-2 border-b border-border/20 bg-secondary/10">
-        <div className="flex items-center justify-between">
-          <CardTitle className="font-display text-sm tracking-wide flex items-center gap-2">
-            <ScrollText className="h-4 w-4 text-primary" /> RECENT BOUTS
-          </CardTitle>
-          <span className="text-[10px] text-muted-foreground font-mono">LAST 5 MATCHES</span>
-        </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="text-[10px] text-muted-foreground uppercase bg-secondary/5 border-b border-border/20 font-bold tracking-wider">
-              <tr>
-                <th className="px-4 py-2">Week</th>
-                <th className="px-4 py-2">Fighter</th>
-                <th className="px-4 py-2">Opponent</th>
-                <th className="px-4 py-2">Result</th>
-                <th className="px-4 py-2 text-right">Method</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/20">
-              {recentBouts.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground text-xs">No match history available</td>
-                </tr>
-              ) : (
-                recentBouts.map((bout) => {
-                  const isPlayerA = bout.a === state.player.stableName;
-                  const playerWon = (isPlayerA && bout.winner === "A") || (!isPlayerA && bout.winner === "D");
-                  const resultColor = playerWon ? "text-arena-pop" : "text-destructive";
+    <Surface variant="glass" padding="none" className="flex flex-col h-full border-border/10 group overflow-hidden relative md:col-span-2 shadow-2xl">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+         <Swords className="h-48 w-48 text-primary" />
+      </div>
 
-                  return (
-                    <tr key={bout.id} className="hover:bg-secondary/10 transition-colors">
-                      <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">Wk {bout.week}</td>
-                      <td className="px-4 py-2.5 font-bold">
-                        {isPlayerA ? bout.a : bout.d}
-                      </td>
-                      <td className="px-4 py-2.5 text-muted-foreground text-xs">
-                         {isPlayerA ? bout.d : bout.a}
-                      </td>
-                      <td className={`px-4 py-2.5 font-bold ${resultColor}`}>
-                         {playerWon ? "WIN" : "LOSS"}
-                      </td>
-                      <td className="px-4 py-2.5 text-right font-mono text-[10px] uppercase text-muted-foreground">
-                        {bout.by || "DECISION"}
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div className="p-2 border-t border-border/20 bg-background/50 text-center">
-            <Link to="/world/history" className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors font-bold flex items-center justify-center gap-1">
-               Full History <ChevronRight className="h-3 w-3" />
-            </Link>
-        </div>
-      </CardContent>
-    </Card>
+      <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
+         <div className="flex items-center gap-4">
+            <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+               <Activity className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+               <h3 className="font-display text-base font-black uppercase tracking-tight">Deployment_History</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Recent_Arena_Engagements</p>
+            </div>
+         </div>
+         <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest">
+            RECENT_05_OPS
+         </Badge>
+      </div>
+
+      <div className="flex-1 overflow-x-auto relative z-10 custom-scrollbar">
+        <Table>
+          <TableHeader className="bg-black/20">
+            <TableRow className="hover:bg-transparent border-white/5">
+              <TableHead className="w-24 font-black uppercase text-[10px] tracking-widest pl-6 py-4">Temporal_ID</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">Operative_Sync</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">Engagement_Outcome</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-6 py-4">Termination_Method</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {recentBouts.length === 0 ? (
+              <TableRow className="hover:bg-transparent border-none">
+                 <TableCell colSpan={4} className="py-12 text-center opacity-20 italic">
+                    <p className="text-[10px] uppercase tracking-[0.3em]">No_Engagement_Data_Synchronized</p>
+                 </TableCell>
+              </TableRow>
+            ) : (
+              recentBouts.map((bout, i) => {
+                const isPlayerA = bout.a === state.player.stableName;
+                const playerWon = (isPlayerA && bout.winner === "A") || (!isPlayerA && bout.winner === "D");
+                const resultColor = playerWon ? "text-arena-pop" : "text-destructive";
+
+                return (
+                  <TableRow key={bout.id} className="border-white/5 group/row hover:bg-white/2 transition-colors">
+                    <TableCell className="pl-6 py-4">
+                       <span className="text-[10px] font-mono font-black text-white/20 group-hover/row:text-primary transition-colors">
+                          WK_{bout.week.toString().padStart(2, '0')}
+                       </span>
+                    </TableCell>
+                    <TableCell className="py-4">
+                       <div className="flex flex-col">
+                          <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/row:text-foreground">
+                             {isPlayerA ? bout.a : bout.d}
+                          </span>
+                          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
+                             VS // {isPlayerA ? bout.d : bout.a}
+                          </span>
+                       </div>
+                    </TableCell>
+                    <TableCell className="text-center py-4">
+                       <Tooltip>
+                          <TooltipTrigger asChild>
+                             <div className={cn(
+                                "inline-flex items-center gap-2 px-3 py-1 rounded-lg border font-black text-[9px] tracking-[0.2em] uppercase transition-all",
+                                playerWon ? "bg-arena-pop/10 border-arena-pop/20 text-arena-pop" : "bg-destructive/10 border-destructive/20 text-destructive"
+                             )}>
+                                {playerWon ? <Trophy className="h-2.5 w-2.5" /> : <Shield className="h-2.5 w-2.5" />}
+                                {playerWon ? "VICTORY" : "DEFEAT"}
+                             </div>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+                             {playerWon ? "Combat objectives achieved." : "Strategic failure detected."}
+                          </TooltipContent>
+                       </Tooltip>
+                    </TableCell>
+                    <TableCell className="text-right pr-6 py-4">
+                       <div className="flex flex-col items-end">
+                          <span className="text-[10px] font-mono font-black text-muted-foreground/60 uppercase">
+                             {bout.by || "JUDICIAL_DECREE"}
+                          </span>
+                          <div className="h-0.5 w-8 bg-white/5 rounded-full mt-1 group-hover/row:bg-primary/40 transition-colors" />
+                       </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
+         <Link 
+            to="/world/history"
+            className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
+         >
+            Sync_Engagement_Chronicle <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+         </Link>
+      </div>
+    </Surface>
   );
 }

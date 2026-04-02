@@ -1,101 +1,135 @@
 import React from "react";
-import { motion } from "framer-motion";
-import { Newspaper, ChevronRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { MarkdownReader } from "@/components/MarkdownReader";
 import { Surface } from "@/components/ui/Surface";
-import type { GazetteStory } from "@/types/game";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Newspaper, Quote, Sparkles, Zap, Trophy, History, MessageSquare, ArrowRight, ExternalLink } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+interface GazetteIssue {
+  week: number;
+  mainHeadline: string;
+  mainStory: string;
+  sideStories: string[];
+}
 
 interface GazetteArticleProps {
-  issue: GazetteStory;
+  issue: GazetteIssue;
   season: string;
 }
 
 export function GazetteArticle({ issue, season }: GazetteArticleProps) {
   return (
-    <motion.article 
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="relative"
-    >
-      <Surface 
-        variant="paper" 
-        padding="none" 
-        className="group overflow-hidden border-double border-4 border-foreground/10 hover:border-foreground/20 transition-colors"
-      >
-        {/* Masthead Detail */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-foreground/10" />
+    <Surface variant="glass" padding="none" className="border-border/10 bg-neutral-900/40 overflow-hidden shadow-2xl group transition-all duration-700 hover:shadow-primary/5">
+      {/* ─── Masthead Branding ─── */}
+      <div className="p-8 md:p-12 border-b border-white/5 relative overflow-hidden bg-black/40">
+        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+           <Newspaper className="h-40 w-40" />
+        </div>
         
-        <div className="p-8 md:p-12 lg:p-16 space-y-10">
-          {/* Header Section */}
-          <div className="space-y-6 border-b-2 border-foreground/30 pb-10">
-            <div className="flex items-center justify-between text-[10px] font-black tracking-[0.4em] uppercase text-foreground/40 border-b border-foreground/10 pb-4">
-              <span className="flex items-center gap-2">
-                 <Newspaper className="h-4 w-4" /> 
-                 VOL. {Math.floor(issue.week / 4) + 1} // NO. {issue.week}
-              </span>
-              <span className="text-foreground/20 italic">{season} // WEEK {issue.week}</span>
-              <span className="hidden sm:inline">ARENA DISTRICT CORE EDITION</span>
-            </div>
-            
-            <h2 className="text-5xl md:text-7xl lg:text-8xl text-foreground font-black tracking-tighter leading-[0.8] uppercase text-center md:text-left py-4 selection:bg-primary selection:text-white">
-              {issue.headline}
-            </h2>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
+           <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                 <Badge className="bg-primary/20 text-primary border-primary/30 font-mono font-black text-[10px] px-3 tracking-widest">
+                    EDITION_SYNC: WK_{issue.week.toString().padStart(2, '0')}
+                 </Badge>
+                 <div className="h-1 w-1 rounded-full bg-white/20" />
+                 <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em]">SEASON_{season} // VOLUME_IV</span>
+              </div>
+              <h2 className="text-3xl md:text-5xl font-display font-black uppercase tracking-tighter text-white leading-[0.95] max-w-4xl group-hover:text-primary transition-colors duration-500">
+                 {issue.mainHeadline.replace("_", " ")}
+              </h2>
+           </div>
+           
+           <div className="flex flex-col items-end gap-1 opacity-40 group-hover:opacity-80 transition-opacity">
+              <span className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">PRESS_CERTIFIED</span>
+              <div className="flex items-center gap-2">
+                 <Sparkles className="h-3 w-3 text-arena-gold" />
+                 <span className="text-[8px] font-mono font-black text-white/50">HASH: {Math.random().toString(16).slice(2, 10).toUpperCase()}</span>
+              </div>
+           </div>
+        </div>
+      </div>
 
-            <div className="flex flex-wrap gap-4 items-center justify-center md:justify-start">
-              <Badge className="bg-foreground text-background text-[10px] font-black tracking-[0.2em] uppercase px-4 py-1.5 rounded-none border-none">
-                EXTRA_EDITION
-              </Badge>
-              <Separator orientation="vertical" className="h-5 bg-foreground/20" />
-              <div className="flex flex-wrap gap-3">
-                {issue.tags.map(tag => (
-                  <span key={tag} className="text-[11px] font-mono font-black tracking-widest text-foreground/60 uppercase hover:text-primary transition-colors cursor-default">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Body Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            <div className="lg:col-span-8 gazette-content first-letter:text-8xl first-letter:font-black first-letter:float-left first-letter:mr-4 first-letter:mt-2 first-letter:text-primary first-letter:leading-none text-lg leading-relaxed text-justify font-serif text-foreground/80 selection:bg-primary/20">
-               <MarkdownReader content={issue.body} />
-            </div>
-            
-            <aside className="lg:col-span-4 space-y-8 lg:border-l lg:border-foreground/10 lg:pl-8">
-              <div className="space-y-4">
-                <h4 className="text-xs font-black uppercase tracking-[0.3em] pb-2 border-b border-foreground/20">District Intel</h4>
-                <div className="space-y-4">
-                   <p className="text-xs leading-relaxed italic text-foreground/60">
-                     "The sands do not lie. Every drop of blood spilled this week tells a story of ambition, failure, and the relentless pursuit of glory." 
-                     <span className="block mt-2 font-black not-italic text-[10px] uppercase opacity-40">— ARENA OVERWATCH</span>
-                   </p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-foreground/5 border border-foreground/10 space-y-2">
-                 <span className="text-[9px] font-black uppercase tracking-widest text-primary">PUBLIC NOTICE</span>
-                 <p className="text-[10px] leading-relaxed text-foreground/70 font-medium">
-                   All combatants must register secondary style adaptations by the third clock. Failure to comply results in notoriety penalties.
-                 </p>
-              </div>
-            </aside>
+      <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-white/5 bg-black/20">
+        {/* ─── The Lead Story ─── */}
+        <div className="lg:col-span-8 p-8 md:p-12 space-y-8 relative group/story">
+          <div className="absolute top-12 left-12 opacity-5 pointer-events-none group-hover/story:opacity-10 transition-opacity">
+             <Quote className="h-24 w-24 text-primary" />
           </div>
           
-          {/* Footer Detail */}
-          <div className="flex flex-col md:flex-row items-center justify-between border-t-2 border-foreground/30 pt-8 mt-12 opacity-40 group-hover:opacity-60 transition-opacity">
-            <span className="text-[11px] font-black uppercase tracking-[0.5em] mb-4 md:mb-0">THE TRUTH REMAINS WHEN THE BLOOD DRIES</span>
-            <div className="flex items-center gap-8">
-                <span className="text-[11px] font-black uppercase tracking-widest">PRICE: 2 COPPER</span>
-                <Separator orientation="vertical" className="h-5 bg-foreground/40" />
-                <span className="text-[11px] font-black uppercase tracking-widest font-mono">EST. 412 AE</span>
+          <div className="space-y-6 relative z-10">
+            <div className="flex items-center gap-3">
+               <div className="h-px w-8 bg-primary/40" />
+               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">FEATURE_DISPATCH</span>
+            </div>
+            
+            <p className="text-base md:text-lg text-foreground/80 leading-relaxed font-serif italic selection:bg-primary/30 tracking-wide">
+              {issue.mainStory}
+            </p>
+            
+            <div className="pt-6 flex items-center justify-between">
+               <div className="flex items-center gap-4">
+                  <div className="flex -space-x-2">
+                     {[1, 2].map((i) => (
+                        <div key={i} className="h-6 w-6 rounded-full border border-black bg-white/5 flex items-center justify-center">
+                           <History className="h-3 w-3 text-muted-foreground" />
+                        </div>
+                     ))}
+                  </div>
+                  <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Contributed_By: ARCHIVE_BOTS</span>
+               </div>
+               <Button variant="ghost" className="h-8 group/btn text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 px-4">
+                  Full_Transcript <ArrowRight className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
+               </Button>
             </div>
           </div>
         </div>
-      </Surface>
-    </motion.article>
+
+        {/* ─── The Side Registry ─── */}
+        <div className="lg:col-span-4 p-8 md:p-12 bg-white/[0.01] space-y-10">
+           <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                 <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40">ARENA_SHORTS</h4>
+                 <div className="h-1.5 w-1.5 rounded-full bg-arena-gold animate-pulse" />
+              </div>
+              
+              <div className="space-y-8">
+                {issue.sideStories.map((story, i) => (
+                  <div key={i} className="group/short space-y-3 relative pl-6 border-l border-white/5 hover:border-arena-gold/30 transition-all">
+                    <div className="absolute -left-0.5 top-0 w-1 h-3 bg-arena-gold opacity-0 group-hover/short:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
+                    <div className="flex items-center gap-2">
+                       <Zap className="h-3 w-3 text-arena-gold opacity-40 group-hover/short:opacity-100 transition-opacity" />
+                       <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 group-hover/short:text-arena-gold transition-colors">INTEL_FRAGMENT</span>
+                    </div>
+                    <p className="text-[11px] md:text-xs text-muted-foreground group-hover/short:text-foreground transition-colors leading-relaxed font-medium">
+                       {story}
+                    </p>
+                  </div>
+                ))}
+              </div>
+           </div>
+
+           <div className="pt-6 border-t border-white/5 space-y-4">
+              <Surface variant="paper" padding="sm" className="bg-primary/5 border border-primary/20 hover:border-primary/40 transition-all cursor-pointer group/cta">
+                 <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                       <Trophy className="h-4 w-4 text-primary" />
+                       <span className="text-[9px] font-black uppercase tracking-widest text-primary/80 group-hover:text-primary transition-colors">Bout_Replays_Active</span>
+                    </div>
+                    <ExternalLink className="h-3 w-3 text-white/20 group-hover:text-primary transition-colors" />
+                 </div>
+              </Surface>
+              <div className="flex items-center justify-center gap-2 opacity-20">
+                 <MessageSquare className="h-3 w-3" />
+                 <span className="text-[8px] font-black uppercase tracking-[0.3em]">REACTION_LOGS_LOCKED</span>
+              </div>
+           </div>
+        </div>
+      </div>
+    </Surface>
   );
 }

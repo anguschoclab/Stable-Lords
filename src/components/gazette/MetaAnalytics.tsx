@@ -1,188 +1,166 @@
-import React, { useMemo } from "react";
-import { motion } from "framer-motion";
-import { BarChart3, Grid3X3, Zap, Shield, Swords, Info } from "lucide-react";
+import React from "react";
 import { Surface } from "@/components/ui/Surface";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { FightSummary } from "@/types/game";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, Activity, Binary, Search, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface MetaAnalyticsProps {
-  allFights: FightSummary[];
+  allFights: any[];
 }
 
 export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
-  const meta = useMemo(() => {
-    const m: Record<string, { w: number; l: number; k: number; fights: number }> = {};
-    const ensure = (s: string) => {
-      if (!m[s]) m[s] = { w: 0, l: 0, k: 0, fights: 0 };
-    };
-    for (const f of allFights) {
-      ensure(f.styleA);
-      ensure(f.styleD);
-      m[f.styleA].fights++;
-      m[f.styleD].fights++;
-      if (f.winner === "A") { m[f.styleA].w++; m[f.styleD].l++; }
-      else if (f.winner === "D") { m[f.styleD].w++; m[f.styleA].l++; }
-      if (f.by === "Kill") {
-        if (f.winner === "A") m[f.styleA].k++;
-        else if (f.winner === "D") m[f.styleD].k++;
-      }
-    }
-    return Object.entries(m)
-      .map(([style, d]) => ({ style, ...d, pct: d.fights > 0 ? d.w / d.fights : 0 }))
-      .sort((a, b) => b.fights - a.fights);
-  }, [allFights]);
-
-  if (meta.length === 0) return null;
-
-  const maxFights = Math.max(...meta.map((m) => m.fights), 1);
+  const styles = ["Brawler", "Technician", "High-Flyer", "Powerhouse", "Grappler"];
+  
+  const stats = styles.map(style => {
+    const styleFights = allFights.filter(f => f.winnerStyle === style || f.loserStyle === style);
+    const wins = allFights.filter(f => f.winnerStyle === style).length;
+    const rate = styleFights.length > 0 ? (wins / styleFights.length) * 100 : 0;
+    return { style, wins, total: styleFights.length, rate };
+  }).sort((a, b) => b.rate - a.rate);
 
   return (
-    <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
-      <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
-        <div className="space-y-1">
-          <h3 className="text-base font-display font-black uppercase tracking-tight flex items-center gap-2">
-            <BarChart3 className="h-4 w-4 text-primary" />
-            Tactical Style Analysis
-          </h3>
-          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
-            DATASET: {allFights.length} REGISTERED BOUTS // GLOBAL AGGREGATE
-          </p>
-        </div>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Info className="h-4 w-4 text-muted-foreground hover:text-primary transition-colors cursor-help" />
-          </TooltipTrigger>
-          <TooltipContent className="max-w-xs text-[10px] p-3 leading-relaxed font-medium">
-            Style Analysis tracks the win-loss percentage and lethality of every fighting style across the entire history of the arena.
-          </TooltipContent>
-        </Tooltip>
+    <Surface variant="glass" className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full">
+      <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
+         <Activity className="h-24 w-24 text-primary" />
       </div>
       
-      <div className="p-6 space-y-6">
-        {meta.map((s) => {
-          const winPct = (s.pct * 100).toFixed(0);
-          const usageWidth = (s.fights / maxFights) * 100;
-          return (
-            <div key={s.style} className="space-y-3 group">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-display font-black uppercase text-foreground group-hover:text-primary transition-colors tracking-tight">{s.style}</span>
-                <div className="flex items-center gap-4 text-[9px] font-mono font-black text-muted-foreground/60">
-                  <span className="bg-secondary/40 px-2 py-0.5 rounded border border-border/20">{s.fights} BOUTS</span>
-                  <span className="text-primary font-black uppercase tracking-widest">{winPct}% WIN_RATE</span>
-                  {s.k > 0 && <span className="text-destructive font-black uppercase tracking-widest">{s.k} FATALITIES</span>}
-                </div>
+      <div className="flex items-center gap-4 mb-8 relative z-10">
+         <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+            <TrendingUp className="h-5 w-5 text-primary" />
+         </div>
+         <div>
+            <h3 className="font-display text-base font-black uppercase tracking-tight">Combat_Flow_Analysis</h3>
+            <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Style_Efficiency // Meta_Pulse</p>
+         </div>
+      </div>
+
+      <div className="space-y-6 relative z-10">
+        {stats.map((s, idx) => (
+          <div key={s.style} className="space-y-2.5 group">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-3">
+                 <span className="text-[10px] font-mono font-black text-white/20">0{idx + 1}</span>
+                 <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-primary transition-colors">{s.style}</span>
               </div>
-              <div className="h-2.5 bg-secondary/10 rounded-full overflow-hidden flex shadow-inner relative border border-white/5" style={{ width: `${usageWidth}%`, minWidth: "6rem" }}>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${s.pct * 100}%` }}
-                  className="h-full bg-primary shadow-[0_0_12px_rgba(var(--primary-rgb),0.5)] relative z-10"
-                />
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(1 - s.pct) * 100}%` }}
-                  className="h-full bg-secondary/80"
-                />
-              </div>
+              <Tooltip>
+                 <TooltipTrigger asChild>
+                    <div className="flex items-center gap-3">
+                       <span className="text-[10px] font-mono font-black text-primary/60 group-hover:text-primary transition-colors">{s.rate.toFixed(1)}%</span>
+                       <Badge variant="outline" className="text-[8px] font-mono font-black border-white/5 bg-white/5 text-muted-foreground/60 h-5 px-2">
+                          {s.wins} / {s.total}
+                       </Badge>
+                    </div>
+                 </TooltipTrigger>
+                 <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+                    Win Density: {s.wins} Wins in {s.total} Registered Bouts
+                 </TooltipContent>
+              </Tooltip>
             </div>
-          );
-        })}
+            
+            <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
+               <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${s.rate}%` }}
+                  transition={{ duration: 1, delay: idx * 0.1 }}
+                  className={cn(
+                    "h-full transition-all duration-1000",
+                    s.rate > 55 ? "bg-arena-pop shadow-[0_0_10px_rgba(var(--arena-pop-rgb),0.4)]" :
+                    s.rate > 45 ? "bg-primary" : "bg-muted-foreground/40"
+                  )}
+               />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between opacity-40 hover:opacity-80 transition-opacity">
+         <div className="flex items-center gap-2">
+            <Search className="h-3 w-3" />
+            <span className="text-[8px] font-black uppercase tracking-widest">Global_Sample: {allFights.length} Bouts</span>
+         </div>
+         <span className="text-[8px] font-black uppercase tracking-[0.3em]">SYNCHRONIZED_META</span>
       </div>
     </Surface>
   );
 }
 
 export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
-  const { styles, matrix } = useMemo(() => {
-    const m = new Map<string, Map<string, { wins: number; total: number }>>();
-    const styleSet = new Set<string>();
-
-    for (const f of allFights) {
-      styleSet.add(f.styleA);
-      styleSet.add(f.styleD);
-
-      if (!m.has(f.styleA)) m.set(f.styleA, new Map());
-      if (!m.has(f.styleD)) m.set(f.styleD, new Map());
-
-      const adEntry = m.get(f.styleA)!.get(f.styleD) ?? { wins: 0, total: 0 };
-      const daEntry = m.get(f.styleD)!.get(f.styleA) ?? { wins: 0, total: 0 };
-      adEntry.total++;
-      daEntry.total++;
-      if (f.winner === "A") adEntry.wins++;
-      else if (f.winner === "D") daEntry.wins++;
-      m.get(f.styleA)!.set(f.styleD, adEntry);
-      m.get(f.styleD)!.set(f.styleA, daEntry);
-    }
-
-    const styles = [...styleSet].sort();
-    return { styles, matrix: m };
-  }, [allFights]);
-
-  if (styles.length < 2) return null;
-
-  function cellColor(pct: number): string {
-    if (pct >= 0.7) return "bg-primary text-primary-foreground";
-    if (pct >= 0.55) return "bg-primary/40 text-foreground";
-    if (pct >= 0.45) return "bg-muted text-muted-foreground";
-    if (pct >= 0.3) return "bg-destructive/30 text-foreground";
-    return "bg-destructive text-destructive-foreground";
-  }
+  const styles = ["Brawler", "Technician", "High-Flyer", "Powerhouse", "Grappler"];
 
   return (
-    <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
-      <div className="p-6 border-b border-white/5 bg-primary/5">
-        <h3 className="text-base font-display font-black uppercase tracking-tight flex items-center gap-2">
-          <Grid3X3 className="h-4 w-4 text-primary" /> 
-          Dominance Coefficient Matrix
-        </h3>
-        <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
-          ROW_STYLE WIN% VS COLUMN_STYLE // RELATIVE BIAS
-        </p>
+    <Surface variant="glass" className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full">
+      <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
+         <LayoutGrid className="h-24 w-24 text-arena-gold" />
       </div>
-      
-      <div className="p-6 overflow-x-auto">
+
+      <div className="flex items-center gap-4 mb-8 relative z-10">
+         <div className="p-2.5 rounded-xl bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+            <Binary className="h-5 w-5 text-arena-gold" />
+         </div>
+         <div>
+            <h3 className="font-display text-base font-black uppercase tracking-tight">Matchup_Dynamic_Registry</h3>
+            <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Style_Interactions // Kinetic_Heatmap</p>
+         </div>
+      </div>
+
+      <div className="overflow-x-auto custom-scrollbar relative z-10">
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th className="p-2 text-left text-[9px] font-black uppercase tracking-widest text-muted-foreground border-b border-border/20 sticky left-0 bg-neutral-900 z-10">VS ↓</th>
-              {styles.map((s) => (
-                <th key={s} className="p-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground text-center border-b border-border/20 min-w-[2.5rem] whitespace-nowrap">
-                  <div className="vertical-text py-2">{s}</div>
+              <th className="p-2"></th>
+              {styles.map(s => (
+                <th key={s} className="p-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 text-center w-16 group/header">
+                   <div className="rotate-45 mb-4 group-hover/header:text-primary transition-colors">{s}</div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {styles.map((rowStyle) => (
-              <tr key={rowStyle} className="group">
-                <td className="p-2 text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors border-r border-border/20 sticky left-0 bg-neutral-900 z-10 whitespace-nowrap">
+            {styles.map(rowStyle => (
+              <tr key={rowStyle} className="group/row">
+                <td className="p-2 text-[10px] font-black uppercase tracking-widest text-foreground/60 text-right pr-4 group-hover/row:text-arena-gold transition-colors">
                   {rowStyle}
                 </td>
-                {styles.map((colStyle) => {
-                  if (rowStyle === colStyle) {
-                    return <td key={colStyle} className="p-1"><div className="w-full h-8 rounded-sm bg-border/20 border border-white/5" /></td>;
-                  }
-                  const entry = matrix.get(rowStyle)?.get(colStyle);
-                  if (!entry || entry.total === 0) {
-                    return <td key={colStyle} className="p-1"><div className="w-full h-8 rounded-sm text-muted-foreground/20 italic flex items-center justify-center text-[8px]">n/a</div></td>;
-                  }
-                  const pct = entry.wins / entry.total;
+                {styles.map(colStyle => {
+                  const matches = allFights.filter(f => 
+                    (f.winnerStyle === rowStyle && f.loserStyle === colStyle) || 
+                    (f.winnerStyle === colStyle && f.loserStyle === rowStyle)
+                  );
+                  const wins = allFights.filter(f => f.winnerStyle === rowStyle && f.loserStyle === colStyle).length;
+                  const rate = matches.length > 0 ? (wins / matches.length) * 100 : 50;
+                  const isNeutral = matches.length === 0;
+
                   return (
                     <td key={colStyle} className="p-1">
                       <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className={cn(
-                            "w-full h-8 rounded-sm flex items-center justify-center font-mono text-[10px] font-black border border-white/10 cursor-default hover:scale-110 transition-transform",
-                            cellColor(pct)
-                          )}>
-                            {Math.round(pct * 100)}
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="text-[10px] p-2 bg-neutral-950 border-primary/20">
-                          <span className="font-black text-primary uppercase">{rowStyle}</span> VS <span className="font-black text-foreground uppercase">{colStyle}</span>
-                          <div className="mt-1 font-mono font-bold">{entry.wins}W / {entry.total} TOTAL ({Math.round(pct * 100)}%)</div>
-                        </TooltipContent>
+                         <TooltipTrigger asChild>
+                            <div 
+                              className={cn(
+                                "h-10 w-full rounded-md border border-white/5 transition-all duration-500 cursor-help",
+                                isNeutral ? "bg-white/[0.02] opacity-20" :
+                                rate > 65 ? "bg-arena-pop/40 border-arena-pop/40 shadow-[inset_0_0_10px_rgba(var(--arena-pop-rgb),0.2)]" :
+                                rate > 55 ? "bg-arena-pop/20 border-arena-pop/20" :
+                                rate > 45 ? "bg-primary/20 border-primary/20" :
+                                rate > 35 ? "bg-destructive/20 border-destructive/20" :
+                                "bg-destructive/40 border-destructive/40 shadow-[inset_0_0_10px_rgba(255,0,0,0.2)]"
+                              )}
+                            >
+                               {!isNeutral && (
+                                 <div className="h-full w-full flex items-center justify-center">
+                                    <span className="text-[10px] font-mono font-black text-white/60">{rate.toFixed(0)}</span>
+                                 </div>
+                               )}
+                            </div>
+                         </TooltipTrigger>
+                         <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+                            {rowStyle} vs {colStyle}: {rate.toFixed(1)}% Win Rate ({wins}/{matches.length})
+                         </TooltipContent>
                       </Tooltip>
                     </td>
                   );
@@ -191,6 +169,18 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-8 flex items-center justify-center gap-6 opacity-40 text-[8px] font-black uppercase tracking-widest relative z-10">
+         <div className="flex items-center gap-1.5 text-arena-pop">
+            <div className="h-2 w-2 rounded-sm bg-arena-pop/40" /> Superior
+         </div>
+         <div className="flex items-center gap-1.5 text-primary">
+            <div className="h-2 w-2 rounded-sm bg-primary/40" /> Neutral
+         </div>
+         <div className="flex items-center gap-1.5 text-destructive">
+            <div className="h-2 w-2 rounded-sm bg-destructive/40" /> Vulnerable
+         </div>
       </div>
     </Surface>
   );

@@ -2,129 +2,209 @@ import React, { useMemo } from "react";
 import { useGameStore } from "@/state/useGameStore";
 import { computeWeeklyBreakdown } from "@/engine/economy";
 import { Surface } from "@/components/ui/Surface";
+import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Coins, FileText, TrendingUp, Skull, Swords, Activity } from "lucide-react";
+import { Coins, FileText, TrendingUp, Skull, Swords, Activity, Wallet, BarChart3, ArrowUpRight, ArrowDownRight, History } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function TreasuryOverview() {
   const { state } = useGameStore();
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);
   const gold = state.gold ?? 0;
   
-  const activeWarriors = state.roster.filter(w => w.status === "Active");
-  const { wins: totalWins, kills: totalKills } = state.roster.reduce(
+  const activeWarriors = (state.roster ?? []).filter(w => w.status === "Active");
+  const { wins: totalWins, kills: totalKills } = (state.roster ?? []).reduce(
     (acc, w) => ({
-      wins: acc.wins + w.career.wins,
-      kills: acc.kills + w.career.kills,
+      wins: acc.wins + (w.career.wins ?? 0),
+      kills: acc.kills + (w.career.kills ?? 0),
     }),
     { wins: 0, kills: 0 }
   );
 
-  const recentLedger = (state.ledger ?? []).slice(-10).reverse();
+  const recentLedger = (state.ledger ?? []).slice(-15).reverse();
 
   return (
-    <div className="space-y-6">
-      {/* ─── High-Level Metrics ─── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* ─── Global Treasury Matrix ─── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Treasury", value: `${gold.toLocaleString()}G`, icon: Coins, color: "text-arena-gold", variant: "gold" as const },
-          { label: "Active Roster", value: activeWarriors.length, icon: Swords, color: "text-primary", variant: "glass" as const },
-          { label: "Total Victories", value: totalWins, icon: TrendingUp, color: "text-arena-pop", variant: "glass" as const },
-          { label: "Fatalities", value: totalKills, icon: Skull, color: "text-destructive", variant: "blood" as const },
+          { label: "Treasury_Reserve", value: `${gold.toLocaleString()}G`, icon: Wallet, color: "text-arena-gold", variant: "gold" as const, desc: "Liquid capital available for operations and recruitment." },
+          { label: "Synced_Personnel", value: activeWarriors.length, icon: Swords, color: "text-primary", variant: "glass" as const, desc: "Total combatant assets currently on active deployment." },
+          { label: "Victory_Manifest", value: totalWins, icon: TrendingUp, color: "text-arena-pop", variant: "glass" as const, desc: "Cumulative competitive victories across all career rosters." },
+          { label: "System_Fatalities", value: totalKills, icon: Skull, color: "text-destructive", variant: "blood" as const, desc: "Final cessation incidents recorded during arena engagements." },
         ].map((stat, i) => (
-          <Surface key={i} variant={stat.variant} padding="sm" className="flex flex-col items-center justify-center text-center group">
-            <stat.icon className={cn("h-4 w-4 mb-2 opacity-50 group-hover:opacity-100 transition-opacity", stat.color)} />
-            <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black mb-1">{stat.label}</span>
-            <span className={cn("text-2xl font-mono font-black leading-none", stat.color === "text-foreground" ? "" : stat.color)}>
-              {stat.value}
-            </span>
-          </Surface>
+          <Tooltip key={i}>
+            <TooltipTrigger asChild>
+              <Surface variant={stat.variant} padding="md" className="flex flex-col items-center justify-center text-center group hover:scale-[1.02] transition-all relative overflow-hidden h-32">
+                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                   <stat.icon className="h-10 w-10" />
+                </div>
+                <stat.icon className={cn("h-5 w-5 mb-3 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300", stat.color)} />
+                <span className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground font-black mb-1 opacity-60">{stat.label}</span>
+                <span className={cn("text-3xl font-display font-black leading-none drop-shadow-sm", stat.color)}>
+                  {stat.value}
+                </span>
+              </Surface>
+            </TooltipTrigger>
+            <TooltipContent className="bg-neutral-950 border-white/10 text-[10px] uppercase font-black tracking-widest px-4 py-2">
+              {stat.desc}
+            </TooltipContent>
+          </Tooltip>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* ─── Weekly Projection ─── */}
-        <Surface variant="glass" className="lg:col-span-1 border-primary/10">
-          <div className="flex items-center gap-2 mb-4">
-            <Activity className="h-4 w-4 text-primary" />
-            <h3 className="font-display text-sm font-black uppercase tracking-tight">Weekly Projection</h3>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        {/* ─── Fiscal Trajectory Monitor ─── */}
+        <Surface variant="glass" className="lg:col-span-4 border-primary/10 relative overflow-hidden flex flex-col">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary/10 to-transparent" />
           
-          <div className="space-y-4">
-            <div>
-              <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2 flex items-center justify-between">
-                <span>Current Income</span>
-                <span className="h-px flex-1 bg-border/30 mx-2" />
-              </h4>
-              {breakdown.income.map((item, i) => (
-                <div key={i} className="flex justify-between text-xs py-1">
-                  <span className="text-muted-foreground">{item.label}</span>
-                  <span className="text-arena-pop font-mono font-bold">+{item.amount}g</span>
-                </div>
-              ))}
-              {breakdown.income.length === 0 && <p className="text-[10px] text-muted-foreground italic">No active revenue streams</p>}
-            </div>
-
-            <div>
-              <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2 flex items-center justify-between">
-                <span>Current Expenses</span>
-                <span className="h-px flex-1 bg-border/30 mx-2" />
-              </h4>
-              {breakdown.expenses.map((item, i) => (
-                <div key={i} className="flex justify-between text-xs py-1">
-                  <span className="text-muted-foreground">{item.label}</span>
-                  <span className="text-destructive font-mono font-bold">-{item.amount}g</span>
-                </div>
-              ))}
-              {breakdown.expenses.length === 0 && <p className="text-[10px] text-muted-foreground italic">No fixed costs</p>}
-            </div>
-
-            <div className="pt-2 border-t border-border/40">
-              <div className="flex justify-between items-center text-sm font-black uppercase tracking-tight">
-                <span>Net Flux</span>
-                <span className={cn("font-mono text-lg", breakdown.net >= 0 ? "text-arena-pop" : "text-destructive")}>
-                  {breakdown.net >= 0 ? "+" : ""}{breakdown.net}g
-                </span>
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+                <BarChart3 className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-display text-sm font-black uppercase tracking-tight">Fiscal_Trajectory</h3>
+                <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Operating_Liquidity // WK_{state.week.toString().padStart(2, '0')}</p>
               </div>
             </div>
+            {breakdown.net >= 0 ? (
+               <Badge className="bg-arena-pop/20 text-arena-pop border-arena-pop/30 font-black text-[9px] tracking-widest uppercase">Solvent</Badge>
+            ) : (
+               <Badge className="bg-destructive/20 text-destructive border-destructive/30 font-black text-[9px] tracking-widest uppercase">Impaired</Badge>
+            )}
+          </div>
+          
+          <div className="space-y-8 flex-1">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                 <ArrowUpRight className="h-3 w-3 text-arena-pop" />
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Revenue_Streams</span>
+                 <div className="h-px flex-1 bg-white/5" />
+              </div>
+              <div className="space-y-2">
+                {breakdown.income.map((item, i) => (
+                  <div key={i} className="flex justify-between items-center group/item hover:bg-white/2 p-1.5 rounded transition-colors">
+                    <span className="text-[11px] font-medium text-foreground/70 group-hover/item:text-foreground">{item.label}</span>
+                    <span className="text-arena-pop font-mono font-black text-xs">+{item.amount}G</span>
+                  </div>
+                ))}
+                {breakdown.income.length === 0 && (
+                   <p className="text-[10px] text-muted-foreground/30 italic uppercase tracking-widest py-2 text-center">No active_revenue</p>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                 <ArrowDownRight className="h-3 w-3 text-destructive" />
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Operational_Costs</span>
+                 <div className="h-px flex-1 bg-white/5" />
+              </div>
+              <div className="space-y-2">
+                {breakdown.expenses.map((item, i) => (
+                  <div key={i} className="flex justify-between items-center group/item hover:bg-white/2 p-1.5 rounded transition-colors">
+                    <span className="text-[11px] font-medium text-foreground/70 group-hover/item:text-foreground">{item.label}</span>
+                    <span className="text-destructive font-mono font-black text-xs">-{item.amount}G</span>
+                  </div>
+                ))}
+                {breakdown.expenses.length === 0 && (
+                   <p className="text-[10px] text-muted-foreground/30 italic uppercase tracking-widest py-2 text-center">No active_debits</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-white/5">
+             <Surface variant="paper" padding="sm" className="bg-black/40 border border-white/5 flex justify-between items-center group hover:border-primary/30 transition-all">
+                <div className="flex flex-col">
+                   <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-[0.3em] opacity-40">Weekly_Net_Flux</span>
+                   <span className="text-xs font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">Projected_Residue</span>
+                </div>
+                <div className={cn(
+                   "text-2xl font-mono font-black drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]",
+                   breakdown.net >= 0 ? "text-arena-pop" : "text-destructive"
+                )}>
+                   {breakdown.net >= 0 ? "+" : ""}{breakdown.net}G
+                </div>
+             </Surface>
           </div>
         </Surface>
 
-        {/* ─── Transaction History ─── */}
-        <Surface variant="glass" padding="none" className="lg:col-span-2 border-border/20">
-          <div className="p-6 pb-2 flex items-center gap-2">
-            <FileText className="h-4 w-4 text-muted-foreground" />
-            <h3 className="font-display text-sm font-black uppercase tracking-tight whitespace-nowrap">Ledger Chronicle</h3>
-            <div className="h-px w-full bg-border/20" />
+        {/* ─── High-Fidelity Ledger Chronicle ─── */}
+        <Surface variant="glass" padding="none" className="lg:col-span-8 border-border/10 flex flex-col relative overflow-hidden h-[500px]">
+          <div className="p-8 border-b border-white/5 bg-neutral-900/40 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 rounded-xl bg-secondary/20 border border-white/5">
+                 <History className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div>
+                 <h3 className="font-display text-base font-black uppercase tracking-tight">Ledger_Registry_Sync</h3>
+                 <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Audited_Transaction_History // Global_Index: {state.ledger?.length ?? 0}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+               <div className="h-1 w-1 rounded-full bg-arena-gold animate-pulse" />
+               <span className="text-[8px] font-black uppercase tracking-widest text-arena-gold opacity-60">Verified_By_Scribes</span>
+            </div>
           </div>
           
-          <div className="overflow-x-auto">
+          <div className="flex-1 overflow-auto custom-scrollbar">
             {recentLedger.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground text-[10px] uppercase tracking-widest opacity-40">
-                The pages are empty. Run bouts to generate records.
+              <div className="h-full flex flex-col items-center justify-center p-12 text-center opacity-20 group">
+                <Wallet className="h-16 w-16 mb-4 group-hover:scale-110 transition-transform duration-500" />
+                <p className="text-sm font-display font-black uppercase tracking-[0.3em]">Registry_Data_Missing</p>
+                <p className="text-[10px] lowercase italic opacity-80 mt-2 font-medium">Bout_engagement_required_for_transaction_logging...</p>
               </div>
             ) : (
               <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent border-border/20">
-                    <TableHead className="w-16 font-black uppercase text-[10px] tracking-widest">Week</TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest">Registry Entry</TableHead>
-                    <TableHead className="text-right font-black uppercase text-[10px] tracking-widest">Disbursement</TableHead>
+                <TableHeader className="bg-black/20 sticky top-0 z-10 backdrop-blur-md border-b border-white/5">
+                  <TableRow className="hover:bg-transparent border-white/5">
+                    <TableHead className="w-24 font-black uppercase text-[10px] tracking-widest pl-8">INDEX</TableHead>
+                    <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60">ENTRY_DESCRIPTOR</TableHead>
+                    <TableHead className="text-right font-black uppercase text-[10px] tracking-widest pr-8">DISBURSEMENT</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {recentLedger.map((entry, i) => (
-                    <TableRow key={i} className="border-border/10">
-                      <TableCell className="font-mono text-[10px] font-black text-muted-foreground">WK_{entry.week.toString().padStart(2, '0')}</TableCell>
-                      <TableCell className="text-xs font-medium text-foreground/80">{entry.label}</TableCell>
-                      <TableCell className={cn("text-right font-mono text-xs font-black", entry.amount >= 0 ? "text-arena-pop" : "text-destructive")}>
-                        {entry.amount >= 0 ? "+" : ""}{entry.amount}g
+                    <TableRow key={i} className="border-white/5 group hover:bg-white/2 transition-colors">
+                      <TableCell className="pl-8 py-4">
+                         <div className="flex items-center gap-3">
+                            <span className="text-[9px] font-mono font-black text-muted-foreground opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all">
+                               WK_{entry.week.toString().padStart(2, '0')}
+                            </span>
+                            <div className="h-1 w-1 rounded-full bg-white/5 group-hover:bg-primary transition-colors" />
+                         </div>
+                      </TableCell>
+                      <TableCell className="py-4">
+                         <span className="text-xs font-black uppercase tracking-widest text-foreground/80 group-hover:text-foreground transition-all">
+                            {entry.label}
+                         </span>
+                      </TableCell>
+                      <TableCell className="text-right pr-8 py-4">
+                        <div className={cn(
+                           "font-mono text-sm font-black tracking-tighter drop-shadow-[0_0_5px_rgba(0,0,0,0.5)]",
+                           entry.amount >= 0 ? "text-arena-pop" : "text-destructive"
+                        )}>
+                          {entry.amount >= 0 ? "+" : ""}{entry.amount.toLocaleString()}G
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             )}
+          </div>
+
+          <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center">
+             <button className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group">
+                Access_Full_Archive <ArrowDownRight className="h-3 w-3 group-hover:translate-y-0.5 transition-transform" />
+             </button>
           </div>
         </Surface>
       </div>

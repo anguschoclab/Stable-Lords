@@ -1,10 +1,15 @@
 import React, { useMemo } from "react";
-import { Skull } from "lucide-react";
+import { Skull, Activity, Shield, Target, Zap, TrendingUp, Globe, Sword, Users, Star } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
-import { StableLink } from "@/components/EntityLink";
-import { WarriorNameTag } from "@/components/ui/WarriorBadges";
+import { cn } from "@/lib/utils";
+import { Link } from "@tanstack/react-router";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function RivalsListWidget() {
   const { state } = useGameStore();
@@ -12,7 +17,7 @@ export function RivalsListWidget() {
 
   // Find recent bouts involving rival warriors
   const recentRivalBouts = useMemo(() => {
-    const rosterNames = new Set(state.roster.map(w => w.name));
+    const rosterNames = new Set((state.roster || []).map(w => w.name));
     return (state.arenaHistory || [])
       .filter(f => {
         const aIsPlayer = rosterNames.has(f.a);
@@ -24,94 +29,115 @@ export function RivalsListWidget() {
   }, [state.arenaHistory, state.roster]);
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="font-display text-base flex items-center gap-2">
-          <Skull className="h-4 w-4 text-destructive" /> Rival Stables
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {rivals.length === 0 ? (
-          <p className="text-xs text-muted-foreground italic">No rival stables yet.</p>
-        ) : (
-          <div className="space-y-2">
-            {rivals.slice(0, 6).map(r => {
-              const active = r.roster.filter(w => w.status === "Active").length;
-              const topWarrior = [...r.roster].sort((a, b) => (b.fame || 0) - (a.fame || 0))[0];
-              const tierColors: Record<string, string> = {
-                Major: "text-arena-gold border-arena-gold/40",
-                Established: "text-primary border-primary/40",
-                Minor: "text-muted-foreground border-border",
-                Legendary: "text-destructive border-destructive/40",
-              };
-              const tierClass = tierColors[r.tier ?? "Minor"] ?? tierColors.Minor;
-              return (
-                <div key={r.owner.id} className="flex items-center gap-3 py-1">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <StableLink name={r.owner.stableName} className="text-sm font-display font-semibold truncate">
-                        {r.owner.stableName}
-                      </StableLink>
-                      {r.tier && (
-                        <Badge variant="outline" className={`text-[9px] h-4 px-1 shrink-0 ${tierClass}`}>
-                          {r.tier}
-                        </Badge>
-                      )}
-                      <Badge variant="outline" className="text-[9px] h-4 px-1 shrink-0">
-                        {r.owner.personality ?? "Unknown"}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center gap-2 mt-0.5 text-[10px] text-muted-foreground">
-                      <span>{active} warriors</span>
-                      <span>·</span>
-                      <span className="text-arena-fame">{r.owner.fame} fame</span>
-                      {r.philosophy && (
-                        <>
-                          <span>·</span>
-                          <span className="italic">{r.philosophy}</span>
-                        </>
-                      )}
-                      {topWarrior && (
-                        <>
-                          <span>·</span>
-                          <span className="truncate flex items-center gap-1">★ <WarriorNameTag name={topWarrior.name} id={topWarrior.id} /></span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+    <Surface variant="glass" padding="none" className="h-full border-border/10 group overflow-hidden relative flex flex-col">
+      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+         <Skull className="h-12 w-12 text-destructive" />
+      </div>
 
-            {/* Recent rival bouts */}
-            {recentRivalBouts.length > 0 && (
-              <div className="pt-2 mt-1 border-t border-border/50">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-1">
-                  Recent vs Rivals
-                </div>
-                {recentRivalBouts.map(f => {
-                  const rosterNames = new Set(state.roster.map(w => w.name));
+      <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
+         <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)]">
+               <Globe className="h-4 w-4 text-destructive" />
+            </div>
+            <div>
+               <h3 className="font-display text-sm font-black uppercase tracking-tight">Rival_Registry</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Opposing_Stable_Intelligence</p>
+            </div>
+         </div>
+         <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest">
+            {rivals.length} OPERATIONAL_THREATS
+         </Badge>
+      </div>
+
+      <div className="flex-1 overflow-y-auto relative z-10 custom-scrollbar">
+         {rivals.length === 0 ? (
+            <div className="p-12 text-center opacity-20 italic">
+               <p className="text-[10px] uppercase tracking-[0.2em]">No_Threat_Signals_Detected</p>
+            </div>
+         ) : (
+            <div className="divide-y divide-white/5">
+               {rivals.slice(0, 4).map(r => {
+                  const activeCount = r.roster?.filter(w => w.status === "Active").length ?? 0;
+                  const tierColors: Record<string, string> = {
+                    Major: "bg-arena-gold/10 text-arena-gold border-arena-gold/20",
+                    Established: "bg-primary/10 text-primary border-primary/20",
+                    Legendary: "bg-destructive/10 text-destructive border-destructive/20",
+                  };
+                  const tierClass = tierColors[r.tier ?? "Minor"] ?? "bg-white/5 text-muted-foreground border-white/10";
+                  
+                  return (
+                     <div key={r.owner.id} className="p-4 hover:bg-white/2 transition-colors group/item">
+                        <div className="flex items-center justify-between mb-2">
+                           <div className="flex items-center gap-2">
+                              <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/item:text-primary transition-colors">
+                                 {r.owner.stableName}
+                              </span>
+                              <Badge variant="outline" className={cn("text-[8px] font-black h-4 px-1.5 uppercase", tierClass)}>
+                                 {r.tier}
+                              </Badge>
+                           </div>
+                           <div className="flex items-center gap-1.5 text-arena-fame">
+                              <span className="text-[10px] font-mono font-black">{r.owner.fame}</span>
+                              <Star className="h-2.5 w-2.5 opacity-40" />
+                           </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+                           <div className="flex items-center gap-1">
+                              <Users className="h-2.5 w-2.5" /> {activeCount} Assets
+                           </div>
+                           <span>|</span>
+                           <div className="flex items-center gap-1">
+                              <Target className="h-2.5 w-2.5" /> {r.owner.personality}
+                           </div>
+                        </div>
+                     </div>
+                  );
+               })}
+            </div>
+         )}
+      </div>
+
+      {recentRivalBouts.length > 0 && (
+         <div className="p-4 border-t border-white/5 bg-black/20 relative z-10">
+            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-3 block">Tactical_Encounter_Log</span>
+            <div className="space-y-2">
+               {recentRivalBouts.map(f => {
+                  const rosterNames = new Set((state.roster || []).map(w => w.name));
                   const playerIsA = rosterNames.has(f.a);
                   const won = (playerIsA && f.winner === "A") || (!playerIsA && f.winner === "D");
                   return (
-                    <div key={f.id} className="flex items-center gap-2 py-0.5">
-                      <Badge
-                        variant={won ? "default" : f.winner ? "destructive" : "secondary"}
-                        className="text-[9px] w-5 h-4 justify-center p-0"
-                      >
-                        {won ? "W" : f.winner ? "L" : "D"}
-                      </Badge>
-                      <span className="text-[11px] truncate flex items-center gap-1">
-                        <WarriorNameTag name={playerIsA ? f.a : f.d} /> vs <WarriorNameTag name={playerIsA ? f.d : f.a} />
-                      </span>
-                    </div>
+                     <div key={f.id} className="flex items-center justify-between group/bout text-[10px]">
+                        <div className="flex items-center gap-2">
+                           <div className={cn(
+                              "h-1.5 w-1.5 rounded-full",
+                              won ? "bg-arena-pop shadow-[0_0_8px_rgba(var(--arena-pop-rgb),0.5)]" : "bg-destructive shadow-[0_0_8px_rgba(var(--destructive-rgb),0.5)]"
+                           )} />
+                           <span className="text-foreground/60 group-hover/bout:text-foreground transition-colors font-medium">
+                              {playerIsA ? f.a : f.d} <span className="text-white/10 mx-1">VS</span> {playerIsA ? f.d : f.a}
+                           </span>
+                        </div>
+                        <span className={cn(
+                           "font-mono font-black",
+                           won ? "text-arena-pop" : "text-destructive"
+                        )}>
+                           {won ? "W" : "L"}
+                        </span>
+                     </div>
                   );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+               })}
+            </div>
+         </div>
+      )}
+
+      <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
+         <Link 
+            to="/world"
+            className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
+         >
+            Sync_Global_Intelligence <Activity className="h-3 w-3 group-hover:scale-110 transition-transform" />
+         </Link>
+      </div>
+    </Surface>
   );
 }

@@ -27,11 +27,15 @@ const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[];
       "Blood painted the sands this week as the arena demanded sacrifice!",
       "The crowd bayed for blood — and the fighters delivered!",
       "Violence ruled the coliseum in a week of savage combat!",
+      "A horrifying symphony of steel and slaughter opened this week's bouts!",
+      "No mercy was shown, and none was asked for in a week of absolute carnage!"
     ],
     closer: [
       "The sands drink deep tonight.",
       "The crowd's thirst is satisfied — for now.",
       "Death stalks the arena, and the people love it.",
+      "A trail of shattered bones and ruined armor litters the coliseum.",
+      "The arena echoes with the dying screams of the defeated."
     ],
   },
   Theatrical: {
@@ -40,11 +44,15 @@ const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[];
       "What a spectacle! The arena delivered drama worthy of the old legends!",
       "The poets will write songs about this week's extraordinary bouts!",
       "Pure theater! Every bout was a performance for the ages!",
+      "A breathtaking showcase of martial prowess captivated the roaring stands!",
+      "From the first strike to the last fall, the arena was a stage for demigods!"
     ],
     closer: [
       "The bards already compose their verses.",
       "What stories will be told of this week!",
       "The crowd departs buzzing with tales of glory.",
+      "Legends were forged in blood and steel today.",
+      "The crowd leaves exhausted, their voices hoarse from cheering this epic drama."
     ],
   },
   Solemn: {
@@ -53,11 +61,15 @@ const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[];
       "A heavy silence hung over the arena this week.",
       "The weight of loss and sacrifice defined the week's combat.",
       "The coliseum bore witness to solemn displays of warrior resolve.",
+      "With grim determination, the fighters took to the sands to face their destiny.",
+      "A somber mood prevailed as steel met steel in a test of pure survival."
     ],
     closer: [
       "The fallen are remembered. The living carry on.",
       "Torches burn low in the hall of warriors tonight.",
       "In silence, the arena honors those who gave everything.",
+      "A heavy toll was exacted upon the brave souls of the coliseum.",
+      "The sands conceal the final rest of those who fought to the bitter end."
     ],
   },
   Festive: {

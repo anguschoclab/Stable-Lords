@@ -1,0 +1,56 @@
+import type { RivalStableData, GameState, TrainerData } from "@/types/state.types";
+import { checkBudget } from "./budgetWorker";
+import { logAgentAction } from "../agentCore";
+
+const SALARY: Record<string, number> = { Novice: 10, Seasoned: 25, Master: 75 };
+const HIRE_COST: Record<string, number> = { Novice: 50, Seasoned: 100, Master: 200 };
+
+/**
+ * StaffWorker: Handles hiring and firing of trainers.
+ * Implements "Risk-Tiered Execution" for staffing.
+ */
+export function processStaff(
+  rival: RivalStableData,
+  state: GameState,
+  hiringPool: TrainerData[]
+): { updatedRival: RivalStableData; gazetteItems: string[]; updatedHiringPool: TrainerData[] } {
+  let updatedRival = { ...rival };
+  const currentTrainers = [...(updatedRival.trainers || [])];
+  let currentGold = updatedRival.gold;
+  let currentPool = [...hiringPool];
+  const gazetteItems: string[] = [];
+  
+  const intent = updatedRival.strategy?.intent ?? "CONSOLIDATION";
+  const week = state.week;
+
+  // 1. Hiring logic (Medium/High Risk)
+  if (intent !== "RECOVERY" && currentTrainers.length < 2 && currentPool.length > 0) {
+    const affordable = currentPool.filter(t => HIRE_COST[t.tier] < (currentGold - 300));
+    if (affordable.length > 0) {
+      const best = affordable.sort((a, b) => HIRE_COST[b.tier] - HIRE_COST[a.tier])[0];
+      const budgetReport = checkBudget(updatedRival, HIRE_COST[best.tier], "STAFF");
+
+      if (budgetReport.isAffordable) {
+        currentGold -= HIRE_COST[best.tier];
+        currentTrainers.push(best);
+        currentPool = currentPool.filter(t => t.id !== best.id);
+        
+        updatedRival = { ...updatedRival, gold: currentGold, trainers: currentTrainers };
+        updatedRival = logAgentAction(updatedRival, "STAFF", `Hired trainer ${best.name} (${best.tier}).`, budgetReport.riskTier, week);
+        gazetteItems.push(`👔 STAFF: ${updatedRival.owner.stableName} hired ${best.name} (${best.tier}) to lead their training camp.`);
+      }
+    }
+  }
+
+  // 2. Firing logic (RECOVERY Tier)
+  if (intent === "RECOVERY" || currentGold < 100) {
+    if (currentTrainers.length > 0) {
+      const fired = currentTrainers.pop()!;
+      updatedRival = { ...updatedRival, gold: currentGold, trainers: currentTrainers };
+      updatedRival = logAgentAction(updatedRival, "STAFF", `Released trainer ${fired.name} due to budget constraints.`, "Low", week);
+      gazetteItems.push(`📉 DOWNSIZING: ${updatedRival.owner.stableName} has released trainer ${fired.name} due to budget constraints.`);
+    }
+  }
+
+  return { updatedRival, gazetteItems, updatedHiringPool: currentPool };
+}

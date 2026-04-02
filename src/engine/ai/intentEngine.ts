@@ -1,6 +1,8 @@
 import type { GameState, RivalStableData, AIIntent, AIStrategy } from "@/types/game";
 import { PERSONALITY_CLASH } from "@/data/ownerData";
 
+import { computeMetaDrift } from "../metaDrift";
+
 /**
  * Determines the weekly strategic intent for an AI owner.
  * Intent impacts recruitment, training, and matchmaking choices.
@@ -13,8 +15,14 @@ export function pickWeeklyIntent(
   const activeRoster = rival.roster.filter(w => w.status === "Active");
   const injuryCount = activeRoster.filter(w => w.injuries && w.injuries.length > 0).length;
   
+  // ⚡ Continuous Alignment: Meta-Drift Awareness
+  // Agents check the arena meta. If their favored styles are failing, they pivot to RECOVERY or CONSOLIDATION.
+  const meta = computeMetaDrift(state.arenaHistory || []);
+  const favoredStyles = rival.owner.favoredStyles || [];
+  const metaIsHostile = favoredStyles.some(s => (meta[s] || 0) < -2);
+
   // 1. RECOVERY: High priority if stable is in crisis
-  if (rival.gold < 200 || (activeRoster.length > 0 && injuryCount / activeRoster.length >= 0.4)) {
+  if (rival.gold < 200 || (activeRoster.length > 0 && injuryCount / activeRoster.length >= 0.4) || (metaIsHostile && personality === "Methodical")) {
     return "RECOVERY";
   }
 
@@ -39,6 +47,36 @@ export function pickWeeklyIntent(
 }
 
 /**
+ * ⚡ Skeptical Memory: Verifies if the current strategy still makes sense.
+ * Returns true if the plan is "disproved" by current reality.
+ */
+export function verifyIntentSkepticism(
+  rival: RivalStableData,
+  state: GameState
+): boolean {
+  const strategy = rival.strategy;
+  if (!strategy) return true;
+
+  const personality = rival.owner.personality ?? "Pragmatic";
+  
+  // Skepticism Tier 1: Financial Crisis
+  if (strategy.intent !== "RECOVERY" && rival.gold < 150) return true;
+
+  // Skepticism Tier 2: Roster Depletion
+  const activeCount = rival.roster.filter(w => w.status === "Active").length;
+  if (strategy.intent === "VENDETTA" && activeCount < 3) return true;
+
+  // Skepticism Tier 3: Meta Hostility (Methodical/Tactician agents only)
+  if (personality === "Methodical" || personality === "Tactician") {
+    const meta = computeMetaDrift(state.arenaHistory || []);
+    const favored = rival.owner.favoredStyles || [];
+    if (favored.some(s => (meta[s] || 0) < -4)) return true;
+  }
+
+  return false;
+}
+
+/**
  * Updates the AI strategy, either continuing the current plan or picking a new one.
  */
 export function updateAIStrategy(
@@ -47,8 +85,11 @@ export function updateAIStrategy(
 ): AIStrategy {
   const current = rival.strategy;
   
-  // If no strategy or plan expired, pick a new one
-  if (!current || current.planWeeksRemaining <= 0) {
+  // ⚡ Skeptical Memory: Verify current plan
+  const planDisproved = verifyIntentSkepticism(rival, state);
+
+  // If no strategy, plan expired, or plan is disproved, pick a new one
+  if (!current || current.planWeeksRemaining <= 0 || planDisproved) {
     const intent = pickWeeklyIntent(rival, state);
     
     // Determine the duration of this intent

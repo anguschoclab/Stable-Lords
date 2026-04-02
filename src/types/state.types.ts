@@ -9,8 +9,10 @@ import {
   type ScoutQuality
 } from "./shared.types";
 import { type Warrior, type DeathEvent } from "./warrior.types";
+export type { Warrior, DeathEvent };
 import { type FightSummary, type FightOutcomeBy } from "./combat.types";
 import type { PoolWarrior } from "@/engine/recruitment";
+export type { PoolWarrior };
 
 // ─── Owner / Stable ─────────────────────────────────────────────────────────
 
@@ -92,12 +94,28 @@ export interface TrainerData {
   styleBonusStyle?: string;
 }
 
+export interface AIEvent {
+  week: number;
+  type: "STRATEGY" | "FINANCE" | "ROSTER" | "STAFF";
+  description: string;
+  riskTier: "Low" | "Medium" | "High";
+}
+
+export interface AIAgentMemory {
+  lastGold: number;
+  burnRate: number;
+  metaAwareness: Record<string, number>; // FightingStyle -> popularity/winrate
+  knownRivals: string[]; // List of stable IDs they are tracking
+}
+
 export interface RivalStableData {
   owner: Owner;
   roster: Warrior[];
   trainers?: TrainerData[];
   gold: number;
   strategy?: AIStrategy;
+  agentMemory?: AIAgentMemory;
+  actionHistory?: AIEvent[];
   motto?: string;
   origin?: string;
   philosophy?: string;

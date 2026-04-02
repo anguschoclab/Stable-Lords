@@ -167,11 +167,11 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
   [FightingStyle.LungingAttack]: {
     tempo: { opening: 1, mid: 0, late: -1, enduranceMult: 1.02 },
     getPassive: (ctx, m) => {
-      const earlyBonus = ctx.exchange <= 2 ? 2 : (ctx.exchange <= 5 ? 1 : 0);
+      const earlyBonus = ctx.exchange === 0 ? 2 : 0;
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        iniBonus: scale(earlyBonus, m) + (ctx.exchange <= 2 ? m.bonus : 0),
+        iniBonus: scale(earlyBonus, m) + (ctx.exchange === 0 ? m.bonus : 0),
         attBonus: ctx.exchange === 0 ? 1 : 0,
         narrative: ctx.exchange === 0 ? `[${m.tier}] explodes forward with a devastating opening lunge!` : undefined,
       };
@@ -192,7 +192,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
   },
 
   [FightingStyle.ParryLunge]: {
-    tempo: { opening: 0, mid: 1, late: 0, enduranceMult: 1.00 },
+    tempo: { opening: 0, mid: 2, late: 0, enduranceMult: 1.00 },
     getPassive: (ctx, m) => {
       const counterReady = ctx.hitsTaken > ctx.hitsLanded;
       return {
@@ -223,7 +223,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       decBonus: 2,
       killNarrative: "turns the parry into a lethal counter — the riposte finds the heart! KILLED!",
       extendedKillWindow: false,
-      killWindowHpMult: 0.3,
+      killWindowHpMult: 0.25,
     }),
     getAntiSynergy: (off) => {
       let offMult = 1, warning;
@@ -239,7 +239,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
     getPassive: (ctx, m) => ({
       ...EMPTY_PASSIVE,
       mastery: m.tier,
-      parBonus: 1,
+      parBonus: 2,
       attBonus: ctx.hitsTaken > ctx.hitsLanded ? 1 : 0,
     }),
     getKillMechanic: () => ({
@@ -280,7 +280,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
     getPassive: (ctx, m) => ({
       ...EMPTY_PASSIVE,
       mastery: m.tier,
-      attBonus: 2 + m.bonus,
+      attBonus: 1 + m.bonus,
       dmgBonus: 1,
     }),
     getKillMechanic: () => ({
@@ -294,12 +294,12 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
   },
 
   [FightingStyle.TotalParry]: {
-    tempo: { opening: -1, mid: 1, late: 1, enduranceMult: 0.96 },
+    tempo: { opening: -1, mid: 1, late: 1, enduranceMult: 0.90 },
     getPassive: (ctx, m) => ({
       ...EMPTY_PASSIVE,
       mastery: m.tier,
       attBonus: -2,
-      parBonus: 2 + m.bonus,
+      parBonus: 3 + m.bonus,
       iniBonus: 1,
       narrative: ctx.phase === "LATE" && ctx.endRatio > 0.5 ? `[${m.tier}] stands fresh as the opponent gasps for breath!` : undefined,
     }),

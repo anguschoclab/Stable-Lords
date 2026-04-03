@@ -295,7 +295,6 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
                        isPlaying ? "bg-white/10 text-white" : "bg-primary text-white shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]"
                      )}
                      aria-label={isPlaying ? "Pause playback" : "Play bout"}
-                     aria-pressed={isPlaying}
                    >
                      {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5 fill-current" />}
                    </button>

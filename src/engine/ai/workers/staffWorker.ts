@@ -1,4 +1,5 @@
-import type { RivalStableData, GameState, TrainerData } from "@/types/state.types";
+import type { RivalStableData, GameState, TrainerData, WeatherType } from "@/types/state.types";
+import { type CrowdMood } from "../../crowdMood";
 import { checkBudget } from "./budgetWorker";
 import { logAgentAction } from "../agentCore";
 
@@ -42,13 +43,18 @@ export function processStaff(
     }
   }
 
-  // 2. Firing logic (RECOVERY Tier)
-  if (intent === "RECOVERY" || currentGold < 100) {
+  // 2. Firing logic (RECOVERY Tier + Regional Risk)
+  const isSolemn = state.crowdMood === "Solemn";
+  const isRainy = state.weather === "Rainy";
+  const underPressure = currentGold < 500 && (isSolemn || isRainy);
+
+  if (intent === "RECOVERY" || currentGold < 100 || underPressure) {
     if (currentTrainers.length > 0) {
       const fired = currentTrainers.pop()!;
       updatedRival = { ...updatedRival, gold: currentGold, trainers: currentTrainers };
-      updatedRival = logAgentAction(updatedRival, "STAFF", `Released trainer ${fired.name} due to budget constraints.`, "Low", week);
-      gazetteItems.push(`📉 DOWNSIZING: ${updatedRival.owner.stableName} has released trainer ${fired.name} due to budget constraints.`);
+      const riskReason = isSolemn ? "solemn crowd dampening income" : isRainy ? "stormy weather risks" : "budget constraints";
+      updatedRival = logAgentAction(updatedRival, "STAFF", `Released trainer ${fired.name} due to ${riskReason}.`, "Low", week);
+      gazetteItems.push(`📉 DOWNSIZING: ${updatedRival.owner.stableName} has released trainer ${fired.name} due to ${riskReason}.`);
     }
   }
 

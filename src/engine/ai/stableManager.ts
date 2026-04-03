@@ -1,4 +1,4 @@
-import type { GameState, RivalStableData, TrainerData } from "@/types/state.types";
+import { type GameState, type RivalStableData, type TrainerData, type Season } from "@/types/game";
 import { processStaff } from "./workers/staffWorker";
 import { processRoster } from "./workers/rosterWorker";
 import { consolidateAgentMemory, createAgentContext } from "./agentCore";
@@ -52,7 +52,7 @@ export function processAIStable(
   gazetteItems.push(...staffResult.gazetteItems);
 
   // B) RosterWorker (Training/Gear)
-  updatedRival = processRoster(updatedRival, state.week);
+  updatedRival = processRoster(updatedRival, state.week, state.season);
 
   // 4. Calculate Final Expenses
   let weeklyExpenses = BASE_OPS_COST;

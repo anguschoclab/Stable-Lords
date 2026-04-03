@@ -1,4 +1,4 @@
-import type { RivalStableData, Warrior } from "@/types/state.types";
+import { type RivalStableData, type Warrior, type Season } from "@/types/game";
 import { checkBudget } from "./budgetWorker";
 import { computeWarriorStats } from "../../skillCalc";
 import { logAgentAction } from "../agentCore";
@@ -9,22 +9,24 @@ import { logAgentAction } from "../agentCore";
  */
 export function processRoster(
   rival: RivalStableData,
-  currentWeek: number
+  currentWeek: number,
+  season?: Season
 ): RivalStableData {
   let updatedRival = { ...rival };
   const activeRoster = updatedRival.roster.filter(w => w.status === "Active");
   const intent = updatedRival.strategy?.intent ?? "CONSOLIDATION";
 
   // 1. Training (Low Risk)
-  const trainee = activeRoster[0];
+  // ⚡ TSA: Prioritize Champion or high-fame units for training
+  const trainee = activeRoster.find(w => w.champion) || activeRoster.sort((a, b) => (b.fame || 0) - (a.fame || 0))[0];
+  
   if (trainee && updatedRival.gold > 200) {
     const trainingCost = 35;
     const budgetReport = checkBudget(updatedRival, trainingCost, "ROSTER");
     
     if (budgetReport.isAffordable) {
       updatedRival.gold -= trainingCost;
-      updatedRival.roster = updatedRival.roster.map(w => w.id === trainee.id ? performAITraining(w) : w);
-      // No log needed for routine low-risk training to prevent bloat.
+      updatedRival.roster = updatedRival.roster.map(w => w.id === trainee.id ? performAITraining(w, season) : w);
     }
   }
 
@@ -34,11 +36,15 @@ export function processRoster(
     const budgetReport = checkBudget(updatedRival, gearCost, "ROSTER");
     
     if (budgetReport.isAffordable) {
-      const luckyWarrior = activeRoster[Math.floor(Math.random() * activeRoster.length)];
-      if (luckyWarrior) {
+      // ⚡ TSA: Role-Based Gearing (Prioritize Champion or the 'Muddy' Basher for rain insurance)
+      const gearCandidate = activeRoster.find(w => w.champion) || 
+                          activeRoster.find(w => w.style === "BASHING ATTACK") ||
+                          activeRoster[Math.floor(Math.random() * activeRoster.length)];
+
+      if (gearCandidate) {
         updatedRival.gold -= gearCost;
-        updatedRival.roster = updatedRival.roster.map(w => w.id === luckyWarrior.id ? applyGearUpgrade(w) : w);
-        updatedRival = logAgentAction(updatedRival, "ROSTER", `Invested 400g in gear for ${luckyWarrior.name}.`, budgetReport.riskTier, currentWeek);
+        updatedRival.roster = updatedRival.roster.map(w => w.id === gearCandidate.id ? applyGearUpgrade(w) : w);
+        updatedRival = logAgentAction(updatedRival, "ROSTER", `Invested 400g in gear for ${gearCandidate.name}.`, budgetReport.riskTier, currentWeek);
       }
     }
   }
@@ -57,10 +63,20 @@ function applyGearUpgrade(w: Warrior): Warrior {
   return { ...w, attributes: newAttrs, baseSkills, derivedStats };
 }
 
-function performAITraining(w: Warrior): Warrior {
+function performAITraining(w: Warrior, season?: Season): Warrior {
   const keys = (Object.keys(w.attributes) as (keyof typeof w.attributes)[]).filter(k => k !== "SZ");
-  const sorted = keys.sort((a, b) => w.attributes[a] - w.attributes[b]);
-  const chosen = sorted[0];
+  
+  // ⚡ TSA: Seasonal Priority Training
+  let chosen: keyof typeof w.attributes | undefined;
+  if (season === "Spring") chosen = "CN"; // Prep for Summer heat
+  else if (season === "Summer") chosen = "ST"; // Maintain endurance
+  
+  // Fallback to lowest stat if no seasonal priority or stat capped
+  if (!chosen || w.attributes[chosen] >= 25) {
+    const sorted = keys.sort((a, b) => w.attributes[a] - w.attributes[b]);
+    chosen = sorted[0];
+  }
+
   if (w.attributes[chosen] < 25) {
     const newAttrs = { ...w.attributes, [chosen]: w.attributes[chosen] + 1 };
     const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, w.style);

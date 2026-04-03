@@ -66,7 +66,7 @@ export function pairAIWarriors(pool: AIPoolWarrior[], rivals: RivalStableData[],
   // A) Collect Bids
   const allBids: { rivalIdx: number; bids: BoutBid[] }[] = rivals.map((r, idx) => ({
     rivalIdx: idx,
-    bids: generateBoutBids(r, state.week).bids 
+    bids: generateBoutBids(r, state.week, state.weather, state.crowdMood).bids 
   }));
 
   // Sort bids by priority (VENDETTA highest)

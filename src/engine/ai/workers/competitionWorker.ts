@@ -1,4 +1,5 @@
 import { type RivalStableData, type Warrior, type WeatherType } from "@/types/state.types";
+import { type CrowdMood } from "../../crowdMood";
 import { FightingStyle } from "@/types/shared.types";
 import { logAgentAction } from "../agentCore";
 
@@ -20,48 +21,56 @@ export interface BoutBid {
 export function generateBoutBids(
   rival: RivalStableData,
   currentWeek: number,
-  weather: WeatherType = "Clear"
+  weather: WeatherType = "Clear",
+  crowdMood: CrowdMood = "Calm"
 ): { bids: BoutBid[]; updatedRival: RivalStableData } {
   const intent = rival.strategy?.intent ?? "CONSOLIDATION";
   const activeRoster = rival.roster.filter(w => w.status === "Active");
   const bids: BoutBid[] = [];
 
   for (const warrior of activeRoster) {
-    // ⚡ Skeptical Matchmaking: Weather Check
-    let weatherCaution = 0;
-    if (weather === "Rainy" && warrior.style === FightingStyle.LungingAttack) {
-      weatherCaution = 3; // Precision styles hate rain
+    // ⚡ TSA: Weather Predation & Caution
+    let weatherModifier = 0;
+    if (weather === "Rainy") {
+      if (warrior.style === FightingStyle.LungingAttack) weatherModifier = -3; // Precision styles hate rain
+      if (warrior.style === FightingStyle.BashingAttack) weatherModifier = +2; // Mudders love the rain
     } else if (weather === "Scalding" && warrior.attributes.CN < 10) {
-      weatherCaution = 2; // Low constitution warriors hate heat
+      weatherModifier = -2; // Low constitution warriors hate heat
     }
+
+    // ⚡ TSA: Crowd Pandering
+    let moodModifier = 0;
+    const personality = rival.owner.personality ?? "Pragmatic";
+    if (crowdMood === "Bloodthirsty" && personality === "Aggressive") moodModifier = +3;
+    if (crowdMood === "Theatrical" && personality === "Showman") moodModifier = +3;
 
     if (intent === "VENDETTA" && rival.strategy?.targetStableId) {
       bids.push({
         proposingWarriorId: warrior.id,
         targetStableId: rival.strategy.targetStableId,
-        priority: Math.max(1, 10 - weatherCaution),
-        description: `Vendetta target. ${weatherCaution > 0 ? "(Weather caution applied)" : ""}`
+        priority: Math.max(1, 10 + weatherModifier + moodModifier),
+        description: `Vendetta target. ${weatherModifier < 0 ? "(Weather caution)" : weatherModifier > 0 ? "(Weather advantage)" : ""}`
       });
     } else if (intent === "RECOVERY") {
-      if (weatherCaution > 2) continue; // Skip recovery bouts in bad weather
+      if (weatherModifier < -2) continue; // Skip recovery bouts in bad weather
       bids.push({
         proposingWarriorId: warrior.id,
         maxFame: 50,
-        priority: 5,
+        priority: Math.max(1, 5 + moodModifier),
         description: "Seeking low-risk recovery bout."
       });
     } else if (intent === "EXPANSION") {
       bids.push({
         proposingWarriorId: warrior.id,
         minFame: 100,
-        priority: Math.max(1, 7 - weatherCaution),
+        priority: Math.max(1, 7 + weatherModifier + moodModifier),
         description: "Seeking high-visibility expansion bout."
       });
     } else {
       // CONSOLIDATION
       bids.push({
         proposingWarriorId: warrior.id,
-        priority: Math.max(1, 3 - weatherCaution),
+        priority: Math.max(1, 4 + weatherModifier + moodModifier),
         description: "Standard training bout."
       });
     }

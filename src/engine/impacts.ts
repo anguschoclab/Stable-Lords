@@ -1,86 +1,41 @@
 import { GameState, Warrior, LedgerEntry } from "@/types/game";
 import { updateEntityInList } from "@/utils/stateUtils";
 
-/**
- * State Impact — A pure object describing a set of changes to apply to the GameState.
- */
-export interface StateImpact {
-  goldDelta?: number;
-  fameDelta?: number;
-  rosterUpdates?: Map<string, Partial<Warrior>>;
-  newsletterItems?: { week: number; title: string; items: string[] }[];
-  ledgerEntries?: LedgerEntry[];
-  newPoolRecruits?: any[]; // Simplified for now
-}
+export interface StateImpact { goldDelta?: number; fameDelta?: number; rosterUpdates?: Map<string, Partial<Warrior>>; newsletterItems?: { week: number; title: string; items: string[] }[]; ledgerEntries?: LedgerEntry[]; newPoolRecruits?: any[]; }
 
-/**
- * Resolve a collection of impacts into a final GameState.
- * This is the "Single Point of Mutation" for the advancement pipeline.
- */
+type ImpactHandler = (state: GameState, value: any) => void;
+
+const impactHandlers: Record<keyof StateImpact, ImpactHandler> = {
+  goldDelta: (state, value: number) => { state.gold = (state.gold ?? 0) + value; },
+  fameDelta: (state, value: number) => { state.fame = (state.fame ?? 0) + value; },
+  rosterUpdates: (state, value: Map<string, Partial<Warrior>>) => {
+    value.forEach((update, id) => { state.roster = updateEntityInList(state.roster, id, (w) => ({ ...w, ...update })); });
+  },
+  newsletterItems: (state, value: any[]) => { state.newsletter = [...state.newsletter, ...value]; },
+  ledgerEntries: (state, value: any[]) => { state.ledger = [...(state.ledger ?? []), ...value]; },
+  newPoolRecruits: () => { }
+};
+
 export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameState {
   const newState = { ...state };
-
   for (const impact of impacts) {
-    // 1. Gold
-    if (impact.goldDelta) {
-      newState.gold = (newState.gold ?? 0) + impact.goldDelta;
-    }
-
-    // 2. Fame
-    if (impact.fameDelta) {
-      newState.fame = (newState.fame ?? 0) + impact.fameDelta;
-    }
-
-    // 3. Roster Updates
-    if (impact.rosterUpdates) {
-      impact.rosterUpdates.forEach((update, id) => {
-        newState.roster = updateEntityInList(newState.roster, id, (w) => ({
-          ...w,
-          ...update
-        }));
-      });
-    }
-
-    // 4. Newsletter
-    if (impact.newsletterItems) {
-      newState.newsletter = [...newState.newsletter, ...impact.newsletterItems];
-    }
-
-    // 5. Ledger
-    if (impact.ledgerEntries) {
-      newState.ledger = [...(newState.ledger ?? []), ...impact.ledgerEntries];
+    for (const key of Object.keys(impact) as Array<keyof StateImpact>) {
+      if (impact[key] !== undefined && impactHandlers[key]) impactHandlers[key](newState, impact[key]);
     }
   }
-
   return newState;
 }
 
-/**
- * Merge multiple impacts into one (optional helper).
- */
 export function mergeImpacts(impacts: StateImpact[]): StateImpact {
-  const merged: StateImpact = {
-    goldDelta: 0,
-    fameDelta: 0,
-    rosterUpdates: new Map(),
-    newsletterItems: [],
-    ledgerEntries: []
-  };
-
+  const merged: StateImpact = { goldDelta: 0, fameDelta: 0, rosterUpdates: new Map(), newsletterItems: [], ledgerEntries: [] };
   for (const imp of impacts) {
     if (imp.goldDelta) merged.goldDelta! += imp.goldDelta;
     if (imp.fameDelta) merged.fameDelta! += imp.fameDelta;
-    
     if (imp.rosterUpdates) {
-      imp.rosterUpdates.forEach((val, key) => {
-        const existing = merged.rosterUpdates!.get(key) || {};
-        merged.rosterUpdates!.set(key, { ...existing, ...val });
-      });
+      imp.rosterUpdates.forEach((val, key) => { const existing = merged.rosterUpdates!.get(key) || {}; merged.rosterUpdates!.set(key, { ...existing, ...val }); });
     }
-
     if (imp.newsletterItems) merged.newsletterItems!.push(...imp.newsletterItems);
     if (imp.ledgerEntries) merged.ledgerEntries!.push(...imp.ledgerEntries);
   }
-
   return merged;
 }

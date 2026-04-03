@@ -1,16 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { computeHealthImpact, applyHealthUpdates } from "@/engine/health";
 import { type GameState, type Warrior, type InjuryData } from "@/types/game";
 import * as injuriesModule from "@/engine/injuries";
 import * as matchmakingModule from "@/engine/matchmaking/historyLogic";
 
-vi.mock("@/engine/injuries", () => ({
-  tickInjuries: vi.fn(),
-}));
 
-vi.mock("@/engine/matchmaking/historyLogic", () => ({
-  clearExpiredRest: vi.fn(),
-}));
 
 describe("pipeline/health", () => {
   beforeEach(() => {

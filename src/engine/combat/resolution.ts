@@ -285,7 +285,7 @@ function resolveInitiative(rng: () => number, fA: FighterState, fD: FighterState
   return { aGoesFirst, attacker, defender, attLabel, defLabel };
 }
 
-function resolveAttack(rng: () => number, attacker: FighterState, attOEmod: number, attMatchup: number, attFat: number, attOffMods: any, attPassive: any, attAntiSynMod: number, attAggBias: number, tacticOveruseAtt: number) {
+function resolveAttack(rng: () => number, attacker: FighterState, attOEmod: number, attMatchup: number, attFat: number, attOffMods: ReturnType<typeof getOffensiveTacticMods>, attPassive: ReturnType<typeof getStylePassive>, attAntiSynMod: number, attAggBias: number, tacticOveruseAtt: number) {
   return skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + INITIATIVE_PRESS_BONUS + GLOBAL_ATT_BONUS + attAggBias - tacticOveruseAtt - attacker.armHits);
 }
 

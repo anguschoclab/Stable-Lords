@@ -138,11 +138,23 @@ export default function Tournaments() {
   const runNextRound = useCallback(() => {
     if (!currentTournament) return;
     const bracket = [...currentTournament.bracket];
-    const unresolved = bracket.filter((b) => b.winner === undefined);
-    if (unresolved.length === 0) return;
 
-    const currentRound = Math.min(...unresolved.map((b) => b.round));
-    const roundBouts = unresolved.filter((b) => b.round === currentRound);
+    let currentRound = Infinity;
+    let roundBouts: typeof bracket = [];
+
+    for (let i = 0; i < bracket.length; i++) {
+      const b = bracket[i];
+      if (b.winner === undefined) {
+        if (b.round < currentRound) {
+          currentRound = b.round;
+          roundBouts = [b];
+        } else if (b.round === currentRound) {
+          roundBouts.push(b);
+        }
+      }
+    }
+
+    if (roundBouts.length === 0) return;
 
     let updatedState = { ...state };
     const winners: string[] = [];

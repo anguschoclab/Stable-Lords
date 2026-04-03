@@ -4,6 +4,7 @@ import { SeededRNG } from "@/utils/random";
 import { generateId } from "@/utils/idUtils";
 import { logAgentAction } from "../agentCore";
 import { checkBudget } from "./budgetWorker";
+import { computeMetaDrift } from "../../metaDrift";
 
 /**
  * RecruitmentWorker: Handles drafting warriors from the pool.
@@ -14,7 +15,8 @@ export function processRecruitment(
   pool: PoolWarrior[],
   week: number,
   rng: SeededRNG,
-  isMajorDraftWeek: boolean
+  isMajorDraftWeek: boolean,
+  meta: Record<string, number> = {}
 ): { updatedRival: RivalStableData; updatedPool: PoolWarrior[]; gazetteItems: string[] } {
   let updatedRival = { ...rival };
   const gazetteItems: string[] = [];
@@ -51,6 +53,17 @@ export function processRecruitment(
     if (w.tier === "Exceptional") score += 50;
     if (w.tier === "Promising") score += 20;
     if (prefsSet.has(w.style)) score += 30;
+    
+    // ⚡ TSA: Meta-Fit Scoring
+    const drift = meta[w.style] || 0;
+    score += drift * 5; // Reward styles that are trending up
+
+    // ⚡ TSA: Style Diversity Guard
+    const styleCount = updatedRival.roster.filter(r => r.status === "Active" && r.style === w.style).length;
+    if (styleCount > 0) {
+      score -= styleCount * 15; // Penalize duplicates to avoid "Weather Fragility"
+    }
+
     const weeksAvailable = week - w.addedWeek;
     score += weeksAvailable * 10; 
 

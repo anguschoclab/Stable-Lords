@@ -10,7 +10,7 @@ import { ArenaHistory } from "@/engine/history/arenaHistory";
 import { LoreArchive } from "@/lore/LoreArchive";
 import { NewsletterFeed } from "@/engine/newsletter/feed";
 import { StyleRollups } from "@/engine/stats/styleRollups";
-import type { TournamentEntry, TournamentBout, FightSummary, Warrior } from "@/types/game";
+import { type TournamentEntry, type TournamentBout, type FightSummary, type Warrior, FightingStyle } from "@/types/game";
 import { BASE_ROSTER_CAP } from "@/data/constants";
 import { getFightsForTournament } from "@/engine/core/historyUtils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -77,6 +77,12 @@ export default function Tournaments() {
       else if (gold > 100) entryCount = 1;
 
       const entrants = activeRoster
+        .filter(rw => {
+          // ⚡ Tournament Entry Skepticism: Weather Check
+          if (state.weather === "Rainy" && rw.style === FightingStyle.LungingAttack) return false;
+          if (state.weather === "Scalding" && rw.attributes.CN < 10) return false;
+          return true;
+        })
         .sort((a, b) => b.fame - a.fame)
         .slice(0, entryCount);
 
@@ -177,7 +183,7 @@ export default function Tournaments() {
 
       const planA = wA.plan ?? (state.roster.some(w => w.name === bout.a) ? defaultPlanForWarrior(wA) : getAIPlan(wA));
       const planD = wD.plan ?? (state.roster.some(w => w.name === bout.d) ? defaultPlanForWarrior(wD) : getAIPlan(wD));
-      const outcome = simulateFight(planA, planD, wA, wD, undefined, updatedState.trainers);
+      const outcome = simulateFight(planA, planD, wA, wD, undefined, updatedState.trainers, state.weather);
 
       bout.winner = outcome.winner;
       bout.by = outcome.by;
@@ -342,7 +348,7 @@ export default function Tournaments() {
 
         const planA = wA.plan ?? getAIPlan(wA);
         const planD = wD.plan ?? getAIPlan(wD);
-        const outcome = simulateFight(planA, planD, wA, wD, undefined, updatedState.trainers);
+        const outcome = simulateFight(planA, planD, wA, wD, undefined, updatedState.trainers, state.weather);
 
         bout.winner = outcome.winner;
         bout.by = outcome.by;

@@ -15,11 +15,20 @@ export function pickWeeklyIntent(
   const activeRoster = rival.roster.filter(w => w.status === "Active");
   const injuryCount = activeRoster.filter(w => w.injuries && w.injuries.length > 0).length;
   
+  // ⚡ Environmental Awareness
+  const isRainy = state.weather === "Rainy";
+  const isSummer = state.season === "Summer";
+  
   // ⚡ Continuous Alignment: Meta-Drift Awareness
-  // Agents check the arena meta. If their favored styles are failing, they pivot to RECOVERY or CONSOLIDATION.
   const meta = computeMetaDrift(state.arenaHistory || []);
   const favoredStyles = rival.owner.favoredStyles || [];
   const metaIsHostile = favoredStyles.some(s => (meta[s] || 0) < -2);
+
+  // Weather Pivot: Avoid the arena if the stable is precision-heavy and it's raining
+  const precisionHeavy = activeRoster.filter(w => w.style === "LUNGING ATTACK").length >= activeRoster.length * 0.5;
+  if (isRainy && precisionHeavy && personality !== "Aggressive") {
+    return "RECOVERY";
+  }
 
   // 1. RECOVERY: High priority if stable is in crisis
   if (rival.gold < 200 || (activeRoster.length > 0 && injuryCount / activeRoster.length >= 0.4) || (metaIsHostile && personality === "Methodical")) {
@@ -71,6 +80,14 @@ export function verifyIntentSkepticism(
     const meta = computeMetaDrift(state.arenaHistory || []);
     const favored = rival.owner.favoredStyles || [];
     if (favored.some(s => (meta[s] || 0) < -4)) return true;
+  }
+
+  // Skepticism Tier 4: Environmental Hazard (Strategic Abort)
+  const isRainy = state.weather === "Rainy";
+  const precisionHeavy = rival.roster.filter(w => w.status === "Active" && w.style === "LUNGING ATTACK").length > 0;
+  if (isRainy && (strategy.intent === "VENDETTA" || strategy.intent === "EXPANSION") && precisionHeavy && personality !== "Aggressive") {
+    // Strategic Abort: Pause the offensive due to bad weather
+    return true;
   }
 
   return false;

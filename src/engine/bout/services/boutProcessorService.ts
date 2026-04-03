@@ -26,7 +26,7 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
 
   if (!currentW || currentW.status !== "Active" || !currentO) return { state, result: { a: warrior, d: opponent, outcome: { winner: null, by: "Draw", minutes: 0, log: [] } as any, isRivalry, rivalStable }, stats: { death: false, playerDeath: false, injured: false, deathNames: [], injuredNames: [] } };
 
-  const outcome = simulateFight(currentW.plan ?? defaultPlanForWarrior(currentW), currentO.plan ?? defaultPlanForWarrior(currentO), currentW, currentO, undefined, state.trainers);
+  const outcome = simulateFight(currentW.plan ?? defaultPlanForWarrior(currentW), currentO.plan ?? defaultPlanForWarrior(currentO), currentW, currentO, undefined, state.trainers, state.weather);
   const tags = outcome.post?.tags ?? [];
   const rawFameA = fameFromTags(outcome.winner === "A" ? tags : []);
   const rawFameD = fameFromTags(outcome.winner === "D" ? tags : []);

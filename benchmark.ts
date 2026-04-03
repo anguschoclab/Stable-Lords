@@ -358,7 +358,7 @@ async function runDailySimulation() {
     report += `- **Lethality Issue:** Kill rate (${killRate}%) is lower than the 8-15% target. **Recommendation:** Increase \`KILL_THRESHOLD_BASE\` by 0.05 in \`src/engine/combat/resolution.ts\` to make kills more frequent.\n`;
   } else if (killRateNum > 15.0) {
     needsChanges = true;
-    report += `- **Lethality Issue:** Kill rate (${killRate}%) exceeds the 8-15% target. **Recommendation:** Decrease \`KILL_THRESHOLD_BASE\` by 0.05 in \`src/engine/combat/resolution.ts\` to reduce lethality.\n`;
+    report += `- **Lethality Issue:** Kill rate (${killRate}%) exceeds the 8-15% target. **Recommendation:** Decrease \`KILL_THRESHOLD_BASE\` from ${KILL_THRESHOLD_BASE} to ${Math.max(0, KILL_THRESHOLD_BASE - 0.05).toFixed(2)} in \`src/engine/combat/resolution.ts\` to reduce lethality.\n`;
   }
 
   if (highWinRates.length > 0) {

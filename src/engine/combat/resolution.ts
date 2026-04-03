@@ -275,12 +275,35 @@ export function applyAggressionBias(aggressionBias: number): [number, number] {
 
 // ─── Core Resolution Logic ────────────────────────────────────────────────
 
+
+function resolveInitiative(rng: () => number, fA: FighterState, fD: FighterState, iniA: number, iniD: number) {
+  const aGoesFirst = contestCheck(rng, iniA, iniD);
+  const attacker = aGoesFirst ? fA : fD;
+  const defender = aGoesFirst ? fD : fA;
+  const attLabel = aGoesFirst ? "A" : "D";
+  const defLabel = aGoesFirst ? "D" : "A";
+  return { aGoesFirst, attacker, defender, attLabel, defLabel };
+}
+
+function resolveAttack(rng: () => number, attacker: FighterState, attOEmod: number, attMatchup: number, attFat: number, attOffMods: any, attPassive: any, attAntiSynMod: number, attAggBias: number, tacticOveruseAtt: number) {
+  return skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + INITIATIVE_PRESS_BONUS + GLOBAL_ATT_BONUS + attAggBias - tacticOveruseAtt - attacker.armHits);
+}
+
+function resolveDefense(rng: () => number, defender: FighterState, isDodging: boolean, defOEmod: number, defMatchup: number, defFat: number, defDefMods: any, defPassive: any, defAntiSynPar: number, bashBypass: number, defAggBias: number, tacticOveruseDef: number, attOffMods: any) {
+  if (isDodging) {
+    const defSuccess = skillCheck(rng, defender.skills.DEF, defOEmod + defMatchup + defFat + defDefMods.defBonus + defPassive.defBonus + defAggBias - tacticOveruseDef - defender.legHits);
+    return { defended: defSuccess, canRiposte: false, type: "DODGE" as const };
+  } else {
+    const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus + defPassive.parBonus + defAntiSynPar - attOffMods.defPenalty + GLOBAL_PAR_PENALTY - bashBypass + defAggBias - tacticOveruseDef - defender.armHits);
+    return { defended: parrySuccess, canRiposte: parrySuccess, type: "PARRY" as const };
+  }
+}
+
 export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: FighterState): CombatEvent[] {
   const events: CombatEvent[] = [];
   const { rng, phase, exchange } = ctx;
   const stylePhase = phase as StylePhase;
 
-  // 1. Resolve Phase Tactics
   const phaseKey = phase === "OPENING" ? "opening" : phase === "MID" ? "mid" : "late";
   const tacticsA = resolveEffectiveTactics(fA.plan, phaseKey);
   const tacticsD = resolveEffectiveTactics(fD.plan, phaseKey);
@@ -298,7 +321,6 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const offModsD = getOffensiveTacticMods(tacticsD.offTactic, fD.style);
   const defModsD = getDefensiveTacticMods(tacticsD.defTactic, fD.style);
 
-  // 1.5 Apply Aggression Bias & Special Conditions
   const aggBiasA = fA.plan.phases?.[phaseKey]?.aggressionBias ?? fA.plan.aggressionBias ?? 5;
   const [biasAttA, biasDefA] = applyAggressionBias(aggBiasA);
 
@@ -308,40 +330,24 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const [finalOE_A, finalAL_A] = calculateFinalOEAL(effOE_A, effAL_A, fA, exchange);
   const [finalOE_D, finalAL_D] = calculateFinalOEAL(effOE_D, effAL_D, fD, exchange);
 
-  // 2. Initiative Contest
   const fatA = fatiguePenalty(fA.endurance, fA.maxEndurance);
   const fatD = fatiguePenalty(fD.endurance, fD.maxEndurance);
   const tempoA = getTempoBonus(fA.style, stylePhase);
   const tempoD = getTempoBonus(fD.style, stylePhase);
 
-  const passiveA = getStylePassive(fA.style, {
-    phase: stylePhase, exchange, hitsLanded: fA.hitsLanded, hitsTaken: fA.hitsTaken,
-    ripostes: fA.ripostes, consecutiveHits: fA.consecutiveHits, hpRatio: fA.hp / fA.maxHp,
-    endRatio: fA.endurance / fA.maxEndurance, opponentStyle: fD.style,
-    targetedLocation: tacticsA.target, totalFights: 0
-  });
-  const passiveD = getStylePassive(fD.style, {
-    phase: stylePhase, exchange, hitsLanded: fD.hitsLanded, hitsTaken: fD.hitsTaken,
-    ripostes: fD.ripostes, consecutiveHits: fD.consecutiveHits, hpRatio: fD.hp / fD.maxHp,
-    endRatio: fD.endurance / fD.maxEndurance, opponentStyle: fA.style,
-    targetedLocation: tacticsD.target, totalFights: 0
-  });
+  const passiveA = getStylePassive(fA.style, { phase: stylePhase, exchange, hitsLanded: fA.hitsLanded, hitsTaken: fA.hitsTaken, ripostes: fA.ripostes, consecutiveHits: fA.consecutiveHits, hpRatio: fA.hp / fA.maxHp, endRatio: fA.endurance / fA.maxEndurance, opponentStyle: fD.style, targetedLocation: tacticsA.target, totalFights: 0 });
+  const passiveD = getStylePassive(fD.style, { phase: stylePhase, exchange, hitsLanded: fD.hitsLanded, hitsTaken: fD.hitsTaken, ripostes: fD.ripostes, consecutiveHits: fD.consecutiveHits, hpRatio: fD.hp / fD.maxHp, endRatio: fD.endurance / fD.maxEndurance, opponentStyle: fA.style, targetedLocation: tacticsD.target, totalFights: 0 });
 
   const antiSynA = getStyleAntiSynergy(fA.style, tacticsA.offTactic, tacticsA.defTactic);
   const antiSynD = getStyleAntiSynergy(fD.style, tacticsD.offTactic, tacticsD.defTactic);
 
-  // Passive Activation Event
   if (passiveA.narrative && rng() < 0.4) events.push({ type: "PASSIVE", actor: "A", result: passiveA.narrative });
   if (passiveD.narrative && rng() < 0.4) events.push({ type: "PASSIVE", actor: "D", result: passiveD.narrative });
 
   const iniA = fA.skills.INI + alIniMod(finalAL_A) + ctx.matchupA + fatA + defModsA.iniBonus + tempoA + passiveA.iniBonus - fA.legHits;
   const iniD = fD.skills.INI + alIniMod(finalAL_D) + ctx.matchupD + fatD + defModsD.iniBonus + tempoD + passiveD.iniBonus - fD.legHits;
   
-  const aGoesFirst = contestCheck(rng, iniA, iniD);
-  const attacker = aGoesFirst ? fA : fD;
-  const defender = aGoesFirst ? fD : fA;
-  const attLabel = aGoesFirst ? "A" : "D";
-  const defLabel = aGoesFirst ? "D" : "A";
+  const { aGoesFirst, attacker, defender, attLabel, defLabel } = resolveInitiative(rng, fA, fD, iniA, iniD);
 
   events.push({ type: "INITIATIVE", actor: attLabel, value: aGoesFirst ? iniA : iniD, result: true });
 
@@ -368,65 +374,39 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const tacticOveruseAtt = aGoesFirst ? Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakA) : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD);
   const tacticOveruseDef = aGoesFirst ? Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD) : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakA);
 
-  // 3. Attack attempt
   const attOEmod = oeAttMod(attOE, attacker.style);
   const attAntiSynMod = Math.round((attAntiSyn.offMult - 1) * 5);
-    const attackSuccess = skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + INITIATIVE_PRESS_BONUS + GLOBAL_ATT_BONUS + attAggBias - tacticOveruseAtt - attacker.armHits);
+  const attackSuccess = resolveAttack(rng, attacker, attOEmod, attMatchup, attFat, attOffMods, attPassive, attAntiSynMod, attAggBias, tacticOveruseAtt);
 
   if (!attackSuccess) {
     events.push({ type: "ATTACK", actor: attLabel, result: "WHIFF" });
     attacker.consecutiveHits = 0;
     attacker.endurance -= Math.max(1, Math.floor(enduranceCost(attOE, aGoesFirst ? effAL_A : effAL_D) * 0.5)) + attOffMods.endCost;
 
-    // Riposte on whiff
     const defAntiSynRip = Math.round((defAntiSyn.defMult - 1) * 3);
     const ripCheck = skillCheck(rng, defender.skills.RIP, defMatchup + defFat + RIPOSTE_WHIFF_PENALTY + defDefMods.ripBonus + defPassive.ripBonus + defAntiSynRip);
-    if (ripCheck) {
-      executeRiposte(events, rng, attacker, defender, defTactics, defPassive, attLabel, defLabel);
-    }
+    if (ripCheck) executeRiposte(events, rng, attacker, defender, defTactics, defPassive, attLabel, defLabel);
   } else {
-    // Attack lands — defender tries to stop it
     const defOEmod = oeDefMod(defOE);
     const defAntiSynPar = Math.round((defAntiSyn.defMult - 1) * 3);
     const bashBypass = attOffMods.parryBypass ?? 0;
     const isDodging = defTactics.defTactic === "Dodge";
 
-    let defended = false;
-    let canRiposte = false;
+    const defResult = resolveDefense(rng, defender, isDodging, defOEmod, defMatchup, defFat, defDefMods, defPassive, defAntiSynPar, bashBypass, defAggBias, tacticOveruseDef, attOffMods);
 
-    if (isDodging) {
-      const defSuccess = skillCheck(rng, defender.skills.DEF, defOEmod + defMatchup + defFat + defDefMods.defBonus + defPassive.defBonus + defAggBias - tacticOveruseDef - defender.legHits);
-      if (defSuccess) {
-        defended = true;
-        events.push({ type: "DEFENSE", actor: defLabel, result: "DODGE" });
-        attacker.consecutiveHits = 0;
-      }
-    } else {
-      const parrySuccess = skillCheck(rng, defender.skills.PAR, defOEmod + defMatchup + defFat + defDefMods.parBonus + defPassive.parBonus + defAntiSynPar - attOffMods.defPenalty + GLOBAL_PAR_PENALTY - bashBypass + defAggBias - tacticOveruseDef - defender.armHits);
-      if (parrySuccess) {
-        defended = true;
-        canRiposte = true;
-        events.push({ type: "DEFENSE", actor: defLabel, result: "PARRY" });
-        attacker.consecutiveHits = 0;
-      }
+    if (defResult.defended) {
+      events.push({ type: "DEFENSE", actor: defLabel, result: defResult.type });
+      attacker.consecutiveHits = 0;
     }
 
-    if (!defended) {
-      // 4. Hit Lands
-      executeHit(
-        events, rng, attacker, defender, attTactics, attOffMods, attPassive,
-        attLabel, defLabel, stylePhase, phase, attKD
-      );
-    } else if (canRiposte) {
-      // Parry succeeded — check riposte
+    if (!defResult.defended) {
+      executeHit(events, rng, attacker, defender, attTactics, attOffMods, attPassive, attLabel, defLabel, stylePhase, phase, attKD);
+    } else if (defResult.canRiposte) {
       const ripAfterParry = skillCheck(rng, defender.skills.RIP, defMatchup + defFat + RIPOSTE_PARRY_PENALTY + defDefMods.ripBonus + defPassive.ripBonus);
-      if (ripAfterParry) {
-        executeRiposte(events, rng, attacker, defender, defTactics, defPassive, attLabel, defLabel);
-      }
+      if (ripAfterParry) executeRiposte(events, rng, attacker, defender, defTactics, defPassive, attLabel, defLabel);
     }
   }
 
-  // 5. Endurance updates
   const attEndurMult = getEnduranceMult(attacker.style);
   const defEndurMult = getEnduranceMult(defender.style);
   const attWepEndMult = attLabel === "A" ? ctx.weaponReqA.endurancePenalty : ctx.weaponReqD.endurancePenalty;
@@ -442,11 +422,8 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   fD.endurance = Math.max(0, fD.endurance);
 
   if (fA.endurance <= 0 || fD.endurance <= 0) {
-    if (fA.endurance <= 0 && fD.endurance <= 0) {
-      events.push({ type: "BOUT_END", actor: "A", result: "Exhaustion" });
-    } else {
-      events.push({ type: "BOUT_END", actor: fA.endurance <= 0 ? "A" : "D", result: "Stoppage" });
-    }
+    if (fA.endurance <= 0 && fD.endurance <= 0) events.push({ type: "BOUT_END", actor: "A", result: "Exhaustion" });
+    else events.push({ type: "BOUT_END", actor: fA.endurance <= 0 ? "A" : "D", result: "Stoppage" });
   }
 
   return events;

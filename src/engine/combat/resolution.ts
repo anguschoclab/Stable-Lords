@@ -289,7 +289,7 @@ function resolveAttack(rng: () => number, attacker: FighterState, attOEmod: numb
   return skillCheck(rng, attacker.skills.ATT, attOEmod + attMatchup + attFat + attOffMods.attBonus + attPassive.attBonus + attAntiSynMod + INITIATIVE_PRESS_BONUS + GLOBAL_ATT_BONUS + attAggBias - tacticOveruseAtt - attacker.armHits);
 }
 
-function resolveDefense(rng: () => number, defender: FighterState, isDodging: boolean, defOEmod: number, defMatchup: number, defFat: number, defDefMods: any, defPassive: any, defAntiSynPar: number, bashBypass: number, defAggBias: number, tacticOveruseDef: number, attOffMods: any) {
+function resolveDefense(rng: () => number, defender: FighterState, isDodging: boolean, defOEmod: number, defMatchup: number, defFat: number, defDefMods: ReturnType<typeof getDefensiveTacticMods>, defPassive: ReturnType<typeof getStylePassive>, defAntiSynPar: number, bashBypass: number, defAggBias: number, tacticOveruseDef: number, attOffMods: ReturnType<typeof getOffensiveTacticMods>) {
   if (isDodging) {
     const defSuccess = skillCheck(rng, defender.skills.DEF, defOEmod + defMatchup + defFat + defDefMods.defBonus + defPassive.defBonus + defAggBias - tacticOveruseDef - defender.legHits);
     return { defended: defSuccess, canRiposte: false, type: "DODGE" as const };

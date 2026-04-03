@@ -52,6 +52,12 @@ describe('StyleRollups', () => {
       expect(StyleRollups.getWeekRollup(1)).toEqual({});
     });
 
+
+    it('returns {} if localStorage.getItem returns an invalid JSON string (loadWeek error path)', () => {
+      (globalThis.localStorage.getItem as Mock).mockReturnValue('{invalid}');
+      expect(StyleRollups.getWeekRollup(1)).toEqual({});
+    });
+
     it('returns {} if localStorage.getItem returns invalid JSON', () => {
       (globalThis.localStorage.getItem as Mock).mockReturnValue('{ invalid json');
       expect(StyleRollups.getWeekRollup(1)).toEqual({});

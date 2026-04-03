@@ -140,7 +140,11 @@ export const HIT_TEMPLATES = [
   "delivers a shuddering, violent blow to",
   "rends bone and sinew from",
   "splinters the weakened defenses of",
-  "punishes the exhausted frame of"
+  "punishes the exhausted frame of",
+  "carves a jagged, bleeding ruin out of",
+  "leaves a horrifying, gushing wound on",
+  "crushes the fragile bone structure of",
+  "impacts with a hollow, sickening crunch against"
 ];
 
 export const PARRY_BREAK_TEMPLATES = [
@@ -178,7 +182,10 @@ export const PARRY_BREAK_TEMPLATES = [
   "A violent clash of steel leaves %D",
   "Sparks shower the sand as %A violently disarms the guard with their %W!",
   "%A forces the blade aside with sheer, terrifying strength using their %W!",
-  "A horrifying crunch resounds as %A's %W breaks both the parry and the wrist!"
+  "A horrifying crunch resounds as %A's %W breaks both the parry and the wrist!",
+  "%A's overwhelming force with their %W shatters the block, sending %D staggering backward!",
+  "The desperate parry is absolutely obliterated by the terrifying weight behind %A's %W!",
+  "A deafening crash of steel on steel echoes as %A's %W ruthlessly batters down %D's failing guard!"
 ];
 
 export const CROWD_REACTIONS_POSITIVE = [
@@ -381,7 +388,12 @@ export const EXECUTION_TEMPLATES = [
   "A horrific spray of crimson paints the sands as %A punishes %D's exposed guard with a lethal %W impact!",
   "%D's legs finally betray them, and %A answers the collapse with a merciless, killing stroke from their %W!",
   "%A turns a simple opening into a butchery, fatally dropping %D with sickening precision!",
-  "Unable to maintain the frantic tempo, %D suffers a catastrophic, life-ending blow from %A!"
+  "Unable to maintain the frantic tempo, %D suffers a catastrophic, life-ending blow from %A!",
+  "%A feints low, catching %D off guard before severing their sword-arm at the elbow with their %W. The crowd erupts!",
+  "A spray of arterial blood paints the sand as %A's %W finds the agonizing gap in %D's faltering defense!",
+  "With a sickening crunch that echoes through the coliseum, %A completely destroys %D's ribcage with their %W!",
+  "The life immediately leaves %D's eyes as %A brutally hooks their %W into an unarmored joint, ending the bout!",
+  "%A shows exactly why they are feared, using a masterful %W strike to violently execute the exhausted %D in spectacular fashion!"
 ];
 
 export const KO_TEMPLATES = [

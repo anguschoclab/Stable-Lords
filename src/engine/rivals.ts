@@ -118,7 +118,14 @@ export function generateRivalStables(count: number, seed: number): RivalStableDa
       strategy: {
         intent: "CONSOLIDATION",
         planWeeksRemaining: 4 + Math.floor(rng() * 4)
-      }
+      },
+      agentMemory: {
+        lastGold: initialGold,
+        burnRate: 0,
+        metaAwareness: {},
+        knownRivals: [],
+      },
+      actionHistory: []
     });
   }
   return rivals;

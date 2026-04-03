@@ -71,6 +71,8 @@ const GOOD_INI_HIGH: StatementEntry[] = [
   { minBase: 14, text: "Smothers enemy momentum before it can even spark" },
   { minBase: 13, text: "Has learned very well how to keep his foe in trouble" },
   { minBase: 12, text: "Pushes forward with the grim certainty of an executioner" },
+  { minBase: 31, text: "Forces a frantic, desperate defense before the opponent can draw a full breath" },
+  { minBase: 29, text: "Smothers any hope of a counter-attack with a relentless wave of steel" },
   { minBase: 0, text: "Has learned how to keep his foe in trouble" },
 ];
 const GOOD_INI_LOW: StatementEntry[] = [
@@ -170,6 +172,8 @@ const GOOD_ATT_HIGH: StatementEntry[] = [
   { minBase: 13, text: "Landing blows on vital areas" },
   { minBase: 10, text: "Carves through defenses like they are mere parchment" },
   { minBase: 5, text: "His strikes consistently find the unarmored meat" },
+  { minBase: 30, text: "Carves through armor with terrifying, methodical butchery" },
+  { minBase: 26, text: "Transforms every attack into an inescapable display of gruesome power" },
   { minBase: 0, text: "He lands blows on less protected areas" },
 ];
 const GOOD_ATT_LOW: StatementEntry[] = [

@@ -58,9 +58,9 @@ describe("applySeasonalUpdates", () => {
     // Using whatever processHallOfFame returned
     expect(weekPipelineModule.processTierProgression).toHaveBeenCalledWith(expect.objectContaining({ hallOfFameProcessed: true }), 1, 11);
 
-    expect(ownerGrudgesModule.processOwnerGrudges).toHaveBeenCalledWith(expect.any(Object), []);
-    expect(ownerNarrativeModule.generateOwnerNarratives).toHaveBeenCalledWith(expect.any(Object), 1);
-    expect(ownerPhilosophyModule.evolvePhilosophies).toHaveBeenCalledWith(expect.any(Object), 1);
+    expect(ownerGrudgesModule.processOwnerGrudges).toHaveBeenCalledWith(expect.objectContaining({ tierProcessed: true }), []);
+    expect(ownerNarrativeModule.generateOwnerNarratives).toHaveBeenCalledWith(expect.objectContaining({ tierProcessed: true }), 1);
+    expect(ownerPhilosophyModule.evolvePhilosophies).toHaveBeenCalledWith(expect.objectContaining({ tierProcessed: true }), 1);
 
     expect(newState.week).toBe(11);
     expect(newState.season).toBe(1);

@@ -93,8 +93,7 @@ export function processWeekBouts(state: GameState): { state: GameState; results:
     results.push(res.result);
     accumulateWeekStats(summary, res);
 
-    s.roster.forEach(w => warriorMap.set(w.id, w));
-    (s.rivals || []).forEach(r => r.roster.forEach(w => warriorMap.set(w.id, w)));
+    // Redundant map refresh removed for performance
   });
 
   finalizeWeekSideEffects(s, results);

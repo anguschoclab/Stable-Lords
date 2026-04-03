@@ -234,7 +234,8 @@ export function fullRefreshPool(
   week: number,
   usedNames: Set<string>
 ): PoolWarrior[] {
-  return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, Date.now());
+  const seed = week * 1337 + 7;
+  return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, seed);
 }
 
 // AI Draft behavior has been moved to src/engine/draftService.ts

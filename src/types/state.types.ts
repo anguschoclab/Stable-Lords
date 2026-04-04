@@ -53,6 +53,7 @@ export interface TournamentEntry {
   week: number;
   name: string;
   bracket: TournamentBout[];
+  participants: Warrior[]; // Persisted 64-man roster (including Freelancers)
   champion?: string;
   completed: boolean;
 }

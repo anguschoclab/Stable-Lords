@@ -15,7 +15,7 @@ const PROTECT_DAMAGE_REDUCTION = 0.75;
 const PROTECT_DAMAGE_PENALTY = 1.1;
 
 // Damage constants
-const DAMAGE_BASE_MIN = 2;
+const DAMAGE_BASE_MIN = 4;
 const DAMAGE_HEAD_MULT = 1.5;
 const DAMAGE_CHEST_MULT = 1.2;
 const DAMAGE_ABDOMEN_MULT = 1.1;
@@ -100,8 +100,8 @@ export function calculateKillWindow(
   matchupBonus: number = 0
 ): number {
   // Base threshold (lethal hits are rare but possible)
-  // Target: ~10% overall mortality across the league (~6.0% per-bout conversion at 12 bouts/yr)
-  let threshold = 0.06; 
+  // Target: ~10% overall mortality across the league (Unified 1.0 Gold Baseline)
+  let threshold = 0.012; 
 
   // HP factor: higher chance if HP is low (below 30%)
   if (hpRatio < 0.3) threshold += 0.012;
@@ -111,11 +111,11 @@ export function calculateKillWindow(
   if (enduranceRatio < 0.3) threshold += 0.020; 
   else if (enduranceRatio < 0.5) threshold += 0.008;
 
-  // Location factor: Vital spots are deadlier (Now using multipliers for vital dominance)
+  // Location factor: Vital spots are deadlier (Blood and Sand Shipment Baseline)
   let locMult = 1.0;
-  if (location === "head") locMult = 3.5;
-  if (location === "chest" || location === "abdomen") locMult = 2.0;
-  if (location === "right leg" || location === "left leg" || location === "right arm" || location === "left arm") locMult = 0.2;
+  if (location === "head") locMult = 6.0;
+  if (location === "chest" || location === "abdomen") locMult = 3.5;
+  if (location === "right leg" || location === "left leg" || location === "right arm" || location === "left arm") locMult = 0.1;
 
   threshold *= locMult;
 
@@ -132,6 +132,6 @@ export function calculateKillWindow(
   // Phase escalation: fights get more dangerous as time passes
   threshold += phaseLevel * 0.004;
 
-  // Cap at 35% for the perfect storm, but rare.
-  return Math.max(0, Math.min(0.35, threshold));
+  // Cap at 15% for the perfect storm (Unified 1.0 Gold Baseline)
+  return Math.max(0, Math.min(0.15, threshold));
 }

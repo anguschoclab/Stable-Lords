@@ -22,7 +22,7 @@ import { getOffensiveSuitability, getDefensiveSuitability, suitabilityMultiplier
 // ─── Combat Constants ─────────────────────────────────────────────────────
 const GLOBAL_ATT_BONUS = -1.5; // Slightly increased penalty for raw aggression
 const GLOBAL_PAR_PENALTY = 0.5; // Reduced penalty to aid technical parry styles
-export const MAX_EXCHANGES = 21; // 7 minutes (Canonical Duelmasters length)
+export const MAX_EXCHANGES = 30; // 10 minutes (Death Rattle calibration)
 export const EXCHANGES_PER_MINUTE = 3;
 export const DECISION_HIT_MARGIN = 2;
 const INITIATIVE_PRESS_BONUS = 1;
@@ -260,8 +260,7 @@ export function executeHit(
         attMatchup
     );
 
-    const decSuccess = skillCheck(rng, attacker.skills.DEC, Math.floor(attKD - 5) * 0.5 + phaseLevel + attOffMods.decBonus + killMech.decBonus);
-    if (decSuccess && rng() < killThreshold) {
+    if (rng() < killThreshold) {
       defender.hp = 0;
       events.push({ type: "BOUT_END", actor: attLabel, result: "Kill", metadata: { cause: "EXECUTION", causeBucket: "EXECUTION", location: hitLoc } });
     }
@@ -452,7 +451,7 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   fA.endurance = Math.max(0, fA.endurance);
   fD.endurance = Math.max(0, fD.endurance);
 
-  if (fA.endurance <= 0 || fD.endurance <= 0) {
+  if ((fA.endurance <= 0 || fD.endurance <= 0) && !events.some(e => e.result === "Kill")) {
     if (fA.endurance <= 0 && fD.endurance <= 0) events.push({ type: "BOUT_END", actor: "A", result: "Exhaustion" });
     else events.push({ type: "BOUT_END", actor: fA.endurance <= 0 ? "A" : "D", result: "Stoppage" });
   }

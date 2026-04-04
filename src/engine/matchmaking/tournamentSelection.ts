@@ -33,8 +33,8 @@ export const TournamentSelectionService = {
         continue;
       }
 
-      const wA = this.findWarrior(updatedState, bout.a);
-      const wD = this.findWarrior(updatedState, bout.d);
+      const wA = this.findWarrior(updatedState, bout.a, tournament);
+      const wD = this.findWarrior(updatedState, bout.d, tournament);
 
       if (!wA || !wD) {
         bout.winner = wA ? "A" : "D";
@@ -102,14 +102,21 @@ export const TournamentSelectionService = {
     return current;
   },
 
-  /** Helper: Find warrior by name across player/rivals */
-  findWarrior(state: GameState, name: string): Warrior | undefined {
+  /** Helper: Find warrior by name across player/rivals/tournament-participants */
+  findWarrior(state: GameState, name: string, tournament?: TournamentEntry): Warrior | undefined {
     const playerW = state.roster.find(w => w.name === name);
     if (playerW) return playerW;
+    
     for (const r of (state.rivals || [])) {
       const rw = r.roster.find(w => w.name === name);
       if (rw) return rw;
     }
+
+    if (tournament) {
+      const tourW = tournament.participants.find(w => w.name === name);
+      if (tourW) return tourW;
+    }
+
     return undefined;
   },
 
@@ -297,6 +304,7 @@ export const TournamentSelectionService = {
       week,
       name: `${season} ${tier} Grand Championship`,
       bracket,
+      participants: warriors,
       completed: false
     };
   },

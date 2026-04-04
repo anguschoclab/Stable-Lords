@@ -106,7 +106,7 @@ export function Chronicle() {
                          <li key={j} className="flex items-start gap-4 group/item">
                            <div className="mt-1.5 shrink-0 flex flex-col items-center gap-1 group/btn">
                               <ChevronRight className="h-3 w-3 text-primary opacity-40 group-hover/item:opacity-100 group-hover/item:translate-x-1 transition-all" />
-                              <div className="w-0.5 h-full bg-white/5 min-h-[12px] group-hover/item:bg-primary/20 transition-colors" />
+                              <div className="w-0.5 h-full bg-white/5 min-h-3 group-hover/item:bg-primary/20 transition-colors" />
                            </div>
                            <span className="text-xs md:text-sm font-medium text-foreground/70 group-hover/item:text-foreground leading-relaxed transition-colors tracking-wide">
                               {item}

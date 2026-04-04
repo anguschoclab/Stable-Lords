@@ -42,7 +42,7 @@ function StableSelector({
           {rivals.map((r) => (
             <Tooltip key={r.owner.id}>
               <TooltipTrigger asChild>
-                <button
+                <button aria-label="Select stable for comparison A"
                   onClick={() => setIdA(r.owner.id === idA ? null : r.owner.id)}
                   disabled={r.owner.id === idB}
                   className={cn(
@@ -88,7 +88,7 @@ function StableSelector({
           {rivals.map((r) => (
             <Tooltip key={r.owner.id}>
               <TooltipTrigger asChild>
-                <button
+                <button aria-label="Select stable for comparison B"
                   onClick={() => setIdB(r.owner.id === idB ? null : r.owner.id)}
                   disabled={r.owner.id === idA}
                   className={cn(

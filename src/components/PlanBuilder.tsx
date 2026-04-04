@@ -252,7 +252,7 @@ export default function PlanBuilder({ plan, onPlanChange, warriorName, warrior }
                               <div className="flex items-center justify-between">
                                 <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{p}</span>
                                 {plan.phases?.[p] && (
-                                  <button 
+                                  <button aria-label={`Select plan: ${plan.name}`}
                                     onClick={() => {
                                       const next = { ...plan.phases };
                                       delete next[p];

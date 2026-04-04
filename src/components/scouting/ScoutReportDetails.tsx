@@ -44,7 +44,7 @@ export function ScoutReportDetails({ report, warriorName, gold, onScout }: Scout
               const cost = getScoutCost(q);
               const canAfford = gold >= cost;
               return (
-                <button
+                <button aria-label="Dismiss report"
                   key={q}
                   disabled={!canAfford}
                   onClick={() => onScout(q)}
@@ -111,7 +111,7 @@ export function ScoutReportDetails({ report, warriorName, gold, onScout }: Scout
         
         <Tooltip>
            <TooltipTrigger asChild>
-              <button className="p-2 rounded-lg bg-neutral-900 border border-white/5 hover:border-primary/40 transition-colors">
+              <button aria-label="View Info" className="p-2 rounded-lg bg-neutral-900 border border-white/5 hover:border-primary/40 transition-colors">
                  <Info className="h-4 w-4 text-muted-foreground/40" />
               </button>
            </TooltipTrigger>
@@ -221,7 +221,7 @@ export function ScoutReportDetails({ report, warriorName, gold, onScout }: Scout
         </div>
 
         {report.quality !== "Expert" && (
-          <button
+          <button aria-label="Request report"
             className="w-full h-12 bg-primary/10 border border-primary/20 rounded-xl hover:bg-primary hover:text-white transition-all group/expand"
             onClick={() => onScout(report.quality === "Basic" ? "Detailed" : "Expert")}
           >

@@ -277,7 +277,7 @@ export default function EventLog() {
                 {weekEvents.map((event) => {
                   const Icon = event.icon;
                   return (
-                    <button
+                    <button aria-label={`View details for event: ${event.title}`}
                       key={event.id}
                       onClick={() => navigate({ to: event.linkTo })}
                       className={cn(

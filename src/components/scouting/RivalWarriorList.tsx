@@ -33,7 +33,7 @@ export function RivalWarriorList({ warriors, selectedWarriorId, onSelectWarrior,
           return (
             <Tooltip key={w.id}>
               <TooltipTrigger asChild>
-                <button
+                <button aria-label={`Select warrior: ${w.name}`}
                   className={cn(
                     "w-full text-left group relative outline-none",
                     isSelected ? "z-10" : "z-0"

@@ -284,7 +284,7 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
           </div>
 
           {/* Tactical Monitor Log */}
-          <div className="h-[440px] overflow-y-auto px-6 py-8 space-y-2 bg-[url('/grid-pattern.svg')] bg-[length:40px_40px] relative scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+          <div className="h-[27.5rem] overflow-y-auto px-6 py-8 space-y-2 bg-[url('/grid-pattern.svg')] bg-[length:40px_40px] relative scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
             {visibleCount === 0 && (
               <div className="h-full flex flex-col items-center justify-center opacity-20 pointer-events-none">
                 <History className="h-16 w-16 text-muted-foreground mb-6" />

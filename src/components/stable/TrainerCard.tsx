@@ -41,7 +41,7 @@ export function TrainerCard({
         trainer.tier === "Master" ? "border-arena-gold/40 shadow-[0_0_30px_rgba(255,215,0,0.05)]" : "border-white/5 hover:border-white/20"
       )}
     >
-      <div className="flex items-stretch min-h-[140px]">
+      <div className="flex items-stretch min-h-[8.75rem]">
         {/* Tier Indicator Strip */}
         <div className={cn(
           "w-1.5 shrink-0",

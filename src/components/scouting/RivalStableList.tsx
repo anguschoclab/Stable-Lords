@@ -24,7 +24,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
         {rivals.map((rival) => (
           <Tooltip key={rival.owner.id}>
             <TooltipTrigger asChild>
-              <button
+              <button aria-label={`Select stable: ${rival.owner.name}`}
                 className={cn(
                   "w-full text-left group relative outline-none",
                   selectedRivalId === rival.owner.id ? "z-10" : "z-0"

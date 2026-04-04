@@ -129,7 +129,7 @@ export function ContractManager() {
                       <TableCell className="py-5">
                         <Tooltip>
                            <TooltipTrigger asChild>
-                              <div className="flex flex-col items-center gap-2 mx-auto max-w-[120px]">
+                              <div className="flex flex-col items-center gap-2 mx-auto max-w-xs">
                                  <div className="flex items-center gap-2 w-full">
                                     <div className="h-1.5 flex-1 bg-black rounded-full overflow-hidden border border-white/5 relative">
                                        <div 
@@ -140,7 +140,7 @@ export function ContractManager() {
                                           style={{ width: `${pct}%` }}
                                        />
                                     </div>
-                                    <span className={cn("text-[10px] font-mono font-black min-w-[30px] text-right", isExpiring ? "text-destructive" : "text-primary/60")}>
+                                    <span className={cn("text-[10px] font-mono font-black min-w-8 text-right", isExpiring ? "text-destructive" : "text-primary/60")}>
                                        {weeksLeft}W
                                     </span>
                                  </div>

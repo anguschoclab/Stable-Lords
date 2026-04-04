@@ -153,33 +153,55 @@ export default function AdminTools() {
           </CardContent>
         </Card>
 
-        <Card className="border-destructive/20 bg-glass-card shadow-lg hover:border-destructive/40 transition-all">
-          <CardHeader className="pb-3 border-b border-destructive/10 bg-destructive/5">
-            <CardTitle className="text-sm font-display flex items-center gap-2 text-destructive uppercase">
-              <ShieldAlert className="h-4 w-4" /> Debug_Overrides
+        <Card className="border-arena-gold/20 bg-glass-card shadow-lg hover:border-arena-gold/40 transition-all">
+          <CardHeader className="pb-3 border-b border-arena-gold/10 bg-arena-gold/5">
+            <CardTitle className="text-sm font-display flex items-center gap-2 text-arena-gold uppercase">
+              <Zap className="h-4 w-4 fill-arena-gold" /> Mastery_Toolkit
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6 space-y-3">
-             <Button onClick={skipFTUE} className="w-full h-11 font-black uppercase text-[10px] tracking-widest bg-destructive/10 text-destructive border-none hover:bg-destructive/20" variant="outline">
-               Bypass_FTUE_Gate
-             </Button>
-            <Button 
-               onClick={() => {
-                 setState({ ...state, gold: (state.gold || 0) + 5000 });
-                 toast.success('Injected 5000 gold.');
-               }} 
-               className="w-full h-11 gap-2 font-black uppercase text-[10px] tracking-widest" 
-               variant="outline"
-             >
-               <Coins className="h-3.5 w-3.5 text-arena-gold" /> Grant_5000G
-             </Button>
              <Button 
-               onClick={resetRivals}
-               className="w-full h-11 gap-2 font-black uppercase text-[10px] tracking-widest" 
-               variant="outline"
-             >
-               <RefreshCw className="h-3.5 w-3.5 text-accent" /> Regenerate_Rivals
-             </Button>
+                onClick={() => {
+                  const updatedRoster = state.roster.map(w => ({
+                    ...w,
+                    favorites: w.favorites ? {
+                      ...w.favorites,
+                      discovered: { ...w.favorites.discovered, weapon: true, rhythm: true }
+                    } : w.favorites
+                  }));
+                  setState({ ...state, roster: updatedRoster });
+                  toast.success('Omniscient mastery achieved.');
+                }} 
+                className="w-full h-11 font-black uppercase text-[10px] tracking-widest border-arena-gold/30 text-arena-gold" 
+                variant="outline"
+              >
+                Force All Mastery
+              </Button>
+              <Button 
+                onClick={() => {
+                  const escalatedGrudges: Record<string, number> = { ...state.ownerGrudges };
+                  Object.keys(escalatedGrudges).forEach(k => escalatedGrudges[k] = 5);
+                  setState({ ...state, ownerGrudges: escalatedGrudges });
+                  toast.success('Blood feuds escalated to maximum.');
+                }} 
+                className="w-full h-11 font-black uppercase text-[10px] tracking-widest border-destructive/30 text-destructive" 
+                variant="outline"
+              >
+                Escalate All Grudges
+              </Button>
+              <Button 
+                onClick={() => {
+                  import("@/engine/pipeline/passes/EquipmentPass").then(({ runEquipmentPass }) => {
+                    const nextState = runEquipmentPass(state);
+                    setState(nextState);
+                    toast.success('AI tactical re-gearing pass complete.');
+                  });
+                }} 
+                className="w-full h-11 font-black uppercase text-[10px] tracking-widest border-primary/30 text-primary" 
+                variant="outline"
+              >
+                Trigger AI Re-Gear
+              </Button>
           </CardContent>
         </Card>
 

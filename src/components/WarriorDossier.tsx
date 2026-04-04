@@ -15,6 +15,7 @@ import { StatBadge } from "@/components/ui/WarriorBadges";
 import WarriorPaperDoll from "@/components/WarriorPaperDoll";
 import { StatBattery } from "@/components/ui/StatBattery";
 import { cn } from "@/lib/utils";
+import { getFavoritesDisplay } from "@/engine/favorites";
 
 interface WarriorDossierProps {
   warriorId: string;
@@ -36,6 +37,8 @@ export function WarriorDossier({ warriorId }: WarriorDossierProps) {
   }, [warriorId, state.roster, state.graveyard, state.retired, state.rivals]);
 
   if (!warrior) return <div className="p-8 text-center text-muted-foreground">Warrior not found.</div>;
+
+  const favDisplay = getFavoritesDisplay(warrior);
 
   const record = `${warrior.career.wins}W - ${warrior.career.losses}L - ${warrior.career.kills}K`;
   const fatigue = (warrior as any).fatigue ?? 0;
@@ -129,14 +132,67 @@ export function WarriorDossier({ warriorId }: WarriorDossierProps) {
         </div>
 
         {/* Radar Chart Section */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Physical Polygon</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <WarriorRadarChart warrior={warrior} />
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="bg-glass/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground font-bold">Physical Polygon</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <WarriorRadarChart warrior={warrior} />
+            </CardContent>
+          </Card>
+
+          {/* Mastery Section */}
+          <Card className="bg-glass/5 border-arena-gold/10">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-[10px] uppercase tracking-widest text-arena-gold font-black flex items-center gap-2">
+                <Zap className="h-3 w-3 fill-arena-gold" /> Soul_Bond & Mastery
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-2">
+               {/* Weapon Mastery */}
+               <div className="space-y-1.5">
+                  <div className="text-[9px] font-black uppercase text-muted-foreground flex items-center gap-1.5 tracking-tighter">
+                    <Swords className="h-3 w-3" /> Weapon Preference
+                  </div>
+                  {warrior.favorites?.discovered.weapon ? (
+                    <div className="flex items-center justify-between p-2 rounded bg-arena-gold/5 border border-arena-gold/20">
+                      <span className="text-xs font-bold text-white uppercase tracking-tight">{favDisplay.weapon}</span>
+                      <Badge className="bg-arena-gold text-black font-black text-[8px] h-4 px-1">MASTERY ✨</Badge>
+                    </div>
+                  ) : warrior.favorites?.discovered.weaponHints ? (
+                    <div className="p-2 rounded bg-white/5 border border-white/10 opacity-60">
+                      <span className="text-xs font-medium italic text-muted-foreground">{favDisplay.weaponHint}</span>
+                    </div>
+                  ) : (
+                    <div className="text-[10px] text-muted-foreground/40 italic px-2">Unknown Preference</div>
+                  )}
+               </div>
+
+               {/* Rhythm Mastery */}
+               <div className="space-y-1.5">
+                  <div className="text-[9px] font-black uppercase text-muted-foreground flex items-center gap-1.5 tracking-tighter">
+                    <Activity className="h-3 w-3" /> Natural Rhythm
+                  </div>
+                  {warrior.favorites?.discovered.rhythm ? (
+                    <div className="flex items-center justify-between p-2 rounded bg-arena-gold/5 border border-arena-gold/20">
+                      <span className="text-xs font-bold text-white uppercase tracking-tight">{favDisplay.rhythm}</span>
+                      <Badge className="bg-arena-gold text-black font-black text-[8px] h-4 px-1">SYNERGY ✨</Badge>
+                    </div>
+                  ) : warrior.favorites?.discovered.rhythmHints ? (
+                    <div className="p-2 rounded bg-white/5 border border-white/10 animate-pulse">
+                      <span className="text-xs font-bold text-arena-gold/40 uppercase tracking-widest blur-[1px]">
+                         {favDisplay.rhythmHint}
+                      </span>
+                      <span className="ml-2 text-[8px] font-black text-arena-gold/60 uppercase">Emerging...</span>
+                    </div>
+                  ) : (
+                    <div className="text-[10px] text-muted-foreground/40 italic px-2">Unknown Rhythm</div>
+                  )}
+               </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Injuries List */}
         {warrior.injuries.length > 0 && (

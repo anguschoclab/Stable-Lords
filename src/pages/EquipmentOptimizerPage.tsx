@@ -12,6 +12,9 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, Swords, Star, AlertTriangle, Lightbulb, Shirt, HardHat, Zap, Search } from "lucide-react";
+import { checkWeaponRequirements } from "@/data/equipment";
+import { cn } from "@/lib/utils";
+import { WeaponReqCheck } from "@/data/equipment";
 
 
 export default function EquipmentOptimizerPage() {
@@ -112,6 +115,12 @@ function RecommendationCard({ rec, isPrimary, selectedStyle, activeWarriors, car
   }, [matchingWarriors, searchQuery]);
 
   const [targetWarriorId, setTargetWarriorId] = useState<string>(matchingWarriors[0]?.id ?? "");
+  const targetWarrior = useMemo(() => matchingWarriors.find((w: any) => w.id === targetWarriorId), [matchingWarriors, targetWarriorId]);
+  const reqCheck = useMemo(() => {
+    if (!targetWarrior || !rec.loadout.weapon) return null;
+    return checkWeaponRequirements(rec.loadout.weapon, targetWarrior.attributes);
+  }, [targetWarrior, rec.loadout.weapon]);
+
   const { doUpdateEquipment } = useGameStore();
 
   const handleApply = () => {
@@ -124,7 +133,7 @@ function RecommendationCard({ rec, isPrimary, selectedStyle, activeWarriors, car
   };
 
   return (
-    <Card className={isPrimary ? "border-primary/30 glow-primary" : ""}>
+    <Card className={cn(isPrimary ? "border-primary/30 glow-primary" : "", "flex flex-col")}>
               <CardHeader className="pb-2">
                 <CardTitle className="font-display text-base flex items-center justify-between">
                   <span className="flex items-center gap-2">
@@ -137,15 +146,18 @@ function RecommendationCard({ rec, isPrimary, selectedStyle, activeWarriors, car
                 </CardTitle>
                 <p className="text-[11px] text-muted-foreground">{rec.description}</p>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 flex-1">
                 {/* Gear Slots */}
                 <div className="space-y-2.5">
                   <div className="flex items-center gap-2">
                     <Swords className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-xs font-medium flex-1">{rec.breakdown.weapon.item.name}</span>
+                    <span className={cn("text-xs font-medium flex-1", reqCheck && !reqCheck.met && "text-destructive")}>
+                      {rec.breakdown.weapon.item.name}
+                    </span>
                     {rec.breakdown.weapon.preferred && <Star className="h-3 w-3 text-arena-gold fill-arena-gold" />}
                     <Badge variant="outline" className="text-[9px] font-mono">{rec.breakdown.weapon.item.weight} enc</Badge>
                   </div>
+                  {/* ... other gear similar ... */}
                   <div className="flex items-center gap-2">
                     <Shirt className="h-3.5 w-3.5 text-muted-foreground" />
                     <span className="text-xs font-medium flex-1">{rec.breakdown.armor.item.name}</span>
@@ -165,6 +177,25 @@ function RecommendationCard({ rec, isPrimary, selectedStyle, activeWarriors, car
                     <Badge variant="outline" className="text-[9px] font-mono">{rec.breakdown.helm.item.weight} enc</Badge>
                   </div>
                 </div>
+
+                {/* Requirement Warning */}
+                {reqCheck && !reqCheck.met && (
+                  <div className="p-2 rounded bg-destructive/5 border border-destructive/20 space-y-1.5 animate-in fade-in slide-in-from-top-1">
+                    <div className="flex items-center gap-1.5 text-[10px] font-black uppercase text-destructive tracking-wider">
+                      <AlertTriangle className="h-3 w-3" /> Requirement_Failed
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {reqCheck.failures.map((f: WeaponReqCheck, fi: number) => (
+                        <Badge key={fi} variant="outline" className="text-[9px] border-destructive/30 text-destructive bg-destructive/5">
+                          {f.stat}: {f.current}/{f.required}
+                        </Badge>
+                      ))}
+                      <Badge className="bg-destructive text-white border-none text-[8px] font-black h-4 px-1.5 animate-pulse">
+                        {reqCheck.attPenalty} ATT PENALTY
+                      </Badge>
+                    </div>
+                  </div>
+                )}
 
                 {/* Encumbrance */}
                 <div className="space-y-1">

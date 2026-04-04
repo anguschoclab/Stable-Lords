@@ -3,8 +3,10 @@ import { BookOpen, Coins, Sparkles, GraduationCap, ScrollText, Skull } from "luc
 import { useGameStore } from "@/state/useGameStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { Separator } from "@/components/ui/separator";
 import { TreasuryOverview } from "@/components/ledger/TreasuryOverview";
 import { InsightVault } from "@/components/ledger/InsightVault";
+import { InsightManager } from "@/components/ledger/InsightManager";
 import { ContractManager } from "@/components/ledger/ContractManager";
 import { Chronicle } from "@/components/ledger/Chronicle";
 import { HallOfWarriors } from "@/components/ledger/HallOfWarriors";
@@ -34,7 +36,7 @@ export default function StableLedger() {
             <Coins className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Overview</span>
           </TabsTrigger>
           <TabsTrigger value="tokens" className="text-[10px] font-black uppercase tracking-widest py-3 gap-2 data-[state=active]:bg-arena-gold data-[state=active]:text-black">
-            <Sparkles className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Vault</span>
+            <Sparkles className="h-3.5 w-3.5" /> <span className="hidden sm:inline">The Vault</span>
           </TabsTrigger>
           <TabsTrigger value="contracts" className="text-[10px] font-black uppercase tracking-widest py-3 gap-2 data-[state=active]:bg-primary/80 data-[state=active]:text-white">
             <GraduationCap className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Staffing</span>
@@ -43,12 +45,16 @@ export default function StableLedger() {
             <ScrollText className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Chronicle</span>
           </TabsTrigger>
           <TabsTrigger value="hall" className="text-[10px] font-black uppercase tracking-widest py-3 gap-2 data-[state=active]:bg-destructive data-[state=active]:text-white">
-            <Skull className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Memorial</span>
+            <Skull className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Legends Hall</span>
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="focus-visible:outline-none"><TreasuryOverview /></TabsContent>
-        <TabsContent value="tokens" className="focus-visible:outline-none"><InsightVault /></TabsContent>
+        <TabsContent value="tokens" className="focus-visible:outline-none space-y-12">
+           <InsightManager />
+           <Separator className="bg-border/20" />
+           <InsightVault />
+        </TabsContent>
         <TabsContent value="contracts" className="focus-visible:outline-none"><ContractManager /></TabsContent>
         <TabsContent value="chronicle" className="focus-visible:outline-none"><Chronicle /></TabsContent>
         <TabsContent value="hall" className="focus-visible:outline-none"><HallOfWarriors /></TabsContent>

@@ -46,6 +46,11 @@ export interface CareerRecord {
   wins: number;
   losses: number;
   kills: number;
+  medals?: {
+    gold: number;
+    silver: number;
+    bronze: number;
+  };
 }
 
 export type WarriorStatus = "Active" | "Dead" | "Retired";

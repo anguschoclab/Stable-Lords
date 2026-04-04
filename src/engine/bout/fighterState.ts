@@ -84,5 +84,6 @@ export function createFighterState(
     armHits: 0,
     legHits: 0,
     favorites: warrior?.favorites,
+    totalFights: warrior?.career ? (warrior.career.wins + warrior.career.losses) : 0,
   };
 }

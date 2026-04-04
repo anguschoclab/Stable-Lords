@@ -62,6 +62,15 @@ const NAV_SECTIONS = [
     ]
   },
   {
+    id: "ops",
+    label: "Operations",
+    items: [
+      { to: "/stable/trainers", label: "Staffing", icon: GraduationCap },
+      { to: "/stable/finance", label: "Treasury", icon: Coins },
+      { to: "/stable/contracts", label: "Booking Office", icon: ScrollText },
+    ]
+  },
+  {
     id: "world",
     label: "The World",
     items: [

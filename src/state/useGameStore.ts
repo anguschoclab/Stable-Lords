@@ -10,6 +10,7 @@ import {
   draftInitialRoster,
   updateWarriorEquipment,
 } from "./gameStore";
+import { consumeInsightToken } from "./mutations/tokenMutations";
 import {
   migrateLegacySave,
   getActiveSlot,
@@ -43,6 +44,7 @@ export interface GameStoreActions {
   doInitializeStable: (name: string, stableName: string) => void;
   doDraftInitialRoster: (warriors: Warrior[]) => void;
   doUpdateEquipment: (warriorId: string, equipment: { weapon: string; armor: string; shield: string; helm: string }) => void;
+  doConsumeInsightToken: (tokenId: string, warriorId: string) => void;
 }
 
 const initialData = { state: createFreshState(), activeSlotId: null as string | null };
@@ -170,6 +172,14 @@ export const useGameStore = create<GameStoreState & GameStoreActions>()(
         const next = updateWarriorEquipment(draft.state, warriorId, equipment);
         draft.state = next;
         if (draft.activeSlotId) saveToSlot(draft.activeSlotId, next);
+      });
+    },
+    doConsumeInsightToken: (tokenId: string, warriorId: string) => {
+      set((draft) => {
+        const next = consumeInsightToken(draft.state, tokenId, warriorId);
+        draft.state = next;
+        if (draft.activeSlotId) saveToSlot(draft.activeSlotId, next);
+        draft.lastSavedAt = new Date().toISOString();
       });
     },
   }))

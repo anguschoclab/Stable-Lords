@@ -22,9 +22,17 @@ export function isActive(w: Pick<Warrior, "status">): boolean {
   return w.status === "Active";
 }
 
-/** Whether a warrior is active AND healthy enough to fight this week */
-export function isFightReady(w: Warrior): boolean {
+/** 
+ * Whether a warrior is active AND healthy enough to fight this week.
+ * Enforces a fatigue ceiling of 50 for regular bouts.
+ */
+export function isFightReady(w: Warrior, isTournament: boolean = false): boolean {
   if (!isActive(w)) return false;
+  
+  // ── Tournament Adrenaline ──
+  // Fatigue is ignored during tournament weeks to allow for multi-round progression.
+  if (!isTournament && (w.fatigue || 0) >= 50) return false;
+
   const injObjs = (w.injuries || []).filter((i): i is InjuryData => typeof i !== "string");
   return !isTooInjuredToFight(injObjs);
 }

@@ -79,7 +79,7 @@ export function processRivalActions(state: GameState, newWeek: number): GameStat
   }, rosterSeed);
   globalGazetteItems.push(...rosterGazette);
 
-  const newState = { 
+  let newState = { 
     ...state, 
     rivals: finalizedRivals, 
     recruitPool: draft.updatedPool, 
@@ -96,7 +96,13 @@ export function processRivalActions(state: GameState, newWeek: number): GameStat
     tiers.forEach((tier, tIdx) => {
       const tour = TournamentSelectionService.generateTournament(state, tier, newWeek, state.season, newWeek * 100 + tIdx);
       newState.tournaments = [...(newState.tournaments || []), tour];
-      tournamentBouts.push(`${tour.name} initiated with 64 warriors.`);
+      
+      // 🏆 Engine Adjudication: Resolve the tournament immediately for the world
+      // This ensures results exist in arenaHistory for the next week advance.
+      newState = TournamentSelectionService.resolveCompleteTournament(newState, tour.id, newWeek * 500 + tIdx);
+      
+      const completedTour = newState.tournaments.find(t => t.id === tour.id);
+      tournamentBouts.push(`${tour.name} concluded. Champion: ${completedTour?.champion || "None"}`);
     });
     
     newState.newsletter = [...(newState.newsletter || []), { 

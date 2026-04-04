@@ -2,11 +2,218 @@ import type { GameState, Warrior, RivalStableData, TournamentEntry, TournamentBo
 import { makeWarrior } from "@/engine/factories";
 import { FightingStyle } from "@/types/shared.types";
 import { SeededRNG } from "@/utils/random";
+import { simulateFight, aiPlanForWarrior, defaultPlanForWarrior } from "@/engine";
+import { updateEntityInList } from "@/utils/stateUtils";
+import { generateId } from "@/utils/idUtils";
 
 /**
  * TournamentSelectionService - Handles qualification and filler logic for 64-man tournaments.
  */
 export const TournamentSelectionService = {
+  // 🏛️ Engine Resolution: Progress the tournament by one round
+  resolveRound(state: GameState, tournamentId: string, seed: number): { updatedState: GameState; roundResults: string[] } {
+    const rng = new SeededRNG(seed);
+    let updatedState = { ...state };
+    const tournament = (updatedState.tournaments || []).find(t => t.id === tournamentId);
+    if (!tournament || tournament.completed) return { updatedState, roundResults: [] };
+
+    const bracket = [...tournament.bracket];
+    const unresolved = bracket.filter(b => b.winner === undefined);
+    if (unresolved.length === 0) return { updatedState, roundResults: [] };
+
+    const currentRound = Math.min(...unresolved.map(b => b.round));
+    const roundBouts = unresolved.filter(b => b.round === currentRound);
+    const winners: string[] = [];
+    const resultsNews: string[] = [];
+
+    for (const bout of roundBouts) {
+      if (bout.d === "(bye)") {
+        bout.winner = "A";
+        winners.push(bout.a);
+        continue;
+      }
+
+      const wA = this.findWarrior(updatedState, bout.a);
+      const wD = this.findWarrior(updatedState, bout.d);
+
+      if (!wA || !wD) {
+        bout.winner = wA ? "A" : "D";
+        winners.push(wA?.name || wD?.name || "");
+        continue;
+      }
+
+      const planA = wA.plan || this.getAIPlan(updatedState, wA);
+      const planD = wD.plan || this.getAIPlan(updatedState, wD);
+      
+      const outcome = simulateFight(planA, planD, wA, wD, rng.roll(0, 1000000), updatedState.trainers, updatedState.weather);
+      
+      bout.winner = outcome.winner;
+      bout.by = outcome.by;
+      bout.fightId = `tf_${tournament.id}_${bout.round}_${bout.matchIndex}`;
+      
+      const winnerName = outcome.winner === "A" ? bout.a : bout.d;
+      winners.push(winnerName);
+      
+      // Update records and history
+      updatedState = this.applyBoutResults(updatedState, wA, wD, outcome, tournament.id, tournament.name);
+    }
+
+    // Generate next round pairings
+    if (winners.length > 1) {
+      const nextRound = currentRound + 1;
+      for (let i = 0; i < winners.length; i += 2) {
+        if (i + 1 < winners.length) {
+          bracket.push({ round: nextRound, matchIndex: i / 2, a: winners[i], d: winners[i + 1] });
+        } else {
+          bracket.push({ round: nextRound, matchIndex: i / 2, a: winners[i], d: "(bye)", winner: "A" });
+        }
+      }
+    }
+
+    const isComplete = winners.length <= 1;
+    const champion = isComplete ? winners[0] : undefined;
+
+    // Update tournament state
+    updatedState.tournaments = (updatedState.tournaments || []).map(t => 
+      t.id === tournamentId ? { ...t, bracket, completed: isComplete, champion } : t
+    );
+
+    if (isComplete && champion) {
+      resultsNews.push(`🏆 CHAMPION: ${champion} has won the ${tournament.name}!`);
+    }
+
+    return { updatedState, roundResults: resultsNews };
+  },
+
+  /**
+   * Resolves an entire tournament to completion in one go.
+   * Useful for AI-only tiers or headless testing.
+   */
+  resolveCompleteTournament(state: GameState, tournamentId: string, seed: number): GameState {
+    let current = { ...state };
+    let safety = 0;
+    while (safety < 10) { // Max 6 rounds for 64-man + padding
+      const tour = (current.tournaments || []).find(t => t.id === tournamentId);
+      if (!tour || tour.completed) break;
+      const result = this.resolveRound(current, tournamentId, seed + safety);
+      current = result.updatedState;
+      safety++;
+    }
+    return current;
+  },
+
+  /** Helper: Find warrior by name across player/rivals */
+  findWarrior(state: GameState, name: string): Warrior | undefined {
+    const playerW = state.roster.find(w => w.name === name);
+    if (playerW) return playerW;
+    for (const r of (state.rivals || [])) {
+      const rw = r.roster.find(w => w.name === name);
+      if (rw) return rw;
+    }
+    return undefined;
+  },
+
+  /** Helper: Get AI plan for tournament warrior */
+  getAIPlan(state: GameState, w: Warrior) {
+     const rival = (state.rivals || []).find(r => r.roster.some(rw => rw.name === w.name));
+     if (!rival) return defaultPlanForWarrior(w);
+     return aiPlanForWarrior(w, rival.owner.personality || "Pragmatic", rival.philosophy || "Opportunist", undefined, rival.strategy?.intent);
+  },
+
+  /** Helper: Apply updates after tournament bout */
+  applyBoutResults(state: GameState, wA: Warrior, wD: Warrior, outcome: any, tId: string, tName: string): GameState {
+    const isKill = outcome.by === "Kill";
+    const winnerSide = outcome.winner;
+    const updatedState = { ...state };
+
+    const summary: any = {
+      id: `tf_${tId}_${generateId()}`,
+      week: state.week,
+      phase: "resolution" as const,
+      tournamentId: tId,
+      title: `${wA.name} vs ${wD.name} (${tName})`,
+      a: wA.name,
+      d: wD.name,
+      winner: winnerSide,
+      by: outcome.by,
+      styleA: wA.style,
+      styleD: wD.style,
+      transcript: outcome.log.map((e: any) => e.text),
+      createdAt: new Date().toISOString(),
+    };
+
+    updatedState.arenaHistory = [...(updatedState.arenaHistory || []), summary].slice(-500);
+
+    const updateWarrior = (w: Warrior, isAttacker: boolean) => {
+      const isWinner = (isAttacker && winnerSide === "A") || (!isAttacker && winnerSide === "D");
+      const didKill = isWinner && isKill;
+      const isVictim = !isWinner && isKill;
+      
+      return {
+        ...w,
+        status: isVictim ? "Dead" : "Active" as any,
+        fatigue: isVictim ? 0 : Math.min(100, (w.fatigue || 0) + 25),
+        career: {
+          ...w.career,
+          wins: (w.career?.wins || 0) + (isWinner ? 1 : 0),
+          losses: (w.career?.losses || 0) + (isWinner ? 0 : 1),
+          kills: (w.career?.kills || 0) + (didKill ? 1 : 0),
+        },
+        fame: Math.max(0, (w.fame || 0) + (isWinner ? (didKill ? 3 : 1) : 0)),
+        seasonPoints: (w.seasonPoints || 0) + (isWinner ? 3 : 0) + (didKill ? 5 : 0)
+      };
+    };
+
+    // Update Player Roster
+    updatedState.roster = updatedState.roster.map(w => {
+      if (w.id === wA.id) return updateWarrior(w, true);
+      if (w.id === wD.id) return updateWarrior(w, false);
+      return w;
+    });
+
+    // Update Rivals
+    updatedState.rivals = (updatedState.rivals || []).map(r => ({
+      ...r,
+      roster: r.roster.map(w => {
+        if (w.id === wA.id) return updateWarrior(w, true);
+        if (w.id === wD.id) return updateWarrior(w, false);
+        return w;
+      })
+    }));
+
+    if (isKill) {
+       const deadA = winnerSide === "D";
+       const victim = deadA ? wA : wD;
+       const deadWarrior = updateWarrior(victim, deadA);
+       
+       // Record in Graveyard
+       updatedState.graveyard = [...(updatedState.graveyard || []), { 
+         ...deadWarrior, 
+         status: "Dead" as any,
+         deathWeek: state.week,
+       } as any];
+
+       // Filter from Roster/Rivals
+       updatedState.roster = updatedState.roster.filter(w => w.id !== deadWarrior.id);
+       updatedState.rivals = (updatedState.rivals || []).map(r => ({
+         ...r,
+         roster: r.roster.filter(w => w.id !== deadWarrior.id)
+       }));
+
+       // If it was a stabled warrior, add a memorial news item
+       const rivalOwner = (state.rivals || []).find(r => r.owner.id === deadWarrior.stableId);
+       if (rivalOwner || state.player.id === deadWarrior.stableId) {
+         updatedState.newsletter = [...(updatedState.newsletter || []), {
+           week: state.week,
+           title: "⚰️ FUNERAL RITES",
+           items: [`${deadWarrior.name} of ${rivalOwner?.owner.stableName || "your stable"} has been killed in the tournament.`]
+         }];
+       }
+    }
+
+    return updatedState;
+  },
+
   /**
    * Selects the top 64 warriors for a specific tier.
    * If not enough stable-affiliated warriors, generates NPC freelancers.

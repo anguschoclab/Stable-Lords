@@ -21,7 +21,7 @@ export function isEligible(
   restMap: Map<string, number>, 
   trainingIds: Set<string>
 ): boolean {
-  if (!isFightReady(w)) return false;
+  if (!isFightReady(w, false)) return false;
   const restUntil = restMap.get(w.id);
   if (restUntil && restUntil > week) return false;
   if (trainingIds.has(w.id)) return false;

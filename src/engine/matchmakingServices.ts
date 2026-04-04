@@ -3,6 +3,7 @@ import type {
   Rivalry, FightOutcome 
 } from "@/types/game";
 import { getStablePairKey, getWarriorPairKey } from "@/utils/keyUtils";
+import { SeededRNG } from "@/utils/random";
 
 /**
  * Matchmaking Scoring Service - handles the weights and logic for pairing warriors.
@@ -102,13 +103,14 @@ export class AIBoutService {
   /**
    * Generates a narrative line for a rival rivalry bout.
    */
-  static generateRivalryNarrative(stableA: string, stableB: string, warriorA: string, warriorB: string): string {
+  static generateRivalryNarrative(stableA: string, stableB: string, warriorA: string, warriorB: string, seed?: number): string {
+    const rng = new SeededRNG(seed ?? (stableA.length * 101 + stableB.length));
     const templates = [
       `🔥 RIVALRY REPORT: The feud between ${stableA} and ${stableB} rages on — ${warriorA} faced ${warriorB} in a grudge match!`,
       `⚔️ VENDETTA IN THE PITS: ${stableA} vs ${stableB} — ${warriorA} and ${warriorB} settled scores in the arena!`,
       `🏟️ BAD BLOOD: ${stableA} and ${stableB} clashed again as ${warriorA} took on ${warriorB}!`,
     ];
-    return templates[Math.floor(Math.random() * templates.length)];
+    return rng.pick(templates);
   }
 }
 

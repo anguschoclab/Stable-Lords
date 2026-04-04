@@ -4,14 +4,17 @@ import { computeMetaDrift, type StyleMeta } from "./metaDrift";
 import { computeWarriorStats } from "./skillCalc";
 import { getRecentFightsForWarrior } from "@/engine/core/historyUtils";
 import { META_RECRUIT_QUOTES, getPhilosophyStyles } from "@/data/ownerData";
+import { SeededRNG } from "@/utils/random";
 
 /**
  * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
  * and releasing underperforming assets based on current owner personality and budget.
  */
 export function processAIRosterManagement(
-  state: GameState
+  state: GameState,
+  seed?: number
 ): { updatedRivals: RivalStableData[]; gazetteItems: string[] } {
+  const rngSnapshot = new SeededRNG(seed ?? (state.week * 7919 + 101));
   const meta = computeMetaDrift(state.arenaHistory, 20);
   const gazetteItems: string[] = [];
   const updatedRivals = (state.rivals || []).map(rival => {
@@ -57,7 +60,7 @@ export function processAIRosterManagement(
     // Age-based retirement
     const elderly = r.roster.filter(w => w.status === "Active" && (w.age ?? 18) >= 30);
     for (const old of elderly.slice(0, 1)) {
-      if (Math.random() < 0.15) { 
+      if (rngSnapshot.next() < 0.15) { 
         old.status = "Retired";
         old.retiredWeek = state.week;
         gazetteItems.push(`🏠 ${old.name} (${r.owner.stableName}) retires after a long career — ${old.career.wins}W/${old.career.losses}L.`);
@@ -74,7 +77,7 @@ export function processAIRosterManagement(
     const canAfford = r.gold >= RECRUIT_COST + 200; // Keep a buffer
     const intent = r.strategy?.intent ?? "CONSOLIDATION";
 
-    if (currentActive < minRoster && Math.random() < recruitChance && canAfford && intent !== "RECOVERY") {
+    if (currentActive < minRoster && rngSnapshot.next() < recruitChance && canAfford && intent !== "RECOVERY") {
       const adaptation = r.owner.metaAdaptation ?? "Opportunist";
       let customMeta = meta;
 
@@ -106,21 +109,22 @@ export function processAIRosterManagement(
   return { updatedRivals, gazetteItems };
 }
 
-function generateAIRecruit(rival: RivalStableData, week: number, meta?: StyleMeta): Warrior | null {
+function generateAIRecruit(rival: RivalStableData, week: number, meta?: StyleMeta, seed?: number): Warrior | null {
+  const rng = new SeededRNG(seed ?? (week * 42 + rival.owner.id.length));
   const philosophy = rival.philosophy ?? "Balanced";
   const adaptation = rival.owner.metaAdaptation ?? "Opportunist";
   const favoredStyles = rival.owner.favoredStyles ?? [];
 
-  const style = pickRecruitStyle(adaptation, philosophy, favoredStyles, meta);
-  const attrs = generateRecruitAttrs(philosophy);
+  const style = pickRecruitStyle(adaptation, philosophy, favoredStyles, meta, rng);
+  const attrs = generateRecruitAttrs(philosophy, rng);
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
 
   const prefixes = ["IRON", "BLOOD", "STORM", "DARK", "SWIFT", "STONE", "FLAME", "FROST", "SHADOW", "STEEL"];
   const suffixes = ["FANG", "BLADE", "HEART", "CLAW", "MANE", "STRIKE", "BORN", "FURY", "WARD", "JAW"];
-  const name = `${prefixes[Math.floor(Math.random() * prefixes.length)]}${suffixes[Math.floor(Math.random() * suffixes.length)]}`;
+  const name = `${rng.pick(prefixes)}${rng.pick(suffixes)}`;
 
   return {
-    id: crypto.randomUUID(),
+    id: `ai_w_${rival.owner.id}_${week}_${Math.floor(rng.next() * 1000)}`,
     name,
     style,
     attributes: attrs,
@@ -134,7 +138,7 @@ function generateAIRecruit(rival: RivalStableData, week: number, meta?: StyleMet
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: "Active",
-    age: 17 + Math.floor(Math.random() * 5),
+    age: 17 + Math.floor(rng.next() * 5),
     stableId: rival.owner.id,
   };
 }
@@ -143,7 +147,8 @@ function pickRecruitStyle(
   adaptation: MetaAdaptation,
   philosophy: string,
   favoredStyles: FightingStyle[],
-  meta?: StyleMeta,
+  meta: StyleMeta | undefined,
+  rng: SeededRNG
 ): FightingStyle {
   const philosophyStyles = getPhilosophyStyles(philosophy);
   const allStyles = Object.values(FightingStyle);
@@ -151,36 +156,36 @@ function pickRecruitStyle(
   switch (adaptation) {
     case "Traditionalist": {
       const pool = favoredStyles.length > 0 ? favoredStyles : philosophyStyles;
-      return pool[Math.floor(Math.random() * pool.length)];
+      return rng.pick(pool);
     }
     case "MetaChaser": {
       if (meta) {
         const sorted = allStyles.slice().sort((a, b) => (meta[b] ?? 0) - (meta[a] ?? 0));
-        return sorted[Math.floor(Math.random() * 3)];
+        return rng.pick(sorted.slice(0, 3));
       }
-      return philosophyStyles[Math.floor(Math.random() * philosophyStyles.length)];
+      return rng.pick(philosophyStyles);
     }
     case "Innovator": {
       if (meta) {
         const sorted = allStyles.slice().sort((a, b) => (meta[a] ?? 0) - (meta[b] ?? 0));
-        return sorted[Math.floor(Math.random() * 4)];
+        return rng.pick(sorted.slice(0, 4));
       }
       const nonStandard = allStyles.filter(s => !philosophyStyles.includes(s));
-      return nonStandard[Math.floor(Math.random() * Math.max(1, nonStandard.length))];
+      return rng.pick(nonStandard);
     }
     case "Opportunist":
     default: {
-      if (meta && Math.random() < 0.5) {
+      if (meta && rng.next() < 0.5) {
         const rising = allStyles.filter(s => (meta[s] ?? 0) >= 2);
-        if (rising.length > 0) return rising[Math.floor(Math.random() * rising.length)];
+        if (rising.length > 0) return rng.pick(rising);
       }
       const pool = favoredStyles.length > 0 ? favoredStyles : philosophyStyles;
-      return pool[Math.floor(Math.random() * pool.length)];
+      return rng.pick(pool);
     }
   }
 }
 
-function generateRecruitAttrs(philosophy: string): { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number } {
+function generateRecruitAttrs(philosophy: string, rng: SeededRNG): { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number } {
   const biasMap: Record<string, Partial<Record<string, number>>> = {
     "Brute Force": { ST: 3, CN: 2, SZ: 2 },
     "Speed Kills": { SP: 3, DF: 2, WL: 1 },
@@ -205,12 +210,12 @@ function generateRecruitAttrs(philosophy: string): { ST: number; CN: number; SZ:
   let attempts = 0;
   while (pool > 0 && attempts < 500) {
     attempts++;
-    const key = weighted[Math.floor(Math.random() * weighted.length)];
+    const key = rng.pick(weighted);
     const current = attrs[key];
     if (current >= 25) continue;
     
     const maxAdd = Math.min(pool, 25 - current);
-    const add = Math.min(maxAdd, Math.floor(Math.random() * 4) + 1);
+    const add = Math.min(maxAdd, Math.floor(rng.next() * 4) + 1);
     attrs[key] += add;
     pool -= add;
   }

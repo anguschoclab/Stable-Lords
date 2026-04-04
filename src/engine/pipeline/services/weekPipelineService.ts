@@ -18,6 +18,7 @@ import { getFightsForWeek } from "@/engine/core/historyUtils";
 import { generateWeeklyGazette } from "@/engine/gazetteNarrative";
 import { partialRefreshPool } from "@/engine/recruitment";
 import { InsightTokenService } from "@/engine/tokens/insightTokenService";
+import { runAIvsAIBouts } from "@/engine/matchmaking/rivalScheduler";
 
 const SEASONS: Season[] = ["Spring", "Summer", "Fall", "Winter"];
 export function computeNextSeason(newWeek: number): Season { return SEASONS[Math.floor((newWeek - 1) / 13) % 4]; }
@@ -40,7 +41,8 @@ export function processRivalActions(state: GameState, newWeek: number): GameStat
   let currentPool = [...(state.hiringPool || [])];
 
   const processedRivals = currentRivals.map((rival, index) => {
-    const strategy = updateAIStrategy(rival, state);
+    const strategySeed = newWeek * 31 + index * 997 + rival.owner.id.length;
+    const strategy = updateAIStrategy(rival, state, strategySeed);
     const rivalWithStrategy = { ...rival, strategy };
     const { updatedRival, isBankrupt, gazetteItems, updatedHiringPool } = processAIStable(rivalWithStrategy, state);
     globalGazetteItems.push(...gazetteItems);
@@ -58,8 +60,22 @@ export function processRivalActions(state: GameState, newWeek: number): GameStat
   const draft = aiDraftFromPool(state.recruitPool, processedRivals, newWeek, state);
   globalGazetteItems.push(...draft.gazetteItems);
 
-  const newState = { ...state, rivals: draft.updatedRivals, recruitPool: draft.updatedPool, hiringPool: currentPool };
-  if (globalGazetteItems.length > 0) newState.newsletter = [...newState.newsletter, { week: newWeek, title: "Intelligence Report", items: globalGazetteItems }];
+  const newState = { 
+    ...state, 
+    rivals: draft.updatedRivals, 
+    recruitPool: draft.updatedPool, 
+    hiringPool: currentPool 
+  };
+  
+  // 4. Background Rival Simulation (Rival-vs-Rival)
+  const rivalSeed = newWeek * 7919 + 777;
+  const aiResults = runAIvsAIBouts(newState, rivalSeed);
+  newState.rivals = aiResults.updatedRivals;
+  globalGazetteItems.push(...aiResults.gazetteItems);
+
+  if (globalGazetteItems.length > 0) {
+    newState.newsletter = [...(newState.newsletter || []), { week: newWeek, title: "Intelligence Report", items: globalGazetteItems }];
+  }
   return newState;
 }
 

@@ -1,5 +1,6 @@
 import { GameState, Season } from "@/types/game";
 import { getRecentFights } from "@/engine/core/historyUtils";
+import { SeededRNG } from "@/utils/random";
 
 /**
  * Generate personality-driven gazette events based on recent performance.
@@ -7,8 +8,10 @@ import { getRecentFights } from "@/engine/core/historyUtils";
  */
 export function generateOwnerNarratives(
   state: GameState,
-  newSeason: Season
+  newSeason: Season,
+  seed?: number
 ): string[] {
+  const rng = new SeededRNG(seed ?? (state.week * 7919 + 7));
   if (newSeason === state.season) return [];
 
   const gazetteItems: string[] = [];
@@ -32,7 +35,7 @@ export function generateOwnerNarratives(
         `🔥 ${rival.owner.name} fires ${rival.owner.stableName}'s head trainer after a dismal ${state.season}!`,
         `⚔️ ${rival.owner.name} declares: "Next season, we fight with fury or not at all!"`,
       ];
-      gazetteItems.push(templates[Math.floor(Math.random() * templates.length)]);
+      gazetteItems.push(rng.pick(templates));
     }
 
     // Methodical owner on a winning streak
@@ -81,14 +84,14 @@ export function generateOwnerNarratives(
       (rv.stableIdB === state.player.id && rv.stableIdA === rival.owner.id)
     );
 
-    if (rivalry && rivalry.intensity >= 4 && Math.random() < 0.25) {
+    if (rivalry && rivalry.intensity >= 4 && rng.next() < 0.25) {
         const tauntTemplates = [
             `🗣️ "${state.player.stableName} is a disgrace to the sands. I will see them bleed," vows ${rival.owner.name} (${rival.owner.stableName}).`,
             `🗣️ ${rival.owner.name} (${rival.owner.stableName}) issues a public challenge: "My warriors will hunt down the dogs of ${state.player.stableName}."`,
             `🗣️ "The feud with ${state.player.stableName} ends when their stable is ash," declares ${rival.owner.name}.`,
             `🗣️ Public Grudge: ${rival.owner.name} (${rival.owner.stableName}) was heard mocking the recent performances of ${state.player.stableName}.`
         ];
-        gazetteItems.push(tauntTemplates[Math.floor(Math.random() * tauntTemplates.length)]);
+        gazetteItems.push(rng.pick(tauntTemplates));
     }
   }
 

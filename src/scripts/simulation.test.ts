@@ -1,8 +1,40 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { runSimulation } from "./simulation-harness";
 import { formatPulseTable } from "@/engine/stats/simulationMetrics";
+import { setMockIdGenerator } from "@/utils/idUtils";
+import { engineEventBus } from "@/engine/core/EventBus";
+import { NewsletterFeed } from "@/engine/newsletter/feed";
+
+// Mock the OPFS Archiver to avoid side effects and conflict errors in tests
+vi.mock("@/engine/storage/opfsArchive", () => ({
+  OPFSArchiveService: class {
+    isSupported = () => true;
+    archiveBoutLog = vi.fn().mockResolvedValue(undefined);
+    retrieveBoutLog = vi.fn().mockResolvedValue(null);
+    archiveGazette = vi.fn().mockResolvedValue(undefined);
+    retrieveGazette = vi.fn().mockResolvedValue(null);
+    archiveHotState = vi.fn().mockResolvedValue(undefined);
+    retrieveHotState = vi.fn().mockResolvedValue(null);
+    getArchivedBoutIdsForSeason = vi.fn().mockResolvedValue([]);
+  }
+}));
+
+function resetGlobalState() {
+  // 1. Reset ID generator sequence
+  let idCounter = 0;
+  setMockIdGenerator(() => `id_${++idCounter}`);
+
+  // 2. Clear Event Bus
+  engineEventBus.clear();
+
+  // 3. Clear Newsletter Buffers
+  NewsletterFeed.clear();
+}
 
 describe("Headless Simulation Harness", () => {
+  beforeEach(() => {
+    resetGlobalState();
+  });
   test("runs a 52-week simulation deterministically", () => {
     const seed = 12345;
     const config = {
@@ -12,6 +44,7 @@ describe("Headless Simulation Harness", () => {
     };
 
     console.log(`\n[Sim] Starting 52-week simulation with seed: ${seed}`);
+    resetGlobalState(); // Critical: Reset before Run 1
     const result = runSimulation(config);
     
     console.log("\n[Sim] Monthly Pulse Report:");
@@ -21,6 +54,7 @@ describe("Headless Simulation Harness", () => {
     expect(result.finalState.week).toBeGreaterThanOrEqual(13); // Should at least finish a season
     
     // Determinism check: run again with same seed
+    resetGlobalState(); // Critical: Reset before Run 2
     const result2 = runSimulation(config);
     expect(result.finalState.gold).toBe(result2.finalState.gold);
     expect(result.finalState.roster.length).toBe(result2.finalState.roster.length);

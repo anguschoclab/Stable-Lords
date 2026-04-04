@@ -2,6 +2,7 @@ import { FightingStyle, type Warrior, type Owner, type RivalStableData } from "@
 import { computeWarriorStats } from "./skillCalc";
 import { STABLE_TEMPLATES, type StableTemplate } from "@/data/stableTemplates";
 import { seededRng } from "@/utils/mathUtils";
+import { SeededRNG } from "@/utils/random";
 export { seededRng };
 
 /**
@@ -173,7 +174,7 @@ function generateStableTrainers(rng: () => number, stableId: string, philosophy:
  * Randomly picks an eligible opponent from a pool of rival stables.
  * Used for AI-vs-AI matchmaking when local pools are empty.
  */
-export function pickRivalOpponent(rivals: RivalStableData[], excludeIds: Set<string>): { warrior: Warrior; rival: RivalStableData } | null {
+export function pickRivalOpponent(rivals: RivalStableData[], excludeIds: Set<string>, seed?: number): { warrior: Warrior; rival: RivalStableData } | null {
   const allEligible: { warrior: Warrior; rival: RivalStableData }[] = [];
   rivals.forEach(r => {
     r.roster.forEach(w => {
@@ -184,16 +185,18 @@ export function pickRivalOpponent(rivals: RivalStableData[], excludeIds: Set<str
   });
 
   if (allEligible.length === 0) return null;
-  return allEligible[Math.floor(Math.random() * allEligible.length)];
+  const rng = new SeededRNG(seed ?? (allEligible.length * 101));
+  return rng.pick(allEligible);
 }
 
-export function generateRivalryNarrative(stableA: string, stableB: string, warriorA: string, warriorB: string): string {
+export function generateRivalryNarrative(stableA: string, stableB: string, warriorA: string, warriorB: string, seed?: number): string {
+  const rng = new SeededRNG(seed ?? (stableA.length * 13));
   const templates = [
     `🔥 RIVALRY REPORT: The feud between ${stableA} and ${stableB} rages on — ${warriorA} faced ${warriorB} in a grudge match!`,
     `⚔️ VENDETTA IN THE PITS: ${stableA} vs ${stableB} — ${warriorA} and ${warriorB} settled scores in the arena!`,
     `🏟️ BAD BLOOD: ${stableA} and ${stableB} clashed again as ${warriorA} took on ${warriorB}!`,
   ];
-  return templates[Math.floor(Math.random() * templates.length)];
+  return rng.pick(templates);
 }
 
 /**

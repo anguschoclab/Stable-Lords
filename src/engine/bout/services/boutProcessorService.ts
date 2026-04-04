@@ -84,7 +84,7 @@ function finalizeWeekSideEffects(s: GameState, results: BoutResult[]) {
   const weekFights = getFightsForWeek(s.arenaHistory, s.week);
   const gazetteSeed = s.week * 9973 + 123;
   s.gazettes = [...(s.gazettes || []), generateWeeklyGazette(weekFights, s.crowdMood, s.week, s.graveyard, s.arenaHistory, gazetteSeed)];
-  s.rivalries = updateRivalriesFromBouts(s.rivalries || [], weekFights, s.week);
+  s.rivalries = updateRivalriesFromBouts(s.rivalries || [], weekFights, s.week, s.week * 13);
   NewsletterFeed.closeWeekToIssue(s.week);
 }
 

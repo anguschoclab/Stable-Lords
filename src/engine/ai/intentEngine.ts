@@ -2,6 +2,7 @@ import type { GameState, RivalStableData, AIIntent, AIStrategy } from "@/types/g
 import { PERSONALITY_CLASH } from "@/data/ownerData";
 
 import { computeMetaDrift } from "../metaDrift";
+import { SeededRNG } from "@/utils/random";
 
 /**
  * Determines the weekly strategic intent for an AI owner.
@@ -9,8 +10,10 @@ import { computeMetaDrift } from "../metaDrift";
  */
 export function pickWeeklyIntent(
   rival: RivalStableData,
-  state: GameState
+  state: GameState,
+  seed?: number
 ): AIIntent {
+  const rng = new SeededRNG(seed ?? (state.week * 131 + rival.owner.id.length));
   const personality = rival.owner.personality ?? "Pragmatic";
   const activeRoster = rival.roster.filter(w => w.status === "Active");
   const injuryCount = activeRoster.filter(w => w.injuries && w.injuries.length > 0).length;
@@ -41,7 +44,7 @@ export function pickWeeklyIntent(
   );
   
   const vendettaChance = personality === "Aggressive" ? 0.4 : personality === "Showman" ? 0.2 : 0.1;
-  if (hasGrudge && Math.random() < vendettaChance) {
+  if (hasGrudge && rng.next() < vendettaChance) {
     return "VENDETTA";
   }
 
@@ -98,7 +101,8 @@ export function verifyIntentSkepticism(
  */
 export function updateAIStrategy(
   rival: RivalStableData,
-  state: GameState
+  state: GameState,
+  seed?: number
 ): AIStrategy {
   const current = rival.strategy;
   
@@ -107,7 +111,8 @@ export function updateAIStrategy(
 
   // If no strategy, plan expired, or plan is disproved, pick a new one
   if (!current || current.planWeeksRemaining <= 0 || planDisproved) {
-    const intent = pickWeeklyIntent(rival, state);
+    const s = seed ?? (state.week * 7919 + rival.owner.id.length * 13);
+    const intent = pickWeeklyIntent(rival, state, s);
     
     // Determine the duration of this intent
     const duration = intent === "RECOVERY" ? 2 : 

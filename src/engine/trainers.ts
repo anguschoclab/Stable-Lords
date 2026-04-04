@@ -77,8 +77,8 @@ function generateTrainerName(rng: () => number, focus: TrainerFocus): string {
 }
 
 /** Generate a pool of available trainers to hire */
-export function generateHiringPool(count: number, seed?: number): Trainer[] {
-  let s = seed ?? Date.now();
+export function generateHiringPool(count: number, seed: number): Trainer[] {
+  let s = seed;
   const rng = () => {
     s = (s * 1103515245 + 12345) & 0x7fffffff;
     return s / 0x7fffffff;
@@ -90,7 +90,7 @@ export function generateHiringPool(count: number, seed?: number): Trainer[] {
     const tierRoll = rng();
     const tier: TrainerTier = tierRoll < 0.5 ? "Novice" : tierRoll < 0.85 ? "Seasoned" : "Master";
     pool.push({
-      id: `trainer_${Date.now()}_${i}`,
+      id: `tr_${seed}_${i}`,
       name: generateTrainerName(rng, focus),
       tier,
       focus,

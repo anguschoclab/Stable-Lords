@@ -9,6 +9,7 @@ import { pickRivalOpponent } from "../rivals";
 import { AIBoutService } from "../matchmakingServices";
 import { getStablePairKey } from "@/utils/keyUtils";
 import { isEligible } from "./bracketEngine";
+import { SeededRNG } from "@/utils/random";
 
 export interface AIBoutResult {
   stableA: string;
@@ -52,13 +53,24 @@ export function collectEligibleAIWarriors(state: GameState, rivals: RivalStableD
 
 import { generateBoutBids, verifyBoutAcceptance, BoutBid } from "../ai/workers/competitionWorker";
 
+/** Simple FNV-1a hash for deterministic seeds from IDs */
+function hashStr(s: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    hash ^= s.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
 /**
  * pairAIWarriors: Refactored to an "Agentic Market" model.
  * 1. Collect bids from all eligible agents.
  * 2. Reconcile bids into pairings.
  * 3. Skeptically verify acceptance.
  */
-export function pairAIWarriors(pool: AIPoolWarrior[], rivals: RivalStableData[], state: GameState): { a: AIPoolWarrior; d: AIPoolWarrior }[] {
+export function pairAIWarriors(pool: AIPoolWarrior[], rivals: RivalStableData[], state: GameState, seed?: number): { a: AIPoolWarrior; d: AIPoolWarrior }[] {
+  const rngSnapshot = new SeededRNG(seed ?? (state.week * 7919 + 202));
   const maxBouts = Math.min(Math.floor(pool.length / 2), 6); 
   const paired = new Set<string>();
   const boutPairs: { a: AIPoolWarrior; d: AIPoolWarrior }[] = [];
@@ -96,7 +108,7 @@ export function pairAIWarriors(pool: AIPoolWarrior[], rivals: RivalStableData[],
 
     if (candidates.length > 0) {
       // Pick best candidate (e.g. closest fame or random)
-      const d = candidates[0];
+      const d = rngSnapshot.pick(candidates);
       
       // ⚡ Skeptical Acceptance Check for the Defender
       const defenderStable = rivals.find(r => r.owner.id === d.stableId);
@@ -129,10 +141,11 @@ export function pairAIWarriors(pool: AIPoolWarrior[], rivals: RivalStableData[],
   return boutPairs;
 }
 
-export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
+export function runAIvsAIBouts(state: GameState, seed?: number): { results: AIBoutResult[]; updatedRivals: RivalStableData[]; gazetteItems: string[] } {
   const rivals = [...(state.rivals || [])];
   const pool = collectEligibleAIWarriors(state, rivals);
-  const boutPairs = pairAIWarriors(pool, rivals, state);
+  const mainSeed = seed ?? (state.week * 9973 + 88);
+  const boutPairs = pairAIWarriors(pool, rivals, state, mainSeed + 1);
 
   const results: AIBoutResult[] = [];
   const gazetteItems: string[] = [];
@@ -167,7 +180,8 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
       stableD.strategy?.intent
     );
 
-    const outcome = simulateFight(planA, planD, a.warrior, d.warrior, undefined, state.trainers, state.weather);
+    const boutSeed = hashStr(`${state.week}|${a.warrior.id}|${d.warrior.id}`);
+    const outcome = simulateFight(planA, planD, a.warrior, d.warrior, boutSeed, state.trainers, state.weather);
     const isKill = outcome.by === "Kill";
     const winnerSide = outcome.winner;
     const isRivalryBout = rivalryMap.has(getStablePairKey(a.stableId, d.stableId));
@@ -208,7 +222,7 @@ export function runAIvsAIBouts(state: GameState): { results: AIBoutResult[]; upd
     });
 
     if (isRivalryBout) {
-      gazetteItems.push(AIBoutService.generateRivalryNarrative(a.stableName, d.stableName, a.warrior.name, d.warrior.name));
+      gazetteItems.push(AIBoutService.generateRivalryNarrative(a.stableName, d.stableName, a.warrior.name, d.warrior.name, boutSeed + 42));
     }
 
     if (isKill) {

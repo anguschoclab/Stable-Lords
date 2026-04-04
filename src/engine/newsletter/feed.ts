@@ -102,6 +102,14 @@ export const NewsletterFeed = {
   closeWeekToIssue(week: number): NewsletterIssue {
     const fights = [...current];
     current.length = 0;
+    return this.generateIssue(week, fights);
+  },
+
+  clear() {
+    current.length = 0;
+  },
+
+  generateIssue(week: number, fights: FightCard[]): NewsletterIssue {
 
     let bestId: string | null = null;
     let best = -1;

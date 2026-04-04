@@ -22,10 +22,13 @@ export function makeWarrior(
   style: FightingStyle,
   attrs: { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number },
   overrides?: Partial<Warrior>,
-  rng: () => number = Math.random
+  rng?: () => number
 ): Warrior {
+  // If no RNG is provided, we use Math.random but this is a temporal leak!
+  // In a headless simulation, an RNG MUST be provided.
+  const safeRng = rng || Math.random;
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
-  const favorites = generateFavorites(style, rng);
+  const favorites = generateFavorites(style, safeRng);
   
   return {
     id: id ?? generateId(),
@@ -42,7 +45,7 @@ export function makeWarrior(
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: "Active",
-    age: 18 + Math.floor(rng() * 8),
+    age: 18 + Math.floor(safeRng() * 8),
     favorites,
     ...overrides,
   };
@@ -60,7 +63,6 @@ export function createFreshState(): GameState {
     },
     ftueComplete: false,
     ftueStep: 0,
-    isFTUE: true,
     coachDismissed: [],
     player: {
       id: "owner_1",
@@ -77,6 +79,7 @@ export function createFreshState(): GameState {
     week: 1,
     phase: "planning",
     season: "Spring",
+    weather: "Clear",
     roster: [],
     graveyard: [],
     retired: [],
@@ -108,6 +111,7 @@ export function createFreshState(): GameState {
         scouting: true,
       },
     },
+    isFTUE: true,
     unacknowledgedDeaths: [],
   };
 }

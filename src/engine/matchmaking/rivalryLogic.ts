@@ -1,6 +1,7 @@
 import type { Rivalry, FightSummary } from "@/types/game";
 import { MatchScoringService } from "../matchmakingServices";
 import { getStablePairKey } from "@/utils/keyUtils";
+import { SeededRNG } from "@/utils/random";
 
 /**
  * Detects and updates rivalries based on recent bouts, deaths, and upsets.
@@ -8,7 +9,8 @@ import { getStablePairKey } from "@/utils/keyUtils";
 export function updateRivalriesFromBouts(
   existingRivalries: Rivalry[],
   weekFights: FightSummary[],
-  week: number
+  week: number,
+  seed?: number
 ): Rivalry[] {
   const rivalries = [...existingRivalries];
   const pairs = new Map<string, { a: string; b: string; bouts: number; deaths: number; upsets: number; lastReason: string }>();
@@ -52,7 +54,7 @@ export function updateRivalriesFromBouts(
         isRecentStyleMatch: false,
         isChallenged: false,
         isAvoided: false,
-        rng: Math.random
+        rng: new SeededRNG(seed ?? (week * 7919 + data.a.length + data.b.length)).next
     }) > 200 ? 2 : 1;
     
     if (existing) {

@@ -86,7 +86,8 @@ export function advanceWeek(state: GameState): GameState {
   newState.recruitPool = partialRefreshPool(newState.recruitPool || [], currentWeek, usedNames);
 
   const weekFights = getFightsForWeek(newState.arenaHistory, currentWeek);
-  const story = generateWeeklyGazette(weekFights, newState.crowdMood, currentWeek, newState.graveyard, newState.arenaHistory);
+  const gazetteSeed = currentWeek * 9973 + 456;
+  const story = generateWeeklyGazette(weekFights, newState.crowdMood, currentWeek, newState.graveyard, newState.arenaHistory, gazetteSeed);
   newState.gazettes = [...(newState.gazettes || []), { ...story, week: currentWeek }].slice(-50);
 
   newState = processHallOfFame(newState, nextWeek);

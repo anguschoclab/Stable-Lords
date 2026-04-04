@@ -51,7 +51,8 @@ export function processAIStable(
   gazetteItems.push(...staffResult.gazetteItems);
 
   // B) RosterWorker (Training/Gear)
-  updatedRival = processRoster(updatedRival, state.week, state.season);
+  const rosterSeed = state.week * 8123 + (updatedRival.owner.id.length * 101); 
+  updatedRival = processRoster(updatedRival, state.week, state.season, rosterSeed);
 
   // 4. Calculate Final Expenses
   let weeklyExpenses = 20; // Base ops

@@ -17,6 +17,7 @@ import type { Warrior, FightOutcome } from "@/types/game";
 import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from "@/types/game";
 import { computeWarriorStats } from "./skillCalc";
 import { canGrow, diminishingReturnsFactor, revealPotential } from "./potential";
+import { SeededRNG } from "@/utils/random";
 
 const XP_PER_LEVEL = 5;
 const TOTAL_ATTR_CAP = 80;
@@ -52,7 +53,8 @@ export function calculateXP(
 }
 
 /** Apply XP to a warrior, potentially triggering a level-up improvement */
-export function applyXP(warrior: Warrior, xpGained: number): { warrior: Warrior; gain: XPGain } {
+export function applyXP(warrior: Warrior, xpGained: number, seed?: number): { warrior: Warrior; gain: XPGain } {
+  const rng = new SeededRNG(seed ?? (xpGained * 7919 + 42));
   const currentXp = (warrior as any).xp ?? 0;
   const newXp = currentXp + xpGained;
   const oldLevel = Math.floor(currentXp / XP_PER_LEVEL);
@@ -80,7 +82,7 @@ export function applyXP(warrior: Warrior, xpGained: number): { warrior: Warrior;
           return Math.max(0.1, dr); // minimum weight so nothing is impossible
         });
         const totalWeight = weights.reduce((s, w) => s + w, 0);
-        let roll = Math.random() * totalWeight;
+        let roll = rng.next() * totalWeight;
         let chosen = improvableAttrs[0];
         for (let i = 0; i < improvableAttrs.length; i++) {
           roll -= weights[i];
@@ -99,8 +101,8 @@ export function applyXP(warrior: Warrior, xpGained: number): { warrior: Warrior;
   const unrevealed = ATTRIBUTE_KEYS.filter(
     (k) => !updated.potentialRevealed?.[k] && updated.potential?.[k] !== undefined
   );
-  if (unrevealed.length > 0 && Math.random() < POTENTIAL_REVEAL_CHANCE) {
-    const revealKey = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+  if (unrevealed.length > 0 && rng.chance(POTENTIAL_REVEAL_CHANCE)) {
+    const revealKey = rng.pick(unrevealed);
     updated = {
       ...updated,
       potentialRevealed: revealPotential(updated.potentialRevealed, revealKey),

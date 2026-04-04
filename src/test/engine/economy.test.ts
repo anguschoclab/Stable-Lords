@@ -137,7 +137,7 @@ describe("Economy Engine", () => {
     it("should accurately compute net income", () => {
       const state = createFreshState();
       state.week = 2;
-      state.fame = 5; // +10 gold
+      state.fame = 5; // +3 gold (Math.round(2.5))
 
       const w1 = makeTestWarrior({ name: "Alice" });
       state.roster = [w1]; // -55 gold
@@ -157,7 +157,7 @@ describe("Economy Engine", () => {
 
       const breakdown = computeWeeklyBreakdown(state);
 
-      // Income: 10 (fame) + 75 (fight) = 85
+      // Income: 3 (fame) + 40 (fight) = 43
       // Expenses: 55 (upkeep) = 55
       // Net = 30
       expect(breakdown.net).toBe(-37);
@@ -169,10 +169,10 @@ describe("Economy Engine", () => {
       const state = createFreshState();
       state.week = 3;
       state.gold = 100;
-      state.fame = 5; // +10 gold
+      state.fame = 5; // +3 gold (Math.round(2.5))
 
       const w1 = makeTestWarrior({ name: "Alice" });
-      state.roster = [w1]; // -45 gold
+      state.roster = [w1]; // -55 gold
 
       state.arenaHistory = [
         {
@@ -192,10 +192,10 @@ describe("Economy Engine", () => {
 
       const newState = processEconomy(state);
 
-      // Income: 10 (fame) + 75 (fight) + 40 (win) = 125
+      // Income: 3 (fame) + 40 (fight) + 25 (win) = 68
       // Expenses: 55 (upkeep) = 55
-      // Net = 70
-      // Expected new gold = 100 + 70 = 170
+      // Net = 13
+      // Expected new gold = 100 + 13 = 113
 
       expect(newState.gold).toBe(73);
 

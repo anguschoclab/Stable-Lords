@@ -118,20 +118,20 @@ describe("Economy Engine", () => {
       const breakdown = computeWeeklyBreakdown(state);
 
       // Income:
-      // Fights: 2 * 75 = 150
-      // Wins: 1 * 40 = 40
-      // Fame: 10 * 2 = 20
-      // Total income: 210
-      expect(breakdown.totalIncome).toBe(210);
+      // Fights: 2 * 40 = 80
+      // Wins: 1 * 25 = 25
+      // Fame: 10 * 0.5 = 5
+      // Total income: 110
+      expect(breakdown.totalIncome).toBe(110);
 
       const incomeLabels = breakdown.income.map(i => i.label);
       expect(incomeLabels).toContain("Fight purses (2)");
       expect(incomeLabels).toContain("Win bonuses (1)");
       expect(incomeLabels).toContain("Fame dividends");
 
-      expect(breakdown.income.find(i => i.label.includes("Fight purses"))?.amount).toBe(150);
-      expect(breakdown.income.find(i => i.label.includes("Win bonuses"))?.amount).toBe(40);
-      expect(breakdown.income.find(i => i.label.includes("Fame dividends"))?.amount).toBe(20);
+      expect(breakdown.income.find(i => i.label.includes("Fight purses"))?.amount).toBe(80);
+      expect(breakdown.income.find(i => i.label.includes("Win bonuses"))?.amount).toBe(25);
+      expect(breakdown.income.find(i => i.label.includes("Fame dividends"))?.amount).toBe(5);
     });
 
     it("should accurately compute net income", () => {
@@ -157,10 +157,10 @@ describe("Economy Engine", () => {
 
       const breakdown = computeWeeklyBreakdown(state);
 
-      // Income: 10 (fame) + 75 (fight) = 85
+      // Income: 5 * 0.5 (fame) = 3 + 40 (fight) = 43 (Fame is Math.round(5 * 0.5) = 3)
       // Expenses: 55 (upkeep) = 55
-      // Net = 30
-      expect(breakdown.net).toBe(30);
+      // Net = 43 - 55 = -12
+      expect(breakdown.net).toBe(-12);
     });
   });
 
@@ -192,12 +192,12 @@ describe("Economy Engine", () => {
 
       const newState = processEconomy(state);
 
-      // Income: 10 (fame) + 75 (fight) + 40 (win) = 125
+      // Income: 5 * 0.5 (fame)=3 + 40 (fight) + 25 (win) = 68
       // Expenses: 55 (upkeep) = 55
-      // Net = 70
-      // Expected new gold = 100 + 70 = 170
+      // Net = 13
+      // Expected new gold = 100 + 13 = 113
 
-      expect(newState.gold).toBe(170);
+      expect(newState.gold).toBe(113);
 
       // Verify immutability
       expect(newState).not.toBe(state);
@@ -212,19 +212,19 @@ describe("Economy Engine", () => {
 
       const fightPurseEntry = newLedgerEntries.find(e => e.label.includes("Fight purses"));
       expect(fightPurseEntry).toBeDefined();
-      expect(fightPurseEntry?.amount).toBe(75);
+      expect(fightPurseEntry?.amount).toBe(40);
       expect(fightPurseEntry?.category).toBe("fight");
       expect(fightPurseEntry?.week).toBe(3);
 
       const winBonusEntry = newLedgerEntries.find(e => e.label.includes("Win bonuses"));
       expect(winBonusEntry).toBeDefined();
-      expect(winBonusEntry?.amount).toBe(40);
+      expect(winBonusEntry?.amount).toBe(25);
       expect(winBonusEntry?.category).toBe("fight");
       expect(winBonusEntry?.week).toBe(3);
 
       const fameEntry = newLedgerEntries.find(e => e.label.includes("Fame dividends"));
       expect(fameEntry).toBeDefined();
-      expect(fameEntry?.amount).toBe(10);
+      expect(fameEntry?.amount).toBe(3);
       expect(fameEntry?.category).toBe("fight");
       expect(fameEntry?.week).toBe(3);
 

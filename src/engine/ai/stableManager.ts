@@ -25,6 +25,14 @@ export function processAIStable(
   const activeRoster = updatedRival.roster.filter(w => w.status === "Active");
   let currentHiringPool = [...(state.hiringPool || [])];
   const gazetteItems: string[] = [];
+  
+  // ── Fatigue Decay for AI Warriors (-25 per week) ──
+  updatedRival.roster = updatedRival.roster.map(w => {
+    if (w.status === "Active" && w.fatigue && w.fatigue > 0) {
+      return { ...w, fatigue: Math.max(0, w.fatigue - 25) };
+    }
+    return w;
+  });
 
   // 2. Calculate Weekly Income (Fights + Fame)
   let weeklyIncome = 0;

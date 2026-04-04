@@ -42,17 +42,30 @@ export function generateRivalStables(count: number, seed: number, week: number =
   const usedTrainerNames = new Set<string>();
   const rivals: RivalStableData[] = [];
 
-  const shuffled = [...STABLE_TEMPLATES].sort(() => rng() - 0.5);
-  const picked = shuffled.slice(0, count);
+  // Support for count > templates.length via over-sampling with procedural variance
+  const iterations = Math.ceil(count / STABLE_TEMPLATES.length);
+  const picked: { tmpl: StableTemplate; iteration: number }[] = [];
+  
+  for (let iter = 0; iter < iterations; iter++) {
+    const shuffled = [...STABLE_TEMPLATES].sort(() => rng() - 0.5);
+    shuffled.forEach(tmpl => {
+      if (picked.length < count) {
+        picked.push({ tmpl, iteration: iter });
+      }
+    });
+  }
 
   for (let i = 0; i < picked.length; i++) {
-    const tmpl = picked[i];
+    const { tmpl, iteration } = picked[i];
     const stableId = `rival_${i}`;
-
+    
+    // Procedural name variance for duplicates
+    const nameSuffix = iteration > 0 ? ` [${iteration === 1 ? "II" : iteration === 2 ? "III" : iteration === 3 ? "IV" : "V"}]` : "";
+    const stableName = `${tmpl.stableName}${nameSuffix}`;
     const owner: Owner = {
       id: stableId,
-      name: tmpl.ownerName,
-      stableName: tmpl.stableName,
+      name: iteration > 0 ? `${tmpl.ownerName} ${String.fromCharCode(64 + iteration + 1)}` : tmpl.ownerName,
+      stableName: stableName,
       fame: tmpl.fameRange[0] + Math.floor(rng() * (tmpl.fameRange[1] - tmpl.fameRange[0] + 1)),
       renown: tmpl.tier === "Legendary" ? 5 : tmpl.tier === "Major" ? 2 : 0,
       titles: tmpl.tier === "Legendary" ? 2 + Math.floor(rng() * 3) : tmpl.tier === "Major" ? Math.floor(rng() * 3) : 0,
@@ -113,7 +126,7 @@ export function generateRivalStables(count: number, seed: number, week: number =
       tier: tmpl.tier,
       trainers,
       strategy: {
-        intent: "CONSOLIDATION",
+        intent: iteration % 3 === 0 ? "EXPANSION" : "CONSOLIDATION",
         planWeeksRemaining: 4 + Math.floor(rng() * 4)
       },
       agentMemory: {
@@ -147,7 +160,7 @@ function biasedAttrs(rng: () => number, bias: Record<string, number>, catchupPoo
 }
 
 function generateStableTrainers(rng: () => number, stableId: string, philosophy: string, count: number, usedNames: Set<string>, tier: string): Trainer[] {
-  const trainers: StableTrainer[] = [];
+  const trainers: Trainer[] = [];
   const focusPool = PHILOSOPHY_TO_FOCUS[philosophy] ?? ["Aggression", "Defense", "Mind"];
   for (let i = 0; i < count; i++) {
     const firstName = TRAINER_FIRST_NAMES[Math.floor(rng() * TRAINER_FIRST_NAMES.length)];

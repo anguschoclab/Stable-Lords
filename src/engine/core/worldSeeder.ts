@@ -14,8 +14,8 @@ export function populateInitialWorld(state: GameState, seed: number): GameState 
   const rng = new SeededRNG(seed);
   const usedNames = new Set<string>();
 
-  // 1. Generate Rivals (10 stables)
-  const rivals = generateRivalStables(10, seed + 1);
+  // 1. Generate Rivals (45 stables for the fluid population target)
+  const rivals = generateRivalStables(45, seed + 1);
   rivals.forEach(r => r.roster.forEach(w => usedNames.add(w.name)));
 
   // 2. Generate Initial Recruit Pool

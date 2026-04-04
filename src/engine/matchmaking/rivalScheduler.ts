@@ -155,7 +155,7 @@ export function runAIvsAIBouts(state: GameState, seed?: number): { results: AIBo
     roster: r.roster.map(w => ({ ...w, career: { ...w.career } })),
   }));
 
-  const meta = computeMetaDrift(state.arenaHistory, 20);
+  const meta = computeMetaDrift(state.arenaHistory, 200);
   const rivalryMap = new Map<string, boolean>();
   for (const rv of (state.rivalries || [])) {
     rivalryMap.set(getStablePairKey(rv.stableIdA, rv.stableIdB), true);

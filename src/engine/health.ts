@@ -12,16 +12,29 @@ export function computeHealthImpact(state: GameState): StateImpact {
   const rosterUpdates = new Map<string, Partial<Warrior>>();
 
   for (const w of state.roster) {
+    const updates: Partial<Warrior> = {};
+    let changed = false;
+
+    // ── Fatigue Decay (-25 per week) ──
+    if (w.fatigue && w.fatigue > 0) {
+      updates.fatigue = Math.max(0, w.fatigue - 25);
+      changed = true;
+    }
+
+    // ── Injury Ticking ──
     const injuryObjects = (w.injuries || []).filter((i): i is InjuryData => typeof i !== "string");
-    if (injuryObjects.length === 0) continue;
-    
-    const result = tickInjuries(injuryObjects);
-    if (result.healed.length > 0) {
-      injuryNews.push(`${w.name} recovered from ${result.healed.join(", ")}.`);
+    if (injuryObjects.length > 0) {
+      const result = tickInjuries(injuryObjects);
+      if (result.healed.length > 0) {
+        injuryNews.push(`${w.name} recovered from ${result.healed.join(", ")}.`);
+      }
+      updates.injuries = result.active;
+      changed = true;
     }
     
-    // Always update the roster with the new injury state (decremented weeksRemaining or empty)
-    rosterUpdates.set(w.id, { injuries: result.active });
+    if (changed) {
+      rosterUpdates.set(w.id, updates);
+    }
   }
 
   return {

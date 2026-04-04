@@ -115,6 +115,7 @@ export interface Warrior {
   status: WarriorStatus;
   age?: number;
   fatigue?: number;
+  seasonPoints?: number;
   xp?: number;
   potentialRevealed?: Partial<Record<keyof Attributes, boolean>>;
   deathWeek?: number;

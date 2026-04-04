@@ -100,16 +100,16 @@ export function calculateKillWindow(
   matchupBonus: number = 0
 ): number {
   // Base threshold (lethal hits are rare but possible)
-  // Target: ~10% overall mortality across the league
-  let threshold = 0.08; 
+  // Target: ~10% overall mortality across the league (~0.8% per bout at 12 bouts/yr)
+  let threshold = 0.008; 
 
   // HP factor: higher chance if HP is low (below 30%)
-  if (hpRatio < 0.3) threshold += 0.12;
-  else if (hpRatio < 0.5) threshold += 0.04;
+  if (hpRatio < 0.3) threshold += 0.012;
+  else if (hpRatio < 0.5) threshold += 0.004;
 
   // Endurance (Fatigue) factor: higher chance if target is exhausted (below 30%)
-  if (enduranceRatio < 0.3) threshold += 0.20; 
-  else if (enduranceRatio < 0.5) threshold += 0.08;
+  if (enduranceRatio < 0.3) threshold += 0.020; 
+  else if (enduranceRatio < 0.5) threshold += 0.008;
 
   // Location factor: Vital spots are deadlier (Now using multipliers for vital dominance)
   let locMult = 1.0;
@@ -120,19 +120,18 @@ export function calculateKillWindow(
   threshold *= locMult;
 
   // Strategic Risk (AL/OE): Aggression fuels lethality
-  // (attOE + attAL - 10) range is -8 to +10. 
-  // At OE 10/AL 10, bonus is +0.10. At OE 1/AL 1, penalty is -0.08.
-  threshold += (attOE + attAL - 10) * 0.01;
+  // At OE 10/AL 10, bonus is +0.01. At OE 1/AL 1, penalty is -0.008.
+  threshold += (attOE + attAL - 10) * 0.001;
 
   // Matchup Bias: Dominant styles find more fatal openings
-  threshold += matchupBonus * 0.04;
+  threshold += matchupBonus * 0.004;
 
   // Kill Desire: Attacker's aggression
-  threshold += (killDesire - 5) * 0.01;
+  threshold += (killDesire - 5) * 0.001;
 
   // Phase escalation: fights get more dangerous as time passes
-  threshold += phaseLevel * 0.04;
+  threshold += phaseLevel * 0.004;
 
-  // Cap at 85% for vitals, but limb hits are naturally capped by their locMult
-  return Math.max(0, Math.min(0.85, threshold));
+  // Cap at 35% for the perfect storm, but rare.
+  return Math.max(0, Math.min(0.35, threshold));
 }

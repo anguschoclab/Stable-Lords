@@ -24,7 +24,19 @@ export function aiDraftFromPool(
 
   const meta = computeMetaDrift(state.arenaHistory || []);
   
-  for (const rival of rivals) {
+  // 🐍 Snake Draft Priority: Sort rivals by "Need"
+  // Priority 1: Fewest active warriors
+  // Priority 2: Lowest gold
+  const sortedRivals = [...rivals].sort((a, b) => {
+    const aActive = a.roster.filter(w => w.status === "Active").length;
+    const bActive = b.roster.filter(w => w.status === "Active").length;
+    if (aActive !== bActive) return aActive - bActive;
+    return a.gold - b.gold;
+  });
+
+  const draftResults: Record<string, RivalStableData> = {};
+
+  for (const rival of sortedRivals) {
     const { updatedRival, updatedPool, gazetteItems } = processRecruitment(
       rival,
       currentPool,
@@ -34,14 +46,17 @@ export function aiDraftFromPool(
       meta
     );
     
-    updatedRivals.push(updatedRival);
+    draftResults[updatedRival.owner.id] = updatedRival;
     currentPool = updatedPool;
     globalGazetteItems.push(...gazetteItems);
   }
 
+  // Restore original rival order to maintain pipeline stability
+  const finalizedRivals = rivals.map(r => draftResults[r.owner.id] || r);
+
   return { 
     updatedPool: currentPool, 
-    updatedRivals, 
+    updatedRivals: finalizedRivals, 
     gazetteItems: globalGazetteItems 
   };
 }

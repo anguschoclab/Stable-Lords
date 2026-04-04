@@ -15,6 +15,8 @@ import { updateEntityInList } from "@/utils/stateUtils";
 import type { PoolWarrior, RivalStableData, Trainer } from "@/types/game";
 import { convertRetiredToTrainer } from "@/engine/trainers";
 import { computeTrainerAging } from "@/engine/trainerAging";
+import { TournamentSelectionService } from "@/engine/matchmaking/tournamentSelection";
+import { WorldManagementService } from "@/engine/ai/worldManagement";
 
 import { computeTrainingImpact, trainingImpactToStateImpact } from "@/engine/training";
 import { computeEconomyImpact } from "@/engine/economy";
@@ -84,6 +86,29 @@ export function processRivalActions(state: GameState, newWeek: number): GameStat
     hiringPool: currentPool 
   };
   
+  // 🏆 Phase 0: Tournament Check (Week 13 finale)
+  const isTournamentWeek = newWeek > 0 && newWeek % 13 === 0;
+
+  if (isTournamentWeek) {
+    const tiers = ["Minor", "Established", "Major", "Legendary"];
+    const tournamentBouts: string[] = [];
+    
+    tiers.forEach((tier, tIdx) => {
+      const tour = TournamentSelectionService.generateTournament(state, tier, newWeek, state.season, newWeek * 100 + tIdx);
+      newState.tournaments = [...(newState.tournaments || []), tour];
+      tournamentBouts.push(`${tour.name} initiated with 64 warriors.`);
+    });
+    
+    newState.newsletter = [...(newState.newsletter || []), { 
+      week: newWeek, 
+      title: "🏆 GRAND CHAMPIONSHIP SEASON", 
+      items: tournamentBouts 
+    }];
+    
+    // In a tournament week, we bypass regular AI-vs-AI exhibitions
+    return newState;
+  }
+
   // 4. Background Rival Simulation (Rival-vs-Rival)
   const rivalSeed = newWeek * 7919 + 777;
   const aiResults = runAIvsAIBouts(newState, rivalSeed);
@@ -134,18 +159,24 @@ export function advanceWeek(state: GameState): GameState {
     newState.newsletter = [...(newState.newsletter || []), { week: nextWeek, title: "Trainer Career Updates", items: trainerNews }];
   }
 
-  // 🏆 Phase 3: Seasonal adaptation (Narrative and Philosophy)
+  // 🏆 Phase 3: Seasonal adaptation (Narrative, Philosophy, and Churn)
   if (nextSeason !== state.season) {
     const seasonSeed = nextWeek * 133;
-    const { updatedRivals, gazetteItems: philGazette } = evolvePhilosophies(newState, nextSeason, seasonSeed);
-    newState.rivals = updatedRivals;
+    
+    // 🏛️ World Stability: Seasonal Churn (Bankruptcy & Expansion)
+    const { updatedRivals: churnRivals, news: churnNews } = WorldManagementService.processSeasonalChurn(newState, seasonSeed + 55);
+    newState.rivals = churnRivals;
+
+    const { updatedRivals: philRivals, gazetteItems: philGazette } = evolvePhilosophies(newState, nextSeason, seasonSeed);
+    newState.rivals = philRivals;
     const narrGazette = generateOwnerNarratives(newState, nextSeason, seasonSeed + 1);
     
-    if (philGazette.length > 0 || narrGazette.length > 0) {
+    const combinedNews = [...churnNews, ...philGazette, ...narrGazette];
+    if (combinedNews.length > 0) {
       newState.newsletter = [...(newState.newsletter || []), { 
         week: nextWeek, 
-        title: `${state.season} Season Wrap-up`, 
-        items: [...philGazette, ...narrGazette] 
+        title: `${state.season} Season Summary`, 
+        items: combinedNews 
       }];
     }
   }

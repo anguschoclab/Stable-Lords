@@ -100,8 +100,8 @@ export function calculateKillWindow(
   matchupBonus: number = 0
 ): number {
   // Base threshold (lethal hits are rare but possible)
-  // Target: ~10% overall mortality across the league (~1.2% per bout at 12 bouts/yr)
-  let threshold = 0.012; 
+  // Target: ~10% overall mortality across the league (~6.0% per-bout conversion at 12 bouts/yr)
+  let threshold = 0.06; 
 
   // HP factor: higher chance if HP is low (below 30%)
   if (hpRatio < 0.3) threshold += 0.012;
@@ -113,9 +113,9 @@ export function calculateKillWindow(
 
   // Location factor: Vital spots are deadlier (Now using multipliers for vital dominance)
   let locMult = 1.0;
-  if (location === "head") locMult = 1.6;
-  if (location === "chest" || location === "abdomen") locMult = 1.4;
-  if (location === "right leg" || location === "left leg" || location === "right arm" || location === "left arm") locMult = 0.4;
+  if (location === "head") locMult = 3.5;
+  if (location === "chest" || location === "abdomen") locMult = 2.0;
+  if (location === "right leg" || location === "left leg" || location === "right arm" || location === "left arm") locMult = 0.2;
 
   threshold *= locMult;
 

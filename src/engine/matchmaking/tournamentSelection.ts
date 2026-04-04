@@ -116,8 +116,9 @@ export const TournamentSelectionService = {
   /** Helper: Get AI plan for tournament warrior */
   getAIPlan(state: GameState, w: Warrior) {
      const rival = (state.rivals || []).find(r => r.roster.some(rw => rw.name === w.name));
-     if (!rival) return defaultPlanForWarrior(w);
-     return aiPlanForWarrior(w, rival.owner.personality || "Pragmatic", rival.philosophy || "Opportunist", undefined, rival.strategy?.intent);
+     if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
+     const plan = aiPlanForWarrior(w, rival.owner.personality || "Pragmatic", rival.philosophy || "Opportunist", undefined, rival.strategy?.intent);
+     return { ...plan, killDesire: 7 }; // Force championship stakes
   },
 
   /** Helper: Apply updates after tournament bout */

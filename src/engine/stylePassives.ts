@@ -120,7 +120,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       decBonus: ctx.targetedLocation !== "Any" ? 3 : 0,
       killNarrative: ctx.hitLocation === "head" ? "finds the fatal gap in the helm with surgical precision — a KILLING BLOW to the skull!" : "places the blade with lethal accuracy — a precise KILLING STRIKE!",
       extendedKillWindow: ctx.hitLocation === "head",
-      killWindowHpMult: ctx.hitLocation === "head" ? 0.4 : 0.3,
+      killWindowHpMult: ctx.hitLocation === "head" ? 0.85 : 0.75,
     }),
     getAntiSynergy: (off, def) => {
       let offMult = 1, warning;

@@ -11,8 +11,9 @@ import {
   narrateAttack, narrateParry, narrateDodge, narrateCounterstrike,
   narrateHit, damageSeverityLine, stateChangeLine,
   fatigueLine, crowdReaction, narrateInitiative,
-  tauntLine, getWeaponDisplayName, narrateInsightHint
+  tauntLine, narrateInsightHint
 } from "../narrativePBP";
+import { getWeaponDisplayName } from "../narrative/narrativeUtils";
 
 export interface NarrationContext {
   rng: () => number;
@@ -81,6 +82,9 @@ export function narrateEvents(
 
       case "HIT":
         if (event.location) {
+          const isMastery = !!event.metadata?.isMastery;
+          const isSuperFlashy = isMastery && (!!event.metadata?.crit || (event.value && event.value > 5) || events.some(e => e.type === "BOUT_END"));
+
           // If it's a normal attack (not following a PARRY or COUNTERSTRIKE event immediately), 
           // we might need to narrate the attack first if it wasn't already.
           // For simplicity in this decoupled version, we assume the resolution emits 
@@ -92,12 +96,12 @@ export function narrateEvents(
           // Normal: attack + hit
           
           if (events.some(e => e.type === "DEFENSE" && e.result === "RIPOSTE" && e.actor === event.actor)) {
-             log.push({ minute, text: narrateAttack(rng, actorName, weapon) });
+             log.push({ minute, text: narrateAttack(rng, actorName, weapon, isMastery) });
           } else if (!events.some(e => e.type === "DEFENSE" && e.actor === event.target)) {
-             log.push({ minute, text: narrateAttack(rng, actorName, weapon) });
+             log.push({ minute, text: narrateAttack(rng, actorName, weapon, isMastery) });
           }
 
-          log.push({ minute, text: narrateHit(rng, opponentName, event.location) });
+          log.push({ minute, text: narrateHit(rng, opponentName, event.location, isMastery, isSuperFlashy, actorName, weapon) });
           
           if (event.metadata?.crit) {
             log.push({ minute, text: `💥 CRITICAL HIT! ${actorName} finds a vital weakness!` });
@@ -134,9 +138,8 @@ export function narrateEvents(
         break;
 
       case "INSIGHT": {
-        // Logic for which attribute to hint at could be passed in metadata
-        // For now, mirroring the 20% chance from simulate.ts if we want to keep it simple
-        const hint = narrateInsightHint(rng, event.metadata?.attribute || "ST");
+        const attribute = (event.metadata?.attribute as string) || "ST";
+        const hint = narrateInsightHint(rng, attribute);
         if (hint) log.push({ minute, text: `🔍 ${hint}` });
         break;
       }

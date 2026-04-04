@@ -9,6 +9,7 @@ import {
 
 interface WarriorPaperDollProps {
   injuries: (string | InjuryData)[];
+  isWeaponMastered?: boolean;
   className?: string;
   size?: number;
 }
@@ -29,7 +30,7 @@ const SEVERITY_STROKE: Record<InjurySeverity, string> = {
   Permanent: "stroke-white/20",
 };
 
-export default function WarriorPaperDoll({ injuries, className, size = 200 }: WarriorPaperDollProps) {
+export default function WarriorPaperDoll({ injuries, isWeaponMastered, className, size = 200 }: WarriorPaperDollProps) {
   // Normalize injuries
   const activeInjuries = injuries.filter(i => typeof i !== 'string') as InjuryData[];
   
@@ -45,7 +46,7 @@ export default function WarriorPaperDoll({ injuries, className, size = 200 }: Wa
     return "Minor";
   };
 
-  const Part = ({ location, path, label }: { location: InjuryLocation, path: string, label: string }) => {
+  const Part = ({ location, path, label, extraClass }: { location: InjuryLocation, path: string, label: string, extraClass?: string }) => {
     const status = getPartStatus(location);
     const relevantInjuries = activeInjuries.filter(i => i.location === location);
 
@@ -58,7 +59,8 @@ export default function WarriorPaperDoll({ injuries, className, size = 200 }: Wa
               "transition-all duration-500 ease-in-out stroke-[1.5]",
               status ? SEVERITY_COLORS[status] : "fill-white/5",
               status ? SEVERITY_STROKE[status] : "stroke-white/10 hover:stroke-white/30",
-              status && "animate-pulse"
+              status && "animate-pulse",
+              extraClass
             )}
           />
         </TooltipTrigger>
@@ -126,6 +128,7 @@ export default function WarriorPaperDoll({ injuries, className, size = 200 }: Wa
           location="Right Arm" 
           label="Right Arm (Weapon)" 
           path="M64 32L72 35L78 65L68 68L64 32Z" 
+          extraClass={isWeaponMastered ? "fill-arena-gold/40 stroke-arena-gold drop-shadow-[0_0_8px_#FFD700] animate-pulse" : ""}
         />
         
         {/* Left Leg */}

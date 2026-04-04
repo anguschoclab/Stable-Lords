@@ -8,11 +8,13 @@ import {
   type DefensiveTactic,
   type FightPlan,
   type WeatherType,
+  type WarriorFavorites,
 } from "@/types/game";
 import { skillCheck, contestCheck } from "./combatMath";
 import { computeHitDamage, rollHitLocation, applyProtectMod, calculateKillWindow } from "./combatDamage";
 import { enduranceCost, fatiguePenalty } from "./combatFatigue";
 import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, type Phase as StylePhase } from "../stylePassives";
+import { getFavoriteRhythmBonus } from "../favorites";
 import { 
   GLOBAL_ATT_BONUS, 
   GLOBAL_PAR_PENALTY, 
@@ -60,6 +62,7 @@ export interface FighterState {
   consecutiveHits: number;
   armHits: number;
   legHits: number;
+  favorites?: WarriorFavorites;
 }
 
 export interface ResolutionContext {
@@ -71,8 +74,8 @@ export interface ResolutionContext {
   matchupD: number;
   trainerModsA: { [key: string]: number };
   trainerModsD: { [key: string]: number };
-  weaponReqA: { endurancePenalty: number };
-  weaponReqD: { endurancePenalty: number };
+  weaponReqA: { endurancePenalty: number; attPenalty: number };
+  weaponReqD: { endurancePenalty: number; attPenalty: number };
   tacticStreakA: number;
   tacticStreakD: number;
 }
@@ -219,18 +222,28 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   if (passD.narrative && rng() < 0.4) events.push({ type: "PASSIVE", actor: "D", result: passD.narrative });
 
   // 2. Initiative Phase
-  const iniA = fA.skills.INI + alIniMod(AL_A) + ctx.matchupA + fatA + defModsA.iniBonus + getTempoBonus(fA.style, stylePhase) + passA.iniBonus - fA.legHits;
-  const iniD = fD.skills.INI + alIniMod(AL_D) + ctx.matchupD + fatD + defModsD.iniBonus + getTempoBonus(fD.style, stylePhase) + passD.iniBonus - fD.legHits;
+  const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA as any, OE_A, AL_A) : 0;
+  const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD as any, OE_D, AL_D) : 0;
+
+  const iniA = fA.skills.INI + alIniMod(AL_A) + ctx.matchupA + fatA + defModsA.iniBonus + getTempoBonus(fA.style, stylePhase) + passA.iniBonus + masteryIniA - fA.legHits;
+  const iniD = fD.skills.INI + alIniMod(AL_D) + ctx.matchupD + fatD + defModsD.iniBonus + getTempoBonus(fD.style, stylePhase) + passD.iniBonus + masteryIniD - fD.legHits;
   
   const aGoesFirst = contestCheck(rng, iniA, iniD);
-  const att = aGoesFirst ? fA : fD;
-  const def = aGoesFirst ? fD : fA;
   const attLabel = aGoesFirst ? "A" : "D";
   const defLabel = aGoesFirst ? "D" : "A";
+  const attMasteryIni = aGoesFirst ? masteryIniA : masteryIniD;
 
-  events.push({ type: "INITIATIVE", actor: attLabel, value: aGoesFirst ? iniA : iniD, result: true });
+  events.push({ 
+    type: "INITIATIVE", 
+    actor: attLabel, 
+    value: aGoesFirst ? iniA : iniD, 
+    result: true,
+    metadata: { isMastery: attMasteryIni > 0 }
+  });
 
   // 3. Resolve Attack
+  const att = aGoesFirst ? fA : fD;
+  const def = aGoesFirst ? fD : fA;
   const curAttOE = aGoesFirst ? OE_A : OE_D;
   const curAttAL = aGoesFirst ? AL_A : AL_D;
   const curOffMods = aGoesFirst ? offModsA : offModsD;
@@ -238,8 +251,9 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const curBiasAtt = aGoesFirst ? biasAttA : biasAttD;
   const curAntiSyn = getStyleAntiSynergy(att.style, (aGoesFirst ? tactA : tactD).offTactic, (aGoesFirst ? tactA : tactD).defTactic);
   const overAtt = aGoesFirst ? Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakA) : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD);
+  const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
 
-  const attSucc = skillCheck(rng, att.skills.ATT, oeAttMod(curAttOE, att.style) + (aGoesFirst ? ctx.matchupA : ctx.matchupD) + (aGoesFirst ? fatA : fatD) + curOffMods.attBonus + curPassA.attBonus + Math.round((curAntiSyn.offMult - 1) * 5) + INITIATIVE_PRESS_BONUS + GLOBAL_ATT_BONUS + curBiasAtt - overAtt - att.armHits);
+  const attSucc = skillCheck(rng, att.skills.ATT, oeAttMod(curAttOE, att.style) + (aGoesFirst ? ctx.matchupA : ctx.matchupD) + (aGoesFirst ? fatA : fatD) + curOffMods.attBonus + curPassA.attBonus + Math.round((curAntiSyn.offMult - 1) * 5) + INITIATIVE_PRESS_BONUS + GLOBAL_ATT_BONUS + curBiasAtt - overAtt - att.armHits + curAttWepReq.attPenalty);
 
   if (!attSucc) {
     events.push({ type: "ATTACK", actor: attLabel, result: "WHIFF" });
@@ -279,10 +293,10 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   }
 
   // 5. Apply Endurance Costs
-  const attWepReq = attLabel === "A" ? ctx.weaponReqA : ctx.weaponReqD;
-  const defWepReq = defLabel === "A" ? ctx.weaponReqA : ctx.weaponReqD;
-  att.endurance -= Math.round(enduranceCost(curAttOE, curAttAL, ctx.weather) * getEnduranceMult(att.style) * attWepReq.endurancePenalty);
-  def.endurance -= Math.max(1, Math.round(enduranceCost(aGoesFirst ? OE_D : OE_A, aGoesFirst ? AL_D : AL_A, ctx.weather) * DEFENDER_ENDURANCE_DISCOUNT * getEnduranceMult(def.style) * defWepReq.endurancePenalty));
+  att.endurance -= Math.round(enduranceCost(curAttOE, curAttAL, ctx.weather) * getEnduranceMult(att.style) * curAttWepReq.endurancePenalty);
+  
+  const curDefWepReq = aGoesFirst ? ctx.weaponReqD : ctx.weaponReqA;
+  def.endurance -= Math.max(1, Math.round(enduranceCost(aGoesFirst ? OE_D : OE_A, aGoesFirst ? AL_D : AL_A, ctx.weather) * DEFENDER_ENDURANCE_DISCOUNT * getEnduranceMult(def.style) * curDefWepReq.endurancePenalty));
   
   if ((fA.endurance <= 0 || fD.endurance <= 0) && !events.some(e => e.result === "Kill" || e.result === "KO")) {
     if (fA.endurance <= 0 && fD.endurance <= 0) events.push({ type: "BOUT_END", actor: "A", result: "Exhaustion" });

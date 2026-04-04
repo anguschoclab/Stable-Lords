@@ -8,10 +8,12 @@ import { generateOwnerNarratives } from "@/engine/ownerNarrative";
 import { WorldManagementService } from "@/engine/ai/worldManagement";
 import { InsightTokenService } from "@/engine/tokens/insightTokenService";
 import { seededRng } from "@/engine/rivals";
+import { processOwnerGrudges } from "@/engine/ownerGrudges";
 
 // 🌩️ New Modular Passes
 import { runEconomyPass } from "../passes/EconomyPass";
 import { runWarriorPass } from "../passes/WarriorPass";
+import { runEquipmentPass } from "../passes/EquipmentPass";
 import { runWorldPass } from "../passes/WorldPass";
 import { runRivalStrategyPass } from "../passes/RivalStrategyPass";
 import { runEventPass } from "../passes/EventPass";
@@ -101,7 +103,13 @@ export function advanceWeek(state: GameState): GameState {
     newState = InsightTokenService.awardToken(newState, tokenRng() > 0.5 ? "Weapon" : "Rhythm", `${newState.season} Championship`);
   }
 
-  // 8. Rival Strategy & Background Actions
+  // 8. Physicality & Aging (Injuries, Development)
+  newState = runWarriorPass(newState);
+
+  // 8.1 — AI Equipment Optimization (Apply Favorites)
+  newState = runEquipmentPass(newState);
+
+  // 8.2. Rival Strategy & Background Actions
   newState = runRivalStrategyPass(newState, nextWeek);
 
   // 9. Economy & Financial Maintenance
@@ -109,6 +117,13 @@ export function advanceWeek(state: GameState): GameState {
 
   // 10. Random Events (Tavern Brawl, etc.)
   newState = runEventPass(newState, nextWeek);
+
+  // 10.1 — Owner Grudges & Rivalries
+  const { grudges: updatedGrudges, gazetteItems: grudgeNews } = processOwnerGrudges(newState, newState.ownerGrudges || []);
+  newState.ownerGrudges = updatedGrudges;
+  if (grudgeNews.length > 0) {
+    newState.newsletter = [...(newState.newsletter || []), { week: nextWeek, title: "Stable Rivalries & Grudges", items: grudgeNews }];
+  }
 
   // 11. Final Cleanup
   newState = { ...newState, trainingAssignments: [] };

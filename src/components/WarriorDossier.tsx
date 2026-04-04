@@ -119,7 +119,11 @@ export function WarriorDossier({ warriorId }: WarriorDossierProps) {
                <Activity className="h-3 w-3 text-arena-blood animate-pulse" />
             </CardHeader>
             <CardContent className="flex justify-center p-4">
-              <WarriorPaperDoll injuries={warrior.injuries} size={140} />
+              <WarriorPaperDoll 
+                injuries={warrior.injuries} 
+                isWeaponMastered={!!(warrior.favorites?.weaponId && warrior.equipment?.weapon === warrior.favorites.weaponId && warrior.favorites.discovered.weapon)}
+                size={140} 
+              />
             </CardContent>
           </Card>
         </div>

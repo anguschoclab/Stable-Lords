@@ -165,19 +165,30 @@ export function runAIvsAIBouts(state: GameState, seed?: number): { results: AIBo
     const stableA = rivals[a.stableIdx];
     const stableD = rivals[d.stableIdx];
 
+    const grudgeA = state.ownerGrudges?.find(g => 
+      (g.ownerIdA === a.stableId && g.ownerIdB === d.stableId) || 
+      (g.ownerIdB === a.stableId && g.ownerIdA === d.stableId)
+    );
+    const grudgeD = state.ownerGrudges?.find(g => 
+      (g.ownerIdA === d.stableId && g.ownerIdB === a.stableId) || 
+      (g.ownerIdB === d.stableId && g.ownerIdA === a.stableId)
+    );
+
     const planA = a.warrior.plan ?? aiPlanForWarrior(
       a.warrior, 
       stableA.owner.personality || "Pragmatic", 
       stableA.philosophy || "Opportunist", 
       d.warrior.style,
-      stableA.strategy?.intent
+      stableA.strategy?.intent,
+      grudgeA?.intensity ?? 0
     );
     const planD = d.warrior.plan ?? aiPlanForWarrior(
       d.warrior, 
       stableD.owner.personality || "Pragmatic", 
       stableD.philosophy || "Opportunist", 
       a.warrior.style,
-      stableD.strategy?.intent
+      stableD.strategy?.intent,
+      grudgeD?.intensity ?? 0
     );
 
     const boutSeed = hashStr(`${state.week}|${a.warrior.id}|${d.warrior.id}`);

@@ -18,7 +18,7 @@ export function runWarriorPass(state: GameState): GameState {
     computeHealthImpact(state),
   ];
 
-  let nextState = resolveImpacts(state, impacts);
+  const nextState = resolveImpacts(state, impacts);
   nextState.seasonalGrowth = (nextState.seasonalGrowth || 0) + (seasonalGrowth || 0);
   
   return nextState;

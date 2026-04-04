@@ -37,9 +37,9 @@ export function createFighterState(
   const derived = warrior?.derivedStats ?? { hp: 100, endurance: 100, damage: 5, encumbrance: 0 };
   
   const equip = warrior?.equipment ?? DEFAULT_LOADOUT;
-  const classicBonus = getClassicWeaponBonus(plan.style, equip.weapon);
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
   const favWeapon = warrior ? getFavoriteWeaponBonus(warrior) : 0;
+  const isMastered = favWeapon > 0;
 
   const getShieldBonus = (id: string) => {
     if (id === "small_shield") return { def: 1, att: 0 };
@@ -58,7 +58,7 @@ export function createFighterState(
   );
 
   const effSkills: BaseSkills = {
-    ATT: skills.ATT + (trainerMods?.attMod ?? 0) + classicBonus + favWeapon + weaponReq.attPenalty + totalShieldAtt,
+    ATT: skills.ATT + (trainerMods?.attMod ?? 0) + favWeapon + weaponReq.attPenalty + totalShieldAtt,
     PAR: skills.PAR + (trainerMods?.parMod ?? 0) + totalShieldDef,
     DEF: skills.DEF + (trainerMods?.defMod ?? 0) + totalShieldDef,
     INI: skills.INI + (trainerMods?.iniMod ?? 0),
@@ -71,7 +71,7 @@ export function createFighterState(
     style: plan.style,
     attributes: attrs,
     skills: effSkills,
-    derived: { ...derived, damage: derived.damage },
+    derived: { ...derived, damage: derived.damage + (isMastered ? 1 : 0) },
     plan,
     hp: derived.hp,
     maxHp: derived.hp,
@@ -83,5 +83,6 @@ export function createFighterState(
     consecutiveHits: 0,
     armHits: 0,
     legHits: 0,
+    favorites: warrior?.favorites,
   };
 }

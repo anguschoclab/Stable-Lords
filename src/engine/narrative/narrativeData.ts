@@ -107,10 +107,47 @@ export const ATTACK_TEMPLATES: Record<WeaponType, string[]> = {
   ],
 };
 
+// ─── Mastery & Soul-Bond Templates ──────────────────────────────────────────
+
+export const MASTERY_TEMPLATES: Record<string, string[]> = {
+  slash: [
+    "%N's blade moves with a soul-bonded precision, a perfect arc of steel!",
+    "%N guides his edge with unnatural fluidity, the weapon an extension of his own spirit.",
+    "A masterful stroke! %N's %W sings through the air in a perfect rhythmic dance.",
+    "%N flows into a mastered slash, the steel flickering like a silver flame."
+  ],
+  bash: [
+    "%N delivers a crushing blow with the perfect weight of his mastered %W!",
+    "The impact is heavy and true—%N wields his %W with the absolute leverage of a master.",
+    "%N's %W descends with the rhythmic thunder of a soul-bound strike!",
+    "Force and technique collide as %N hammers home a flawless mastered strike."
+  ],
+  thrust: [
+    "%N's %W flickers like a serpent's tongue, a mastered thrust of absolute lethality!",
+    "With a master's intuition, %N drives the point of his %W through the smallest gap.",
+    "%N's steel finds the rhythm of the soul, a piercing strike of lightning speed!",
+    "The %W is a needle in %N's hands, guided by a bond beyond simple training."
+  ],
+  fist: [
+    "%N's hands move in a mastered blur, the rhythm of a true brawler!",
+    "A strike of pure intuition! %N's fists find the mark with soul-bound power.",
+    "%N's movements are liquid and lethal, his very body a mastered weapon.",
+    "The rhythm of the street and the soul—%N's fists are a blur of perfect technique."
+  ]
+};
+
+export const SUPER_FLASHY_TEMPLATES: string[] = [
+  "✨ A DIVINE STRIKE! %N's soul and steel are one—a golden flicker of absolute mastery! ✨",
+  "✨ THE HEAVENS WATCH! %N delivers a legendary blow, his %W pulsing with a golden aura! ✨",
+  "✨ UNSTOPPABLE ! %N's %W finds the soul-rhythm, a strike that will be sung of for ages! ✨",
+  "✨ GOLDEN FURY! %N's mastery is absolute, his %W crushing all before it! ✨"
+];
+
 export const INI_FEINT_TEMPLATES = [
-  "%N feints an attack, freezing his opponent's initiative!",
-  "%N feints an attack, hindering his opponent's initiative!",
-  "%N feints an attack, trying to disrupt the rhythm of the fight!",
+  "%N feints a high line, drawing his opponent out of position.",
+  "%N shows the blade, but it's a clever ruse!",
+  "A masterful feint by %N—his opponent bites on the fake!",
+  "%N uses a rhythmic twitch to freeze his enemy for a split second."
 ];
 
 export const EVEN_STATUS = [

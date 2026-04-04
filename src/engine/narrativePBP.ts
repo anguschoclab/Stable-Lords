@@ -21,6 +21,8 @@ import {
   INSIGHT_SP_HINTS,
   INSIGHT_DF_HINTS,
   INSIGHT_WL_HINTS,
+  MASTERY_TEMPLATES,
+  SUPER_FLASHY_TEMPLATES,
 } from "./narrative/narrativeData";
 import {
   pick,
@@ -113,9 +115,15 @@ export function battleOpener(rng: RNG): string {
 
 // ─── Attack Narration ───────────────────────────────────────────────────────
 
-export function narrateAttack(rng: RNG, attackerName: string, weaponId?: string): string {
+export function narrateAttack(rng: RNG, attackerName: string, weaponId?: string, isMastery?: boolean): string {
   const wType = getWeaponType(weaponId);
   const wName = getWeaponDisplayName(weaponId);
+
+  if (isMastery && MASTERY_TEMPLATES[wType]) {
+    const template = pick(rng, MASTERY_TEMPLATES[wType]);
+    return template.replace(/%N/g, attackerName).replace(/%W/g, wName);
+  }
+
   const template = pick(rng, ATTACK_TEMPLATES[wType]);
   return template.replace(/%N/g, attackerName).replace(/%W/g, wName);
 }
@@ -136,9 +144,17 @@ export function narrateCounterstrike(rng: RNG, name: string): string {
   return pick(rng, COUNTERSTRIKE_TEMPLATES).replace(/%D/g, name);
 }
 
-export function narrateHit(rng: RNG, defenderName: string, location: string): string {
+export function narrateHit(rng: RNG, defenderName: string, location: string, isMastery?: boolean, isSuperFlashy?: boolean, attackerName?: string, weaponId?: string): string {
   const richLoc = richHitLocation(rng, location);
-  return pick(rng, HIT_TEMPLATES).replace(/%D/g, defenderName).replace(/%L/g, richLoc);
+  const wName = getWeaponDisplayName(weaponId);
+
+  if (isSuperFlashy) {
+    const template = pick(rng, SUPER_FLASHY_TEMPLATES);
+    return template.replace(/%N/g, attackerName || "The warrior").replace(/%W/g, wName).replace(/%D/g, defenderName).replace(/%L/g, richLoc);
+  }
+
+  const template = pick(rng, HIT_TEMPLATES);
+  return template.replace(/%D/g, defenderName).replace(/%L/g, richLoc);
 }
 
 export function narrateParryBreak(rng: RNG, attackerName: string, weaponId?: string): string {

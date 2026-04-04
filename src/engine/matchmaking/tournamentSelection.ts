@@ -169,8 +169,8 @@ export const TournamentSelectionService = {
         continue;
       }
 
-      const planA = wA.plan || this.getAIPlan(updatedState, wA);
-      const planD = wD.plan || this.getAIPlan(updatedState, wD);
+      const planA = wA.plan || this.getAIPlan(updatedState, wA, wD.style, wD.stableId);
+      const planD = wD.plan || this.getAIPlan(updatedState, wD, wA.style, wA.stableId);
       
       const outcome = simulateFight(planA, planD, wA, wD, rng.roll(0, 1000000), updatedState.trainers, updatedState.weather);
       
@@ -227,11 +227,27 @@ export const TournamentSelectionService = {
     return tournament?.participants.find(w => w.name === name);
   },
 
-  getAIPlan(state: GameState, w: Warrior) {
-     const rival = state.rivals.find(r => r.roster.some(rw => rw.name === w.name));
+  getAIPlan(state: GameState, w: Warrior, opponentStyle?: FightingStyle, opponentOwnerId?: string) {
+     const rival = state.rivals.find(r => r.owner.id === w.stableId);
      if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
-     const plan = aiPlanForWarrior(w, rival.owner.personality || "Pragmatic", rival.philosophy || "Opportunist", undefined, rival.strategy?.intent);
-     return { ...plan, killDesire: 7 };
+
+     let grudgeIntensity = 0;
+     if (opponentOwnerId) {
+       const grudge = state.ownerGrudges?.find(g => 
+         (g.ownerIdA === rival.owner.id && g.ownerIdB === opponentOwnerId) || 
+         (g.ownerIdB === rival.owner.id && g.ownerIdA === opponentOwnerId)
+       );
+       grudgeIntensity = grudge?.intensity ?? 0;
+     }
+
+     return aiPlanForWarrior(
+       w, 
+       rival.owner.personality || "Pragmatic", 
+       rival.owner.personality || "Opportunist", // Assuming personality maps to philosophy for AI
+       opponentStyle, 
+       rival.strategy?.intent,
+       grudgeIntensity
+     );
   },
 
   applyBoutResults(state: GameState, wA: Warrior, wD: Warrior, outcome: any, tId: string, tName: string): GameState {

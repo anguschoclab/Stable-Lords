@@ -12,7 +12,8 @@ export function aiPlanForWarrior(
   personality: OwnerPersonality,
   philosophy: string,
   opponentStyle?: FightingStyle,
-  intent?: AIIntent
+  intent?: AIIntent,
+  grudgeIntensity: number = 0
 ): FightPlan {
   const base = defaultPlanForWarrior(w);
   const pMod = PERSONALITY_PLAN_MODS[personality] ?? {};
@@ -32,14 +33,18 @@ export function aiPlanForWarrior(
     intentKD = 2; 
   }
 
+  // Grudge-based escalation
+  const grudgeKD = grudgeIntensity; // +1 to +5
+  const grudgeAL = Math.floor(grudgeIntensity / 2);
+
   // Per-style matchup heuristics
   const matchup = opponentStyle ? getStyleMatchupMods(w.style, opponentStyle) : { oe: 0, al: 0, kd: 0 };
 
   return {
     ...base,
     OE: clamp((base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + intentOE, 1, 10),
-    AL: clamp((base.AL ?? 5) + (pMod.AL ?? 0) + (phMod.AL ?? 0) + matchup.al + intentAL, 1, 10),
-    killDesire: clamp((base.killDesire ?? 5) + (pMod.killDesire ?? 0) + (phMod.killDesire ?? 0) + matchup.kd + intentKD, 1, 10),
+    AL: clamp((base.AL ?? 5) + (pMod.AL ?? 0) + (phMod.AL ?? 0) + matchup.al + intentAL + grudgeAL, 1, 10),
+    killDesire: clamp((base.killDesire ?? 5) + (pMod.killDesire ?? 0) + (phMod.killDesire ?? 0) + matchup.kd + intentKD + grudgeKD, 1, 10),
   };
 }
 

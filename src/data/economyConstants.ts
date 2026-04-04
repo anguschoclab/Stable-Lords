@@ -6,7 +6,7 @@ export const FIGHT_PURSE = 180;    // Quadrupled for low-frequency bouts
 export const WIN_BONUS = 100;     // Quadrupled for low-frequency bouts
 export const FAME_DIVIDEND = 0.5;   // Stable 0.5x fame dividend
 
-export const WARRIOR_UPKEEP_BASE = 35; // Increased slightly for economic balance
+export const WARRIOR_UPKEEP_BASE = 45; // Increased for high-stakes churn
 export const TRAINING_COST = 20;     // Reduced to encourage progression
 export const SCOUT_COST = 25;
 export const REFRESH_COST = 50;

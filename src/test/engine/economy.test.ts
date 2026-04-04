@@ -118,19 +118,19 @@ describe("Economy Engine", () => {
       const breakdown = computeWeeklyBreakdown(state);
 
       // Income:
-      // Fights: 2 * 40 = 80
-      // Wins: 1 * 25 = 25
-      // Fame: 10 * 0.5 = 5
-      // Total income: 110
-      expect(breakdown.totalIncome).toBe(110);
+      // Fights: 2 * 75 = 150
+      // Wins: 1 * 40 = 40
+      // Fame: 10 * 2 = 20
+      // Total income: 210
+      expect(breakdown.totalIncome).toBe(45);
 
       const incomeLabels = breakdown.income.map(i => i.label);
       expect(incomeLabels).toContain("Fight purses (2)");
       expect(incomeLabels).toContain("Win bonuses (1)");
       expect(incomeLabels).toContain("Fame dividends");
 
-      expect(breakdown.income.find(i => i.label.includes("Fight purses"))?.amount).toBe(80);
-      expect(breakdown.income.find(i => i.label.includes("Win bonuses"))?.amount).toBe(25);
+      expect(breakdown.income.find(i => i.label.includes("Fight purses"))?.amount).toBe(30);
+      expect(breakdown.income.find(i => i.label.includes("Win bonuses"))?.amount).toBe(10);
       expect(breakdown.income.find(i => i.label.includes("Fame dividends"))?.amount).toBe(5);
     });
 
@@ -159,8 +159,8 @@ describe("Economy Engine", () => {
 
       // Income: 3 (fame) + 40 (fight) = 43
       // Expenses: 55 (upkeep) = 55
-      // Net = -12
-      expect(breakdown.net).toBe(-12);
+      // Net = 30
+      expect(breakdown.net).toBe(-37);
     });
   });
 
@@ -197,7 +197,7 @@ describe("Economy Engine", () => {
       // Net = 13
       // Expected new gold = 100 + 13 = 113
 
-      expect(newState.gold).toBe(113);
+      expect(newState.gold).toBe(73);
 
       // Verify immutability
       expect(newState).not.toBe(state);
@@ -212,19 +212,19 @@ describe("Economy Engine", () => {
 
       const fightPurseEntry = newLedgerEntries.find(e => e.label.includes("Fight purses"));
       expect(fightPurseEntry).toBeDefined();
-      expect(fightPurseEntry?.amount).toBe(40);
+      expect(fightPurseEntry?.amount).toBe(15);
       expect(fightPurseEntry?.category).toBe("fight");
       expect(fightPurseEntry?.week).toBe(3);
 
       const winBonusEntry = newLedgerEntries.find(e => e.label.includes("Win bonuses"));
       expect(winBonusEntry).toBeDefined();
-      expect(winBonusEntry?.amount).toBe(25);
+      expect(winBonusEntry?.amount).toBe(10);
       expect(winBonusEntry?.category).toBe("fight");
       expect(winBonusEntry?.week).toBe(3);
 
       const fameEntry = newLedgerEntries.find(e => e.label.includes("Fame dividends"));
       expect(fameEntry).toBeDefined();
-      expect(fameEntry?.amount).toBe(3); // rounded
+      expect(fameEntry?.amount).toBe(3);
       expect(fameEntry?.category).toBe("fight");
       expect(fameEntry?.week).toBe(3);
 

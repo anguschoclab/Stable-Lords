@@ -86,16 +86,48 @@ function ArenaLeaderboard() {
   const { state } = useGameStore(useShallow(s => ({ state: s.state })));
 
   const allWarriors = useMemo(() => {
-    const warriors: { warrior: Warrior; stableName: string; isPlayer: boolean }[] = [];
-    for (const w of state.roster) {
-      if (w.status === "Active") warriors.push({ warrior: w, stableName: state.player.stableName, isPlayer: true });
-    }
-    for (const r of state.rivals ?? []) {
-      for (const w of r.roster) {
-        if (w.status === "Active") warriors.push({ warrior: w, stableName: r.owner.stableName, isPlayer: false });
+    type Entry = { warrior: Warrior; stableName: string; isPlayer: boolean };
+    const top10: Entry[] = [];
+
+    const insert = (entry: Entry) => {
+      const fame = entry.warrior.fame;
+      if (top10.length === 10 && fame <= top10[9].warrior.fame) {
+          return;
+      }
+
+      let i = top10.length - 1;
+      while (i >= 0 && top10[i].warrior.fame < fame) {
+        i--;
+      }
+
+      top10.splice(i + 1, 0, entry);
+      if (top10.length > 10) {
+        top10.pop();
+      }
+    };
+
+    const playerStable = state.player.stableName;
+    for (let i = 0; i < state.roster.length; i++) {
+      const w = state.roster[i];
+      if (w.status === "Active") {
+         insert({ warrior: w, stableName: playerStable, isPlayer: true });
       }
     }
-    return warriors.sort((a, b) => b.warrior.fame - a.warrior.fame).slice(0, 10);
+
+    if (state.rivals) {
+        for (let i = 0; i < state.rivals.length; i++) {
+            const r = state.rivals[i];
+            const rivalStable = r.owner.stableName;
+            for (let j = 0; j < r.roster.length; j++) {
+                const w = r.roster[j];
+                if (w.status === "Active") {
+                    insert({ warrior: w, stableName: rivalStable, isPlayer: false });
+                }
+            }
+        }
+    }
+
+    return top10;
   }, [state.roster, state.rivals, state.player.stableName]);
 
   return (

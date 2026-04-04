@@ -28,7 +28,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
       }
     }
     return list;
-  }, [rivals, playerRoster]);
+  }, [playerRoster, rivals]);
 
   const entryA = useMemo(() => allWarriors.find(e => e.warrior.id === wIdA), [allWarriors, wIdA]);
   const entryB = useMemo(() => allWarriors.find(e => e.warrior.id === wIdB), [allWarriors, wIdB]);

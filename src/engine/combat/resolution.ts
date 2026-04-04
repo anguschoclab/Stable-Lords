@@ -1,7 +1,3 @@
-/**
- * Combat Resolution — Pure math for the combat engine.
- * Emits CombatEvents instead of strings.
- */
 import {
   FightingStyle,
   type CombatEvent,
@@ -17,7 +13,6 @@ import { skillCheck, contestCheck } from "./combatMath";
 import { computeHitDamage, rollHitLocation, applyProtectMod, calculateKillWindow } from "./combatDamage";
 import { enduranceCost, fatiguePenalty } from "./combatFatigue";
 import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, type Phase as StylePhase } from "../stylePassives";
-import { getOffensiveSuitability, getDefensiveSuitability, suitabilityMultiplier } from "../tacticSuitability";
 import { 
   GLOBAL_ATT_BONUS, 
   GLOBAL_PAR_PENALTY, 
@@ -36,6 +31,7 @@ import {
 } from "./tacticResolution";
 
 // ─── Fighter State & Context ───────────────────────────────────────────────
+
 export interface FighterState {
   label: "A" | "D";
   style: FightingStyle;
@@ -217,6 +213,7 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
 
   // 3. Resolve Attack
   const curAttOE = aGoesFirst ? OE_A : OE_D;
+  const curAttAL = aGoesFirst ? AL_A : AL_D;
   const curOffMods = aGoesFirst ? offModsA : offModsD;
   const curPassA = aGoesFirst ? passA : passD;
   const curBiasAtt = aGoesFirst ? biasAttA : biasAttD;
@@ -227,7 +224,47 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
 
   if (!attSucc) {
     events.push({ type: "ATTACK", actor: attLabel, result: "WHIFF" });
+    att.consecutiveHits = 0;
+    att.endurance -= Math.max(1, Math.floor(enduranceCost(curAttOE, curAttAL, ctx.weather) * 0.5)) + curOffMods.endCost;
 
+    const curAntiSynDef = getStyleAntiSynergy(def.style, (aGoesFirst ? tactD : tactA).offTactic, (aGoesFirst ? tactD : tactA).defTactic);
+    const ripCheck = skillCheck(rng, def.skills.RIP, (aGoesFirst ? ctx.matchupD : ctx.matchupA) + (aGoesFirst ? fatD : fatA) + curOffMods.defPenalty + (aGoesFirst ? passD : passA).ripBonus + Math.round((curAntiSynDef.defMult - 1) * 3));
+    if (ripCheck) executeRiposte(events, rng, att, def, aGoesFirst ? tactD : tactA, aGoesFirst ? passD : passA, attLabel, defLabel);
+  } else {
+    // 4. Resolve Defense
+    const curDefOE = aGoesFirst ? OE_D : OE_A;
+    const curDefMods = aGoesFirst ? defModsD : defModsA;
+    const curPassD = aGoesFirst ? passD : passA;
+    const curBiasDef = aGoesFirst ? biasDefD : biasDefA;
+    const isDodge = (aGoesFirst ? tactD : tactA).defTactic === "Dodge";
+    const overDef = aGoesFirst ? Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD) : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakA);
+
+    let defDefended = false;
+    if (isDodge) {
+      defDefended = skillCheck(rng, def.skills.DEF, oeDefMod(curDefOE) + (aGoesFirst ? ctx.matchupD : ctx.matchupA) + (aGoesFirst ? fatD : fatA) + curDefMods.defBonus + curPassD.defBonus + curBiasDef - overDef - def.legHits);
+      if (defDefended) events.push({ type: "DEFENSE", actor: defLabel, result: "DODGE" });
+    } else {
+      const curAntiSynDef = getStyleAntiSynergy(def.style, (aGoesFirst ? tactD : tactA).offTactic, (aGoesFirst ? tactD : tactA).defTactic);
+      defDefended = skillCheck(rng, def.skills.PAR, oeDefMod(curDefOE) + (aGoesFirst ? ctx.matchupD : ctx.matchupA) + (aGoesFirst ? fatD : fatA) + curDefMods.parBonus + curPassD.parBonus + Math.round((curAntiSynDef.defMult - 1) * 3) - curOffMods.defPenalty - curOffMods.parryBypass + GLOBAL_PAR_PENALTY + curBiasDef - overDef - def.armHits);
+      if (defDefended) events.push({ type: "DEFENSE", actor: defLabel, result: "PARRY" });
+    }
+
+    if (!defDefended) {
+      executeHit(events, rng, att, def, aGoesFirst ? tactA : tactD, curOffMods, curPassA, attLabel, defLabel, stylePhase, phase, aGoesFirst ? (fA.plan.phases?.[phaseKey]?.killDesire ?? 5) : (fD.plan.phases?.[phaseKey]?.killDesire ?? 5), curAttOE, curAttAL, aGoesFirst ? ctx.matchupA : ctx.matchupD);
+    } else if (!isDodge) {
+      const ripPostParry = skillCheck(rng, def.skills.RIP, (aGoesFirst ? ctx.matchupD : ctx.matchupA) + (aGoesFirst ? fatD : fatA) + (aGoesFirst ? defModsD : defModsA).ripBonus + curPassD.ripBonus);
+      if (ripPostParry) executeRiposte(events, rng, att, def, aGoesFirst ? tactD : tactA, aGoesFirst ? passD : passA, attLabel, defLabel);
+    }
+    
+    att.consecutiveHits = defDefended ? 0 : att.consecutiveHits;
+  }
+
+  // 5. Apply Endurance Costs
+  const attWepReq = attLabel === "A" ? ctx.weaponReqA : ctx.weaponReqD;
+  const defWepReq = defLabel === "A" ? ctx.weaponReqA : ctx.weaponReqD;
+  att.endurance -= Math.round(enduranceCost(curAttOE, curAttAL, ctx.weather) * getEnduranceMult(att.style) * attWepReq.endurancePenalty);
+  def.endurance -= Math.max(1, Math.round(enduranceCost(aGoesFirst ? OE_D : OE_A, aGoesFirst ? AL_D : AL_A, ctx.weather) * DEFENDER_ENDURANCE_DISCOUNT * getEnduranceMult(def.style) * defWepReq.endurancePenalty));
+  
   if ((fA.endurance <= 0 || fD.endurance <= 0) && !events.some(e => e.result === "Kill")) {
     if (fA.endurance <= 0 && fD.endurance <= 0) events.push({ type: "BOUT_END", actor: "A", result: "Exhaustion" });
     else events.push({ type: "BOUT_END", actor: fA.endurance <= 0 ? "A" : "D", result: "Stoppage" });

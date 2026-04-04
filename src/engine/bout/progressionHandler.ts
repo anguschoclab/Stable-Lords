@@ -3,12 +3,15 @@ import { calculateXP, applyXP } from "@/engine/progression";
 import { checkDiscovery } from "@/engine/favorites";
 import { updateEntityInList } from "@/utils/stateUtils";
 
-export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outcome: FightOutcome, tags: string[], week: number, rivalStableId?: string): GameState {
+export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outcome: FightOutcome, tags: string[], week: number, rivalStableId?: string, seed?: number): GameState {
   // XP
-  s.roster = updateEntityInList(s.roster, wA.id, w => applyXP(w, calculateXP(outcome, "A", tags)).warrior);
+  const seedA = (seed ?? 0) + 1;
+  const seedD = (seed ?? 0) + 2;
+
+  s.roster = updateEntityInList(s.roster, wA.id, w => applyXP(w, calculateXP(outcome, "A", tags), seedA).warrior);
   
   if (!rivalStableId) {
-    s.roster = updateEntityInList(s.roster, wD.id, w => applyXP(w, calculateXP(outcome, "D", tags)).warrior);
+    s.roster = updateEntityInList(s.roster, wD.id, w => applyXP(w, calculateXP(outcome, "D", tags), seedD).warrior);
   }
   
   // Favorites Discovery

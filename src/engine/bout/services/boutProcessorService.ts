@@ -19,6 +19,16 @@ export interface BoutImpact { state: GameState; result: BoutResult; stats: { dea
 export interface WeekBoutSummary { bouts: number; deaths: number; injuries: number; deathNames: string[]; injuryNames: string[]; hadPlayerDeath: boolean; hadRivalryEscalation: boolean; }
 export interface BoutContext { warriorMap: Map<string, Warrior>; warrior: Warrior; opponent: Warrior; isRivalry: boolean; rivalStable?: string; rivalStableId?: string; moodMods: ReturnType<typeof getMoodModifiers>; week: number; playerId: string; }
 
+/** Simple FNV-1a hash for deterministic seeds from IDs */
+function hashStr(s: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    hash ^= s.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
 export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   const { warrior, opponent, isRivalry, rivalStable, rivalStableId, moodMods, week, warriorMap } = ctx;
   const currentW = warriorMap.get(warrior.id);
@@ -26,7 +36,9 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
 
   if (!currentW || currentW.status !== "Active" || !currentO) return { state, result: { a: warrior, d: opponent, outcome: { winner: null, by: "Draw", minutes: 0, log: [] } as any, isRivalry, rivalStable }, stats: { death: false, playerDeath: false, injured: false, deathNames: [], injuredNames: [] } };
 
-  const outcome = simulateFight(currentW.plan ?? defaultPlanForWarrior(currentW), currentO.plan ?? defaultPlanForWarrior(currentO), currentW, currentO, undefined, state.trainers, state.weather);
+  // 🛡️ Determinism: Generate a unique seed for this specific bout
+  const boutSeed = hashStr(`${week}|${currentW.id}|${currentO.id}`);
+  const outcome = simulateFight(currentW.plan ?? defaultPlanForWarrior(currentW), currentO.plan ?? defaultPlanForWarrior(currentO), currentW, currentO, boutSeed, state.trainers, state.weather);
   const tags = outcome.post?.tags ?? [];
   const rawFameA = fameFromTags(outcome.winner === "A" ? tags : []);
   const rawFameD = fameFromTags(outcome.winner === "D" ? tags : []);
@@ -42,7 +54,7 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   s = deathRes.s;
   const injuryRes = handleInjuries(s, currentW, currentO, outcome, week, rivalStableId);
   s = injuryRes.s;
-  s = handleProgressions(s, currentW, currentO, outcome, tags, week, rivalStableId);
+  s = handleProgressions(s, currentW, currentO, outcome, tags, week, rivalStableId, boutSeed);
 
   const { summary, announcement } = handleReporting(currentW, currentO, outcome, tags, fameA, popA, fameD, popD, week, rivalStableId, isRivalry);
   s.arenaHistory = [...s.arenaHistory, summary];
@@ -70,7 +82,8 @@ function finalizeWeekSideEffects(s: GameState, results: BoutResult[]) {
   s.moodHistory = [...(s.moodHistory || []).slice(-19), { week: s.week, mood: s.crowdMood }];
 
   const weekFights = getFightsForWeek(s.arenaHistory, s.week);
-  s.gazettes = [...(s.gazettes || []), generateWeeklyGazette(weekFights, s.crowdMood, s.week, s.graveyard, s.arenaHistory)];
+  const gazetteSeed = s.week * 9973 + 123;
+  s.gazettes = [...(s.gazettes || []), generateWeeklyGazette(weekFights, s.crowdMood, s.week, s.graveyard, s.arenaHistory, gazetteSeed)];
   s.rivalries = updateRivalriesFromBouts(s.rivalries || [], weekFights, s.week);
   NewsletterFeed.closeWeekToIssue(s.week);
 }

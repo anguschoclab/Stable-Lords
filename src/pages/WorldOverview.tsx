@@ -22,9 +22,17 @@ export default function WorldOverview() {
 
   const stableRows = useMemo(() => {
     const rows: any[] = [];
-    const pWins = state.roster.reduce((s, w) => s + w.career.wins, 0);
-    const pLosses = state.roster.reduce((s, w) => s + w.career.losses, 0);
-    const pKills = state.roster.reduce((s, w) => s + w.career.kills, 0);
+    let pWins = 0;
+    let pLosses = 0;
+    let pKills = 0;
+    let pActive = 0;
+    for (let i = 0; i < state.roster.length; i++) {
+      const w = state.roster[i];
+      pWins += w.career.wins;
+      pLosses += w.career.losses;
+      pKills += w.career.kills;
+      if (w.status === "Active") pActive++;
+    }
     const pTotal = pWins + pLosses;
     
     rows.push({
@@ -36,16 +44,24 @@ export default function WorldOverview() {
       losses: pLosses,
       kills: pKills,
       winRate: pTotal > 0 ? Math.round((pWins / pTotal) * 100) : 0,
-      roster: state.roster.filter(w => w.status === "Active").length,
+      roster: pActive,
       tier: "Player",
       motto: "",
       isPlayer: true,
     });
 
     for (const r of state.rivals || []) {
-      const rWins = r.roster.reduce((s, w) => s + w.career.wins, 0);
-      const rLosses = r.roster.reduce((s, w) => s + w.career.losses, 0);
-      const rKills = r.roster.reduce((s, w) => s + w.career.kills, 0);
+      let rWins = 0;
+      let rLosses = 0;
+      let rKills = 0;
+      let rActive = 0;
+      for (let i = 0; i < r.roster.length; i++) {
+        const w = r.roster[i];
+        rWins += w.career.wins;
+        rLosses += w.career.losses;
+        rKills += w.career.kills;
+        if (w.status === "Active") rActive++;
+      }
       const rTotal = rWins + rLosses;
       const tmpl = templates.find(t => t.stableName === r.owner.stableName);
       rows.push({
@@ -57,7 +73,7 @@ export default function WorldOverview() {
         losses: rLosses,
         kills: rKills,
         winRate: rTotal > 0 ? Math.round((rWins / rTotal) * 100) : 0,
-        roster: r.roster.filter(w => w.status === "Active").length,
+        roster: rActive,
         tier: r.tier || "Minor",
         motto: tmpl?.motto ?? "",
         isPlayer: false,
@@ -76,30 +92,43 @@ export default function WorldOverview() {
   }, [state, stableSort, templates]);
 
   const warriorRows = useMemo(() => {
-    const rows: any[] = [];
-    const addWarriors = (warriors: Warrior[], stableName: string, stableId: string, isPlayer: boolean) => {
-      for (const w of warriors) {
-        if (w.status !== "Active") continue;
-        const total = w.career.wins + w.career.losses;
-        rows.push({
-          id: w.id,
-          name: w.name,
-          stableName,
-          stableId,
-          fame: w.fame,
-          wins: w.career.wins,
-          losses: w.career.losses,
-          kills: w.career.kills,
-          winRate: total > 0 ? Math.round((w.career.wins / total) * 100) : 0,
-          style: w.style,
-          isPlayer,
-        });
-      }
+    const mapWarrior = (w: Warrior, stableName: string, stableId: string, isPlayer: boolean) => {
+      const total = w.career.wins + w.career.losses;
+      return {
+        id: w.id,
+        name: w.name,
+        stableName,
+        stableId,
+        fame: w.fame,
+        wins: w.career.wins,
+        losses: w.career.losses,
+        kills: w.career.kills,
+        winRate: total > 0 ? Math.round((w.career.wins / total) * 100) : 0,
+        style: w.style,
+        isPlayer,
+      };
     };
 
-    addWarriors(state.roster, state.player.stableName, state.player.id, true);
-    for (const r of state.rivals || []) {
-      addWarriors(r.roster, r.owner.stableName, r.owner.id, false);
+    const rows = state.roster.reduce((acc: any[], w: Warrior) => {
+      if (w.status === "Active") {
+        acc.push(mapWarrior(w, state.player.stableName, state.player.id, true));
+      }
+      return acc;
+    }, []);
+
+    if (state.rivals) {
+      for (let i = 0; i < state.rivals.length; i++) {
+        const r = state.rivals[i];
+        const rRoster = r.roster;
+        const rName = r.owner.stableName;
+        const rId = r.owner.id;
+        for (let j = 0; j < rRoster.length; j++) {
+          const w = rRoster[j];
+          if (w.status === "Active") {
+            rows.push(mapWarrior(w, rName, rId, false));
+          }
+        }
+      }
     }
 
     return rows.sort((a, b) => {

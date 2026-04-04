@@ -16,27 +16,54 @@ interface LeaderboardProps {
 
 export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
   const leaderData = useMemo(() => {
-    const registry: Record<string, { w: number; l: number; k: number; fame: number; style: string }> = {};
-    for (const f of allFights) {
-      if (!registry[f.a]) registry[f.a] = { w: 0, l: 0, k: 0, fame: f.fameA || 0, style: f.styleA };
-      if (!registry[f.d]) registry[f.d] = { w: 0, l: 0, k: 0, fame: f.fameD || 0, style: f.styleD };
+    const registry = new Map<string, { w: number; l: number; k: number; fame: number; style: string }>();
+
+    for (let i = 0; i < allFights.length; i++) {
+      const f = allFights[i];
       
-      const winner = f.winner === "A" ? f.a : f.winner === "D" ? f.d : null;
-      const loser = f.winner === "A" ? f.d : f.winner === "D" ? f.a : null;
+      let aData = registry.get(f.a);
+      if (!aData) {
+        aData = { w: 0, l: 0, k: 0, fame: f.fameA || 0, style: f.styleA };
+        registry.set(f.a, aData);
+      }
       
-      if (winner) {
-        registry[winner].w++;
-        registry[winner].fame = Math.max(registry[winner].fame, (f.winner === "A" ? f.fameA : f.fameD) || 0);
+      let dData = registry.get(f.d);
+      if (!dData) {
+        dData = { w: 0, l: 0, k: 0, fame: f.fameD || 0, style: f.styleD };
+        registry.set(f.d, dData);
       }
-      if (loser) {
-        registry[loser].l++;
-        registry[loser].fame = Math.max(registry[loser].fame, (f.winner === "A" ? f.fameD : f.fameA) || 0);
+
+      if (f.winner === "A") {
+        aData.w++;
+        dData.l++;
+        const fA = f.fameA || 0;
+        if (fA > aData.fame) aData.fame = fA;
+        if (fA > dData.fame) dData.fame = fA;
+        if (f.by === "Kill") aData.k++;
+      } else if (f.winner === "D") {
+        dData.w++;
+        aData.l++;
+        const fD = f.fameD || 0;
+        if (fD > dData.fame) dData.fame = fD;
+        if (fD > aData.fame) aData.fame = fD;
+        if (f.by === "Kill") dData.k++;
       }
-      if (f.by === "Kill" && winner) registry[winner].k++;
     }
     
-    return Object.entries(registry)
-      .map(([name, data]) => ({ name, ...data, rate: data.w / (data.w + data.l || 1) }))
+    const result = [];
+    for (const [name, data] of registry.entries()) {
+      result.push({
+        name,
+        w: data.w,
+        l: data.l,
+        k: data.k,
+        fame: data.fame,
+        style: data.style,
+        rate: data.w / (data.w + data.l || 1)
+      });
+    }
+
+    return result
       .sort((a, b) => b.w - a.w || b.rate - a.rate)
       .slice(0, 5);
   }, [allFights]);
@@ -122,17 +149,27 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
 }
 
 export function BestByStyle({ allFights }: LeaderboardProps) {
-  const styles = ["Brawler", "Technician", "High-Flyer", "Powerhouse", "Grappler"];
+  const styles = useMemo(() => ["Brawler", "Technician", "High-Flyer", "Powerhouse", "Grappler"], []);
   const bestData = useMemo(() => {
     return styles.map(style => {
       const warriors: Record<string, number> = {};
-      allFights.forEach(f => {
-        if (f.winnerStyle === style) warriors[f.winner] = (warriors[f.winner] || 0) + 1;
-      });
-      const top = Object.entries(warriors).sort((a, b) => b[1] - a[1])[0];
-      return { style, name: top?.[0] || "No Data", wins: top?.[1] || 0 };
+      for (let i = 0; i < allFights.length; i++) {
+        const f = allFights[i];
+        if (f.winnerStyle === style) {
+          warriors[f.winner] = (warriors[f.winner] || 0) + 1;
+        }
+      }
+      let topName = "No Data";
+      let topWins = 0;
+      for (const [name, wins] of Object.entries(warriors)) {
+         if (wins > topWins) {
+            topWins = wins;
+            topName = name;
+         }
+      }
+      return { style, name: topName, wins: topWins };
     });
-  }, [allFights]);
+  }, [allFights, styles]);
 
   return (
     <Surface variant="glass" className="border-border/10 bg-neutral-900/40 relative overflow-hidden h-full">
@@ -174,18 +211,43 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
 
 export function RisingStars({ allFights, currentWeek }: LeaderboardProps & { currentWeek: number }) {
   const stars = useMemo(() => {
-    const history: Record<string, { wins: number; matches: number; firstWeek: number }> = {};
-    for (const f of allFights) {
-      if (!history[f.a]) history[f.a] = { wins: 0, matches: 0, firstWeek: f.week };
-      if (!history[f.d]) history[f.d] = { wins: 0, matches: 0, firstWeek: f.week };
-      history[f.a].matches++;
-      history[f.d].matches++;
-      if (f.winner === "A") history[f.a].wins++;
-      if (f.winner === "D") history[f.d].wins++;
+    const history = new Map<string, { wins: number; matches: number; firstWeek: number }>();
+
+    for (let i = 0; i < allFights.length; i++) {
+      const f = allFights[i];
+
+      let aData = history.get(f.a);
+      if (!aData) {
+        aData = { wins: 0, matches: 0, firstWeek: f.week };
+        history.set(f.a, aData);
+      }
+
+      let dData = history.get(f.d);
+      if (!dData) {
+        dData = { wins: 0, matches: 0, firstWeek: f.week };
+        history.set(f.d, dData);
+      }
+
+      aData.matches++;
+      dData.matches++;
+
+      if (f.winner === "A") aData.wins++;
+      else if (f.winner === "D") dData.wins++;
     }
-    return Object.entries(history)
-      .filter(([_, data]) => data.matches <= 5 && data.wins >= 3)
-      .map(([name, data]) => ({ name, ...data }))
+
+    const result = [];
+    for (const [name, data] of history.entries()) {
+      if (data.matches <= 5 && data.wins >= 3) {
+        result.push({
+          name,
+          wins: data.wins,
+          matches: data.matches,
+          firstWeek: data.firstWeek
+        });
+      }
+    }
+
+    return result
       .sort((a, b) => b.wins - a.wins)
       .slice(0, 3);
   }, [allFights]);

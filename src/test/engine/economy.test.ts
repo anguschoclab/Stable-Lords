@@ -137,7 +137,7 @@ describe("Economy Engine", () => {
     it("should accurately compute net income", () => {
       const state = createFreshState();
       state.week = 2;
-      state.fame = 5; // +10 gold
+      state.fame = 5; // +3 gold (Math.round(2.5))
 
       const w1 = makeTestWarrior({ name: "Alice" });
       state.roster = [w1]; // -55 gold
@@ -169,10 +169,10 @@ describe("Economy Engine", () => {
       const state = createFreshState();
       state.week = 3;
       state.gold = 100;
-      state.fame = 5; // +10 gold
+      state.fame = 5; // +3 gold (Math.round(2.5))
 
       const w1 = makeTestWarrior({ name: "Alice" });
-      state.roster = [w1]; // -45 gold
+      state.roster = [w1]; // -55 gold
 
       state.arenaHistory = [
         {

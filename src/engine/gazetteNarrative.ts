@@ -3,7 +3,8 @@
  * Synthesizes weekly fight data into procedural stories.
  */
 import type { FightSummary, CrowdMoodType, Warrior, GazetteStory } from "@/types/game";
-import { STYLE_DISPLAY_NAMES } from "@/types/game";
+import { STYLE_DISPLAY_NAMES } from "@/types/shared.types";
+import { SeededRNG } from "@/utils/random";
 
 
 
@@ -22,37 +23,45 @@ const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[];
     ],
   },
   Bloodthirsty: {
-    adjectives: ["savage", "brutal", "merciless", "vicious"],
+    adjectives: ["savage", "brutal", "merciless", "vicious", "gruesome", "blood-drenched"],
     opener: [
       "Blood painted the sands this week as the arena demanded sacrifice!",
       "The crowd bayed for blood — and the fighters delivered!",
       "Violence ruled the coliseum in a week of savage combat!",
       "A horrifying symphony of steel and slaughter opened this week's bouts!",
-      "No mercy was shown, and none was asked for in a week of absolute carnage!"
+      "No mercy was shown, and none was asked for in a week of absolute carnage!",
+      "The sands ran thick with gore as fighters were mercilessly butchered this week!",
+      "A terrifying festival of slaughter unfolded in the coliseum!"
     ],
     closer: [
       "The sands drink deep tonight.",
       "The crowd's thirst is satisfied — for now.",
       "Death stalks the arena, and the people love it.",
       "A trail of shattered bones and ruined armor litters the coliseum.",
-      "The arena echoes with the dying screams of the defeated."
+      "The arena echoes with the dying screams of the defeated.",
+      "The crows feast well upon the shattered remains tonight.",
+      "A thick stench of blood and death permanently stains the coliseum."
     ],
   },
   Theatrical: {
-    adjectives: ["dramatic", "spectacular", "breathtaking", "legendary"],
+    adjectives: ["dramatic", "spectacular", "breathtaking", "legendary", "mythic", "awe-inspiring"],
     opener: [
       "What a spectacle! The arena delivered drama worthy of the old legends!",
       "The poets will write songs about this week's extraordinary bouts!",
       "Pure theater! Every bout was a performance for the ages!",
       "A breathtaking showcase of martial prowess captivated the roaring stands!",
-      "From the first strike to the last fall, the arena was a stage for demigods!"
+      "From the first strike to the last fall, the arena was a stage for demigods!",
+      "A breathtaking opera of violence and valor commanded the arena this week!",
+      "Epic rivalries and glorious final stands painted a masterpiece on the sands!"
     ],
     closer: [
       "The bards already compose their verses.",
       "What stories will be told of this week!",
       "The crowd departs buzzing with tales of glory.",
       "Legends were forged in blood and steel today.",
-      "The crowd leaves exhausted, their voices hoarse from cheering this epic drama."
+      "The crowd leaves exhausted, their voices hoarse from cheering this epic drama.",
+      "The tale of this week's battles will be sung for generations.",
+      "A breathtaking finale to a week of mythical combat."
     ],
   },
   Solemn: {
@@ -87,17 +96,18 @@ const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[];
   },
 };
 
-function pick(arr: string[]): string {
-  return arr[Math.floor(Math.random() * arr.length)];
+function pick(rng: SeededRNG, arr: string[]): string {
+  return rng.pick(arr);
 }
 
 function styleName(style: string): string {
   return STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style;
 }
 
-export function generateFightNarrative(fight: FightSummary, mood: CrowdMoodType): string {
+export function generateFightNarrative(fight: FightSummary, mood: CrowdMoodType, rng?: SeededRNG): string {
+  const safeRng = rng ?? new SeededRNG(fight.week * 42);
   const tone = MOOD_TONE[mood];
-  const adj = pick(tone.adjectives);
+  const adj = pick(safeRng, tone.adjectives);
   const winner = fight.winner === "A" ? fight.a : fight.winner === "D" ? fight.d : null;
   const loser = fight.winner === "A" ? fight.d : fight.winner === "D" ? fight.a : null;
 
@@ -107,11 +117,11 @@ export function generateFightNarrative(fight: FightSummary, mood: CrowdMoodType)
       `${winner} delivered a ${adj} execution of ${loser}! The crowd gasped as the finishing strike landed. Another warrior returns to the dust.`,
       `Death claimed ${loser} at the hands of ${winner}. A ${adj} end to what was a hard-fought bout.`,
     ];
-    return pick(templates);
+    return pick(safeRng, templates);
   }
 
   if (fight.by === "KO" && winner && loser) {
-    return pick([
+    return pick(safeRng, [
       `${winner} battered ${loser} into unconsciousness with ${adj} efficiency. The ${styleName(fight.winner === "A" ? fight.styleA : fight.styleD)}'s power was on full display.`,
       `A ${adj} knockout! ${winner} overwhelmed ${loser}'s defenses and left them crumpled on the sand.`,
     ]);
@@ -207,8 +217,10 @@ export function generateWeeklyGazette(
   mood: CrowdMoodType,
   week: number,
   graveyard: Warrior[],
-  allFights?: FightSummary[]
+  allFights?: FightSummary[],
+  seed?: number
 ): GazetteStory {
+  const rng = new SeededRNG(seed ?? (week * 7919 + 55));
   const moodKey = mood && MOOD_TONE[mood] ? mood : "Calm";
   const tone = MOOD_TONE[moodKey];
   const kills = fights.filter(f => f.by === "Kill");
@@ -318,15 +330,15 @@ export function generateWeeklyGazette(
     const killer = k.winner === "A" ? k.a : k.d;
     headline = `Week ${week}: ${killer} Claims a Life in the Arena`;
   } else if (knockouts.length >= 2) {
-    headline = `Week ${week}: ${pick(tone.adjectives).charAt(0).toUpperCase() + pick(tone.adjectives).slice(1)} Knockouts Rock the Arena`;
+    headline = `Week ${week}: ${pick(rng, tone.adjectives).charAt(0).toUpperCase() + pick(rng, tone.adjectives).slice(1)} Knockouts Rock the Arena`;
   } else if (fights.length > 0) {
-    headline = `Week ${week}: A ${pick(tone.adjectives).charAt(0).toUpperCase() + pick(tone.adjectives).slice(1)} Week in the Coliseum`;
+    headline = `Week ${week}: A ${pick(rng, tone.adjectives).charAt(0).toUpperCase() + pick(rng, tone.adjectives).slice(1)} Week in the Coliseum`;
   } else {
     headline = `Week ${week}: Silence in the Arena`;
   }
 
   // Body
-  const paragraphs: string[] = [pick(tone.opener)];
+  const paragraphs: string[] = [pick(rng, tone.opener)];
 
   // Summary stats
   if (fights.length > 0) {
@@ -343,7 +355,7 @@ export function generateWeeklyGazette(
     .slice(0, 3);
 
   for (const { fight } of scoredFights) {
-    paragraphs.push(generateFightNarrative(fight, mood));
+    paragraphs.push(generateFightNarrative(fight, mood, rng));
   }
 
   // Streak narratives
@@ -384,7 +396,7 @@ export function generateWeeklyGazette(
     }
   }
 
-  paragraphs.push(pick(tone.closer));
+  paragraphs.push(pick(rng, tone.closer));
 
   return {
     headline,

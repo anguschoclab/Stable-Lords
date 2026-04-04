@@ -1,3 +1,0 @@
-## 2024-05-18 - [Optimizing React Component Rendering for Top-K Data]
-**Learning:** Computing "top 10" lists using `flatMap`, `.filter()`, and `.sort()` on the entire GameState in React `useMemo` hooks is incredibly expensive (`O(N log N)` with massive allocations), frequently triggering GC thrash and dropping framerates.
-**Action:** When computing top-K lists (e.g., leaderboards) from large datasets, use a single-pass `for` loop combined with a bounded insertion sort array (limiting tracked elements to K). This drops the computational overhead from `O(N log N)` to essentially `O(N)` while eliminating all intermediate array allocations.

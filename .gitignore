@@ -22,5 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-\n# Daily Automated Reports\nDaily_Balance_Report.md
+
+# Test output
 coverage/
+test-results/
+bun_output.txt
+test_output.txt
+
+# One-off fix scripts
+fix_*.cjs
+
+# Daily Automated Reports
+Daily_Balance_Report.md

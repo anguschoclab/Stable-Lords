@@ -4,11 +4,11 @@ import {
   OffensiveTactic,
   DefensiveTactic
 } from "@/types/game";
-import { skillCheck, contestCheck } from "./combatMath";
-import { computeHitDamage, rollHitLocation, applyProtectMod, calculateKillWindow } from "./combatDamage";
-import { enduranceCost, fatiguePenalty } from "./combatFatigue";
-import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, Phase as StylePhase } from "../stylePassives";
-import { getFavoriteRhythmBonus } from "../../favorites";
+import { skillCheck, contestCheck } from "../combatMath";
+import { computeHitDamage, rollHitLocation, applyProtectMod, calculateKillWindow } from "../combatDamage";
+import { enduranceCost, fatiguePenalty } from "../combatFatigue";
+import { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy, Phase as StylePhase } from "../../stylePassives";
+import { getFavoriteRhythmBonus } from "../../../engine/favorites";
 import {
   GLOBAL_ATT_BONUS,
   GLOBAL_PAR_PENALTY,
@@ -16,9 +16,9 @@ import {
   DEFENDER_ENDURANCE_DISCOUNT,
   CRIT_DAMAGE_MULT,
   TACTIC_OVERUSE_CAP
-} from "./combatConstants";
-import { oeAttMod, oeDefMod, alIniMod, getOffensiveTacticMods, getDefensiveTacticMods, calculateFinalOEAL } from "./tacticResolution";
-import { FighterState, ResolutionContext, resolveEffectiveTactics, applyAggressionBias } from "./resolution";
+} from "../combatConstants";
+import { oeAttMod, oeDefMod, alIniMod, getOffensiveTacticMods, getDefensiveTacticMods, calculateFinalOEAL } from "../tacticResolution";
+import { FighterState, ResolutionContext, resolveEffectiveTactics, applyAggressionBias } from "../resolution";
 
 export function evaluateInitiative(
   rng: () => number,

@@ -1,14 +1,31 @@
-import { simulateFight } from "./combat/services/simulateFightService";
 import { createFighterState } from "./bout/fighterState";
 import { resolveDecision } from "./bout/decisionLogic";
 import { defaultPlanForWarrior } from "./bout/planDefaults";
-import { mulberry32, getPhase as getCombatPhase } from "./combat/combatMath";
-import { DEFAULT_LOADOUT, checkWeaponRequirements, checkArmorRequirements } from "@/data/equipment";
+import { getPhase as getCombatPhase } from "./combat/combatMath";
+import { DEFAULT_LOADOUT, checkWeaponRequirements } from "@/data/equipment";
 import { getTrainingBonus } from "./trainers";
 import { getMatchupBonus, MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from "./combat/combatConstants";
-import { resolveEffectiveTactics, resolveExchange } from "./combat/resolution";
-import { generateWarriorIntro, formatPBPEvent, battleOpener, narratorSummarizeEnd, conservingLine, minuteStatusLine, narrateBoutEnd } from "./narrativePBP";
+import { resolveEffectiveTactics, resolveExchange, type ResolutionContext } from "./combat/resolution";
+import { 
+  generateWarriorIntro, 
+  battleOpener, 
+  minuteStatusLine, 
+  narrateBoutEnd,
+  conservingLine
+} from "./narrativePBP";
 import { narrateEvents, NarrationContext } from "./combat/narrator";
+import { SeededRNG } from "@/utils/random";
+import type { 
+  GameState, 
+  Warrior, 
+  Trainer, 
+  FightPlan, 
+  FightOutcome, 
+  WeatherType,
+  MinuteEvent,
+  DeathCauseBucket,
+  FightingStyle
+} from "@/types/game";
 
 // ─── Exports from sub-modules for backward compatibility ───
 export { createFighterState, resolveDecision, defaultPlanForWarrior };
@@ -60,7 +77,8 @@ export function simulateFight(
     const seed = typeof providedRng === "number" 
       ? providedRng 
       : crypto.getRandomValues(new Uint32Array(1))[0];
-    rng = mulberry32(seed);
+    const sRng = new SeededRNG(seed);
+    rng = () => sRng.next();
   }
 
   const nameA = warriorA?.name ?? "Attacker";

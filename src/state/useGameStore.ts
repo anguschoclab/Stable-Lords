@@ -22,6 +22,7 @@ import {
   listSaveSlots,
 } from "./saveSlots";
 import { hashStr } from "@/utils/idUtils";
+import { SeededRNG } from "@/utils/random";
 
 export interface GameStoreState {
   state: GameState;
@@ -261,13 +262,10 @@ export const useGameStore = create<GameStoreState & GameStoreActions>()(
       const { state, activeSlotId } = get();
       
       // Determinism: Seed RNG with week + warriorId for reproducible results
-      let seedValue = state.week * 7 + hashStr(warriorId || tokenId);
-      const rng = () => {
-        const x = Math.sin(seedValue++) * 10000;
-        return x - Math.floor(x);
-      };
+      const seedValue = state.week * 7 + hashStr(warriorId || tokenId);
+      const rng = new SeededRNG(seedValue);
       
-      const next = await engineProxy.assignToken(state, tokenId, warriorId, Comlink.proxy(rng));
+      const next = await engineProxy.assignToken(state, tokenId, warriorId, Comlink.proxy(() => rng.next()));
       
       set((draft) => {
         draft.state = next;

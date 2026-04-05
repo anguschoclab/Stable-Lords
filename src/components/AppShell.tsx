@@ -77,7 +77,8 @@ const NAV_SECTIONS = [
       { to: "/world", label: "Power Rankings", icon: Globe },
       { to: "/world/tournaments", label: "Tournaments", icon: Trophy },
       { to: "/world/scouting", label: "Scouting", icon: Search },
-      { to: "/world/gazette", label: "Daily Gazette", icon: Newspaper },
+      { to: "/world/gazette", label: "Gazette", icon: Newspaper },
+      { to: "/help", label: "Library", icon: BookOpen },
     ]
   },
   {
@@ -86,6 +87,8 @@ const NAV_SECTIONS = [
     items: [
       { to: "/legacy", label: "Graveyard", icon: Skull },
       { to: "/legacy/hall-of-fame", label: "Hall of Fame", icon: Crown },
+      { to: "/world/history", label: "Chronicle", icon: ScrollText },
+      { to: "/legacy/awards", label: "Trophy Room", icon: Trophy },
       { to: "/legacy/analytics", label: "Kill Stats", icon: Target },
     ]
   }
@@ -98,12 +101,14 @@ import { CoachOverlay } from "@/components/ui/CoachOverlay";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const { 
-    week, gold, fame, crowdMood, roster, 
-    doReset, returnToTitle, lastSavedAt, doAdvanceWeek 
+    const { 
+    week, day, isTournamentWeek, gold, fame, crowdMood, roster, 
+    doReset, returnToTitle, lastSavedAt, doAdvanceWeek, doAdvanceDay 
   } = useGameStore(
     useShallow((s) => ({
       week: s.state.week,
+      day: s.state.day,
+      isTournamentWeek: s.state.isTournamentWeek,
       gold: s.state.gold,
       fame: s.state.fame,
       crowdMood: s.state.crowdMood,
@@ -112,6 +117,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       returnToTitle: s.returnToTitle,
       lastSavedAt: s.lastSavedAt,
       doAdvanceWeek: s.doAdvanceWeek,
+      doAdvanceDay: s.doAdvanceDay,
     }))
   );
   const { theme, setTheme } = useTheme();
@@ -182,8 +188,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="hidden lg:flex items-center gap-8">
             <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Arena Week</span>
-              <span className="font-mono font-black text-xs text-foreground bg-white/5 px-2 py-0.5 rounded border border-white/5">{week}</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Arena Time</span>
+              <span className="font-mono font-black text-xs text-foreground bg-white/5 px-2 py-0.5 rounded border border-white/5">
+                W{week}{isTournamentWeek ? ` • D${day + 1}` : ""}
+              </span>
             </div>
             
             <div className="flex flex-col">
@@ -351,14 +359,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="p-4 border-t border-white/5">
             <Button 
-              onClick={() => doAdvanceWeek()}
+              onClick={() => isTournamentWeek ? doAdvanceDay() : doAdvanceWeek()}
               className={cn(
                 "w-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.3)] border border-white/10",
                 !sidebarOpen && "p-0"
               )}
             >
               <RotateCcw className={cn("h-4 w-4", sidebarOpen && "mr-2")} />
-              {sidebarOpen && "End Week Sequence"}
+              {sidebarOpen && (isTournamentWeek ? `Advance Day ${day + 1}` : "End Week Sequence")}
             </Button>
           </div>
         </aside>

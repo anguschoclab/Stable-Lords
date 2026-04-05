@@ -34,7 +34,7 @@ export const TournamentSelectionService = {
       // Update locked IDs for the next tier
       updatedLockedIds.forEach(id => lockedWarriorIds.add(id));
 
-      const tournament = this.buildTournament(tierConfig.id, tierConfig.name, warriors, week, season);
+      const tournament = this.buildTournament(tierConfig.id, tierConfig.name, warriors, week, season, rng);
       tournaments.push(tournament);
     });
 
@@ -112,8 +112,8 @@ export const TournamentSelectionService = {
     return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
   },
 
-  buildTournament(tierId: string, name: string, participants: Warrior[], week: number, season: string): TournamentEntry {
-    const shuffled = [...participants].sort(() => Math.random() - 0.5);
+  buildTournament(tierId: string, name: string, participants: Warrior[], week: number, season: string, rng: SeededRNG): TournamentEntry {
+    const shuffled = rng.shuffle([...participants]);
     const bracket: TournamentBout[] = [];
     
     for (let i = 0; i < 64; i += 2) {

@@ -11,6 +11,7 @@ import {
   updateWarriorEquipment,
 } from "./gameStore";
 import { consumeInsightToken } from "./mutations/tokenMutations";
+import { advanceDay } from "@/engine/dayPipeline";
 import {
   migrateLegacySave,
   getActiveSlot,
@@ -29,6 +30,7 @@ export interface GameStoreState {
 export interface GameStoreActions {
   setState: (next: GameState) => void;
   doAdvanceWeek: () => void;
+  doAdvanceDay: () => void;
   doAppendFight: (summary: FightSummary) => void;
   doUpdateWarrior: (
     warriorId: string,
@@ -95,7 +97,29 @@ export const useGameStore = create<GameStoreState & GameStoreActions>()(
 
     doAdvanceWeek: () => {
       set((draft) => {
-        const next = advanceWeek(draft.state);
+        // If it's a tournament week, we forced daily progression.
+        // But if the user somehow triggers a week advance, we should resolve all 7 days.
+        let next = draft.state;
+        if (next.isTournamentWeek) {
+          for (let i = next.day; i < 7; i++) {
+            next = advanceDay(next);
+          }
+        } else {
+          next = advanceWeek(next);
+        }
+        
+        draft.state = next;
+        const { activeSlotId } = draft;
+        if (activeSlotId) {
+          saveToSlot(activeSlotId, next);
+          draft.lastSavedAt = new Date().toISOString();
+        }
+      });
+    },
+
+    doAdvanceDay: () => {
+      set((draft) => {
+        const next = advanceDay(draft.state);
         draft.state = next;
         const { activeSlotId } = draft;
         if (activeSlotId) {

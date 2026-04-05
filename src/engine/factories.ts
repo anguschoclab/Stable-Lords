@@ -5,6 +5,7 @@ import {
 import { computeWarriorStats } from "@/engine/skillCalc";
 import { generateFavorites } from "@/engine/favorites";
 import { generateId } from "@/utils/idUtils";
+import { SeededRNG } from "@/utils/random";
 
 /**
  * Warrior Factory - creates a new warrior with calculated stats and favorites.
@@ -14,7 +15,7 @@ import { generateId } from "@/utils/idUtils";
  * @param style - Fighting style
  * @param attrs - Base attributes
  * @param overrides - Partial warrior properties to override defaults
- * @param rng - Custom RNG function (default Math.random)
+ * @param rng - Optional SeededRNG for deterministic generation
  */
 export function makeWarrior(
   id: string | undefined,
@@ -22,16 +23,13 @@ export function makeWarrior(
   style: FightingStyle,
   attrs: { ST: number; CN: number; SZ: number; WT: number; WL: number; SP: number; DF: number },
   overrides?: Partial<Warrior>,
-  rng?: () => number
+  rng?: SeededRNG
 ): Warrior {
-  // If no RNG is provided, we use Math.random but this is a temporal leak!
-  // In a headless simulation, an RNG MUST be provided.
-  const safeRng = rng || Math.random;
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
-  const favorites = generateFavorites(style, safeRng);
+  const favorites = generateFavorites(style, rng ? () => rng.next() : Math.random);
   
   return {
-    id: id ?? generateId(),
+    id: id ?? generateId(rng),
     name,
     style,
     attributes: attrs,
@@ -45,7 +43,7 @@ export function makeWarrior(
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: "Active",
-    age: 18 + Math.floor(safeRng() * 8),
+    age: 18 + Math.floor((rng ? rng.next() : Math.random()) * 8),
     favorites,
     ...overrides,
   };

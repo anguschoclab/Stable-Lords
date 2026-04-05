@@ -1,3 +1,5 @@
+import { type SeededRNG } from "./random";
+
 /**
  * ID Generation utilities with support for deterministic testing.
  */
@@ -15,9 +17,21 @@ export function setMockIdGenerator(generator: (() => string) | null) {
 /**
  * Generates a unique ID (UUID or fallback).
  * Supports standard browser crypto and provides a deterministic path for tests.
+ * @param rng - Optional SeededRNG for deterministic generation
  */
-export function generateId(): string {
+export function generateId(rng?: SeededRNG): string {
   if (mockIdGenerator) return mockIdGenerator();
+
+  if (rng) {
+    // Generate a deterministic 16-character hex ID using the provided RNG
+    const chars = "abcdef0123456789";
+    let id = "";
+    for (let i = 0; i < 16; i++) {
+        const val = rng.next();
+        id += chars[Math.floor(val * chars.length)];
+    }
+    return id;
+  }
 
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
     return crypto.randomUUID();
@@ -25,14 +39,10 @@ export function generateId(): string {
 
   // Fallback for environments where crypto is available but randomUUID is not
   if (typeof crypto !== "undefined" && crypto.getRandomValues) {
-    return (([1e7] as unknown as number) + -1e3 + -4e3 + -8e3 + -1e11).replace(
-      /[018]/g,
-      (c: string) =>
-        (
-          Number(c) ^
-          (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (Number(c) / 4)))
-        ).toString(16)
-    );
+    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) => {
+        const n = parseInt(c, 10);
+        return (n ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (n / 4)))).toString(16);
+    });
   }
 
   // Ultimate fallback

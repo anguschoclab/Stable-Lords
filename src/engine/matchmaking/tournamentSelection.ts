@@ -132,7 +132,7 @@ export const TournamentSelectionService = {
     }
 
     return {
-      id: `t_${tierId.toLowerCase()}_${week}`,
+      id: `t_${tierId.toLowerCase()}_${week}_${generateId(rng)}`,
       season: season as import("@/types/game").Season,
       week,
       name,
@@ -182,11 +182,11 @@ export const TournamentSelectionService = {
       
       bout.winner = outcome.winner;
       bout.by = outcome.by;
-      bout.fightId = `tf_${tournament.id}_${bout.round}_${bout.matchIndex}`;
+      bout.fightId = `tf_${tournament.id}_${bout.round}_${bout.matchIndex}_${generateId(rng)}`;
       
       winners.push(outcome.winner === "A" ? bout.a : bout.d);
       losers.push(outcome.winner === "A" ? bout.d : bout.a);
-      updatedState = this.applyBoutResults(updatedState, wA, wD, outcome, tournament.id, tournament.name);
+      updatedState = this.applyBoutResults(updatedState, wA, wD, outcome, tournament.id, tournament.name, rng);
     }
 
     // Generate next round pairings
@@ -209,8 +209,9 @@ export const TournamentSelectionService = {
           matchIndex: 1, // Finals is index 0
           a: losers[0], 
           d: losers[1],
-          label: "Bronze Match" 
-        } as import("@/types/game").TournamentEntry);
+          stableA: "", // Will be filled or inferred
+          stableD: "",
+        });
       }
     }
 
@@ -384,13 +385,21 @@ export const TournamentSelectionService = {
      );
   },
 
-  applyBoutResults(state: GameState, wA: Warrior, wD: Warrior, outcome: import("@/engine/boutProcessor").BoutResult, tId: string, tName: string): GameState {
+  applyBoutResults(
+    state: GameState, 
+    wA: Warrior, 
+    wD: Warrior, 
+    outcome: import("@/types/game").FightOutcome, 
+    tId: string, 
+    tName: string,
+    rng: SeededRNG
+  ): GameState {
     const isKill = outcome.by === "Kill";
     const winnerSide = outcome.winner;
     const updatedState = { ...state };
 
     const summary: import("@/types/game").FightSummary = {
-      id: `tf_${tId}_${generateId()}`,
+      id: `tf_${tId}_${generateId(rng)}`,
       week: state.week,
       phase: "resolution" as const,
       tournamentId: tId,
@@ -462,6 +471,6 @@ export const TournamentSelectionService = {
       const key = rng.pick(keys);
       if (attrs[key] < 25) { attrs[key]++; remaining--; }
     }
-    return makeWarrior(undefined, `Freelancer ${rng.pick(["Thrax", "Murmillo", "Kaeso"])} #${index}`, style, attrs, {}, () => rng.next());
+    return makeWarrior(undefined, `Freelancer ${rng.pick(["Thrax", "Murmillo", "Kaeso"])} #${index}`, style, attrs, {}, rng);
   }
 };

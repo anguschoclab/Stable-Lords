@@ -22,7 +22,7 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: Seede
         ...w,
         fame: (w.fame || 0) + 5,
         injuries: [...(w.injuries || []), {
-          id: generateId(),
+          id: generateId(brawlRng),
           name: "Bruised knuckles (Tavern Brawl)",
           description: "Got into a scrap at the local tavern. The crowd loved it, but the hands took a beating.",
           severity: "Minor",

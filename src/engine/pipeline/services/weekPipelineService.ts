@@ -60,11 +60,13 @@ export function advanceWeek(state: GameState): GameState {
   newState = runRankingsPass(newState);
   newState = runPromoterPass(newState);
 
-  // 3. Recruitment & Administrative Churn
+  // 3. Recruitment & Administrative Churn (Optimized Set Generation)
   const usedNames = new Set<string>();
-  newState.roster.forEach(w => usedNames.add(w.name));
-  newState.graveyard.forEach(w => usedNames.add(w.name));
-  (newState.rivals || []).forEach(r => r.roster.forEach(w => usedNames.add(w.name)));
+  for (const w of newState.roster) usedNames.add(w.name);
+  for (const w of newState.graveyard) usedNames.add(w.name);
+  for (const r of newState.rivals || []) {
+    for (const w of r.roster) usedNames.add(w.name);
+  }
   newState.recruitPool = partialRefreshPool(newState.recruitPool || [], currentWeek, usedNames);
 
   // 4. Gazette & Hall of Fame

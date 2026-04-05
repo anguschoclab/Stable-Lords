@@ -14,14 +14,13 @@ interface FormSparklineProps {
   limit?: number;
 }
 
-export function FormSparkline({ warriorId, limit = 5 }: FormSparklineProps) {
-  const { state } = useGameStore();
+export const FormSparkline = React.memo(function FormSparkline({ warriorId, limit = 5 }: FormSparklineProps) {
+  // Only select what we need: the history array
+  const arenaHistory = useGameStore(s => s.state.arenaHistory);
 
   const history = useMemo(() => {
-    // ⚡ Bolt: Fast O(K) lookup without spreading, sorting, or filtering
-    // the massive chronological arenaHistory array.
-    return getRecentFightsForWarrior(state.arenaHistory, warriorId, limit);
-  }, [state.arenaHistory, warriorId, limit]);
+    return getRecentFightsForWarrior(arenaHistory, warriorId, limit);
+  }, [arenaHistory, warriorId, limit]);
 
   return (
     <div className="flex items-center gap-1">
@@ -29,7 +28,7 @@ export function FormSparkline({ warriorId, limit = 5 }: FormSparklineProps) {
         {history.length === 0 ? (
           <span className="text-[10px] text-muted-foreground font-mono">NEW</span>
         ) : (
-          history.map((fight, i) => {
+          history.map((fight) => {
             const isA = fight.a === warriorId;
             const won = (isA && fight.winner === "A") || (!isA && fight.winner === "D");
             const byKill = fight.by === "Kill";
@@ -43,7 +42,7 @@ export function FormSparkline({ warriorId, limit = 5 }: FormSparklineProps) {
               label = "Draw";
             } else if (won) {
               colorClass = byKill ? "bg-arena-blood shadow-[0_0_8px_rgba(153,27,27,0.5)]" : "bg-arena-fame";
-              label = won ? (byKill ? "Win (Kill)" : "Win") : "Loss";
+              label = byKill ? "Win (Kill)" : "Win";
             } else {
               colorClass = "bg-destructive/60";
               label = "Loss";
@@ -72,4 +71,4 @@ export function FormSparkline({ warriorId, limit = 5 }: FormSparklineProps) {
       </TooltipProvider>
     </div>
   );
-}
+});

@@ -160,7 +160,7 @@ export function generateRecruit(
   const favorites = generateFavorites(style, () => rng.next());
 
   return {
-    id: generateId(),
+    id: generateId(rng),
     name,
     style,
     attributes,

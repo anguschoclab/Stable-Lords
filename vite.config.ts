@@ -67,8 +67,6 @@ export default defineConfig(({ mode }) => ({
     }),
     visualizer({
       filename: "stats.html",
-      open: false,
-      gzipSize: true,
       brotliSize: true,
     }),
     viteCompression({
@@ -81,10 +79,31 @@ export default defineConfig(({ mode }) => ({
       ext: ".gz",
       threshold: 1024,
     }),
-  ].filter(Boolean),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("recharts") || id.includes("framer-motion") || id.includes("lucide-react") || id.includes("lodash")) {
+              return "vendor-ui";
+            }
+            if (id.includes("react") || id.includes("zustand") || id.includes("@tanstack")) {
+              return "vendor-core";
+            }
+            if (id.includes("radix-ui") || id.includes("date-fns") || id.includes("cmdk")) {
+              return "vendor-assets";
+            }
+            return "vendor";
+          }
+        },
+      },
     },
   },
 }));

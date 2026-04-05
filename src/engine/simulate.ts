@@ -2,6 +2,13 @@ import { simulateFight } from "./combat/services/simulateFightService";
 import { createFighterState } from "./bout/fighterState";
 import { resolveDecision } from "./bout/decisionLogic";
 import { defaultPlanForWarrior } from "./bout/planDefaults";
+import { mulberry32, getPhase as getCombatPhase } from "./combat/combatMath";
+import { DEFAULT_LOADOUT, checkWeaponRequirements, checkArmorRequirements } from "@/data/equipment";
+import { getTrainingBonus } from "./trainers";
+import { getMatchupBonus, MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from "./combat/combatConstants";
+import { resolveEffectiveTactics, resolveExchange } from "./combat/resolution";
+import { generateWarriorIntro, formatPBPEvent, battleOpener, narratorSummarizeEnd, conservingLine, minuteStatusLine, narrateBoutEnd } from "./narrativePBP";
+import { narrateEvents, NarrationContext } from "./combat/narrator";
 
 // ─── Exports from sub-modules for backward compatibility ───
 export { createFighterState, resolveDecision, defaultPlanForWarrior };

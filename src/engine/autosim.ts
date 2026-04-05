@@ -3,10 +3,21 @@ import { advanceWeek } from "@/state/gameStore";
 import { processWeekBouts } from "@/engine/bout/services/boutProcessorService";
 import { respondToBoutOffer } from "@/state/mutations/contractMutations";
 
+export interface AutosimWeekSummary {
+  week: number;
+  bouts: number;
+  deaths: number;
+  injuries: number;
+  deathNames: string[];
+  injuryNames: string[];
+}
+
 export interface AutosimResult {
   finalState: GameState;
   weeksSimmed: number;
   stopReason: "max_weeks" | "death" | "injury" | "bankrupt" | "no_pairings";
+  stopDetail?: string;
+  weekSummaries: AutosimWeekSummary[];
 }
 
 export async function runAutosim(
@@ -16,6 +27,7 @@ export async function runAutosim(
 ): Promise<AutosimResult> {
   let state = initialState;
   let weeksSimmed = 0;
+  const weekSummaries: AutosimWeekSummary[] = [];
 
   for (let i = 0; i < weeksToSim; i++) {
     // 1. Advance Week (Strategy/Promoters/Events handled here)
@@ -36,9 +48,18 @@ export async function runAutosim(
     });
 
     // 3. Process Weekly Bouts (Actually runs the fights)
-    const { state: nextState, results } = processWeekBouts(state);
+    const { state: nextState, results, summary } = processWeekBouts(state);
     state = nextState;
     
+    weekSummaries.push({
+      week: state.week,
+      bouts: summary.bouts,
+      deaths: summary.deaths,
+      injuries: summary.injuries,
+      deathNames: summary.deathNames || [],
+      injuryNames: summary.injuryNames || [],
+    });
+
     weeksSimmed++;
 
     if (onProgress) {
@@ -47,9 +68,13 @@ export async function runAutosim(
 
     // Stop conditions
     if (state.gold < -500) {
-      return { finalState: state, weeksSimmed, stopReason: "bankrupt" };
+      return { finalState: state, weeksSimmed, stopReason: "bankrupt", stopDetail: "Stable ran out of gold", weekSummaries };
     }
     
+    if (state.roster.length === 0) {
+      return { finalState: state, weeksSimmed, stopReason: "no_pairings", stopDetail: "No warriors left to fight", weekSummaries };
+    }
+
     if (weeksSimmed > 0 && results.length === 0 && weeksSimmed % 4 === 1) {
        // Only stop if no fights for multiple weeks (ignore single dry weeks)
     }
@@ -58,6 +83,8 @@ export async function runAutosim(
   return {
     finalState: state,
     weeksSimmed,
-    stopReason: "max_weeks"
+    stopReason: "max_weeks",
+    stopDetail: "Reached maximum simulation weeks",
+    weekSummaries
   };
 }

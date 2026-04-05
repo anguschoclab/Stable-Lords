@@ -3,7 +3,9 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
-// import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+import { visualizer } from "rollup-plugin-visualizer";
+import viteCompression from "vite-plugin-compression";
+import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -15,7 +17,9 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [
-    // TanStackRouterVite({ autoCodeSplitting: true }), // Disabled for code-based routing setup initially
+    TanStackRouterVite({
+      autoCodeSplitting: true,
+    }),
     react(),
     mode === "development" && componentTagger(),
     VitePWA({
@@ -60,6 +64,22 @@ export default defineConfig(({ mode }) => ({
         skipWaiting: true,
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
       },
+    }),
+    visualizer({
+      filename: "stats.html",
+      open: false,
+      gzipSize: true,
+      brotliSize: true,
+    }),
+    viteCompression({
+      algorithm: "brotliCompress",
+      ext: ".br",
+      threshold: 1024,
+    }),
+    viteCompression({
+      algorithm: "gzip",
+      ext: ".gz",
+      threshold: 1024,
     }),
   ].filter(Boolean),
   resolve: {

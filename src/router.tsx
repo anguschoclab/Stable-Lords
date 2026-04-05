@@ -1,37 +1,46 @@
 import React from "react";
 import { RootRoute, Route, Router, Outlet, createMemoryHistory, createBrowserHistory } from "@tanstack/react-router";
 import AppShell from "@/components/AppShell";
-import Dashboard from "@/pages/Dashboard";
-import RunRound from "@/pages/RunRound";
-import Tournaments from "@/pages/Tournaments";
-import Help from "@/pages/Help";
-import WarriorDetail from "@/pages/WarriorDetail";
-import HallOfFights from "@/lore/HallOfFights";
-import Recruit from "@/pages/Recruit";
-import Graveyard from "@/pages/Graveyard";
-import Training from "@/pages/Training";
-import Trainers from "@/pages/Trainers";
-import Scouting from "@/pages/Scouting";
-import StableDetail from "@/pages/StableDetail";
-import WorldOverview from "@/pages/WorldOverview";
-import NotFound from "./pages/NotFound";
-import Gazette from "@/pages/Gazette";
-import HallOfFame from "@/pages/HallOfFame";
-import KillAnalytics from "@/pages/KillAnalytics";
-import EquipmentOptimizerPage from "@/pages/EquipmentOptimizerPage";
-import TrainingPlanner from "@/pages/TrainingPlanner";
-import SeasonalAwards from "@/pages/SeasonalAwards";
-import TournamentAwards from "@/pages/TournamentAwards";
-import StableLedger from "@/pages/StableLedger";
-import StableHall from "@/pages/StableHall";
-import BookingOffice from "@/pages/BookingOffice";
+// ─── Lazy Loaded Pages ──────────────────────────────────────────────────────
+const Dashboard = React.lazy(() => import("@/pages/Dashboard"));
+const RunRound = React.lazy(() => import("@/pages/RunRound"));
+const Tournaments = React.lazy(() => import("@/pages/Tournaments"));
+const Help = React.lazy(() => import("@/pages/Help"));
+const WarriorDetail = React.lazy(() => import("@/pages/WarriorDetail"));
+const HallOfFights = React.lazy(() => import("@/lore/HallOfFights"));
+const Recruit = React.lazy(() => import("@/pages/Recruit"));
+const Graveyard = React.lazy(() => import("@/pages/Graveyard"));
+const Training = React.lazy(() => import("@/pages/Training"));
+const Trainers = React.lazy(() => import("@/pages/Trainers"));
+const Scouting = React.lazy(() => import("@/pages/Scouting"));
+const StableDetail = React.lazy(() => import("@/pages/StableDetail"));
+const WorldOverview = React.lazy(() => import("@/pages/WorldOverview"));
+const Gazette = React.lazy(() => import("@/pages/Gazette"));
+const HallOfFame = React.lazy(() => import("@/pages/HallOfFame"));
+const KillAnalytics = React.lazy(() => import("@/pages/KillAnalytics"));
+const EquipmentOptimizerPage = React.lazy(() => import("@/pages/EquipmentOptimizerPage"));
+const TrainingPlanner = React.lazy(() => import("@/pages/TrainingPlanner"));
+const SeasonalAwards = React.lazy(() => import("@/pages/SeasonalAwards"));
+const TournamentAwards = React.lazy(() => import("@/pages/TournamentAwards"));
+const StableLedger = React.lazy(() => import("@/pages/StableLedger"));
+const StableHall = React.lazy(() => import("@/pages/StableHall"));
+const BookingOffice = React.lazy(() => import("@/pages/BookingOffice"));
+const NotFound = React.lazy(() => import("./pages/NotFound"));
+const Orphanage = React.lazy(() => import("@/pages/Orphanage"));
 
 // ─── Route Components ───────────────────────────────────────────────────────
 
 function Root() {
   return (
     <AppShell>
-      <Outlet />
+      <React.Suspense fallback={<div className="h-screen w-screen bg-[#0d0f14] flex flex-col items-center justify-center font-mono text-[10px] uppercase tracking-[0.5em] text-primary/80 animate-pulse">
+        <div className="mb-4">Synchronizing_Nodal_Link...</div>
+        <div className="w-48 h-[1px] bg-primary/20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-primary/60 animate-progress" />
+        </div>
+      </div>}>
+        <Outlet />
+      </React.Suspense>
     </AppShell>
   );
 }
@@ -43,11 +52,8 @@ const rootRoute = new RootRoute({
 });
 
 function Welcome() {
-  const Orphanage = React.lazy(() => import("@/pages/Orphanage"));
   return (
-    <React.Suspense fallback={<div className="h-screen w-screen bg-[#050506] flex items-center justify-center font-mono text-[10px] uppercase tracking-[0.5em] text-primary animate-pulse">Initializing_Nodal_Link...</div>}>
-      <Orphanage />
-    </React.Suspense>
+    <Orphanage />
   );
 }
 

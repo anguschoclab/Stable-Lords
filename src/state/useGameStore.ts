@@ -11,7 +11,8 @@ import {
   draftInitialRoster,
   updateWarriorEquipment,
 } from "./gameStore";
-import { consumeInsightToken, InsightTokenService } from "./mutations/tokenMutations";
+import { consumeInsightToken } from "./mutations/tokenMutations";
+import { InsightTokenService } from "@/engine/tokens/insightTokenService";
 import { advanceDay } from "@/engine/dayPipeline";
 import {
   migrateLegacySave,

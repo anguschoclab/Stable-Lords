@@ -38,7 +38,8 @@ export function handleDeath(
   
   const deathSummary: FightSummary = { 
     id: boutId, week, winner: outcome.winner, by: outcome.by, a: wA.name, d: wD.name, 
-    styleA: wA.style, styleD: wD.style, isDeathEvent: true, deathEventData: event, createdAt: new Date().toISOString() 
+    styleA: wA.style, styleD: wD.style, isDeathEvent: true, deathEventData: event, createdAt: new Date().toISOString(),
+    title: `DEATH: ${victim.name} in the Arena`, phase: "resolution"
   };
   
   nextS.arenaHistory = [...nextS.arenaHistory, deathSummary];

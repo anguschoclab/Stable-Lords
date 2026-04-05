@@ -1,5 +1,6 @@
 import { GameState, InsightToken, InsightTokenType, Warrior, Attributes } from "@/types/game";
 import { generateId } from "@/utils/idUtils";
+import { SeededRNG } from "@/utils/random";
 
 /**
  * InsightTokenService — Manages Tournament Reward Tokens.
@@ -9,9 +10,9 @@ export const InsightTokenService = {
   /**
    * Awards a token to the stable's pool.
    */
-  awardToken(state: GameState, type: InsightTokenType, source: string): GameState {
+  awardToken(state: GameState, type: InsightTokenType, source: string, rng?: SeededRNG): GameState {
     const newToken: InsightToken = {
-      id: generateId(),
+      id: generateId(rng),
       type,
       warriorId: "", // Initially unassigned
       warriorName: "Unassigned",
@@ -36,7 +37,7 @@ export const InsightTokenService = {
   /**
    * Assigns a token to a specific warrior.
    */
-  assignToken(state: GameState, tokenId: string, warriorId: string, rng?: () => number): GameState {
+  assignToken(state: GameState, tokenId: string, warriorId: string, rng?: SeededRNG): GameState {
     const token = state.insightTokens?.find(t => t.id === tokenId);
     const warrior = state.roster.find(w => w.id === warriorId);
 
@@ -58,8 +59,7 @@ export const InsightTokenService = {
       } else if (token.type === "Attribute") {
         // Permanent +1 to a primary attribute
         const primaries: (keyof Attributes)[] = ["ST", "WT", "SP", "DF"];
-        const safeRng = rng || Math.random;
-        const attrKey = primaries[Math.floor(safeRng() * primaries.length)];
+        const attrKey = rng ? rng.pick(primaries) : primaries[Math.floor(Math.random() * primaries.length)];
         const currentVal = updatedWarrior.attributes[attrKey] || 10;
         updatedWarrior.attributes = { ...updatedWarrior.attributes, [attrKey]: currentVal + 1 };
         token.detail = `Internalized: +1 ${attrKey}`;

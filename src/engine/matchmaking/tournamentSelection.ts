@@ -204,14 +204,13 @@ export const TournamentSelectionService = {
 
       // 🥉 Bronze Match Injection: If we just finished Semi-Finals (Round 5, winners.length === 2)
       if (currentRound === 5 && losers.length === 2) {
-        bracket.push({ 
+        const bronzeBout: TournamentBout = { 
           round: 6, // Bronze Match happens alongside the Finals
           matchIndex: 1, // Finals is index 0
           a: losers[0], 
           d: losers[1],
-          stableA: "", // Will be filled or inferred
-          stableD: "",
-        });
+        };
+        bracket.push(bronzeBout);
       }
     }
 
@@ -223,7 +222,7 @@ export const TournamentSelectionService = {
     );
 
     if (isComplete && champion) {
-       updatedState = this.awardTournamentPrizes(updatedState, tournamentId);
+       updatedState = this.awardTournamentPrizes(updatedState, tournamentId, rng);
     }
 
     return { updatedState, roundResults: isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${tournament.name}!`] : [] };
@@ -235,7 +234,7 @@ export const TournamentSelectionService = {
    * 2nd: Gold Purse (50%) + Weapon Insight Token
    * 3rd: Gold Purse (25%) + Rhythm Insight Token
    */
-  awardTournamentPrizes(state: GameState, tournamentId: string): GameState {
+  awardTournamentPrizes(state: GameState, tournamentId: string, rng: SeededRNG): GameState {
     const tournament = state.tournaments.find(t => t.id === tournamentId);
     if (!tournament) return state;
 
@@ -253,7 +252,7 @@ export const TournamentSelectionService = {
     const tier = tournament.id.split("_")[1].toUpperCase(); // "GOLD", "SILVER", etc.
     const basePurse = tier === "GOLD" ? 5000 : tier === "SILVER" ? 2500 : tier === "BRONZE" ? 1200 : 600;
 
-    const award = (name: string, place: 1 | 2 | 3) => {
+    const award = (name: string, place: 1 | 2 | 3, awardRng: SeededRNG) => {
       const w = this.findWarrior(updatedState, name, tournament);
       if (!w) return;
 
@@ -284,7 +283,7 @@ export const TournamentSelectionService = {
         } else if (place === 2) {
           // Add Weapon Token
           updatedState.insightTokens = [...(updatedState.insightTokens || []), {
-            id: generateId(),
+            id: generateId(awardRng),
             type: "Weapon",
             warriorId: "",
             warriorName: "Unassigned",
@@ -294,7 +293,7 @@ export const TournamentSelectionService = {
         } else if (place === 3) {
           // Add Rhythm Token
           updatedState.insightTokens = [...(updatedState.insightTokens || []), {
-            id: generateId(),
+            id: generateId(awardRng),
             type: "Rhythm",
             warriorId: "",
             warriorName: "Unassigned",
@@ -310,9 +309,9 @@ export const TournamentSelectionService = {
       }
     };
 
-    award(first, 1);
-    award(second, 2);
-    if (third) award(third, 3);
+    award(first, 1, rng);
+    award(second, 2, rng);
+    if (third) award(third, 3, rng);
 
     return updatedState;
   },

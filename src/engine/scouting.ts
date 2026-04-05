@@ -65,20 +65,22 @@ export function getAttributeRangeDescription(low: number, high: number): string 
   return `${lowDesc} to ${highDesc}`;
 }
 
+import { SeededRNG } from "@/utils/random";
+
 /** Generate a scout report for a warrior */
 export function generateScoutReport(
   warrior: Warrior,
   quality: ScoutQuality,
   week: number,
-  rng: () => number = Math.random
+  rng: SeededRNG
 ): { report: ScoutReport; newInsights: InsightToken[] } {
   const fuzz = QUALITY_FUZZ[quality];
 
   const attributeRanges: Record<string, string> = {};
   for (const key of ATTRIBUTE_KEYS) {
     const val = warrior.attributes[key];
-    const low = Math.max(3, val - fuzz + Math.floor(rng() * 2));
-    const high = Math.min(25, val + fuzz - Math.floor(rng() * 2));
+    const low = Math.max(3, val - fuzz + Math.floor(rng.next() * 2));
+    const high = Math.min(25, val + fuzz - Math.floor(rng.next() * 2));
     attributeRanges[key] = getAttributeRangeDescription(low, high);
   }
 
@@ -113,7 +115,7 @@ export function generateScoutReport(
 
   // Basic scouting reveals Style
   newInsights.push({
-    id: generateId(),
+    id: generateId(rng),
     type: "Style",
     warriorId: warrior.id,
     warriorName: warrior.name,
@@ -123,10 +125,10 @@ export function generateScoutReport(
 
   // Detailed scouting reveals 2 random attributes
   if (quality === "Detailed" || quality === "Expert") {
-    const attrsToReveal = [...ATTRIBUTE_KEYS].sort(() => 0.5 - rng()).slice(0, quality === "Expert" ? 4 : 2);
+    const attrsToReveal = [...ATTRIBUTE_KEYS].sort(() => 0.5 - rng.next()).slice(0, quality === "Expert" ? 4 : 2);
     attrsToReveal.forEach(attr => {
       newInsights.push({
-        id: generateId(),
+        id: generateId(rng),
         type: "Attribute",
         warriorId: warrior.id,
         warriorName: warrior.name,
@@ -140,7 +142,7 @@ export function generateScoutReport(
   // Expert scouting reveals Tactics
   if (quality === "Expert" && warrior.plan) {
     newInsights.push({
-      id: generateId(),
+      id: generateId(rng),
       type: "Tactic",
       warriorId: warrior.id,
       warriorName: warrior.name,
@@ -151,7 +153,7 @@ export function generateScoutReport(
 
   return {
     report: {
-      id: generateId(),
+      id: generateId(rng),
       warriorName: warrior.name,
       style: warrior.style,
       quality,
@@ -165,5 +167,4 @@ export function generateScoutReport(
     },
     newInsights
   };
-
 }

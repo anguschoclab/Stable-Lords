@@ -3,20 +3,29 @@ import { generateId } from "@/utils/idUtils";
 import { generateFightNarrative } from "@/engine/gazetteNarrative";
 import { killWarrior } from "@/state/gameStore";
 import { engineEventBus } from "@/engine/core/EventBus";
+import { SeededRNG } from "@/utils/random";
 
-export function handleDeath(s: GameState, wA: Warrior, wD: Warrior, outcome: FightOutcome, week: number, tags: string[], rivalStableId?: string) {
+export function handleDeath(
+  s: GameState, 
+  wA: Warrior, 
+  wD: Warrior, 
+  outcome: FightOutcome, 
+  week: number, 
+  tags: string[], 
+  rivalStableId?: string,
+  rng?: SeededRNG
+) {
   if (outcome.by !== "Kill") return { s, death: false, playerDeath: false, deathNames: [] };
   
   const victim = outcome.winner === "A" ? wD : wA;
   const isPlayerVictim = (outcome.winner === "A" && !!rivalStableId) ? false : (outcome.winner !== "A");
-  // Refined isPlayerVictim logic: if winner is A and there is a rivalStableId, then player killed rival. 
-  // If winner is D, then player lost (assuming player is always A in this context, which is how resolveBout is called).
   
-  const boutId = generateId();
+  const boutId = generateId(rng);
   const narrative = generateFightNarrative({ 
     id: boutId, week, a: wA.name, d: wD.name, winner: outcome.winner, by: outcome.by, 
-    styleA: wA.style, styleD: wD.style, transcript: [], title: `${wA.name} vs ${wD.name}`, phase: "resolution" 
-  } as import("@/types/game").FightSummary, s.crowdMood);
+    styleA: wA.style, styleD: wD.style, transcript: [], title: `${wA.name} vs ${wD.name}`, phase: "resolution",
+    createdAt: new Date().toISOString()
+  } as FightSummary, s.crowdMood);
   
   const event = { boutId, killerId: outcome.winner === "A" ? wA.id : wD.id, deathSummary: narrative, memorialTags: tags };
 
@@ -29,8 +38,9 @@ export function handleDeath(s: GameState, wA: Warrior, wD: Warrior, outcome: Fig
   
   const deathSummary: FightSummary = { 
     id: boutId, week, winner: outcome.winner, by: outcome.by, a: wA.name, d: wD.name, 
-    styleA: wA.style, styleD: wD.style, isDeathEvent: true, deathEventData: event, createdAt: new Date().toISOString() 
-  } as import("@/types/game").FightSummary;
+    styleA: wA.style, styleD: wD.style, isDeathEvent: true, deathEventData: event, createdAt: new Date().toISOString(),
+    title: `DEATH: ${victim.name} in the Arena`, phase: "resolution"
+  };
   
   nextS.arenaHistory = [...nextS.arenaHistory, deathSummary];
   nextS.newsletter = [...(nextS.newsletter || []), { week, title: "Arena Obituary", items: [narrative] }];

@@ -5,7 +5,6 @@ import {
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
-  ResponsiveContainer,
 } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Warrior, ATTRIBUTE_LABELS, ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from "@/types/game";
@@ -25,7 +24,7 @@ const chartConfig: ChartConfig = {
   },
 };
 
-export function WarriorRadarChart({ warrior }: WarriorRadarChartProps) {
+export const WarriorRadarChart = React.memo(function WarriorRadarChart({ warrior }: WarriorRadarChartProps) {
   const data = ATTRIBUTE_KEYS.map((key) => ({
     attribute: ATTRIBUTE_LABELS[key],
     current: warrior.attributes[key],
@@ -68,4 +67,4 @@ export function WarriorRadarChart({ warrior }: WarriorRadarChartProps) {
       </ChartContainer>
     </div>
   );
-}
+});

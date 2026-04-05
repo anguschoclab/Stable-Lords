@@ -156,7 +156,7 @@ export function rollForTrainingInjury(warrior: Warrior, healingBonus: number, rn
     const [minW, maxW] = template.weeksRange;
     const weeks = rng.roll(minW, maxW);
     const injury: InjuryData = {
-      id: generateId(),
+      id: generateId(rng),
       name: template.name,
       description: template.description,
       severity: "Minor",

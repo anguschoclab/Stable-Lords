@@ -64,6 +64,10 @@ export const TournamentSelectionService = {
     const collect = (roster: Warrior[]) => {
       roster.forEach(w => {
         if (w.status === "Active" && !lockedIds.has(w.id)) {
+          // 🌩️ Tournament Entry Skepticism: Weather Check
+          if (state.weather === "Rainy" && w.style === FightingStyle.LungingAttack) return;
+          if (state.weather === "Scalding" && (w.attributes.CN || 0) < 10) return;
+
           const r = rankings[w.id];
           if (r) pool.push({ w, rank: r.overallRank, score: r.compositeScore });
         }

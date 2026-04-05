@@ -432,22 +432,24 @@ const STABLE_ALT = [
   "Brotherhood of Ash",   "The Iron Syndicate",   "Cult of the Flayed",   "Lords of the Pit",   "The Crimson Circle"
 ];
 
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+function pick<T>(arr: T[], rng?: () => number): T {
+  const safeRng = rng || Math.random;
+  return arr[Math.floor(safeRng() * arr.length)];
 }
 
-export function randomWarriorName(): string {
-  return pick(WARRIOR_NAMES);
+export function randomWarriorName(rng?: () => number): string {
+  return pick(WARRIOR_NAMES, rng);
 }
 
-export function randomOwnerName(): string {
-  return `${pick(OWNER_FIRST)} ${pick(OWNER_LAST)}`;
+export function randomOwnerName(rng?: () => number): string {
+  return `${pick(OWNER_FIRST, rng)} ${pick(OWNER_LAST, rng)}`;
 }
 
-export function randomStableName(): string {
+export function randomStableName(rng?: () => number): string {
+  const safeRng = rng || Math.random;
   // 40% chance of alt-style name, 60% prefix+suffix
-  if (Math.random() < 0.4) {
-    return pick(STABLE_ALT);
+  if (safeRng() < 0.4) {
+    return pick(STABLE_ALT, rng);
   }
-  return `${pick(STABLE_PREFIXES)} ${pick(STABLE_SUFFIXES)}`;
+  return `${pick(STABLE_PREFIXES, rng)} ${pick(STABLE_SUFFIXES, rng)}`;
 }

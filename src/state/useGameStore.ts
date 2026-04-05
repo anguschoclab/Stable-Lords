@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import type { GameState, FightSummary, Warrior } from "@/types/game";
+import { type BoutResult } from "@/engine/boutProcessor";
 import {
   createFreshState,
   advanceWeek,
@@ -29,8 +30,8 @@ export interface GameStoreState {
 
 export interface GameStoreActions {
   setState: (next: GameState) => void;
-  doAdvanceWeek: () => void;
-  doAdvanceDay: () => void;
+  doAdvanceWeek: (processedState?: GameState, results?: BoutResult[], deaths?: string[], injuries?: string[]) => void;
+  doAdvanceDay: (processedState?: GameState, results?: BoutResult[], deaths?: string[], injuries?: string[]) => void;
   doAppendFight: (summary: FightSummary) => void;
   doUpdateWarrior: (
     warriorId: string,
@@ -95,11 +96,11 @@ export const useGameStore = create<GameStoreState & GameStoreActions>()(
       });
     },
 
-    doAdvanceWeek: () => {
+    doAdvanceWeek: (processedState?: GameState, results?: BoutResult[], deaths?: string[], injuries?: string[]) => {
       set((draft) => {
-        // If it's a tournament week, we forced daily progression.
-        // But if the user somehow triggers a week advance, we should resolve all 7 days.
-        let next = draft.state;
+        let next = processedState || draft.state;
+        const currentWeek = next.week;
+
         if (next.isTournamentWeek) {
           for (let i = next.day; i < 7; i++) {
             next = advanceDay(next);
@@ -108,6 +109,16 @@ export const useGameStore = create<GameStoreState & GameStoreActions>()(
           next = advanceWeek(next);
         }
         
+        // Populate resolution data for the summary view
+        next.phase = "resolution";
+        next.pendingResolutionData = {
+          bouts: results || [],
+          deaths: deaths || [],
+          injuries: injuries || [],
+          promotions: [],
+          gazette: next.newsletter.filter(n => n.week === currentWeek),
+        };
+
         draft.state = next;
         const { activeSlotId } = draft;
         if (activeSlotId) {
@@ -117,9 +128,24 @@ export const useGameStore = create<GameStoreState & GameStoreActions>()(
       });
     },
 
-    doAdvanceDay: () => {
+    doAdvanceDay: (processedState?: GameState, results?: BoutResult[], deaths?: string[], injuries?: string[]) => {
       set((draft) => {
-        const next = advanceDay(draft.state);
+        const baseState = processedState || draft.state;
+        const currentDay = baseState.day || 0;
+        const currentWeek = baseState.week;
+        
+        const next = advanceDay(baseState);
+        
+        // Populate resolution data for the summary view
+        next.phase = "resolution";
+        next.pendingResolutionData = {
+          bouts: results || [],
+          deaths: deaths || [],
+          injuries: injuries || [],
+          promotions: [],
+          gazette: next.newsletter.filter(n => n.week === currentWeek),
+        };
+
         draft.state = next;
         const { activeSlotId } = draft;
         if (activeSlotId) {

@@ -22,8 +22,13 @@ import { AutosimConsole } from "@/components/run-round/AutosimConsole";
 import { RunResults } from "@/components/run-round/RunResults";
 
 export default function RunRound() {
-  const { state, setState } = useGameStore(
-    useShallow((s) => ({ state: s.state, setState: s.setState }))
+  const { state, setState, doAdvanceDay, doAdvanceWeek } = useGameStore(
+    useShallow((s) => ({ 
+      state: s.state, 
+      setState: s.setState,
+      doAdvanceDay: s.doAdvanceDay,
+      doAdvanceWeek: s.doAdvanceWeek
+    }))
   );
   const [results, setResults] = useState<BoutResult[]>([]);
   const [running, setRunning] = useState(false);
@@ -42,47 +47,33 @@ export default function RunRound() {
     }));
   }, [state]);
 
-  const handleRunWeek = useCallback(() => {
+  const handleExecuteCycle = useCallback(() => {
     if (running) return;
     setRunning(true);
 
     if (matchCard.length === 0 && fightReady.length < 2) {
       setRunning(false);
-      toast.error("No valid pairings available this week.");
+      toast.error("No valid pairings available for this mission.");
       return;
     }
 
     const processed = processWeekBouts(state);
-
-    let updatedState = {
-      ...processed.state,
-      trainers: (processed.state.trainers ?? []).map(t => ({
-        ...t, contractWeeksLeft: Math.max(0, t.contractWeeksLeft - 1),
-      })).filter(t => t.contractWeeksLeft > 0),
-    };
-
-    updatedState = advanceWeek(updatedState);
     
-    // Type-safe handling of promotions and summaries
-    const playerPromotions: string[] = []; 
-    
-    updatedState = {
-      ...updatedState,
-      phase: "resolution",
-      pendingResolutionData: {
-        bouts: processed.results,
-        deaths: processed.summary.deathNames,
-        injuries: processed.summary.injuryNames,
-        promotions: playerPromotions,
-        gazette: updatedState.newsletter.filter(n => n.week === state.week),
-      }
-    };
-
+    // Update local state results for display
     setResults(processed.results);
-    setState(updatedState);
+
+    // Persist to store based on cycle type
+    if (state.isTournamentWeek) {
+      doAdvanceDay(processed.state, processed.results, processed.summary.deathNames, processed.summary.injuryNames);
+      toast.success(`Empire Day ${state.day + 1} concluded.`);
+    } else {
+      doAdvanceWeek(processed.state, processed.results, processed.summary.deathNames, processed.summary.injuryNames);
+      toast.success(`Week ${state.week} concluded.`);
+    }
+
     setRunning(false);
-    toast.success(`Week ${state.week} concluded.`);
-  }, [state, setState, running, matchCard, fightReady.length]);
+    setExpandedId(null);
+  }, [state, running, matchCard, fightReady.length, doAdvanceDay, doAdvanceWeek]);
 
   const handleStartAutosim = useCallback(async (weeks: number) => {
     if (autosimming) return;
@@ -116,11 +107,11 @@ export default function RunRound() {
 
         {!autosimming && !autosimResult && results.length === 0 && (
           <Button 
-            onClick={handleRunWeek} 
+            onClick={handleExecuteCycle} 
             disabled={running || (matchCard.length === 0 && fightReady.length < 2)}
             className="h-12 px-8 gap-3 font-black uppercase text-[11px] tracking-[0.2em] shadow-lg data-[running=true]:animate-pulse"
           >
-            <Zap className="h-4 w-4 fill-current" /> EXECUTE_WEEK_CYCLE
+            <Zap className="h-4 w-4 fill-current" /> {state.isTournamentWeek ? `EXECUTE_DAY_${state.day + 1}_CYCLE` : `EXECUTE_WEEK_${state.week}_CYCLE`}
           </Button>
         )}
       </div>

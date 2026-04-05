@@ -134,7 +134,7 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   if (passA.narrative && rng() < 0.4) events.push({ type: "PASSIVE", actor: "A", result: passA.narrative });
   if (passD.narrative && rng() < 0.4) events.push({ type: "PASSIVE", actor: "D", result: passD.narrative });
 
-  const { aGoesFirst, attMasteryIni } = evaluateInitiative(rng, fA, fD, ctx, stylePhase, OE_A, AL_A, OE_D, AL_D, fatA, fatD, defModsA, defModsD, passA, passD);
+  const { aGoesFirst, attMasteryIni, iniA, iniD } = evaluateInitiative(rng, fA, fD, ctx, stylePhase, OE_A, AL_A, OE_D, AL_D, fatA, fatD, defModsA, defModsD, passA, passD);
   const attLabel = aGoesFirst ? "A" : "D";
   const defLabel = aGoesFirst ? "D" : "A";
 

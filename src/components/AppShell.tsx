@@ -103,7 +103,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
     const { 
     week, day, isTournamentWeek, gold, fame, crowdMood, roster, 
-    doReset, returnToTitle, lastSavedAt, doAdvanceWeek, doAdvanceDay 
+    doReset, returnToTitle, lastSavedAt, doAdvanceWeek, doAdvanceDay,
+    isSimulating, isInitialized
   } = useGameStore(
     useShallow((s) => ({
       week: s.state.week,
@@ -118,6 +119,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       lastSavedAt: s.lastSavedAt,
       doAdvanceWeek: s.doAdvanceWeek,
       doAdvanceDay: s.doAdvanceDay,
+      isSimulating: s.isSimulating,
+      isInitialized: s.isInitialized,
     }))
   );
   const { theme, setTheme } = useTheme();

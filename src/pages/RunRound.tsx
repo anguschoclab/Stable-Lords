@@ -22,12 +22,13 @@ import { AutosimConsole } from "@/components/run-round/AutosimConsole";
 import { RunResults } from "@/components/run-round/RunResults";
 
 export default function RunRound() {
-  const { state, setState, doAdvanceDay, doAdvanceWeek } = useGameStore(
+  const { state, setState, doAdvanceDay, doAdvanceWeek, setSimulating } = useGameStore(
     useShallow((s) => ({ 
       state: s.state, 
       setState: s.setState,
       doAdvanceDay: s.doAdvanceDay,
-      doAdvanceWeek: s.doAdvanceWeek
+      doAdvanceWeek: s.doAdvanceWeek,
+      setSimulating: s.setSimulating
     }))
   );
   const [results, setResults] = useState<BoutResult[]>([]);
@@ -78,17 +79,24 @@ export default function RunRound() {
   const handleStartAutosim = useCallback(async (weeks: number) => {
     if (autosimming) return;
     setAutosimming(true);
+    setSimulating(true);
     setAutosimResult(null);
 
-    // Filter autosim call to match expected single-arg callback if necessary or use proper any
-    const result = await runAutosim(state, weeks, (currentWeek: number) => {
-      setAutosimProgress({ current: currentWeek, total: weeks });
-    });
+    try {
+      const result = await runAutosim(state, weeks, (currentWeek: number) => {
+        setAutosimProgress({ current: currentWeek, total: weeks });
+      });
 
-    setAutosimming(false);
-    setAutosimResult(result);
-    setState(result.finalState);
-  }, [state, setState, autosimming]);
+      setAutosimResult(result);
+      setState(result.finalState);
+    } catch (err) {
+      console.error("Autosim failed", err);
+      toast.error("Auto-simulation encountered a temporal rift.");
+    } finally {
+      setAutosimming(false);
+      setSimulating(false);
+    }
+  }, [state, setState, autosimming, setSimulating]);
 
   return (
     <div className="space-y-6 pb-20 max-w-5xl mx-auto">

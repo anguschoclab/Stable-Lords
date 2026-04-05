@@ -78,7 +78,7 @@ export class OPFSArchiveService implements ArchiveService {
          if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('OPFS_QUOTA_EXCEEDED', { detail: 'Storage Quota Exceeded: Archival failed.' }));
          return;
       }
-    });
+    }
   }
 
   async retrieveHotState(slotId: string): Promise<import("@/types/game").GameState | null> {
@@ -154,7 +154,7 @@ export class OPFSArchiveService implements ArchiveService {
       if ((error as Error)?.name === 'NoModificationAllowedError') {
         throw new ArchiveConflictError(`Bout log ${boutId} already exists in archive.`);
       }
-    });
+    }
   }
 
   async retrieveBoutLog(season: number, boutId: string): Promise<import("@/types/game").GameState | null> {
@@ -193,12 +193,13 @@ export class OPFSArchiveService implements ArchiveService {
         await writable.write(markdown);
         await writable.close();
 
-    } catch (error) {
-      if ((error as Error)?.name === 'QuotaExceededError') {
-         console.error('OPFS Quota Exceeded during gazette archival', error);
-         // Dispatch to Zustand to show Toast
-         if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('OPFS_QUOTA_EXCEEDED', { detail: 'Storage Quota Exceeded: Archival failed.' }));
-         return;
+      } catch (error) {
+        if ((error as Error)?.name === 'QuotaExceededError') {
+           console.error('OPFS Quota Exceeded during gazette archival', error);
+           // Dispatch to Zustand to show Toast
+           if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('OPFS_QUOTA_EXCEEDED', { detail: 'Storage Quota Exceeded: Archival failed.' }));
+           return;
+        }
       }
     });
   }

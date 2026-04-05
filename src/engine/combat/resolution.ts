@@ -144,6 +144,7 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const aGoesFirst = contestCheck(rng, iniA, iniD);
   const attLabel = aGoesFirst ? "A" : "D";
   const defLabel = aGoesFirst ? "D" : "A";
+  const attMasteryIni = aGoesFirst ? masteryIniA : masteryIniD;
 
   events.push({ type: "INITIATIVE", actor: attLabel, value: aGoesFirst ? iniA : iniD, result: true, metadata: { isMastery: attMasteryIni > 0 } });
 

@@ -1,3 +1,5 @@
+import { SeededRNG } from "@/utils/random";
+
 /**
  * Combat Math — RNG, phase detection, skill/contest checks.
  * Single source of truth for combat math utilities used by simulate.ts.
@@ -7,15 +9,6 @@ type Phase = "opening" | "mid" | "late";
 
 const PHASE_OPENING_THRESHOLD = 0.25;
 const PHASE_MID_THRESHOLD = 0.65;
-
-export function mulberry32(seed: number) {
-  return function () {
-    let t = (seed += 0x6d2b79f5);
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 export function getPhase(exchange: number, maxExchanges: number): Phase {
   if (maxExchanges <= 0) return "opening";

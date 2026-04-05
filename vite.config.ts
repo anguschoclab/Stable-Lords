@@ -3,7 +3,9 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
-// import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
+import { visualizer } from "rollup-plugin-visualizer";
+import viteCompression from "vite-plugin-compression";
+import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -15,7 +17,9 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [
-    // TanStackRouterVite({ autoCodeSplitting: true }), // Disabled for code-based routing setup initially
+    TanStackRouterVite({
+      autoCodeSplitting: true,
+    }),
     react(),
     mode === "development" && componentTagger(),
     VitePWA({
@@ -61,10 +65,45 @@ export default defineConfig(({ mode }) => ({
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB
       },
     }),
-  ].filter(Boolean),
+    visualizer({
+      filename: "stats.html",
+      brotliSize: true,
+    }),
+    viteCompression({
+      algorithm: "brotliCompress",
+      ext: ".br",
+      threshold: 1024,
+    }),
+    viteCompression({
+      algorithm: "gzip",
+      ext: ".gz",
+      threshold: 1024,
+    }),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("recharts") || id.includes("framer-motion") || id.includes("lucide-react") || id.includes("lodash")) {
+              return "vendor-ui";
+            }
+            if (id.includes("react") || id.includes("zustand") || id.includes("@tanstack")) {
+              return "vendor-core";
+            }
+            if (id.includes("radix-ui") || id.includes("date-fns") || id.includes("cmdk")) {
+              return "vendor-assets";
+            }
+            return "vendor";
+          }
+        },
+      },
     },
   },
 }));

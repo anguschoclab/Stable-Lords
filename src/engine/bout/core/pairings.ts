@@ -21,7 +21,7 @@ export function generatePairings(state: GameState): BoutPairing[] {
   });
 
   // 2. Derive pairings from Signed Contracts for this week
-  const currentOffers = Object.values(state.boutOffers).filter(
+  const currentOffers = Object.values(state.boutOffers || {}).filter(
     o => o.status === "Signed" && o.boutWeek === currentWeek
   );
 
@@ -31,12 +31,12 @@ export function generatePairings(state: GameState): BoutPairing[] {
 
     if (wA && wD) {
       // Find which stable wD belongs to
-      const rivalStable = state.rivals.find(r => r.roster.some(w => w.id === wD.id));
+      const rivalStable = (state.rivals || []).find(r => r.roster.some(w => w.id === wD.id));
       
       pairings.push({
         a: wA,
         d: wD,
-        isRivalry: offer.hype > 150, // Use hype as a proxy for rivalry
+        isRivalry: (offer.hype || 0) > 150, // Use hype as a proxy for rivalry
         rivalStable: rivalStable?.owner.stableName,
         rivalStableId: rivalStable?.owner.id,
         contractId: offer.id
@@ -44,8 +44,31 @@ export function generatePairings(state: GameState): BoutPairing[] {
     }
   });
 
-  // 3. TODO: Integrate Tournament Matchups
-  // (Assuming tournaments will eventually use the same signed status or a separate bracket lookup)
+  // 3. Integrate Tournament Matchups
+  if (state.isTournamentWeek && state.activeTournamentId) {
+    const tournament = state.tournaments.find(t => t.id === state.activeTournamentId);
+    if (tournament) {
+      // Round 1 is Day 1, Round 2 is Day 2, etc.
+      const currentDay = state.day || 0;
+      const tournamentBouts = tournament.bracket.filter(b => b.round === currentDay && b.winner === undefined);
+      
+      tournamentBouts.forEach(bout => {
+        const wA = warriorMap.get(bout.a) || Array.from(warriorMap.values()).find(w => w.name === bout.a);
+        const wD = warriorMap.get(bout.d) || Array.from(warriorMap.values()).find(w => w.name === bout.d);
+        
+        if (wA && wD) {
+          pairings.push({
+            a: wA,
+            d: wD,
+            isRivalry: true, // Tournaments are always high stakes
+            rivalStable: (state.rivals || []).find(r => r.owner.id === bout.stableD)?.owner.stableName || "Rival",
+            rivalStableId: bout.stableD,
+            contractId: `tour_${tournament.id}_${bout.round}_${bout.matchIndex}`
+          });
+        }
+      });
+    }
+  }
 
   return pairings;
 }

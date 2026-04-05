@@ -60,7 +60,7 @@ describe("ownerRoster - processAIRosterManagement", () => {
       rivals: [
         {
           owner: { id: "r1", name: "M", stableName: "S", personality: "Methodical" },
-          gold: 500,
+          gold: 200, // Lowered to prevent accidental recruitment from obscuring test results
           strategy: { intent: "CONSOLIDATION", planWeeksRemaining: 4 },
           philosophy: "Iron Defense",
           roster: [
@@ -77,8 +77,8 @@ describe("ownerRoster - processAIRosterManagement", () => {
       ]
     };
     
-    vi.spyOn(Math, 'random').mockReturnValue(0.5); 
-
+    // SeededRNG is used in the implementation, so Math.random mock may not be enough
+    // but we lowered gold to ensure no recruitment happens.
     const { updatedRivals, gazetteItems } = processAIRosterManagement(poorPerformer);
     
     expect(updatedRivals[0].roster.filter(w => w.status === "Active").length).toBe(1);

@@ -1,33 +1,7 @@
-import {
-  FightingStyle,
-  type Warrior,
-  type FightPlan,
-  type FightOutcome,
-  type MinuteEvent,
-  type Trainer,
-  type DeathCauseBucket,
-  type WeatherType,
-} from "@/types/game";
-import { DEFAULT_LOADOUT, checkWeaponRequirements } from "@/data/equipment";
-import { mulberry32, getPhase as getCombatPhase } from "./combat/combatMath";
-import {
-  generateWarriorIntro, battleOpener, conservingLine, minuteStatusLine,
-  narrateBoutEnd
-} from "./narrativePBP";
-import { 
-  resolveExchange, 
-  getMatchupBonus, 
-  type FighterState, 
-  type ResolutionContext, 
-  resolveEffectiveTactics,
-  MAX_EXCHANGES,
-  EXCHANGES_PER_MINUTE,
-} from "./combat/resolution";
-import { narrateEvents, type NarrationContext } from "./combat/narrator";
+import { simulateFight } from "./combat/services/simulateFightService";
 import { createFighterState } from "./bout/fighterState";
 import { resolveDecision } from "./bout/decisionLogic";
 import { defaultPlanForWarrior } from "./bout/planDefaults";
-import { getTrainingBonus } from "./trainers";
 
 // ─── Exports from sub-modules for backward compatibility ───
 export { createFighterState, resolveDecision, defaultPlanForWarrior };

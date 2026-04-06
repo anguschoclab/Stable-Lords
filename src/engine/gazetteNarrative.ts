@@ -222,27 +222,8 @@ function detectRivalryMatchup(
   return best;
 }
 
-export function generateWeeklyGazette(
-  fights: FightSummary[],
-  mood: CrowdMoodType,
-  week: number,
-  graveyard: Warrior[],
-  allFights?: FightSummary[],
-  seed?: number
-): GazetteStory {
-  const rng = new SeededRNG(seed ?? (week * 7919 + 55));
-  const moodKey = mood && MOOD_TONE[mood] ? mood : "Calm";
-  const tone = MOOD_TONE[moodKey];
-  const kills = fights.filter(f => f.by === "Kill");
-  const knockouts = fights.filter(f => f.by === "KO");
-  const tags: string[] = [];
 
-  if (kills.length >= 2) tags.push("Bloodbath");
-  if (fights.some(f => f.flashyTags?.includes("Comeback"))) tags.push("Comeback");
-  if (fights.some(f => f.flashyTags?.includes("Dominance"))) tags.push("Dominance");
-  if (knockouts.length >= 3) tags.push("KO Fest");
-
-  // Detect active streaks (5+) among this week's winners
+function detectHotStreaks(fights: FightSummary[], allFights?: FightSummary[]): { name: string; streak: number }[] {
   const streaks = allFights ? computeStreaks(allFights) : new Map<string, number>();
   const hotStreakers: { name: string; streak: number }[] = [];
   for (const f of fights) {
@@ -251,29 +232,21 @@ export function generateWeeklyGazette(
     const s = streaks.get(winnerName) ?? 0;
     if (s >= 5) hotStreakers.push({ name: winnerName, streak: s });
   }
-  if (hotStreakers.length > 0) tags.push("Hot Streak");
+  return hotStreakers;
+}
 
-  // Detect rivalries — pairs who have fought 3+ times across all history
-  const rivalryPair = detectRivalryMatchup(fights, allFights ?? []);
-  if (rivalryPair) tags.push("Rivalry");
-
-  // Detect rising stars — warriors whose total career is exactly 3 wins, 0 losses
+function detectRisingStars(fights: FightSummary[], allFights?: FightSummary[]): string[] {
   const risingStars: string[] = [];
   if (allFights && fights.length > 0) {
     const candidates = new Set<string>();
     for (let i = 0; i < fights.length; i++) {
       const f = fights[i];
-      if (f.winner) {
-        candidates.add(f.winner === "A" ? f.a : f.d);
-      }
+      if (f.winner) candidates.add(f.winner === "A" ? f.a : f.d);
     }
 
     const stats = new Map<string, { total: number; wins: number }>();
-    for (const c of candidates) {
-      stats.set(c, { total: 0, wins: 0 });
-    }
+    for (const c of candidates) stats.set(c, { total: 0, wins: 0 });
 
-    // ⚡ Bolt: Check if candidates Set has a/d to avoid Map lookups for everyone
     for (let i = 0; i < allFights.length; i++) {
       const af = allFights[i];
       if (candidates.has(af.a)) {
@@ -290,14 +263,13 @@ export function generateWeeklyGazette(
 
     for (const c of candidates) {
       const s = stats.get(c)!;
-      if (s.total === 3 && s.wins === 3) {
-        risingStars.push(c);
-      }
+      if (s.total === 3 && s.wins === 3) risingStars.push(c);
     }
   }
-  if (risingStars.length > 0) tags.push("Rising Star");
+  return risingStars;
+}
 
-  // Detect upsets — low-fame warrior beats high-fame warrior (fame ratio >= 2x, min 10 fame gap)
+function detectUpsets(fights: FightSummary[]): { winner: string; loser: string; winnerFame: number; loserFame: number }[] {
   const upsets: { winner: string; loser: string; winnerFame: number; loserFame: number }[] = [];
   for (const f of fights) {
     if (!f.winner || f.fameA == null || f.fameD == null) continue;
@@ -309,112 +281,132 @@ export function generateWeeklyGazette(
       upsets.push({ winner: winnerName, loser: loserName, winnerFame, loserFame });
     }
   }
-  if (upsets.length > 0) tags.push("Upset");
+  return upsets;
+}
 
-  // Headline — streak headlines take priority over standard ones
-  let headline: string;
+function generateHeadline(
+  week: number,
+  killsCount: number,
+  knockoutsCount: number,
+  fightsCount: number,
+  hotStreakers: { name: string; streak: number }[],
+  rivalryPair: { a: string; b: string; count: number } | null,
+  risingStars: string[],
+  upsets: { winner: string; loser: string; winnerFame: number; loserFame: number }[],
+  rng: SeededRNG,
+  toneAdjectives: string[],
+  kills: FightSummary[]
+): string {
   if (hotStreakers.length > 0) {
     const top = hotStreakers.sort((a, b) => b.streak - a.streak)[0];
-    if (top.streak >= 10) {
-      headline = `Week ${week}: UNSTOPPABLE! ${top.name} Extends Legendary ${top.streak}-Win Streak!`;
-    } else if (top.streak >= 7) {
-      headline = `Week ${week}: ${top.name} Is On Fire — ${top.streak} Consecutive Victories!`;
-    } else {
-      headline = `Week ${week}: ${top.name} Rides a ${top.streak}-Win Streak Into Glory!`;
-    }
-  } else if (rivalryPair) {
-    if (rivalryPair.count >= 5) {
-      headline = `Week ${week}: RIVALRY ERUPTS! ${rivalryPair.a} vs ${rivalryPair.b} — Chapter ${rivalryPair.count}!`;
-    } else {
-      headline = `Week ${week}: Old Foes Meet Again — ${rivalryPair.a} vs ${rivalryPair.b} (Bout ${rivalryPair.count})`;
-    }
-  } else if (risingStars.length > 0) {
-    headline = `Week ${week}: RISING STAR! ${risingStars[0]} Opens Career with a Perfect 3-0!`;
-  } else if (upsets.length > 0) {
-    const u = upsets[0];
-    headline = `Week ${week}: UPSET! ${u.winner} Topples the Mighty ${u.loser}!`;
-  } else if (kills.length >= 2) {
-    headline = `Week ${week}: Blood Runs Deep — ${kills.length} Warriors Fall!`;
-  } else if (kills.length === 1) {
-    const k = kills[0];
-    const killer = k.winner === "A" ? k.a : k.d;
-    headline = `Week ${week}: ${killer} Claims a Life in the Arena`;
-  } else if (knockouts.length >= 2) {
-    headline = `Week ${week}: ${pick(rng, tone.adjectives).charAt(0).toUpperCase() + pick(rng, tone.adjectives).slice(1)} Knockouts Rock the Arena`;
-  } else if (fights.length > 0) {
-    headline = `Week ${week}: A ${pick(rng, tone.adjectives).charAt(0).toUpperCase() + pick(rng, tone.adjectives).slice(1)} Week in the Coliseum`;
-  } else {
-    headline = `Week ${week}: Silence in the Arena`;
+    if (top.streak >= 10) return `Week ${week}: UNSTOPPABLE! ${top.name} Extends Legendary ${top.streak}-Win Streak!`;
+    if (top.streak >= 7) return `Week ${week}: ${top.name} Is On Fire — ${top.streak} Consecutive Victories!`;
+    return `Week ${week}: ${top.name} Rides a ${top.streak}-Win Streak Into Glory!`;
   }
+  if (rivalryPair) {
+    if (rivalryPair.count >= 5) return `Week ${week}: RIVALRY ERUPTS! ${rivalryPair.a} vs ${rivalryPair.b} — Chapter ${rivalryPair.count}!`;
+    return `Week ${week}: Old Foes Meet Again — ${rivalryPair.a} vs ${rivalryPair.b} (Bout ${rivalryPair.count})`;
+  }
+  if (risingStars.length > 0) return `Week ${week}: RISING STAR! ${risingStars[0]} Opens Career with a Perfect 3-0!`;
+  if (upsets.length > 0) {
+    const u = upsets[0];
+    return `Week ${week}: UPSET! ${u.winner} Topples the Mighty ${u.loser}!`;
+  }
+  if (killsCount >= 2) return `Week ${week}: Blood Runs Deep — ${killsCount} Warriors Fall!`;
+  if (killsCount === 1) {
+    const k = kills[0];
+    return `Week ${week}: ${k.winner === "A" ? k.a : k.d} Claims a Life in the Arena`;
+  }
+  if (knockoutsCount >= 2) return `Week ${week}: ${pick(rng, toneAdjectives).charAt(0).toUpperCase() + pick(rng, toneAdjectives).slice(1)} Knockouts Rock the Arena`;
+  if (fightsCount > 0) return `Week ${week}: A ${pick(rng, toneAdjectives).charAt(0).toUpperCase() + pick(rng, toneAdjectives).slice(1)} Week in the Coliseum`;
+  return `Week ${week}: Silence in the Arena`;
+}
 
-  // Body
+function generateBody(
+  rng: SeededRNG,
+  tone: any,
+  fights: FightSummary[],
+  killsCount: number,
+  mood: CrowdMoodType,
+  hotStreakers: { name: string; streak: number }[],
+  rivalryPair: { a: string; b: string; count: number } | null,
+  risingStars: string[],
+  upsets: { winner: string; loser: string; winnerFame: number; loserFame: number }[],
+  graveyard: Warrior[],
+  week: number
+): string {
   const paragraphs: string[] = [pick(rng, tone.opener)];
 
-  // Summary stats
   if (fights.length > 0) {
-    paragraphs.push(`${fights.length} bout${fights.length !== 1 ? "s" : ""} were contested this week${kills.length > 0 ? `, with ${kills.length} ending in death` : ""}.`);
+    paragraphs.push(`${fights.length} bout${fights.length !== 1 ? "s" : ""} were contested this week${killsCount > 0 ? `, with ${killsCount} ending in death` : ""}.`);
   }
 
-  // Individual fight narratives (top 3 by "score")
   const scoredFights = fights
-    .map(f => ({
-      fight: f,
-      score: (f.by === "Kill" ? 5 : f.by === "KO" ? 3 : 1) + (f.flashyTags?.length ?? 0),
-    }))
+    .map(f => ({ fight: f, score: (f.by === "Kill" ? 5 : f.by === "KO" ? 3 : 1) + (f.flashyTags?.length ?? 0) }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 3);
 
-  for (const { fight } of scoredFights) {
-    paragraphs.push(generateFightNarrative(fight, mood, rng));
-  }
+  for (const { fight } of scoredFights) paragraphs.push(generateFightNarrative(fight, mood, rng));
 
-  // Streak narratives
   for (const s of hotStreakers) {
-    if (s.streak >= 10) {
-      paragraphs.push(`The arena trembles before ${s.name}, who has now won an astonishing ${s.streak} bouts in a row! Legends speak of such dominance only in whispers.`);
-    } else if (s.streak >= 7) {
-      paragraphs.push(`${s.name} continues an incredible run of form with ${s.streak} consecutive victories. Can anyone stop this warrior?`);
-    } else {
-      paragraphs.push(`${s.name} is building momentum with ${s.streak} wins in a row — a warrior to watch closely.`);
-    }
+    if (s.streak >= 10) paragraphs.push(`The arena trembles before ${s.name}, who has now won an astonishing ${s.streak} bouts in a row! Legends speak of such dominance only in whispers.`);
+    else if (s.streak >= 7) paragraphs.push(`${s.name} continues an incredible run of form with ${s.streak} consecutive victories. Can anyone stop this warrior?`);
+    else paragraphs.push(`${s.name} is building momentum with ${s.streak} wins in a row — a warrior to watch closely.`);
   }
 
-  // Rivalry narrative
   if (rivalryPair) {
-    if (rivalryPair.count >= 5) {
-      paragraphs.push(`The bitter feud between ${rivalryPair.a} and ${rivalryPair.b} continues to captivate the arena! This marks their ${rivalryPair.count}th meeting — a rivalry for the ages.`);
-    } else {
-      paragraphs.push(`${rivalryPair.a} and ${rivalryPair.b} crossed blades for the ${rivalryPair.count}${rivalryPair.count === 3 ? "rd" : "th"} time. The crowd senses a budding rivalry.`);
-    }
+    if (rivalryPair.count >= 5) paragraphs.push(`The bitter feud between ${rivalryPair.a} and ${rivalryPair.b} continues to captivate the arena! This marks their ${rivalryPair.count}th meeting — a rivalry for the ages.`);
+    else paragraphs.push(`${rivalryPair.a} and ${rivalryPair.b} crossed blades for the ${rivalryPair.count}${rivalryPair.count === 3 ? "rd" : "th"} time. The crowd senses a budding rivalry.`);
   }
 
-  // Rising star narrative
-  for (const star of risingStars) {
-    paragraphs.push(`All eyes turn to ${star}, who has burst onto the scene with three consecutive victories to open their career. A rising star — or a flash in the pan? Only the arena will tell.`);
-  }
+  for (const star of risingStars) paragraphs.push(`All eyes turn to ${star}, who has burst onto the scene with three consecutive victories to open their career. A rising star — or a flash in the pan? Only the arena will tell.`);
 
-  // Upset narrative
-  for (const u of upsets) {
-    paragraphs.push(`In a stunning upset, ${u.winner} (fame: ${u.winnerFame}) defeated the celebrated ${u.loser} (fame: ${u.loserFame})! The crowd roared in disbelief as the underdog proved that fame means nothing once steel is drawn.`);
-  }
+  for (const u of upsets) paragraphs.push(`In a stunning upset, ${u.winner} (fame: ${u.winnerFame}) defeated the celebrated ${u.loser} (fame: ${u.loserFame})! The crowd roared in disbelief as the underdog proved that fame means nothing once steel is drawn.`);
 
-  // Graveyard mention
   if (graveyard.length > 0) {
     const recent = graveyard.filter(w => w.deathWeek === week);
-    if (recent.length > 0) {
-      paragraphs.push(`The Hall of Warriors receives ${recent.length} new name${recent.length !== 1 ? "s" : ""} this week. Their sacrifice is not forgotten.`);
-    }
+    if (recent.length > 0) paragraphs.push(`The Hall of Warriors receives ${recent.length} new name${recent.length !== 1 ? "s" : ""} this week. Their sacrifice is not forgotten.`);
   }
 
   paragraphs.push(pick(rng, tone.closer));
+  return paragraphs.join("\n\n");
+}
 
-  return {
-    headline,
-    body: paragraphs.join("\n\n"),
-    mood,
-    tags,
-    week,
-  };
+export function generateWeeklyGazette(
+  fights: FightSummary[],
+  mood: CrowdMoodType,
+  week: number,
+  graveyard: Warrior[],
+  allFights?: FightSummary[],
+  seed?: number
+): GazetteStory {
+  const rng = new SeededRNG(seed ?? (week * 7919 + 55));
+  const tone = MOOD_TONE[mood && MOOD_TONE[mood] ? mood : "Calm"];
+  const kills = fights.filter(f => f.by === "Kill");
+  const knockouts = fights.filter(f => f.by === "KO");
+  const tags: string[] = [];
+
+  if (kills.length >= 2) tags.push("Bloodbath");
+  if (fights.some(f => f.flashyTags?.includes("Comeback"))) tags.push("Comeback");
+  if (fights.some(f => f.flashyTags?.includes("Dominance"))) tags.push("Dominance");
+  if (knockouts.length >= 3) tags.push("KO Fest");
+
+  const hotStreakers = detectHotStreaks(fights, allFights);
+  if (hotStreakers.length > 0) tags.push("Hot Streak");
+
+  const rivalryPair = detectRivalryMatchup(fights, allFights ?? []);
+  if (rivalryPair) tags.push("Rivalry");
+
+  const risingStars = detectRisingStars(fights, allFights);
+  if (risingStars.length > 0) tags.push("Rising Star");
+
+  const upsets = detectUpsets(fights);
+  if (upsets.length > 0) tags.push("Upset");
+
+  const headline = generateHeadline(week, kills.length, knockouts.length, fights.length, hotStreakers, rivalryPair, risingStars, upsets, rng, tone.adjectives, kills);
+  const body = generateBody(rng, tone, fights, kills.length, mood, hotStreakers, rivalryPair, risingStars, upsets, graveyard, week);
+
+  return { headline, body, mood, tags, week };
 }
 
 /** Generate a season-end retrospective */

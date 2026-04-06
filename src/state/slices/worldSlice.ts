@@ -31,6 +31,8 @@ export interface WorldSlice {
   updatePromoterHistory: (promoterId: string, purse: number, boutId: string) => void;
   replacePromoter: (oldId: string, newPromoter: Promoter) => void;
   updateWarriorStatus: (warriorId: string, won: boolean, killed: boolean, fameDelta: number, popDelta: number, rivalStableId?: string) => void;
+  renameStable: (newName: string) => void;
+  renamePlayer: (newName: string) => void;
 }
 
 export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get) => ({
@@ -211,5 +213,30 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
           : w)
       };
     });
+  },
+
+  renameStable: (newName: string) => {
+    set((state: any) => {
+      const oldName = state.player.stableName;
+      
+      // Update arena history for stable-level filtering
+      const nextHistory = (state.arenaHistory || []).map((f: any) => {
+        const nextF = { ...f };
+        if (f.stableA === oldName) nextF.stableA = newName;
+        if (f.stableD === oldName) nextF.stableD = newName;
+        return nextF;
+      });
+
+      return {
+        player: { ...state.player, stableName: newName },
+        arenaHistory: nextHistory,
+      };
+    });
+  },
+
+  renamePlayer: (newName: string) => {
+    set((state: any) => ({
+      player: { ...state.player, name: newName }
+    }));
   }
 });

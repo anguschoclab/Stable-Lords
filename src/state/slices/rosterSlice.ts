@@ -15,6 +15,7 @@ export interface RosterSlice {
   retireWarrior: (warriorId: string) => void;
   consumeInsightToken: (tokenId: string, warriorId: string) => void;
   updateWarriorEquipment: (warriorId: string, equipment: { weapon: string; armor: string; shield: string; helm: string }) => void;
+  renameWarrior: (warriorId: string, newName: string) => void;
 }
 
 export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, get) => ({
@@ -123,6 +124,49 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
       });
 
       return { roster: nextRoster };
+    });
+  },
+  
+  renameWarrior: (warriorId, newName) => {
+    set((state: any) => {
+      const warrior = state.roster.find((w: Warrior) => w.id === warriorId) || 
+                      state.graveyard.find((w: Warrior) => w.id === warriorId) || 
+                      state.retired.find((w: Warrior) => w.id === warriorId);
+      
+      if (!warrior) return state;
+      const oldName = warrior.name;
+      
+      // 1. Update the warrior object names across all lists
+      const updateList = (list: Warrior[]) => list.map(w => w.id === warriorId ? { ...w, name: newName } : w);
+      
+      // 2. Surgical Migration: Sweep arena history to preserve "Chronicle"
+      const nextHistory = (state.arenaHistory || []).map((f: any) => {
+        let changed = false;
+        const nextF = { ...f };
+        
+        if (f.a === oldName) { nextF.a = newName; changed = true; }
+        if (f.d === oldName) { nextF.d = newName; changed = true; }
+        
+        if (changed) {
+          // Update the title too if it contains the names
+          nextF.title = nextF.title.replace(oldName, newName);
+        }
+        
+        return nextF;
+      });
+
+      // 3. Update Insight Tokens
+      const nextTokens = (state.insightTokens || []).map((t: any) => 
+        t.warriorId === warriorId ? { ...t, warriorName: newName } : t
+      );
+
+      return {
+        roster: updateList(state.roster),
+        graveyard: updateList(state.graveyard),
+        retired: updateList(state.retired),
+        arenaHistory: nextHistory,
+        insightTokens: nextTokens
+      };
     });
   },
 });

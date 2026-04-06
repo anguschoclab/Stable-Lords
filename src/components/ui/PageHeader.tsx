@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   actions?: React.ReactNode;
   icon?: React.ElementType;
 }
@@ -35,14 +35,14 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
               </motion.h1>
             </div>
             {subtitle && (
-              <motion.p 
+              <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
                 className="text-xs md:text-sm text-muted-foreground font-mono font-black uppercase tracking-[0.2em] opacity-70"
               >
                 {subtitle}
-              </motion.p>
+              </motion.div>
             )}
           </div>
 

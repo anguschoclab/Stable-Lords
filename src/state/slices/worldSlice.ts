@@ -102,10 +102,10 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
       // Check if all parties have responded
       let newStatus = offer.status;
       const allParticipatingWarriors = offer.warriorIds;
-      const allResponded = allParticipatingWarriors.every(id => newResponses[id] && newResponses[id] !== "Pending");
+      const allResponded = allParticipatingWarriors.every((wid: string) => newResponses[wid] && newResponses[wid] !== "Pending");
       
       if (allResponded) {
-        const anyDeclined = allParticipatingWarriors.some(id => newResponses[id] === "Declined");
+        const anyDeclined = allParticipatingWarriors.some((wid: string) => newResponses[wid] === "Declined");
         newStatus = anyDeclined ? "Rejected" : "Signed";
       }
 
@@ -219,24 +219,41 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
     set((state: any) => {
       const oldName = state.player.stableName;
       
-      // Update arena history for stable-level filtering
-      const nextHistory = (state.arenaHistory || []).map((f: any) => {
-        const nextF = { ...f };
-        if (f.stableA === oldName) nextF.stableA = newName;
-        if (f.stableD === oldName) nextF.stableD = newName;
-        return nextF;
-      });
+      // 1. Update arena history for stable-level filtering
+      const nextHistory = (state.arenaHistory || []).map((f: any) => ({
+        ...f,
+        stableA: f.stableA === oldName ? newName : f.stableA,
+        stableD: f.stableD === oldName ? newName : f.stableD
+      }));
+
+      // 2. Sweep Owner Grudges
+      const nextGrudges = (state.ownerGrudges || []).map((g: any) => ({
+        ...g,
+        reason: g.reason?.replace(new RegExp(oldName, 'g'), newName)
+      }));
 
       return {
         player: { ...state.player, stableName: newName },
         arenaHistory: nextHistory,
+        ownerGrudges: nextGrudges
       };
     });
   },
 
   renamePlayer: (newName: string) => {
-    set((state: any) => ({
-      player: { ...state.player, name: newName }
-    }));
+    set((state: any) => {
+      const oldName = state.player.name;
+
+      // Sweep Owner Grudges for character name mentions
+      const nextGrudges = (state.ownerGrudges || []).map((g: any) => ({
+        ...g,
+        reason: g.reason?.replace(new RegExp(oldName, 'g'), newName)
+      }));
+
+      return {
+        player: { ...state.player, name: newName },
+        ownerGrudges: nextGrudges
+      };
+    });
   }
 });

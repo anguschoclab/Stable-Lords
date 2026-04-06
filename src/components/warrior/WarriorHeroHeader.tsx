@@ -2,7 +2,10 @@ import React from "react";
 import { Trophy, Flame, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TagBadge } from "@/components/ui/WarriorBadges";
-import { STYLE_DISPLAY_NAMES, FightingStyle, Warrior } from "@/types/game";
+import { STYLE_DISPLAY_NAMES, FightingStyle } from "@/types/game";
+import { EditableText } from "@/components/ui/EditableText";
+import { useGameStore } from "@/state/useGameStore";
+import { cn } from "@/lib/utils";
 
 interface ObfuscatedWarrior {
   name: string;
@@ -21,16 +24,29 @@ interface WarriorHeroHeaderProps {
   record: string;
   streakLabel: string | null;
   streakVal: number;
+  id?: string;
+  isPlayerOwned?: boolean;
 }
 
-export function WarriorHeroHeader({ warrior, record, streakLabel, streakVal }: WarriorHeroHeaderProps) {
+export function WarriorHeroHeader({ warrior, record, streakLabel, streakVal, id, isPlayerOwned }: WarriorHeroHeaderProps) {
+  const store = useGameStore();
+
   return (
     <div className="relative rounded-xl border border-border bg-gradient-to-br from-secondary via-card to-secondary p-4 sm:p-8 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/5 glow-neon-blue rounded-xl" />
       <div className="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
         <div className="min-w-0">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
-            <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-wide break-all">{warrior.name}</h1>
+            {isPlayerOwned && id ? (
+              <EditableText
+                value={warrior.name}
+                onSave={(newName) => store.renameWarrior(id, newName)}
+                className="text-2xl sm:text-3xl font-display font-bold tracking-wide break-all"
+                label="Rename Warrior"
+              />
+            ) : (
+              <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-wide break-all">{warrior.name}</h1>
+            )}
             {warrior.champion && (
               <Badge className="bg-arena-gold text-black gap-1">
                 <Trophy className="h-3 w-3" /> Champion

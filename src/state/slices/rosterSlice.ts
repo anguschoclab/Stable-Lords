@@ -126,7 +126,7 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
       return { roster: nextRoster };
     });
   },
-  
+
   renameWarrior: (warriorId, newName) => {
     set((state: any) => {
       const warrior = state.roster.find((w: Warrior) => w.id === warriorId) || 
@@ -146,10 +146,11 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
         
         if (f.a === oldName) { nextF.a = newName; changed = true; }
         if (f.d === oldName) { nextF.d = newName; changed = true; }
+        if (f.winner === oldName) { nextF.winner = newName; changed = true; }
+        if (f.loser === oldName) { nextF.loser = newName; changed = true; }
         
         if (changed) {
-          // Update the title too if it contains the names
-          nextF.title = nextF.title.replace(oldName, newName);
+          nextF.title = nextF.title.replace(new RegExp(oldName, 'g'), newName);
         }
         
         return nextF;
@@ -160,12 +161,44 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
         t.warriorId === warriorId ? { ...t, warriorName: newName } : t
       );
 
+      // 4. Sweep Tournaments (Brackets & Participants)
+      const nextTournaments = (state.tournaments || []).map((t: any) => {
+        const nextT = { ...t };
+        if (t.champion === oldName) nextT.champion = newName;
+        nextT.bracket = t.bracket.map((b: any) => {
+          const nextB = { ...b };
+          if (b.a === oldName) nextB.a = newName;
+          if (b.d === oldName) nextB.d = newName;
+          return nextB;
+        });
+        nextT.participants = t.participants.map((p: any) => 
+          p.id === warriorId ? { ...p, name: newName } : p
+        );
+        return nextT;
+      });
+
+      // 5. Sweep Scout Reports
+      const nextReports = (state.scoutReports || []).map((r: any) => 
+        r.warriorName === oldName ? { ...r, warriorName: newName } : r
+      );
+
+      // 6. Sweep lastSimulationReport
+      const nextSimReport = state.lastSimulationReport ? {
+        ...state.lastSimulationReport,
+        trainingGains: state.lastSimulationReport.trainingGains?.map((g: any) => 
+          g.warriorId === warriorId ? { ...g, warriorName: newName } : g
+        )
+      } : state.lastSimulationReport;
+
       return {
         roster: updateList(state.roster),
         graveyard: updateList(state.graveyard),
         retired: updateList(state.retired),
         arenaHistory: nextHistory,
-        insightTokens: nextTokens
+        insightTokens: nextTokens,
+        tournaments: nextTournaments,
+        scoutReports: nextReports,
+        lastSimulationReport: nextSimReport
       };
     });
   },

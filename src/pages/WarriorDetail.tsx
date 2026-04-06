@@ -31,7 +31,8 @@ const TABS: SubNavTab[] = [
 export default function WarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const navigate = useNavigate();
-  const { state, setState } = useGameStore();
+  const state = useGameStore();
+  const { renameWarrior } = state;
 
   const [activeTab, setActiveTab] = useState("biometrics");
 
@@ -128,7 +129,14 @@ export default function WarriorDetail() {
         )}
       </div>
 
-      <WarriorHeroHeader warrior={displayWarrior} record={record} streakLabel={streakLabel} streakVal={streakVal} />
+      <WarriorHeroHeader 
+        warrior={displayWarrior} 
+        record={record} 
+        streakLabel={streakLabel} 
+        streakVal={streakVal} 
+        id={id}
+        isPlayerOwned={isPlayerOwned}
+      />
       <SubNav tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
       {activeTab === "biometrics" && <BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />}

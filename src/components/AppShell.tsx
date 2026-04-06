@@ -36,7 +36,6 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useCoachTip } from "@/hooks/useCoachTip";
-import { getActiveSlot, deleteSlot, exportActiveSlot } from "@/state/saveSlots";
 import EventLog from "@/components/EventLog";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useRivalryAlerts } from "@/hooks/useRivalryAlerts";
@@ -152,7 +151,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       console.warn("Personnel deficit detected. Redirecting to recruitment protocol.");
       navigate({ to: "/welcome" });
     }
-  }, [roster, activePath]);
+  }, [roster, activePath, navigate]);
 
   useEffect(() => {
     if (!lastSavedAt) return;
@@ -336,7 +335,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                       <Tooltip key={item.to} delayDuration={sidebarOpen ? 1000 : 0}>
                         <TooltipTrigger asChild>
                           <Link
-                            to={item.to as "/" | "/world" | "/trainers" | "/physicals" | "/stable/hall" | "/recruitment" | "/tournaments"}
+                            to={item.to as any}
                             className={cn(
                               "flex items-center gap-3 px-6 py-2.5 text-sm font-semibold transition-all relative group h-10",
                               isActive 
@@ -437,17 +436,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-6">
             <AlertDialogCancel className="bg-secondary/40 border-white/5 hover:bg-white/10 hover:text-foreground">Abort Protocol</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.3)]"
-              onClick={() => {
-                const currentSlot = getActiveSlot();
-                if (currentSlot) deleteSlot(currentSlot);
-                doReset();
-                setResetOpen(false);
-              }}
-            >
-              Confirm Purge
-            </AlertDialogAction>
+              <AlertDialogAction
+                className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.3)]"
+                onClick={() => {
+                  doReset();
+                  setResetOpen(false);
+                }}
+              >
+                Confirm Purge
+              </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

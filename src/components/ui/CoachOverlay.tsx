@@ -34,8 +34,8 @@ export function CoachOverlay() {
     }
 
     // 🚑 Injury Check (Fighters assigned to bouts with low health)
-    const activeFighters = state.roster.filter(w => state.arenaHistory.some(f => f.fighterA.id === w.id && !f.result));
-    const injuredActive = activeFighters.filter(w => (w.health || 0) < 30);
+    const activeFighters = state.roster.filter(w => state.arenaHistory.some(f => (f.a === w.id || f.d === w.id) && f.winner === null));
+    const injuredActive = activeFighters.filter(w => (w.derivedStats?.hp || 0) < 30);
     if (injuredActive.length > 0) {
       list.push({
         id: "crit_injury",
@@ -49,8 +49,8 @@ export function CoachOverlay() {
 
     // ⚖️ Encumbrance Check (Heavy gear on fast style)
     const mismatchedSprints = state.roster.filter(w => {
-      const isFast = ["LungingAttack", "SlashingAttack"].includes(w.style);
-      const isHeavy = (w.attributes.endurance || 0) < (w.loadout?.weight || 0);
+      const isFast = ["LUNGING ATTACK", "SLASHING ATTACK"].includes(w.style);
+      const isHeavy = (w.derivedStats?.endurance || 0) < (w.derivedStats?.encumbrance || 0);
       return isFast && isHeavy;
     });
     if (mismatchedSprints.length > 0) {

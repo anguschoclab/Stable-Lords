@@ -44,7 +44,7 @@ export function populateInitialWorld(state: GameState, seed: number): GameState 
       SP: 8 + rng.roll(0, 4),
       DF: 8 + rng.roll(0, 4)
     };
-    const w = makeWarrior(undefined, `Starter_${i}`, style, attrs, {}, () => rng.next());
+    const w = makeWarrior(undefined, `Starter_${i}`, style, attrs, {}, rng);
     usedNames.add(w.name);
     return w;
   });

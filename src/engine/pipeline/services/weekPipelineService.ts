@@ -41,6 +41,7 @@ export function advanceWeek(state: GameState): GameState {
   const rootRng = new SeededRNG(nextWeek * 7919 + 101);
 
   // 1. Core Simulation Impact Phase (Deterministic)
+  console.time(`Phase 1 - Impacts`);
   const trainingImpactRaw = computeTrainingImpact(state);
   const { impact: trainingImpact, seasonalGrowth } = trainingImpactToStateImpact(state, trainingImpactRaw);
   const impacts: StateImpact[] = [
@@ -51,16 +52,20 @@ export function advanceWeek(state: GameState): GameState {
   ];
   let newState = resolveImpacts(state, impacts);
   newState.seasonalGrowth = seasonalGrowth;
+  console.timeEnd(`Phase 1 - Impacts`);
 
   // 2. World State Update (Week, Season, Weather)
+  console.time(`Phase 2 - World/Rankings`);
   newState = runWorldPass(newState, rootRng);
   const nextSeason = newState.season;
 
   // 2.1 — Global Rankings & Promoter Logic
   newState = runRankingsPass(newState);
   newState = runPromoterPass(newState);
+  console.timeEnd(`Phase 2 - World/Rankings`);
 
-  // 3. Recruitment & Administrative Churn (Optimized Set Generation)
+  // 3. Recruitment & Administrative Churn
+  console.time(`Phase 3 - Recruitment/HallOfFame`);
   const usedNames = new Set<string>();
   for (const w of newState.roster) usedNames.add(w.name);
   for (const w of newState.graveyard) usedNames.add(w.name);
@@ -86,8 +91,10 @@ export function advanceWeek(state: GameState): GameState {
 
   // 5.1 — Promoter Careers & Succession
   newState = runPromoterLifecyclePass(newState);
+  console.timeEnd(`Phase 3 - Recruitment/HallOfFame`);
 
-  // 6. Seasonal Adaptation (Narrative, Philosophy, and Churn)
+  // 6. Seasonal Adaptation
+  console.time(`Phase 6 - Seasonal/Tournament`);
   if (nextSeason !== state.season) {
     const seasonSeed = nextWeek * 133;
     const { updatedRivals: churnRivals, news: churnNews } = WorldManagementService.processSeasonalChurn(newState, seasonSeed + 55);
@@ -115,17 +122,23 @@ export function advanceWeek(state: GameState): GameState {
       items: ["The seasonal tournaments have been bracketed. Progression will shift to DAILY ticks until champions are crowned."]
     }];
   }
+  console.timeEnd(`Phase 6 - Seasonal/Tournament`);
 
-  // 8. Physicality & Aging (Injuries, Development)
+  // 8. Physicality & Aging
+  console.time(`Phase 8 - Warrior/Equipment`);
   newState = runWarriorPass(newState);
 
   // 8.1 — AI Equipment Optimization (Apply Favorites)
   newState = runEquipmentPass(newState);
+  console.timeEnd(`Phase 8 - Warrior/Equipment`);
 
-  // 8.2. Rival Strategy & Background Actions
+  // 8.2. Rival Strategy
+  console.time(`Phase 8.2 - RivalStrategy`);
   newState = runRivalStrategyPass(newState, nextWeek, rootRng);
+  console.timeEnd(`Phase 8.2 - RivalStrategy`);
 
-  // 9. Economy & Financial Maintenance
+  // 9. Economy & Events
+  console.time(`Phase 9 - Economy/Events`);
   newState = runEconomyPass(newState);
 
   // 10. Random Events (Tavern Brawl, etc.)

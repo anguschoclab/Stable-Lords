@@ -29,15 +29,26 @@ export function runPromoterPass(state: GameState): GameState {
   const newOffers: Record<string, BoutOffer> = { ...state.boutOffers };
   const rankings = state.realmRankings || {};
   
+  // 0. Garbage Collection: Prune expired or stale bout offers
+  for (const [offerId, offer] of Object.entries(newOffers)) {
+    if (offer.boutWeek < state.week) {
+      delete newOffers[offerId]; // Past events
+    } else if (offer.expirationWeek < state.week && offer.status !== "Signed") {
+      delete newOffers[offerId]; // Expired proposals
+    }
+  }
+  
   // 1. Gather all active, available warriors
   // Available = No SIGNED bout for Week+2 or Week+3
-  const getAvailability = (wId: string, week: number) => {
-    return !Object.values(newOffers).some(o => 
-      o.warriorIds.includes(wId) && 
-      o.status === "Signed" && 
-      (o.boutWeek === week || o.boutWeek === week + 1)
-    );
-  };
+  const targetWeek = state.week + 2; // Forward booking
+  const unavailableWarriorIds = new Set<string>();
+  Object.values(newOffers).forEach(o => {
+    if (o.status === "Signed" && (o.boutWeek === targetWeek || o.boutWeek === targetWeek + 1)) {
+      o.warriorIds.forEach(id => unavailableWarriorIds.add(id));
+    }
+  });
+
+  const getAvailability = (wId: string) => !unavailableWarriorIds.has(wId);
 
   const allWarriors: { w: Warrior; stableId: string }[] = [];
   state.roster.forEach(w => {
@@ -60,7 +71,7 @@ export function runPromoterPass(state: GameState): GameState {
 
     for (const warriorA of shuffledWarriors) {
       if (generated >= capacity) break;
-      if (!getAvailability(warriorA.w.id, targetWeek)) continue;
+      if (!getAvailability(warriorA.w.id)) continue;
 
       const rankA = rankings[warriorA.w.id]?.overallRank || 999;
       if (rankA > RANK_REQUIREMENTS[promoter.tier]) continue;
@@ -68,7 +79,7 @@ export function runPromoterPass(state: GameState): GameState {
       // Find an opponent B
       const opponentB = shuffledWarriors.find(candidate => {
         if (candidate.w.id === warriorA.w.id) return false;
-        if (!getAvailability(candidate.w.id, targetWeek)) return false;
+        if (!getAvailability(candidate.w.id)) return false;
         
         const rankB = rankings[candidate.w.id]?.overallRank || 999;
         const scoreA = rankings[warriorA.w.id]?.compositeScore || 0;

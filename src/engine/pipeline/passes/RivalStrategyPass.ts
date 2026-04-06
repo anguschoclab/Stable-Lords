@@ -6,7 +6,7 @@ import { generateRivalStables } from "@/engine/rivals";
 import { aiDraftFromPool } from "@/engine/draftService";
 import { processAIRosterManagement } from "@/engine/ownerRoster";
 import { TournamentSelectionService } from "@/engine/matchmaking/tournamentSelection";
-import { processRivalBoutOffers } from "@/engine/ai/workers/competitionWorker";
+import { processAllRivalsBoutOffers } from "@/engine/ai/workers/competitionWorker";
 
 /**
  * Stable Lords — Rival Strategy Pipeline Pass
@@ -52,9 +52,7 @@ export function runRivalStrategyPass(state: GameState, nextWeek: number, rootRng
   currentState.rivals = finalizedRivals;
 
   // 4. Contract Decision Phase: AI Stables accept/decline pending boutique offers
-  finalizedRivals.forEach(rival => {
-    currentState = processRivalBoutOffers(currentState, rival);
-  });
+  currentState = processAllRivalsBoutOffers(currentState, finalizedRivals);
   
   // 5. Tournament Handling (Every 13 weeks)
   if (nextWeek > 0 && nextWeek % 13 === 0) {

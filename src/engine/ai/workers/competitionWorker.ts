@@ -156,22 +156,24 @@ export function evaluateBoutOffer(
 }
 
 /**
- * AI Decision Engine — processes all pending offers for a rival stable.
+ * AI Decision Engine — processes all pending offers for ALL rival stables in one O(N) pass.
  */
-export function processRivalBoutOffers(state: GameState, rival: RivalStableData): GameState {
+export function processAllRivalsBoutOffers(state: GameState, rivals: RivalStableData[]): GameState {
   let currentState = state;
-  const pendingOffers = Object.values(state.boutOffers).filter(o => 
-    o.status === "Proposed" && 
-    o.warriorIds.some(id => rival.roster.some(w => w.id === id)) &&
-    o.responses[rival.roster.find(w => o.warriorIds.includes(w.id))?.id || ""] === "Pending"
-  );
+  const pendingOffers = Object.values(state.boutOffers).filter(o => o.status === "Proposed");
 
   pendingOffers.forEach(offer => {
-    const rivalWarrior = rival.roster.find(w => offer.warriorIds.includes(w.id));
-    if (rivalWarrior) {
-      const response = evaluateBoutOffer(state, offer, rival, rivalWarrior);
-      currentState = respondToBoutOffer(currentState, offer.id, rivalWarrior.id, response);
-    }
+    offer.warriorIds.forEach(wId => {
+      // Find which rival owns this warrior
+      const owningRival = rivals.find(r => r.roster.some(w => w.id === wId));
+      if (!owningRival) return;
+
+      const rivalWarrior = owningRival.roster.find(w => w.id === wId);
+      if (rivalWarrior && offer.responses[wId] === "Pending") {
+        const response = evaluateBoutOffer(currentState, offer, owningRival, rivalWarrior);
+        currentState = respondToBoutOffer(currentState, offer.id, rivalWarrior.id, response);
+      }
+    });
   });
 
   return currentState;

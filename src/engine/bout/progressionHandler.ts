@@ -2,6 +2,7 @@ import { GameState, Warrior, FightOutcome } from "@/types/game";
 import { calculateXP, applyXP } from "@/engine/progression";
 import { checkDiscovery } from "@/engine/favorites";
 import { updateEntityInList } from "@/utils/stateUtils";
+import { SeededRNG } from "@/utils/random";
 
 export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outcome: FightOutcome, tags: string[], week: number, rivalStableId?: string, seed?: number): GameState {
   // XP
@@ -15,9 +16,10 @@ export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outco
   }
   
   // Favorites Discovery
+  const discRng = new SeededRNG((seed ?? 0) + 3);
   [wA, !rivalStableId ? wD : null].forEach(w => {
     if (!w) return;
-    const disc = checkDiscovery(w);
+    const disc = checkDiscovery(w, () => discRng.next());
     if (disc.updated) {
       s.roster = updateEntityInList(s.roster, w.id, rw => ({ ...rw, favorites: w.favorites }));
       if (disc.hints.length > 0) {

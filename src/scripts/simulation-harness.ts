@@ -30,11 +30,18 @@ export function runSimulation(config: SimulationConfig): SimulationResult {
 
   // 2. Main Loop
   for (let w = 1; w <= weeks; w++) {
-    // Process Bouts
+    console.log(`[Sim] Running Week ${w}...`);
+    console.time(`Week ${w} - processBouts`);
     const processed = processWeekBouts(state);
+    console.timeEnd(`Week ${w} - processBouts`);
     
-    // Advance Week
+    console.time(`Week ${w} - advanceWeek`);
     state = advanceWeek(processed.state);
+    console.timeEnd(`Week ${w} - advanceWeek`);
+    
+    let totalWarriors = 0;
+    state.rivals.forEach(r => totalWarriors += r.roster.length);
+    console.log(`[Sim] Week ${w} - Rivals: ${state.rivals.length}, Total Warriors: ${totalWarriors}, Pool: ${state.recruitPool.length}`);
 
     // Collect Data
     if (w % logFrequency === 0 || w === weeks) {

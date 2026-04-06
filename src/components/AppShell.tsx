@@ -102,7 +102,7 @@ import { CoachOverlay } from "@/components/ui/CoachOverlay";
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
     const { 
-    week, day, isTournamentWeek, gold, fame, crowdMood, roster, 
+    week, day, isTournamentWeek, treasury, fame, crowdMood, roster, 
     doReset, returnToTitle, lastSavedAt, doAdvanceWeek, doAdvanceDay,
     isSimulating, isInitialized
   } = useGameStore(
@@ -110,7 +110,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       week: s.state.week,
       day: s.state.day,
       isTournamentWeek: s.state.isTournamentWeek,
-      gold: s.state.gold,
+      treasury: s.state.treasury,
       fame: s.state.fame,
       crowdMood: s.state.crowdMood,
       roster: s.state.roster,
@@ -201,7 +201,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col">
               <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Treasury</span>
               <span className="font-mono font-black text-xs text-arena-gold flex items-center gap-1">
-                {(gold ?? 0).toLocaleString()} <Coins className="h-3 w-3 opacity-60" />
+                {(treasury ?? 0).toLocaleString()} <Coins className="h-3 w-3 opacity-60" />
               </span>
             </div>
 

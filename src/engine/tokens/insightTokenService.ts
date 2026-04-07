@@ -12,7 +12,7 @@ export const InsightTokenService = {
    */
   awardToken(state: GameState, type: InsightTokenType, source: string, rng?: SeededRNG): GameState {
     const newToken: InsightToken = {
-      id: generateId(rng),
+      id: generateId(rng, "ins"),
       type,
       warriorId: "", // Initially unassigned
       warriorName: "Unassigned",
@@ -26,6 +26,7 @@ export const InsightTokenService = {
       newsletter: [
         ...(state.newsletter || []),
         {
+          id: generateId(rng, "news"),
           week: state.week,
           title: "Tournament Reward",
           items: [`The stable has earned a ${type} Insight Token from ${source}.`]
@@ -59,7 +60,7 @@ export const InsightTokenService = {
       } else if (token.type === "Attribute") {
         // Permanent +1 to a primary attribute
         const primaries: (keyof Attributes)[] = ["ST", "WT", "SP", "DF"];
-        const attrKey = (rng ? (typeof rng.pick === 'function' ? rng.pick(primaries) : (await rng.next())) : primaries[Math.floor(Math.random() * primaries.length)]) as keyof Attributes;
+        const attrKey = (rng && typeof rng.pick === 'function' ? rng.pick(primaries) : primaries[0]) as keyof Attributes;
         const currentVal = updatedWarrior.attributes[attrKey] || 10;
         updatedWarrior.attributes = { ...updatedWarrior.attributes, [attrKey]: currentVal + 1 };
         token.detail = `Internalized: +1 ${attrKey}`;
@@ -85,6 +86,7 @@ export const InsightTokenService = {
       newsletter: [
         ...(state.newsletter || []),
         {
+          id: (rng as SeededRNG)?.uuid("news") || generateId(undefined, "news"),
           week: state.week,
           title: "Insight Gained",
           items: [`${warrior.name} has internalized the ${token.type} insight tokens from the stable archives.`]

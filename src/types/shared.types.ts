@@ -93,6 +93,7 @@ export type Season = "Spring" | "Summer" | "Fall" | "Winter";
 export type CrowdMoodType = "Calm" | "Bloodthirsty" | "Theatrical" | "Solemn" | "Festive";
 
 export interface NewsletterItem {
+  id: string;
   week: number;
   title: string;
   items: string[];
@@ -162,7 +163,7 @@ export type ScoutQuality = "Basic" | "Detailed" | "Expert";
 
 // ─── Weather Types ────────────────────────────────────────────────────────
 
-export type WeatherType = "Clear" | "Rainy" | "Scalding" | "Drafty" | "Overcast" | "Blazing Sun";
+export type WeatherType = "Clear" | "Rainy" | "Scalding" | "Drafty" | "Overcast" | "Blazing Sun" | "Blood Moon";
 
 export interface DeathEvent {
   boutId: string;

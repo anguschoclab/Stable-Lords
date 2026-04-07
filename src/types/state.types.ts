@@ -92,8 +92,12 @@ export interface Owner {
 export interface TournamentBout {
   round: number;
   matchIndex: number;
-  a: string;
-  d: string;
+  a: string; // snapshots name for display
+  d: string; 
+  warriorIdA: string;
+  warriorIdD: string;
+  stableIdA?: string;
+  stableIdD?: string;
   stableA?: string;
   stableD?: string;
   winner?: "A" | "D" | null;
@@ -125,6 +129,7 @@ export interface SeasonalGrowth {
 }
 
 export interface LedgerEntry {
+  id: string;
   week: number;
   label: string;
   amount: number;
@@ -142,6 +147,7 @@ export interface AIStrategy {
 // TrainerData was here, now using Trainer from shared.types
 
 export interface AIEvent {
+  id: string;
   week: number;
   type: "STRATEGY" | "FINANCE" | "ROSTER" | "STAFF";
   description: string;
@@ -157,7 +163,9 @@ export interface AIAgentMemory {
 }
 
 export interface RivalStableData {
+  id: string;
   owner: Owner;
+  fame: number; // 🏗️ Prestige Persistence
   roster: Warrior[];
   trainers?: Trainer[];
   treasury: number;
@@ -190,6 +198,7 @@ export interface RestState {
 }
 
 export interface Rivalry {
+  id: string;
   stableIdA: string;
   stableIdB: string;
   intensity: number;
@@ -205,6 +214,7 @@ export interface MatchRecord {
 }
 
 export interface OwnerGrudge {
+  id: string;
   ownerIdA: string;
   ownerIdB: string;
   intensity: number;
@@ -214,6 +224,7 @@ export interface OwnerGrudge {
 }
 
 export interface GazetteStory {
+  id: string;
   headline: string;
   body: string;
   mood: CrowdMoodType;
@@ -234,17 +245,35 @@ export interface InsightToken {
 }
 
 export interface HallEntry {
+  id: string;
   week: number;
   label: "Fight of the Week" | "Fight of the Tournament";
   fightId: string;
 }
 
+// ─── Simulation & Awards ────────────────────────────────────────────────────
+
 export interface SimulationReport {
+  id: string;
   week: number;
   treasuryChange: number;
   trainingGains: { warriorId: string; warriorName: string; attr: string; gain: number }[];
   agingEvents: string[];
   healthEvents: string[];
+}
+
+export type AnnualAwardType = "WARRIOR_OF_YEAR" | "KILLER_OF_YEAR" | "STABLE_OF_YEAR" | "CLASS_MVP" | "TOURNAMENT_RANK";
+
+export interface AnnualAward {
+  year: number;
+  type: AnnualAwardType;
+  warriorId?: string;
+  warriorName?: string;
+  stableId?: string;
+  stableName?: string;
+  style?: FightingStyle;
+  value: number; // e.g. 15 wins, 5 kills
+  reason: string;
 }
 
 export interface GameState {
@@ -269,6 +298,7 @@ export interface GameState {
   treasury: number;
   ledger: LedgerEntry[];
   week: number;
+  year: number; // 🌩️ Calendar Authority (v1.0)
   phase: "planning" | "resolution";
   season: Season;
   weather: WeatherType;
@@ -313,6 +343,7 @@ export interface GameState {
   promoters: Record<string, Promoter>;
   boutOffers: Record<string, BoutOffer>;
   realmRankings: Record<string, RankingEntry>;
+  awards: AnnualAward[]; // 🏗️ Prestige Persistence
   lastSimulationReport?: SimulationReport;
 }
 

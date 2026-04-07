@@ -5,6 +5,7 @@
 import type { FightSummary, CrowdMoodType, Warrior, GazetteStory } from "@/types/game";
 import { STYLE_DISPLAY_NAMES } from "@/types/shared.types";
 import { SeededRNG } from "@/utils/random";
+import { generateId } from "@/utils/idUtils";
 
 
 
@@ -25,6 +26,9 @@ const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[];
   Bloodthirsty: {
     adjectives: ["savage", "brutal", "merciless", "vicious", "gruesome", "blood-drenched"],
     opener: [
+      "Gore choked the drains this week as the arena reached new heights of depravity!",
+      "A horrifying festival of dismemberment thrilled the crowds!",
+      "The screams of the dying echoed for miles in a blood-soaked week!",
       "Gore soaked the arena floor as an unprecedented wave of violence swept the week's bouts!",
       "The crowd's hunger for death was finally satiated by a horrifying display of brutality!",
       "Blood painted the sands this week as the arena demanded sacrifice!",
@@ -38,6 +42,8 @@ const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[];
       "Gore rained upon the sands as the warriors delivered an unprecedented display of savagery!"
     ],
     closer: [
+      "The sand is stained a permanent, terrifying crimson.",
+      "Carts full of the fallen were wheeled out late into the night.",
       "The cleaners will be scrubbing blood from the stones for weeks.",
       "A haunting silence falls over the blood-soaked pit until next week.",
       "The sands drink deep tonight.",
@@ -231,6 +237,7 @@ export function generateWeeklyGazette(
   seed?: number
 ): GazetteStory {
   const rng = new SeededRNG(seed ?? (week * 7919 + 55));
+  const storyId = rng.uuid("gaz");
   const moodKey = mood && MOOD_TONE[mood] ? mood : "Calm";
   const tone = MOOD_TONE[moodKey];
   const kills = fights.filter(f => f.by === "Kill");
@@ -409,6 +416,7 @@ export function generateWeeklyGazette(
   paragraphs.push(pick(rng, tone.closer));
 
   return {
+    id: storyId,
     headline,
     body: paragraphs.join("\n\n"),
     mood,
@@ -450,5 +458,5 @@ export function generateSeasonSummary(
     "The arena turns its gaze to the next season. What legends will emerge?",
   ].filter(Boolean).join("\n\n");
 
-  return { headline, body, mood, tags: ["Season Review"], week: -1 };
+  return { id: `summary_${season}`, headline, body, mood, tags: ["Season Review"], week: -1 };
 }

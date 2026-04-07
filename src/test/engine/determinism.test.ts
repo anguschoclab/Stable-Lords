@@ -1,7 +1,6 @@
-import { vi } from 'vitest';
 import { describe, it, expect, vi } from "vitest";
 import { advanceWeek } from "@/engine/pipeline/services/weekPipelineService";
-import { createFreshState } from "@/state/gameStore";
+import { createFreshState } from "@/engine/factories";
 import { SeededRNG } from "@/utils/random";
 
 // Mock the archive service to avoid disk I/O during tests

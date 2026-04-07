@@ -11,7 +11,9 @@
  *  - Trainer salaries: 35g per active trainer per week
  *  - Training costs: 15g per warrior in training
  */
-import type { GameState, LedgerEntry } from "@/types/game";
+import type { GameState, LedgerEntry, Warrior } from "@/types/game";
+import { generateId } from "@/utils/idUtils";
+import { SeededRNG } from "@/utils/random";
 import { 
   FIGHT_PURSE, 
   WIN_BONUS, 
@@ -32,7 +34,7 @@ export interface WeeklyBreakdown {
 /** Compute a projected breakdown for the current state (before advancing). */
 export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
   const week = state.week;
-  const playerWarriorNames = new Set(state.roster.map((w) => w.name));
+  const playerWarriorIds = new Set(state.roster.map((w) => w.id));
 
   let fightCount = 0;
   let winCount = 0;
@@ -43,8 +45,8 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
     const f = state.arenaHistory[i];
     if (f.week !== week) break;
  
-    const aIsPlayer = playerWarriorNames.has(f.a);
-    const dIsPlayer = playerWarriorNames.has(f.d);
+    const aIsPlayer = playerWarriorIds.has(f.warriorIdA);
+    const dIsPlayer = playerWarriorIds.has(f.warriorIdD);
     if (aIsPlayer) { fightCount++; if (f.winner === "A") winCount++; }
     if (dIsPlayer) { fightCount++; if (f.winner === "D") winCount++; }
   }
@@ -90,11 +92,13 @@ export function computeEconomyImpact(state: GameState): StateImpact {
   const breakdown = computeWeeklyBreakdown(state);
   const entries: LedgerEntry[] = [];
 
+  const rng = new SeededRNG(state.week * 31);
+
   for (const i of breakdown.income) {
-    entries.push({ week: state.week, label: i.label, amount: i.amount, category: "fight" });
+    entries.push({ id: generateId(rng, "led"), week: state.week, label: i.label, amount: i.amount, category: "fight" });
   }
   for (const e of breakdown.expenses) {
-    entries.push({ week: state.week, label: e.label, amount: -e.amount, category: "upkeep" });
+    entries.push({ id: generateId(rng, "led"), week: state.week, label: e.label, amount: -e.amount, category: "upkeep" });
   }
 
   return {

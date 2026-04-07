@@ -4,6 +4,8 @@ import { Swords, History, Zap, Target } from "lucide-react";
 import { Surface } from "@/components/ui/Surface";
 import { ArenaHistory } from "@/engine/history/arenaHistory";
 import type { Warrior } from "@/types/game";
+import { resolveWarriorName } from "@/utils/historyResolver";
+import { useGameStore } from "@/state/useGameStore";
 import { cn } from "@/lib/utils";
 
 interface HeadToHeadProps {
@@ -14,18 +16,19 @@ interface HeadToHeadProps {
 }
 
 export function HeadToHead({ nameA, nameB, rosterA, rosterB }: HeadToHeadProps) {
+  const state = useGameStore();
   const allFights = useMemo(() => ArenaHistory.all() || [], []);
-  const namesA = useMemo(() => new Set(rosterA.map(w => w.name)), [rosterA]);
-  const namesB = useMemo(() => new Set(rosterB.map(w => w.name)), [rosterB]);
+  const idsA = useMemo(() => new Set(rosterA.map(w => w.id)), [rosterA]);
+  const idsB = useMemo(() => new Set(rosterB.map(w => w.id)), [rosterB]);
 
   const h2h = useMemo(() => {
     return allFights.filter(f =>
-      (namesA.has(f.a) && namesB.has(f.d)) || (namesA.has(f.d) && namesB.has(f.a))
+      (idsA.has(f.warriorIdA) && idsB.has(f.warriorIdD)) || (idsA.has(f.warriorIdD) && idsB.has(f.warriorIdA))
     );
-  }, [allFights, namesA, namesB]);
+  }, [allFights, idsA, idsB]);
 
-  const winsA = h2h.filter(f => (namesA.has(f.a) && f.winner === "A") || (namesA.has(f.d) && f.winner === "D")).length;
-  const winsB = h2h.filter(f => (namesB.has(f.a) && f.winner === "A") || (namesB.has(f.d) && f.winner === "D")).length;
+  const winsA = h2h.filter(f => (idsA.has(f.warriorIdA) && f.winner === "A") || (idsA.has(f.warriorIdD) && f.winner === "D")).length;
+  const winsB = h2h.filter(f => (idsB.has(f.warriorIdA) && f.winner === "A") || (idsB.has(f.warriorIdD) && f.winner === "D")).length;
   const draws = h2h.length - winsA - winsB;
 
   return (
@@ -76,9 +79,9 @@ export function HeadToHead({ nameA, nameB, rosterA, rosterB }: HeadToHeadProps) 
 
             <div className="space-y-1.5 max-h-64 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
               {h2h.slice().reverse().map(f => {
-                const aIsStableA = namesA.has(f.a);
-                const winnerIsA = (aIsStableA && f.winner === "A") || (!aIsStableA && f.winner === "D");
-                const winnerIsB = (!aIsStableA && f.winner === "A") || (aIsStableA && f.winner === "D");
+                const aIsStableA = idsA.has(f.warriorIdA) || idsA.has(f.warriorIdD); // Fix: Determine which side is A for this display row
+                const winnerIsA = (idsA.has(f.warriorIdA) && f.winner === "A") || (idsA.has(f.warriorIdD) && f.winner === "D");
+                const winnerIsB = (idsB.has(f.warriorIdA) && f.winner === "A") || (idsB.has(f.warriorIdD) && f.winner === "D");
                 
                 return (
                   <div key={f.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-lg">
@@ -87,7 +90,7 @@ export function HeadToHead({ nameA, nameB, rosterA, rosterB }: HeadToHeadProps) 
                       "flex-1 truncate text-[11px] font-black transition-colors uppercase tracking-tight",
                       winnerIsA ? "text-primary" : "text-muted-foreground/40"
                     )}>
-                      {f.a}
+                      {resolveWarriorName(state, f.warriorIdA, f.a)}
                     </div>
                     <div className="flex items-center gap-1 mx-4">
                        <Target className="h-3 w-3 text-arena-gold/40" />
@@ -97,7 +100,7 @@ export function HeadToHead({ nameA, nameB, rosterA, rosterB }: HeadToHeadProps) 
                       "flex-1 truncate text-right text-[11px] font-black transition-colors uppercase tracking-tight",
                       winnerIsB ? "text-accent" : "text-muted-foreground/40"
                     )}>
-                      {f.d}
+                      {resolveWarriorName(state, f.warriorIdD, f.d)}
                     </div>
                   </div>
                 );

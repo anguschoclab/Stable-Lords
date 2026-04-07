@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import BoutViewer from "@/components/BoutViewer";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { resolveWarriorName } from "@/utils/historyResolver";
+import { useGameStore } from "@/state/useGameStore";
 import type { TournamentBout, FightSummary } from "@/types/game";
 
 interface TournamentBracketProps {
@@ -15,6 +17,7 @@ interface TournamentBracketProps {
 }
 
 export function TournamentBracket({ bouts, arenaHistory, expandedBout, onToggleExpand }: TournamentBracketProps) {
+  const state = useGameStore();
   const roundsMap = new Map<number, TournamentBout[]>();
   bouts.forEach((b) => {
     const arr = roundsMap.get(b.round) || [];
@@ -77,7 +80,7 @@ export function TournamentBracket({ bouts, arenaHistory, expandedBout, onToggleE
                       )}>
                         <div className="flex items-center gap-2 truncate">
                           <div className={cn("w-1 h-4 rounded-full", isAChosen ? "bg-primary" : "bg-muted-foreground/20")} />
-                          <span className="text-xs truncate">{bout.a}</span>
+                          <span className="text-xs truncate">{resolveWarriorName(state, bout.warriorIdA, bout.a)}</span>
                         </div>
                         {isAChosen && <Trophy className="h-3 w-3 animate-bounce shadow-glow text-arena-gold" />}
                       </div>
@@ -92,7 +95,7 @@ export function TournamentBracket({ bouts, arenaHistory, expandedBout, onToggleE
                       )}>
                         <div className="flex items-center gap-2 truncate">
                           <div className={cn("w-1 h-4 rounded-full", isDChosen ? "bg-primary" : "bg-muted-foreground/20")} />
-                          <span className="text-xs truncate">{bout.d}</span>
+                          <span className="text-xs truncate">{resolveWarriorName(state, bout.warriorIdD, bout.d)}</span>
                         </div>
                         {isDChosen && <Trophy className="h-3 w-3 animate-bounce shadow-glow text-arena-gold" />}
                       </div>
@@ -114,14 +117,14 @@ export function TournamentBracket({ bouts, arenaHistory, expandedBout, onToggleE
                       <Card className="bg-glass-card border-primary/50 shadow-2xl overflow-hidden">
                         <CardHeader className="p-4 border-b border-border/20 bg-secondary/40">
                           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center justify-between">
-                            <span>Bout Archive: {bout.a} vs {bout.d}</span>
+                            <span>Bout Archive: {resolveWarriorName(state, bout.warriorIdA, bout.a)} vs {resolveWarriorName(state, bout.warriorIdD, bout.d)}</span>
                             <Badge variant="outline" className="text-[10px]">{fightSummary.by}</Badge>
                           </CardTitle>
                         </CardHeader>
                         <div className="p-4 max-h-[500px] overflow-y-auto thin-scrollbar bg-background/60">
                           <BoutViewer
-                            nameA={fightSummary.a}
-                            nameD={fightSummary.d}
+                            nameA={resolveWarriorName(state, fightSummary.warriorIdA, fightSummary.a)}
+                            nameD={resolveWarriorName(state, fightSummary.warriorIdD, fightSummary.d)}
                             styleA={fightSummary.styleA!}
                             styleD={fightSummary.styleD!}
                             log={fightSummary.transcript!.map((text, idx) => ({ minute: idx + 1, text }))}

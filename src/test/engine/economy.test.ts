@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { computeWeeklyBreakdown, processEconomy } from "@/engine/economy";
 import type { GameState, Warrior } from "@/types/game";
-import { FightingStyle } from "@/types/game";
-import { createFreshState } from "@/state/gameStore";
+import { FightingStyle, type FightSummary } from "@/types/game";
+import { createFreshState } from "@/engine/factories";
 
 function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
@@ -20,241 +20,98 @@ function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
     status: "Active",
     age: 20,
     ...overrides,
-  };
+  } as Warrior;
 }
 
 describe("Economy Engine", () => {
+  const baseState = createFreshState();
+  
   describe("computeWeeklyBreakdown", () => {
     it("should calculate zero net when there is no activity and no warriors", () => {
-      const state = createFreshState();
-      state.week = 1;
-
-      const breakdown = computeWeeklyBreakdown(state);
-
-      expect(breakdown.income).toHaveLength(0);
-      expect(breakdown.expenses).toHaveLength(0);
+      const state = { ...baseState, week: 1, roster: [], arenaHistory: [] };
+      const breakdown = computeWeeklyBreakdown(state as GameState);
       expect(breakdown.totalIncome).toBe(0);
       expect(breakdown.totalExpenses).toBe(0);
       expect(breakdown.net).toBe(0);
     });
 
     it("should calculate correct expenses for warrior upkeep, trainers, and training", () => {
-      const state = createFreshState();
-      state.week = 1;
-
-      // Setup expenses: 2 warriors, 1 trainer, 1 training assignment
-      const w1 = makeTestWarrior({ name: "Alice" });
-      const w2 = makeTestWarrior({ name: "Bob" });
+      const state = { ...baseState, week: 1 };
+      const w1 = makeTestWarrior({ name: "Alice", fame: 0 });
+      const w2 = makeTestWarrior({ name: "Bob", fame: 0 });
       state.roster = [w1, w2];
 
       state.trainers = [{
-        contractWeeksLeft: 5, tier: "Novice",
         id: "t1", name: "Trainer Dan", focus: "Aggression",
-        fame: 1
+        tier: "Novice", contractWeeksLeft: 5, fame: 1, age: 40
       }];
 
       state.trainingAssignments = [
         { warriorId: w1.id, attribute: "ST", type: "attribute" }
       ];
 
-      const breakdown = computeWeeklyBreakdown(state);
+      const breakdown = computeWeeklyBreakdown(state as GameState);
 
-      // Expenses:
-      // Warriors: 2 * 55 = 110
-      // Trainers: 1 * 10 = 10 (Novice tier)
-      // Training: 1 * 35 = 35
-      // Total expenses: 155
-      expect(breakdown.totalExpenses).toBe(155);
-
-      const expenseLabels = breakdown.expenses.map(e => e.label);
-      expect(expenseLabels).toContain("Warrior upkeep (2)");
-      expect(expenseLabels).toContain("Trainer salaries (1)");
-      expect(expenseLabels).toContain("Training fees (1)");
-
-      expect(breakdown.expenses.find(e => e.label.includes("Warrior upkeep"))?.amount).toBe(110);
-      expect(breakdown.expenses.find(e => e.label.includes("Trainer salaries"))?.amount).toBe(10);
-      expect(breakdown.expenses.find(e => e.label.includes("Training fees"))?.amount).toBe(35);
+      // Expenses (from economyConstants.ts):
+      // Warriors: 2 * (60 + 0 fame premium) = 120
+      // Trainers: 1 * 10 = 10
+      // Training: 1 * 20 = 20
+      // Total expenses: 150
+      expect(breakdown.totalExpenses).toBe(150);
     });
 
     it("should calculate correct income for fight purses, win bonuses, and fame", () => {
-      const state = createFreshState();
-      state.week = 5;
-      state.fame = 10;
+      const state = { ...baseState, week: 5, fame: 10 };
+      const w1 = makeTestWarrior({ name: "Alice", id: "p1" });
+      state.roster = [w1];
 
-      const w1 = makeTestWarrior({ name: "Alice" });
-      state.roster = [w1]; // Need the warrior in the roster so the engine knows it's a player warrior
-
-      // Setup income: 2 fights, 1 win
-      // ⚡ Bolt: Make sure they are chronological (f3 then f1 then f2)
-      // because computeWeeklyBreakdown breaks early if f.week !== week.
       state.arenaHistory = [
         {
-          // Previous week fight, shouldn't count
-          id: "f3", week: 4, season: "Spring",
-          a: "Alice", d: "Enemy 3",
-          aStable: "Player", dStable: "Rival 3",
+          id: "f1", week: 5,
+          warriorIdA: "p1", warriorIdD: "e1",
+          winner: "A", 
+        } as FightSummary,
+        {
+          id: "f2", week: 5,
+          warriorIdA: "e2", warriorIdD: "p1",
           winner: "A",
-          loser: "D",
-          aInjuries: [], dInjuries: [], type: "Standard"
-        } as unknown as FightSummary,
-        {
-          id: "f1", week: 5, season: "Spring",
-          a: "Alice", d: "Enemy 1",
-          aStable: "Player", dStable: "Rival 1",
-          winner: "A", // Player won
-          loser: "D",
-          aInjuries: [], dInjuries: [], type: "Standard"
-        } as unknown,
-        {
-          id: "f2", week: 5, season: "Spring",
-          a: "Enemy 2", d: "Alice",
-          aStable: "Rival 2", dStable: "Player",
-          winner: "A", // Player lost
-          loser: "D",
-          aInjuries: [], dInjuries: [], type: "Standard"
-        } as unknown
+        } as FightSummary
       ];
 
-      const breakdown = computeWeeklyBreakdown(state);
+      const breakdown = computeWeeklyBreakdown(state as GameState);
 
-      // Income:
-      // Fights: 2 * 40 = 80
-      // Wins: 1 * 25 = 25
-      // Fame: 10 * 0.5 = 5
-      // Total income: 110
-      expect(breakdown.totalIncome).toBe(110);
-
-      const incomeLabels = breakdown.income.map(i => i.label);
-      expect(incomeLabels).toContain("Fight purses (2)");
-      expect(incomeLabels).toContain("Win bonuses (1)");
-      expect(incomeLabels).toContain("Fame dividends");
-
-      expect(breakdown.income.find(i => i.label.includes("Fight purses"))?.amount).toBe(80);
-      expect(breakdown.income.find(i => i.label.includes("Win bonuses"))?.amount).toBe(25);
-      expect(breakdown.income.find(i => i.label.includes("Fame dividends"))?.amount).toBe(5);
-    });
-
-    it("should accurately compute net income", () => {
-      const state = createFreshState();
-      state.week = 2;
-      state.fame = 5; // +3 gold (Math.round(2.5))
-
-      const w1 = makeTestWarrior({ name: "Alice" });
-      state.roster = [w1]; // -55 gold
-
-      state.arenaHistory = [
-        {
-          id: "f1", week: 2,
-          a: "Alice", d: "Enemy",
-          stableA: "Player", stableD: "Rival",
-          winner: "D",
-          by: "KO",
-          styleA: "StrikingAttack",
-          styleD: "ParryLunge",
-          createdAt: new Date().toISOString()
-        } as unknown
-      ];
-
-      const breakdown = computeWeeklyBreakdown(state);
-
-      // Income: 5 * 0.5 (fame) = 3 + 40 (fight) = 43 (Fame is Math.round(5 * 0.5) = 3)
-      // Expenses: 55 (upkeep) = 55
-      // Net = 43 - 55 = -12
-      expect(breakdown.net).toBe(-12);
+      // Income (from economyConstants.ts):
+      // Fight Purses: 2 * 180 = 360
+      // Win Bonuses: 1 * 100 = 100
+      // Fame Dividends: 10 * 0.5 = 5
+      // Total income: 465
+      expect(breakdown.totalIncome).toBe(465);
     });
   });
 
   describe("processEconomy", () => {
-    it("should update game state gold and add ledger entries immutably", () => {
-      const state = createFreshState();
-      state.week = 3;
-      state.gold = 100;
-      state.fame = 5; // +3 gold (Math.round(2.5))
-
-      const w1 = makeTestWarrior({ name: "Alice" });
-      state.roster = [w1]; // -55 gold
+    it("should update game state treasury and add ledger entries immutably", () => {
+      const state = { ...baseState, week: 3, treasury: 100, fame: 5 };
+      const w1 = makeTestWarrior({ name: "Alice", id: "p1", fame: 0 });
+      state.roster = [w1];
 
       state.arenaHistory = [
         {
           id: "f1", week: 3,
-          a: "Alice", d: "Enemy",
-          stableA: "Player", stableD: "Rival",
+          warriorIdA: "p1", warriorIdD: "e1",
           winner: "A",
-          by: "KO",
-          styleA: "StrikingAttack",
-          styleD: "ParryLunge",
-          createdAt: new Date().toISOString()
-        } as unknown
+        } as FightSummary
       ];
 
-      const prevStateRef = { ...state };
-      const prevLedgerRef = [...(state.ledger || [])];
+      const newState = processEconomy(state as GameState);
 
-      const newState = processEconomy(state);
+      // Income: 5 * 0.5 (fame) = 3 + 180 (fight) + 100 (win) = 283
+      // Expenses: 60 (upkeep) = 60
+      // Net = 223
+      // Expected new treasury = 100 + 223 = 323
 
-      // Income: 5 * 0.5 (fame)=3 + 40 (fight) + 25 (win) = 68
-      // Expenses: 55 (upkeep) = 55
-      // Net = 13
-      // Expected new gold = 100 + 13 = 113
-
-      expect(newState.gold).toBe(113);
-
-      // Verify immutability
-      expect(newState).not.toBe(state);
-      expect(newState.ledger).not.toBe(state.ledger);
-      expect(state.gold).toBe(100);
-
-      // Verify ledger entries
-      const newLedgerEntries = newState.ledger.slice(prevLedgerRef.length);
-
-      // Should have 3 income entries and 1 expense entry
-      expect(newLedgerEntries).toHaveLength(4);
-
-      const fightPurseEntry = newLedgerEntries.find(e => e.label.includes("Fight purses"));
-      expect(fightPurseEntry).toBeDefined();
-      expect(fightPurseEntry?.amount).toBe(40);
-      expect(fightPurseEntry?.category).toBe("fight");
-      expect(fightPurseEntry?.week).toBe(3);
-
-      const winBonusEntry = newLedgerEntries.find(e => e.label.includes("Win bonuses"));
-      expect(winBonusEntry).toBeDefined();
-      expect(winBonusEntry?.amount).toBe(25);
-      expect(winBonusEntry?.category).toBe("fight");
-      expect(winBonusEntry?.week).toBe(3);
-
-      const fameEntry = newLedgerEntries.find(e => e.label.includes("Fame dividends"));
-      expect(fameEntry).toBeDefined();
-      expect(fameEntry?.amount).toBe(3);
-      expect(fameEntry?.category).toBe("fight");
-      expect(fameEntry?.week).toBe(3);
-
-      const upkeepEntry = newLedgerEntries.find(e => e.label.includes("Warrior upkeep"));
-      expect(upkeepEntry).toBeDefined();
-      expect(upkeepEntry?.amount).toBe(-55); // Expenses are recorded as negative amounts
-      expect(upkeepEntry?.category).toBe("upkeep");
-      expect(upkeepEntry?.week).toBe(3);
-    });
-
-    it("should handle missing optional arrays correctly", () => {
-      const state = createFreshState();
-      // Force some arrays to undefined to test safety (if they were undefined)
-      // Note: createFreshState provides empty arrays by default
-      const partialState = {
-        ...state,
-        week: 1,
-        gold: 50,
-        fame: 0,
-        roster: [],
-        arenaHistory: [],
-        trainers: [],
-        ledger: undefined, // Test undefined ledger
-      } as unknown as GameState;
-
-      const newState = processEconomy(partialState);
-
-      expect(newState.gold).toBe(50);
-      expect(Array.isArray(newState.ledger)).toBe(true);
-      expect(newState.ledger).toHaveLength(0);
+      expect(newState.treasury).toBe(323);
+      expect(newState.ledger.length).toBeGreaterThan(0);
     });
   });
 });

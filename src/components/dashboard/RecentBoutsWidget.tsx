@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { ScrollText, ChevronRight, Swords, Trophy, Activity, Target, Zap, Shield } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
+import { resolveStableName } from "@/utils/historyResolver";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -13,15 +14,15 @@ import {
 } from "@/components/ui/tooltip";
 
 export function RecentBoutsWidget() {
-  const { state } = useGameStore();
+  const state = useGameStore();
 
   // Get the last 5 bouts involving the player's stable
   const recentBouts = useMemo(() => {
-    const stableName = state.player.stableName;
+    const playerStableId = state.player.id;
     return (state.arenaHistory || [])
-      .filter(bout => bout.a === stableName || bout.d === stableName)
+      .filter(bout => bout.stableIdA === playerStableId || bout.stableIdD === playerStableId)
       .slice(0, 5);
-  }, [state.arenaHistory, state.player.stableName]);
+  }, [state.arenaHistory, state.player.id]);
 
   return (
     <Surface variant="glass" padding="none" className="flex flex-col h-full border-border/10 group overflow-hidden relative md:col-span-2 shadow-2xl">
@@ -63,8 +64,8 @@ export function RecentBoutsWidget() {
               </TableRow>
             ) : (
               recentBouts.map((bout, i) => {
-                const isPlayerA = bout.a === state.player.stableName;
-                const playerWon = (isPlayerA && bout.winner === "A") || (!isPlayerA && bout.winner === "D");
+              const isPlayerA = bout.stableIdA === state.player.id;
+              const playerWon = (isPlayerA && bout.winner === "A") || (!isPlayerA && bout.winner === "D");
                 const resultColor = playerWon ? "text-arena-pop" : "text-destructive";
 
                 return (
@@ -77,10 +78,10 @@ export function RecentBoutsWidget() {
                     <TableCell className="py-4">
                        <div className="flex flex-col">
                           <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/row:text-foreground">
-                             {isPlayerA ? bout.a : bout.d}
+                             {resolveStableName(state, isPlayerA ? bout.stableIdA : bout.stableIdD, isPlayerA ? bout.a : bout.d)}
                           </span>
                           <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
-                             VS // {isPlayerA ? bout.d : bout.a}
+                             VS // {resolveStableName(state, isPlayerA ? bout.stableIdD : bout.stableIdA, isPlayerA ? bout.d : bout.a)}
                           </span>
                        </div>
                     </TableCell>

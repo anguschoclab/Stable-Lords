@@ -93,6 +93,7 @@ export type Season = "Spring" | "Summer" | "Fall" | "Winter";
 export type CrowdMoodType = "Calm" | "Bloodthirsty" | "Theatrical" | "Solemn" | "Festive";
 
 export interface NewsletterItem {
+  id: string;
   week: number;
   title: string;
   items: string[];

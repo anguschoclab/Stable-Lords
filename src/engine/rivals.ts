@@ -121,9 +121,10 @@ export function generateRivalStables(count: number, seed: number, week: number =
     const initialGold = (tmpl.tier === "Legendary" ? 2000 : tmpl.tier === "Major" ? 1200 : tmpl.tier === "Established" ? 800 : 500) + catchupGold;
 
     rivals.push({ 
+      id: stableId,
       owner, 
       roster: warriors, 
-      gold: initialGold,
+      treasury: initialGold,
       motto: tmpl.motto,
       origin: tmpl.origin,
       philosophy: tmpl.philosophy,
@@ -134,7 +135,7 @@ export function generateRivalStables(count: number, seed: number, week: number =
         planWeeksRemaining: 4 + Math.floor(rng() * 4)
       },
       agentMemory: {
-        lastGold: initialGold,
+        lastTreasury: initialGold,
         burnRate: 0,
         metaAwareness: {},
         knownRivals: [],

@@ -26,10 +26,10 @@ export function makeWarrior(
   rng?: SeededRNG
 ): Warrior {
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
-  const favorites = generateFavorites(style, rng ? () => rng.next() : Math.random);
+  const favorites = generateFavorites(style, rng ? () => rng.next() : () => 0.5);
   
   return {
-    id: id ?? generateId(rng),
+    id: id ?? generateId(rng, "war"),
     name,
     style,
     attributes: attrs,
@@ -43,33 +43,33 @@ export function makeWarrior(
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: "Active",
-    age: 18 + Math.floor((rng ? rng.next() : Math.random()) * 8),
+    age: 18 + Math.floor((rng ? rng.next() : 0.5) * 8),
     favorites,
     ...overrides,
   };
 }
 
-/**
- * Creates the initial, default game state for a new game.
- */
-export function createFreshState(): GameState {
-  return {
-    meta: {
-      gameName: "Stable Lords",
-      version: "2.0.0",
-      createdAt: new Date().toISOString(),
-    },
-    ftueComplete: false,
-    ftueStep: 0,
-    coachDismissed: [],
-    player: {
-      id: "owner_1",
-      name: "You",
-      stableName: "My Stable",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
+  /**
+   * Creates the initial, default game state for a new game.
+   */
+  export function createFreshState(createdAt: string = "2026-01-01T00:00:00.000Z"): GameState {
+    return {
+      meta: {
+        gameName: "Stable Lords",
+        version: "2.0.0",
+        createdAt,
+      },
+      ftueComplete: false,
+      ftueStep: 0,
+      coachDismissed: [],
+      player: {
+        id: "stb_player",
+        name: "You",
+        stableName: "My Stable",
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
     fame: 0,
     popularity: 0,
     treasury: 500,

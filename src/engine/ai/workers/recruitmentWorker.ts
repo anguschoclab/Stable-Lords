@@ -82,11 +82,11 @@ export function processRecruitment(
     const budgetReport = checkBudget(updatedRival, cost, "ROSTER");
     
     if (budgetReport.isAffordable) {
-      updatedRival.gold -= cost;
+      updatedRival.treasury -= cost;
       remainingPool.splice(bestIdx, 1);
 
       const newWarrior: Warrior = {
-        id: generateId(rng),
+        id: generateId(rng, "war"),
         name: recruit.name,
         style: recruit.style,
         attributes: { ...recruit.attributes },

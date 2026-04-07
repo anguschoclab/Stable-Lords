@@ -31,8 +31,7 @@ const TABS: SubNavTab[] = [
 export default function WarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const navigate = useNavigate();
-  const state = useGameStore();
-  const { renameWarrior } = state;
+  const { state, setState, renameWarrior } = useGameStore();
 
   const [activeTab, setActiveTab] = useState("biometrics");
 
@@ -139,12 +138,12 @@ export default function WarriorDetail() {
       />
       <SubNav tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {activeTab === "biometrics" && <BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />}
+      {activeTab === "biometrics" && <BiometricsTab warrior={warrior} displayWarrior={displayWarrior as any} />}
       
       {activeTab === "mission" && (
         <MissionControlTab 
           warrior={warrior} 
-          displayWarrior={displayWarrior} 
+          displayWarrior={displayWarrior as any} 
           currentPlan={currentPlan} 
           currentLoadout={currentLoadout} 
           onPlanChange={handlePlanChange} 

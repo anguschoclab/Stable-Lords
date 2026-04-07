@@ -45,6 +45,16 @@ export class SeededRNG {
     return copy;
   }
 
+  /** Generates a deterministic hex-based ID with an optional prefix */
+  uuid(prefix?: string): string {
+    const chars = "abcdef0123456789";
+    let str = "";
+    for (let i = 0; i < 12; i++) {
+      str += chars[Math.floor(this.next() * chars.length)];
+    }
+    return prefix ? `${prefix}_${str}` : str;
+  }
+
   /** Returns a new SeededRNG with the exact same state */
   clone(): SeededRNG {
     const clone = new SeededRNG(0);
@@ -55,9 +65,9 @@ export class SeededRNG {
 
 /** Legacy secure RNG (kept for non-deterministic UI needs if any) */
 export function random32(): number {
-  if (typeof globalThis !== "undefined" && (globalThis as unknown as { crypto: Crypto }).crypto && (globalThis as unknown as { crypto: Crypto }).crypto.getRandomValues) {
+  if (typeof globalThis !== "undefined" && (globalThis as any).crypto?.getRandomValues) {
     const array = new Uint32Array(1);
-    (globalThis as unknown as { crypto: Crypto }).crypto.getRandomValues(array);
+    (globalThis as any).crypto.getRandomValues(array);
     return array[0];
   }
   throw new Error("Secure random number generator not available in this environment.");

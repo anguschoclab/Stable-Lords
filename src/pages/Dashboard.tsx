@@ -158,21 +158,12 @@ export default function Dashboard() {
   return (
     <div className="space-y-12 max-w-7xl mx-auto">
       <PageHeader 
-        title="Arena Hub"
+        title={<EditableText value={state.player.stableName} onSave={state.renameStable} className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl font-display uppercase tracking-tighter" />}
         subtitle={
-          <div className="flex items-center gap-4 flex-wrap">
-             <span>COMMAND CENTER //</span>
-             <EditableText 
-               value={state.player.stableName} 
-               onSave={(val) => state.renameStable(val)} 
-               label="Stable Name"
-             />
-             <span className="opacity-40">//</span>
-             <EditableText 
-               value={state.player.name} 
-               onSave={(val) => state.renamePlayer(val)} 
-               label="Owner Name"
-             />
+          <div className="flex items-center gap-2 text-muted-foreground font-black uppercase text-[10px] tracking-[0.2em] opacity-60">
+            <span>By</span>
+            <EditableText value={state.player.name} onSave={state.renamePlayer} className="text-primary/80" />
+            <span>• Command Center</span>
           </div>
         }
         icon={LayoutDashboard}

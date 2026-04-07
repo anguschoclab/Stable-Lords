@@ -15,6 +15,7 @@ import { opfsArchive } from "@/engine/storage/opfsArchive";
 import { createEconomySlice, EconomySlice } from "./slices/economySlice";
 import { createRosterSlice, RosterSlice } from "./slices/rosterSlice";
 import { createWorldSlice, WorldSlice } from "./slices/worldSlice";
+import { createTournamentSlice, TournamentSlice } from "./slices/tournamentSlice";
 
 export interface GameStoreState {
   atTitleScreen: boolean;
@@ -33,9 +34,10 @@ export interface GameStoreActions {
   doReset: () => void;
   returnToTitle: () => void;
   saveCurrentState: () => Promise<void>;
+  setState: (fn: (state: any) => void) => void;
 }
 
-export type GameStore = GameStoreState & GameStoreActions & EconomySlice & RosterSlice & WorldSlice;
+export type GameStore = GameStoreState & GameStoreActions & EconomySlice & RosterSlice & WorldSlice & TournamentSlice;
 
 /**
  * Reconstructs a full GameState from the modular slices for engine consumption.
@@ -63,6 +65,9 @@ function reconstructGameState(store: GameStore): GameState {
     gazettes: store.gazettes,
     unacknowledgedDeaths: store.unacknowledgedDeaths,
     rosterBonus: store.rosterBonus,
+    tournaments: store.tournaments,
+    isTournamentWeek: store.isTournamentWeek,
+    activeTournamentId: store.activeTournamentId,
   };
 }
 
@@ -73,6 +78,7 @@ export const useGameStore = create<GameStore>()(
       ...createEconomySlice(set, get, ...args),
       ...createRosterSlice(set, get, ...args),
       ...createWorldSlice(set, get, ...args),
+      ...createTournamentSlice(set, get, ...args),
 
       // ─── Core State ───
       activeSlotId: null,
@@ -108,6 +114,9 @@ export const useGameStore = create<GameStore>()(
           draft.gazettes = state.gazettes;
           draft.unacknowledgedDeaths = state.unacknowledgedDeaths;
           draft.rosterBonus = state.rosterBonus;
+          draft.tournaments = state.tournaments;
+          draft.isTournamentWeek = state.isTournamentWeek;
+          draft.activeTournamentId = state.activeTournamentId;
           
           draft.activeSlotId = slotId;
           draft.atTitleScreen = false;
@@ -205,6 +214,10 @@ export const useGameStore = create<GameStore>()(
           draft.atTitleScreen = true;
           draft.activeSlotId = null;
         });
+      },
+
+      setState: (fn: (state: any) => void) => {
+        set(fn);
       },
     }))
   )

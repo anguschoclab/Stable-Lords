@@ -120,7 +120,16 @@ function useMostWantedRival(state: GameState, rosterNames: Set<string>, rivalWar
       if (bout.by === "Kill") entry.kills++;
       winCounts.set(rivalName, entry);
     }
-    return [...winCounts.values()].sort((a, b) => b.wins - a.wins || b.kills - a.kills)[0] ?? null;
+
+    // ⚡ Bolt Optimization: Use a single O(N) scan to find the max entry instead of converting to array and sorting.
+    // Reduces array allocations and O(N log N) GC pressure inside this useMemo hook.
+    let maxEntry: { name: string; stable: string; wins: number; kills: number } | null = null;
+    for (const entry of winCounts.values()) {
+      if (!maxEntry || entry.wins > maxEntry.wins || (entry.wins === maxEntry.wins && entry.kills > maxEntry.kills)) {
+        maxEntry = entry;
+      }
+    }
+    return maxEntry;
 
   }, [state.arenaHistory, state.week, rosterNames, rivalWarriorStable]);
 }

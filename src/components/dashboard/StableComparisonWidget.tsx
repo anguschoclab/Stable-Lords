@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Shield, Swords, Users, Target, Activity, Zap, TrendingUp, BarChart3, Star, Award, Skull } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
+import { resolveStableName } from "@/utils/historyResolver";
 import { type Warrior } from "@/types/game";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/tooltip";
 
 type StableComparisonStats = {
+  id: string;
   name: string;
   warriors: number;
   wins: number;
@@ -30,9 +32,10 @@ type HeadToHeadRecord = {
 import { calculateStableStats } from "@/engine/stats/stableStats";
 
 // Helper: Extracts key stats for a single stable in O(n) using the centralized engine
-function getWidgetStats(roster: readonly Warrior[], stableName: string, isPlayer: boolean): StableComparisonStats {
+function getWidgetStats(roster: readonly Warrior[], stableId: string, stableName: string, isPlayer: boolean): StableComparisonStats {
   const stats = calculateStableStats(roster as Warrior[]);
   return { 
+    id: stableId,
     name: stableName, 
     warriors: stats.activeCount, 
     wins: stats.totalWins, 
@@ -43,28 +46,28 @@ function getWidgetStats(roster: readonly Warrior[], stableName: string, isPlayer
 }
 
 export function StableComparisonWidget() {
-  const { state } = useGameStore();
+  const state = useGameStore();
 
-  const playerNames = useMemo(() => new Set((state.roster || []).map(w => w.name)), [state.roster]);
+  const playerWarriorIds = useMemo(() => new Set((state.roster || []).map(w => w.id)), [state.roster]);
 
   const playerStats = useMemo(() => {
-    return getWidgetStats(state.roster || [], state.player.stableName, true);
-  }, [state.roster, state.player.stableName]);
+    return getWidgetStats(state.roster || [], state.player.id, state.player.stableName, true);
+  }, [state.roster, state.player.id, state.player.stableName]);
 
   const { rivalStats, h2hRecords } = useMemo(() => {
     const rivals = (state.rivals ?? []).slice(0, 3);
     const h2h: Record<string, HeadToHeadRecord> = {};
 
     const stats = rivals.map(r => {
-      const rivalNameSet = new Set((r.roster || []).map(w => w.name));
-      const rStats = getWidgetStats(r.roster || [], r.owner.stableName, false);
+      const rivalWarriorIds = new Set((r.roster || []).map(w => w.id));
+      const rStats = getWidgetStats(r.roster || [], r.id, r.owner.stableName, false);
 
       const record: HeadToHeadRecord = { wins: 0, losses: 0, kills: 0, deaths: 0 };
       for (const f of (state.arenaHistory || [])) {
-        const aIsPlayer = playerNames.has(f.a);
-        const dIsPlayer = playerNames.has(f.d);
-        const aIsRival = rivalNameSet.has(f.a);
-        const dIsRival = rivalNameSet.has(f.d);
+        const aIsPlayer = playerWarriorIds.has(f.warriorIdA);
+        const dIsPlayer = playerWarriorIds.has(f.warriorIdD);
+        const aIsRival = rivalWarriorIds.has(f.warriorIdA);
+        const dIsRival = rivalWarriorIds.has(f.warriorIdD);
 
         if ((aIsPlayer && dIsRival) || (dIsPlayer && aIsRival)) {
           const playerIsA = aIsPlayer;
@@ -79,12 +82,12 @@ export function StableComparisonWidget() {
           }
         }
       }
-      h2h[r.owner.stableName] = record;
+      h2h[r.id] = record;
       return rStats;
     });
 
     return { rivalStats: stats, h2hRecords: h2h };
-  }, [state.rivals, state.arenaHistory, playerNames]);
+  }, [state.rivals, state.arenaHistory, playerWarriorIds]);
 
   const allStables = [playerStats, ...rivalStats];
   const maxWins = Math.max(...allStables.map(s => s.wins), 1);
@@ -134,7 +137,7 @@ export function StableComparisonWidget() {
                     </div>
                   )}
                   <span className={cn("text-xs font-black uppercase tracking-tight truncate", s.isPlayer ? "text-primary" : "text-foreground/80")}>
-                    {s.name}
+                    {resolveStableName(state, s.id, s.name)}
                   </span>
                 </div>
                 
@@ -172,15 +175,15 @@ export function StableComparisonWidget() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {rivalStats.map(r => {
-                const rec = h2hRecords[r.name];
+                const rec = h2hRecords[r.id];
                 if (!rec || (rec.wins + rec.losses) === 0) return null;
                 const total = rec.wins + rec.losses;
                 const winPct = Math.round((rec.wins / total) * 100);
 
                 return (
-                  <div key={r.name} className="p-4 bg-black/20 rounded-xl border border-white/5 group/h2h hover:border-primary/20 transition-all">
+                  <div key={r.id} className="p-4 bg-black/20 rounded-xl border border-white/5 group/h2h hover:border-primary/20 transition-all">
                     <div className="flex justify-between items-center mb-3">
-                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{r.name}</span>
+                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{resolveStableName(state, r.id, r.name)}</span>
                        <div className="flex items-center gap-2">
                           <span className={cn("text-xs font-mono font-black", winPct >= 50 ? "text-arena-pop" : "text-destructive")}>{winPct}% Efficiency</span>
                        </div>

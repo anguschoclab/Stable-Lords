@@ -19,18 +19,11 @@ export function setMockIdGenerator(generator: (() => string) | null) {
  * Supports standard browser crypto and provides a deterministic path for tests.
  * @param rng - Optional SeededRNG for deterministic generation
  */
-export function generateId(rng?: SeededRNG): string {
+export function generateId(rng?: SeededRNG, prefix?: string): string {
   if (mockIdGenerator) return mockIdGenerator();
 
   if (rng) {
-    // Generate a deterministic 16-character hex ID using the provided RNG
-    const chars = "abcdef0123456789";
-    let id = "";
-    for (let i = 0; i < 16; i++) {
-        const val = rng.next();
-        id += chars[Math.floor(val * chars.length)];
-    }
-    return id;
+    return rng.uuid(prefix);
   }
 
   if (typeof crypto !== "undefined" && crypto.randomUUID) {

@@ -7,9 +7,10 @@ import { Link } from "@tanstack/react-router";
 import { WarriorLink } from "@/components/EntityLink";
 import { cn } from "@/lib/utils";
 import { ATTRIBUTE_KEYS } from "@/types/game";
+import { resolveWarriorName, resolveStableName } from "@/utils/historyResolver";
 
 export function NextBoutWidget() {
-  const { state } = useGameStore();
+  const state = useGameStore();
 
   const nextBout = useMemo(() => {
     // Check tournaments first
@@ -22,8 +23,12 @@ export function NextBoutWidget() {
            name: activeTourney.name,
            a: pendingMatch.a,
            d: pendingMatch.d,
+           warriorIdA: pendingMatch.warriorIdA,
+           warriorIdD: pendingMatch.warriorIdD,
            stableA: pendingMatch.stableA,
-           stableD: pendingMatch.stableD
+           stableD: pendingMatch.stableD,
+           stableIdA: pendingMatch.stableIdA,
+           stableIdD: pendingMatch.stableIdD
          };
       }
     }
@@ -37,20 +42,24 @@ export function NextBoutWidget() {
          name: "Upcoming Scrimmage",
          a: state.roster[0].name,
          d: primaryRival.roster[0].name,
+         warriorIdA: state.roster[0].id,
+         warriorIdD: primaryRival.roster[0].id,
          stableA: state.player.stableName,
-         stableD: primaryRival.owner.stableName
+         stableD: primaryRival.owner.stableName,
+         stableIdA: state.player.id,
+         stableIdD: primaryRival.id
        };
     }
 
     return null;
-  }, [state.tournaments, state.roster, state.rivals, state.player.stableName]);
+  }, [state.tournaments, state.roster, state.rivals, state.player.id, state.player.stableName]);
 
   const odds = useMemo(() => {
     if (!nextBout) return 50;
-    // Simple heuristic: Avg Attributes
-    const warriorA = state.roster.find(w => w.name === nextBout.a);
-    const rivalStable = state.rivals.find(r => r.owner.stableName === nextBout.stableD);
-    const warriorD = rivalStable?.roster.find(w => w.name === nextBout.d) || state.roster.find(w => w.name === nextBout.d);
+    // Use IDs for lookup
+    const warriorA = state.roster.find(w => w.id === nextBout.warriorIdA);
+    const rivalStable = state.rivals.find(r => r.id === nextBout.stableIdD);
+    const warriorD = rivalStable?.roster.find(w => w.id === nextBout.warriorIdD) || state.roster.find(w => w.id === nextBout.warriorIdD);
     
     if (!warriorA || !warriorD) return 50;
     
@@ -96,16 +105,16 @@ export function NextBoutWidget() {
               
               <div className="flex items-center justify-between gap-2 py-1">
                 <div className="flex-1 text-center">
-                   <p className="text-[11px] font-black truncate">{nextBout.a}</p>
-                   <p className="text-[9px] text-muted-foreground truncate uppercase">{nextBout.stableA}</p>
+                   <p className="text-[11px] font-black truncate">{resolveWarriorName(state, nextBout.warriorIdA, nextBout.a || "Unknown")}</p>
+                   <p className="text-[9px] text-muted-foreground truncate uppercase">{resolveStableName(state, nextBout.stableIdA, nextBout.stableA || "Unknown")}</p>
                 </div>
                 <div className="flex flex-col items-center">
                    <span className="text-[10px] font-bold text-muted-foreground/50">VS</span>
                    {nextBout.type === "Tournament" && <Trophy className="h-3 w-3 text-secondary-foreground" />}
                 </div>
                 <div className="flex-1 text-center">
-                   <p className="text-[11px] font-black truncate">{nextBout.d}</p>
-                   <p className="text-[9px] text-muted-foreground truncate uppercase">{nextBout.stableD}</p>
+                   <p className="text-[11px] font-black truncate">{resolveWarriorName(state, nextBout.warriorIdD, nextBout.d || "Unknown")}</p>
+                   <p className="text-[9px] text-muted-foreground truncate uppercase">{resolveStableName(state, nextBout.stableIdD, nextBout.stableD || "Unknown")}</p>
                 </div>
               </div>
             </div>

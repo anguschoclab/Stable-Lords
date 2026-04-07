@@ -11,7 +11,8 @@ import {
   narrateAttack, narrateParry, narrateDodge, narrateCounterstrike,
   narrateHit, damageSeverityLine, stateChangeLine,
   fatigueLine, crowdReaction, narrateInitiative,
-  tauntLine, narrateInsightHint
+  tauntLine, narrateInsightHint, narratePassive,
+  narrateBoutEnd
 } from "../narrativePBP";
 import { getWeaponDisplayName } from "../narrative/narrativeUtils";
 
@@ -133,7 +134,7 @@ export function narrateEvents(
 
       case "PASSIVE":
         if (event.result) {
-          log.push({ minute, text: `${actorName} ${event.result}` });
+          log.push({ minute, text: narratePassive(rng, event.actor === "A" ? ctx.styleA : ctx.styleD, actorName) });
         }
         break;
 
@@ -144,10 +145,16 @@ export function narrateEvents(
         break;
       }
 
-      case "BOUT_END":
-        // This will be handled at the very end of simulateFight usually, 
-        // but can be narrated here if preferred.
+      case "BOUT_END": {
+        const resultType = event.result as string;
+        const winnerName = actorName;
+        const loserName = opponentName;
+        const weaponId = getWeapon(event.actor);
+        
+        const lines = narrateBoutEnd(rng, resultType, winnerName, loserName, weaponId);
+        lines.forEach(text => log.push({ minute, text }));
         break;
+      }
     }
   }
 

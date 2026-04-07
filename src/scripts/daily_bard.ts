@@ -1,127 +1,245 @@
 import fs from "fs";
 import path from "path";
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { z } from "zod";
 
 const NARRATIVE_FILE = path.join(process.cwd(), "src/data/narrativeContent.json");
 const REPORT_FILE = path.join(process.cwd(), "Daily_Bard_Report.md");
 
-// Initialize OpenAI client (requires process.env.OPENAI_API_KEY)
-// For local simulation if no key is provided, we will mock the response to avoid failing completely.
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY || "mock-key",
+const VALID_VARIABLES = ["%A", "%D", "%W", "%BP"];
+
+/**
+ * Strict Zod Schema for Narrative Templates.
+ * Enforces allowed variables using .refine().
+ */
+const templateStringSchema = z.string().refine(
+  (str) => {
+    const foundVars = str.match(/%\w+/g) || [];
+    return foundVars.every((v) => VALID_VARIABLES.includes(v));
+  },
+  { message: "String contains unauthorized % variables. Only %A, %D, %W, %BP are allowed." }
+);
+
+const CategorySchema = z.object({
+  glancing: z.array(templateStringSchema),
+  solid: z.array(templateStringSchema),
+  critical: z.array(templateStringSchema),
+  fatal: z.array(templateStringSchema),
 });
 
-interface NarrativeData {
-    ATTACK_TEMPLATES: Record<string, string[]>;
-    KILL_TEMPLATES: string[];
-    MOOD_TONE: Record<string, { adjectives: string[]; opener: string[]; closer: string[] }>;
+const DefenseSchema = z.object({
+  success: z.array(templateStringSchema),
+  stumbling: z.array(templateStringSchema),
+});
+
+export const NarrativeSchema = z.object({
+  strikes: z.record(z.string(), CategorySchema),
+  defenses: z.record(z.string(), DefenseSchema),
+  attacks: z.record(z.string(), z.array(templateStringSchema)),
+  passives: z.record(z.string(), z.array(templateStringSchema)),
+  conclusions: z.record(z.string(), z.array(templateStringSchema)),
+  insights: z.record(z.string(), z.array(templateStringSchema)),
+});
+
+type ValidatedJSON = z.infer<typeof NarrativeSchema>;
+
+// Initialize Gemini
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "mock-key");
+const model = genAI.getGenerativeModel({ 
+  model: "gemini-2.5-flash",
+  generationConfig: { responseMimeType: "application/json" }
+});
+
+/**
+ * Traverses the JSON and identifies paths where variety is low.
+ */
+function fetch_narrative_deficits(data: ValidatedJSON): string[] {
+  const deficits: string[] = [];
+
+  for (const [type, severities] of Object.entries(data.strikes)) {
+    for (const [sev, templates] of Object.entries(severities)) {
+      if (templates.length < 10) {
+        deficits.push(`strikes.${type}.${sev}`);
+      }
+    }
+  }
+
+  for (const [type, outcomes] of Object.entries(data.defenses)) {
+    for (const [outcome, templates] of Object.entries(outcomes)) {
+      if (templates.length < 10) {
+        deficits.push(`defenses.${type}.${outcome}`);
+      }
+    }
+  }
+
+  const extraCategories: (keyof ValidatedJSON)[] = ["attacks", "passives", "conclusions", "insights"];
+  for (const cat of extraCategories) {
+    for (const [subCat, templates] of Object.entries(data[cat])) {
+      if (templates.length < 10) {
+        deficits.push(`${cat}.${subCat}`);
+      }
+    }
+  }
+
+  return deficits;
 }
 
-async function getNewTemplates(prompt: string, count: number): Promise<string[]> {
-    if (process.env.OPENAI_API_KEY) {
-        try {
-            const response = await openai.chat.completions.create({
-                model: "gpt-4o-mini", // Cost efficient model for narrative gen
-                messages: [
-                    { role: "system", content: "You are the Bard of the Blood Sands, generating gruesome, high-fantasy arena combat descriptions." },
-                    { role: "user", content: prompt }
-                ],
-                temperature: 0.9,
-            });
-            const text = response.choices[0]?.message?.content || "";
-            // Parse out lines that look like templates (simple extraction)
-            return text.split('\n')
-                .map(line => line.trim())
-                .filter(line => line.startsWith('"') && line.endsWith('"'))
-                .map(line => line.substring(1, line.length - 1))
-                .slice(0, count);
-        } catch (error) {
-            console.error("OpenAI API Error:", error);
-            return [];
-        }
-    } else {
-        // Mock generation for sandbox / test without an API key
-        console.log("No OPENAI_API_KEY found, returning mock data for prompt:", prompt.substring(0, 50) + "...");
-        const mocks = [];
-        for (let i = 0; i < count; i++) {
-            const suffix = ` (Mock ${i})`;
-            if (prompt.includes("KILL_TEMPLATES")) {
-                mocks.push(`%A executes %D with a chilling, masterful strike that sends a spray of crimson across the sands!${suffix}`);
-            } else if (prompt.includes("ATTACK_TEMPLATES")) {
-                mocks.push(`%N unleashes a terrifying barrage with his %W, forcing his opponent into a desperate retreat!${suffix}`);
-            } else if (prompt.includes("MOOD_TONE")) {
-                mocks.push(`A horrifying symphony of steel and slaughter opened this week's bouts!${suffix}`);
-            } else {
-                mocks.push(`A generic mock line.${suffix}`);
-            }
-        }
-        return mocks;
+/**
+ * Calls Gemini 1.5 Flash to generate new templates for a specific deficit path.
+ */
+async function request_bardic_inspiration(deficitPath: string, context: string = ""): Promise<string> {
+  const [root, type, leaf] = deficitPath.split(".");
+
+  const systemPrompt = `You are the Bard of the Blood Sands, a brutal arena announcer.
+You generate high-fantasy combat descriptions for a text-based game.
+STRICT RULE: You MUST ONLY use the following variables:
+- %A: The Attacker
+- %D: The Defender
+- %W: The Weapon
+- %BP: The Body Part (e.g., "head", "left arm", "chest")
+
+Format your response as a JSON object with a single key "new_templates" which is an array of 3 unique strings.
+Tone: Visceral, gruesome, and dramatic.
+Context: You are writing for ${root} -> ${type} -> ${leaf}. ${context}`;
+
+  if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "mock-key") {
+    try {
+      const result = await model.generateContent(`${systemPrompt}\n\nGenerate 3 new templates for ${deficitPath}.`);
+      return result.response.text();
+    } catch (error: any) {
+      console.error("Gemini API Error:", error.message);
+      return "{}";
     }
+  } else {
+    // Mock for local testing
+    console.log(`[MOCK] Generating for ${deficitPath}`);
+    return JSON.stringify({
+      new_templates: [
+        `%A drives their %W into %D's %BP with a sickening crunch. (Mock 1)`,
+        `A spray of crimson follows as %A's %W bites deep into the %BP. (Mock 2)`,
+        `%D gasps as %A's %W finds a gap, punishing the %BP. (Mock 3)`,
+      ],
+    });
+  }
+}
+
+/**
+ * The Agentic Loop: Validates LLM output and retries with errors if necessary.
+ */
+async function validate_with_retry(deficitPath: string, retries = 3): Promise<string[] | null> {
+  let errorContext = "";
+  for (let i = 0; i < retries; i++) {
+    const rawResponse = await request_bardic_inspiration(deficitPath, errorContext);
+    try {
+      const parsed = JSON.parse(rawResponse);
+      const templates = parsed.new_templates;
+      if (!Array.isArray(templates)) throw new Error("Missing new_templates array");
+
+      // Validate each template individually to pinpoint errors
+      for (const t of templates) {
+        templateStringSchema.parse(t);
+      }
+
+      return templates;
+    } catch (err: any) {
+      console.warn(`Validation failed for ${deficitPath} (Attempt ${i + 1}/${retries}): ${err.message}`);
+      errorContext = `Your previous response failed validation: ${err.message}. Fix the variables and regenerate. Ensure you only use %A, %D, %W, %BP.`;
+    }
+  }
+  return null;
+}
+
+/**
+ * Atomic merge and write to the archive.
+ */
+async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
+  const rawData = fs.readFileSync(NARRATIVE_FILE, "utf-8");
+  const data: ValidatedJSON = JSON.parse(rawData);
+
+  let report = "# Daily Bard Report\n\n";
+  let addedCount = 0;
+
+  for (const [path, items] of Object.entries(newTemplatesMap)) {
+    const segments = path.split(".");
+    let target: any = data;
+    for (let i = 0; i < segments.length - 1; i++) {
+      target = target[segments[i]];
+    }
+    const leaf = segments[segments.length - 1];
+    
+    // Merge and Deduplicate
+    const uniqueTemplates = [...new Set([...target[leaf], ...items])];
+    const newItemsCount = uniqueTemplates.length - target[leaf].length;
+    
+    target[leaf] = uniqueTemplates;
+    
+    report += `### Added to ${path} (${newItemsCount} new unique templates)\n`;
+    items.forEach(it => report += `- ${it}\n`);
+    addedCount += newItemsCount;
+  }
+
+  if (addedCount > 0) {
+    fs.writeFileSync(NARRATIVE_FILE, JSON.stringify(data, null, 2), "utf-8");
+    fs.writeFileSync(REPORT_FILE, report, "utf-8");
+    console.log(`Successfully added ${addedCount} new templates.`);
+  } else {
+    console.log("No new templates were added.");
+  }
+}
+
+/**
+ * Global deduplication sweep for the entire archive.
+ */
+function deduplicate_full_archive(data: ValidatedJSON) {
+  for (const severities of Object.values(data.strikes)) {
+    for (const sev of Object.keys(severities)) {
+      (severities as any)[sev] = [...new Set((severities as any)[sev])];
+    }
+  }
+  for (const outcomes of Object.values(data.defenses)) {
+    for (const outcome of Object.keys(outcomes)) {
+      (outcomes as any)[outcome] = [...new Set((outcomes as any)[outcome])];
+    }
+  }
+  const extraCategories: (keyof ValidatedJSON)[] = ["attacks", "passives", "conclusions", "insights"];
+  for (const cat of extraCategories) {
+    for (const subCat of Object.keys(data[cat])) {
+      (data[cat] as any)[subCat] = [...new Set((data[cat] as any)[subCat])];
+    }
+  }
 }
 
 async function main() {
-    console.log("📜 The Bard of the Blood Sands is waking up...");
+  console.log("📜 The Bard of the Blood Sands is waking up...");
 
-    let data: NarrativeData;
-    try {
-        const rawData = fs.readFileSync(NARRATIVE_FILE, "utf-8");
-        data = JSON.parse(rawData);
-    } catch (err) {
-        console.error("Failed to read narrative data:", err);
-        return;
+  const rawData = fs.readFileSync(NARRATIVE_FILE, "utf-8");
+  const data: ValidatedJSON = NarrativeSchema.parse(JSON.parse(rawData));
+
+  // 1. Deficit Detection
+  const deficits = fetch_narrative_deficits(data);
+  console.log(`Found ${deficits.length} deficit paths.`);
+
+  // 2. Generation Loop
+  const newTemplatesMap: Record<string, string[]> = {};
+  const targetDeficits = deficits.slice(0, 5);
+
+  for (const path of targetDeficits) {
+    console.log(`Processing: ${path}...`);
+    const validated = await validate_with_retry(path);
+    if (validated) {
+      newTemplatesMap[path] = validated;
     }
+  }
 
-    let changed = false;
-    let reportLog = "## The Bard's Additions\n\n";
+  // 3. Commit & Deduplicate
+  await commit_to_archive(newTemplatesMap);
+  
+  // 4. Final Full-Sweep Cleanup (ensures even static/legacy duplicates are purged)
+  const freshData = JSON.parse(fs.readFileSync(NARRATIVE_FILE, "utf-8"));
+  deduplicate_full_archive(freshData);
+  fs.writeFileSync(NARRATIVE_FILE, JSON.stringify(freshData, null, 2), "utf-8");
 
-    // 1. Check and expand KILL_TEMPLATES
-    if (data.KILL_TEMPLATES.length < 500) { // Arbitrary endless cap for now
-        console.log(`Current Kill Templates: ${data.KILL_TEMPLATES.length}. Generating new ones...`);
-        const prompt = `Generate 3 new KILL_TEMPLATES. They must be a single sentence string. Use %A for the attacker/winner and %D for the defender/loser. Example: "A fountain of gore erupts as %A's final strike decapitates %D!" Wrap each in double quotes on its own line.`;
-        const newKills = await getNewTemplates(prompt, 3);
-        if (newKills.length > 0) {
-            data.KILL_TEMPLATES.push(...newKills);
-            changed = true;
-            reportLog += "### New Kill Templates:\n";
-            newKills.forEach(k => reportLog += `- ${k}\n`);
-        }
-    }
-
-    // 2. Check and expand ATTACK_TEMPLATES (Slash)
-    const slashLen = data.ATTACK_TEMPLATES.slash.length;
-    if (slashLen < 200) {
-        console.log(`Current Slash Attack Templates: ${slashLen}. Generating new ones...`);
-        const prompt = `Generate 3 new ATTACK_TEMPLATES for a "slash" weapon type. Use %N for the attacker, %D for defender (optional), and %W for the weapon. Example: "%N whips his %W blade back and forth as if to slash his foe to ribbons!" Wrap each in double quotes on its own line.`;
-        const newAttacks = await getNewTemplates(prompt, 3);
-        if (newAttacks.length > 0) {
-            data.ATTACK_TEMPLATES.slash.push(...newAttacks);
-            changed = true;
-            reportLog += "### New Slash Attack Templates:\n";
-            newAttacks.forEach(a => reportLog += `- ${a}\n`);
-        }
-    }
-
-    // 3. Expand Gazette MOOD_TONE (Bloodthirsty Openers)
-    if (data.MOOD_TONE.Bloodthirsty && data.MOOD_TONE.Bloodthirsty.opener.length < 100) {
-        console.log(`Current Bloodthirsty Openers: ${data.MOOD_TONE.Bloodthirsty.opener.length}. Generating new ones...`);
-        const prompt = `Generate 2 new MOOD_TONE openers for the "Bloodthirsty" crowd mood in an arena combat game. They should be a single dramatic sentence. Example: "Gore choked the drains this week as the arena reached new heights of depravity!" Wrap each in double quotes on its own line.`;
-        const newOpeners = await getNewTemplates(prompt, 2);
-        if (newOpeners.length > 0) {
-            data.MOOD_TONE.Bloodthirsty.opener.push(...newOpeners);
-            changed = true;
-            reportLog += "### New Bloodthirsty Openers:\n";
-            newOpeners.forEach(o => reportLog += `- ${o}\n`);
-        }
-    }
-
-    if (changed) {
-        fs.writeFileSync(NARRATIVE_FILE, JSON.stringify(data, null, 2), "utf-8");
-        fs.writeFileSync(REPORT_FILE, reportLog, "utf-8");
-        console.log("\n✅ The Bard has successfully transcribed new lore into the archives.");
-        console.log("Wrote updates to src/data/narrativeContent.json and generated Daily_Bard_Report.md");
-    } else {
-        console.log("\nNo new lore was generated today.");
-    }
+  console.log("✅ Bardic duties complete.");
 }
 
 main().catch(console.error);

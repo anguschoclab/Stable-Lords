@@ -3,7 +3,10 @@ import narrativeContent from "@/data/narrativeContent.json";
  * Gazette Narrative Engine — generates crowd-mood-toned prose from simulation events.
  * Synthesizes weekly fight data into procedural stories.
  */
-import type { FightSummary, CrowdMoodType, Warrior, GazetteStory } from "@/types/game";
+import type { FightSummary } from "@/types/combat.types";
+import type { CrowdMoodType, Season } from "@/types/shared.types";
+import type { Warrior } from "@/types/warrior.types";
+import type { GazetteStory } from "@/types/state.types";
 import { STYLE_DISPLAY_NAMES } from "@/types/shared.types";
 import { SeededRNG } from "@/utils/random";
 import { generateId } from "@/utils/idUtils";

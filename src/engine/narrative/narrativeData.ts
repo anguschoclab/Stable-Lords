@@ -35,9 +35,9 @@ export const HELM_DESCS: Record<string, string[]> = {
   "full_helm":   ["FULL HELM", "fearsome FULL HELM", "imposing FULL HELM", "visored FULL HELM"],
 };
 
-export type WeaponType = "slash" | "bash" | "thrust" | "fist" | "generic";
+export type WeaponType = "slash" | "bash" | "piercing" | "fist" | "generic";
 
-export const ATTACK_TEMPLATES: Record<WeaponType, string[]> = narrativeContent.ATTACK_TEMPLATES as Record<WeaponType, string[]>;
+// ATTACK_TEMPLATES and KILL_TEMPLATES have been moved to narrativeContent.json and are managed by narrativePBP.ts
 
 // ─── Mastery & Soul-Bond Templates ──────────────────────────────────────────
 
@@ -70,8 +70,8 @@ export const MASTERY_TEMPLATES: Record<string, string[]> = {
     "That was not a swing. That was a lesson in force delivered by a master.",
     "%N's %W lands with an inevitability that only mastery can produce.",
   ],
-  thrust: [
-    "%N's %W flickers like a serpent's tongue, a mastered thrust of absolute lethality!",
+  piercing: [
+    "%N's %W flickers like a serpent's tongue, a mastered piercing strike of absolute lethality!",
     "With a master's intuition, %N drives the point of his %W through the smallest gap.",
     "%N's steel finds the rhythm of the soul, a piercing strike of lightning speed!",
     "The %W is a needle in %N's hands, guided by a bond beyond simple training.",
@@ -164,7 +164,7 @@ export const EVEN_STATUS = [
   "Blood on both faces. Neither man cares.",
 ];
 
-export const KILL_TEMPLATES: string[] = narrativeContent.KILL_TEMPLATES;
+// KILL_TEMPLATES have been moved to narrativeContent.json and are managed by narrativePBP.ts
 
 export const STOPPAGE_TEMPLATES = [
   "%D motions to the LORD PROTECTORS that he cannot continue!\n%A is the victor of the match!",

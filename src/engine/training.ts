@@ -122,7 +122,7 @@ export function trainingImpactToStateImpact(
         baseSkills: w.baseSkills,
         derivedStats: w.derivedStats,
         fatigue: w.fatigue ?? 0,
-        injuries: w.injuries, // 🩹 Essential fix: include injuries in delta!
+        injuries: w.injuries,
       };
       
       rosterUpdates.set(w.id, delta);

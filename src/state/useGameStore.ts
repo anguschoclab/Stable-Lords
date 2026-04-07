@@ -42,7 +42,7 @@ export type GameStore = GameStoreState & GameStoreActions & EconomySlice & Roste
 /**
  * Reconstructs a full GameState from the modular slices for engine consumption.
  */
-function reconstructGameState(store: GameStore): GameState {
+export function reconstructGameState(store: GameStore): GameState {
   const fresh = createFreshState("reconstruct-default");
   return {
     ...fresh,

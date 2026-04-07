@@ -106,41 +106,46 @@ function executeWorldTransitions(state: GameState, rng: SeededRNG, nextWeek: num
 }
 
 function executeRivalActivity(state: GameState, nextWeek: number, rng: SeededRNG): GameState {
-  let newState = state;
+  let newState = { ...state };
 
   // Seasonal Churn & Philosophy Evolution
   if (newState.season !== state.season) {
     const seasonSeed = nextWeek * 133;
     const { updatedRivals, news } = WorldManagementService.processSeasonalChurn(newState, seasonSeed + 55);
-    newState.rivals = updatedRivals;
+    newState = { ...newState, rivals: updatedRivals };
     
     const { updatedRivals: philRivals, gazetteItems } = evolvePhilosophies(newState, newState.season, seasonSeed);
-    newState.rivals = philRivals;
+    newState = { ...newState, rivals: philRivals };
     
     const narrGazette = generateOwnerNarratives(newState, newState.season, seasonSeed + 1);
     const combinedNews = [...news, ...gazetteItems, ...narrGazette];
     if (combinedNews.length > 0) {
-      newState.newsletter = [...(newState.newsletter || []), { 
-        id: seasonSeed.toString(), 
-        week: nextWeek, 
-        title: `${state.season} Season Summary`, 
-        items: combinedNews 
-      }];
+      newState = {
+        ...newState,
+        newsletter: [...(newState.newsletter || []), { 
+          id: seasonSeed.toString(), 
+          week: nextWeek, 
+          title: `${state.season} Season Summary`, 
+          items: combinedNews 
+        }]
+      };
     }
   }
 
   // Tournament Generation
   if (nextWeek % 13 === 0) {
     const tours = TournamentSelectionService.generateSeasonalTiers(newState, nextWeek, newState.season, nextWeek * 777);
-    newState.tournaments = [...(newState.tournaments || []), ...tours];
-    newState.isTournamentWeek = true;
-    newState.activeTournamentId = tours[0].id;
-    newState.day = 0;
+    newState = {
+      ...newState,
+      tournaments: [...(newState.tournaments || []), ...tours],
+      isTournamentWeek: true,
+      activeTournamentId: tours[0].id,
+      day: 0
+    };
   }
 
-  // Physicality & Equipment
-  newState = runWarriorPass(newState);
-  newState = runEquipmentPass(newState);
+  // 🛡️ 1.0 Hardening: Removed Redundant Warrior/Equipment Passes
+  // (They are already processed at the start of the week in advanceWeek)
 
   // AI Strategy
   newState = runRivalStrategyPass(newState, nextWeek, rng);
@@ -149,23 +154,29 @@ function executeRivalActivity(state: GameState, nextWeek: number, rng: SeededRNG
 }
 
 function executeNarrativePass(state: GameState, currentWeek: number, nextWeek: number): GameState {
-  let newState = state;
+  let newState = { ...state };
 
   // Gazette
   const weekFights = getFightsForWeek(newState.arenaHistory, currentWeek);
   const story = generateWeeklyGazette(weekFights, newState.crowdMood, currentWeek, newState.graveyard, newState.arenaHistory, currentWeek * 9973 + 456);
-  newState.gazettes = [...(newState.gazettes || []), { ...story, week: currentWeek }].slice(-50);
+  newState = {
+    ...newState,
+    gazettes: [...(newState.gazettes || []), { ...story, week: currentWeek }].slice(-50)
+  };
 
   // Grudges
   const { grudges, gazetteItems } = processOwnerGrudges(newState, newState.ownerGrudges || []);
-  newState.ownerGrudges = grudges;
+  newState = { ...newState, ownerGrudges: grudges };
   if (gazetteItems.length > 0) {
-    newState.newsletter = [...(newState.newsletter || []), { 
-      id: nextWeek.toString() + "_grudge", 
-      week: nextWeek, 
-      title: "Stable Rivalries & Grudges", 
-      items: gazetteItems 
-    }];
+    newState = {
+      ...newState,
+      newsletter: [...(newState.newsletter || []), { 
+        id: nextWeek.toString() + "_grudge", 
+        week: nextWeek, 
+        title: "Stable Rivalries & Grudges", 
+        items: gazetteItems 
+      }]
+    };
   }
 
   return newState;

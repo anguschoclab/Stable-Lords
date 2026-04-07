@@ -145,7 +145,11 @@ function applyAward(state: GameState, award: AnnualAward, fameBonus: number): Ga
 
   if (sId) {
     if (sId === state.player.id) {
-      updatedState = { ...updatedState, fame: (updatedState.fame || 0) + fameBonus };
+      updatedState = { 
+        ...updatedState, 
+        fame: (updatedState.fame || 0) + fameBonus,
+        player: { ...updatedState.player, fame: (updatedState.player.fame || 0) + fameBonus }
+      };
     } else {
       updatedState = {
         ...updatedState,

@@ -1,4 +1,4 @@
-import type { GameState, Warrior, AnnualAward, AnnualAwardType } from "@/types/game";
+import type { GameState, Warrior, AnnualAward, AnnualAwardType } from "@/types/state.types";
 import { FightingStyle } from "@/types/shared.types";
 import { SeededRNG } from "@/utils/random";
 

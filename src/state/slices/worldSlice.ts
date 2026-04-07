@@ -7,7 +7,10 @@ import {
   RivalStableData,
   GazetteStory,
   Owner,
-  ScoutReportData
+  ScoutReportData,
+  CrowdMoodType,
+  NewsletterItem,
+  HallEntry
 } from "@/types/state.types";
 import { FightSummary } from "@/types/combat.types";
 import { truncateArray } from "@/utils/stateUtils";
@@ -26,6 +29,19 @@ export interface WorldSlice {
   gazettes: GazetteStory[];
   scoutReports: ScoutReportData[];
   arenaHistory: FightSummary[];
+  newsletter: NewsletterItem[];
+  hallOfFame: HallEntry[];
+  crowdMood: CrowdMoodType;
+  moodHistory: { week: number; mood: CrowdMoodType }[];
+  settings: {
+    featureFlags: {
+      tournaments: boolean;
+      scouting: boolean;
+    };
+  };
+  isFTUE: boolean;
+  ftueStep?: number;
+  ftueComplete: boolean;
   player: Owner;
   setWeek: (week: number) => void;
   initializeStable: (name: string, stableName: string) => void;
@@ -52,6 +68,18 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   gazettes: [],
   scoutReports: [],
   arenaHistory: [],
+  newsletter: [],
+  hallOfFame: [],
+  crowdMood: "Neutral" as CrowdMoodType,
+  moodHistory: [],
+  settings: {
+    featureFlags: {
+      tournaments: true,
+      scouting: true,
+    },
+  },
+  isFTUE: false,
+  ftueComplete: false,
   player: { id: "p1", name: "Rookie", stableName: "Fresh Stable", fame: 0, renown: 0, titles: 0 },
 
   setWeek: (week) => set({ week }),

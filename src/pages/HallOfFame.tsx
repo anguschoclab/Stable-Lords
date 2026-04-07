@@ -14,31 +14,33 @@ import { InducteeCard } from "./HallOfFame/InducteeCard";
 import { motion } from "framer-motion";
 
 export default function HallOfFame() {
-  const { state } = useGameStore();
-  const allFights = useMemo(() => ArenaHistory.all(), [state.week]);
+  const { 
+    week, roster, graveyard, retired, rivals, awards, year, player 
+  } = useGameStore();
+  const allFights = useMemo(() => ArenaHistory.all(), []);
 
   // Aggregate all warriors for lookup
   const allWarriors = useMemo(() => {
     const list: Warrior[] = [
-      ...state.roster,
-      ...state.graveyard,
-      ...state.retired,
-      ...(state.rivals ?? []).flatMap(r => r.roster),
+      ...roster,
+      ...graveyard,
+      ...retired,
+      ...(rivals ?? []).flatMap(r => r.roster),
     ];
     return list;
-  }, [state]);
+  }, [roster, graveyard, retired, rivals]);
 
   // Categorize awards from the official source (state.awards)
   const yearlyAwards = useMemo(() => {
     const groups: Record<number, AnnualAward[]> = {};
-    for (const award of state.awards || []) {
+    for (const award of awards || []) {
       if (!groups[award.year]) groups[award.year] = [];
       groups[award.year].push(award);
     }
     return Object.entries(groups)
-      .map(([year, awards]) => ({ year: parseInt(year), awards }))
+      .map(([y, aws]) => ({ year: parseInt(y), awards: aws }))
       .sort((a, b) => b.year - a.year);
-  }, [state.awards]);
+  }, [awards]);
 
   // All-time greats (Top Fame)
   const allTimeGreats = useMemo(() => {
@@ -57,7 +59,7 @@ export default function HallOfFame() {
     }
   };
 
-  const currentYear = state.year;
+  const currentYear = year;
 
   return (
     <div className="space-y-8">
@@ -85,7 +87,7 @@ export default function HallOfFame() {
           </Badge>
           <Separator orientation="vertical" className="h-4 bg-border/20" />
           <Badge variant="outline" className="text-[10px] font-black tracking-widest uppercase border-primary/20 bg-primary/5 text-primary">
-            WEEK {state.week}
+            WEEK {week}
           </Badge>
         </div>
       </div>
@@ -119,7 +121,7 @@ export default function HallOfFame() {
                                 </span>
                               </div>
                               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
-                                LEADER: {state.player.stableName === award.stableName ? state.player.name : "RIVAL_OWNER"}
+                                LEADER: {player.stableName === award.stableName ? player.name : "RIVAL_OWNER"}
                               </div>
                             </div>
                             <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase text-primary border-primary/20 py-1 px-2">

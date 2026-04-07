@@ -39,20 +39,33 @@ const SEASON_ICONS: Record<string, string> = {
 };
 
 export default function Tournaments() {
-  const state = useGameStore();
-  const { setState } = state;
+  const {
+    tournaments,
+    season,
+    roster,
+    rivals,
+    trainers,
+    weather,
+    week,
+    year,
+    arenaHistory,
+    player,
+    rosterBonus,
+    setState
+  } = useGameStore();
+
   const [expandedBout, setExpandedBout] = useState<string | null>(null);
 
   const currentTournament = useMemo(
-    () => state.tournaments.find((t) => t.season === state.season && !t.completed),
-    [state.tournaments, state.season]
+    () => tournaments.find((t) => t.season === season && !t.completed),
+    [tournaments, season]
   );
 
-  const activeWarriors = useMemo(() => state.roster.filter((w) => w.status === "Active"), [state.roster]);
+  const activeWarriors = useMemo(() => roster.filter((w) => w.status === "Active"), [roster]);
 
   const pastTournaments = useMemo(
-    () => state.tournaments.filter((t) => t.completed).reverse(),
-    [state.tournaments]
+    () => tournaments.filter((t) => t.completed).reverse(),
+    [tournaments]
   );
 
   const runNextRound = useCallback(() => {
@@ -235,7 +248,7 @@ export default function Tournaments() {
 
   const skipToMyBouts = useCallback(() => {
     if (!currentTournament) return;
-    const playerNames = new Set(state.roster.map(w => w.name));
+    const playerNames = new Set(roster.map(w => w.name));
 
     setState((draft) => {
       const tournament = draft.tournaments.find((t: any) => t.id === currentTournament.id);
@@ -356,7 +369,7 @@ export default function Tournaments() {
         toast.success(`Skipped ${roundsSkipped} AI-only rounds.`);
       }
     });
-  }, [currentTournament, state.roster, setState]);
+  }, [currentTournament, roster, setState]);
 
   return (
     <div className="space-y-6 pb-20">
@@ -389,7 +402,7 @@ export default function Tournaments() {
           <CardHeader className="pb-4 bg-accent/5 border-b border-border/10">
             <CardTitle className="font-display text-xl font-black flex items-center justify-between text-accent uppercase tracking-tighter">
               <span className="flex items-center gap-3">
-                <span className="text-2xl drop-shadow-sm">{SEASON_ICONS[state.season]}</span>
+                <span className="text-2xl drop-shadow-sm">{SEASON_ICONS[season]}</span>
                 {currentTournament.name}
               </span>
               <Badge className="bg-primary text-primary-foreground font-black uppercase text-[9px] tracking-[0.2em] px-3 animate-pulse">PROTOCOL_LIVE</Badge>
@@ -398,7 +411,7 @@ export default function Tournaments() {
           <CardContent className="p-0">
             <TournamentBracket
               bouts={currentTournament.bracket}
-              arenaHistory={state.arenaHistory}
+              arenaHistory={arenaHistory}
               expandedBout={expandedBout}
               onToggleExpand={setExpandedBout}
             />
@@ -426,7 +439,7 @@ export default function Tournaments() {
           pastTournaments={pastTournaments}
           seasonIcons={SEASON_ICONS}
           seasonNames={SEASON_NAMES}
-          currentSeason={state.season}
+          currentSeason={season}
         />
       </div>
 

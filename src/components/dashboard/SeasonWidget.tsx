@@ -121,7 +121,7 @@ export function SeasonWidget() {
                       </span>
                    </div>
                 </TooltipTrigger>
-                <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest w-full max-w-xs">
+                <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest w-full max-w-52">
                    {phaseDesc}
                 </TooltipContent>
              </Tooltip>

@@ -162,11 +162,11 @@ export const INI_WIN_TEMPLATES = [
 // ─── Hits ────────────────────────────────────────────────────────────────────
 
 export const HIT_TEMPLATES = [
-  "tears a ghastly gouge across",
-  "leaves a sickening, pulsing wound on",
-  "shatters armor and bone alike, devastating",
-  "impacts with the sickening sound of snapping bone on",
-  "carves a spray of crimson from",
+  "tears a ghastly gouge across %D's %L",
+  "leaves a sickening, pulsing wound on %D's %L",
+  "shatters armor and bone alike, devastating %D's %L",
+  "impacts with the sickening sound of snapping bone on %D's %L",
+  "carves a spray of crimson from %D's %L",
   "a solid strike connects with",
   "lands a heavy blow to",
   "strikes cleanly against",

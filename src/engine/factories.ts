@@ -1,9 +1,7 @@
 import { 
   type GameState, 
   type Warrior, 
-  type OwnerPersonality,
-  type RosterSlice,
-  type EconomySlice
+  type OwnerPersonality 
 } from "@/types/state.types";
 import { type PoolWarrior } from "@/engine/recruitment";
 import { FightingStyle, ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from "@/types/shared.types";

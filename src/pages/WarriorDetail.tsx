@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Armchair, Target, ScrollText, User } from "lucide-react";
 import { defaultPlanForWarrior } from "@/engine/simulate";
 import { computeStreaks } from "@/engine/gazetteNarrative";
-import { retireWarrior } from "@/state/gameStore";
+import { useGameStore } from "@/state/useGameStore";
 import { DEFAULT_LOADOUT, type EquipmentLoadout } from "@/data/equipment";
 import { toast } from "sonner";
 import SubNav, { type SubNavTab } from "@/components/SubNav";
@@ -31,7 +31,7 @@ const TABS: SubNavTab[] = [
 export default function WarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const navigate = useNavigate();
-  const { state, setState, renameWarrior } = useGameStore();
+  const { state, setState, renameWarrior, retireWarrior } = useGameStore();
 
   const [activeTab, setActiveTab] = useState("biometrics");
 

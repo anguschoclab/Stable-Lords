@@ -41,11 +41,11 @@ export function getRecentFights(arenaHistory: FightSummary[], minWeek: number): 
  * Optimized with a backward loop to break early once the desired count is reached,
  * turning an O(N) full-array scan into an O(K) operation where K is the number of items needed.
  */
-export function getRecentFightsForWarrior(arenaHistory: FightSummary[], warriorName: string, limit: number = 10): FightSummary[] {
+export function getRecentFightsForWarrior(arenaHistory: FightSummary[], warriorId: string, limit: number = 10): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = arenaHistory.length - 1; i >= 0; i--) {
     const f = arenaHistory[i];
-    if (f.a === warriorName || f.d === warriorName) {
+    if (f.warriorIdA === warriorId || f.warriorIdD === warriorId) {
       result.push(f);
       if (result.length >= limit) {
         break;
@@ -60,11 +60,11 @@ export function getRecentFightsForWarrior(arenaHistory: FightSummary[], warriorN
  * Useful when the full timeline or head-to-head records are needed,
  * but extracts via standard for-loop to avoid O(N) functional allocation overhead.
  */
-export function getAllFightsForWarrior(arenaHistory: FightSummary[], warriorName: string): FightSummary[] {
+export function getAllFightsForWarrior(arenaHistory: FightSummary[], warriorId: string): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = 0; i < arenaHistory.length; i++) {
     const f = arenaHistory[i];
-    if (f.a === warriorName || f.d === warriorName) {
+    if (f.warriorIdA === warriorId || f.warriorIdD === warriorId) {
       result.push(f);
     }
   }

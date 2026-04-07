@@ -5,6 +5,7 @@
 import type { FightSummary, CrowdMoodType, Warrior, GazetteStory } from "@/types/game";
 import { STYLE_DISPLAY_NAMES } from "@/types/shared.types";
 import { SeededRNG } from "@/utils/random";
+import { generateId } from "@/utils/idUtils";
 
 
 
@@ -231,6 +232,7 @@ export function generateWeeklyGazette(
   seed?: number
 ): GazetteStory {
   const rng = new SeededRNG(seed ?? (week * 7919 + 55));
+  const storyId = rng.uuid("gaz");
   const moodKey = mood && MOOD_TONE[mood] ? mood : "Calm";
   const tone = MOOD_TONE[moodKey];
   const kills = fights.filter(f => f.by === "Kill");
@@ -409,6 +411,7 @@ export function generateWeeklyGazette(
   paragraphs.push(pick(rng, tone.closer));
 
   return {
+    id: storyId,
     headline,
     body: paragraphs.join("\n\n"),
     mood,
@@ -450,5 +453,5 @@ export function generateSeasonSummary(
     "The arena turns its gaze to the next season. What legends will emerge?",
   ].filter(Boolean).join("\n\n");
 
-  return { headline, body, mood, tags: ["Season Review"], week: -1 };
+  return { id: `summary_${season}`, headline, body, mood, tags: ["Season Review"], week: -1 };
 }

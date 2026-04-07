@@ -216,44 +216,14 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   },
 
   renameStable: (newName: string) => {
-    set((state: any) => {
-      const oldName = state.player.stableName;
-      
-      // 1. Update arena history for stable-level filtering
-      const nextHistory = (state.arenaHistory || []).map((f: any) => ({
-        ...f,
-        stableA: f.stableA === oldName ? newName : f.stableA,
-        stableD: f.stableD === oldName ? newName : f.stableD
-      }));
-
-      // 2. Sweep Owner Grudges
-      const nextGrudges = (state.ownerGrudges || []).map((g: any) => ({
-        ...g,
-        reason: g.reason?.replace(new RegExp(oldName, 'g'), newName)
-      }));
-
-      return {
-        player: { ...state.player, stableName: newName },
-        arenaHistory: nextHistory,
-        ownerGrudges: nextGrudges
-      };
-    });
+    set((state: any) => ({
+      player: { ...state.player, stableName: newName }
+    }));
   },
 
   renamePlayer: (newName: string) => {
-    set((state: any) => {
-      const oldName = state.player.name;
-
-      // Sweep Owner Grudges for character name mentions
-      const nextGrudges = (state.ownerGrudges || []).map((g: any) => ({
-        ...g,
-        reason: g.reason?.replace(new RegExp(oldName, 'g'), newName)
-      }));
-
-      return {
-        player: { ...state.player, name: newName },
-        ownerGrudges: nextGrudges
-      };
-    });
+    set((state: any) => ({
+      player: { ...state.player, name: newName }
+    }));
   }
 });

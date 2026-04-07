@@ -1,7 +1,6 @@
-import { GameState, Warrior, FightOutcome, FightSummary } from "@/types/game";
+import { GameState, Warrior, FightOutcome, FightSummary, RivalStableData } from "@/types/game";
 import { generateId } from "@/utils/idUtils";
 import { generateFightNarrative } from "@/engine/gazetteNarrative";
-import { killWarrior } from "@/state/gameStore";
 import { engineEventBus } from "@/engine/core/EventBus";
 import { SeededRNG } from "@/utils/random";
 
@@ -20,16 +19,35 @@ export function handleDeath(
   const victim = outcome.winner === "A" ? wD : wA;
   const isPlayerVictim = (outcome.winner === "A" && !!rivalStableId) ? false : (outcome.winner !== "A");
   
-  const boutId = generateId(rng);
+  const boutId = generateId(rng, "bt");
   const narrative = generateFightNarrative({ 
-    id: boutId, week, a: wA.name, d: wD.name, winner: outcome.winner, by: outcome.by, 
+    id: boutId, week, a: wA.name, d: wD.name, 
+    warriorIdA: wA.id, warriorIdD: wD.id,
+    winner: outcome.winner, by: outcome.by, 
     styleA: wA.style, styleD: wD.style, transcript: [], title: `${wA.name} vs ${wD.name}`, phase: "resolution",
-    createdAt: new Date().toISOString()
+    createdAt: "2026-01-01T00:00:00Z"
   } as FightSummary, s.crowdMood);
   
   const event = { boutId, killerId: outcome.winner === "A" ? wA.id : wD.id, deathSummary: narrative, memorialTags: tags };
 
-  const nextS = killWarrior(s, victim.id, outcome.winner === "A" ? wA.name : wD.name, "Arena Combat", event);
+  // Pure State Transformation for Death
+  const graveyardEntry: Warrior = {
+    ...victim,
+    status: "Dead",
+    deathWeek: week,
+    isDead: true,
+    killedBy: outcome.winner === "A" ? wA.name : wD.name,
+    causeOfDeath: "Arena Combat",
+    dateOfDeath: `Week ${week}, Season ${s.season}`,
+    deathEvent: event
+  };
+
+  const nextS: GameState = {
+    ...s,
+    roster: s.roster.filter(w => w.id !== victim.id),
+    graveyard: [...(s.graveyard || []), graveyardEntry],
+    unacknowledgedDeaths: [...(s.unacknowledgedDeaths || []), victim.id]
+  };
   
   if (isPlayerVictim) {
     nextS.fame = Math.max(0, (nextS.fame || 0) + 5);
@@ -38,12 +56,13 @@ export function handleDeath(
   
   const deathSummary: FightSummary = { 
     id: boutId, week, winner: outcome.winner, by: outcome.by, a: wA.name, d: wD.name, 
-    styleA: wA.style, styleD: wD.style, isDeathEvent: true, deathEventData: event, createdAt: new Date().toISOString(),
+    warriorIdA: wA.id, warriorIdD: wD.id,
+    styleA: wA.style, styleD: wD.style, isDeathEvent: true, deathEventData: event, createdAt: "2026-01-01T00:00:00Z",
     title: `DEATH: ${victim.name} in the Arena`, phase: "resolution"
   };
   
   nextS.arenaHistory = [...nextS.arenaHistory, deathSummary];
-  nextS.newsletter = [...(nextS.newsletter || []), { week, title: "Arena Obituary", items: [narrative] }];
+  nextS.newsletter = [...(nextS.newsletter || []), { id: generateId(rng, "news"), week, title: "Arena Obituary", items: [narrative] }];
   
   // Decoupled notification
   engineEventBus.emit({ 
@@ -52,8 +71,8 @@ export function handleDeath(
   });
 
   if (rivalStableId && outcome.winner === "A") { // Player killed a rival
-    nextS.rivals = (nextS.rivals || []).map(r => r.owner.id === rivalStableId 
-      ? { ...r, roster: r.roster.filter(w => w.id !== wD.id) }
+    nextS.rivals = (nextS.rivals || []).map((r: RivalStableData) => r.owner.id === rivalStableId 
+      ? { ...r, roster: r.roster.filter((w: Warrior) => w.id !== wD.id) }
       : r);
   }
 

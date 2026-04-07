@@ -82,7 +82,7 @@ export function rollForInjury(
 
   return {
     ...template,
-    id: generateId(rng),
+    id: generateId(rng, "inj"),
     weeksRemaining: weeks,
   };
 }

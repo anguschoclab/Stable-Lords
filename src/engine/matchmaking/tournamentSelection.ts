@@ -126,13 +126,17 @@ export const TournamentSelectionService = {
         matchIndex: i / 2,
         a: shuffled[i].name,
         d: shuffled[i+1].name,
-        stableA: shuffled[i].stableId,
+        warriorIdA: shuffled[i].id,
+        warriorIdD: shuffled[i+1].id,
+        stableIdA: shuffled[i].stableId,
+        stableIdD: shuffled[i+1].stableId,
+        stableA: shuffled[i].stableId, // snapshots current stable name if needed
         stableD: shuffled[i+1].stableId,
       });
     }
 
     return {
-      id: `t_${tierId.toLowerCase()}_${week}_${generateId(rng)}`,
+      id: rng.uuid("tou"),
       season: season as import("@/types/game").Season,
       week,
       name,
@@ -155,22 +159,23 @@ export const TournamentSelectionService = {
 
     const currentRound = Math.min(...unresolved.map(b => b.round));
     const roundBouts = unresolved.filter(b => b.round === currentRound);
-    const winners: string[] = [];
-    const losers: string[] = [];
+    const winners: { id: string; name: string; stableId?: string }[] = [];
+    const losers: { id: string; name: string; stableId?: string }[] = [];
 
     for (const bout of roundBouts) {
       if (bout.d === "(bye)") {
         bout.winner = "A";
-        winners.push(bout.a);
+        winners.push({ id: bout.warriorIdA, name: bout.a, stableId: bout.stableIdA });
         continue;
       }
 
-      const wA = this.findWarrior(updatedState, bout.a, tournament);
-      const wD = this.findWarrior(updatedState, bout.d, tournament);
+      const wA = this.findWarriorById(updatedState, bout.warriorIdA, tournament);
+      const wD = this.findWarriorById(updatedState, bout.warriorIdD, tournament);
 
       if (!wA || !wD) {
         bout.winner = wA ? "A" : "D";
-        winners.push(wA?.name || wD?.name || "");
+        const winnerObj = wA ? { id: wA.id, name: wA.name, stableId: wA.stableId } : (wD ? { id: wD.id, name: wD.name, stableId: wD.stableId } : undefined);
+        if (winnerObj) winners.push(winnerObj);
         continue;
       }
 
@@ -182,10 +187,10 @@ export const TournamentSelectionService = {
       
       bout.winner = outcome.winner;
       bout.by = outcome.by;
-      bout.fightId = `tf_${tournament.id}_${bout.round}_${bout.matchIndex}_${generateId(rng)}`;
+      bout.fightId = rng.uuid("bt");
       
-      winners.push(outcome.winner === "A" ? bout.a : bout.d);
-      losers.push(outcome.winner === "A" ? bout.d : bout.a);
+      winners.push(outcome.winner === "A" ? { id: wA.id, name: wA.name, stableId: wA.stableId } : { id: wD.id, name: wD.name, stableId: wD.stableId });
+      losers.push(outcome.winner === "A" ? { id: wD.id, name: wD.name, stableId: wD.stableId } : { id: wA.id, name: wA.name, stableId: wA.stableId });
       updatedState = this.applyBoutResults(updatedState, wA, wD, outcome, tournament.id, tournament.name, rng);
     }
 
@@ -196,9 +201,26 @@ export const TournamentSelectionService = {
       // Standard Bracket progression
       for (let i = 0; i < winners.length; i += 2) {
         if (i + 1 < winners.length) {
-          bracket.push({ round: nextRound, matchIndex: i / 2, a: winners[i], d: winners[i + 1] });
+          bracket.push({ 
+            round: nextRound, 
+            matchIndex: i / 2, 
+            a: winners[i].name, 
+            d: winners[i + 1].name,
+            warriorIdA: winners[i].id,
+            warriorIdD: winners[i+1].id,
+            stableIdA: winners[i].stableId,
+            stableIdD: winners[i+1].stableId
+          });
         } else {
-          bracket.push({ round: nextRound, matchIndex: i / 2, a: winners[i], d: "(bye)", winner: "A" });
+          bracket.push({ 
+            round: nextRound, 
+            matchIndex: i / 2, 
+            a: winners[i].name, 
+            d: "(bye)", 
+            warriorIdA: winners[i].id,
+            warriorIdD: "bye",
+            winner: "A" 
+          });
         }
       }
 
@@ -207,15 +229,19 @@ export const TournamentSelectionService = {
         const bronzeBout: TournamentBout = { 
           round: 6, // Bronze Match happens alongside the Finals
           matchIndex: 1, // Finals is index 0
-          a: losers[0], 
-          d: losers[1],
+          a: losers[0].name, 
+          d: losers[1].name,
+          warriorIdA: losers[0].id,
+          warriorIdD: losers[1].id,
+          stableIdA: losers[0].stableId,
+          stableIdD: losers[1].id
         };
         bracket.push(bronzeBout);
       }
     }
 
     const isComplete = winners.length <= 1 && currentRound >= 6;
-    const champion = isComplete ? winners[0] : undefined;
+    const champion = isComplete ? winners[0].name : undefined;
 
     updatedState.tournaments = (updatedState.tournaments || []).map(t => 
       t.id === tournamentId ? { ...t, bracket, completed: isComplete, champion } : t
@@ -244,16 +270,16 @@ export const TournamentSelectionService = {
 
     if (!finals) return state;
 
-    const first = finals.winner === "A" ? finals.a : finals.d;
-    const second = finals.winner === "A" ? finals.d : finals.a;
-    const third = bronze ? (bronze.winner === "A" ? bronze.a : bronze.d) : undefined;
+    const first = finals.winner === "A" ? finals.warriorIdA : finals.warriorIdD;
+    const second = finals.winner === "A" ? finals.warriorIdD : finals.warriorIdA;
+    const third = bronze ? (bronze.winner === "A" ? bronze.warriorIdA : bronze.warriorIdD) : undefined;
 
     let updatedState = { ...state };
     const tier = tournament.id.split("_")[1].toUpperCase(); // "GOLD", "SILVER", etc.
     const basePurse = tier === "GOLD" ? 5000 : tier === "SILVER" ? 2500 : tier === "BRONZE" ? 1200 : 600;
 
-    const award = (name: string, place: 1 | 2 | 3, awardRng: SeededRNG) => {
-      const w = this.findWarrior(updatedState, name, tournament);
+    const award = (warriorId: string, place: 1 | 2 | 3, awardRng: SeededRNG) => {
+      const w = this.findWarriorById(updatedState, warriorId, tournament);
       if (!w) return;
 
       const isPlayer = w.stableId === updatedState.player.id;
@@ -270,8 +296,9 @@ export const TournamentSelectionService = {
 
       // 2. Financials & Specific Rewards
       if (isPlayer) {
-        updatedState.gold += prizeGold;
+        updatedState.treasury += prizeGold;
         updatedState.ledger.push({ 
+          id: awardRng.uuid("led"),
           week: updatedState.week, 
           label: `${tournament.name} (${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'})`, 
           amount: prizeGold, 
@@ -283,7 +310,7 @@ export const TournamentSelectionService = {
         } else if (place === 2) {
           // Add Weapon Token
           updatedState.insightTokens = [...(updatedState.insightTokens || []), {
-            id: generateId(awardRng),
+            id: awardRng.uuid("ins"),
             type: "Weapon",
             warriorId: "",
             warriorName: "Unassigned",
@@ -293,7 +320,7 @@ export const TournamentSelectionService = {
         } else if (place === 3) {
           // Add Rhythm Token
           updatedState.insightTokens = [...(updatedState.insightTokens || []), {
-            id: generateId(awardRng),
+            id: awardRng.uuid("ins"),
             type: "Rhythm",
             warriorId: "",
             warriorName: "Unassigned",
@@ -304,7 +331,7 @@ export const TournamentSelectionService = {
       } else {
         // Rival reward logic
         updatedState.rivals = updatedState.rivals.map(r => 
-          r.owner.id === w.stableId ? { ...r, gold: r.gold + prizeGold } : r
+          r.owner.id === w.stableId ? { ...r, treasury: r.treasury + prizeGold } : r
         );
       }
     };
@@ -351,14 +378,14 @@ export const TournamentSelectionService = {
     return current;
   },
 
-  findWarrior(state: GameState, name: string, tournament?: TournamentEntry): Warrior | undefined {
-    const playerW = state.roster.find(w => w.name === name);
+  findWarriorById(state: GameState, warriorId: string, tournament?: TournamentEntry): Warrior | undefined {
+    const playerW = state.roster.find(w => w.id === warriorId);
     if (playerW) return playerW;
     for (const r of state.rivals) {
-      const rw = r.roster.find(w => w.name === name);
+      const rw = r.roster.find(w => w.id === warriorId);
       if (rw) return rw;
     }
-    return tournament?.participants.find(w => w.name === name);
+    return tournament?.participants.find(w => w.id === warriorId);
   },
 
   getAIPlan(state: GameState, w: Warrior, opponentStyle?: FightingStyle, opponentOwnerId?: string) {
@@ -398,13 +425,17 @@ export const TournamentSelectionService = {
     const updatedState = { ...state };
 
     const summary: import("@/types/game").FightSummary = {
-      id: `tf_${tId}_${generateId(rng)}`,
+      id: rng.uuid("bt"),
       week: state.week,
       phase: "resolution" as const,
       tournamentId: tId,
       title: `${wA.name} vs ${wD.name} (${tName})`,
       a: wA.name,
       d: wD.name,
+      warriorIdA: wA.id,
+      warriorIdD: wD.id,
+      stableIdA: wA.stableId,
+      stableIdD: wD.stableId,
       winner: winnerSide,
       by: outcome.by,
       styleA: wA.style,

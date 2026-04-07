@@ -3,7 +3,7 @@
  */
 import React, { useState, useMemo } from "react";
 import { useGameStore } from "@/state/useGameStore";
-import { type FightingStyle, STYLE_DISPLAY_NAMES, type Attributes } from "@/types/shared.types";
+import { FightingStyle, STYLE_DISPLAY_NAMES, type Attributes } from "@/types/shared.types";
 import type { Warrior } from "@/types/state.types";
 import { generateRecommendations, getStyleEquipmentTips } from "@/engine/equipmentOptimizer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +19,7 @@ import { WeaponReqCheck } from "@/data/equipment";
 
 
 export default function EquipmentOptimizerPage() {
-  const { roster, doUpdateEquipment } = useGameStore();
+  const { roster, updateWarriorEquipment } = useGameStore();
   const activeWarriors = roster.filter(w => w.status === "Active");
   const [selectedStyle, setSelectedStyle] = useState<FightingStyle>(
     activeWarriors[0]?.style ?? FightingStyle.StrikingAttack
@@ -99,7 +99,7 @@ export default function EquipmentOptimizerPage() {
             selectedStyle={selectedStyle}
             activeWarriors={activeWarriors}
             carryCap={carryCap}
-            doUpdateEquipment={doUpdateEquipment}
+            updateWarriorEquipment={updateWarriorEquipment}
           />
         ))}
       </div>
@@ -107,13 +107,13 @@ export default function EquipmentOptimizerPage() {
   );
 }
 
-function RecommendationCard({ rec, isPrimary, selectedStyle, activeWarriors, carryCap, doUpdateEquipment }: { 
+function RecommendationCard({ rec, isPrimary, selectedStyle, activeWarriors, carryCap, updateWarriorEquipment }: { 
   rec: any; 
   isPrimary: boolean; 
   selectedStyle: FightingStyle; 
   activeWarriors: Warrior[]; 
   carryCap: number;
-  doUpdateEquipment: (warriorId: string, equipment: any) => void;
+  updateWarriorEquipment: (warriorId: string, equipment: any) => void;
 }) {
   const matchingWarriors = useMemo(() => activeWarriors.filter((w) => w.style === selectedStyle), [activeWarriors, selectedStyle]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -130,11 +130,9 @@ function RecommendationCard({ rec, isPrimary, selectedStyle, activeWarriors, car
     return checkWeaponRequirements(rec.loadout.weapon, targetWarrior.attributes);
   }, [targetWarrior, rec.loadout.weapon]);
 
-  }, [targetWarrior, rec.loadout.weapon]);
-
   const handleApply = () => {
     if (!targetWarriorId) return;
-    doUpdateEquipment(targetWarriorId, rec.loadout);
+    updateWarriorEquipment(targetWarriorId, rec.loadout);
     import("sonner").then(({ toast }) => {
        const w = matchingWarriors.find((mw) => mw.id === targetWarriorId);
        toast.success(`Applied ${rec.label} to ${w?.name}`);

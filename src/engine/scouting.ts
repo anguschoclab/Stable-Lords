@@ -8,8 +8,9 @@
  * - Known injuries
  * - Suspected fight plan tendencies
  */
-import type { Warrior, InsightToken, InsightTokenType } from "@/types/game";
-import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from "@/types/game";
+import type { InsightToken, InsightTokenType } from "@/types/state.types";
+import type { Warrior } from "@/types/warrior.types";
+import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from "@/types/shared.types";
 import { generateId } from "@/utils/idUtils";
 
 export type ScoutQuality = "Basic" | "Detailed" | "Expert";
@@ -142,7 +143,7 @@ export function generateScoutReport(
   // Expert scouting reveals Tactics
   if (quality === "Expert" && warrior.plan) {
     newInsights.push({
-      id: generateId(rng, "ins"),
+      id: generateId(rng, "insight"),
       type: "Tactic",
       warriorId: warrior.id,
       warriorName: warrior.name,
@@ -153,7 +154,7 @@ export function generateScoutReport(
 
   return {
     report: {
-      id: generateId(rng, "sco"),
+      id: generateId(rng, "scout"),
       warriorName: warrior.name,
       style: warrior.style,
       quality,

@@ -43,15 +43,16 @@ async function getNewTemplates(prompt: string, count: number): Promise<string[]>
         // Mock generation for sandbox / test without an API key
         console.log("No OPENAI_API_KEY found, returning mock data for prompt:", prompt.substring(0, 50) + "...");
         const mocks = [];
-        for (let i=0; i<count; i++) {
+        for (let i = 0; i < count; i++) {
+            const suffix = ` (Mock ${i})`;
             if (prompt.includes("KILL_TEMPLATES")) {
-                mocks.push(`%A executes %D with a chilling, masterful strike that sends a spray of crimson across the sands!`);
+                mocks.push(`%A executes %D with a chilling, masterful strike that sends a spray of crimson across the sands!${suffix}`);
             } else if (prompt.includes("ATTACK_TEMPLATES")) {
-                mocks.push(`%N unleashes a terrifying barrage with his %W, forcing his opponent into a desperate retreat!`);
+                mocks.push(`%N unleashes a terrifying barrage with his %W, forcing his opponent into a desperate retreat!${suffix}`);
             } else if (prompt.includes("MOOD_TONE")) {
-                mocks.push(`A horrifying symphony of steel and slaughter opened this week's bouts!`);
+                mocks.push(`A horrifying symphony of steel and slaughter opened this week's bouts!${suffix}`);
             } else {
-                mocks.push("A generic mock line.");
+                mocks.push(`A generic mock line.${suffix}`);
             }
         }
         return mocks;

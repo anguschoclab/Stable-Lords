@@ -1,12 +1,12 @@
-import {
-  FightPlan,
-  Warrior,
-  Trainer,
-  WeatherType,
-  FightOutcome,
-  MinuteEvent,
-  DeathCauseBucket
-} from "@/types/game";
+import type { FightingStyle, WeatherType } from "@/types/shared.types";
+import type { Warrior } from "@/types/warrior.types";
+import type { Trainer } from "@/types/state.types";
+import type { 
+  FightPlan, 
+  FightOutcome, 
+  MinuteEvent, 
+  DeathCauseBucket 
+} from "@/types/combat.types";
 import { DEFAULT_LOADOUT } from "@/data/equipment";
 import { getPhase as getCombatPhase } from "@/engine/combat/combatMath";
 import { generateWarriorIntro, battleOpener, conservingLine, minuteStatusLine, narrateBoutEnd } from "@/engine/narrativePBP";

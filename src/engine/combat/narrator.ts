@@ -28,6 +28,10 @@ export interface NarrationContext {
   maxHpD: number;
   prevHpRatioA: number;
   prevHpRatioD: number;
+  fameA: number;
+  fameD: number;
+  isFavoriteA: boolean;
+  isFavoriteD: boolean;
 }
 
 export function narrateEvents(
@@ -45,6 +49,8 @@ export function narrateEvents(
   const getOpponentName = (actor: "A" | "D") => actor === "A" ? nameD : nameA;
   const getWeapon = (actor: "A" | "D") => actor === "A" ? weaponA : weaponD;
   const getMaxHp = (actor: "A" | "D") => actor === "A" ? ctx.maxHpA : ctx.maxHpD;
+  const getFame = (actor: "A" | "D") => actor === "A" ? ctx.fameA : ctx.fameD;
+  const getIsFavorite = (actor: "A" | "D") => actor === "A" ? ctx.isFavoriteA : ctx.isFavoriteD;
   const getHpRatio = (actor: "A" | "D") => actor === "A" ? currentHpRatioA : currentHpRatioD;
   const setHpRatio = (actor: "A" | "D", ratio: number) => {
     if (actor === "A") currentHpRatioA = ratio;
@@ -102,7 +108,25 @@ export function narrateEvents(
              log.push({ minute, text: narrateAttack(rng, actorName, weapon, isMastery) });
           }
 
-          log.push({ minute, text: narrateHit(rng, opponentName, event.location, isMastery, isSuperFlashy, actorName, weapon) });
+          const isFatal = !!event.metadata?.lethal;
+
+          log.push({ 
+            minute, 
+            text: narrateHit(
+              rng, 
+              opponentName, 
+              event.location, 
+              isMastery, 
+              isSuperFlashy, 
+              actorName, 
+              weapon, 
+              event.value, 
+              getMaxHp(event.target as "A" | "D"), 
+              isFatal,
+              getFame(event.actor as "A" | "D"),
+              getIsFavorite(event.actor as "A" | "D")
+            ) 
+          });
           
           if (event.metadata?.crit) {
             log.push({ minute, text: `💥 CRITICAL HIT! ${actorName} finds a vital weakness!` });

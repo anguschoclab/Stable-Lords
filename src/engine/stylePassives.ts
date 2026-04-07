@@ -4,7 +4,9 @@
  * This module uses a Strategy Pattern to define style-specific behaviors,
  * eliminating massive switch statements and improving extensibility.
  */
-import { FightingStyle } from "@/types/game";
+import { FightingStyle } from "@/types/shared.types";
+import type { Warrior } from "@/types/warrior.types";
+import type { FightPlan } from "@/types/combat.types";
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -20,6 +22,7 @@ export interface StylePassiveResult {
   iniBonus: number;
   mastery: MasteryTier;
   hasPassiveNarrative?: boolean;
+  narrative?: string;
 }
 
 export interface KillMechanic {

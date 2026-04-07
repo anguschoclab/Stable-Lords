@@ -72,10 +72,30 @@ function interpolateTemplate(template: string, ctx: CombatContext): string {
 /**
  * Maps damage/health ratio to mechanical severity categories.
  */
-function getStrikeSeverity(damage: number, maxHp: number, isFatal: boolean): "glancing" | "solid" | "critical" | "fatal" {
+/**
+ * Maps damage/health ratio to mechanical severity categories.
+ * Now supports the expanded 6-tier Strike system.
+ */
+function getStrikeSeverity(
+  damage: number, 
+  maxHp: number, 
+  isFatal: boolean, 
+  isCrit: boolean, 
+  isFavorite: boolean,
+  fame: number
+): "glancing" | "solid" | "mastery" | "critical_human" | "critical_supernatural" | "fatal" {
   if (isFatal) return "fatal";
+  
+  // Crits & Super Flashy (Big Damage > 25% HP)
   const ratio = damage / maxHp;
-  if (ratio >= 0.25) return "critical";
+  if (isCrit || ratio >= 0.25) {
+    return fame >= 100 ? "critical_supernatural" : "critical_human";
+  }
+
+  // Flashy (Mastery via Favorite Weapon)
+  if (isFavorite) return "mastery";
+
+  // Standard
   if (ratio >= 0.10) return "solid";
   return "glancing";
 }
@@ -201,7 +221,7 @@ export function narrateCounterstrike(rng: RNG, name: string): string {
 
 /**
  * The primary mechanical driver for combat flavor.
- * Integrated with the Bard's Archive and Severity Logic.
+ * Expanded for Tiered Mastery, Supernatural Evolution, and Flashy logic.
  */
 export function narrateHit(
   rng: RNG, 
@@ -213,19 +233,23 @@ export function narrateHit(
   weaponId?: string,
   damage?: number,
   maxHp?: number,
-  isFatal?: boolean
+  isFatal?: boolean,
+  attackerFame?: number,
+  isFavorite?: boolean
 ): string {
   const richLoc = richHitLocation(rng, location);
   const wName = getWeaponDisplayName(weaponId);
   const wType = getWeaponType(weaponId);
 
-  if (isSuperFlashy) {
-    const template = pick(rng, SUPER_FLASHY_TEMPLATES);
-    return template.replace(/%N/g, attackerName || "The warrior").replace(/%W/g, wName).replace(/%D/g, defenderName).replace(/%L/g, richLoc);
-  }
-
-  // 1. Determine severity
-  const severity = getStrikeSeverity(damage || 0, maxHp || 100, isFatal || false);
+  // 1. Determine severity using full metadata
+  const severity = getStrikeSeverity(
+    damage || 0, 
+    maxHp || 100, 
+    isFatal || false, 
+    isSuperFlashy || false, 
+    isFavorite || false,
+    attackerFame || 0
+  );
 
   // 2. Fetch from JSON archive
   const template = getFromArchive(rng, ["strikes", wType, severity]);
@@ -289,6 +313,7 @@ export function minuteStatusLine(rng: RNG, minute: number, nameA: string, nameD:
 
 export function narrateBoutEnd(rng: RNG, by: string, winnerName: string, loserName: string, weaponId?: string): string[] {
   const wName = getWeaponDisplayName(weaponId);
+  const wType = getWeaponType(weaponId);
   
   // Normalized type mapping
   const categoryMap: Record<string, string> = {
@@ -299,13 +324,17 @@ export function narrateBoutEnd(rng: RNG, by: string, winnerName: string, loserNa
   };
 
   const cat = categoryMap[by] || "KO";
-  const template = getFromArchive(rng, ["conclusions", cat]);
+  const conclusionTemplate = getFromArchive(rng, ["conclusions", cat]);
+  const conclusion = interpolateTemplate(conclusionTemplate, { attacker: winnerName, defender: loserName, weapon: wName });
+
+  // KILLER REDUNDANCY: Prepend the fatal blow description if it's a kill
+  if (cat === "Kill") {
+     const fatalBlowTemplate = getFromArchive(rng, ["strikes", wType, "fatal"]);
+     const fatalBlow = interpolateTemplate(fatalBlowTemplate, { attacker: winnerName, defender: loserName, weapon: wName });
+     return [fatalBlow, conclusion];
+  }
   
-  return [interpolateTemplate(template, { 
-    attacker: winnerName, 
-    defender: loserName, 
-    weapon: wName 
-  })];
+  return [conclusion];
 }
 
 export function popularityLine(name: string, popDelta: number): string | null {

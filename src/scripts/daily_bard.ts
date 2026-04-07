@@ -23,8 +23,10 @@ const templateStringSchema = z.string().refine(
 const CategorySchema = z.object({
   glancing: z.array(templateStringSchema),
   solid: z.array(templateStringSchema),
-  critical: z.array(templateStringSchema),
-  fatal: z.array(templateStringSchema),
+  mastery: z.array(templateStringSchema), // Flashy (Always for Favorite Weapon)
+  critical_human: z.array(templateStringSchema), // Super Flashy (Low Skill)
+  critical_supernatural: z.array(templateStringSchema), // Super Flashy (Legendary)
+  fatal: z.array(templateStringSchema), // Killer (The blow itself)
 });
 
 const DefenseSchema = z.object({
@@ -39,6 +41,13 @@ export const NarrativeSchema = z.object({
   passives: z.record(z.string(), z.array(templateStringSchema)),
   conclusions: z.record(z.string(), z.array(templateStringSchema)),
   insights: z.record(z.string(), z.array(templateStringSchema)),
+  promoters: z.record(z.string(), z.record(z.string(), z.array(templateStringSchema))), // promoter.[personality].pitch
+  media: z.record(z.string(), z.array(templateStringSchema)), // media.[type]
+  persona: z.record(z.string(), z.array(templateStringSchema)), // persona.[trait]
+  recruitment: z.record(z.string(), z.array(templateStringSchema)), // recruitment.[origin/blurb]
+  memorials: z.record(z.string(), z.array(templateStringSchema)), // memorials.[epigraph]
+  fanfare: z.record(z.string(), z.array(templateStringSchema)), // fanfare.[victory]
+  meta: z.record(z.string(), z.array(templateStringSchema)), // meta.[tooltip]
 });
 
 type ValidatedJSON = z.infer<typeof NarrativeSchema>;
@@ -58,7 +67,7 @@ function fetch_narrative_deficits(data: ValidatedJSON): string[] {
 
   for (const [type, severities] of Object.entries(data.strikes)) {
     for (const [sev, templates] of Object.entries(severities)) {
-      if (templates.length < 10) {
+      if (templates.length < 15) { // Increased target variety
         deficits.push(`strikes.${type}.${sev}`);
       }
     }
@@ -66,17 +75,26 @@ function fetch_narrative_deficits(data: ValidatedJSON): string[] {
 
   for (const [type, outcomes] of Object.entries(data.defenses)) {
     for (const [outcome, templates] of Object.entries(outcomes)) {
-      if (templates.length < 10) {
+      if (templates.length < 12) {
         deficits.push(`defenses.${type}.${outcome}`);
       }
     }
   }
 
-  const extraCategories: (keyof ValidatedJSON)[] = ["attacks", "passives", "conclusions", "insights"];
+  const extraCategories: (keyof ValidatedJSON)[] = [
+    "attacks", "passives", "conclusions", "insights", "media", 
+    "persona", "recruitment", "memorials", "fanfare", "meta"
+  ];
   for (const cat of extraCategories) {
+    if (typeof data[cat] !== 'object' || data[cat] === null) continue;
     for (const [subCat, templates] of Object.entries(data[cat])) {
-      if (templates.length < 10) {
-        deficits.push(`${cat}.${subCat}`);
+      if (Array.isArray(templates)) {
+        if (templates.length < 12) deficits.push(`${cat}.${subCat}`);
+      } else if (typeof templates === 'object') {
+        // Handle nested (e.g., promoters.[personality].pitch)
+        for (const [key, tps] of Object.entries(templates)) {
+           if (Array.isArray(tps) && tps.length < 12) deficits.push(`${cat}.${subCat}.${key}`);
+        }
       }
     }
   }
@@ -91,16 +109,24 @@ async function request_bardic_inspiration(deficitPath: string, context: string =
   const [root, type, leaf] = deficitPath.split(".");
 
   const systemPrompt = `You are the Bard of the Blood Sands, a brutal arena announcer.
-You generate high-fantasy combat descriptions for a text-based game.
-STRICT RULE: You MUST ONLY use the following variables:
-- %A: The Attacker
-- %D: The Defender
-- %W: The Weapon
-- %BP: The Body Part (e.g., "head", "left arm", "chest")
+You generate high-fantasy combat and world descriptions for a text-based game.
 
-Format your response as a JSON object with a single key "new_templates" which is an array of 3 unique strings.
-Tone: Visceral, gruesome, and dramatic.
-Context: You are writing for ${root} -> ${type} -> ${leaf}. ${context}`;
+STRICT RULE: You MUST ONLY use the following variables:
+- %A: The Attacker / Active Subject
+- %D: The Defender / Passive Subject
+- %W: The Weapon / Tool / Entity
+- %BP: The Body Part (e.g., "head", "left arm", "chest")
+- %S: The Stable / Team Name
+
+TIER DEFINITIONS:
+- Standard (glancing/solid): Practical, gritty, and dirt-covered.
+- Flashy (mastery): Masterful, fluid, and rehearsed. Effortless grace.
+- Super Flashy - Human (critical_human): Explosive, cinematic impact. Peak physical feat.
+- Super Flashy - Supernatural (critical_supernatural): Mythic, hyper-real effects (spectral light, blade-singing, reality-tearing).
+- Killer (fatal): Final, visceral, and gruesome terminal strikes.
+
+Format your response as a JSON object with a single key "new_templates" which is an array of 5 unique strings.
+Context: You are writing for ${deficitPath}. ${context}`;
 
   if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== "mock-key") {
     try {
@@ -201,10 +227,23 @@ function deduplicate_full_archive(data: ValidatedJSON) {
       (outcomes as any)[outcome] = [...new Set((outcomes as any)[outcome])];
     }
   }
-  const extraCategories: (keyof ValidatedJSON)[] = ["attacks", "passives", "conclusions", "insights"];
+  const extraCategories: (keyof ValidatedJSON)[] = [
+    "attacks", "passives", "conclusions", "insights", "media", 
+    "persona", "recruitment", "memorials", "fanfare", "meta", "promoters"
+  ];
   for (const cat of extraCategories) {
+    if (!data[cat]) continue;
     for (const subCat of Object.keys(data[cat])) {
-      (data[cat] as any)[subCat] = [...new Set((data[cat] as any)[subCat])];
+      const val = (data[cat] as any)[subCat];
+      if (Array.isArray(val)) {
+        (data[cat] as any)[subCat] = [...new Set(val)];
+      } else if (typeof val === 'object') {
+        for (const leaf of Object.keys(val)) {
+          if (Array.isArray(val[leaf])) {
+            val[leaf] = [...new Set(val[leaf])];
+          }
+        }
+      }
     }
   }
 }

@@ -300,17 +300,35 @@
       "Kill": ["In a {{adj}} display, {{winner}} struck down {{loser}} with a killing blow."],
       "KO": ["{{winner}} battered {{loser}} into unconsciousness with {{adj}} efficiency."],
       "Stoppage": ["{{winner}} ground {{loser}} down. The Arenamaster called the stoppage."],
-      "Exhaustion": ["Both fighters pushed to total exhaustion. {{winner}} was awarded the bout."]
+      "Exhaustion": ["Both fighters pushed to total exhaustion. {{winner}} was awarded the bout."],
+      "Draw": ["The sands of time ran out before a victor could be declared."],
+      "Default": ["A hard-fought struggle between {{a}} and {{d}} ended in {{winner}}'s favor."]
     },
     "headlines": {
       "LegendaryStreak": "Week {{week}}: UNSTOPPABLE! {{name}} Extends Legendary {{streak}}-Win Streak!",
       "HotStreak": "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
       "Streak": "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
       "LegacyRivalry": "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!",
+      "Rivalry": "Week {{week}}: BLOOD FEUD! {{a}} and {{b}} meet again in the pit!",
+      "RisingStar": "Week {{week}}: A STAR IS BORN! {{name}} remains undefeated!",
       "Upset": "Week {{week}}: UPSET! {{winner}} Topples the Mighty {{loser}}!",
+      "MultipleKills": "Week {{week}}: THE REAPER'S HARVEST! {{count}} warriors fallen!",
+      "Kill": "Week {{week}}: DEATH IN THE PIT! {{killer}} claims a life!",
+      "MultipleKOs": "Week {{week}}: {{adj}} DEVASTATION! The sands are littered with the fallen!",
+      "Standard": "Week {{week}}: {{adj}} CLASHES! The arena roars for its champions!",
+      "Empty": "Week {{week}}: A quiet week in the arena. The peace won't last.",
       "Graveyard": "The Hall of Warriors receives {{count}} new name{{plural}} this week."
     },
-    "featured": {},
+    "featured": {
+      "LegendaryStreak": "Whispers of the ancients surround {{name}}, whose {{streak}} victories have become legend.",
+      "HotStreak": "{{name}} is unstoppable, carving a path through the rankings with {{streak}} wins.",
+      "Streak": "The momentum stays with {{name}} as they secure their {{streak}}th win.",
+      "LegacyRivalry": "The grand history between {{a}} and {{b}} continues. This was their {{count}}{{suffix}} meeting.",
+      "Rivalry": "The bad blood between {{a}} and {{b}} was on full display today.",
+      "RisingStar": "All eyes are on {{name}}, a rising star who refuses to taste defeat.",
+      "Upset": "The impossible happened! {{winner}} (fame: {{fameW}}) overcame {{loser}} (fame: {{fameL}}).",
+      "Graveyard": "We mourn the {{count}} warrior{{plural}} who gave everything to the sands this week."
+    },
     "season_summary": {
       "headline": "{{season}} Season in Review: {{total}} Bouts, {{kills}} Deaths",
       "body": [

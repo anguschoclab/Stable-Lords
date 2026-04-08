@@ -1,11 +1,14 @@
-import type { GameState, Season, RivalStableData } from "@/types/game";
+import type { GameState, RivalStableData } from "@/types/state.types";
+import { type Season } from "@/types/shared.types";
+import { SeededRNG } from "@/utils/random";
+import { generateId, hashStr } from "@/utils/idUtils";
 import type { PoolWarrior } from "@/engine/recruitment";
 
 interface TierStats { totalWins: number; totalKills: number; totalFights: number; activeCount: number; }
 
 type TierRule = (stats: TierStats) => { newTier: RivalStableData["tier"]; newsTemplate: string } | null;
 
-const tierRules: Record<RivalStableData["tier"], TierRule[]> = {
+const tierRules: Record<NonNullable<RivalStableData["tier"]>, TierRule[]> = {
   Minor: [
     (stats) => stats.totalWins >= 15 && stats.totalKills >= 2 && stats.activeCount >= 5
       ? { newTier: "Established", newsTemplate: "📈 {name} has risen to Established status!" } : null
@@ -19,7 +22,8 @@ const tierRules: Record<RivalStableData["tier"], TierRule[]> = {
   Major: [
     (stats) => stats.activeCount < 4
       ? { newTier: "Established", newsTemplate: "📉 {name} has been downgraded to Established." } : null
-  ]
+  ],
+  Legendary: []
 };
 
 export function processTierProgression(state: GameState, newSeason: Season, newWeek: number): GameState {
@@ -36,7 +40,7 @@ export function processTierProgression(state: GameState, newSeason: Season, newW
       if (w.status === "Active") stats.activeCount++;
     }
 
-    const rules = tierRules[r.tier] || [];
+    const rules = tierRules[r.tier || "Minor"];
     for (const rule of rules) {
       const result = rule(stats);
       if (result) {
@@ -47,7 +51,18 @@ export function processTierProgression(state: GameState, newSeason: Season, newW
     return r;
   });
 
+  const rng = new SeededRNG(hashStr(state.meta.createdAt) + state.week);
   const s = { ...state, rivals: updatedRivals, recruitPool: [] as PoolWarrior[] };
-  if (promotionNews.length > 0) s.newsletter = [...s.newsletter, { week: newWeek, title: "Stable Rankings Update", items: promotionNews }];
+  if (promotionNews.length > 0) {
+    s.newsletter = [
+      ...s.newsletter, 
+      { 
+        id: generateId(rng, "news-"),
+        week: newWeek, 
+        title: "Stable Rankings Update", 
+        items: promotionNews 
+      }
+    ];
+  }
   return s;
 }

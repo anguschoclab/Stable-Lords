@@ -1,5 +1,6 @@
 import { SeededRNG } from "@/utils/random";
-import type { GameState, Season, WeatherType } from "@/types/game";
+import type { GameState } from "@/types/state.types";
+import { type Season, type WeatherType } from "@/types/shared.types";
 
 /**
  * Stable Lords — World Pipeline Pass

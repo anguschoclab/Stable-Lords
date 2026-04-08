@@ -7,7 +7,8 @@
  * - Recovery time in weeks
  * - Severity level
  */
-import type { Warrior, FightOutcome, InjuryData, InjurySeverity } from "@/types/game";
+import type { Warrior, InjuryData, InjurySeverity } from "@/types/warrior.types";
+import type { FightOutcome } from "@/types/combat.types";
 import { SeededRNG } from "@/utils/random";
 import { generateId } from "@/utils/idUtils";
 
@@ -82,7 +83,7 @@ export function rollForInjury(
 
   return {
     ...template,
-    id: generateId(rng, "inj"),
+    id: generateId(rng, "injury-"),
     weeksRemaining: weeks,
   };
 }

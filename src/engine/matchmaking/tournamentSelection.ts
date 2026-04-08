@@ -145,7 +145,7 @@ export const TournamentSelectionService = {
     }
 
     return {
-      id: rng.uuid("tou"),
+      id: rng.uuid("tournament-"),
       season: season as Season,
       week,
       name,
@@ -196,7 +196,7 @@ export const TournamentSelectionService = {
       
       bout.winner = outcome.winner;
       bout.by = outcome.by;
-      bout.fightId = rng.uuid("bt");
+      bout.fightId = rng.uuid("bout-");
       
       winners.push(outcome.winner === "A" ? { id: wA.id, name: wA.name, stableId: wA.stableId } : { id: wD.id, name: wD.name, stableId: wD.stableId });
       losers.push(outcome.winner === "A" ? { id: wD.id, name: wD.name, stableId: wD.stableId } : { id: wA.id, name: wA.name, stableId: wA.stableId });
@@ -309,7 +309,7 @@ export const TournamentSelectionService = {
       if (isPlayer) {
         updatedState.treasury += prizeGold;
         updatedState.ledger.push({ 
-          id: awardRng.uuid("led"),
+          id: awardRng.uuid("ledger-"),
           week: updatedState.week, 
           label: `${tournament.name} (${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'})`, 
           amount: prizeGold, 
@@ -323,7 +323,7 @@ export const TournamentSelectionService = {
         } else if (place === 2) {
           // Add Weapon Token
           updatedState.insightTokens = [...(updatedState.insightTokens || []), {
-            id: awardRng.uuid("ins"),
+            id: awardRng.uuid("insight-"),
             type: "Weapon",
             warriorId: "",
             warriorName: "Unassigned",
@@ -333,7 +333,7 @@ export const TournamentSelectionService = {
         } else if (place === 3) {
           // Add Rhythm Token
           updatedState.insightTokens = [...(updatedState.insightTokens || []), {
-            id: awardRng.uuid("ins"),
+            id: awardRng.uuid("insight-"),
             type: "Rhythm",
             warriorId: "",
             warriorName: "Unassigned",
@@ -438,7 +438,7 @@ export const TournamentSelectionService = {
     const updatedState = { ...state };
 
     const summary: import("@/types/state.types").FightSummary = {
-      id: rng.uuid("bout"),
+      id: rng.uuid("bout-"),
       week: state.week,
       phase: "resolution" as const,
       tournamentId: tId,

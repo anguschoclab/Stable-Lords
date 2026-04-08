@@ -9,7 +9,7 @@
  */
 import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX, type Attributes } from "@/types/shared.types";
 import type { Warrior, AttributePotential } from "@/types/warrior.types";
-import { FightingStyle, type BaseSkills, type DerivedStats } from "@/types/game";
+import { FightingStyle, type BaseSkills, type DerivedStats } from "@/types/shared.types";
 import {
   computeHP as canonicalHP,
   computeDamageClass,

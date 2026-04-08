@@ -1,4 +1,4 @@
-import { GameState } from "@/types/game";
+import type { GameState } from "@/types/state.types";
 import { computeEconomyImpact } from "@/engine/economy";
 import { resolveImpacts } from "@/engine/impacts";
 import { SeededRNG } from "@/utils/random";

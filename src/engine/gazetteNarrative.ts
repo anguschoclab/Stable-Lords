@@ -13,7 +13,7 @@ import { generateId } from "@/utils/idUtils";
 
 
 
-const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[]; closer: string[] }> = (narrativeContent as any).MOOD_TONE;
+const MOOD_TONE: Record<CrowdMoodType, { adjectives: string[]; opener: string[]; closer: string[] }> = (narrativeContent as any).ux_metadata.mood_tone;
 
 function styleName(style: string): string {
   return STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style;
@@ -33,7 +33,7 @@ export function generateFightNarrative(fight: FightSummary, mood: CrowdMoodType,
   const adj = safeRng.pick(tone.adjectives);
   const winner = fight.winner === "A" ? fight.a : fight.winner === "D" ? fight.d : null;
   const loser = fight.winner === "A" ? fight.d : fight.winner === "D" ? fight.a : null;
-  const g = narrativeContent.gazette.fights;
+  const g = (narrativeContent.gazette as any).fights;
 
   const data = {
     adj,
@@ -229,7 +229,7 @@ export function generateWeeklyGazette(
   if (upsets.length > 0) tags.push("Upset");
 
   // Headline — streak headlines take priority over standard ones
-  const gh = narrativeContent.gazette.headlines;
+  const gh = (narrativeContent.gazette as any).headlines;
   let headline: string;
   if (hotStreakers.length > 0) {
     const top = hotStreakers.sort((a, b) => b.streak - a.streak)[0];
@@ -262,7 +262,7 @@ export function generateWeeklyGazette(
 
   // Body
   const paragraphs: string[] = [rng.pick(tone.opener)];
-  const gf = narrativeContent.gazette.featured;
+  const gf = (narrativeContent.gazette as any).featured;
 
   // Summary stats
   if (fights.length > 0) {

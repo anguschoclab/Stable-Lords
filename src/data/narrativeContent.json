@@ -350,7 +350,9 @@
     "memorial_default": "Fallen in combat.",
     "btn_honor": "Honor the Fallen",
     "btn_planning": "Acknowledge & Begin Planning",
-    "btn_next": "Next Report"
+    "btn_next": "Next Report",
+    "armor_intro_verbs": ["is wearing", "is armored in", "steps forth in", "glimmers in"],
+    "weapon_intro_verbs": ["is armed with %W", "clutches a %W", "prepares to fight with %W", "draws his %W"]
   },
   "memorials": {
     "tributes": [

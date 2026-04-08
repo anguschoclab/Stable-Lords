@@ -156,7 +156,7 @@ export function narrateAttack(rng: RNG, attackerName: string, weaponId?: string,
   const wName = getWeaponDisplayName(weaponId);
 
   // Use the new architecture for generic attacks/swings (Whiffs)
-  const template = getFromArchive(rng, ["attacks", "whiff"]);
+  const template = getFromArchive(rng, ["pbp", "whiffs"]);
   return interpolateTemplate(template, {
     attacker: attackerName,
     weapon: wName
@@ -171,14 +171,14 @@ export function narratePassive(rng: RNG, style: FightingStyle, actorName: string
 export function narrateParry(rng: RNG, defenderName: string, weaponId?: string): string {
   const wName = getWeaponDisplayName(weaponId);
   const isShield = weaponId && ["small_shield", "medium_shield", "large_shield"].includes(weaponId);
-  const type = isShield ? "shield" : "weapon";
+  const type = isShield ? "shield" : "parry";
 
-  const template = getFromArchive(rng, ["defenses", type, "success"]);
+  const template = getFromArchive(rng, ["pbp", "defenses", type, "success"]);
   return interpolateTemplate(template, { defender: defenderName, weapon: wName });
 }
 
 export function narrateDodge(rng: RNG, defenderName: string): string {
-  const template = getFromArchive(rng, ["defenses", "dodge", "success"]);
+  const template = getFromArchive(rng, ["pbp", "defenses", "dodge", "success"]);
   return interpolateTemplate(template, { defender: defenderName });
 }
 
@@ -359,7 +359,7 @@ export function pressingLine(rng: RNG, name: string): string {
 }
 
 export function narrateInsightHint(rng: RNG, attribute: string): string | null {
-  const template = getFromArchive(rng, ["insights", attribute]);
+  const template = getFromArchive(rng, ["pbp", "insights", attribute]);
   if (!template || template === "A fierce exchange occurs.") return null;
   return template;
 }

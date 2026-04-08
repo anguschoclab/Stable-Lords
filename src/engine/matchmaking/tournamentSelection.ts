@@ -125,8 +125,9 @@ export const TournamentSelectionService = {
     return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
   },
 
-  buildTournament(tierId: string, name: string, participants: Warrior[], week: number, season: string, rng: SeededRNG): TournamentEntry {
-    const shuffled = rng.shuffle([...participants]);
+  buildTournament(tierId: string, tierName: string, warriors: Warrior[], week: number, season: Season, rng: SeededRNG): TournamentEntry {
+    const id = `t-${tierId.toLowerCase()}-${season.id}-${week}`;
+    const shuffled = rng.shuffle([...warriors]);
     const bracket: TournamentBout[] = [];
     
     for (let i = 0; i < 64; i += 2) {
@@ -139,18 +140,19 @@ export const TournamentSelectionService = {
         warriorIdD: shuffled[i+1].id,
         stableIdA: shuffled[i].stableId,
         stableIdD: shuffled[i+1].stableId,
-        stableA: shuffled[i].stableId, // snapshots current stable name if needed
+        stableA: shuffled[i].stableId,
         stableD: shuffled[i+1].stableId,
       });
     }
 
     return {
-      id: rng.uuid("tournament-"),
-      season: season as Season,
+      id,
+      season,
       week,
-      name,
+      tierId,
+      name: tierName,
       bracket,
-      participants,
+      participants: warriors,
       completed: false
     };
   },
@@ -257,7 +259,7 @@ export const TournamentSelectionService = {
     );
 
     if (isComplete && champion) {
-       updatedState = this.awardTournamentPrizes(updatedState, tournamentId, rng);
+       updatedState = this.awardTournamentPrizes(tournament, updatedState);
     }
 
     return { updatedState, roundResults: isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${tournament.name}!`] : [] };
@@ -269,10 +271,7 @@ export const TournamentSelectionService = {
    * 2nd: Gold Purse (50%) + Weapon Insight Token
    * 3rd: Gold Purse (25%) + Rhythm Insight Token
    */
-  awardTournamentPrizes(state: GameState, tournamentId: string, rng: SeededRNG): GameState {
-    const tournament = state.tournaments.find(t => t.id === tournamentId);
-    if (!tournament) return state;
-
+  awardTournamentPrizes(tournament: TournamentEntry, state: GameState): GameState {
     const bracket = tournament.bracket;
     const finals = bracket.find(b => b.round === 6 && b.matchIndex === 0);
     const bronze = bracket.find(b => b.round === 6 && b.matchIndex === 1);
@@ -284,8 +283,9 @@ export const TournamentSelectionService = {
     const third = bronze ? (bronze.winner === "A" ? bronze.warriorIdA : bronze.warriorIdD) : undefined;
 
     let updatedState = { ...state };
-    const tier = tournament.id.split("_")[1].toUpperCase(); // "GOLD", "SILVER", etc.
+    const tier = tournament.tierId.toUpperCase(); // "GOLD", "SILVER", etc.
     const basePurse = tier === "GOLD" ? 5000 : tier === "SILVER" ? 2500 : tier === "BRONZE" ? 1200 : 600;
+    const awardRng = new SeededRNG(Date.now());
 
     const award = (warriorId: string, place: 1 | 2 | 3, awardRng: SeededRNG) => {
       const w = this.findWarriorById(updatedState, warriorId, tournament);

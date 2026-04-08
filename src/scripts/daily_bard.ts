@@ -55,7 +55,7 @@ type ValidatedJSON = z.infer<typeof NarrativeSchema>;
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "mock-key");
 const model = genAI.getGenerativeModel({ 
-  model: "gemini-2.5-flash",
+  model: "gemini-3-flash",
   generationConfig: { responseMimeType: "application/json" }
 });
 

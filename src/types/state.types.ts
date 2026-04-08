@@ -110,6 +110,7 @@ export interface TournamentEntry {
   id: string;
   season: Season;
   week: number;
+  tierId: string; // 🌩️ Tier Identity (v1.0)
   name: string;
   bracket: TournamentBout[];
   participants: Warrior[]; // Persisted 64-man roster (including Freelancers)

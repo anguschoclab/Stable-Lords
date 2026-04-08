@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, beforeAll , Mock} from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Tournaments from '../../pages/Tournaments';
 import { useGameStore } from '../../state/useGameStore';
+import { renderWithGameState } from "../testUtils";
 
 // We mock @tanstack/react-router to avoid setting up a full router context
 vi.mock('@tanstack/react-router', () => ({
@@ -41,7 +42,7 @@ describe('Tournaments Page', () => {
   });
 
   it('renders recruit operatives button when criteria are met', () => {
-    render(<Tournaments />);
+    renderWithGameState(<Tournaments />, mockState);
 
     // Check main title
     expect(screen.getByText(/Seasonal Campaigns/)).toBeDefined();

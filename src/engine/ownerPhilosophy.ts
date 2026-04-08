@@ -1,4 +1,5 @@
-import { GameState, Season, RivalStableData } from "@/types/game";
+import type { GameState, Season, RivalStableData } from "@/types/state.types";
+import type { FightSummary } from "@/types/combat.types";
 import { getRecentFights } from "@/engine/core/historyUtils";
 import { PHILOSOPHY_DRIFT } from "@/data/ownerData";
 import { SeededRNG } from "@/utils/random";
@@ -46,7 +47,7 @@ export function evolvePhilosophies(
         gazetteItems.push(
           `💡 ${rival.owner.name} (${rival.owner.stableName}) shifts strategy from ${currentPhilosophy} to ${nextPhilosophy}.`
         );
-        return { ...rival, philosophy: nextPhilosophy } as import("@/types/game").RivalStableData;
+        return { ...rival, philosophy: nextPhilosophy } as RivalStableData;
       }
     }
 
@@ -56,7 +57,7 @@ export function evolvePhilosophies(
   return { updatedRivals, gazetteItems };
 }
 
-function calculateRecentPerformance(recentFights: import("@/types/game").FightSummary[], rosterNames: Set<string>) {
+function calculateRecentPerformance(recentFights: FightSummary[], rosterNames: Set<string>) {
   let wins = 0, losses = 0;
   for (const f of recentFights) {
     const isA = rosterNames.has(f.a), isD = rosterNames.has(f.d);

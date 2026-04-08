@@ -2,14 +2,13 @@ import {
   type GameState, 
   type TrainingAssignment 
 } from "@/types/state.types";
-import { type Warrior } from "@/types/warrior.types";
+import { type Warrior, type InjuryData } from "@/types/warrior.types";
 import { 
   type Attributes, 
   ATTRIBUTE_KEYS, 
-  ATTRIBUTE_MAX,
-  type SeasonalGrowth,
-  type InjuryData
-} from "@/types/game";
+  ATTRIBUTE_MAX 
+} from "@/types/shared.types";
+import { type SeasonalGrowth } from "@/types/state.types";
 import { canGrow, diminishingReturnsFactor } from "@/engine/potential";
 import { computeWarriorStats } from "@/engine/skillCalc";
 import { SeededRNG } from "@/utils/random";

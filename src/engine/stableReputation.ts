@@ -2,7 +2,9 @@
  * Stable Reputation System — computes Fame, Notoriety, Honor, Adaptability.
  * Per Design Bible v3.0 §9.2
  */
-import type { GameState, Warrior, FightSummary } from "@/types/game";
+import type { GameState } from "@/types/state.types";
+import type { Warrior } from "@/types/warrior.types";
+import type { FightSummary } from "@/types/combat.types";
 
 export interface StableReputation {
   fame: number;       // 0-100: public acclaim

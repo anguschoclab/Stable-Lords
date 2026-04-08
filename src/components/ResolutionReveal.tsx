@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useGameStore } from "@/state/useGameStore";
+import { useGameStore, reconstructGameState } from "@/state/useGameStore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,11 +13,22 @@ import type { NewsletterItem } from "@/types/shared.types";
 import type { Warrior } from "@/types/warrior.types";
 import type { GazetteStory } from "@/types/state.types";
 import type { BoutResult } from "@/engine/boutProcessor";
+import narrativeContent from "@/data/narrativeContent.json";
 
 type RevealStep = "gazette" | "injuries" | "bouts" | "math" | "memorial";
 
+function t(template: string, data: Record<string, any>): string {
+  let result = template;
+  for (const [key, value] of Object.entries(data)) {
+    result = result.replace(new RegExp(`{{${key}}}`, "g"), String(value));
+  }
+  return result;
+}
+
 export default function ResolutionReveal() {
-  const { state, setState } = useGameStore();
+  const store = useGameStore();
+  const state = reconstructGameState(store);
+  const setState = store.setState;
   const [step, setStep] = useState<RevealStep>("gazette");
 
   const latestFight = state.arenaHistory?.[state.arenaHistory.length - 1];
@@ -32,10 +43,11 @@ export default function ResolutionReveal() {
 
   const doClearResolution = () => {
     // Clear resolution data
-    const updated = { ...state, arenaHistory: state.arenaHistory.map((f, i) =>
-      i === state.arenaHistory.length - 1 ? { ...f, pendingResolutionData: undefined } : f
-    )};
-    setState(updated);
+    setState((draft: any) => {
+      draft.arenaHistory = draft.arenaHistory.map((f: any, i: number) =>
+        i === draft.arenaHistory.length - 1 ? { ...f, pendingResolutionData: undefined } : f
+      );
+    });
   };
   const hasInjuriesOrDeaths = data.injuries.length > 0 || data.deaths.length > 0;
 
@@ -61,7 +73,7 @@ export default function ResolutionReveal() {
         <CardHeader className="bg-secondary/30 pb-4 shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-2xl font-display font-bold">Cycle Resolution</CardTitle>
+              <CardTitle className="text-2xl font-display font-bold">{narrativeContent.fanfare.resolution_title}</CardTitle>
               <CardDescription>Week {state.week - 1} Results</CardDescription>
             </div>
             <div className="flex gap-2">
@@ -110,7 +122,7 @@ export default function ResolutionReveal() {
                     </div>
                   ) : (
                     <div className="flex items-center justify-center h-full text-muted-foreground italic">
-                      A quiet week in the arena. No major headlines.
+                      {narrativeContent.fanfare.gazette_empty}
                     </div>
                   )}
                 </ScrollArea>
@@ -127,7 +139,7 @@ export default function ResolutionReveal() {
               >
                 <div className="flex items-center gap-2">
                   <Activity className="h-6 w-6 text-amber-500" />
-                  <h3 className="text-xl font-semibold">Medical & Mortality Report</h3>
+                  <h3 className="text-xl font-semibold">{narrativeContent.fanfare.report_medical}</h3>
                 </div>
 
                 {data.deaths.length > 0 && (
@@ -170,7 +182,7 @@ export default function ResolutionReveal() {
               >
                 <div className="flex items-center gap-2 mb-6 shrink-0">
                   <Swords className="h-6 w-6 text-primary" />
-                  <h3 className="text-xl font-semibold">Combat Results</h3>
+                  <h3 className="text-xl font-semibold">{narrativeContent.fanfare.report_combat}</h3>
                 </div>
                 <ScrollArea className="flex-1 pr-4">
                   {data.bouts.length > 0 ? (
@@ -199,7 +211,7 @@ export default function ResolutionReveal() {
                     </div>
                   ) : (
                     <div className="flex items-center justify-center h-full text-muted-foreground italic">
-                      Your stable did not participate in any official bouts this week.
+                      {narrativeContent.fanfare.report_combat_empty}
                     </div>
                   )}
                 </ScrollArea>
@@ -216,7 +228,7 @@ export default function ResolutionReveal() {
               >
                 <div className="flex items-center gap-2">
                   <Activity className="h-6 w-6 text-indigo-500" />
-                  <h3 className="text-xl font-semibold">Simulation Math & Metrics</h3>
+                  <h3 className="text-xl font-semibold">{narrativeContent.fanfare.report_math}</h3>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
@@ -247,7 +259,7 @@ export default function ResolutionReveal() {
                   <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Granular Breakdown</h4>
                   <ScrollArea className="h-[200px] border rounded-md p-4 bg-muted/30">
                     <div className="space-y-4">
-                      {state.lastSimulationReport?.trainingGains.map((g, i) => (
+                      {state.lastSimulationReport?.trainingGains.map((g: any, i: number) => (
                         <div key={i} className="flex items-center justify-between text-sm">
                           <span className="font-medium">{g.warriorName}</span>
                           <div className="flex gap-2 font-mono">
@@ -255,7 +267,7 @@ export default function ResolutionReveal() {
                           </div>
                         </div>
                       ))}
-                      {state.lastSimulationReport?.agingEvents.map((e, i) => (
+                      {state.lastSimulationReport?.agingEvents.map((e: string, i: number) => (
                         <div key={`age-${i}`} className="text-sm text-amber-500">
                           <span className="font-bold mr-2">!</span> {e}
                         </div>
@@ -277,14 +289,14 @@ export default function ResolutionReveal() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,0,0,0.05)_0,transparent_100%)] mix-blend-screen" />
                 <div className="z-10 flex flex-col items-center max-w-full">
                   <Skull className="h-16 w-16 mb-4 text-zinc-600 animate-pulse drop-shadow-[0_0_15px_rgba(200,0,0,0.3)]" />
-                  <h2 className="text-3xl font-serif text-center mb-8 uppercase tracking-widest text-zinc-300">The Arena Remembers</h2>
+                  <h2 className="text-3xl font-serif text-center mb-8 uppercase tracking-widest text-zinc-300">{narrativeContent.fanfare.memorial_title}</h2>
                   <div className="flex gap-6 overflow-x-auto pb-4 max-w-[100%]">
                     {deadWarriors.map((w) => {
                       if (!w) return null;
                       return (
                         <div key={w.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-lg text-center min-w-72 shadow-2xl relative">
                           <h3 className="text-2xl font-display font-bold text-red-500 mb-1 drop-shadow-md">{w.name}</h3>
-                          <p className="text-sm text-zinc-400 mb-4 italic leading-relaxed">{w.deathCause || "Fallen in combat."}</p>
+                          <p className="text-sm text-zinc-400 mb-4 italic leading-relaxed">{w.deathCause || narrativeContent.fanfare.memorial_default}</p>
                           <Separator className="bg-zinc-800 mb-4" />
                           <div className="grid grid-cols-2 gap-3 text-xs text-zinc-500 text-left">
                             <div className="bg-zinc-950 p-2 rounded">Age: <span className="text-zinc-300 font-mono inline-block ml-1">{w.age}</span></div>
@@ -304,7 +316,7 @@ export default function ResolutionReveal() {
 
         <div className="p-4 bg-secondary/20 border-t shrink-0 flex justify-end">
           <Button onClick={handleNext} className="gap-2" size="lg" variant={step === "memorial" ? "destructive" : "default"}>
-            {step === "math" && data.deaths.length > 0 ? "Honor the Fallen" : (step === "math" || step === "memorial") ? "Acknowledge & Begin Planning" : "Next Report"}
+            {step === "math" && data.deaths.length > 0 ? narrativeContent.fanfare.btn_honor : (step === "math" || step === "memorial") ? narrativeContent.fanfare.btn_planning : narrativeContent.fanfare.btn_next}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

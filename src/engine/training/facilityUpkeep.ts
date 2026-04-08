@@ -1,4 +1,5 @@
-import type { Attributes, SeasonalGrowth } from "@/types/game";
+import { type Attributes } from "@/types/shared.types";
+import { type SeasonalGrowth, type Season } from "@/types/state.types";
 
 /**
  * Retrieves the partial attribute gains for a specific warrior in a specific season.
@@ -29,5 +30,5 @@ export function updateSeasonalGains(
         : sg
     );
   }
-  return [...seasonalGrowth, { warriorId, season: season as import("@/types/game").Season, gains: { [attr]: 1 } }];
+  return [...seasonalGrowth, { warriorId, season: season as Season, gains: { [attr]: 1 } }];
 }

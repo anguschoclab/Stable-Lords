@@ -1,29 +1,7 @@
 import { type FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/shared.types";
 import { getItemById } from "@/data/equipment";
 import narrativeContent from "@/data/narrativeContent.json";
-
-import {
-  HIT_LOC_VARIANTS,
-  STYLE_PBP_DESC,
-  HELM_DESCS,
-  INI_FEINT_TEMPLATES,
-  EVEN_STATUS,
-  STOPPAGE_TEMPLATES,
-  EXHAUSTION_TEMPLATES,
-  POPULARITY_TEMPLATES,
-  SKILL_LEARNS,
-  TRADING_BLOWS,
-  STALEMATE_LINES,
-  WINNER_TAUNTS,
-  LOSER_TAUNTS,
-  PRESSING_TEMPLATES,
-  INSIGHT_ST_HINTS,
-  INSIGHT_SP_HINTS,
-  INSIGHT_DF_HINTS,
-  INSIGHT_WL_HINTS,
-  MASTERY_TEMPLATES,
-  SUPER_FLASHY_TEMPLATES,
-} from "./narrative/narrativeData";
+import { audioManager } from "@/lib/AudioManager";
 
 import {
   pick,
@@ -32,19 +10,6 @@ import {
   getWeaponType,
 } from "./narrative/narrativeUtils";
 
-import {
-  KO_TEMPLATES,
-  ARMOR_INTRO_VERBS,
-  WEAPON_INTRO_VERBS,
-  BATTLE_OPENERS,
-  COUNTERSTRIKE_TEMPLATES,
-  PARRY_BREAK_TEMPLATES,
-  CROWD_REACTIONS_POSITIVE,
-  CROWD_REACTIONS_NEGATIVE,
-  CROWD_REACTIONS_ENCOURAGE,
-  INI_WIN_TEMPLATES,
-} from "./narrativeTemplates";
-
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 type RNG = () => number;
@@ -52,6 +17,7 @@ type RNG = () => number;
 interface CombatContext {
   attacker?: string;
   defender?: string;
+  name?: string;
   weapon?: string;
   bodyPart?: string;
 }
@@ -121,7 +87,7 @@ function getFromArchive(rng: RNG, path: string[]): string {
 // ─── Hit Location Display ───────────────────────────────────────────────────
 
 export function richHitLocation(rng: RNG, location: string): string {
-  const variants = HIT_LOC_VARIANTS[location.toLowerCase()];
+  const variants = (narrativeContent as any).pbp.hit_locations[location.toLowerCase()];
   if (!variants) return location.toUpperCase();
   return pick(rng, variants);
 }
@@ -149,15 +115,15 @@ export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: numb
   // Armor & Helm
   const armorItem = data.armorId ? getItemById(data.armorId) : null;
   if (armorItem && armorItem.id !== "none_armor") {
-    lines.push(`${n} ${pick(rng, ARMOR_INTRO_VERBS)} ${armorItem.name.toUpperCase()} armor.`);
+    const verb = getFromArchive(rng, ["fanfare", "armor_intro_verbs"]) || "is wearing";
+    lines.push(`${n} ${verb} ${armorItem.name.toUpperCase()} armor.`);
   } else {
     lines.push(`${n} has chosen to fight without body armor.`);
   }
 
   const helmItem = data.helmId ? getItemById(data.helmId) : null;
   if (helmItem && helmItem.id !== "none_helm") {
-    const helmNames = HELM_DESCS[helmItem.id] ?? [helmItem.name.toUpperCase()];
-    lines.push(`And will wear a ${pick(rng, helmNames)}.`);
+    lines.push(`And will wear a ${helmItem.name.toUpperCase()}.`);
   }
 
   // Weapon & Style
@@ -165,10 +131,11 @@ export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: numb
   if (weaponName === "OPEN HAND") {
     lines.push(`${n} will fight using his OPEN HAND.`);
   } else {
-    lines.push(`${n} ${pick(rng, WEAPON_INTRO_VERBS).replace("%W", weaponName)}.`);
+    const verb = getFromArchive(rng, ["fanfare", "weapon_intro_verbs"]) || "is armed with {{weapon}}";
+    lines.push(interpolateTemplate(verb, { attacker: n, weapon: weaponName }));
   }
 
-  lines.push(`${n} ${STYLE_PBP_DESC[data.style] ?? `uses the ${STYLE_DISPLAY_NAMES[data.style]} style`}.`);
+  lines.push(`${n} uses the ${STYLE_DISPLAY_NAMES[data.style]} style.`);
   lines.push(`${n} is well suited to the weapons selected.`);
 
   return lines;
@@ -177,7 +144,7 @@ export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: numb
 // ─── Battle Openers ─────────────────────────────────────────────────────────
 
 export function battleOpener(rng: RNG): string {
-  return pick(rng, BATTLE_OPENERS);
+  return getFromArchive(rng, ["pbp", "openers"]);
 }
 
 // ─── Attack Narration ───────────────────────────────────────────────────────
@@ -216,7 +183,8 @@ export function narrateDodge(rng: RNG, defenderName: string): string {
 }
 
 export function narrateCounterstrike(rng: RNG, name: string): string {
-  return pick(rng, COUNTERSTRIKE_TEMPLATES).replace(/%D/g, name);
+  const template = getFromArchive(rng, ["pbp", "defenses", "counterstrike"]) || "{{attacker}} counters!";
+  return interpolateTemplate(template, { attacker: name });
 }
 
 /**
@@ -251,8 +219,13 @@ export function narrateHit(
     attackerFame || 0
   );
 
+  // Audio Sync
+  if (severity === "critical_human" || severity === "critical_supernatural") {
+    audioManager.play("crit");
+  }
+
   // 2. Fetch from JSON archive
-  const template = getFromArchive(rng, ["strikes", wType, severity]);
+  const template = getFromArchive(rng, ["strikes", wType, severity]) || getFromArchive(rng, ["strikes", "generic"]);
 
   // 3. Interpolate
   return interpolateTemplate(template, {
@@ -265,24 +238,31 @@ export function narrateHit(
 
 export function narrateParryBreak(rng: RNG, attackerName: string, weaponId?: string): string {
   const wName = getWeaponDisplayName(weaponId);
-  return pick(rng, PARRY_BREAK_TEMPLATES).replace(/%A/g, attackerName).replace(/%W/g, wName);
+  const template = getFromArchive(rng, ["pbp", "defenses", "parry_break"]) || "{{attacker}} breaks the guard!";
+  return interpolateTemplate(template, { attacker: attackerName, weapon: wName });
 }
 
 // ─── Status & Feedback ──────────────────────────────────────────────────────
 
 export function damageSeverityLine(rng: RNG, damage: number, maxHp: number): string | null {
   const ratio = damage / maxHp;
-  if (ratio >= 0.35) return pick(rng, ["It was a deadly attack!", "What a massive blow!", "What a devastating attack!"]);
-  if (ratio >= 0.25) return pick(rng, ["It was an incredible blow!", "It is a terrific blow!"]);
-  if (ratio >= 0.15) return pick(rng, ["It is a tremendous blow!", "It was a powerful blow!"]);
-  if (ratio <= 0.05) return pick(rng, ["The attack is a glancing blow only.", "The stroke lands ineffectively."]);
+  if (ratio >= 0.35) return getFromArchive(rng, ["pbp", "damage_severity", "deadly"]);
+  if (ratio >= 0.25) return getFromArchive(rng, ["pbp", "damage_severity", "terrific"]);
+  if (ratio >= 0.15) return getFromArchive(rng, ["pbp", "damage_severity", "powerful"]);
+  if (ratio <= 0.05) return getFromArchive(rng, ["pbp", "damage_severity", "glancing"]);
   return null;
 }
 
 export function stateChangeLine(rng: RNG, name: string, hpRatio: number, prevHpRatio: number): string | null {
-  if (hpRatio <= 0.2 && prevHpRatio > 0.2) return pick(rng, [`${name} is severely hurt!!`, `${name} is dangerously stunned!`]);
-  if (hpRatio <= 0.4 && prevHpRatio > 0.4) return `${name} appears DESPERATE!`;
-  if (hpRatio <= 0.6 && prevHpRatio > 0.6) return `${name} has sustained serious wounds!`;
+  let cat = "";
+  if (hpRatio <= 0.2 && prevHpRatio > 0.2) cat = "severe";
+  else if (hpRatio <= 0.4 && prevHpRatio > 0.4) cat = "desperate";
+  else if (hpRatio <= 0.6 && prevHpRatio > 0.6) cat = "serious";
+  
+  if (cat) {
+    const template = getFromArchive(rng, ["pbp", "status_changes", cat]);
+    return interpolateTemplate(template, { name });
+  }
   return null;
 }
 
@@ -294,19 +274,21 @@ export function fatigueLine(rng: RNG, name: string, endRatio: number): string | 
 
 export function crowdReaction(rng: RNG, loserName: string, winnerName: string, hpRatio: number): string | null {
   if (rng() > 0.25) return null;
-  if (hpRatio <= 0.3) return pick(rng, CROWD_REACTIONS_ENCOURAGE).replace(/%N/g, loserName);
-  return pick(rng, rng() < 0.5 ? CROWD_REACTIONS_NEGATIVE : CROWD_REACTIONS_POSITIVE).replace(/%N/g, loserName);
+  const mood = hpRatio <= 0.3 ? "encourage" : rng() < 0.5 ? "negative" : "positive";
+  const template = getFromArchive(rng, ["pbp", "reactions", mood]);
+  return interpolateTemplate(template, { name: loserName });
 }
 
 export function narrateInitiative(rng: RNG, winnerName: string, isFeint: boolean): string {
-  const templates = isFeint ? INI_FEINT_TEMPLATES : INI_WIN_TEMPLATES;
-  return pick(rng, templates).replace(/%N/g, winnerName);
+  const path = isFeint ? ["pbp", "feints"] : ["pbp", "initiative"];
+  const template = getFromArchive(rng, path);
+  return interpolateTemplate(template, { attacker: winnerName });
 }
 
 export function minuteStatusLine(rng: RNG, minute: number, nameA: string, nameD: string, hitsA: number, hitsD: number): string {
   if (hitsA > hitsD + 3) return `${nameA} is beating his opponent!`;
   if (hitsD > hitsA + 3) return `${nameD} is beating his opponent!`;
-  return pick(rng, EVEN_STATUS);
+  return getFromArchive(rng, ["pbp", "pacing", "stalemate"]);
 }
 
 // ─── Post-Bout ──────────────────────────────────────────────────────────────
@@ -327,9 +309,12 @@ export function narrateBoutEnd(rng: RNG, by: string, winnerName: string, loserNa
   const conclusionTemplate = getFromArchive(rng, ["conclusions", cat]);
   const conclusion = interpolateTemplate(conclusionTemplate, { attacker: winnerName, defender: loserName, weapon: wName });
 
+  // Audio Sync
+  if (cat === "Kill") audioManager.play("death");
+
   // KILLER REDUNDANCY: Prepend the fatal blow description if it's a kill
   if (cat === "Kill") {
-     const fatalBlowTemplate = getFromArchive(rng, ["strikes", wType, "fatal"]);
+     const fatalBlowTemplate = getFromArchive(rng, ["strikes", wType, "fatal"]) || getFromArchive(rng, ["strikes", "generic"]);
      const fatalBlow = interpolateTemplate(fatalBlowTemplate, { attacker: winnerName, defender: loserName, weapon: wName });
      return [fatalBlow, conclusion];
   }
@@ -337,27 +322,31 @@ export function narrateBoutEnd(rng: RNG, by: string, winnerName: string, loserNa
   return [conclusion];
 }
 
-export function popularityLine(name: string, popDelta: number): string | null {
-  if (popDelta >= 3) return POPULARITY_TEMPLATES.great.replace(/%N/g, name);
-  if (popDelta >= 1) return POPULARITY_TEMPLATES.normal.replace(/%N/g, name);
-  return null;
+export function popularityLine(rng: RNG, name: string, popDelta: number): string | null {
+  const cat = popDelta >= 3 ? "great" : popDelta >= 1 ? "normal" : "";
+  if (!cat) return null;
+  const template = getFromArchive(rng, ["pbp", "meta", "popularity", cat]);
+  return interpolateTemplate(template, { name });
 }
 
 export function skillLearnLine(rng: RNG, name: string): string {
-  return pick(rng, SKILL_LEARNS).replace(/%N/g, name);
+  const template = getFromArchive(rng, ["pbp", "meta", "skill_learns"]);
+  return interpolateTemplate(template, { attacker: name });
 }
 
 export function tradingBlowsLine(rng: RNG): string {
-  return pick(rng, TRADING_BLOWS);
+  return getFromArchive(rng, ["pbp", "pacing", "trading_blows"]);
 }
 
 export function stalemateLine(rng: RNG): string {
-  return pick(rng, STALEMATE_LINES);
+  return getFromArchive(rng, ["pbp", "pacing", "stalemate"]);
 }
 
 export function tauntLine(rng: RNG, name: string, isWinner: boolean): string | null {
   if (rng() > 0.2) return null;
-  return pick(rng, isWinner ? WINNER_TAUNTS : LOSER_TAUNTS).replace(/%N/g, name);
+  const cat = isWinner ? "winner" : "loser";
+  const template = getFromArchive(rng, ["pbp", "taunts", cat]);
+  return interpolateTemplate(template, { attacker: name });
 }
 
 export function conservingLine(name: string): string {
@@ -365,7 +354,8 @@ export function conservingLine(name: string): string {
 }
 
 export function pressingLine(rng: RNG, name: string): string {
-  return pick(rng, PRESSING_TEMPLATES).replace(/%N/g, name);
+  const template = getFromArchive(rng, ["pbp", "pacing", "pressing"]);
+  return interpolateTemplate(template, { attacker: name });
 }
 
 export function narrateInsightHint(rng: RNG, attribute: string): string | null {

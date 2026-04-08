@@ -1,4 +1,4 @@
-import { GameState, RivalStableData, OwnerPersonality, OwnerGrudge } from "@/types/game";
+import type { GameState, RivalStableData, OwnerPersonality, OwnerGrudge } from "@/types/state.types";
 import { getRecentFights } from "@/engine/core/historyUtils";
 import { PERSONALITY_CLASH } from "@/data/ownerData";
 
@@ -69,6 +69,7 @@ export function processOwnerGrudges(
         }
       } else if (hasKill) {
         grudges.push({
+          id: `grudge_${rA.owner.id}_${rB.owner.id}`,
           ownerIdA: rA.owner.id,
           ownerIdB: rB.owner.id,
           intensity: 2,

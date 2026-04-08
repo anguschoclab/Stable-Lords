@@ -1,269 +1,29 @@
 {
-  "MOOD_TONE": {
-    "Calm": {
-      "adjectives": ["measured", "technical", "efficient", "precise"],
-      "opener": ["The arena is quiet today, the air heavy with expectation."],
-      "closer": ["A professional display by the arena's finest."]
-    },
-    "Rowdy": {
-      "adjectives": ["wild", "chaotic", "unruly", "frenzied"],
-      "opener": ["The crowd is roaring, their shouts echoing against the stone walls!"],
-      "closer": ["The sand is stained deep red, and the crowd loves it."]
-    },
-    "Bloodthirsty": {
-      "adjectives": ["visceral", "savage", "brutal", "unforgiving"],
-      "opener": ["They want blood, and the arena delivers!"],
-      "closer": ["No mercy was found today in the circle of truth."]
-    },
-    "Theatrical": {
-      "adjectives": ["stunning", "operatic", "magnificent", "dramatic"],
-      "opener": ["A drama unfolds on the sands today!"],
-      "closer": ["A performance for the ages, etched in the memories of all who watched."]
-    }
-  },
-  "strikes": {
-    "slashing": {
-      "glancing": [
-        "%A's %W skips harmlessly off %D's %BP.",
-        "%A's %W hits the %BP, but the angle is poor and the blade slides off.",
-        "%A slashes with his %W, but the strike is a glancing blow only."
-      ],
-      "solid": [
-        "%A unleashes a blinding flurry of cuts with his %W, biting into the %BP!",
-        "%A steps deep inside the guard, whipping his %W into a vicious arc across the %BP!",
-        "%A's %W lunges with awesome cutting power, rending the %BP!"
-      ],
-      "mastery": [
-        "In a blur of practiced rhythm, %A's %W flows through %D's guard to find the %BP.",
-        "%A's %W seems to vanish and reappear, bitingly deep into the %BP with effortless grace.",
-        "The %W moves like an extension of %A's own soul, carving a perfect line across the %BP."
-      ],
-      "critical_human": [
-        "A horrifying display of speed as %A carves a deep path through %D's %BP with his %W!",
-        "%A's %W flashes as he takes a sudden vicious slash, nearly severing the %BP!",
-        "%A feints low, catching %D off guard before ripping his %W across the %BP in a spray of crimson!"
-      ],
-      "critical_supernatural": [
-        "The air shudders as %A's %W hums with a spectral light, cleaving through %D's %BP and the very air itself.",
-        "%A's eyes glow with an inner fire as their %W leaves a trail of silver light, shredding the %BP in a mythic display.",
-        "Aetheric pressure precedes the blow; %A's %W strikes with the weight of stars, obliterating the %BP."
-      ],
-      "fatal": [
-        "%A feints low, catching %D off guard before severing their %BP at the joint.",
-        "A fountain of gore erupts as %A's final strike decapitates %D!",
-        "%A steps past a fading guard and ends %D's life with a chilling, masterful execution!"
-      ]
-    },
-    "bashing": {
-      "glancing": [
-        "%A's %W bounces off the %BP with a hollow clang.",
-        "%A heaves his %W, but the weight carries it wide, only grazing the %BP."
-      ],
-      "solid": [
-        "%A roars, bringing the %W down like an executioner's maul on the %BP!",
-        "%A steps into the strike, letting the massive weight of the %W hammer the %BP!"
-      ],
-      "mastery": [
-        "%A catches %D in a perfect orbit of weight, hammering the %BP with crushing precision.",
-        "The %W strikes with a focused vibration, %A's mastery turning raw weight into surgical impact on the %BP.",
-        "With terrifying economy of motion, %A drops the %W directly onto the %BP."
-      ],
-      "critical_human": [
-        "The arena trembles as %A unleashes a terrifying overhead smash, crushing the %BP!",
-        "%A winds up and unleashes a thunderous swing, the %W shattering %D's %BP!"
-      ],
-      "critical_supernatural": [
-        "Gravity itself seems to bow to %A's %W, as the impact on the %BP creates a localized shockwave of force.",
-        "A boom like thunder echoes as %A's %W connects, the strike wreathed in a faint, destructive static.",
-        "%A strikes with the force of a collapsing mountain, the %W glowing with a dull, menacing heat."
-      ],
-      "fatal": [
-        "%A shows no mercy, delivering a horrifying, skull-crushing execution!",
-        "The match concludes in horrific fashion as %D's %BP is pulverized by %A's %W!"
-      ]
-    },
-    "piercing": {
-      "glancing": [
-        "%A's %W skips off the %BP, barely scratching the surface.",
-        "%A thrusts with his %W, but the point catches only air and armor."
-      ],
-      "solid": [
-        "%A drops his center and drives a blinding lunge with his %W into the %BP!",
-        "%A's %W strikes like a coiled viper, piercing the %BP!"
-      ],
-      "mastery": [
-        "%A's %W finds the microscopic gap in %D's defense, sliding effortlessly into the %BP.",
-        "With a dancer's poise, %A threads the needle, burying the %W deep into the %BP.",
-        "The %W moves in a straight, undeniable line, %A's focus total as it punctures the %BP."
-      ],
-      "critical_human": [
-        "%A extends fully, every ounce of reach behind his %W as it sinks deep into the %BP!",
-        "%A launches a controlled, perfectly balanced lunge, the %W finding a gap in the %BP!"
-      ],
-      "critical_supernatural": [
-        "Percentage of the void follows the tip of %A's %W as it pierces the %BP with impossible geometry.",
-        "The %W hums a low, deathly note, its point glowing with a cold light as it bypasses reality to hit the %BP.",
-        "%A's thrust is a streak of pure energy, the %W leaving a hollowed-out path through the %BP."
-      ],
-      "fatal": [
-        "%A drops into a low crouch and rockets his %W upward, ending %D's life in a spray of crimson!",
-        "%A executes %D with a chilling, masterful strike of the %W through the %BP!"
-      ]
-    },
-    "fist": {
-      "glancing": [
-        "%A throws a PUNCH, but it merely grazes %D's %BP."
-      ],
-      "solid": [
-        "%A steps inside the guard and unleashes a horrific combination on the %BP!"
-      ],
-      "mastery": [
-        "%A's limbs are a blur of technical perfection, striking the %BP with rhythmic violence.",
-        "Every joint in %A's body snaps in sequence, delivering a masterwork of force to the %BP."
-      ],
-      "critical_human": [
-        "%A throws a rock-fisted PUNCH of incredible felling power into the %BP!"
-      ],
-      "critical_supernatural": [
-        "%A's fist glows with an internal aura, the impact on the %BP shattering the air in a localized burst.",
-        "A golden light follows %A's strike, the sound of a bell ringing as the %BP is struck by 'The Enlightened Hand'."
-      ],
-      "fatal": [
-        "%A grabs his opponent and drives a sickening KNEE into their midsection. %D collapses dead."
-      ]
-    }
-  },
-  "defenses": {
-    "dodge": {
-      "success": [
-        "%D twists his body with surprising grace, allowing the attack to pass harmlessly by.",
-        "%D rolls beneath the blow, rising instantly with his weapon ready."
-      ],
-      "stumbling": [
-        "%D barely avoids the blow, stumbling awkwardly into the sand."
-      ]
-    },
-    "parry": {
-      "success": [
-        "%D catches the strike on the edge of his weapon, turning it aside with ease.",
-        "A sharp ring of steel as %D parries the blow with practiced ease."
-      ],
-      "stumbling": [
-        "%D barely manages to bring his guard up in time, the impact nearly rattling his weapon free."
-      ]
-    }
-  },
-  "attacks": {
-    "whiff": [
-      "%A's %W whistles through empty air as %D slips the blow.",
-      "A desperate swing by %A finds only dust and shadows."
-    ],
-    "initiative": [
-      "%A takes the center of the sands, %W held in a low, menacing guard.",
-      "With a sudden burst of speed, %A seizes the opening!",
-      "The arena goes silent as %A dictates the pace of the exchange."
-    ]
-  },
-  "passives": {
-    "AimedBlow": [
-      "%A studies the opponent's rhythm, waiting for the perfect opening."
-    ],
-    "BashingAttack": [
-      "%A hammers through the defensive stance — raw power overwhelms technique!"
-    ]
-  },
-  "conclusions": {
-    "KO": [
-      "%D collapses into the dust, consciousness fleeing as %A's %W delivers the final blow. KNOCKED OUT!"
-    ],
-    "Kill": [
-      "finds the fatal gap in the helm with surgical precision — a KILLING BLOW to the skull!",
-      "places the blade with lethal accuracy — a precise KILLING STRIKE!"
-    ]
-  },
-  "insights": {
-    "ST": [
-      "You notice a primal strength in %A's posture."
-    ]
-  },
-  "promoters": {
-    "Sadistic": {
-      "pitch": [
-        "The crowd is hungry for real suffering, %S. This match promises to paint the sands red.",
-        "There's a certain... finality... in the air for this one. Don't disappoint the blood-gods."
-      ]
-    },
-    "Flashy": {
-      "pitch": [
-        "The spotlight is yours, %S! Give 'em a show they'll be talking about for years.",
-        "A clash of stars! Everyone who's anyone is coming to see if your legacy is real."
-      ]
-    }
-  },
-  "gazette": {
-    "fights": {
-      "Kill": [
-        "In a {{adj}} display of combat, {{winner}} ({{styleW}}) struck down {{loser}} with a killing blow. The {{styleL}} fighter will be missed — but not mourned for long in this arena.",
-        "{{winner}} delivered a {{adj}} execution of {{loser}}! The crowd gasped as the finishing strike landed. Another warrior returns to the dust.",
-        "Death claimed {{loser}} at the hands of {{winner}}. A {{adj}} end to what was a hard-fought bout."
-      ],
-      "KO": [
-        "{{winner}} battered {{loser}} into unconsciousness with {{adj}} efficiency. The {{styleW}}'s power was on full display.",
-        "A {{adj}} knockout! {{winner}} overwhelmed {{loser}}'s defenses and left them crumpled on the sand."
-      ],
-      "Stoppage": [
-        "{{winner}} ground {{loser}} down in a {{adj}} bout of attrition. The Arenamaster called the stoppage to merciful applause."
-      ],
-      "Exhaustion": {
-        "victory": ["Both fighters pushed to total exhaustion in a {{adj}} endurance contest. {{winner}} was awarded the bout by the narrowest of margins."],
-        "draw": ["A {{adj}} bout ended in mutual exhaustion — neither warrior could claim victory."]
+  "ux_metadata": {
+    "version": "3.0.0",
+    "description": "Unified Bard 1.0 — Universal Narrative Archive",
+    "mood_tone": {
+      "Calm": {
+        "adjectives": ["measured", "technical", "efficient", "precise"],
+        "opener": ["The arena is quiet today, the air heavy with expectation."],
+        "closer": ["A professional display by the arena's finest."]
       },
-      "Draw": [
-        "The bout between {{a}} and {{d}} ended in a {{adj}} draw. Neither fighter could gain the decisive advantage."
-      ],
-      "Default": [
-        "{{winner}} defeated {{loser}} in a {{adj}} contest."
-      ]
-    },
-    "headlines": {
-      "LegendaryStreak": "Week {{week}}: UNSTOPPABLE! {{name}} Extends Legendary {{streak}}-Win Streak!",
-      "HotStreak": "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
-      "Streak": "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
-      "LegacyRivalry": "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!",
-      "Rivalry": "Week {{week}}: Old Foes Meet Again — {{a}} vs {{b}} (Bout {{count}})",
-      "RisingStar": "Week {{week}}: RISING STAR! {{name}} Opens Career with a Perfect 3-0!",
-      "Upset": "Week {{week}}: UPSET! {{winner}} Topples the Mighty {{loser}}!",
-      "MultipleKills": "Week {{week}}: Blood Runs Deep — {{count}} Warriors Fall!",
-      "Kill": "Week {{week}}: {{killer}} Claims a Life in the Arena",
-      "MultipleKOs": "Week {{week}}: {{adj}} Knockouts Rock the Arena",
-      "Standard": "Week {{week}}: A {{adj}} Week in the Coliseum",
-      "Empty": "Week {{week}}: Silence in the Arena"
-    },
-    "featured": {
-      "LegendaryStreak": "The arena trembles before {{name}}, who has now won an astonishing {{streak}} bouts in a row! Legends speak of such dominance only in whispers.",
-      "HotStreak": "{{name}} continues an incredible run of form with {{streak}} consecutive victories. Can anyone stop this warrior?",
-      "Streak": "{{name}} is building momentum with {{streak}} wins in a row — a warrior to watch closely.",
-      "LegacyRivalry": "The bitter feud between {{a}} and {{b}} continues to captivate the arena! This marks their {{count}}th meeting — a rivalry for the ages.",
-      "Rivalry": "{{a}} and {{b}} crossed blades for the {{count}}{{suffix}} time. The crowd senses a budding rivalry.",
-      "RisingStar": "All eyes turn to {{name}}, who has burst onto the scene with three consecutive victories to open their career. A rising star — or a flash in the pan? Only the arena will tell.",
-      "Upset": "In a stunning upset, {{winner}} (fame: {{fameW}}) defeated the celebrated {{loser}} (fame: {{fameL}})! The crowd roared in disbelief as the underdog proved that fame means nothing once steel is drawn.",
-      "Graveyard": "The Hall of Warriors receives {{count}} new name{{plural}} this week. Their sacrifice is not forgotten."
-    },
-    "season_summary": {
-      "headline": "{{season}} Season in Review: {{total}} Bouts, {{kills}} Deaths",
-      "body": [
-        "The {{season}} season concludes with {{total}} bouts fought and a {{killRate}}% fatality rate.",
-        "{{style}} dominated the meta with {{wins}} victories.",
-        "It was a particularly deadly season — many promising careers cut short.",
-        "The arena turns its gaze to the next season. What legends will emerge?"
-      ]
+      "Rowdy": {
+        "adjectives": ["wild", "chaotic", "unruly", "frenzied"],
+        "opener": ["The crowd is roaring, their shouts echoing against the stone walls!"],
+        "closer": ["The sand is stained deep red, and the crowd loves it."]
+      },
+      "Bloodthirsty": {
+        "adjectives": ["visceral", "savage", "brutal", "unforgiving"],
+        "opener": ["They want blood, and the arena delivers!"],
+        "closer": ["No mercy was found today in the circle of truth."]
+      },
+      "Theatrical": {
+        "adjectives": ["stunning", "operatic", "magnificent", "dramatic"],
+        "opener": ["A drama unfolds on the sands today!"],
+        "closer": ["A performance for the ages, etched in the memories of all who watched."]
+      }
     }
-  },
-  "media": {
-    "headline": [
-      "BLOOD ON THE SANDS: THE RISE OF %S",
-      "ARENA FEVER: %S CLIMBS THE RANKINGS"
-    ]
   },
   "persona": {
     "good": {
@@ -384,70 +144,253 @@
       }
     }
   },
-  "recruitment": {
-    "origin": [
-      "Found fighting for scraps in the pit districts.",
-      "Orphaned at twelve, trained in the yards.",
-      "A former soldier seeking glory.",
-      "Quiet, watchful, and dangerous.",
-      "Born in the arena's shadow.",
-      "Escaped the mines with nothing but fury.",
-      "Raised by pit-fighters since childhood.",
-      "A street brawler with untapped potential.",
-      "Sold to the arena by a desperate family.",
-      "Survived the border wars. Now fights for coin."
+  "strikes": {
+    "generic": [
+      "tears a ghastly gouge across {{defender}}'s {{bodyPart}}",
+      "leaves a sickening, pulsing wound on {{defender}}'s {{bodyPart}}",
+      "impacts with the sickening sound of snapping bone on {{defender}}'s {{bodyPart}}",
+      "carves a spray of crimson from {{defender}}'s {{bodyPart}}",
+      "lands a heavy blow to {{defender}}'s {{bodyPart}}",
+      "strikes cleanly against {{defender}}'s {{bodyPart}}",
+      "finds its mark on {{defender}}'s {{bodyPart}}",
+      "bites deep into {{defender}}'s {{bodyPart}}",
+      "leaves a brutal wound on {{defender}}'s {{bodyPart}}",
+      "tears flesh from {{defender}}'s {{bodyPart}}",
+      "smashes sickeningly into {{defender}}'s {{bodyPart}}"
     ],
-    "style_blurbs": {
-      "Aimed Blow": ["Precise and calculating.", "Every strike finds its mark."],
-      "Bashing Attack": ["Raw power incarnate.", "Swings first, asks never."],
-      "Lunging Attack": ["A blur of speed and steel.", "Dashes in without fear."],
-      "Parry Lunge": ["Patience followed by explosion.", "Waits, then strikes like a viper."],
-      "Parry Riposte": ["A master of counter-fighting.", "Punishes every mistake."],
-      "Parry Strike": ["Efficient and deadly.", "Economy of motion, maximum damage."],
-      "Slashing Attack": ["Arcs of steel fill the air.", "Wide, sweeping cuts that never stop."],
-      "Striking Attack": ["Clean, direct, devastating.", "No wasted motion."],
-      "Total Parry": ["An immovable fortress.", "Impossible to put down."],
-      "Wall of Steel": ["Constant blade motion.", "A whirling wall of defense and attack."]
+    "slashing": {
+      "glancing": [
+        "{{attacker}}'s {{weapon}} skips harmlessly off {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} slashes with his {{weapon}}, but the strike is a glancing blow only."
+      ],
+      "solid": [
+        "{{attacker}} unleashes a blinding flurry of cuts with his {{weapon}}, biting into the {{bodyPart}}!",
+        "{{attacker}}'s {{weapon}} lunges with awesome cutting power, rending the {{bodyPart}}!"
+      ],
+      "mastery": [
+        "In a blur of practiced rhythm, {{attacker}}'s {{weapon}} flows through {{defender}}'s guard to find the {{bodyPart}}.",
+        "The {{weapon}} moves like an extension of {{attacker}}'s own soul, carving a perfect line across the {{bodyPart}}."
+      ],
+      "critical_human": [
+        "A horrifying display of speed as {{attacker}} carves a deep path through {{defender}}'s {{bodyPart}} with his {{weapon}}!",
+        "{{attacker}}'s {{weapon}} flashes as he takes a sudden vicious slash, nearly severing the {{bodyPart}}!"
+      ],
+      "critical_supernatural": [
+        "The air shudders as {{attacker}}'s {{weapon}} hums with a spectral light, cleaving through {{defender}}'s {{bodyPart}} and the very air itself.",
+        "Aetheric pressure precedes the blow; {{attacker}}'s {{weapon}} strikes with the weight of stars, obliterating the {{bodyPart}}."
+      ],
+      "fatal": [
+        "{{attacker}} feints low, catching {{defender}} off guard before severing their {{bodyPart}} at the joint.",
+        "A fountain of gore erupts as {{attacker}}'s final strike decapitates {{defender}}!"
+      ]
+    },
+    "bashing": {
+      "glancing": ["{{attacker}}'s {{weapon}} bounces off the {{bodyPart}} with a hollow clang."],
+      "solid": ["{{attacker}} roars, bringing the {{weapon}} down like an executioner's maul on the {{bodyPart}}!"],
+      "mastery": ["{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision."],
+      "critical_human": ["The arena trembles as {{attacker}} unleashes a terrifying overhead smash, crushing the {{bodyPart}}!"],
+      "critical_supernatural": ["Gravity itself seems to bow to {{attacker}}'s {{weapon}}, creating a localized shockwave on the {{bodyPart}}."],
+      "fatal": ["{{attacker}} delivers a horrifying, skull-crushing execution!"]
+    },
+    "piercing": {
+      "glancing": ["{{attacker}}'s {{weapon}} skips off the {{bodyPart}}, barely scratching the surface."],
+      "solid": ["{{attacker}} drops his center and drives a blinding lunge with his {{weapon}} into the {{bodyPart}}!"],
+      "mastery": ["{{attacker}}'s {{weapon}} finds the microscopic gap in {{defender}}'s defense, sliding effortlessly into the {{bodyPart}}."],
+      "critical_human": ["{{attacker}} extends fully, every ounce of reach behind his {{weapon}} as it sinks deep into the {{bodyPart}}!"],
+      "critical_supernatural": ["The {{weapon}} hums a low, deathly note, bypassing reality to hit the {{bodyPart}} with cold light."],
+      "fatal": ["{{attacker}} executes {{defender}} with a chilling lunge of the {{weapon}} through the {{bodyPart}}!"]
+    },
+    "fist": {
+      "glancing": ["{{attacker}} throws a PUNCH, but it merely grazes {{defender}}'s {{bodyPart}}."],
+      "solid": ["{{attacker}} steps inside the guard and unleashes a horrific combination on the {{bodyPart}}!"],
+      "mastery": ["{{attacker}}'s limbs are a blur of technical perfection, striking the {{bodyPart}} with rhythmic violence."],
+      "critical_human": ["{{attacker}} throws a rock-fisted PUNCH of incredible felling power into the {{bodyPart}}!"],
+      "critical_supernatural": ["A golden light follows {{attacker}}'s strike, shattering the air as the {{bodyPart}} is struck by 'The Enlightened Hand'."],
+      "fatal": ["{{attacker}} grabs his opponent and drives a sickening KNEE into their midsection. {{defender}} collapses dead."]
     }
   },
-  "memorials": {
-    "epigraph": [
-      "The sands have claimed what the steel could not. Rest in the dust.",
-      "A life of violence ends in a moment of silence."
-    ]
+  "pbp": {
+    "openers": [
+      "The stench of old blood rises as the fighters step onto the sand.",
+      "The crowd bays for blood as the combatants lock eyes.",
+      "Steel is drawn, and the roar of the coliseum becomes deafening!",
+      "A hush falls. Then the ARENAMASTER drops his hand, and steel is drawn."
+    ],
+    "whiffs": [
+      "{{attacker}} swings his {{weapon}} but finds only air.",
+      "{{defender}} sidesteps the incoming {{weapon}} with ease."
+    ],
+    "hit_locations": {
+      "head": ["HEAD", "JAW", "TEMPLE", "FOREHEAD", "SKULL", "FACE", "THROAT", "NECK", "side of the HEAD", "CHEEK", "BROW", "CHIN", "EAR", "NOSE", "CROWN"],
+      "chest": ["CHEST", "RIBS", "RIGHT RIBCAGE", "LEFT RIBCAGE", "upper BODY", "BREAST", "STERNUM", "COLLARBONE", "SHOULDER BLADE", "UPPER CHEST"],
+      "abdomen": ["STOMACH", "ABDOMEN", "PELVIS", "KIDNEYS", "GROIN", "BELLY", "LOWER BODY", "SOLAR PLEXUS", "MIDSECTION", "SIDE", "FLANK", "GUT"],
+      "right arm": ["RIGHT ARM", "RIGHT FOREARM", "RIGHT BICEPS", "RIGHT ELBOW", "RIGHT HAND", "RIGHT WRIST", "RIGHT SHOULDER", "RIGHT KNUCKLES", "RIGHT UPPER ARM"],
+      "left arm": ["LEFT ARM", "LEFT FOREARM", "LEFT BICEPS", "LEFT ELBOW", "LEFT HAND", "LEFT WRIST", "LEFT SHOULDER", "LEFT KNUCKLES", "LEFT UPPER ARM"],
+      "right leg": ["RIGHT LEG", "RIGHT THIGH", "RIGHT KNEE", "RIGHT SHIN", "RIGHT BUTTOCKS", "RIGHT HIP", "RIGHT CALF", "RIGHT ANKLE", "RIGHT HAMSTRING"],
+      "left leg": ["LEFT LEG", "LEFT THIGH", "LEFT KNEE", "LEFT SHIN", "LEFT HIP", "LEFT CALF", "LEFT ANKLE", "LEFT HAMSTRING", "LEFT QUADRICEP"]
+    },
+    "damage_severity": {
+      "deadly": ["It was a deadly attack!", "What a massive blow!", "What a devastating attack!"],
+      "terrific": ["It was an incredible blow!", "It is a terrific blow!"],
+      "powerful": ["It is a tremendous blow!", "It was a powerful blow!"],
+      "glancing": ["The attack is a glancing blow only.", "The stroke lands ineffectively."]
+    },
+    "status_changes": {
+      "severe": ["{{name}} is severely hurt!!", "{{name}} is dangerously stunned!"],
+      "desperate": ["{{name}} appears DESPERATE!"],
+      "serious": ["{{name}} has sustained serious wounds!"]
+    },
+    "defenses": {
+      "dodge": {
+        "success": ["{{defender}} twists his body with prideful grace, allowing the attack to pass harmlessly by."]
+      },
+      "parry": {
+        "success": ["{{defender}} catches the strike on the edge of his {{weapon}}, turning it aside with ease."]
+      },
+      "shield": {
+        "success": ["{{defender}} catches the blow on his SHIELD."]
+      }
+    },
+    "pacing": {
+      "stalemate": ["The fighters slowly circle each other, looking for a weakness."],
+      "trading_blows": ["The two warriors fiercely trade attacks and parry."],
+      "pressing": ["{{attacker}} presses the attack relentlessly, giving his foe no room to breathe!"]
+    },
+    "reactions": {
+      "positive": ["The crowd ROARS in approval!"],
+      "negative": ["Boos and jeers echo from the arena walls."],
+      "encourage": ["The crowd urges the warriors on."]
+    },
+    "taunts": {
+      "winner": ["{{attacker}} roars, 'Who else wants to die today?!'"],
+      "loser": ["{{attacker}} spits blood and refuses to look away."]
+    },
+    "initiative": [
+      "With a sudden burst of speed, {{attacker}} seizes the opening!",
+      "{{attacker}} dictating the pace of the exchange."
+    ],
+    "feints": [
+      "{{attacker}} feints a high line, drawing {{defender}} out of position."
+    ],
+    "insights": {
+      "ST": ["His parry shatters under your monstrous strength!"],
+      "SP": ["He moves with blinding speed, leaving you swinging at shadows."],
+      "DF": ["He clumsily overextends, leaving himself wide open."],
+      "WL": ["Despite the punishment, his iron will keeps him standing."]
+    }
+  },
+  "conclusions": {
+    "Kill": "The life fades from {{defender}}'s eyes as {{attacker}} stands victorious.",
+    "KO": "{{defender}} collapses into the sand, unconscious. {{attacker}} is the victor.",
+    "Stoppage": "The match is called. {{defender}} cannot continue. {{attacker}} wins!",
+    "Exhaustion": "Both warriors are spent, but {{attacker}} is awarded the victory."
+  },
+  "events": {
+    "tavern_brawl": {
+      "title": "Tavern Brawl!",
+      "newsletter": ["{{name}} got into a wild tavern brawl last night! They gained +{{fame}} Fame but suffered a minor injury."]
+    },
+    "celestial_blessing": {
+      "title": "A Sign from the Gods!",
+      "newsletter": ["A shooting star was seen over the arena exactly as {{name}} was training. (+{{fame}} Fame, +{{xp}} XP)"]
+    }
+  },
+  "gazette": {
+    "fights": {
+      "Kill": ["In a {{adj}} display, {{winner}} struck down {{loser}} with a killing blow."],
+      "KO": ["{{winner}} battered {{loser}} into unconsciousness with {{adj}} efficiency."],
+      "Stoppage": ["{{winner}} ground {{loser}} down. The Arenamaster called the stoppage."],
+      "Exhaustion": ["Both fighters pushed to total exhaustion. {{winner}} was awarded the bout."]
+    },
+    "headlines": {
+      "LegendaryStreak": "Week {{week}}: UNSTOPPABLE! {{name}} Extends Legendary {{streak}}-Win Streak!",
+      "HotStreak": "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
+      "Streak": "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
+      "LegacyRivalry": "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!",
+      "Upset": "Week {{week}}: UPSET! {{winner}} Topples the Mighty {{loser}}!",
+      "Graveyard": "The Hall of Warriors receives {{count}} new name{{plural}} this week."
+    },
+    "featured": {},
+    "season_summary": {
+      "headline": "{{season}} Season in Review: {{total}} Bouts, {{kills}} Deaths",
+      "body": [
+        "The {{season}} season concludes with {{total}} bouts fought and a {{killRate}}% fatality rate.",
+        "{{style}} dominated the meta with {{wins}} victories.",
+        "It was a particularly deadly season — many promising careers cut short.",
+        "The arena turns its gaze to the next season. What legends will emerge?"
+      ]
+    }
   },
   "fanfare": {
-    "victory": [
-      "To the victor, the spoils! %A stands tall as the champion of the circle.",
-      "Let the wine flow for %A tonight, for tomorrow the sands demand more."
+    "resolution_title": "Cycle Resolution",
+    "gazette_empty": "A quiet week in the arena. No major headlines.",
+    "report_medical": "Medical & Mortality Report",
+    "report_combat": "Combat Results",
+    "report_combat_empty": "Your stable did not participate in any official bouts this week.",
+    "report_math": "Simulation Math & Metrics",
+    "memorial_title": "The Arena Remembers",
+    "memorial_default": "Fallen in combat.",
+    "btn_honor": "Honor the Fallen",
+    "btn_planning": "Acknowledge & Begin Planning",
+    "btn_next": "Next Report"
+  },
+  "memorials": {
+    "tributes": [
+      "A legend has passed into the halls of iron.",
+      "The arena grows colder with the loss of {{name}}."
     ]
+  },
+  "recruitment": {
+    "names": [
+      "ARAK", "BRIX", "CARN", "DRAV", "ESKA", "FAEL", "GRIX", "HASK",
+      "IVOR", "JETT", "KAEL", "LYNX", "MORD", "NYX", "ORIN", "PYKE",
+      "QUIL", "RASK", "SORN", "TAHL", "URSA", "VALK", "WREN", "XAEL",
+      "YGOR", "ZETH", "BANE", "CROW", "DUSK", "EDGE", "FLUX", "GALE",
+      "HAZE", "IRON", "JADE", "KNOT", "LASH", "MACE", "NAIL", "OMEN",
+      "PYRE", "RAZE", "SCAR", "TUSK", "VICE", "WOLF", "AXEL", "BLITZ",
+      "CRAG", "DIRK", "ECHO", "FLAK", "GRIM", "HAWK", "INK", "JINX",
+      "KITE", "LURK", "MOSS", "NOCK", "OPUS", "PALE", "ROOK", "SLAG",
+      "TORN", "ULRIC", "VEX", "WYRM", "XENO", "YOKE", "ZINC", "ASHE",
+      "BOSK", "CHAR", "DALE", "ETCH", "FERN", "GHOL", "HELM", "ISLE",
+      "JOLT", "KERN", "LOOM", "MIRK", "NARD", "OPAL", "PITH", "RIME",
+      "SILT", "TARN", "VALE", "WOAD", "ZEAL", "BRAGG", "CLASH", "DREAD",
+      "FORGE", "GLINT", "HAVOK", "KREEL", "LANCE", "MAUL", "RASP", "SCALD"
+    ],
+    "rival_stable_names": [
+      "Iron Crown", "Shadow Blades", "Golden Lions", "Silent Storm", 
+      "Vanguard", "Nightfall", "Ebon Hand", "Gilded Fang",
+      "Azure Rose", "Crimson Guard", "Onyx Shield"
+    ],
+    "tiers": {
+      "Common": { "points": [66, 70], "cost": 100, "stars": 0 },
+      "Promising": { "points": [70, 74], "cost": 150, "stars": 1 },
+      "Exceptional": { "points": [74, 78], "cost": 250, "stars": 2 },
+      "Prodigy": { "points": [78, 82], "cost": 400, "stars": 3 }
+    },
+    "origin": [
+      "Found fighting for scraps in the pit districts.",
+      "A former soldier seeking glory."
+    ],
+    "style_blurbs": {
+      "Aimed Blow": ["Precise and calculating."],
+      "Bashing Attack": ["Raw power incarnate."]
+    }
   },
   "meta": {
     "flair": {
-      "Flashy": "Crowd favorite — earns +2 Popularity per flashy fight. Theatrical crowd moods amplify this further.",
-      "Comeback": "Survived near-death to win — earns +1 Fame and +1 Popularity when triggered.",
-      "RiposteChain": "Master counter-fighter — earned by landing 3+ ripostes in a single bout. +1 Fame.",
-      "Dominance": "Overwhelming victor — earned by landing 5+ hits in a winning bout. +1 Fame.",
-      "Giant Killer": "Slayer of legends — earned by winning 3+ upset victories against far more famous opponents."
-    },
-    "title": {
-      "Tournament Champion": "Won a seasonal tournament. A mark of elite combat prowess.",
-      "Champion": "Reigning arena champion — commands respect and higher Fame gains."
+      "Flashy": "Crowd favorite — earns +2 Popularity per flashy fight."
     },
     "injury": {
-      "Broken Arm": "Reduces Attack and Parry effectiveness until healed.",
-      "Cracked Ribs": "Lowers Endurance and increases vulnerability to body shots.",
-      "Concussion": "Reduces Initiative and Wit-based skills temporarily.",
-      "Torn Muscle": "Strength penalty — lower damage output until recovered.",
-      "Sprained Ankle": "Speed and Defense are penalized until healed.",
-      "Deep Laceration": "Ongoing HP loss risk in future bouts until healed.",
-      "Fractured Skull": "Severe — major penalties to all skills. May end a career.",
-      "Dislocated Shoulder": "Reduces Attack and weapon handling until healed."
+      "Broken Arm": "Reduces Attack and Parry effectiveness until healed."
     },
     "status": {
-      "Active": "Ready for combat — can be assigned to bouts and tournaments.",
-      "Dead": "Fallen in the arena. Their legacy lives on in the Graveyard.",
-      "Retired": "Honorably withdrawn from combat. May become a trainer."
+      "Active": "Ready for combat.",
+      "Dead": "Fallen in the arena.",
+      "Retired": "Honorably withdrawn from combat."
     }
+  },
+  "passives": {
+    "AimedBlow": ["{{attacker}} studies the opponent's rhythm, waiting for the perfect opening."],
+    "BashingAttack": ["{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"]
   }
 }

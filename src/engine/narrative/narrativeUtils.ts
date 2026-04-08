@@ -1,5 +1,5 @@
 import { getItemById, getItemByCode } from "@/data/equipment";
-import { WeaponType } from "./narrativeData";
+import { type WeaponType } from "@/types/combat.types";
 
 /**
  * Stable Lords — Narrative Helpers

@@ -2,11 +2,8 @@
  * Combat Narrator — Consumer of CombatEvents that produces MinuteEvent[] log.
  * Translates pure math results into the flavor text defined in the Design Bible.
  */
-import {
-  type CombatEvent,
-  type MinuteEvent,
-  type FightingStyle,
-} from "@/types/game";
+import { type FightingStyle } from "@/types/shared.types";
+import { type CombatEvent, type MinuteEvent } from "@/types/combat.types";
 import {
   narrateAttack, narrateParry, narrateDodge, narrateCounterstrike,
   narrateHit, damageSeverityLine, stateChangeLine,

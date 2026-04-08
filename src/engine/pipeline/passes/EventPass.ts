@@ -2,10 +2,19 @@ import type { GameState } from "@/types/state.types";
 import { SeededRNG } from "@/utils/random";
 import { updateEntityInList } from "@/utils/stateUtils";
 import { generateId } from "@/utils/idUtils";
+import narrativeContent from "@/data/narrativeContent.json";
 
 /**
  * Stable Lords — Random Event Pipeline Pass
  */
+
+function t(template: string, data: Record<string, any>): string {
+  let result = template;
+  for (const [key, value] of Object.entries(data)) {
+    result = result.replace(new RegExp(`{{${key}}}`, "g"), String(value));
+  }
+  return result;
+}
 
 export function runEventPass(state: GameState, nextWeek: number, rootRng?: SeededRNG): GameState {
   const nextState = { ...state };
@@ -17,14 +26,15 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: Seede
     if (activeWarriors.length > 0) {
       const brawlerIndex = Math.floor(brawlRng.next() * activeWarriors.length);
       const brawler = activeWarriors[brawlerIndex];
+      const e = narrativeContent.events.tavern_brawl;
       
       nextState.roster = updateEntityInList(nextState.roster, brawler.id, (w) => ({
         ...w,
         fame: (w.fame || 0) + 5,
         injuries: [...(w.injuries || []), {
           id: generateId(brawlRng, "injury"),
-          name: "Bruised knuckles (Tavern Brawl)",
-          description: "Got into a scrap at the local tavern. The crowd loved it, but the hands took a beating.",
+          name: e.injury_name,
+          description: e.injury_desc,
           severity: "Minor",
           weeksRemaining: 1,
           penalties: { ATT: -1 }
@@ -34,8 +44,8 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: Seede
       nextState.newsletter = [...(nextState.newsletter || []), {
         id: generateId(brawlRng, "newsletter"),
         week: nextWeek,
-        title: "Tavern Brawl!",
-        items: [`${brawler.name} got into a wild tavern brawl last night! They gained +5 Fame but suffered a minor injury.`]
+        title: e.title,
+        items: [t(brawlRng.pick(e.newsletter), { name: brawler.name, fame: 5 })]
       }];
     }
   }
@@ -43,10 +53,11 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: Seede
 
   // ☄️ Star-crossed Blessing Event
   if (brawlRng.next() < 0.03 && nextState.roster.length > 0) {
-    const youngWarriors = nextState.roster.filter(w => w.status === "Active" && w.age <= 25);
+    const youngWarriors = nextState.roster.filter(w => w.status === "Active" && (w.age || 0) <= 25);
     if (youngWarriors.length > 0) {
       const chosenIndex = Math.floor(brawlRng.next() * youngWarriors.length);
       const chosen = youngWarriors[chosenIndex];
+      const e = narrativeContent.events.celestial_blessing;
 
       nextState.roster = updateEntityInList(nextState.roster, chosen.id, (w) => ({
         ...w,
@@ -55,9 +66,10 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: Seede
       }));
 
       nextState.newsletter = [...(nextState.newsletter || []), {
+        id: generateId(brawlRng, "newsletter"),
         week: nextWeek,
-        title: "A Sign from the Gods!",
-        items: [`A shooting star was seen over the arena exactly as ${chosen.name} was training. The crowd sees them as chosen! (+15 Fame, +2 XP)`]
+        title: e.title,
+        items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 15, xp: 2 })]
       }];
     }
   }

@@ -1,6 +1,5 @@
-import { 
-  GameState, RivalStableData, type Warrior 
-} from "@/types/game";
+import type { GameState, RivalStableData } from "@/types/state.types";
+import type { Warrior } from "@/types/warrior.types";
 import { simulateFight } from "../simulate";
 import { aiPlanForWarrior } from "../ownerAI";
 import { computeMetaDrift } from "../metaDrift";
@@ -8,7 +7,7 @@ import { logAgentAction } from "../ai/agentCore";
 import { pickRivalOpponent } from "../rivals";
 import { AIBoutService } from "../matchmakingServices";
 import { getStablePairKey } from "@/utils/keyUtils";
-import { isEligible } from "./bracketEngine";
+import { isEligible } from "./eligibility";
 import { SeededRNG } from "@/utils/random";
 
 export interface AIBoutResult {

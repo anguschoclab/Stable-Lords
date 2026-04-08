@@ -28,25 +28,21 @@ export interface PoolWarrior {
 
 // ─── Constants ────────────────────────────────────────────────────────────
 
-const TIER_POINTS: Record<RecruitTier, [number, number]> = {
-  Common: [66, 70],
-  Promising: [70, 74],
-  Exceptional: [74, 78],
-  Prodigy: [78, 82],
-};
+// TIER data is now fetched from narrativeContent.json
+const getTierData = (tier: RecruitTier) => (narrativeContent as any).recruitment.tiers[tier];
 
 export const TIER_COST: Record<RecruitTier, number> = {
-  Common: 100,
-  Promising: 150,
-  Exceptional: 250,
-  Prodigy: 400,
+  Common: (narrativeContent as any).recruitment.tiers.Common.cost,
+  Promising: (narrativeContent as any).recruitment.tiers.Promising.cost,
+  Exceptional: (narrativeContent as any).recruitment.tiers.Exceptional.cost,
+  Prodigy: (narrativeContent as any).recruitment.tiers.Prodigy.cost,
 };
 
 export const TIER_STARS: Record<RecruitTier, number> = {
-  Common: 0,
-  Promising: 1,
-  Exceptional: 2,
-  Prodigy: 3,
+  Common: (narrativeContent as any).recruitment.tiers.Common.stars,
+  Promising: (narrativeContent as any).recruitment.tiers.Promising.stars,
+  Exceptional: (narrativeContent as any).recruitment.tiers.Exceptional.stars,
+  Prodigy: (narrativeContent as any).recruitment.tiers.Prodigy.stars,
 };
 
 const REFRESH_COST = 50;
@@ -55,21 +51,8 @@ export { REFRESH_COST, DEFAULT_POOL_SIZE };
 
 // ─── Name Pool ────────────────────────────────────────────────────────────
 
-const NAME_POOL = [
-  "ARAK", "BRIX", "CARN", "DRAV", "ESKA", "FAEL", "GRIX", "HASK",
-  "IVOR", "JETT", "KAEL", "LYNX", "MORD", "NYX", "ORIN", "PYKE",
-  "QUIL", "RASK", "SORN", "TAHL", "URSA", "VALK", "WREN", "XAEL",
-  "YGOR", "ZETH", "BANE", "CROW", "DUSK", "EDGE", "FLUX", "GALE",
-  "HAZE", "IRON", "JADE", "KNOT", "LASH", "MACE", "NAIL", "OMEN",
-  "PYRE", "RAZE", "SCAR", "TUSK", "VICE", "WOLF", "AXEL", "BLITZ",
-  "CRAG", "DIRK", "ECHO", "FLAK", "GRIM", "HAWK", "INK", "JINX",
-  "KITE", "LURK", "MOSS", "NOCK", "OPUS", "PALE", "ROOK", "SLAG",
-  "TORN", "ULRIC", "VEX", "WYRM", "XENO", "YOKE", "ZINC", "ASHE",
-  "BOSK", "CHAR", "DALE", "ETCH", "FERN", "GHOL", "HELM", "ISLE",
-  "JOLT", "KERN", "LOOM", "MIRK", "NARD", "OPAL", "PITH", "RIME",
-  "SILT", "TARN", "VALE", "WOAD", "ZEAL", "BRAGG", "CLASH", "DREAD",
-  "FORGE", "GLINT", "HAVOK", "KREEL", "LANCE", "MAUL", "RASP", "SCALD",
-];
+// Name pool is now fetched from narrativeContent.json
+const NAME_POOL = (narrativeContent as any).recruitment.names;
 
 // Lore for recruitment is now entirely data-driven via narrativeContent.json
 import narrativeContent from "@/data/narrativeContent.json";
@@ -116,7 +99,8 @@ export function generateRecruit(
   forceTier?: RecruitTier
 ): PoolWarrior {
   const tier = forceTier ?? rollTier(rng);
-  const [minPts, maxPts] = TIER_POINTS[tier];
+  const tierData = getTierData(tier);
+  const [minPts, maxPts] = tierData.points;
   const total = rng.roll(minPts, maxPts);
   const attributes = distributeAttributes(rng, total);
 

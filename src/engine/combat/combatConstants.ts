@@ -1,4 +1,4 @@
-import { FightingStyle } from "@/types/game";
+import { FightingStyle } from "@/types/shared.types";
 
 /**
  * Stable Lords — Combat Engine Constants & Tuning

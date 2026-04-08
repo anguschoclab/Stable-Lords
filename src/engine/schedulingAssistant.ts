@@ -1,6 +1,6 @@
-import { FightingStyle } from "@/types/game";
+import { FightingStyle } from "@/types/shared.types";
 import type { GameState, RivalStableData } from "@/types/state.types";
-import type { Warrior } from "@/types/warrior.types";
+import type { Warrior, InjuryData } from "@/types/warrior.types";
 import { isTooInjuredToFight } from "./injuries";
 
 const MATCHUP_MATRIX: Record<FightingStyle, Record<FightingStyle, number>> = {
@@ -89,7 +89,7 @@ function getEligibleRivals(state: GameState): { warrior: Warrior, stable: RivalS
     const rivals: { warrior: Warrior, stable: RivalStableData }[] = [];
     for (const stable of (state.rivals ?? [])) {
         for (const warrior of stable.roster) {
-            if (warrior.status === "Active" && !isTooInjuredToFight(warrior.injuries as import("@/types/game").InjuryData[])) {
+            if (warrior.status === "Active" && !isTooInjuredToFight(warrior.injuries)) {
                 rivals.push({ warrior, stable });
             }
         }

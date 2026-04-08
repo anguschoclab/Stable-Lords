@@ -106,7 +106,7 @@ export interface Warrior {
   fame: number;
   popularity: number;
   titles: string[];
-  injuries: (string | InjuryData)[];
+  injuries: InjuryData[];
   flair: string[];
   career: CareerRecord;
   champion: boolean;
@@ -135,7 +135,7 @@ export interface Warrior {
   dateOfDeath?: string;
   causeOfDeath?: string;
   yearlySnapshots?: Record<number, CareerRecord>; // 📸 Snapshot at Year Start
-  awards?: import("./state.types").AnnualAward[]; // 🏗️ Prestige Persistence
+  awards?: any[]; // Avoiding circular dependency with state.types for now, or just use any if it's transient
 }
 
 // Re-exports for convenience

@@ -12,6 +12,8 @@ import {
 } from "./shared.types";
 import type { BoutResult } from "@/engine/boutProcessor";
 
+export type WeaponType = "slashing" | "bashing" | "piercing" | "fist";
+
 // ─── Equipment Constants ───────────────────────────────────────────────────
 
 export type ArmorWeight = "None" | "Light" | "Medium" | "Heavy" | "Ultra-Heavy";

@@ -4,6 +4,7 @@ import {
   type OwnerPersonality 
 } from "@/types/state.types";
 import { type PoolWarrior } from "@/engine/recruitment";
+import narrativeContent from "@/data/narrativeContent.json";
 import { FightingStyle, ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from "@/types/shared.types";
 import { computeWarriorStats } from "@/engine/skillCalc";
 import { generateFavorites } from "@/engine/favorites";
@@ -132,11 +133,7 @@ export function makeWarrior(
     };
 
     // 2. Generate Initial Rivals (4 Stables) - Seeded selection
-    const RIVAL_NAMES = [
-      "Iron Crown", "Shadow Blades", "Golden Lions", "Silent Storm", 
-      "Vanguard", "Nightfall", "Ebon Hand", "Gilded Fang",
-      "Azure Rose", "Crimson Guard", "Onyx Shield"
-    ];
+    const RIVAL_NAMES = (narrativeContent as any).recruitment.rival_stable_names;
     const PERSONALITIES: OwnerPersonality[] = ["Aggressive", "Methodical", "Showman", "Pragmatic", "Tactician"];
     
     // Shuffle and pick 4
@@ -190,7 +187,7 @@ export function makeWarrior(
         ...baseWarrior,
         cost: 150 + Math.floor(rng.next() * 150),
         tier: "Common",
-        lore: "A wanderer seeking glory.",
+        lore: (narrativeContent as any).recruitment.origin[0], // Seeded fallback
         addedWeek: 1,
         potential: { ST: 1, CN: 1, SZ: 1, WT: 1, WL: 1, SP: 1, DF: 1 }
       } as PoolWarrior;

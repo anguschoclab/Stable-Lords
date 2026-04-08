@@ -1,4 +1,5 @@
-import { GameState, RivalStableData, type Warrior } from "@/types/game";
+import { GameState, RivalStableData } from "@/types/state.types";
+import type { Warrior } from "@/types/warrior.types";
 import { checkWeaponRequirements, DEFAULT_LOADOUT } from "@/data/equipment";
 
 /**

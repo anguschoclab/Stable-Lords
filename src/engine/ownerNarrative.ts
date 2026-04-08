@@ -100,7 +100,7 @@ export function generateOwnerNarratives(
   return gazetteItems;
 }
 
-function calculateRecentRecord(recentFights: import("@/types/game").FightSummary[], rosterNames: Set<string>) {
+function calculateRecentRecord(recentFights: FightSummary[], rosterNames: Set<string>) {
   let wins = 0, losses = 0, kills = 0, deaths = 0;
   for (const f of recentFights) {
     const isA = rosterNames.has(f.a), isD = rosterNames.has(f.d);

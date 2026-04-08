@@ -1,10 +1,19 @@
-import type { GameState, Warrior, RivalStableData, TournamentEntry, TournamentBout } from "@/types/state.types";
+import type { 
+  GameState, 
+  Warrior, 
+  RivalStableData, 
+  TournamentEntry, 
+  TournamentBout,
+  FightSummary,
+  Season
+} from "@/types/state.types";
 import { type WarriorStatus } from "@/types/warrior.types";
 import { makeWarrior } from "@/engine/factories";
 import { FightingStyle } from "@/types/shared.types";
 import { SeededRNG } from "@/utils/random";
 import { simulateFight, aiPlanForWarrior, defaultPlanForWarrior } from "@/engine";
 import { generateId } from "@/utils/idUtils";
+import type { FightOutcome } from "@/types/combat.types";
 
 /**
  * Stable Lords — Tournament Selection Committee (v1.0)
@@ -137,7 +146,7 @@ export const TournamentSelectionService = {
 
     return {
       id: rng.uuid("tou"),
-      season: season as import("@/types/game").Season,
+      season: season as Season,
       week,
       name,
       bracket,
@@ -419,7 +428,7 @@ export const TournamentSelectionService = {
     state: GameState, 
     wA: Warrior, 
     wD: Warrior, 
-    outcome: import("@/types/game").FightOutcome, 
+    outcome: FightOutcome, 
     tId: string, 
     tName: string,
     rng: SeededRNG

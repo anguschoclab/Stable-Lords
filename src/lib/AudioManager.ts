@@ -14,9 +14,7 @@ class AudioManager {
   private muted: boolean = false;
 
   private constructor() {
-    if (typeof window !== "undefined") {
-      this.muted = localStorage.getItem("sl_muted") === "true";
-    }
+    this.muted = typeof localStorage !== "undefined" && localStorage.getItem("sl_muted") === "true";
     this.loadSfx();
   }
 
@@ -52,7 +50,7 @@ class AudioManager {
 
   public setMuted(muted: boolean) {
     this.muted = muted;
-    localStorage.setItem("sl_muted", String(muted));
+    if (typeof localStorage !== "undefined") localStorage.setItem("sl_muted", String(muted));
   }
 
   public isMuted() {

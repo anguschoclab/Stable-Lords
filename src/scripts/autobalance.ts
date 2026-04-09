@@ -134,7 +134,7 @@ async function main() {
 
   // Check economy
   if (avgEconomy < -50000) {
-      const ecoFile = require('path').join(process.cwd(), "src/data/economyConstants.ts");
+      const ecoFile = path.join(process.cwd(), "src/data/economyConstants.ts");
       if (fs.existsSync(ecoFile)) {
          let ecoContent = fs.readFileSync(ecoFile, "utf-8");
          const fightPurseMatch = ecoContent.match(/export const FIGHT_PURSE = ([0-9.]+);/);

@@ -5,7 +5,7 @@ import { Howl } from "howler";
  * Uses Howler for high-performance audio playback.
  */
 
-export type SfxType = "ui_click" | "hit" | "crit" | "clash" | "death" | "recovery" | "coin";
+export type SfxType = "ui_click" | "hit" | "crit" | "clash" | "death" | "recovery" | "coin" | "arena_ambient";
 
 class AudioManager {
   private static instance: AudioManager;
@@ -34,6 +34,7 @@ class AudioManager {
       death:    "/audio/death.mp3",
       recovery: "/audio/recovery.mp3",
       coin:     "/audio/coin.mp3",
+      arena_ambient: "/audio/arena_ambient.mp3",
     };
 
     Object.entries(sfxMap).forEach(([key, url]) => {

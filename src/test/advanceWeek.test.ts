@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /**
  * advanceWeek pipeline tests — verifies orchestration of the weekly pipeline
  */

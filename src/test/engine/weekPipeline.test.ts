@@ -3,7 +3,7 @@ import { processTierProgression } from "../../engine/weekPipeline";
 import { GameState, RivalStableData } from "../../types/game";
 
 describe("processTierProgression", () => {
-  const mockState = {
+  const mockState = { meta: { createdAt: "2024-01-01" },
     season: "Spring",
     week: 1,
     rivals: [

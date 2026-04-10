@@ -51,6 +51,7 @@ export function advanceWeek(state: GameState): GameState {
 
   // 2. Core Simulation (Bouts, Training, Health, Economy)
   // Bouts happen for the week that is just ending
+  let newState = state;
   newState = runBoutSimulationPass(newState, rootRng);
 
   newState = runWarriorPass(newState, rootRng);

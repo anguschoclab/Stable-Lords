@@ -42,12 +42,13 @@ export function handleReporting(
 
   const tone: AnnounceTone = outcome.by === "Kill" ? "grim" : (tags.includes("Flashy") ? "hype" : "neutral");
   const announcement = (outcome.by === "Kill" || outcome.by === "KO") 
-    ? commentatorFor(outcome.by) 
+    ? commentatorFor(outcome.by, () => (safeRng as SeededRNG).next()) 
     : blurb({ 
         tone, 
         winner: outcome.winner === "A" ? wA.name : wD.name, 
         loser: outcome.winner === "A" ? wD.name : wA.name, 
-        by: outcome.by ?? undefined 
+        by: outcome.by ?? undefined,
+        rng: () => (safeRng as SeededRNG).next()
       });
 
   return { summary, announcement };

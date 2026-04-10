@@ -1151,5 +1151,29 @@
     "BashingAttack": [
       "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"
     ]
+  },
+  "recap": [
+    "%A dismantled %D in a brisk %H-minute clash.",
+    "%D could not weather %A's onslaught—done in %H.",
+    "%A outfoxed %D and sealed it in %H.",
+    "%A turned the tide and toppled %D after %H minutes.",
+    "%A took center stage, leaving %D reeling in %H."
+  ],
+  "commentary": {
+    "KO": ["What a knockout! The crowd erupts!"],
+    "Kill": ["A fatal finish—steel and silence. The arena gasps."],
+    "Flashy": ["Spectacle! Flourishes and feints—pure theatre!"],
+    "Upset": ["An upset for the ages! The favorite falls."]
+  },
+  "blurbs": {
+    "neutral": ["%A bests %D%H."],
+    "hype": [
+      "Great heavens! %A drops the guard in a blur!",
+      "By the gods! %A finds the opening with a deft twist!",
+      "Witness! %A presses the advantage after a feint!",
+      "What a clash! %A seals the bout despite the odds!",
+      "%A drives the point home to the crowd's delight!"
+    ],
+    "grim": ["%A overcomes %D%H, the arena falls hushed."]
   }
 }

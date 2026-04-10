@@ -2,6 +2,7 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 import { BoutVisualizer } from "@/components/BoutVisualizer";
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "@testing-library/jest-dom";
 
 describe("BoutVisualizer", () => {

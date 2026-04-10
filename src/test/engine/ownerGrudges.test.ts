@@ -32,6 +32,7 @@ describe("ownerGrudges - processOwnerGrudges", () => {
 
   it("should escalate existing grudges on further kills", () => {
     const existingGrudge = {
+      id: "g1",
       ownerIdA: "o1",
       ownerIdB: "o2",
       intensity: 2,
@@ -40,7 +41,7 @@ describe("ownerGrudges - processOwnerGrudges", () => {
       lastEscalation: 1
     };
     
-    const { grudges, gazetteItems } = processOwnerGrudges(mockState, [existingGrudge]);
+    const { grudges, gazetteItems } = processOwnerGrudges(mockState, [existingGrudge as any]);
     
     expect(grudges[0].intensity).toBe(3);
     expect(gazetteItems[0]).toContain("GRUDGE DEEPENS");

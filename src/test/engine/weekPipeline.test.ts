@@ -16,6 +16,7 @@ describe("processTierProgression", () => {
         })
       }
     ],
+    meta: { createdAt: new Date().toISOString(), gameName: "Stable Lords", version: "1.0" },
     newsletter: [],
     recruitPool: [{ id: 'old' }]
   } as unknown as GameState;

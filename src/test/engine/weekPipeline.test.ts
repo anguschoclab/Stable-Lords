@@ -6,6 +6,7 @@ describe("processTierProgression", () => {
   const mockState = {
     season: "Spring",
     week: 1,
+    meta: { createdAt: "mock-date" },
     rivals: [
       {
         owner: { stableName: "Rival 1" },

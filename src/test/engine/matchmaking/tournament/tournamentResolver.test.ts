@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { createFreshState } from "@/engine/factories";
 import { FightingStyle } from "@/types/shared.types";
-import { SeededRNG } from "@/utils/random";
+import { SeededRNGService } from "@/engine/core/rng";
 import { buildTournament } from "@/engine/matchmaking/tournament/tournamentBracketBuilder";
 import { resolveRound, resolveCompleteTournament } from "@/engine/matchmaking/tournament/tournamentResolver";
 import { makeWarrior } from "@/engine/factories";
@@ -18,7 +18,7 @@ describe("TournamentResolver", () => {
 
   describe("resolveRound", () => {
     it("should resolve a round and advance bracket", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -47,7 +47,7 @@ describe("TournamentResolver", () => {
     });
 
     it("should determine winners for each match", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -78,7 +78,7 @@ describe("TournamentResolver", () => {
 
 
     it("should return round results", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -105,7 +105,7 @@ describe("TournamentResolver", () => {
 
   describe("resolveCompleteTournament", () => {
     it("should resolve all rounds to completion", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -130,7 +130,7 @@ describe("TournamentResolver", () => {
     });
 
     it("should determine a champion", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -159,7 +159,7 @@ describe("TournamentResolver", () => {
     });
 
     it("should be deterministic with same seed", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -172,7 +172,7 @@ describe("TournamentResolver", () => {
         warriors,
         week: 1,
         season: "Spring",
-        rng: new SeededRNG(12345)
+        rng: new SeededRNGService(12345)
       });
 
       const state1 = { ...state, tournaments: [tournament1] };
@@ -184,7 +184,7 @@ describe("TournamentResolver", () => {
         warriors,
         week: 1,
         season: "Spring",
-        rng: new SeededRNG(12345)
+        rng: new SeededRNGService(12345)
       });
 
       const state2 = { ...state, tournaments: [tournament2] };

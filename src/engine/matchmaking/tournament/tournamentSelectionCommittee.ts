@@ -33,12 +33,13 @@ export interface CommitteeSelectionResult {
  */
 export function committeeSelection(
   state: GameState,
-  tier: string,
-  seed: number,
+  tierId: string,
+  week: number,
   lockedIds: Set<string>,
   rng?: IRNGService
 ): CommitteeSelectionResult {
-  const rngService = rng || new SeededRNGService(seed);
+  const rngService = rng || new SeededRNGService(week * 7919 + tierId.charCodeAt(0));
+  const tier = TOURNAMENT_TIERS.find(t => t.id === tierId);
   const rankings = state.realmRankings || {};
   const qualified: Warrior[] = [];
   const newLocks = new Set<string>();
@@ -82,7 +83,7 @@ export function committeeSelection(
   // 3. Bubble Watch (Fill to 64 from the next 40 candidates)
   const remainingNeeded = 64 - qualified.length;
   const bubblePool = sortedPool.filter(p => !newLocks.has(p.w.id)).slice(0, 40);
-  const shuffledBubble = rng.shuffle(bubblePool);
+  const shuffledBubble = rngService.shuffle(bubblePool);
   
   shuffledBubble.slice(0, remainingNeeded).forEach(p => {
     qualified.push(p.w);
@@ -93,7 +94,7 @@ export function committeeSelection(
   if (qualified.length < 64) {
     const fillersNeeded = 64 - qualified.length;
     for (let i = 0; i < fillersNeeded; i++) {
-      const freelancer = generateFreelancer(tier, i, rngService!);
+      const freelancer = generateFreelancer(tier!.id, i, rngService!);
       qualified.push(freelancer);
     }
   }

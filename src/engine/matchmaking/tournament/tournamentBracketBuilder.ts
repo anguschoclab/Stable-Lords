@@ -4,6 +4,7 @@ import type {
   Season
 } from "@/types/state.types";
 import type { IRNGService } from "@/engine/core/rng";
+import { SeededRNGService } from "@/engine/core/rng";
 
 export interface TournamentBracketConfig {
   tierId: string;
@@ -20,8 +21,9 @@ export interface TournamentBracketConfig {
  */
 export function buildTournament(config: TournamentBracketConfig): TournamentEntry {
   const { tierId, tierName, warriors, week, season, rng } = config;
+  const rngService = rng;
   const id = `t-${tierId.toLowerCase()}-${season.toLowerCase()}-${week}`;
-  const shuffled = rng.shuffle([...warriors]);
+  const shuffled = rngService.shuffle([...warriors]);
   const bracket: any[] = [];
   
   for (let i = 0; i < 64; i += 2) {

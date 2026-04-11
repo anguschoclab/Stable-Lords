@@ -1,13 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { FightingStyle } from "@/types/shared.types";
-import { SeededRNG } from "@/utils/random";
+import { SeededRNGService } from "@/engine/core/rng";
 import { buildTournament } from "@/engine/matchmaking/tournament/tournamentBracketBuilder";
 import { makeWarrior } from "@/engine/factories";
 
 describe("TournamentBracketBuilder", () => {
   describe("buildTournament", () => {
     it("should create a 64-warrior bracket", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -27,7 +27,7 @@ describe("TournamentBracketBuilder", () => {
     });
 
     it("should have correct tournament metadata", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -51,7 +51,7 @@ describe("TournamentBracketBuilder", () => {
     });
 
     it("should include all warriors as participants", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -72,7 +72,7 @@ describe("TournamentBracketBuilder", () => {
     });
 
     it("should create round 1 matches with correct structure", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -104,7 +104,7 @@ describe("TournamentBracketBuilder", () => {
     });
 
     it("should shuffle warriors before creating bracket", () => {
-      const rng1 = new SeededRNG(12345);
+      const rng1 = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -117,7 +117,7 @@ describe("TournamentBracketBuilder", () => {
         warriors,
         week: 1,
         season: "Spring",
-        rng: new SeededRNG(12345)
+        rng: new SeededRNGService(12345)
       });
 
       const tournament2 = buildTournament({
@@ -126,7 +126,7 @@ describe("TournamentBracketBuilder", () => {
         warriors,
         week: 1,
         season: "Spring",
-        rng: new SeededRNG(12345)
+        rng: new SeededRNGService(12345)
       });
 
       // Same seed should produce same bracket
@@ -134,7 +134,7 @@ describe("TournamentBracketBuilder", () => {
     });
 
     it("should generate unique tournament ID", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10

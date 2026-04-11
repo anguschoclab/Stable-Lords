@@ -2,7 +2,6 @@ import { Promoter, PromoterPersonality } from "@/types/state.types";
 import { FightingStyle } from "@/types/shared.types";
 import type { IRNGService } from "@/engine/core/rng";
 import { SeededRNGService } from "@/engine/core/rng";
-import { generateId } from "@/utils/idUtils";
 
 const PROMOTER_FIRST_NAMES = [
   "Silas", "Cassian", "Vesper", "Theron", "Marius", "Lucia", "Octavia", "Titus",
@@ -20,8 +19,8 @@ const PROMOTER_LAST_NAMES = [
 
 const PERSONALITIES: PromoterPersonality[] = ["Greedy", "Honorable", "Sadistic", "Flashy", "Corporate"];
 
-export function generatePromoters(count: number, seed: number, week: number = 0): Promoter[] {
-  const rngService = new SeededRNGService(seed);
+export function generatePromoters(count: number, seed: number, rng?: IRNGService): Promoter[] {
+  const rngService = rng || new SeededRNGService(seed);
   const promoters: Promoter[] = [];
 
   const tiers: ("Local" | "Regional" | "National" | "Legendary")[] = [
@@ -37,7 +36,7 @@ export function generatePromoters(count: number, seed: number, week: number = 0)
     const lastName = rngService.pick(PROMOTER_LAST_NAMES);
     const tier = tiers[i % tiers.length];
 
-    promoters[id] = {
+    promoters.push({
       id,
       name: `${firstName} ${lastName}`,
       age: 35 + Math.floor(rngService.next() * 31),
@@ -50,7 +49,7 @@ export function generatePromoters(count: number, seed: number, week: number = 0)
         notableBouts: [],
         legacyFame: 0
       }
-    };
+    });
   }
 
   return promoters;

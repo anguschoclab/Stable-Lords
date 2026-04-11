@@ -20,8 +20,11 @@ function styleName(style: string): string {
   return STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style;
 }
 
-function t(template: string, data: Record<string, any>): string {
-  let result = template;
+function t(template: string | string[], data: Record<string, any>, rng?: IRNGService): string {
+  let result = Array.isArray(template)
+    ? (rng ? rng.pick(template) : template[Math.floor(Math.random() * template.length)])
+    : template;
+  if (!result) return "";
   for (const [key, value] of Object.entries(data)) {
     result = result.replace(new RegExp(`{{${key}}}`, "g"), String(value));
   }

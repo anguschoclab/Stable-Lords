@@ -50,7 +50,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   
   // 1. Gather all active warriors
   const allWarriors: { w: Warrior; stableId: string }[] = [];
-  state.roster.forEach(w => {
+  (state.roster || []).forEach(w => {
     if (w.status === "Active") allWarriors.push({ w, stableId: state.player.id });
   });
   (state.rivals || []).forEach(r => {
@@ -72,7 +72,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   const availableWarriors = allWarriors.filter(entry => !unavailableWarriorIds.has(entry.w.id));
 
   // 2. Iterate through Promoters
-  Object.values(state.promoters).forEach(promoter => {
+  Object.values(state.promoters || []).forEach(promoter => {
     const capacity = promoter.capacity;
     let generated = 0;
 

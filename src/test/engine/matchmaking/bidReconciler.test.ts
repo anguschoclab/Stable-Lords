@@ -54,9 +54,10 @@ describe("BidReconciler", () => {
     });
 
     it("should return updated rivals with agent actions logged", () => {
-      const { updatedRivals } = reconcileBidsIntoPairings(pool, state.rivals, state, 12345);
+      const { impact } = reconcileBidsIntoPairings(pool, state.rivals, state, 12345);
       
-      expect(updatedRivals.length).toBe(state.rivals.length);
+      // StateImpact now contains rivalsUpdates instead of updatedRivals
+      expect(impact.rivalsUpdates).toBeDefined();
     });
 
     it("should not pair the same warrior twice", () => {

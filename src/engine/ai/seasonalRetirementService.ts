@@ -14,9 +14,9 @@ export class SeasonalRetirementService {
     const updatedState = { ...state };
     const legacyCandidates: any[] = [];
 
-    updatedState.rivals = updatedState.rivals.map(rival => {
+    updatedState.rivals = (updatedState.rivals || []).map(rival => {
       // Retirement logic for warriors
-      const retiredWarriors = rival.roster.filter(w => {
+      const retiredWarriors = (rival.roster || []).filter(w => {
         if (w.status !== "Active") return false;
         
         const age = w.age ?? 20;

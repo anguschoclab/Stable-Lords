@@ -48,6 +48,7 @@ export function committeeSelection(
   const pool: { w: Warrior; rank: number; score: number }[] = [];
   
   const collect = (roster: Warrior[]) => {
+    if (!roster) return;
     roster.forEach(w => {
       if (w.status === "Active" && !lockedIds.has(w.id)) {
         // 🌩️ Tournament Entry Skepticism: Weather Check
@@ -61,7 +62,7 @@ export function committeeSelection(
   };
 
   collect(state.roster);
-  state.rivals.forEach(r => collect(r.roster));
+  (state.rivals || []).forEach(r => collect(r.roster));
 
   // Sort pool by rank
   const sortedPool = pool.sort((a, b) => a.rank - b.rank);

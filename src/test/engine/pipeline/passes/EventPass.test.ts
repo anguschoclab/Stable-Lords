@@ -15,13 +15,14 @@ describe("EventPass", () => {
     // and the third call (lost relic event) is < 0.04.
     const originalNext = rng.next.bind(rng);
     let callCount = 0;
-    rng.next = () => {
+    const mockNext = () => {
       callCount++;
       if (callCount === 1) return 0.5; // fail Tavern Brawl
       if (callCount === 2) return 0.5; // fail Star-crossed Blessing
       if (callCount === 3) return 0.01; // succeed Lost Relic
-      return 0.5;
+      return originalNext();
     };
+    (rng as any).next = mockNext;
 
     const w: Partial<Warrior> = { id: "w-1", name: "Gladiator", status: "Active", fame: 0, xp: 0 };
     const state: Partial<GameState> = {

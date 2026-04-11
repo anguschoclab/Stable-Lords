@@ -11,7 +11,13 @@ describe("Blood Moon Feature", () => {
   it("should roll Blood Moon weather when rng yields high enough value", () => {
     // rollWeather returns Blood Moon if roll >= 0.95 and roll < 0.98 -> Drafty, roll >= 0.98 -> Blood Moon
     const rng = new SeededRNGService(1);
-    rng.next = () => 0.99;
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    rng.next = () => {
+      callCount++;
+      if (callCount === 1) return 0.99;
+      return originalNext();
+    };
     expect(rollWeather(rng)).toBe("Blood Moon");
   });
 });

@@ -75,7 +75,7 @@ export function advanceWeek(state: GameState): GameState {
   }
 
   // World & System Impacts
-  impacts.push(runWorldPass(settledState, rootRng, nextWeek));
+  impacts.push(runWorldPass(settledState, nextWeek, rootRng));
   impacts.push(runRecruitmentPass(settledState, rootRng));
   impacts.push(runSystemPass(settledState, rootRng));
   impacts.push(runRankingsPass(settledState));

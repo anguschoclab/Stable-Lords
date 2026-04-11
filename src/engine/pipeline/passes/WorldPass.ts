@@ -1,7 +1,7 @@
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import type { GameState, WeatherType, Season } from "@/types/state.types";
-import { generateWeather, advanceSeason } from "@/engine/weather";
+import { StateImpact } from "@/engine/impacts";
 
 /**
  * Stable Lords — World Pipeline Pass
@@ -30,13 +30,12 @@ export function rollWeather(rng: IRNGService): WeatherType {
   return "Blood Moon";
 }
 
-export function runWorldPass(state: GameState, rng?: IRNGService, nextWeek: number): GameState {
+export function runWorldPass(state: GameState, nextWeek: number, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(nextWeek * 13);
   const nextSeason = computeNextSeason(nextWeek);
   const nextWeather = rollWeather(rngService);
 
   return {
-    ...state,
     week: nextWeek,
     season: nextSeason,
     weather: nextWeather

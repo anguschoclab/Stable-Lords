@@ -2,6 +2,7 @@ import { GameState, Promoter, PromoterPersonality } from "@/types/state.types";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { generateDynasticName } from "@/utils/nameLogic";
+import { StateImpact } from "@/engine/impacts";
 
 /**
  * Stable Lords — Promoter Lifecycle Pass
@@ -15,7 +16,7 @@ export const PASS_METADATA = {
 
 const PERSONALITIES: PromoterPersonality[] = ["Greedy", "Honorable", "Sadistic", "Flashy", "Corporate"];
 
-export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): GameState {
+export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(state.week * 777 + 1);
   const newPromoters: Record<string, Promoter> = { ...state.promoters };
   const news: string[] = [];
@@ -70,9 +71,16 @@ export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): G
     }
   }
 
-  return {
-    ...state,
-    promoters: newPromoters,
-    newsletter: news.length > 0 ? [...state.newsletter, { id: rngService.uuid(), week: state.week, title: "Promoter News", items: news }] : state.newsletter
-  };
+  const impact: StateImpact = { promoters: newPromoters };
+  
+  if (news.length > 0) {
+    impact.newsletterItems = [{ 
+      id: rngService.uuid(), 
+      week: state.week, 
+      title: "Promoter News", 
+      items: news 
+    }];
+  }
+
+  return impact;
 }

@@ -31,6 +31,18 @@ export interface StateImpact {
   rivalries?: Rivalry[];
   trainingAssignments?: any[];
   lastSimulationReport?: any;
+  arenaHistory?: any[];
+  hallOfFame?: any[];
+  matchHistory?: any[];
+  moodHistory?: any[];
+  retired?: any[];
+  scoutReports?: any[];
+  insightTokens?: any[];
+  playerChallenges?: any[];
+  playerAvoids?: any[];
+  coachDismissed?: any[];
+  restStates?: any[];
+  unacknowledgedDeaths?: any[];
 }
 
 type ImpactHandler<K extends keyof StateImpact> = (state: GameState, value: Exclude<StateImpact[K], undefined>) => void;
@@ -63,6 +75,18 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
   season: (state, value) => { state.season = value; },
   weather: (state, value) => { state.weather = value; },
   realmRankings: (state, value) => { state.realmRankings = value; },
+  arenaHistory: (state, value) => { state.arenaHistory = [...(state.arenaHistory || []), ...value]; },
+  hallOfFame: (state, value) => { state.hallOfFame = [...(state.hallOfFame || []), ...value]; },
+  matchHistory: (state, value) => { state.matchHistory = [...(state.matchHistory || []), ...value]; },
+  moodHistory: (state, value) => { state.moodHistory = [...(state.moodHistory || []), ...value]; },
+  retired: (state, value) => { state.retired = [...(state.retired || []), ...value]; },
+  scoutReports: (state, value) => { state.scoutReports = [...(state.scoutReports || []), ...value]; },
+  insightTokens: (state, value) => { state.insightTokens = [...(state.insightTokens || []), ...value]; },
+  playerChallenges: (state, value) => { state.playerChallenges = [...(state.playerChallenges || []), ...value]; },
+  playerAvoids: (state, value) => { state.playerAvoids = [...(state.playerAvoids || []), ...value]; },
+  coachDismissed: (state, value) => { state.coachDismissed = [...(state.coachDismissed || []), ...value]; },
+  restStates: (state, value) => { state.restStates = [...(state.restStates || []), ...value]; },
+  unacknowledgedDeaths: (state, value) => { state.unacknowledgedDeaths = [...(state.unacknowledgedDeaths || []), ...value]; },
   boutOffers: (state, value) => { state.boutOffers = value; },
   promoters: (state, value) => { state.promoters = value; },
   recruitPool: (state, value) => { state.recruitPool = value; },

@@ -4,7 +4,6 @@ import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { FIGHT_PURSE } from "@/data/economyConstants";
 import { generateId } from "@/utils/idUtils";
-
 /**
  * Stable Lords — Promoter Pass
  * Phase 2: Promoters scan the world and dispatch bout offers.
@@ -35,7 +34,7 @@ const RANK_REQUIREMENTS = {
   Legendary: 20
 };
 
-export function runPromoterPass(state: GameState, rng?: IRNGService): GameState {
+export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(state.week * 881 + 17);
   const newOffers: Record<string, BoutOffer> = { ...state.boutOffers };
   const rankings = state.realmRankings || {};
@@ -125,8 +124,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): GameState 
   });
 
   return {
-    ...state,
-    boutOffers: newOffers
+    ...stas: newOffers
   };
 }
 

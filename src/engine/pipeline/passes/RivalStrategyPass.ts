@@ -82,35 +82,32 @@ export function runRivalStrategyPass(state: GameState, nextWeek: number, rootRng
   return currentState;
 }
 
-function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGService): GameState {
-  let newState = { ...state };
-  
-  // 🏆 4-Tier Selection Committee Logic: Generates and resolves all tiers
-  const tournaments = TournamentSelectionService.generateSeasonalTiers(newState, week, state.season, week * 881);
+function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGService): StateImpact {
+  const tournaments = TournamentSelectionService.generateSeasonalTiers(state, week, state.season, week * 881);
   const tournamentNews: string[] = [];
+  const allTours: any[] = [];
+  let finalState = { ...state };
 
   tournaments.forEach((tour) => {
-    // 1. Add to state
-    newState.tournaments = [...(newState.tournaments || []), tour];
-    
-    // 2. Resolve the entire tournament deterministically
-    newState = TournamentSelectionService.resolveCompleteTournament(newState, tour.id, week * 500 + hashStr(tour.id));
-    
-    const completedTour = newState.tournaments.find(t => t.id === tour.id);
+    finalState.tournaments = [...(finalState.tournaments || []), tour];
+    finalState = TournamentSelectionService.resolveCompleteTournament(finalState, tour.id, week * 500 + hashStr(tour.id));
+    const completedTour = finalState.tournaments.find(t => t.id === tour.id);
+    allTours.push(completedTour);
     tournamentNews.push(`🏆 ${tour.name} finalized: ${completedTour?.champion || "Undisputed"} crowned champion.`);
   });
   
-  newState = {
-    ...newState,
-    newsletter: [...newState.newsletter, {
+  return {
+    tournaments: allTours,
+    isTournamentWeek: true,
+    activeTournamentId: allTours[0].id,
+    day: 0,
+    newsletterItems: [{
       id: rng.uuid(),
       week: week, 
       title: "🎖️ TOURNAMENT ARCHIVE", 
       items: tournamentNews 
     }]
   };
-  
-  return newState;
 }
 
 function hashStr(s: string): number {

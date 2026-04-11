@@ -36,8 +36,13 @@ describe("rollForInjury", () => {
     },
   };
 
-  it.skip("should generate an ID for an injury - rollForInjury export issue", () => {
-    // This test is skipped because rollForInjury is not exported from the injuries module
-    // TODO: Fix export or remove this test
+  it("should generate an ID for an injury", () => {
+    const res = rollForInjury(mockWarrior, mockOutcome, "A", 12345);
+    expect(res).toBeDefined();
+    if (res) {
+      expect(res.id).toBeDefined();
+      expect(res.name).toBeDefined();
+      expect(res.weeksRemaining).toBeGreaterThan(0);
+    }
   });
 });

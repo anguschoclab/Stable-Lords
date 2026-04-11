@@ -16,35 +16,37 @@ describe("BoutVisualizer", () => {
     { minute: 3, text: "D is wobbling...", events: [] },
   ];
 
-  it.skip("renders the initial state - TooltipProvider issue", () => {
+  it("renders the initial state", () => {
     render(
-      <BoutVisualizer 
-        nameA="Warrior A" 
-        nameD="Warrior D" 
-        styleA="Slasher" 
-        styleD="Basher" 
-        log={mockLog as unknown as Mock}
-        winner="A" 
-        by="KO" 
-      />
+      <TooltipProvider>
+        <BoutVisualizer 
+          nameA="Warrior A" 
+          nameD="Warrior D" 
+          styleA="Slasher" 
+          styleD="Basher" 
+          log={mockLog as any}
+          winner="A" 
+          by="KO" 
+        />
+      </TooltipProvider>
     );
     expect(screen.getByText("Warrior A")).toBeInTheDocument();
     expect(screen.getByText("Warrior D")).toBeInTheDocument();
   });
 
-  it.skip("advances the timeline when play is pressed", async () => {});
-
-  it.skip("renders critical strike animations/indicators - TooltipProvider issue", async () => {
+  it("renders critical strike animations/indicators", async () => {
     render(
-      <BoutVisualizer 
-        nameA="Warrior A" 
-        nameD="Warrior D" 
-        styleA="Slasher" 
-        styleD="Basher" 
-        log={mockLog as unknown as Mock}
-        winner="A" 
-        by="KO" 
-      />
+      <TooltipProvider>
+        <BoutVisualizer 
+          nameA="Warrior A" 
+          nameD="Warrior D" 
+          styleA="Slasher" 
+          styleD="Basher" 
+          log={mockLog as any}
+          winner="A" 
+          by="KO" 
+        />
+      </TooltipProvider>
     );
     
     // Skip to end or advance manually

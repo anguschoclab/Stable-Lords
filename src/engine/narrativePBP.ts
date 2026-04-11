@@ -2,7 +2,11 @@
 export { CombatNarrator } from "./narrative/combatNarrator";
 export { StatusNarrator } from "./narrative/statusNarrator";
 export { BoutNarrator } from "./narrative/boutNarrator";
-export { NarrativeTemplateEngine } from "./narrative/narrativeTemplateEngine";
+import { NarrativeTemplateEngine } from "./narrative/narrativeTemplateEngine";
+export { NarrativeTemplateEngine };
+
+const { getFromArchive, interpolateTemplate, getTemplate, formatNarrative } = NarrativeTemplateEngine;
+export { getFromArchive, interpolateTemplate, getTemplate, formatNarrative };
 
 // Re-export all functions for backward compatibility
 export { generateWarriorIntro, battleOpener, narrateAttack, narratePassive, narrateParry, narrateDodge, narrateCounterstrike, narrateHit, narrateParryBreak, narrateInitiative, narrateBoutEnd } from "./narrative/combatNarrator";

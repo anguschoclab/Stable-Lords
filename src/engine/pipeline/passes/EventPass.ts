@@ -26,22 +26,24 @@ function t(template: string, data: Record<string, any>): string {
   return result;
 }
 
-export function runEventPass(state: GameState, nextWeek: number, rootRng?: IRNGService): GameState {
-  const nextState = { ...state };
+import { StateImpact } from "@/engine/impacts";
+
+export function runEventPass(state: GameState, nextWeek: number, rootRng?: IRNGService): StateImpact {
   const brawlRng = rootRng || new SeededRNGService(nextWeek * 999 + 1);
+  const rosterUpdates = new Map<string, any>();
+  const newsletterItems: any[] = [];
   
   // 🍺 Tavern Brawl Event
-  if (brawlRng.next() < 0.05 && nextState.roster.length > 0) {
-    const activeWarriors = nextState.roster.filter(w => w.status === "Active" && (!w.injuries || w.injuries.length === 0));
+  if (brawlRng.next() < 0.05 && state.roster.length > 0) {
+    const activeWarriors = state.roster.filter(w => w.status === "Active" && (!w.injuries || w.injuries.length === 0));
     if (activeWarriors.length > 0) {
       const brawlerIndex = Math.floor(brawlRng.next() * activeWarriors.length);
       const brawler = activeWarriors[brawlerIndex];
       const e = (narrativeContent.events as any).tavern_brawl;
       
-      nextState.roster = updateEntityInList(nextState.roster, brawler.id, (w) => ({
-        ...w,
-        fame: (w.fame || 0) + 5,
-        injuries: [...(w.injuries || []), {
+      rosterUpdates.set(brawler.id, {
+        fame: (brawler.fame || 0) + 5,
+        injuries: [...(brawler.injuries || []), {
           id: brawlRng.uuid(),
           name: e.injury_name,
           description: e.injury_desc,
@@ -49,63 +51,65 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: IRNGS
           weeksRemaining: 1,
           penalties: { ATT: -1 }
         }]
-      }));
+      });
 
-      nextState.newsletter = [...(nextState.newsletter || []), {
+      newsletterItems.push({
         id: generateId(brawlRng, "newsletter"),
         week: nextWeek,
         title: e.title,
         items: [t(brawlRng.pick(e.newsletter), { name: brawler.name, fame: 5 })]
-      }];
+      });
     }
   }
 
 
   // ☄️ Star-crossed Blessing Event
-  if (brawlRng.next() < 0.03 && nextState.roster.length > 0) {
-    const youngWarriors = nextState.roster.filter(w => w.status === "Active" && (w.age || 0) <= 25);
+  if (brawlRng.next() < 0.03 && state.roster.length > 0) {
+    const youngWarriors = state.roster.filter(w => w.status === "Active" && (w.age || 0) <= 25);
     if (youngWarriors.length > 0) {
       const chosenIndex = Math.floor(brawlRng.next() * youngWarriors.length);
       const chosen = youngWarriors[chosenIndex];
       const e = (narrativeContent.events as any).celestial_blessing;
 
-      nextState.roster = updateEntityInList(nextState.roster, chosen.id, (w) => ({
-        ...w,
-        fame: (w.fame || 0) + 15,
-        xp: (w.xp || 0) + 2
-      }));
+      const existingUpdate = rosterUpdates.get(chosen.id) || {};
+      rosterUpdates.set(chosen.id, {
+        ...existingUpdate,
+        fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 15,
+        xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 2
+      });
 
-      nextState.newsletter = [...(nextState.newsletter || []), {
+      newsletterItems.push({
         id: generateId(brawlRng, "newsletter"),
         week: nextWeek,
         title: e.title,
         items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 15, xp: 2 })]
-      }];
+      });
     }
   }
 
   // 🏺 Lost Relic Discovery Event
-  if (brawlRng.next() < 0.04 && nextState.roster.length > 0) {
-    const activeWarriors = nextState.roster.filter(w => w.status === "Active");
+  if (brawlRng.next() < 0.04 && state.roster.length > 0) {
+    const activeWarriors = state.roster.filter(w => w.status === "Active");
     if (activeWarriors.length > 0) {
       const chosenIndex = Math.floor(brawlRng.next() * activeWarriors.length);
       const chosen = activeWarriors[chosenIndex];
-      const e = narrativeContent.events.lost_relic;
+      const e = (narrativeContent.events as any).lost_relic;
 
-      nextState.roster = updateEntityInList(nextState.roster, chosen.id, (w) => ({
-        ...w,
-        fame: (w.fame || 0) + 10,
-        xp: (w.xp || 0) + 5
-      }));
+      const existingUpdate = rosterUpdates.get(chosen.id) || {};
+      rosterUpdates.set(chosen.id, {
+        ...existingUpdate,
+        fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 10,
+        xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 5
+      });
 
-      nextState.newsletter = [...(nextState.newsletter || []), {
+      newsletterItems.push({
         id: generateId(brawlRng, "newsletter"),
         week: nextWeek,
         title: e.title,
         items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 10, xp: 5 })]
-      }];
+      });
     }
   }
 
-  return nextState;
+  return { rosterUpdates, newsletterItems };
 }

@@ -102,11 +102,12 @@ export function generateRecruit(
   const tier = forceTier ?? rollTier(rng);
   const tierData = getTierData(tier);
   const [minPts, maxPts] = tierData.points;
-  const total = Math.floor(Math.random() * (maxPts - minPts + 1)) + minPts;
+  // ⚡ Fix: use rng instead of Math.random()
+  const total = Math.floor(rng.next() * (maxPts - minPts + 1)) + minPts;
   const attributes = distributeAttributes(rng, total);
 
   const styles = Object.values(FightingStyle);
-  const style = rng.pick(styles);
+  const style = typeof rng.pick === 'function' ? rng.pick(styles) : styles[Math.floor(rng.next() * styles.length)];
 
   // Pick unique name
   let name: string;

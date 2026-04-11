@@ -20,6 +20,11 @@ export { TOURNAMENT_TIERS };
 export const TournamentSelectionService = {
   
   /**
+   * NCAA-style Tiered Selection
+   */
+  committeeSelection,
+
+  /**
    * Generates all 4 seasonal tournaments using the committee selection logic.
    */
   generateSeasonalTiers(state: GameState, week: number, season: Season, seed: number): TournamentEntry[] {

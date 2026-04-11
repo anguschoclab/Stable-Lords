@@ -1,47 +1,32 @@
-import type { GameState, Trainer } from "@/types/state.types";
+import type { GameState } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";
-import { RNGContext } from "@/engine/core/rng";
 import { archiveWeekLogs } from "../adapters/opfsArchiver";
-import { processHallOfFame } from "../core/hallOfFame";
-import { processTierProgression } from "../core/tierProgression";
-import { computeTrainerAging } from "@/engine/trainerAging";
-import { evolvePhilosophies } from "@/engine/ownerPhilosophy";
-import { generateOwnerNarratives } from "@/engine/ownerNarrative";
-import { WorldManagementService } from "@/engine/ai/worldManagement";
-import { PatronTokenService } from "@/engine/tokens/patronTokenService";
-import type { IRNGService } from "@/engine/core/rng";
-import { SeededRNGService } from "@/engine/core/rng";
-import { processOwnerGrudges } from "@/engine/ownerGrudges";
-import { TournamentSelectionService } from "@/engine/matchmaking/tournamentSelection";
 import { computeMetaDrift } from "@/engine/metaDrift";
+import { SeededRNGService } from "@/engine/core/rng";
+import { resolveImpacts, StateImpact } from "@/engine/impacts";
 
-// 🌩️ New Modular Passes
-import { runEconomyPass } from "../passes/EconomyPass";
+// 🌩️ Modular Pipeline Passes
+import { runBoutSimulationPass } from "../passes/BoutSimulationPass";
 import { runWarriorPass } from "../passes/WarriorPass";
+import { runEconomyPass } from "../passes/EconomyPass";
 import { runEquipmentPass } from "../passes/EquipmentPass";
 import { runWorldPass } from "../passes/WorldPass";
-import { runRivalStrategyPass } from "../passes/RivalStrategyPass";
-import { runEventPass } from "../passes/EventPass";
+import { runRecruitmentPass } from "../passes/RecruitmentPass";
+import { runSystemPass } from "../passes/SystemPass";
+import { runRankingsPass } from "../passes/RankingsPass";
 import { runPromoterPass } from "../passes/PromoterPass";
 import { runPromoterLifecyclePass } from "../passes/PromoterLifecyclePass";
-import { runRankingsPass } from "../passes/RankingsPass";
-import { runBoutSimulationPass } from "../passes/BoutSimulationPass";
-
-import { computeTrainingImpact, trainingImpactToStateImpact } from "@/engine/training";
-import { computeEconomyImpact } from "@/engine/economy";
-import { computeAgingImpact } from "@/engine/aging";
-import { computeHealthImpact } from "@/engine/health";
-import { resolveImpacts, StateImpact } from "@/engine/impacts";
-import { getFightsForWeek } from "@/engine/core/historyUtils";
-import { generateWeeklyGazette } from "@/engine/gazetteNarrative";
-import { partialRefreshPool } from "@/engine/recruitment";
+import { runTrainerPass } from "../passes/TrainerPass";
+import { runRivalStrategyPass } from "../passes/RivalStrategyPass";
+import { runEventPass } from "../passes/EventPass";
+import { runNarrativePass } from "../passes/NarrativePass";
 
 /**
- * Stable Lords — Consolidated Weekly Pipeline
- * Orchestrates the simulation tick by executing a series of specialized passes.
+ * Stable Lords — Consolidated Weekly Pipeline (1.0 Hardened)
+ * Orchestrates the simulation tick using a high-performance batched architecture.
  */
 export function advanceWeek(state: GameState): GameState {
-  // 1. Preparation
+  // 1. Preparation & Temporal Logic
   const currentWeek = state.week;
   let nextWeek = currentWeek + 1;
   let nextYear = state.year || 1;
@@ -51,169 +36,64 @@ export function advanceWeek(state: GameState): GameState {
     nextYear++;
   }
 
+  // Consistent Root RNG for the new week
   const rootRng = new SeededRNGService(nextYear * 52 + nextWeek * 7919 + 101);
-
-  // ⚡ Bolt: Compute and cache meta drift weekly for AI components
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
 
-  // 2. Core Simulation (Bouts, Training, Health, Economy)
-  // Bouts happen for the week that is just ending
-  let newState = runBoutSimulationPass(state, rootRng);
-  newState = { ...newState, cachedMetaDrift: metaDrift };
+  // 2. Settlement Phase (The "World Heartbeat")
+  // Bouts settle against current state to finalize history/records for the week ending.
+  let settledState = runBoutSimulationPass(state, rootRng);
+  settledState.cachedMetaDrift = metaDrift;
 
-  // ⚡ Bolt: Build and cache warrior map weekly for bout processing
+  // Build and cache warrior map for subsequent AI passes
   const warriorMap = new Map<string, Warrior>();
-  newState.roster.forEach(w => warriorMap.set(w.id, w));
-  (newState.rivals || []).forEach(r => r.roster.forEach(w => warriorMap.set(w.id, w)));
-  newState = { ...newState, warriorMap };
+  settledState.roster.forEach(w => warriorMap.set(w.id, w));
+  (settledState.rivals || []).forEach(r => r.roster.forEach(w => warriorMap.set(w.id, w)));
+  settledState.warriorMap = warriorMap;
 
-  newState = runWarriorPass(newState, rootRng);
-  newState = runEconomyPass(newState, rootRng);
-  newState = runEquipmentPass(newState);
+  // 3. Collection Phase (Collect all intended changes)
+  const impacts: StateImpact[] = [];
 
-  // ⚡ Bolt: Early exit on bankruptcy condition
-  if (newState.treasury < -500) {
-    newState = finalizeWeek(newState, nextWeek, nextYear, rootRng);
-    return archiveWeekLogs(newState);
+  // Core Simulation Impacts
+  impacts.push(runWarriorPass(settledState, rootRng));
+  impacts.push(runEconomyPass(settledState, rootRng));
+  impacts.push(runEquipmentPass(settledState));
+
+  // ⚡ Early Exit: Bankruptcy Check
+  // We check against settledState + economy impact roughly
+  const estimatedTreasury = settledState.treasury + (impacts[1]?.treasuryDelta || 0);
+  if (estimatedTreasury < -500) {
+    // If bankrupt, we still resolve basic impacts then exit
+    let finalState = resolveImpacts(settledState, impacts);
+    finalState.week = nextWeek;
+    finalState.year = nextYear;
+    return archiveWeekLogs(finalState);
   }
 
-  // 3. World & System Transitions
-  newState = executeWorldTransitions(newState, rootRng, nextWeek);
+  // World & System Impacts
+  impacts.push(runWorldPass(settledState, rootRng, nextWeek));
+  impacts.push(runRecruitmentPass(settledState, rootRng));
+  impacts.push(runSystemPass(settledState, rootRng));
+  impacts.push(runRankingsPass(settledState));
+  impacts.push(runPromoterPass(settledState));
+  impacts.push(runPromoterLifecyclePass(settledState, rootRng));
+  impacts.push(runTrainerPass(settledState, rootRng));
 
-  // 4. Strategic & AI Activity
-  newState = executeRivalActivity(newState, nextWeek, rootRng);
+  // AI & Strategic Impacts
+  impacts.push(runRivalStrategyPass(settledState, nextWeek, rootRng));
 
-  // 5. Events & Narrative
-  newState = runEventPass(newState, nextWeek, rootRng); // Use rootRng for consistency
-  newState = executeNarrativePass(newState, currentWeek, nextWeek, rootRng);
+  // Narrative & Event Impacts
+  impacts.push(runEventPass(settledState, nextWeek, rootRng));
+  impacts.push(runNarrativePass(settledState, currentWeek, nextWeek, rootRng));
 
-  // 6. Completion & Persistence
-  newState = finalizeWeek(newState, nextWeek, nextYear, rootRng);
+  // 4. Resolution Phase (Apply all impacts in one unified pass)
+  let finalizedState = resolveImpacts(settledState, impacts);
 
-  // Surface Simulation Math
-  newState.lastSimulationReport = state.lastSimulationReport; // Carry over if needed, but we replace it below
+  // 5. Finalization
+  finalizedState.week = nextWeek;
+  finalizedState.year = nextYear;
+  finalizedState.day = 0; // Reset daily counter
+  finalizedState.trainingAssignments = []; // Reset weekly assignments
 
-  return archiveWeekLogs(newState);
-}
-
-
-
-function executeWorldTransitions(state: GameState, rng: IRNGService, nextWeek: number): GameState {
-  let newState = runWorldPass(state, rng, nextWeek);
-  const nextSeason = newState.season;
-
-  newState = runRankingsPass(newState);
-  newState = runPromoterPass(newState);
-  
-  // Recruitment
-  const usedNames = new Set<string>(newState.roster.map((w: any) => w.name));
-  newState.recruitPool = partialRefreshPool(newState.recruitPool || [], newState.week, usedNames);
-
-  // Tier Progression
-  newState = processHallOfFame(newState, nextWeek);
-  newState = processTierProgression(newState, nextSeason, nextWeek);
-
-  // Trainer Lifecycle
-  const { updatedTrainers, news, updatedHiringPool } = computeTrainerAging(newState);
-  newState.trainers = updatedTrainers;
-  newState.hiringPool = updatedHiringPool;
-  if (news.length > 0) {
-    newState.newsletter = [...(newState.newsletter || []), { 
-      id: rng.uuid("newsletter"), 
-      week: nextWeek, 
-      title: "Trainer Career Updates", 
-      items: news 
-    }];
-  }
-
-  newState = runPromoterLifecyclePass(newState, rng);
-  return newState;
-}
-
-function executeRivalActivity(state: GameState, nextWeek: number, rng: IRNGService): GameState {
-  let newState = { ...state };
-
-  // Seasonal Churn & Philosophy Evolution
-  if (newState.season !== state.season) {
-    const seasonSeed = nextWeek * 133;
-    const rngContext = new RNGContext(seasonSeed + 55);
-    const { updatedRivals, news } = WorldManagementService.processSeasonalChurn(newState, rngContext);
-    newState = { ...newState, rivals: updatedRivals };
-    
-    const { updatedRivals: philRivals, gazetteItems } = evolvePhilosophies(newState, newState.season, rngContext.getRNG());
-    newState = { ...newState, rivals: philRivals };
-    
-    const narrGazette = generateOwnerNarratives(newState, newState.season, rngContext.getRNG());
-    const combinedNews = [...news, ...gazetteItems, ...narrGazette];
-    if (combinedNews.length > 0) {
-      newState = {
-        ...newState,
-        newsletter: [...(newState.newsletter || []), { 
-          id: rng.uuid("newsletter"), 
-          week: nextWeek, 
-          title: `${state.season} Season Summary`, 
-          items: combinedNews 
-        }]
-      };
-    }
-  }
-
-  // Tournament Generation
-  if (nextWeek % 13 === 0) {
-    const tours = TournamentSelectionService.generateSeasonalTiers(newState, nextWeek, newState.season, nextWeek * 777);
-    newState = {
-      ...newState,
-      tournaments: [...(newState.tournaments || []), ...tours],
-      isTournamentWeek: true,
-      activeTournamentId: tours[0].id,
-      day: 0
-    };
-  }
-
-  // 🛡️ 1.0 Hardening: Removed Redundant Warrior/Equipment Passes
-  // (They are already processed at the start of the week in advanceWeek)
-
-  // AI Strategy
-  newState = runRivalStrategyPass(newState, nextWeek, rng);
-  
-  return newState;
-}
-
-function executeNarrativePass(state: GameState, currentWeek: number, nextWeek: number, rng: IRNGService): GameState {
-  let newState = { ...state };
-
-  // Gazette
-  const weekFights = getFightsForWeek(newState.arenaHistory, currentWeek);
-  const gazetteRng = new SeededRNGService(currentWeek * 9973 + 456);
-  const story = generateWeeklyGazette(weekFights, newState.crowdMood, currentWeek, newState.graveyard, newState.arenaHistory, gazetteRng);
-  newState = {
-    ...newState,
-    gazettes: [...(newState.gazettes || []), { ...story, week: currentWeek }].slice(-50)
-  };
-
-  // Grudges
-  const { grudges, gazetteItems } = processOwnerGrudges(newState, newState.ownerGrudges || []);
-  newState = { ...newState, ownerGrudges: grudges };
-  if (gazetteItems.length > 0) {
-    newState = {
-      ...newState,
-      newsletter: [...(newState.newsletter || []), { 
-        id: rng.uuid("newsletter"), 
-        week: nextWeek, 
-        title: "Stable Rivalries & Grudges", 
-        items: gazetteItems 
-      }]
-    };
-  }
-
-  return newState;
-}
-
-function finalizeWeek(state: GameState, nextWeek: number, nextYear: number, rng: IRNGService): GameState {
-  return {
-    ...state,
-    week: nextWeek,
-    year: nextYear,
-    trainingAssignments: [],
-  };
+  return archiveWeekLogs(finalizedState);
 }

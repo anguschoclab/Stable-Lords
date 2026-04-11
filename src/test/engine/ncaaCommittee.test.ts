@@ -5,7 +5,7 @@ import { runRankingsPass } from "@/engine/pipeline/passes/RankingsPass";
 import { TournamentSelectionService } from "@/engine/matchmaking/tournamentSelection";
 import { GameState } from "@/types/state.types";
 
-describe.skip("NCAA-style Tournament Selection Committee - committeeSelection not exported", () => {
+describe("NCAA-style Tournament Selection Committee", () => {
   let state: GameState;
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe.skip("NCAA-style Tournament Selection Committee - committeeSelection no
     expect(overlapping.length).toBe(0);
   });
 
-  it.skip("should generate all 4 seasonal tournaments", () => {
+  it("should generate all 4 seasonal tournaments", () => {
     const tournaments = TournamentSelectionService.generateSeasonalTiers(state, state.week, state.season, 1);
     expect(tournaments.length).toBe(4); // Gold, Silver, Bronze, Iron
     expect(tournaments[0].name).toBe("Imperial Gold Cup");

@@ -1,20 +1,83 @@
-import type { GameState, LedgerEntry, NewsletterItem } from "@/types/state.types";
+import type { GameState, LedgerEntry, NewsletterItem, RivalStableData, RankingEntry, Season, WeatherType, BoutOffer, Promoter, Trainer, OwnerGrudge, Rivalry } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";
 import type { PoolWarrior } from "@/engine/recruitment";
-import { updateEntityInList } from "@/utils/stateUtils";
 
-export interface StateImpact { treasuryDelta?: number; fameDelta?: number; rosterUpdates?: Map<string, Partial<Warrior>>; newsletterItems?: NewsletterItem[]; ledgerEntries?: LedgerEntry[]; newPoolRecruits?: PoolWarrior[]; }
+export interface StateImpact { 
+  treasuryDelta?: number; 
+  fameDelta?: number; 
+  rosterUpdates?: Map<string, Partial<Warrior>>; 
+  rivalsUpdates?: Map<string, Partial<RivalStableData>>; 
+  newsletterItems?: NewsletterItem[]; 
+  ledgerEntries?: LedgerEntry[]; 
+  seasonalGrowth?: any[]; 
+  tokensDelta?: any[]; 
+  newPoolRecruits?: PoolWarrior[]; 
+  recruitPool?: PoolWarrior[];
+  tournaments?: any[];
+  isTournamentWeek?: boolean;
+  activeTournamentId?: string;
+  day?: number;
+  graveyard?: any[];
+  week?: number; 
+  season?: Season; 
+  weather?: WeatherType; 
+  realmRankings?: Record<string, RankingEntry>; 
+  boutOffers?: Record<string, BoutOffer>;
+  promoters?: Record<string, Promoter>;
+  trainers?: Trainer[];
+  hiringPool?: Trainer[];
+  gazettes?: any[];
+  ownerGrudges?: OwnerGrudge[];
+  rivalries?: Rivalry[];
+  trainingAssignments?: any[];
+  lastSimulationReport?: any;
+}
 
 type ImpactHandler<K extends keyof StateImpact> = (state: GameState, value: Exclude<StateImpact[K], undefined>) => void;
 
 const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
   treasuryDelta: (state, value) => { state.treasury = (state.treasury ?? 0) + value; },
-  fameDelta: (state, value) => { state.fame = (state.fame ?? 0) + value; },
-  rosterUpdates: (state, value) => {
-    value.forEach((update, id) => { state.roster = updateEntityInList(state.roster, id, (w) => ({ ...w, ...update })); });
+  fameDelta: (state, value) => { 
+    state.fame = (state.fame ?? 0) + value; 
+    if (state.player) state.player.fame = (state.player.fame ?? 0) + value;
   },
-  newsletterItems: (state, value) => { state.newsletter = [...state.newsletter, ...value]; },
+  rosterUpdates: (state, value) => {
+    if (value.size === 0) return;
+    state.roster = state.roster.map(w => {
+      const update = value.get(w.id);
+      return update ? { ...w, ...update } : w;
+    });
+  },
+  rivalsUpdates: (state, value) => {
+    if (value.size === 0) return;
+    state.rivals = state.rivals.map(r => {
+      const update = value.get(r.owner.id);
+      return update ? { ...r, ...update } : r;
+    });
+  },
+  newsletterItems: (state, value) => { state.newsletter = [...(state.newsletter || []), ...value]; },
   ledgerEntries: (state, value) => { state.ledger = [...(state.ledger ?? []), ...value]; },
+  seasonalGrowth: (state, value) => { state.seasonalGrowth = [...(state.seasonalGrowth || []), ...value]; },
+  tokensDelta: (state, value) => { state.tokens = [...(state.tokens || []), ...value]; },
+  week: (state, value) => { state.week = value; },
+  season: (state, value) => { state.season = value; },
+  weather: (state, value) => { state.weather = value; },
+  realmRankings: (state, value) => { state.realmRankings = value; },
+  boutOffers: (state, value) => { state.boutOffers = value; },
+  promoters: (state, value) => { state.promoters = value; },
+  recruitPool: (state, value) => { state.recruitPool = value; },
+  tournaments: (state, value) => { state.tournaments = [...(state.tournaments || []), ...value]; },
+  isTournamentWeek: (state, value) => { state.isTournamentWeek = value; },
+  activeTournamentId: (state, value) => { state.activeTournamentId = value; },
+  day: (state, value) => { state.day = value; },
+  graveyard: (state, value) => { state.graveyard = [...(state.graveyard || []), ...value]; },
+  trainers: (state, value) => { state.trainers = value; },
+  hiringPool: (state, value) => { state.hiringPool = value; },
+  gazettes: (state, value) => { state.gazettes = value; },
+  ownerGrudges: (state, value) => { state.ownerGrudges = value; },
+  rivalries: (state, value) => { state.rivalries = value; },
+  trainingAssignments: (state, value) => { state.trainingAssignments = value; },
+  lastSimulationReport: (state, value) => { state.lastSimulationReport = value; },
   newPoolRecruits: () => { }
 };
 
@@ -35,7 +98,7 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
 }
 
 export function mergeImpacts(impacts: StateImpact[]): StateImpact {
-  const merged: StateImpact = { treasuryDelta: 0, fameDelta: 0, rosterUpdates: new Map(), newsletterItems: [], ledgerEntries: [] };
+  const merged: StateImpact = { treasuryDelta: 0, fameDelta: 0, rosterUpdates: new Map(), newsletterItems: [], ledgerEntries: [], boutOffers: {} };
   for (const imp of impacts) {
     if (imp.treasuryDelta) merged.treasuryDelta! += imp.treasuryDelta;
     if (imp.fameDelta) merged.fameDelta! += imp.fameDelta;

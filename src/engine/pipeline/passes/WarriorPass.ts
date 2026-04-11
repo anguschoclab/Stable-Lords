@@ -20,7 +20,13 @@ export const PASS_METADATA = {
  * Stable Lords — Warrior Pipeline Pass
  * Handles weekly training, aging, and recovery using the established impact pattern.
  */
-export function runWarriorPass(state: GameState, rng: IRNGService): GameState {
+import { resolveImpacts, StateImpact, mergeImpacts } from "@/engine/impacts";
+
+/**
+ * Stable Lords — Warrior Pipeline Pass
+ * Handles weekly training, aging, and recovery using the established impact pattern.
+ */
+export function runWarriorPass(state: GameState, rng: IRNGService): StateImpact {
   const trainingImpactRaw = computeTrainingImpact(state);
   const { impact: trainingImpact, seasonalGrowth, results } = trainingImpactToStateImpact(state, trainingImpactRaw, rng);
 
@@ -30,20 +36,12 @@ export function runWarriorPass(state: GameState, rng: IRNGService): GameState {
     computeHealthImpact(state, rng),
   ];
 
-  let nextState = resolveImpacts(state, impacts);
+  const mergedImpact = mergeImpacts(impacts);
   
-  // 🌩️ New System Integration: Insight Token Awards
-  // Low chance (5%) to earn an Insight Token during any successful training week
-  if (results && results.some(r => r.type === "gain" || r.type === "recovery") && rng.next() < 0.05) {
-    const tokenOptions = ["Style", "Weapon", "Rhythm"] as const;
-    const type = tokenOptions[Math.floor(rng.next() * tokenOptions.length)];
-    nextState = PatronTokenService.awardToken(nextState, type, "Exceptional Training", rng);
+  // Attach seasonal growth to the merged impact
+  if (Array.isArray(seasonalGrowth) && seasonalGrowth.length > 0) {
+    mergedImpact.seasonalGrowth = seasonalGrowth;
   }
 
-  // Correctly merge the seasonal growth arrays
-  if (Array.isArray(seasonalGrowth) && seasonalGrowth.length > 0) {
-    nextState.seasonalGrowth = [...(nextState.seasonalGrowth || []), ...seasonalGrowth];
-  }
-  
-  return nextState;
+  return mergedImpact;
 }

@@ -15,21 +15,29 @@ describe("AIBoutSimulator", () => {
     state.week = 5;
     state.weather = "Clear";
     
+    // Create test warriors
+    const warriorA = makeWarrior(undefined, "Attacker", FightingStyle.StrikingAttack, {
+      ST: 14, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12
+    });
+    const warriorD = makeWarrior(undefined, "Defender", FightingStyle.ParryRiposte, {
+      ST: 10, CN: 14, SZ: 10, WT: 14, WL: 14, SP: 10, DF: 14
+    });
+
+    // Add them to state rosters
+    state.rivals[0].roster.push(warriorA);
+    state.rivals[1].roster.push(warriorD);
+    
     // Create test bout pairs
     boutPairs = [
       {
         a: {
-          warrior: makeWarrior(undefined, "Attacker", FightingStyle.StrikingAttack, {
-            ST: 14, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12
-          }),
+          warrior: warriorA,
           stableIdx: 0,
           stableId: state.rivals[0].owner.id,
           stableName: state.rivals[0].owner.stableName
         },
         d: {
-          warrior: makeWarrior(undefined, "Defender", FightingStyle.ParryRiposte, {
-            ST: 10, CN: 14, SZ: 10, WT: 14, WL: 14, SP: 10, DF: 14
-          }),
+          warrior: warriorD,
           stableIdx: 1,
           stableId: state.rivals[1].owner.id,
           stableName: state.rivals[1].owner.stableName
@@ -56,15 +64,22 @@ describe("AIBoutSimulator", () => {
       });
     });
 
-    it.skip("should maintain roster size - expects 64 warriors", () => {
-      const { updatedRivals } = simulateAIBouts(state, boutPairs, state.rivals, 12345);
+    it("should maintain roster size (minus casualties)", () => {
+      const { updatedRivals, results } = simulateAIBouts(state, boutPairs, state.rivals, 12345);
+      const kills = results.filter(r => r.kill).length;
       const totalRosterSize = updatedRivals.reduce((sum, r) => sum + r.roster.length, 0);
-      expect(totalRosterSize).toBe(64);
+      const initialRosterSize = state.rivals.reduce((sum, r) => sum + r.roster.length, 0);
+      expect(totalRosterSize).toBe(initialRosterSize - kills);
     });
 
-    it.skip("should update warrior records after bouts - missing career property", () => {
+    it("should update warrior records after bouts", () => {
       const { updatedRivals } = simulateAIBouts(state, boutPairs, state.rivals, 12345);
-      expect(updatedRivals).toBeDefined();
+      updatedRivals.forEach(r => {
+        r.roster.forEach(w => {
+          expect(w.career).toBeDefined();
+          expect(typeof w.career.wins).toBe("number");
+        });
+      });
     });
 
     it("should handle kills correctly", () => {

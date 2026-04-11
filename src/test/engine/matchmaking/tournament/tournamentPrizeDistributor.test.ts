@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { createFreshState } from "@/engine/factories";
 import { FightingStyle } from "@/types/shared.types";
-import { SeededRNG } from "@/utils/random";
+import { SeededRNGService } from "@/engine/core/rng";
 import { buildTournament } from "@/engine/matchmaking/tournament/tournamentBracketBuilder";
 import { resolveCompleteTournament } from "@/engine/matchmaking/tournament/tournamentResolver";
 import { awardTournamentPrizes, awardRunnerUpPrizes } from "@/engine/matchmaking/tournament/tournamentPrizeDistributor";
@@ -20,7 +20,7 @@ describe("TournamentPrizeDistributor", () => {
 
   describe("awardTournamentPrizes", () => {
     it("should award prizes to champion", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -50,7 +50,7 @@ describe("TournamentPrizeDistributor", () => {
     });
 
     it("should award different prizes for different tiers", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -88,7 +88,7 @@ describe("TournamentPrizeDistributor", () => {
     });
 
     it("should generate prize news items", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -119,7 +119,7 @@ describe("TournamentPrizeDistributor", () => {
 
   describe("awardRunnerUpPrizes", () => {
     it("should award runner-up prizes", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
@@ -144,7 +144,7 @@ describe("TournamentPrizeDistributor", () => {
     });
 
     it("should generate runner-up news items", () => {
-      const rng = new SeededRNG(12345);
+      const rng = new SeededRNGService(12345);
       const warriors = Array.from({ length: 64 }, (_, i) => 
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10

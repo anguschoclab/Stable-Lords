@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { BoutNarrator } from "@/engine/narrative/boutNarrator";
+import { SeededRNGService } from "@/engine/core/rng";
 import { FightingStyle } from "@/types/shared.types";
 import { SeededRNG } from "@/utils/random";
 

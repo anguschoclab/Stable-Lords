@@ -13,7 +13,7 @@ import { computeWarriorStats, DAMAGE_LABELS } from "@/engine/skillCalc";
 import { generatePotential } from "@/engine/potential";
 import { LoreArchive } from "@/lore/LoreArchive";
 import { generateId } from "@/utils/idUtils";
-import { SeededRNG } from "@/utils/random";
+import { SeededRNGService } from "@/engine/core/rng";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +40,7 @@ export default function Orphanage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [poolSeedValue, setPoolSeedValue] = useState(12345); // Standard starting seed
   
-  const rng = useMemo(() => new SeededRNG(poolSeedValue), [poolSeedValue]);
+  const rng = useMemo(() => new SeededRNGService(poolSeedValue), [poolSeedValue]);
 
   const [boutResult, setBoutResult] = useState<{
     a: Warrior; d: Warrior;
@@ -107,12 +107,12 @@ export default function Orphanage() {
   }, [selectedWarriors]);
 
   const finishFTUE = useCallback(() => {
-    const finishRng = new SeededRNG(poolSeedValue + 999);
+    const finishRng = new SeededRNGService(poolSeedValue + 999);
 
     const warriors = selectedWarriors.map((pw) => {
       const potential = generatePotential(pw.attrs, "Promising", () => finishRng.next());
       const w = makeWarrior(
-        generateId(finishRng, "warrior"),
+        finishRng.uuid(),
         pw.name,
         pw.style,
         pw.attrs,
@@ -161,7 +161,7 @@ export default function Orphanage() {
     deadWarriors.forEach(w => usedNames.add(w.name));
     rivals.forEach(r => r.roster.forEach(w => usedNames.add(w.name)));
 
-    const recruitPool = generateRecruitPool(100, 1, usedNames, poolSeedValue + 888);
+    const recruitPool = generateRecruitPool(100, 1, usedNames, new SeededRNGService(poolSeedValue + 888));
 
     setState((draft: any) => {
       draft.isFTUE = false;

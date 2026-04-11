@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from "vitest";
 import { advanceWeek } from "@/engine/pipeline/services/weekPipelineService";
 import { GameState, Warrior, BoutOffer, Promoter } from "@/types/state.types";
 import { FightingStyle } from "@/types/shared.types";
-import { SeededRNG } from "@/utils/random";
+import { SeededRNGService } from "@/engine/core/rng";
 
 describe("Bout Simulation Integration", () => {
   it("should simulate a signed bout and update state accordingly", () => {
-    const rng = new SeededRNG(1);
+    const rng = new SeededRNGService(1);
     
     // 1. Setup a minimal state with a signed bout
     const warriorA: Warrior = {

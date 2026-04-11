@@ -4,8 +4,7 @@ import { audioManager } from "@/lib/AudioManager";
 import narrativeContent from "@/data/narrativeContent.json";
 import { NarrativeTemplateEngine, type CombatContext } from "./narrativeTemplateEngine";
 import { pick, szToHeight, getWeaponDisplayName, getWeaponType } from "./narrativeUtils";
-
-type RNG = () => number;
+import type { IRNGService } from "@/engine/core/rng";
 
 export interface WarriorIntroData {
   name: string;
@@ -66,7 +65,8 @@ export class CombatNarrator {
    * Generates battle opener text.
    */
   static battleOpener(rng: IRNGService): string {
-    return NarrativeTemplateEngine.getFromArchive(rng, ["pbp", "openers"]);
+    const template = NarrativeTemplateEngine.getFromArchive(rng, ["pbp", "openers"]);
+    return NarrativeTemplateEngine.interpolateTemplate(template, {});
   }
 
   /**

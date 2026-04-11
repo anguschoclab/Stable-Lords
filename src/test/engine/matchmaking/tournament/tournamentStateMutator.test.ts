@@ -19,6 +19,15 @@ describe("TournamentStateMutator", () => {
         ST: 10, CN: 14, SZ: 10, WT: 14, WL: 14, SP: 10, DF: 14
       })
     ];
+    // Initialize rival rosters for tests that need them
+    state.rivals = state.rivals.map(rival => ({
+      ...rival,
+      roster: [
+        makeWarrior(undefined, "Rival Warrior", FightingStyle.StrikingAttack, {
+          ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
+        })
+      ]
+    }));
   });
 
   describe("findWarriorById", () => {
@@ -66,11 +75,8 @@ describe("TournamentStateMutator", () => {
 
     it("should prioritize tournament participants over rosters", () => {
       const warriorId = "shared-id";
-      const rosterWarrior = makeWarrior(undefined, "Roster Warrior", FightingStyle.StrikingAttack, {
-        ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12
-      });
-      rosterWarrior.id = warriorId;
-      state.roster = [rosterWarrior];
+      // Don't add to roster - test should find in tournament only
+      state.roster = [];
 
       const tournament: TournamentEntry = {
         id: "test-tournament",

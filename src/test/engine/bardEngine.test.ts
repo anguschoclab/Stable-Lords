@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { getFromArchive, interpolateTemplate } from "@/engine/narrativePBP";
+import { SeededRNGService } from "@/engine/core/rng";
+import { NarrativeTemplateEngine } from "@/engine/narrative/narrativeTemplateEngine";
 import { blurb, commentatorFor, recapLine } from "@/lore/AnnouncerAI";
-import { SeededRNG } from "@/utils/random";
 
 describe("Bard Narrative Engine", () => {
-  const rng = new SeededRNG(12345);
+  const rng = new SeededRNGService(12345);
   const nextRng = () => rng.next();
 
   describe("interpolateTemplate", () => {
@@ -16,44 +16,44 @@ describe("Bard Narrative Engine", () => {
         weapon: "GLADIUS",
         bodyPart: "CHEST"
       };
-      const result = interpolateTemplate(template, ctx);
+      const result = NarrativeTemplateEngine.interpolateTemplate(template, ctx);
       expect(result).toBe("Warrior A strikes Warrior D with GLADIUS in the CHEST.");
     });
 
     it("interpolates %H (hits/minutes) token", () => {
       const template = "The bout lasted %H minutes.";
-      const result = interpolateTemplate(template, { hits: 15 });
+      const result = NarrativeTemplateEngine.interpolateTemplate(template, { hits: 15 });
       expect(result).toBe("The bout lasted 15 minutes.");
     });
 
     it("falls back to generic names for missing context", () => {
       const template = "%A attacks %D.";
-      const result = interpolateTemplate(template, {});
+      const result = NarrativeTemplateEngine.interpolateTemplate(template, {});
       expect(result).toBe("The warrior attacks the opponent.");
     });
   });
 
   describe("Archive Lookup", () => {
     it("successfully retrieves migrated blurbs", () => {
-      const template = getFromArchive(nextRng, ["blurbs", "neutral"]);
+      const template = NarrativeTemplateEngine.getFromArchive(rng, ["blurbs", "neutral"]);
       expect(template).toBeDefined();
       expect(template).toContain("%A");
     });
 
     it("retrieves commentary by tag", () => {
-      const template = getFromArchive(nextRng, ["commentary", "KO"]);
+      const template = NarrativeTemplateEngine.getFromArchive(rng, ["commentary", "KO"]);
       expect(template).toBe("What a knockout! The crowd erupts!");
     });
 
     it("returns ultimate fallback for missing paths", () => {
-      const template = getFromArchive(nextRng, ["invalid", "path"]);
+      const template = NarrativeTemplateEngine.getFromArchive(rng, ["invalid", "path"]);
       expect(template).toBe("A fierce exchange occurs.");
     });
   });
 
   describe("Unified Announcer AI", () => {
     it("generates a deterministic blurb", () => {
-      const testRng = new SeededRNG(42);
+      const testRng = new SeededRNGService(42);
       const output1 = blurb({ 
         tone: "hype", 
         winner: "Caesar", 
@@ -61,7 +61,7 @@ describe("Bard Narrative Engine", () => {
         rng: () => testRng.next() 
       });
       
-      const testRng2 = new SeededRNG(42);
+      const testRng2 = new SeededRNGService(42);
       const output2 = blurb({ 
         tone: "hype", 
         winner: "Caesar", 
@@ -90,7 +90,7 @@ describe("Bard Narrative Engine", () => {
     it("handles flashy/supernatural tiers via getStrikeSeverity logic", () => {
       // In narrativePBP if fame >= 100 and isSuperFlashy=true -> "critical_supernatural"
       // We can't test internal private functions easily but we can verify getFromArchive paths
-      const criticalTemplate = getFromArchive(nextRng, ["strikes", "slashing", "critical_supernatural"]);
+      const criticalTemplate = NarrativeTemplateEngine.getFromArchive(rng, ["strikes", "slashing", "critical_supernatural"]);
       expect(criticalTemplate).toBeDefined();
     });
   });

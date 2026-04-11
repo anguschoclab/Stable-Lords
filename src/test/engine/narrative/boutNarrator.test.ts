@@ -1,11 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { BoutNarrator } from "@/engine/narrative/boutNarrator";
-import { SeededRNGService } from "@/engine/core/rng";
 import { FightingStyle } from "@/types/shared.types";
-import { SeededRNG } from "@/utils/random";
+import { SeededRNGService } from "@/engine/core/rng";
 
 describe("BoutNarrator", () => {
-  const rng = () => new SeededRNG(12345).next();
+  const rng = new SeededRNGService(12345);
 
   describe("generateWarriorIntro", () => {
     it("should delegate to CombatNarrator", () => {

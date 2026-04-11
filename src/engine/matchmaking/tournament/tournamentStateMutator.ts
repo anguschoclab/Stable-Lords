@@ -26,11 +26,16 @@ export function modifyWarrior(state: GameState, warriorId: string, transform: (w
 }
 
 export function findWarriorById(state: GameState, warriorId: string, tournament?: TournamentEntry): Warrior | undefined {
+  // Check tournament first if provided
+  if (tournament) {
+    const tournamentW = tournament.participants.find(w => w.id === warriorId);
+    if (tournamentW) return tournamentW;
+  }
   const playerW = state.roster.find(w => w.id === warriorId);
   if (playerW) return playerW;
   for (const r of state.rivals) {
     const rw = r.roster.find(w => w.id === warriorId);
     if (rw) return rw;
   }
-  return tournament?.participants.find(w => w.id === warriorId);
+  return undefined;
 }

@@ -9,7 +9,7 @@ import { useGameStore } from "@/state/useGameStore";
 import { FightingStyle, STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, type Attributes } from "@/types/game";
 import { BASE_ROSTER_CAP } from "@/data/constants";
 import { makeWarrior } from "@/engine/factories";
-import { SeededRNG } from "@/utils/random";
+import { SeededRNGService } from "@/engine/core/rng";
 import { hashStr } from "@/utils/idUtils";
 import {
   generateRecruitPool, fullRefreshPool,
@@ -218,7 +218,7 @@ export default function Recruit() {
       }
 
       // 1.0 Deterministic ID: Recruitment uses hash-based seed for bit-identity
-      const recruitRng = new SeededRNG(draft.week + hashStr(w.name));
+      const recruitRng = new SeededRNGService(draft.week + hashStr(w.name));
       const warrior = makeWarrior(
         recruitRng.uuid("warrior"),
         w.name, w.style, w.attributes,
@@ -294,7 +294,7 @@ export default function Recruit() {
           toast.error("Roster full!");
           return;
         }
-        const rng = new SeededRNG(draft.week + hashStr(data.name));
+        const rng = new SeededRNGService(draft.week + hashStr(data.name));
         const id = rng.uuid("warrior");
         const warrior = makeWarrior(id, data.name, data.style, data.attributes);
         

@@ -1,5 +1,6 @@
 import type { GameState, RivalStableData } from "@/types/state.types";
 import type { IRNGService } from "@/engine/core/rng";
+import { SeededRNGService } from "@/engine/core/rng";
 import { generateRivalStables } from "../rivals";
 
 /**
@@ -11,7 +12,12 @@ export class ExpansionService {
    * Processes expansion by generating new rival stables.
    * Adds new stables to maintain world population.
    */
-  static processExpansion(state: GameState, rng: IRNGService, targetCount: number = 8, legacyCandidates?: { name: string; stableName: string }[]): { updatedState: GameState; newStables: RivalStableData[] } {
+  static processExpansion(
+    state: GameState,
+    rng: IRNGService,
+    targetCount: number = 8,
+    legacyCandidates?: { name: string; stableName: string }[]
+  ): { updatedState: GameState; newStables: RivalStableData[] } {
     let updatedState = { ...state };
     const currentCount = updatedState.rivals?.length || 0;
     

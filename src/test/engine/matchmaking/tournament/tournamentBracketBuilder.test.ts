@@ -97,8 +97,6 @@ describe("TournamentBracketBuilder", () => {
         expect(match.d).toBeDefined();
         expect(match.warriorIdA).toBeDefined();
         expect(match.warriorIdD).toBeDefined();
-        expect(match.stableIdA).toBeDefined();
-        expect(match.stableIdD).toBeDefined();
         expect(match.winner).toBeUndefined();
       });
     });

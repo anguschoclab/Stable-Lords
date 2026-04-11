@@ -23,7 +23,7 @@ export class NarrativeTemplateEngine {
    */
   static interpolateTemplate(template: string, ctx: CombatContext): string {
     if (!template) return "No description available.";
-    return template
+    let result = template
       .replace(/%A/g, ctx.attacker || ctx.name || "The warrior")
       .replace(/%D/g, ctx.defender || "the opponent")
       .replace(/%W/g, ctx.weapon || "weapon")
@@ -31,6 +31,18 @@ export class NarrativeTemplateEngine {
       .replace(/%H/g, String(ctx.hits || ""))
       .replace(/%WINNER/g, ctx.winner || "the winner")
       .replace(/%LOSER/g, ctx.loser || "the loser");
+    
+    // Also handle {{token}} format
+    result = result
+      .replace(/\{\{attacker\}\}/g, ctx.attacker || ctx.name || "The warrior")
+      .replace(/\{\{defender\}\}/g, ctx.defender || "the opponent")
+      .replace(/\{\{weapon\}\}/g, ctx.weapon || "weapon")
+      .replace(/\{\{bodyPart\}\}/g, ctx.bodyPart || "body")
+      .replace(/\{\{name\}\}/g, ctx.name || "The warrior")
+      .replace(/\{\{winner\}\}/g, ctx.winner || "the winner")
+      .replace(/\{\{loser\}\}/g, ctx.loser || "the loser");
+    
+    return result;
   }
 
   /**

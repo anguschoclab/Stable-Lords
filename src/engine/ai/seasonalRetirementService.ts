@@ -11,7 +11,7 @@ export class SeasonalRetirementService {
    * Handles legacy founders (retired warriors becoming owners).
    */
   static processSeasonalRetirement(state: GameState, rng: IRNGService): { updatedState: GameState; legacyCandidates: any[] } {
-    let updatedState = { ...state };
+    const updatedState = { ...state };
     const legacyCandidates: any[] = [];
 
     updatedState.rivals = updatedState.rivals.map(rival => {

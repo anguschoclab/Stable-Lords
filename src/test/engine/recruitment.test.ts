@@ -61,7 +61,7 @@ describe("partialRefreshPool", () => {
     expect(addedInWeek2.length).toBe(9);
 
     // Test maximum removal: array size 20 -> floor(6) -> min(4, 6) = 4
-    let largePool = generateRecruitPool(20, 1, usedNames);
+    const largePool = generateRecruitPool(20, 1, usedNames);
     const refreshedLarge = partialRefreshPool(largePool, 2, usedNames);
     // Doesn't truncate down to DEFAULT_POOL_SIZE if it was larger, only expands up to it.
     // wait, does it? The code says:

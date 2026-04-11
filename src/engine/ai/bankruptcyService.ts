@@ -12,7 +12,7 @@ export class BankruptcyService {
    */
   static processBankruptcy(state: GameState, rng: IRNGService): { updatedState: GameState; bankruptStables: string[] } {
     const BANKRUPTCY_THRESHOLD = -500;
-    let updatedState = { ...state };
+    const updatedState = { ...state };
     const bankruptStables: string[] = [];
 
     updatedState.rivals = updatedState.rivals.filter(rival => {

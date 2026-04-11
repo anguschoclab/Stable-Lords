@@ -114,7 +114,7 @@ export function processHallOfFame(state: GameState, newWeek: number, rng?: IRNGS
   });
 
   const impact: StateImpact = {
-    hallOfFame: [...(state.hallOfFame || []), ...awards],
+    awards: [...(state.awards || []), ...awards],
     rosterUpdates,
     rivalsUpdates
   };

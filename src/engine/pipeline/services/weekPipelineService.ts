@@ -45,7 +45,7 @@ export function advanceWeek(state: GameState): GameState {
   const boutImpact = runBoutSimulationPass(state, rootRng);
   
   // Apply bout impact to get settled state for subsequent passes
-  let settledState = resolveImpacts(state, [boutImpact]);
+  const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 
   // Build and cache warrior map for subsequent AI passes
@@ -68,7 +68,7 @@ export function advanceWeek(state: GameState): GameState {
   const estimatedTreasury = settledState.treasury + (economyImpact?.treasuryDelta || 0);
   if (estimatedTreasury < -500) {
     // If bankrupt, we still resolve basic impacts then exit
-    let finalState = resolveImpacts(settledState, impacts);
+    const finalState = resolveImpacts(settledState, impacts);
     finalState.week = nextWeek;
     finalState.year = nextYear;
     return archiveWeekLogs(finalState);
@@ -91,7 +91,7 @@ export function advanceWeek(state: GameState): GameState {
   impacts.push(runNarrativePass(settledState, currentWeek, nextWeek, rootRng));
 
   // 4. Resolution Phase (Apply all impacts in one unified pass)
-  let finalizedState = resolveImpacts(settledState, impacts);
+  const finalizedState = resolveImpacts(settledState, impacts);
 
   // 5. Finalization
   finalizedState.week = nextWeek;

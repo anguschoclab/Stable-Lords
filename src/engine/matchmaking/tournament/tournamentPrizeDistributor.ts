@@ -24,7 +24,7 @@ export function awardTournamentPrizes(
   const championWarrior = tournament.participants.find(w => w.name === champion);
   const championStableId = championWarrior?.stableId;
   
-  let updatedState = { ...state };
+  const updatedState = { ...state };
   const prizeNews: string[] = [];
 
   // Prize Purses by Tier
@@ -87,7 +87,7 @@ export function awardRunnerUpPrizes(
     const runnerUpWarrior = tournament.participants.find(w => w.name === (runnerUp.winner === "A" ? runnerUp.d : runnerUp.a));
     const runnerUpStableId = runnerUpWarrior?.stableId;
     
-    let updatedState = { ...state };
+    const updatedState = { ...state };
     const prizeNews: string[] = [];
 
     if (runnerUpStableId === updatedState.player?.id) {

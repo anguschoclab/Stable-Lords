@@ -143,6 +143,8 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
     }
     if (imp.newsletterItems) merged.newsletterItems!.push(...imp.newsletterItems);
     if (imp.ledgerEntries) merged.ledgerEntries!.push(...imp.ledgerEntries);
+    if (imp.tournaments) merged.tournaments = imp.tournaments;
+    if (imp.awards) merged.awards = imp.awards;
   }
   return merged;
 }

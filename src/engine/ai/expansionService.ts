@@ -18,7 +18,7 @@ export class ExpansionService {
     targetCount: number = 8,
     legacyCandidates?: { name: string; stableName: string }[]
   ): { updatedState: GameState; newStables: RivalStableData[] } {
-    let updatedState = { ...state };
+    const updatedState = { ...state };
     const currentCount = updatedState.rivals?.length || 0;
     
     if (currentCount >= targetCount) {

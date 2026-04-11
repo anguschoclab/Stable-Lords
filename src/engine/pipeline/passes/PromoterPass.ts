@@ -1,9 +1,9 @@
-import { GameState, BoutOffer, Promoter, Warrior, RankingEntry } from "@/types/state.types";
+import { GameState, BoutOffer, Promoter, Warrior } from "@/types/state.types";
+import { StateImpact } from "@/engine/impacts";
 import { FightingStyle } from "@/types/shared.types";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { FIGHT_PURSE } from "@/data/economyConstants";
-import { generateId } from "@/utils/idUtils";
 /**
  * Stable Lords — Promoter Pass
  * Phase 2: Promoters scan the world and dispatch bout offers.
@@ -124,7 +124,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   });
 
   return {
-    ...stas: newOffers
+    boutOffers: newOffers
   };
 }
 

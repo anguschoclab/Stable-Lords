@@ -3,6 +3,7 @@ import { createFreshState } from "@/engine/factories";
 import { populateTestState } from "@/test/testHelpers";
 import { runRankingsPass } from "@/engine/pipeline/passes/RankingsPass";
 import { committeeSelection, TOURNAMENT_TIERS } from "@/engine/matchmaking/tournament/tournamentSelectionCommittee";
+import { resolveImpacts } from "@/engine/impacts";
 import { GameState } from "@/types/state.types";
 import { FightingStyle } from "@/types/shared.types";
 
@@ -12,7 +13,8 @@ describe("TournamentSelectionCommittee", () => {
   beforeEach(() => {
     state = createFreshState("test-seed");
     state = populateTestState(state);
-    state = runRankingsPass(state);
+    const rankingsImpact = runRankingsPass(state);
+    state = resolveImpacts(state, [rankingsImpact]);
   });
 
   describe("committeeSelection", () => {

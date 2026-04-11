@@ -76,7 +76,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   };
 }
 
-/** Process aging for all warriors at week-end. Legacy wrapper. */
+/** @deprecated Use computeAgingImpact and resolveImpacts instead. Process aging for all warriors at week-end. Legacy wrapper. */
 export function processAging(state: GameState): GameState {
   const rng = new SeededRNGService(state.week * 997 + 3);
   const impact = computeAgingImpact(state, rng);

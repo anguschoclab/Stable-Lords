@@ -42,13 +42,16 @@ export function advanceWeek(state: GameState): GameState {
 
   // 2. Settlement Phase (The "World Heartbeat")
   // Bouts settle against current state to finalize history/records for the week ending.
-  let settledState = runBoutSimulationPass(state, rootRng);
+  const boutImpact = runBoutSimulationPass(state, rootRng);
+  
+  // Apply bout impact to get settled state for subsequent passes
+  let settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 
   // Build and cache warrior map for subsequent AI passes
   const warriorMap = new Map<string, Warrior>();
-  settledState.roster.forEach(w => warriorMap.set(w.id, w));
-  (settledState.rivals || []).forEach(r => r.roster.forEach(w => warriorMap.set(w.id, w)));
+  settledState.roster.forEach((w: Warrior) => warriorMap.set(w.id, w));
+  (settledState.rivals || []).forEach((r: any) => r.roster.forEach((w: Warrior) => warriorMap.set(w.id, w)));
   settledState.warriorMap = warriorMap;
 
   // 3. Collection Phase (Collect all intended changes)
@@ -61,7 +64,8 @@ export function advanceWeek(state: GameState): GameState {
 
   // ⚡ Early Exit: Bankruptcy Check
   // We check against settledState + economy impact roughly
-  const estimatedTreasury = settledState.treasury + (impacts[1]?.treasuryDelta || 0);
+  const economyImpact = impacts.find(i => i.treasuryDelta !== undefined);
+  const estimatedTreasury = settledState.treasury + (economyImpact?.treasuryDelta || 0);
   if (estimatedTreasury < -500) {
     // If bankrupt, we still resolve basic impacts then exit
     let finalState = resolveImpacts(settledState, impacts);

@@ -4,6 +4,7 @@ import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { logAgentAction } from "../ai/agentCore";
 import { generateBoutBids, verifyBoutAcceptance, BoutBid } from "../ai/workers/competitionWorker";
 import { AIPoolWarrior } from "./aiPoolCollector";
+import { StateImpact } from "@/engine/impacts";
 
 /** Stablemates cannot fight each other */
 function disallowStablemates(aStableId: string, dStableId: string): boolean {
@@ -14,7 +15,7 @@ function disallowStablemates(aStableId: string, dStableId: string): boolean {
  * Reconciles AI bout bids into pairings.
  * 1. Collect bids from all eligible agents.
  * 2. Reconcile bids into pairings.
- * 3. Skeptically verify acceptance.
+ * 3. Skeptical verify acceptance.
  */
 export function reconcileBidsIntoPairings(
   pool: AIPoolWarrior[],
@@ -22,12 +23,12 @@ export function reconcileBidsIntoPairings(
   state: GameState,
   seed?: number,
   rng?: IRNGService
-): { boutPairs: { a: AIPoolWarrior; d: AIPoolWarrior }[]; updatedRivals: RivalStableData[] } {
+): { boutPairs: { a: AIPoolWarrior; d: AIPoolWarrior }[]; impact: StateImpact } {
   const rngSnapshot = rng || new SeededRNGService(seed ?? (state.week * 7919 + 202));
   const maxBouts = Math.min(Math.floor(pool.length / 2), 6); 
   const paired = new Set<string>();
   const boutPairs: { a: AIPoolWarrior; d: AIPoolWarrior }[] = [];
-  const updatedRivals = [...rivals];
+  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
 
   // A) Collect Bids
   const allBids: { rivalIdx: number; bids: BoutBid[] }[] = rivals.map((r, idx) => ({
@@ -64,8 +65,8 @@ export function reconcileBidsIntoPairings(
       const d = rngSnapshot.pick(candidates);
       
       // Skeptical Acceptance Check for the Defender
-      const defenderStable = updatedRivals.find(r => r.owner.id === d.stableId);
-      const attackerStable = updatedRivals[bid.rivalIdx];
+      const defenderStable = rivals.find(r => r.owner.id === d.stableId);
+      const attackerStable = rivals[bid.rivalIdx];
       
       if (defenderStable && attackerPoolEntry && d) {
         const decision = verifyBoutAcceptance(defenderStable, d.warrior, attackerPoolEntry.warrior, attackerStable, state.weather);
@@ -75,20 +76,18 @@ export function reconcileBidsIntoPairings(
           paired.add(attackerPoolEntry.warrior.id);
           paired.add(d.warrior.id);
           
-          updatedRivals[bid.rivalIdx] = logAgentAction(updatedRivals[bid.rivalIdx], "STRATEGY", `Proposed bout: ${attackerPoolEntry.warrior.name} vs ${d.warrior.name} - ${bid.description}`, "Medium", state.week);
-          const defIdx = updatedRivals.findIndex(r => r.owner.id === d.stableId);
-          if (defIdx !== -1) {
-            updatedRivals[defIdx] = logAgentAction(updatedRivals[defIdx], "STRATEGY", `Accepted bout: ${d.warrior.name} vs ${attackerPoolEntry.warrior.name} from ${attackerStable.owner.stableName}.`, "Low", state.week);
-          }
+          const updatedAttacker = logAgentAction(attackerStable, "STRATEGY", `Proposed bout: ${attackerPoolEntry.warrior.name} vs ${d.warrior.name} - ${bid.description}`, "Medium", state.week);
+          rivalsUpdates.set(attackerStable.owner.id, updatedAttacker);
+          
+          const updatedDefender = logAgentAction(defenderStable, "STRATEGY", `Accepted bout: ${d.warrior.name} vs ${attackerPoolEntry.warrior.name} from ${attackerStable.owner.stableName}.`, "Low", state.week);
+          rivalsUpdates.set(defenderStable.owner.id, updatedDefender);
         } else {
-          const defIdx = updatedRivals.findIndex(r => r.owner.id === d.stableId);
-          if (defIdx !== -1) {
-             updatedRivals[defIdx] = logAgentAction(updatedRivals[defIdx], "STRATEGY", `Declined bout for ${d.warrior.name}: ${decision.reason}`, "Low", state.week);
-          }
+          const updatedDefender = logAgentAction(defenderStable, "STRATEGY", `Declined bout for ${d.warrior.name}: ${decision.reason}`, "Low", state.week);
+          rivalsUpdates.set(defenderStable.owner.id, updatedDefender);
         }
       }
     }
   }
 
-  return { boutPairs, updatedRivals };
+  return { boutPairs, impact: { rivalsUpdates } };
 }

@@ -88,6 +88,7 @@ export function computeTrainingImpact(state: GameState, rng: IRNGService): Train
   return { updatedRoster: currentRoster, updatedSeasonalGrowth: seasonalGrowth, results };
 }
 
+/** @deprecated Use computeTrainingImpact and resolveImpacts instead. Process training for all warriors at week-end. */
 export function processTraining(state: GameState): GameState {
   const rngService = new SeededRNGService(state.week * 555 + 1);
   const impact = computeTrainingImpact(state, rngService);

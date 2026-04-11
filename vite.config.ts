@@ -86,7 +86,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    sourcemap: false,
+    sourcemap: mode === "development",
     rollupOptions: {
       output: {
         manualChunks(id) {

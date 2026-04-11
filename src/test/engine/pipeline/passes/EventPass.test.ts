@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { runEventPass } from "@/engine/pipeline/passes/EventPass";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
+import { resolveImpacts } from "@/engine/impacts";
 import type { GameState } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";
 
@@ -28,8 +29,9 @@ describe("EventPass", () => {
       newsletter: []
     };
 
-    const nextState = runEventPass(state as GameState, 2, rng);
-    const warrior = nextState.roster.find(r => r.id === "w-1");
+    const impact = runEventPass(state as GameState, 2, rng);
+    const nextState = resolveImpacts(state as GameState, [impact]);
+    const warrior = nextState.roster.find((r: Warrior) => r.id === "w-1");
     expect(warrior?.fame).toBe(10);
     expect(warrior?.xp).toBe(5);
 

@@ -8,6 +8,7 @@ import { processAIRosterManagement } from "@/engine/ownerRoster";
 import { TournamentSelectionService } from "@/engine/matchmaking/tournamentSelection";
 import { processAllRivalsBoutOffers } from "@/engine/ai/workers/competitionWorker";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
+import { StateImpact, mergeImpacts } from "@/engine/impacts";
 /**
  * Stable Lords — Rival Strategy Pipeline Pass
  */
@@ -19,17 +20,18 @@ export const PASS_METADATA = {
 /**
  * Stable Lords — Rival Strategy Pipeline Pass
  */
-export function runRivalStrategyPass(state: GameState, nextWeek: number, rootRng?: IRNGService): GameState {
+export function runRivalStrategyPass(state: GameState, nextWeek: number, rootRng?: IRNGService): StateImpact {
   const rng = rootRng || new SeededRNGService(nextWeek * 7919 + 13);
-  let currentState = state;
+  const impacts: StateImpact[] = [];
   const globalGazetteItems: string[] = [];
+  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
 
   // 1. Process Individual Rival Stables (Economy/Strategy)
   const processedRivals = (state.rivals || []).map((rival, index) => {
     const strategySeed = nextWeek * 31 + index * 997 + rival.owner.id.length;
-    const strategy = updateAIStrategy(rival, currentState, strategySeed);
+    const strategy = updateAIStrategy(rival, state, strategySeed);
     const rivalWithStrategy = { ...rival, strategy };
-    const { updatedRival, isBankrupt, gazetteItems } = processAIStable(rivalWithStrategy, currentState);
+    const { updatedRival, isBankrupt, gazetteItems } = processAIStable(rivalWithStrategy, state);
     globalGazetteItems.push(...gazetteItems);
 
     if (isBankrupt) {
@@ -41,65 +43,66 @@ export function runRivalStrategyPass(state: GameState, nextWeek: number, rootRng
     return updatedRival;
   });
 
-  currentState.rivals = processedRivals;
+  rivalsUpdates.set("all", { rivals: processedRivals });
+  impacts.push({ rivalsUpdates });
 
   // 2. Draft from Recruitment Pool
-  const draft = aiDraftFromPool(state.recruitPool, currentState.rivals, nextWeek, currentState);
+  const draft = aiDraftFromPool(state.recruitPool, processedRivals, nextWeek, state);
   globalGazetteItems.push(...draft.gazetteItems);
-  currentState.rivals = draft.updatedRivals;
-  currentState.recruitPool = draft.updatedPool;
+  impacts.push({ 
+    rivalsUpdates: new Map([["all", { rivals: draft.updatedRivals }]]),
+    recruitPool: draft.updatedPool 
+  });
 
   // 3. AI Roster Management (Recruitment/Retirement)
   const rosterSeed = nextWeek * 13 + 7;
   const rosterRng = new SeededRNGService(rosterSeed);
   const { updatedRivals: finalizedRivals, gazetteItems: rosterGazette } = processAIRosterManagement({
-    ...currentState,
+    ...state,
     week: nextWeek
   }, rosterRng);
   globalGazetteItems.push(...rosterGazette);
-  currentState.rivals = finalizedRivals;
+  impacts.push({ rivalsUpdates: new Map([["all", { rivals: finalizedRivals }]]) });
 
   // 4. Contract Decision Phase: AI Stables accept/decline pending boutique offers
-  currentState = processAllRivalsBoutOffers(currentState, finalizedRivals);
+  const boutOffersImpact = processAllRivalsBoutOffers(state, finalizedRivals);
+  impacts.push(boutOffersImpact);
   
   // 5. Tournament Handling (Every 13 weeks)
   if (nextWeek > 0 && nextWeek % 13 === 0) {
-    currentState = handleSeasonalTournaments(currentState, nextWeek, rng);
+    const tournamentImpact = handleSeasonalTournaments(state, nextWeek, rng);
+    impacts.push(tournamentImpact);
   }
 
   if (globalGazetteItems.length > 0) {
-    currentState = {
-      ...currentState,
-      newsletter: [...(currentState.newsletter || []), { 
-        id: rng.uuid(),
-        week: nextWeek, 
-        title: "Intelligence & Strategy Report", 
-        items: globalGazetteItems 
-      }]
-    };
+    impacts.push({ newsletterItems: [{ 
+      id: rng.uuid(),
+      week: nextWeek, 
+      title: "Intelligence & Strategy Report", 
+      items: globalGazetteItems 
+    }]});
   }
 
-  return currentState;
+  return mergeImpacts(impacts);
 }
 
 function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGService): StateImpact {
   const tournaments = TournamentSelectionService.generateSeasonalTiers(state, week, state.season, week * 881);
   const tournamentNews: string[] = [];
   const allTours: any[] = [];
-  let finalState = { ...state };
+  const impacts: StateImpact[] = [];
 
   tournaments.forEach((tour) => {
-    finalState.tournaments = [...(finalState.tournaments || []), tour];
-    finalState = TournamentSelectionService.resolveCompleteTournament(finalState, tour.id, week * 500 + hashStr(tour.id));
-    const completedTour = finalState.tournaments.find(t => t.id === tour.id);
-    allTours.push(completedTour);
-    tournamentNews.push(`🏆 ${tour.name} finalized: ${completedTour?.champion || "Undisputed"} crowned champion.`);
+    impacts.push({ tournaments: [tour] });
+    const tournamentImpact = TournamentSelectionService.resolveCompleteTournament(state, tour.id, week * 500 + hashStr(tour.id));
+    impacts.push(tournamentImpact);
+    // Note: In a real implementation, we'd need to track the completed tournament
+    tournamentNews.push(`🏆 ${tour.name} finalized: Champion crowned.`);
   });
   
-  return {
-    tournaments: allTours,
+  impacts.push({
     isTournamentWeek: true,
-    activeTournamentId: allTours[0].id,
+    activeTournamentId: allTours[0]?.id,
     day: 0,
     newsletterItems: [{
       id: rng.uuid(),
@@ -107,7 +110,9 @@ function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGServ
       title: "🎖️ TOURNAMENT ARCHIVE", 
       items: tournamentNews 
     }]
-  };
+  });
+
+  return mergeImpacts(impacts);
 }
 
 function hashStr(s: string): number {

@@ -5,6 +5,7 @@ import { generateId } from "@/utils/idUtils";
 import { generateFightNarrative } from "@/engine/gazetteNarrative";
 import { engineEventBus } from "@/engine/core/EventBus";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
+import { StateImpact } from "@/engine/impacts";
 
 export function handleDeath(
   s: GameState, 
@@ -16,7 +17,7 @@ export function handleDeath(
   rivalStableId?: string,
   rng?: IRNGService
 ) {
-  if (outcome.by !== "Kill") return { s, death: false, playerDeath: false, deathNames: [] };
+  if (outcome.by !== "Kill") return { impact: {}, death: false, playerDeath: false, deathNames: [] };
   
   const victim = outcome.winner === "A" ? wD : wA;
   const isPlayerVictim = (outcome.winner === "A" && !!rivalStableId) ? false : (outcome.winner !== "A");
@@ -44,16 +45,17 @@ export function handleDeath(
     deathEvent: event
   };
 
-  const nextS: GameState = {
-    ...s,
-    roster: s.roster.filter(w => w.id !== victim.id),
-    graveyard: [...(s.graveyard || []), graveyardEntry],
-    unacknowledgedDeaths: [...(s.unacknowledgedDeaths || []), victim.id]
-  };
+  const rosterUpdates = new Map<string, Partial<Warrior>>();
+  const rivalsUpdates = new Map<string, any>();
+  const newsletterItems: any[] = [];
+  
+  // Remove victim from roster
+  if (s.roster.some(w => w.id === victim.id)) {
+    rosterUpdates.set(victim.id, { status: "Dead" as any });
+  }
   
   if (isPlayerVictim) {
-    nextS.fame = Math.max(0, (nextS.fame || 0) + 5);
-    if (nextS.player) nextS.player.fame = Math.max(0, (nextS.player.fame || 0) + 5);
+    newsletterItems.push({ type: "fameDelta", amount: 5 });
   }
   
   const deathSummary: FightSummary = { 
@@ -63,7 +65,7 @@ export function handleDeath(
     title: `DEATH: ${victim.name} in the Arena`, phase: "resolution"
   };
   
-  nextS.newsletter = [...(nextS.newsletter || []), { id: rng!.uuid(), week, title: "Arena Obituary", items: [narrative] }];
+  newsletterItems.push({ id: rng!.uuid(), week, title: "Arena Obituary", items: [narrative] });
   
   // Decoupled notification
   engineEventBus.emit({ 
@@ -72,10 +74,21 @@ export function handleDeath(
   });
 
   if (rivalStableId && outcome.winner === "A") { // Player killed a rival
-    nextS.rivals = (nextS.rivals || []).map((r: RivalStableData) => r.owner.id === rivalStableId 
-      ? { ...r, roster: r.roster.filter((w: Warrior) => w.id !== wD.id) }
-      : r);
+    const rival = (s.rivals || []).find((r: RivalStableData) => r.owner.id === rivalStableId);
+    if (rival) {
+      const updatedRoster = rival.roster.filter((w: Warrior) => w.id !== wD.id);
+      rivalsUpdates.set(rivalStableId, { roster: updatedRoster });
+    }
   }
 
-  return { s: nextS, death: true, playerDeath: isPlayerVictim, deathNames: [victim.name] };
+  const impact: StateImpact = {
+    graveyard: [graveyardEntry],
+    unacknowledgedDeaths: [victim.id],
+    rosterUpdates,
+    rivalsUpdates,
+    newsletterItems,
+    fameDelta: isPlayerVictim ? 5 : 0
+  };
+
+  return { impact, death: true, playerDeath: isPlayerVictim, deathNames: [victim.name] };
 }

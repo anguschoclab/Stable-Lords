@@ -3,6 +3,7 @@ import { createFreshState } from "@/engine/factories";
 import { FightingStyle } from "@/types/shared.types";
 import { findWarriorById, modifyWarrior } from "@/engine/matchmaking/tournament/tournamentStateMutator";
 import { makeWarrior } from "@/engine/factories";
+import { resolveImpacts } from "@/engine/impacts";
 import type { GameState } from "@/types/state.types";
 import type { TournamentEntry } from "@/types/state.types";
 
@@ -104,9 +105,10 @@ describe("TournamentStateMutator", () => {
   describe("modifyWarrior", () => {
     it("should modify warrior in player roster", () => {
       const originalFame = state.roster[0].fame;
-      const updatedState = modifyWarrior(state, state.roster[0].id, w => {
+      const impact = modifyWarrior(state, state.roster[0].id, w => {
         w.fame = 100;
       });
+      const updatedState = resolveImpacts(state, [impact]);
 
       const updatedWarrior = updatedState.roster.find(w => w.id === state.roster[0].id);
       expect(updatedWarrior?.fame).toBe(100);
@@ -117,9 +119,10 @@ describe("TournamentStateMutator", () => {
       const rivalId = state.rivals[0].roster[0].id;
       const originalFame = state.rivals[0].roster[0].fame;
       
-      const updatedState = modifyWarrior(state, rivalId, w => {
+      const impact = modifyWarrior(state, rivalId, w => {
         w.fame = 50;
       });
+      const updatedState = resolveImpacts(state, [impact]);
 
       const updatedRival = updatedState.rivals[0];
       const updatedWarrior = updatedRival.roster.find(w => w.id === rivalId);
@@ -128,20 +131,23 @@ describe("TournamentStateMutator", () => {
     });
 
     it("should return unchanged state for non-existent warrior", () => {
-      const originalState = JSON.stringify(state);
-      const updatedState = modifyWarrior(state, "non-existent-id", w => {
+      const impact = modifyWarrior(state, "non-existent-id", w => {
         w.fame = 100;
       });
+      const updatedState = resolveImpacts(state, [impact]);
 
-      expect(JSON.stringify(updatedState)).toBe(originalState);
+      // StateImpact with empty updates should resolve to same state
+      expect(updatedState.roster).toEqual(state.roster);
+      expect(updatedState.rivals).toEqual(state.rivals);
     });
 
     it("should apply complex transform function", () => {
-      const updatedState = modifyWarrior(state, state.roster[0].id, w => {
+      const impact = modifyWarrior(state, state.roster[0].id, w => {
         w.fame = w.fame + 10;
         w.career.wins = w.career.wins + 1;
         w.popularity = w.popularity + 5;
       });
+      const updatedState = resolveImpacts(state, [impact]);
 
       const updatedWarrior = updatedState.roster.find(w => w.id === state.roster[0].id);
       expect(updatedWarrior?.fame).toBe(10);

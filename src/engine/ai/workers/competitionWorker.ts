@@ -3,6 +3,7 @@ import { type CrowdMood } from "../../crowdMood";
 import { FightingStyle } from "@/types/shared.types";
 import { logAgentAction } from "../agentCore";
 import { respondToBoutOffer } from "@/engine/bout/mutations/contractMutations";
+import { StateImpact, mergeImpacts } from "@/engine/impacts";
 
 /**
  * CompetitionWorker: Handles boutique reasoning, tournament entry, and matchmaking bids.
@@ -158,8 +159,8 @@ export function evaluateBoutOffer(
 /**
  * AI Decision Engine — processes all pending offers for ALL rival stables in one O(N) pass.
  */
-export function processAllRivalsBoutOffers(state: GameState, rivals: RivalStableData[]): GameState {
-  let currentState = state;
+export function processAllRivalsBoutOffers(state: GameState, rivals: RivalStableData[]): StateImpact {
+  const impacts: StateImpact[] = [];
   const pendingOffers = Object.values(state.boutOffers).filter(o => o.status === "Proposed");
 
   pendingOffers.forEach(offer => {
@@ -170,11 +171,12 @@ export function processAllRivalsBoutOffers(state: GameState, rivals: RivalStable
 
       const rivalWarrior = owningRival.roster.find(w => w.id === wId);
       if (rivalWarrior && offer.responses[wId] === "Pending") {
-        const response = evaluateBoutOffer(currentState, offer, owningRival, rivalWarrior);
-        currentState = respondToBoutOffer(currentState, offer.id, rivalWarrior.id, response);
+        const response = evaluateBoutOffer(state, offer, owningRival, rivalWarrior);
+        const impact = respondToBoutOffer(state, offer.id, rivalWarrior.id, response);
+        impacts.push(impact);
       }
     });
   });
 
-  return currentState;
+  return mergeImpacts(impacts);
 }

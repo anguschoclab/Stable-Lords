@@ -5,6 +5,7 @@ import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { buildTournament } from "@/engine/matchmaking/tournament/tournamentBracketBuilder";
 import { resolveRound, resolveCompleteTournament } from "@/engine/matchmaking/tournament/tournamentResolver";
 import { makeWarrior } from "@/engine/factories";
+import { resolveImpacts } from "@/engine/impacts";
 import type { TournamentBout } from "@/types/state.types";
 
 describe("TournamentResolver", () => {
@@ -36,7 +37,8 @@ describe("TournamentResolver", () => {
 
       state.tournaments = [tournament];
 
-      const { updatedState, roundResults } = resolveRound(state, tournament.id, 12345);
+      const { impact, roundResults } = resolveRound(state, tournament.id, 12345);
+      const updatedState = resolveImpacts(state, [impact]);
 
       // Check that bracket was updated with winners
       const updatedTournament = updatedState.tournaments[0];
@@ -66,7 +68,8 @@ describe("TournamentResolver", () => {
 
       state.tournaments = [tournament];
 
-      const { updatedState } = resolveRound(state, tournament.id, 12345);
+      const { impact } = resolveRound(state, tournament.id, 12345);
+      const updatedState = resolveImpacts(state, [impact]);
 
       const resolvedTournament = updatedState.tournaments[0];
       const round1Matches = resolvedTournament.bracket.filter((b: TournamentBout) => b.round === 1);
@@ -123,10 +126,11 @@ describe("TournamentResolver", () => {
 
       state.tournaments = [tournament];
 
-      const updatedState = resolveCompleteTournament(state, tournament.id, 12345);
+      const impact = resolveCompleteTournament(state, tournament.id, 12345);
+      const updatedState = resolveImpacts(state, [impact]);
 
-      expect(updatedState.tournaments[0].completed).toBe(true);
-      expect(updatedState.tournaments[0].champion).toBeDefined();
+      expect(updatedState.tournaments?.[0].completed).toBe(true);
+      expect(updatedState.tournaments?.[0].champion).toBeDefined();
     });
 
     it("should determine a champion", () => {
@@ -148,9 +152,10 @@ describe("TournamentResolver", () => {
 
       state.tournaments = [tournament];
 
-      const updatedState = resolveCompleteTournament(state, tournament.id, 12345);
+      const impact = resolveCompleteTournament(state, tournament.id, 12345);
+      const updatedState = resolveImpacts(state, [impact]);
 
-      const champion = updatedState.tournaments[0].champion;
+      const champion = updatedState.tournaments?.[0].champion;
       expect(champion).toBeDefined();
       // Champion is a string (warrior ID)
       if (champion) {
@@ -176,7 +181,8 @@ describe("TournamentResolver", () => {
       });
 
       const state1 = { ...state, tournaments: [tournament1] };
-      const result1 = resolveCompleteTournament(state1, tournament1.id, 12345);
+      const impact1 = resolveCompleteTournament(state1, tournament1.id, 12345);
+      const result1 = resolveImpacts(state1, [impact1]);
 
       const tournament2 = buildTournament({
         tierId: "Gold",
@@ -188,7 +194,8 @@ describe("TournamentResolver", () => {
       });
 
       const state2 = { ...state, tournaments: [tournament2] };
-      const result2 = resolveCompleteTournament(state2, tournament2.id, 12345);
+      const impact2 = resolveCompleteTournament(state2, tournament2.id, 12345);
+      const result2 = resolveImpacts(state2, [impact2]);
 
       expect(result1.tournaments[0].champion).toBe(result2.tournaments[0].champion);
     });

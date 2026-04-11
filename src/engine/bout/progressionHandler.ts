@@ -6,13 +6,19 @@ import { calculateXP, applyXP } from "@/engine/progression";
 import { checkDiscovery } from "@/engine/favorites";
 import { updateEntityInList } from "@/utils/stateUtils";
 import { generateId } from "@/utils/idUtils";
+import { StateImpact } from "@/engine/impacts";
 
-export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outcome: FightOutcome, tags: string[], week: number, rivalStableId?: string, rng?: IRNGService): GameState {
+export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outcome: FightOutcome, tags: string[], week: number, rivalStableId?: string, rng?: IRNGService): StateImpact {
+  const rosterUpdates = new Map<string, Partial<Warrior>>();
+  const newsletterItems: any[] = [];
+  
   // XP
-  s.roster = updateEntityInList(s.roster, wA.id, w => applyXP(w, calculateXP(outcome, "A", tags), rng).warrior);
+  const updatedA = applyXP(wA, calculateXP(outcome, "A", tags), rng).warrior;
+  rosterUpdates.set(wA.id, updatedA);
 
   if (!rivalStableId) {
-    s.roster = updateEntityInList(s.roster, wD.id, w => applyXP(w, calculateXP(outcome, "D", tags), rng).warrior);
+    const updatedD = applyXP(wD, calculateXP(outcome, "D", tags), rng).warrior;
+    rosterUpdates.set(wD.id, updatedD);
   }
   
   // Favorites Discovery
@@ -21,9 +27,10 @@ export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outco
     if (!w) return;
     const disc = checkDiscovery(w, () => discRng ? discRng.next() : Math.random());
     if (disc.updated) {
-      s.roster = updateEntityInList(s.roster, w.id, rw => ({ ...rw, favorites: w.favorites }));
+      const existing = rosterUpdates.get(w.id) || w;
+      rosterUpdates.set(w.id, { ...existing, favorites: w.favorites });
       if (disc.hints.length > 0) {
-        s.newsletter = [...(s.newsletter || []), { id: discRng ? discRng.uuid() : generateId(undefined, "newsletter"), week, title: "Training Insight", items: disc.hints }];
+        newsletterItems.push({ id: discRng ? discRng.uuid() : generateId(undefined, "newsletter"), week, title: "Training Insight", items: disc.hints });
       }
     }
   });
@@ -33,8 +40,12 @@ export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outco
     const winner = outcome.winner === "A" ? wA : wD;
     const loser = outcome.winner === "A" ? wD : wA;
     if (loser.fame >= (winner.fame || 0) + 10 && (loser.fame || 0) >= (winner.fame || 0) * 2 && !winner.flair.includes("Giant Killer")) {
-       s.roster = updateEntityInList(s.roster, winner.id, rw => ({ ...rw, flair: [...rw.flair, "Giant Killer"] }));
+       const existing = rosterUpdates.get(winner.id) || winner;
+       rosterUpdates.set(winner.id, { ...existing, flair: [...(existing.flair || []), "Giant Killer"] });
     }
   }
-  return s;
+  
+  const impact: StateImpact = { rosterUpdates };
+  if (newsletterItems.length > 0) impact.newsletterItems = newsletterItems;
+  return impact;
 }

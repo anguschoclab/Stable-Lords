@@ -1,4 +1,4 @@
-import type { GameState, LedgerEntry, NewsletterItem, RivalStableData, RankingEntry, Season, WeatherType, BoutOffer, Promoter, Trainer, OwnerGrudge, Rivalry } from "@/types/state.types";
+import type { GameState, LedgerEntry, NewsletterItem, RivalStableData, RankingEntry, Season, WeatherType, BoutOffer, Promoter, Trainer, OwnerGrudge, Rivalry, CrowdMoodType, AnnualAward } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";
 import type { PoolWarrior } from "@/engine/recruitment";
 
@@ -10,7 +10,6 @@ export interface StateImpact {
   newsletterItems?: NewsletterItem[]; 
   ledgerEntries?: LedgerEntry[]; 
   seasonalGrowth?: any[]; 
-  tokensDelta?: any[]; 
   newPoolRecruits?: PoolWarrior[]; 
   recruitPool?: PoolWarrior[];
   tournaments?: any[];
@@ -43,6 +42,8 @@ export interface StateImpact {
   coachDismissed?: any[];
   restStates?: any[];
   unacknowledgedDeaths?: any[];
+  crowdMood?: CrowdMoodType;
+  awards?: AnnualAward[];
 }
 
 type ImpactHandler<K extends keyof StateImpact> = (state: GameState, value: Exclude<StateImpact[K], undefined>) => void;
@@ -70,7 +71,6 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
   newsletterItems: (state, value) => { state.newsletter = [...(state.newsletter || []), ...value]; },
   ledgerEntries: (state, value) => { state.ledger = [...(state.ledger ?? []), ...value]; },
   seasonalGrowth: (state, value) => { state.seasonalGrowth = [...(state.seasonalGrowth || []), ...value]; },
-  tokensDelta: (state, value) => { state.tokens = [...(state.tokens || []), ...value]; },
   week: (state, value) => { state.week = value; },
   season: (state, value) => { state.season = value; },
   weather: (state, value) => { state.weather = value; },
@@ -86,11 +86,23 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
   playerAvoids: (state, value) => { state.playerAvoids = [...(state.playerAvoids || []), ...value]; },
   coachDismissed: (state, value) => { state.coachDismissed = [...(state.coachDismissed || []), ...value]; },
   restStates: (state, value) => { state.restStates = [...(state.restStates || []), ...value]; },
+  crowdMood: (state, value) => { state.crowdMood = value; },
   unacknowledgedDeaths: (state, value) => { state.unacknowledgedDeaths = [...(state.unacknowledgedDeaths || []), ...value]; },
+  awards: (state, value) => { state.awards = [...(state.awards || []), ...value]; },
   boutOffers: (state, value) => { state.boutOffers = value; },
   promoters: (state, value) => { state.promoters = value; },
   recruitPool: (state, value) => { state.recruitPool = value; },
-  tournaments: (state, value) => { state.tournaments = [...(state.tournaments || []), ...value]; },
+  tournaments: (state, value) => { 
+    if (!value || value.length === 0) return;
+    const existing = state.tournaments || [];
+    const updated = existing.map(t => {
+      const replacement = value.find(v => v.id === t.id);
+      return replacement ? replacement : t;
+    });
+    // Add any new tournaments that weren't in the existing array
+    const newTournaments = value.filter(v => !existing.find(e => e.id === v.id));
+    state.tournaments = [...updated, ...newTournaments];
+  },
   isTournamentWeek: (state, value) => { state.isTournamentWeek = value; },
   activeTournamentId: (state, value) => { state.activeTournamentId = value; },
   day: (state, value) => { state.day = value; },

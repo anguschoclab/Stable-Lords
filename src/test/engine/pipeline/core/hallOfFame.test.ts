@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { processHallOfFame } from "@/engine/pipeline/core/hallOfFame";
+import { resolveImpacts } from "@/engine/impacts";
 import type { GameState, Warrior } from "@/types/game";
 import { FightingStyle } from "@/types/shared.types";
 
@@ -32,14 +33,16 @@ describe("processHallOfFame", () => {
 
   it("returns state unchanged if not week 1 of a new year", () => {
     const state = { ...baseState, week: 2 } as GameState;
-    const res = processHallOfFame(state, 2);
-    expect(res).toBe(state);
+    const impact = processHallOfFame(state, 2);
+    const res = resolveImpacts(state, [impact]);
+    expect(res).toEqual(state);
   });
 
   it("returns state unchanged if it is the very first week of the game (Year 1)", () => {
     const state = { ...baseState, year: 1 } as GameState;
-    const res = processHallOfFame(state, 1);
-    expect(res).toBe(state);
+    const impact = processHallOfFame(state, 1);
+    const res = resolveImpacts(state, [impact]);
+    expect(res).toEqual(state);
   });
 
   it("correctly calculates and applies annual awards at Year 2 start", () => {
@@ -55,7 +58,8 @@ describe("processHallOfFame", () => {
       ],
     } as GameState;
 
-    const res = processHallOfFame(state, 1);
+    const impact = processHallOfFame(state, 1);
+    const res = resolveImpacts(state, [impact]);
     
     expect(res.awards.length).toBeGreaterThan(0);
     

@@ -1,28 +1,40 @@
-import type { GameState, Warrior, TournamentEntry } from "@/types/state.types";
+import type { GameState } from "@/types/state.types";
+import type { Warrior } from "@/types/warrior.types";
+import { StateImpact } from "@/engine/impacts";
 
 /**
  * Helper functions to modify/find warriors in state for tournament operations.
  */
-export function modifyWarrior(state: GameState, warriorId: string, transform: (w: Warrior) => void): GameState {
-  const updatedState = { ...state };
-  let found = false;
+export function modifyWarrior(state: GameState, warriorId: string, transform: (w: Warrior) => void): StateImpact {
+  const rosterUpdates = new Map<string, Partial<Warrior>>();
+  const rivalsUpdates = new Map<string, any>();
 
-  updatedState.roster = updatedState.roster.map(w => {
-    if (w.id === warriorId) { found = true; const draft = { ...w }; transform(draft); return draft; }
-    return w;
+  state.roster.forEach(w => {
+    if (w.id === warriorId) {
+      const newW = { ...w };
+      transform(newW);
+      rosterUpdates.set(warriorId, newW);
+    }
   });
 
-  if (!found) {
-    updatedState.rivals = updatedState.rivals.map(r => ({
-      ...r,
-      roster: r.roster.map(w => {
-        if (w.id === warriorId) { const draft = { ...w }; transform(draft); return draft; }
-        return w;
-      })
-    }));
-  }
+  state.rivals.forEach(r => {
+    const updatedRoster = r.roster.map(w => {
+      if (w.id === warriorId) {
+        const newW = { ...w };
+        transform(newW);
+        return newW;
+      }
+      return w;
+    });
+    if (updatedRoster !== r.roster) {
+      rivalsUpdates.set(r.owner.id, { roster: updatedRoster });
+    }
+  });
 
-  return updatedState;
+  return {
+    rosterUpdates,
+    rivalsUpdates
+  };
 }
 
 export function findWarriorById(state: GameState, warriorId: string, tournament?: TournamentEntry): Warrior | undefined {

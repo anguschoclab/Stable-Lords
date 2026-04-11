@@ -116,7 +116,7 @@ export function computeEconomyImpact(state: GameState, rng?: IRNGService): State
   };
 }
 
-/** Process economy at week-end. Adds ledger entries and updates treasury. */
+/** @deprecated Use computeEconomyImpact and resolveImpacts instead. Process economy at week-end. Adds ledger entries and updates treasury. */
 export function processEconomy(state: GameState): GameState {
   const impact = computeEconomyImpact(state);
   return {

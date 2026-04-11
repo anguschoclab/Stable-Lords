@@ -6,6 +6,7 @@ import { buildTournament } from "@/engine/matchmaking/tournament/tournamentBrack
 import { resolveCompleteTournament } from "@/engine/matchmaking/tournament/tournamentResolver";
 import { awardTournamentPrizes, awardRunnerUpPrizes } from "@/engine/matchmaking/tournament/tournamentPrizeDistributor";
 import { makeWarrior } from "@/engine/factories";
+import { resolveImpacts } from "@/engine/impacts";
 import type { GameState } from "@/types/state.types";
 
 describe("TournamentPrizeDistributor", () => {
@@ -14,7 +15,6 @@ describe("TournamentPrizeDistributor", () => {
   beforeEach(() => {
     state = createFreshState("test-seed");
     state.roster = [];
-    state.rivals = [];
     state.treasury = 1000;
   });
 
@@ -41,7 +41,8 @@ describe("TournamentPrizeDistributor", () => {
       });
 
       state.tournaments = [tournament];
-      state = resolveCompleteTournament(state, tournament.id, 12345);
+      const impact = resolveCompleteTournament(state, tournament.id, 12345);
+      state = resolveImpacts(state, [impact]);
 
       const { updatedState, prizeNews } = awardTournamentPrizes(state, tournament.id, 12345);
 
@@ -77,11 +78,13 @@ describe("TournamentPrizeDistributor", () => {
       });
 
       state.tournaments = [goldTournament];
-      state = resolveCompleteTournament(state, goldTournament.id, 12345);
+      const goldImpact = resolveCompleteTournament(state, goldTournament.id, 12345);
+      state = resolveImpacts(state, [goldImpact]);
       const { prizeNews: goldNews } = awardTournamentPrizes(state, goldTournament.id, 12345);
 
       state.tournaments = [silverTournament];
-      state = resolveCompleteTournament(state, silverTournament.id, 12345);
+      const silverImpact = resolveCompleteTournament(state, silverTournament.id, 12345);
+      state = resolveImpacts(state, [silverImpact]);
       const { prizeNews: silverNews } = awardTournamentPrizes(state, silverTournament.id, 12345);
 
       expect(goldNews.length).toBeGreaterThan(0);
@@ -106,7 +109,8 @@ describe("TournamentPrizeDistributor", () => {
       });
 
       state.tournaments = [tournament];
-      state = resolveCompleteTournament(state, tournament.id, 12345);
+      const impact = resolveCompleteTournament(state, tournament.id, 12345);
+      state = resolveImpacts(state, [impact]);
 
       const { prizeNews } = awardTournamentPrizes(state, tournament.id, 12345);
 
@@ -137,7 +141,8 @@ describe("TournamentPrizeDistributor", () => {
       });
 
       state.tournaments = [tournament];
-      state = resolveCompleteTournament(state, tournament.id, 12345);
+      const impact = resolveCompleteTournament(state, tournament.id, 12345);
+      state = resolveImpacts(state, [impact]);
 
       const { updatedState, prizeNews } = awardRunnerUpPrizes(state, tournament.id, 12345);
 
@@ -163,7 +168,8 @@ describe("TournamentPrizeDistributor", () => {
       });
 
       state.tournaments = [tournament];
-      state = resolveCompleteTournament(state, tournament.id, 12345);
+      const impact = resolveCompleteTournament(state, tournament.id, 12345);
+      state = resolveImpacts(state, [impact]);
 
       const { prizeNews } = awardRunnerUpPrizes(state, tournament.id, 12345);
 

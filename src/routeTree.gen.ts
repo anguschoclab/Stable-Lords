@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as World_rootRouteImport } from './routes/world/__root'
+import { Route as Ops_rootRouteImport } from './routes/ops/__root'
+import { Route as Command_rootRouteImport } from './routes/command/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as RunRoundRouteImport } from './routes/run-round'
 import { Route as HelpRouteImport } from './routes/help'
@@ -16,10 +19,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorldIndexRouteImport } from './routes/world/index'
 import { Route as StableIndexRouteImport } from './routes/stable/index'
 import { Route as LegacyIndexRouteImport } from './routes/legacy/index'
+import { Route as CommandIndexRouteImport } from './routes/command/index'
 import { Route as WorldTournamentsRouteImport } from './routes/world/tournaments'
 import { Route as WorldScoutingRouteImport } from './routes/world/scouting'
+import { Route as WorldIntelligenceRouteImport } from './routes/world/intelligence'
 import { Route as WorldHistoryRouteImport } from './routes/world/history'
 import { Route as WorldGazetteRouteImport } from './routes/world/gazette'
+import { Route as WorldChronicleRouteImport } from './routes/world/chronicle'
 import { Route as WarriorIdRouteImport } from './routes/warrior/$id'
 import { Route as StableTrainingRouteImport } from './routes/stable/training'
 import { Route as StableTrainersRouteImport } from './routes/stable/trainers'
@@ -29,11 +35,31 @@ import { Route as StableFinanceRouteImport } from './routes/stable/finance'
 import { Route as StableEquipmentRouteImport } from './routes/stable/equipment'
 import { Route as StableContractsRouteImport } from './routes/stable/contracts'
 import { Route as StableIdRouteImport } from './routes/stable/$id'
+import { Route as OpsPersonnelRouteImport } from './routes/ops/personnel'
+import { Route as OpsFinanceRouteImport } from './routes/ops/finance'
+import { Route as OpsEquipmentRouteImport } from './routes/ops/equipment'
+import { Route as OpsContractsRouteImport } from './routes/ops/contracts'
 import { Route as LegacyTournamentAwardsRouteImport } from './routes/legacy/tournament-awards'
 import { Route as LegacyHallOfFameRouteImport } from './routes/legacy/hall-of-fame'
 import { Route as LegacyAwardsRouteImport } from './routes/legacy/awards'
 import { Route as LegacyAnalyticsRouteImport } from './routes/legacy/analytics'
+import { Route as CommandTrainingRouteImport } from './routes/command/training'
+import { Route as CommandTacticsRouteImport } from './routes/command/tactics'
+import { Route as CommandRosterRouteImport } from './routes/command/roster'
+import { Route as CommandCombatRouteImport } from './routes/command/combat'
 
+const World_rootRoute = World_rootRouteImport.update({
+  id: '/world/__root',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Ops_rootRoute = Ops_rootRouteImport.update({
+  id: '/ops/__root',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Command_rootRoute = Command_rootRouteImport.update({
+  id: '/command/__root',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WelcomeRoute = WelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
@@ -69,6 +95,11 @@ const LegacyIndexRoute = LegacyIndexRouteImport.update({
   path: '/legacy/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommandIndexRoute = CommandIndexRouteImport.update({
+  id: '/command/',
+  path: '/command/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorldTournamentsRoute = WorldTournamentsRouteImport.update({
   id: '/world/tournaments',
   path: '/world/tournaments',
@@ -79,6 +110,11 @@ const WorldScoutingRoute = WorldScoutingRouteImport.update({
   path: '/world/scouting',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorldIntelligenceRoute = WorldIntelligenceRouteImport.update({
+  id: '/world/intelligence',
+  path: '/world/intelligence',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorldHistoryRoute = WorldHistoryRouteImport.update({
   id: '/world/history',
   path: '/world/history',
@@ -87,6 +123,11 @@ const WorldHistoryRoute = WorldHistoryRouteImport.update({
 const WorldGazetteRoute = WorldGazetteRouteImport.update({
   id: '/world/gazette',
   path: '/world/gazette',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorldChronicleRoute = WorldChronicleRouteImport.update({
+  id: '/world/chronicle',
+  path: '/world/chronicle',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WarriorIdRoute = WarriorIdRouteImport.update({
@@ -134,6 +175,26 @@ const StableIdRoute = StableIdRouteImport.update({
   path: '/stable/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpsPersonnelRoute = OpsPersonnelRouteImport.update({
+  id: '/ops/personnel',
+  path: '/ops/personnel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpsFinanceRoute = OpsFinanceRouteImport.update({
+  id: '/ops/finance',
+  path: '/ops/finance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpsEquipmentRoute = OpsEquipmentRouteImport.update({
+  id: '/ops/equipment',
+  path: '/ops/equipment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpsContractsRoute = OpsContractsRouteImport.update({
+  id: '/ops/contracts',
+  path: '/ops/contracts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegacyTournamentAwardsRoute = LegacyTournamentAwardsRouteImport.update({
   id: '/legacy/tournament-awards',
   path: '/legacy/tournament-awards',
@@ -154,16 +215,46 @@ const LegacyAnalyticsRoute = LegacyAnalyticsRouteImport.update({
   path: '/legacy/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommandTrainingRoute = CommandTrainingRouteImport.update({
+  id: '/command/training',
+  path: '/command/training',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommandTacticsRoute = CommandTacticsRouteImport.update({
+  id: '/command/tactics',
+  path: '/command/tactics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommandRosterRoute = CommandRosterRouteImport.update({
+  id: '/command/roster',
+  path: '/command/roster',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommandCombatRoute = CommandCombatRouteImport.update({
+  id: '/command/combat',
+  path: '/command/combat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/help': typeof HelpRoute
   '/run-round': typeof RunRoundRoute
   '/welcome': typeof WelcomeRoute
+  '/command': typeof Command_rootRoute
+  '/command/combat': typeof CommandCombatRoute
+  '/command/roster': typeof CommandRosterRoute
+  '/command/tactics': typeof CommandTacticsRoute
+  '/command/training': typeof CommandTrainingRoute
   '/legacy/analytics': typeof LegacyAnalyticsRoute
   '/legacy/awards': typeof LegacyAwardsRoute
   '/legacy/hall-of-fame': typeof LegacyHallOfFameRoute
   '/legacy/tournament-awards': typeof LegacyTournamentAwardsRoute
+  '/ops': typeof Ops_rootRoute
+  '/ops/contracts': typeof OpsContractsRoute
+  '/ops/equipment': typeof OpsEquipmentRoute
+  '/ops/finance': typeof OpsFinanceRoute
+  '/ops/personnel': typeof OpsPersonnelRoute
   '/stable/$id': typeof StableIdRoute
   '/stable/contracts': typeof StableContractsRoute
   '/stable/equipment': typeof StableEquipmentRoute
@@ -173,10 +264,14 @@ export interface FileRoutesByFullPath {
   '/stable/trainers': typeof StableTrainersRoute
   '/stable/training': typeof StableTrainingRoute
   '/warrior/$id': typeof WarriorIdRoute
+  '/world': typeof World_rootRoute
+  '/world/chronicle': typeof WorldChronicleRoute
   '/world/gazette': typeof WorldGazetteRoute
   '/world/history': typeof WorldHistoryRoute
+  '/world/intelligence': typeof WorldIntelligenceRoute
   '/world/scouting': typeof WorldScoutingRoute
   '/world/tournaments': typeof WorldTournamentsRoute
+  '/command/': typeof CommandIndexRoute
   '/legacy/': typeof LegacyIndexRoute
   '/stable/': typeof StableIndexRoute
   '/world/': typeof WorldIndexRoute
@@ -186,10 +281,20 @@ export interface FileRoutesByTo {
   '/help': typeof HelpRoute
   '/run-round': typeof RunRoundRoute
   '/welcome': typeof WelcomeRoute
+  '/command': typeof CommandIndexRoute
+  '/command/combat': typeof CommandCombatRoute
+  '/command/roster': typeof CommandRosterRoute
+  '/command/tactics': typeof CommandTacticsRoute
+  '/command/training': typeof CommandTrainingRoute
   '/legacy/analytics': typeof LegacyAnalyticsRoute
   '/legacy/awards': typeof LegacyAwardsRoute
   '/legacy/hall-of-fame': typeof LegacyHallOfFameRoute
   '/legacy/tournament-awards': typeof LegacyTournamentAwardsRoute
+  '/ops': typeof Ops_rootRoute
+  '/ops/contracts': typeof OpsContractsRoute
+  '/ops/equipment': typeof OpsEquipmentRoute
+  '/ops/finance': typeof OpsFinanceRoute
+  '/ops/personnel': typeof OpsPersonnelRoute
   '/stable/$id': typeof StableIdRoute
   '/stable/contracts': typeof StableContractsRoute
   '/stable/equipment': typeof StableEquipmentRoute
@@ -199,13 +304,15 @@ export interface FileRoutesByTo {
   '/stable/trainers': typeof StableTrainersRoute
   '/stable/training': typeof StableTrainingRoute
   '/warrior/$id': typeof WarriorIdRoute
+  '/world': typeof WorldIndexRoute
+  '/world/chronicle': typeof WorldChronicleRoute
   '/world/gazette': typeof WorldGazetteRoute
   '/world/history': typeof WorldHistoryRoute
+  '/world/intelligence': typeof WorldIntelligenceRoute
   '/world/scouting': typeof WorldScoutingRoute
   '/world/tournaments': typeof WorldTournamentsRoute
   '/legacy': typeof LegacyIndexRoute
   '/stable': typeof StableIndexRoute
-  '/world': typeof WorldIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -213,10 +320,20 @@ export interface FileRoutesById {
   '/help': typeof HelpRoute
   '/run-round': typeof RunRoundRoute
   '/welcome': typeof WelcomeRoute
+  '/command/__root': typeof Command_rootRoute
+  '/command/combat': typeof CommandCombatRoute
+  '/command/roster': typeof CommandRosterRoute
+  '/command/tactics': typeof CommandTacticsRoute
+  '/command/training': typeof CommandTrainingRoute
   '/legacy/analytics': typeof LegacyAnalyticsRoute
   '/legacy/awards': typeof LegacyAwardsRoute
   '/legacy/hall-of-fame': typeof LegacyHallOfFameRoute
   '/legacy/tournament-awards': typeof LegacyTournamentAwardsRoute
+  '/ops/__root': typeof Ops_rootRoute
+  '/ops/contracts': typeof OpsContractsRoute
+  '/ops/equipment': typeof OpsEquipmentRoute
+  '/ops/finance': typeof OpsFinanceRoute
+  '/ops/personnel': typeof OpsPersonnelRoute
   '/stable/$id': typeof StableIdRoute
   '/stable/contracts': typeof StableContractsRoute
   '/stable/equipment': typeof StableEquipmentRoute
@@ -226,10 +343,14 @@ export interface FileRoutesById {
   '/stable/trainers': typeof StableTrainersRoute
   '/stable/training': typeof StableTrainingRoute
   '/warrior/$id': typeof WarriorIdRoute
+  '/world/__root': typeof World_rootRoute
+  '/world/chronicle': typeof WorldChronicleRoute
   '/world/gazette': typeof WorldGazetteRoute
   '/world/history': typeof WorldHistoryRoute
+  '/world/intelligence': typeof WorldIntelligenceRoute
   '/world/scouting': typeof WorldScoutingRoute
   '/world/tournaments': typeof WorldTournamentsRoute
+  '/command/': typeof CommandIndexRoute
   '/legacy/': typeof LegacyIndexRoute
   '/stable/': typeof StableIndexRoute
   '/world/': typeof WorldIndexRoute
@@ -241,10 +362,20 @@ export interface FileRouteTypes {
     | '/help'
     | '/run-round'
     | '/welcome'
+    | '/command'
+    | '/command/combat'
+    | '/command/roster'
+    | '/command/tactics'
+    | '/command/training'
     | '/legacy/analytics'
     | '/legacy/awards'
     | '/legacy/hall-of-fame'
     | '/legacy/tournament-awards'
+    | '/ops'
+    | '/ops/contracts'
+    | '/ops/equipment'
+    | '/ops/finance'
+    | '/ops/personnel'
     | '/stable/$id'
     | '/stable/contracts'
     | '/stable/equipment'
@@ -254,10 +385,14 @@ export interface FileRouteTypes {
     | '/stable/trainers'
     | '/stable/training'
     | '/warrior/$id'
+    | '/world'
+    | '/world/chronicle'
     | '/world/gazette'
     | '/world/history'
+    | '/world/intelligence'
     | '/world/scouting'
     | '/world/tournaments'
+    | '/command/'
     | '/legacy/'
     | '/stable/'
     | '/world/'
@@ -267,10 +402,20 @@ export interface FileRouteTypes {
     | '/help'
     | '/run-round'
     | '/welcome'
+    | '/command'
+    | '/command/combat'
+    | '/command/roster'
+    | '/command/tactics'
+    | '/command/training'
     | '/legacy/analytics'
     | '/legacy/awards'
     | '/legacy/hall-of-fame'
     | '/legacy/tournament-awards'
+    | '/ops'
+    | '/ops/contracts'
+    | '/ops/equipment'
+    | '/ops/finance'
+    | '/ops/personnel'
     | '/stable/$id'
     | '/stable/contracts'
     | '/stable/equipment'
@@ -280,23 +425,35 @@ export interface FileRouteTypes {
     | '/stable/trainers'
     | '/stable/training'
     | '/warrior/$id'
+    | '/world'
+    | '/world/chronicle'
     | '/world/gazette'
     | '/world/history'
+    | '/world/intelligence'
     | '/world/scouting'
     | '/world/tournaments'
     | '/legacy'
     | '/stable'
-    | '/world'
   id:
     | '__root__'
     | '/'
     | '/help'
     | '/run-round'
     | '/welcome'
+    | '/command/__root'
+    | '/command/combat'
+    | '/command/roster'
+    | '/command/tactics'
+    | '/command/training'
     | '/legacy/analytics'
     | '/legacy/awards'
     | '/legacy/hall-of-fame'
     | '/legacy/tournament-awards'
+    | '/ops/__root'
+    | '/ops/contracts'
+    | '/ops/equipment'
+    | '/ops/finance'
+    | '/ops/personnel'
     | '/stable/$id'
     | '/stable/contracts'
     | '/stable/equipment'
@@ -306,10 +463,14 @@ export interface FileRouteTypes {
     | '/stable/trainers'
     | '/stable/training'
     | '/warrior/$id'
+    | '/world/__root'
+    | '/world/chronicle'
     | '/world/gazette'
     | '/world/history'
+    | '/world/intelligence'
     | '/world/scouting'
     | '/world/tournaments'
+    | '/command/'
     | '/legacy/'
     | '/stable/'
     | '/world/'
@@ -320,10 +481,20 @@ export interface RootRouteChildren {
   HelpRoute: typeof HelpRoute
   RunRoundRoute: typeof RunRoundRoute
   WelcomeRoute: typeof WelcomeRoute
+  Command_rootRoute: typeof Command_rootRoute
+  CommandCombatRoute: typeof CommandCombatRoute
+  CommandRosterRoute: typeof CommandRosterRoute
+  CommandTacticsRoute: typeof CommandTacticsRoute
+  CommandTrainingRoute: typeof CommandTrainingRoute
   LegacyAnalyticsRoute: typeof LegacyAnalyticsRoute
   LegacyAwardsRoute: typeof LegacyAwardsRoute
   LegacyHallOfFameRoute: typeof LegacyHallOfFameRoute
   LegacyTournamentAwardsRoute: typeof LegacyTournamentAwardsRoute
+  Ops_rootRoute: typeof Ops_rootRoute
+  OpsContractsRoute: typeof OpsContractsRoute
+  OpsEquipmentRoute: typeof OpsEquipmentRoute
+  OpsFinanceRoute: typeof OpsFinanceRoute
+  OpsPersonnelRoute: typeof OpsPersonnelRoute
   StableIdRoute: typeof StableIdRoute
   StableContractsRoute: typeof StableContractsRoute
   StableEquipmentRoute: typeof StableEquipmentRoute
@@ -333,10 +504,14 @@ export interface RootRouteChildren {
   StableTrainersRoute: typeof StableTrainersRoute
   StableTrainingRoute: typeof StableTrainingRoute
   WarriorIdRoute: typeof WarriorIdRoute
+  World_rootRoute: typeof World_rootRoute
+  WorldChronicleRoute: typeof WorldChronicleRoute
   WorldGazetteRoute: typeof WorldGazetteRoute
   WorldHistoryRoute: typeof WorldHistoryRoute
+  WorldIntelligenceRoute: typeof WorldIntelligenceRoute
   WorldScoutingRoute: typeof WorldScoutingRoute
   WorldTournamentsRoute: typeof WorldTournamentsRoute
+  CommandIndexRoute: typeof CommandIndexRoute
   LegacyIndexRoute: typeof LegacyIndexRoute
   StableIndexRoute: typeof StableIndexRoute
   WorldIndexRoute: typeof WorldIndexRoute
@@ -344,6 +519,27 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/world/__root': {
+      id: '/world/__root'
+      path: '/world'
+      fullPath: '/world'
+      preLoaderRoute: typeof World_rootRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ops/__root': {
+      id: '/ops/__root'
+      path: '/ops'
+      fullPath: '/ops'
+      preLoaderRoute: typeof Ops_rootRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/command/__root': {
+      id: '/command/__root'
+      path: '/command'
+      fullPath: '/command'
+      preLoaderRoute: typeof Command_rootRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/welcome': {
       id: '/welcome'
       path: '/welcome'
@@ -393,6 +589,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegacyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/command/': {
+      id: '/command/'
+      path: '/command'
+      fullPath: '/command/'
+      preLoaderRoute: typeof CommandIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/world/tournaments': {
       id: '/world/tournaments'
       path: '/world/tournaments'
@@ -407,6 +610,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldScoutingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/world/intelligence': {
+      id: '/world/intelligence'
+      path: '/world/intelligence'
+      fullPath: '/world/intelligence'
+      preLoaderRoute: typeof WorldIntelligenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/world/history': {
       id: '/world/history'
       path: '/world/history'
@@ -419,6 +629,13 @@ declare module '@tanstack/react-router' {
       path: '/world/gazette'
       fullPath: '/world/gazette'
       preLoaderRoute: typeof WorldGazetteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/world/chronicle': {
+      id: '/world/chronicle'
+      path: '/world/chronicle'
+      fullPath: '/world/chronicle'
+      preLoaderRoute: typeof WorldChronicleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/warrior/$id': {
@@ -484,6 +701,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StableIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ops/personnel': {
+      id: '/ops/personnel'
+      path: '/ops/personnel'
+      fullPath: '/ops/personnel'
+      preLoaderRoute: typeof OpsPersonnelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ops/finance': {
+      id: '/ops/finance'
+      path: '/ops/finance'
+      fullPath: '/ops/finance'
+      preLoaderRoute: typeof OpsFinanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ops/equipment': {
+      id: '/ops/equipment'
+      path: '/ops/equipment'
+      fullPath: '/ops/equipment'
+      preLoaderRoute: typeof OpsEquipmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ops/contracts': {
+      id: '/ops/contracts'
+      path: '/ops/contracts'
+      fullPath: '/ops/contracts'
+      preLoaderRoute: typeof OpsContractsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legacy/tournament-awards': {
       id: '/legacy/tournament-awards'
       path: '/legacy/tournament-awards'
@@ -512,6 +757,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegacyAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/command/training': {
+      id: '/command/training'
+      path: '/command/training'
+      fullPath: '/command/training'
+      preLoaderRoute: typeof CommandTrainingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/command/tactics': {
+      id: '/command/tactics'
+      path: '/command/tactics'
+      fullPath: '/command/tactics'
+      preLoaderRoute: typeof CommandTacticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/command/roster': {
+      id: '/command/roster'
+      path: '/command/roster'
+      fullPath: '/command/roster'
+      preLoaderRoute: typeof CommandRosterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/command/combat': {
+      id: '/command/combat'
+      path: '/command/combat'
+      fullPath: '/command/combat'
+      preLoaderRoute: typeof CommandCombatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -520,10 +793,20 @@ const rootRouteChildren: RootRouteChildren = {
   HelpRoute: HelpRoute,
   RunRoundRoute: RunRoundRoute,
   WelcomeRoute: WelcomeRoute,
+  Command_rootRoute: Command_rootRoute,
+  CommandCombatRoute: CommandCombatRoute,
+  CommandRosterRoute: CommandRosterRoute,
+  CommandTacticsRoute: CommandTacticsRoute,
+  CommandTrainingRoute: CommandTrainingRoute,
   LegacyAnalyticsRoute: LegacyAnalyticsRoute,
   LegacyAwardsRoute: LegacyAwardsRoute,
   LegacyHallOfFameRoute: LegacyHallOfFameRoute,
   LegacyTournamentAwardsRoute: LegacyTournamentAwardsRoute,
+  Ops_rootRoute: Ops_rootRoute,
+  OpsContractsRoute: OpsContractsRoute,
+  OpsEquipmentRoute: OpsEquipmentRoute,
+  OpsFinanceRoute: OpsFinanceRoute,
+  OpsPersonnelRoute: OpsPersonnelRoute,
   StableIdRoute: StableIdRoute,
   StableContractsRoute: StableContractsRoute,
   StableEquipmentRoute: StableEquipmentRoute,
@@ -533,10 +816,14 @@ const rootRouteChildren: RootRouteChildren = {
   StableTrainersRoute: StableTrainersRoute,
   StableTrainingRoute: StableTrainingRoute,
   WarriorIdRoute: WarriorIdRoute,
+  World_rootRoute: World_rootRoute,
+  WorldChronicleRoute: WorldChronicleRoute,
   WorldGazetteRoute: WorldGazetteRoute,
   WorldHistoryRoute: WorldHistoryRoute,
+  WorldIntelligenceRoute: WorldIntelligenceRoute,
   WorldScoutingRoute: WorldScoutingRoute,
   WorldTournamentsRoute: WorldTournamentsRoute,
+  CommandIndexRoute: CommandIndexRoute,
   LegacyIndexRoute: LegacyIndexRoute,
   StableIndexRoute: StableIndexRoute,
   WorldIndexRoute: WorldIndexRoute,

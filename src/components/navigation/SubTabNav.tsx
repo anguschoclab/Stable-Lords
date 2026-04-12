@@ -28,7 +28,7 @@ const OPS_TABS = [
 const WORLD_TABS = [
   { to: "/world", label: "Rankings", exact: true },
   { to: "/world/tournaments", label: "Tournaments" },
-  { to: "/world/intelligence", label: "Intelligence" },
+  { to: "/world/intelligence", label: "Scouting" },
   { to: "/world/chronicle", label: "Chronicle" },
 ] as const;
 

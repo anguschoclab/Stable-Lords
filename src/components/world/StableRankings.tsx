@@ -109,14 +109,14 @@ export function StableRankings({ rows, sort, onSort }: StableRankingsProps) {
                         <div>
                            {row.isPlayer ? (
                              <Link
-                               to="/stable"
+                               to="/command/roster"
                                className="font-display font-black uppercase text-xs tracking-tight transition-all text-primary hover:text-white"
                              >
                                {row.name}
                              </Link>
                            ) : (
                              <Link
-                               to="/stable/$id"
+                               to="/world/stable/$id"
                                params={{ id: row.id }}
                                className="font-display font-black uppercase text-xs tracking-tight transition-all text-foreground hover:text-primary"
                              >

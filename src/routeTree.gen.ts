@@ -18,6 +18,7 @@ import { Route as HelpRouteImport } from './routes/help'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorldIndexRouteImport } from './routes/world/index'
 import { Route as StableIndexRouteImport } from './routes/stable/index'
+import { Route as OpsIndexRouteImport } from './routes/ops/index'
 import { Route as LegacyIndexRouteImport } from './routes/legacy/index'
 import { Route as CommandIndexRouteImport } from './routes/command/index'
 import { Route as WorldTournamentsRouteImport } from './routes/world/tournaments'
@@ -47,6 +48,7 @@ import { Route as CommandTrainingRouteImport } from './routes/command/training'
 import { Route as CommandTacticsRouteImport } from './routes/command/tactics'
 import { Route as CommandRosterRouteImport } from './routes/command/roster'
 import { Route as CommandCombatRouteImport } from './routes/command/combat'
+import { Route as WorldStableIdRouteImport } from './routes/world/stable/$id'
 
 const World_rootRoute = World_rootRouteImport.update({
   id: '/world/__root',
@@ -88,6 +90,11 @@ const WorldIndexRoute = WorldIndexRouteImport.update({
 const StableIndexRoute = StableIndexRouteImport.update({
   id: '/stable/',
   path: '/stable/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpsIndexRoute = OpsIndexRouteImport.update({
+  id: '/ops/',
+  path: '/ops/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LegacyIndexRoute = LegacyIndexRouteImport.update({
@@ -235,6 +242,11 @@ const CommandCombatRoute = CommandCombatRouteImport.update({
   path: '/command/combat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorldStableIdRoute = WorldStableIdRouteImport.update({
+  id: '/world/stable/$id',
+  path: '/world/stable/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -273,8 +285,10 @@ export interface FileRoutesByFullPath {
   '/world/tournaments': typeof WorldTournamentsRoute
   '/command/': typeof CommandIndexRoute
   '/legacy/': typeof LegacyIndexRoute
+  '/ops/': typeof OpsIndexRoute
   '/stable/': typeof StableIndexRoute
   '/world/': typeof WorldIndexRoute
+  '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -290,7 +304,7 @@ export interface FileRoutesByTo {
   '/legacy/awards': typeof LegacyAwardsRoute
   '/legacy/hall-of-fame': typeof LegacyHallOfFameRoute
   '/legacy/tournament-awards': typeof LegacyTournamentAwardsRoute
-  '/ops': typeof Ops_rootRoute
+  '/ops': typeof OpsIndexRoute
   '/ops/contracts': typeof OpsContractsRoute
   '/ops/equipment': typeof OpsEquipmentRoute
   '/ops/finance': typeof OpsFinanceRoute
@@ -313,6 +327,7 @@ export interface FileRoutesByTo {
   '/world/tournaments': typeof WorldTournamentsRoute
   '/legacy': typeof LegacyIndexRoute
   '/stable': typeof StableIndexRoute
+  '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -352,8 +367,10 @@ export interface FileRoutesById {
   '/world/tournaments': typeof WorldTournamentsRoute
   '/command/': typeof CommandIndexRoute
   '/legacy/': typeof LegacyIndexRoute
+  '/ops/': typeof OpsIndexRoute
   '/stable/': typeof StableIndexRoute
   '/world/': typeof WorldIndexRoute
+  '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -394,8 +411,10 @@ export interface FileRouteTypes {
     | '/world/tournaments'
     | '/command/'
     | '/legacy/'
+    | '/ops/'
     | '/stable/'
     | '/world/'
+    | '/world/stable/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -434,6 +453,7 @@ export interface FileRouteTypes {
     | '/world/tournaments'
     | '/legacy'
     | '/stable'
+    | '/world/stable/$id'
   id:
     | '__root__'
     | '/'
@@ -472,8 +492,10 @@ export interface FileRouteTypes {
     | '/world/tournaments'
     | '/command/'
     | '/legacy/'
+    | '/ops/'
     | '/stable/'
     | '/world/'
+    | '/world/stable/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -513,8 +535,10 @@ export interface RootRouteChildren {
   WorldTournamentsRoute: typeof WorldTournamentsRoute
   CommandIndexRoute: typeof CommandIndexRoute
   LegacyIndexRoute: typeof LegacyIndexRoute
+  OpsIndexRoute: typeof OpsIndexRoute
   StableIndexRoute: typeof StableIndexRoute
   WorldIndexRoute: typeof WorldIndexRoute
+  WorldStableIdRoute: typeof WorldStableIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -580,6 +604,13 @@ declare module '@tanstack/react-router' {
       path: '/stable'
       fullPath: '/stable/'
       preLoaderRoute: typeof StableIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ops/': {
+      id: '/ops/'
+      path: '/ops'
+      fullPath: '/ops/'
+      preLoaderRoute: typeof OpsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/legacy/': {
@@ -785,6 +816,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommandCombatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/world/stable/$id': {
+      id: '/world/stable/$id'
+      path: '/world/stable/$id'
+      fullPath: '/world/stable/$id'
+      preLoaderRoute: typeof WorldStableIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -825,8 +863,10 @@ const rootRouteChildren: RootRouteChildren = {
   WorldTournamentsRoute: WorldTournamentsRoute,
   CommandIndexRoute: CommandIndexRoute,
   LegacyIndexRoute: LegacyIndexRoute,
+  OpsIndexRoute: OpsIndexRoute,
   StableIndexRoute: StableIndexRoute,
   WorldIndexRoute: WorldIndexRoute,
+  WorldStableIdRoute: WorldStableIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -4,7 +4,8 @@
       "Bash(bun run:*)",
       "Bash(npm run:*)",
       "Bash(npx vite:*)",
-      "Bash(node -e ':*)"
+      "Bash(node -e ':*)",
+      "WebFetch(domain:terrablood.com)"
     ]
   }
 }

@@ -120,7 +120,7 @@ function computeTournamentAwards(
   }
 
   // Iron Will: survived most rounds (most wins)
-  let bestIron = null;
+  let bestIron: typeof allStats[number] | null = null;
   let bestIronWins = -Infinity;
   let bestIronRate = -Infinity;
   const mvpName = bestMvp?.name;

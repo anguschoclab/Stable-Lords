@@ -65,29 +65,3 @@ export const SUITABILITY_LABELS: Record<SuitabilityRating, string> = {
   U: "Unsuited",
 };
 
-/**
- * ⚡ Style Matchup Matrix — Rock-Paper-Scissors Logic
- * Defines natural advantages/disadvantages between styles.
- */
-export const STYLE_MATCHUP_MATRIX: Partial<Record<FightingStyle, Partial<Record<FightingStyle, number>>>> = {
-  [FightingStyle.LungingAttack]: {
-    [FightingStyle.AimedBlow]: 1.15, // Lunging beats Focused
-    [FightingStyle.ParryRiposte]: 0.85, // Parry-heavy beats Lunging
-  },
-  [FightingStyle.BashingAttack]: {
-    [FightingStyle.WallOfSteel]: 1.10, // Bash breaks Steel
-    [FightingStyle.SlashingAttack]: 0.90, // Slash evades Bash
-  },
-  [FightingStyle.AimedBlow]: {
-    [FightingStyle.SlashingAttack]: 1.12, // Focused hits Slashers
-    [FightingStyle.LungingAttack]: 0.88, // Lunge interrupts Aim
-  },
-  [FightingStyle.TotalParry]: {
-    [FightingStyle.BashingAttack]: 0.85, // Bash breaks Parry
-    [FightingStyle.SlashingAttack]: 1.15, // Parry catches Slashes
-  },
-};
-
-export function getStyleMatchupAdvantage(styleA: FightingStyle, styleD: FightingStyle): number {
-  return STYLE_MATCHUP_MATRIX[styleA]?.[styleD] ?? 1.0;
-}

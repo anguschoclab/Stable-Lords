@@ -61,8 +61,10 @@ export function createFighterState(
   const encumbranceIniPenalty = overweight ? -2 : 0;
   const encumbranceEndMult = overweight ? 1.2 : 1.0;
 
+  const classicBonus = warrior ? getClassicWeaponBonus(plan.style, equip.weapon) : 0;
+
   const effSkills: BaseSkills = {
-    ATT: skills.ATT + (trainerMods?.attMod ?? 0) + favWeapon + weaponReq.attPenalty + totalShieldAtt,
+    ATT: skills.ATT + (trainerMods?.attMod ?? 0) + favWeapon + classicBonus + weaponReq.attPenalty + totalShieldAtt,
     PAR: skills.PAR + (trainerMods?.parMod ?? 0) + totalShieldDef,
     DEF: skills.DEF + (trainerMods?.defMod ?? 0) + totalShieldDef,
     INI: skills.INI + (trainerMods?.iniMod ?? 0) + encumbranceIniPenalty,

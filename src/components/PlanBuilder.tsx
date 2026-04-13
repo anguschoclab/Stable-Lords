@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import type { FightPlan, OffensiveTactic, DefensiveTactic, Warrior } from "@/types/game";
 import { FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/game";
 import { getTempoBonus, getStyleAntiSynergy, getEnduranceMult, getKillMechanic, getMastery } from "@/engine/stylePassives";
-import { getStyleMatchupAdvantage } from "@/engine/tacticSuitability";
+import { getMatchupBonus } from "@/engine/combat/combatConstants";
 import { computeStrategyScore, getScoreColor } from "@/engine/strategyAnalysis";
 
 /* ── DnD Types & Data ───────────────────────────────────── */
@@ -42,8 +42,8 @@ export default function PlanBuilder({ plan, onPlanChange, warriorName, warrior, 
   const [showStylePassives, setShowStylePassives] = useState<boolean>(false);
   
   const matchupAdv = useMemo(() => {
-    if (!rivalStyle) return 1.0;
-    return getStyleMatchupAdvantage(plan.style, rivalStyle);
+    if (!rivalStyle) return 0;
+    return getMatchupBonus(plan.style, rivalStyle);
   }, [plan.style, rivalStyle]);
 
   const score = useMemo(() => computeStrategyScore(plan, warrior), [plan, warrior]);
@@ -93,16 +93,16 @@ export default function PlanBuilder({ plan, onPlanChange, warriorName, warrior, 
           </div>
           
           <div className="text-right flex items-center gap-6">
-            {matchupAdv !== 1.0 && (
+            {matchupAdv !== 0 && (
               <div className="text-right">
                 <Badge className={cn(
                   "rounded-none border-none font-black text-[10px] tracking-tight px-1.5 py-0.5",
-                  matchupAdv > 1.0 ? "bg-green-500/20 text-green-500" : "bg-destructive/20 text-destructive"
+                  matchupAdv > 0 ? "bg-green-500/20 text-green-500" : "bg-destructive/20 text-destructive"
                 )}>
-                  {matchupAdv > 1.0 ? "MATCHUP_ADV" : "MATCHUP_PENALTY"}
+                  {matchupAdv > 0 ? "MATCHUP_ADV" : "MATCHUP_PENALTY"}
                 </Badge>
-                <div className={cn("text-lg font-mono font-black italic", matchupAdv > 1.0 ? "text-green-500" : "text-destructive")}>
-                   {matchupAdv > 1.0 ? "+" : ""}{Math.round((matchupAdv - 1) * 100)}%
+                <div className={cn("text-lg font-mono font-black italic", matchupAdv > 0 ? "text-green-500" : "text-destructive")}>
+                  {matchupAdv > 0 ? "+" : ""}{matchupAdv}
                 </div>
               </div>
             )}

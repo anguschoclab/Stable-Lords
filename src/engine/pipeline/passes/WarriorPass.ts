@@ -24,7 +24,7 @@ export function runWarriorPass(state: GameState, rng: IRNGService): StateImpact 
 
   const impacts: StateImpact[] = [
     trainingImpact,
-    computeAgingImpact(state, state.season, rng),
+    computeAgingImpact(state, rng),
     computeHealthImpact(state, rng),
   ];
 

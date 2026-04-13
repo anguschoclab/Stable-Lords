@@ -299,7 +299,7 @@ describe("Training System", () => {
         seasonalGrowth: undefined
       });
       const impact = computeTrainingImpact(state as any, new SeededRNG(1) as any);
-      expect(impact.updatedSeasonalGrowth).toBeDefined();
+      expect(impact.updatedSeasonalGrowth).toEqual(expect.any(Array));
     });
 
 

@@ -234,8 +234,8 @@ export const StyleRollups = {
       const tid = opts.isTournament;
       tour[tid] = tour[tid] || {};
       const bump = (s: string, win: boolean, killed: boolean) => {
-        tour[tid][s] = tour[tid][s] || { W: 0, L: 0, K: 0, fights: 0 };
-        const b = tour[tid][s]!;
+        tour[tid]![s] = tour[tid]![s] || { W: 0, L: 0, K: 0, fights: 0 };
+        const b = tour[tid]![s]!;
         b.W += win ? 1 : 0;
         b.L += win ? 0 : 1;
         b.K += killed ? 1 : 0;
@@ -280,6 +280,7 @@ export const StyleRollups = {
     const rows: StyleRecord[] = [];
     Object.keys(tour).forEach((s) => {
       const b = tour[s];
+      if (!b) return;
       rows.push({
         style: s,
         W: b.W,

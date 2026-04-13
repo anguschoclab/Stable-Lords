@@ -1,5 +1,6 @@
 import type { GameState } from "@/types/state.types";
 import { opfsArchive } from "@/engine/storage/opfsArchive";
+import { truncateState } from "@/engine/storage/truncation";
 
 export interface SaveSlotMeta {
   id: string;
@@ -44,15 +45,18 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
 
   const currentMeta = getStoredMeta();
   const index = currentMeta.findIndex(m => m.id === slotId);
-  
+
   if (index !== -1) {
     currentMeta[index] = meta;
   } else {
     currentMeta.push(meta);
   }
-  
+
   setStoredMeta(currentMeta);
-  await opfsArchive.archiveHotState(slotId, state);
+
+  // Truncate state to keep save file size manageable
+  const truncatedState = truncateState(state);
+  await opfsArchive.archiveHotState(slotId, truncatedState);
 }
 
 export async function loadFromSlot(slotId: string): Promise<GameState | null> {

@@ -3,9 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { Suspense, lazy } from "react";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { createRouter, RouterProvider, useLocation } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
+import { useCoachTip } from "@/hooks/useCoachTip";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 const ResolutionReveal = lazy(() => import("@/components/ResolutionReveal"));
 const StartGame = lazy(() => import("@/pages/StartGame"));
@@ -26,6 +28,18 @@ const queryClient = new QueryClient();
 function GameRoutes() {
   const state = useWorldState();
   const { atTitleScreen } = useGameStore();
+  const location = useLocation();
+
+  // Use coach tip hook for contextual onboarding tips
+  useCoachTip(location.pathname);
+
+  // Use keyboard shortcuts hook
+  useKeyboardShortcuts({
+    onToggleSidebar: () => {
+      // TODO: Implement sidebar toggle functionality
+      console.log("Toggle sidebar");
+    },
+  });
 
   // No active game → show title / start screen
   if (atTitleScreen) {

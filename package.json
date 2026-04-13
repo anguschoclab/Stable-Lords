@@ -5,11 +5,11 @@
   "version": "2.1.0",
   "description": "Manage your stable of warriors, train fighting styles, and compete in the arena!",
   "author": "Stable Lords Team",
-  "main": "electron/main.ts",
+  "main": "electron/main.js",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "electron:dev": "concurrently \"bun run dev\" \"wait-on http://localhost:8080 && electron --experimental-modules .\"",
+    "electron:dev": "concurrently \"bun run dev\" \"wait-on http://localhost:8080 && electron .\"",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "electron:build": "bun run build && electron-builder",

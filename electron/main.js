@@ -1,38 +1,21 @@
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined") return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
 
 // electron/main.ts
-var import_electron = require("electron");
-var path = __toESM(require("path"), 1);
-var import_electron_is_dev = __toESM(require("electron-is-dev"), 1);
-var import_electron_store = __toESM(require("electron-store"), 1);
-var import_url = require("url");
-var fs = __toESM(require("fs"), 1);
-var os = __toESM(require("os"), 1);
-var import_meta = {};
-var __filename = (0, import_url.fileURLToPath)(import_meta.url);
+import { app, BrowserWindow, ipcMain, Menu, dialog, shell, Tray, nativeImage } from "electron";
+import * as path from "path";
+import isDev from "electron-is-dev";
+import Store from "electron-store";
+import { fileURLToPath } from "url";
+import * as fs from "fs";
+import * as os from "os";
+var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
-var store = new import_electron_store.default();
+var store = new Store();
 var mainWindow = null;
 var tray = null;
 function getSaveDirectory() {
@@ -59,7 +42,7 @@ function ensureSaveDirectory() {
   });
 }
 function createWindow() {
-  mainWindow = new import_electron.BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: store.get("windowBounds.width") || 1400,
     height: store.get("windowBounds.height") || 900,
     x: store.get("windowBounds.x"),
@@ -77,7 +60,7 @@ function createWindow() {
     },
     icon: path.join(__dirname, "../public/icons/icon-512.png")
   });
-  if (import_electron_is_dev.default) {
+  if (isDev) {
     mainWindow.loadURL("http://localhost:8080");
     mainWindow.webContents.openDevTools();
   } else {
@@ -99,7 +82,7 @@ function createWindow() {
     mainWindow = null;
   });
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    import_electron.shell.openExternal(url);
+    shell.openExternal(url);
     return { action: "deny" };
   });
 }
@@ -107,7 +90,7 @@ function createMenu() {
   const template = [
     ...process.platform === "darwin" ? [
       {
-        label: import_electron.app.getName(),
+        label: app.getName(),
         submenu: [
           { role: "about" },
           { type: "separator" },
@@ -149,7 +132,7 @@ function createMenu() {
         {
           label: "Export Save",
           click: async () => {
-            const result = await import_electron.dialog.showSaveDialog(mainWindow, {
+            const result = await dialog.showSaveDialog(mainWindow, {
               defaultPath: `stablelords-save-${Date.now()}.json`,
               filters: [{ name: "JSON Files", extensions: ["json"] }]
             });
@@ -161,7 +144,7 @@ function createMenu() {
         {
           label: "Import Save",
           click: async () => {
-            const result = await import_electron.dialog.showOpenDialog(mainWindow, {
+            const result = await dialog.showOpenDialog(mainWindow, {
               filters: [{ name: "JSON Files", extensions: ["json"] }]
             });
             if (!result.canceled && result.filePaths.length > 0) {
@@ -215,14 +198,14 @@ function createMenu() {
       ]
     }
   ];
-  const menu = import_electron.Menu.buildFromTemplate(template);
-  import_electron.Menu.setApplicationMenu(menu);
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 }
 function createTray() {
   const iconPath = path.join(__dirname, "../public/icons/icon-192.png");
-  const image = import_electron.nativeImage.createFromPath(iconPath);
-  tray = new import_electron.Tray(image);
-  const contextMenu = import_electron.Menu.buildFromTemplate([
+  const image = nativeImage.createFromPath(iconPath);
+  tray = new Tray(image);
+  const contextMenu = Menu.buildFromTemplate([
     {
       label: "Show Stable Lords",
       click: () => {
@@ -252,7 +235,7 @@ function createTray() {
     {
       label: "Quit",
       click: () => {
-        import_electron.app.quit();
+        app.quit();
       }
     }
   ]);
@@ -271,7 +254,7 @@ function createTray() {
     }
   });
 }
-import_electron.ipcMain.handle("save-game", async (_event, slotId, state) => {
+ipcMain.handle("save-game", async (_event, slotId, state) => {
   try {
     ensureSaveDirectory();
     const filePath = path.join(getSaveDirectory(), "hot_state", `${slotId}.json`);
@@ -282,7 +265,7 @@ import_electron.ipcMain.handle("save-game", async (_event, slotId, state) => {
     return { success: false, error: error.message };
   }
 });
-import_electron.ipcMain.handle("load-game", async (_event, slotId) => {
+ipcMain.handle("load-game", async (_event, slotId) => {
   try {
     const filePath = path.join(getSaveDirectory(), "hot_state", `${slotId}.json`);
     if (!fs.existsSync(filePath)) {
@@ -295,7 +278,7 @@ import_electron.ipcMain.handle("load-game", async (_event, slotId) => {
     return { success: false, error: error.message };
   }
 });
-import_electron.ipcMain.handle("list-saves", async () => {
+ipcMain.handle("list-saves", async () => {
   try {
     const hotStateDir = path.join(getSaveDirectory(), "hot_state");
     if (!fs.existsSync(hotStateDir)) {
@@ -308,7 +291,7 @@ import_electron.ipcMain.handle("list-saves", async () => {
     return { success: false, error: error.message };
   }
 });
-import_electron.ipcMain.handle("delete-save", async (_event, slotId) => {
+ipcMain.handle("delete-save", async (_event, slotId) => {
   try {
     const filePath = path.join(getSaveDirectory(), "hot_state", `${slotId}.json`);
     if (fs.existsSync(filePath)) {
@@ -320,7 +303,7 @@ import_electron.ipcMain.handle("delete-save", async (_event, slotId) => {
     return { success: false, error: error.message };
   }
 });
-import_electron.ipcMain.handle("archive-bout-log", async (_event, year, season, boutId, logData) => {
+ipcMain.handle("archive-bout-log", async (_event, year, season, boutId, logData) => {
   try {
     ensureSaveDirectory();
     const seasonDir = path.join(getSaveDirectory(), "seasons", `season_${season}`, "bouts");
@@ -335,7 +318,7 @@ import_electron.ipcMain.handle("archive-bout-log", async (_event, year, season, 
     return { success: false, error: error.message };
   }
 });
-import_electron.ipcMain.handle("retrieve-bout-log", async (_event, year, season, boutId) => {
+ipcMain.handle("retrieve-bout-log", async (_event, year, season, boutId) => {
   try {
     const filePath = path.join(getSaveDirectory(), "seasons", `season_${season}`, "bouts", `${year}_${boutId}.json`);
     if (!fs.existsSync(filePath)) {
@@ -348,7 +331,7 @@ import_electron.ipcMain.handle("retrieve-bout-log", async (_event, year, season,
     return { success: false, error: error.message };
   }
 });
-import_electron.ipcMain.handle("archive-gazette", async (_event, season, week, markdown) => {
+ipcMain.handle("archive-gazette", async (_event, season, week, markdown) => {
   try {
     ensureSaveDirectory();
     const seasonDir = path.join(getSaveDirectory(), "seasons", `season_${season}`, "gazettes");
@@ -363,7 +346,7 @@ import_electron.ipcMain.handle("archive-gazette", async (_event, season, week, m
     return { success: false, error: error.message };
   }
 });
-import_electron.ipcMain.handle("retrieve-gazette", async (_event, season, week) => {
+ipcMain.handle("retrieve-gazette", async (_event, season, week) => {
   try {
     const filePath = path.join(getSaveDirectory(), "seasons", `season_${season}`, "gazettes", `week_${week}.md`);
     if (!fs.existsSync(filePath)) {
@@ -376,49 +359,49 @@ import_electron.ipcMain.handle("retrieve-gazette", async (_event, season, week) 
     return { success: false, error: error.message };
   }
 });
-import_electron.ipcMain.handle("store-get", async (_event, key) => {
+ipcMain.handle("store-get", async (_event, key) => {
   return store.get(key);
 });
-import_electron.ipcMain.handle("store-set", async (_event, key, value) => {
+ipcMain.handle("store-set", async (_event, key, value) => {
   store.set(key, value);
   return { success: true };
 });
-import_electron.ipcMain.handle("store-delete", async (_event, key) => {
+ipcMain.handle("store-delete", async (_event, key) => {
   store.delete(key);
   return { success: true };
 });
-import_electron.ipcMain.handle("get-app-info", async () => {
+ipcMain.handle("get-app-info", async () => {
   return {
-    name: import_electron.app.getName(),
-    version: import_electron.app.getVersion(),
+    name: app.getName(),
+    version: app.getVersion(),
     platform: process.platform
   };
 });
-import_electron.ipcMain.handle("show-notification", async (_event, options) => {
-  const { Notification } = require("electron");
+ipcMain.handle("show-notification", async (_event, options) => {
+  const { Notification } = __require("electron");
   new Notification({
     title: options.title,
     body: options.body
   }).show();
   return { success: true };
 });
-import_electron.app.whenReady().then(() => {
+app.whenReady().then(() => {
   ensureSaveDirectory();
   createWindow();
   createMenu();
   createTray();
-  import_electron.app.on("activate", () => {
-    if (import_electron.BrowserWindow.getAllWindows().length === 0) {
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
 });
-import_electron.app.on("window-all-closed", () => {
+app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    import_electron.app.quit();
+    app.quit();
   }
 });
-import_electron.app.on("before-quit", () => {
+app.on("before-quit", () => {
   if (tray) {
     tray.destroy();
   }

@@ -4,6 +4,7 @@ import { FightingStyle } from "@/types/shared.types";
 import { logAgentAction } from "../agentCore";
 import { respondToBoutOffer } from "@/engine/bout/mutations/contractMutations";
 import { StateImpact, mergeImpacts } from "@/engine/impacts";
+import { scoreMatchup } from "@/engine/schedulingAssistant";
 
 /**
  * CompetitionWorker: Handles boutique reasoning, tournament entry, and matchmaking bids.
@@ -31,6 +32,59 @@ export function generateBoutBids(
   const news: string[] = [];
   const bids: BoutBid[] = [];
 
+  // Build a mock state for matchup scoring
+  const mockState: GameState = {
+    meta: { gameName: "", version: "", createdAt: "" },
+    ftueComplete: true,
+    ftueStep: undefined,
+    coachDismissed: [],
+    player: rival.owner,
+    fame: rival.owner.fame,
+    popularity: rival.owner.renown,
+    treasury: rival.treasury,
+    ledger: [],
+    week: currentWeek,
+    year: 1,
+    phase: "planning",
+    season: "Spring",
+    weather,
+    roster: activeRoster,
+    graveyard: [],
+    retired: [],
+    arenaHistory: [],
+    newsletter: [],
+    rivals: [],
+    gazettes: [],
+    hallOfFame: [],
+    crowdMood,
+    tournaments: [],
+    trainers: [],
+    hiringPool: [],
+    trainingAssignments: [],
+    seasonalGrowth: [],
+    scoutReports: [],
+    restStates: [],
+    rivalries: [],
+    matchHistory: [],
+    recruitPool: [],
+    rosterBonus: 0,
+    ownerGrudges: [],
+    insightTokens: [],
+    moodHistory: [],
+    playerChallenges: [],
+    playerAvoids: [],
+    unacknowledgedDeaths: [],
+    settings: { featureFlags: { tournaments: true, scouting: true } },
+    isFTUE: false,
+    day: 1,
+    isTournamentWeek: false,
+    promoters: {},
+    boutOffers: {},
+    activeTournamentId: undefined,
+    realmRankings: {},
+    awards: []
+  };
+
   for (const warrior of activeRoster) {
     // ⚡ TSA: Weather Predation & Caution
     let weatherModifier = 0;
@@ -47,33 +101,49 @@ export function generateBoutBids(
     if (crowdMood === "Bloodthirsty" && personality === "Aggressive") moodModifier = +3;
     if (crowdMood === "Theatrical" && personality === "Showman") moodModifier = +3;
 
+    // ⚡ Scheduling Assistant: Matchup scoring
+    let matchupModifier = 0;
+    if (intent !== "VENDETTA") {
+      // Score against potential opponents (other rivals)
+      for (const otherRival of mockState.rivals) {
+        for (const opponent of otherRival.roster) {
+          if (opponent.status === "Active") {
+            const matchupScore = scoreMatchup(warrior, opponent, mockState);
+            // Convert score (100-200 range) to modifier (-5 to +5)
+            matchupModifier = Math.max(-5, Math.min(5, (matchupScore - 100) / 20));
+            break; // Use first available opponent for scoring
+          }
+        }
+      }
+    }
+
     if (intent === "VENDETTA" && rival.strategy?.targetStableId) {
       bids.push({
         proposingWarriorId: warrior.id,
         targetStableId: rival.strategy.targetStableId,
-        priority: Math.max(1, 10 + weatherModifier + moodModifier),
-        description: `Vendetta target. ${weatherModifier < 0 ? "(Weather caution)" : weatherModifier > 0 ? "(Weather advantage)" : ""}`
+        priority: Math.max(1, 10 + weatherModifier + moodModifier + matchupModifier),
+        description: `Vendetta target. ${weatherModifier < 0 ? "(Weather caution)" : weatherModifier > 0 ? "(Weather advantage)" : ""} ${matchupModifier > 0 ? "(Favorable matchup)" : matchupModifier < 0 ? "(Unfavorable matchup)" : ""}`
       });
     } else if (intent === "RECOVERY") {
       if (weatherModifier < -2) continue; // Skip recovery bouts in bad weather
       bids.push({
         proposingWarriorId: warrior.id,
         maxFame: 50,
-        priority: Math.max(1, 5 + moodModifier),
+        priority: Math.max(1, 5 + moodModifier + matchupModifier),
         description: "Seeking low-risk recovery bout."
       });
     } else if (intent === "EXPANSION") {
       bids.push({
         proposingWarriorId: warrior.id,
         minFame: 100,
-        priority: Math.max(1, 7 + weatherModifier + moodModifier),
+        priority: Math.max(1, 7 + weatherModifier + moodModifier + matchupModifier),
         description: "Seeking high-visibility expansion bout."
       });
     } else {
       // CONSOLIDATION
       bids.push({
         proposingWarriorId: warrior.id,
-        priority: Math.max(1, 4 + weatherModifier + moodModifier),
+        priority: Math.max(1, 4 + weatherModifier + moodModifier + matchupModifier),
         description: "Standard training bout."
       });
     }

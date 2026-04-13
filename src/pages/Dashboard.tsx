@@ -22,6 +22,7 @@ import { TrainingWidget } from "@/components/dashboard/TrainingWidget";
 import { RivalsListWidget } from "@/components/dashboard/RivalsListWidget";
 import { RivalryWidget } from "@/components/dashboard/RivalryWidget";
 import { StableComparisonWidget } from "@/components/dashboard/StableComparisonWidget";
+import { StableStrategyWidget } from "@/components/dashboard/StableStrategyWidget";
 import { CrowdMoodWidget } from "@/components/widgets/CrowdMoodWidget";
 import { MedicalAuditWidget } from "@/components/dashboard/MedicalAuditWidget";
 import { IntelligenceHubWidget } from "@/components/dashboard/IntelligenceHubWidget";
@@ -51,6 +52,7 @@ const MemoMetaPulseWidget = React.memo(MetaPulseWidget);
 const MemoRecentBoutsWidget = React.memo(RecentBoutsWidget);
 const MemoCrowdMoodWidget = React.memo(CrowdMoodWidget);
 const MemoStableComparisonWidget = React.memo(StableComparisonWidget);
+const MemoStableStrategyWidget = React.memo(StableStrategyWidget);
 const MemoMedicalAuditWidget = React.memo(MedicalAuditWidget);
 const MemoIntelligenceHubWidget = React.memo(IntelligenceHubWidget);
 const MemoBubbleWatchWidget = React.memo(BubbleWatchWidget);
@@ -66,6 +68,7 @@ const WIDGET_REGISTRY: WidgetDef[] = [
   { id: "training", label: "Training Status",    component: MemoTrainingWidget },
   { id: "rivals",    label: "Rival Stables",      component: MemoRivalsWidget },
   { id: "stableCompare", label: "Stable Comparison", component: MemoStableComparisonWidget, wide: true },
+  { id: "strategy", label: "Stable Strategy",    component: MemoStableStrategyWidget },
   { id: "bubbleWatch", label: "Tournament Bubble Watch", component: MemoBubbleWatchWidget },
   { id: "rivalries", label: "Rivalries",          component: MemoRivalryWidget, wide: true },
   { id: "rankings", label: "Warrior Rankings",   component: MemoRankingsWidget, wide: true },

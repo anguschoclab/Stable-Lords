@@ -1,5 +1,5 @@
 import type { GameState } from "@/types/state.types";
-import { opfsArchive } from "@/engine/storage/opfsArchive";
+import { archiveService } from "@/engine/storage/electronArchive";
 import { truncateState } from "@/engine/storage/truncation";
 
 export interface SaveSlotMeta {
@@ -14,18 +14,41 @@ export interface SaveSlotMeta {
 const STORAGE_KEY = "stable-lords-save-slots";
 export const MAX_SAVE_SLOTS = 10;
 
-function getStoredMeta(): SaveSlotMeta[] {
+async function getStoredMeta(): Promise<SaveSlotMeta[]> {
+  // Try electron-store first (Electron environment)
+  if (typeof window !== 'undefined' && window.electronAPI) {
+    try {
+      const stored = await window.electronAPI.storeGet(STORAGE_KEY);
+      if (stored) return stored as SaveSlotMeta[];
+    } catch (e) {
+      console.error("Failed to parse save slot metadata from electron-store", e);
+    }
+    return [];
+  }
+  
+  // Fallback to localStorage (web environment)
   const stored = localStorage.getItem(STORAGE_KEY);
   if (!stored) return [];
   try {
     return JSON.parse(stored);
   } catch (e) {
-    console.error("Failed to parse save slot metadata", e);
+    console.error("Failed to parse save slot metadata from localStorage", e);
     return [];
   }
 }
 
-function setStoredMeta(meta: SaveSlotMeta[]) {
+async function setStoredMeta(meta: SaveSlotMeta[]) {
+  // Try electron-store first (Electron environment)
+  if (typeof window !== 'undefined' && window.electronAPI) {
+    try {
+      await window.electronAPI.storeSet(STORAGE_KEY, meta);
+    } catch (error) {
+      console.error('Failed to save save slot metadata to electron-store', error);
+    }
+    return;
+  }
+  
+  // Fallback to localStorage (web environment)
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(meta));
   } catch (error) {
@@ -33,7 +56,7 @@ function setStoredMeta(meta: SaveSlotMeta[]) {
       console.error('localStorage quota exceeded when saving save slot metadata', error);
       // Attempt to clear old save slots to free up space
       try {
-        const existing = getStoredMeta();
+        const existing = await getStoredMeta();
         if (existing.length > 0) {
           // Keep only the most recent save slot
           const mostRecent = existing.slice(-1);
@@ -48,8 +71,8 @@ function setStoredMeta(meta: SaveSlotMeta[]) {
   }
 }
 
-export function listSaveSlots(): SaveSlotMeta[] {
-  return getStoredMeta();
+export async function listSaveSlots(): Promise<SaveSlotMeta[]> {
+  return await getStoredMeta();
 }
 
 export async function saveToSlot(slotId: string, name: string, state: GameState) {
@@ -62,7 +85,7 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
     version: state.meta.version
   };
 
-  const currentMeta = getStoredMeta();
+  const currentMeta = await getStoredMeta();
   const index = currentMeta.findIndex(m => m.id === slotId);
 
   if (index !== -1) {
@@ -71,22 +94,22 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
     currentMeta.push(meta);
   }
 
-  setStoredMeta(currentMeta);
+  await setStoredMeta(currentMeta);
 
   // Truncate state to keep save file size manageable
   const truncatedState = truncateState(state);
-  await opfsArchive.archiveHotState(slotId, truncatedState);
+  await archiveService.archiveHotState(slotId, truncatedState);
 }
 
 export async function loadFromSlot(slotId: string): Promise<GameState | null> {
-  return await opfsArchive.retrieveHotState(slotId);
+  return await archiveService.retrieveHotState(slotId);
 }
 
 export async function deleteSlot(slotId: string) {
-  const currentMeta = getStoredMeta();
+  const currentMeta = await getStoredMeta();
   const filtered = currentMeta.filter(m => m.id !== slotId);
-  setStoredMeta(filtered);
-  // Note: OPFS deletion is implicit if we just don't load it, 
+  await setStoredMeta(filtered);
+  // Note: Electron archive deletion is implicit if we just don't load it, 
   // but a real implementation might want to unlink the file.
   // For now, removing meta is enough to "delete" it from UI.
 }

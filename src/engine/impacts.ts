@@ -3,25 +3,27 @@ import type { Warrior } from "@/types/warrior.types";
 import type { FightSummary } from "@/types/combat.types";
 import type { PoolWarrior } from "@/engine/recruitment";
 
-export interface StateImpact { 
-  treasuryDelta?: number; 
-  fameDelta?: number; 
-  rosterUpdates?: Map<string, Partial<Warrior>>; 
-  rivalsUpdates?: Map<string, Partial<RivalStableData>>; 
-  newsletterItems?: NewsletterItem[]; 
-  ledgerEntries?: LedgerEntry[]; 
-  seasonalGrowth?: SeasonalGrowth[]; 
-  newPoolRecruits?: PoolWarrior[]; 
+export interface StateImpact {
+  treasuryDelta?: number;
+  fameDelta?: number;
+  popularityDelta?: number;
+  rosterUpdates?: Map<string, Partial<Warrior>>;
+  rosterRemovals?: string[];
+  rivalsUpdates?: Map<string, Partial<RivalStableData>>;
+  newsletterItems?: NewsletterItem[];
+  ledgerEntries?: LedgerEntry[];
+  seasonalGrowth?: SeasonalGrowth[];
+  newPoolRecruits?: PoolWarrior[];
   recruitPool?: PoolWarrior[];
   tournaments?: TournamentEntry[];
   isTournamentWeek?: boolean;
   activeTournamentId?: string;
   day?: number;
   graveyard?: Warrior[];
-  week?: number; 
-  season?: Season; 
-  weather?: WeatherType; 
-  realmRankings?: Record<string, RankingEntry>; 
+  week?: number;
+  season?: Season;
+  weather?: WeatherType;
+  realmRankings?: Record<string, RankingEntry>;
   boutOffers?: Record<string, BoutOffer>;
   promoters?: Record<string, Promoter>;
   trainers?: Trainer[];
@@ -51,9 +53,14 @@ type ImpactHandler<K extends keyof StateImpact> = (state: GameState, value: Excl
 
 const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
   treasuryDelta: (state, value) => { state.treasury = (state.treasury ?? 0) + value; },
-  fameDelta: (state, value) => { 
-    state.fame = (state.fame ?? 0) + value; 
+  fameDelta: (state, value) => {
+    state.fame = (state.fame ?? 0) + value;
     if (state.player) state.player.fame = (state.player.fame ?? 0) + value;
+  },
+  popularityDelta: (state, value) => { state.popularity = (state.popularity ?? 0) + value; },
+  rosterRemovals: (state, value) => {
+    if (value.length === 0) return;
+    state.roster = state.roster.filter(w => !value.includes(w.id));
   },
   rosterUpdates: (state, value) => {
     if (value.size === 0) return;

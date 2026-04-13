@@ -13,8 +13,21 @@ class AudioManager {
   private muted: boolean = false;
 
   private constructor() {
-    this.muted = typeof localStorage !== "undefined" && localStorage.getItem("sl_muted") === "true";
     this.loadSfx();
+    this.loadMuteState();
+  }
+
+  private async loadMuteState() {
+    if (typeof window !== "undefined" && window.electronAPI) {
+      try {
+        const muted = await window.electronAPI.storeGet("sl_muted");
+        this.muted = muted === "true";
+      } catch {
+        this.muted = false;
+      }
+    } else if (typeof localStorage !== "undefined") {
+      this.muted = localStorage.getItem("sl_muted") === "true";
+    }
   }
 
   public static getInstance(): AudioManager {
@@ -47,9 +60,15 @@ class AudioManager {
     if (sound) sound.play();
   }
 
-  public setMuted(muted: boolean) {
+  public async setMuted(muted: boolean) {
     this.muted = muted;
-    if (typeof localStorage !== "undefined") {
+    if (typeof window !== "undefined" && window.electronAPI) {
+      try {
+        await window.electronAPI.storeSet("sl_muted", String(muted));
+      } catch (error) {
+        console.error('Failed to save mute state to electron-store', error);
+      }
+    } else if (typeof localStorage !== "undefined") {
       try {
         localStorage.setItem("sl_muted", String(muted));
       } catch (error) {

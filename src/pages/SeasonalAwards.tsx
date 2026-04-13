@@ -169,11 +169,11 @@ function computeSeasonalAwards(
     const allStats = [...stats.values()];
 
     // ⚡ Bolt: Reduced O(N log N) sorts to O(N) linear scans for single max value lookups
-    let bestMvp = null;
+    let bestMvp: typeof allStats[number] | null = null;
     let bestMvpScore = -Infinity;
-    let bestKill = null;
+    let bestKill: typeof allStats[number] | null = null;
     let bestKillScore = 0;
-    let bestIron = null;
+    let bestIron: typeof allStats[number] | null = null;
     let bestIronRate = -Infinity;
     let bestIronWins = -Infinity;
 

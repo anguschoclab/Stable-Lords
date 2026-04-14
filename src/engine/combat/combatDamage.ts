@@ -117,9 +117,10 @@ export function calculateKillWindow(
   if (hpRatio < 0.3) threshold += 0.012;
   else if (hpRatio < 0.5) threshold += 0.004;
 
-  // Endurance (Fatigue) factor: higher chance if target is exhausted (below 30%)
-  if (enduranceRatio < 0.3) threshold += 0.020;
-  else if (enduranceRatio < 0.5) threshold += 0.008;
+  // Endurance (Fatigue) factor: severe exhaustion is a major kill window opener
+  if (enduranceRatio < 0.2) threshold += 0.050;
+  else if (enduranceRatio < 0.4) threshold += 0.020;
+  else if (enduranceRatio < 0.6) threshold += 0.008;
 
   // Location factor: Vital spots are deadlier
   const locMult = LOCATION_KILL_MULT[location] ?? 1.0;

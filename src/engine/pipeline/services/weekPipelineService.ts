@@ -40,16 +40,9 @@ export function advanceWeek(state: GameState): GameState {
   const rootRng = new SeededRNGService(nextYear * 52 + nextWeek * 7919 + 101);
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
 
-  // 2. Core Simulation (Bouts, Training, Health, Economy)
-  // Bouts happen for the week that is just ending
-  let newState = state;
-  newState = runBoutSimulationPass(newState, rootRng);
-
-  newState = runWarriorPass(newState, rootRng);
-  newState = runEconomyPass(newState, rootRng);
-  newState = runEquipmentPass(newState, rootRng);
-  
-  // Apply bout impact to get settled state for subsequent passes
+  // 2. Bout Simulation (happens for the week just ending)
+  // Bouts resolve first; all subsequent passes run against the post-bout settled state.
+  const boutImpact = runBoutSimulationPass(state, rootRng);
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 

@@ -89,26 +89,24 @@ export function runRivalStrategyPass(state: GameState, nextWeek: number, rootRng
 function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGService): StateImpact {
   const tournaments = TournamentSelectionService.generateSeasonalTiers(state, week, state.season, week * 881);
   const tournamentNews: string[] = [];
-  const allTours: any[] = [];
   const impacts: StateImpact[] = [];
 
   tournaments.forEach((tour) => {
     impacts.push({ tournaments: [tour] });
     const tournamentImpact = TournamentSelectionService.resolveCompleteTournament(state, tour.id, week * 500 + hashStr(tour.id));
     impacts.push(tournamentImpact);
-    // Note: In a real implementation, we'd need to track the completed tournament
     tournamentNews.push(`🏆 ${tour.name} finalized: Champion crowned.`);
   });
-  
+
   impacts.push({
     isTournamentWeek: true,
-    activeTournamentId: allTours[0]?.id,
+    activeTournamentId: tournaments[0]?.id,
     day: 0,
     newsletterItems: [{
       id: rng.uuid(),
-      week: week, 
-      title: "🎖️ TOURNAMENT ARCHIVE", 
-      items: tournamentNews 
+      week: week,
+      title: "🎖️ TOURNAMENT ARCHIVE",
+      items: tournamentNews
     }]
   });
 

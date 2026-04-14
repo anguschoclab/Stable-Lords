@@ -24,10 +24,12 @@ export interface GameStoreState {
   activeSlotId: string | null;
   isSimulating: boolean;
   isInitialized: boolean;
+  eventLogOpen: boolean;
 }
 
 export interface GameStoreActions {
   setSimulating: (simulating: boolean) => void;
+  toggleEventLog: () => void;
   doAdvanceWeek: (processedState?: GameState, results?: BoutResult[], deaths?: string[], injuries?: string[]) => Promise<void>;
   doAdvanceDay: (processedState?: GameState, results?: BoutResult[], deaths?: string[], injuries?: string[]) => Promise<void>;
   initialize: () => void;
@@ -142,6 +144,11 @@ export const useGameStore = create<GameStore>()(
       lastSavedAt: null,
       isSimulating: false,
       isInitialized: false,
+      eventLogOpen: false,
+
+      toggleEventLog: () => {
+        set((draft) => { draft.eventLogOpen = !draft.eventLogOpen; });
+      },
 
       initialize: () => {
         set((draft) => {

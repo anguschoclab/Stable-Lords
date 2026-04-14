@@ -142,17 +142,94 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
 }
 
 export function mergeImpacts(impacts: StateImpact[]): StateImpact {
-  const merged: StateImpact = { treasuryDelta: 0, fameDelta: 0, rosterUpdates: new Map(), newsletterItems: [], ledgerEntries: [], boutOffers: {} };
+  const merged: StateImpact = {
+    treasuryDelta: 0,
+    fameDelta: 0,
+    popularityDelta: 0,
+    rosterUpdates: new Map(),
+    rivalsUpdates: new Map(),
+    newsletterItems: [],
+    ledgerEntries: [],
+    graveyard: [],
+    arenaHistory: [],
+    matchHistory: [],
+    restStates: [],
+    insightTokens: [],
+    awards: [],
+    retired: [],
+    scoutReports: [],
+    hallOfFame: [],
+    moodHistory: [],
+    playerChallenges: [],
+    playerAvoids: [],
+    coachDismissed: [],
+    unacknowledgedDeaths: [],
+    seasonalGrowth: [],
+    rosterRemovals: [],
+  };
+
   for (const imp of impacts) {
+    // Numeric accumulation
     if (imp.treasuryDelta) merged.treasuryDelta! += imp.treasuryDelta;
     if (imp.fameDelta) merged.fameDelta! += imp.fameDelta;
+    if (imp.popularityDelta) merged.popularityDelta! += imp.popularityDelta;
+
+    // Map merges (shallow-merge per key)
     if (imp.rosterUpdates) {
-      imp.rosterUpdates.forEach((val, key) => { const existing = merged.rosterUpdates!.get(key) || {}; merged.rosterUpdates!.set(key, { ...existing, ...val }); });
+      imp.rosterUpdates.forEach((val, key) => {
+        const existing = merged.rosterUpdates!.get(key) || {};
+        merged.rosterUpdates!.set(key, { ...existing, ...val });
+      });
     }
-    if (imp.newsletterItems) merged.newsletterItems!.push(...imp.newsletterItems);
-    if (imp.ledgerEntries) merged.ledgerEntries!.push(...imp.ledgerEntries);
+    if (imp.rivalsUpdates) {
+      imp.rivalsUpdates.forEach((val, key) => {
+        const existing = merged.rivalsUpdates!.get(key) || {};
+        merged.rivalsUpdates!.set(key, { ...existing, ...val });
+      });
+    }
+
+    // Array appends
+    if (imp.newsletterItems?.length) merged.newsletterItems!.push(...imp.newsletterItems);
+    if (imp.ledgerEntries?.length) merged.ledgerEntries!.push(...imp.ledgerEntries);
+    if (imp.graveyard?.length) merged.graveyard!.push(...imp.graveyard);
+    if (imp.arenaHistory?.length) merged.arenaHistory!.push(...imp.arenaHistory);
+    if (imp.matchHistory?.length) merged.matchHistory!.push(...imp.matchHistory);
+    if (imp.restStates?.length) merged.restStates!.push(...imp.restStates);
+    if (imp.insightTokens?.length) merged.insightTokens!.push(...imp.insightTokens);
+    if (imp.awards?.length) merged.awards!.push(...imp.awards);
+    if (imp.retired?.length) merged.retired!.push(...imp.retired);
+    if (imp.scoutReports?.length) merged.scoutReports!.push(...imp.scoutReports);
+    if (imp.hallOfFame?.length) merged.hallOfFame!.push(...imp.hallOfFame);
+    if (imp.moodHistory?.length) merged.moodHistory!.push(...imp.moodHistory);
+    if (imp.playerChallenges?.length) merged.playerChallenges!.push(...imp.playerChallenges);
+    if (imp.playerAvoids?.length) merged.playerAvoids!.push(...imp.playerAvoids);
+    if (imp.coachDismissed?.length) merged.coachDismissed!.push(...imp.coachDismissed);
+    if (imp.unacknowledgedDeaths?.length) merged.unacknowledgedDeaths!.push(...imp.unacknowledgedDeaths);
+    if (imp.seasonalGrowth?.length) merged.seasonalGrowth!.push(...imp.seasonalGrowth);
+    if (imp.rosterRemovals?.length) merged.rosterRemovals!.push(...imp.rosterRemovals);
+
+    // Replace semantics (last writer wins)
     if (imp.tournaments) merged.tournaments = imp.tournaments;
-    if (imp.awards) merged.awards = imp.awards;
+    if (imp.recruitPool !== undefined) merged.recruitPool = imp.recruitPool;
+    if (imp.newPoolRecruits !== undefined) merged.newPoolRecruits = imp.newPoolRecruits;
+    if (imp.realmRankings !== undefined) merged.realmRankings = imp.realmRankings;
+    if (imp.boutOffers !== undefined) merged.boutOffers = imp.boutOffers;
+    if (imp.promoters !== undefined) merged.promoters = imp.promoters;
+    if (imp.trainers !== undefined) merged.trainers = imp.trainers;
+    if (imp.hiringPool !== undefined) merged.hiringPool = imp.hiringPool;
+    if (imp.gazettes !== undefined) merged.gazettes = imp.gazettes;
+    if (imp.ownerGrudges !== undefined) merged.ownerGrudges = imp.ownerGrudges;
+    if (imp.rivalries !== undefined) merged.rivalries = imp.rivalries;
+    if (imp.trainingAssignments !== undefined) merged.trainingAssignments = imp.trainingAssignments;
+    if (imp.lastSimulationReport !== undefined) merged.lastSimulationReport = imp.lastSimulationReport;
+    if (imp.isTournamentWeek !== undefined) merged.isTournamentWeek = imp.isTournamentWeek;
+    if (imp.activeTournamentId !== undefined) merged.activeTournamentId = imp.activeTournamentId;
+    if (imp.day !== undefined) merged.day = imp.day;
+    if (imp.week !== undefined) merged.week = imp.week;
+    if (imp.season !== undefined) merged.season = imp.season;
+    if (imp.weather !== undefined) merged.weather = imp.weather;
+    if (imp.crowdMood !== undefined) merged.crowdMood = imp.crowdMood;
   }
+
   return merged;
 }

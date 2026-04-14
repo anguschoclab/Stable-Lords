@@ -36,13 +36,14 @@ import { useShallow } from 'zustand/react/shallow';
 
 import { DeathModal } from "@/components/modals/DeathModal";
 import { CoachOverlay } from "@/components/ui/CoachOverlay";
+import EventLog from "@/components/EventLog";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
     const {
     week, day, isTournamentWeek, treasury, fame, crowdMood, roster,
     doReset, returnToTitle, lastSavedAt,
-    isSimulating, isInitialized
+    isSimulating, isInitialized, eventLogOpen
   } = useGameStore(
     useShallow((s: any) => ({
       week: s.week,
@@ -57,6 +58,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       lastSavedAt: s.lastSavedAt,
       isSimulating: s.isSimulating,
       isInitialized: s.isInitialized,
+      eventLogOpen: s.eventLogOpen,
     }))
   );
   const navigate = useNavigate();
@@ -236,8 +238,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         {/* ─── Hub Navigation ─── */}
         <HubNav />
 
+        {/* ─── Event Log Sidebar (E to toggle) ─── */}
+        <AnimatePresence>
+          {eventLogOpen && (
+            <motion.aside
+              key="event-log"
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="absolute right-0 top-0 bottom-0 z-40 w-80 border-l border-white/10 bg-[#0d0f14] overflow-hidden flex flex-col"
+            >
+              <EventLog />
+            </motion.aside>
+          )}
+        </AnimatePresence>
+
         {/* ─── Main Content Area ─── */}
-        <main className="flex-1 flex flex-col relative bg-[#050506] overflow-hidden">
+        <main className={cn("flex-1 flex flex-col relative bg-[#050506] overflow-hidden transition-all duration-300", eventLogOpen && "mr-80")}>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
           
           <div className="flex-1 relative overflow-y-auto overflow-x-hidden p-6 md:p-10">

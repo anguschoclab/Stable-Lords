@@ -28,12 +28,9 @@ export function runWarriorPass(state: GameState, rng: IRNGService): StateImpact 
     computeHealthImpact(state),
   ];
 
-  const mergedImpact = mergeImpacts(impacts);
-
-  // Attach seasonal growth to the merged impact
   if (Array.isArray(seasonalGrowth) && seasonalGrowth.length > 0) {
-    mergedImpact.seasonalGrowth = seasonalGrowth;
+    impacts.push({ seasonalGrowth });
   }
 
-  return mergedImpact;
+  return mergeImpacts(impacts);
 }

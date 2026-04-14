@@ -4,20 +4,15 @@ import AppShell from "@/components/AppShell";
 import NotFound from "@/pages/NotFound";
 import { useCoachTip } from "@/hooks/useCoachTip";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { useGameStore } from "@/state/useGameStore";
 
 function RouterHooks() {
   const location = useLocation();
+  const toggleEventLog = useGameStore((s) => s.toggleEventLog);
 
-  // Use coach tip hook for contextual onboarding tips
   useCoachTip(location.pathname);
 
-  // Use keyboard shortcuts hook
-  useKeyboardShortcuts({
-    onToggleSidebar: () => {
-      // TODO: Implement sidebar toggle functionality
-      console.log("Toggle sidebar");
-    },
-  });
+  useKeyboardShortcuts({ onToggleSidebar: toggleEventLog });
 
   return null;
 }

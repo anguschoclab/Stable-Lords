@@ -717,7 +717,7 @@
       ],
       "Exhaustion": [
         "Both fighters pushed to total exhaustion. {{winner}} was awarded the bout.",
-        "In a gruelling test of wills, {{winner}} outlasted a completely spent {{loser}}.",
+        "In a grueling test of wills, {{winner}} outlasted a completely spent {{loser}}.",
         "Lungs burning and muscles failing, {{winner}} barely edged out {{loser}} at the limit.",
         "A battle of attrition ended with {{loser}} unable to stand, handing {{winner}} the victory."
       ],

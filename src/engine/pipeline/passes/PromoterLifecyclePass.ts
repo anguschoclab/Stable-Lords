@@ -60,6 +60,7 @@ export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): S
           }
         };
 
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete newPromoters[id];
         newPromoters[newId] = successor;
         news.push(`🏠 SUCCESSION: The legendary promoter ${p.name} has retired. Their protege, ${successorName}, takes over the ${p.tier} circuit.`);

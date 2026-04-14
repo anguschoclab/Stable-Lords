@@ -41,14 +41,30 @@ export function handleReporting(
   NewsletterFeed.appendFightResult({ summary, transcript: summary.transcript ?? [] });
 
   const tone: AnnounceTone = outcome.by === "Kill" ? "grim" : (tags.includes("Flashy") ? "hype" : "neutral");
+  // Create a simple RNG wrapper if not provided
+  const fallbackRng: IRNGService = {
+    next: () => Math.random(),
+    pick: (arr) => arr[Math.floor(Math.random() * arr.length)]!,
+    uuid: (prefix) => generateId(undefined, prefix || "uuid"),
+    roll: (min, max) => Math.floor(Math.random() * (max - min)) + min,
+    shuffle: (arr) => {
+      const result = [...arr];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i]!, result[j]!] = [result[j]!, result[i]!];
+      }
+      return result;
+    }
+  };
+  const rngService = safeRng || fallbackRng;
   const announcement = (outcome.by === "Kill" || outcome.by === "KO")
-    ? commentatorFor(outcome.by, () => safeRng ? safeRng.next() : Math.random())
+    ? commentatorFor(outcome.by, rngService)
     : blurb({
         tone,
         winner: outcome.winner === "A" ? wA.name : wD.name,
         loser: outcome.winner === "A" ? wD.name : wA.name,
         by: outcome.by ?? undefined,
-        rng: () => safeRng ? safeRng.next() : Math.random()
+        rng: rngService
       });
 
   return { summary, announcement };

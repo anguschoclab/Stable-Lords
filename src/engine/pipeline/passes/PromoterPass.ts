@@ -42,8 +42,10 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   // 0. Garbage Collection: Prune expired or stale bout offers
   for (const [offerId, offer] of Object.entries(newOffers)) {
     if (offer.boutWeek < state.week) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete newOffers[offerId]; // Past events
     } else if (offer.expirationWeek < state.week && offer.status !== "Signed") {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete newOffers[offerId]; // Expired proposals
     }
   }

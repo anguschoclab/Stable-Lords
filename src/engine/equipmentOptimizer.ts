@@ -100,6 +100,7 @@ export function generateRecommendations(style: FightingStyle, carryCap: number):
     const isTwoHanded = weapon.twoHanded ?? false;
     const armor = bestItem(armors, a => scoreArmor(a, profile));
     const shield = isTwoHanded
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       ? shields.find(s => s.id === "none_shield")!
       : bestItem(shields, s => scoreShield(s, profile));
     const helm = bestItem(helms, h => scoreHelm(h, profile));

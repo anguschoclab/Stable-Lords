@@ -44,7 +44,7 @@ export function aiPlanForWarrior(
   const matchup = opponentStyle ? getStyleMatchupMods(w.style, opponentStyle) : { oe: 0, al: 0, kd: 0 };
 
   // Generate initial plan
-  let plan: FightPlan = {
+  const plan: FightPlan = {
     ...base,
     OE: clamp((base.OE ?? 5) + (pMod.OE ?? 0) + (phMod.OE ?? 0) + matchup.oe + intentOE, 1, 10),
     AL: clamp((base.AL ?? 5) + (pMod.AL ?? 0) + (phMod.AL ?? 0) + matchup.al + intentAL + grudgeAL, 1, 10),

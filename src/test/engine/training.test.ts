@@ -377,8 +377,6 @@ describe("Training System", () => {
       expect(impact.updatedRoster[0].injuries).toHaveLength(0);
       spy.mockRestore();
     });
-      spy.mockRestore();
-    });
 
 
 

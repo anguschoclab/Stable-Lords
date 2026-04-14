@@ -200,7 +200,7 @@ export function makeWarrior(
     return state;
   }export function makeFightSummary(overrides: Partial<FightSummary> = {}): FightSummary {
   return {
-    id: `fight-${Math.random().toString(36).substr(2, 9)}`,
+    id: generateId(undefined, "fight"),
     week: 1,
     a: "Attacker",
     d: "Defender",

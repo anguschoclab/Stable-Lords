@@ -239,6 +239,7 @@ export default function EventLog() {
     const map = new Map<number, GameEvent[]>();
     events.forEach((e) => {
       if (!map.has(e.week)) map.set(e.week, []);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       map.get(e.week)!.push(e);
     });
     return Array.from(map.entries()).sort(([a], [b]) => b - a);

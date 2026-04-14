@@ -79,6 +79,8 @@ export function createFighterState(
     skills: effSkills,
     derived: { ...derived, damage: derived.damage + (isMastered ? 1 : 0) },
     plan,
+    activePlan: plan,
+    psychState: "Neutral",
     hp: derived.hp,
     maxHp: derived.hp,
     endurance: derived.endurance + (trainerMods?.endMod ?? 0),
@@ -94,5 +96,8 @@ export function createFighterState(
     encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, enduranceMult: encumbranceEndMult },
     weaponId: equip.weapon,
     armorId: equip.armor,
+    momentum: 0,
+    committed: false,
+    survivalStrike: false,
   };
 }

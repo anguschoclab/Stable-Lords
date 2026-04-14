@@ -23,9 +23,10 @@ export function handleProgressions(s: GameState, wA: Warrior, wD: Warrior, outco
   
   // Favorites Discovery
   const discRng = rng;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   [wA, !rivalStableId ? wD : null].forEach(w => {
     if (!w) return;
-    const disc = checkDiscovery(w, () => discRng ? discRng.next() : Math.random());
+    const disc = checkDiscovery(w, () => discRng?.next() ?? 0.5);
     if (disc.updated) {
       const existing = rosterUpdates.get(w.id) || w;
       rosterUpdates.set(w.id, { ...existing, favorites: w.favorites });

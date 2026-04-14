@@ -11,6 +11,7 @@ const localStorageMock = (function() {
       store[key] = value.toString();
     },
     removeItem: function(key: string) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete store[key];
     },
     clear: function() {

@@ -162,12 +162,41 @@ export interface FightPlan {
     mid?: PhaseStrategy;
     late?: PhaseStrategy;
   };
+  /** Conditional overrides evaluated mid-fight based on fight state. First match wins. */
+  conditions?: PlanCondition[];
 }
+
+// ─── Conditional Fight Plans ─────────────────────────────────────────────────
+
+export type ConditionTriggerType =
+  | "HP_BELOW"
+  | "HP_ABOVE"
+  | "MOMENTUM_LEAD"
+  | "MOMENTUM_DEFICIT"
+  | "PHASE_IS"
+  | "ENDURANCE_BELOW";
+
+export interface PlanCondition {
+  trigger: { type: ConditionTriggerType; value: number | string };
+  override: Partial<Pick<FightPlan, "OE" | "AL" | "killDesire" | "offensiveTactic" | "defensiveTactic">>;
+  label?: string;
+}
+
+export type PsychState = "Neutral" | "InTheZone" | "Rattled" | "Desperate" | "Cruising";
 
 // ─── Trainer Types ────────────────────────────────────────────────────────
 
 export type TrainerTier = "Novice" | "Seasoned" | "Master";
 export type TrainerFocus = "Aggression" | "Defense" | "Endurance" | "Mind" | "Healing";
+
+export type TrainerSpecialty =
+  | "KillerInstinct"    // Aggression: kill-window bonus when enemy HP < 40%
+  | "IronConditioning"  // Endurance: stamina drain −10% in LATE phase
+  | "CounterFighter"    // Defense: riposte damage +15% after successful parry
+  | "Footwork"          // Defense: initiative +3 in MID/LATE phase
+  | "IronGuard"         // Defense: damage taken −10% while endurance > 60%
+  | "Finisher"          // Aggression: ATT +10% when momentum >= 2
+  | "RopeADope";        // Endurance: fatigue penalty reduced 30%
 
 // ─── Scouting Types ───────────────────────────────────────────────────────
 
@@ -199,4 +228,5 @@ export interface Trainer {
   styleBonusStyle?: FightingStyle; // bonus for warriors of this style
   legacyWins?: number;
   legacyKills?: number;
+  specialty?: TrainerSpecialty;
 }

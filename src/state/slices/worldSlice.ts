@@ -166,6 +166,7 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   replacePromoter: (oldId, newPromoter) => {
     set((state: any) => {
       const newPromoters = { ...state.promoters };
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete newPromoters[oldId];
       newPromoters[newPromoter.id] = newPromoter;
 

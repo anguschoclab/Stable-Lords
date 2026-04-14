@@ -45,21 +45,27 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
     return { impact: {}, result: { a: warrior, d: opponent, outcome: { winner: null, by: "Draw", minutes: 0, log: [] } as FightOutcome, isRivalry, rivalStable, contractId: contract?.id }, stats: { death: false, playerDeath: false, injured: false, deathNames: [], injuredNames: [] } };
   }
 
-  const boutSeed = hashStr(`${week}|${cW!.id}|${cO!.id}`);
+  // After validation, cW and cO are guaranteed to be non-null
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const validCW = cW!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const validCO = cO!;
+
+  const boutSeed = hashStr(`${week}|${validCW.id}|${validCO.id}`);
   const rng = new SeededRNGService(boutSeed);
-  const outcome = simulateFight(getDefaultPlan(cW!, defaultPlanForWarrior), getDefaultPlan(cO!, defaultPlanForWarrior), cW!, cO!, boutSeed, state.trainers, state.weather);
+  const outcome = simulateFight(getDefaultPlan(validCW, defaultPlanForWarrior), getDefaultPlan(validCO, defaultPlanForWarrior), validCW, validCO, boutSeed, state.trainers, state.weather);
   const tags = outcome.post?.tags ?? [];
-  
+
   const { fameA, popA, fameD, popD } = calculateBoutFame(outcome, tags, moodMods, isRivalry);
 
-  const impacts: StateImpact[] = processContractPayouts(state, contract, getWinnerId(outcome, cW!.id, cO!.id), cW!.id, cO!.id, rivalStableId);
-  impacts.push(applyRecords(state, cW!, cO!, outcome, tags, fameA, popA, fameD, popD, rivalStableId));
-  
-  const deathRes = handleDeath(state, cW!, cO!, outcome, week, tags, rivalStableId, rng);
-  const injuryRes = handleInjuries(state, cW!, cO!, outcome, week, rivalStableId, boutSeed);
-  impacts.push(deathRes.impact, injuryRes.impact, handleProgressions(state, cW!, cO!, outcome, tags, week, rivalStableId, rng));
+  const impacts: StateImpact[] = processContractPayouts(state, contract, getWinnerId(outcome, validCW.id, validCO.id), validCW.id, validCO.id, rivalStableId);
+  impacts.push(applyRecords(state, validCW, validCO, outcome, tags, fameA, popA, fameD, popD, rivalStableId));
 
-  const { summary, announcement } = handleReporting(cW!, cO!, outcome, tags, fameA, popA, fameD, popD, week, rivalStableId, isRivalry, 0, rng);
+  const deathRes = handleDeath(state, validCW, validCO, outcome, week, tags, rivalStableId, rng);
+  const injuryRes = handleInjuries(state, validCW, validCO, outcome, week, rivalStableId, boutSeed);
+  impacts.push(deathRes.impact, injuryRes.impact, handleProgressions(state, validCW, validCO, outcome, tags, week, rivalStableId, rng));
+
+  const { summary, announcement } = handleReporting(validCW, validCO, outcome, tags, fameA, popA, fameD, popD, week, rivalStableId, isRivalry, 0, rng);
   impacts.push({ arenaHistory: [summary] });
   engineEventBus.emit({ type: 'BOUT_COMPLETED', payload: { summary, transcript: summary.transcript } });
 

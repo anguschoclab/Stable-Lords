@@ -51,7 +51,7 @@ export function computeGainChance(
 ): number {
   const trainerBonus = computeTrainerBonus(attribute, trainers, warrior.style);
   const wtBonus = ((warrior.attributes.WT ?? 10) - 10) * 0.01;
-  const agePenalty = (warrior.age ?? 18) > 25 ? ((warrior.age! - 25) * 0.02) : 0;
+  const agePenalty = (warrior.age ?? 18) > 25 ? (((warrior.age ?? 18) - 25) * 0.02) : 0;
   const hasInjury = warrior.injuries.length > 0;
   const injuryPenalty = hasInjury ? 0.10 : 0;
 
@@ -160,7 +160,8 @@ export function rollForTrainingInjury(warrior: Warrior, healingBonus: number, rn
   if (rng.next() < injuryChance) {
     const template = rng.pick(TRAINING_INJURIES);
     const [minW, maxW] = template.weeksRange;
-    const weeks = Math.floor(Math.random() * (maxW - minW + 1)) + minW;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const weeks = rng.roll(minW!, (maxW ?? minW!) + 1);
     const injury: InjuryData = {
       id: generateId(),
       name: template.name,

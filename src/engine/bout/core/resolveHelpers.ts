@@ -81,6 +81,7 @@ export function processContractPayouts(
 
   // Close the contract
   const boutOffers = { ...state.boutOffers };
+  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
   delete boutOffers[contract.id];
   impacts.push({ boutOffers });
 

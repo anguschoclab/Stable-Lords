@@ -10,14 +10,18 @@ import {
 import { FightingStyle } from "@/types/shared.types";
 import type { Warrior, WarriorFavorites } from "@/types/warrior.types";
 import type { FightPlan, FightSummary, CombatEvent } from "@/types/combat.types";
-import type { 
-  BaseSkills, 
-  Attributes, 
-  DerivedStats, 
+import type {
+  BaseSkills,
+  Attributes,
+  DerivedStats,
   WeatherType,
-  OffensiveTactic, 
-  DefensiveTactic 
+  PsychState,
+  OffensiveTactic,
+  DefensiveTactic
 } from "@/types/shared.types";
+import type { WeatherEffect } from "./weatherEffects";
+import { getWeatherEffect } from "./weatherEffects";
+import { evaluateConditions, PSYCH_STATE_MODS } from "./conditionEngine";
 import { skillCheck, contestCheck } from "./combatMath";
 import { computeHitDamage, rollHitLocation, applyProtectMod, calculateKillWindow } from "./combatDamage";
 import { enduranceCost, fatiguePenalty } from "./combatFatigue";
@@ -66,6 +70,10 @@ export interface FighterState {
   skills: BaseSkills;
   derived: DerivedStats;
   plan: FightPlan;
+  /** Current effective plan — may diverge from plan when a PlanCondition fires */
+  activePlan: FightPlan;
+  /** Psychological state derived each exchange from fight metrics */
+  psychState: PsychState;
   hp: number;
   maxHp: number;
   endurance: number;
@@ -82,6 +90,12 @@ export interface FighterState {
   weaponId?: string;
   armorId?: string;
   desperate?: boolean;
+  /** Momentum counter: −3 to +3. Builds on hits/parries, swings on ripostes. Gates kill window. */
+  momentum: number;
+  /** True when fighter has committed (HP < 35%, high killDesire): +20% ATT/DMG, fully open. */
+  committed: boolean;
+  /** True when fighter survived a commit attack — grants a free riposte on next exchange. */
+  survivalStrike: boolean;
 }
 
 export interface ResolutionContext {
@@ -89,6 +103,7 @@ export interface ResolutionContext {
   phase: "OPENING" | "MID" | "LATE";
   exchange: number;
   weather: WeatherType;
+  weatherEffect: WeatherEffect;
   matchupA: number;
   matchupD: number;
   trainerModsA: { [key: string]: number };
@@ -124,31 +139,57 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const stylePhase = phase as StylePhase;
   const phaseKey = phase === "OPENING" ? "opening" : phase === "MID" ? "mid" : "late";
 
+  // ── Evaluate conditional fight plans (WT-gated) ──
+  const wtA = fA.attributes.WT;
+  const wtD = fD.attributes.WT;
+  const condResultA = evaluateConditions(fA, fD, ctx, wtA);
+  const condResultD = evaluateConditions(fD, fA, ctx, wtD);
+  fA.activePlan = condResultA.newPlan;
+  fD.activePlan = condResultD.newPlan;
+  if (condResultA.psychState !== fA.psychState) {
+    fA.psychState = condResultA.psychState;
+    if (condResultA.psychState !== "Neutral") {
+      events.push({ type: "STATE_CHANGE", actor: "A", result: `PSYCH_${condResultA.psychState.toUpperCase()}` });
+    }
+  }
+  if (condResultD.psychState !== fD.psychState) {
+    fD.psychState = condResultD.psychState;
+    if (condResultD.psychState !== "Neutral") {
+      events.push({ type: "STATE_CHANGE", actor: "D", result: `PSYCH_${condResultD.psychState.toUpperCase()}` });
+    }
+  }
+
+  // ── Psych state modifier lookup ──
+  const psychA = PSYCH_STATE_MODS[fA.psychState];
+  const psychD = PSYCH_STATE_MODS[fD.psychState];
+
   // Canonical desperate state: override plan when HP < 30% OR endurance < 20%
   for (const f of [fA, fD] as FighterState[]) {
     if (!f.desperate && f.plan.desperatePlan && (f.hp < f.maxHp * 0.3 || f.endurance < f.maxEndurance * 0.2)) {
       const dp = f.plan.desperatePlan;
-      f.plan = { ...f.plan, OE: dp.OE, AL: dp.AL, ...(dp.killDesire !== undefined && { killDesire: dp.killDesire }), offensiveTactic: dp.offensiveTactic ?? f.plan.offensiveTactic, defensiveTactic: dp.defensiveTactic ?? f.plan.defensiveTactic, target: dp.target ?? f.plan.target, protect: dp.protect ?? f.plan.protect, phases: undefined };
+      f.activePlan = { ...f.plan, OE: dp.OE, AL: dp.AL, ...(dp.killDesire !== undefined && { killDesire: dp.killDesire }), offensiveTactic: dp.offensiveTactic ?? f.plan.offensiveTactic, defensiveTactic: dp.defensiveTactic ?? f.plan.defensiveTactic, target: dp.target ?? f.plan.target, protect: dp.protect ?? f.plan.protect, phases: undefined };
       f.desperate = true;
       events.push({ type: "STATE_CHANGE", actor: f.label, result: "DESPERATE" });
     }
   }
 
-  const tactA = resolveEffectiveTactics(fA.plan, phaseKey);
-  const tactD = resolveEffectiveTactics(fD.plan, phaseKey);
+  // Use activePlan for all tactic/OE/AL lookups
+  const tactA = resolveEffectiveTactics(fA.activePlan, phaseKey);
+  const tactD = resolveEffectiveTactics(fD.activePlan, phaseKey);
   const offModsA = getOffensiveTacticMods(tactA.offTactic, fA.style);
   const defModsA = getDefensiveTacticMods(tactA.defTactic, fA.style);
   const offModsD = getOffensiveTacticMods(tactD.offTactic, fD.style);
   const defModsD = getDefensiveTacticMods(tactD.defTactic, fD.style);
 
-  const [biasAttA, biasDefA] = applyAggressionBias(fA.plan.phases?.[phaseKey]?.aggressionBias ?? fA.plan.aggressionBias ?? 5);
-  const [biasAttD, biasDefD] = applyAggressionBias(fD.plan.phases?.[phaseKey]?.aggressionBias ?? fD.plan.aggressionBias ?? 5);
+  const [biasAttA, biasDefA] = applyAggressionBias(fA.activePlan.phases?.[phaseKey]?.aggressionBias ?? fA.activePlan.aggressionBias ?? 5);
+  const [biasAttD, biasDefD] = applyAggressionBias(fD.activePlan.phases?.[phaseKey]?.aggressionBias ?? fD.activePlan.aggressionBias ?? 5);
 
-  const [OE_A, AL_A] = calculateFinalOEAL(fA.plan.phases?.[phaseKey]?.OE ?? fA.plan.OE, fA.plan.phases?.[phaseKey]?.AL ?? fA.plan.AL, fA.plan, fA.hp, fA.maxHp, fA.endurance, fA.maxEndurance, exchange);
-  const [OE_D, AL_D] = calculateFinalOEAL(fD.plan.phases?.[phaseKey]?.OE ?? fD.plan.OE, fD.plan.phases?.[phaseKey]?.AL ?? fD.plan.AL, fD.plan, fD.hp, fD.maxHp, fD.endurance, fD.maxEndurance, exchange);
+  const [OE_A, AL_A] = calculateFinalOEAL(fA.activePlan.phases?.[phaseKey]?.OE ?? fA.activePlan.OE, fA.activePlan.phases?.[phaseKey]?.AL ?? fA.activePlan.AL, fA.activePlan, fA.hp, fA.maxHp, fA.endurance, fA.maxEndurance, exchange);
+  const [OE_D, AL_D] = calculateFinalOEAL(fD.activePlan.phases?.[phaseKey]?.OE ?? fD.activePlan.OE, fD.activePlan.phases?.[phaseKey]?.AL ?? fD.activePlan.AL, fD.activePlan, fD.hp, fD.maxHp, fD.endurance, fD.maxEndurance, exchange);
 
-  const fatA = fatiguePenalty(fA.endurance, fA.maxEndurance);
-  const fatD = fatiguePenalty(fD.endurance, fD.maxEndurance);
+  // Apply psych state mods to fatigue calculations
+  const fatA = fatiguePenalty(fA.endurance, fA.maxEndurance) + psychA.defMod + psychA.parMod;
+  const fatD = fatiguePenalty(fD.endurance, fD.maxEndurance) + psychD.defMod + psychD.parMod;
   const passA = getStylePassive(fA.style, { phase: stylePhase, exchange, hitsLanded: fA.hitsLanded, hitsTaken: fA.hitsTaken, ripostes: fA.ripostes, consecutiveHits: fA.consecutiveHits, hpRatio: fA.hp / fA.maxHp, endRatio: fA.endurance / fA.maxEndurance, opponentStyle: fD.style, targetedLocation: tactA.target, totalFights: fA.totalFights });
   const passD = getStylePassive(fD.style, { phase: stylePhase, exchange, hitsLanded: fD.hitsLanded, hitsTaken: fD.hitsTaken, ripostes: fD.ripostes, consecutiveHits: fD.consecutiveHits, hpRatio: fD.hp / fD.maxHp, endRatio: fD.endurance / fD.maxEndurance, opponentStyle: fA.style, targetedLocation: tactD.target, totalFights: fD.totalFights });
 
@@ -159,8 +200,8 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA as unknown as Warrior, OE_A, AL_A) : 0;
   const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD as unknown as Warrior, OE_D, AL_D) : 0;
 
-  const iniA = fA.skills.INI + alIniMod(AL_A) + ctx.matchupA + fatA + defModsA.iniBonus + getTempoBonus(fA.style, stylePhase) + passA.iniBonus + masteryIniA - fA.legHits;
-  const iniD = fD.skills.INI + alIniMod(AL_D) + ctx.matchupD + fatD + defModsD.iniBonus + getTempoBonus(fD.style, stylePhase) + passD.iniBonus + masteryIniD - fD.legHits;
+  const iniA = fA.skills.INI + alIniMod(AL_A) + ctx.matchupA + fatA + defModsA.iniBonus + getTempoBonus(fA.style, stylePhase) + passA.iniBonus + masteryIniA - fA.legHits + psychA.iniMod + (fA.momentum * 2) + (ctx.trainerModsA.iniMod ?? 0) + ctx.weatherEffect.initiativeMod;
+  const iniD = fD.skills.INI + alIniMod(AL_D) + ctx.matchupD + fatD + defModsD.iniBonus + getTempoBonus(fD.style, stylePhase) + passD.iniBonus + masteryIniD - fD.legHits + psychD.iniMod + (fD.momentum * 2) + (ctx.trainerModsD.iniMod ?? 0) + ctx.weatherEffect.initiativeMod;
   
   const aGoesFirst = contestCheck(rng, iniA, iniD);
   const attLabel = aGoesFirst ? "A" : "D";
@@ -180,7 +221,9 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const overAtt = aGoesFirst ? Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakA) : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD);
   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
 
-  const attSucc = performAttackCheck(rng, att, curAttOE, aGoesFirst ? ctx.matchupA : ctx.matchupD, aGoesFirst ? fatA : fatD, curOffMods, curPassA, curAntiSyn, curBiasAtt, overAtt, curAttWepReq);
+  const attMomentumBonus = att.momentum * 2;
+  const attPsychMod = aGoesFirst ? psychA.attMod : psychD.attMod;
+  const attSucc = performAttackCheck(rng, att, curAttOE, aGoesFirst ? ctx.matchupA : ctx.matchupD, aGoesFirst ? fatA : fatD, curOffMods, curPassA, curAntiSyn, curBiasAtt, overAtt, curAttWepReq, attMomentumBonus + attPsychMod);
 
   if (!attSucc) {
     events.push({ type: "ATTACK", actor: attLabel, result: "WHIFF" });
@@ -214,7 +257,10 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
       }
       att.consecutiveHits = 0;
     } else {
-      executeHit(events, rng, att, def, aGoesFirst ? tactA : tactD, curOffMods, curPassA, attLabel, defLabel, stylePhase, phase, aGoesFirst ? (fA.plan.phases?.[phaseKey]?.killDesire ?? 5) : (fD.plan.phases?.[phaseKey]?.killDesire ?? 5), curAttOE, curAttAL, aGoesFirst ? ctx.matchupA : ctx.matchupD);
+      const killDesire = aGoesFirst
+        ? (fA.activePlan.phases?.[phaseKey]?.killDesire ?? fA.activePlan.killDesire ?? 5)
+        : (fD.activePlan.phases?.[phaseKey]?.killDesire ?? fD.activePlan.killDesire ?? 5);
+      executeHit(events, rng, att, def, aGoesFirst ? tactA : tactD, curOffMods, curPassA, attLabel, defLabel, stylePhase, phase, killDesire, curAttOE, curAttAL, aGoesFirst ? ctx.matchupA : ctx.matchupD, ctx);
     }
   }
 

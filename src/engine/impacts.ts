@@ -170,42 +170,67 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
 
   for (const imp of impacts) {
     // Numeric accumulation
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.treasuryDelta) merged.treasuryDelta! += imp.treasuryDelta;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.fameDelta) merged.fameDelta! += imp.fameDelta;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.popularityDelta) merged.popularityDelta! += imp.popularityDelta;
 
     // Map merges (shallow-merge per key)
     if (imp.rosterUpdates) {
       imp.rosterUpdates.forEach((val, key) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const existing = merged.rosterUpdates!.get(key) || {};
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         merged.rosterUpdates!.set(key, { ...existing, ...val });
       });
     }
     if (imp.rivalsUpdates) {
       imp.rivalsUpdates.forEach((val, key) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const existing = merged.rivalsUpdates!.get(key) || {};
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         merged.rivalsUpdates!.set(key, { ...existing, ...val });
       });
     }
 
     // Array appends
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.newsletterItems?.length) merged.newsletterItems!.push(...imp.newsletterItems);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.ledgerEntries?.length) merged.ledgerEntries!.push(...imp.ledgerEntries);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.graveyard?.length) merged.graveyard!.push(...imp.graveyard);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.arenaHistory?.length) merged.arenaHistory!.push(...imp.arenaHistory);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.matchHistory?.length) merged.matchHistory!.push(...imp.matchHistory);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.restStates?.length) merged.restStates!.push(...imp.restStates);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.insightTokens?.length) merged.insightTokens!.push(...imp.insightTokens);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.awards?.length) merged.awards!.push(...imp.awards);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.retired?.length) merged.retired!.push(...imp.retired);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.scoutReports?.length) merged.scoutReports!.push(...imp.scoutReports);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.hallOfFame?.length) merged.hallOfFame!.push(...imp.hallOfFame);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.moodHistory?.length) merged.moodHistory!.push(...imp.moodHistory);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.playerChallenges?.length) merged.playerChallenges!.push(...imp.playerChallenges);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.playerAvoids?.length) merged.playerAvoids!.push(...imp.playerAvoids);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.coachDismissed?.length) merged.coachDismissed!.push(...imp.coachDismissed);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.unacknowledgedDeaths?.length) merged.unacknowledgedDeaths!.push(...imp.unacknowledgedDeaths);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.seasonalGrowth?.length) merged.seasonalGrowth!.push(...imp.seasonalGrowth);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (imp.rosterRemovals?.length) merged.rosterRemovals!.push(...imp.rosterRemovals);
 
     // Replace semantics (last writer wins)

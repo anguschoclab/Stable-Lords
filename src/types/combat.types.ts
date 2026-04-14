@@ -47,7 +47,7 @@ export type DeathCauseBucket =
 
 export type FightOutcomeBy = "Kill" | "KO" | "Exhaustion" | "Stoppage" | "Draw" | null;
 
-export type CombatEventType = 
+export type CombatEventType =
   | "INITIATIVE"
   | "ATTACK"
   | "DEFENSE"
@@ -58,7 +58,8 @@ export type CombatEventType =
   | "STATE_CHANGE"
   | "BOUT_END"
   | "PASSIVE"
-  | "INSIGHT";
+  | "INSIGHT"
+  | "MOMENTUM_SHIFT";
 
 export interface CombatEvent {
   type: CombatEventType;

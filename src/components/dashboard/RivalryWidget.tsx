@@ -71,6 +71,7 @@ function useRivalriesList(state: GameState, rosterNames: Set<string>, rivalWarri
         });
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const r = map.get(stable)!;
       r.bouts++;
 

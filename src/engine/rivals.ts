@@ -98,7 +98,7 @@ export function generateRivalStables(count: number, seed: number, week: number =
       // Create a wrapper object compatible with SeededRNG for makeWarrior
       const rngWrapper = {
         next: () => rng.next(),
-        pick: <T,>(arr: T[]): T => arr[Math.floor(rng.next() * arr.length)]!,
+        pick: <T,>(arr: T[]): T => { /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */ return arr[Math.floor(rng.next() * arr.length)]!; },
         roll: (min: number, max: number) => Math.floor(rng.next() * (max - min + 1)) + min,
         uuid: () => crypto.randomUUID(),
         chance: (p: number) => rng.next() < p,

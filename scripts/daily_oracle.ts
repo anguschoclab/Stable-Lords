@@ -49,7 +49,7 @@ async function runBenchmark() {
 - **Total Bouts Ran**: ${totalBouts}
 
 ## 💰 Economy Report
-- **Average Stable Wealth**: ${avgStableWealth} Gold
+- **Final Stable Wealth**: ${avgStableWealth} Gold
 - **Inflation Check**: ${avgStableWealth > 100000 ? "⚠️ Hyper-inflation detected. Consider more gold sinks." : "✅ Economy looks stable."}
 - **Current Constants**:
   - Purse: ${FIGHT_PURSE}g

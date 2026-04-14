@@ -8,12 +8,12 @@
   "main": "electron/main.ts",
   "scripts": {
     "dev": "vite",
-    "electron:dev": "bun run dev & sleep 5 && ELECTRON_IS_DEV=true electron-builder start",
+    "electron:dev": "bun run dev & sleep 5 && electron-forge start",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "electron:build": "bunx tsx build-electron.ts && vite build && electron-builder",
-    "electron:build:all": "bunx tsx build-electron.ts && vite build && electron-builder -mwl",
-    "electron:pack": "bunx tsx build-electron.ts && vite build && electron-builder --dir",
+    "electron:build": "vite build && electron-forge make",
+    "electron:build:all": "vite build && electron-forge make --platform=all",
+    "electron:pack": "vite build && electron-forge package",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
@@ -88,6 +88,12 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-deb": "^7.11.1",
+    "@electron-forge/maker-dmg": "^7.11.1",
+    "@electron-forge/maker-rpm": "^7.11.1",
+    "@electron-forge/maker-squirrel": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
     "@eslint/js": "^9.39.4",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/typography": "^0.5.16",
@@ -106,10 +112,8 @@
     "comlink": "^4.4.2",
     "dexie": "^4.3.0",
     "electron": "^41.2.0",
-    "electron-builder": "^26.8.1",
     "electron-is-dev": "^3.0.1",
     "electron-store": "^11.0.2",
-    "electron-vite": "^5.0.0",
     "esbuild": "^0.28.0",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -165,6 +169,38 @@
           "arch": ["x64"]
         }
       ]
+    },
+    "config": {
+      "forge": {
+        "packagerConfig": {},
+        "rebuildConfig": {},
+        "makers": [
+          {
+            "name": "@electron-forge/maker-squirrel",
+            "config": {
+              "name": "stable_lords"
+            }
+          },
+          {
+            "name": "@electron-forge/maker-zip",
+            "platforms": [
+              "darwin"
+            ]
+          },
+          {
+            "name": "@electron-forge/maker-dmg",
+            "config": {}
+          },
+          {
+            "name": "@electron-forge/maker-deb",
+            "config": {}
+          },
+          {
+            "name": "@electron-forge/maker-rpm",
+            "config": {}
+          }
+        ]
+      }
     },
     "nsis": {
       "oneClick": false,

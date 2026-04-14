@@ -2,6 +2,10 @@ import { app, BrowserWindow, ipcMain, Menu, dialog, shell, Tray, nativeImage } f
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Simple development mode check
 const isDev = process.env.NODE_ENV === 'development' || process.env.ELECTRON_IS_DEV === 'true';
@@ -323,6 +327,23 @@ function registerIPCHandlers() {
       return { success: true, data: JSON.parse(data) };
     } catch (error) {
       console.error('Error loading game:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
+  ipcMain.handle('list-saves', async () => {
+    try {
+      const saveDir = path.join(getSaveDirectory(), 'hot_state');
+      if (!fs.existsSync(saveDir)) {
+        return { success: true, data: [] };
+      }
+      const files = fs.readdirSync(saveDir);
+      const saveIds = files
+        .filter(f => f.endsWith('.json'))
+        .map(f => f.replace('.json', ''));
+      return { success: true, data: saveIds };
+    } catch (error) {
+      console.error('Error listing saves:', error);
       return { success: false, error: error.message };
     }
   });

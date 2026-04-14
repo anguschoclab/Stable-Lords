@@ -29,7 +29,7 @@ export function ScoutReportDetails({ report, warriorName, treasury, onScout }: S
         <div className="space-y-6 relative z-10">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-               <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+               <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
                   <Terminal className="h-4 w-4 text-primary" />
                </div>
                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary leading-none">Scouting_Protocol_Pending</h4>
@@ -49,7 +49,7 @@ export function ScoutReportDetails({ report, warriorName, treasury, onScout }: S
                   disabled={!canAfford}
                   onClick={() => onScout(q)}
                   className={cn(
-                    "w-full flex items-center justify-between p-4 rounded-xl border transition-all relative group/btn",
+                    "w-full flex items-center justify-between p-4 rounded-none border transition-all relative group/btn",
                     canAfford 
                       ? q === "Expert" 
                         ? "bg-primary text-white border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] hover:scale-[1.02]" 
@@ -59,7 +59,7 @@ export function ScoutReportDetails({ report, warriorName, treasury, onScout }: S
                 >
                   <div className="flex items-center gap-4">
                     <div className={cn(
-                      "p-2 rounded-lg transition-colors border",
+                      "p-2 rounded-none transition-colors border",
                       q === "Expert" ? "bg-white/10 border-white/20" : "bg-neutral-800 border-white/5 group-hover/btn:bg-primary/20 group-hover/btn:border-primary/20 group-hover/btn:text-primary"
                     )}>
                       <Eye className="h-4 w-4" />
@@ -71,14 +71,14 @@ export function ScoutReportDetails({ report, warriorName, treasury, onScout }: S
                   </div>
 
                   <div className={cn(
-                    "px-3 py-1.5 rounded-lg border flex items-center gap-2 font-mono font-black text-xs",
+                    "px-3 py-1.5 rounded-none border flex items-center gap-2 font-mono font-black text-xs",
                     q === "Expert" ? "bg-black/20 border-white/10 text-white" : "bg-black border-white/5 text-arena-gold"
                   )}>
                     <Coins className="h-3.5 w-3.5" /> {cost}G
                   </div>
                   
                   {q === "Expert" && canAfford && (
-                    <div className="absolute inset-0 bg-white/5 animate-pulse rounded-xl pointer-events-none" />
+                    <div className="absolute inset-0 bg-white/5 animate-pulse rounded-none pointer-events-none" />
                   )}
                 </button>
               );
@@ -95,13 +95,13 @@ export function ScoutReportDetails({ report, warriorName, treasury, onScout }: S
       
       <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
         <div className="flex items-center gap-4">
-           <div className="p-2.5 rounded-xl bg-primary text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]">
+           <div className="p-2.5 rounded-none bg-primary text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]">
               <Microscope className="h-5 w-5" />
            </div>
            <div>
               <h3 className="font-display font-black uppercase text-base tracking-tight leading-none mb-1">{report.warriorName}</h3>
               <div className="flex items-center gap-2">
-                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-sm bg-primary/10 border border-primary/20">
+                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-primary/10 border border-primary/20">
                     <span className="text-[8px] font-black uppercase tracking-widest text-primary leading-none">{report.quality} SCAN COMPLETED</span>
                  </div>
                  <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-40">PROTOCOL_ACTIVE</span>
@@ -111,7 +111,7 @@ export function ScoutReportDetails({ report, warriorName, treasury, onScout }: S
         
         <Tooltip>
            <TooltipTrigger asChild>
-              <button aria-label="More Info" className="p-2 rounded-lg bg-neutral-900 border border-white/5 hover:border-primary/40 transition-colors">
+              <button aria-label="More Info" className="p-2 rounded-none bg-neutral-900 border border-white/5 hover:border-primary/40 transition-colors">
                  <Info className="h-4 w-4 text-muted-foreground/40" />
               </button>
            </TooltipTrigger>
@@ -215,14 +215,14 @@ export function ScoutReportDetails({ report, warriorName, treasury, onScout }: S
 
         <div className="relative group">
           <Terminal className="absolute -left-6 top-1 h-4 w-4 text-primary/10 group-hover:text-primary transition-colors" />
-          <div className="bg-neutral-900 rounded-xl p-5 border border-white/5 border-l-4 border-l-primary/40 italic">
+          <div className="bg-neutral-900 rounded-none p-5 border border-white/5 border-l-4 border-l-primary/40 italic">
             <p className="text-xs text-muted-foreground leading-relaxed font-medium">"{report.notes}"</p>
           </div>
         </div>
 
         {report.quality !== "Expert" && (
           <button
-            className="w-full h-12 bg-primary/10 border border-primary/20 rounded-xl hover:bg-primary hover:text-white transition-all group/expand"
+            className="w-full h-12 bg-primary/10 border border-primary/20 rounded-none hover:bg-primary hover:text-white transition-all group/expand"
             onClick={() => onScout(report.quality === "Basic" ? "Detailed" : "Expert")}
           >
             <div className="flex items-center justify-center gap-3">

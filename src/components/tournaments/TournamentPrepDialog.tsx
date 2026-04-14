@@ -25,7 +25,7 @@ export function TournamentPrepDialog({ isOpen, onOpenChange, activeWarriors, sea
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
-          <div className="text-[11px] font-black uppercase tracking-widest text-muted-foreground/60 bg-secondary/20 p-4 rounded-2xl border border-border/20 leading-relaxed">
+          <div className="text-[11px] font-black uppercase tracking-widest text-muted-foreground/60 bg-secondary/20 p-4 rounded-none border border-border/20 leading-relaxed">
             Review your active roster signatures before committing to the seasonal tournament.
             Ensure fame limits and tactical equipment classes are synchronized.
           </div>

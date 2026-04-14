@@ -49,7 +49,7 @@ export function InducteeCard({ warrior, title, icon, fights }: { warrior: Warrio
           <div className="flex items-start justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <div className={cn("p-1.5 rounded-lg border", title.includes("Fame") || title.includes("Greatest") ? "bg-arena-gold/10 border-arena-gold/30" : "bg-primary/10 border-primary/30")}>
+                <div className={cn("p-1.5 rounded-none border", title.includes("Fame") || title.includes("Greatest") ? "bg-arena-gold/10 border-arena-gold/30" : "bg-primary/10 border-primary/30")}>
                   {icon}
                 </div>
                 <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-arena-gold transition-colors">{warrior.name}</span>
@@ -73,7 +73,7 @@ export function InducteeCard({ warrior, title, icon, fights }: { warrior: Warrio
               { label: "KILL", val: warrior.career.kills, color: "text-destructive" },
               { label: "FAME", val: warrior.fame ?? 0, color: "text-arena-gold" },
             ].map((s) => (
-              <div key={s.label} className="bg-secondary/20 rounded-xl p-2 border border-border/10 text-center">
+              <div key={s.label} className="bg-secondary/20 rounded-none p-2 border border-border/10 text-center">
                 <div className={cn("text-sm font-mono font-black", s.color)}>{s.val}</div>
                 <div className="text-[8px] font-black uppercase tracking-tighter text-muted-foreground/40">{s.label}</div>
               </div>
@@ -99,7 +99,7 @@ export function InducteeCard({ warrior, title, icon, fights }: { warrior: Warrio
           {warrior.titles.length > 0 && (
             <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/10">
               {warrior.titles.map((t, i) => (
-                <Badge key={i} variant="secondary" className="text-[9px] font-black tracking-widest uppercase bg-arena-gold/5 text-arena-gold border border-arena-gold/10 px-2 py-0.5 rounded-sm">
+                <Badge key={i} variant="secondary" className="text-[9px] font-black tracking-widest uppercase bg-arena-gold/5 text-arena-gold border border-arena-gold/10 px-2 py-0.5 rounded-none">
                    {t}
                 </Badge>
               ))}
@@ -108,7 +108,7 @@ export function InducteeCard({ warrior, title, icon, fights }: { warrior: Warrio
 
           {/* Greatest fight — Tactical Box */}
           {best && (
-            <div className="bg-black/20 rounded-xl p-4 border border-border/10 mt-auto">
+            <div className="bg-black/20 rounded-none p-4 border border-border/10 mt-auto">
               <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-3 flex items-center justify-between">
                  <span>CHRONICLE_PEAK</span>
                  <span>WK_{best.week}</span>

@@ -45,7 +45,7 @@ export function WarriorTrainingCard({ warrior, assignment, seasonalGains, traine
             {hasInjury && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="bg-destructive/20 text-destructive px-2 py-0.5 rounded-sm text-[9px] font-black uppercase tracking-widest flex items-center gap-1 border border-destructive/20 animate-pulse cursor-help">
+                  <div className="bg-destructive/20 text-destructive px-2 py-0.5 rounded-none text-[9px] font-black uppercase tracking-widest flex items-center gap-1 border border-destructive/20 animate-pulse cursor-help">
                      <AlertTriangle className="h-2.5 w-2.5" /> INJURED
                   </div>
                 </TooltipTrigger>
@@ -104,7 +104,7 @@ export function WarriorTrainingCard({ warrior, assignment, seasonalGains, traine
                       disabled={disabled}
                       onClick={() => onAssign(key)}
                       className={cn(
-                        "group/row relative w-full flex items-center gap-3 px-3 py-2 rounded-md border text-left transition-all",
+                        "group/row relative w-full flex items-center gap-3 px-3 py-2 rounded-none border text-left transition-all",
                         isSelected 
                           ? "bg-primary/20 border-primary shadow-[0_0_15px_-5px_rgba(34,197,94,0.4)]" 
                           : disabled
@@ -157,7 +157,7 @@ export function WarriorTrainingCard({ warrior, assignment, seasonalGains, traine
 
                       {/* Overlay for "Near Ceiling" */}
                       {nearCeiling && (
-                        <div className="absolute inset-0 bg-arena-gold/5 pointer-events-none rounded-md border border-arena-gold/10" />
+                        <div className="absolute inset-0 bg-arena-gold/5 pointer-events-none rounded-none border border-arena-gold/10" />
                       )}
                     </button>
                   </TooltipTrigger>

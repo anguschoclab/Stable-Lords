@@ -112,7 +112,7 @@ export default function AdminTools() {
       <div className="flex items-center justify-between border-b border-border/10 pb-6">
         <div>
           <h1 className="text-xl sm:text-3xl font-display font-black flex items-center gap-3 uppercase tracking-tighter text-foreground">
-            <div className="p-2 bg-primary/10 rounded-xl border border-primary/20">
+            <div className="p-2 bg-primary/10 rounded-none border border-primary/20">
               <Settings className="h-6 w-6 text-primary" />
             </div>
             Admin_Interface

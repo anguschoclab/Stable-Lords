@@ -37,7 +37,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
               <StatBadge styleName={wA.style} />
             </div>
             <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-primary/60">
-              <span className="px-1.5 py-0.5 rounded-sm bg-primary/10">PLAYER_STABLE</span>
+              <span className="px-1.5 py-0.5 rounded-none bg-primary/10">PLAYER_STABLE</span>
             </div>
           </div>
 

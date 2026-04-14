@@ -143,7 +143,7 @@ export default function ResolutionReveal() {
                 </div>
 
                 {data.deaths.length > 0 && (
-                  <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 space-y-3">
+                  <div className="bg-destructive/10 border border-destructive/20 rounded-none p-4 space-y-3">
                     <div className="flex items-center gap-2 text-destructive font-bold">
                       <Skull className="h-5 w-5" />
                       <h4>Fallen Warriors</h4>
@@ -157,7 +157,7 @@ export default function ResolutionReveal() {
                 )}
 
                 {data.injuries.length > 0 && (
-                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 space-y-3">
+                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-none p-4 space-y-3">
                     <div className="flex items-center gap-2 text-amber-500 font-bold">
                       <Activity className="h-5 w-5" />
                       <h4>Injured Roster</h4>
@@ -257,7 +257,7 @@ export default function ResolutionReveal() {
 
                 <div className="space-y-3">
                   <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Granular Breakdown</h4>
-                  <ScrollArea className="h-[200px] border rounded-md p-4 bg-muted/30">
+                  <ScrollArea className="h-[200px] border rounded-none p-4 bg-muted/30">
                     <div className="space-y-4">
                       {state.lastSimulationReport?.trainingGains.map((g: any, i: number) => (
                         <div key={i} className="flex items-center justify-between text-sm">
@@ -294,7 +294,7 @@ export default function ResolutionReveal() {
                     {deadWarriors.map((w) => {
                       if (!w) return null;
                       return (
-                        <div key={w.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-lg text-center min-w-72 shadow-2xl relative">
+                        <div key={w.id} className="bg-zinc-900 border border-zinc-800 p-6 rounded-none text-center min-w-72 shadow-2xl relative">
                           <h3 className="text-2xl font-display font-bold text-red-500 mb-1 drop-shadow-md">{w.name}</h3>
                           <p className="text-sm text-zinc-400 mb-4 italic leading-relaxed">{w.deathCause || narrativeContent.fanfare.memorial_default}</p>
                           <Separator className="bg-zinc-800 mb-4" />

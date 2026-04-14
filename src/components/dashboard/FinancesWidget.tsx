@@ -22,7 +22,7 @@ export function FinancesWidget() {
       </div>
 
       <div className="flex items-center gap-3 mb-6 relative z-10">
-         <div className="p-2 rounded-lg bg-arena-gold/10 border border-arena-gold/20">
+         <div className="p-2 rounded-none bg-arena-gold/10 border border-arena-gold/20">
             <Coins className="h-4 w-4 text-arena-gold" />
          </div>
          <div>
@@ -32,7 +32,7 @@ export function FinancesWidget() {
       </div>
 
       <div className="space-y-6 relative z-10">
-        <div className="flex flex-col items-center justify-center py-4 bg-black/20 rounded-xl border border-white/5 shadow-inner">
+        <div className="flex flex-col items-center justify-center py-4 bg-black/20 rounded-none border border-white/5 shadow-inner">
            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40 mb-1">TOTAL_RESERVE</span>
            <div className="flex items-center gap-2">
                <span className="text-3xl font-display font-black text-white selection:bg-arena-gold/30 drop-shadow-[0_0_15px_rgba(255,215,0,0.1)]">
@@ -45,7 +45,7 @@ export function FinancesWidget() {
         <div className="grid grid-cols-2 gap-3">
           <Tooltip>
              <TooltipTrigger asChild>
-                <div className="bg-arena-pop/5 border border-arena-pop/10 rounded-xl p-3 group/stat hover:bg-arena-pop/10 transition-colors cursor-help">
+                <div className="bg-arena-pop/5 border border-arena-pop/10 rounded-none p-3 group/stat hover:bg-arena-pop/10 transition-colors cursor-help">
                    <div className="flex items-center gap-2 mb-1">
                       <ArrowUpRight className="h-3 w-3 text-arena-pop opacity-60 group-hover/stat:opacity-100 transition-opacity" />
                       <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">INFLOW</span>
@@ -62,7 +62,7 @@ export function FinancesWidget() {
 
           <Tooltip>
              <TooltipTrigger asChild>
-                <div className="bg-destructive/5 border border-destructive/10 rounded-xl p-3 group/stat hover:bg-destructive/10 transition-colors cursor-help">
+                <div className="bg-destructive/5 border border-destructive/10 rounded-none p-3 group/stat hover:bg-destructive/10 transition-colors cursor-help">
                    <div className="flex items-center gap-2 mb-1">
                       <ArrowDownRight className="h-3 w-3 text-destructive opacity-60 group-hover/stat:opacity-100 transition-opacity" />
                       <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-60">OUTFLOW</span>

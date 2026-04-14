@@ -182,7 +182,7 @@ export function TacticalBar() {
                     <div
                       key={alert.id}
                       className={cn(
-                        "flex items-center justify-between p-3 rounded-lg border",
+                        "flex items-center justify-between p-3 rounded-none border",
                         alert.type === "warning" && "bg-amber-500/10 border-amber-500/20",
                         alert.type === "info" && "bg-stone-500/10 border-stone-500/20",
                         alert.type === "urgent" && "bg-red-500/10 border-red-500/20",

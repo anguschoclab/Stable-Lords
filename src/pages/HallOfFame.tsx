@@ -64,7 +64,7 @@ export default function HallOfFame() {
   return (
     <div className="space-y-8">
       {/* Masthead */}
-      <div className="text-center space-y-4 py-8 relative overflow-hidden bg-glass-card rounded-3xl border border-border/40">
+      <div className="text-center space-y-4 py-8 relative overflow-hidden bg-glass-card rounded-none border border-border/40">
         <div className="absolute inset-0 bg-gradient-to-b from-arena-gold/5 to-transparent pointer-events-none" />
         <div className="flex items-center justify-center gap-4 relative z-10">
           <Separator className="w-16 bg-arena-gold/20" />
@@ -113,7 +113,7 @@ export default function HallOfFame() {
                           <div className="flex items-start justify-between">
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
-                                <div className="p-1.5 rounded-lg border bg-primary/10 border-primary/30">
+                                <div className="p-1.5 rounded-none border bg-primary/10 border-primary/30">
                                   <Users className="h-4 w-4 text-primary" />
                                 </div>
                                 <span className="font-display font-black text-xl uppercase tracking-tighter text-foreground group-hover:text-primary transition-colors">

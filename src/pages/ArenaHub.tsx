@@ -54,7 +54,7 @@ function CrowdMoodWidget() {
       <div className="grid grid-cols-2 gap-3 pt-2">
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded-md border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all hover:bg-white/[0.05] hover:border-white/10">
+            <div className="rounded-none border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all hover:bg-white/[0.05] hover:border-white/10">
               <div className={cn("text-lg font-display font-black tracking-tighter", mods.fameMultiplier > 1 ? "text-primary" : "text-muted-foreground")}>
                 ×{mods.fameMultiplier.toFixed(1)}
               </div>
@@ -66,7 +66,7 @@ function CrowdMoodWidget() {
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className="rounded-md border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all hover:bg-white/[0.05] hover:border-white/10">
+            <div className="rounded-none border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all hover:bg-white/[0.05] hover:border-white/10">
               <div className={cn("text-lg font-display font-black tracking-tighter", mods.killChanceBonus > 0 ? "text-destructive" : "text-muted-foreground")}>
                 {mods.killChanceBonus > 0 ? "+" : ""}{(mods.killChanceBonus * 100).toFixed(0)}%
               </div>

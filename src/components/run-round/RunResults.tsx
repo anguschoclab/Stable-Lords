@@ -72,7 +72,7 @@ export function RunResults({ results, expandedId, onToggleExpand }: RunResultsPr
                        {res.outcome.by === "Kill" && <Skull className="h-4 w-4 text-destructive animate-pulse" />}
                        {res.outcome.by === "KO" && <Zap className="h-4 w-4 text-amber-500" />}
                        <div className={cn(
-                         "p-1.5 rounded-lg border border-border/20 transition-colors",
+                         "p-1.5 rounded-none border border-border/20 transition-colors",
                          isExpanded ? "bg-primary/20 text-primary border-primary/20" : "bg-secondary/40 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
                        )}>
                          {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}

@@ -1,19 +1,43 @@
 import { app, BrowserWindow, ipcMain, Menu, dialog, shell, Tray, nativeImage } from 'electron';
 import * as path from 'path';
-import isDev from 'electron-is-dev';
-import Store from 'electron-store';
-import { fileURLToPath } from 'url';
 import * as fs from 'fs';
 import * as os from 'os';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Simple development mode check
+const isDev = process.env.NODE_ENV === 'development' || process.env.ELECTRON_IS_DEV === 'true';
 
-// Initialize electron-store for configuration
-const store = new Store() as any;
+// Simple in-memory store for configuration (can be replaced with electron-store later)
+const store = new Map();
+let configPath;
 
-let mainWindow: BrowserWindow | null = null;
-let tray: Tray | null = null;
+// Load config from file
+function loadConfig() {
+  try {
+    if (fs.existsSync(configPath)) {
+      const data = fs.readFileSync(configPath, 'utf-8');
+      const parsed = JSON.parse(data);
+      Object.keys(parsed).forEach(key => store.set(key, parsed[key]));
+    }
+  } catch (e) {
+    console.error('Failed to load config:', e);
+  }
+}
+
+// Save config to file
+function saveConfig() {
+  try {
+    const data = {};
+    store.forEach((value, key) => {
+      data[key] = value;
+    });
+    fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
+  } catch (e) {
+    console.error('Failed to save config:', e);
+  }
+}
+
+let mainWindow: any = null;
+let tray: any = null;
 
 // Get platform-specific save directory
 function getSaveDirectory(): string {
@@ -76,6 +100,7 @@ function createWindow() {
     if (mainWindow) {
       const bounds = mainWindow.getBounds();
       store.set('windowBounds', bounds as any);
+      saveConfig();
     }
   });
 
@@ -83,6 +108,7 @@ function createWindow() {
     if (mainWindow) {
       const bounds = mainWindow.getBounds();
       store.set('windowBounds', bounds as any);
+      saveConfig();
     }
   });
 
@@ -274,157 +300,149 @@ function createTray() {
   });
 }
 
-// IPC Handlers for file operations
-ipcMain.handle('save-game', async (_event, slotId: string, state: any) => {
-  try {
-    ensureSaveDirectory();
-    const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
-    fs.writeFileSync(filePath, JSON.stringify(state, null, 2));
+function registerIPCHandlers() {
+  ipcMain.handle('save-game', async (_event, slotId: string, state: any) => {
+    try {
+      ensureSaveDirectory();
+      const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(state, null, 2));
+      return { success: true };
+    } catch (error) {
+      console.error('Error saving game:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  });
+
+  ipcMain.handle('load-game', async (_event, slotId: string) => {
+    try {
+      const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      if (!fs.existsSync(filePath)) {
+        return { success: false, error: 'Save file not found' };
+      }
+      const data = fs.readFileSync(filePath, 'utf-8');
+      return { success: true, data: JSON.parse(data) };
+    } catch (error) {
+      console.error('Error loading game:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  });
+
+  ipcMain.handle('delete-save', async (_event, slotId: string) => {
+    try {
+      const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting save:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  });
+
+  ipcMain.handle('archive-bout-log', async (_event, year: number, season: number, boutId: string, logData: string[]) => {
+    try {
+      ensureSaveDirectory();
+      const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'bouts');
+      if (!fs.existsSync(seasonDir)) {
+        fs.mkdirSync(seasonDir, { recursive: true });
+      }
+      const filePath = path.join(seasonDir, `${year}_${boutId}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(logData, null, 2));
+      return { success: true };
+    } catch (error) {
+      console.error('Error archiving bout log:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  });
+
+  ipcMain.handle('retrieve-bout-log', async (_event, year: number, season: number, boutId: string) => {
+    try {
+      const filePath = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'bouts', `${year}_${boutId}.json`);
+      if (!fs.existsSync(filePath)) {
+        return { success: false, error: 'Bout log not found' };
+      }
+      const data = fs.readFileSync(filePath, 'utf-8');
+      return { success: true, data: JSON.parse(data) };
+    } catch (error) {
+      console.error('Error retrieving bout log:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  });
+
+  ipcMain.handle('archive-gazette', async (_event, season: number, week: number, markdown: string) => {
+    try {
+      ensureSaveDirectory();
+      const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'gazettes');
+      if (!fs.existsSync(seasonDir)) {
+        fs.mkdirSync(seasonDir, { recursive: true });
+      }
+      const filePath = path.join(seasonDir, `week_${week}.md`);
+      fs.writeFileSync(filePath, markdown);
+      return { success: true };
+    } catch (error) {
+      console.error('Error archiving gazette:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  });
+
+  ipcMain.handle('retrieve-gazette', async (_event, season: number, week: number) => {
+    try {
+      const filePath = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'gazettes', `week_${week}.md`);
+      if (!fs.existsSync(filePath)) {
+        return { success: false, error: 'Gazette not found' };
+      }
+      const data = fs.readFileSync(filePath, 'utf-8');
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error retrieving gazette:', error);
+      return { success: false, error: (error as Error).message };
+    }
+  });
+
+  // IPC Handlers for store
+  ipcMain.handle('store-get', async (_event, key: string) => {
+    return store.get(key as any);
+  });
+
+  ipcMain.handle('store-set', async (_event, key: string, value: any) => {
+    store.set(key as any, value);
+    saveConfig();
     return { success: true };
-  } catch (error) {
-    console.error('Error saving game:', error);
-    return { success: false, error: (error as Error).message };
-  }
-});
+  });
 
-ipcMain.handle('load-game', async (_event, slotId: string) => {
-  try {
-    const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
-    if (!fs.existsSync(filePath)) {
-      return { success: false, error: 'Save file not found' };
-    }
-    const data = fs.readFileSync(filePath, 'utf-8');
-    return { success: true, data: JSON.parse(data) };
-  } catch (error) {
-    console.error('Error loading game:', error);
-    return { success: false, error: (error as Error).message };
-  }
-});
-
-ipcMain.handle('list-saves', async () => {
-  try {
-    const hotStateDir = path.join(getSaveDirectory(), 'hot_state');
-    if (!fs.existsSync(hotStateDir)) {
-      return { success: true, saves: [] };
-    }
-    const files = fs.readdirSync(hotStateDir).filter(f => f.endsWith('.json'));
-    return { success: true, saves: files.map(f => f.replace('.json', '')) };
-  } catch (error) {
-    console.error('Error listing saves:', error);
-    return { success: false, error: (error as Error).message };
-  }
-});
-
-ipcMain.handle('delete-save', async (_event, slotId: string) => {
-  try {
-    const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
+  ipcMain.handle('store-delete', async (_event, key: string) => {
+    store.delete(key as any);
+    saveConfig();
     return { success: true };
-  } catch (error) {
-    console.error('Error deleting save:', error);
-    return { success: false, error: (error as Error).message };
-  }
-});
+  });
 
-ipcMain.handle('archive-bout-log', async (_event, year: number, season: number, boutId: string, logData: string[]) => {
-  try {
-    ensureSaveDirectory();
-    const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'bouts');
-    if (!fs.existsSync(seasonDir)) {
-      fs.mkdirSync(seasonDir, { recursive: true });
-    }
-    const filePath = path.join(seasonDir, `${year}_${boutId}.json`);
-    fs.writeFileSync(filePath, JSON.stringify(logData, null, 2));
+  // IPC Handler for app info
+  ipcMain.handle('get-app-info', async () => {
+    return {
+      name: app.getName(),
+      version: app.getVersion(),
+      platform: process.platform,
+    };
+  });
+
+  // IPC Handler for notifications
+  ipcMain.handle('show-notification', async (_event, options: { title: string; body: string }) => {
+    const { Notification } = require('electron');
+    new Notification({
+      title: options.title,
+      body: options.body,
+    }).show();
     return { success: true };
-  } catch (error) {
-    console.error('Error archiving bout log:', error);
-    return { success: false, error: (error as Error).message };
-  }
-});
-
-ipcMain.handle('retrieve-bout-log', async (_event, year: number, season: number, boutId: string) => {
-  try {
-    const filePath = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'bouts', `${year}_${boutId}.json`);
-    if (!fs.existsSync(filePath)) {
-      return { success: false, error: 'Bout log not found' };
-    }
-    const data = fs.readFileSync(filePath, 'utf-8');
-    return { success: true, data: JSON.parse(data) };
-  } catch (error) {
-    console.error('Error retrieving bout log:', error);
-    return { success: false, error: (error as Error).message };
-  }
-});
-
-ipcMain.handle('archive-gazette', async (_event, season: number, week: number, markdown: string) => {
-  try {
-    ensureSaveDirectory();
-    const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'gazettes');
-    if (!fs.existsSync(seasonDir)) {
-      fs.mkdirSync(seasonDir, { recursive: true });
-    }
-    const filePath = path.join(seasonDir, `week_${week}.md`);
-    fs.writeFileSync(filePath, markdown);
-    return { success: true };
-  } catch (error) {
-    console.error('Error archiving gazette:', error);
-    return { success: false, error: (error as Error).message };
-  }
-});
-
-ipcMain.handle('retrieve-gazette', async (_event, season: number, week: number) => {
-  try {
-    const filePath = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'gazettes', `week_${week}.md`);
-    if (!fs.existsSync(filePath)) {
-      return { success: false, error: 'Gazette not found' };
-    }
-    const data = fs.readFileSync(filePath, 'utf-8');
-    return { success: true, data };
-  } catch (error) {
-    console.error('Error retrieving gazette:', error);
-    return { success: false, error: (error as Error).message };
-  }
-});
-
-// IPC Handlers for electron-store
-ipcMain.handle('store-get', async (_event, key: string) => {
-  return store.get(key as any);
-});
-
-ipcMain.handle('store-set', async (_event, key: string, value: any) => {
-  store.set(key as any, value);
-  return { success: true };
-});
-
-ipcMain.handle('store-delete', async (_event, key: string) => {
-  store.delete(key as any);
-  return { success: true };
-});
-
-// IPC Handler for app info
-ipcMain.handle('get-app-info', async () => {
-  return {
-    name: app.getName(),
-    version: app.getVersion(),
-    platform: process.platform,
-  };
-});
-
-// IPC Handler for notifications
-ipcMain.handle('show-notification', async (_event, options: { title: string; body: string }) => {
-  const { Notification } = require('electron');
-  new Notification({
-    title: options.title,
-    body: options.body,
-  }).show();
-  return { success: true };
-});
-
-// App lifecycle
+  });
+}
 app.whenReady().then(() => {
+  // Initialize config path now that app is ready
+  configPath = path.join(app.getPath('userData'), 'config.json');
+  loadConfig();
+  
   ensureSaveDirectory();
+  registerIPCHandlers();
   createWindow();
   createMenu();
   createTray();

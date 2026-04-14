@@ -97,7 +97,7 @@ export function StableComparisonWidget() {
     <Surface variant="glass" padding="none" className="md:col-span-2 border-border/10 group overflow-hidden relative flex flex-col">
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
+            <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20">
                <TrendingUp className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -123,16 +123,16 @@ export function StableComparisonWidget() {
           <div className="space-y-2">
             {allStables.map((s, i) => (
               <div key={i} className={cn(
-                "grid grid-cols-[1fr_80px_120px_80px_120px] gap-4 p-4 rounded-xl border transition-all duration-300 group/row items-center",
+                "grid grid-cols-[1fr_80px_120px_80px_120px] gap-4 p-4 rounded-none border transition-all duration-300 group/row items-center",
                 s.isPlayer ? "bg-primary/5 border-primary/20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" : "bg-white/2 border-white/5 hover:bg-white/5"
               )}>
                 <div className="flex items-center gap-3 min-w-0">
                   {s.isPlayer ? (
-                    <div className="p-1.5 rounded-lg bg-primary/20 border border-primary/30">
+                    <div className="p-1.5 rounded-none bg-primary/20 border border-primary/30">
                        <Shield className="h-3 w-3 text-primary" />
                     </div>
                   ) : (
-                    <div className="p-1.5 rounded-lg bg-white/5 border border-white/10 opacity-40">
+                    <div className="p-1.5 rounded-none bg-white/5 border border-white/10 opacity-40">
                        <Activity className="h-3 w-3 text-muted-foreground" />
                     </div>
                   )}
@@ -181,7 +181,7 @@ export function StableComparisonWidget() {
                 const winPct = Math.round((rec.wins / total) * 100);
 
                 return (
-                  <div key={r.id} className="p-4 bg-black/20 rounded-xl border border-white/5 group/h2h hover:border-primary/20 transition-all">
+                  <div key={r.id} className="p-4 bg-black/20 rounded-none border border-white/5 group/h2h hover:border-primary/20 transition-all">
                     <div className="flex justify-between items-center mb-3">
                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{resolveStableName(state, r.id, r.name)}</span>
                        <div className="flex items-center gap-2">

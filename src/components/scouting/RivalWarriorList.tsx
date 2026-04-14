@@ -19,7 +19,7 @@ export function RivalWarriorList({ warriors, selectedWarriorId, onSelectWarrior,
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 px-2">
-        <div className="p-1 px-2 rounded-md bg-primary/10 border border-primary/20">
+        <div className="p-1 px-2 rounded-none bg-primary/10 border border-primary/20">
            <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">{stableName ? `${stableName}_ROSTER` : "Select_Stable"}</span>
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
@@ -56,7 +56,7 @@ export function RivalWarriorList({ warriors, selectedWarriorId, onSelectWarrior,
                         <div className="flex items-center gap-3">
                            <WarriorNameTag id={w.id} name={w.name} useCrown={false} />
                            {hasReport && (
-                             <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse">
+                             <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-none bg-primary/20 border border-primary/20 text-[8px] font-black text-primary uppercase tracking-widest animate-pulse">
                                <Eye className="h-2.5 w-2.5" /> INTEL_LOCKED
                              </div>
                            )}

@@ -31,7 +31,7 @@ export function RankingsWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+            <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
                <Award className="h-5 w-5 text-primary" />
             </div>
             <div>

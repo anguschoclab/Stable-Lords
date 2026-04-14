@@ -28,7 +28,7 @@ export function StableWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+            <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
                <Users className="h-4 w-4 text-primary" />
             </div>
             <div>
@@ -53,7 +53,7 @@ export function StableWidget() {
                   return (
                      <div key={w.id} className="p-4 flex items-center gap-4 hover:bg-white/2 transition-colors group/item">
                         <div className="relative">
-                           <div className="w-10 h-10 rounded-xl bg-secondary/20 border border-white/10 flex items-center justify-center overflow-hidden transition-transform group-hover/item:scale-105">
+                           <div className="w-10 h-10 rounded-none bg-secondary/20 border border-white/10 flex items-center justify-center overflow-hidden transition-transform group-hover/item:scale-105">
                               <span className="text-xs font-black text-white/40">{w.name.charAt(0)}</span>
                               {hasInjuries && (
                                  <div className="absolute -top-1 -right-1 bg-destructive p-0.5 rounded-full ring-2 ring-[#050506]">

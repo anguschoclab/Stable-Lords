@@ -34,7 +34,7 @@ export function TrainingWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+            <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
                <Zap className="h-4 w-4 text-primary" />
             </div>
             <div>
@@ -67,10 +67,10 @@ export function TrainingWidget() {
               const nearCeiling = potential !== undefined && (potential - current) <= 2;
 
               return (
-                <div key={warriorId} className="flex items-center justify-between group/item p-3 bg-white/2 rounded-xl border border-white/5 hover:border-primary/20 transition-all">
+                <div key={warriorId} className="flex items-center justify-between group/item p-3 bg-white/2 rounded-none border border-white/5 hover:border-primary/20 transition-all">
                    <div className="flex items-center gap-4">
                       <div className="relative">
-                         <div className="h-8 w-8 rounded-lg bg-secondary/20 flex items-center justify-center border border-white/5">
+                         <div className="h-8 w-8 rounded-none bg-secondary/20 flex items-center justify-center border border-white/5">
                             <span className="text-[10px] font-black text-white/40">{w.name.charAt(0)}</span>
                          </div>
                          <div className={cn(

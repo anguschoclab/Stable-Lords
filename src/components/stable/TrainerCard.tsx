@@ -57,7 +57,7 @@ export function TrainerCard({
               {/* Visual Avatar Container */}
               <div className="relative group-hover:scale-105 transition-transform duration-500">
                 <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="w-16 h-16 rounded-2xl bg-neutral-900 border border-white/5 flex items-center justify-center relative z-10 shadow-inner text-3xl">
+                <div className="w-16 h-16 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center relative z-10 shadow-inner text-3xl">
                   {icon}
                 </div>
                 {trainer.tier === "Master" && (
@@ -86,7 +86,7 @@ export function TrainerCard({
 
                 <div className="flex items-center gap-3">
                   <div className={cn(
-                    "px-2 py-0.5 rounded-sm border text-[9px] font-black uppercase tracking-widest",
+                    "px-2 py-0.5 rounded-none border text-[9px] font-black uppercase tracking-widest",
                     trainer.tier === "Master" ? "bg-arena-gold/20 border-arena-gold/40 text-arena-gold" : "bg-white/5 border-white/10 text-muted-foreground/60"
                   )}>
                     {trainer.tier} CONTRACT
@@ -106,7 +106,7 @@ export function TrainerCard({
                      <button 
                       onClick={onFire} 
                       aria-label="Release Trainer"
-                      className="p-2.5 rounded-xl bg-neutral-900 border border-white/5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-all group/fire"
+                      className="p-2.5 rounded-none bg-neutral-900 border border-white/5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-all group/fire"
                     >
                       <UserMinus className="h-4 w-4 group-hover/fire:scale-110 transition-transform" />
                     </button>
@@ -120,7 +120,7 @@ export function TrainerCard({
           {/* Performance & Status Footer */}
           <div className="mt-6 flex items-center justify-between gap-6">
             <div className="flex-1 flex items-center gap-4">
-               <div className="flex-1 bg-black/40 rounded-xl border border-white/5 p-3 flex items-center justify-between group/intel">
+               <div className="flex-1 bg-black/40 rounded-none border border-white/5 p-3 flex items-center justify-between group/intel">
                   <div className="flex items-center gap-3">
                      <div className="p-1.5 rounded bg-primary/10 border border-primary/20">
                         <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -143,7 +143,7 @@ export function TrainerCard({
 
             <div className="shrink-0 w-48">
                {owned ? (
-                 <div className="bg-neutral-900 rounded-xl border border-white/5 p-3 transition-all">
+                 <div className="bg-neutral-900 rounded-none border border-white/5 p-3 transition-all">
                     <StatBattery
                       label="TNR"
                       value={Math.min(100, (trainer.contractWeeksLeft / 24) * 100)}

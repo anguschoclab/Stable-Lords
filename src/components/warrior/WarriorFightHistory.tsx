@@ -58,7 +58,7 @@ export function WarriorFightHistory({ warriorName, arenaHistory }: { warriorName
         return (
           <div key={f.id}>
             <button
-              className={`w-full flex items-center justify-between py-2.5 px-3 rounded-lg border transition-colors text-left ${
+              className={`w-full flex items-center justify-between py-2.5 px-3 rounded-none border transition-colors text-left ${
                 isExpanded ? "border-primary/40 bg-primary/5" : "border-border hover:bg-secondary/50"
               }`}
               onClick={() => setExpandedId(isExpanded ? null : f.id)}

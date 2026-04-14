@@ -17,7 +17,7 @@ export function TrainerTable() {
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden h-full">
       <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-primary/20 border border-primary/30">
+          <div className="p-2 rounded-none bg-primary/20 border border-primary/30">
             <GraduationCap className="h-4 w-4 text-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
           </div>
           <div>

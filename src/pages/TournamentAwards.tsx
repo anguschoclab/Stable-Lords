@@ -183,7 +183,7 @@ function TournamentSection({ award }: { award: TournamentAward }) {
   return (
     <article className="space-y-4">
       {/* Header */}
-      <div className="rounded-xl border border-accent/30 p-5 bg-gradient-to-br from-accent/5 to-primary/5">
+      <div className="rounded-none border border-accent/30 p-5 bg-gradient-to-br from-accent/5 to-primary/5">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
             <span className="text-3xl">{icon}</span>

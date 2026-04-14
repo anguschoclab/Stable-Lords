@@ -75,7 +75,7 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
 
       <div className="p-8 border-b border-white/5 flex items-center justify-between bg-neutral-900/60 relative z-10">
         <div className="flex items-center gap-4">
-           <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+           <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
               <Award className="h-5 w-5 text-primary" />
            </div>
            <div>
@@ -188,7 +188,7 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
       </div>
 
       <div className="flex items-center gap-4 mb-8 relative z-10">
-         <div className="p-2.5 rounded-xl bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+         <div className="p-2.5 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
             <Zap className="h-5 w-5 text-arena-gold" />
          </div>
          <div>
@@ -269,7 +269,7 @@ export function RisingStars({ allFights, currentWeek }: LeaderboardProps & { cur
       </div>
 
       <div className="flex items-center gap-4 mb-8 relative z-10">
-         <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+         <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
             <User className="h-5 w-5 text-primary" />
          </div>
          <div>

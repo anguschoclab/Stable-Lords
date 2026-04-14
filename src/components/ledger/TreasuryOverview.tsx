@@ -68,7 +68,7 @@ export function TreasuryOverview() {
           
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+              <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
                 <BarChart3 className="h-4 w-4 text-primary" />
               </div>
               <div>
@@ -143,7 +143,7 @@ export function TreasuryOverview() {
         <Surface variant="glass" padding="none" className="lg:col-span-8 border-border/10 flex flex-col relative overflow-hidden h-[500px]">
           <div className="p-8 border-b border-white/5 bg-neutral-900/40 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-2.5 rounded-xl bg-secondary/20 border border-white/5">
+              <div className="p-2.5 rounded-none bg-secondary/20 border border-white/5">
                  <History className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>

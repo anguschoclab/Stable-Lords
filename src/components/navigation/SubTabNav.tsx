@@ -69,7 +69,7 @@ export function SubTabNav({ className }: SubTabNavProps) {
             key={tab.to}
             to={tab.to}
             className={cn(
-              "relative px-4 py-1.5 rounded-md text-[11px] font-black uppercase tracking-wider transition-all duration-200",
+              "relative px-4 py-1.5 rounded-none text-[11px] font-black uppercase tracking-wider transition-all duration-200",
               isActive
                 ? "text-primary bg-primary/10"
                 : "text-muted-foreground/60 hover:text-foreground hover:bg-white/5"
@@ -78,7 +78,7 @@ export function SubTabNav({ className }: SubTabNavProps) {
             {isActive && (
               <motion.div
                 layoutId="subtab-indicator"
-                className="absolute inset-0 bg-primary/10 rounded-md"
+                className="absolute inset-0 bg-primary/10 rounded-none"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}

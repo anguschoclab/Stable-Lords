@@ -120,7 +120,7 @@ export default function StableEquipment() {
                   </Button>
                 ))}
                 {activeWarriors.filter(w => w.style === selectedStyle).length === 0 && (
-                  <div className="p-8 text-center border-2 border-dashed border-border/20 rounded-xl">
+                  <div className="p-8 text-center border-2 border-dashed border-border/20 rounded-none">
                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">No_Active_Operatives</p>
                   </div>
                 )}
@@ -168,7 +168,7 @@ export default function StableEquipment() {
                     </div>
 
                     {reqCheck && !reqCheck.met && (
-                      <div className="p-3 rounded-xl bg-destructive/5 border border-destructive/20 space-y-2">
+                      <div className="p-3 rounded-none bg-destructive/5 border border-destructive/20 space-y-2">
                         <div className="flex items-center gap-2 text-[10px] font-black uppercase text-destructive tracking-widest">
                           <AlertTriangle className="h-3.5 w-3.5" /> Requirement_Mismatch
                         </div>
@@ -214,8 +214,8 @@ export default function StableEquipment() {
 
 function GearItem({ icon: Icon, name, weight, error, blocked }: { icon: any, name: string, weight: number, error?: boolean, blocked?: boolean }) {
   return (
-    <div className="flex items-center gap-3 p-2 rounded-lg bg-secondary/10 border border-transparent hover:border-border/20 transition-all">
-      <div className={cn("p-1.5 rounded-md", error ? "bg-destructive/10 text-destructive" : "bg-primary/5 text-primary/60")}>
+    <div className="flex items-center gap-3 p-2 rounded-none bg-secondary/10 border border-transparent hover:border-border/20 transition-all">
+      <div className={cn("p-1.5 rounded-none", error ? "bg-destructive/10 text-destructive" : "bg-primary/5 text-primary/60")}>
         <Icon className="h-4 w-4" />
       </div>
       <div className="flex-1">

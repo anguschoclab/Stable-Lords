@@ -49,7 +49,7 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
       </div>
       
       <div className="flex items-center gap-4 mb-8 relative z-10">
-         <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+         <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
             <TrendingUp className="h-5 w-5 text-primary" />
          </div>
          <div>
@@ -137,7 +137,7 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
       </div>
 
       <div className="flex items-center gap-4 mb-8 relative z-10">
-         <div className="p-2.5 rounded-xl bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+         <div className="p-2.5 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
             <Binary className="h-5 w-5 text-arena-gold" />
          </div>
          <div>
@@ -177,7 +177,7 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
                          <TooltipTrigger asChild>
                             <div 
                               className={cn(
-                                "h-10 w-full rounded-md border border-white/5 transition-all duration-500 cursor-help",
+                                "h-10 w-full rounded-none border border-white/5 transition-all duration-500 cursor-help",
                                 isNeutral ? "bg-white/[0.02] opacity-20" :
                                 rate > 65 ? "bg-arena-pop/40 border-arena-pop/40 shadow-[inset_0_0_10px_rgba(var(--arena-pop-rgb),0.2)]" :
                                 rate > 55 ? "bg-arena-pop/20 border-arena-pop/20" :
@@ -208,13 +208,13 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
 
       <div className="mt-8 flex items-center justify-center gap-6 opacity-40 text-[8px] font-black uppercase tracking-widest relative z-10">
          <div className="flex items-center gap-1.5 text-arena-pop">
-            <div className="h-2 w-2 rounded-sm bg-arena-pop/40" /> Superior
+            <div className="h-2 w-2 rounded-none bg-arena-pop/40" /> Superior
          </div>
          <div className="flex items-center gap-1.5 text-primary">
-            <div className="h-2 w-2 rounded-sm bg-primary/40" /> Neutral
+            <div className="h-2 w-2 rounded-none bg-primary/40" /> Neutral
          </div>
          <div className="flex items-center gap-1.5 text-destructive">
-            <div className="h-2 w-2 rounded-sm bg-destructive/40" /> Vulnerable
+            <div className="h-2 w-2 rounded-none bg-destructive/40" /> Vulnerable
          </div>
       </div>
     </Surface>

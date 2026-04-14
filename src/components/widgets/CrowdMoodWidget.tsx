@@ -107,19 +107,19 @@ export function CrowdMoodWidget() {
 
         {/* Modifier breakdown */}
         <div className="grid grid-cols-3 gap-1.5 text-center">
-          <div className="rounded-md bg-secondary/60 p-1.5 border border-border/50">
+          <div className="rounded-none bg-secondary/60 p-1.5 border border-border/50">
             <div className={`text-sm font-mono font-bold ${modColor(mods.fameMultiplier)}`}>
               {fmtMod(mods.fameMultiplier)}
             </div>
             <div className="text-[9px] text-muted-foreground uppercase">Fame</div>
           </div>
-          <div className="rounded-md bg-secondary/60 p-1.5 border border-border/50">
+          <div className="rounded-none bg-secondary/60 p-1.5 border border-border/50">
             <div className={`text-sm font-mono font-bold ${modColor(mods.popMultiplier)}`}>
               {fmtMod(mods.popMultiplier)}
             </div>
             <div className="text-[9px] text-muted-foreground uppercase">Pop</div>
           </div>
-          <div className="rounded-md bg-secondary/60 p-1.5 border border-border/50">
+          <div className="rounded-none bg-secondary/60 p-1.5 border border-border/50">
             <div className={`text-sm font-mono font-bold ${killColor(mods.killChanceBonus)}`}>
               {fmtKill(mods.killChanceBonus)}
             </div>

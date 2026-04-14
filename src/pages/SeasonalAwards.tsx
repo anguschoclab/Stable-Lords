@@ -263,7 +263,7 @@ function SeasonSection({ award }: { award: SeasonalAward }) {
   return (
     <article className="space-y-4">
       {/* Season Header */}
-      <div className={cn("rounded-xl border border-border/60 p-5 bg-gradient-to-br", gradient)}>
+      <div className={cn("rounded-none border border-border/60 p-5 bg-gradient-to-br", gradient)}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-3xl">{icon}</span>
@@ -322,7 +322,7 @@ function SeasonSection({ award }: { award: SeasonalAward }) {
           <CollapsibleContent>
             <div className="mt-2 space-y-1.5">
               {award.risingStars.map((rs, i) => (
-                <div key={rs.name} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-secondary/40 border border-border/30">
+                <div key={rs.name} className="flex items-center justify-between py-1.5 px-3 rounded-none bg-secondary/40 border border-border/30">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-mono text-muted-foreground w-4">{i + 1}</span>
                     <span className="text-xs font-display font-semibold">{rs.name}</span>

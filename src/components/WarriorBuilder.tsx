@@ -239,19 +239,19 @@ export default function WarriorBuilder({
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-lg bg-secondary p-3 border border-border">
+                <div className="rounded-none bg-secondary p-3 border border-border">
                   <div className="text-xs text-muted-foreground">Hit Points</div>
                   <div className="text-xl font-bold">{stats.derivedStats.hp}</div>
                 </div>
-                <div className="rounded-lg bg-secondary p-3 border border-border">
+                <div className="rounded-none bg-secondary p-3 border border-border">
                   <div className="text-xs text-muted-foreground">Endurance</div>
                   <div className="text-xl font-bold">{stats.derivedStats.endurance}</div>
                 </div>
-                <div className="rounded-lg bg-secondary p-3 border border-border">
+                <div className="rounded-none bg-secondary p-3 border border-border">
                   <div className="text-xs text-muted-foreground">Damage</div>
                   <div className="text-xl font-bold">{DAMAGE_LABELS[stats.derivedStats.damage]}</div>
                 </div>
-                <div className="rounded-lg bg-secondary p-3 border border-border">
+                <div className="rounded-none bg-secondary p-3 border border-border">
                   <div className="text-xs text-muted-foreground">Carry Cap</div>
                   <div className="text-xl font-bold">{stats.derivedStats.encumbrance}</div>
                 </div>

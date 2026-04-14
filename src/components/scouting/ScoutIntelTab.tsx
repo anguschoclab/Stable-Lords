@@ -72,7 +72,7 @@ export function ScoutIntelTab({
 
       <div className="space-y-6">
         <div className="flex items-center gap-3 px-2">
-           <div className="p-1 px-2 rounded-md bg-primary/10 border border-primary/20">
+           <div className="p-1 px-2 rounded-none bg-primary/10 border border-primary/20">
               <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Target_Analysis</span>
            </div>
            <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />

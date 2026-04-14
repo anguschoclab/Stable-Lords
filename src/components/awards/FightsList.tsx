@@ -20,7 +20,7 @@ export default function FightsList({ fights, getRound }: { fights: FightSummary[
           {fights.map((f) => {
             const round = getRound ? getRound(f.id) : undefined;
             return (
-              <div key={f.id} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-secondary/30 border border-border/20 text-xs">
+              <div key={f.id} className="flex items-center justify-between py-1.5 px-3 rounded-none bg-secondary/30 border border-border/20 text-xs">
                 <div className="flex items-center gap-2">
                   {round !== undefined && <span className="text-[10px] font-mono text-muted-foreground w-8">Rd {round}</span>}
                   <span className={cn("font-display", f.winner === "A" ? "font-bold text-foreground" : "text-muted-foreground")}>{f.a}</span>

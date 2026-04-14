@@ -32,8 +32,8 @@ export function WarriorHeroHeader({ warrior, record, streakLabel, streakVal, id,
   const store = useGameStore();
 
   return (
-    <div className="relative rounded-xl border border-border bg-gradient-to-br from-secondary via-card to-secondary p-4 sm:p-8 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/5 glow-neon-blue rounded-xl" />
+    <div className="relative rounded-none border border-border bg-gradient-to-br from-secondary via-card to-secondary p-4 sm:p-8 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/5 glow-neon-blue rounded-none" />
       <div className="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
         <div className="min-w-0">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">

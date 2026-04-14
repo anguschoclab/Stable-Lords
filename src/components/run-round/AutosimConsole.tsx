@@ -45,7 +45,7 @@ export function AutosimConsole({ isSimulating, progress, result, onStart }: Auto
             </div>
             <Progress value={percent} className="h-2 bg-accent/10" />
             {progress.lastSummary && (
-               <div className="bg-background/40 p-3 rounded-xl border border-accent/20 flex items-center justify-between animate-in fade-in slide-in-from-bottom-2">
+               <div className="bg-background/40 p-3 rounded-none border border-accent/20 flex items-center justify-between animate-in fade-in slide-in-from-bottom-2">
                   <div className="flex items-center gap-3">
                     <Activity className="h-3.5 w-3.5 text-accent" />
                     <span className="text-[10px] font-mono text-muted-foreground uppercase">Wk {progress.lastSummary.week}: {progress.lastSummary.bouts} Bouts</span>
@@ -62,7 +62,7 @@ export function AutosimConsole({ isSimulating, progress, result, onStart }: Auto
         {result && (
           <div className="space-y-4 animate-in zoom-in-95 duration-300">
              <div className={cn(
-               "p-4 rounded-2xl border flex items-start gap-4",
+               "p-4 rounded-none border flex items-start gap-4",
                result.stopReason === "max_weeks" ? "bg-primary/10 border-primary/30" : "bg-destructive/10 border-destructive/30"
              )}>
                 {result.stopReason === "max_weeks" ? <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" /> : <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />}
@@ -77,11 +77,11 @@ export function AutosimConsole({ isSimulating, progress, result, onStart }: Auto
              </div>
 
              <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="bg-secondary/20 p-3 rounded-xl border border-border/10">
+                <div className="bg-secondary/20 p-3 rounded-none border border-border/10">
                    <span className="text-[8px] font-black uppercase text-muted-foreground block mb-1">Total Cycles</span>
                    <span className="font-mono text-sm font-bold">{result.weeksSimmed} Weeks</span>
                 </div>
-                <div className="bg-secondary/20 p-3 rounded-xl border border-border/10">
+                <div className="bg-secondary/20 p-3 rounded-none border border-border/10">
                    <span className="text-[8px] font-black uppercase text-muted-foreground block mb-1">Arena Casualties</span>
                    <span className="font-mono text-sm font-bold text-destructive">{result.weekSummaries.reduce((s, w) => s + w.deaths, 0)} Deaths</span>
                 </div>

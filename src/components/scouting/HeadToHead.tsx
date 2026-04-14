@@ -89,7 +89,7 @@ export function HeadToHead({ nameA, nameB, rosterA, rosterB }: HeadToHeadProps) 
                 const warriorNameRight = aIsStableA ? f.d : f.a;
                 
                 return (
-                  <div key={f.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-lg">
+                  <div key={f.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0 group/row hover:bg-white/5 transition-colors px-2 rounded-none">
                     <div className="text-[8px] font-mono font-black text-muted-foreground/30 w-8">W{f.week}</div>
                     <div className={cn(
                       "flex-1 truncate text-[11px] font-black transition-colors uppercase tracking-tight",

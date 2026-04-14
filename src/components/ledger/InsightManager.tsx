@@ -63,7 +63,7 @@ export function InsightManager() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-center gap-4 px-1">
-         <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)] text-primary">
+         <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)] text-primary">
             <Search className="h-5 w-5" />
          </div>
          <div>
@@ -77,7 +77,7 @@ export function InsightManager() {
         <div className="lg:col-span-4 space-y-4">
           <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Available_Tokens</h4>
           {tokens.length === 0 ? (
-            <div className="p-8 rounded-2xl border-2 border-dashed border-border/20 text-center opacity-30">
+            <div className="p-8 rounded-none border-2 border-dashed border-border/20 text-center opacity-30">
               <Zap className="h-8 w-8 mx-auto mb-3" />
               <p className="text-[10px] font-black uppercase tracking-widest">Inventory_Empty</p>
             </div>
@@ -88,14 +88,14 @@ export function InsightManager() {
                   aria-label={`Select ${token.type} Insight Token, discovered week ${token.discoveredWeek}`}
                   key={token.id}
                   onClick={() => setSelectedTokenId(token.id)}
-                  className={`w-full text-left p-4 rounded-xl border transition-all relative overflow-hidden group ${
+                  className={`w-full text-left p-4 rounded-none border transition-all relative overflow-hidden group ${
                     selectedTokenId === token.id 
                     ? "bg-primary/10 border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]" 
                     : "bg-glass-card border-border/40 hover:border-primary/40"
                   }`}
                 >
                   <div className="flex items-center gap-3 relative z-10">
-                    <div className={`p-2 rounded-lg ${token.type === "Weapon" ? "bg-orange-500/20 text-orange-500" : "bg-cyan-500/20 text-cyan-500"}`}>
+                    <div className={`p-2 rounded-none ${token.type === "Weapon" ? "bg-orange-500/20 text-orange-500" : "bg-cyan-500/20 text-cyan-500"}`}>
                        {token.type === "Weapon" ? <Swords className="h-4 w-4" /> : <RotateCw className="h-4 w-4" />}
                     </div>
                     <div>
@@ -131,7 +131,7 @@ export function InsightManager() {
                         key={w.id}
                         disabled={isRevealed || isRevealing}
                         onClick={() => setSelectedWarriorId(w.id)}
-                        className={`p-3 rounded-xl border text-center transition-all group relative ${
+                        className={`p-3 rounded-none border text-center transition-all group relative ${
                           selectedWarriorId === w.id 
                           ? "bg-primary/20 border-primary" 
                           : isRevealed 
@@ -201,15 +201,15 @@ export function InsightManager() {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
           >
-             <div className="bg-neutral-950 border-2 border-primary/40 rounded-3xl p-10 max-w-md w-full text-center relative shadow-[0_0_50px_rgba(255,0,0,0.2)]">
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.5)]">
+             <div className="bg-neutral-950 border-2 border-primary/40 rounded-none p-10 max-w-md w-full text-center relative shadow-[0_0_50px_rgba(255,0,0,0.2)]">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-none bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.5)]">
                    <Sparkles className="text-white h-6 w-6 animate-pulse" />
                 </div>
                 
                 <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">Discovery_Successful</h4>
                 <h2 className="text-4xl font-display font-black uppercase tracking-tighter text-white mb-6 leading-none">{revealData.name}</h2>
                 
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8">
+                <div className="bg-white/5 border border-white/10 rounded-none p-6 mb-8">
                    <span className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">{revealData.type}_AUTHENTICATED</span>
                    <span className="block text-2xl font-mono font-black text-arena-gold uppercase tracking-tighter drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]">
                       {revealData.result}

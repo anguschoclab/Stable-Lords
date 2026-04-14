@@ -32,7 +32,7 @@ export function RecentBoutsWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+            <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
                <Activity className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -89,7 +89,7 @@ export function RecentBoutsWidget() {
                        <Tooltip>
                           <TooltipTrigger asChild>
                              <div className={cn(
-                                "inline-flex items-center gap-2 px-3 py-1 rounded-lg border font-black text-[9px] tracking-[0.2em] uppercase transition-all",
+                                "inline-flex items-center gap-2 px-3 py-1 rounded-none border font-black text-[9px] tracking-[0.2em] uppercase transition-all",
                                 playerWon ? "bg-arena-pop/10 border-arena-pop/20 text-arena-pop" : "bg-destructive/10 border-destructive/20 text-destructive"
                              )}>
                                 {playerWon ? <Trophy className="h-2.5 w-2.5" /> : <Shield className="h-2.5 w-2.5" />}

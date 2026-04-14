@@ -97,7 +97,7 @@ export function WeatherWidget() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="rounded-md border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all hover:bg-white/[0.05] hover:border-white/10 flex items-center justify-between">
+              <div className="rounded-none border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all hover:bg-white/[0.05] hover:border-white/10 flex items-center justify-between">
                 <span className="text-[8px] text-muted-foreground uppercase font-black tracking-widest">Active_Modifiers</span>
                 <Info className="h-3 w-3 text-muted-foreground/40" />
               </div>

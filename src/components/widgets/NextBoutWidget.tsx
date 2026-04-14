@@ -87,7 +87,7 @@ export function NextBoutWidget() {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="p-3 bg-secondary/20 rounded-lg border border-border/50">
+            <div className="p-3 bg-secondary/20 rounded-none border border-border/50">
               <div className="flex justify-between items-center mb-2">
                 <Badge variant="outline" className="text-[10px] font-mono px-1.5 py-0 h-5 bg-background shadow-sm ring-1 ring-primary/20">
                    {nextBout.type}

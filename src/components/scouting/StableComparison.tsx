@@ -33,7 +33,7 @@ function StableSelector({
     <div className="grid grid-cols-2 gap-8">
       <div className="space-y-4">
         <div className="flex items-center gap-3 px-2">
-           <div className="p-1 px-2 rounded-md bg-primary/10 border border-primary/20">
+           <div className="p-1 px-2 rounded-none bg-primary/10 border border-primary/20">
               <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">Asset_Alpha</span>
            </div>
            <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
@@ -47,7 +47,7 @@ function StableSelector({
                   onClick={() => setIdA(r.owner.id === idA ? null : r.owner.id)}
                   disabled={r.owner.id === idB}
                   className={cn(
-                    "w-full text-left p-3 rounded-xl border transition-all relative group/alpha outline-none",
+                    "w-full text-left p-3 rounded-none border transition-all relative group/alpha outline-none",
                     idA === r.owner.id
                       ? "border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]"
                       : r.owner.id === idB
@@ -58,7 +58,7 @@ function StableSelector({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={cn(
-                        "h-8 w-8 flex items-center justify-center rounded-lg border transition-all",
+                        "h-8 w-8 flex items-center justify-center rounded-none border transition-all",
                         idA === r.owner.id ? "bg-primary text-white border-primary" : "bg-neutral-800 text-muted-foreground border-white/5"
                       )}>
                         <Shield className="h-4 w-4" />
@@ -81,7 +81,7 @@ function StableSelector({
       <div className="space-y-4">
         <div className="flex items-center gap-3 px-2 text-right">
            <div className="h-px flex-1 bg-gradient-to-l from-accent/20 via-border/20 to-transparent" />
-           <div className="p-1 px-2 rounded-md bg-accent/10 border border-accent/20">
+           <div className="p-1 px-2 rounded-none bg-accent/10 border border-accent/20">
               <span className="text-[9px] font-black text-accent uppercase tracking-[0.2em]">Asset_Beta</span>
            </div>
         </div>
@@ -94,7 +94,7 @@ function StableSelector({
                   onClick={() => setIdB(r.owner.id === idB ? null : r.owner.id)}
                   disabled={r.owner.id === idA}
                   className={cn(
-                    "w-full text-left p-3 rounded-xl border transition-all relative group/beta outline-none",
+                    "w-full text-left p-3 rounded-none border transition-all relative group/beta outline-none",
                     idB === r.owner.id
                       ? "border-accent bg-accent/10 shadow-[0_0_15px_rgba(var(--accent-rgb),0.2)]"
                       : r.owner.id === idA
@@ -105,7 +105,7 @@ function StableSelector({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={cn(
-                        "h-8 w-8 flex items-center justify-center rounded-lg border transition-all",
+                        "h-8 w-8 flex items-center justify-center rounded-none border transition-all",
                         idB === r.owner.id ? "bg-accent text-white border-accent" : "bg-neutral-800 text-muted-foreground border-white/5"
                       )}>
                         <Shield className="h-4 w-4" />
@@ -167,7 +167,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Surface variant="glass" className="border-border/40 space-y-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
                   <BarChart3 className="h-4 w-4 text-primary" />
                 </div>
                 <div>
@@ -186,7 +186,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
 
             <Surface variant="glass" className="border-border/40 space-y-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-accent/10 border border-accent/20">
+                <div className="p-2 rounded-none bg-accent/10 border border-accent/20">
                   <Swords className="h-4 w-4 text-accent" />
                 </div>
                 <div>
@@ -217,7 +217,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                </div>
                <div className="p-4 space-y-1">
                   {(Object.entries(statsA.styleCounts) as [string, number][]).sort(([, a], [, b]) => b - a).map(([style, count]) => (
-                    <div key={style} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-primary/5 transition-colors group/row">
+                    <div key={style} className="flex items-center justify-between py-1.5 px-2 rounded-none hover:bg-primary/5 transition-colors group/row">
                       <span className="text-[11px] font-bold text-foreground/80 group-hover/row:text-primary transition-colors">{STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}</span>
                       <div className="flex items-center gap-2">
                          <div className="h-1 w-8 bg-neutral-900 rounded-full overflow-hidden">
@@ -235,7 +235,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                </div>
                <div className="p-4 space-y-1">
                   {(Object.entries(statsB.styleCounts) as [string, number][]).sort(([, a], [, b]) => b - a).map(([style, count]) => (
-                    <div key={style} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-accent/5 transition-colors group/row">
+                    <div key={style} className="flex items-center justify-between py-1.5 px-2 rounded-none hover:bg-accent/5 transition-colors group/row">
                       <span className="text-[11px] font-bold text-foreground/80 group-hover/row:text-accent transition-colors">{STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}</span>
                       <div className="flex items-center gap-2">
                          <div className="h-1 w-8 bg-neutral-900 rounded-full overflow-hidden">
@@ -260,7 +260,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                 <div className="grid grid-cols-2 gap-8">
                   {[statsA.topWarrior, statsB.topWarrior].map((w, i) => (
                     <div key={i} className={cn(
-                      "p-4 rounded-xl border relative overflow-hidden transition-all hover:scale-[1.02]",
+                      "p-4 rounded-none border relative overflow-hidden transition-all hover:scale-[1.02]",
                       i === 0 ? "border-primary/20 bg-primary/5" : "border-accent/20 bg-accent/5"
                     )}>
                       {w ? (
@@ -287,7 +287,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                <span className="text-xs font-mono font-black text-arena-gold">{w.fame ?? 0}G</span>
                             </div>
                           </div>
-                          <div className={cn("absolute top-2 right-2 p-2 rounded-lg bg-black/20 opacity-20", i === 0 ? "text-primary" : "text-accent")}>
+                          <div className={cn("absolute top-2 right-2 p-2 rounded-none bg-black/20 opacity-20", i === 0 ? "text-primary" : "text-accent")}>
                              <Crosshair className="h-4 w-4" />
                           </div>
                         </>

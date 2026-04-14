@@ -25,7 +25,7 @@ export default function UpsetsList({ upsets }: { upsets: UpsetEntry[] }) {
       <CollapsibleContent>
         <div className="mt-2 space-y-1.5">
           {upsets.map((u, i) => (
-            <div key={i} className="flex items-center justify-between py-1.5 px-3 rounded-lg bg-secondary/40 border border-border/30">
+            <div key={i} className="flex items-center justify-between py-1.5 px-3 rounded-none bg-secondary/40 border border-border/30">
               <div className="flex items-center gap-2 text-xs">
                 <Swords className="h-3 w-3 text-muted-foreground" />
                 <span className="font-display font-semibold">{u.winner}</span>

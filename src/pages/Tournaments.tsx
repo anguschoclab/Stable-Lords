@@ -125,7 +125,7 @@ export default function Tournaments() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
            <h1 className="text-xl sm:text-3xl font-display font-black flex items-center gap-3 uppercase tracking-tighter text-foreground">
-            <div className="p-2 bg-accent/10 rounded-xl border border-accent/20">
+            <div className="p-2 bg-accent/10 rounded-none border border-accent/20">
               <Trophy className="h-6 w-6 text-accent shadow-glow" />
             </div>
             Seasonal Campaigns

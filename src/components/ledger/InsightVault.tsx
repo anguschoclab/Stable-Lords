@@ -26,7 +26,7 @@ export function InsightVault() {
         </div>
         
         <div className="flex flex-col md:flex-row md:items-center gap-8 relative z-10">
-           <div className="p-4 rounded-2xl bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_20px_rgba(255,215,0,0.1)]">
+           <div className="p-4 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_20px_rgba(255,215,0,0.1)]">
              <Unlock className="h-8 w-8 text-arena-gold" />
            </div>
            <div className="flex-1">
@@ -156,7 +156,7 @@ export function InsightVault() {
         
         <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/5">
           <div className="p-8 flex items-center gap-6 group hover:bg-white/2 transition-all">
-             <div className="p-3 rounded-2xl bg-secondary/20 border border-white/5 group-hover:border-primary/20 transition-all">
+             <div className="p-3 rounded-none bg-secondary/20 border border-white/5 group-hover:border-primary/20 transition-all">
                 <Search className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
              </div>
              <div>
@@ -167,7 +167,7 @@ export function InsightVault() {
           </div>
           
           <div className="p-8 flex items-center gap-6 group hover:bg-white/2 transition-all">
-             <div className="p-3 rounded-2xl bg-arena-gold/10 border border-white/5 group-hover:border-arena-gold/30 transition-all">
+             <div className="p-3 rounded-none bg-arena-gold/10 border border-white/5 group-hover:border-arena-gold/30 transition-all">
                 <Box className="h-5 w-5 text-arena-gold/60 group-hover:text-arena-gold transition-colors" />
              </div>
              <div>
@@ -178,7 +178,7 @@ export function InsightVault() {
           </div>
 
           <div className="p-8 flex items-center gap-6 group hover:bg-white/2 transition-all">
-             <div className="p-3 rounded-2xl bg-arena-pop/10 border border-white/5 group-hover:border-arena-pop/30 transition-all">
+             <div className="p-3 rounded-none bg-arena-pop/10 border border-white/5 group-hover:border-arena-pop/30 transition-all">
                 <Binary className="h-5 w-5 text-arena-pop/60 group-hover:text-arena-pop transition-colors" />
              </div>
              <div>

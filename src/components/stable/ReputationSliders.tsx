@@ -23,7 +23,7 @@ export function ReputationSliders() {
     <Surface variant="glass" className="border-border/40">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+          <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
             <Eye className="h-5 w-5 text-primary" />
           </div>
           <div>

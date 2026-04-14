@@ -49,7 +49,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
           <div key={label} className="space-y-4">
             <div className="flex items-center gap-3 px-2">
                <div className={cn(
-                 "p-1 px-2 rounded-md border",
+                 "p-1 px-2 rounded-none border",
                  color === "primary" ? "bg-primary/10 border-primary/20 text-primary" : "bg-accent/10 border-accent/20 text-accent"
                )}>
                   <span className="text-[9px] font-black uppercase tracking-[0.2em]">{label}</span>
@@ -69,7 +69,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
                       onClick={() => setSel(w.id === sel ? null : w.id)}
                       disabled={w.id === other}
                       className={cn(
-                        "w-full text-left p-3 rounded-xl border transition-all relative outline-none",
+                        "w-full text-left p-3 rounded-none border transition-all relative outline-none",
                         sel === w.id
                           ? color === "primary" 
                             ? "border-primary bg-primary/10 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
@@ -133,7 +133,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Surface variant="glass" className="border-border/40 space-y-6">
                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                  <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
                      <BarChart3 className="h-4 w-4 text-primary" />
                   </div>
                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">Attribute Matrix</h3>
@@ -155,7 +155,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
 
             <Surface variant="glass" className="border-border/40 space-y-6">
                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-accent/10 border border-accent/20">
+                  <div className="p-2 rounded-none bg-accent/10 border border-accent/20">
                      <TrendingUp className="h-4 w-4 text-accent" />
                   </div>
                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">Career Trajectory</h3>

@@ -30,7 +30,7 @@ export function IntelligenceHubWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+            <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
                <Newspaper className="h-5 w-5 text-primary" />
             </div>
             <div>
@@ -113,10 +113,10 @@ export function IntelligenceHubWidget() {
                 ) : (
                   <div className="py-6 space-y-8">
                     {recentNewsletter.map((report, i) => (
-                      <div key={i} className="group/report relative space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4 hover:border-arena-gold/30 transition-all">
+                      <div key={i} className="group/report relative space-y-3 bg-white/[0.02] border border-white/5 rounded-none p-4 hover:border-arena-gold/30 transition-all">
                         <div className="flex items-center justify-between">
                            <div className="flex items-center gap-3">
-                              <div className="p-1.5 rounded-lg bg-arena-gold/10 border border-arena-gold/20">
+                              <div className="p-1.5 rounded-none bg-arena-gold/10 border border-arena-gold/20">
                                 <Zap className="h-3 w-3 text-arena-gold" />
                               </div>
                               <span className="text-[9px] font-mono font-black text-arena-gold opacity-60 uppercase tracking-widest">Wk_{report.week} Strategic_Update</span>

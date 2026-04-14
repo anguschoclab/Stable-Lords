@@ -33,7 +33,7 @@ export function RosterWall() {
       
       <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-neutral-900/40 backdrop-blur-md">
         <div className="flex items-center gap-4">
-           <div className="p-3 rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
+           <div className="p-3 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
              <Users className="h-6 w-6 text-primary" />
            </div>
            <div>
@@ -127,14 +127,14 @@ export function RosterWall() {
                                     />
                                     <div className="flex items-center gap-3">
                                        <StatBadge styleName={w.style as import("@/types/game").FightingStyle} career={w.career} />
-                                       <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all">
+                                       <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all">
                                           <Star className={cn("h-3 w-3", w.fame > 1000 ? "text-arena-gold" : "text-muted-foreground/60")} />
                                           <span className={cn("text-[10px] font-mono font-black", w.fame > 1000 ? "text-arena-gold" : "text-muted-foreground")}>{w.fame}G</span>
                                        </div>
                                     </div>
                                  </div>
 
-                                 <div className="flex items-center gap-6 px-6 py-3 rounded-2xl bg-black/40 border border-white/5 group-hover:border-primary/10 transition-all">
+                                 <div className="flex items-center gap-6 px-6 py-3 rounded-none bg-black/40 border border-white/5 group-hover:border-primary/10 transition-all">
                                     <div className="text-center">
                                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">Victory</span>
                                        <span className="font-mono font-black text-primary text-sm">{winRate}%</span>
@@ -186,7 +186,7 @@ export function RosterWall() {
                                     </div>
                                  </div>
                                  <button
-                                    className="flex items-center gap-2 group/btn px-4 py-1.5 rounded-lg bg-white/5 border border-white/5 hover:border-primary/50 transition-all"
+                                    className="flex items-center gap-2 group/btn px-4 py-1.5 rounded-none bg-white/5 border border-white/5 hover:border-primary/50 transition-all"
                                     aria-label={`View tactical report for ${w.name}`}
                                  >
                                     <span className="text-[9px] font-black uppercase tracking-widest group-hover/btn:text-primary transition-colors">Tactical_Report</span>

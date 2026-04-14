@@ -45,7 +45,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
                   <div className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className={cn(
-                        "h-10 w-10 flex items-center justify-center rounded-xl border transition-all",
+                        "h-10 w-10 flex items-center justify-center rounded-none border transition-all",
                         selectedRivalId === rival.owner.id 
                           ? "bg-primary text-white border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" 
                           : "bg-neutral-800 text-muted-foreground border-white/10 group-hover:bg-neutral-700"

@@ -57,7 +57,7 @@ export function StableStrategyWidget() {
                           <div
                             key={i}
                             className={cn(
-                              "w-1 h-2 rounded-sm",
+                              "w-1 h-2 rounded-none",
                               i < grudge.intensity ? "bg-destructive" : "bg-neutral-800"
                             )}
                           />

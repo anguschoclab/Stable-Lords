@@ -156,7 +156,7 @@ export function RivalryWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)]">
+            <div className="p-2.5 rounded-none bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)]">
                <Flame className="h-5 w-5 text-destructive" />
             </div>
             <div>
@@ -178,7 +178,7 @@ export function RivalryWidget() {
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {rivalries.slice(0, 4).map(r => (
-                <div key={r.ownerId} className="space-y-4 p-4 bg-white/2 rounded-xl border border-white/5 hover:border-destructive/20 transition-all group/item">
+                <div key={r.ownerId} className="space-y-4 p-4 bg-white/2 rounded-none border border-white/5 hover:border-destructive/20 transition-all group/item">
                   <div className="flex items-center justify-between">
                      <div className="flex flex-col">
                         <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/item:text-destructive transition-colors">
@@ -235,9 +235,9 @@ export function RivalryWidget() {
                    <Target className="h-3.5 w-3.5 text-destructive opacity-60" />
                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">High_Priority_Target</span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-destructive/5 border border-destructive/10 rounded-xl group/wanted hover:bg-destructive/10 transition-all">
+                <div className="flex items-center justify-between p-4 bg-destructive/5 border border-destructive/10 rounded-none group/wanted hover:bg-destructive/10 transition-all">
                   <div className="flex items-center gap-4">
-                     <div className="h-10 w-10 rounded-xl bg-destructive/20 flex items-center justify-center border border-destructive/30">
+                     <div className="h-10 w-10 rounded-none bg-destructive/20 flex items-center justify-center border border-destructive/30">
                         <Skull className="h-5 w-5 text-destructive animate-pulse" />
                      </div>
                      <div className="flex flex-col">

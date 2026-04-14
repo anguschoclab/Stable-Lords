@@ -33,7 +33,7 @@ export function MedicalAuditWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all">
+            <div className="p-2.5 rounded-none bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(239,68,68,0.1)] group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)] transition-all">
                <ShieldAlert className={cn("h-5 w-5 text-destructive", criticalCount > 0 && "animate-pulse")} />
             </div>
             <div>
@@ -95,7 +95,7 @@ export function MedicalAuditWidget() {
                   {isInjured && (
                     <div className="mt-2 flex flex-wrap gap-1.5 pl-1 border-l border-destructive/30 ml-0.5">
                       {w.injuries.map((inj, i) => (
-                         <span key={i} className="text-[8px] font-black uppercase tracking-[0.1em] text-destructive py-0.5 px-1.5 bg-destructive/10 border border-destructive/20 rounded-md">
+                         <span key={i} className="text-[8px] font-black uppercase tracking-[0.1em] text-destructive py-0.5 px-1.5 bg-destructive/10 border border-destructive/20 rounded-none">
                            {typeof inj === 'string' ? inj : inj.name.replace(/_/g, ' ')}
                          </span>
                       ))}

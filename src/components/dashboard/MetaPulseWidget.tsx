@@ -35,7 +35,7 @@ export function MetaPulseWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+            <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
                <TrendingUp className="h-4 w-4 text-primary" />
             </div>
             <div>

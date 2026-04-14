@@ -20,7 +20,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
         <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
           <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+              <div className="p-2 rounded-none bg-primary/10 border border-primary/20">
                 <Brain className="h-4 w-4 text-primary" />
               </div>
               <div>
@@ -36,7 +36,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
               <div key={rival.owner.id} className="p-6 hover:bg-primary/5 transition-all group relative overflow-hidden">
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 relative z-10">
                   <div className="flex items-center gap-4 text-left">
-                     <div className="w-12 h-12 rounded-xl bg-neutral-900 border border-white/5 flex items-center justify-center font-display font-black text-xs text-muted-foreground group-hover:text-primary group-hover:border-primary/40 transition-all">
+                     <div className="w-12 h-12 rounded-none bg-neutral-900 border border-white/5 flex items-center justify-center font-display font-black text-xs text-muted-foreground group-hover:text-primary group-hover:border-primary/40 transition-all">
                         {rival.owner.stableName.slice(0, 2).toUpperCase()}
                      </div>
                      <div>
@@ -119,7 +119,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
 
         <Surface variant="glass" className="bg-primary/5 border-primary/20 border-dashed">
           <div className="flex items-start gap-4">
-             <div className="p-2 rounded-lg bg-primary/10">
+             <div className="p-2 rounded-none bg-primary/10">
                 <Zap className="h-4 w-4 text-primary" />
              </div>
              <div className="space-y-1">

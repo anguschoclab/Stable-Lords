@@ -16,7 +16,7 @@ export default function StableHall() {
         subtitle={`REPUTATION // ${player.name} // LEGACY OF THE ARENA`}
         icon={Shield}
         actions={
-          <div className="flex flex-col md:flex-row items-center gap-6 bg-neutral-900/40 backdrop-blur-md px-6 py-3 rounded-xl border border-white/5 shadow-inner">
+          <div className="flex flex-col md:flex-row items-center gap-6 bg-neutral-900/40 backdrop-blur-md px-6 py-3 rounded-none border border-white/5 shadow-inner">
              <div className="flex flex-col items-center border-r border-white/10 pr-6">
                 <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Eminent Fame</span>
                 <span className="font-mono font-black text-arena-gold text-lg flex items-center gap-1.5 leading-none">

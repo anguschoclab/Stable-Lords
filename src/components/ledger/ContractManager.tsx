@@ -35,7 +35,7 @@ export function ContractManager() {
         
         <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-neutral-900/40 backdrop-blur-md">
           <div className="flex items-center gap-4">
-             <div className="p-3 rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+             <div className="p-3 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
                <UserCheck className="h-6 w-6 text-primary" />
              </div>
              <div>
@@ -166,7 +166,7 @@ export function ContractManager() {
       {/* ─── Strategic Personnel Summary ─── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Surface variant="glass" padding="md" className="bg-neutral-900/40 border-border/10 flex items-center gap-6 group hover:border-destructive/30 transition-all">
-           <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(255,0,0,0.1)] group-hover:bg-destructive/20 transition-all">
+           <div className="p-4 rounded-none bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(255,0,0,0.1)] group-hover:bg-destructive/20 transition-all">
               <TrendingDown className="h-6 w-6 text-destructive" />
            </div>
            <div>
@@ -177,7 +177,7 @@ export function ContractManager() {
         </Surface>
         
         <Surface variant="glass" padding="md" className="bg-neutral-900/40 border-border/10 flex items-center gap-6 group hover:border-primary/30 transition-all">
-           <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)] group-hover:bg-primary/20 transition-all">
+           <div className="p-4 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)] group-hover:bg-primary/20 transition-all">
               <ShieldCheck className="h-6 w-6 text-primary" />
            </div>
            <div>

@@ -110,7 +110,7 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
                <TooltipTrigger asChild>
                   <button
                     onClick={() => setExpanded(!expanded)}
-                    className="p-2 rounded-xl bg-neutral-900 border border-white/10 text-muted-foreground hover:text-foreground transition-all hover:border-white/30"
+                    className="p-2 rounded-none bg-neutral-900 border border-white/10 text-muted-foreground hover:text-foreground transition-all hover:border-white/30"
                     aria-label={expanded ? "Minimize battle log" : "Reveal battle log"}
                     aria-expanded={expanded}
                   >
@@ -216,7 +216,7 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
           {/* Simulation Controls */}
           <div className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-neutral-900/60 backdrop-blur-xl">
              <div className="flex items-center gap-4">
-                <div className="flex items-center px-4 py-2 rounded-xl bg-black border border-white/5 gap-4">
+                <div className="flex items-center px-4 py-2 rounded-none bg-black border border-white/5 gap-4">
                    <Tooltip>
                       <TooltipTrigger asChild>
                          <button onClick={reset} className="text-muted-foreground/40 hover:text-white transition-colors" aria-label="Reset bout viewer">
@@ -251,13 +251,13 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
                    </Tooltip>
                 </div>
 
-                <div className="flex items-center bg-black border border-white/5 rounded-xl p-1">
+                <div className="flex items-center bg-black border border-white/5 rounded-none p-1">
                   {[1, 2, 3].map((s) => (
                     <button
                       key={s}
                       onClick={() => setSpeed(s as 1 | 2 | 3)}
                       className={cn(
-                        "px-4 py-1.5 rounded-lg text-[10px] font-mono font-black transition-all",
+                        "px-4 py-1.5 rounded-none text-[10px] font-mono font-black transition-all",
                         speed === s ? "bg-white/10 text-white" : "text-muted-foreground/20 hover:text-muted-foreground/60"
                       )}
                       aria-label={`Set playback speed to ${s}x`}
@@ -300,7 +300,7 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
                 <div
                   key={i}
                   className={cn(
-                    "flex flex-col gap-3 p-4 rounded-xl border transition-all duration-500",
+                    "flex flex-col gap-3 p-4 rounded-none border transition-all duration-500",
                     getEventColor(type),
                     isLatest ? "scale-[1.02] shadow-[0_0_30px_rgba(var(--primary-rgb),0.15)] ring-1 ring-primary/40 -translate-y-1" : "opacity-60 grayscale-[0.4]",
                     isPhaseEvent && "border-primary/40"
@@ -308,7 +308,7 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
                 >
                   <div className="flex items-start gap-4">
                     <div className="mt-1 shrink-0">
-                       <div className="p-2 rounded-lg bg-black/40 border border-white/5">
+                       <div className="p-2 rounded-none bg-black/40 border border-white/5">
                           {getEventIcon(type)}
                        </div>
                     </div>
@@ -342,7 +342,7 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
                         { name: nameA, off: event.offTacticA, def: event.defTacticA, prot: event.protectA, color: "primary" },
                         { name: nameD, off: event.offTacticD, def: event.defTacticD, prot: event.protectD, color: "accent" }
                       ].map((tactical) => (
-                        <div key={tactical.name} className="space-y-3 p-3 rounded-xl bg-black/40 border border-white/5">
+                        <div key={tactical.name} className="space-y-3 p-3 rounded-none bg-black/40 border border-white/5">
                            <div className="flex items-center gap-2">
                               <Boxes className={cn("h-3 w-3", tactical.color === "primary" ? "text-primary" : "text-accent")} />
                               <span className="text-[10px] font-black uppercase text-muted-foreground/60">{tactical.name} PROTOCOL</span>
@@ -414,7 +414,7 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
             <div className="px-8 py-6 border-t border-white/5 bg-black relative overflow-hidden group">
                <div className="absolute top-0 left-0 w-full h-px bg-arena-gold/30 animate-pulse" />
                <div className="relative z-10 flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-arena-gold/10 border border-arena-gold/20 shrink-0">
+                  <div className="p-2 rounded-none bg-arena-gold/10 border border-arena-gold/20 shrink-0">
                      <Activity className="h-4 w-4 text-arena-gold" />
                   </div>
                   <p className="text-[13px] italic text-muted-foreground/80 leading-relaxed font-serif py-0.5">

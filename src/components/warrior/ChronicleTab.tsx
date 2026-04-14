@@ -63,7 +63,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
       </div>
 
       <div className="lg:col-span-8">
-        <div className="bg-glass-card border-border/40 border rounded-3xl overflow-hidden min-h-[600px]">
+        <div className="bg-glass-card border-border/40 border rounded-none overflow-hidden min-h-[600px]">
           <div className="bg-secondary/10 px-8 py-6 border-b border-border/40">
              <h2 className="font-display font-black uppercase text-2xl tracking-tighter">Engagement Archive</h2>
           </div>

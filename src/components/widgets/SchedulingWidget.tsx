@@ -21,7 +21,7 @@ function MatchupCard({ matchup, type }: MatchupCardProps) {
 
   return (
     <div className={cn(
-      "p-3 rounded-lg border bg-card transition-all hover:shadow-md",
+      "p-3 rounded-none border bg-card transition-all hover:shadow-md",
       isGood ? "border-primary/20 hover:border-primary/40" : "border-destructive/20 hover:border-destructive/40"
     )}>
       <div className="flex items-center justify-between mb-2">
@@ -113,7 +113,7 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
                 <MatchupCard key={i} matchup={m} type="recommend" />
               ))
             ) : (
-              <p className="text-xs text-muted-foreground italic p-4 border border-dashed rounded-lg text-center">
+              <p className="text-xs text-muted-foreground italic p-4 border border-dashed rounded-none text-center">
                 No prime targets available this week.
               </p>
             )}
@@ -137,7 +137,7 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
                 <MatchupCard key={i} matchup={m} type="avoid" />
               ))
             ) : (
-              <p className="text-xs text-muted-foreground italic p-4 border border-dashed rounded-lg text-center">
+              <p className="text-xs text-muted-foreground italic p-4 border border-dashed rounded-none text-center">
                 No high-risk matchups found.
               </p>
             )}

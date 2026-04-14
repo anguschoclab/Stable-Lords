@@ -72,7 +72,7 @@ export function SeasonWidget() {
 
       <div className="p-6">
         <div className="flex items-center gap-3 mb-6 relative z-10">
-           <div className="p-2 rounded-lg bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
+           <div className="p-2 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
               <Clock className="h-4 w-4 text-primary" />
            </div>
            <div>

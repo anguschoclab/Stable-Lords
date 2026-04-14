@@ -65,12 +65,12 @@ const surfaceVariants = cva(
 
       rounded: {
         none:  "rounded-none",
-        sm:    "rounded-sm",
-        md:    "rounded-md",
-        lg:    "rounded-lg",
-        xl:    "rounded-xl",
-        "2xl": "rounded-2xl",
-        "3xl": "rounded-3xl",
+        sm:    "rounded-none",
+        md:    "rounded-none",
+        lg:    "rounded-none",
+        xl:    "rounded-none",
+        "2xl": "rounded-none",
+        "3xl": "rounded-none",
       },
     },
     defaultVariants: {

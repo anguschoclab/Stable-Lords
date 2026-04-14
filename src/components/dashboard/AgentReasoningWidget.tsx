@@ -81,7 +81,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
       
       <CardHeader className="pb-4 relative">
         <div className="flex items-center gap-3">
-          <div className={cn("p-2 rounded-xl bg-black border border-white/5", metric.color)}>
+          <div className={cn("p-2 rounded-none bg-black border border-white/5", metric.color)}>
             <BrainCircuit className="w-5 h-5" />
           </div>
           <div>
@@ -97,7 +97,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
 
       <CardContent className="space-y-6 relative">
         {/* Active Intent */}
-        <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-3">
+        <div className="p-4 rounded-none bg-black/40 border border-white/5 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Icon className={cn("w-4 h-4", metric.color)} />
@@ -125,7 +125,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
           <div className="space-y-2 max-h-[120px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/5">
             {rival.actionHistory && rival.actionHistory.length > 0 ? (
               rival.actionHistory.map((event, i) => (
-                <div key={i} className="flex items-start gap-3 p-2 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
+                <div key={i} className="flex items-start gap-3 p-2 rounded-none bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
                   <span className="text-[8px] font-mono text-primary mt-0.5">W{event.week}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-[10px] font-medium text-foreground truncate">
@@ -133,7 +133,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
                     </p>
                     <div className="flex items-center gap-2 mt-1">
                       <span className={cn(
-                        "text-[7px] font-black uppercase px-1 rounded-sm",
+                        "text-[7px] font-black uppercase px-1 rounded-none",
                         event.riskTier === "High" ? "bg-destructive/20 text-destructive" :
                         event.riskTier === "Medium" ? "bg-amber-500/20 text-amber-500" :
                         "bg-green-500/20 text-green-500"

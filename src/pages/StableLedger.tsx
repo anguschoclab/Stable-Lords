@@ -21,7 +21,7 @@ export default function StableLedger() {
         subtitle={`FISCAL YEAR: 412 AE · SEASON: ${season} · Week: ${week}`}
         icon={BookOpen}
         actions={
-          <div className="flex items-center gap-4 px-4 py-2 bg-secondary/20 rounded-lg border border-border/40 backdrop-blur-sm">
+          <div className="flex items-center gap-4 px-4 py-2 bg-secondary/20 rounded-none border border-border/40 backdrop-blur-sm">
             <div className="flex flex-col items-end">
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Treasury Reserve</span>
               <span className="font-mono font-black text-arena-gold">{(treasury ?? 0).toLocaleString()}G</span>
@@ -31,7 +31,7 @@ export default function StableLedger() {
       />
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="w-full grid grid-cols-2 md:grid-cols-5 h-auto p-1 bg-secondary/20 border border-border/40 backdrop-blur-sm rounded-xl mb-8">
+        <TabsList className="w-full grid grid-cols-2 md:grid-cols-5 h-auto p-1 bg-secondary/20 border border-border/40 backdrop-blur-sm rounded-none mb-8">
           <TabsTrigger value="overview" className="text-[10px] font-black uppercase tracking-widest py-3 gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
             <Coins className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Overview</span>
           </TabsTrigger>

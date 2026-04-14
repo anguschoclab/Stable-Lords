@@ -60,7 +60,7 @@ export function TournamentBracket({ bouts, arenaHistory, expandedBout, onToggleE
                   )}
 
                   <div className={cn(
-                    "w-64 rounded-xl border transition-all duration-300 relative z-10",
+                    "w-64 rounded-none border transition-all duration-300 relative z-10",
                     isPending ? "bg-background/20 border-border/40" : "bg-secondary/10 border-primary/30 shadow-[0_0_15px_-5px_rgba(0,0,0,0.5)]",
                     isExpanded && "ring-2 ring-primary/50 border-primary shadow-[0_0_20px_-5px_hsl(var(--primary)/0.4)]"
                   )}>
@@ -75,7 +75,7 @@ export function TournamentBracket({ bouts, arenaHistory, expandedBout, onToggleE
 
                     <div className="p-3 space-y-1">
                       <div className={cn(
-                        "flex items-center justify-between p-2 rounded-lg transition-colors",
+                        "flex items-center justify-between p-2 rounded-none transition-colors",
                         isAChosen ? "bg-primary/10 text-primary font-bold shadow-inner" : isDChosen ? "opacity-30 grayscale" : "bg-background/40"
                       )}>
                         <div className="flex items-center gap-2 truncate">
@@ -90,7 +90,7 @@ export function TournamentBracket({ bouts, arenaHistory, expandedBout, onToggleE
                       </div>
 
                       <div className={cn(
-                        "flex items-center justify-between p-2 rounded-lg transition-colors",
+                        "flex items-center justify-between p-2 rounded-none transition-colors",
                         isDChosen ? "bg-primary/10 text-primary font-bold shadow-inner" : isAChosen ? "opacity-30 grayscale" : "bg-background/40"
                       )}>
                         <div className="flex items-center gap-2 truncate">

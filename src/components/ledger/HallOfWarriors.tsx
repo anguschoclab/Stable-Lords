@@ -21,7 +21,7 @@ export function HallOfWarriors() {
       {/* ─── Legendary Veterans ─── */}
       <section className="space-y-6">
         <div className="flex items-center gap-4 px-1">
-           <div className="p-2.5 rounded-xl bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
+           <div className="p-2.5 rounded-none bg-arena-gold/10 border border-arena-gold/20 shadow-[0_0_15px_rgba(255,215,0,0.1)]">
               <Trophy className="h-5 w-5 text-arena-gold" />
            </div>
            <div>

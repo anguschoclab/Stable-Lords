@@ -301,7 +301,7 @@ export default function TrainingPlanner() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-secondary via-card to-secondary p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-none border border-border bg-gradient-to-br from-secondary via-card to-secondary p-6 sm:p-8">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5" />
         <div className="relative">
           <div className="flex items-center gap-3 mb-2">

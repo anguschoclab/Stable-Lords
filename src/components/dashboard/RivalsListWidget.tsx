@@ -36,7 +36,7 @@ export function RivalsListWidget() {
 
       <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)]">
+            <div className="p-2 rounded-none bg-destructive/10 border border-destructive/20 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)]">
                <Globe className="h-4 w-4 text-destructive" />
             </div>
             <div>

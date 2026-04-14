@@ -9,7 +9,7 @@ describe("Blood Moon Feature", () => {
   });
 
   it("should roll Blood Moon weather when rng yields high enough value", () => {
-    // rollWeather returns Blood Moon if roll >= 0.95 and roll < 0.98 -> Drafty, roll >= 0.98 -> Blood Moon
+    // rollWeather returns Blood Moon if roll >= 0.95 and roll < 0.98 -> Breezy, roll >= 0.98 -> Blood Moon
     const rng = new SeededRNGService(1);
     const originalNext = rng.next.bind(rng);
     let callCount = 0;

@@ -384,7 +384,10 @@
       ],
       "fatal": [
         "{{attacker}} feints low, catching {{defender}} off guard before severing their {{bodyPart}} at the joint.",
-        "A fountain of gore erupts as {{attacker}}'s final strike decapitates {{defender}}!"
+        "A fountain of gore erupts as {{attacker}}'s final strike decapitates {{defender}}!",
+        "{{attacker}} finds the gap in the armor, dragging the {{weapon}} across {{defender}}'s throat in a geyser of crimson.",
+        "With a horrifying sweep, {{attacker}}'s {{weapon}} disembowels {{defender}}, spilling their life onto the hot sand.",
+        "{{attacker}} executes a brutal cross-slash, cleaving through bone and ending {{defender}}'s misery."
       ]
     },
     "bashing": {
@@ -404,7 +407,10 @@
         "Gravity itself seems to bow to {{attacker}}'s {{weapon}}, creating a localized shockwave on the {{bodyPart}}."
       ],
       "fatal": [
-        "{{attacker}} delivers a horrifying, skull-crushing execution!"
+        "{{attacker}} delivers a horrifying, skull-crushing execution!",
+        "{{attacker}} steps into the swing, bringing the {{weapon}} down with meteoric force to cave in {{defender}}'s skull.",
+        "The sickening crunch of shattered ribs echoes through the arena as {{attacker}} bashes the life out of {{defender}}.",
+        "{{attacker}} pulverizes {{defender}} with a ruthless overhead smash, turning their final breath into a bloody cough."
       ]
     },
     "piercing": {
@@ -424,7 +430,10 @@
         "The {{weapon}} hums a low, deathly note, bypassing reality to hit the {{bodyPart}} with cold light."
       ],
       "fatal": [
-        "{{attacker}} executes {{defender}} with a chilling lunge of the {{weapon}} through the {{bodyPart}}!"
+        "{{attacker}} executes {{defender}} with a chilling lunge of the {{weapon}} through the {{bodyPart}}!",
+        "{{attacker}} drives the {{weapon}} straight through {{defender}}'s heart, pinning them to their own doom.",
+        "A swift, precise thrust from {{attacker}} punctures {{defender}}'s lung, drowning them in their own blood.",
+        "{{attacker}} steps past the guard and buries the {{weapon}} deep into {{defender}}'s vital organs. The light fades from their eyes."
       ]
     },
     "fist": {
@@ -444,7 +453,10 @@
         "A golden light follows {{attacker}}'s strike, shattering the air as the {{bodyPart}} is struck by 'The Enlightened Hand'."
       ],
       "fatal": [
-        "{{attacker}} grabs his opponent and drives a sickening KNEE into their midsection. {{defender}} collapses dead."
+        "{{attacker}} grabs his opponent and drives a sickening KNEE into their midsection. {{defender}} collapses dead.",
+        "{{attacker}} rains down relentless, skull-shattering blows until {{defender}} stops twitching.",
+        "With a terrifying display of raw strength, {{attacker}} snaps {{defender}}'s neck with a violent twist.",
+        "{{attacker}} drives a devastating punch straight into {{defender}}'s windpipe, crushing it instantly."
       ]
     }
   },
@@ -637,7 +649,10 @@
         "Jeers cut through the air as the audience demands more action."
       ],
       "encourage": [
-        "The crowd urges the warriors on."
+        "The crowd urges the warriors on.",
+        "Chants for blood echo rhythmically from the stands.",
+        "The audience leans in collectively, sensing a turning point in the bout.",
+        "The crowd begins to pound the benches, demanding a spectacular finish."
       ]
     },
     "taunts": {
@@ -742,7 +757,10 @@
         "Week {{week}}: Sand and Steel: This week's bouts deliver!"
       ],
       "Empty": "Week {{week}}: A quiet week in the arena. The peace won't last.",
-      "Graveyard": "The Hall of Warriors receives {{count}} new name{{plural}} this week."
+      "Graveyard": "The Hall of Warriors receives {{count}} new name{{plural}} this week.",
+      "BloodDrunk": "Week {{week}}: THE CROWD DRINKS DEEP! A week of spectacular violence!",
+      "QuietDespair": "Week {{week}}: TENSION MOUNTS! The calm before the inevitable slaughter.",
+      "NewLegends": "Week {{week}}: NEW BLOOD, NEW LEGENDS! The sands welcome the next generation."
     },
     "featured": {
       "LegendaryStreak": "Whispers of the ancients surround {{name}}, whose {{streak}} victories have become legend.",

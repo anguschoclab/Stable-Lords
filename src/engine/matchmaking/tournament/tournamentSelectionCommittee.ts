@@ -53,7 +53,7 @@ export function committeeSelection(
       if (w.status === "Active" && !lockedIds.has(w.id)) {
         // 🌩️ Tournament Entry Skepticism: Weather Check
         if (state.weather === "Rainy" && w.style === FightingStyle.LungingAttack) return;
-        if (state.weather === "Scalding" && (w.attributes.CN || 0) < 10) return;
+        if (state.weather === "Sweltering" && (w.attributes.CN || 0) < 10) return;
 
         const r = rankings[w.id];
         if (r) pool.push({ w, rank: r.overallRank, score: r.compositeScore });
@@ -105,7 +105,7 @@ export function committeeSelection(
 
 /**
  * Generate a freelancer warrior for tournament filler.
- * This is a simple placeholder that will be replaced by TournamentFreelancerGenerator.
+ * Creates tier-appropriate warriors with randomized attributes.
  */
 function generateFreelancer(tier: string, index: number, rng: IRNGService): Warrior {
   // Temporary implementation - will be moved to TournamentFreelancerGenerator

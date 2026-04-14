@@ -3,23 +3,23 @@ import { resolveDecision } from "./bout/decisionLogic";
 import { defaultPlanForWarrior } from "./bout/planDefaults";
 import { getPhase as getCombatPhase } from "./combat/combatMath";
 import { DEFAULT_LOADOUT, checkWeaponRequirements } from "@/data/equipment";
-import { getTrainingBonus } from "./trainers";
 import { getMatchupBonus, MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from "./combat/combatConstants";
 import { resolveEffectiveTactics, resolveExchange, type ResolutionContext } from "./combat/resolution";
-import { 
-  generateWarriorIntro, 
-  battleOpener, 
-  minuteStatusLine, 
+import {
+  generateWarriorIntro,
+  battleOpener,
+  minuteStatusLine,
   narrateBoutEnd,
   conservingLine
 } from "./narrativePBP";
 import { narrateEvents, NarrationContext } from "./combat/narrator";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
-import type { GameState, Trainer, FightOutcomeBy } from "@/types/state.types";
+import type { Trainer, FightOutcomeBy } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";
 import type { FightPlan, FightOutcome, MinuteEvent, DeathCauseBucket } from "@/types/combat.types";
-import type { WeatherType, FightingStyle } from "@/types/shared.types";
+import type { WeatherType } from "@/types/shared.types";
+import { getTrainerMods } from "./combat/simulate/core/simulateHelpers";
 
 // ─── Exports from sub-modules for backward compatibility ───
 export { createFighterState, resolveDecision, defaultPlanForWarrior };
@@ -29,19 +29,6 @@ type Phase = "OPENING" | "MID" | "LATE";
 function getPhase(exchange: number, maxExchanges: number): Phase {
   const p = getCombatPhase(exchange, maxExchanges);
   return p.toUpperCase() as Phase;
-}
-
-function getTrainerMods(trainers: Trainer[], style: FightingStyle) {
-  const bonus = getTrainingBonus(trainers, style);
-  return {
-    attMod: bonus.Aggression,
-    parMod: Math.floor(bonus.Defense * 0.6),
-    defMod: Math.floor(bonus.Defense * 0.4),
-    iniMod: Math.floor(bonus.Mind * 0.6),
-    decMod: Math.floor(bonus.Mind * 0.4),
-    endMod: bonus.Endurance * 2,
-    healMod: bonus.Healing,
-  };
 }
 
 /**
@@ -95,8 +82,8 @@ export function simulateFight(
   const modsA = trainers ? getTrainerMods(trainers, planA.style) : { attMod: 0, defMod: 0, iniMod: 0, parMod: 0, decMod: 0, endMod: 0, healMod: 0 };
   const modsD = trainers ? getTrainerMods(trainers, planD.style) : { attMod: 0, defMod: 0, iniMod: 0, parMod: 0, decMod: 0, endMod: 0, healMod: 0 };
 
-  const weaponReqA = checkWeaponRequirements(weaponA, warriorA?.attributes ?? { ST: 10, DF: 10, SP: 10 });
-  const weaponReqD = checkWeaponRequirements(weaponD, warriorD?.attributes ?? { ST: 10, DF: 10, SP: 10 });
+  const weaponReqA = checkWeaponRequirements(weaponA, warriorA?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 });
+  const weaponReqD = checkWeaponRequirements(weaponD, warriorD?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 });
 
   const resCtx: ResolutionContext = {
     rng,
@@ -191,13 +178,27 @@ export function simulateFight(
     // C. Check for End Events
     const boutEnd = events.find(e => e.type === "BOUT_END");
     if (boutEnd) {
-      winner = boutEnd.actor === "A" ? "A" : "D";
       by = boutEnd.result as FightOutcomeBy;
       fatalHitLocation = boutEnd.metadata?.location as string;
       fatalExchangeIndex = ex;
       causeBucket = boutEnd.metadata?.cause as DeathCauseBucket;
-      
-      const boutEndLines = narrateBoutEnd(rng, by as string, boutEnd.actor === "A" ? nameA : nameD, boutEnd.actor === "A" ? nameD : nameA);
+
+      // Kill/KO: actor = who scored it (winner)
+      // Stoppage: actor = who ran out of endurance (loser) → other fighter wins
+      // Exhaustion: both ran out simultaneously → draw
+      if (by === "Stoppage") {
+        winner = boutEnd.actor === "A" ? "D" : "A";
+      } else if (by === "Exhaustion") {
+        winner = null;
+      } else {
+        winner = boutEnd.actor === "A" ? "A" : "D";
+      }
+
+      // For narration: winnerName first, loserName second
+      const boutActorIsWinner = by !== "Stoppage";
+      const narWinner = boutActorIsWinner ? (boutEnd.actor === "A" ? nameA : nameD) : (boutEnd.actor === "A" ? nameD : nameA);
+      const narLoser  = boutActorIsWinner ? (boutEnd.actor === "A" ? nameD : nameA) : (boutEnd.actor === "A" ? nameA : nameD);
+      const boutEndLines = narrateBoutEnd(rng, by as string, narWinner, narLoser);
       boutEndLines.forEach(line => log.push({ minute: min, text: line }));
       break;
     }
@@ -212,6 +213,10 @@ export function simulateFight(
   }
 
   // Outcome Tags & Postprocessing
+  const fightMinutes = Math.max(1, log[log.length - 1]?.minute ?? 1);
+  if (fightMinutes <= 3) tags.add("Quick");
+  if (fightMinutes >= 8) tags.add("Epic");
+
   if (winner) {
     const w = winner === "A" ? fA : fD;
     const l = winner === "A" ? fD : fA;
@@ -219,6 +224,8 @@ export function simulateFight(
     if (w.hitsLanded >= 5) tags.add("Dominance");
     if (by === "KO") tags.add("KO");
     if (by === "Kill") tags.add("Kill");
+    if (w.ripostes >= 3) tags.add("RiposteChain");
+    if (w.ripostes >= 2 || w.hitsLanded >= 6) tags.add("Flashy");
   }
 
   return {

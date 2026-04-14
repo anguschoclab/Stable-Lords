@@ -213,6 +213,10 @@ export function simulateFight(
   }
 
   // Outcome Tags & Postprocessing
+  const fightMinutes = Math.max(1, log[log.length - 1]?.minute ?? 1);
+  if (fightMinutes <= 3) tags.add("Quick");
+  if (fightMinutes >= 8) tags.add("Epic");
+
   if (winner) {
     const w = winner === "A" ? fA : fD;
     const l = winner === "A" ? fD : fA;
@@ -220,6 +224,8 @@ export function simulateFight(
     if (w.hitsLanded >= 5) tags.add("Dominance");
     if (by === "KO") tags.add("KO");
     if (by === "Kill") tags.add("Kill");
+    if (w.ripostes >= 3) tags.add("RiposteChain");
+    if (w.ripostes >= 2 || w.hitsLanded >= 6) tags.add("Flashy");
   }
 
   return {

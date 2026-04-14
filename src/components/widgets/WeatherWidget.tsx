@@ -39,7 +39,7 @@ const WEATHER_METADATA = {
     description: "Fierce winds. Substantial penalty to stamina.",
     stats: "STAMINA_DRAIN_115%"
   },
-  Scalding: {
+  Sweltering: {
     icon: ThermometerSun,
     color: "text-orange-500",
     bg: "bg-orange-500/10",
@@ -47,7 +47,7 @@ const WEATHER_METADATA = {
     description: "Oppressive heat. Endurance consumption is doubled. High-constitution warriors favored.",
     stats: "ENDURANCE_DRAIN_200% // FATIGUE_ACCEL"
   },
-  Drafty: {
+  Breezy: {
     icon: Wind,
     color: "text-stone-300",
     bg: "bg-stone-300/10",

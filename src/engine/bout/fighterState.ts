@@ -91,6 +91,8 @@ export function createFighterState(
     legHits: 0,
     favorites: warrior?.favorites,
     totalFights: warrior?.career ? (warrior.career.wins + warrior.career.losses) : 0,
-    encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, enduranceMult: encumbranceEndMult }
+    encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, enduranceMult: encumbranceEndMult },
+    weaponId: equip.weapon,
+    armorId: equip.armor,
   };
 }

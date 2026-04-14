@@ -69,7 +69,7 @@ describe("TournamentSelectionCommittee", () => {
     });
 
     it("should apply weather skepticism for scalding weather", () => {
-      state.weather = "Scalding";
+      state.weather = "Sweltering";
       const { warriors } = committeeSelection(state, "Gold", 1, new Set());
       const lowCNWarriors = warriors.filter(w => (w.attributes.CN || 0) < 10);
       // Should have fewer or no low CN warriors in scalding weather

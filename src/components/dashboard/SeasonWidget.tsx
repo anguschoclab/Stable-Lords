@@ -38,7 +38,7 @@ export function SeasonWidget() {
     WeatherIcon = Sun;
     weatherColor = "text-red-500";
     weatherBg = "bg-red-500/10 border-red-500/20";
-  } else if (weather === "Scalding") {
+  } else if (weather === "Sweltering") {
     WeatherIcon = Sun;
     weatherColor = "text-orange-500";
     weatherBg = "bg-orange-500/10 border-orange-500/20";
@@ -54,7 +54,7 @@ export function SeasonWidget() {
     WeatherIcon = Wind;
     weatherColor = "text-emerald-500";
     weatherBg = "bg-emerald-500/10 border-emerald-500/20";
-  } else if (weather === "Drafty") {
+  } else if (weather === "Breezy") {
     WeatherIcon = Wind;
     weatherColor = "text-stone-300";
     weatherBg = "bg-stone-300/10 border-stone-300/20";
@@ -149,10 +149,10 @@ export function SeasonWidget() {
                    </TooltipTrigger>
                    <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest w-full max-w-xs">
                       {weather === "Blazing Sun" ? "30% more stamina drain in combat." :
-                       weather === "Scalding" ? "20% more stamina drain in combat." :
+                       weather === "Sweltering" ? "20% more stamina drain in combat." :
                        weather === "Blood Moon" ? "A crimson moon rises. Fighters are bloodthirsty, vastly increasing lethality. 10% more stamina drain." :
                        weather === "Gale" ? "Fierce winds. 15% more stamina drain in combat." :
-                       weather === "Drafty" ? "10% less stamina drain in combat." :
+                       weather === "Breezy" ? "10% less stamina drain in combat." :
                        weather === "Eclipse" ? "20% less stamina drain in combat. Fights are slow and methodical." :
                        weather === "Rainy" ? "Poor visibility and slick ground penalize initiative and attack." :
                        "Standard atmospheric conditions."}

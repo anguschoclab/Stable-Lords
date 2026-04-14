@@ -39,6 +39,42 @@ const LOCATION_KILL_MULT: Record<HitLocation, number> = {
   "left leg": 0.1,
 };
 
+// ─── Weapon/Armor Type Interactions ─────────────────────────────────────────
+
+type DamageType = "slash" | "bash" | "pierce" | "none";
+
+const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
+  // Pierce
+  dagger: "pierce", epee: "pierce", short_spear: "pierce", long_spear: "pierce",
+  // Slash
+  hatchet: "slash", short_sword: "slash", scimitar: "slash", longsword: "slash",
+  battle_axe: "slash", broadsword: "slash", greatsword: "slash", great_axe: "slash",
+  // Bash
+  war_hammer: "bash", mace: "bash", morning_star: "bash", war_flail: "bash",
+  maul: "bash", halberd: "bash", quarterstaff: "bash",
+  // Shields deal blunt but negligible — no interaction
+  small_shield: "none", medium_shield: "none", large_shield: "none",
+};
+
+// Multiplier on incoming damage: < 1.0 = armor resists, > 1.0 = armor is weak
+const ARMOR_TYPE_MULT: Record<string, Partial<Record<DamageType, number>>> = {
+  none_armor:     {},
+  leather:        { slash: 0.95 },
+  padded_leather: { bash: 0.80, pierce: 1.10 },
+  ring_mail:      { slash: 0.90, pierce: 0.90, bash: 1.10 },
+  scale_mail:     { slash: 0.80, pierce: 1.15 },
+  chain_mail:     { pierce: 0.80, slash: 1.10 },
+  plate_mail:     { slash: 0.85, bash: 0.85, pierce: 0.85 },
+};
+
+export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: string): number {
+  if (!weaponId || !armorId) return damage;
+  const dtype = WEAPON_DAMAGE_TYPE[weaponId];
+  if (!dtype || dtype === "none") return damage;
+  const mult = ARMOR_TYPE_MULT[armorId]?.[dtype] ?? 1.0;
+  return Math.round(damage * mult);
+}
+
 export function protectCovers(protect?: string): string[] {
   if (!protect || protect === "Any" || protect === "none_armor" || protect === "none_helm") return [];
   const p = protect.toLowerCase();

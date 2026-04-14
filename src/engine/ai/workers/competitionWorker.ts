@@ -89,7 +89,7 @@ export function generateBoutBids(
     if (weather === "Rainy") {
       if (warrior.style === FightingStyle.LungingAttack) weatherModifier = -3; // Precision styles hate rain
       if (warrior.style === FightingStyle.BashingAttack) weatherModifier = +2; // Mudders love the rain
-    } else if (weather === "Scalding" && warrior.attributes.CN < 10) {
+    } else if (weather === "Sweltering" && warrior.attributes.CN < 10) {
       weatherModifier = -2; // Low constitution warriors hate heat
     }
 
@@ -167,7 +167,7 @@ export function verifyBoutAcceptance(
     return { accepted: false, reason: "Precision penalty in rain." };
   }
 
-  if (weather === "Scalding" && warrior.attributes.CN < 15) {
+  if (weather === "Sweltering" && warrior.attributes.CN < 15) {
      return { accepted: false, reason: "Heatstroke risk too high." };
   }
 
@@ -180,7 +180,7 @@ export function verifyBoutAcceptance(
 
   // Skeptical Check: AGGRESSIVE agents accept most things (unless weather is lethal)
   if (rival.owner.personality === "Aggressive") {
-    if (weather === "Scalding" && warrior.attributes.CN < 8) {
+    if (weather === "Sweltering" && warrior.attributes.CN < 8) {
       return { accepted: false, reason: "Aggressive but not suicidal; heat is too dangerous for this unit." };
     }
     return { accepted: true };

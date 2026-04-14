@@ -113,19 +113,19 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
 
   // ⚡ Bolt: Reduced O(S^2 * N) nested filtering to O(N) single-pass aggregation and memoized result
   const matchupStats = useMemo(() => {
-    const agg: Record<string, { wins: number; total: number }> = {};
-    for (let i = 0; i < allFights.length; i++) {
-      const f = allFights[i];
-      if (!f.winnerStyle || !f.loserStyle) continue;
+    const agg: Record<string, Record<string, { wins: number; total: number }>> = {};
+    for (const f of allFights || []) {
+      const { winnerStyle: w, loserStyle: l } = f;
+      if (!w || !l) continue;
 
-      const key1 = `${f.winnerStyle}vs${f.loserStyle}`;
-      if (!agg[key1]) agg[key1] = { wins: 0, total: 0 };
-      agg[key1].wins++;
-      agg[key1].total++;
+      if (!agg[w]) agg[w] = {};
+      if (!agg[w][l]) agg[w][l] = { wins: 0, total: 0 };
+      agg[w][l].wins++;
+      agg[w][l].total++;
 
-      const key2 = `${f.loserStyle}vs${f.winnerStyle}`;
-      if (!agg[key2]) agg[key2] = { wins: 0, total: 0 };
-      agg[key2].total++;
+      if (!agg[l]) agg[l] = {};
+      if (!agg[l][w]) agg[l][w] = { wins: 0, total: 0 };
+      agg[l][w].total++;
     }
     return agg;
   }, [allFights]);

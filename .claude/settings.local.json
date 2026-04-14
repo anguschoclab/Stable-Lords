@@ -27,7 +27,10 @@
       "Bash(bunx tsc:*)",
       "mcp__plugin_serena_serena__get_symbols_overview",
       "Bash(grep:*)",
-      "Bash(xargs sed:*)"
+      "Bash(xargs sed:*)",
+      "Bash(npm test:*)",
+      "Bash(npm install:*)",
+      "Bash(bun test:*)"
     ]
   }
 }

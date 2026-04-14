@@ -2,6 +2,7 @@
  * Combat Narrator — Consumer of CombatEvents that produces MinuteEvent[] log.
  * Translates pure math results into the flavor text defined in the Design Bible.
  */
+import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { type FightingStyle } from "@/types/shared.types";
 import { type CombatEvent, type MinuteEvent } from "@/types/combat.types";
 import {
@@ -9,7 +10,6 @@ import {
   narrateHit, damageSeverityLine, stateChangeLine,
   fatigueLine, crowdReaction, narrateInitiative,
   tauntLine, narrateInsightHint, narratePassive,
-  narrateBoutEnd
 } from "../narrativePBP";
 import { getWeaponDisplayName } from "../narrative/narrativeUtils";
 
@@ -166,16 +166,6 @@ export function narrateEvents(
         break;
       }
 
-      case "BOUT_END": {
-        const resultType = event.result as string;
-        const winnerName = actorName;
-        const loserName = opponentName;
-        const weaponId = getWeapon(event.actor);
-        
-        const lines = narrateBoutEnd(rng, resultType, winnerName, loserName, weaponId);
-        lines.forEach(text => log.push({ minute, text }));
-        break;
-      }
     }
   }
 

@@ -58,7 +58,7 @@ export class SeededRNG {
   /** Returns a new SeededRNG with the exact same state */
   clone(): SeededRNG {
     const clone = new SeededRNG(0);
-    clone["state"] = this.state;
+    clone.state = this.state;
     return clone;
   }
 }

@@ -33,7 +33,7 @@ export function resolveWarriorName(
 
   // Search rival rosters
   for (const rival of state.rivals) {
-    const rw = rival.roster?.find((w: { id: string; name: string }) => w.id === warriorId);
+    const rw = rival.roster?.find(w => w.id === warriorId);
     if (rw) return rw.name;
   }
 

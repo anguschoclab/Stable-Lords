@@ -683,19 +683,19 @@
   },
   "blurbs": {
     "neutral": [
-      "{{attacker}} defeated {{defender}}{{hits}} in a hard-fought contest.",
-      "{{attacker}} emerged victorious over {{defender}}{{hits}}.",
-      "{{attacker}} bested {{defender}}{{hits}}."
+      "%A defeated %D%H in a hard-fought contest.",
+      "%A emerged victorious over %D%H.",
+      "%A bested %D%H."
     ],
     "hype": [
-      "{{attacker}} DOMINATED {{defender}}{{hits}}! The crowd goes wild!",
-      "What a performance! {{attacker}} crushed {{defender}}{{hits}}!",
-      "{{attacker}} finishes {{defender}}{{hits}} with a spectacular display!"
+      "%A DOMINATED %D%H! The crowd goes wild!",
+      "What a performance! %A crushed %D%H!",
+      "%A finishes %D%H with a spectacular display!"
     ],
     "grim": [
-      "{{attacker}} cut down {{defender}}{{hits}} without mercy.",
-      "{{defender}} fell to {{attacker}}{{hits}}. The sands drink deep.",
-      "{{attacker}} ended {{defender}}{{hits}} in brutal fashion."
+      "%A cut down %D%H without mercy.",
+      "%D fell to %A%H. The sands drink deep.",
+      "%A ended %D%H in brutal fashion."
     ]
   },
   "commentary": {

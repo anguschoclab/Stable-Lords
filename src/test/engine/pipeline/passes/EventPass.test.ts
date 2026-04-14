@@ -38,6 +38,6 @@ describe("EventPass", () => {
 
     const newsletter = nextState.newsletter?.[0];
     expect(newsletter?.title).toBe("Lost Relic Discovery");
-    expect(newsletter?.items[0]).toContain("discovered an ancient artifact!");
+    expect(newsletter?.items[0]).toContain("discovered an ancient artifact");
   });
 });

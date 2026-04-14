@@ -3,6 +3,7 @@ import { getItemById } from "@/data/equipment";
 import narrativeContent from "@/data/narrativeContent.json";
 import type { NarrativeContent } from "@/types/narrative.types";
 import { audioManager } from "@/lib/AudioManager";
+import type { IRNGService } from "@/engine/core/rng/IRNGService";
 
 import {
   pick,
@@ -91,18 +92,18 @@ function getStrikeSeverity(
 
 /**
  * Safely picks a template from the JSON archive or returns a generic fallback.
+ * Supports both RNG function and IRNGService objects.
  */
-/**
- * Safely picks a template from the JSON archive or returns a generic fallback.
- */
-export function getFromArchive(rng: RNG, path: string[]): string {
+export function getFromArchive(rng: RNG | IRNGService, path: string[]): string {
   try {
     let current: any = narrativeContent;
     for (const key of path) {
       current = current[key];
     }
     if (Array.isArray(current) && current.length > 0) {
-      return pick(rng, current);
+      // Handle both RNG function and IRNGService objects
+      const rngFn = typeof rng === 'function' ? rng : () => rng.next();
+      return pick(rngFn, current);
     }
   } catch (e) {
     console.error(`Narrative Archive Error: Missing path ${path.join(".")}`);

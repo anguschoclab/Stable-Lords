@@ -1,5 +1,6 @@
 {
   "name": "stable-lords",
+  "packageManager": "bun@1.3.11",
   "productName": "Stable Lords",
   "private": true,
   "version": "2.1.0",

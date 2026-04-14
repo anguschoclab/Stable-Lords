@@ -5,6 +5,7 @@ import type { IRNGService } from "@/engine/core/rng/IRNGService";
  * StatusNarrator - Damage, fatigue, state change, and crowd reaction narration.
  * Handles all status-related narrative generation.
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class StatusNarrator {
   /**
    * Generates damage severity line based on damage ratio.

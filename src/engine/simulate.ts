@@ -114,15 +114,15 @@ export function simulateFight(
   let fatalExchangeIndex: number | undefined;
 
   // ── 1. Introductions ──
-  const introA = generateWarriorIntro(rngService, { name: nameA, style: planA.style, weaponId: weaponA, armorId: (warriorA?.equipment ?? DEFAULT_LOADOUT).armor, helmId: (warriorA?.equipment ?? DEFAULT_LOADOUT).helm }, warriorA?.attributes?.SZ);
-  const introD = generateWarriorIntro(rngService, { name: nameD, style: planD.style, weaponId: weaponD, armorId: (warriorD?.equipment ?? DEFAULT_LOADOUT).armor, helmId: (warriorD?.equipment ?? DEFAULT_LOADOUT).helm }, warriorD?.attributes?.SZ);
+  const introA = generateWarriorIntro(rng, { name: nameA, style: planA.style, weaponId: weaponA, armorId: (warriorA?.equipment ?? DEFAULT_LOADOUT).armor, helmId: (warriorA?.equipment ?? DEFAULT_LOADOUT).helm }, warriorA?.attributes?.SZ);
+  const introD = generateWarriorIntro(rng, { name: nameD, style: planD.style, weaponId: weaponD, armorId: (warriorD?.equipment ?? DEFAULT_LOADOUT).armor, helmId: (warriorD?.equipment ?? DEFAULT_LOADOUT).helm }, warriorD?.attributes?.SZ);
   
   introA.forEach(line => log.push({ minute: 0, text: line }));
   log.push({ minute: 0, text: "" });
   introD.forEach(line => log.push({ minute: 0, text: line }));
   log.push({ minute: 0, text: "" });
 
-  log.push({ minute: 1, text: battleOpener(rngService) });
+  log.push({ minute: 1, text: battleOpener(rng) });
   if (planA.OE <= 3) log.push({ minute: 1, text: conservingLine(nameA) });
   if (planD.OE <= 3) log.push({ minute: 1, text: conservingLine(nameD) });
 
@@ -153,7 +153,7 @@ export function simulateFight(
     if (min > lastMinuteMarker && min > 1) {
       lastMinuteMarker = min;
       log.push({ minute: min, text: `MINUTE ${min}.` });
-      log.push({ minute: min, text: minuteStatusLine(rngService, min, nameA, nameD, fA.hitsLanded, fD.hitsLanded) });
+      log.push({ minute: min, text: minuteStatusLine(rng, min, nameA, nameD, fA.hitsLanded, fD.hitsLanded) });
     }
 
     // A. Resolve Math (Dice)
@@ -161,7 +161,7 @@ export function simulateFight(
 
     // B. Resolve Narration (Drama)
     const narCtx: NarrationContext = {
-      rng: rngService, nameA, nameD, weaponA, weaponD,
+      rng, nameA, nameD, weaponA, weaponD,
       styleA: fA.style, styleD: fD.style,
       maxHpA: fA.maxHp, maxHpD: fD.maxHp,
       prevHpRatioA, prevHpRatioD,

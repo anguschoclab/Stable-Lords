@@ -18,7 +18,11 @@
       "Bash(/c/Users/amauricia/.bun/bin/bun run:*)",
       "Bash(/c/Users/amauricia/.bun/bin/bun x:*)",
       "Bash(/c/Users/amauricia/.bun/bin/bunx tsc:*)",
-      "Bash(/c/Users/amauricia/.bun/bin/bun test:*)"
+      "Bash(/c/Users/amauricia/.bun/bin/bun test:*)",
+      "WebFetch(domain:www.reality.com)",
+      "Bash(bunx vitest:*)",
+      "Bash(bunx tsx:*)",
+      "Bash(grep -v \"^$\")"
     ]
   }
 }

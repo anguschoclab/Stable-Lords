@@ -178,13 +178,27 @@ export function simulateFight(
     // C. Check for End Events
     const boutEnd = events.find(e => e.type === "BOUT_END");
     if (boutEnd) {
-      winner = boutEnd.actor === "A" ? "A" : "D";
       by = boutEnd.result as FightOutcomeBy;
       fatalHitLocation = boutEnd.metadata?.location as string;
       fatalExchangeIndex = ex;
       causeBucket = boutEnd.metadata?.cause as DeathCauseBucket;
-      
-      const boutEndLines = narrateBoutEnd(rng, by as string, boutEnd.actor === "A" ? nameA : nameD, boutEnd.actor === "A" ? nameD : nameA);
+
+      // Kill/KO: actor = who scored it (winner)
+      // Stoppage: actor = who ran out of endurance (loser) → other fighter wins
+      // Exhaustion: both ran out simultaneously → draw
+      if (by === "Stoppage") {
+        winner = boutEnd.actor === "A" ? "D" : "A";
+      } else if (by === "Exhaustion") {
+        winner = null;
+      } else {
+        winner = boutEnd.actor === "A" ? "A" : "D";
+      }
+
+      // For narration: winnerName first, loserName second
+      const boutActorIsWinner = by !== "Stoppage";
+      const narWinner = boutActorIsWinner ? (boutEnd.actor === "A" ? nameA : nameD) : (boutEnd.actor === "A" ? nameD : nameA);
+      const narLoser  = boutActorIsWinner ? (boutEnd.actor === "A" ? nameD : nameA) : (boutEnd.actor === "A" ? nameA : nameD);
+      const boutEndLines = narrateBoutEnd(rng, by as string, narWinner, narLoser);
       boutEndLines.forEach(line => log.push({ minute: min, text: line }));
       break;
     }

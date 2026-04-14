@@ -188,8 +188,10 @@ describe("simulateFight — kill logic", () => {
 
 describe("simulateFight — style matchups", () => {
   it("Wall of Steel has defensive advantage over aggressive styles", () => {
+    // Canonical skill chart: WS needs high SP/DF for INI, high DF/WL for PAR.
+    // DEF is clamped to 1 for WS (style penalty -12), so PAR + INI are the defensive levers.
     const wA = makeWarrior("Basher", FightingStyle.BashingAttack, { ST: 14, CN: 12 });
-    const wD = makeWarrior("Wall", FightingStyle.WallOfSteel, { CN: 14, DF: 14, WL: 14 });
+    const wD = makeWarrior("Wall", FightingStyle.WallOfSteel, { SP: 15, DF: 15, WL: 14, CN: 14 });
 
     let wallWins = 0;
     const trials = 40;

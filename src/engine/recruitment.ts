@@ -5,7 +5,8 @@ import { generatePotential } from "./potential";
 import { generateFavorites } from "./favorites";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
-import { generateId } from "@/utils/idUtils";
+import narrativeContent from "@/data/narrativeContent.json";
+import type { NarrativeContent } from "@/types/narrative.types";
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -30,20 +31,20 @@ export interface PoolWarrior {
 // ─── Constants ────────────────────────────────────────────────────────────
 
 // TIER data is now fetched from narrativeContent.json
-const getTierData = (tier: RecruitTier) => (narrativeContent as any).recruitment.tiers[tier];
+const getTierData = (tier: RecruitTier) => (narrativeContent as NarrativeContent).recruitment.tiers[tier];
 
 export const TIER_COST: Record<RecruitTier, number> = {
-  Common: (narrativeContent as any).recruitment.tiers.Common.cost,
-  Promising: (narrativeContent as any).recruitment.tiers.Promising.cost,
-  Exceptional: (narrativeContent as any).recruitment.tiers.Exceptional.cost,
-  Prodigy: (narrativeContent as any).recruitment.tiers.Prodigy.cost,
+  Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common.cost,
+  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising.cost,
+  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional.cost,
+  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy.cost,
 };
 
 export const TIER_STARS: Record<RecruitTier, number> = {
-  Common: (narrativeContent as any).recruitment.tiers.Common.stars,
-  Promising: (narrativeContent as any).recruitment.tiers.Promising.stars,
-  Exceptional: (narrativeContent as any).recruitment.tiers.Exceptional.stars,
-  Prodigy: (narrativeContent as any).recruitment.tiers.Prodigy.stars,
+  Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common.stars,
+  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising.stars,
+  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional.stars,
+  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy.stars,
 };
 
 const REFRESH_COST = 50;
@@ -53,10 +54,7 @@ export { REFRESH_COST, DEFAULT_POOL_SIZE };
 // ─── Name Pool ────────────────────────────────────────────────────────────
 
 // Name pool is now fetched from narrativeContent.json
-const NAME_POOL = (narrativeContent as any).recruitment.names;
-
-// Lore for recruitment is now entirely data-driven via narrativeContent.json
-import narrativeContent from "@/data/narrativeContent.json";
+const NAME_POOL = (narrativeContent as NarrativeContent).recruitment.names;
 
 // Removed manual seededRng implementation in favor of utils/random
 
@@ -86,9 +84,9 @@ function distributeAttributes(rng: IRNGService, total: number): Attributes {
 }
 
 function generateLore(rng: IRNGService, style: FightingStyle): string {
-  const recruitment = narrativeContent.recruitment;
+  const recruitment = (narrativeContent as NarrativeContent).recruitment;
   const origin = rng.pick(recruitment.origin);
-  const blurbs = (recruitment as any).style_blurbs?.[style] || ["A fighter with something to prove."];
+  const blurbs = recruitment.style_blurbs?.[style] || ["A fighter with something to prove."];
   const blurb = rng.pick(blurbs);
   return `${origin} ${blurb}`;
 }

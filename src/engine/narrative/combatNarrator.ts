@@ -2,6 +2,7 @@ import { FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/shared.types";
 import { getItemById } from "@/data/equipment";
 import { audioManager } from "@/lib/AudioManager";
 import narrativeContent from "@/data/narrativeContent.json";
+import type { NarrativeContent } from "@/types/narrative.types";
 import { NarrativeTemplateEngine, type CombatContext } from "./narrativeTemplateEngine";
 import { pick, szToHeight, getWeaponDisplayName, getWeaponType } from "./narrativeUtils";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
@@ -210,7 +211,9 @@ export class CombatNarrator {
   // Helper methods
 
   private static richHitLocation(rng: IRNGService, location: string): string {
-    const variants = (narrativeContent as any).pbp.hit_locations[location.toLowerCase()];
+    const hitLocations = (narrativeContent as NarrativeContent).pbp.hit_locations;
+    const key = location.toLowerCase() as keyof typeof hitLocations;
+    const variants = hitLocations[key];
     if (!variants) return location.toUpperCase();
     return rng.pick(variants);
   }

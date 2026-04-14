@@ -3,23 +3,23 @@ import { resolveDecision } from "./bout/decisionLogic";
 import { defaultPlanForWarrior } from "./bout/planDefaults";
 import { getPhase as getCombatPhase } from "./combat/combatMath";
 import { DEFAULT_LOADOUT, checkWeaponRequirements } from "@/data/equipment";
-import { getTrainingBonus } from "./trainers";
 import { getMatchupBonus, MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from "./combat/combatConstants";
 import { resolveEffectiveTactics, resolveExchange, type ResolutionContext } from "./combat/resolution";
-import { 
-  generateWarriorIntro, 
-  battleOpener, 
-  minuteStatusLine, 
+import {
+  generateWarriorIntro,
+  battleOpener,
+  minuteStatusLine,
   narrateBoutEnd,
   conservingLine
 } from "./narrativePBP";
 import { narrateEvents, NarrationContext } from "./combat/narrator";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
-import type { GameState, Trainer, FightOutcomeBy } from "@/types/state.types";
+import type { Trainer, FightOutcomeBy } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";
 import type { FightPlan, FightOutcome, MinuteEvent, DeathCauseBucket } from "@/types/combat.types";
-import type { WeatherType, FightingStyle } from "@/types/shared.types";
+import type { WeatherType } from "@/types/shared.types";
+import { getTrainerMods } from "./combat/simulate/core/simulateHelpers";
 
 // ─── Exports from sub-modules for backward compatibility ───
 export { createFighterState, resolveDecision, defaultPlanForWarrior };
@@ -29,19 +29,6 @@ type Phase = "OPENING" | "MID" | "LATE";
 function getPhase(exchange: number, maxExchanges: number): Phase {
   const p = getCombatPhase(exchange, maxExchanges);
   return p.toUpperCase() as Phase;
-}
-
-function getTrainerMods(trainers: Trainer[], style: FightingStyle) {
-  const bonus = getTrainingBonus(trainers, style);
-  return {
-    attMod: bonus.Aggression,
-    parMod: Math.floor(bonus.Defense * 0.6),
-    defMod: Math.floor(bonus.Defense * 0.4),
-    iniMod: Math.floor(bonus.Mind * 0.6),
-    decMod: Math.floor(bonus.Mind * 0.4),
-    endMod: bonus.Endurance * 2,
-    healMod: bonus.Healing,
-  };
 }
 
 /**
@@ -95,8 +82,8 @@ export function simulateFight(
   const modsA = trainers ? getTrainerMods(trainers, planA.style) : { attMod: 0, defMod: 0, iniMod: 0, parMod: 0, decMod: 0, endMod: 0, healMod: 0 };
   const modsD = trainers ? getTrainerMods(trainers, planD.style) : { attMod: 0, defMod: 0, iniMod: 0, parMod: 0, decMod: 0, endMod: 0, healMod: 0 };
 
-  const weaponReqA = checkWeaponRequirements(weaponA, warriorA?.attributes ?? { ST: 10, DF: 10, SP: 10 });
-  const weaponReqD = checkWeaponRequirements(weaponD, warriorD?.attributes ?? { ST: 10, DF: 10, SP: 10 });
+  const weaponReqA = checkWeaponRequirements(weaponA, warriorA?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 });
+  const weaponReqD = checkWeaponRequirements(weaponD, warriorD?.attributes ?? { ST: 10, SZ: 10, WT: 10, DF: 10 });
 
   const resCtx: ResolutionContext = {
     rng,

@@ -116,6 +116,7 @@ describe("HallOfFame Component", () => {
     expect(greatestFightSection).not.toBeUndefined();
 
     // Search for the opponent's name within this section
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const opponent = within(greatestFightSection!).getByText("Victim");
     expect(opponent).toBeInTheDocument();
 

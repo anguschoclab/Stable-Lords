@@ -127,6 +127,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                       <span className="text-[10px] opacity-20">PATRON:</span> {row.stableName}
                     </Link>
                   ) : (
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     <Link
                       to="/world/stable/$id"
                       params={{ id: row.stableId! }}

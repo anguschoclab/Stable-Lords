@@ -106,18 +106,19 @@ export function calculateKillWindow(
   phaseLevel: number, // 0 for Opening, 1 for Mid, 2 for Late
   attOE: number = 5,
   attAL: number = 5,
-  matchupBonus: number = 0
+  matchupBonus: number = 0,
+  decSkill: number = 10 // Canonical: DEC skill drives kill/decisiveness ability (1-20)
 ): number {
   // Base threshold (lethal hits are rare but possible)
   // Target: ~10% overall mortality across the league (Unified 1.0 Gold Baseline)
-  let threshold = 0.065; 
+  let threshold = 0.065;
 
   // HP factor: higher chance if HP is low (below 30%)
   if (hpRatio < 0.3) threshold += 0.012;
   else if (hpRatio < 0.5) threshold += 0.004;
 
   // Endurance (Fatigue) factor: higher chance if target is exhausted (below 30%)
-  if (enduranceRatio < 0.3) threshold += 0.020; 
+  if (enduranceRatio < 0.3) threshold += 0.020;
   else if (enduranceRatio < 0.5) threshold += 0.008;
 
   // Location factor: Vital spots are deadlier
@@ -133,6 +134,10 @@ export function calculateKillWindow(
 
   // Kill Desire: Attacker's aggression
   threshold += (killDesire - 5) * 0.001;
+
+  // Canonical DEC skill: higher DEC → better at seizing kill opportunities
+  // Range: DEC 1 ≈ -0.011, DEC 10 = 0, DEC 20 ≈ +0.012
+  threshold += (decSkill - 10) * 0.0012;
 
   // Phase escalation: fights get more dangerous as time passes
   threshold += phaseLevel * 0.004;

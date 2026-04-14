@@ -191,7 +191,9 @@ export function executeHit(
 
   if (defender.hp <= defender.maxHp * killMech.killWindowHpMult) {
     const killPos = phase === "LATE" ? 2 : phase === "MID" ? 1 : 0;
-    const killThreshold = calculateKillWindow(defender.hp / defender.maxHp, defender.endurance / defender.maxEndurance, hitLoc, attKD + killMech.killBonus, killPos, attOE, attAL, attMatchup);
+    // Canonical: DEC skill + style's decBonus both contribute to kill threshold
+    const effectiveDec = attacker.skills.DEC + killMech.decBonus;
+    const killThreshold = calculateKillWindow(defender.hp / defender.maxHp, defender.endurance / defender.maxEndurance, hitLoc, attKD + killMech.killBonus, killPos, attOE, attAL, attMatchup, effectiveDec);
     if (rng() < killThreshold) {
       defender.hp = 0;
       didKill = true;

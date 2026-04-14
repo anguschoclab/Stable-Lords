@@ -1,6 +1,7 @@
 import { type FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/shared.types";
 import { getItemById } from "@/data/equipment";
 import narrativeContent from "@/data/narrativeContent.json";
+import type { NarrativeContent } from "@/types/narrative.types";
 import { audioManager } from "@/lib/AudioManager";
 
 import {
@@ -112,7 +113,9 @@ export function getFromArchive(rng: RNG, path: string[]): string {
 // ─── Hit Location Display ───────────────────────────────────────────────────
 
 export function richHitLocation(rng: RNG, location: string): string {
-  const variants = (narrativeContent as any).pbp.hit_locations[location.toLowerCase()];
+  const hitLocations = (narrativeContent as NarrativeContent).pbp.hit_locations;
+  const key = location.toLowerCase() as keyof typeof hitLocations;
+  const variants = hitLocations[key];
   if (!variants) return location.toUpperCase();
   return pick(rng, variants);
 }

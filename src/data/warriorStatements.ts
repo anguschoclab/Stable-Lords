@@ -1,6 +1,7 @@
 import { BaseSkills } from "@/types/shared.types";
 import { computeCoordination, computeActivityRating } from "./terrabloodCharts";
 import narrativeContent from "./narrativeContent.json";
+import type { NarrativeContent } from "@/types/narrative.types";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -72,7 +73,7 @@ export function generateWarriorStatements(
   skills: BaseSkills,
 ): WarriorOverviewStatements {
   const isGoodWit = wt > 7;
-  const p = (narrativeContent as any).persona;
+  const p = (narrativeContent as NarrativeContent).persona;
 
   function getStatement(
     skillKey: string,
@@ -81,7 +82,7 @@ export function generateWarriorStatements(
   ): string {
     const witKey = isGoodWit ? "good" : "bad";
     const orderKey = baseValue >= highThreshold ? "high" : "low";
-    const category = p[witKey]?.[skillKey];
+    const category = (p[witKey] as any)?.[skillKey];
     const entries = category?.[orderKey];
     // Personas in the archive use the WT itself for the sub-selection min values
     return pickFromArchive(entries, wt);

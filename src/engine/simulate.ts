@@ -91,6 +91,7 @@ export function simulateFight(
     phase: "OPENING",
     exchange: 0,
     weather,
+    weatherEffect: getWeatherEffect(weather),
     matchupA: getMatchupBonus(planA.style, planD.style),
     matchupD: getMatchupBonus(planD.style, planA.style),
     trainerModsA: modsA,
@@ -122,6 +123,10 @@ export function simulateFight(
   log.push({ minute: 0, text: "" });
   introD.forEach(line => log.push({ minute: 0, text: line }));
   log.push({ minute: 0, text: "" });
+
+  // Emit weather opening line (skipped for Clear/Overcast)
+  const weatherLine = weatherOpeningLine(weather);
+  if (weatherLine) log.push({ minute: 0, text: `☁ ${weatherLine}` });
 
   log.push({ minute: 1, text: battleOpener(rng) });
   if (planA.OE <= 3) log.push({ minute: 1, text: conservingLine(nameA) });
@@ -207,7 +212,7 @@ export function simulateFight(
 
   // ── 3. Decision Logic (if time limit reached) ──
   if (!winner) {
-    const finalOutcome = resolveDecision(fA, fD, nameA, nameD);
+    const finalOutcome = resolveDecision(fA, fD, nameA, nameD, rng);
     winner = finalOutcome.winner;
     by = finalOutcome.by;
     log.push({ minute: Math.floor(MAX_EXCHANGES / EXCHANGES_PER_MINUTE), text: finalOutcome.narrative });

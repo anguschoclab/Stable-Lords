@@ -111,6 +111,7 @@ function computeSeasonalAwards(
       if (!fightsBySeason.has(s)) {
         fightsBySeason.set(s, []);
       }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       fightsBySeason.get(s)!.push(f);
     }
   }
@@ -134,6 +135,7 @@ function computeSeasonalAwards(
       if (!stats.has(name)) {
         stats.set(name, { name, style, wins: 0, losses: 0, kills: 0, fameGained: 0, popGained: 0 });
       }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return stats.get(name)!;
     };
 

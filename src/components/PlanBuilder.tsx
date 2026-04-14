@@ -424,8 +424,8 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
                     <GitBranch className="w-4 h-4 text-arena-pop" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-arena-pop">Contingency Plans</span>
                     {(plan.conditions?.length ?? 0) > 0 && (
-                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                       <Badge className="rounded-none border-none bg-arena-pop/20 text-arena-pop text-[9px] font-black px-1.5 py-0.5">
+                        {/* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */}
                         {plan.conditions!.length}
                       </Badge>
                     )}

@@ -62,7 +62,6 @@ export function handleReporting(
         const temp = result[i]!;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         result[i] = result[j]!;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         result[j] = temp;
       }
       return result;

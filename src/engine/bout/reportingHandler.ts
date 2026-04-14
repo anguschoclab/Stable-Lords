@@ -49,6 +49,7 @@ export function handleReporting(
     pick: (arr) => {
       if (arr.length === 0) throw new Error("Cannot pick from empty array");
       const idx = Math.floor(seededFallback.next() * arr.length);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return arr[idx]!;
     },
     uuid: (prefix) => generateId(undefined, prefix || "uuid"),
@@ -57,8 +58,11 @@ export function handleReporting(
       const result = [...arr];
       for (let i = result.length - 1; i > 0; i--) {
         const j = Math.floor(seededFallback.next() * (i + 1));
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const temp = result[i]!;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         result[i] = result[j]!;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         result[j] = temp;
       }
       return result;

@@ -6,6 +6,13 @@ import { STORE_KEYS } from "@/constants/storeKeys";
  * Uses Howler for high-performance audio playback.
  */
 
+// Initialize HowlerGlobal for Electron environment
+declare global {
+  interface Window {
+    HowlerGlobal?: any;
+  }
+}
+
 export type SfxType = "ui_click" | "hit" | "crit" | "clash" | "death" | "recovery" | "coin" | "arena_ambient";
 
 class AudioManager {
@@ -14,7 +21,10 @@ class AudioManager {
   private muted: boolean = false;
 
   private constructor() {
-    this.loadSfx();
+    // Initialize HowlerGlobal for Electron environment
+    if (typeof (window as any).HowlerGlobal === 'undefined') {
+      (window as any).HowlerGlobal = {};
+    }
     this.loadMuteState();
   }
 
@@ -36,23 +46,6 @@ class AudioManager {
       this.instance = new AudioManager();
     }
     return this.instance;
-  }
-
-  private loadSfx() {
-    const sfxMap: Record<SfxType, string> = {
-      ui_click: "/audio/ui_click.mp3",
-      hit:      "/audio/hit.mp3",
-      crit:     "/audio/crit.mp3",
-      clash:    "/audio/clash.mp3",
-      death:    "/audio/death.mp3",
-      recovery: "/audio/recovery.mp3",
-      coin:     "/audio/coin.mp3",
-      arena_ambient: "/audio/arena_ambient.mp3",
-    };
-
-    Object.entries(sfxMap).forEach(([key, url]) => {
-      this.sfx.set(key as SfxType, new Howl({ src: [url], volume: 0.5 }));
-    });
   }
 
   public play(type: SfxType) {

@@ -15,7 +15,10 @@ export function oeAttMod(oe: number, style?: FightingStyle): number {
 }
 
 export function oeDefMod(oe: number): number {
-  return -Math.floor(Math.max(0, oe - 6) * OE_DEF_SCALING);
+  // Canonical: OE 5 = neutral. Low OE = conservative (slight defense bonus).
+  // High OE = opens up defenses (escalating penalty). Centered at 5, not 6.
+  if (oe <= 5) return Math.floor((5 - oe) * OE_DEF_SCALING);
+  return -Math.floor((oe - 5) * OE_DEF_SCALING);
 }
 
 export function alIniMod(al: number): number {

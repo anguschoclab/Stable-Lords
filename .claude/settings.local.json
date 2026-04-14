@@ -24,7 +24,9 @@
       "Bash(bunx tsx:*)",
       "Bash(grep -v \"^$\")",
       "Bash(rm \"src/test/debug-ws-fight.ts\")",
-      "Bash(bunx tsc:*)"
+      "Bash(bunx tsc:*)",
+      "mcp__plugin_serena_serena__get_symbols_overview",
+      "Bash(grep:*)"
     ]
   }
 }

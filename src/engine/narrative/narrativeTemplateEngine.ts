@@ -17,6 +17,7 @@ export interface CombatContext {
  * NarrativeTemplateEngine - Template interpolation and archive access.
  * Handles all narrative content retrieval and token replacement.
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class NarrativeTemplateEngine {
   /**
    * Replaces canonical tokens (%A, %D, %W, %BP, %H) with contextual values.

@@ -20,6 +20,7 @@ import type { Warrior } from "@/types/warrior.types";
 import type { FightPlan, FightOutcome, MinuteEvent, DeathCauseBucket } from "@/types/combat.types";
 import type { WeatherType } from "@/types/shared.types";
 import { getTrainerMods } from "./combat/simulate/core/simulateHelpers";
+import { getWeatherEffect, weatherOpeningLine } from "./combat/weatherEffects";
 
 // ─── Exports from sub-modules for backward compatibility ───
 export { createFighterState, resolveDecision, defaultPlanForWarrior };

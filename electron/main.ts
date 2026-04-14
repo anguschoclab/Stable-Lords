@@ -41,13 +41,17 @@ function saveConfig() {
   if (configSaveTimeout) {
     clearTimeout(configSaveTimeout);
   }
-  configSaveTimeout = setTimeout(() => {
+  configSaveTimeout = setTimeout(async () => {
+    if (!configPath) {
+      console.warn('Config path not initialized yet');
+      return;
+    }
     try {
       const data = {};
       store.forEach((value, key) => {
         data[key] = value;
       });
-      fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
+      await fs.writeFile(configPath, JSON.stringify(data, null, 2));
     } catch (e) {
       console.error('Failed to save config:', e);
     }

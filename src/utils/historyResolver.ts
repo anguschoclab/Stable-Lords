@@ -28,7 +28,7 @@ export function resolveWarriorName(
   if (dead) return dead.name;
 
   // Search retired
-  const retired = state.retired.find((w: { id: string; name: string }) => w.id === warriorId);
+  const retired = state.retired.find(w => w.id === warriorId);
   if (retired) return retired.name;
 
   // Search rival rosters

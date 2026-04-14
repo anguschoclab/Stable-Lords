@@ -39,7 +39,6 @@ Daily_Balance_Report.md
 
 # Redundant lockfiles (project uses bun)
 package-lock.json
-pnpm-lock.yaml
 
 # AI tool config directories (IDE-local)
 .gemini/

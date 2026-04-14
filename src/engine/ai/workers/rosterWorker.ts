@@ -93,8 +93,8 @@ function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
 
     // If the prioritized attribute is capped, fall back to lowest stat
     if (!key || newAttrs[key] >= 25) {
-      const sorted = keys.sort((a, b) => newAttrs[a] - newAttrs[b]);
-      key = sorted[0];
+      // ⚡ Bolt: Reduced O(N log N) sort to O(N) linear scan to find minimum stat
+      key = keys.reduce((min, k) => newAttrs[k] < newAttrs[min] ? k : min, keys[0]);
     }
 
     if (key && newAttrs[key] < 25) newAttrs[key]++;
@@ -114,8 +114,8 @@ function performAITraining(w: Warrior, season?: Season): Warrior {
 
   // Fallback to lowest stat if no seasonal priority or stat capped
   if (!chosen || w.attributes[chosen] >= 25) {
-    const sorted = keys.sort((a, b) => w.attributes[a] - w.attributes[b]);
-    chosen = sorted[0];
+    // ⚡ Bolt: Reduced O(N log N) sort to O(N) linear scan to find minimum stat
+    chosen = keys.reduce((min, k) => w.attributes[k] < w.attributes[min] ? k : min, keys[0]);
   }
 
   if (chosen && w.attributes[chosen] < 25) {

@@ -6,7 +6,7 @@ export default defineConfig({
   main: {
     build: {
       rollupOptions: {
-        external: ['electron']
+        external: ['electron', 'path', 'fs', 'os']
       }
     }
   },
@@ -20,7 +20,10 @@ export default defineConfig({
   renderer: {
     root: '.',
     build: {
-      outDir: 'dist'
+      outDir: 'dist',
+      rollupOptions: {
+        input: path.resolve(__dirname, 'index.html')
+      }
     },
     plugins: [react()],
     resolve: {

@@ -5,15 +5,15 @@
   "version": "2.1.0",
   "description": "Manage your stable of warriors, train fighting styles, and compete in the arena!",
   "author": "Stable Lords Team",
-  "main": "electron/main.ts",
+  "main": "out/main/index.js",
   "scripts": {
     "dev": "vite",
-    "electron:dev": "bun run dev & sleep 5 && ELECTRON_IS_DEV=true bunx tsx electron/main.ts",
+    "electron:dev": "bunx tsx build-electron.ts && bun run dev & sleep 5 && electron .",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "electron:build": "bun run build && electron-builder",
-    "electron:build:all": "bun run build && electron-builder -mwl",
-    "electron:pack": "bun run build && electron-builder --dir",
+    "electron:build": "bunx tsx build-electron.ts && vite build && electron-builder",
+    "electron:build:all": "bunx tsx build-electron.ts && vite build && electron-builder -mwl",
+    "electron:pack": "bunx tsx build-electron.ts && vite build && electron-builder --dir",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
@@ -139,12 +139,12 @@
       "output": "dist-electron"
     },
     "files": [
+      "out/**/*",
       "dist/**/*",
-      "electron/**/*",
       "package.json"
     ],
     "extraMetadata": {
-      "main": "electron/main.ts"
+      "main": "out/main/index.js"
     },
     "asar": false,
     "mac": {

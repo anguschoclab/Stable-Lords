@@ -64,8 +64,8 @@ export function generateFightNarrative(fight: FightSummary, mood: CrowdMoodType,
 
   if (fight.by === "Exhaustion") {
     return winner
-      ? t(safeRng.pick((g.Exhaustion as any).victory), data)
-      : t(safeRng.pick((g.Exhaustion as any).draw), data);
+      ? t(safeRng.pick(g.Exhaustion), data)
+      : t(safeRng.pick(g.Draw), data);
   }
 
   if (!winner) {
@@ -240,32 +240,30 @@ export function generateWeeklyGazette(
     // ⚡ Bolt: Reduced O(N log N) sort to O(N) single-pass reduce to find the max streak.
     const top = hotStreakers.reduce((max, curr) => curr.streak > max.streak ? curr : max, hotStreakers[0]);
     if (top.streak >= 10) {
-      headline = t(gh.LegendaryStreak, { week, name: top.name, streak: top.streak });
+      headline = t(rng.pick(gh.LegendaryStreak), { week, name: top.name, streak: top.streak });
     } else if (top.streak >= 7) {
-      headline = t(gh.HotStreak, { week, name: top.name, streak: top.streak });
+      headline = t(rng.pick(gh.HotStreak), { week, name: top.name, streak: top.streak });
     } else {
-      headline = t(gh.Streak, { week, name: top.name, streak: top.streak });
+      headline = t(rng.pick(gh.Streak), { week, name: top.name, streak: top.streak });
     }
   } else if (rivalryPair) {
-    headline = t(rivalryPair.count >= 5 ? gh.LegacyRivalry : gh.Rivalry, { 
+    headline = t(rng.pick(rivalryPair.count >= 5 ? gh.LegacyRivalry : gh.Rivalry), {
       week, a: rivalryPair.a, b: rivalryPair.b, count: rivalryPair.count 
     });
   } else if (risingStars.length > 0) {
-    headline = t(gh.RisingStar, { week, name: risingStars[0] });
+    headline = t(rng.pick(gh.RisingStar), { week, name: risingStars[0] });
   } else if (upsets.length > 0) {
-    headline = t(gh.Upset, { week, winner: upsets[0].winner, loser: upsets[0].loser });
-  } else if (kills.length >= 3) {
-    headline = t(gh.BloodDrunk, { week });
+    headline = t(rng.pick(gh.Upset), { week, winner: upsets[0].winner, loser: upsets[0].loser });
   } else if (kills.length >= 2) {
-    headline = t(gh.MultipleKills, { week, count: kills.length });
+    headline = t(rng.pick(gh.MultipleKills), { week, count: kills.length });
   } else if (kills.length === 1) {
-    headline = t(gh.Kill, { week, killer: kills[0].winner === "A" ? kills[0].a : kills[0].d });
+    headline = t(rng.pick(gh.Kill), { week, killer: kills[0].winner === "A" ? kills[0].a : kills[0].d });
   } else if (knockouts.length >= 2) {
-    headline = t(gh.MultipleKOs, { week, adj: rngService.pick(tone.adjectives) });
+    headline = t(rng.pick(gh.MultipleKOs), { week, adj: rng.pick(tone.adjectives) });
   } else if (fights.length > 0) {
-    headline = t(rngService.pick([gh.Standard, gh.NewLegends]), { week, adj: rngService.pick(tone.adjectives) });
+    headline = t(rng.pick(gh.Standard), { week, adj: rng.pick(tone.adjectives) });
   } else {
-    headline = t(rngService.pick([gh.Empty, gh.QuietDespair]), { week });
+    headline = t(rng.pick(gh.Empty), { week });
   }
 
   // Body
@@ -293,36 +291,36 @@ export function generateWeeklyGazette(
   // Streak narratives
   for (const s of hotStreakers) {
     if (s.streak >= 10) {
-      paragraphs.push(t(gf.LegendaryStreak, { name: s.name, streak: s.streak }));
+      paragraphs.push(t(rng.pick(gf.LegendaryStreak), { name: s.name, streak: s.streak }));
     } else if (s.streak >= 7) {
-      paragraphs.push(t(gf.HotStreak, { name: s.name, streak: s.streak }));
+      paragraphs.push(t(rng.pick(gf.HotStreak), { name: s.name, streak: s.streak }));
     } else {
-      paragraphs.push(t(gf.Streak, { name: s.name, streak: s.streak }));
+      paragraphs.push(t(rng.pick(gf.Streak), { name: s.name, streak: s.streak }));
     }
   }
 
   // Rivalry narrative
   if (rivalryPair) {
-    paragraphs.push(t(rivalryPair.count >= 5 ? gf.LegacyRivalry : gf.Rivalry, { 
+    paragraphs.push(t(rng.pick(rivalryPair.count >= 5 ? gf.LegacyRivalry : gf.Rivalry), {
       a: rivalryPair.a, b: rivalryPair.b, count: rivalryPair.count, suffix: rivalryPair.count === 3 ? "rd" : "th" 
     }));
   }
 
   // Rising star narrative
   for (const star of risingStars) {
-    paragraphs.push(t(gf.RisingStar, { name: star }));
+    paragraphs.push(t(rng.pick(gf.RisingStar), { name: star }));
   }
 
   // Upset narrative
   for (const u of upsets) {
-    paragraphs.push(t(gf.Upset, { winner: u.winner, loser: u.loser, fameW: u.winnerFame, fameL: u.loserFame }));
+    paragraphs.push(t(rng.pick(gf.Upset), { winner: u.winner, loser: u.loser, fameW: u.winnerFame, fameL: u.loserFame }));
   }
 
   // Graveyard mention
   if (graveyard.length > 0) {
     const recent = graveyard.filter(w => w.deathWeek === week);
     if (recent.length > 0) {
-      paragraphs.push(t(gf.Graveyard, { count: recent.length, plural: recent.length !== 1 ? "s" : "" }));
+      paragraphs.push(t(rng.pick(gf.Graveyard), { count: recent.length, plural: recent.length !== 1 ? "s" : "" }));
     }
   }
 

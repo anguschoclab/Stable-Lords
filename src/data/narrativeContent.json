@@ -386,7 +386,10 @@
       "fatal": [
         "{{attacker}} feints low, catching {{defender}} off guard before severing their {{bodyPart}} at the joint.",
         "A fountain of gore erupts as {{attacker}}'s final strike decapitates {{defender}}!",
-        "{{attacker}} feints low, catching {{defender}} off guard before severing their sword-arm at the elbow. The crowd erupts!"
+        "With a sickening crunch, {{attacker}}'s {{weapon}} cleaves through {{defender}}'s {{bodyPart}}, ending their life in an instant.",
+        "{{attacker}} spins with terrible grace, their {{weapon}} severing {{defender}}'s {{bodyPart}}. The crowd screams as {{defender}} falls lifeless.",
+        "A masterful stroke! {{attacker}} brings the {{weapon}} down with executioner's finality upon {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} feints high, then sweeps the {{weapon}} low, completely butchering {{defender}}'s {{bodyPart}} in a fatal arc."
       ]
     },
     "bashing": {
@@ -397,8 +400,7 @@
         "{{attacker}} roars, bringing the {{weapon}} down like an executioner's maul on the {{bodyPart}}!"
       ],
       "mastery": [
-        "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",
-        "{{attacker}} effortlessly steps inside the guard, crashing the {{weapon}} into the {{bodyPart}} with bone-jarring force."
+        "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision."
       ],
       "critical_human": [
         "The arena trembles as {{attacker}} unleashes a terrifying overhead smash, crushing the {{bodyPart}}!"
@@ -408,7 +410,10 @@
       ],
       "fatal": [
         "{{attacker}} delivers a horrifying, skull-crushing execution!",
-        "{{attacker}} brings the {{weapon}} down with the force of a falling star, ending {{defender}}'s career—and life—instantly."
+        "The heavy thud of {{attacker}}'s {{weapon}} against {{defender}}'s {{bodyPart}} signals a brutal end to the bout.",
+        "{{defender}}'s {{bodyPart}} caves in with a wet crunch as {{attacker}} brings the {{weapon}} crashing down. It is over.",
+        "There is no getting up from that. {{attacker}} shatters {{defender}}'s {{bodyPart}} completely with a horrific smash.",
+        "{{attacker}} winds up and unleashes hell, the {{weapon}} obliterating {{defender}}'s {{bodyPart}} and their life with it."
       ]
     },
     "piercing": {
@@ -429,7 +434,10 @@
       ],
       "fatal": [
         "{{attacker}} executes {{defender}} with a chilling lunge of the {{weapon}} through the {{bodyPart}}!",
-        "A blindingly fast lunge from {{attacker}} finds the heart, leaving {{defender}} to collapse onto the bloody sand."
+        "{{attacker}} finds the perfect angle, burying the {{weapon}} to the hilt in {{defender}}'s {{bodyPart}}. A clean kill.",
+        "A blinding thrust! {{attacker}}'s {{weapon}} pierces directly through {{defender}}'s {{bodyPart}}, pinning them to their fate.",
+        "{{defender}} gasps as {{attacker}}'s {{weapon}} slides into their {{bodyPart}}, the lethal point emerging from the other side.",
+        "With snake-like speed, {{attacker}} drives the {{weapon}} deep into {{defender}}'s {{bodyPart}}. The light leaves {{defender}}'s eyes."
       ]
     },
     "fist": {
@@ -450,9 +458,10 @@
       ],
       "fatal": [
         "{{attacker}} grabs his opponent and drives a sickening KNEE into their midsection. {{defender}} collapses dead.",
-        "{{attacker}} rains down relentless, skull-shattering blows until {{defender}} stops twitching.",
-        "With a terrifying display of raw strength, {{attacker}} snaps {{defender}}'s neck with a violent twist.",
-        "{{attacker}} drives a devastating punch straight into {{defender}}'s windpipe, crushing it instantly."
+        "{{attacker}} grabs {{defender}}'s head and snaps their neck in one terrifying, fluid motion.",
+        "A devastating haymaker from {{attacker}} catches {{defender}} flush on the {{bodyPart}}, breaking bone and stopping their heart.",
+        "{{attacker}} pummels {{defender}} into the sand with merciless fury, the final strike to the {{bodyPart}} sealing their doom.",
+        "In a terrifying display of raw power, {{attacker}} crushes {{defender}}'s {{bodyPart}} with a bare-handed execution."
       ]
     }
   },
@@ -470,10 +479,12 @@
     "whiffs": [
       "{{attacker}} swings his {{weapon}} but finds only air.",
       "{{defender}} sidesteps the incoming {{weapon}} with ease.",
-      "{{attacker}} fakes high and goes low, but {{defender}} leaps back just in time to avoid the {{weapon}}.",
-      "{{attacker}}'s {{weapon}} whistles through the air as {{defender}} cleanly ducks the swing.",
-      "{{attacker}} overcommits to the swing, and {{defender}} easily dances out of range.",
-      "A wild swing from {{attacker}} misses {{defender}} completely."
+      "{{attacker}} wildly misses the mark with their {{weapon}}.",
+      "A desperate swing from {{attacker}} finds nothing but the arena sand.",
+      "{{defender}} ducks under {{attacker}}'s heavy {{weapon}} swing.",
+      "{{attacker}} overextends, the {{weapon}} whistling harmlessly past {{defender}}.",
+      "{{defender}} leans back just in time to watch {{attacker}}'s {{weapon}} carve empty air.",
+      "With an elegant pivot, {{defender}} makes {{attacker}}'s {{weapon}} look clumsy."
     ],
     "hit_locations": {
       "head": [
@@ -568,10 +579,7 @@
       "deadly": [
         "It was a deadly attack!",
         "What a massive blow!",
-        "What a devastating attack!",
-        "An absolutely lethal strike!",
-        "A brutal, bone-shattering blow!",
-        "The impact is monstrous, echoing across the arena!"
+        "What a devastating attack!"
       ],
       "terrific": [
         "It was an incredible blow!",
@@ -601,18 +609,12 @@
     "defenses": {
       "dodge": {
         "success": [
-          "{{defender}} twists his body with prideful grace, allowing the attack to pass harmlessly by.",
-          "{{defender}} weaves beneath the strike, moving with unnatural grace.",
-          "A quick step back allows {{defender}} to avoid {{attacker}}'s reaching blade.",
-          "{{defender}} shifts their weight, narrowly evading a swipe that could have ended the fight."
+          "{{defender}} twists his body with prideful grace, allowing the attack to pass harmlessly by."
         ]
       },
       "parry": {
         "success": [
-          "{{defender}} catches the strike on the edge of his {{weapon}}, turning it aside with ease.",
-          "{{defender}} brings up their {{weapon}} just in time, deflecting the blow with a shower of sparks.",
-          "With a sharp clang, {{defender}} turns aside {{attacker}}'s brutal strike.",
-          "{{defender}} meets the attack head-on, their parry holding firm against {{attacker}}'s might."
+          "{{defender}} catches the strike on the edge of his {{weapon}}, turning it aside with ease."
         ]
       },
       "shield": {
@@ -634,22 +636,13 @@
     },
     "reactions": {
       "positive": [
-        "The crowd ROARS in approval!",
-        "The stands erupt into a frenzy of cheering!",
-        "A thunderous applause sweeps through the coliseum!",
-        "Spectators leap to their feet, roaring with bloodlust!"
+        "The crowd ROARS in approval!"
       ],
       "negative": [
-        "Boos and jeers echo from the arena walls.",
-        "Displeased mutters and sharp whistles rain down from the stands.",
-        "The crowd's energy wanes, replaced by a chorus of impatient groans.",
-        "Jeers cut through the air as the audience demands more action."
+        "Boos and jeers echo from the arena walls."
       ],
       "encourage": [
-        "The crowd urges the warriors on.",
-        "Chants for blood echo rhythmically from the stands.",
-        "The audience leans in collectively, sensing a turning point in the bout.",
-        "The crowd begins to pound the benches, demanding a spectacular finish."
+        "The crowd urges the warriors on."
       ]
     },
     "taunts": {
@@ -700,73 +693,153 @@
       "newsletter": [
         "A shooting star was seen over the arena exactly as {{name}} was training. (+{{fame}} Fame, +{{xp}} XP)"
       ]
-    },
-    "lost_relic": {
-      "title": "Lost Relic Discovery",
-      "newsletter": [
-        "{{name}} discovered an ancient artifact! (+{{fame}} Fame, +{{xp}} XP)"
-      ]
     }
   },
   "gazette": {
     "fights": {
       "Kill": [
         "In a {{adj}} display, {{winner}} struck down {{loser}} with a killing blow.",
-        "In a display of absolute butchery, {{winner}} cleaved through {{loser}}, leaving the crowd stunned.",
-        "The sands drank deep as {{winner}} executed {{loser}} in cold blood.",
-        "{{loser}}'s final moments were met with a roar from the crowd as {{winner}} delivered the fatal strike."
+        "With a {{adj}} final strike, {{winner}} executed {{loser}} without mercy.",
+        "The crowd gasped as {{winner}} ended {{loser}}'s life in a {{adj}} climax.",
+        "{{loser}}'s blood stained the sands after a {{adj}} killing blow from {{winner}}."
       ],
       "KO": [
         "{{winner}} battered {{loser}} into unconsciousness with {{adj}} efficiency.",
-        "A sudden, vicious blow from {{winner}} sent {{loser}} crumpling to the sand, out cold."
+        "{{winner}} delivered a {{adj}} blow that sent {{loser}} spiraling into darkness.",
+        "A {{adj}} masterclass from {{winner}} left {{loser}} twitching on the sand.",
+        "{{loser}}'s legs gave out after a {{adj}} assault by {{winner}}."
       ],
       "Stoppage": [
-        "{{winner}} ground {{loser}} down. The Arenamaster called the stoppage."
+        "{{winner}} ground {{loser}} down. The Arenamaster called the stoppage.",
+        "The sheer {{adj}} pressure from {{winner}} forced the officials to save {{loser}}'s life.",
+        "Mercy was shown to {{loser}}, as the Arenamaster halted {{winner}}'s {{adj}} onslaught.",
+        "{{winner}} broke {{loser}}'s spirit with a {{adj}} display, prompting an early end."
       ],
       "Exhaustion": [
-        "Both fighters pushed to total exhaustion. {{winner}} was awarded the bout."
+        "Both fighters pushed to total exhaustion. {{winner}} was awarded the bout.",
+        "In a grueling test of wills, {{winner}} outlasted a completely spent {{loser}}.",
+        "Lungs burning and muscles failing, {{winner}} barely edged out {{loser}} at the limit.",
+        "A battle of attrition ended with {{loser}} unable to stand, handing {{winner}} the victory."
       ],
       "Draw": [
-        "The sands of time ran out before a victor could be declared."
+        "The sands of time ran out before a victor could be declared.",
+        "Neither warrior could claim the edge; a brutal stalemate was the only result.",
+        "The bell saved them both from mutual destruction in an epic clash."
       ],
       "Default": [
-        "A hard-fought struggle between {{a}} and {{d}} ended in {{winner}}'s favor."
+        "A hard-fought struggle between {{a}} and {{d}} ended in {{winner}}'s favor.",
+        "{{winner}} emerged triumphant over {{loser}} in a hard-fought contest.",
+        "A grueling test between {{a}} and {{d}} saw {{winner}} raise their arms in victory."
       ]
     },
     "headlines": {
-      "LegendaryStreak": "Week {{week}}: UNSTOPPABLE! {{name}} Extends Legendary {{streak}}-Win Streak!",
-      "HotStreak": "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
-      "Streak": "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
-      "LegacyRivalry": "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!",
-      "Rivalry": "Week {{week}}: BLOOD FEUD! {{a}} and {{b}} meet again in the pit!",
-      "RisingStar": "Week {{week}}: A STAR IS BORN! {{name}} remains undefeated!",
-      "Upset": "Week {{week}}: UPSET! {{winner}} Topples the Mighty {{loser}}!",
-      "MultipleKills": "Week {{week}}: THE REAPER'S HARVEST! {{count}} warriors fallen!",
+      "LegendaryStreak": [
+        "Week {{week}}: UNSTOPPABLE! {{name}} Extends Legendary {{streak}}-Win Streak!",
+        "Week {{week}}: IMMORTAL PATH! {{name}}'s {{streak}}-Win Streak Defies the Gods!",
+        "Week {{week}}: THE UNTOUCHABLE {{name}} Achieves {{streak}} Wins!"
+      ],
+      "HotStreak": [
+        "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
+        "Week {{week}}: BLOOD AND SAND! {{name}} Paints the Arena Red with {{streak}} Wins!",
+        "Week {{week}}: THE CROWD GOES WILD FOR {{name}} — {{streak}} Wins!"
+      ],
+      "Streak": [
+        "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
+        "Week {{week}}: {{name}} Continues to Climb With {{streak}} Consecutive Wins!",
+        "Week {{week}}: {{name}} Builds Momentum — {{streak}} Victories!"
+      ],
+      "LegacyRivalry": [
+        "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!",
+        "Week {{week}}: ETERNAL FOES! {{a}} and {{b}} Clash in Chapter {{count}} of Their Saga!",
+        "Week {{week}}: THE GRUDGE MATCH OF THE CENTURY! {{a}} vs {{b}} (Chapter {{count}})"
+      ],
+      "Rivalry": [
+        "Week {{week}}: BLOOD FEUD! {{a}} and {{b}} meet again in the pit!",
+        "Week {{week}}: OLD SCORES SETTLED! {{a}} vs {{b}}",
+        "Week {{week}}: BITTER ENEMIES MEET! {{a}} and {{b}} Trade Blows Again!"
+      ],
+      "RisingStar": [
+        "Week {{week}}: A STAR IS BORN! {{name}} remains undefeated!",
+        "Week {{week}}: WATCH THEM RISE! {{name}} Proves Untouchable!",
+        "Week {{week}}: NEW BLOOD! {{name}} Shows Champion Potential!"
+      ],
+      "Upset": [
+        "Week {{week}}: UPSET! {{winner}} Topples the Mighty {{loser}}!",
+        "Week {{week}}: DAVID SLAYS GOLIATH! {{winner}} Brings Down {{loser}}!",
+        "Week {{week}}: SHOCKER! Unknown {{winner}} Decimates The Great {{loser}}!"
+      ],
+      "MultipleKills": [
+        "Week {{week}}: THE REAPER'S HARVEST! {{count}} warriors fallen!",
+        "Week {{week}}: A BLOODY WEEK! {{count}} Souls Sent to the Void!",
+        "Week {{week}}: SLAUGHTER IN THE SANDS! {{count}} Fatalities Recorded!"
+      ],
       "Kill": [
         "Week {{week}}: DEATH IN THE PIT! {{killer}} claims a life!",
-        "Week {{week}}: A Bloody End: {{killer}} Claims Another Victim!",
-        "Week {{week}}: {{killer}} Executes Flawless Victory in the Sands!"
+        "Week {{week}}: FATAL BLOW! {{killer}} Sends an Opponent to the Grave!",
+        "Week {{week}}: BLOOD ON THE SANDS! A Brutal Kill By {{killer}}!"
       ],
-      "MultipleKOs": "Week {{week}}: {{adj}} DEVASTATION! The sands are littered with the fallen!",
+      "MultipleKOs": [
+        "Week {{week}}: {{adj}} DEVASTATION! The sands are littered with the fallen!",
+        "Week {{week}}: BODIES EVERYWHERE! A Week of {{adj}} Knockouts!",
+        "Week {{week}}: {{adj}} CARNAGE! The Healers Will Work Late Tonight!"
+      ],
       "Standard": [
         "Week {{week}}: {{adj}} CLASHES! The arena roars for its champions!",
-        "Week {{week}}: An action-packed week leaves the fans breathless!",
-        "Week {{week}}: Sand and Steel: This week's bouts deliver!"
+        "Week {{week}}: {{adj}} BOUTS KEEP THE CROWD ROARING!",
+        "Week {{week}}: ANOTHER WEEK OF {{adj}} WARFARE IN THE PIT!"
       ],
-      "Empty": "Week {{week}}: A quiet week in the arena. The peace won't last.",
-      "Graveyard": "The Hall of Warriors receives {{count}} new name{{plural}} this week.",
-      "Kill2": "Week {{week}}: BLOOD FOR THE GODS! {{killer}}'s blade finds its mark!"
+      "Empty": [
+        "Week {{week}}: A quiet week in the arena. The peace won't last.",
+        "Week {{week}}: SILENCE IN THE ARENA. The calm before the storm.",
+        "Week {{week}}: NO BLOOD SHED TODAY. An eerie quiet settles over the sands."
+      ],
+      "Graveyard": [
+        "The Hall of Warriors receives {{count}} new name{{plural}} this week.",
+        "The Halls of the Dead Welcome {{count}} New Soul{{plural}}.",
+        "A Moment of Silence for the {{count}} Warrior{{plural}} Lost This Week."
+      ]
     },
     "featured": {
-      "LegendaryStreak": "Whispers of the ancients surround {{name}}, whose {{streak}} victories have become legend.",
-      "HotStreak": "{{name}} is unstoppable, carving a path through the rankings with {{streak}} wins.",
-      "Streak": "The momentum stays with {{name}} as they secure their {{streak}}th win.",
-      "LegacyRivalry": "The grand history between {{a}} and {{b}} continues. This was their {{count}}{{suffix}} meeting.",
-      "Rivalry": "The bad blood between {{a}} and {{b}} was on full display today.",
-      "RisingStar": "All eyes are on {{name}}, a rising star who refuses to taste defeat.",
-      "Upset": "The impossible happened! {{winner}} (fame: {{fameW}}) overcame {{loser}} (fame: {{fameL}}).",
-      "Graveyard": "We mourn the {{count}} warrior{{plural}} who gave everything to the sands this week.",
-      "Kill2": "{{killer}} claimed another soul in the arena today, leaving the crowd in awe of their brutality."
+      "LegendaryStreak": [
+        "Whispers of the ancients surround {{name}}, whose {{streak}} victories have become legend.",
+        "Few live to see such glory. {{name}} has achieved the impossible with {{streak}} straight wins.",
+        "Bards will sing of {{name}} for generations. A {{streak}}-win streak cements their immortal legacy."
+      ],
+      "HotStreak": [
+        "{{name}} is unstoppable, carving a path through the rankings with {{streak}} wins.",
+        "The crowd's favorite, {{name}}, leaves another broken body in the dust for win number {{streak}}.",
+        "It seems no one can find a weakness in {{name}}'s armor. {{streak}} wins and counting."
+      ],
+      "Streak": [
+        "The momentum stays with {{name}} as they secure their {{streak}}th win.",
+        "A solid foundation is being built by {{name}} with their {{streak}}th win.",
+        "Slowly but surely, {{name}} climbs the ranks. {{streak}} wins show great promise."
+      ],
+      "LegacyRivalry": [
+        "The grand history between {{a}} and {{b}} continues. This was their {{count}}{{suffix}} meeting.",
+        "We thought we had seen it all, but the {{count}}{{suffix}} bout between {{a}} and {{b}} was a masterpiece of violence.",
+        "The hatred between {{a}} and {{b}} transcends the sport. Chapter {{count}} did not disappoint."
+      ],
+      "Rivalry": [
+        "The bad blood between {{a}} and {{b}} was on full display today.",
+        "Sparks flew as {{a}} and {{b}} collided in a highly anticipated grudge match.",
+        "There is no love lost between {{a}} and {{b}}. The tension in the arena was palpable."
+      ],
+      "RisingStar": [
+        "All eyes are on {{name}}, a rising star who refuses to taste defeat.",
+        "The veterans are watching their backs. {{name}} looks to be the real deal.",
+        "Flawless execution. {{name}} is proving to be a dangerous new addition to the roster."
+      ],
+      "Upset": [
+        "The impossible happened! {{winner}} (fame: {{fameW}}) overcame {{loser}} (fame: {{fameL}}).",
+        "Nobody saw it coming! {{winner}} (fame: {{fameW}}) shattered the ego of the celebrated {{loser}} (fame: {{fameL}}).",
+        "A humbling moment for {{loser}} (fame: {{fameL}}) as they fall to the much lesser-known {{winner}} (fame: {{fameW}})."
+      ],
+      "Graveyard": [
+        "We mourn the {{count}} warrior{{plural}} who gave everything to the sands this week.",
+        "The sands drink deeply today. We remember the {{count}} soul{{plural}} claimed by the arena.",
+        "Not all who enter the pit leave it. {{count}} fighter{{plural}} paid the ultimate price."
+      ]
     },
     "season_summary": {
       "headline": "{{season}} Season in Review: {{total}} Bouts, {{kills}} Deaths",
@@ -914,207 +987,7 @@
       "LANCE",
       "MAUL",
       "RASP",
-      "SCALD",
-      "VOTOL",
-      "VINIP",
-      "VYME",
-      "LAVOQ",
-      "HUVI",
-      "QIXO",
-      "HEJEL",
-      "JIROJ",
-      "SOPE",
-      "REMEX",
-      "DAVED",
-      "KEBA",
-      "WOSE",
-      "JOJA",
-      "BANY",
-      "DYBUF",
-      "QADIV",
-      "KEXE",
-      "MOZUN",
-      "XALAH",
-      "PYNA",
-      "NOFA",
-      "HOBOL",
-      "PYDI",
-      "GUDEP",
-      "SYMIZ",
-      "JAPA",
-      "QEVY",
-      "FANUW",
-      "ZYQO",
-      "BEWUP",
-      "JITI",
-      "MIPAL",
-      "WUTIB",
-      "JOMU",
-      "DAQUW",
-      "SOXYC",
-      "MISUH",
-      "ZISAK",
-      "DOLAG",
-      "QEWY",
-      "HOVUN",
-      "ZOPEP",
-      "COPO",
-      "MUBAT",
-      "MYRE",
-      "LYMAP",
-      "BAVI",
-      "QEJY",
-      "WUQAM",
-      "QEKED",
-      "SAZI",
-      "WIJY",
-      "FARU",
-      "RENEB",
-      "LICAL",
-      "BYKED",
-      "QIZUS",
-      "RIMY",
-      "LUSEP",
-      "SYGI",
-      "POVUX",
-      "CYBYW",
-      "TIGY",
-      "SYDE",
-      "CAXAM",
-      "SYBON",
-      "HYHAX",
-      "LEZE",
-      "HOWYZ",
-      "TOJA",
-      "GEKU",
-      "TOPUC",
-      "QYDY",
-      "VOTA",
-      "RANAM",
-      "DOQAG",
-      "HANAR",
-      "TUNIB",
-      "HYFEG",
-      "PUDOD",
-      "VOHE",
-      "ZABO",
-      "ZYRE",
-      "LACE",
-      "ZYKOZ",
-      "JYXY",
-      "LITU",
-      "VEFUR",
-      "VYTUB",
-      "SYRY",
-      "MIFOL",
-      "FUWU",
-      "ZODEK",
-      "XEXEB",
-      "WARE",
-      "GOQO",
-      "GYZIP",
-      "GEMUL",
-      "COPYF",
-      "LOFU",
-      "XOPEX",
-      "NEZIZ",
-      "WOTU",
-      "MUNYG",
-      "KINY",
-      "DEMO",
-      "CIJI",
-      "MILYG",
-      "PAZYS",
-      "LAPAM",
-      "MIVAN",
-      "FYCOD",
-      "NELIC",
-      "FAGYQ",
-      "MISA",
-      "DAJE",
-      "SALU",
-      "BOBO",
-      "DUMA",
-      "GUCOP",
-      "CUSY",
-      "DOKI",
-      "DUSY",
-      "TAHAG",
-      "HYLIR",
-      "NARIS",
-      "MYKIM",
-      "HYSUZ",
-      "ZAXU",
-      "BOSAH",
-      "RYMYN",
-      "GOGON",
-      "ZUNE",
-      "BYFOH",
-      "ZYGA",
-      "NEWI",
-      "JUBA",
-      "BEFOQ",
-      "TAQE",
-      "SASEC",
-      "FOVOJ",
-      "LEVEZ",
-      "FYHYQ",
-      "QAQE",
-      "GYBOP",
-      "FIMI",
-      "POZAC",
-      "HENO",
-      "SUFE",
-      "DUNE",
-      "HOHIV",
-      "LIJO",
-      "GOQAX",
-      "NOCUN",
-      "FELA",
-      "ZYSEF",
-      "ZIHAJ",
-      "CYHAM",
-      "NAJE",
-      "SOMIH",
-      "NUSUS",
-      "TURY",
-      "NIQY",
-      "NOTUS",
-      "WAHID",
-      "XONI",
-      "VEQO",
-      "LOCA",
-      "WOQI",
-      "KOMIM",
-      "NUZOG",
-      "KYPY",
-      "JOJY",
-      "XOHO",
-      "WIHO",
-      "CEPAL",
-      "VIDUM",
-      "DUKEM",
-      "XEGU",
-      "DOLO",
-      "QIVAH",
-      "WADOX",
-      "KECUQ",
-      "BIZYH",
-      "KUGE",
-      "BEDI",
-      "VEDYZ",
-      "BOQE",
-      "HYSU",
-      "LOTY",
-      "JUHA",
-      "DIPOH",
-      "KAPO",
-      "ZUTIS",
-      "GOQY",
-      "DONYV",
-      "CULUZ",
-      "JOBYV",
-      "VAPU"
+      "SCALD"
     ],
     "rival_stable_names": [
       "Iron Crown",
@@ -1198,42 +1071,6 @@
     ],
     "BashingAttack": [
       "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"
-    ]
-  },
-  "recap": [
-    "%A dismantled %D in a brisk %H-minute clash.",
-    "%D could not weather %A's onslaught—done in %H.",
-    "%A outfoxed %D and sealed it in %H.",
-    "%A turned the tide and toppled %D after %H minutes.",
-    "%A took center stage, leaving %D reeling in %H."
-  ],
-  "commentary": {
-    "KO": [
-      "What a knockout! The crowd erupts!"
-    ],
-    "Kill": [
-      "A fatal finish—steel and silence. The arena gasps."
-    ],
-    "Flashy": [
-      "Spectacle! Flourishes and feints—pure theatre!"
-    ],
-    "Upset": [
-      "An upset for the ages! The favorite falls."
-    ]
-  },
-  "blurbs": {
-    "neutral": [
-      "%A bests %D%H."
-    ],
-    "hype": [
-      "Great heavens! %A drops the guard in a blur!",
-      "By the gods! %A finds the opening with a deft twist!",
-      "Witness! %A presses the advantage after a feint!",
-      "What a clash! %A seals the bout despite the odds!",
-      "%A drives the point home to the crowd's delight!"
-    ],
-    "grim": [
-      "%A overcomes %D%H, the arena falls hushed."
     ]
   }
 }

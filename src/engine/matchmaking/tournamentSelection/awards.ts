@@ -19,7 +19,7 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
   const tierRaw = (tournament.tierId || tournament.id.split('-')[1] || "Iron").toUpperCase();
   const tier = tierRaw.includes("GOLD") ? "GOLD" : tierRaw.includes("SILVER") ? "SILVER" : tierRaw.includes("BRONZE") ? "BRONZE" : "IRON";
   const basePurse = tier === "GOLD" ? 5000 : tier === "SILVER" ? 2500 : tier === "BRONZE" ? 1200 : 600;
-  const awardRng = new SeededRNG(Date.now());
+  const awardRng = new SeededRNG(tournament.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0));
 
   const award = (warriorId: string, place: 1 | 2 | 3, awardRng: SeededRNG) => {
     const w = findWarriorById(updatedState, warriorId, tournament);

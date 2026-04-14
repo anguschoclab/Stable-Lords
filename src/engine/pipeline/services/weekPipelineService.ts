@@ -40,9 +40,14 @@ export function advanceWeek(state: GameState): GameState {
   const rootRng = new SeededRNGService(nextYear * 52 + nextWeek * 7919 + 101);
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
 
-  // 2. Settlement Phase (The "World Heartbeat")
-  // Bouts settle against current state to finalize history/records for the week ending.
-  const boutImpact = runBoutSimulationPass(state, rootRng);
+  // 2. Core Simulation (Bouts, Training, Health, Economy)
+  // Bouts happen for the week that is just ending
+  let newState = state;
+  newState = runBoutSimulationPass(newState, rootRng);
+
+  newState = runWarriorPass(newState, rootRng);
+  newState = runEconomyPass(newState, rootRng);
+  newState = runEquipmentPass(newState, rootRng);
   
   // Apply bout impact to get settled state for subsequent passes
   const settledState = resolveImpacts(state, [boutImpact]);

@@ -33,7 +33,7 @@ async function runBenchmark() {
   const lethalityRate = totalBouts > 0 ? ((deaths / totalBouts) * 100).toFixed(2) : "0.00";
 
   // 3. Metrics: Meta-Drift
-  const metaDrift = computeMetaDrift(finalState.arenaHistory || []);
+  const metaDrift = computeMetaDrift(finalState.arenaHistory || [], 200);
   let metaDriftString = "";
   for (const [style, drift] of Object.entries(metaDrift)) {
       metaDriftString += `- **${style}**: Drift: ${drift > 0 ? "+" : ""}${drift} (${getMetaLabel(drift)})\n`;

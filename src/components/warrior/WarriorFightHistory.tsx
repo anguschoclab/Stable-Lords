@@ -16,6 +16,7 @@ export function WarriorFightHistory({ warriorName, arenaHistory }: { warriorName
       const isA = f.a === warriorName;
       const opponent = isA ? f.d : f.a;
       if (!map.has(opponent)) map.set(opponent, { wins: 0, losses: 0, draws: 0, kills: 0, deaths: 0 });
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const rec = map.get(opponent)!;
       const won = (isA && f.winner === "A") || (!isA && f.winner === "D");
       const lost = (isA && f.winner === "D") || (!isA && f.winner === "A");

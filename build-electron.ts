@@ -1,5 +1,5 @@
-import * as esbuild from 'esbuild'
-import { copyFileSync, mkdirSync, existsSync } from 'fs'
+import { execSync } from 'child_process'
+import { mkdirSync, existsSync } from 'fs'
 import path from 'path'
 
 async function build() {
@@ -15,26 +15,26 @@ async function build() {
     mkdirSync(path.join(outDir, 'preload'), { recursive: true })
   }
 
-  // Build main process
-  await esbuild.build({
-    entryPoints: ['src/main/index.ts'],
-    bundle: false,
-    platform: 'node',
-    target: 'node18',
-    format: 'cjs',
-    outfile: 'out/main/index.js',
-    logLevel: 'info'
+  // Build main process using tsc
+  execSync('npx tsc --project tsconfig.json', {
+    cwd: path.join(process.cwd(), 'src/main'),
+    stdio: 'inherit'
   })
 
-  // Build preload
-  await esbuild.build({
-    entryPoints: ['src/preload/index.ts'],
-    bundle: false,
-    platform: 'node',
-    target: 'node18',
-    format: 'cjs',
-    outfile: 'out/preload/index.js',
-    logLevel: 'info'
+  // Copy compiled file to output
+  execSync('cp src/main/index.js out/main/index.js', {
+    stdio: 'inherit'
+  })
+
+  // Build preload using tsc
+  execSync('npx tsc --project tsconfig.json', {
+    cwd: path.join(process.cwd(), 'src/preload'),
+    stdio: 'inherit'
+  })
+
+  // Copy compiled file to output
+  execSync('cp src/preload/index.js out/preload/index.js', {
+    stdio: 'inherit'
   })
 
   console.log('Electron build complete')

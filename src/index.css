@@ -476,3 +476,34 @@
     );
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ACCESSIBILITY: REDUCED MOTION
+   Respect user preferences for motion sensitivity
+───────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable specific animations */
+  .animate-pulse,
+  .animate-bounce,
+  .animate-spin,
+  .animate-pulse-slow,
+  .animate-fade-in {
+    animation: none !important;
+  }
+
+  /* Keep opacity transitions for state changes but disable transforms */
+  .transition-all,
+  .transition-transform {
+    transform: none !important;
+  }
+}

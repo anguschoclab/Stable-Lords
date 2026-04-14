@@ -100,8 +100,8 @@ function ensureSaveDirectory() {
 }
 function createWindow() {
     mainWindow = new electron_1.BrowserWindow({
-        width: store.get('windowBounds.width') || 1400,
-        height: store.get('windowBounds.height') || 900,
+        width: (store.get('windowBounds.width')) || 1400,
+        height: (store.get('windowBounds.height')) || 900,
         x: store.get('windowBounds.x'),
         y: store.get('windowBounds.y'),
         minWidth: 1024,
@@ -109,12 +109,12 @@ function createWindow() {
         frame: true, // Start with frame, will implement custom title bar later
         titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
         webPreferences: {
-            preload: path.join(__dirname, '../preload/index.js'),
+            preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             nodeIntegration: false,
             sandbox: false,
         },
-        icon: path.join(__dirname, '../../public/icons/icon-512.png'),
+        icon: path.join(__dirname, '../public/icons/icon-512.png'),
     });
     // Load the app
     if (isDev) {
@@ -122,7 +122,7 @@ function createWindow() {
         mainWindow.webContents.openDevTools();
     }
     else {
-        mainWindow.loadFile(path.join(__dirname, '../../renderer/index.html'));
+        mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
     }
     // Save window bounds on resize/move
     mainWindow.on('resize', () => {
@@ -266,7 +266,7 @@ function createMenu() {
     electron_1.Menu.setApplicationMenu(menu);
 }
 function createTray() {
-    const iconPath = path.join(__dirname, '../../public/icons/icon-192.png');
+    const iconPath = path.join(__dirname, '../public/icons/icon-192.png');
     const image = electron_1.nativeImage.createFromPath(iconPath);
     tray = new electron_1.Tray(image);
     const contextMenu = electron_1.Menu.buildFromTemplate([

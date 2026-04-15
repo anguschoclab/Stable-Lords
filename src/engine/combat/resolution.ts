@@ -97,6 +97,12 @@ export interface FighterState {
   committed: boolean;
   /** True when fighter survived a commit attack — grants a free riposte on next exchange. */
   survivalStrike: boolean;
+  /**
+   * Recovery debt from CommitLevel. 0–3.
+   * Penalises the Approach sub-phase roll by 2 per point. Decays by 1 each exchange.
+   * Set via: recoveryDebt = Math.min(3, Math.max(existing, toWrite))
+   */
+  recoveryDebt: number;
 }
 
 export interface ResolutionContext {

@@ -99,5 +99,6 @@ export function createFighterState(
     momentum: 0,
     committed: false,
     survivalStrike: false,
+    recoveryDebt: 0,
   };
 }

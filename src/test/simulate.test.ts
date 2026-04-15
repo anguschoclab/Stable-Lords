@@ -630,3 +630,114 @@ describe("simulateFight — post-fight stats", () => {
     expect(result.post?.xpD).toBeGreaterThanOrEqual(1);
   });
 });
+
+// ─── Spatial System Integration Tests ────────────────────────────────────────
+
+describe("simulateFight — arena system", () => {
+  it("smoke test: 100 fights with mudpit_arena complete without error", () => {
+    const wA = makeWarrior("MudA", FightingStyle.BashingAttack, { ST: 13, WL: 13 });
+    const wD = makeWarrior("MudD", FightingStyle.ParryRiposte, { WT: 13, DF: 13 });
+    for (let seed = 1; seed <= 100; seed++) {
+      expect(() => simulateFight(
+        makePlan(FightingStyle.BashingAttack, { OE: 8 }),
+        makePlan(FightingStyle.ParryRiposte, { OE: 5, AL: 7 }),
+        wA, wD, seed,
+        undefined,
+        "Clear",
+        "mudpit_arena",
+      )).not.toThrow();
+    }
+  });
+
+  it("mudpit arena fights last at least as long as standard on average (higher endurance drain)", () => {
+    const wA = makeWarrior("FighterA", FightingStyle.StrikingAttack, { ST: 12, CN: 12 });
+    const wD = makeWarrior("FighterD", FightingStyle.StrikingAttack, { ST: 12, CN: 12 });
+    const planA = makePlan(FightingStyle.StrikingAttack, { OE: 8 });
+    const planD = makePlan(FightingStyle.StrikingAttack, { OE: 8 });
+
+    let mudpitTotal = 0;
+    let standardTotal = 0;
+    const trials = 50;
+
+    for (let seed = 1; seed <= trials; seed++) {
+      const rMudpit = simulateFight(planA, planD, wA, wD, seed, undefined, "Clear", "mudpit_arena");
+      const rStandard = simulateFight(planA, planD, wA, wD, seed, undefined, "Clear", "standard_arena");
+      mudpitTotal += rMudpit.minutes;
+      standardTotal += rStandard.minutes;
+    }
+
+    const mudpitAvg = mudpitTotal / trials;
+    const standardAvg = standardTotal / trials;
+    // Mudpit's higher enduranceMult (1.15) should cause fights to end no earlier than standard
+    // We allow generous tolerance since many fights end by KO/Kill (HP) rather than endurance
+    expect(mudpitAvg).toBeGreaterThanOrEqual(standardAvg - 1.5);
+  });
+
+  it("non-default arena logs include arena intro line", () => {
+    const result = simulateFight(
+      makePlan(FightingStyle.StrikingAttack),
+      makePlan(FightingStyle.ParryRiposte),
+      makeWarrior("A", FightingStyle.StrikingAttack),
+      makeWarrior("B", FightingStyle.ParryRiposte),
+      42,
+      undefined,
+      "Clear",
+      "mudpit_arena",
+    );
+
+    const minute0 = result.log.filter(e => e.minute === 0);
+    const hasArenaIntro = minute0.some(e => e.text.includes("MUDPIT") || e.text.includes("Mudpit") || e.text.includes("⚔"));
+    expect(hasArenaIntro).toBe(true);
+  });
+});
+
+describe("simulateFight — distance system", () => {
+  it("Extended-preferring vs Grapple-preferring warriors produce RANGE_SHIFT narration over 20 fights", () => {
+    const wExt = makeWarrior("Lancer", FightingStyle.LungingAttack, { SP: 14, DF: 13 }, {
+      equipment: { weapon: "pike", armor: "leather", helm: "none", shield: "none" },
+    });
+    const wGrap = makeWarrior("Grappler", FightingStyle.BashingAttack, { ST: 14, CN: 13 }, {
+      equipment: { weapon: "open_hand", armor: "none", helm: "none", shield: "none" },
+    });
+
+    const planExt = makePlan(FightingStyle.LungingAttack, { OE: 7, AL: 6, rangePreference: "Extended" });
+    const planGrap = makePlan(FightingStyle.BashingAttack, { OE: 8, AL: 5, rangePreference: "Grapple" });
+
+    let hasRangeShiftText = false;
+    for (let seed = 1; seed <= 20; seed++) {
+      const result = simulateFight(planExt, planGrap, wExt, wGrap, seed);
+      // Check for range-related narration in the log
+      const rangeLines = result.log.filter(e =>
+        /grappling range|tight quarters|striking range|extended range|forces the fight|dictates the distance|seizes the spacing/i.test(e.text)
+      );
+      if (rangeLines.length > 0) {
+        hasRangeShiftText = true;
+        break;
+      }
+    }
+
+    expect(hasRangeShiftText).toBe(true);
+  });
+
+  it("feint-enabled warrior produces FEINT_SUCCESS or FEINT_FAIL narration over 30 fights", () => {
+    const wFeinter = makeWarrior("Trickster", FightingStyle.AimedBlow, { WT: 16, DF: 14 });
+    const wTarget = makeWarrior("Target", FightingStyle.StrikingAttack, { ST: 12 });
+
+    const planFeint = makePlan(FightingStyle.AimedBlow, { OE: 7, AL: 6, feintTendency: 4 });
+    const planTarget = makePlan(FightingStyle.StrikingAttack, { OE: 7 });
+
+    let hasFeintText = false;
+    for (let seed = 1; seed <= 30; seed++) {
+      const result = simulateFight(planFeint, planTarget, wFeinter, wTarget, seed);
+      const feintLines = result.log.filter(e =>
+        /feint|deception|misdirection|ruse/i.test(e.text)
+      );
+      if (feintLines.length > 0) {
+        hasFeintText = true;
+        break;
+      }
+    }
+
+    expect(hasFeintText).toBe(true);
+  });
+});

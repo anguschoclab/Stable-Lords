@@ -174,4 +174,61 @@ describe("runRecovery", () => {
     runRecovery(fA, fD, 0, 2, []);
     expect(fD.recoveryDebt).toBe(2);
   });
+
+  it("does not stack: max(existing, written) — writing 1 over existing 2 stays at 2", () => {
+    const fA = makeFighter({ recoveryDebt: 2 });
+    const fD = makeFighter({ recoveryDebt: 0 });
+    runRecovery(fA, fD, 1, 0, []);
+    expect(fA.recoveryDebt).toBe(2);
+  });
+});
+
+describe("runRecovery — zone transitions", () => {
+  it("pushes zone Center → Edge when HIT lands on A", () => {
+    const fA = makeFighter();
+    const fD = makeFighter();
+    const ctx: any = { zone: "Center", pushedFighter: undefined };
+    const events: any[] = [{ type: "HIT", actor: "D", target: "A", location: "torso", value: 10 }];
+    runRecovery(fA, fD, 0, 0, events, ctx);
+    expect(ctx.zone).toBe("Edge");
+    expect(ctx.pushedFighter).toBe("A");
+    expect(events.some((e: any) => e.type === "ZONE_SHIFT")).toBe(true);
+  });
+
+  it("pushes zone Edge → Corner on a second hit on the same fighter", () => {
+    const fA = makeFighter();
+    const fD = makeFighter();
+    const ctx: any = { zone: "Edge", pushedFighter: "A" };
+    const events: any[] = [{ type: "HIT", actor: "D", target: "A", location: "torso", value: 10 }];
+    runRecovery(fA, fD, 0, 0, events, ctx);
+    expect(ctx.zone).toBe("Corner");
+  });
+
+  it("Corner stays Corner when another hit occurs (no further push)", () => {
+    const fA = makeFighter();
+    const fD = makeFighter();
+    const ctx: any = { zone: "Corner", pushedFighter: "A" };
+    const events: any[] = [{ type: "HIT", actor: "D", target: "A", location: "torso", value: 10 }];
+    const initialEventCount = events.length;
+    runRecovery(fA, fD, 0, 0, events, ctx);
+    expect(ctx.zone).toBe("Corner");
+    // No ZONE_SHIFT emitted since zone didn't change
+    expect(events.filter((e: any) => e.type === "ZONE_SHIFT").length).toBe(0);
+  });
+
+  it("zone drifts back toward Center when no hit lands (recovery)", () => {
+    const fA = makeFighter();
+    const fD = makeFighter();
+    const ctx: any = { zone: "Edge", pushedFighter: "A" };
+    runRecovery(fA, fD, 0, 0, [], ctx);
+    expect(ctx.zone).toBe("Center");
+  });
+
+  it("no zone drift when pushedFighter is undefined", () => {
+    const fA = makeFighter();
+    const fD = makeFighter();
+    const ctx: any = { zone: "Center", pushedFighter: undefined };
+    runRecovery(fA, fD, 0, 0, [], ctx);
+    expect(ctx.zone).toBe("Center");
+  });
 });

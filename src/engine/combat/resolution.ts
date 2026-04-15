@@ -17,7 +17,11 @@ import type {
   WeatherType,
   PsychState,
   OffensiveTactic,
-  DefensiveTactic
+  DefensiveTactic,
+  DistanceRange,
+  ArenaZone,
+  ArenaConfig,
+  SurfaceMod
 } from "@/types/shared.types";
 import type { WeatherEffect } from "./weatherEffects";
 import { getWeatherEffect } from "./weatherEffects";
@@ -126,6 +130,16 @@ export interface ResolutionContext {
   tacticStreakD: number;
   lastOffTacticA?: string;
   lastOffTacticD?: string;
+  /** Current distance range between fighters */
+  range: DistanceRange;
+  /** Current zone of the pushed-back fighter */
+  zone: ArenaZone;
+  /** Arena configuration (zone penalties, surface mods) */
+  arenaConfig: ArenaConfig;
+  /** Which fighter is currently in the disadvantaged zone position */
+  pushedFighter?: "A" | "D";
+  /** Surface modifiers from arenaConfig, unpacked for convenience */
+  surfaceMod: SurfaceMod;
 }
 
 export function resolveEffectiveTactics(plan: FightPlan, phaseKey: "opening" | "mid" | "late") {

@@ -85,7 +85,7 @@ export default function WarriorDetail() {
     (newLoadout: EquipmentLoadout) => {
       if (!warrior) return;
       setState((draft: any) => {
-        const index = draft.roster.findIndex((w: any) => w.id === warrior.id);
+        const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
         if (index !== -1) {
           draft.roster[index].equipment = newLoadout;
         }

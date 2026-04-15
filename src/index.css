@@ -478,6 +478,197 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+   ARENA ANIMATION KEYFRAMES
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Rain animation for weather effects */
+@keyframes rain {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(400px);
+    opacity: 0;
+  }
+}
+
+.animate-rain {
+  animation: rain 0.5s linear infinite;
+}
+
+/* Heat shimmer for blazing sun */
+@keyframes heat-shimmer {
+  0%, 100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-10px) scaleY(1.02);
+    opacity: 0.7;
+  }
+}
+
+.animate-heat-shimmer {
+  animation: heat-shimmer 3s ease-in-out infinite;
+}
+
+/* Crowd animations */
+@keyframes crowd-cheer {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-5px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(-3px); }
+}
+
+@keyframes crowd-gasp {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.95); }
+}
+
+@keyframes crowd-chant {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+/* Fighter stance animations */
+@keyframes advancing {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+@keyframes retreating {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-5px); }
+}
+
+@keyframes lunging {
+  0% { transform: translateX(0) scaleX(1); }
+  30% { transform: translateX(15px) scaleX(1.1); }
+  100% { transform: translateX(0) scaleX(1); }
+}
+
+@keyframes defending {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-5deg); }
+}
+
+@keyframes stunned {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+@keyframes victorious {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.05); }
+}
+
+@keyframes defeated {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(90deg); }
+}
+
+/* Idle animations by fighting style */
+@keyframes idle-aggressive {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes idle-defensive {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes idle-balanced {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+@keyframes idle-aimed {
+  0%, 100% { transform: rotate(0deg); }
+  90% { transform: rotate(0deg); }
+  95% { transform: rotate(2deg); }
+}
+
+@keyframes idle-striking {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-1px); }
+  75% { transform: translateY(-1px); }
+}
+
+/* Screen shake for critical hits */
+@keyframes screen-shake {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-4px, -4px); }
+  20% { transform: translate(4px, 4px); }
+  30% { transform: translate(-4px, 4px); }
+  40% { transform: translate(4px, -4px); }
+  50% { transform: translate(-2px, 2px); }
+  60% { transform: translate(2px, -2px); }
+  70% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 2px); }
+  90% { transform: translate(-1px, 1px); }
+}
+
+/* Weapon trail fade */
+@keyframes weapon-trail {
+  0% { opacity: 1; stroke-width: 3; }
+  100% { opacity: 0; stroke-width: 1; }
+}
+
+/* Particle animations */
+@keyframes particle-fade {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx, 20px), var(--ty, -20px)) scale(0.5); }
+}
+
+/* Blood pool expansion */
+@keyframes blood-pool {
+  0% { transform: scale(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+/* Dust cloud */
+@keyframes dust-cloud {
+  0% { transform: scale(0.5); opacity: 0; }
+  20% { opacity: 0.6; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* Apply animations with utility classes */
+.animate-advancing { animation: advancing 1.5s ease-in-out infinite; }
+.animate-retreating { animation: retreating 1.5s ease-in-out infinite; }
+.animate-lunging { animation: lunging 0.5s ease-out; }
+.animate-defending { animation: defending 2s ease-in-out infinite; }
+.animate-stunned { animation: stunned 0.5s ease-in-out 3; }
+.animate-victorious { animation: victorious 1s ease-in-out infinite; }
+.animate-defeated { animation: defeated 0.5s ease-out forwards; }
+
+.animate-idle-aggressive { animation: idle-aggressive 1.5s ease-in-out infinite; }
+.animate-idle-defensive { animation: idle-defensive 2s ease-in-out infinite; }
+.animate-idle-balanced { animation: idle-balanced 2s ease-in-out infinite; }
+.animate-idle-aimed { animation: idle-aimed 4s ease-in-out infinite; }
+.animate-idle-striking { animation: idle-striking 1s ease-in-out infinite; }
+
+/* Screen shake intensity variants */
+.animate-shake-low { animation: screen-shake 0.3s ease-in-out; }
+.animate-shake-medium { animation: screen-shake 0.4s ease-in-out; }
+.animate-shake-high { animation: screen-shake 0.5s ease-in-out; }
+
+/* Crowd reaction states */
+.crowd-cheer { animation: crowd-cheer 0.5s ease-in-out; }
+.crowd-gasp { animation: crowd-gasp 0.3s ease-in-out; }
+.crowd-chant { animation: crowd-chant 1s ease-in-out infinite; }
+
+/* ─────────────────────────────────────────────────────────────────────────
    ACCESSIBILITY: REDUCED MOTION
    Respect user preferences for motion sensitivity
 ───────────────────────────────────────────────────────────────────────────── */

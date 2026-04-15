@@ -17,6 +17,14 @@ import { truncateArray } from "@/utils/stateUtils";
 import { updatePromoterHistory as engineUpdatePromoterHistory } from "@/engine/promoters";
 import { respondToBoutOffer as engineRespondToBoutOffer } from "@/state/mutations/contractMutations";
 
+export interface ArenaPreferences {
+  defaultViewMode: "log" | "arena";
+  audioEnabled: boolean;
+  audioVolume: number;
+  effectsEnabled: boolean;
+  screenShakeIntensity: "off" | "low" | "medium" | "high";
+}
+
 export interface WorldSlice {
   year: number;
   week: number;
@@ -39,6 +47,7 @@ export interface WorldSlice {
       scouting: boolean;
     };
   };
+  arenaPreferences: ArenaPreferences;
   isFTUE: boolean;
   ftueStep?: number;
   ftueComplete: boolean;
@@ -51,6 +60,7 @@ export interface WorldSlice {
   ownerGrudges: any[];
   phase: "planning" | "resolution";
   setWeek: (week: number) => void;
+  setArenaPreferences: (prefs: Partial<ArenaPreferences>) => void;
   initializeStable: (name: string, stableName: string) => void;
   appendFight: (summary: FightSummary) => void;
   updateBoutOfferStatus: (offerId: string, status: BoutOffer["status"]) => void;
@@ -85,6 +95,13 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
       scouting: true,
     },
   },
+  arenaPreferences: {
+    defaultViewMode: "arena",
+    audioEnabled: true,
+    audioVolume: 0.7,
+    effectsEnabled: true,
+    screenShakeIntensity: "medium",
+  },
   isFTUE: false,
   ftueComplete: false,
   player: { id: "p1", name: "Rookie", stableName: "Fresh Stable", fame: 0, renown: 0, titles: 0 },
@@ -97,6 +114,12 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   phase: "planning",
 
   setWeek: (week) => set({ week }),
+
+  setArenaPreferences: (prefs: Partial<ArenaPreferences>) => {
+    set((draft: WorldSlice) => {
+      draft.arenaPreferences = { ...draft.arenaPreferences, ...prefs };
+    });
+  },
 
   initializeStable: (name: string, stableName: string) => {
     set((state: any) => ({

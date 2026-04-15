@@ -1,19 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import type { MinuteEvent, FightOutcomeBy } from "@/types/game";
+import type { MinuteEvent, FightOutcomeBy, FightingStyle } from "@/types/game";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
 import { Badge } from "@/components/ui/badge";
 import { TagBadge } from "@/components/ui/WarriorBadges";
-import { Button } from "@/components/ui/button";
 import { Surface } from "@/components/ui/Surface";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Play, Pause, SkipForward, RotateCcw, Skull, Swords, Zap, Shield, 
-  ChevronDown, ChevronUp, History, Timer, Target, Activity, 
-  Dna, Boxes, Crosshair, BarChart3, TrendingUp, Trophy
+  ChevronDown, ChevronUp, Timer, Activity,
+  Crosshair, Trophy
 } from "lucide-react";
-import { classifyEvent } from "@/lib/boutUtils";
 import { useBoutPlayback } from "@/hooks/useBoutPlayback";
+import { useGameStore } from "@/state/useGameStore";
+import ViewModeToggle from "./arena/ViewModeToggle";
+import ArenaView from "./arena/ArenaView";
+import TacticalLogView from "./arena/TacticalLogView";
+import type { ViewMode } from "./arena/ViewModeToggle";
 
 interface BoutViewerProps {
   nameA: string;
@@ -25,36 +28,9 @@ interface BoutViewerProps {
   by: FightOutcomeBy;
   announcement?: string;
   isRivalry?: boolean;
-}
-
-function getEventIcon(type: ReturnType<typeof classifyEvent>) {
-  switch (type) {
-    case "hit": return <Swords className="h-3 w-3 text-arena-gold" />;
-    case "crit": return <Zap className="h-3.5 w-3.5 text-destructive animate-pulse" />;
-    case "death": return <Skull className="h-3.5 w-3.5 text-arena-blood" />;
-    case "ko": return <Skull className="h-3 w-3 text-arena-gold" />;
-    case "miss": return <Shield className="h-3 w-3 text-arena-steel opacity-40" />;
-    case "riposte": return <Swords className="h-3 w-3 text-arena-fame" />;
-    case "initiative": return <Zap className="h-3 w-3 text-primary" />;
-    case "exhaust": return <Activity className="h-3 w-3 text-muted-foreground/40" />;
-    case "phase": return <Target className="h-3 w-3 text-primary/60" />;
-    default: return <div className="h-2 w-2 rounded-full bg-muted-foreground/20" />;
-  }
-}
-
-function getEventColor(type: ReturnType<typeof classifyEvent>) {
-  switch (type) {
-    case "hit": return "border-arena-gold/20 bg-arena-gold/5";
-    case "crit": return "border-destructive/30 bg-destructive/10 shadow-[0_0_15px_rgba(var(--destructive-rgb),0.1)]";
-    case "death": return "border-arena-blood/40 bg-arena-blood/10";
-    case "ko": return "border-arena-gold/30 bg-arena-gold/5";
-    case "riposte": return "border-arena-fame/20 bg-arena-fame/5";
-    case "initiative": return "border-primary/20 bg-primary/5";
-    case "exhaust": return "border-white/5 bg-white/5";
-    case "miss": return "border-white/5 bg-transparent opacity-60";
-    case "phase": return "border-primary/40 bg-primary/10 py-3 my-2";
-    default: return "border-white/5 bg-transparent";
-  }
+  arenaTier?: "training" | "standard" | "championship" | "grand";
+  weather?: string;
+  transcript?: string[];
 }
 
 function getOutcomeStyles(by: FightOutcomeBy) {
@@ -67,8 +43,23 @@ function getOutcomeStyles(by: FightOutcomeBy) {
   }
 }
 
-export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, by, announcement, isRivalry }: BoutViewerProps) {
+export default function BoutViewer({ 
+  nameA, 
+  nameD, 
+  styleA, 
+  styleD, 
+  log, 
+  winner, 
+  by, 
+  announcement, 
+  isRivalry,
+  arenaTier = "standard",
+  weather = "Clear",
+}: BoutViewerProps) {
+  const store = useGameStore();
+  const arenaPrefs = store.arenaPreferences;
   const [expanded, setExpanded] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>(arenaPrefs.defaultViewMode);
   const logEndRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -89,10 +80,8 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
 
   const outcomeStyle = getOutcomeStyles(by);
   const winnerName = winner === "A" ? nameA : winner === "D" ? nameD : null;
-  const loserName = winner === "A" ? nameD : winner === "D" ? nameA : null;
   
-  const minutes = log.length > 0 ? log[log.length - 1].minute : 0;
-  const currentMinute = visibleCount > 0 ? log[visibleCount - 1]?.minute ?? 0 : 0;
+  const minutes = log.length > 0 ? log[log.length - 1]!.minute : 0;
 
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden relative shadow-2xl">
@@ -216,6 +205,19 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
           {/* Simulation Controls */}
           <div className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-neutral-900/60 backdrop-blur-xl">
              <div className="flex items-center gap-4">
+                {/* View Mode Toggle */}
+                <ViewModeToggle
+                  mode={viewMode}
+                  onChange={(mode) => {
+                    setViewMode(mode);
+                    // Persist as new default if user explicitly changes
+                    store.setArenaPreferences({ defaultViewMode: mode });
+                  }}
+                  disabled={isPlaying}
+                />
+                
+                <div className="h-6 w-px bg-white/10" />
+                
                 <div className="flex items-center px-4 py-2 rounded-none bg-black border border-white/5 gap-4">
                    <Tooltip>
                       <TooltipTrigger asChild>
@@ -283,84 +285,29 @@ export default function BoutViewer({ nameA, nameD, styleA, styleD, log, winner, 
              </div>
           </div>
 
-          {/* Tactical Monitor Log */}
-          <div className="h-[440px] overflow-y-auto px-6 py-8 space-y-2 bg-[url('/grid-pattern.svg')] bg-[length:40px_40px] relative scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-            {visibleCount === 0 && (
-              <div className="h-full flex flex-col items-center justify-center opacity-20 pointer-events-none">
-                <History className="h-16 w-16 text-muted-foreground mb-6" />
-                <p className="text-[10px] font-black uppercase tracking-[0.5em]">Press_Play_To_Initialize_Bout_Data</p>
-              </div>
-            )}
-            {log.slice(0, visibleCount).map((event, i) => {
-              const type = classifyEvent(event.text);
-              const isLatest = i === visibleCount - 1;
-              const isPhaseEvent = type === "phase";
-              
-              return (
-                <div
-                  key={i}
-                  className={cn(
-                    "flex flex-col gap-3 p-4 rounded-none border transition-all duration-500",
-                    getEventColor(type),
-                    isLatest ? "scale-[1.02] shadow-[0_0_30px_rgba(var(--primary-rgb),0.15)] ring-1 ring-primary/40 -translate-y-1" : "opacity-60 grayscale-[0.4]",
-                    isPhaseEvent && "border-primary/40"
-                  )}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="mt-1 shrink-0">
-                       <div className="p-2 rounded-none bg-black/40 border border-white/5">
-                          {getEventIcon(type)}
-                       </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                         <span className={cn(
-                           "text-[9px] font-mono font-black uppercase tracking-[0.2em] opacity-40",
-                           isLatest && "opacity-100 text-primary"
-                         )}>
-                            Minute_0{event.minute}
-                         </span>
-                         {isLatest && <div className="h-1 w-1 rounded-full bg-primary animate-ping" />}
-                      </div>
-                      <p className={cn(
-                        "text-[13px] leading-relaxed font-medium tracking-tight",
-                        type === "death" ? "font-black text-arena-blood uppercase tracking-wide italic" :
-                        type === "crit" ? "font-black text-destructive uppercase tracking-wide italic" :
-                        type === "ko" ? "font-black text-arena-gold uppercase tracking-wide italic" :
-                        type === "phase" ? "font-black text-primary text-sm uppercase tracking-[0.3em] py-2" :
-                        "text-foreground/90"
-                      )}>
-                        {event.text}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Tactical Insight Overlay */}
-                  {isPhaseEvent && (event.offTacticA || event.defTacticA || event.protectA || event.offTacticD || event.defTacticD || event.protectD) && (
-                    <div className="grid grid-cols-2 gap-4 mt-2 pl-12">
-                      {[
-                        { name: nameA, off: event.offTacticA, def: event.defTacticA, prot: event.protectA, color: "primary" },
-                        { name: nameD, off: event.offTacticD, def: event.defTacticD, prot: event.protectD, color: "accent" }
-                      ].map((tactical) => (
-                        <div key={tactical.name} className="space-y-3 p-3 rounded-none bg-black/40 border border-white/5">
-                           <div className="flex items-center gap-2">
-                              <Boxes className={cn("h-3 w-3", tactical.color === "primary" ? "text-primary" : "text-accent")} />
-                              <span className="text-[10px] font-black uppercase text-muted-foreground/60">{tactical.name} PROTOCOL</span>
-                           </div>
-                           <div className="flex flex-wrap gap-1.5 focus:outline-none">
-                              {tactical.off && <Badge variant="outline" className="text-[8px] font-black uppercase px-2 py-0 border-arena-gold/30 text-arena-gold bg-arena-gold/5">{tactical.off}</Badge>}
-                              {tactical.def && <Badge variant="outline" className="text-[8px] font-black uppercase px-2 py-0 border-primary/30 text-primary bg-primary/5">{tactical.def}</Badge>}
-                              {tactical.prot && <Badge variant="outline" className="text-[8px] font-black uppercase px-2 py-0 border-white/20 text-muted-foreground/60">🛡 {tactical.prot}</Badge>}
-                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            <div ref={logEndRef} className="h-4" />
-          </div>
+          {/* Content Area - Arena or Log */}
+          {viewMode === "arena" ? (
+            <ArenaView
+              nameA={nameA}
+              nameD={nameD}
+              styleA={styleA as FightingStyle}
+              styleD={styleD as FightingStyle}
+              log={log}
+              winner={winner}
+              visibleCount={visibleCount}
+              isPlaying={isPlaying}
+              isComplete={isComplete}
+              arenaTier={arenaTier}
+              weather={weather}
+              maxHpA={50}
+              maxHpD={50}
+            />
+          ) : (
+            <TacticalLogView
+              log={log}
+              visibleCount={visibleCount}
+            />
+          )}
 
           {/* Cinematic Resolution Banner */}
           {isComplete && winner && (

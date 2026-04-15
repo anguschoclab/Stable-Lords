@@ -260,7 +260,8 @@ export function generateWeeklyGazette(
       headline = t(rngService.pick((gh as any).win_streak ? (gh as any).win_streak : gh.Streak), { week, name: top.name, streak: top.streak });
     }
   } else if (rivalryPair) {
-    headline = t(rngService.pick(rivalryPair.count >= 5 ? (gh.LegacyRivalry || gh.Rivalry) : (gh.Rivalry || gh.Rivalry)), {
+    const rivalryHeadline = rivalryPair.count >= 5 ? (gh.LegacyRivalry || gh.Rivalry) : (gh.Rivalry || gh.Rivalry);
+    headline = t(rngService.pick(rivalryHeadline), {
       week, a: rivalryPair.a, b: rivalryPair.b, count: rivalryPair.count 
     });
   } else if (risingStars.length > 0) {

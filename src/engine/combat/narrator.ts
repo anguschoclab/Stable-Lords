@@ -67,14 +67,14 @@ export function narrateEvents(
 
       case "ATTACK":
         if (event.result === "WHIFF") {
-          log.push({ minute, text: narrateAttack(rng, actorName, weapon) });
+          log.push({ minute, text: narrateAttack(rng, actorName, weapon, false, opponentName) });
           log.push({ minute, text: narrateDodge(rng, opponentName) });
         }
         break;
 
       case "DEFENSE":
         if (event.result === "PARRY") {
-          log.push({ minute, text: narrateAttack(rng, getOpponentName(event.actor), getWeapon(event.actor === "A" ? "D" : "A")) });
+          log.push({ minute, text: narrateAttack(rng, getOpponentName(event.actor), getWeapon(event.actor === "A" ? "D" : "A"), false, actorName) });
           log.push({ minute, text: narrateParry(rng, actorName, weapon) });
         } else if (event.result === "DODGE") {
           log.push({ minute, text: narrateDodge(rng, actorName) });
@@ -88,20 +88,20 @@ export function narrateEvents(
           const isMastery = !!event.metadata?.isMastery;
           const isSuperFlashy = isMastery && (!!event.metadata?.crit || (event.value && event.value > 5) || events.some(e => e.type === "BOUT_END"));
 
-          // If it's a normal attack (not following a PARRY or COUNTERSTRIKE event immediately), 
+          // If it's a normal attack (not following a PARRY or COUNTERSTRIKE event immediately),
           // we might need to narrate the attack first if it wasn't already.
-          // For simplicity in this decoupled version, we assume the resolution emits 
+          // For simplicity in this decoupled version, we assume the resolution emits
           // a sequence: [ATTACK(whiff)] or [DEFENSE(parry/dodge)] or [HIT]
-          
+
           // Only narrate attack if it's the start of a sequence or a riposte
           // Actually, let's keep it consistent with simulate.ts:
           // Riposte: counterstrike + attack + hit
           // Normal: attack + hit
-          
+
           if (events.some(e => e.type === "DEFENSE" && e.result === "RIPOSTE" && e.actor === event.actor)) {
-             log.push({ minute, text: narrateAttack(rng, actorName, weapon, isMastery) });
+             log.push({ minute, text: narrateAttack(rng, actorName, weapon, isMastery, opponentName) });
           } else if (!events.some(e => e.type === "DEFENSE" && e.actor === event.target)) {
-             log.push({ minute, text: narrateAttack(rng, actorName, weapon, isMastery) });
+             log.push({ minute, text: narrateAttack(rng, actorName, weapon, isMastery, opponentName) });
           }
 
           const isFatal = !!event.metadata?.lethal;

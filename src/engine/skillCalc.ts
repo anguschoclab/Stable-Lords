@@ -106,7 +106,7 @@ const STYLE_PENALTIES: Record<FightingStyle, [number, number, number, number, nu
   [FightingStyle.SlashingAttack]:  [ -8,  -10, -12,  0,  -4,   0  ],
   [FightingStyle.StrikingAttack]:  [ -12, -9,  -12, -5,  -4,  +1  ],
   [FightingStyle.TotalParry]:      [ -14, -2,  -12, -7,  -4,  -2  ],
-  [FightingStyle.WallOfSteel]:     [ -8,  -4,  -12, -1,  -4,  -1  ],
+  [FightingStyle.WallOfSteel]:     [ -5,  -4,  -12, -1,  -4,  -1  ],
 };
 
 // ─── Base Skill Computation ───────────────────────────────────────────────

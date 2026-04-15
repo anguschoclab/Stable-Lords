@@ -147,49 +147,49 @@ export function calculateKillWindow(
   momentum: number = 0, // Attacker momentum (-3 to +3). < 1 blocks kill attempts.
   specialtyBonus: number = 0 // Extra kill window from trainer specialties (e.g. KillerInstinct)
 ): number {
-  // Momentum gate: must not be deeply negative momentum to attempt a kill
-  // Softened from < 1 to < -1 to allow kills at neutral momentum
-  if (momentum < -1) return 0;
+  // Momentum gate: must have neutral or positive momentum to attempt a kill
+  // Softened from < 1 to < 0 to allow kills at neutral momentum (not just after consecutive hits)
+  if (momentum < 0) return 0;
 
   // Base threshold (lethal hits are rare but possible)
   // Target: ~10% overall mortality across the league (Unified 1.0 Gold Baseline)
-  let threshold = 0.065;
+  let threshold = 0.010;
 
   // HP factor: higher chance if HP is low (below 30%)
-  if (hpRatio < 0.3) threshold += 0.012;
-  else if (hpRatio < 0.5) threshold += 0.004;
+  if (hpRatio < 0.3) threshold += 0.004;
+  else if (hpRatio < 0.5) threshold += 0.001;
 
-  // Endurance (Fatigue) factor: severe exhaustion is a major kill window opener
-  if (enduranceRatio < 0.2) threshold += 0.050;
-  else if (enduranceRatio < 0.4) threshold += 0.020;
-  else if (enduranceRatio < 0.6) threshold += 0.008;
+  // Endurance (Fatigue) factor: exhaustion opens kill windows
+  if (enduranceRatio < 0.2) threshold += 0.008;
+  else if (enduranceRatio < 0.4) threshold += 0.004;
+  else if (enduranceRatio < 0.6) threshold += 0.001;
 
   // Location factor: Vital spots are deadlier
   const locMult = LOCATION_KILL_MULT[location] ?? 1.0;
   threshold *= locMult;
 
   // Strategic Risk (AL/OE): Aggression fuels lethality
-  threshold += (attOE + attAL - 10) * 0.001;
+  threshold += (attOE + attAL - 10) * 0.0005;
 
   // Matchup Bias: Dominant styles find more fatal openings
-  threshold += matchupBonus * 0.004;
+  threshold += matchupBonus * 0.002;
 
-  // Kill Desire: Attacker's aggression
-  threshold += (killDesire - 5) * 0.001;
+  // Kill Desire: primary lever for intentional execution — scales aggressively
+  threshold += (killDesire - 5) * 0.004;
 
   // DEC skill bonus
-  threshold += (decSkill - 10) * 0.0012;
+  threshold += (decSkill - 10) * 0.0006;
 
   // Phase escalation: fights get more dangerous as time passes
-  threshold += phaseLevel * 0.004;
+  threshold += phaseLevel * 0.003;
 
-  // Momentum bonus: momentum 2 = +0.01, momentum 3 = +0.02
-  if (momentum >= 3) threshold += 0.02;
-  else if (momentum >= 2) threshold += 0.01;
+  // Momentum bonus: momentum 2 = +0.008, momentum 3 = +0.015
+  if (momentum >= 3) threshold += 0.015;
+  else if (momentum >= 2) threshold += 0.008;
 
   // Trainer specialty bonus (e.g. KillerInstinct)
   threshold += specialtyBonus;
 
-  // Cap at 15% for the perfect storm (Unified 1.0 Gold Baseline)
-  return Math.max(0, Math.min(0.15, threshold));
+  // Cap at 8% for the perfect storm (Unified 1.0 Gold Baseline)
+  return Math.max(0, Math.min(0.08, threshold));
 }

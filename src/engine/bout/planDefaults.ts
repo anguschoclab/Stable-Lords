@@ -16,22 +16,19 @@ export function defaultPlanForWarrior(warrior: Warrior): FightPlan {
     FightingStyle.SlashingAttack,
   ].includes(style);
 
-  const isDefensive = [
-    FightingStyle.TotalParry,
-    FightingStyle.WallOfSteel,
-    FightingStyle.ParryRiposte,
-  ].includes(style);
-
   let oe = 5, al = 6, kd = 5;
 
   if (isAggressive) {
     oe = style === FightingStyle.BashingAttack ? 9 : 8;
     al = style === FightingStyle.BashingAttack ? 3 : (style === FightingStyle.LungingAttack ? 8 : 5);
     kd = 7;
-  } else if (isDefensive) {
-    oe = style === FightingStyle.TotalParry ? 2 : 4;
-    al = style === FightingStyle.TotalParry ? 2 : 5;
-    kd = 3;
+  } else if (style === FightingStyle.TotalParry) {
+    oe = 2; al = 2; kd = 3;
+  } else if (style === FightingStyle.WallOfSteel) {
+    // WoS uses INI=7 advantage + passive ramp to control fights — needs active OE not passive OE=4
+    oe = 7; al = 6; kd = 6;
+  } else if (style === FightingStyle.ParryRiposte) {
+    oe = 4; al = 5; kd = 3;
   } else if (style === FightingStyle.AimedBlow) {
     oe = 6; al = 5; kd = 8;
   }

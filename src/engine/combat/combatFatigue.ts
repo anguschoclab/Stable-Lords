@@ -6,9 +6,9 @@
 import { getWeatherEffect } from "./weatherEffects";
 import type { WeatherType } from "@/types/shared.types";
 
-// Endurance scaling
-const ENDURANCE_OE_SCALING = 0.22;
-const ENDURANCE_AL_SCALING = 0.10;
+// Endurance scaling — tuned so OE=8 fighters (END≈25) last ~20-25 exchanges before exhaustion
+const ENDURANCE_OE_SCALING = 0.10;
+const ENDURANCE_AL_SCALING = 0.05;
 
 // Fatigue thresholds (fighters need to be genuinely exhausted before penalties kick in)
 const FATIGUE_MODERATE_THRESHOLD = 0.45;

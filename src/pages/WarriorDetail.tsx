@@ -5,8 +5,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useParams, useNavigate, Link } from "@tanstack/react-router";
 import { obfuscateWarrior } from "@/lib/obfuscation";
-import { useGameStore } from "@/state/useGameStore";
+import { useGameStore, type GameStore } from "@/state/useGameStore";
 import { type FightPlan, type GameState } from "@/types/game";
+import type { Warrior } from "@/types/state.types";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Armchair, Target, ScrollText, User } from "lucide-react";
 import { defaultPlanForWarrior } from "@/engine/simulate";
@@ -63,10 +64,10 @@ export default function WarriorDetail() {
   const handlePlanChange = useCallback(
     (newPlan: FightPlan) => {
       if (!warrior) return;
-      setState((draft: any) => {
-        const index = draft.roster.findIndex((w: any) => w.id === warrior.id);
+      setState((draft: GameStore) => {
+        const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
         if (index !== -1) {
-          draft.roster[index].plan = newPlan;
+          draft.roster[index]?.plan = newPlan;
         }
       });
     },

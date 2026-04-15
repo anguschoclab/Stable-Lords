@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
-import { useGameStore, useWorldState } from "@/state/useGameStore";
+import { useGameStore, useWorldState, type GameStore } from "@/state/useGameStore";
 import { useShallow } from 'zustand/react/shallow';
 import {
   ATTRIBUTE_LABELS,
   type TrainingAssignment, type Attributes,
 } from "@/types/game";
+import type { Warrior } from "@/types/state.types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dumbbell, Heart, Activity, Target, Zap } from "lucide-react";
@@ -37,10 +38,10 @@ export default function Training() {
 
   const handleAssign = (warriorId: string, attribute: keyof Attributes) => {
     if (attribute === "SZ") return;
-    const warrior = state.roster.find((w: any) => w.id === warriorId);
-    setState((s: any) => {
+    const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
+    setState((s: GameStore) => {
       s.trainingAssignments = [
-        ...(s.trainingAssignments ?? []).filter((a: any) => a.warriorId !== warriorId),
+        ...(s.trainingAssignments ?? []).filter((a: TrainingAssignment) => a.warriorId !== warriorId),
         { warriorId, type: "attribute", attribute },
       ];
     });
@@ -48,10 +49,10 @@ export default function Training() {
   };
 
   const handleAssignRecovery = (warriorId: string) => {
-    const warrior = state.roster.find((w: any) => w.id === warriorId);
-    setState((s: any) => {
+    const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
+    setState((s: GameStore) => {
       s.trainingAssignments = [
-        ...(s.trainingAssignments ?? []).filter((a: any) => a.warriorId !== warriorId),
+        ...(s.trainingAssignments ?? []).filter((a: TrainingAssignment) => a.warriorId !== warriorId),
         { warriorId, type: "recovery" },
       ];
     });
@@ -59,18 +60,18 @@ export default function Training() {
   };
 
   const handleClear = (warriorId: string) => {
-    setState((s: any) => {
-      s.trainingAssignments = (s.trainingAssignments ?? []).filter((a: any) => a.warriorId !== warriorId);
+    setState((s: GameStore) => {
+      s.trainingAssignments = (s.trainingAssignments ?? []).filter((a: TrainingAssignment) => a.warriorId !== warriorId);
     });
   };
 
   const handleClearAll = () => {
-    setState((s: any) => { s.trainingAssignments = []; });
+    setState((s: GameStore) => { s.trainingAssignments = []; });
     toast("All training assignments cleared.");
   };
 
   const assignedCount = assignments.length;
-  const recoveryCount = assignments.filter((a: any) => a.type === "recovery").length;
+  const recoveryCount = assignments.filter((a: TrainingAssignment) => a.type === "recovery").length;
   const trainingCount = assignedCount - recoveryCount;
 
   return (
@@ -144,7 +145,7 @@ export default function Training() {
         </Surface>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {state.roster.filter((w: any) => w.status === "Active").map((warrior: any) => (
+          {state.roster.filter((w: Warrior) => w.status === "Active").map((warrior: Warrior) => (
             <WarriorTrainingCard
               key={warrior.id}
               warrior={warrior}

@@ -1,16 +1,19 @@
 import { StateCreator } from "zustand";
-import { 
-  Season, 
-  WeatherType, 
-  Promoter, 
-  BoutOffer, 
+import {
+  Season,
+  WeatherType,
+  Promoter,
+  BoutOffer,
   RivalStableData,
   GazetteStory,
   Owner,
   ScoutReportData,
   CrowdMoodType,
   NewsletterItem,
-  HallEntry
+  HallEntry,
+  Rivalry,
+  MatchRecord,
+  OwnerGrudge
 } from "@/types/state.types";
 import { FightSummary } from "@/types/combat.types";
 import { truncateArray } from "@/utils/stateUtils";
@@ -53,11 +56,11 @@ export interface WorldSlice {
   ftueComplete: boolean;
   player: Owner;
   coachDismissed: string[];
-  rivalries: any[];
-  matchHistory: any[];
+  rivalries: Rivalry[];
+  matchHistory: MatchRecord[];
   playerChallenges: string[];
   playerAvoids: string[];
-  ownerGrudges: any[];
+  ownerGrudges: OwnerGrudge[];
   phase: "planning" | "resolution";
   setWeek: (week: number) => void;
   setArenaPreferences: (prefs: Partial<ArenaPreferences>) => void;
@@ -122,7 +125,7 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   },
 
   initializeStable: (name: string, stableName: string) => {
-    set((state: any) => ({
+    set((state: WorldSlice) => ({
       player: {
         ...state.player,
         name,
@@ -133,8 +136,8 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   },
 
   appendFight: (summary: FightSummary) => {
-    set((state: any) => {
-      const nextHistory = truncateArray([...state.arenaHistory, summary], 500).map((f: FightSummary, i: number, arr: any[]) => {
+    set((state: WorldSlice) => {
+      const nextHistory = truncateArray([...state.arenaHistory, summary], 500).map((f: FightSummary, i: number, arr: FightSummary[]) => {
         // Keep transcripts only for the last 20 fights to save memory
         if (arr.length - i > 20 && f.transcript) {
           const { transcript, ...rest } = f;
@@ -150,7 +153,7 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   },
 
   updateBoutOfferStatus: (offerId, status) => {
-    set((state: any) => {
+    set((state: WorldSlice) => {
       if (!state.boutOffers[offerId]) return state;
       return {
         boutOffers: {
@@ -187,7 +190,7 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   },
 
   replacePromoter: (oldId, newPromoter) => {
-    set((state: any) => {
+    set((state: WorldSlice) => {
       const newPromoters = { ...state.promoters };
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete newPromoters[oldId];
@@ -243,13 +246,13 @@ export const createWorldSlice: StateCreator<any, [], [], WorldSlice> = (set, get
   },
 
   renameStable: (newName: string) => {
-    set((state: any) => ({
+    set((state: WorldSlice) => ({
       player: { ...state.player, stableName: newName }
     }));
   },
 
   renamePlayer: (newName: string) => {
-    set((state: any) => ({
+    set((state: WorldSlice) => ({
       player: { ...state.player, name: newName }
     }));
   }

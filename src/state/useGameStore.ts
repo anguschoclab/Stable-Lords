@@ -37,7 +37,7 @@ export interface GameStoreActions {
   doReset: () => void;
   returnToTitle: () => void;
   saveCurrentState: () => Promise<void>;
-  setState: (fn: (state: any) => void) => void;
+  setState: (fn: (state: GameStore) => void) => void;
 }
 
 export type GameStore = GameStoreState & GameStoreActions & EconomySlice & RosterSlice & WorldSlice & TournamentSlice;
@@ -307,7 +307,7 @@ export const useGameStore = create<GameStore>()(
         });
       },
 
-      setState: (fn: (state: any) => void) => {
+      setState: (fn: (state: GameStore) => void) => {
         set(fn);
       },
     }))

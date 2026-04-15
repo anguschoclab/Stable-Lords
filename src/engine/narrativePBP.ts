@@ -181,13 +181,14 @@ export function battleOpener(rng: RNG): string {
 /**
  * Refactored to use narrativeContent.json and dynamic interpolation.
  */
-export function narrateAttack(rng: RNG, attackerName: string, weaponId?: string, isMastery?: boolean): string {
+export function narrateAttack(rng: RNG, attackerName: string, weaponId?: string, isMastery?: boolean, defenderName?: string): string {
   const wName = getWeaponDisplayName(weaponId);
 
   // Use the new architecture for generic attacks/swings (Whiffs)
   const template = getFromArchive(rng, ["pbp", "whiffs"]);
   return interpolateTemplate(template, {
     attacker: attackerName,
+    defender: defenderName,
     weapon: wName
   });
 }

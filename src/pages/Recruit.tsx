@@ -195,7 +195,7 @@ export default function Recruit() {
   const canRefresh = canTransact(treasury, REFRESH_COST);
 
   const handleRecruit = useCallback((w: PoolWarrior) => {
-    setState((draft: any) => {
+    setState((draft: GameStore) => {
       if (!canTransact(draft.treasury, w.cost)) {
         toast.error(`Not enough funds! Need ${w.cost}g.`);
         return;
@@ -215,9 +215,10 @@ export default function Recruit() {
 
       draft.roster.push(warrior);
       draft.treasury -= w.cost;
-      draft.recruitPool = (draft.recruitPool ?? []).filter((p: any) => p.id !== w.id);
-      
+      draft.recruitPool = (draft.recruitPool ?? []).filter((p: PoolWarrior) => p.id !== w.id);
+
       draft.ledger.push({
+        id: String(hashStr(`${draft.week}-${w.name}`)),
         week: draft.week,
         label: `Recruit: ${w.name} (${w.tier})`,
         amount: -w.cost,
@@ -225,6 +226,7 @@ export default function Recruit() {
       });
 
       draft.newsletter.push({
+        id: String(hashStr(`${draft.week}-recruitment-${w.name}`)),
         week: draft.week,
         title: "Recruitment",
         items: [`${draft.player.stableName} signed ${w.name}, a ${w.tier.toLowerCase()} ${STYLE_DISPLAY_NAMES[w.style]}.`],
@@ -235,7 +237,7 @@ export default function Recruit() {
   }, [MAX_ROSTER, setState]);
 
   const handleScout = useCallback((w: PoolWarrior) => {
-    setState((draft: any) => {
+    setState((draft: GameStore) => {
       if (!canTransact(draft.treasury, 25)) {
         toast.error("Not enough gold to scout potential (need 25g).");
         return;
@@ -243,6 +245,7 @@ export default function Recruit() {
       setScoutedIds(s => new Set(s).add(w.id));
       draft.treasury -= 25;
       draft.ledger.push({
+        id: String(hashStr(`${draft.week}-scout-${w.name}`)),
         week: draft.week,
         label: `Scout Potential: ${w.name}`,
         amount: -25,
@@ -271,6 +274,7 @@ export default function Recruit() {
       draft.treasury -= REFRESH_COST;
       draft.recruitPool = newPool;
       draft.ledger.push({
+        id: String(hashStr(`${draft.week}-pool-refresh`)),
         week: draft.week,
         label: "Pool refresh",
         amount: -REFRESH_COST,
@@ -282,7 +286,7 @@ export default function Recruit() {
 
   const handleCustomCreate = useCallback(
     (data: { name: string; style: FightingStyle; attributes: Attributes }) => {
-      setState((draft: any) => {
+      setState((draft: GameStore) => {
         if (!canTransact(draft.treasury, CUSTOM_COST)) {
           toast.error(`Not enough gold! Need ${CUSTOM_COST}g for custom build.`);
           return;
@@ -294,10 +298,11 @@ export default function Recruit() {
         const rng = new SeededRNGService(draft.week + hashStr(data.name));
         const id = rng.uuid("warrior");
         const warrior = makeWarrior(id, data.name, data.style, data.attributes);
-        
+
         draft.roster.push(warrior);
         draft.treasury -= CUSTOM_COST;
         draft.ledger.push({
+          id: String(hashStr(`${draft.week}-custom-${data.name}`)),
           week: draft.week,
           label: `Custom Build: ${data.name}`,
           amount: -CUSTOM_COST,

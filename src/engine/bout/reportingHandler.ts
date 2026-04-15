@@ -42,32 +42,8 @@ export function handleReporting(
   NewsletterFeed.appendFightResult({ summary, transcript: summary.transcript ?? [] });
 
   const tone: AnnounceTone = outcome.by === "Kill" ? "grim" : (tags.includes("Flashy") ? "hype" : "neutral");
-  // Create a simple RNG wrapper if not provided
-  const seededFallback = new SeededRNGService(week * 12345 + 67890);
-  const fallbackRng: IRNGService = {
-    next: () => seededFallback.next(),
-    pick: (arr) => {
-      if (arr.length === 0) throw new Error("Cannot pick from empty array");
-      const idx = Math.floor(seededFallback.next() * arr.length);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return arr[idx]!;
-    },
-    uuid: (prefix) => generateId(undefined, prefix || "uuid"),
-    roll: (min, max) => Math.floor(seededFallback.next() * (max - min)) + min,
-    shuffle: (arr) => {
-      const result = [...arr];
-      for (let i = result.length - 1; i > 0; i--) {
-        const j = Math.floor(seededFallback.next() * (i + 1));
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const temp = result[i]!;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        result[i] = result[j]!;
-        result[j] = temp;
-      }
-      return result;
-    }
-  };
-  const rngService = safeRng || fallbackRng;
+  // Use SeededRNGService directly as fallback (implements IRNGService)
+  const rngService = safeRng || new SeededRNGService(week * 12345 + 67890);
   const announcement = (outcome.by === "Kill" || outcome.by === "KO")
     ? commentatorFor(outcome.by, rngService)
     : blurb({

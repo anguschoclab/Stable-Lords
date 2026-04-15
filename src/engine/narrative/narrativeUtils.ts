@@ -5,9 +5,10 @@ import { type WeaponType } from "@/types/combat.types";
  * Stable Lords — Narrative Helpers
  */
 
-type RNG = () => number;
+type RNGFn = () => number;
 
-export function pick<T>(rng: RNG, arr: T[]): T {
+/** Pick a random element from an array using the provided RNG */
+export function pick<T>(rng: RNGFn, arr: T[]): T {
   return arr[Math.floor(rng() * arr.length)];
 }
 
@@ -34,9 +35,9 @@ export function getWeaponType(weaponId?: string): WeaponType {
   const bashing = ["mace", "war_hammer", "morning_star", "maul", "war_flail", "large_shield", "medium_shield", "small_shield"];
   const piercing = ["epee", "dagger", "short_spear", "long_spear", "halberd", "quarterstaff"];
   
-  if (slashing.includes(weaponId)) return "slashing" as any;
-  if (bashing.includes(weaponId)) return "bashing" as any;
-  if (piercing.includes(weaponId)) return "piercing" as any;
-  
-  return "fist" as any;
+  if (slashing.includes(weaponId)) return "slashing";
+  if (bashing.includes(weaponId)) return "bashing";
+  if (piercing.includes(weaponId)) return "piercing";
+
+  return "fist";
 }

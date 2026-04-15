@@ -4,7 +4,7 @@ const localStorageMock = (function() {
   return {
     getItem: function(key: string) { return store[key] || null; },
     setItem: function(key: string, value: string) { store[key] = value.toString(); },
-    removeItem: function(key: string) { /* eslint-disable-next-line @typescript-eslint/no-dynamic-delete */ delete store[key]; },
+    removeItem: function(key: string) {   delete store[key]; },
     clear: function() { store = {}; }
   };
 })();

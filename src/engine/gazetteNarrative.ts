@@ -22,8 +22,7 @@ function styleName(style: string): string {
 
 function t(template: string | string[], data: Record<string, any>, rng?: IRNGService): string {
   let result = Array.isArray(template)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ? (rng ? rng.pick(template) : template[Math.floor(new SeededRNGService(Date.now()).next() * template.length)]!)
+    ? (rng ? rng.pick(template) : template[Math.floor(new SeededRNGService(Date.now()).next() * template.length)] || "")
     : template;
   if (!result) return "";
   for (const [key, value] of Object.entries(data)) {
@@ -35,7 +34,8 @@ function t(template: string | string[], data: Record<string, any>, rng?: IRNGSer
 export function generateFightNarrative(fight: FightSummary, mood: CrowdMoodType, rng?: IRNGService): string {
   const safeRng = rng || new SeededRNGService(fight.week * 42);
   const toneResource = MOOD_TONE[mood] || MOOD_TONE["Calm"];
-  if (!MOOD_TONE[mood]) console.error(`Missing mood tone logic for: ${mood}`);
+  // Log warning for debugging if a new mood type is added without tone data
+  if (!MOOD_TONE[mood] && mood !== "Calm") console.error(`Missing mood tone logic for: ${mood}, falling back to Calm`);
   const adj = safeRng.pick(toneResource.adjectives);
   const winner = fight.winner === "A" ? fight.a : fight.winner === "D" ? fight.d : null;
   const loser = fight.winner === "A" ? fight.d : fight.winner === "D" ? fight.a : null;
@@ -112,6 +112,7 @@ function detectRivalryMatchup(
   const names = new Set<string>();
   for (let i = 0; i < weekFights.length; i++) {
     const f = weekFights[i];
+    if (!f) continue;
     candidatePairs.add(f.a < f.d ? `${f.a}||${f.d}` : `${f.d}||${f.a}`);
     names.add(f.a);
     names.add(f.d);
@@ -125,6 +126,7 @@ function detectRivalryMatchup(
   // ⚡ Bolt: Fast existence check using names Set before template literal string allocation
   for (let i = 0; i < allFights.length; i++) {
     const f = allFights[i];
+    if (!f) continue;
     if (names.has(f.a) && names.has(f.d)) {
       const key = f.a < f.d ? `${f.a}||${f.d}` : `${f.d}||${f.a}`;
       if (pairCounts.has(key)) {
@@ -137,6 +139,7 @@ function detectRivalryMatchup(
   let best: { a: string; b: string; count: number } | null = null;
   for (let i = 0; i < weekFights.length; i++) {
     const f = weekFights[i];
+    if (!f) continue;
     const key = f.a < f.d ? `${f.a}||${f.d}` : `${f.d}||${f.a}`;
     const count = pairCounts.get(key) ?? 0;
     if (count >= 3 && (!best || count > best.count)) {
@@ -188,6 +191,7 @@ export function generateWeeklyGazette(
     const candidates = new Set<string>();
     for (let i = 0; i < fights.length; i++) {
       const f = fights[i];
+      if (!f) continue;
       if (f.winner) {
         candidates.add(f.winner === "A" ? f.a : f.d);
       }
@@ -201,6 +205,7 @@ export function generateWeeklyGazette(
     // ⚡ Bolt: Check if candidates Set has a/d to avoid Map lookups for everyone
     for (let i = 0; i < allFights.length; i++) {
       const af = allFights[i];
+      if (!af) continue;
       if (candidates.has(af.a)) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const s = stats.get(af.a)!;
@@ -244,32 +249,35 @@ export function generateWeeklyGazette(
   let headline: string;
   if (hotStreakers.length > 0) {
     // ⚡ Bolt: Reduced O(N log N) sort to O(N) single-pass reduce to find the max streak.
-    const top = hotStreakers.reduce((max, curr) => curr.streak > max.streak ? curr : max, hotStreakers[0]);
-    if (top.streak >= 10) {
-      headline = t(rng.pick(gh.LegendaryStreak), { week, name: top.name, streak: top.streak });
+    const top = hotStreakers.reduce((max, curr) => curr.streak > max.streak ? curr : max, hotStreakers[0] as { name: string; streak: number });
+    if (!top) {
+      headline = t(rngService.pick(gh.Standard), { week, adj: rngService.pick(tone.adjectives) });
+    } else if (top.streak >= 10) {
+      headline = t(rngService.pick(gh.LegendaryStreak), { week, name: top.name, streak: top.streak });
     } else if (top.streak >= 7) {
-      headline = t(rng.pick(gh.HotStreak), { week, name: top.name, streak: top.streak });
+      headline = t(rngService.pick(gh.HotStreak), { week, name: top.name, streak: top.streak });
     } else {
-      headline = t(rng.pick(gh.win_streak ? gh.win_streak : gh.Streak), { week, name: top.name, streak: top.streak });
+      headline = t(rngService.pick((gh as any).win_streak ? (gh as any).win_streak : gh.Streak), { week, name: top.name, streak: top.streak });
     }
   } else if (rivalryPair) {
-    headline = t(rng.pick(rivalryPair.count >= 5 ? gh.LegacyRivalry : gh.Rivalry), {
+    headline = t(rngService.pick(rivalryPair.count >= 5 ? (gh.LegacyRivalry || gh.Rivalry) : (gh.Rivalry || gh.Rivalry)), {
       week, a: rivalryPair.a, b: rivalryPair.b, count: rivalryPair.count 
     });
   } else if (risingStars.length > 0) {
-    headline = t(rng.pick(gh.RisingStar), { week, name: risingStars[0] });
+    headline = t(rngService.pick(gh.RisingStar || gh.Standard), { week, name: risingStars[0] });
   } else if (upsets.length > 0) {
-    headline = t(rng.pick(upsets[0].loserFame / upsets[0].winnerFame >= 3 && gh.major_upset ? gh.major_upset : gh.Upset), { week, winner: upsets[0].winner, loser: upsets[0].loser });
+    const upsetHeadline = (gh as any).major_upset && upsets[0].loserFame / upsets[0].winnerFame >= 3 ? (gh as any).major_upset : gh.Upset;
+    headline = t(rngService.pick(upsetHeadline), { week, winner: upsets[0].winner, loser: upsets[0].loser });
   } else if (kills.length >= 2) {
-    headline = t(rng.pick(gh.MultipleKills), { week, count: kills.length });
+    headline = t(rngService.pick(gh.MultipleKills), { week, count: kills.length });
   } else if (kills.length === 1) {
-    headline = t(rng.pick(gh.Kill), { week, killer: kills[0].winner === "A" ? kills[0].a : kills[0].d });
+    headline = t(rngService.pick(gh.Kill), { week, killer: kills[0]?.winner === "A" ? kills[0]?.a : kills[0]?.d });
   } else if (knockouts.length >= 2) {
-    headline = t(rng.pick(gh.MultipleKOs), { week, adj: rng.pick(tone.adjectives) });
+    headline = t(rngService.pick(gh.MultipleKOs), { week, adj: rngService.pick(tone.adjectives) });
   } else if (fights.length > 0) {
-    headline = t(rng.pick(gh.Standard), { week, adj: rng.pick(tone.adjectives) });
+    headline = t(rngService.pick(gh.Standard), { week, adj: rngService.pick(tone.adjectives) });
   } else {
-    headline = t(rng.pick(gh.Empty), { week });
+    headline = t(rngService.pick(gh.Empty), { week });
   }
 
   // Body
@@ -297,36 +305,36 @@ export function generateWeeklyGazette(
   // Streak narratives
   for (const s of hotStreakers) {
     if (s.streak >= 10) {
-      paragraphs.push(t(rng.pick(gf.LegendaryStreak), { name: s.name, streak: s.streak }));
+      paragraphs.push(t(rngService.pick(gf.LegendaryStreak), { name: s.name, streak: s.streak }));
     } else if (s.streak >= 7) {
-      paragraphs.push(t(rng.pick(gf.HotStreak), { name: s.name, streak: s.streak }));
+      paragraphs.push(t(rngService.pick(gf.HotStreak), { name: s.name, streak: s.streak }));
     } else {
-      paragraphs.push(t(rng.pick(gf.Streak), { name: s.name, streak: s.streak }));
+      paragraphs.push(t(rngService.pick(gf.Streak), { name: s.name, streak: s.streak }));
     }
   }
 
   // Rivalry narrative
   if (rivalryPair) {
-    paragraphs.push(t(rng.pick(rivalryPair.count >= 5 ? gf.LegacyRivalry : gf.Rivalry), {
+    paragraphs.push(t(rngService.pick(rivalryPair.count >= 5 ? gf.LegacyRivalry : gf.Rivalry), {
       a: rivalryPair.a, b: rivalryPair.b, count: rivalryPair.count, suffix: rivalryPair.count === 3 ? "rd" : "th" 
     }));
   }
 
   // Rising star narrative
   for (const star of risingStars) {
-    paragraphs.push(t(rng.pick(gf.RisingStar), { name: star }));
+    paragraphs.push(t(rngService.pick(gf.RisingStar), { name: star }));
   }
 
   // Upset narrative
   for (const u of upsets) {
-    paragraphs.push(t(rng.pick(gf.Upset), { winner: u.winner, loser: u.loser, fameW: u.winnerFame, fameL: u.loserFame }));
+    paragraphs.push(t(rngService.pick(gf.Upset), { winner: u.winner, loser: u.loser, fameW: u.winnerFame, fameL: u.loserFame }));
   }
 
   // Graveyard mention
   if (graveyard.length > 0) {
     const recent = graveyard.filter(w => w.deathWeek === week);
     if (recent.length > 0) {
-      paragraphs.push(t(rng.pick(gf.Graveyard), { count: recent.length, plural: recent.length !== 1 ? "s" : "" }));
+      paragraphs.push(t(rngService.pick(gf.Graveyard), { count: recent.length, plural: recent.length !== 1 ? "s" : "" }));
     }
   }
 
@@ -370,10 +378,10 @@ export function generateSeasonSummary(
   const gs = (narrativeContent as NarrativeContent).gazette.season_summary;
   const headline = t(gs.headline, { season, total, kills });
   const body = [
-    t(gs.body[0], { season, total, killRate }),
-    topStyle ? t(gs.body[1], { style: styleName(topStyle[0]), wins: topStyle[1] }) : "",
-    kills >= 5 ? gs.body[2] : "",
-    gs.body[3],
+    gs.body[0] ? t(gs.body[0], { season, total, killRate }) : "",
+    topStyle && gs.body[1] ? t(gs.body[1], { style: styleName(topStyle[0]), wins: topStyle[1] }) : "",
+    kills >= 5 && gs.body[2] ? gs.body[2] : "",
+    gs.body[3] || "",
   ].filter(Boolean).join("\n\n");
 
   return { id: `summary_${season}`, headline, body, mood, tags: ["Season Review"], week: -1 };

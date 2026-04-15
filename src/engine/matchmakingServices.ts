@@ -1,21 +1,15 @@
-import type { 
-  Warrior, RivalStableData, MatchRecord, 
-  Rivalry
-} from "@/types/state.types";
-import type { FightOutcome } from "@/types/combat.types";
-import { getStablePairKey, getWarriorPairKey } from "@/utils/keyUtils";
+import type { Warrior } from "@/types/state.types";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 
 /**
  * Matchmaking Scoring Service - handles the weights and logic for pairing warriors.
  */
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
-export class MatchScoringService {
+export const MatchScoringService = {
   /**
    * Calculates a booking score for a potential matchup.
    * Higher score = more likely to be booked.
    */
-  static calculatePairingScore(params: {
+  calculatePairingScore(params: {
     p_fame: number;
     r_fame: number;
     rivalStableId: string;
@@ -77,12 +71,12 @@ export class MatchScoringService {
 /**
  * AI Bout Service - handles automatic background resolution of rival-vs-rival fights.
  */
-export class AIBoutService {
+export const AIBoutService = {
   /**
    * Updates a rival warrior's record after a background bout.
    * This is a pure-ish helper that returns the updated roster.
    */
-  static updateWarriorRecord(
+  updateWarriorRecord(
     roster: Warrior[],
     wId: string,
     won: boolean,
@@ -100,12 +94,12 @@ export class AIBoutService {
         fame: Math.max(0, w.fame + (won ? (killed ? 3 : 1) : 0)),
       };
     });
-  }
+  },
 
   /**
    * Generates a narrative line for a rival rivalry bout.
    */
-  static generateRivalryNarrative(stableA: string, stableB: string, warriorA: string, warriorB: string, rng: IRNGService): string {
+  generateRivalryNarrative(stableA: string, stableB: string, warriorA: string, warriorB: string, rng: IRNGService): string {
     const templates = [
       `🔥 RIVALRY REPORT: The feud between ${stableA} and ${stableB} rages on — ${warriorA} faced ${warriorB} in a grudge match!`,
       `⚔️ VENDETTA IN THE PITS: ${stableA} vs ${stableB} — ${warriorA} and ${warriorB} settled scores in the arena!`,

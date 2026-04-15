@@ -2,17 +2,16 @@ import type { GameState } from "@/types/state.types";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { advanceWeek as runWeeklyPipeline } from "@/engine/pipeline/services/weekPipelineService";
 import { TournamentSelectionService } from "@/engine/matchmaking/tournamentSelection";
-import { resolveImpacts, StateImpact } from "@/engine/impacts";
 
 /**
  * Stable Lords — Unified Tick Orchestrator
  * Central point for all time-based progression logic.
  */
-export class TickOrchestrator {
+export const TickOrchestrator = {
   /**
    * Advances a single day including tournament resolution.
    */
-  static advanceDay(state: GameState): GameState {
+  advanceDay(state: GameState): GameState {
     const currentDay = state.day || 0;
     const nextDay = currentDay + 1;
     const rng = new SeededRNGService((state.week * 100) + nextDay);
@@ -51,16 +50,15 @@ export class TickOrchestrator {
 
     // 3. Regular Day
     return { ...state, day: nextDay };
-  }
+  },
 
   /**
    * High-performance: Skips to the end of the current week.
    * Batches tournament rounds into a single summary.
    */
-  static skipToWeekEnd(state: GameState): GameState {
+  skipToWeekEnd(state: GameState): GameState {
     let currentState = { ...state };
     const currentDay = state.day || 0;
-    const remainingDays = 7 - currentDay;
     const weeklyNewsItems: string[] = [];
 
     // 1. Resolve Tournament Rounds (Batched)

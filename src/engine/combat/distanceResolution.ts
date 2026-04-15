@@ -97,8 +97,8 @@ export function contestDistance(
 
   return {
     distanceWinner: winner,
-    rangeModA: aWins ? 1 : -1,
-    rangeModD: aWins ? -1 : 1,
+    rangeModA: 0,
+    rangeModD: 0,
     newRange,
     events,
   };

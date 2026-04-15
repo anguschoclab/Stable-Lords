@@ -384,6 +384,12 @@ export function conservingLine(name: string): string {
   return `${name} is conserving his energy.`;
 }
 
+export function tacticStreakLine(name: string, tactic: string, streak: number): string | null {
+  if (streak === 3) return `${name} is leaning heavily on the ${tactic}.`;
+  if (streak >= 5) return `${name}'s repeated ${tactic} is now obvious to everyone watching.`;
+  return null;
+}
+
 export function pressingLine(rng: RNG, name: string): string {
   const template = getFromArchive(rng, ["pbp", "pacing", "pressing"]);
   return interpolateTemplate(template, { attacker: name });

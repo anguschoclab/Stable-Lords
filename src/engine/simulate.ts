@@ -10,7 +10,8 @@ import {
   battleOpener,
   minuteStatusLine,
   narrateBoutEnd,
-  conservingLine
+  conservingLine,
+  tacticStreakLine,
 } from "./narrativePBP";
 import { narrateEvents, NarrationContext } from "./combat/narrator";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
@@ -125,9 +126,9 @@ export function simulateFight(
   introD.forEach(line => log.push({ minute: 0, text: line }));
   log.push({ minute: 0, text: "" });
 
-  // Emit weather opening line (skipped for Clear/Overcast)
+  // Emit weather opening line with explicit type name (skipped for Clear/Overcast)
   const weatherLine = weatherOpeningLine(weather);
-  if (weatherLine) log.push({ minute: 0, text: `☁ ${weatherLine}` });
+  if (weatherLine) log.push({ minute: 0, text: `☁ ${weather.toUpperCase()} — ${weatherLine}` });
 
   log.push({ minute: 1, text: battleOpener(rng) });
   if (planA.OE <= 3) log.push({ minute: 1, text: conservingLine(nameA) });
@@ -181,6 +182,16 @@ export function simulateFight(
     log.push(...newLines);
     prevHpRatioA = lastHpRatioA;
     prevHpRatioD = lastHpRatioD;
+
+    // Tactic streak commentary — emit only at the 3 and 5 thresholds
+    if ((resCtx.tacticStreakA === 3 || resCtx.tacticStreakA === 5) && resCtx.lastOffTacticA) {
+      const streakLine = tacticStreakLine(nameA, resCtx.lastOffTacticA, resCtx.tacticStreakA);
+      if (streakLine) log.push({ minute: min, text: streakLine });
+    }
+    if ((resCtx.tacticStreakD === 3 || resCtx.tacticStreakD === 5) && resCtx.lastOffTacticD) {
+      const streakLine = tacticStreakLine(nameD, resCtx.lastOffTacticD, resCtx.tacticStreakD);
+      if (streakLine) log.push({ minute: min, text: streakLine });
+    }
 
     // C. Check for End Events
     const boutEnd = events.find(e => e.type === "BOUT_END");

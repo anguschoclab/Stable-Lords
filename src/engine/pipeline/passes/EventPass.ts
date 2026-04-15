@@ -27,11 +27,12 @@ function t(template: string, data: Record<string, any>): string {
 }
 
 import { StateImpact } from "@/engine/impacts";
+import type { NewsletterItem } from "@/types/state.types";
 
 export function runEventPass(state: GameState, nextWeek: number, rootRng?: IRNGService): StateImpact {
   const brawlRng = rootRng || new SeededRNGService(nextWeek * 999 + 1);
   const rosterUpdates = new Map<string, any>();
-  const newsletterItems: any[] = [];
+  const newsletterItems: NewsletterItem[] = [];
   
   // 🍺 Tavern Brawl Event
   if (brawlRng.next() < 0.05 && state.roster.length > 0) {

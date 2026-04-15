@@ -3,7 +3,7 @@
  */
 import React from "react";
 import { useGameStore } from "@/state/useGameStore";
-import { STYLE_DISPLAY_NAMES, FightingStyle } from "@/types/game";
+import { STYLE_DISPLAY_NAMES, FightingStyle, type Warrior } from "@/types/game";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -70,7 +70,7 @@ export default function Graveyard() {
   );
 }
 
-function FallenGrid({ warriors, season, emptyTitle, emptyDesc }: { warriors: any[], season: string, emptyTitle: string, emptyDesc: string }) {
+function FallenGrid({ warriors, season, emptyTitle, emptyDesc }: { warriors: Warrior[], season: string, emptyTitle: string, emptyDesc: string }) {
   if (warriors.length === 0) {
     return (
       <motion.div 

@@ -1,5 +1,5 @@
-import type { GameState } from "@/types/state.types";
-import type { Warrior } from "@/types/warrior.types";
+import type { GameState, Warrior, RivalStableData } from "@/types/state.types";
+import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { archiveWeekLogs } from "../adapters/opfsArchiver";
 import { computeMetaDrift } from "@/engine/metaDrift";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
@@ -49,7 +49,7 @@ export function advanceWeek(state: GameState): GameState {
   // Build and cache warrior map for subsequent AI passes
   const warriorMap = new Map<string, Warrior>();
   settledState.roster.forEach((w: Warrior) => warriorMap.set(w.id, w));
-  (settledState.rivals || []).forEach((r: any) => r.roster.forEach((w: Warrior) => warriorMap.set(w.id, w)));
+  (settledState.rivals || []).forEach((r: RivalStableData) => r.roster.forEach((w: Warrior) => warriorMap.set(w.id, w)));
   settledState.warriorMap = warriorMap;
 
   // 3. Collection Phase (Collect all intended changes)

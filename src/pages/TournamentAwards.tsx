@@ -8,7 +8,7 @@ import AwardCard from "@/components/awards/AwardCard";
 import UpsetsList from "@/components/awards/UpsetsList";
 import FightsList from "@/components/awards/FightsList";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";
-import type { TournamentEntry, FightSummary } from "@/types/game";
+import type { TournamentEntry, FightSummary, Warrior } from "@/types/game";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -243,14 +243,14 @@ function TournamentSection({ award }: { award: TournamentAward }) {
 export default function TournamentAwards() {
   const state = useWorldState();
   const playerNames = useMemo(() => new Set([
-    ...state.roster.map((w: any) => w.name),
-    ...state.graveyard.map((w: any) => w.name),
-    ...state.retired.map((w: any) => w.name),
+    ...state.roster.map((w: Warrior) => w.name),
+    ...state.graveyard.map((w: Warrior) => w.name),
+    ...state.retired.map((w: Warrior) => w.name),
   ]), [state]);
 
   const awards = useMemo(() => {
-    const completed = state.tournaments.filter((t: any) => t.completed).reverse();
-    return completed.map((t: any) => computeTournamentAwards(t, state.arenaHistory, playerNames));
+    const completed = state.tournaments.filter((t: TournamentEntry) => t.completed).reverse();
+    return completed.map((t: TournamentEntry) => computeTournamentAwards(t, state.arenaHistory, playerNames));
   }, [state.tournaments, state.arenaHistory, playerNames]);
 
   return (

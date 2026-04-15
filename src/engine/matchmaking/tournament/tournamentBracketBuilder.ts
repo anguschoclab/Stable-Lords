@@ -1,5 +1,5 @@
-import type { 
-  Warrior, 
+import type {
+  Warrior,
   TournamentEntry,
   Season
 } from "@/types/state.types";
@@ -15,6 +15,19 @@ export interface TournamentBracketConfig {
   rng: IRNGService;
 }
 
+export interface BracketMatch {
+  round: number;
+  matchIndex: number;
+  a: string;
+  d: string;
+  warriorIdA: string;
+  warriorIdD: string;
+  stableIdA?: string;
+  stableIdD?: string;
+  stableA?: string;
+  stableD?: string;
+}
+
 /**
  * Builds a tournament bracket from selected warriors.
  * Creates a 64-warrior single-elimination bracket.
@@ -24,7 +37,7 @@ export function buildTournament(config: TournamentBracketConfig): TournamentEntr
   const rngService = rng;
   const id = `t-${tierId.toLowerCase()}-${season.toLowerCase()}-${week}`;
   const shuffled = rngService.shuffle([...warriors]);
-  const bracket: any[] = [];
+  const bracket: BracketMatch[] = [];
   
   for (let i = 0; i < 64; i += 2) {
     bracket.push({

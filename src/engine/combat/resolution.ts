@@ -317,7 +317,7 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
 
   const attMomentumBonus = att.momentum * 2;
   const attPsychMod = aGoesFirst ? psychA.attMod : psychD.attMod;
-  const attSucc = performAttackCheck(rng, att, curAttOE, aGoesFirst ? ctx.matchupA : ctx.matchupD, aGoesFirst ? fatA : fatD, curOffMods, curPassA, curAntiSyn, curBiasAtt, overAtt, curAttWepReq, attMomentumBonus + attPsychMod);
+  const attSucc = performAttackCheck(rng, att, curAttOE, aGoesFirst ? ctx.matchupA : ctx.matchupD, aGoesFirst ? fatA : fatD, curOffMods, curPassA, curAntiSyn, curBiasAtt, overAtt, curAttWepReq, attMomentumBonus + attPsychMod + (aGoesFirst ? es.rangeModA : es.rangeModD) + attCommit.attBonus + feintAttBonus);
 
   if (!attSucc) {
     events.push({ type: "ATTACK", actor: attLabel, result: "WHIFF" });
@@ -342,7 +342,12 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
     const overDef = aGoesFirst ? Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD) : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakA);
     const curAntiSynDef = getStyleAntiSynergy(def.style, (aGoesFirst ? tactD : tactA).offTactic, (aGoesFirst ? tactD : tactA).defTactic);
 
-    const defCheck = performDefenseCheck(rng, def, curDefOE, aGoesFirst ? ctx.matchupD : ctx.matchupA, aGoesFirst ? fatD : fatA, curDefMods, curPassD, curBiasDef, overDef, isDodge, curAntiSynDef, curOffMods, ctx, att);
+    const zonePenalty = ctx.pushedFighter === def.label
+      ? Math.abs(getZonePenalty(ctx.zone, ctx.arenaConfig))
+      : 0;
+    const extraDefPenalty = zonePenalty + Math.max(0, -defCommit.defPenalty) + feintDefBonus;
+
+    const defCheck = performDefenseCheck(rng, def, curDefOE, aGoesFirst ? ctx.matchupD : ctx.matchupA, aGoesFirst ? fatD : fatA, curDefMods, curPassD, curBiasDef, overDef, isDodge, curAntiSynDef, curOffMods, ctx, att, extraDefPenalty);
 
     if (defCheck.success) {
       events.push({ type: "DEFENSE", actor: defLabel, result: defCheck.type });
@@ -369,6 +374,9 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   }
 
   applyEnduranceCosts(events, ctx, fA, fD, aGoesFirst, curAttOE, curAttAL, curAttWepReq, aGoesFirst ? ctx.weaponReqD : ctx.weaponReqA, OE_D, AL_D, OE_A, AL_A);
+
+  // Sub-phase 5: Recovery — write debt, handle zone transitions
+  runRecovery(fA, fD, es.recoveryDebtToWriteA, es.recoveryDebtToWriteD, events, ctx);
 
   // Track tactic streaks for overuse penalty
   const currTacticA = tactA.offTactic;

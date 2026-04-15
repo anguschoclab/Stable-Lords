@@ -6,6 +6,7 @@ import { aiPlanForWarrior } from "@/engine/ownerAI";
 import { FightingStyle } from "@/types/shared.types";
 import { findWarriorById, modifyWarrior } from "./tournamentStateMutator";
 import { StateImpact, mergeImpacts, resolveImpacts } from "@/engine/impacts";
+import type { BracketMatch } from "./tournamentBracketBuilder";
 
 export interface RoundResolutionResult {
   impact: StateImpact;
@@ -95,10 +96,10 @@ export function resolveRound(state: GameState, tournamentId: string, seed: numbe
 
     // 🥉 Bronze Match Injection: If we just finished Semi-Finals (Round 5, winners.length === 2)
     if (currentRound === 5 && losers.length === 2) {
-      const bronzeBout: any = { 
+      const bronzeBout: BracketMatch = {
         round: 6, // Bronze Match happens alongside the Finals
         matchIndex: 1, // Finals is index 0
-        a: losers[0].name, 
+        a: losers[0].name,
         d: losers[1].name,
         warriorIdA: losers[0].id,
         warriorIdD: losers[1].id,
@@ -228,7 +229,7 @@ function applyBoutResultsToImpact(
   rosterUpdates.set(wD.id, updateWarrior(wD, false));
 
   state.rivals.forEach(r => {
-    const rosterChanges: any[] = [];
+    const rosterChanges: Warrior[] = [];
     r.roster.forEach(w => {
       if (w.id === wA.id) rosterChanges.push(updateWarrior(w, true));
       else if (w.id === wD.id) rosterChanges.push(updateWarrior(w, false));
@@ -249,7 +250,7 @@ function applyBoutResultsToImpact(
     const victim = winnerSide === "D" ? wA : wD;
     impact.graveyard = [{ ...victim, status: "Dead", deathWeek: state.week }];
     // Mark as dead in roster updates
-    const deadUpdate = { status: "Dead" as any };
+    const deadUpdate: Partial<Warrior> = { status: "Dead" as const };
     rosterUpdates.set(victim.id, deadUpdate);
   }
 

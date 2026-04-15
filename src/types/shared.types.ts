@@ -164,6 +164,10 @@ export interface FightPlan {
   };
   /** Conditional overrides evaluated mid-fight based on fight state. First match wins. */
   conditions?: PlanCondition[];
+  /** 0-10 tendency to feint; only triggers when WT ≥ 15 and OE ≥ 4 */
+  feintTendency?: number;
+  /** Preferred range — influences Approach roll motivation bonus (+2 when contesting toward this range) */
+  rangePreference?: DistanceRange;
 }
 
 // ─── Conditional Fight Plans ─────────────────────────────────────────────────
@@ -183,6 +187,38 @@ export interface PlanCondition {
 }
 
 export type PsychState = "Neutral" | "InTheZone" | "Rattled" | "Desperate" | "Cruising";
+
+// ─── Spatial / Distance System ─────────────────────────────────────────────
+
+export type DistanceRange = "Grapple" | "Tight" | "Striking" | "Extended";
+export type ArenaZone     = "Center" | "Edge" | "Corner" | "Obstacle";
+export type CommitLevel   = "Cautious" | "Standard" | "Full";
+export type ArenaTag      = "outdoor" | "indoor" | "elevated" | "water" | "cramped" | "open" | "premium";
+
+export interface SurfaceMod {
+  initiativeMod: number;   // flat bonus/penalty to INI rolls each exchange
+  enduranceMult: number;   // multiplier on endurance costs (1.0 = baseline)
+  riposteMod: number;      // flat bonus/penalty to riposte checks
+}
+
+export interface ArenaWeatherMod {
+  weatherType: WeatherType;
+  zoneDef?: Partial<Record<ArenaZone, number>>;
+  surfaceMod?: Partial<SurfaceMod>;
+}
+
+export interface ArenaConfig {
+  id: string;
+  name: string;
+  tags: ArenaTag[];
+  tier: 1 | 2 | 3;          // 1=common, 2=prestigious, 3=special event
+  description: string;
+  /** DEF penalty per zone (negative = penalty). E.g. Edge: -2, Corner: -4 */
+  zoneDef: Partial<Record<ArenaZone, number>>;
+  surfaceMod: SurfaceMod;
+  weatherMods?: ArenaWeatherMod[];
+  startingZone?: ArenaZone; // default "Center"
+}
 
 // ─── Trainer Types ────────────────────────────────────────────────────────
 

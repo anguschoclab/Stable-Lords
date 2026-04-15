@@ -59,7 +59,11 @@ export type CombatEventType =
   | "BOUT_END"
   | "PASSIVE"
   | "INSIGHT"
-  | "MOMENTUM_SHIFT";
+  | "MOMENTUM_SHIFT"
+  | "RANGE_SHIFT"
+  | "FEINT_SUCCESS"
+  | "FEINT_FAIL"
+  | "ZONE_SHIFT";
 
 export interface CombatEvent {
   type: CombatEventType;

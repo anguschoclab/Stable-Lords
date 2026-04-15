@@ -96,6 +96,7 @@ export function simulateFight(
     matchupD: getMatchupBonus(planD.style, planA.style),
     trainerModsA: modsA,
     trainerModsD: modsD,
+    trainers: trainers ?? [],
     weaponReqA: { endurancePenalty: weaponReqA.endurancePenalty, attPenalty: weaponReqA.attPenalty },
     weaponReqD: { endurancePenalty: weaponReqD.endurancePenalty, attPenalty: weaponReqD.attPenalty },
     tacticStreakA: 0,

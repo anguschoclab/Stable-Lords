@@ -136,6 +136,35 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
     onUpdate();
   };
 
+  const handleApplyRhythm = () => {
+    const fav = warrior.favorites;
+    if (!fav?.discovered.rhythm) return;
+    setState((s: any) => {
+      s.roster = s.roster.map((w: any) => {
+        if (w.id !== warrior.id) return w;
+        const basePlan = w.plan ?? {};
+        return { ...w, plan: { ...basePlan, OE: fav.rhythm.oe, AL: fav.rhythm.al } };
+      });
+    });
+    toast.success(`${warrior.name}'s strategy updated — OE ${fav.rhythm.oe} / AL ${fav.rhythm.al} locked in.`);
+    onUpdate();
+  };
+
+  const handleEquipFavoriteWeapon = () => {
+    const fav = warrior.favorites;
+    if (!fav?.discovered.weapon) return;
+    setState((s: any) => {
+      s.roster = s.roster.map((w: any) => {
+        if (w.id !== warrior.id) return w;
+        const equip = w.equipment ?? {};
+        return { ...w, equipment: { ...equip, weapon: fav.weaponId } };
+      });
+    });
+    const weaponName = favDisplay.weapon ?? fav.weaponId;
+    toast.success(`${warrior.name} equipped with their soul-bond weapon: ${weaponName}.`);
+    onUpdate();
+  };
+
   if (!warrior.favorites) return null;
 
   return (
@@ -170,18 +199,32 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
                 </div>
               )}
             </div>
-            {!isWeaponDiscovered && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" onClick={() => handleInsight("weapon")} className="h-7 w-7 p-0 border-white/10 hover:bg-arena-gold/20" aria-label="Reveal favorite weapon insight">
-                      <Eye className="h-3.5 w-3.5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="bg-black text-[10px]">Use Insight Token</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
+            <div className="flex items-center gap-1.5">
+              {isWeaponDiscovered && warrior.equipment?.weapon !== warrior.favorites?.weaponId && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="sm" onClick={handleEquipFavoriteWeapon} className="h-7 px-2 border-arena-gold/30 hover:bg-arena-gold/20 text-arena-gold text-[9px] font-black uppercase gap-1" aria-label="Equip favorite weapon">
+                        <Download className="h-3 w-3" /> Equip
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-black text-[10px]">Switch to soul-bond weapon</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              {!isWeaponDiscovered && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="sm" onClick={() => handleInsight("weapon")} className="h-7 w-7 p-0 border-white/10 hover:bg-arena-gold/20" aria-label="Reveal favorite weapon insight">
+                        <Eye className="h-3.5 w-3.5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-black text-[10px]">Use Insight Token</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
           </div>
           <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
             <div 
@@ -215,18 +258,39 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
                 </div>
               )}
             </div>
-            {!isRhythmDiscovered && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" onClick={() => handleInsight("rhythm")} className="h-7 w-7 p-0 border-white/10 hover:bg-arena-gold/20" aria-label="Reveal favorite rhythm insight">
-                      <Eye className="h-3.5 w-3.5" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent className="bg-black text-[10px]">Use Insight Token</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
+            <div className="flex items-center gap-1.5">
+              {isRhythmDiscovered && (() => {
+                const fav = warrior.favorites!;
+                const plan = warrior.plan;
+                const alreadyApplied = plan && plan.OE === fav.rhythm.oe && plan.AL === fav.rhythm.al;
+                return !alreadyApplied ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" size="sm" onClick={handleApplyRhythm} className="h-7 px-2 border-arena-gold/30 hover:bg-arena-gold/20 text-arena-gold text-[9px] font-black uppercase gap-1" aria-label="Apply favorite rhythm to strategy">
+                          <Download className="h-3 w-3" /> Apply
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-black text-[10px]">Lock soul-rhythm into strategy sheet</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <Badge className="bg-arena-gold/10 text-arena-gold border border-arena-gold/20 text-[9px] font-black px-1.5">Active</Badge>
+                );
+              })()}
+              {!isRhythmDiscovered && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="sm" onClick={() => handleInsight("rhythm")} className="h-7 w-7 p-0 border-white/10 hover:bg-arena-gold/20" aria-label="Reveal favorite rhythm insight">
+                        <Eye className="h-3.5 w-3.5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-black text-[10px]">Use Insight Token</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
           </div>
           <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
             <div 

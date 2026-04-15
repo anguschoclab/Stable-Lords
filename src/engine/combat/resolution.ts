@@ -22,6 +22,7 @@ import type {
 import type { WeatherEffect } from "./weatherEffects";
 import { getWeatherEffect } from "./weatherEffects";
 import { evaluateConditions, PSYCH_STATE_MODS } from "./conditionEngine";
+import { getSpecialtyMods } from "../trainerSpecialties";
 import { skillCheck, contestCheck } from "./combatMath";
 import { computeHitDamage, rollHitLocation, applyProtectMod, calculateKillWindow } from "./combatDamage";
 import { enduranceCost, fatiguePenalty } from "./combatFatigue";
@@ -108,6 +109,11 @@ export interface ResolutionContext {
   matchupD: number;
   trainerModsA: { [key: string]: number };
   trainerModsD: { [key: string]: number };
+  /** Raw trainer list — used for per-exchange specialty recalculation */
+  trainers?: import("@/types/state.types").Trainer[];
+  /** Snapshot of base trainer mods (without specialties) — preserved so per-exchange specialty deltas stay additive */
+  baseTrainerModsA?: { [key: string]: number };
+  baseTrainerModsD?: { [key: string]: number };
   weaponReqA: { endurancePenalty: number; attPenalty: number };
   weaponReqD: { endurancePenalty: number; attPenalty: number };
   tacticStreakA: number;
@@ -159,6 +165,45 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
     }
   }
 
+  // ── Per-exchange specialty mods (conditional on current fight state) ──
+  // Specialties like KillerInstinct/Finisher/IronGuard depend on live HP/momentum/endurance.
+  // We snapshot the static base mods on exchange 0 and always diff from that snapshot,
+  // so each exchange gets a fresh specialty computation without compounding.
+  if (ctx.trainers?.length) {
+    if (!ctx.baseTrainerModsA) ctx.baseTrainerModsA = { ...ctx.trainerModsA };
+    if (!ctx.baseTrainerModsD) ctx.baseTrainerModsD = { ...ctx.trainerModsD };
+    const specA = getSpecialtyMods(ctx.trainers, fA, fD, ctx);
+    const specD = getSpecialtyMods(ctx.trainers, fD, fA, ctx);
+    const baseA = ctx.baseTrainerModsA;
+    const baseD = ctx.baseTrainerModsD;
+    ctx.trainerModsA = {
+      attMod: (baseA.attMod ?? 0) + specA.attMod,
+      parMod: (baseA.parMod ?? 0) + specA.parMod,
+      defMod: (baseA.defMod ?? 0) + specA.defMod,
+      iniMod: (baseA.iniMod ?? 0) + specA.iniMod,
+      decMod: (baseA.decMod ?? 0) + specA.decMod,
+      endMod: (baseA.endMod ?? 0) + specA.endMod,
+      healMod: baseA.healMod ?? 0,
+      killWindowBonus: specA.killWindowBonus,
+      damageReceivedMult: specA.damageReceivedMult,
+      riposteDamageMult: specA.riposteDamageMult,
+      fatiguePenaltyReduction: specA.fatiguePenaltyReduction,
+    };
+    ctx.trainerModsD = {
+      attMod: (baseD.attMod ?? 0) + specD.attMod,
+      parMod: (baseD.parMod ?? 0) + specD.parMod,
+      defMod: (baseD.defMod ?? 0) + specD.defMod,
+      iniMod: (baseD.iniMod ?? 0) + specD.iniMod,
+      decMod: (baseD.decMod ?? 0) + specD.decMod,
+      endMod: (baseD.endMod ?? 0) + specD.endMod,
+      healMod: baseD.healMod ?? 0,
+      killWindowBonus: specD.killWindowBonus,
+      damageReceivedMult: specD.damageReceivedMult,
+      riposteDamageMult: specD.riposteDamageMult,
+      fatiguePenaltyReduction: specD.fatiguePenaltyReduction,
+    };
+  }
+
   // ── Psych state modifier lookup ──
   const psychA = PSYCH_STATE_MODS[fA.psychState];
   const psychD = PSYCH_STATE_MODS[fD.psychState];
@@ -187,9 +232,9 @@ export function resolveExchange(ctx: ResolutionContext, fA: FighterState, fD: Fi
   const [OE_A, AL_A] = calculateFinalOEAL(fA.activePlan.phases?.[phaseKey]?.OE ?? fA.activePlan.OE, fA.activePlan.phases?.[phaseKey]?.AL ?? fA.activePlan.AL, fA.activePlan, fA.hp, fA.maxHp, fA.endurance, fA.maxEndurance, exchange);
   const [OE_D, AL_D] = calculateFinalOEAL(fD.activePlan.phases?.[phaseKey]?.OE ?? fD.activePlan.OE, fD.activePlan.phases?.[phaseKey]?.AL ?? fD.activePlan.AL, fD.activePlan, fD.hp, fD.maxHp, fD.endurance, fD.maxEndurance, exchange);
 
-  // Apply psych state mods to fatigue calculations
-  const fatA = fatiguePenalty(fA.endurance, fA.maxEndurance) + psychA.defMod + psychA.parMod;
-  const fatD = fatiguePenalty(fD.endurance, fD.maxEndurance) + psychD.defMod + psychD.parMod;
+  // Apply psych state mods and RopeADope fatigue penalty reduction
+  const fatA = fatiguePenalty(fA.endurance, fA.maxEndurance, ctx.trainerModsA.fatiguePenaltyReduction ?? 0) + psychA.defMod + psychA.parMod;
+  const fatD = fatiguePenalty(fD.endurance, fD.maxEndurance, ctx.trainerModsD.fatiguePenaltyReduction ?? 0) + psychD.defMod + psychD.parMod;
   const passA = getStylePassive(fA.style, { phase: stylePhase, exchange, hitsLanded: fA.hitsLanded, hitsTaken: fA.hitsTaken, ripostes: fA.ripostes, consecutiveHits: fA.consecutiveHits, hpRatio: fA.hp / fA.maxHp, endRatio: fA.endurance / fA.maxEndurance, opponentStyle: fD.style, targetedLocation: tactA.target, totalFights: fA.totalFights });
   const passD = getStylePassive(fD.style, { phase: stylePhase, exchange, hitsLanded: fD.hitsLanded, hitsTaken: fD.hitsTaken, ripostes: fD.ripostes, consecutiveHits: fD.consecutiveHits, hpRatio: fD.hp / fD.maxHp, endRatio: fD.endurance / fD.maxEndurance, opponentStyle: fA.style, targetedLocation: tactD.target, totalFights: fD.totalFights });
 

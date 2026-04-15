@@ -130,7 +130,7 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
   const handleInsight = (type: "weapon" | "rhythm") => {
     const msg = applyInsightToken(warrior, type);
     setState((s: any) => {
-      s.roster = s.roster.map((w: any) => w.id === warrior.id ? { ...w, favorites: warrior.favorites } : w);
+      s.roster = s.roster.map((w: Warrior) => w.id === warrior.id ? { ...w, favorites: warrior.favorites } : w);
     });
     toast.success(msg);
     onUpdate();
@@ -140,7 +140,7 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
     const fav = warrior.favorites;
     if (!fav?.discovered.rhythm) return;
     setState((s: any) => {
-      s.roster = s.roster.map((w: any) => {
+      s.roster = s.roster.map((w: Warrior) => {
         if (w.id !== warrior.id) return w;
         const basePlan = w.plan ?? {};
         return { ...w, plan: { ...basePlan, OE: fav.rhythm.oe, AL: fav.rhythm.al } };
@@ -154,7 +154,7 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
     const fav = warrior.favorites;
     if (!fav?.discovered.weapon) return;
     setState((s: any) => {
-      s.roster = s.roster.map((w: any) => {
+      s.roster = s.roster.map((w: Warrior) => {
         if (w.id !== warrior.id) return w;
         const equip = w.equipment ?? {};
         return { ...w, equipment: { ...equip, weapon: fav.weaponId } };

@@ -1,16 +1,17 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  BrainCircuit, 
-  Target, 
-  Zap, 
-  History, 
-  TrendingUp, 
+import {
+  BrainCircuit,
+  Target,
+  Zap,
+  History,
+  TrendingUp,
   Activity,
   ShieldAlert,
   Coins,
-  Users
+  Users,
+  LucideIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { RivalStableData, AIIntent, AIEvent } from "@/types/state.types";
@@ -19,7 +20,7 @@ interface AgentReasoningWidgetProps {
   rival: RivalStableData;
 }
 
-const INTENT_METRICS: Record<AIIntent, { label: string; icon: any; color: string; description: string }> = {
+const INTENT_METRICS: Record<AIIntent, { label: string; icon: LucideIcon; color: string; description: string }> = {
   SURVIVAL: { 
     label: "Survival Protocol", 
     icon: ShieldAlert, 

@@ -43,7 +43,7 @@ export interface GameStoreActions {
 export type GameStore = GameStoreState & GameStoreActions & EconomySlice & RosterSlice & WorldSlice & TournamentSlice;
 
 let lastResult: GameState | null = null;
-let lastStoreValues: any = null;
+let lastStoreValues: GameStore | null = null;
 
 export function reconstructGameState(store: GameStore): GameState {
   const currentValues = {

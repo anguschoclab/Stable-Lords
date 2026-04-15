@@ -11,34 +11,36 @@ type RollingBucket = { W: number; L: number; K: number; fights: number };
 
 // ── Validation ────────────────────────────────────────────────────────────
 
-function isBucket(o: any): o is Bucket {
+function isBucket(o: unknown): o is Bucket {
   return (
     !!o &&
-    (o as any).w !== undefined &&
-    typeof (o as any).w === 'number' &&
-    typeof (o as any).l === 'number' &&
-    typeof (o as any).k === 'number' &&
-    typeof (o as any).pct === 'number' &&
-    typeof (o as any).fights === 'number'
+    (o as Bucket).w !== undefined &&
+    typeof (o as Bucket).w === 'number' &&
+    typeof (o as Bucket).l === 'number' &&
+    typeof (o as Bucket).k === 'number' &&
+    typeof (o as Bucket).pct === 'number' &&
+    typeof (o as Bucket).fights === 'number'
   );
 }
 
-function isRollingBucket(o: any): o is RollingBucket {
+function isRollingBucket(o: unknown): o is RollingBucket {
   return (
     !!o &&
-    (o as any).W !== undefined &&
-    typeof (o as any).W === 'number' &&
-    typeof (o as any).L === 'number' &&
-    typeof (o as any).K === 'number' &&
-    typeof (o as any).fights === 'number'
+    (o as RollingBucket).W !== undefined &&
+    typeof (o as RollingBucket).W === 'number' &&
+    typeof (o as RollingBucket).L === 'number' &&
+    typeof (o as RollingBucket).K === 'number' &&
+    typeof (o as RollingBucket).fights === 'number'
   );
 }
 
 function validateWeekRecord(o: unknown): Record<string, Bucket> {
   if (!o || typeof o !== 'object' || Array.isArray(o)) return {};
   const res: Record<string, Bucket> = {};
-  for (const key in (o as any)) {
-    if (isBucket((o as any)[key])) res[key] = (o as any)[key];
+  const obj = o as Record<string, unknown>;
+  for (const key in obj) {
+    const value = obj[key];
+    if (isBucket(value)) res[key] = value;
   }
   return res;
 }
@@ -46,9 +48,11 @@ function validateWeekRecord(o: unknown): Record<string, Bucket> {
 function validateRollingRecord(o: unknown): Record<string, RollingBucket[]> {
   if (!o || typeof o !== 'object' || Array.isArray(o)) return {};
   const res: Record<string, RollingBucket[]> = {};
-  for (const key in (o as any)) {
-    if (Array.isArray((o as any)[key])) {
-      const arr = (o as any)[key].filter(isRollingBucket);
+  const obj = o as Record<string, unknown>;
+  for (const key in obj) {
+    const value = obj[key];
+    if (Array.isArray(value)) {
+      const arr = value.filter(isRollingBucket);
       if (arr.length > 0) res[key] = arr;
     }
   }
@@ -58,18 +62,17 @@ function validateRollingRecord(o: unknown): Record<string, RollingBucket[]> {
 function validateTourRecord(o: unknown): Record<string, Record<string, RollingBucket>> {
   if (!o || typeof o !== 'object' || Array.isArray(o)) return {};
   const res: Record<string, Record<string, RollingBucket>> = {};
-  for (const tourId in (o as any)) {
-    const tourData = (o as any)[tourId];
-    if (tourData && typeof tourData === 'object' && !Array.isArray(tourData)) {
-      const validatedStyles: Record<string, RollingBucket> = {};
-      for (const style in tourData) {
-        if (isRollingBucket((tourData as any)[style])) {
-          validatedStyles[style] = (tourData as any)[style];
-        }
+  const obj = o as Record<string, unknown>;
+  for (const tourId in obj) {
+    const tourData = obj[tourId];
+    if (typeof tourData === 'object' && tourData !== null && !Array.isArray(tourData)) {
+      const validWeeks: Record<string, RollingBucket> = {};
+      const tourObj = tourData as Record<string, unknown>;
+      for (const weekId in tourObj) {
+        const weekData = tourObj[weekId];
+        if (isRollingBucket(weekData)) validWeeks[weekId] = weekData;
       }
-      if (Object.keys(validatedStyles).length > 0) {
-        res[tourId] = validatedStyles;
-      }
+      if (Object.keys(validWeeks).length > 0) res[tourId] = validWeeks;
     }
   }
   return res;

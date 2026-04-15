@@ -1,6 +1,7 @@
 import { CombatNarrator } from "./combatNarrator";
 import { StatusNarrator } from "./statusNarrator";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
+import type { Warrior } from "@/types/game";
 
 /**
  * BoutNarrator - Intro, opener, and conclusion narration.
@@ -11,7 +12,7 @@ export class BoutNarrator {
   /**
    * Delegates to CombatNarrator for warrior intro.
    */
-  static generateWarriorIntro(rng: IRNGService, data: any, sz?: number): string[] {
+  static generateWarriorIntro(rng: IRNGService, data: Warrior, sz?: number): string[] {
     return CombatNarrator.generateWarriorIntro(rng, data, sz);
   }
 

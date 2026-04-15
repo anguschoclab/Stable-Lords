@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useGameStore, reconstructGameState } from "@/state/useGameStore";
+import { useGameStore, reconstructGameState, type GameStore } from "@/state/useGameStore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -13,6 +13,7 @@ import type { NewsletterItem } from "@/types/shared.types";
 import type { Warrior } from "@/types/warrior.types";
 import type { GazetteStory } from "@/types/state.types";
 import type { BoutResult } from "@/engine/boutProcessor";
+import type { FightSummary } from "@/types/combat.types";
 import narrativeContent from "@/data/narrativeContent.json";
 
 type RevealStep = "gazette" | "injuries" | "bouts" | "math" | "memorial";
@@ -43,8 +44,8 @@ export default function ResolutionReveal() {
 
   const doClearResolution = () => {
     // Clear resolution data
-    setState((draft: any) => {
-      draft.arenaHistory = draft.arenaHistory.map((f: any, i: number) =>
+    setState((draft: GameStore) => {
+      draft.arenaHistory = draft.arenaHistory.map((f: FightSummary, i: number) =>
         i === draft.arenaHistory.length - 1 ? { ...f, pendingResolutionData: undefined } : f
       );
     });
@@ -259,7 +260,7 @@ export default function ResolutionReveal() {
                   <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Granular Breakdown</h4>
                   <ScrollArea className="h-[200px] border rounded-none p-4 bg-muted/30">
                     <div className="space-y-4">
-                      {state.lastSimulationReport?.trainingGains.map((g: any, i: number) => (
+                      {state.lastSimulationReport?.trainingGains.map((g: { warriorName: string; gain: number; attr: string }, i: number) => (
                         <div key={i} className="flex items-center justify-between text-sm">
                           <span className="font-medium">{g.warriorName}</span>
                           <div className="flex gap-2 font-mono">

@@ -218,7 +218,7 @@ export function useCoachTip(pathname: string) {
     const context: CoachContext = {};
     const warriorMatch = pathname.match(/^\/warrior\/(.+)/);
     if (warriorMatch) {
-      context.warrior = state.roster.find((w: any) => w.id === warriorMatch[1]);
+      context.warrior = state.roster.find((w: Warrior) => w.id === warriorMatch[1]);
     }
 
     const tip = entry.tips.find(

@@ -1,5 +1,6 @@
 import { StateCreator } from "zustand";
 import { GameState, Warrior, PoolWarrior, DeathEvent, InsightToken, Trainer, TrainingAssignment, SeasonalGrowth, RestState } from "@/types/state.types";
+import type { GameStore } from "@/state/useGameStore";
 
 export interface RosterSlice {
   roster: Warrior[];
@@ -24,7 +25,7 @@ export interface RosterSlice {
   acknowledgeDeath: (warriorId: string) => void;
 }
 
-export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, get) => ({
+export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (set, get) => ({
   roster: [],
   graveyard: [],
   retired: [],
@@ -40,10 +41,10 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
 
   setRoster: (roster) => set({ roster }),
 
-  addWarrior: (warrior) => set((state: any) => ({ roster: [...state.roster, warrior] })),
+  addWarrior: (warrior) => set((state: GameStore) => ({ roster: [...state.roster, warrior] })),
 
   killWarrior: (warriorId, killedBy, cause, deathEvent) => {
-    set((state: any) => {
+    set((state: GameStore) => {
       const victim = state.roster.find((w: Warrior) => w.id === warriorId);
       if (!victim) return state;
 
@@ -68,7 +69,7 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
   },
 
   retireWarrior: (warriorId) => {
-    set((state: any) => {
+    set((state: GameStore) => {
       const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
       if (!warrior) return state;
 
@@ -86,13 +87,13 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
   },
 
   consumeInsightToken: (tokenId, warriorId) => {
-    set((state: any) => {
+    set((state: GameStore) => {
       const token = state.insightTokens?.find((t: InsightToken) => t.id === tokenId);
       if (!token) return state;
 
       const nextRoster = state.roster.map((w: Warrior) => {
         if (w.id !== warriorId) return w;
-        
+
         const draft = { ...w };
         if (!draft.favorites) {
            draft.favorites = {
@@ -119,7 +120,7 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
   },
 
   updateWarriorEquipment: (warriorId, equipment) => {
-    set((state: any) => {
+    set((state: GameStore) => {
       const nextRoster = state.roster.map((w: Warrior) => {
         if (w.id !== warriorId) return w;
         return {
@@ -139,9 +140,9 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
   },
 
   renameWarrior: (warriorId, newName) => {
-    set((state: any) => {
+    set((state: GameStore) => {
       const updateList = (list: Warrior[]) => list.map(w => w.id === warriorId ? { ...w, name: newName } : w);
-      
+
       return {
         roster: updateList(state.roster),
         graveyard: updateList(state.graveyard),
@@ -149,9 +150,9 @@ export const createRosterSlice: StateCreator<any, [], [], RosterSlice> = (set, g
       };
     });
   },
-  
+
   acknowledgeDeath: (warriorId) => {
-    set((state: any) => ({
+    set((state: GameStore) => ({
       unacknowledgedDeaths: (state.unacknowledgedDeaths || []).filter((id: string) => id !== warriorId)
     }));
   },

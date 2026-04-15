@@ -1,13 +1,14 @@
 import React, { useMemo } from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from "@/types/game";
+import type { InjuryData } from "@/types/warrior.types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { WarriorRadarChart } from "@/components/charts/WarriorRadarChart";
 import { FormSparkline } from "@/components/charts/FormSparkline";
-import { 
-  Activity, Swords, Zap, Skull 
+import {
+  Activity, Swords, Zap, Skull
 } from "lucide-react";
 import { StatBadge } from "@/components/ui/WarriorBadges";
 import WarriorPaperDoll from "@/components/WarriorPaperDoll";
@@ -193,7 +194,7 @@ export const WarriorDossier = React.memo(function WarriorDossier({ warriorId }: 
               <Activity className="h-3 w-3 text-destructive" /> Medical Report
             </h3>
             <div className="grid gap-2">
-              {warrior.injuries.map((inj: any, i: number) => {
+              {warrior.injuries.map((inj: InjuryData, i: number) => {
                 const name = typeof inj === "string" ? inj : inj.name;
                 const severity = typeof inj === "string" ? "Minor" : inj.severity;
                 return (

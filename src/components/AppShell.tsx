@@ -8,9 +8,10 @@ import {
 } from "lucide-react";
 import { audioManager } from "@/lib/AudioManager";
 import { Button } from "@/components/ui/button";
-import { useGameStore } from "@/state/useGameStore";
+import { useGameStore, type GameStore } from "@/state/useGameStore";
 import { Separator } from "@/components/ui/separator";
 import { MOOD_ICONS } from "@/engine/crowdMood";
+import type { Warrior } from "@/types/state.types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,7 +46,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     doReset, returnToTitle, lastSavedAt,
     isSimulating, isInitialized, eventLogOpen
   } = useGameStore(
-    useShallow((s: any) => ({
+    useShallow((s: GameStore) => ({
       week: s.week,
       day: s.day,
       isTournamentWeek: s.isTournamentWeek,
@@ -58,7 +59,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       lastSavedAt: s.lastSavedAt,
       isSimulating: s.isSimulating,
       isInitialized: s.isInitialized,
-      eventLogOpen: s.eventLogOpen,
+      eventLogOpen: s.eventLogOpen
     }))
   );
   const navigate = useNavigate();
@@ -79,7 +80,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     // Only check for "Orphan" status if we are in the main game loops
     if (activePath === "/welcome") return;
 
-    const activeWarriors = roster.filter((w: any) => w.status === "Active");
+    const activeWarriors = roster.filter((w: Warrior) => w.status === "Active");
     if (activeWarriors.length < 3) {
       console.warn("Personnel deficit detected. Redirecting to recruitment protocol.");
       navigate({ to: "/welcome" });

@@ -60,15 +60,8 @@ describe("randomPick", () => {
     expect(arr).toContain(result);
   });
 
-  it("works with IRNGService", () => {
-    const rng = new SeededRNG(42);
-    const arr = ["a", "b", "c"];
-    const result = randomPick(rng, arr);
-    expect(arr).toContain(result);
-  });
-
   it("throws on empty array", () => {
-    const rng = new SeededRNG(42);
+    const rng = () => 0.5;
     expect(() => randomPick(rng, [])).toThrow("Cannot pick from empty array");
   });
 });

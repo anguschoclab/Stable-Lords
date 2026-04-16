@@ -9,7 +9,7 @@ interface FirstBloodStepProps {
     d: Warrior;
     outcome: {
       winner: "A" | "D" | null;
-      by: string;
+      by: string | null;
       post?: { tags?: string[] };
     };
     summary: FightSummary;

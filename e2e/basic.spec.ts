@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-describe('Stable Lords Basic E2E Tests', () => {
+test.describe('Stable Lords Basic E2E Tests', () => {
   
   test('homepage loads without errors', async ({ page }) => {
     await page.goto('/');

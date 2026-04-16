@@ -3,16 +3,13 @@
  * Codex Sanguis design: Roman enrollment / gladiatorial intake aesthetic
  * Dynamic warrior selection → Tutorial bout → Summary
  */
-import React, { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useGameStore, type GameStore } from "@/state/useGameStore";
 import { makeWarrior } from "@/engine/factories";
 import { simulateFight, defaultPlanForWarrior } from "@/engine";
 import { generateRivalStables } from "@/engine/rivals";
 import { generateRecruitPool } from "@/engine/recruitment";
-import {
-  FightingStyle, STYLE_DISPLAY_NAMES,
-  type Warrior, type FightSummary,
-} from "@/types/game";
+import type { Warrior, FightSummary } from "@/types/game";
 import { generatePotential } from "@/engine/potential";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { generateOrphanPool, TRAIT_PLAN_MODIFIERS } from "@/data/orphanPool";

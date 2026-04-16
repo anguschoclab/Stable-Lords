@@ -120,6 +120,13 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: IRNGS
     const e = (narrativeContent.events as any).mysterious_patron;
     const gold = 100 + Math.floor(brawlRng.next() * 401); // 100-500 gold
     treasuryDelta += gold;
+    ledgerEntries.push({
+      id: generateId(brawlRng, "ledger"),
+      week: nextWeek,
+      label: "Mysterious Patron Donation",
+      amount: gold,
+      category: "other"
+    });
 
     newsletterItems.push({
       id: generateId(brawlRng, "newsletter"),

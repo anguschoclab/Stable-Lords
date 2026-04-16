@@ -1,7 +1,7 @@
 {
   "ux_metadata": {
     "version": "3.0.0",
-    "description": "Unified Bard 1.0 — Universal Narrative Archive",
+    "description": "Unified Bard 1.0 \u2014 Universal Narrative Archive",
     "mood_tone": {
       "Calm": {
         "adjectives": [
@@ -393,7 +393,10 @@
         "{{attacker}} feints low, catching {{defender}} off guard before severing their {{bodyPart}} with a clinical strike. The crowd erupts!",
         "A horrific spray of crimson follows as {{attacker}}'s blade effortlessly cleaves through {{defender}}'s {{bodyPart}}.",
         "{{attacker}} sidesteps a desperate lunge, bringing the {{weapon}} down in a monstrous arc that takes {{defender}}'s {{bodyPart}} clean off.",
-        "{{defender}} screams in agony as {{attacker}} butchers their {{bodyPart}}, leaving a gruesome testament to {{attacker}}'s prowess."
+        "{{defender}} screams in agony as {{attacker}} butchers their {{bodyPart}}, leaving a gruesome testament to {{attacker}}'s prowess.",
+        "{{attacker}} spins like a dervish, the {{weapon}} carving an inescapable arc that separates {{defender}}'s {{bodyPart}} from their body.",
+        "A spray of crimson mist erupts as {{attacker}}'s {{weapon}} flawlessly bisects {{defender}}'s {{bodyPart}}.",
+        "{{defender}} stares in shock as their {{bodyPart}} is brutally sundered by {{attacker}}'s merciless {{weapon}}."
       ],
       "critical": [
         "{{attacker}}'s {{weapon}} becomes a blur of silver, opening a horrific gash on {{defender}}'s {{bodyPart}}!",
@@ -428,7 +431,11 @@
         "The horrifying crunch of bone echoes through the arena as {{attacker}}'s {{weapon}} utterly demolishes {{defender}}'s {{bodyPart}}.",
         "{{attacker}} heaves the {{weapon}} overhead and brings it down like a falling mountain, smashing {{defender}}'s {{bodyPart}} into pulp.",
         "With terrifying momentum, {{attacker}} sweeps the {{weapon}} into {{defender}}'s {{bodyPart}}, delivering a crushing blow that ends the fight instantly.",
-        "There is nothing but ruin left of {{defender}}'s {{bodyPart}} after {{attacker}} connects with a sickening, wet thud."
+        "There is nothing but ruin left of {{defender}}'s {{bodyPart}} after {{attacker}} connects with a sickening, wet thud.",
+        "With a sickening crunch, {{attacker}}'s {{weapon}} caves in {{defender}}'s {{bodyPart}}, ending the bout instantly.",
+        "{{attacker}} brings the {{weapon}} down like a judge's gavel, obliterating {{defender}}'s {{bodyPart}}.",
+        "The crowd gasps as {{attacker}} swings the {{weapon}} with titanic force, shattering {{defender}}'s {{bodyPart}} and their life.",
+        "{{defender}} drops like a stone as {{attacker}}'s {{weapon}} crushes their {{bodyPart}} into ruin."
       ]
     },
     "piercing": {
@@ -456,7 +463,11 @@
         "{{attacker}} lunges forward, sinking the {{weapon}} so deeply into {{defender}}'s {{bodyPart}} that it requires leverage to pull it free.",
         "A masterful thrust from {{attacker}} finds the seam in armor, skewering {{defender}} through the {{bodyPart}} and anchoring them to the sand.",
         "{{defender}}'s eyes widen in disbelief as they look down at {{attacker}}'s {{weapon}} protruding from their {{bodyPart}}.",
-        "With surgical precision, {{attacker}} drives the {{weapon}} through {{defender}}'s {{bodyPart}}, severing the vital arteries."
+        "With surgical precision, {{attacker}} drives the {{weapon}} through {{defender}}'s {{bodyPart}}, severing the vital arteries.",
+        "{{attacker}} lunges with terrifying speed, driving the {{weapon}} straight through {{defender}}'s {{bodyPart}}.",
+        "The {{weapon}} bursts through {{defender}}'s back! {{attacker}} has skewered the {{bodyPart}} entirely.",
+        "With surgical precision, {{attacker}} impales {{defender}}'s {{bodyPart}}, withdrawing the {{weapon}} as the lifeless body falls.",
+        "{{attacker}} pins {{defender}} to the sand, the {{weapon}} driven deep through their {{bodyPart}}."
       ]
     },
     "fist": {
@@ -497,7 +508,14 @@
       "The arena gates screech open, and the warriors step forth into the unforgiving light.",
       "Sand crunching underfoot, the combatants measure each other before the first blow falls.",
       "The crowd's chanting swells to a roar as weapons are unsheathed and readied.",
-      "Blood-stained sand awaits fresh tribute as the ARENAMASTER signals the start."
+      "Blood-stained sand awaits fresh tribute as the ARENAMASTER signals the start.",
+      "The iron grates rise, and the air grows thick with the scent of impending violence.",
+      "A heavy silence descends upon the arena as the combatants pace like caged beasts.",
+      "The sun beats mercilessly on the hot sands, demanding a sacrifice of blood.",
+      "With a thunderous drumbeat, the champions are called to the center of the pit.",
+      "The jeers of the crowd blur into a fevered roar as steel is finally drawn.",
+      "Banners snap in the wind, but all eyes are fixed on the warriors below.",
+      "The arena master's nod is the only signal needed; the dance of death begins."
     ],
     "whiffs": [
       "{{attacker}} swings his {{weapon}} but finds only air.",
@@ -512,7 +530,13 @@
       "{{defender}} weaves out of the path of {{attacker}}'s predictable {{weapon}} swing.",
       "A wild strike from {{attacker}} misses by miles.",
       "{{attacker}} telegraphs the strike, allowing {{defender}} an easy sidestep.",
-      "{{defender}} misdirects {{attacker}}, causing the {{weapon}} to slam uselessly into the dirt."
+      "{{defender}} misdirects {{attacker}}, causing the {{weapon}} to slam uselessly into the dirt.",
+      "{{attacker}} puts too much power into the swing, and the {{weapon}} meets only empty air.",
+      "With a mocking grin, {{defender}} glides out of reach of {{attacker}}'s {{weapon}}.",
+      "{{attacker}}'s aggressive lunge is easily read, and {{defender}} sidesteps without breaking a sweat.",
+      "The crowd groans as {{attacker}}'s {{weapon}} swishes through the space {{defender}} just vacated.",
+      "A cloud of sand is all {{attacker}} manages to hit with that clumsy {{weapon}} strike.",
+      "{{defender}} bends backward like a reed in the wind, letting the {{weapon}} whistle past their nose."
     ],
     "hit_locations": {
       "head": [
@@ -622,7 +646,7 @@
         "The stroke lands ineffectively."
       ],
       "fatal": [
-        "{{attacker}} executes a merciless coup de grâce, ending {{defender}}'s misery.",
+        "{{attacker}} executes a merciless coup de gr\u00e2ce, ending {{defender}}'s misery.",
         "The crowd falls dead silent as {{attacker}}'s strike abruptly ends {{defender}}'s life.",
         "With an explosive burst of violence, {{attacker}} extinguishes the light from {{defender}}'s eyes.",
         "A brutal, uncompromising blow by {{attacker}} shatters {{defender}} completely.",
@@ -630,7 +654,7 @@
         "Blood sprays across the sands as {{attacker}} delivers the final, fatal judgment.",
         "{{attacker}}'s {{weapon}} claims another soul for the void today.",
         "The arena echoes with the sickening sound of {{defender}}'s life being crushed out by {{attacker}}.",
-        "There is no recovery from that—{{attacker}} has sent {{defender}} to the ancestors.",
+        "There is no recovery from that\u2014{{attacker}} has sent {{defender}} to the ancestors.",
         "{{attacker}} stands victorious, {{defender}} dead before they even hit the ground."
       ]
     },
@@ -649,7 +673,11 @@
     "defenses": {
       "dodge": {
         "success": [
-          "{{defender}} twists his body with prideful grace, allowing the attack to pass harmlessly by."
+          "{{defender}} twists his body with prideful grace, allowing the attack to pass harmlessly by.",
+          "{{defender}} slips beneath the blow like a shadow.",
+          "With cat-like agility, {{defender}} evades the attack completely.",
+          "{{defender}} performs a breathtaking backstep, evading death by inches.",
+          "The strike looks true, but {{defender}} is no longer there!"
         ]
       },
       "parry": {
@@ -659,7 +687,12 @@
           "Sparks fly as {{defender}} cleanly deflects {{attacker}}'s powerful swing.",
           "{{defender}} holds their ground, knocking the incoming {{weapon}} aside.",
           "With an expert twist of the wrist, {{defender}} parries the strike harmlessly away.",
-          "The crowd cheers as {{defender}} demonstrates perfect defensive form."
+          "The crowd cheers as {{defender}} demonstrates perfect defensive form.",
+          "{{defender}} intercepts the {{weapon}} mid-swing with a jarring clash!",
+          "{{attacker}}'s heavy blow is halted instantly by {{defender}}'s ironclad block.",
+          "With a flick of the wrist, {{defender}} redirects the lethal force of the {{weapon}} away.",
+          "The sound of grinding steel rings out as {{defender}} firmly answers {{attacker}}'s strike.",
+          "{{defender}} stands firm, their guard an impenetrable fortress against the {{weapon}}."
         ]
       },
       "shield": {
@@ -681,10 +714,16 @@
     },
     "reactions": {
       "positive": [
-        "The crowd ROARS in approval!"
+        "The crowd ROARS in approval!",
+        "The onlookers stomp their feet in a rhythmic thunder!",
+        "Cheers cascade from the stands, shaking the very foundations of the coliseum!",
+        "The crowd howls for more, completely intoxicated by the violence."
       ],
       "negative": [
-        "Boos and jeers echo from the arena walls."
+        "Boos and jeers echo from the arena walls.",
+        "A wave of disgust ripples through the spectators.",
+        "The crowd hisses, demanding a refund for this cowardly display.",
+        "Shouts of 'FIGHT!' and 'COWARD!' echo from the angry masses."
       ],
       "encourage": [
         "The crowd urges the warriors on."
@@ -713,10 +752,16 @@
     },
     "taunts": {
       "winner": [
-        "{{attacker}} roars, 'Who else wants to die today?!'"
+        "{{attacker}} roars, 'Who else wants to die today?!'",
+        "{{attacker}} beats their chest, roaring in triumph!",
+        "{{attacker}} gestures to the crowd, soaking in their adulation.",
+        "With a cruel smirk, {{attacker}} points their {{weapon}} at the dying {{defender}}."
       ],
       "loser": [
-        "{{attacker}} spits blood and refuses to look away."
+        "{{attacker}} spits blood and refuses to look away.",
+        "{{attacker}} manages a defiant, bloody smile.",
+        "Even on their knees, {{attacker}} glares upwards with unbroken pride.",
+        "{{attacker}} spits a glob of crimson onto the sand, refusing to beg."
       ]
     },
     "initiative": [
@@ -747,9 +792,16 @@
       "The arena falls utterly silent for a heartbeat, before erupting at the brutal execution delivered by {{attacker}}.",
       "{{attacker}} stands triumphant over the remains of {{defender}}, as blood soaks the thirsty sands.",
       "In a terrifying display of lethal intent, {{attacker}} reduces {{defender}} to a mere memory.",
-      "{{attacker}} roars a challenge to the heavens, having just claimed another soul in the Blood Sands."
+      "{{attacker}} roars a challenge to the heavens, having just claimed another soul in the Blood Sands.",
+      "{{defender}} crumples to the blood-soaked sand, another sacrifice to the arena. {{attacker}} is the champion!",
+      "The gods of war smile upon {{attacker}}, who stands over the broken corpse of {{defender}}.",
+      "{{attacker}} kicks the lifeless body of {{defender}} aside. The bout is over, and death has claimed the loser."
     ],
-    "KO": "{{defender}} collapses into the sand, unconscious. {{attacker}} is the victor.",
+    "KO": [
+      "{{defender}} collapses into the sand, unconscious. {{attacker}} is the victor.",
+      "{{defender}}'s eyes roll back, and they collapse. {{attacker}} claims a decisive knockout victory!",
+      "The lights go out for {{defender}}. {{attacker}} stands tall amidst the cheering crowd."
+    ],
     "Stoppage": "The match is called. {{defender}} cannot continue. {{attacker}} wins!",
     "Exhaustion": "Both warriors are spent, but {{attacker}} is awarded the victory."
   },
@@ -880,17 +932,17 @@
         "Week {{week}}: THE UNTOUCHABLE {{name}} Achieves {{streak}} Wins!"
       ],
       "HotStreak": [
-        "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
+        "Week {{week}}: {{name}} Is On Fire \u2014 {{streak}} Consecutive Victories!",
         "Week {{week}}: BLOOD AND SAND! {{name}} Paints the Arena Red with {{streak}} Wins!",
-        "Week {{week}}: THE CROWD GOES WILD FOR {{name}} — {{streak}} Wins!"
+        "Week {{week}}: THE CROWD GOES WILD FOR {{name}} \u2014 {{streak}} Wins!"
       ],
       "Streak": [
         "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
         "Week {{week}}: {{name}} Continues to Climb With {{streak}} Consecutive Wins!",
-        "Week {{week}}: {{name}} Builds Momentum — {{streak}} Victories!"
+        "Week {{week}}: {{name}} Builds Momentum \u2014 {{streak}} Victories!"
       ],
       "LegacyRivalry": [
-        "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!",
+        "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} \u2014 Chapter {{count}}!",
         "Week {{week}}: ETERNAL FOES! {{a}} and {{b}} Clash in Chapter {{count}} of Their Saga!",
         "Week {{week}}: THE GRUDGE MATCH OF THE CENTURY! {{a}} vs {{b}} (Chapter {{count}})"
       ],
@@ -917,7 +969,10 @@
       "Kill": [
         "Week {{week}}: DEATH IN THE PIT! {{killer}} claims a life!",
         "Week {{week}}: FATAL BLOW! {{killer}} Sends an Opponent to the Grave!",
-        "Week {{week}}: BLOOD ON THE SANDS! A Brutal Kill By {{killer}}!"
+        "Week {{week}}: BLOOD ON THE SANDS! A Brutal Kill By {{killer}}!",
+        "Week {{week}}: A SOUL REAPED! {{killer}} Paints the Sands Red!",
+        "Week {{week}}: WIDOWMAKER! {{killer}} Claims Another Victim!",
+        "Week {{week}}: NO MERCY GIVEN! {{killer}} Ends a Life in the Pit!"
       ],
       "MultipleKOs": [
         "Week {{week}}: {{adj}} DEVASTATION! The sands are littered with the fallen!",
@@ -927,7 +982,10 @@
       "Standard": [
         "Week {{week}}: {{adj}} CLASHES! The arena roars for its champions!",
         "Week {{week}}: {{adj}} BOUTS KEEP THE CROWD ROARING!",
-        "Week {{week}}: ANOTHER WEEK OF {{adj}} WARFARE IN THE PIT!"
+        "Week {{week}}: ANOTHER WEEK OF {{adj}} WARFARE IN THE PIT!",
+        "Week {{week}}: {{adj}} SHOWDOWN! The Arena Demands Entertainment!",
+        "Week {{week}}: STEEL AND SWEAT! {{adj}} Bouts Keep the Masses Sated!",
+        "Week {{week}}: THE GAMES CONTINUE! {{adj}} Spectacles in the Coliseum!"
       ],
       "Empty": [
         "Week {{week}}: A quiet week in the arena. The peace won't last.",
@@ -1001,7 +1059,7 @@
       "body": [
         "The {{season}} season concludes with {{total}} bouts fought and a {{killRate}}% fatality rate.",
         "{{style}} dominated the meta with {{wins}} victories.",
-        "It was a particularly deadly season — many promising careers cut short.",
+        "It was a particularly deadly season \u2014 many promising careers cut short.",
         "The arena turns its gaze to the next season. What legends will emerge?"
       ]
     }
@@ -1206,7 +1264,7 @@
   },
   "meta": {
     "flair": {
-      "Flashy": "Crowd favorite — earns +2 Popularity per flashy fight."
+      "Flashy": "Crowd favorite \u2014 earns +2 Popularity per flashy fight."
     },
     "title": {
       "Champion": "Arena title holder. Earns passive fame each week."
@@ -1225,7 +1283,7 @@
       "{{attacker}} studies the opponent's rhythm, waiting for the perfect opening."
     ],
     "BashingAttack": [
-      "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"
+      "{{attacker}} hammers through the defensive stance \u2014 raw power overwhelms technique!"
     ]
   }
 }

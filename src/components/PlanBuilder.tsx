@@ -1,35 +1,17 @@
-import { useState, useMemo } from "react";
-import { DragDropContext, DropResult, Droppable, Draggable, type DroppableProvided, type DraggableProvided, type DraggableStateSnapshot, type DroppableStateSnapshot } from "@hello-pangea/dnd";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Swords, Shield, Flame, Timer, Zap, Clock, Activity, GripVertical, Target, BookOpen, Heart, Gauge, GitBranch, MoveHorizontal } from "lucide-react";
+import { useMemo } from "react";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import { Card, CardContent, CardHeader, CardTitle, Badge } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { FightPlan, OffensiveTactic, DefensiveTactic, Warrior, PlanCondition } from "@/types/game";
-import type { DistanceRange } from "@/types/shared.types";
-import ConditionEditor from "@/components/warrior/ConditionEditor";
+import type { FightPlan, Warrior, OffensiveTactic, DefensiveTactic } from "@/types/game";
 import { FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/game";
-import { getTempoBonus, getStyleAntiSynergy, getEnduranceMult, getKillMechanic, getMastery } from "@/engine/stylePassives";
 import { getMatchupBonus } from "@/engine/combat/combatConstants";
 import { computeStrategyScore, getScoreColor } from "@/engine/strategyAnalysis";
-import { getWeaponRangeMod, getWeaponPreferredRange } from "@/engine/combat/distanceResolution";
-
-const DISTANCE_RANGES: DistanceRange[] = ["Grapple", "Tight", "Striking", "Extended"];
-
-/* ── DnD Types & Data ───────────────────────────────────── */
-
-const TACTIC_BANK = [
-  { id: "Lunge", type: "offensive", label: "Lunge", icon: Zap },
-  { id: "Slash", type: "offensive", label: "Slash", icon: Swords },
-  { id: "Bash", type: "offensive", label: "Bash", icon: Shield },
-  { id: "Decisiveness", type: "offensive", label: "DEC", icon: Target },
-  { id: "Dodge", type: "defensive", label: "Dodge", icon: Activity },
-  { id: "Parry", type: "defensive", label: "Parry", icon: Shield },
-  { id: "Riposte", type: "defensive", label: "Riposte", icon: Flame },
-  { id: "Responsiveness", type: "defensive", label: "RESP", icon: Clock },
-];
+import { TACTIC_BANK } from "./planBuilder/TacticBank";
+import CommonControls from "./planBuilder/CommonControls";
+import SpatialControls from "./planBuilder/SpatialControls";
+import PhaseOverrides from "./planBuilder/PhaseOverrides";
+import StylePassives from "./planBuilder/StylePassives";
+import ContingencyPlans from "./planBuilder/ContingencyPlans";
 
 /* ── Sub-components ─────────────────────────────────────── */
 
@@ -41,10 +23,6 @@ interface PlanBuilderProps {
 }
 
 export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }: PlanBuilderProps) {
-  const [phaseMode, setPhaseMode] = useState<boolean>(!!plan.phases);
-  const [showStylePassives, setShowStylePassives] = useState<boolean>(false);
-  const [showConditions, setShowConditions] = useState<boolean>(!!(plan.conditions?.length));
-  
   const matchupAdv = useMemo(() => {
     if (!rivalStyle) return 0;
     return getMatchupBonus(plan.style, rivalStyle);
@@ -69,7 +47,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
       }
     } else {
       const phases = { ...(plan.phases || {}) };
-      const currentPhase = phases[phaseKey] || { OE: plan.OE, AL: plan.AL, killDesire: plan.killDesire || 5 };
+      const currentPhase = phases[phaseKey] || { OE: plan.OE, AL: plan.AL ?? 5, killDesire: plan.killDesire ?? 5 };
       
       if (tactic.type === "offensive") {
         phases[phaseKey] = { ...currentPhase, offensiveTactic: tactic.id as OffensiveTactic };

@@ -2,7 +2,7 @@ import { Droppable, Draggable, type DroppableProvided, type DraggableProvided, t
 import { GripVertical, Zap, Swords, Shield, Target, Activity, Flame, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const TACTIC_BANK = [
+export const TACTIC_BANK = [
   { id: "Lunge", type: "offensive", label: "Lunge", icon: Zap },
   { id: "Slash", type: "offensive", label: "Slash", icon: Swords },
   { id: "Bash", type: "offensive", label: "Bash", icon: Shield },

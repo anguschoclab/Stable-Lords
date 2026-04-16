@@ -43,15 +43,15 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
       {/* Range Preference */}
       <div className="space-y-3">
         <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Range Preference</Label>
-        {warrior?.loadout?.weaponId && (
+        {warrior?.equipment?.weapon && (
           <p className="text-[9px] text-muted-foreground/60 font-black uppercase tracking-wider">
-            Natural: {getWeaponPreferredRange(warrior.loadout.weaponId)}
+            Natural: {getWeaponPreferredRange(warrior.equipment.weapon)}
           </p>
         )}
         <div className="grid grid-cols-4 gap-1">
           {DISTANCE_RANGES.map((r) => {
-            const isNatural = warrior?.loadout?.weaponId && getWeaponPreferredRange(warrior.loadout.weaponId) === r;
-            const isSelected = (plan.rangePreference ?? getWeaponPreferredRange(warrior?.loadout?.weaponId)) === r;
+            const isNatural = warrior?.equipment?.weapon && getWeaponPreferredRange(warrior.equipment.weapon) === r;
+            const isSelected = (plan.rangePreference ?? getWeaponPreferredRange(warrior?.equipment?.weapon)) === r;
             return (
               <button
                 key={r}
@@ -72,14 +72,14 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
       </div>
 
       {/* Weapon Range Modifier Grid */}
-      {warrior?.loadout?.weaponId && (
+      {warrior?.equipment?.weapon && (
         <div className="space-y-2">
           <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             Weapon ATT Modifiers
           </Label>
           <div className="grid grid-cols-4 gap-1">
             {DISTANCE_RANGES.map((r) => {
-              const mod = getWeaponRangeMod(warrior.loadout?.weaponId, r);
+              const mod = getWeaponRangeMod(warrior.equipment?.weapon, r);
               return (
                 <div key={r} className="bg-black/40 border border-white/5 p-2 text-center">
                   <div className="text-[8px] uppercase tracking-wider text-muted-foreground/60 mb-1">{r}</div>

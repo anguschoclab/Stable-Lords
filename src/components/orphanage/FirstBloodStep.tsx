@@ -112,7 +112,7 @@ export default function FirstBloodStep({
                 victorious
               </div>
               <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 mt-1">
-                by {boutResult.outcome.by}
+                by {boutResult.outcome.by ?? "decision"}
                 {boutResult.outcome.by === "Kill" && (
                   <Skull className="h-3 w-3 inline ml-1.5 text-destructive/70" />
                 )}

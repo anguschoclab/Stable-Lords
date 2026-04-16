@@ -4,6 +4,7 @@
  * Uses the Mulberry32 algorithm for fast, high-quality, 
  * deterministic randomness in the engine.
  */
+import type { IRNGService } from "@/engine/core/rng/IRNGService";
 
 export class SeededRNG {
   private state: number;
@@ -32,7 +33,10 @@ export class SeededRNG {
 
   /** Picks a random element from an array */
   pick<T>(arr: T[]): T {
-    return arr[Math.floor(this.next() * arr.length)];
+    if (arr.length === 0) {
+      throw new Error("Cannot pick from empty array");
+    }
+    return arr[Math.floor(this.next() * arr.length)]!;
   }
 
   /** Shuffles an array (returns a new array) */
@@ -40,7 +44,7 @@ export class SeededRNG {
     const copy = [...arr];
     for (let i = copy.length - 1; i > 0; i--) {
       const j = Math.floor(this.next() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
+      [copy[i]!, copy[j]!] = [copy[j]!, copy[i]!];
     }
     return copy;
   }
@@ -68,7 +72,48 @@ export function random32(): number {
   if (typeof globalThis !== "undefined" && "crypto" in globalThis && typeof (globalThis.crypto as Crypto).getRandomValues === "function") {
     const array = new Uint32Array(1);
     (globalThis.crypto as Crypto).getRandomValues(array);
-    return array[0];
+    return array[0]!;
   }
   throw new Error("Secure random number generator not available in this environment.");
+}
+
+/**
+ * Universal random picker that works with both function-based RNG and IRNGService
+ * Eliminates DRY violation of Math.floor(rng() * arr.length) pattern
+ */
+export function randomPick<T>(rng: (() => number) | IRNGService, arr: T[]): T {
+  if (arr.length === 0) {
+    throw new Error("Cannot pick from empty array");
+  }
+  if (typeof rng === 'function') {
+    return arr[Math.floor(rng() * arr.length)]!;
+  }
+  return rng.pick(arr);
+}
+
+/**
+ * Converts a string to a numeric seed using character code reduction
+ * Eliminates DRY violation of seed generation patterns
+ */
+export function stringToSeed(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+/**
+ * FNV-1a hash function for deterministic string-to-number conversion
+ * Used for generating consistent seeds from IDs
+ * Eliminates DRY violation of hash string patterns
+ */
+export function hashStr(s: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    hash ^= s.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
 }

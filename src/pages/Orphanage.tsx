@@ -23,7 +23,7 @@ import StoryBeginsStep from "@/components/orphanage/StoryBeginsStep";
 
 export default function Orphanage() {
   const state = useGameStore();
-  const { initializeStable, setRoster, setState, returnToTitle } = state;
+  const { initializeStable, setState, returnToTitle } = state;
 
   const initialStep = !state.player.stableName ? 0 : 1;
   const [step, setStep] = useState(initialStep);
@@ -33,7 +33,6 @@ export default function Orphanage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [poolSeedValue, setPoolSeedValue] = useState(12345);
 
-  const rng = useMemo(() => new SeededRNGService(poolSeedValue), [poolSeedValue]);
   const orphanPool = useMemo(
     () => generateOrphanPool(8, poolSeedValue),
     [poolSeedValue]
@@ -45,9 +44,6 @@ export default function Orphanage() {
     outcome: ReturnType<typeof simulateFight>;
     summary: FightSummary;
   } | null>(null);
-
-  const stableName = state.player.stableName;
-  const ownerName = state.player.name;
 
   const rerollPool = useCallback(() => {
     setPoolSeedValue((prev) => (prev * 1103515245 + 12345) & 0x7fffffff);

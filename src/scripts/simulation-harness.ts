@@ -40,7 +40,7 @@ export function runSimulation(config: SimulationConfig): SimulationResult {
     state = advanceWeek(state);
 
     const boutResult = processWeekBouts(state);
-    state = { ...state, ...boutResult.impact };
+    state = resolveImpacts(state, [boutResult.impact]);
     
     let totalWarriors = 0;
     state.rivals.forEach(r => totalWarriors += r.roster.length);

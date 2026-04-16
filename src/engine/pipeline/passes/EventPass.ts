@@ -33,6 +33,8 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: IRNGS
   const brawlRng = rootRng || new SeededRNGService(nextWeek * 999 + 1);
   const rosterUpdates = new Map<string, any>();
   const newsletterItems: NewsletterItem[] = [];
+  let treasuryDelta = 0;
+  const ledgerEntries: StateImpact["ledgerEntries"] = [];
   
   // 🍺 Tavern Brawl Event
   if (brawlRng.next() < 0.05 && state.roster.length > 0) {
@@ -112,5 +114,28 @@ export function runEventPass(state: GameState, nextWeek: number, rootRng?: IRNGS
     }
   }
 
-  return { rosterUpdates, newsletterItems };
+
+  // 💰 Mysterious Patron Event
+  if (brawlRng.next() < 0.05) {
+    const e = (narrativeContent.events as any).mysterious_patron;
+    const gold = 100 + Math.floor(brawlRng.next() * 401); // 100-500 gold
+    treasuryDelta += gold;
+    ledgerEntries.push({
+      id: generateId(brawlRng, "ledger"),
+      week: nextWeek,
+      label: "Mysterious Patron Donation",
+      amount: gold,
+      category: "other"
+    });
+
+    newsletterItems.push({
+      id: generateId(brawlRng, "newsletter"),
+      week: nextWeek,
+      title: e.title,
+      items: [t(brawlRng.pick(e.newsletter), { gold })]
+    });
+  }
+
+  return { rosterUpdates, newsletterItems, ...(ledgerEntries.length > 0 ? { ledgerEntries } : {}), ...(treasuryDelta > 0 ? { treasuryDelta } : {}) };
+
 }

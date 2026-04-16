@@ -766,7 +766,9 @@
       "title": "Tavern Brawl!",
       "newsletter": [
         "{{name}} got into a wild tavern brawl last night! They gained +{{fame}} Fame but suffered a minor injury."
-      ]
+      ],
+      "injury_name": "Black Eye",
+      "injury_desc": "Caught a nasty right hook in the tavern."
     },
     "celestial_blessing": {
       "title": "A Sign from the Gods!",
@@ -778,6 +780,12 @@
       "title": "Lost Relic Discovery",
       "newsletter": [
         "{{name}} discovered an ancient artifact while exploring the ruins! (+{{fame}} Fame, +{{xp}} XP)"
+      ]
+    },
+    "mysterious_patron": {
+      "title": "A Mysterious Patron!",
+      "newsletter": [
+        "A mysterious patron was impressed by your stable and donated {{gold}} gold!"
       ]
     }
   },

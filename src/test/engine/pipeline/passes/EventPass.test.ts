@@ -40,4 +40,32 @@ describe("EventPass", () => {
     expect(newsletter?.title).toBe("Lost Relic Discovery");
     expect(newsletter?.items[0]).toContain("discovered an ancient artifact");
   });
+
+
+  it("should trigger the Mysterious Patron event and correctly update treasuryDelta", () => {
+    const rng = new SeededRNGService(42);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 0.5; // fail Tavern Brawl
+      if (callCount === 2) return 0.5; // fail Star-crossed Blessing
+      if (callCount === 3) return 0.5; // fail Lost Relic
+      if (callCount === 4) return 0.01; // succeed Mysterious Patron
+      return originalNext();
+    };
+    (rng as any).next = mockNext;
+
+    const state: Partial<GameState> = {
+      roster: [],
+      newsletter: [],
+      treasury: 1000
+    };
+
+    const impact = runEventPass(state as GameState, 2, rng);
+
+    expect(impact.treasuryDelta).toBeGreaterThanOrEqual(100);
+    expect(impact.newsletterItems?.[0]?.title).toBe("A Mysterious Patron!");
+  });
+
 });

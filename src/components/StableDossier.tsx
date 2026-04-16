@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
-  Trophy, Star, Flame, Shield, Activity, 
+  Trophy, Star, Flame, Activity, 
   History, Swords, Heart, Zap, Skull, Users
 } from "lucide-react";
 import { StatBadge, WarriorNameTag } from "@/components/ui/WarriorBadges";
+import { StableCrest } from "@/components/crest/StableCrest";
 
 interface StableDossierProps {
   stableId?: string;
@@ -35,17 +36,46 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
   return (
     <ScrollArea className="h-full pr-4">
       <div className="space-y-6 pb-20">
-        {/* Header Section */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-display font-black tracking-tight">{stable.owner.stableName}</h2>
-            {stable.isPlayer ? (
-               <Badge className="bg-arena-fame text-black">Your Stable</Badge>
+        {/* Header Section with Crest */}
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0">
+            {'crest' in stable && stable.crest ? (
+              <div className="relative">
+                <StableCrest crest={stable.crest} size="lg" showMantling />
+                {stable.owner?.generation !== undefined && stable.owner.generation > 0 && (
+                  <Badge 
+                    variant="outline" 
+                    className="absolute -bottom-1 -right-1 text-[8px] px-1 py-0"
+                    title={`Generation ${stable.owner.generation} - Inherited crest`}
+                  >
+                    G{stable.owner.generation}
+                  </Badge>
+                )}
+              </div>
             ) : (
-               <Badge variant="outline">Rival</Badge>
+              <div className="h-16 w-16 rounded-lg border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-secondary/20">
+                <span className="text-xs text-muted-foreground">?</span>
+              </div>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">Master: <span className="font-bold text-foreground">{stable.owner.name}</span></p>
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-display font-black tracking-tight">{stable.owner.stableName}</h2>
+              {stable.isPlayer ? (
+                 <Badge className="bg-arena-fame text-black">Your Stable</Badge>
+              ) : (
+                 <Badge variant="outline">Rival</Badge>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">Master: <span className="font-bold text-foreground">{stable.owner.name}</span></p>
+            {'crest' in stable && stable.crest && (
+              <p className="text-[10px] text-muted-foreground italic">
+                {stable.crest.charge.count > 1 ? `${stable.crest.charge.count} ` : ''}
+                {stable.crest.charge.name}
+                {stable.crest.charge.posture ? ` (${stable.crest.charge.posture})` : ''}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Stats */}

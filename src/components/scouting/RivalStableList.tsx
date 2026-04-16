@@ -1,10 +1,11 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Surface } from "@/components/ui/Surface";
 import type { RivalStableData } from "@/types/game";
 import { cn } from "@/lib/utils";
+import { StableCrest } from "@/components/crest/StableCrest";
 
 interface RivalStableListProps {
   rivals: RivalStableData[];
@@ -45,12 +46,18 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
                   <div className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className={cn(
-                        "h-10 w-10 flex items-center justify-center rounded-none border transition-all",
+                        "h-10 w-10 flex items-center justify-center rounded-none border transition-all overflow-hidden",
                         selectedRivalId === rival.owner.id 
-                          ? "bg-primary text-white border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" 
-                          : "bg-neutral-800 text-muted-foreground border-white/10 group-hover:bg-neutral-700"
+                          ? "border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" 
+                          : "border-white/10 group-hover:border-white/20"
                       )}>
-                        <Shield className="h-5 w-5" />
+                        {rival.crest ? (
+                          <StableCrest crest={rival.crest} size="sm" />
+                        ) : (
+                          <div className="h-full w-full bg-neutral-800 flex items-center justify-center">
+                            <span className="text-[8px] text-muted-foreground">?</span>
+                          </div>
+                        )}
                       </div>
                       <div className="space-y-1">
                         <span className={cn(

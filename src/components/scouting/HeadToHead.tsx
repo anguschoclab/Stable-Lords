@@ -21,15 +21,37 @@ export function HeadToHead({ nameA, nameB, rosterA, rosterB }: HeadToHeadProps) 
   const idsA = useMemo(() => new Set(rosterA.map(w => w.id)), [rosterA]);
   const idsB = useMemo(() => new Set(rosterB.map(w => w.id)), [rosterB]);
 
-  const h2h = useMemo(() => {
-    return allFights.filter(f =>
-      (idsA.has(f.warriorIdA) && idsB.has(f.warriorIdD)) || (idsA.has(f.warriorIdD) && idsB.has(f.warriorIdA))
-    );
+  // ⚡ Bolt: Reduced multiple O(N) array filter/slice/reverse operations into a single O(N) pass
+  // with a pre-reversed list to prevent blocking the render loop.
+  const { h2hReversed, winsA, winsB, draws } = useMemo(() => {
+    const reversed = [];
+    let wA = 0;
+    let wB = 0;
+    let d = 0;
+
+    for (let i = allFights.length - 1; i >= 0; i--) {
+      const f = allFights[i];
+      const idA = f.warriorIdA;
+      const idD = f.warriorIdD;
+      const aIsA = idsA.has(idA);
+
+      if (aIsA && idsB.has(idD)) {
+        reversed.push(f);
+        if (f.winner === "A") wA++;
+        else if (f.winner === "D") wB++;
+        else d++;
+      } else if (idsA.has(idD) && idsB.has(idA)) {
+        reversed.push(f);
+        if (f.winner === "D") wA++;
+        else if (f.winner === "A") wB++;
+        else d++;
+      }
+    }
+
+    return { h2hReversed: reversed, winsA: wA, winsB: wB, draws: d };
   }, [allFights, idsA, idsB]);
 
-  const winsA = h2h.filter(f => (idsA.has(f.warriorIdA) && f.winner === "A") || (idsA.has(f.warriorIdD) && f.winner === "D")).length;
-  const winsB = h2h.filter(f => (idsB.has(f.warriorIdA) && f.winner === "A") || (idsB.has(f.warriorIdD) && f.winner === "D")).length;
-  const draws = h2h.length - winsA - winsB;
+  const h2hLength = h2hReversed.length;
 
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden relative">
@@ -42,13 +64,13 @@ export function HeadToHead({ nameA, nameB, rosterA, rosterB }: HeadToHeadProps) 
             </div>
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">Head-to-Head History</h3>
          </div>
-         {h2h.length > 0 && (
-           <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase border-white/10 bg-white/5 text-muted-foreground">{h2h.length} ENGAGEMENTS</Badge>
+         {h2hLength > 0 && (
+           <Badge variant="outline" className="text-[9px] font-black tracking-widest uppercase border-white/10 bg-white/5 text-muted-foreground">{h2hLength} ENGAGEMENTS</Badge>
          )}
       </div>
 
       <div className="p-6 space-y-6">
-        {h2h.length === 0 ? (
+        {h2hLength === 0 ? (
           <div className="py-12 text-center flex flex-col items-center gap-4 opacity-20">
              <Swords className="h-10 w-10 text-muted-foreground" />
              <p className="text-[10px] font-black uppercase tracking-widest">No_Historical_Matchups_Detected</p>
@@ -71,14 +93,14 @@ export function HeadToHead({ nameA, nameB, rosterA, rosterB }: HeadToHeadProps) 
               </div>
               
               <div className="h-2 rounded-full overflow-hidden flex bg-neutral-900 border border-white/5 shadow-inner">
-                {winsA > 0 && <div className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all" style={{ width: `${(winsA / h2h.length) * 100}%` }} />}
-                {draws > 0 && <div className="h-full bg-muted-foreground/20 transition-all" style={{ width: `${(draws / h2h.length) * 100}%` }} />}
-                {winsB > 0 && <div className="h-full bg-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)] transition-all" style={{ width: `${(winsB / h2h.length) * 100}%` }} />}
+                {winsA > 0 && <div className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all" style={{ width: `${(winsA / h2hLength) * 100}%` }} />}
+                {draws > 0 && <div className="h-full bg-muted-foreground/20 transition-all" style={{ width: `${(draws / h2hLength) * 100}%` }} />}
+                {winsB > 0 && <div className="h-full bg-accent shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)] transition-all" style={{ width: `${(winsB / h2hLength) * 100}%` }} />}
               </div>
             </div>
 
             <div className="space-y-1.5 max-h-64 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-              {h2h.slice().reverse().map(f => {
+              {h2hReversed.map(f => {
                 const aIsStableA = idsA.has(f.warriorIdA);
                 const winnerIsA = (idsA.has(f.warriorIdA) && f.winner === "A") || (idsA.has(f.warriorIdD) && f.winner === "D");
                 const winnerIsB = (idsB.has(f.warriorIdA) && f.winner === "A") || (idsB.has(f.warriorIdD) && f.winner === "D");

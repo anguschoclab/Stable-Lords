@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 import "@testing-library/jest-dom";
 
 // Mock localStorage for Bun/Vitest environment
@@ -69,7 +68,7 @@ global.Worker = class Worker {
     this.url = stringUrl;
   }
 
-  postMessage(msg: any) {
+  postMessage(_msg: any) {
     // Basic mock: echo back a completion message for common simulation worker patterns
     setTimeout(() => {
       this.onmessage({ data: { type: "WORKER_READY" } });

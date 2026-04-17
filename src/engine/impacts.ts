@@ -195,7 +195,7 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
 
   // Initialize merged with default values
   for (const [key, config] of Object.entries(MERGE_CONFIG)) {
-    (merged as any)[key] = config.defaultValue;
+    (merged as any)[key] = Array.isArray(config.defaultValue) ? [...config.defaultValue] : config.defaultValue;
   }
 
   for (const imp of impacts) {
@@ -209,7 +209,11 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
           break;
         case 'append':
           if (Array.isArray(value) && value.length > 0) {
-            (merged as any)[key].push(...value);
+            // Avoid "Maximum call stack size exceeded" by avoiding spread operator on potentially huge arrays
+            const target = (merged as any)[key];
+            for (let i = 0; i < value.length; i++) {
+              target.push(value[i]);
+            }
           }
           break;
         case 'mapMerge':

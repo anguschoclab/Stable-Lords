@@ -24,11 +24,6 @@ Object.defineProperty(global, 'localStorage', {
   value: localStorageMock
 });
 
-// Clear localStorage before each test to prevent pollution
-beforeEach(() => {
-  localStorageMock.clear();
-});
-
 // Mock ResizeObserver for JSDOM
  
 global.ResizeObserver = class ResizeObserver {

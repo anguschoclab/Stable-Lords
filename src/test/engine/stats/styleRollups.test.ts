@@ -8,40 +8,9 @@ describe('StyleRollups', () => {
   });
 
   describe('loadWeek (via getWeekRollup)', () => {
-    let originalLocalStorage: any;
-
     beforeEach(() => {
-      // Save the original localStorage if it exists
-      originalLocalStorage = globalThis.localStorage;
-
-      // Create a mock localStorage
-      const localStorageMock = {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        clear: vi.fn(),
-        removeItem: vi.fn(),
-        length: 0,
-        key: vi.fn(),
-      };
-
-      // Override the global object
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: localStorageMock,
-        writable: true,
-        configurable: true,
-      });
-    });
-
-    afterEach(() => {
-      // Restore original
-      if (originalLocalStorage) {
-        Object.defineProperty(globalThis, 'localStorage', {
-          value: originalLocalStorage,
-          writable: true,
-          configurable: true,
-        });
-      }
-      vi.restoreAllMocks();
+      // Clear localStorage before each test
+      (globalThis.localStorage as any).clear();
     });
 
     it('returns {} if localStorage is undefined', () => {
@@ -98,32 +67,9 @@ describe('StyleRollups', () => {
   });
 
   describe('loadRolling (via last10)', () => {
-    let originalLocalStorage: any;
-
     beforeEach(() => {
-      originalLocalStorage = globalThis.localStorage;
-      const localStorageMock = {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        clear: vi.fn(),
-        removeItem: vi.fn(),
-        length: 0,
-        key: vi.fn(),
-      };
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: localStorageMock,
-        writable: true,
-        configurable: true,
-      });
-    });
-
-    afterEach(() => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: originalLocalStorage,
-        writable: true,
-        configurable: true,
-      });
-      vi.restoreAllMocks();
+      // Clear localStorage before each test
+      (globalThis.localStorage as any).clear();
     });
 
     it('returns [] if localStorage is undefined', () => {
@@ -190,34 +136,9 @@ describe('StyleRollups', () => {
   });
 
   describe('loadTour (via tournament)', () => {
-    let originalLocalStorage: any;
-
     beforeEach(() => {
-      originalLocalStorage = globalThis.localStorage;
-      const localStorageMock = {
-        getItem: vi.fn(),
-        setItem: vi.fn(),
-        clear: vi.fn(),
-        removeItem: vi.fn(),
-        length: 0,
-        key: vi.fn(),
-      };
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: localStorageMock,
-        writable: true,
-        configurable: true,
-      });
-    });
-
-    afterEach(() => {
-      if (originalLocalStorage) {
-        Object.defineProperty(globalThis, 'localStorage', {
-          value: originalLocalStorage,
-          writable: true,
-          configurable: true,
-        });
-      }
-      vi.restoreAllMocks();
+      // Clear localStorage before each test
+      (globalThis.localStorage as any).clear();
     });
 
     it('returns [] if localStorage is undefined', () => {

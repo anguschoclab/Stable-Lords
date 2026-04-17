@@ -66,6 +66,41 @@ export interface KillContext {
   hitLocation: string;
 }
 
+// ─── Style Identity (narrative flags) ─────────────────────────────────────
+// Non-mechanical flags consumed by the narrator to pick voice/flavour per style,
+// and by crowd-mood + kill-text assembly to bias tone.
+
+export type StyleVoice = "Surgical" | "Brutal" | "Explosive" | "Fortified" | "Flowing" | "Cunning";
+export type AttackFreq = "Sparing" | "Measured" | "Relentless";
+export type KillBias = "Opportunistic" | "Methodical" | "Savage";
+export type FatigueBurn = "Low" | "Moderate" | "High";
+
+export interface StyleIdentity {
+  voice: StyleVoice;
+  attackFreq: AttackFreq;
+  killBias: KillBias;
+  fatigueBurn: FatigueBurn;
+  /** Short narrative tagline, safe for use in kill-text assembly. */
+  tagline: string;
+}
+
+export const STYLE_IDENTITY: Record<FightingStyle, StyleIdentity> = {
+  [FightingStyle.AimedBlow]:      { voice: "Surgical",  attackFreq: "Sparing",    killBias: "Methodical",    fatigueBurn: "Low",      tagline: "patient surgeon of the arena" },
+  [FightingStyle.BashingAttack]:  { voice: "Brutal",    attackFreq: "Relentless", killBias: "Savage",        fatigueBurn: "Moderate", tagline: "wall-breaker with the weight of a storm" },
+  [FightingStyle.LungingAttack]:  { voice: "Explosive", attackFreq: "Measured",   killBias: "Opportunistic", fatigueBurn: "High",     tagline: "sudden-strike specialist" },
+  [FightingStyle.ParryLunge]:     { voice: "Cunning",   attackFreq: "Measured",   killBias: "Opportunistic", fatigueBurn: "Moderate", tagline: "counter-strike technician" },
+  [FightingStyle.ParryRiposte]:   { voice: "Fortified", attackFreq: "Sparing",    killBias: "Methodical",    fatigueBurn: "Low",      tagline: "iron bulwark, waiting for the error" },
+  [FightingStyle.ParryStrike]:    { voice: "Cunning",   attackFreq: "Measured",   killBias: "Methodical",    fatigueBurn: "Moderate", tagline: "coiled counter-striker" },
+  [FightingStyle.StrikingAttack]: { voice: "Flowing",   attackFreq: "Measured",   killBias: "Methodical",    fatigueBurn: "Moderate", tagline: "rhythmic striker, reading the tempo" },
+  [FightingStyle.SlashingAttack]: { voice: "Flowing",   attackFreq: "Relentless", killBias: "Savage",        fatigueBurn: "Moderate", tagline: "whirl of razored arcs" },
+  [FightingStyle.WallOfSteel]:    { voice: "Fortified", attackFreq: "Sparing",    killBias: "Methodical",    fatigueBurn: "High",     tagline: "unmoving bastion of blade and brace" },
+  [FightingStyle.TotalParry]:     { voice: "Fortified", attackFreq: "Sparing",    killBias: "Opportunistic", fatigueBurn: "Low",      tagline: "immovable defender, drawing mistakes from the foe" },
+};
+
+export function getStyleIdentity(style: FightingStyle): StyleIdentity {
+  return STYLE_IDENTITY[style];
+}
+
 // ─── Mastery System ───────────────────────────────────────────────────────
 
 export type MasteryTier = "Novice" | "Practiced" | "Veteran" | "Master" | "Grandmaster";

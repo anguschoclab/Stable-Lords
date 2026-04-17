@@ -33,6 +33,18 @@ export function handleDeath(
   
   const event = { boutId, killerId: outcome.winner === "A" ? wA.id : wD.id, deathSummary: narrative, memorialTags: tags };
 
+  // Derive the canonical DeathCauseBucket. Precedence:
+  //   RIVALRY_FINISH (if the two stables were rivals at the time of the kill)
+  //   > whatever the combat resolver stamped (EXECUTION / CRITICAL_CHAIN / ARMOR_FAILURE / FATIGUE_COLLAPSE)
+  //   > FATAL_DAMAGE as the catch-all.
+  const stableIds = [wA.stableId, wD.stableId].filter((x): x is string => !!x);
+  const isRivalryKill = stableIds.length === 2 && (s.rivalries ?? []).some(r =>
+    (r.stableIdA === stableIds[0] && r.stableIdB === stableIds[1]) ||
+    (r.stableIdA === stableIds[1] && r.stableIdB === stableIds[0])
+  );
+  const stampedCause = outcome.post?.causeBucket;
+  const causeBucket: string = isRivalryKill ? "RIVALRY_FINISH" : (stampedCause ?? "FATAL_DAMAGE");
+
   // Pure State Transformation for Death
   const graveyardEntry: Warrior = {
     ...victim,
@@ -40,9 +52,9 @@ export function handleDeath(
     deathWeek: week,
     isDead: true,
     killedBy: outcome.winner === "A" ? wA.name : wD.name,
-    causeOfDeath: "Arena Combat",
+    causeOfDeath: causeBucket,
     dateOfDeath: `Week ${week}, Season ${s.season}`,
-    deathEvent: event
+    deathEvent: { ...event, causeBucket } as typeof event & { causeBucket: string }
   };
 
   const rosterUpdates = new Map<string, Partial<Warrior>>();

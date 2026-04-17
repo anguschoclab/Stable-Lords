@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { createFreshState } from "@/engine/factories";
 import { populateTestState } from "@/test/testHelpers";
 import { runRankingsPass } from "@/engine/pipeline/passes/RankingsPass";
@@ -15,6 +15,10 @@ describe("TournamentSelectionCommittee", () => {
     state = populateTestState(state);
     const rankingsImpact = runRankingsPass(state);
     state = resolveImpacts(state, [rankingsImpact]);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe("committeeSelection", () => {
@@ -40,24 +44,27 @@ describe("TournamentSelectionCommittee", () => {
 
     it("should include the best ranked warrior", () => {
       const { warriors } = committeeSelection(state, "Gold", 1, new Set());
-      const bestRankedId = Object.keys(state.realmRankings).find(id => state.realmRankings[id].overallRank === 1);
+      const bestRankedId = Object.keys(state.realmRankings).find(id => state.realmRankings[id]?.overallRank === 1);
+      if (!bestRankedId) {
+        throw new Error('No best ranked warrior found');
+      }
       expect(warriors.some(w => w.id === bestRankedId)).toBe(true);
     });
 
     it("should respect locked warrior IDs", () => {
       const { warriors: goldWarriors, updatedLockedIds: goldLocks } = committeeSelection(state, "Gold", 1, new Set());
       const goldIds = goldWarriors.map(w => w.id);
-      
+
       const { warriors: silverWarriors } = committeeSelection(state, "Silver", 2, goldLocks);
       const overlapping = silverWarriors.filter(w => goldIds.includes(w.id));
-      
+
       expect(overlapping.length).toBe(0);
     });
 
     it("should exclude warriors on rest", () => {
-      state.restStates = [{ warriorId: state.roster[0].id, restUntilWeek: state.week + 1 }];
+      state.restStates = [{ warriorId: state.roster[0]!.id, restUntilWeek: state.week + 1 }];
       const { warriors } = committeeSelection(state, "Gold", 1, new Set());
-      expect(warriors.some(w => w.id === state.roster[0].id)).toBe(false);
+      expect(warriors.some(w => w.id === state.roster[0]!.id)).toBe(false);
     });
 
     it("should apply weather skepticism for rainy weather", () => {

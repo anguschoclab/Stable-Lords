@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { createFreshState } from "@/engine/factories";
 import { FightingStyle } from "@/types/shared.types";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
@@ -18,17 +18,21 @@ describe("TournamentPrizeDistributor", () => {
     state.treasury = 1000;
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe("awardTournamentPrizes", () => {
     it("should award prizes to champion", () => {
       const rng = new SeededRNGService(12345);
-      const warriors = Array.from({ length: 64 }, (_, i) => 
+      const warriors = Array.from({ length: 64 }, (_, i) =>
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
         }, {}, rng)
-      );
+      ) as any[];
 
       // Make first warrior the player's warrior
-      warriors[0] = { ...warriors[0], id: "player-warrior" };
+      warriors[0] = { ...warriors[0], id: "player-warrior" } as any;
       state.roster = [warriors[0]];
 
       const tournament = buildTournament({
@@ -144,7 +148,7 @@ describe("TournamentPrizeDistributor", () => {
       const impact = resolveCompleteTournament(state, tournament.id, 12345);
       state = resolveImpacts(state, [impact]);
 
-      const { updatedState, prizeNews } = awardRunnerUpPrizes(state, tournament.id, 12345);
+      const { prizeNews } = awardRunnerUpPrizes(state, tournament.id, 12345);
 
       // Prize news generation may have changed, just verify function runs
       expect(Array.isArray(prizeNews)).toBe(true);

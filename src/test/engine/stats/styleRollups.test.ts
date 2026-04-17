@@ -3,6 +3,10 @@ import { describe, it, expect, vi, beforeEach, afterEach , Mock} from 'vitest';
 import { StyleRollups } from '@/engine/stats/styleRollups';
 
 describe('StyleRollups', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe('loadWeek (via getWeekRollup)', () => {
     let originalLocalStorage: any;
 
@@ -180,8 +184,8 @@ describe('StyleRollups', () => {
       (globalThis.localStorage.getItem as Mock).mockReturnValue(JSON.stringify(mixedData));
       const result = StyleRollups.last10();
       expect(result).toHaveLength(1);
-      expect(result[0].style).toBe('Sword');
-      expect(result[0].fights).toBe(1);
+      expect(result[0]!.style).toBe('Sword');
+      expect(result[0]!.fights).toBe(1);
     });
   });
 
@@ -274,7 +278,7 @@ describe('StyleRollups', () => {
       (globalThis.localStorage.getItem as Mock).mockReturnValue(JSON.stringify(mixedData));
       const result = StyleRollups.tournament('tour1');
       expect(result).toHaveLength(1);
-      expect(result[0].style).toBe('Sword');
+      expect(result[0]!.style).toBe('Sword');
     });
   });
 });

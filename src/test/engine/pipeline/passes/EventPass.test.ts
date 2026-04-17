@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import { runEventPass } from "@/engine/pipeline/passes/EventPass";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { resolveImpacts } from "@/engine/impacts";
@@ -6,6 +6,10 @@ import type { GameState } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";
 
 describe("EventPass", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("should rarely trigger the Lost Relic Discovery event and correctly modify stats", () => {
     // To hit `brawlRng.next() < 0.04`, we need RNG next to return something small.
     // However, brawlRng = rootRng?.clone() ?? new SeededRNG(nextWeek * 999 + 1);

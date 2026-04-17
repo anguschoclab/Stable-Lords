@@ -31,6 +31,10 @@ describe("TournamentStateMutator", () => {
     }));
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe("findWarriorById", () => {
     it("should find warrior in player roster", () => {
       const warrior = findWarriorById(state, state.roster[0].id);

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { createFreshState } from "@/engine/factories";
 import { FightingStyle } from "@/types/shared.types";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
@@ -17,10 +17,14 @@ describe("TournamentResolver", () => {
     state.rivals = [];
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe("resolveRound", () => {
     it("should resolve a round and advance bracket", () => {
       const rng = new SeededRNGService(12345);
-      const warriors = Array.from({ length: 64 }, (_, i) => 
+      const warriors = Array.from({ length: 64 }, (_, i) =>
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
         }, {}, rng)
@@ -33,7 +37,7 @@ describe("TournamentResolver", () => {
         week: 1,
         season: "Spring",
         rng
-      });
+      } as any);
 
       state.tournaments = [tournament];
 
@@ -42,6 +46,9 @@ describe("TournamentResolver", () => {
 
       // Check that bracket was updated with winners
       const updatedTournament = updatedState.tournaments[0];
+      if (!updatedTournament) {
+        throw new Error('Tournament not found');
+      }
       const round1Matches = updatedTournament.bracket.filter((b: TournamentBout) => b.round === 1);
       const hasWinners = round1Matches.every((b: TournamentBout) => b.winner !== undefined);
       expect(hasWinners).toBe(true);
@@ -51,7 +58,7 @@ describe("TournamentResolver", () => {
 
     it("should determine winners for each match", () => {
       const rng = new SeededRNGService(12345);
-      const warriors = Array.from({ length: 64 }, (_, i) => 
+      const warriors = Array.from({ length: 64 }, (_, i) =>
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
         }, {}, rng)
@@ -64,7 +71,7 @@ describe("TournamentResolver", () => {
         week: 1,
         season: "Spring",
         rng
-      });
+      } as any);
 
       state.tournaments = [tournament];
 
@@ -72,6 +79,9 @@ describe("TournamentResolver", () => {
       const updatedState = resolveImpacts(state, [impact]);
 
       const resolvedTournament = updatedState.tournaments[0];
+      if (!resolvedTournament) {
+        throw new Error('Tournament not found');
+      }
       const round1Matches = resolvedTournament.bracket.filter((b: TournamentBout) => b.round === 1);
       
       round1Matches.forEach((match: TournamentBout) => {
@@ -83,7 +93,7 @@ describe("TournamentResolver", () => {
 
     it("should return round results", () => {
       const rng = new SeededRNGService(12345);
-      const warriors = Array.from({ length: 64 }, (_, i) => 
+      const warriors = Array.from({ length: 64 }, (_, i) =>
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
         }, {}, rng)
@@ -96,7 +106,7 @@ describe("TournamentResolver", () => {
         week: 1,
         season: "Spring",
         rng
-      });
+      } as any);
 
       state.tournaments = [tournament];
 
@@ -109,7 +119,7 @@ describe("TournamentResolver", () => {
   describe("resolveCompleteTournament", () => {
     it("should resolve all rounds to completion", () => {
       const rng = new SeededRNGService(12345);
-      const warriors = Array.from({ length: 64 }, (_, i) => 
+      const warriors = Array.from({ length: 64 }, (_, i) =>
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
         }, {}, rng)
@@ -122,20 +132,20 @@ describe("TournamentResolver", () => {
         week: 1,
         season: "Spring",
         rng
-      });
+      } as any);
 
       state.tournaments = [tournament];
 
       const impact = resolveCompleteTournament(state, tournament.id, 12345);
       const updatedState = resolveImpacts(state, [impact]);
 
-      expect(updatedState.tournaments?.[0].completed).toBe(true);
-      expect(updatedState.tournaments?.[0].champion).toBeDefined();
+      expect(updatedState.tournaments![0]!.completed).toBe(true);
+      expect(updatedState.tournaments![0]!.champion).toBeDefined();
     });
 
     it("should determine a champion", () => {
       const rng = new SeededRNGService(12345);
-      const warriors = Array.from({ length: 64 }, (_, i) => 
+      const warriors = Array.from({ length: 64 }, (_, i) =>
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
         }, {}, rng)
@@ -148,14 +158,14 @@ describe("TournamentResolver", () => {
         week: 1,
         season: "Spring",
         rng
-      });
+      } as any);
 
       state.tournaments = [tournament];
 
       const impact = resolveCompleteTournament(state, tournament.id, 12345);
       const updatedState = resolveImpacts(state, [impact]);
 
-      const champion = updatedState.tournaments?.[0].champion;
+      const champion = updatedState.tournaments![0]!.champion;
       expect(champion).toBeDefined();
       // Champion is a string (warrior ID)
       if (champion) {
@@ -165,7 +175,7 @@ describe("TournamentResolver", () => {
 
     it("should be deterministic with same seed", () => {
       const rng = new SeededRNGService(12345);
-      const warriors = Array.from({ length: 64 }, (_, i) => 
+      const warriors = Array.from({ length: 64 }, (_, i) =>
         makeWarrior(undefined, `Warrior ${i}`, FightingStyle.StrikingAttack, {
           ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10
         }, {}, rng)
@@ -178,7 +188,7 @@ describe("TournamentResolver", () => {
         week: 1,
         season: "Spring",
         rng: new SeededRNGService(12345)
-      });
+      } as any);
 
       const state1 = { ...state, tournaments: [tournament1] };
       const impact1 = resolveCompleteTournament(state1, tournament1.id, 12345);
@@ -191,13 +201,13 @@ describe("TournamentResolver", () => {
         week: 1,
         season: "Spring",
         rng: new SeededRNGService(12345)
-      });
+      } as any);
 
       const state2 = { ...state, tournaments: [tournament2] };
       const impact2 = resolveCompleteTournament(state2, tournament2.id, 12345);
       const result2 = resolveImpacts(state2, [impact2]);
 
-      expect(result1.tournaments[0].champion).toBe(result2.tournaments[0].champion);
+      expect(result1.tournaments![0]!.champion).toBe(result2.tournaments![0]!.champion);
     });
   });
 });

@@ -1,4 +1,3 @@
-import { vi } from "vitest";
 /**
  * advanceWeek pipeline tests — verifies orchestration of the weekly pipeline
  */
@@ -70,12 +69,12 @@ describe("advanceWeek pipeline orchestration", () => {
   it("advances the week counter and returns a new state", () => {
     const state = createFreshState("test-seed");
     const originalWeek = state.week;
-    
+
     // We mock resolveImpacts to return the state it received
-    vi.mocked(Impacts.resolveImpacts).mockImplementation((s) => ({ ...s }));
+    (Impacts.resolveImpacts as any).mockImplementation((s: any) => ({ ...s }));
 
     const next = advanceWeek(state);
-    
+
     expect(next.week).toBe(originalWeek + 1);
     expect(next).not.toBe(state);
   });

@@ -11,7 +11,7 @@ import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import type { Trainer, FightOutcomeBy } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";
-import type { FightPlan, FightOutcome, MinuteEvent, DeathCauseBucket } from "@/types/combat.types";
+import type { FightPlan, FightOutcome, MinuteEvent, DeathCauseBucket, ExchangeLogEntry, CombatEvent } from "@/types/combat.types";
 import type { WeatherType, DistanceRange, ArenaZone } from "@/types/shared.types";
 import { getTrainerMods } from "./combat/mechanics/simulateHelpers";
 import { getWeatherEffect, weatherOpeningLine } from "./combat/mechanics/weatherEffects";
@@ -40,6 +40,51 @@ type Phase = "OPENING" | "MID" | "LATE";
 function getPhase(exchange: number, maxExchanges: number): Phase {
   const p = getCombatPhase(exchange, maxExchanges);
   return p.toUpperCase() as Phase;
+}
+
+/**
+ * Derive a structured `ExchangeLogEntry` from the `CombatEvent[]` emitted by
+ * `resolveExchange`. Strictly a read-over-events projection — no resolution
+ * logic lives here, which keeps this callable safely on any event stream.
+ * Consumers: HighlightLog curation, telemetry aggregation, kill-text tiers.
+ */
+function buildExchangeLogEntry(
+  exchangeIndex: number,
+  minute: number,
+  phase: Phase,
+  events: CombatEvent[]
+): ExchangeLogEntry {
+  const entry: ExchangeLogEntry = { exchangeIndex, minute, phase };
+  const reasonCodes: string[] = [];
+  for (const e of events) {
+    switch (e.type) {
+      case "INITIATIVE":
+        entry.iniWinner = e.actor;
+        break;
+      case "ATTACK":
+        if (e.result === "WHIFF") entry.attResult = "miss";
+        else if (e.metadata?.crit) entry.attResult = "crit";
+        else if (e.result === "FUMBLE") entry.attResult = "fumble";
+        break;
+      case "DEFENSE":
+        if (e.result === "PARRY") { entry.parResult = "success"; entry.attResult ??= "miss"; }
+        else if (e.result === "DODGE") { entry.defResult = "dodge"; entry.attResult ??= "miss"; }
+        else if (e.result === "RIPOSTE") entry.ripResult = "hit";
+        break;
+      case "HIT":
+        entry.attResult ??= (e.metadata?.crit ? "crit" : "hit");
+        if (typeof e.value === "number") entry.damage = (entry.damage ?? 0) + e.value;
+        if (e.location) entry.hitLocation = e.location;
+        break;
+      case "BOUT_END":
+        if (e.metadata?.cause) reasonCodes.push(`CAUSE_${String(e.metadata.cause)}`);
+        entry.executionFlag = e.result === "Kill";
+        entry.killWindow ??= e.result === "Kill";
+        break;
+    }
+  }
+  if (reasonCodes.length) entry.reasonCodes = reasonCodes;
+  return entry;
 }
 
 /**
@@ -122,6 +167,7 @@ export function simulateFight(
   };
 
   const log: MinuteEvent[] = [];
+  const exchangeLog: ExchangeLogEntry[] = [];
   const tags = new Set<string>();
   let prevHpRatioA = 1.0;
   let prevHpRatioD = 1.0;
@@ -204,6 +250,7 @@ export function simulateFight(
 
     // A. Resolve Math (Dice)
     const events = resolveExchange(resCtx, fA, fD);
+    exchangeLog.push(buildExchangeLogEntry(ex, min, phase, events));
 
     // B. Resolve Narration (Drama)
     const narCtx: NarrationContext = {
@@ -296,6 +343,7 @@ export function simulateFight(
     by,
     minutes: Math.max(1, log[log.length - 1]?.minute ?? 1),
     log,
+    exchangeLog,
     post: {
       xpA: winner === "A" ? 2 : 1,
       xpD: winner === "D" ? 2 : 1,

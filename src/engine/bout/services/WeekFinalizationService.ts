@@ -52,7 +52,7 @@ export function finalizeWeekSideEffectsToImpact(
   }
 
   const weekFights = getFightsForWeek(state.arenaHistory, state.week);
-  const gazetteRng = createWeekRng(state.week, 123);
+  const gazetteRng = new SeededRNGService(state.week * 9973 + 123);
   impact.gazettes = [
     generateWeeklyGazette(
       weekFights,
@@ -63,7 +63,7 @@ export function finalizeWeekSideEffectsToImpact(
       gazetteRng
     ),
   ];
-  const rng = createWeekRng(state.week, 13);
+  const rng = new SeededRNGService(state.week * 13);
   impact.rivalries = updateRivalriesFromBouts(
     state.rivalries || [],
     weekFights,

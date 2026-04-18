@@ -194,6 +194,7 @@ export default function EquipmentLoadoutUI({ loadout, style, carryCap, warriorAt
   const overEncumbered = isOverEncumbered(loadout, carryCap);
   const weaponItem = getItemById(loadout.weapon);
   const isTwoHanded = weaponItem?.twoHanded ?? false;
+  const loadoutIssues = validateLoadout(loadout);
 
   const handleSlotChange = (slot: EquipmentSlot, id: string) => {
     const next = { ...loadout, [slot]: id };

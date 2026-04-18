@@ -51,6 +51,14 @@ export function derivePsychState(fighter: FighterState, opponent: FighterState):
   const hpRatio = fighter.hp / fighter.maxHp;
   const endRatio = fighter.endurance / fighter.maxEndurance;
 
+  // Fatigue panic: near-zero endurance. WIT lets a fighter keep composure — high WIT
+  // stays "Desperate" (less severe penalties), low WIT spirals into "FatiguePanic".
+  if (endRatio < 0.1) {
+    const wt = fighter.attributes?.WT ?? 10;
+    if (wt < 12) return "FatiguePanic";
+    return "Desperate";
+  }
+
   if (hpRatio < 0.3) return "Desperate";
 
   if (fighter.momentum >= 2 && hpRatio > 0.7) return "InTheZone";
@@ -105,4 +113,7 @@ export const PSYCH_STATE_MODS: Record<PsychState, { attMod: number; iniMod: numb
   Rattled:   { attMod: 0,  iniMod: 0,  defMod: -5, parMod: -3, decMod: 0,  enduranceCostMult: 1.0  },
   Desperate: { attMod: -3, iniMod: -3, defMod: -3, parMod: -3, decMod: -5, enduranceCostMult: 1.0  },
   Cruising:  { attMod: 0,  iniMod: 0,  defMod: 0,  parMod: 0,  decMod: 0,  enduranceCostMult: 0.9  },
+  // FatiguePanic: exhaustion-driven error cascade. Worse than Desperate across the board;
+  // endurance cost mult >1 accelerates the spiral. WIT≥12 diverts to Desperate instead.
+  FatiguePanic: { attMod: -5, iniMod: -5, defMod: -6, parMod: -6, decMod: -8, enduranceCostMult: 1.1 },
 };

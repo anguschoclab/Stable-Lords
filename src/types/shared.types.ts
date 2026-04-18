@@ -186,7 +186,7 @@ export interface PlanCondition {
   label?: string;
 }
 
-export type PsychState = "Neutral" | "InTheZone" | "Rattled" | "Desperate" | "Cruising";
+export type PsychState = "Neutral" | "InTheZone" | "Rattled" | "Desperate" | "Cruising" | "FatiguePanic";
 
 // ─── Spatial / Distance System ─────────────────────────────────────────────
 

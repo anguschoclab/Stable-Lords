@@ -75,5 +75,26 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
     }
   }
 
+  // 4. Weekly fame / popularity decay (half-life ≈ 52 weeks; decays ~1.33% per week).
+  // Applied as negative deltas so the resolveImpacts pipeline handles merging normally.
+  // Rivals decay in the same rivalsUpdates map to keep prestige from becoming permanent.
+  const DECAY_RATE = 0.0133;
+  const decayAmount = (v: number) => Math.max(0, Math.floor(v * DECAY_RATE));
+  const playerFameLoss = decayAmount(state.fame ?? 0);
+  const playerPopLoss = decayAmount(state.popularity ?? 0);
+  if (playerFameLoss > 0) impact.fameDelta = (impact.fameDelta ?? 0) - playerFameLoss;
+  if (playerPopLoss > 0) impact.popularityDelta = (impact.popularityDelta ?? 0) - playerPopLoss;
+
+  if (state.rivals && state.rivals.length > 0) {
+    const rivalDecayMap = impact.rivalsUpdates ?? new Map();
+    for (const r of state.rivals) {
+      const loss = decayAmount(r.fame ?? 0);
+      if (loss <= 0) continue;
+      const prev = rivalDecayMap.get(r.owner.id) ?? {};
+      rivalDecayMap.set(r.owner.id, { ...prev, fame: Math.max(0, (prev.fame ?? r.fame) - loss) });
+    }
+    if (rivalDecayMap.size > 0) impact.rivalsUpdates = rivalDecayMap;
+  }
+
   return impact;
 }

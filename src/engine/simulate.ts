@@ -16,6 +16,21 @@ import type { WeatherType, DistanceRange, ArenaZone } from "@/types/shared.types
 import { getTrainerMods } from "./combat/mechanics/simulateHelpers";
 import { getWeatherEffect, weatherOpeningLine } from "./combat/mechanics/weatherEffects";
 import { getArenaById } from "@/data/arenas";
+import { getFeatureFlags } from "@/engine/featureFlags";
+import type { CrowdMood } from "@/engine/crowdMood";
+
+/**
+ * Per-mood kill-window deltas. Magnitudes are intentionally tiny so the 8%
+ * cap in `calculateKillWindow` keeps overall mortality near the 10% baseline
+ * even when a Bloodthirsty crowd stacks with other risk factors.
+ */
+const CROWD_KILL_BONUS: Record<CrowdMood, number> = {
+  Calm: 0,
+  Bloodthirsty: 0.008,
+  Theatrical: 0,
+  Solemn: -0.004,
+  Festive: 0,
+};
 
 // ─── Exports from sub-modules for backward compatibility ───
 export { createFighterState, resolveDecision, defaultPlanForWarrior };
@@ -45,7 +60,8 @@ export function simulateFight(
   providedRng?: (() => number) | number,
   trainers?: Trainer[],
   weather: WeatherType = "Clear",
-  arenaId: string = "standard_arena"
+  arenaId: string = "standard_arena",
+  crowdMood?: CrowdMood
 ): FightOutcome {
   // 1. Deterministic RNG setup
   let rngService: IRNGService;
@@ -102,6 +118,7 @@ export function simulateFight(
     arenaConfig: getArenaById(arenaId),
     surfaceMod: getArenaById(arenaId).surfaceMod,
     pushedFighter: undefined,
+    crowdKillBonus: (getFeatureFlags().crowdMoodLethality && crowdMood) ? CROWD_KILL_BONUS[crowdMood] : 0,
   };
 
   const log: MinuteEvent[] = [];

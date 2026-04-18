@@ -24,7 +24,19 @@ export interface EquipmentItem {
   reqSZ?: number;          // minimum Size
   reqWT?: number;          // minimum Wit
   reqDF?: number;          // minimum Deftness
+  // Shield-only: which hit-location band the shield reliably covers.
+  // LOW = legs/groin, MEDIUM = torso/arms, HIGH = head/throat/shoulders.
+  // Used by combatDamage to apply zone-specific mitigation when the defender
+  // is protecting that band.
+  coverage?: "LOW" | "MEDIUM" | "HIGH";
 }
+
+export const SHIELD_ITEM_IDS = ["small_shield", "medium_shield", "large_shield"] as const;
+export const SHIELD_COVERAGE: Record<string, "LOW" | "MEDIUM" | "HIGH"> = {
+  small_shield: "MEDIUM",
+  medium_shield: "MEDIUM",
+  large_shield: "HIGH",
+};
 
 // ─── Single-Handed Weapons ──────────────────────────────────────────────────
 
@@ -35,7 +47,7 @@ export const WEAPONS: EquipmentItem[] = [
   { id: "epee",         code: "EP", name: "Epée",           slot: "weapon", weight: 2, reqST: 7, reqSZ: 3, reqWT: 15, reqDF: 15, description: "Thrusting weapon. CW for Parry-Riposte. W for most styles.", preferredStyles: [FightingStyle.ParryRiposte, FightingStyle.StrikingAttack, FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.ParryLunge, FightingStyle.ParryStrike, FightingStyle.TotalParry, FightingStyle.AimedBlow] },
   { id: "hatchet",      code: "HA", name: "Hatchet",        slot: "weapon", weight: 2, reqST: 7, reqSZ: 3, reqWT: 7, reqDF: 7, description: "Light chopping weapon. Quick and versatile.", preferredStyles: [FightingStyle.StrikingAttack, FightingStyle.SlashingAttack] },
   { id: "short_sword",  code: "SH", name: "Shortsword",     slot: "weapon", weight: 2, reqST: 5, reqSZ: 3, reqWT: 3, reqDF: 7, description: "Versatile light blade. CW for Parry-Strike. W for most styles.", preferredStyles: [FightingStyle.ParryStrike, FightingStyle.StrikingAttack, FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.WallOfSteel, FightingStyle.ParryLunge, FightingStyle.TotalParry, FightingStyle.ParryRiposte, FightingStyle.AimedBlow] },
-  { id: "small_shield", code: "SM", name: "Small Shield",   slot: "weapon", weight: 2, reqST: 5, reqSZ: 3, reqWT: 11, reqDF: 3, description: "Light shield. CW for Total-Parry.", preferredStyles: [FightingStyle.TotalParry, FightingStyle.WallOfSteel] },
+  { id: "small_shield", code: "SM", name: "Small Shield",   slot: "weapon", weight: 2, reqST: 5, reqSZ: 3, reqWT: 11, reqDF: 3, description: "Light shield. CW for Total-Parry.", preferredStyles: [FightingStyle.TotalParry, FightingStyle.WallOfSteel], coverage: "MEDIUM" },
   { id: "war_hammer",   code: "WH", name: "War Hammer",     slot: "weapon", weight: 2, reqST: 13, reqSZ: 3, reqWT: 5, reqDF: 7, description: "Light crushing weapon. Armor-piercing.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack, FightingStyle.ParryStrike], restrictedStyles: [FightingStyle.AimedBlow] },
 
   // Medium weapons (weight 3-4)
@@ -44,11 +56,11 @@ export const WEAPONS: EquipmentItem[] = [
   { id: "longsword",    code: "LO", name: "Longsword",      slot: "weapon", weight: 3, reqST: 11, reqSZ: 3, reqWT: 13, reqDF: 11, description: "Versatile blade. CW for Parry-Lunge. W for most styles.", preferredStyles: [FightingStyle.ParryLunge, FightingStyle.StrikingAttack, FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.ParryStrike, FightingStyle.TotalParry, FightingStyle.ParryRiposte, FightingStyle.AimedBlow] },
   { id: "battle_axe",   code: "BA", name: "Battle Axe",     slot: "weapon", weight: 4, reqST: 15, reqSZ: 7, reqWT: 7, reqDF: 9, description: "Heavy chopping weapon. Better for Strikers and Slashers than Bashers.", preferredStyles: [FightingStyle.StrikingAttack, FightingStyle.SlashingAttack, FightingStyle.WallOfSteel, FightingStyle.ParryStrike, FightingStyle.TotalParry], restrictedStyles: [FightingStyle.AimedBlow] },
   { id: "broadsword",   code: "BS", name: "Broadsword",     slot: "weapon", weight: 4, reqST: 11, reqSZ: 3, reqWT: 9, reqDF: 7, description: "Standard arena sword. CW for Striker. W for most styles.", preferredStyles: [FightingStyle.StrikingAttack, FightingStyle.SlashingAttack, FightingStyle.WallOfSteel, FightingStyle.ParryStrike, FightingStyle.TotalParry, FightingStyle.AimedBlow] },
-  { id: "medium_shield",code: "ME", name: "Medium Shield",  slot: "weapon", weight: 4, reqST: 7, reqSZ: 3, reqWT: 11, reqDF: 3, description: "Standard shield. CW for Total-Parry. +2 DEF.", preferredStyles: [FightingStyle.TotalParry, FightingStyle.WallOfSteel], restrictedStyles: [FightingStyle.LungingAttack] },
+  { id: "medium_shield",code: "ME", name: "Medium Shield",  slot: "weapon", weight: 4, reqST: 7, reqSZ: 3, reqWT: 11, reqDF: 3, description: "Standard shield. CW for Total-Parry. +2 DEF.", preferredStyles: [FightingStyle.TotalParry, FightingStyle.WallOfSteel], restrictedStyles: [FightingStyle.LungingAttack], coverage: "MEDIUM" },
   { id: "morning_star", code: "MS", name: "Morning Star",   slot: "weapon", weight: 4, reqST: 13, reqSZ: 3, reqWT: 9, reqDF: 11, description: "Spiked crushing weapon. CW for Wall of Steel.", preferredStyles: [FightingStyle.WallOfSteel, FightingStyle.BashingAttack, FightingStyle.StrikingAttack], restrictedStyles: [FightingStyle.AimedBlow, FightingStyle.LungingAttack] },
   { id: "short_spear",  code: "SS", name: "Short Spear",    slot: "weapon", weight: 4, reqST: 9, reqSZ: 3, reqWT: 5, reqDF: 7, description: "Thrusting polearm. CW for Lunger. W for parry styles.", preferredStyles: [FightingStyle.LungingAttack, FightingStyle.StrikingAttack, FightingStyle.ParryLunge, FightingStyle.ParryStrike, FightingStyle.ParryRiposte, FightingStyle.AimedBlow] },
   { id: "war_flail",    code: "WF", name: "War Flail",      slot: "weapon", weight: 4, reqST: 11, reqSZ: 3, reqWT: 5, reqDF: 5, description: "Chained weapon. Hard to parry.", preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack, FightingStyle.WallOfSteel], restrictedStyles: [FightingStyle.AimedBlow] },
-  { id: "large_shield", code: "LG", name: "Large Shield",   slot: "weapon", weight: 6, reqST: 13, reqSZ: 3, reqWT: 3, reqDF: 7, description: "Tower shield. CW for Total-Parry. +3 DEF, -1 ATT.", preferredStyles: [FightingStyle.TotalParry], restrictedStyles: [FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.AimedBlow] },
+  { id: "large_shield", code: "LG", name: "Large Shield",   slot: "weapon", weight: 6, reqST: 13, reqSZ: 3, reqWT: 3, reqDF: 7, description: "Tower shield. CW for Total-Parry. +3 DEF, -1 ATT.", preferredStyles: [FightingStyle.TotalParry], restrictedStyles: [FightingStyle.LungingAttack, FightingStyle.SlashingAttack, FightingStyle.AimedBlow], coverage: "HIGH" },
 
   // Two-handed weapons — higher requirements
   { id: "quarterstaff", code: "QS", name: "Quarterstaff",   slot: "weapon", weight: 4, reqST: 11, reqSZ: 9, reqWT: 11, reqDF: 11, twoHanded: true, description: "Balanced staff. CW for Aimed-Blow. W for many styles.", preferredStyles: [FightingStyle.AimedBlow, FightingStyle.BashingAttack, FightingStyle.StrikingAttack, FightingStyle.WallOfSteel, FightingStyle.ParryStrike, FightingStyle.TotalParry] },
@@ -178,6 +190,36 @@ export function checkWeaponRequirements(
 
 export function isOverEncumbered(loadout: EquipmentLoadout, carryCap: number): boolean {
   return getLoadoutWeight(loadout) > carryCap;
+}
+
+/**
+ * Hard-block validation for a loadout. Replaces the previous soft-warning fallthrough
+ * for the two-handed + shield conflict — illegal combinations return a list of issues
+ * so the UI/plan layer can block save instead of silently stripping gear.
+ */
+export interface LoadoutIssue {
+  code: "TWO_HANDED_WITH_SHIELD" | "MISSING_WEAPON";
+  message: string;
+}
+
+export function validateLoadout(loadout: EquipmentLoadout): LoadoutIssue[] {
+  const issues: LoadoutIssue[] = [];
+  const weapon = getItemById(loadout.weapon);
+  if (!weapon) {
+    issues.push({ code: "MISSING_WEAPON", message: "Loadout has no valid weapon." });
+    return issues;
+  }
+  const usingShield =
+    !!loadout.shield && loadout.shield !== "none_shield" && loadout.shield !== "None";
+  // Also catch the case where both hands hold a shield (weapon slot is a shield
+  // and the offhand is also a shield) OR a two-handed weapon is paired with any shield.
+  if (weapon.twoHanded && usingShield) {
+    issues.push({
+      code: "TWO_HANDED_WITH_SHIELD",
+      message: `${weapon.name} is two-handed and cannot be paired with a shield.`,
+    });
+  }
+  return issues;
 }
 
 /**

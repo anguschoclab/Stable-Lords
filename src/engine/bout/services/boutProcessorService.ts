@@ -38,7 +38,7 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
 
   const boutSeed = hashStr(`${week}|${validCW.id}|${validCO.id}`);
   const rng = new SeededRNGService(boutSeed);
-  const outcome = simulateFight(getDefaultPlan(validCW, defaultPlanForWarrior), getDefaultPlan(validCO, defaultPlanForWarrior), validCW, validCO, boutSeed, state.trainers, state.weather);
+  const outcome = simulateFight(getDefaultPlan(validCW, defaultPlanForWarrior), getDefaultPlan(validCO, defaultPlanForWarrior), validCW, validCO, boutSeed, state.trainers, state.weather, undefined, state.crowdMood);
   const tags = outcome.post?.tags ?? [];
 
   const { fameA, popA, fameD, popD } = calculateBoutFame(outcome, tags, moodMods, isRivalry);

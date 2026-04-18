@@ -248,7 +248,8 @@ export function executeHit(
     const killPos = phase === "LATE" ? 2 : phase === "MID" ? 1 : 0;
     const effectiveDec = attacker.skills.DEC + killMech.decBonus;
     const specKillBonus = ctx ? (attacker.label === "A" ? (ctx.trainerModsA.killWindowBonus ?? 0) : (ctx.trainerModsD.killWindowBonus ?? 0)) : 0;
-    const killThreshold = calculateKillWindow(defender.hp / defender.maxHp, defender.endurance / defender.maxEndurance, hitLoc, attKD + killMech.killBonus, killPos, attOE, attAL, attMatchup, effectiveDec, attacker.momentum, specKillBonus);
+    const crowdKillBonus = ctx?.crowdKillBonus ?? 0;
+    const killThreshold = calculateKillWindow(defender.hp / defender.maxHp, defender.endurance / defender.maxEndurance, hitLoc, attKD + killMech.killBonus, killPos, attOE, attAL, attMatchup, effectiveDec, attacker.momentum, specKillBonus, crowdKillBonus);
     if (rng() < killThreshold) {
       defender.hp = 0;
       didKill = true;

@@ -145,7 +145,8 @@ export function calculateKillWindow(
   matchupBonus: number = 0,
   decSkill: number = 10, // Canonical: DEC skill drives kill/decisiveness ability (1-20)
   momentum: number = 0, // Attacker momentum (-3 to +3). < 1 blocks kill attempts.
-  specialtyBonus: number = 0 // Extra kill window from trainer specialties (e.g. KillerInstinct)
+  specialtyBonus: number = 0, // Extra kill window from trainer specialties (e.g. KillerInstinct)
+  crowdKillBonus: number = 0 // Crowd-mood modulation; kept small to preserve ~10% baseline (Bloodthirsty +, Solemn -)
 ): number {
   // Momentum gate: must have neutral or positive momentum to attempt a kill
   // Softened from < 1 to < 0 to allow kills at neutral momentum (not just after consecutive hits)
@@ -189,6 +190,10 @@ export function calculateKillWindow(
 
   // Trainer specialty bonus (e.g. KillerInstinct)
   threshold += specialtyBonus;
+
+  // Crowd-mood modulation: small additive so the 8% cap preserves the ~10% mortality target.
+  // Magnitudes intentionally tiny — the cap absorbs Bloodthirsty surges rather than blowing past baseline.
+  threshold += crowdKillBonus;
 
   // Cap at 8% for the perfect storm (Unified 1.0 Gold Baseline)
   return Math.max(0, Math.min(0.08, threshold));

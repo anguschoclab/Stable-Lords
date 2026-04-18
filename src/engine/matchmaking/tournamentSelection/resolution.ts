@@ -42,7 +42,7 @@ export function resolveRound(state: GameState, tournamentId: string, seed: numbe
     const planA = wA.plan || getAIPlan(updatedState, wA, wD.style, wD.stableId);
     const planD = wD.plan || getAIPlan(updatedState, wD, wA.style, wA.stableId);
 
-    const outcome = simulateFight(planA, planD, wA, wD, rng.roll(0, 1000000), updatedState.trainers, updatedState.weather);
+    const outcome = simulateFight(planA, planD, wA, wD, rng.roll(0, 1000000), updatedState.trainers, updatedState.weather, undefined, updatedState.crowdMood);
 
 
     bout.winner = outcome.winner;

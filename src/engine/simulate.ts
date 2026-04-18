@@ -135,8 +135,24 @@ export function simulateFight(
   let fatalExchangeIndex: number | undefined;
 
   // ── 1. Introductions ──
-  const introA = generateWarriorIntro(rng, { name: nameA, style: planA.style, weaponId: weaponA, armorId: (warriorA?.equipment ?? DEFAULT_LOADOUT).armor, helmId: (warriorA?.equipment ?? DEFAULT_LOADOUT).helm }, warriorA?.attributes?.SZ);
-  const introD = generateWarriorIntro(rng, { name: nameD, style: planD.style, weaponId: weaponD, armorId: (warriorD?.equipment ?? DEFAULT_LOADOUT).armor, helmId: (warriorD?.equipment ?? DEFAULT_LOADOUT).helm }, warriorD?.attributes?.SZ);
+  const introA = generateWarriorIntro(rng, {
+    name: nameA,
+    style: planA.style,
+    weaponId: weaponA,
+    armorId: (warriorA?.equipment ?? DEFAULT_LOADOUT).armor,
+    helmId: (warriorA?.equipment ?? DEFAULT_LOADOUT).helm,
+    attributes: warriorA?.attributes,
+    backupWeaponId: (warriorA?.equipment as { backup?: string } | undefined)?.backup,
+  }, warriorA?.attributes?.SZ);
+  const introD = generateWarriorIntro(rng, {
+    name: nameD,
+    style: planD.style,
+    weaponId: weaponD,
+    armorId: (warriorD?.equipment ?? DEFAULT_LOADOUT).armor,
+    helmId: (warriorD?.equipment ?? DEFAULT_LOADOUT).helm,
+    attributes: warriorD?.attributes,
+    backupWeaponId: (warriorD?.equipment as { backup?: string } | undefined)?.backup,
+  }, warriorD?.attributes?.SZ);
   
   introA.forEach(line => log.push({ minute: 0, text: line }));
   log.push({ minute: 0, text: "" });
@@ -238,7 +254,14 @@ export function simulateFight(
       const boutActorIsWinner = by !== "Stoppage";
       const narWinner = boutActorIsWinner ? (boutEnd.actor === "A" ? nameA : nameD) : (boutEnd.actor === "A" ? nameD : nameA);
       const narLoser  = boutActorIsWinner ? (boutEnd.actor === "A" ? nameD : nameA) : (boutEnd.actor === "A" ? nameA : nameD);
-      const boutEndLines = narrateBoutEnd(rng, by as string, narWinner, narLoser);
+      // Pass kill-cause, winner's style, and crowd mood so narrativePostBout can
+      // pick from tiered archive paths (cause × style × mood → cause × style → cause → generic).
+      const winnerStyle = boutEnd.actor === "A" ? planA.style : planD.style;
+      const boutEndLines = narrateBoutEnd(rng, by as string, narWinner, narLoser, undefined, {
+        cause: causeBucket,
+        style: winnerStyle,
+        mood: crowdMood,
+      });
       boutEndLines.forEach(line => log.push({ minute: min, text: line }));
       break;
     }

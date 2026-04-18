@@ -88,7 +88,67 @@ export function aiPlanForWarrior(
   plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
   plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
 
+  // In-bout personality adaptation — appended AFTER any user-authored conditions
+  // so player overrides take precedence (evaluateConditions is first-match-wins).
+  // Each personality gets at most one adaptation condition to keep behaviour
+  // legible in transcripts and bounded (±1/2 nudges, never beyond plan caps).
+  plan.ownerPersonality = personality;
+  const adaptations = getPersonalityAdaptations(personality, plan);
+  if (adaptations.length > 0) {
+    plan.conditions = [...(plan.conditions ?? []), ...adaptations];
+  }
+
   return plan;
+}
+
+/**
+ * Per-personality in-bout nudges. Returned as PlanConditions so they're evaluated
+ * by the existing WT-gated condition pipeline — no new code path.
+ */
+function getPersonalityAdaptations(
+  personality: OwnerPersonality,
+  plan: FightPlan
+): import("@/types/shared.types").PlanCondition[] {
+  const bounded = (v: number, delta: number) => clamp(v + delta, 1, 10);
+  switch (personality) {
+    case "Aggressive":
+      // When ahead on momentum, press harder.
+      return [{
+        trigger: { type: "MOMENTUM_LEAD", value: 2 },
+        override: { OE: bounded(plan.OE, +1), killDesire: bounded(plan.killDesire ?? 5, +1) },
+        label: "Aggressive: press the advantage",
+      }];
+    case "Methodical":
+      // Losing ground on momentum → tighten defence.
+      return [{
+        trigger: { type: "MOMENTUM_DEFICIT", value: 2 },
+        override: { AL: bounded(plan.AL, +1), OE: bounded(plan.OE, -1) },
+        label: "Methodical: disengage and reset",
+      }];
+    case "Showman":
+      // Late-phase flourish: drama sells tickets, lethality sells legends.
+      return [{
+        trigger: { type: "PHASE_IS", value: "LATE" },
+        override: { killDesire: bounded(plan.killDesire ?? 5, +1), OE: bounded(plan.OE, +1) },
+        label: "Showman: late-phase flourish",
+      }];
+    case "Pragmatic":
+      // Below 30% HP: survive the round first, win the campaign second.
+      return [{
+        trigger: { type: "HP_BELOW", value: 30 },
+        override: { OE: bounded(plan.OE, -1), AL: bounded(plan.AL, +2), killDesire: bounded(plan.killDesire ?? 5, -1) },
+        label: "Pragmatic: preservation",
+      }];
+    case "Tactician":
+      // Endurance under 40%: conserve, outlast.
+      return [{
+        trigger: { type: "ENDURANCE_BELOW", value: 40 },
+        override: { OE: bounded(plan.OE, -1), AL: bounded(plan.AL, +1) },
+        label: "Tactician: conserve pace",
+      }];
+    default:
+      return [];
+  }
 }
 
 /**

@@ -101,6 +101,7 @@ export interface FighterState {
   encumbrancePenalty?: { iniPenalty: number; enduranceMult: number };
   weaponId?: string;
   armorId?: string;
+  shieldId?: string;
   desperate?: boolean;
   /** Momentum counter: −3 to +3. Builds on hits/parries, swings on ripostes. Gates kill window. */
   momentum: number;

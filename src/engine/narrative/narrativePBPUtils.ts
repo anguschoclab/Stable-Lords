@@ -73,6 +73,24 @@ export function getStrikeSeverity(
 }
 
 /**
+ * Quietly walk the archive to see if the given path resolves to a non-empty
+ * string array. Returns the array (or null) without logging — intended for
+ * tiered lookups where misses at lower specificity are expected.
+ */
+export function peekArchive(path: string[]): string[] | null {
+  let current: unknown = narrativeContent;
+  for (const key of path) {
+    if (current && typeof current === "object" && key in (current as Record<string, unknown>)) {
+      current = (current as Record<string, unknown>)[key];
+    } else {
+      return null;
+    }
+  }
+  if (Array.isArray(current) && current.length > 0) return current as string[];
+  return null;
+}
+
+/**
  * Safely picks a template from the JSON archive or returns a generic fallback.
  * Supports both RNG function and IRNGService objects.
  */

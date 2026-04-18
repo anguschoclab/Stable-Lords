@@ -10,7 +10,8 @@ import type { Warrior } from "@/types/warrior.types";
 import type { CombatEvent } from "@/types/combat.types";
 import type { Trainer } from "@/types/state.types";
 import { skillCheck } from "../mechanics/combatMath";
-import { computeHitDamage, rollHitLocation, applyProtectMod, calculateKillWindow, applyArmorTypeMod } from "../mechanics/combatDamage";
+import { computeHitDamage, rollHitLocation, applyProtectMod, calculateKillWindow, applyArmorTypeMod, applyShieldZoneMod } from "../mechanics/combatDamage";
+import { SHIELD_COVERAGE } from "@/data/equipment";
 import { enduranceCost } from "../mechanics/combatFatigue";
 import { getStylePassive, getKillMechanic, getStyleAntiSynergy, getEnduranceMult, Phase as StylePhase } from "../../stylePassives";
 import {
@@ -202,7 +203,12 @@ export function executeHit(
     events.push({ type: "HIT", actor: attLabel, target: defLabel, location: hitLoc, value: rawDamage });
   }
 
-  const damage = applyProtectMod(rawDamage, hitLoc, defender.activePlan.protect);
+  // Shield-zone mitigation: a defender whose shield covers this location eats a flat
+  // damage reduction on top of armor/protect. Coverage lookup tolerates weapon-slot
+  // shields (Total-Parry carries a shield as the weapon) and offhand shield ids.
+  const defShieldCov = SHIELD_COVERAGE[defender.shieldId ?? ""] ?? SHIELD_COVERAGE[defender.weaponId ?? ""];
+  const postShieldDamage = applyShieldZoneMod(rawDamage, hitLoc, defShieldCov);
+  const damage = applyProtectMod(postShieldDamage, hitLoc, defender.activePlan.protect);
   defender.hp -= damage;
   defender.hitsTaken++;
   attacker.hitsLanded++;

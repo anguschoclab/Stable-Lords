@@ -99,6 +99,7 @@ export function createFighterState(
     encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, enduranceMult: encumbranceEndMult },
     weaponId: equip.weapon,
     armorId: equip.armor,
+    shieldId: equip.shield,
     momentum: 0,
     committed: false,
     survivalStrike: false,

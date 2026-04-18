@@ -168,6 +168,8 @@ export interface FightPlan {
   feintTendency?: number;
   /** Preferred range — influences Approach roll motivation bonus (+2 when contesting toward this range) */
   rangePreference?: DistanceRange;
+  /** Stable owner's personality — drives in-bout adaptation conditions (see ownerAI.ts). Undefined for player-authored plans. */
+  ownerPersonality?: "Aggressive" | "Methodical" | "Showman" | "Pragmatic" | "Tactician";
 }
 
 // ─── Conditional Fight Plans ─────────────────────────────────────────────────

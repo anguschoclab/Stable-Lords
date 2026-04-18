@@ -122,6 +122,32 @@ export function applyProtectMod(damage: number, location: HitLocation, protect?:
   }
 }
 
+// ─── Shield zone mitigation ────────────────────────────────────────────────
+// Shields cover specific location bands. Hits inside a shield's coverage take
+// additional mitigation on top of armor. Kept small so the ~10% mortality
+// baseline holds even when a Large Shield + High-zone hit stack.
+const SHIELD_ZONE_LOCATIONS: Record<"LOW" | "MEDIUM" | "HIGH", HitLocation[]> = {
+  LOW:    ["right leg", "left leg"],
+  MEDIUM: ["chest", "abdomen", "right arm", "left arm"],
+  HIGH:   ["head", "chest", "right arm", "left arm"],
+};
+const SHIELD_ZONE_MITIGATION: Record<"LOW" | "MEDIUM" | "HIGH", number> = {
+  LOW:    0.92, // 8% reduction
+  MEDIUM: 0.88, // 12% reduction
+  HIGH:   0.85, // 15% reduction
+};
+
+export function applyShieldZoneMod(
+  damage: number,
+  location: HitLocation,
+  coverage?: "LOW" | "MEDIUM" | "HIGH"
+): number {
+  if (!coverage) return damage;
+  const zones = SHIELD_ZONE_LOCATIONS[coverage];
+  if (!zones.includes(location)) return damage;
+  return Math.floor(damage * SHIELD_ZONE_MITIGATION[coverage]);
+}
+
 export function computeHitDamage(rng: () => number, damageClass: number, location: HitLocation): number {
   const base = damageClass + DAMAGE_BASE_MIN;
   const locMult = LOCATION_DAMAGE_MULT[location] ?? 1.0;

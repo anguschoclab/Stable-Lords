@@ -432,9 +432,9 @@
         "{{attacker}} heaves the {{weapon}} overhead and brings it down like a falling mountain, smashing {{defender}}'s {{bodyPart}} into pulp.",
         "With terrifying momentum, {{attacker}} sweeps the {{weapon}} into {{defender}}'s {{bodyPart}}, delivering a crushing blow that ends the fight instantly.",
         "There is nothing but ruin left of {{defender}}'s {{bodyPart}} after {{attacker}} connects with a sickening, wet thud.",
-        "{{attacker}} brings their weapon down like a judge's gavel, caving in {{defender}}'s skull with a sickening crunch.",
-        "A brutal, sweeping blow from {{attacker}} shatters {{defender}}'s ribs, collapsing their chest cavity in a lethal display.",
-        "{{attacker}} knocks {{defender}} to their knees, then delivers a devastating execution strike to the back of the neck."
+        "{{attacker}} brings their weapon down like a judge's gavel, caving in {{defender}}'s {{bodyPart}} with a sickening crunch.",
+        "A brutal, sweeping blow from {{attacker}} shatters {{defender}}'s {{bodyPart}}, ending the fight in a lethal display.",
+        "{{attacker}} knocks {{defender}} to their knees, then delivers a devastating execution strike to the {{bodyPart}}."
       ]
     },
     "piercing": {

@@ -273,6 +273,10 @@ export interface Passives {
 
 // ─── Root Narrative Content Interface ───────────────────────────────────────
 
+export interface KillText {
+  [key: string]: string[];
+}
+
 export interface NarrativeContent {
   ux_metadata: UxMetadata;
   persona: Persona;
@@ -286,4 +290,5 @@ export interface NarrativeContent {
   recruitment: Recruitment;
   meta: Meta;
   passives: Passives;
+  kill_text?: KillText;
 }

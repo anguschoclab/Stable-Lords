@@ -229,6 +229,21 @@ export default function EquipmentLoadoutUI({ loadout, style, carryCap, warriorAt
         </div>
       </CardHeader>
       <CardContent className="space-y-5">
+        {/* Hard-block loadout validation — surfaces illegal combos (e.g. two-handed + shield). */}
+        {loadoutIssues.length > 0 && (
+          <div className="space-y-1.5">
+            {loadoutIssues.map(issue => (
+              <div
+                key={issue.code}
+                className="flex items-start gap-2 p-2 border border-destructive/40 bg-destructive/10 rounded-none text-destructive"
+              >
+                <XCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                <span className="text-xs font-semibold">{issue.message}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Encumbrance bar */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between text-sm">

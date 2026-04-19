@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useGameStore } from "@/state/useGameStore";
+import { calculateStableStats } from "@/engine/stats/stableStats";
 import type { Warrior } from "@/types/warrior.types";
 import { STYLE_DISPLAY_NAMES, FightingStyle } from "@/types/shared.types";
 import { MOOD_DESCRIPTIONS, MOOD_ICONS, getMoodModifiers, type CrowdMood } from "@/engine/crowdMood";
@@ -190,6 +191,7 @@ export default function ArenaHub() {
   const { roster, player } = useGameStore();
 
   const lifetimeKills = useMemo(() => roster.reduce((s,w)=>s+(w.career?.kills || 0),0), [roster]);
+  const stableStats = useMemo(() => calculateStableStats(roster), [roster]);
 
   return (
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
@@ -246,7 +248,7 @@ export default function ArenaHub() {
                  </div>
                  <div className="flex justify-between items-center group">
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-white/80 transition-colors">Combat_Yield</span>
-                    <span className="font-display font-black text-xl text-primary tracking-tighter">72%</span>
+                    <span className="font-display font-black text-xl text-primary tracking-tighter">{Math.round(stableStats.winRate * 100)}%</span>
                  </div>
               </div>
 

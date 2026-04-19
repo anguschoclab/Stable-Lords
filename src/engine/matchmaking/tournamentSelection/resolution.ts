@@ -1,11 +1,12 @@
 
-import type { GameState, Warrior, TournamentEntry, TournamentBout, FightSummary } from '@/types/state.types';
-import { type WarriorStatus } from '@/types/warrior.types';
+import type { GameState, Warrior, TournamentBout, FightSummary } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
 import { simulateFight } from '@/engine/simulate';
 import { findWarriorById, getAIPlan } from './utils';
 import { awardTournamentPrizes } from './awards';
 import type { FightOutcome } from '@/types/combat.types';
+import { createFightSummary } from '@/engine/core/fightSummaryFactory';
+import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
 
 export function resolveRound(state: GameState, tournamentId: string, seed: number): { updatedState: GameState; roundResults: string[] } {
   const rng = new SeededRNG(seed);
@@ -100,7 +101,8 @@ export function resolveRound(state: GameState, tournamentId: string, seed: numbe
     }
   }
 
-  const isComplete = winners.length <= 1 && currentRound >= 6;
+  // 🏆 7-round tournament: R1(32) → R2(16) → R3(8) → QF(4) → SF(2) → 3rd(1) → Finals(1)
+  const isComplete = winners.length <= 1 && currentRound >= 7;
   const champion = isComplete ? winners[0].name : undefined;
 
   updatedState.tournaments = (updatedState.tournaments || []).map(t =>
@@ -140,58 +142,29 @@ export function applyBoutResults(
   const winnerSide = outcome.winner;
   const updatedState = { ...state };
 
-  const summary: import("@/types/state.types").FightSummary = {
-    id: rng.uuid("bout"),
+  const summary: FightSummary = createFightSummary({
+    warriorA: wA,
+    warriorD: wD,
+    outcome,
     week: state.week,
-    phase: "resolution" as const,
     tournamentId: tId,
-    title: `${wA.name} vs ${wD.name} (${tName})`,
-    a: wA.name,
-    d: wD.name,
-    warriorIdA: wA.id,
-    warriorIdD: wD.id,
-    stableIdA: wA.stableId,
-    stableIdD: wD.stableId,
-    winner: winnerSide,
-    by: outcome.by,
-    styleA: wA.style,
-    styleD: wD.style,
-    transcript: outcome.log.map((e: { text: string }) => e.text),
-    createdAt: new Date().toISOString(),
-  };
+    tournamentName: tName,
+    rng,
+  });
 
   updatedState.arenaHistory = [...(updatedState.arenaHistory || []), summary].slice(-500);
 
-  const updateWarrior = (w: Warrior, isAttacker: boolean) => {
-    const isWinner = (isAttacker && winnerSide === "A") || (!isAttacker && winnerSide === "D");
-    const didKill = isWinner && isKill;
-    const isVictim = !isWinner && isKill;
-
-    return {
-      ...w,
-      status: (isVictim ? "Dead" : "Active") as WarriorStatus,
-      fatigue: isVictim ? 0 : Math.min(100, (w.fatigue || 0) + 25),
-      career: {
-        ...w.career,
-        wins: (w.career?.wins || 0) + (isWinner ? 1 : 0),
-        losses: (w.career?.losses || 0) + (isWinner ? 0 : 1),
-        kills: (w.career?.kills || 0) + (didKill ? 1 : 0),
-      }
-      , fame: Math.max(0, (w.fame || 0) + (isWinner ? (didKill ? 3 : 1) : 0)),
-    };
-  };
-
   updatedState.roster = updatedState.roster.map(w => {
-    if (w.id === wA.id) return updateWarrior(w, true);
-    if (w.id === wD.id) return updateWarrior(w, false);
+    if (w.id === wA.id) return updateWarriorFromBoutOutcome(w, true, winnerSide, isKill);
+    if (w.id === wD.id) return updateWarriorFromBoutOutcome(w, false, winnerSide, isKill);
     return w;
   });
 
   updatedState.rivals = updatedState.rivals.map(r => ({
     ...r,
     roster: r.roster.map(w => {
-      if (w.id === wA.id) return updateWarrior(w, true);
-      if (w.id === wD.id) return updateWarrior(w, false);
+      if (w.id === wA.id) return updateWarriorFromBoutOutcome(w, true, winnerSide, isKill);
+      if (w.id === wD.id) return updateWarriorFromBoutOutcome(w, false, winnerSide, isKill);
       return w;
     })
   }));

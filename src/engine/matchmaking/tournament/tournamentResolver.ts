@@ -7,6 +7,8 @@ import { FightingStyle } from "@/types/shared.types";
 import { findWarriorById, modifyWarrior } from "./tournamentStateMutator";
 import { StateImpact, mergeImpacts, resolveImpacts } from "@/engine/impacts";
 import type { BracketMatch } from "./tournamentBracketBuilder";
+import { createFightSummary } from "@/engine/core/fightSummaryFactory";
+import { updateWarriorFromBoutOutcome } from "@/engine/warrior/careerUpdate";
 
 export interface RoundResolutionResult {
   impact: StateImpact;
@@ -186,53 +188,24 @@ function applyBoutResultsToImpact(
   const rosterUpdates = new Map<string, Partial<Warrior>>();
   const rivalsUpdates = new Map<string, any>();
 
-  const summary: FightSummary = {
-    id: rng.uuid(),
+  const summary: FightSummary = createFightSummary({
+    warriorA: wA,
+    warriorD: wD,
+    outcome,
     week: state.week,
-    phase: "resolution" as const,
     tournamentId: tId,
-    title: `${wA.name} vs ${wD.name} (${tName})`,
-    a: wA.name,
-    d: wD.name,
-    warriorIdA: wA.id,
-    warriorIdD: wD.id,
-    stableIdA: wA.stableId,
-    stableIdD: wD.stableId,
-    winner: winnerSide,
-    by: outcome.by,
-    styleA: wA.style,
-    styleD: wD.style,
-    transcript: outcome.log.map((e: { text: string }) => e.text),
-    createdAt: new Date().toISOString(),
-  };
+    tournamentName: tName,
+    rng,
+  });
 
-  const updateWarrior = (w: Warrior, isAttacker: boolean) => {
-    const isWinner = (isAttacker && winnerSide === "A") || (!isAttacker && winnerSide === "D");
-    const didKill = isWinner && isKill;
-    const isVictim = !isWinner && isKill;
-    
-    return {
-      ...w,
-      status: (isVictim ? "Dead" : "Active") as any,
-      fatigue: isVictim ? 0 : Math.min(100, (w.fatigue || 0) + 25),
-      career: {
-        ...w.career,
-        wins: (w.career?.wins || 0) + (isWinner ? 1 : 0),
-        losses: (w.career?.losses || 0) + (isWinner ? 0 : 1),
-        kills: (w.career?.kills || 0) + (didKill ? 1 : 0),
-      },
-      fame: Math.max(0, (w.fame || 0) + (isWinner ? (didKill ? 3 : 1) : 0)),
-    };
-  };
-
-  rosterUpdates.set(wA.id, updateWarrior(wA, true));
-  rosterUpdates.set(wD.id, updateWarrior(wD, false));
+  rosterUpdates.set(wA.id, updateWarriorFromBoutOutcome(wA, true, winnerSide, isKill));
+  rosterUpdates.set(wD.id, updateWarriorFromBoutOutcome(wD, false, winnerSide, isKill));
 
   state.rivals.forEach(r => {
     const rosterChanges: Warrior[] = [];
     r.roster.forEach(w => {
-      if (w.id === wA.id) rosterChanges.push(updateWarrior(w, true));
-      else if (w.id === wD.id) rosterChanges.push(updateWarrior(w, false));
+      if (w.id === wA.id) rosterChanges.push(updateWarriorFromBoutOutcome(w, true, winnerSide, isKill));
+      else if (w.id === wD.id) rosterChanges.push(updateWarriorFromBoutOutcome(w, false, winnerSide, isKill));
       else rosterChanges.push(w);
     });
     if (rosterChanges.some(c => c.id === wA.id || c.id === wD.id)) {

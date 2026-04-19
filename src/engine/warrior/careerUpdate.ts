@@ -11,6 +11,8 @@ export interface CareerUpdateInput {
   isVictim: boolean;
   fameDelta?: number;
   popularityDelta?: number;
+  /** If true, skip fatigue accrual (for tournament participants during tournament week) */
+  skipFatigue?: boolean;
 }
 
 export interface CareerUpdateResult {
@@ -30,7 +32,7 @@ export function calculateCareerUpdate(
   warrior: Warrior,
   input: CareerUpdateInput
 ): CareerUpdateResult {
-  const { isWinner, isKill, isVictim, fameDelta = 0, popularityDelta = 0 } = input;
+  const { isWinner, isKill, isVictim, fameDelta = 0, popularityDelta = 0, skipFatigue = false } = input;
   const didKill = isWinner && isKill;
 
   // Calculate new career stats
@@ -48,7 +50,11 @@ export function calculateCareerUpdate(
   const status: WarriorStatus = isVictim ? "Dead" : "Active";
 
   // Calculate fatigue: reset to 0 if dead, otherwise +25 (capped at 100)
-  const fatigue = isVictim ? 0 : Math.min(100, (warrior.fatigue || 0) + 25);
+  // 🔒 Skip fatigue accrual for tournament participants during tournament week
+  const fatigue = isVictim ? 0 : (skipFatigue
+    ? (warrior.fatigue || 0)  // Keep current fatigue (no accrual)
+    : Math.min(100, (warrior.fatigue || 0) + 25)  // Normal +25 fatigue
+  );
 
   const result: CareerUpdateResult = {
     status,

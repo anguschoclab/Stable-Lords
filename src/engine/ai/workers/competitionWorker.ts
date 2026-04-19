@@ -200,9 +200,13 @@ export function verifyBoutAcceptance(
 
   return { accepted: true };
 }
+/** Injury severity types that block bout acceptance */
+const BLOCKING_INJURY_SEVERITIES = ["Moderate", "Severe", "Critical", "Permanent"] as const;
+type BlockingSeverity = typeof BLOCKING_INJURY_SEVERITIES[number];
+
 /**
  * Validates whether a rival stable should accept a bout offer.
- * Incorporates strategy (EXPANSION/CONSOLIDATION) and warrior health.
+ * Incorporates strategy (EXPANSION/CONSOLIDATION), warrior health, fatigue, and injuries.
  */
 export function evaluateBoutOffer(
   offer: BoutOffer,
@@ -212,6 +216,20 @@ export function evaluateBoutOffer(
   // 1. Health Guard: Protective owners decline if HP < 80%
   const currentHP = warrior.derivedStats?.hp ?? 100;
   if (currentHP < 80 && rival.owner.personality !== "Aggressive") {
+    return "Declined";
+  }
+
+  // 🔋 Fatigue Gate: if fatigue > 60, decline unless personality is Aggressive
+  const fatigue = warrior.fatigue ?? 0;
+  if (fatigue > 60 && rival.owner.personality !== "Aggressive") {
+    return "Declined";
+  }
+
+  // 🩹 Injury Gate: if any injury severity is Moderate+, decline
+  const hasBlockingInjury = (warrior.injuries || []).some(injury =>
+    BLOCKING_INJURY_SEVERITIES.includes(injury.severity as BlockingSeverity)
+  );
+  if (hasBlockingInjury) {
     return "Declined";
   }
 
@@ -230,11 +248,15 @@ export function evaluateBoutOffer(
 }
 
 /**
- * AI Decision Engine — processes all pending offers for ALL rival stables in one O(N) pass.
+ * AI Decision Engine — processes all pending offers for ALL rival stables using weekly slate approach.
+ * Each rival evaluates their full slate of offers and picks at most one offer per warrior per week.
  */
 export function processAllRivalsBoutOffers(state: GameState, rivals: RivalStableData[]): StateImpact {
   const impacts: StateImpact[] = [];
   const pendingOffers = Object.values(state.boutOffers).filter(o => o.status === "Proposed");
+
+  // Group offers by stableId (each rival gets their weekly slate)
+  const offersByRival = new Map<string, typeof pendingOffers>();
 
   pendingOffers.forEach(offer => {
     offer.warriorIds.forEach(wId => {
@@ -242,12 +264,53 @@ export function processAllRivalsBoutOffers(state: GameState, rivals: RivalStable
       const owningRival = rivals.find(r => r.roster.some(w => w.id === wId));
       if (!owningRival) return;
 
-      const rivalWarrior = owningRival.roster.find(w => w.id === wId);
-      if (rivalWarrior && offer.responses[wId] === "Pending") {
+      // Group by rival stable ID
+      if (!offersByRival.has(owningRival.id)) {
+        offersByRival.set(owningRival.id, []);
+      }
+      offersByRival.get(owningRival.id)!.push(offer);
+    });
+  });
+
+  // Process each rival's slate
+  offersByRival.forEach((rivalOffers, rivalId) => {
+    const owningRival = rivals.find(r => r.id === rivalId);
+    if (!owningRival) return;
+
+    // Track warriors already committed this week (prevents double-booking)
+    const pickedWarriors = new Set<string>();
+
+    // Sort offers by quality (hype * purse) for better selection
+    const sortedOffers = [...rivalOffers].sort((a, b) => {
+      const scoreA = a.hype * a.purse;
+      const scoreB = b.hype * b.purse;
+      return scoreB - scoreA;
+    });
+
+    sortedOffers.forEach(offer => {
+      offer.warriorIds.forEach(wId => {
+        // Skip if warrior not owned by this rival
+        if (!owningRival.roster.some(w => w.id === wId)) return;
+
+        // Skip if warrior already committed this week
+        if (pickedWarriors.has(wId)) return;
+
+        // Skip if already responded
+        if (offer.responses[wId] !== "Pending") return;
+
+        const rivalWarrior = owningRival.roster.find(w => w.id === wId);
+        if (!rivalWarrior) return;
+
         const response = evaluateBoutOffer(offer, owningRival, rivalWarrior);
+
+        if (response === "Accepted") {
+          // Mark warrior as committed for this week
+          pickedWarriors.add(wId);
+        }
+
         const impact = respondToBoutOffer(state, offer.id, rivalWarrior.id, response);
         impacts.push(impact);
-      }
+      });
     });
   });
 

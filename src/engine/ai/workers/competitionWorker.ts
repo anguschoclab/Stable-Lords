@@ -8,6 +8,13 @@ import { scoreMatchup } from "@/engine/schedulingAssistant";
 /**
  * CompetitionWorker: Handles boutique reasoning, tournament entry, and matchmaking bids.
  * Implements "Skeptical Matchmaking" and "Targeted Competition".
+ *
+ * **Intentional asymmetry (audited 2026-04-19)**: when scoring matchups the AI
+ * reads true opponent stats directly from `state.rivals[].roster[]` —
+ * effectively bypassing the player's fog-of-war scouting system (see
+ * `scouting.ts`). This is an anti-exploit design choice: if the AI also had to
+ * scout before it could plan, the player could starve it of information by
+ * never scouting rivals. Keep it forked.
  */
 
 export interface BoutBid {

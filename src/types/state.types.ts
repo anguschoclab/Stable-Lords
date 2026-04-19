@@ -186,6 +186,13 @@ export interface RivalStableData {
   philosophy?: string;
   tier?: "Minor" | "Established" | "Major" | "Legendary";
   crest?: CrestData;
+  /**
+   * Per-stable seasonal training growth — mirrors `GameState.seasonalGrowth` so
+   * rival warriors hit the same `SEASONAL_CAP_PER_ATTR` wall the player does.
+   * Optional for backward compat with factories that don't seed it; treated as
+   * `[]` by the training pipeline.
+   */
+  seasonalGrowth?: SeasonalGrowth[];
 }
 
 export interface ScoutReportData {

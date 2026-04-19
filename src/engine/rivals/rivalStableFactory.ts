@@ -1,6 +1,15 @@
 /**
  * Rival Stable Factory - Generates rival stables from templates
- * Extracted from rivals.ts to follow SRP
+ * Extracted from rivals.ts to follow SRP.
+ *
+ * **Intentional asymmetry (audited 2026-04-19)**: startup rivals are seeded
+ * with `biasedAttrs`/`createRivalWarrior` rather than drawn from the player's
+ * shared recruit pool (`recruitment.ts::generateRecruit`). This is a catch-up
+ * scaffold — rivals need an initial roster before the recruit-pool pipeline
+ * has had a chance to run. *Ongoing* rival recruitment (post-startup) goes
+ * through `recruitmentWorker.ts` and signs from the same shared pool the
+ * player sees. Don't "fix" the factory bias without also replacing the
+ * startup-state warrior generator.
  */
 import type { RivalStableData, Owner } from "@/types/state.types";
 import type { Warrior } from "@/types/warrior.types";

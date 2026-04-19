@@ -25,6 +25,10 @@ export function processRecruitment(
   const activeCount = updatedRival.roster.filter(w => w.status === "Active").length;
   
   // 1. Check Recruitment Chance
+  // **Intentional asymmetry (audited 2026-04-19)**: personality-based soft cap
+  // (Aggressive=10, others=8) is deliberately decoupled from the player's
+  // `BASE_ROSTER_CAP` constant. The asymmetry exists so that rival stables
+  // feel distinct in roster shape; unifying to a single cap would flatten that.
   const maxRoster = updatedRival.owner.personality === "Aggressive" ? 10 : 8;
   if (activeCount >= maxRoster || remainingPool.length === 0) {
     return { updatedRival, updatedPool: remainingPool, gazetteItems };

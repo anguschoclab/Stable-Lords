@@ -1,6 +1,15 @@
 /**
  * Rival Trainer Factory - Generates trainers for rival stables
- * Extracted from rivals.ts to follow SRP
+ * Extracted from rivals.ts to follow SRP.
+ *
+ * **Intentional asymmetry (audited 2026-04-19)**: rivals spawn with trainers
+ * instead of hiring from the market. Hiring costs and market inventory don't
+ * apply by design. The *bonuses* those trainers confer still flow through the
+ * shared math (`computeTrainerBonus` → `computeGainChance` in
+ * `trainingGains.ts`) now that `rosterWorker::performAITraining` routes
+ * through the player pipeline — so this fork only affects *sourcing*, not
+ * *effect*. Don't paper it over with a hiring tax without also modelling the
+ * trainer market as a resource rivals compete over.
  */
 import type { Trainer, TrainerTier } from "@/types/shared.types";
 import { TRAINER_FIRST_NAMES, PHILOSOPHY_TO_FOCUS } from "./rivalNamePool";

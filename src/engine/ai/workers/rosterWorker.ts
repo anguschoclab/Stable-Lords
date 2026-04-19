@@ -1,12 +1,22 @@
-import type { RivalStableData } from "@/types/state.types";
+import type { GameState, RivalStableData, SeasonalGrowth } from "@/types/state.types";
+import type { Attributes, Season } from "@/types/shared.types";
 import type { Warrior } from "@/types/warrior.types";
-import type { Season } from "@/types/shared.types";
 import { checkBudget } from "./budgetWorker";
 import { computeWarriorStats } from "../../skillCalc";
 import { logAgentAction } from "../agentCore";
 import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { generateRecommendations } from "@/engine/equipmentOptimizer";
+import { validateLoadout, checkWeaponRequirements } from "@/data/equipment";
+import {
+  processAttributeTraining,
+  processSkillDrillTraining,
+  rollForTrainingInjury,
+  SKILL_DRILL_CAP,
+  TOTAL_CAP,
+} from "@/engine/training/trainingGains";
+import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX, FightingStyle, type BaseSkills } from "@/types/shared.types";
+import { getFeatureFlags } from "@/engine/featureFlags";
 
 /**
  * RosterWorker: Handles training and equipment.
@@ -21,6 +31,7 @@ export function processRoster(
 ): RivalStableData {
   const rngService = rng || new SeededRNGService(seed ?? (currentWeek * 7919 + 101));
   let updatedRival = { ...rival };
+  let seasonalGrowth: SeasonalGrowth[] = updatedRival.seasonalGrowth ?? [];
   const activeRoster = updatedRival.roster.filter(w => w.status === "Active");
   const intent = updatedRival.strategy?.intent ?? "CONSOLIDATION";
 
@@ -30,16 +41,37 @@ export function processRoster(
   const trainees = activeRoster
     .sort((a, b) => (a.fame || 0) - (b.fame || 0))
     .slice(0, trainingLimit);
-  
+
   for (const trainee of trainees) {
     const trainingCost = 35;
     const budgetReport = checkBudget(updatedRival, trainingCost, "ROSTER");
-    
+
     if (budgetReport.isAffordable) {
       updatedRival.treasury -= trainingCost;
-      updatedRival.roster = updatedRival.roster.map(w => w.id === trainee.id ? performAITraining(w, season, rngService) : w);
+      // With the `skillDrilling` feature flag on, roughly 1-in-4 AI training
+      // weeks spend on skill drilling instead of attribute training — same
+      // option surface the player has in the TrainingAssignment UI. Below the
+      // cap a drill is comparatively cheap and the attribute pipeline handles
+      // the rest of the time.
+      const doDrill = getFeatureFlags().skillDrilling && rngService.next() < 0.25;
+      if (doDrill) {
+        updatedRival.roster = updatedRival.roster.map(w =>
+          w.id === trainee.id ? performAISkillDrill(trainee, updatedRival, rngService) : w,
+        );
+      } else {
+        const { warrior, seasonalGrowth: nextGrowth } = performAITraining(
+          trainee,
+          updatedRival,
+          season,
+          seasonalGrowth,
+          rngService,
+        );
+        seasonalGrowth = nextGrowth;
+        updatedRival.roster = updatedRival.roster.map(w => w.id === warrior.id ? warrior : w);
+      }
     }
   }
+  updatedRival.seasonalGrowth = seasonalGrowth;
 
   // 2. Equipment (High Risk)
   if (intent === "EXPANSION" || (intent === "VENDETTA" && updatedRival.treasury > 1000)) {
@@ -63,78 +95,166 @@ export function processRoster(
   return updatedRival;
 }
 
+/**
+ * Apply an equipment upgrade — validated through the same loadout + weapon-
+ * requirement gates the player hits via `StableEquipment.tsx`. Walks the
+ * optimizer recommendations in synergy order, skipping any that fail
+ * `validateLoadout` (catches two-handed + shield) or `checkWeaponRequirements`
+ * (ST/SZ/WT/DF gates). If every recommendation fails, the warrior is returned
+ * untouched — no attribute nudge, no invalid gear applied.
+ *
+ * Historical note: the previous implementation didn't write `warrior.equipment`
+ * at all — it just incremented attributes based on the top recommendation's
+ * weight profile. That made the function a misnamed attribute nudger *and*
+ * skipped every validation gate. We now do the job on the tin and honor the
+ * shared validator.
+ */
 function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
-  // Get equipment optimizer recommendations for this warrior's style
   const recommendations = generateRecommendations(w.style, w.attributes.SZ);
-  const bestRec = recommendations[0]; // Use highest synergy recommendation
+  const attrs = {
+    ST: w.attributes.ST,
+    SZ: w.attributes.SZ,
+    WT: w.attributes.WT,
+    DF: w.attributes.DF,
+  };
 
-  // Determine which attributes to upgrade based on equipment type
-  const keys = (Object.keys(w.attributes) as (keyof typeof w.attributes)[]).filter(k => k !== "SZ");
-  const newAttrs = { ...w.attributes };
-
-  // Upgrade attributes based on equipment optimizer recommendations
-  for (let i = 0; i < 2; i++) {
-    let key: keyof typeof w.attributes | undefined;
-
-    // Prioritize attributes based on equipment type
-    if (bestRec && bestRec.breakdown.weapon.item.weight >= 4) {
-      // Heavy weapon: prioritize ST for damage
-      key = "ST";
-    } else if (bestRec && bestRec.breakdown.armor.item.weight >= 4) {
-      // Heavy armor: prioritize CN for endurance
-      key = "CN";
-    } else if (bestRec && bestRec.breakdown.shield.item.weight >= 2) {
-      // Medium/heavy shield: prioritize DF for parry
-      key = "DF";
-    } else {
-      // Light gear: prioritize SP for speed
-      key = "SP";
-    }
-
-    // If the prioritized attribute is capped, fall back to lowest stat
-    if (!key || newAttrs[key] >= 25) {
-      // ⚡ Bolt: Reduced O(N log N) sort to O(N) linear scan to find minimum stat
-      if (keys.length > 0) {
-        key = keys.reduce((min, k) => newAttrs[k] < newAttrs[min] ? k : min, keys[0]!);
-      }
-    }
-
-    if (key && newAttrs[key] < 25) newAttrs[key]++;
+  for (const rec of recommendations) {
+    const loadoutIssues = validateLoadout(rec.loadout);
+    if (loadoutIssues.length > 0) continue;
+    const wepReq = checkWeaponRequirements(rec.loadout.weapon, attrs);
+    if (!wepReq.met) continue;
+    // Validated loadout wins — apply to the warrior.
+    return { ...w, equipment: { ...rec.loadout } };
   }
-
-  const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, w.style);
-  return { ...w, attributes: newAttrs, baseSkills, derivedStats };
+  return w;
 }
 
 /**
  * AI training runs at ~80% player effectiveness per the Training Mechanics spec.
- * Rather than always gaining, we roll a 0.8 success gate; on failure the week is spent
- * without a stat gain, matching the player-side gain-chance variance.
+ * The 80% lever is a **pre-gate** on whether the week attempts training at all;
+ * once we decide to attempt, the full shared pipeline runs so potential caps,
+ * `TOTAL_CAP`, `SEASONAL_CAP_PER_ATTR`, diminishing returns, trainer bonuses,
+ * and injury rolls all fire exactly the same way they do for the player.
+ *
+ * Net gain rate = 0.8 × `computeGainChance(...)` (modulo pipeline gates),
+ * which matches the spec's multiplicative-effectiveness intent.
  */
 const AI_TRAINING_EFFECTIVENESS = 0.8;
 
-function performAITraining(w: Warrior, season?: Season, rng?: IRNGService): Warrior {
-  if (rng && rng.next() >= AI_TRAINING_EFFECTIVENESS) return w;
+/** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
+function performAITraining(
+  w: Warrior,
+  stable: RivalStableData,
+  season: Season | undefined,
+  seasonalGrowth: SeasonalGrowth[],
+  rng: IRNGService,
+): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[] } {
+  // 80% pre-gate — preserves the spec's AI-at-80%-effectiveness lever while
+  // still routing through the full pipeline on the weeks it attempts.
+  if (rng.next() >= AI_TRAINING_EFFECTIVENESS) return { warrior: w, seasonalGrowth };
 
-  const keys = (Object.keys(w.attributes) as (keyof typeof w.attributes)[]).filter(k => k !== "SZ");
+  // Total-attribute hard cap check — cheaper to short-circuit here than to
+  // recompute inside `processAttributeTraining` for every attribute.
+  const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + w.attributes[k], 0);
+  if (total >= TOTAL_CAP) return { warrior: w, seasonalGrowth };
 
-  // ⚡ TSA: Seasonal Priority Training
-  let chosen: keyof typeof w.attributes | undefined;
-  if (season === "Spring") chosen = "CN"; // Prep for Summer heat
-  else if (season === "Summer") chosen = "ST"; // Maintain endurance
+  // Focus selection — preserve the seasonal-priority heuristic the AI already
+  // used (Spring→CN, Summer→ST), falling back to the lowest trainable stat.
+  const trainableKeys = ATTRIBUTE_KEYS.filter(k => k !== "SZ") as (keyof Attributes)[];
+  let chosen: keyof Attributes | undefined;
+  if (season === "Spring") chosen = "CN";
+  else if (season === "Summer") chosen = "ST";
+  if (!chosen || w.attributes[chosen] >= ATTRIBUTE_MAX) {
+    chosen = trainableKeys.reduce(
+      (min, k) => w.attributes[k] < w.attributes[min] ? k : min,
+      trainableKeys[0]!,
+    );
+  }
+  if (!chosen) return { warrior: w, seasonalGrowth };
 
-  // Fallback to lowest stat if no seasonal priority or stat capped
-  if (!chosen || w.attributes[chosen] >= 25) {
-    // ⚡ Bolt: Reduced O(N log N) sort to O(N) linear scan to find minimum stat
-    if (keys.length > 0) {
-      chosen = keys.reduce((min, k) => w.attributes[k] < w.attributes[min] ? k : min, keys[0]!);
+  // Adapter: `processAttributeTraining` expects a GameState for `season` and
+  // `trainers`. Rivals don't have a full GameState, so we feed a minimal shape
+  // with just the fields the pipeline reads.
+  const stateAdapter = {
+    season: season ?? "Spring",
+    trainers: stable.trainers ?? [],
+  } as unknown as GameState;
+
+  const attemptResult = processAttributeTraining(w, chosen, stateAdapter, seasonalGrowth, rng);
+  let warrior = attemptResult.updatedWarrior ?? w;
+  const nextSeasonalGrowth = attemptResult.updatedSeasonalGrowth ?? seasonalGrowth;
+
+  // Training injury roll — same chance formula the player hits. `healingBonus`
+  // defaults to 0 for rivals (no infirmary / healing trainer modeling yet).
+  const injuryRoll = rollForTrainingInjury(warrior, 0, rng);
+  if (injuryRoll.injury) {
+    warrior = { ...warrior, injuries: [...(warrior.injuries ?? []), injuryRoll.injury] };
+  }
+
+  // Recompute derived stats if the underlying attributes changed via the
+  // pipeline (processAttributeTraining already does this, but injuries could
+  // also modify attributes in a future pass — safe to re-derive defensively).
+  if (warrior !== w) {
+    const { baseSkills, derivedStats } = computeWarriorStats(warrior.attributes, warrior.style);
+    warrior = { ...warrior, baseSkills, derivedStats };
+  }
+
+  return { warrior, seasonalGrowth: nextSeasonalGrowth };
+}
+
+/**
+ * Style → primary drilled skill. Mirrors the player's implicit affinity when
+ * they pick a drill focus in the Training UI — a BashingAttack fighter drills
+ * ATT, a TotalParry fighter drills PAR, etc. Kept as a small lookup rather
+ * than style-passive-derived so future style rebalances don't silently
+ * reroute AI drill priorities.
+ */
+const STYLE_PRIMARY_DRILL: Record<FightingStyle, keyof BaseSkills> = {
+  [FightingStyle.AimedBlow]: "DEC",
+  [FightingStyle.BashingAttack]: "ATT",
+  [FightingStyle.LungingAttack]: "ATT",
+  [FightingStyle.ParryLunge]: "PAR",
+  [FightingStyle.ParryRiposte]: "RIP",
+  [FightingStyle.ParryStrike]: "PAR",
+  [FightingStyle.SlashingAttack]: "ATT",
+  [FightingStyle.StrikingAttack]: "ATT",
+  [FightingStyle.TotalParry]: "PAR",
+  [FightingStyle.WallOfSteel]: "DEF",
+};
+
+const DRILLABLE_SKILLS: (keyof BaseSkills)[] = ["ATT", "PAR", "DEF", "INI", "RIP", "DEC"];
+
+/**
+ * Skill drilling for AI warriors — routes through the shared
+ * `processSkillDrillTraining` pipeline so cap (`SKILL_DRILL_CAP=3`),
+ * chance formula, and trainer-focus bonus are all evaluated identically
+ * to the player path.
+ *
+ * Focus policy: prefer the style's primary skill if still below the drill
+ * cap; otherwise pick the lowest-drilled skill overall so a capped warrior
+ * still benefits from the week's training slot rather than no-op-ing.
+ */
+function performAISkillDrill(w: Warrior, stable: RivalStableData, rng: IRNGService): Warrior {
+  const primary = STYLE_PRIMARY_DRILL[w.style as FightingStyle];
+  const drills = w.skillDrills ?? {};
+  let skill: keyof BaseSkills | undefined;
+  if (primary && (drills[primary] ?? 0) < SKILL_DRILL_CAP) {
+    skill = primary;
+  } else {
+    // Fall back to the least-drilled still-below-cap skill; ties broken by
+    // declaration order in DRILLABLE_SKILLS.
+    let bestCount = SKILL_DRILL_CAP;
+    for (const s of DRILLABLE_SKILLS) {
+      const c = drills[s] ?? 0;
+      if (c < bestCount) {
+        bestCount = c;
+        skill = s;
+      }
     }
   }
+  if (!skill) return w; // All skills at cap — nothing to drill.
 
-  if (chosen && w.attributes[chosen] < 25) {
-    const newAttrs = { ...w.attributes, [chosen]: w.attributes[chosen] + 1 };
-    const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, w.style);
-    return { ...w, attributes: newAttrs, baseSkills, derivedStats };
-  }
-  return w;
+  const stateAdapter = { trainers: stable.trainers ?? [] } as unknown as GameState;
+  const { updatedWarrior } = processSkillDrillTraining(w, skill, stateAdapter, rng);
+  return updatedWarrior ?? w;
 }

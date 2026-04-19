@@ -10,6 +10,8 @@ interface LegacyCandidate {
   name: string;
   stableName: string;
   parentStableId?: string; // 🛡️ Track parent stable for crest inheritance
+  warriorId?: string; // Lineage breadcrumb — mirrors Trainer.retiredFromWarrior
+  fightingStyle?: import("@/types/shared.types").FightingStyle;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
@@ -45,6 +47,8 @@ export class SeasonalRetirementService {
               name: w.name,
               stableName: newStableName,
               parentStableId: rival.id, // 🛡️ Track parent for crest inheritance
+              warriorId: w.id,
+              fightingStyle: w.style,
             });
           }
         });

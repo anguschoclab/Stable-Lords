@@ -6,6 +6,8 @@ import { randomOwnerName, randomStableName } from "@/data/randomNames";
 import { generateCrest } from "@/engine/crest/crestGenerator";
 import { StableCrest } from "@/components/crest/StableCrest";
 import type { CrestData } from "@/types/crest.types";
+import BackstoryPicker from "@/components/startGame/BackstoryPicker";
+import { BACKSTORY_IDS, type BackstoryId } from "@/data/backstories";
 
 interface NewGameFormProps {
   ownerName: string;
@@ -14,6 +16,8 @@ interface NewGameFormProps {
   setStableName: (name: string) => void;
   playerCrest: CrestData;
   setPlayerCrest: (crest: CrestData) => void;
+  backstoryId: BackstoryId | null;
+  setBackstoryId: (id: BackstoryId) => void;
   onBack: () => void;
   onSubmit: () => void;
   canCreate: boolean;
@@ -26,17 +30,31 @@ export default function NewGameForm({
   setStableName,
   playerCrest,
   setPlayerCrest,
+  backstoryId,
+  setBackstoryId,
   onBack,
   onSubmit,
   canCreate,
 }: NewGameFormProps) {
   const randomizeCrest = () => {
-    const newCrest = generateCrest({ 
-      seed: Math.floor(Math.random() * 100000), 
-      philosophy: "Balanced", 
-      tier: "Established" 
+    const newCrest = generateCrest({
+      seed: Math.floor(Math.random() * 100000),
+      philosophy: "Balanced",
+      tier: "Established"
     });
     setPlayerCrest(newCrest);
+  };
+
+  const randomizeBackstory = () => {
+    const id = BACKSTORY_IDS[Math.floor(Math.random() * BACKSTORY_IDS.length)]!;
+    setBackstoryId(id);
+  };
+
+  const randomizeAll = () => {
+    setOwnerName(randomOwnerName());
+    setStableName(randomStableName());
+    randomizeCrest();
+    randomizeBackstory();
   };
 
   return (
@@ -44,7 +62,7 @@ export default function NewGameForm({
       className="min-h-screen flex items-center justify-center p-4 relative"
       style={{ background: "#0C0806" }}
     >
-      <div className="relative z-10 w-full max-w-md space-y-6">
+      <div className="relative z-10 w-full max-w-xl space-y-6">
         <button
           onClick={onBack}
           className="flex items-center gap-2 text-muted-foreground/60 hover:text-accent text-[11px] font-black uppercase tracking-widest transition-colors duration-150"
@@ -89,6 +107,17 @@ export default function NewGameForm({
           </div>
 
           <div className="h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(201,151,42,0.2) 40%, rgba(201,151,42,0.2) 60%, transparent)" }} />
+
+          <Button
+            variant="outline"
+            type="button"
+            onClick={randomizeAll}
+            title="Randomize everything"
+            className="w-full h-10 gap-2 border-[rgba(60,42,22,0.8)] bg-[#0A0705] hover:border-accent/40 hover:bg-accent/5 text-[11px] font-black uppercase tracking-wider"
+          >
+            <Dices className="h-4 w-4 text-accent/70" />
+            Randomize All
+          </Button>
 
           <div className="space-y-5">
             <div className="space-y-2">
@@ -188,6 +217,12 @@ export default function NewGameForm({
               </div>
             </div>
           </div>
+
+          <BackstoryPicker
+            value={backstoryId}
+            onChange={setBackstoryId}
+            onRandomize={randomizeBackstory}
+          />
 
           <Button
             onClick={onSubmit}

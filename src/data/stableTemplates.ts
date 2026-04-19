@@ -1,4 +1,5 @@
 import { FightingStyle, OwnerPersonality, MetaAdaptation } from "@/types/game";
+import type { BackstoryId } from "@/data/backstories";
 
 export interface StableTemplate {
   stableName: string;
@@ -16,6 +17,8 @@ export interface StableTemplate {
   trainerRange: [number, number];
   /** How this owner reacts to meta shifts */
   metaAdaptation: MetaAdaptation;
+  /** Who the owner was before founding the stable. Orthogonal to stable archetype. */
+  backstoryId: BackstoryId;
 }
 
 export const STABLE_TEMPLATES: StableTemplate[] = [
@@ -35,6 +38,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Legendary",
     trainerRange: [4, 5],
     metaAdaptation: "Traditionalist", // Ancient house, sticks to proven methods
+    backstoryId: "gladiator",
   },
 
   // ═══ MAJOR (5) ═══
@@ -53,6 +57,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Major",
     trainerRange: [3, 5],
     metaAdaptation: "Traditionalist", // Stubbornly brute force
+    backstoryId: "veteran",
   },
   {
     stableName: "House of Blades",
@@ -69,6 +74,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Major",
     trainerRange: [3, 5],
     metaAdaptation: "Innovator", // Always seeking new techniques
+    backstoryId: "noble",
   },
   {
     stableName: "The Blood Ravens",
@@ -85,6 +91,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Major",
     trainerRange: [3, 4],
     metaAdaptation: "MetaChaser", // Chases whatever kills best
+    backstoryId: "gladiator",
   },
   {
     stableName: "Crimson Tide",
@@ -101,6 +108,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Major",
     trainerRange: [3, 5],
     metaAdaptation: "Opportunist", // Flexible, reads the room
+    backstoryId: "gladiator",
   },
   {
     stableName: "The Warlords",
@@ -117,6 +125,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Major",
     trainerRange: [3, 5],
     metaAdaptation: "MetaChaser", // Military intelligence — adapts to what works
+    backstoryId: "veteran",
   },
 
   // ═══ ESTABLISHED (9) ═══
@@ -135,6 +144,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [3, 4],
     metaAdaptation: "Opportunist", // Follows the crowd's taste
+    backstoryId: "merchant",
   },
   {
     stableName: "Steel Serpents",
@@ -151,6 +161,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [3, 4],
     metaAdaptation: "Innovator", // Counter-meta specialists
+    backstoryId: "scholar",
   },
   {
     stableName: "Ash Reapers",
@@ -167,6 +178,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [3, 4],
     metaAdaptation: "Opportunist", // Will adapt to survive
+    backstoryId: "outcast",
   },
   {
     stableName: "Storm Breakers",
@@ -183,6 +195,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [2, 4],
     metaAdaptation: "MetaChaser", // Aggressive trend followers
+    backstoryId: "sellsword",
   },
   {
     stableName: "The Night Watch",
@@ -199,6 +212,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [3, 4],
     metaAdaptation: "Traditionalist", // Disciplined, never changes
+    backstoryId: "veteran",
   },
   {
     stableName: "Thunder Guard",
@@ -215,6 +229,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [3, 4],
     metaAdaptation: "Opportunist", // Pragmatic, will shift if needed
+    backstoryId: "veteran",
   },
   {
     stableName: "The Bone Crushers",
@@ -231,6 +246,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [2, 4],
     metaAdaptation: "MetaChaser", // Wants whatever kills fastest
+    backstoryId: "outcast",
   },
   {
     stableName: "Scarlet Masquerade",
@@ -247,6 +263,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [3, 4],
     metaAdaptation: "Innovator", // Always reinventing their act
+    backstoryId: "noble",
   },
   {
     stableName: "Blackwater Company",
@@ -263,6 +280,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Established",
     trainerRange: [3, 4],
     metaAdaptation: "MetaChaser", // Follows the money / what wins
+    backstoryId: "sellsword",
   },
 
   // ═══ MINOR (8) ═══
@@ -281,6 +299,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Minor",
     trainerRange: [2, 3],
     metaAdaptation: "Opportunist", // Former champion reads the field
+    backstoryId: "gladiator",
   },
   {
     stableName: "Dawn Hammers",
@@ -297,6 +316,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Minor",
     trainerRange: [2, 3],
     metaAdaptation: "Traditionalist", // Zealots never change
+    backstoryId: "priest",
   },
   {
     stableName: "Shadow Company",
@@ -313,6 +333,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Minor",
     trainerRange: [2, 3],
     metaAdaptation: "Innovator", // Assassins adapt and counter
+    backstoryId: "cutpurse",
   },
   {
     stableName: "Frost Giants",
@@ -329,6 +350,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Minor",
     trainerRange: [2, 3],
     metaAdaptation: "Innovator", // Big and constantly trying weird builds
+    backstoryId: "outcast",
   },
   {
     stableName: "Red Dust Wanderers",
@@ -345,6 +367,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Minor",
     trainerRange: [2, 3],
     metaAdaptation: "Opportunist", // Scavenges what works
+    backstoryId: "sellsword",
   },
   {
     stableName: "The Hollow Men",
@@ -361,6 +384,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Minor",
     trainerRange: [2, 3],
     metaAdaptation: "MetaChaser", // Desperate — will try anything that works
+    backstoryId: "outcast",
   },
   {
     stableName: "Gilded Thorns",
@@ -377,6 +401,7 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Minor",
     trainerRange: [2, 3],
     metaAdaptation: "Innovator", // Artistic experimentation
+    backstoryId: "noble",
   },
   {
     stableName: "Ironback Syndicate",
@@ -393,5 +418,6 @@ export const STABLE_TEMPLATES: StableTemplate[] = [
     tier: "Minor",
     trainerRange: [2, 3],
     metaAdaptation: "Opportunist", // Crime boss follows the money
+    backstoryId: "cutpurse",
   },
 ];

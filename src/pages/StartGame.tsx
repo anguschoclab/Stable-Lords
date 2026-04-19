@@ -30,6 +30,8 @@ import {
 import { toast } from "sonner";
 import { generateCrest } from "@/engine/crest/crestGenerator";
 import type { CrestData } from "@/types/crest.types";
+import { applyBackstoryToPlayer, type BackstoryId } from "@/data/backstories";
+import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import ColomseumArch from "@/components/startGame/ColomseumArch";
 import NewGameForm from "@/components/startGame/NewGameForm";
 import TitleScreenHero from "@/components/startGame/TitleScreenHero";
@@ -50,11 +52,13 @@ export default function StartGame() {
   const [ownerName, setOwnerName] = useState("");
   const [stableName, setStableName] = useState("");
   
-  const [playerCrest, setPlayerCrest] = useState<CrestData>(() => 
+  const [playerCrest, setPlayerCrest] = useState<CrestData>(() =>
     generateCrest({ seed: Math.floor(Math.random() * 100000), philosophy: "Balanced", tier: "Established" })
   );
-  
-  const canCreate = ownerName.trim().length >= 2 && stableName.trim().length >= 2;
+
+  const [backstoryId, setBackstoryId] = useState<BackstoryId | null>(null);
+
+  const canCreate = ownerName.trim().length >= 2 && stableName.trim().length >= 2 && backstoryId != null;
   
   const refreshSlots = useCallback(async () => {
     const savedSlots = await listSaveSlots();
@@ -91,15 +95,18 @@ export default function StartGame() {
   }, [deleteTarget, refreshSlots]);
 
   const handleNewGame = useCallback(() => {
+    if (!backstoryId) return;
     const fresh = createFreshState("alpha-prime-10");
     fresh.player.name = ownerName.trim();
     fresh.player.stableName = stableName.trim();
     fresh.player.crest = playerCrest; // 🛡️ Store the selected heraldic crest
     fresh.player.generation = 0; // Player is the original founder
     const slotId = newSlotId();
+    const identitySeed = slotId.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    applyBackstoryToPlayer(fresh, backstoryId, new SeededRNGService(identitySeed));
     saveToSlot(slotId, fresh.player.stableName, fresh);
     loadGame(slotId, fresh);
-  }, [ownerName, stableName, playerCrest, loadGame]);
+  }, [ownerName, stableName, playerCrest, backstoryId, loadGame]);
 
   const handleImport = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,6 +157,8 @@ export default function StartGame() {
         setStableName={setStableName}
         playerCrest={playerCrest}
         setPlayerCrest={setPlayerCrest}
+        backstoryId={backstoryId}
+        setBackstoryId={setBackstoryId}
         onBack={() => setScreen("title")}
         onSubmit={handleNewGame}
         canCreate={canCreate}

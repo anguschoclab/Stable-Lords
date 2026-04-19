@@ -3,6 +3,8 @@ import type { IRNGService } from "@/engine/core/rng/IRNGService";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { generateRivalStables } from "../rivals";
 import { inheritCrest } from "../crest/crestGenerator";
+import { BACKSTORIES } from "@/data/backstories";
+import type { FightingStyle } from "@/types/shared.types";
 
 /**
  * ExpansionService - Handles stable expansion.
@@ -19,7 +21,7 @@ export class ExpansionService {
     state: GameState,
     rng: IRNGService,
     targetCount: number = 8,
-    legacyCandidates?: { name: string; stableName: string; parentStableId?: string }[]
+    legacyCandidates?: { name: string; stableName: string; parentStableId?: string; warriorId?: string; fightingStyle?: FightingStyle }[]
   ): { updatedState: GameState; newStables: RivalStableData[] } {
     const updatedState = { ...state };
     const currentCount = updatedState.rivals?.length || 0;
@@ -41,7 +43,25 @@ export class ExpansionService {
           // Set legacy founder details
           newStable.owner.name = legacy.name;
           newStable.owner.stableName = legacy.stableName;
-          newStable.owner.personality = "Aggressive"; // Legends are often aggressive
+          newStable.owner.backstoryId = "gladiator"; // Legacy founders are former arena warriors
+          newStable.owner.foundedByWarriorId = legacy.warriorId;
+          // Derive personality/favoredStyles from the backstory seed + warrior's style
+          // rather than hardcoding "Aggressive" for every legacy founder.
+          const seedBasis = legacy.warriorId ?? legacy.name;
+          const seedRng = new SeededRNGService(
+            seedBasis.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0),
+          );
+          const gladDef = BACKSTORIES.gladiator;
+          const personalityEntries = Object.entries(gladDef.identitySeed.personalityWeights) as [NonNullable<typeof newStable.owner.personality>, number][];
+          const totalP = personalityEntries.reduce((s, [, w]) => s + w, 0);
+          let rollP = seedRng.next() * totalP;
+          for (const [key, w] of personalityEntries) {
+            rollP -= w;
+            if (rollP <= 0) { newStable.owner.personality = key; break; }
+          }
+          if (legacy.fightingStyle) {
+            newStable.owner.favoredStyles = [legacy.fightingStyle];
+          }
           
           // Find parent stable for crest inheritance
           let parentCrest = undefined;

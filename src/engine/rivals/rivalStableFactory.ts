@@ -67,6 +67,7 @@ export function generateRivalStables(count: number, seed: number, week: number =
       personality: tmpl.personality,
       metaAdaptation: tmpl.metaAdaptation,
       favoredStyles: tmpl.preferredStyles,
+      backstoryId: tmpl.backstoryId,
     };
 
     const [minR, maxR] = tmpl.rosterRange;

@@ -10,6 +10,7 @@ import { FightingStyle } from "@/types/shared.types";
 import { SeededRNGService } from "@/engine/core/rng/SeededRNGService";
 import { makeWarrior } from "./warriorFactory";
 import { generatePotential } from "@/engine/potential";
+import { BACKSTORY_IDS } from "@/data/backstories";
 
 /**
  * Creates the initial, deterministic game state for a new game.
@@ -105,6 +106,7 @@ export function createFreshState(seed: string, createdAt: string = new Date().to
 
   state.rivals = pool.slice(0, 4).map((name) => {
     const personalityIndex = Math.floor(rng.next() * PERSONALITIES.length);
+    const backstoryId = BACKSTORY_IDS[Math.floor(rng.next() * BACKSTORY_IDS.length)]!;
     return {
       id: rng.uuid(),
       fame: 100,
@@ -114,7 +116,7 @@ export function createFreshState(seed: string, createdAt: string = new Date().to
         name: `Lord ${name.split(" ")[0]}`,
         stableName: name,
         personality: PERSONALITIES[personalityIndex],
-        philosophy: "Winning at all costs",
+        backstoryId,
         fame: 100,
         renown: 10,
         titles: 0,

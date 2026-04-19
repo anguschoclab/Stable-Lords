@@ -55,17 +55,19 @@ describe("ExpansionService", () => {
       }
     });
 
-    it("should set personality to Aggressive for legacy founders", () => {
+    it("should tag legacy founders with gladiator backstory and derive personality", () => {
       const legacyCandidates = [
-        { name: "Legend", stableName: "Legend's Academy" }
+        { name: "Legend", stableName: "Legend's Academy", warriorId: "w-legend-1" }
       ];
 
       const { newStables } = ExpansionService.processExpansion(state, new SeededRNGService(12345), 8, legacyCandidates);
-      
+
       if (newStables.length > 0) {
         const legacyStable = newStables.find(s => s.owner.name === "Legend");
         if (legacyStable) {
-          expect(legacyStable.owner.personality).toBe("Aggressive");
+          expect(legacyStable.owner.backstoryId).toBe("gladiator");
+          expect(legacyStable.owner.foundedByWarriorId).toBe("w-legend-1");
+          expect(legacyStable.owner.personality).toBeDefined();
         }
       }
     });

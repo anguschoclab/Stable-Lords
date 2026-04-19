@@ -91,6 +91,8 @@ export interface Owner {
   favoredStyles?: FightingStyle[];
   generation?: number; // 🛡️ Crest lineage depth (0 = original founder)
   crest?: CrestData; // 🛡️ Heraldic crest for the stable
+  backstoryId?: import("@/data/backstories").BackstoryId;
+  foundedByWarriorId?: string; // Lineage breadcrumb for legacy founders
 }
 
 // ─── Game State ─────────────────────────────────────────────────────────────

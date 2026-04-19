@@ -3,8 +3,8 @@
  * Merged Dashboard + Critical Alerts
  */
 import { createFileRoute } from "@tanstack/react-router";
-import Dashboard from "@/pages/Dashboard";
+import ControlCenter from "@/pages/ControlCenter";
 
 export const Route = createFileRoute("/command/")({
-  component: Dashboard,
+  component: ControlCenter,
 });

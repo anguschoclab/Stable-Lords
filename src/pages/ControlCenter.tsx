@@ -5,20 +5,17 @@
  */
 import React, { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useGameStore } from "@/state/useGameStore";
+import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { useShallow } from "zustand/react/shallow";
 import { cn } from "@/lib/utils";
 
 import { calculateStableStats } from "@/engine/stats/stableStats";
-import { collectPulse } from "@/engine/stats/simulationMetrics";
 import { computeStableReputation } from "@/engine/stableReputation";
 import { computeMetaDrift } from "@/engine/metaDrift";
 import { getRecommendedChallenges, getMatchupsToAvoid } from "@/engine/schedulingAssistant";
-import { SEASON_NAMES } from "@/data/gameConstants";
 
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { SeasonWidget } from "@/components/dashboard/SeasonWidget";
 import { RecentBoutsWidget } from "@/components/dashboard/RecentBoutsWidget";
 import { MedicalAuditWidget } from "@/components/dashboard/MedicalAuditWidget";
@@ -27,12 +24,12 @@ import { NextBoutWidget } from "@/components/widgets/NextBoutWidget";
 import { MetaDriftWidget } from "@/components/widgets/MetaDriftWidget";
 import { WeatherWidget } from "@/components/widgets/WeatherWidget";
 import { FormSparkline } from "@/components/charts/FormSparkline";
-import { STYLE_ABBREV, STYLE_DISPLAY_NAMES } from "@/types/shared.types";
+import { STYLE_ABBREV } from "@/types/shared.types";
 
 import {
   Swords, Crown, Coins, Star, Skull, TrendingUp,
   Shield, Activity, ChevronRight, Zap, Users,
-  BarChart3, Target, AlertTriangle, BookOpen,
+  BarChart3, Target, AlertTriangle,
   Trophy, Eye, Flame,
 } from "lucide-react";
 
@@ -43,14 +40,12 @@ type TabId = "overview" | "roster" | "intel" | "meta" | "ops";
 // ─── KPI Bar ──────────────────────────────────────────────────────────────────
 
 function KpiBar() {
-  const { roster, treasury, fame, week, arenaHistory, rivals } = useGameStore(
+  const { roster, treasury, fame, arenaHistory } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
       treasury: s.treasury,
       fame: s.fame,
-      week: s.week,
       arenaHistory: s.arenaHistory,
-      rivals: s.rivals,
     }))
   );
 
@@ -98,7 +93,7 @@ function HeroPanel() {
   );
 
   const stats = useMemo(() => calculateStableStats(roster), [roster]);
-  const seasonName = SEASON_NAMES?.[season - 1] ?? `Season ${season}`;
+  const seasonName = `Season ${season}`;
 
   return (
     <Surface variant="glass" className="p-6 flex items-start justify-between gap-6 border-primary/10">
@@ -112,7 +107,7 @@ function HeroPanel() {
               {player?.stableName ?? "Your Stable"}
             </h1>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 mt-0.5">
-              {player?.ownerName ?? "Commander"} · {seasonName} · Week {week}
+              {player?.name ?? "Commander"} · {seasonName} · Week {week}
             </p>
           </div>
         </div>
@@ -151,8 +146,8 @@ function HeroPanel() {
 // ─── Roster Snapshot Tab ──────────────────────────────────────────────────────
 
 function RosterSnapshot() {
-  const { roster, arenaHistory } = useGameStore(
-    useShallow((s) => ({ roster: s.roster, arenaHistory: s.arenaHistory }))
+  const { roster } = useGameStore(
+    useShallow((s) => ({ roster: s.roster }))
   );
 
   const active = useMemo(() => roster.filter((w) => w.status === "Active"), [roster]);
@@ -165,10 +160,6 @@ function RosterSnapshot() {
         </div>
       )}
       {active.map((w) => {
-        const history = arenaHistory
-          .filter((b) => b.warriorIdA === w.id || b.warriorIdB === w.id)
-          .slice(-10);
-
         return (
           <Link key={w.id} to="/command/roster" className="block group">
             <Surface variant="glass" className="p-4 hover:border-primary/20 transition-colors">
@@ -214,13 +205,13 @@ function RosterSnapshot() {
                     </div>
                   )}
 
-                  <FormSparkline warrior={w} history={history} size="sm" />
+                  <FormSparkline warriorId={w.id} limit={6} />
 
                   <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors" />
                 </div>
               </div>
-            </Link>
-          </Surface>
+            </Surface>
+          </Link>
         );
       })}
     </div>
@@ -230,7 +221,7 @@ function RosterSnapshot() {
 // ─── Intel Tab ────────────────────────────────────────────────────────────────
 
 function IntelTab() {
-  const state = useGameStore();
+  const worldState = useWorldState();
   const { roster } = useGameStore(useShallow((s) => ({ roster: s.roster })));
 
   const topWarrior = useMemo(() => {
@@ -239,13 +230,13 @@ function IntelTab() {
   }, [roster]);
 
   const recommended = useMemo(
-    () => (topWarrior ? getRecommendedChallenges(state, topWarrior, 4) : []),
-    [state, topWarrior]
+    () => (topWarrior ? getRecommendedChallenges(worldState, topWarrior, 4) : []),
+    [worldState, topWarrior]
   );
 
   const avoid = useMemo(
-    () => (topWarrior ? getMatchupsToAvoid(state, topWarrior, 3) : []),
-    [state, topWarrior]
+    () => (topWarrior ? getMatchupsToAvoid(worldState, topWarrior, 3) : []),
+    [worldState, topWarrior]
   );
 
   if (!topWarrior) return (
@@ -363,8 +354,8 @@ function MetaTab() {
 // ─── Reputation Tab ───────────────────────────────────────────────────────────
 
 function ReputationTab() {
-  const state = useGameStore();
-  const rep = useMemo(() => computeStableReputation(state), [state]);
+  const worldState = useWorldState();
+  const rep = useMemo(() => computeStableReputation(worldState), [worldState]);
 
   const dims: { key: keyof typeof rep; label: string; color: string; icon: React.ElementType; desc: string }[] = [
     { key: "fame",         label: "Fame",          color: "text-arena-gold",  icon: Star,    desc: "Public acclaim from victories and showmanship." },

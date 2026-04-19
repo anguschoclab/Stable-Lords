@@ -1,3 +1,4 @@
+import {
   type WeatherType,
   type WarriorId,
   type StableId,
@@ -12,7 +13,18 @@
   type RivalryId,
   type InsightId,
   type HallEntryId,
-  type SimulationReportId
+  type SimulationReportId,
+  type Season,
+  type CrowdMoodType,
+  type NewsletterItem,
+  type TrainerTier,
+  type TrainerFocus,
+  type Trainer,
+  type ScoutQuality,
+  type FightingStyle,
+  type FightId,
+  type Attributes,
+  type BaseSkills
 } from "./shared.types";
 
 import { type Warrior, type DeathEvent } from "./warrior.types";

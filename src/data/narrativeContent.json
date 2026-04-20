@@ -403,14 +403,14 @@
         "{{attacker}} feints low, then pivots with blinding speed to sever {{defender}}'s {{bodyPart}}. The crowd erupts!",
         "With a terrifying horizontal sweep, {{attacker}} unzips {{defender}}'s {{bodyPart}}. The sands drink deep today.",
         "{{attacker}} hooks {{defender}}'s guard away, then delivers a spinning strike to the {{bodyPart}} that silences the arena for a split second before the roar.",
-        "{{attacker}} feints low, catching {{defender}} off guard before severing their sword-arm at the elbow. The crowd erupts!",
-        "A brutal horizontal arc from {{attacker}} opens {{defender}} from hip to collarbone, ending the bout instantly.",
-        "{{attacker}} steps inside the guard and drives their blade clean through {{defender}}'s neck.",
-        "{{attacker}} executes a flawless rising diagonal cut, slicing {{defender}} from hip to opposite shoulder. The crowd roars as {{defender}} collapses.",
-        "With terrifying speed, {{attacker}} sweeps their blade across {{defender}}'s throat, ending the fight before the body even hits the sand.",
-        "A brutal overhand cleave from {{attacker}} splits {{defender}}'s collarbone deep into their chest cavity.",
-        "{{attacker}} dances past {{defender}}'s guard and draws a crimson ribbon across their eyes, followed immediately by a fatal thrust.",
-        "Blood sprays across the sands as {{attacker}} brutally dismembers {{defender}} with a series of hacking, downward slashes."
+        "{{attacker}} feints low, catching {{defender}} off guard before severing their {{bodyPart}}. The crowd erupts!",
+        "A brutal horizontal arc from {{attacker}} opens {{defender}}'s {{bodyPart}}, ending the bout instantly.",
+        "{{attacker}} steps inside the guard and drives their blade clean through {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} executes a flawless rising diagonal cut, slicing {{defender}}'s {{bodyPart}}. The crowd roars as {{defender}} collapses.",
+        "With terrifying speed, {{attacker}} sweeps their blade across {{defender}}'s {{bodyPart}}, ending the fight before the body even hits the sand.",
+        "A brutal overhand cleave from {{attacker}} splits {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} dances past {{defender}}'s guard and draws a crimson ribbon across their {{bodyPart}}, followed immediately by a fatal thrust.",
+        "Blood sprays across the sands as {{attacker}} brutally strikes {{defender}}'s {{bodyPart}} with a series of hacking, downward slashes."
       ],
       "critical": [
         "{{attacker}}'s {{weapon}} becomes a blur of silver, opening a horrific gash on {{defender}}'s {{bodyPart}}!",

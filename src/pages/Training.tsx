@@ -132,6 +132,9 @@ export default function Training() {
             </div>
             <div className="text-3xl font-display font-black tracking-tighter">{trainingCount}</div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Warriors pursuing growth</div>
+            <div className="text-[10px] text-muted-foreground/60 normal-case tracking-normal leading-snug mt-1">
+              Gain attribute points each week. Assign a trainer to improve ST, WT, SP, or DF.
+            </div>
          </Surface>
          <Surface variant="glass" className="p-6 flex flex-col gap-2 border-l-destructive/20">
             <div className="flex items-center gap-2 text-destructive">
@@ -140,6 +143,9 @@ export default function Training() {
             </div>
             <div className="text-3xl font-display font-black tracking-tighter">{recoveryCount}</div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Warriors in active healing</div>
+            <div className="text-[10px] text-muted-foreground/60 normal-case tracking-normal leading-snug mt-1">
+              Recover fatigue faster between bouts. High fatigue reduces combat performance.
+            </div>
          </Surface>
          <Surface variant="glass" className="p-6 flex flex-col gap-2 opacity-60">
             <div className="flex items-center gap-2 text-muted-foreground">
@@ -148,6 +154,9 @@ export default function Training() {
             </div>
             <div className="text-3xl font-display font-black tracking-tighter">{state.roster.length - assignedCount}</div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Idle personnel available</div>
+            <div className="text-[10px] text-muted-foreground/60 normal-case tracking-normal leading-snug mt-1">
+              Unassigned warriors. Use the cards below to assign them to drills or recovery.
+            </div>
          </Surface>
         </div>
       </div>

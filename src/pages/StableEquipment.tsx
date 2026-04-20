@@ -96,6 +96,15 @@ export default function StableEquipment() {
                 </ul>
               </div>
             )}
+
+            <div className="pt-4 border-t border-white/5">
+              <div className="flex items-start gap-2 p-2.5 bg-white/[0.02]">
+                <HelpCircle className="h-3 w-3 text-muted-foreground/30 shrink-0 mt-0.5" />
+                <p className="text-[9px] text-muted-foreground/40 leading-relaxed italic">
+                  Recommendations are based on fighting style and warrior stats.
+                </p>
+              </div>
+            </div>
           </Surface>
 
           <Surface variant="glass" className="space-y-4">

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Play, Upload } from "lucide-react";
 import type { SaveSlotMeta } from "@/state/saveSlots";
@@ -8,7 +9,7 @@ interface ActionButtonsProps {
   maxSaveSlots: number;
   onContinue: () => void;
   onNewGame: () => void;
-  onImport: () => void;
+  onImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function ActionButtons({
@@ -19,6 +20,7 @@ export default function ActionButtons({
   onNewGame,
   onImport,
 }: ActionButtonsProps) {
+  const importRef = useRef<HTMLInputElement>(null);
   return (
     <div className="space-y-2.5">
       {mostRecent && (
@@ -53,12 +55,19 @@ export default function ActionButtons({
       </Button>
 
       <button
-        onClick={onImport}
+        onClick={() => importRef.current?.click()}
         className="w-full flex items-center justify-center gap-2 h-9 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors duration-150"
       >
         <Upload className="h-3.5 w-3.5" />
         Import Save File
       </button>
+      <input
+        ref={importRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={onImport}
+      />
     </div>
   );
 }

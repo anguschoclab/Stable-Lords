@@ -252,9 +252,18 @@ function WarriorPlannerCard({ warrior, trainers, season, seasonalGains }: {
                 </Tooltip>
               </TooltipProvider>
             )}
-            <Badge variant={trainability >= 50 ? "default" : trainability >= 30 ? "secondary" : "outline"} className="text-[10px] font-mono">
-              {trainability}% trainable
-            </Badge>
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Badge variant={trainability >= 50 ? "default" : trainability >= 30 ? "secondary" : "outline"} className="text-[10px] font-mono cursor-help">
+                    {trainability}% trainable
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent className="text-xs max-w-[220px] text-center">
+                  Trainability: the percentage of attributes that still have room to grow before hitting their potential ceiling. Higher is better — below 30% means most stats are near their cap.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
         <div className="text-[10px] text-muted-foreground flex gap-3 mt-1">
@@ -332,7 +341,7 @@ export default function TrainingPlanner() {
         {/* Archetype D: Left Rail Roster (span-4) */}
         <aside className="lg:col-span-4 space-y-4 sticky top-6">
            <div className="flex items-center gap-3 px-2">
-              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">STABLE_ROSTER</span>
+              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">STABLE ROSTER</span>
               <div className="h-px flex-1 bg-gradient-to-r from-primary/20 to-transparent" />
            </div>
            
@@ -398,7 +407,7 @@ export default function TrainingPlanner() {
            ) : (
              <Surface variant="glass" className="py-32 text-center border-dashed">
                 <Dumbbell className="h-12 w-12 mx-auto mb-4 opacity-10" />
-                <p className="font-display font-black uppercase tracking-widest text-sm text-muted-foreground/30">Select_Warrior_To_Plan</p>
+                <p className="font-display font-black uppercase tracking-widest text-sm text-muted-foreground/30">Select a Warrior to Plan</p>
              </Surface>
            )}
         </main>

@@ -3,7 +3,7 @@
  * Codex Sanguis design: Roman Imperial Archive aesthetic
  * New Game → name stable → Orphanage | Continue | Load | Delete saves
  */
-import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useGameStore } from "@/state/useGameStore";
 import { createFreshState } from "@/engine/factories";
 import {
@@ -47,8 +47,6 @@ export default function StartGame() {
   const [screen, setScreen] = useState<Screen>("title");
   const [slots, setSlots] = useState<SaveSlotMeta[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<SaveSlotMeta | null>(null);
-  const importRef = useRef<HTMLInputElement>(null);
-
   const [ownerName, setOwnerName] = useState("");
   const [stableName, setStableName] = useState("");
   
@@ -184,15 +182,7 @@ export default function StartGame() {
           maxSaveSlots={MAX_SAVE_SLOTS}
           onContinue={() => mostRecent && loadSlot(mostRecent.id)}
           onNewGame={() => setScreen("newGame")}
-          onImport={() => importRef.current?.click()}
-        />
-
-        <input
-          ref={importRef}
-          type="file"
-          accept=".json"
-          className="hidden"
-          onChange={handleImport}
+          onImport={handleImport}
         />
 
         <SavedGamesSection

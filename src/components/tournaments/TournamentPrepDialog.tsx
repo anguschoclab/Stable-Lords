@@ -22,7 +22,7 @@ export function TournamentPrepDialog({ isOpen, onOpenChange, activeWarriors, sea
         <div className="bg-secondary/20 p-6 border-b border-white/5 flex items-center gap-3">
           <Shield className="h-5 w-5 text-primary" />
           <h2 className="font-display text-xl font-black uppercase tracking-tighter text-foreground">
-            {seasonName}_PREP_PROTOCOL
+            {seasonName} PREP PROTOCOL
           </h2>
         </div>
         <div className="p-8 space-y-8">
@@ -40,7 +40,7 @@ export function TournamentPrepDialog({ isOpen, onOpenChange, activeWarriors, sea
                 </div>
                 <div className="p-5 space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Fame_Index</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Fame Index</span>
                     <div className="flex items-center gap-2">
                       <span className={cn(
                         "font-mono font-black text-xs",
@@ -54,14 +54,14 @@ export function TournamentPrepDialog({ isOpen, onOpenChange, activeWarriors, sea
                             <TooltipTrigger>
                               <AlertCircle className="h-3.5 w-3.5 text-destructive animate-pulse" />
                             </TooltipTrigger>
-                            <TooltipContent className="bg-destructive text-white font-black uppercase text-[9px] border-none">Nearing_Sig_Freeze</TooltipContent>
+                            <TooltipContent className="bg-destructive text-white font-black uppercase text-[9px] border-none">Nearing Sig Freeze</TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
                       )}
                     </div>
                   </div>
                   <div className="flex justify-between items-center text-xs">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Operational_Record</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Operational Record</span>
                     <span className="font-mono font-black text-[10px] text-foreground/60">{w.career.wins}W - {w.career.losses}L</span>
                   </div>
                 </div>
@@ -75,7 +75,7 @@ export function TournamentPrepDialog({ isOpen, onOpenChange, activeWarriors, sea
               className="h-12 px-10 gap-3 font-black uppercase text-[11px] tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] group"
             >
               <Trophy className="h-4 w-4 group-hover:scale-125 transition-transform" /> 
-              <span>INITIATE_SEASON_CAMPAIGN</span>
+              <span>INITIATE SEASON CAMPAIGN</span>
             </Button>
           </div>
         </div>

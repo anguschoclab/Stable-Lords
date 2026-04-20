@@ -23,7 +23,7 @@ import StoryBeginsStep from "@/components/orphanage/StoryBeginsStep";
 
 export default function Orphanage() {
   const state = useGameStore();
-  const { initializeStable, setState, returnToTitle } = state;
+  const { initializeStable, setState, returnToTitle, saveCurrentState } = state;
 
   const initialStep = !state.player.stableName ? 0 : 1;
   const [step, setStep] = useState(initialStep);
@@ -192,7 +192,8 @@ export default function Orphanage() {
       draft.recruitPool = recruitPool;
       draft.arenaHistory = boutResult ? [boutResult.summary] : [];
     });
-  }, [state, setState, selectedWarriors, boutResult, poolSeedValue]);
+    saveCurrentState();
+  }, [state, setState, selectedWarriors, boutResult, poolSeedValue, saveCurrentState]);
 
   // ─── Shell ──────────────────────────────────────────────────────────────────
 

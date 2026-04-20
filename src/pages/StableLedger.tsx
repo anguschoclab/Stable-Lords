@@ -47,7 +47,7 @@ export default function StableLedger() {
            </div>
            <div>
               <div className="flex items-center gap-2">
-                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">Fiscal_Runway_Projection</span>
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">Fiscal Runway Projection</span>
                  {isEmergency && <Badge className="bg-destructive text-white text-[8px] font-black h-4 px-1.5 animate-bounce">CRITICAL</Badge>}
               </div>
               <p className="text-xl font-display font-black uppercase tracking-tight text-foreground leading-none mt-1">

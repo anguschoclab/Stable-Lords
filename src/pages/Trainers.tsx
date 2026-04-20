@@ -129,7 +129,7 @@ export default function Trainers() {
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
       <PageHeader 
         title="Personnel Management"
-        subtitle="STABLE_STAFF // TACTICAL_MASTERY // RECRUITMENT_REVEAL"
+        subtitle="OPS · PERSONNEL · TACTICAL MASTERY"
         icon={Users}
         actions={
           <div className="flex flex-col md:flex-row items-center gap-6 bg-neutral-900/40 backdrop-blur-md px-6 py-3 rounded-none border border-white/5 shadow-inner">

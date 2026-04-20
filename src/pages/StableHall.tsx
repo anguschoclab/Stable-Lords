@@ -18,7 +18,7 @@ export default function StableHall() {
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
       <PageHeader 
         title={player.stableName}
-        subtitle={`REPUTATION // ${player.name} // LEGACY OF THE ARENA`}
+        subtitle={`STABLE · ${player.name} · LEGACY OF THE ARENA`}
         icon={Shield}
       />
 
@@ -75,7 +75,7 @@ export default function StableHall() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
         <div className="lg:col-span-12">
            <div className="flex items-center gap-3 px-1 mb-6">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">STABLE_COMPOSITION</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">STABLE COMPOSITION</span>
               <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
            </div>
         </div>
@@ -93,7 +93,7 @@ export default function StableHall() {
 
       <div className="space-y-4">
         <div className="flex items-center gap-3 px-1">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-yellow-400">PATRONAGE_AWARDS</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-yellow-400">PATRONAGE AWARDS</span>
           {pendingTokens > 0
             ? <Badge className="bg-yellow-400/20 text-yellow-400 border border-yellow-400/30 text-[9px] font-black">{pendingTokens} TOKEN{pendingTokens !== 1 ? "S" : ""} PENDING</Badge>
             : <Badge className="bg-white/5 text-muted-foreground border border-white/10 text-[9px] font-black">Place in tournaments to earn tokens</Badge>

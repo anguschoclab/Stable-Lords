@@ -31,8 +31,8 @@ export function InsightVault() {
            </div>
            <div className="flex-1">
              <div className="flex items-center gap-3 mb-2">
-                <h3 className="font-display text-xl font-black uppercase tracking-tight text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">The_Insight_Vault</h3>
-                <Badge className="bg-arena-gold/20 text-arena-gold border-arena-gold/30 font-mono font-black text-[10px] px-2">ENCRYPTED_SYNC_ACTIVE</Badge>
+                <h3 className="font-display text-xl font-black uppercase tracking-tight text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]">The Insight Vault</h3>
+                <Badge className="bg-arena-gold/20 text-arena-gold border-arena-gold/30 font-mono font-black text-[10px] px-2">ENCRYPTED SYNC ACTIVE</Badge>
              </div>
              <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl font-medium">
                Insights are fragments of tactical truth discovered amidst the chaos of the sands. 
@@ -49,7 +49,7 @@ export function InsightVault() {
               <div className="flex items-center gap-3">
                  <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
-                    Personnel_Intel
+                    Personnel Intel
                  </h4>
               </div>
               <span className="font-mono text-[10px] font-black text-primary/60">{statTokens.length} / --</span>
@@ -59,7 +59,7 @@ export function InsightVault() {
               {statTokens.length === 0 ? (
                 <Surface variant="glass" className="py-12 text-center border-dashed border-white/5 opacity-40">
                    <Lock className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
-                   <p className="text-[9px] font-black uppercase tracking-widest leading-none">Vulnerabilities_Obscured</p>
+                   <p className="text-[9px] font-black uppercase tracking-widest leading-none">Vulnerabilities Obscured</p>
                 </Surface>
               ) : (
                 statTokens.map(t => (
@@ -69,7 +69,7 @@ export function InsightVault() {
                          <Shield className="h-3 w-3 text-primary opacity-60" />
                          <span className="text-[11px] font-display font-black uppercase text-primary tracking-tight group-hover:drop-shadow-[0_0_5px_rgba(var(--primary-rgb),0.4)] transition-all">{t.warriorName}</span>
                       </div>
-                      <span className="text-[8px] font-mono font-black text-muted-foreground/60 tracking-widest">SEQ_{t.discoveredWeek.toString().padStart(2, '0')}</span>
+                      <span className="text-[8px] font-mono font-black text-muted-foreground/60 tracking-widest">SEQ {t.discoveredWeek.toString().padStart(2, '0')}</span>
                     </div>
                     <p className="text-[10px] text-foreground/70 font-medium leading-relaxed italic">{t.detail}</p>
                   </Surface>
@@ -84,7 +84,7 @@ export function InsightVault() {
               <div className="flex items-center gap-3">
                  <div className="h-2 w-2 rounded-full bg-arena-gold animate-pulse" />
                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
-                    Armament_Telemetry
+                    Armament Telemetry
                  </h4>
               </div>
               <span className="font-mono text-[10px] font-black text-arena-gold/60">{weaponTokens.length} / --</span>
@@ -94,7 +94,7 @@ export function InsightVault() {
               {weaponTokens.length === 0 ? (
                 <Surface variant="glass" className="py-12 text-center border-dashed border-white/5 opacity-40">
                    <Target className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
-                   <p className="text-[9px] font-black uppercase tracking-widest leading-none">Armature_Encrypted</p>
+                   <p className="text-[9px] font-black uppercase tracking-widest leading-none">Armature Encrypted</p>
                 </Surface>
               ) : (
                 weaponTokens.map(t => (
@@ -104,7 +104,7 @@ export function InsightVault() {
                          <Target className="h-3 w-3 text-arena-gold opacity-60" />
                          <span className="text-[11px] font-display font-black uppercase text-arena-gold tracking-tight group-hover:drop-shadow-[0_0_5px_rgba(255,215,0,0.4)] transition-all">{t.warriorName}</span>
                       </div>
-                      <span className="text-[8px] font-mono font-black text-muted-foreground/60 tracking-widest">SEQ_{t.discoveredWeek.toString().padStart(2, '0')}</span>
+                      <span className="text-[8px] font-mono font-black text-muted-foreground/60 tracking-widest">SEQ {t.discoveredWeek.toString().padStart(2, '0')}</span>
                     </div>
                     <p className="text-[10px] text-foreground/70 font-medium leading-relaxed italic">{t.detail}</p>
                   </Surface>
@@ -119,7 +119,7 @@ export function InsightVault() {
               <div className="flex items-center gap-3">
                  <div className="h-2 w-2 rounded-full bg-arena-pop animate-pulse" />
                  <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
-                    Kinetic_Patterns
+                    Kinetic Patterns
                  </h4>
               </div>
               <span className="font-mono text-[10px] font-black text-arena-pop/60">{rhythmTokens.length} / --</span>
@@ -129,7 +129,7 @@ export function InsightVault() {
               {rhythmTokens.length === 0 ? (
                 <Surface variant="glass" className="py-12 text-center border-dashed border-white/5 opacity-40">
                    <Zap className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
-                   <p className="text-[9px] font-black uppercase tracking-widest leading-none">Rhythms_Obscured</p>
+                   <p className="text-[9px] font-black uppercase tracking-widest leading-none">Rhythms Obscured</p>
                 </Surface>
               ) : (
                 rhythmTokens.map(t => (
@@ -139,7 +139,7 @@ export function InsightVault() {
                          <Zap className="h-3 w-3 text-arena-pop opacity-60" />
                          <span className="text-[11px] font-display font-black uppercase text-arena-pop tracking-tight group-hover:drop-shadow-[0_0_5px_rgba(var(--arena-pop-rgb),0.4)] transition-all">{t.warriorName}</span>
                       </div>
-                      <span className="text-[8px] font-mono font-black text-muted-foreground/60 tracking-widest">SEQ_{t.discoveredWeek.toString().padStart(2, '0')}</span>
+                      <span className="text-[8px] font-mono font-black text-muted-foreground/60 tracking-widest">SEQ {t.discoveredWeek.toString().padStart(2, '0')}</span>
                     </div>
                     <p className="text-[10px] text-foreground/70 font-medium leading-relaxed italic">{t.detail}</p>
                   </Surface>
@@ -160,9 +160,9 @@ export function InsightVault() {
                 <Search className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
              </div>
              <div>
-                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] block mb-1 opacity-40">System_Indexing</span>
+                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] block mb-1 opacity-40">System Indexing</span>
                 <span className="text-xl font-mono font-black text-foreground">{tokens.length}G</span>
-                <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest block mt-0.5">Total_Sync</span>
+                <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest block mt-0.5">Total Sync</span>
              </div>
           </div>
           
@@ -171,9 +171,9 @@ export function InsightVault() {
                 <Box className="h-5 w-5 text-arena-gold/60 group-hover:text-arena-gold transition-colors" />
              </div>
              <div>
-                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] block mb-1 opacity-40">Armature_Index</span>
+                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] block mb-1 opacity-40">Armature Index</span>
                 <span className="text-xl font-mono font-black text-arena-gold">{weaponTokens.length}S</span>
-                <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest block mt-0.5">Verified_Intel</span>
+                <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest block mt-0.5">Verified Intel</span>
              </div>
           </div>
 
@@ -182,18 +182,18 @@ export function InsightVault() {
                 <Binary className="h-5 w-5 text-arena-pop/60 group-hover:text-arena-pop transition-colors" />
              </div>
              <div>
-                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] block mb-1 opacity-40">Tactical_Flow</span>
+                <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] block mb-1 opacity-40">Tactical Flow</span>
                 <span className="text-xl font-mono font-black text-arena-pop">{rhythmTokens.length}K</span>
-                <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest block mt-0.5">Verified_Intel</span>
+                <span className="text-[8px] font-black text-muted-foreground/60 uppercase tracking-widest block mt-0.5">Verified Intel</span>
              </div>
           </div>
 
           <div className="p-8 bg-secondary/5 flex flex-col justify-center relative overflow-hidden">
              <div className="absolute inset-0 bg-primary/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none" />
-             <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4 opacity-40">Intel_Synthesis_Status</span>
+             <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4 opacity-40">Intel Synthesis Status</span>
              <div className="flex items-center gap-3">
                 <Unlocked className="h-4 w-4 text-primary animate-pulse" />
-                <span className="text-xs font-black uppercase tracking-widest text-primary drop-shadow-[0_0_5px_rgba(var(--primary-rgb),0.3)]">SYNCHRONIZATION_PENDING</span>
+                <span className="text-xs font-black uppercase tracking-widest text-primary drop-shadow-[0_0_5px_rgba(var(--primary-rgb),0.3)]">SYNCHRONIZATION PENDING</span>
              </div>
           </div>
         </div>

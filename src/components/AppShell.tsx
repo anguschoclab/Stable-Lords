@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import {
   Swords, RotateCcw, LogOut, Save,
   Activity, Volume2, VolumeX,
-  Coins, Crown, Cloud
+  Coins, Crown, Cloud, ChevronRight
 } from "lucide-react";
 import { audioManager } from "@/lib/AudioManager";
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const {
     week, day, isTournamentWeek, treasury, fame, crowdMood, weather, roster,
     doReset, returnToTitle, lastSavedAt,
-    isSimulating, isInitialized, eventLogOpen
+    isSimulating, isInitialized, eventLogOpen, initialize
   } = useGameStore(
     useShallow((s: GameStore) => ({
       week: s.week,
@@ -59,7 +59,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       lastSavedAt: s.lastSavedAt,
       isSimulating: s.isSimulating,
       isInitialized: s.isInitialized,
-      eventLogOpen: s.eventLogOpen
+      eventLogOpen: s.eventLogOpen,
+      initialize: s.initialize
     }))
   );
   const navigate = useNavigate();
@@ -77,8 +78,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   useRivalryAlerts();
 
   useEffect(() => {
+    initialize();
+  }, [initialize]);
+
+  useEffect(() => {
     // Only check for "Orphan" status if we are in the main game loops
-    if (activePath === "/welcome") return;
+    const exemptPaths = ["/welcome", "/ops/", "/admin", "/help"];
+    if (exemptPaths.some(p => activePath.startsWith(p))) return;
 
     const activeWarriors = roster.filter((w: Warrior) => w.status === "Active");
     if (activeWarriors.length < 3) {
@@ -117,7 +123,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </motion.div>
             <div className="flex flex-col">
               <span className="font-display font-black text-sm tracking-tighter uppercase leading-none group-hover:text-primary transition-colors">Stable Lords</span>
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-40">ALPHA_DISTRICT_412</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-40">ALPHA DISTRICT 412</span>
             </div>
           </Link>
 
@@ -162,6 +168,21 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link
+            to="/command/combat"
+            className={cn(
+              "flex items-center gap-2 h-9 px-4 font-black text-[11px] uppercase tracking-widest transition-all duration-150",
+              isSimulating
+                ? "bg-white/5 text-muted-foreground/40 pointer-events-none"
+                : "bg-primary text-white shadow-[0_0_16px_rgba(255,0,0,0.35)] hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(255,0,0,0.5)] active:scale-95"
+            )}
+          >
+            {isTournamentWeek ? `Day ${day + 1}` : `Week ${week}`}
+            <ChevronRight className="h-3.5 w-3.5" />
+            {isTournamentWeek ? "Fight" : "Advance"}
+          </Link>
+
+          <Separator orientation="vertical" className="h-6 bg-white/5" />
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

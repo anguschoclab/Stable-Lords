@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { cn } from "@/lib/utils";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
@@ -84,19 +85,19 @@ export function InsightManager() {
             <Search className="h-5 w-5" />
          </div>
          <div>
-            <h3 className="font-display text-lg font-black uppercase tracking-tight text-white">Insight_Intelligence_Hub</h3>
-            <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Decrypting_Asset_Profiles // Tokens_Available: {tokens.length}</p>
+            <h3 className="font-display text-lg font-black uppercase tracking-tight text-white">Insight Intelligence Hub</h3>
+            <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Decrypting Asset Profiles // Tokens Available: {tokens.length}</p>
          </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* ─── Token Inventory ─── */}
         <div className="lg:col-span-4 space-y-4">
-          <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Available_Tokens</h4>
+          <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Available Tokens</h4>
           {tokens.length === 0 ? (
             <div className="p-8 rounded-none border-2 border-dashed border-border/20 text-center opacity-30">
               <Zap className="h-8 w-8 mx-auto mb-3" />
-              <p className="text-[10px] font-black uppercase tracking-widest">Inventory_Empty</p>
+              <p className="text-[10px] font-black uppercase tracking-widest">Inventory Empty</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -140,7 +141,7 @@ export function InsightManager() {
 
         {/* ─── Target Selection ─── */}
         <div className="lg:col-span-8 space-y-4">
-          <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Select_Operational_Target</h4>
+          <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Select Operational Target</h4>
           
           <Surface variant="glass" className="p-6 border-white/5 bg-black/20">
             {selectedTokenId ? (
@@ -200,8 +201,8 @@ export function InsightManager() {
                        )}
                     </div>
                     <div>
-                       <p className="text-[10px] font-black uppercase text-white tracking-widest">{selectedWarrior?.name || "Target_Required"}</p>
-                       <p className="text-[9px] text-muted-foreground uppercase tracking-widest opacity-60">Ready_For_Extraction</p>
+                       <p className="text-[10px] font-black uppercase text-white tracking-widest">{selectedWarrior?.name || "Target Required"}</p>
+                       <p className="text-[9px] text-muted-foreground uppercase tracking-widest opacity-60">Ready For Extraction</p>
                     </div>
                   </div>
 
@@ -215,14 +216,14 @@ export function InsightManager() {
                     ) : (
                       <Zap className="h-4 w-4 mr-2 group-hover:scale-125 transition-transform" />
                     )}
-                    {isRevealing ? "CONSULTING_ORACLES..." : "SEQUENCE_START"}
+                    {isRevealing ? "CONSULTING ORACLES..." : "SEQUENCE START"}
                   </Button>
                 </div>
               </div>
             ) : (
               <div className="py-20 text-center opacity-20">
                 <Target className="h-12 w-12 mx-auto mb-4" />
-                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Hardware_Authentication_Required</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Hardware Authentication Required</p>
                 <p className="text-[9px] lowercase mt-2 italic font-medium">Please select a physical insight token from your inventory to begin target matching.</p>
               </div>
             )}
@@ -243,11 +244,11 @@ export function InsightManager() {
                    <Sparkles className="text-white h-6 w-6 animate-pulse" />
                 </div>
                 
-                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">Discovery_Successful</h4>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">Discovery Successful</h4>
                 <h2 className="text-4xl font-display font-black uppercase tracking-tighter text-white mb-6 leading-none">{revealData.name}</h2>
                 
                 <div className="bg-white/5 border border-white/10 rounded-none p-6 mb-8">
-                   <span className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">{revealData.type}_AUTHENTICATED</span>
+                   <span className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">{revealData.type} AUTHENTICATED</span>
                    <span className="block text-2xl font-mono font-black text-arena-gold uppercase tracking-tighter drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]">
                       {revealData.result}
                    </span>
@@ -257,7 +258,7 @@ export function InsightManager() {
                   onClick={() => setRevealData(null)}
                   className="w-full h-12 bg-white/5 hover:bg-white/10 text-white font-black uppercase text-[10px] tracking-widest border border-white/10"
                 >
-                  Close_Sequence
+                  Close Sequence
                 </Button>
              </div>
           </motion.div>

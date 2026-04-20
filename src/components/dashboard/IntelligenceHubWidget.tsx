@@ -34,12 +34,12 @@ export function IntelligenceHubWidget() {
                <Newspaper className="h-5 w-5 text-primary" />
             </div>
             <div>
-               <h3 className="font-display text-base font-black uppercase tracking-tight">Intelligence_Hub</h3>
-               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Tactical_Comms_Synchronizer</p>
+               <h3 className="font-display text-base font-black uppercase tracking-tight">Intelligence Hub</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Tactical Comms Synchronizer</p>
             </div>
          </div>
          <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest uppercase">
-            {totalCommCount.toString().padStart(2, '0')} ACTIVE_STREAMS
+            {totalCommCount.toString().padStart(2, '0')} ACTIVE STREAMS
          </Badge>
       </div>
 
@@ -51,19 +51,19 @@ export function IntelligenceHubWidget() {
                 value="gazette" 
                 className="bg-transparent border-none p-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 data-[state=active]:text-primary data-[state=active]:shadow-none relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:scale-x-0 data-[state=active]:after:scale-x-100 after:transition-transform"
               >
-                Gazette_Feed
+                Gazette Feed
               </TabsTrigger>
               <TabsTrigger 
                 value="briefing" 
                 className="bg-transparent border-none p-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 data-[state=active]:text-arena-gold data-[state=active]:shadow-none relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-arena-gold after:scale-x-0 data-[state=active]:after:scale-x-100 after:transition-transform"
               >
-                Intelligence_Reports
+                Intelligence Reports
               </TabsTrigger>
               <TabsTrigger 
                 value="reasoning" 
                 className="bg-transparent border-none p-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 data-[state=active]:text-primary data-[state=active]:shadow-none relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:scale-x-0 data-[state=active]:after:scale-x-100 after:transition-transform"
               >
-                Cognitive_Sync
+                Cognitive Sync
               </TabsTrigger>
             </TabsList>
           </div>
@@ -74,7 +74,7 @@ export function IntelligenceHubWidget() {
                 {recentGazettes.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 opacity-20">
                     <Zap className="h-8 w-8 mb-4" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">No_Arena_Transmission</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">No Arena Transmission</p>
                   </div>
                 ) : (
                   <div className="py-6 space-y-8">
@@ -83,7 +83,7 @@ export function IntelligenceHubWidget() {
                         <div className="absolute left-[-5px] top-2 h-2.5 w-2.5 rounded-full bg-neutral-800 border boder-white/10 group-hover/story:bg-primary group-hover/story:shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all" />
                         
                         <div className="flex items-center gap-3 mb-2">
-                          <span className="text-[9px] font-mono font-black text-primary/60">WK_{story.week.toString().padStart(2, '0')}</span>
+                          <span className="text-[9px] font-mono font-black text-primary/60">WK {story.week.toString().padStart(2, '0')}</span>
                           <h4 className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/story:text-foreground transition-colors italic">
                             {story.headline}
                           </h4>
@@ -108,7 +108,7 @@ export function IntelligenceHubWidget() {
                 {recentNewsletter.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 opacity-20">
                     <Info className="h-8 w-8 mb-4 text-arena-gold" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">No_Strategic_Intel</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">No Strategic Intel</p>
                   </div>
                 ) : (
                   <div className="py-6 space-y-8">
@@ -119,7 +119,7 @@ export function IntelligenceHubWidget() {
                               <div className="p-1.5 rounded-none bg-arena-gold/10 border border-arena-gold/20">
                                 <Zap className="h-3 w-3 text-arena-gold" />
                               </div>
-                              <span className="text-[9px] font-mono font-black text-arena-gold opacity-60 uppercase tracking-widest">Wk_{report.week} Strategic_Update</span>
+                              <span className="text-[9px] font-mono font-black text-arena-gold opacity-60 uppercase tracking-widest">Wk {report.week} Strategic Update</span>
                            </div>
                         </div>
                         
@@ -159,7 +159,7 @@ export function IntelligenceHubWidget() {
             to="/world/chronicle"
             className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
          >
-            Sync_Full_Archive <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+            Sync Full Archive <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
          </Link>
          <Link
             to="/world/intelligence"
@@ -167,7 +167,7 @@ export function IntelligenceHubWidget() {
             className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-arena-gold/70 hover:text-arena-gold border border-arena-gold/20 hover:border-arena-gold/50 bg-arena-gold/5 hover:bg-arena-gold/10 px-3 py-1.5 transition-all group"
          >
             <Target className="h-3 w-3 shrink-0" />
-            Scout_Rivals
+            Scout Rivals
             <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
          </Link>
       </div>

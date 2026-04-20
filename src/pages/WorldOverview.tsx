@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { Globe, Trophy, Swords, Skull, Crown, Activity, Brain } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,12 +12,17 @@ import { getStableTemplates } from "@/engine/rivals";
 import type { Warrior } from "@/types/game";
 
 type SortField = "rank" | "name" | "fame" | "wins" | "losses" | "kills" | "winRate" | "roster" | "tier";
-type WarriorSortField = "name" | "stable" | "fame" | "wins" | "losses" | "kills" | "winRate" | "style";
+type WarriorSortField = "name" | "stable" | "fame" | "wins" | "losses" | "kills" | "winRate" | "style" | "officialRank" | "compositeScore";
 
 export default function WorldOverview() {
   const state = useWorldState();
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: "asc" | "desc" }>({ field: "fame", dir: "desc" });
   const [warriorSort, setWarriorSort] = useState<{ field: WarriorSortField; dir: "asc" | "desc" }>({ field: "fame", dir: "desc" });
+  const [syncing, setSyncing] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setSyncing(false), 1800);
+    return () => clearTimeout(t);
+  }, []);
 
   const templates = useMemo(() => getStableTemplates(), []);
 
@@ -178,13 +183,16 @@ export default function WorldOverview() {
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
       <PageHeader 
         title="World Overview"
-        subtitle={`WEEK ${state.week} // ${state.season} // NATIONAL COMMISSION ARCHIVE`}
+        subtitle={`WORLD \u00b7 ${state.season} \u00b7 NATIONAL COMMISSION ARCHIVE`}
         icon={Globe}
         actions={
           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.34em] text-muted-foreground opacity-60">
              <span>Lords Connected: {stableRows.length}</span>
              <div className="h-4 w-px bg-border/40" />
-             <span className="text-primary italic animate-pulse">Syncing Arena Data...</span>
+             {syncing
+               ? <span className="text-primary italic animate-pulse">Syncing Arena Data...</span>
+               : <span className="text-primary">Arena Data Live</span>
+             }
           </div>
         }
       />
@@ -211,7 +219,7 @@ export default function WorldOverview() {
 
         <TabsContent value="stables" className="space-y-6">
           <div className="flex items-center gap-3 px-1">
-             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">LEAGUE_RANKINGS</span>
+             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">LEAGUE RANKINGS</span>
              <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
           </div>
           <StableRankings 
@@ -223,7 +231,7 @@ export default function WorldOverview() {
 
         <TabsContent value="warriors" className="space-y-6">
           <div className="flex items-center gap-3 px-1">
-             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">VANGUARD_BOARD</span>
+             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">VANGUARD BOARD</span>
              <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
           </div>
           <WarriorLeaderboard 
@@ -235,7 +243,7 @@ export default function WorldOverview() {
 
         <TabsContent value="intel" className="space-y-6">
           <div className="flex items-center gap-3 px-1">
-             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">RIVAL_SURVEILLANCE</span>
+             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">RIVAL SURVEILLANCE</span>
              <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

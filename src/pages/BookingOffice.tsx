@@ -167,7 +167,7 @@ export default function BookingOffice() {
             <div className="space-y-1.5 flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm font-black uppercase tracking-widest text-primary truncate max-w-[150px]">
-                  {promoter?.name || "Local_Promoter"}
+                  {promoter?.name || "Local Promoter"}
                 </span>
                 <Badge variant="outline" className="text-[9px] uppercase font-black border-white/10">{promoter?.tier}</Badge>
                 {personalityConfig && (
@@ -205,7 +205,7 @@ export default function BookingOffice() {
                 <DollarSign className="h-4 w-4 text-arena-gold" />
                 {offer.purse}G
               </div>
-              <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest mt-1">Contract_Purse</div>
+              <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest mt-1">Contract Purse</div>
             </div>
           </div>
         </div>
@@ -214,13 +214,13 @@ export default function BookingOffice() {
           <div className="flex flex-wrap gap-2">
             <Badge variant="outline" className={cn("text-[9px] font-black uppercase tracking-widest border-white/5", fatigueStatus.color)}>
               <span className="flex items-center gap-1.5">
-                {fatigueStatus.icon} {fatigue} PERCENT_READY
+                {fatigueStatus.icon} {fatigue}% Ready
               </span>
             </Badge>
             {injuryBadge && (
               <Badge variant="outline" className={cn("text-[9px] font-black uppercase tracking-widest border-white/5", injuryBadge.color)}>
                 <span className="flex items-center gap-1.5">
-                  <AlertTriangle className="h-3 w-3" /> {injuryBadge.label}_WOUND
+                  <AlertTriangle className="h-3 w-3" /> {injuryBadge.label} Wound
                 </span>
               </Badge>
             )}
@@ -243,7 +243,7 @@ export default function BookingOffice() {
             <div className="text-center space-y-3 flex-1 min-w-0">
                <div className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.3em] mb-2">TARGET</div>
                <div className="text-xs font-black uppercase tracking-tight text-muted-foreground/80 truncate">
-                  {opponent?.name || "??_UNKNOWN"}
+                  {opponent?.name || "Unknown"}
                </div>
                <div className="text-[9px] font-black text-muted-foreground/40 uppercase">
                   {opponent ? STYLE_DISPLAY_NAMES[opponent.style as FightingStyle] : "CLASSIFIED"}
@@ -256,13 +256,13 @@ export default function BookingOffice() {
               <div className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] flex items-center gap-1.5">
                 <Clock className="h-3 w-3 opacity-40" /> SCHEDULE
               </div>
-              <div className="text-sm font-black uppercase">WEEK_{offer.boutWeek}</div>
+              <div className="text-sm font-black uppercase">WEEK {offer.boutWeek}</div>
             </div>
             <div className="space-y-1">
               <div className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] flex items-center gap-1.5">
-                <Target className="h-3 w-3 opacity-40 text-arena-gold" /> HYPE_EST
+                <Target className="h-3 w-3 opacity-40 text-arena-gold" /> HYPE EST
               </div>
-              <div className="text-sm font-black text-arena-gold">{offer.hype}%_INDEX</div>
+              <div className="text-sm font-black text-arena-gold">{offer.hype}% Hype</div>
             </div>
           </div>
         </div>
@@ -273,7 +273,7 @@ export default function BookingOffice() {
             onClick={() => handleResponse(offer.id, playerWarriorId, "Accepted")}
             disabled={!!injuryBadge || fatigue > 60}
           >
-            Sign_Protocol
+            Sign Contract
           </Button>
           <Button
             variant="ghost"
@@ -301,7 +301,7 @@ export default function BookingOffice() {
       <Surface variant="glass" className="flex items-center gap-12 p-5 border-l-4 border-l-primary/50">
         <div className="flex items-center gap-3">
           <Target className="h-4 w-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Market_Overview</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Market Overview</span>
         </div>
 
         <div className="flex items-center gap-10">
@@ -338,7 +338,7 @@ export default function BookingOffice() {
         {/* Archetype D: Left Rail Roster (span-4) */}
         <div className="lg:col-span-4 space-y-4 sticky top-6">
           <div className="flex items-center gap-3 px-2">
-            <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Roster_Readiness</h3>
+            <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Roster Readiness</h3>
           </div>
           <Surface variant="glass" className="p-0 border-white/5 max-h-[700px] overflow-y-auto thin-scrollbar">
             {roster.map(warrior => {
@@ -380,7 +380,7 @@ export default function BookingOffice() {
                 <Surface variant="glass" className="py-24 text-center">
                   <ShieldAlert className="h-16 w-16 opacity-10 mx-auto mb-4" />
                   <p className="font-display font-black uppercase tracking-widest text-sm text-muted-foreground/30">
-                    No_Proposals_Detected_Week_{week + 2}
+                    No proposals detected for week {week + 2}
                   </p>
                 </Surface>
               ) : (

@@ -101,23 +101,23 @@ export function StableComparisonWidget() {
                <TrendingUp className="h-5 w-5 text-primary" />
             </div>
             <div>
-               <h3 className="font-display text-base font-black uppercase tracking-tight">Competitive_Matrix</h3>
-               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Cross-Stable_Resource_Audit</p>
+               <h3 className="font-display text-base font-black uppercase tracking-tight">Competitive Matrix</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Cross-Stable Resource Audit</p>
             </div>
          </div>
          <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest">
-            {allStables.length} ENTITY_COMPARISON
+            {allStables.length} STABLES
          </Badge>
       </div>
 
       <div className="p-6 flex-1 relative z-10 space-y-8">
         <div className="space-y-4">
           <div className="grid grid-cols-[1fr_80px_120px_80px_120px] gap-4 px-4 pb-2 border-b border-white/5 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-             <span>Entity_Identity</span>
+             <span>Entity</span>
              <span className="text-center">Assets</span>
-             <span>Victory_Weight</span>
+             <span>Wins</span>
              <span className="text-center">Kills</span>
-             <span>Fame_Density</span>
+             <span>Avg Fame</span>
           </div>
           
           <div className="space-y-2">
@@ -171,7 +171,7 @@ export function StableComparisonWidget() {
           <div className="border-t border-white/5 pt-8 space-y-6">
             <div className="flex items-center gap-3 px-2">
               <Swords className="h-4 w-4 text-primary opacity-60" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Strategic_Head-to-Head_Sync</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Head-to-Head</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {rivalStats.map(r => {
@@ -231,7 +231,7 @@ export function StableComparisonWidget() {
 
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
          <button aria-label="Global Registry Analysis" className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group">
-            Global_Registry_Analysis <BarChart3 className="h-3 w-3 group-hover:scale-110 transition-transform" />
+            Global Registry Analysis <BarChart3 className="h-3 w-3 group-hover:scale-110 transition-transform" />
          </button>
       </div>
     </Surface>

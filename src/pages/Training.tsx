@@ -81,7 +81,7 @@ export default function Training() {
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
       <PageHeader
         title="Training Grounds"
-        subtitle="ACADEMY // REGIMEN_CONTROL // POTENTIAL_UNLEASHED"
+        subtitle="COMMAND · TRAINING · POTENTIAL UNLEASHED"
         icon={Dumbbell}
         actions={
           <div className="flex items-center gap-6">
@@ -102,7 +102,7 @@ export default function Training() {
                 size="sm"
                 className="h-8 text-[10px] font-black tracking-widest uppercase border-white/5 bg-white/5 hover:bg-white/10 flex items-center gap-1"
               >
-                TRAINING_PLANNER
+                TRAINING PLANNER
                 <ChevronRight className="h-3 w-3" />
               </Button>
             </Link>
@@ -113,7 +113,7 @@ export default function Training() {
                 onClick={handleClearAll}
                 className="h-8 text-[10px] font-black tracking-widest uppercase border-white/5 bg-white/5 hover:bg-white/10"
               >
-                RESET_ALL
+                RESET ALL
               </Button>
             )}
           </div>
@@ -128,7 +128,7 @@ export default function Training() {
          <Surface variant="glass" className="p-6 flex flex-col gap-2">
             <div className="flex items-center gap-2 text-primary">
               <Zap className="h-4 w-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Active_Drills</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Active Drills</span>
             </div>
             <div className="text-3xl font-display font-black tracking-tighter">{trainingCount}</div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Warriors pursuing growth</div>
@@ -139,7 +139,7 @@ export default function Training() {
          <Surface variant="glass" className="p-6 flex flex-col gap-2 border-l-destructive/20">
             <div className="flex items-center gap-2 text-destructive">
               <Heart className="h-4 w-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Medical_Bay</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Medical Bay</span>
             </div>
             <div className="text-3xl font-display font-black tracking-tighter">{recoveryCount}</div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Warriors in active healing</div>
@@ -150,7 +150,7 @@ export default function Training() {
          <Surface variant="glass" className="p-6 flex flex-col gap-2 opacity-60">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Target className="h-4 w-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Reserve_Pool</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Reserve Pool</span>
             </div>
             <div className="text-3xl font-display font-black tracking-tighter">{state.roster.length - assignedCount}</div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Idle personnel available</div>
@@ -164,7 +164,7 @@ export default function Training() {
       {state.roster.length === 0 ? (
         <Surface variant="glass" className="py-24 text-center">
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">
-            // NO_PERSONNEL_DETECTED // PLEASE_RECRUIT_WARRIORS_TO_COMMENCE_TRAINING
+            No personnel detected · Please recruit warriors to commence training
           </p>
           <Button variant="link" className="mt-4 text-xs uppercase tracking-widest font-black" onClick={() => navigate({ to: '/stable/recruit' })}>
             Go to Recruitments

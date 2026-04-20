@@ -161,19 +161,19 @@ export function RivalryWidget() {
                <Flame className="h-5 w-5 text-destructive" />
             </div>
             <div>
-               <h3 className="font-display text-base font-black uppercase tracking-tight">Vendetta_Registry</h3>
-               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Inter-Stable_Conflict_Monitor</p>
+               <h3 className="font-display text-base font-black uppercase tracking-tight">Vendetta Registry</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Inter-Stable Conflict Monitor</p>
             </div>
          </div>
          <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest">
-            {rivalries.length} ACTIVE_FEUDS
+            {rivalries.length} ACTIVE FEUDS
          </Badge>
       </div>
 
       <div className="flex-1 overflow-y-auto relative z-10 custom-scrollbar p-6">
         {rivalries.length === 0 ? (
           <div className="py-12 text-center opacity-20 italic">
-            <p className="text-[10px] uppercase tracking-[0.3em]">No_Significant_Vendettas_Detected</p>
+            <p className="text-[10px] uppercase tracking-[0.3em]">No significant vendettas detected</p>
           </div>
         ) : (
           <div className="space-y-8">
@@ -196,7 +196,7 @@ export function RivalryWidget() {
                         <div className="text-[10px] font-mono font-black text-foreground opacity-60">
                            {r.playerWins}W <span className="text-white/10 mx-0.5">/</span> {r.playerLosses}L
                         </div>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30">Engagement_Ratio</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30">Engagement Ratio</span>
                      </div>
                   </div>
 
@@ -234,7 +234,7 @@ export function RivalryWidget() {
               <div className="border-t border-white/5 pt-6">
                 <div className="flex items-center gap-2 mb-4">
                    <Target className="h-3.5 w-3.5 text-destructive opacity-60" />
-                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">High_Priority_Target</span>
+                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">High Priority Target</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-destructive/5 border border-destructive/10 rounded-none group/wanted hover:bg-destructive/10 transition-all">
                   <div className="flex items-center gap-4">
@@ -252,7 +252,7 @@ export function RivalryWidget() {
                      <div className="text-xs font-mono font-black text-destructive">
                         {mostWanted.wins} VICTORIES <span className="text-white/10 mx-1">|</span> {mostWanted.kills} TERMINATIONS
                      </div>
-                     <span className="text-[8px] font-black uppercase tracking-widest text-destructive/40">Aggression_Rating: EXTREME</span>
+                     <span className="text-[8px] font-black uppercase tracking-widest text-destructive/40">AGGRESSION RATING: EXTREME</span>
                   </div>
                 </div>
               </div>
@@ -263,7 +263,7 @@ export function RivalryWidget() {
 
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
          <button aria-label="Access Conflict Archives" className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group">
-            Access_Conflict_Archives <TrendingUp className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            Access Conflict Archives <TrendingUp className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
          </button>
       </div>
     </Surface>

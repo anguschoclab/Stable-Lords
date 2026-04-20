@@ -13,7 +13,7 @@ const WEATHER_METADATA = {
     bg: "bg-yellow-400/10",
     border: "border-yellow-400/20",
     description: "Optimal conditions. No environmental modifiers applied to combat resolution.",
-    stats: "NORMAL_VISIBILITY // ZERO_DRAIN"
+    stats: "NORMAL VISIBILITY // ZERO DRAIN"
   },
   Overcast: {
     icon: Cloud,
@@ -21,7 +21,7 @@ const WEATHER_METADATA = {
     bg: "bg-slate-400/10",
     border: "border-slate-400/20",
     description: "Cloudy skies. Slight reduction in precision for ranged and lunging attacks.",
-    stats: "LOW_VISIBILITY // STABLE_ENDURANCE"
+    stats: "LOW VISIBILITY // STABLE ENDURANCE"
   },
   Rainy: {
     icon: CloudRain,
@@ -29,7 +29,7 @@ const WEATHER_METADATA = {
     bg: "bg-stone-400/10",
     border: "border-stone-400/20",
     description: "Driving rain. Significant penalties to precision and initiative. Footing is uncertain.",
-    stats: "PRECISION_PENALTY_15% // INITIATIVE_-10"
+    stats: "PRECISION PENALTY 15% // INITIATIVE -10"
   },
   Gale: {
     icon: Wind,
@@ -37,7 +37,7 @@ const WEATHER_METADATA = {
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/20",
     description: "Fierce winds. Substantial penalty to stamina.",
-    stats: "STAMINA_DRAIN_115%"
+    stats: "STAMINA DRAIN 115%"
   },
   Sweltering: {
     icon: ThermometerSun,
@@ -45,7 +45,7 @@ const WEATHER_METADATA = {
     bg: "bg-orange-500/10",
     border: "border-orange-500/20",
     description: "Oppressive heat. Endurance consumption is doubled. High-constitution warriors favored.",
-    stats: "ENDURANCE_DRAIN_200% // FATIGUE_ACCEL"
+    stats: "ENDURANCE DRAIN 200% // FATIGUE ACCEL"
   },
   Breezy: {
     icon: Wind,
@@ -53,7 +53,7 @@ const WEATHER_METADATA = {
     bg: "bg-stone-300/10",
     border: "border-stone-300/20",
     description: "Strong shifting winds. Erratic initiative modifiers and slight energy drain.",
-    stats: "INITIATIVE_FLUX // STAMINA_DRAIN_120%"
+    stats: "INITIATIVE FLUX // STAMINA DRAIN 120%"
   },
   Eclipse: {
     icon: Moon,
@@ -61,7 +61,7 @@ const WEATHER_METADATA = {
     bg: "bg-purple-500/10",
     border: "border-purple-500/20",
     description: "Eerie darkness descends. Fights become slow and methodical as combatants hesitate.",
-    stats: "STAMINA_CONSERVATION_20% // HESITATION"
+    stats: "STAMINA CONSERVATION 20% // HESITATION"
   }
 };
 
@@ -76,7 +76,7 @@ export function WeatherWidget() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Cloud className="h-4 w-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Arena_Environment</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Arena Environment</span>
         </div>
         <Badge variant="outline" className={cn("text-[9px] font-black tracking-widest uppercase", meta.border, meta.bg, meta.color)}>
            {weather}
@@ -86,7 +86,7 @@ export function WeatherWidget() {
       <div className="flex items-center justify-between mb-4">
          <Icon className={cn("h-10 w-10 drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]", meta.color)} />
          <div className="text-right">
-           <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest mb-1">Atmospheric_Data</div>
+           <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest mb-1">Atmospheric Data</div>
            <p className="text-[10px] text-muted-foreground italic leading-tight w-full max-w-36 border-r-2 border-primary/20 pr-3">
              {meta.description}
            </p>
@@ -98,7 +98,7 @@ export function WeatherWidget() {
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="rounded-none border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all hover:bg-white/[0.05] hover:border-white/10 flex items-center justify-between">
-                <span className="text-[8px] text-muted-foreground uppercase font-black tracking-widest">Active_Modifiers</span>
+                <span className="text-[8px] text-muted-foreground uppercase font-black tracking-widest">Active Modifiers</span>
                 <Info className="h-3 w-3 text-muted-foreground/40" />
               </div>
             </TooltipTrigger>

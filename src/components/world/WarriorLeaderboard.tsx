@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { Surface } from "@/components/ui/Surface";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { SortHeader } from "@/components/ui/sort-header";
-import { TrendingUp, Star, Swords, Skull, Target, Medal, Crown } from "lucide-react";
+import { TrendingUp, Skull, Crown, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +30,27 @@ interface WarriorLeaderboardProps {
 }
 
 export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardProps) {
+  const [classFilter, setClassFilter] = useState<string | null>(null);
+  const [quickFilter, setQuickFilter] = useState<"kills" | "wins" | "winRate" | null>(null);
+  const [myWarriorsOnly, setMyWarriorsOnly] = useState(false);
+
+  const classes = useMemo(() => {
+    const seen = new Set<string>();
+    rows.forEach(r => { if (r.style) seen.add(r.style); });
+    return Array.from(seen).sort();
+  }, [rows]);
+
+  const filtered = useMemo(() => {
+    let result = myWarriorsOnly ? rows.filter(r => r.isPlayer) : rows;
+    if (classFilter) result = result.filter(r => r.style === classFilter);
+    if (quickFilter === "kills") result = [...result].sort((a, b) => b.kills - a.kills);
+    else if (quickFilter === "wins") result = [...result].sort((a, b) => b.wins - a.wins);
+    else if (quickFilter === "winRate") result = [...result].sort((a, b) => b.winRate - a.winRate);
+    return result;
+  }, [rows, classFilter, quickFilter, myWarriorsOnly]);
+
+  const isFiltered = classFilter !== null || quickFilter !== null || myWarriorsOnly;
+
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
       <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
@@ -45,15 +66,77 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
           </div>
         </div>
         <Badge variant="outline" className="text-[9px] uppercase font-mono py-1 px-3 border-primary/20 text-primary">
-          Meritocracy_Cycle_Active
+          {isFiltered ? `${filtered.length} Filtered` : "Meritocracy Cycle Active"}
         </Badge>
+      </div>
+
+      {/* Filter bar */}
+      <div className="px-4 py-3 border-b border-white/5 bg-black/20 flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => setMyWarriorsOnly(v => !v)}
+          className={cn(
+            "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border transition-colors flex items-center gap-1",
+            myWarriorsOnly
+              ? "bg-primary/20 text-primary border-primary/40"
+              : "bg-white/5 text-muted-foreground/50 border-white/10 hover:text-foreground hover:border-white/20"
+          )}
+        >
+          <Crown className="h-3 w-3" /> My Warriors
+        </button>
+
+        <div className="w-px h-4 bg-white/10 mx-1" />
+
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mr-1">Class</span>
+        {classes.map(cls => (
+          <button
+            key={cls}
+            onClick={() => setClassFilter(classFilter === cls ? null : cls)}
+            className={cn(
+              "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border transition-colors",
+              classFilter === cls
+                ? "bg-primary/20 text-primary border-primary/40"
+                : "bg-white/5 text-muted-foreground/50 border-white/10 hover:text-foreground hover:border-white/20"
+            )}
+          >
+            {cls}
+          </button>
+        ))}
+
+        <div className="w-px h-4 bg-white/10 mx-1" />
+
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mr-1">Sort by</span>
+        {(["kills", "wins", "winRate"] as const).map(f => (
+          <button
+            key={f}
+            onClick={() => { setQuickFilter(quickFilter === f ? null : f); if (quickFilter !== f) onSort(f); }}
+            className={cn(
+              "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border transition-colors",
+              quickFilter === f
+                ? "bg-primary/20 text-primary border-primary/40"
+                : "bg-white/5 text-muted-foreground/50 border-white/10 hover:text-foreground hover:border-white/20"
+            )}
+          >
+            {f === "winRate" ? "Efficiency" : f === "kills" ? "Kills" : "Wins"}
+          </button>
+        ))}
+
+        {isFiltered && (
+          <button
+            onClick={() => { setClassFilter(null); setQuickFilter(null); setMyWarriorsOnly(false); }}
+            className="ml-auto flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-destructive transition-colors"
+          >
+            <X className="h-3 w-3" /> Clear
+          </button>
+        )}
       </div>
 
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-white/5 bg-black/20">
-              <TableHead className="w-16 text-center text-[10px] font-black uppercase tracking-widest opacity-40">RANK</TableHead>
+              <TableHead className="w-16 text-center">
+                <SortHeader label="Rank" active={sort.field === "officialRank"} dir={sort.dir} onClick={() => onSort("officialRank")} />
+              </TableHead>
               <TableHead>
                 <SortHeader label="Combatant" active={sort.field === "name"} dir={sort.dir} onClick={() => onSort("name")} />
               </TableHead>
@@ -61,27 +144,27 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                 <SortHeader label="Patron Stable" active={sort.field === "stable"} dir={sort.dir} onClick={() => onSort("stable")} />
               </TableHead>
               <TableHead className="hidden lg:table-cell">
-                <SortHeader label="Specialization" active={sort.field === "style"} dir={sort.dir} onClick={() => onSort("style")} />
+                <SortHeader label="Class" active={sort.field === "style"} dir={sort.dir} onClick={() => onSort("style")} />
               </TableHead>
-              <TableHead className="text-right">
-                <SortHeader label="Composite Pts" active={sort.field === "fame"} dir={sort.dir} onClick={() => onSort("fame")} />
+              <TableHead className="text-center">
+                <SortHeader label="Composite Pts" active={sort.field === "compositeScore"} dir={sort.dir} onClick={() => onSort("compositeScore")} />
               </TableHead>
-               <TableHead className="text-right">
-                <SortHeader label="Fame" active={sort.field === "renown"} dir={sort.dir} onClick={() => onSort("renown")} />
+              <TableHead className="text-center">
+                <SortHeader label="Fame" active={sort.field === "fame"} dir={sort.dir} onClick={() => onSort("fame")} />
               </TableHead>
-              <TableHead className="text-right">
+              <TableHead className="text-center">
                 <SortHeader label="W" active={sort.field === "wins"} dir={sort.dir} onClick={() => onSort("wins")} />
               </TableHead>
-              <TableHead className="text-right hidden sm:table-cell">
+              <TableHead className="text-center hidden sm:table-cell">
                 <SortHeader label="Efficiency" active={sort.field === "winRate"} dir={sort.dir} onClick={() => onSort("winRate")} />
               </TableHead>
-              <TableHead className="text-right">
+              <TableHead className="text-center">
                 <SortHeader label="K" active={sort.field === "kills"} dir={sort.dir} onClick={() => onSort("kills")} />
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.slice(0, 100).map((row, i) => (
+            {filtered.slice(0, 100).map((row, i) => (
               <TableRow 
                 key={row.id} 
                 className={cn(
@@ -90,13 +173,18 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                 )}
               >
                 <TableCell className="text-center">
-                  <div className={cn(
-                    "font-mono text-xs font-black p-1 rounded border inline-block min-w-6",
-                    row.officialRank <= 64 ? "bg-arena-gold/10 text-arena-gold border-arena-gold/20" : 
-                    row.officialRank <= 128 ? "bg-slate-400/10 text-slate-400 border-slate-400/20" :
-                    "bg-neutral-800 text-muted-foreground border-border/10"
-                  )}>
-                    #{row.officialRank}
+                  <div className="flex flex-col items-center gap-0.5">
+                    <div className={cn(
+                      "font-mono text-xs font-black p-1 rounded border inline-block min-w-6",
+                      row.officialRank <= 64 ? "bg-arena-gold/10 text-arena-gold border-arena-gold/20" :
+                      row.officialRank <= 128 ? "bg-slate-400/10 text-slate-400 border-slate-400/20" :
+                      "bg-neutral-800 text-muted-foreground border-border/10"
+                    )}>
+                      {isFiltered ? `#${i + 1}` : `#${row.officialRank}`}
+                    </div>
+                    {isFiltered && (
+                      <span className="text-[8px] font-mono text-muted-foreground/30">#{row.officialRank}</span>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell>
@@ -115,7 +203,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                         {row.officialRank === 1 && <Crown className="h-3 w-3 text-arena-gold" />}
                       </div>
                     )}
-                    <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest leading-none mt-0.5">STATUS // ACTIVE_DUTY</span>
+                    <span className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest leading-none mt-0.5">STATUS // ACTIVE DUTY</span>
                   </div>
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
@@ -137,16 +225,14 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                   )}
                 </TableCell>
                 <TableCell className="hidden lg:table-cell text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">{row.style}</TableCell>
-                <TableCell className="text-right font-mono font-black text-xs text-primary">{Math.round(row.compositeScore)}</TableCell>
-                <TableCell className="text-right font-mono font-black text-xs text-arena-gold">{row.fame.toLocaleString()}</TableCell>
-                <TableCell className="text-right font-mono font-black text-xs text-foreground/70">{row.wins}</TableCell>
-                <TableCell className="text-right hidden sm:table-cell">
-                   <div className="flex flex-col items-end">
-                      <span className="font-mono font-black text-xs">{row.winRate}%</span>
-                   </div>
+                <TableCell className="text-center font-mono font-black text-xs text-primary">{Math.round(row.compositeScore)}</TableCell>
+                <TableCell className="text-center font-mono font-black text-xs text-arena-gold">{row.fame.toLocaleString()}</TableCell>
+                <TableCell className="text-center font-mono font-black text-xs text-foreground/70">{row.wins}</TableCell>
+                <TableCell className="text-center hidden sm:table-cell">
+                   <span className="font-mono font-black text-xs">{row.winRate}%</span>
                 </TableCell>
-                <TableCell className="text-right">
-                   <div className="flex items-center justify-end gap-2">
+                <TableCell className="text-center">
+                   <div className="flex items-center justify-center gap-2">
                       <span className={cn("font-mono font-black text-xs", row.kills > 0 ? "text-destructive" : "text-muted-foreground/20")}>{row.kills}</span>
                       <Skull className={cn("h-3 w-3", row.kills > 0 ? "text-destructive/40" : "text-muted-foreground/5")} />
                    </div>

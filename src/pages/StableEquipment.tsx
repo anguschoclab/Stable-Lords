@@ -46,7 +46,7 @@ export default function StableEquipment() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-20">
       <PageHeader 
-        title="THE_ARMORY"
+        title="The Armory"
         subtitle="OPS · ARMORY · TACTICAL LOADOUTS"
         icon={Shield}
       />
@@ -58,13 +58,13 @@ export default function StableEquipment() {
             <div className="flex items-center gap-3 border-b border-white/5 pb-4">
               <Package className="h-4 w-4 text-primary" />
               <div className="flex flex-col">
-                <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tactical_Style</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Tactical Style</span>
                 <span className="text-[8px] uppercase font-bold text-muted-foreground/60 tracking-widest mt-0.5">Optimize Methodology</span>
               </div>
             </div>
 
             <div className="space-y-3">
-              <label className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Selection_Matrix</label>
+              <label className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Select Style</label>
               <Select value={selectedStyle} onValueChange={(v) => {
                 setSelectedStyle(v as FightingStyle);
                 const firstMatch = activeWarriors.find(w => w.style === v);
@@ -84,7 +84,7 @@ export default function StableEquipment() {
             {tips.length > 0 && (
               <div className="space-y-4 pt-4 border-t border-white/5">
                 <div className="flex items-center gap-2 text-[9px] font-black uppercase text-arena-gold tracking-[0.3em]">
-                  <Lightbulb className="h-3.5 w-3.5" /> Intelligence_Feed
+                  <Lightbulb className="h-3.5 w-3.5" /> Intelligence Feed
                 </div>
                 <ul className="space-y-3">
                   {tips.map((tip, i) => (
@@ -109,7 +109,7 @@ export default function StableEquipment() {
 
           <Surface variant="glass" className="space-y-4">
             <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 px-1 mb-2">
-              <Star className="h-3 w-3 text-arena-gold" /> Style_Champions
+              <Star className="h-3 w-3 text-arena-gold" /> Style Champions
             </div>
             <div className="space-y-2">
               {activeWarriors.filter(w => w.style === selectedStyle).map(w => (
@@ -135,7 +135,7 @@ export default function StableEquipment() {
               ))}
               {activeWarriors.filter(w => w.style === selectedStyle).length === 0 && (
                 <div className="p-10 text-center border border-dashed border-white/10 opacity-30">
-                  <p className="text-[8px] font-black uppercase tracking-widest">Berths_Empty</p>
+                  <p className="text-[8px] font-black uppercase tracking-widest">No Warriors</p>
                 </div>
               )}
             </div>
@@ -158,9 +158,9 @@ export default function StableEquipment() {
                   <div className={cn("p-6 space-y-4 flex-1 flex flex-col", i === 0 ? "bg-primary/5" : "bg-black/20")}>
                      <div className="flex items-center justify-between">
                         <Badge className="bg-primary/20 text-primary border-primary/20 font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border">
-                           {rec.synergy}%_INTELLIGENCE
+                           {rec.synergy}% SYNERGY
                         </Badge>
-                        {i === 0 && <Badge className="bg-arena-gold text-black font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border-none">OPTIMAL_PATH</Badge>}
+                        {i === 0 && <Badge className="bg-arena-gold text-black font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border-none">OPTIMAL PATH</Badge>}
                      </div>
                      
                      <div className="space-y-1">
@@ -182,12 +182,12 @@ export default function StableEquipment() {
                     {reqCheck && !reqCheck.met && (
                       <div className="p-3 bg-destructive/10 border border-destructive/20 space-y-2 mt-4">
                         <div className="flex items-center gap-2 text-[8px] font-black uppercase text-destructive tracking-[0.3em]">
-                          <AlertTriangle className="h-3 w-3" /> Hardware_Sync_Error
+                          <AlertTriangle className="h-3 w-3" /> Stat Requirement Failed
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {reqCheck.failures.map((f: any, fi: number) => (
                             <div key={fi} className="text-[9px] font-mono font-black text-destructive/80 uppercase">
-                              [{f.stat}: {f.current} < {f.required}]
+                              {`[${f.stat}: ${f.current} < ${f.required}]`}
                             </div>
                           ))}
                         </div>
@@ -212,7 +212,7 @@ export default function StableEquipment() {
                           </Tooltip>
                         </TooltipProvider>
                         <span className={cn("font-mono font-black", rec.totalWeight > carryCap ? "text-destructive" : "text-primary")}>
-                          {rec.totalWeight} / {carryCap}_UNIT
+                          {rec.totalWeight} / {carryCap} WT
                         </span>
                       </div>
                       <div className="h-1 bg-white/5 overflow-hidden">
@@ -234,7 +234,7 @@ export default function StableEquipment() {
                       onClick={() => handleApply(rec.loadout, rec.label)}
                       disabled={!targetWarriorId}
                     >
-                      Initialize_Deployment
+                      Apply Loadout
                     </Button>
                   </div>
                 </Surface>

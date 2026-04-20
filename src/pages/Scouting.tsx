@@ -82,7 +82,7 @@ export default function Scouting() {
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
       <PageHeader 
         title="Tactical Reconnaissance"
-        subtitle="SURVEILLANCE // THREAT_ANALYSIS // ENEMY_INTEL"
+        subtitle="WORLD · INTELLIGENCE · THREAT ANALYSIS"
         icon={Search}
         actions={
           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.34em] text-muted-foreground opacity-60">
@@ -98,7 +98,7 @@ export default function Scouting() {
           <Tooltip>
             <TooltipTrigger asChild>
               <TabsTrigger value="scout" className="data-[state=active]:bg-primary data-[state=active]:text-white uppercase tracking-widest text-[10px] font-black py-2 px-6 rounded-none transition-all">
-                <Eye className="h-3.5 w-3.5 mr-2" /> SCOUT_INTEL
+                <Eye className="h-3.5 w-3.5 mr-2" /> SCOUT INTEL
               </TabsTrigger>
             </TooltipTrigger>
             <TooltipContent side="top">
@@ -109,7 +109,7 @@ export default function Scouting() {
           <Tooltip>
             <TooltipTrigger asChild>
               <TabsTrigger value="compare" className="data-[state=active]:bg-primary data-[state=active]:text-white uppercase tracking-widest text-[10px] font-black py-2 px-6 rounded-none transition-all">
-                <ArrowLeftRight className="h-3.5 w-3.5 mr-2" /> STABLE_DYNAMICS
+                <ArrowLeftRight className="h-3.5 w-3.5 mr-2" /> STABLE DYNAMICS
               </TabsTrigger>
             </TooltipTrigger>
             <TooltipContent side="top">
@@ -120,7 +120,7 @@ export default function Scouting() {
           <Tooltip>
             <TooltipTrigger asChild>
               <TabsTrigger value="warriors" className="data-[state=active]:bg-primary data-[state=active]:text-white uppercase tracking-widest text-[10px] font-black py-2 px-6 rounded-none transition-all">
-                <UserRoundSearch className="h-3.5 w-3.5 mr-2" /> WARRIOR_FACE-OFF
+                <UserRoundSearch className="h-3.5 w-3.5 mr-2" /> WARRIOR FACE-OFF
               </TabsTrigger>
             </TooltipTrigger>
             <TooltipContent side="top">

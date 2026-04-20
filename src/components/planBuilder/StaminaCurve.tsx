@@ -32,7 +32,7 @@ export default function StaminaCurve({ plan, warrior, width = 240, height = 56 }
   return (
     <div className="flex items-center gap-3">
       <div className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">
-        Stamina_Curve
+        Stamina Curve
       </div>
       <svg width={width} height={height} className="border border-white/5 bg-black/40">
         <path d={path} fill="none" stroke={stroke} strokeWidth={1.5} />

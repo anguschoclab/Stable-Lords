@@ -38,9 +38,9 @@ export function RosterWall() {
              <Users className="h-6 w-6 text-primary" />
            </div>
            <div>
-             <h3 className="font-display text-base font-black uppercase tracking-tight">Active_Personnel_Matrix</h3>
+             <h3 className="font-display text-base font-black uppercase tracking-tight">Active Personnel Matrix</h3>
              <div className="flex items-center gap-2 mt-1">
-                <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">Deployable_Assets // Total_Synced: {sortedRoster.length}</span>
+                <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">Deployable Assets // Total Synced: {sortedRoster.length}</span>
                 <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
              </div>
            </div>
@@ -48,7 +48,7 @@ export function RosterWall() {
         
         <Link to="/ops/personnel">
           <Button variant="outline" size="sm" className="bg-neutral-900 border-white/10 text-[10px] font-black uppercase tracking-[0.2em] gap-2 h-10 px-6 hover:bg-primary hover:text-white hover:border-primary transition-all">
-             Initialize_Recruitment <ChevronRight className="h-4 w-4" />
+             Initialize Recruitment <ChevronRight className="h-4 w-4" />
           </Button>
         </Link>
       </div>
@@ -61,14 +61,14 @@ export function RosterWall() {
                <Swords className="h-16 w-16 text-muted-foreground opacity-20 relative z-10" />
             </div>
             <div className="space-y-2">
-              <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">Roster_Data_Empty</p>
+              <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">Roster Data Empty</p>
               <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
                 Synchronization failed. All personnel berths are currently vacant. Proceed to the recruitment terminal to enlist your first combatant asset.
               </p>
             </div>
             <Link to="/ops/personnel" className="mt-4">
                <Button className="bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px] px-10 h-12 shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] hover:scale-105 active:scale-95 transition-all">
-                  Initialize_SYNC
+                  Initialize Sync
                </Button>
             </Link>
           </Surface>
@@ -209,7 +209,7 @@ export function RosterWall() {
                                     className="flex items-center gap-2 group/btn px-4 py-1.5 rounded-none bg-white/5 border border-white/5 hover:border-primary/50 transition-all"
                                     aria-label={`View tactical report for ${w.name}`}
                                  >
-                                    <span className="text-[9px] font-black uppercase tracking-widest group-hover/btn:text-primary transition-colors">Tactical_Report</span>
+                                    <span className="text-[9px] font-black uppercase tracking-widest group-hover/btn:text-primary transition-colors">Tactical Report</span>
                                     <ChevronRight className="h-3 w-3 opacity-20 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all" />
                                  </button>
                               </div>

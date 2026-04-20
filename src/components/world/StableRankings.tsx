@@ -126,7 +126,7 @@ export function StableRankings({ rows, sort, onSort }: StableRankingsProps) {
                            )}
                            <div className="flex items-center gap-2 mt-0.5">
                               <span className="text-[9px] font-black text-muted-foreground uppercase opacity-40 leading-none">Commanded by {row.ownerName}</span>
-                              {row.isPlayer && <Badge variant="outline" className="text-[8px] font-black border-primary/20 bg-primary/10 text-primary py-0 px-1 leading-none h-3">ACTIVE_PLAYER</Badge>}
+                              {row.isPlayer && <Badge variant="outline" className="text-[8px] font-black border-primary/20 bg-primary/10 text-primary py-0 px-1 leading-none h-3">ACTIVE PLAYER</Badge>}
                            </div>
                         </div>
                       </TooltipTrigger>

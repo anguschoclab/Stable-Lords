@@ -79,7 +79,7 @@ export function TrainerCard({
                             <GraduationCap className="h-3 w-3 text-arena-fame" />
                          </div>
                       </TooltipTrigger>
-                      <TooltipContent className="bg-neutral-950 border-white/10 text-[10px] font-black uppercase tracking-widest">LEGENDARY_VETERAN: {trainer.retiredFromWarrior}</TooltipContent>
+                      <TooltipContent className="bg-neutral-950 border-white/10 text-[10px] font-black uppercase tracking-widest">LEGENDARY VETERAN: {trainer.retiredFromWarrior}</TooltipContent>
                     </Tooltip>
                   )}
                 </div>
@@ -111,7 +111,7 @@ export function TrainerCard({
                       <UserMinus className="h-4 w-4 group-hover/fire:scale-110 transition-transform" />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="left" className="bg-destructive text-white border-none font-black text-[10px] tracking-widest">TERMINATE_CONTRACT</TooltipContent>
+                  <TooltipContent side="left" className="bg-destructive text-white border-none font-black text-[10px] tracking-widest">TERMINATE CONTRACT</TooltipContent>
                 </Tooltip>
               )}
             </div>

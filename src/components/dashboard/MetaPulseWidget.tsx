@@ -39,20 +39,20 @@ export function MetaPulseWidget() {
                <TrendingUp className="h-4 w-4 text-primary" />
             </div>
             <div>
-               <h3 className="font-display text-sm font-black uppercase tracking-tight">Divisional_Pulse</h3>
-               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Meta_Drift_Analysis</p>
+               <h3 className="font-display text-sm font-black uppercase tracking-tight">Divisional Pulse</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Meta Drift Analysis</p>
             </div>
          </div>
          <div className="flex items-center gap-2">
             <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-            <span className="text-[8px] font-black uppercase tracking-widest text-primary opacity-60">LIVE_SCAN</span>
+            <span className="text-[8px] font-black uppercase tracking-widest text-primary opacity-60">LIVE SCAN</span>
          </div>
       </div>
 
       <div className="p-6 flex-1 relative z-10">
         {activeStyles.length === 0 ? (
           <div className="py-8 text-center opacity-20 italic">
-            <p className="text-[10px] uppercase tracking-[0.2em]">Stagnant_Meta_Signal</p>
+            <p className="text-[10px] uppercase tracking-[0.2em]">Stagnant Meta Signal</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -62,7 +62,7 @@ export function MetaPulseWidget() {
                    <span className="text-[10px] font-black uppercase tracking-widest text-foreground/80 group-hover/item:text-primary transition-colors">
                       {STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] ?? style}
                    </span>
-                   <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">Martial_Discipline</span>
+                   <span className="text-[8px] font-black text-muted-foreground/40 uppercase tracking-widest">Martial Discipline</span>
                 </div>
                 
                 <Tooltip>
@@ -90,7 +90,7 @@ export function MetaPulseWidget() {
 
       <div className="px-6 py-4 border-t border-white/5 bg-black/40 flex justify-center mt-auto">
          <button aria-label="Access Full Intelligence" className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group">
-            Access_Full_Intelligence <Activity className="h-3 w-3 group-hover:scale-110 transition-transform" />
+            Access Full Intelligence <Activity className="h-3 w-3 group-hover:scale-110 transition-transform" />
          </button>
       </div>
     </Surface>

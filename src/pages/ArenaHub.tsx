@@ -39,7 +39,7 @@ function CrowdMoodWidget() {
         <div>
           <div className="flex items-center gap-2">
             <Eye className="h-3 w-3 text-accent" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Crowd_Temperament</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Crowd Temperament</span>
           </div>
           <p className="text-[10px] text-muted-foreground italic leading-tight max-w-[200px] mt-1">
             {MOOD_DESCRIPTIONS[mood]}
@@ -54,7 +54,7 @@ function CrowdMoodWidget() {
           <TooltipTrigger asChild>
             <div className="flex items-center gap-3 px-4 py-2 bg-white/[0.02] border border-white/5 transition-all hover:bg-white/[0.05]">
               <div className="text-right">
-                <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1">FAME_MULT</div>
+                <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1">FAME MULT</div>
                 <div className={cn("text-lg font-display font-black tracking-tighter leading-none", mods.fameMultiplier > 1 ? "text-primary" : "text-muted-foreground")}>
                   ×{mods.fameMultiplier.toFixed(1)}
                 </div>
@@ -139,10 +139,10 @@ function ArenaLeaderboard() {
       <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy className="h-4 w-4 text-arena-gold" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Global_Power_Rankings</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Global Power Rankings</span>
         </div>
         <div className="text-[10px] font-mono text-muted-foreground flex items-center gap-2">
-          <Activity className="h-3 w-3 text-primary" /> LIVE_ARENA_FEED
+          <Activity className="h-3 w-3 text-primary" /> LIVE ARENA FEED
         </div>
       </div>
       <Table>
@@ -151,7 +151,7 @@ function ArenaLeaderboard() {
             <TableHead className="w-12 pl-6 text-[9px] font-black uppercase tracking-widest">RANK</TableHead>
             <TableHead className="text-[9px] font-black uppercase tracking-widest">WARRIOR</TableHead>
             <TableHead className="text-[9px] font-black uppercase tracking-widest">STABLE</TableHead>
-            <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">W_L_K</TableHead>
+            <TableHead className="text-center text-[9px] font-black uppercase tracking-widest">W / L / K</TableHead>
             <TableHead className="pr-6 text-right text-[9px] font-black uppercase tracking-widest">FAME</TableHead>
           </TableRow>
         </TableHeader>
@@ -200,15 +200,12 @@ export default function ArenaHub() {
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
       <PageHeader 
         title="Arena Command Hub"
-        subtitle="VIRTUAL_COLOSSEUM // SPECTACLE_ENGINE // WORLD_STATE"
+        subtitle="ARENA \u00b7 SPECTACLE ENGINE \u00b7 WORLD STATE"
         icon={Swords}
         actions={
           <div className="flex gap-3">
              <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1">
-               {roster.filter(w=>w.status==="Active").length}_UNITS_ACTIVE
-             </Badge>
-             <Badge variant="outline" className="bg-arena-gold/5 text-arena-gold border-arena-gold/20 font-black uppercase tracking-widest text-[9px] px-3 py-1">
-               PREMIUM_ACCESS
+               {roster.filter(w=>w.status==="Active").length} UNITS ACTIVE
              </Badge>
           </div>
         }
@@ -237,22 +234,22 @@ export default function ArenaHub() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <BarChart3 className="h-4 w-4 text-primary" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Arena_Analytics</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Arena Analytics</span>
                 </div>
                 <Activity className="h-3 w-3 text-primary animate-pulse" />
               </div>
               
               <div className="space-y-4">
                  <div className="flex justify-between items-center group">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-white/80 transition-colors">Stable_Renown</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-white/80 transition-colors">Stable Renown</span>
                     <span className="font-display font-black text-xl text-arena-fame tracking-tighter">{player.renown}</span>
                  </div>
                  <div className="flex justify-between items-center group">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-white/80 transition-colors">Lifetime_Kills</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-white/80 transition-colors">Lifetime Kills</span>
                     <span className="font-display font-black text-xl text-destructive tracking-tighter">{lifetimeKills}</span>
                  </div>
                  <div className="flex justify-between items-center group">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-white/80 transition-colors">Combat_Yield</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-white/80 transition-colors">Combat Yield</span>
                     <span className="font-display font-black text-xl text-primary tracking-tighter">{Math.round(stableStats.winRate * 100)}%</span>
                  </div>
               </div>
@@ -272,16 +269,16 @@ export default function ArenaHub() {
       {/* Immersive Operational Strip */}
       <div className="py-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-30 px-6 border-t border-white/5">
          <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-            <Skull className="h-3.5 w-3.5 text-destructive" /> Blood_Shed_Protocols: V1.4
+            <Skull className="h-3.5 w-3.5 text-destructive" /> Blood Shed Protocols: V1.4
          </div>
          <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-            <TrendingUp className="h-3.5 w-3.5 text-primary" /> Market_Drift: Synchronized
+            <TrendingUp className="h-3.5 w-3.5 text-primary" /> Market Drift: Synchronized
          </div>
          <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-            <Star className="h-3.5 w-3.5 text-arena-gold" /> Fame_Coefficient_Active
+            <Star className="h-3.5 w-3.5 text-arena-gold" /> Fame Coefficient Active
          </div>
          <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-            <Shield className="h-3.5 w-3.5 text-accent" /> Integrity_Hash_Verified
+            <Shield className="h-3.5 w-3.5 text-accent" /> Integrity Hash Verified
          </div>
       </div>
     </div>

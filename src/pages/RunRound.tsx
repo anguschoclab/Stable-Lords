@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { Swords, Zap, Skull, Shield, FastForward, Trophy, Heart } from "lucide-react";
+import { Surface } from "@/components/ui/Surface";
+import { Swords, Zap, Skull, Shield, FastForward, Trophy, Heart, Activity } from "lucide-react";
 import { toast } from "sonner";
 import { useShallow } from 'zustand/react/shallow';
 
@@ -108,13 +109,13 @@ export default function RunRound() {
       <Surface variant="glass" className="flex items-center gap-12 p-5 border-l-4 border-l-primary/50">
         <div className="flex items-center gap-3">
           <Activity className="h-4 w-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Stable_Readiness</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Stable Readiness</span>
         </div>
         
         <div className="flex items-center gap-10">
            <div className="flex items-center gap-3">
               <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">Mission_Ready</span>
+                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">Mission Ready</span>
                 <span className="font-display font-black text-xl text-primary leading-none mt-1">{fightReady.length}</span>
               </div>
               <div className="h-8 w-px bg-white/5" />
@@ -122,7 +123,7 @@ export default function RunRound() {
 
            <div className="flex items-center gap-3">
               <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">Combat_Paired</span>
+                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">Combat Paired</span>
                 <span className="font-display font-black text-xl text-arena-gold leading-none mt-1">{matchCard.length}</span>
               </div>
               <div className="h-8 w-px bg-white/5" />
@@ -130,7 +131,7 @@ export default function RunRound() {
 
            <div className="flex items-center gap-3">
               <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">Injured_Medbay</span>
+                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">Injured / Medbay</span>
                 <span className="font-display font-black text-xl text-destructive leading-none mt-1">
                   {state.roster.filter(w => w.fatigue > 70 || w.status === "Injured").length}
                 </span>
@@ -165,7 +166,7 @@ export default function RunRound() {
             <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4 text-accent" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Active_Combat_Manifest</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Active Combat Manifest</span>
               </div>
               <Badge variant="outline" className="text-[9px] font-mono border-white/10">{matchCard.length} PAIRINGS</Badge>
             </div>
@@ -190,8 +191,8 @@ export default function RunRound() {
                 <div className="py-20 text-center text-muted-foreground/30">
                   <Skull className="h-12 w-12 mx-auto mb-4 opacity-20" />
                   <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed">
-                    Zero_Engagement_Pairs_Detected<br/>
-                    <span className="text-[9px] opacity-60">Warriors_May_Be_Resting_Or_In_Training</span>
+                    Zero Engagement Pairs Detected<br/>
+                    <span className="text-[9px] opacity-60">Warriors may be resting or in training</span>
                   </p>
                 </div>
               )}
@@ -202,7 +203,7 @@ export default function RunRound() {
         {/* Autosim moved below main content in Archetype F */}
         <div className="pt-8 border-t border-white/5">
           <div className="flex items-center gap-3 px-2 mb-6">
-            <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Auto_Simulation_Bridge</h3>
+            <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Auto Simulation Bridge</h3>
             <div className="h-px flex-1 bg-border/20" />
           </div>
           <AutosimConsole 

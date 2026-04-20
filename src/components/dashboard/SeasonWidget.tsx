@@ -20,7 +20,7 @@ export function SeasonWidget() {
   // Progress within a 13-week standard season
   const progress = (week / 13) * 100;
   
-  const phase = week <= 4 ? "Initialization" : week <= 9 ? "Mid_Sequence" : "Championship_Peak";
+  const phase = week <= 4 ? "Initialization" : week <= 9 ? "Mid Sequence" : "Championship Peak";
   const phaseDesc = week <= 4 ? "Early season scouting and roster consolidation." : 
                     week <= 9 ? "Intense divisional rivalries and meta-drift analysis." : 
                     "Final championship qualification and legendary bouts.";
@@ -76,15 +76,15 @@ export function SeasonWidget() {
               <Clock className="h-4 w-4 text-primary" />
            </div>
            <div>
-              <h3 className="font-display text-sm font-black uppercase tracking-tight">Chronology_Matrix</h3>
-              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Temporal_Registry // WK_{week.toString().padStart(2, '0')}</p>
+              <h3 className="font-display text-sm font-black uppercase tracking-tight">Chronology Matrix</h3>
+              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Temporal Registry // WK {week.toString().padStart(2, '0')}</p>
            </div>
         </div>
 
         <div className="space-y-8 relative z-10">
           <div className="flex items-center justify-between">
              <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">CURRENT_EPOCH</span>
+                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">CURRENT EPOCH</span>
                 <div className="flex items-center gap-2">
                    <span className="text-2xl font-display font-black text-white uppercase tracking-tighter">
                       {season}
@@ -96,7 +96,7 @@ export function SeasonWidget() {
              </div>
              
              <div className="text-right">
-                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">ARENA_CYCLE</span>
+                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">ARENA CYCLE</span>
                 <div className="text-xl font-mono font-black text-foreground/80">
                    {week} / 13
                 </div>
@@ -107,7 +107,7 @@ export function SeasonWidget() {
              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
                 <div className="flex items-center gap-2">
                    <Activity className="h-3 w-3" />
-                   <span>Seasonal_Completion</span>
+                   <span>Seasonal Completion</span>
                 </div>
                 <span className="font-mono text-primary">{Math.round(progress)}%</span>
              </div>
@@ -127,7 +127,7 @@ export function SeasonWidget() {
              <Tooltip>
                 <TooltipTrigger asChild>
                    <div className="flex flex-col gap-1 cursor-help group/stat">
-                      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 group-hover/stat:text-primary transition-colors">Phase_Identifier</span>
+                      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 group-hover/stat:text-primary transition-colors">Phase Identifier</span>
                       <span className="text-[10px] font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
                          <Hexagon className="h-2.5 w-2.5 text-primary opacity-60" /> {phase}
                       </span>
@@ -139,7 +139,7 @@ export function SeasonWidget() {
              </Tooltip>
 
              <div className="flex flex-col gap-1 items-end text-right">
-                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Weather_Condition</span>
+                <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Weather Condition</span>
                 <Tooltip>
                    <TooltipTrigger asChild>
                       <Badge variant="outline" className={cn("text-[9px] font-mono font-black uppercase tracking-widest gap-1 mt-1 cursor-help", weatherBg, weatherColor)}>

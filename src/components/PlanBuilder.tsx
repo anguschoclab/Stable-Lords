@@ -86,7 +86,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
                   "rounded-none border-none font-black text-[10px] tracking-tight px-1.5 py-0.5",
                   matchupAdv > 0 ? "bg-green-500/20 text-green-500" : "bg-destructive/20 text-destructive"
                 )}>
-                  {matchupAdv > 0 ? "MATCHUP_ADV" : "MATCHUP_PENALTY"}
+                  {matchupAdv > 0 ? "MATCHUP ADV" : "MATCHUP PENALTY"}
                 </Badge>
                 <div className={cn("text-lg font-mono font-black italic", matchupAdv > 0 ? "text-green-500" : "text-destructive")}>
                   {matchupAdv > 0 ? "+" : ""}{matchupAdv}

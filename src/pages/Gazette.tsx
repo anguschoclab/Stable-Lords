@@ -284,7 +284,7 @@ export default function Gazette() {
             icon={BarChart3}
             title="Arena Intelligence Matrix"
             subtitle="Tactical Telemetry // Historical Aggregates"
-            badge="LIVE_FEED"
+            badge="LIVE FEED"
             badgeStyle="primary"
           />
 
@@ -335,7 +335,7 @@ export default function Gazette() {
           icon={Radio}
           title="Information Oracle"
           subtitle="Editorial Registry // Stylized Archival"
-          badge="ARCHIVE_SYNC"
+          badge="ARCHIVE SYNC"
           badgeStyle="gold"
         />
 

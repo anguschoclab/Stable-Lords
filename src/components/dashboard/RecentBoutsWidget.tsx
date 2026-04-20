@@ -46,12 +46,12 @@ export function RecentBoutsWidget() {
                <Activity className="h-5 w-5 text-primary" />
             </div>
             <div>
-               <h3 className="font-display text-base font-black uppercase tracking-tight">Deployment_History</h3>
-               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Recent_Arena_Engagements</p>
+               <h3 className="font-display text-base font-black uppercase tracking-tight">Deployment History</h3>
+               <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Recent Arena Engagements</p>
             </div>
          </div>
          <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest">
-            RECENT_05_OPS
+            LAST 5 BOUTS
          </Badge>
       </div>
 
@@ -59,17 +59,17 @@ export function RecentBoutsWidget() {
         <Table>
           <TableHeader className="bg-black/20">
             <TableRow className="hover:bg-transparent border-white/5">
-              <TableHead className="w-24 font-black uppercase text-[10px] tracking-widest pl-6 py-4">Temporal_ID</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">Operative_Sync</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">Engagement_Outcome</TableHead>
-              <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-6 py-4">Termination_Method</TableHead>
+              <TableHead className="w-24 font-black uppercase text-[10px] tracking-widest pl-6 py-4">Week</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">Operative</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">Outcome</TableHead>
+              <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-6 py-4">Method</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {recentBouts.length === 0 ? (
               <TableRow className="hover:bg-transparent border-none">
                  <TableCell colSpan={4} className="py-12 text-center opacity-20 italic">
-                    <p className="text-[10px] uppercase tracking-[0.3em]">No_Engagement_Data_Synchronized</p>
+                    <p className="text-[10px] uppercase tracking-[0.3em]">No engagement data yet</p>
                  </TableCell>
               </TableRow>
             ) : (
@@ -82,7 +82,7 @@ export function RecentBoutsWidget() {
                   <TableRow key={bout.id} className="border-white/5 group/row hover:bg-white/2 transition-colors">
                     <TableCell className="pl-6 py-4">
                        <span className="text-[10px] font-mono font-black text-white/20 group-hover/row:text-primary transition-colors">
-                          WK_{bout.week.toString().padStart(2, '0')}
+                          WK {bout.week.toString().padStart(2, '0')}
                        </span>
                     </TableCell>
                     <TableCell className="py-4">

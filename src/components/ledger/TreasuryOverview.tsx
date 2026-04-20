@@ -12,6 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { type Warrior, type LedgerEntry } from "@/types/game";
+import { TreasurySparkline } from "@/components/charts/TreasurySparkline";
 
 export function TreasuryOverview() {
   const state = useWorldState();
@@ -33,6 +34,9 @@ export function TreasuryOverview() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* ─── Treasury Trend Sparkline ─── */}
+      <TreasurySparkline height={52} />
+
       {/* ─── Global Treasury Matrix ─── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[

@@ -48,6 +48,7 @@ import { Route as CommandTacticsRouteImport } from './routes/command/tactics'
 import { Route as CommandRosterRouteImport } from './routes/command/roster'
 import { Route as CommandCombatRouteImport } from './routes/command/combat'
 import { Route as WorldStableIdRouteImport } from './routes/world/stable/$id'
+import { Route as OpsPromoterIdRouteImport } from './routes/ops/promoter.$id'
 
 const World_rootRoute = World_rootRouteImport.update({
   id: '/world/__root',
@@ -241,6 +242,11 @@ const WorldStableIdRoute = WorldStableIdRouteImport.update({
   path: '/world/stable/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpsPromoterIdRoute = OpsPromoterIdRouteImport.update({
+  id: '/ops/promoter/$id',
+  path: '/ops/promoter/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -281,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/ops/': typeof OpsIndexRoute
   '/stable/': typeof StableIndexRoute
   '/world/': typeof WorldIndexRoute
+  '/ops/promoter/$id': typeof OpsPromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRoutesByTo {
@@ -319,6 +326,7 @@ export interface FileRoutesByTo {
   '/world/intelligence': typeof WorldIntelligenceRoute
   '/world/tournaments': typeof WorldTournamentsRoute
   '/stable': typeof StableIndexRoute
+  '/ops/promoter/$id': typeof OpsPromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRoutesById {
@@ -361,6 +369,7 @@ export interface FileRoutesById {
   '/ops/': typeof OpsIndexRoute
   '/stable/': typeof StableIndexRoute
   '/world/': typeof WorldIndexRoute
+  '/ops/promoter/$id': typeof OpsPromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRouteTypes {
@@ -404,6 +413,7 @@ export interface FileRouteTypes {
     | '/ops/'
     | '/stable/'
     | '/world/'
+    | '/ops/promoter/$id'
     | '/world/stable/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -442,6 +452,7 @@ export interface FileRouteTypes {
     | '/world/intelligence'
     | '/world/tournaments'
     | '/stable'
+    | '/ops/promoter/$id'
     | '/world/stable/$id'
   id:
     | '__root__'
@@ -483,6 +494,7 @@ export interface FileRouteTypes {
     | '/ops/'
     | '/stable/'
     | '/world/'
+    | '/ops/promoter/$id'
     | '/world/stable/$id'
   fileRoutesById: FileRoutesById
 }
@@ -525,6 +537,7 @@ export interface RootRouteChildren {
   OpsIndexRoute: typeof OpsIndexRoute
   StableIndexRoute: typeof StableIndexRoute
   WorldIndexRoute: typeof WorldIndexRoute
+  OpsPromoterIdRoute: typeof OpsPromoterIdRoute
   WorldStableIdRoute: typeof WorldStableIdRoute
 }
 
@@ -803,6 +816,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldStableIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ops/promoter/$id': {
+      id: '/ops/promoter/$id'
+      path: '/ops/promoter/$id'
+      fullPath: '/ops/promoter/$id'
+      preLoaderRoute: typeof OpsPromoterIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -845,6 +865,7 @@ const rootRouteChildren: RootRouteChildren = {
   OpsIndexRoute: OpsIndexRoute,
   StableIndexRoute: StableIndexRoute,
   WorldIndexRoute: WorldIndexRoute,
+  OpsPromoterIdRoute: OpsPromoterIdRoute,
   WorldStableIdRoute: WorldStableIdRoute,
 }
 export const routeTree = rootRouteImport

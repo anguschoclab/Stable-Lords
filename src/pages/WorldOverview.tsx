@@ -7,6 +7,7 @@ import { WorldStats } from "@/components/world/WorldStats";
 import { StableRankings } from "@/components/world/StableRankings";
 import { WarriorLeaderboard } from "@/components/world/WarriorLeaderboard";
 import { RivalIntelligence } from "@/components/world/RivalIntelligence";
+import { ReputationQuadrant } from "@/components/charts/ReputationQuadrant";
 import { getStableTemplates } from "@/engine/rivals";
 import type { Warrior } from "@/types/game";
 
@@ -237,7 +238,12 @@ export default function WorldOverview() {
              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">RIVAL_SURVEILLANCE</span>
              <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
           </div>
-          <RivalIntelligence rivals={state.rivals || []} />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <RivalIntelligence rivals={state.rivals || []} />
+            </div>
+            <ReputationQuadrant />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

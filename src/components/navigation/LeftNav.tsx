@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Swords, Users, Globe,
   LayoutDashboard, BookUser, Dumbbell, Target, Cpu,
-  Wrench, Coins, ScrollText,
+  Wrench, Coins, ScrollText, Building2, Sunset,
   Trophy, Radar, Newspaper, FileText,
   ChevronRight,
   AlertCircle,
@@ -46,6 +46,8 @@ const HUBS = [
       { to: "/ops/equipment",  label: "Equipment",  icon: Wrench },
       { to: "/ops/finance",    label: "Finance",    icon: Coins },
       { to: "/ops/contracts",  label: "Contracts",  icon: ScrollText },
+      { to: "/ops/promoters",  label: "Promoters",  icon: Building2 },
+      { to: "/ops/offseason",  label: "Offseason",  icon: Sunset },
     ],
   },
   {

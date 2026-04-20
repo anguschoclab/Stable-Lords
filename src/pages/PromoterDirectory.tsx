@@ -199,8 +199,8 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
           className="flex-1 text-[10px] uppercase font-bold"
           asChild
         >
-          <Link to="/ops/contracts">
-            View Offers <ArrowRight className="h-3 w-3 ml-1" />
+          <Link to={`/ops/promoter/${promoter.id}`}>
+            View Profile <ArrowRight className="h-3 w-3 ml-1" />
           </Link>
         </Button>
       </CardFooter>

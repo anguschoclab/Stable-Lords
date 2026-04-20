@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ReputationSliders } from "@/components/stable/ReputationSliders";
 import { RosterWall } from "@/components/stable/RosterWall";
 import { TrainerTable } from "@/components/stable/TrainerTable";
+import { StyleMeterTable } from "@/components/charts/StyleMeterTable";
 
 export default function StableHall() {
   const { player, fame } = useGameStore();
@@ -43,6 +44,7 @@ export default function StableHall() {
 
         <div className="lg:col-span-5 flex flex-col gap-8">
            <ReputationSliders />
+           <StyleMeterTable />
            <TrainerTable />
         </div>
 

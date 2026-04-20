@@ -24,6 +24,9 @@ import { NextBoutWidget } from "@/components/widgets/NextBoutWidget";
 import { MetaDriftWidget } from "@/components/widgets/MetaDriftWidget";
 import { WeatherWidget } from "@/components/widgets/WeatherWidget";
 import { FormSparkline } from "@/components/charts/FormSparkline";
+import { ReputationQuadrant } from "@/components/charts/ReputationQuadrant";
+import { TreasurySparkline } from "@/components/charts/TreasurySparkline";
+import { StyleMeterTable } from "@/components/charts/StyleMeterTable";
 import { STYLE_ABBREV } from "@/types/shared.types";
 
 import {
@@ -35,7 +38,7 @@ import {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type TabId = "overview" | "roster" | "intel" | "meta" | "ops";
+type TabId = "overview" | "roster" | "intel" | "meta" | "ops" | "rep";
 
 // ─── KPI Bar ──────────────────────────────────────────────────────────────────
 
@@ -396,10 +399,16 @@ function ReputationTab() {
 
 function OpsTab() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <MedicalAuditWidget />
-      <NextBoutWidget />
-      <WeatherWidget />
+    <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TreasurySparkline />
+        <StyleMeterTable />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <MedicalAuditWidget />
+        <NextBoutWidget />
+        <WeatherWidget />
+      </div>
     </div>
   );
 }
@@ -411,6 +420,7 @@ const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
   { id: "roster",   label: "Roster",     icon: Users },
   { id: "intel",    label: "Intel",      icon: Eye },
   { id: "meta",     label: "Meta",       icon: BarChart3 },
+  { id: "rep",      label: "Reputation", icon: Crown },
   { id: "ops",      label: "Operations", icon: Zap },
 ];
 
@@ -463,6 +473,12 @@ export default function ControlCenter() {
         {activeTab === "roster"   && <RosterSnapshot />}
         {activeTab === "intel"    && <IntelTab />}
         {activeTab === "meta"     && <MetaTab />}
+        {activeTab === "rep"      && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ReputationQuadrant />
+            <ReputationTab />
+          </div>
+        )}
         {activeTab === "ops"      && <OpsTab />}
       </div>
     </div>

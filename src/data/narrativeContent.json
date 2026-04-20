@@ -1305,7 +1305,7 @@
       "{{attacker}} steps over the broken form of {{defender}}, delivering a cold, calculated execution that silences the arena.",
       "No mercy, no hesitation. {{attacker}} performs a brutal execution on the defenseless {{defender}}.",
       "The crowd watches in stunned silence as {{attacker}} ends {{defender}}'s misery with a swift execution.",
-      "{{attacker}} feints low, catching {{defender}} off guard before severing their sword-arm at the elbow. The crowd erupts as the final blow is struck!",
+      "{{attacker}} feints low, catching {{defender}} off guard before striking their {{bodyPart}} with clinical precision. The crowd erupts as the final blow is struck!",
       "With a sneer, {{attacker}} forces {{defender}} to their knees before delivering the final, decapitating strike."
     ],
     "critical_chain": [

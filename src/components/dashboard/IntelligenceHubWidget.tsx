@@ -163,6 +163,7 @@ export function IntelligenceHubWidget() {
          </Link>
          <Link
             to="/world/intelligence"
+            title="Gather intel before booking bouts"
             className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-arena-gold/70 hover:text-arena-gold border border-arena-gold/20 hover:border-arena-gold/50 bg-arena-gold/5 hover:bg-arena-gold/10 px-3 py-1.5 transition-all group"
          >
             <Target className="h-3 w-3 shrink-0" />

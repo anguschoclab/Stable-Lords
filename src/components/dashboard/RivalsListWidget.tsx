@@ -16,18 +16,22 @@ export function RivalsListWidget() {
   const state = useWorldState();
   const rivals = state.rivals ?? [];
 
+  // ⚡ Bolt: Memoize the Set of player roster names so it's not recreated in loops
+  const playerRosterNames = useMemo(() => {
+    return new Set((state.roster || []).map(w => w.name));
+  }, [state.roster]);
+
   // Find recent bouts involving rival warriors
   const recentRivalBouts = useMemo(() => {
-    const rosterNames = new Set((state.roster || []).map(w => w.name));
     return (state.arenaHistory || [])
       .filter(f => {
-        const aIsPlayer = rosterNames.has(f.a);
-        const dIsPlayer = rosterNames.has(f.d);
+        const aIsPlayer = playerRosterNames.has(f.a);
+        const dIsPlayer = playerRosterNames.has(f.d);
         return (aIsPlayer && !dIsPlayer) || (!aIsPlayer && dIsPlayer);
       })
       .slice(-3)
       .reverse();
-  }, [state.arenaHistory, state.roster]);
+  }, [state.arenaHistory, playerRosterNames]);
 
   return (
     <Surface variant="glass" padding="none" className="h-full border-border/10 group overflow-hidden relative flex flex-col">
@@ -119,8 +123,8 @@ export function RivalsListWidget() {
             <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-3 block">Tactical_Encounter_Log</span>
             <div className="space-y-2">
                {recentRivalBouts.map(f => {
-                  const rosterNames = new Set((state.roster || []).map(w => w.name));
-                  const playerIsA = rosterNames.has(f.a);
+                  // ⚡ Bolt: Reuse the memoized Set instead of recreating it per item
+                  const playerIsA = playerRosterNames.has(f.a);
                   const won = (playerIsA && f.winner === "A") || (!playerIsA && f.winner === "D");
                   return (
                      <div key={f.id} className="flex items-center justify-between group/bout text-[10px]">

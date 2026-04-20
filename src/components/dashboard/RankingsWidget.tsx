@@ -81,6 +81,31 @@ export function RankingsWidget() {
          </Badge>
       </div>
 
+      {/* Player Standings Banner */}
+      <div className="px-6 py-3 bg-primary/5 border-b border-primary/10 relative z-10 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2.5">
+          <Shield className="h-3.5 w-3.5 text-primary/60 shrink-0" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Your_Standing</span>
+        </div>
+        <div className="flex items-center gap-4">
+          {playerStanding.bestWarriorName && playerStanding.bestRank !== null ? (
+            <>
+              <span className="text-[10px] font-mono font-black text-primary truncate max-w-[120px]">
+                {playerStanding.bestWarriorName}
+              </span>
+              <Badge variant="outline" className="text-[9px] font-mono font-black border-primary/20 bg-primary/10 text-primary h-5 px-2 tracking-widest">
+                #{playerStanding.bestRank}
+              </Badge>
+              <Badge variant="outline" className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-5 px-2 tracking-widest">
+                Stable_#{playerStanding.stablePosition}_of_{playerStanding.totalStables}
+              </Badge>
+            </>
+          ) : (
+            <span className="text-[10px] font-mono text-muted-foreground/30 uppercase tracking-widest">No_Rank_Data</span>
+          )}
+        </div>
+      </div>
+
       <div className="flex-1 overflow-y-auto relative z-10 custom-scrollbar">
         {ranked.length === 0 ? (
           <div className="px-8 py-12 text-center opacity-20 italic">

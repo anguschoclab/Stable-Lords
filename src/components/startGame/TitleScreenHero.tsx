@@ -18,7 +18,7 @@ export default function TitleScreenHero() {
         >
           Stable Lords
         </h1>
-        <p className="text-xs text-muted-foreground italic leading-relaxed max-w-xs mx-auto opacity-70">
+        <p className="text-xs text-muted-foreground italic leading-relaxed max-w-[240px] mx-auto opacity-70">
           Build a stable. Train warriors. Fight for glory. Forge legends in the arena.
         </p>
       </div>

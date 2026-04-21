@@ -14,7 +14,6 @@ import { FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/game";
 import {
   type EquipmentLoadout as Loadout,
   type EquipmentSlot,
-  type EquipmentItem,
   getAvailableItems,
   getItemById,
   getLoadoutWeight,
@@ -131,35 +130,71 @@ function SlotSelector({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {items.map((item) => {
-            const preferred = slot === "weapon" && isPreferredWeapon(item, style);
-            const itemReq = slot === "weapon" && warriorAttrs
-              ? checkWeaponRequirements(item.id, warriorAttrs)
-              : null;
-            return (
+          {(() => {
+            if (slot !== "weapon" || !warriorAttrs) {
+              return items.map((item) => (
+                <SelectItem key={item.id} value={item.id}>
+                  <span>{item.name}</span>
+                </SelectItem>
+              ));
+            }
+
+            // Annotate each weapon with preferred + req status
+            const annotated = items.map((item) => {
+              const preferred = isPreferredWeapon(item, style);
+              const req = checkWeaponRequirements(item.id, warriorAttrs);
+              return { item, preferred, req };
+            });
+
+            // Group: preferred+met | non-preferred+met | preferred+failed
+            // Non-preferred + failed are hidden (too noisy, not class-relevant)
+            const classReady   = annotated.filter((a) => a.preferred && a.req.met);
+            const offClassReady = annotated.filter((a) => !a.preferred && a.req.met);
+            const classUnmet   = annotated.filter((a) => a.preferred && !a.req.met);
+
+            const renderItem = ({ item, preferred, req }: typeof annotated[number]) => (
               <SelectItem key={item.id} value={item.id}>
                 <div className="flex items-center gap-2">
-                  <span className={itemReq && !itemReq.met ? "text-destructive" : ""}>{item.name}</span>
+                  <span className={!req.met ? "text-destructive/80" : ""}>{item.name}</span>
                   {item.twoHanded && (
                     <Badge variant="secondary" className="text-[10px] py-0 px-1">2H</Badge>
                   )}
-                  {preferred && (
+                  {preferred && req.met && (
                     <Star className="h-3 w-3 text-arena-gold fill-arena-gold" />
                   )}
-                  {itemReq && !itemReq.met && (
-                    <XCircle className="h-3 w-3 text-destructive" />
-                  )}
-                  {/* Show requirement hints in dropdown */}
-                  {slot === "weapon" && item.reqST && (
+                  {!req.met && (
                     <span className="text-muted-foreground text-[9px] font-mono">
-                      ST{item.reqST}{item.reqSZ ? `/SZ${item.reqSZ}` : ""}{item.reqWT ? `/WT${item.reqWT}` : ""}{item.reqDF ? `/DF${item.reqDF}` : ""}
+                      {req.failures.map((f) => `${f.stat}${f.required}`).join("/")}
                     </span>
                   )}
                   <span className="text-muted-foreground text-xs ml-auto">wt {item.weight}</span>
                 </div>
               </SelectItem>
             );
-          })}
+
+            return (
+              <>
+                {classReady.length > 0 && (
+                  <>
+                    <div className="px-2 py-1 text-[9px] font-black uppercase tracking-widest text-arena-gold/70">Class Weapons</div>
+                    {classReady.map(renderItem)}
+                  </>
+                )}
+                {offClassReady.length > 0 && (
+                  <>
+                    <div className="px-2 py-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 mt-1">Available</div>
+                    {offClassReady.map(renderItem)}
+                  </>
+                )}
+                {classUnmet.length > 0 && (
+                  <>
+                    <div className="px-2 py-1 text-[9px] font-black uppercase tracking-widest text-destructive/50 mt-1">Class Weapons (Reqs Not Met)</div>
+                    {classUnmet.map(renderItem)}
+                  </>
+                )}
+              </>
+            );
+          })()}
         </SelectContent>
       </Select>
       {selected && (

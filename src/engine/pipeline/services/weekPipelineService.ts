@@ -26,6 +26,7 @@ import { runNarrativePass } from "../passes/NarrativePass";
  * Orchestrates the simulation tick using a high-performance batched architecture.
  */
 export function advanceWeek(state: GameState): GameState {
+  console.log("[advanceWeek] START week", state.week);
   // 1. Preparation & Temporal Logic
   const currentWeek = state.week;
   let nextWeek = currentWeek + 1;
@@ -39,10 +40,11 @@ export function advanceWeek(state: GameState): GameState {
   // Consistent Root RNG for the new week
   const rootRng = new SeededRNGService(nextYear * 52 + nextWeek * 7919 + 101);
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
+  console.log("[advanceWeek] metaDrift done, arenaHistory length:", state.arenaHistory?.length);
 
   // 2. Bout Simulation (happens for the week just ending)
-  // Bouts resolve first; all subsequent passes run against the post-bout settled state.
   const boutImpact = runBoutSimulationPass(state, rootRng);
+  console.log("[advanceWeek] boutSimulation done");
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 
@@ -57,15 +59,16 @@ export function advanceWeek(state: GameState): GameState {
 
   // Core Simulation Impacts
   impacts.push(runWarriorPass(settledState, rootRng));
+  console.log("[advanceWeek] warriorPass done");
   impacts.push(runEconomyPass(settledState, rootRng));
+  console.log("[advanceWeek] economyPass done");
   impacts.push(runEquipmentPass(settledState));
+  console.log("[advanceWeek] equipmentPass done");
 
   // ⚡ Early Exit: Bankruptcy Check
-  // We check against settledState + economy impact roughly
   const economyImpact = impacts.find(i => i.treasuryDelta !== undefined);
   const estimatedTreasury = settledState.treasury + (economyImpact?.treasuryDelta || 0);
   if (estimatedTreasury < -500) {
-    // If bankrupt, we still resolve basic impacts then exit
     const finalState = resolveImpacts(settledState, impacts);
     finalState.week = nextWeek;
     finalState.year = nextYear;
@@ -74,22 +77,33 @@ export function advanceWeek(state: GameState): GameState {
 
   // World & System Impacts
   impacts.push(runWorldPass(settledState, nextWeek, rootRng));
+  console.log("[advanceWeek] worldPass done");
   impacts.push(runRecruitmentPass(settledState, rootRng));
+  console.log("[advanceWeek] recruitmentPass done");
   impacts.push(runSystemPass(settledState, rootRng));
+  console.log("[advanceWeek] systemPass done");
   impacts.push(runRankingsPass(settledState));
+  console.log("[advanceWeek] rankingsPass done");
   impacts.push(runPromoterPass(settledState));
+  console.log("[advanceWeek] promoterPass done");
   impacts.push(runPromoterLifecyclePass(settledState, rootRng));
+  console.log("[advanceWeek] promoterLifecyclePass done");
   impacts.push(runTrainerPass(settledState, rootRng));
+  console.log("[advanceWeek] trainerPass done");
 
   // AI & Strategic Impacts
   impacts.push(runRivalStrategyPass(settledState, nextWeek, rootRng));
+  console.log("[advanceWeek] rivalStrategyPass done");
 
   // Narrative & Event Impacts
   impacts.push(runEventPass(settledState, nextWeek, rootRng));
+  console.log("[advanceWeek] eventPass done");
   impacts.push(runNarrativePass(settledState, currentWeek, nextWeek, rootRng));
+  console.log("[advanceWeek] narrativePass done");
 
   // 4. Resolution Phase (Apply all impacts in one unified pass)
   const finalizedState = resolveImpacts(settledState, impacts);
+  console.log("[advanceWeek] resolveImpacts done");
 
   // 5. Finalization
   finalizedState.week = nextWeek;

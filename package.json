@@ -136,7 +136,8 @@
     "vite-plugin-pwa": "^1.2.0",
     "vitest": "^3.2.4",
     "wait-on": "^9.0.5",
-    "zustand": "^5.0.11"
+    "zustand": "^5.0.11",
+    "unplugin": "^1.16.0"
   },
   "build": {
     "appId": "com.stablelords.app",

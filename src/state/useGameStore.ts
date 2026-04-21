@@ -274,20 +274,30 @@ export const useGameStore = create<GameStore>()(
 
       doAdvanceWeek: async (processedState?: GameState, results?: BoutResult[], deaths?: WarriorId[], injuries?: InjuryId[]) => {
         const store = get();
-        const state = processedState || reconstructGameState(store);
-        const currentWeek = state.week;
+        const raw = processedState || reconstructGameState(store);
+        // In DEV mode (main thread), deep-clone to unfreeze immer's frozen objects
+        // In PROD (worker), structured clone handles this automatically
+        const state = import.meta.env.DEV ? JSON.parse(JSON.stringify(raw)) : raw;
+        // Strip non-serializable fields before structured-clone transfer to worker
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { warriorMap: _wm, cachedMetaDrift: _cmd, ...cleanState } = state as any;
+        const currentWeek = cleanState.week;
 
         set((draft) => { draft.isSimulating = true; });
 
+        const timeout = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error("Worker timeout after 15s")), 15000)
+        );
+
         try {
           let next: GameState;
-          if (state.isTournamentWeek) {
-            next = state;
-            for (let i = state.day; i < 7; i++) {
-              next = await engineProxy.advanceDay(next);
+          if (cleanState.isTournamentWeek) {
+            next = cleanState;
+            for (let i = cleanState.day; i < 7; i++) {
+              next = await Promise.race([engineProxy.advanceDay(next), timeout]);
             }
           } else {
-            next = await engineProxy.advanceWeek(state);
+            next = await Promise.race([engineProxy.advanceWeek(cleanState), timeout]);
           }
           
           next.phase = "resolution";
@@ -309,13 +319,16 @@ export const useGameStore = create<GameStore>()(
 
       doAdvanceDay: async (processedState?: GameState, results?: BoutResult[], deaths?: WarriorId[], injuries?: InjuryId[]) => {
         const store = get();
-        const state = processedState || reconstructGameState(store);
-        const currentWeek = state.week;
+        const raw = processedState || reconstructGameState(store);
+        const state = import.meta.env.DEV ? JSON.parse(JSON.stringify(raw)) : raw;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { warriorMap: _wm, cachedMetaDrift: _cmd, ...cleanState } = state as any;
+        const currentWeek = cleanState.week;
         
         set((draft) => { draft.isSimulating = true; });
 
         try {
-          const next = await engineProxy.advanceDay(state);
+          const next = await engineProxy.advanceDay(cleanState);
           
           next.phase = "resolution";
           next.pendingResolutionData = {

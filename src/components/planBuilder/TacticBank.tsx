@@ -1,6 +1,6 @@
-import { Droppable, Draggable, type DroppableProvided, type DraggableProvided, type DraggableStateSnapshot } from "@hello-pangea/dnd";
-import { GripVertical, Zap, Swords, Shield, Target, Activity, Flame, Clock } from "lucide-react";
+import { Zap, Swords, Shield, Target, Activity, Flame, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { FightPlan, OffensiveTactic, DefensiveTactic } from "@/types/game";
 
 export const TACTIC_BANK = [
   { id: "Lunge", type: "offensive", label: "Lunge", icon: Zap },
@@ -13,42 +13,46 @@ export const TACTIC_BANK = [
   { id: "Responsiveness", type: "defensive", label: "RESP", icon: Clock },
 ];
 
-export default function TacticBank() {
+interface TacticBankProps {
+  plan?: FightPlan;
+  onPlanChange?: (plan: FightPlan) => void;
+}
+
+export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {}) {
+  const handleClick = (t: typeof TACTIC_BANK[number]) => {
+    if (!plan || !onPlanChange) return;
+    if (t.type === "offensive") {
+      onPlanChange({ ...plan, offensiveTactic: t.id as OffensiveTactic });
+    } else {
+      onPlanChange({ ...plan, defensiveTactic: t.id as DefensiveTactic });
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-arena-gold mb-2">
-        <GripVertical className="w-4 h-4" />
         <span className="text-[10px] font-black uppercase tracking-widest">Tactic Bank</span>
       </div>
-      <Droppable droppableId="bank">
-        {(provided: DroppableProvided) => (
-          <div 
-            {...provided.droppableProps} 
-            ref={provided.innerRef}
-            className="flex flex-col gap-2 p-2 bg-black/40 border border-white/5 rounded-none"
+      <div className="flex flex-col gap-2 p-2 bg-black/40 border border-white/5 rounded-none">
+        {TACTIC_BANK.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => handleClick(t)}
+            className={cn(
+              "flex items-center gap-3 p-3 text-xs font-bold uppercase tracking-wider border transition-all text-left",
+              plan && (
+                (t.type === "offensive" && plan.offensiveTactic === t.id) ||
+                (t.type === "defensive" && plan.defensiveTactic === t.id)
+              )
+                ? "bg-arena-blood/20 border-arena-blood/60 text-white"
+                : "bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground"
+            )}
           >
-            {TACTIC_BANK.map((t, idx) => (
-              <Draggable key={t.id} draggableId={t.id} index={idx}>
-                {(dragProvided: DraggableProvided, dragSnapshot: DraggableStateSnapshot) => (
-                  <div
-                    ref={dragProvided.innerRef}
-                    {...dragProvided.draggableProps}
-                    {...dragProvided.dragHandleProps}
-                    className={cn(
-                      "flex items-center gap-3 p-3 text-xs font-bold uppercase tracking-wider border transition-all cursor-grab active:cursor-grabbing",
-                      dragSnapshot.isDragging ? "bg-arena-blood border-white text-white z-50" : "bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground"
-                    )}
-                  >
-                    <t.icon className="w-4 h-4 shrink-0" />
-                    {t.label}
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+            <t.icon className="w-4 h-4 shrink-0" />
+            {t.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

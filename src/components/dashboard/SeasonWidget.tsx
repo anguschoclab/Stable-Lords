@@ -142,10 +142,12 @@ export function SeasonWidget() {
                 <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">Weather Condition</span>
                 <Tooltip>
                    <TooltipTrigger asChild>
-                      <Badge variant="outline" className={cn("text-[9px] font-mono font-black uppercase tracking-widest gap-1 mt-1 cursor-help", weatherBg, weatherColor)}>
-                         <WeatherIcon className="h-3 w-3" />
-                         {weather}
-                      </Badge>
+                      <span className="inline-flex cursor-help mt-1">
+                         <Badge variant="outline" className={cn("text-[9px] font-mono font-black uppercase tracking-widest gap-1", weatherBg, weatherColor)}>
+                            <WeatherIcon className="h-3 w-3" />
+                            {weather}
+                         </Badge>
+                      </span>
                    </TooltipTrigger>
                    <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest w-full max-w-xs">
                       {weather === "Blazing Sun" ? "30% more stamina drain in combat." :

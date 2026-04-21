@@ -159,11 +159,13 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   const allWarriors = collectAllActiveWarriors(state);
 
   // ⚡ Bolt: Pre-compute available warriors to avoid repeated availability checks
-  // Available = No SIGNED bout for Week+2 or Week+3
+  // Available = No SIGNED or PROPOSED bout for Week+2 or Week+3
   const targetWeek = state.week + 2; // Forward booking
   const unavailableWarriorIds = new Set<string>();
   Object.values(newOffers).forEach(o => {
-    if (o.status === "Signed" && (o.boutWeek === targetWeek || o.boutWeek === targetWeek + 1)) {
+    const isBooked = (o.status === "Signed" || o.status === "Proposed") &&
+      (o.boutWeek === targetWeek || o.boutWeek === targetWeek + 1);
+    if (isBooked) {
       o.warriorIds.forEach(id => unavailableWarriorIds.add(id));
     }
   });

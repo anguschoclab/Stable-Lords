@@ -1,4 +1,3 @@
-import { Droppable, type DroppableProvided, type DroppableStateSnapshot } from "@hello-pangea/dnd";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -49,32 +48,23 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
             min={1} max={10} step={1} 
           />
         </div>
-        <Droppable droppableId="base">
-          {(dropProvided: DroppableProvided, dropSnapshot: DroppableStateSnapshot) => (
-            <div
-              {...dropProvided.droppableProps}
-              ref={dropProvided.innerRef}
-              className="min-h-[60px] border-2 border-dashed flex items-center justify-center p-4 transition-colors bg-black/20 border-white/10 data-[dragging-over=true]:bg-arena-gold/10 data-[dragging-over=true]:border-arena-gold/40"
-              data-dragging-over={dropSnapshot.isDraggingOver}
-            >
-               <div className="flex gap-2">
-                 {plan.offensiveTactic && plan.offensiveTactic !== 'none' && (
-                   <Badge className="bg-arena-blood text-white rounded-none uppercase font-black tracking-widest px-3 py-1">
-                     {plan.offensiveTactic}
-                   </Badge>
-                 )}
-                 {plan.defensiveTactic && plan.defensiveTactic !== 'none' && (
-                   <Badge className="bg-arena-gold text-black rounded-none uppercase font-black tracking-widest px-3 py-1">
-                     {plan.defensiveTactic}
-                   </Badge>
-                 )}
-                 {!plan.offensiveTactic && !plan.defensiveTactic && (
-                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">Drop Tactics Here</span>
-                 )}
-               </div>
-            </div>
-          )}
-        </Droppable>
+        <div className="min-h-[60px] border-2 border-dashed flex items-center justify-center p-4 bg-black/20 border-white/10">
+          <div className="flex gap-2">
+            {plan.offensiveTactic && plan.offensiveTactic !== 'none' && (
+              <Badge className="bg-arena-blood text-white rounded-none uppercase font-black tracking-widest px-3 py-1">
+                {plan.offensiveTactic}
+              </Badge>
+            )}
+            {plan.defensiveTactic && plan.defensiveTactic !== 'none' && (
+              <Badge className="bg-arena-gold text-black rounded-none uppercase font-black tracking-widest px-3 py-1">
+                {plan.defensiveTactic}
+              </Badge>
+            )}
+            {!plan.offensiveTactic && !plan.defensiveTactic && (
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">Select tactics from the bank</span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

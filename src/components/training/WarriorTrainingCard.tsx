@@ -38,7 +38,7 @@ export function WarriorTrainingCard({ warrior, assignment, seasonalGains, traine
             <div className="flex items-center gap-2 opacity-60">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em]">{STYLE_DISPLAY_NAMES[warrior.style]}</span>
                 <div className="h-2 w-px bg-white/20" />
-                <span className="text-[10px] font-mono tracking-wider">AGE_{warrior.age}</span>
+                <span className="text-[10px] font-mono tracking-wider">Age {warrior.age}</span>
             </div>
           </div>
           
@@ -55,7 +55,14 @@ export function WarriorTrainingCard({ warrior, assignment, seasonalGains, traine
                 </TooltipContent>
               </Tooltip>
             )}
-            <div className="text-[10px] font-mono opacity-40">Σ_{total}/80</div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="text-[10px] font-mono opacity-40 cursor-help">Sum {total}/80</div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={6} className="bg-neutral-950 border-white/10 text-[10px] font-black uppercase tracking-widest">
+                Total attribute points: {total} of 80 cap
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -75,7 +82,7 @@ export function WarriorTrainingCard({ warrior, assignment, seasonalGains, traine
             )}
           >
             <Heart className={cn("h-3.5 w-3.5", isRecovery ? "text-white" : "text-destructive")} />
-            {isRecovery ? "CANCEL_RECOVERY" : "ACTIVE_RECOVERY"}
+            {isRecovery ? "CANCEL RECOVERY" : "ACTIVE RECOVERY"}
           </Button>
         )}
 
@@ -174,7 +181,7 @@ export function WarriorTrainingCard({ warrior, assignment, seasonalGains, traine
                       )}
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="right" className="bg-neutral-950 border-white/10 p-3 space-y-2 w-full max-w-56">
+                  <TooltipContent side="top" sideOffset={8} className="bg-neutral-950 border-white/10 p-3 space-y-2 w-56 z-50">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-black uppercase tracking-[0.2em]">{ATTRIBUTE_LABELS[key]}</span>
                       {chance > 0 && <Badge variant="outline" className="h-4 text-[8px] font-mono bg-primary/10 border-primary/20 text-primary">{chance}% CHANCE</Badge>}
@@ -218,7 +225,7 @@ export function WarriorTrainingCard({ warrior, assignment, seasonalGains, traine
             <div className="flex items-center gap-2">
               <Gauge className="h-3.5 w-3.5 text-primary opacity-60" />
               <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
-                {isRecovery ? "REST_MODE" : `CORE_DRILL: ${assignment.attribute}`}
+                {isRecovery ? "REST MODE" : `CORE DRILL: ${assignment.attribute}`}
               </span>
             </div>
             <Button 

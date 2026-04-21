@@ -413,7 +413,7 @@ export default function Trainers() {
 
         <TabsContent value="legends" className="mt-0 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="flex items-center gap-3 px-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-destructive">DEPARTED_LEGENDS</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-destructive">DEPARTED LEGENDS</span>
             <div className="h-px flex-1 bg-gradient-to-r from-destructive/20 via-border/20 to-transparent" />
           </div>
           {(() => {

@@ -3,8 +3,8 @@
  * Replaces HubNav (top bar) + SubTabNav (secondary tabs) with a single
  * collapsible left rail: hub switcher + per-hub sub-pages + alert badges.
  */
-import React from "react";
-import { Link, useLocation } from "@tanstack/react-router";
+import React, { useRef, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -71,14 +71,30 @@ type HubId = (typeof HUBS)[number]["id"];
 // ─── Alert badge helper ──────────────────────────────────────────────────────
 
 function useNavAlerts() {
-  const { roster, boutOffers, isTournamentWeek, trainingAssignments } = useGameStore(
+  const { roster, boutOffers, isTournamentWeek, trainingAssignments, week } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
       boutOffers: s.boutOffers,
       isTournamentWeek: s.isTournamentWeek,
       trainingAssignments: s.trainingAssignments,
+      week: s.week,
     }))
   );
+  const location = useLocation();
+  const onOpsSection = location.pathname.startsWith("/ops");
+  const onCommandSection = location.pathname.startsWith("/command");
+
+  // Track the week when user last visited each section — badge only shows for newer weeks
+  const lastSeenOpsWeek = useRef(onOpsSection ? week : -1);
+  const lastSeenCommandWeek = useRef(onCommandSection ? week : -1);
+
+  useEffect(() => {
+    if (onOpsSection) lastSeenOpsWeek.current = week;
+  }, [onOpsSection, week]);
+
+  useEffect(() => {
+    if (onCommandSection) lastSeenCommandWeek.current = week;
+  }, [onCommandSection, week]);
 
   const assignedIds = new Set((trainingAssignments ?? []).map((a) => a.warriorId));
   const untrainedCount = roster.filter(
@@ -90,10 +106,13 @@ function useNavAlerts() {
     o.status === "Proposed" && o.warriorIds.some((id) => rosterIds.has(id))
   ).length;
 
+  const showOpsAlert = pendingOffers > 0 && !onOpsSection && week > lastSeenOpsWeek.current;
+  const showCommandAlert = untrainedCount > 0 && !onCommandSection && week > lastSeenCommandWeek.current;
+
   return {
     counts: {
-      command: untrainedCount > 0 ? untrainedCount : 0,
-      ops: pendingOffers > 0 ? pendingOffers : 0,
+      command: showCommandAlert ? untrainedCount : 0,
+      ops: showOpsAlert ? pendingOffers : 0,
       world: isTournamentWeek ? 1 : 0,
     } as Record<HubId, number>,
     links: {
@@ -112,6 +131,7 @@ interface LeftNavProps {
 
 export function LeftNav({ className }: LeftNavProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
   const { counts: alerts, links: alertLinks } = useNavAlerts();
 
@@ -150,13 +170,12 @@ export function LeftNav({ className }: LeftNavProps) {
               <Icon className="h-3.5 w-3.5 shrink-0" />
               <span className="flex-1">{hub.label}</span>
               {alertCount > 0 && (
-                <Link
-                  to={alertLink}
-                  onClick={(e) => e.stopPropagation()}
+                <button
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate({ to: alertLink }); }}
                   className="flex items-center justify-center h-4 min-w-4 px-1 rounded-none bg-arena-blood text-white text-[8px] font-black hover:bg-destructive transition-colors"
                 >
                   {alertCount}
-                </Link>
+                </button>
               )}
               {isActive && (
                 <ChevronRight className="h-3 w-3 text-primary/60 shrink-0" />
@@ -229,14 +248,30 @@ export function LeftNav({ className }: LeftNavProps) {
 // ─── Bottom alert strip ──────────────────────────────────────────────────────
 
 function AlertStrip() {
-  const { roster, isTournamentWeek, boutOffers, trainingAssignments } = useGameStore(
+  const { roster, isTournamentWeek, boutOffers, trainingAssignments, week } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
       isTournamentWeek: s.isTournamentWeek,
       boutOffers: s.boutOffers,
       trainingAssignments: s.trainingAssignments,
+      week: s.week,
     }))
   );
+
+  const location = useLocation();
+  const onCommandSection = location.pathname.startsWith("/command");
+  const onOpsSection = location.pathname.startsWith("/ops");
+
+  const lastSeenOpsWeek = useRef(onOpsSection ? week : -1);
+  const lastSeenCommandWeek = useRef(onCommandSection ? week : -1);
+
+  useEffect(() => {
+    if (onOpsSection) lastSeenOpsWeek.current = week;
+  }, [onOpsSection, week]);
+
+  useEffect(() => {
+    if (onCommandSection) lastSeenCommandWeek.current = week;
+  }, [onCommandSection, week]);
 
   const assignedIds = new Set((trainingAssignments ?? []).map((a) => a.warriorId));
   const untrainedCount = roster.filter(
@@ -250,7 +285,7 @@ function AlertStrip() {
 
   const alerts: { icon: React.ElementType; label: string; color: string; to: string }[] = [];
 
-  if (untrainedCount > 0)
+  if (untrainedCount > 0 && !onCommandSection && week > lastSeenCommandWeek.current)
     alerts.push({
       icon: ShieldAlert,
       label: `${untrainedCount} unassigned`,
@@ -258,7 +293,7 @@ function AlertStrip() {
       to: "/command/training",
     });
 
-  if (pendingOffers > 0)
+  if (pendingOffers > 0 && !onOpsSection && week > lastSeenOpsWeek.current)
     alerts.push({
       icon: ScrollText,
       label: `${pendingOffers} offers`,

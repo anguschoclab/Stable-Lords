@@ -132,7 +132,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <div className="flex flex-col">
               <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Arena Time</span>
               <span className="font-mono font-black text-xs text-foreground bg-white/5 px-2 py-0.5 rounded border border-white/5">
-                W{week}{isTournamentWeek ? ` • D${day + 1}` : ""}
+                {isSimulating ? <span className="animate-pulse opacity-40">W—</span> : `W${week}${isTournamentWeek ? ` • D${day + 1}` : ""}`}
               </span>
             </div>
             
@@ -176,9 +176,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 : "bg-primary text-white shadow-[0_0_16px_rgba(255,0,0,0.35)] hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(255,0,0,0.5)] active:scale-95"
             )}
           >
-            {isTournamentWeek ? `Day ${day + 1}` : `Week ${week}`}
-            <ChevronRight className="h-3.5 w-3.5" />
-            {isTournamentWeek ? "Fight" : "Advance"}
+            {isSimulating ? (
+              <>
+                <span className="animate-pulse">Processing</span>
+                <span className="animate-pulse">…</span>
+              </>
+            ) : (
+              <>
+                {isTournamentWeek ? `Day ${day + 1}` : `Week ${week}`}
+                <ChevronRight className="h-3.5 w-3.5" />
+                {isTournamentWeek ? "Fight" : "Advance"}
+              </>
+            )}
           </Link>
           <Separator orientation="vertical" className="h-6 bg-white/5" />
           <Tooltip>

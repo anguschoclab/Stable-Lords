@@ -33,5 +33,10 @@ export function defaultPlanForWarrior(warrior: Warrior): FightPlan {
     oe = 6; al = 5; kd = 8;
   }
 
-  return { style, OE: oe, AL: al, killDesire: kd, target: "Any", protect: "Any" };
+  // Feint tendency is derived from WT — only effective at WT >= 15 (engine gate)
+  const feintTendency = warrior.attributes.WT >= 15
+    ? Math.min(10, Math.floor((warrior.attributes.WT - 14) * 1.5))
+    : 0;
+
+  return { style, OE: oe, AL: al, killDesire: kd, target: "Any", protect: "Any", feintTendency };
 }

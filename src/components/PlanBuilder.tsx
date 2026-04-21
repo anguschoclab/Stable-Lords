@@ -1,13 +1,11 @@
 import { useMemo } from "react";
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { FightPlan, Warrior, OffensiveTactic, DefensiveTactic } from "@/types/game";
+import type { FightPlan, Warrior } from "@/types/game";
 import { FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/game";
 import { getMatchupBonus } from "@/engine/combat/mechanics/combatConstants";
 import { computeStrategyScore, getScoreColor } from "@/engine/strategyAnalysis";
-import { TACTIC_BANK } from "./planBuilder/TacticBank";
 import TacticBank from "./planBuilder/TacticBank";
 import CommonControls from "./planBuilder/CommonControls";
 import SpatialControls from "./planBuilder/SpatialControls";
@@ -34,34 +32,6 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
 
   const score = useMemo(() => computeStrategyScore(plan, warrior), [plan, warrior]);
   const warnings = useMemo(() => validateStrategy(plan, warrior), [plan, warrior]);
-
-  const onDragEnd = (result: DropResult) => {
-    const { destination, draggableId } = result;
-    if (!destination) return;
-
-    const tactic = TACTIC_BANK.find(t => t.id === draggableId);
-    if (!tactic) return;
-
-    const phaseKey = destination.droppableId as "opening" | "mid" | "late" | "base";
-    
-    if (phaseKey === "base") {
-      if (tactic.type === "offensive") {
-        onPlanChange({ ...plan, offensiveTactic: tactic.id as OffensiveTactic });
-      } else {
-        onPlanChange({ ...plan, defensiveTactic: tactic.id as DefensiveTactic });
-      }
-    } else {
-      const phases = { ...(plan.phases || {}) };
-      const currentPhase = phases[phaseKey] || { OE: plan.OE, AL: plan.AL ?? 5, killDesire: plan.killDesire ?? 5 };
-      
-      if (tactic.type === "offensive") {
-        phases[phaseKey] = { ...currentPhase, offensiveTactic: tactic.id as OffensiveTactic };
-      } else {
-        phases[phaseKey] = { ...currentPhase, defensiveTactic: tactic.id as DefensiveTactic };
-      }
-      onPlanChange({ ...plan, phases });
-    }
-  };
 
   return (
     <Card className="bg-[#0a0a0b] border-arena-blood/20 shadow-2xl relative overflow-hidden">
@@ -129,10 +99,9 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
           )}
         </div>
 
-        <DragDropContext onDragEnd={onDragEnd}>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <div className="lg:col-span-1">
-              <TacticBank />
+              <TacticBank plan={plan} onPlanChange={onPlanChange} />
             </div>
 
             <div className="lg:col-span-3 space-y-8">
@@ -143,7 +112,6 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
               <ContingencyPlans plan={plan} onPlanChange={onPlanChange} />
             </div>
           </div>
-        </DragDropContext>
 
         <div className="pt-6 border-t border-white/5 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
           <span>Simulation Accuracy: 94.2%</span>

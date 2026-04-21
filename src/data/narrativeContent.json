@@ -658,7 +658,16 @@
         "{{attacker}}'s {{weapon}} claims another soul for the void today.",
         "The arena echoes with the sickening sound of {{defender}}'s life being crushed out by {{attacker}}.",
         "There is no recovery from that—{{attacker}} has sent {{defender}} to the ancestors.",
-        "{{attacker}} stands victorious, {{defender}} dead before they even hit the ground."
+        "{{attacker}} stands victorious, {{defender}} dead before they even hit the ground.",
+        "A devastating blow that shatters bone and splatters blood across the sand.",
+        "The strike lands with a sickening crunch, ending the contest immediately.",
+        "A masterful, lethal strike that instantly separates life from body.",
+        "{{attacker}} drives the {{weapon}} deep, drawing a final, gurgling breath from {{defender}}.",
+        "With ruthless efficiency, {{attacker}} extinguishes {{defender}}'s light in a single stroke.",
+        "The sands drink deeply as {{attacker}}'s fatal strike finds its mark.",
+        "{{defender}}'s eyes widen in shock as {{attacker}}'s {{weapon}} parts flesh and soul.",
+        "A catastrophic hit that instantly fells {{defender}} like a toppled statue.",
+        "{{attacker}} executes a flawless, mortal strike, leaving no hope for {{defender}}."
       ]
     },
     "status_changes": {
@@ -684,7 +693,11 @@
       },
       "dodge": {
         "success": [
-          "{{defender}} twists his body with prideful grace, allowing the attack to pass harmlessly by."
+          "{{defender}} twists their body with prideful grace, allowing the attack to pass harmlessly by.",
+          "{{defender}} weaves backward gracefully, letting the attack whistle past.",
+          "With feline agility, {{defender}} sidesteps the incoming blow.",
+          "{{attacker}} swings at empty air as {{defender}} ducks underneath.",
+          "A sudden pivot saves {{defender}} from a strike that would have been fatal."
         ]
       },
       "parry": {
@@ -699,19 +712,29 @@
       },
       "shield": {
         "success": [
-          "{{defender}} catches the blow on his SHIELD."
+          "{{defender}} catches the blow on their SHIELD.",
+          "{{defender}} raises their shield at the last second, taking the brunt of the heavy impact.",
+          "The strike clangs loudly against {{defender}}'s shield, leaving a fresh dent but no blood.",
+          "{{defender}} braces themselves, using their shield to expertly deflect the attack.",
+          "Wood splinters and metal groans as {{defender}}'s shield absorbs the ferocious blow."
         ]
       }
     },
     "pacing": {
       "stalemate": [
-        "The fighters slowly circle each other, looking for a weakness."
+        "The fighters slowly circle each other, looking for a weakness.",
+        "The fighters circle each other warily, neither willing to commit to a fatal mistake.",
+        "A tense standoff ensues, the hot sand baking as they study each other's footwork.",
+        "Both warriors pause, chests heaving, evaluating their next move in this deadly dance."
       ],
       "trading_blows": [
         "The two warriors fiercely trade attacks and parry."
       ],
       "pressing": [
-        "{{attacker}} presses the attack relentlessly, giving his foe no room to breathe!"
+        "{{attacker}} presses the attack relentlessly, giving their foe no room to breathe!",
+        "{{attacker}} surges forward, driving {{defender}} backward with a relentless flurry of attacks.",
+        "Smelling blood, {{attacker}} presses the advantage, giving {{defender}} no room to breathe.",
+        "The momentum shifts entirely as {{attacker}} goes on the offensive, overwhelming the defense."
       ]
     },
     "reactions": {
@@ -734,7 +757,11 @@
         "The crowd falls into a stunned silence.",
         "Gasps of horror and awe ripple through the onlookers.",
         "A horrific sound of tearing flesh echoes; the crowd recoils!",
-        "Some spectators cover their eyes from the gruesome display!"
+        "Some spectators cover their eyes from the gruesome display!",
+        "A collective gasp ripples through the coliseum as the brutal reality of the strike sets in.",
+        "The crowd inhales sharply, shocked by the sheer savagery of the blow.",
+        "Silence falls for a split second, followed by a horrified gasp from the nobles in the front row.",
+        "Even the most hardened veterans in the stands wince at the impact."
       ],
       "cheer": [
         "The crowd erupts into deafening cheers!",
@@ -746,7 +773,11 @@
         "The arena trembles as the crowd stomps their feet in unison.",
         "A deafening cheer erupts as the crowd witnesses the masterful display.",
         "The stands erupt into chaotic, bloodthirsty cheering!",
-        "Chants of 'BLOOD! BLOOD! BLOOD!' rain down from the audience!"
+        "Chants of 'BLOOD! BLOOD! BLOOD!' rain down from the audience!",
+        "The arena explodes in deafening cheers, chanting {{attacker}}'s name!",
+        "A roar of approval shakes the foundations of the coliseum.",
+        "The crowd goes wild, tossing coins and roses onto the blood-soaked sands.",
+        "Thunderous applause greets the masterful display of violence."
       ],
       "boo": [
         "Jeers and boos rain down from the cheap seats.",
@@ -824,11 +855,17 @@
   "commentary": {
     "KO": [
       "What a knockout! The crowd erupts!",
-      "{{attacker}} lays out {{defender}} with a devastating blow!"
+      "{{attacker}} lays out {{defender}} with a devastating blow!",
+      "Lights out! What a devastating blow to end the match!",
+      "They're not getting up from that one. A clean, decisive knockout!",
+      "The impact echoed all the way to the cheap seats. Goodnight!"
     ],
     "Kill": [
       "A brutal finish! {{attacker}} has killed {{defender}}!",
-      "The life leaves {{defender}}'s eyes. What a savage display!"
+      "The life leaves {{defender}}'s eyes. What a savage display!",
+      "A gruesome end to a brutal contest. The cleaners will need extra sand for that one.",
+      "No mercy shown, none expected. A fatal masterclass in arena combat.",
+      "That is why they call it the blood sands. A swift, merciless kill."
     ],
     "Flashy": [
       "What a flashy display of skill!",
@@ -1306,7 +1343,12 @@
       "No mercy, no hesitation. {{attacker}} performs a brutal execution on the defenseless {{defender}}.",
       "The crowd watches in stunned silence as {{attacker}} ends {{defender}}'s misery with a swift execution.",
       "{{attacker}} feints low, catching {{defender}} off guard before striking their {{bodyPart}} with clinical precision. The crowd erupts as the final blow is struck!",
-      "With a sneer, {{attacker}} forces {{defender}} to their knees before delivering the final, decapitating strike."
+      "With a sneer, {{attacker}} forces {{defender}} to their knees before delivering the final, decapitating strike.",
+      "{{attacker}} slowly circles the fallen {{defender}}, relishing the moment before delivering the final, brutal execution.",
+      "With the crowd roaring for blood, {{attacker}} obliges, ending {{defender}} with a ruthless, calculated strike.",
+      "{{attacker}} places a boot on {{defender}}'s chest, raising their {{weapon}} high before bringing down the curtain.",
+      "A cold, dispassionate execution. {{attacker}} ends {{defender}}'s life with terrifying efficiency.",
+      "{{attacker}} leans in, whispering something unheard to {{defender}} before delivering the fatal execution blow."
     ],
     "critical_chain": [
       "A relentless flurry! {{attacker}} strings together a blinding series of strikes, the final one separating {{defender}} from their life.",
@@ -1326,7 +1368,11 @@
     "rivalry_finish": [
       "Years of bad blood culminate in a single, hateful strike. {{attacker}} stands triumphant over their slain rival, {{defender}}.",
       "With a roar of pure vengeance, {{attacker}} ends the feud once and for all, staining the sands with {{defender}}'s blood.",
-      "The bitter feud concludes in absolute butchery. {{attacker}} spits on the fallen corpse of {{defender}}."
+      "The bitter feud concludes in absolute butchery. {{attacker}} spits on the fallen corpse of {{defender}}.",
+      "The bitter feud ends here! {{attacker}} delivers a spiteful, final blow to their hated rival, {{defender}}.",
+      "The long-standing grudge is settled in a spray of crimson. {{attacker}} stands over the broken remains of their nemesis.",
+      "{{attacker}} doesn't just kill {{defender}}; they destroy their legacy, ending the rivalry in a shower of gore.",
+      "With a scream of pure hatred, {{attacker}} buries their {{weapon}} into {{defender}}, finishing the blood feud once and for all."
     ],
     "fatal_damage": [
       "A catastrophic impact! {{attacker}} unleashes a monstrous blow that utterly destroys {{defender}}.",

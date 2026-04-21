@@ -662,7 +662,7 @@
         "A devastating blow that shatters bone and splatters blood across the sand.",
         "The strike lands with a sickening crunch, ending the contest immediately.",
         "A masterful, lethal strike that instantly separates life from body.",
-        "{{attacker}} drives the weapon deep, drawing a final, gurgling breath from {{defender}}.",
+        "{{attacker}} drives the {{weapon}} deep, drawing a final, gurgling breath from {{defender}}.",
         "With ruthless efficiency, {{attacker}} extinguishes {{defender}}'s light in a single stroke.",
         "The sands drink deeply as {{attacker}}'s fatal strike finds its mark.",
         "{{defender}}'s eyes widen in shock as {{attacker}}'s weapon parts flesh and soul.",

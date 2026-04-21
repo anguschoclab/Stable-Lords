@@ -109,9 +109,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   // const activePath = location.pathname;
 
   return (
-    <div className="min-h-screen bg-[#050506] flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
+    <div className="min-h-screen bg-[#0C0806] flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
       {/* ─── Global Status Header ─── */}
-      <header className="h-14 border-b border-white/5 bg-black/60 backdrop-blur-xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+      <header className="h-14 border-b border-white/5 bg-[#080604]/85 backdrop-blur-xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-3 group active:scale-95 transition-transform">
             <motion.div 
@@ -122,7 +122,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </motion.div>
             <div className="flex flex-col">
               <span className="font-display font-black text-sm tracking-tighter uppercase leading-none group-hover:text-primary transition-colors">Stable Lords</span>
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-40">ALPHA DISTRICT 412</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-40">CODEX SANGUIS · MMCDXII</span>
             </div>
           </Link>
 

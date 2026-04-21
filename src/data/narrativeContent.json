@@ -665,7 +665,7 @@
         "{{attacker}} drives the {{weapon}} deep, drawing a final, gurgling breath from {{defender}}.",
         "With ruthless efficiency, {{attacker}} extinguishes {{defender}}'s light in a single stroke.",
         "The sands drink deeply as {{attacker}}'s fatal strike finds its mark.",
-        "{{defender}}'s eyes widen in shock as {{attacker}}'s weapon parts flesh and soul.",
+        "{{defender}}'s eyes widen in shock as {{attacker}}'s {{weapon}} parts flesh and soul.",
         "A catastrophic hit that instantly fells {{defender}} like a toppled statue.",
         "{{attacker}} executes a flawless, mortal strike, leaving no hope for {{defender}}."
       ]

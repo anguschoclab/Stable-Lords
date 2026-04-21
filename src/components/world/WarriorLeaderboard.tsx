@@ -74,6 +74,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
       <div className="px-4 py-3 border-b border-white/5 bg-black/20 flex flex-wrap items-center gap-2">
         <button
           onClick={() => setMyWarriorsOnly(v => !v)}
+          aria-label="Toggle My Warriors"
           className={cn(
             "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border transition-colors flex items-center gap-1",
             myWarriorsOnly
@@ -91,6 +92,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
           <button
             key={cls}
             onClick={() => setClassFilter(classFilter === cls ? null : cls)}
+            aria-label={`Filter by ${cls}`}
             className={cn(
               "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border transition-colors",
               classFilter === cls
@@ -109,6 +111,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
           <button
             key={f}
             onClick={() => { setQuickFilter(quickFilter === f ? null : f); if (quickFilter !== f) onSort(f); }}
+            aria-label={`Sort by ${f}`}
             className={cn(
               "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border transition-colors",
               quickFilter === f
@@ -123,6 +126,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
         {isFiltered && (
           <button
             onClick={() => { setClassFilter(null); setQuickFilter(null); setMyWarriorsOnly(false); }}
+            aria-label="Clear filters"
             className="ml-auto flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-destructive transition-colors"
           >
             <X className="h-3 w-3" /> Clear

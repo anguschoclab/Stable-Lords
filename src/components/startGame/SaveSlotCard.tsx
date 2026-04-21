@@ -28,10 +28,7 @@ export default function SaveSlotCard({
       }}
     >
       <div
-        className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background: "linear-gradient(90deg, transparent 0%, rgba(201, 151, 42, 0.5) 30%, rgba(201, 151, 42, 0.8) 50%, rgba(201, 151, 42, 0.5) 70%, transparent 100%)",
-        }}
+        className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[linear-gradient(90deg,transparent_0%,rgba(201,151,42,0.5)_30%,rgba(201,151,42,0.8)_50%,rgba(201,151,42,0.5)_70%,transparent_100%)]"
       />
       <div className="p-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 flex-1 min-w-0">

@@ -56,6 +56,7 @@ export default function ActionButtons({
 
       <button
         onClick={() => importRef.current?.click()}
+        aria-label="Import Save File"
         className="w-full flex items-center justify-center gap-2 h-9 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors duration-150"
       >
         <Upload className="h-3.5 w-3.5" />

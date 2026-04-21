@@ -117,7 +117,7 @@ export function SeasonWidget() {
                       {latestOffseasonEvent.title}
                    </span>
                    <span className="text-[9px] font-medium text-indigo-200/70 leading-tight">
-                      {latestOffseasonEvent.items[0]}
+                      {latestOffseasonEvent.items?.[0] ?? ""}
                    </span>
                 </div>
              </div>

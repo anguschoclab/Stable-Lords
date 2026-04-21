@@ -20,6 +20,7 @@ import { runTrainerPass } from "../passes/TrainerPass";
 import { runRivalStrategyPass } from "../passes/RivalStrategyPass";
 import { runEventPass } from "../passes/EventPass";
 import { runNarrativePass } from "../passes/NarrativePass";
+import { runSeasonalPass } from "../seasonal";
 
 /**
  * Stable Lords — Consolidated Weekly Pipeline (1.0 Hardened)
@@ -100,6 +101,9 @@ export function advanceWeek(state: GameState): GameState {
   console.log("[advanceWeek] eventPass done");
   impacts.push(runNarrativePass(settledState, currentWeek, nextWeek, rootRng));
   console.log("[advanceWeek] narrativePass done");
+
+  // Offseason Impacts
+  impacts.push(runSeasonalPass(settledState, nextWeek, rootRng));
 
   // 4. Resolution Phase (Apply all impacts in one unified pass)
   const finalizedState = resolveImpacts(settledState, impacts);

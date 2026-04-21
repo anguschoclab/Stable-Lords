@@ -195,6 +195,32 @@ const MERGE_CONFIG: MergeConfig = {
   crowdMood: { strategy: 'replace', defaultValue: undefined },
 };
 
+// 🌩️ Pure helpers for merging strategies (Strategy Pattern)
+const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: any) => void> = {
+  accumulate: (merged, key, value) => {
+    if (typeof value === 'number') {
+      merged[key] = (merged[key] || 0) + value;
+    }
+  },
+  append: (merged, key, value) => {
+    if (Array.isArray(value)) {
+      merged[key] = (merged[key] || []).concat(value);
+    }
+  },
+  mapMerge: (merged, key, value) => {
+    if (value instanceof Map) {
+      const targetMap = merged[key] as Map<string, object>;
+      value.forEach((val, mapKey) => {
+        const existing = targetMap.get(mapKey) || {};
+        targetMap.set(mapKey, { ...existing, ...val });
+      });
+    }
+  },
+  replace: (merged, key, value) => {
+    merged[key] = value;
+  }
+};
+
 export function mergeImpacts(impacts: StateImpact[]): StateImpact {
   const merged: StateImpact = {} as StateImpact;
 
@@ -216,29 +242,9 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
       const value = imp[key];
       if (value === undefined || value === null) return;
 
-      switch (config.strategy) {
-        case 'accumulate':
-          if (typeof value === 'number') {
-            (merged as any)[key] = ((merged as any)[key] || 0) + value;
-          }
-          break;
-        case 'append':
-          if (Array.isArray(value)) {
-            (merged as any)[key] = ((merged as any)[key] || []).concat(value);
-          }
-          break;
-        case 'mapMerge':
-          if (value instanceof Map) {
-            const targetMap = (merged as any)[key] as Map<string, object>;
-            value.forEach((val, mapKey) => {
-              const existing = targetMap.get(mapKey as any) || {};
-              targetMap.set(mapKey as any, { ...existing, ...val });
-            });
-          }
-          break;
-        case 'replace':
-          (merged as any)[key] = value;
-          break;
+      const strategyFn = mergeStrategies[config.strategy];
+      if (strategyFn) {
+        strategyFn(merged, key, value);
       }
     });
   }

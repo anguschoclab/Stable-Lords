@@ -22,107 +22,91 @@ import { runEventPass } from "../passes/EventPass";
 import { runNarrativePass } from "../passes/NarrativePass";
 import { runSeasonalPass } from "../seasonal";
 
+interface WeekContext {
+  currentWeek: number;
+  nextWeek: number;
+  nextYear: number;
+  rootRng: IRNGService;
+}
+
+function prepareWeekContext(state: GameState): WeekContext {
+  const currentWeek = state.week;
+  let nextWeek = currentWeek + 1;
+  let nextYear = state.year || 1;
+  if (nextWeek > 52) { nextWeek = 1; nextYear++; }
+  return { currentWeek, nextWeek, nextYear, rootRng: new SeededRNGService(nextYear * 52 + nextWeek * 7919 + 101) };
+}
+
+function runBoutPhase(state: GameState, ctx: WeekContext): GameState {
+  const metaDrift = computeMetaDrift(state.arenaHistory || []);
+  const boutImpact = runBoutSimulationPass(state, ctx.rootRng);
+  const settledState = resolveImpacts(state, [boutImpact]);
+  settledState.cachedMetaDrift = metaDrift;
+
+  const warriorMap = new Map<string, Warrior>();
+  settledState.roster.forEach(w => warriorMap.set(w.id, w));
+  (settledState.rivals || []).forEach(r => r.roster.forEach(w => warriorMap.set(w.id, w)));
+  settledState.warriorMap = warriorMap;
+
+  return settledState;
+}
+
+function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
+  return [
+    runWarriorPass(state, ctx.rootRng),
+    runEconomyPass(state, ctx.rootRng),
+    runEquipmentPass(state)
+  ];
+}
+
+function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): boolean {
+  const economyImpact = coreImpacts.find(i => i.treasuryDelta !== undefined);
+  const estimatedTreasury = state.treasury + (economyImpact?.treasuryDelta || 0);
+  return estimatedTreasury < -500;
+}
+
+function collectRemainingImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
+  return [
+    runWorldPass(state, ctx.nextWeek, ctx.rootRng),
+    runRecruitmentPass(state, ctx.rootRng),
+    runSystemPass(state, ctx.rootRng),
+    runRankingsPass(state),
+    runPromoterPass(state),
+    runPromoterLifecyclePass(state, ctx.rootRng),
+    runTrainerPass(state, ctx.rootRng),
+    runRivalStrategyPass(state, ctx.nextWeek, ctx.rootRng),
+    runEventPass(state, ctx.nextWeek, ctx.rootRng),
+    runNarrativePass(state, ctx.currentWeek, ctx.nextWeek, ctx.rootRng),
+    runSeasonalPass(state, ctx.nextWeek, ctx.rootRng)
+  ];
+}
+
+function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext): GameState {
+  state.week = ctx.nextWeek;
+  state.year = ctx.nextYear;
+  state.day = 0;
+  state.trainingAssignments = [];
+
+  if (state.season !== oldState.season) {
+    state.seasonalGrowth = (state.seasonalGrowth ?? []).filter(sg => sg.season === state.season);
+  }
+
+  return archiveWeekLogs(state);
+}
+
 /**
  * Stable Lords — Consolidated Weekly Pipeline (1.0 Hardened)
  * Orchestrates the simulation tick using a high-performance batched architecture.
  */
 export function advanceWeek(state: GameState): GameState {
-  console.log("[advanceWeek] START week", state.week);
-  // 1. Preparation & Temporal Logic
-  const currentWeek = state.week;
-  let nextWeek = currentWeek + 1;
-  let nextYear = state.year || 1;
+  const ctx = prepareWeekContext(state);
+  const settledState = runBoutPhase(state, ctx);
+  const coreImpacts = collectCoreImpacts(settledState, ctx);
 
-  if (nextWeek > 52) {
-    nextWeek = 1;
-    nextYear++;
+  if (checkBankruptcy(settledState, coreImpacts)) {
+    return finalizeState(resolveImpacts(settledState, coreImpacts), state, ctx);
   }
 
-  // Consistent Root RNG for the new week
-  const rootRng = new SeededRNGService(nextYear * 52 + nextWeek * 7919 + 101);
-  const metaDrift = computeMetaDrift(state.arenaHistory || []);
-  console.log("[advanceWeek] metaDrift done, arenaHistory length:", state.arenaHistory?.length);
-
-  // 2. Bout Simulation (happens for the week just ending)
-  const boutImpact = runBoutSimulationPass(state, rootRng);
-  console.log("[advanceWeek] boutSimulation done");
-  const settledState = resolveImpacts(state, [boutImpact]);
-  settledState.cachedMetaDrift = metaDrift;
-
-  // Build and cache warrior map for subsequent AI passes
-  const warriorMap = new Map<string, Warrior>();
-  settledState.roster.forEach((w: Warrior) => warriorMap.set(w.id, w));
-  (settledState.rivals || []).forEach((r: RivalStableData) => r.roster.forEach((w: Warrior) => warriorMap.set(w.id, w)));
-  settledState.warriorMap = warriorMap;
-
-  // 3. Collection Phase (Collect all intended changes)
-  const impacts: StateImpact[] = [];
-
-  // Core Simulation Impacts
-  impacts.push(runWarriorPass(settledState, rootRng));
-  console.log("[advanceWeek] warriorPass done");
-  impacts.push(runEconomyPass(settledState, rootRng));
-  console.log("[advanceWeek] economyPass done");
-  impacts.push(runEquipmentPass(settledState));
-  console.log("[advanceWeek] equipmentPass done");
-
-  // ⚡ Early Exit: Bankruptcy Check
-  const economyImpact = impacts.find(i => i.treasuryDelta !== undefined);
-  const estimatedTreasury = settledState.treasury + (economyImpact?.treasuryDelta || 0);
-  if (estimatedTreasury < -500) {
-    const finalState = resolveImpacts(settledState, impacts);
-    finalState.week = nextWeek;
-    finalState.year = nextYear;
-    return archiveWeekLogs(finalState);
-  }
-
-  // World & System Impacts
-  impacts.push(runWorldPass(settledState, nextWeek, rootRng));
-  console.log("[advanceWeek] worldPass done");
-  impacts.push(runRecruitmentPass(settledState, rootRng));
-  console.log("[advanceWeek] recruitmentPass done");
-  impacts.push(runSystemPass(settledState, rootRng));
-  console.log("[advanceWeek] systemPass done");
-  impacts.push(runRankingsPass(settledState));
-  console.log("[advanceWeek] rankingsPass done");
-  impacts.push(runPromoterPass(settledState));
-  console.log("[advanceWeek] promoterPass done");
-  impacts.push(runPromoterLifecyclePass(settledState, rootRng));
-  console.log("[advanceWeek] promoterLifecyclePass done");
-  impacts.push(runTrainerPass(settledState, rootRng));
-  console.log("[advanceWeek] trainerPass done");
-
-  // AI & Strategic Impacts
-  impacts.push(runRivalStrategyPass(settledState, nextWeek, rootRng));
-  console.log("[advanceWeek] rivalStrategyPass done");
-
-  // Narrative & Event Impacts
-  impacts.push(runEventPass(settledState, nextWeek, rootRng));
-  console.log("[advanceWeek] eventPass done");
-  impacts.push(runNarrativePass(settledState, currentWeek, nextWeek, rootRng));
-  console.log("[advanceWeek] narrativePass done");
-
-  // Offseason Impacts
-  impacts.push(runSeasonalPass(settledState, nextWeek, rootRng));
-
-  // 4. Resolution Phase (Apply all impacts in one unified pass)
-  const finalizedState = resolveImpacts(settledState, impacts);
-  console.log("[advanceWeek] resolveImpacts done");
-
-  // 5. Finalization
-  finalizedState.week = nextWeek;
-  finalizedState.year = nextYear;
-  finalizedState.day = 0; // Reset daily counter
-  finalizedState.trainingAssignments = []; // Reset weekly assignments
-
-  // Prune stale seasonal growth entries on season change to prevent unbounded growth.
-  // The seasonal cap is keyed by season name, so old-season entries are already ignored
-  // mechanically — this just keeps the array from growing forever.
-  if (finalizedState.season !== state.season) {
-    finalizedState.seasonalGrowth = (finalizedState.seasonalGrowth ?? []).filter(
-      (sg) => sg.season === finalizedState.season
-    );
-  }
-
-  return archiveWeekLogs(finalizedState);
+  const allImpacts = [...coreImpacts, ...collectRemainingImpacts(settledState, ctx)];
+  return finalizeState(resolveImpacts(settledState, allImpacts), state, ctx);
 }

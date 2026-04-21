@@ -559,7 +559,7 @@
       "{{attacker}} overcommits to the swing, stumbling forward as {{defender}} sidesteps.",
       "A phantom strike! {{attacker}}'s {{weapon}} finds nothing but the wind.",
       "{{defender}} dances back, leaving {{attacker}} swinging at shadows.",
-      "The crowd groans as {{attacker}} horribly misjudges the distance.",
+      "The crowd groans as {{attacker}} horribly misjudges the distance."
     ],
     "hit_locations": {
       "head": [

@@ -275,7 +275,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <LeftNav />
 
         {/* ─── Main Content Area ─── */}
-        <main className="flex-1 flex flex-col relative bg-[#050506] overflow-hidden">
+        <main className="flex-1 flex flex-col relative bg-[#0C0806] overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
           
           <div className="flex-1 relative overflow-y-auto overflow-x-hidden p-6 md:p-10">

@@ -24,16 +24,16 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.25, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   className="imperial-ring shrink-0"
                 >
                   <Icon className="h-5 w-5 text-accent" />
                 </motion.div>
               )}
               <motion.h1
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ delay: 0.25, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="font-display text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter uppercase text-foreground leading-none text-carved"
               >
                 {title}
@@ -43,7 +43,7 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.15, duration: 0.4 }}
+                transition={{ delay: 0.35, duration: 0.35 }}
                 className="text-[10px] md:text-xs text-muted-foreground font-black uppercase tracking-[0.25em] opacity-55 pl-0.5"
               >
                 {subtitle}
@@ -55,7 +55,7 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
+              transition={{ delay: 0.3, duration: 0.35 }}
               className="flex items-center gap-3"
             >
               {actions}

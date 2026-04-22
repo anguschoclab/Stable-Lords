@@ -93,7 +93,7 @@ export default function RunRound() {
       });
     } catch (err) {
       console.error("Autosim failed", err);
-      toast.error("Auto-simulation encountered a temporal rift.");
+      toast.error("Auto-simulation encountered an archive corruption.");
     } finally {
       setAutosimming(false);
       setSimulating(false);

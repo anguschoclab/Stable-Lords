@@ -35,16 +35,16 @@ const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.25, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="p-1.5 bg-primary/10 border border-primary/20"
             >
               <Icon className="h-4 w-4 text-primary" />
             </motion.div>
           )}
           <motion.h2
-            initial={{ opacity: 0, x: align === "right" ? 20 : -20 }}
+            initial={{ opacity: 0, x: align === "right" ? 12 : -12 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.25, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
               "font-display text-xl md:text-2xl font-black tracking-tight uppercase leading-none text-carved",
               variantClasses[variant]
@@ -58,7 +58,7 @@ const SectionHeader = React.forwardRef<HTMLDivElement, SectionHeaderProps>(
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.1, duration: 0.3 }}
+            transition={{ delay: 0.35, duration: 0.3 }}
             className={cn(
               "text-[10px] uppercase tracking-[0.2em] font-black opacity-55",
               align === "center" && "text-center"

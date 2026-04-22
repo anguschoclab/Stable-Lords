@@ -243,7 +243,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10">
-              Terminal Reset (Delete Save)
+              Expunge Ledger (Delete Save)
             </TooltipContent>
           </Tooltip>
 
@@ -306,11 +306,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 z-50 bg-[#050506] flex items-center justify-center flex-col gap-4"
+                className="absolute inset-0 z-50 bg-[#0C0806] flex items-center justify-center flex-col gap-4"
               >
                 <div className="w-12 h-12 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
                 <div className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 animate-pulse">
-                  Restoring_Temporal_Sync...
+                  Unsealing the Archive...
                 </div>
               </motion.div>
             )}
@@ -326,7 +326,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               animate={{ width: 320, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="flex-shrink-0 border-l border-white/10 bg-[#0d0f14] overflow-hidden flex flex-col"
+              className="flex-shrink-0 border-l border-white/10 bg-[#08090b] overflow-hidden flex flex-col"
             >
               <EventLog />
             </motion.aside>
@@ -339,15 +339,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
         <AlertDialogContent className="bg-neutral-900 border-destructive/20 scale-105">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-display font-black text-2xl uppercase tracking-tighter text-destructive">Terminal Purge Protocol</AlertDialogTitle>
+            <AlertDialogTitle className="font-display font-black text-2xl uppercase tracking-tighter text-destructive">Expunge the Record</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground font-medium selection:bg-destructive/20">
-              You are about to initiate the Purge Protocol. This sequence will permanently erase the current combat history, stable roster, and financial records. 
+              You are about to seal and destroy this ledger. All combat history, stable roster, and financial records will be permanently struck from the archive.
               <br/><br/>
-              <span className="text-destructive font-black uppercase tracking-widest text-[10px]">Data loss is irreversible. Proceed?</span>
+              <span className="text-destructive font-black uppercase tracking-widest text-[10px]">This act cannot be undone. Proceed?</span>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-6">
-            <AlertDialogCancel className="bg-secondary/40 border-white/5 hover:bg-white/10 hover:text-foreground">Abort Protocol</AlertDialogCancel>
+            <AlertDialogCancel className="bg-secondary/40 border-white/5 hover:bg-white/10 hover:text-foreground">Preserve the Record</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.3)]"
                 onClick={() => {
@@ -355,7 +355,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                   setResetOpen(false);
                 }}
               >
-                Confirm Purge
+                Expunge
               </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

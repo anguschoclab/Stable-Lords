@@ -247,11 +247,10 @@ describe("trainingGains", () => {
       // wtBonus = (20 - 10) * 0.01 = 0.1
       // trainer matching focus
       const trainer = { id: "t1", name: "Trainer", focus: "Aggression", styleBonusStyle: null, contractWeeksLeft: 10, fame: 0, costPerWeek: 0, hireCost: 0, origin: "Guild" };
-      const chance = computeSkillDrillChance(warrior, "Punching", [trainer as any]);
-      // focus for Punching is Aggression -> trainerBonus = 1
-      // raw = (0.4 + 1 * 0.04 + 0.1) * 1 = 0.54 (but wait, trainerBonus might be different? TIER_BONUS logic isn't here)
-      // Actually trainer bonus logic: trainerBonus = 0 if we mock focus or maybe 1.
-      expect(chance).toBeCloseTo(0.50);
+      const chance = computeSkillDrillChance(warrior, "ATT", [trainer as any]);
+      // focus for ATT is Aggression -> trainerBonus = 1
+      // raw = (0.4 + 1 * 0.04 + 0.1) * 1 = 0.54
+      expect(chance).toBeCloseTo(0.54);
     });
 
     it("should apply age penalty", () => {

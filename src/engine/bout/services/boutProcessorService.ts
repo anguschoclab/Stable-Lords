@@ -21,81 +21,88 @@ export interface BoutImpact { impact: StateImpact; result: BoutResult; stats: { 
 export interface WeekBoutSummary { bouts: number; deaths: number; injuries: number; deathNames: string[]; injuryNames: string[]; hadPlayerDeath: boolean; hadRivalryEscalation: boolean; }
 export interface BoutContext { warriorMap: Map<string, Warrior>; warrior: Warrior; opponent: Warrior; isRivalry: boolean; rivalStable?: string; rivalStableId?: string; moodMods: ReturnType<typeof getMoodModifiers>; week: number; playerId: string; contract?: BoutOffer; }
 
-export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
-  const { warrior, opponent, isRivalry, rivalStable, rivalStableId, moodMods, week, warriorMap, contract } = ctx;
-  const cW = warriorMap?.get(warrior?.id);
-  const cO = warriorMap?.get(opponent?.id);
+function getValidatedCombatants(ctx: BoutContext): { cW: Warrior; cO: Warrior } | null {
+  const cW = ctx.warriorMap.get(ctx.warrior.id);
+  const cO = ctx.warriorMap.get(ctx.opponent.id);
+  if (!validateBoutCombatants(cW, cO)) return null;
+  if (!cW || !cO) return null;
+  return { cW, cO };
+}
 
-  if (!validateBoutCombatants(cW, cO)) {
-    return { impact: {}, result: { a: warrior, d: opponent, outcome: { winner: null, by: "Draw", minutes: 0, log: [] } as FightOutcome, isRivalry, rivalStable, contractId: contract?.id }, stats: { death: false, playerDeath: false, injured: false, deathNames: [], injuredNames: [] } };
-  }
+function handleInvalidBout(ctx: BoutContext): BoutImpact {
+  return {
+    impact: {},
+    result: { a: ctx.warrior, d: ctx.opponent, outcome: { winner: null, by: "Draw", minutes: 0, log: [] } as FightOutcome, isRivalry: ctx.isRivalry, rivalStable: ctx.rivalStable, contractId: ctx.contract?.id },
+    stats: { death: false, playerDeath: false, injured: false, deathNames: [], injuredNames: [] }
+  };
+}
 
-  if (!cW || !cO) {
-    return { impact: {}, result: { a: warrior, d: opponent, outcome: { winner: null, by: "Error", minutes: 0, log: [] } as FightOutcome, isRivalry, rivalStable, contractId: contract?.id }, stats: { death: false, playerDeath: false, injured: false, deathNames: [], injuredNames: [] } };
-  }
-  const validCW = cW;
-  const validCO = cO;
+function runBoutSimulation(state: GameState, ctx: BoutContext, validCW: Warrior, validCO: Warrior, boutSeed: number) {
+  return simulateFight(
+    getDefaultPlan(validCW, defaultPlanForWarrior),
+    getDefaultPlan(validCO, defaultPlanForWarrior),
+    validCW, validCO, boutSeed, state.trainers, state.weather, undefined, state.crowdMood
+  );
+}
 
-  const boutSeed = hashStr(`${week}|${validCW.id}|${validCO.id}`);
-  const rng = new SeededRNGService(boutSeed);
-  const outcome = simulateFight(getDefaultPlan(validCW, defaultPlanForWarrior), getDefaultPlan(validCO, defaultPlanForWarrior), validCW, validCO, boutSeed, state.trainers, state.weather, undefined, state.crowdMood);
+function collectBoutImpacts(state: GameState, ctx: BoutContext, validCW: Warrior, validCO: Warrior, outcome: FightOutcome, boutSeed: number) {
   const tags = outcome.post?.tags ?? [];
+  const rng = new SeededRNGService(boutSeed);
+  const { fameA, popA, fameD, popD } = calculateBoutFame(outcome, tags, ctx.moodMods, ctx.isRivalry);
 
-  const { fameA, popA, fameD, popD } = calculateBoutFame(outcome, tags, moodMods, isRivalry);
+  const impacts: StateImpact[] = processContractPayouts(state, ctx.contract, getWinnerId(outcome, validCW.id, validCO.id), validCW.id, validCO.id, ctx.rivalStableId);
+  impacts.push(applyRecords(state, validCW, validCO, outcome, tags, fameA, popA, fameD, popD, ctx.rivalStableId));
 
-  const impacts: StateImpact[] = processContractPayouts(state, contract, getWinnerId(outcome, validCW.id, validCO.id), validCW.id, validCO.id, rivalStableId);
-  impacts.push(applyRecords(state, validCW, validCO, outcome, tags, fameA, popA, fameD, popD, rivalStableId));
+  const deathRes = handleDeath(state, validCW, validCO, outcome, ctx.week, tags, ctx.rivalStableId, rng);
+  const injuryRes = handleInjuries(state, validCW, validCO, outcome, ctx.week, ctx.rivalStableId, boutSeed);
+  impacts.push(deathRes.impact, injuryRes.impact, handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, ctx.rivalStableId, rng));
 
-  const deathRes = handleDeath(state, validCW, validCO, outcome, week, tags, rivalStableId, rng);
-  const injuryRes = handleInjuries(state, validCW, validCO, outcome, week, rivalStableId, boutSeed);
-  impacts.push(deathRes.impact, injuryRes.impact, handleProgressions(state, validCW, validCO, outcome, tags, week, rivalStableId, rng));
-
-  const { summary, announcement } = handleReporting(validCW, validCO, outcome, tags, fameA, popA, fameD, popD, week, rivalStableId, isRivalry, 0, rng);
+  const { summary, announcement } = handleReporting(validCW, validCO, outcome, tags, fameA, popA, fameD, popD, ctx.week, ctx.rivalStableId, ctx.isRivalry, 0, rng);
   impacts.push({ arenaHistory: [summary] });
   engineEventBus.emit({ type: 'BOUT_COMPLETED', payload: { summary, transcript: summary.transcript } });
 
-  return { impact: mergeImpacts(impacts), result: { a: warrior, d: opponent, outcome, announcement, isRivalry, rivalStable, contractId: contract?.id }, stats: { death: deathRes.death, playerDeath: deathRes.playerDeath, injured: injuryRes.injured, deathNames: deathRes.deathNames, injuredNames: injuryRes.injuredNames } };
+  return { impacts, deathRes, injuryRes, announcement, summary };
+}
+
+export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
+  const combatants = getValidatedCombatants(ctx);
+  if (!combatants) return handleInvalidBout(ctx);
+
+  const { cW, cO } = combatants;
+  const boutSeed = hashStr(`${ctx.week}|${cW.id}|${cO.id}`);
+
+  const outcome = runBoutSimulation(state, ctx, cW, cO, boutSeed);
+  const { impacts, deathRes, injuryRes, announcement } = collectBoutImpacts(state, ctx, cW, cO, outcome, boutSeed);
+
+  return {
+    impact: mergeImpacts(impacts),
+    result: { a: ctx.warrior, d: ctx.opponent, outcome, announcement, isRivalry: ctx.isRivalry, rivalStable: ctx.rivalStable, contractId: ctx.contract?.id },
+    stats: { death: deathRes.death, playerDeath: deathRes.playerDeath, injured: injuryRes.injured, deathNames: deathRes.deathNames, injuredNames: injuryRes.injuredNames }
+  };
+}
+
+function buildWarriorMap(state: GameState): Map<string, Warrior> {
+  const map = new Map<string, Warrior>();
+  state.roster.forEach(w => map.set(w.id, w));
+  (state.rivals || []).forEach(r => r.roster.forEach(w => map.set(w.id, w)));
+  return map;
 }
 
 export function processWeekBouts(state: GameState): { impact: StateImpact; results: BoutResult[]; summary: WeekBoutSummary } {
-  // ⚡ Bolt: Use cached warriorMap if available, otherwise build it
-  const warriorMap = state.warriorMap || (() => {
-    const map = new Map<string, Warrior>();
-    state.roster.forEach(w => map.set(w.id, w));
-    (state.rivals || []).forEach(r => r.roster.forEach(w => map.set(w.id, w)));
-    return map;
-  })();
-
-  const pairings = generatePairings(state);
+  const warriorMap = state.warriorMap || buildWarriorMap(state);
   const moodMods = getMoodModifiers(state.crowdMood);
-
   const impacts: StateImpact[] = [];
   const results: BoutResult[] = [];
   const summary = createWeekBoutSummary();
 
-  pairings.forEach(p => {
+  generatePairings(state).forEach(p => {
     const contract = p.contractId ? state.boutOffers[p.contractId] : undefined;
-    const res = resolveBout(state, { 
-      warrior: p.a, 
-      opponent: p.d, 
-      isRivalry: p.isRivalry, 
-      rivalStable: p.rivalStable, 
-      rivalStableId: p.rivalStableId, 
-      moodMods, 
-      week: state.week, 
-      playerId: state.player.id, 
-      warriorMap,
-      contract
-    });
+    const res = resolveBout(state, { warrior: p.a, opponent: p.d, isRivalry: p.isRivalry, rivalStable: p.rivalStable, rivalStableId: p.rivalStableId, moodMods, week: state.week, playerId: state.player.id, warriorMap, contract });
     impacts.push(res.impact);
     results.push(res.result);
     accumulateWeekStats(summary, res);
   });
 
-  const sideEffectsImpact = finalizeWeekSideEffectsToImpact(state, results);
-  impacts.push(sideEffectsImpact);
-  
-  const mergedImpact = mergeImpacts(impacts);
-  return { impact: mergedImpact, results, summary };
+  impacts.push(finalizeWeekSideEffectsToImpact(state, results));
+  return { impact: mergeImpacts(impacts), results, summary };
 }
-

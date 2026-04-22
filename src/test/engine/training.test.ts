@@ -336,8 +336,8 @@ describe("Training System", () => {
 
       const injurySpy = vi.spyOn(trainingGains, 'rollForTrainingInjury');
 
-      const rng = new SeededRNG(1);
-      const impact = computeTrainingImpact(state as any, rng as any);
+      const rng = new SeededRNGService(1);
+      const impact = computeTrainingImpact(state as any, rng);
 
       expect(injurySpy).not.toHaveBeenCalled();
       expect(impact.results.some(r => r.message === "Capped")).toBe(true);

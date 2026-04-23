@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
-import { ScrollText, ChevronRight, Swords, Trophy, Activity, Target, Zap, Shield } from "lucide-react";
+import { ChevronRight, Swords, Trophy, Activity, Shield } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
 import { resolveStableName } from "@/utils/historyResolver";
 import { Surface } from "@/components/ui/Surface";
@@ -20,7 +20,7 @@ export function RecentBoutsWidget() {
   const recentBouts = useMemo(() => {
     const playerStableId = state.player.id;
     const history = state.arenaHistory || [];
-    const results = [];
+    const results: any[] = [];
 
     // ⚡ Bolt: Replaced O(N) full-array filter and slice with an O(1) forward scan
     // to find the first 5 bouts without scanning or allocating the entire history.
@@ -73,13 +73,12 @@ export function RecentBoutsWidget() {
                  </TableCell>
               </TableRow>
             ) : (
-              recentBouts.map((bout, i) => {
-              const isPlayerA = bout.stableIdA === state.player.id;
-              const playerWon = (isPlayerA && bout.winner === "A") || (!isPlayerA && bout.winner === "D");
-                const resultColor = playerWon ? "text-arena-pop" : "text-destructive";
+              recentBouts.map((bout: any) => {
+                const isPlayerA = bout.stableIdA === state.player.id;
+                const playerWon = (isPlayerA && bout.winner === "A") || (!isPlayerA && bout.winner === "D");
 
-                return (
-                  <TableRow key={bout.id} className="border-white/5 group/row hover:bg-white/2 transition-colors">
+              return (
+                <TableRow key={bout.id} className="border-white/5 group/row hover:bg-white/2 transition-colors">
                     <TableCell className="pl-6 py-4">
                        <span className="text-[10px] font-mono font-black text-white/20 group-hover/row:text-primary transition-colors">
                           WK {bout.week.toString().padStart(2, '0')}

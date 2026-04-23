@@ -3,7 +3,7 @@
  * Two tabs: Scout Pool (pre-generated warriors) and Custom Build.
  * Implements Stable_Lords_Orphanage_Recruitment_Spec_v1.0
  */
-import React, { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useGameStore, type GameStore } from "@/state/useGameStore";
 import { FightingStyle, STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, type Attributes } from "@/types/game";
@@ -32,6 +32,15 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { Surface } from "@/components/ui/Surface";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const CUSTOM_COST = 200;
 
@@ -223,8 +232,7 @@ function RecruitCard({
 export default function Recruit() {
   const store = useGameStore();
   const { 
-    roster, graveyard, retired, rivals, treasury, week, rosterBonus, player, 
-    ledger, newsletter, recruitPool, setState 
+    roster, treasury, rosterBonus, recruitPool, setState 
   } = store;
   
   const navigate = useNavigate();
@@ -256,7 +264,7 @@ export default function Recruit() {
       // 1.0 Deterministic ID: Recruitment uses hash-based seed for bit-identity
       const recruitRng = new SeededRNGService(draft.week + hashStr(w.name));
       const warrior = makeWarrior(
-        recruitRng.uuid("warrior"),
+        recruitRng.uuid("warrior") as any,
         w.name, w.style, w.attributes,
         { age: w.age, potential: w.potential }
       );
@@ -326,10 +334,10 @@ export default function Recruit() {
       // ⚡ Bolt: Moving name collection inside the callback to avoid per-render overhead.
       // We use a single-pass loop approach to avoid intermediate array allocations (O(N) vs O(N*M)).
       const usedNames = new Set<string>();
-      draft.roster.forEach(w => usedNames.add(w.name));
-      draft.graveyard.forEach(w => usedNames.add(w.name));
-      draft.retired.forEach(w => usedNames.add(w.name));
-      (draft.rivals ?? []).forEach(r => r.roster.forEach(w => usedNames.add(w.name)));
+      draft.roster.forEach((w: any) => usedNames.add(w.name));
+      draft.graveyard.forEach((w: any) => usedNames.add(w.name));
+      draft.retired.forEach((w: any) => usedNames.add(w.name));
+      (draft.rivals ?? []).forEach((r: any) => r.roster.forEach((w: any) => usedNames.add(w.name)));
 
       const newPool = fullRefreshPool(draft.week, usedNames);
       draft.treasury -= REFRESH_COST;
@@ -381,15 +389,15 @@ export default function Recruit() {
     let pool = [...(recruitPool ?? [])];
     
     // Filter by Tier
-    pool = pool.filter(w => activeTiers.has(w.tier));
+    pool = pool.filter((w: PoolWarrior) => activeTiers.has(w.tier));
     
     // Filter by Style
     if (activeStyle !== "all") {
-      pool = pool.filter(w => w.style === activeStyle);
+      pool = pool.filter((w: PoolWarrior) => w.style === activeStyle);
     }
     
     // Sort
-    pool.sort((a, b) => {
+    pool.sort((a: PoolWarrior, b: PoolWarrior) => {
       switch (sortBy) {
         case "cost-asc": return a.cost - b.cost;
         case "cost-desc": return b.cost - a.cost;

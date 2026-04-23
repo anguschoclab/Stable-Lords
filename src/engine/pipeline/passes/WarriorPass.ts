@@ -9,11 +9,6 @@ import type { IRNGService } from "@/engine/core/rng/IRNGService";
  * Stable Lords — Warrior Pipeline Pass
  * Handles weekly training, aging, and recovery using the established impact pattern.
  */
-export const PASS_METADATA = {
-  name: "WarriorPass",
-  dependencies: ["BoutSimulationPass"] // Depends on bout simulation completing
-};
-
 /**
  * Stable Lords — Warrior Pipeline Pass
  * Handles weekly training, aging, and recovery using the established impact pattern.

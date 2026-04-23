@@ -1,4 +1,3 @@
-import React from "react";
 import { type Warrior } from "@/types/game";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { growthNarrative } from "./GrowthHelpers";

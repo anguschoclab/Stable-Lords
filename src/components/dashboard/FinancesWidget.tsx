@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
-import { Coins, ArrowUpRight, ArrowDownRight, Wallet, Activity, TrendingUp, BarChart3 } from "lucide-react";
-import { useGameStore, useWorldState } from "@/state/useGameStore";
+import { useMemo } from "react";
+import { Coins, ArrowUpRight, ArrowDownRight, Wallet, TrendingUp } from "lucide-react";
+import { useWorldState } from "@/state/useGameStore";
 import { computeWeeklyBreakdown } from "@/engine/economy";
 import { Surface } from "@/components/ui/Surface";
 import { cn } from "@/lib/utils";

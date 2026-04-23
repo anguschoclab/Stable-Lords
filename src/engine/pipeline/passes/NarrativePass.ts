@@ -11,11 +11,6 @@ import { getFightsForWeek } from "@/engine/core/historyUtils";
  * Stable Lords — Narrative Pipeline Pass
  * Bundles Gazette generation, Grudges, and Rivalry updates into a single impact.
  */
-export const PASS_METADATA = {
-  name: "NarrativePass",
-  dependencies: ["RivalStrategyPass"]
-};
-
 export function runNarrativePass(state: GameState, currentWeek: number, nextWeek: number, rootRng?: IRNGService): StateImpact {
   const rng = rootRng || new SeededRNGService(currentWeek * 9973 + 456);
   

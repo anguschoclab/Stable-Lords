@@ -1,4 +1,3 @@
-import React from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { Link } from "@tanstack/react-router";
 import { STYLE_DISPLAY_NAMES } from "@/types/game";

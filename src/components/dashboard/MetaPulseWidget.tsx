@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { TrendingUp, Activity, Zap, ArrowUpRight, ArrowDownLeft, Target, Globe } from "lucide-react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { computeMetaDrift, getMetaLabel, getMetaColor } from "@/engine/metaDrift";

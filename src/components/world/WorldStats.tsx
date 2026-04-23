@@ -1,4 +1,3 @@
-import React from "react";
 import { Surface } from "@/components/ui/Surface";
 import { Trophy, Swords, Skull, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";

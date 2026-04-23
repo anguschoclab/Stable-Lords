@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState, useEffect } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { useGameStore } from "@/state/useGameStore";
 import type { GameState } from "@/types/state.types";
 import type { Trainer } from "@/types/shared.types";

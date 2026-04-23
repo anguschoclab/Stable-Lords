@@ -6,11 +6,6 @@ import { StateImpact } from "@/engine/impacts";
  * Stable Lords — Equipment Pipeline Pass
  * Handles AI equipment optimization for rival stables.
  */
-export const PASS_METADATA = {
-  name: "EquipmentPass",
-  dependencies: ["WarriorPass"] // Depends on warrior roster updates
-};
-
 /**
  * Stable Lords — Equipment Pipeline Pass
  * Handles AI equipment optimization for rival stables.

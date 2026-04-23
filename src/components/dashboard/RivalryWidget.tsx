@@ -1,16 +1,10 @@
-import React, { useMemo } from "react";
-import { useGameStore, useWorldState } from "@/state/useGameStore";
+import { useMemo } from "react";
+import { useWorldState } from "@/state/useGameStore";
 import { GameState } from "@/types/game";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
-import { StableLink, WarriorLink } from "@/components/EntityLink";
-import { Flame, Skull, Activity, Target, Zap, TrendingUp, AlertCircle, Sparkles, Swords } from "lucide-react";
+import { Flame, Skull, Target, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { getRecentFights } from "@/engine/core/historyUtils";
 
 export interface DerivedRivalry {

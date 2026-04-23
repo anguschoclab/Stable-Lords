@@ -1,17 +1,20 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Activity, Zap, Shield, Swords, Battery, AlertTriangle } from 'lucide-react';
+import { Activity, Zap, Swords, AlertTriangle } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV } from '@/types/game';
+import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
+import { useGameStore } from "@/state/useGameStore";
+import { cn } from "@/lib/utils";
+import { Surface } from "@/components/ui/Surface";
 
 export default function PhysicalsSimulator() {
   const { roster } = useGameStore();
-  const activeWarriors = roster.filter(w => w.status === "Active");
+  const activeWarriors = roster.filter((w: Warrior) => w.status === "Active");
 
   const [styleA, setStyleA] = useState<FightingStyle>(FightingStyle.BashingAttack);
   const [styleB, setStyleB] = useState<FightingStyle>(FightingStyle.ParryRiposte);
@@ -77,7 +80,7 @@ export default function PhysicalsSimulator() {
     };
   }, [styleA, styleB, statsA, statsB]);
 
-  const renderFighterConfig = (label: string, style: FightingStyle, setStyle: (s: any) => void, stats: any, setStats: (s: any) => void, colorClass: string) => (
+  const renderFighterConfig = (label: string, style: FightingStyle, setStyle: (s: any) => void, stats: any, setStats: (s: any) => void) => (
     <Card>
       <CardHeader className="pb-4 border-b border-border">
         <CardTitle className="font-display text-lg flex items-center justify-between">
@@ -128,7 +131,7 @@ export default function PhysicalsSimulator() {
           </div>
 
           <Surface variant="glass" className="p-0 border-white/5 max-h-[600px] overflow-y-auto thin-scrollbar">
-            {activeWarriors.map(warrior => {
+            {activeWarriors.map((warrior: Warrior) => {
               const inA = fighterAId === warrior.id;
               const inB = fighterBId === warrior.id;
               
@@ -143,7 +146,7 @@ export default function PhysicalsSimulator() {
                 >
                   <div className="flex-1 min-w-0">
                     <p className={cn("text-xs font-black uppercase truncate", inA ? "text-primary" : inB ? "text-destructive" : "")}>{warrior.name}</p>
-                    <p className="text-[9px] text-muted-foreground uppercase mt-1">{STYLE_ABBREV[warrior.style] ?? warrior.style}</p>
+                    <p className="text-[9px] text-muted-foreground uppercase mt-1">{STYLE_ABBREV[warrior.style as FightingStyle] ?? warrior.style}</p>
                   </div>
                   {inA && <Badge className="bg-primary/20 text-primary border-primary/30 text-[8px] font-black h-4 px-1">PILOT_A</Badge>}
                   {inB && <Badge className="bg-destructive/20 text-destructive border-destructive/30 text-[8px] font-black h-4 px-1">PILOT_B</Badge>}
@@ -159,11 +162,10 @@ export default function PhysicalsSimulator() {
           </div>
         </aside>
 
-        {/* Right Rail Simulation Canvas (span-9) */}
         <main className="lg:col-span-9 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {renderFighterConfig("Fighter A", styleA, setStyleA, statsA, setStatsA, "primary")}
-            {renderFighterConfig("Fighter B", styleB, setStyleB, statsB, setStatsB, "destructive")}
+            {renderFighterConfig("Fighter A", styleA, setStyleA, statsA, setStatsA)}
+            {renderFighterConfig("Fighter B", styleB, setStyleB, statsB, setStatsB)}
           </div>
 
           <Surface variant="glass" className="border-accent/40 bg-accent/5 p-0 overflow-hidden">

@@ -1,16 +1,11 @@
-import React, { useMemo } from "react";
-import { Skull, Activity, Shield, Target, Zap, TrendingUp, Globe, Sword, Users, Star } from "lucide-react";
-import { useGameStore, useWorldState } from "@/state/useGameStore";
+import { useMemo } from "react";
+import { Skull, Activity, Target, Globe, Users, Star } from "lucide-react";
+import { useWorldState } from "@/state/useGameStore";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { StableCrest } from "@/components/crest/StableCrest";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export function RivalsListWidget() {
   const state = useWorldState();

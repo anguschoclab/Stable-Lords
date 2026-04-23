@@ -1,4 +1,3 @@
-import React from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon } from "lucide-react";
 import { Surface } from "@/components/ui/Surface";

@@ -10,11 +10,6 @@ import { getFeatureFlags } from "@/engine/featureFlags";
  * Stable Lords — Bout Simulation Pass
  * Phase 0: Simulates all scheduled bouts for the week.
  */
-export const PASS_METADATA = {
-  name: "BoutSimulationPass",
-  dependencies: [] // No dependencies - runs first
-};
-
 /**
  * Stable Lords — Bout Simulation Pipeline Pass
  * Integrates the legacy bout processor into the standard modular pipeline.

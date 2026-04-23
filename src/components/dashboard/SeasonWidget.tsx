@@ -1,8 +1,6 @@
-import React from "react";
-import { Calendar, Clock, Trophy, MapPin, Gauge, Activity, Sparkles, Hexagon, CloudRain, Sun, Cloud, Wind, SunDim, Moon, PartyPopper } from "lucide-react";
-import { useGameStore, useWorldState } from "@/state/useGameStore";
+import { Calendar, Clock, Activity, Hexagon, CloudRain, Sun, Cloud, Wind, Moon, PartyPopper } from "lucide-react";
+import { useWorldState } from "@/state/useGameStore";
 import { Surface } from "@/components/ui/Surface";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";

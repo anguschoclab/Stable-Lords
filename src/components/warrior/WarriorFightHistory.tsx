@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Swords } from "lucide-react";
 import { type FightSummary } from "@/types/game";
 import { Card, CardContent } from "@/components/ui/card";

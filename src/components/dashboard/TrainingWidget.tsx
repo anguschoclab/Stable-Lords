@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { Dumbbell, ChevronRight, Activity, Zap, Target, TrendingUp, AlertCircle, Sparkles } from "lucide-react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";

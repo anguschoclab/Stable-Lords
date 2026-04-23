@@ -1,16 +1,11 @@
-import React, { useMemo } from "react";
-import { Shield, Swords, Users, Target, Activity, Zap, TrendingUp, BarChart3, Star, Award, Skull } from "lucide-react";
+import { useMemo } from "react";
+import { Shield, Swords, Activity, TrendingUp, BarChart3 } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
 import { resolveStableName } from "@/utils/historyResolver";
 import { type Warrior } from "@/types/game";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 type StableComparisonStats = {
   id: string;
@@ -167,7 +162,10 @@ export function StableComparisonWidget() {
           </div>
         </div>
 
-        {rivalStats.some(r => (h2hRecords[r.name]?.wins + h2hRecords[r.name]?.losses) > 0) && (
+        {rivalStats.some(r => {
+          const rec = h2hRecords[r.id];
+          return rec && (rec.wins + rec.losses) > 0;
+        }) && (
           <div className="border-t border-white/5 pt-8 space-y-6">
             <div className="flex items-center gap-3 px-2">
               <Swords className="h-4 w-4 text-primary opacity-60" />

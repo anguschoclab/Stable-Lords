@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/game";
 import { computeMetaDrift, getMetaLabel, getMetaColor } from "@/engine/metaDrift";

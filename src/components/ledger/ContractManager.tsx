@@ -1,4 +1,3 @@
-import React from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { Link } from "@tanstack/react-router";
 import { TRAINER_WEEKLY_SALARY } from "@/engine/trainers";

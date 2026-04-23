@@ -12,11 +12,6 @@ import { StateImpact, mergeImpacts } from "@/engine/impacts";
 /**
  * Stable Lords — Rival Strategy Pipeline Pass
  */
-export const PASS_METADATA = {
-  name: "RivalStrategyPass",
-  dependencies: ["WorldPass"] // Depends on world transitions
-};
-
 /**
  * Stable Lords — Rival Strategy Pipeline Pass
  */

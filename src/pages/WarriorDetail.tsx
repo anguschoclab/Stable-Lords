@@ -2,7 +2,7 @@
  * Stable Lords — Warrior Detail
  * Deep dive into a single warrior's stats, history, and equipment.
  */
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useParams, useNavigate, Link } from "@tanstack/react-router";
 import { obfuscateWarrior } from "@/lib/obfuscation";
 import { useGameStore, type GameStore } from "@/state/useGameStore";

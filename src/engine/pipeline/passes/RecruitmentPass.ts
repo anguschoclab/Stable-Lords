@@ -8,11 +8,6 @@ import { partialRefreshPool, generateRecruit } from "@/engine/recruitment";
  * Stable Lords — Recruitment Pipeline Pass
  * Handles the weekly refresh of the recruitment pool.
  */
-export const PASS_METADATA = {
-  name: "RecruitmentPass",
-  dependencies: ["WorldPass"]
-};
-
 export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): StateImpact {
   const rng = rootRng || new SeededRNGService(state.week * 701 + 13);
   

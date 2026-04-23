@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from "@/types/game";

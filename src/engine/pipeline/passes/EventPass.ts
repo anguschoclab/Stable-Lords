@@ -10,11 +10,6 @@ import { type WarriorId, type InjuryId, type LedgerEntryId } from "@/types/share
 /**
  * Stable Lords — Random Event Pipeline Pass
  */
-export const PASS_METADATA = {
-  name: "EventPass",
-  dependencies: ["RivalStrategyPass"]
-};
-
 function t(template: string, data: Record<string, string | number>): string {
   let result = template;
   for (const [key, value] of Object.entries(data)) {

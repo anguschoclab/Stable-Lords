@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Search, Eye, Target, Activity } from "lucide-react";
 import type { RivalStableData, ScoutReportData, ScoutQuality } from "@/types/game";
 import { RivalStableList } from "./RivalStableList";

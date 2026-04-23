@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { useShallow } from 'zustand/react/shallow';
 import { motion, AnimatePresence } from "framer-motion";

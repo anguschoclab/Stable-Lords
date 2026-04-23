@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useGameStore } from "@/state/useGameStore";
 import { FightingStyle, STYLE_DISPLAY_NAMES } from "@/types/shared.types";
 import { generateRecommendations, getStyleEquipmentTips } from "@/engine/equipmentOptimizer";

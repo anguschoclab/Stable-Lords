@@ -1,4 +1,3 @@
-import React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Shield, Trophy, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";

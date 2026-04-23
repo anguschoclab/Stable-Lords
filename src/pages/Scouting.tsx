@@ -2,7 +2,7 @@
  * Stable Lords — Scouting Page (Refactored)
  * Modularized for better maintainability and strict type safety.
  */
-import React, { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useGameStore, type GameStore } from "@/state/useGameStore";
 import { generateScoutReport, getScoutCost, type ScoutQuality } from "@/engine/scouting";
 import { type ScoutReportData, type RivalStableData, type Warrior } from "@/types/game";

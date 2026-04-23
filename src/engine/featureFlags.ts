@@ -50,28 +50,6 @@ export function setFeatureFlags(patch: Partial<FeatureFlags>): void {
   activeFlags = { ...activeFlags, ...patch };
 }
 
-export function resetFeatureFlags(): void {
-  activeFlags = { ...DEFAULTS };
-}
-
-/**
- * Parse a URL fragment like `?feature=narrativeGen2,highlightLog` and flip matching flags on.
- * Safe to call in non-browser contexts — returns false and no-ops if window is unavailable.
- */
-export function hydrateFeatureFlagsFromLocation(): boolean {
-  if (typeof window === "undefined" || !window.location) return false;
-  const params = new URLSearchParams(window.location.search);
-  const raw = params.get("feature");
-  if (!raw) return false;
-  const patch: Partial<FeatureFlags> = {};
-  for (const key of raw.split(",").map(s => s.trim()).filter(Boolean)) {
-    if (key in DEFAULTS) {
-      (patch as Record<string, boolean>)[key] = true;
-    }
-  }
-  if (Object.keys(patch).length > 0) {
-    setFeatureFlags(patch);
-    return true;
-  }
-  return false;
+export function setFeatureFlags(patch: Partial<FeatureFlags>): void {
+  activeFlags = { ...activeFlags, ...patch };
 }

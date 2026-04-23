@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { UserRoundSearch, Swords, Crosshair, Zap, Hexagon, BarChart3, TrendingUp } from "lucide-react";
 import { Surface } from "@/components/ui/Surface";

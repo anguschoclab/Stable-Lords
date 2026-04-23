@@ -1,4 +1,3 @@
-import React from "react";
 import { Trophy, Flame, Users, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TagBadge } from "@/components/ui/WarriorBadges";

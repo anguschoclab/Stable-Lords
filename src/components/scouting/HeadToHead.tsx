@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Swords, History, Zap, Target } from "lucide-react";
 import { Surface } from "@/components/ui/Surface";

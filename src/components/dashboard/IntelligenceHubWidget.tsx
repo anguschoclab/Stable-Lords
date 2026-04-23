@@ -1,10 +1,9 @@
-import React, { useMemo } from "react";
-import { useGameStore, useWorldState } from "@/state/useGameStore";
-import { Newspaper, Bell, Quote, ChevronRight, Info, Zap, TrendingUp, Target, Activity, Send } from "lucide-react";
+import { useMemo } from "react";
+import { useWorldState } from "@/state/useGameStore";
+import { Newspaper, Quote, ChevronRight, Info, Zap, Target, Send } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AgentReasoningWidget } from "./AgentReasoningWidget";

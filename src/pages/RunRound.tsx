@@ -2,7 +2,7 @@
  * Stable Lords — Run Round (Refactored)
  * Modularized for better maintainability and strict type safety.
  */
-import React, { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useGameStore, reconstructGameState, type GameStore } from "@/state/useGameStore";
 import { type GameState, type Warrior, type RivalStableData } from "@/types/game";

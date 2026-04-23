@@ -10,11 +10,6 @@ import { collectAllActiveWarriors } from "@/engine/core/warriorCollection";
  * Phase 2: Promoters scan the world and dispatch bout offers.
  * Logic incorporates Hype Matrix, Rank Requirements, and Personality biases.
  */
-export const PASS_METADATA = {
-  name: "PromoterPass",
-  dependencies: ["RankingsPass"] // Depends on rankings for matchmaking
-};
-
 /**
  * Stable Lords — Promoter Pass
  * Phase 2: Promoters scan the world and dispatch bout offers.

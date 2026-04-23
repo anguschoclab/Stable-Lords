@@ -1,4 +1,3 @@
-import React from "react";
 import { Crosshair, Shield, Target } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import PlanBuilder from "@/components/PlanBuilder";

@@ -210,34 +210,3 @@ export function applyBackstoryToPlayer(
   if (def.economy.rosterBonusDelta) state.rosterBonus += def.economy.rosterBonusDelta;
   seedIdentity(state.player, def.identitySeed, rng);
 }
-
-/**
- * Apply a backstory to a rival stable **without** assuming a template already set deltas.
- * For template-driven rivals, use `labelRivalBackstory` (no stat changes) instead.
- */
-export function applyBackstoryToRival(
-  rival: RivalStableData,
-  id: BackstoryId,
-  rng: IRNGService,
-): void {
-  const def = BACKSTORIES[id];
-  if (!def) return;
-  rival.owner.backstoryId = id;
-  applyEconomyToOwner(rival.owner, def.economy);
-  if (def.economy.treasuryDelta) rival.treasury += def.economy.treasuryDelta;
-  if (def.economy.fameDelta) rival.fame += def.economy.fameDelta;
-  seedIdentity(rival.owner, def.identitySeed, rng);
-}
-
-/** Label-only: tag an owner with a backstory without mutating stats. For template rivals. */
-export function labelOwnerBackstory(owner: Owner, id: BackstoryId): void {
-  owner.backstoryId = id;
-}
-
-export function pickRandomBackstory(
-  rng: IRNGService,
-  weights?: Partial<Record<BackstoryId, number>>,
-): BackstoryId {
-  if (weights) return rollWeighted(weights, rng);
-  return BACKSTORY_IDS[Math.floor(rng.next() * BACKSTORY_IDS.length)]!;
-}

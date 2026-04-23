@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Heart } from 'lucide-react';

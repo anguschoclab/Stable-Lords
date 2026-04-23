@@ -1,4 +1,3 @@
-import React from "react";
 import { useGameStore } from "@/state/useGameStore";
 import { Shield, Users, Crown, Medal, Award, Star, Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";

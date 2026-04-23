@@ -7,11 +7,6 @@ import { StateImpact } from "@/engine/impacts";
  * Stable Lords — World Pipeline Pass
  * Handles seasonal transitions and weather changes.
  */
-export const PASS_METADATA = {
-  name: "WorldPass",
-  dependencies: ["EquipmentPass"] // Depends on equipment pass completing
-};
-
 const SEASONS: Season[] = ["Spring", "Summer", "Fall", "Winter"];
 
 export function computeNextSeason(newWeek: number): Season {

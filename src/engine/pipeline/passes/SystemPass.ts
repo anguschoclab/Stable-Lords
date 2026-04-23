@@ -15,11 +15,6 @@ import { computeNextSeason } from "./WorldPass";
  * Stable Lords — System & Season Pipeline Pass
  * Bundles systemic updates like Hall of Fame, Tier Progression, and AI Seasonal Churn.
  */
-export const PASS_METADATA = {
-  name: "SystemPass",
-  dependencies: ["WorldPass"]
-};
-
 export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImpact {
   const nextWeek = state.week + 1 > 52 ? 1 : state.week + 1;
   const rng = rootRng || new SeededRNGService(state.week * 881 + 17);

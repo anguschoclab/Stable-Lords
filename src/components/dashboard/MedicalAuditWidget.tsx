@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
-import { useGameStore, useWorldState } from "@/state/useGameStore";
-import { HeartPulse, Activity, Skull, AlertCircle, Thermometer, ShieldAlert, ChevronRight } from "lucide-react";
+import { useMemo } from "react";
+import { useWorldState } from "@/state/useGameStore";
+import { HeartPulse, Activity, Skull, ShieldAlert } from "lucide-react";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
 import { StatBattery } from "@/components/ui/StatBattery";

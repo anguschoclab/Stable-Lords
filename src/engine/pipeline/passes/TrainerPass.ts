@@ -8,11 +8,6 @@ import { computeTrainerAging } from "@/engine/trainerAging";
  * Stable Lords — Trainer Pipeline Pass
  * Handles aging, retirement, and pool management for trainers.
  */
-export const PASS_METADATA = {
-  name: "TrainerPass",
-  dependencies: ["WorldPass"]
-};
-
 export function runTrainerPass(state: GameState, rootRng?: IRNGService): StateImpact {
   const rng = rootRng || new SeededRNGService(state.week * 1337 + 7);
   const { updatedTrainers, news, updatedHiringPool } = computeTrainerAging(state, rng);

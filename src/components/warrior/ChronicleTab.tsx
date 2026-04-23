@@ -1,4 +1,3 @@
-import React from "react";
 import { Trophy, Star } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CareerTimeline } from "@/components/warrior/CareerTimeline";

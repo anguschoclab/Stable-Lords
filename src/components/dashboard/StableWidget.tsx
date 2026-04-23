@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "@tanstack/react-router";
 import { Shield, UserPlus, Users, Activity, Heart, Swords, Star, AlertCircle } from "lucide-react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { type Warrior, STYLE_DISPLAY_NAMES } from "@/types/game";
 import { getRecommendedChallenges, getMatchupsToAvoid, type MatchupScore } from "@/engine/schedulingAssistant";

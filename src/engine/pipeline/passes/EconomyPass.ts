@@ -7,11 +7,6 @@ import { StateImpact } from "@/engine/impacts";
  * Stable Lords — Economy Pipeline Pass
  * Handles weekly income and expenses for the player's stable.
  */
-export const PASS_METADATA = {
-  name: "EconomyPass",
-  dependencies: ["WarriorPass"] // Depends on warrior updates for income calculation
-};
-
 /**
  * Stable Lords — Economy Pipeline Pass
  * Uses the established impact-resolution pattern for financial simulation.

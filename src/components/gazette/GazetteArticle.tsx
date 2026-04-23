@@ -1,4 +1,3 @@
-import React from "react";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

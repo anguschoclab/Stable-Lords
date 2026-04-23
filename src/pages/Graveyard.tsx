@@ -1,7 +1,6 @@
 /**
  * Stable Lords — Graveyard & Retired Warriors
  */
-import React from "react";
 import { useGameStore } from "@/state/useGameStore";
 import { STYLE_DISPLAY_NAMES, FightingStyle, type Warrior } from "@/types/game";
 import { Card, CardContent } from "@/components/ui/card";

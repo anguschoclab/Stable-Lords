@@ -11,11 +11,6 @@ import { type WarriorId, type LedgerEntryId } from "@/types/shared.types";
  * Stable Lords — Seasonal Pipeline Pass (Offseason)
  * The Chaos Weaver 🎲
  */
-export const PASS_METADATA = {
-  name: "SeasonalPass",
-  dependencies: ["EventPass"]
-};
-
 function t(template: string, data: Record<string, string | number>): string {
   let result = template;
   for (const [key, value] of Object.entries(data)) {

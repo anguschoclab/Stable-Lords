@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "@/lib/utils";
 
 export type BodyPart = "Head" | "Torso" | "LeftArm" | "RightArm" | "Legs";

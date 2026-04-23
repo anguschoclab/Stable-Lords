@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "@tanstack/react-router";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";

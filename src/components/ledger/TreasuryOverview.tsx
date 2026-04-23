@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { computeWeeklyBreakdown } from "@/engine/economy";
 import { Surface } from "@/components/ui/Surface";

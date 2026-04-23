@@ -1,4 +1,3 @@
-import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Coins, Target, Terminal, AlertTriangle, ShieldAlert, Microscope, Info, Swords } from "lucide-react";
 import { Button } from "@/components/ui/button";

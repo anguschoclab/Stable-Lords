@@ -1,16 +1,11 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Trophy, ChevronRight, Star, Award, Target, TrendingUp, Zap, Shield } from "lucide-react";
-import { useGameStore, useWorldState } from "@/state/useGameStore";
+import { Trophy, ChevronRight, Star, Award, Target, TrendingUp, Shield } from "lucide-react";
+import { useWorldState } from "@/state/useGameStore";
 import { selectActiveWarriors } from "@/state/selectors";
 import { Surface } from "@/components/ui/Surface";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export function RankingsWidget() {
   const state = useWorldState();
@@ -35,7 +30,7 @@ export function RankingsWidget() {
     let bestRank: number | null = null;
 
     for (const [id, entry] of Object.entries(realmRankings)) {
-      if (!playerWarriorIds.has(id)) continue;
+      if (!playerWarriorIds.has(id as any)) continue;
       if (bestRank === null || entry.overallRank < bestRank) {
         bestRank = entry.overallRank;
         const warrior = (state.roster ?? []).find(w => w.id === id);

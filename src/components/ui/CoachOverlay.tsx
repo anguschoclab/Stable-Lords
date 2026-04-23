@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useGameStore, useWorldState } from "@/state/useGameStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle, ShieldAlert, Coins, History, Zap, Activity } from "lucide-react";

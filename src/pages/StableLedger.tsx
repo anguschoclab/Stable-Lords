@@ -1,4 +1,3 @@
-import React from "react";
 import { BookOpen, Coins, Sparkles, GraduationCap, ScrollText, Skull, CalendarDays, AlertCircle, Hourglass } from "lucide-react";
 import { useGameStore } from "@/state/useGameStore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

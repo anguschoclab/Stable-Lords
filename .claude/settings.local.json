@@ -49,7 +49,34 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('bin',{}\\)\\)\")",
       "Bash(bun x *)",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(list\\(d.keys\\(\\)\\)\\)\")",
-      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('files',{}\\)\\)\")"
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('files',{}\\)\\)\")",
+      "Bash(claude mcp *)",
+      "Skill(update-config)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(node \"node_modules/prettier/bin/prettier.cjs\" --write \"src/main.tsx\")",
+      "Bash(node \"node_modules/typescript/bin/tsc\" --noEmit)",
+      "Bash(/c/Users/amauricia/.bun/bin/bunx prettier *)",
+      "Bash(python3 *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/c/Users/amauricia/.bun/bin/bunx prettier --write \"src/**/*.{ts,tsx}\" 2>/dev/null || true",
+            "statusMessage": "Formatting..."
+          },
+          {
+            "type": "command",
+            "command": "/c/Users/amauricia/.bun/bin/bunx tsc --noEmit 2>/dev/null || true",
+            "timeout": 60,
+            "statusMessage": "Type checking..."
+          }
+        ]
+      }
     ]
   }
 }

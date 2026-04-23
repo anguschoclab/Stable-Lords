@@ -31,7 +31,7 @@ export function RankingsWidget() {
       }
     }
     return top;
-  }, [state]);
+  }, [state.roster]);
 
   // ── Player standings summary ──────────────────────────────────────────────
   const playerStanding = useMemo(() => {

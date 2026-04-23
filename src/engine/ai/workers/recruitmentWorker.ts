@@ -106,6 +106,7 @@ export function processRecruitment(
         status: "Active",
         age: recruit.age,
         stableId: updatedRival.owner.id,
+        lineage: recruit.lineage,
       };
 
       updatedRival.roster = [...updatedRival.roster, newWarrior];

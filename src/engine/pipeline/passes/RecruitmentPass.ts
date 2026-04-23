@@ -13,7 +13,21 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
   
   // 1. Refresh recruitment pool
   const usedNames = new Set<string>(state.roster.map(w => w.name));
-  const recruitPool = partialRefreshPool(state.recruitPool || [], state.week, usedNames, rng);
+  
+  // Collect legacy candidates (fame > 1000)
+  const legacyCandidates = [
+    ...(state.graveyard || []),
+    ...(state.retired || [])
+  ].filter(w => w.fame > 1000);
+
+  const recruitPool = partialRefreshPool(
+    state.recruitPool || [], 
+    state.week, 
+    usedNames, 
+    rng, 
+    state.cachedMetaDrift,
+    legacyCandidates
+  );
 
   // 2. Post-death pool bonus: each arena death this week draws one extra aspirant
   // into the pool (fame of mortal combat attracts more blood). Bounded so a slaughter
@@ -24,7 +38,7 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
     const poolNames = new Set(recruitPool.map(w => w.name));
     const allUsed = new Set<string>([...usedNames, ...poolNames]);
     for (let i = 0; i < bonusCount; i++) {
-      recruitPool.push(generateRecruit(rng, allUsed, state.week));
+      recruitPool.push(generateRecruit(rng, allUsed, state.week, undefined, state.cachedMetaDrift, legacyCandidates));
     }
   }
 

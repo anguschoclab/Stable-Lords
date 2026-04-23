@@ -99,6 +99,14 @@ export interface WarriorFavorites {
   };
 }
 
+export interface WarriorLineage {
+  parentId?: WarriorId;
+  stableId?: StableId;
+  generation: number;
+  pedigree: "Commoner" | "Second Generation" | "Legacy" | "Noble Blood" | "Exiled Legend";
+  mentorName?: string;
+}
+
 export interface Warrior {
   id: WarriorId;
   name: string;
@@ -140,11 +148,12 @@ export interface Warrior {
   isDead?: boolean;
   dateOfDeath?: string;
   causeOfDeath?: string;
-  yearlySnapshots?: Record<number, CareerRecord>; // 📸 Snapshot at Year Start
+  yearlySnapshots?: Record<number, CareerRecord>; 
   awards?: import("./state.types").AnnualAward[];
   traits: string[];
   lore?: string;
   origin?: string;
+  lineage?: WarriorLineage;
 }
 
 // Re-exports for convenience

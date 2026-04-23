@@ -16,6 +16,9 @@ import { StatBattery } from "@/components/ui/StatBattery";
 import { cn } from "@/lib/utils";
 import { TRAIT_DATA } from "@/data/orphanPool";
 import { getFavoritesDisplay } from "@/components/warrior/favoritesDisplay";
+import { LineageTree } from "@/components/stable/LineageTree";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { History, Fingerprint } from "lucide-react";
 
 interface WarriorDossierProps {
   warriorId: string;
@@ -126,7 +129,6 @@ export const WarriorDossier = React.memo(function WarriorDossier({ warriorId }: 
                 </div>
               </CardContent>
             </Card>
-            
             <div className="grid grid-cols-2 gap-2">
               {ATTRIBUTE_KEYS.map((key) => (
                 <div key={key} className="flex items-center justify-between p-2 rounded bg-secondary/10 border border-border/50">
@@ -137,19 +139,38 @@ export const WarriorDossier = React.memo(function WarriorDossier({ warriorId }: 
             </div>
           </div>
 
-          <Card className="bg-glass border-arena-blood/10 overflow-hidden relative">
-            <CardHeader className="pb-0 pt-3 flex flex-row items-center justify-between space-y-0">
-               <CardTitle className="text-[9px] uppercase tracking-widest text-muted-foreground font-black">Trauma Mapping</CardTitle>
-               <Activity className="h-3 w-3 text-arena-blood animate-pulse" />
-            </CardHeader>
-            <CardContent className="flex justify-center p-4">
-              <WarriorPaperDoll 
-                injuries={warrior.injuries} 
-                isWeaponMastered={!!(warrior.favorites?.weaponId && warrior.equipment?.weapon === warrior.favorites.weaponId && warrior.favorites.discovered.weapon)}
-                size={140} 
-              />
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+             <Tabs defaultValue="overview" className="w-full">
+               <TabsList className="w-full bg-neutral-900 border border-white/5 p-1 rounded-none h-10">
+                 <TabsTrigger value="overview" className="flex-1 text-[9px] font-black uppercase tracking-widest rounded-none data-[state=active]:bg-primary data-[state=active]:text-white">
+                    <Fingerprint className="h-3 w-3 mr-2" /> Biometrics
+                 </TabsTrigger>
+                 <TabsTrigger value="lineage" className="flex-1 text-[9px] font-black uppercase tracking-widest rounded-none data-[state=active]:bg-primary data-[state=active]:text-white">
+                    <History className="h-3 w-3 mr-2" /> Lineage
+                 </TabsTrigger>
+               </TabsList>
+               
+               <TabsContent value="overview" className="mt-4 space-y-4">
+                  <Card className="bg-glass border-arena-blood/10 overflow-hidden relative">
+                    <CardHeader className="pb-0 pt-3 flex flex-row items-center justify-between space-y-0">
+                       <CardTitle className="text-[9px] uppercase tracking-widest text-muted-foreground font-black">Trauma Mapping</CardTitle>
+                       <Activity className="h-3 w-3 text-arena-blood animate-pulse" />
+                    </CardHeader>
+                    <CardContent className="flex justify-center p-4">
+                      <WarriorPaperDoll 
+                        injuries={warrior.injuries} 
+                        isWeaponMastered={!!(warrior.favorites?.weaponId && warrior.equipment?.weapon === warrior.favorites.weaponId && warrior.favorites.discovered.weapon)}
+                        size={140} 
+                      />
+                    </CardContent>
+                  </Card>
+               </TabsContent>
+
+               <TabsContent value="lineage" className="mt-4">
+                  <LineageTree lineage={warrior.lineage} warriorName={warrior.name} />
+               </TabsContent>
+             </Tabs>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

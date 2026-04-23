@@ -1,5 +1,6 @@
 import { FightingStyle, type Attributes, type BaseSkills, type DerivedStats } from "@/types/shared.types";
-import { type AttributePotential, type WarriorFavorites } from "@/types/warrior.types";
+import { type StyleMeta } from "./metaDrift";
+import { type AttributePotential, type WarriorFavorites, type WarriorLineage } from "@/types/warrior.types";
 import { computeWarriorStats } from "./skillCalc";
 import { generatePotential } from "./potential";
 import { generateFavorites } from "./favorites";
@@ -26,6 +27,7 @@ export interface PoolWarrior {
   lore: string;
   addedWeek: number;
   favorites: WarriorFavorites;
+  lineage?: WarriorLineage;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────
@@ -95,7 +97,9 @@ export function generateRecruit(
   rng: IRNGService,
   usedNames: Set<string>,
   week: number,
-  forceTier?: RecruitTier
+  forceTier?: RecruitTier,
+  meta?: StyleMeta,
+  legacyCandidates: import("@/types/warrior.types").Warrior[] = []
 ): PoolWarrior {
   const tier = forceTier ?? rollTier(rng);
   const tierData = getTierData(tier);
@@ -105,7 +109,32 @@ export function generateRecruit(
   const attributes = distributeAttributes(rng, total);
 
   const styles = Object.values(FightingStyle);
-  const style = typeof rng.pick === 'function' ? rng.pick(styles) : styles[Math.floor(rng.next() * styles.length)];
+  let style: FightingStyle;
+  let lineage: import("@/types/warrior.types").WarriorLineage | undefined;
+
+  // 🧬 Genetic Bloodlines: 5% chance to be a Legacy recruit
+  const isLegacy = rng.next() < 0.05 && legacyCandidates.length > 0;
+  if (isLegacy) {
+    const parent = rng.pick(legacyCandidates);
+    style = parent.style;
+    lineage = {
+      parentId: parent.id,
+      generation: (parent.lineage?.generation ?? 1) + 1,
+      pedigree: parent.fame > 2000 ? "Noble Blood" : "Legacy",
+      mentorName: parent.name,
+    };
+  } else if (meta) {
+    // ⚡ Institutional Style Drift: Bias toward current meta
+    const stylesByWeight: FightingStyle[] = [];
+    for (const s of Object.values(FightingStyle)) {
+      const drift = meta[s] ?? 0;
+      const weight = Math.max(1, 5 + drift); // Scale drift (-10..10) to weights (1..15)
+      for (let w = 0; w < weight; w++) stylesByWeight.push(s);
+    }
+    style = rng.pick(stylesByWeight);
+  } else {
+    style = rng.pick(styles);
+  }
 
   // Pick unique name
   let name: string;
@@ -143,17 +172,19 @@ export function generateRecruitPool(
   count: number = DEFAULT_POOL_SIZE,
   week: number,
   usedNames: Set<string>,
-  rng?: IRNGService
+  rng?: IRNGService,
+  meta?: StyleMeta,
+  legacyCandidates: import("@/types/warrior.types").Warrior[] = []
 ): PoolWarrior[] {
   const rngService = rng || new SeededRNGService(week * 9973 + 42);
   const pool: PoolWarrior[] = [];
 
   // Guarantee at least two Promising+ warriors in a larger pool
-  pool.push(generateRecruit(rngService, usedNames, week, rngService.next() < 0.3 ? "Exceptional" : "Promising"));
-  pool.push(generateRecruit(rngService, usedNames, week, rngService.next() < 0.1 ? "Prodigy" : "Promising"));
+  pool.push(generateRecruit(rngService, usedNames, week, rngService.next() < 0.3 ? "Exceptional" : "Promising", meta, legacyCandidates));
+  pool.push(generateRecruit(rngService, usedNames, week, rngService.next() < 0.1 ? "Prodigy" : "Promising", meta, legacyCandidates));
 
   while (pool.length < count) {
-    pool.push(generateRecruit(rngService, usedNames, week));
+    pool.push(generateRecruit(rngService, usedNames, week, undefined, meta, legacyCandidates));
   }
 
   return pool;
@@ -161,15 +192,17 @@ export function generateRecruitPool(
 
 /** Partial weekly refresh — replace oldest 3-4 warriors */
 export function partialRefreshPool(
-  pool: PoolWarrior[],
+  currentPool: PoolWarrior[],
   week: number,
   usedNames: Set<string>,
-  rng?: IRNGService
+  rng?: IRNGService,
+  meta?: StyleMeta,
+  legacyCandidates: import("@/types/warrior.types").Warrior[] = []
 ): PoolWarrior[] {
-  if (pool.length === 0) return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, rng);
+  if (currentPool.length === 0) return generateRecruitPool(DEFAULT_POOL_SIZE, week, usedNames, rng, meta, legacyCandidates);
 
-  const sorted = [...pool].sort((a, b) => a.addedWeek - b.addedWeek);
-  const removeCount = Math.min(4, Math.max(2, Math.floor(pool.length * 0.3)));
+  const sorted = [...currentPool].sort((a, b) => a.addedWeek - b.addedWeek);
+  const removeCount = Math.min(4, Math.max(2, Math.floor(currentPool.length * 0.3)));
   const remaining = sorted.slice(removeCount);
 
   // Rebuild used names from remaining
@@ -179,16 +212,16 @@ export function partialRefreshPool(
   const rngService = rng || new SeededRNGService(week * 7919 + 31);
   const newWarriors: PoolWarrior[] = [];
   for (let i = 0; i < removeCount; i++) {
-    newWarriors.push(generateRecruit(rngService, allUsed, week));
+    newWarriors.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
   }
 
   // Ensure pool stays at size
-  const result = [...remaining, ...newWarriors];
-  while (result.length < DEFAULT_POOL_SIZE) {
-    result.push(generateRecruit(rngService, allUsed, week));
+  const newPool = [...remaining, ...newWarriors];
+  while (newPool.length < DEFAULT_POOL_SIZE) {
+    newPool.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
   }
 
-  return result;
+  return newPool;
 }
 
 /** Full manual refresh (costs gold) */

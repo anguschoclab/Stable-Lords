@@ -2,7 +2,7 @@ import { StateCreator } from "zustand";
 import { LedgerEntry, Promoter, BoutOffer, RankingEntry, AnnualAward } from "@/types/state.types";
 import { canTransact as _canTransact } from "@/utils/economyUtils";
 import type { GameStore } from "@/state/useGameStore";
-import { hashStr } from "@/utils/idUtils";
+import { hashStr } from "@/utils/random";
 import { type PromoterId, type BoutOfferId, type WarriorId, type LedgerEntryId } from "@/types/shared.types";
 
 export interface EconomySlice {

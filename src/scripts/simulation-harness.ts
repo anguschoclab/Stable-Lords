@@ -34,14 +34,32 @@ export function runSimulation(config: SimulationConfig): SimulationResult {
 
   for (let w = 1; w <= weeks; w++) {
     // A. Weekly Decision Logic (AI/Player)
-    state.boutOffers = {}; // Clear old offers
-    // ... logic for responding to offers if any ...
+
+    // Headless: Auto-Respond to Player Contracts
+    const playerOffers = Object.values(state.boutOffers || {}).filter(
+      (o) =>
+        o.status === 'Proposed' && o.warriorIds.some((id) => state.roster.some((w) => w.id === id))
+    );
+
+    playerOffers.forEach((offer) => {
+      const playerWarriorIds = offer.warriorIds.filter((id) => state.roster.some((w) => w.id === id));
+
+      if (offer.hype > 100 || offer.purse > 200) {
+        playerWarriorIds.forEach((id) => {
+          offer.responses[id] = 'Accepted';
+        });
+
+        const allResponded = offer.warriorIds.every(
+          (wid) => offer.responses[wid] !== 'Pending'
+        );
+        if (allResponded) {
+          offer.status = 'Signed';
+        }
+      }
+    });
 
     // B. Advance Week
     state = advanceWeek(state);
-
-    const boutResult = processWeekBouts(state);
-    state = resolveImpacts(state, [boutResult.impact]);
 
     let totalWarriors = 0;
     state.rivals.forEach((r) => (totalWarriors += r.roster.length));

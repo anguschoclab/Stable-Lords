@@ -139,7 +139,7 @@ export function runSeasonalPass(
   } else if (e.effectType === 'tavern_brawl') {
     const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
-      const chosen = activeWarriors[Math.floor(seasonRng.next() * activeWarriors.length)];
+      const chosen = seasonRng.pick(activeWarriors)!;
       const fameGained = 10 + Math.floor(seasonRng.next() * 10);
 
       const newInjury: InjuryData = {

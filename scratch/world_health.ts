@@ -36,7 +36,7 @@ for (let w = 1; w <= years * 52; w++) {
     const ages = allWarriors.map(w => w.age || 0).sort((a,b)=>a-b);
     const oldest = ages[ages.length-1];
     const median = ages[Math.floor(ages.length/2)];
-    origLog(`Y${yr} | rivals=${state.rivals.length} active=${allWarriors.length} dead=${state.graveyard.length} ret=${state.retired.length} avgPwr=${avgPwr.toFixed(1)} pool=${state.recruitPool.length} ages(med/max)=${median}/${oldest}`);
+    origLog(`Y${yr} | rivals=${state.rivals.length} active=${allWarriors.length} dead=${state.graveyard.length} ret=${state.retired.length} avgPwr=${avgPwr.toFixed(1)} pool=${state.recruitPool.length} ages(med/max)=${median}/${oldest} treasury=[${state.rivals.map(r=>r.treasury).sort((a,b)=>a-b).join(',')}]`);
     origLog(`     style: ${Object.entries(styleCounts).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>k.slice(0,6)+':'+v).join(' ')}`);
   }
 }

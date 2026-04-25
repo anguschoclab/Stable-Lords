@@ -34,6 +34,13 @@ export function handleReporting(
     d: wD.name,
     warriorIdA: wA.id,
     warriorIdD: wD.id,
+    // Stable identity fields — needed by stableManager.weeklyIncome (which keys
+    // by stableIdA/B) and by ownerNarrative/schedulingAssistant rivalry lookups.
+    // Prior code omitted these on regular bouts (only tournament summaries via
+    // createFightSummary set them), so rival income from arenaHistory was always
+    // 0 and rival treasuries never reflected bout earnings.
+    stableIdA: wA.stableId as any,
+    stableIdD: wD.stableId as any,
     winner: outcome.winner,
     by: outcome.by,
     styleA: wA.style,

@@ -244,12 +244,19 @@ export function partialRefreshPool(
     newWarriors.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
   }
 
-  // Ensure pool stays at size
+  // Top up to DEFAULT_POOL_SIZE if undersized, then cap so the pool can't grow
+  // unbounded when AI drafts are slower than the natural turnover rate. Prior
+  // code only enforced the lower bound, so weekly +bonus recruits accumulated
+  // forever (1600+ entries after 15 years in the world-health diagnostic).
   const newPool = [...remaining, ...newWarriors];
   while (newPool.length < DEFAULT_POOL_SIZE) {
     newPool.push(generateRecruit(rngService, allUsed, week, undefined, meta, legacyCandidates));
   }
-
+  const POOL_HARD_CAP = DEFAULT_POOL_SIZE * 3; // 36 — comfortable headroom for bonuses without runaway growth
+  if (newPool.length > POOL_HARD_CAP) {
+    // Drop oldest first so the pool stays fresh
+    return newPool.sort((a, b) => a.addedWeek - b.addedWeek).slice(-POOL_HARD_CAP);
+  }
   return newPool;
 }
 

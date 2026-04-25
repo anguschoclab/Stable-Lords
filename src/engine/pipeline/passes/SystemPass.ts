@@ -57,7 +57,8 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
 
     impact.rivalsUpdates = new Map();
     philRivals.forEach((r) => {
-      if (impact.rivalsUpdates) impact.rivalsUpdates.set(r.owner.id, r);
+      // Key by rival.id (StableId) — handler in impacts.ts indexes by r.id.
+      if (impact.rivalsUpdates) impact.rivalsUpdates.set(r.id, r);
     });
 
     const combinedNews = [...news, ...gazetteItems, ...narrGazette];

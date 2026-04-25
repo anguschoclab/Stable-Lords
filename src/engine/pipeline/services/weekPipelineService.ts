@@ -64,6 +64,11 @@ function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
     runWarriorPass(state, ctx.rootRng),
     runEconomyPass(state, ctx.rootRng),
     runEquipmentPass(state),
+    // RecruitmentPass refills the draft pool. Must land before RivalStrategyPass
+    // (which drains it) — otherwise both run in parallel against the same
+    // pre-impact state and the post-recruitment pool gets clobbered by the
+    // post-draft pool, leaving the pool empty every tick.
+    runRecruitmentPass(state, ctx.rootRng),
   ];
 }
 
@@ -76,7 +81,6 @@ function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): boolean 
 function collectRemainingImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
   return [
     runWorldPass(state, ctx.nextWeek, ctx.rootRng),
-    runRecruitmentPass(state, ctx.rootRng),
     runSystemPass(state, ctx.rootRng),
     runRankingsPass(state),
     runPromoterPass(state),

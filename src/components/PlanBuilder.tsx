@@ -96,7 +96,7 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
         <div className="flex flex-wrap items-start justify-between gap-6 pb-4 border-b border-white/5">
           <StaminaCurve plan={plan} warrior={warrior} />
           {warnings.length > 0 && (
-            <ul className="flex-1 min-w-[240px] space-y-1">
+            <ul className="flex-1 min-w-60 space-y-1">
               {warnings.map((w) => (
                 <li
                   key={w.code}

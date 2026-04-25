@@ -312,7 +312,7 @@ export function TournamentSchedule({ tournament, currentWeek }: TournamentSchedu
                                     bout.winner === 'A' ? 'bg-primary' : 'bg-muted-foreground/30'
                                   )}
                                 />
-                                <span className="text-sm truncate max-w-[120px]">
+                                <span className="text-sm truncate max-w-32">
                                   {resolveWarriorName(state, bout.warriorIdA, bout.a)}
                                 </span>
                                 {bout.winner === 'A' && (
@@ -334,7 +334,7 @@ export function TournamentSchedule({ tournament, currentWeek }: TournamentSchedu
                                       bout.winner === 'D' ? 'bg-primary' : 'bg-muted-foreground/30'
                                     )}
                                   />
-                                  <span className="text-sm truncate max-w-[120px]">
+                                  <span className="text-sm truncate max-w-32">
                                     {resolveWarriorName(state, bout.warriorIdD, bout.d)}
                                   </span>
                                   {bout.winner === 'D' && (

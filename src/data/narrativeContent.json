@@ -1223,11 +1223,11 @@
         "No Mercy: {{winner}} Claims Another Skull",
         "Death in the Dust: {{loser}} Falls to {{winner}}",
         "A Fatal Encounter: {{winner}} stands over {{loser}}'s corpse",
-        "SLAUGHTER ON THE SANDS: {{winner}} EXECUTES {{loser}} IN BRUTAL SPECTACLE",
-        "NO MERCY SHOWN: {{loser}} LEAVES ARENA IN PIECES AT HANDS OF {{winner}}",
-        "A GRISLY END! {{winner}}'S FATAL BLOW SHATTERS {{loser}}",
-        "BLOOD SOAKED VICTORY! {{winner}} CLAIMS ANOTHER SOUL",
-        "THE REAPER SMILES: {{winner}} MASSACRES {{loser}}"
+        "Week {{week}}: SLAUGHTER ON THE SANDS: {{killer}} EXECUTES {{loser}} IN BRUTAL SPECTACLE",
+        "Week {{week}}: NO MERCY SHOWN: {{loser}} LEAVES ARENA IN PIECES AT HANDS OF {{killer}}",
+        "Week {{week}}: A GRISLY END! {{killer}}'S FATAL BLOW SHATTERS {{loser}}",
+        "Week {{week}}: BLOOD SOAKED VICTORY! {{killer}} CLAIMS ANOTHER SOUL",
+        "Week {{week}}: THE REAPER SMILES: {{killer}} MASSACRES {{loser}}"
       ],
       "MultipleKOs": [
         "Week {{week}}: {{adj}} DEVASTATION! The sands are littered with the fallen!",

@@ -280,11 +280,97 @@ function ArenaLeaderboard() {
 // ─── Main Hub Page ────────────────────────────────────────────────────────────
 
 export default function ArenaHub() {
-  const { roster, player } = useGameStore();
+  const store = useGameStore();
+  const { roster, player, setState, doAdvanceDay, doAdvanceWeek, setSimulating } = store;
   const { week, isTournamentWeek } = useGameStore(
     useShallow((s) => ({ week: s.week, isTournamentWeek: s.isTournamentWeek }))
   );
   const navigate = useNavigate();
+  const gameState = useMemo(() => reconstructGameState(store), [store]);
+
+  const [showCombat, setShowCombat] = useState(false);
+  const [results, setResults] = useState<BoutResult[]>([]);
+  const [running, setRunning] = useState(false);
+  const [autosimming, setAutosimming] = useState(false);
+  const [autosimProgress, setAutosimProgress] = useState<{
+    current: number;
+    total: number;
+  } | null>(null);
+  const [autosimResult, setAutosimResult] = useState<AutosimResult | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const fightReady = useMemo(
+    () => gameState.roster.filter((w: Warrior) => isFightReady(w)),
+    [gameState.roster]
+  );
+  const matchCard = useMemo(
+    () =>
+      generatePairings(gameState).map((p) => ({
+        playerWarrior: p.a,
+        rivalWarrior: p.d,
+        rivalStable:
+          gameState.rivals.find((r: RivalStableData) => r.owner.id === p.rivalStableId) ||
+          ({ owner: { id: p.rivalStableId, stableName: p.rivalStable } } as RivalStableData),
+        isRivalryBout: p.isRivalry,
+      })),
+    [gameState]
+  );
+
+  const handleExecuteCycle = useCallback(() => {
+    if (running) return;
+    setRunning(true);
+    if (matchCard.length === 0 && fightReady.length < 2) {
+      setRunning(false);
+      toast.error('No valid pairings available for this mission.');
+      return;
+    }
+    const processed = processWeekBouts(gameState);
+    setResults(processed.results);
+    if (gameState.isTournamentWeek) {
+      doAdvanceDay(
+        processed.state,
+        processed.results,
+        processed.summary.deathNames,
+        processed.summary.injuryNames
+      );
+      toast.success(`Empire Day ${gameState.day + 1} concluded.`);
+    } else {
+      doAdvanceWeek(
+        processed.state,
+        processed.results,
+        processed.summary.deathNames,
+        processed.summary.injuryNames
+      );
+      toast.success(`Week ${gameState.week} concluded.`);
+    }
+    setRunning(false);
+    setExpandedId(null);
+  }, [gameState, running, matchCard.length, fightReady.length, doAdvanceDay, doAdvanceWeek]);
+
+  const handleStartAutosim = useCallback(
+    async (weeks: number) => {
+      if (autosimming) return;
+      setAutosimming(true);
+      setSimulating(true);
+      setAutosimResult(null);
+      try {
+        const result = await runAutosim(gameState, weeks, (currentWeek: number) => {
+          setAutosimProgress({ current: currentWeek, total: weeks });
+        });
+        setAutosimResult(result);
+        setState((draft: GameStore) => {
+          Object.assign(draft, result.finalState);
+        });
+      } catch (err) {
+        console.error('Autosim failed', err);
+        toast.error('Auto-simulation encountered an archive corruption.');
+      } finally {
+        setAutosimming(false);
+        setSimulating(false);
+      }
+    },
+    [gameState, setState, autosimming, setSimulating]
+  );
 
   const lifetimeKills = useMemo(
     () => roster.reduce((s, w) => s + (w.career?.kills || 0), 0),
@@ -327,7 +413,12 @@ export default function ArenaHub() {
           </p>
         </div>
         <Button
-          onClick={() => navigate({ to: '/command/combat' })}
+          onClick={() => {
+            setShowCombat(true);
+            setResults([]);
+            setAutosimResult(null);
+          }}
+          disabled={showCombat}
           className="bg-primary text-black font-black uppercase tracking-widest shrink-0"
         >
           <Zap className="h-4 w-4 mr-2" />
@@ -419,6 +510,150 @@ export default function ArenaHub() {
           <Shield className="h-3.5 w-3.5 text-accent" /> Integrity Hash Verified
         </div>
       </div>
+
+      {/* ── Inline Combat Execution Panel ── */}
+      {showCombat && (
+        <div className="space-y-8 border-t-2 border-primary/20 pt-10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Zap className="h-4 w-4 text-primary" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">
+                Engagement Console
+              </span>
+            </div>
+            {results.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setShowCombat(false);
+                  setResults([]);
+                  setAutosimResult(null);
+                }}
+                className="text-[10px] font-black uppercase tracking-widest border-white/10 hover:bg-white/5"
+              >
+                Close Results
+              </Button>
+            )}
+          </div>
+
+          {/* Readiness Strip */}
+          <Surface
+            variant="glass"
+            className="flex items-center gap-10 p-5 border-l-4 border-l-primary/50"
+          >
+            <div className="flex items-center gap-3">
+              <Activity className="h-4 w-4 text-primary" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">
+                Stable Readiness
+              </span>
+            </div>
+            <div className="flex items-center gap-8">
+              <div className="flex flex-col">
+                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
+                  Mission Ready
+                </span>
+                <span className="font-display font-black text-xl text-primary leading-none mt-1">
+                  {fightReady.length}
+                </span>
+              </div>
+              <div className="h-8 w-px bg-white/5" />
+              <div className="flex flex-col">
+                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
+                  Combat Paired
+                </span>
+                <span className="font-display font-black text-xl text-arena-gold leading-none mt-1">
+                  {matchCard.length}
+                </span>
+              </div>
+            </div>
+            {!autosimming && !autosimResult && results.length === 0 && (
+              <div className="ml-auto">
+                <Button
+                  onClick={handleExecuteCycle}
+                  disabled={running || (matchCard.length === 0 && fightReady.length < 2)}
+                  className="h-10 px-8 gap-3 font-black uppercase text-[12px] tracking-[0.2em] bg-primary text-black hover:bg-primary/90"
+                >
+                  <Zap className="h-4 w-4 fill-current" />
+                  {isTournamentWeek
+                    ? `EXECUTE DAY ${gameState.day + 1} ›`
+                    : `EXECUTE WEEK ${gameState.week} ›`}
+                </Button>
+              </div>
+            )}
+          </Surface>
+
+          {/* Match Card / Results */}
+          <div className="max-w-3xl mx-auto space-y-8">
+            {results.length > 0 ? (
+              <RunResults
+                results={results}
+                expandedId={expandedId}
+                onToggleExpand={setExpandedId}
+              />
+            ) : (
+              <Surface variant="glass" className="p-0 border-accent/20">
+                <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Activity className="h-4 w-4 text-accent" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">
+                      Active Combat Manifest
+                    </span>
+                  </div>
+                  <Badge variant="outline" className="text-[9px] font-mono border-white/10">
+                    {matchCard.length} PAIRINGS
+                  </Badge>
+                </div>
+                <div className="p-6 space-y-4">
+                  {matchCard.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-4">
+                      {matchCard.map((p, i) => (
+                        <MatchCard
+                          key={i}
+                          pairing={{
+                            a: p.playerWarrior,
+                            d: p.rivalWarrior,
+                            rivalStable: p.rivalStable?.owner?.stableName || 'Rival Stable',
+                            isRivalry: p.isRivalryBout,
+                          }}
+                          crowdMood={gameState.crowdMood}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-20 text-center text-muted-foreground/30">
+                      <Skull className="h-12 w-12 mx-auto mb-4 opacity-20" />
+                      <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed">
+                        Zero Engagement Pairs Detected
+                        <br />
+                        <span className="text-[9px] opacity-60">
+                          Warriors may be resting or in training
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </Surface>
+            )}
+
+            {/* Autosim */}
+            <div className="pt-8 border-t border-white/5">
+              <div className="flex items-center gap-3 px-2 mb-6">
+                <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+                  Auto Simulation Bridge
+                </h3>
+                <div className="h-px flex-1 bg-border/20" />
+              </div>
+              <AutosimConsole
+                isSimulating={autosimming}
+                progress={autosimProgress}
+                result={autosimResult}
+                onStart={handleStartAutosim}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

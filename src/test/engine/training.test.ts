@@ -525,6 +525,7 @@ describe('Training System', () => {
       const res = trainingImpactToStateImpact(state, impact, rng);
 
       expect(res.impact.rosterUpdates?.get(warrior.id)).toEqual({
+        attributes: warrior.attributes,
         baseSkills: warrior.baseSkills,
         derivedStats: warrior.derivedStats,
         fatigue: 10,

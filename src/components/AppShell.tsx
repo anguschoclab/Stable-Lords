@@ -237,7 +237,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 size="icon"
                 className="h-9 w-9 rounded-none hover:bg-white/5 transition-colors"
                 onClick={toggleMute}
-                title={isMuted ? 'Unmute audio' : 'Mute audio'}
                 aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
                 aria-pressed={!isMuted}
               >
@@ -265,7 +264,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                   'h-9 w-9 rounded-none transition-all',
                   saveFlash ? 'bg-primary/20 text-primary scale-110' : 'hover:bg-white/5'
                 )}
-                title="Save status"
                 aria-label="Save status"
               >
                 <Save className="h-4 w-4" />
@@ -286,7 +284,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 size="icon"
                 className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors"
                 onClick={() => setResetOpen(true)}
-                title="Reset game"
                 aria-label="Reset game"
               >
                 <RotateCcw className="h-4 w-4" />
@@ -310,7 +307,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 className="h-9 w-9 rounded-none hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-30"
                 onClick={returnToTitle}
                 disabled={isSimulating}
-                title="Exit to title"
                 aria-label="Exit to title"
               >
                 <LogOut className="h-4 w-4" />

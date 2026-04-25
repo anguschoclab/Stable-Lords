@@ -148,7 +148,7 @@ export function createFreshState(
     FightingStyle.WallOfSteel,
   ];
 
-  state.recruitPool = initialStyles.map((style, i) => {
+  state.recruitPool = initialStyles.concat(initialStyles).slice(0, 12).map((style, i) => {
     // Use rng for initial attributes (10 +/- 3)
     const attrBase = () => 7 + Math.floor(rng.next() * 7);
     const attrs = {

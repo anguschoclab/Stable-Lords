@@ -96,7 +96,7 @@ export function runRivalStrategyPass(
   // 4. Final Aggregation of Rival Updates
   const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
   finalizedRivals.forEach(r => {
-    rivalsUpdates.set(r.owner.id, r);
+    rivalsUpdates.set(r.id, r);
   });
   impacts.push({ rivalsUpdates });
 

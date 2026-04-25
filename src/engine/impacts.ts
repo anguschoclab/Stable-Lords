@@ -112,7 +112,7 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
       return;
     }
     state.rivals = state.rivals.map((r) => {
-      const update = value.get(r.owner.id);
+      const update = value.get(r.id);
       return update ? { ...r, ...update } : r;
     });
   },

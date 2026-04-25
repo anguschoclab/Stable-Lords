@@ -26,11 +26,14 @@ export function generatePairings(state: GameState): BoutPairing[] {
     })();
 
   // 2. Derive pairings from Signed Contracts for this week
-  const currentOffers = Object.values(state.boutOffers || {}).filter(
+  const allOffers = Object.values(state.boutOffers || {});
+  const currentOffers = allOffers.filter(
     (o) => o.status === 'Signed' && o.boutWeek === currentWeek
   );
-  if (currentOffers.length > 0) {
-      // console.log(`[Pairings] Week ${currentWeek} | Signed Offers: ${currentOffers.length}`);
+  
+  if (allOffers.length > 0) {
+      const signed = allOffers.filter(o => o.status === 'Signed').length;
+      console.log(`[DEBUG-STATE] Week ${currentWeek} | Total Offers: ${allOffers.length} | Total Signed: ${signed} | Current Week Signed: ${currentOffers.length}`);
   }
 
   currentOffers.forEach((offer) => {
@@ -46,9 +49,13 @@ export function generatePairings(state: GameState): BoutPairing[] {
         d: wD,
         isRivalry: (offer.hype || 0) > 150, // Use hype as a proxy for rivalry
         rivalStable: rivalStable?.owner.stableName,
-        rivalStableId: rivalStable?.owner.id,
+        rivalStableId: rivalStable?.id,
         contractId: offer.id,
       });
+    } else {
+        console.log(`[DEBUG] Pairing Failed: wA=${!!wA} wD=${!!wD}. IDs: ${offer.warriorIds.join(', ')}`);
+        if (!wA) console.log(`[DEBUG] Missing Warrior A ID: ${offer.warriorIds[0]}`);
+        if (!wD) console.log(`[DEBUG] Missing Warrior D ID: ${offer.warriorIds[1]}`);
     }
   });
 

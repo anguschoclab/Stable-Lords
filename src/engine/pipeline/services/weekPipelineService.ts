@@ -95,12 +95,13 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   state.day = 0;
   state.trainingAssignments = [];
 
-  // 🧹 1.0 Hardening: Purge expired bout offers to prevent memory/perf degradation
+  // 🧹 1.0 Hardening: Purge expired bout offers
   if (state.boutOffers) {
     const cleanedOffers: Record<string, any> = {};
+    const currentWeek = ctx.nextWeek - 1; // The week that just finished
     Object.values(state.boutOffers).forEach((offer) => {
-      // Keep only offers for current/future weeks or those that are Signed and active
-      if (offer.boutWeek >= ctx.nextWeek || offer.status === 'Signed') {
+      // Keep if it's for current/future week, or if it's already Signed
+      if (offer.boutWeek >= currentWeek || offer.status === 'Signed') {
         cleanedOffers[offer.id] = offer;
       }
     });

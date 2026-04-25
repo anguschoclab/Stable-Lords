@@ -26,8 +26,17 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
   const offers: BoutOffer[] = [];
   const pairedIds = new Set<string>();
 
-  // Shuffle warriors to avoid bias
-  const pool = [...eligibleWarriors].sort(() => rng.next() - 0.5);
+  // 🏆 Ranking Incentive: Sort by fame (desc) then by inactivity (lastBoutWeek)
+  // This ensures top-tier warriors fight to keep their tournament slots.
+  const pool = [...eligibleWarriors].sort((a, b) => {
+      const fameB = b.warrior.fame || 0;
+      const fameA = a.warrior.fame || 0;
+      if (Math.abs(fameB - fameA) > 100) return fameB - fameA;
+      
+      const lastBoutA = a.warrior.career?.lastBoutWeek || 0;
+      const lastBoutB = b.warrior.career?.lastBoutWeek || 0;
+      return lastBoutA - lastBoutB; // Prioritize those who haven't fought in a while
+  });
 
   for (let i = 0; i < pool.length; i++) {
     const entryA = pool[i];
@@ -37,7 +46,8 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
     let bestOpponent: typeof entryA | null = null;
     let minFameGap = Infinity;
 
-    for (let j = i + 1; j < pool.length; j++) {
+    for (let j = 0; j < pool.length; j++) {
+      if (i === j) continue;
       const entryD = pool[j];
       if (pairedIds.has(entryD.warrior.id)) continue;
       if (entryA.stable.id === entryD.stable.id) continue;
@@ -48,8 +58,7 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
         bestOpponent = entryD;
       }
       
-      // If we find a very close match, take it immediately
-      if (fameGap < 20) break;
+      if (fameGap < 50) break; // Good enough for background sim
     }
 
     if (bestOpponent) {
@@ -62,8 +71,8 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
         proposerStableId: entryA.stable.id,
         warriorIds: [entryA.warrior.id, bestOpponent.warrior.id],
         boutWeek: state.week + 1,
-        purse: 300,
-        hype: 100 + Math.floor(rng.next() * 50),
+        purse: 300 + Math.floor(rng.next() * 200), // Variable purses
+        hype: 100 + Math.floor(rng.next() * 100),
         status: 'Proposed',
         responses: {
           [entryA.warrior.id]: 'Pending',

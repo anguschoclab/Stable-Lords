@@ -41,10 +41,17 @@ export function processAIStable(
   const gazetteItems: string[] = [];
   const impacts: StateImpact[] = [];
 
-  // ── Fatigue Decay for AI Warriors (-25 per week) ──
+  // ── Fatigue Decay & HP Recovery for AI Warriors ──
   updatedRival.roster = updatedRival.roster.map((w) => {
-    if (w.status === 'Active' && w.fatigue && w.fatigue > 0) {
-      return { ...w, fatigue: Math.max(0, w.fatigue - 25) };
+    if (w.status === 'Active') {
+      const fatigue = Math.max(0, (w.fatigue || 0) - 25);
+      const currentHP = w.derivedStats?.hp ?? 100;
+      const hp = Math.min(100, currentHP + 20); // Passive heal +20%
+      return { 
+          ...w, 
+          fatigue,
+          derivedStats: { ...w.derivedStats, hp } 
+      };
     }
     return w;
   });
@@ -138,7 +145,7 @@ export function processAIStable(
 
   // Collect impact for this rival
   const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
-  rivalsUpdates.set(rival.owner.id, updatedRival);
+  rivalsUpdates.set(rival.id, updatedRival);
   impacts.push({ rivalsUpdates });
 
   // console.log(`[AIStable] ${updatedRival.owner.stableName} | Pop: ${updatedRival.roster.length} | T: ${updatedRival.treasury}`);

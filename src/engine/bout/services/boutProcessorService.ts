@@ -258,7 +258,13 @@ export function processWeekBouts(state: GameState): {
   const results: BoutResult[] = [];
   const summary = createWeekBoutSummary();
 
-  generatePairings(state).forEach((p) => {
+  const pairings = generatePairings(state);
+  if (pairings.length === 0) {
+      const signedOffers = Object.values(state.boutOffers || {}).filter(o => o.status === 'Signed');
+      console.log(`[DEBUG] No pairings generated. Week: ${state.week}. Signed Offers: ${signedOffers.length}`);
+  }
+
+  pairings.forEach((p) => {
     const contract = p.contractId ? state.boutOffers[p.contractId] : undefined;
     const res = resolveBout(state, {
       warrior: p.a,

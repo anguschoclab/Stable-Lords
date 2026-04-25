@@ -220,22 +220,35 @@ type BlockingSeverity = (typeof BLOCKING_INJURY_SEVERITIES)[number];
 export function evaluateBoutOffer(
   offer: BoutOffer,
   rival: RivalStableData,
-  warrior: Warrior
+  warrior: Warrior,
+  currentWeek: number
 ): 'Accepted' | 'Declined' {
   // 0. Desperation Gate: if treasury is critically low, accept ANYTHING for the purse
   if (rival.treasury < 500) {
       return 'Accepted';
   }
 
-  // 1. Health Guard: Protective owners decline if HP < 80%
+  // 🏆 1. Tournament Hunger: If we are close to a tournament week (13, 26, 39, 52), we MUST fight for rankings
+  const weeksUntilTournament = 13 - (currentWeek % 13);
+  const isTournamentHungry = weeksUntilTournament <= 4;
+
+  // 1. Inactivity Pressure: if haven't fought in 4+ weeks, reduce caution
+  const weeksSinceBout = warrior.career?.lastBoutWeek ? currentWeek - warrior.career.lastBoutWeek : 10;
+  const isDesperateForBout = weeksSinceBout > 4 || isTournamentHungry;
+
+  // 2. Health Guard: Protective owners decline if HP < 70% (Relaxed from 80%)
+  const hpThreshold = isDesperateForBout ? 50 : 70;
   const currentHP = warrior.derivedStats?.hp ?? 100;
-  if (currentHP < 80 && rival.owner.personality !== 'Aggressive') {
+  if (currentHP < hpThreshold && rival.owner.personality !== 'Aggressive') {
+    console.log(`[DEBUG-DECLINE] ${warrior.name} | HP too low: ${currentHP} < ${hpThreshold}`);
     return 'Declined';
   }
 
-  // 🔋 Fatigue Gate: if fatigue > 60, decline unless personality is Aggressive
+  // 🔋 Fatigue Gate: if fatigue > 70, decline (Relaxed from 60)
+  const fatigueThreshold = isDesperateForBout ? 90 : 70;
   const fatigue = warrior.fatigue ?? 0;
-  if (fatigue > 60 && rival.owner.personality !== 'Aggressive') {
+  if (fatigue > fatigueThreshold && rival.owner.personality !== 'Aggressive') {
+    console.log(`[DEBUG-DECLINE] ${warrior.name} | Fatigue too high: ${fatigue} > ${fatigueThreshold}`);
     return 'Declined';
   }
 
@@ -243,21 +256,31 @@ export function evaluateBoutOffer(
   const hasBlockingInjury = (warrior.injuries || []).some((injury) =>
     BLOCKING_INJURY_SEVERITIES.includes(injury.severity as BlockingSeverity)
   );
-  if (hasBlockingInjury) {
+  if (hasBlockingInjury && !isDesperateForBout) { 
+    console.log(`[DEBUG-DECLINE] ${warrior.name} | Blocking Injury`);
     return 'Declined';
   }
 
-  // 2. Personality Logic
+  // 3. Personality Logic
   const personality = rival.owner.personality;
   const hype = offer.hype;
   const purse = offer.purse;
 
-  if (personality === 'Aggressive' && (hype > 120 || purse > 500)) return 'Accepted';
-  if (personality === 'Methodical' && currentHP < 95) return 'Declined';
-  if (personality === 'Showman' && hype > 130) return 'Accepted';
-  if (personality === 'Pragmatic' && purse > 400) return 'Accepted';
+  if (isTournamentHungry) {
+      console.log(`[DEBUG-ACCEPT] ${warrior.name} | Tournament Hungry!`);
+      return 'Accepted';
+  }
+
+  if (personality === 'Aggressive' && (hype > 110 || purse > 300)) return 'Accepted';
+  if (personality === 'Methodical' && currentHP < 85) {
+      console.log(`[DEBUG-DECLINE] ${warrior.name} | Methodical HP check`);
+      return 'Declined';
+  }
+  if (personality === 'Showman' && hype > 120) return 'Accepted';
+  if (personality === 'Pragmatic' && purse > 250) return 'Accepted';
 
   // Default: Accept if reasonable
+  console.log(`[DEBUG-ACCEPT] ${warrior.name} | Default Accept`);
   return 'Accepted';
 }
 
@@ -318,7 +341,7 @@ export function processAllRivalsBoutOffers(
         const rivalWarrior = owningRival.roster.find((w) => w.id === wId);
         if (!rivalWarrior) return;
 
-        const response = evaluateBoutOffer(trackedOffer, owningRival, rivalWarrior);
+        const response = evaluateBoutOffer(trackedOffer, owningRival, rivalWarrior, state.week);
 
         if (response === 'Accepted') {
           pickedWarriors.add(wId);

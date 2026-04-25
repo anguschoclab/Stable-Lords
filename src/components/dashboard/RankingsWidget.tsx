@@ -108,7 +108,7 @@ export function RankingsWidget() {
         <div className="flex items-center gap-4">
           {playerStanding.bestWarriorName && playerStanding.bestRank !== null ? (
             <>
-              <span className="text-[10px] font-mono font-black text-primary truncate max-w-xs">
+              <span className="text-[10px] font-mono font-black text-primary truncate max-w-32">
                 {playerStanding.bestWarriorName}
               </span>
               <Badge

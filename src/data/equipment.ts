@@ -634,6 +634,26 @@ export const DEFAULT_LOADOUT: EquipmentLoadout = {
   helm: 'leather_cap',
 };
 
+/**
+ * Style-aware default loadout. Every style gets its canonical (classic) weapon
+ * so the +1 classic-weapon bonus and weapon stat-requirements line up with the
+ * warrior's style. Without this, every default-loadout warrior was issued a
+ * broadsword (Striking Attack's classic), giving ST a hidden +1 ATT advantage
+ * that no other style had access to.
+ *
+ * Used by the warrior factory to seed `warrior.equipment` at creation, and by
+ * combat fallback paths when a warrior has no equipment field set.
+ */
+export function getStyleDefaultLoadout(style: FightingStyle): EquipmentLoadout {
+  const classic = STYLE_CLASSIC_WEAPONS[style] ?? 'broadsword';
+  return {
+    weapon: classic,
+    armor: 'leather',
+    shield: 'none_shield',
+    helm: 'leather_cap',
+  };
+}
+
 export function getLoadoutWeight(loadout: EquipmentLoadout): number {
   return [loadout.weapon, loadout.armor, loadout.shield, loadout.helm].reduce(
     (sum, id) => sum + (getItemById(id)?.weight ?? 0),

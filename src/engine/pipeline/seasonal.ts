@@ -108,7 +108,7 @@ export function runSeasonalPass(
       title: e.title,
       items: [t(seasonRng.pick(e.newsletter) || '', { gold })],
     });
-  } else if (e.effectType === 'epiphany' && state.roster.length > 0) {
+  } else if (e.effectType === 'epiphany') {
     const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
       const chosen = activeWarriors[Math.floor(seasonRng.next() * activeWarriors.length)];

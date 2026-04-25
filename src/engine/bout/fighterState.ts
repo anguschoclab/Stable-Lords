@@ -8,9 +8,11 @@ import {
   checkWeaponRequirements,
   getLoadoutWeight,
   isOverEncumbered,
+  getStyleDefaultLoadout,
 } from '@/data/equipment';
 import { getTrainingBonus } from '@/engine/trainers';
 import { getFavoriteWeaponBonus } from '@/engine/favorites';
+import { getStaticTraitMods } from '@/engine/traits';
 import { type FighterState } from '../combat/resolution';
 
 function getTrainerMods(trainers: Trainer[], style: FightingStyle) {
@@ -39,7 +41,9 @@ export function createFighterState(
   const skills = warrior?.baseSkills ?? { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 };
   const derived = warrior?.derivedStats ?? { hp: 100, endurance: 100, damage: 5, encumbrance: 0 };
 
-  const equip = warrior?.equipment ?? DEFAULT_LOADOUT;
+  // Style-aware fallback: if warrior has no equipment, use the style's classic loadout
+  // (was DEFAULT_LOADOUT — broadsword for everyone, which silently advantaged ST).
+  const equip = warrior?.equipment ?? getStyleDefaultLoadout(plan.style);
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
   const favWeapon = warrior ? getFavoriteWeaponBonus(warrior) : 0;
   const isMastered = favWeapon > 0;
@@ -71,6 +75,10 @@ export function createFighterState(
   // Skill drilling bonuses — flat additive modifiers from dedicated drill training.
   const drills = warrior?.skillDrills ?? {};
 
+  // Static trait mods (Quick, Heavy-Handed, Agile, etc.). Conditional traits
+  // (Berserker, Patient, etc.) are applied per-exchange in resolution.ts.
+  const traitMods = getStaticTraitMods(warrior);
+
   const effSkills: BaseSkills = {
     ATT:
       skills.ATT +
@@ -79,12 +87,28 @@ export function createFighterState(
       classicBonus +
       weaponReq.attPenalty +
       totalShieldAtt +
-      (drills.ATT ?? 0),
-    PAR: skills.PAR + (trainerMods?.parMod ?? 0) + totalShieldDef + (drills.PAR ?? 0),
-    DEF: skills.DEF + (trainerMods?.defMod ?? 0) + totalShieldDef + (drills.DEF ?? 0),
-    INI: skills.INI + (trainerMods?.iniMod ?? 0) + encumbranceIniPenalty + (drills.INI ?? 0),
-    RIP: skills.RIP + (drills.RIP ?? 0),
-    DEC: skills.DEC + (trainerMods?.decMod ?? 0) + (drills.DEC ?? 0),
+      (drills.ATT ?? 0) +
+      traitMods.attMod,
+    PAR:
+      skills.PAR +
+      (trainerMods?.parMod ?? 0) +
+      totalShieldDef +
+      (drills.PAR ?? 0) +
+      traitMods.parMod,
+    DEF:
+      skills.DEF +
+      (trainerMods?.defMod ?? 0) +
+      totalShieldDef +
+      (drills.DEF ?? 0) +
+      traitMods.defMod,
+    INI:
+      skills.INI +
+      (trainerMods?.iniMod ?? 0) +
+      encumbranceIniPenalty +
+      (drills.INI ?? 0) +
+      traitMods.iniMod,
+    RIP: skills.RIP + (drills.RIP ?? 0) + traitMods.ripMod,
+    DEC: skills.DEC + (trainerMods?.decMod ?? 0) + (drills.DEC ?? 0) + traitMods.decMod,
   };
 
   return {
@@ -92,7 +116,10 @@ export function createFighterState(
     style: plan.style,
     attributes: attrs,
     skills: effSkills,
-    derived: { ...derived, damage: derived.damage + (isMastered ? 1 : 0) },
+    derived: {
+      ...derived,
+      damage: derived.damage + (isMastered ? 1 : 0) + traitMods.dmgBonus,
+    },
     plan,
     activePlan: plan,
     psychState: 'Neutral',
@@ -107,6 +134,7 @@ export function createFighterState(
     armHits: 0,
     legHits: 0,
     favorites: warrior?.favorites,
+    traits: warrior?.traits,
     totalFights: warrior?.career ? warrior.career.wins + warrior.career.losses : 0,
     encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, enduranceMult: encumbranceEndMult },
     weaponId: equip.weapon,

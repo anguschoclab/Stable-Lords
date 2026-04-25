@@ -472,15 +472,22 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
 
   [FightingStyle.TotalParry]: {
     tempo: { opening: -1, mid: 1, late: 1, enduranceMult: 0.9 },
-    // Tuned 2026-04 (passive pass): TP at 36% aggregate. attBonus -2 was so
-    // punishing it couldn't finish fights. Soften to -1 (still defensive
-    // identity) and trim parBonus +4 → +3 so it doesn't hard-counter aggressive
-    // styles into 0% win rates.
+    // Tuned 2026-04 (3 passes):
+    //  - Pass 1: attBonus -2 → -1, parBonus +4 → +3
+    //  - Pass 3: parBonus +3 → +1.
+    //
+    // The shield-as-classic-weapon ruling means TP's default loadout now puts
+    // a medium_shield in the weapon slot, which adds +2 PAR/DEF on its own
+    // (via getShieldBonus in fighterState.ts). Stacking the prior parBonus +3
+    // on top of that +2 shield gave TP an effective +5 PAR baseline — way out
+    // of line with other defensive styles (PS +2, PR +1). Cutting passive
+    // parBonus to +1 leaves the net defensive value (shield +2 + passive +1 =
+    // +3) close to PS's pure passive of +2 while preserving TP's identity.
     getPassive: (ctx, m) => ({
       ...EMPTY_PASSIVE,
       mastery: m.tier,
       attBonus: -1,
-      parBonus: 3 + m.bonus,
+      parBonus: 1 + m.bonus,
       iniBonus: 2,
       hasPassiveNarrative: ctx.phase === 'LATE' && ctx.endRatio > 0.5,
     }),

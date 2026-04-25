@@ -20,6 +20,7 @@ import {
 } from '../mechanics/combatDamage';
 import { SHIELD_COVERAGE } from '@/data/equipment';
 import { enduranceCost } from '../mechanics/combatFatigue';
+import { getDynamicTraitMods } from '../../traits';
 import {
   getStylePassive,
   getKillMechanic,
@@ -371,6 +372,15 @@ export function executeHit(
         ? (ctx.trainerModsA.killWindowBonus ?? 0)
         : (ctx.trainerModsD.killWindowBonus ?? 0)
       : 0;
+    // Trait killWindowBonus (e.g. Bloodthirsty +0.005) — folded onto specBonus.
+    const attackerTraitKill = attacker.traits
+      ? getDynamicTraitMods({ traits: attacker.traits } as unknown as Warrior, {
+          phase: phase as 'OPENING' | 'MID' | 'LATE',
+          hpRatio: attacker.hp / attacker.maxHp,
+          endRatio: attacker.endurance / attacker.maxEndurance,
+          consecutiveHits: attacker.consecutiveHits,
+        }).killWindowBonus
+      : 0;
     const crowdKillBonus = ctx?.crowdKillBonus ?? 0;
     const killThreshold = calculateKillWindow(
       defender.hp / defender.maxHp,
@@ -383,7 +393,7 @@ export function executeHit(
       attMatchup,
       effectiveDec,
       attacker.momentum,
-      specKillBonus,
+      specKillBonus + attackerTraitKill,
       crowdKillBonus
     );
     if (rng() < killThreshold) {

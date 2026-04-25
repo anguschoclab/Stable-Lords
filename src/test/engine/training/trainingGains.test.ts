@@ -392,7 +392,7 @@ describe('processAttributeTraining - successful gain', () => {
 
   describe('processAttributeTraining - caps and limits', () => {
     it('should hard cap training if TOTAL_CAP is reached', () => {
-      const warrior = makeWarrior({ ST: 20, CN: 20, SZ: 20, WT: 20, WL: 20, SP: 20, DF: 20 }); // Total: 140, TOTAL_CAP is 120
+      const warrior = makeWarrior({ ST: 10, CN: 20, SZ: 20, WT: 20, WL: 20, SP: 20, DF: 10 }); // Total: 120, TOTAL_CAP is 120
       const rng = new SeededRNGService(1);
       const res = processAttributeTraining(warrior, 'ST', {} as GameState, [], rng);
       expect(res.hardCapped).toBe(true);

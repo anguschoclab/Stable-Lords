@@ -96,7 +96,14 @@ export function processAIRosterManagement(
           ? 'Master'
           : 'Novice';
 
-    const recruitChance = currentActive < 4 ? 1.0 : (personality === 'Aggressive' ? 0.4 : personality === 'Pragmatic' ? 0.25 : 0.15);
+    const recruitChance =
+      currentActive < 4
+        ? 1.0
+        : personality === 'Aggressive'
+          ? 0.4
+          : personality === 'Pragmatic'
+            ? 0.25
+            : 0.15;
 
     // Treasury Awareness: Recruitment costs 100g (signing fee)
     const RECRUIT_COST = 100;

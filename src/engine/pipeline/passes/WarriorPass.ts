@@ -42,11 +42,7 @@ export function runWarriorPass(state: GameState, rng: IRNGService): StateImpact 
     });
   }
 
-  const impacts: StateImpact[] = [
-    trainingImpact,
-    agingImpact,
-    computeHealthImpact(state),
-  ];
+  const impacts: StateImpact[] = [trainingImpact, agingImpact, computeHealthImpact(state)];
 
   if (newTrainersInPool.length > 0) {
     impacts.push({ hiringPool: [...(state.hiringPool || []), ...newTrainersInPool] });

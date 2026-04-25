@@ -68,12 +68,12 @@ function getValidatedCombatants(ctx: BoutContext): { cW: Warrior; cO: Warrior } 
   const cW = ctx.warriorMap.get(ctx.warrior.id);
   const cO = ctx.warriorMap.get(ctx.opponent.id);
   if (!cW || !cO) {
-      // console.log(`[BoutValidation] FAILED: Missing warriors (${ctx.warrior.id} vs ${ctx.opponent.id})`);
-      return null;
+    // console.log(`[BoutValidation] FAILED: Missing warriors (${ctx.warrior.id} vs ${ctx.opponent.id})`);
+    return null;
   }
   if (!validateBoutCombatants(cW, cO)) {
-      // console.log(`[BoutValidation] FAILED: validateBoutCombatants check`);
-      return null;
+    // console.log(`[BoutValidation] FAILED: validateBoutCombatants check`);
+    return null;
   }
   return { cW, cO };
 }
@@ -260,8 +260,10 @@ export function processWeekBouts(state: GameState): {
 
   const pairings = generatePairings(state);
   if (pairings.length === 0) {
-      const signedOffers = Object.values(state.boutOffers || {}).filter(o => o.status === 'Signed');
-      console.log(`[DEBUG] No pairings generated. Week: ${state.week}. Signed Offers: ${signedOffers.length}`);
+    const signedOffers = Object.values(state.boutOffers || {}).filter((o) => o.status === 'Signed');
+    console.log(
+      `[DEBUG] No pairings generated. Week: ${state.week}. Signed Offers: ${signedOffers.length}`
+    );
   }
 
   pairings.forEach((p) => {

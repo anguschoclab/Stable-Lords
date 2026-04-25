@@ -28,6 +28,7 @@ import {
   AlertCircle,
   CalendarClock,
   ShieldAlert,
+  BrainCircuit,
 } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -44,6 +45,7 @@ const HUBS = [
       { to: '/command', label: 'Overview', icon: LayoutDashboard, exact: true },
       { to: '/command/roster', label: 'Roster', icon: BookUser },
       { to: '/command/training', label: 'Training', icon: Dumbbell },
+      { to: '/command/tactics', label: 'Planner', icon: BrainCircuit },
       { to: '/command/arena', label: 'Arena', icon: Flame },
       { to: '/world/tournaments', label: 'Tournaments', icon: CalendarClock },
     ],

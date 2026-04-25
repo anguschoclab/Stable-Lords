@@ -28,8 +28,10 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   const retiredWarriors: Warrior[] = [];
 
   const allWarriors: { w: Warrior; isPlayer: boolean; rivalId?: string }[] = [];
-  state.roster.forEach(w => allWarriors.push({ w, isPlayer: true }));
-  state.rivals.forEach(r => r.roster.forEach(w => allWarriors.push({ w, isPlayer: false, rivalId: r.id })));
+  state.roster.forEach((w) => allWarriors.push({ w, isPlayer: true }));
+  state.rivals.forEach((r) =>
+    r.roster.forEach((w) => allWarriors.push({ w, isPlayer: false, rivalId: r.id }))
+  );
 
   const isAgeTick = state.week % WEEKS_PER_YEAR === 0;
 
@@ -61,18 +63,28 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
     let retired = false;
     if (currentAge >= FORCED_RETIRE_MAX) {
       retired = true;
-      if (isPlayer) ageEvents.push(`${w.name} (age ${currentAge}) has been forced to retire — too old to fight.`);
+      if (isPlayer)
+        ageEvents.push(
+          `${w.name} (age ${currentAge}) has been forced to retire — too old to fight.`
+        );
     } else if (currentAge >= FORCED_RETIRE_MIN) {
-      const retireChance = ((currentAge - FORCED_RETIRE_MIN) / (FORCED_RETIRE_MAX - FORCED_RETIRE_MIN)) * 0.15;
+      const retireChance =
+        ((currentAge - FORCED_RETIRE_MIN) / (FORCED_RETIRE_MAX - FORCED_RETIRE_MIN)) * 0.15;
       if (rng.next() < retireChance) {
         retired = true;
-        if (isPlayer) ageEvents.push(`${w.name} (age ${currentAge}) has decided to hang up the blade.`);
+        if (isPlayer)
+          ageEvents.push(`${w.name} (age ${currentAge}) has decided to hang up the blade.`);
       }
     }
 
     if (retired) {
       console.log(`[Aging] Retired: ${w.name} (age ${currentAge}) from ${rivalId || 'Player'}`);
-      const retiredObj = { ...w, age: currentAge, status: 'Retired' as any, retiredWeek: state.week };
+      const retiredObj = {
+        ...w,
+        age: currentAge,
+        status: 'Retired' as any,
+        retiredWeek: state.week,
+      };
       retiredWarriors.push(retiredObj);
       if (isPlayer) {
         toRetire.push(w.id);
@@ -88,21 +100,23 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
       if (isPlayer) {
         rosterUpdates.set(w.id, update);
       } else if (rivalId) {
-        const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...state.rivals.find(r => r.id === rivalId)!.roster] };
-        rUpdate.roster = rUpdate.roster!.map(rw => rw.id === w.id ? { ...rw, ...update } : rw);
+        const rUpdate = rivalsUpdates.get(rivalId) || {
+          roster: [...state.rivals.find((r) => r.id === rivalId)!.roster],
+        };
+        rUpdate.roster = rUpdate.roster!.map((rw) => (rw.id === w.id ? { ...rw, ...update } : rw));
         rivalsUpdates.set(rivalId, rUpdate);
       }
     }
   }
 
   // Handle rival retirements (filtering out retired ones)
-  retiredWarriors.forEach(rw => {
+  retiredWarriors.forEach((rw) => {
     if (rw.stableId && rw.stableId !== state.player.id) {
       const rivalId = rw.stableId;
-      const currentRival = state.rivals.find(r => r.id === rivalId);
+      const currentRival = state.rivals.find((r) => r.id === rivalId);
       if (currentRival) {
         const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...currentRival.roster] };
-        rUpdate.roster = rUpdate.roster!.filter(w => w.id !== rw.id);
+        rUpdate.roster = rUpdate.roster!.filter((w) => w.id !== rw.id);
         rivalsUpdates.set(rivalId, rUpdate);
       }
     }

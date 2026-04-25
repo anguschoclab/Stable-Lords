@@ -5,16 +5,16 @@ import { FightingStyle } from '@/types/shared.types';
 
 /**
  * World Matchmaking Service
- * 
+ *
  * Logic to pair NPC warriors from different stables for background bouts.
  * Ensures the world evolves (XP, fame, mortality) even without player input.
  */
 
 export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
   const eligibleWarriors: { warrior: Warrior; stable: RivalStableData }[] = [];
-  
-  (state.rivals || []).forEach(rival => {
-    rival.roster.forEach(warrior => {
+
+  (state.rivals || []).forEach((rival) => {
+    rival.roster.forEach((warrior) => {
       if (warrior.status === 'Active' && !warrior.isDead) {
         eligibleWarriors.push({ warrior, stable: rival });
       }
@@ -29,13 +29,13 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
   // 🏆 Ranking Incentive: Sort by fame (desc) then by inactivity (lastBoutWeek)
   // This ensures top-tier warriors fight to keep their tournament slots.
   const pool = [...eligibleWarriors].sort((a, b) => {
-      const fameB = b.warrior.fame || 0;
-      const fameA = a.warrior.fame || 0;
-      if (Math.abs(fameB - fameA) > 100) return fameB - fameA;
-      
-      const lastBoutA = a.warrior.career?.lastBoutWeek || 0;
-      const lastBoutB = b.warrior.career?.lastBoutWeek || 0;
-      return lastBoutA - lastBoutB; // Prioritize those who haven't fought in a while
+    const fameB = b.warrior.fame || 0;
+    const fameA = a.warrior.fame || 0;
+    if (Math.abs(fameB - fameA) > 100) return fameB - fameA;
+
+    const lastBoutA = a.warrior.career?.lastBoutWeek || 0;
+    const lastBoutB = b.warrior.career?.lastBoutWeek || 0;
+    return lastBoutA - lastBoutB; // Prioritize those who haven't fought in a while
   });
 
   for (let i = 0; i < pool.length; i++) {
@@ -57,7 +57,7 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
         minFameGap = fameGap;
         bestOpponent = entryD;
       }
-      
+
       if (fameGap < 50) break; // Good enough for background sim
     }
 
@@ -76,10 +76,10 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
         status: 'Proposed',
         responses: {
           [entryA.warrior.id]: 'Pending',
-          [bestOpponent.warrior.id]: 'Pending'
+          [bestOpponent.warrior.id]: 'Pending',
         },
         conditions: [],
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
       offers.push(offer);
     }

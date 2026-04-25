@@ -31,14 +31,15 @@ export function runRivalStrategyPass(
   let currentRivals = (state.rivals || []).map((rival, index) => {
     const strategySeed = nextWeek * 31 + index * 997 + (rival.owner.id || '').length;
     const strategy = updateAIStrategy(rival, state, strategySeed);
-    
+
     // 🎂 1.0 Hardening: Handle Aging & Succession
-    const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } = handleOwnerLifecycle(
-      { ...rival, strategy },
-      state,
-      nextWeek,
-      new SeededRNGService(strategySeed + 123)
-    );
+    const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } =
+      handleOwnerLifecycle(
+        { ...rival, strategy },
+        state,
+        nextWeek,
+        new SeededRNGService(strategySeed + 123)
+      );
     globalGazetteItems.push(...lifecycleGazette);
 
     const { updatedRival, isBankrupt, gazetteItems } = processAIStable(rivalWithLifecycle, state);
@@ -58,16 +59,18 @@ export function runRivalStrategyPass(
   // 1.5. World Matchmaking: NPCs propose bouts to each other
   const worldBouts = planWorldBouts(state, rng);
   const boutOffersWithWorld = { ...(state.boutOffers || {}) };
-  
+
   // 🧹 1.6 Hardening: Purge Expired Offers (Prevent state bloat)
-  Object.keys(boutOffersWithWorld).forEach(id => {
-      if (boutOffersWithWorld[id].expirationWeek < nextWeek) {
-          delete boutOffersWithWorld[id];
-      }
+  Object.keys(boutOffersWithWorld).forEach((id) => {
+    if (boutOffersWithWorld[id].expirationWeek < nextWeek) {
+      delete boutOffersWithWorld[id];
+    }
   });
 
   if (worldBouts.length > 0) {
-    worldBouts.forEach(o => { boutOffersWithWorld[o.id] = o; });
+    worldBouts.forEach((o) => {
+      boutOffersWithWorld[o.id] = o;
+    });
   }
   impacts.push({ boutOffers: boutOffersWithWorld });
 
@@ -95,7 +98,7 @@ export function runRivalStrategyPass(
 
   // 4. Final Aggregation of Rival Updates
   const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
-  finalizedRivals.forEach(r => {
+  finalizedRivals.forEach((r) => {
     rivalsUpdates.set(r.id, r);
   });
   impacts.push({ rivalsUpdates });
@@ -157,8 +160,8 @@ function handleOwnerLifecycle(
       (w) => w.stableId === updatedRival.id && (w.fame || 0) > 200
     );
 
-    const newName = successorCandidate 
-      ? successorCandidate.name 
+    const newName = successorCandidate
+      ? successorCandidate.name
       : `Lord ${updatedRival.owner.stableName.split(' ')[0]} ${'I'.repeat(generation + 1)}`;
 
     updatedRival.owner = {

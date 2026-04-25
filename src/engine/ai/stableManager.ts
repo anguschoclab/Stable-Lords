@@ -47,10 +47,10 @@ export function processAIStable(
       const fatigue = Math.max(0, (w.fatigue || 0) - 25);
       const currentHP = w.derivedStats?.hp ?? 100;
       const hp = Math.min(100, currentHP + 20); // Passive heal +20%
-      return { 
-          ...w, 
-          fatigue,
-          derivedStats: { ...w.derivedStats, hp } 
+      return {
+        ...w,
+        fatigue,
+        derivedStats: { ...w.derivedStats, hp },
       };
     }
     return w;
@@ -114,11 +114,13 @@ export function processAIStable(
   const SUBSIDY_FLOOR = 500;
   let isBankrupt = false;
   if (newTreasury < SUBSIDY_FLOOR) {
-      const subsidy = SUBSIDY_FLOOR - (newTreasury < 0 ? 0 : newTreasury);
-      updatedRival.treasury = SUBSIDY_FLOOR;
-      gazetteItems.push(`🏛️ SUBSIDY: ${updatedRival.owner.stableName} received ${subsidy}g from the League of Lords to maintain operations.`);
+    const subsidy = SUBSIDY_FLOOR - (newTreasury < 0 ? 0 : newTreasury);
+    updatedRival.treasury = SUBSIDY_FLOOR;
+    gazetteItems.push(
+      `🏛️ SUBSIDY: ${updatedRival.owner.stableName} received ${subsidy}g from the League of Lords to maintain operations.`
+    );
   } else {
-      updatedRival.treasury = newTreasury;
+    updatedRival.treasury = newTreasury;
   }
 
   // Milestone detection — narrow parity with the player's own-stable gazette.

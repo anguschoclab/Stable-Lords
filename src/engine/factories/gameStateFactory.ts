@@ -148,36 +148,39 @@ export function createFreshState(
     FightingStyle.WallOfSteel,
   ];
 
-  state.recruitPool = initialStyles.concat(initialStyles).slice(0, 12).map((style, i) => {
-    // Use rng for initial attributes (10 +/- 3)
-    const attrBase = () => 7 + Math.floor(rng.next() * 7);
-    const attrs = {
-      ST: attrBase(),
-      CN: attrBase(),
-      SZ: attrBase(),
-      WT: attrBase(),
-      WL: attrBase(),
-      SP: attrBase(),
-      DF: attrBase(),
-    };
+  state.recruitPool = initialStyles
+    .concat(initialStyles)
+    .slice(0, 12)
+    .map((style, i) => {
+      // Use rng for initial attributes (10 +/- 3)
+      const attrBase = () => 7 + Math.floor(rng.next() * 7);
+      const attrs = {
+        ST: attrBase(),
+        CN: attrBase(),
+        SZ: attrBase(),
+        WT: attrBase(),
+        WL: attrBase(),
+        SP: attrBase(),
+        DF: attrBase(),
+      };
 
-    const baseWarrior = makeWarrior(
-      rng.uuid() as WarriorId,
-      `Recruit ${i + 1}`,
-      style,
-      attrs,
-      {},
-      rng
-    );
-    return {
-      ...baseWarrior,
-      cost: 150 + Math.floor(rng.next() * 150),
-      tier: 'Common',
-      lore: (narrativeContent as NarrativeContent).recruitment.origin[0], // Seeded fallback
-      addedWeek: 1,
-      potential: generatePotential(attrs, 'Common', () => rng.next()),
-    } as PoolWarrior;
-  });
+      const baseWarrior = makeWarrior(
+        rng.uuid() as WarriorId,
+        `Recruit ${i + 1}`,
+        style,
+        attrs,
+        {},
+        rng
+      );
+      return {
+        ...baseWarrior,
+        cost: 150 + Math.floor(rng.next() * 150),
+        tier: 'Common',
+        lore: (narrativeContent as NarrativeContent).recruitment.origin[0], // Seeded fallback
+        addedWeek: 1,
+        potential: generatePotential(attrs, 'Common', () => rng.next()),
+      } as PoolWarrior;
+    });
 
   return state;
 }

@@ -225,7 +225,7 @@ export function evaluateBoutOffer(
 ): 'Accepted' | 'Declined' {
   // 0. Desperation Gate: if treasury is critically low, accept ANYTHING for the purse
   if (rival.treasury < 500) {
-      return 'Accepted';
+    return 'Accepted';
   }
 
   // 🏆 1. Tournament Hunger: If we are close to a tournament week (13, 26, 39, 52), we MUST fight for rankings
@@ -233,7 +233,9 @@ export function evaluateBoutOffer(
   const isTournamentHungry = weeksUntilTournament <= 4;
 
   // 1. Inactivity Pressure: if haven't fought in 4+ weeks, reduce caution
-  const weeksSinceBout = warrior.career?.lastBoutWeek ? currentWeek - warrior.career.lastBoutWeek : 10;
+  const weeksSinceBout = warrior.career?.lastBoutWeek
+    ? currentWeek - warrior.career.lastBoutWeek
+    : 10;
   const isDesperateForBout = weeksSinceBout > 4 || isTournamentHungry;
 
   // 2. Health Guard: Protective owners decline if HP < 70% (Relaxed from 80%)
@@ -248,7 +250,9 @@ export function evaluateBoutOffer(
   const fatigueThreshold = isDesperateForBout ? 90 : 70;
   const fatigue = warrior.fatigue ?? 0;
   if (fatigue > fatigueThreshold && rival.owner.personality !== 'Aggressive') {
-    console.log(`[DEBUG-DECLINE] ${warrior.name} | Fatigue too high: ${fatigue} > ${fatigueThreshold}`);
+    console.log(
+      `[DEBUG-DECLINE] ${warrior.name} | Fatigue too high: ${fatigue} > ${fatigueThreshold}`
+    );
     return 'Declined';
   }
 
@@ -256,7 +260,7 @@ export function evaluateBoutOffer(
   const hasBlockingInjury = (warrior.injuries || []).some((injury) =>
     BLOCKING_INJURY_SEVERITIES.includes(injury.severity as BlockingSeverity)
   );
-  if (hasBlockingInjury && !isDesperateForBout) { 
+  if (hasBlockingInjury && !isDesperateForBout) {
     console.log(`[DEBUG-DECLINE] ${warrior.name} | Blocking Injury`);
     return 'Declined';
   }
@@ -267,14 +271,14 @@ export function evaluateBoutOffer(
   const purse = offer.purse;
 
   if (isTournamentHungry) {
-      console.log(`[DEBUG-ACCEPT] ${warrior.name} | Tournament Hungry!`);
-      return 'Accepted';
+    console.log(`[DEBUG-ACCEPT] ${warrior.name} | Tournament Hungry!`);
+    return 'Accepted';
   }
 
   if (personality === 'Aggressive' && (hype > 110 || purse > 300)) return 'Accepted';
   if (personality === 'Methodical' && currentHP < 85) {
-      console.log(`[DEBUG-DECLINE] ${warrior.name} | Methodical HP check`);
-      return 'Declined';
+    console.log(`[DEBUG-DECLINE] ${warrior.name} | Methodical HP check`);
+    return 'Declined';
   }
   if (personality === 'Showman' && hype > 120) return 'Accepted';
   if (personality === 'Pragmatic' && purse > 250) return 'Accepted';
@@ -347,9 +351,14 @@ export function processAllRivalsBoutOffers(
           pickedWarriors.add(wId);
         }
 
-        const impact = respondToBoutOffer({ ...state, boutOffers: currentOffers }, offer.id, rivalWarrior.id, response);
+        const impact = respondToBoutOffer(
+          { ...state, boutOffers: currentOffers },
+          offer.id,
+          rivalWarrior.id,
+          response
+        );
         if (impact.boutOffers) {
-           Object.assign(currentOffers, impact.boutOffers);
+          Object.assign(currentOffers, impact.boutOffers);
         }
       });
     });

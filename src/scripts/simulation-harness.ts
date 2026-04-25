@@ -42,16 +42,16 @@ export function runSimulation(config: SimulationConfig): SimulationResult {
     );
 
     playerOffers.forEach((offer) => {
-      const playerWarriorIds = offer.warriorIds.filter((id) => state.roster.some((w) => w.id === id));
+      const playerWarriorIds = offer.warriorIds.filter((id) =>
+        state.roster.some((w) => w.id === id)
+      );
 
       if (offer.hype > 100 || offer.purse > 200) {
         playerWarriorIds.forEach((id) => {
           offer.responses[id] = 'Accepted';
         });
 
-        const allResponded = offer.warriorIds.every(
-          (wid) => offer.responses[wid] !== 'Pending'
-        );
+        const allResponded = offer.warriorIds.every((wid) => offer.responses[wid] !== 'Pending');
         if (allResponded) {
           offer.status = 'Signed';
         }

@@ -30,10 +30,12 @@ export function generatePairings(state: GameState): BoutPairing[] {
   const currentOffers = allOffers.filter(
     (o) => o.status === 'Signed' && o.boutWeek === currentWeek
   );
-  
+
   if (allOffers.length > 0) {
-      const signed = allOffers.filter(o => o.status === 'Signed').length;
-      console.log(`[DEBUG-STATE] Week ${currentWeek} | Total Offers: ${allOffers.length} | Total Signed: ${signed} | Current Week Signed: ${currentOffers.length}`);
+    const signed = allOffers.filter((o) => o.status === 'Signed').length;
+    console.log(
+      `[DEBUG-STATE] Week ${currentWeek} | Total Offers: ${allOffers.length} | Total Signed: ${signed} | Current Week Signed: ${currentOffers.length}`
+    );
   }
 
   currentOffers.forEach((offer) => {
@@ -53,9 +55,11 @@ export function generatePairings(state: GameState): BoutPairing[] {
         contractId: offer.id,
       });
     } else {
-        console.log(`[DEBUG] Pairing Failed: wA=${!!wA} wD=${!!wD}. IDs: ${offer.warriorIds.join(', ')}`);
-        if (!wA) console.log(`[DEBUG] Missing Warrior A ID: ${offer.warriorIds[0]}`);
-        if (!wD) console.log(`[DEBUG] Missing Warrior D ID: ${offer.warriorIds[1]}`);
+      console.log(
+        `[DEBUG] Pairing Failed: wA=${!!wA} wD=${!!wD}. IDs: ${offer.warriorIds.join(', ')}`
+      );
+      if (!wA) console.log(`[DEBUG] Missing Warrior A ID: ${offer.warriorIds[0]}`);
+      if (!wD) console.log(`[DEBUG] Missing Warrior D ID: ${offer.warriorIds[1]}`);
     }
   });
 

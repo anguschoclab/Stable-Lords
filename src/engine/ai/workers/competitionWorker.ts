@@ -209,8 +209,18 @@ export function verifyBoutAcceptance(
 
   return { accepted: true };
 }
-/** Injury severity types that block bout acceptance */
-const BLOCKING_INJURY_SEVERITIES = ['Moderate', 'Severe', 'Critical', 'Permanent'] as const;
+/** Injury severity types that block bout acceptance.
+ *  Any of these blocks acceptance regardless of desperation. The previous
+ *  behavior allowed desperation (long inactivity / tournament hunger) to
+ *  override even Critical injuries, which meant rivals routinely sent
+ *  half-dead warriors to die. Tightened 2026-04 to never override.
+ */
+const BLOCKING_INJURY_SEVERITIES = [
+  'Moderate',
+  'Severe',
+  'Critical',
+  'Permanent',
+] as const;
 type BlockingSeverity = (typeof BLOCKING_INJURY_SEVERITIES)[number];
 
 /**
@@ -256,11 +266,14 @@ export function evaluateBoutOffer(
     return 'Declined';
   }
 
-  // 🩹 Injury Gate: if any injury severity is Moderate+, decline
+  // 🩹 Injury Gate: any Moderate+ injury blocks. Tightened 2026-04 — the
+  // prior `isDesperateForBout` override let injured warriors fight if they
+  // hadn't been booked recently OR were near a tournament; in long sims this
+  // funneled hurt warriors into the arena and inflated death rates.
   const hasBlockingInjury = (warrior.injuries || []).some((injury) =>
-    BLOCKING_INJURY_SEVERITIES.includes(injury.severity as BlockingSeverity)
+    (BLOCKING_INJURY_SEVERITIES as readonly string[]).includes(injury.severity as BlockingSeverity)
   );
-  if (hasBlockingInjury && !isDesperateForBout) {
+  if (hasBlockingInjury) {
     console.log(`[DEBUG-DECLINE] ${warrior.name} | Blocking Injury`);
     return 'Declined';
   }

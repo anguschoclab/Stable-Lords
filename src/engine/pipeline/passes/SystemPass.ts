@@ -91,8 +91,9 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
     for (const r of state.rivals) {
       const loss = decayAmount(r.fame ?? 0);
       if (loss <= 0) continue;
-      const prev = rivalDecayMap.get(r.owner.id) ?? {};
-      rivalDecayMap.set(r.owner.id, { ...prev, fame: Math.max(0, (prev.fame ?? r.fame) - loss) });
+      // Key by rival.id (StableId) — handler indexes by r.id, not owner.id.
+      const prev = rivalDecayMap.get(r.id) ?? {};
+      rivalDecayMap.set(r.id, { ...prev, fame: Math.max(0, (prev.fame ?? r.fame) - loss) });
     }
     if (rivalDecayMap.size > 0) impact.rivalsUpdates = rivalDecayMap;
   }

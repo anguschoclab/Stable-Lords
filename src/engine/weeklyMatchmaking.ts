@@ -74,7 +74,11 @@ export function planWeeklyMatches(state: GameState, _rng: IRNGService): Matchmak
     let best: { rw: Warrior; stable: RivalStableData; score: number } | null = null;
     for (const { warrior: rw, stable } of rivalEligible) {
       const fameGap = Math.abs((pw.fame ?? 0) - (rw.fame ?? 0));
-      const rivalryBonus = isStableRivalry(pw.stableId, stable.owner.id) ? 100 : 0;
+      // Compare stable.id (StableId) against warrior.stableId — both are
+      // rival.id. The prior code used stable.owner.id which is the owner's id,
+      // a different identifier, so isStableRivalry never matched and the
+      // rivalryBonus was always 0.
+      const rivalryBonus = isStableRivalry(pw.stableId, stable.id) ? 100 : 0;
       const score = 100 + rivalryBonus + Math.max(0, 30 - fameGap * 3);
       if (!best || score > best.score) best = { rw, stable, score };
     }
@@ -83,7 +87,7 @@ export function planWeeklyMatches(state: GameState, _rng: IRNGService): Matchmak
         a: pw,
         d: best.rw,
         score: best.score,
-        isRivalry: isStableRivalry(pw.stableId, best.stable.owner.id),
+        isRivalry: isStableRivalry(pw.stableId, best.stable.id),
       });
     }
   }

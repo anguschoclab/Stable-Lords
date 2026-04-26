@@ -31,7 +31,8 @@ export function runEquipmentPass(state: GameState): StateImpact {
     });
 
     if (changed) {
-      rivalsUpdates.set(rival.owner.id, { roster: updatedRoster });
+      // Key by rival.id (StableId) — rivalsUpdates handler in impacts.ts indexes by r.id.
+      rivalsUpdates.set(rival.id, { roster: updatedRoster });
     }
   });
 

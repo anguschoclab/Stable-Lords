@@ -96,8 +96,8 @@ describe('Warrior Progression', () => {
     it('does not improve attributes if all are at their potential ceiling', () => {
       const warrior = mockWarrior();
       warrior.xp = 4;
-      // Set all attributes to their potential
-      warrior.attributes = { ...warrior.potential } as any;
+      // Set potential to match current attributes (sum = 70, which is < TOTAL_ATTR_CAP)
+      warrior.potential = { ...warrior.attributes } as any;
 
       const rng = {
         next: () => 0.5,
@@ -111,7 +111,7 @@ describe('Warrior Progression', () => {
       expect(gain.improvement).toBeUndefined(); // No attribute improved
 
       const totalAttrs = Object.values(updated.attributes).reduce((sum, val) => sum + val, 0);
-      expect(totalAttrs).toBe(105); // 7 * 15 = 105 (no growth)
+      expect(totalAttrs).toBe(70); // No growth
     });
 
     it('does not improve attributes if total exceeds TOTAL_ATTR_CAP (80)', () => {

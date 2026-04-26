@@ -106,6 +106,9 @@ export interface FighterState {
   /** Inherent traits — Berserker, Patient, etc. Static mods are baked into
    *  `skills`; conditional ones are evaluated each exchange in `resolveExchange`. */
   traits?: string[];
+  /** Static endurance multiplier (e.g. Iron Lung trait). Multiplied into the
+   *  per-exchange endurance cost in applyEnduranceCosts. Defaults to 1. */
+  staticEnduranceMult?: number;
   totalFights: number;
   encumbrancePenalty?: { iniPenalty: number; enduranceMult: number };
   weaponId?: string;

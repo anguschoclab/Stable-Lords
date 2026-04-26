@@ -21,6 +21,7 @@ import {
 import { SHIELD_COVERAGE } from '@/data/equipment';
 import { enduranceCost } from '../mechanics/combatFatigue';
 import { getDynamicTraitMods } from '../../traits';
+import { PSYCH_STATE_MODS } from '../mechanics/conditionEngine';
 import {
   getStylePassive,
   getKillMechanic,
@@ -447,12 +448,22 @@ export function applyEnduranceCosts(
   const def = aGoesFirst ? fD : fA;
 
   const arenaEndMult = ctx.surfaceMod?.enduranceMult ?? 1;
+  // Psych-state endurance mult (Cruising 0.9, FatiguePanic 1.1) was previously
+  // declared in PSYCH_STATE_MODS but never read here — wired in 2026-04 so the
+  // modifiers actually do something.
+  const psychEndMultA = PSYCH_STATE_MODS[fA.psychState]?.enduranceCostMult ?? 1;
+  const psychEndMultD = PSYCH_STATE_MODS[fD.psychState]?.enduranceCostMult ?? 1;
+  // Static trait endurance mult (Iron Lung 0.92) baked into traitEnduranceMult on FighterState.
+  const traitEndMultAtt = att.staticEnduranceMult ?? 1;
+  const traitEndMultDef = def.staticEnduranceMult ?? 1;
   att.endurance -= Math.round(
     enduranceCost(curAttOE, curAttAL, ctx.weather) *
       getEnduranceMult(att.style) *
       curAttWepReq.endurancePenalty *
       (att.encumbrancePenalty?.enduranceMult ?? 1) *
-      arenaEndMult
+      arenaEndMult *
+      (aGoesFirst ? psychEndMultA : psychEndMultD) *
+      traitEndMultAtt
   );
   def.endurance -= Math.max(
     1,
@@ -462,7 +473,9 @@ export function applyEnduranceCosts(
         getEnduranceMult(def.style) *
         curDefWepReq.endurancePenalty *
         (def.encumbrancePenalty?.enduranceMult ?? 1) *
-        arenaEndMult
+        arenaEndMult *
+        (aGoesFirst ? psychEndMultD : psychEndMultA) *
+        traitEndMultDef
     )
   );
 

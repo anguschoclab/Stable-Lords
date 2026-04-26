@@ -135,6 +135,7 @@ export function createFighterState(
     legHits: 0,
     favorites: warrior?.favorites,
     traits: warrior?.traits,
+    staticEnduranceMult: traitMods.enduranceMult,
     totalFights: warrior?.career ? warrior.career.wins + warrior.career.losses : 0,
     encumbrancePenalty: { iniPenalty: encumbranceIniPenalty, enduranceMult: encumbranceEndMult },
     weaponId: equip.weapon,

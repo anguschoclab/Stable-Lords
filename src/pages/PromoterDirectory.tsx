@@ -13,7 +13,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardFooter,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -80,13 +79,13 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
             <CardTitle className="text-base font-black uppercase tracking-wider text-primary truncate">
               {promoter.name}
             </CardTitle>
-            <CardDescription className="text-[10px] font-mono uppercase flex items-center gap-1.5 flex-wrap">
+            <div className="text-[10px] font-mono uppercase flex items-center gap-1.5 flex-wrap text-muted-foreground">
               <Badge variant="outline" className={`text-[9px] ${tierColor}`}>
                 {promoter.tier}
               </Badge>
               <span className="opacity-60">•</span>
               <span className="opacity-60">Age {promoter.age}</span>
-            </CardDescription>
+            </div>
           </div>
           <Badge
             variant="outline"

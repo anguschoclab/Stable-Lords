@@ -4,6 +4,7 @@
  * Dynamic warrior selection → Tutorial bout → Summary
  */
 import { useState, useMemo, useCallback } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories';
 import { simulateFight, defaultPlanForWarrior } from '@/engine';
@@ -27,6 +28,7 @@ import StoryBeginsStep from '@/components/orphanage/StoryBeginsStep';
 // ─── Main Component ────────────────────────────────────────────────────────────
 
 export default function Orphanage() {
+  const navigate = useNavigate();
   const state = useGameStore();
   const { initializeStable, setState, returnToTitle, saveCurrentState } = state;
 
@@ -223,7 +225,10 @@ export default function Orphanage() {
       draft.realmRankings = seeded.realmRankings;
     });
     saveCurrentState();
-  }, [state, setState, selectedWarriors, boutResult, poolSeedValue, saveCurrentState]);
+
+    // Navigate to command center after FTUE
+    navigate({ to: '/command' });
+  }, [state, setState, selectedWarriors, boutResult, poolSeedValue, saveCurrentState, navigate]);
 
   // ─── Shell ──────────────────────────────────────────────────────────────────
 

@@ -292,7 +292,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                 <TableCell className="hidden md:table-cell">
                   {row.isPlayer ? (
                     <Link
-                      to="/command/roster"
+                      to="/ops/overview"
                       className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
                     >
                       <span className="text-[10px] opacity-20">PATRON:</span> {row.stableName}

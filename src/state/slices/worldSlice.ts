@@ -1,6 +1,7 @@
 import { StateCreator } from 'zustand';
 import type { GameStore } from '@/state/useGameStore';
 import {
+  type GameState,
   Season,
   WeatherType,
   Promoter,
@@ -71,6 +72,7 @@ export interface WorldSlice {
   playerAvoids: string[];
   ownerGrudges: OwnerGrudge[];
   phase: 'planning' | 'resolution';
+  pendingResolutionData?: GameState['pendingResolutionData'];
   setWeek: (week: number) => void;
   setArenaPreferences: (prefs: Partial<ArenaPreferences>) => void;
   initializeStable: (name: string, stableName: string) => void;
@@ -142,6 +144,7 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
   playerAvoids: [],
   ownerGrudges: [],
   phase: 'planning',
+  pendingResolutionData: undefined,
 
   setWeek: (week) => set({ week }),
 

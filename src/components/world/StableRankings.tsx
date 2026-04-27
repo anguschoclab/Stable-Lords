@@ -159,7 +159,7 @@ export function StableRankings({ rows, sort, onSort }: StableRankingsProps) {
                         <div>
                           {row.isPlayer ? (
                             <Link
-                              to="/command/roster"
+                              to="/ops/overview"
                               className="font-display font-black uppercase text-xs tracking-tight transition-all text-primary hover:text-white"
                             >
                               {row.name}

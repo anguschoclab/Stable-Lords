@@ -129,7 +129,7 @@ export function StableWidget() {
       </div>
 
       <div className="p-4 border-t border-white/5 bg-black/40 grid grid-cols-2 gap-3 relative z-10">
-        <Link to="/ops/personnel">
+        <Link to="/ops/recruit">
           <Button
             variant="ghost"
             size="sm"
@@ -138,7 +138,7 @@ export function StableWidget() {
             <UserPlus className="h-3.5 w-3.5" /> Recruit
           </Button>
         </Link>
-        <Link to="/command/roster">
+        <Link to="/ops/overview">
           <Button
             variant="ghost"
             size="sm"

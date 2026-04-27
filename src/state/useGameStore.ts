@@ -7,7 +7,6 @@ import { type BoutResult } from '@/engine/boutProcessor';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
 import { opfsArchive } from '@/engine/storage/opfsArchive';
-import { type WarriorId, type InjuryId } from '@/types/shared.types';
 
 // ─── Slices ────────────────────────────────────────────────────────────────
 import { createEconomySlice, EconomySlice } from './slices/economySlice';
@@ -30,14 +29,14 @@ export interface GameStoreActions {
   doAdvanceWeek: (
     processedState?: GameState,
     results?: BoutResult[],
-    deaths?: WarriorId[],
-    injuries?: InjuryId[]
+    deaths?: string[],
+    injuries?: string[]
   ) => Promise<void>;
   doAdvanceDay: (
     processedState?: GameState,
     results?: BoutResult[],
-    deaths?: WarriorId[],
-    injuries?: InjuryId[]
+    deaths?: string[],
+    injuries?: string[]
   ) => Promise<void>;
   initialize: () => void;
   loadGame: (slotId: string, gameState: GameState) => void;
@@ -275,6 +274,7 @@ export const useGameStore = create<GameStore>()(
           draft.matchHistory = state.matchHistory || [];
           draft.ownerGrudges = state.ownerGrudges || [];
           draft.phase = state.phase || 'planning';
+          draft.pendingResolutionData = state.pendingResolutionData;
           draft.playerChallenges = state.playerChallenges || [];
           draft.playerAvoids = state.playerAvoids || [];
 
@@ -294,8 +294,8 @@ export const useGameStore = create<GameStore>()(
       doAdvanceWeek: async (
         processedState?: GameState,
         results?: BoutResult[],
-        deaths?: WarriorId[],
-        injuries?: InjuryId[]
+        deaths?: string[],
+        injuries?: string[]
       ) => {
         const store = get();
         const raw = processedState || reconstructGameState(store);
@@ -327,13 +327,19 @@ export const useGameStore = create<GameStore>()(
           }
 
           next.phase = 'resolution';
-          next.pendingResolutionData = {
+          const resolutionPayload = {
             bouts: results || [],
             deaths: deaths || [],
             injuries: injuries || [],
             promotions: [],
             gazette: next.newsletter.filter((n) => n.week === currentWeek),
           };
+          next.pendingResolutionData = resolutionPayload;
+          if (next.arenaHistory?.length > 0) {
+            const idx = next.arenaHistory.length - 1;
+            const lastEntry = next.arenaHistory[idx]!;
+            next.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
+          }
 
           store.loadGame(store.activeSlotId || 'autosave', next);
           set((draft) => {
@@ -350,8 +356,8 @@ export const useGameStore = create<GameStore>()(
       doAdvanceDay: async (
         processedState?: GameState,
         results?: BoutResult[],
-        deaths?: WarriorId[],
-        injuries?: InjuryId[]
+        deaths?: string[],
+        injuries?: string[]
       ) => {
         const store = get();
         const raw = processedState || reconstructGameState(store);
@@ -368,13 +374,19 @@ export const useGameStore = create<GameStore>()(
           const next = await engineProxy.advanceDay(cleanState);
 
           next.phase = 'resolution';
-          next.pendingResolutionData = {
+          const resolutionPayload = {
             bouts: results || [],
             deaths: deaths || [],
             injuries: injuries || [],
             promotions: [],
             gazette: next.newsletter.filter((n) => n.week === currentWeek),
           };
+          next.pendingResolutionData = resolutionPayload;
+          if (next.arenaHistory?.length > 0) {
+            const idx = next.arenaHistory.length - 1;
+            const lastEntry = next.arenaHistory[idx]!;
+            next.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
+          }
 
           store.loadGame(store.activeSlotId || 'autosave', next);
           set((draft) => {

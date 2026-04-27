@@ -294,7 +294,7 @@ function RosterSnapshot() {
       )}
       {active.map((w) => {
         return (
-          <Link key={w.id} to="/command/roster" className="block group">
+          <Link key={w.id} to="/ops/overview" className="block group">
             <Surface variant="glass" className="p-4 hover:border-primary/20 transition-colors">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 min-w-0">

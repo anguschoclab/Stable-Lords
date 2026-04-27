@@ -37,9 +37,11 @@ import { Route as StableFinanceRouteImport } from './routes/stable/finance'
 import { Route as StableEquipmentRouteImport } from './routes/stable/equipment'
 import { Route as StableContractsRouteImport } from './routes/stable/contracts'
 import { Route as StableIdRouteImport } from './routes/stable/$id'
+import { Route as OpsRosterRouteImport } from './routes/ops/roster'
 import { Route as OpsRecruitRouteImport } from './routes/ops/recruit'
 import { Route as OpsPromotersRouteImport } from './routes/ops/promoters'
 import { Route as OpsPersonnelRouteImport } from './routes/ops/personnel'
+import { Route as OpsOverviewRouteImport } from './routes/ops/overview'
 import { Route as OpsOffseasonRouteImport } from './routes/ops/offseason'
 import { Route as OpsFinanceRouteImport } from './routes/ops/finance'
 import { Route as OpsEquipmentRouteImport } from './routes/ops/equipment'
@@ -190,6 +192,11 @@ const StableIdRoute = StableIdRouteImport.update({
   path: '/stable/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OpsRosterRoute = OpsRosterRouteImport.update({
+  id: '/ops/roster',
+  path: '/ops/roster',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OpsRecruitRoute = OpsRecruitRouteImport.update({
   id: '/ops/recruit',
   path: '/ops/recruit',
@@ -203,6 +210,11 @@ const OpsPromotersRoute = OpsPromotersRouteImport.update({
 const OpsPersonnelRoute = OpsPersonnelRouteImport.update({
   id: '/ops/personnel',
   path: '/ops/personnel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OpsOverviewRoute = OpsOverviewRouteImport.update({
+  id: '/ops/overview',
+  path: '/ops/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OpsOffseasonRoute = OpsOffseasonRouteImport.update({
@@ -285,9 +297,11 @@ export interface FileRoutesByFullPath {
   '/ops/equipment': typeof OpsEquipmentRoute
   '/ops/finance': typeof OpsFinanceRoute
   '/ops/offseason': typeof OpsOffseasonRoute
+  '/ops/overview': typeof OpsOverviewRoute
   '/ops/personnel': typeof OpsPersonnelRoute
   '/ops/promoters': typeof OpsPromotersRoute
   '/ops/recruit': typeof OpsRecruitRoute
+  '/ops/roster': typeof OpsRosterRoute
   '/stable/$id': typeof StableIdRoute
   '/stable/contracts': typeof StableContractsRoute
   '/stable/equipment': typeof StableEquipmentRoute
@@ -330,9 +344,11 @@ export interface FileRoutesByTo {
   '/ops/equipment': typeof OpsEquipmentRoute
   '/ops/finance': typeof OpsFinanceRoute
   '/ops/offseason': typeof OpsOffseasonRoute
+  '/ops/overview': typeof OpsOverviewRoute
   '/ops/personnel': typeof OpsPersonnelRoute
   '/ops/promoters': typeof OpsPromotersRoute
   '/ops/recruit': typeof OpsRecruitRoute
+  '/ops/roster': typeof OpsRosterRoute
   '/stable/$id': typeof StableIdRoute
   '/stable/contracts': typeof StableContractsRoute
   '/stable/equipment': typeof StableEquipmentRoute
@@ -373,9 +389,11 @@ export interface FileRoutesById {
   '/ops/equipment': typeof OpsEquipmentRoute
   '/ops/finance': typeof OpsFinanceRoute
   '/ops/offseason': typeof OpsOffseasonRoute
+  '/ops/overview': typeof OpsOverviewRoute
   '/ops/personnel': typeof OpsPersonnelRoute
   '/ops/promoters': typeof OpsPromotersRoute
   '/ops/recruit': typeof OpsRecruitRoute
+  '/ops/roster': typeof OpsRosterRoute
   '/stable/$id': typeof StableIdRoute
   '/stable/contracts': typeof StableContractsRoute
   '/stable/equipment': typeof StableEquipmentRoute
@@ -420,9 +438,11 @@ export interface FileRouteTypes {
     | '/ops/equipment'
     | '/ops/finance'
     | '/ops/offseason'
+    | '/ops/overview'
     | '/ops/personnel'
     | '/ops/promoters'
     | '/ops/recruit'
+    | '/ops/roster'
     | '/stable/$id'
     | '/stable/contracts'
     | '/stable/equipment'
@@ -465,9 +485,11 @@ export interface FileRouteTypes {
     | '/ops/equipment'
     | '/ops/finance'
     | '/ops/offseason'
+    | '/ops/overview'
     | '/ops/personnel'
     | '/ops/promoters'
     | '/ops/recruit'
+    | '/ops/roster'
     | '/stable/$id'
     | '/stable/contracts'
     | '/stable/equipment'
@@ -507,9 +529,11 @@ export interface FileRouteTypes {
     | '/ops/equipment'
     | '/ops/finance'
     | '/ops/offseason'
+    | '/ops/overview'
     | '/ops/personnel'
     | '/ops/promoters'
     | '/ops/recruit'
+    | '/ops/roster'
     | '/stable/$id'
     | '/stable/contracts'
     | '/stable/equipment'
@@ -553,9 +577,11 @@ export interface RootRouteChildren {
   OpsEquipmentRoute: typeof OpsEquipmentRoute
   OpsFinanceRoute: typeof OpsFinanceRoute
   OpsOffseasonRoute: typeof OpsOffseasonRoute
+  OpsOverviewRoute: typeof OpsOverviewRoute
   OpsPersonnelRoute: typeof OpsPersonnelRoute
   OpsPromotersRoute: typeof OpsPromotersRoute
   OpsRecruitRoute: typeof OpsRecruitRoute
+  OpsRosterRoute: typeof OpsRosterRoute
   StableIdRoute: typeof StableIdRoute
   StableContractsRoute: typeof StableContractsRoute
   StableEquipmentRoute: typeof StableEquipmentRoute
@@ -778,6 +804,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StableIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ops/roster': {
+      id: '/ops/roster'
+      path: '/ops/roster'
+      fullPath: '/ops/roster'
+      preLoaderRoute: typeof OpsRosterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ops/recruit': {
       id: '/ops/recruit'
       path: '/ops/recruit'
@@ -797,6 +830,13 @@ declare module '@tanstack/react-router' {
       path: '/ops/personnel'
       fullPath: '/ops/personnel'
       preLoaderRoute: typeof OpsPersonnelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ops/overview': {
+      id: '/ops/overview'
+      path: '/ops/overview'
+      fullPath: '/ops/overview'
+      preLoaderRoute: typeof OpsOverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ops/offseason': {
@@ -905,9 +945,11 @@ const rootRouteChildren: RootRouteChildren = {
   OpsEquipmentRoute: OpsEquipmentRoute,
   OpsFinanceRoute: OpsFinanceRoute,
   OpsOffseasonRoute: OpsOffseasonRoute,
+  OpsOverviewRoute: OpsOverviewRoute,
   OpsPersonnelRoute: OpsPersonnelRoute,
   OpsPromotersRoute: OpsPromotersRoute,
   OpsRecruitRoute: OpsRecruitRoute,
+  OpsRosterRoute: OpsRosterRoute,
   StableIdRoute: StableIdRoute,
   StableContractsRoute: StableContractsRoute,
   StableEquipmentRoute: StableEquipmentRoute,

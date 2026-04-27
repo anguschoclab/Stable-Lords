@@ -72,7 +72,7 @@ export default function RunRound() {
     // Persist to store based on cycle type
     if (state.isTournamentWeek) {
       doAdvanceDay(
-        processed.state,
+        undefined,
         processed.results,
         processed.summary.deathNames,
         processed.summary.injuryNames
@@ -80,7 +80,7 @@ export default function RunRound() {
       toast.success(`Empire Day ${state.day + 1} concluded.`);
     } else {
       doAdvanceWeek(
-        processed.state,
+        undefined,
         processed.results,
         processed.summary.deathNames,
         processed.summary.injuryNames

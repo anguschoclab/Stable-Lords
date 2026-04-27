@@ -328,7 +328,7 @@ export default function ArenaHub() {
     setResults(processed.results);
     if (gameState.isTournamentWeek) {
       doAdvanceDay(
-        processed.state,
+        undefined,
         processed.results,
         processed.summary.deathNames,
         processed.summary.injuryNames
@@ -336,7 +336,7 @@ export default function ArenaHub() {
       toast.success(`Empire Day ${gameState.day + 1} concluded.`);
     } else {
       doAdvanceWeek(
-        processed.state,
+        undefined,
         processed.results,
         processed.summary.deathNames,
         processed.summary.injuryNames

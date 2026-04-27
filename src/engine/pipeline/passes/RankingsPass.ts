@@ -8,11 +8,6 @@ import { collectAllActiveWarriors } from '@/engine/core/warriorCollection';
  * Phase 1: Calculates the global and class-specific power rankings.
  * This cache is used by Promoters for matchmaking and Tournaments for seeding.
  */
-/**
- * Stable Lords — Rankings Pass
- * Phase 1: Calculates the global and class-specific power rankings.
- * This cache is used by Promoters for matchmaking and Tournaments for seeding.
- */
 
 export function runRankingsPass(state: GameState): StateImpact {
   // 1. Gather all active warriors from player and rivals using utility

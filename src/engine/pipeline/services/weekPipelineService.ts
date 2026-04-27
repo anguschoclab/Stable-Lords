@@ -1,4 +1,5 @@
-import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
+import type { GameState, Warrior } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { archiveWeekLogs } from '../adapters/opfsArchiver';
 import { computeMetaDrift } from '@/engine/metaDrift';
@@ -51,7 +52,7 @@ function runBoutPhase(state: GameState, ctx: WeekContext): GameState {
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 
-  const warriorMap = new Map<string, Warrior>();
+  const warriorMap = new Map<WarriorId, Warrior>();
   settledState.roster.forEach((w) => warriorMap.set(w.id, w));
   (settledState.rivals || []).forEach((r) => r.roster.forEach((w) => warriorMap.set(w.id, w)));
   settledState.warriorMap = warriorMap;
@@ -135,7 +136,6 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
  * Orchestrates the simulation tick using a high-performance batched architecture.
  */
 export function advanceWeek(state: GameState): GameState {
-  console.log(`>>> advanceWeek Start | Week: ${state.week}`);
   const ctx = prepareWeekContext(state);
   const settledState = runBoutPhase(state, ctx);
   const coreImpacts = collectCoreImpacts(settledState, ctx);

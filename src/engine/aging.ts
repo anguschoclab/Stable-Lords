@@ -7,8 +7,11 @@
  * - Aging penalties apply to SP and DF after age 28
  */
 import type { GameState, RivalStableData } from '@/types/state.types';
-import type { Warrior, WarriorStatus } from '@/types/warrior.types';
+import type { Warrior } from '@/types/warrior.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import { computeWarriorStats } from './skillCalc';
+import { type StateImpact } from './impacts';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const WEEKS_PER_YEAR = 52;
 const AGING_PENALTY_START = 25;
@@ -20,16 +23,12 @@ const AGING_PENALTY_START = 25;
 const FORCED_RETIRE_MIN = 26;
 const FORCED_RETIRE_MAX = 32;
 
-import { type StateImpact } from './impacts';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
-
 /** Compute the aging impact of the current week. */
 export function computeAgingImpact(state: GameState, rng: IRNGService): StateImpact {
   const ageEvents: string[] = [];
-  const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
-  const toRetire: string[] = [];
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
+  const toRetire: WarriorId[] = [];
   const retiredWarriors: Warrior[] = [];
 
   const allWarriors: { w: Warrior; isPlayer: boolean; rivalId?: string }[] = [];
@@ -83,7 +82,6 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
     }
 
     if (retired) {
-      console.log(`[Aging] Retired: ${w.name} (age ${currentAge}) from ${rivalId || 'Player'}`);
       const retiredObj = {
         ...w,
         age: currentAge,
@@ -93,23 +91,17 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
       retiredWarriors.push(retiredObj);
       if (isPlayer) {
         toRetire.push(w.id);
-      } else if (rivalId) {
-        // Prepare rival update to remove the warrior
-        const rivalUpdate = rivalsUpdates.get(rivalId) || {};
-        // We can't easily filter here, but we can set a flag or handle it in impacts.ts
-        // Actually, StateImpact.rivalsUpdates handles Partial<RivalStableData>.
-        // It's better to provide the whole new roster for that rival.
-        // But since we are looping over ALL warriors, we should group them by rival first.
       }
     } else if (Object.keys(update).length > 0) {
       if (isPlayer) {
         rosterUpdates.set(w.id, update);
       } else if (rivalId) {
-        const rUpdate = rivalsUpdates.get(rivalId) || {
+        const rKey = rivalId as StableId;
+        const rUpdate = rivalsUpdates.get(rKey) || {
           roster: [...state.rivals.find((r) => r.id === rivalId)!.roster],
         };
         rUpdate.roster = rUpdate.roster!.map((rw) => (rw.id === w.id ? { ...rw, ...update } : rw));
-        rivalsUpdates.set(rivalId, rUpdate);
+        rivalsUpdates.set(rKey, rUpdate);
       }
     }
   }
@@ -117,7 +109,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   // Handle rival retirements (filtering out retired ones)
   retiredWarriors.forEach((rw) => {
     if (rw.stableId && rw.stableId !== state.player.id) {
-      const rivalId = rw.stableId;
+      const rivalId = rw.stableId as unknown as StableId;
       const currentRival = state.rivals.find((r) => r.id === rivalId);
       if (currentRival) {
         const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...currentRival.roster] };

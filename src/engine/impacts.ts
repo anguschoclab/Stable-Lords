@@ -106,11 +106,6 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
   },
   rivalsUpdates: (state, value) => {
     if (value.size === 0) return;
-    const allUpdate = value.get('all' as any);
-    if (allUpdate && (allUpdate as any).rivals) {
-      state.rivals = (allUpdate as any).rivals;
-      return;
-    }
     state.rivals = state.rivals.map((r) => {
       const update = value.get(r.id);
       return update ? { ...r, ...update } : r;
@@ -347,10 +342,11 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
   // Initialize merged with default values
   (Object.keys(MERGE_CONFIG) as Array<keyof StateImpact>).forEach((key) => {
     const config = MERGE_CONFIG[key];
+    if (!config) return;
     if (Array.isArray(config.defaultValue)) {
       (merged as any)[key] = [...config.defaultValue];
     } else if (config.defaultValue instanceof Map) {
-      (merged as any)[key] = new Map(config.defaultValue);
+      (merged as any)[key] = new Map(config.defaultValue as never);
     } else {
       (merged as any)[key] = config.defaultValue;
     }
@@ -359,6 +355,7 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
   for (const imp of impacts) {
     (Object.keys(MERGE_CONFIG) as Array<keyof StateImpact>).forEach((key) => {
       const config = MERGE_CONFIG[key];
+      if (!config) return;
       const value = imp[key];
       if (value === undefined || value === null) return;
 

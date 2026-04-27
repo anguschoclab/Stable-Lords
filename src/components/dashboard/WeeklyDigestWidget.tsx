@@ -190,7 +190,7 @@ export function WeeklyDigestWidget({
 
         {/* This Week's Schedule */}
         {summary.signedOffers > 0 && (
-          <div className="p-3 bg-secondary/30 rounded-lg">
+          <div className="p-3 bg-secondary/30 rounded-none">
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
               <Target className="h-3.5 w-3.5" />
               <span className="font-bold uppercase">Scheduled This Week</span>
@@ -228,7 +228,7 @@ function StatBox({ icon, label, value, color }: StatBoxProps) {
   };
 
   return (
-    <div className={cn('p-2 rounded-lg text-center', colorClasses[color])}>
+    <div className={cn('p-2 rounded-none text-center', colorClasses[color])}>
       <div className="flex justify-center mb-1">{icon}</div>
       <div className="text-lg font-black font-mono">{value}</div>
       <div className="text-[9px] uppercase font-bold opacity-70">{label}</div>
@@ -261,7 +261,7 @@ function AlertBox({ type, message }: AlertBoxProps) {
   const config = configs[type];
 
   return (
-    <div className={cn('flex items-center gap-2 p-2 rounded-lg border text-sm', config.className)}>
+    <div className={cn('flex items-center gap-2 p-2 rounded-none border text-sm', config.className)}>
       {config.icon}
       <span className="font-medium">{message}</span>
     </div>
@@ -277,7 +277,7 @@ export function WeeklyDigestMini({
   const fightsThisWeek = arenaHistory.filter((f) => f.week === currentWeek).length;
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg">
+    <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-none">
       <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
         <span className="text-lg font-black">{week}</span>
       </div>

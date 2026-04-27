@@ -1,5 +1,6 @@
 import type { GameState, NewsletterItem, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { calculateXP, applyXP } from '@/engine/progression';
@@ -23,11 +24,11 @@ function routeUpdate(
   s: GameState,
   warrior: Warrior,
   partial: Partial<Warrior>,
-  rosterUpdates: Map<string, Partial<Warrior>>,
-  rivalsUpdates: Map<string, Partial<RivalStableData>>
+  rosterUpdates: Map<WarriorId, Partial<Warrior>>,
+  rivalsUpdates: Map<StableId, Partial<RivalStableData>>
 ): void {
   const isPlayer =
-    s.player?.id === (warrior as any).stableId ||
+    s.player?.id === warrior.stableId ||
     (s.roster || []).some((w) => w.id === warrior.id);
   if (isPlayer) {
     const existing = rosterUpdates.get(warrior.id) ?? {};
@@ -36,7 +37,7 @@ function routeUpdate(
   }
   // Find owning rival
   const rival = (s.rivals || []).find(
-    (r) => r.id === (warrior as any).stableId || r.roster.some((w) => w.id === warrior.id)
+    (r) => r.id === warrior.stableId || r.roster.some((w) => w.id === warrior.id)
   );
   if (!rival) return;
   const existingRival = rivalsUpdates.get(rival.id);
@@ -55,8 +56,8 @@ export function handleProgressions(
   rivalStableId?: string,
   rng?: IRNGService
 ): StateImpact {
-  const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
   const newsletterItems: NewsletterItem[] = [];
 
   // XP for both fighters — routed to the right roster regardless of ownership

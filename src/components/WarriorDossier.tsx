@@ -95,7 +95,7 @@ export const WarriorDossier = React.memo(function WarriorDossier({
           </div>
 
           {(warrior.origin || (warrior.traits && warrior.traits.length > 0)) && (
-            <div className="p-3 bg-white/5 border border-white/5 rounded-sm space-y-3">
+            <div className="p-3 bg-white/5 border border-white/5 rounded-none space-y-3">
               <div className="flex flex-wrap gap-2">
                 {warrior.traits?.map((t) => (
                   <Badge

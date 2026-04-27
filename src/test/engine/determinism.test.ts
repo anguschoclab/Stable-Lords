@@ -3,32 +3,22 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { createFreshState } from '@/engine/factories';
 
-// Mock the archive service to avoid disk I/O during tests
-vi.mock('@/engine/storage/opfsArchive', () => {
-  return {
-    OPFSArchiveService: class {
-      isSupported() {
-        return false;
-      }
-      archiveHotState() {
-        return Promise.resolve();
-      }
-      retrieveHotState() {
-        return Promise.resolve(null);
-      }
-      archiveBoutLog() {
-        return Promise.resolve();
-      }
-    },
-  };
-});
+// Mock the archiver adapter (used by weekPipelineService) to avoid disk I/O during tests
+vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({
+  archiveWeekLogs: (state: unknown) => state,
+}));
 
 describe('Simulation Determinism', () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should produce identical results from a fresh state over 5 weeks', () => {
+    // Pin toISOString so any new Date().toISOString() calls inside advanceWeek are stable
+    const FIXED_ISO = '2026-04-11T09:00:00.000Z';
+    vi.spyOn(Date.prototype, 'toISOString').mockReturnValue(FIXED_ISO);
+
     // 1. Setup two identical states
     // Pass a fixed timestamp to ensure meta.createdAt remains stable
     const stateA = createFreshState('test-seed-1', '2026-04-11T09:00:00Z');

@@ -1,4 +1,4 @@
-import { GameState, Warrior, BoutOffer } from '@/types/state.types';
+import { GameState, Warrior } from '@/types/state.types';
 
 export interface BoutPairing {
   a: Warrior;
@@ -31,16 +31,11 @@ export function generatePairings(state: GameState): BoutPairing[] {
     (o) => o.status === 'Signed' && o.boutWeek === currentWeek
   );
 
-  if (allOffers.length > 0) {
-    const signed = allOffers.filter((o) => o.status === 'Signed').length;
-    console.log(
-      `[DEBUG-STATE] Week ${currentWeek} | Total Offers: ${allOffers.length} | Total Signed: ${signed} | Current Week Signed: ${currentOffers.length}`
-    );
-  }
-
   currentOffers.forEach((offer) => {
-    const wA = warriorMap.get(offer.warriorIds[0]);
-    const wD = warriorMap.get(offer.warriorIds[1]);
+    const idA = offer.warriorIds[0];
+    const idD = offer.warriorIds[1];
+    const wA = idA ? warriorMap.get(idA) : undefined;
+    const wD = idD ? warriorMap.get(idD) : undefined;
 
     if (wA && wD) {
       // Find which stable wD belongs to
@@ -54,12 +49,6 @@ export function generatePairings(state: GameState): BoutPairing[] {
         rivalStableId: rivalStable?.id,
         contractId: offer.id,
       });
-    } else {
-      console.log(
-        `[DEBUG] Pairing Failed: wA=${!!wA} wD=${!!wD}. IDs: ${offer.warriorIds.join(', ')}`
-      );
-      if (!wA) console.log(`[DEBUG] Missing Warrior A ID: ${offer.warriorIds[0]}`);
-      if (!wD) console.log(`[DEBUG] Missing Warrior D ID: ${offer.warriorIds[1]}`);
     }
   });
 

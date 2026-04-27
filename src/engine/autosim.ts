@@ -1,6 +1,5 @@
 import { type GameState } from '@/types/state.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
-import { processWeekBouts } from '@/engine/bout/services/boutProcessorService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
 
@@ -45,31 +44,26 @@ export async function runAutosim(
       if (!playerWarriorId) return;
       // Auto-accept logical offers (Hype > 100 or Purse > 200)
       if (offer.hype > 100 || offer.purse > 200) {
-        state = { ...state, ...respondToBoutOffer(state, offer.id, playerWarriorId, 'Accepted') };
+        const impact = respondToBoutOffer(state, offer.id, playerWarriorId, 'Accepted');
+        state = resolveImpacts(state, [impact]);
       }
     });
 
     // Bouts are now handled inside advanceWeek via BoutSimulationPass.
-    // We just extract the summary from the last simulation report.
-    const report = state.lastSimulationReport?.bouts;
-    const summary = report || { bouts: 0, deaths: 0, injuries: 0, deathNames: [], injuryNames: [] };
-    const results: any[] = []; // Only checked for length down below
-
-    if (!state)
-      return {
-        weekSummaries,
-        weeksSimmed,
-        stopReason: 'no_pairings' as const,
-        finalState: null as any,
-      };
+    // Derive per-week stats from the FightSummary[] array in lastSimulationReport.
+    const boutSummaries = state.lastSimulationReport?.bouts ?? [];
+    const deathNames = boutSummaries
+      .filter((b) => b.by === 'Kill')
+      .map((b) => (b.winner === 'A' ? b.d : b.a));
+    const injuryNames: string[] = [];
 
     weekSummaries.push({
       week: state.week || 1,
-      bouts: summary.bouts,
-      deaths: summary.deaths,
-      injuries: summary.injuries,
-      deathNames: summary.deathNames || [],
-      injuryNames: summary.injuryNames || [],
+      bouts: boutSummaries.length,
+      deaths: deathNames.length,
+      injuries: injuryNames.length,
+      deathNames,
+      injuryNames,
     });
 
     weeksSimmed++;
@@ -97,10 +91,6 @@ export async function runAutosim(
         stopDetail: 'No warriors left to fight',
         weekSummaries,
       };
-    }
-
-    if (weeksSimmed > 0 && results.length === 0 && weeksSimmed % 4 === 1) {
-      // Only stop if no fights for multiple weeks (ignore single dry weeks)
     }
   }
 

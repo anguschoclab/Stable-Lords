@@ -1,15 +1,10 @@
 import { GameState, Promoter, Warrior, PromoterPersonality } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { FIGHT_PURSE } from '@/data/economyConstants';
 import { collectAllActiveWarriors } from '@/engine/core/warriorCollection';
-/**
- * Stable Lords — Promoter Pass
- * Phase 2: Promoters scan the world and dispatch bout offers.
- * Logic incorporates Hype Matrix, Rank Requirements, and Personality biases.
- */
 /**
  * Stable Lords — Promoter Pass
  * Phase 2: Promoters scan the world and dispatch bout offers.
@@ -263,8 +258,9 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         );
         const finalPurse = Math.floor(basePurse * (hype / 100) * purseModifier);
 
-        newOffers[offerId] = {
-          id: offerId,
+        const typedOfferId = offerId as BoutOfferId;
+        newOffers[typedOfferId] = {
+          id: typedOfferId,
           promoterId: promoter.id,
           warriorIds: [warriorA.warrior.id, opponentB.warrior.id],
           boutWeek: targetWeek,

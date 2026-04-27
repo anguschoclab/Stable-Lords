@@ -151,13 +151,14 @@ export interface Warrior {
   deathEvent?: DeathEvent;
   killedBy?: string;
   retiredWeek?: number;
+  lastBoutWeek?: number;
   stableId?: StableId;
   favorites?: WarriorFavorites;
   isDead?: boolean;
   dateOfDeath?: string;
   causeOfDeath?: string;
   yearlySnapshots?: Record<number, CareerRecord>;
-  awards?: import('./state.types').AnnualAward[];
+  awards?: AnnualAward[];
   traits: string[];
   lore?: string;
   origin?: string;

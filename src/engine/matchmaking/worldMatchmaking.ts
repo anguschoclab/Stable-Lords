@@ -1,7 +1,7 @@
 import { GameState, Warrior, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { generateId } from '@/utils/idUtils';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type BoutOfferId, type PromoterId } from '@/types/shared.types';
 
 /**
  * World Matchmaking Service
@@ -33,8 +33,8 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
     const fameA = a.warrior.fame || 0;
     if (Math.abs(fameB - fameA) > 100) return fameB - fameA;
 
-    const lastBoutA = a.warrior.career?.lastBoutWeek || 0;
-    const lastBoutB = b.warrior.career?.lastBoutWeek || 0;
+    const lastBoutA = a.warrior.lastBoutWeek || 0;
+    const lastBoutB = b.warrior.lastBoutWeek || 0;
     return lastBoutA - lastBoutB; // Prioritize those who haven't fought in a while
   });
 
@@ -65,9 +65,10 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
       pairedIds.add(entryA.warrior.id);
       pairedIds.add(bestOpponent.warrior.id);
 
-      const offerId = `world_bout_${rng.uuid()}`;
+      const offerId = `world_bout_${rng.uuid()}` as BoutOfferId;
       const offer: BoutOffer = {
         id: offerId,
+        promoterId: '' as PromoterId,
         proposerStableId: entryA.stable.id,
         warriorIds: [entryA.warrior.id, bestOpponent.warrior.id],
         boutWeek: state.week + 1,

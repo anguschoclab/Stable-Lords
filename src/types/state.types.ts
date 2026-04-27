@@ -3,7 +3,6 @@ import {
   type WarriorId,
   type StableId,
   type PromoterId,
-  type TrainerId,
   type TournamentId,
   type BoutOfferId,
   type LedgerEntryId,
@@ -69,6 +68,9 @@ export interface BoutOffer {
   hype: number;
   status: BoutOfferStatus;
   responses: Record<WarriorId, BoutOfferResponse>;
+  proposerStableId?: StableId;
+  conditions?: string[];
+  createdAt?: string;
 }
 
 export type PromoterPersonality = 'Greedy' | 'Honorable' | 'Sadistic' | 'Flashy' | 'Corporate';

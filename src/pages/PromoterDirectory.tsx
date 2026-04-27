@@ -3,9 +3,10 @@
  * Browse all promoters in the realm with their personalities,
  * booking history, and current capacity.
  */
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import type { Promoter, PromoterPersonality, BoutOffer } from '@/types/state.types';
+import type { Promoter, BoutOffer, PromoterPersonality } from '@/types/state.types';
+import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import {
   Card,
@@ -18,61 +19,17 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  DollarSign,
-  Award,
-  AlertTriangle,
-  Sparkles,
-  Building2,
   Calendar,
   Users,
   Sword,
   History,
   ArrowRight,
+  Building2,
+  DollarSign,
 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { PageHeader } from '@/components/ui/PageHeader';
 
-/** Personality badge configuration */
-const PERSONALITY_CONFIG: Record<
-  PromoterPersonality,
-  {
-    color: string;
-    icon: React.ReactNode;
-    label: string;
-    description: string;
-  }
-> = {
-  Greedy: {
-    color: 'bg-amber-500/20 text-amber-600 border-amber-500/30',
-    icon: <DollarSign className="h-4 w-4" />,
-    label: 'Greedy',
-    description: 'High purses (+15%), reduced hype (-10%)',
-  },
-  Honorable: {
-    color: 'bg-blue-500/20 text-blue-600 border-blue-500/30',
-    icon: <Award className="h-4 w-4" />,
-    label: 'Honorable',
-    description: 'Fair matchups, increased hype (+10%)',
-  },
-  Sadistic: {
-    color: 'bg-red-500/20 text-red-600 border-red-500/30',
-    icon: <AlertTriangle className="h-4 w-4" />,
-    label: 'Sadistic',
-    description: 'High-kill matchups, injury-risk bonus (+25% hype)',
-  },
-  Flashy: {
-    color: 'bg-purple-500/20 text-purple-600 border-purple-500/30',
-    icon: <Sparkles className="h-4 w-4" />,
-    label: 'Flashy',
-    description: 'Fame-focused, showy style bonus (+15% hype)',
-  },
-  Corporate: {
-    color: 'bg-emerald-500/20 text-emerald-600 border-emerald-500/30',
-    icon: <Building2 className="h-4 w-4" />,
-    label: 'Corporate',
-    description: 'Stable, predictable matchups (+5% purse)',
-  },
-};
 
 const TIER_COLORS: Record<Promoter['tier'], string> = {
   Local: 'bg-stone-500/20 text-stone-600 border-stone-500/30',
@@ -217,7 +174,7 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
           className="flex-1 text-[10px] uppercase font-bold"
           asChild
         >
-          <Link to={`/ops/promoter/${promoter.id}`}>
+          <Link to="/ops/promoter/$id" params={{ id: promoter.id }}>
             View Profile <ArrowRight className="h-3 w-3 ml-1" />
           </Link>
         </Button>
@@ -322,7 +279,7 @@ export default function PromoterDirectory() {
       </div>
 
       {/* Legend */}
-      <div className="mb-6 p-4 border border-border/50 rounded-lg bg-muted/20">
+      <div className="mb-6 p-4 border border-border/50 rounded-none bg-muted/20">
         <h3 className="text-[11px] uppercase tracking-wider font-bold mb-3 text-muted-foreground">
           Personality Guide
         </h3>

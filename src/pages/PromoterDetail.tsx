@@ -193,7 +193,7 @@ export default function PromoterDetail() {
       </div>
 
       {/* Hero Section */}
-      <div className={`p-6 rounded-xl border ${tierStyle.bg} ${tierStyle.badge} border-current`}>
+      <div className={`p-6 rounded-none border ${tierStyle.bg} ${tierStyle.badge} border-current`}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3 flex-wrap">
@@ -204,7 +204,7 @@ export default function PromoterDetail() {
             </div>
             <p className="text-sm opacity-80">{personality.description}</p>
           </div>
-          <div className={`p-4 rounded-lg ${personality.bgColor} flex items-center gap-3`}>
+          <div className={`p-4 rounded-none ${personality.bgColor} flex items-center gap-3`}>
             <div className={personality.color}>{personality.icon}</div>
             <div>
               <div className={`font-bold ${personality.color}`}>{personality.label}</div>

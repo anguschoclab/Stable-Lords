@@ -1,4 +1,5 @@
 import { GameState, RivalStableData } from '@/types/state.types';
+import type { StableId, BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { updateAIStrategy } from '@/engine/ai/intentEngine';
 import { processAIStable } from '@/engine/ai/stableManager';
@@ -12,9 +13,6 @@ import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { hashStr } from '@/utils/random';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 
-/**
- * Stable Lords — Rival Strategy Pipeline Pass
- */
 /**
  * Stable Lords — Rival Strategy Pipeline Pass
  */
@@ -47,11 +45,14 @@ export function runRivalStrategyPass(
 
     if (isBankrupt) {
       const retirementSeed = nextWeek + index * 1000;
-      const [newStable] = generateRivalStables(1, retirementSeed);
-      globalGazetteItems.push(
-        `🆕 RECRUITMENT: ${newStable.owner.stableName} has debuted in the league under ${newStable.owner.name}!`
-      );
-      return newStable as RivalStableData;
+      const generated = generateRivalStables(1, retirementSeed);
+      const newStable = generated[0];
+      if (newStable) {
+        globalGazetteItems.push(
+          `🆕 RECRUITMENT: ${newStable.owner.stableName} has debuted in the league under ${newStable.owner.name}!`
+        );
+        return newStable as RivalStableData;
+      }
     }
     return updatedRival;
   });
@@ -62,8 +63,9 @@ export function runRivalStrategyPass(
 
   // 🧹 1.6 Hardening: Purge Expired Offers (Prevent state bloat)
   Object.keys(boutOffersWithWorld).forEach((id) => {
-    if (boutOffersWithWorld[id].expirationWeek < nextWeek) {
-      delete boutOffersWithWorld[id];
+    const offer = boutOffersWithWorld[id as BoutOfferId];
+    if (offer && offer.expirationWeek < nextWeek) {
+      delete boutOffersWithWorld[id as BoutOfferId];
     }
   });
 
@@ -97,9 +99,9 @@ export function runRivalStrategyPass(
   currentRivals = finalizedRivals;
 
   // 4. Final Aggregation of Rival Updates
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
   finalizedRivals.forEach((r) => {
-    rivalsUpdates.set(r.id, r);
+    rivalsUpdates.set(r.id as StableId, r);
   });
   impacts.push({ rivalsUpdates });
 
@@ -222,7 +224,7 @@ function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGServ
   const rosterRemovals = [...preRosterIds].filter((id) => !postRosterIds.has(id));
 
   // Build rivalsUpdates so the rival rosters reflect tournament casualties + status updates.
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
   (workingState.rivals || []).forEach((r) => {
     const preIds = preRivalRosters.get(r.id);
     if (!preIds) return;
@@ -230,7 +232,7 @@ function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGServ
     const removed = [...preIds].filter((id) => !postIds.has(id));
     const sizesDiffer = preIds.size !== postIds.size;
     if (removed.length > 0 || sizesDiffer) {
-      rivalsUpdates.set(r.id, { roster: r.roster });
+      rivalsUpdates.set(r.id as StableId, { roster: r.roster });
     }
   });
 

@@ -1,4 +1,5 @@
 import type { Warrior } from '@/types/state.types';
+import type { StableId, FightId } from '@/types/shared.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { generateId } from '@/utils/idUtils';
@@ -19,13 +20,13 @@ export function handleReporting(
   fD: number,
   pD: number,
   week: number,
-  rivalStableId?: string,
+  _rivalStableId?: string,
   isRivalry?: boolean,
-  day: number = 0,
+  _day: number = 0,
   rng?: IRNGService
 ) {
   const safeRng = rng;
-  const boutId = safeRng ? safeRng.uuid() : generateId(undefined, 'bout');
+  const boutId = (safeRng ? safeRng.uuid() : generateId(undefined, 'bout')) as FightId;
   const summary: FightSummary = {
     id: boutId,
     week,
@@ -39,8 +40,8 @@ export function handleReporting(
     // Prior code omitted these on regular bouts (only tournament summaries via
     // createFightSummary set them), so rival income from arenaHistory was always
     // 0 and rival treasuries never reflected bout earnings.
-    stableIdA: wA.stableId as any,
-    stableIdD: wD.stableId as any,
+    stableIdA: wA.stableId as unknown as StableId,
+    stableIdD: wD.stableId as unknown as StableId,
     winner: outcome.winner,
     by: outcome.by,
     styleA: wA.style,

@@ -8,7 +8,7 @@ import {
 import { type CrowdMood } from '../../crowdMood';
 import { FightingStyle } from '@/types/shared.types';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
-import { StateImpact, mergeImpacts } from '@/engine/impacts';
+import { StateImpact } from '@/engine/impacts';
 import { scoreMatchup } from '@/engine/schedulingAssistant';
 
 /**
@@ -243,16 +243,14 @@ export function evaluateBoutOffer(
   const isTournamentHungry = weeksUntilTournament <= 4;
 
   // 1. Inactivity Pressure: if haven't fought in 4+ weeks, reduce caution
-  const weeksSinceBout = warrior.career?.lastBoutWeek
-    ? currentWeek - warrior.career.lastBoutWeek
-    : 10;
+  const lastBoutWeek = warrior.lastBoutWeek;
+  const weeksSinceBout = lastBoutWeek != null ? currentWeek - lastBoutWeek : 10;
   const isDesperateForBout = weeksSinceBout > 4 || isTournamentHungry;
 
   // 2. Health Guard: Protective owners decline if HP < 70% (Relaxed from 80%)
   const hpThreshold = isDesperateForBout ? 50 : 70;
   const currentHP = warrior.derivedStats?.hp ?? 100;
   if (currentHP < hpThreshold && rival.owner.personality !== 'Aggressive') {
-    console.log(`[DEBUG-DECLINE] ${warrior.name} | HP too low: ${currentHP} < ${hpThreshold}`);
     return 'Declined';
   }
 
@@ -260,9 +258,6 @@ export function evaluateBoutOffer(
   const fatigueThreshold = isDesperateForBout ? 90 : 70;
   const fatigue = warrior.fatigue ?? 0;
   if (fatigue > fatigueThreshold && rival.owner.personality !== 'Aggressive') {
-    console.log(
-      `[DEBUG-DECLINE] ${warrior.name} | Fatigue too high: ${fatigue} > ${fatigueThreshold}`
-    );
     return 'Declined';
   }
 
@@ -274,7 +269,6 @@ export function evaluateBoutOffer(
     (BLOCKING_INJURY_SEVERITIES as readonly string[]).includes(injury.severity as BlockingSeverity)
   );
   if (hasBlockingInjury) {
-    console.log(`[DEBUG-DECLINE] ${warrior.name} | Blocking Injury`);
     return 'Declined';
   }
 
@@ -284,20 +278,17 @@ export function evaluateBoutOffer(
   const purse = offer.purse;
 
   if (isTournamentHungry) {
-    console.log(`[DEBUG-ACCEPT] ${warrior.name} | Tournament Hungry!`);
     return 'Accepted';
   }
 
   if (personality === 'Aggressive' && (hype > 110 || purse > 300)) return 'Accepted';
   if (personality === 'Methodical' && currentHP < 85) {
-    console.log(`[DEBUG-DECLINE] ${warrior.name} | Methodical HP check`);
     return 'Declined';
   }
   if (personality === 'Showman' && hype > 120) return 'Accepted';
   if (personality === 'Pragmatic' && purse > 250) return 'Accepted';
 
   // Default: Accept if reasonable
-  console.log(`[DEBUG-ACCEPT] ${warrior.name} | Default Accept`);
   return 'Accepted';
 }
 

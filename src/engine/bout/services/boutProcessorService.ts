@@ -1,4 +1,5 @@
 import { GameState, Warrior, BoutOffer } from '@/types/state.types';
+import type { BoutOfferId } from '@/types/shared.types';
 import { type FightOutcome } from '@/types/combat.types';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { getMoodModifiers } from '@/engine/crowdMood';
@@ -95,7 +96,7 @@ function handleInvalidBout(ctx: BoutContext): BoutImpact {
 
 function runBoutSimulation(
   state: GameState,
-  ctx: BoutContext,
+  _ctx: BoutContext,
   validCW: Warrior,
   validCO: Warrior,
   boutSeed: number
@@ -259,15 +260,9 @@ export function processWeekBouts(state: GameState): {
   const summary = createWeekBoutSummary();
 
   const pairings = generatePairings(state);
-  if (pairings.length === 0) {
-    const signedOffers = Object.values(state.boutOffers || {}).filter((o) => o.status === 'Signed');
-    console.log(
-      `[DEBUG] No pairings generated. Week: ${state.week}. Signed Offers: ${signedOffers.length}`
-    );
-  }
 
   pairings.forEach((p) => {
-    const contract = p.contractId ? state.boutOffers[p.contractId] : undefined;
+    const contract = p.contractId ? state.boutOffers[p.contractId as BoutOfferId] : undefined;
     const res = resolveBout(state, {
       warrior: p.a,
       opponent: p.d,

@@ -104,7 +104,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
     const activeWarriors = roster.filter((w: Warrior) => w.status === 'Active');
     if (activeWarriors.length < 3) {
-      console.warn('Personnel deficit detected. Redirecting to recruitment protocol.');
       navigate({ to: '/welcome' });
     }
   }, [roster, activePath, navigate]);
@@ -125,7 +124,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // const activePath = location.pathname;
 
   return (
     <div className="min-h-screen bg-[#0C0806] flex flex-col overflow-hidden text-foreground selection:bg-primary/30">

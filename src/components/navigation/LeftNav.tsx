@@ -29,6 +29,7 @@ import {
   CalendarClock,
   ShieldAlert,
   BrainCircuit,
+  UserPlus,
 } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -61,6 +62,7 @@ const HUBS = [
       { to: '/ops/finance', label: 'Finance', icon: Coins },
       { to: '/ops/contracts', label: 'Bouts', icon: ScrollText },
       { to: '/ops/promoters', label: 'Promoters', icon: Building2 },
+      { to: '/ops/recruit', label: 'Recruit', icon: UserPlus },
       { to: '/ops/offseason', label: 'Offseason', icon: Sunset },
     ],
   },
@@ -265,44 +267,15 @@ export function LeftNav({ className }: LeftNavProps) {
 // ─── Bottom alert strip ──────────────────────────────────────────────────────
 
 function AlertStrip() {
-  const { roster, isTournamentWeek, boutOffers, trainingAssignments, week } = useGameStore(
-    useShallow((s) => ({
-      roster: s.roster,
-      isTournamentWeek: s.isTournamentWeek,
-      boutOffers: s.boutOffers,
-      trainingAssignments: s.trainingAssignments,
-      week: s.week,
-    }))
-  );
+  const { counts } = useNavAlerts();
+  const { isTournamentWeek } = useGameStore(useShallow((s) => ({ isTournamentWeek: s.isTournamentWeek })));
 
-  const location = useLocation();
-  const onCommandSection = location.pathname.startsWith('/command');
-  const onOpsSection = location.pathname.startsWith('/ops');
-
-  const lastSeenOpsWeek = useRef(onOpsSection ? week : -1);
-  const lastSeenCommandWeek = useRef(onCommandSection ? week : -1);
-
-  useEffect(() => {
-    if (onOpsSection) lastSeenOpsWeek.current = week;
-  }, [onOpsSection, week]);
-
-  useEffect(() => {
-    if (onCommandSection) lastSeenCommandWeek.current = week;
-  }, [onCommandSection, week]);
-
-  const assignedIds = new Set((trainingAssignments ?? []).map((a) => a.warriorId));
-  const untrainedCount = roster.filter(
-    (w) => w.status === 'Active' && !assignedIds.has(w.id)
-  ).length;
-
-  const rosterIds = new Set(roster.map((w) => w.id));
-  const pendingOffers = Object.values(boutOffers || {}).filter(
-    (o) => o.status === 'Proposed' && o.warriorIds.some((id) => rosterIds.has(id))
-  ).length;
+  const untrainedCount = counts.command;
+  const pendingOffers = counts.ops;
 
   const alerts: { icon: React.ElementType; label: string; color: string; to: string }[] = [];
 
-  if (untrainedCount > 0 && !onCommandSection && week > lastSeenCommandWeek.current)
+  if (untrainedCount > 0)
     alerts.push({
       icon: ShieldAlert,
       label: `${untrainedCount} unassigned`,
@@ -310,7 +283,7 @@ function AlertStrip() {
       to: '/command/training',
     });
 
-  if (pendingOffers > 0 && !onOpsSection && week > lastSeenOpsWeek.current)
+  if (pendingOffers > 0)
     alerts.push({
       icon: ScrollText,
       label: `${pendingOffers} offers`,
@@ -335,7 +308,7 @@ function AlertStrip() {
         return (
           <Link
             key={i}
-            to={a.to}
+            to={a.to as never}
             className={cn(
               'flex items-center gap-2 px-2 py-1 text-[9px] font-black uppercase tracking-widest transition-opacity hover:opacity-70',
               a.color

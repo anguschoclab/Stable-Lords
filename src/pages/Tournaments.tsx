@@ -182,7 +182,7 @@ export default function Tournaments() {
 
       {/* ── Pre-tournament readiness banner ── */}
       {currentTournament && playerWarriorsInTournament.length > 0 && (
-        <div className="rounded-lg border border-border/20 bg-secondary/10 px-5 py-4 space-y-3">
+        <div className="rounded-none border border-border/20 bg-secondary/10 px-5 py-4 space-y-3">
           {/* Header row */}
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">

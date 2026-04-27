@@ -1,18 +1,10 @@
 import type { GameState } from '@/types/state.types';
+import type { Trainer } from '@/types/shared.types';
 import { computeTrainingImpact, trainingImpactToStateImpact } from '@/engine/training';
 import { computeAgingImpact } from '@/engine/aging';
 import { computeHealthImpact } from '@/engine/health';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-
-/**
- * Stable Lords — Warrior Pipeline Pass
- * Handles weekly training, aging, and recovery using the established impact pattern.
- */
-/**
- * Stable Lords — Warrior Pipeline Pass
- * Handles weekly training, aging, and recovery using the established impact pattern.
- */
 import { convertRetiredToTrainer } from '@/engine/trainers';
 
 /**
@@ -30,7 +22,7 @@ export function runWarriorPass(state: GameState, rng: IRNGService): StateImpact 
   const agingImpact = computeAgingImpact(state, rng);
 
   // 🧬 Legacy System: Retired warriors with fame > 500 can become trainers
-  const newTrainersInPool: any[] = [];
+  const newTrainersInPool: Trainer[] = [];
   if (agingImpact.retired && agingImpact.retired.length > 0) {
     agingImpact.retired.forEach((w) => {
       if (w.fame > 500) {

@@ -42,7 +42,7 @@ export default function SpeechBubble({ bubble, onDismiss, position = 'left' }: S
     >
       <div
         className={cn(
-          'relative px-4 py-2 rounded-sm border-2 font-display text-xs font-black uppercase tracking-wide whitespace-nowrap',
+          'relative px-4 py-2 rounded-none border-2 font-display text-xs font-black uppercase tracking-wide whitespace-nowrap',
           'shadow-lg backdrop-blur-sm',
           getBubbleStyles(bubble.type)
         )}

@@ -173,8 +173,10 @@ function selectColors(
       // Pick a contrasting color group
       const allColorKeys = Object.keys(CREST_COLORS) as CrestColorKey[];
       const availableColors = allColorKeys.filter((k) => CREST_COLORS[k] !== primaryColor);
-      const pickedColor = rng.pick(availableColors);
-      secondaryColor = CREST_COLORS[pickedColor];
+      if (availableColors.length > 0) {
+        const pickedColor = rng.pick(availableColors);
+        secondaryColor = CREST_COLORS[pickedColor];
+      }
     }
   }
 

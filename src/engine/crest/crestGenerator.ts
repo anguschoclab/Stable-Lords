@@ -43,7 +43,11 @@ const PHILOSOPHY_COLOR_PREFERENCES: Record<string, CrestColorKey[]> = {
  */
 function getInheritanceConfig(generation: number): CrestInheritanceConfig {
   if (generation <= 0) {
-    return INHERITANCE_CHANCES[0]!;
+    const first = INHERITANCE_CHANCES[0];
+    if (!first) {
+      throw new Error('INHERITANCE_CHANCES is empty');
+    }
+    return first;
   }
   return INHERITANCE_CHANCES[generation] ?? DEFAULT_INHERITANCE;
 }

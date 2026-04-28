@@ -33,8 +33,8 @@ export const FormSparkline = React.memo(function FormSparkline({
             const byKill = fight.by === 'Kill';
             const isDraw = fight.winner === null;
 
-            let colorClass = 'bg-muted';
-            let label = 'Draw';
+            let colorClass: string;
+            let label: string;
 
             if (isDraw) {
               colorClass = 'bg-arena-gold/50';

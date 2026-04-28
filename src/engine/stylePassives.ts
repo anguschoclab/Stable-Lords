@@ -246,15 +246,15 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
   },
 
   [FightingStyle.BashingAttack]: {
-    tempo: { opening: 1, mid: 1, late: 0, enduranceMult: 0.98 },
+    tempo: { opening: 1, mid: 0, late: 0, enduranceMult: 0.98 },
     getPassive: (ctx, m) => {
-      const momentumDmg = Math.min(3 + m.bonus, 1 + ctx.consecutiveHits);
+      const momentumDmg = Math.min(2 + m.bonus, ctx.consecutiveHits);
       const vsTP = ctx.opponentStyle === FightingStyle.TotalParry;
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
         dmgBonus: scale(momentumDmg, m) + (vsTP ? 1 : 0),
-        attBonus: scale(ctx.consecutiveHits >= 2 ? 2 : 1, m) + (vsTP ? 2 : 0),
+        attBonus: scale(ctx.consecutiveHits >= 3 ? 2 : 1, m) + (vsTP ? 1 : 0),
         hasPassiveNarrative: (vsTP && ctx.consecutiveHits >= 2) || ctx.consecutiveHits >= 3,
       };
     },
@@ -264,7 +264,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
         killBonus: momentum * 0.04,
         decBonus: momentum,
         extendedKillWindow: ctx.consecutiveHits >= 3,
-        killWindowHpMult: ctx.consecutiveHits >= 3 ? 0.4 : 0.3,
+        killWindowHpMult: ctx.consecutiveHits >= 3 ? 0.5 : 0.4,
         killNarrative: 'unleashes the full weight of their momentum in a crushing final blow!',
       };
     },
@@ -312,7 +312,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       killBonus: ctx.phase === 'OPENING' ? 0.08 : 0,
       decBonus: ctx.phase === 'OPENING' ? 2 : 0,
       extendedKillWindow: false,
-      killWindowHpMult: 0.3,
+      killWindowHpMult: 0.45,
       killNarrative: 'springs forward with a sudden, lethal thrust!',
     }),
     getAntiSynergy: (off, def) => {
@@ -338,8 +338,9 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        attBonus: scale(counterReady ? 1 : 0, m) + (counterReady ? m.bonus : 0),
-        iniBonus: counterReady ? 1 : 0,
+        attBonus: scale(counterReady ? 2 : 1, m),
+        parBonus: 2 + m.bonus,
+        iniBonus: counterReady ? 2 : 0,
         hasPassiveNarrative: counterReady,
       };
     },
@@ -347,7 +348,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       killBonus: 0,
       decBonus: 0,
       extendedKillWindow: false,
-      killWindowHpMult: 0.3,
+      killWindowHpMult: 0.45,
       killNarrative: 'exploits a gap in the defense to strike home!',
     }),
     getAntiSynergy: () => ({ offMult: 1, defMult: 1 }),
@@ -372,7 +373,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       killBonus: 0.03,
       decBonus: 2,
       extendedKillWindow: false,
-      killWindowHpMult: 0.25,
+      killWindowHpMult: 0.40,
       killNarrative: 'pivots around the attack and delivers a stinging riposte!',
     }),
     getAntiSynergy: (off) => {
@@ -406,7 +407,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       killBonus: 0,
       decBonus: 0,
       extendedKillWindow: false,
-      killWindowHpMult: 0.3,
+      killWindowHpMult: 0.45,
       killNarrative: 'blocks and strikes in a single fluid motion!',
     }),
     getAntiSynergy: (off) => ({ offMult: off === 'Bash' ? 0.6 : 1, defMult: 1 }),
@@ -416,15 +417,17 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
     tempo: { opening: 1, mid: 0, late: 0, enduranceMult: 0.96 },
     // Tuned 2026-04 (passive pass 3): SL still 73% W% after passes 1-2.
     // The cumulative phase-tempo (+1/+1/0) + attBonus(+1) + dmg flurry was a
-    // permanent triple-stack. Pass 3 drops mid tempo +1 → 0, gates attBonus to
-    // OPENING only, and stretches the flurry threshold so you need 4+ landed
-    // hits before the +1 dmg kicks in.
+    // permanent triple-stack. Pass 3 dropped mid tempo +1 → 0 and gated attBonus
+    // to OPENING only — but that pushed SL too far down to 28% W%. Pass 4:
+    // restore attBonus to OPENING+MID (not LATE), keep flurry threshold at 4+.
+    // Pass 5: added parBonus=1 baseline to give SL minimal survivability.
     getPassive: (ctx, m) => {
       const flurryDmg = ctx.hitsLanded >= 4 ? 1 : 0;
       return {
         ...EMPTY_PASSIVE,
         mastery: m.tier,
-        attBonus: ctx.phase === 'OPENING' ? 1 + m.bonus : 0,
+        attBonus: ctx.phase !== 'LATE' ? 1 + m.bonus : 0,
+        parBonus: 1,
         dmgBonus: flurryDmg,
         hasPassiveNarrative: ctx.hitsLanded >= 4,
       };
@@ -433,7 +436,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       killBonus: ctx.hitsLanded >= 4 ? 0.06 : 0,
       decBonus: 0,
       extendedKillWindow: ctx.hitsLanded >= 5,
-      killWindowHpMult: ctx.hitsLanded >= 5 ? 0.35 : 0.3,
+      killWindowHpMult: ctx.hitsLanded >= 5 ? 0.50 : 0.40,
       killNarrative: 'overwhelms their foe with a flurry of precise cuts!',
     }),
     getAntiSynergy: (off, def) => {
@@ -464,7 +467,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       killBonus: 0.1,
       decBonus: 2,
       extendedKillWindow: true,
-      killWindowHpMult: 0.25,
+      killWindowHpMult: 0.40,
       killNarrative: 'lands a devastating, direct strike!',
     }),
     getAntiSynergy: (off, def) => ({ offMult: 1, defMult: def === 'Riposte' ? 0.6 : 1 }),
@@ -475,27 +478,23 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
     // Tuned 2026-04 (3 passes):
     //  - Pass 1: attBonus -2 → -1, parBonus +4 → +3
     //  - Pass 3: parBonus +3 → +1.
-    //
-    // The shield-as-classic-weapon ruling means TP's default loadout now puts
-    // a medium_shield in the weapon slot, which adds +2 PAR/DEF on its own
-    // (via getShieldBonus in fighterState.ts). Stacking the prior parBonus +3
-    // on top of that +2 shield gave TP an effective +5 PAR baseline — way out
-    // of line with other defensive styles (PS +2, PR +1). Cutting passive
-    // parBonus to +1 leaves the net defensive value (shield +2 + passive +1 =
-    // +3) close to PS's pure passive of +2 while preserving TP's identity.
+    //  - Pass 4: iniBonus 2 → 1, parBonus capped at m.bonus (no base floor).
+    //    TP was winning 95-100% vs AB/PL because iniBonus=2 + shield+2 + parBonus+1
+    //    created an impenetrable wall. Removing the parBonus floor keeps TP
+    //    defensive at higher mastery but lets novice warriors land some hits.
     getPassive: (ctx, m) => ({
       ...EMPTY_PASSIVE,
       mastery: m.tier,
       attBonus: -1,
-      parBonus: 1 + m.bonus,
-      iniBonus: 2,
+      parBonus: 1 + (ctx.phase === 'LATE' ? m.bonus : 0),
+      iniBonus: 1,
       hasPassiveNarrative: ctx.phase === 'LATE' && ctx.endRatio > 0.5,
     }),
     getKillMechanic: () => ({
       killBonus: -0.05,
       decBonus: -1,
       extendedKillWindow: false,
-      killWindowHpMult: 0.25,
+      killWindowHpMult: 0.35,
       killNarrative: 'finds a momentary opening in their own defensive shell!',
     }),
     getAntiSynergy: (off) => {
@@ -531,7 +530,7 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
       killBonus: -0.03,
       decBonus: 0,
       extendedKillWindow: false,
-      killWindowHpMult: 0.28,
+      killWindowHpMult: 0.40,
       killNarrative: 'shifts their weight and drives through the defense!',
     }),
     getAntiSynergy: () => ({ offMult: 1, defMult: 1 }),

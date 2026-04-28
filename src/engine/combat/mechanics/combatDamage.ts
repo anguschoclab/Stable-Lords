@@ -220,16 +220,18 @@ export function calculateKillWindow(
   // before reaching age 30). Halving the per-hit kill chance brings per-bout
   // mortality toward the documented ~5% target and lets warriors live long
   // enough to age out, retire, and create generational turnover.
-  let threshold = 0.005;
+  // Re-tuned 2026-04 pass 2: 0.005 base + 2.5% cap produced ~3.6% per-bout kill
+  // rate, below the 6% floor. Raising to 0.012 base + 4% cap targets ~6-10%.
+  let threshold = 0.012;
 
   // HP factor: higher chance if HP is low (below 30%)
-  if (hpRatio < 0.3) threshold += 0.002;
-  else if (hpRatio < 0.5) threshold += 0.0005;
+  if (hpRatio < 0.3) threshold += 0.004;
+  else if (hpRatio < 0.5) threshold += 0.001;
 
   // Endurance (Fatigue) factor: exhaustion opens kill windows
-  if (enduranceRatio < 0.2) threshold += 0.004;
-  else if (enduranceRatio < 0.4) threshold += 0.002;
-  else if (enduranceRatio < 0.6) threshold += 0.0005;
+  if (enduranceRatio < 0.2) threshold += 0.006;
+  else if (enduranceRatio < 0.4) threshold += 0.003;
+  else if (enduranceRatio < 0.6) threshold += 0.001;
 
   // Location factor: Vital spots are deadlier
   const locMult = LOCATION_KILL_MULT[location] ?? 1.0;
@@ -261,9 +263,8 @@ export function calculateKillWindow(
   // Magnitudes intentionally tiny — the cap absorbs Bloodthirsty surges rather than blowing past baseline.
   threshold += crowdKillBonus;
 
-  // Cap at 2.5% for the perfect storm. Was 8% → 4% → 2.5% (2026-04 tuning).
-  // At 4% per-bout mortality was still ~7-8%, giving ~1.5y warrior lifespans —
-  // not enough to reach age 30 retirement from 18-25 starts. 2.5% targets
-  // ~4% per-bout kill rate and ~5-7y lifespans, opening real generational play.
-  return Math.max(0, Math.min(0.025, threshold));
+  // Cap at 4% for the perfect storm. Was 8% → 4% → 2.5% → 4% (2026-04 pass 2).
+  // 2.5% cap produced ~3.6% per-bout kill rate, below the 6% test floor.
+  // Restoring 4% cap with higher base threshold targets ~6-10% per-bout kill rate.
+  return Math.max(0, Math.min(0.04, threshold));
 }

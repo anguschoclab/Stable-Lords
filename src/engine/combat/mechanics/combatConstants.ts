@@ -71,16 +71,16 @@ export const STYLE_ORDER = [
  */
 export const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
-  [0, +1, +2, +1, +1, +1, +2, +2, +1, +2], // AB  (heavy buff; rich-mode AB still 28.8%)
-  [0, 0, 0, +1, +1, +1, 0, 0, +1, 0], // BA  (restored some advantages after rich-mode AB attr pool sapped BA to 37%)
-  [-2, 0, 0, +1, +1, -1, 0, 0, +1, -1], // LU  (penalized vs AB; LU at 71% rich-mode, kept hostile)
-  [0, -1, -1, 0, 0, 0, 0, -1, 0, 0], // PL
-  [0, -1, 0, 0, 0, 0, 0, -1, +1, 0], // PR
-  [0, 0, +1, 0, 0, 0, 0, -1, 0, 0], // PS
-  [-1, -1, 0, 0, +1, 0, 0, -1, +1, 0], // SL  (penalized vs AB/BA; SL still 67.8% rich-mode)
-  [-1, 0, +1, +1, +1, 0, +1, 0, +1, +1], // ST
-  [0, 0, -1, 0, 0, 0, -1, -1, 0, 0], // TP
-  [-1, 0, +1, 0, 0, 0, 0, 0, 0, 0], // WS
+  [0, +1, +2, +1, +1, +1, +1, +2, +1, +2], // AB  (AB vs SL +2→+1; SL was losing 84%)
+  [0, 0, 0, -1, +1, 0, -1, 0, +1, 0], // BA  (BA vs PL +1→-1, BA vs PS +1→0, BA vs SL 0→-1; BA at 74% → nerf)
+  [-2, 0, 0, +1, +1, -1, 0, 0, +1, -1], // LU  (restored LU vs PL +1; PlanBuilder test requires this)
+  [0, +2, -1, 0, +2, +2, 0, 0, +2, 0], // PL  (PL row: buff vs BA/PR/PS/TP; LU vs PL restored)
+  [0, -1, 0, -2, 0, 0, 0, -1, +1, 0], // PR  (PR vs PL 0→-2; PR was 94% vs PL)
+  [0, 0, +1, -2, 0, 0, 0, -1, 0, 0], // PS  (PS vs PL 0→-2; PS was 91% vs PL)
+  [-1, -1, 0, 0, +1, 0, 0, -1, +1, 0], // SL  (unchanged; SL already weak, let passives fix it)
+  [-1, 0, +1, +1, +1, 0, 0, 0, +1, +1], // ST  (ST vs SL +1→0; ST was 82% vs SL)
+  [-2, 0, -1, -2, 0, 0, -1, -1, 0, -1], // TP  (TP vs AB 0→-2, TP vs PL 0→-2, TP vs WS 0→-1; TP dominant at 95-100%)
+  [-1, 0, +1, 0, 0, 0, 0, 0, 0, 0], // WS  (unchanged)
 ];
 
 export function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle): number {

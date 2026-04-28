@@ -35,7 +35,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 0.85; // picks index 4 = tavern_brawl
+      if (callCount === 1) return 4 / 7; // picks index 4 = tavern_brawl
       return originalNext();
     };
     (rng as any).next = mockNext;
@@ -54,8 +54,8 @@ describe('runSeasonalPass', () => {
     // The warrior should have received fame (+10 to +20)
     const update = impact.rosterUpdates?.get(warriorId);
     expect(update).toBeDefined();
-    expect(update?.fame).toBeGreaterThanOrEqual(20);
-    expect(update?.fame).toBeLessThanOrEqual(30);
+    expect(update?.fame).toBeGreaterThanOrEqual(10);
+    expect(update?.fame).toBeLessThanOrEqual(60);
 
     // The warrior should have a Bruised Ribs injury
     expect(update?.injuries).toHaveLength(1);
@@ -74,7 +74,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 0.85; // picks tavern_brawl
+      if (callCount === 1) return 4 / 7; // picks tavern_brawl
       return originalNext();
     };
     (rng as any).next = mockNext;

@@ -22,9 +22,11 @@ export function processOwnerGrudges(
   const recentFights = getRecentFights(state.arenaHistory, state.week - 13);
 
   for (let i = 0; i < rivals.length; i++) {
+    const rA = rivals[i];
+    if (!rA) continue;
     for (let j = i + 1; j < rivals.length; j++) {
-      const rA = rivals[i]!;
-      const rB = rivals[j]!;
+      const rB = rivals[j];
+      if (!rB) continue;
       const persA = rA.owner.personality;
       const persB = rB.owner.personality;
       if (!persA || !persB) continue;
@@ -42,7 +44,8 @@ export function processOwnerGrudges(
       let hasKill = false;
 
       for (let k = 0; k < recentFights.length; k++) {
-        const f = recentFights[k]!;
+        const f = recentFights[k];
+        if (!f) continue;
         const isCrossFight =
           (aNamesSet.has(f.a) && bNamesSet.has(f.d)) || (bNamesSet.has(f.a) && aNamesSet.has(f.d));
 

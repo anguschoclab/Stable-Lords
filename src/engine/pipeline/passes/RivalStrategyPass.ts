@@ -96,7 +96,6 @@ export function runRivalStrategyPass(
     rosterRng
   );
   globalGazetteItems.push(...rosterGazette);
-  currentRivals = finalizedRivals;
 
   // 4. Final Aggregation of Rival Updates
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();

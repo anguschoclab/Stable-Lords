@@ -237,7 +237,7 @@ describe('Autosim Integration', () => {
     it('should handle multi-week simulation', async () => {
       const result = await runAutosim(initialState, 20, () => {});
 
-      expect(result.weeksSimmed).toBeGreaterThan(0);
+      expect(result.weeksSimmed).toBeGreaterThan(1);
       expect(result.finalState.week).toBeGreaterThan(initialState.week);
     });
 

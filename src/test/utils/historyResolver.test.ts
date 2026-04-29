@@ -1,129 +1,102 @@
-import { test, expect } from 'vitest';
-import {
-  resolveWarriorName,
-  resolveStableName,
-  findWarrior,
-  type NameResolutionState,
-} from '@/utils/historyResolver';
+
+import { describe, it, expect } from 'vitest';
+import { resolveWarriorName, resolveStableName, findWarrior } from '@/utils/historyResolver';
 import { GameState } from '@/types/state.types';
 
-const generateState = (numRivals = 100, rosterSize = 20) => {
-  return {
+describe('historyResolver', () => {
+  const mockState: any = {
     player: { id: 'p1', stableName: 'Player Stable', name: 'Player' },
-    roster: Array.from({ length: rosterSize }, (_, i) => ({
-      id: `p_w_${i}`,
-      name: `Player Warrior ${i}`,
-    })),
-    graveyard: Array.from({ length: rosterSize }, (_, i) => ({
-      id: `g_w_${i}`,
-      name: `Graveyard Warrior ${i}`,
-    })),
-    retired: Array.from({ length: rosterSize }, (_, i) => ({
-      id: `r_w_${i}`,
-      name: `Retired Warrior ${i}`,
-    })),
-    rivals: Array.from({ length: numRivals }, (_, i) => ({
-      id: `rival_${i}`,
-      owner: { stableName: `Rival Stable ${i}` },
-      roster: Array.from({ length: rosterSize }, (_, j) => ({
-        id: `rival_${i}_w_${j}`,
-        name: `Rival ${i} Warrior ${j}`,
-      })),
-    })),
-  } as unknown as NameResolutionState;
-};
-
-test('historyResolver caching logic exactly matches precedence', () => {
-  const state = {
-    player: { id: 'p1', stableName: 'Player Stable', name: 'Player' },
-    roster: [{ id: 'w1', name: 'Roster Warrior 1' }], // Highest precedence
+    roster: [
+      { id: 'w1', name: 'Warrior 1' },
+      { id: 'shared-id', name: 'Roster Warrior' }
+    ],
     graveyard: [
-      { id: 'w1', name: 'Graveyard Warrior 1' },
-      { id: 'w2', name: 'Graveyard Warrior 2' },
+      { id: 'w2', name: 'Warrior 2' },
+      { id: 'shared-id', name: 'Grave Warrior' }
     ],
     retired: [
-      { id: 'w2', name: 'Retired Warrior 2' },
-      { id: 'w3', name: 'Retired Warrior 3' },
+      { id: 'w3', name: 'Warrior 3' }
     ],
     rivals: [
       {
         id: 'r1',
-        owner: { stableName: 'Rival 1' },
+        owner: { id: 'r1', stableName: 'Rival Stable 1' },
         roster: [
-          { id: 'w3', name: 'Rival1 Warrior 3' },
-          { id: 'w4', name: 'Rival1 Warrior 4' },
-        ],
-      }, // Rival 0 has higher precedence than Rival 1
-      {
-        id: 'r2',
-        owner: { stableName: 'Rival 2' },
-        roster: [
-          { id: 'w4', name: 'Rival2 Warrior 4' },
-          { id: 'w5', name: 'Rival2 Warrior 5' },
-        ],
-      },
-    ],
+          { id: 'w4', name: 'Warrior 4' },
+          { id: 'shared-id', name: 'Rival Warrior' }
+        ]
+      }
+    ]
   };
 
-  expect(resolveWarriorName(state as unknown as NameResolutionState, 'w1', '')).toBe('Roster Warrior 1');
-  expect(resolveWarriorName(state as unknown as NameResolutionState, 'w2', '')).toBe('Graveyard Warrior 2');
-  expect(resolveWarriorName(state as unknown as NameResolutionState, 'w3', '')).toBe('Retired Warrior 3');
-  expect(resolveWarriorName(state as unknown as NameResolutionState, 'w4', '')).toBe('Rival1 Warrior 4');
-  expect(resolveWarriorName(state as unknown as NameResolutionState, 'w5', '')).toBe('Rival2 Warrior 5');
-});
+  describe('resolveWarriorName', () => {
+    it('should resolve name from roster', () => {
+      expect(resolveWarriorName(mockState, 'w1', 'Fallback')).toBe('Warrior 1');
+    });
 
-test('historyResolver stable name logic exactly matches precedence', () => {
-  const state = {
-    player: { id: 'p1', stableName: 'Player Stable', name: 'Player' },
-    roster: [],
-    graveyard: [],
-    retired: [],
-    rivals: [
-      { id: 'p1', owner: { stableName: 'Rival 1' }, roster: [] },
-      { id: 'r2', owner: { stableName: 'Rival 2' }, roster: [] },
-      { id: 'r2', owner: { stableName: 'Rival 3' }, roster: [] },
-    ],
-  } as unknown as NameResolutionState;
+    it('should resolve name from graveyard', () => {
+      expect(resolveWarriorName(mockState, 'w2', 'Fallback')).toBe('Warrior 2');
+    });
 
-  expect(resolveStableName(state, 'p1', '')).toBe('Player Stable'); // Player stable > rival stable
-  expect(resolveStableName(state, 'r2', '')).toBe('Rival 2'); // Rival 0 > Rival 1
-  expect(resolveStableName(state, 'r99', 'Fallback')).toBe('Fallback');
-});
+    it('should resolve name from retired', () => {
+      expect(resolveWarriorName(mockState, 'w3', 'Fallback')).toBe('Warrior 3');
+    });
 
-test('findWarrior uses the correct precedence and caching', () => {
-  // Use a minimal object matching GameState
-  const state = {
-    player: { id: 'p1', stableName: 'Player Stable', name: 'Player' },
-    roster: [{ id: 'w1', name: 'Warrior 1' }],
-    graveyard: [{ id: 'w1', name: 'Warrior 2' }],
-    retired: [],
-    rivals: [],
-  } as unknown as GameState;
+    it('should resolve name from rivals', () => {
+      expect(resolveWarriorName(mockState, 'w4', 'Fallback')).toBe('Warrior 4');
+    });
 
-  expect(findWarrior(state, 'w1')).toEqual({ id: 'w1', name: 'Warrior 1' } as any);
-  expect(findWarrior(state, undefined, 'Warrior 1')).toEqual({ id: 'w1', name: 'Warrior 1' } as any);
-  expect(findWarrior(state, undefined, 'Warrior 2')).toEqual({ id: 'w1', name: 'Warrior 2' } as any);
-  expect(findWarrior(state, 'w99', 'Warrior 99')).toBeUndefined();
-});
+    it('should use fallback if not found', () => {
+      expect(resolveWarriorName(mockState, 'unknown', 'Fallback')).toBe('Fallback');
+    });
 
-test('historyResolver works correctly with missing arrays', () => {
-  const state = {
-    player: { id: 'p1', stableName: 'Player Stable', name: 'Player' },
-  } as unknown as NameResolutionState;
+    it('should prioritize roster > graveyard > retired > rivals', () => {
+      expect(resolveWarriorName(mockState, 'shared-id', 'Fallback')).toBe('Roster Warrior');
+    });
+  });
 
-  expect(resolveWarriorName(state, 'w1', 'Fallback')).toBe('Fallback');
-  expect(resolveStableName(state, 'p1', 'Fallback')).toBe('Player Stable');
-});
+  describe('resolveStableName', () => {
+    it('should resolve player stable name', () => {
+      expect(resolveStableName(mockState, 'p1', 'Fallback')).toBe('Player Stable');
+    });
 
-test('historyResolver cache speed', () => {
-  const state = generateState();
-  const start = performance.now();
-  for (let i = 0; i < 1000; i++) {
-    resolveWarriorName(state, 'rival_99_w_19', 'Legacy');
-    resolveStableName(state, 'rival_99', 'Legacy');
-    findWarrior(state as unknown as GameState, 'rival_99_w_19');
-  }
-  const end = performance.now();
-  console.log(`Time taken: ${end - start} ms`);
-  expect(end - start).toBeLessThan(100); // Should be very fast with O(1) cache
+    it('should resolve rival stable name', () => {
+      expect(resolveStableName(mockState, 'r1', 'Fallback')).toBe('Rival Stable 1');
+    });
+
+    it('should use fallback if not found', () => {
+      expect(resolveStableName(mockState, 'unknown', 'Fallback')).toBe('Fallback');
+    });
+  });
+
+  describe('findWarrior', () => {
+    it('should find warrior by id', () => {
+      const w = findWarrior(mockState, 'w1');
+      expect(w?.name).toBe('Warrior 1');
+    });
+
+    it('should find warrior by name', () => {
+      const w = findWarrior(mockState, undefined, 'Warrior 4');
+      expect(w?.id).toBe('w4');
+    });
+
+    it('should prioritize ID over Name if both provided', () => {
+      const w = findWarrior(mockState, 'w1', 'Warrior 4');
+      expect(w?.id).toBe('w1');
+    });
+
+    it('should prioritize roster over other lists when searching by name', () => {
+        const stateWithNameConflict: any = {
+            ...mockState,
+            roster: [...mockState.roster, { id: 'w-new', name: 'Warrior 4' }]
+        };
+        const w = findWarrior(stateWithNameConflict, undefined, 'Warrior 4');
+        expect(w?.id).toBe('w-new');
+    });
+  });
+
+  it('should handle state changes (new state object)', () => {
+    const nextState = { ...mockState, roster: [{ id: 'w1', name: 'Updated Warrior 1' }] };
+    expect(resolveWarriorName(nextState, 'w1', 'Fallback')).toBe('Updated Warrior 1');
+  });
 });

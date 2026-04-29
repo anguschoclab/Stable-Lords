@@ -25,8 +25,9 @@ import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
-import { TRAITS } from '@/engine/traits';
+import { TRAITS, generateTraits } from '@/engine/traits';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { generateRecruit } from '@/engine/recruitment';
 
 // ── Test Helpers ────────────────────────────────────────────────────────────
 
@@ -244,6 +245,40 @@ describe('Combat Balance: Trait System', () => {
         expect(winPct).toBeGreaterThanOrEqual(33);
         expect(winPct).toBeLessThanOrEqual(67);
       });
+    });
+  });
+
+  // ── 7. Trait Registry Integration ──────────────────────────────────────
+  describe('Trait registry integration', () => {
+    it('all trait IDs in the TRAITS registry are valid snake_case', () => {
+      for (const id of Object.keys(TRAITS)) {
+        expect(id).toMatch(/^[a-z][a-z0-9_]*$/);
+        expect(TRAITS[id]?.id).toBe(id);
+      }
+    });
+
+    it('recruited warriors have trait IDs that resolve in the combat engine', () => {
+      const rng = new SeededRNGService(12345);
+      const usedNames = new Set<string>();
+
+      for (let i = 0; i < 50; i++) {
+        const recruit = generateRecruit(rng, usedNames, 1);
+        for (const traitId of recruit.traits) {
+          const def = TRAITS[traitId];
+          expect(def).toBeDefined();
+          expect(def?.id).toBe(traitId);
+        }
+      }
+    });
+
+    it('generateTraits produces valid trait IDs', () => {
+      const rng = new SeededRNGService(99999);
+      for (let i = 0; i < 100; i++) {
+        const traits = generateTraits(rng, 'brutal');
+        for (const tid of traits) {
+          expect(TRAITS[tid]).toBeDefined();
+        }
+      }
     });
   });
 });

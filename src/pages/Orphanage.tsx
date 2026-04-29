@@ -100,7 +100,7 @@ export default function Orphanage() {
       // Build base plan and merge trait-based modifiers
       const basePlan = defaultPlanForWarrior(makeWarrior(undefined, pw.name, pw.style, pw.attrs));
       const traitData = TRAIT_DATA[pw.trait];
-      const traitMods = traitData?.modifiers ?? {};
+      const traitMods = traitData?.effect.fightPlanMod ?? {};
       const plan = { ...basePlan, ...traitMods };
       const w = makeWarrior(
         finishRng.uuid(),

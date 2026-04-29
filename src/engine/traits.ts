@@ -18,6 +18,7 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { Archetype } from '@/data/names/archetypeNames';
 
 export interface TraitEffect {
   // Static skill mods (applied at fighterState build)
@@ -53,6 +54,10 @@ export interface TraitDef {
   effect: TraitEffect;
   /** 0-1; lower = rarer. Weighted random pool. */
   weight: number;
+  /** Archetypes this trait synergizes with (2× pick weight). */
+  synergy?: Archetype[];
+  /** Archetypes this trait clashes with (0.3× pick weight). */
+  antiSynergy?: Archetype[];
 }
 
 export const TRAITS: Record<string, TraitDef> = {
@@ -161,6 +166,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'Fights with reckless abandon, favoring strength over defense.',
     effect: { fightPlanMod: { OE: 4, AL: -1, killDesire: 5 }, attrBonus: { ST: 1, WL: 1 } },
     weight: 1.0,
+    synergy: ['brutal'],
+    antiSynergy: ['tank'],
   },
   disciplined_mind: {
     id: 'disciplined_mind',
@@ -168,6 +175,7 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'Calm and focused, waiting for the perfect moment to strike.',
     effect: { fightPlanMod: { AL: 3, OE: -1, feintTendency: 5 }, attrBonus: { DF: 1, WL: 1 } },
     weight: 1.0,
+    synergy: ['cunning', 'tank'],
   },
   cunning: {
     id: 'cunning',
@@ -175,6 +183,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'Favors trickery and misdirection to find the killing blow.',
     effect: { fightPlanMod: { feintTendency: 10, AL: 2, killDesire: -2 }, attrBonus: { SP: 1, DF: 1 } },
     weight: 1.0,
+    synergy: ['cunning', 'agile'],
+    antiSynergy: ['brutal'],
   },
   sturdy: {
     id: 'sturdy',
@@ -182,6 +192,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'An unbreakable wall that outlasts any opponent.',
     effect: { fightPlanMod: { AL: -3, OE: -2, killDesire: -5 }, attrBonus: { CN: 1, SZ: 1 } },
     weight: 1.0,
+    synergy: ['tank'],
+    antiSynergy: ['agile'],
   },
   feral: {
     id: 'feral',
@@ -189,6 +201,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'Fights with a savage, unpredictable intensity.',
     effect: { fightPlanMod: { OE: 6, AL: -4, killDesire: 10 }, attrBonus: { ST: 1, SP: 1 } },
     weight: 0.6,
+    synergy: ['brutal', 'agile'],
+    antiSynergy: ['tank', 'cunning'],
   },
   merciless: {
     id: 'merciless',
@@ -196,6 +210,7 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'Relentlessly pursues the kill, ignoring all distractions.',
     effect: { fightPlanMod: { killDesire: 15, OE: 2 }, attrBonus: { ST: 1, WL: 1 } },
     weight: 0.6,
+    synergy: ['brutal'],
   },
   calculated: {
     id: 'calculated',
@@ -203,6 +218,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'Every move is a deliberate setup for a final strike.',
     effect: { fightPlanMod: { feintTendency: 8, AL: 4, OE: -3 }, attrBonus: { SP: 1, DF: 1 } },
     weight: 0.8,
+    synergy: ['cunning'],
+    antiSynergy: ['brutal'],
   },
   resilient: {
     id: 'resilient',
@@ -210,6 +227,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'Absorbs punishment that would fell a lesser warrior.',
     effect: { fightPlanMod: { AL: -2, killDesire: -8 }, attrBonus: { CN: 2 } },
     weight: 0.8,
+    synergy: ['tank'],
+    antiSynergy: ['agile'],
   },
   evasive: {
     id: 'evasive',
@@ -217,6 +236,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'A ghost on the sand, near-impossible to pin down.',
     effect: { fightPlanMod: { AL: 10, OE: -5, feintTendency: 5 }, attrBonus: { SP: 2 } },
     weight: 0.8,
+    synergy: ['agile'],
+    antiSynergy: ['brutal', 'tank'],
   },
   brutal: {
     id: 'brutal',
@@ -224,6 +245,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: 'Values raw power and crushing impact above all else.',
     effect: { fightPlanMod: { OE: 8, killDesire: 5, AL: -5 }, attrBonus: { ST: 2 } },
     weight: 0.8,
+    synergy: ['brutal'],
+    antiSynergy: ['cunning', 'tank'],
   },
 };
 
@@ -233,23 +256,40 @@ const TRAIT_IDS = Object.keys(TRAITS);
  * Roll 0-2 traits at warrior creation, weighted by trait rarity.
  * Distribution targets ~25% no traits, ~55% one trait, ~20% two traits.
  */
-export function generateTraits(rng: IRNGService): string[] {
+/**
+ * Roll 0-2 traits at warrior creation, weighted by trait rarity.
+ * Distribution targets ~25% no traits, ~55% one trait, ~20% two traits.
+ *
+ * When an archetype is provided, traits with matching synergy get 2× weight
+ * and traits with matching antiSynergy get 0.3× weight. This makes thematic
+ * fits ~60-70% likely while still allowing interesting against-type warriors.
+ */
+export function generateTraits(rng: IRNGService, archetype?: Archetype): string[] {
   const r1 = rng.next();
   const numTraits = r1 < 0.25 ? 0 : r1 < 0.8 ? 1 : 2;
   if (numTraits === 0) return [];
 
   const picked: string[] = [];
-  const totalWeight = TRAIT_IDS.reduce((s, id) => {
-    const trait = TRAITS[id];
-    return trait ? s + trait.weight : s;
-  }, 0);
 
   for (let i = 0; i < numTraits; i++) {
-    let target = rng.next() * totalWeight;
+    // Compute archetype-adjusted weights
+    let totalWeight = 0;
+    const weights: { id: string; w: number }[] = [];
     for (const id of TRAIT_IDS) {
       const t = TRAITS[id];
       if (!t || picked.includes(id)) continue;
-      target -= t.weight;
+      let w = t.weight;
+      if (archetype) {
+        if (t.synergy?.includes(archetype)) w *= 2.0;
+        if (t.antiSynergy?.includes(archetype)) w *= 0.3;
+      }
+      weights.push({ id, w });
+      totalWeight += w;
+    }
+
+    let target = rng.next() * totalWeight;
+    for (const { id, w } of weights) {
+      target -= w;
       if (target <= 0) {
         picked.push(id);
         break;

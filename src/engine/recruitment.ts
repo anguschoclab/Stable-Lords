@@ -17,7 +17,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import narrativeContent from '@/data/narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types';
-import { PERSONALITY_TRAITS, PERSONALITY_TRAIT_DATA } from '@/data/personalityTraits';
+import { TRAITS, generateTraits } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
@@ -125,12 +125,17 @@ export function generateRecruit(
   const archetype = STYLE_ARCHETYPE[style];
   const attributes = generateArchetypeAttrs(style, () => rng.next());
 
-  // Personality Trait
-  const trait = rng.pick(PERSONALITY_TRAITS);
-  const traitData = PERSONALITY_TRAIT_DATA[trait];
-  if (traitData?.attrBonus) {
-    for (const [key, bonus] of Object.entries(traitData.attrBonus)) {
-      attributes[key as keyof Attributes] += bonus as number;
+  // Trait generation — unified TRAITS registry with archetype-aware weighting.
+  // Uses snake_case IDs that the combat engine (traits.ts) recognises.
+  const traits = generateTraits(rng, archetype);
+
+  // Apply personality attrBonus from traits at recruitment time
+  for (const tid of traits) {
+    const tdef = TRAITS[tid];
+    if (tdef?.effect.attrBonus) {
+      for (const [key, bonus] of Object.entries(tdef.effect.attrBonus)) {
+        attributes[key as keyof Attributes] += bonus as number;
+      }
     }
   }
 
@@ -163,7 +168,7 @@ export function generateRecruit(
     age: 16 + Math.floor(rng.next() * 6),
     lore: loreStr,
     origin: originStr,
-    traits: [trait],
+    traits,
     addedWeek: week,
     favorites,
     lineage,

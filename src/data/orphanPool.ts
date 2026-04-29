@@ -7,10 +7,11 @@ import { FightingStyle } from '@/types/game';
 import type { Attributes } from '@/types/game';
 import type { AttributePotential } from '@/types/warrior.types';
 import { generatePotential } from '@/engine/potential';
-import { PERSONALITY_TRAITS, PERSONALITY_TRAIT_DATA } from '@/data/personalityTraits';
+import { TRAITS } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
+import { shuffled } from '@/utils/random';
 
 export interface OrphanWarrior {
   id: string;
@@ -38,14 +39,7 @@ function pick<T>(arr: T[], rng: () => number): T {
   return arr[Math.floor(rng() * arr.length)];
 }
 
-function shuffled<T>(arr: T[], rng: () => number): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+const TRAIT_IDS = Object.keys(TRAITS);
 
 // ── Generation Logic ─────────────────────────────────────────────────────
 
@@ -87,7 +81,7 @@ export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarr
     const age = Math.floor(rng() * 5) + 15;
     const attrs = generateArchetypeAttrs(style, rng);
     const origin = generateOrigin(rng);
-    const trait = pick(PERSONALITY_TRAITS, rng);
+    const trait = pick(TRAIT_IDS, rng);
     const lore = generateLore(name, rng);
 
     const rarityRoll = rng();
@@ -96,9 +90,9 @@ export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarr
     else if (rarityRoll > 0.95) tier = 'Exceptional';
     else if (rarityRoll > 0.82) tier = 'Promising';
 
-    const traitData = PERSONALITY_TRAIT_DATA[trait];
-    if (traitData?.attrBonus) {
-      for (const [key, bonus] of Object.entries(traitData.attrBonus)) {
+    const traitData = TRAITS[trait];
+    if (traitData?.effect.attrBonus) {
+      for (const [key, bonus] of Object.entries(traitData.effect.attrBonus)) {
         attrs[key as keyof Attributes] += bonus as number;
       }
     }
@@ -121,4 +115,5 @@ export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarr
   return pool;
 }
 
-export { PERSONALITY_TRAIT_DATA as TRAIT_DATA };
+// Re-export TRAITS as TRAIT_DATA for UI components (WarriorCard tooltip)
+export { TRAITS as TRAIT_DATA };

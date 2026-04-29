@@ -117,7 +117,7 @@ export function useRivalryAlerts() {
   }, [state.rivals]);
 
   const currentRivalries = useMemo((): RivalrySnapshot[] => {
-    const map: Record<string, { stableName: string; kills: number; bouts: number }> = {};
+    const map: Record<string, { stableName: string; kills: number; bouts: number }> = Object.create(null);
     const result: { stableName: string; kills: number; bouts: number }[] = [];
 
     for (const bout of state.arenaHistory) {

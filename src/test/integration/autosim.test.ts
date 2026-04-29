@@ -182,7 +182,7 @@ describe('Autosim Integration', () => {
 
       const result = await runAutosim(state, 5, () => {});
 
-      expect(result.finalState.newsletter).toBeDefined();
+      expect(result.finalState.newsletter.length).toBeGreaterThan(0);
     });
 
     it('should process economy correctly', async () => {

@@ -123,3 +123,22 @@ export function hashStr(s: string): number {
   }
   return hash >>> 0;
 }
+
+/**
+ * Picks a random element from an array using a simple RNG function.
+ */
+export function pick<T>(arr: T[], rng: () => number): T {
+  return arr[Math.floor(rng() * arr.length)];
+}
+
+/**
+ * Returns a shuffled copy of the array using a simple RNG function.
+ */
+export function shuffled<T>(arr: T[], rng: () => number): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}

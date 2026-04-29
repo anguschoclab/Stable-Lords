@@ -143,8 +143,8 @@ export const TRAITS: Record<string, TraitDef> = {
   fragile: {
     id: 'fragile',
     name: 'Fragile',
-    description: '−1 defense baseline — drops guard easily.',
-    effect: { defMod: -1 },
+    description: '−2 defense baseline — drops guard easily.',
+    effect: { defMod: -2 },
     weight: 0.4,
   },
   slow: {
@@ -159,7 +159,7 @@ export const TRAITS: Record<string, TraitDef> = {
     id: 'aggressive',
     name: 'Aggressive',
     description: 'Fights with reckless abandon, favoring strength over defense.',
-    effect: { fightPlanMod: { OE: 4, AL: -2, killDesire: 5 }, attrBonus: { ST: 1, WL: 1 } },
+    effect: { fightPlanMod: { OE: 4, AL: -1, killDesire: 5 }, attrBonus: { ST: 1, WL: 1 } },
     weight: 1.0,
   },
   disciplined_mind: {

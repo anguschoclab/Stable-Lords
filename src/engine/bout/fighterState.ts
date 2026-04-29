@@ -118,24 +118,27 @@ export function createFighterState(
     DEC: skills.DEC + (trainerMods?.decMod ?? 0) + (drills.DEC ?? 0) + traitMods.decMod + (injuryPenalties['DEC'] ?? 0),
   };
 
+  // Personality trait FightPlan mods (Aggressive +OE, Cunning +feint, etc.)
+  // Bake into the BASE plan so evaluateConditions (which resets activePlan to
+  // plan each exchange) doesn't silently erase personality-driven behaviour.
   const aiMods = getTraitFightPlanMods(warrior);
-  const activePlan = { ...plan };
-  if (aiMods.OE != null) activePlan.OE = Math.max(0, Math.min(10, activePlan.OE + aiMods.OE));
-  if (aiMods.AL != null) activePlan.AL = Math.max(0, Math.min(10, activePlan.AL + aiMods.AL));
-  if (aiMods.killDesire != null) activePlan.killDesire = Math.max(0, Math.min(100, activePlan.killDesire + aiMods.killDesire));
-  if (aiMods.feintTendency != null) activePlan.feintTendency = Math.max(0, Math.min(100, activePlan.feintTendency + aiMods.feintTendency));
+  const traitPlan = { ...plan };
+  if (aiMods.OE != null) traitPlan.OE = Math.max(0, Math.min(10, traitPlan.OE + aiMods.OE));
+  if (aiMods.AL != null) traitPlan.AL = Math.max(0, Math.min(10, traitPlan.AL + aiMods.AL));
+  if (aiMods.killDesire != null) traitPlan.killDesire = Math.max(0, Math.min(100, traitPlan.killDesire + aiMods.killDesire));
+  if (aiMods.feintTendency != null) traitPlan.feintTendency = Math.max(0, Math.min(100, traitPlan.feintTendency + aiMods.feintTendency));
 
   return {
     label,
-    style: plan.style,
+    style: traitPlan.style,
     attributes: attrs,
     skills: effSkills,
     derived: {
       ...derived,
       damage: derived.damage + (isMastered ? 1 : 0) + traitMods.dmgBonus,
     },
-    plan,
-    activePlan,
+    plan: traitPlan,
+    activePlan: { ...traitPlan },
     psychState: 'Neutral',
     hp: derived.hp,
     maxHp: derived.hp,

@@ -117,7 +117,6 @@ describe('Autosim Integration', () => {
     it('should provide stop details', async () => {
       const result = await runAutosim(initialState, 5, () => {});
 
-      expect(result.stopDetail).toBeDefined();
       expect(typeof result.stopDetail).toBe('string');
       expect(result.stopDetail.length).toBeGreaterThan(0);
     });
@@ -305,7 +304,6 @@ describe('Autosim Integration', () => {
     it('should provide descriptive stop details', async () => {
       const result = await runAutosim(initialState, 5, () => {});
 
-      expect(result.stopDetail).toBeDefined();
       expect(typeof result.stopDetail).toBe('string');
       expect(result.stopDetail.length).toBeGreaterThan(0);
     });

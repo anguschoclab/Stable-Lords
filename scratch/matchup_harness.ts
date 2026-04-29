@@ -108,7 +108,7 @@ type Row = { i: number; j: number; iWins: number; jWins: number; total: number; 
 const matchups: Row[] = [];
 for (let i = 0; i < 10; i++) {
   for (let j = i; j < 10; j++) {
-    let iWins = 0, jWins = 0, total = 0;
+    let iWins: number, jWins: number, total: number;
     if (i === j) {
       const c = grid[i]![j]!;
       iWins = c.aWins;
@@ -138,7 +138,7 @@ print('     ' + ABBR.map(s => s.padStart(5)).join(' '));
 for (let i = 0; i < 10; i++) {
   let row = `${ABBR[i]!.padEnd(4)} `;
   for (let j = 0; j < 10; j++) {
-    let total = 0, iWins = 0;
+    let total: number, iWins: number;
     if (i === j) {
       total = grid[i]![j]!.aWins + grid[i]![j]!.dWins + grid[i]![j]!.draws;
       iWins = grid[i]![j]!.aWins;

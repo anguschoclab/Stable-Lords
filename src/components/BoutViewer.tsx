@@ -124,7 +124,8 @@ export default function BoutViewer({
   const outcomeStyle = getOutcomeStyles(by);
   const winnerName = winner === 'A' ? nameA : winner === 'D' ? nameD : null;
 
-  const minutes = log.length > 0 ? log[log.length - 1]!.minute : 0;
+  const lastLogEntry = log.length > 0 ? log[log.length - 1] : null;
+  const minutes = lastLogEntry ? lastLogEntry.minute : 0;
 
   return (
     <Surface

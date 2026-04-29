@@ -46,8 +46,10 @@ export default function NewGameForm({
   };
 
   const randomizeBackstory = () => {
-    const id = BACKSTORY_IDS[Math.floor(Math.random() * BACKSTORY_IDS.length)]!;
-    setBackstoryId(id);
+    const id = BACKSTORY_IDS[Math.floor(Math.random() * BACKSTORY_IDS.length)];
+    if (id) {
+      setBackstoryId(id);
+    }
   };
 
   const randomizeAll = () => {

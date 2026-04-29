@@ -267,7 +267,7 @@ export function useArenaAnimation(
             }
             break;
 
-          default:
+          default: {
             // Gradual return to neutral spacing
             const targetDist = 30;
             const currentDist = prev.fighterD.x - prev.fighterA.x;
@@ -287,6 +287,7 @@ export function useArenaAnimation(
               };
             }
             break;
+          }
         }
 
         // Add speech bubble if appropriate

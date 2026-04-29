@@ -3,6 +3,8 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { generateId } from '@/utils/idUtils';
 import { FightingStyle, type BoutOfferId, type PromoterId } from '@/types/shared.types';
 
+const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
+
 /**
  * World Matchmaking Service
  *
@@ -39,8 +41,8 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
   });
 
   for (let i = 0; i < pool.length; i++) {
-    const entryA = pool[i]!;
-    if (pairedIds.has(entryA.warrior.id)) continue;
+    const entryA = pool[i];
+    if (!entryA || pairedIds.has(entryA.warrior.id)) continue;
 
     // Find a suitable opponent (proximity in fame + different stable)
     // If the stable is on a VENDETTA intent with a target, bias toward that stable's warriors.
@@ -54,8 +56,8 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
 
     for (let j = 0; j < pool.length; j++) {
       if (i === j) continue;
-      const entryD = pool[j]!;
-      if (pairedIds.has(entryD.warrior.id)) continue;
+      const entryD = pool[j];
+      if (!entryD || pairedIds.has(entryD.warrior.id)) continue;
       if (entryA.stable.id === entryD.stable.id) continue;
 
       const fameGap = Math.abs((entryA.warrior.fame || 0) - (entryD.warrior.fame || 0));
@@ -81,7 +83,7 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
       const offerId = `world_bout_${rng.uuid()}` as BoutOfferId;
       const offer: BoutOffer = {
         id: offerId,
-        promoterId: '' as PromoterId,
+        promoterId: WORLD_MATCHMAKING,
         proposerStableId: entryA.stable.id,
         warriorIds: [entryA.warrior.id, bestOpponent.warrior.id],
         boutWeek: state.week + 1,

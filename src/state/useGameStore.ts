@@ -26,6 +26,7 @@ export interface GameStoreState {
   atTitleScreen: boolean;
   lastSavedAt: string | null;
   activeSlotId: string | null;
+  lastSimulationReport?: import('@/types/combat.types').FightOutcome;
   isSimulating: boolean;
   isInitialized: boolean;
   eventLogOpen: boolean;
@@ -113,6 +114,7 @@ type GameStateValues = {
   phase: GameState['phase'];
   playerChallenges: GameState['playerChallenges'];
   playerAvoids: GameState['playerAvoids'];
+  lastSimulationReport: GameState['lastSimulationReport'];
 };
 let lastStoreValues: GameStateValues | null = null;
 
@@ -165,6 +167,7 @@ export function reconstructGameState(store: GameStore): GameState {
     phase: store.phase,
     playerChallenges: store.playerChallenges,
     playerAvoids: store.playerAvoids,
+    lastSimulationReport: store.lastSimulationReport,
   };
 
   if (lastResult && lastStoreValues) {
@@ -280,6 +283,7 @@ export const useGameStore = create<GameStore>()(
           draft.pendingResolutionData = state.pendingResolutionData;
           draft.playerChallenges = state.playerChallenges || [];
           draft.playerAvoids = state.playerAvoids || [];
+          draft.lastSimulationReport = state.lastSimulationReport;
 
           draft.activeSlotId = slotId;
           draft.atTitleScreen = false;
@@ -337,10 +341,13 @@ export const useGameStore = create<GameStore>()(
             gazette: next.newsletter.filter((n) => n.week === currentWeek),
           };
           next.pendingResolutionData = resolutionPayload;
-          if (next.arenaHistory?.length > 0) {
+          
+          if (next.arenaHistory && next.arenaHistory.length > 0) {
             const idx = next.arenaHistory.length - 1;
-            const lastEntry = next.arenaHistory[idx]!;
-            next.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
+            const lastEntry = next.arenaHistory[idx];
+            if (lastEntry) {
+              next.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
+            }
           }
 
           store.loadGame(store.activeSlotId || 'autosave', next);
@@ -383,10 +390,13 @@ export const useGameStore = create<GameStore>()(
             gazette: next.newsletter.filter((n) => n.week === currentWeek),
           };
           next.pendingResolutionData = resolutionPayload;
-          if (next.arenaHistory?.length > 0) {
+
+          if (next.arenaHistory && next.arenaHistory.length > 0) {
             const idx = next.arenaHistory.length - 1;
-            const lastEntry = next.arenaHistory[idx]!;
-            next.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
+            const lastEntry = next.arenaHistory[idx];
+            if (lastEntry) {
+              next.arenaHistory[idx] = { ...lastEntry, pendingResolutionData: resolutionPayload };
+            }
           }
 
           store.loadGame(store.activeSlotId || 'autosave', next);

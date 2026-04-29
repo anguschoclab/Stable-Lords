@@ -9,7 +9,7 @@ const localStorageMock = (function () {
       store[key] = value.toString();
     },
     removeItem: function (key: string) {
-      delete store[key];
+      store[key] = undefined as any;
     },
     clear: function () {
       store = {};

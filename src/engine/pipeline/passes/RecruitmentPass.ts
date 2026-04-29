@@ -22,7 +22,7 @@ export function runRecruitmentPass(state: GameState, rootRng?: IRNGService): Sta
     (w) => w.fame > 1000
   );
 
-  const recruitPool = partialRefreshPool(
+  let recruitPool = partialRefreshPool(
     state.recruitPool || [],
     state.week,
     usedNames,

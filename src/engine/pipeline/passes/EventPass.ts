@@ -36,32 +36,32 @@ export function runEventPass(
       (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
     );
     if (activeWarriors.length > 0) {
-      const brawlerIndex = Math.floor(brawlRng.next() * activeWarriors.length);
-      const brawler = activeWarriors[brawlerIndex]!;
-      const e = events.tavern_brawl!;
+      const brawler = brawlRng.pick(activeWarriors);
+      const e = events.tavern_brawl;
+      if (brawler && e) {
+        rosterUpdates.set(brawler.id, {
+          fame: (brawler.fame || 0) + 5,
+          injuries: [
+            ...(brawler.injuries || []),
+            {
+              id: brawlRng.uuid() as InjuryId,
+              name: e.injury_name ?? 'Black Eye',
+              description: e.injury_desc ?? 'Caught a nasty right hook in the tavern.',
+              severity: 'Minor',
+              weeksRemaining: 1,
+              penalties: { ATT: -1 },
+            },
+          ],
+        });
 
-      rosterUpdates.set(brawler.id, {
-        fame: (brawler.fame || 0) + 5,
-        injuries: [
-          ...(brawler.injuries || []),
-          {
-            id: brawlRng.uuid() as InjuryId,
-            name: e.injury_name ?? 'Black Eye',
-            description: e.injury_desc ?? 'Caught a nasty right hook in the tavern.',
-            severity: 'Minor',
-            weeksRemaining: 1,
-            penalties: { ATT: -1 },
-          },
-        ],
-      });
-
-      newsletterItems.push({
-        id: brawlRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(brawlRng.pick(e.newsletter), { name: brawler.name, fame: 5 })],
-        category: 'event',
-      });
+        newsletterItems.push({
+          id: brawlRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [t(brawlRng.pick(e.newsletter), { name: brawler.name, fame: 5 })],
+          category: 'event',
+        });
+      }
     }
   }
 
@@ -70,24 +70,24 @@ export function runEventPass(
   if (brawlRng.next() < blessingChance && state.roster.length > 0) {
     const youngWarriors = state.roster.filter((w) => w.status === 'Active' && (w.age || 0) <= 25);
     if (youngWarriors.length > 0) {
-      const chosenIndex = Math.floor(brawlRng.next() * youngWarriors.length);
-      const chosen = youngWarriors[chosenIndex]!;
-      const e = events.celestial_blessing!;
+      const chosen = brawlRng.pick(youngWarriors);
+      const e = events.celestial_blessing;
+      if (chosen && e) {
+        const existingUpdate = rosterUpdates.get(chosen.id) || {};
+        rosterUpdates.set(chosen.id, {
+          ...existingUpdate,
+          fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 15,
+          xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 2,
+        });
 
-      const existingUpdate = rosterUpdates.get(chosen.id) || {};
-      rosterUpdates.set(chosen.id, {
-        ...existingUpdate,
-        fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 15,
-        xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 2,
-      });
-
-      newsletterItems.push({
-        id: brawlRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 15, xp: 2 })],
-        category: 'event',
-      });
+        newsletterItems.push({
+          id: brawlRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 15, xp: 2 })],
+          category: 'event',
+        });
+      }
     }
   }
 
@@ -95,47 +95,49 @@ export function runEventPass(
   if (brawlRng.next() < 0.04 && state.roster.length > 0) {
     const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
-      const chosenIndex = Math.floor(brawlRng.next() * activeWarriors.length);
-      const chosen = activeWarriors[chosenIndex]!;
-      const e = events.lost_relic!;
+      const chosen = brawlRng.pick(activeWarriors);
+      const e = events.lost_relic;
+      if (chosen && e) {
+        const existingUpdate = rosterUpdates.get(chosen.id) || {};
+        rosterUpdates.set(chosen.id, {
+          ...existingUpdate,
+          fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 10,
+          xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 5,
+        });
 
-      const existingUpdate = rosterUpdates.get(chosen.id) || {};
-      rosterUpdates.set(chosen.id, {
-        ...existingUpdate,
-        fame: (chosen.fame || 0) + (existingUpdate.fame || 0) + 10,
-        xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 5,
+        newsletterItems.push({
+          id: brawlRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 10, xp: 5 })],
+          category: 'event',
+        });
+      }
+    }
+  }
+
+  // 💰 Mysterious Patron Event
+  if (brawlRng.next() < 0.05) {
+    const e = events.mysterious_patron;
+    if (e) {
+      const gold = 100 + Math.floor(brawlRng.next() * 401); // 100-500 gold
+      treasuryDelta += gold;
+      ledgerEntries.push({
+        id: brawlRng.uuid('ledger') as LedgerEntryId,
+        week: nextWeek,
+        label: 'Mysterious Patron Donation',
+        amount: gold,
+        category: 'other',
       });
 
       newsletterItems.push({
         id: brawlRng.uuid('newsletter'),
         week: nextWeek,
         title: e.title,
-        items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 10, xp: 5 })],
+        items: [t(brawlRng.pick(e.newsletter), { gold })],
         category: 'event',
       });
     }
-  }
-
-  // 💰 Mysterious Patron Event
-  if (brawlRng.next() < 0.05) {
-    const e = events.mysterious_patron!;
-    const gold = 100 + Math.floor(brawlRng.next() * 401); // 100-500 gold
-    treasuryDelta += gold;
-    ledgerEntries.push({
-      id: brawlRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Mysterious Patron Donation',
-      amount: gold,
-      category: 'other',
-    });
-
-    newsletterItems.push({
-      id: brawlRng.uuid('newsletter'),
-      week: nextWeek,
-      title: e.title,
-      items: [t(brawlRng.pick(e.newsletter), { gold })],
-      category: 'event',
-    });
   }
 
   return {

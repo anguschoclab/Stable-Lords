@@ -111,7 +111,7 @@ export function evaluateStopConditions(
           return { shouldStop: true, reason: 'player_death' };
         }
         break;
-      case 'noPairings':
+      case 'noPairings': {
         // Check if there are no eligible fighters
         const hasEligible = state.roster.some(
           (w) => w.status === 'Active' && !w.isDead && (!w.injuries || w.injuries.length === 0)
@@ -120,6 +120,7 @@ export function evaluateStopConditions(
           return { shouldStop: true, reason: 'no_pairings' };
         }
         break;
+      }
       case 'custom':
         if (condition.check(state)) {
           return { shouldStop: true, reason: 'custom_condition' };

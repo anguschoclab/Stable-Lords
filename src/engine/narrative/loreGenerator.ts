@@ -67,13 +67,13 @@ const DEFINING_MOMENTS = [
   'now standing at the threshold of a legacy they are eager to claim',
 ];
 
-export function generateLore(name: string, rng?: () => number): string {
-  const r = rng || Math.random;
+export function generateLore(name: string, rng: () => number): string {
+  const r = rng;
   const childhood = pick(CHILDHOOD_TRAITS, r);
   const defining = pick(DEFINING_MOMENTS, r);
   return `${name} ${childhood}, ${defining}.`;
 }
 
-export function generateOrigin(rng?: () => number): string {
-  return pick(ORIGINS, rng || Math.random);
+export function generateOrigin(rng: () => number): string {
+  return pick(ORIGINS, rng);
 }

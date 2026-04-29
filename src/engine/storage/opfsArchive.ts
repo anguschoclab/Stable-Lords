@@ -144,57 +144,58 @@ export class OPFSArchiveService implements ArchiveService {
     logData: string[],
     overwrite = false
   ): Promise<void> {
-    let writable: FileSystemWritableFileStream | null = null;
-    try {
-      const dirHandle = await this.getDirectory(season, 'bouts');
-      if (!dirHandle) return;
-
-      const fileName = `${year}_${boutId}.json`;
-
-      let fileHandle;
+    return this.enqueue(async () => {
+      let writable: FileSystemWritableFileStream | null = null;
       try {
-        fileHandle = await dirHandle.getFileHandle(fileName, { create: false });
-        if (fileHandle && !overwrite) {
-          throw new ArchiveConflictError(`Bout log ${boutId} already exists in archive.`);
+        const dirHandle = await this.getDirectory(season, 'bouts');
+        if (!dirHandle) return;
+
+        const fileName = `${year}_${boutId}.json`;
+
+        let fileHandle;
+        try {
+          fileHandle = await dirHandle.getFileHandle(fileName, { create: false });
+          if (fileHandle && !overwrite) {
+            throw new ArchiveConflictError(`Bout log ${boutId} already exists in archive.`);
+          }
+        } catch (error: any) {
+          if (error instanceof ArchiveConflictError) {
+            throw error;
+          }
+          // File doesn't exist, proceed
+          fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
         }
-      } catch (error: any) {
+
+        writable = await fileHandle.createWritable();
+        await writable.write(JSON.stringify(logData));
+      } catch (error) {
         if (error instanceof ArchiveConflictError) {
           throw error;
         }
-        // File doesn't exist, proceed
-        fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
-      }
-
-      writable = await fileHandle.createWritable();
-      await writable.write(JSON.stringify(logData));
-    } catch (error) {
-      if (error instanceof ArchiveConflictError) {
-        throw error;
-      }
-      if ((error as Error)?.name === 'QuotaExceededError') {
-        console.error('OPFS Quota Exceeded during bout log archival', error);
-        // Dispatch to Zustand to show Toast
-        if (typeof window !== 'undefined')
-          window.dispatchEvent(
-            new CustomEvent('OPFS_QUOTA_EXCEEDED', {
-              detail: 'Storage Quota Exceeded: Archival failed.',
-            })
-          );
-        return;
-      }
-      if ((error as Error)?.name === 'NoModificationAllowedError') {
-        throw new ArchiveConflictError(`Bout log ${boutId} already exists in archive.`);
-      }
-      console.error('Unknown error during bout log archival', error);
-    } finally {
-      if (writable) {
-        try {
-          await writable.close();
-        } catch (closeError) {
-          console.warn('Failed to close writable stream:', closeError);
+        if ((error as Error)?.name === 'QuotaExceededError') {
+          console.error('OPFS Quota Exceeded during bout log archival', error);
+          if (typeof window !== 'undefined')
+            window.dispatchEvent(
+              new CustomEvent('OPFS_QUOTA_EXCEEDED', {
+                detail: 'Storage Quota Exceeded: Archival failed.',
+              })
+            );
+          return;
+        }
+        if ((error as Error)?.name === 'NoModificationAllowedError') {
+          throw new ArchiveConflictError(`Bout log ${boutId} already exists in archive.`);
+        }
+        console.error('Unknown error during bout log archival', error);
+      } finally {
+        if (writable) {
+          try {
+            await writable.close();
+          } catch (closeError) {
+            console.warn('Failed to close writable stream:', closeError);
+          }
         }
       }
-    }
+    });
   }
 
   async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {

@@ -98,7 +98,10 @@ export const ExpansionService = {
           } else {
             // Generate new crest for legacy founder without parent
             const crestSeed = Math.floor(rng.next() * 100000);
-            newStable.crest = inheritCrest(newStable.crest!, crestSeed);
+            const baseCrest = newStable.crest;
+            if (baseCrest) {
+              newStable.crest = inheritCrest(baseCrest, crestSeed);
+            }
             newStable.owner.generation = 1;
           }
         }

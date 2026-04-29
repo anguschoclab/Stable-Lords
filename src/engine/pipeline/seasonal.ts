@@ -55,9 +55,7 @@ export function runSeasonalPass(
   const insightTokens: InsightToken[] = [];
 
   // Safe cast for our dynamic offseason data
-  const events = (narrativeContent as any).offseason_events as
-    | Record<string, OffseasonEventNarrative>
-    | undefined;
+  const events = (narrativeContent as unknown as { offseason_events: Record<string, OffseasonEventNarrative> }).offseason_events;
 
   if (!events) {
     return {};
@@ -66,7 +64,8 @@ export function runSeasonalPass(
   const eventKeys = Object.keys(events);
   if (eventKeys.length === 0) return {};
 
-  const chosenEventKey = eventKeys[Math.floor(seasonRng.next() * eventKeys.length)]!;
+  const chosenEventKey = seasonRng.pick(eventKeys);
+  if (!chosenEventKey) return {};
   const e = events[chosenEventKey];
 
   if (!e) return {};
@@ -74,7 +73,8 @@ export function runSeasonalPass(
   if (e.effectType === 'fame_boost' && state.roster.length > 0) {
     const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
-      const chosen = activeWarriors[Math.floor(seasonRng.next() * activeWarriors.length)]!;
+      const chosen = seasonRng.pick(activeWarriors);
+      if (!chosen) return {};
       rosterUpdates.set(chosen.id, {
         fame: (chosen.fame || 0) + 25,
       });
@@ -122,7 +122,8 @@ export function runSeasonalPass(
   } else if (e.effectType === 'epiphany') {
     const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors)!;
+      const chosen = seasonRng.pick(activeWarriors);
+      if (!chosen) return {};
 
       rosterUpdates.set(chosen.id, {
         fame: (chosen.fame || 0) + 10,
@@ -151,7 +152,8 @@ export function runSeasonalPass(
       (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
     );
     if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors)!;
+      const chosen = seasonRng.pick(activeWarriors);
+      if (!chosen) return {};
       const fameGained = 10 + Math.floor(seasonRng.next() * 11);
 
       const newInjury: InjuryData = {
@@ -180,7 +182,8 @@ export function runSeasonalPass(
   } else if (e.effectType === 'bards_song') {
     const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors)!;
+      const chosen = seasonRng.pick(activeWarriors);
+      if (!chosen) return {};
       const fameGained = 15 + Math.floor(seasonRng.next() * 20);
       rosterUpdates.set(chosen.id, {
         fame: (chosen.fame || 0) + fameGained,
@@ -197,7 +200,8 @@ export function runSeasonalPass(
       (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
     );
     if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors)!;
+      const chosen = seasonRng.pick(activeWarriors);
+      if (!chosen) return {};
       const fameLost = 5 + Math.floor(seasonRng.next() * 10);
 
       const newInjury: InjuryData = {

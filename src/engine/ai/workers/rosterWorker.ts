@@ -220,10 +220,13 @@ function performAITraining(
   if (season === 'Spring') chosen = 'CN';
   else if (season === 'Summer') chosen = 'ST';
   if (!chosen || w.attributes[chosen] >= ATTRIBUTE_MAX) {
-    chosen = trainableKeys.reduce(
-      (min, k) => (w.attributes[k] < w.attributes[min] ? k : min),
-      trainableKeys[0]!
-    );
+    const initialKey = trainableKeys[0];
+    if (initialKey) {
+      chosen = trainableKeys.reduce(
+        (min, k) => (w.attributes[k] < w.attributes[min] ? k : min),
+        initialKey
+      );
+    }
   }
   if (!chosen) return { warrior: w, seasonalGrowth };
 

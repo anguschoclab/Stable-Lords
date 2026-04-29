@@ -1,0 +1,242 @@
+[
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/scratch/matchup_harness.ts",
+    "line": 111,
+    "message": "This assigned value is not used in subsequent statements.",
+    "ruleId": "no-useless-assignment"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/scratch/matchup_harness.ts",
+    "line": 111,
+    "message": "This assigned value is not used in subsequent statements.",
+    "ruleId": "no-useless-assignment"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/scratch/matchup_harness.ts",
+    "line": 111,
+    "message": "This assigned value is not used in subsequent statements.",
+    "ruleId": "no-useless-assignment"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/scratch/matchup_harness.ts",
+    "line": 141,
+    "message": "This assigned value is not used in subsequent statements.",
+    "ruleId": "no-useless-assignment"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/scratch/matchup_harness.ts",
+    "line": 141,
+    "message": "This assigned value is not used in subsequent statements.",
+    "ruleId": "no-useless-assignment"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/components/BoutViewer.tsx",
+    "line": 127,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/components/startGame/NewGameForm.tsx",
+    "line": 49,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/components/warrior/FavoritesCard.tsx",
+    "line": 306,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/data/templates/backstoryData.ts",
+    "line": 73,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/ai/expansionService.ts",
+    "line": 101,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/ai/workers/rosterWorker.ts",
+    "line": 225,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/factories/statGeneration.ts",
+    "line": 36,
+    "message": "'Math.random' is restricted from being used. Do not use Math.random() in engine code. Use rngFromSeed/rngForWorld (src/engine/rng.ts).",
+    "ruleId": "no-restricted-properties"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/matchmaking/worldMatchmaking.ts",
+    "line": 42,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/matchmaking/worldMatchmaking.ts",
+    "line": 57,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/narrative/combatNarrator.ts",
+    "line": 23,
+    "message": "Unexpected class with only static properties.",
+    "ruleId": "@typescript-eslint/no-extraneous-class"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/narrative/loreGenerator.ts",
+    "line": 71,
+    "message": "'Math.random' is restricted from being used. Do not use Math.random() in engine code. Use rngFromSeed/rngForWorld (src/engine/rng.ts).",
+    "ruleId": "no-restricted-properties"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/narrative/loreGenerator.ts",
+    "line": 78,
+    "message": "'Math.random' is restricted from being used. Do not use Math.random() in engine code. Use rngFromSeed/rngForWorld (src/engine/rng.ts).",
+    "ruleId": "no-restricted-properties"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/narrative/narrativeTemplateEngine.ts",
+    "line": 19,
+    "message": "Unexpected class with only static properties.",
+    "ruleId": "@typescript-eslint/no-extraneous-class"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/narrative/statusNarrator.ts",
+    "line": 8,
+    "message": "Unexpected class with only static properties.",
+    "ruleId": "@typescript-eslint/no-extraneous-class"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts",
+    "line": 40,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts",
+    "line": 41,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts",
+    "line": 74,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts",
+    "line": 75,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts",
+    "line": 99,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts",
+    "line": 100,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts",
+    "line": 121,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/seasonal.ts",
+    "line": 69,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/seasonal.ts",
+    "line": 77,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/seasonal.ts",
+    "line": 125,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/seasonal.ts",
+    "line": 154,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/seasonal.ts",
+    "line": 183,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/seasonal.ts",
+    "line": 200,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/engine/tick/TimeAdvanceService.ts",
+    "line": 116,
+    "message": "Unexpected lexical declaration in case block.",
+    "ruleId": "no-case-declarations"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/hooks/useArenaAnimation.ts",
+    "line": 272,
+    "message": "Unexpected lexical declaration in case block.",
+    "ruleId": "no-case-declarations"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/hooks/useArenaAnimation.ts",
+    "line": 273,
+    "message": "Unexpected lexical declaration in case block.",
+    "ruleId": "no-case-declarations"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/state/slices/rosterSlice.ts",
+    "line": 139,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/state/useGameStore.ts",
+    "line": 342,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/state/useGameStore.ts",
+    "line": 388,
+    "message": "Forbidden non-null assertion.",
+    "ruleId": "@typescript-eslint/no-non-null-assertion"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/test/lore/HallOfFights.test.tsx",
+    "line": 12,
+    "message": "Do not delete dynamically computed property keys.",
+    "ruleId": "@typescript-eslint/no-dynamic-delete"
+  },
+  {
+    "file": "/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/WorldOverview.test.tsx",
+    "line": 12,
+    "message": "Do not delete dynamically computed property keys.",
+    "ruleId": "@typescript-eslint/no-dynamic-delete"
+  }
+]

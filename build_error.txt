@@ -1,0 +1,49 @@
+
+> stable-lords@2.1.0 build
+> vite build
+
+vite v7.3.2 building client environment for production...
+transforming...
+✓ 2563 modules transformed.
+✗ Build failed in 2.37s
+error during build:
+[vite:esbuild] Transform failed with 3 errors:
+/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts:41:26: ERROR: Cannot use "continue" here:
+/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts:75:25: ERROR: Cannot use "continue" here:
+/Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts:100:25: ERROR: Cannot use "continue" here:
+file: /Users/amauricia/Documents/GitHub/stable-lords/src/engine/pipeline/passes/EventPass.ts:41:26
+
+Cannot use "continue" here:
+39 |        const brawler = brawlRng.pick(activeWarriors);
+40 |        const e = events.tavern_brawl;
+41 |        if (!brawler || !e) continue;
+   |                            ^
+42 |  
+43 |        rosterUpdates.set(brawler.id, {
+
+Cannot use "continue" here:
+73 |        const chosen = brawlRng.pick(youngWarriors);
+74 |        const e = events.celestial_blessing;
+75 |        if (!chosen || !e) continue;
+   |                           ^
+76 |  
+77 |        const existingUpdate = rosterUpdates.get(chosen.id) || {};
+
+Cannot use "continue" here:
+98  |        const chosen = brawlRng.pick(activeWarriors);
+99  |        const e = events.lost_relic;
+100 |        if (!chosen || !e) continue;
+    |                           ^
+101 |  
+102 |        const existingUpdate = rosterUpdates.get(chosen.id) || {};
+
+    at failureErrorWithLog (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/vite/node_modules/esbuild/lib/main.js:1748:15)
+    at /Users/amauricia/Documents/GitHub/stable-lords/node_modules/vite/node_modules/esbuild/lib/main.js:1017:50
+    at responseCallbacks.<computed> (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/vite/node_modules/esbuild/lib/main.js:884:9)
+    at handleIncomingPacket (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/vite/node_modules/esbuild/lib/main.js:939:12)
+    at Socket.readFromStdout (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/vite/node_modules/esbuild/lib/main.js:862:7)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)

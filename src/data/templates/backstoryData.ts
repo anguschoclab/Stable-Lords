@@ -68,10 +68,10 @@ export function getTemplatesByAttributeBias(
   attribute: keyof StableTemplate['attrBias'],
   minValue: number
 ): StableTemplate[] {
-  return ALL_TEMPLATES.filter(
-    (template) =>
-      template.attrBias[attribute] !== undefined && template.attrBias[attribute]! >= minValue
-  );
+  return ALL_TEMPLATES.filter((template) => {
+    const biasValue = template.attrBias[attribute];
+    return biasValue !== undefined && biasValue !== null && biasValue >= minValue;
+  });
 }
 
 /**

@@ -134,7 +134,7 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
     const msg = applyInsightToken(warrior, type);
     setState((s) => {
       const w = s.roster.find((x) => x.id === warrior.id);
-      if (w) w.favorites = warrior.favorites;
+      if (w?.favorites) w.favorites = warrior.favorites;
     });
     toast.success(msg);
     onUpdate();
@@ -145,7 +145,7 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
     if (!fav?.discovered.rhythm) return;
     setState((s) => {
       const w = s.roster.find((x) => x.id === warrior.id);
-      if (w) {
+      if (w && fav?.rhythm) {
         if (!w.plan) w.plan = { style: w.style, OE: fav.rhythm.oe, AL: fav.rhythm.al };
         else {
           w.plan.OE = fav.rhythm.oe;
@@ -303,7 +303,8 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
             <div className="flex items-center gap-1.5">
               {isRhythmDiscovered &&
                 (() => {
-                  const fav = warrior.favorites!;
+                  const fav = warrior.favorites;
+                  if (!fav) return null;
                   const plan = warrior.plan;
                   const alreadyApplied =
                     plan && plan.OE === fav.rhythm.oe && plan.AL === fav.rhythm.al;

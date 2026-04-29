@@ -1,4 +1,4 @@
-import { FightingStyle, type Attributes, ATTRIBUTE_KEYS } from '@/types/game';
+import { FightingStyle, type Attributes, ATTRIBUTE_KEYS } from '@/types/shared.types';
 import { pick, shuffled } from '@/utils/random';
 
 type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank';
@@ -32,8 +32,8 @@ const ARCHETYPE_STAT_WEIGHTS: Record<
  * @param rng Optional RNG generator.
  * @returns The generated Attributes object.
  */
-export function generateArchetypeAttrs(style: FightingStyle, rng?: () => number): Attributes {
-  const r = rng || Math.random;
+export function generateArchetypeAttrs(style: FightingStyle, rng: () => number): Attributes {
+  const r = rng;
   const archetype = STYLE_ARCHETYPE[style];
   const weights = ARCHETYPE_STAT_WEIGHTS[archetype];
   const attrs: Attributes = { ST: 3, CN: 3, SZ: 3, WT: 3, WL: 3, SP: 3, DF: 3 };

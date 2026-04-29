@@ -280,6 +280,25 @@ function szMod(table: Record<number, number>, sz: number): number {
 // Format: [ATT, PAR, DEF, INI, RIP, DEC]
 const STYLE_PENALTIES: Record<FightingStyle, [number, number, number, number, number, number]> = {
   //                                           ATT  PAR  DEF  INI  RIP  DEC
+<<<<<<< HEAD
+  // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
+  [FightingStyle.AimedBlow]: /*AB*/ [-13, -6, -10, -7, -5, +1], // was -52, now -40: +12 budget (ATT/PAR/DEF/INI/RIP)
+  [FightingStyle.ParryRiposte]: /*PR*/ [-14, -8, -15, -8, -2, -2], // was -38, now -49: identity = riposte king (RIP least penalised)
+  [FightingStyle.ParryStrike]: /*PS*/ [-12, -6, -12, -9, -4, -1], // was -42, now -44: minor INI nerf
+  [FightingStyle.ParryLunge]: /*PL*/ [-11, -7, -13, -7, -6, -1], // was -35, now -45: ATT/INI/RIP down
+
+  // ── Agile archetype (SP/DF/WT → massive breakpoint yields, heaviest penalty) ──
+  [FightingStyle.LungingAttack]: /*LU*/ [-10, -12, -13, -7, -7, -2], // was -30, now -51: massive nerf to all skills
+  [FightingStyle.SlashingAttack]: /*SL*/ [-12, -14, -15, -4, -7, -2], // was -34, now -54: INI kept as identity, everything else down
+
+  // ── Brutal archetype (ST/CN/SZ → low breakpoint yields, lightest penalty) ──
+  [FightingStyle.BashingAttack]: /*BA*/ [-4, -6, -10, 0, -2, +2], // was -35, now -20: +15 budget across all skills
+  [FightingStyle.StrikingAttack]: /*ST*/ [-7, -6, -9, -2, -2, +2], // was -41, now -24: +17 budget; still lower ATT than BA
+
+  // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
+  [FightingStyle.TotalParry]: /*TP*/ [-12, +1, -9, -4, -2, 0], // was -41, now -26: PAR buff is identity; ATT stays low
+  [FightingStyle.WallOfSteel]: /*WS*/ [-2, -2, -9, 2, -2, 0], // was -27, now -13: small universal buff; INI positive = reads attacks
+=======
   // ── Cunning archetype (17 HP, 1.4 DMG) ──
   [FightingStyle.AimedBlow]:      /*AB*/  [-10, -5,  -9, -7, -4, +1],    // Σ -34: WR ~49% (Good)
   [FightingStyle.ParryRiposte]:   /*PR*/  [ -5, -2,  -6, -3, +3,  0],    // Σ -13: Buffing slightly (was 46% WR)
@@ -297,6 +316,7 @@ const STYLE_PENALTIES: Record<FightingStyle, [number, number, number, number, nu
   // ── Tank archetype (37 HP, 3.4 DMG, 33 END) ──
   [FightingStyle.TotalParry]:     /*TP*/  [-16, -2, -12, -7, -4, -2],    // Σ -43: WR ~51% (Good)
   [FightingStyle.WallOfSteel]:    /*WS*/  [ -2, -2,  -7,  2, -1,  0],    // Σ -10: Buffing WS further (was 44% WR)
+>>>>>>> 72f6b31b521862f5ae05c4dfdcb9b34ee46812fa
 };
 
 // ─── Base Skill Computation ───────────────────────────────────────────────

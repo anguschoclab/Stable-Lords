@@ -77,9 +77,10 @@ describe('Autosim Integration', () => {
         progressCalls++;
       });
 
+      expect(result.finalState).toBeDefined();
       expect(result.finalState.week).toBeGreaterThan(initialState.week);
       expect(result.weeksSimmed).toBe(weeksToAdvance);
-      expect(progressCalls).toBeGreaterThan(0);
+      expect(progressCalls).toBe(weeksToAdvance);
     });
 
     it('should provide week summaries', async () => {
@@ -118,8 +119,9 @@ describe('Autosim Integration', () => {
     it('should provide stop details', async () => {
       const result = await runAutosim(initialState, 5, () => {});
 
+      expect(result.stopDetail).toBeDefined();
       expect(typeof result.stopDetail).toBe('string');
-      expect(result.stopDetail?.length).toBeGreaterThan(0);
+      expect(result.stopDetail.length).toBeGreaterThan(0);
     });
 
     it('should stop at max weeks when no other conditions trigger', async () => {
@@ -134,7 +136,7 @@ describe('Autosim Integration', () => {
     it('should maintain roster integrity during autosim', async () => {
       const result = await runAutosim(initialState, 10, () => {});
 
-
+      expect(result.finalState).toBeDefined();
 
       // Roster + graveyard + retired should account for all warriors
       const totalWarriors =
@@ -157,7 +159,7 @@ describe('Autosim Integration', () => {
 
       const result = await runAutosim(state, 5, () => {});
 
-
+      expect(result.finalState).toBeDefined();
 
       // Find the warrior in any collection
       const warrior =
@@ -166,9 +168,7 @@ describe('Autosim Integration', () => {
         (result.finalState.retired || []).find((w) => w.id === 'unique_1');
 
       expect(warrior).toBeDefined();
-      if (warrior) {
-        expect(warrior.name).toBe('Unique Name');
-      }
+      expect(warrior?.name).toBe('Unique Name');
     });
 
     it('should accumulate newsletter entries', async () => {
@@ -184,15 +184,17 @@ describe('Autosim Integration', () => {
 
       const result = await runAutosim(state, 5, () => {});
 
+      expect(result.finalState).toBeDefined();
       expect(result.finalState.newsletter).toBeDefined();
     });
 
     it('should process economy correctly', async () => {
       const result = await runAutosim(initialState, 5, () => {});
 
-
+      expect(result.finalState).toBeDefined();
 
       // Ledger should have entries
+      expect(result.finalState.ledger).toBeDefined();
       expect(result.finalState.ledger.length).toBeGreaterThan(0);
 
       // Gold should be a valid number
@@ -238,6 +240,7 @@ describe('Autosim Integration', () => {
     it('should handle multi-week simulation', async () => {
       const result = await runAutosim(initialState, 20, () => {});
 
+      expect(result.weeksSimmed).toBeGreaterThan(1);
       expect(result.finalState.week).toBeGreaterThan(initialState.week);
     });
 
@@ -301,8 +304,9 @@ describe('Autosim Integration', () => {
     it('should provide descriptive stop details', async () => {
       const result = await runAutosim(initialState, 5, () => {});
 
+      expect(result.stopDetail).toBeDefined();
       expect(typeof result.stopDetail).toBe('string');
-      expect(result.stopDetail?.length).toBeGreaterThan(0);
+      expect(result.stopDetail.length).toBeGreaterThan(0);
     });
   });
 });

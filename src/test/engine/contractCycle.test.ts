@@ -41,7 +41,7 @@ describe('Contract System Cycle', () => {
     const offer = offers.find((o) =>
       o.warriorIds.some((wId) => stateWithOffers.roster.some((pW) => pW.id === wId))
     );
-
+    expect(offer).toBeDefined();
     const playerWarrior = stateWithOffers.roster.find((w) => offer.warriorIds.includes(w.id));
     if (!playerWarrior) throw new Error('Player warrior not found for offer');
     const playerWarriorId = playerWarrior.id;

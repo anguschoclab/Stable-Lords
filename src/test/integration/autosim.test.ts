@@ -206,7 +206,7 @@ describe('Autosim Integration', () => {
 
       // Ledger should have entries
       expect(result.finalState.ledger).toBeDefined();
-      expect(result.finalState.ledger.length).toBeGreaterThanOrEqual(0);
+      expect(result.finalState.ledger.length).toBeGreaterThan(0);
 
       // Gold should be a valid number
       expect(typeof result.finalState.treasury).toBe('number');

@@ -195,7 +195,7 @@ export function runSeasonalPass(
         description: 'Leaves the victim weak and fatigued.',
         severity: 'Minor',
         weeksRemaining: 2 + Math.floor(seasonRng.next() * 2), // 2-3 weeks
-        penalties: { EN: -2, ST: -1 },
+        penalties: { CN: -2, ST: -1 },
       };
 
       const currentInjuries = chosen.injuries || [];

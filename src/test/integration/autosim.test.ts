@@ -186,7 +186,7 @@ describe('Autosim Integration', () => {
 
       expect(result.finalState).toBeDefined();
       expect(result.finalState.newsletter).toBeDefined();
-      expect(result.finalState.newsletter.length).toBeGreaterThanOrEqual(0);
+      expect(result.finalState.newsletter.length).toBeGreaterThan(0);
     });
 
     it('should process economy correctly', async () => {

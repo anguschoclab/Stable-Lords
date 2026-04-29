@@ -59,9 +59,12 @@ describe('Autosim Integration', () => {
 
   beforeEach(() => {
     initialState = createFreshState('test-seed');
+    initialState.treasury = 5000;
     initialState.roster = [
-      makeWarrior('w1', 'Test Warrior 1'),
-      makeWarrior('w2', 'Test Warrior 2'),
+      makeWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 }),
+      makeWarrior('w2', 'Test Warrior 2', { fame: 10, popularity: 5 }),
+      makeWarrior('w3', 'Test Warrior 3', { fame: 10, popularity: 5 }),
+      makeWarrior('w4', 'Test Warrior 4', { fame: 10, popularity: 5 }),
     ];
   });
 

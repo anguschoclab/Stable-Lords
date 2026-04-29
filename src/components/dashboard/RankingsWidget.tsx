@@ -52,11 +52,12 @@ export function RankingsWidget() {
     let stablePosition = 1;
     if (bestRank !== null) {
       for (const rival of state.rivals ?? []) {
-        const rivalIds = new Set((rival.roster ?? []).map((w: { id: string }) => w.id));
         let rivalBest: number | null = null;
-        for (const [id, entry] of Object.entries(realmRankings)) {
-          if (!rivalIds.has(id)) continue;
-          if (rivalBest === null || entry.overallRank < rivalBest) rivalBest = entry.overallRank;
+        for (const w of rival.roster ?? []) {
+          const entry = realmRankings[w.id];
+          if (entry && (rivalBest === null || entry.overallRank < rivalBest)) {
+            rivalBest = entry.overallRank;
+          }
         }
         if (rivalBest !== null && rivalBest < bestRank) stablePosition++;
       }

@@ -54,8 +54,8 @@ describe('runSeasonalPass', () => {
     // The warrior should have received fame (+10 to +20)
     const update = impact.rosterUpdates?.get(warriorId);
     expect(update).toBeDefined();
-    expect(update?.fame).toBeGreaterThanOrEqual(10);
-    expect(update?.fame).toBeLessThanOrEqual(60);
+    expect(update?.fame).toBeGreaterThanOrEqual(20);
+    expect(update?.fame).toBeLessThanOrEqual(30);
 
     // The warrior should have a Bruised Ribs injury
     expect(update?.injuries).toHaveLength(1);

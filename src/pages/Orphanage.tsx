@@ -5,6 +5,7 @@
  */
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories';
 import { simulateFight, defaultPlanForWarrior } from '@/engine';
@@ -25,6 +26,19 @@ import IdentityStep from '@/components/orphanage/IdentityStep';
 import WarriorSelectionStep from '@/components/orphanage/WarriorSelectionStep';
 import FirstBloodStep from '@/components/orphanage/FirstBloodStep';
 import StoryBeginsStep from '@/components/orphanage/StoryBeginsStep';
+
+// ─── Animation variants for step transitions ────────────────────────────────
+
+const stepVariants = {
+  initial: { opacity: 0, y: 20, scale: 0.98 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -20, scale: 0.98 },
+};
+
+const stepTransition = {
+  duration: 0.4,
+  ease: [0.16, 1, 0.3, 1] as [number, number, number, number], // Custom cubic-bezier for smooth deceleration
+};
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
@@ -245,47 +259,88 @@ export default function Orphanage() {
         {/* Progress */}
         <StepProgress step={step} total={4} />
 
-        {/* ── Step 0: Identity ────────────────────────────────────────────────── */}
-        {step === 0 && (
-          <IdentityStep
-            ownerInput={ownerInput}
-            setOwnerInput={setOwnerInput}
-            stableInput={stableInput}
-            setStableInput={setStableInput}
-            onBack={returnToTitle}
-            onSubmit={() => {
-              initializeStable(ownerInput.trim(), stableInput.trim());
-              setStep(1);
-            }}
-          />
-        )}
+        {/* ── Step Content with AnimatePresence ─────────────────────────────────── */}
+        <AnimatePresence mode="wait">
+          {/* ── Step 0: Identity ────────────────────────────────────────────────── */}
+          {step === 0 && (
+            <motion.div
+              key="identity"
+              variants={stepVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={stepTransition}
+            >
+              <IdentityStep
+                ownerInput={ownerInput}
+                setOwnerInput={setOwnerInput}
+                stableInput={stableInput}
+                setStableInput={setStableInput}
+                onBack={returnToTitle}
+                onSubmit={() => {
+                  initializeStable(ownerInput.trim(), stableInput.trim());
+                  setStep(1);
+                }}
+              />
+            </motion.div>
+          )}
 
-        {/* ── Step 1: Choose Warriors ──────────────────────────────────────────── */}
-        {step === 1 && (
-          <WarriorSelectionStep
-            orphanPool={orphanPool}
-            selected={selected}
-            onToggleWarrior={toggleWarrior}
-            onRerollPool={rerollPool}
-            onBack={() => setStep(0)}
-            onNext={() => {
-              setStep(2);
-              runTutorialBout();
-            }}
-          />
-        )}
+          {/* ── Step 1: Choose Warriors ──────────────────────────────────────────── */}
+          {step === 1 && (
+            <motion.div
+              key="warrior-selection"
+              variants={stepVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={stepTransition}
+            >
+              <WarriorSelectionStep
+                orphanPool={orphanPool}
+                selected={selected}
+                onToggleWarrior={toggleWarrior}
+                onRerollPool={rerollPool}
+                onBack={() => setStep(0)}
+                onNext={() => {
+                  setStep(2);
+                  runTutorialBout();
+                }}
+              />
+            </motion.div>
+          )}
 
-        {/* ── Step 2: First Blood ──────────────────────────────────────────────── */}
-        {step === 2 && boutResult && (
-          <FirstBloodStep
-            boutResult={boutResult}
-            onBack={() => setStep(1)}
-            onNext={() => setStep(3)}
-          />
-        )}
+          {/* ── Step 2: First Blood ──────────────────────────────────────────────── */}
+          {step === 2 && boutResult && (
+            <motion.div
+              key="first-blood"
+              variants={stepVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={stepTransition}
+            >
+              <FirstBloodStep
+                boutResult={boutResult}
+                onBack={() => setStep(1)}
+                onNext={() => setStep(3)}
+              />
+            </motion.div>
+          )}
 
-        {/* ── Step 3: Your Story Begins ────────────────────────────────────────── */}
-        {step === 3 && <StoryBeginsStep onFinish={finishFTUE} />}
+          {/* ── Step 3: Your Story Begins ────────────────────────────────────────── */}
+          {step === 3 && (
+            <motion.div
+              key="story-begins"
+              variants={stepVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={stepTransition}
+            >
+              <StoryBeginsStep onFinish={finishFTUE} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

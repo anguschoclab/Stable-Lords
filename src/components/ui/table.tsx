@@ -15,7 +15,14 @@ const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
+  <thead
+    ref={ref}
+    className={cn(
+      '[&_tr]:border-b [&_tr]:border-white/5 bg-white/[0.03]',
+      className
+    )}
+    {...props}
+  />
 ));
 TableHeader.displayName = 'TableHeader';
 
@@ -39,12 +46,20 @@ const TableFooter = React.forwardRef<
 ));
 TableFooter.displayName = 'TableFooter';
 
-const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
-  ({ className, ...props }, ref) => (
+interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  /** Highlight row as player-owned (blood accent) */
+  'data-player'?: boolean;
+}
+
+const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
+  ({ className, 'data-player': isPlayer, ...props }, ref) => (
     <tr
       ref={ref}
+      data-player={isPlayer}
       className={cn(
-        'border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50',
+        'border-b border-white/5 transition-colors',
+        'hover:bg-white/[0.02]',
+        isPlayer && 'bg-primary/[0.03] border-l-2 border-l-primary',
         className
       )}
       {...props}
@@ -60,7 +75,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
+      'h-10 px-4 py-3 text-left align-middle text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 [&:has([role=checkbox])]:pr-0',
       className
     )}
     {...props}
@@ -68,16 +83,25 @@ const TableHead = React.forwardRef<
 ));
 TableHead.displayName = 'TableHead';
 
-const TableCell = React.forwardRef<
-  HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
-  <td
-    ref={ref}
-    className={cn('p-4 align-middle [&:has([role=checkbox])]:pr-0', className)}
-    {...props}
-  />
-));
+interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
+  /** Use monospace font for numeric/stat values */
+  'data-numeric'?: boolean;
+}
+
+const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
+  ({ className, 'data-numeric': isNumeric, ...props }, ref) => (
+    <td
+      ref={ref}
+      data-numeric={isNumeric}
+      className={cn(
+        'p-3 px-4 align-middle text-xs [&:has([role=checkbox])]:pr-0',
+        isNumeric && 'font-mono font-black',
+        className
+      )}
+      {...props}
+    />
+  )
+);
 TableCell.displayName = 'TableCell';
 
 const TableCaption = React.forwardRef<

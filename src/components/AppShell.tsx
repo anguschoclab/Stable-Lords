@@ -50,6 +50,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
 import { LeftNav } from '@/components/navigation/LeftNav';
+import { MobileNav } from '@/components/navigation/MobileNav';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 
 import { useShallow } from 'zustand/react/shallow';
@@ -183,22 +184,25 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* ─── Global Status Header ─── */}
       <header className="h-16 border-b border-white/5 bg-[#080604]/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
         <div className="flex items-center gap-10">
-          <Link
-            to="/"
-            className="flex items-center gap-4 group active:scale-95 transition-all duration-300"
-          >
-            <ImperialRing size="md" variant="blood" className="group-hover:rotate-[225deg] transition-all duration-700">
-              <Swords className="w-5 h-5" />
-            </ImperialRing>
-            <div className="flex flex-col">
-              <span className="font-display font-black text-base tracking-tighter uppercase leading-none group-hover:text-primary transition-colors">
-                Stable Lords
-              </span>
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-30">
-                Codex Sanguis · v1.0
-              </span>
-            </div>
-          </Link>
+          <div className="flex items-center gap-4">
+            <MobileNav />
+            <Link
+              to="/"
+              className="flex items-center gap-4 group active:scale-95 transition-all duration-300"
+            >
+              <ImperialRing size="md" variant="blood" className="group-hover:rotate-[225deg] transition-all duration-700">
+                <Swords className="w-5 h-5" />
+              </ImperialRing>
+              <div className="flex flex-col">
+                <span className="font-display font-black text-base tracking-tighter uppercase leading-none group-hover:text-primary transition-colors">
+                  Stable Lords
+                </span>
+                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-30">
+                  Codex Sanguis · v1.0
+                </span>
+              </div>
+            </Link>
+          </div>
 
           <div className="hidden xl:flex items-center gap-1">
             {/* Cycle Status */}
@@ -397,7 +401,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       <div className="flex-1 flex flex-row overflow-hidden relative">
         {/* ─── Left Navigation Rail ─── */}
-        <LeftNav />
+        <div className="hidden md:flex">
+          <LeftNav />
+        </div>
 
         {/* ─── Main Content Area ─── */}
         <main className="flex-1 flex flex-col relative bg-[#0C0806] overflow-hidden">

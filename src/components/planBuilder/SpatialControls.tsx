@@ -21,8 +21,8 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
   return (
     <div className="bg-white/5 p-6 border border-white/5 space-y-6">
       <div className="flex items-center gap-2 mb-2">
-        <MoveHorizontal className="w-4 h-4 text-blue-400" />
-        <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">
+        <MoveHorizontal className="w-4 h-4 text-arena-steel" />
+        <span className="text-[10px] font-black uppercase tracking-widest text-arena-steel">
           Spatial Tactics
         </span>
       </div>
@@ -58,7 +58,7 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
             <span
               className={cn(
                 'text-sm font-mono font-bold',
-                warrior.attributes.WT >= 15 ? 'text-blue-400' : 'text-muted-foreground/40'
+                warrior.attributes.WT >= 15 ? 'text-arena-gold' : 'text-muted-foreground/40'
               )}
             >
               {plan.feintTendency ?? 0}
@@ -73,7 +73,7 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
             <div
               className={cn(
                 'h-full transition-all',
-                warrior.attributes.WT >= 15 ? 'bg-blue-500/60' : 'bg-white/10'
+                warrior.attributes.WT >= 15 ? 'bg-arena-gold/60' : 'bg-white/10'
               )}
               style={{ width: `${((plan.feintTendency ?? 0) / 10) * 100}%` }}
             />
@@ -107,14 +107,14 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
                 className={cn(
                   'py-1.5 text-[9px] font-black uppercase tracking-wider border transition-all',
                   isSelected
-                    ? 'bg-blue-500/20 border-blue-500/60 text-blue-300'
+                    ? 'bg-arena-steel/20 border-arena-steel/60 text-arena-steel'
                     : 'bg-black/40 border-white/10 text-muted-foreground hover:border-white/30'
                 )}
                 aria-label={'Set preferred distance to ' + r}
               >
                 {r}
                 {isNatural && (
-                  <span className="block text-[7px] text-blue-400/60 normal-case font-normal">
+                  <span className="block text-[7px] text-arena-steel/60 normal-case font-normal">
                     natural
                   </span>
                 )}

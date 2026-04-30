@@ -1,4 +1,4 @@
-import { Crosshair, Shield, Target } from 'lucide-react';
+import { Crosshair, Shield, Target, Settings2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import PlanBuilder from '@/components/PlanBuilder';
 import EquipmentLoadoutUI from '@/components/EquipmentLoadout';
@@ -6,6 +6,8 @@ import { SchedulingWidget } from '@/components/widgets/SchedulingWidget';
 import { Warrior, FightPlan } from '@/types/game';
 import { EquipmentLoadout } from '@/data/equipment';
 import { Surface } from '@/components/ui/Surface';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 interface MissionControlTabProps {
   warrior: Warrior;
@@ -25,58 +27,74 @@ export function MissionControlTab({
   onEquipmentChange,
 }: MissionControlTabProps) {
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <Surface variant="glass" padding="none" className="border-neon-gold border-2">
-        <div className="bg-arena-gold/10 px-8 py-4 border-b border-arena-gold/20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Crosshair className="h-5 w-5 text-arena-gold" />
-            <span className="font-display font-black uppercase tracking-widest text-sm">
-              Targeting & Engagement Protocols
-            </span>
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div>
+        <SectionDivider label="Engagement Protocols" />
+        <Surface variant="glass" className="border-white/5 overflow-hidden">
+          <div className="bg-white/[0.01] px-8 py-6 border-b border-white/5 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <ImperialRing size="sm" variant="gold">
+                <Crosshair className="h-4 w-4 text-arena-gold" />
+              </ImperialRing>
+              <span className="font-display font-black uppercase tracking-[0.2em] text-[11px]">
+                Targeting & Behavioral Logic
+              </span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1 border border-primary/20 bg-primary/5 text-primary text-[8px] font-black uppercase tracking-widest">
+              <Settings2 className="h-3 w-3" /> Manual Override Active
+            </div>
           </div>
-          <Badge className="bg-arena-gold text-black px-4 font-black uppercase text-[10px]">
-            Manual Override Active
-          </Badge>
-        </div>
-        <div className="p-8">
-          <PlanBuilder
-            warrior={warrior}
-            plan={currentPlan}
-            onPlanChange={onPlanChange}
-            warriorName={displayWarrior.name}
-          />
-        </div>
-      </Surface>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Surface variant="glass" padding="none" className="border-neon overflow-hidden">
-          <div className="bg-secondary/10 px-6 py-4 border-b border-white/5 flex items-center gap-3">
-            <Shield className="h-4 w-4 text-primary" />
-            <span className="font-display font-black uppercase tracking-widest text-xs">
-              Armory Loadout
-            </span>
-          </div>
-          <div className="p-6">
-            <EquipmentLoadoutUI
-              loadout={currentLoadout}
-              style={warrior.style}
-              carryCap={warrior.derivedStats?.encumbrance ?? 0}
-              warriorAttrs={warrior.attributes}
-              onChange={onEquipmentChange}
+          <div className="p-10">
+            <PlanBuilder
+              warrior={warrior}
+              plan={currentPlan}
+              onPlanChange={onPlanChange}
+              warriorName={displayWarrior.name}
             />
           </div>
         </Surface>
-        <Surface variant="glass" padding="none" className="border-neon overflow-hidden">
-          <div className="bg-secondary/10 px-6 py-4 border-b border-white/5 flex items-center gap-3">
-            <Target className="h-4 w-4 text-accent" />
-            <span className="font-display font-black uppercase tracking-widest text-xs">
-              Scouting Assist
-            </span>
-          </div>
-          <div className="p-2 h-full overflow-y-auto max-h-[600px] no-scrollbar">
-            <SchedulingWidget warrior={warrior} />
-          </div>
-        </Surface>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="space-y-8">
+          <SectionDivider label="Physical Configuration" />
+          <Surface variant="glass" className="border-white/5 overflow-hidden">
+            <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
+              <ImperialRing size="xs" variant="silver">
+                <Shield className="h-3 w-3 text-muted-foreground" />
+              </ImperialRing>
+              <span className="font-display font-black uppercase tracking-widest text-[10px]">
+                Armory Allocation
+              </span>
+            </div>
+            <div className="p-8">
+              <EquipmentLoadoutUI
+                loadout={currentLoadout}
+                style={warrior.style}
+                carryCap={warrior.derivedStats?.encumbrance ?? 0}
+                warriorAttrs={warrior.attributes}
+                onChange={onEquipmentChange}
+              />
+            </div>
+          </Surface>
+        </div>
+
+        <div className="space-y-8">
+          <SectionDivider label="Operational Logistics" />
+          <Surface variant="glass" className="border-white/5 overflow-hidden">
+            <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
+              <ImperialRing size="xs" variant="bronze">
+                <Target className="h-3 w-3 text-muted-foreground" />
+              </ImperialRing>
+              <span className="font-display font-black uppercase tracking-widest text-[10px]">
+                Scouting Telemetry
+              </span>
+            </div>
+            <div className="p-2 h-full overflow-y-auto max-h-[600px] thin-scrollbar">
+              <SchedulingWidget warrior={warrior} />
+            </div>
+          </Surface>
+        </div>
       </div>
     </div>
   );

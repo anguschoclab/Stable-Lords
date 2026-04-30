@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { Eye, Lightbulb, Swords, Zap, Activity, Download } from 'lucide-react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { type Warrior } from '@/types/game';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -10,111 +9,8 @@ import { getFavoritesDisplay } from '@/components/warrior/favoritesDisplay';
 import { applyInsightToken } from '@/engine/favorites';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-
-/** Discovery progress thresholds */
-const WEAPON_HINT_FIGHTS = 5;
-const WEAPON_REVEAL_FIGHTS = 15;
-const RHYTHM_HINT_FIGHTS = 7;
-const RHYTHM_REVEAL_FIGHTS = 18;
-
-/** Get discovery progress for a warrior */
-function getDiscoveryProgress(totalFights: number): {
-  weaponProgress: number;
-  rhythmProgress: number;
-  weaponStage: 'hidden' | 'hint1' | 'hint2' | 'revealed';
-  rhythmStage: 'hidden' | 'hint1' | 'hint2' | 'revealed';
-} {
-  let weaponStage: 'hidden' | 'hint1' | 'hint2' | 'revealed' = 'hidden';
-  if (totalFights >= WEAPON_REVEAL_FIGHTS) weaponStage = 'revealed';
-  else if (totalFights >= WEAPON_HINT_FIGHTS * 2) weaponStage = 'hint2';
-  else if (totalFights >= WEAPON_HINT_FIGHTS) weaponStage = 'hint1';
-
-  let rhythmStage: 'hidden' | 'hint1' | 'hint2' | 'revealed' = 'hidden';
-  if (totalFights >= RHYTHM_REVEAL_FIGHTS) rhythmStage = 'revealed';
-  else if (totalFights >= RHYTHM_HINT_FIGHTS * 2) rhythmStage = 'hint2';
-  else if (totalFights >= RHYTHM_HINT_FIGHTS) rhythmStage = 'hint1';
-
-  return {
-    weaponProgress: Math.min(100, (totalFights / WEAPON_REVEAL_FIGHTS) * 100),
-    rhythmProgress: Math.min(100, (totalFights / RHYTHM_REVEAL_FIGHTS) * 100),
-    weaponStage,
-    rhythmStage,
-  };
-}
-
-/** Discovery Progress Bar with milestone markers */
-function DiscoveryProgressBar({
-  progress,
-  stage,
-  label,
-  hint1Label,
-  hint2Label,
-  revealLabel,
-  hint1At,
-  hint2At,
-  revealAt,
-}: {
-  progress: number;
-  stage: 'hidden' | 'hint1' | 'hint2' | 'revealed';
-  label: string;
-  hint1Label: string;
-  hint2Label: string;
-  revealLabel: string;
-  hint1At: number;
-  hint2At: number;
-  revealAt: number;
-}) {
-  const stageLabels: Record<string, string> = {
-    hidden: 'Unknown',
-    hint1: hint1Label,
-    hint2: hint2Label,
-    revealed: revealLabel,
-  };
-
-  const stageColors: Record<string, string> = {
-    hidden: 'bg-muted',
-    hint1: 'bg-primary/60',
-    hint2: 'bg-primary/80',
-    revealed: 'bg-accent',
-  };
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">{label}</span>
-        <span
-          className={`text-xs font-medium ${stage === 'revealed' ? 'text-accent' : 'text-muted-foreground'}`}
-        >
-          {stageLabels[stage]}
-        </span>
-      </div>
-      <div className="relative">
-        <div className="h-2 w-full rounded-full bg-secondary overflow-hidden">
-          <div
-            className={`h-full transition-all duration-500 ${stageColors[stage]}`}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <div className="absolute inset-0 flex items-center">
-          <div
-            className="absolute w-px h-3 bg-muted-foreground/30"
-            style={{ left: `${(hint1At / revealAt) * 100}%` }}
-          />
-          <div
-            className="absolute w-px h-3 bg-muted-foreground/30"
-            style={{ left: `${(hint2At / revealAt) * 100}%` }}
-          />
-        </div>
-      </div>
-      <div className="flex justify-between text-[10px] text-muted-foreground/70">
-        <span>0</span>
-        <span>Hint {hint1At}</span>
-        <span>Hint {hint2At}</span>
-        <span>Reveal {revealAt}</span>
-      </div>
-    </div>
-  );
-}
+import { Surface } from '@/components/ui/Surface';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () => void }) {
   const state = useWorldState();
@@ -154,7 +50,7 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
       }
     });
     toast.success(
-      `${warrior.name}'s strategy updated — OE ${fav.rhythm.oe} / AL ${fav.rhythm.al} locked in.`
+      `Cognitive Alignment Confirmed: OE ${fav.rhythm.oe} / AL ${fav.rhythm.al} synchronized.`
     );
     onUpdate();
   };
@@ -176,131 +72,113 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
       }
     });
     const weaponName = favDisplay.weapon ?? fav.weaponId;
-    toast.success(`${warrior.name} equipped with their soul-bond weapon: ${weaponName}.`);
+    toast.success(`Biological Lock: ${weaponName} equipped.`);
     onUpdate();
   };
 
   if (!warrior.favorites) return null;
 
   return (
-    <Card className="bg-glass/10 border-arena-gold/10">
-      <CardHeader className="pb-3 border-b border-white/5">
-        <CardTitle className="font-display text-lg flex items-center gap-2 text-arena-gold">
-          <Zap className="h-5 w-5 fill-arena-gold" /> SOUL-BOND & MASTERY
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6 pt-4">
-        {/* Weapon Section */}
-        <div className="space-y-3">
+    <Surface variant="glass" className="border-white/5 overflow-hidden">
+      <div className="p-6 border-b border-white/5 bg-white/[0.01] flex items-center gap-3">
+        <ImperialRing size="xs" variant="gold">
+          <Zap className="h-3 w-3 text-arena-gold" />
+        </ImperialRing>
+        <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
+          Synaptic Mapping
+        </span>
+      </div>
+      
+      <div className="p-8 space-y-10">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-              <Swords className="h-3 w-3" /> Favorite Weapon
+            <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 flex items-center gap-2">
+              <Swords className="h-3 w-3" /> Materiel Affinity
             </div>
             {isWeaponDiscovered && (
-              <Badge className="bg-arena-gold text-black font-black text-[9px] px-1.5 py-0 h-4">
-                MASTERY ✨
-              </Badge>
+              <span className="text-[8px] font-black uppercase text-arena-gold tracking-widest px-2 py-0.5 border border-arena-gold/20 bg-arena-gold/5">
+                DISCOVERED
+              </span>
             )}
           </div>
 
           <div className="flex items-center justify-between gap-4">
             <div className="flex-1">
               {isWeaponDiscovered ? (
-                <div className="space-y-0.5">
-                  <div>{favDisplay.weapon}</div>
-                  <div className="text-[9px] font-mono text-arena-gold font-bold">
-                    +2 ATT / +1 DAMAGE
+                <div className="space-y-1">
+                  <div className="text-sm font-display font-black uppercase">{favDisplay.weapon}</div>
+                  <div className="text-[9px] font-black text-arena-gold uppercase tracking-widest">
+                    Operational Bonus: +2 ACC / +1 DMG
                   </div>
                 </div>
               ) : (
-                <div className="text-sm text-muted-foreground italic font-medium opacity-60">
-                  {weaponHints > 0 ? favDisplay.weaponHint : 'Preference hidden...'}
+                <div className="text-[11px] text-muted-foreground/40 uppercase tracking-widest font-black italic">
+                  {weaponHints > 0 ? favDisplay.weaponHint : 'Pattern Unrecognized'}
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               {isWeaponDiscovered && warrior.equipment?.weapon !== warrior.favorites?.weaponId && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleEquipFavoriteWeapon}
-                        className="h-7 px-2 border-arena-gold/30 hover:bg-arena-gold/20 text-arena-gold text-[9px] font-black uppercase gap-1"
-                        aria-label="Equip favorite weapon"
-                      >
-                        <Download className="h-3 w-3" /> Equip
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-black text-[10px]">
-                      Switch to soul-bond weapon
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleEquipFavoriteWeapon}
+                  className="h-8 px-4 border-arena-gold/20 hover:bg-arena-gold/10 text-arena-gold text-[9px] font-black uppercase rounded-none tracking-widest"
+                >
+                  Deploy
+                </Button>
               )}
               {!isWeaponDiscovered && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleInsight('weapon')}
-                        className="h-7 w-7 p-0 border-white/10 hover:bg-arena-gold/20"
-                        aria-label="Reveal favorite weapon insight"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-black text-[10px]">
-                      Use Insight Token
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleInsight('weapon')}
+                  className="h-8 w-8 p-0 border-white/10 hover:bg-white/5 rounded-none"
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
               )}
             </div>
           </div>
-          <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+          <div className="h-1 w-full bg-white/5 overflow-hidden">
             <div
               className={cn(
                 'h-full transition-all duration-1000',
-                isWeaponDiscovered ? 'bg-arena-gold' : 'bg-arena-gold/30'
+                isWeaponDiscovered ? 'bg-arena-gold shadow-[0_0_8px_rgba(255,184,0,0.4)]' : 'bg-white/10'
               )}
               style={{ width: `${weaponProgress}%` }}
             />
           </div>
         </div>
 
-        {/* Rhythm Section */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
-              <Activity className="h-3 w-3" /> Natural Rhythm
+            <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 flex items-center gap-2">
+              <Activity className="h-3 w-3" /> Bio-Rhythm
             </div>
             {isRhythmDiscovered && (
-              <Badge className="bg-arena-gold text-black font-black text-[9px] px-1.5 py-0 h-4">
-                SYNERGY ✨
-              </Badge>
+              <span className="text-[8px] font-black uppercase text-arena-gold tracking-widest px-2 py-0.5 border border-arena-gold/20 bg-arena-gold/5">
+                OPTIMIZED
+              </span>
             )}
           </div>
 
           <div className="flex items-center justify-between gap-4">
             <div className="flex-1">
               {isRhythmDiscovered ? (
-                <div className="space-y-0.5">
-                  <div>{favDisplay.rhythm}</div>
-                  <div className="text-[9px] font-mono text-arena-gold font-bold">
-                    +2 INI / +2 DEF (BONUS)
+                <div className="space-y-1">
+                  <div className="text-sm font-display font-black uppercase">{favDisplay.rhythm}</div>
+                  <div className="text-[9px] font-black text-arena-gold uppercase tracking-widest">
+                    Tactical Bonus: +2 INI / +2 DEF
                   </div>
                 </div>
               ) : (
-                <div className="text-sm text-muted-foreground italic font-medium opacity-60">
-                  {rhythmHints > 0 ? favDisplay.rhythmHint : 'Rhythm hidden...'}
+                <div className="text-[11px] text-muted-foreground/40 uppercase tracking-widest font-black italic">
+                  {rhythmHints > 0 ? favDisplay.rhythmHint : 'Rhythm Classified'}
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               {isRhythmDiscovered &&
                 (() => {
                   const fav = warrior.favorites;
@@ -309,63 +187,43 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
                   const alreadyApplied =
                     plan && plan.OE === fav.rhythm.oe && plan.AL === fav.rhythm.al;
                   return !alreadyApplied ? (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleApplyRhythm}
-                            className="h-7 px-2 border-arena-gold/30 hover:bg-arena-gold/20 text-arena-gold text-[9px] font-black uppercase gap-1"
-                            aria-label="Apply favorite rhythm to strategy"
-                          >
-                            <Download className="h-3 w-3" /> Apply
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-black text-[10px]">
-                          Lock soul-rhythm into strategy sheet
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleApplyRhythm}
+                      className="h-8 px-4 border-arena-gold/20 hover:bg-arena-gold/10 text-arena-gold text-[9px] font-black uppercase rounded-none tracking-widest"
+                    >
+                      Sync
+                    </Button>
                   ) : (
-                    <Badge className="bg-arena-gold/10 text-arena-gold border border-arena-gold/20 text-[9px] font-black px-1.5">
-                      Active
-                    </Badge>
+                    <span className="text-[8px] font-black uppercase text-primary tracking-widest px-2 py-0.5 border border-primary/20 bg-primary/5">
+                      ACTIVE
+                    </span>
                   );
                 })()}
               {!isRhythmDiscovered && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleInsight('rhythm')}
-                        className="h-7 w-7 p-0 border-white/10 hover:bg-arena-gold/20"
-                        aria-label="Reveal favorite rhythm insight"
-                      >
-                        <Eye className="h-3.5 w-3.5" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-black text-[10px]">
-                      Use Insight Token
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleInsight('rhythm')}
+                  className="h-8 w-8 p-0 border-white/10 hover:bg-white/5 rounded-none"
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
               )}
             </div>
           </div>
-          <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+          <div className="h-1 w-full bg-white/5 overflow-hidden">
             <div
               className={cn(
                 'h-full transition-all duration-1000',
-                isRhythmDiscovered ? 'bg-arena-gold' : 'bg-arena-gold/30'
+                isRhythmDiscovered ? 'bg-arena-gold shadow-[0_0_8px_rgba(255,184,0,0.4)]' : 'bg-white/10'
               )}
               style={{ width: `${rhythmProgress}%` }}
             />
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </Surface>
   );
 }

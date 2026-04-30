@@ -1,10 +1,5 @@
-/**
- * Stable Lords — Administration & Telemetry Console
- * Strictly typed utility for save management and simulation bypass.
- */
 import React, { useMemo, useCallback } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -16,10 +11,14 @@ import {
   Activity,
   Zap,
   SlidersHorizontal,
+  Terminal,
 } from 'lucide-react';
 import ArenaSettings from '@/components/settings/ArenaSettings';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { Surface } from '@/components/ui/Surface';
+import { ImperialRing } from '@/components/ui/ImperialRing';
+import { SectionDivider } from '@/components/ui/SectionDivider';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
@@ -132,30 +131,33 @@ export default function AdminTools() {
   }, [setState]);
 
   return (
-    <div className="space-y-8 pb-20 max-w-7xl mx-auto">
+    <PageFrame maxWidth="lg" className="pb-32">
       <PageHeader
-        icon={Settings}
+        icon={Terminal}
+        eyebrow="Console // Root Access"
         title="Administration"
-        subtitle="IMPERIAL CENSOR · ADMIN · SYSTEM OVERRIDE"
+        subtitle="IMPERIAL CENSOR · SYSTEM OVERRIDE · DATA ARCHIVAL"
         actions={
-          <Badge
-            variant={ftueComplete ? 'outline' : 'destructive'}
-            className="font-black uppercase text-[10px] tracking-widest h-6 px-4"
-          >
-            SYSTEM_{ftueComplete ? 'UNLOCKED' : 'LOCKED'}
-          </Badge>
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col items-end px-4 border-r border-white/5">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
+                Authorization
+              </span>
+              <span className={cn(
+                "text-[10px] font-black uppercase tracking-widest",
+                ftueComplete ? "text-primary" : "text-destructive"
+              )}>
+                SYSTEM_{ftueComplete ? 'UNLOCKED' : 'LOCKED'}
+              </span>
+            </div>
+          </div>
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <aside className="lg:col-span-3 space-y-6 sticky top-6">
-          <div className="flex items-center gap-3 px-2">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">
-              CONSOLE LEVEL
-            </span>
-          </div>
-
-          <Surface variant="glass" className="p-2 space-y-1">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <aside className="lg:col-span-3 space-y-8 sticky top-6">
+          <SectionDivider label="Access Level" />
+          <Surface variant="glass" className="p-2 space-y-1 border-white/5">
             {[
               { id: 'SYSTEM', icon: Settings, label: 'Core_System' },
               { id: 'ECONOMY', icon: Zap, label: 'Market_Ops' },
@@ -167,182 +169,213 @@ export default function AdminTools() {
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id as any)}
                 className={cn(
-                  'w-full flex items-center gap-3 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all',
+                  'w-full flex items-center gap-4 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 group',
                   activeCategory === cat.id
                     ? 'bg-primary text-black'
-                    : 'text-muted-foreground hover:bg-white/5'
+                    : 'text-muted-foreground/60 hover:bg-white/5 hover:text-foreground'
                 )}
               >
-                <cat.icon className="h-4 w-4" />
+                <cat.icon className={cn(
+                  "h-4 w-4 transition-colors",
+                  activeCategory === cat.id ? "text-black" : "text-muted-foreground/40 group-hover:text-primary"
+                )} />
                 {cat.label}
               </button>
             ))}
           </Surface>
         </aside>
 
-        <main className="lg:col-span-9 space-y-6">
+        <main className="lg:col-span-9 space-y-12">
           {activeCategory === 'SYSTEM' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Surface variant="glass" className="p-0 border-primary/20 overflow-hidden shadow-2xl">
-                <div className="bg-primary/10 px-5 py-3 border-b border-primary/10 flex items-center gap-2">
-                  <Download className="h-4 w-4 text-primary" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">
-                    SAVE CORE
-                  </span>
-                </div>
-                <div className="p-6 space-y-3">
-                  <Button
-                    onClick={handleExport}
-                    className="w-full h-11 gap-2 font-black uppercase text-[10px] tracking-widest"
-                    variant="outline"
-                  >
-                    Export_Persistent_Save
-                  </Button>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept=".json"
-                      onChange={handleImport}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                    />
+            <div className="space-y-12">
+              <SectionDivider label="Save Operations" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Surface variant="glass" className="border-white/5 overflow-hidden">
+                  <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
+                    <ImperialRing size="xs" variant="silver">
+                      <Download className="h-3 w-3 text-muted-foreground" />
+                    </ImperialRing>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
+                      Save Core
+                    </span>
+                  </div>
+                  <div className="p-8 space-y-4">
                     <Button
-                      className="w-full h-11 gap-2 border-border/40 font-black uppercase text-[10px] tracking-widest"
+                      onClick={handleExport}
+                      className="w-full h-12 gap-3 font-black uppercase text-[10px] tracking-widest rounded-none border-white/10"
                       variant="outline"
                     >
-                      <Upload className="h-4 w-4" /> Import_State_Data
+                      Export Persistent Save
+                    </Button>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept=".json"
+                        onChange={handleImport}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      />
+                      <Button
+                        className="w-full h-12 gap-3 font-black uppercase text-[10px] tracking-widest rounded-none border-white/10"
+                        variant="outline"
+                      >
+                        <Upload className="h-4 w-4" /> Import State Data
+                      </Button>
+                    </div>
+                  </div>
+                </Surface>
+
+                <Surface variant="blood" className="border-primary/20 overflow-hidden">
+                  <div className="bg-primary/5 px-6 py-4 border-b border-primary/10 flex items-center gap-4">
+                    <ImperialRing size="xs" variant="blood">
+                      <Trash2 className="h-3 w-3 text-primary" />
+                    </ImperialRing>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">
+                      Destructive Reset
+                    </span>
+                  </div>
+                  <div className="p-8 space-y-6">
+                    <p className="text-[10px] text-primary/60 font-mono leading-relaxed">
+                      WARNING: This bypasses all safety checks and nukes the local IndexedDB pool. All progress will be lost.
+                    </p>
+                    <Button
+                      onClick={doReset}
+                      variant="destructive"
+                      className="w-full h-12 font-black uppercase text-[10px] tracking-widest rounded-none"
+                    >
+                      Execute System Wipe
                     </Button>
                   </div>
-                  <Button
-                    onClick={doReset}
-                    className="w-full h-11 gap-2 font-black uppercase text-[10px] tracking-widest bg-destructive/10 text-destructive hover:bg-destructive/20 border-none"
-                    variant="outline"
-                  >
-                    <Trash2 className="h-4 w-4" /> Wipe_All_Data
-                  </Button>
-                </div>
-              </Surface>
-
-              <Surface variant="blood" className="p-6 flex flex-col justify-center">
-                <h3 className="text-sm font-black uppercase tracking-widest text-destructive mb-2 flex items-center gap-2">
-                  <Trash2 className="h-4 w-4" /> Hard Reset
-                </h3>
-                <p className="text-[10px] text-destructive/70 mb-6 font-mono">
-                  WARNING: This bypasses all safety checks and nukes the local IndexedDB pool.
-                </p>
-                <Button
-                  onClick={doReset}
-                  variant="destructive"
-                  className="w-full h-10 font-black uppercase text-[10px] tracking-widest"
-                >
-                  EXECUTE WIPE
-                </Button>
-              </Surface>
+                </Surface>
+              </div>
             </div>
           )}
 
           {activeCategory === 'WORLD' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Surface variant="glass" className="p-0 border-accent/20 overflow-hidden">
-                <div className="bg-accent/10 px-5 py-3 border-b border-accent/10 flex items-center gap-2">
-                  <FastForward className="h-4 w-4 text-accent" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-accent">
-                    TEMPORAL DRIFT
-                  </span>
-                </div>
-                <div className="p-6 space-y-3">
-                  <Button
-                    onClick={skipWeek}
-                    className="w-full h-11 font-black uppercase text-[10px] tracking-widest"
-                    variant="secondary"
-                  >
-                    Advance 1 Week
-                  </Button>
-                  <Button
-                    onClick={skipSeason}
-                    className="w-full h-11 font-black uppercase text-[10px] tracking-widest"
-                    variant="secondary"
-                  >
-                    Advance Season (13W)
-                  </Button>
-                  <Button
-                    onClick={skipFTUE}
-                    className="w-full h-11 font-black uppercase text-[10px] tracking-widest"
-                    variant="outline"
-                  >
-                    Bypass FTUE
-                  </Button>
-                </div>
-              </Surface>
+            <div className="space-y-12">
+              <SectionDivider label="Temporal Control" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Surface variant="glass" className="border-white/5 overflow-hidden">
+                  <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
+                    <ImperialRing size="xs" variant="gold">
+                      <FastForward className="h-3 w-3 text-arena-gold" />
+                    </ImperialRing>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
+                      Time Dilation
+                    </span>
+                  </div>
+                  <div className="p-8 space-y-4">
+                    <Button
+                      onClick={skipWeek}
+                      className="w-full h-12 font-black uppercase text-[10px] tracking-widest rounded-none"
+                      variant="secondary"
+                    >
+                      Advance 1 Week
+                    </Button>
+                    <Button
+                      onClick={skipSeason}
+                      className="w-full h-12 font-black uppercase text-[10px] tracking-widest rounded-none"
+                      variant="secondary"
+                    >
+                      Advance Season (13W)
+                    </Button>
+                    <Button
+                      onClick={skipFTUE}
+                      className="w-full h-12 font-black uppercase text-[10px] tracking-widest rounded-none border-white/10"
+                      variant="outline"
+                    >
+                      Bypass FTUE Constraints
+                    </Button>
+                  </div>
+                </Surface>
+              </div>
             </div>
           )}
 
           {activeCategory === 'ECONOMY' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Surface variant="glass" className="p-6">
-                <h3 className="text-sm font-black uppercase tracking-widest text-arena-gold mb-2 flex items-center gap-2">
-                  <Zap className="h-4 w-4 fill-arena-gold" /> Mastery_Toolkit
-                </h3>
-                <Button
-                  onClick={() => {
-                    setState((draft: GameState) => {
-                      draft.roster.forEach((w) => {
-                        if (w.favorites) {
-                          w.favorites.discovered = {
-                            weapon: true,
-                            rhythm: true,
-                            weaponHints: 10,
-                            rhythmHints: 10,
-                          };
-                        }
-                      });
-                    });
-                    toast.success('Omniscient mastery achieved.');
-                  }}
-                  className="w-full h-11 font-black uppercase text-[10px] tracking-widest border-arena-gold/30 text-arena-gold mb-3"
-                  variant="outline"
-                >
-                  Force All Mastery
-                </Button>
-                <Button
-                  onClick={resetRivals}
-                  className="w-full h-11 font-black uppercase text-[10px] tracking-widest border-primary/30 text-primary"
-                  variant="outline"
-                >
-                  Regenerate Rivals
-                </Button>
-              </Surface>
+            <div className="space-y-12">
+              <SectionDivider label="Operational Mastery" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Surface variant="glass" className="border-white/5 overflow-hidden">
+                  <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
+                    <ImperialRing size="xs" variant="gold">
+                      <Zap className="h-3 w-3 text-arena-gold" />
+                    </ImperialRing>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
+                      God Mode Tools
+                    </span>
+                  </div>
+                  <div className="p-8 space-y-4">
+                    <Button
+                      onClick={() => {
+                        setState((draft: GameState) => {
+                          draft.roster.forEach((w) => {
+                            if (w.favorites) {
+                              w.favorites.discovered = {
+                                weapon: true,
+                                rhythm: true,
+                                weaponHints: 10,
+                                rhythmHints: 10,
+                              };
+                            }
+                          });
+                        });
+                        toast.success('Omniscient mastery achieved.');
+                      }}
+                      className="w-full h-12 font-black uppercase text-[10px] tracking-widest rounded-none border-arena-gold/30 text-arena-gold"
+                      variant="outline"
+                    >
+                      Force All Mastery
+                    </Button>
+                    <Button
+                      onClick={resetRivals}
+                      className="w-full h-12 font-black uppercase text-[10px] tracking-widest rounded-none border-primary/30 text-primary"
+                      variant="outline"
+                    >
+                      Regenerate Rival Stables
+                    </Button>
+                  </div>
+                </Surface>
+              </div>
             </div>
           )}
 
           {activeCategory === 'TELEMETRY' && (
-            <Surface variant="glass" className="p-0 overflow-hidden font-mono text-[11px]">
-              <div className="bg-secondary/20 px-5 py-3 border-b border-white/5 flex items-center gap-2 text-muted-foreground/60 uppercase font-black tracking-widest">
-                <Activity className="h-4 w-4" /> Raw_Protocol_Dump
-              </div>
-              <div className="p-6 bg-black/40 overflow-x-auto thin-scrollbar">
-                <pre className="text-primary/60">
-                  {JSON.stringify(
-                    {
-                      temporal: { week, season },
-                      inventory: { treasury, fame },
-                      roster: { size: roster.length },
-                      player: player,
-                    },
-                    null,
-                    4
-                  )}
-                </pre>
-              </div>
-            </Surface>
+            <div className="space-y-12">
+              <SectionDivider label="Data Visualization" />
+              <Surface variant="glass" className="border-white/5 overflow-hidden font-mono text-[11px]">
+                <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4 text-muted-foreground/40 uppercase font-black tracking-widest">
+                  <Activity className="h-4 w-4" /> Protocol Dump // V2.4.0
+                </div>
+                <div className="p-8 bg-black/40 overflow-x-auto thin-scrollbar">
+                  <pre className="text-primary/60">
+                    {JSON.stringify(
+                      {
+                        temporal: { week, season },
+                        inventory: { treasury, fame },
+                        roster: { size: roster.length },
+                        player: player,
+                      },
+                      null,
+                      4
+                    )}
+                  </pre>
+                </div>
+              </Surface>
+            </div>
           )}
 
           {activeCategory === 'PREFERENCES' && (
-            <div className="max-w-xl">
-              <ArenaSettings />
+            <div className="space-y-12">
+              <SectionDivider label="Arena Parameters" />
+              <div className="max-w-2xl">
+                <ArenaSettings />
+              </div>
             </div>
           )}
         </main>
       </div>
-    </div>
+    </PageFrame>
+  );
+}
   );
 }

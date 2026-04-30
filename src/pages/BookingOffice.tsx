@@ -22,11 +22,17 @@ import {
   Award,
   DollarSign,
   Target,
+  Users,
+  Activity,
+  ArrowRight
 } from 'lucide-react';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import type { Warrior, PromoterPersonality, BoutOffer } from '@/types/state.types';
 import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import type { InjuryData } from '@/types/warrior.types';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 /** Get fatigue status for display */
 function getFatigueStatus(fatigue: number): {
@@ -36,19 +42,19 @@ function getFatigueStatus(fatigue: number): {
 } {
   if (fatigue <= 30)
     return {
-      label: 'Fresh',
-      color: 'bg-primary/20 text-primary border-primary/30',
+      label: 'Optimal',
+      color: 'text-primary',
       icon: <Heart className="h-3 w-3" />,
     };
   if (fatigue <= 60)
     return {
-      label: 'Tired',
-      color: 'bg-arena-gold/20 text-arena-gold border-arena-gold/30',
+      label: 'Degraded',
+      color: 'text-arena-gold',
       icon: <Clock className="h-3 w-3" />,
     };
   return {
-    label: 'Exhausted',
-    color: 'bg-destructive/20 text-destructive border-destructive/30',
+    label: 'Critical',
+    color: 'text-destructive',
     icon: <AlertTriangle className="h-3 w-3" />,
   };
 }
@@ -68,16 +74,13 @@ function getInjuryBadge(
     return order.indexOf(i.severity) > order.indexOf(max.severity) ? i : max;
   }, first);
   const colorMap: Record<string, string> = {
-    Moderate: 'bg-arena-gold/20 text-arena-gold border-arena-gold/30',
-    Severe: 'bg-arena-blood/20 text-arena-blood border-arena-blood/30',
-    Critical: 'bg-destructive/20 text-destructive border-destructive/30',
-    Permanent: 'bg-arena-fame/20 text-arena-fame border-arena-fame/30',
+    Moderate: 'text-arena-gold',
+    Severe: 'text-primary',
+    Critical: 'text-destructive',
+    Permanent: 'text-arena-fame',
   };
   const severity = severest.severity ?? 'Moderate';
   const color = colorMap[severity] ?? colorMap['Moderate'];
-  if (!color) {
-    throw new Error('Color not found for severity');
-  }
   return {
     label: severity,
     color,
@@ -125,171 +128,109 @@ function OfferCard({
   const fatigue = playerWarrior?.fatigue ?? 0;
   const fatigueStatus = getFatigueStatus(fatigue);
   const injuryBadge = getInjuryBadge(playerWarrior?.injuries || []);
+  const isSigned = signedOfferIds.has(offer.id);
 
   return (
     <Surface
       variant="glass"
-      padding="none"
-      className="border-border/10 overflow-hidden group hover:border-primary/40 transition-all duration-300 shadow-xl flex flex-col"
+      className={cn(
+        "border-white/5 overflow-hidden group hover:border-primary/20 transition-all duration-500",
+        isSigned && "opacity-60 grayscale-[0.5]"
+      )}
     >
-      <div className="bg-white/[0.03] border-b border-white/5 p-6 pb-5">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1.5 flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-black uppercase tracking-widest text-primary truncate max-w-[150px]">
-                {promoter?.name || 'Local Promoter'}
-              </span>
-              <Badge variant="outline" className="text-[9px] uppercase font-black border-white/10">
-                {promoter?.tier}
-              </Badge>
-              {personalityConfig && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        'text-[9px] uppercase font-black cursor-help',
-                        personalityConfig.color
-                      )}
-                    >
-                      <span className="flex items-center gap-1">
-                        {personalityConfig.icon} {personality}
-                      </span>
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="max-w-xs text-[11px] font-semibold">
-                    {personalityConfig.tooltip}
-                  </TooltipContent>
-                </Tooltip>
-              )}
-            </div>
+      <div className="p-6 border-b border-white/5 flex items-start justify-between bg-white/[0.01]">
+        <div className="flex items-center gap-4">
+          <ImperialRing size="sm" variant="bronze">
+            <Briefcase className="h-4 w-4 text-muted-foreground/40" />
+          </ImperialRing>
+          <div>
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground leading-none mb-1">
+              {promoter?.name || 'External Syndicate'}
+            </h3>
             <div className="flex items-center gap-3">
-              <div className="text-[10px] font-black uppercase opacity-40 tracking-widest truncate">
-                {personalityConfig?.desc}
-              </div>
-              {promoter && (
-                <Link
-                  to="/ops/promoter/$id"
-                  params={{ id: promoter.id }}
-                  className="text-[9px] font-black uppercase tracking-widest text-primary/50 hover:text-primary transition-colors whitespace-nowrap ml-auto"
-                >
-                  View Profile →
-                </Link>
-              )}
-            </div>
-          </div>
-          <div className="text-right pl-4">
-            <div className="text-2xl font-display font-black text-foreground flex items-center gap-1.5 justify-end leading-none">
-              <DollarSign className="h-4 w-4 text-arena-gold" />
-              {offer.purse}G
-            </div>
-            <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-widest mt-1">
-              Contract Purse
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-8 flex-1 space-y-8">
-        <div className="flex flex-wrap gap-2">
-          <Badge
-            variant="outline"
-            className={cn(
-              'text-[9px] font-black uppercase tracking-widest border-white/5',
-              fatigueStatus.color
-            )}
-          >
-            <span className="flex items-center gap-1.5">
-              {fatigueStatus.icon} {fatigue}% Ready
-            </span>
-          </Badge>
-          {injuryBadge && (
-            <Badge
-              variant="outline"
-              className={cn(
-                'text-[9px] font-black uppercase tracking-widest border-white/5',
-                injuryBadge.color
-              )}
-            >
-              <span className="flex items-center gap-1.5">
-                <AlertTriangle className="h-3 w-3" /> {injuryBadge.label} Wound
+              <span className="text-[8px] font-black uppercase text-primary tracking-widest">
+                {promoter?.tier} PROMOTER
               </span>
-            </Badge>
-          )}
-        </div>
-
-        <div className="flex items-center justify-between gap-6 px-4 py-6 bg-black/20 border border-white/5 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-1 h-full bg-primary/40" />
-          <div className="text-center space-y-3 flex-1 min-w-0">
-            <div className="text-[8px] font-black text-primary/40 uppercase tracking-[0.3em] mb-2">
-              DEPLOYED
-            </div>
-            <div className="text-xs font-black uppercase tracking-tight text-foreground truncate">
-              {playerWarrior?.name}
-            </div>
-            <div className="text-[9px] font-black text-muted-foreground/60 uppercase">
-              {STYLE_DISPLAY_NAMES[playerWarrior?.style as FightingStyle]}
-            </div>
-          </div>
-          <div className="flex flex-col items-center gap-1 group-hover:scale-110 transition-transform">
-            <div className="h-px w-8 bg-white/10" />
-            <Zap className="h-4 w-4 text-arena-gold animate-pulse" />
-            <div className="h-px w-8 bg-white/10" />
-          </div>
-          <div className="text-center space-y-3 flex-1 min-w-0">
-            <div className="text-[8px] font-black text-muted-foreground/20 uppercase tracking-[0.3em] mb-2">
-              TARGET
-            </div>
-            <div className="text-xs font-black uppercase tracking-tight text-muted-foreground/80 truncate">
-              {opponent?.name || 'Unknown'}
-            </div>
-            <div className="text-[9px] font-black text-muted-foreground/40 uppercase">
-              {opponent ? STYLE_DISPLAY_NAMES[opponent.style as FightingStyle] : 'CLASSIFIED'}
+              {personalityConfig && (
+                <span className={cn("text-[8px] font-black uppercase tracking-widest", personalityConfig.color)}>
+                   {personality}
+                </span>
+              )}
             </div>
           </div>
         </div>
+        <div className="text-right">
+          <div className="text-xl font-display font-black text-arena-gold leading-none">{offer.purse}G</div>
+          <p className="text-[8px] font-black uppercase text-muted-foreground/20 tracking-tighter mt-1">ALLOCATED PURSE</p>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-2 gap-6 pt-2">
-          <div className="space-y-1">
-            <div className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] flex items-center gap-1.5">
-              <Clock className="h-3 w-3 opacity-40" /> SCHEDULE
+      <div className="p-8 space-y-8">
+        <div className="flex items-center justify-between gap-6">
+          <div className="flex-1 text-center space-y-2">
+            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/40">DEPLOYMENT</span>
+            <div className="text-xs font-display font-black uppercase text-foreground">{playerWarrior?.name}</div>
+            <div className="flex items-center justify-center gap-2">
+              <span className={cn("text-[8px] font-black uppercase tracking-widest", fatigueStatus.color)}>
+                {fatigueStatus.label} [{100 - fatigue}%]
+              </span>
+              {injuryBadge && (
+                <span className={cn("text-[8px] font-black uppercase tracking-widest", injuryBadge.color)}>
+                  / {injuryBadge.label}
+                </span>
+              )}
             </div>
-            <div className="text-sm font-black uppercase">WEEK {offer.boutWeek}</div>
           </div>
-          <div className="space-y-1">
-            <div className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] flex items-center gap-1.5">
-              <Target className="h-3 w-3 opacity-40 text-arena-gold" /> HYPE EST
+
+          <div className="flex flex-col items-center gap-1 opacity-20">
+            <Zap className="h-4 w-4" />
+            <div className="h-8 w-px bg-white/20" />
+          </div>
+
+          <div className="flex-1 text-center space-y-2">
+            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/20">TARGET</span>
+            <div className="text-xs font-display font-black uppercase text-muted-foreground/80">{opponent?.name || 'CLASSIFIED'}</div>
+            <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-widest">
+              {opponent?.stableName || 'UNKNOWN STABLE'}
             </div>
-            <div className="text-sm font-black text-arena-gold">{offer.hype}% Hype</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-8 py-6 border-y border-white/5">
+          <div className="space-y-1">
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Temporal Window</span>
+            <div className="text-[11px] font-display font-black uppercase">Operation Week {offer.boutWeek}</div>
+          </div>
+          <div className="space-y-1 text-right">
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Projection Index</span>
+            <div className="text-[11px] font-display font-black uppercase text-arena-gold">{offer.hype}% Expected Hype</div>
           </div>
         </div>
       </div>
 
-      <div className="p-6 bg-black/40 border-t border-white/5 flex gap-3">
-        {signedOfferIds.has(offer.id) ? (
-          <Button
-            className="flex-1 h-12 bg-primary/20 text-primary border border-primary/40 gap-2 font-black uppercase text-[10px] tracking-[0.2em] transition-all cursor-default"
-            disabled
-          >
-            <CheckCircle2 className="h-4 w-4" /> Signed
-          </Button>
+      <div className="p-4 bg-white/[0.02] flex gap-2">
+        {isSigned ? (
+          <div className="flex-1 h-12 flex items-center justify-center gap-3 border border-primary/20 bg-primary/5 text-primary font-black uppercase text-[10px] tracking-[0.2em]">
+            <CheckCircle2 className="h-4 w-4" /> Execution Confirmed
+          </div>
         ) : (
-          <Button
-            className="flex-1 h-12 bg-primary text-black hover:bg-primary/90 gap-2 font-black uppercase text-[10px] tracking-[0.2em] transition-all"
-            onClick={() => onResponse(offer.id, playerWarriorId, 'Accepted')}
-            disabled={!!injuryBadge || fatigue > 60}
-          >
-            Sign Contract
-          </Button>
+          <>
+            <Button
+              className="flex-1 h-12 bg-primary text-primary-foreground rounded-none gap-3 font-black uppercase text-[10px] tracking-[0.2em] hover:bg-primary/90 transition-all"
+              onClick={() => onResponse(offer.id, playerWarriorId, 'Accepted')}
+              disabled={!!injuryBadge || fatigue > 60}
+            >
+              Sign Protocol
+            </Button>
+            <Button
+              variant="outline"
+              className="w-12 h-12 rounded-none border-white/5 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 p-0 transition-all"
+              onClick={() => onResponse(offer.id, playerWarriorId, 'Declined')}
+            >
+              <Ban className="h-4 w-4" />
+            </Button>
+          </>
         )}
-        <Button
-          variant="ghost"
-          className="w-12 h-12 p-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive flex items-center justify-center transition-colors"
-          onClick={() => onResponse(offer.id, playerWarriorId, 'Declined')}
-          title="Decline Offer"
-        >
-          <Ban className="h-5 w-5" />
-        </Button>
       </div>
     </Surface>
   );
@@ -304,14 +245,12 @@ export default function BookingOffice() {
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [trackedWeek, setTrackedWeek] = useState(week);
 
-  // Reset local UI state when the week advances
   if (week !== trackedWeek) {
     setTrackedWeek(week);
     setSignedOfferIds(new Set());
     setSelectedWarriorId(null);
   }
 
-  // Group offers by week
   const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(() => {
     const playerOffers = Object.values(boutOffers).filter(
       (offer: BoutOffer) =>
@@ -325,7 +264,6 @@ export default function BookingOffice() {
       ? playerOffers.filter((o) => o.warriorIds.includes(selectedWarriorId as any))
       : playerOffers;
 
-    // Keep only the best offer per promoter (highest purse × hype score)
     const bestByPromoter = (offers: BoutOffer[]): BoutOffer[] => {
       const map = new Map<string, BoutOffer>();
       offers.forEach((o) => {
@@ -341,10 +279,8 @@ export default function BookingOffice() {
     const thisWeek = bestByPromoter(filtered.filter((o) => o.boutWeek === week + 2));
     const upcoming = bestByPromoter(filtered.filter((o) => o.boutWeek > week + 2));
 
-    // Find warriors with no offers
     const warriorsWithOffers = new Set(playerOffers.flatMap((o) => o.warriorIds));
     const idle = roster.filter((w) => w.status === 'Active' && !warriorsWithOffers.has(w.id));
-
     const maxPurse = playerOffers.length > 0 ? Math.max(...playerOffers.map((o) => o.purse)) : 0;
 
     return {
@@ -372,10 +308,9 @@ export default function BookingOffice() {
         s.boutOffers = next.boutOffers;
       }
     });
-    toast.success(`Offer ${response === 'Accepted' ? 'accepted' : 'declined'}.`);
+    toast.success(`Protocol ${response === 'Accepted' ? 'Initialized' : 'Terminated'}.`);
   };
 
-  // Bulk actions
   const acceptAllHonorable = () => {
     const honorableOffers = thisWeekOffers.filter(
       (o) => promoters[o.promoterId]?.personality === 'Honorable'
@@ -394,231 +329,180 @@ export default function BookingOffice() {
         accepted++;
       }
     });
-    toast.success(`Accepted ${accepted} offers from honorable promoters.`);
+    toast.success(`Batch execution complete: ${accepted} protocols signed.`);
   };
-
-  const _declineAllFromPromoter = (promoterId: string) => {
-    const promoterOffers = thisWeekOffers.filter((o) => o.promoterId === promoterId);
-    let declined = 0;
-    promoterOffers.forEach((offer) => {
-      const warriorId = offer.warriorIds.find((id) => roster.some((w) => w.id === id));
-      if (warriorId) {
-        handleResponse(offer.id, warriorId, 'Declined');
-        declined++;
-      }
-    });
-    toast.success(`Declined ${declined} offers.`);
-  };
-
-  const renderOfferCard = (offer: BoutOffer) => (
-    <OfferCard
-      key={offer.id}
-      offer={offer}
-      promoters={promoters}
-      roster={roster}
-      rivals={rivals}
-      signedOfferIds={signedOfferIds}
-      onResponse={handleResponse}
-    />
-  );
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <div className="space-y-8 pb-20 max-w-7xl mx-auto">
-        <PageHeader
-          icon={Briefcase}
-          title="Booking Office"
-          subtitle={`OPS · CONTRACTS · WEEK ${week}`}
-        />
+    <PageFrame size="xl">
+      <PageHeader
+        title="Booking Intelligence"
+        subtitle={`OPS · CONTRACT_MANAGEMENT · WK ${week}`}
+        actions={
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col items-end">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Market Saturation</span>
+              <span className="text-sm font-display font-black text-primary">{thisWeekOffers.length + upcomingOffers.length} Live Proposals</span>
+            </div>
+            <div className="flex flex-col items-end border-l border-white/5 pl-6">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Peak Valuation</span>
+              <span className="text-sm font-display font-black text-arena-gold">{highestPurse.toLocaleString()}G CAP</span>
+            </div>
+          </div>
+        }
+      />
 
-        {/* Band 2 — Booking Intelligence Strip (Spec §6.4) */}
-        <Surface
-          variant="glass"
-          className="flex items-center gap-12 p-5 border-l-4 border-l-primary/50"
-        >
-          <div className="flex items-center gap-3">
+      <Surface variant="glass" className="flex items-center gap-12 p-8 border-white/5 mb-12">
+        <div className="flex items-center gap-4">
+          <ImperialRing size="sm" variant="blood">
             <Target className="h-4 w-4 text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-              Market Overview
+          </ImperialRing>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">Operational Overview</span>
+        </div>
+
+        <div className="flex items-center gap-10">
+          <div className="flex flex-col">
+            <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-widest mb-1">Idle Assets</span>
+            <span className={cn("font-display font-black text-lg leading-none", idleWarriors.length > 0 ? "text-primary" : "text-muted-foreground/40")}>
+              {idleWarriors.length}
             </span>
           </div>
-
-          <div className="flex items-center gap-10">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest mb-1">
-                Open Proposals
-              </span>
-              <span className="font-display font-black text-xl text-primary leading-none mt-1">
-                {thisWeekOffers.length + upcomingOffers.length}
-              </span>
-            </div>
-
-            <div className="h-8 w-px bg-white/5" />
-
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest mb-1">
-                Highest Purse
-              </span>
-              <span className="font-display font-black text-xl text-arena-gold leading-none mt-1">
-                {(highestPurse || 0).toLocaleString()}G
-              </span>
-            </div>
-
-            <div className="h-8 w-px bg-white/5" />
-
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest mb-1">
-                Idle Warriors
-              </span>
-              <span
-                className={cn(
-                  'font-display font-black text-xl leading-none mt-1',
-                  idleWarriors.length > 0 ? 'text-destructive' : 'text-muted-foreground'
-                )}
-              >
-                {idleWarriors.length}
-              </span>
-            </div>
+          <div className="h-8 w-px bg-white/5" />
+          <div className="flex flex-col">
+            <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-widest mb-1">Personnel Deployed</span>
+            <span className="font-display font-black text-lg leading-none">
+              {roster.length - idleWarriors.length} / {roster.length}
+            </span>
           </div>
+        </div>
 
-          <div className="ml-auto flex gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-9 px-4 text-[10px] font-black uppercase tracking-widest"
-              onClick={acceptAllHonorable}
-            >
-              <Award className="h-3.5 w-3.5 mr-2 text-primary" /> Accept All (Safe)
-            </Button>
+        <div className="ml-auto">
+          <Button
+            variant="outline"
+            className="h-10 px-6 rounded-none border-white/10 hover:bg-white/5 font-black uppercase text-[10px] tracking-widest flex items-center gap-3"
+            onClick={acceptAllHonorable}
+          >
+            <Award className="h-3.5 w-3.5 text-primary" /> Execute All Safe Protocols
+          </Button>
+        </div>
+      </Surface>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+        {/* Left Rail Asset Registry */}
+        <aside className="space-y-8">
+          <SectionDivider label="Asset Registry" />
+          <div className="grid grid-cols-1 gap-3">
+            {roster.map((warrior) => {
+              const hasAccepted = Object.values(boutOffers).some(
+                (o) => o.warriorIds.includes(warrior.id) && o.status === 'Signed'
+              );
+              const isSelected = selectedWarriorId === warrior.id;
+              const fatigueConfig = getFatigueStatus(warrior.fatigue ?? 0);
+
+              return (
+                <button
+                  key={warrior.id}
+                  onClick={() => setSelectedWarriorId(isSelected ? null : warrior.id)}
+                  className={cn(
+                    "flex flex-col gap-1 p-4 border transition-all text-left group relative overflow-hidden",
+                    isSelected 
+                      ? "bg-white/[0.05] border-white/20" 
+                      : "bg-transparent border-white/5 opacity-40 grayscale hover:opacity-100 hover:grayscale-0",
+                    hasAccepted && "border-l-4 border-l-primary"
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className={cn("text-[10px] font-black uppercase tracking-widest", isSelected ? "text-foreground" : "text-muted-foreground")}>
+                      {warrior.name}
+                    </span>
+                    {hasAccepted && <CheckCircle2 className="h-3 w-3 text-primary" />}
+                  </div>
+                  <span className={cn("text-[8px] font-black uppercase tracking-tighter", fatigueConfig.color)}>
+                    {fatigueConfig.label} Readiness
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        </Surface>
+        </aside>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Archetype D: Left Rail Roster (span-4) */}
-          <div className="lg:col-span-4 space-y-4 sticky top-6">
-            <div className="flex items-center gap-3 px-2">
-              <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-                Roster Readiness
-              </h3>
-            </div>
-            <Surface
-              variant="glass"
-              className="p-0 border-white/5 max-h-[700px] overflow-y-auto thin-scrollbar"
-            >
-              {roster.map((warrior) => {
-                const hasAccepted = Object.values(boutOffers).some(
-                  (o) => o.warriorIds.includes(warrior.id) && o.status === 'Signed'
-                );
-                const hasProposed = Object.values(boutOffers).some(
-                  (o) => o.warriorIds.includes(warrior.id) && o.status === 'Proposed'
-                );
-                const fatigueConfig = getFatigueStatus(warrior.fatigue ?? 0);
-                const isSelected = selectedWarriorId === warrior.id;
-
-                return (
-                  <button
-                    key={warrior.id}
-                    onClick={() => setSelectedWarriorId(isSelected ? null : warrior.id)}
-                    className={cn(
-                      'w-full p-4 border-b border-white/5 last:border-0 flex items-center gap-3 transition-colors text-left',
-                      isSelected
-                        ? 'bg-primary/10 border-l-2 border-l-primary'
-                        : 'hover:bg-white/[0.03] border-l-2 border-l-transparent',
-                      hasAccepted ? 'bg-primary/[0.03]' : ''
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        'h-1.5 w-1.5 rounded-full shrink-0',
-                        hasAccepted ? 'bg-primary' : hasProposed ? 'bg-arena-gold' : 'bg-white/10'
-                      )}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-black uppercase truncate">{warrior.name}</p>
-                      <p className="text-[9px] text-muted-foreground uppercase">
-                        {fatigueConfig.label} • {warrior.fatigue ?? 0}% FATIGUE
-                      </p>
-                    </div>
-                    {hasAccepted && (
-                      <Badge className="bg-primary/20 text-primary border-primary/30 text-[8px] font-black px-1 h-4">
-                        BOOKED
-                      </Badge>
-                    )}
-                  </button>
-                );
-              })}
-            </Surface>
-          </div>
-
-          {/* Right Rail Viewport (span-8) */}
-          <div className="lg:col-span-8 space-y-6">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="w-full justify-start h-auto bg-transparent border-b border-white/10 rounded-none p-0 mb-6 flex gap-6">
+        {/* Right Rail Viewport */}
+        <div className="lg:col-span-3 space-y-8">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <div className="flex items-center h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none mb-12">
+              <TabsList className="flex w-full h-full bg-transparent p-0 gap-1 rounded-none">
                 <TabsTrigger
                   value="this-week"
-                  className="bg-transparent border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none px-1 pb-2 text-[10px] uppercase font-black tracking-widest text-muted-foreground data-[state=active]:text-primary"
+                  className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
                 >
-                  Immediate Proposals ({thisWeekOffers.length})
+                  Immediate Proposals [{thisWeekOffers.length}]
                 </TabsTrigger>
                 <TabsTrigger
                   value="upcoming"
-                  className="bg-transparent border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none px-1 pb-2 text-[10px] uppercase font-black tracking-widest text-muted-foreground data-[state=active]:text-primary"
+                  className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
                 >
-                  Future Slates ({upcomingOffers.length})
+                  Future Slates [{upcomingOffers.length}]
                 </TabsTrigger>
               </TabsList>
+            </div>
 
-              {selectedWarriorId && (
-                <div className="flex items-center gap-2 mb-4 px-1">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50">
-                    Showing offers for
-                  </span>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">
-                    {roster.find((w) => w.id === selectedWarriorId)?.name}
-                  </span>
-                  <button
-                    onClick={() => setSelectedWarriorId(null)}
-                    className="ml-auto text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-foreground transition-colors"
-                  >
-                    Show All ×
-                  </button>
+            <TabsContent value="this-week" className="mt-0 space-y-8">
+              {thisWeekOffers.length === 0 ? (
+                <Surface variant="glass" className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6">
+                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
+                    <Briefcase className="h-8 w-8" />
+                  </ImperialRing>
+                  <div className="space-y-2">
+                    <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">Zero Proposals Found</p>
+                    <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">No immediate contract offers detected for the current window.</p>
+                  </div>
+                </Surface>
+              ) : (
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                  {thisWeekOffers.map((o) => (
+                    <OfferCard
+                      key={o.id}
+                      offer={o}
+                      promoters={promoters}
+                      roster={roster}
+                      rivals={rivals}
+                      signedOfferIds={signedOfferIds}
+                      onResponse={handleResponse}
+                    />
+                  ))}
                 </div>
               )}
+            </TabsContent>
 
-              <TabsContent value="this-week" className="mt-0 space-y-6">
-                {thisWeekOffers.length === 0 ? (
-                  <Surface variant="glass" className="py-24 text-center">
-                    <ShieldAlert className="h-16 w-16 opacity-10 mx-auto mb-4" />
-                    <p className="font-display font-black uppercase tracking-widest text-sm text-muted-foreground/30">
-                      {selectedWarriorId
-                        ? `No proposals for ${roster.find((w) => w.id === selectedWarriorId)?.name ?? 'this warrior'} this week`
-                        : `No proposals detected for week ${week + 2}`}
-                    </p>
-                  </Surface>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {thisWeekOffers.map(renderOfferCard)}
+            <TabsContent value="upcoming" className="mt-0 space-y-8">
+              {upcomingOffers.length === 0 ? (
+                <Surface variant="glass" className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6">
+                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
+                    <Briefcase className="h-8 w-8" />
+                  </ImperialRing>
+                  <div className="space-y-2">
+                    <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">Upcoming Slates Empty</p>
+                    <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">No future engagement projections currently available.</p>
                   </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="upcoming" className="mt-0 space-y-6">
-                {upcomingOffers.length === 0 && selectedWarriorId ? (
-                  <Surface variant="glass" className="py-24 text-center">
-                    <ShieldAlert className="h-16 w-16 opacity-10 mx-auto mb-4" />
-                    <p className="font-display font-black uppercase tracking-widest text-sm text-muted-foreground/30">
-                      No upcoming proposals for{' '}
-                      {roster.find((w) => w.id === selectedWarriorId)?.name ?? 'this warrior'}
-                    </p>
-                  </Surface>
-                ) : (
-                  upcomingOffers.map(renderOfferCard)
-                )}
-              </TabsContent>
-            </Tabs>
-          </div>
+                </Surface>
+              ) : (
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                  {upcomingOffers.map((o) => (
+                    <OfferCard
+                      key={o.id}
+                      offer={o}
+                      promoters={promoters}
+                      roster={roster}
+                      rivals={rivals}
+                      signedOfferIds={signedOfferIds}
+                      onResponse={handleResponse}
+                    />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
-    </TooltipProvider>
+    </PageFrame>
   );
 }

@@ -1,4 +1,4 @@
-import { Trophy, Flame, Users, Eye } from 'lucide-react';
+import { Trophy, Flame, Users, Eye, Target, Shield, Heart, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { TagBadge } from '@/components/ui/WarriorBadges';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
@@ -6,6 +6,8 @@ import { EditableText } from '@/components/ui/EditableText';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import type { InsightToken } from '@/types/state.types';
+import { Surface } from '@/components/ui/Surface';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 interface ObfuscatedWarrior {
   name: string;
@@ -39,62 +41,64 @@ export function WarriorHeroHeader({
   insightTokens,
 }: WarriorHeroHeaderProps) {
   const store = useGameStore();
-
-  // Get insight tokens for this warrior
   const warriorInsightTokens = insightTokens?.filter((token) => token.warriorId === id) || [];
 
   return (
-    <div
-      className="relative rounded-none border border-[rgba(60,42,22,0.8)] bg-[#120D09] p-4 sm:p-8 overflow-hidden shadow-xl"
-      style={{
-        borderTopColor: 'rgba(80,55,30,0.45)',
-        borderLeftColor: 'rgba(70,48,26,0.4)',
-        backgroundImage:
-          'linear-gradient(135deg,rgba(255,245,220,0.018) 0%,transparent 60%,rgba(200,120,20,0.02) 100%)',
-      }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/8 to-accent/4 pointer-events-none" />
-      <div className="absolute inset-0 glow-blood pointer-events-none opacity-40" />
-      <div className="relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
-            {isPlayerOwned && id ? (
-              <EditableText
-                value={warrior.name}
-                onSave={(newName) => store.renameWarrior(id, newName)}
-                className="text-2xl sm:text-3xl font-display font-bold tracking-wide break-all"
-                label="Rename Warrior"
-              />
-            ) : (
-              <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-wide break-all">
-                {warrior.name}
-              </h1>
-            )}
-            {warrior.champion && (
-              <Badge className="bg-arena-gold text-black gap-1">
-                <Trophy className="h-3 w-3" /> Champion
-              </Badge>
-            )}
+    <Surface variant="glass" className="relative p-8 border-white/5 overflow-hidden">
+      <div className="absolute top-0 left-0 w-1 h-full bg-primary/40" />
+      
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60">
+              {isPlayerOwned ? "Registry Asset // Internal" : "External Dossier // Intelligence"}
+            </span>
+            <div className="flex items-center gap-4">
+               {isPlayerOwned && id ? (
+                <EditableText
+                  value={warrior.name}
+                  onSave={(newName) => store.renameWarrior(id, newName)}
+                  className="text-4xl font-display font-black uppercase tracking-tight"
+                  label="Rename Asset"
+                />
+              ) : (
+                <h1 className="text-4xl font-display font-black uppercase tracking-tight">
+                  {warrior.name}
+                </h1>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Shield className="h-3.5 w-3.5 text-muted-foreground/40" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                {warrior.style === 'UNKNOWN'
+                  ? 'Classified Discipline'
+                  : STYLE_DISPLAY_NAMES[warrior.style as FightingStyle]}
+              </span>
+            </div>
+            <div className="h-4 w-px bg-white/10" />
+            <div className="flex items-center gap-2">
+              <Target className="h-3.5 w-3.5 text-muted-foreground/40" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                {record}
+              </span>
+            </div>
             {warriorInsightTokens.length > 0 && (
-              <Badge variant="outline" className="gap-1 border-primary/50 bg-primary/10">
-                <Eye className="h-3 w-3" /> {warriorInsightTokens.length} Insights
-              </Badge>
+              <>
+                <div className="h-4 w-px bg-white/10" />
+                <div className="flex items-center gap-2 text-primary">
+                  <Eye className="h-3.5 w-3.5" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">
+                    {warriorInsightTokens.length} Insights Detected
+                  </span>
+                </div>
+              </>
             )}
           </div>
-          <p className="text-lg text-muted-foreground font-display">
-            {warrior.style === 'UNKNOWN'
-              ? 'Unknown Style'
-              : STYLE_DISPLAY_NAMES[warrior.style as FightingStyle]}
-          </p>
-          <div className="flex items-center gap-2 mt-1">
-            <p className="font-mono text-sm text-muted-foreground">{record}</p>
-            {streakLabel && (
-              <Badge variant={streakVal > 0 ? 'default' : 'destructive'} className="text-xs gap-1">
-                {streakLabel}
-              </Badge>
-            )}
-          </div>
-          <div className="flex gap-2 mt-3 flex-wrap">
+
+          <div className="flex flex-wrap gap-2 pt-2">
             {warrior.flair.map((f) => (
               <TagBadge key={f} tag={f} type="flair" />
             ))}
@@ -107,19 +111,22 @@ export function WarriorHeroHeader({
             })}
           </div>
         </div>
-        <div className="flex gap-4">
-          <div className="text-center">
-            <Flame className="h-6 w-6 text-arena-fame mx-auto mb-1" />
-            <div className="text-2xl font-bold">{warrior.fame}</div>
-            <div className="text-xs text-muted-foreground">Fame</div>
+
+        <div className="flex items-center gap-8">
+           <div className="flex flex-col items-center gap-2">
+            <ImperialRing size="md" variant="blood">
+               <Zap className="h-5 w-5 text-primary" />
+            </ImperialRing>
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Status</span>
           </div>
-          <div className="text-center">
-            <Users className="h-6 w-6 text-arena-pop mx-auto mb-1" />
-            <div className="text-2xl font-bold">{warrior.popularity}</div>
-            <div className="text-xs text-muted-foreground">Pop</div>
+          <div className="flex flex-col items-center gap-2">
+            <ImperialRing size="md" variant="bronze">
+               <Heart className="h-5 w-5 text-muted-foreground/60" />
+            </ImperialRing>
+            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Vitals</span>
           </div>
         </div>
       </div>
-    </div>
+    </Surface>
   );
 }

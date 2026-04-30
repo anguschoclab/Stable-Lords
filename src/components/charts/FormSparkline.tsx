@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

@@ -12,7 +12,7 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { RivalStableData, AIIntent, AIEvent } from '@/types/state.types';
+import type { RivalStableData, AIIntent } from '@/types/state.types';
 
 interface AgentReasoningWidgetProps {
   rival: RivalStableData;

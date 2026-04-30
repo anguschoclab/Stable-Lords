@@ -1,21 +1,10 @@
 import { useMemo } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useWorldState } from '@/state/useGameStore';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-  Trophy,
-  Star,
-  Flame,
-  Activity,
-  History,
-  Swords,
-  Heart,
-  Zap,
-  Skull,
-  Users,
-} from 'lucide-react';
-import { StatBadge, WarriorNameTag } from '@/components/ui/WarriorBadges';
+import { Users } from 'lucide-react';
+import { StatBadge } from '@/components/ui/WarriorBadges';
 import { StableCrest } from '@/components/crest/StableCrest';
 
 interface StableDossierProps {

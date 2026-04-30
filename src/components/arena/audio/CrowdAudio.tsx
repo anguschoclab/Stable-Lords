@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { audioManager } from '@/lib/AudioManager';
 import type { CrowdState } from '../crowd/CrowdReactions';
 
 interface CrowdAudioProps {
   state: CrowdState;
   volume: number;
   enabled: boolean;
-  isBloodMoon?: boolean;
 }
 
 // Crowd audio trigger mapping
@@ -24,7 +22,6 @@ export default function CrowdAudio({
   state,
   volume,
   enabled,
-  isBloodMoon = false,
 }: CrowdAudioProps) {
   const lastStateRef = useRef<CrowdState>('idle');
   const [isInitialized, setIsInitialized] = useState(false);

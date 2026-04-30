@@ -35,10 +35,8 @@ export function TreasurySparkline({
     }
 
     const byWeek = new Map<number, number>();
-    let running = 0;
     for (const entry of ledger) {
       const w = entry.week ?? 0;
-      running += entry.amount ?? 0;
       byWeek.set(w, (byWeek.get(w) ?? 0) + (entry.amount ?? 0));
     }
 

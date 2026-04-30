@@ -132,7 +132,7 @@ export function WarriorFightHistory({
                   />
                 </div>
               )}
-            </div>
+            </Surface>
           );
         })}
     </div>

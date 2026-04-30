@@ -1,7 +1,6 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Settings,
   Download,
@@ -24,10 +23,8 @@ import { toast } from 'sonner';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import type { GameState, RivalStableData } from '@/types/state.types';
-import { ArenaHistory } from '@/engine/history/arenaHistory';
 
 export default function AdminTools() {
-  const allFights = useMemo(() => ArenaHistory.all(), []);
   const {
     setState,
     doReset,
@@ -37,8 +34,6 @@ export default function AdminTools() {
     season,
     roster,
     player,
-    rivals,
-    tournaments,
     ftueComplete,
   } = useGameStore();
 
@@ -192,7 +187,7 @@ export default function AdminTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <Surface variant="glass" className="border-white/5 overflow-hidden">
                   <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
-                    <ImperialRing size="xs" variant="silver">
+                    <ImperialRing size="sm" variant="bronze">
                       <Download className="h-3 w-3 text-muted-foreground" />
                     </ImperialRing>
                     <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
@@ -226,7 +221,7 @@ export default function AdminTools() {
 
                 <Surface variant="blood" className="border-primary/20 overflow-hidden">
                   <div className="bg-primary/5 px-6 py-4 border-b border-primary/10 flex items-center gap-4">
-                    <ImperialRing size="xs" variant="blood">
+                    <ImperialRing size="sm" variant="blood">
                       <Trash2 className="h-3 w-3 text-primary" />
                     </ImperialRing>
                     <span className="text-[10px] font-black uppercase tracking-widest text-primary">
@@ -256,7 +251,7 @@ export default function AdminTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <Surface variant="glass" className="border-white/5 overflow-hidden">
                   <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
-                    <ImperialRing size="xs" variant="gold">
+                    <ImperialRing size="sm" variant="gold">
                       <FastForward className="h-3 w-3 text-arena-gold" />
                     </ImperialRing>
                     <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
@@ -297,7 +292,7 @@ export default function AdminTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <Surface variant="glass" className="border-white/5 overflow-hidden">
                   <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
-                    <ImperialRing size="xs" variant="gold">
+                    <ImperialRing size="sm" variant="gold">
                       <Zap className="h-3 w-3 text-arena-gold" />
                     </ImperialRing>
                     <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
@@ -375,7 +370,5 @@ export default function AdminTools() {
         </main>
       </div>
     </PageFrame>
-  );
-}
   );
 }

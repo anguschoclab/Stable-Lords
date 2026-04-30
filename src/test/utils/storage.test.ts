@@ -51,7 +51,7 @@ describe('handleLocalStorageQuotaError', () => {
   it('trims array data when quota is exceeded on the first attempt, then succeeds', () => {
     // Mock the first call to throw a quota error, and the second to succeed
     let calls = 0;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (localStorage.setItem as any).mockImplementation((_key: string, _value: string) => {
       calls++;
       if (calls === 1) {

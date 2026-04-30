@@ -271,7 +271,7 @@ function RecruitCard({
 
 export default function Recruit() {
   const store = useGameStore();
-  const { roster, treasury, rosterBonus, recruitPool, setState } = store;
+  const { roster, treasury, rosterBonus, recruitPool, setState, week } = store;
 
   const navigate = useNavigate();
   const MAX_ROSTER = BASE_ROSTER_CAP + (rosterBonus ?? 0);
@@ -304,7 +304,6 @@ export default function Recruit() {
           return;
         }
 
-        // 1.0 Deterministic ID: Recruitment uses hash-based seed for bit-identity
         const recruitRng = new SeededRNGService(draft.week + hashStr(w.name));
         const warrior = makeWarrior(
           recruitRng.uuid('warrior') as any,
@@ -314,7 +313,6 @@ export default function Recruit() {
           { age: w.age, potential: w.potential }
         );
 
-        // Signing bonus perk — +2 XP and an "Eager" flair tag.
         if (bonus) {
           (warrior as any).xp = ((warrior as any).xp ?? 0) + 2;
           const tags = (warrior as any).tags ?? (warrior as any).flair ?? [];
@@ -361,8 +359,6 @@ export default function Recruit() {
           return;
         }
         setScoutedIds((s) => new Set(s).add(w.id));
-        // Deterministic partial reveal — same (recruit, week) always yields the
-        // same subset, so save/load doesn't shuffle the intel.
         const report = revealRecruitPotential(w.id, draft.week, w.potential);
         setScoutReports((prev) => ({ ...prev, [w.id]: report }));
         draft.treasury -= 25;
@@ -386,8 +382,6 @@ export default function Recruit() {
         return;
       }
 
-      // ⚡ Bolt: Moving name collection inside the callback to avoid per-render overhead.
-      // We use a single-pass loop approach to avoid intermediate array allocations (O(N) vs O(N*M)).
       const usedNames = new Set<string>();
       draft.roster.forEach((w: any) => usedNames.add(w.name));
       draft.graveyard.forEach((w: any) => usedNames.add(w.name));
@@ -442,31 +436,19 @@ export default function Recruit() {
 
   const filteredPool = useMemo(() => {
     let pool = [...(recruitPool ?? [])];
-
-    // Filter by Tier
     pool = pool.filter((w: PoolWarrior) => activeTiers.has(w.tier));
-
-    // Filter by Style
     if (activeStyle !== 'all') {
       pool = pool.filter((w: PoolWarrior) => w.style === activeStyle);
     }
-
-    // Sort
     pool.sort((a: PoolWarrior, b: PoolWarrior) => {
       switch (sortBy) {
-        case 'cost-asc':
-          return a.cost - b.cost;
-        case 'cost-desc':
-          return b.cost - a.cost;
-        case 'potential-desc':
-          return potentialRating(b.potential) - potentialRating(a.potential);
-        case 'age-asc':
-          return a.age - b.age;
-        default:
-          return 0;
+        case 'cost-asc': return a.cost - b.cost;
+        case 'cost-desc': return b.cost - a.cost;
+        case 'potential-desc': return potentialRating(b.potential) - potentialRating(a.potential);
+        case 'age-asc': return a.age - b.age;
+        default: return 0;
       }
     });
-
     return pool;
   }, [recruitPool, activeTiers, activeStyle, sortBy]);
 
@@ -478,155 +460,157 @@ export default function Recruit() {
   };
 
   return (
-    <div className="space-y-4">
+    <PageFrame size="xl">
       <PageHeader
-        icon={UserPlus}
-        title="Recruit Warriors"
-        subtitle="STABLE · RECRUITMENT · CONTRACT MARKET"
+        title="Personnel Acquisition"
+        subtitle="STABLE · CONTRACT_MARKET · Wk {week}"
         actions={
-          <div className="flex items-center gap-3">
-            <Badge variant="outline" className="gap-1.5 font-mono">
-              <Users className="h-3 w-3" />
-              {roster.length}/{MAX_ROSTER}
-            </Badge>
-            <Badge variant="outline" className="gap-1.5 font-mono">
-              <Coins className="h-3 w-3 text-arena-gold" />
-              {treasury}g
-            </Badge>
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col items-end">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Roster Capacity</span>
+              <span className="text-sm font-display font-black text-foreground">{roster.length} / {MAX_ROSTER}</span>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Available Credits</span>
+              <span className="text-sm font-display font-black text-arena-gold">{treasury}G</span>
+            </div>
           </div>
         }
       />
 
       {rosterFull && (
-        <div className="rounded-none border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
-          Roster full! Retire or release a warrior before recruiting.
-        </div>
+        <Surface variant="glass" className="border-destructive/30 bg-destructive/5 p-6 mb-8 flex items-center gap-6">
+          <ImperialRing size="sm" variant="blood">
+            <Shield className="h-4 w-4 text-destructive" />
+          </ImperialRing>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-destructive">Roster Capacity Exhausted</p>
+            <p className="text-[9px] text-muted-foreground/60 uppercase tracking-widest italic">Protocol: Decommission active assets before acquiring new recruits.</p>
+          </div>
+        </Surface>
       )}
 
-      <Tabs defaultValue="scout" className="w-full">
-        <TabsList className="w-full grid grid-cols-2">
-          <TabsTrigger value="scout" className="gap-1.5">
-            <Search className="h-3.5 w-3.5" />
-            Scout Pool
+      <Tabs defaultValue="scout" className="w-full space-y-12">
+        <TabsList className="w-full h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none">
+          <TabsTrigger 
+            value="scout" 
+            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+          >
+            Personnel Registry
           </TabsTrigger>
-          <TabsTrigger value="custom" className="gap-1.5">
-            <Hammer className="h-3.5 w-3.5" />
-            Custom Build
+          <TabsTrigger 
+            value="custom" 
+            className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
+          >
+            Custom Specification
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="scout" className="mt-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Archetype B: Left Filter Sidebar (span-3) */}
-            <aside className="lg:col-span-3 space-y-6 sticky top-6">
-              <div className="flex items-center gap-3 px-1">
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
-                  FILTER ENGINE
-                </span>
-              </div>
-
-              <Surface variant="glass" className="space-y-6">
+        <TabsContent value="scout" className="mt-0 focus-visible:outline-none">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+            {/* Left Sidebar */}
+            <aside className="space-y-8">
+              <SectionDivider label="Filter Engine" />
+              
+              <div className="space-y-8">
                 {/* Tiers */}
                 <div className="space-y-4">
-                  <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                    Market Tiers
-                  </label>
-                  <div className="space-y-3">
-                    {(['Common', 'Promising', 'Exceptional', 'Prodigy'] as RecruitTier[]).map(
-                      (tier) => {
-                        const isActive = activeTiers.has(tier);
-                        return (
-                          <button
-                            key={tier}
-                            onClick={() => toggleTier(tier)}
-                            className={cn(
-                              'w-full flex items-center justify-between p-2 border transition-all',
-                              isActive
-                                ? 'bg-white/[0.05] border-white/20'
-                                : 'bg-transparent border-transparent opacity-40 grayscale hover:grayscale-0 hover:opacity-100'
-                            )}
-                          >
-                            <TierBadge tier={tier} />
-                            <span className="font-mono text-[10px] text-arena-gold">
-                              {TIER_COST[tier]}g
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Market Tier Filter</label>
+                  <div className="grid grid-cols-1 gap-3">
+                    {(['Common', 'Promising', 'Exceptional', 'Prodigy'] as RecruitTier[]).map((tier) => {
+                      const isActive = activeTiers.has(tier);
+                      const config = TIER_CONFIG[tier];
+                      return (
+                        <button
+                          key={tier}
+                          onClick={() => toggleTier(tier)}
+                          className={cn(
+                            "group flex items-center justify-between p-4 border transition-all",
+                            isActive 
+                              ? "bg-white/[0.05] border-white/20" 
+                              : "bg-transparent border-white/5 opacity-20 grayscale hover:opacity-100 hover:grayscale-0"
+                          )}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className={cn("w-1.5 h-1.5", config.bg)} />
+                            <span className={cn("text-[10px] font-black uppercase tracking-widest", isActive ? "text-foreground" : "text-muted-foreground")}>
+                              {tier}
                             </span>
-                          </button>
-                        );
-                      }
-                    )}
+                          </div>
+                          <span className="font-display font-black text-[10px] text-arena-gold">
+                            {TIER_COST[tier]}G
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Style */}
-                <div className="space-y-3 pt-4 border-t border-white/5">
-                  <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                    Combat Style
-                  </label>
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Tactical Archetype</label>
                   <Select value={activeStyle} onValueChange={(v) => setActiveStyle(v as any)}>
-                    <SelectTrigger className="h-9 text-[10px] uppercase font-black tracking-widest bg-black/20 border-white/10">
-                      <SelectValue placeholder="All Styles" />
+                    <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
+                      <SelectValue placeholder="All Archetypes" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">ALL_STYLES</SelectItem>
+                    <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
+                      <SelectItem value="all">ALL ARCHETYPES</SelectItem>
                       {Object.entries(STYLE_DISPLAY_NAMES).map(([k, v]) => (
-                        <SelectItem key={k} value={k}>
-                          {v.toUpperCase()}
-                        </SelectItem>
+                        <SelectItem key={k} value={k}>{v.toUpperCase()}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Sort */}
-                <div className="space-y-3 pt-4 border-t border-white/5">
-                  <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                    Sequence Order
-                  </label>
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Registry Sequence</label>
                   <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
-                    <SelectTrigger className="h-9 text-[10px] uppercase font-black tracking-widest bg-black/20 border-white/10">
+                    <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="potential-desc">POTENTIAL_DESC</SelectItem>
-                      <SelectItem value="cost-asc">COST_ASCENDING</SelectItem>
-                      <SelectItem value="cost-desc">COST_DESCENDING</SelectItem>
-                      <SelectItem value="age-asc">AGE_ASCENDING</SelectItem>
+                    <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
+                      <SelectItem value="potential-desc">POTENTIAL: HIGH TO LOW</SelectItem>
+                      <SelectItem value="cost-asc">VALUE: LOW TO HIGH</SelectItem>
+                      <SelectItem value="cost-desc">VALUE: HIGH TO LOW</SelectItem>
+                      <SelectItem value="age-asc">AGE: YOUNGEST FIRST</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Refresh */}
-                <div className="space-y-3 pt-4 border-t border-white/5">
-                  <label className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                    Temporal Refresh
-                  </label>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full justify-between h-10 px-4 text-[10px] font-black uppercase tracking-widest border-primary/20 hover:bg-primary/10 transition-colors"
-                    onClick={handleRefresh}
-                    disabled={!canRefresh}
-                  >
-                    <span>REFRESH_LIST</span>
-                    <div className="flex items-center gap-1.5 text-arena-gold">
-                      <Coins className="h-3 w-3" />
-                      {REFRESH_COST}g
-                    </div>
-                  </Button>
-                </div>
-              </Surface>
+                <Button
+                  onClick={handleRefresh}
+                  disabled={!canRefresh}
+                  className="w-full h-16 bg-white/[0.02] border border-white/10 text-foreground hover:bg-white/5 transition-all rounded-none flex items-center justify-between px-6 group"
+                >
+                  <div className="flex items-center gap-4">
+                    <RefreshCw className="h-4 w-4 text-primary group-hover:rotate-180 transition-all duration-700" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Sync Registry</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Coins className="h-3 w-3 text-arena-gold" />
+                    <span className="font-display font-black text-arena-gold text-xs">{REFRESH_COST}G</span>
+                  </div>
+                </Button>
+              </div>
             </aside>
 
-            {/* Right Result Grid (span-9) */}
-            <main className="lg:col-span-9 space-y-6">
-              <div className="flex items-center justify-between px-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
-                  {filteredPool.length} Profiles_Match_Criteria / {recruitPool.length} TOTAL
-                </p>
+            {/* Main Content */}
+            <div className="lg:col-span-3 space-y-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <ImperialRing size="xs" variant="blood">
+                    <Target className="h-3 w-3" />
+                  </ImperialRing>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
+                    Showing {filteredPool.length} of {recruitPool.length} Identified Candidates
+                  </span>
+                </div>
               </div>
 
               {filteredPool.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                   {filteredPool.map((w) => (
                     <RecruitCard
                       key={w.id}
@@ -643,27 +627,33 @@ export default function Recruit() {
                   ))}
                 </div>
               ) : (
-                <Surface variant="glass" className="py-48 text-center border-dashed opacity-50">
-                  <Search className="h-12 w-12 mx-auto mb-4 opacity-10" />
-                  <p className="font-display font-black uppercase tracking-widest text-sm text-muted-foreground/30">
-                    NO MATCHES DETECTED
-                  </p>
+                <Surface variant="glass" className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6">
+                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
+                    <Search className="h-8 w-8" />
+                  </ImperialRing>
+                  <div className="space-y-2">
+                    <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">Zero Results Detected</p>
+                    <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">Broaden filtering parameters or synchronize registry.</p>
+                  </div>
                 </Surface>
               )}
-            </main>
+            </div>
           </div>
         </TabsContent>
 
-        <TabsContent value="custom" className="mt-8 space-y-4">
-          <div className="rounded-none border border-border bg-secondary/30 p-3 text-sm text-muted-foreground">
-            <Hammer className="h-4 w-4 inline mr-1.5" />
-            Custom warriors cost{' '}
-            <span className="font-semibold text-foreground">{CUSTOM_COST}g</span> and start with 66
-            total attribute points. You choose the distribution.
-            {!canTransact(treasury, CUSTOM_COST) && (
-              <span className="text-destructive ml-1">(Need {CUSTOM_COST - treasury}g more)</span>
-            )}
-          </div>
+        <TabsContent value="custom" className="mt-0 space-y-12 focus-visible:outline-none">
+          <Surface variant="glass" className="p-8 border-primary/20 bg-primary/5 flex items-center gap-8">
+            <ImperialRing size="md" variant="blood">
+              <Hammer className="h-5 w-5 text-primary" />
+            </ImperialRing>
+            <div className="space-y-2">
+              <h3 className="text-lg font-black uppercase tracking-tight text-foreground leading-none">Custom Specification Protocol</h3>
+              <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest leading-relaxed">
+                Unit Cost: <span className="text-arena-gold font-display font-black">200G</span> · Allocation: <span className="text-foreground font-black">66 Attribute Points</span> · Full tactical customization enabled.
+              </p>
+            </div>
+          </Surface>
+          
           <WarriorBuilder
             onCreateWarrior={handleCustomCreate}
             maxRoster={MAX_ROSTER}
@@ -671,6 +661,6 @@ export default function Recruit() {
           />
         </TabsContent>
       </Tabs>
-    </div>
+    </PageFrame>
   );
 }

@@ -1,7 +1,3 @@
-/**
- * Training Planner — Trainability advisor with potential ceilings,
- * burn warnings, and seasonal cap visualization.
- */
 import React, { useMemo } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useGameStore } from '@/state/useGameStore';
@@ -15,14 +11,16 @@ import {
 import type { Warrior } from '@/types/state.types';
 import { computeGainChance } from '@/engine/training';
 import { potentialRating, potentialGrade, diminishingReturnsFactor } from '@/engine/potential';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Dumbbell, AlertTriangle, Lock, Star, BarChart3, Target, Activity } from 'lucide-react';
+import { Dumbbell, AlertTriangle, Lock, Star, Target, Activity, Shield, Zap, Heart, Info } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
 import { WarriorLink } from '@/components/EntityLink';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 /* ── Burn Risk Assessment ──────────────────────────────── */
 
@@ -81,8 +79,6 @@ function assessBurnRisks(
   return warnings;
 }
 
-/* ── Trainability Score ──────────────────────────────────── */
-
 function computeTrainability(
   warrior: Warrior,
   trainers: import('@/types/shared.types').Trainer[]
@@ -100,31 +96,38 @@ function computeTrainability(
   return trainable > 0 ? Math.round((totalChance / trainable) * 100) : 0;
 }
 
-/* ── Burn Warnings Component ──────────────────────────────── */
-
 function BurnWarnings({ burns }: { burns: BurnWarning[] }) {
   const visibleBurns = burns.filter((b) => b.severity !== 'low');
   if (visibleBurns.length === 0) return null;
 
   return (
-    <div className="mt-3 pt-2 border-t border-border/50 space-y-1">
-      {visibleBurns.map((b, i) => (
-        <div
-          key={i}
-          className={`flex items-center gap-2 text-[10px] ${
-            b.severity === 'high' ? 'text-destructive' : 'text-arena-gold'
-          }`}
-        >
-          <AlertTriangle className="h-3 w-3 shrink-0" />
-          <span className="font-medium">{ATTRIBUTE_LABELS[b.attribute]}:</span>
-          <span>{b.reason}</span>
-        </div>
-      ))}
+    <div className="mt-8 pt-8 border-t border-white/5 space-y-3">
+      <div className="flex items-center gap-3">
+        <AlertTriangle className="h-4 w-4 text-primary" />
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Operational Constraints</span>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {visibleBurns.map((b, i) => (
+          <div
+            key={i}
+            className={cn(
+              "p-4 border bg-white/[0.01] flex items-center justify-between",
+              b.severity === 'high' ? 'border-primary/20' : 'border-white/5'
+            )}
+          >
+            <div className="flex flex-col gap-1">
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">{ATTRIBUTE_LABELS[b.attribute]}</span>
+              <span className="text-[10px] text-foreground font-display font-black italic">"{b.reason}"</span>
+            </div>
+            <Badge className={cn("rounded-none text-[8px] font-black uppercase tracking-widest", b.severity === 'high' ? 'bg-primary text-primary-foreground' : 'bg-white/10 text-muted-foreground')}>
+              {b.severity} Risk
+            </Badge>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-
-/* ── Attribute Row Component ─────────────────────────────── */
 
 function AttributeRow({
   attr,
@@ -142,78 +145,80 @@ function AttributeRow({
 }) {
   const chancePct = Math.round(attr.chance * 100);
   const isRecommended = !attr.capped && !attr.seasonCapped && attr.chance >= 0.4;
+  const pct = (attr.val / 25) * 100;
+  const potPct = attr.pot ? (attr.pot / 25) * 100 : 0;
+  
+  const colorClass = attr.val >= 16 ? "bg-primary" : attr.val >= 12 ? "bg-arena-gold" : "bg-white/20";
 
   return (
-    <div className={`flex items-center gap-2 py-1 px-2 rounded ${attr.capped ? 'opacity-40' : ''}`}>
-      <span className="text-xs w-16 font-medium flex items-center gap-1">
-        {attr.key === 'SZ' && <Lock className="h-2.5 w-2.5" />}
-        {ATTRIBUTE_LABELS[attr.key]}
-      </span>
-
-      {/* Current / Potential bar */}
-      <div className="flex-1 relative">
-        <div className="h-3 bg-muted rounded-full overflow-hidden relative">
-          {/* Potential ceiling indicator */}
-          {attr.pot !== undefined && (
-            <div
-              className="absolute top-0 h-full border-r-2 border-arena-gold/50"
-              style={{ left: `${(attr.pot / 25) * 100}%` }}
-            />
+    <div className={cn("p-4 border border-white/5 bg-white/[0.01] transition-all", attr.capped && "opacity-20 grayscale")}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-4">
+          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 w-16">{ATTRIBUTE_LABELS[attr.key]}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-display font-black text-foreground leading-none">{attr.val}</span>
+            {attr.pot !== undefined && (
+              <span className="text-[11px] font-display font-black text-arena-gold opacity-40">/ {attr.pot}</span>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-6">
+          {/* Season Gains */}
+          <div className="flex gap-1.5">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className={cn(
+                  "w-2 h-2",
+                  i < attr.seasonGain ? "bg-primary" : "bg-white/5"
+                )}
+              />
+            ))}
+          </div>
+          {/* Chance Badge */}
+          {!attr.capped ? (
+            <div className="w-16 text-right">
+              <span className={cn(
+                "text-[10px] font-display font-black tracking-widest",
+                chancePct >= 50 ? "text-arena-pop" : chancePct >= 30 ? "text-foreground" : "text-primary"
+              )}>
+                {chancePct}%
+              </span>
+              <p className="text-[8px] font-black uppercase text-muted-foreground/20 tracking-tighter">SUCCESS</p>
+            </div>
+          ) : (
+            <div className="w-16 text-right">
+              <span className="text-[10px] font-display font-black text-muted-foreground/40 tracking-widest">CEILING</span>
+              <p className="text-[8px] font-black uppercase text-muted-foreground/20 tracking-tighter">REACHED</p>
+            </div>
           )}
-          {/* Current value */}
-          <div
-            className={`h-full rounded-full transition-all ${
-              attr.capped
-                ? 'bg-muted-foreground/30'
-                : attr.drFactor < 0.5
-                  ? 'bg-arena-gold/70'
-                  : 'bg-primary'
-            }`}
-            style={{ width: `${(attr.val / 25) * 100}%` }}
-          />
         </div>
       </div>
 
-      <span className="text-xs font-mono w-5 text-right">{attr.val}</span>
-      {attr.pot !== undefined && (
-        <span className="text-[9px] font-mono text-arena-gold w-5 text-right">/{attr.pot}</span>
-      )}
-
-      {/* Gain chance */}
-      {!attr.capped ? (
-        <span
-          className={`text-[10px] font-mono w-10 text-right ${
-            chancePct >= 50
-              ? 'text-arena-pop'
-              : chancePct >= 30
-                ? 'text-foreground'
-                : 'text-destructive'
-          }`}
-        >
-          {chancePct}%
-        </span>
-      ) : (
-        <span className="text-[9px] text-muted-foreground w-10 text-right">MAX</span>
-      )}
-
-      {/* Season progress */}
-      <div className="w-10 flex gap-0.5">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className={`h-1.5 flex-1 rounded-full ${
-              i < attr.seasonGain ? 'bg-primary' : 'bg-muted'
-            }`}
+      <div className="h-1 bg-white/5 relative overflow-hidden">
+        {/* Potential Marker */}
+        {attr.pot !== undefined && (
+          <div 
+            className="absolute h-full w-px bg-arena-gold/30 z-10"
+            style={{ left: `${potPct}%` }}
           />
-        ))}
+        )}
+        {/* Progress Bar */}
+        <div 
+          className={cn("h-full transition-all duration-1000", colorClass)}
+          style={{ width: `${pct}%` }}
+        />
       </div>
-
-      {isRecommended && <Target className="h-3 w-3 text-arena-pop shrink-0" />}
+      
+      {isRecommended && (
+        <div className="flex items-center gap-2 mt-3">
+          <Target className="h-3 w-3 text-arena-pop" />
+          <span className="text-[8px] font-black uppercase tracking-widest text-arena-pop">Optimized Development Path Detected</span>
+        </div>
+      )}
     </div>
   );
 }
-
-/* ── Warrior Planner Card ────────────────────────────────── */
 
 function WarriorPlannerCard({
   warrior,
@@ -231,12 +236,6 @@ function WarriorPlannerCard({
   const potRating = warrior.potential ? potentialRating(warrior.potential) : null;
   const potGrade = potRating !== null ? potentialGrade(potRating) : null;
 
-  const highBurns = burns.filter((b) => b.severity === 'high').length;
-  const medBurns = burns.filter((b) => b.severity === 'medium').length;
-
-  const total = ATTRIBUTE_KEYS.reduce((s, k) => s + warrior.attributes[k], 0);
-
-  // Best attributes to train (sorted by gain chance descending, excluding capped)
   const ranked = ATTRIBUTE_KEYS.filter((k): k is Exclude<keyof Attributes, 'SZ'> => k !== 'SZ')
     .map((k) => ({
       key: k as keyof Attributes,
@@ -257,86 +256,54 @@ function WarriorPlannerCard({
       return b.chance - a.chance;
     });
 
-  const gradeColors: Record<string, string> = {
-    S: 'text-arena-gold',
-    A: 'text-primary',
-    B: 'text-arena-pop',
-    C: 'text-muted-foreground',
-    D: 'text-destructive',
-  };
-
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CardTitle className="font-display text-base">
-              <WarriorLink name={warrior.name} id={warrior.id}>
+    <div className="space-y-12">
+      <Surface variant="glass" className="p-8 border-white/5 space-y-8">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-6">
+            <ImperialRing size="md" variant="bronze">
+              <Activity className="h-5 w-5 text-muted-foreground/40" />
+            </ImperialRing>
+            <div>
+              <h2 className="text-2xl font-display font-black uppercase tracking-tight text-foreground leading-none mb-2">
                 {warrior.name}
-              </WarriorLink>
-            </CardTitle>
-            <Badge variant="outline" className="text-[10px] font-mono">
-              {STYLE_DISPLAY_NAMES[warrior.style as FightingStyle]}
-            </Badge>
+              </h2>
+              <div className="flex items-center gap-4">
+                <StatBadge styleName={warrior.style as FightingStyle} showFullName />
+                <span className="text-[10px] text-muted-foreground/40 uppercase tracking-widest font-black">Age {warrior.age}</span>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            {potGrade && (
-              <TooltipProvider delayDuration={200}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge
-                      variant="outline"
-                      className={`text-xs font-mono ${gradeColors[potGrade] ?? ''}`}
-                    >
-                      <Star className="h-3 w-3 mr-0.5" /> {potGrade}
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent className="text-xs">
-                    Potential Rating: {potRating}/100 (Grade {potGrade})
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge
-                    variant={
-                      trainability >= 50 ? 'default' : trainability >= 30 ? 'secondary' : 'outline'
-                    }
-                    className="text-[10px] font-mono cursor-help"
-                  >
-                    {trainability}% trainable
-                  </Badge>
-                </TooltipTrigger>
-                <TooltipContent className="text-xs max-w-[220px] text-center">
-                  Trainability: the percentage of attributes that still have room to grow before
-                  hitting their potential ceiling. Higher is better — below 30% means most stats are
-                  near their cap.
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+
+          <div className="flex items-center gap-6">
+            <div className="text-right">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Potential Index</span>
+              <div className="flex items-center gap-3">
+                <Star className="h-4 w-4 text-arena-gold" />
+                <span className="text-xl font-display font-black text-arena-gold">{potGrade}</span>
+              </div>
+            </div>
+            <div className="text-right border-l border-white/5 pl-6">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Trainability</span>
+              <div className="flex items-center gap-3">
+                <Dumbbell className="h-4 w-4 text-primary" />
+                <span className="text-xl font-display font-black text-foreground">{trainability}%</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="text-[10px] text-muted-foreground flex gap-3 mt-1">
-          <span>Age {warrior.age ?? '?'}</span>
-          <span>Total: {total}/80</span>
-          {highBurns > 0 && <span className="text-destructive">⚠ {highBurns} at ceiling</span>}
-          {medBurns > 0 && <span className="text-arena-gold">{medBurns} warnings</span>}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {ranked.map((attr) => (
+            <AttributeRow key={attr.key} attr={attr} />
+          ))}
         </div>
-      </CardHeader>
-      <CardContent className="space-y-1.5 pt-2">
-        {ranked.map((attr) => (
-          <AttributeRow key={attr.key} attr={attr} />
-        ))}
 
         <BurnWarnings burns={burns} />
-      </CardContent>
-    </Card>
+      </Surface>
+    </div>
   );
 }
-
-/* ── Main Page ───────────────────────────────────────────── */
 
 export default function TrainingPlanner() {
   const { roster, trainers, seasonalGrowth, season } = useGameStore();
@@ -357,7 +324,6 @@ export default function TrainingPlanner() {
     return map;
   }, [seasonalGrowth, season]);
 
-  // Overall stable trainability
   const avgTrainability = useMemo(() => {
     if (activeWarriors.length === 0) return 0;
     return Math.round(
@@ -367,149 +333,91 @@ export default function TrainingPlanner() {
   }, [activeWarriors, currentTrainers]);
 
   return (
-    <div className="space-y-8 pb-20 max-w-7xl mx-auto">
+    <PageFrame size="xl">
       <PageHeader
-        icon={BarChart3}
-        title="Training Planner"
-        subtitle="COMMAND · TRAINING · ATTRIBUTE DEVELOPMENT"
+        title="Training Logistics"
+        subtitle="STABLE · DEVELOPMENT_PLANNER · WK {season}"
         actions={
-          <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-widest bg-secondary/20 backdrop-blur-md px-6 py-3 border border-white/5">
-            <div className="text-center">
-              <div className="text-xl font-display font-black text-primary">{avgTrainability}%</div>
-              <div className="text-muted-foreground/50">AVG TRAINABILITY</div>
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col items-end">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Stable Trainability</span>
+              <span className="text-sm font-display font-black text-primary">{avgTrainability}% Aggregate</span>
             </div>
-            <div className="text-center ml-6 border-l border-white/10 pl-6">
-              <div className="text-xl font-display font-black">{activeWarriors.length}</div>
-              <div className="text-muted-foreground/50">ACTIVE</div>
-            </div>
-            <div className="text-center ml-6 border-l border-white/10 pl-6">
-              <div className="text-xl font-display font-black">
-                {currentTrainers.filter((t) => t.contractWeeksLeft > 0).length}
-              </div>
-              <div className="text-muted-foreground/50">TRAINERS</div>
+            <div className="flex flex-col items-end border-l border-white/5 pl-6">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Active Trainers</span>
+              <span className="text-sm font-display font-black text-foreground">{currentTrainers.filter((t) => t.contractWeeksLeft > 0).length} Personnel</span>
             </div>
           </div>
         }
       />
 
-      {/* Training Tab Bar */}
-      <div className="flex items-center border-b border-white/5 -mt-4">
+      <div className="flex items-center h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none mb-12">
         <Link
           to="/command/training"
-          className="flex items-center gap-2 px-5 py-2.5 text-[11px] font-black uppercase tracking-wider border-b-2 border-transparent -mb-px text-muted-foreground/50 hover:text-foreground transition-colors"
+          className="flex-1 h-full flex items-center justify-center gap-3 font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground hover:text-foreground transition-all"
         >
           <Dumbbell className="h-3.5 w-3.5" />
-          Assignments
+          Personnel Assignments
         </Link>
-        <Link
-          to="/command/tactics"
-          className={cn(
-            'flex items-center gap-2 px-5 py-2.5 text-[11px] font-black uppercase tracking-wider border-b-2 -mb-px transition-colors',
-            'text-foreground border-primary'
-          )}
-        >
-          <Target className="h-3.5 w-3.5 text-primary" />
-          Planning
-        </Link>
+        <div className="flex-1 h-full flex items-center justify-center gap-3 font-black uppercase text-[10px] tracking-[0.3em] bg-primary text-primary-foreground">
+          <Target className="h-3.5 w-3.5" />
+          Strategic Planning
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Archetype D: Left Rail Roster (span-4) */}
-        <aside className="lg:col-span-4 space-y-4 sticky top-6">
-          <div className="flex items-center gap-3 px-2">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">
-              STABLE ROSTER
-            </span>
-            <div className="h-px flex-1 bg-gradient-to-r from-primary/20 to-transparent" />
-          </div>
-
-          <Surface
-            variant="glass"
-            className="p-0 border-white/5 max-h-[700px] overflow-y-auto thin-scrollbar"
-          >
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+        {/* Left Rail Roster */}
+        <aside className="space-y-8">
+          <SectionDivider label="Asset Registry" />
+          <div className="grid grid-cols-1 gap-3">
             {activeWarriors.map((warrior) => {
               const isSelected = warrior.id === selectedId;
               const trainability = computeTrainability(warrior, currentTrainers);
-
               return (
                 <button
                   key={warrior.id}
                   onClick={() => setSelectedId(warrior.id)}
                   className={cn(
-                    'w-full text-left p-4 border-b border-white/5 last:border-0 flex items-center gap-3 transition-all',
-                    isSelected
-                      ? 'bg-primary/10 border-l-4 border-l-primary'
-                      : 'hover:bg-white/[0.02]'
+                    "flex flex-col gap-1 p-4 border transition-all text-left group",
+                    isSelected 
+                      ? "bg-white/[0.05] border-white/20" 
+                      : "bg-transparent border-white/5 opacity-40 grayscale hover:opacity-100 hover:grayscale-0"
                   )}
                 >
-                  <div className="flex-1 min-w-0">
-                    <p
-                      className={cn(
-                        'text-xs font-black uppercase truncate',
-                        isSelected ? 'text-primary' : ''
-                      )}
-                    >
-                      {warrior.name}
-                    </p>
-                    <p className="text-[9px] text-muted-foreground uppercase mt-1">
-                      Trainability: {trainability}%
-                    </p>
-                  </div>
-                  {isSelected && <Activity className="h-3.5 w-3.5 text-primary animate-pulse" />}
+                  <span className={cn("text-[10px] font-black uppercase tracking-widest", isSelected ? "text-foreground" : "text-muted-foreground")}>
+                    {warrior.name}
+                  </span>
+                  <span className="text-[9px] font-black text-primary uppercase tracking-tighter">
+                    {trainability}% Growth Potential
+                  </span>
                 </button>
               );
             })}
-          </Surface>
+          </div>
         </aside>
 
-        {/* Right Rail Viewport (span-8) */}
-        <main className="lg:col-span-8">
+        {/* Right Rail Viewport */}
+        <div className="lg:col-span-3">
           {selectedWarrior ? (
-            <div className="space-y-6">
-              <WarriorPlannerCard
-                warrior={selectedWarrior}
-                trainers={currentTrainers}
-                season={season}
-                seasonalGains={seasonalGainsMap.get(selectedWarrior.id) ?? {}}
-              />
-
-              <Surface variant="glass" className="flex flex-wrap gap-8 p-6 bg-secondary/10">
-                <div className="flex flex-col gap-2">
-                  <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                    Growth Markers
-                  </span>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-black tracking-widest">
-                      <div className="h-2 w-4 bg-primary" /> Current
-                    </div>
-                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-black tracking-widest">
-                      <div className="h-2 w-0.5 border-r-2 border-arena-gold" /> Potential
-                    </div>
-                  </div>
-                </div>
-
-                <div className="h-10 w-px bg-white/5" />
-
-                <div className="flex flex-col gap-2">
-                  <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                    Advisory
-                  </span>
-                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-black tracking-widest">
-                    <Target className="h-3.5 w-3.5 text-arena-pop" /> Optimized Gain Path
-                  </div>
-                </div>
-              </Surface>
-            </div>
+            <WarriorPlannerCard
+              warrior={selectedWarrior}
+              trainers={currentTrainers}
+              season={season}
+              seasonalGains={seasonalGainsMap.get(selectedWarrior.id) ?? {}}
+            />
           ) : (
-            <Surface variant="glass" className="py-32 text-center border-dashed">
-              <Dumbbell className="h-12 w-12 mx-auto mb-4 opacity-10" />
-              <p className="font-display font-black uppercase tracking-widest text-sm text-muted-foreground/30">
-                Select a Warrior to Plan
-              </p>
+            <Surface variant="glass" className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6">
+              <ImperialRing size="lg" variant="bronze" className="opacity-20">
+                <Dumbbell className="h-8 w-8" />
+              </ImperialRing>
+              <div className="space-y-2">
+                <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">Zero Assets Selected</p>
+                <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">Select a combat asset from the registry to initialize planning.</p>
+              </div>
             </Surface>
           )}
-        </main>
+        </div>
       </div>
-    </div>
+    </PageFrame>
   );
 }

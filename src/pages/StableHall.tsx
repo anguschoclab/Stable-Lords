@@ -1,5 +1,5 @@
 import { useGameStore } from '@/state/useGameStore';
-import { Shield, Crown, Star, Sparkles } from 'lucide-react';
+import { Shield, Crown, Star, Sparkles, UserCheck, BookOpen, Quote } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
@@ -8,122 +8,99 @@ import { RosterWall } from '@/components/stable/RosterWall';
 import { TrainerTable } from '@/components/stable/TrainerTable';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { InsightManager } from '@/components/ledger/InsightManager';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 export default function StableHall() {
   const { player, fame, insightTokens } = useGameStore();
   const pendingTokens = (insightTokens ?? []).length;
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto pb-20">
+    <PageFrame size="xl">
       <PageHeader
+        eyebrow="INSTITUTIONAL_PROFILE"
         title={player.stableName}
-        subtitle={`STABLE · ${player.name} · LEGACY OF THE ARENA`}
+        subtitle={`COMMANDER · ${player.name.toUpperCase()} · ESTABLISHED 410 AE`}
         icon={Shield}
-      />
-
-      {/* Band 1 — Roster Wall (primary content) */}
-      <RosterWall />
-
-      {/* Band 2 — Stable Hero Strip */}
-      <Surface
-        variant="gold"
-        className="flex items-center gap-12 p-8 border-l-4 border-l-arena-gold/50"
-      >
-        <div className="flex items-center gap-6">
-          <div className="w-16 h-16 rounded-none bg-arena-gold/10 border border-arena-gold/30 flex items-center justify-center shadow-[0_0_20px_rgba(201,151,42,0.15)]">
-            <Shield className="h-8 w-8 text-arena-gold" />
-          </div>
-          <div>
-            <h2 className="font-display font-black text-3xl uppercase tracking-tighter text-foreground leading-none">
-              {player.stableName}
-            </h2>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 mt-1.5 flex items-center gap-2">
-              ESTABLISHED 410 AE <span className="opacity-30">·</span> {player.name}
-            </p>
-          </div>
-        </div>
-
-        <div className="h-12 w-px bg-white/5" />
-
-        <div className="flex items-center gap-10">
-          <div className="flex flex-col">
-            <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1">
-              Eminent Fame
-            </span>
-            <div className="flex items-center gap-2 font-display font-black text-2xl text-arena-gold tracking-tighter leading-none">
-              {fame} <Star className="h-4 w-4" />
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1">
-              Master Titles
-            </span>
-            <div className="flex items-center gap-2 font-display font-black text-2xl text-arena-fame tracking-tighter leading-none">
-              {player.titles || 0} <Crown className="h-4 w-4" />
-            </div>
-          </div>
-
-          {pendingTokens > 0 && (
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1">
-                Patron Tokens
-              </span>
-              <div className="flex items-center gap-2 font-display font-black text-2xl text-arena-gold tracking-tighter leading-none">
-                {pendingTokens} <Sparkles className="h-4 w-4 animate-pulse" />
+        actions={
+          <div className="flex items-center gap-8">
+            <div className="flex flex-col items-end">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">Eminent Fame</span>
+              <div className="flex items-center gap-2 font-display font-black text-xl text-arena-gold">
+                {fame} <Star className="h-3.5 w-3.5" />
               </div>
             </div>
-          )}
-        </div>
-
-        <div className="ml-auto hidden xl:block text-right">
-          <p className="text-[10px] italic text-muted-foreground/40 max-w-[200px] leading-relaxed">
-            "The sand remembers every drop of blood shed in the name of the{' '}
-            {player.stableName.split(' ')[0]} legacy."
-          </p>
-        </div>
-      </Surface>
-
-      {/* Band 3 — Stable Composition (supporting context) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:col-span-12">
-          <div className="flex items-center gap-3 px-1 mb-6">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
-              STABLE COMPOSITION
-            </span>
-            <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
+            <div className="h-8 w-px bg-white/5" />
+            <div className="flex flex-col items-end">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-1">Master Titles</span>
+              <div className="flex items-center gap-2 font-display font-black text-xl text-primary">
+                {player.titles || 0} <Crown className="h-3.5 w-3.5" />
+              </div>
+            </div>
           </div>
-        </div>
+        }
+      />
 
-        <div className="lg:col-span-4 flex flex-col gap-8">
-          <ReputationSliders />
-          <StyleMeterTable />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        {/* Sidebar: Institutional Values */}
+        <aside className="lg:col-span-4 space-y-12">
+          <section>
+            <SectionDivider label="Reputation Metrics" />
+            <div className="mt-8">
+              <ReputationSliders />
+            </div>
+          </section>
 
-        <div className="lg:col-span-8">
-          <TrainerTable />
+          <section>
+            <SectionDivider label="Style Composition" />
+            <div className="mt-8">
+              <StyleMeterTable />
+            </div>
+          </section>
+
+          <section>
+            <SectionDivider label="Institutional Creed" />
+            <Surface variant="glass" className="mt-8 p-6 border-white/5 bg-white/[0.01] relative overflow-hidden">
+              <div className="absolute -right-4 -bottom-4 opacity-[0.03]">
+                <Quote className="h-24 w-24" />
+              </div>
+              <p className="text-[11px] text-muted-foreground/60 leading-relaxed italic relative z-10">
+                "The sand remembers every drop of blood shed in the name of the {player.stableName.split(' ')[0]} legacy. We do not just fight; we endure."
+              </p>
+            </Surface>
+          </section>
+        </aside>
+
+        {/* Main: Roster & Staff */}
+        <div className="lg:col-span-8 space-y-12">
+          <section>
+            <SectionDivider label="Active Personnel Matrix" variant="primary" />
+            <div className="mt-8">
+              <RosterWall />
+            </div>
+          </section>
+
+          <section>
+            <SectionDivider label="Command Staff" variant="gold" />
+            <div className="mt-8">
+              <TrainerTable />
+            </div>
+          </section>
+
+          <section>
+            <div className="flex items-center justify-between mb-8">
+              <SectionDivider label="Patronage Awards" className="flex-1" />
+              {pendingTokens > 0 && (
+                <Badge className="bg-arena-gold/10 text-arena-gold border border-arena-gold/20 text-[9px] font-black rounded-none ml-4">
+                  {pendingTokens} TOKENS_PENDING
+                </Badge>
+              )}
+            </div>
+            <InsightManager />
+          </section>
         </div>
       </div>
-
-      {/* Band 4 — Patronage Awards */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-3 px-1">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-arena-gold">
-            PATRONAGE AWARDS
-          </span>
-          {pendingTokens > 0 ? (
-            <Badge className="bg-arena-gold/20 text-arena-gold border border-arena-gold/30 text-[9px] font-black rounded-none">
-              {pendingTokens} TOKEN{pendingTokens !== 1 ? 'S' : ''} PENDING
-            </Badge>
-          ) : (
-            <Badge className="bg-white/5 text-muted-foreground border border-white/10 text-[9px] font-black">
-              Place in tournaments to earn tokens
-            </Badge>
-          )}
-          <div className="h-px flex-1 bg-gradient-to-r from-arena-gold/20 via-border/20 to-transparent" />
-        </div>
-        <InsightManager />
-      </div>
-    </div>
+    </PageFrame>
   );
 }

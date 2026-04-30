@@ -1,62 +1,40 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Fingerprint, History, Activity } from 'lucide-react';
-import WarriorPaperDoll from '@/components/WarriorPaperDoll';
-import { LineageTree } from '@/components/stable/LineageTree';
-import type { Warrior } from '@/types/warrior.types';
+import { Surface } from '@/components/ui/Surface';
+import { cn } from '@/lib/utils';
+import { type Warrior } from '@/types/warrior.types';
+import { LayoutDashboard, Swords, FileText, Activity } from 'lucide-react';
 
-interface WarriorDossierTabsProps {
-  warrior: Warrior;
+interface Props {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 }
 
-export function WarriorDossierTabs({ warrior }: WarriorDossierTabsProps) {
+const TABS = [
+  { id: 'overview', label: 'Tactical Overview', icon: LayoutDashboard },
+  { id: 'stats', label: 'Combat Attributes', icon: Activity },
+  { id: 'history', label: 'Engagement Log', icon: Swords },
+  { id: 'biography', label: 'Subject History', icon: FileText },
+];
+
+export default function WarriorDossierTabs({ activeTab, setActiveTab }: Props) {
   return (
-    <div className="space-y-4">
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="w-full bg-neutral-900 border border-white/5 p-1 rounded-none h-10">
-          <TabsTrigger
-            value="overview"
-            className="flex-1 text-[9px] font-black uppercase tracking-widest rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-          >
-            <Fingerprint className="h-3 w-3 mr-2" /> Biometrics
-          </TabsTrigger>
-          <TabsTrigger
-            value="lineage"
-            className="flex-1 text-[9px] font-black uppercase tracking-widest rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-          >
-            <History className="h-3 w-3 mr-2" /> Lineage
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="mt-4 space-y-4">
-          <Card className="bg-glass border-arena-blood/10 overflow-hidden relative">
-            <CardHeader className="pb-0 pt-3 flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-[9px] uppercase tracking-widest text-muted-foreground font-black">
-                Trauma Mapping
-              </CardTitle>
-              <Activity className="h-3 w-3 text-arena-blood animate-pulse" />
-            </CardHeader>
-            <CardContent className="flex justify-center p-4">
-              <WarriorPaperDoll
-                injuries={warrior.injuries}
-                isWeaponMastered={
-                  !!(
-                    warrior.favorites?.weaponId &&
-                    warrior.equipment?.weapon === warrior.favorites.weaponId &&
-                    warrior.favorites.discovered.weapon
-                  )
-                }
-                size={140}
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="lineage" className="mt-4">
-          <LineageTree lineage={warrior.lineage} warriorName={warrior.name} />
-        </TabsContent>
-      </Tabs>
+    <div className="flex items-center gap-8 border-b border-white/5">
+      {TABS.map((tab) => (
+        <button
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id)}
+          className={cn(
+            "flex items-center gap-2 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative",
+            activeTab === tab.id ? "text-primary" : "text-muted-foreground/40 hover:text-foreground"
+          )}
+        >
+          <tab.icon className="h-3.5 w-3.5" />
+          {tab.label}
+          {activeTab === tab.id && (
+            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
+          )}
+        </button>
+      ))}
     </div>
   );
 }

@@ -1,15 +1,16 @@
 import { useMemo } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { type Warrior, STYLE_DISPLAY_NAMES } from '@/types/game';
 import {
   getRecommendedChallenges,
   getMatchupsToAvoid,
   type MatchupScore,
 } from '@/engine/schedulingAssistant';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Link } from '@tanstack/react-router';
 import {
   Target,
@@ -32,87 +33,70 @@ function MatchupCard({ matchup, type }: MatchupCardProps) {
   const isGood = type === 'recommend';
 
   return (
-    <div
+    <Surface
+      variant="glass"
       className={cn(
-        'p-3 rounded-none border bg-card transition-all hover:shadow-md',
-        isGood
-          ? 'border-primary/20 hover:border-primary/40'
-          : 'border-destructive/20 hover:border-destructive/40'
+        'p-4 border-white/5 transition-all group hover:bg-white/[0.02]',
+        isGood ? 'hover:border-primary/20' : 'hover:border-destructive/20'
       )}
     >
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          {isGood ? (
-            <TrendingUp className="h-4 w-4 text-primary" />
-          ) : (
-            <TrendingDown className="h-4 w-4 text-destructive" />
-          )}
-          <span className="font-display font-bold text-sm tracking-tight">{w.name}</span>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <ImperialRing size="xs" variant={isGood ? 'bronze' : 'blood'}>
+            {isGood ? (
+              <TrendingUp className="h-3 w-3 text-primary" />
+            ) : (
+              <TrendingDown className="h-3 w-3 text-destructive" />
+            )}
+          </ImperialRing>
+          <span className="font-display font-black text-[11px] uppercase tracking-tight text-foreground">{w.name}</span>
         </div>
         <Link to="/warrior/$id" params={{ id: w.id }}>
           <Button
             variant="ghost"
             size="icon"
-            className="h-6 w-6"
-            title="View warrior profile"
-            aria-label="View warrior profile"
+            className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <ExternalLink className="h-3 w-3" />
           </Button>
         </Link>
       </div>
 
-      <div className="flex flex-wrap gap-1.5 mb-2">
-        <Badge variant="outline" className="text-[10px] font-mono py-0">
+      <div className="flex flex-wrap gap-2 mb-4">
+        <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest px-2 py-0 rounded-none border-white/5 bg-white/5">
           {STYLE_DISPLAY_NAMES[w.style]}
         </Badge>
-        <Badge variant="secondary" className="text-[10px] font-mono py-0">
+        <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest px-2 py-0 rounded-none border-white/5 bg-white/5">
           {matchup.rivalStableName}
-        </Badge>
-        <Badge
-          variant="outline"
-          className={cn(
-            'text-[10px] font-mono py-0',
-            matchup.styleAdvantage > 0
-              ? 'text-primary border-primary/30'
-              : matchup.styleAdvantage < 0
-                ? 'text-destructive border-destructive/30'
-                : ''
-          )}
-        >
-          Adv: {matchup.styleAdvantage > 0 ? '+' : ''}
-          {matchup.styleAdvantage}
         </Badge>
       </div>
 
-      <div className="space-y-1">
+      <div className="space-y-2 mb-4">
         {matchup.notes.map((note, i) => (
           <div
             key={i}
-            className="text-[10px] text-muted-foreground flex items-center gap-1.5 italic"
+            className="text-[9px] text-muted-foreground/60 flex items-center gap-2 italic uppercase font-black tracking-tight"
           >
-            <span
-              className={cn('h-1 w-1 rounded-full', isGood ? 'bg-primary/50' : 'bg-destructive/50')}
-            />
+            <div className={cn('h-1 w-1', isGood ? 'bg-primary' : 'bg-destructive')} />
             {note}
           </div>
         ))}
       </div>
 
-      <div className="mt-3 flex items-center justify-between">
-        <div className="text-[10px] uppercase font-bold text-muted-foreground/60 tracking-widest">
-          Score
+      <div className="flex items-center justify-between pt-3 border-t border-white/5">
+        <div className="text-[8px] uppercase font-black text-muted-foreground/40 tracking-[0.2em]">
+          Priority_Index
         </div>
         <div
           className={cn(
-            'text-sm font-mono font-black',
+            'text-xs font-display font-black',
             isGood ? 'text-primary' : 'text-destructive'
           )}
         >
           {Math.round(matchup.score)}
         </div>
       </div>
-    </div>
+    </Surface>
   );
 }
 
@@ -131,72 +115,48 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
   const toAvoid = useMemo(() => getMatchupsToAvoid(state, warrior, 2), [state, warrior]);
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2">
+    <div className="space-y-12">
+      <div className="grid gap-12 md:grid-cols-2">
         {/* Recommendations */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Trophy className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <h3 className="text-sm font-display font-black uppercase tracking-tight">
-                Prime Targets
-              </h3>
-              <p className="text-[10px] text-muted-foreground uppercase font-medium">
-                Recommended for advancement
-              </p>
-            </div>
-          </div>
-          <div className="space-y-3">
+        <div className="space-y-6">
+          <SectionDivider label="Strategic Opportunities" />
+          <div className="space-y-4">
             {recommendations.length > 0 ? (
               recommendations.map((m, i) => <MatchupCard key={i} matchup={m} type="recommend" />)
             ) : (
-              <p className="text-xs text-muted-foreground italic p-4 border border-dashed rounded-none text-center">
-                No prime targets available this week.
+              <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
+                No prime targets available.
               </p>
             )}
           </div>
         </div>
 
         {/* To Avoid */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-destructive/10 flex items-center justify-center">
-              <AlertTriangle className="h-4 w-4 text-destructive" />
-            </div>
-            <div>
-              <h3 className="text-sm font-display font-black uppercase tracking-tight">
-                High Risk
-              </h3>
-              <p className="text-[10px] text-muted-foreground uppercase font-medium">
-                Matchups to avoid if possible
-              </p>
-            </div>
-          </div>
-          <div className="space-y-3">
+        <div className="space-y-6">
+          <SectionDivider label="High Risk Vectors" variant="blood" />
+          <div className="space-y-4">
             {toAvoid.length > 0 ? (
               toAvoid.map((m, i) => <MatchupCard key={i} matchup={m} type="avoid" />)
             ) : (
-              <p className="text-xs text-muted-foreground italic p-4 border border-dashed rounded-none text-center">
-                No high-risk matchups found.
+              <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
+                No imminent threats detected.
               </p>
             )}
           </div>
         </div>
       </div>
 
-      <Card className="bg-secondary/20 border-border/40">
-        <CardContent className="p-4 flex items-start gap-3">
-          <Swords className="h-4 w-4 text-muted-foreground mt-0.5" />
-          <div className="text-[11px] text-muted-foreground leading-relaxed">
-            <span className="font-bold text-foreground">Scouting Intelligence:</span>{' '}
-            Recommendations represent a composite score based on style matchup matrix, fame
-            differential, and your warrior's current momentum. Grudge matches against rivals will
-            significantly boost the priority of a challenge.
+      <Surface variant="glass" className="p-8 border-white/5 bg-white/[0.01]">
+        <div className="flex items-start gap-4">
+          <ImperialRing size="sm" variant="bronze">
+            <Swords className="h-4 w-4 text-muted-foreground/40" />
+          </ImperialRing>
+          <div className="text-[11px] text-muted-foreground/60 leading-relaxed uppercase font-black tracking-tight">
+            <span className="text-foreground">Tactical Intelligence Note:</span>{' '}
+            Engagement matrices are calculated based on style affinity, historical performance, and institutional fame differential. Grudge matches against rivals escalate priority levels.
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </Surface>
     </div>
   );
 }

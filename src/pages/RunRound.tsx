@@ -1,24 +1,21 @@
-/**
- * Stable Lords — Run Round (Refactored)
- * Modularized for better maintainability and strict type safety.
- */
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, reconstructGameState, type GameStore } from '@/state/useGameStore';
 import { type GameState, type Warrior, type RivalStableData } from '@/types/game';
-
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { isFightReady } from '@/engine/warriorStatus';
 import { processWeekBouts, type BoutResult } from '@/engine/boutProcessor';
 import { runAutosim, type AutosimResult } from '@/engine/autosim';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
-import { Swords, Zap, Skull, Shield, FastForward, Trophy, Heart, Activity } from 'lucide-react';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
+import { Swords, Zap, Skull, Activity, FastForward, Heart, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
-import { useShallow } from 'zustand/react/shallow';
+import { cn } from '@/lib/utils';
 
 // Modular Components
 import { MatchCard } from '@/components/run-round/MatchCard';
@@ -60,16 +57,13 @@ export default function RunRound() {
 
     if (matchCard.length === 0 && fightReady.length < 2) {
       setRunning(false);
-      toast.error('No valid pairings available for this mission.');
+      toast.error('Mission aborted: insufficient personnel sync.');
       return;
     }
 
     const processed = processWeekBouts(state);
-
-    // Update local state results for display
     setResults(processed.results);
 
-    // Persist to store based on cycle type
     if (state.isTournamentWeek) {
       doAdvanceDay(
         undefined,
@@ -77,7 +71,7 @@ export default function RunRound() {
         processed.summary.deathNames,
         processed.summary.injuryNames
       );
-      toast.success(`Empire Day ${state.day + 1} concluded.`);
+      toast.success(`Day ${state.day + 1} finalized.`);
     } else {
       doAdvanceWeek(
         undefined,
@@ -85,12 +79,12 @@ export default function RunRound() {
         processed.summary.deathNames,
         processed.summary.injuryNames
       );
-      toast.success(`Week ${state.week} concluded.`);
+      toast.success(`Week ${state.week} archival sequence completed.`);
     }
 
     setRunning(false);
     setExpandedId(null);
-    setTimeout(() => navigate({ to: '/command' }), 1200);
+    setTimeout(() => navigate({ to: '/command' }), 1500);
   }, [state, running, matchCard, fightReady.length, doAdvanceDay, doAdvanceWeek, navigate]);
 
   const handleStartAutosim = useCallback(
@@ -111,7 +105,7 @@ export default function RunRound() {
         });
       } catch (err) {
         console.error('Autosim failed', err);
-        toast.error('Auto-simulation encountered an archive corruption.');
+        toast.error('Simulation interrupt: memory leak detected.');
       } finally {
         setAutosimming(false);
         setSimulating(false);
@@ -121,144 +115,104 @@ export default function RunRound() {
   );
 
   return (
-    <div className="space-y-8 pb-20 max-w-5xl mx-auto">
+    <PageFrame size="md">
       <PageHeader
-        icon={Swords}
+        eyebrow="MISSION_EXECUTION"
         title="Engagement Console"
-        subtitle={`WEEK ${state.week} · ${state.season} · ${state.crowdMood} CROWD`}
+        subtitle={`WEEK ${state.week} · ${state.season.toUpperCase()} SEASON · ${state.crowdMood.toUpperCase()} MOOD`}
+        icon={Swords}
       />
 
-      {/* Band 2 — Stable Readiness Strip */}
-      <Surface
-        variant="glass"
-        className="flex items-center gap-12 p-5 border-l-4 border-l-primary/50"
-      >
-        <div className="flex items-center gap-3">
-          <Activity className="h-4 w-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-            Stable Readiness
-          </span>
-        </div>
-
-        <div className="flex items-center gap-10">
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                Mission Ready
-              </span>
-              <span className="font-display font-black text-xl text-primary leading-none mt-1">
-                {fightReady.length}
-              </span>
+      {/* Main Focus: Execution & Roster Status */}
+      <div className="space-y-12">
+        <Surface variant="glass" className="p-8 border-primary/20 bg-primary/[0.02] flex flex-col items-center text-center">
+          <div className="flex items-center gap-12 mb-10">
+            <div className="text-center">
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">Units Ready</div>
+              <div className="text-3xl font-display font-black text-foreground">{fightReady.length}</div>
             </div>
-            <div className="h-8 w-px bg-white/5" />
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                Combat Paired
-              </span>
-              <span className="font-display font-black text-xl text-arena-gold leading-none mt-1">
-                {matchCard.length}
-              </span>
+            <div className="h-10 w-px bg-white/5" />
+            <div className="text-center">
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">Paired Bouts</div>
+              <div className="text-3xl font-display font-black text-arena-gold">{matchCard.length}</div>
             </div>
-            <div className="h-8 w-px bg-white/5" />
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                Injured / Medbay
-              </span>
-              <span className="font-display font-black text-xl text-destructive leading-none mt-1">
-                {state.roster.filter((w) => w.fatigue > 70 || w.status === 'Injured').length}
-              </span>
+            <div className="h-10 w-px bg-white/5" />
+            <div className="text-center">
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2">Medical List</div>
+              <div className="text-3xl font-display font-black text-destructive">
+                {state.roster.filter((w) => (w.fatigue ?? 0) > 70 || w.status === 'Injured').length}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="ml-auto flex items-center gap-3">
-          {!autosimming && !autosimResult && results.length === 0 && (
+          <div className="relative group">
+            <div className="absolute inset-0 bg-primary/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
             <Button
               onClick={handleExecuteCycle}
               disabled={running || (matchCard.length === 0 && fightReady.length < 2)}
-              className="h-10 px-8 gap-3 font-black uppercase text-[12px] tracking-[0.2em] bg-primary text-black hover:bg-primary/90"
+              className="relative h-20 px-12 rounded-none bg-primary text-black font-black uppercase text-base tracking-[0.3em] hover:bg-primary/90 transition-all shadow-[0_0_40px_rgba(var(--primary-rgb),0.3)]"
             >
-              <Zap className="h-4 w-4 fill-current" />
-              {state.isTournamentWeek
-                ? `EXECUTE DAY ${state.day + 1} ›`
-                : `EXECUTE WEEK ${state.week} ›`}
+              <Zap className="h-5 w-5 mr-4 fill-current" />
+              {state.isTournamentWeek ? `EXECUTE_DAY_${state.day + 1}` : `EXECUTE_WEEK_${state.week}`}
+              <ChevronRight className="h-5 w-5 ml-4" />
             </Button>
-          )}
-        </div>
-      </Surface>
+          </div>
+          
+          <p className="mt-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">
+            {running ? "SYNCING_WITH_ARENA_RECORDS..." : "AWAITING_COMMAND_AUTHORIZATION"}
+          </p>
+        </Surface>
 
-      {/* Main Focus Canvas — Archetype F */}
-      <div className="max-w-3xl mx-auto space-y-8">
-        {results.length > 0 ? (
-          <RunResults results={results} expandedId={expandedId} onToggleExpand={setExpandedId} />
-        ) : (
-          <Surface variant="glass" className="p-0 border-accent/20">
-            <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Activity className="h-4 w-4 text-accent" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-                  Active Combat Manifest
-                </span>
-              </div>
-              <Badge variant="outline" className="text-[9px] font-mono border-white/10">
-                {matchCard.length} PAIRINGS
-              </Badge>
-            </div>
-
-            <div className="p-6 space-y-4">
-              {matchCard.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4">
-                  {matchCard.map((p, i) => (
+        {/* Manifest / Results Section */}
+        <section className="space-y-8">
+          <SectionDivider label={results.length > 0 ? "Execution Report" : "Active Engagement Manifest"} variant="primary" />
+          
+          <div className="mx-auto">
+            {results.length > 0 ? (
+              <RunResults results={results} expandedId={expandedId} onToggleExpand={setExpandedId} />
+            ) : (
+              <div className="space-y-4">
+                {matchCard.length > 0 ? (
+                  matchCard.map((p, i) => (
                     <MatchCard
                       key={i}
                       pairing={{
                         a: p.playerWarrior,
                         d: p.rivalWarrior,
-                        rivalStable: p.rivalStable?.owner?.stableName || 'Rival Stable',
+                        rivalStable: p.rivalStable?.owner?.stableName || 'Independent',
                         isRivalry: p.isRivalryBout,
                       }}
                       crowdMood={state.crowdMood}
                     />
-                  ))}
-                </div>
-              ) : (
-                <div className="py-20 text-center text-muted-foreground/30">
-                  <Skull className="h-12 w-12 mx-auto mb-4 opacity-20" />
-                  <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed">
-                    Zero Engagement Pairs Detected
-                    <br />
-                    <span className="text-[9px] opacity-60">
-                      Warriors may be resting or in training
-                    </span>
-                  </p>
-                </div>
-              )}
-            </div>
-          </Surface>
-        )}
-
-        {/* Autosim moved below main content in Archetype F */}
-        <div className="pt-8 border-t border-white/5">
-          <div className="flex items-center gap-3 px-2 mb-6">
-            <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-              Auto Simulation Bridge
-            </h3>
-            <div className="h-px flex-1 bg-border/20" />
+                  ))
+                ) : (
+                  <Surface variant="glass" className="py-24 text-center border-dashed border-white/5">
+                    <Skull className="h-12 w-12 mx-auto mb-6 opacity-20 text-muted-foreground" />
+                    <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground/40">
+                      Zero Engagement Pairs Detected
+                      <br />
+                      <span className="text-[9px] opacity-60">Warriors may be unassigned or incapacitated.</span>
+                    </p>
+                  </Surface>
+                )}
+              </div>
+            )}
           </div>
-          <AutosimConsole
-            isSimulating={autosimming}
-            progress={autosimProgress}
-            result={autosimResult}
-            onStart={handleStartAutosim}
-          />
-        </div>
+        </section>
+
+        {/* Autosim Bridge */}
+        <section className="pt-12 border-t border-white/5">
+          <SectionDivider label="Auto Simulation Bridge" />
+          <div className="mt-8">
+            <AutosimConsole
+              isSimulating={autosimming}
+              progress={autosimProgress}
+              result={autosimResult}
+              onStart={handleStartAutosim}
+            />
+          </div>
+        </section>
       </div>
-    </div>
+    </PageFrame>
   );
 }

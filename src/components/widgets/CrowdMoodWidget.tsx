@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { useWorldState } from '@/state/useGameStore';
+import { Surface } from '@/components/ui/Surface';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Heart } from 'lucide-react';
 import { CrowdMood, getMoodModifiers, MOOD_ICONS, MOOD_DESCRIPTIONS } from '@/engine/crowdMood';
+import { cn } from '@/lib/utils';
 
 // Radial gauge: map mood to an angle (0-180 arc)
 const MOOD_ANGLE: Record<CrowdMood, number> = {
@@ -36,186 +39,131 @@ export function CrowdMoodWidget() {
   };
 
   const modColor = (v: number) =>
-    v > 1 ? 'text-arena-pop' : v < 1 ? 'text-destructive' : 'text-muted-foreground';
+    v > 1 ? 'text-arena-pop' : v < 1 ? 'text-destructive' : 'text-muted-foreground/40';
   const killColor = (v: number) =>
-    v > 0 ? 'text-destructive' : v < 0 ? 'text-arena-pop' : 'text-muted-foreground';
+    v > 0 ? 'text-primary' : v < 0 ? 'text-arena-pop' : 'text-muted-foreground/40';
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="font-display text-base flex items-center gap-2">
-          <Heart className="h-4 w-4 text-destructive" /> Crowd Mood
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
+    <Surface variant="glass" className="h-full border-white/5 bg-white/[0.01]">
+      <div className="p-6 border-b border-white/5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <ImperialRing size="xs" variant="blood">
+            <Heart className="h-3.5 w-3.5 text-primary" />
+          </ImperialRing>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">Crowd Resonance</span>
+        </div>
+      </div>
+
+      <div className="p-8 space-y-8">
         {/* Radial gauge */}
         <div className="flex justify-center">
-          <div className="relative w-40 h-24">
-            {/* Arc background */}
+          <div className="relative w-48 h-28">
             <svg viewBox="0 0 160 90" className="w-full h-full">
-              {/* Track */}
               <path
                 d="M 15 80 A 65 65 0 0 1 145 80"
                 fill="none"
-                stroke="hsl(var(--muted))"
-                strokeWidth="10"
+                stroke="rgba(255,255,255,0.05)"
+                strokeWidth="8"
                 strokeLinecap="round"
               />
-              {/* Gradient colored arc segments */}
               <defs>
                 <linearGradient id="moodGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="hsl(var(--primary))" />
-                  <stop offset="40%" stopColor="hsl(var(--accent))" />
-                  <stop offset="70%" stopColor="hsl(var(--arena-gold, 45 93% 47%))" />
-                  <stop offset="100%" stopColor="hsl(var(--destructive))" />
+                  <stop offset="50%" stopColor="hsl(var(--arena-gold))" />
+                  <stop offset="100%" stopColor="hsl(var(--primary))" />
                 </linearGradient>
               </defs>
               <path
                 d="M 15 80 A 65 65 0 0 1 145 80"
                 fill="none"
                 stroke="url(#moodGrad)"
-                strokeWidth="10"
+                strokeWidth="8"
                 strokeLinecap="round"
-                opacity="0.3"
+                opacity="0.1"
               />
-              {/* Needle */}
               <line
                 x1="80"
                 y1="80"
-                x2={80 + 50 * Math.cos(Math.PI - (angle * Math.PI) / 180)}
-                y2={80 - 50 * Math.sin(Math.PI - (angle * Math.PI) / 180)}
-                stroke="hsl(var(--foreground))"
-                strokeWidth="2.5"
+                x2={80 + 55 * Math.cos(Math.PI - (angle * Math.PI) / 180)}
+                y2={80 - 55 * Math.sin(Math.PI - (angle * Math.PI) / 180)}
+                stroke="hsl(var(--primary))"
+                strokeWidth="2"
                 strokeLinecap="round"
-                className="transition-all duration-700"
+                className="transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"
               />
-              {/* Center dot */}
-              <circle cx="80" cy="80" r="4" fill="hsl(var(--foreground))" />
+              <circle cx="80" cy="80" r="3" fill="hsl(var(--primary))" />
             </svg>
-            {/* Labels at ends */}
-            <span className="absolute bottom-0 left-0 text-[9px] text-muted-foreground">🕯️</span>
-            <span className="absolute bottom-0 right-0 text-[9px] text-muted-foreground">🩸</span>
+            <span className="absolute bottom-2 left-2 text-[10px] opacity-20 grayscale">🕯️</span>
+            <span className="absolute bottom-2 right-2 text-[10px] opacity-20 grayscale">🩸</span>
           </div>
         </div>
 
-        {/* Current mood */}
-        <div className="text-center">
-          <div className="text-2xl">{icon}</div>
-          <div className="font-display font-bold text-sm">{mood}</div>
-          <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{desc}</p>
+        <div className="text-center space-y-2">
+          <div className="text-2xl animate-pulse">{icon}</div>
+          <div className="text-[12px] font-display font-black uppercase tracking-widest text-foreground">{mood}</div>
+          <p className="text-[10px] font-black uppercase tracking-tight text-muted-foreground/40 max-w-[200px] mx-auto leading-relaxed">
+            {desc}
+          </p>
         </div>
 
-        {/* Modifier breakdown */}
-        <div className="grid grid-cols-3 gap-1.5 text-center">
-          <div className="rounded-none bg-secondary/60 p-1.5 border border-border/50">
-            <div className={`text-sm font-mono font-bold ${modColor(mods.fameMultiplier)}`}>
-              {fmtMod(mods.fameMultiplier)}
+        {/* Modifier grid */}
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { label: 'Fame', value: fmtMod(mods.fameMultiplier), color: modColor(mods.fameMultiplier) },
+            { label: 'Pop', value: fmtMod(mods.popMultiplier), color: modColor(mods.popMultiplier) },
+            { label: 'Lethality', value: fmtKill(mods.killChanceBonus), color: killColor(mods.killChanceBonus) },
+          ].map((m) => (
+            <div key={m.label} className="text-center p-3 bg-white/[0.02] border border-white/5">
+              <div className={cn("text-xs font-display font-black mb-1", m.color)}>{m.value}</div>
+              <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30">{m.label}</div>
             </div>
-            <div className="text-[9px] text-muted-foreground uppercase">Fame</div>
-          </div>
-          <div className="rounded-none bg-secondary/60 p-1.5 border border-border/50">
-            <div className={`text-sm font-mono font-bold ${modColor(mods.popMultiplier)}`}>
-              {fmtMod(mods.popMultiplier)}
-            </div>
-            <div className="text-[9px] text-muted-foreground uppercase">Pop</div>
-          </div>
-          <div className="rounded-none bg-secondary/60 p-1.5 border border-border/50">
-            <div className={`text-sm font-mono font-bold ${killColor(mods.killChanceBonus)}`}>
-              {fmtKill(mods.killChanceBonus)}
-            </div>
-            <div className="text-[9px] text-muted-foreground uppercase">Kill %</div>
-          </div>
+          ))}
         </div>
 
-        {/* Mood History Sparkline */}
-        {moodHistory.length >= 2 &&
-          (() => {
-            const MOOD_Y: Record<string, number> = {
-              Solemn: 4,
-              Calm: 3,
-              Theatrical: 2,
-              Festive: 1,
-              Bloodthirsty: 0,
-            };
-            const MOOD_COLOR: Record<string, string> = {
-              Solemn: 'hsl(var(--primary))',
-              Calm: 'hsl(var(--muted-foreground))',
-              Theatrical: 'hsl(var(--accent-foreground))',
-              Festive: 'hsl(var(--arena-pop, 142 71% 45%))',
-              Bloodthirsty: 'hsl(var(--destructive))',
-            };
-            const last10 = moodHistory.slice(-10);
-            const w = 200,
-              h = 40,
-              px = 8,
-              py = 4;
-            const stepX = (w - px * 2) / Math.max(last10.length - 1, 1);
-            const stepY = (h - py * 2) / 4;
-            const pts = last10.map((entry, i) => ({
-              x: px + i * stepX,
-              y: py + (MOOD_Y[entry.mood] ?? 2) * stepY,
-              mood: entry.mood as CrowdMood,
-              week: entry.week,
-            }));
-            const polyline = pts.map((p) => `${p.x},${p.y}`).join(' ');
+        {/* Mood History */}
+        {moodHistory.length >= 2 && (
+          <div className="pt-6 border-t border-white/5">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/20">Temporal Shift</span>
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/20">Last 10 Cycles</span>
+            </div>
+            {(() => {
+              const MOOD_Y: Record<string, number> = { Solemn: 4, Calm: 3, Theatrical: 2, Festive: 1, Bloodthirsty: 0 };
+              const last10 = moodHistory.slice(-10);
+              const w = 240, h = 32, px = 8, py = 4;
+              const stepX = (w - px * 2) / Math.max(last10.length - 1, 1);
+              const stepY = (h - py * 2) / 4;
+              const pts = last10.map((entry, i) => ({
+                x: px + i * stepX,
+                y: py + (MOOD_Y[entry.mood] ?? 2) * stepY,
+                mood: entry.mood as CrowdMood,
+              }));
+              const polyline = pts.map((p) => `${p.x},${p.y}`).join(' ');
 
-            return (
-              <div className="mt-1">
-                <div className="text-[9px] text-muted-foreground uppercase mb-1">Mood History</div>
-                <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-10">
-                  {/* Grid lines */}
-                  {[0, 1, 2, 3, 4].map((i) => (
-                    <line
-                      key={i}
-                      x1={px}
-                      x2={w - px}
-                      y1={py + i * stepY}
-                      y2={py + i * stepY}
-                      stroke="hsl(var(--border))"
-                      strokeWidth="0.5"
-                      strokeDasharray="2,2"
-                      opacity="0.4"
-                    />
-                  ))}
-                  {/* Line */}
+              return (
+                <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-8 overflow-visible">
                   <polyline
                     points={polyline}
                     fill="none"
-                    stroke="hsl(var(--foreground))"
-                    strokeWidth="1.5"
+                    stroke="rgba(var(--primary-rgb), 0.2)"
+                    strokeWidth="1"
                     strokeLinejoin="round"
-                    strokeLinecap="round"
-                    opacity="0.6"
                   />
-                  {/* Dots */}
                   {pts.map((p, i) => (
                     <circle
                       key={i}
                       cx={p.x}
                       cy={p.y}
-                      r="3"
-                      fill={MOOD_COLOR[p.mood] ?? 'hsl(var(--foreground))'}
-                      stroke="hsl(var(--background))"
-                      strokeWidth="1"
-                    >
-                      <title>
-                        Week {p.week}: {p.mood}
-                      </title>
-                    </circle>
+                      r="1.5"
+                      fill={p.mood === mood ? "hsl(var(--primary))" : "rgba(255,255,255,0.1)"}
+                    />
                   ))}
                 </svg>
-                {/* Y-axis labels */}
-                <div className="flex justify-between text-[8px] text-muted-foreground -mt-0.5 px-1">
-                  <span>🩸</span>
-                  <span>🎉</span>
-                  <span>🎭</span>
-                  <span>😐</span>
-                  <span>🕯️</span>
-                </div>
-              </div>
-            );
-          })()}
-      </CardContent>
-    </Card>
+              );
+            })()}
+          </div>
+        )}
+      </div>
+    </Surface>
   );
 }

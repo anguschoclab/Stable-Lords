@@ -48,7 +48,7 @@ describe('contractMutations', () => {
         hype: 10,
         status: 'Proposed',
         responses: { w1: 'Accepted', w2: 'Pending' }
-      } as BoutOffer;
+      };
 
       const impact = respondToBoutOffer(state, 'offer1', 'w2', 'Accepted');
       expect(impact.boutOffers?.['offer1'].responses).toEqual({

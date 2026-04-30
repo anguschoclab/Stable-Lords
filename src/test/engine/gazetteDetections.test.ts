@@ -114,7 +114,7 @@ describe('detectDebuts', () => {
 });
 
 describe('computeStreaks', () => {
-  it('correctly tracks win and loss streaks', () => {
+  it('correctly tracks win and loss streaks (legacy integration test)', () => {
     const fights = [
       createFight({ a: 'Alice', d: 'Bob', winner: 'A' }), // Alice 1, Bob -1
       createFight({ a: 'Alice', d: 'Charlie', winner: 'A' }), // Alice 2, Charlie -1
@@ -127,6 +127,83 @@ describe('computeStreaks', () => {
     expect(streaks.get('Charlie')).toBe(-1);
     expect(streaks.get('Dave')).toBe(-1);
     expect(streaks.get('Eve')).toBe(1);
+  });
+
+  it('initializes streaks to 1 and -1 on a single win/loss', () => {
+    const fights = [createFight({ a: 'Hero', d: 'Villain', winner: 'A' })];
+    const streaks = computeStreaks(fights);
+    expect(streaks.get('Hero')).toBe(1);
+    expect(streaks.get('Villain')).toBe(-1);
+  });
+
+  it('builds positive streaks correctly on consecutive wins', () => {
+    const fights = [
+      createFight({ a: 'Hero', d: 'Villain1', winner: 'A' }),
+      createFight({ a: 'Hero', d: 'Villain2', winner: 'A' }),
+      createFight({ a: 'Hero', d: 'Villain3', winner: 'A' }),
+    ];
+    const streaks = computeStreaks(fights);
+    expect(streaks.get('Hero')).toBe(3);
+    expect(streaks.get('Villain1')).toBe(-1);
+    expect(streaks.get('Villain2')).toBe(-1);
+    expect(streaks.get('Villain3')).toBe(-1);
+  });
+
+  it('builds negative streaks correctly on consecutive losses', () => {
+    const fights = [
+      createFight({ a: 'Hero', d: 'Villain1', winner: 'D' }),
+      createFight({ a: 'Hero', d: 'Villain2', winner: 'D' }),
+      createFight({ a: 'Hero', d: 'Villain3', winner: 'D' }),
+    ];
+    const streaks = computeStreaks(fights);
+    expect(streaks.get('Hero')).toBe(-3);
+    expect(streaks.get('Villain1')).toBe(1);
+    expect(streaks.get('Villain2')).toBe(1);
+    expect(streaks.get('Villain3')).toBe(1);
+  });
+
+  it('breaks a losing streak and sets the streak to 1 on a win', () => {
+    const fights = [
+      createFight({ a: 'Hero', d: 'Villain1', winner: 'D' }), // Hero -1
+      createFight({ a: 'Hero', d: 'Villain2', winner: 'D' }), // Hero -2
+      createFight({ a: 'Hero', d: 'Villain3', winner: 'A' }), // Hero wins! Streak becomes 1
+    ];
+    const streaks = computeStreaks(fights);
+    expect(streaks.get('Hero')).toBe(1);
+    expect(streaks.get('Villain3')).toBe(-1);
+  });
+
+  it('breaks a winning streak and sets the streak to -1 on a loss', () => {
+    const fights = [
+      createFight({ a: 'Hero', d: 'Villain1', winner: 'A' }), // Hero 1
+      createFight({ a: 'Hero', d: 'Villain2', winner: 'A' }), // Hero 2
+      createFight({ a: 'Hero', d: 'Villain3', winner: 'D' }), // Hero loses! Streak becomes -1
+    ];
+    const streaks = computeStreaks(fights);
+    expect(streaks.get('Hero')).toBe(-1);
+    expect(streaks.get('Villain3')).toBe(1);
+  });
+
+  it('resets both fighters streaks to 0 on a draw', () => {
+    const fights = [
+      createFight({ a: 'Hero', d: 'Villain1', winner: 'A' }), // Hero 1
+      createFight({ a: 'Villain2', d: 'Bystander', winner: 'A' }), // Villain2 1
+      createFight({ a: 'Hero', d: 'Villain2', winner: null }), // Draw!
+    ];
+    const streaks = computeStreaks(fights);
+    expect(streaks.get('Hero')).toBe(0);
+    expect(streaks.get('Villain2')).toBe(0);
+  });
+
+  it('gracefully ignores null or undefined fight objects', () => {
+    const fights = [
+      createFight({ a: 'Hero', d: 'Villain', winner: 'A' }),
+      null as any,
+      undefined as any,
+      createFight({ a: 'Hero', d: 'Villain2', winner: 'A' }),
+    ];
+    const streaks = computeStreaks(fights);
+    expect(streaks.get('Hero')).toBe(2);
   });
 });
 

@@ -6,9 +6,12 @@
 import { Link } from '@tanstack/react-router';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { YearEndRecap } from '@/components/ledger/YearEndRecap';
 import { SeasonSynthesis } from '@/components/ledger/SeasonSynthesis';
-import { CalendarDays, UserPlus, GraduationCap, BookOpen } from 'lucide-react';
+import { CalendarDays, UserPlus, GraduationCap, BookOpen, ArrowRight, Shield } from 'lucide-react';
 
 export default function Offseason() {
   return (

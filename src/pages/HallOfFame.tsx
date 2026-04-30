@@ -24,9 +24,12 @@ import {
 import { InducteeCard } from './HallOfFame/InducteeCard';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 import { WarriorLink } from '@/components/EntityLink';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PageFrame } from '@/components/ui/PageFrame';
 import FightsList from '@/components/awards/FightsList';
 import UpsetsList, { type UpsetEntry } from '@/components/awards/UpsetsList';
 

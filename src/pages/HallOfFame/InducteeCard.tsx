@@ -7,6 +7,7 @@ import { Swords, Trophy, Activity, Medal, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Surface } from '@/components/ui/Surface';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 /* ── helpers ─────────────────────────────────────────────── */
 

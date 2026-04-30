@@ -89,7 +89,7 @@ describe('applyRecords', () => {
     expect(updatedD.career?.wins).toBe(1);
     expect(updatedD.career?.losses).toBe(0);
     expect(updatedD.career?.kills).toBe(1); // D got the kill
-    expect(updatedD.fatigue).toBe(0); // If D got the kill, `wasKilled` argument to `updateWarriorAfterBout` is true. `updateWarriorAfterBout` has: `const fatigue = wasKilled ? 0 : ...` so fatigue is reset to 0 if they get a kill! Wait, let's verify if that's the logic.
+    expect(updatedD.fatigue).toBe(0); // Fatigue is reset to 0 when a warrior performs a kill
     expect(updatedD.flair).toContain('Flashy');
   });
 

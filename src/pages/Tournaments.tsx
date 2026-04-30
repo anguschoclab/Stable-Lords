@@ -159,20 +159,21 @@ export default function Tournaments() {
   }, [currentTournament, activeSlotId, loadGame, setSimulating]);
 
   return (
-    <div className="space-y-6 pb-20">
+    <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
         icon={Trophy}
-        title="Seasonal Campaigns"
-        subtitle={`IMPERIAL · TOURNAMENTS · ${season.toUpperCase()} SEASON`}
+        eyebrow="Seasonal Campaigns"
+        title="Imperial Tournaments"
+        subtitle={`${season.toUpperCase()} SEASON · YEAR ${year}`}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {!currentTournament && activeWarriors.length < 2 && (
               <Link to="/ops/recruit">
                 <Button
                   variant="outline"
-                  className="h-9 font-black uppercase text-[10px] tracking-widest gap-2"
+                  className="h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all"
                 >
-                  <UserPlus className="h-4 w-4" /> RECRUIT OPERATIVES
+                  <UserPlus className="h-3.5 w-3.5" /> RECRUIT UNITS
                 </Button>
               </Link>
             )}
@@ -182,127 +183,154 @@ export default function Tournaments() {
 
       {/* ── Pre-tournament readiness banner ── */}
       {currentTournament && playerWarriorsInTournament.length > 0 && (
-        <div className="rounded-none border border-border/20 bg-secondary/10 px-5 py-4 space-y-3">
-          {/* Header row */}
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-              <Zap className="h-3.5 w-3.5 text-primary" />
-              OPERATIVE READINESS
-            </div>
-            {/* Prizes pill */}
-            {(() => {
-              const prizes = TIER_PRIZES[currentTournament.tierId];
-              if (!prizes) return null;
-              return (
-                <div className="flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent/5 px-3 py-1 text-[9px] font-black uppercase tracking-widest text-accent">
-                  <Medal className="h-3 w-3" />
-                  <span>{prizes.first.toLocaleString()}g</span>
-                  <span className="opacity-40">/</span>
-                  <span className="opacity-70">{prizes.second.toLocaleString()}g</span>
-                  <span className="opacity-40">/</span>
-                  <span className="opacity-50">{prizes.third.toLocaleString()}g</span>
-                </div>
-              );
-            })()}
-          </div>
-
-          {/* Per-warrior rows */}
-          <div className="flex flex-wrap gap-2">
-            {playerWarriorsInTournament.map((w) => {
-              const { label: fatigueLabel, color: fatigueColor } = getFatigueLabel(w.fatigue);
-              const hasInjuries = w.injuries && w.injuries.length > 0;
-              return (
-                <div
-                  key={w.id}
-                  className="flex items-center gap-2 rounded border border-border/15 bg-background/30 px-3 py-1.5 text-[11px]"
-                >
-                  <span className="font-semibold text-foreground/90 truncate max-w-[120px]">
-                    {w.name}
-                  </span>
-                  <span
-                    className={`font-black uppercase text-[9px] tracking-widest ${fatigueColor}`}
-                  >
-                    {fatigueLabel}
-                  </span>
-                  {hasInjuries && (
-                    <div className="flex items-center gap-1 text-destructive">
-                      <AlertTriangle className="h-3 w-3" />
-                      <span className="text-[9px] font-black uppercase tracking-widest">
-                        {w.injuries.length === 1
-                          ? w.injuries[0].severity
-                          : `${w.injuries.length} INJURIES`}
-                      </span>
+        <div className="pt-4">
+          <SectionDivider label="Operative Readiness" />
+          <Surface
+            variant="glass"
+            className="flex flex-col gap-6 p-6 border-l-4 border-l-primary shadow-xl"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <ImperialRing size="sm" variant="blood">
+                  <Zap className="h-3.5 w-3.5 text-primary" />
+                </ImperialRing>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
+                  Combat Status Audit
+                </span>
+              </div>
+              {(() => {
+                const prizes = TIER_PRIZES[currentTournament.tierId];
+                if (!prizes) return null;
+                return (
+                  <div className="flex items-center gap-3 bg-white/[0.03] border border-white/5 px-4 py-2 rounded-none">
+                    <Medal className="h-3.5 w-3.5 text-arena-gold" />
+                    <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-foreground/70">
+                      <span>{prizes.first.toLocaleString()}g</span>
+                      <span className="opacity-20 text-[8px]">|</span>
+                      <span>{prizes.second.toLocaleString()}g</span>
+                      <span className="opacity-20 text-[8px]">|</span>
+                      <span>{prizes.third.toLocaleString()}g</span>
                     </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                  </div>
+                );
+              })()}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {playerWarriorsInTournament.map((w) => {
+                const { label: fatigueLabel, color: fatigueColor } = getFatigueLabel(w.fatigue);
+                const hasInjuries = w.injuries && w.injuries.length > 0;
+                return (
+                  <div
+                    key={w.id}
+                    className="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-all"
+                  >
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[11px] font-black uppercase tracking-tight text-foreground/90">
+                        {w.name}
+                      </span>
+                      {hasInjuries ? (
+                        <div className="flex items-center gap-1.5 text-destructive animate-pulse">
+                          <AlertTriangle className="h-2.5 w-2.5" />
+                          <span className="text-[8px] font-black uppercase tracking-widest">
+                            {w.injuries.length === 1 ? w.injuries[0].severity : `${w.injuries.length} INJURIES`}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+                          Status: Nominal
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className={cn("text-[9px] font-black uppercase tracking-widest", fatigueColor)}>
+                        {fatigueLabel}
+                      </span>
+                      <div className="h-1 w-12 bg-white/5 mt-1">
+                        <div 
+                          className={cn("h-full transition-all", 
+                            (w.fatigue ?? 0) < 30 ? "bg-primary" : (w.fatigue ?? 0) < 60 ? "bg-arena-gold" : "bg-destructive"
+                          )} 
+                          style={{ width: `${Math.min(100, w.fatigue ?? 0)}%` }} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Surface>
         </div>
       )}
 
       {currentTournament && (
-        <Surface
-          variant="gold"
-          padding="none"
-          className="border-accent/40 shadow-[0_0_50px_-10px_hsla(var(--accent),0.2)] overflow-hidden"
-        >
-          <div className="pb-4 bg-accent/5 border-b border-border/10 p-6">
-            <div className="font-display text-xl font-black flex items-center justify-between text-accent uppercase tracking-tighter">
-              <span className="flex items-center gap-3">
-                <span className="text-2xl drop-shadow-sm">{SEASON_ICONS[season]}</span>
-                {currentTournament.name}
-              </span>
-              <Badge className="bg-primary text-black font-black uppercase text-[9px] tracking-[0.2em] px-3 animate-pulse border-none">
-                LIVE
+        <div className="pt-8">
+          <SectionDivider label="Active Manifest" variant="primary" />
+          <Surface
+            variant="glass"
+            padding="none"
+            className="border-primary/20 shadow-[0_0_50px_-10px_rgba(135,34,40,0.15)] overflow-hidden"
+          >
+            <div className="pb-6 bg-primary/5 border-b border-white/5 p-8 flex items-center justify-between">
+              <div className="flex items-center gap-5">
+                <ImperialRing size="md" variant="blood">
+                  <span className="text-xl">{SEASON_ICONS[season]}</span>
+                </ImperialRing>
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Tournament Active</span>
+                  <h3 className="font-display text-2xl font-black uppercase tracking-tight text-foreground">
+                    {currentTournament.name}
+                  </h3>
+                </div>
+              </div>
+              <Badge className="bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] px-6 py-2 rounded-none animate-pulse">
+                LIVE PHASE
               </Badge>
             </div>
-          </div>
-          <div className="p-0">
-            <div className="p-6 border-b border-white/5">
-              <TournamentSchedule tournament={currentTournament} currentWeek={week} />
-            </div>
-
-            <TournamentBracket
-              bouts={currentTournament.bracket}
-              arenaHistory={arenaHistory}
-              expandedBout={expandedBout}
-              onToggleExpand={setExpandedBout}
-            />
-
-            {currentTournament.bracket.some((b) => b.winner === undefined) && (
-              <div className="flex flex-col gap-4 p-8 border-t border-white/5 bg-secondary/10">
-                <div className="flex gap-4">
-                  <Button
-                    onClick={handleExecuteRound}
-                    className="flex-1 h-14 font-black uppercase text-[11px] tracking-[0.4em] shadow-2xl bg-primary text-black hover:bg-primary/90 transition-all"
-                  >
-                    <Play className="h-4 w-4 mr-2 fill-current" /> EXECUTE NEXT BOUT
-                  </Button>
-                </div>
-
-                {isTournamentReadyToStart && (
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsPrepOpen(true)}
-                    className="w-full h-12 font-black uppercase text-[10px] tracking-widest gap-2 bg-accent/5 border-accent/20 hover:bg-accent/10 transition-colors"
-                  >
-                    <Settings2 className="h-4 w-4" /> OPEN PREP CONSOLE
-                  </Button>
-                )}
+            
+            <div className="p-0">
+              <div className="p-8 border-b border-white/5 bg-white/[0.01]">
+                <TournamentSchedule tournament={currentTournament} currentWeek={week} />
               </div>
-            )}
-          </div>
-        </Surface>
+
+              <div className="py-12 bg-gradient-to-b from-transparent to-white/[0.02]">
+                <TournamentBracket
+                  bouts={currentTournament.bracket}
+                  arenaHistory={arenaHistory}
+                  expandedBout={expandedBout}
+                  onToggleExpand={setExpandedBout}
+                />
+              </div>
+
+              {currentTournament.bracket.some((b) => b.winner === undefined) && (
+                <div className="flex flex-col gap-6 p-8 border-t border-white/5 bg-primary/5">
+                  <div className="flex gap-6">
+                    <Button
+                      onClick={handleExecuteRound}
+                      className="flex-1 h-16 font-black uppercase text-[12px] tracking-[0.4em] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(135,34,40,0.4)] transition-all rounded-none"
+                    >
+                      <Play className="h-5 w-5 mr-4 fill-current" /> EXECUTE NEXT BOUT
+                    </Button>
+                  </div>
+
+                  {isTournamentReadyToStart && (
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsPrepOpen(true)}
+                      className="w-full h-12 font-black uppercase text-[10px] tracking-[0.2em] gap-3 bg-white/5 border-white/10 hover:bg-white/10 transition-all rounded-none"
+                    >
+                      <Settings2 className="h-4 w-4" /> OPEN PREPARATION CONSOLE
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </Surface>
+        </div>
       )}
 
-      <div className="space-y-4">
-        <div className="flex items-center gap-3 px-2">
-          <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-            Tournament History
-          </h3>
-          <div className="h-px flex-1 bg-border/20" />
-        </div>
+      <div className="space-y-6 pt-12">
+        <SectionDivider label="Campaign Archives" />
         <TournamentHistory
           pastTournaments={pastTournaments}
           seasonIcons={SEASON_ICONS}
@@ -310,6 +338,6 @@ export default function Tournaments() {
           currentSeason={season}
         />
       </div>
-    </div>
+    </PageFrame>
   );
 }

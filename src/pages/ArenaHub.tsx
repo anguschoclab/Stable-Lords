@@ -50,6 +50,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 // Unified Widgets
 import { MedicalAuditWidget } from '@/components/dashboard/MedicalAuditWidget';
@@ -379,16 +382,17 @@ export default function ArenaHub() {
   const stableStats = useMemo(() => calculateStableStats(roster), [roster]);
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto pb-20">
+    <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
-        title="Arena Command Hub"
-        subtitle="ARENA \u00b7 SPECTACLE ENGINE \u00b7 WORLD STATE"
         icon={Swords}
+        eyebrow="Operational Command"
+        title="Arena Hub"
+        subtitle="SPECTACLE ENGINE · WORLD STATE MONITOR"
         actions={
           <div className="flex gap-3">
             <Badge
               variant="outline"
-              className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1"
+              className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1 rounded-none"
             >
               {roster.filter((w) => w.status === 'Active').length} UNITS ACTIVE
             </Badge>
@@ -402,14 +406,20 @@ export default function ArenaHub() {
       {/* Execute Week CTA */}
       <Surface
         variant="glass"
-        className="flex flex-row items-center gap-6 p-5 border-l-4 border-l-primary/50"
+        className="flex flex-row items-center gap-6 p-6 border-l-4 border-l-primary shadow-2xl"
       >
         <div className="flex-1">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-            {isTournamentWeek ? 'Tournament Day' : `Week ${week}`}
-          </p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">
-            Execute all bouts for this week
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
+              Mission Cycle
+            </span>
+            <div className="h-px w-8 bg-primary/30" />
+          </div>
+          <h2 className="font-display font-black text-2xl uppercase tracking-tight text-foreground">
+            {isTournamentWeek ? `Empire Day ${gameState.day + 1}` : `Cycle Week ${week}`}
+          </h2>
+          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest mt-1">
+            Commit all pending pairings to the arena registry
           </p>
         </div>
         <Button
@@ -419,46 +429,59 @@ export default function ArenaHub() {
             setAutosimResult(null);
           }}
           disabled={showCombat}
-          className="bg-primary text-primary-foreground font-black uppercase tracking-widest shrink-0"
+          className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] text-[11px] hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all duration-300 rounded-none shrink-0"
         >
-          <Zap className="h-4 w-4 mr-2" />
-          {isTournamentWeek ? 'EXECUTE TOURNAMENT DAY →' : `EXECUTE WEEK ${week} →`}
+          <Zap className="h-4 w-4 mr-3 fill-current" />
+          {isTournamentWeek ? 'EXECUTE DAY' : 'EXECUTE WEEK'}
         </Button>
       </Surface>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Primary Intel Channel */}
-        <div className="lg:col-span-8 space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
+        {/* Left Column: Command & Pairings */}
+        <div className="lg:col-span-8 flex flex-col gap-8">
+          <SectionDivider label="Engagement Intelligence" variant="gold" />
           <IntelligenceHubWidget />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <NextBoutWidget />
-            <MedicalAuditWidget />
+            <div className="flex flex-col gap-4">
+              <SectionDivider label="Next Engagement" />
+              <NextBoutWidget />
+            </div>
+            <div className="flex flex-col gap-4">
+              <SectionDivider label="Medical Audit" />
+              <MedicalAuditWidget />
+            </div>
           </div>
         </div>
 
-        {/* Tactical Feed Side Pane */}
-        <div className="lg:col-span-4 space-y-8">
+        {/* Right Column: Environmental & Tactical Feed */}
+        <div className="lg:col-span-4 flex flex-col gap-8">
+          <SectionDivider label="Atmospheric Conditions" />
           <WeatherWidget />
+          
+          <SectionDivider label="Style Meta State" />
           <MetaDriftWidget />
 
+          <SectionDivider label="Arena Analytics" />
           <Surface
             variant="glass"
             className="p-6 space-y-6 bg-gradient-to-br from-white/[0.01] to-white/[0.03]"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-primary" />
+              <div className="flex items-center gap-3">
+                <ImperialRing size="sm" variant="blood">
+                  <BarChart3 className="h-3.5 w-3.5 text-primary" />
+                </ImperialRing>
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-                  Arena Analytics
+                  Performance Feed
                 </span>
               </div>
-              <Activity className="h-3 w-3 text-primary animate-pulse" />
+              <Activity className="h-3.5 w-3.5 text-primary animate-pulse" />
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 pt-2">
               <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-foreground/80 transition-colors">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors">
                   Stable Renown
                 </span>
                 <span className="font-display font-black text-xl text-arena-fame tracking-tighter">
@@ -466,7 +489,7 @@ export default function ArenaHub() {
                 </span>
               </div>
               <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-foreground/80 transition-colors">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors">
                   Lifetime Kills
                 </span>
                 <span className="font-display font-black text-xl text-destructive tracking-tighter">
@@ -474,8 +497,8 @@ export default function ArenaHub() {
                 </span>
               </div>
               <div className="flex justify-between items-center group">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-foreground/80 transition-colors">
-                  Combat Yield
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 group-hover:text-foreground/80 transition-colors">
+                  Win Velocity
                 </span>
                 <span className="font-display font-black text-xl text-primary tracking-tighter">
                   {Math.round(stableStats.winRate * 100)}%
@@ -483,88 +506,84 @@ export default function ArenaHub() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/5">
-              <p className="text-[9px] text-muted-foreground/60 leading-relaxed uppercase tracking-wider font-mono">
-                All metrics updated in real-time. Combat performance influences world-state drift.
+            <div className="pt-6 border-t border-white/5">
+              <p className="text-[9px] text-muted-foreground/30 leading-relaxed uppercase tracking-[0.2em] font-black italic">
+                Data stream synchronized with central registry.
               </p>
             </div>
           </Surface>
         </div>
       </div>
 
+      <SectionDivider label="Global Arena Rankings" variant="primary" />
+
       {/* Global Rankings Channel */}
       <ArenaLeaderboard />
 
-      {/* Immersive Operational Strip */}
-      <div className="py-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-30 px-6 border-t border-white/5">
-        <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-          <Skull className="h-3.5 w-3.5 text-destructive" /> Blood Shed Protocols: V1.4
+      {/* Operational Protocol Strip */}
+      <div className="py-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 opacity-20 px-6 border-t border-white/5 mt-12 grayscale hover:grayscale-0 transition-all duration-700">
+        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
+          <Skull className="h-3.5 w-3.5 text-destructive" /> Protocols: V1.4
         </div>
-        <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-          <TrendingUp className="h-3.5 w-3.5 text-primary" /> Market Drift: Synchronized
+        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
+          <TrendingUp className="h-3.5 w-3.5 text-primary" /> Drift: Sync
         </div>
-        <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-          <Star className="h-3.5 w-3.5 text-arena-gold" /> Fame Coefficient Active
+        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
+          <Star className="h-3.5 w-3.5 text-arena-gold" /> Fame: Active
         </div>
-        <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.3em] whitespace-nowrap">
-          <Shield className="h-3.5 w-3.5 text-accent" /> Integrity Hash Verified
+        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
+          <Shield className="h-3.5 w-3.5 text-accent" /> Hash: Verified
         </div>
       </div>
 
       {/* ── Inline Combat Execution Panel ── */}
       {showCombat && (
-        <div className="space-y-8 border-t-2 border-primary/20 pt-10">
+        <div className="space-y-10 border-t-2 border-primary/20 pt-16 animate-in slide-in-from-bottom-10 duration-700 ease-out">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Zap className="h-4 w-4 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-                Engagement Console
-              </span>
+            <div className="flex items-center gap-4">
+              <ImperialRing size="md" variant="blood">
+                <Zap className="h-5 w-5 text-primary" />
+              </ImperialRing>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Engage Mode</span>
+                <h3 className="font-display font-black text-xl uppercase tracking-tight text-foreground"> Engagement Console</h3>
+              </div>
             </div>
             {results.length > 0 && (
               <Button
                 variant="outline"
-                size="sm"
                 onClick={() => {
                   setShowCombat(false);
                   setResults([]);
                   setAutosimResult(null);
                 }}
-                className="text-[10px] font-black uppercase tracking-widest border-white/10 hover:bg-white/5"
+                className="text-[10px] font-black uppercase tracking-[0.2em] border-white/10 h-12 px-8 rounded-none hover:bg-white/5 transition-all"
               >
-                Close Results
+                Seal Results
               </Button>
             )}
           </div>
 
-          {/* Readiness Strip */}
           <Surface
             variant="glass"
-            className="flex items-center gap-10 p-5 border-l-4 border-l-primary/50"
+            className="flex items-center gap-12 p-8 border-l-4 border-l-primary shadow-xl"
           >
-            <div className="flex items-center gap-3">
-              <Activity className="h-4 w-4 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-                Stable Readiness
-              </span>
-            </div>
-            <div className="flex items-center gap-8">
-              <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                  Mission Ready
-                </span>
-                <span className="font-display font-black text-xl text-primary leading-none mt-1">
-                  {fightReady.length}
-                </span>
+            <div className="flex flex-col gap-1">
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Readiness State</span>
+              <div className="flex items-center gap-4">
+                <Activity className="h-5 w-5 text-primary" />
+                <span className="font-display font-black text-xl uppercase tracking-tighter">Operational</span>
               </div>
-              <div className="h-8 w-px bg-white/5" />
+            </div>
+            <div className="h-12 w-px bg-white/5" />
+            <div className="flex items-center gap-12">
               <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase text-muted-foreground/60 tracking-widest">
-                  Combat Paired
-                </span>
-                <span className="font-display font-black text-xl text-arena-gold leading-none mt-1">
-                  {matchCard.length}
-                </span>
+                <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1">Mission Ready</span>
+                <span className="font-display font-black text-3xl text-primary leading-none">{fightReady.length}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1">Combat Pairs</span>
+                <span className="font-display font-black text-3xl text-arena-gold leading-none">{matchCard.length}</span>
               </div>
             </div>
             {!autosimming && !autosimResult && results.length === 0 && (
@@ -572,19 +591,17 @@ export default function ArenaHub() {
                 <Button
                   onClick={handleExecuteCycle}
                   disabled={running || (matchCard.length === 0 && fightReady.length < 2)}
-                  className="h-10 px-8 gap-3 font-black uppercase text-[12px] tracking-[0.2em] bg-primary text-primary-foreground hover:bg-primary/90"
+                  className="h-14 px-12 gap-4 font-black uppercase text-[14px] tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(135,34,40,0.4)] transition-all rounded-none"
                 >
-                  <Zap className="h-4 w-4 fill-current" />
-                  {isTournamentWeek
-                    ? `EXECUTE DAY ${gameState.day + 1} ›`
-                    : `EXECUTE WEEK ${gameState.week} ›`}
+                  <Zap className="h-5 w-5 fill-current" />
+                  EXECUTE CYLCE
                 </Button>
               </div>
             )}
           </Surface>
 
           {/* Match Card / Results */}
-          <div className="max-w-3xl mx-auto space-y-8">
+          <div className="max-w-4xl mx-auto space-y-12">
             {results.length > 0 ? (
               <RunResults
                 results={results}
@@ -592,21 +609,21 @@ export default function ArenaHub() {
                 onToggleExpand={setExpandedId}
               />
             ) : (
-              <Surface variant="glass" className="p-0 border-accent/20">
-                <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Activity className="h-4 w-4 text-accent" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-                      Active Combat Manifest
-                    </span>
+              <Surface variant="glass" className="p-0 border-accent/20 overflow-hidden">
+                <div className="p-6 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <ImperialRing size="sm" variant="gold">
+                      <Activity className="h-3.5 w-3.5 text-accent" />
+                    </ImperialRing>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/80">Active Manifest</span>
                   </div>
-                  <Badge variant="outline" className="text-[9px] font-mono border-white/10">
+                  <Badge variant="outline" className="text-[9px] font-black uppercase tracking-[0.2em] border-white/10 rounded-none h-8 px-4">
                     {matchCard.length} PAIRINGS
                   </Badge>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="p-8">
                   {matchCard.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-6">
                       {matchCard.map((p, i) => (
                         <MatchCard
                           key={i}
@@ -621,14 +638,12 @@ export default function ArenaHub() {
                       ))}
                     </div>
                   ) : (
-                    <div className="py-20 text-center text-muted-foreground/30">
-                      <Skull className="h-12 w-12 mx-auto mb-4 opacity-20" />
-                      <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed">
+                    <div className="py-24 text-center">
+                      <ImperialRing size="lg" variant="bronze" className="mx-auto mb-6 opacity-10">
+                        <Skull className="h-8 w-8" />
+                      </ImperialRing>
+                      <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 leading-relaxed">
                         Zero Engagement Pairs Detected
-                        <br />
-                        <span className="text-[9px] opacity-60">
-                          Warriors may be resting or in training
-                        </span>
                       </p>
                     </div>
                   )}
@@ -637,13 +652,8 @@ export default function ArenaHub() {
             )}
 
             {/* Autosim */}
-            <div className="pt-8 border-t border-white/5">
-              <div className="flex items-center gap-3 px-2 mb-6">
-                <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-                  Auto Simulation Bridge
-                </h3>
-                <div className="h-px flex-1 bg-border/20" />
-              </div>
+            <div className="pt-16 border-t border-white/5">
+              <SectionDivider label="Autonomous Simulation Bridge" />
               <AutosimConsole
                 isSimulating={autosimming}
                 progress={autosimProgress}
@@ -654,6 +664,6 @@ export default function ArenaHub() {
           </div>
         </div>
       )}
-    </div>
+    </PageFrame>
   );
 }

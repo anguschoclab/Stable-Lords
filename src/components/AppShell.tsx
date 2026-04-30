@@ -50,6 +50,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
 import { LeftNav } from '@/components/navigation/LeftNav';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 import { useShallow } from 'zustand/react/shallow';
 
@@ -180,80 +181,82 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#0C0806] flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
       {/* ─── Global Status Header ─── */}
-      <header className="h-14 border-b border-white/5 bg-[#080604]/85 backdrop-blur-xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
-        <div className="flex items-center gap-6">
+      <header className="h-16 border-b border-white/5 bg-[#080604]/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
+        <div className="flex items-center gap-10">
           <Link
             to="/"
-            className="flex items-center gap-3 group active:scale-95 transition-transform"
+            className="flex items-center gap-4 group active:scale-95 transition-all duration-300"
           >
-            <motion.div
-              whileHover={{ rotate: 15 }}
-              className="w-8 h-8 rounded-none bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(255,0,0,0.4)] border border-white/10"
-            >
-              <Swords />
-            </motion.div>
+            <ImperialRing size="md" variant="blood" className="group-hover:rotate-[225deg] transition-all duration-700">
+              <Swords className="w-5 h-5" />
+            </ImperialRing>
             <div className="flex flex-col">
-              <span className="font-display font-black text-sm tracking-tighter uppercase leading-none group-hover:text-primary transition-colors">
+              <span className="font-display font-black text-base tracking-tighter uppercase leading-none group-hover:text-primary transition-colors">
                 Stable Lords
               </span>
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-40">
-                CODEX SANGUIS · MMCDXII
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-30">
+                Codex Sanguis · v1.0
               </span>
             </div>
           </Link>
 
-          <Separator orientation="vertical" className="h-6 bg-white/5" />
-
-          <div className="hidden lg:flex items-center gap-8">
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">
-                Arena Time
+          <div className="hidden xl:flex items-center gap-1">
+            {/* Cycle Status */}
+            <div className="flex flex-col px-4 border-l border-white/5">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
+                Temporal Cycle
               </span>
-              <span className="font-mono font-black text-xs text-foreground bg-white/5 px-2 py-0.5 rounded-none border border-white/5">
-                {isSimulating ? (
-                  <span className="animate-pulse opacity-40">W—</span>
-                ) : (
-                  `W${week}${isTournamentWeek ? ` • D${day + 1}` : ''}`
-                )}
+              <div className="flex items-center gap-2">
+                <span className="font-display font-black text-xs text-foreground uppercase tracking-tight">
+                  {isSimulating ? (
+                    <span className="animate-pulse opacity-40 italic">Syncing Archive...</span>
+                  ) : (
+                    `Week ${week} · ${isTournamentWeek ? `Day ${day + 1}` : 'Planning Phase'}`
+                  )}
+                </span>
+              </div>
+            </div>
+
+            {/* Treasury */}
+            <div className="flex flex-col px-4 border-l border-white/5">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
+                Registry Balance
+              </span>
+              <span className="font-mono font-black text-xs text-arena-gold flex items-center gap-1.5">
+                {(treasury ?? 0).toLocaleString()} <Coins className="h-3 w-3 opacity-40" />
               </span>
             </div>
 
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">
-                Treasury
+            {/* Influence */}
+            <div className="flex flex-col px-4 border-l border-white/5">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
+                Total Influence
               </span>
-              <span className="font-mono font-black text-xs text-arena-gold flex items-center gap-1">
-                {(treasury ?? 0).toLocaleString()} <Coins className="h-3 w-3 opacity-60" />
-              </span>
-            </div>
-
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">
-                Influence
-              </span>
-              <span className="font-mono font-black text-xs text-arena-fame flex items-center gap-1">
-                {fame} <Crown className="h-3 w-3 opacity-60" />
+              <span className="font-mono font-black text-xs text-arena-fame flex items-center gap-1.5">
+                {fame} <Crown className="h-3 w-3 opacity-40" />
               </span>
             </div>
 
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">
-                Crowd Mood
+            {/* Crowd Mood */}
+            <div className="flex flex-col px-4 border-l border-white/5">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
+                Arena Favor
               </span>
-              <span className="font-mono font-black text-xs text-arena-pop flex items-center gap-1">
-                {moodIcon} <Activity className="h-3 w-3 opacity-60" />
+              <span className="font-mono font-black text-xs text-arena-pop flex items-center gap-1.5">
+                {moodIcon} <Activity className="h-3 w-3 opacity-40" />
               </span>
             </div>
 
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">
-                Weather
+            {/* Environmental Status */}
+            <div className="flex flex-col px-4 border-l border-white/5">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
+                Environment
               </span>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span
                     className={cn(
-                      'font-mono font-black text-xs flex items-center gap-1.5 px-2 py-0.5 rounded-none border border-white/5 bg-white/5 cursor-help transition-colors',
+                      'font-mono font-black text-[10px] flex items-center gap-1.5 px-2 py-0.5 rounded-none border border-white/5 bg-white/5 cursor-help transition-all hover:bg-white/10 uppercase tracking-widest',
                       WEATHER_COLORS[weather] || 'text-sky-400'
                     )}
                   >
@@ -266,12 +269,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 </TooltipTrigger>
                 <TooltipContent
                   side="bottom"
-                  className="bg-[#0C0806] border-white/10 p-3 max-w-[200px]"
+                  className="bg-[#0C0806] border-white/10 p-3 max-w-[220px] rounded-none"
                 >
-                  <p className="text-[10px] font-black uppercase tracking-widest mb-1">
-                    Environmental Status
+                  <p className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-primary">
+                    Environmental Record
                   </p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-[11px] text-muted-foreground leading-relaxed italic">
                     {getWeatherEffect(weather).description}
                   </p>
                 </TooltipContent>
@@ -284,22 +287,18 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <Link
             to="/command/combat"
             className={cn(
-              'flex items-center gap-2 h-9 px-4 font-black text-[11px] uppercase tracking-widest transition-all duration-150',
+              'flex items-center gap-3 h-10 px-6 font-black text-[10px] uppercase tracking-[0.2em] transition-all duration-500 ease-[0.16,1,0.3,1]',
               isSimulating
-                ? 'bg-white/5 text-muted-foreground/40 pointer-events-none'
-                : 'bg-primary text-primary-foreground shadow-[0_0_16px_rgba(255,0,0,0.35)] hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(255,0,0,0.5)] active:scale-95'
+                ? 'bg-neutral-900 text-muted-foreground/20 pointer-events-none'
+                : 'bg-primary text-primary-foreground shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0'
             )}
           >
             {isSimulating ? (
-              <>
-                <span className="animate-pulse">Processing</span>
-                <span className="animate-pulse">…</span>
-              </>
+              <span className="animate-pulse italic">Processing Cycle...</span>
             ) : (
               <>
-                {isTournamentWeek ? `Day ${day + 1}` : `Week ${week}`}
-                <ChevronRight className="h-3.5 w-3.5" />
-                {isTournamentWeek ? 'Fight' : 'Advance'}
+                {isTournamentWeek ? `EXECUTE DAY ${day + 1}` : `FINALIZE WEEK ${week}`}
+                <ChevronRight className="h-4 w-4" />
               </>
             )}
           </Link>
@@ -408,13 +407,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
                 transition={{
-                  type: 'spring',
-                  stiffness: 260,
-                  damping: 20,
+                  duration: 0.4,
+                  ease: [0.16, 1, 0.3, 1],
                 }}
                 className="relative z-10"
               >
@@ -451,7 +449,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 320, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="flex-shrink-0 border-l border-white/10 bg-[#08090b] overflow-hidden flex flex-col"
             >
               <EventLog />

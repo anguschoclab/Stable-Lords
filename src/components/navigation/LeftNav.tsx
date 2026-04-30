@@ -213,7 +213,7 @@ export function LeftNav({ className }: LeftNavProps) {
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -8 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col gap-0.5 px-2"
             >
               {HUBS.find((h) => h.id === activeHubId)?.pages.map((page) => {
@@ -239,7 +239,7 @@ export function LeftNav({ className }: LeftNavProps) {
                       <motion.div
                         layoutId="leftnav-page-indicator"
                         className="absolute left-0 top-0 bottom-0 w-0.5 bg-primary"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       />
                     )}
                     <PageIcon

@@ -14,6 +14,8 @@ import { computeStableReputation } from '@/engine/stableReputation';
 
 import { Surface } from '@/components/ui/Surface';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Badge } from '@/components/ui/badge';
 import { SeasonWidget } from '@/components/dashboard/SeasonWidget';
 import { RecentBoutsWidget } from '@/components/dashboard/RecentBoutsWidget';
@@ -467,69 +469,73 @@ export default function ControlCenter() {
   );
 
   return (
-    <div className="flex flex-col gap-6 max-w-7xl mx-auto pb-20">
+    <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
         icon={Swords}
-        title="Command Center"
-        subtitle="COMMAND · HQ · STRATEGIC OVERVIEW"
+        eyebrow="Command & Strategy"
+        title={player?.stableName ?? 'Command Center'}
+        subtitle="HQ · CENTRAL OPERATIONAL ARCHIVE"
       />
-      {/* Hero panel */}
-      <HeroPanel />
 
-      {/* KPI bar */}
-      <KpiBar />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column: High Density Intel */}
+        <div className="lg:col-span-8 flex flex-col gap-8">
+          <KpiBar />
+          
+          <SectionDivider label="Registry Intelligence" variant="gold" />
+          <RankingsBar />
 
-      {/* Rankings bar */}
-      <RankingsBar />
+          <div className="flex items-center gap-1 border-b border-white/5 pt-4">
+            {TABS.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={cn(
+                  'relative flex items-center gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300',
+                  activeTab === id
+                    ? 'text-primary bg-primary/5 border-b-2 border-primary -mb-px shadow-[inset_0_-10px_20px_-10px_rgba(135,34,40,0.2)]'
+                    : 'text-muted-foreground/40 hover:text-foreground/70 border-b-2 border-transparent -mb-px'
+                )}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {label}
+              </button>
+            ))}
+          </div>
 
-      {/* Tab nav */}
-      <div className="flex items-center gap-1 border-b border-white/5 pb-0">
-        {TABS.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setActiveTab(id)}
-            className={cn(
-              'relative flex items-center gap-2 px-4 py-2.5 text-[11px] font-black uppercase tracking-wider transition-all duration-150',
-              activeTab === id
-                ? 'text-primary border-b-2 border-primary -mb-px'
-                : 'text-muted-foreground/50 hover:text-foreground border-b-2 border-transparent -mb-px'
+          <div className="min-h-[400px] animate-in fade-in duration-500">
+            {activeTab === 'overview' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SeasonWidget />
+                <WeeklyDigestWidget
+                  week={week}
+                  season={season}
+                  arenaHistory={arenaHistory}
+                  boutOffers={boutOffers ?? {}}
+                  currentWeek={week}
+                />
+                <div className="md:col-span-2">
+                  <RecentBoutsWidget />
+                </div>
+              </div>
             )}
-          >
-            <Icon className="h-3.5 w-3.5" />
-            {label}
-          </button>
-        ))}
-      </div>
+            {activeTab === 'roster' && <RosterSnapshot />}
+            {activeTab === 'rep' && (
+              <div className="grid grid-cols-1 gap-6">
+                <ReputationQuadrant />
+                <ReputationTab />
+              </div>
+            )}
+          </div>
+        </div>
 
-      {/* Tab content */}
-      <div className="min-h-[400px]">
-        {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="flex flex-col gap-6">
-              <SeasonWidget />
-              <RecentBoutsWidget />
-              <WeeklyDigestWidget
-                week={week}
-                season={season}
-                arenaHistory={arenaHistory}
-                boutOffers={boutOffers ?? {}}
-                currentWeek={week}
-              />
-            </div>
-            <div className="flex flex-col gap-6">
-              <RivalryWidget />
-              <MetaDriftWidget />
-            </div>
-          </div>
-        )}
-        {activeTab === 'roster' && <RosterSnapshot />}
-        {activeTab === 'rep' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ReputationQuadrant />
-            <ReputationTab />
-          </div>
-        )}
+        {/* Right Column: Active Monitoring */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          <SectionDivider label="Metagame & Rivalries" />
+          <RivalryWidget />
+          <MetaDriftWidget />
+        </div>
       </div>
-    </div>
+    </PageFrame>
   );
 }

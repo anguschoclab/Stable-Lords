@@ -21,6 +21,9 @@ import { WarriorHeroHeader } from '@/components/warrior/WarriorHeroHeader';
 import { BiometricsTab } from '@/components/warrior/BiometricsTab';
 import { MissionControlTab } from '@/components/warrior/MissionControlTab';
 import { ChronicleTab } from '@/components/warrior/ChronicleTab';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
 
 const TABS: SubNavTab[] = [
   { id: 'biometrics', label: 'BIOMETRICS', icon: <User className="h-4 w-4" /> },
@@ -136,52 +139,121 @@ export default function WarriorDetail() {
         : null;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <Link to="/">
-          <Button variant="ghost" className="gap-2">
-            <ArrowLeft className="h-4 w-4" /> Back
-          </Button>
-        </Link>
-        {isPlayerOwned && warrior.status === 'Active' && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRetire}
-            className="gap-1.5 text-muted-foreground hover:text-destructive transition-colors"
-          >
-            <Armchair className="h-3.5 w-3.5" /> Retire
-          </Button>
-        )}
-      </div>
-
-      <WarriorHeroHeader
-        warrior={displayWarrior}
-        record={record}
-        streakLabel={streakLabel}
-        streakVal={streakVal}
-        id={id}
-        isPlayerOwned={isPlayerOwned}
-        insightTokens={insightTokens}
+    <PageFrame maxWidth="lg" className="pb-32">
+      <PageHeader
+        icon={User}
+        eyebrow={isPlayerOwned ? "Registry Asset" : "External Dossier"}
+        title={displayWarrior.name}
+        subtitle={`${STYLE_DISPLAY_NAMES[warrior.style as FightingStyle] || 'Unknown Style'} · ${warrior.status}`}
+        actions={
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col items-end px-4 border-r border-white/5">
+              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
+                Career Record
+              </span>
+              <span className="font-mono font-black text-foreground text-sm">
+                {record}
+              </span>
+            </div>
+            {isPlayerOwned && warrior.status === 'Active' && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRetire}
+                className="gap-2 text-[10px] font-black uppercase tracking-widest h-10 px-6 rounded-none border-white/10 hover:bg-destructive hover:text-white transition-all duration-300"
+              >
+                <Armchair className="h-3.5 w-3.5" /> Decommission
+              </Button>
+            )}
+          </div>
+        }
       />
-      <SubNav tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {activeTab === 'biometrics' && (
-        <BiometricsTab warrior={warrior} displayWarrior={displayWarrior as any} />
-      )}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-8 space-y-8">
+          <WarriorHeroHeader
+            warrior={displayWarrior}
+            record={record}
+            streakLabel={streakLabel}
+            streakVal={streakVal}
+            id={id}
+            isPlayerOwned={isPlayerOwned}
+            insightTokens={insightTokens}
+          />
 
-      {activeTab === 'mission' && (
-        <MissionControlTab
-          warrior={warrior}
-          displayWarrior={displayWarrior as any}
-          currentPlan={currentPlan}
-          currentLoadout={currentLoadout}
-          onPlanChange={handlePlanChange}
-          onEquipmentChange={handleEquipmentChange}
-        />
-      )}
+          <div className="flex items-center gap-1 border-b border-white/5">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  'relative flex items-center gap-3 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300',
+                  activeTab === tab.id
+                    ? 'text-primary bg-primary/5 border-b-2 border-primary -mb-px'
+                    : 'text-muted-foreground/40 hover:text-foreground/70 border-b-2 border-transparent -mb-px'
+                )}
+              >
+                {tab.icon}
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-      {activeTab === 'chronicle' && <ChronicleTab warrior={warrior} arenaHistory={arenaHistory} />}
-    </div>
+          <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+            {activeTab === 'biometrics' && (
+              <BiometricsTab warrior={warrior} displayWarrior={displayWarrior as any} />
+            )}
+
+            {activeTab === 'mission' && (
+              <MissionControlTab
+                warrior={warrior}
+                displayWarrior={displayWarrior as any}
+                currentPlan={currentPlan}
+                currentLoadout={currentLoadout}
+                onPlanChange={handlePlanChange}
+                onEquipmentChange={handleEquipmentChange}
+              />
+            )}
+
+            {activeTab === 'chronicle' && <ChronicleTab warrior={warrior} arenaHistory={arenaHistory} />}
+          </div>
+        </div>
+
+        <div className="lg:col-span-4 space-y-6">
+          <SectionDivider label="Asset Valuation" />
+          <Surface variant="glass" className="p-6 flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Fame Factor</span>
+                <span className="font-display font-black text-2xl text-arena-fame">{displayWarrior.fame}</span>
+              </div>
+              <Trophy className="h-8 w-8 text-arena-fame opacity-20" />
+            </div>
+            <Separator className="bg-white/5" />
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Crowd Favor</span>
+                <span className="font-display font-black text-2xl text-arena-pop">{displayWarrior.popularity}</span>
+              </div>
+              <Users className="h-8 w-8 text-arena-pop opacity-20" />
+            </div>
+          </Surface>
+          
+          <SectionDivider label="Status Indicators" />
+          <div className="flex flex-wrap gap-2">
+            {streakLabel && (
+              <Badge variant={streakVal > 0 ? 'default' : 'destructive'} className="text-[9px] font-black uppercase tracking-widest h-8 px-4 rounded-none">
+                {streakLabel}
+              </Badge>
+            )}
+            {warrior.champion && (
+              <Badge className="bg-arena-gold text-black text-[9px] font-black uppercase tracking-widest h-8 px-4 rounded-none">
+                CHAMPION
+              </Badge>
+            )}
+          </div>
+        </div>
+      </div>
+    </PageFrame>
   );
 }

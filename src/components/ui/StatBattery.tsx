@@ -20,14 +20,18 @@ export const StatBattery = React.forwardRef<HTMLDivElement, StatBatteryProps>(fu
 
   return (
     <div ref={ref} className={cn('flex items-center gap-3', className)}>
-      <span className="text-xs text-muted-foreground w-8 font-mono">{label}</span>
+      <span className="text-[10px] text-muted-foreground w-10 font-black uppercase tracking-widest opacity-60">
+        {label}
+      </span>
       <div className="flex-1 relative">
         <Progress
           value={pct}
-          className={cn('h-2 overflow-hidden shadow-[0_0_5px_currentColor]', colorClass)}
+          className={cn('h-[2px] bg-neutral-950/40 ring-1 ring-white/5', colorClass)}
         />
       </div>
-      <span className="text-sm font-mono font-semibold w-6 text-right">{displayValue}</span>
+      <span className="text-[11px] font-mono font-black w-6 text-right text-foreground/80">
+        {displayValue}
+      </span>
     </div>
   );
 });

@@ -12,27 +12,25 @@ export function ConditionBattery({ value, className, showText = false }: Conditi
   const opacity = value > 70 ? 'opacity-100' : value > 30 ? 'opacity-80' : 'opacity-90';
 
   return (
-    <div className={cn('flex items-center gap-1.5', className)}>
-      <div className="relative w-8 h-4 border border-muted-foreground/30 rounded-none p-[1px] bg-background/50 overflow-hidden">
-        {/* Battery Top Notch */}
-        <div className="absolute right-[-2px] top-1/2 -translate-y-1/2 w-[2px] h-2 bg-muted-foreground/30 rounded-none" />
-
-        {/* Fill */}
+    <div className={cn('flex flex-col gap-1', className)}>
+      <div className="flex items-center justify-between gap-2">
+        {showText && (
+          <span
+            className={cn(
+              'text-[9px] font-black uppercase tracking-widest',
+              value < 30 ? 'text-destructive' : 'text-muted-foreground/60'
+            )}
+          >
+            Condition · {Math.round(value)}%
+          </span>
+        )}
+      </div>
+      <div className="relative w-full h-[3px] bg-neutral-950/40 ring-1 ring-white/5 overflow-hidden">
         <div
-          className={cn('h-full rounded-none transition-all duration-500', color, opacity)}
+          className={cn('h-full transition-all duration-700 ease-out', color, opacity)}
           style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
         />
       </div>
-      {showText && (
-        <span
-          className={cn(
-            'text-[10px] font-mono font-bold',
-            value < 30 ? 'text-destructive' : 'text-muted-foreground'
-          )}
-        >
-          {Math.round(value)}%
-        </span>
-      )}
     </div>
   );
 }

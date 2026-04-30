@@ -1,8 +1,3 @@
-/**
- * Stable Lords — Recruit Page (Post-FTUE)
- * Two tabs: Scout Pool (pre-generated warriors) and Custom Build.
- * Implements Stable_Lords_Orphanage_Recruitment_Spec_v1.0
- */
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
@@ -24,16 +19,12 @@ import { canTransact } from '@/utils/economyUtils';
 import { potentialRating, potentialGrade } from '@/engine/potential';
 import { revealRecruitPotential, type PotentialScoutReport } from '@/engine/recruitScouting';
 import WarriorBuilder from '@/components/WarriorBuilder';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Badge } from '@/components/ui/badge';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  ArrowLeft,
-  Coins,
-  Star,
   UserPlus,
   RefreshCw,
   Hammer,
@@ -44,10 +35,15 @@ import {
   Eye,
   Clock,
   Quote,
+  Star,
+  Coins,
+  Shield,
+  Target,
+  Sword,
+  Info
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 import { Surface } from '@/components/ui/Surface';
 import {
   Select,
@@ -56,29 +52,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 const CUSTOM_COST = 200;
 
-const TIER_ACCENTS: Record<RecruitTier, string> = {
-  Common: 'border-border/40 text-muted-foreground',
-  Promising: 'border-stone-500/30 text-stone-300 bg-stone-500/10',
-  Exceptional:
-    'border-arena-fame/50 text-arena-fame bg-arena-fame/10 shadow-[0_0_15px_-3px_rgba(139,95,196,0.3)]',
-  Prodigy:
-    'border-arena-gold text-arena-gold bg-arena-gold/10 shadow-[0_0_20px_-5px_rgba(201,151,42,0.4)]',
+const TIER_CONFIG: Record<RecruitTier, { border: string; text: string; bg: string; ring: "bronze" | "silver" | "gold" | "blood" }> = {
+  Common: { border: 'border-white/10', text: 'text-muted-foreground', bg: 'bg-white/5', ring: 'bronze' },
+  Promising: { border: 'border-white/20', text: 'text-foreground', bg: 'bg-white/10', ring: 'silver' },
+  Exceptional: { border: 'border-primary/30', text: 'text-primary', bg: 'bg-primary/5', ring: 'blood' },
+  Prodigy: { border: 'border-arena-gold/30', text: 'text-arena-gold', bg: 'bg-arena-gold/5', ring: 'gold' },
 };
 
 function TierBadge({ tier }: { tier: RecruitTier }) {
   const stars = TIER_STARS[tier];
+  const config = TIER_CONFIG[tier];
   return (
     <Badge
       variant="outline"
-      className={`text-[10px] gap-1 font-black uppercase tracking-widest ${TIER_ACCENTS[tier]}`}
+      className={cn(
+        "text-[9px] gap-1.5 font-black uppercase tracking-[0.2em] px-3 py-1 rounded-none border-white/10",
+        config.text
+      )}
     >
-      {stars > 0 &&
-        Array.from({ length: stars }).map((_, i) => (
-          <Star key={i} className="h-2 w-2 fill-current" />
-        ))}
+      {stars > 0 && (
+        <div className="flex items-center gap-0.5">
+          {Array.from({ length: stars }).map((_, i) => (
+            <Star key={i} className="h-2 w-2 fill-current" />
+          ))}
+        </div>
+      )}
       {tier}
     </Badge>
   );
@@ -86,24 +90,23 @@ function TierBadge({ tier }: { tier: RecruitTier }) {
 
 function StatBar({ label, value, max = 21 }: { label: string; value: number; max?: number }) {
   const pct = Math.min(100, (value / max) * 100);
+  const colorClass = value >= 16 ? "bg-primary" : value >= 12 ? "bg-arena-gold" : "bg-white/20";
+  
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-[9px] font-black uppercase text-muted-foreground w-6 text-right font-mono tracking-tighter">
-        {label}
+    <div className="flex items-center gap-4">
+      <span className="text-[10px] font-black uppercase text-muted-foreground/40 w-8 tracking-tighter">
+        {label.slice(0, 3)}
       </span>
-      <div className="flex-1 h-1.5 rounded-full bg-secondary/30 overflow-hidden border border-border/20">
+      <div className="flex-1 h-1 bg-white/5 rounded-none overflow-hidden relative">
         <div
-          className={`h-full rounded-full transition-all duration-700 ease-out ${
-            value >= 16
-              ? 'bg-primary glow-neon-green'
-              : value >= 12
-                ? 'bg-arena-gold glow-neon-gold'
-                : 'bg-muted-foreground/40'
-          }`}
+          className={cn("h-full transition-all duration-1000 ease-out", colorClass)}
           style={{ width: `${pct}%` }}
         />
+        {/* Threshold Markers */}
+        <div className="absolute top-0 left-[60%] w-px h-full bg-white/10" />
+        <div className="absolute top-0 left-[80%] w-px h-full bg-white/10" />
       </div>
-      <span className="text-[10px] font-mono font-bold w-4 text-right text-foreground/80">
+      <span className="text-[11px] font-display font-black w-6 text-right text-foreground">
         {value}
       </span>
     </div>
@@ -132,158 +135,137 @@ function RecruitCard({
   scoutReport?: PotentialScoutReport;
 }) {
   const grade = potentialGrade(potentialRating(warrior.potential));
-  const isElite = warrior.tier === 'Prodigy' || warrior.tier === 'Exceptional';
+  const config = TIER_CONFIG[warrior.tier];
 
   return (
-    <motion.div whileHover={{ y: -5 }}>
-      <Surface
-        variant={isElite ? 'gold' : 'glass'}
-        padding="none"
-        className={cn(
-          'overflow-hidden transition-all duration-300 group h-full',
-          isElite ? 'border-arena-gold/30 hover:border-arena-gold' : 'hover:border-primary/50',
-          TIER_ACCENTS[warrior.tier]
-        )}
-      >
-        <CardHeader className="pb-2 pt-5 px-5 relative">
-          <div className="flex items-center justify-between mb-2">
-            <CardTitle className="font-display font-black uppercase text-sm tracking-tight group-hover:text-primary transition-colors">
-              {warrior.name}
-            </CardTitle>
-            <div className="flex items-center gap-2">
-              <TierBadge tier={warrior.tier} />
-              {isScouted && (
-                <Badge
-                  variant="outline"
-                  className="gap-1 border-primary/50 bg-primary/10 text-[10px] px-2 py-0 h-5"
-                >
-                  <Eye className="h-3 w-3" /> Scouted
-                </Badge>
-              )}
+    <Surface
+      variant="glass"
+      className="group p-0 border-white/5 hover:border-primary/20 transition-all duration-500 overflow-hidden"
+    >
+      <div className="p-8 space-y-8">
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-6">
+            <ImperialRing size="md" variant={config.ring}>
+              <Sword className={cn("h-5 w-5", config.text)} />
+            </ImperialRing>
+            <div>
+              <h3 className="text-xl font-display font-black uppercase tracking-tight text-foreground leading-none mb-2">
+                {warrior.name}
+              </h3>
+              <div className="flex items-center gap-4">
+                <StatBadge styleName={warrior.style} showFullName />
+                <span className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
+                  Age {warrior.age}
+                </span>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
-            <StatBadge styleName={warrior.style} showFullName />
-            <span className="flex items-center gap-1">
-              <Clock className="h-3 w-3" /> AGE {warrior.age}
-            </span>
-            {isScouted && (
-              <Badge
-                className={cn(
-                  'text-[10px] ml-auto font-black px-2 py-0 h-4',
-                  grade === 'S' || grade === 'A'
-                    ? 'bg-primary text-black'
-                    : 'bg-secondary text-muted-foreground'
-                )}
-              >
+          <TierBadge tier={warrior.tier} />
+        </div>
+
+        {/* Intelligence Overlay */}
+        {isScouted ? (
+          <div className="bg-primary/5 border border-primary/20 p-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-700">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Eye className="h-4 w-4 text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Intelligence Synchronized</span>
+              </div>
+              <Badge className="bg-primary text-primary-foreground font-black text-[10px] rounded-none px-3">
                 POTENTIAL: {grade}
               </Badge>
+            </div>
+            {scoutReport && (
+              <p className="text-[11px] text-muted-foreground italic leading-relaxed">
+                "{scoutReport.summary}"
+              </p>
             )}
           </div>
-        </CardHeader>
+        ) : (
+          <div className="bg-white/[0.02] border border-white/5 p-6 flex items-center justify-between group/scout">
+            <div className="flex items-center gap-3 opacity-40">
+              <Info className="h-4 w-4" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Personnel Intel Redacted</span>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 text-[9px] font-black uppercase tracking-widest border-white/10 hover:border-primary/50 transition-all rounded-none"
+              disabled={!canAffordScout}
+              onClick={() => onScout(warrior)}
+            >
+              Scout Profile [25G]
+            </Button>
+          </div>
+        )}
 
-        <CardContent className="px-5 pb-5 space-y-4">
-          <div className="space-y-1.5 bg-background/20 p-3 rounded-none border border-border/20">
+        {/* Attributes Grid */}
+        <div className="grid grid-cols-1 gap-5">
+          <div className="space-y-4 bg-white/[0.01] border border-white/5 p-6">
             {ATTRIBUTE_KEYS.map((key) => (
               <StatBar key={key} label={key} value={warrior.attributes[key]} />
             ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div className="flex items-center gap-2 p-2 rounded-none bg-secondary/10 border border-border/10">
-              <Heart className="h-3.5 w-3.5 text-destructive" />
-              <div className="flex-1">
-                <p className="text-[9px] text-muted-foreground font-black uppercase">HIT POINTS</p>
-                <p className="text-xs font-mono font-bold">{warrior.derivedStats.hp}</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-white/[0.02] border border-white/5 space-y-1">
+              <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">Health Capacity</span>
+              <div className="flex items-center gap-3">
+                <Heart className="h-3.5 w-3.5 text-destructive" />
+                <span className="text-lg font-display font-black text-foreground">{warrior.derivedStats.hp}</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 p-2 rounded-none bg-secondary/10 border border-border/10">
-              <Zap className="h-3.5 w-3.5 text-arena-fame" />
-              <div className="flex-1">
-                <p className="text-[9px] text-muted-foreground font-black uppercase">ENDURANCE</p>
-                <p className="text-xs font-mono font-bold">{warrior.derivedStats.endurance}</p>
+            <div className="p-4 bg-white/[0.02] border border-white/5 space-y-1">
+              <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">Endurance Pool</span>
+              <div className="flex items-center gap-3">
+                <Zap className="h-3.5 w-3.5 text-arena-fame" />
+                <span className="text-lg font-display font-black text-foreground">{warrior.derivedStats.endurance}</span>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="relative">
-            <Quote className="h-4 w-4 text-primary/20 absolute -top-2 -left-2" />
-            <p className="text-[11px] text-muted-foreground italic leading-relaxed pl-3 border-l-2 border-primary/20">
-              {warrior.lore}
-            </p>
-          </div>
+        {/* Lore / Quote */}
+        <div className="relative pl-6 border-l border-white/10">
+          <Quote className="absolute -left-1 top-0 h-4 w-4 text-white/5" />
+          <p className="text-[11px] text-muted-foreground/60 italic leading-relaxed">
+            {warrior.lore}
+          </p>
+        </div>
 
-          {isScouted && scoutReport && Object.keys(scoutReport.revealed).length > 0 && (
-            <div className="p-3 border border-primary/30 bg-primary/5 rounded-none space-y-1.5">
-              <div className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">
-                Scout_Report
-              </div>
-              <p className="text-[10px] text-muted-foreground italic">{scoutReport.summary}</p>
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {Object.entries(scoutReport.revealed).map(([k, v]) => (
-                  <span
-                    key={k}
-                    className="text-[10px] font-mono px-2 py-0.5 border border-primary/30 bg-black/40 text-primary"
-                  >
-                    {k} ceiling: <span className="font-black">{v}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center justify-between pt-2 border-t border-border/20">
-            <div className="flex flex-col">
-              <span className="text-[8px] text-muted-foreground font-black uppercase tracking-tighter">
-                CONTRACT FEE
-              </span>
-              <div className="flex items-center gap-1.5 text-base font-display font-black text-arena-gold">
-                <Coins className="h-4 w-4" />
-                {warrior.cost}G
-              </div>
-            </div>
+        {/* Footer Actions */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 pt-8 border-t border-white/5">
+          <div className="flex flex-col">
+            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">Contract Value</span>
             <div className="flex items-center gap-2">
-              {!isScouted && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="h-9 text-[10px] font-black uppercase tracking-widest px-3 border-border/40 hover:bg-primary/10"
-                  disabled={!canAffordScout}
-                  onClick={() => onScout(warrior)}
-                >
-                  <Eye className="h-3.5 w-3.5 mr-1.5 text-primary" />
-                  SCOUT [25G]
-                </Button>
-              )}
-              <Button
-                size="sm"
-                className={cn(
-                  'h-9 px-4 font-black uppercase tracking-widest',
-                  isElite
-                    ? 'bg-arena-gold text-black hover:bg-arena-gold/80'
-                    : 'bg-primary text-black hover:bg-primary/80'
-                )}
-                disabled={!canAfford || rosterFull}
-                onClick={() => onRecruit(warrior, false)}
-              >
-                <UserPlus className="h-3.5 w-3.5 mr-1.5" />
-                HIRE
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-9 px-3 font-black uppercase tracking-widest border-arena-gold/40 text-arena-gold hover:bg-arena-gold/10"
-                disabled={!canAffordBonus || rosterFull}
-                onClick={() => onRecruit(warrior, true)}
-                title="Pay a 50g signing bonus — warrior arrives eager (+2 XP) and gets a gazette mention."
-              >
-                + BONUS [50G]
-              </Button>
+              <Coins className="h-4 w-4 text-arena-gold" />
+              <span className="text-2xl font-display font-black text-arena-gold">{warrior.cost}G</span>
             </div>
           </div>
-        </CardContent>
-      </Surface>
-    </motion.div>
+
+          <div className="flex items-center gap-3">
+            <Button
+              className="flex-1 sm:flex-none h-14 px-8 bg-primary text-primary-foreground font-black uppercase text-[11px] tracking-[0.2em] rounded-none hover:shadow-[0_0_25px_rgba(135,34,40,0.4)] transition-all"
+              disabled={!canAfford || rosterFull}
+              onClick={() => onRecruit(warrior, false)}
+            >
+              <UserPlus className="h-4 w-4 mr-3" />
+              Contract Secure
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 sm:flex-none h-14 px-6 border-arena-gold/30 text-arena-gold font-black uppercase text-[10px] tracking-widest rounded-none hover:bg-arena-gold/5 transition-all"
+              disabled={!canAffordBonus || rosterFull}
+              onClick={() => onRecruit(warrior, true)}
+              title="Pay a 50g signing bonus — warrior arrives eager (+2 XP) and gets a gazette mention."
+            >
+              + Bonus [50G]
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Surface>
   );
 }
 

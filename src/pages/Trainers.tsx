@@ -130,92 +130,89 @@ export default function Trainers() {
   );
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto pb-20">
+    <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
-        title="Personnel Management"
-        subtitle="OPS · PERSONNEL · TACTICAL MASTERY"
         icon={Users}
+        eyebrow="Personnel Management"
+        title="Command Staff"
+        subtitle="TACTICAL MASTERY · TRAINING OPERATIONS"
         actions={
-          <div className="flex flex-col md:flex-row items-center gap-6 bg-neutral-900/40 backdrop-blur-md px-6 py-3 rounded-none border border-white/5 shadow-inner">
+          <div className="flex items-center gap-6 bg-white/[0.02] border border-white/5 px-6 py-3 rounded-none shadow-2xl">
             <div className="flex flex-col items-center border-r border-white/10 pr-6">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
                 Staff Capacity
               </span>
-              <span className="font-mono font-black text-primary text-lg flex items-center gap-1.5 leading-none">
+              <span className="font-display font-black text-primary text-xl flex items-center gap-2 leading-none">
                 {currentTrainers.length} <span className="opacity-20">/</span>{' '}
-                {TRAINER_MAX_PER_STABLE} <Users className="h-3.5 w-3.5" />
+                {TRAINER_MAX_PER_STABLE}
               </span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
                 Personnel Budget
               </span>
-              <span className="font-mono font-black text-arena-gold text-lg flex items-center gap-1.5 leading-none">
-                {treasury} <Coins className="h-3.5 w-3.5" />
+              <span className="font-display font-black text-arena-gold text-xl flex items-center gap-2 leading-none">
+                {treasury.toLocaleString()}G
               </span>
             </div>
           </div>
         }
       />
 
-      <Tabs defaultValue="current" className="space-y-8">
-        <TabsList className="bg-neutral-900/60 border border-white/5 p-1 h-12 rounded-none">
+      <Tabs defaultValue="current" className="space-y-12">
+        <TabsList className="bg-white/[0.02] border border-white/5 p-1 h-14 rounded-none w-full justify-start overflow-x-auto no-scrollbar">
           <TabsTrigger
             value="current"
-            className="gap-2 px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[10px] tracking-widest"
+            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
           >
-            <GraduationCap className="h-3.5 w-3.5" /> Stability Staff
+            <GraduationCap className="h-4 w-4" /> Operational Staff
           </TabsTrigger>
           <TabsTrigger
             value="hire"
-            className="gap-2 px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[10px] tracking-widest"
+            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
           >
-            <UserPlus className="h-3.5 w-3.5" /> Tactical Hire
+            <UserPlus className="h-4 w-4" /> Tactical Hire
           </TabsTrigger>
           <TabsTrigger
             value="mentors"
-            className="gap-2 px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[10px] tracking-widest"
+            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
           >
-            <Award className="h-3.5 w-3.5" /> Top Mentors
+            <Award className="h-4 w-4" /> Legacy Mentors
           </TabsTrigger>
           <TabsTrigger
             value="legends"
-            className="gap-2 px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[10px] tracking-widest"
+            className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
           >
-            <Skull className="h-3.5 w-3.5" /> Departed Legends
+            <Skull className="h-4 w-4" /> Fallen Legends
           </TabsTrigger>
         </TabsList>
 
         <TabsContent
           value="current"
-          className="mt-0 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500"
+          className="mt-0 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-8">
             {currentTrainers.length === 0 ? (
               <Surface
                 variant="glass"
-                className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4"
+                className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
               >
-                <GraduationCap className="h-12 w-12 text-muted-foreground opacity-20" />
-                <div className="space-y-1 text-center">
-                  <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">
+                <ImperialRing size="lg" variant="bronze" className="opacity-20">
+                  <GraduationCap className="h-8 w-8" />
+                </ImperialRing>
+                <div className="space-y-2">
+                  <h4 className="font-display font-black uppercase tracking-widest text-muted-foreground/60">
                     Personnel Database Empty
-                  </p>
-                  <p className="text-xs text-muted-foreground/60 italic max-w-xs mx-auto text-center">
-                    Establish your training core by recruiting specialists from the tactical hire
-                    registry.
+                  </h4>
+                  <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] italic max-w-sm mx-auto">
+                    Establish your training core by recruiting specialists from the tactical hire registry.
                   </p>
                 </div>
               </Surface>
             ) : (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 px-1 mb-2">
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
-                    STAFF PERSONNEL
-                  </span>
-                  <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
-                </div>
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <div className="space-y-6">
+                <SectionDivider label="Active Personnel" variant="primary" />
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                   {currentTrainers.map((t) => (
                     <TrainerCard key={t.id} trainer={t} owned onFire={() => fireTrainer(t.id)} />
                   ))}
@@ -225,20 +222,15 @@ export default function Trainers() {
           </div>
 
           {currentTrainers.length > 0 && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 px-1">
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-arena-gold">
-                  AGGREGATED SYSTEM BONUSES
-                </span>
-                <div className="h-px flex-1 bg-gradient-to-r from-arena-gold/20 via-border/20 to-transparent" />
-              </div>
+            <div className="space-y-8">
+              <SectionDivider label="Aggregated System Bonuses" variant="gold" />
               <Surface
                 variant="glass"
                 padding="none"
-                className="border-border/40 shadow-2xl relative overflow-hidden"
+                className="border-white/5 shadow-2xl relative overflow-hidden bg-gradient-to-br from-white/[0.01] to-white/[0.03]"
               >
-                <div className="absolute top-0 left-0 w-1.5 h-full bg-arena-gold opacity-40 shadow-[0_0_15px_rgba(255,215,0,0.5)]" />
-                <div className="p-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
+                <div className="absolute top-0 left-0 w-1 h-full bg-arena-gold/40" />
+                <div className="p-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-12">
                   {TRAINER_FOCUSES.map((focus) => {
                     const total = currentTrainers
                       .filter((t) => t.focus === focus && t.contractWeeksLeft > 0)
@@ -248,27 +240,20 @@ export default function Trainers() {
                       total > 0 && (
                         <div
                           key={focus}
-                          className="group relative flex flex-col items-center gap-6 p-4 rounded-none hover:bg-white/5 transition-all"
+                          className="group relative flex flex-col items-center gap-6"
                         >
-                          <div className="text-4xl filter group-hover:scale-110 group-hover:drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] transition-all duration-500">
+                          <div className="text-5xl transition-all duration-700 group-hover:scale-110 group-hover:rotate-6">
                             {FOCUS_ICONS[focus]}
                           </div>
-                          <div className="text-center relative">
-                            <div className="flex items-center justify-center gap-1.5 mb-1">
-                              <span className="text-3xl font-display font-black text-foreground leading-none">
+                          <div className="text-center">
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <span className="text-3xl font-display font-black text-foreground">
                                 +{total}
                               </span>
-                              <Zap
-                                className={cn(
-                                  'h-4 w-4 transition-all duration-500',
-                                  total > 0
-                                    ? 'text-arena-gold animate-pulse'
-                                    : 'text-muted-foreground/20'
-                                )}
-                              />
+                              <Zap className="h-4 w-4 text-arena-gold animate-pulse" />
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors">
-                              {focus} PROTOCOL
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary transition-colors">
+                              {focus}
                             </span>
                           </div>
                         </div>
@@ -281,79 +266,21 @@ export default function Trainers() {
           )}
 
           {convertableRetired.length > 0 && canHire && (
-            <div className="pt-8 border-t border-white/5">
-              <Dialog open={convertDialogOpen} onOpenChange={setConvertDialogOpen}>
-                <DialogTrigger asChild>
-                  <button className="w-full h-16 rounded-none bg-primary/10 border border-primary/30 flex items-center justify-center gap-4 group hover:bg-primary/20 hover:border-primary transition-all">
-                    <div className="p-2 rounded-none bg-primary/20 group-hover:bg-primary transition-colors">
-                      <Armchair className="h-5 w-5 text-foreground" />
-                    </div>
-                    <div className="text-left">
-                      <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary block leading-none mb-1">
-                        Veteran Restoration Protocol
-                      </span>
-                      <span className="text-[9px] text-muted-foreground/60 uppercase tracking-widest leading-none italic">
-                        {convertableRetired.length} Retired Assets Ready for Re-acquisition
-                      </span>
-                    </div>
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="bg-neutral-950/95 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-                  <DialogHeader className="p-6 border-b border-white/5 flex flex-col gap-4">
-                    <DialogTitle className="font-display text-2xl font-black uppercase tracking-tight flex items-center gap-4">
-                      <div className="p-2 rounded-none bg-primary text-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]">
-                        <GraduationCap className="h-6 w-6" />
-                      </div>
-                      Retired_to_Staff_Sync
-                    </DialogTitle>
-                    <p className="text-xs text-muted-foreground/60 leading-relaxed uppercase tracking-widest font-medium border-l-2 border-primary/20 pl-4 italic">
-                      Confirmed veterans are eligible for immediate tactical reassignment. This
-                      protocol restores legendary combat signatures as specialized staff assets.
-                    </p>
-                  </DialogHeader>
-
-                  <div className="p-6 space-y-4 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
-                    {convertableRetired.map((w) => {
-                      const preview = convertRetiredToTrainer(w);
-                      return (
-                        <div
-                          key={w.id}
-                          className="flex items-center justify-between p-4 rounded-none bg-neutral-900 border border-white/5 group hover:border-primary/40 transition-all"
-                        >
-                          <div className="flex items-center gap-6">
-                            <div>
-                              <div className="flex items-center gap-3 mb-2">
-                                <WarriorNameTag
-                                  id={w.id}
-                                  name={w.name}
-                                  isChampion={w.champion}
-                                  useCrown={w.champion}
-                                />
-                                <StatBadge styleName={w.style as FightingStyle} />
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <ChevronRight className="h-3 w-3 text-primary" />
-                                <Badge
-                                  variant="outline"
-                                  className="text-[9px] font-black uppercase tracking-widest border-primary/20 bg-primary/5 text-primary rounded-none"
-                                >
-                                  {preview.tier} {preview.focus} SPECIALIST
-                                </Badge>
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => convertWarrior(w.id)}
-                            className="bg-primary text-foreground px-6 py-2.5 rounded-none font-black uppercase text-[10px] tracking-widest shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)] hover:scale-105 active:scale-95 transition-all"
-                          >
-                            ESTABLISH_Staff
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </DialogContent>
-              </Dialog>
+            <div className="mt-12">
+              <Button
+                onClick={() => setConvertDialogOpen(true)}
+                className="w-full h-20 bg-primary/5 border border-primary/20 text-primary hover:bg-primary/10 transition-all rounded-none flex items-center justify-center gap-6 group"
+              >
+                <ImperialRing size="md" variant="blood" className="group-hover:scale-110 transition-transform">
+                  <Armchair className="h-5 w-5" />
+                </ImperialRing>
+                <div className="text-left">
+                  <span className="text-[12px] font-black uppercase tracking-[0.3em] block mb-1">Veteran Reassignment Protocol</span>
+                  <span className="text-[10px] text-muted-foreground/50 uppercase tracking-widest italic">
+                    {convertableRetired.length} Retired Assets Ready for Staff Transition
+                  </span>
+                </div>
+              </Button>
             </div>
           )}
         </TabsContent>
@@ -362,101 +289,65 @@ export default function Trainers() {
           value="hire"
           className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
         >
-          <div className="flex flex-col sm:flex-row items-center justify-between bg-neutral-900/60 p-6 rounded-none border border-white/5 gap-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-none bg-primary/10 border border-primary/20">
-                <RefreshCw className="h-6 w-6 text-primary" />
-              </div>
+          <div className="flex flex-col sm:flex-row items-center justify-between bg-white/[0.02] border border-white/5 p-8 rounded-none gap-8">
+            <div className="flex items-center gap-5">
+              <ImperialRing size="md" variant="blood">
+                <RefreshCw className="h-5 w-5 text-primary" />
+              </ImperialRing>
               <div>
-                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground leading-none mb-1.5">
-                  Candidate Database
+                <h3 className="text-lg font-black uppercase tracking-tight text-foreground leading-none mb-1.5">
+                  Personnel Registry
                 </h3>
-                <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest leading-none">
-                  {currentHiringPool.length > 0
-                    ? `Confirmed Search Result: ${currentHiringPool.length} Candidates Located`
-                    : 'Scanning Personnel Database...'}
+                <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] leading-none">
+                  {currentHiringPool.length} Tactical Candidates Located
                 </p>
               </div>
             </div>
-            <button
+            <Button
+              variant="outline"
               onClick={refreshPool}
-              className="flex items-center gap-2.5 bg-neutral-950 border border-white/10 hover:border-primary/50 px-5 py-2.5 rounded-none transition-all group/refresh"
+              className="h-12 px-8 font-black uppercase text-[10px] tracking-widest gap-3 rounded-none border-white/10 hover:bg-white/5 transition-all"
             >
-              <RefreshCw className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:rotate-180 transition-all duration-700" />
-              <span className="text-[10px] font-black uppercase tracking-widest">
-                Update Registry
-              </span>
-            </button>
+              <RefreshCw className="h-3.5 w-3.5 group-hover:rotate-180 transition-all duration-700" />
+              Update Registry
+            </Button>
           </div>
 
-          {currentHiringPool.length > 0 ? (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              {currentHiringPool.map((t) => (
-                <TrainerCard
-                  key={t.id}
-                  trainer={t}
-                  owned={false}
-                  action={
-                    <div className="flex items-center gap-3">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-none bg-black border border-white/5 font-mono font-black text-xs text-arena-gold shadow-inner">
-                            <Coins className="h-3.5 w-3.5" />{' '}
-                            {TIER_COST[t.tier as TrainerTier] ?? 50}G
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
-                          ACQUISITION CREDITS
-                        </TooltipContent>
-                      </Tooltip>
-
-                      <button
-                        disabled={
-                          !canHire || !canTransact(treasury, TIER_COST[t.tier as TrainerTier] ?? 50)
-                        }
-                        onClick={() => hireTrainer(t)}
-                        className={cn(
-                          'flex items-center gap-2 px-5 py-1.5 rounded-none font-black uppercase text-[10px] tracking-widest transition-all',
-                          !canHire || !canTransact(treasury, TIER_COST[t.tier as TrainerTier] ?? 50)
-                            ? 'bg-neutral-900 border border-white/5 text-muted-foreground/40 cursor-not-allowed'
-                            : 'bg-primary text-foreground border border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)] hover:scale-105 active:scale-95'
-                        )}
-                      >
-                        <UserPlus className="h-4 w-4" />
-                        {!canHire
-                          ? 'CAPACITY FULL'
-                          : !canTransact(treasury, TIER_COST[t.tier as TrainerTier] ?? 50)
-                            ? 'FUNDS LOCKED'
-                            : 'Secure Contract'}
-                      </button>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            {currentHiringPool.map((t) => (
+              <TrainerCard
+                key={t.id}
+                trainer={t}
+                owned={false}
+                action={
+                  <div className="flex items-center gap-4">
+                    <div className="flex flex-col items-end">
+                      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">Acquisition</span>
+                      <span className="font-display font-black text-arena-gold text-lg leading-none">
+                        {TIER_COST[t.tier as TrainerTier] ?? 50}G
+                      </span>
                     </div>
-                  }
-                />
-              ))}
-            </div>
-          ) : (
-            <Surface
-              variant="glass"
-              className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-4"
-            >
-              <RefreshCw className="h-12 w-12 text-muted-foreground opacity-20 animate-spin duration-3000" />
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-40 italic">
-                Waiting for Connection...
-              </p>
-            </Surface>
-          )}
+
+                    <Button
+                      disabled={!canHire || !canTransact(treasury, TIER_COST[t.tier as TrainerTier] ?? 50)}
+                      onClick={() => hireTrainer(t)}
+                      className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-none hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all"
+                    >
+                      <UserPlus className="h-4 w-4 mr-3" />
+                      Secure Contract
+                    </Button>
+                  </div>
+                }
+              />
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent
           value="mentors"
-          className="mt-0 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500"
+          className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
         >
-          <div className="flex items-center gap-3 px-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-arena-gold">
-              TOP MENTORS
-            </span>
-            <div className="h-px flex-1 bg-gradient-to-r from-arena-gold/20 via-border/20 to-transparent" />
-          </div>
+          <SectionDivider label="Legacy Mentors" variant="gold" />
           {(() => {
             const ranked = [...currentTrainers]
               .map((t) => ({
@@ -470,52 +361,48 @@ export default function Trainers() {
               return (
                 <Surface
                   variant="glass"
-                  className="py-20 text-center border-dashed border-border/40 flex flex-col items-center gap-4"
+                  className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
                 >
-                  <Award className="h-10 w-10 text-muted-foreground opacity-20" />
-                  <p className="text-[10px] font-black uppercase tracking-widest opacity-40 italic">
+                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
+                    <Award className="h-8 w-8" />
+                  </ImperialRing>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
                     No mentor legacy recorded yet.
                   </p>
                 </Surface>
               );
             }
             return (
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {ranked.map(({ t, score }, i) => (
                   <Surface
                     key={t.id}
                     variant="glass"
-                    className="px-5 py-4 border-border/30 flex items-center justify-between"
+                    className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all"
                   >
-                    <div className="flex items-center gap-4">
-                      <span className="text-2xl font-display font-black text-arena-gold w-8 text-center">
-                        #{i + 1}
+                    <div className="flex items-center gap-6">
+                      <span className="text-3xl font-display font-black text-arena-gold/30 group-hover:text-arena-gold transition-colors w-8 text-center">
+                        {i + 1}
                       </span>
-                      <div>
-                        <div className="text-sm font-black uppercase tracking-tight">{t.name}</div>
-                        <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                          {t.tier} · {t.focus}
-                        </div>
+                      <div className="flex flex-col">
+                        <span className="text-[12px] font-black uppercase tracking-tight text-foreground">{t.name}</span>
+                        <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">
+                          {t.tier} · {t.focus} SPECIALIST
+                        </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-5 text-[10px] font-mono font-black">
-                      <div className="text-center">
-                        <div className="text-muted-foreground/50 uppercase tracking-widest text-[8px]">
-                          Wins
-                        </div>
-                        <div className="text-primary">{t.legacyWins ?? 0}</div>
+                    <div className="flex items-center gap-8 text-[10px] font-black uppercase tracking-widest">
+                      <div className="flex flex-col items-center">
+                        <span className="text-muted-foreground/30 text-[8px] mb-1">Wins</span>
+                        <span className="text-primary">{t.legacyWins ?? 0}</span>
                       </div>
-                      <div className="text-center">
-                        <div className="text-muted-foreground/50 uppercase tracking-widest text-[8px]">
-                          Kills
-                        </div>
-                        <div className="text-destructive">{t.legacyKills ?? 0}</div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-muted-foreground/30 text-[8px] mb-1">Kills</span>
+                        <span className="text-destructive">{t.legacyKills ?? 0}</span>
                       </div>
-                      <div className="text-center">
-                        <div className="text-muted-foreground/50 uppercase tracking-widest text-[8px]">
-                          Score
-                        </div>
-                        <div className="text-arena-gold">{score}</div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-muted-foreground/30 text-[8px] mb-1">Score</span>
+                        <span className="text-arena-gold">{score}</span>
                       </div>
                     </div>
                   </Surface>
@@ -527,14 +414,9 @@ export default function Trainers() {
 
         <TabsContent
           value="legends"
-          className="mt-0 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500"
+          className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
         >
-          <div className="flex items-center gap-3 px-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-destructive">
-              DEPARTED LEGENDS
-            </span>
-            <div className="h-px flex-1 bg-gradient-to-r from-destructive/20 via-border/20 to-transparent" />
-          </div>
+          <SectionDivider label="Fallen Legends" variant="blood" />
           {(() => {
             const fallen = [
               ...(graveyard ?? []).map((w) => ({
@@ -558,52 +440,42 @@ export default function Trainers() {
               return (
                 <Surface
                   variant="glass"
-                  className="py-20 text-center border-dashed border-border/40 flex flex-col items-center gap-4"
+                  className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
                 >
-                  <Skull className="h-10 w-10 text-muted-foreground opacity-20" />
-                  <p className="text-[10px] font-black uppercase tracking-widest opacity-40 italic">
-                    No legends to memorialise.
+                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
+                    <Skull className="h-8 w-8" />
+                  </ImperialRing>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
+                    No legends memorialized in the archives.
                   </p>
                 </Surface>
               );
             }
             return (
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {fallen.map((w, i) => (
                   <Surface
                     key={`${w.kind}-${w.name}-${i}`}
                     variant="glass"
-                    className="px-5 py-4 border-border/30 flex items-center justify-between"
+                    className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all"
                   >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={cn(
-                          'p-2 rounded-none border',
-                          w.kind === 'fallen'
-                            ? 'bg-destructive/10 border-destructive/30 text-destructive'
-                            : 'bg-muted/10 border-white/10 text-muted-foreground'
-                        )}
-                      >
-                        {w.kind === 'fallen' ? (
-                          <Skull className="h-4 w-4" />
-                        ) : (
-                          <Armchair className="h-4 w-4" />
-                        )}
+                    <div className="flex items-center gap-6">
+                      <div className={cn(
+                        "p-3 border transition-all",
+                        w.kind === 'fallen' ? "bg-destructive/5 border-destructive/20 text-destructive" : "bg-white/5 border-white/10 text-muted-foreground/40"
+                      )}>
+                        {w.kind === 'fallen' ? <Skull className="h-4 w-4" /> : <Armchair className="h-4 w-4" />}
                       </div>
-                      <div>
-                        <div className="text-sm font-black uppercase tracking-tight">{w.name}</div>
-                        <div className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                          {STYLE_DISPLAY_NAMES[w.style as FightingStyle] ?? w.style} ·{' '}
-                          {w.kind === 'fallen' ? 'Fallen in the arena' : 'Retired'}
-                          {w.week ? ` · Wk ${w.week}` : ''}
-                        </div>
+                      <div className="flex flex-col">
+                        <span className="text-[12px] font-black uppercase tracking-tight text-foreground">{w.name}</span>
+                        <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">
+                          {STYLE_DISPLAY_NAMES[w.style as FightingStyle]} · {w.kind === 'fallen' ? 'Fallen' : 'Retired'} · Wk {w.week}
+                        </span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-[8px] text-muted-foreground/50 uppercase tracking-widest">
-                        Fame
-                      </div>
-                      <div className="font-mono font-black text-arena-gold">{w.fame}</div>
+                      <span className="text-muted-foreground/30 text-[8px] font-black uppercase tracking-widest block mb-1">Fame</span>
+                      <span className="font-display font-black text-arena-gold text-xl leading-none">{w.fame}</span>
                     </div>
                   </Surface>
                 ))}
@@ -612,6 +484,53 @@ export default function Trainers() {
           })()}
         </TabsContent>
       </Tabs>
-    </div>
+
+      {/* Convert Dialog */}
+      <Dialog open={convertDialogOpen} onOpenChange={setConvertDialogOpen}>
+        <DialogContent className="bg-neutral-950/95 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-none">
+          <div className="p-10 border-b border-white/5 bg-primary/5">
+            <h3 className="font-display text-3xl font-black uppercase tracking-tight flex items-center gap-6">
+              <ImperialRing size="lg" variant="blood">
+                <GraduationCap className="h-8 w-8 text-primary" />
+              </ImperialRing>
+              Veteran Reassignment
+            </h3>
+          </div>
+
+          <div className="p-10 space-y-6 overflow-y-auto no-scrollbar">
+            {convertableRetired.map((w) => {
+              const preview = convertRetiredToTrainer(w);
+              return (
+                <div
+                  key={w.id}
+                  className="flex items-center justify-between p-6 bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-all"
+                >
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-4">
+                      <span className="text-lg font-black uppercase tracking-tight">{w.name}</span>
+                      <StatBadge styleName={w.style as FightingStyle} />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest rounded-none">
+                        {preview.tier} Staff
+                      </Badge>
+                      <span className="text-[10px] text-muted-foreground/40 uppercase tracking-widest italic">
+                        Specialization: {preview.focus}
+                      </span>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => convertWarrior(w.id)}
+                    className="h-10 px-6 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-widest rounded-none"
+                  >
+                    Establish Staff
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </PageFrame>
   );
 }

@@ -128,7 +128,7 @@ describe('applyRecords', () => {
     const updatedWD = updatedRivalData.roster?.find((w) => w.id === 'D');
     expect(updatedWD).toBeDefined();
     expect(updatedWD?.career?.losses).toBe(1);
-    expect(updatedWD?.popularity).toBe(10); // Rival pop changes are forced to 0
+    expect(updatedWD?.popularity).toBe(10); // Rival popularity delta is 0, so it remains at the initial value
   });
 
   it('skips fatigue accrual for tournament participants during tournament week', () => {

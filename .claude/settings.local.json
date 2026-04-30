@@ -63,7 +63,14 @@
       "Bash(bun -e ' *)",
       "Bash(bunx --bun tsc --noEmit)",
       "Bash(git stash *)",
-      "Bash(npx --yes vite build)"
+      "Bash(npx --yes vite build)",
+      "Bash(npx --yes vitest run src/test/engine/planBias.test.ts)",
+      "Bash(where bun *)",
+      "Bash(where npx *)",
+      "Bash(node node_modules/vitest/vitest.mjs run src/test/engine/planBias.test.ts)",
+      "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" run *)",
+      "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" x *)",
+      "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" install *)"
     ]
   },
   "hooks": {

@@ -2,6 +2,7 @@
  * Combat Damage — hit location, protection, and damage calculations.
  * Single source of truth for damage mechanics used by simulate.ts.
  */
+import { KILL_WINDOW_ENDURANCE } from './combatConstants';
 
 export type HitLocation =
   | 'head'
@@ -230,7 +231,7 @@ export function calculateKillWindow(
 
   // Endurance (Fatigue) factor: exhaustion opens kill windows
   if (enduranceRatio < 0.2) threshold += 0.006;
-  else if (enduranceRatio < 0.4) threshold += 0.003;
+  else if (enduranceRatio < KILL_WINDOW_ENDURANCE) threshold += 0.003;
   else if (enduranceRatio < 0.6) threshold += 0.001;
 
   // Location factor: Vital spots are deadlier

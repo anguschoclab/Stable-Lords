@@ -16,12 +16,7 @@ export const AL_INI_SCALING = 0.7;
 export const AL_ATTR_SCALING = 0.5;
 
 export const DEFENDER_ENDURANCE_DISCOUNT = 0.6;
-export const DAMAGE_TAX_SCALING = 0.7;
-export const KILL_WINDOW_ENDURANCE = 0.4;
-export const KILL_DESIRE_SCALING = 0.04;
-export const KILL_PHASE_LATE_BONUS = 0.15;
-export const KILL_THRESHOLD_MIN = 0.05;
-export const KILL_THRESHOLD_BASE = 0.3;
+export const KILL_WINDOW_ENDURANCE = 0.4; // middle endurance threshold in calculateKillWindow
 
 export const TACTIC_OVERUSE_CAP = 3;
 export const CRIT_DAMAGE_MULT = 1.7;

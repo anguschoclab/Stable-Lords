@@ -341,7 +341,7 @@ export const useGameStore = create<GameStore>()(
             gazette: next.newsletter.filter((n) => n.week === currentWeek),
           };
           next.pendingResolutionData = resolutionPayload;
-          
+
           if (next.arenaHistory && next.arenaHistory.length > 0) {
             const idx = next.arenaHistory.length - 1;
             const lastEntry = next.arenaHistory[idx];

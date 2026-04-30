@@ -216,7 +216,8 @@ export function executeHit(
   attOE: number,
   attAL: number,
   attMatchup: number,
-  ctx?: ResolutionContext
+  ctx?: ResolutionContext,
+  defPassive?: ReturnType<typeof getStylePassive>
 ) {
   // ── Survival Strike: defender has earned a free counter — skip this attack ──
   if (defender.survivalStrike) {
@@ -225,7 +226,7 @@ export function executeHit(
     const freeRipLoc = rollHitLocation(rng, attTactics.target, attacker.activePlan.protect);
     let freeRipDmg = computeHitDamage(
       rng,
-      defender.derived.damage + attPassive.dmgBonus,
+      defender.derived.damage + (defPassive?.dmgBonus ?? 0),
       freeRipLoc
     );
     freeRipDmg = applyArmorTypeMod(freeRipDmg, defender.weaponId, attacker.armorId);

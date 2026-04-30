@@ -299,7 +299,6 @@ const STYLE_PENALTIES: Record<FightingStyle, [number, number, number, number, nu
   [FightingStyle.WallOfSteel]: /*WS*/ [-2, -2, -9, 2, -2, 0], // was -27, now -13: small universal buff; INI positive = reads attacks
 };
 
-
 // ─── Base Skill Computation ───────────────────────────────────────────────
 
 /**

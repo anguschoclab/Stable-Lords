@@ -62,13 +62,10 @@ describe('Plan Bias', () => {
       expect(tuned.target).toBe('Any');
     });
 
-    it('should detect lunging styles via regex but plan.style might not match expected format', () => {
+    it('should suggest Lunge for lunging styles', () => {
       const lungePlan: FightPlan = { ...basePlan, style: FightingStyle.LungingAttack };
       const tuned = autoTuneFromBias(lungePlan, 'balanced');
-      // Note: This test reveals that the regex pattern may not work as expected with enum values
-      // The function expects string matching but FightingStyle enum values may differ
-      // Just verify it doesn't crash and returns partial plan
-      expect(tuned).toBeDefined();
+      expect(tuned.offensiveTactic).toBe('Lunge');
     });
 
     it('should suggest Bash for bashing styles', () => {
@@ -78,18 +75,15 @@ describe('Plan Bias', () => {
       expect(tuned.offensiveTactic).toBe('Bash');
     });
 
-    it('should not suggest Riposte for parry-riposte due to hyphen mismatch', () => {
+    it('should suggest Riposte for Parry-Riposte style', () => {
       const ripostePlan: FightPlan = { ...basePlan, style: FightingStyle.ParryRiposte };
       const tuned = autoTuneFromBias(ripostePlan, 'balanced');
-      // FightingStyle.ParryRiposte = "PARRY-RIPOSTE" doesn't match /PARRY\s*RIPOSTE/i (hyphen vs space)
-      // This is a known limitation of the regex pattern matching
-      expect(tuned.defensiveTactic).toBeUndefined();
+      expect(tuned.defensiveTactic).toBe('Riposte');
     });
 
-    it('should not suggest Parry for total parry due to hyphen in enum', () => {
+    it('should suggest Parry for Total Parry style', () => {
       const parryPlan: FightPlan = { ...basePlan, style: FightingStyle.TotalParry };
       const tuned = autoTuneFromBias(parryPlan, 'balanced');
-      // FightingStyle.TotalParry = "TOTAL PARRY" should match /TOTAL\s*PARRY/i
       expect(tuned.defensiveTactic).toBe('Parry');
     });
 

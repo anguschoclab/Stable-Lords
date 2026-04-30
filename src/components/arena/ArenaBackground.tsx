@@ -450,13 +450,15 @@ function WeatherOverlay({ weather }: { weather: string }) {
           <div
             key={i}
             className="absolute w-1.5 h-1.5 bg-fuchsia-400/40 rounded-full animate-mana-spark"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              '--tx': `${(Math.random() - 0.5) * 100}px`,
-              '--ty': `${(Math.random() - 0.5) * 100}px`,
-              animationDelay: `${Math.random() * 4}s`,
-            } as any}
+            style={
+              {
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                '--tx': `${(Math.random() - 0.5) * 100}px`,
+                '--ty': `${(Math.random() - 0.5) * 100}px`,
+                animationDelay: `${Math.random() * 4}s`,
+              } as any
+            }
           />
         ))}
       </div>

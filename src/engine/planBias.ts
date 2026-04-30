@@ -1,6 +1,7 @@
 /**
  * Plan bias + style-aware auto-tune helpers.
  */
+import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/combat.types';
 
 export type Bias = 'head-hunt' | 'hamstring' | 'gut' | 'guard-break' | 'balanced';
@@ -30,10 +31,12 @@ export function autoTuneFromBias(plan: FightPlan, bias: Bias): Partial<FightPlan
   }
 
   // Style nudges
-  if (/(LUNGE)/i.test(plan.style)) tuned.offensiveTactic = 'Lunge';
-  if (/BASHING/.test(plan.style)) tuned.offensiveTactic = tuned.offensiveTactic || 'Bash';
-  if (/PARRY\s*RIPOSTE/i.test(plan.style)) tuned.defensiveTactic = 'Riposte';
-  if (/TOTAL\s*PARRY/i.test(plan.style)) tuned.defensiveTactic = 'Parry';
+  if (plan.style === FightingStyle.LungingAttack || plan.style === FightingStyle.ParryLunge)
+    tuned.offensiveTactic = 'Lunge';
+  if (plan.style === FightingStyle.BashingAttack)
+    tuned.offensiveTactic = tuned.offensiveTactic || 'Bash';
+  if (plan.style === FightingStyle.ParryRiposte) tuned.defensiveTactic = 'Riposte';
+  if (plan.style === FightingStyle.TotalParry) tuned.defensiveTactic = 'Parry';
 
   return tuned;
 }

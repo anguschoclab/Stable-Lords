@@ -666,7 +666,8 @@ export function resolveExchange(
         curAttOE,
         curAttAL,
         aGoesFirst ? ctx.matchupA : ctx.matchupD,
-        ctx
+        ctx,
+        curPassD
       );
     }
   }

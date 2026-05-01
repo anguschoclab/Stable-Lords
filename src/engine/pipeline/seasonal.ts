@@ -35,7 +35,8 @@ interface OffseasonEventNarrative {
     | 'bards_song'
     | 'plague_outbreak'
     | 'black_market_raid'
-    | 'grand_feast';
+    | 'grand_feast'
+    | 'wandering_healer';
   newsletter: string[];
 }
 
@@ -285,6 +286,49 @@ export function runSeasonalPass(
       title: e.title,
       items: [t(seasonRng.pick(e.newsletter) || '', { gold: goldCost })],
     });
+  } else if (e.effectType === 'wandering_healer') {
+    const goldCost = 50 + Math.floor(seasonRng.next() * 51); // 50-100 gold
+    treasuryDelta -= goldCost;
+    ledgerEntries.push({
+      id: seasonRng.uuid('ledger') as LedgerEntryId,
+      week: nextWeek,
+      label: 'Medical Tonics',
+      amount: -goldCost,
+      category: 'medical',
+    });
+
+    const activeInjured = state.roster.filter(
+      (w) => w.status === 'Active' && w.injuries && w.injuries.length > 0
+    );
+
+    if (activeInjured.length > 0) {
+      const chosen = seasonRng.pick(activeInjured);
+      if (chosen) {
+        const remainingInjuries = [...(chosen.injuries || [])];
+        if (remainingInjuries.length > 0) {
+          // Remove a random injury
+          const injuryIndex = Math.floor(seasonRng.next() * remainingInjuries.length);
+          remainingInjuries.splice(injuryIndex, 1);
+        }
+        rosterUpdates.set(chosen.id, {
+          injuries: remainingInjuries,
+        });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [t(e.newsletter[0] || '', { name: chosen.name, gold: goldCost })],
+        });
+      }
+    } else {
+      newsletterItems.push({
+        id: seasonRng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [t(e.newsletter[1] || '', { gold: goldCost })],
+      });
+    }
   }
   // Record this event in the State so the UI can pick it up
   const impact: StateImpact = {

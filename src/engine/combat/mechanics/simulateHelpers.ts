@@ -1,7 +1,7 @@
 import { FightingStyle } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { Trainer } from '@/types/state.types';
-import { type ResolutionContext, type FighterState } from '@/engine/combat/resolution';
+import { type ResolutionContext, type FighterState } from '@/engine/combat/resolution/resolution';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { getTrainingBonus } from '@/engine/trainers';

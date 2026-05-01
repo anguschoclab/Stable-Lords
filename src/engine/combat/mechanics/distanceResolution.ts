@@ -1,5 +1,5 @@
 import type { DistanceRange, ArenaZone, ArenaConfig } from '@/types/shared.types';
-import type { FighterState } from './resolution';
+import type { FighterState } from '../resolution/resolution';
 import type { CombatEvent } from '@/types/combat.types';
 import { contestCheck } from './combatMath';
 

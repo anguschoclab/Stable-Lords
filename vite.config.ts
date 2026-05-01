@@ -48,6 +48,22 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-core': ['react', 'react-dom', 'framer-motion'],
+          'vendor-ui': ['lucide-react', 'recharts', 'date-fns'],
+          'engine-core': [
+            path.resolve(__dirname, './src/engine/simulate.ts'),
+            path.resolve(__dirname, './src/engine/impacts.ts'),
+            path.resolve(__dirname, './src/engine/recruitment.ts'),
+          ],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
   define: {
     'global.HowlerGlobal': '{}',
   },

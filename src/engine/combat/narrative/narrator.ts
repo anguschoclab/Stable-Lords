@@ -22,7 +22,7 @@ import {
   narrateFeint,
   narrateZoneShift,
 } from '../../narrativePBP';
-import { getWeaponDisplayName } from '../narrative/narrativeUtils';
+import { getWeaponDisplayName } from '../../narrative/narrativeUtils';
 
 export interface NarrationContext {
   rng: () => number;

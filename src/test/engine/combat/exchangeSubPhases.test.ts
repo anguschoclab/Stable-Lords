@@ -5,7 +5,7 @@ import {
   runFeint,
   runRecovery,
 } from '@/engine/combat/resolution/exchangeSubPhases';
-import type { FighterState } from '@/engine/combat/resolution';
+import type { FighterState } from '@/engine/combat/resolution/resolution';
 
 function makeFighter(overrides: Partial<FighterState> = {}): FighterState {
   return {

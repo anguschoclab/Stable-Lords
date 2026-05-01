@@ -82,7 +82,7 @@ export class SeededRNG {
  * Universal random picker that works with both function-based RNG and IRNGService.
  * Standardizes selection across the entire engine.
  */
-export function randomPick<T>(rng: (() => number) | IRNGService, arr: T[]): T {
+export function randomPick<T>(arr: T[], rng: (() => number) | IRNGService): T {
   if (arr.length === 0) {
     throw new Error('Cannot pick from empty array');
   }

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { getSpecialtyMods, defaultSpecialtyMods } from '@/engine/trainerSpecialties';
 import type { Trainer } from '@/types/shared.types';
-import type { FighterState, ResolutionContext } from '@/engine/combat/resolution';
+import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/resolution';
 
 describe('trainerSpecialties', () => {
   const createMockFighter = (overrides: Partial<FighterState> = {}): FighterState =>

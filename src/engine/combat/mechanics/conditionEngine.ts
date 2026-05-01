@@ -4,7 +4,7 @@ import type {
   ConditionTriggerType,
   PsychState,
 } from '@/types/shared.types';
-import type { FighterState, ResolutionContext } from './resolution';
+import type { FighterState, ResolutionContext } from '../resolution/resolution';
 
 /**
  * Returns the number of exchanges between condition re-evaluations based on WT (Wit) stat.

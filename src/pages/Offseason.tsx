@@ -16,12 +16,8 @@ import {
   GraduationCap,
   BookOpen,
   ArrowRight,
-  Shield,
-  Activity,
   History,
-  TrendingUp,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export default function Offseason() {
   return (
@@ -70,29 +66,29 @@ export default function Offseason() {
                   label: 'Refresh Roster',
                   sub: 'Scout new tactical assets',
                   icon: UserPlus,
-                  variant: 'blood',
+                  variant: 'blood' as const,
                 },
                 {
                   to: '/ops/personnel',
                   label: 'Revise Staff',
                   sub: 'Personnel + Mentor review',
                   icon: GraduationCap,
-                  variant: 'gold',
+                  variant: 'gold' as const,
                 },
                 {
                   to: '/ops/finance',
                   label: 'Ledger Audit',
                   sub: 'Full fiscal retrospective',
                   icon: BookOpen,
-                  variant: 'bronze',
+                  variant: 'bronze' as const,
                 },
               ].map((item) => (
-                <Link key={item.to} to={item.to as any}>
+                <Link key={item.to} to={item.to}>
                   <Surface
                     variant="glass"
                     className="p-5 border-white/5 hover:border-primary/40 transition-all group flex items-center gap-4"
                   >
-                    <ImperialRing size="sm" variant={item.variant as any}>
+                    <ImperialRing size="sm" variant={item.variant}>
                       <item.icon className="h-4 w-4" />
                     </ImperialRing>
                     <div className="flex-1">

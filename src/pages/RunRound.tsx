@@ -1,21 +1,18 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, reconstructGameState, type GameStore } from '@/state/useGameStore';
-import { type GameState, type Warrior, type RivalStableData } from '@/types/game';
+import { type Warrior, type RivalStableData } from '@/types/game';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { isFightReady } from '@/engine/warriorStatus';
 import { processWeekBouts, type BoutResult } from '@/engine/boutProcessor';
 import { runAutosim, type AutosimResult } from '@/engine/autosim';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
-import { ImperialRing } from '@/components/ui/ImperialRing';
-import { Swords, Zap, Skull, Activity, FastForward, Heart, ChevronRight } from 'lucide-react';
+import { Swords, Zap, Skull, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
 
 // Modular Components
 import { MatchCard } from '@/components/run-round/MatchCard';

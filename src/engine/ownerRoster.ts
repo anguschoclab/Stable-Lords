@@ -34,10 +34,10 @@ export function processAIRosterManagement(
 
     // Trajectory guard: warriors on a hot streak (3+ wins in last 5 fights) are
     // protected from any personality-based culling regardless of career win-rate.
-    const isOnWinStreak = (w: { career: { wins: number; losses: number } }) => {
+    const isOnWinStreak = (w: Warrior) => {
       const total = w.career.wins + w.career.losses;
       if (total < 5) return false;
-      const wId = (w as any).id as string;
+      const wId = w.id;
       const recentFights = getRecentFightsForWarrior(state.arenaHistory, wId, 5);
       const recentWins = recentFights.filter(
         (f) =>

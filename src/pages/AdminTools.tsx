@@ -155,7 +155,7 @@ export default function AdminTools() {
             ].map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.id as any)}
+                onClick={() => setActiveCategory(cat.id as 'SYSTEM' | 'ECONOMY' | 'WORLD' | 'TELEMETRY' | 'PREFERENCES')}
                 className={cn(
                   'w-full flex items-center gap-4 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 group',
                   activeCategory === cat.id

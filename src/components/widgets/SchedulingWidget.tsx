@@ -13,10 +13,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Link } from '@tanstack/react-router';
 import {
-  Target,
-  AlertTriangle,
   Swords,
-  Trophy,
   ExternalLink,
   TrendingUp,
   TrendingDown,

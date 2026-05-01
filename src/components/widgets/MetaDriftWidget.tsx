@@ -4,7 +4,6 @@ import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { computeMetaDrift, getMetaLabel, getMetaColor } from '@/engine/metaDrift';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Activity, TrendingUp, TrendingDown, Minus, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';

@@ -99,15 +99,9 @@ function buildCache(state: NameResolutionState | GameState) {
   return cacheEntry;
 }
 
-function getCache(state: NameResolutionState | GameState) {
-  let cacheEntry = cache.get(state);
-  if (!cacheEntry) {
-    cacheEntry = buildCache(state);
-  }
-  return cacheEntry;
-}
 
-type CachedWarrior = { id: string; name: string } & Record<string, any>;
+
+type CachedWarrior = { id: string; name: string } & Record<string, unknown>;
 
 interface WarriorCache {
   idMap: Map<string, CachedWarrior>;
@@ -128,7 +122,7 @@ function ensureWarriorCache(state: NameResolutionState | GameState): WarriorCach
   const idMap = new Map<string, CachedWarrior>();
   const nameMap = new Map<string, CachedWarrior>();
 
-  const processWarrior = (w: any) => {
+  const processWarrior = (w: CachedWarrior | undefined) => {
     if (!w) return;
     idMap.set(w.id, w);
     nameMap.set(w.name, w);

@@ -1,4 +1,4 @@
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';

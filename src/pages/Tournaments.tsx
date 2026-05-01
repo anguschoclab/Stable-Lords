@@ -120,7 +120,7 @@ export default function Tournaments() {
     setSimulating(true);
     try {
       const state = useGameStore.getState();
-      const currentFullState = reconstructGameState(state as unknown as import('@/state/useGameStore').GameStore);
+      const currentFullState = reconstructGameState(state);
 
       const { updatedState, roundResults } = await engineProxy.resolveTournamentRound(
         currentFullState,

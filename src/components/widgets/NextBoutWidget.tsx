@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Swords, Trophy, Target, TrendingUp, ChevronRight } from 'lucide-react';
+import { Swords, Trophy, Target, ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { WarriorLink } from '@/components/EntityLink';
+
 import { cn } from '@/lib/utils';
 import { ATTRIBUTE_KEYS } from '@/types/game';
 import { resolveWarriorName, resolveStableName } from '@/utils/historyResolver';

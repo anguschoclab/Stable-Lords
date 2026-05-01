@@ -13,7 +13,6 @@ import { RunResults } from '@/components/run-round/RunResults';
 import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import type { Warrior } from '@/types/warrior.types';
-import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/shared.types';
 import {
   MOOD_DESCRIPTIONS,
   MOOD_ICONS,
@@ -34,19 +33,16 @@ import {
 import {
   Trophy,
   Swords,
-  Flame,
   Star,
   Skull,
   Zap,
   Eye,
   TrendingUp,
   Activity,
-  Target,
   Shield,
-  Info,
   BarChart3,
 } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -288,7 +284,7 @@ export default function ArenaHub() {
   const { week, isTournamentWeek } = useGameStore(
     useShallow((s) => ({ week: s.week, isTournamentWeek: s.isTournamentWeek }))
   );
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const gameState = useMemo(() => reconstructGameState(store), [store]);
 
   const [showCombat, setShowCombat] = useState(false);

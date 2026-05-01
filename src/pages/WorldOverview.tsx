@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
-import { Globe, Trophy, Swords, Skull, Crown, Activity, Brain } from 'lucide-react';
+import { Globe, Trophy, Swords, Brain } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { WorldStats } from '@/components/world/WorldStats';
@@ -10,6 +10,7 @@ import { RivalIntelligence } from '@/components/world/RivalIntelligence';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { getStableTemplates } from '@/engine/rivals';
 import type { Warrior } from '@/types/game';
+
 
 type SortField =
   | 'rank'
@@ -33,6 +34,21 @@ type WarriorSortField =
   | 'officialRank'
   | 'compositeScore';
 
+interface StableRow {
+  id: string;
+  name: string;
+  ownerName: string;
+  fame: number;
+  wins: number;
+  losses: number;
+  kills: number;
+  winRate: number;
+  roster: number;
+  tier: string;
+  motto: string;
+  isPlayer: boolean;
+}
+
 export default function WorldOverview() {
   const state = useWorldState();
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: 'asc' | 'desc' }>({
@@ -51,8 +67,8 @@ export default function WorldOverview() {
 
   const templates = useMemo(() => getStableTemplates(), []);
 
-  const stableRows = useMemo(() => {
-    const rows: any[] = [];
+  const stableRows = useMemo<StableRow[]>(() => {
+    const rows: StableRow[] = [];
     let pWins = 0;
     let pLosses = 0;
     let pKills = 0;
@@ -116,8 +132,8 @@ export default function WorldOverview() {
       const dir = stableSort.dir === 'asc' ? 1 : -1;
       if (f === 'name') return a.name.localeCompare(b.name) * dir;
       if (f === 'tier') return a.tier.localeCompare(b.tier) * dir;
-      const va = a[f] as number;
-      const vb = b[f] as number;
+      const va = a[f as keyof StableRow] as number;
+      const vb = b[f as keyof StableRow] as number;
       return (va - vb) * dir;
     });
   }, [state, stableSort, templates]);
@@ -267,7 +283,7 @@ export default function WorldOverview() {
           <StableRankings
             rows={stableRows}
             sort={stableSort}
-            onSort={(field: any) =>
+            onSort={(field: SortField) =>
               setStableSort((prev) => ({
                 field: field as SortField,
                 dir: prev.field === field && prev.dir === 'desc' ? 'asc' : 'desc',
@@ -286,7 +302,7 @@ export default function WorldOverview() {
           <WarriorLeaderboard
             rows={warriorRows}
             sort={warriorSort}
-            onSort={(field: any) =>
+            onSort={(field: WarriorSortField) =>
               setWarriorSort((prev) => ({
                 field: field as WarriorSortField,
                 dir: prev.field === field && prev.dir === 'desc' ? 'asc' : 'desc',

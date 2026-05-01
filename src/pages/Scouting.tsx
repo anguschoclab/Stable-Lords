@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting';
 import { type ScoutReportData, type RivalStableData, type Warrior } from '@/types/game';
-import { Search, Eye, ArrowLeftRight, UserRoundSearch, Shield, Target, Radio } from 'lucide-react';
+import { Radio } from 'lucide-react';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { hashStr } from '@/utils/random';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

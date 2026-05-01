@@ -4,31 +4,24 @@ import { useGameStore } from '@/state/useGameStore';
 import {
   ATTRIBUTE_KEYS,
   ATTRIBUTE_LABELS,
-  STYLE_DISPLAY_NAMES,
   type Attributes,
   type FightingStyle,
 } from '@/types/shared.types';
-import type { Warrior } from '@/types/state.types';
+import type { Warrior, SeasonalGrowth } from '@/types/state.types';
 import { computeGainChance } from '@/engine/training';
 import { potentialRating, potentialGrade, diminishingReturnsFactor } from '@/engine/potential';
 import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Dumbbell,
   AlertTriangle,
-  Lock,
   Star,
   Target,
   Activity,
-  Shield,
-  Zap,
-  Heart,
-  Info,
 } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
-import { WarriorLink } from '@/components/EntityLink';
+import { StatBadge } from '@/components/ui/WarriorBadges';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
@@ -270,12 +263,10 @@ function AttributeRow({
 function WarriorPlannerCard({
   warrior,
   trainers,
-  season,
   seasonalGains,
 }: {
   warrior: Warrior;
   trainers: import('@/types/shared.types').Trainer[];
-  season: string;
   seasonalGains: Partial<Record<keyof Attributes, number>>;
 }) {
   const burns = useMemo(() => assessBurnRisks(warrior, trainers), [warrior, trainers]);
@@ -370,7 +361,7 @@ export default function TrainingPlanner() {
 
   const seasonalGainsMap = useMemo(() => {
     const map = new Map<string, Partial<Record<keyof Attributes, number>>>();
-    const growth = (seasonalGrowth ?? []) as any[];
+    const growth = (seasonalGrowth ?? []) as SeasonalGrowth[];
     for (const sg of growth) {
       if (sg.season === season) {
         map.set(sg.warriorId, sg.gains);
@@ -470,7 +461,6 @@ export default function TrainingPlanner() {
             <WarriorPlannerCard
               warrior={selectedWarrior}
               trainers={currentTrainers}
-              season={season}
               seasonalGains={seasonalGainsMap.get(selectedWarrior.id) ?? {}}
             />
           ) : (

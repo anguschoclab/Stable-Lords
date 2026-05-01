@@ -1,5 +1,5 @@
 import type { GameState } from '@/types/state.types';
-import type { FightSummary } from '@/types/combat.types';
+
 
 export interface ArchiveService {
   isSupported: () => boolean;
@@ -34,7 +34,7 @@ export class ArchiveConflictError extends Error {
 }
 
 export class OPFSArchiveService implements ArchiveService {
-  private writeQueue: Promise<any> = Promise.resolve();
+  private writeQueue: Promise<void> = Promise.resolve();
 
   private async enqueue<T>(task: () => Promise<T>): Promise<T> {
     const p = this.writeQueue.then(task);
@@ -158,7 +158,7 @@ export class OPFSArchiveService implements ArchiveService {
           if (fileHandle && !overwrite) {
             throw new ArchiveConflictError(`Bout log ${boutId} already exists in archive.`);
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           if (error instanceof ArchiveConflictError) {
             throw error;
           }

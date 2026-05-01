@@ -333,6 +333,13 @@ export interface AnnualAward {
   reason: string;
 }
 
+export interface DeferredBoutLog {
+  year: number;
+  season: number;
+  boutId: string;
+  transcript: string[];
+}
+
 export interface GameState {
   meta: {
     gameName: string;
@@ -398,6 +405,7 @@ export interface GameState {
   lastSimulationReport?: SimulationReport;
   cachedMetaDrift?: import('@/engine/metaDrift').StyleMeta;
   warriorMap?: Map<WarriorId, import('@/types/warrior.types').Warrior>;
+  deferredBoutLogs?: DeferredBoutLog[];
 }
 
 export interface UIPrefs {

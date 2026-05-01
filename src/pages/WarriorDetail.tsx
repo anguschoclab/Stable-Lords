@@ -17,7 +17,6 @@ import { toast } from 'sonner';
 import { type SubNavTab } from '@/components/SubNav';
 import { Separator } from '@/components/ui/separator';
 import { Trophy, Users } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { Surface } from '@/components/ui/Surface';

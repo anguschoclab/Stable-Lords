@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
-import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Heart } from 'lucide-react';
 import { CrowdMood, getMoodModifiers, MOOD_ICONS, MOOD_DESCRIPTIONS } from '@/engine/crowdMood';

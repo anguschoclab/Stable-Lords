@@ -3,20 +3,14 @@
  */
 import { useGameStore } from '@/state/useGameStore';
 import { STYLE_DISPLAY_NAMES, FightingStyle, type Warrior } from '@/types/game';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Skull, Armchair, Zap, Crosshair, Swords, Trophy, Shield, Activity } from 'lucide-react';
+import { Skull, Zap, Crosshair, Shield, Activity } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
-import { SectionDivider } from '@/components/ui/SectionDivider';
-import { ImperialRing } from '@/components/ui/ImperialRing';
-import { Link } from '@tanstack/react-router';
 import { WarriorLink } from '@/components/EntityLink';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
-import { PageFrame } from '@/components/ui/PageFrame';
+import { motion } from 'framer-motion';
 
 export default function Graveyard() {
   const { graveyard, player, season } = useGameStore();

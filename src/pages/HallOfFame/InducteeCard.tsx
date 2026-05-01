@@ -1,13 +1,13 @@
 import React from 'react';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { Warrior, FightSummary } from '@/types/game';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Swords, Trophy, Activity, Medal, Star } from 'lucide-react';
+import { Swords, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Surface } from '@/components/ui/Surface';
-import { ImperialRing } from '@/components/ui/ImperialRing';
+
 
 /* ── helpers ─────────────────────────────────────────────── */
 

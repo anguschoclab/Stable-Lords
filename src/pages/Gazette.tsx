@@ -3,10 +3,9 @@
  * Codex Sanguis design: Roman acta diurna / historical broadsheet aesthetic
  */
 import { useMemo, useState, useCallback } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import {
-  Newspaper,
   Terminal,
   BarChart3,
   Radio,
@@ -20,7 +19,6 @@ import { cn } from '@/lib/utils';
 
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { GazetteArticle } from '@/components/gazette/GazetteArticle';
 import { TacticalStyleAnalysis, StyleMatchupHeatmap } from '@/components/gazette/MetaAnalytics';
 import {

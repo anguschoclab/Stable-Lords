@@ -15,14 +15,11 @@ import {
 } from '@/engine/trainers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
+import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   GraduationCap,
@@ -31,18 +28,16 @@ import {
   Armchair,
   Zap,
   Users,
-  Coins,
-  ChevronRight,
   Award,
   Skull,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { TrainerCard } from '@/components/stable/TrainerCard';
 import { canTransact } from '@/utils/economyUtils';
-import { generateId } from '@/utils/idUtils';
+
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { toast } from 'sonner';
 
@@ -437,14 +432,14 @@ export default function Trainers() {
                 style: w.style,
                 kind: 'fallen' as const,
                 fame: w.fame ?? 0,
-                week: (w as any).deathWeek,
+                week: w.deathWeek,
               })),
               ...(retired ?? []).map((w) => ({
                 name: w.name,
                 style: w.style,
                 kind: 'retired' as const,
                 fame: w.fame ?? 0,
-                week: (w as any).retiredWeek ?? 0,
+                week: w.retiredWeek ?? 0,
               })),
             ]
               .sort((a, b) => b.fame - a.fame)

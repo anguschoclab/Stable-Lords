@@ -77,7 +77,6 @@ export function MedicalAuditWidget() {
               const fatigue = w.fatigue ?? 0;
               const condition = Math.max(0, 100 - fatigue);
               const isInjured = w.injuries.length > 0;
-              const isCritical = fatigue > 85;
 
               return (
                 <div key={w.id} className="group/item relative">

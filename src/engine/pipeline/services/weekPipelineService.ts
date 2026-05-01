@@ -127,7 +127,7 @@ function finalizeState(
 
   // 🧹 Bout offer cleanup — single source of truth for offer pruning.
   if (state.boutOffers) {
-    const cleanedOffers: Record<string, any> = {};
+    const cleanedOffers: Record<string, BoutOffer> = {};
     const justFinishedWeek = ctx.nextWeek - 1;
     Object.values(state.boutOffers).forEach((offer) => {
       if (offer.boutWeek <= justFinishedWeek) return;
@@ -172,8 +172,8 @@ function finalizeState(
     }
 
     // Store in state for batch flushing
-    (state as any).deferredBoutLogs = [
-      ...((state as any).deferredBoutLogs || []),
+    state.deferredBoutLogs = [
+      ...(state.deferredBoutLogs || []),
       ...pendingArchives,
     ];
     return state;

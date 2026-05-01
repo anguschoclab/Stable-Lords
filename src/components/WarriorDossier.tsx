@@ -7,9 +7,9 @@ import { WarriorRadarChart } from '@/components/charts/WarriorRadarChart';
 // Child components
 import { WarriorDossierHeader } from './warrior/dossier/WarriorDossierHeader';
 import { WarriorDossierTraits } from './warrior/dossier/WarriorDossierTraits';
-import { WarriorDossierStats } from './warrior/dossier/WarriorDossierStats';
-import { WarriorDossierTabs } from './warrior/dossier/WarriorDossierTabs';
-import { WarriorDossierSoulBond } from './warrior/dossier/WarriorDossierSoulBond';
+import WarriorDossierStats from './warrior/dossier/WarriorDossierStats';
+import WarriorDossierTabs from './warrior/dossier/WarriorDossierTabs';
+import WarriorDossierSoulBond from './warrior/dossier/WarriorDossierSoulBond';
 import { WarriorDossierMedicalReport } from './warrior/dossier/WarriorDossierMedicalReport';
 
 interface WarriorDossierProps {

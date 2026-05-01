@@ -4,28 +4,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom';
 
-// Mock DnD to avoid context errors in JSDOM
-vi.mock('@hello-pangea/dnd', () => ({
-  DragDropContext: ({ children }: any) => <div>{children}</div>,
-  Droppable: ({ children }: any) =>
-    children(
-      {
-        draggableProps: {},
-        innerRef: vi.fn(),
-        droppableProps: {},
-      },
-      { isDraggingOver: false }
-    ),
-  Draggable: ({ children }: any) =>
-    children(
-      {
-        draggableProps: {},
-        innerRef: vi.fn(),
-        dragHandleProps: {},
-      },
-      { isDragging: false }
-    ),
-}));
+// No longer uses DnD
 
 describe('PlanBuilder Matchup Rendering', () => {
   const mockPlan = {

@@ -1,7 +1,7 @@
 import type { GameState, RivalStableData, RestState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import { rollForInjury } from '@/engine/injuries';
+import { generateInjury } from '@/engine/injuries';
 import { addRestState } from '@/engine/matchmaking/historyLogic';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { StateImpact } from '@/engine/impacts';
@@ -27,7 +27,7 @@ export function handleInjuries(
   }
 
   // 1. Process Warrior A
-  const injA = rollForInjury(wA, outcome, 'A', seed);
+  const injA = generateInjury(wA, outcome, 'A', seed);
   if (injA) {
     injured = true;
     names.push(wA.name);
@@ -51,7 +51,7 @@ export function handleInjuries(
   }
 
   // 2. Process Warrior D
-  const injD = rollForInjury(wD, outcome, 'D', seed ? seed + 1 : undefined);
+  const injD = generateInjury(wD, outcome, 'D', seed ? seed + 1 : undefined);
   if (injD) {
     injured = true;
     names.push(wD.name);

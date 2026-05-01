@@ -165,9 +165,6 @@ export function generateInjury(
   };
 }
 
-/** Alias for generateInjury for backward compatibility */
-export const rollForInjury = generateInjury;
-
 /** Tick all injuries down by 1 week, remove healed ones. Returns updated injuries array and healed names. */
 export function tickInjuries(injuries: InjuryData[]): { active: InjuryData[]; healed: string[] } {
   const healed: string[] = [];

@@ -79,8 +79,8 @@ export class SeededRNG {
 }
 
 /**
- * Universal random picker that works with both function-based RNG and IRNGService
- * Eliminates DRY violation of Math.floor(rng() * arr.length) pattern
+ * Universal random picker that works with both function-based RNG and IRNGService.
+ * Standardizes selection across the entire engine.
  */
 export function randomPick<T>(rng: (() => number) | IRNGService, arr: T[]): T {
   if (arr.length === 0) {
@@ -88,18 +88,19 @@ export function randomPick<T>(rng: (() => number) | IRNGService, arr: T[]): T {
   }
   if (typeof rng === 'function') {
     const idx = Math.floor(rng() * arr.length);
-    const item = arr[idx];
-    if (item === undefined) {
-      throw new Error('RNG index out of bounds');
-    }
-    return item;
+    return arr[idx] as T;
   }
   return rng.pick(arr);
 }
 
 /**
- * Converts a string to a numeric seed using character code reduction
- * Eliminates DRY violation of seed generation patterns
+ * Legacy pick alias for backward compatibility.
+ * @deprecated Use randomPick instead.
+ */
+export const pick = randomPick;
+
+/**
+ * Converts a string to a numeric seed using character code reduction.
  */
 export function stringToSeed(str: string): number {
   let hash = 0;
@@ -111,9 +112,8 @@ export function stringToSeed(str: string): number {
 }
 
 /**
- * FNV-1a hash function for deterministic string-to-number conversion
- * Used for generating consistent seeds from IDs
- * Eliminates DRY violation of hash string patterns
+ * FNV-1a hash function for deterministic string-to-number conversion.
+ * Used for generating consistent seeds from IDs.
  */
 export function hashStr(s: string): number {
   let hash = 2166136261;
@@ -125,20 +125,20 @@ export function hashStr(s: string): number {
 }
 
 /**
- * Picks a random element from an array using a simple RNG function.
+ * Universal shuffle that works with both function-based RNG and IRNGService.
+ * Returns a new array.
  */
-export function pick<T>(arr: T[], rng: () => number): T {
-  return arr[Math.floor(rng() * arr.length)];
+export function randomShuffle<T>(rng: (() => number) | IRNGService, arr: T[]): T[] {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = typeof rng === 'function' ? Math.floor(rng() * (i + 1)) : Math.floor(rng.next() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
 }
 
 /**
- * Returns a shuffled copy of the array using a simple RNG function.
+ * Legacy shuffled alias for backward compatibility.
+ * @deprecated Use randomShuffle instead.
  */
-export function shuffled<T>(arr: T[], rng: () => number): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+export const shuffled = randomShuffle;

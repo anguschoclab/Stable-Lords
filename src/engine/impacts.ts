@@ -118,7 +118,7 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
     state.ledger = [...(state.ledger ?? []), ...value];
   },
   seasonalGrowth: (state, value) => {
-    state.seasonalGrowth = [...(state.seasonalGrowth || []), ...value];
+    state.seasonalGrowth = value;
   },
   week: (state, value) => {
     state.week = value;
@@ -280,7 +280,7 @@ const MERGE_CONFIG: MergeConfig = {
   playerAvoids: { strategy: 'append', defaultValue: [] },
   coachDismissed: { strategy: 'append', defaultValue: [] },
   unacknowledgedDeaths: { strategy: 'append', defaultValue: [] },
-  seasonalGrowth: { strategy: 'append', defaultValue: [] },
+  seasonalGrowth: { strategy: 'replace', defaultValue: [] },
   rosterRemovals: { strategy: 'append', defaultValue: [] },
   tournaments: { strategy: 'replace', defaultValue: undefined },
   recruitPool: { strategy: 'replace', defaultValue: undefined },

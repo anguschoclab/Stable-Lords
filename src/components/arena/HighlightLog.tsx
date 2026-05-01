@@ -149,3 +149,4 @@ export function HighlightLog({ log, visibleCount }: Props) {
 }
 
 export default HighlightLog;
+

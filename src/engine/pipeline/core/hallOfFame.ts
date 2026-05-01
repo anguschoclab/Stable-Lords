@@ -183,7 +183,7 @@ function applyAward(
   return { updatedWarrior };
 }
 
-function createYearlySnapshots(state: GameState): StateImpact {
+export function createYearlySnapshots(state: GameState): StateImpact {
   const currentYear = state.year;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();

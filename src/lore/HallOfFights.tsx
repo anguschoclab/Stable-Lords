@@ -274,3 +274,4 @@ export const HallOfFights: React.FC = () => {
 };
 
 export default HallOfFights;
+

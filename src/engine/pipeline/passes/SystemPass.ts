@@ -3,7 +3,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
 import { StateImpact } from '@/engine/impacts';
-import { processHallOfFame } from '../core/hallOfFame';
+import { processHallOfFame, createYearlySnapshots } from '../core/hallOfFame';
 import { processTierProgression } from '../core/tierProgression';
 import { WorldManagementService } from '@/engine/ai/worldManagement';
 import { evolvePhilosophies } from '@/engine/ownerPhilosophy';
@@ -21,11 +21,27 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
 
   // 1. Systemic Progression (Draft-heavy)
   const hofImpact = processHallOfFame(state, nextWeek);
+  
+  // 🏛️ Hall of Fame Snapshotting (1.0 Fix)
+  // We create snapshots at the BEGINNING of every year (Week 1) to provide a baseline.
+  // We also check for Year 1 Week 1 to ensure the very first baseline is captured.
+  let snapshotImpact: StateImpact = {};
+  const isFirstTick = state.week === 1 && state.year === 1;
+  const isYearTransition = nextWeek === 1;
+
+  // Check if we need to initialize snapshots for the current year
+  const needsInitialSnapshot = isFirstTick && !state.roster.some(w => w.yearlySnapshots?.[1]);
+  
+  if (isYearTransition || needsInitialSnapshot) {
+    snapshotImpact = createYearlySnapshots(state);
+  }
+
   const tierImpact = processTierProgression(state, state.season, nextWeek);
 
   // SystemPass runs AFTER WorldPass in the pipeline, so we must not override these values
   const impact: StateImpact = {
     ...hofImpact,
+    ...snapshotImpact,
     ...tierImpact,
     seasonalGrowth: state.seasonalGrowth ? [...state.seasonalGrowth] : [],
     // Do NOT set season or weather here - WorldPass handles them

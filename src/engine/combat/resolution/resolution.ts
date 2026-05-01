@@ -8,7 +8,7 @@ import {
 } from './exchangeHelpers';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
-import type { FightPlan, FightSummary, CombatEvent } from '@/types/combat.types';
+import type { FightPlan, CombatEvent } from '@/types/combat.types';
 import type {
   BaseSkills,
   Attributes,
@@ -23,40 +23,23 @@ import type {
   SurfaceMod,
 } from '@/types/shared.types';
 import type { WeatherEffect } from '../mechanics/weatherEffects';
-import { getWeatherEffect } from '../mechanics/weatherEffects';
 import { evaluateConditions, PSYCH_STATE_MODS } from '../mechanics/conditionEngine';
 import { getSpecialtyMods } from '../../trainerSpecialties';
-import { skillCheck, contestCheck } from '../mechanics/combatMath';
-import {
-  computeHitDamage,
-  rollHitLocation,
-  applyProtectMod,
-  calculateKillWindow,
-} from '../mechanics/combatDamage';
+import { contestCheck } from '../mechanics/combatMath';
 import { enduranceCost, fatiguePenalty } from '../mechanics/combatFatigue';
 import {
   getTempoBonus,
-  getEnduranceMult,
   getStylePassive,
-  getKillMechanic,
   getStyleAntiSynergy,
   type Phase as StylePhase,
-  type MasteryTier,
 } from '../../stylePassives';
 import { getFavoriteRhythmBonus } from '../../favorites';
 import { getDynamicTraitMods, type DynamicTraitContext } from '../../traits';
 import {
-  GLOBAL_ATT_BONUS,
-  GLOBAL_PAR_PENALTY,
-  INITIATIVE_PRESS_BONUS,
-  DEFENDER_ENDURANCE_DISCOUNT,
-  CRIT_DAMAGE_MULT,
   TACTIC_OVERUSE_CAP,
   getMatchupBonus as rawMatchupBonus,
 } from '../mechanics/combatConstants';
 import {
-  oeAttMod,
-  oeDefMod,
   getOffensiveTacticMods,
   getDefensiveTacticMods,
   calculateFinalOEAL,

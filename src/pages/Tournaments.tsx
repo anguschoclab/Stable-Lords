@@ -4,32 +4,18 @@
  */
 import React, { useState, useCallback, useMemo } from 'react';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
-import { simulateFight, defaultPlanForWarrior, fameFromTags, aiPlanForWarrior } from '@/engine';
-import {
-  type TournamentEntry,
-  type TournamentBout,
-  type FightSummary,
-  type Warrior,
-  FightingStyle,
-} from '@/types/game';
-import { generateId } from '@/utils/idUtils';
-import { hashStr } from '@/utils/random';
-import { SeededRNG } from '@/utils/random';
-import { ArenaHistory } from '@/engine/history/arenaHistory';
-import { LoreArchive } from '@/lore/LoreArchive';
-import { NewsletterFeed } from '@/engine/newsletter/feed';
-import { StyleRollups } from '@/engine/stats/styleRollups';
-import { getFightsForTournament } from '@/engine/core/historyUtils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
+import { PageFrame } from '@/components/ui/PageFrame';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 import {
   Trophy,
   Play,
   UserPlus,
-  FastForward,
   Settings2,
   Zap,
   AlertTriangle,
@@ -79,15 +65,10 @@ export default function Tournaments() {
     tournaments,
     season,
     roster,
-    rivals,
-    trainers,
-    weather,
     week,
     year,
     arenaHistory,
     player,
-    rosterBonus,
-    setState,
     activeSlotId,
     loadGame,
     setSimulating,
@@ -139,7 +120,7 @@ export default function Tournaments() {
     setSimulating(true);
     try {
       const state = useGameStore.getState();
-      const currentFullState = reconstructGameState(state as any);
+      const currentFullState = reconstructGameState(state as unknown as import('@/state/useGameStore').GameStore);
 
       const { updatedState, roundResults } = await engineProxy.resolveTournamentRound(
         currentFullState,
@@ -352,6 +333,13 @@ export default function Tournaments() {
           currentSeason={season}
         />
       </div>
+      <TournamentPrepDialog
+        isOpen={isPrepOpen}
+        onOpenChange={setIsPrepOpen}
+        activeWarriors={activeWarriors}
+        seasonName={SEASON_NAMES[season] ?? season}
+        onStart={() => setIsPrepOpen(false)}
+      />
     </PageFrame>
   );
 }

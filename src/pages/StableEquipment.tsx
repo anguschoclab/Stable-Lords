@@ -2,10 +2,8 @@ import { useState, useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipmentOptimizer';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -21,7 +19,6 @@ import {
   Lightbulb,
   Shirt,
   HardHat,
-  Zap,
   Package,
   HelpCircle,
 } from 'lucide-react';
@@ -31,7 +28,6 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Activity } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function StableEquipment() {
@@ -54,7 +50,7 @@ export default function StableEquipment() {
     [activeWarriors, targetWarriorId]
   );
 
-  const handleApply = (loadout: any, label: string) => {
+  const handleApply = (loadout: import('@/data/equipment').EquipmentLoadout, label: string) => {
     if (!targetWarriorId) {
       toast.error('Select a warrior first');
       return;
@@ -273,7 +269,7 @@ export default function StableEquipment() {
                           <AlertTriangle className="h-3 w-3" /> Stat Requirement Failed
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          {reqCheck.failures.map((f: any, fi: number) => (
+                          {reqCheck.failures.map((f: { stat: string; current: number; required: number }, fi: number) => (
                             <div
                               key={fi}
                               className="text-[9px] font-mono font-black text-destructive/80 uppercase"
@@ -372,7 +368,7 @@ function GearRow({
   blocked,
   high,
 }: {
-  icon: any;
+  icon: React.ElementType;
   name: string;
   weight: number;
   error?: boolean;

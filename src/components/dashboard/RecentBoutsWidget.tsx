@@ -23,7 +23,7 @@ export function RecentBoutsWidget() {
   const recentBouts = useMemo(() => {
     const playerStableId = state.player.id;
     const history = state.arenaHistory || [];
-    const results: any[] = [];
+    const results: import('@/types/game').CombatEvent[] = [];
 
     // ⚡ Bolt: Replaced O(N) full-array filter and slice with an O(1) forward scan
     // to find the first 5 bouts without scanning or allocating the entire history.
@@ -95,7 +95,7 @@ export function RecentBoutsWidget() {
                 </TableCell>
               </TableRow>
             ) : (
-              recentBouts.map((bout: any) => {
+              recentBouts.map((bout) => {
                 const isPlayerA = bout.stableIdA === state.player.id;
                 const playerWon =
                   (isPlayerA && bout.winner === 'A') || (!isPlayerA && bout.winner === 'D');

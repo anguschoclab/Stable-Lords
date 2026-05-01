@@ -7,7 +7,6 @@ import { makeWarrior } from '@/engine/factories';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { hashStr } from '@/utils/random';
 import {
-  generateRecruitPool,
   fullRefreshPool,
   type PoolWarrior,
   type RecruitTier,
@@ -31,9 +30,7 @@ import {
   Search,
   Heart,
   Zap,
-  Users,
   Eye,
-  Clock,
   Quote,
   Star,
   Coins,
@@ -310,7 +307,7 @@ function RecruitCard({
 
 export default function Recruit() {
   const store = useGameStore();
-  const { roster, treasury, rosterBonus, recruitPool, setState, week } = store;
+  const { roster, treasury, rosterBonus, recruitPool, setState } = store;
 
   const navigate = useNavigate();
   const MAX_ROSTER = BASE_ROSTER_CAP + (rosterBonus ?? 0);
@@ -345,7 +342,7 @@ export default function Recruit() {
 
         const recruitRng = new SeededRNGService(draft.week + hashStr(w.name));
         const warrior = makeWarrior(
-          recruitRng.uuid('warrior') as any,
+          recruitRng.uuid('warrior') as WarriorId,
           w.name,
           w.style,
           w.attributes,
@@ -353,9 +350,9 @@ export default function Recruit() {
         );
 
         if (bonus) {
-          (warrior as any).xp = ((warrior as any).xp ?? 0) + 2;
-          const tags = (warrior as any).tags ?? (warrior as any).flair ?? [];
-          (warrior as any).tags = [...tags, 'Eager'];
+          warrior.xp = (warrior.xp ?? 0) + 2;
+          const currentFlair = warrior.flair ?? [];
+          warrior.flair = [...currentFlair, 'Eager'];
         }
 
         draft.roster.push(warrior);
@@ -422,10 +419,10 @@ export default function Recruit() {
       }
 
       const usedNames = new Set<string>();
-      draft.roster.forEach((w: any) => usedNames.add(w.name));
-      draft.graveyard.forEach((w: any) => usedNames.add(w.name));
-      draft.retired.forEach((w: any) => usedNames.add(w.name));
-      (draft.rivals ?? []).forEach((r: any) => r.roster.forEach((w: any) => usedNames.add(w.name)));
+      draft.roster.forEach((w: Warrior) => usedNames.add(w.name));
+      draft.graveyard.forEach((w: Warrior) => usedNames.add(w.name));
+      draft.retired.forEach((w: Warrior) => usedNames.add(w.name));
+      (draft.rivals ?? []).forEach((r) => r.roster.forEach((w: Warrior) => usedNames.add(w.name)));
 
       const newPool = fullRefreshPool(draft.week, usedNames);
       draft.treasury -= REFRESH_COST;
@@ -617,7 +614,7 @@ export default function Recruit() {
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                     Tactical Archetype
                   </label>
-                  <Select value={activeStyle} onValueChange={(v) => setActiveStyle(v as any)}>
+                  <Select value={activeStyle} onValueChange={(v) => setActiveStyle(v as string)}>
                     <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
                       <SelectValue placeholder="All Archetypes" />
                     </SelectTrigger>
@@ -637,7 +634,7 @@ export default function Recruit() {
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                     Registry Sequence
                   </label>
-                  <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
+                  <Select value={sortBy} onValueChange={(v) => setSortBy(v as string)}>
                     <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
                       <SelectValue />
                     </SelectTrigger>

@@ -35,6 +35,7 @@ export interface GameStoreState {
 export interface GameStoreActions {
   setSimulating: (simulating: boolean) => void;
   toggleEventLog: () => void;
+  setEventLogOpen: (open: boolean) => void;
   doAdvanceWeek: (
     processedState?: GameState,
     results?: BoutResult[],
@@ -223,6 +224,11 @@ export const useGameStore = create<GameStore>()(
       toggleEventLog: () => {
         set((draft) => {
           draft.eventLogOpen = !draft.eventLogOpen;
+        });
+      },
+      setEventLogOpen: (open: boolean) => {
+        set((draft) => {
+          draft.eventLogOpen = open;
         });
       },
 

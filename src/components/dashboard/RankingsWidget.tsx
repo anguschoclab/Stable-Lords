@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { Trophy, ChevronRight, Star, Award, Target, TrendingUp, Shield } from 'lucide-react';
 import { useWorldState } from '@/state/useGameStore';
 import { selectActiveWarriors } from '@/state/selectors';
@@ -40,7 +40,7 @@ export function RankingsWidget() {
     let bestRank: number | null = null;
 
     for (const [id, entry] of Object.entries(realmRankings)) {
-      if (!playerWarriorIds.has(id as any)) continue;
+      if (!playerWarriorIds.has(id)) continue;
       if (bestRank === null || entry.overallRank < bestRank) {
         bestRank = entry.overallRank;
         const warrior = (state.roster ?? []).find((w) => w.id === id);

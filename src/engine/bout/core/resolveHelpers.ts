@@ -35,20 +35,18 @@ export function processContractPayouts(
   contract: BoutOffer | undefined,
   winnerId: string | null,
   currentWId: string,
-  currentOId: string,
-  rivalStableId?: string
+  currentOId: string
 ): StateImpact[] {
   if (!contract) return [];
 
   const impacts: StateImpact[] = [];
-  const rivalsUpdates = new Map<string, any>();
+  const rivalsUpdates = new Map<string, Partial<GameState>>();
 
   const purse = contract.purse;
   const showFee = Math.floor(purse * 0.2);
 
   // Find rivals
   const rivalA = state.rivals?.find((r) => r.roster.some((w) => w.id === currentWId));
-  const rivalD = state.rivals?.find((r) => r.roster.some((w) => w.id === currentOId));
 
   // Player payouts go via treasuryDelta. Rival payouts are handled in
   // stableManager.weeklyIncome (which iterates arenaHistory and adds
@@ -93,6 +91,6 @@ export function processContractPayouts(
   return impacts;
 }
 
-export function getDefaultPlan(w: Warrior, defaultPlanForWarrior: (w: Warrior) => any) {
+export function getDefaultPlan(w: Warrior, defaultPlanForWarrior: (w: Warrior) => import('@/types/combat.types').FightPlan) {
   return w.plan ?? defaultPlanForWarrior(w);
 }

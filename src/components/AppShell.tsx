@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useLocation } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import {
   Swords,
@@ -60,7 +60,7 @@ import { CoachOverlay } from '@/components/ui/CoachOverlay';
 import { TacticalBar } from '@/components/navigation/TacticalBar';
 import EventLog from '@/components/EventLog';
 
-const WEATHER_ICONS: Record<string, any> = {
+const WEATHER_ICONS: Record<string, React.ElementType> = {
   Clear: Sun,
   Overcast: CloudSun,
   Rainy: CloudRain,
@@ -131,10 +131,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       isSimulating: s.isSimulating,
       isInitialized: s.isInitialized,
       eventLogOpen: s.eventLogOpen,
+      setEventLogOpen: s.setEventLogOpen,
       initialize: s.initialize,
     }))
   );
   const navigate = useNavigate();
+  const location = useLocation();
   const activePath = location.pathname;
   const moodIcon = MOOD_ICONS[crowdMood as keyof typeof MOOD_ICONS] ?? '😐';
   const [resetOpen, setResetOpen] = useState(false);
@@ -169,6 +171,20 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const t = setTimeout(() => setSaveFlash(false), 1500);
     return () => clearTimeout(t);
   }, [lastSavedAt]);
+
+  useEffect(() => {
+    // Strategic Route-Aware Event Log Toggling
+    // We open the Event Log on the dashboard and high-stakes command screens.
+    // We close it on management-heavy screens (Stable/World) to maximize workspace.
+    const autoOpenPaths = ['/', '/command/arena', '/command/tactics'];
+    const autoClosePaths = ['/ops', '/world', '/command/roster', '/command/training'];
+
+    if (autoOpenPaths.includes(activePath)) {
+      useGameStore.getState().setEventLogOpen(true);
+    } else if (autoClosePaths.some((p) => activePath.startsWith(p))) {
+      useGameStore.getState().setEventLogOpen(false);
+    }
+  }, [activePath]);
 
   const formatSaveTime = (iso: string) => {
     try {

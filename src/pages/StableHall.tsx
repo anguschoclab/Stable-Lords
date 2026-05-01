@@ -1,5 +1,5 @@
 import { useGameStore } from '@/state/useGameStore';
-import { Shield, Crown, Star, Sparkles, UserCheck, BookOpen, Quote } from 'lucide-react';
+import { Shield, Crown, Star, Quote } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +10,6 @@ import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { InsightManager } from '@/components/ledger/InsightManager';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
-import { ImperialRing } from '@/components/ui/ImperialRing';
 
 export default function StableHall() {
   const { player, fame, insightTokens } = useGameStore();

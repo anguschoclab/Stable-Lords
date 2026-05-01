@@ -14,9 +14,9 @@ import { defaultPlanForWarrior } from '@/engine/simulate';
 import { computeStreaks } from '@/engine/gazetteNarrative';
 import { DEFAULT_LOADOUT, type EquipmentLoadout } from '@/data/equipment';
 import { toast } from 'sonner';
-import SubNav, { type SubNavTab } from '@/components/SubNav';
+import { type SubNavTab } from '@/components/SubNav';
 import { Separator } from '@/components/ui/separator';
-import { Trophy, Users, Heart, Zap, Shield, Target as TargetIcon } from 'lucide-react';
+import { Trophy, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
@@ -52,7 +52,6 @@ export default function WarriorDetail() {
     arenaHistory,
     insightTokens,
     setState,
-    renameWarrior,
     retireWarrior,
   } = store;
 
@@ -89,7 +88,7 @@ export default function WarriorDetail() {
   const handlePlanChange = useCallback(
     (newPlan: FightPlan) => {
       if (!warrior) return;
-      setState((draft: any) => {
+      setState((draft: GameState) => {
         const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
         if (index !== -1) {
           draft.roster[index].plan = newPlan;
@@ -109,7 +108,7 @@ export default function WarriorDetail() {
   const handleEquipmentChange = useCallback(
     (newLoadout: EquipmentLoadout) => {
       if (!warrior) return;
-      setState((draft: any) => {
+      setState((draft: GameState) => {
         const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
         if (index !== -1) {
           draft.roster[index].equipment = newLoadout;
@@ -206,13 +205,13 @@ export default function WarriorDetail() {
 
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
             {activeTab === 'biometrics' && (
-              <BiometricsTab warrior={warrior} displayWarrior={displayWarrior as any} />
+              <BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />
             )}
 
             {activeTab === 'mission' && (
               <MissionControlTab
                 warrior={warrior}
-                displayWarrior={displayWarrior as any}
+                displayWarrior={displayWarrior}
                 currentPlan={currentPlan}
                 currentLoadout={currentLoadout}
                 onPlanChange={handlePlanChange}

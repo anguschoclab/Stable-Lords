@@ -1,32 +1,24 @@
 import { useMemo, useState } from 'react';
-import { Link } from '@tanstack/react-router';
 import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStore';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import {
   Briefcase,
   CheckCircle2,
   Clock,
-  ShieldAlert,
   Heart,
   Ban,
   AlertTriangle,
   Zap,
   Award,
-  DollarSign,
   Target,
-  Users,
-  Activity,
-  ArrowRight,
 } from 'lucide-react';
-import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
+import { } from '@/types/shared.types';
 import type { Warrior, PromoterPersonality, BoutOffer } from '@/types/state.types';
 import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import type { InjuryData } from '@/types/warrior.types';
@@ -296,7 +288,7 @@ export default function BookingOffice() {
     );
 
     const filtered = selectedWarriorId
-      ? playerOffers.filter((o) => o.warriorIds.includes(selectedWarriorId as any))
+      ? playerOffers.filter((o) => o.warriorIds.includes(selectedWarriorId as import('@/types/warrior.types').WarriorId))
       : playerOffers;
 
     const bestByPromoter = (offers: BoutOffer[]): BoutOffer[] => {

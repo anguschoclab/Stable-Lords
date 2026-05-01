@@ -1,16 +1,13 @@
 import { useMemo } from 'react';
 import {
   TrendingUp,
-  Activity,
-  Zap,
   ArrowUpRight,
   ArrowDownLeft,
-  Target,
   Globe,
   ChevronRight,
 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { computeMetaDrift, getMetaLabel, getMetaColor } from '@/engine/metaDrift';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';

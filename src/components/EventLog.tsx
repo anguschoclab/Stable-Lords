@@ -19,6 +19,7 @@ import {
   Dumbbell,
   Heart,
   ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
@@ -50,7 +51,7 @@ interface GameEvent {
   entityNames?: string[];
 }
 
-import { Sparkles } from 'lucide-react';
+
 
 const EVENT_ICONS: Record<EventType, { icon: React.ElementType; color: string }> = {
   fight: { icon: Swords, color: 'text-primary' },

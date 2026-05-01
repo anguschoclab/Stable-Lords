@@ -1,0 +1,96 @@
+import { type GameState } from '@/types/state.types';
+import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
+import { processWeekBouts } from '@/engine/boutProcessor';
+import { populateInitialWorld } from '@/engine/core/worldSeeder';
+import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics';
+import { resolveImpacts } from '@/engine/impacts';
+
+export interface SimulationConfig {
+  weeks: number;
+  seed: number;
+  logFrequency?: number; // Log every N weeks
+  ignoreBankruptcy?: boolean;
+}
+
+export interface SimulationResult {
+  finalState: GameState;
+  pulses: SimPulse[];
+}
+
+/**
+ * Run a headless simulation loop.
+ * Synchronous and deterministic.
+ */
+export function runSimulation(config: SimulationConfig): SimulationResult {
+  const { weeks, seed, logFrequency = 1 } = config;
+
+  // 1. Initialize State
+  const seedStr = seed.toString();
+  let state = populateInitialWorld(createFreshState(seedStr), seed);
+  const pulses: SimPulse[] = [];
+
+  // 2. Main Loop
+  console.log(`[Harness] Starting simulation for ${weeks} weeks...`);
+
+  for (let w = 1; w <= weeks; w++) {
+    // A. Weekly Decision Logic (AI/Player)
+
+    // Headless: Auto-Respond to Player Contracts
+    const playerOffers = Object.values(state.boutOffers || {}).filter(
+      (o) =>
+        o.status === 'Proposed' && o.warriorIds.some((id) => state.roster.some((w) => w.id === id))
+    );
+
+    playerOffers.forEach((offer) => {
+      const playerWarriorIds = offer.warriorIds.filter((id) =>
+        state.roster.some((w) => w.id === id)
+      );
+
+      if (offer.hype >= 20 || offer.purse >= 50) {
+        playerWarriorIds.forEach((id) => {
+          offer.responses[id] = 'Accepted';
+        });
+
+        const allResponded = offer.warriorIds.every((wid) => offer.responses[wid] !== 'Pending');
+        if (allResponded) {
+          offer.status = 'Signed';
+        }
+      }
+    });
+
+    // B. Advance Week
+    state = advanceWeek(state);
+
+    let totalWarriors = 0;
+    state.rivals.forEach((r) => (totalWarriors += r.roster.length));
+
+    if (w % logFrequency === 0) {
+      console.log(
+        `[Harness] Week ${state.week} | Roster: ${state.roster.length} | Treasury: ${state.treasury}`
+      );
+      pulses.push(collectPulse(state));
+    }
+
+    // Auto-recruit if empty roster (to keep the simulation running)
+    if (state.roster.length === 0) {
+      if (state.recruitPool.length > 0) {
+        state.roster.push({ ...state.recruitPool[0] });
+        state.recruitPool.shift();
+      }
+    }
+
+    // Stop Conditions (Optional)
+    if (!config.ignoreBankruptcy) {
+      if (state.treasury < -5000 || (state.roster.length === 0 && state.treasury < 100)) {
+        console.warn(`[Sim] Failure at week ${w}: Stable Bankrupt/Empty.`);
+        break;
+      }
+    }
+  }
+
+  return {
+    finalState: state,
+    pulses,
+  };
+}

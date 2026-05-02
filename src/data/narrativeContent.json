@@ -1829,15 +1829,33 @@
   },
   "passives": {
     "AIMED BLOW": ["{{attacker}} studies the opponent's rhythm, waiting for the perfect opening."],
-    "BASHING ATTACK": ["{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"],
-    "LUNGING ATTACK": ["{{attacker}} overextends with a desperate lunge, trading balance for lethal reach."],
-    "PARRY-LUNGE": ["{{attacker}} catches the blade on their hilt, pivoting into a lightning-fast riposte lunge."],
-    "PARRY-RIPOSTE": ["{{attacker}} deflects the strike and immediately circles back with a precision counter-attack."],
-    "PARRY-STRIKE": ["{{attacker}} knocks the opponent's weapon aside and follows through with a heavy, crushing strike."],
-    "SLASHING ATTACK": ["{{attacker}} unleashes a wide, sweeping arc, forcing the opponent to retreat or be rent asunder."],
-    "STRIKING ATTACK": ["{{attacker}} steps into the guard, delivering a flurry of rapid, overwhelming strikes."],
-    "TOTAL PARRY": ["{{attacker}} enters a state of absolute defense, their weapon becoming an impenetrable wall of steel."],
-    "WALL OF STEEL": ["{{attacker}} holds their ground with mountain-like stability, negating the opponent's momentum."]
+    "BASHING ATTACK": [
+      "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"
+    ],
+    "LUNGING ATTACK": [
+      "{{attacker}} overextends with a desperate lunge, trading balance for lethal reach."
+    ],
+    "PARRY-LUNGE": [
+      "{{attacker}} catches the blade on their hilt, pivoting into a lightning-fast riposte lunge."
+    ],
+    "PARRY-RIPOSTE": [
+      "{{attacker}} deflects the strike and immediately circles back with a precision counter-attack."
+    ],
+    "PARRY-STRIKE": [
+      "{{attacker}} knocks the opponent's weapon aside and follows through with a heavy, crushing strike."
+    ],
+    "SLASHING ATTACK": [
+      "{{attacker}} unleashes a wide, sweeping arc, forcing the opponent to retreat or be rent asunder."
+    ],
+    "STRIKING ATTACK": [
+      "{{attacker}} steps into the guard, delivering a flurry of rapid, overwhelming strikes."
+    ],
+    "TOTAL PARRY": [
+      "{{attacker}} enters a state of absolute defense, their weapon becoming an impenetrable wall of steel."
+    ],
+    "WALL OF STEEL": [
+      "{{attacker}} holds their ground with mountain-like stability, negating the opponent's momentum."
+    ]
   },
   "kill_text": {
     "execution": [
@@ -1966,6 +1984,14 @@
       "effectType": "grand_feast",
       "newsletter": [
         "We hosted a grand feast for the stable! It cost {{gold}} gold, but spirits are high, and everyone feels invigorated. (+10 XP)"
+      ]
+    },
+    "wandering_healer": {
+      "title": "A Wandering Healer",
+      "effectType": "wandering_healer",
+      "newsletter": [
+        "A peculiar wandering healer arrived and cured {{name}} of an injury! It cost us {{gold}} gold.",
+        "A wandering medicine man offered snake oil tonics to the stable. It cost us {{gold}} gold, but at least they tasted interesting."
       ]
     }
   },

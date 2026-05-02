@@ -16,7 +16,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 7.5 / 9; // picks index 7 = black_market_raid
+      if (callCount === 1) return 7.5 / 10; // picks index 7 = black_market_raid
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -48,7 +48,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 8.5 / 9; // picks index 8 = grand_feast
+      if (callCount === 1) return 8.5 / 10; // picks index 8 = grand_feast
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -110,7 +110,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 4.5 / 9; // picks index 4 = tavern_brawl
+      if (callCount === 1) return 4.5 / 10; // picks index 4 = tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -147,7 +147,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 4.5 / 9; // picks tavern_brawl
+      if (callCount === 1) return 4.5 / 10; // picks tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -179,5 +179,107 @@ describe('runSeasonalPass', () => {
 
     // No roster updates for the injured warrior — they were skipped
     expect(impact.rosterUpdates?.has(warriorId)).toBeFalsy();
+  });
+
+  it('should trigger wandering_healer and cure an injury if someone is injured', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 9.5 / 10; // picks index 9 = wandering_healer
+      return originalNext();
+    };
+    (rng as any).rng.next = mockNext;
+
+    const warriorId = 'w-injured' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [
+        {
+          id: warriorId,
+          name: 'Sickly Bob',
+          status: 'Active',
+          injuries: [
+            {
+              id: 'inj-1' as any,
+              name: 'Cracked Ribs',
+              severity: 'Moderate',
+              weeksRemaining: 3,
+              penalties: { CN: -2 },
+            },
+            {
+              id: 'inj-2' as any,
+              name: 'Sprained Ankle',
+              severity: 'Minor',
+              weeksRemaining: 1,
+              penalties: { AG: -1 },
+            },
+          ],
+        } as any,
+      ],
+      newsletter: [],
+      treasury: 1000,
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    expect(impact.treasuryDelta).toBeDefined();
+    expect(impact.treasuryDelta).toBeLessThanOrEqual(-50);
+    expect(impact.treasuryDelta).toBeGreaterThanOrEqual(-100);
+
+    expect(impact.ledgerEntries).toHaveLength(1);
+    expect(impact.ledgerEntries?.[0]?.label).toBe('Medical Tonics');
+
+    // Should have 1 injury removed
+    const wUpdate = impact.rosterUpdates?.get(warriorId);
+    expect(wUpdate).toBeDefined();
+    expect(wUpdate?.injuries).toHaveLength(1);
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('A Wandering Healer');
+    expect(impact.newsletterItems?.[0]?.items[0]).toContain('cured Sickly Bob of an injury');
+  });
+
+  it('should trigger wandering_healer and offer snake oil if no one is injured', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 9.5 / 10; // picks index 9 = wandering_healer
+      return originalNext();
+    };
+    (rng as any).rng.next = mockNext;
+
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [
+        {
+          id: 'w-healthy' as WarriorId,
+          name: 'Healthy Bob',
+          status: 'Active',
+          injuries: [],
+        } as any,
+      ],
+      newsletter: [],
+      treasury: 1000,
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    expect(impact.treasuryDelta).toBeDefined();
+    expect(impact.treasuryDelta).toBeLessThanOrEqual(-50);
+    expect(impact.treasuryDelta).toBeGreaterThanOrEqual(-100);
+
+    expect(impact.ledgerEntries).toHaveLength(1);
+    expect(impact.ledgerEntries?.[0]?.label).toBe('Medical Tonics');
+
+    // Should have no roster updates
+    expect(impact.rosterUpdates?.has('w-healthy' as WarriorId)).toBeFalsy();
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('A Wandering Healer');
+    expect(impact.newsletterItems?.[0]?.items[0]).toContain('snake oil tonics');
   });
 });

@@ -34,14 +34,26 @@ export class NarrativeTemplateEngine {
       .replace(/%LOSER/g, ctx.loser || 'the loser');
 
     // Also handle {{token}} format
-    result = result
-      .replace(/\{\{attacker\}\}/g, ctx.attacker || ctx.name || 'The warrior')
-      .replace(/\{\{defender\}\}/g, ctx.defender || 'the opponent')
-      .replace(/\{\{weapon\}\}/g, ctx.weapon || 'weapon')
-      .replace(/\{\{bodyPart\}\}/g, ctx.bodyPart || 'body')
-      .replace(/\{\{name\}\}/g, ctx.name || 'The warrior')
-      .replace(/\{\{winner\}\}/g, ctx.winner || 'the winner')
-      .replace(/\{\{loser\}\}/g, ctx.loser || 'the loser');
+    result = result.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
+      switch (key) {
+        case 'attacker':
+          return ctx.attacker || ctx.name || 'The warrior';
+        case 'defender':
+          return ctx.defender || 'the opponent';
+        case 'weapon':
+          return ctx.weapon || 'weapon';
+        case 'bodyPart':
+          return ctx.bodyPart || 'body';
+        case 'name':
+          return ctx.name || 'The warrior';
+        case 'winner':
+          return ctx.winner || 'the winner';
+        case 'loser':
+          return ctx.loser || 'the loser';
+        default:
+          return match;
+      }
+    });
 
     return result;
   }

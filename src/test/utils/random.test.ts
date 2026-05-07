@@ -56,13 +56,13 @@ describe('randomPick', () => {
     let counter = 0;
     const rng = () => (counter++ % 3) / 3;
     const arr = ['a', 'b', 'c'];
-    const result = randomPick(rng, arr);
+    const result = randomPick(arr, rng);
     expect(arr).toContain(result);
   });
 
   it('throws on empty array', () => {
     const rng = () => 0.5;
-    expect(() => randomPick(rng, [])).toThrow('Cannot pick from empty array');
+    expect(() => randomPick([], rng)).toThrow('Cannot pick from empty array');
   });
 });
 

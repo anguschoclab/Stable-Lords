@@ -26,7 +26,7 @@ export function narrateRangeShift(rng: RNG, moverName: string, newRange: string)
     `%A seizes the spacing advantage, pulling into ${rangeName}.`,
     `%A controls the range — the fight moves to ${rangeName}.`,
   ];
-  return interpolateTemplate(pick(rng, templates), { attacker: moverName });
+  return interpolateTemplate(pick(templates, rng), { attacker: moverName });
 }
 
 /**
@@ -43,7 +43,7 @@ export function narrateFeint(rng: RNG, attackerName: string, succeeded: boolean)
       `%A tries to deceive, but their opponent sees through it instantly.`,
       `%A's misdirection fools no one — the opponent doesn't bite.`,
     ];
-    return interpolateTemplate(pick(rng, templates), { attacker: attackerName });
+    return interpolateTemplate(pick(templates, rng), { attacker: attackerName });
   }
 }
 
@@ -57,21 +57,21 @@ export function narrateZoneShift(rng: RNG, pushedName: string, zone: string): st
       `%A finds the wall at their back, hemmed in with nowhere to go.`,
       `%A is driven into the corner — pressure becoming desperate.`,
     ];
-    return interpolateTemplate(pick(rng, templates), { attacker: pushedName });
+    return interpolateTemplate(pick(templates, rng), { attacker: pushedName });
   } else if (zone === 'Edge') {
     const templates = [
       `%A gives ground, retreating to the edge of the arena.`,
       `%A is pushed to the boundary — the pressure is mounting.`,
       `%A cedes the center, falling back toward the perimeter.`,
     ];
-    return interpolateTemplate(pick(rng, templates), { attacker: pushedName });
+    return interpolateTemplate(pick(templates, rng), { attacker: pushedName });
   } else {
     const templates = [
       `%A recovers ground, reclaiming the center of the arena.`,
       `%A finds space to breathe — pushing away from the wall.`,
       `%A wrestles back to open ground.`,
     ];
-    return interpolateTemplate(pick(rng, templates), { attacker: pushedName });
+    return interpolateTemplate(pick(templates, rng), { attacker: pushedName });
   }
 }
 

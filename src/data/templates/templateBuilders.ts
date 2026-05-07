@@ -36,7 +36,7 @@ export {
  * Gets a random template from all available templates.
  */
 export function getRandomTemplate(rng?: () => number): StableTemplate {
-  return randomPick(rng || Math.random, ALL_TEMPLATES);
+  return randomPick(ALL_TEMPLATES, rng || Math.random);
 }
 
 /**
@@ -44,7 +44,7 @@ export function getRandomTemplate(rng?: () => number): StableTemplate {
  */
 export function getRandomTemplateByTier(tier: StableTier, rng?: () => number): StableTemplate {
   const templates = getTemplatesByTier(tier);
-  return randomPick(rng || Math.random, templates);
+  return randomPick(templates, rng || Math.random);
 }
 
 /**

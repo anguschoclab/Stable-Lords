@@ -58,8 +58,8 @@ describe('Tournaments Page', () => {
     // Check main title
     expect(getByText(/Seasonal Campaigns/)).toBeDefined();
 
-    // Check Recruit Operatives button is present when tournament is not active
-    const recruitBtn = getByRole('button', { name: /RECRUIT OPERATIVES/i });
+    // Check Recruit Units button is present when tournament is null
+    const recruitBtn = getByRole('button', { name: /RECRUIT UNITS/i });
     expect(recruitBtn).toBeDefined();
   });
 });

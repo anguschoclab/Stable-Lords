@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { rollForInjury } from '@/engine/injuries';
-import { FightingStyle, type Warrior, type FightOutcome } from '@/types/game';
+import { generateInjury } from '@/engine/injuries';
+import { FightingStyle } from '@/types/shared.types';
+import type { Warrior } from '@/types/warrior.types';
+import type { FightOutcome } from '@/types/combat.types';
 
 describe('rollForInjury', () => {
   const mockWarrior: Warrior = {
@@ -37,7 +39,7 @@ describe('rollForInjury', () => {
   };
 
   it('should generate an ID for an injury', () => {
-    const res = rollForInjury(mockWarrior, mockOutcome, 'A', 12345);
+    const res = generateInjury(mockWarrior, mockOutcome, 'A', 12345);
     expect(res).toBeDefined();
     if (res) {
       expect(res.id).toBeDefined();

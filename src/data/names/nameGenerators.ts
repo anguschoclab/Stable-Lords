@@ -15,7 +15,7 @@ import { randomPick } from '@/utils/random';
  * @returns A random warrior name
  */
 export function randomWarriorName(rng?: () => number): string {
-  return randomPick(rng || Math.random, WARRIOR_NAMES);
+  return randomPick(WARRIOR_NAMES, rng || Math.random);
 }
 
 /**
@@ -25,8 +25,8 @@ export function randomWarriorName(rng?: () => number): string {
  * @returns A random owner name in "First Last" format
  */
 export function randomOwnerName(rng?: () => number): string {
-  const firstName = randomPick(rng || Math.random, OWNER_FIRST);
-  const lastName = randomPick(rng || Math.random, OWNER_LAST);
+  const firstName = randomPick(OWNER_FIRST, rng || Math.random);
+  const lastName = randomPick(OWNER_LAST, rng || Math.random);
   return `${firstName} ${lastName}`;
 }
 
@@ -49,8 +49,8 @@ export function randomStableName(rng?: () => number): string {
  * @returns A random prefixed stable name
  */
 export function randomPrefixedStableName(rng?: () => number): string {
-  const prefix = randomPick(rng || Math.random, STABLE_PREFIXES);
-  const suffix = randomPick(rng || Math.random, STABLE_SUFFIXES);
+  const prefix = randomPick(STABLE_PREFIXES, rng || Math.random);
+  const suffix = randomPick(STABLE_SUFFIXES, rng || Math.random);
   return `${prefix} ${suffix}`;
 }
 
@@ -61,5 +61,5 @@ export function randomPrefixedStableName(rng?: () => number): string {
  * @returns A random alternative stable name
  */
 export function randomAltStableName(rng?: () => number): string {
-  return randomPick(rng || Math.random, STABLE_ALT);
+  return randomPick(STABLE_ALT, rng || Math.random);
 }

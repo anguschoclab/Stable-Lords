@@ -105,7 +105,7 @@ export function getFromArchive(rng: RNG | IRNGService, path: string[]): string {
     }
     if (Array.isArray(current) && current.length > 0) {
       const rngFn = typeof rng === 'function' ? rng : () => rng.next();
-      return pick(rngFn, current);
+      return pick(current, rngFn);
     }
   } catch (e) {
     console.error(`Narrative Archive Error: Missing path ${path.join('.')}`);
@@ -121,5 +121,5 @@ export function richHitLocation(rng: RNG, location: string): string {
   const key = location.toLowerCase() as keyof typeof hitLocations;
   const variants = hitLocations[key];
   if (!variants) return location.toUpperCase();
-  return pick(rng, variants);
+  return pick(variants, rng);
 }

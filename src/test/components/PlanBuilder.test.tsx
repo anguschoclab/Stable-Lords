@@ -19,7 +19,11 @@ describe('PlanBuilder Matchup Rendering', () => {
   it('renders MATCHUP_ADV when player has a style advantage', () => {
     // Aimed Blow has +1 advantage vs Bashing Attack
     render(
-      <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} rivalStyle={FightingStyle.BashingAttack} />
+      <PlanBuilder
+        plan={mockPlan}
+        onPlanChange={vi.fn()}
+        rivalStyle={FightingStyle.BashingAttack}
+      />
     );
 
     expect(screen.getByText('MATCHUP ADV')).toBeInTheDocument();
@@ -30,11 +34,7 @@ describe('PlanBuilder Matchup Rendering', () => {
     // Bashing Attack is weak to Aimed Blow (-1 penalty)
     const weakPlan = { ...mockPlan, style: FightingStyle.BashingAttack };
     render(
-      <PlanBuilder
-        plan={weakPlan}
-        onPlanChange={vi.fn()}
-        rivalStyle={FightingStyle.AimedBlow}
-      />
+      <PlanBuilder plan={weakPlan} onPlanChange={vi.fn()} rivalStyle={FightingStyle.AimedBlow} />
     );
 
     expect(screen.getByText('MATCHUP PENALTY')).toBeInTheDocument();

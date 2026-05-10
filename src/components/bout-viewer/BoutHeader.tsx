@@ -155,7 +155,7 @@ export default function BoutHeader({
               <Timer className="h-3 w-3" /> T-MIN 00
             </div>
             <div className="flex items-center gap-2">
-              FINAL_RESOLUTION <Timer className="h-3 w-3" /> 0{minutes}
+              FINAL_RESOLUTION <Timer className="h-3 w-3" /> {minutes.toString().padStart(2, '0')}
             </div>
           </div>
           <div className="relative h-1.5 w-full bg-black rounded-full overflow-hidden border border-white/5 shadow-inner">

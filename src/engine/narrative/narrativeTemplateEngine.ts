@@ -45,7 +45,7 @@ export class NarrativeTemplateEngine {
         case 'bodyPart':
           return ctx.bodyPart || 'body';
         case 'name':
-          return ctx.name || 'The warrior';
+          return ctx.name || ctx.attacker || 'The warrior';
         case 'winner':
           return ctx.winner || 'the winner';
         case 'loser':

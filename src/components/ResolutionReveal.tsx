@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 import { useGameStore, reconstructGameState, type GameStore } from '@/state/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { motion, AnimatePresence } from 'framer-motion';
-import BoutViewer from './BoutViewer';
-import { Newspaper, Skull, Activity, Swords, ChevronRight } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
+import { ChevronRight } from 'lucide-react';
 import { audioManager } from '@/lib/AudioManager';
-import type { NewsletterItem } from '@/types/shared.types';
-import type { BoutResult } from '@/engine/boutProcessor';
 import type { FightSummary } from '@/types/combat.types';
 import narrativeContent from '@/data/narrativeContent.json';
+
+import { GazetteStep } from './resolution-reveal/GazetteStep';
+import { InjuriesStep } from './resolution-reveal/InjuriesStep';
+import { BoutsStep } from './resolution-reveal/BoutsStep';
+import { MathStep } from './resolution-reveal/MathStep';
+import { MemorialStep } from './resolution-reveal/MemorialStep';
 
 type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';
 
@@ -91,271 +92,12 @@ export default function ResolutionReveal() {
 
         <CardContent className="flex-1 overflow-hidden p-0 relative">
           <AnimatePresence mode="wait">
-            {step === 'gazette' && (
-              <motion.div
-                key="gazette"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="h-full p-6"
-              >
-                <div className="flex items-center gap-2 mb-6">
-                  <Newspaper className="h-6 w-6 text-primary" />
-                  <h3 className="text-xl font-semibold">The Weekly Gazette</h3>
-                </div>
-                <ScrollArea className="h-[calc(100%-4rem)] pr-4">
-                  {data.gazette.length > 0 ? (
-                    <div className="space-y-6">
-                      {data.gazette.map((item: NewsletterItem, i: number) => (
-                        <div key={i} className="space-y-2 border-l-2 border-primary/50 pl-4">
-                          <h4 className="text-lg font-bold font-display leading-tight">
-                            {item.title}
-                          </h4>
-                          <ul className="list-disc list-inside space-y-1">
-                            {item.items.map((line: string, li: number) => (
-                              <li key={li} className="text-sm text-muted-foreground">
-                                {line}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-muted-foreground italic">
-                      {narrativeContent.fanfare.gazette_empty}
-                    </div>
-                  )}
-                </ScrollArea>
-              </motion.div>
-            )}
-
-            {step === 'injuries' && (
-              <motion.div
-                key="injuries"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="h-full p-6 flex flex-col gap-6"
-              >
-                <div className="flex items-center gap-2">
-                  <Activity className="h-6 w-6 text-arena-gold" />
-                  <h3 className="text-xl font-semibold">
-                    {narrativeContent.fanfare.report_medical}
-                  </h3>
-                </div>
-
-                {data.deaths.length > 0 && (
-                  <div className="bg-destructive/10 border border-destructive/20 rounded-none p-4 space-y-3">
-                    <div className="flex items-center gap-2 text-destructive font-bold">
-                      <Skull className="h-5 w-5" />
-                      <h4>Fallen Warriors</h4>
-                    </div>
-                    <ul className="list-disc list-inside text-sm text-destructive-foreground">
-                      {data.deaths.map((name: string, i: number) => (
-                        <li key={i}>{name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {data.injuries.length > 0 && (
-                  <div className="bg-arena-gold/10 border border-arena-gold/20 rounded-none p-4 space-y-3">
-                    <div className="flex items-center gap-2 text-arena-gold font-bold">
-                      <Activity className="h-5 w-5" />
-                      <h4>Injured Roster</h4>
-                    </div>
-                    <ul className="list-disc list-inside text-sm text-arena-gold">
-                      {data.injuries.map((name: string, i: number) => (
-                        <li key={i}>{name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {step === 'bouts' && (
-              <motion.div
-                key="bouts"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="h-full p-6 flex flex-col"
-              >
-                <div className="flex items-center gap-2 mb-6 shrink-0">
-                  <Swords className="h-6 w-6 text-primary" />
-                  <h3 className="text-xl font-semibold">
-                    {narrativeContent.fanfare.report_combat}
-                  </h3>
-                </div>
-                <ScrollArea className="flex-1 pr-4">
-                  {data.bouts.length > 0 ? (
-                    <div className="space-y-6">
-                      {data.bouts.map((r: BoutResult, i: number) => (
-                        <div key={i} className="space-y-2">
-                          {r.isRivalry && (
-                            <div className="text-xs text-destructive font-semibold uppercase tracking-wider">
-                              Rivalry Bout
-                            </div>
-                          )}
-                          <BoutViewer
-                            nameA={r.a.name}
-                            nameD={r.d.name}
-                            styleA={r.a.style}
-                            styleD={r.d.style}
-                            log={r.outcome.log}
-                            winner={r.outcome.winner}
-                            by={r.outcome.by}
-                            announcement={r.announcement}
-                            isRivalry={r.isRivalry}
-                          />
-                          <Separator className="my-4" />
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-muted-foreground italic">
-                      {narrativeContent.fanfare.report_combat_empty}
-                    </div>
-                  )}
-                </ScrollArea>
-              </motion.div>
-            )}
-
-            {step === 'math' && (
-              <motion.div
-                key="math"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="h-full p-6 space-y-6"
-              >
-                <div className="flex items-center gap-2">
-                  <Activity className="h-6 w-6 text-muted-foreground" />
-                  <h3 className="text-xl font-semibold">{narrativeContent.fanfare.report_math}</h3>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Card className="bg-secondary/10">
-                    <CardHeader className="py-2 px-4">
-                      <CardTitle className="text-sm font-medium">Weekly Treasury Delta</CardTitle>
-                    </CardHeader>
-                    <CardContent className="py-2 px-4">
-                      <div
-                        className={`text-2xl font-mono font-bold ${state.lastSimulationReport?.treasuryChange && state.lastSimulationReport.treasuryChange >= 0 ? 'text-primary' : 'text-arena-gold'}`}
-                      >
-                        {state.lastSimulationReport?.treasuryChange &&
-                        state.lastSimulationReport.treasuryChange > 0
-                          ? '+'
-                          : ''}
-                        {state.lastSimulationReport?.treasuryChange ?? 0} GC
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-secondary/10">
-                    <CardHeader className="py-2 px-4">
-                      <CardTitle className="text-sm font-medium">Training Outcomes</CardTitle>
-                    </CardHeader>
-                    <CardContent className="py-2 px-4">
-                      <div className="text-2xl font-mono font-bold text-primary">
-                        {state.lastSimulationReport?.trainingGains.length ?? 0} Improvements
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div className="space-y-3">
-                  <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                    Granular Breakdown
-                  </h4>
-                  <ScrollArea className="h-[200px] border rounded-none p-4 bg-muted/30">
-                    <div className="space-y-4">
-                      {state.lastSimulationReport?.trainingGains.map(
-                        (g: { warriorName: string; gain: number; attr: string }, i: number) => (
-                          <div key={i} className="flex items-center justify-between text-sm">
-                            <span className="font-medium">{g.warriorName}</span>
-                            <div className="flex gap-2 font-mono">
-                              <Badge variant="outline" className="text-primary">
-                                +{g.gain} {g.attr}
-                              </Badge>
-                            </div>
-                          </div>
-                        )
-                      )}
-                      {state.lastSimulationReport?.agingEvents.map((e: string, i: number) => (
-                        <div key={`age-${i}`} className="text-sm text-arena-gold">
-                          <span className="font-bold mr-2">!</span> {e}
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                </div>
-              </motion.div>
-            )}
-
+            {step === 'gazette' && <GazetteStep gazette={data.gazette} />}
+            {step === 'injuries' && <InjuriesStep injuries={data.injuries} deaths={data.deaths} />}
+            {step === 'bouts' && <BoutsStep bouts={data.bouts} />}
+            {step === 'math' && <MathStep lastSimulationReport={state.lastSimulationReport} />}
             {step === 'memorial' && deadWarriors.length > 0 && (
-              <motion.div
-                key="memorial"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                className="h-full p-6 flex flex-col items-center justify-center bg-background text-foreground relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,0,0,0.05)_0,transparent_100%)] mix-blend-screen" />
-                <div className="z-10 flex flex-col items-center max-w-full">
-                  <Skull className="h-16 w-16 mb-4 text-muted-foreground animate-pulse drop-shadow-[0_0_15px_rgba(200,0,0,0.3)]" />
-                  <h2 className="text-3xl font-display text-center mb-8 uppercase tracking-widest text-foreground">
-                    {narrativeContent.fanfare.memorial_title}
-                  </h2>
-                  <div className="flex gap-6 overflow-x-auto pb-4 max-w-[100%]">
-                    {deadWarriors.map((w) => {
-                      if (!w) return null;
-                      return (
-                        <div
-                          key={w.id}
-                          className="bg-muted/40 border border-border/60 p-6 rounded-none text-center min-w-72 shadow-2xl relative"
-                        >
-                          <h3 className="text-2xl font-display font-bold text-destructive mb-1 drop-shadow-md">
-                            {w.name}
-                          </h3>
-                          <p className="text-sm text-muted-foreground mb-4 italic leading-relaxed">
-                            {w.deathCause || narrativeContent.fanfare.memorial_default}
-                          </p>
-                          <Separator className="bg-border mb-4" />
-                          <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground text-left">
-                            <div className="bg-background/60 p-2 rounded-none">
-                              Age:{' '}
-                              <span className="text-foreground font-mono inline-block ml-1">
-                                {w.age}
-                              </span>
-                            </div>
-                            <div className="bg-background/60 p-2 rounded-none">
-                              Fame:{' '}
-                              <span className="text-foreground font-mono inline-block ml-1">
-                                {w.fame}
-                              </span>
-                            </div>
-                            <div className="bg-background/60 p-2 rounded-none">
-                              Wins:{' '}
-                              <span className="text-foreground font-mono inline-block ml-1">
-                                {w.career?.wins || 0}
-                              </span>
-                            </div>
-                            <div className="bg-background/60 p-2 rounded-none">
-                              Kills:{' '}
-                              <span className="text-destructive font-mono inline-block ml-1">
-                                {w.career?.kills || 0}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </motion.div>
+              <MemorialStep deadWarriors={deadWarriors} />
             )}
           </AnimatePresence>
         </CardContent>

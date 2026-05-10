@@ -158,11 +158,13 @@ describe('Style Passives', () => {
         ...baseContext,
         exchange: 0,
         phase: 'OPENING',
+        totalFights: 30,
       });
       const late = getStylePassive(FightingStyle.LungingAttack, {
         ...baseContext,
         exchange: 10,
         phase: 'LATE',
+        totalFights: 30,
       });
 
       expect(opening.iniBonus).toBeGreaterThan(late.iniBonus);

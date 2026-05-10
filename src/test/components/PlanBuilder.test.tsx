@@ -8,7 +8,7 @@ import '@testing-library/jest-dom';
 
 describe('PlanBuilder Matchup Rendering', () => {
   const mockPlan = {
-    style: FightingStyle.LungingAttack,
+    style: FightingStyle.AimedBlow,
     OE: 5,
     AL: 5,
     target: 'Any' as any,
@@ -17,9 +17,13 @@ describe('PlanBuilder Matchup Rendering', () => {
   };
 
   it('renders MATCHUP_ADV when player has a style advantage', () => {
-    // Lunging Attack has +1 advantage vs ParryLunge
+    // Aimed Blow has +1 advantage vs Bashing Attack
     render(
-      <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} rivalStyle={FightingStyle.ParryLunge} />
+      <PlanBuilder
+        plan={mockPlan}
+        onPlanChange={vi.fn()}
+        rivalStyle={FightingStyle.BashingAttack}
+      />
     );
 
     expect(screen.getByText('MATCHUP ADV')).toBeInTheDocument();
@@ -27,14 +31,10 @@ describe('PlanBuilder Matchup Rendering', () => {
   });
 
   it('renders MATCHUP_PENALTY when player has a style disadvantage', () => {
-    // ParryLunge is weak to Lunging Attack (-1 penalty)
-    const weakPlan = { ...mockPlan, style: FightingStyle.ParryLunge };
+    // Bashing Attack is weak to Aimed Blow (-1 penalty)
+    const weakPlan = { ...mockPlan, style: FightingStyle.BashingAttack };
     render(
-      <PlanBuilder
-        plan={weakPlan}
-        onPlanChange={vi.fn()}
-        rivalStyle={FightingStyle.LungingAttack}
-      />
+      <PlanBuilder plan={weakPlan} onPlanChange={vi.fn()} rivalStyle={FightingStyle.AimedBlow} />
     );
 
     expect(screen.getByText('MATCHUP PENALTY')).toBeInTheDocument();

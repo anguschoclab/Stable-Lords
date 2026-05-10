@@ -101,9 +101,13 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
               <Button
                 variant="ghost"
                 className="h-8 group/btn text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 px-4"
+                aria-label="View Full Transcript"
               >
                 Full_Transcript{' '}
-                <ArrowRight className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform" />
+                <ArrowRight
+                  aria-hidden="true"
+                  className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform"
+                />
               </Button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import type { GameState, RivalStableData, NewsletterItem } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
-import { generateFightNarrative } from '@/engine/gazetteNarrative';
+import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';

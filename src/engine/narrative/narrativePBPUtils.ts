@@ -30,19 +30,15 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
     .replace(/%BP/g, ctx.bodyPart || 'body')
     .replace(/%H/g, String(ctx.hits || ''));
 
-  // Also support Handlebars-style placeholders
-  for (const [key, value] of Object.entries(ctx)) {
-    if (value !== undefined) {
-      result = result.replace(new RegExp(`\\{\\{\\s*${key}\\s*\\}\\}`, 'g'), String(value));
-    }
-  }
+  // Also support Handlebars-style placeholders with a single pass
+  result = result.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
+    // Fallbacks for specific templates that use {{name}} but only pass attacker/defender
+    if (key === 'name' && !ctx.name && ctx.attacker) return String(ctx.attacker);
+    if (key === 'attacker' && !ctx.attacker && ctx.name) return String(ctx.name);
 
-  // Fallbacks for specific templates that use {{name}} but only pass attacker/defender
-  if (ctx.attacker && !ctx.name) {
-    result = result.replace(/\{\{\s*name\s*\}\}/g, String(ctx.attacker));
-  } else if (ctx.name && !ctx.attacker) {
-    result = result.replace(/\{\{\s*attacker\s*\}\}/g, String(ctx.name));
-  }
+    const value = (ctx as any)[key];
+    return value !== undefined && Object.hasOwn(ctx, key) ? String(value) : match;
+  });
 
   return result;
 }
@@ -106,7 +102,7 @@ export function getFromArchive(rng: RNG | IRNGService, path: string[]): string {
     }
     if (Array.isArray(current) && current.length > 0) {
       const rngFn = typeof rng === 'function' ? rng : () => rng.next();
-      return pick(rngFn, current);
+      return pick(current, rngFn);
     }
   } catch (e) {
     console.error(`Narrative Archive Error: Missing path ${path.join('.')}`);
@@ -122,5 +118,5 @@ export function richHitLocation(rng: RNG, location: string): string {
   const key = location.toLowerCase() as keyof typeof hitLocations;
   const variants = hitLocations[key];
   if (!variants) return location.toUpperCase();
-  return pick(rng, variants);
+  return pick(variants, rng);
 }

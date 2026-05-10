@@ -8,7 +8,8 @@ import { type WeaponType } from '@/types/combat.types';
 type RNGFn = () => number;
 
 /** Pick a random element from an array using the provided RNG */
-export function pick<T>(rng: RNGFn, arr: T[]): T {
+export function pick<T>(arr: T[], rng: RNGFn): T {
+  if (!arr || arr.length === 0) throw new Error('Cannot pick from empty array');
   return arr[Math.floor(rng() * arr.length)];
 }
 

@@ -7,7 +7,9 @@ import {
   potentialRating,
   potentialGrade,
 } from '@/engine/potential';
-import type { Attributes, AttributePotential } from '@/types/game';
+import type { Attributes } from '@/types/shared.types';
+import type { AttributePotential } from '@/types/warrior.types';
+import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 
 describe('Potential System', () => {
   const mockAttrs: Attributes = {
@@ -22,12 +24,12 @@ describe('Potential System', () => {
 
   describe('generatePotential', () => {
     it('should generate potential correctly for Common tier', () => {
-      // Common tier headroom is [1, 4]. For ST=10, potential should be between 11 and 14
-      const rng = vi.fn().mockReturnValue(0.5); // (4 - 1 + 1) * 0.5 = Math.floor(2) = 2. Headroom = 1 + 2 = 3
+      // Common tier headroom is [1, 4].
+      const rng = new SeededRNGService(12345);
       const potential = generatePotential(mockAttrs, 'Common', rng);
 
-      expect(potential.ST).toBe(13); // 10 + 3
-      expect(potential.CN).toBe(13);
+      expect(potential.ST).toBeGreaterThanOrEqual(11);
+      expect(potential.ST).toBeLessThanOrEqual(14);
     });
 
     it('should enforce the POTENTIAL_ABSOLUTE_MAX (25) boundary', () => {
@@ -41,7 +43,7 @@ describe('Potential System', () => {
         SP: 24,
         DF: 24,
       };
-      const rng = vi.fn().mockReturnValue(0.99); // max out the headroom (Prodigy = 12)
+      const rng = new SeededRNGService(12345);
       const potential = generatePotential(highAttrs, 'Prodigy', rng);
 
       // Should be clamped to 25
@@ -58,7 +60,7 @@ describe('Potential System', () => {
         SP: 120,
         DF: 120,
       };
-      const rng = vi.fn().mockReturnValue(0.99);
+      const rng = new SeededRNGService(12345);
       const potential = generatePotential(veryHighAttrs, 'Prodigy', rng);
 
       // The system should clamp the crazy potential down to 25

@@ -337,4 +337,38 @@ describe('runSeasonalPass', () => {
     expect(impact.rosterUpdates?.get(warriorId)?.injuries?.[0]?.name).toBe('Bite Wound');
     expect(impact.newsletterItems?.[0]?.title).toBe('Wild Beast Encounter');
   });
+
+  it('should trigger the loyal_stray offseason event, award xp and fame, and deduct gold', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 12.5 / 13; // picks index 12 = loyal_stray
+      return originalNext();
+    };
+    (rng as any).rng.next = mockNext;
+
+    const warriorId = 'w-stray' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Grok', status: 'Active', xp: 5, fame: 5 } as any],
+      treasury: 100,
+      newsletter: [],
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    expect(impact.treasuryDelta).toBe(-25);
+    expect(impact.ledgerEntries).toHaveLength(1);
+    expect(impact.ledgerEntries?.[0]?.label).toBe('Dog Food & Treats');
+
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update).toBeDefined();
+    expect(update?.xp).toBe(15);
+    expect(update?.fame).toBe(10);
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('A Loyal Stray');
+  });
 });

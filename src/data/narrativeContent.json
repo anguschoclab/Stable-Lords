@@ -1923,6 +1923,13 @@
     ]
   },
   "offseason_events": {
+    "strange_dream": {
+      "title": "A Strange Dream",
+      "effectType": "strange_dream",
+      "newsletter": [
+        "{{name}} woke up in a cold sweat after a bizarre dream about the arena. They feel oddly invigorated, though slightly unnerved. (+{{xp}} XP)"
+      ]
+    },
     "festival_of_blades": {
       "title": "Festival of Blades",
       "effectType": "fame_boost",

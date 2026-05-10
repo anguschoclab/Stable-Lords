@@ -16,7 +16,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 7.5 / 13; // picks index 7 = black_market_raid
+      if (callCount === 1) return 8.5 / 13; // picks index 8 = black_market_raid
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -48,7 +48,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 8.5 / 13; // picks index 8 = grand_feast
+      if (callCount === 1) return 9.5 / 13; // picks index 9 = grand_feast
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -110,7 +110,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 4.5 / 13; // picks index 4 = tavern_brawl
+      if (callCount === 1) return 5.5 / 13; // picks index 5 = tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -147,7 +147,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 4.5 / 13; // picks tavern_brawl
+      if (callCount === 1) return 5.5 / 13; // picks tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -187,7 +187,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 9.5 / 13; // picks index 9 = wandering_healer
+      if (callCount === 1) return 10.5 / 13; // picks index 10 = wandering_healer
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -247,7 +247,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 9.5 / 13; // picks index 9 = wandering_healer
+      if (callCount === 1) return 10.5 / 13; // picks index 10 = wandering_healer
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -289,7 +289,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 10.5 / 13; // picks index 10 = mystic_vision
+      if (callCount === 1) return 11.5 / 13; // picks index 11 = mystic_vision
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -320,7 +320,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 11.5 / 13; // picks index 11 = wild_animal_attack
+      if (callCount === 1) return 12.5 / 13; // picks index 12 = wild_animal_attack
       return originalNext();
     };
     (rng as any).rng.next = mockNext;

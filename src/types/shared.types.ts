@@ -299,7 +299,7 @@ export type WeatherType =
   | 'Acid Rain'
   | 'Mana Surge'
   | 'Scorching Wind'
-  | 'Abyssal Gloom';
+  | 'Spooky Night';
 
 export interface DeathEvent {
   boutId: string;

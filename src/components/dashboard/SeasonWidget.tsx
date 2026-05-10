@@ -92,10 +92,10 @@ export function SeasonWidget() {
     WeatherIcon = Wind;
     weatherColor = 'text-destructive';
     weatherBg = 'bg-destructive/10 border-destructive/20';
-  } else if (weather === 'Abyssal Gloom') {
+  } else if (weather === 'Spooky Night') {
     WeatherIcon = Moon;
-    weatherColor = 'text-arena-fame';
-    weatherBg = 'bg-arena-fame/10 border-arena-fame/20';
+    weatherColor = 'text-purple-400';
+    weatherBg = 'bg-purple-500/10 border-purple-500/20 glow-neon-purple';
   }
 
   return (
@@ -236,8 +236,8 @@ export function SeasonWidget() {
                                   ? '30% more stamina drain in combat. Fighters push harder and act rashly.'
                                   : weather === 'Mist'
                                     ? 'Reduced visibility makes initial strikes trickier.'
-                                    : weather === 'Abyssal Gloom'
-                                      ? 'A supernatural darkness dulls the senses. Attacks and initiative suffer.'
+                                    : weather === 'Spooky Night'
+                                      ? 'An unnatural chill and eerie shadows make fighters nervous and jumpy.'
                                       : 'Standard atmospheric conditions.'}
                 </TooltipContent>
               </Tooltip>

@@ -351,6 +351,19 @@ function WeatherOverlay({ weather }: { weather: string }) {
     );
   }
 
+  // 👻 Spooky Night
+  if (weatherLower.includes('spooky night')) {
+    return (
+      <div
+        className="absolute inset-0 pointer-events-none animate-pulse-slow"
+        style={{
+          background: 'radial-gradient(ellipse at top, rgba(75,0,130,0.4) 0%, transparent 80%)',
+          boxShadow: 'inset 0 0 100px rgba(75,0,130,0.15)',
+        }}
+      />
+    );
+  }
+
   // 🏜️ Sandstorm
   if (weatherLower.includes('sandstorm')) {
     return (

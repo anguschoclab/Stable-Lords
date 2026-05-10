@@ -38,7 +38,7 @@ interface OffseasonEventNarrative {
     | 'wandering_healer'
     | 'mystic_vision'
     | 'wild_animal_attack'
-    | 'loyal_stray';
+    | 'strange_dream';
   newsletter: string[];
 }
 
@@ -381,39 +381,23 @@ export function runSeasonalPass(
         items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
       });
     }
-  } else if (e.effectType === 'loyal_stray') {
-    const goldCost = 25;
-    treasuryDelta -= goldCost;
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Dog Food & Treats',
-      amount: -goldCost,
-      category: 'other',
-    });
-
+  } else if (e.effectType === 'strange_dream') {
     const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
       const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        rosterUpdates.set(chosen.id, {
-          xp: (chosen.xp || 0) + 10,
-          fame: (chosen.fame || 0) + 5,
-        });
+      if (!chosen) return {};
 
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name })],
-        });
-      }
-    } else {
+      const xpGained = 5 + Math.floor(seasonRng.next() * 11); // 5-15 XP
+
+      rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
       newsletterItems.push({
         id: seasonRng.uuid('newsletter'),
         week: nextWeek,
         title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: 'Someone' })],
+        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, xp: xpGained })],
       });
     }
   }

@@ -110,7 +110,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 5.5 / 13; // picks index 4 = tavern_brawl
+      if (callCount === 1) return 5.5 / 13; // picks index 5 = tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;

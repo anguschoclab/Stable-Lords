@@ -81,7 +81,7 @@ export default function BoutHeader({
                 variant="outline"
                 className="text-[10px] font-black uppercase tracking-widest border-white/5 bg-white/5 text-muted-foreground/60 rounded-none px-3"
               >
-                {STYLE_DISPLAY_NAMES[styleA as keyof typeof STYLE_DISPLAY_NAMES] ?? styleA}
+                {STYLE_DISPLAY_NAMES[styleA] ?? styleA}
               </Badge>
               {winner === 'A' && (
                 <div className="flex items-center gap-2 text-[10px] font-black text-primary tracking-[0.2em] animate-pulse">

@@ -32,7 +32,7 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
           </CardHeader>
           <CardContent className="py-2 px-4">
             <div
-              className={`text-2xl font-mono font-bold ${lastSimulationReport?.treasuryChange && lastSimulationReport.treasuryChange >= 0 ? 'text-primary' : 'text-arena-gold'}`}
+              className={`text-2xl font-mono font-bold ${(lastSimulationReport?.treasuryChange ?? 0) >= 0 ? 'text-primary' : 'text-arena-gold'}`}
             >
               {lastSimulationReport?.treasuryChange && lastSimulationReport.treasuryChange > 0
                 ? '+'

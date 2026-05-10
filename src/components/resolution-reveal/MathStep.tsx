@@ -16,7 +16,7 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
     <motion.div
       key="math"
       initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       className="h-full p-6 space-y-6"
     >

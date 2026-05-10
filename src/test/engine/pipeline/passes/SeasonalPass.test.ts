@@ -289,7 +289,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 11.5 / 13; // picks index 10 = mystic_vision
+      if (callCount === 1) return 11.5 / 13; // picks index 11 = mystic_vision
       return originalNext();
     };
     (rng as any).rng.next = mockNext;

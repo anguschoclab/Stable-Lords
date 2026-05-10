@@ -2,8 +2,17 @@ import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
 
 const registry = new Map<string, ArenaConfig>();
 
+// Internal caches for optimized retrieval
+let allCache: ArenaConfig[] | null = null;
+const tagIndex = new Map<ArenaTag, ArenaConfig[]>();
+const tierIndex = new Map<number, ArenaConfig[]>();
+
 export function registerArena(arena: ArenaConfig): void {
   registry.set(arena.id, arena);
+  // Clear caches on registry change
+  allCache = null;
+  tagIndex.clear();
+  tierIndex.clear();
 }
 
 export function getArenaById(id: string): ArenaConfig {
@@ -11,15 +20,28 @@ export function getArenaById(id: string): ArenaConfig {
 }
 
 export function getAllArenas(): ArenaConfig[] {
-  return Array.from(registry.values());
+  if (!allCache) {
+    allCache = Array.from(registry.values());
+  }
+  return [...allCache];
 }
 
 export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
-  return getAllArenas().filter((a) => a.tags.includes(tag));
+  let results = tagIndex.get(tag);
+  if (!results) {
+    results = getAllArenas().filter((a) => a.tags.includes(tag));
+    tagIndex.set(tag, results);
+  }
+  return [...results];
 }
 
 export function getArenasByTier(tier: 1 | 2 | 3): ArenaConfig[] {
-  return getAllArenas().filter((a) => a.tier === tier);
+  let results = tierIndex.get(tier);
+  if (!results) {
+    results = getAllArenas().filter((a) => a.tier === tier);
+    tierIndex.set(tier, results);
+  }
+  return [...results];
 }
 
 export function isIndoorArena(id?: string): boolean {

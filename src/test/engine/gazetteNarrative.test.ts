@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { computeStreaks, generateFightNarrative } from '@/engine/gazetteNarrative';
+import { computeStreaks } from '@/engine/gazette/gazetteDetections';
+import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import type { FightSummary, FightOutcomeBy } from '@/types/game';
 
 describe('computeStreaks', () => {

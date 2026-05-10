@@ -135,11 +135,15 @@ export function computePlayerThreatLevel(state: GameState): PlayerThreatLevel {
   const rankings = state.realmRankings;
   if (!rankings || Object.keys(rankings).length === 0) return 'Neutral';
 
-  const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
   let playerBestRank: number | null = null;
-  for (const [id, entry] of Object.entries(rankings)) {
-    if (!playerWarriorIds.has(id as import('@/types/shared.types').WarriorId)) continue;
-    if (playerBestRank === null || entry.overallRank < playerBestRank) {
+  const roster = state.roster || [];
+
+  // ⚡ Bolt: Replaced Object.entries(rankings) loop with a targeted iteration over the roster
+  // This changes complexity from O(total realm rankings) to O(player roster size)
+  // and avoids allocating a large array of key-value pairs per tick.
+  for (let i = 0; i < roster.length; i++) {
+    const entry = rankings[roster[i].id];
+    if (entry && (playerBestRank === null || entry.overallRank < playerBestRank)) {
       playerBestRank = entry.overallRank;
     }
   }

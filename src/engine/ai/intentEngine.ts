@@ -94,12 +94,23 @@ export function pickWeeklyIntent(
   const allStyles = activeRoster.map((w) => w.style);
   if (allStyles.length >= 4) {
     const styleCounts: Record<string, number> = {};
-    for (const s of allStyles) styleCounts[s] = (styleCounts[s] ?? 0) + 1;
-    const maxConcentration = Math.max(...Object.values(styleCounts)) / allStyles.length;
-    const dominantStyle = Object.entries(styleCounts).reduce((a, b) =>
-      b[1] > a[1] ? b : a
-    )[0] as FightingStyle;
-    if (maxConcentration >= 0.5 && (meta[dominantStyle] ?? 0) <= -3) {
+    let dominantStyle: FightingStyle | null = null;
+    let maxCount = -1;
+
+    // ⚡ Bolt: Replaced chained mapping and Object.entries().reduce() with a single-pass loop.
+    // This avoids intermediate allocations and finds the dominant style directly in O(N).
+    for (let i = 0; i < allStyles.length; i++) {
+      const s = allStyles[i];
+      const count = (styleCounts[s] || 0) + 1;
+      styleCounts[s] = count;
+      if (count > maxCount) {
+        maxCount = count;
+        dominantStyle = s;
+      }
+    }
+
+    const maxConcentration = maxCount / allStyles.length;
+    if (dominantStyle && maxConcentration >= 0.5 && (meta[dominantStyle] ?? 0) <= -3) {
       return 'ROSTER_DIVERSITY';
     }
   }

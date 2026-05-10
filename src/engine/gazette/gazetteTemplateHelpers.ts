@@ -41,7 +41,7 @@ export function t(
   if (!result || typeof result !== 'string' || !result.includes('{{')) return result || '';
 
   return result.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
-    const val = data[key];
+    const val = Object.prototype.hasOwnProperty.call(data, key) ? data[key] : undefined;
     return val !== undefined ? String(val) : match;
   });
 }

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { STYLE_DISPLAY_NAMES } from '@/types/game';
+import { STYLE_DISPLAY_NAMES, type FightingStyle } from '@/types/game';
 import { Badge } from '@/components/ui/badge';
 import { TagBadge } from '@/components/ui/WarriorBadges';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';

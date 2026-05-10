@@ -30,20 +30,14 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
     .replace(/%BP/g, ctx.bodyPart || 'body')
     .replace(/%H/g, String(ctx.hits || ''));
 
-  if (!result.includes('{{')) return result;
-
-  // Also support Handlebars-style placeholders with optimized regex replacement
+  // Also support Handlebars-style placeholders with a single pass
   result = result.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
     // Fallbacks for specific templates that use {{name}} but only pass attacker/defender
-    if (key === 'name' && !ctx.name && ctx.attacker) {
-      return String(ctx.attacker);
-    }
-    if (key === 'attacker' && !ctx.attacker && ctx.name) {
-      return String(ctx.name);
-    }
+    if (key === 'name' && !ctx.name && ctx.attacker) return String(ctx.attacker);
+    if (key === 'attacker' && !ctx.attacker && ctx.name) return String(ctx.name);
 
-    const val = ctx[key as keyof CombatContext];
-    return val !== undefined ? String(val) : match;
+    const value = (ctx as any)[key];
+    return value !== undefined && Object.hasOwn(ctx, key) ? String(value) : match;
   });
 
   return result;

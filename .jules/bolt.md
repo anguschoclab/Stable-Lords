@@ -8,7 +8,9 @@
 ## 2024-06-25 - Handlebars-style string substitution optimization
 **Learning:** In tight loops (like narrative log generation and event processing), dynamically instantiating `new RegExp` objects inside an `Object.entries(data)` iteration is a severe performance bottleneck. Generating one regex string literal per object key forces the engine to parse, compile, and execute multiple regex patterns per template dynamically.
 **Action:** Always prefer a single static pre-compiled Regex (like `replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => ...)`) that matches the placeholder syntax directly. In our benchmarks, this single-pass matching strategy was over 2x faster, saving significant CPU cycles in hot loops.
-
-## 2026-05-08 - [Optimizing Object.entries in hot loops]
-**Learning:** In hot loops like `computePlayerThreatLevel` (`src/engine/ai/agentCore.ts`) or `pickWeeklyIntent` (`src/engine/ai/intentEngine.ts`), using `Object.entries` combined with `reduce` or mapping creates unnecessary array allocations. Furthermore, when checking properties that exist directly on an array or dictionary, looping via index and doing direct property lookup is much faster and avoids overhead.
-**Action:** Replace `Object.entries` with traditional `for` loops and direct object property lookups in performance-sensitive core AI functions.
+## 2025-02-23 - [Regex String Interpolation in Template Engines]
+**Learning:** Replaced multiple chained `.replace()` calls with a single-pass regex replacement logic. It turns out that passing a replacer function instead of a replacement string acts as a literal string replacer, silently solving edge-case bugs with special string characters like '$'.
+**Action:** Always prefer a single regex pass with a dictionary lookup/switch statement over multiple chained .replace() calls to reduce array/string allocations and string parsing times in template engines.
+## 2024-06-25 - [Regex String Interpolation in Template Engines]
+**Learning:** Replaced multiple chained `.replace()` calls with a single-pass regex replacement logic. Passing a replacer function instead of a replacement string acts as a literal string replacer, silently solving edge-case bugs with special string characters like '$'.
+**Action:** Always prefer a single regex pass with a dictionary lookup/switch statement over multiple chained .replace() calls to reduce array/string allocations and string parsing times in template engines.

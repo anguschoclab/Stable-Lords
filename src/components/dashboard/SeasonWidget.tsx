@@ -92,6 +92,10 @@ export function SeasonWidget() {
     WeatherIcon = Wind;
     weatherColor = 'text-destructive';
     weatherBg = 'bg-destructive/10 border-destructive/20';
+  } else if (weather === 'Spooky Night') {
+    WeatherIcon = Moon;
+    weatherColor = 'text-purple-400';
+    weatherBg = 'bg-purple-500/10 border-purple-500/20 glow-neon-purple';
   }
 
   return (
@@ -232,7 +236,9 @@ export function SeasonWidget() {
                                   ? '30% more stamina drain in combat. Fighters push harder and act rashly.'
                                   : weather === 'Mist'
                                     ? 'Reduced visibility makes initial strikes trickier.'
-                                    : 'Standard atmospheric conditions.'}
+                                    : weather === 'Spooky Night'
+                                      ? 'An unnatural chill and eerie shadows make fighters nervous and jumpy.'
+                                      : 'Standard atmospheric conditions.'}
                 </TooltipContent>
               </Tooltip>
             </div>

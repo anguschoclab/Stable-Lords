@@ -38,7 +38,8 @@ interface OffseasonEventNarrative {
     | 'grand_feast'
     | 'wandering_healer'
     | 'mystic_vision'
-    | 'wild_animal_attack';
+    | 'wild_animal_attack'
+    | 'strange_dream';
   newsletter: string[];
 }
 
@@ -379,6 +380,25 @@ export function runSeasonalPass(
         week: nextWeek,
         title: e.title,
         items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
+      });
+    }
+  } else if (e.effectType === 'strange_dream') {
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (!chosen) return {};
+
+      const xpGained = 5 + Math.floor(seasonRng.next() * 11); // 5-15 XP
+
+      rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
+      newsletterItems.push({
+        id: seasonRng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, xp: xpGained })],
       });
     }
   }

@@ -24,6 +24,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   Sandstorm: 'ambience-wind-gale',
   Mist: null,
   'Scorching Wind': 'ambience-wind-gale',
+  'Spooky Night': 'ambience-wind-breezy',
   Blizzard: 'ambience-wind-gale',
   'Dense Fog': null,
   Thunderstorm: 'ambience-thunderstorm',

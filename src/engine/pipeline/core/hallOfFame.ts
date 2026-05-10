@@ -66,7 +66,10 @@ export function processHallOfFame(
     } else if (woty.w.stableId) {
       const stableId = woty.w.stableId;
       const existingRoster = rivalsUpdates.get(stableId)?.roster || [];
-      const currentRoster = rivalsUpdates.get(stableId)?.roster || state.rivals.find((r) => r.id === stableId)?.roster || [];
+      const currentRoster =
+        rivalsUpdates.get(stableId)?.roster ||
+        state.rivals.find((r) => r.id === stableId)?.roster ||
+        [];
       const updatedRoster = [...currentRoster];
       const index = updatedRoster.findIndex((w: Warrior) => w.id === woty.w.id);
       if (index !== -1) {

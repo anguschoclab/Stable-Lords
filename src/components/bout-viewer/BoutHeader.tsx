@@ -8,8 +8,8 @@ import { ChevronDown, ChevronUp, Timer, Trophy, Swords } from 'lucide-react';
 interface BoutHeaderProps {
   nameA: string;
   nameD: string;
-  styleA: string;
-  styleD: string;
+  styleA: FightingStyle;
+  styleD: FightingStyle;
   winner: 'A' | 'D' | null;
   isRivalry?: boolean;
   minutes: number;

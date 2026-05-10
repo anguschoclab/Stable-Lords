@@ -19,11 +19,11 @@ describe('processAIStable', () => {
         stableName: 'Test Stable',
         fame: 0,
         renown: 0,
-        titles: 0
+        titles: 0,
       },
       fame: 0,
       roster: [],
-      treasury: 1000
+      treasury: 1000,
     };
 
     // Create a fight where this stable's warrior fought
@@ -41,7 +41,7 @@ describe('processAIStable', () => {
       by: 'KO',
       styleA: 'BRUTE',
       styleD: 'AGILE',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     state.arenaHistory = [fight];

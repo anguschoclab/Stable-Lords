@@ -292,7 +292,8 @@ function WeatherOverlay({ weather }: { weather: string }) {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at center, rgba(30,0,50,0.3) 10%, rgba(0,0,0,0.7) 90%)',
+          background:
+            'radial-gradient(circle at center, rgba(30,0,50,0.3) 10%, rgba(0,0,0,0.7) 90%)',
           mixBlendMode: 'multiply',
         }}
       />
@@ -300,7 +301,11 @@ function WeatherOverlay({ weather }: { weather: string }) {
   }
 
   // 🌬️ Wind / Gale effect
-  if (weatherLower.includes('gale') || weatherLower.includes('breezy') || weatherLower.includes('scorching wind')) {
+  if (
+    weatherLower.includes('gale') ||
+    weatherLower.includes('breezy') ||
+    weatherLower.includes('scorching wind')
+  ) {
     const isGale = weatherLower.includes('gale') || weatherLower.includes('scorching wind');
     return (
       <div className="absolute inset-0 pointer-events-none">

@@ -187,7 +187,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 10.5 / 13; // picks index 9 = wandering_healer
+      if (callCount === 1) return 10.5 / 13; // picks index 10 = wandering_healer
       return originalNext();
     };
     (rng as any).rng.next = mockNext;

@@ -48,7 +48,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 9.5 / 13; // picks index 8 = grand_feast
+      if (callCount === 1) return 9.5 / 13; // picks index 9 = grand_feast
       return originalNext();
     };
     (rng as any).rng.next = mockNext;

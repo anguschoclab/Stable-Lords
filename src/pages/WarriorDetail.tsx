@@ -11,7 +11,7 @@ import type { Warrior } from '@/types/state.types';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Armchair, Target, ScrollText, User } from 'lucide-react';
 import { defaultPlanForWarrior } from '@/engine/simulate';
-import { computeStreaks } from '@/engine/gazetteNarrative';
+import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { DEFAULT_LOADOUT, type EquipmentLoadout } from '@/data/equipment';
 import { toast } from 'sonner';
 import { type SubNavTab } from '@/components/SubNav';

@@ -16,7 +16,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 8.5 / 13; // picks index 7 = black_market_raid
+      if (callCount === 1) return 8.5 / 13; // picks index 8 = black_market_raid
       return originalNext();
     };
     (rng as any).rng.next = mockNext;

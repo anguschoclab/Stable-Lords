@@ -32,7 +32,7 @@ export function t(
   data: Record<string, any>,
   rng?: IRNGService
 ): string {
-  let result = Array.isArray(template)
+  const result = Array.isArray(template)
     ? rng
       ? rng.pick(template)
       : template[Math.floor(new SeededRNGService(Date.now()).next() * template.length)] || ''

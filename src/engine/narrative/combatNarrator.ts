@@ -24,7 +24,11 @@ export interface WarriorIntroData {
 /**
  * Generates warrior introduction lines.
  */
-export function generateWarriorIntro(rng: IRNGService, data: WarriorIntroData, sz?: number): string[] {
+export function generateWarriorIntro(
+  rng: IRNGService,
+  data: WarriorIntroData,
+  sz?: number
+): string[] {
   const lines: string[] = [];
   const n = data.name;
 
@@ -38,8 +42,7 @@ export function generateWarriorIntro(rng: IRNGService, data: WarriorIntroData, s
   const armorItem = data.armorId ? getItemById(data.armorId) : null;
   if (armorItem && armorItem.id !== 'none_armor') {
     const verb =
-      NarrativeTemplateEngine.getFromArchive(rng, ['fanfare', 'armor_intro_verbs']) ||
-      'is wearing';
+      NarrativeTemplateEngine.getFromArchive(rng, ['fanfare', 'armor_intro_verbs']) || 'is wearing';
     lines.push(`${n} ${verb} ${armorItem.name.toUpperCase()} armor.`);
   } else {
     lines.push(`${n} has chosen to fight without body armor.`);
@@ -107,8 +110,7 @@ export function narratePassive(rng: IRNGService, style: FightingStyle, actorName
  */
 export function narrateParry(rng: IRNGService, defenderName: string, weaponId?: string): string {
   const wName = getWeaponDisplayName(weaponId);
-  const isShield =
-    weaponId && ['small_shield', 'medium_shield', 'large_shield'].includes(weaponId);
+  const isShield = weaponId && ['small_shield', 'medium_shield', 'large_shield'].includes(weaponId);
   const type = isShield ? 'shield' : 'parry';
 
   const template = NarrativeTemplateEngine.getFromArchive(rng, [
@@ -195,7 +197,11 @@ export function narrateHit(
 /**
  * Narrates a parry break.
  */
-export function narrateParryBreak(rng: IRNGService, attackerName: string, weaponId?: string): string {
+export function narrateParryBreak(
+  rng: IRNGService,
+  attackerName: string,
+  weaponId?: string
+): string {
   const wName = getWeaponDisplayName(weaponId);
   const template =
     NarrativeTemplateEngine.getFromArchive(rng, ['pbp', 'defenses', 'parry_break']) ||
@@ -246,8 +252,7 @@ export function narrateBoutEnd(
   const category = categoryMap[by] || 'KO';
   const conclusionPath = ['conclusions', category];
   const conclusion =
-    NarrativeTemplateEngine.getFromArchive(rng, conclusionPath) ||
-    '{{winner}} defeats {{loser}}.';
+    NarrativeTemplateEngine.getFromArchive(rng, conclusionPath) || '{{winner}} defeats {{loser}}.';
   const conclusionText = NarrativeTemplateEngine.interpolateTemplate(conclusion, {
     winner: winnerName,
     loser: loserName,

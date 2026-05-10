@@ -190,7 +190,7 @@ export function LeftNav({ className }: LeftNavProps) {
               {alertCount > 0 && (
                 <button
                   aria-label={`${alertCount} alerts for ${hub.label}`}
-                  className="flex items-center justify-center bg-primary/20 text-primary hover:bg-primary/30 transition-colors text-[10px] font-mono font-black h-5 min-w-[20px] px-1 rounded-sm border border-primary/30"
+                  className="flex items-center justify-center bg-primary/20 text-primary hover:bg-primary/30 transition-colors text-[10px] font-mono font-black h-5 min-w-[20px] px-1 rounded-none border border-primary/30"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

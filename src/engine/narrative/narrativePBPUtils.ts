@@ -19,28 +19,35 @@ export interface CombatContext {
 }
 
 /**
- * Replaces canonical tokens (%A, %D, %W, %BP, %H) with contextual values.
+ * Replaces canonical tokens (%A, %D, %W, %BP, %H) and Handlebars {{token}} with contextual values.
+ * ⚡ Bolt Optimization: Uses a single-pass regex replace rather than multiple chained replacements
+ * to eliminate O(N) string re-scanning overhead and minimize garbage collection in hot loops.
  */
 export function interpolateTemplate(template: string, ctx: CombatContext): string {
   if (!template) return 'No description available.';
-  let result = template
-    .replace(/%A/g, ctx.attacker || ctx.name || 'The warrior')
-    .replace(/%D/g, ctx.defender || 'the opponent')
-    .replace(/%W/g, ctx.weapon || 'weapon')
-    .replace(/%BP/g, ctx.bodyPart || 'body')
-    .replace(/%H/g, String(ctx.hits || ''));
 
-  // Also support Handlebars-style placeholders with a single pass
-  result = result.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
-    // Fallbacks for specific templates that use {{name}} but only pass attacker/defender
-    if (key === 'name' && !ctx.name && ctx.attacker) return String(ctx.attacker);
-    if (key === 'attacker' && !ctx.attacker && ctx.name) return String(ctx.name);
+  return template.replace(/%([A-Z]+)|\{\{\s*([^{}\s]+)\s*\}\}/g, (match, shortKey, longKey) => {
+    if (shortKey) {
+      switch (shortKey) {
+        case 'A': return ctx.attacker || ctx.name || 'The warrior';
+        case 'D': return ctx.defender || 'the opponent';
+        case 'W': return ctx.weapon || 'weapon';
+        case 'BP': return ctx.bodyPart || 'body';
+        case 'H': return String(ctx.hits || '');
+        default: return match;
+      }
+    }
 
-    const value = (ctx as any)[key];
-    return value !== undefined && Object.hasOwn(ctx, key) ? String(value) : match;
+    if (longKey) {
+      if (longKey === 'name' && !ctx.name && ctx.attacker) return String(ctx.attacker);
+      if (longKey === 'attacker' && !ctx.attacker && ctx.name) return String(ctx.name);
+
+      const value = (ctx as any)[longKey];
+      return value !== undefined && Object.hasOwn(ctx, longKey) ? String(value) : match;
+    }
+
+    return match;
   });
-
-  return result;
 }
 
 /**

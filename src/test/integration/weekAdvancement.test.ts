@@ -10,7 +10,7 @@
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { createFreshState } from '@/engine/factories/warriorFactory';
+import { createWarrior } from '@/engine/factories/warriorFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState, Warrior } from '@/types/state.types';

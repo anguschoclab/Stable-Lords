@@ -2,10 +2,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateTestState } from '@/test/testHelpers';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
-import {
-  committeeSelection,
-  TOURNAMENT_TIERS,
-} from '@/engine/matchmaking/tournament/tournamentSelectionCommittee';
+import { committeeSelection } from '@/engine/matchmaking/tournamentSelection/committee';
+import { TOURNAMENT_TIERS } from '@/engine/matchmaking/tournamentSelection/core';
 import { resolveImpacts } from '@/engine/impacts';
 import { GameState } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';

@@ -17,11 +17,10 @@ import type { InsightToken } from '@/types/state.types';
  * The Chaos Weaver 🎲
  */
 function t(template: string, data: Record<string, string | number>): string {
-  let result = template;
-  for (const [key, value] of Object.entries(data)) {
-    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), String(value));
-  }
-  return result;
+  return template.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
+    const value = data[key];
+    return value !== undefined && Object.hasOwn(data, key) ? String(value) : match;
+  });
 }
 
 interface OffseasonEventNarrative {
@@ -38,7 +37,8 @@ interface OffseasonEventNarrative {
     | 'grand_feast'
     | 'wandering_healer'
     | 'mystic_vision'
-    | 'wild_animal_attack';
+    | 'wild_animal_attack'
+    | 'loyal_stray';
   newsletter: string[];
 }
 
@@ -379,6 +379,41 @@ export function runSeasonalPass(
         week: nextWeek,
         title: e.title,
         items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
+      });
+    }
+  } else if (e.effectType === 'loyal_stray') {
+    const goldCost = 25;
+    treasuryDelta -= goldCost;
+    ledgerEntries.push({
+      id: seasonRng.uuid('ledger') as LedgerEntryId,
+      week: nextWeek,
+      label: 'Dog Food & Treats',
+      amount: -goldCost,
+      category: 'other',
+    });
+
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (chosen) {
+        rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + 10,
+          fame: (chosen.fame || 0) + 5,
+        });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name })],
+        });
+      }
+    } else {
+      newsletterItems.push({
+        id: seasonRng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [t(seasonRng.pick(e.newsletter) || '', { name: 'Someone' })],
       });
     }
   }

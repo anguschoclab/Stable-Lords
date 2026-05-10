@@ -31,9 +31,12 @@ import {
 import { cn } from '@/lib/utils';
 
 import { PageHeader } from '@/components/ui/PageHeader';
+import { PageFrame } from '@/components/ui/PageFrame';
 import { Surface } from '@/components/ui/Surface';
 import { TrainerCard } from '@/components/stable/TrainerCard';
 import { canTransact } from '@/utils/economyUtils';
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { ImperialRing } from '@/components/ui/ImperialRing';
 
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { toast } from 'sonner';

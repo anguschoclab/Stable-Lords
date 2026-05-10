@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Activity } from 'lucide-react';
 import narrativeContent from '@/data/narrativeContent.json';
-import type { GameState } from '@/types/gameStore.types';
+import type { GameState } from '@/types/state.types';
 
 interface MathStepProps {
   lastSimulationReport: GameState['lastSimulationReport'];

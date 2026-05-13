@@ -1,102 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from '@tanstack/react-router';
-import { cn } from '@/lib/utils';
-import {
-  Swords,
-  RotateCcw,
-  LogOut,
-  Save,
-  Activity,
-  Volume2,
-  VolumeX,
-  Coins,
-  Crown,
-  ChevronRight,
-  Sun,
-  Cloud,
-  CloudRain,
-  Flame,
-  Wind,
-  CloudLightning,
-  CloudSnow,
-  CloudFog,
-  Factory,
-  Droplets,
-  Sparkles,
-  Moon,
-  Circle,
-  Waves,
-  CloudSun,
-} from 'lucide-react';
-import { audioManager } from '@/lib/AudioManager';
-import { Button } from '@/components/ui/button';
+import { useNavigate, useLocation } from '@tanstack/react-router';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
-import { Separator } from '@/components/ui/separator';
-import { MOOD_ICONS } from '@/engine/crowdMood';
-import type { Warrior } from '@/types/state.types';
-import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useShallow } from 'zustand/react/shallow';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
 import { LeftNav } from '@/components/navigation/LeftNav';
-import { MobileNav } from '@/components/navigation/MobileNav';
-import { ImperialRing } from '@/components/ui/ImperialRing';
-
-import { useShallow } from 'zustand/react/shallow';
-
 import { DeathModal } from '@/components/modals/DeathModal';
 import { CoachOverlay } from '@/components/ui/CoachOverlay';
 import { TacticalBar } from '@/components/navigation/TacticalBar';
 import EventLog from '@/components/EventLog';
-
-const WEATHER_ICONS: Record<string, React.ElementType> = {
-  Clear: Sun,
-  Overcast: CloudSun,
-  Rainy: CloudRain,
-  Sweltering: Flame,
-  Breezy: Wind,
-  'Blazing Sun': Sun,
-  Gale: CloudLightning,
-  'Blood Moon': Moon,
-  Eclipse: Circle,
-  Sandstorm: Waves,
-  Blizzard: CloudSnow,
-  'Dense Fog': CloudFog,
-  Thunderstorm: CloudLightning,
-  Ashfall: Factory,
-  'Acid Rain': Droplets,
-  'Mana Surge': Sparkles,
-};
-
-const WEATHER_COLORS: Record<string, string> = {
-  Clear: 'text-yellow-400',
-  Overcast: 'text-slate-400',
-  Rainy: 'text-blue-400',
-  Sweltering: 'text-orange-500',
-  Breezy: 'text-emerald-400',
-  'Blazing Sun': 'text-red-500',
-  Gale: 'text-cyan-400',
-  'Blood Moon': 'text-red-600',
-  Eclipse: 'text-purple-400',
-  Sandstorm: 'text-amber-600',
-  Blizzard: 'text-blue-200',
-  'Dense Fog': 'text-slate-400',
-  Thunderstorm: 'text-yellow-400',
-  Ashfall: 'text-stone-500',
-  'Acid Rain': 'text-lime-500',
-  'Mana Surge': 'text-fuchsia-400',
-};
+import { AppHeader } from '@/components/layout/AppHeader';
+import { ResetDialog } from '@/components/layout/ResetDialog';
+import type { Warrior } from '@/types/state.types';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const {
@@ -138,16 +54,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const activePath = location.pathname;
-  const moodIcon = MOOD_ICONS[crowdMood as keyof typeof MOOD_ICONS] ?? '😐';
   const [resetOpen, setResetOpen] = useState(false);
-  const [saveFlash, setSaveFlash] = useState(false);
-  const [isMuted, setIsMuted] = useState(audioManager.isMuted());
 
-  const toggleMute = () => {
-    const next = !isMuted;
-    audioManager.setMuted(next);
-    setIsMuted(next);
-  };
   useRivalryAlerts();
 
   useEffect(() => {
@@ -166,13 +74,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }, [roster, activePath, navigate]);
 
   useEffect(() => {
-    if (!lastSavedAt) return;
-    setSaveFlash(true);
-    const t = setTimeout(() => setSaveFlash(false), 1500);
-    return () => clearTimeout(t);
-  }, [lastSavedAt]);
-
-  useEffect(() => {
     // Strategic Route-Aware Event Log Toggling
     // We open the Event Log on the dashboard and high-stakes command screens.
     // We close it on management-heavy screens (Stable/World) to maximize workspace.
@@ -186,238 +87,21 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     }
   }, [activePath]);
 
-  const formatSaveTime = (iso: string) => {
-    try {
-      const d = new Date(iso);
-      return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-    } catch {
-      return '';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#0C0806] flex flex-col overflow-hidden text-foreground selection:bg-primary/30">
-      {/* ─── Global Status Header ─── */}
-      <header className="h-16 border-b border-white/5 bg-[#080604]/90 backdrop-blur-2xl z-50 flex items-center justify-between px-6 sticky top-0 flex-shrink-0 shadow-2xl">
-        <div className="flex items-center gap-10">
-          <div className="flex items-center gap-4">
-            <MobileNav />
-            <Link
-              to="/"
-              className="flex items-center gap-4 group active:scale-95 transition-all duration-300"
-            >
-              <ImperialRing
-                size="md"
-                variant="blood"
-                className="group-hover:rotate-[225deg] transition-all duration-700"
-              >
-                <Swords className="w-5 h-5" />
-              </ImperialRing>
-              <div className="flex flex-col">
-                <span className="font-display font-black text-base tracking-tighter uppercase leading-none group-hover:text-primary transition-colors">
-                  Stable Lords
-                </span>
-                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-30">
-                  Codex Sanguis · v1.0
-                </span>
-              </div>
-            </Link>
-          </div>
-
-          <div className="hidden xl:flex items-center gap-1">
-            {/* Cycle Status */}
-            <div className="flex flex-col px-4 border-l border-white/5">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-                Temporal Cycle
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="font-display font-black text-xs text-foreground uppercase tracking-tight">
-                  {isSimulating ? (
-                    <span className="animate-pulse opacity-40 italic">Syncing Archive...</span>
-                  ) : (
-                    `Week ${week} · ${isTournamentWeek ? `Day ${day + 1}` : 'Planning Phase'}`
-                  )}
-                </span>
-              </div>
-            </div>
-
-            {/* Treasury */}
-            <div className="flex flex-col px-4 border-l border-white/5">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-                Registry Balance
-              </span>
-              <span className="font-mono font-black text-xs text-arena-gold flex items-center gap-1.5">
-                {(treasury ?? 0).toLocaleString()} <Coins className="h-3 w-3 opacity-40" />
-              </span>
-            </div>
-
-            {/* Influence */}
-            <div className="flex flex-col px-4 border-l border-white/5">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-                Total Influence
-              </span>
-              <span className="font-mono font-black text-xs text-arena-fame flex items-center gap-1.5">
-                {fame} <Crown className="h-3 w-3 opacity-40" />
-              </span>
-            </div>
-
-            {/* Crowd Mood */}
-            <div className="flex flex-col px-4 border-l border-white/5">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-                Arena Favor
-              </span>
-              <span className="font-mono font-black text-xs text-arena-pop flex items-center gap-1.5">
-                {moodIcon} <Activity className="h-3 w-3 opacity-40" />
-              </span>
-            </div>
-
-            {/* Environmental Status */}
-            <div className="flex flex-col px-4 border-l border-white/5">
-              <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-                Environment
-              </span>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span
-                    className={cn(
-                      'font-mono font-black text-[10px] flex items-center gap-1.5 px-2 py-0.5 rounded-none border border-white/5 bg-white/5 cursor-help transition-all hover:bg-white/10 uppercase tracking-widest',
-                      WEATHER_COLORS[weather] || 'text-sky-400'
-                    )}
-                  >
-                    {(() => {
-                      const Icon = WEATHER_ICONS[weather] || Cloud;
-                      return <Icon className="h-3 w-3" />;
-                    })()}
-                    {weather || 'Clear'}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent
-                  side="bottom"
-                  className="bg-[#0C0806] border-white/10 p-3 max-w-[220px] rounded-none"
-                >
-                  <p className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-primary">
-                    Environmental Record
-                  </p>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed italic">
-                    {getWeatherEffect(weather).description}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Link
-            to="/command/combat"
-            className={cn(
-              'flex items-center gap-3 h-10 px-6 font-black text-[10px] uppercase tracking-[0.2em] transition-all duration-500 ease-[0.16,1,0.3,1]',
-              isSimulating
-                ? 'bg-neutral-900 text-muted-foreground/20 pointer-events-none'
-                : 'bg-primary text-primary-foreground shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0'
-            )}
-          >
-            {isSimulating ? (
-              <span className="animate-pulse italic">Processing Cycle...</span>
-            ) : (
-              <>
-                {isTournamentWeek ? `EXECUTE DAY ${day + 1}` : `FINALIZE WEEK ${week}`}
-                <ChevronRight className="h-4 w-4" />
-              </>
-            )}
-          </Link>
-          <Separator orientation="vertical" className="h-6 bg-white/5" />
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-none hover:bg-white/5 transition-colors"
-                onClick={toggleMute}
-                aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
-                aria-pressed={!isMuted}
-              >
-                {isMuted ? (
-                  <VolumeX className="h-4 w-4 text-destructive" />
-                ) : (
-                  <Volume2 className="h-4 w-4 text-primary" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="bottom"
-              className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10"
-            >
-              Toggle Acoustic Signal ({isMuted ? 'Muted' : 'Active'})
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  'h-9 w-9 rounded-none transition-all',
-                  saveFlash ? 'bg-primary/20 text-primary scale-110' : 'hover:bg-white/5'
-                )}
-                aria-label="Save status"
-              >
-                <Save className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="bottom"
-              className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10"
-            >
-              {lastSavedAt ? `Auto-Saved: ${formatSaveTime(lastSavedAt)}` : 'Registry Idle'}
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors"
-                onClick={() => setResetOpen(true)}
-                aria-label="Reset game"
-              >
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="bottom"
-              className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10"
-            >
-              Expunge Ledger (Delete Save)
-            </TooltipContent>
-          </Tooltip>
-
-          <Separator orientation="vertical" className="h-6 bg-white/5 mx-1" />
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-none hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-30"
-                onClick={returnToTitle}
-                disabled={isSimulating}
-                aria-label="Exit to title"
-              >
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="bottom"
-              className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10"
-            >
-              Exit to Command Center
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      </header>
+      <AppHeader
+        week={week}
+        day={day}
+        isTournamentWeek={isTournamentWeek}
+        treasury={treasury}
+        fame={fame}
+        crowdMood={crowdMood}
+        weather={weather}
+        isSimulating={isSimulating}
+        lastSavedAt={lastSavedAt}
+        onResetPrompt={() => setResetOpen(true)}
+        returnToTitle={returnToTitle}
+      />
 
       <div className="flex-1 flex flex-row overflow-hidden relative">
         {/* ─── Left Navigation Rail ─── */}
@@ -486,38 +170,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       <DeathModal />
 
-      <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
-        <AlertDialogContent className="bg-neutral-900 border-destructive/20 scale-105">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="font-display font-black text-2xl uppercase tracking-tighter text-destructive">
-              Expunge the Record
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-muted-foreground font-medium selection:bg-destructive/20">
-              You are about to seal and destroy this ledger. All combat history, stable roster, and
-              financial records will be permanently struck from the archive.
-              <br />
-              <br />
-              <span className="text-destructive font-black uppercase tracking-widest text-[10px]">
-                This act cannot be undone. Proceed?
-              </span>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="mt-6">
-            <AlertDialogCancel className="bg-secondary/40 border-white/5 hover:bg-white/10 hover:text-foreground">
-              Preserve the Record
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.3)]"
-              onClick={() => {
-                doReset();
-                setResetOpen(false);
-              }}
-            >
-              Expunge
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ResetDialog open={resetOpen} onOpenChange={setResetOpen} onConfirm={doReset} />
     </div>
   );
 }

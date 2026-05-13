@@ -46,7 +46,7 @@ describe('PlanBuilder Matchup Rendering', () => {
       <PlanBuilder
         plan={mockPlan}
         onPlanChange={vi.fn()}
-        rivalStyle={FightingStyle.LungingAttack}
+        rivalStyle={FightingStyle.AimedBlow}
       />
     );
 

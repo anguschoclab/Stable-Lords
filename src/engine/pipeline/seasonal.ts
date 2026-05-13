@@ -400,6 +400,41 @@ export function runSeasonalPass(
         items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, xp: xpGained })],
       });
     }
+  } else if (e.effectType === 'loyal_stray') {
+    const cost = 25;
+    treasuryDelta -= cost;
+    ledgerEntries.push({
+      id: seasonRng.uuid('ledger') as LedgerEntryId,
+      week: nextWeek,
+      label: 'Dog Food & Treats',
+      amount: -cost,
+      category: 'other',
+    });
+
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (chosen) {
+        rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + 10,
+          fame: (chosen.fame || 0) + 5,
+        });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [
+            t(seasonRng.pick(e.newsletter) || '', {
+              name: chosen.name,
+              xp: 10,
+              fame: 5,
+              gold: cost,
+            }),
+          ],
+        });
+      }
+    }
   }
   // Record this event in the State so the UI can pick it up
   const impact: StateImpact = {

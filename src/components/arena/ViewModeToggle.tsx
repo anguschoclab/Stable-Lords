@@ -33,6 +33,8 @@ export default function ViewModeToggle({
             : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
         )}
         disabled={disabled}
+        aria-label="Switch to Tactical Log view"
+        aria-pressed={mode === 'log'}
       >
         <ScrollText className="h-3.5 w-3.5" />
         <span>Tactical Log</span>
@@ -47,6 +49,8 @@ export default function ViewModeToggle({
             : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
         )}
         disabled={disabled}
+        aria-label="Switch to Arena Replay view"
+        aria-pressed={mode === 'arena'}
       >
         <Swords className="h-3.5 w-3.5" />
         <span>Arena Replay</span>

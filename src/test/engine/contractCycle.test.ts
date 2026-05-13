@@ -15,7 +15,7 @@ describe('Contract System Cycle', () => {
     state = createFreshState('test-seed');
     state = populateTestState(state);
 
-    // Fix test setup: remove rivals so that the limited promoter capacity
+    // Remove rivals so that the limited promoter capacity
     // is filled purely by player warriors, guaranteeing offers are generated
     // for the player roster in tests that expect them.
     state.rivals = [];

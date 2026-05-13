@@ -20,42 +20,42 @@ export interface CombatContext {
 export class NarrativeTemplateEngine {
   private constructor() {}
   /**
-   * Replaces canonical tokens (%A, %D, %W, %BP, %H) with contextual values.
+   * Replaces canonical tokens (%A, %D, %W, %BP, %H) and Handlebars {{token}} with contextual values.
+   * ⚡ Bolt Optimization: Switched from chained .replace() to a single-pass regex dictionary
+   * to drastically reduce allocations and CPU cycles when generating thousands of narrative logs.
    */
   static interpolateTemplate(template: string, ctx: CombatContext): string {
     if (!template) return 'No description available.';
-    let result = template
-      .replace(/%A/g, ctx.attacker || ctx.name || 'The warrior')
-      .replace(/%D/g, ctx.defender || 'the opponent')
-      .replace(/%W/g, ctx.weapon || 'weapon')
-      .replace(/%BP/g, ctx.bodyPart || 'body')
-      .replace(/%H/g, String(ctx.hits || ''))
-      .replace(/%WINNER/g, ctx.winner || 'the winner')
-      .replace(/%LOSER/g, ctx.loser || 'the loser');
 
-    // Also handle {{token}} format
-    result = result.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
-      switch (key) {
-        case 'attacker':
-          return ctx.attacker || ctx.name || 'The warrior';
-        case 'defender':
-          return ctx.defender || 'the opponent';
-        case 'weapon':
-          return ctx.weapon || 'weapon';
-        case 'bodyPart':
-          return ctx.bodyPart || 'body';
-        case 'name':
-          return ctx.name || ctx.attacker || 'The warrior';
-        case 'winner':
-          return ctx.winner || 'the winner';
-        case 'loser':
-          return ctx.loser || 'the loser';
-        default:
-          return match;
+    return template.replace(/%([A-Z]+)|\{\{\s*([^{}\s]+)\s*\}\}/g, (match, shortKey, longKey) => {
+      if (shortKey) {
+        switch (shortKey) {
+          case 'A': return ctx.attacker || ctx.name || 'The warrior';
+          case 'D': return ctx.defender || 'the opponent';
+          case 'W': return ctx.weapon || 'weapon';
+          case 'BP': return ctx.bodyPart || 'body';
+          case 'H': return String(ctx.hits || '');
+          case 'WINNER': return ctx.winner || 'the winner';
+          case 'LOSER': return ctx.loser || 'the loser';
+          default: return match;
+        }
       }
-    });
 
-    return result;
+      if (longKey) {
+        switch (longKey) {
+          case 'attacker': return ctx.attacker || ctx.name || 'The warrior';
+          case 'defender': return ctx.defender || 'the opponent';
+          case 'weapon': return ctx.weapon || 'weapon';
+          case 'bodyPart': return ctx.bodyPart || 'body';
+          case 'name': return ctx.name || ctx.attacker || 'The warrior';
+          case 'winner': return ctx.winner || 'the winner';
+          case 'loser': return ctx.loser || 'the loser';
+          default: return match;
+        }
+      }
+
+      return match;
+    });
   }
 
   /**

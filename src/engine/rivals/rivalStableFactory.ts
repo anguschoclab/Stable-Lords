@@ -8,7 +8,7 @@
  * scaffold — rivals need an initial roster before the recruit-pool pipeline
  * has had a chance to run. *Ongoing* rival recruitment (post-startup) goes
  * through `recruitmentWorker.ts` and signs from the same shared pool the
- * player sees. Don't "fix" the factory bias without also replacing the
+ * player sees. Do not alter the factory bias without also replacing the
  * startup-state warrior generator.
  */
 import type { RivalStableData, Owner } from '@/types/state.types';

@@ -26,6 +26,7 @@ interface WarriorCache {
 
 interface StableCache {
   idMap: Map<string, string>;
+  nameMap: Map<string, string>;
 }
 
 const warriorCache = new WeakMap<object, WarriorCache>();
@@ -85,6 +86,7 @@ function ensureStableCache(state: NameResolutionState | GameState): StableCache 
   if (cache) return cache;
 
   const idMap = new Map<string, string>();
+  const nameMap = new Map<string, string>();
 
   // Rivals (last to first so first one wins)
   const rivals = state.rivals || [];
@@ -92,15 +94,17 @@ function ensureStableCache(state: NameResolutionState | GameState): StableCache 
     const rival = rivals[i];
     if (rival && rival.owner) {
       idMap.set(rival.id, rival.owner.stableName);
+      nameMap.set(rival.owner.stableName, rival.id);
     }
   }
 
   // Player (highest precedence)
   if ('player' in state && state.player) {
     idMap.set(state.player.id, state.player.stableName);
+    nameMap.set(state.player.stableName, state.player.id);
   }
 
-  cache = { idMap };
+  cache = { idMap, nameMap };
   stableCache.set(state, cache);
   return cache;
 }
@@ -154,4 +158,15 @@ export function findWarrior(state: GameState, id?: string, name?: string): Warri
   }
 
   return undefined;
+}
+
+/**
+ * Finds a stable ID by its name.
+ */
+export function findStableId(
+  state: GameState | NameResolutionState,
+  name: string
+): string | undefined {
+  const cache = ensureStableCache(state);
+  return cache.nameMap.get(name);
 }

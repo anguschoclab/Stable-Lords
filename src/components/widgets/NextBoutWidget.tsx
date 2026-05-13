@@ -7,7 +7,7 @@ import { Link } from '@tanstack/react-router';
 
 import { cn } from '@/lib/utils';
 import { ATTRIBUTE_KEYS } from '@/types/game';
-import { resolveWarriorName, resolveStableName } from '@/utils/historyResolver';
+import { resolveWarriorName, resolveStableName, findWarrior } from '@/utils/historyResolver';
 
 export function NextBoutWidget() {
   const state = useGameStore();
@@ -56,12 +56,9 @@ export function NextBoutWidget() {
 
   const odds = useMemo(() => {
     if (!nextBout) return 50;
-    // Use IDs for lookup
-    const warriorA = state.roster.find((w) => w.id === nextBout.warriorIdA);
-    const rivalStable = state.rivals.find((r) => r.id === nextBout.stableIdD);
-    const warriorD =
-      rivalStable?.roster.find((w) => w.id === nextBout.warriorIdD) ||
-      state.roster.find((w) => w.id === nextBout.warriorIdD);
+    // ⚡ Bolt: Use O(1) cache lookup for warriors rather than array .find scans
+    const warriorA = findWarrior(state, nextBout.warriorIdA);
+    const warriorD = findWarrior(state, nextBout.warriorIdD);
 
     if (!warriorA || !warriorD) return 50;
 

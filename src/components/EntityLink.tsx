@@ -13,6 +13,7 @@ import { StableDossier } from '@/components/StableDossier';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, User, Landmark } from 'lucide-react';
 import type { GameState, Warrior } from '@/types/game';
+import { findWarrior, findStableId } from '@/utils/historyResolver';
 
 // ─── Warrior Link ──────────────────────────────────────────────────────────
 
@@ -82,17 +83,8 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
 
 function resolveWarriorId(name: string, state: GameState): string | undefined {
   if (!state) return undefined;
-  const active = state.roster?.find((w: Warrior) => w.name === name);
-  if (active) return active.id;
-  const dead = state.graveyard?.find((w: Warrior) => w.name === name);
-  if (dead) return dead.id;
-  const retired = state.retired?.find((w: Warrior) => w.name === name);
-  if (retired) return retired.id;
-  for (const rival of state.rivals ?? []) {
-    const rw = rival.roster?.find((w: Warrior) => w.name === name);
-    if (rw) return rw.id;
-  }
-  return undefined;
+  // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
+  return findWarrior(state, undefined, name)?.id;
 }
 
 // ─── Stable Link ───────────────────────────────────────────────────────────
@@ -107,9 +99,8 @@ export function StableLink({ name, className, children }: StableLinkProps) {
   const state = useWorldState();
 
   // Resolve stable name to owner ID
-  const rival = (state.rivals ?? []).find((r: any) => r.owner.stableName === name);
-  const isPlayer = state.player.stableName === name;
-  const stableId = isPlayer ? 'player' : rival?.owner.id;
+  // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
+  const stableId = findStableId(state, name);
 
   if (!stableId) {
     return <span className={className}>{children ?? name}</span>;

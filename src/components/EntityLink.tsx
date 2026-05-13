@@ -100,9 +100,11 @@ export function StableLink({ name, className, children }: StableLinkProps) {
 
   // Resolve stable name to owner ID
   // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
-  const stableId = findStableId(state, name);
+  const resolvedStableId = findStableId(state, name);
+  const isPlayer = resolvedStableId === state.player.id;
+  const stableId = isPlayer ? 'player' : resolvedStableId;
 
-  if (!stableId) {
+  if (!resolvedStableId) {
     return <span className={className}>{children ?? name}</span>;
   }
 

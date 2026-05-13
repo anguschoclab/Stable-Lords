@@ -46,8 +46,8 @@ export function getWeaponPreferredRange(weaponId?: string): DistanceRange {
 // Design intent: a dagger user at Grapple gets +4 ATT — they should close range.
 //               A pike user at Grapple gets −10 ATT — they should flee to Extended.
 
-// Weapon IDs MUST match those in `src/data/equipment.ts`. See note above on
-// the prior id-mismatch bug that silently disabled this entire system.
+// WARNING: Weapon IDs MUST match those in `src/data/equipment.ts`.
+// This is not a TODO, but a critical note: see the above warning regarding a past id-mismatch bug that silently disabled this system.
 const WEAPON_RANGE_MODIFIERS: Record<string, Partial<Record<DistanceRange, number>>> = {
   // ── Tight-preferred (close, fast) ────────────────────────────────────────
   dagger: { Grapple: +3, Tight: +4, Striking: 0, Extended: -5 },

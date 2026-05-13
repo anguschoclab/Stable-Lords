@@ -16,7 +16,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 8.5 / 14; // picks index 8 = black_market_raid
+      if (callCount === 1) return 8.5 / 15; // picks index 8 = black_market_raid
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -48,7 +48,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 9.5 / 14; // picks index 9 = grand_feast
+      if (callCount === 1) return 9.5 / 15; // picks index 9 = grand_feast
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -110,7 +110,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 5.5 / 14; // picks index 5 = tavern_brawl
+      if (callCount === 1) return 5.5 / 15; // picks index 5 = tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -147,7 +147,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 5.5 / 14; // picks tavern_brawl
+      if (callCount === 1) return 5.5 / 15; // picks tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -187,7 +187,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 10.5 / 14; // picks index 10 = wandering_healer
+      if (callCount === 1) return 10.5 / 15; // picks index 10 = wandering_healer
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -247,7 +247,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 10.5 / 14; // picks index 10 = wandering_healer
+      if (callCount === 1) return 10.5 / 15; // picks index 10 = wandering_healer
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -289,7 +289,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 11.5 / 14; // picks index 11 = mystic_vision
+      if (callCount === 1) return 11.5 / 15; // picks index 11 = mystic_vision
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -320,7 +320,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 12.5 / 14; // picks index 12 = wild_animal_attack
+      if (callCount === 1) return 12.5 / 15; // picks index 12 = wild_animal_attack
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -344,7 +344,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 13.5 / 14; // picks index 13 = loyal_stray
+      if (callCount === 1) return 13.5 / 15; // picks index 13 = loyal_stray
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -371,4 +371,41 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems).toHaveLength(1);
     expect(impact.newsletterItems?.[0]?.title).toBe('A Loyal Stray');
   });
+
+  it('should trigger the street_performance offseason event, gaining fame and gold, and adding a tag', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 14.5 / 15; // picks index 14 = street_performance
+      return originalNext();
+    };
+    (rng as any).rng.next = mockNext;
+
+    const warriorId = 'w-performer' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Busk the Great', status: 'Active', tags: [] } as any],
+      newsletter: [],
+      treasury: 1000,
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    expect(impact.treasuryDelta).toBeDefined();
+    expect(impact.treasuryDelta).toBeGreaterThan(0);
+
+    expect(impact.ledgerEntries).toBeDefined();
+    expect(impact.ledgerEntries?.[0]?.label).toBe('Street Performance Tips');
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.items[0]).toContain('Busk the Great');
+
+    const wUpdate = impact.rosterUpdates?.get(warriorId);
+    expect(wUpdate).toBeDefined();
+    expect(wUpdate?.fame).toBe(15);
+    expect(wUpdate?.tags).toContain('Local Hero');
+  });
+
 });

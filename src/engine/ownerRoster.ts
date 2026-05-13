@@ -221,6 +221,50 @@ function generateAIRecruit(
   };
 }
 
+/** Function type for meta-adaptation recruit style pickers. */
+type AdaptationStyleFn = (
+  philosophyStyles: FightingStyle[],
+  favoredStyles: FightingStyle[],
+  allStyles: FightingStyle[],
+  meta: StyleMeta | undefined,
+  rng: IRNGService
+) => FightingStyle;
+
+/**
+ * Strategy map: each MetaAdaptation maps to a function that picks
+ * the recruit's fighting style based on that owner's philosophy.
+ * TypeScript will error if a MetaAdaptation variant is missing here.
+ */
+const ADAPTATION_STYLE_PICKERS: Record<MetaAdaptation, AdaptationStyleFn> = {
+  Traditionalist: (philosophyStyles, favoredStyles, _allStyles, _meta, rng) => {
+    const pool = favoredStyles.length > 0 ? favoredStyles : philosophyStyles;
+    return rng.pick(pool);
+  },
+  MetaChaser: (philosophyStyles, _favoredStyles, allStyles, meta, rng) => {
+    if (meta) {
+      const sorted = allStyles.slice().sort((a, b) => (meta[b] ?? 0) - (meta[a] ?? 0));
+      return rng.pick(sorted.slice(0, 3));
+    }
+    return rng.pick(philosophyStyles);
+  },
+  Innovator: (philosophyStyles, _favoredStyles, allStyles, meta, rng) => {
+    if (meta) {
+      const sorted = allStyles.slice().sort((a, b) => (meta[a] ?? 0) - (meta[b] ?? 0));
+      return rng.pick(sorted.slice(0, 4));
+    }
+    const nonStandard = allStyles.filter((s) => !philosophyStyles.includes(s));
+    return rng.pick(nonStandard);
+  },
+  Opportunist: (philosophyStyles, favoredStyles, allStyles, meta, rng) => {
+    if (meta && rng.next() < 0.5) {
+      const rising = allStyles.filter((s) => (meta[s] ?? 0) >= 2);
+      if (rising.length > 0) return rng.pick(rising);
+    }
+    const pool = favoredStyles.length > 0 ? favoredStyles : philosophyStyles;
+    return rng.pick(pool);
+  },
+};
+
 function pickRecruitStyle(
   adaptation: MetaAdaptation,
   philosophy: string,
@@ -230,37 +274,8 @@ function pickRecruitStyle(
 ): FightingStyle {
   const philosophyStyles = getPhilosophyStyles(philosophy);
   const allStyles = Object.values(FightingStyle);
-
-  switch (adaptation) {
-    case 'Traditionalist': {
-      const pool = favoredStyles.length > 0 ? favoredStyles : philosophyStyles;
-      return rng.pick(pool);
-    }
-    case 'MetaChaser': {
-      if (meta) {
-        const sorted = allStyles.slice().sort((a, b) => (meta[b] ?? 0) - (meta[a] ?? 0));
-        return rng.pick(sorted.slice(0, 3));
-      }
-      return rng.pick(philosophyStyles);
-    }
-    case 'Innovator': {
-      if (meta) {
-        const sorted = allStyles.slice().sort((a, b) => (meta[a] ?? 0) - (meta[b] ?? 0));
-        return rng.pick(sorted.slice(0, 4));
-      }
-      const nonStandard = allStyles.filter((s) => !philosophyStyles.includes(s));
-      return rng.pick(nonStandard);
-    }
-    case 'Opportunist':
-    default: {
-      if (meta && rng.next() < 0.5) {
-        const rising = allStyles.filter((s) => (meta[s] ?? 0) >= 2);
-        if (rising.length > 0) return rng.pick(rising);
-      }
-      const pool = favoredStyles.length > 0 ? favoredStyles : philosophyStyles;
-      return rng.pick(pool);
-    }
-  }
+  const picker = ADAPTATION_STYLE_PICKERS[adaptation] ?? ADAPTATION_STYLE_PICKERS.Opportunist;
+  return picker(philosophyStyles, favoredStyles, allStyles, meta, rng);
 }
 
 function generateRecruitAttrs(

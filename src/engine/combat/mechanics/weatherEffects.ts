@@ -163,50 +163,35 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
 }
 
 /**
+ * Strategy map: weather type → atmospheric opening line for the fight log.
+ * null entries (Clear/Overcast) suppress the line entirely.
+ */
+const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  Clear: null,
+  Overcast: null,
+  Rainy: 'Rain slicks the sand — footwork will be treacherous today.',
+  Sweltering: 'The air hangs thick and hot. Stamina will be the deciding factor.',
+  Breezy: 'A cool breeze sweeps through the arena. The fighters look sharp.',
+  'Blazing Sun': 'The sun beats down mercilessly. Heavy fighters will suffer.',
+  Gale: 'Gale-force winds tear through the stands. Timing will be everything.',
+  'Blood Moon': 'A crimson moon hangs overhead. The crowd is already baying for blood.',
+  Eclipse: 'Darkness falls mid-day. An eerie calm descends before the violence.',
+  Sandstorm: 'A howling sandstorm blinds the arena. Every breath is a battle.',
+  Blizzard: 'A brutal blizzard freezes the arena. Survival is the only goal.',
+  'Dense Fog': 'A thick mist swallows the fighters. Every shadow is a threat.',
+  Mist: 'A light mist rolls across the sand, clinging to the fighters.',
+  Thunderstorm: 'Thunder shakes the ground while lightning splits the sky.',
+  Ashfall: 'Gray ash falls like snow. The air itself tastes of death.',
+  'Acid Rain': 'Hissing rain burns the skin. This fight will be short and brutal.',
+  'Mana Surge': 'The air crackles with power. The fighters move with impossible speed.',
+  'Scorching Wind': 'A hot, dry wind sweeps the arena, parching throats and sapping strength.',
+  'Spooky Night': 'An unnatural chill settles over the arena, and shadows seem to move on their own.',
+};
+
+/**
  * Returns an atmospheric opening line for the fight log.
  * Returns null for neutral weather (Clear/Overcast) — no line is emitted.
  */
 export function weatherOpeningLine(weather: WeatherType): string | null {
-  switch (weather) {
-    case 'Clear':
-      return null;
-    case 'Overcast':
-      return null;
-    case 'Rainy':
-      return 'Rain slicks the sand — footwork will be treacherous today.';
-    case 'Sweltering':
-      return 'The air hangs thick and hot. Stamina will be the deciding factor.';
-    case 'Breezy':
-      return 'A cool breeze sweeps through the arena. The fighters look sharp.';
-    case 'Blazing Sun':
-      return 'The sun beats down mercilessly. Heavy fighters will suffer.';
-    case 'Gale':
-      return 'Gale-force winds tear through the stands. Timing will be everything.';
-    case 'Blood Moon':
-      return 'A crimson moon hangs overhead. The crowd is already baying for blood.';
-    case 'Eclipse':
-      return 'Darkness falls mid-day. An eerie calm descends before the violence.';
-    case 'Sandstorm':
-      return 'A howling sandstorm blinds the arena. Every breath is a battle.';
-    case 'Blizzard':
-      return 'A brutal blizzard freezes the arena. Survival is the only goal.';
-    case 'Dense Fog':
-      return 'A thick mist swallows the fighters. Every shadow is a threat.';
-    case 'Mist':
-      return 'A light mist rolls across the sand, clinging to the fighters.';
-    case 'Thunderstorm':
-      return 'Thunder shakes the ground while lightning splits the sky.';
-    case 'Ashfall':
-      return 'Gray ash falls like snow. The air itself tastes of death.';
-    case 'Acid Rain':
-      return 'Hissing rain burns the skin. This fight will be short and brutal.';
-    case 'Mana Surge':
-      return 'The air crackles with power. The fighters move with impossible speed.';
-    case 'Scorching Wind':
-      return 'A hot, dry wind sweeps the arena, parching throats and sapping strength.';
-    case 'Spooky Night':
-      return 'An unnatural chill settles over the arena, and shadows seem to move on their own.';
-    default:
-      return null;
-  }
+  return WEATHER_OPENING_LINES[weather] ?? null;
 }

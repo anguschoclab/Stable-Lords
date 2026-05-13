@@ -30,20 +30,21 @@ export const DEFAULT_AUTOSIM_STOP_CONDITIONS: SoftStopCondition[] = [
 ];
 
 /**
+ * Strategy map: raw TimeAdvanceService stop reason strings → autosim stop reasons.
+ * Unlisted keys fall back to 'max_weeks'.
+ */
+const STOP_REASON_MAP: Record<string, AutosimResult['stopReason']> = {
+  roster_empty: 'no_pairings',
+  no_pairings: 'no_pairings',
+  player_death: 'death',
+  custom_condition: 'injury',
+};
+
+/**
  * Convert TimeAdvanceService stop reasons to autosim stop reasons
  */
 function mapStopReason(reason: string | null | undefined): AutosimResult['stopReason'] {
-  switch (reason) {
-    case 'roster_empty':
-    case 'no_pairings':
-      return 'no_pairings';
-    case 'player_death':
-      return 'death';
-    case 'custom_condition':
-      return 'injury';
-    default:
-      return 'max_weeks';
-  }
+  return (reason && STOP_REASON_MAP[reason]) || 'max_weeks';
 }
 
 export interface AutosimOptions {

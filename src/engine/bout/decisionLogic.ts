@@ -3,36 +3,38 @@ import { type FighterState } from '../combat/resolution';
 
 type JudgeArchetype = 'Crowd' | 'Technical' | 'Blood';
 
+/** Function signature for a judge archetype scorer. */
+type JudgeScorerFn = (fA: FighterState, fD: FighterState) => { scoreA: number; scoreD: number };
+
+/**
+ * Strategy map: each judge archetype has its own scoring formula.
+ * TypeScript will error if a JudgeArchetype variant is ever added without
+ * a corresponding entry here.
+ */
+const JUDGE_SCORERS: Record<JudgeArchetype, JudgeScorerFn> = {
+  // Crowd loves aggression and flashy counters
+  Crowd: (fA, fD) => ({
+    scoreA: fA.hitsLanded * 1.5 + fA.ripostes * 0.5,
+    scoreD: fD.hitsLanded * 1.5 + fD.ripostes * 0.5,
+  }),
+  // Technical judges reward ripostes and penalize taking hits
+  Technical: (fA, fD) => ({
+    scoreA: fA.ripostes * 2 - fA.hitsTaken * 0.5,
+    scoreD: fD.ripostes * 2 - fD.hitsTaken * 0.5,
+  }),
+  // Blood judges score by damage dealt (HP stripped from opponent)
+  Blood: (fA, fD) => ({
+    scoreA: fD.maxHp - fD.hp,
+    scoreD: fA.maxHp - fA.hp,
+  }),
+};
+
 /**
  * Score a fight from one judge's perspective.
  * Returns the fighter label that the judge favors, or null for a tie.
  */
-function judgeScore(
-  archetype: JudgeArchetype,
-  fA: FighterState,
-  fD: FighterState
-): 'A' | 'D' | null {
-  let scoreA = 0;
-  let scoreD = 0;
-
-  switch (archetype) {
-    case 'Crowd':
-      // Crowd loves aggression and flashy counters
-      scoreA = fA.hitsLanded * 1.5 + fA.ripostes * 0.5;
-      scoreD = fD.hitsLanded * 1.5 + fD.ripostes * 0.5;
-      break;
-    case 'Technical':
-      // Technical judges reward ripostes and penalize taking hits
-      scoreA = fA.ripostes * 2 - fA.hitsTaken * 0.5;
-      scoreD = fD.ripostes * 2 - fD.hitsTaken * 0.5;
-      break;
-    case 'Blood':
-      // Blood judges score by damage dealt (HP stripped from opponent)
-      scoreA = fD.maxHp - fD.hp;
-      scoreD = fA.maxHp - fA.hp;
-      break;
-  }
-
+function judgeScore(archetype: JudgeArchetype, fA: FighterState, fD: FighterState): 'A' | 'D' | null {
+  const { scoreA, scoreD } = JUDGE_SCORERS[archetype](fA, fD);
   if (scoreA > scoreD + 0.5) return 'A';
   if (scoreD > scoreA + 0.5) return 'D';
   return null;

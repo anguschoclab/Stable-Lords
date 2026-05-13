@@ -41,27 +41,22 @@ export function contestCheck(
   return rollA > rollD;
 }
 
+/**
+ * Strategy map: weather type → stamina drain multiplier.
+ * 1.0 = baseline. Unlisted weather types fall back to 1.0.
+ */
+const WEATHER_STAMINA_MOD: Record<string, number> = {
+  'Blazing Sun': 1.3, // 30% more stamina drain
+  'Scorching Wind': 1.3, // 30% more stamina drain
+  Sweltering: 1.2, // 20% more stamina drain
+  'Blood Moon': 1.1, // 10% more stamina drain
+  Gale: 1.15, // 15% more stamina drain
+  Breezy: 0.9, // 10% less stamina drain
+  Eclipse: 0.8, // 20% less stamina drain, slow methodical fights
+  // Clear / Overcast / Rainy → 1.0 (default)
+};
+
 export function weatherStaminaModifier(weather?: string): number {
   if (!weather) return 1.0;
-  switch (weather) {
-    case 'Blazing Sun':
-      return 1.3; // 30% more stamina drain
-    case 'Scorching Wind':
-      return 1.3; // 30% more stamina drain
-    case 'Sweltering':
-      return 1.2; // 20% more stamina drain
-    case 'Blood Moon':
-      return 1.1; // 10% more stamina drain
-    case 'Gale':
-      return 1.15; // 15% more stamina drain
-    case 'Breezy':
-      return 0.9; // 10% less stamina drain
-    case 'Eclipse':
-      return 0.8; // 20% less stamina drain, slow methodical fights
-    case 'Overcast':
-    case 'Clear':
-    case 'Rainy':
-    default:
-      return 1.0;
-  }
+  return WEATHER_STAMINA_MOD[weather] ?? 1.0;
 }

@@ -243,6 +243,74 @@ function buildUniversalConditions(plan: FightPlan): PlanCondition[] {
   ];
 }
 
+/** Function signature for per-personality in-bout adaptation builders. */
+type PersonalityAdaptationFn = (
+  plan: FightPlan,
+  bounded: (v: number, delta: number) => number,
+  isKillIntent: boolean
+) => PlanCondition[];
+
+/**
+ * Strategy map: each OwnerPersonality maps to a function that builds its
+ * in-bout PlanCondition nudges.  TypeScript will error if a personality is
+ * ever added to the union without a corresponding entry here.
+ */
+const PERSONALITY_ADAPTATION_MAP: Record<OwnerPersonality, PersonalityAdaptationFn> = {
+  Aggressive: (plan, bounded, isKillIntent) => {
+    const conditions: PlanCondition[] = [
+      {
+        trigger: { type: 'MOMENTUM_LEAD', value: 2 },
+        override: { OE: bounded(plan.OE, +1), killDesire: bounded(plan.killDesire ?? 5, +1) },
+        label: 'Aggressive: press the advantage',
+      },
+    ];
+    if (isKillIntent) {
+      conditions.push({
+        trigger: { type: 'MOMENTUM_LEAD', value: 2 },
+        override: { OE: bounded(plan.OE, +1), killDesire: bounded(plan.killDesire ?? 5, +2) },
+        label: 'Aggressive+Vendetta: kill commitment',
+      });
+    }
+    return conditions;
+  },
+  Methodical: (plan, bounded) => [
+    {
+      // Losing ground on momentum → tighten defence.
+      trigger: { type: 'MOMENTUM_DEFICIT', value: 2 },
+      override: { AL: bounded(plan.AL, +1), OE: bounded(plan.OE, -1) },
+      label: 'Methodical: disengage and reset',
+    },
+  ],
+  Showman: (plan, bounded) => [
+    {
+      // Late-phase flourish: drama sells tickets, lethality sells legends.
+      trigger: { type: 'PHASE_IS', value: 'LATE' },
+      override: { killDesire: bounded(plan.killDesire ?? 5, +1), OE: bounded(plan.OE, +1) },
+      label: 'Showman: late-phase flourish',
+    },
+  ],
+  Pragmatic: (plan, bounded) => [
+    {
+      // Below 30% HP: survive the round first, win the campaign second.
+      trigger: { type: 'HP_BELOW', value: 30 },
+      override: {
+        OE: bounded(plan.OE, -1),
+        AL: bounded(plan.AL, +2),
+        killDesire: bounded(plan.killDesire ?? 5, -1),
+      },
+      label: 'Pragmatic: preservation',
+    },
+  ],
+  Tactician: (plan, bounded) => [
+    {
+      // Endurance under 40%: conserve, outlast.
+      trigger: { type: 'ENDURANCE_BELOW', value: 40 },
+      override: { OE: bounded(plan.OE, -1), AL: bounded(plan.AL, +1) },
+      label: 'Tactician: conserve pace',
+    },
+  ],
+};
+
 /**
  * Per-personality in-bout nudges. Returned as PlanConditions so they're evaluated
  * by the existing WT-gated condition pipeline — no new code path.
@@ -254,67 +322,8 @@ function getPersonalityAdaptations(
 ): PlanCondition[] {
   const bounded = (v: number, delta: number) => clamp(v + delta, 1, 10);
   const isKillIntent = intent === 'VENDETTA' || intent === 'AGGRESSIVE_EXPANSION';
-  switch (personality) {
-    case 'Aggressive': {
-      const conditions: PlanCondition[] = [
-        {
-          trigger: { type: 'MOMENTUM_LEAD', value: 2 },
-          override: { OE: bounded(plan.OE, +1), killDesire: bounded(plan.killDesire ?? 5, +1) },
-          label: 'Aggressive: press the advantage',
-        },
-      ];
-      if (isKillIntent) {
-        conditions.push({
-          trigger: { type: 'MOMENTUM_LEAD', value: 2 },
-          override: { OE: bounded(plan.OE, +1), killDesire: bounded(plan.killDesire ?? 5, +2) },
-          label: 'Aggressive+Vendetta: kill commitment',
-        });
-      }
-      return conditions;
-    }
-    case 'Methodical':
-      // Losing ground on momentum → tighten defence.
-      return [
-        {
-          trigger: { type: 'MOMENTUM_DEFICIT', value: 2 },
-          override: { AL: bounded(plan.AL, +1), OE: bounded(plan.OE, -1) },
-          label: 'Methodical: disengage and reset',
-        },
-      ];
-    case 'Showman':
-      // Late-phase flourish: drama sells tickets, lethality sells legends.
-      return [
-        {
-          trigger: { type: 'PHASE_IS', value: 'LATE' },
-          override: { killDesire: bounded(plan.killDesire ?? 5, +1), OE: bounded(plan.OE, +1) },
-          label: 'Showman: late-phase flourish',
-        },
-      ];
-    case 'Pragmatic':
-      // Below 30% HP: survive the round first, win the campaign second.
-      return [
-        {
-          trigger: { type: 'HP_BELOW', value: 30 },
-          override: {
-            OE: bounded(plan.OE, -1),
-            AL: bounded(plan.AL, +2),
-            killDesire: bounded(plan.killDesire ?? 5, -1),
-          },
-          label: 'Pragmatic: preservation',
-        },
-      ];
-    case 'Tactician':
-      // Endurance under 40%: conserve, outlast.
-      return [
-        {
-          trigger: { type: 'ENDURANCE_BELOW', value: 40 },
-          override: { OE: bounded(plan.OE, -1), AL: bounded(plan.AL, +1) },
-          label: 'Tactician: conserve pace',
-        },
-      ];
-    default:
-      return [];
-  }
+  const handler = PERSONALITY_ADAPTATION_MAP[personality];
+  return handler ? handler(plan, bounded, isKillIntent) : [];
 }
 
 /**

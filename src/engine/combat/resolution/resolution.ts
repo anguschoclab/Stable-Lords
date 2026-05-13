@@ -120,13 +120,13 @@ export interface ResolutionContext {
   weatherEffect: WeatherEffect;
   matchupA: number;
   matchupD: number;
-  trainerModsA: { [key: string]: number };
-  trainerModsD: { [key: string]: number };
+  trainerModsA: Record<string, number>;
+  trainerModsD: Record<string, number>;
   /** Raw trainer list — used for per-exchange specialty recalculation */
   trainers?: import('@/types/state.types').Trainer[];
   /** Snapshot of base trainer mods (without specialties) — preserved so per-exchange specialty deltas stay additive */
-  baseTrainerModsA?: { [key: string]: number };
-  baseTrainerModsD?: { [key: string]: number };
+  baseTrainerModsA?: Record<string, number>;
+  baseTrainerModsD?: Record<string, number>;
   weaponReqA: { endurancePenalty: number; attPenalty: number };
   weaponReqD: { endurancePenalty: number; attPenalty: number };
   tacticStreakA: number;

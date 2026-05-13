@@ -32,82 +32,110 @@ export function alIniMod(al: number): number {
   return Math.floor((al - 5) * AL_INI_SCALING);
 }
 
-export function getOffensiveTacticMods(tactic: OffensiveTactic | undefined, style: FightingStyle) {
-  if (!tactic || tactic === 'none')
-    return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 0, decBonus: 0, parryBypass: 0 };
+/** Shape returned by offensive tactic resolution. */
+export type OffensiveMods = {
+  attBonus: number;
+  dmgBonus: number;
+  defPenalty: number;
+  endCost: number;
+  decBonus: number;
+  parryBypass: number;
+};
+
+const ZERO_OFF: OffensiveMods = {
+  attBonus: 0,
+  dmgBonus: 0,
+  defPenalty: 0,
+  endCost: 0,
+  decBonus: 0,
+  parryBypass: 0,
+};
+
+/**
+ * Strategy map: each offensive tactic (excluding 'none') maps to a function
+ * that accepts the suitability multiplier and returns the resolved mods.
+ */
+const OFFENSIVE_TACTIC_MAP: Record<Exclude<OffensiveTactic, 'none'>, (mult: number) => OffensiveMods> = {
+  Lunge: (mult) => ({
+    attBonus: Math.round(2 * mult),
+    dmgBonus: 0,
+    defPenalty: Math.round(1 * mult),
+    endCost: 2,
+    decBonus: 0,
+    parryBypass: 0,
+  }),
+  Slash: (mult) => ({
+    attBonus: 0,
+    dmgBonus: Math.round(2 * mult),
+    defPenalty: 0,
+    endCost: 1,
+    decBonus: 0,
+    parryBypass: Math.round(2 * mult),
+  }),
+  Bash: (mult) => ({
+    attBonus: Math.round(1 * mult),
+    dmgBonus: Math.round(1 * mult),
+    defPenalty: Math.round(2 * mult),
+    endCost: 2,
+    decBonus: 0,
+    parryBypass: Math.round(4 * mult),
+  }),
+  Decisiveness: (mult) => ({
+    attBonus: 0,
+    dmgBonus: 0,
+    defPenalty: 0,
+    endCost: 1,
+    decBonus: Math.round(3 * mult),
+    parryBypass: 0,
+  }),
+};
+
+export function getOffensiveTacticMods(tactic: OffensiveTactic | undefined, style: FightingStyle): OffensiveMods {
+  if (!tactic || tactic === 'none') return ZERO_OFF;
   const mult = suitabilityMultiplier(getOffensiveSuitability(style, tactic));
-  switch (tactic) {
-    case 'Lunge':
-      return {
-        attBonus: Math.round(2 * mult),
-        dmgBonus: 0,
-        defPenalty: Math.round(1 * mult),
-        endCost: 2,
-        decBonus: 0,
-        parryBypass: 0,
-      };
-    case 'Slash':
-      return {
-        attBonus: 0,
-        dmgBonus: Math.round(2 * mult),
-        defPenalty: 0,
-        endCost: 1,
-        decBonus: 0,
-        parryBypass: Math.round(2 * mult),
-      };
-    case 'Bash':
-      return {
-        attBonus: Math.round(1 * mult),
-        dmgBonus: Math.round(1 * mult),
-        defPenalty: Math.round(2 * mult),
-        endCost: 2,
-        decBonus: 0,
-        parryBypass: Math.round(4 * mult),
-      };
-    case 'Decisiveness':
-      return {
-        attBonus: 0,
-        dmgBonus: 0,
-        defPenalty: 0,
-        endCost: 1,
-        decBonus: Math.round(3 * mult),
-        parryBypass: 0,
-      };
-    default:
-      return { attBonus: 0, dmgBonus: 0, defPenalty: 0, endCost: 0, decBonus: 0, parryBypass: 0 };
-  }
+  return (OFFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_OFF))(mult);
 }
 
-export function getDefensiveTacticMods(tactic: DefensiveTactic | undefined, style: FightingStyle) {
-  if (!tactic || tactic === 'none') return { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: 0 };
+/** Shape returned by defensive tactic resolution. */
+export type DefensiveMods = {
+  parBonus: number;
+  defBonus: number;
+  ripBonus: number;
+  iniBonus: number;
+};
+
+const ZERO_DEF: DefensiveMods = { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: 0 };
+
+/**
+ * Strategy map: each defensive tactic (excluding 'none') maps to a function
+ * that accepts the suitability multiplier and returns the resolved mods.
+ */
+const DEFENSIVE_TACTIC_MAP: Record<Exclude<DefensiveTactic, 'none'>, (mult: number) => DefensiveMods> = {
+  Parry: (mult) => ({
+    parBonus: Math.round(3 * mult),
+    defBonus: 0,
+    ripBonus: -Math.round(1 * mult),
+    iniBonus: 0,
+  }),
+  Dodge: (mult) => ({
+    parBonus: -Math.round(1 * mult),
+    defBonus: Math.round(3 * mult),
+    ripBonus: 0,
+    iniBonus: 0,
+  }),
+  Riposte: (mult) => ({
+    parBonus: Math.round(1 * mult),
+    defBonus: 0,
+    ripBonus: Math.round(3 * mult),
+    iniBonus: 0,
+  }),
+  Responsiveness: (mult) => ({ parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: Math.round(2 * mult) }),
+};
+
+export function getDefensiveTacticMods(tactic: DefensiveTactic | undefined, style: FightingStyle): DefensiveMods {
+  if (!tactic || tactic === 'none') return ZERO_DEF;
   const mult = suitabilityMultiplier(getDefensiveSuitability(style, tactic));
-  switch (tactic) {
-    case 'Parry':
-      return {
-        parBonus: Math.round(3 * mult),
-        defBonus: 0,
-        ripBonus: -Math.round(1 * mult),
-        iniBonus: 0,
-      };
-    case 'Dodge':
-      return {
-        parBonus: -Math.round(1 * mult),
-        defBonus: Math.round(3 * mult),
-        ripBonus: 0,
-        iniBonus: 0,
-      };
-    case 'Riposte':
-      return {
-        parBonus: Math.round(1 * mult),
-        defBonus: 0,
-        ripBonus: Math.round(3 * mult),
-        iniBonus: 0,
-      };
-    case 'Responsiveness':
-      return { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: Math.round(2 * mult) };
-    default:
-      return { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: 0 };
-  }
+  return (DEFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_DEF))(mult);
 }
 
 export function calculateFinalOEAL(

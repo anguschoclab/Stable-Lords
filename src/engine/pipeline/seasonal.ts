@@ -454,12 +454,13 @@ export function runSeasonalPass(
         });
 
         // Ensure "Local Hero" tag is present
-        const currentTags = chosen.tags || [];
-        const newTags = currentTags.includes('Local Hero') ? currentTags : [...currentTags, 'Local Hero'];
+        // Ensure "Local Hero" flair is present
+        const currentFlair = chosen.flair || [];
+        const newFlair = currentFlair.includes('Local Hero') ? currentFlair : [...currentFlair, 'Local Hero'];
 
         rosterUpdates.set(chosen.id, {
           fame: (chosen.fame || 0) + fameGained,
-          tags: newTags
+          flair: newFlair
         });
 
         newsletterItems.push({

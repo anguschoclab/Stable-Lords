@@ -17,3 +17,7 @@
 ## 2026-05-10 - Precomputing relationships to prevent N+1 array scan bottlenecks
 **Learning:** To prevent N+1 array scan bottlenecks in React components (e.g., repeatedly using `.find()` inside a loop over historical data), precompute relationships by storing required entity details directly into a `useMemo` Map or utilize existing global/store lookup utilities.
 **Action:** When a UI component needs to look up entities (like warriors or stables) repeatedly, prefer extracting the lookup to a precomputed `Map` or using an optimized resolution utility like `findWarrior` rather than running `.find()` sequentially over large arrays (`roster`, `graveyard`, `rivals`, etc.) multiple times.
+
+## 2024-05-13 - [O(1) lookups for findWarrior]
+**Learning:** Found multiple places in React components doing `.find` on `state.roster`, `state.graveyard`, `state.retired` or `state.rivals` arrays. This is an O(N) operation per lookup, inside render cycles. The project specifically has O(1) caching utilities `findWarrior` in `src/utils/historyResolver.ts`.
+**Action:** Replace `state.roster.find(...)` and `graveyard.find(...)` manual O(N) loops with `findWarrior(state, id)` where possible to resolve the N+1 array scan bottleneck.

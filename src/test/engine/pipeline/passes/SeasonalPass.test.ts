@@ -405,7 +405,7 @@ describe('runSeasonalPass', () => {
     const wUpdate = impact.rosterUpdates?.get(warriorId);
     expect(wUpdate).toBeDefined();
     expect(wUpdate?.fame).toBe(15);
-    expect(wUpdate?.tags).toContain('Local Hero');
+    expect(wUpdate?.flair).toContain('Local Hero');
   });
 
 });

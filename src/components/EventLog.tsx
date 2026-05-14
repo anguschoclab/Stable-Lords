@@ -24,6 +24,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { WarriorLink } from '@/components/EntityLink';
+import { findWarrior } from '@/utils/historyResolver';
 
 type EventType =
   | 'fight'
@@ -198,7 +199,7 @@ export default function EventLog() {
 
     // Training
     (state.trainingAssignments ?? []).forEach((a) => {
-      const w = state.roster.find((w) => w.id === a.warriorId);
+      const w = findWarrior(state, a.warriorId);
       if (!w) return;
       const isRecovery = a.type === 'recovery';
       all.push({

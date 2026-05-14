@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
+import { findWarrior } from '@/utils/historyResolver';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { WarriorRadarChart } from '@/components/charts/WarriorRadarChart';
@@ -22,18 +23,7 @@ export const WarriorDossier = React.memo(function WarriorDossier({
   const state = useWorldState();
 
   // Use fine-grained selector to find the warrior
-  const warrior = useMemo(() => {
-    let w =
-      state.roster.find((w) => w.id === warriorId) ||
-      state.graveyard.find((w) => w.id === warriorId) ||
-      state.retired.find((w) => w.id === warriorId);
-    if (w) return w;
-    for (const rs of state.rivals || []) {
-      w = rs.roster.find((w) => w.id === warriorId);
-      if (w) return w;
-    }
-    return undefined;
-  }, [state, warriorId]);
+  const warrior = useMemo(() => findWarrior(state, warriorId), [state, warriorId]);
 
   // Also select rankings separately
   const rankings = state.realmRankings?.[warriorId];

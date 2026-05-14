@@ -185,7 +185,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Acid Rain': 'Hissing rain burns the skin. This fight will be short and brutal.',
   'Mana Surge': 'The air crackles with power. The fighters move with impossible speed.',
   'Scorching Wind': 'A hot, dry wind sweeps the arena, parching throats and sapping strength.',
-  'Spooky Night': 'An unnatural chill settles over the arena, and shadows seem to move on their own.',
+  'Spooky Night':
+    'An unnatural chill settles over the arena, and shadows seem to move on their own.',
 };
 
 /**

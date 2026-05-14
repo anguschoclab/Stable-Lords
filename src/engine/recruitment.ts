@@ -81,7 +81,7 @@ const NAME_POOL = (narrativeContent as NarrativeContent).recruitment.names;
 /**
  * Randomly rolls a recruitment tier based on predefined probabilities.
  * 5% chance for Prodigy, 15% for Exceptional, 30% for Promising, 50% for Common.
- * 
+ *
  * @param rng - RNG service for random generation
  * @returns The rolled RecruitTier
  */

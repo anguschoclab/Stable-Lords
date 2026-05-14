@@ -31,6 +31,7 @@ interface OffseasonEventNarrative {
     | 'merchant_blessing'
     | 'epiphany'
     | 'tavern_brawl'
+    | 'drunken_brawl'
     | 'bards_song'
     | 'plague_outbreak'
     | 'black_market_raid'
@@ -153,6 +154,38 @@ export function runSeasonalPass(
         week: nextWeek,
         title: e.title,
         items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name })],
+      });
+    }
+  } else if (e.effectType === 'drunken_brawl') {
+    const activeWarriors = state.roster.filter(
+      (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
+    );
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (!chosen) return {};
+      const fameGained = 5 + Math.floor(seasonRng.next() * 11);
+
+      const newInjury: InjuryData = {
+        id: seasonRng.uuid('injury') as InjuryId,
+        name: 'Black Eye',
+        description: 'Painful but manageable.',
+        severity: 'Minor',
+        weeksRemaining: 1 + Math.floor(seasonRng.next() * 2), // 1-2 weeks
+        penalties: { CN: -1 },
+      };
+
+      const currentInjuries = chosen.injuries || [];
+
+      rosterUpdates.set(chosen.id, {
+        fame: (chosen.fame || 0) + fameGained,
+        injuries: [...currentInjuries, newInjury],
+      });
+
+      newsletterItems.push({
+        id: seasonRng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
       });
     }
   } else if (e.effectType === 'tavern_brawl') {
@@ -456,11 +489,13 @@ export function runSeasonalPass(
         // Ensure "Local Hero" tag is present
         // Ensure "Local Hero" flair is present
         const currentFlair = chosen.flair || [];
-        const newFlair = currentFlair.includes('Local Hero') ? currentFlair : [...currentFlair, 'Local Hero'];
+        const newFlair = currentFlair.includes('Local Hero')
+          ? currentFlair
+          : [...currentFlair, 'Local Hero'];
 
         rosterUpdates.set(chosen.id, {
           fame: (chosen.fame || 0) + fameGained,
-          flair: newFlair
+          flair: newFlair,
         });
 
         newsletterItems.push({

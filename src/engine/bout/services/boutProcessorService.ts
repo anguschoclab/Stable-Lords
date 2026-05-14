@@ -263,8 +263,6 @@ export function processWeekBouts(state: GameState): {
 } {
   const warriorMap = state.warriorMap || buildWarriorMap(state);
 
-
-
   // 🏟️ Minimum Viable Arena (1.0 Fix)
 
   // Ensure at least 2 warriors are healthy/active across all stables.

@@ -386,7 +386,7 @@ describe('runSeasonalPass', () => {
     const warriorId = 'w-performer' as WarriorId;
     const state: Partial<GameState> = {
       year: 1,
-      roster: [{ id: warriorId, name: 'Busk the Great', status: 'Active', tags: [] } as any],
+      roster: [{ id: warriorId, name: 'Busk the Great', status: 'Active', flair: [] } as any],
       newsletter: [],
       treasury: 1000,
     };

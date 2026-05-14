@@ -26,3 +26,7 @@
 ## 2024-05-09 - Accessible Icon Buttons in Gazette
 **Learning:** Found that `size="icon"` or inline icons inside standard Buttons are widely used, but often miss `aria-label` or rely on raw text descriptions (e.g. `Full_Transcript`) while leaving decorative icon SVGs (`ArrowRight`) visible to screen readers, causing stuttered readouts.
 **Action:** When adding small contextual buttons or "ghost" text buttons with appended icons, ensure the text wrapper or Button element has a clear `aria-label` and the interior SVG uses `aria-hidden="true"`.
+
+## 2024-05-14 - Add ARIA Labels to Sortable Table Headers
+**Learning:** React components acting as interactive table headers (like `SortHeader`) often lack semantic indication to screen readers that they are clickable sorting toggles. Adding `aria-label` provides crucial context without altering the visual design.
+**Action:** Always verify that interactive icon or text components used for sorting have an explicit `aria-label` or `aria-sort` attribute to ensure screen reader users understand the component's interactive purpose.

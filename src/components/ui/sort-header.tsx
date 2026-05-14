@@ -11,9 +11,12 @@ export interface SortHeaderProps {
 }
 
 export function SortHeader({ label, active, dir, onClick }: SortHeaderProps) {
+  const ariaLabel = typeof label === 'string' ? `Sort by ${label}` : 'Sort table column';
+
   return (
     <button
       onClick={onClick}
+      aria-label={ariaLabel}
       className="flex items-center gap-1 hover:text-foreground transition-colors"
     >
       <span>{label}</span>

@@ -26,6 +26,11 @@ export interface TrainingImpact {
 /**
  * Compute the impact of training assignments for the current week.
  * Returns a pure impact object without modifying game state directly.
+ *
+ * @param state - The current game state
+ * @param rng - RNG service
+ * @param weather - Current weather conditions (affects injury risk)
+ * @returns A TrainingImpact object containing roster and growth updates
  */
 export function computeTrainingImpact(
   state: GameState,
@@ -140,7 +145,12 @@ export function computeTrainingImpact(
 }
 
 /**
- * Convert a TrainingImpact to a generic StateImpact for the pipeline.
+ * Convert a TrainingImpact to a generic StateImpact for the simulation pipeline.
+ *
+ * @param state - The current game state
+ * @param impact - The training impact to convert
+ * @param rng - RNG service for ID generation
+ * @returns StateImpact and seasonal growth results
  */
 export function trainingImpactToStateImpact(
   state: GameState,

@@ -32,6 +32,12 @@ interface StableCache {
 const warriorCache = new WeakMap<object, WarriorCache>();
 const stableCache = new WeakMap<object, StableCache>();
 
+/**
+ * Ensures a warrior cache exists for the given state using a WeakMap.
+ *
+ * @param state - The current game state or resolution context
+ * @returns The WarriorCache containing ID and Name maps
+ */
 function ensureWarriorCache(state: NameResolutionState | GameState): WarriorCache {
   let cache = warriorCache.get(state);
   if (cache) return cache;
@@ -81,6 +87,12 @@ function ensureWarriorCache(state: NameResolutionState | GameState): WarriorCach
   return cache;
 }
 
+/**
+ * Ensures a stable cache exists for the given state using a WeakMap.
+ *
+ * @param state - The current game state or resolution context
+ * @returns The StableCache containing ID and Name maps
+ */
 function ensureStableCache(state: NameResolutionState | GameState): StableCache {
   let cache = stableCache.get(state);
   if (cache) return cache;
@@ -112,6 +124,11 @@ function ensureStableCache(state: NameResolutionState | GameState): StableCache 
 /**
  * Resolves a warrior's current display name from their persistent ID.
  * Falls back to the provided legacy name if the ID lookup fails.
+ *
+ * @param state - The name resolution state
+ * @param warriorId - The persistent ID of the warrior
+ * @param legacyName - Fallback name if ID is not found
+ * @returns The resolved name or legacy fallback
  */
 export function resolveWarriorName(
   state: NameResolutionState,
@@ -128,6 +145,11 @@ export function resolveWarriorName(
 /**
  * Resolves a stable's current display name from its persistent ID.
  * Falls back to the provided legacy name if the ID lookup fails.
+ *
+ * @param state - The name resolution state
+ * @param stableId - The persistent ID of the stable
+ * @param legacyName - Fallback name if ID is not found
+ * @returns The resolved stable name or legacy fallback
  */
 export function resolveStableName(
   state: NameResolutionState,
@@ -142,7 +164,12 @@ export function resolveStableName(
 }
 
 /**
- * Resolves a warrior object by ID or Name.
+ * Resolves a warrior object by ID or Name using the internal cache.
+ *
+ * @param state - The current game state
+ * @param id - Optional persistent ID
+ * @param name - Optional display name
+ * @returns The resolved Warrior object, or undefined if not found
  */
 export function findWarrior(state: GameState, id?: string, name?: string): Warrior | undefined {
   const cache = ensureWarriorCache(state);
@@ -161,7 +188,11 @@ export function findWarrior(state: GameState, id?: string, name?: string): Warri
 }
 
 /**
- * Finds a stable ID by its name.
+ * Finds a stable ID by its name using the internal cache.
+ *
+ * @param state - The game state or resolution context
+ * @param name - The stable's display name
+ * @returns The persistent stable ID, or undefined if not found
  */
 export function findStableId(
   state: GameState | NameResolutionState,

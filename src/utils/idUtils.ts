@@ -17,7 +17,10 @@ export function setMockIdGenerator(generator: (() => string) | null) {
 /**
  * Generates a unique ID (UUID or fallback).
  * Supports standard browser crypto and provides a deterministic path for tests.
+ *
  * @param rng - Optional SeededRNG for deterministic generation
+ * @param prefix - Optional string prefix for the generated ID
+ * @returns A unique string identifier
  */
 export function generateId(rng?: SeededRNG, prefix?: string): string {
   if (mockIdGenerator) return mockIdGenerator();

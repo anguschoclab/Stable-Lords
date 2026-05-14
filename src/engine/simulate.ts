@@ -67,6 +67,13 @@ export { createFighterState, resolveDecision, defaultPlanForWarrior };
 
 type Phase = 'OPENING' | 'MID' | 'LATE';
 
+/**
+ * Maps exchange index to a combat phase.
+ *
+ * @param exchange - Current exchange index
+ * @param maxExchanges - Maximum number of exchanges in the bout
+ * @returns The current phase: 'OPENING', 'MID', or 'LATE'
+ */
 function getPhase(exchange: number, maxExchanges: number): Phase {
   const p = getCombatPhase(exchange, maxExchanges);
   return p.toUpperCase() as Phase;
@@ -77,6 +84,12 @@ function getPhase(exchange: number, maxExchanges: number): Phase {
  * `resolveExchange`. Strictly a read-over-events projection — no resolution
  * logic lives here, which keeps this callable safely on any event stream.
  * Consumers: HighlightLog curation, telemetry aggregation, kill-text tiers.
+ *
+ * @param exchangeIndex - Current exchange index
+ * @param minute - Current minute of the bout
+ * @param phase - Current phase of the bout
+ * @param events - List of combat events to project
+ * @returns A structured log entry for the exchange
  */
 function buildExchangeLogEntry(
   exchangeIndex: number,
@@ -128,8 +141,12 @@ function buildExchangeLogEntry(
  * @param planD - Strategy for fighter D
  * @param warriorA - Warrior data for A (optional)
  * @param warriorD - Warrior data for D (optional)
- * @param providedRng - Seeded RNG function (optional, generates one if missing)
+ * @param providedRng - Seeded RNG service or numeric seed (optional, generates one if missing)
  * @param trainers - Active trainers providing global modifiers
+ * @param weather - Current weather conditions
+ * @param arenaId - Identifier for the arena where the bout takes place
+ * @param crowdMood - Current mood of the arena crowd
+ * @returns Detailed outcome of the fight simulation
  */
 export function simulateFight(
   planA: FightPlan,

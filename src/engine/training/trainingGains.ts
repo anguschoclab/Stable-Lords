@@ -86,7 +86,13 @@ export interface TrainingResult {
 }
 
 /**
- * Gain Chance Calculator (exported for UI preview)
+ * Calculates the probability of an attribute gain from training.
+ * Considers trainer bonuses, attributes (Wit), age penalties, and injury status.
+ *
+ * @param warrior - The warrior being trained
+ * @param attribute - The attribute targeted for training
+ * @param trainers - Array of available trainers
+ * @returns Numerical probability (0.0 - 1.0)
  */
 export function computeGainChance(
   warrior: Warrior,
@@ -106,6 +112,16 @@ export function computeGainChance(
   return Math.max(GAIN_CHANCE_MIN, Math.min(GAIN_CHANCE_MAX, raw));
 }
 
+/**
+ * Processes a single week of attribute training for a warrior.
+ *
+ * @param warrior - The warrior being trained
+ * @param attr - The target attribute
+ * @param state - Current game state
+ * @param seasonalGrowth - Current seasonal growth records
+ * @param rng - RNG service
+ * @returns Updated warrior, growth records, and training result
+ */
 export function processAttributeTraining(
   warrior: Warrior,
   attr: keyof Attributes,
@@ -234,6 +250,14 @@ export function processAttributeTraining(
   };
 }
 
+/**
+ * Calculates the probability of a skill point gain from drilling.
+ *
+ * @param warrior - The warrior being trained
+ * @param skill - The target combat skill
+ * @param trainers - Array of available trainers
+ * @returns Numerical probability (0.0 - 1.0)
+ */
 export function computeSkillDrillChance(
   warrior: Warrior,
   skill: keyof BaseSkills,
@@ -259,6 +283,15 @@ export function computeSkillDrillChance(
   return Math.max(SKILL_DRILL_GAIN_MIN, Math.min(SKILL_DRILL_GAIN_MAX, raw));
 }
 
+/**
+ * Processes a single week of skill drilling for a warrior.
+ *
+ * @param warrior - The warrior being trained
+ * @param skill - The target combat skill
+ * @param state - Current game state
+ * @param rng - RNG service
+ * @returns Updated warrior and training result
+ */
 export function processSkillDrillTraining(
   warrior: Warrior,
   skill: keyof BaseSkills,
@@ -300,6 +333,16 @@ export function processSkillDrillTraining(
   };
 }
 
+/**
+ * Rolls for a potential injury sustained during training.
+ * Risk is affected by age, trainer healing bonuses, and weather.
+ *
+ * @param warrior - The warrior being trained
+ * @param healingBonus - Bonus from specialized trainers
+ * @param rng - RNG service
+ * @param weather - Current weather conditions
+ * @returns Potential injury data and training result message
+ */
 export function rollForTrainingInjury(
   warrior: Warrior,
   healingBonus: number,
@@ -348,6 +391,13 @@ export function rollForTrainingInjury(
   return { injury: null, result: null };
 }
 
+/**
+ * Processes a week of active recovery to heal injuries faster.
+ *
+ * @param warrior - The warrior resting
+ * @param healingBonus - Bonus from specialized trainers
+ * @returns Updated injuries array and recovery message
+ */
 export function processRecovery(
   warrior: Warrior,
   healingBonus: number

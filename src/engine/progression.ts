@@ -37,7 +37,14 @@ export interface XPGain {
   potentialRevealed?: string;
 }
 
-/** Calculate XP gain from a fight outcome */
+/**
+ * Calculates XP gain from a fight outcome based on performance and tags.
+ *
+ * @param outcome - The fight outcome
+ * @param side - Which side the warrior fought on
+ * @param tags - Special tags earned during the fight (e.g. Flashy, Comeback)
+ * @returns The numerical XP gained
+ */
 export function calculateXP(outcome: FightOutcome, side: 'A' | 'D', tags: string[]): number {
   const won = outcome.winner === side;
   const draw = outcome.winner === null;
@@ -50,7 +57,14 @@ export function calculateXP(outcome: FightOutcome, side: 'A' | 'D', tags: string
   return xp;
 }
 
-/** Apply XP to a warrior, potentially triggering a level-up improvement */
+/**
+ * Applies XP to a warrior, potentially triggering a level-up improvement.
+ *
+ * @param warrior - The warrior to receive XP
+ * @param xpGained - The amount of XP to add
+ * @param rng - Optional RNG service
+ * @returns Object containing the updated warrior and the gain details
+ */
 export function applyXP(
   warrior: Warrior,
   xpGained: number,

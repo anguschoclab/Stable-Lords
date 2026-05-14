@@ -34,6 +34,13 @@ const DEFENSIVE_MATRIX: Record<FightingStyle, Record<string, SuitabilityRating>>
   [FightingStyle.WallOfSteel]: { Dodge: 'U', Parry: 'WS', Riposte: 'WS', Responsiveness: 'U' },
 };
 
+/**
+ * Retrieves the suitability rating for an offensive tactic based on the fighting style.
+ * 
+ * @param style - The warrior's fighting style
+ * @param tactic - The offensive tactic to evaluate
+ * @returns The suitability rating (WS, S, or U)
+ */
 export function getOffensiveSuitability(
   style: FightingStyle,
   tactic: OffensiveTactic
@@ -42,6 +49,13 @@ export function getOffensiveSuitability(
   return OFFENSIVE_MATRIX[style]?.[tactic as string] ?? 'S';
 }
 
+/**
+ * Retrieves the suitability rating for a defensive tactic based on the fighting style.
+ * 
+ * @param style - The warrior's fighting style
+ * @param tactic - The defensive tactic to evaluate
+ * @returns The suitability rating (WS, S, or U)
+ */
 export function getDefensiveSuitability(
   style: FightingStyle,
   tactic: DefensiveTactic
@@ -50,6 +64,12 @@ export function getDefensiveSuitability(
   return DEFENSIVE_MATRIX[style]?.[tactic as string] ?? 'S';
 }
 
+/**
+ * Converts a suitability rating into a numerical multiplier for combat calculations.
+ * 
+ * @param rating - The suitability rating to convert
+ * @returns The numerical multiplier (1.0, 0.6, or 0.3)
+ */
 export function suitabilityMultiplier(rating: SuitabilityRating): number {
   const multipliers: Record<SuitabilityRating, number> = {
     WS: 1.0,

@@ -78,6 +78,13 @@ const NAME_POOL = (narrativeContent as NarrativeContent).recruitment.names;
 
 // ─── Generation ───────────────────────────────────────────────────────────
 
+/**
+ * Randomly rolls a recruitment tier based on predefined probabilities.
+ * 5% chance for Prodigy, 15% for Exceptional, 30% for Promising, 50% for Common.
+ * 
+ * @param rng - RNG service for random generation
+ * @returns The rolled RecruitTier
+ */
 function rollTier(rng: IRNGService): RecruitTier {
   if (rng.next() < 0.05) return 'Prodigy';
   if (rng.next() < 0.2) return 'Exceptional';
@@ -85,6 +92,17 @@ function rollTier(rng: IRNGService): RecruitTier {
   return 'Common';
 }
 
+/**
+ * Generates a single recruit for the pool.
+ *
+ * @param rng - RNG service for random generation
+ * @param usedNames - Set of names already in use to ensure uniqueness
+ * @param week - Current game week
+ * @param forceTier - Optional tier to force for the recruit
+ * @param meta - Optional style meta for institutional drift
+ * @param legacyCandidates - Optional list of former warriors for lineage generation
+ * @returns A new PoolWarrior object
+ */
 export function generateRecruit(
   rng: IRNGService,
   usedNames: Set<string>,
@@ -177,6 +195,17 @@ export function generateRecruit(
 
 // ─── Pool Management ──────────────────────────────────────────────────────
 
+/**
+ * Generates a full pool of recruits.
+ *
+ * @param count - Number of recruits to generate
+ * @param week - Current game week
+ * @param usedNames - Set of names already in use
+ * @param rng - Optional RNG service
+ * @param meta - Optional style meta
+ * @param legacyCandidates - Optional list of former warriors
+ * @returns An array of generated PoolWarriors
+ */
 export function generateRecruitPool(
   count: number = DEFAULT_POOL_SIZE,
   week: number,
@@ -218,6 +247,17 @@ export function generateRecruitPool(
 }
 
 /** Partial weekly refresh — replace oldest 3-4 warriors */
+/**
+ * Partially refreshes the recruitment pool by replacing the oldest entries.
+ *
+ * @param currentPool - The current pool of warriors
+ * @param week - Current game week
+ * @param usedNames - Set of names already in use
+ * @param rng - Optional RNG service
+ * @param meta - Optional style meta
+ * @param legacyCandidates - Optional list of former warriors
+ * @returns The updated pool of warriors
+ */
 export function partialRefreshPool(
   currentPool: PoolWarrior[],
   week: number,
@@ -260,6 +300,14 @@ export function partialRefreshPool(
 }
 
 /** Full manual refresh (costs gold) */
+/**
+ * Full manual refresh of the recruitment pool.
+ *
+ * @param week - Current game week
+ * @param usedNames - Set of names already in use
+ * @param rng - Optional RNG service
+ * @returns A fresh array of PoolWarriors
+ */
 export function fullRefreshPool(
   week: number,
   usedNames: Set<string>,

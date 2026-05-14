@@ -309,13 +309,9 @@ const STYLE_PENALTIES: Record<FightingStyle, [number, number, number, number, nu
  * contribution values. SZ adjusts INI/PAR/DEF. Style penalty applied as flat
  * modifier. Result clamped to [1, 20].
  *
- * Attribute→skill contributions:
- *   ATT: ST + WT + WL + DF
- *   PAR: ST + SZ + WL + DF
- *   DEF: SZ + WT + WL + SP + DF
- *   INI: SZ + WT + SP + DF
- *   RIP: WT + SP + DF
- *   DEC: WT + WL + SP
+ * @param attrs - The warrior's base attributes
+ * @param style - The warrior's fighting style
+ * @returns A BaseSkills object containing ATT, PAR, DEF, INI, RIP, and DEC
  */
 export function computeBaseSkills(attrs: Attributes, style: FightingStyle): BaseSkills {
   const { ST, SZ, WT, WL, SP, DF } = attrs;
@@ -346,22 +342,42 @@ export function computeBaseSkills(attrs: Attributes, style: FightingStyle): Base
 
 // ─── Derived Stats (Canonical Terrablood Charts) ────────────────────────
 
-/** HP = CN*2 + SZmod + WLmod (100% accuracy, n=3650) */
+/**
+ * HP = CN*2 + SZmod + WLmod (100% accuracy, n=3650)
+ *
+ * @param attrs - The warrior's base attributes
+ * @returns Computed Hit Points
+ */
 export function computeHP(attrs: Attributes): number {
   return canonicalHP(attrs.CN, attrs.SZ, attrs.WL);
 }
 
-/** Endurance from canonical (ST+CN) × WL chart */
+/**
+ * Endurance from canonical (ST+CN) × WL chart.
+ *
+ * @param attrs - The warrior's base attributes
+ * @returns Computed Endurance value
+ */
 export function computeEndurance(attrs: Attributes): number {
   return computeEnduranceValue(attrs.ST, attrs.CN, attrs.WL);
 }
 
-/** Damage class from canonical ST × SZ chart (returns 1-9 scale) */
+/**
+ * Damage class from canonical ST × SZ chart (returns 1-9 scale).
+ *
+ * @param attrs - The warrior's base attributes
+ * @returns Damage class index (1-9)
+ */
 export function computeDamage(attrs: Attributes): number {
   return computeDamageClass(attrs.ST, attrs.SZ);
 }
 
-/** Encumbrance capacity from canonical ST × CN chart */
+/**
+ * Encumbrance capacity from canonical ST × CN chart.
+ *
+ * @param attrs - The warrior's base attributes
+ * @returns Encumbrance capacity value
+ */
 export function computeEncumbrance(attrs: Attributes): number {
   return computeEncumbranceCapacity(attrs.ST, attrs.CN);
 }
@@ -392,7 +408,12 @@ export const DAMAGE_LABELS = [
   'Unearthly',
 ];
 
-/** Convenience: compute all derived stats */
+/**
+ * Convenience function to compute all derived stats at once.
+ *
+ * @param attrs - The warrior's base attributes
+ * @returns A DerivedStats object
+ */
 export function computeDerivedStats(attrs: Attributes): DerivedStats {
   return {
     hp: computeHP(attrs),
@@ -402,7 +423,13 @@ export function computeDerivedStats(attrs: Attributes): DerivedStats {
   };
 }
 
-/** Full computation: base skills + derived stats */
+/**
+ * Full computation: base skills + derived stats.
+ *
+ * @param attrs - The warrior's base attributes
+ * @param style - The warrior's fighting style
+ * @returns An object containing baseSkills and derivedStats
+ */
 export function computeWarriorStats(attrs: Attributes, style: FightingStyle) {
   return {
     baseSkills: computeBaseSkills(attrs, style),

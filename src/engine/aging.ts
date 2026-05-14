@@ -23,7 +23,13 @@ const AGING_PENALTY_START = 25;
 const FORCED_RETIRE_MIN = 26;
 const FORCED_RETIRE_MAX = 32;
 
-/** Compute the aging impact of the current week. */
+/**
+ * Compute the aging impact of the current week.
+ *
+ * @param state - The current game state
+ * @param rng - RNG service for retirement checks
+ * @returns The state impact containing roster updates and retirement events
+ */
 export function computeAgingImpact(state: GameState, rng: IRNGService): StateImpact {
   const ageEvents: string[] = [];
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();

@@ -12,6 +12,14 @@ import { getOffensiveSuitability, getDefensiveSuitability } from './tacticSuitab
 /**
  * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
  * Now includes per-style matchup heuristics, global strategic intent, and strategy score validation.
+ *
+ * @param w - The warrior to generate a plan for
+ * @param personality - Personality traits of the stable owner
+ * @param philosophy - Strategic philosophy of the owner
+ * @param opponentStyle - Fighting style of the opponent (optional)
+ * @param intent - Current strategic intent (e.g., VENDETTA)
+ * @param grudgeIntensity - Intensity of the grudge between owners
+ * @returns A computed fight plan for the warrior
  */
 export function aiPlanForWarrior(
   w: Warrior,
@@ -134,6 +142,9 @@ export function aiPlanForWarrior(
 
 /**
  * Pick the best-rated offensive tactic for a style, returning 'none' for TotalParry.
+ *
+ * @param style - The fighting style to evaluate
+ * @returns The best suited offensive tactic
  */
 function getBestOffensiveTactic(style: FightingStyle): OffensiveTactic {
   const tactics: OffensiveTactic[] = ['Lunge', 'Slash', 'Bash', 'Decisiveness'];
@@ -152,6 +163,9 @@ function getBestOffensiveTactic(style: FightingStyle): OffensiveTactic {
 
 /**
  * Pick the best-rated defensive tactic for a style.
+ *
+ * @param style - The fighting style to evaluate
+ * @returns The best suited defensive tactic
  */
 function getBestDefensiveTactic(style: FightingStyle): DefensiveTactic {
   const tactics: DefensiveTactic[] = ['Dodge', 'Parry', 'Riposte', 'Responsiveness'];
@@ -170,6 +184,11 @@ function getBestDefensiveTactic(style: FightingStyle): DefensiveTactic {
 
 /**
  * Build per-phase OE/AL curves: conservative opening, base mid, personality-tweaked late.
+ *
+ * @param plan - The base fight plan
+ * @param personality - Owner personality for late phase modifiers
+ * @param style - Fighting style to determine opening bias
+ * @returns Phased strategies for the bout
  */
 function buildPhasePlan(
   plan: FightPlan,
@@ -203,6 +222,10 @@ function buildPhasePlan(
 
 /**
  * Build a personality-keyed desperate plan (HP<30% or END<20% fallback).
+ *
+ * @param plan - The base fight plan
+ * @param personality - Owner personality for desperate logic
+ * @returns A fallback strategy for critical situations
  */
 function buildDesperatePlan(
   plan: FightPlan,
@@ -231,6 +254,9 @@ function buildDesperatePlan(
 /**
  * Universal conditions prepended before personality ones (first-match-wins).
  * Ensures every AI warrior has a critical-endurance survival fallback.
+ *
+ * @param plan - The base fight plan
+ * @returns A list of universal plan conditions
  */
 function buildUniversalConditions(plan: FightPlan): PlanCondition[] {
   const bounded = (v: number, delta: number) => clamp(v + delta, 1, 10);
@@ -314,6 +340,11 @@ const PERSONALITY_ADAPTATION_MAP: Record<OwnerPersonality, PersonalityAdaptation
 /**
  * Per-personality in-bout nudges. Returned as PlanConditions so they're evaluated
  * by the existing WT-gated condition pipeline — no new code path.
+ *
+ * @param personality - The personality to adapt for
+ * @param plan - The base fight plan
+ * @param intent - Current strategic intent
+ * @returns A list of personality-specific conditions
  */
 function getPersonalityAdaptations(
   personality: OwnerPersonality,
@@ -329,6 +360,9 @@ function getPersonalityAdaptations(
 /**
  * Returns OE/AL bias preferences for each fighting style.
  * Aggressive styles prefer higher OE, defensive styles prefer higher AL.
+ *
+ * @param style - The fighting style to evaluate
+ * @returns A bias object with OE and AL adjustments
  */
 function getStyleSuitabilityBias(style: FightingStyle): { oe: number; al: number } {
   const biases: Partial<Record<FightingStyle, { oe: number; al: number }>> = {
@@ -349,6 +383,10 @@ function getStyleSuitabilityBias(style: FightingStyle): { oe: number; al: number
 /**
  * Per-style matchup heuristics from the Fighting Styles Compendium.
  * Returns OE/AL/KD adjustments when facing a specific opponent style.
+ *
+ * @param myStyle - The warrior's fighting style
+ * @param oppStyle - The opponent's fighting style
+ * @returns Matchup-based adjustments for the plan
  */
 export function getStyleMatchupMods(
   myStyle: FightingStyle,

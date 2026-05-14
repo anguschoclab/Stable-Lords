@@ -52,6 +52,12 @@ export function computeStrategyScore(plan: FightPlan, warrior?: Warrior): number
   return clamp(score, 0, 100);
 }
 
+/**
+ * Returns the CSS class for a strategy score based on its value.
+ * 
+ * @param score - The numerical strategy score (0-100)
+ * @returns A string containing Tailwind CSS classes
+ */
 export function getScoreColor(score: number): string {
   if (score >= 85) return 'text-arena-gold shadow-[0_0_10px_rgba(var(--arena-gold-rgb),0.5)]';
   if (score >= 70) return 'text-primary';

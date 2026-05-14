@@ -111,7 +111,16 @@ const SEVERITY_WEEKS: Record<InjurySeverity, [number, number]> = {
   Permanent: [999, 999],
 };
 
-/** Roll for a possible injury after a fight. Returns an Injury or null. */
+/**
+ * Roll for a possible injury after a fight. Returns an Injury or null.
+ *
+ * @param warrior - The warrior who may be injured
+ * @param outcome - The outcome of the fight
+ * @param side - Which side the warrior fought on ('A' or 'D')
+ * @param seed - Optional seed for RNG
+ * @param rng - Optional RNG service
+ * @returns An InjuryData object if injured, or null
+ */
 export function generateInjury(
   warrior: Warrior,
   outcome: FightOutcome,
@@ -165,7 +174,12 @@ export function generateInjury(
   };
 }
 
-/** Tick all injuries down by 1 week, remove healed ones. Returns updated injuries array and healed names. */
+/**
+ * Ticks all injuries down by 1 week, and removes healed ones.
+ *
+ * @param injuries - The current array of injuries
+ * @returns Object containing the new active injuries and a list of healed injury names
+ */
 export function tickInjuries(injuries: InjuryData[]): { active: InjuryData[]; healed: string[] } {
   const healed: string[] = [];
   const active: InjuryData[] = [];
@@ -182,7 +196,12 @@ export function tickInjuries(injuries: InjuryData[]): { active: InjuryData[]; he
   return { active, healed };
 }
 
-/** Get total stat penalties from active injuries */
+/**
+ * Aggregates total stat penalties from all active injuries.
+ *
+ * @param injuries - The array of active injuries
+ * @returns A record of stat keys and their cumulative negative modifiers
+ */
 export function getInjuryPenalties(injuries: InjuryData[]): Record<string, number> {
   const totals: Record<string, number> = {};
   for (const inj of injuries) {
@@ -193,7 +212,12 @@ export function getInjuryPenalties(injuries: InjuryData[]): Record<string, numbe
   return totals;
 }
 
-/** Check if a warrior is too injured to fight */
+/**
+ * Checks if a warrior is too severely injured to participate in a fight.
+ *
+ * @param injuries - The array of active injuries
+ * @returns True if the warrior has a severe injury with more than 2 weeks remaining
+ */
 export function isTooInjuredToFight(injuries: InjuryData[]): boolean {
   return injuries.some((i) => i.severity === 'Severe' && i.weeksRemaining > 2);
 }

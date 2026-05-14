@@ -23,15 +23,28 @@ import {
   TRAINER_WEEKLY_SALARY,
 } from '@/data/economyConstants';
 
+/**
+ * Represents the financial summary for a game week.
+ */
 export interface WeeklyBreakdown {
+  /** Individual income items */
   income: { label: string; amount: number }[];
+  /** Individual expense items */
   expenses: { label: string; amount: number }[];
+  /** Sum of all income */
   totalIncome: number;
+  /** Sum of all expenses */
   totalExpenses: number;
+  /** Net profit or loss (income - expenses) */
   net: number;
 }
 
-/** Compute a projected breakdown for the current state (before advancing). */
+/**
+ * Compute a projected breakdown for the current state (before advancing).
+ *
+ * @param state - The current game state
+ * @returns A detailed breakdown of income and expenses
+ */
 export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
   const week = state.week;
   const playerWarriorIds = new Set(state.roster.map((w) => w.id));
@@ -127,9 +140,13 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
   return { income, expenses, totalIncome, totalExpenses, net: totalIncome - totalExpenses };
 }
 
-import { type StateImpact } from './impacts';
-
-/** Compute the economic impact of the current week. */
+/**
+ * Compute the economic impact of the current week.
+ *
+ * @param state - The current game state
+ * @param rng - RNG service for generating transaction IDs (optional)
+ * @returns The state impact containing treasury delta and ledger entries
+ */
 export function computeEconomyImpact(state: GameState, rng?: IRNGService): StateImpact {
   const breakdown = computeWeeklyBreakdown(state);
   const entries: LedgerEntry[] = [];

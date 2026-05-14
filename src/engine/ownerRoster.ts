@@ -11,6 +11,10 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 /**
  * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
  * and releasing underperforming assets based on current owner personality and budget.
+ *
+ * @param state - The current game state
+ * @param rng - Optional RNG service
+ * @returns Updated rivals list and gazette news items
  */
 export function processAIRosterManagement(
   state: GameState,
@@ -159,6 +163,15 @@ export function processAIRosterManagement(
   return { updatedRivals, gazetteItems };
 }
 
+/**
+ * Generates a new warrior for an AI owner's roster.
+ *
+ * @param rival - The rival stable data
+ * @param week - Current game week
+ * @param meta - Optional style meta for adaptation
+ * @param seed - Optional seed for RNG
+ * @returns A new Warrior object, or null if generation fails
+ */
 function generateAIRecruit(
   rival: RivalStableData,
   week: number,
@@ -265,6 +278,16 @@ const ADAPTATION_STYLE_PICKERS: Record<MetaAdaptation, AdaptationStyleFn> = {
   },
 };
 
+/**
+ * Picks a fighting style for a recruit based on owner adaptation and philosophy.
+ *
+ * @param adaptation - The owner's meta-adaptation strategy
+ * @param philosophy - The owner's strategic philosophy
+ * @param favoredStyles - Styles favored by this owner
+ * @param meta - Current style meta drift
+ * @param rng - RNG service
+ * @returns The selected FightingStyle
+ */
 function pickRecruitStyle(
   adaptation: MetaAdaptation,
   philosophy: string,
@@ -278,6 +301,13 @@ function pickRecruitStyle(
   return picker(philosophyStyles, favoredStyles, allStyles, meta, rng);
 }
 
+/**
+ * Generates base attributes for a recruit based on owner philosophy.
+ *
+ * @param philosophy - The owner's strategic philosophy
+ * @param rng - RNG service
+ * @returns A set of 7 base attributes (ST, CN, SZ, WT, WL, SP, DF)
+ */
 function generateRecruitAttrs(
   philosophy: string,
   rng: IRNGService

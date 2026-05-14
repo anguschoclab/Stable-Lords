@@ -226,6 +226,13 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
   },
 };
 
+/**
+ * Applies a list of state impacts to the current game state.
+ *
+ * @param state - The current game state
+ * @param impacts - An array of state impacts to apply
+ * @returns A new game state with the impacts applied
+ */
 export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameState {
   const newState = { ...state };
   for (const impact of impacts) {
@@ -325,6 +332,13 @@ const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: a
   },
 };
 
+/**
+ * Merges multiple state impacts into a single combined impact.
+ * Uses specific merge strategies (accumulate, append, replace, etc.) for each field.
+ *
+ * @param impacts - An array of state impacts to merge
+ * @returns A single merged state impact
+ */
 export function mergeImpacts(impacts: StateImpact[]): StateImpact {
   const merged: StateImpact = {} as StateImpact;
 

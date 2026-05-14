@@ -136,6 +136,15 @@ export interface MatchupScore {
   notes: string[];
 }
 
+/**
+ * Calculates a numerical score for a matchup between a player warrior and a rival.
+ * Considers style advantage, fame difference, win rates, and active rivalries.
+ *
+ * @param playerWarrior - The player's warrior
+ * @param rivalWarrior - The rival warrior to challenge
+ * @param state - The current game state
+ * @returns A score where higher means a better/more attractive challenge
+ */
 export function scoreMatchup(
   playerWarrior: Warrior,
   rivalWarrior: Warrior,
@@ -212,6 +221,15 @@ function getMatchupNotes(
   return notes;
 }
 
+/**
+ * Recommends the best potential challenges for a player warrior.
+ * Uses bounded insertion sort for O(N) performance on large rival lists.
+ *
+ * @param state - The current game state
+ * @param playerWarrior - The warrior looking for a challenge
+ * @param limit - Maximum number of recommendations to return
+ * @returns Array of MatchupScore objects sorted by desirability
+ */
 export function getRecommendedChallenges(
   state: GameState,
   playerWarrior: Warrior,
@@ -259,6 +277,14 @@ export function getRecommendedChallenges(
   return topScores;
 }
 
+/**
+ * Identifies the most dangerous or unattractive matchups to avoid.
+ *
+ * @param state - The current game state
+ * @param playerWarrior - The warrior checking for risks
+ * @param limit - Maximum number of warnings to return
+ * @returns Array of MatchupScore objects sorted by danger/undesirability
+ */
 export function getMatchupsToAvoid(
   state: GameState,
   playerWarrior: Warrior,

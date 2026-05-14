@@ -15,15 +15,31 @@ import { ExternalLink, User, Landmark } from 'lucide-react';
 import type { GameState, Warrior } from '@/types/game';
 import { findWarrior, findStableId } from '@/utils/historyResolver';
 
-// ─── Warrior Link ──────────────────────────────────────────────────────────
-
+/**
+ * Props for the WarriorLink component.
+ */
 interface WarriorLinkProps {
+  /** The display name of the warrior */
   name: string;
+  /** Optional warrior ID (will be resolved from name if missing) */
   id?: string;
+  /** Optional CSS class name */
   className?: string;
+  /** Optional custom children to render as the link */
   children?: React.ReactNode;
 }
 
+/**
+ * Component for displaying a link to a warrior.
+ * Triggers a side-panel sheet with the warrior's dossier.
+ *
+ * @param props - Component properties
+ * @param props.name - The name of the warrior to display and resolve
+ * @param props.id - Optional explicit warrior ID. If not provided, it will be resolved by name.
+ * @param props.className - Optional CSS classes for styling the link
+ * @param props.children - Optional custom content for the link trigger
+ * @returns A tooltip-wrapped sheet trigger or a plain span if the warrior cannot be resolved
+ */
 export function WarriorLink({ name, id, className, children }: WarriorLinkProps) {
   const state = useWorldState();
   const resolvedId = id ?? resolveWarriorId(name, state);
@@ -81,20 +97,41 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
   );
 }
 
+/**
+ * Resolves a warrior name to an ID using the current game state.
+ *
+ * @param name - The name of the warrior to resolve
+ * @param state - The current game state
+ * @returns The resolved warrior ID, or undefined if not found
+ */
 function resolveWarriorId(name: string, state: GameState): string | undefined {
   if (!state) return undefined;
   // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
   return findWarrior(state, undefined, name)?.id;
 }
 
-// ─── Stable Link ───────────────────────────────────────────────────────────
-
+/**
+ * Props for the StableLink component.
+ */
 interface StableLinkProps {
+  /** The display name of the stable */
   name: string;
+  /** Optional CSS class name */
   className?: string;
+  /** Optional custom children to render as the link */
   children?: React.ReactNode;
 }
 
+/**
+ * Renders a clickable link for a stable that opens its records in a side panel.
+ * Falls back to plain text if the stable cannot be resolved.
+ * 
+ * @param {StableLinkProps} props - The component props.
+ * @param {string} props.name - The name of the stable.
+ * @param {string} [props.className] - Optional CSS class name for styling.
+ * @param {React.ReactNode} [props.children] - Optional custom content to display inside the link.
+ * @returns {JSX.Element} A clickable sheet trigger or a plain span if ID cannot be resolved.
+ */
 export function StableLink({ name, className, children }: StableLinkProps) {
   const state = useWorldState();
 

@@ -268,6 +268,10 @@ const TRAIT_IDS = Object.keys(TRAITS);
  * When an archetype is provided, traits with matching synergy get 2× weight
  * and traits with matching antiSynergy get 0.3× weight. This makes thematic
  * fits ~60-70% likely while still allowing interesting against-type warriors.
+ *
+ * @param rng - RNG service
+ * @param archetype - Optional archetype to bias trait generation
+ * @returns An array of trait IDs
  */
 export function generateTraits(rng: IRNGService, archetype?: Archetype): string[] {
   const r1 = rng.next();
@@ -304,7 +308,12 @@ export function generateTraits(rng: IRNGService, archetype?: Archetype): string[
   return picked;
 }
 
-/** Sum static skill mods from a warrior's traits. Applied once at fighterState build. */
+/**
+ * Sums static skill mods from a warrior's traits. Applied once at fighterState build.
+ *
+ * @param warrior - The warrior whose traits to evaluate
+ * @returns Object containing cumulative static modifiers
+ */
 export function getStaticTraitMods(warrior?: Warrior): {
   attMod: number;
   parMod: number;
@@ -349,8 +358,12 @@ export interface DynamicTraitContext {
 }
 
 /**
- * Sum conditional skill mods that depend on per-exchange combat context.
+ * Sums conditional skill mods that depend on per-exchange combat context.
  * Called per exchange (matches the trainer-specialty pattern).
+ *
+ * @param warrior - The warrior whose traits to evaluate
+ * @param ctx - The dynamic combat context (phase, HP, etc.)
+ * @returns Object containing cumulative dynamic modifiers
  */
 export function getDynamicTraitMods(
   warrior: Warrior | undefined,
@@ -374,7 +387,12 @@ export function getDynamicTraitMods(
   return acc;
 }
 
-/** Combines personality/combat AI trait modifiers for a warrior's FightPlan */
+/**
+ * Combines personality/combat AI trait modifiers for a warrior's FightPlan.
+ *
+ * @param warrior - The warrior whose traits to evaluate
+ * @returns Partial FightPlan containing cumulative AI modifiers
+ */
 export function getTraitFightPlanMods(
   warrior?: Warrior
 ): Partial<import('@/types/shared.types').FightPlan> {

@@ -94,6 +94,14 @@ function bestItem(items: EquipmentItem[], scorer: (i: EquipmentItem) => number):
   return items.reduce((best, item) => (scorer(item) > scorer(best) ? item : best), items[0]);
 }
 
+/**
+ * Generates gear recommendations for a warrior based on their fighting style
+ * and current carry capacity. Analyzes encumbrance vs performance tradeoffs.
+ *
+ * @param style - The warrior's fighting style
+ * @param carryCap - The warrior's maximum encumbrance capacity
+ * @returns Array of gear recommendations for different build profiles
+ */
 export function generateRecommendations(
   style: FightingStyle,
   carryCap: number
@@ -145,7 +153,12 @@ export function generateRecommendations(
   });
 }
 
-/** Get style-specific equipment tips */
+/**
+ * Retrieves style-specific equipment tips and guidance.
+ *
+ * @param style - The fighting style
+ * @returns Array of strings containing equipment advice
+ */
 export function getStyleEquipmentTips(style: FightingStyle): string[] {
   const tips: Record<FightingStyle, string[]> = {
     [FightingStyle.AimedBlow]: [

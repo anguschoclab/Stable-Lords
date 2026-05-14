@@ -160,6 +160,12 @@ export const STYLE_IDENTITY: Record<FightingStyle, StyleIdentity> = {
   },
 };
 
+/**
+ * Retrieves the narrative identity (voice, tone, tagline) for a fighting style.
+ *
+ * @param style - The fighting style
+ * @returns The StyleIdentity definition
+ */
 export function getStyleIdentity(style: FightingStyle): StyleIdentity {
   return STYLE_IDENTITY[style];
 }
@@ -184,6 +190,12 @@ const MASTERY_THRESHOLDS: { tier: MasteryTier; minFights: number; bonus: number;
     { tier: 'Novice', minFights: 0, bonus: 0, mult: 1.0 },
   ];
 
+/**
+ * Calculates mastery level and bonuses based on total fights fought in a style.
+ *
+ * @param totalFights - Number of fights completed in the style
+ * @returns MasteryInfo including tier, fight count, and numerical bonuses
+ */
 export function getMastery(totalFights: number): MasteryInfo {
   for (const t of MASTERY_THRESHOLDS) {
     if (totalFights >= t.minFights)
@@ -205,6 +217,13 @@ const EMPTY_PASSIVE: StylePassiveResult = {
   mastery: 'Novice',
 };
 
+/**
+ * Scales a base value by a mastery multiplier.
+ *
+ * @param val - The base value to scale
+ * @param m - The mastery info containing the multiplier
+ * @returns The rounded, scaled value
+ */
 function scale(val: number, m: MasteryInfo): number {
   return Math.round(val * m.mult);
 }
@@ -550,16 +569,36 @@ const STYLES: Record<FightingStyle, StyleStrategy> = {
 
 // ─── Public API ───────────────────────────────────────────────────────────
 
+/**
+ * Gets the phase-specific initiative/tempo bonus for a fighting style.
+ *
+ * @param style - The fighting style
+ * @param phase - The current fight phase (OPENING, MID, LATE)
+ * @returns The numerical tempo bonus
+ */
 export function getTempoBonus(style: FightingStyle, phase: Phase): number {
   const t = STYLES[style]?.tempo;
   if (!t) return 0;
   return phase === 'OPENING' ? t.opening : phase === 'MID' ? t.mid : t.late;
 }
 
+/**
+ * Gets the endurance consumption multiplier for a fighting style.
+ *
+ * @param style - The fighting style
+ * @returns The endurance multiplier (default 1.0)
+ */
 export function getEnduranceMult(style: FightingStyle): number {
   return STYLES[style]?.tempo.enduranceMult ?? 1.0;
 }
 
+/**
+ * Computes active combat passive modifiers for a style based on exchange context.
+ *
+ * @param style - The fighting style
+ * @param context - The current exchange context (phase, hits landed/taken, etc.)
+ * @returns The StylePassiveResult with bonuses and narrative flags
+ */
 export function getStylePassive(
   style: FightingStyle,
   context: StylePassiveContext & { totalFights?: number }
@@ -570,6 +609,13 @@ export function getStylePassive(
   return strategy.getPassive(context, m);
 }
 
+/**
+ * Computes kill-threshold modifiers and narrative for a style.
+ *
+ * @param attackerStyle - The style of the attacking warrior
+ * @param context - The kill context (phase, location, hit-streak)
+ * @returns The KillMechanic definition
+ */
 export function getKillMechanic(attackerStyle: FightingStyle, context: KillContext): KillMechanic {
   const strategy = STYLES[attackerStyle];
   if (!strategy)
@@ -583,6 +629,14 @@ export function getKillMechanic(attackerStyle: FightingStyle, context: KillConte
   return strategy.getKillMechanic(context);
 }
 
+/**
+ * Calculates anti-synergy penalties for choosing incompatible tactics for a style.
+ *
+ * @param style - The fighting style
+ * @param offTactic - The selected offensive tactic
+ * @param defTactic - The selected defensive tactic
+ * @returns Modifiers for offense/defense and optional warning text
+ */
 export function getStyleAntiSynergy(
   style: FightingStyle,
   offTactic?: string,

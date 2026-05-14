@@ -8,6 +8,11 @@ import { clamp } from '@/utils/math';
 
 export type StyleMeta = Record<FightingStyle, number>; // -10 to +10 drift
 
+/**
+ * Creates a default style meta object with all drifts set to 0.
+ * 
+ * @returns A fresh StyleMeta object
+ */
 export function createDefaultMeta(): StyleMeta {
   const meta = {} as StyleMeta;
   for (const style of Object.values(FightingStyle)) {
@@ -51,6 +56,12 @@ export function computeMetaDrift(history: FightSummary[], window = 20): StyleMet
   return meta;
 }
 
+/**
+ * Maps a numerical drift value to a human-readable meta label.
+ * 
+ * @param drift - The style's current meta drift (-10 to 10)
+ * @returns A label describing the style's current standing (e.g., 'Dominant', 'Rising')
+ */
 export function getMetaLabel(drift: number): string {
   if (drift >= 5) return 'Dominant';
   if (drift >= 2) return 'Rising';
@@ -59,6 +70,12 @@ export function getMetaLabel(drift: number): string {
   return 'Stable';
 }
 
+/**
+ * Returns a CSS color class based on the style's meta drift.
+ * 
+ * @param drift - The style's current meta drift (-10 to 10)
+ * @returns A string containing Tailwind CSS color classes
+ */
 export function getMetaColor(drift: number): string {
   if (drift >= 5) return 'text-arena-treasury';
   if (drift >= 2) return 'text-arena-pop';

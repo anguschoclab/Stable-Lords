@@ -38,7 +38,8 @@ interface OffseasonEventNarrative {
     | 'wandering_healer'
     | 'mystic_vision'
     | 'wild_animal_attack'
-    | 'strange_dream';
+    | 'strange_dream'
+    | 'street_performance';
   newsletter: string[];
 }
 
@@ -430,6 +431,47 @@ export function runSeasonalPass(
               xp: 10,
               fame: 5,
               gold: cost,
+            }),
+          ],
+        });
+      }
+    }
+  } else if (e.effectType === 'street_performance') {
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (chosen) {
+        const fameGained = 15;
+        const goldGained = 50 + Math.floor(seasonRng.next() * 50); // 50-99 gold
+        treasuryDelta += goldGained;
+
+        ledgerEntries.push({
+          id: seasonRng.uuid('ledger') as LedgerEntryId,
+          week: nextWeek,
+          label: 'Street Performance Tips',
+          amount: goldGained,
+          category: 'other',
+        });
+
+        // Ensure "Local Hero" tag is present
+        // Ensure "Local Hero" flair is present
+        const currentFlair = chosen.flair || [];
+        const newFlair = currentFlair.includes('Local Hero') ? currentFlair : [...currentFlair, 'Local Hero'];
+
+        rosterUpdates.set(chosen.id, {
+          fame: (chosen.fame || 0) + fameGained,
+          flair: newFlair
+        });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [
+            t(seasonRng.pick(e.newsletter) || '', {
+              name: chosen.name,
+              fame: fameGained,
+              gold: goldGained,
             }),
           ],
         });

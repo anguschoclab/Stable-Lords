@@ -2145,7 +2145,7 @@
       "title": "Street Performance",
       "effectType": "street_performance",
       "newsletter": [
-        "During the offseason, {{name}} took to the streets, performing mock battles for the local townsfolk. The crowd loved it! (+Fame, +Gold, 'Local Hero' Tag)"
+        "During the offseason, {{name}} took to the streets, performing mock battles for the local townsfolk. The crowd loved it! (+{{fame}} Fame, +{{gold}} Gold, 'Local Hero' Tag)"
       ]
     }
   },

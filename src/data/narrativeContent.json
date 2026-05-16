@@ -2147,6 +2147,13 @@
       "newsletter": [
         "During the offseason, {{name}} took to the streets, performing mock battles for the local townsfolk. The crowd loved it! (+{{fame}} Fame, +{{gold}} Gold, 'Local Hero' Tag)"
       ]
+    },
+    "chaotic_spells": {
+      "title": "Chaotic Spells",
+      "effectType": "chaotic_spells",
+      "newsletter": [
+        "A rogue wizard's spell went awry near the barracks! {{name}} was caught in the blast and experienced strange side effects."
+      ]
     }
   },
   "crowd_reactions": {

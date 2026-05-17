@@ -26,3 +26,6 @@
 ## 2024-05-09 - Accessible Icon Buttons in Gazette
 **Learning:** Found that `size="icon"` or inline icons inside standard Buttons are widely used, but often miss `aria-label` or rely on raw text descriptions (e.g. `Full_Transcript`) while leaving decorative icon SVGs (`ArrowRight`) visible to screen readers, causing stuttered readouts.
 **Action:** When adding small contextual buttons or "ghost" text buttons with appended icons, ensure the text wrapper or Button element has a clear `aria-label` and the interior SVG uses `aria-hidden="true"`.
+## 2024-05-24 - Disabled Button Tooltips
+**Learning:** In the `Button` component, `disabled:pointer-events-none` prevents tooltips from showing and `cursor-not-allowed` from working when a button is disabled, hiding helpful context (like why a button is disabled) from the user.
+**Action:** Replace `disabled:pointer-events-none` with `disabled:cursor-not-allowed` in button styles to retain pointer events for tooltips while communicating the disabled state.

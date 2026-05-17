@@ -154,6 +154,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.15,
     description: 'Falling stars distract fighters and add a chaotic unpredictability to combat.',
   },
+  'Abyssal Gloom': {
+    staminaMult: 0.9,
+    initiativeMod: -5,
+    riposteMod: +5,
+    damageMult: 1.15,
+    description: 'Impenetrable, supernatural darkness swallows the arena. Attacks are devastating, but finding the target is grueling.',
+  },
 };
 
 /**
@@ -194,6 +201,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Scorching Wind': 'A hot, dry wind sweeps the arena, parching throats and sapping strength.',
   'Spooky Night': 'An unnatural chill settles over the arena, and shadows seem to move on their own.',
   'Meteor Shower': 'The night sky burns with falling stars, casting chaotic shadows across the sand.',
+  'Abyssal Gloom': 'A terrifying, supernatural darkness swallows the arena. Fighters vanish into the abyssal gloom.',
 };
 
 /**

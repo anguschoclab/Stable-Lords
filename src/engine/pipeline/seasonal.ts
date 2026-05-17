@@ -501,7 +501,7 @@ export function runSeasonalPass(
             description: 'Singed by erratic magic.',
             severity: 'Minor',
             weeksRemaining: 1 + Math.floor(seasonRng.next() * 2), // 1-2 weeks
-            penalties: { AG: -1, CN: -1 },
+            penalties: { SP: -1, CN: -1 },
           };
           const currentInjuries = chosen.injuries || [];
           rosterUpdates.set(chosen.id, {

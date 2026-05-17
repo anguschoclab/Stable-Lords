@@ -39,7 +39,8 @@ interface OffseasonEventNarrative {
     | 'mystic_vision'
     | 'wild_animal_attack'
     | 'strange_dream'
-    | 'street_performance';
+    | 'street_performance'
+    | 'chaotic_spells';
   newsletter: string[];
 }
 
@@ -474,6 +475,55 @@ export function runSeasonalPass(
               gold: goldGained,
             }),
           ],
+        });
+      }
+    }
+  } else if (e.effectType === 'chaotic_spells') {
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (chosen) {
+        const roll = seasonRng.next();
+        let effectMsg = '';
+
+        if (roll < 0.33) {
+          // Buff: XP gain
+          const xpGained = 10 + Math.floor(seasonRng.next() * 11); // 10-20
+          rosterUpdates.set(chosen.id, {
+            xp: (chosen.xp || 0) + xpGained,
+          });
+          effectMsg = `They feel a surge of unnatural energy! (+${xpGained} XP)`;
+        } else if (roll < 0.66) {
+          // Debuff: Minor Injury
+          const newInjury: InjuryData = {
+            id: seasonRng.uuid('injury') as InjuryId,
+            name: 'Arcane Burns',
+            description: 'Singed by erratic magic.',
+            severity: 'Minor',
+            weeksRemaining: 1 + Math.floor(seasonRng.next() * 2), // 1-2 weeks
+            penalties: { SP: -1, CN: -1 },
+          };
+          const currentInjuries = chosen.injuries || [];
+          rosterUpdates.set(chosen.id, {
+            injuries: [...currentInjuries, newInjury],
+          });
+          effectMsg = 'They sustained mild arcane burns. (Minor Injury)';
+        } else {
+          // Debuff: Fame loss
+          const fameLost = 5 + Math.floor(seasonRng.next() * 6); // 5-10
+          rosterUpdates.set(chosen.id, {
+            fame: Math.max(0, (chosen.fame || 0) - fameLost),
+          });
+          effectMsg = `They were temporarily turned an embarrassing shade of purple. (-${fameLost} Fame)`;
+        }
+
+        const baseMsg = t(seasonRng.pick(e.newsletter) || '', { name: chosen.name });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [`${baseMsg} ${effectMsg}`],
         });
       }
     }

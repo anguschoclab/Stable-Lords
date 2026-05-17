@@ -147,6 +147,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.9,
     description: 'An unnatural chill and eerie shadows make fighters nervous and jumpy.',
   },
+  'Meteor Shower': {
+    staminaMult: 1.2,
+    initiativeMod: -3,
+    riposteMod: -3,
+    damageMult: 1.15,
+    description: 'Falling stars distract fighters and add a chaotic unpredictability to combat.',
+  },
 };
 
 /**
@@ -186,6 +193,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Mana Surge': 'The air crackles with power. The fighters move with impossible speed.',
   'Scorching Wind': 'A hot, dry wind sweeps the arena, parching throats and sapping strength.',
   'Spooky Night': 'An unnatural chill settles over the arena, and shadows seem to move on their own.',
+  'Meteor Shower': 'The night sky burns with falling stars, casting chaotic shadows across the sand.',
 };
 
 /**

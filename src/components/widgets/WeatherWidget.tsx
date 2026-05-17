@@ -1,5 +1,5 @@
 import { useWorldState } from '@/state/useGameStore';
-import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon } from 'lucide-react';
+import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon, Sparkles } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -64,6 +64,15 @@ const WEATHER_METADATA = {
     description:
       'Eerie darkness descends. Fights become slow and methodical as combatants hesitate.',
     stats: 'STAMINA CONSERVATION 20% // HESITATION',
+  },
+  'Meteor Shower': {
+    icon: Sparkles,
+    color: 'text-amber-500',
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/20',
+    description:
+      'Falling stars light up the sky. The chaotic spectacle distracts fighters and exhausts stamina.',
+    stats: 'INITIATIVE & RIPOSTE PENALTY -3 // STAMINA DRAIN 120%',
   },
 };
 

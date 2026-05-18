@@ -66,29 +66,38 @@ const EVENT_ICONS: Record<EventType, { icon: React.ElementType; color: string }>
   recovery: { icon: Heart, color: 'text-arena-pop' },
 };
 
+const regexCache = new WeakMap<string[], { pattern: RegExp; nameSet: Set<string> }>();
+
 /**
  * Renders text with known entity names replaced by clickable WarriorLink components.
  * Names are matched longest-first to avoid partial matches.
  */
 function LinkifiedText({ text, names }: { text: string; names: string[] }) {
-  // ⚡ Bolt: Memoize the regular expression creation and string splitting.
-  // The EventLog renders many events, each containing LinkifiedText for the title and subtitle.
-  // Re-creating the regex and re-splitting the string on every render for every event is a significant performance bottleneck.
-  // This reduces unnecessary CPU cycles and garbage collection by caching the result unless the text or names list changes.
+  // ⚡ Bolt: Memoize the regular expression creation across all instances using a WeakMap.
+  // Since `text` changes for every event, the previous useMemo re-compiled the RegExp for
+  // the entire `allWarriorNames` array hundreds of times per render. Caching it by the
+  // `names` array reference guarantees O(1) compilation per render cycle.
   const { parts, nameSet, isLinkifiable } = useMemo(() => {
     if (!names || names.length === 0) {
       return { parts: [text], nameSet: new Set<string>(), isLinkifiable: false };
     }
 
-    // Sort longest first to avoid partial matches
-    const sorted = [...names].sort((a, b) => b.length - a.length);
-    // Escape regex special chars in names
-    const escaped = sorted.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-    const pattern = new RegExp(`(${escaped.join('|')})`, 'g');
+    let cached = regexCache.get(names);
+    if (!cached) {
+      // Sort longest first to avoid partial matches
+      const sorted = [...names].sort((a, b) => b.length - a.length);
+      // Escape regex special chars in names
+      const escaped = sorted.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      cached = {
+        pattern: new RegExp(`(${escaped.join('|')})`, 'g'),
+        nameSet: new Set(names),
+      };
+      regexCache.set(names, cached);
+    }
 
     return {
-      parts: text.split(pattern),
-      nameSet: new Set(names),
+      parts: text.split(cached.pattern),
+      nameSet: cached.nameSet,
       isLinkifiable: true,
     };
   }, [text, names]);

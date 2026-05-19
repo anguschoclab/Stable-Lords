@@ -2154,6 +2154,13 @@
       "newsletter": [
         "A rogue wizard's spell went awry near the barracks! {{name}} was caught in the blast and experienced strange side effects."
       ]
+    },
+    "mysterious_patron": {
+      "title": "A Mysterious Patron!",
+      "effectType": "mysterious_patron",
+      "newsletter": [
+        "A mysterious patron was impressed by your stable and anonymously donated {{gold}} gold!"
+      ]
     }
   },
   "crowd_reactions": {

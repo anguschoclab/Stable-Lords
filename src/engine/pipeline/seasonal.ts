@@ -41,7 +41,8 @@ interface OffseasonEventNarrative {
     | 'strange_dream'
     | 'street_performance'
     | 'chaotic_spells'
-    | 'mysterious_patron';
+    | 'mysterious_patron'
+    | 'midnight_feast';
   newsletter: string[];
 }
 
@@ -546,6 +547,52 @@ export function runSeasonalPass(
       title: e.title,
       items: [t(seasonRng.pick(e.newsletter) || '', { gold: goldGained })],
     });
+  } else if (e.effectType === 'midnight_feast') {
+    const cost = 40 + Math.floor(seasonRng.next() * 61); // 40-100 gold
+    treasuryDelta -= cost;
+
+    ledgerEntries.push({
+      id: seasonRng.uuid('ledger') as LedgerEntryId,
+      week: nextWeek,
+      label: 'Midnight Feast Tab',
+      amount: -cost,
+      category: 'other',
+    });
+
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (chosen) {
+        const xpGained = 15;
+        const fameGained = 10;
+
+        rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+          fame: (chosen.fame || 0) + fameGained,
+        });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [
+            t(seasonRng.pick(e.newsletter) || '', {
+              name: chosen.name,
+              xp: xpGained,
+              fame: fameGained,
+              gold: cost,
+            }),
+          ],
+        });
+      }
+    } else {
+      newsletterItems.push({
+        id: seasonRng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [t(seasonRng.pick(e.newsletter) || '', { name: 'Someone', xp: 0, fame: 0, gold: cost })],
+      });
+    }
   }
   // Record this event in the State so the UI can pick it up
   const impact: StateImpact = {

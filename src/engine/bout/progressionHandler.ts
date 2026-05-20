@@ -7,6 +7,7 @@ import { calculateXP, applyXP } from '@/engine/progression';
 import { checkDiscovery } from '@/engine/favorites';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
+import { updateEntityInList } from '@/utils/stateUtils';
 
 /**
  * Routes a per-warrior update to either the player's rosterUpdates map or to
@@ -41,7 +42,7 @@ function routeUpdate(
   if (!rival) return;
   const existingRival = rivalsUpdates.get(rival.id);
   const baseRoster = (existingRival?.roster as Warrior[] | undefined) ?? rival.roster;
-  const updatedRoster = baseRoster.map((w) => (w.id === warrior.id ? { ...w, ...partial } : w));
+  const updatedRoster = updateEntityInList(baseRoster, warrior.id, (w) => ({ ...w, ...partial }));
   rivalsUpdates.set(rival.id, { ...existingRival, roster: updatedRoster });
 }
 

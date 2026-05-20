@@ -1,6 +1,7 @@
 import type { GameState, TournamentEntry } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { StateImpact } from '@/engine/impacts';
+import { updateEntityInList } from '@/utils/stateUtils';
 
 /**
  * Helper functions to modify/find warriors in state for tournament operations.
@@ -23,14 +24,11 @@ export function modifyWarrior(
 
   state.rivals.forEach((r) => {
     let modified = false;
-    const updatedRoster = r.roster.map((w) => {
-      if (w.id === warriorId) {
-        modified = true;
-        const newW = { ...w };
-        transform(newW);
-        return newW;
-      }
-      return w;
+    const updatedRoster = updateEntityInList(r.roster, warriorId, (w) => {
+      modified = true;
+      const newW = { ...w };
+      transform(newW);
+      return newW;
     });
     if (modified) {
       rivalsUpdates.set(r.id, { roster: updatedRoster });

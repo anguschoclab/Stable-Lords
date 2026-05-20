@@ -29,3 +29,7 @@
 ## 2025-02-12 - Explicit Label Association
 **Learning:** Found pattern where form labels were lacking `htmlFor` properties and matching inputs had no `id` properties (e.g. `IdentityStep.tsx` and `ConditionEditor.tsx`), leading to unassociated labels for screen readers. Using the loop index (`idx`) dynamically for inputs within iterative arrays avoids `id` collisions. Replacing `<div className="space-y-1.5">` wrappers to actual `<label>` tags with `block` or adding a visually hidden `.sr-only` label helps accessibility heavily with zero visual changes.
 **Action:** Always check newly built forms for `htmlFor` and `id` pairs. Ensure dynamic forms utilize uniquely indexed IDs to prevent collisions. Use `sr-only` classes to provide visual-agnostic context.
+
+## 2024-05-14 - Add ARIA Labels to Sortable Table Headers
+**Learning:** React components acting as interactive table headers (like `SortHeader`) often lack semantic indication to screen readers that they are clickable sorting toggles. Adding `aria-label` provides crucial context without altering the visual design.
+**Action:** Always verify that interactive icon or text components used for sorting have an explicit `aria-label` or `aria-sort` attribute to ensure screen reader users understand the component's interactive purpose.

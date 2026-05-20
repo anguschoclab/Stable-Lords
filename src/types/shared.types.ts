@@ -301,7 +301,8 @@ export type WeatherType =
   | 'Scorching Wind'
   | 'Spooky Night'
   | 'Meteor Shower'
-  | 'Abyssal Gloom';
+  | 'Abyssal Gloom'
+  | 'Cursed Miasma';
 
 export interface DeathEvent {
   boutId: string;

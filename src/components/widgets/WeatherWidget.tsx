@@ -83,6 +83,15 @@ const WEATHER_METADATA = {
       'Impenetrable darkness. Drastic penalties to initiative, but strikes from the shadows are lethal.',
     stats: 'INITIATIVE -5 // RIPOSTE +5 // DAMAGE 115%',
   },
+  'Cursed Miasma': {
+    icon: Cloud,
+    color: 'text-fuchsia-600',
+    bg: 'bg-fuchsia-600/10',
+    border: 'border-fuchsia-600/20',
+    description:
+      'A vile purple mist clings to the arena, draining stamina and clouding the mind.',
+    stats: 'INITIATIVE & RIPOSTE PENALTY // STAMINA DRAIN 130%',
+  },
 };
 
 export function WeatherWidget() {

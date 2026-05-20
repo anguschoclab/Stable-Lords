@@ -32,6 +32,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Acid Rain': 'ambience-acid-rain',
   'Mana Surge': 'ambience-mana-surge',
   'Abyssal Gloom': 'ambience-eclipse',
+  'Cursed Miasma': 'ambience-acid-rain',
 };
 
 export default function WeatherAudio({ weather, volume, enabled, arenaId }: WeatherAudioProps) {

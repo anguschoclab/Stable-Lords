@@ -161,6 +161,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.15,
     description: 'Impenetrable, supernatural darkness swallows the arena. Attacks are devastating, but finding the target is grueling.',
   },
+  'Cursed Miasma': {
+    staminaMult: 1.3,
+    initiativeMod: -4,
+    riposteMod: -2,
+    damageMult: 1.1,
+    description: 'A vile, clinging mist saps energy and clouds the mind, leaving fighters desperate.',
+  },
 };
 
 /**
@@ -202,6 +209,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Spooky Night': 'An unnatural chill settles over the arena, and shadows seem to move on their own.',
   'Meteor Shower': 'The night sky burns with falling stars, casting chaotic shadows across the sand.',
   'Abyssal Gloom': 'A terrifying, supernatural darkness swallows the arena. Fighters vanish into the abyssal gloom.',
+  'Cursed Miasma': 'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
 };
 
 /**

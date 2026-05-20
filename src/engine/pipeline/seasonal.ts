@@ -40,7 +40,8 @@ interface OffseasonEventNarrative {
     | 'wild_animal_attack'
     | 'strange_dream'
     | 'street_performance'
-    | 'chaotic_spells';
+    | 'chaotic_spells'
+    | 'mysterious_patron';
   newsletter: string[];
 }
 
@@ -527,6 +528,24 @@ export function runSeasonalPass(
         });
       }
     }
+  } else if (e.effectType === 'mysterious_patron') {
+    const goldGained = 100 + Math.floor(seasonRng.next() * 201); // 100-300 gold
+    treasuryDelta += goldGained;
+
+    ledgerEntries.push({
+      id: seasonRng.uuid('ledger') as LedgerEntryId,
+      week: nextWeek,
+      label: 'Mysterious Patron Donation',
+      amount: goldGained,
+      category: 'other',
+    });
+
+    newsletterItems.push({
+      id: seasonRng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(seasonRng.pick(e.newsletter) || '', { gold: goldGained })],
+    });
   }
   // Record this event in the State so the UI can pick it up
   const impact: StateImpact = {

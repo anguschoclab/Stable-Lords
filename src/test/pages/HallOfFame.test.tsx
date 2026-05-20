@@ -1,22 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, within } from '@testing-library/react';
 import HallOfFame from '@/pages/HallOfFame';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/game';
 import type { GameState, FightSummary, NewsletterItem, Warrior } from '@/types/game';
-
-// Must mock the module before importing it inside components
-vi.mock('@/engine/history/arenaHistory', () => {
-  return {
-    ArenaHistory: {
-      all: vi.fn().mockReturnValue([]),
-      append: vi.fn(),
-      clear: vi.fn(),
-      query: vi.fn().mockReturnValue([]),
-    },
-  };
-});
+import type { FightSummary as FightSummaryType } from '@/types/combat.types';
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
@@ -49,7 +38,16 @@ vi.mock('@/state/useGameStore', () => ({
   }),
 }));
 
-import { ArenaHistory } from '@/engine/history/arenaHistory';
+// Must mock the module before importing it inside components
+const mockArenaHistoryAll = vi.fn((): FightSummaryType[] => []);
+vi.mock('@/engine/history/arenaHistory', () => ({
+  ArenaHistory: {
+    all: () => mockArenaHistoryAll(),
+    append: vi.fn(),
+    clear: vi.fn(),
+    query: vi.fn().mockReturnValue([]),
+  },
+}));
 
 // Mock the router components
 vi.mock('@tanstack/react-router', () => ({
@@ -100,13 +98,13 @@ describe('HallOfFame Component', () => {
   };
 
   const fight1: FightSummary = {
-    id: 'f1',
+    id: 'f1' as any,
     week: 10,
     title: 'Reaper vs Victim',
     a: 'Reaper',
     d: 'Victim',
-    warriorIdA: 'Reaper',
-    warriorIdD: 'Victim',
+    warriorIdA: 'Reaper' as any,
+    warriorIdD: 'Victim' as any,
     winner: 'A',
     by: 'Kill',
     styleA: FightingStyle.LungingAttack,
@@ -115,13 +113,13 @@ describe('HallOfFame Component', () => {
     transcript: [],
   };
   const fight2: FightSummary = {
-    id: 'f2',
+    id: 'f2' as any,
     week: 20,
     title: 'Reaper vs Victim2',
     a: 'Reaper',
     d: 'Victim2',
-    warriorIdA: 'Reaper',
-    warriorIdD: 'Victim2',
+    warriorIdA: 'Reaper' as any,
+    warriorIdD: 'Victim2' as any,
     winner: 'A',
     by: 'KO',
     styleA: FightingStyle.LungingAttack,
@@ -136,25 +134,25 @@ describe('HallOfFame Component', () => {
     mockState.newsletter = [mockNewsletter];
 
     mockState.roster = [
-      createDummyWarrior('Gladiator', 'Active', 30, 5, 150),
-      createDummyWarrior('Reaper', 'Active', 20, 5, 120),
-      createDummyWarrior('The Mountain', 'Active', 15, 0, 90),
+      createDummyWarrior('Gladiator' as any, 'Active', 30, 5, 150),
+      createDummyWarrior('Reaper' as any, 'Active', 20, 5, 120),
+      createDummyWarrior('The Mountain' as any, 'Active', 15, 0, 90),
     ];
 
     mockState.awards = [
-      { year: 1, type: 'WARRIOR_OF_YEAR', warriorId: 'Gladiator', reason: 'Dominance', value: 100 },
-      { year: 1, type: 'KILLER_OF_YEAR', warriorId: 'Reaper', reason: 'Lethality', value: 50 },
+      { year: 1, type: 'WARRIOR_OF_YEAR' as any, warriorId: 'Gladiator' as any, reason: 'Dominance', value: 100 },
+      { year: 1, type: 'KILLER_OF_YEAR' as any, warriorId: 'Reaper' as any, reason: 'Lethality', value: 50 },
       {
         year: 1,
-        type: 'DEFENDER_OF_YEAR',
-        warriorId: 'The Mountain',
+        type: 'CLASS_MVP' as any,
+        warriorId: 'The Mountain' as any,
         reason: 'Immovable',
         value: 75,
       },
     ];
 
     // Setup ArenaHistory mock
-    vi.mocked(ArenaHistory.all).mockReturnValue([fight1, fight2]);
+    mockArenaHistoryAll.mockReturnValue([fight1, fight2]);
   });
 
   it('renders the inductees correctly', async () => {

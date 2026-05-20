@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { render, screen, cleanup } from '@testing-library/react';
 import { PaperDoll } from '@/components/ui/PaperDoll';
 import { describe, it, expect, afterEach } from 'vitest';

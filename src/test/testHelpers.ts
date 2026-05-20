@@ -1,12 +1,11 @@
 import { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-import { generateId } from '@/utils/idUtils';
 
 /**
  * Populates a GameState with a realistic number of warriors for testing.
  */
-export function populateTestState(state: GameState, warriorCount: number = 300): GameState {
+export function populateTestState(state: GameState): GameState {
   const newState = { ...state };
   const styles = Object.values(FightingStyle);
 
@@ -14,9 +13,9 @@ export function populateTestState(state: GameState, warriorCount: number = 300):
   for (let i = 0; i < 10; i++) {
     newState.roster.push(
       makeWarrior(
-        `p_w_${i}`,
+        `p_w_${i}` as any,
         `Player Warrior ${i}`,
-        styles[i % styles.length],
+        styles[i % styles.length] || FightingStyle.StrikingAttack,
         { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
         { fame: 50 + i * 10 }
       )
@@ -29,9 +28,9 @@ export function populateTestState(state: GameState, warriorCount: number = 300):
     for (let w = 0; w < 20; w++) {
       rivalWorkers.push(
         makeWarrior(
-          `r_${r}_w_${w}`,
+          `r_${r}_w_${w}` as any,
           `Rival ${r} Warrior ${w}`,
-          styles[(r + w) % styles.length],
+          styles[(r + w) % styles.length] || FightingStyle.StrikingAttack,
           { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
           { fame: 50 + r * 10 + w * 5 }
         )
@@ -59,7 +58,7 @@ export function populateTestState(state: GameState, warriorCount: number = 300):
   // 3. Add Promoters
   newState.promoters = {
     p_local: {
-      id: 'p_local',
+      id: 'p_local' as any,
       name: 'Local Joe',
       age: 45,
       personality: 'Flashy',
@@ -69,7 +68,7 @@ export function populateTestState(state: GameState, warriorCount: number = 300):
       history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 },
     },
     p_legendary: {
-      id: 'p_legendary',
+      id: 'p_legendary' as any,
       name: 'Don Kingpin',
       age: 65,
       personality: 'Greedy',
@@ -78,7 +77,34 @@ export function populateTestState(state: GameState, warriorCount: number = 300):
       biases: [FightingStyle.StrikingAttack],
       history: { totalPursePaid: 0, notableBouts: [], legacyFame: 100 },
     },
-  };
+  } as any;
 
   return newState;
+}
+
+/**
+ * Helper function to simulate localStorage quota exceeded error in tests
+ */
+export function simulateLocalStorageQuotaError() {
+  if (typeof localStorage !== 'undefined' && (localStorage as any)._setQuotaExceeded) {
+    (localStorage as any)._setQuotaExceeded(true);
+  }
+}
+
+/**
+ * Helper function to reset localStorage quota error simulation in tests
+ */
+export function resetLocalStorageQuotaError() {
+  if (typeof localStorage !== 'undefined' && (localStorage as any)._setQuotaExceeded) {
+    (localStorage as any)._setQuotaExceeded(false);
+  }
+}
+
+/**
+ * Helper function to clear all localStorage in tests
+ */
+export function clearTestLocalStorage() {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.clear();
+  }
 }

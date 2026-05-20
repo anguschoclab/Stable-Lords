@@ -21,6 +21,7 @@ const RenderTracker = ({
 describe('useGameStore Optimization (Epic 4)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   it('re-renders when selected state changes', async () => {

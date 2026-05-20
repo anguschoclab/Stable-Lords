@@ -12,10 +12,25 @@ vi.mock('howler', () => {
   };
 });
 
+// Mock window.electronAPI for Electron environment
+const mockElectronAPI = {
+  storeGet: vi.fn().mockResolvedValue('false'),
+  storeSet: vi.fn().mockResolvedValue(undefined),
+};
+
+Object.defineProperty(global, 'window', {
+  value: {
+    electronAPI: mockElectronAPI,
+  },
+  configurable: true,
+});
+
 describe('AudioManager', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+    mockElectronAPI.storeGet.mockResolvedValue('false');
+    mockElectronAPI.storeSet.mockResolvedValue(undefined);
     audioManager.setMuted(false);
   });
 

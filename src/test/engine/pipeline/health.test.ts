@@ -1,7 +1,6 @@
-import { vi } from 'vitest';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { computeHealthImpact, applyHealthUpdates } from '@/engine/health';
-import { type GameState, type Warrior, type InjuryData } from '@/types/game';
+import { type GameState, type InjuryData } from '@/types/game';
 import * as injuriesModule from '@/engine/injuries';
 import * as matchmakingModule from '@/engine/matchmaking/historyLogic';
 
@@ -58,7 +57,7 @@ describe('pipeline/health', () => {
       expect(injuriesModule.tickInjuries).toHaveBeenCalledWith([mockInjury]);
 
       expect(impact.rosterUpdates?.size).toBe(1);
-      expect(impact.rosterUpdates?.get('w1')).toMatchObject({
+      expect(impact.rosterUpdates?.get('w1' as any)).toMatchObject({
         injuries: [{ ...mockInjury, weeksRemaining: 1 }],
       });
 

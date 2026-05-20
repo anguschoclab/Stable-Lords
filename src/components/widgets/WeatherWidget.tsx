@@ -74,6 +74,15 @@ const WEATHER_METADATA = {
       'Falling stars light up the sky. The chaotic spectacle distracts fighters and exhausts stamina.',
     stats: 'INITIATIVE & RIPOSTE PENALTY -3 // STAMINA DRAIN 120%',
   },
+  'Abyssal Gloom': {
+    icon: Moon,
+    color: 'text-indigo-900',
+    bg: 'bg-indigo-900/10',
+    border: 'border-indigo-900/20',
+    description:
+      'Impenetrable darkness. Drastic penalties to initiative, but strikes from the shadows are lethal.',
+    stats: 'INITIATIVE -5 // RIPOSTE +5 // DAMAGE 115%',
+  },
 };
 
 export function WeatherWidget() {

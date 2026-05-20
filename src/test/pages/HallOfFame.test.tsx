@@ -1,10 +1,7 @@
-// Test utilities
-
-import '../setup';
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import HallOfFame from '@/pages/HallOfFame';
-import { renderWithGameState } from '../testUtils';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/game';
 import type { GameState, FightSummary, NewsletterItem, Warrior } from '@/types/game';
@@ -20,6 +17,37 @@ vi.mock('@/engine/history/arenaHistory', () => {
     },
   };
 });
+
+// Mock useGameStore to avoid store initialization issues
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: () => ({
+    roster: [],
+    newsletter: [],
+    ledger: [],
+    matchHistory: [],
+    moodHistory: [],
+    graveyard: [],
+    retired: [],
+    week: 1,
+    season: 'Spring',
+    year: 1,
+    treasury: 500,
+    tournaments: [],
+    rivals: [],
+    arenaHistory: [],
+    trainers: [],
+    trainingAssignments: [],
+    fame: 0,
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: "Dragon's Hearth",
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
+  }),
+}));
 
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 
@@ -130,7 +158,7 @@ describe('HallOfFame Component', () => {
   });
 
   it('renders the inductees correctly', async () => {
-    const { container } = renderWithGameState(<HallOfFame />, mockState);
+    const { container } = render(<HallOfFame />);
 
     // Check that we're showing the correct year section
     expect(within(container).getByText(/Year 1 Accolades/i)).toBeInTheDocument();
@@ -142,7 +170,7 @@ describe('HallOfFame Component', () => {
   });
 
   it('identifies and displays the best fight correctly', async () => {
-    const { getAllByText } = renderWithGameState(<HallOfFame />, mockState);
+    const { getAllByText } = render(<HallOfFame />);
 
     // Find the 'Reaper' card directly
     const reaperElements = getAllByText('Reaper');

@@ -1,31 +1,40 @@
-// Mock localStorage FIRST
-const localStorageMock = (function () {
-  let store: Record<string, string> = {};
-  return {
-    getItem: function (key: string) {
-      return store[key] || null;
-    },
-    setItem: function (key: string, value: string) {
-      store[key] = value.toString();
-    },
-    removeItem: function (key: string) {
-      store[key] = undefined as any;
-    },
-    clear: function () {
-      store = {};
-    },
-  };
-})();
-Object.defineProperty(global, 'localStorage', { value: localStorageMock, writable: true });
-
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import WorldOverview from '@/pages/WorldOverview';
-import { renderWithGameState } from '../testUtils';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { FightingStyle } from '@/types/game';
 import type { Warrior, GameState } from '@/types/game';
-import '../setup';
+
+// Mock useGameStore to avoid store initialization issues
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: () => ({
+    roster: [],
+    newsletter: [],
+    ledger: [],
+    matchHistory: [],
+    moodHistory: [],
+    graveyard: [],
+    retired: [],
+    week: 1,
+    season: 'Spring',
+    year: 1,
+    treasury: 500,
+    tournaments: [],
+    rivals: [],
+    arenaHistory: [],
+    trainers: [],
+    trainingAssignments: [],
+    fame: 0,
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: "Dragon's Hearth",
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
+  }),
+}));
 
 // Mock the router components
 vi.mock('@tanstack/react-router', () => ({
@@ -116,7 +125,7 @@ describe('WorldOverview Component', () => {
   });
 
   it('renders stable rows correctly with aggregated stats', async () => {
-    renderWithGameState(<WorldOverview />, mockState);
+    render(<WorldOverview />);
 
     // Use findAllByText since stable names might appear multiple times due to tooltips/links
     const playerStables = await screen.findAllByText('Player Stable');
@@ -141,7 +150,7 @@ describe('WorldOverview Component', () => {
   });
 
   it('renders warrior rows correctly', async () => {
-    renderWithGameState(<WorldOverview />, mockState);
+    render(<WorldOverview />);
 
     // Since we mocked TabsContent to always render, we can query it directly
     const pw1Elements = await screen.findAllByText('PlayerWarrior1');

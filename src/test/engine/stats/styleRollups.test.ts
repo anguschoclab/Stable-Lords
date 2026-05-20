@@ -1,56 +1,50 @@
 /** @vitest-environment jsdom */
-import { describe, it, expect, vi, beforeEach, afterEach, Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { StyleRollups } from '@/engine/stats/styleRollups';
 
 describe('StyleRollups', () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   describe('loadWeek (via getWeekRollup)', () => {
+    const mockGetItem = vi.fn();
+    const mockSetItem = vi.fn();
+    const mockRemoveItem = vi.fn();
+    const mockClear = vi.fn();
+
     beforeEach(() => {
-      // Ensure localStorage is a valid mock object before each test
-      if (!globalThis.localStorage) {
-        Object.defineProperty(globalThis, 'localStorage', {
-          value: {
-            getItem: vi.fn(),
-            setItem: vi.fn(),
-            removeItem: vi.fn(),
-            clear: vi.fn(),
-          },
-          writable: true,
-          configurable: true,
-        });
-      }
-      (globalThis.localStorage as any).clear();
+      // In jsdom, localStorage is already defined, so we assign directly
+      (globalThis as any).localStorage = {
+        getItem: mockGetItem,
+        setItem: mockSetItem,
+        removeItem: mockRemoveItem,
+        clear: mockClear,
+      };
+      mockClear.mockClear();
+      mockGetItem.mockClear();
+      mockSetItem.mockClear();
+      mockRemoveItem.mockClear();
     });
 
     it('returns {} if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: undefined,
-        writable: true,
-        configurable: true,
-      });
+      (globalThis as any).localStorage = undefined;
       expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
     });
 
     it('returns {} if localStorage.getItem returns null', () => {
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(null);
+      mockGetItem.mockReturnValue(null);
       expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
     });
 
     it('returns {} if localStorage.getItem returns an invalid JSON string (loadWeek error path)', () => {
-      (globalThis.localStorage.getItem as Mock).mockReturnValue('{invalid}');
+      mockGetItem.mockReturnValue('{invalid}');
       expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
     });
 
     it('returns {} if localStorage.getItem returns invalid JSON', () => {
-      (globalThis.localStorage.getItem as Mock).mockReturnValue('{ invalid json');
+      mockGetItem.mockReturnValue('{ invalid json');
       expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
     });
 
     it('returns {} if localStorage.getItem throws an Error', () => {
-      (globalThis.localStorage.getItem as Mock).mockImplementation(() => {
+      mockGetItem.mockImplementation(() => {
         throw new Error('QuotaExceededError');
       });
       expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
@@ -60,7 +54,7 @@ describe('StyleRollups', () => {
       const validData = {
         Sword: { w: 1, l: 0, k: 0, pct: 1, fights: 1 },
       };
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(JSON.stringify(validData));
+      mockGetItem.mockReturnValue(JSON.stringify(validData));
       expect(StyleRollups.getWeekRollup(1)).toEqual(validData);
     });
 
@@ -70,7 +64,7 @@ describe('StyleRollups', () => {
         Axe: { invalid: 'data' }, // Should be ignored by validateWeekRecord
         Spear: 'string', // Should be ignored
       };
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(JSON.stringify(mixedData));
+      mockGetItem.mockReturnValue(JSON.stringify(mixedData));
       expect(StyleRollups.getWeekRollup(1)).toMatchObject({
         Sword: { w: 1, l: 0, k: 0, pct: 1, fights: 1 },
       });
@@ -78,38 +72,41 @@ describe('StyleRollups', () => {
   });
 
   describe('loadRolling (via last10)', () => {
+    const mockGetItem2 = vi.fn();
+    const mockSetItem2 = vi.fn();
+    const mockRemoveItem2 = vi.fn();
+    const mockClear2 = vi.fn();
+
     beforeEach(() => {
-      if (!globalThis.localStorage) {
-        Object.defineProperty(globalThis, 'localStorage', {
-          value: { getItem: vi.fn(), setItem: vi.fn(), removeItem: vi.fn(), clear: vi.fn() },
-          writable: true,
-          configurable: true,
-        });
-      }
-      (globalThis.localStorage as any).clear();
+      (globalThis as any).localStorage = {
+        getItem: mockGetItem2,
+        setItem: mockSetItem2,
+        removeItem: mockRemoveItem2,
+        clear: mockClear2,
+      };
+      mockClear2.mockClear();
+      mockGetItem2.mockClear();
+      mockSetItem2.mockClear();
+      mockRemoveItem2.mockClear();
     });
 
     it('returns [] if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: undefined,
-        writable: true,
-        configurable: true,
-      });
+      (globalThis as any).localStorage = undefined;
       expect(StyleRollups.last10()).toEqual([]);
     });
 
     it('returns [] if localStorage.getItem returns null', () => {
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(null);
+      mockGetItem2.mockReturnValue(null);
       expect(StyleRollups.last10()).toEqual([]);
     });
 
     it('returns [] if localStorage.getItem returns invalid JSON', () => {
-      (globalThis.localStorage.getItem as Mock).mockReturnValue('{ invalid json');
+      mockGetItem2.mockReturnValue('{ invalid json');
       expect(StyleRollups.last10()).toEqual([]);
     });
 
     it('returns [] if localStorage.getItem throws an Error', () => {
-      (globalThis.localStorage.getItem as Mock).mockImplementation(() => {
+      mockGetItem2.mockImplementation(() => {
         throw new Error('QuotaExceededError');
       });
       expect(StyleRollups.last10()).toEqual([]);
@@ -122,7 +119,7 @@ describe('StyleRollups', () => {
           { W: 0, L: 1, K: 0, fights: 1 },
         ],
       };
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(JSON.stringify(validData));
+      mockGetItem2.mockReturnValue(JSON.stringify(validData));
       const result = StyleRollups.last10();
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
@@ -141,7 +138,7 @@ describe('StyleRollups', () => {
         Axe: { notAnArray: true },
         Spear: 'string',
       };
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(JSON.stringify(mixedData));
+      mockGetItem2.mockReturnValue(JSON.stringify(mixedData));
       const result = StyleRollups.last10();
       expect(result).toHaveLength(1);
       expect(result[0]!.style).toBe('Sword');
@@ -150,38 +147,41 @@ describe('StyleRollups', () => {
   });
 
   describe('loadTour (via tournament)', () => {
+    const mockGetItem3 = vi.fn();
+    const mockSetItem3 = vi.fn();
+    const mockRemoveItem3 = vi.fn();
+    const mockClear3 = vi.fn();
+
     beforeEach(() => {
-      if (!globalThis.localStorage) {
-        Object.defineProperty(globalThis, 'localStorage', {
-          value: { getItem: vi.fn(), setItem: vi.fn(), removeItem: vi.fn(), clear: vi.fn() },
-          writable: true,
-          configurable: true,
-        });
-      }
-      (globalThis.localStorage as any).clear();
+      (globalThis as any).localStorage = {
+        getItem: mockGetItem3,
+        setItem: mockSetItem3,
+        removeItem: mockRemoveItem3,
+        clear: mockClear3,
+      };
+      mockClear3.mockClear();
+      mockGetItem3.mockClear();
+      mockSetItem3.mockClear();
+      mockRemoveItem3.mockClear();
     });
 
     it('returns [] if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: undefined,
-        writable: true,
-        configurable: true,
-      });
+      (globalThis as any).localStorage = undefined;
       expect(StyleRollups.tournament('tour1')).toEqual([]);
     });
 
     it('returns [] if localStorage.getItem returns null', () => {
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(null);
+      mockGetItem3.mockReturnValue(null);
       expect(StyleRollups.tournament('tour1')).toEqual([]);
     });
 
     it('returns [] if localStorage.getItem returns invalid JSON', () => {
-      (globalThis.localStorage.getItem as Mock).mockReturnValue('{ invalid json');
+      mockGetItem3.mockReturnValue('{ invalid json');
       expect(StyleRollups.tournament('tour1')).toEqual([]);
     });
 
     it('returns [] if localStorage.getItem throws an Error', () => {
-      (globalThis.localStorage.getItem as Mock).mockImplementation(() => {
+      mockGetItem3.mockImplementation(() => {
         throw new Error('QuotaExceededError');
       });
       expect(StyleRollups.tournament('tour1')).toEqual([]);
@@ -193,7 +193,7 @@ describe('StyleRollups', () => {
           Sword: { W: 1, L: 0, K: 0, fights: 1 },
         },
       };
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(JSON.stringify(validData));
+      mockGetItem3.mockReturnValue(JSON.stringify(validData));
       const result = StyleRollups.tournament('tour1');
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
@@ -216,7 +216,7 @@ describe('StyleRollups', () => {
           Spear: { W: 0, L: 1, K: 0, fights: 1 },
         },
       };
-      (globalThis.localStorage.getItem as Mock).mockReturnValue(JSON.stringify(mixedData));
+      mockGetItem3.mockReturnValue(JSON.stringify(mixedData));
       const result = StyleRollups.tournament('tour1');
       expect(result).toHaveLength(1);
       expect(result[0]!.style).toBe('Sword');

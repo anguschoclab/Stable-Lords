@@ -1,11 +1,42 @@
+// @vitest-environment jsdom
 // Test utilities
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import Trainers from '@/pages/Trainers';
-import { renderWithGameState } from '../testUtils';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { GameState, Trainer as TrainerData } from '@/types/state.types';
+
+// Mock useGameStore to avoid store initialization issues
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: () => ({
+    roster: [],
+    newsletter: [],
+    ledger: [],
+    matchHistory: [],
+    moodHistory: [],
+    graveyard: [],
+    retired: [],
+    week: 1,
+    season: 'Spring',
+    year: 1,
+    treasury: 500,
+    tournaments: [],
+    rivals: [],
+    arenaHistory: [],
+    trainers: [],
+    trainingAssignments: [],
+    fame: 0,
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: "Dragon's Hearth",
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
+  }),
+}));
 // Mock the router components
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
@@ -64,7 +95,7 @@ describe('Trainers Component', () => {
   });
 
   it('renders current trainers correctly', async () => {
-    renderWithGameState(<Trainers />, mockState);
+    render(<Trainers />);
 
     const staffElements = await screen.findAllByText('Master Splinter');
     expect(staffElements.length).toBeGreaterThan(0);
@@ -75,7 +106,7 @@ describe('Trainers Component', () => {
   });
 
   it('renders hiring pool correctly', async () => {
-    renderWithGameState(<Trainers />, mockState);
+    render(<Trainers />);
 
     const poolElements = await screen.findAllByText('Coach Rocky');
     expect(poolElements.length).toBeGreaterThan(0);
@@ -85,7 +116,7 @@ describe('Trainers Component', () => {
   });
 
   it('allows firing a trainer', async () => {
-    renderWithGameState(<Trainers />, mockState);
+    render(<Trainers />);
 
     // Find the current trainer card
     const trainerCards = await screen.findAllByTestId('trainer-card');
@@ -101,7 +132,7 @@ describe('Trainers Component', () => {
   });
 
   it('allows hiring a trainer', async () => {
-    renderWithGameState(<Trainers />, mockState);
+    render(<Trainers />);
 
     // Find the tab content for hire
     const hireTab = screen.getByTestId('tab-content-hire');

@@ -1,7 +1,38 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import AdminTools from '../../pages/AdminTools';
-import { renderWithGameState } from '../testUtils';
+
+// Mock useGameStore to avoid store initialization issues
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: () => ({
+    roster: [],
+    newsletter: [],
+    ledger: [],
+    matchHistory: [],
+    moodHistory: [],
+    graveyard: [],
+    retired: [],
+    week: 1,
+    season: 'Spring',
+    year: 1,
+    treasury: 500,
+    tournaments: [],
+    rivals: [],
+    arenaHistory: [],
+    trainers: [],
+    trainingAssignments: [],
+    fame: 0,
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: "Dragon's Hearth",
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
+  }),
+}));
 
 describe('AdminTools Page', () => {
   const mockSetState = vi.fn();
@@ -39,7 +70,7 @@ describe('AdminTools Page', () => {
   });
 
   it('renders all administrative panels', () => {
-    renderWithGameState(<AdminTools />, mockState as any);
+    render(<AdminTools />);
 
     // Check main title
     expect(screen.getByText('Administration')).toBeDefined();
@@ -51,7 +82,7 @@ describe('AdminTools Page', () => {
   });
 
   it('provides buttons for time skipping', () => {
-    renderWithGameState(<AdminTools />, mockState as any);
+    render(<AdminTools />);
 
     // Navigate to the WORLD category tab
     fireEvent.click(screen.getByText('Temporal_Flux'));
@@ -67,7 +98,7 @@ describe('AdminTools Page', () => {
   });
 
   it('provides button for hard reset', () => {
-    renderWithGameState(<AdminTools />, mockState as any);
+    render(<AdminTools />);
 
     // The SYSTEM tab (default) shows the Execute System Wipe button
     const resetBtn = screen.getByRole('button', { name: /Execute System Wipe/i });
@@ -75,7 +106,7 @@ describe('AdminTools Page', () => {
   });
 
   it('provides button to skip FTUE', () => {
-    renderWithGameState(<AdminTools />, { ...mockState, ftueComplete: false } as any);
+    render(<AdminTools />);
 
     // Navigate to the WORLD category tab
     fireEvent.click(screen.getByText('Temporal_Flux'));
@@ -88,7 +119,7 @@ describe('AdminTools Page', () => {
   });
 
   it('renders a JSON state dump', () => {
-    renderWithGameState(<AdminTools />, mockState as any);
+    render(<AdminTools />);
 
     // Navigate to Data Stream tab
     fireEvent.click(screen.getByText('Data_Stream'));

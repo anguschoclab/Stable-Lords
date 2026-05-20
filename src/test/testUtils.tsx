@@ -22,16 +22,19 @@ const localStorageMock = (function () {
 })();
 Object.defineProperty(global, 'localStorage', { value: localStorageMock, writable: true });
 
-// Now import the state modules
-import { useGameStore } from '@/state/useGameStore';
+// Import the state modules dynamically
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import type { GameState } from '@/types/game';
 
 // A helper to inject a mock state into the Zustand store before rendering
 export function renderWithGameState(
   ui: React.ReactElement,
   partialState: Partial<ReturnType<typeof createFreshState>> = {}
 ) {
+  // Import useGameStore dynamically inside the function to ensure it's initialized
+  const { useGameStore } = require('@/state/useGameStore');
+  
   // Get a clean base state
   const baseState = createFreshState('test-seed');
 

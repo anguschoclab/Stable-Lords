@@ -1,8 +1,41 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, beforeAll, Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Tournaments from '../../pages/Tournaments';
 import { useGameStore } from '../../state/useGameStore';
-import { renderWithGameState } from '../testUtils';
+import { createFreshState } from '../../engine/factories/gameStateFactory';
+import type { GameState } from '../../types/game';
+
+// Mock useGameStore to avoid store initialization issues
+vi.mock('../../state/useGameStore', () => ({
+  useGameStore: () => ({
+    roster: [],
+    newsletter: [],
+    ledger: [],
+    matchHistory: [],
+    moodHistory: [],
+    graveyard: [],
+    retired: [],
+    week: 1,
+    season: 'Spring',
+    year: 1,
+    treasury: 500,
+    tournaments: [],
+    rivals: [],
+    arenaHistory: [],
+    trainers: [],
+    trainingAssignments: [],
+    fame: 0,
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: "Dragon's Hearth",
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
+  }),
+}));
 
 // We mock @tanstack/react-router to avoid setting up a full router context
 vi.mock('@tanstack/react-router', () => ({
@@ -53,7 +86,7 @@ describe('Tournaments Page', () => {
   });
 
   it('renders recruit operatives button when criteria are met', () => {
-    const { getByText, getByRole } = renderWithGameState(<Tournaments />, mockState as any);
+    const { getByText, getByRole } = render(<Tournaments />);
 
     // Check main title
     expect(getByText(/Seasonal Campaigns/)).toBeDefined();

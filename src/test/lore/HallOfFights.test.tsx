@@ -1,31 +1,41 @@
-// Mock localStorage FIRST
-const localStorageMock = (function () {
-  let store: Record<string, string> = {};
-  return {
-    getItem: function (key: string) {
-      return store[key] || null;
-    },
-    setItem: function (key: string, value: string) {
-      store[key] = value.toString();
-    },
-    removeItem: function (key: string) {
-      store[key] = undefined as any;
-    },
-    clear: function () {
-      store = {};
-    },
-  };
-})();
-Object.defineProperty(global, 'localStorage', { value: localStorageMock, writable: true });
-
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
 import { HallOfFights } from '@/lore/HallOfFights';
-import { renderWithGameState } from '../testUtils';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/game';
 import type { GameState, FightSummary } from '@/types/game';
-import '../setup';
+
+// Mock useGameStore to avoid store initialization issues
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: () => ({
+    roster: [],
+    newsletter: [],
+    ledger: [],
+    matchHistory: [],
+    moodHistory: [],
+    graveyard: [],
+    retired: [],
+    week: 1,
+    season: 'Spring',
+    year: 1,
+    treasury: 500,
+    tournaments: [],
+    rivals: [],
+    arenaHistory: [],
+    trainers: [],
+    trainingAssignments: [],
+    fame: 0,
+    player: {
+      id: 'p1',
+      name: 'Player',
+      stableName: "Dragon's Hearth",
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
+  }),
+}));
 
 // Must mock the module before importing it inside components
 vi.mock('@/lore/LoreArchive', () => {
@@ -118,13 +128,14 @@ describe('HallOfFights Component', () => {
     mockState.arenaHistory = [fight1, fight2, fight3];
 
     // Setup LoreArchive mock for hall entries
-    vi.mocked(LoreArchive.allHall).mockReturnValue([
+    const mockAllHall = LoreArchive.allHall as any;
+    mockAllHall.mockReturnValue([
       { week: 10, label: 'Fight of the Week', fightId: 'f1' },
     ]);
   });
 
   it('groups and displays fights from the arenaHistory by week correctly', async () => {
-    renderWithGameState(<HallOfFights />, mockState);
+    render(<HallOfFights />);
 
     // There should be section for week 11 and week 10
     const week10Headers = await screen.findAllByText(/Week 10/);
@@ -143,7 +154,7 @@ describe('HallOfFights Component', () => {
   });
 
   it('renders style stats correctly based on arena history', async () => {
-    renderWithGameState(<HallOfFights />, mockState);
+    render(<HallOfFights />);
 
     // We mocked TabsContent so all tabs' content is rendered into the DOM
     // The table should list styles from the fights

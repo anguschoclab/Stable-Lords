@@ -12,3 +12,8 @@
 **Vulnerability:** The Electron main process explicitly disabled the sandbox for renderer processes (`sandbox: false` in `webPreferences`).
 **Learning:** Disabling the Electron sandbox significantly weakens defense-in-depth, allowing a compromised renderer process (e.g., via XSS) to escape the Chromium sandbox.
 **Prevention:** Rely on Electron's secure defaults. Never set `sandbox: false` unless there is a specific, well-understood requirement and alternative security measures are in place. Use `contextIsolation` and `nodeIntegration: false` in conjunction with the sandbox.
+
+## 2024-05-02 - [Arbitrary Protocol Execution via shell.openExternal]
+**Vulnerability:** The Electron main process explicitly passed all URLs from `setWindowOpenHandler` directly into `shell.openExternal(url)` without validating the protocol.
+**Learning:** `shell.openExternal(url)` delegates to the operating system to handle the URI. If an attacker can control the `url` (e.g. via `window.open('file://etc/passwd')` from a compromised renderer), they can trigger Local File Inclusion, SMB reflection, or even Remote Code Execution depending on the OS and the scheme.
+**Prevention:** Always parse the URL and explicitly allow-list only safe protocols (`http:`, `https:`) before passing them to `shell.openExternal`. Use a try-catch block to handle malformed URLs safely.

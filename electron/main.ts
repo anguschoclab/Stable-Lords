@@ -172,7 +172,16 @@ function createWindow() {
 
   // Handle external links
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    try {
+      const parsedUrl = new URL(url);
+      if (['https:', 'http:'].includes(parsedUrl.protocol)) {
+        shell.openExternal(url);
+      } else {
+        console.warn(`Blocked attempt to open external link with unsafe protocol: ${parsedUrl.protocol}`);
+      }
+    } catch (e) {
+      console.error(`Invalid URL attempt blocked: ${url}`);
+    }
     return { action: 'deny' };
   });
 }

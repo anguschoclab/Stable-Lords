@@ -92,6 +92,14 @@ const WEATHER_METADATA = {
       'A vile purple mist clings to the arena, draining stamina and clouding the mind.',
     stats: 'INITIATIVE & RIPOSTE PENALTY // STAMINA DRAIN 130%',
   },
+  Hailstorm: {
+    icon: CloudRain,
+    color: 'text-cyan-300',
+    bg: 'bg-cyan-300/10',
+    border: 'border-cyan-300/20',
+    description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
+    stats: 'INITIATIVE & RIPOSTE PENALTY -2 // STAMINA DRAIN 120%',
+  },
 };
 
 export function WeatherWidget() {

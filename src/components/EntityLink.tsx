@@ -125,7 +125,7 @@ interface StableLinkProps {
 /**
  * Renders a clickable link for a stable that opens its records in a side panel.
  * Falls back to plain text if the stable cannot be resolved.
- * 
+ *
  * @param {StableLinkProps} props - The component props.
  * @param {string} props.name - The name of the stable.
  * @param {string} [props.className] - Optional CSS class name for styling.

@@ -29,8 +29,7 @@ describe('updatePromoterHistory', () => {
     const newState = updatePromoterHistory(state, promoterId, purse, boutId);
 
     expect(newState.promoters[promoterId].history.totalPursePaid).toBe(1500);
-    expect(newState.promoters[promoterId].history.notableBouts).toContain(boutId);
-    expect(newState.promoters[promoterId].history.notableBouts.length).toBe(2);
+    expect(newState.promoters[promoterId].history.notableBouts).toEqual(['old-bout' as FightId, boutId]);
   });
 
   it('keeps only the last 10 notable bouts', () => {

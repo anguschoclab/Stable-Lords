@@ -70,7 +70,8 @@
       "Bash(node node_modules/vitest/vitest.mjs run src/test/engine/planBias.test.ts)",
       "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" run *)",
       "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" x *)",
-      "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" install *)"
+      "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" install *)",
+      "Skill(superpowers:test-driven-development)"
     ]
   },
   "hooks": {

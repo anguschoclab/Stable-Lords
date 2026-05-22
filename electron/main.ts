@@ -85,14 +85,14 @@ async function ensureSaveDirectory() {
   
   // Create subdirectories
   const subdirs = ['hot_state', 'seasons'];
-  for (const dir of subdirs) {
+  await Promise.all(subdirs.map(async (dir) => {
     const dirPath = path.join(saveDir, dir);
     try {
       await fs.access(dirPath);
     } catch {
       await fs.mkdir(dirPath, { recursive: true });
     }
-  }
+  }));
 }
 
 function createWindow() {

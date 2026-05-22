@@ -168,6 +168,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.1,
     description: 'A vile, clinging mist saps energy and clouds the mind, leaving fighters desperate.',
   },
+  Hailstorm: {
+    staminaMult: 1.2,
+    initiativeMod: -4,
+    riposteMod: -2,
+    damageMult: 0.95,
+    description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
+  },
 };
 
 /**
@@ -210,6 +217,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Meteor Shower': 'The night sky burns with falling stars, casting chaotic shadows across the sand.',
   'Abyssal Gloom': 'A terrifying, supernatural darkness swallows the arena. Fighters vanish into the abyssal gloom.',
   'Cursed Miasma': 'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
+  Hailstorm: 'Ice falls from the sky like stones, battering armor and bare flesh alike.',
 };
 
 /**

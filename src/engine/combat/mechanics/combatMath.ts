@@ -50,6 +50,7 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   'Scorching Wind': 1.3, // 30% more stamina drain
   'Cursed Miasma': 1.3, // 30% more stamina drain
   Sweltering: 1.2, // 20% more stamina drain
+  Hailstorm: 1.2, // 20% more stamina drain
   'Blood Moon': 1.1, // 10% more stamina drain
   Gale: 1.15, // 15% more stamina drain
   Breezy: 0.9, // 10% less stamina drain

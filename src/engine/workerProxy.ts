@@ -23,15 +23,18 @@ function buildProxy(): AsyncEngine {
         { advanceDay },
         { createFreshState },
         { TournamentSelectionService },
+        { TickOrchestrator },
       ] = await Promise.all([
         import('./pipeline/services/weekPipelineService'),
         import('./dayPipeline'),
         import('./factories/gameStateFactory'),
         import('./matchmaking/tournamentSelection'),
+        import('./tick/TickOrchestrator'),
       ]);
       cached = {
         advanceWeek,
         advanceDay,
+        skipToWeekEnd: TickOrchestrator.skipToWeekEnd,
         createFreshState,
         resolveTournamentRound: TournamentSelectionService.resolveRound.bind(
           TournamentSelectionService
@@ -42,6 +45,7 @@ function buildProxy(): AsyncEngine {
     return {
       advanceWeek: async (...args) => (await load()).advanceWeek(...args),
       advanceDay: async (...args) => (await load()).advanceDay(...args),
+      skipToWeekEnd: async (...args) => (await load()).skipToWeekEnd(...args),
       createFreshState: async (...args) => (await load()).createFreshState(...args),
       resolveTournamentRound: async (...args) => (await load()).resolveTournamentRound(...args),
     };

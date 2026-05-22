@@ -140,8 +140,20 @@ describe('HallOfFame Component', () => {
     ];
 
     mockState.awards = [
-      { year: 1, type: 'WARRIOR_OF_YEAR' as any, warriorId: 'Gladiator' as any, reason: 'Dominance', value: 100 },
-      { year: 1, type: 'KILLER_OF_YEAR' as any, warriorId: 'Reaper' as any, reason: 'Lethality', value: 50 },
+      {
+        year: 1,
+        type: 'WARRIOR_OF_YEAR' as any,
+        warriorId: 'Gladiator' as any,
+        reason: 'Dominance',
+        value: 100,
+      },
+      {
+        year: 1,
+        type: 'KILLER_OF_YEAR' as any,
+        warriorId: 'Reaper' as any,
+        reason: 'Lethality',
+        value: 50,
+      },
       {
         year: 1,
         type: 'CLASS_MVP' as any,

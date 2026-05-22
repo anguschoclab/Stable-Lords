@@ -22,8 +22,6 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
   // 1. Systemic Progression (Draft-heavy)
   const hofImpact = processHallOfFame(state, nextWeek);
 
-
-
   // 🏛️ Hall of Fame Snapshotting (1.0 Fix)
 
   // We create snapshots at the BEGINNING of every year (Week 1) to provide a baseline.

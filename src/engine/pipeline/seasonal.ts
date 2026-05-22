@@ -460,11 +460,13 @@ export function runSeasonalPass(
         // Ensure "Local Hero" tag is present
         // Ensure "Local Hero" flair is present
         const currentFlair = chosen.flair || [];
-        const newFlair = currentFlair.includes('Local Hero') ? currentFlair : [...currentFlair, 'Local Hero'];
+        const newFlair = currentFlair.includes('Local Hero')
+          ? currentFlair
+          : [...currentFlair, 'Local Hero'];
 
         rosterUpdates.set(chosen.id, {
           fame: (chosen.fame || 0) + fameGained,
-          flair: newFlair
+          flair: newFlair,
         });
 
         newsletterItems.push({
@@ -591,7 +593,9 @@ export function runSeasonalPass(
         id: seasonRng.uuid('newsletter'),
         week: nextWeek,
         title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: 'Someone', xp: 0, fame: 0, gold: cost })],
+        items: [
+          t(seasonRng.pick(e.newsletter) || '', { name: 'Someone', xp: 0, fame: 0, gold: cost }),
+        ],
       });
     }
   }

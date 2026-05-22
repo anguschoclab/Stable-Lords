@@ -116,7 +116,8 @@ const PERSONALITY_PURSE_MOD: Record<PromoterPersonality, PurseModFn> = {
   // +10% hype (competitive matches draw more interest)
   Honorable: (_a, _b, baseHype) => (baseHype > 120 ? 1.05 : 1.0),
   // Already +25 hype for kill warriors; add +20% on injury-risk pairings
-  Sadistic: (warriorA, warriorB) => (hasInjuryRisk(warriorA) || hasInjuryRisk(warriorB) ? 1.2 : 1.0),
+  Sadistic: (warriorA, warriorB) =>
+    hasInjuryRisk(warriorA) || hasInjuryRisk(warriorB) ? 1.2 : 1.0,
   // Already +15 hype for fame; add +20% purse when both fame > 75
   Flashy: (warriorA, warriorB) => (warriorA.fame > 75 && warriorB.fame > 75 ? 1.2 : 1.0),
   // +5% purse, stable
@@ -293,35 +294,35 @@ function calculateHype(a: Warrior, b: Warrior, promoter: Promoter): number {
   if (isBrute(b.style) && isEvasive(a.style)) hype += 20;
   if (isEvasive(a.style) && isEvasive(b.style)) hype -= 30;
 
-/** Function type for personality-based hype bias modification. */
-type HypeBiasFn = (a: Warrior, b: Warrior, hype: number) => number;
+  /** Function type for personality-based hype bias modification. */
+  type HypeBiasFn = (a: Warrior, b: Warrior, hype: number) => number;
 
-/**
- * Strategy map: each PromoterPersonality maps to a function that adjusts
- * raw hype based on the matchup characteristics it values.
- */
-const PERSONALITY_HYPE_BIAS: Record<PromoterPersonality, HypeBiasFn> = {
-  // -10% hype for crowd-pleasing blowouts (they pay more but generate less organic hype)
-  Greedy: (_a, _b, hype) => hype * 0.9,
-  // +10% hype for competitive matches
-  Honorable: (a, b, hype) => (Math.abs(a.fame - b.fame) < 50 ? hype * 1.1 : hype),
-  // +25 hype for kill warriors; +20% on injury-risk pairings
-  Sadistic: (a, b, hype) => {
-    let h = hype;
-    if (a.career.kills > 2 || b.career.kills > 2) h += 25;
-    if (hasInjuryRisk(a) || hasInjuryRisk(b)) h *= 1.2;
-    return h;
-  },
-  // +15 hype for fame; +10% when both have showy styles
-  Flashy: (a, b, hype) => {
-    let h = hype;
-    if (a.fame > 100 || b.fame > 100) h += 15;
-    if (isShowyWarrior(a) && isShowyWarrior(b)) h *= 1.1;
-    return h;
-  },
-  // Stable, moderate hype — no change
-  Corporate: (_a, _b, hype) => hype,
-};
+  /**
+   * Strategy map: each PromoterPersonality maps to a function that adjusts
+   * raw hype based on the matchup characteristics it values.
+   */
+  const PERSONALITY_HYPE_BIAS: Record<PromoterPersonality, HypeBiasFn> = {
+    // -10% hype for crowd-pleasing blowouts (they pay more but generate less organic hype)
+    Greedy: (_a, _b, hype) => hype * 0.9,
+    // +10% hype for competitive matches
+    Honorable: (a, b, hype) => (Math.abs(a.fame - b.fame) < 50 ? hype * 1.1 : hype),
+    // +25 hype for kill warriors; +20% on injury-risk pairings
+    Sadistic: (a, b, hype) => {
+      let h = hype;
+      if (a.career.kills > 2 || b.career.kills > 2) h += 25;
+      if (hasInjuryRisk(a) || hasInjuryRisk(b)) h *= 1.2;
+      return h;
+    },
+    // +15 hype for fame; +10% when both have showy styles
+    Flashy: (a, b, hype) => {
+      let h = hype;
+      if (a.fame > 100 || b.fame > 100) h += 15;
+      if (isShowyWarrior(a) && isShowyWarrior(b)) h *= 1.1;
+      return h;
+    },
+    // Stable, moderate hype — no change
+    Corporate: (_a, _b, hype) => hype,
+  };
 
   // 2. Personality Bias - Extended for all personalities
   hype = (PERSONALITY_HYPE_BIAS[promoter.personality] ?? ((_a, _b, h) => h))(a, b, hype);

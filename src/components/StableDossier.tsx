@@ -15,7 +15,7 @@ interface StableDossierProps {
 /**
  * Renders a dossier for a specific stable (either the player's or a rival's).
  * Displays the stable's crest, owner information, fame, and active roster.
- * 
+ *
  * @param {StableDossierProps} props - The component props.
  * @param {string} [props.stableId] - The unique ID of the stable owner.
  * @param {string} [props.stableName] - The name of the stable to display.

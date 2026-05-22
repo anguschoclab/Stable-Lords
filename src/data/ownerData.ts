@@ -86,13 +86,27 @@ export const PERSONALITY_STYLE_PREFS: Record<OwnerPersonality, FightingStyle[]> 
   Showman: [FightingStyle.AimedBlow, FightingStyle.SlashingAttack, FightingStyle.LungingAttack],
   Pragmatic: [FightingStyle.StrikingAttack, FightingStyle.ParryStrike, FightingStyle.WallOfSteel],
   Tactician: [FightingStyle.ParryRiposte, FightingStyle.ParryLunge, FightingStyle.AimedBlow],
-};
+};/**
+ * Get philosophy styles.
+ * @param philosophy - Philosophy.
+ * @returns The result.
+ */
+
 
 export function getPhilosophyStyles(philosophy: string): FightingStyle[] {
   return PHILOSOPHY_TO_STYLES[philosophy] ?? Object.values(FightingStyle);
-}
+}/**
+ * Philosophy_evolve_threshold_win.
+ */
+
 
 // ─── 1.0 Hardening: Thresholds ───────────────────────────────────────────
-export const PHILOSOPHY_EVOLVE_THRESHOLD_WIN = 0.7;
-export const PHILOSOPHY_EVOLVE_THRESHOLD_LOSS = 0.3;
+export const PHILOSOPHY_EVOLVE_THRESHOLD_WIN = 0.7;/**
+ * Philosophy_evolve_threshold_loss.
+ */
+
+export const PHILOSOPHY_EVOLVE_THRESHOLD_LOSS = 0.3;/**
+ * Philosophy_min_fights.
+ */
+
 export const PHILOSOPHY_MIN_FIGHTS = 4;

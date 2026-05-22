@@ -10,7 +10,12 @@ const STEP_SUBTITLES = [
 interface StepProgressProps {
   step: number;
   total: number;
-}
+}/**
+ * Step progress.
+ * @param { step, total } - { step, total }.
+ * @returns The result.
+ */
+
 
 export default function StepProgress({ step, total }: StepProgressProps) {
   return (

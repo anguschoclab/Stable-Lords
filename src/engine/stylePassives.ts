@@ -6,11 +6,17 @@
  */
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { FightPlan } from '@/types/combat.types';
+import type { FightPlan } from '@/types/combat.types';/**
+ * Phase type.
+ */
+
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
-export type Phase = 'OPENING' | 'MID' | 'LATE';
+export type Phase = 'OPENING' | 'MID' | 'LATE';/**
+ * Defines the shape of style passive result.
+ */
+
 
 export interface StylePassiveResult {
   attBonus: number;
@@ -23,7 +29,10 @@ export interface StylePassiveResult {
   mastery: MasteryTier;
   hasPassiveNarrative?: boolean;
   narrative?: string;
-}
+}/**
+ * Defines the shape of kill mechanic.
+ */
+
 
 export interface KillMechanic {
   killBonus: number;
@@ -31,7 +40,10 @@ export interface KillMechanic {
   extendedKillWindow: boolean;
   killWindowHpMult: number;
   killNarrative: string;
-}
+}/**
+ * Defines the shape of style strategy.
+ */
+
 
 export interface StyleStrategy {
   tempo: {
@@ -46,7 +58,10 @@ export interface StyleStrategy {
     offTactic?: string,
     defTactic?: string
   ) => { offMult: number; defMult: number; warning?: string };
-}
+}/**
+ * Defines the shape of style passive context.
+ */
+
 
 export interface StylePassiveContext {
   phase: Phase;
@@ -59,7 +74,10 @@ export interface StylePassiveContext {
   endRatio: number;
   opponentStyle: FightingStyle;
   targetedLocation?: string;
-}
+}/**
+ * Defines the shape of kill context.
+ */
+
 
 export interface KillContext {
   phase: Phase;
@@ -67,16 +85,31 @@ export interface KillContext {
   consecutiveHits: number;
   targetedLocation?: string;
   hitLocation: string;
-}
+}/**
+ * Style voice type.
+ */
+
 
 // ─── Style Identity (narrative flags) ─────────────────────────────────────
 // Non-mechanical flags consumed by the narrator to pick voice/flavour per style,
 // and by crowd-mood + kill-text assembly to bias tone.
 
-export type StyleVoice = 'Surgical' | 'Brutal' | 'Explosive' | 'Fortified' | 'Flowing' | 'Cunning';
-export type AttackFreq = 'Sparing' | 'Measured' | 'Relentless';
-export type KillBias = 'Opportunistic' | 'Methodical' | 'Savage';
-export type FatigueBurn = 'Low' | 'Moderate' | 'High';
+export type StyleVoice = 'Surgical' | 'Brutal' | 'Explosive' | 'Fortified' | 'Flowing' | 'Cunning';/**
+ * Attack freq type.
+ */
+
+export type AttackFreq = 'Sparing' | 'Measured' | 'Relentless';/**
+ * Kill bias type.
+ */
+
+export type KillBias = 'Opportunistic' | 'Methodical' | 'Savage';/**
+ * Fatigue burn type.
+ */
+
+export type FatigueBurn = 'Low' | 'Moderate' | 'High';/**
+ * Defines the shape of style identity.
+ */
+
 
 export interface StyleIdentity {
   voice: StyleVoice;
@@ -85,7 +118,10 @@ export interface StyleIdentity {
   fatigueBurn: FatigueBurn;
   /** Short narrative tagline, safe for use in kill-text assembly. */
   tagline: string;
-}
+}/**
+ * Style_identity.
+ */
+
 
 export const STYLE_IDENTITY: Record<FightingStyle, StyleIdentity> = {
   [FightingStyle.AimedBlow]: {
@@ -168,11 +204,17 @@ export const STYLE_IDENTITY: Record<FightingStyle, StyleIdentity> = {
  */
 export function getStyleIdentity(style: FightingStyle): StyleIdentity {
   return STYLE_IDENTITY[style];
-}
+}/**
+ * Mastery tier type.
+ */
+
 
 // ─── Mastery System ───────────────────────────────────────────────────────
 
-export type MasteryTier = 'Novice' | 'Practiced' | 'Veteran' | 'Master' | 'Grandmaster';
+export type MasteryTier = 'Novice' | 'Practiced' | 'Veteran' | 'Master' | 'Grandmaster';/**
+ * Defines the shape of mastery info.
+ */
+
 
 export interface MasteryInfo {
   tier: MasteryTier;

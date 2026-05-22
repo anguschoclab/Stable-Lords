@@ -10,7 +10,10 @@ import { ESTABLISHED_TEMPLATES } from './establishedTemplates';
 import { MINOR_TEMPLATES } from './minorTemplates';
 
 // Cache storage for filtered results
-const templateCache = new Map<string, StableTemplate[]>();
+const templateCache = new Map<string, StableTemplate[]>();/**
+ * All_templates.
+ */
+
 
 // Combined all templates for convenience
 export const ALL_TEMPLATES: StableTemplate[] = [
@@ -18,7 +21,10 @@ export const ALL_TEMPLATES: StableTemplate[] = [
   ...MAJOR_TEMPLATES,
   ...ESTABLISHED_TEMPLATES,
   ...MINOR_TEMPLATES,
-];
+];/**
+ * Tier_caches.
+ */
+
 
 // Pre-computed tier caches for instant access
 export const TIER_CACHES: Record<StableTier, StableTemplate[]> = {

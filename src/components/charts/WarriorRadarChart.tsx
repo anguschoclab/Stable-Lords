@@ -21,7 +21,10 @@ const chartConfig: ChartConfig = {
     label: 'Genetic Potential',
     color: 'hsl(var(--muted-foreground))',
   },
-};
+};/**
+ * Warrior radar chart.
+ */
+
 
 export const WarriorRadarChart = React.memo(function WarriorRadarChart({
   warrior,

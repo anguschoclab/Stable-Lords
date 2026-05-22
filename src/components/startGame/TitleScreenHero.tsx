@@ -1,4 +1,8 @@
-import { Swords, Star } from 'lucide-react';
+import { Swords, Star } from 'lucide-react';/**
+ * Title screen hero.
+ * @returns The result.
+ */
+
 
 export default function TitleScreenHero() {
   return (

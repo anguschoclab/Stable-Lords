@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import type { ArenaTier } from '../ArenaBackground';
+import type { ArenaTier } from '../ArenaBackground';/**
+ * Crowd state type.
+ */
+
 
 export type CrowdState = 'idle' | 'anticipation' | 'cheer' | 'roar' | 'gasp' | 'silence' | 'chant';
 
@@ -8,7 +11,12 @@ interface CrowdReactionsProps {
   tier: ArenaTier;
   state: CrowdState;
   className?: string;
-}
+}/**
+ * Crowd reactions.
+ * @param { tier, state, className } - { tier, state, class name }.
+ * @returns The result.
+ */
+
 
 export default function CrowdReactions({ tier, state, className }: CrowdReactionsProps) {
   const [currentState, setCurrentState] = useState<CrowdState>('idle');

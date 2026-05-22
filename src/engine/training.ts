@@ -15,7 +15,10 @@ import {
 import { getHealingTrainerBonus } from './training/coachLogic';
 
 // ─── Exports for backward compatibility ───
-export { computeGainChance };
+export { computeGainChance };/**
+ * Defines the shape of training impact.
+ */
+
 
 export interface TrainingImpact {
   updatedRoster: Warrior[];

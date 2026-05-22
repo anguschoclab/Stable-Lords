@@ -28,7 +28,11 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';/**
+ * Stable equipment.
+ * @returns The result.
+ */
+
 
 export default function StableEquipment() {
   const { roster, updateWarriorEquipment } = useGameStore();

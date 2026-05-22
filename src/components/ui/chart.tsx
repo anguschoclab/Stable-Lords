@@ -1,7 +1,10 @@
 import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';/**
+ * Chart config type.
+ */
+
 
 // Format: { [key]: { label: string, color: string } }
 export type ChartConfig = Record<

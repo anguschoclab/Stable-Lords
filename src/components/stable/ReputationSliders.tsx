@@ -48,7 +48,11 @@ const REP_LABELS: {
     glow: 'bg-arena-pop',
     desc: 'Strategic responsiveness to the shifting combat meta. High adaptability allows your warriors to better capitalize on tactical openings.',
   },
-];
+];/**
+ * Reputation sliders.
+ * @returns The result.
+ */
+
 
 export function ReputationSliders() {
   const state = useWorldState();

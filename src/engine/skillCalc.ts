@@ -393,7 +393,10 @@ export {
   type HPRating,
   type EnduranceTier,
   type EncumbranceClass,
-} from '@/data/terrabloodCharts';
+} from '@/data/terrabloodCharts';/**
+ * Damage_labels.
+ */
+
 
 export const DAMAGE_LABELS = [
   '',

@@ -8,7 +8,12 @@ interface ComparisonBarProps {
   maxVal: number;
   colorA: string;
   colorB: string;
-}
+}/**
+ * Comparison bar.
+ * @param { label, valA, valB, maxVal, colorA, colorB } - { label, val a, val b, max val, color a, color b }.
+ * @returns The result.
+ */
+
 
 export function ComparisonBar({ label, valA, valB, maxVal, colorA, colorB }: ComparisonBarProps) {
   const pctA = maxVal > 0 ? (valA / maxVal) * 100 : 0;

@@ -3,7 +3,10 @@
  */
 
 import type { GameState } from '@/types/state.types';
-import type { FightSummary } from '@/types/combat.types';
+import type { FightSummary } from '@/types/combat.types';/**
+ * Engine event type.
+ */
+
 
 export type EngineEvent =
   | { type: 'WEEK_ADVANCED'; payload: { week: number; state: GameState } }
@@ -41,6 +44,9 @@ class EventBus {
   clear(): void {
     this.handlers.clear();
   }
-}
+}/**
+ * Engine event bus.
+ */
+
 
 export const engineEventBus = new EventBus();

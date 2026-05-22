@@ -3,7 +3,10 @@
  * Comprehensive TypeScript interfaces for narrativeContent.json
  */
 
-import type { CrowdMoodType } from './shared.types';
+import type { CrowdMoodType } from './shared.types';/**
+ * Defines the shape of mood tone record.
+ */
+
 
 // ─── UX Metadata ────────────────────────────────────────────────────────
 
@@ -11,25 +14,37 @@ export interface MoodToneRecord {
   adjectives: string[];
   opener: string[];
   closer: string[];
-}
+}/**
+ * Defines the shape of ux metadata.
+ */
+
 
 export interface UxMetadata {
   version: string;
   description: string;
   mood_tone: Record<CrowdMoodType, MoodToneRecord>;
-}
+}/**
+ * Defines the shape of persona descriptor.
+ */
+
 
 // ─── Persona Descriptors ─────────────────────────────────────────────────
 
 export interface PersonaDescriptor {
   min: number;
   text: string;
-}
+}/**
+ * Defines the shape of persona skill.
+ */
+
 
 export interface PersonaSkill {
   high: PersonaDescriptor[];
   low: PersonaDescriptor[];
-}
+}/**
+ * Defines the shape of persona good.
+ */
+
 
 export interface PersonaGood {
   initiative: PersonaSkill;
@@ -38,23 +53,35 @@ export interface PersonaGood {
   parry: PersonaSkill;
   defense: PersonaSkill;
   endurance: PersonaSkill;
-}
+}/**
+ * Defines the shape of persona bad.
+ */
+
 
 export interface PersonaBad {
   initiative: PersonaSkill;
   attack: PersonaSkill;
-}
+}/**
+ * Defines the shape of persona descriptors.
+ */
+
 
 export interface PersonaDescriptors {
   coordination: Record<string, string>;
   activity: Record<string, string>;
-}
+}/**
+ * Defines the shape of persona.
+ */
+
 
 export interface Persona {
   good: PersonaGood;
   bad: PersonaBad;
   descriptors: PersonaDescriptors;
-}
+}/**
+ * Defines the shape of strike category.
+ */
+
 
 // ─── Strike Narratives ────────────────────────────────────────────────────
 
@@ -65,7 +92,10 @@ export interface StrikeCategory {
   critical_human: string[];
   critical_supernatural: string[];
   fatal: string[];
-}
+}/**
+ * Defines the shape of strikes collection.
+ */
+
 
 export interface StrikesCollection {
   generic: string[];
@@ -73,7 +103,10 @@ export interface StrikesCollection {
   bashing: StrikeCategory;
   piercing: StrikeCategory;
   fist: StrikeCategory;
-}
+}/**
+ * Defines the shape of hit locations.
+ */
+
 
 // ─── Play-by-Play Narratives ─────────────────────────────────────────────
 
@@ -85,50 +118,74 @@ export interface HitLocations {
   'left arm': string[];
   'right leg': string[];
   'left leg': string[];
-}
+}/**
+ * Defines the shape of damage severity.
+ */
+
 
 export interface DamageSeverity {
   deadly: string[];
   terrific: string[];
   powerful: string[];
   glancing: string[];
-}
+}/**
+ * Defines the shape of status changes.
+ */
+
 
 export interface StatusChanges {
   severe: string[];
   desperate: string[];
   serious: string[];
-}
+}/**
+ * Defines the shape of defenses.
+ */
+
 
 export interface Defenses {
   dodge: { success: string[] };
   parry: { success: string[] };
   shield: { success: string[] };
-}
+}/**
+ * Defines the shape of pacing.
+ */
+
 
 export interface Pacing {
   stalemate: string[];
   trading_blows: string[];
   pressing: string[];
-}
+}/**
+ * Defines the shape of reactions.
+ */
+
 
 export interface Reactions {
   positive: string[];
   negative: string[];
   encourage: string[];
-}
+}/**
+ * Defines the shape of taunts.
+ */
+
 
 export interface Taunts {
   winner: string[];
   loser: string[];
-}
+}/**
+ * Defines the shape of insights.
+ */
+
 
 export interface Insights {
   ST: string[];
   SP: string[];
   DF: string[];
   WL: string[];
-}
+}/**
+ * Defines the shape of pbp narratives.
+ */
+
 
 export interface PbpNarratives {
   openers: string[];
@@ -143,7 +200,10 @@ export interface PbpNarratives {
   initiative: string[];
   feints: string[];
   insights: Insights;
-}
+}/**
+ * Defines the shape of conclusions.
+ */
+
 
 // ─── Conclusions ──────────────────────────────────────────────────────────
 
@@ -152,7 +212,10 @@ export interface Conclusions {
   KO: string | string[];
   Stoppage: string | string[];
   Exhaustion: string | string[];
-}
+}/**
+ * Defines the shape of event narrative.
+ */
+
 
 // ─── Events ────────────────────────────────────────────────────────────────
 
@@ -161,12 +224,18 @@ export interface EventNarrative {
   newsletter: string[];
   injury_name?: string;
   injury_desc?: string;
-}
+}/**
+ * Defines the shape of events.
+ */
+
 
 export interface Events {
   tavern_brawl: EventNarrative;
   celestial_blessing: EventNarrative;
-}
+}/**
+ * Defines the shape of gazette fights.
+ */
+
 
 // ─── Gazette Narratives ───────────────────────────────────────────────────
 
@@ -177,7 +246,10 @@ export interface GazetteFights {
   Exhaustion: string[];
   Draw: string[];
   Default: string[];
-}
+}/**
+ * Defines the shape of gazette headlines.
+ */
+
 
 export interface GazetteHeadlines {
   LegendaryStreak: string[];
@@ -195,7 +267,10 @@ export interface GazetteHeadlines {
   Standard: string[];
   Empty: string[];
   Graveyard: string[];
-}
+}/**
+ * Defines the shape of gazette featured.
+ */
+
 
 export interface GazetteFeatured {
   LegendaryStreak: string[];
@@ -206,19 +281,28 @@ export interface GazetteFeatured {
   RisingStar: string[];
   Upset: string[];
   Graveyard: string[];
-}
+}/**
+ * Defines the shape of season summary.
+ */
+
 
 export interface SeasonSummary {
   headline: string;
   body: string[];
-}
+}/**
+ * Defines the shape of gazette narratives.
+ */
+
 
 export interface GazetteNarratives {
   fights: GazetteFights;
   headlines: GazetteHeadlines;
   featured: GazetteFeatured;
   season_summary: SeasonSummary;
-}
+}/**
+ * Defines the shape of fanfare.
+ */
+
 
 // ─── Fanfare ─────────────────────────────────────────────────────────────
 
@@ -236,13 +320,19 @@ export interface Fanfare {
   btn_next: string;
   armor_intro_verbs: string[];
   weapon_intro_verbs: string[];
-}
+}/**
+ * Defines the shape of memorials.
+ */
+
 
 // ─── Memorials ────────────────────────────────────────────────────────────
 
 export interface Memorials {
   tributes: string[];
-}
+}/**
+ * Defines the shape of tier config.
+ */
+
 
 // ─── Recruitment ───────────────────────────────────────────────────────────
 
@@ -250,7 +340,10 @@ export interface TierConfig {
   points: number[];
   cost: number;
   stars: number;
-}
+}/**
+ * Defines the shape of recruitment.
+ */
+
 
 export interface Recruitment {
   names: string[];
@@ -258,7 +351,10 @@ export interface Recruitment {
   tiers: Record<string, TierConfig>;
   origin: string[];
   style_blurbs: Record<string, string[]>;
-}
+}/**
+ * Defines the shape of meta.
+ */
+
 
 // ─── Meta ─────────────────────────────────────────────────────────────────
 
@@ -267,19 +363,28 @@ export interface Meta {
   title: Record<string, string>;
   injury: Record<string, string>;
   status: Record<string, string>;
-}
+}/**
+ * Defines the shape of passives.
+ */
+
 
 // ─── Passives ─────────────────────────────────────────────────────────────
 
 export interface Passives {
   [key: string]: string[];
-}
+}/**
+ * Defines the shape of kill text.
+ */
+
 
 // ─── Root Narrative Content Interface ───────────────────────────────────────
 
 export interface KillText {
   [key: string]: string[];
-}
+}/**
+ * Defines the shape of narrative content.
+ */
+
 
 export interface NarrativeContent {
   ux_metadata: UxMetadata;

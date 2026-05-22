@@ -76,7 +76,10 @@ const surfaceVariants = cva('relative overflow-hidden transition-all duration-30
     padding: 'md',
     rounded: 'none', // Stone-cut default — hard edges throughout
   },
-});
+});/**
+ * Defines the shape of surface props.
+ */
+
 
 export interface SurfaceProps
   extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof surfaceVariants> {

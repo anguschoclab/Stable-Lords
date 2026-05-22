@@ -1,4 +1,7 @@
-import type { Warrior } from '@/types/warrior.types';
+import type { Warrior } from '@/types/warrior.types';/**
+ * Defines the shape of stable stats.
+ */
+
 
 export interface StableStats {
   activeCount: number;

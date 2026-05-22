@@ -14,7 +14,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
+ * Recent bouts widget.
+ * @returns The result.
+ */
+
 
 export function RecentBoutsWidget() {
   const state = useGameStore();

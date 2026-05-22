@@ -124,7 +124,10 @@ const MATCHUP_MATRIX: Record<FightingStyle, Record<FightingStyle, number>> = {
     [FightingStyle.TotalParry]: 1,
     [FightingStyle.WallOfSteel]: 0,
   },
-};
+};/**
+ * Defines the shape of matchup score.
+ */
+
 
 export interface MatchupScore {
   playerWarriorId: string;

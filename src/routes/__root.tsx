@@ -15,7 +15,10 @@ function RouterHooks() {
   useKeyboardShortcuts({ onToggleSidebar: toggleEventLog });
 
   return null;
-}
+}/**
+ * Route.
+ */
+
 
 export const Route = createRootRoute({
   component: () => (

@@ -16,7 +16,11 @@ import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV, type Warrior } from '
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
-import { Surface } from '@/components/ui/Surface';
+import { Surface } from '@/components/ui/Surface';/**
+ * Physicals simulator.
+ * @returns The result.
+ */
+
 
 export default function PhysicalsSimulator() {
   const { roster } = useGameStore();

@@ -3,7 +3,12 @@ import { Flame, Zap } from 'lucide-react';
 
 interface StoryBeginsStepProps {
   onFinish: () => void;
-}
+}/**
+ * Story begins step.
+ * @param { onFinish } - { on finish }.
+ * @returns The result.
+ */
+
 
 export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {
   return (

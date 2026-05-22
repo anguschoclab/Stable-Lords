@@ -2,7 +2,22 @@ import { type Warrior } from '@/types/game';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { growthNarrative } from './GrowthHelpers';
 import { generateWarriorStatements } from '@/data/warriorStatements';
-import { StatBattery } from '@/components/ui/StatBattery';
+import { StatBattery } from '@/components/ui/StatBattery';/**
+ * Attr bar.
+ * @param {
+  label,
+  value,
+  potential,
+  max = 25,
+} - {
+  label,
+  value,
+  potential,
+  max = 25,
+}.
+ * @returns The result.
+ */
+
 
 export function AttrBar({
   label,
@@ -41,7 +56,20 @@ export function AttrBar({
       <StatBattery label="" value={value} max={max} className="[&>span:first-child]:hidden" />
     </div>
   );
-}
+}/**
+ * Render the SkillBar component.
+ * @param {
+  label,
+  value,
+  max = 20,
+} - {
+  label,
+  value,
+  max = 20,
+}.
+ * @returns The result.
+ */
+
 
 export function SkillBar({
   label,
@@ -53,7 +81,12 @@ export function SkillBar({
   max?: number;
 }) {
   return <StatBattery label={label} value={value} max={max} />;
-}
+}/**
+ * Render the WarriorStatementsPanel component.
+ * @param { warrior } - { warrior }.
+ * @returns The result.
+ */
+
 
 export function WarriorStatementsPanel({ warrior }: { warrior: Warrior }) {
   if (!warrior.baseSkills) return null;

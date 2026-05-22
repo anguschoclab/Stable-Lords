@@ -191,7 +191,12 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
 export function resolveEffectiveWeather(weather: WeatherType, arenaTags: string[]): WeatherType {
   const isIndoor = arenaTags.includes('indoor');
   return isIndoor ? 'Clear' : weather;
-}
+}/**
+ * Get weather effect.
+ * @param weather - Weather.
+ * @returns The result.
+ */
+
 
 export function getWeatherEffect(weather: WeatherType): WeatherEffect {
   return WEATHER_EFFECTS[weather] ?? WEATHER_EFFECTS['Clear'];

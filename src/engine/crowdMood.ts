@@ -2,11 +2,20 @@
  * Stable Lords — Crowd Mood System
  * Arena-wide mood states that affect fame gain, kill probability, and gazette tone.
  */
-import type { FightSummary } from '@/types/combat.types';
+import type { FightSummary } from '@/types/combat.types';/**
+ * Crowd mood type.
+ */
 
-export type CrowdMood = 'Calm' | 'Bloodthirsty' | 'Theatrical' | 'Solemn' | 'Festive';
 
-export const CROWD_MOODS: CrowdMood[] = ['Calm', 'Bloodthirsty', 'Theatrical', 'Solemn', 'Festive'];
+export type CrowdMood = 'Calm' | 'Bloodthirsty' | 'Theatrical' | 'Solemn' | 'Festive';/**
+ * Crowd_moods.
+ */
+
+
+export const CROWD_MOODS: CrowdMood[] = ['Calm', 'Bloodthirsty', 'Theatrical', 'Solemn', 'Festive'];/**
+ * Mood_descriptions.
+ */
+
 
 export const MOOD_DESCRIPTIONS: Record<CrowdMood, string> = {
   Calm: 'The crowd watches with quiet anticipation.',
@@ -14,7 +23,10 @@ export const MOOD_DESCRIPTIONS: Record<CrowdMood, string> = {
   Theatrical: 'The audience craves spectacle. Flashy fighters gain extra popularity.',
   Solemn: 'A somber mood lingers after recent deaths. Fame gains are muted.',
   Festive: 'Festival atmosphere! Fame and popularity gains are boosted.',
-};
+};/**
+ * Mood_icons.
+ */
+
 
 export const MOOD_ICONS: Record<CrowdMood, string> = {
   Calm: '😐',
@@ -22,13 +34,21 @@ export const MOOD_ICONS: Record<CrowdMood, string> = {
   Theatrical: '🎭',
   Solemn: '🕯️',
   Festive: '🎉',
-};
+};/**
+ * Defines the shape of mood modifiers.
+ */
+
 
 export interface MoodModifiers {
   fameMultiplier: number;
   popMultiplier: number;
   killChanceBonus: number;
-}
+}/**
+ * Get mood modifiers.
+ * @param mood - Mood.
+ * @returns The result.
+ */
+
 
 export function getMoodModifiers(mood: CrowdMood): MoodModifiers {
   switch (mood) {

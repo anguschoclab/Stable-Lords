@@ -3,7 +3,10 @@
  */
 
 import { FightingStyle, OwnerPersonality, MetaAdaptation } from '@/types/game';
-import type { BackstoryId } from '@/data/backstories';
+import type { BackstoryId } from '@/data/backstories';/**
+ * Defines the shape of stable template.
+ */
+
 
 export interface StableTemplate {
   stableName: string;
@@ -31,9 +34,15 @@ export interface StableTemplate {
   metaAdaptation: MetaAdaptation;
   /** Who the owner was before founding the stable. Orthogonal to stable archetype. */
   backstoryId: BackstoryId;
-}
+}/**
+ * Stable tier type.
+ */
 
-export type StableTier = 'Minor' | 'Established' | 'Major' | 'Legendary';
+
+export type StableTier = 'Minor' | 'Established' | 'Major' | 'Legendary';/**
+ * Stable philosophy type.
+ */
+
 
 export type StablePhilosophy =
   | 'Brute Force'

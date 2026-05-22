@@ -3,7 +3,12 @@ import remarkGfm from 'remark-gfm';
 
 interface MarkdownReaderProps {
   content: string;
-}
+}/**
+ * Markdown reader.
+ * @param { content } - { content }.
+ * @returns The result.
+ */
+
 
 export function MarkdownReader({ content }: MarkdownReaderProps) {
   return (

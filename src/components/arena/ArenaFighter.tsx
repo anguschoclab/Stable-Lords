@@ -55,7 +55,36 @@ function getWeaponCategory(weaponName: string): 'slash' | 'bash' | 'pierce' | 's
     return 'pierce';
   if (w.includes('staff') || w.includes('fist') || w.includes('gauntlet')) return 'fist';
   return 'slash'; // default
-}
+}/**
+ * Arena fighter.
+ * @param {
+  name,
+  pose,
+  stats,
+  style,
+  weaponName = 'Longsword',
+  shieldName,
+  isWinner,
+  isDead,
+  isActive,
+  className,
+  size = 120,
+} - {
+  name,
+  pose,
+  stats,
+  style,
+  weapon name = 'longsword',
+  shield name,
+  is winner,
+  is dead,
+  is active,
+  class name,
+  size = 120,
+}.
+ * @returns The result.
+ */
+
 
 export default function ArenaFighter({
   name,

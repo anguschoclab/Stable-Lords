@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';/**
+ * Particle type type.
+ */
+
 
 export type ParticleType = 'blood' | 'spark' | 'dust' | 'sweat';
 
@@ -20,7 +23,22 @@ interface ParticleSystemProps {
   sourceX: number; // 0-100 arena position
   sourceY: number;
   className?: string;
-}
+}/**
+ * Particle system.
+ * @param {
+  trigger,
+  sourceX,
+  sourceY,
+  className,
+} - {
+  trigger,
+  source x,
+  source y,
+  class name,
+}.
+ * @returns The result.
+ */
+
 
 export default function ParticleSystem({
   trigger,

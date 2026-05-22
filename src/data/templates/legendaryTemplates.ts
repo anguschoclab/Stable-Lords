@@ -4,7 +4,10 @@
  */
 
 import { FightingStyle } from '@/types/game';
-import type { StableTemplate } from './stableTemplate.types';
+import type { StableTemplate } from './stableTemplate.types';/**
+ * Legendary_templates.
+ */
+
 
 export const LEGENDARY_TEMPLATES: StableTemplate[] = [
   {

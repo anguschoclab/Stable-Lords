@@ -4,7 +4,10 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { FightSummary } from '@/types/combat.types';
+import type { FightSummary } from '@/types/combat.types';/**
+ * Defines the shape of stable reputation.
+ */
+
 
 export interface StableReputation {
   fame: number; // 0-100: public acclaim

@@ -11,12 +11,18 @@
  * attach handlers once at boot and tear them down in tests via `clearDeathHandlers`.
  */
 import { engineEventBus, type EngineEvent } from '@/engine/core/EventBus';
-import { logger } from '@/utils/logger';
+import { logger } from '@/utils/logger';/**
+ * Defines the shape of death notification.
+ */
+
 
 export interface DeathNotification {
   warriorId: string;
   name: string;
-}
+}/**
+ * Death handler type.
+ */
+
 
 export type DeathHandler = (n: DeathNotification) => void;
 

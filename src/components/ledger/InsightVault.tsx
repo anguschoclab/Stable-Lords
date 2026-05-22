@@ -2,7 +2,11 @@ import React from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from 'lucide-react';
+import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from 'lucide-react';/**
+ * Insight vault.
+ * @returns The result.
+ */
+
 
 export function InsightVault() {
   const state = useWorldState();

@@ -46,7 +46,11 @@ interface StableRow {
   tier: string;
   motto: string;
   isPlayer: boolean;
-}
+}/**
+ * World overview.
+ * @returns The result.
+ */
+
 
 export default function WorldOverview() {
   const state = useWorldState();

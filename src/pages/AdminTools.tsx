@@ -22,7 +22,11 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
-import type { GameState, RivalStableData } from '@/types/state.types';
+import type { GameState, RivalStableData } from '@/types/state.types';/**
+ * Admin tools.
+ * @returns The result.
+ */
+
 
 export default function AdminTools() {
   const {

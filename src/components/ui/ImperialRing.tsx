@@ -5,7 +5,22 @@ interface ImperialRingProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'bronze' | 'gold' | 'blood';
-}
+}/**
+ * Imperial ring.
+ * @param {
+  children,
+  className,
+  size = 'md',
+  variant = 'bronze',
+} - {
+  children,
+  class name,
+  size = 'md',
+  variant = 'bronze',
+}.
+ * @returns The result.
+ */
+
 
 export function ImperialRing({
   children,

@@ -9,7 +9,12 @@ import { Surface } from '@/components/ui/Surface';
 interface MatchCardProps {
   pairing: MatchPairing;
   crowdMood: string;
-}
+}/**
+ * Match card.
+ * @param { pairing, crowdMood } - { pairing, crowd mood }.
+ * @returns The result.
+ */
+
 
 export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
   const { a: wA, d: wB, rivalStable, isRivalry: isRivalryBout } = pairing;

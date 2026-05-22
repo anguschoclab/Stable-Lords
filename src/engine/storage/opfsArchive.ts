@@ -1,4 +1,7 @@
-import type { GameState } from '@/types/state.types';
+import type { GameState } from '@/types/state.types';/**
+ * Defines the shape of archive service.
+ */
+
 
 export interface ArchiveService {
   isSupported: () => boolean;
@@ -23,14 +26,20 @@ export interface ArchiveService {
 
   // Utility
   getArchivedBoutIdsForSeason: (season: number) => Promise<string[]>;
-}
+}/**
+ * The ArchiveConflictError class.
+ */
+
 
 export class ArchiveConflictError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'ArchiveConflictError';
   }
-}
+}/**
+ * The OPFSArchiveService class.
+ */
+
 
 export class OPFSArchiveService implements ArchiveService {
   private writeQueue: Promise<void> = Promise.resolve();
@@ -296,6 +305,9 @@ export class OPFSArchiveService implements ArchiveService {
       return [];
     }
   }
-}
+}/**
+ * Opfs archive.
+ */
+
 
 export const opfsArchive = new OPFSArchiveService();

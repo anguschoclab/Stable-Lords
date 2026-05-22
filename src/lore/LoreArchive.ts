@@ -36,7 +36,10 @@ function saveArray<T>(key: string, arr: T[]) {
       }
     }
   }
-}
+}/**
+ * Lore archive.
+ */
+
 
 export const LoreArchive = {
   allFights(): FightSummary[] {

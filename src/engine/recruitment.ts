@@ -20,11 +20,17 @@ import type { NarrativeContent } from '@/types/narrative.types';
 import { TRAITS, generateTraits } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
-import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
+import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';/**
+ * Recruit tier type.
+ */
+
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
-export type RecruitTier = 'Common' | 'Promising' | 'Exceptional' | 'Prodigy';
+export type RecruitTier = 'Common' | 'Promising' | 'Exceptional' | 'Prodigy';/**
+ * Defines the shape of pool warrior.
+ */
+
 
 export interface PoolWarrior {
   id: string;
@@ -49,14 +55,20 @@ export interface PoolWarrior {
 
 // TIER data is now fetched from narrativeContent.json
 const getTierData = (tier: RecruitTier) =>
-  (narrativeContent as NarrativeContent).recruitment.tiers[tier];
+  (narrativeContent as NarrativeContent).recruitment.tiers[tier];/**
+ * Tier_cost.
+ */
+
 
 export const TIER_COST: Record<RecruitTier, number> = {
   Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common.cost,
   Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising.cost,
   Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional.cost,
   Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy.cost,
-};
+};/**
+ * Tier_stars.
+ */
+
 
 export const TIER_STARS: Record<RecruitTier, number> = {
   Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common.stars,

@@ -4,7 +4,10 @@
  */
 
 import { getFromArchive, interpolateTemplate } from '@/engine/narrativePBP';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
+ * Announce tone type.
+ */
+
 
 export type AnnounceTone = 'neutral' | 'hype' | 'grim';
 

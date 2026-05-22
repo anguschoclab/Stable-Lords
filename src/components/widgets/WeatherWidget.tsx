@@ -108,7 +108,11 @@ const WEATHER_METADATA = {
     description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
     stats: 'INITIATIVE -4 // RIPOSTE -2 // DAMAGE 95% // STAMINA DRAIN 120%',
   },
-};
+};/**
+ * Weather widget.
+ * @returns The result.
+ */
+
 
 export function WeatherWidget() {
   const state = useWorldState();

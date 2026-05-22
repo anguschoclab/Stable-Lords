@@ -6,7 +6,10 @@
 import { useEffect } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
-import type { GameState, Warrior } from '@/types/game';
+import type { GameState, Warrior } from '@/types/game';/**
+ * Defines the shape of coach tip.
+ */
+
 
 export interface CoachTip {
   id: string;

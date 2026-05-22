@@ -4,7 +4,10 @@
  */
 
 import { FightingStyle } from '@/types/game';
-import type { EquipmentItem } from './equipment.types';
+import type { EquipmentItem } from './equipment.types';/**
+ * Helms.
+ */
+
 
 export const HELMS: EquipmentItem[] = [
   {

@@ -8,7 +8,12 @@ import ConditionEditor from '@/components/warrior/ConditionEditor';
 interface ContingencyPlansProps {
   plan: FightPlan;
   onPlanChange: (plan: FightPlan) => void;
-}
+}/**
+ * Contingency plans.
+ * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @returns The result.
+ */
+
 
 export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlansProps) {
   const [showConditions, setShowConditions] = useState(!!plan.conditions?.length);

@@ -79,7 +79,14 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Sadistic',
   'Flashy',
   'Corporate',
-];
+];/**
+ * Generate promoters.
+ * @param count - Count.
+ * @param seed - Seed.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
+
 
 export function generatePromoters(count: number, seed: number, rng?: IRNGService): Promoter[] {
   const rngService = rng || new SeededRNGService(seed);

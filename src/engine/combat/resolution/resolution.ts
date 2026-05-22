@@ -44,9 +44,18 @@ import {
   getDefensiveTacticMods,
   calculateFinalOEAL,
   alIniMod,
-} from '../mechanics/tacticResolution';
+} from '../mechanics/tacticResolution';/**
+ * Decision_hit_margin.
+ */
 
-export const DECISION_HIT_MARGIN = 3;
+
+export const DECISION_HIT_MARGIN = 3;/**
+ * Get matchup bonus.
+ * @param styleA - Style a.
+ * @param styleD - Style d.
+ * @returns The result.
+ */
+
 
 export function getMatchupBonus(styleA: FightingStyle, styleD: FightingStyle): number {
   return rawMatchupBonus(styleA, styleD);
@@ -60,7 +69,10 @@ import {
   runRecovery,
   type ExchangeState,
 } from './exchangeSubPhases';
-import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';
+import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';/**
+ * Defines the shape of fighter state.
+ */
+
 
 // ─── Fighter State & Context ───────────────────────────────────────────────
 
@@ -110,7 +122,10 @@ export interface FighterState {
    * Set via: recoveryDebt = Math.min(3, Math.max(existing, toWrite))
    */
   recoveryDebt: number;
-}
+}/**
+ * Defines the shape of resolution context.
+ */
+
 
 export interface ResolutionContext {
   rng: () => number;
@@ -145,7 +160,13 @@ export interface ResolutionContext {
   surfaceMod: SurfaceMod;
   /** Crowd-mood lethality delta injected by simulate.ts. */
   crowdKillBonus?: number;
-}
+}/**
+ * Resolve effective tactics.
+ * @param plan - Plan.
+ * @param phaseKey - Phase key.
+ * @returns The result.
+ */
+
 
 export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | 'mid' | 'late') {
   const phase = plan.phases?.[phaseKey];
@@ -154,13 +175,25 @@ export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | '
     defTactic: (phase?.defensiveTactic ?? plan.defensiveTactic ?? 'none') as DefensiveTactic,
     target: phase?.target ?? plan.target ?? 'Any',
   };
-}
+}/**
+ * Apply aggression bias.
+ * @param aggressionBias - Aggression bias.
+ * @returns The result.
+ */
+
 
 export function applyAggressionBias(aggressionBias: number): [number, number] {
   return aggressionBias > 5
     ? [(aggressionBias - 5) * 0.5, -(aggressionBias - 5) * 0.5]
     : [(aggressionBias - 5) * 0.5, (5 - aggressionBias) * 0.5];
-}
+}/**
+ * Resolve exchange.
+ * @param ctx - Ctx.
+ * @param fA - F a.
+ * @param fD - F d.
+ * @returns The result.
+ */
+
 
 // ─── Phase Handlers ─────────────────────────────────────────────────────────
 

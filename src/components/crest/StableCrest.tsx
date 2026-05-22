@@ -337,7 +337,32 @@ function Helmet({ metal }: { metal: string }): React.ReactNode {
       <circle cx="9" cy="4" r="0.8" fill={highlight} />
     </g>
   );
-}
+}/**
+ * Stable crest.
+ * @param {
+  crest,
+  size = 'md',
+  showMantling,
+  showHelmet,
+  animate = false,
+  className = '',
+  selected = false,
+  showTooltip = true,
+  showGenerationBadge = true,
+} - {
+  crest,
+  size = 'md',
+  show mantling,
+  show helmet,
+  animate = false,
+  class name = '',
+  selected = false,
+  show tooltip = true,
+  show generation badge = true,
+}.
+ * @returns The result.
+ */
+
 
 export function StableCrest({
   crest,

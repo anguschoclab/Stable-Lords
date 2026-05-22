@@ -2,9 +2,18 @@
  * Plan bias + style-aware auto-tune helpers.
  */
 import { FightingStyle } from '@/types/shared.types';
-import type { FightPlan } from '@/types/combat.types';
+import type { FightPlan } from '@/types/combat.types';/**
+ * Bias type.
+ */
 
-export type Bias = 'head-hunt' | 'hamstring' | 'gut' | 'guard-break' | 'balanced';
+
+export type Bias = 'head-hunt' | 'hamstring' | 'gut' | 'guard-break' | 'balanced';/**
+ * Auto tune from bias.
+ * @param plan - Plan.
+ * @param bias - Bias.
+ * @returns The result.
+ */
+
 
 export function autoTuneFromBias(plan: FightPlan, bias: Bias): Partial<FightPlan> {
   const tuned: Partial<FightPlan> = {};
@@ -39,7 +48,13 @@ export function autoTuneFromBias(plan: FightPlan, bias: Bias): Partial<FightPlan
   if (plan.style === FightingStyle.TotalParry) tuned.defensiveTactic = 'Parry';
 
   return tuned;
-}
+}/**
+ * Reconcile gear two handed.
+ * @param plan - Plan.
+ * @param draft - Draft.
+ * @returns The result.
+ */
+
 
 export function reconcileGearTwoHanded(plan: FightPlan, draft: Partial<FightPlan>): void {
   const next = { ...plan, ...draft };

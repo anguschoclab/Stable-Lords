@@ -8,7 +8,15 @@ import type {
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { generateId } from '@/utils/idUtils';
-import { generateFreelancer } from './utils';
+import { generateFreelancer } from './utils';/**
+ * Committee selection.
+ * @param state - State.
+ * @param tier - Tier.
+ * @param seed - Seed.
+ * @param lockedIds - Locked ids.
+ * @returns The result.
+ */
+
 
 export function committeeSelection(
   state: GameState,
@@ -80,7 +88,17 @@ export function committeeSelection(
   }
 
   return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
-}
+}/**
+ * Build tournament.
+ * @param tierId - Tier id.
+ * @param tierName - Tier name.
+ * @param warriors - Warriors.
+ * @param week - Week.
+ * @param season - Season.
+ * @param rng - Rng.
+ * @returns The result.
+ */
+
 
 export function buildTournament(
   tierId: string,

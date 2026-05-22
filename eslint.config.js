@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
+import jsdoc from "eslint-plugin-jsdoc";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
@@ -14,6 +15,7 @@ export default tseslint.config(
       globals: globals.browser,
     },
     plugins: {
+      jsdoc,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
     },
@@ -22,6 +24,31 @@ export default tseslint.config(
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-explicit-any": "warn",
+      "jsdoc/require-jsdoc": [
+        "warn",
+        {
+          publicOnly: true,
+          require: {
+            ArrowFunctionExpression: true,
+            ClassDeclaration: true,
+            FunctionDeclaration: true,
+            FunctionExpression: true,
+            MethodDefinition: true,
+          },
+          contexts: [
+            "TSTypeAliasDeclaration",
+            "TSInterfaceDeclaration",
+            "TSPropertySignature",
+          ],
+        },
+      ],
+      "jsdoc/require-description": ["warn", { contexts: ["any"] }],
+      "jsdoc/require-param-description": "warn",
+      "jsdoc/require-returns-description": "warn",
+      "jsdoc/no-types": "warn",
+      "jsdoc/check-param-names": "warn",
+      "jsdoc/check-tag-names": "warn",
+      "jsdoc/check-alignment": "warn",
     },
   },
   {

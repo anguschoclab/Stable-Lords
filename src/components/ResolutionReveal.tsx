@@ -17,7 +17,11 @@ import {
   MemorialStep,
 } from './resolution-reveal';
 
-type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';
+type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';/**
+ * Resolution reveal.
+ * @returns The result.
+ */
+
 
 export default function ResolutionReveal() {
   const store = useGameStore();

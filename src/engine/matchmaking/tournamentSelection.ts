@@ -8,7 +8,10 @@ import {
 } from './tournamentSelection/resolution';
 import { findWarriorById, getAIPlan, generateFreelancer } from './tournamentSelection/utils';
 
-export { TOURNAMENT_TIERS };
+export { TOURNAMENT_TIERS };/**
+ * Tournament selection service.
+ */
+
 
 export const TournamentSelectionService = {
   generateSeasonalTiers,

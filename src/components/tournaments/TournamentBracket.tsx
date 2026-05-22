@@ -23,7 +23,22 @@ interface TournamentBracketProps {
   arenaHistory: FightSummary[];
   expandedBout: string | null;
   onToggleExpand: (key: string | null) => void;
-}
+}/**
+ * Tournament bracket.
+ * @param {
+  bouts,
+  arenaHistory,
+  expandedBout,
+  onToggleExpand,
+} - {
+  bouts,
+  arena history,
+  expanded bout,
+  on toggle expand,
+}.
+ * @returns The result.
+ */
+
 
 export function TournamentBracket({
   bouts,
@@ -335,7 +350,20 @@ interface ChampionDisplayProps {
   championName: string;
   championId?: string;
   tournamentName: string;
-}
+}/**
+ * Champion display.
+ * @param {
+  championName,
+  championId,
+  tournamentName,
+} - {
+  champion name,
+  champion id,
+  tournament name,
+}.
+ * @returns The result.
+ */
+
 
 export function ChampionDisplay({
   championName,
@@ -380,7 +408,12 @@ export function ChampionDisplay({
 interface BronzeHighlightProps {
   thirdPlaceName: string;
   thirdPlaceId?: string;
-}
+}/**
+ * Bronze highlight.
+ * @param { thirdPlaceName, thirdPlaceId } - { third place name, third place id }.
+ * @returns The result.
+ */
+
 
 export function BronzeHighlight({ thirdPlaceName, thirdPlaceId }: BronzeHighlightProps) {
   const state = useGameStore();
@@ -416,7 +449,22 @@ interface TournamentProgressProps {
   totalRounds: number;
   completedMatches: number;
   totalMatches: number;
-}
+}/**
+ * Tournament progress.
+ * @param {
+  currentRound,
+  totalRounds,
+  completedMatches,
+  totalMatches,
+} - {
+  current round,
+  total rounds,
+  completed matches,
+  total matches,
+}.
+ * @returns The result.
+ */
+
 
 export function TournamentProgress({
   currentRound,

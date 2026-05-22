@@ -9,7 +9,12 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 interface ChronicleTabProps {
   warrior: Warrior;
   arenaHistory: FightSummary[];
-}
+}/**
+ * Chronicle tab.
+ * @param { warrior, arenaHistory } - { warrior, arena history }.
+ * @returns The result.
+ */
+
 
 export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
   return (

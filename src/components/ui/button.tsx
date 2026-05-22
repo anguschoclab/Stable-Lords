@@ -38,7 +38,10 @@ const buttonVariants = cva(
       size: 'default',
     },
   }
-);
+);/**
+ * Defines the shape of button props.
+ */
+
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {

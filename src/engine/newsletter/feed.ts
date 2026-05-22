@@ -1,12 +1,18 @@
 /**
  * Newsletter feed — collects fight cards per week and generates issues.
  */
-import type { FightSummary } from '@/types/combat.types';
+import type { FightSummary } from '@/types/combat.types';/**
+ * Defines the shape of fight card.
+ */
+
 
 export interface FightCard {
   summary: FightSummary;
   transcript: string[];
-}
+}/**
+ * Defines the shape of newsletter issue.
+ */
+
 
 export interface NewsletterIssue {
   id: string;
@@ -94,7 +100,10 @@ function computeTopMovers(
     .slice(0, 5);
 }
 
-const current: FightCard[] = [];
+const current: FightCard[] = [];/**
+ * Newsletter feed.
+ */
+
 
 export const NewsletterFeed = {
   appendFightResult(card: FightCard) {

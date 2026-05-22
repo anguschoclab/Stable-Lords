@@ -24,7 +24,10 @@ import { finalizeWeekSideEffectsToImpact } from './WeekFinalizationService';
 import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
 import { buildWarriorMap } from '@/utils/roster';
 
-import { isFightReady } from '@/engine/warriorStatus';
+import { isFightReady } from '@/engine/warriorStatus';/**
+ * Defines the shape of bout result.
+ */
+
 
 export interface BoutResult {
   a: Warrior;
@@ -36,7 +39,10 @@ export interface BoutResult {
   contractId?: string;
   arenaId?: string;
   weather?: import('@/types/shared.types').WeatherType;
-}
+}/**
+ * Defines the shape of bout impact.
+ */
+
 export interface BoutImpact {
   impact: StateImpact;
   result: BoutResult;
@@ -47,7 +53,10 @@ export interface BoutImpact {
     deathNames: string[];
     injuredNames: string[];
   };
-}
+}/**
+ * Defines the shape of week bout summary.
+ */
+
 export interface WeekBoutSummary {
   bouts: number;
   deaths: number;
@@ -56,7 +65,10 @@ export interface WeekBoutSummary {
   injuryNames: string[];
   hadPlayerDeath: boolean;
   hadRivalryEscalation: boolean;
-}
+}/**
+ * Defines the shape of bout context.
+ */
+
 export interface BoutContext {
   warriorMap: Map<string, Warrior>;
   warrior: Warrior;
@@ -208,7 +220,13 @@ function collectBoutImpacts(
   });
 
   return { impacts, deathRes, injuryRes, announcement, summary };
-}
+}/**
+ * Resolve bout.
+ * @param state - State.
+ * @param ctx - Ctx.
+ * @returns The result.
+ */
+
 
 export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   const combatants = getValidatedCombatants(ctx);
@@ -248,7 +266,12 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
       injuredNames: injuryRes.injuredNames,
     },
   };
-}
+}/**
+ * Process week bouts.
+ * @param state - State.
+ * @returns The result.
+ */
+
 
 export function processWeekBouts(state: GameState): {
   impact: StateImpact;

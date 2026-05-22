@@ -7,7 +7,10 @@ import type { NarrativeContent } from '@/types/narrative.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { pick } from './narrativeUtils';
 
-type RNG = () => number;
+type RNG = () => number;/**
+ * Defines the shape of combat context.
+ */
+
 
 export interface CombatContext {
   attacker?: string;

@@ -41,7 +41,11 @@ import TitleScreenHero from '@/components/startGame/TitleScreenHero';
 import ActionButtons from '@/components/startGame/ActionButtons';
 import SavedGamesSection from '@/components/startGame/SavedGamesSection';
 
-type Screen = 'title' | 'newGame';
+type Screen = 'title' | 'newGame';/**
+ * Start game.
+ * @returns The result.
+ */
+
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 

@@ -1,6 +1,12 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';/**
+ * Arena tier type.
+ */
 
-export type ArenaTier = 'training' | 'standard' | 'championship' | 'grand';
+
+export type ArenaTier = 'training' | 'standard' | 'championship' | 'grand';/**
+ * Season type.
+ */
+
 export type Season = 'spring' | 'summer' | 'fall' | 'winter' | 'tournament';
 
 import { isIndoorArena } from '@/data/arenas';
@@ -91,7 +97,24 @@ const SEASON_MODIFIERS: Record<
     accentColor: '#DC143C',
     decorations: true,
   },
-};
+};/**
+ * Arena background.
+ * @param {
+  tier = 'standard',
+  season = 'summer',
+  weather,
+  arenaId,
+  className,
+} - {
+  tier = 'standard',
+  season = 'summer',
+  weather,
+  arena id,
+  class name,
+}.
+ * @returns The result.
+ */
+
 
 export default function ArenaBackground({
   tier = 'standard',

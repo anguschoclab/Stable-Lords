@@ -8,7 +8,12 @@ import type { FightPlan } from '@/types/game';
 interface PhaseOverridesProps {
   plan: FightPlan;
   onPlanChange: (plan: FightPlan) => void;
-}
+}/**
+ * Phase overrides.
+ * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @returns The result.
+ */
+
 
 export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesProps) {
   const [phaseMode, setPhaseMode] = useState(!!plan.phases);

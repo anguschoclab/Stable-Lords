@@ -5,7 +5,18 @@ import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
 import BoutViewer from '@/components/BoutViewer';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';/**
+ * Warrior fight history.
+ * @param {
+  warriorName,
+  arenaHistory,
+} - {
+  warrior name,
+  arena history,
+}.
+ * @returns The result.
+ */
+
 
 export function WarriorFightHistory({
   warriorName,

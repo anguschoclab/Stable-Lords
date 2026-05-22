@@ -6,7 +6,12 @@ import type { RivalStableData } from '@/types/game';
 interface ComparisonHeaderProps {
   rivalA: RivalStableData;
   rivalB: RivalStableData;
-}
+}/**
+ * Comparison header.
+ * @param { rivalA, rivalB } - { rival a, rival b }.
+ * @returns The result.
+ */
+
 
 export function ComparisonHeader({ rivalA, rivalB }: ComparisonHeaderProps) {
   return (

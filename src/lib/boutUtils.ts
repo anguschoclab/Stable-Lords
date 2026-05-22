@@ -1,4 +1,9 @@
-import { MinuteEvent } from '@/types/game';
+import { MinuteEvent } from '@/types/game';/**
+ * Classify event.
+ * @param event - Event.
+ * @returns The result.
+ */
+
 
 export function classifyEvent(
   event: MinuteEvent | string

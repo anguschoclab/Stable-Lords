@@ -22,7 +22,10 @@ import {
   narrateFeint,
   narrateZoneShift,
 } from '../../narrativePBP';
-import { getWeaponDisplayName } from '../../narrative/narrativeUtils';
+import { getWeaponDisplayName } from '../../narrative/narrativeUtils';/**
+ * Defines the shape of narration context.
+ */
+
 
 export interface NarrationContext {
   rng: () => number;
@@ -40,7 +43,14 @@ export interface NarrationContext {
   fameD: number;
   isFavoriteA?: boolean;
   isFavoriteD?: boolean;
-}
+}/**
+ * Narrate events.
+ * @param events - Events.
+ * @param ctx - Ctx.
+ * @param minute - Minute.
+ * @returns The result.
+ */
+
 
 export function narrateEvents(
   events: CombatEvent[],

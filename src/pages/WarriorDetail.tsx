@@ -35,7 +35,11 @@ const TABS: SubNavTab[] = [
   { id: 'biometrics', label: 'BIOMETRICS', icon: <User className="h-4 w-4" /> },
   { id: 'mission', label: 'MISSION CONTROL', icon: <Target className="h-4 w-4" /> },
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
-];
+];/**
+ * Warrior detail.
+ * @returns The result.
+ */
+
 
 export default function WarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };

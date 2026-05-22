@@ -85,7 +85,10 @@ export const OWNER_FIRST = [
   'Vael',
   'Thane',
   'Kaelar',
-];
+];/**
+ * Owner_last.
+ */
+
 
 export const OWNER_LAST = [
   'Blackthorn',

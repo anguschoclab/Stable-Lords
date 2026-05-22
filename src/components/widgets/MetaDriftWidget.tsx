@@ -7,7 +7,11 @@ import { Badge } from '@/components/ui/badge';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Activity, TrendingUp, TrendingDown, Minus, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';/**
+ * Meta drift widget.
+ * @returns The result.
+ */
+
 
 export function MetaDriftWidget() {
   const state = useWorldState();

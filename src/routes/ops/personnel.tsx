@@ -3,7 +3,10 @@
  * Trainers and Recruitment unified
  */
 import { createFileRoute } from '@tanstack/react-router';
-import Trainers from '@/pages/Trainers';
+import Trainers from '@/pages/Trainers';/**
+ * Route.
+ */
+
 
 export const Route = createFileRoute('/ops/personnel')({
   component: Trainers,

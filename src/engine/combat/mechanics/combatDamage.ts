@@ -2,7 +2,10 @@
  * Combat Damage — hit location, protection, and damage calculations.
  * Single source of truth for damage mechanics used by simulate.ts.
  */
-import { KILL_WINDOW_ENDURANCE } from './combatConstants';
+import { KILL_WINDOW_ENDURANCE } from './combatConstants';/**
+ * Hit location type.
+ */
+
 
 export type HitLocation =
   | 'head'
@@ -11,7 +14,10 @@ export type HitLocation =
   | 'right arm'
   | 'left arm'
   | 'right leg'
-  | 'left leg';
+  | 'left leg';/**
+ * Hit_locations.
+ */
+
 
 export const HIT_LOCATIONS = [
   'head',
@@ -95,7 +101,14 @@ const ARMOR_TYPE_MULT: Record<string, Partial<Record<DamageType, number>>> = {
   scale_mail: { slash: 0.8, pierce: 1.15 },
   chain_mail: { pierce: 0.8, slash: 1.1 },
   plate_mail: { slash: 0.85, bash: 0.85, pierce: 0.85 },
-};
+};/**
+ * Apply armor type mod.
+ * @param damage - Damage.
+ * @param weaponId - Weapon id. (optional)
+ * @param armorId - Armor id. (optional)
+ * @returns The result.
+ */
+
 
 export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: string): number {
   if (!weaponId || !armorId) return damage;
@@ -103,7 +116,12 @@ export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: s
   if (!dtype || dtype === 'none') return damage;
   const mult = ARMOR_TYPE_MULT[armorId]?.[dtype] ?? 1.0;
   return Math.round(damage * mult);
-}
+}/**
+ * Protect covers.
+ * @param protect - Protect. (optional)
+ * @returns The result.
+ */
+
 
 export function protectCovers(protect?: string): string[] {
   if (!protect || protect === 'Any' || protect === 'none_armor' || protect === 'none_helm')
@@ -117,7 +135,14 @@ export function protectCovers(protect?: string): string[] {
   if (p === 'legs') return ['right leg', 'left leg'];
 
   return [];
-}
+}/**
+ * Roll hit location.
+ * @param rng - Rng.
+ * @param target - Target. (optional)
+ * @param protect - Protect. (optional)
+ * @returns The result.
+ */
+
 
 export function rollHitLocation(rng: () => number, target?: string, protect?: string): HitLocation {
   const covered = protectCovers(protect);
@@ -140,7 +165,14 @@ export function rollHitLocation(rng: () => number, target?: string, protect?: st
 
   // Fallback to completely random
   return HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)];
-}
+}/**
+ * Apply protect mod.
+ * @param damage - Damage.
+ * @param location - Location.
+ * @param protect - Protect. (optional)
+ * @returns The result.
+ */
+
 
 export function applyProtectMod(damage: number, location: HitLocation, protect?: string): number {
   const covered = protectCovers(protect);
@@ -166,7 +198,14 @@ const SHIELD_ZONE_MITIGATION: Record<'LOW' | 'MEDIUM' | 'HIGH', number> = {
   LOW: 0.92, // 8% reduction
   MEDIUM: 0.88, // 12% reduction
   HIGH: 0.85, // 15% reduction
-};
+};/**
+ * Apply shield zone mod.
+ * @param damage - Damage.
+ * @param location - Location.
+ * @param coverage - Coverage. (optional)
+ * @returns The result.
+ */
+
 
 export function applyShieldZoneMod(
   damage: number,
@@ -177,7 +216,14 @@ export function applyShieldZoneMod(
   const zones = SHIELD_ZONE_LOCATIONS[coverage];
   if (!zones.includes(location)) return damage;
   return Math.floor(damage * SHIELD_ZONE_MITIGATION[coverage]);
-}
+}/**
+ * Compute hit damage.
+ * @param rng - Rng.
+ * @param damageClass - Damage class.
+ * @param location - Location.
+ * @returns The result.
+ */
+
 
 export function computeHitDamage(
   rng: () => number,

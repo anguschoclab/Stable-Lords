@@ -6,7 +6,12 @@ interface BackstoryPickerProps {
   value: BackstoryId | null;
   onChange: (id: BackstoryId) => void;
   onRandomize: () => void;
-}
+}/**
+ * Backstory picker.
+ * @param { value, onChange, onRandomize } - { value, on change, on randomize }.
+ * @returns The result.
+ */
+
 
 export default function BackstoryPicker({ value, onChange, onRandomize }: BackstoryPickerProps) {
   return (

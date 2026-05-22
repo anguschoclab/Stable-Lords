@@ -4,7 +4,12 @@ interface ConditionBatteryProps {
   value: number; // 0-100
   className?: string;
   showText?: boolean;
-}
+}/**
+ * Condition battery.
+ * @param { value, className, showText = false } - { value, class name, show text = false }.
+ * @returns The result.
+ */
+
 
 export function ConditionBattery({ value, className, showText = false }: ConditionBatteryProps) {
   // Determine color segment

@@ -21,7 +21,10 @@ const DEFAULT_POSE_D: FighterPose = {
   stance: 'neutral',
 };
 
-const MIN_DISTANCE = 20; // Minimum distance between fighters
+const MIN_DISTANCE = 20;/**
+ * Defines the shape of use arena animation return.
+ */
+ // Minimum distance between fighters
 
 export interface UseArenaAnimationReturn extends ArenaState {
   /** Add a speech bubble */
@@ -375,7 +378,13 @@ export function useArenaAnimation(
     reset,
     updatePose,
   };
-}
+}/**
+ * Set fighter names.
+ * @param a - A.
+ * @param d - D.
+ * @returns The result.
+ */
+
 
 export function setFighterNames(a: string, d: string) {
   nameA = a.toLowerCase();

@@ -1,7 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { audioManager } from '@/lib/AudioManager';
 import { MinuteEvent } from '@/types/game';
-import { classifyEvent } from '@/lib/boutUtils';
+import { classifyEvent } from '@/lib/boutUtils';/**
+ * React hook: use bout playback.
+ * @param log - Log.
+ * @returns The result.
+ */
+
 
 export function useBoutPlayback(log: MinuteEvent[]) {
   const [visibleCount, setVisibleCount] = useState(0);

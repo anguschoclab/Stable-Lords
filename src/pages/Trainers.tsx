@@ -39,7 +39,11 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
-import { toast } from 'sonner';
+import { toast } from 'sonner';/**
+ * Trainers.
+ * @returns The result.
+ */
+
 
 export default function Trainers() {
   // Flat destructuring from 1.0 store

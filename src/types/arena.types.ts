@@ -1,4 +1,7 @@
-import type { Gear, FightingStyle } from './game';
+import type { Gear, FightingStyle } from './game';/**
+ * Defines the shape of fighter pose.
+ */
+
 
 export interface FighterPose {
   /** Position 0-100 across the arena (left to right) */
@@ -17,7 +20,10 @@ export interface FighterPose {
     | 'stunned'
     | 'victorious'
     | 'defeated';
-}
+}/**
+ * Defines the shape of speech bubble.
+ */
+
 
 export interface SpeechBubble {
   id: string;
@@ -25,7 +31,10 @@ export interface SpeechBubble {
   speaker: 'A' | 'D';
   duration: number;
   type: 'taunt' | 'hit' | 'crit' | 'death' | 'victory';
-}
+}/**
+ * Defines the shape of arena state.
+ */
+
 
 export interface ArenaState {
   fighterA: FighterPose;
@@ -35,14 +44,20 @@ export interface ArenaState {
   hpD: number;
   fpA: number;
   fpD: number;
-}
+}/**
+ * Defines the shape of fighter stats.
+ */
+
 
 export interface FighterStats {
   maxHp: number;
   currentHp: number;
   maxFp: number;
   currentFp: number;
-}
+}/**
+ * Defines the shape of arena fighter data.
+ */
+
 
 export interface ArenaFighterData {
   name: string;

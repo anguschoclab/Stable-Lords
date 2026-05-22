@@ -10,7 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Swords, ScrollText, Volume2, Sparkles, Activity } from 'lucide-react';
+import { Swords, ScrollText, Volume2, Sparkles, Activity } from 'lucide-react';/**
+ * Arena settings.
+ * @returns The result.
+ */
+
 
 export default function ArenaSettings() {
   const store = useGameStore();

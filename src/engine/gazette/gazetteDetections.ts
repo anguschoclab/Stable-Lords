@@ -2,7 +2,10 @@
  * Gazette Detection Functions - Detects patterns in fight data for gazette generation
  * Extracted from gazetteNarrative.ts to follow SRP
  */
-import type { FightSummary } from '@/types/combat.types';
+import type { FightSummary } from '@/types/combat.types';/**
+ * Defines the shape of gazette detections.
+ */
+
 
 export interface GazetteDetections {
   tags: string[];

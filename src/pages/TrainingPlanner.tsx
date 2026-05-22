@@ -343,7 +343,11 @@ function WarriorPlannerCard({
       </Surface>
     </div>
   );
-}
+}/**
+ * Training planner.
+ * @returns The result.
+ */
+
 
 export default function TrainingPlanner() {
   const { roster, trainers, seasonalGrowth, season } = useGameStore();

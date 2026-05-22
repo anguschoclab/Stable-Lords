@@ -10,7 +10,12 @@ interface WarriorCardProps {
   isSelected: boolean;
   canSelect: boolean;
   onClick: () => void;
-}
+}/**
+ * Render the WarriorCard component.
+ * @param { warrior, isSelected, canSelect, onClick } - { warrior, is selected, can select, on click }.
+ * @returns The result.
+ */
+
 
 export default function WarriorCard({ warrior, isSelected, canSelect, onClick }: WarriorCardProps) {
   const stats = computeWarriorStats(warrior.attrs, warrior.style);

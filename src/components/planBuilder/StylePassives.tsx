@@ -14,7 +14,12 @@ import {
 interface StylePassivesProps {
   plan: FightPlan;
   warrior?: Warrior;
-}
+}/**
+ * Style passives.
+ * @param { plan, warrior } - { plan, warrior }.
+ * @returns The result.
+ */
+
 
 export default function StylePassives({ plan, warrior }: StylePassivesProps) {
   const [showStylePassives, setShowStylePassives] = useState(false);

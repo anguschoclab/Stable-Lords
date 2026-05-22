@@ -1,7 +1,10 @@
 import React from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
+ * Defines the shape of sub nav tab.
+ */
+
 
 export interface SubNavTab {
   id: string;
@@ -13,7 +16,12 @@ interface SubNavProps {
   tabs: SubNavTab[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
-}
+}/**
+ * Sub nav.
+ * @param { tabs, activeTab, onTabChange } - { tabs, active tab, on tab change }.
+ * @returns The result.
+ */
+
 
 export default function SubNav({ tabs, activeTab, onTabChange }: SubNavProps) {
   const state = useWorldState();

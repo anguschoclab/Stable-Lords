@@ -142,7 +142,11 @@ function calculateStats(
     avgPurse: Math.round(avgPurse),
     totalHype: promoterOffers.reduce((sum, o) => sum + o.hype, 0),
   };
-}
+}/**
+ * Promoter detail.
+ * @returns The result.
+ */
+
 
 export default function PromoterDetail() {
   const { id } = useParams({ strict: false }) as { id: string };

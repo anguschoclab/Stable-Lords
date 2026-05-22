@@ -4,7 +4,11 @@ import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { ScrollText, ChevronRight, History, Activity, ShieldCheck, Terminal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
+ * Chronicle.
+ * @returns The result.
+ */
+
 
 export function Chronicle() {
   const state = useWorldState();

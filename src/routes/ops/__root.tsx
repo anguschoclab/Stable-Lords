@@ -1,7 +1,10 @@
 /**
  * Operations Hub Root Layout
  */
-import { Outlet, createFileRoute } from '@tanstack/react-router';
+import { Outlet, createFileRoute } from '@tanstack/react-router';/**
+ * Route.
+ */
+
 
 export const Route = createFileRoute('/ops/__root')({
   component: OpsLayout,

@@ -15,7 +15,11 @@ import { StableComparison } from '@/components/scouting/StableComparison';
 import { WarriorComparison } from '@/components/scouting/WarriorComparison';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { PageFrame } from '@/components/ui/PageFrame';
-import { ImperialRing } from '@/components/ui/ImperialRing';
+import { ImperialRing } from '@/components/ui/ImperialRing';/**
+ * Scouting.
+ * @returns The result.
+ */
+
 
 export default function Scouting() {
   const { treasury, week, rivals, scoutReports, roster, setState } = useGameStore();

@@ -7,7 +7,24 @@ interface SaveSlotCardProps {
   onExport: () => void;
   onDelete: () => void;
   formatDate: (iso: string) => string;
-}
+}/**
+ * Save slot card.
+ * @param {
+  slot,
+  onLoad,
+  onExport,
+  onDelete,
+  formatDate,
+} - {
+  slot,
+  on load,
+  on export,
+  on delete,
+  format date,
+}.
+ * @returns The result.
+ */
+
 
 export default function SaveSlotCard({
   slot,

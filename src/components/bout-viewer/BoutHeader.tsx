@@ -17,7 +17,36 @@ interface BoutHeaderProps {
   visibleCount: number;
   expanded: boolean;
   onToggleExpanded: () => void;
-}
+}/**
+ * Bout header.
+ * @param {
+  nameA,
+  nameD,
+  styleA,
+  styleD,
+  winner,
+  isRivalry,
+  minutes,
+  totalEvents,
+  visibleCount,
+  expanded,
+  onToggleExpanded,
+} - {
+  name a,
+  name d,
+  style a,
+  style d,
+  winner,
+  is rivalry,
+  minutes,
+  total events,
+  visible count,
+  expanded,
+  on toggle expanded,
+}.
+ * @returns The result.
+ */
+
 
 export default function BoutHeader({
   nameA,

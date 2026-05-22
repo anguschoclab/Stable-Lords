@@ -70,7 +70,12 @@ const INTENT_METRICS: Record<
     color: 'text-primary/60',
     description: 'Resting injured warriors and avoiding high-stakes bouts.',
   },
-};
+};/**
+ * Agent reasoning widget.
+ * @param { rival } - { rival }.
+ * @returns The result.
+ */
+
 
 export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
   const currentIntent = rival.agentMemory?.currentIntent || 'SURVIVAL';

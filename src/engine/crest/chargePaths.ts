@@ -4,13 +4,19 @@
  * All paths are normalized to a 100x100 viewBox coordinate system
  */
 
-import type { ChargeType } from '@/types/crest.types';
+import type { ChargeType } from '@/types/crest.types';/**
+ * Defines the shape of charge path.
+ */
+
 
 export interface ChargePath {
   path: string;
   viewBox: string;
   name: string;
-}
+}/**
+ * Beast_paths.
+ */
+
 
 // BEAST CHARGES
 export const BEAST_PATHS: Record<string, ChargePath> = {
@@ -86,7 +92,10 @@ export const BEAST_PATHS: Record<string, ChargePath> = {
     viewBox: '0 0 100 100',
     name: 'Dragon',
   },
-};
+};/**
+ * Weapon_paths.
+ */
+
 
 // WEAPON CHARGES
 export const WEAPON_PATHS: Record<string, ChargePath> = {
@@ -155,7 +164,10 @@ export const WEAPON_PATHS: Record<string, ChargePath> = {
     viewBox: '0 0 100 100',
     name: 'Scourge',
   },
-};
+};/**
+ * Symbol_paths.
+ */
+
 
 // SYMBOL CHARGES
 export const SYMBOL_PATHS: Record<string, ChargePath> = {
@@ -229,7 +241,10 @@ export const SYMBOL_PATHS: Record<string, ChargePath> = {
     viewBox: '0 0 100 100',
     name: 'Tower',
   },
-};
+};/**
+ * Nature_paths.
+ */
+
 
 // NATURE CHARGES
 export const NATURE_PATHS: Record<string, ChargePath> = {
@@ -303,7 +318,10 @@ export const NATURE_PATHS: Record<string, ChargePath> = {
     viewBox: '0 0 100 100',
     name: 'Mushroom',
   },
-};
+};/**
+ * Celestial_paths.
+ */
+
 
 // CELESTIAL CHARGES
 export const CELESTIAL_PATHS: Record<string, ChargePath> = {
@@ -347,7 +365,10 @@ export const CELESTIAL_PATHS: Record<string, ChargePath> = {
     viewBox: '0 0 100 100',
     name: 'Constellation',
   },
-};
+};/**
+ * Mythical_paths.
+ */
+
 
 // MYTHICAL CHARGES
 export const MYTHICAL_PATHS: Record<string, ChargePath> = {
@@ -411,7 +432,12 @@ export const MYTHICAL_PATHS: Record<string, ChargePath> = {
     viewBox: '0 0 100 100',
     name: 'Pegasus',
   },
-};
+};/**
+ * Get charge paths by type.
+ * @param type - Type.
+ * @returns The result.
+ */
+
 
 // Helper to get all charge paths by type
 export function getChargePathsByType(type: ChargeType): Record<string, ChargePath> {
@@ -431,7 +457,13 @@ export function getChargePathsByType(type: ChargeType): Record<string, ChargePat
     default:
       return BEAST_PATHS;
   }
-}
+}/**
+ * Get random charge.
+ * @param type - Type.
+ * @param seed - Seed.
+ * @returns The result.
+ */
+
 
 // Helper to get a random charge from a type
 export function getRandomCharge(type: ChargeType, seed: number): ChargePath & { name: string } {

@@ -3,7 +3,10 @@
  * Consolidates career stat updates to eliminate DRY violations across tournament resolvers
  */
 import type { Warrior } from '@/types/warrior.types';
-import type { WarriorStatus, CareerRecord } from '@/types/warrior.types';
+import type { WarriorStatus, CareerRecord } from '@/types/warrior.types';/**
+ * Defines the shape of career update input.
+ */
+
 
 export interface CareerUpdateInput {
   isWinner: boolean;
@@ -13,7 +16,10 @@ export interface CareerUpdateInput {
   popularityDelta?: number;
   /** If true, skip fatigue accrual (for tournament participants during tournament week) */
   skipFatigue?: boolean;
-}
+}/**
+ * Defines the shape of career update result.
+ */
+
 
 export interface CareerUpdateResult {
   status: WarriorStatus;

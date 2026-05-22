@@ -7,7 +7,11 @@ import { Link } from '@tanstack/react-router';
 
 import { cn } from '@/lib/utils';
 import { ATTRIBUTE_KEYS } from '@/types/game';
-import { resolveWarriorName, resolveStableName, findWarrior } from '@/utils/historyResolver';
+import { resolveWarriorName, resolveStableName, findWarrior } from '@/utils/historyResolver';/**
+ * Next bout widget.
+ * @returns The result.
+ */
+
 
 export function NextBoutWidget() {
   const state = useGameStore();

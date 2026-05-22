@@ -32,7 +32,10 @@ const CategorySchema = z.object({
 const DefenseSchema = z.object({
   success: z.array(templateStringSchema),
   stumbling: z.array(templateStringSchema),
-});
+});/**
+ * Narrative schema.
+ */
+
 
 export const NarrativeSchema = z.object({
   strikes: z.record(z.string(), CategorySchema),

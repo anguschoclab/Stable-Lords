@@ -16,7 +16,10 @@ import {
   type StableId,
   type InsightId,
   type ShieldSize,
-} from '@/types/shared.types';
+} from '@/types/shared.types';/**
+ * Defines the shape of roster slice.
+ */
+
 
 export interface RosterSlice {
   roster: Warrior[];
@@ -47,7 +50,13 @@ export interface RosterSlice {
   ) => void;
   renameWarrior: (warriorId: WarriorId, newName: string) => void;
   acknowledgeDeath: (warriorId: WarriorId) => void;
-}
+}/**
+ * Create roster slice.
+ * @param set - Set.
+ * @param get - Get.
+ * @returns The result.
+ */
+
 
 export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (set, get) => ({
   roster: [],

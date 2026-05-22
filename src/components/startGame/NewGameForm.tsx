@@ -21,7 +21,36 @@ interface NewGameFormProps {
   onBack: () => void;
   onSubmit: () => void;
   canCreate: boolean;
-}
+}/**
+ * New game form.
+ * @param {
+  ownerName,
+  setOwnerName,
+  stableName,
+  setStableName,
+  playerCrest,
+  setPlayerCrest,
+  backstoryId,
+  setBackstoryId,
+  onBack,
+  onSubmit,
+  canCreate,
+} - {
+  owner name,
+  set owner name,
+  stable name,
+  set stable name,
+  player crest,
+  set player crest,
+  backstory id,
+  set backstory id,
+  on back,
+  on submit,
+  can create,
+}.
+ * @returns The result.
+ */
+
 
 export default function NewGameForm({
   ownerName,

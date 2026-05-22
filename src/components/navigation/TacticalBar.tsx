@@ -31,7 +31,11 @@ interface Alert {
     label: string;
     to: string;
   };
-}
+}/**
+ * Tactical bar.
+ * @returns The result.
+ */
+
 
 export function TacticalBar() {
   const [expanded, setExpanded] = useState(false);

@@ -1,5 +1,8 @@
 import narrativeContent from '@/data/narrativeContent.json';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
+ * Defines the shape of combat context.
+ */
+
 
 export interface CombatContext {
   attacker?: string;

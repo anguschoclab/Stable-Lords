@@ -3,7 +3,11 @@ import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { motion } from 'framer-motion';
 import { Skull, Scroll, HeartOff, Crosshair } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PaperDoll } from '@/components/ui/PaperDoll';
+import { PaperDoll } from '@/components/ui/PaperDoll';/**
+ * Death modal.
+ * @returns The result.
+ */
+
 
 export function DeathModal() {
   const state = useWorldState();

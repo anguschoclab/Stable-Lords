@@ -2,17 +2,38 @@ import { GameState, Warrior, BoutOffer } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
-import { fameFromTags } from '@/engine/fame';
+import { fameFromTags } from '@/engine/fame';/**
+ * Validate bout combatants.
+ * @param currentW - Current w. (optional)
+ * @param currentO - Current o. (optional)
+ * @returns The result.
+ */
+
 
 export function validateBoutCombatants(currentW?: Warrior, currentO?: Warrior): boolean {
   return !!currentW && currentW.status === 'Active' && !!currentO;
-}
+}/**
+ * Get winner id.
+ * @param outcome - Outcome.
+ * @param wId - W id.
+ * @param oId - O id.
+ * @returns The result.
+ */
+
 
 export function getWinnerId(outcome: FightOutcome, wId: string, oId: string): string | null {
   if (outcome.winner === 'A') return wId;
   if (outcome.winner === 'D') return oId;
   return null;
-}
+}/**
+ * Calculate bout fame.
+ * @param outcome - Outcome.
+ * @param tags - Tags.
+ * @param moodMods - Mood mods.
+ * @param isRivalry - Is rivalry.
+ * @returns The result.
+ */
+
 
 export function calculateBoutFame(
   outcome: FightOutcome,
@@ -28,7 +49,16 @@ export function calculateBoutFame(
     fameD: Math.round(rawFameD.fame * moodMods.fameMultiplier),
     popD: Math.round(rawFameD.pop * moodMods.popMultiplier),
   };
-}
+}/**
+ * Process contract payouts.
+ * @param state - State.
+ * @param contract - Contract.
+ * @param winnerId - Winner id.
+ * @param currentWId - Current w id.
+ * @param currentOId - Current o id.
+ * @returns The result.
+ */
+
 
 export function processContractPayouts(
   state: GameState,
@@ -90,7 +120,13 @@ export function processContractPayouts(
   impacts.push({ boutOffers: remainingBoutOffers });
 
   return impacts;
-}
+}/**
+ * Get default plan.
+ * @param w - W.
+ * @param defaultPlanForWarrior - Default plan for warrior.
+ * @returns The result.
+ */
+
 
 export function getDefaultPlan(
   w: Warrior,

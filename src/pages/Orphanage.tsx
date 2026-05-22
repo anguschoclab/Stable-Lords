@@ -38,7 +38,11 @@ const stepVariants = {
 const stepTransition = {
   duration: 0.4,
   ease: [0.16, 1, 0.3, 1] as [number, number, number, number], // Custom cubic-bezier for smooth deceleration
-};
+};/**
+ * Orphanage.
+ * @returns The result.
+ */
+
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 

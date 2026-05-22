@@ -303,7 +303,11 @@ function RecruitCard({
       </div>
     </Surface>
   );
-}
+}/**
+ * Recruit.
+ * @returns The result.
+ */
+
 
 export default function Recruit() {
   const store = useGameStore();

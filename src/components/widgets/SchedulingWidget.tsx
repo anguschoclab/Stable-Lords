@@ -104,7 +104,12 @@ function MatchupCard({ matchup, type }: MatchupCardProps) {
 
 interface SchedulingWidgetProps {
   warrior: Warrior;
-}
+}/**
+ * Scheduling widget.
+ * @param { warrior } - { warrior }.
+ * @returns The result.
+ */
+
 
 export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
   const state = useWorldState();

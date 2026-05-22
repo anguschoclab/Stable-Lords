@@ -7,7 +7,12 @@ import narrativeContent from '@/data/narrativeContent.json';
 
 interface MemorialStepProps {
   deadWarriors: (Warrior | undefined)[];
-}
+}/**
+ * Memorial step.
+ * @param { deadWarriors } - { dead warriors }.
+ * @returns The result.
+ */
+
 
 export function MemorialStep({ deadWarriors }: MemorialStepProps) {
   return (

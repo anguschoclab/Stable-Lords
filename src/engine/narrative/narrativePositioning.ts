@@ -5,7 +5,10 @@
 import { pick } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate } from './narrativePBPUtils';
 
-type RNG = () => number;
+type RNG = () => number;/**
+ * Range_names.
+ */
+
 
 export const RANGE_NAMES: Record<string, string> = {
   Grapple: 'grappling range',

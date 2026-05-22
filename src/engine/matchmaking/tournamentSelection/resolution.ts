@@ -5,7 +5,14 @@ import { findWarriorById, getAIPlan } from './utils';
 import { awardTournamentPrizes } from './awards';
 import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
-import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
+import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';/**
+ * Resolve round.
+ * @param state - State.
+ * @param tournamentId - Tournament id.
+ * @param seed - Seed.
+ * @returns The result.
+ */
+
 
 export function resolveRound(
   state: GameState,
@@ -150,7 +157,14 @@ export function resolveRound(
     roundResults:
       isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${tournament.name}!`] : [],
   };
-}
+}/**
+ * Resolve complete tournament.
+ * @param state - State.
+ * @param tournamentId - Tournament id.
+ * @param seed - Seed.
+ * @returns The result.
+ */
+
 
 export function resolveCompleteTournament(
   state: GameState,
@@ -167,7 +181,19 @@ export function resolveCompleteTournament(
     safety++;
   }
   return current;
-}
+}/**
+ * Apply bout results.
+ * @param state - State.
+ * @param wA - W a.
+ * @param wD - W d.
+ * @param outcome - Outcome.
+ * @param tId - T id.
+ * @param tName - T name.
+ * @param rng - Rng.
+ * @param skipFatigue - Skip fatigue. (optional)
+ * @returns The result.
+ */
+
 
 export function applyBoutResults(
   state: GameState,

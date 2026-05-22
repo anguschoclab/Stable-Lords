@@ -28,7 +28,11 @@ import { WarriorLink } from '@/components/EntityLink';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
 import { motion } from 'framer-motion';
 import FightsList from '@/components/awards/FightsList';
-import UpsetsList, { type UpsetEntry } from '@/components/awards/UpsetsList';
+import UpsetsList, { type UpsetEntry } from '@/components/awards/UpsetsList';/**
+ * Render the HallOfFame component.
+ * @returns The result.
+ */
+
 
 export default function HallOfFame() {
   const { roster, graveyard, retired, rivals, awards, year, player, season } = useGameStore();

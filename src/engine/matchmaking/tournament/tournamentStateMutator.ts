@@ -51,7 +51,14 @@ let warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
  */
 export function clearWarriorCache(): void {
   warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
-}
+}/**
+ * Find warrior by id.
+ * @param state - State.
+ * @param warriorId - Warrior id.
+ * @param tournament - Tournament. (optional)
+ * @returns The result.
+ */
+
 
 export function findWarriorById(
   state: GameState,

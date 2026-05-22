@@ -3,11 +3,23 @@
  * Describes the gameplay impact of flair, titles, injuries, and status tags.
  * Decoupled from hardcoded strings and migrated to narrativeContent.json.
  */
-import narrativeContent from '@/data/narrativeContent.json';
+import narrativeContent from '@/data/narrativeContent.json';/**
+ * Flair_descriptions.
+ */
 
-export const FLAIR_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.flair;
-export const TITLE_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.title;
-export const INJURY_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.injury;
+
+export const FLAIR_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.flair;/**
+ * Title_descriptions.
+ */
+
+export const TITLE_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.title;/**
+ * Injury_descriptions.
+ */
+
+export const INJURY_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.injury;/**
+ * Status_descriptions.
+ */
+
 export const STATUS_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.status;
 
 /**

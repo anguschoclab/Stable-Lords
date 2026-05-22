@@ -13,7 +13,10 @@ const engine = {
   advanceDay,
   resolveTournamentRound: TournamentSelectionService.resolveRound.bind(TournamentSelectionService),
   createFreshState,
-};
+};/**
+ * Engine worker type.
+ */
+
 
 export type EngineWorker = typeof engine;
 

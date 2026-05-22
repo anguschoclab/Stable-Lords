@@ -133,7 +133,12 @@ function useNavAlerts() {
 
 interface MobileNavProps {
   className?: string;
-}
+}/**
+ * Mobile nav.
+ * @param { className } - { class name }.
+ * @returns The result.
+ */
+
 
 export function MobileNav({ className }: MobileNavProps) {
   const [open, setOpen] = useState(false);

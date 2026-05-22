@@ -22,7 +22,11 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
+ * Contract manager.
+ * @returns The result.
+ */
+
 
 export function ContractManager() {
   const state = useWorldState();

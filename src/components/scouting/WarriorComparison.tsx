@@ -19,7 +19,12 @@ import { cn } from '@/lib/utils';
 interface WarriorComparisonProps {
   rivals: RivalStableData[];
   playerRoster: Warrior[];
-}
+}/**
+ * Warrior comparison.
+ * @param { rivals, playerRoster } - { rivals, player roster }.
+ * @returns The result.
+ */
+
 
 export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonProps) {
   const [wIdA, setWIdA] = useState<string | null>(null);

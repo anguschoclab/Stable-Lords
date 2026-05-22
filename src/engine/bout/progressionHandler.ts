@@ -43,7 +43,19 @@ function routeUpdate(
   const baseRoster = (existingRival?.roster as Warrior[] | undefined) ?? rival.roster;
   const updatedRoster = baseRoster.map((w) => (w.id === warrior.id ? { ...w, ...partial } : w));
   rivalsUpdates.set(rival.id, { ...existingRival, roster: updatedRoster });
-}
+}/**
+ * Handle progressions.
+ * @param s - S.
+ * @param wA - W a.
+ * @param wD - W d.
+ * @param outcome - Outcome.
+ * @param tags - Tags.
+ * @param week - Week.
+ * @param rivalStableId - Rival stable id. (optional)
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
+
 
 export function handleProgressions(
   s: GameState,

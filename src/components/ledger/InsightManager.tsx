@@ -27,7 +27,11 @@ const TOKEN_CFG: Record<
   Style: { Icon: Zap, color: 'bg-arena-gold/20 text-arena-gold', label: 'Style' },
   Attribute: { Icon: TrendingUp, color: 'bg-primary/20 text-primary', label: 'Attribute' },
   Tactic: { Icon: Brain, color: 'bg-purple-500/20 text-purple-500', label: 'Tactic' },
-};
+};/**
+ * Insight manager.
+ * @returns The result.
+ */
+
 
 export function InsightManager() {
   const state = useWorldState();

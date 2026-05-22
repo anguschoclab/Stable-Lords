@@ -12,7 +12,12 @@ interface Props {
   warrior?: Warrior;
   width?: number;
   height?: number;
-}
+}/**
+ * Stamina curve.
+ * @param { plan, warrior, width = 240, height = 56 } - { plan, warrior, width = 240, height = 56 }.
+ * @returns The result.
+ */
+
 
 export default function StaminaCurve({ plan, warrior, width = 240, height = 56 }: Props) {
   const { path, lastPct } = useMemo(() => {

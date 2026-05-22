@@ -25,7 +25,12 @@ function getLethalityScore(wA: Warrior, wB: Warrior, crowdMood: string) {
   else if (crowdMood === 'Restless') score += 1;
 
   return score;
-}
+}/**
+ * Lethality badge.
+ * @param { wA, wB, crowdMood } - { w a, w b, crowd mood }.
+ * @returns The result.
+ */
+
 
 export function LethalityBadge({ wA, wB, crowdMood }: LethalityBadgeProps) {
   const score = getLethalityScore(wA, wB, crowdMood);

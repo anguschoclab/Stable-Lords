@@ -3,7 +3,10 @@ import React from 'react';
 interface State {
   hasError: boolean;
   error: Error | null;
-}
+}/**
+ * The ErrorBoundary class.
+ */
+
 
 export class ErrorBoundary extends React.Component<React.PropsWithChildren, State> {
   constructor(props: React.PropsWithChildren) {

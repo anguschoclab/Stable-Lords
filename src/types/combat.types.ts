@@ -14,13 +14,22 @@ import {
   type FightId,
   type TournamentId,
 } from './shared.types';
-import type { BoutResult } from '@/engine/boutProcessor';
+import type { BoutResult } from '@/engine/boutProcessor';/**
+ * Weapon type type.
+ */
 
-export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist';
+
+export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist';/**
+ * Armor weight type.
+ */
+
 
 // ─── Equipment Constants ───────────────────────────────────────────────────
 
-export type ArmorWeight = 'None' | 'Light' | 'Medium' | 'Heavy' | 'Ultra-Heavy';
+export type ArmorWeight = 'None' | 'Light' | 'Medium' | 'Heavy' | 'Ultra-Heavy';/**
+ * Armor_weight_map.
+ */
+
 
 export const ARMOR_WEIGHT_MAP: Record<
   ArmorWeight,
@@ -31,16 +40,25 @@ export const ARMOR_WEIGHT_MAP: Record<
   Medium: { minWeight: 5, maxWeight: 8, speedPenalty: 2 },
   Heavy: { minWeight: 9, maxWeight: 12, speedPenalty: 4 },
   'Ultra-Heavy': { minWeight: 13, maxWeight: 20, speedPenalty: 6 },
-};
+};/**
+ * Equipment slot type.
+ */
 
-export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';
+
+export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';/**
+ * Defines the shape of armor encumbrance.
+ */
+
 
 export interface ArmorEncumbrance {
   totalWeight: number;
   speedPenalty: number;
   fatigueMult: number;
   weightClass: ArmorWeight;
-}
+}/**
+ * Death cause bucket type.
+ */
+
 
 // ─── Fight Results ──────────────────────────────────────────────────────────
 
@@ -50,9 +68,15 @@ export type DeathCauseBucket =
   | 'CRITICAL_CHAIN'
   | 'FATIGUE_COLLAPSE'
   | 'ARMOR_FAILURE'
-  | 'RIVALRY_FINISH';
+  | 'RIVALRY_FINISH';/**
+ * Fight outcome by type.
+ */
 
-export type FightOutcomeBy = 'Kill' | 'KO' | 'Exhaustion' | 'Stoppage' | 'Draw' | null;
+
+export type FightOutcomeBy = 'Kill' | 'KO' | 'Exhaustion' | 'Stoppage' | 'Draw' | null;/**
+ * Combat event type type.
+ */
+
 
 export type CombatEventType =
   | 'INITIATIVE'
@@ -70,7 +94,10 @@ export type CombatEventType =
   | 'RANGE_SHIFT'
   | 'FEINT_SUCCESS'
   | 'FEINT_FAIL'
-  | 'ZONE_SHIFT';
+  | 'ZONE_SHIFT';/**
+ * Defines the shape of combat event.
+ */
+
 
 export interface CombatEvent {
   type: CombatEventType;
@@ -80,7 +107,10 @@ export interface CombatEvent {
   location?: string;
   result?: string | boolean;
   metadata?: Record<string, unknown>;
-}
+}/**
+ * Defines the shape of minute event.
+ */
+
 
 export interface MinuteEvent {
   minute: number;
@@ -124,7 +154,10 @@ export interface ExchangeLogEntry {
   executionFlag?: boolean;
   /** Telemetry reason codes e.g. AI_PUSH_FATIGUE, CROWD_BLOODTHIRSTY_LETHAL. */
   reasonCodes?: string[];
-}
+}/**
+ * Defines the shape of fight outcome.
+ */
+
 
 export interface FightOutcome {
   winner: 'A' | 'D' | null;
@@ -146,7 +179,10 @@ export interface FightOutcome {
     fatalExchangeIndex?: number;
     tags?: string[];
   };
-}
+}/**
+ * Defines the shape of fight summary.
+ */
+
 
 export interface FightSummary {
   id: FightId;

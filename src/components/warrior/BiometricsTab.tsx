@@ -13,7 +13,12 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 interface BiometricsTabProps {
   warrior: Warrior;
   displayWarrior: import('@/types/game').Warrior;
-}
+}/**
+ * Biometrics tab.
+ * @param { warrior, displayWarrior } - { warrior, display warrior }.
+ * @returns The result.
+ */
+
 
 export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
   return (

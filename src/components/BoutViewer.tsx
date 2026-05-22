@@ -27,7 +27,38 @@ interface BoutViewerProps {
   weather?: string;
   arenaId?: string;
   transcript?: string[];
-}
+}/**
+ * Bout viewer.
+ * @param {
+  nameA,
+  nameD,
+  styleA,
+  styleD,
+  log,
+  winner,
+  by,
+  announcement,
+  isRivalry,
+  arenaTier = 'standard',
+  weather = 'Clear',
+  arenaId,
+} - {
+  name a,
+  name d,
+  style a,
+  style d,
+  log,
+  winner,
+  by,
+  announcement,
+  is rivalry,
+  arena tier = 'standard',
+  weather = 'clear',
+  arena id,
+}.
+ * @returns The result.
+ */
+
 
 export default function BoutViewer({
   nameA,

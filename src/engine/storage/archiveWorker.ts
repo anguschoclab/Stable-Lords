@@ -16,5 +16,8 @@ const archiveWorkerApi = {
   },
 };
 
-Comlink.expose(archiveWorkerApi);
+Comlink.expose(archiveWorkerApi);/**
+ * Archive worker type.
+ */
+
 export type ArchiveWorker = typeof archiveWorkerApi;

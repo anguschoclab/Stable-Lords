@@ -17,7 +17,10 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { hashStr } from '@/utils/random';
 
 const ATTRIBUTE_KEYS = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF'] as const;
-type AttrKey = (typeof ATTRIBUTE_KEYS)[number];
+type AttrKey = (typeof ATTRIBUTE_KEYS)[number];/**
+ * Defines the shape of potential scout report.
+ */
+
 
 export interface PotentialScoutReport {
   recruitId: string;

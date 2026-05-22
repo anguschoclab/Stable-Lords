@@ -217,19 +217,58 @@ export class StatusNarrator {
     const templateStr = Array.isArray(template) ? template[0] : template;
     return NarrativeTemplateEngine.interpolateTemplate(templateStr, {});
   }
-}
+}/**
+ * Damage severity line.
+ */
+
 
 // Export static methods as standalone functions for backward compatibility
-export const damageSeverityLine = StatusNarrator.damageSeverityLine.bind(StatusNarrator);
-export const stateChangeLine = StatusNarrator.stateChangeLine.bind(StatusNarrator);
-export const fatigueLine = StatusNarrator.fatigueLine.bind(StatusNarrator);
-export const crowdReaction = StatusNarrator.crowdReaction.bind(StatusNarrator);
-export const minuteStatusLine = StatusNarrator.minuteStatusLine.bind(StatusNarrator);
-export const popularityLine = StatusNarrator.popularityLine.bind(StatusNarrator);
-export const skillLearnLine = StatusNarrator.skillLearnLine.bind(StatusNarrator);
-export const tradingBlowsLine = StatusNarrator.tradingBlowsLine.bind(StatusNarrator);
-export const stalemateLine = StatusNarrator.stalemateLine.bind(StatusNarrator);
-export const tauntLine = StatusNarrator.tauntLine.bind(StatusNarrator);
-export const conservingLine = StatusNarrator.conservingLine.bind(StatusNarrator);
-export const pressingLine = StatusNarrator.pressingLine.bind(StatusNarrator);
+export const damageSeverityLine = StatusNarrator.damageSeverityLine.bind(StatusNarrator);/**
+ * State change line.
+ */
+
+export const stateChangeLine = StatusNarrator.stateChangeLine.bind(StatusNarrator);/**
+ * Fatigue line.
+ */
+
+export const fatigueLine = StatusNarrator.fatigueLine.bind(StatusNarrator);/**
+ * Crowd reaction.
+ */
+
+export const crowdReaction = StatusNarrator.crowdReaction.bind(StatusNarrator);/**
+ * Minute status line.
+ */
+
+export const minuteStatusLine = StatusNarrator.minuteStatusLine.bind(StatusNarrator);/**
+ * Popularity line.
+ */
+
+export const popularityLine = StatusNarrator.popularityLine.bind(StatusNarrator);/**
+ * Skill learn line.
+ */
+
+export const skillLearnLine = StatusNarrator.skillLearnLine.bind(StatusNarrator);/**
+ * Trading blows line.
+ */
+
+export const tradingBlowsLine = StatusNarrator.tradingBlowsLine.bind(StatusNarrator);/**
+ * Stalemate line.
+ */
+
+export const stalemateLine = StatusNarrator.stalemateLine.bind(StatusNarrator);/**
+ * Taunt line.
+ */
+
+export const tauntLine = StatusNarrator.tauntLine.bind(StatusNarrator);/**
+ * Conserving line.
+ */
+
+export const conservingLine = StatusNarrator.conservingLine.bind(StatusNarrator);/**
+ * Pressing line.
+ */
+
+export const pressingLine = StatusNarrator.pressingLine.bind(StatusNarrator);/**
+ * Narrate insight hint.
+ */
+
 export const narrateInsightHint = StatusNarrator.narrateInsightHint.bind(StatusNarrator);

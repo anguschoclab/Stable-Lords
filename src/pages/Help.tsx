@@ -6,7 +6,11 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { PageHeader } from '@/components/ui/PageHeader';
-import { BookOpen } from 'lucide-react';
+import { BookOpen } from 'lucide-react';/**
+ * Help.
+ * @returns The result.
+ */
+
 
 export default function Help() {
   return (

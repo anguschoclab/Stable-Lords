@@ -1,6 +1,9 @@
 import { Zap, Swords, Shield, Target, Activity, Flame, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { FightPlan, OffensiveTactic, DefensiveTactic } from '@/types/game';
+import type { FightPlan, OffensiveTactic, DefensiveTactic } from '@/types/game';/**
+ * Tactic_bank.
+ */
+
 
 export const TACTIC_BANK = [
   { id: 'Lunge', type: 'offensive', label: 'Lunge', icon: Zap },
@@ -16,7 +19,12 @@ export const TACTIC_BANK = [
 interface TacticBankProps {
   plan?: FightPlan;
   onPlanChange?: (plan: FightPlan) => void;
-}
+}/**
+ * Tactic bank.
+ * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @returns The result.
+ */
+
 
 export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {}) {
   const handleClick = (t: (typeof TACTIC_BANK)[number]) => {

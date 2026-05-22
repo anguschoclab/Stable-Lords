@@ -24,7 +24,12 @@ const NAV_ROUTES = [
 
 interface UseKeyboardShortcutsOpts {
   onToggleSidebar: () => void;
-}
+}/**
+ * React hook: use keyboard shortcuts.
+ * @param { onToggleSidebar } - { on toggle sidebar }.
+ * @returns The result.
+ */
+
 
 export function useKeyboardShortcuts({ onToggleSidebar }: UseKeyboardShortcutsOpts) {
   const navigate = useNavigate();

@@ -24,7 +24,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 
 interface LeaderboardProps {
   allFights: import('@/types/game').FightSummary[];
-}
+}/**
+ * Gazette leaderboard.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
+
 
 export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
   const leaderData = useMemo(() => {
@@ -220,7 +225,12 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
       </div>
     </Surface>
   );
-}
+}/**
+ * Best by style.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
+
 
 export function BestByStyle({ allFights }: LeaderboardProps) {
   const styles = useMemo(
@@ -312,7 +322,12 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
       </div>
     </Surface>
   );
-}
+}/**
+ * Rising stars.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
+
 
 export function RisingStars({ allFights }: LeaderboardProps) {
   const stars = useMemo(() => {

@@ -5,11 +5,22 @@ import { type ResolutionContext, type FighterState } from '@/engine/combat/resol
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { getTrainingBonus } from '@/engine/trainers';
-import { getSpecialtyMods } from '@/engine/trainerSpecialties';
+import { getSpecialtyMods } from '@/engine/trainerSpecialties';/**
+ * Create rng for context.
+ * @param seed - Seed.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
+
 
 export function createRNGForContext(seed: number, rng?: IRNGService): IRNGService {
   return rng || new SeededRNGService(seed);
-}
+}/**
+ * Setup rng.
+ * @param providedRng - Provided rng. (optional)
+ * @returns The result.
+ */
+
 
 export function setupRng(providedRng?: (() => number) | number): () => number {
   if (typeof providedRng === 'function') {
@@ -19,7 +30,16 @@ export function setupRng(providedRng?: (() => number) | number): () => number {
     typeof providedRng === 'number' ? providedRng : crypto.getRandomValues(new Uint32Array(1))[0];
   const sRng = new SeededRNGService(seed);
   return () => sRng.next();
-}
+}/**
+ * Get trainer mods.
+ * @param trainers - Trainers.
+ * @param style - Style.
+ * @param fighter - Fighter. (optional)
+ * @param opponent - Opponent. (optional)
+ * @param ctx - Ctx. (optional)
+ * @returns The result.
+ */
+
 
 export function getTrainerMods(
   trainers: Trainer[] | undefined,
@@ -78,7 +98,15 @@ export function getTrainerMods(
     riposteDamageMult: 1.0,
     fatiguePenaltyReduction: 0,
   };
-}
+}/**
+ * Process outcome tags.
+ * @param winner - Winner.
+ * @param by - By.
+ * @param fA - F a.
+ * @param fD - F d.
+ * @returns The result.
+ */
+
 
 export function processOutcomeTags(
   winner: 'A' | 'D',

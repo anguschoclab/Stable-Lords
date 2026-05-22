@@ -10,7 +10,12 @@ interface MetaAnalyticsProps {
   allFights: import('@/types/game').FightSummary[];
 }
 
-const TACTICAL_STYLES = ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler'];
+const TACTICAL_STYLES = ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler'];/**
+ * Tactical style analysis.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
+
 
 export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
   // ⚡ Bolt: Reduced O(S * N) repeated filter calls to O(N) single-pass aggregation and memoized result
@@ -125,7 +130,12 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
       </div>
     </Surface>
   );
-}
+}/**
+ * Style matchup heatmap.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
+
 
 export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
   // ⚡ Bolt: Reduced O(S^2 * N) nested filtering to O(N) single-pass aggregation and memoized result

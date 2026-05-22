@@ -6,7 +6,12 @@ export interface FamePop {
   fame: number;
   pop: number;
   labels: string[];
-}
+}/**
+ * Fame from tags.
+ * @param tags - Tags.
+ * @returns The result.
+ */
+
 
 export function fameFromTags(tags: string[] = []): FamePop {
   let fame = 0;

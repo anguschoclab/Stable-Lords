@@ -15,7 +15,10 @@ import { checkBudget } from './workers/budgetWorker';
  * Encapsulates the turn logic for a single rival stable.
  * Implements "Skeptical Memory" and "Hierarchical Delegation".
  */
-export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral';
+export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral';/**
+ * Defines the shape of agent context.
+ */
+
 
 export interface AgentContext {
   rival: RivalStableData;
@@ -23,7 +26,13 @@ export interface AgentContext {
   meta: Record<string, number>;
   budgetReport?: BudgetReport; // ⚡ Bolt: Cache budget report for the week
   playerThreatLevel: PlayerThreatLevel;
-}
+}/**
+ * Create agent context.
+ * @param rival - Rival.
+ * @param state - State.
+ * @returns The result.
+ */
+
 
 export function createAgentContext(rival: RivalStableData, state: GameState): AgentContext {
   // ⚡ Skeptical Memory: Initialize memory if missing

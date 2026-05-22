@@ -7,7 +7,24 @@ interface ScreenShakeProps {
   disabled?: boolean;
   className?: string;
   children: React.ReactNode;
-}
+}/**
+ * Screen shake.
+ * @param {
+  trigger,
+  intensity = 'medium',
+  disabled = false,
+  className,
+  children,
+} - {
+  trigger,
+  intensity = 'medium',
+  disabled = false,
+  class name,
+  children,
+}.
+ * @returns The result.
+ */
+
 
 export default function ScreenShake({
   trigger,

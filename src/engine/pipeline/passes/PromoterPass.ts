@@ -131,7 +131,13 @@ function calculatePersonalityPurseModifier(
   baseHype: number
 ): number {
   return (PERSONALITY_PURSE_MOD[promoter.personality] ?? (() => 1.0))(warriorA, warriorB, baseHype);
-}
+}/**
+ * Run promoter pass.
+ * @param state - State.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
+
 
 export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(state.week * 881 + 17);

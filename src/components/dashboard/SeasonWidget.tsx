@@ -15,7 +15,11 @@ import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
+ * Season widget.
+ * @returns The result.
+ */
+
 
 export function SeasonWidget() {
   const state = useWorldState();

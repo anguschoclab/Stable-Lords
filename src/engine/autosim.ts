@@ -2,7 +2,10 @@ import { type GameState } from '@/types/state.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
-import { TimeAdvanceService, type SoftStopCondition } from './tick/TimeAdvanceService';
+import { TimeAdvanceService, type SoftStopCondition } from './tick/TimeAdvanceService';/**
+ * Defines the shape of autosim week summary.
+ */
+
 
 export interface AutosimWeekSummary {
   week: number;
@@ -11,7 +14,10 @@ export interface AutosimWeekSummary {
   injuries: number;
   deathNames: string[];
   injuryNames: string[];
-}
+}/**
+ * Defines the shape of autosim result.
+ */
+
 
 export interface AutosimResult {
   finalState: GameState;
@@ -45,7 +51,10 @@ const STOP_REASON_MAP: Record<string, AutosimResult['stopReason']> = {
  */
 function mapStopReason(reason: string | null | undefined): AutosimResult['stopReason'] {
   return (reason && STOP_REASON_MAP[reason]) || 'max_weeks';
-}
+}/**
+ * Defines the shape of autosim options.
+ */
+
 
 export interface AutosimOptions {
   weeksToSim: number;

@@ -4,14 +4,20 @@ import { processWeekBouts } from '@/engine/boutProcessor';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics';
-import { resolveImpacts } from '@/engine/impacts';
+import { resolveImpacts } from '@/engine/impacts';/**
+ * Defines the shape of simulation config.
+ */
+
 
 export interface SimulationConfig {
   weeks: number;
   seed: number;
   logFrequency?: number; // Log every N weeks
   ignoreBankruptcy?: boolean;
-}
+}/**
+ * Defines the shape of simulation result.
+ */
+
 
 export interface SimulationResult {
   finalState: GameState;

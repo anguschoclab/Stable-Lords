@@ -12,7 +12,14 @@ let warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
  */
 export function clearWarriorCache(): void {
   warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
-}
+}/**
+ * Find warrior by id.
+ * @param state - State.
+ * @param warriorId - Warrior id.
+ * @param tournament - Tournament. (optional)
+ * @returns The result.
+ */
+
 
 export function findWarriorById(
   state: GameState,
@@ -48,7 +55,15 @@ export function findWarriorById(
   }
 
   return undefined;
-}
+}/**
+ * Get ai plan.
+ * @param state - State.
+ * @param w - W.
+ * @param opponentStyle - Opponent style. (optional)
+ * @param opponentOwnerId - Opponent owner id. (optional)
+ * @returns The result.
+ */
+
 
 export function getAIPlan(
   state: GameState,
@@ -79,7 +94,14 @@ export function getAIPlan(
     rival.strategy?.intent,
     grudgeIntensity
   );
-}
+}/**
+ * Generate freelancer.
+ * @param tier - Tier.
+ * @param index - Index.
+ * @param rng - Rng.
+ * @returns The result.
+ */
+
 
 export function generateFreelancer(tier: string, index: number, rng: SeededRNG): Warrior {
   const styles = Object.values(FightingStyle);

@@ -30,7 +30,12 @@ interface TrainerCardProps {
   onFire?: () => void;
   owned: boolean;
   action?: React.ReactNode;
-}
+}/**
+ * Trainer card.
+ * @param { trainer, onFire, owned, action } - { trainer, on fire, owned, action }.
+ * @returns The result.
+ */
+
 
 export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps) {
   const icon = FOCUS_ICONS[trainer.focus as TrainerFocus] ?? '📋';

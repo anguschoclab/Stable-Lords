@@ -4,7 +4,10 @@
  * the engine computes state, this module formats it for display.
  */
 import type { Warrior } from '@/types/warrior.types';
-import { WEAPONS } from '@/data/equipment';
+import { WEAPONS } from '@/data/equipment';/**
+ * Defines the shape of favorites display info.
+ */
+
 
 export interface FavoritesDisplayInfo {
   weapon: string | null;

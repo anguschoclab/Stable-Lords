@@ -1,4 +1,7 @@
-import type { GameState } from '@/types/state.types';
+import type { GameState } from '@/types/state.types';/**
+ * Defines the shape of archive service.
+ */
+
 
 export interface ArchiveService {
   isSupported: () => boolean;
@@ -23,14 +26,20 @@ export interface ArchiveService {
 
   // Utility
   getArchivedBoutIdsForSeason: (season: number) => Promise<string[]>;
-}
+}/**
+ * The ArchiveConflictError class.
+ */
+
 
 export class ArchiveConflictError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'ArchiveConflictError';
   }
-}
+}/**
+ * The ElectronArchiveService class.
+ */
+
 
 export class ElectronArchiveService implements ArchiveService {
   private writeQueue: Promise<any> = Promise.resolve();
@@ -146,7 +155,10 @@ export class ElectronArchiveService implements ArchiveService {
     // For now, return empty array as this is not critical for Electron version
     return [];
   }
-}
+}/**
+ * Archive service.
+ */
+
 
 // Export appropriate archive service based on environment
 export let archiveService: ArchiveService;

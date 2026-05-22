@@ -1,5 +1,8 @@
 import { cn } from '@/lib/utils';
-import { ScrollText, Swords } from 'lucide-react';
+import { ScrollText, Swords } from 'lucide-react';/**
+ * View mode type.
+ */
+
 
 export type ViewMode = 'log' | 'arena';
 
@@ -8,7 +11,22 @@ interface ViewModeToggleProps {
   onChange: (mode: ViewMode) => void;
   disabled?: boolean;
   className?: string;
-}
+}/**
+ * View mode toggle.
+ * @param {
+  mode,
+  onChange,
+  disabled = false,
+  className,
+} - {
+  mode,
+  on change,
+  disabled = false,
+  class name,
+}.
+ * @returns The result.
+ */
+
 
 export default function ViewModeToggle({
   mode,

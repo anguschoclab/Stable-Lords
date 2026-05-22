@@ -5,7 +5,10 @@ import narrativeContent from '@/data/narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { NarrativeTemplateEngine } from './narrativeTemplateEngine';
 import { szToHeight, getWeaponDisplayName, getWeaponType } from './narrativeUtils';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
+ * Defines the shape of warrior intro data.
+ */
+
 
 export interface WarriorIntroData {
   name: string;
@@ -302,7 +305,10 @@ function getStrikeSeverity(
 
   if (ratio >= 0.1) return 'solid';
   return 'glancing';
-}
+}/**
+ * Combat narrator.
+ */
+
 
 // Backward compatibility object
 export const CombatNarrator = {

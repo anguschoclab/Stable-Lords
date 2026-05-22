@@ -13,7 +13,10 @@ import {
   getAvailableItems,
   getLoadoutWeight,
   isPreferredWeapon,
-} from '@/data/equipment';
+} from '@/data/equipment';/**
+ * Defines the shape of gear recommendation.
+ */
+
 
 export interface GearRecommendation {
   loadout: EquipmentLoadout;

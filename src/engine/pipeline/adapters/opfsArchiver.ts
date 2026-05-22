@@ -3,7 +3,12 @@ import { type Season } from '@/types/shared.types';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { archiveWorkerProxy } from '@/engine/storage/archiveWorkerProxy';
 
-const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
+const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];/**
+ * Season to number.
+ * @param season - Season.
+ * @returns The result.
+ */
+
 export function seasonToNumber(season: Season): number {
   return SEASONS.indexOf(season);
 }
@@ -48,7 +53,12 @@ export function flushDeferredArchivesOffThread(state: GameState): GameState {
     console.error('Archive worker proxy: flush failed', err);
   });
   return state;
-}
+}/**
+ * Archive week logs.
+ * @param state - State.
+ * @returns The result.
+ */
+
 
 export function archiveWeekLogs(state: GameState): GameState {
   const opfs = new OPFSArchiveService();

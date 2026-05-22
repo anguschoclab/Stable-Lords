@@ -15,7 +15,12 @@ interface QuadrantDot {
   fame: number;
   notoriety: number;
   isPlayer: boolean;
-}
+}/**
+ * Reputation quadrant.
+ * @param { className } - { class name }.
+ * @returns The result.
+ */
+
 
 export function ReputationQuadrant({ className }: { className?: string }) {
   const worldState = useWorldState();

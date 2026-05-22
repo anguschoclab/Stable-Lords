@@ -355,7 +355,11 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
       </div>
     </Surface>
   );
-}
+}/**
+ * Treasury overview.
+ * @returns The result.
+ */
+
 
 export function TreasuryOverview() {
   const state = useWorldState();

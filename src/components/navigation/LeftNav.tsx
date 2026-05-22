@@ -148,7 +148,12 @@ function useNavAlerts() {
 
 interface LeftNavProps {
   className?: string;
-}
+}/**
+ * Left nav.
+ * @param { className } - { class name }.
+ * @returns The result.
+ */
+
 
 export function LeftNav({ className }: LeftNavProps) {
   const location = useLocation();

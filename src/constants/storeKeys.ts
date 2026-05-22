@@ -8,6 +8,9 @@ export const STORE_KEYS = {
   UI_PREFS: 'sl.ui.prefs',
   AUDIO_MUTED: 'sl_muted',
   WINDOW_BOUNDS: 'windowBounds',
-} as const;
+} as const;/**
+ * Store key type.
+ */
+
 
 export type StoreKey = (typeof STORE_KEYS)[keyof typeof STORE_KEYS];

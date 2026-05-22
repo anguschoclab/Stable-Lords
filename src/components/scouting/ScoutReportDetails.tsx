@@ -23,7 +23,22 @@ interface ScoutReportDetailsProps {
   warriorName: string;
   treasury: number;
   onScout: (quality: ScoutQuality) => void;
-}
+}/**
+ * Scout report details.
+ * @param {
+  report,
+  warriorName,
+  treasury,
+  onScout,
+} - {
+  report,
+  warrior name,
+  treasury,
+  on scout,
+}.
+ * @returns The result.
+ */
+
 
 export function ScoutReportDetails({
   report,

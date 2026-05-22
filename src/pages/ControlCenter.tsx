@@ -378,7 +378,11 @@ const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
   { id: 'overview', label: 'Overview', icon: Activity },
   { id: 'roster', label: 'Roster', icon: Users },
   { id: 'rep', label: 'Reputation', icon: Crown },
-];
+];/**
+ * Control center.
+ * @returns The result.
+ */
+
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 

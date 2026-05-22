@@ -5,7 +5,10 @@ import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Flame, Skull, Target, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { getRecentFights } from '@/engine/core/historyUtils';
+import { getRecentFights } from '@/engine/core/historyUtils';/**
+ * Defines the shape of derived rivalry.
+ */
+
 
 export interface DerivedRivalry {
   stableName: string;
@@ -154,7 +157,11 @@ const intensityLabel = (n: number) =>
   n >= 5 ? 'Blood Feud' : n >= 4 ? 'Bitter' : n >= 3 ? 'Heated' : n >= 2 ? 'Tense' : 'Simmering';
 
 const intensityColor = (n: number) =>
-  n >= 4 ? 'text-destructive' : n >= 2 ? 'text-arena-gold' : 'text-primary';
+  n >= 4 ? 'text-destructive' : n >= 2 ? 'text-arena-gold' : 'text-primary';/**
+ * Rivalry widget.
+ * @returns The result.
+ */
+
 
 // Main Widget Component
 export function RivalryWidget() {

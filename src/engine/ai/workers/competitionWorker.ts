@@ -31,7 +31,15 @@ export interface BoutBid {
   maxFame?: number;
   priority: number; // 1-10
   description?: string;
-}
+}/**
+ * Generate bout bids.
+ * @param rival - Rival.
+ * @param currentWeek - Current week.
+ * @param weather - Weather.
+ * @param crowdMood - Crowd mood.
+ * @returns The result.
+ */
+
 
 export function generateBoutBids(
   rival: RivalStableData,

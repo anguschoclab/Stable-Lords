@@ -20,7 +20,14 @@ const FATIGUE_HEAVY_THRESHOLD = 0.25;
 
 // Fatigue penalties (reduced to avoid disproportionately punishing aggressive styles)
 const FATIGUE_MODERATE_PENALTY = -4;
-const FATIGUE_HEAVY_PENALTY = -8;
+const FATIGUE_HEAVY_PENALTY = -8;/**
+ * Endurance cost.
+ * @param oe - Oe.
+ * @param al - Al.
+ * @param weather - Weather. (optional)
+ * @returns The result.
+ */
+
 
 export function enduranceCost(oe: number, al: number, weather?: WeatherType | string): number {
   const baseCost = oe * ENDURANCE_OE_SCALING + al * ENDURANCE_AL_SCALING;

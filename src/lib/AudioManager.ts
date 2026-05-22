@@ -17,7 +17,10 @@ export type SfxType =
   | 'death'
   | 'recovery'
   | 'coin'
-  | 'arena_ambient';
+  | 'arena_ambient';/**
+ * The AudioManager class.
+ */
+
 
 export class AudioManager {
   private static instance: AudioManager | undefined;
@@ -112,6 +115,9 @@ export class AudioManager {
   public static resetForTesting(): void {
     AudioManager.instance = undefined;
   }
-}
+}/**
+ * Audio manager.
+ */
+
 
 export const audioManager = AudioManager.getInstance();

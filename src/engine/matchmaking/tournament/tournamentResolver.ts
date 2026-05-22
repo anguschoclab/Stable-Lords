@@ -8,7 +8,10 @@ import { findWarriorById, modifyWarrior } from './tournamentStateMutator';
 import { StateImpact, mergeImpacts, resolveImpacts } from '@/engine/impacts';
 import type { BracketMatch } from './tournamentBracketBuilder';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
-import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
+import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';/**
+ * Defines the shape of round resolution result.
+ */
+
 
 export interface RoundResolutionResult {
   impact: StateImpact;

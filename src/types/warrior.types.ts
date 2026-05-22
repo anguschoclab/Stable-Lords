@@ -17,7 +17,10 @@ import {
   type StableId,
   type InjuryId,
 } from './shared.types';
-import type { AnnualAward } from './state.types';
+import type { AnnualAward } from './state.types';/**
+ * Defines the shape of tag badge props.
+ */
+
 
 // ─── UI Prop Types ──────────────────────────────────────────────────────────
 
@@ -25,7 +28,10 @@ export interface TagBadgeProps {
   tag: string;
   type: 'flair' | 'title' | 'injury';
   className?: string;
-}
+}/**
+ * Defines the shape of stat badge props.
+ */
+
 
 export interface StatBadgeProps {
   styleName: FightingStyle;
@@ -33,7 +39,10 @@ export interface StatBadgeProps {
   variant?: 'outline' | 'default' | 'secondary' | 'destructive';
   showFullName?: boolean;
   className?: string;
-}
+}/**
+ * Defines the shape of warrior name tag props.
+ */
+
 
 export interface WarriorNameTagProps {
   id?: string;
@@ -42,7 +51,10 @@ export interface WarriorNameTagProps {
   injuryCount?: number;
   useCrown?: boolean;
   isDead?: boolean;
-}
+}/**
+ * Defines the shape of career record.
+ */
+
 
 // ─── Warrior ────────────────────────────────────────────────────────────────
 
@@ -56,7 +68,10 @@ export interface CareerRecord {
     silver: number;
     bronze: number;
   };
-}
+}/**
+ * Warrior status type.
+ */
+
 
 export type WarriorStatus = 'Active' | 'Dead' | 'Retired';
 
@@ -81,7 +96,10 @@ export type InjuryLocation =
   | 'Left Arm'
   | 'Right Leg'
   | 'Left Leg'
-  | 'General';
+  | 'General';/**
+ * Defines the shape of injury data.
+ */
+
 
 export interface InjuryData {
   id: InjuryId;
@@ -92,9 +110,15 @@ export interface InjuryData {
   weeksRemaining: number;
   penalties: Partial<Record<keyof Attributes | keyof BaseSkills, number>>;
   permanent?: boolean;
-}
+}/**
+ * Attribute potential type.
+ */
 
-export type AttributePotential = Record<keyof Attributes, number>;
+
+export type AttributePotential = Record<keyof Attributes, number>;/**
+ * Defines the shape of warrior favorites.
+ */
+
 
 export interface WarriorFavorites {
   weaponId: string;
@@ -105,7 +129,10 @@ export interface WarriorFavorites {
     weaponHints: number;
     rhythmHints: number;
   };
-}
+}/**
+ * Defines the shape of warrior lineage.
+ */
+
 
 export interface WarriorLineage {
   parentId?: WarriorId;
@@ -113,7 +140,10 @@ export interface WarriorLineage {
   generation: number;
   pedigree: 'Commoner' | 'Second Generation' | 'Legacy' | 'Noble Blood' | 'Exiled Legend';
   mentorName?: string;
-}
+}/**
+ * Defines the shape of warrior.
+ */
+
 
 export interface Warrior {
   id: WarriorId;

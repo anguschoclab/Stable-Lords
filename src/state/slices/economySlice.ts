@@ -8,7 +8,10 @@ import {
   type BoutOfferId,
   type WarriorId,
   type LedgerEntryId,
-} from '@/types/shared.types';
+} from '@/types/shared.types';/**
+ * Defines the shape of economy slice.
+ */
+
 
 export interface EconomySlice {
   treasury: number;
@@ -22,7 +25,13 @@ export interface EconomySlice {
   rosterBonus: number;
   addFunds: (amount: number, label: string, category: LedgerEntry['category']) => void;
   deductFunds: (amount: number, label: string, category: LedgerEntry['category']) => boolean;
-}
+}/**
+ * Create economy slice.
+ * @param set - Set.
+ * @param get - Get.
+ * @returns The result.
+ */
+
 
 export const createEconomySlice: StateCreator<GameStore, [], [], EconomySlice> = (set, get) => ({
   treasury: 0,

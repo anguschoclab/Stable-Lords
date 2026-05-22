@@ -1,4 +1,7 @@
-import type { GameState } from '@/types/state.types';
+import type { GameState } from '@/types/state.types';/**
+ * Defines the shape of sim pulse.
+ */
+
 
 export interface SimPulse {
   week: number;

@@ -1,7 +1,13 @@
 import type { GameState, Warrior, TournamentEntry, InsightTokenType } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
 import { PatronTokenService } from '@/engine/tokens/patronTokenService';
-import { findWarriorById } from './utils';
+import { findWarriorById } from './utils';/**
+ * Award tournament prizes.
+ * @param tournament - Tournament.
+ * @param state - State.
+ * @returns The result.
+ */
+
 
 export function awardTournamentPrizes(tournament: TournamentEntry, state: GameState): GameState {
   const bracket = tournament.bracket;
@@ -111,7 +117,14 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
   if (third) award(third, 3, awardRng);
 
   return updatedState;
-}
+}/**
+ * Modify warrior.
+ * @param state - State.
+ * @param warriorId - Warrior id.
+ * @param transform - Transform.
+ * @returns The result.
+ */
+
 
 export function modifyWarrior(
   state: GameState,

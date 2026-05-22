@@ -4,7 +4,10 @@
  * From Fighting Styles Compendium v0.3 & Strategy Editor Spec v1.0
  */
 import { FightingStyle } from '@/types/shared.types';
-import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';
+import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';/**
+ * Suitability rating type.
+ */
+
 
 export type SuitabilityRating = 'WS' | 'S' | 'U';
 
@@ -77,13 +80,19 @@ export function suitabilityMultiplier(rating: SuitabilityRating): number {
     U: 0.3,
   };
   return multipliers[rating];
-}
+}/**
+ * Suitability_colors.
+ */
+
 
 export const SUITABILITY_COLORS: Record<SuitabilityRating, string> = {
   WS: 'text-green-500',
   S: 'text-amber-500',
   U: 'text-destructive',
-};
+};/**
+ * Suitability_labels.
+ */
+
 
 export const SUITABILITY_LABELS: Record<SuitabilityRating, string> = {
   WS: 'Well Suited',

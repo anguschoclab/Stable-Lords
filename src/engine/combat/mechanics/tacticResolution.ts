@@ -19,14 +19,24 @@ export function oeAttMod(oe: number, style?: FightingStyle): number {
     style === FightingStyle.StrikingAttack;
   const base = Math.floor((oe - 5) * OE_ATT_SCALING);
   return isAggressive ? base + 1 : base;
-}
+}/**
+ * Oe def mod.
+ * @param oe - Oe.
+ * @returns The result.
+ */
+
 
 export function oeDefMod(oe: number): number {
   // Canonical: OE 5 = neutral. Low OE = conservative (slight defense bonus).
   // High OE = opens up defenses (escalating penalty). Centered at 5, not 6.
   if (oe <= 5) return Math.floor((5 - oe) * OE_DEF_SCALING);
   return -Math.floor((oe - 5) * OE_DEF_SCALING);
-}
+}/**
+ * Al ini mod.
+ * @param al - Al.
+ * @returns The result.
+ */
+
 
 export function alIniMod(al: number): number {
   return Math.floor((al - 5) * AL_INI_SCALING);
@@ -88,7 +98,13 @@ const OFFENSIVE_TACTIC_MAP: Record<Exclude<OffensiveTactic, 'none'>, (mult: numb
     decBonus: Math.round(3 * mult),
     parryBypass: 0,
   }),
-};
+};/**
+ * Get offensive tactic mods.
+ * @param tactic - Tactic.
+ * @param style - Style.
+ * @returns The result.
+ */
+
 
 export function getOffensiveTacticMods(tactic: OffensiveTactic | undefined, style: FightingStyle): OffensiveMods {
   if (!tactic || tactic === 'none') return ZERO_OFF;
@@ -130,13 +146,31 @@ const DEFENSIVE_TACTIC_MAP: Record<Exclude<DefensiveTactic, 'none'>, (mult: numb
     iniBonus: 0,
   }),
   Responsiveness: (mult) => ({ parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: Math.round(2 * mult) }),
-};
+};/**
+ * Get defensive tactic mods.
+ * @param tactic - Tactic.
+ * @param style - Style.
+ * @returns The result.
+ */
+
 
 export function getDefensiveTacticMods(tactic: DefensiveTactic | undefined, style: FightingStyle): DefensiveMods {
   if (!tactic || tactic === 'none') return ZERO_DEF;
   const mult = suitabilityMultiplier(getDefensiveSuitability(style, tactic));
   return (DEFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_DEF))(mult);
-}
+}/**
+ * Calculate final oeal.
+ * @param effOE - Eff oe.
+ * @param effAL - Eff al.
+ * @param plan - Plan.
+ * @param hp - Hp.
+ * @param maxHp - Max hp.
+ * @param end - End.
+ * @param maxEnd - Max end.
+ * @param exchange - Exchange.
+ * @returns The result.
+ */
+
 
 export function calculateFinalOEAL(
   effOE: number,

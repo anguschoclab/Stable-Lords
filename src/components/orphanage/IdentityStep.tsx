@@ -8,7 +8,26 @@ interface IdentityStepProps {
   setStableInput: (value: string) => void;
   onBack: () => void;
   onSubmit: () => void;
-}
+}/**
+ * Identity step.
+ * @param {
+  ownerInput,
+  setOwnerInput,
+  stableInput,
+  setStableInput,
+  onBack,
+  onSubmit,
+} - {
+  owner input,
+  set owner input,
+  stable input,
+  set stable input,
+  on back,
+  on submit,
+}.
+ * @returns The result.
+ */
+
 
 export default function IdentityStep({
   ownerInput,

@@ -1,11 +1,22 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';/**
+ * Body part type.
+ */
 
-export type BodyPart = 'Head' | 'Torso' | 'LeftArm' | 'RightArm' | 'Legs';
+
+export type BodyPart = 'Head' | 'Torso' | 'LeftArm' | 'RightArm' | 'Legs';/**
+ * Defines the shape of paper doll props.
+ */
+
 
 export interface PaperDollProps {
   healthMap: Partial<Record<BodyPart, number>>;
   className?: string;
-}
+}/**
+ * Paper doll.
+ * @param { healthMap, className } - { health map, class name }.
+ * @returns The result.
+ */
+
 
 export function PaperDoll({ healthMap, className }: PaperDollProps) {
   const getPartColor = (part: BodyPart) => {

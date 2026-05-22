@@ -45,7 +45,10 @@ export type {
 import { type FightSummary, type FightOutcomeBy } from './combat.types';
 export type { FightSummary, FightOutcomeBy };
 import type { PoolWarrior } from '@/engine/recruitment';
-export type { PoolWarrior };
+export type { PoolWarrior };/**
+ * Defines the shape of ranking entry.
+ */
+
 
 // ─── Ranking & Contracts ───────────────────────────────────────────────────
 
@@ -53,10 +56,19 @@ export interface RankingEntry {
   overallRank: number;
   classRank: number;
   compositeScore: number;
-}
+}/**
+ * Bout offer status type.
+ */
 
-export type BoutOfferStatus = 'Proposed' | 'Signed' | 'Rejected' | 'Canceled' | 'Expired';
-export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined';
+
+export type BoutOfferStatus = 'Proposed' | 'Signed' | 'Rejected' | 'Canceled' | 'Expired';/**
+ * Bout offer response type.
+ */
+
+export type BoutOfferResponse = 'Pending' | 'Accepted' | 'Declined';/**
+ * Defines the shape of bout offer.
+ */
+
 
 export interface BoutOffer {
   id: BoutOfferId;
@@ -71,9 +83,15 @@ export interface BoutOffer {
   proposerStableId?: StableId;
   conditions?: string[];
   createdAt?: string;
-}
+}/**
+ * Promoter personality type.
+ */
 
-export type PromoterPersonality = 'Greedy' | 'Honorable' | 'Sadistic' | 'Flashy' | 'Corporate';
+
+export type PromoterPersonality = 'Greedy' | 'Honorable' | 'Sadistic' | 'Flashy' | 'Corporate';/**
+ * Defines the shape of promoter.
+ */
+
 
 export interface Promoter {
   id: PromoterId;
@@ -89,12 +107,21 @@ export interface Promoter {
     mentorId?: PromoterId;
     legacyFame: number;
   };
-}
+}/**
+ * Owner personality type.
+ */
+
 
 // ─── Owner / Stable ─────────────────────────────────────────────────────────
 
-export type OwnerPersonality = 'Aggressive' | 'Methodical' | 'Showman' | 'Pragmatic' | 'Tactician';
-export type MetaAdaptation = 'MetaChaser' | 'Traditionalist' | 'Opportunist' | 'Innovator';
+export type OwnerPersonality = 'Aggressive' | 'Methodical' | 'Showman' | 'Pragmatic' | 'Tactician';/**
+ * Meta adaptation type.
+ */
+
+export type MetaAdaptation = 'MetaChaser' | 'Traditionalist' | 'Opportunist' | 'Innovator';/**
+ * Defines the shape of owner.
+ */
+
 
 export interface Owner {
   id: StableId;
@@ -112,7 +139,10 @@ export interface Owner {
   foundedByWarriorId?: WarriorId; // Lineage breadcrumb for legacy founders
   age?: number; // 🎂 1.0 Hardening: Owner age for retirement
   ageRetired?: number; // Week the previous owner retired
-}
+}/**
+ * Defines the shape of tournament bout.
+ */
+
 
 // ─── Game State ─────────────────────────────────────────────────────────────
 
@@ -130,7 +160,10 @@ export interface TournamentBout {
   winner?: 'A' | 'D' | null;
   by?: FightOutcomeBy;
   fightId?: FightId;
-}
+}/**
+ * Defines the shape of tournament entry.
+ */
+
 
 export interface TournamentEntry {
   id: TournamentId;
@@ -142,7 +175,10 @@ export interface TournamentEntry {
   participants: Warrior[];
   champion?: WarriorId;
   completed: boolean;
-}
+}/**
+ * Defines the shape of training assignment.
+ */
+
 
 export interface TrainingAssignment {
   warriorId: WarriorId;
@@ -150,13 +186,19 @@ export interface TrainingAssignment {
   attribute?: keyof Attributes;
   /** For skillDrill assignments — which combat skill to drill (ATT/PAR/DEF/INI/RIP/DEC). */
   skill?: keyof BaseSkills;
-}
+}/**
+ * Defines the shape of seasonal growth.
+ */
+
 
 export interface SeasonalGrowth {
   warriorId: WarriorId;
   season: Season;
   gains: Partial<Record<keyof Attributes, number>>;
-}
+}/**
+ * Defines the shape of ledger entry.
+ */
+
 
 export interface LedgerEntry {
   id: LedgerEntryId;
@@ -164,7 +206,10 @@ export interface LedgerEntry {
   label: string;
   amount: number;
   category: 'fight' | 'training' | 'recruit' | 'trainer' | 'upkeep' | 'prize' | 'other';
-}
+}/**
+ * Ai intent type.
+ */
+
 
 export type AIIntent =
   | 'EXPANSION'
@@ -174,13 +219,19 @@ export type AIIntent =
   | 'SURVIVAL'
   | 'WEALTH_ACCUMULATION'
   | 'AGGRESSIVE_EXPANSION'
-  | 'ROSTER_DIVERSITY';
+  | 'ROSTER_DIVERSITY';/**
+ * Defines the shape of ai strategy.
+ */
+
 
 export interface AIStrategy {
   intent: AIIntent;
   targetStableId?: StableId;
   planWeeksRemaining: number;
-}
+}/**
+ * Defines the shape of ai event.
+ */
+
 
 // TrainerData was here, now using Trainer from shared.types
 
@@ -190,7 +241,10 @@ export interface AIEvent {
   type: 'STRATEGY' | 'FINANCE' | 'ROSTER' | 'STAFF';
   description: string;
   riskTier: 'Low' | 'Medium' | 'High';
-}
+}/**
+ * Defines the shape of ai agent memory.
+ */
+
 
 export interface AIAgentMemory {
   lastTreasury: number;
@@ -204,7 +258,10 @@ export interface AIAgentMemory {
     kills: number;
     rosterSizeAtSeasonStart: number;
   };
-}
+}/**
+ * Defines the shape of rival stable data.
+ */
+
 
 export interface RivalStableData {
   id: StableId;
@@ -222,7 +279,10 @@ export interface RivalStableData {
   tier?: 'Minor' | 'Established' | 'Major' | 'Legendary';
   crest?: CrestData;
   seasonalGrowth?: SeasonalGrowth[];
-}
+}/**
+ * Defines the shape of scout report data.
+ */
+
 
 export interface ScoutReportData {
   id: ScoutReportId;
@@ -236,12 +296,18 @@ export interface ScoutReportData {
   suspectedOE?: string;
   suspectedAL?: string;
   notes: string;
-}
+}/**
+ * Defines the shape of rest state.
+ */
+
 
 export interface RestState {
   warriorId: WarriorId;
   restUntilWeek: number;
-}
+}/**
+ * Defines the shape of rivalry.
+ */
+
 
 export interface Rivalry {
   id: RivalryId;
@@ -250,14 +316,20 @@ export interface Rivalry {
   intensity: number;
   reason: string;
   startWeek: number;
-}
+}/**
+ * Defines the shape of match record.
+ */
+
 
 export interface MatchRecord {
   week: number;
   playerWarriorId: WarriorId;
   opponentWarriorId: WarriorId;
   opponentStableId: StableId;
-}
+}/**
+ * Defines the shape of owner grudge.
+ */
+
 
 export interface OwnerGrudge {
   id: GrudgeId;
@@ -267,7 +339,10 @@ export interface OwnerGrudge {
   reason: string;
   startWeek: number;
   lastEscalation: number;
-}
+}/**
+ * Defines the shape of gazette story.
+ */
+
 
 export interface GazetteStory {
   id: NewsId;
@@ -276,9 +351,15 @@ export interface GazetteStory {
   mood: CrowdMoodType;
   tags: string[];
   week: number;
-}
+}/**
+ * Insight token type type.
+ */
 
-export type InsightTokenType = 'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic';
+
+export type InsightTokenType = 'Weapon' | 'Rhythm' | 'Style' | 'Attribute' | 'Tactic';/**
+ * Defines the shape of insight token.
+ */
+
 
 export interface InsightToken {
   id: InsightId;
@@ -288,14 +369,20 @@ export interface InsightToken {
   detail: string;
   targetKey?: string;
   discoveredWeek: number;
-}
+}/**
+ * Defines the shape of hall entry.
+ */
+
 
 export interface HallEntry {
   id: HallEntryId;
   week: number;
   label: 'Fight of the Week' | 'Fight of the Tournament';
   fightId: FightId;
-}
+}/**
+ * Defines the shape of simulation report.
+ */
+
 
 // ─── Simulation & Awards ────────────────────────────────────────────────────
 
@@ -312,14 +399,20 @@ export interface SimulationReport {
   agingEvents: string[];
   healthEvents: string[];
   bouts?: import('@/types/combat.types').FightSummary[];
-}
+}/**
+ * Annual award type type.
+ */
+
 
 export type AnnualAwardType =
   | 'WARRIOR_OF_YEAR'
   | 'KILLER_OF_YEAR'
   | 'STABLE_OF_YEAR'
   | 'CLASS_MVP'
-  | 'TOURNAMENT_RANK';
+  | 'TOURNAMENT_RANK';/**
+ * Defines the shape of annual award.
+ */
+
 
 export interface AnnualAward {
   year: number;
@@ -331,14 +424,20 @@ export interface AnnualAward {
   style?: FightingStyle;
   value: number; // e.g. 15 wins, 5 kills
   reason: string;
-}
+}/**
+ * Defines the shape of deferred bout log.
+ */
+
 
 export interface DeferredBoutLog {
   year: number;
   season: number;
   boutId: string;
   transcript: string[];
-}
+}/**
+ * Defines the shape of game state.
+ */
+
 
 export interface GameState {
   meta: {
@@ -408,7 +507,10 @@ export interface GameState {
   warriorToStableMap?: Map<string, { stableId: string; isPlayer: boolean }>;
   rivalMap?: Map<string, import('@/types/state.types').RivalStableData>;
   deferredBoutLogs?: DeferredBoutLog[];
-}
+}/**
+ * Defines the shape of ui prefs.
+ */
+
 
 export interface UIPrefs {
   autoTunePlan: boolean;

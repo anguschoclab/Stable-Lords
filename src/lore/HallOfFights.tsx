@@ -14,7 +14,11 @@ import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { WarriorLink } from '@/components/EntityLink';
 import Gazette from '@/pages/Gazette';
-import Graveyard from '@/pages/Graveyard';
+import Graveyard from '@/pages/Graveyard';/**
+ * Hall of fights.
+ * @returns The result.
+ */
+
 
 export const HallOfFights: React.FC = () => {
   const state = useWorldState();

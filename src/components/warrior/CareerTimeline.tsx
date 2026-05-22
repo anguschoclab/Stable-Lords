@@ -2,7 +2,18 @@ import React, { useMemo } from 'react';
 import { History, Swords, Trophy, Skull, Star, Armchair } from 'lucide-react';
 import { type Warrior, type FightSummary } from '@/types/game';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
+import { getAllFightsForWarrior } from '@/engine/core/historyUtils';/**
+ * Career timeline.
+ * @param {
+  warrior,
+  arenaHistory,
+} - {
+  warrior,
+  arena history,
+}.
+ * @returns The result.
+ */
+
 
 export function CareerTimeline({
   warrior,

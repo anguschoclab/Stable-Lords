@@ -6,7 +6,10 @@ import type {
   RivalStableData,
 } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
+ * Backstory id type.
+ */
+
 
 export type BackstoryId =
   | 'gladiator'
@@ -17,20 +20,29 @@ export type BackstoryId =
   | 'outcast'
   | 'cutpurse'
   | 'priest'
-  | 'sellsword';
+  | 'sellsword';/**
+ * Defines the shape of backstory economy.
+ */
+
 
 export interface BackstoryEconomy {
   treasuryDelta?: number;
   fameDelta?: number;
   renownDelta?: number;
   rosterBonusDelta?: number;
-}
+}/**
+ * Defines the shape of backstory identity seed.
+ */
+
 
 export interface BackstoryIdentitySeed {
   personalityWeights: Partial<Record<OwnerPersonality, number>>;
   metaAdaptationWeights: Partial<Record<MetaAdaptation, number>>;
   favoredStyles?: FightingStyle[];
-}
+}/**
+ * Defines the shape of backstory def.
+ */
+
 
 export interface BackstoryDef {
   id: BackstoryId;
@@ -40,7 +52,10 @@ export interface BackstoryDef {
   bonusSummary: string[];
   economy: BackstoryEconomy;
   identitySeed: BackstoryIdentitySeed;
-}
+}/**
+ * Backstories.
+ */
+
 
 export const BACKSTORIES: Record<BackstoryId, BackstoryDef> = {
   gladiator: {
@@ -158,9 +173,15 @@ export const BACKSTORIES: Record<BackstoryId, BackstoryDef> = {
       metaAdaptationWeights: { Opportunist: 50, MetaChaser: 30, Innovator: 20 },
     },
   },
-};
+};/**
+ * Backstory_list.
+ */
 
-export const BACKSTORY_LIST: BackstoryDef[] = Object.values(BACKSTORIES);
+
+export const BACKSTORY_LIST: BackstoryDef[] = Object.values(BACKSTORIES);/**
+ * Backstory_ids.
+ */
+
 export const BACKSTORY_IDS: BackstoryId[] = BACKSTORY_LIST.map((b) => b.id);
 
 /** Roll a key from a weight map. Falls back to first key if weights are empty. */

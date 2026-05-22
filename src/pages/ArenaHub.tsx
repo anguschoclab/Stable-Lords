@@ -274,7 +274,11 @@ function ArenaLeaderboard() {
       </Table>
     </Surface>
   );
-}
+}/**
+ * Arena hub.
+ * @returns The result.
+ */
+
 
 // ─── Main Hub Page ────────────────────────────────────────────────────────────
 

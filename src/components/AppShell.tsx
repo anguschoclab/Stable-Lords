@@ -11,7 +11,12 @@ import { CoachOverlay } from '@/components/ui/CoachOverlay';
 import { TacticalBar } from '@/components/navigation/TacticalBar';
 import EventLog from '@/components/EventLog';
 import { AppHeader } from '@/components/layout/AppHeader';
-import { ResetDialog } from '@/components/layout/ResetDialog';
+import { ResetDialog } from '@/components/layout/ResetDialog';/**
+ * App shell.
+ * @param { children } - { children }.
+ * @returns The result.
+ */
+
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const {

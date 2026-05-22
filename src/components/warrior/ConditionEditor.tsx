@@ -55,7 +55,12 @@ function triggerDisplayValue(cond: PlanCondition): string {
   if (opt.inputType === 'percent') return `${cond.trigger.value}%`;
   if (opt.inputType === 'phase') return String(cond.trigger.value);
   return String(cond.trigger.value);
-}
+}/**
+ * Condition editor.
+ * @param { conditions, onChange } - { conditions, on change }.
+ * @returns The result.
+ */
+
 
 export default function ConditionEditor({ conditions, onChange }: ConditionEditorProps) {
   function addCondition() {

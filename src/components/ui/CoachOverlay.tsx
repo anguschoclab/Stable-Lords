@@ -13,7 +13,11 @@ interface CoachWarning {
   description: string;
   icon: any;
   color: string;
-}
+}/**
+ * Coach overlay.
+ * @returns The result.
+ */
+
 
 export function CoachOverlay() {
   const state = useWorldState();

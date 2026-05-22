@@ -4,7 +4,12 @@ import type { Warrior } from '@/types/warrior.types';
 
 interface WarriorDossierTraitsProps {
   warrior: Warrior;
-}
+}/**
+ * Warrior dossier traits.
+ * @param { warrior } - { warrior }.
+ * @returns The result.
+ */
+
 
 export function WarriorDossierTraits({ warrior }: WarriorDossierTraitsProps) {
   if (!warrior.origin && (!warrior.traits || warrior.traits.length === 0)) {

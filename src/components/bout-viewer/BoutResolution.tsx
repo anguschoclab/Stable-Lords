@@ -45,7 +45,28 @@ function getOutcomeStyles(by: FightOutcomeBy) {
         icon: <Swords className="h-4 w-4" />,
       };
   }
-}
+}/**
+ * Bout resolution.
+ * @param {
+  isComplete,
+  winner,
+  winnerName,
+  by,
+  minutes,
+  totalEvents,
+  announcement,
+} - {
+  is complete,
+  winner,
+  winner name,
+  by,
+  minutes,
+  total events,
+  announcement,
+}.
+ * @returns The result.
+ */
+
 
 export default function BoutResolution({
   isComplete,

@@ -7,7 +7,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 interface FormSparklineProps {
   warriorId: string;
   limit?: number;
-}
+}/**
+ * Form sparkline.
+ */
+
 
 export const FormSparkline = React.memo(function FormSparkline({
   warriorId,

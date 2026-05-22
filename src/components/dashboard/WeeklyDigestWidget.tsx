@@ -21,6 +21,7 @@ import { Link } from '@tanstack/react-router';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 
 interface WeeklyDigestProps {
   week: number;
@@ -49,12 +50,11 @@ export function WeeklyDigestWidget({
   boutOffers,
   currentWeek,
 }: WeeklyDigestProps) {
-  const state = useGameStore();
+  const playerWarriorIds = useGameStore(
+    useShallow((s) => new Set<WarriorId>(s.roster.map((w) => w.id)))
+  );
 
   const summary = useMemo<DigestSummary>(() => {
-    // Get player warrior IDs
-    const playerWarriorIds = new Set<WarriorId>(state.roster.map((w) => w.id));
-
     // Filter fights for current week
     const thisWeekFights = arenaHistory.filter((f) => f.week === currentWeek);
 
@@ -101,7 +101,7 @@ export function WeeklyDigestWidget({
       signedOffers: signed,
       tournamentActive: false, // Set by parent if needed
     };
-  }, [arenaHistory, boutOffers, currentWeek, state.roster]);
+  }, [arenaHistory, boutOffers, currentWeek, playerWarriorIds]);
 
   const hasActivity =
     summary.totalFights > 0 || summary.pendingOffers > 0 || summary.signedOffers > 0;

@@ -43,7 +43,15 @@ export function modifyWarrior(
   };
 }
 
-const warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
+let warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
+
+/**
+ * Clears the warrior cache to prevent state pollution across tests.
+ * This should be called in test cleanup hooks.
+ */
+export function clearWarriorCache(): void {
+  warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
+}
 
 export function findWarriorById(
   state: GameState,

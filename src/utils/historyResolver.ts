@@ -29,8 +29,17 @@ interface StableCache {
   nameMap: Map<string, string>;
 }
 
-const warriorCache = new WeakMap<object, WarriorCache>();
-const stableCache = new WeakMap<object, StableCache>();
+let warriorCache = new WeakMap<object, WarriorCache>();
+let stableCache = new WeakMap<object, StableCache>();
+
+/**
+ * Clears all history resolver caches to prevent state pollution across tests.
+ * This should be called in test cleanup hooks.
+ */
+export function clearHistoryResolverCaches(): void {
+  warriorCache = new WeakMap<object, WarriorCache>();
+  stableCache = new WeakMap<object, StableCache>();
+}
 
 /**
  * Ensures a warrior cache exists for the given state using a WeakMap.

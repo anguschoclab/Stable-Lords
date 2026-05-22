@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle, ShieldAlert, Coins, History, Zap, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -17,23 +18,27 @@ interface CoachWarning {
 export function CoachOverlay() {
   const state = useWorldState();
 
+  const rosterLength = useGameStore(useShallow((s) => s.roster.length));
+  const trainersLength = useGameStore(useShallow((s) => s.trainers.length));
+  const treasury = useGameStore(useShallow((s) => s.treasury));
+
   const warnings = useMemo(() => {
     const list: CoachWarning[] = [];
 
     // 💰 Bankruptcy Check
-    const weeklyUpkeep = state.roster.length * 10 + state.trainers.length * 50;
-    if (state.treasury < weeklyUpkeep) {
+    const weeklyUpkeep = rosterLength * 10 + trainersLength * 50;
+    if (treasury < weeklyUpkeep) {
       list.push({
         id: 'bankruptcy',
         type: 'CRITICAL',
         label: 'Impending Insolvency',
-        description: `Treasury (${state.treasury}g) cannot cover upkeep (${weeklyUpkeep}g). Disband assets or win a bout immediately.`,
+        description: `Treasury (${treasury}g) cannot cover upkeep (${weeklyUpkeep}g). Disband assets or win a bout immediately.`,
         icon: Coins,
         color: 'text-destructive border-destructive/20 bg-destructive/10',
       });
     }
 
-    // 🚑 Injury Check (Fighters assigned to bouts with low health)
+    // 🚑 Injury Check (Fighters assigned to bouts with low health) - needs full roster for derivedStats
     const activeFighters = state.roster.filter((w) =>
       state.arenaHistory.some((f) => (f.a === w.id || f.d === w.id) && f.winner === null)
     );
@@ -49,7 +54,7 @@ export function CoachOverlay() {
       });
     }
 
-    // ⚖️ Encumbrance Check (Heavy gear on fast style)
+    // ⚖️ Encumbrance Check (Heavy gear on fast style) - needs full roster for derivedStats
     const mismatchedSprints = state.roster.filter((w) => {
       const isFast = ['LUNGING ATTACK', 'SLASHING ATTACK'].includes(w.style);
       const isHeavy = (w.derivedStats?.endurance || 0) < (w.derivedStats?.encumbrance || 0);
@@ -67,7 +72,7 @@ export function CoachOverlay() {
     }
 
     return list;
-  }, [state]);
+  }, [state, rosterLength, trainersLength, treasury]);
 
   if (warnings.length === 0) return null;
 

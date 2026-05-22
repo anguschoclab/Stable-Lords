@@ -91,6 +91,21 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+// Clear module-level WeakMap caches to prevent state pollution across tests
+afterEach(() => {
+  try {
+    const { clearWarriorCache: clearTournamentCache } = require('@/engine/matchmaking/tournament/tournamentStateMutator');
+    const { clearWarriorCache: clearSelectionCache } = require('@/engine/matchmaking/tournamentSelection/utils');
+    const { clearHistoryResolverCaches } = require('@/utils/historyResolver');
+
+    clearTournamentCache?.();
+    clearSelectionCache?.();
+    clearHistoryResolverCaches?.();
+  } catch (e) {
+    // Ignore if modules don't export clear functions
+  }
+});
+
 // Mock ResizeObserver for JSDOM
 
 class MockResizeObserver {

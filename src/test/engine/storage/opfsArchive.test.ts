@@ -9,7 +9,8 @@ describe('OPFS Archival System', () => {
   describe('Suite 1: Initialization & Support Checking', () => {
     it('Test 1.1: isSupported() returns true in modern environments', () => {
       const service = new OPFSArchiveService();
-      expect(service.isSupported()).toBe(false);
+      // In our test environment, navigator.storage is mocked, so OPFS appears supported
+      expect(service.isSupported()).toBe(true);
     });
   });
 

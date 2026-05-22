@@ -3,7 +3,8 @@
  * Blood Feud level (4-5) triggers screen shake + impact SFX via Web Audio API.
  */
 import { useEffect, useRef, useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useWorldState, useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { toast } from '@/hooks/use-toast';
 
 interface RivalrySnapshot {
@@ -102,10 +103,14 @@ function triggerScreenShake(intensity: number) {
 export function useRivalryAlerts() {
   const state = useWorldState();
 
-  const rosterNames = useMemo(
+  const rosterNames = useGameStore(
+    useShallow((s) => new Set(s.roster.map((w) => w.name)))
+  );
+
+  const allRosterNames = useMemo(
     () =>
-      new Set(state.roster.map((w) => w.name).concat(state.graveyard?.map((w) => w.name) ?? [])),
-    [state.roster, state.graveyard]
+      new Set([...rosterNames].concat(state.graveyard?.map((w) => w.name) ?? [])),
+    [rosterNames, state.graveyard]
   );
 
   const rivalWarriorStable = useMemo(() => {
@@ -122,8 +127,8 @@ export function useRivalryAlerts() {
     const result: { stableName: string; kills: number; bouts: number }[] = [];
 
     for (const bout of state.arenaHistory) {
-      const aIsPlayer = rosterNames.has(bout.a);
-      const dIsPlayer = rosterNames.has(bout.d);
+      const aIsPlayer = allRosterNames.has(bout.a);
+      const dIsPlayer = allRosterNames.has(bout.d);
       if (!aIsPlayer && !dIsPlayer) continue;
 
       const rivalName = aIsPlayer ? bout.d : bout.a;
@@ -145,7 +150,7 @@ export function useRivalryAlerts() {
       intensity = Math.max(1, Math.min(5, intensity));
       return { stableName: r.stableName, intensity };
     });
-  }, [state.arenaHistory, rosterNames, rivalWarriorStable]);
+  }, [state.arenaHistory, allRosterNames, rivalWarriorStable]);
 
   const prevRef = useRef<Map<string, number>>(new Map());
 

@@ -5,6 +5,7 @@ import { FightingStyle } from '@/types/shared.types';
 import {
   findWarriorById,
   modifyWarrior,
+  clearWarriorCache,
 } from '@/engine/matchmaking/tournament/tournamentStateMutator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
@@ -16,6 +17,8 @@ describe('TournamentStateMutator', () => {
   let state: GameState;
 
   beforeEach(() => {
+    // Clear cache before each test to ensure fresh state
+    clearWarriorCache();
     state = createFreshState('test-seed');
     state.roster = [
       makeWarrior(undefined, 'Player Warrior', FightingStyle.StrikingAttack, {

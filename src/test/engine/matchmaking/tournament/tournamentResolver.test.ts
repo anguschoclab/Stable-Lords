@@ -9,12 +9,17 @@ import {
   resolveCompleteTournament,
 } from '@/engine/matchmaking/tournament/tournamentResolver';
 import { resolveImpacts } from '@/engine/impacts';
+import { clearWarriorCache } from '@/engine/matchmaking/tournament/tournamentStateMutator';
+import { clearWarriorCache as clearSelectionCache } from '@/engine/matchmaking/tournamentSelection/utils';
 import type { TournamentBout } from '@/types/state.types';
 
 describe('TournamentResolver', () => {
   let state: any;
 
   beforeEach(() => {
+    // Clear caches before each test to ensure fresh state
+    clearWarriorCache();
+    clearSelectionCache();
     state = createFreshState('test-seed');
     state.roster = [];
     state.rivals = [];

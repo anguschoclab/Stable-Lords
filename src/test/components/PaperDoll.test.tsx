@@ -2,6 +2,7 @@ import { render, screen, cleanup } from '@testing-library/react';
 import { PaperDoll } from '@/components/ui/PaperDoll';
 import { describe, it, expect, afterEach } from 'vitest';
 import '@testing-library/jest-dom';
+import '@/test/setup';
 
 describe('PaperDoll', () => {
   afterEach(() => {

@@ -1,0 +1,2861 @@
+bun test v1.3.13 (bf2e2cec)
+
+src/test/example.test.ts:
+(pass) example > should pass
+
+src/test/schedulingAssistant.test.ts:
+(pass) Scheduling Assistant Engine > should correctly score a favorable style matchup (e.g. TP vs AB)
+(pass) Scheduling Assistant Engine > should correctly score an unfavorable style matchup (e.g. AB vs PR) [0.30ms]
+(pass) Scheduling Assistant Engine > should return a sorted list of top challenges for a warrior [0.26ms]
+(pass) Scheduling Assistant Engine > should penalize matchups where fame difference is too high [0.33ms]
+(pass) Scheduling Assistant Engine > should return a sorted list of matchups to avoid [0.30ms]
+
+src/test/simulation_hardening.test.ts:
+Initial World Population: 382 warriors across 45 stables.
+--- SIMULATION AUDIT RESULTS (WEEK 104) ---
+Final Rival Stables: 45 (Target: 30-45)
+Total Deaths: 19
+Est. Annual Mortality: 2.49% (Target: ~10%)
+Championships Run: 0
+(pass) Stable Lords 1.0 Simulation Hardening Audit > runs a 104-week high-stakes career simulation [408.02ms]
+
+src/test/combat.test.ts:
+(pass) simulateFight — determinism > produces identical results with the same seed [1.35ms]
+(pass) simulateFight — determinism > produces different results with different seeds [1.97ms]
+(pass) simulateFight — outcome structure > always returns a valid FightOutcome [0.30ms]
+(pass) simulateFight — outcome structure > log entries have valid minute and text [0.22ms]
+(pass) simulateFight — outcome structure > post stats are consistent with outcome [0.23ms]
+(pass) simulateFight — kill logic > kills are more likely with high killDesire and OE [4.91ms]
+(pass) simulateFight — kill logic > low killDesire reduces kill frequency [3.34ms]
+(pass) simulateFight — style matchups > Wall of Steel has defensive advantage over aggressive styles [3.24ms]
+(pass) simulateFight — style matchups > defaultPlanForWarrior returns sensible defaults per style [0.10ms]
+(pass) simulateFight — phase strategies > respects per-phase OE/AL overrides [0.31ms]
+(pass) simulateFight — endurance and exhaustion > high OE+AL drains endurance faster [0.19ms]
+(pass) fameFromTags > returns zero for no tags
+(pass) fameFromTags > awards fame for Kill [0.40ms]
+(pass) fameFromTags > awards fame and pop for KO [0.07ms]
+(pass) fameFromTags > awards pop for Flashy [0.02ms]
+(pass) fameFromTags > stacks multiple tags [0.03ms]
+(pass) fameFromTags > applies dampener above 5 [0.03ms]
+(pass) fameFromTags > handles undefined tags gracefully [0.04ms]
+(pass) simulateFight — hit-location lethality > targeting head produces more kills than targeting limbs [8.38ms]
+(pass) simulateFight — hit-location lethality > head armor reduces lethality of head-targeted attacks [8.06ms]
+(pass) simulateFight — hit-location lethality > chest/torso attacks are a reliable kill path compared to legs [11.29ms]
+
+src/test/balance.test.ts:
+(pass) Style Balance > should have no style with >75% overall win rate [0.30ms]
+(pass) Style Balance > should have no style with <22% overall win rate (too weak) [0.05ms]
+(pass) Style Balance > should have no single matchup worse than 80/20 [0.06ms]
+(pass) Kill Rate > should be approximately 10% (between 6% and 16%) [0.01ms]
+(pass) OE/KD Variability > high OE (8) should win more fights than low OE (3) when facing the same opponent [18.41ms]
+(pass) OE/KD Variability > high killDesire (10) should produce more kills than low killDesire (1) [39.71ms]
+
+src/test/simulate.test.ts:
+(pass) simulateFight — resolution phases > generates log entries across multiple phases [0.91ms]
+(pass) simulateFight — resolution phases > phase-specific OE/AL overrides are respected [0.16ms]
+(pass) simulateFight — tactic resolution > Bash tactic bypasses parry more often [7.80ms]
+(pass) simulateFight — tactic resolution > Dodge tactic skips parry and uses DEF [0.25ms]
+(pass) simulateFight — tactic resolution > Lunge tactic increases attack at cost of defense [5.31ms]
+(pass) simulateFight — tactic resolution > Riposte tactic increases counter-attack frequency [4.67ms]
+(pass) simulateFight — tactic overuse penalty > continuous tactic use degrades effectiveness [0.22ms]
+(pass) simulateFight — target and protect mechanics > targeted attacks hit the specified location more often [1.80ms]
+(pass) simulateFight — target and protect mechanics > protect reduces damage to covered locations [0.17ms]
+(pass) simulateFight — outcome termination types > can produce Kill outcomes [3.75ms]
+(pass) simulateFight — outcome termination types > can produce KO outcomes [1.73ms]
+(pass) simulateFight — outcome termination types > can produce Exhaustion outcomes [1.80ms]
+(pass) simulateFight — outcome termination types > can produce Stoppage outcomes [1.91ms]
+(pass) simulateFight — outcome termination types > can produce Draw outcomes [16.86ms]
+(pass) simulateFight — initiative and tempo > high AL improves initiative [4.18ms]
+(pass) simulateFight — style passives integration > Basher consecutive hits build momentum [1.54ms]
+(pass) simulateFight — style passives integration > Total Parry has endurance efficiency advantage [2.39ms]
+(pass) simulateFight — equipment modifiers > heavy weapons increase damage [0.14ms]
+(pass) simulateFight — equipment modifiers > shields improve defense [2.14ms]
+(pass) simulateFight — narrative log quality > generates warrior introductions at minute 0 [0.21ms]
+(pass) simulateFight — narrative log quality > includes bout ending narration [0.25ms]
+(pass) simulateFight — narrative log quality > log entries have increasing or stable minutes [0.33ms]
+(pass) defaultPlanForWarrior > returns appropriate defaults for each style [0.12ms]
+(pass) defaultPlanForWarrior > Total Parry has low offensive defaults [0.04ms]
+(pass) defaultPlanForWarrior > Bashing Attack has high offensive defaults [0.02ms]
+(pass) simulateFight — determinism > identical seeds produce identical results [0.26ms]
+(pass) simulateFight — determinism > different seeds produce varied results [0.93ms]
+(pass) simulateFight — post-fight stats > post.tags contains outcome tags [0.31ms]
+(pass) simulateFight — post-fight stats > post.gotKillA/D matches outcome [0.07ms]
+(pass) simulateFight — post-fight stats > hit counts are non-negative [0.05ms]
+(pass) simulateFight — post-fight stats > xp values are assigned [0.13ms]
+(pass) simulateFight — arena system > smoke test: 100 fights with mudpit_arena complete without error [4.70ms]
+(pass) simulateFight — arena system > mudpit arena fights last at least as long as standard on average (higher endurance drain) [3.73ms]
+(pass) simulateFight — arena system > non-default arena logs include arena intro line [0.25ms]
+(pass) simulateFight — distance system > Extended-preferring vs Grapple-preferring warriors produce RANGE_SHIFT narration over 20 fights [0.31ms]
+(pass) simulateFight — distance system > feint-enabled warrior produces FEINT_SUCCESS or FEINT_FAIL narration over 30 fights [0.21ms]
+(pass) spatial system integration > simulateFight runs 100 fights with mudpit arena without throwing [11.23ms]
+(pass) spatial system integration > mudpit arena has higher endurance cost than standard (over 50 fights) [10.90ms]
+(pass) spatial system integration > RANGE_SHIFT events appear in the fight log when fighters have different range preferences [0.40ms]
+
+src/test/advanceWeek.test.ts:
+(pass) advanceWeek pipeline orchestration > calls all impact computation functions [1.14ms]
+(pass) advanceWeek pipeline orchestration > resolves collected impacts using resolveImpacts [0.29ms]
+(pass) advanceWeek pipeline orchestration > advances the week counter and returns a new state [0.36ms]
+
+src/test/rivalryGrowth.test.ts:
+(pass) Stable Lords 1.0 Rivalry Growth Audit > verifies that rivalry intensity scales correctly with fame outcomes [1.26ms]
+(pass) Stable Lords 1.0 Rivalry Growth Audit > verifies that rivalries reach Stage 5 (Blood Feud) over repeated bouts [0.10ms]
+
+src/scripts/simulation.test.ts:
+
+[Sim] Starting 104-week balance check with seed: 999
+[Harness] Starting simulation for 104 weeks...
+[Harness] Week 5 | Roster: 4 | Treasury: 500
+[Harness] Week 9 | Roster: 4 | Treasury: 500
+[Harness] Week 13 | Roster: 4 | Treasury: 500
+[Harness] Week 17 | Roster: 4 | Treasury: 500
+[Harness] Week 21 | Roster: 4 | Treasury: 500
+[Harness] Week 25 | Roster: 4 | Treasury: 500
+[Harness] Week 29 | Roster: 4 | Treasury: 500
+[Harness] Week 33 | Roster: 4 | Treasury: 500
+[Harness] Week 37 | Roster: 4 | Treasury: 500
+[Harness] Week 41 | Roster: 4 | Treasury: 500
+[Harness] Week 45 | Roster: 4 | Treasury: 500
+[Harness] Week 49 | Roster: 4 | Treasury: 500
+[Harness] Week 1 | Roster: 4 | Treasury: 500
+[Harness] Week 5 | Roster: 4 | Treasury: 500
+[Harness] Week 9 | Roster: 4 | Treasury: 500
+[Harness] Week 13 | Roster: 4 | Treasury: 500
+[Harness] Week 17 | Roster: 4 | Treasury: 500
+[Harness] Week 21 | Roster: 4 | Treasury: 500
+[Harness] Week 25 | Roster: 4 | Treasury: 500
+[Harness] Week 29 | Roster: 4 | Treasury: 500
+[Harness] Week 33 | Roster: 4 | Treasury: 500
+[Harness] Week 37 | Roster: 4 | Treasury: 500
+[Harness] Week 41 | Roster: 4 | Treasury: 500
+[Harness] Week 45 | Roster: 4 | Treasury: 500
+[Harness] Week 49 | Roster: 4 | Treasury: 500
+[Harness] Week 1 | Roster: 4 | Treasury: 500
+SUCCESS
+(pass) Headless Simulation Harness > runs a long-term balance check (104 weeks) [1375.93ms]
+
+src/test/integration/weekAdvancement.test.ts:
+(pass) Week Advancement Integration > Basic Week Progression > should advance week counter [1.21ms]
+(pass) Week Advancement Integration > Basic Week Progression > should maintain roster across weeks [0.40ms]
+(pass) Week Advancement Integration > Basic Week Progression > should preserve warrior IDs across weeks [0.76ms]
+(pass) Week Advancement Integration > Basic Week Progression > should not mutate the input state [0.22ms]
+(pass) Week Advancement Integration > Multi-Week Simulation > should successfully advance 52 weeks (1 year) [116.08ms]
+(pass) Week Advancement Integration > Multi-Week Simulation > should maintain data integrity over 100 weeks [162.40ms]
+(pass) Week Advancement Integration > Multi-Week Simulation > should accumulate newsletter entries over time [86.87ms]
+151 | 
+152 |       // Advance to Summer (week 14)
+153 |       for (let i = 0; i < 13; i++) {
+154 |         state = advanceWeek(state);
+155 |       }
+156 |       expect(state.season).toBe('Summer');
+                                 ^
+error: expect(received).toBe(expected)
+
+Expected: "Summer"
+Received: "Spring"
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/integration/weekAdvancement.test.ts:156:28)
+(fail) Week Advancement Integration > Season Transitions > should cycle through seasons correctly [19.89ms]
+(pass) Week Advancement Integration > Season Transitions > should not crash on seasonal growth check [0.39ms]
+234 |       }
+235 | 
+236 |       // Warrior should be 21 after 52 weeks (find by ID in case roster order changed)
+237 |       const aged = current.roster.find((w) => w.id === 'w1');
+238 |       expect(aged, 'Warrior w1 should still be alive after 52 weeks').toBeDefined();
+239 |       expect(aged!.age).toBe(21);
+                              ^
+error: expect(received).toBe(expected)
+
+Expected: 21
+Received: 20
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/integration/weekAdvancement.test.ts:239:25)
+(fail) Week Advancement Integration > Aging System > should age warriors after 52 weeks [99.72ms]
+248 |       for (let i = 0; i < 5; i++) {
+249 |         state = advanceWeek(state);
+250 |       }
+251 | 
+252 |       // Ledger should have new entries from weekly economic processing
+253 |       expect(state.ledger.length).toBeGreaterThan(initialLedgerLength);
+                                        ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/integration/weekAdvancement.test.ts:253:35)
+(fail) Week Advancement Integration > Economic Consistency > should process economy every week [0.82ms]
+(pass) Week Advancement Integration > Economic Consistency > should maintain treasury balance over time [18.96ms]
+(pass) Week Advancement Integration > Roster Management > should maintain roster integrity across deaths [0.49ms]
+(pass) Week Advancement Integration > Training System > should process training assignments and clear them [0.19ms]
+(pass) Week Advancement Integration > State Invariants > should allow going negative within debt limits [48.01ms]
+(pass) Week Advancement Integration > State Invariants > should maintain unique warrior IDs [27.26ms]
+(pass) Week Advancement Integration > State Invariants > should respect cyclical week counter [92.24ms]
+
+src/test/integration/autosim.test.ts:
+(pass) Autosim Integration > Basic Autosim > should advance specified number of weeks [1.22ms]
+(pass) Autosim Integration > Basic Autosim > should provide week summaries [0.67ms]
+(pass) Autosim Integration > Basic Autosim > should call progress callback for each week [0.49ms]
+(pass) Autosim Integration > Stop Conditions > should stop when no valid pairings available [0.22ms]
+(pass) Autosim Integration > Stop Conditions > should provide stop details [0.40ms]
+(pass) Autosim Integration > Stop Conditions > should stop at max weeks when no other conditions trigger [0.33ms]
+(pass) Autosim Integration > State Consistency > should maintain roster integrity during autosim [0.72ms]
+(pass) Autosim Integration > State Consistency > should preserve warrior data during simulation [0.44ms]
+(pass) Autosim Integration > State Consistency > should accumulate newsletter entries [0.46ms]
+209 | 
+210 |       expect(result.finalState).toBeDefined();
+211 | 
+212 |       // Ledger should have entries
+213 |       expect(result.finalState.ledger).toBeDefined();
+214 |       expect(result.finalState.ledger.length).toBeGreaterThan(0);
+                                                    ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/integration/autosim.test.ts:214:47)
+(fail) Autosim Integration > State Consistency > should process economy correctly [0.99ms]
+(pass) Autosim Integration > Week Summaries > should track bouts per week [0.57ms]
+(pass) Autosim Integration > Week Summaries > should track deaths and injuries [0.89ms]
+(pass) Autosim Integration > Week Summaries > should include week numbers [0.35ms]
+(pass) Autosim Integration > Long-term Simulation > should handle multi-week simulation [21.20ms]
+(pass) Autosim Integration > Long-term Simulation > should complete in reasonable time [42.09ms]
+(pass) Autosim Integration > Edge Cases > should handle empty roster gracefully [0.22ms]
+(pass) Autosim Integration > Edge Cases > should handle zero weeks to advance [0.15ms]
+(pass) Autosim Integration > Result Metadata > should provide accurate weeks simmed count [0.26ms]
+(pass) Autosim Integration > Result Metadata > should always have a stop reason [0.30ms]
+(pass) Autosim Integration > Result Metadata > should provide descriptive stop details [0.30ms]
+
+src/test/lore/HallOfFights.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/lore/HallOfFights.test.tsx:139:5)
+(fail) HallOfFights Component > groups and displays fights from the arenaHistory by week correctly [1.00ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/lore/HallOfFights.test.tsx:158:5)
+(fail) HallOfFights Component > renders style stats correctly based on arena history [0.46ms]
+
+src/test/utils/historyResolver.test.ts:
+(pass) historyResolver > resolveWarriorName > should resolve name from roster [0.09ms]
+(pass) historyResolver > resolveWarriorName > should resolve name from graveyard [0.10ms]
+(pass) historyResolver > resolveWarriorName > should resolve name from retired
+(pass) historyResolver > resolveWarriorName > should resolve name from rivals
+(pass) historyResolver > resolveWarriorName > should use fallback if not found [0.06ms]
+(pass) historyResolver > resolveWarriorName > should prioritize roster > graveyard > retired > rivals [0.02ms]
+(pass) historyResolver > resolveStableName > should resolve player stable name [0.05ms]
+(pass) historyResolver > resolveStableName > should resolve rival stable name [0.01ms]
+(pass) historyResolver > resolveStableName > should use fallback if not found
+(pass) historyResolver > findWarrior > should find warrior by id [0.02ms]
+(pass) historyResolver > findWarrior > should find warrior by name [0.01ms]
+(pass) historyResolver > findWarrior > should prioritize ID over Name if both provided [0.01ms]
+(pass) historyResolver > findWarrior > should prioritize roster over other lists when searching by name [0.03ms]
+(pass) historyResolver > should handle state changes (new state object) [0.02ms]
+
+src/test/utils/random.test.ts:
+(pass) SeededRNG > produces deterministic results for the same seed [0.03ms]
+(pass) SeededRNG > produces different results for different seeds
+(pass) SeededRNG > roll(min, max) returns values within range [0.06ms]
+(pass) SeededRNG > pick(array) returns an element from the array [0.03ms]
+(pass) SeededRNG > chance(probability) works correctly [0.02ms]
+(pass) randomPick > works with function-based RNG [0.03ms]
+(pass) randomPick > throws on empty array [0.04ms]
+(pass) stringToSeed > produces consistent seeds for same string [0.04ms]
+(pass) stringToSeed > produces different seeds for different strings [0.01ms]
+(pass) stringToSeed > returns positive numbers
+(pass) hashStr > produces consistent hashes for same string [0.01ms]
+(pass) hashStr > produces different hashes for different strings [0.01ms]
+(pass) hashStr > returns 32-bit unsigned integer [0.01ms]
+
+src/test/utils/attributes.test.ts:
+(pass) sumAttributes > sums all attribute values [0.06ms]
+(pass) sumAttributes > handles different attribute values
+(pass) sumAttributes > handles zero values [0.03ms]
+(pass) sumAttributesByKey > sums specific attribute keys [0.01ms]
+(pass) sumAttributesByKey > handles empty key array [0.04ms]
+(pass) sumAttributesByKey > handles all keys [0.02ms]
+(pass) sumAttributesByKey > handles non-existent keys gracefully [0.01ms]
+
+src/test/utils/roster.test.ts:
+(pass) buildWarriorMap > builds map from player roster [0.09ms]
+(pass) buildWarriorMap > builds map from rival rosters [0.06ms]
+(pass) buildWarriorMap > builds map from both player and rival rosters [0.03ms]
+(pass) updateRoster > applies updates from map to roster [0.05ms]
+(pass) updateRoster > returns original roster if no updates [0.02ms]
+(pass) removeFromRoster > removes warriors by IDs [0.08ms]
+(pass) removeFromRoster > handles empty ID list [0.02ms]
+(pass) filterActive > filters to only active warriors [0.05ms]
+(pass) filterByStatus > filters by specific status [0.03ms]
+
+src/test/utils/combat.test.ts:
+(pass) getOutcomeStyles > returns blood variant for Kill [0.08ms]
+(pass) getOutcomeStyles > returns gold variant for KO [0.01ms]
+(pass) getOutcomeStyles > returns gold variant for Stoppage
+(pass) getOutcomeStyles > returns parchment variant for Exhaustion [0.01ms]
+(pass) getOutcomeStyles > returns parchment variant for Draw [0.01ms]
+(pass) getOutcomeStyles > returns parchment variant for unknown outcomes
+
+src/test/utils/storage.test.ts:
+(pass) handleLocalStorageQuotaError > saves data successfully when quota is available [0.40ms]
+(pass) handleLocalStorageQuotaError > trims array data when quota is exceeded on the first attempt, then succeeds [0.39ms]
+(pass) handleLocalStorageQuotaError > throws an error if data is an object and quota is exceeded [0.08ms]
+(pass) handleLocalStorageQuotaError > handles empty array with quota error [0.08ms]
+
+src/test/utils/economyUtils.test.ts:
+(pass) Economy Utility - canTransact > returns true if treasury exceeds cost [0.02ms]
+(pass) Economy Utility - canTransact > returns true if treasury equals cost
+(pass) Economy Utility - canTransact > returns false if treasury is insufficient [0.04ms]
+(pass) Economy Utility - canTransact > throws Error on negative cost inputs [0.06ms]
+(pass) Economy Utility - canTransact > returns true for zero cost even with zero treasury [0.02ms]
+
+src/test/state/saveSlots.test.ts:
+(pass) saveSlots > newSlotId > should return a string [0.42ms]
+(pass) saveSlots > newSlotId > should return unique IDs [0.04ms]
+(pass) saveSlots > newSlotId > should return IDs starting with slot_ [0.02ms]
+
+src/test/state/useGameStore.perf.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/state/useGameStore.perf.test.tsx:32:5)
+(fail) useGameStore Optimization (Epic 4) > re-renders when selected state changes [0.26ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/state/useGameStore.perf.test.tsx:48:5)
+(fail) useGameStore Optimization (Epic 4) > does NOT re-render when unrelated state changes (with precise selector) [0.10ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/state/useGameStore.perf.test.tsx:71:5)
+(fail) useGameStore Optimization (Epic 4) > requires useShallow for object-returning selectors to avoid extra renders [0.11ms]
+
+src/test/components/PaperDoll.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/components/PaperDoll.test.tsx:13:5)
+(fail) PaperDoll > renders all body parts
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/components/PaperDoll.test.tsx:22:5)
+(fail) PaperDoll > applies red color for critical health [0.43ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/components/PaperDoll.test.tsx:29:5)
+(fail) PaperDoll > applies yellow color for moderate health [0.06ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/components/PaperDoll.test.tsx:35:5)
+(fail) PaperDoll > applies green color for full health [0.05ms]
+
+src/test/components/PlanBuilder.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/components/PlanBuilder.test.tsx:23:5)
+(fail) PlanBuilder Matchup Rendering > renders MATCHUP_ADV when player has a style advantage [0.14ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/components/PlanBuilder.test.tsx:38:5)
+(fail) PlanBuilder Matchup Rendering > renders MATCHUP_PENALTY when player has a style disadvantage [0.04ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/components/PlanBuilder.test.tsx:47:5)
+(fail) PlanBuilder Matchup Rendering > renders no badge when matchup is neutral [0.05ms]
+
+src/test/components/MarkdownReader.test.tsx:
+(pass) pass
+
+src/test/lib/AudioManager.test.ts:
+37 |   });
+38 | 
+39 |   it('should be able to set and get muted state', () => {
+40 |     audioManager.setMuted(true);
+41 |     expect(audioManager.isMuted()).toBe(true);
+42 |     expect(localStorage.getItem('sl_muted')).toBe('true');
+                                                  ^
+error: expect(received).toBe(expected)
+
+Expected: "true"
+Received: null
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/lib/AudioManager.test.ts:42:46)
+(fail) AudioManager > should be able to set and get muted state [0.70ms]
+(pass) AudioManager > should handle play requests for valid sfx types [0.05ms]
+(pass) AudioManager > should respect muted state during play calls [0.02ms]
+
+src/test/perf/pipeline.perf.test.ts:
+(pass) Pipeline Performance Benchmarks > should complete quarter advance within reasonable time [25.98ms]
+(pass) Pipeline Performance Benchmarks > headless mode should be faster than full mode [23.83ms]
+(pass) Pipeline Performance Benchmarks > autosim batch mode should handle large week counts [0.49ms]
+(pass) Pipeline Performance Benchmarks > should not accumulate excessive memory during batch operations [103.57ms]
+(pass) Determinism vs Performance Trade-offs > sequential vs batch should produce similar functional state [43.50ms]
+(pass) Long-running Simulation Stress Tests > should handle long simulation without memory issues [0.25ms]
+
+src/test/data/tagDescriptions.test.ts:
+(pass) getTagDescription > should return the correct description for flair tags
+(pass) getTagDescription > should return the correct description for title tags [0.23ms]
+(pass) getTagDescription > should return the correct description for injury tags
+(pass) getTagDescription > should return the correct description for status tags
+(pass) getTagDescription > should return a fallback message for unknown tags [0.05ms]
+(pass) getTagDescription > should handle empty strings by returning the fallback message [0.03ms]
+
+src/test/pages/Tournaments.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/Tournaments.test.tsx:90:38)
+(fail) Tournaments Page > renders recruit operatives button when criteria are met [0.12ms]
+
+src/test/pages/Trainers.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/Trainers.test.tsx:99:5)
+(fail) Trainers Component > renders current trainers correctly
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/Trainers.test.tsx:110:5)
+(fail) Trainers Component > renders hiring pool correctly [0.50ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/Trainers.test.tsx:120:5)
+(fail) Trainers Component > allows firing a trainer [0.27ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/Trainers.test.tsx:136:5)
+(fail) Trainers Component > allows hiring a trainer [0.22ms]
+
+src/test/pages/WorldOverview.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/WorldOverview.test.tsx:130:5)
+(fail) WorldOverview Component > renders stable rows correctly with aggregated stats [0.84ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/WorldOverview.test.tsx:155:5)
+(fail) WorldOverview Component > renders warrior rows correctly [0.23ms]
+
+src/test/pages/AdminTools.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/AdminTools.test.tsx:74:5)
+(fail) AdminTools Page > renders all administrative panels [0.13ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/AdminTools.test.tsx:86:5)
+(fail) AdminTools Page > provides buttons for time skipping [0.06ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/AdminTools.test.tsx:102:5)
+(fail) AdminTools Page > provides button for hard reset [0.01ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/AdminTools.test.tsx:110:5)
+(fail) AdminTools Page > provides button to skip FTUE [0.06ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/AdminTools.test.tsx:123:5)
+(fail) AdminTools Page > renders a JSON state dump [0.06ms]
+
+src/test/pages/HallOfFame.test.tsx:
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/HallOfFame.test.tsx:160:27)
+(fail) HallOfFame Component > renders the inductees correctly [0.68ms]
+251 |     throw error;
+252 |   }
+253 |   if (!baseElement) {
+254 |     // default to document.body instead of documentElement to avoid output of potentially-large
+255 |     // head elements (such as JSS style blocks) in debug output
+256 |     baseElement = document.body;
+                        ^
+ReferenceError: document is not defined
+      at render (/Users/amauricia/Documents/GitHub/stable-lords/node_modules/@testing-library/react/dist/pure.js:256:19)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/HallOfFame.test.tsx:172:30)
+(fail) HallOfFame Component > identifies and displays the best fight correctly [0.21ms]
+
+src/test/pages/PhysicalsSimulator.test.tsx:
+3 | import PhysicalsSimulator from '../../pages/PhysicalsSimulator';
+4 | 
+5 | // Mocking getBoundingClientRect for Radix UI select and slider
+6 | // This is often needed in JSDOM when rendering complex UI components
+7 | beforeAll(() => {
+8 |   Element.prototype.getBoundingClientRect = vi.fn(() => ({
+      ^
+ReferenceError: Element is not defined
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/pages/PhysicalsSimulator.test.tsx:8:3)
+(fail) (unnamed)
+
+src/test/engine/combatDamage.test.ts:
+(pass) combatDamage engine > protectCovers > returns empty array for no protection
+(pass) combatDamage engine > protectCovers > returns chest and abdomen for body armor [0.23ms]
+(pass) combatDamage engine > protectCovers > returns head for head protection [0.03ms]
+(pass) combatDamage engine > protectCovers > returns empty array for unknown protection [0.01ms]
+(pass) combatDamage engine > rollHitLocation > returns target if rng < TARGET_HIT_CHANCE [0.02ms]
+(pass) combatDamage engine > rollHitLocation > ignores target 'any' [0.01ms]
+(pass) combatDamage engine > rollHitLocation > falls through to random when targeted hit fails (rng >= 0.6) [0.02ms]
+(pass) combatDamage engine > rollHitLocation > prefers exposed locations when rng < 0.3 after missing target [0.05ms]
+(pass) combatDamage engine > rollHitLocation > falls back to completely random if no target and rng >= 0.3 for exposed
+(pass) combatDamage engine > applyProtectMod > applies penalty if no protection is provided [0.02ms]
+(pass) combatDamage engine > applyProtectMod > applies penalty if protection is 'none_armor'
+(pass) combatDamage engine > applyProtectMod > applies reduction if location is covered by protection [0.01ms]
+(pass) combatDamage engine > applyProtectMod > applies penalty if location is NOT covered by protection [0.02ms]
+(pass) combatDamage engine > applyProtectMod > correctly applies Math.floor to ensure integer damage values
+(pass) combatDamage engine > applyProtectMod > handles zero damage correctly
+(pass) combatDamage engine > applyProtectMod > handles negative damage correctly (though rare in engine) [0.01ms]
+(pass) combatDamage engine > computeHitDamage > applies head multiplier [0.03ms]
+(pass) combatDamage engine > computeHitDamage > applies chest multiplier [0.01ms]
+(pass) combatDamage engine > computeHitDamage > applies abdomen multiplier
+(pass) combatDamage engine > computeHitDamage > applies limb multiplier
+(pass) combatDamage engine > computeHitDamage > respects variance range [0.02ms]
+(pass) combatDamage engine > computeHitDamage > minimum damage is 1 [0.02ms]
+
+src/test/engine/gazetteDetections.test.ts:
+(pass) detectUpsets > detects an upset when the underdog wins significantly [0.81ms]
+(pass) detectUpsets > does not detect an upset when fame difference is small [0.02ms]
+(pass) detectUpsets > does not detect an upset when ratio is small [0.02ms]
+(pass) detectUpsets > does not detect an upset when the favorite wins [0.01ms]
+(pass) detectUpsets > does not detect an upset on a draw [0.02ms]
+(pass) detectUpsets > does not detect an upset when fame data is missing [0.02ms]
+(pass) detectDebuts > identifies warriors making their first appearance [0.06ms]
+(pass) detectDebuts > handles the first week correctly (all are debuts) [0.02ms]
+(pass) detectDebuts > returns an empty array when weekFights is empty [0.02ms]
+(pass) detectDebuts > does not return duplicates if a debuting fighter fights multiple times in a week [0.05ms]
+(pass) detectDebuts > safely handles undefined or null entries in allFights [0.03ms]
+(pass) computeStreaks > correctly tracks win and loss streaks (legacy integration test) [0.05ms]
+(pass) computeStreaks > initializes streaks to 1 and -1 on a single win/loss [0.02ms]
+(pass) computeStreaks > builds positive streaks correctly on consecutive wins [0.02ms]
+(pass) computeStreaks > builds negative streaks correctly on consecutive losses [0.02ms]
+(pass) computeStreaks > breaks a losing streak and sets the streak to 1 on a win [0.02ms]
+(pass) computeStreaks > breaks a winning streak and sets the streak to -1 on a loss [0.03ms]
+(pass) computeStreaks > resets both fighters streaks to 0 on a draw [0.02ms]
+(pass) computeStreaks > gracefully ignores null or undefined fight objects [0.01ms]
+(pass) detectRivalryMatchup > detects a rivalry when warriors meet 3+ times [0.07ms]
+(pass) detectRivalryMatchup > does not detect rivalry with fewer than 3 meetings [0.19ms]
+(pass) detectRivalryMatchup > correctly normalizes attacker/defender order [0.11ms]
+(pass) detectRivalryMatchup > selects the rivalry with the highest count when multiple candidates exist [0.05ms]
+(pass) detectRivalryMatchup > handles null or undefined fights gracefully [0.04ms]
+(pass) detectHotStreakers > detects winners on a streak of 5+ [0.04ms]
+(pass) detectRisingStars > detects warriors who are 3-0 after this week [0.03ms]
+(pass) detectRisingStars > does not detect warriors with losses [0.04ms]
+(pass) detectGazetteTags > assigns Bloodbath for 2+ kills [0.06ms]
+(pass) detectGazetteTags > assigns KO Fest for 3+ KOs [0.03ms]
+(pass) detectGazetteTags > assigns Upset when upsets are detected [0.01ms]
+
+src/test/engine/contractCycle.test.ts:
+(pass) Contract System Cycle > should generate bout offers in PromoterPass [1.06ms]
+39 | 
+40 |     // Find an offer for a player warrior
+41 |     const offer = offers.find((o) =>
+42 |       o.warriorIds.some((wId) => stateWithOffers.roster.some((pW) => pW.id === wId))
+43 |     );
+44 |     expect(offer).toBeDefined();
+                       ^
+error: expect(received).toBeDefined()
+
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/contractCycle.test.ts:44:19)
+(fail) Contract System Cycle > should transition offer to 'Signed' when accepted by player [0.76ms]
+62 |     let s = resolveImpacts(state, [promoterImpact]);
+63 |     const offers = Object.values(s.boutOffers || {}) as BoutOffer[];
+64 |     const offer = offers.find((o) =>
+65 |       o.warriorIds.some((wId) => s.roster.some((pW) => pW.id === wId))
+66 |     );
+67 |     expect(offer).toBeDefined();
+                       ^
+error: expect(received).toBeDefined()
+
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/contractCycle.test.ts:67:19)
+(fail) Contract System Cycle > should payout the purse upon bout resolution via processWeekBouts [0.60ms]
+
+src/test/engine/boutProcessor.test.ts:
+(pass) boutProcessor - generatePairings > should generate pairings for player and rival
+localStorage quota exceeded when saving week 1 style rollups  99 |   });
+100 | 
+101 |   it('handles empty array with quota error', () => {
+102 |     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+103 |     (localStorage.setItem as any).mockImplementation(() => {
+104 |       const err = new Error('QuotaExceededError');
+                            ^
+QuotaExceededError: QuotaExceededError
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/utils/storage.test.ts:104:23)
+      at saveWeek (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:98:20)
+      at addFight (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:223:5)
+      at handleReporting (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/reportingHandler.ts:66:16)
+      at collectBoutImpacts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:187:37)
+      at resolveBout (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:221:58)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/boutProcessor.test.ts:113:32)
+
+Failed to recover from localStorage quota error for week 1  99 |   });
+100 | 
+101 |   it('handles empty array with quota error', () => {
+102 |     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+103 |     (localStorage.setItem as any).mockImplementation(() => {
+104 |       const err = new Error('QuotaExceededError');
+                            ^
+QuotaExceededError: QuotaExceededError
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/utils/storage.test.ts:104:23)
+      at saveWeek (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:108:24)
+      at addFight (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:223:5)
+      at handleReporting (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/reportingHandler.ts:66:16)
+      at collectBoutImpacts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:187:37)
+      at resolveBout (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:221:58)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/boutProcessor.test.ts:113:32)
+
+localStorage quota exceeded when saving rolling style metrics  99 |   });
+100 | 
+101 |   it('handles empty array with quota error', () => {
+102 |     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+103 |     (localStorage.setItem as any).mockImplementation(() => {
+104 |       const err = new Error('QuotaExceededError');
+                            ^
+QuotaExceededError: QuotaExceededError
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/utils/storage.test.ts:104:23)
+      at saveRolling (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:143:20)
+      at addFight (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:236:5)
+      at handleReporting (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/reportingHandler.ts:66:16)
+      at collectBoutImpacts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:187:37)
+      at resolveBout (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:221:58)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/boutProcessor.test.ts:113:32)
+
+112 | 
+113 |     const { impact, result } = resolveBout(mockState, ctx);
+114 |     // The engine no longer mutates state directly in resolveBout, it returns a StateImpact
+115 | 
+116 |     expect(result.outcome.winner).toBeDefined();
+117 |     expect(impact.arenaHistory).toHaveLength(1);
+                                      ^
+error: Received value does not have a length property: undefined
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/boutProcessor.test.ts:117:33)
+(fail) boutProcessor - resolveBout > should update records after a bout [2.27ms]
+
+src/test/engine/bardEngine.test.ts:
+(pass) Bard Narrative Engine > interpolateTemplate > interpolates %A, %D, %W, %BP tokens
+(pass) Bard Narrative Engine > interpolateTemplate > interpolates %H (hits/minutes) token [0.32ms]
+(pass) Bard Narrative Engine > interpolateTemplate > falls back to generic names for missing context [0.03ms]
+(pass) Bard Narrative Engine > interpolateTemplate > interpolates Handlebars-style {{key}} placeholders alongside % tokens [0.02ms]
+(pass) Bard Narrative Engine > interpolateTemplate > falls back {{name}} to ctx.attacker and {{attacker}} to ctx.name [0.08ms]
+(pass) Bard Narrative Engine > NCAA-style Tournament Selection Committee > should generate all 4 seasonal tournaments [1.56ms]
+(pass) Bard Narrative Engine > Archive Lookup > successfully retrieves migrated blurbs [0.12ms]
+(pass) Bard Narrative Engine > Archive Lookup > retrieves commentary by tag [0.03ms]
+Narrative Archive Error: Missing path invalid.path
+(pass) Bard Narrative Engine > Archive Lookup > returns ultimate fallback for missing paths [0.06ms]
+(pass) Bard Narrative Engine > Unified Announcer AI > generates a deterministic blurb [0.04ms]
+(pass) Bard Narrative Engine > Unified Announcer AI > generates a valid recap line [0.23ms]
+(pass) Bard Narrative Engine > Unified Announcer AI > handles commentary tags correctly [0.02ms]
+(pass) Bard Narrative Engine > Severity Mapping (Strike tiers) > handles flashy/supernatural tiers via getStrikeSeverity logic [0.03ms]
+
+src/test/engine/equipmentOptimizer.test.ts:
+(pass) Equipment Optimizer > generateRecommendations > should generate recommendations for Aimed Blow style [0.71ms]
+(pass) Equipment Optimizer > generateRecommendations > should generate recommendations for Bashing Attack style [0.43ms]
+(pass) Equipment Optimizer > generateRecommendations > should generate recommendations for Total Parry style
+(pass) Equipment Optimizer > generateRecommendations > should include preferred weapon in loadout [0.03ms]
+(pass) Equipment Optimizer > generateRecommendations > should calculate synergy score correctly [0.02ms]
+(pass) Equipment Optimizer > generateRecommendations > should calculate total weight correctly [0.01ms]
+(pass) Equipment Optimizer > getStyleEquipmentTips > should return tips for Aimed Blow style [0.07ms]
+(pass) Equipment Optimizer > getStyleEquipmentTips > should return tips for Bashing Attack style [0.01ms]
+(pass) Equipment Optimizer > getStyleEquipmentTips > should return tips for Total Parry style [0.02ms]
+(pass) Equipment Optimizer > getStyleEquipmentTips > should return relevant tips about weapon preferences [0.04ms]
+(pass) Equipment Optimizer > getStyleEquipmentTips > should return relevant tips about armor [0.03ms]
+
+src/test/engine/stylePassives.test.ts:
+(pass) Style Passives > getTempoBonus > should return phase-specific bonuses for each style [0.04ms]
+(pass) Style Passives > getTempoBonus > should give Total Parry negative opening tempo
+(pass) Style Passives > getTempoBonus > should give Wall of Steel positive late tempo
+(pass) Style Passives > getTempoBonus > should give Aimed Blow positive late tempo
+(pass) Style Passives > getEnduranceMult > should return multipliers less than or equal to 1.0 for efficient styles [0.04ms]
+(pass) Style Passives > getEnduranceMult > should return multipliers greater than 1.0 for wasteful styles
+(pass) Style Passives > getMastery > should return Novice for 0-9 fights [0.02ms]
+(pass) Style Passives > getMastery > should return Practiced for 10-19 fights [0.04ms]
+(pass) Style Passives > getMastery > should return Veteran for 20-29 fights [0.02ms]
+(pass) Style Passives > getMastery > should return Master for 30-49 fights
+(pass) Style Passives > getMastery > should return Grandmaster for 50+ fights
+(pass) Style Passives > getMastery > should increase multipliers with mastery tier [0.01ms]
+(pass) Style Passives > getStylePassive > should return passive bonuses for Aimed Blow when targeting [0.04ms]
+(pass) Style Passives > getStylePassive > should give Aimed Blow a smaller bonus without targeting (and a larger one with targeting) [0.02ms]
+(pass) Style Passives > getStylePassive > should increase Bashing Attack damage with consecutive hits [0.04ms]
+(pass) Style Passives > getStylePassive > should give Lunging Attack strong opening bonuses
+(pass) Style Passives > getStylePassive > should give Parry-Riposte bonuses for ripostes [0.02ms]
+(pass) Style Passives > getStylePassive > should penalize Parry-Riposte ATT in OPENING phase [0.02ms]
+(pass) Style Passives > getStylePassive > should give Total Parry parry bonuses [0.02ms]
+(pass) Style Passives > getStylePassive > should penalize Total Parry ATT
+(pass) Style Passives > getStylePassive > should increase Slashing Attack damage with hits landed [0.02ms]
+(pass) Style Passives > getStylePassive > should give Striking Attack consistent bonuses [0.02ms]
+(pass) Style Passives > getStylePassive > should increase Wall of Steel defense over time [0.02ms]
+(pass) Style Passives > getStylePassive > should scale bonuses with mastery [0.03ms]
+(pass) Style Passives > getKillMechanic > should give Aimed Blow bonus for headshots [0.04ms]
+(pass) Style Passives > getKillMechanic > should increase Bashing Attack kill chance with momentum [0.02ms]
+(pass) Style Passives > getKillMechanic > should give Lunging Attack bonus in opening phase [0.02ms]
+(pass) Style Passives > getKillMechanic > should give Slashing Attack bonus after multiple hits [0.02ms]
+(pass) Style Passives > getKillMechanic > should penalize Total Parry kill chances [0.12ms]
+(pass) Style Passives > getKillMechanic > should include narrative text for all styles [0.03ms]
+(pass) Style Passives > getKillMechanic > should have lower kill window for defensive styles
+
+src/test/engine/weekPipeline.test.ts:
+(pass) processTierProgression > should return StateImpact with tier promotion when season changes [0.22ms]
+(pass) processTierProgression > should return empty StateImpact if season hasn't changed [0.06ms]
+
+src/test/engine/progression.test.ts:
+(pass) Warrior Progression > calculateXP > grants 2 XP for a win
+(pass) Warrior Progression > calculateXP > grants 1 XP for a loss [0.59ms]
+(pass) Warrior Progression > calculateXP > grants 1 XP for a draw [0.02ms]
+(pass) Warrior Progression > calculateXP > grants bonus XP for a kill if the warrior won [0.02ms]
+(pass) Warrior Progression > calculateXP > does not grant bonus XP for a kill if the warrior lost [0.03ms]
+(pass) Warrior Progression > calculateXP > grants bonus XP for Flashy tag [0.02ms]
+(pass) Warrior Progression > calculateXP > grants bonus XP for Comeback tag if the warrior won [0.02ms]
+(pass) Warrior Progression > calculateXP > does not grant bonus XP for Comeback tag if the warrior lost
+(pass) Warrior Progression > calculateXP > combines multiple bonuses [0.01ms]
+(pass) Warrior Progression > applyXP > adds XP without leveling up [0.06ms]
+(pass) Warrior Progression > applyXP > levels up when XP crosses a 5-point threshold [0.10ms]
+(pass) Warrior Progression > applyXP > does not improve attributes if all are at their potential ceiling [0.04ms]
+(pass) Warrior Progression > applyXP > does not improve attributes if total exceeds TOTAL_ATTR_CAP (80) [0.05ms]
+(pass) Warrior Progression > applyXP > reveals potential based on probability [0.04ms]
+(pass) Warrior Progression > applyXP > does not reveal potential if rng roll is high [0.02ms]
+
+src/test/engine/potential.test.ts:
+(pass) Potential System > generatePotential > should generate potential correctly for Common tier [0.12ms]
+(pass) Potential System > generatePotential > should enforce the POTENTIAL_ABSOLUTE_MAX (25) boundary [0.03ms]
+(pass) Potential System > generatePotential > should gracefully handle potential > 100 scenario by clamping to MAX
+(pass) Potential System > canGrow > should return true if current < potential [0.01ms]
+(pass) Potential System > canGrow > should return false if current >= potential [0.01ms]
+(pass) Potential System > canGrow > should return true if potential is undefined and current < 25 [0.01ms]
+(pass) Potential System > canGrow > should return false if potential is undefined and current >= 25
+(pass) Potential System > diminishingReturnsFactor > should return 1.0 when potential is undefined [0.01ms]
+(pass) Potential System > diminishingReturnsFactor > should return 1.0 when far from ceiling
+(pass) Potential System > diminishingReturnsFactor > should return 0.5 when within 2 points of ceiling
+(pass) Potential System > diminishingReturnsFactor > should return 0.25 when within 1 point of ceiling
+(pass) Potential System > diminishingReturnsFactor > should return 0.0 when at or above ceiling
+(pass) Potential System > revealPotential > should reveal a new attribute without affecting others [0.15ms]
+(pass) Potential System > revealPotential > should handle undefined initial state [0.04ms]
+(pass) Potential System > potentialRating and grade > should calculate rating correctly based on max possible (175) [0.07ms]
+(pass) Potential System > potentialRating and grade > should return correct grades [0.03ms]
+
+src/test/engine/agentArchitecture.test.ts:
+(pass) AI Agent Architecture - Skeptical Intent > should approve a valid plan [0.09ms]
+(pass) AI Agent Architecture - Skeptical Intent > should disprove a plan due to financial crisis [0.01ms]
+(pass) AI Agent Architecture - Skeptical Intent > should disprove a VENDETTA due to low active roster [0.03ms]
+(pass) AI Agent Architecture - Skeptical Intent > should NOT disprove if personality is Aggressive despite low treasury (higher risk tolerance) [0.01ms]
+(pass) AI Agent Architecture - Weather Skepticism > should decline a bout for LungingAttack in Rainy weather [0.07ms]
+(pass) AI Agent Architecture - Weather Skepticism > should accept a bout for LungingAttack in Clear weather [0.02ms]
+(pass) AI Agent Architecture - Weather Skepticism > should decline a bout for low CON warrior in Sweltering weather [0.02ms]
+(pass) AI Agent Architecture - Weather Skepticism > should accept a bout for high CON warrior in Sweltering weather [0.01ms]
+
+src/test/engine/resolveImpacts.test.ts:
+43 |       fameDelta: -10,
+44 |     };
+45 | 
+46 |     const newState = resolveImpacts(state, [impact]);
+47 | 
+48 |     expect(newState.treasury).toBe(1500);
+                                   ^
+error: expect(received).toBe(expected)
+
+Expected: 1500
+Received: 1000
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/resolveImpacts.test.ts:48:31)
+(fail) resolveImpacts > applies treasury and fame deltas correctly [1.05ms]
+56 | 
+57 |     const impact: StateImpact = { rosterUpdates };
+58 |     const newState = resolveImpacts(state, [impact]);
+59 | 
+60 |     const w1 = newState.roster.find((w) => w.id === 'w1');
+61 |     expect(w1?.fame).toBe(100);
+                          ^
+error: expect(received).toBe(expected)
+
+Expected: 100
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/resolveImpacts.test.ts:61:22)
+(fail) resolveImpacts > applies roster updates using ID mapping [0.10ms]
+73 |       ledgerEntries: [{ week: 1, category: 'upkeep', amount: -50, label: 'L1' }],
+74 |     };
+75 | 
+76 |     const newState = resolveImpacts(state, [impact]);
+77 | 
+78 |     expect(newState.newsletter).toHaveLength(1);
+                                     ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/resolveImpacts.test.ts:78:33)
+(fail) resolveImpacts > merges newsletter items and ledger entries [0.19ms]
+86 |     const impact1: StateImpact = { treasuryDelta: 100 };
+87 |     const impact2: StateImpact = { treasuryDelta: 200 };
+88 | 
+89 |     const newState = resolveImpacts(state, [impact1, impact2]);
+90 | 
+91 |     expect(newState.treasury).toBe(1300);
+                                   ^
+error: expect(received).toBe(expected)
+
+Expected: 1300
+Received: 1000
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/resolveImpacts.test.ts:91:31)
+(fail) resolveImpacts > handles multiple impacts correctly [0.05ms]
+
+src/test/engine/succession.test.ts:
+(pass) Promoter Succession > should age promoters every week [0.85ms]
+(pass) Promoter Succession > should replace a promoter when they retire [0.62ms]
+
+src/test/engine/ownerPhilosophy.test.ts:
+(pass) ownerPhilosophy - evolvePhilosophies > should evolve philosophy on season change if performance is poor [0.14ms]
+(pass) ownerPhilosophy - evolvePhilosophies > should double down (no change) on season change if winning [0.07ms]
+
+src/test/engine/combatFatigue.test.ts:
+(pass) combatFatigue engine > fatiguePenalty > returns 0 penalty when endurance is high (> 45%) [0.06ms]
+(pass) combatFatigue engine > fatiguePenalty > returns -4 moderate penalty when endurance is <= 45% and > 25% [0.01ms]
+(pass) combatFatigue engine > fatiguePenalty > returns -8 heavy penalty when endurance is <= 25%
+(pass) combatFatigue engine > fatiguePenalty > handles zero or negative maxEndurance gracefully (div by zero prevention)
+(pass) combatFatigue engine > enduranceCost > calculates cost based on OE (0.18) + AL (0.09) without internal floor [0.05ms]
+(pass) combatFatigue engine > enduranceCost > returns 0 if inputs are 0 [0.02ms]
+
+src/test/engine/gameStoreSecurity.test.ts:
+(pass) pass
+
+src/test/engine/arenas.test.ts:
+(pass) Arena Registry > getArenaById returns STANDARD_ARENA for unknown id [0.03ms]
+(pass) Arena Registry > getArenaById returns the registered arena [0.01ms]
+(pass) Arena Registry > getAllArenas includes standard_arena [0.04ms]
+(pass) Arena Registry > getArenasByTag returns only arenas with that tag [0.10ms]
+(pass) Arena Registry > getArenasByTier returns only arenas of that tier [0.04ms]
+(pass) Arena Registry > registerArena adds to the registry [0.03ms]
+
+src/test/engine/injuries.test.ts:
+(pass) rollForInjury > should generate an ID for an injury
+
+src/test/engine/aging.test.ts:
+ 96 |     const state = makeGameState(52, [w]);
+ 97 |     const rng = new SeededRNGService(state.week * 997 + 3);
+ 98 |     const impact = computeAgingImpact(state, rng);
+ 99 |     const newState = resolveImpacts(state, [impact]);
+100 | 
+101 |     expect(newState.roster[0]!.age).toBe(21);
+                                          ^
+error: expect(received).toBe(expected)
+
+Expected: 21
+Received: 20
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/aging.test.ts:101:37)
+(fail) computeAgingImpact — basic aging > increments age by 1 on multiples of 52 weeks [0.26ms]
+(pass) computeAgingImpact — basic aging > does not increment age on non-multiples of 52 weeks [0.03ms]
+129 |     const state = makeGameState(52, [w]);
+130 |     const rng = new SeededRNGService(state.week * 997 + 3);
+131 |     const impact = computeAgingImpact(state, rng);
+132 |     const newState = resolveImpacts(state, [impact]);
+133 | 
+134 |     expect(newState.roster[0]!.age).toBe(24);
+                                          ^
+error: expect(received).toBe(expected)
+
+Expected: 24
+Received: 23
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/aging.test.ts:134:37)
+(fail) computeAgingImpact — aging penalties > does not apply penalties to a warrior under the age penalty start limit [0.54ms]
+144 |     const state = makeGameState(52, [w]);
+145 |     const rng = new SeededRNGService(state.week * 997 + 3);
+146 |     const impact = computeAgingImpact(state, rng);
+147 |     const newState = resolveImpacts(state, [impact]);
+148 | 
+149 |     expect(newState.roster[0]!.age).toBe(28);
+                                          ^
+error: expect(received).toBe(expected)
+
+Expected: 28
+Received: 27
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/aging.test.ts:149:37)
+(fail) computeAgingImpact — aging penalties > applies penalty to SP and DF when age exceeds AGING_PENALTY_START [0.06ms]
+156 |     const state = makeGameState(52, [w]);
+157 |     const rng = new SeededRNGService(state.week * 997 + 3);
+158 |     const impact = computeAgingImpact(state, rng);
+159 |     const newState = resolveImpacts(state, [impact]);
+160 | 
+161 |     expect(newState.newsletter.length).toBe(1);
+                                             ^
+error: expect(received).toBe(expected)
+
+Expected: 1
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/aging.test.ts:161:40)
+(fail) computeAgingImpact — aging penalties > adds a newsletter event when aging penalties are applied [0.05ms]
+174 |     const state = makeGameState(10, [w]);
+175 |     const rng = new SeededRNGService(state.week * 997 + 3);
+176 |     const impact = computeAgingImpact(state, rng);
+177 |     const newState = resolveImpacts(state, [impact]);
+178 | 
+179 |     expect(newState.roster.length).toBe(0);
+                                         ^
+error: expect(received).toBe(expected)
+
+Expected: 0
+Received: 1
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/aging.test.ts:179:36)
+(fail) computeAgingImpact — forced retirement > guarantees retirement for a warrior at FORCED_RETIRE_MAX (32+) [0.06ms]
+188 |     vi.spyOn(SeededRNGService.prototype, 'next').mockReturnValue(0.01);
+189 |     const rng = new SeededRNGService(state.week * 997 + 3);
+190 |     const impact = computeAgingImpact(state, rng);
+191 |     const newState = resolveImpacts(state, [impact]);
+192 | 
+193 |     expect(newState.roster.length).toBe(0);
+                                         ^
+error: expect(received).toBe(expected)
+
+Expected: 0
+Received: 1
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/aging.test.ts:193:36)
+(fail) computeAgingImpact — forced retirement > can force retirement with a low random roll [0.06ms]
+(pass) computeAgingImpact — forced retirement > does not force retirement with a high random roll [0.03ms]
+
+src/test/engine/trainers.test.ts:
+(pass) Trainer System > generateHiringPool > should generate the requested number of trainers [0.93ms]
+(pass) Trainer System > generateHiringPool > should generate trainers with valid properties [0.13ms]
+(pass) Trainer System > generateHiringPool > should generate mostly Novice/Seasoned trainers [0.21ms]
+(pass) Trainer System > generateHiringPool > should assign fame based on tier [0.12ms]
+(pass) Trainer System > generateHiringPool > should be deterministic with same seed [0.07ms]
+(pass) Trainer System > convertRetiredToTrainer > should map aggressive styles to Aggression focus [0.13ms]
+(pass) Trainer System > convertRetiredToTrainer > should map defensive styles to Defense focus [0.05ms]
+(pass) Trainer System > convertRetiredToTrainer > should map counter styles to Mind focus [0.01ms]
+(pass) Trainer System > convertRetiredToTrainer > should assign tier based on career stats [0.03ms]
+(pass) Trainer System > convertRetiredToTrainer > should promote to Master with 3+ kills even with low fight count [0.02ms]
+(pass) Trainer System > convertRetiredToTrainer > should preserve warrior fame [0.02ms]
+(pass) Trainer System > convertRetiredToTrainer > should set style bonus to warrior's original style [0.01ms]
+(pass) Trainer System > convertRetiredToTrainer > should include warrior name in trainer name [0.01ms]
+(pass) Trainer System > convertRetiredToTrainer > should set 52-week contract [0.02ms]
+(pass) Trainer System > getTrainingBonus > should return zero bonuses with no trainers [0.02ms]
+(pass) Trainer System > getTrainingBonus > should apply tier bonuses [0.05ms]
+(pass) Trainer System > getTrainingBonus > should ignore expired trainers
+(pass) Trainer System > getTrainingBonus > should apply style affinity bonus [0.02ms]
+(pass) Trainer System > getTrainingBonus > should stack multiple trainers of same focus [0.02ms]
+(pass) Trainer System > Trainer constants > should have correct tier costs [0.01ms]
+(pass) Trainer System > Trainer constants > should have correct tier bonuses [0.01ms]
+
+src/test/engine/ownerGrudges.test.ts:
+(pass) ownerGrudges - processOwnerGrudges > should create a new grudge when personalities clash and blood is spilled [0.14ms]
+(pass) ownerGrudges - processOwnerGrudges > should escalate existing grudges on further kills [0.04ms]
+(pass) ownerGrudges - calculateRivalryScore > should calculate score correctly [0.03ms]
+
+src/test/engine/rivals.test.ts:
+(pass) generateRivalStables > should generate a variety of metaAdaptation types [2.05ms]
+
+src/test/engine/ownerRoster.test.ts:
+(pass) ownerRoster - processAIRosterManagement > should attempt recruitment when roster is low and funds are sufficient [0.16ms]
+(pass) ownerRoster - processAIRosterManagement > should retire underperforming warriors for Methodical owners [0.17ms]
+(pass) ownerRoster - processAIRosterManagement > should NOT recruit if in RECOVERY intent [0.08ms]
+
+src/test/engine/crowdMood.test.ts:
+(pass) crowdMood system > getMoodModifiers > returns correct modifiers for Bloodthirsty [0.99ms]
+(pass) crowdMood system > getMoodModifiers > returns correct modifiers for Theatrical [0.05ms]
+(pass) crowdMood system > getMoodModifiers > returns correct modifiers for Solemn [0.04ms]
+(pass) crowdMood system > getMoodModifiers > returns correct modifiers for Festive [0.01ms]
+(pass) crowdMood system > getMoodModifiers > returns correct modifiers for Calm (and as default) [0.02ms]
+(pass) crowdMood system > computeCrowdMood > returns Calm if there are no recent fights [0.01ms]
+(pass) crowdMood system > computeCrowdMood > returns Bloodthirsty if there are >= 2 kills in the last 5 fights [0.05ms]
+(pass) crowdMood system > computeCrowdMood > returns Solemn if there is >= 1 kill and >= 2 draws in the last 5 fights [0.02ms]
+(pass) crowdMood system > computeCrowdMood > returns Theatrical if there are >= 3 flashy fights in the last 5 [0.03ms]
+(pass) crowdMood system > computeCrowdMood > returns Festive if there are >= 4 fights with 0 kills in the last 5 [0.02ms]
+(pass) crowdMood system > computeCrowdMood > only considers the last 5 fights [0.03ms]
+(pass) crowdMood system > computeCrowdMood > prioritizes conditions correctly (Bloodthirsty > Solemn > Theatrical > Festive > Calm) [0.01ms]
+(pass) crowdMood system > computeCrowdMood > returns Calm if no other conditions are met [0.02ms]
+(pass) crowdMood system > crowd mood state transitions over time > transitions from Calm to Theatrical to Festive to Bloodthirsty as fights progress [0.09ms]
+
+src/test/engine/training.test.ts:
+(pass) Training System > computeGainChance > should return base gain chance with no modifiers [0.14ms]
+(pass) Training System > computeGainChance > should increase chance with high WT [0.02ms]
+(pass) Training System > computeGainChance > should decrease chance with age penalty [0.01ms]
+(pass) Training System > computeGainChance > should decrease chance when injured [0.03ms]
+(pass) Training System > computeGainChance > should apply diminishing returns near potential ceiling [0.02ms]
+(pass) Training System > computeTrainingImpact (deprecated processTraining equivalent) > should return state unchanged if no assignments [0.04ms]
+183 | 
+184 |       const rng = new SeededRNGService(1);
+185 |       const trainingImpact = computeTrainingImpact(state, rng);
+186 |       const { impact: stateImpact } = trainingImpactToStateImpact(state, trainingImpact, rng);
+187 |       const newState = resolveImpacts(state, [stateImpact]);
+188 |       expect(newState.trainingAssignments).toEqual([]);
+                                                 ^
+error: expect(received).toEqual(expected)
+
+- []
++ [
++   {
++     "attribute": "ST",
++     "type": "attribute",
++     "warriorId": "w1",
++   },
++ ]
+
+- Expected  - 1
++ Received  + 7
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:188:44)
+(fail) Training System > computeTrainingImpact (deprecated processTraining equivalent) > should clear assignments after processing [0.20ms]
+(pass) Training System > computeTrainingImpact (deprecated processTraining equivalent) > should block SZ training [0.04ms]
+235 |       });
+236 | 
+237 |       const rng = new SeededRNGService(1);
+238 |       const impact = computeTrainingImpact(state as any, rng);
+239 | 
+240 |       expect(impact.results.some((r) => r.message === 'Sharpened')).toBe(true);
+                                                                          ^
+error: expect(received).toBe(expected)
+
+Expected: true
+Received: false
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:240:69)
+(fail) Training System > computeTrainingImpact edge cases > should process skillDrill assignments correctly and roll for injury [0.04ms]
+266 | 
+267 |       const rng = new SeededRNGService(1);
+268 |       const impact = computeTrainingImpact(state as any, rng);
+269 | 
+270 |       expect(injurySpy).not.toHaveBeenCalled();
+271 |       expect(impact.results.some((r) => r.message === 'Capped')).toBe(true);
+                                                                       ^
+error: expect(received).toBe(expected)
+
+Expected: true
+Received: false
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:271:66)
+(fail) Training System > computeTrainingImpact edge cases > should skip skillDrill injury roll if hard capped
+(pass) Training System > computeTrainingImpact edge cases > should handle missing seasonal growth during training assignment loop [0.04ms]
+(pass) Training System > computeTrainingImpact edge cases > should handle empty training assignments properly [0.03ms]
+(pass) Training System > computeTrainingImpact edge cases > should handle missing seasonalGrowth gracefully [0.02ms]
+(pass) Training System > computeTrainingImpact edge cases > should return empty seasonal growth when assignments are undefined [0.02ms]
+(pass) Training System > computeTrainingImpact edge cases > should handle missing trainingAssignments
+(pass) Training System > computeTrainingImpact edge cases > should handle warrior missing from roster
+(pass) Training System > computeTrainingImpact edge cases > should handle missing attribute for attribute training [0.03ms]
+334 |         roster: [warrior],
+335 |         trainers: undefined,
+336 |         trainingAssignments: [{ warriorId: 'w1', type: 'recovery' }] as any,
+337 |       });
+338 |       const impact = computeTrainingImpact(state as any, new SeededRNG(1) as any);
+339 |       expect(impact.results).toHaveLength(1);
+                                   ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:339:30)
+(fail) Training System > computeTrainingImpact edge cases > should handle missing trainers array in state gracefully [0.07ms]
+(pass) Training System > computeTrainingImpact edge cases > should handle injury returned without injuryResult (edge case) [0.04ms]
+384 |       });
+385 | 
+386 |       const rng = new SeededRNG(1);
+387 |       const impact = computeTrainingImpact(state as any, rng as any);
+388 | 
+389 |       expect(impact.results.filter((r) => r.type === 'attribute')).toHaveLength(1);
+                                                                         ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:389:68)
+(fail) Training System > computeTrainingImpact edge cases > should process attribute training message correctly [0.05ms]
+418 |       });
+419 | 
+420 |       const rng = new SeededRNG(1);
+421 |       const impact = computeTrainingImpact(state as any, rng as any);
+422 | 
+423 |       expect(impact.results.filter((r) => r.type === 'injury')).toHaveLength(1);
+                                                                      ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:423:65)
+(fail) Training System > computeTrainingImpact edge cases > should fallback to currentRoster for injury if updatedWarrior is null [0.08ms]
+455 |       });
+456 | 
+457 |       const rng = new SeededRNG(1);
+458 |       const impact = computeTrainingImpact(state as any, rng as any);
+459 | 
+460 |       expect(impact.results.filter((r) => r.type === 'injury')).toHaveLength(1);
+                                                                      ^
+error: expect(received).toHaveLength(expected)
+
+Expected length: 1
+Received length: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:460:65)
+(fail) Training System > computeTrainingImpact edge cases > should process attribute training injury correctly [0.08ms]
+(pass) Training System > computeTrainingImpact edge cases > should handle training injury roll coverage in computeTrainingImpact [0.05ms]
+487 |         updatedRoster: [],
+488 |         updatedSeasonalGrowth: [],
+489 |         results: [{ type: 'blocked', warriorId: 'w1', message: 'blocked' }],
+490 |       } as any;
+491 |       const res = trainingImpactToStateImpact(state, impact, new SeededRNG(123) as any);
+492 |       expect(res.impact.newsletterItems).toEqual([]);
+                                               ^
+error: expect(received).toEqual(expected)
+
+Expected: []
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:492:42)
+(fail) Training System > trainingImpactToStateImpact edge cases > should ignore blocked results for newsletter [0.11ms]
+500 |         results: [{ type: 'attribute', warriorId: 'w1', message: 'Gained ST!' }],
+501 |       } as any;
+502 |       const rng = new SeededRNG(123) as any;
+503 |       rng.uuid = vi.fn().mockReturnValue('newsletter-123');
+504 |       const res = trainingImpactToStateImpact(state, impact, rng);
+505 |       expect(res.impact.newsletterItems).toBeDefined();
+                                               ^
+error: expect(received).toBeDefined()
+
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:505:42)
+(fail) Training System > trainingImpactToStateImpact edge cases > should populate newsletterItems properly and use rng.uuid [0.46ms]
+524 |       } as any;
+525 | 
+526 |       const rng = new SeededRNG(123) as any;
+527 |       const res = trainingImpactToStateImpact(state, impact, rng);
+528 | 
+529 |       expect(res.impact.rosterUpdates?.get(warrior.id)).toEqual({
+                                                              ^
+error: expect(received).toEqual(expected)
+
+- {
+-   "attributes": {
+-     "CN": 12,
+-     "DF": 12,
+-     "SP": 12,
+-     "ST": 12,
+-     "SZ": 12,
+-     "WL": 12,
+-     "WT": 12,
+-   },
+-   "baseSkills": {
+-     "ATT": 7,
+-     "DEC": 10,
+-     "DEF": 1,
+-     "INI": 11,
+-     "PAR": 2,
+-     "RIP": 8,
+-   },
+-   "derivedStats": {
+-     "damage": 3,
+-     "encumbrance": 18,
+-     "endurance": 25,
+-     "hp": 31,
+-   },
+-   "fatigue": 10,
+-   "injuries": [],
+- }
++ undefined
+
+- Expected  - 27
++ Received  + 1
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/training.test.ts:529:57)
+(fail) Training System > trainingImpactToStateImpact edge cases > should generate proper roster updates delta [0.15ms]
+
+src/test/engine/fame.test.ts:
+(pass) fameFromTags > returns zero for no tags [1.09ms]
+(pass) fameFromTags > awards fame for Kill [0.06ms]
+(pass) fameFromTags > awards fame and pop for KO [0.01ms]
+(pass) fameFromTags > awards pop for Flashy [0.01ms]
+(pass) fameFromTags > stacks multiple tags [0.01ms]
+(pass) fameFromTags > applies dampener above 5 [0.02ms]
+(pass) fameFromTags > handles undefined tags gracefully [0.01ms]
+(pass) fameFromTags > awards pop for bloody [0.02ms]
+(pass) fameFromTags > awards pop for upset
+(pass) fameFromTags > decreases pop for quick [0.02ms]
+(pass) fameFromTags > awards pop for epic with dampener [0.02ms]
+(pass) fameFromTags > stacks new tags with existing tags [0.03ms]
+
+src/test/engine/ownerAI.test.ts:
+(pass) ownerAI - aiPlanForWarrior > should apply personality and philosophy modifiers [0.50ms]
+(pass) ownerAI - aiPlanForWarrior > should clamp values between 1 and 10 [0.08ms]
+(pass) ownerAI - getStyleMatchupMods > return correct mods for known match-ups [0.04ms]
+(pass) ownerAI - getStyleMatchupMods > return zero mods for unknown match-ups [0.03ms]
+
+src/test/engine/impacts.test.ts:
+ 6 |     const impacts: StateImpact[] = [
+ 7 |       { treasuryDelta: 100, fameDelta: 50 },
+ 8 |       { treasuryDelta: 50, fameDelta: 25 },
+ 9 |     ];
+10 |     const result = mergeImpacts(impacts);
+11 |     expect(result.treasuryDelta).toBe(150);
+                                      ^
+error: expect(received).toBe(expected)
+
+Expected: 150
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:11:34)
+(fail) mergeImpacts > merges numeric values by accumulation [1.13ms]
+16 |     const impacts: StateImpact[] = [
+17 |       { newsletterItems: [{ id: '1', week: 1, title: 'Test', items: [] }] },
+18 |       { newsletterItems: [{ id: '2', week: 2, title: 'Test2', items: [] }] },
+19 |     ];
+20 |     const result = mergeImpacts(impacts);
+21 |     expect(result.newsletterItems).toHaveLength(2);
+                                        ^
+error: Received value does not have a length property: undefined
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:21:36)
+(fail) mergeImpacts > merges arrays by appending [0.03ms]
+26 |   it('merges Maps by merging values', () => {
+27 |     const map1 = new Map([['warrior1', { fame: 100 }]]);
+28 |     const map2 = new Map([['warrior2', { fame: 50 }]]);
+29 |     const impacts: StateImpact[] = [{ rosterUpdates: map1 }, { rosterUpdates: map2 }];
+30 |     const result = mergeImpacts(impacts);
+31 |     expect(result.rosterUpdates?.size).toBe(2);
+                                            ^
+error: expect(received).toBe(expected)
+
+Expected: 2
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:31:40)
+(fail) mergeImpacts > merges Maps by merging values [0.06ms]
+36 |   it('merges Maps by combining values for same key', () => {
+37 |     const map1 = new Map([['warrior1', { fame: 100 }]]);
+38 |     const map2 = new Map([['warrior1', { popularity: 50 }]]);
+39 |     const impacts: StateImpact[] = [{ rosterUpdates: map1 }, { rosterUpdates: map2 }];
+40 |     const result = mergeImpacts(impacts);
+41 |     expect(result.rosterUpdates?.size).toBe(1);
+                                            ^
+error: expect(received).toBe(expected)
+
+Expected: 1
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:41:40)
+(fail) mergeImpacts > merges Maps by combining values for same key [0.05ms]
+43 |   });
+44 | 
+45 |   it('replaces values for replace strategy properties', () => {
+46 |     const impacts: StateImpact[] = [{ weather: 'Rainy' }, { weather: 'Sunny' }];
+47 |     const result = mergeImpacts(impacts);
+48 |     expect(result.weather).toBe('Sunny');
+                                ^
+error: expect(received).toBe(expected)
+
+Expected: "Sunny"
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:48:28)
+(fail) mergeImpacts > replaces values for replace strategy properties [0.03ms]
+48 |     expect(result.weather).toBe('Sunny');
+49 |   });
+50 | 
+51 |   it('handles empty impacts array', () => {
+52 |     const result = mergeImpacts([]);
+53 |     expect(result.treasuryDelta).toBe(0);
+                                      ^
+error: expect(received).toBe(expected)
+
+Expected: 0
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:53:34)
+(fail) mergeImpacts > handles empty impacts array [0.04ms]
+56 |   });
+57 | 
+58 |   it('handles single impact', () => {
+59 |     const impacts: StateImpact[] = [{ treasuryDelta: 100 }];
+60 |     const result = mergeImpacts(impacts);
+61 |     expect(result.treasuryDelta).toBe(100);
+                                      ^
+error: expect(received).toBe(expected)
+
+Expected: 100
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:61:34)
+(fail) mergeImpacts > handles single impact [0.03ms]
+65 |     const impacts: StateImpact[] = [
+66 |       { treasuryDelta: 100 },
+67 |       { treasuryDelta: undefined, fameDelta: 50 },
+68 |     ];
+69 |     const result = mergeImpacts(impacts);
+70 |     expect(result.treasuryDelta).toBe(100);
+                                      ^
+error: expect(received).toBe(expected)
+
+Expected: 100
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:70:34)
+(fail) mergeImpacts > skips undefined values [0.03ms]
+75 |     const impacts: StateImpact[] = [
+76 |       { treasuryDelta: 100, fameDelta: 50, popularityDelta: 25 },
+77 |       { treasuryDelta: 50, fameDelta: 25, popularityDelta: 10 },
+78 |     ];
+79 |     const result = mergeImpacts(impacts);
+80 |     expect(result.treasuryDelta).toBe(150);
+                                      ^
+error: expect(received).toBe(expected)
+
+Expected: 150
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:80:34)
+(fail) mergeImpacts > merges all numeric delta properties [0.04ms]
+108 |           },
+109 |         ],
+110 |       },
+111 |     ];
+112 |     const result = mergeImpacts(impacts);
+113 |     expect(result.insightTokens).toHaveLength(2);
+                                       ^
+error: Received value does not have a length property: undefined
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/impacts.test.ts:113:34)
+(fail) mergeImpacts > merges all array properties [0.03ms]
+
+src/test/engine/economy.test.ts:
+(pass) Economy Engine > computeWeeklyBreakdown > should calculate zero net when there is no activity and no warriors [0.23ms]
+(pass) Economy Engine > computeWeeklyBreakdown > should calculate correct expenses for warrior upkeep, trainers, and training [0.17ms]
+(pass) Economy Engine > computeWeeklyBreakdown > should calculate correct income for fight purses, win bonuses, and fame [0.04ms]
+101 |       const impact = computeEconomyImpact(state);
+102 | 
+103 |       const newState = resolveImpacts(state, [impact]);
+104 | 
+105 |       // Treasury calculation may have changed, just verify it increased
+106 |       expect(newState.treasury).toBeGreaterThan(100);
+                                      ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 100
+Received: 100
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/economy.test.ts:106:33)
+(fail) Economy Engine > computeEconomyImpact > should update game state treasury and add ledger entries immutably [0.07ms]
+
+src/test/engine/recruitment.test.ts:
+10 | describe('partialRefreshPool', () => {
+11 |   it('returns a newly generated pool of DEFAULT_POOL_SIZE if given an empty pool', () => {
+12 |     const usedNames = new Set<string>();
+13 |     const rng = new SeededRNGService(12345);
+14 |     const pool = partialRefreshPool([], 1, usedNames, rng);
+15 |     expect(pool.length).toBe(DEFAULT_POOL_SIZE);
+                             ^
+error: expect(received).toBe(expected)
+
+Expected: 12
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/recruitment.test.ts:15:25)
+(fail) partialRefreshPool > returns a newly generated pool of DEFAULT_POOL_SIZE if given an empty pool [0.03ms]
+44 |     // So 3 oldest warriors should be removed.
+45 |     // They are pool[0], pool[1], and one of the others.
+46 | 
+47 |     // Count how many warriors are from the nextWeek
+48 |     const newWarriors = refreshedPool.filter((w) => w.addedWeek === nextWeek);
+49 |     expect(newWarriors.length).toBe(3);
+                                    ^
+error: expect(received).toBe(expected)
+
+Expected: 3
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/recruitment.test.ts:49:32)
+(fail) partialRefreshPool > removes the oldest warriors and replaces them, ensuring DEFAULT_POOL_SIZE [1.51ms]
+57 |     const usedNames = new Set<string>();
+58 |     // Test minimum removal: array size 5 -> floor(1.5) = 1 -> max(2, 1) = 2
+59 |     let smallPool = generateRecruitPool(5, 1, usedNames);
+60 |     smallPool = partialRefreshPool(smallPool, 2, usedNames);
+61 |     // Since original was 5, it should expand to DEFAULT_POOL_SIZE
+62 |     expect(smallPool.length).toBe(DEFAULT_POOL_SIZE);
+                                  ^
+error: expect(received).toBe(expected)
+
+Expected: 12
+Received: 5
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/recruitment.test.ts:62:30)
+(fail) partialRefreshPool > maintains minimum and maximum limits for removal count [0.13ms]
+(pass) partialRefreshPool > avoids reusing names that are in the remaining pool or previously used [0.19ms]
+
+src/test/engine/metaDrift.test.ts:
+(pass) Meta Drift > createDefaultMeta > should initialize all styles with 0 drift
+(pass) Meta Drift > computeMetaDrift > should return default meta for empty history [0.83ms]
+(pass) Meta Drift > computeMetaDrift > should calculate +10 drift for 100% win rate [0.11ms]
+(pass) Meta Drift > computeMetaDrift > should calculate -10 drift for 0% win rate [0.04ms]
+(pass) Meta Drift > computeMetaDrift > should calculate 0 drift for 50% win rate [0.01ms]
+(pass) Meta Drift > computeMetaDrift > should calculate +5 drift for 75% win rate [0.05ms]
+(pass) Meta Drift > computeMetaDrift > should respect the window parameter [0.11ms]
+(pass) Meta Drift > getMetaLabel > should return correct labels for various drift values [0.05ms]
+(pass) Meta Drift > getMetaColor > should return correct color classes for various drift values [0.03ms]
+
+src/test/engine/skillCalc.test.ts:
+(pass) skillCalc - computeEndurance > calculates endurance correctly for minimum possible attributes (3s)
+(pass) skillCalc - computeEndurance > calculates endurance correctly for maximum possible attributes (25s)
+(pass) skillCalc - computeEndurance > endurance tier breakpoints > handles Tier P breakpoint (score >= 35) [0.48ms]
+(pass) skillCalc - computeEndurance > endurance tier breakpoints > handles Tier N breakpoint (score >= 48) [0.01ms]
+(pass) skillCalc - computeEndurance > endurance tier breakpoints > handles Tier G breakpoint (score >= 62) [0.02ms]
+(pass) skillCalc - computeEndurance > endurance tier breakpoints > handles Tier R breakpoint (score >= 75)
+(pass) skillCalc - computeEndurance > endurance tier breakpoints > handles Tier T breakpoint (score >= 85) [0.02ms]
+(pass) skillCalc - computeEndurance > endurance tier breakpoints > handles Tier A breakpoint (score >= 95) [0.02ms]
+(pass) skillCalc - computeEndurance > endurance tier breakpoints > maxes out at Tier A for very high scores (e.g. >95)
+
+src/test/engine/stableReputation.test.ts:
+(pass) computeStableReputation > returns base reputation for an empty state [0.70ms]
+(pass) computeStableReputation > calculates fame correctly [0.08ms]
+(pass) computeStableReputation > caps fame at 100 [0.02ms]
+(pass) computeStableReputation > calculates notoriety correctly [0.03ms]
+(pass) computeStableReputation > calculates honor correctly [0.01ms]
+(pass) computeStableReputation > calculates adaptability correctly [0.05ms]
+(pass) computeStableReputation > ignores non-active roster members [0.02ms]
+(pass) computeRivalReputation > returns base reputation for empty roster [0.07ms]
+(pass) computeRivalReputation > calculates rival fame correctly [0.05ms]
+(pass) computeRivalReputation > calculates rival notoriety and honor correctly [0.03ms]
+(pass) computeRivalReputation > calculates rival adaptability correctly [0.03ms]
+(pass) computeRivalReputation > caps values correctly [0.03ms]
+(pass) computeRivalReputation > ignores non-active roster members [0.02ms]
+
+src/test/engine/bloodMoon.test.ts:
+(pass) Blood Moon Feature > should return a 1.1 multiplier for Blood Moon stamina drain [0.70ms]
+(pass) Blood Moon Feature > should roll Blood Moon weather when rng yields high enough value [0.23ms]
+
+src/test/engine/scouting.test.ts:
+(pass) Scouting System > getScoutCost > should return correct costs for each quality
+(pass) Scouting System > generateScoutReport > should always reveal warrior style [0.17ms]
+(pass) Scouting System > generateScoutReport > should include win-loss record [0.18ms]
+(pass) Scouting System > generateScoutReport > should generate attribute text based on quality [0.12ms]
+(pass) Scouting System > generateScoutReport > should not show injuries in Basic report [0.05ms]
+(pass) Scouting System > generateScoutReport > should show injuries in Detailed report [0.03ms]
+(pass) Scouting System > generateScoutReport > should not reveal plan tendencies in Basic or Detailed reports [0.03ms]
+(pass) Scouting System > generateScoutReport > should reveal plan tendencies in Expert report [0.03ms]
+(pass) Scouting System > generateScoutReport > should categorize OE/AL as Low/Medium/High correctly [0.10ms]
+(pass) Scouting System > generateScoutReport > should generate appropriate notes based on quality [0.06ms]
+(pass) Scouting System > generateScoutReport > should mention kills in Expert report for killers [0.06ms]
+(pass) Scouting System > generateScoutReport > should generate valid strings for attribute ranges [0.12ms]
+(pass) Scouting System > generateScoutReport > should include all attributes in ranges [0.05ms]
+(pass) Scouting System > generateScoutReport > should include quality in report [0.04ms]
+(pass) Scouting System > generateScoutReport > should include week in report [0.02ms]
+(pass) Scouting System > generateScoutReport > should generate unique report IDs [0.04ms]
+
+src/test/engine/tacticSuitability.test.ts:
+(pass) Tactic Suitability > getOffensiveSuitability > should return WS for 'none' tactic
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Bashing Attack as WS for Bash [0.16ms]
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Bashing Attack as U for Lunge
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Lunging Attack as WS for Lunge
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Lunging Attack as U for Bash
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Aimed Blow as U for Decisiveness (canonical: AB relies on precision tactics, not quick decisions) [0.05ms]
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Aimed Blow as WS for Bash (canonical: AB well-suited for all attack tactics)
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Total Parry as U for all offensive tactics [0.06ms]
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Slashing Attack as WS for Slash [0.02ms]
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Striking Attack as WS for Decisiveness
+(pass) Tactic Suitability > getOffensiveSuitability > should rate Striking Attack as WS for all attack tactics (canonical: ST is the most versatile offensive style) [0.01ms]
+(pass) Tactic Suitability > getDefensiveSuitability > should return WS for 'none' tactic [0.01ms]
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Parry-Riposte as WS for Parry and Riposte
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Parry-Riposte as U for Responsiveness (canonical: PR relies on parry/riposte, not reactive speed) [0.01ms]
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Lunging Attack as WS for Dodge [0.02ms]
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Lunging Attack as U for Parry [0.01ms]
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Aimed Blow as WS for Dodge
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Bashing Attack as U for Dodge and Riposte [0.02ms]
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Total Parry as WS for Parry
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Wall of Steel as U for Responsiveness (canonical: WS uses parry/riposte, not reactive footwork)
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Striking Attack as S for Riposte (canonical: ST has some riposte capability) [0.01ms]
+(pass) Tactic Suitability > getDefensiveSuitability > should rate Slashing Attack as U for Parry
+(pass) Tactic Suitability > suitabilityMultiplier > should return 1.0 for WS
+(pass) Tactic Suitability > suitabilityMultiplier > should return 0.6 for S [0.02ms]
+(pass) Tactic Suitability > suitabilityMultiplier > should return 0.3 for U
+(pass) Tactic Suitability > Edge cases > should handle all fighting styles [0.04ms]
+(pass) Tactic Suitability > Edge cases > should handle all defensive tactics [0.06ms]
+
+src/test/engine/ncaaCommittee.test.ts:
+(pass) NCAA-style Tournament Selection Committee > should select 64 warriors for the Gold Tier [1.63ms]
+(pass) NCAA-style Tournament Selection Committee > should prevent double-booking across tiers [1.62ms]
+(pass) NCAA-style Tournament Selection Committee > should generate all 4 seasonal tournaments [2.31ms]
+
+src/test/engine/traits.test.ts:
+(pass) Warrior Traits > generateTraits > produces 0-2 traits per warrior [0.33ms]
+(pass) Warrior Traits > generateTraits > does not pick the same trait twice for one warrior [0.24ms]
+(pass) Warrior Traits > generateTraits > is deterministic for a given seed [0.03ms]
+(pass) Warrior Traits > getStaticTraitMods > returns zero mods for a warrior with no traits [0.04ms]
+(pass) Warrior Traits > getStaticTraitMods > applies Quick (+1 INI) [0.03ms]
+(pass) Warrior Traits > getStaticTraitMods > stacks multiple static traits additively [0.01ms]
+(pass) Warrior Traits > getStaticTraitMods > multiplies enduranceMult
+(pass) Warrior Traits > getStaticTraitMods > ignores unknown trait ids gracefully [0.02ms]
+(pass) Warrior Traits > getDynamicTraitMods > Berserker: +2 ATT only when HP < 50% [0.04ms]
+(pass) Warrior Traits > getDynamicTraitMods > Patient: +2 DEF only in OPENING phase [0.02ms]
+(pass) Warrior Traits > getDynamicTraitMods > Stalwart: +2 PAR only when HP > 75% [0.02ms]
+(pass) Warrior Traits > getDynamicTraitMods > Combo Artist: +1 ATT only when consecutiveHits >= 2 [0.02ms]
+(pass) Warrior Traits > getDynamicTraitMods > Bloodthirsty: always adds killWindowBonus [0.02ms]
+
+src/test/engine/determinism.test.ts:
+(pass) Simulation Determinism > should produce identical results from a fresh state over 5 weeks [2.28ms]
+(pass) Simulation Determinism > should remain deterministic even when branching (recreating RNG) [0.05ms]
+(pass) Simulation Determinism > should produce different results for different seeds [0.14ms]
+(pass) Quarter/Year Advancement Determinism > advanceQuarter should produce functionally equivalent state to 13 sequential advanceWeek calls [62.97ms]
+(pass) Quarter/Year Advancement Determinism > advanceYear should produce functionally equivalent state to 52 sequential advanceWeek calls [233.82ms]
+(pass) Quarter/Year Advancement Determinism > quarter advancement should handle year boundaries correctly [26.46ms]
+(pass) Quarter/Year Advancement Determinism > should stop early when stop condition is met [0.33ms]
+(pass) Quarter/Year Advancement Determinism > should provide week summaries for each week advanced [29.43ms]
+
+src/test/engine/promoters.test.ts:
+(pass) updatePromoterHistory > updates totalPursePaid and adds a notable bout [1.41ms]
+(pass) updatePromoterHistory > keeps only the last 10 notable bouts [0.20ms]
+(pass) updatePromoterHistory > returns original state if promoter does not exist [0.08ms]
+(pass) updatePromoterHistory > does not mutate the original state [0.09ms]
+
+src/test/engine/planBias.test.ts:
+(pass) Plan Bias > autoTuneFromBias > should set head targeting for head-hunt bias
+(pass) Plan Bias > autoTuneFromBias > should increase kill desire for head-hunt bias [0.28ms]
+(pass) Plan Bias > autoTuneFromBias > should set leg targeting for hamstring bias
+(pass) Plan Bias > autoTuneFromBias > should increase AL for hamstring bias [0.04ms]
+(pass) Plan Bias > autoTuneFromBias > should set abdomen targeting for gut bias [0.01ms]
+(pass) Plan Bias > autoTuneFromBias > should increase OE for gut bias [0.02ms]
+(pass) Plan Bias > autoTuneFromBias > should set arm targeting for guard-break bias
+(pass) Plan Bias > autoTuneFromBias > should increase OE for guard-break bias [0.02ms]
+(pass) Plan Bias > autoTuneFromBias > should set Any target for balanced bias
+(pass) Plan Bias > autoTuneFromBias > should suggest Lunge for lunging styles [0.02ms]
+(pass) Plan Bias > autoTuneFromBias > should suggest Bash for bashing styles [0.02ms]
+(pass) Plan Bias > autoTuneFromBias > should suggest Riposte for Parry-Riposte style [0.02ms]
+(pass) Plan Bias > autoTuneFromBias > should suggest Parry for Total Parry style [0.03ms]
+(pass) Plan Bias > autoTuneFromBias > should not override existing high values [0.02ms]
+(pass) Plan Bias > autoTuneFromBias > should not override existing high AL [0.01ms]
+(pass) Plan Bias > autoTuneFromBias > should not override existing high OE [0.06ms]
+(pass) Plan Bias > reconcileGearTwoHanded > should remove shield when weapon is two-handed [0.02ms]
+(pass) Plan Bias > reconcileGearTwoHanded > should not modify gear if weapon is one-handed [0.06ms]
+(pass) Plan Bias > reconcileGearTwoHanded > should not modify gear if no shield equipped [0.12ms]
+(pass) Plan Bias > reconcileGearTwoHanded > should handle missing gear gracefully [0.05ms]
+(pass) Plan Bias > reconcileGearTwoHanded > should preserve other gear properties when removing shield [0.02ms]
+
+src/test/engine/health.test.ts:
+34 |     } as unknown as GameState;
+35 | 
+36 |     const impact = computeHealthImpact(mockState);
+37 | 
+38 |     // The negative and 0 week injuries should instantly heal since -1 - 1 = -2 <= 0
+39 |     expect(impact.rosterUpdates?.get('w1')?.injuries).toEqual([]);
+                                                           ^
+error: expect(received).toEqual(expected)
+
+Expected: []
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/health.test.ts:39:55)
+(fail) Health System (Boundary Testing) > should handle warrior health / injuries correctly at boundaries [0.27ms]
+(pass) Health System (Boundary Testing) > should handle empty injuries array safely [0.02ms]
+
+src/test/engine/trainerSpecialties.test.ts:
+(pass) trainerSpecialties > should return default mods if trainers is undefined [0.48ms]
+(pass) trainerSpecialties > should return default mods if trainers list is empty
+(pass) trainerSpecialties > should ignore trainers with negative or zero contract weeks [0.08ms]
+(pass) trainerSpecialties > should apply KillerInstinct bonus when opponent HP is < 40% [0.04ms]
+(pass) trainerSpecialties > should NOT apply KillerInstinct bonus when opponent HP is >= 40% [0.02ms]
+(pass) trainerSpecialties > should apply IronConditioning bonus in LATE phase [0.02ms]
+(pass) trainerSpecialties > should NOT apply IronConditioning bonus in non-LATE phase [0.04ms]
+(pass) trainerSpecialties > should apply CounterFighter riposte damage amplification unconditionally [0.02ms]
+(pass) trainerSpecialties > should apply Footwork initiative bonus in MID/LATE phase [0.02ms]
+(pass) trainerSpecialties > should NOT apply Footwork initiative bonus in OPENING phase [0.02ms]
+(pass) trainerSpecialties > should apply IronGuard damage reduction when endurance is > 60% [0.02ms]
+(pass) trainerSpecialties > should NOT apply IronGuard damage reduction when endurance is <= 60% [0.03ms]
+(pass) trainerSpecialties > should apply Finisher attack bonus when momentum is >= 2 [0.03ms]
+(pass) trainerSpecialties > should NOT apply Finisher attack bonus when momentum is < 2 [0.01ms]
+(pass) trainerSpecialties > should apply RopeADope fatigue penalty reduction (capped at 50%) [0.02ms]
+(pass) trainerSpecialties > should apply KillerInstinct + Finisher chemistry combo [0.02ms]
+(pass) trainerSpecialties > should floor damageReceivedMult to 0.5 [0.03ms]
+(pass) trainerSpecialties > should handle undefined tier on a trainer (default to 1) [0.02ms]
+
+src/test/engine/gazetteNarrative.test.ts:
+(pass) computeStreaks > returns an empty map for empty history
+(pass) computeStreaks > sets correct initial streaks for a single fight [0.43ms]
+(pass) computeStreaks > increments streaks for consecutive wins [0.05ms]
+(pass) computeStreaks > decrements streaks for consecutive losses [0.02ms]
+(pass) computeStreaks > resets a winning streak to -1 on a loss
+(pass) computeStreaks > resets a losing streak to 1 on a win [0.03ms]
+(pass) computeStreaks > resets streaks to 0 on a draw [0.03ms]
+(pass) computeStreaks > processes fights in chronological order regardless of input order [0.02ms]
+(pass) computeStreaks > handles complex multi-character scenarios correctly [0.01ms]
+(pass) generateFightNarrative > generates narrative for KO victory [0.05ms]
+(pass) generateFightNarrative > generates narrative for Kill victory [0.05ms]
+(pass) generateFightNarrative > generates narrative for Stoppage victory [0.02ms]
+(pass) generateFightNarrative > generates narrative for draw [0.02ms]
+(pass) generateFightNarrative > uses different tone for different crowd moods [0.03ms]
+Missing mood tone logic for: InvalidMood, falling back to Calm
+(pass) generateFightNarrative > handles missing mood gracefully by falling back to Calm [0.03ms]
+
+src/engine/crest/crestGenerator.test.ts:
+(pass) crestGenerator > generateCrest > should generate a crest with all required properties
+(pass) crestGenerator > generateCrest > should be deterministic (same seed produces same crest)
+(pass) crestGenerator > generateCrest > should produce different crests with different seeds [0.62ms]
+(pass) crestGenerator > generateCrest > should influence charge type based on philosophy [0.45ms]
+(pass) crestGenerator > generateCrest > should include secondary color for non-solid fields [0.05ms]
+(pass) crestGenerator > inheritCrest > should create a crest with increased generation [0.14ms]
+(pass) crestGenerator > inheritCrest > should inherit elements with diminishing probability [0.08ms]
+(pass) crestGenerator > inheritCrest > should preserve some parent elements in early generations [0.26ms]
+(pass) crestGenerator > getCrestColor > should return color hex for valid color keys [0.03ms]
+(pass) crestGenerator > getChargeDescription > should return charge description from definitions [0.03ms]
+(pass) crestGenerator > getChargeDescription > should handle charges without description in definitions
+(pass) crestGenerator > getCrestDescription > should generate heraldic description with metal name and field [0.11ms]
+(pass) crestGenerator > getCrestDescription > should include charge count for multiple charges [0.04ms]
+
+src/test/state/slices/rosterSlice.test.ts:
+(pass) RosterSlice > should add a warrior to the roster [4.35ms]
+(pass) RosterSlice > should kill a warrior and move them to the graveyard [0.96ms]
+(pass) RosterSlice > should retire a warrior and move them to retired list [0.33ms]
+
+src/test/state/slices/economySlice.test.ts:
+(pass) EconomySlice > should initialize with zero treasury and empty ledger [0.10ms]
+(pass) EconomySlice > should add funds correctly [0.19ms]
+(pass) EconomySlice > should deduct funds correctly when treasury is sufficient [0.16ms]
+(pass) EconomySlice > should fail to deduct funds when treasury is insufficient [0.03ms]
+
+src/test/state/slices/worldSlice.test.ts:
+(pass) WorldSlice > should initialize a stable with starting capital [0.46ms]
+(pass) WorldSlice > should append a fight to the arena history [0.19ms]
+(pass) WorldSlice > should truncate arena history and remove old transcripts [1.63ms]
+
+src/test/engine/pipeline/boutSimulation.test.ts:
+localStorage quota exceeded when saving week 1 style rollups  99 |   });
+100 | 
+101 |   it('handles empty array with quota error', () => {
+102 |     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+103 |     (localStorage.setItem as any).mockImplementation(() => {
+104 |       const err = new Error('QuotaExceededError');
+                            ^
+QuotaExceededError: QuotaExceededError
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/utils/storage.test.ts:104:23)
+      at saveWeek (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:98:20)
+      at addFight (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:223:5)
+      at handleReporting (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/reportingHandler.ts:66:16)
+      at collectBoutImpacts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:187:37)
+      at resolveBout (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:221:58)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:293:17)
+      at forEach (1:11)
+      at processWeekBouts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:291:12)
+
+Failed to recover from localStorage quota error for week 1  99 |   });
+100 | 
+101 |   it('handles empty array with quota error', () => {
+102 |     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+103 |     (localStorage.setItem as any).mockImplementation(() => {
+104 |       const err = new Error('QuotaExceededError');
+                            ^
+QuotaExceededError: QuotaExceededError
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/utils/storage.test.ts:104:23)
+      at saveWeek (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:108:24)
+      at addFight (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:223:5)
+      at handleReporting (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/reportingHandler.ts:66:16)
+      at collectBoutImpacts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:187:37)
+      at resolveBout (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:221:58)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:293:17)
+      at forEach (1:11)
+      at processWeekBouts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:291:12)
+
+localStorage quota exceeded when saving rolling style metrics  99 |   });
+100 | 
+101 |   it('handles empty array with quota error', () => {
+102 |     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+103 |     (localStorage.setItem as any).mockImplementation(() => {
+104 |       const err = new Error('QuotaExceededError');
+                            ^
+QuotaExceededError: QuotaExceededError
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/utils/storage.test.ts:104:23)
+      at saveRolling (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:143:20)
+      at addFight (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/stats/styleRollups.ts:236:5)
+      at handleReporting (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/reportingHandler.ts:66:16)
+      at collectBoutImpacts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:187:37)
+      at resolveBout (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:221:58)
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:293:17)
+      at forEach (1:11)
+      at processWeekBouts (/Users/amauricia/Documents/GitHub/stable-lords/src/engine/bout/services/boutProcessorService.ts:291:12)
+
+ 98 |     // 2. Advance the week (which should trigger the simulation)
+ 99 |     const nextState = advanceWeek(initialState as GameState);
+100 | 
+101 |     // 3. Verifications
+102 |     // - Should have 1 fight in history (if bout was processed)
+103 |     expect(nextState.arenaHistory.length).toBe(1);
+                                                ^
+error: expect(received).toBe(expected)
+
+Expected: 1
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/boutSimulation.test.ts:103:43)
+(fail) Bout Simulation Integration - getFromArchive function issue > should simulate a signed bout and update state accordingly [2.62ms]
+
+src/test/engine/pipeline/health.test.ts:
+22 |       } as unknown as GameState;
+23 | 
+24 |       const impact = computeHealthImpact(mockState);
+25 | 
+26 |       expect(injuriesModule.tickInjuries).not.toHaveBeenCalled();
+27 |       expect(impact.rosterUpdates?.size).toBe(0);
+                                              ^
+error: expect(received).toBe(expected)
+
+Expected: 0
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/health.test.ts:27:42)
+(fail) pipeline/health > computeHealthImpact > should handle warriors with missing, null, or string-only injuries gracefully [0.18ms]
+51 |         healed: ['sprain'],
+52 |       });
+53 | 
+54 |       const impact = computeHealthImpact(mockState);
+55 | 
+56 |       expect(injuriesModule.tickInjuries).toHaveBeenCalledTimes(1);
+                                               ^
+error: expect(received).toHaveBeenCalledTimes(expected)
+
+Expected number of calls: 1
+Received number of calls: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/health.test.ts:56:43)
+(fail) pipeline/health > computeHealthImpact > should process injuries and return updates [0.11ms]
+76 |       } as unknown as GameState;
+77 | 
+78 |       const impact = computeHealthImpact(mockState);
+79 | 
+80 |       expect(injuriesModule.tickInjuries).not.toHaveBeenCalled();
+81 |       expect(impact.rosterUpdates?.size).toBe(0);
+                                              ^
+error: expect(received).toBe(expected)
+
+Expected: 0
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/health.test.ts:81:42)
+(fail) pipeline/health > computeHealthImpact > should return empty updates if no injuries to process [0.05ms]
+101 |         healed: [],
+102 |       });
+103 | 
+104 |       const impact = computeHealthImpact(mockState);
+105 | 
+106 |       expect(impact.newsletterItems).toEqual([]);
+                                           ^
+error: expect(received).toEqual(expected)
+
+Expected: []
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/health.test.ts:106:38)
+(fail) pipeline/health > computeHealthImpact > should omit newsletter if no injuries healed [0.13ms]
+134 | 
+135 |       vi.spyOn(matchmakingModule, 'clearExpiredRest').mockReturnValue([]);
+136 | 
+137 |       const newState = applyHealthUpdates(mockState);
+138 | 
+139 |       expect(matchmakingModule.clearExpiredRest).toHaveBeenCalledWith(mockState.restStates, 5);
+                                                       ^
+error: expect(received).toHaveBeenCalledWith(...expected)
+
+Expected: [
+  [
+    {
+      warriorId: "w1",
+      restUntilWeek: 4,
+    }
+  ], 5
+]
+But it was not called.
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/health.test.ts:139:50)
+(fail) pipeline/health > applyHealthUpdates > should apply computed impacts to the state [0.24ms]
+167 | 
+168 |       vi.spyOn(matchmakingModule, 'clearExpiredRest').mockReturnValue([]);
+169 | 
+170 |       const newState = applyHealthUpdates(mockState);
+171 | 
+172 |       expect(matchmakingModule.clearExpiredRest).toHaveBeenCalledWith([], 5);
+                                                       ^
+error: expect(received).toHaveBeenCalledWith(...expected)
+
+Expected: [
+  [], 5
+]
+But it was not called.
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/health.test.ts:172:50)
+(fail) pipeline/health > applyHealthUpdates > should handle state with undefined restStates and newsletter [0.16ms]
+
+src/test/engine/core/EventBus.test.ts:
+(pass) EventBus > should clear all subscribers successfully [1.07ms]
+
+src/test/engine/core/historyUtils.test.ts:
+(pass) getRecentFightsForWarrior > returns empty array when history is empty [0.09ms]
+(pass) getRecentFightsForWarrior > returns empty array when warrior is not in history [0.05ms]
+(pass) getRecentFightsForWarrior > finds fights where warrior is attacker [0.05ms]
+(pass) getRecentFightsForWarrior > finds fights where warrior is defender [0.04ms]
+(pass) getRecentFightsForWarrior > finds fights where warrior is both attacker and defender across different fights [0.03ms]
+(pass) getRecentFightsForWarrior > limits the results and returns the most recent fights chronologically [0.03ms]
+(pass) getRecentFightsForWarrior > uses the default limit of 10 [0.08ms]
+
+src/test/engine/combat/combatMath.test.ts:
+(pass) combatMath engine > skillCheck > auto-succeeds on a natural 1 (rng = 0), regardless of low skill [0.94ms]
+(pass) combatMath engine > skillCheck > auto-fails on a natural 20 (rng = 0.99), regardless of high skill [0.03ms]
+(pass) combatMath engine > skillCheck > succeeds when roll is <= target [0.04ms]
+(pass) combatMath engine > skillCheck > fails when roll is > target
+(pass) combatMath engine > skillCheck > clamps target between 1 and 19 [0.07ms]
+(pass) combatMath engine > skillCheck > incorporates modifier correctly [0.02ms]
+(pass) combatMath engine > skillCheck > handles fractional skill levels by flooring
+(pass) combatMath engine > getPhase > returns 'opening' when maxExchanges is 0 or negative [0.02ms]
+(pass) combatMath engine > getPhase > returns 'opening' when exchange is negative [0.01ms]
+(pass) combatMath engine > getPhase > returns 'late' when exchange is greater than maxExchanges
+(pass) combatMath engine > getPhase > returns 'opening' when ratio is exactly the threshold (0.25)
+(pass) combatMath engine > getPhase > returns 'opening' when ratio is below the threshold (< 0.25)
+(pass) combatMath engine > getPhase > returns 'mid' when ratio is exactly the mid threshold (0.65) [0.02ms]
+(pass) combatMath engine > getPhase > returns 'mid' when ratio is between opening and mid thresholds [0.01ms]
+(pass) combatMath engine > getPhase > returns 'late' when ratio is above the mid threshold (> 0.65)
+
+src/test/engine/combat/traitBalance.test.ts:
+(pass) Combat Balance: Trait System > Positive combat traits > quick: win% delta within ±12pp of 50% baseline [13.93ms]
+(pass) Combat Balance: Trait System > Positive combat traits > patient: win% delta within ±12pp of 50% baseline [12.60ms]
+(pass) Combat Balance: Trait System > Positive combat traits > berserker: win% delta within ±12pp of 50% baseline [12.69ms]
+(pass) Combat Balance: Trait System > Positive combat traits > stalwart: win% delta within ±12pp of 50% baseline [12.55ms]
+(pass) Combat Balance: Trait System > Positive combat traits > heavy_handed: win% delta within ±12pp of 50% baseline [12.67ms]
+(pass) Combat Balance: Trait System > Positive combat traits > disciplined: win% delta within ±12pp of 50% baseline [11.17ms]
+(pass) Combat Balance: Trait System > Positive combat traits > ironlung: win% delta within ±12pp of 50% baseline [11.37ms]
+(pass) Combat Balance: Trait System > Positive combat traits > bloodthirsty: win% delta within ±12pp of 50% baseline [10.77ms]
+(pass) Combat Balance: Trait System > Positive combat traits > agile: win% delta within ±12pp of 50% baseline [10.92ms]
+(pass) Combat Balance: Trait System > Positive combat traits > precise: win% delta within ±12pp of 50% baseline [10.81ms]
+(pass) Combat Balance: Trait System > Positive combat traits > combo_artist: win% delta within ±12pp of 50% baseline [10.47ms]
+(pass) Combat Balance: Trait System > Positive combat traits > riposte_natural: win% delta within ±12pp of 50% baseline [10.61ms]
+(pass) Combat Balance: Trait System > Negative combat traits > fragile: should confer a disadvantage (W% < 50%) [9.94ms]
+(pass) Combat Balance: Trait System > Negative combat traits > slow: should confer a disadvantage (W% < 50%) [9.83ms]
+(pass) Combat Balance: Trait System > Dual-trait stacking > quick + heavy_handed should not exceed ±15pp from 50% [10.28ms]
+(pass) Combat Balance: Trait System > Dual-trait stacking > berserker + bloodthirsty should not exceed ±15pp from 50% [9.98ms]
+(pass) Combat Balance: Trait System > Dual-trait stacking > agile + patient should not exceed ±15pp from 50% [10.58ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > aggressive: win% delta within ±18pp of 50% baseline [10.36ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > disciplined_mind: win% delta within ±18pp of 50% baseline [10.90ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > cunning: win% delta within ±18pp of 50% baseline [10.73ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > sturdy: win% delta within ±18pp of 50% baseline [10.31ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > feral: win% delta within ±18pp of 50% baseline [10.74ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > merciless: win% delta within ±18pp of 50% baseline [10.74ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > calculated: win% delta within ±18pp of 50% baseline [10.41ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > resilient: win% delta within ±18pp of 50% baseline [9.82ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > evasive: win% delta within ±18pp of 50% baseline [11.06ms]
+(pass) Combat Balance: Trait System > Personality traits (fightPlanMod) > brutal: win% delta within ±18pp of 50% baseline [10.70ms]
+(pass) Combat Balance: Trait System > Kill rate sanity > aggregate kill rate across all traits stays within 3-15% per bout [31.78ms]
+(pass) Combat Balance: Trait System > Cross-style trait impact > berserker trait stays balanced on BASHING ATTACK [7.15ms]
+(pass) Combat Balance: Trait System > Cross-style trait impact > berserker trait stays balanced on PARRY-RIPOSTE [14.82ms]
+(pass) Combat Balance: Trait System > Cross-style trait impact > berserker trait stays balanced on LUNGING ATTACK [8.27ms]
+(pass) Combat Balance: Trait System > Cross-style trait impact > berserker trait stays balanced on TOTAL PARRY [18.41ms]
+(pass) Combat Balance: Trait System > Trait registry integration > all trait IDs in the TRAITS registry are valid snake_case [0.20ms]
+(pass) Combat Balance: Trait System > Trait registry integration > recruited warriors have trait IDs that resolve in the combat engine [0.44ms]
+(pass) Combat Balance: Trait System > Trait registry integration > generateTraits produces valid trait IDs [0.12ms]
+
+src/test/engine/combat/resolution.test.ts:
+(pass) getMatchupBonus > returns positive bonus for favorable matchups [0.89ms]
+(pass) getMatchupBonus > returns negative bonus for unfavorable matchups [0.02ms]
+(pass) getMatchupBonus > returns 0 for neutral matchups
+(pass) resolveEffectiveTactics > returns phase-specific tactics when phase tactics defined [0.12ms]
+(pass) resolveEffectiveTactics > falls back to base tactics when phase tactics undefined [0.03ms]
+(pass) resolveEffectiveTactics > falls back to 'none' when no tactics defined [0.02ms]
+(pass) resolveEffectiveTactics > uses phase target when defined [0.03ms]
+(pass) resolveEffectiveTactics > falls back to base target when phase undefined [0.02ms]
+(pass) applyAggressionBias > returns [0, 0] for neutral bias of 5 [0.02ms]
+(pass) applyAggressionBias > returns positive attBias, negative defBias for aggression > 5 [0.02ms]
+(pass) applyAggressionBias > returns negative attBias, positive defBias for aggression < 5 [0.03ms]
+(pass) applyAggressionBias > handles maximum aggression bias of 10 [0.01ms]
+(pass) applyAggressionBias > handles minimum aggression bias of 0 [0.01ms]
+
+src/test/engine/combat/distanceResolution.test.ts:
+(pass) computeReachScore > returns INI + 0 when OE=5, no motivation, no debt
+(pass) computeReachScore > adds (OE-5)*2 for OE above 5 [0.03ms]
+(pass) computeReachScore > subtracts (5-OE)*2 for OE below 5
+(pass) computeReachScore > adds motivation bonus
+(pass) computeReachScore > subtracts recoveryDebt*2
+(pass) getWeaponPreferredRange > returns Tight for short_sword [0.04ms]
+(pass) getWeaponPreferredRange > returns Extended for halberd
+(pass) getWeaponPreferredRange > returns Striking as default for unknown weapon
+(pass) getWeaponPreferredRange > returns Striking as default when weaponId is undefined [0.02ms]
+(pass) contestDistance > winner gets +1 rangeMod, loser gets -1 [0.05ms]
+(pass) contestDistance > produces newRange = one step toward winner's preferred range [0.05ms]
+(pass) contestDistance > keeps current range when scores are equal (pure tie) [0.02ms]
+(pass) getZonePenalty > returns 0 for Center [0.02ms]
+(pass) getZonePenalty > returns -2 for Edge in standard config [0.02ms]
+(pass) getZonePenalty > returns -4 for Corner in standard config
+(pass) getZonePenalty > returns 0 when zone not in config [0.01ms]
+(pass) transitionZone > Center → Edge when pushed [0.02ms]
+(pass) transitionZone > Edge → Corner when pushed again
+(pass) transitionZone > Corner stays Corner
+(pass) transitionZone > Obstacle stays Obstacle
+(pass) resetZone > Corner → Edge on reset
+(pass) resetZone > Edge → Center on reset
+(pass) resetZone > Center stays Center on reset [0.04ms]
+
+src/test/engine/combat/exchangeSubPhases.test.ts:
+(pass) makeExchangeState > initialises with zero modifiers [0.03ms]
+(pass) runCommit > returns Cautious when OE ≤ 3 [0.11ms]
+(pass) runCommit > returns Full when OE ≥ 7 [0.02ms]
+(pass) runCommit > returns Full when momentum ≥ 2 regardless of OE [0.01ms]
+(pass) runCommit > returns Cautious when HP < 30% regardless of OE [0.02ms]
+(pass) runCommit > returns Standard for OE 4-6 without special conditions [0.02ms]
+(pass) runFeint > does not trigger when feintTendency is 0 [0.06ms]
+(pass) runFeint > does not trigger when WT < 15 [0.02ms]
+(pass) runFeint > does not trigger when OE < 4 [0.02ms]
+(pass) runFeint > succeeds when rng roll is below threshold [0.04ms]
+(pass) runFeint > fails when rng roll is above threshold [0.03ms]
+(pass) runRecovery > writes recoveryDebt, taking max of existing and new, capped at 3 [0.03ms]
+(pass) runRecovery > decays recoveryDebt by 1 per exchange when toWrite is 0 [0.01ms]
+(pass) runRecovery > does not decay below 0 [0.02ms]
+(pass) runRecovery > writes recoveryDebt for fD correctly [0.01ms]
+(pass) runRecovery > does not stack: max(existing, written) — writing 1 over existing 2 stays at 2 [0.01ms]
+(pass) runRecovery — zone transitions > pushes zone Center → Edge when HIT lands on A [0.08ms]
+(pass) runRecovery — zone transitions > pushes zone Edge → Corner on a second hit on the same fighter [0.04ms]
+(pass) runRecovery — zone transitions > Corner stays Corner when another hit occurs (no further push) [0.03ms]
+(pass) runRecovery — zone transitions > zone drifts back toward Center when no hit lands (recovery) [0.03ms]
+(pass) runRecovery — zone transitions > no zone drift when pushedFighter is undefined [0.02ms]
+
+src/test/engine/rivals/rivalUtils.test.ts:
+(pass) rivalUtils > pickRivalOpponent > should return null if no rivals exist [0.06ms]
+(pass) rivalUtils > pickRivalOpponent > should return null if all rivals are excluded [0.05ms]
+(pass) rivalUtils > pickRivalOpponent > should return null if no active warriors exist [0.02ms]
+(pass) rivalUtils > pickRivalOpponent > should pick an active warrior not in the exclude list [0.04ms]
+(pass) rivalUtils > pickRivalOpponent > should be deterministic based on the provided seed [0.04ms]
+(pass) rivalUtils > generateRivalryNarrative > should generate a narrative string containing stable and warrior names [0.05ms]
+(pass) rivalUtils > generateRivalryNarrative > should be deterministic based on the provided seed [0.01ms]
+(pass) rivalUtils > calculateRivalryScore > should calculate correctly based on formula [0.02ms]
+(pass) rivalUtils > calculateRivalryScore > should not go below 1
+(pass) rivalUtils > calculateRivalryScore > should not exceed 5 [0.01ms]
+(pass) rivalUtils > calculateRivalryScore > should evaluate correctly in the middle range [0.02ms]
+
+src/test/engine/training/trainingGains.test.ts:
+(pass) trainingGains > processAttributeTraining > should block SZ training [0.19ms]
+(pass) trainingGains > processAttributeTraining > should hard cap training if at ATTRIBUTE_MAX [0.04ms]
+(pass) trainingGains > processAttributeTraining > should block if reaching seasonal cap [0.07ms]
+(pass) trainingGains > processAttributeTraining > should reveal potential on failed roll occasionally [0.04ms]
+(pass) trainingGains > rollForTrainingInjury > should occasionally cause injury [0.09ms]
+(pass) trainingGains > rollForTrainingInjury > should return null if no injury [0.06ms]
+(pass) trainingGains > processRecovery > should return no-op message if no injuries [0.07ms]
+(pass) trainingGains > processRecovery > should reduce weeks remaining [0.05ms]
+(pass) trainingGains > processRecovery > should clear injury if weeks drop to 0 [0.05ms]
+(pass) processAttributeTraining - successful gain > should process attribute gain correctly [0.03ms]
+(pass) processAttributeTraining - successful gain > should gain attribute and not reveal potential if already revealed near ceiling [0.05ms]
+(pass) processAttributeTraining - successful gain > should gain attribute not near ceiling [0.06ms]
+(pass) processAttributeTraining - successful gain > should fail gain and not reveal potential if already revealed [0.03ms]
+(pass) processAttributeTraining - successful gain > should fail gain and fail reveal roll [0.03ms]
+(pass) processAttributeTraining - successful gain > should reveal potential if near ceiling and not yet revealed [0.05ms]
+(pass) processAttributeTraining - successful gain > should reveal true potential if near ceiling [0.06ms]
+(pass) processAttributeTraining - successful gain > computeSkillDrillChance > should compute base skill drill chance correctly [0.04ms]
+(pass) processAttributeTraining - successful gain > computeSkillDrillChance > should apply WT bonus and trainer focus bonus [0.03ms]
+(pass) processAttributeTraining - successful gain > computeSkillDrillChance > should apply age penalty [0.03ms]
+(pass) processAttributeTraining - successful gain > computeSkillDrillChance > should apply diminishing returns from existing drills [0.03ms]
+(pass) processAttributeTraining - successful gain > processSkillDrillTraining > should block if already capped [0.04ms]
+(pass) processAttributeTraining - successful gain > processSkillDrillTraining > should increase drill count on success [0.05ms]
+(pass) processAttributeTraining - successful gain > processSkillDrillTraining > should fail and block if roll misses [0.06ms]
+(pass) processAttributeTraining - successful gain > processAttributeTraining - caps and limits > should hard cap training if TOTAL_CAP is reached [0.02ms]
+(pass) processAttributeTraining - successful gain > processAttributeTraining - caps and limits > should hard cap training if potential is reached [0.02ms]
+
+src/test/engine/training/coachLogic.test.ts:
+(pass) coachLogic > computeTrainerBonus > should calculate bonus for relevant attributes and style
+(pass) coachLogic > getHealingTrainerBonus > should calculate healing bonus [0.32ms]
+
+src/test/engine/training/facilityUpkeep.test.ts:
+(pass) facilityUpkeep > getSeasonalGains > should return empty object if no entry found [0.18ms]
+(pass) facilityUpkeep > getSeasonalGains > should return gains for specific warrior and season [0.72ms]
+(pass) facilityUpkeep > updateSeasonalGains > should create new entry if none exists [0.31ms]
+(pass) facilityUpkeep > updateSeasonalGains > should update existing entry [0.03ms]
+
+src/test/engine/narrative/boutNarrator.test.ts:
+(pass) BoutNarrator > generateWarriorIntro > should delegate to CombatNarrator [0.46ms]
+(pass) BoutNarrator > battleOpener > should delegate to CombatNarrator [0.06ms]
+(pass) BoutNarrator > narrateBoutEnd > should delegate to CombatNarrator for KO [0.14ms]
+(pass) BoutNarrator > narrateBoutEnd > should delegate to CombatNarrator for Kill [0.06ms]
+
+src/test/engine/narrative/narrativeTemplateEngine.test.ts:
+(pass) NarrativeTemplateEngine > interpolateTemplate > should replace %A token with attacker name
+(pass) NarrativeTemplateEngine > interpolateTemplate > should replace %D token with defender name
+(pass) NarrativeTemplateEngine > interpolateTemplate > should replace %W token with weapon name [0.55ms]
+(pass) NarrativeTemplateEngine > interpolateTemplate > should replace %BP token with body part
+(pass) NarrativeTemplateEngine > interpolateTemplate > should replace %H token with hits count
+(pass) NarrativeTemplateEngine > interpolateTemplate > should replace multiple tokens [0.05ms]
+(pass) NarrativeTemplateEngine > interpolateTemplate > should fall back to default for missing attacker [0.02ms]
+(pass) NarrativeTemplateEngine > interpolateTemplate > should fall back to default for missing defender [0.02ms]
+(pass) NarrativeTemplateEngine > interpolateTemplate > should fall back to default for missing weapon [0.01ms]
+(pass) NarrativeTemplateEngine > interpolateTemplate > should fall back to default for missing body part [0.01ms]
+(pass) NarrativeTemplateEngine > interpolateTemplate > should use name as fallback for attacker [0.01ms]
+Narrative Archive Error: Missing path pbp.openers
+(pass) NarrativeTemplateEngine > getFromArchive > should retrieve template from valid path [0.33ms]
+Narrative Archive Error: Missing path invalid.path
+(pass) NarrativeTemplateEngine > getFromArchive > should return fallback for invalid path [0.04ms]
+Narrative Archive Error: Missing path pbp.nonexistent
+(pass) NarrativeTemplateEngine > getFromArchive > should return fallback for missing template [0.02ms]
+(pass) NarrativeTemplateEngine > getFromArchive > should handle empty path array [0.02ms]
+
+src/test/engine/narrative/combatNarrator.test.ts:
+(pass) CombatNarrator > generateWarriorIntro > should generate warrior introduction lines [0.12ms]
+(pass) CombatNarrator > generateWarriorIntro > should include warrior name in intro [0.03ms]
+(pass) CombatNarrator > generateWarriorIntro > should mention fighting style [0.02ms]
+(pass) CombatNarrator > generateWarriorIntro > should handle no armor [0.03ms]
+(pass) CombatNarrator > battleOpener > should generate battle opener text [0.02ms]
+(pass) CombatNarrator > narrateAttack > should narrate an attack (whiff) [0.07ms]
+(pass) CombatNarrator > narrateAttack > should include weapon in attack narration [0.01ms]
+(pass) CombatNarrator > narratePassive > should narrate a passive style activation [0.04ms]
+(pass) CombatNarrator > narrateParry > should narrate a successful parry [0.04ms]
+(pass) CombatNarrator > narrateDodge > should narrate a successful dodge [0.04ms]
+(pass) CombatNarrator > narrateCounterstrike > should narrate a counterstrike [0.04ms]
+(pass) CombatNarrator > narrateHit > should narrate a hit [0.05ms]
+(pass) CombatNarrator > narrateHit > should include body part in hit narration [0.05ms]
+(pass) CombatNarrator > narrateHit > should handle fatal hits [0.02ms]
+(pass) CombatNarrator > narrateParryBreak > should narrate a parry break [0.03ms]
+(pass) CombatNarrator > narrateInitiative > should narrate initiative winner [0.03ms]
+(pass) CombatNarrator > narrateInitiative > should handle feint initiative [0.01ms]
+(pass) CombatNarrator > narrateBoutEnd > should narrate bout conclusion for KO [0.01ms]
+(pass) CombatNarrator > narrateBoutEnd > should narrate bout conclusion for Kill [0.05ms]
+
+src/test/engine/narrative/statusNarrator.test.ts:
+(pass) StatusNarrator > damageSeverityLine > should return null for moderate damage [0.10ms]
+(pass) StatusNarrator > damageSeverityLine > should return line for deadly damage [0.03ms]
+(pass) StatusNarrator > damageSeverityLine > should return line for terrific damage [0.04ms]
+(pass) StatusNarrator > damageSeverityLine > should return line for powerful damage [0.02ms]
+(pass) StatusNarrator > damageSeverityLine > should return line for glancing damage
+(pass) StatusNarrator > stateChangeLine > should return null when no threshold crossed [0.04ms]
+(pass) StatusNarrator > stateChangeLine > should return line for severe threshold [0.02ms]
+(pass) StatusNarrator > stateChangeLine > should return line for desperate threshold [0.02ms]
+(pass) StatusNarrator > stateChangeLine > should return line for serious threshold [0.02ms]
+(pass) StatusNarrator > fatigueLine > should return null for healthy endurance [0.02ms]
+(pass) StatusNarrator > fatigueLine > should return line for low endurance [0.02ms]
+(pass) StatusNarrator > fatigueLine > should return line for very low endurance [0.02ms]
+(pass) StatusNarrator > crowdReaction > should return null when RNG doesn't trigger [0.03ms]
+(pass) StatusNarrator > crowdReaction > should return reaction when RNG triggers - returns object instead of string [0.01ms]
+(pass) StatusNarrator > minuteStatusLine > should return beating status when one warrior leads by 3+ hits [0.04ms]
+(pass) StatusNarrator > minuteStatusLine > should return beating status for defender lead [0.02ms]
+(pass) StatusNarrator > minuteStatusLine > should return stalemate when hits are close [0.02ms]
+(pass) StatusNarrator > popularityLine > should return null for no popularity change [0.03ms]
+(pass) StatusNarrator > popularityLine > should return line for great popularity gain [0.02ms]
+(pass) StatusNarrator > popularityLine > should return line for normal popularity gain [0.01ms]
+(pass) StatusNarrator > skillLearnLine > should generate skill learn narration [0.02ms]
+(pass) StatusNarrator > tradingBlowsLine > should generate trading blows narration [0.03ms]
+(pass) StatusNarrator > stalemateLine > should generate stalemate narration [0.03ms]
+(pass) StatusNarrator > tauntLine > should return null when RNG doesn't trigger [0.02ms]
+(pass) StatusNarrator > tauntLine > should return taunt for winner when RNG triggers [0.02ms]
+(pass) StatusNarrator > tauntLine > should return taunt for loser when RNG triggers
+(pass) StatusNarrator > conservingLine > should generate conserving energy narration [0.03ms]
+(pass) StatusNarrator > pressingLine > should generate pressing attack narration [0.04ms]
+
+src/test/engine/warrior/careerUpdate.test.ts:
+(pass) careerUpdate > calculateCareerUpdate > fatigue management > should add +25 fatigue for regular bout (skipFatigue=false) [0.89ms]
+(pass) careerUpdate > calculateCareerUpdate > fatigue management > should NOT add fatigue when skipFatigue=true (tournament exemption) [0.07ms]
+(pass) careerUpdate > calculateCareerUpdate > fatigue management > should cap fatigue at 100 for regular bout [0.02ms]
+(pass) careerUpdate > calculateCareerUpdate > fatigue management > should reset fatigue to 0 when warrior is killed regardless of skipFatigue [0.02ms]
+(pass) careerUpdate > calculateCareerUpdate > fatigue management > should handle skipFatigue with already high fatigue [0.01ms]
+(pass) careerUpdate > calculateCareerUpdate > career stats > should increment wins for winner [0.02ms]
+(pass) careerUpdate > calculateCareerUpdate > career stats > should increment losses for loser [0.01ms]
+(pass) careerUpdate > calculateCareerUpdate > career stats > should increment kills when winner gets a kill [0.02ms]
+(pass) careerUpdate > calculateCareerUpdate > fame calculation > should add +1 fame for regular win
+(pass) careerUpdate > calculateCareerUpdate > fame calculation > should add +3 fame for kill win
+(pass) careerUpdate > calculateCareerUpdate > fame calculation > should add fame delta bonus [0.02ms]
+(pass) careerUpdate > calculateCareerUpdate > fame calculation > should not add fame for loss [0.01ms]
+(pass) careerUpdate > calculateCareerUpdate > fame calculation > should never have negative fame [0.02ms]
+(pass) careerUpdate > calculateCareerUpdate > status management > should keep status Active for survivor [0.01ms]
+(pass) careerUpdate > calculateCareerUpdate > status management > should set status to Dead for victim [0.02ms]
+(pass) careerUpdate > applyCareerUpdate > should apply all updates to warrior [0.06ms]
+(pass) careerUpdate > applyCareerUpdate > should preserve warrior id and name [0.03ms]
+(pass) careerUpdate > updateWarriorFromBoutOutcome > should identify attacker as winner when winnerSide is A [0.05ms]
+(pass) careerUpdate > updateWarriorFromBoutOutcome > should identify attacker as loser when winnerSide is D [0.03ms]
+(pass) careerUpdate > updateWarriorFromBoutOutcome > should identify defender as winner when winnerSide is D [0.02ms]
+(pass) careerUpdate > updateWarriorFromBoutOutcome > should apply fatigue skip for tournament bout [0.03ms]
+(pass) careerUpdate > updateWarriorFromBoutOutcome > should apply normal fatigue for non-tournament bout
+(pass) careerUpdate > updateWarriorFromBoutOutcome > should handle kill victory with fatigue skip [0.01ms]
+(pass) careerUpdate > updateWarriorFromBoutOutcome > should handle death outcome (isVictim) [0.02ms]
+(pass) careerUpdate > tournament week fatigue exemption integration > should simulate tournament week with multiple bouts - fatigue should not accumulate [0.02ms]
+(pass) careerUpdate > tournament week fatigue exemption integration > should simulate regular week with multiple bouts - fatigue should accumulate [0.02ms]
+(pass) careerUpdate > tournament week fatigue exemption integration > should cap fatigue at 100 even with multiple bouts [0.01ms]
+
+src/test/engine/storage/opfsArchive.test.ts:
+(pass) OPFS Archival System > Suite 1: Initialization & Support Checking > Test 1.1: isSupported() returns true in modern environments [0.04ms]
+(pass) OPFS Archival System > Suite 2: Archiving Play-by-Play (PBP) Logs (Append-Only) > Test 2.1: archiveBoutLog does not throw with valid inputs [0.26ms]
+(pass) OPFS Archival System > Suite 2: Archiving Play-by-Play (PBP) Logs (Append-Only) > Test 2.2: archiveBoutLog handles empty payload [0.06ms]
+(pass) OPFS Archival System > Suite 3: Retrieval & Hydration > Test 3.1: retrieveBoutLog does not throw [0.03ms]
+(pass) OPFS Archival System > Suite 4: Seasonal Gazette Archiving > Test 4.1: archiveGazette does not throw [0.02ms]
+(pass) OPFS Archival System > Suite 5: Fallback & Quota Management > Test 5.1: Graceful degradation on errors [0.03ms]
+
+src/test/engine/storage/truncation.test.ts:
+(pass) truncateState > handles empty state and undefined arrays gracefully [0.15ms]
+(pass) truncateState > truncates arrays to their respective limits [0.37ms]
+(pass) truncateState > removes transcripts from arenaHistory for flights older than the last 20 [0.07ms]
+(pass) truncateState > slices keeping the most recent items (tail of the array) [0.11ms]
+
+src/test/engine/ai/stableManager.test.ts:
+(pass) processAIStable > should accurately calculate weekly income from bouts for AI stables using stableId [0.33ms]
+
+src/test/engine/ai/intentEngine.test.ts:
+(pass) pickWeeklyIntent > returns RECOVERY when treasury is low [1.47ms]
+(pass) pickWeeklyIntent > returns CONSOLIDATION as default [0.08ms]
+(pass) verifyIntentSkepticism > returns true when no strategy exists [0.04ms]
+(pass) verifyIntentSkepticism > returns true when treasury is critically low and intent is not RECOVERY [0.02ms]
+(pass) verifyIntentSkepticism > returns false when strategy is valid [0.02ms]
+(pass) updateAIStrategy > creates new strategy when none exists [0.06ms]
+(pass) updateAIStrategy > decrements planWeeksRemaining when strategy is valid [0.02ms]
+(pass) updateAIStrategy > creates new strategy when planWeeksRemaining is 0 [0.02ms]
+(pass) updateAIStrategy > creates new strategy when plan is disproved by skepticism [0.01ms]
+
+src/test/engine/ai/expansionService.test.ts:
+(pass) ExpansionService > processExpansion > should process expansion for rival stables [0.24ms]
+(pass) ExpansionService > processExpansion > should add new stables when below target count [0.18ms]
+(pass) ExpansionService > processExpansion > should not add stables when at target count [0.05ms]
+(pass) ExpansionService > processExpansion > should not add stables when above target count [0.14ms]
+(pass) ExpansionService > processExpansion > should integrate legacy founders when provided [0.13ms]
+(pass) ExpansionService > processExpansion > should tag legacy founders with gladiator backstory and derive personality [0.11ms]
+(pass) ExpansionService > processExpansion > should generate new stables with valid structure [0.07ms]
+(pass) ExpansionService > processExpansion > should be deterministic with same seed [0.15ms]
+(pass) ExpansionService > processExpansion > should handle empty rivals list [0.11ms]
+(pass) ExpansionService > processExpansion > should not exceed target count [0.09ms]
+
+src/test/engine/ai/bankruptcyService.test.ts:
+(pass) BankruptcyService > processBankruptcy > should process bankruptcy for all rival stables [1.47ms]
+(pass) BankruptcyService > processBankruptcy > should remove bankrupt stables [0.12ms]
+(pass) BankruptcyService > processBankruptcy > should keep solvent stables [0.07ms]
+(pass) BankruptcyService > processBankruptcy > should handle empty rivals list [0.08ms]
+(pass) BankruptcyService > processBankruptcy > should handle stables at bankruptcy threshold [0.11ms]
+(pass) BankruptcyService > processBankruptcy > should handle stables above bankruptcy threshold [0.07ms]
+(pass) BankruptcyService > processBankruptcy > should return stable names of bankrupt stables [0.09ms]
+
+src/test/engine/ai/seasonalRetirementService.test.ts:
+(pass) SeasonalRetirementService > processSeasonalRetirement > should process retirement for all rival stables [1.66ms]
+(pass) SeasonalRetirementService > processSeasonalRetirement > should retire warriors based on age [0.18ms]
+(pass) SeasonalRetirementService > processSeasonalRetirement > should not retire young warriors [0.12ms]
+(pass) SeasonalRetirementService > processSeasonalRetirement > should identify legacy founder candidates [0.12ms]
+(pass) SeasonalRetirementService > processSeasonalRetirement > should not create legacy candidates for non-legendary warriors [0.13ms]
+(pass) SeasonalRetirementService > processSeasonalRetirement > should set retiredWeek on retired warriors [0.18ms]
+(pass) SeasonalRetirementService > processSeasonalRetirement > should be deterministic with same seed [0.12ms]
+
+src/test/engine/factories/combatFactory.test.ts:
+(pass) combatFactory > makeFightSummary > should generate a default fight summary [0.13ms]
+(pass) combatFactory > makeFightSummary > should handle partial overrides [0.05ms]
+(pass) combatFactory > makeFightSummary > should accept a custom createdAt timestamp [0.02ms]
+
+src/test/engine/history/arenaHistory.test.ts:
+(pass) pass
+
+src/test/engine/newsletter/feed.test.ts:
+(pass) NewsletterFeed > should append a fight result [0.16ms]
+(pass) NewsletterFeed > should clear the feed properly
+(pass) NewsletterFeed > should calculate correct style rollups [0.04ms]
+(pass) NewsletterFeed > should compute top movers based on fame + pop delta [0.07ms]
+(pass) NewsletterFeed > should score fights correctly for Fight of the Week [0.06ms]
+(pass) NewsletterFeed > should create issue with correct week and empty state if no fights [0.04ms]
+
+src/test/engine/stats/styleRollups.test.ts:
+(pass) StyleRollups > loadWeek (via getWeekRollup) > returns {} if localStorage is undefined
+(pass) StyleRollups > loadWeek (via getWeekRollup) > returns {} if localStorage.getItem returns null [0.12ms]
+(pass) StyleRollups > loadWeek (via getWeekRollup) > returns {} if localStorage.getItem returns an invalid JSON string (loadWeek error path) [0.04ms]
+(pass) StyleRollups > loadWeek (via getWeekRollup) > returns {} if localStorage.getItem returns invalid JSON [0.02ms]
+(pass) StyleRollups > loadWeek (via getWeekRollup) > returns {} if localStorage.getItem throws an Error [0.04ms]
+(pass) StyleRollups > loadWeek (via getWeekRollup) > returns valid records if localStorage has valid data [0.07ms]
+(pass) StyleRollups > loadWeek (via getWeekRollup) > filters out invalid records [0.04ms]
+(pass) StyleRollups > loadRolling (via last10) > returns [] if localStorage is undefined [0.05ms]
+(pass) StyleRollups > loadRolling (via last10) > returns [] if localStorage.getItem returns null [0.04ms]
+(pass) StyleRollups > loadRolling (via last10) > returns [] if localStorage.getItem returns invalid JSON [0.02ms]
+(pass) StyleRollups > loadRolling (via last10) > returns [] if localStorage.getItem throws an Error [0.02ms]
+(pass) StyleRollups > loadRolling (via last10) > returns valid records if localStorage has valid data [0.05ms]
+(pass) StyleRollups > loadRolling (via last10) > filters out invalid records [0.09ms]
+(pass) StyleRollups > loadTour (via tournament) > returns [] if localStorage is undefined [0.04ms]
+(pass) StyleRollups > loadTour (via tournament) > returns [] if localStorage.getItem returns null [0.04ms]
+(pass) StyleRollups > loadTour (via tournament) > returns [] if localStorage.getItem returns invalid JSON [0.02ms]
+(pass) StyleRollups > loadTour (via tournament) > returns [] if localStorage.getItem throws an Error [0.03ms]
+(pass) StyleRollups > loadTour (via tournament) > returns valid records if localStorage has valid data [0.06ms]
+(pass) StyleRollups > loadTour (via tournament) > filters out invalid records [0.04ms]
+
+src/test/engine/bout/planDefaults.test.ts:
+(pass) defaultPlanForWarrior > Aggressive Styles > generates correct defaults for BashingAttack
+(pass) defaultPlanForWarrior > Aggressive Styles > generates correct defaults for LungingAttack
+(pass) defaultPlanForWarrior > Aggressive Styles > generates correct defaults for StrikingAttack [0.04ms]
+(pass) defaultPlanForWarrior > Aggressive Styles > generates correct defaults for SlashingAttack [0.02ms]
+(pass) defaultPlanForWarrior > Defensive and Tactical Styles > generates correct defaults for TotalParry [0.01ms]
+(pass) defaultPlanForWarrior > Defensive and Tactical Styles > generates correct defaults for WallOfSteel [0.02ms]
+(pass) defaultPlanForWarrior > Defensive and Tactical Styles > generates correct defaults for ParryRiposte [0.03ms]
+(pass) defaultPlanForWarrior > Defensive and Tactical Styles > generates correct defaults for AimedBlow [0.02ms]
+(pass) defaultPlanForWarrior > Other Styles (Defaults) > generates base defaults for an unhandled style (e.g. ParryLunge)
+(pass) defaultPlanForWarrior > Feint Tendency Logic > sets feintTendency to 0 when WT is less than 15 [0.01ms]
+(pass) defaultPlanForWarrior > Feint Tendency Logic > calculates feintTendency correctly when WT is 15 [0.03ms]
+(pass) defaultPlanForWarrior > Feint Tendency Logic > calculates feintTendency correctly when WT is 18 [0.02ms]
+(pass) defaultPlanForWarrior > Feint Tendency Logic > caps feintTendency at 10 for very high WT
+
+src/test/engine/bout/recordHandler.test.ts:
+(pass) applyRecords > updates stats correctly when A wins and no kill occurs [0.15ms]
+(pass) applyRecords > updates stats correctly when D wins and a kill occurs [0.08ms]
+(pass) applyRecords > populates rivalsUpdates correctly when rivalStableId is provided [0.08ms]
+(pass) applyRecords > skips fatigue accrual for tournament participants during tournament week [0.05ms]
+(pass) applyRecords > handles missing fatigue gracefully by initializing it to 0 [0.05ms]
+
+src/test/engine/pipeline/core/hallOfFame.test.ts:
+(pass) processHallOfFame > returns state unchanged if not week 1 of a new year
+(pass) processHallOfFame > returns state unchanged if it is the very first week of the game (Year 1)
+69 | 
+70 |     const impact = processHallOfFame(state, 1);
+71 | 
+72 |     const res = resolveImpacts(state, [impact]);
+73 | 
+74 |     expect(res.awards?.length).toBeGreaterThan(0);
+                                    ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/core/hallOfFame.test.ts:74:32)
+(fail) processHallOfFame > correctly calculates and applies annual awards at Year 2 start [0.95ms]
+
+src/test/engine/pipeline/passes/SeasonalPass.test.ts:
+(pass) runSeasonalPass > should not do anything if nextWeek is not 1 [0.68ms]
+(pass) runSeasonalPass > should trigger the black_market_raid offseason event, deduct gold, and newsletter [0.26ms]
+(pass) runSeasonalPass > should trigger the grand_feast offseason event, deduct gold, award XP to all active [0.10ms]
+(pass) runSeasonalPass > should run offseason event when nextWeek is 1 [0.06ms]
+(pass) runSeasonalPass > should trigger the tavern_brawl offseason event, award fame, and add a Bruised Ribs injury [0.10ms]
+(pass) runSeasonalPass > should not add a Bruised Ribs injury to an already-injured warrior in tavern_brawl [0.08ms]
+(pass) runSeasonalPass > should trigger wandering_healer and cure an injury if someone is injured [0.10ms]
+(pass) runSeasonalPass > should trigger wandering_healer and offer snake oil if no one is injured [0.05ms]
+(pass) runSeasonalPass > should trigger the mystic_vision offseason event, award xp and fame, and add a newsletter item [0.11ms]
+(pass) runSeasonalPass > should trigger the wild_animal_attack offseason event, award fame, and add a Bite Wound injury [0.07ms]
+(pass) runSeasonalPass > should trigger the loyal_stray offseason event, award xp and fame, and deduct gold [0.05ms]
+(pass) runSeasonalPass > should trigger the street_performance offseason event, gaining fame and gold, and adding a tag [0.08ms]
+(pass) runSeasonalPass > should trigger the chaotic_spells offseason event and award xp (roll < 0.33) [0.10ms]
+(pass) runSeasonalPass > should trigger the chaotic_spells offseason event and add injury (roll < 0.66) [0.05ms]
+(pass) runSeasonalPass > should trigger the chaotic_spells offseason event and reduce fame (roll >= 0.66) [0.08ms]
+
+src/test/engine/pipeline/passes/SystemPass.test.ts:
+(pass) SystemPass Snapshotting Logic > creates initial yearly snapshots on Year 1 Week 1 if absent [0.22ms]
+(pass) SystemPass Snapshotting Logic > creates yearly snapshots upon transition to a new year (Week 1 of subsequent years) [0.11ms]
+
+src/test/engine/pipeline/passes/EventPass.test.ts:
+42 |     };
+43 | 
+44 |     const impact = runEventPass(state as GameState, 2, rng);
+45 |     const nextState = resolveImpacts(state as GameState, [impact]);
+46 |     const warrior = nextState.roster.find((r: Warrior) => r.id === 'w-1');
+47 |     expect(warrior?.fame).toBe(10);
+                               ^
+error: expect(received).toBe(expected)
+
+Expected: 10
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/passes/EventPass.test.ts:47:27)
+(fail) EventPass > should rarely trigger the Lost Relic Discovery event and correctly modify stats [1.27ms]
+77 | 
+78 |     const impact = runEventPass(state as GameState, 3, rng);
+79 |     const nextState = resolveImpacts(state as GameState, [impact]);
+80 |     const warrior = nextState.roster.find((r: Warrior) => r.id === 'w-brawl');
+81 | 
+82 |     expect(warrior?.fame).toBe(15);
+                               ^
+error: expect(received).toBe(expected)
+
+Expected: 15
+Received: 10
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/passes/EventPass.test.ts:82:27)
+(fail) EventPass > should trigger the Tavern Brawl event, award +5 fame and add a Black Eye injury [0.09ms]
+(pass) EventPass > should trigger the Mysterious Patron event and correctly update treasuryDelta [0.04ms]
+
+src/test/engine/pipeline/passes/PromoterPass.test.ts:
+104 | 
+105 |       const result = runPromoterPass(state);
+106 |       const offers = Object.values(result.boutOffers || {});
+107 | 
+108 |       // Should generate at least one offer
+109 |       expect(offers.length).toBeGreaterThan(0);
+                                  ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/passes/PromoterPass.test.ts:109:29)
+(fail) PromoterPass > Personality-based purse modifiers > should apply +15% purse modifier for Greedy promoters [0.75ms]
+(pass) PromoterPass > Personality-based purse modifiers > should apply +20% purse when both warriors have fame > 75 for Flashy promoters [0.50ms]
+184 |       };
+185 | 
+186 |       const result = runPromoterPass(state);
+187 |       const offers = Object.values(result.boutOffers || {});
+188 | 
+189 |       expect(offers.length).toBeGreaterThan(0);
+                                  ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/passes/PromoterPass.test.ts:189:29)
+(fail) PromoterPass > Personality-based purse modifiers > should apply +5% purse for Corporate promoters [0.43ms]
+(pass) PromoterPass > Personality-based hype modifiers > should reduce hype by 10% for Greedy promoters [0.41ms]
+(pass) PromoterPass > Personality-based hype modifiers > should increase hype by 10% for Honorable promoters when fame difference < 50 [0.54ms]
+(pass) PromoterPass > Personality-based hype modifiers > should increase hype by 25 for Sadistic promoters with high-kill warriors [0.50ms]
+(pass) PromoterPass > Personality-based hype modifiers > should increase hype by 15 for Flashy promoters when warriors have fame > 100 [0.58ms]
+346 | 
+347 |       const result = runPromoterPass(state);
+348 |       const offers = Object.values(result.boutOffers || {});
+349 | 
+350 |       // Greedy should generate offers due to larger allowed gap
+351 |       expect(offers.length).toBeGreaterThan(0);
+                                  ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/passes/PromoterPass.test.ts:351:29)
+(fail) PromoterPass > Personality-based skill gap thresholds > should allow larger skill gaps (0.35) for Greedy promoters [0.48ms]
+(pass) PromoterPass > Personality-based skill gap thresholds > should restrict skill gaps to 0.10 for Honorable promoters [0.39ms]
+378 |       // Both should generate reasonable numbers of offers with standard gap
+379 |       const sadisticCount = offers.filter((o) => o.promoterId === 'sadistic').length;
+380 |       const flashyCount = offers.filter((o) => o.promoterId === 'flashy').length;
+381 | 
+382 |       // Both should be able to generate offers
+383 |       expect(sadisticCount + flashyCount).toBeGreaterThan(0);
+                                                ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/passes/PromoterPass.test.ts:383:43)
+(fail) PromoterPass > Personality-based skill gap thresholds > should use 0.25 skill gap for Sadistic and Flashy promoters [0.39ms]
+(pass) PromoterPass > Personality-based skill gap thresholds > should use 0.20 skill gap for Corporate promoters [0.40ms]
+(pass) PromoterPass > Tournament week warrior exclusion > should exclude tournament-locked warriors from regular bout offers [0.66ms]
+(pass) PromoterPass > Tournament week warrior exclusion > should still generate offers for non-tournament warriors during tournament weeks [0.49ms]
+(pass) PromoterPass > Tournament week warrior exclusion > should not affect offer generation when isTournamentWeek is false [0.53ms]
+(pass) PromoterPass > Sadistic promoter injury-risk matching > should prefer injury-risk matchups for Sadistic promoters [0.60ms]
+508 |       };
+509 | 
+510 |       const result = runPromoterPass(state);
+511 |       const offers = Object.values(result.boutOffers || {});
+512 | 
+513 |       expect(offers.length).toBeGreaterThan(0);
+                                  ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/pipeline/passes/PromoterPass.test.ts:513:29)
+(fail) PromoterPass > Sadistic promoter injury-risk matching > should apply +20% purse modifier for injury-risk matchups with Sadistic promoters [0.82ms]
+(pass) PromoterPass > Flashy promoter showy-style matching > should prefer showy styles (Lunging, AimedBlow, ParryLunge) for Flashy promoters [0.82ms]
+(pass) PromoterPass > Flashy promoter showy-style matching > should apply +10% hype when both warriors have showy styles [0.52ms]
+(pass) PromoterPass > Edge cases and error handling > should handle empty promoters gracefully [0.35ms]
+(pass) PromoterPass > Edge cases and error handling > should handle promoters with zero capacity [0.34ms]
+(pass) PromoterPass > Edge cases and error handling > should garbage collect expired offers [0.58ms]
+(pass) PromoterPass > Edge cases and error handling > should preserve signed offers for current week [0.52ms]
+
+src/test/engine/matchmaking/tournament/tournamentStateMutator.test.ts:
+61 |   describe('findWarriorById', () => {
+62 |     it('should find warrior in player roster', () => {
+63 |       const warrior = findWarriorById(state, state.roster[0].id);
+64 |       expect(warrior).toBeDefined();
+65 |       expect(warrior?.id).toBe(state.roster[0].id);
+66 |       expect(warrior?.name).toBe('Player Warrior');
+                                 ^
+error: expect(received).toBe(expected)
+
+Expected: "Player Warrior"
+Received: "Rival Warrior"
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentStateMutator.test.ts:66:29)
+(fail) TournamentStateMutator > findWarriorById > should find warrior in player roster [0.43ms]
+(pass) TournamentStateMutator > findWarriorById > should find warrior in rival roster [0.09ms]
+(pass) TournamentStateMutator > findWarriorById > should return undefined for non-existent warrior [0.10ms]
+(pass) TournamentStateMutator > findWarriorById > should find warrior in tournament participants [1.58ms]
+(pass) TournamentStateMutator > findWarriorById > should prioritize tournament participants over rosters [0.37ms]
+148 |         w.fame = 100;
+149 |       });
+150 |       const updatedState = resolveImpacts(state, [impact]);
+151 | 
+152 |       const updatedWarrior = updatedState.roster.find((w) => w.id === state.roster[0].id);
+153 |       expect(updatedWarrior?.fame).toBe(100);
+                                         ^
+error: expect(received).toBe(expected)
+
+Expected: 100
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentStateMutator.test.ts:153:36)
+(fail) TournamentStateMutator > modifyWarrior > should modify warrior in player roster [0.45ms]
+163 |       });
+164 |       const updatedState = resolveImpacts(state, [impact]);
+165 | 
+166 |       const updatedRival = updatedState.rivals[0];
+167 |       const updatedWarrior = updatedRival.roster.find((w) => w.id === rivalId);
+168 |       expect(updatedWarrior?.fame).toBe(50);
+                                         ^
+error: expect(received).toBe(expected)
+
+Expected: 50
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentStateMutator.test.ts:168:36)
+(fail) TournamentStateMutator > modifyWarrior > should modify warrior in rival roster [0.19ms]
+(pass) TournamentStateMutator > modifyWarrior > should return unchanged state for non-existent warrior [0.07ms]
+187 |         w.popularity = w.popularity + 5;
+188 |       });
+189 |       const updatedState = resolveImpacts(state, [impact]);
+190 | 
+191 |       const updatedWarrior = updatedState.roster.find((w) => w.id === state.roster[0].id);
+192 |       expect(updatedWarrior?.fame).toBe(10);
+                                         ^
+error: expect(received).toBe(expected)
+
+Expected: 10
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentStateMutator.test.ts:192:36)
+(fail) TournamentStateMutator > modifyWarrior > should apply complex transform function [0.19ms]
+(pass) TournamentStateMutator > modifyWarrior > should not mutate original state [0.05ms]
+
+src/test/engine/matchmaking/tournament/tournamentBracketBuilder.test.ts:
+(pass) TournamentBracketBuilder > buildTournament > should create a 64-warrior bracket [0.64ms]
+(pass) TournamentBracketBuilder > buildTournament > should have correct tournament metadata [0.33ms]
+(pass) TournamentBracketBuilder > buildTournament > should include all warriors as participants [0.24ms]
+(pass) TournamentBracketBuilder > buildTournament > should create round 1 matches with correct structure [0.32ms]
+(pass) TournamentBracketBuilder > buildTournament > should shuffle warriors before creating bracket [0.19ms]
+(pass) TournamentBracketBuilder > buildTournament > should generate unique tournament ID [0.30ms]
+
+src/test/engine/matchmaking/tournament/tournamentResolver.test.ts:
+(pass) TournamentResolver > resolveRound > should resolve a round and advance bracket [3.23ms]
+(pass) TournamentResolver > resolveRound > should determine winners for each match [2.41ms]
+(pass) TournamentResolver > resolveRound > should return round results [2.26ms]
+191 |       state.tournaments = [tournament];
+192 | 
+193 |       const impact = resolveCompleteTournament(state, tournament.id, 12345);
+194 |       const updatedState = resolveImpacts(state, [impact]);
+195 | 
+196 |       expect(updatedState.tournaments![0]!.completed).toBe(true);
+                                                            ^
+error: expect(received).toBe(expected)
+
+Expected: true
+Received: false
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentResolver.test.ts:196:55)
+(fail) TournamentResolver > resolveCompleteTournament > should resolve all rounds to completion [3.03ms]
+231 | 
+232 |       const impact = resolveCompleteTournament(state, tournament.id, 12345);
+233 |       const updatedState = resolveImpacts(state, [impact]);
+234 | 
+235 |       const champion = updatedState.tournaments![0]!.champion;
+236 |       expect(champion).toBeDefined();
+                             ^
+error: expect(received).toBeDefined()
+
+Received: undefined
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentResolver.test.ts:236:24)
+(fail) TournamentResolver > resolveCompleteTournament > should determine a champion [2.49ms]
+(pass) TournamentResolver > resolveCompleteTournament > should be deterministic with same seed [3.78ms]
+343 |         expect(resolvedMatches).toBe(matchesInRound);
+344 |       }
+345 | 
+346 |       // Verify 7-round structure: 32 → 16 → 8 → 4 → 2 → 2 → 1
+347 |       expect(roundCounts[0]).toBe(32); // Round 1: Round of 64
+348 |       expect(roundCounts[1]).toBe(16); // Round 2: Round of 32
+                                   ^
+error: expect(received).toBe(expected)
+
+Expected: 16
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentResolver.test.ts:348:30)
+(fail) TournamentResolver > 7-round format structure > should progress through all 7 rounds for 64 warriors [2.74ms]
+396 | 
+397 |       const tour = currentState.tournaments![0]!;
+398 | 
+399 |       // Check that round 6 has both Finals and Bronze match
+400 |       const round6Matches = tour.bracket.filter((b: TournamentBout) => b.round === 6);
+401 |       expect(round6Matches.length).toBe(2);
+                                         ^
+error: expect(received).toBe(expected)
+
+Expected: 2
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentResolver.test.ts:401:36)
+(fail) TournamentResolver > 7-round format structure > should inject bronze match after semifinals (round 5) [2.76ms]
+452 |         currentState = resolveImpacts(currentState, [impact]);
+453 |       }
+454 | 
+455 |       const tour = currentState.tournaments![0]!;
+456 |       const semifinalMatches = tour.bracket.filter((b: TournamentBout) => b.round === 5);
+457 |       expect(semifinalMatches.length).toBe(2);
+                                            ^
+error: expect(received).toBe(expected)
+
+Expected: 2
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentResolver.test.ts:457:39)
+(fail) TournamentResolver > 7-round format structure > should track semifinal losers for bronze match [2.22ms]
+514 | 
+515 |       const impact = resolveCompleteTournament(state, tournament.id, 12345);
+516 |       const finalState = resolveImpacts(state, [impact]);
+517 | 
+518 |       const completedTournament = finalState.tournaments![0]!;
+519 |       expect(completedTournament.completed).toBe(true);
+                                                  ^
+error: expect(received).toBe(expected)
+
+Expected: true
+Received: false
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentResolver.test.ts:519:45)
+(fail) TournamentResolver > 7-round format structure > should award champion after 7 rounds [2.06ms]
+(pass) TournamentResolver > 7-round format structure > should handle bye matches correctly [2.04ms]
+615 | 
+616 |       const impact = resolveCompleteTournament(state, tournament.id, 12345);
+617 |       const finalState = resolveImpacts(state, [impact]);
+618 | 
+619 |       // Check that arena history was populated with fight results
+620 |       expect(finalState.arenaHistory!.length).toBeGreaterThan(0);
+                                                    ^
+error: expect(received).toBeGreaterThan(expected)
+
+Expected: > 0
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentResolver.test.ts:620:47)
+(fail) TournamentResolver > 7-round format structure > should handle warrior deaths during tournament [2.47ms]
+
+src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts:
+(pass) TournamentSelectionCommittee > committeeSelection > should select 64 warriors for the Gold Tier [2.93ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should select 64 warriors for the Silver Tier [0.85ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should select 64 warriors for the Bronze Tier [0.70ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should select 64 warriors for the Iron Tier [0.60ms]
+47 |       const { warriors } = committeeSelection(state, 'Gold', 1, new Set());
+48 |       const bestRankedId = Object.keys(state.realmRankings).find(
+49 |         (id) => state.realmRankings[id]?.overallRank === 1
+50 |       );
+51 |       if (!bestRankedId) {
+52 |         throw new Error('No best ranked warrior found');
+                                                           ^
+error: No best ranked warrior found
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts:52:55)
+(fail) TournamentSelectionCommittee > committeeSelection > should include the best ranked warrior [0.85ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should respect locked warrior IDs [0.98ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should exclude warriors on rest [0.73ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should apply weather skepticism for rainy weather [0.65ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should apply weather skepticism for scalding weather [0.67ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should include style champions [0.68ms]
+(pass) TournamentSelectionCommittee > committeeSelection > should generate emergency fillers if pool is insufficient [0.74ms]
+108 |       expect(warriors.length).toBe(64);
+109 |     });
+110 | 
+111 |     it('should return updated locked IDs', () => {
+112 |       const { updatedLockedIds } = committeeSelection(state, 'Gold', 1, new Set());
+113 |       expect(updatedLockedIds.size).toBe(64);
+                                          ^
+error: expect(received).toBe(expected)
+
+Expected: 64
+Received: 0
+
+      at <anonymous> (/Users/amauricia/Documents/GitHub/stable-lords/src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts:113:37)
+(fail) TournamentSelectionCommittee > committeeSelection > should return updated locked IDs [0.79ms]
+(pass) TournamentSelectionCommittee > TOURNAMENT_TIERS > should export 4 tournament tiers [0.50ms]
+(pass) TournamentSelectionCommittee > TOURNAMENT_TIERS > should have correct tier IDs [0.44ms]
+(pass) TournamentSelectionCommittee > TOURNAMENT_TIERS > should have correct rank ranges [0.31ms]
+
+src/test/engine/ai/workers/competitionWorker.test.ts:
+(pass) CompetitionWorker > evaluateBoutOffer - Fatigue Gate > should decline offers for warriors with fatigue > 60 (non-Aggressive personality) [1.61ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Fatigue Gate > should accept offers for warriors with fatigue > 60 if rival is Aggressive [0.52ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Fatigue Gate > should accept offers for warriors with fatigue <= 60 [0.36ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Fatigue Gate > should accept offers for warriors with fatigue = 0 (fresh) [0.36ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Injury Gate > should decline offers for warriors with Moderate injuries [0.34ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Injury Gate > should decline offers for warriors with Severe injuries [0.33ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Injury Gate > should decline offers for warriors with Critical injuries [0.30ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Injury Gate > should decline offers for warriors with Permanent injuries [0.38ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Injury Gate > should accept offers for warriors with only Minor injuries [0.33ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Injury Gate > should accept offers for warriors with no injuries [0.32ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Injury Gate > should decline if any injury is blocking (Moderate+) even with Minor injuries present [0.33ms]
+(pass) CompetitionWorker > evaluateBoutOffer - Combined Gates > should decline if warrior has high fatigue AND blocking injury [0.33ms]
+(pass) CompetitionWorker > processAllRivalsBoutOffers - Slate Processing > should process offers for all rivals [0.27ms]
+(pass) CompetitionWorker > processAllRivalsBoutOffers - Slate Processing > should prevent double-booking the same warrior [0.38ms]
+(pass) CompetitionWorker > processAllRivalsBoutOffers - Slate Processing > should sort offers by quality (hype × purse) to prioritize better offers [0.31ms]
+(pass) CompetitionWorker > processAllRivalsBoutOffers - Slate Processing > should skip warriors already committed to other offers [0.38ms]
+(pass) CompetitionWorker > processAllRivalsBoutOffers - Slate Processing > should handle empty offer list gracefully [0.40ms]
+(pass) CompetitionWorker > processAllRivalsBoutOffers - Slate Processing > should handle empty rivals list gracefully [0.37ms]
+(pass) CompetitionWorker > Edge Cases > should handle warriors with undefined fatigue [0.34ms]
+(pass) CompetitionWorker > Edge Cases > should handle warriors with undefined injuries [0.31ms]
+(pass) CompetitionWorker > Edge Cases > should handle offer not found for rival [0.35ms]
+
+src/test/engine/bout/mutations/contractMutations.test.ts:
+(pass) contractMutations > respondToBoutOffer > returns empty impact when offer does not exist [0.03ms]
+(pass) contractMutations > respondToBoutOffer > updates response correctly for single warrior [0.21ms]
+(pass) contractMutations > respondToBoutOffer > updates status to Signed when all warriors accept [0.08ms]
+(pass) contractMutations > respondToBoutOffer > updates status to Rejected when any warrior declines (all responded) [0.07ms]
+
+98 tests failed:
+(fail) Week Advancement Integration > Season Transitions > should cycle through seasons correctly [19.89ms]
+(fail) Week Advancement Integration > Aging System > should age warriors after 52 weeks [99.72ms]
+(fail) Week Advancement Integration > Economic Consistency > should process economy every week [0.82ms]
+(fail) Autosim Integration > State Consistency > should process economy correctly [0.99ms]
+(fail) HallOfFights Component > groups and displays fights from the arenaHistory by week correctly [1.00ms]
+(fail) HallOfFights Component > renders style stats correctly based on arena history [0.46ms]
+(fail) useGameStore Optimization (Epic 4) > re-renders when selected state changes [0.26ms]
+(fail) useGameStore Optimization (Epic 4) > does NOT re-render when unrelated state changes (with precise selector) [0.10ms]
+(fail) useGameStore Optimization (Epic 4) > requires useShallow for object-returning selectors to avoid extra renders [0.11ms]
+(fail) PaperDoll > renders all body parts
+(fail) PaperDoll > applies red color for critical health [0.43ms]
+(fail) PaperDoll > applies yellow color for moderate health [0.06ms]
+(fail) PaperDoll > applies green color for full health [0.05ms]
+(fail) PlanBuilder Matchup Rendering > renders MATCHUP_ADV when player has a style advantage [0.14ms]
+(fail) PlanBuilder Matchup Rendering > renders MATCHUP_PENALTY when player has a style disadvantage [0.04ms]
+(fail) PlanBuilder Matchup Rendering > renders no badge when matchup is neutral [0.05ms]
+(fail) AudioManager > should be able to set and get muted state [0.70ms]
+(fail) Tournaments Page > renders recruit operatives button when criteria are met [0.12ms]
+(fail) Trainers Component > renders current trainers correctly
+(fail) Trainers Component > renders hiring pool correctly [0.50ms]
+(fail) Trainers Component > allows firing a trainer [0.27ms]
+(fail) Trainers Component > allows hiring a trainer [0.22ms]
+(fail) WorldOverview Component > renders stable rows correctly with aggregated stats [0.84ms]
+(fail) WorldOverview Component > renders warrior rows correctly [0.23ms]
+(fail) AdminTools Page > renders all administrative panels [0.13ms]
+(fail) AdminTools Page > provides buttons for time skipping [0.06ms]
+(fail) AdminTools Page > provides button for hard reset [0.01ms]
+(fail) AdminTools Page > provides button to skip FTUE [0.06ms]
+(fail) AdminTools Page > renders a JSON state dump [0.06ms]
+(fail) HallOfFame Component > renders the inductees correctly [0.68ms]
+(fail) HallOfFame Component > identifies and displays the best fight correctly [0.21ms]
+(fail) (unnamed)
+(fail) Contract System Cycle > should transition offer to 'Signed' when accepted by player [0.76ms]
+(fail) Contract System Cycle > should payout the purse upon bout resolution via processWeekBouts [0.60ms]
+(fail) boutProcessor - resolveBout > should update records after a bout [2.27ms]
+(fail) resolveImpacts > applies treasury and fame deltas correctly [1.05ms]
+(fail) resolveImpacts > applies roster updates using ID mapping [0.10ms]
+(fail) resolveImpacts > merges newsletter items and ledger entries [0.19ms]
+(fail) resolveImpacts > handles multiple impacts correctly [0.05ms]
+(fail) computeAgingImpact — basic aging > increments age by 1 on multiples of 52 weeks [0.26ms]
+(fail) computeAgingImpact — aging penalties > does not apply penalties to a warrior under the age penalty start limit [0.54ms]
+(fail) computeAgingImpact — aging penalties > applies penalty to SP and DF when age exceeds AGING_PENALTY_START [0.06ms]
+(fail) computeAgingImpact — aging penalties > adds a newsletter event when aging penalties are applied [0.05ms]
+(fail) computeAgingImpact — forced retirement > guarantees retirement for a warrior at FORCED_RETIRE_MAX (32+) [0.06ms]
+(fail) computeAgingImpact — forced retirement > can force retirement with a low random roll [0.06ms]
+(fail) Training System > computeTrainingImpact (deprecated processTraining equivalent) > should clear assignments after processing [0.20ms]
+(fail) Training System > computeTrainingImpact edge cases > should process skillDrill assignments correctly and roll for injury [0.04ms]
+(fail) Training System > computeTrainingImpact edge cases > should skip skillDrill injury roll if hard capped
+(fail) Training System > computeTrainingImpact edge cases > should handle missing trainers array in state gracefully [0.07ms]
+(fail) Training System > computeTrainingImpact edge cases > should process attribute training message correctly [0.05ms]
+(fail) Training System > computeTrainingImpact edge cases > should fallback to currentRoster for injury if updatedWarrior is null [0.08ms]
+(fail) Training System > computeTrainingImpact edge cases > should process attribute training injury correctly [0.08ms]
+(fail) Training System > trainingImpactToStateImpact edge cases > should ignore blocked results for newsletter [0.11ms]
+(fail) Training System > trainingImpactToStateImpact edge cases > should populate newsletterItems properly and use rng.uuid [0.46ms]
+(fail) Training System > trainingImpactToStateImpact edge cases > should generate proper roster updates delta [0.15ms]
+(fail) mergeImpacts > merges numeric values by accumulation [1.13ms]
+(fail) mergeImpacts > merges arrays by appending [0.03ms]
+(fail) mergeImpacts > merges Maps by merging values [0.06ms]
+(fail) mergeImpacts > merges Maps by combining values for same key [0.05ms]
+(fail) mergeImpacts > replaces values for replace strategy properties [0.03ms]
+(fail) mergeImpacts > handles empty impacts array [0.04ms]
+(fail) mergeImpacts > handles single impact [0.03ms]
+(fail) mergeImpacts > skips undefined values [0.03ms]
+(fail) mergeImpacts > merges all numeric delta properties [0.04ms]
+(fail) mergeImpacts > merges all array properties [0.03ms]
+(fail) Economy Engine > computeEconomyImpact > should update game state treasury and add ledger entries immutably [0.07ms]
+(fail) partialRefreshPool > returns a newly generated pool of DEFAULT_POOL_SIZE if given an empty pool [0.03ms]
+(fail) partialRefreshPool > removes the oldest warriors and replaces them, ensuring DEFAULT_POOL_SIZE [1.51ms]
+(fail) partialRefreshPool > maintains minimum and maximum limits for removal count [0.13ms]
+(fail) Health System (Boundary Testing) > should handle warrior health / injuries correctly at boundaries [0.27ms]
+(fail) Bout Simulation Integration - getFromArchive function issue > should simulate a signed bout and update state accordingly [2.62ms]
+(fail) pipeline/health > computeHealthImpact > should handle warriors with missing, null, or string-only injuries gracefully [0.18ms]
+(fail) pipeline/health > computeHealthImpact > should process injuries and return updates [0.11ms]
+(fail) pipeline/health > computeHealthImpact > should return empty updates if no injuries to process [0.05ms]
+(fail) pipeline/health > computeHealthImpact > should omit newsletter if no injuries healed [0.13ms]
+(fail) pipeline/health > applyHealthUpdates > should apply computed impacts to the state [0.24ms]
+(fail) pipeline/health > applyHealthUpdates > should handle state with undefined restStates and newsletter [0.16ms]
+(fail) processHallOfFame > correctly calculates and applies annual awards at Year 2 start [0.95ms]
+(fail) EventPass > should rarely trigger the Lost Relic Discovery event and correctly modify stats [1.27ms]
+(fail) EventPass > should trigger the Tavern Brawl event, award +5 fame and add a Black Eye injury [0.09ms]
+(fail) PromoterPass > Personality-based purse modifiers > should apply +15% purse modifier for Greedy promoters [0.75ms]
+(fail) PromoterPass > Personality-based purse modifiers > should apply +5% purse for Corporate promoters [0.43ms]
+(fail) PromoterPass > Personality-based skill gap thresholds > should allow larger skill gaps (0.35) for Greedy promoters [0.48ms]
+(fail) PromoterPass > Personality-based skill gap thresholds > should use 0.25 skill gap for Sadistic and Flashy promoters [0.39ms]
+(fail) PromoterPass > Sadistic promoter injury-risk matching > should apply +20% purse modifier for injury-risk matchups with Sadistic promoters [0.82ms]
+(fail) TournamentStateMutator > findWarriorById > should find warrior in player roster [0.43ms]
+(fail) TournamentStateMutator > modifyWarrior > should modify warrior in player roster [0.45ms]
+(fail) TournamentStateMutator > modifyWarrior > should modify warrior in rival roster [0.19ms]
+(fail) TournamentStateMutator > modifyWarrior > should apply complex transform function [0.19ms]
+(fail) TournamentResolver > resolveCompleteTournament > should resolve all rounds to completion [3.03ms]
+(fail) TournamentResolver > resolveCompleteTournament > should determine a champion [2.49ms]
+(fail) TournamentResolver > 7-round format structure > should progress through all 7 rounds for 64 warriors [2.74ms]
+(fail) TournamentResolver > 7-round format structure > should inject bronze match after semifinals (round 5) [2.76ms]
+(fail) TournamentResolver > 7-round format structure > should track semifinal losers for bronze match [2.22ms]
+(fail) TournamentResolver > 7-round format structure > should award champion after 7 rounds [2.06ms]
+(fail) TournamentResolver > 7-round format structure > should handle warrior deaths during tournament [2.47ms]
+(fail) TournamentSelectionCommittee > committeeSelection > should include the best ranked warrior [0.85ms]
+(fail) TournamentSelectionCommittee > committeeSelection > should return updated locked IDs [0.79ms]
+
+ 1051 pass
+ 98 fail
+ 4945 expect() calls
+Ran 1149 tests across 123 files. [5.04s]

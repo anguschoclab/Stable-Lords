@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { audioManager } from '@/lib/AudioManager';
+import '@/test/setup';
 
 // Mock Howler globally before any imports
 vi.mock('howler', () => {
@@ -29,6 +30,7 @@ describe('AudioManager', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
+    (localStorage as any)._resetQuota?.();
     mockElectronAPI.storeGet.mockResolvedValue('false');
     mockElectronAPI.storeSet.mockResolvedValue(undefined);
     audioManager.setMuted(false);

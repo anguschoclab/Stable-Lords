@@ -5,6 +5,7 @@
  */
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Trophy, Skull, Coins, Swords, Users, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -12,17 +13,21 @@ import { cn } from '@/lib/utils';
 export function YearEndRecap() {
   const { roster, graveyard, retired, ledger, rivalries, season, week } = useGameStore();
 
+  const rosterFameData = useGameStore(
+    useShallow((s) => s.roster.map((w) => ({ id: w.id, name: w.name, fame: w.fame, career: w.career })))
+  );
+
   const recap = useMemo(() => {
     // ⚡ Bolt: Reduced O(N log N) sort to O(N) linear scan for finding max values. Avoids extra array allocations.
-    let topWarrior = roster?.[0];
-    let mostKills = roster?.[0];
-    for (const w of roster) {
+    let topWarrior = rosterFameData[0];
+    let mostKills = rosterFameData[0];
+    for (const w of rosterFameData) {
       if ((w.fame ?? 0) > (topWarrior?.fame ?? 0)) topWarrior = w;
       if ((w.career?.kills ?? 0) > (mostKills?.career?.kills ?? 0)) mostKills = w;
     }
 
     const totalKills =
-      roster.reduce((s, w) => s + (w.career?.kills ?? 0), 0) +
+      rosterFameData.reduce((s, w) => s + (w.career?.kills ?? 0), 0) +
       graveyard.reduce((s, w) => s + (w.career?.kills ?? 0), 0);
     const net = (ledger ?? []).reduce((s, e) => s + e.amount, 0);
     const memorials = graveyard.slice(-5);
@@ -35,7 +40,7 @@ export function YearEndRecap() {
     }
 
     return { topWarrior, mostKills, totalKills, net, memorials, topRivalry };
-  }, [roster, graveyard, ledger, rivalries]);
+  }, [rosterFameData, graveyard, ledger, rivalries]);
 
   const stat = (
     label: string,

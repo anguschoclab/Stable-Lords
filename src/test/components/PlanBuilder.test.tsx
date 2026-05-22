@@ -1,9 +1,9 @@
-// @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import PlanBuilder from '@/components/PlanBuilder';
 import { FightingStyle } from '@/types/shared.types';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom';
+import '@/test/setup';
 
 // No longer uses DnD
 

@@ -1,9 +1,10 @@
-// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import WorldOverview from '@/pages/WorldOverview';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { FightingStyle } from '@/types/game';
 import type { Warrior, GameState } from '@/types/game';
+import '@/test/setup';
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({

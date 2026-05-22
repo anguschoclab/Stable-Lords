@@ -6,15 +6,13 @@ import type { FightPlan, Warrior } from '@/types/game';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { getMatchupBonus } from '@/engine/combat/mechanics/combatConstants';
 import { computeStrategyScore, getScoreColor } from '@/engine/strategyAnalysis';
-import {
-  TacticBank,
-  CommonControls,
-  SpatialControls,
-  PhaseOverrides,
-  StylePassives,
-  ContingencyPlans,
-  StaminaCurve,
-} from './planBuilder';
+import TacticBank from './planBuilder/TacticBank';
+import CommonControls from './planBuilder/CommonControls';
+import SpatialControls from './planBuilder/SpatialControls';
+import PhaseOverrides from './planBuilder/PhaseOverrides';
+import StylePassives from './planBuilder/StylePassives';
+import ContingencyPlans from './planBuilder/ContingencyPlans';
+import StaminaCurve from './planBuilder/StaminaCurve';
 import { validateStrategy } from '@/engine/strategyValidator';
 
 /* ── Sub-components ─────────────────────────────────────── */

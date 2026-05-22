@@ -130,7 +130,8 @@ export function protectCovers(protect?: string): string[] {
 
   // Specific IDs or categories from tests and equipment data
   if (p.includes('helm') || p.includes('cap') || p === 'head') return ['head'];
-  if (p.includes('armor') || p.includes('mail') || p === 'body') return ['chest', 'abdomen'];
+  if (p === 'leather' || p === 'padded' || p === 'studded_leather' ||
+      p.includes('armor') || p.includes('mail') || p === 'body') return ['chest', 'abdomen'];
   if (p === 'arms') return ['right arm', 'left arm'];
   if (p === 'legs') return ['right leg', 'left leg'];
 

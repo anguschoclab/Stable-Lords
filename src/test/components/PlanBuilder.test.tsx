@@ -2,6 +2,7 @@
 import { render, screen } from '@testing-library/react';
 import PlanBuilder from '@/components/PlanBuilder';
 import { FightingStyle } from '@/types/shared.types';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import '@/test/setup';
@@ -21,11 +22,13 @@ describe('PlanBuilder Matchup Rendering', () => {
   it('renders MATCHUP_ADV when player has a style advantage', () => {
     // Aimed Blow has +1 advantage vs Bashing Attack
     render(
-      <PlanBuilder
-        plan={mockPlan}
-        onPlanChange={vi.fn()}
-        rivalStyle={FightingStyle.BashingAttack}
-      />
+      <TooltipProvider>
+        <PlanBuilder
+          plan={mockPlan}
+          onPlanChange={vi.fn()}
+          rivalStyle={FightingStyle.BashingAttack}
+        />
+      </TooltipProvider>
     );
 
     expect(screen.getByText('MATCHUP ADV')).toBeInTheDocument();
@@ -36,7 +39,9 @@ describe('PlanBuilder Matchup Rendering', () => {
     // Bashing Attack is weak to Aimed Blow (-1 penalty)
     const weakPlan = { ...mockPlan, style: FightingStyle.BashingAttack };
     render(
-      <PlanBuilder plan={weakPlan} onPlanChange={vi.fn()} rivalStyle={FightingStyle.AimedBlow} />
+      <TooltipProvider>
+        <PlanBuilder plan={weakPlan} onPlanChange={vi.fn()} rivalStyle={FightingStyle.AimedBlow} />
+      </TooltipProvider>
     );
 
     expect(screen.getByText('MATCHUP PENALTY')).toBeInTheDocument();
@@ -45,11 +50,13 @@ describe('PlanBuilder Matchup Rendering', () => {
 
   it('renders no badge when matchup is neutral', () => {
     render(
-      <PlanBuilder
-        plan={mockPlan}
-        onPlanChange={vi.fn()}
-        rivalStyle={FightingStyle.AimedBlow}
-      />
+      <TooltipProvider>
+        <PlanBuilder
+          plan={mockPlan}
+          onPlanChange={vi.fn()}
+          rivalStyle={FightingStyle.AimedBlow}
+        />
+      </TooltipProvider>
     );
 
     expect(screen.queryByText('MATCHUP ADV')).not.toBeInTheDocument();

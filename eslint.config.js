@@ -38,7 +38,6 @@ export default tseslint.config(
           contexts: [
             "TSTypeAliasDeclaration",
             "TSInterfaceDeclaration",
-            "TSPropertySignature",
           ],
         },
       ],

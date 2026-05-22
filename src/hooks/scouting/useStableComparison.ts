@@ -19,8 +19,13 @@ export function useStableComparison(rivals: RivalStableData[]) {
   const [idB, setIdB] = useState<string | null>(null);
   const ownerGrudges = useGameStore(useShallow((s) => s.ownerGrudges ?? []));
 
-  const rivalA = useMemo(() => rivals.find((r) => r.owner.id === idA), [rivals, idA]);
-  const rivalB = useMemo(() => rivals.find((r) => r.owner.id === idB), [rivals, idB]);
+  const rivalMap = useMemo(
+    () => new Map(rivals.map((r) => [r.owner.id as string, r])),
+    [rivals]
+  );
+
+  const rivalA = useMemo(() => (idA ? rivalMap.get(idA) : undefined), [rivalMap, idA]);
+  const rivalB = useMemo(() => (idB ? rivalMap.get(idB) : undefined), [rivalMap, idB]);
 
   const statsA = useMemo(() => (rivalA ? stableStats(rivalA) : null), [rivalA]);
   const statsB = useMemo(() => (rivalB ? stableStats(rivalB) : null), [rivalB]);

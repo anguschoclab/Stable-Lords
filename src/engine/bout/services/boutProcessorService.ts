@@ -22,6 +22,7 @@ import { handleReporting } from '../reportingHandler';
 import { generatePairings } from '../core/pairings';
 import { finalizeWeekSideEffectsToImpact } from './WeekFinalizationService';
 import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
+import { buildWarriorMap } from '@/utils/roster';
 
 import { isFightReady } from '@/engine/warriorStatus';
 
@@ -247,13 +248,6 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
       injuredNames: injuryRes.injuredNames,
     },
   };
-}
-
-function buildWarriorMap(state: GameState): Map<string, Warrior> {
-  const map = new Map<string, Warrior>();
-  state.roster.forEach((w) => map.set(w.id, w));
-  (state.rivals || []).forEach((r) => r.roster.forEach((w) => map.set(w.id, w)));
-  return map;
 }
 
 export function processWeekBouts(state: GameState): {

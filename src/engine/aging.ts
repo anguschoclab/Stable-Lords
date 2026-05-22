@@ -103,7 +103,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
         rosterUpdates.set(w.id, update);
       } else if (rivalId) {
         const rKey = rivalId as StableId;
-        const rival = state.rivals.find((r) => r.id === rivalId);
+        const rival = state.rivalMap?.get(rivalId);
         if (!rival) continue;
         const rUpdate = rivalsUpdates.get(rKey) || { roster: [...rival.roster] };
         if (rUpdate.roster) {
@@ -118,7 +118,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   retiredWarriors.forEach((rw) => {
     if (rw.stableId && rw.stableId !== state.player.id) {
       const rivalId = rw.stableId as unknown as StableId;
-      const currentRival = state.rivals.find((r) => r.id === rivalId);
+      const currentRival = state.rivalMap?.get(rivalId);
       if (currentRival) {
         const rUpdate = rivalsUpdates.get(rivalId) || { roster: [...currentRival.roster] };
         if (rUpdate.roster) {

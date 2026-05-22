@@ -3,7 +3,7 @@ import {
   advanceWeek,
   type WeekAdvanceOptions,
 } from '@/engine/pipeline/services/weekPipelineService';
-import { flushDeferredArchives } from '@/engine/pipeline/adapters/opfsArchiver';
+import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
 import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/telemetry';
 
 /**
@@ -194,14 +194,9 @@ export const TimeAdvanceService = {
       if (opts?.stopConditions && (i + 1) % checkpointInterval === 0) {
         const stopResult = evaluateStopConditions(currentState, opts.stopConditions);
         if (stopResult.shouldStop) {
-          // Flush any deferred archives before returning
+          // Flush any deferred archives before returning (off-thread, non-blocking)
           if (opts.deferArchives) {
-            const flushStart = performance.now();
-            await flushDeferredArchives(currentState);
-            telemetry.timing(
-              TelemetryEvents.FLUSH_DEFERRED_ARCHIVES,
-              performance.now() - flushStart
-            );
+            flushDeferredArchivesOffThread(currentState);
           }
 
           const duration = performance.now() - startTime;
@@ -237,11 +232,9 @@ export const TimeAdvanceService = {
       }
     }
 
-    // Flush deferred archives at quarter end
+    // Flush deferred archives at quarter end (off-thread, non-blocking)
     if (opts?.deferArchives) {
-      const flushStart = performance.now();
-      await flushDeferredArchives(currentState);
-      telemetry.timing(TelemetryEvents.FLUSH_DEFERRED_ARCHIVES, performance.now() - flushStart);
+      flushDeferredArchivesOffThread(currentState);
     }
 
     const duration = performance.now() - startTime;
@@ -354,5 +347,3 @@ export const TimeAdvanceService = {
     });
   },
 };
-
-export default TimeAdvanceService;

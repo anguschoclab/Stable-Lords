@@ -97,7 +97,7 @@ interface HighlightEntry extends Highlight {
 }
 
 // ⚡ Bolt: Pre-calculate all possible highlights for a log to avoid expensive text classification on every playback tick
-export function HighlightLog({ log, visibleCount }: Props) {
+function HighlightLog({ log, visibleCount }: Props) {
   const allHighlights = useMemo<HighlightEntry[]>(() => {
     const out: HighlightEntry[] = [];
     const seenKills = new Set<number>();

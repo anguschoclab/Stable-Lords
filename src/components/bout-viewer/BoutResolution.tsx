@@ -12,7 +12,7 @@ interface BoutResolutionProps {
   announcement?: string;
 }
 
-export function getOutcomeStyles(by: FightOutcomeBy) {
+function getOutcomeStyles(by: FightOutcomeBy) {
   switch (by) {
     case 'Kill':
       return {

@@ -68,7 +68,7 @@ export function processHallOfFame(
       const existingRoster = rivalsUpdates.get(stableId)?.roster || [];
       const currentRoster =
         rivalsUpdates.get(stableId)?.roster ||
-        state.rivals.find((r) => r.id === stableId)?.roster ||
+        state.rivalMap?.get(stableId)?.roster ||
         [];
       const updatedRoster = [...currentRoster];
       const index = updatedRoster.findIndex((w: Warrior) => w.id === woty.w.id);

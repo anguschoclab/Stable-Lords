@@ -488,4 +488,3 @@ export function StableCrest({
 
 // Export size constants for external use
 export { SIZE_MAP };
-export default StableCrest;

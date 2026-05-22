@@ -1,4 +1,5 @@
 import { GameState, Warrior } from '@/types/state.types';
+import { buildWarriorMap } from '@/utils/roster';
 
 export interface BoutPairing {
   a: Warrior;
@@ -14,16 +15,7 @@ export function generatePairings(state: GameState): BoutPairing[] {
   const pairings: BoutPairing[] = [];
 
   // ⚡ Bolt: Use cached warriorMap if available, otherwise build it
-  const warriorMap =
-    state.warriorMap ||
-    (() => {
-      const map = new Map<string, Warrior>();
-      state.roster.forEach((w) => map.set(w.id, w));
-      (state.rivals || []).forEach((r) => {
-        r.roster.forEach((w) => map.set(w.id, w));
-      });
-      return map;
-    })();
+  const warriorMap = state.warriorMap || buildWarriorMap(state);
 
   // 2. Derive pairings from Signed Contracts for this week
   const allOffers = Object.values(state.boutOffers || {});
@@ -38,8 +30,9 @@ export function generatePairings(state: GameState): BoutPairing[] {
     const wD = idD ? warriorMap.get(idD) : undefined;
 
     if (wA && wD) {
-      // Find which stable wD belongs to
-      const rivalStable = (state.rivals || []).find((r) => r.roster.some((w) => w.id === wD.id));
+      // Find which stable wD belongs to using O(1) map lookup
+      const stableInfo = state.warriorToStableMap?.get(wD.id);
+      const rivalStable = stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
 
       pairings.push({
         a: wA,

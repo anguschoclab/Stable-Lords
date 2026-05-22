@@ -67,6 +67,19 @@ function runBoutPhase(state: GameState, ctx: WeekContext): GameState {
   (settledState.rivals || []).forEach((r) => r.roster.forEach((w) => warriorMap.set(w.id, w)));
   settledState.warriorMap = warriorMap;
 
+  const warriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
+  settledState.roster.forEach((w) =>
+    warriorToStableMap.set(w.id, { stableId: settledState.player.id, isPlayer: true })
+  );
+  (settledState.rivals || []).forEach((r) =>
+    r.roster.forEach((w) => warriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false }))
+  );
+  settledState.warriorToStableMap = warriorToStableMap;
+
+  const rivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
+  (settledState.rivals || []).forEach((r) => rivalMap.set(r.id, r));
+  settledState.rivalMap = rivalMap;
+
   return settledState;
 }
 

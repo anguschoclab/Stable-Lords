@@ -405,6 +405,8 @@ export interface GameState {
   lastSimulationReport?: SimulationReport;
   cachedMetaDrift?: import('@/engine/metaDrift').StyleMeta;
   warriorMap?: Map<WarriorId, import('@/types/warrior.types').Warrior>;
+  warriorToStableMap?: Map<string, { stableId: string; isPlayer: boolean }>;
+  rivalMap?: Map<string, import('@/types/state.types').RivalStableData>;
   deferredBoutLogs?: DeferredBoutLog[];
 }
 

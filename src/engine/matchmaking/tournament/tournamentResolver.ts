@@ -201,7 +201,7 @@ function getAIPlan(
   opponentOwnerId?: string
 ) {
   // warrior.stableId is rival.id (StableId), not owner.id — see warriorFactory + recruitmentWorker fixes
-  const rival = state.rivals.find((r) => r.id === w.stableId);
+  const rival = state.rivalMap?.get(w.stableId);
   if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
 
   let grudgeIntensity = 0;

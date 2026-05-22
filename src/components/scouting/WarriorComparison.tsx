@@ -36,8 +36,13 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
     return list;
   }, [rivals, playerRoster]);
 
-  const entryA = useMemo(() => allWarriors.find((e) => e.warrior.id === wIdA), [allWarriors, wIdA]);
-  const entryB = useMemo(() => allWarriors.find((e) => e.warrior.id === wIdB), [allWarriors, wIdB]);
+  const warriorMap = useMemo(
+    () => new Map(allWarriors.map((e) => [e.warrior.id as string, e])),
+    [allWarriors]
+  );
+
+  const entryA = useMemo(() => (wIdA ? warriorMap.get(wIdA) : undefined), [warriorMap, wIdA]);
+  const entryB = useMemo(() => (wIdB ? warriorMap.get(wIdB) : undefined), [warriorMap, wIdB]);
 
   if (allWarriors.length < 2) {
     return (

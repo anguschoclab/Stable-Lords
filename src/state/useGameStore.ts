@@ -9,10 +9,17 @@ import { engineProxy } from '@/engine/workerProxy';
 import { opfsArchive } from '@/engine/storage/opfsArchive';
 
 // Helper to strip non-serializable fields before worker transfer
-function stripNonSerializable<T extends { warriorMap?: unknown; cachedMetaDrift?: unknown }>(
+function stripNonSerializable<
+  T extends {
+    warriorMap?: unknown;
+    cachedMetaDrift?: unknown;
+    warriorToStableMap?: unknown;
+    rivalMap?: unknown;
+  }
+>(
   state: T
-): Omit<T, 'warriorMap' | 'cachedMetaDrift'> {
-  const { warriorMap, cachedMetaDrift, ...rest } = state;
+): Omit<T, 'warriorMap' | 'cachedMetaDrift' | 'warriorToStableMap' | 'rivalMap'> {
+  const { warriorMap, cachedMetaDrift, warriorToStableMap, rivalMap, ...rest } = state;
   return rest;
 }
 
@@ -456,4 +463,3 @@ export const useRivals = () => useGameStore((s) => s.rivals);
 export const useTreasury = () => useGameStore((s) => s.treasury);
 export const useWeek = () => useGameStore((s) => s.week);
 export const useIsSimulating = () => useGameStore((s) => s.isSimulating);
-export const useGame = useGameStore;

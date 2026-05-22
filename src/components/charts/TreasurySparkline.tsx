@@ -28,26 +28,31 @@ export function TreasurySparkline({
     }))
   );
 
-  // Build weekly treasury snapshots from ledger entries grouped by week
+  // Build weekly treasury snapshots from ledger entries in chronological order
   const points = useMemo(() => {
     if (!ledger || ledger.length === 0) {
       return [{ week, value: treasury }];
     }
 
-    const byWeek = new Map<number, number>();
+    const series: { week: number; value: number }[] = [];
+    let currentWeek = -1;
+    let cum = 0;
+
     for (const entry of ledger) {
       const w = entry.week ?? 0;
-      byWeek.set(w, (byWeek.get(w) ?? 0) + (entry.amount ?? 0));
+      if (w !== currentWeek) {
+        if (currentWeek !== -1) {
+          series.push({ week: currentWeek, value: cum });
+        }
+        currentWeek = w;
+      }
+      cum += entry.amount ?? 0;
+    }
+    // Add final week
+    if (currentWeek !== -1) {
+      series.push({ week: currentWeek, value: cum });
     }
 
-    // Build cumulative weekly series
-    const weeks = Array.from(byWeek.keys()).sort((a, b) => a - b);
-    let cum = 0;
-    const series: { week: number; value: number }[] = [];
-    for (const w of weeks) {
-      cum += byWeek.get(w) ?? 0;
-      series.push({ week: w, value: cum });
-    }
     // Ensure current week is represented
     const lastSeries = series[series.length - 1];
     if (series.length === 0 || !lastSeries || lastSeries.week !== week) {

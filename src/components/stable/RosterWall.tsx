@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { useNavigate, Link } from '@tanstack/react-router';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
@@ -13,12 +13,26 @@ import { StatBattery } from '@/components/ui/StatBattery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function RosterWall() {
-  const state = useWorldState();
   const navigate = useNavigate();
 
-  const sortedRoster = useMemo(
-    () => [...state.roster].filter((w) => w.status === 'Active').sort((a, b) => b.fame - a.fame),
-    [state.roster]
+  const sortedRoster = useGameStore(
+    useShallow((s) =>
+      s.roster
+        .filter((w) => w.status === 'Active')
+        .map((w) => ({
+          id: w.id,
+          name: w.name,
+          fame: w.fame,
+          style: w.style,
+          champion: w.champion,
+          potential: w.potential,
+          attributes: w.attributes,
+          career: w.career,
+          injuries: w.injuries,
+          flair: w.flair,
+        }))
+        .sort((a, b) => b.fame - a.fame)
+    )
   );
 
   return (

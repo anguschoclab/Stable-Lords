@@ -22,9 +22,14 @@ export default function Scouting() {
   const [selectedRivalId, setSelectedRivalId] = useState<string | null>(null);
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
 
+  const rivalMap = useMemo(
+    () => new Map((rivals ?? []).map((r) => [r.owner.id as string, r])),
+    [rivals]
+  );
+
   const activeRival = useMemo(
-    () => (rivals ?? []).find((r: RivalStableData) => r.owner.id === selectedRivalId),
-    [rivals, selectedRivalId]
+    () => (selectedRivalId ? rivalMap.get(selectedRivalId) : undefined),
+    [rivalMap, selectedRivalId]
   );
 
   const activeWarrior = useMemo(

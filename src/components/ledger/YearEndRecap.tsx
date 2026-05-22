@@ -130,5 +130,3 @@ export function YearEndRecap() {
     </div>
   );
 }
-
-export default YearEndRecap;

@@ -329,8 +329,9 @@ export function processAllRivalsBoutOffers(
 
   pendingOffers.forEach((offer) => {
     offer.warriorIds.forEach((wId) => {
-      // Find which rival owns this warrior
-      const owningRival = rivals.find((r) => r.roster.some((w) => w.id === wId));
+      // Find which rival owns this warrior using O(1) map lookup
+      const stableInfo = state.warriorToStableMap?.get(wId);
+      const owningRival = stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
       if (!owningRival) return;
 
       // Group by rival stable ID
@@ -369,7 +370,7 @@ export function processAllRivalsBoutOffers(
         const trackedOffer = currentOffers[offer.id];
         if (!trackedOffer || trackedOffer.responses[wId] !== 'Pending') return;
 
-        const rivalWarrior = owningRival.roster.find((w) => w.id === wId);
+        const rivalWarrior = state.warriorMap?.get(wId);
         if (!rivalWarrior) return;
 
         const response = evaluateBoutOffer(trackedOffer, owningRival, rivalWarrior, state.week);

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useWorldState, useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { HeartPulse, Activity, Skull, ShieldAlert } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
@@ -11,18 +12,24 @@ import { WarriorLink } from '@/components/EntityLink';
 export function MedicalAuditWidget() {
   const state = useWorldState();
 
-  const atRisk = useMemo(() => {
-    return state.roster
-      .filter((w) => {
-        const fatigue = w.fatigue ?? 0;
-        return w.status === 'Active' && (fatigue > 60 || w.injuries.length > 0);
-      })
-      .sort((a, b) => {
-        const bFatigue = b.fatigue ?? 0;
-        const aFatigue = a.fatigue ?? 0;
-        return bFatigue - aFatigue;
-      });
-  }, [state.roster]);
+  const atRiskData = useGameStore(
+    useShallow((s) =>
+      s.roster
+        .filter((w) => {
+          const fatigue = w.fatigue ?? 0;
+          return w.status === 'Active' && (fatigue > 60 || w.injuries.length > 0);
+        })
+        .map((w) => ({
+          id: w.id,
+          name: w.name,
+          fatigue: w.fatigue ?? 0,
+          injuries: w.injuries,
+        }))
+        .sort((a, b) => b.fatigue - a.fatigue)
+    )
+  );
+
+  const atRisk = useMemo(() => atRiskData, [atRiskData]);
 
   const criticalCount = atRisk.filter((w) => (w.fatigue ?? 0) > 85 || w.injuries.length > 1).length;
 

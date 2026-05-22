@@ -45,8 +45,9 @@ export function processContractPayouts(
   const purse = contract.purse;
   const showFee = Math.floor(purse * 0.2);
 
-  // Find rivals
-  const rivalA = state.rivals?.find((r) => r.roster.some((w) => w.id === currentWId));
+  // Find rivals using O(1) map lookup
+  const stableInfo = state.warriorToStableMap?.get(currentWId);
+  const rivalA = stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
 
   // Player payouts go via treasuryDelta. Rival payouts are handled in
   // stableManager.weeklyIncome (which iterates arenaHistory and adds

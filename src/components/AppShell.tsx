@@ -12,7 +12,6 @@ import { TacticalBar } from '@/components/navigation/TacticalBar';
 import EventLog from '@/components/EventLog';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { ResetDialog } from '@/components/layout/ResetDialog';
-import type { Warrior } from '@/types/state.types';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const {
@@ -23,7 +22,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     fame,
     crowdMood,
     weather,
-    roster,
     doReset,
     returnToTitle,
     lastSavedAt,
@@ -40,7 +38,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       fame: s.fame,
       crowdMood: s.crowdMood,
       weather: s.weather,
-      roster: s.roster,
       doReset: s.doReset,
       returnToTitle: s.returnToTitle,
       lastSavedAt: s.lastSavedAt,
@@ -50,6 +47,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       setEventLogOpen: s.setEventLogOpen,
       initialize: s.initialize,
     }))
+  );
+  const warriorStatusData = useGameStore(
+    useShallow((s: GameStore) => s.roster.map((w) => w.status))
   );
   const navigate = useNavigate();
   const location = useLocation();
@@ -67,11 +67,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const exemptPaths = ['/welcome', '/ops/', '/admin', '/help'];
     if (exemptPaths.some((p) => activePath.startsWith(p))) return;
 
-    const activeWarriors = roster.filter((w: Warrior) => w.status === 'Active');
+    const activeWarriors = warriorStatusData.filter((status) => status === 'Active');
     if (activeWarriors.length < 3) {
       navigate({ to: '/welcome' });
     }
-  }, [roster, activePath, navigate]);
+  }, [warriorStatusData, activePath, navigate]);
 
   useEffect(() => {
     // Strategic Route-Aware Event Log Toggling

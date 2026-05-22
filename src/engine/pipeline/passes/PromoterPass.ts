@@ -176,7 +176,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   }
 
   const availableWarriors = allWarriors.filter(
-    (entry) => !unavailableWarriorIds.has(entry.warrior.id)
+    (warrior) => !unavailableWarriorIds.has(warrior.id)
   );
 
   // 2. Iterate through Promoters
@@ -193,7 +193,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
     for (const warriorA of shuffledWarriors) {
       if (generated >= capacity) break;
 
-      const rankDataA = rankings[warriorA.warrior.id];
+      const rankDataA = rankings[warriorA.id];
       const rankA = rankDataA?.overallRank ?? 999;
       if (rankA > RANK_REQUIREMENTS[promoter.tier]) continue;
 
@@ -203,14 +203,14 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
 
       // Optimized candidate selection: single pass with inline scoring
       // Avoids multiple array allocations (filter + map + sort)
-      let bestCandidate: (typeof shuffledWarriors)[0] | null = null;
+      let bestCandidate: Warrior | null = null;
       let bestScore = -Infinity;
       let bestGap = 0;
 
       for (const candidate of shuffledWarriors) {
-        if (candidate.warrior.id === warriorA.warrior.id) continue;
+        if (candidate.id === warriorA.id) continue;
 
-        const rankDataB = rankings[candidate.warrior.id];
+        const rankDataB = rankings[candidate.id];
         const rankB = rankDataB?.overallRank ?? 999;
         if (rankB > RANK_REQUIREMENTS[promoter.tier]) continue;
 
@@ -219,8 +219,8 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         if (gap > gapThreshold) continue;
 
         const personalityScore = calculatePersonalityMatchScore(
-          warriorA.warrior,
-          candidate.warrior,
+          warriorA,
+          candidate,
           promoter
         );
 
@@ -245,11 +245,11 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
 
       if (opponentB) {
         const offerId = rngService.uuid();
-        const hype = calculateHype(warriorA.warrior, opponentB.warrior, promoter);
+        const hype = calculateHype(warriorA, opponentB, promoter);
         const basePurse = FIGHT_PURSE * TIER_MULTIPLIERS[promoter.tier];
         const purseModifier = calculatePersonalityPurseModifier(
-          warriorA.warrior,
-          opponentB.warrior,
+          warriorA,
+          opponentB,
           promoter,
           hype
         );
@@ -259,15 +259,15 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         newOffers[typedOfferId] = {
           id: typedOfferId,
           promoterId: promoter.id,
-          warriorIds: [warriorA.warrior.id, opponentB.warrior.id],
+          warriorIds: [warriorA.id, opponentB.id],
           boutWeek: targetWeek,
           expirationWeek: state.week + 1,
           purse: finalPurse,
           hype,
           status: 'Proposed',
           responses: {
-            [warriorA.warrior.id]: 'Pending',
-            [opponentB.warrior.id]: 'Pending',
+            [warriorA.id]: 'Pending',
+            [opponentB.id]: 'Pending',
           },
         };
         generated++;

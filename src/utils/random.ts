@@ -128,7 +128,7 @@ export function hashStr(s: string): number {
  * Universal shuffle that works with both function-based RNG and IRNGService.
  * Returns a new array.
  */
-export function randomShuffle<T>(arr: T[], rng: (() => number) | IRNGService): T[] {
+export function shuffled<T>(arr: T[], rng: (() => number) | IRNGService): T[] {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {
     const j =
@@ -137,9 +137,3 @@ export function randomShuffle<T>(arr: T[], rng: (() => number) | IRNGService): T
   }
   return copy;
 }
-
-/**
- * Legacy shuffled alias for backward compatibility.
- * @deprecated Use randomShuffle instead.
- */
-export const shuffled = randomShuffle;

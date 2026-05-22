@@ -22,14 +22,22 @@ interface StyleRow {
 }
 
 export function StyleMeterTable({ className }: StyleMeterTableProps) {
-  const { roster } = useGameStore(useShallow((s) => ({ roster: s.roster })));
+  const styleData = useGameStore(
+    useShallow((s) =>
+      s.roster.map((w) => ({
+        style: w.style,
+        wins: w.career?.wins ?? 0,
+        losses: w.career?.losses ?? 0,
+      }))
+    )
+  );
 
   const rows = useMemo<StyleRow[]>(() => {
     const map = new Map<string, { wins: number; losses: number }>();
-    for (const w of roster) {
+    for (const w of styleData) {
       const entry = map.get(w.style) ?? { wins: 0, losses: 0 };
-      entry.wins += w.career?.wins ?? 0;
-      entry.losses += w.career?.losses ?? 0;
+      entry.wins += w.wins;
+      entry.losses += w.losses;
       map.set(w.style, entry);
     }
 
@@ -45,7 +53,7 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
         };
       })
       .sort((a, b) => b.winRate - a.winRate);
-  }, [roster]);
+  }, [styleData]);
 
   return (
     <Surface variant="glass" className={cn('p-4 flex flex-col gap-3', className)}>

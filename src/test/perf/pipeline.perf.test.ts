@@ -11,6 +11,10 @@ vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({
     (state as any).deferredBoutLogs = [];
     return state;
   },
+  flushDeferredArchivesOffThread: (state: unknown) => {
+    (state as any).deferredBoutLogs = [];
+    return state;
+  },
 }));
 
 describe('Pipeline Performance Benchmarks', () => {

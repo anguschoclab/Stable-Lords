@@ -28,9 +28,8 @@ export function runRankingsPass(state: GameState): StateImpact {
   // Pre-size the array for better memory allocation
   const scores: WarriorScore[] = new Array(allWarriors.length);
   for (let i = 0; i < allWarriors.length; i++) {
-    const warriorEntry = allWarriors[i];
-    if (!warriorEntry) continue;
-    const warrior = warriorEntry.warrior;
+    const warrior = allWarriors[i];
+    if (!warrior) continue;
     const wins = warrior.career?.wins ?? 0;
     const losses = warrior.career?.losses ?? 0;
     const total = wins + losses;

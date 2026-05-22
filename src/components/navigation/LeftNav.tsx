@@ -89,14 +89,16 @@ type HubId = (typeof HUBS)[number]['id'];
 // ─── Alert badge helper ──────────────────────────────────────────────────────
 
 function useNavAlerts() {
-  const { roster, boutOffers, isTournamentWeek, trainingAssignments, week } = useGameStore(
+  const { boutOffers, isTournamentWeek, trainingAssignments, week } = useGameStore(
     useShallow((s) => ({
-      roster: s.roster,
       boutOffers: s.boutOffers,
       isTournamentWeek: s.isTournamentWeek,
       trainingAssignments: s.trainingAssignments,
       week: s.week,
     }))
+  );
+  const warriorStatusData = useGameStore(
+    useShallow((s) => s.roster.map((w) => ({ id: w.id, status: w.status })))
   );
   const location = useLocation();
   const onOpsSection = location.pathname.startsWith('/ops');
@@ -115,11 +117,11 @@ function useNavAlerts() {
   }, [onCommandSection, week]);
 
   const assignedIds = new Set((trainingAssignments ?? []).map((a) => a.warriorId));
-  const untrainedCount = roster.filter(
+  const untrainedCount = warriorStatusData.filter(
     (w) => w.status === 'Active' && !assignedIds.has(w.id)
   ).length;
 
-  const rosterIds = new Set(roster.map((w) => w.id));
+  const rosterIds = new Set(warriorStatusData.map((w) => w.id));
   const pendingOffers = Object.values(boutOffers || {}).filter(
     (o) => o.status === 'Proposed' && o.warriorIds.some((id) => rosterIds.has(id))
   ).length;

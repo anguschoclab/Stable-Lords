@@ -1,6 +1,7 @@
 import type { GameState } from '@/types/state.types';
 import { type Season } from '@/types/shared.types';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
+import { archiveWorkerProxy } from '@/engine/storage/archiveWorkerProxy';
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
 export function seasonToNumber(season: Season): number {
@@ -38,6 +39,21 @@ export async function flushDeferredArchives(state: GameState): Promise<GameState
   // Clear deferred logs
   (state as any).deferredBoutLogs = [];
 
+  return state;
+}
+
+/**
+ * Non-blocking flush: extracts deferred bout logs from state, clears them
+ * immediately on the main thread, and dispatches archiving to a Web Worker.
+ * Returns the mutated state with deferredBoutLogs cleared.
+ */
+export function flushDeferredArchivesOffThread(state: GameState): GameState {
+  const logs = state.deferredBoutLogs;
+  if (!logs || logs.length === 0) return state;
+  state.deferredBoutLogs = [];
+  archiveWorkerProxy.flushLogs(logs).catch((err) => {
+    console.error('Archive worker proxy: flush failed', err);
+  });
   return state;
 }
 

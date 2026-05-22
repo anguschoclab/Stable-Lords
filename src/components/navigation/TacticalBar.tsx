@@ -17,8 +17,10 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { isFightReady } from '@/engine/warriorStatus';
 import type { BoutOffer } from '@/types/state.types';
+import type { GameStore } from '@/state/useGameStore';
 
 interface Alert {
   id: string;
@@ -34,8 +36,10 @@ interface Alert {
 export function TacticalBar() {
   const [expanded, setExpanded] = useState(false);
   const location = useLocation();
-  const { roster, trainers, trainingAssignments, boutOffers, isTournamentWeek, day, week } =
-    useGameStore();
+  const { trainers, trainingAssignments, boutOffers, isTournamentWeek, day, week, roster } = useGameStore();
+  const warriorStatusData = useGameStore(
+    useShallow((s: GameStore) => s.roster.map((w) => ({ id: w.id, status: w.status })))
+  );
 
   // Generate alerts based on game state
   const alerts = useMemo<Alert[]>(() => {
@@ -45,8 +49,8 @@ export function TacticalBar() {
     const assignedIds = new Set(
       trainingAssignments?.map((a: { warriorId: string }) => a.warriorId) ?? []
     );
-    const activeWarriors = roster?.filter((w: { status: string }) => w.status === 'Active') ?? [];
-    const unassigned = activeWarriors.filter((w: { id: string }) => !assignedIds.has(w.id));
+    const activeWarriors = warriorStatusData.filter((w) => w.status === 'Active');
+    const unassigned = activeWarriors.filter((w) => !assignedIds.has(w.id));
 
     if (unassigned.length > 0) {
       result.push({
@@ -74,7 +78,7 @@ export function TacticalBar() {
       });
     }
 
-    // Check for fight-ready warriors
+    // Check for fight-ready warriors (needs full warrior objects for isFightReady)
     const fightReady =
       roster?.filter((w: unknown) => isFightReady(w as Parameters<typeof isFightReady>[0])) ?? [];
 
@@ -100,7 +104,7 @@ export function TacticalBar() {
     }
 
     return result;
-  }, [roster, trainingAssignments, boutOffers, isTournamentWeek, day, trainers]);
+  }, [warriorStatusData, roster, trainingAssignments, boutOffers, isTournamentWeek, day, trainers]);
 
   // Don't show on certain pages (welcome, warrior detail)
   const hiddenPaths = ['/welcome', '/help'];

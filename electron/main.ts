@@ -170,9 +170,18 @@ function createWindow() {
     mainWindow = null;
   });
 
-  // Handle external links
+  // Handle external links securely
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    try {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+        shell.openExternal(url);
+      } else {
+        console.warn(`[Security] Blocked attempt to open external URL with unsafe protocol: ${parsedUrl.protocol}`);
+      }
+    } catch (e) {
+      console.warn(`[Security] Blocked attempt to open invalid URL: ${url}`);
+    }
     return { action: 'deny' };
   });
 }

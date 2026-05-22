@@ -2,7 +2,7 @@ import { Crosshair, Shield, Target, Settings2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import PlanBuilder from '@/components/PlanBuilder';
 import EquipmentLoadoutUI from '@/components/EquipmentLoadout';
-import { SchedulingWidget } from '@/components/widgets/SchedulingWidget';
+import { SchedulingWidget } from '@/components/widgets';
 import { Warrior, FightPlan } from '@/types/game';
 import { EquipmentLoadout } from '@/data/equipment';
 import { Surface } from '@/components/ui/Surface';

@@ -15,13 +15,15 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Separator } from '@/components/ui/separator';
-import { TreasuryOverview } from '@/components/ledger/TreasuryOverview';
-import { InsightVault } from '@/components/ledger/InsightVault';
-import { InsightManager } from '@/components/ledger/InsightManager';
-import { ContractManager } from '@/components/ledger/ContractManager';
-import { Chronicle } from '@/components/ledger/Chronicle';
-import { HallOfWarriors } from '@/components/ledger/HallOfWarriors';
-import { YearEndRecap } from '@/components/ledger/YearEndRecap';
+import {
+  TreasuryOverview,
+  InsightVault,
+  InsightManager,
+  ContractManager,
+  Chronicle,
+  HallOfWarriors,
+  YearEndRecap,
+} from '@/components/ledger';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { computeWeeklyBreakdown } from '@/engine/economy';

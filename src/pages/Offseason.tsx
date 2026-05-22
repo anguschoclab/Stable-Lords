@@ -8,8 +8,7 @@ import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { PageFrame } from '@/components/ui/PageFrame';
-import { YearEndRecap } from '@/components/ledger/YearEndRecap';
-import { SeasonSynthesis } from '@/components/ledger/SeasonSynthesis';
+import { YearEndRecap, SeasonSynthesis } from '@/components/ledger';
 import { CalendarDays, UserPlus, GraduationCap, BookOpen, ArrowRight, History } from 'lucide-react';
 
 export default function Offseason() {

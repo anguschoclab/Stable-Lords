@@ -3,6 +3,7 @@
  * Extracted from factories.ts to follow SRP
  */
 import type { FightSummary } from '@/types/state.types';
+import { FightingStyle } from '@/types/shared.types';
 import { generateId } from '@/utils/idUtils';
 
 /**
@@ -19,8 +20,8 @@ export function makeFightSummary(
     d: 'Defender',
     warriorIdA: 'warrior-a',
     warriorIdD: 'warrior-d',
-    styleA: 'Brawler' as any,
-    styleD: 'Balanced' as any,
+    styleA: FightingStyle.BashingAttack,
+    styleD: FightingStyle.TotalParry,
     winner: 'A',
     by: 'KO',
     title: 'Practice Match',

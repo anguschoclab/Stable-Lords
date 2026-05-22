@@ -7,35 +7,40 @@ import { FightingStyle } from '@/types/game';
 import type { GameState, FightSummary } from '@/types/game';
 import '@/test/setup';
 
+let storeOverride: any = {};
+
+const defaultStoreState = {
+  roster: [],
+  newsletter: [],
+  ledger: [],
+  matchHistory: [],
+  moodHistory: [],
+  graveyard: [],
+  retired: [],
+  week: 1,
+  season: 'Spring',
+  year: 1,
+  treasury: 500,
+  tournaments: [],
+  rivals: [],
+  arenaHistory: [],
+  trainers: [],
+  trainingAssignments: [],
+  fame: 0,
+  player: {
+    id: 'p1',
+    name: 'Player',
+    stableName: "Dragon's Hearth",
+    fame: 0,
+    renown: 0,
+    titles: 0,
+  },
+};
+
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({
-    roster: [],
-    newsletter: [],
-    ledger: [],
-    matchHistory: [],
-    moodHistory: [],
-    graveyard: [],
-    retired: [],
-    week: 1,
-    season: 'Spring',
-    year: 1,
-    treasury: 500,
-    tournaments: [],
-    rivals: [],
-    arenaHistory: [],
-    trainers: [],
-    trainingAssignments: [],
-    fame: 0,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: "Dragon's Hearth",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-  }),
+  useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
+  useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
 }));
 
 // Must mock the module before importing it inside components
@@ -125,8 +130,10 @@ describe('HallOfFights Component', () => {
   };
 
   beforeEach(() => {
+    storeOverride = {};
     mockState = createFreshState('test-seed');
     mockState.arenaHistory = [fight1, fight2, fight3];
+    storeOverride = { arenaHistory: mockState.arenaHistory, week: mockState.week };
 
     // Setup LoreArchive mock for hall entries
     const mockAllHall = LoreArchive.allHall as any;

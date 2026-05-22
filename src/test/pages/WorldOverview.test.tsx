@@ -7,35 +7,40 @@ import { FightingStyle } from '@/types/game';
 import type { Warrior, GameState } from '@/types/game';
 import '@/test/setup';
 
+let storeOverride: any = {};
+
+const defaultStoreState = {
+  roster: [],
+  newsletter: [],
+  ledger: [],
+  matchHistory: [],
+  moodHistory: [],
+  graveyard: [],
+  retired: [],
+  week: 1,
+  season: 'Spring',
+  year: 1,
+  treasury: 500,
+  tournaments: [],
+  rivals: [],
+  arenaHistory: [],
+  trainers: [],
+  trainingAssignments: [],
+  fame: 0,
+  player: {
+    id: 'p1',
+    name: 'Player',
+    stableName: "Dragon's Hearth",
+    fame: 0,
+    renown: 0,
+    titles: 0,
+  },
+};
+
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({
-    roster: [],
-    newsletter: [],
-    ledger: [],
-    matchHistory: [],
-    moodHistory: [],
-    graveyard: [],
-    retired: [],
-    week: 1,
-    season: 'Spring',
-    year: 1,
-    treasury: 500,
-    tournaments: [],
-    rivals: [],
-    arenaHistory: [],
-    trainers: [],
-    trainingAssignments: [],
-    fame: 0,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: "Dragon's Hearth",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-  }),
+  useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
+  useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
 }));
 
 // Mock the router components
@@ -100,6 +105,7 @@ describe('WorldOverview Component', () => {
   let mockState: GameState;
 
   beforeEach(() => {
+    storeOverride = {};
     mockState = createFreshState('test-seed');
 
     // Setup player stable
@@ -132,6 +138,13 @@ describe('WorldOverview Component', () => {
         roster: [createDummyWarrior('RivalWarrior1', 'Active', 20, 0, 90)],
       } as unknown,
     ];
+
+    storeOverride = {
+      roster: mockState.roster,
+      rivals: mockState.rivals,
+      player: mockState.player,
+      fame: mockState.player.fame,
+    };
   });
 
   it('renders stable rows correctly with aggregated stats', async () => {

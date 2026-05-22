@@ -1,7 +1,7 @@
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Zap, Activity } from 'lucide-react';
-import { MetaDriftWidget } from '@/components/widgets/MetaDriftWidget';
+import { MetaDriftWidget } from '@/components/widgets';
 import { STYLE_DISPLAY_NAMES, type FightingStyle, type RivalStableData } from '@/types/game';
 import { cn } from '@/lib/utils';
 

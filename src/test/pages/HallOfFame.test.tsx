@@ -8,35 +8,40 @@ import type { GameState, FightSummary, NewsletterItem, Warrior } from '@/types/g
 import type { FightSummary as FightSummaryType } from '@/types/combat.types';
 import '@/test/setup';
 
+let storeOverride: any = {};
+
+const defaultStoreState = {
+  roster: [],
+  newsletter: [],
+  ledger: [],
+  matchHistory: [],
+  moodHistory: [],
+  graveyard: [],
+  retired: [],
+  week: 1,
+  season: 'Spring',
+  year: 1,
+  treasury: 500,
+  tournaments: [],
+  rivals: [],
+  arenaHistory: [],
+  trainers: [],
+  trainingAssignments: [],
+  fame: 0,
+  awards: [],
+  player: {
+    id: 'p1',
+    name: 'Player',
+    stableName: "Dragon's Hearth",
+    fame: 0,
+    renown: 0,
+    titles: 0,
+  },
+};
+
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({
-    roster: [],
-    newsletter: [],
-    ledger: [],
-    matchHistory: [],
-    moodHistory: [],
-    graveyard: [],
-    retired: [],
-    week: 1,
-    season: 'Spring',
-    year: 1,
-    treasury: 500,
-    tournaments: [],
-    rivals: [],
-    arenaHistory: [],
-    trainers: [],
-    trainingAssignments: [],
-    fame: 0,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: "Dragon's Hearth",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-  }),
+  useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
 }));
 
 // Must mock the module before importing it inside components
@@ -139,6 +144,7 @@ describe('HallOfFame Component', () => {
   };
 
   beforeEach(() => {
+    storeOverride = {};
     mockState = createFreshState('test-seed');
     mockState.week = 53; // ensure it's past week 52 for year calculation
     mockState.newsletter = [mockNewsletter];
@@ -163,6 +169,19 @@ describe('HallOfFame Component', () => {
 
     // Setup ArenaHistory mock
     mockArenaHistoryAll.mockReturnValue([fight1, fight2]);
+
+    storeOverride = {
+      roster: mockState.roster,
+      awards: mockState.awards,
+      year: 1,
+      week: mockState.week,
+      season: mockState.season,
+      newsletter: mockState.newsletter,
+      graveyard: mockState.graveyard,
+      retired: mockState.retired,
+      rivals: mockState.rivals,
+      player: mockState.player,
+    };
   });
 
   it('renders the inductees correctly', async () => {

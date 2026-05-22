@@ -9,11 +9,13 @@ import { audioManager } from '@/lib/AudioManager';
 import type { FightSummary } from '@/types/combat.types';
 import narrativeContent from '@/data/narrativeContent.json';
 
-import { GazetteStep } from './resolution-reveal/GazetteStep';
-import { InjuriesStep } from './resolution-reveal/InjuriesStep';
-import { BoutsStep } from './resolution-reveal/BoutsStep';
-import { MathStep } from './resolution-reveal/MathStep';
-import { MemorialStep } from './resolution-reveal/MemorialStep';
+import {
+  GazetteStep,
+  InjuriesStep,
+  BoutsStep,
+  MathStep,
+  MemorialStep,
+} from './resolution-reveal';
 
 type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';
 

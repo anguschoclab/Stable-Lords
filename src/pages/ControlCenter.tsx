@@ -21,7 +21,7 @@ import { SeasonWidget } from '@/components/dashboard/SeasonWidget';
 import { RecentBoutsWidget } from '@/components/dashboard/RecentBoutsWidget';
 import { WeeklyDigestWidget } from '@/components/dashboard/WeeklyDigestWidget';
 import { RivalryWidget } from '@/components/dashboard/RivalryWidget';
-import { MetaDriftWidget } from '@/components/widgets/MetaDriftWidget';
+import { MetaDriftWidget } from '@/components/widgets';
 import { FormSparkline } from '@/components/charts/FormSparkline';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { STYLE_ABBREV } from '@/types/shared.types';

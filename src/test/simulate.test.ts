@@ -455,7 +455,7 @@ describe('simulateFight — equipment modifiers', () => {
       FightingStyle.BashingAttack,
       { ST: 18 },
       {
-        equipment: { weapon: 'great_axe', armor: 'scale_armor', helm: 'none', shield: 'none' },
+        equipment: { weapon: 'great_axe', armor: 'scale_mail', helm: 'none_helm', shield: 'none_shield' },
       }
     );
     const wLight = makeWarrior(
@@ -463,7 +463,7 @@ describe('simulateFight — equipment modifiers', () => {
       FightingStyle.LungingAttack,
       { SP: 16 },
       {
-        equipment: { weapon: 'dagger', armor: 'leather', helm: 'none', shield: 'none' },
+        equipment: { weapon: 'dagger', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
       }
     );
 
@@ -486,8 +486,8 @@ describe('simulateFight — equipment modifiers', () => {
       { CN: 14, DF: 14 },
       {
         equipment: {
-          weapon: 'shortsword',
-          armor: 'chainmail',
+          weapon: 'short_sword',
+          armor: 'chain_mail',
           helm: 'helm',
           shield: 'medium_shield',
         },
@@ -792,7 +792,7 @@ describe('simulateFight — distance system', () => {
       FightingStyle.LungingAttack,
       { SP: 14, DF: 13 },
       {
-        equipment: { weapon: 'pike', armor: 'leather', helm: 'none', shield: 'none' },
+        equipment: { weapon: 'short_spear', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
       }
     );
     const wGrap = makeWarrior(
@@ -800,7 +800,7 @@ describe('simulateFight — distance system', () => {
       FightingStyle.BashingAttack,
       { ST: 14, CN: 13 },
       {
-        equipment: { weapon: 'open_hand', armor: 'none', helm: 'none', shield: 'none' },
+        equipment: { weapon: 'dagger', armor: 'none_armor', helm: 'none_helm', shield: 'none_shield' },
       }
     );
 

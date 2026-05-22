@@ -19,10 +19,12 @@ import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 
 // Modular Components
-import { TournamentBracket } from '@/components/tournaments/TournamentBracket';
-import { TournamentHistory } from '@/components/tournaments/TournamentHistory';
-import { TournamentPrepDialog } from '@/components/tournaments/TournamentPrepDialog';
-import { TournamentSchedule } from '@/components/tournaments/TournamentSchedule';
+import {
+  TournamentBracket,
+  TournamentHistory,
+  TournamentPrepDialog,
+  TournamentSchedule,
+} from '@/components/tournaments';
 
 const SEASON_NAMES: Record<string, string> = {
   Spring: 'Spring Classic',

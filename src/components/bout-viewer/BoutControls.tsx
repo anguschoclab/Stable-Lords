@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Play, Pause, SkipForward, RotateCcw } from 'lucide-react';
-import ViewModeToggle, { type ViewMode } from '@/components/arena/ViewModeToggle';
+import { ViewModeToggle, type ViewMode } from '@/components/arena';
 
 interface BoutControlsProps {
   viewMode: ViewMode;

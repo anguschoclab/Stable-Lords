@@ -7,7 +7,7 @@
  * - Aging penalties apply to SP and DF after age 28
  */
 import type { GameState, RivalStableData } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
+import type { Warrior, WarriorStatus } from '@/types/warrior.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { computeWarriorStats } from './skillCalc';
 import { type StateImpact } from './impacts';
@@ -91,7 +91,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
       const retiredObj = {
         ...w,
         age: currentAge,
-        status: 'Retired' as any,
+        status: 'Retired' as WarriorStatus,
         retiredWeek: state.week,
       };
       retiredWarriors.push(retiredObj);

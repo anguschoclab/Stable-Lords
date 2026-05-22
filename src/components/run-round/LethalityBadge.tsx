@@ -8,7 +8,7 @@ interface LethalityBadgeProps {
   crowdMood: string;
 }
 
-export function getLethalityScore(wA: Warrior, wB: Warrior, crowdMood: string) {
+function getLethalityScore(wA: Warrior, wB: Warrior, crowdMood: string) {
   let score = 0;
   // Lower HP = higher risk
   const hpA = wA.derivedStats?.hp ?? 0;

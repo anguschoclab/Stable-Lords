@@ -7,7 +7,7 @@ import { ReputationSliders } from '@/components/stable/ReputationSliders';
 import { RosterWall } from '@/components/stable/RosterWall';
 import { TrainerTable } from '@/components/stable/TrainerTable';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
-import { InsightManager } from '@/components/ledger/InsightManager';
+import { InsightManager } from '@/components/ledger';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 

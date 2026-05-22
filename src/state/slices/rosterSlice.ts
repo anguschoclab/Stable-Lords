@@ -121,7 +121,8 @@ export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (
         const draft = { ...w };
         if (!draft.favorites) {
           draft.favorites = {
-            weaponId: 'gladius',
+            // Use canonical weapon ID to avoid silent fallback in distance resolution
+            weaponId: 'broadsword',
             rhythm: { oe: 0.5, al: 0.5 },
             discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
           };

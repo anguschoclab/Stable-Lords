@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Users } from 'lucide-react';
 import { StatBadge } from '@/components/ui/WarriorBadges';
-import { StableCrest } from '@/components/crest/StableCrest';
+import { StableCrest } from '@/components/crest';
 
 interface StableDossierProps {
   stableId?: string;

@@ -59,9 +59,9 @@ export function processRoster(
   const trainableWarriors = updatedRival.roster.filter(
     (w) => w.status === 'Active' && (w.injuries ?? []).length === 0
   );
-  const champions = trainableWarriors.filter((w) => w.champion || (w as any).isStarInvestment);
+  const champions = trainableWarriors.filter((w) => w.champion || w.isStarInvestment);
   const nonChampions = trainableWarriors
-    .filter((w) => !w.champion && !(w as any).isStarInvestment)
+    .filter((w) => !w.champion && !w.isStarInvestment)
     .sort((a, b) => (b.fame || 0) - (a.fame || 0));
   const trainees = [...champions, ...nonChampions].slice(0, trainingLimit);
 

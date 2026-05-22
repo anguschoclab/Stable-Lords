@@ -42,6 +42,7 @@ interface OffseasonEventNarrative {
     | 'street_performance'
     | 'chaotic_spells'
     | 'mysterious_patron'
+    | 'loyal_stray'
     | 'midnight_feast';
   newsletter: string[];
 }

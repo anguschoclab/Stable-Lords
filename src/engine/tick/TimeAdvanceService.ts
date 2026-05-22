@@ -278,13 +278,20 @@ export const TimeAdvanceService = {
     const startYear = state.year;
     const startTreasury = state.treasury;
 
+    const quarterOpts = opts?.deferArchives ? { ...opts, deferArchives: false } : opts;
+
     for (let q = 0; q < 4; q++) {
-      const result = await this.advanceQuarter(currentState, opts);
+      const result = await this.advanceQuarter(currentState, quarterOpts);
       quarterResults.push(result);
       currentState = result.state;
 
       // Early termination if stop condition triggered
       if (result.stopReason) {
+        if (opts?.deferArchives) {
+          const flushStart = performance.now();
+          await flushDeferredArchives(currentState);
+          telemetry.timing(TelemetryEvents.FLUSH_DEFERRED_ARCHIVES, performance.now() - flushStart);
+        }
         return {
           state: currentState,
           quarterResults,
@@ -304,6 +311,12 @@ export const TimeAdvanceService = {
           stopReason: result.stopReason,
         };
       }
+    }
+
+    if (opts?.deferArchives) {
+      const flushStart = performance.now();
+      await flushDeferredArchives(currentState);
+      telemetry.timing(TelemetryEvents.FLUSH_DEFERRED_ARCHIVES, performance.now() - flushStart);
     }
 
     return {

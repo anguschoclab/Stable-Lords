@@ -39,6 +39,14 @@ const WEATHER_METADATA = {
     description: 'Fierce winds. Substantial penalty to stamina.',
     stats: 'STAMINA DRAIN 115%',
   },
+  Tornado: {
+    icon: Wind,
+    color: 'text-orange-500',
+    bg: 'bg-orange-500/10',
+    border: 'border-orange-500/20',
+    description: 'Violent swirling winds. Severe penalty to coordination and stamina.',
+    stats: 'STAMINA DRAIN 140% // SEVERE INITIATIVE PENALTY',
+  },
   Sweltering: {
     icon: ThermometerSun,
     color: 'text-arena-blood',
@@ -91,6 +99,14 @@ const WEATHER_METADATA = {
     description:
       'A vile purple mist clings to the arena, draining stamina and clouding the mind.',
     stats: 'INITIATIVE & RIPOSTE PENALTY // STAMINA DRAIN 130%',
+  },
+  Hailstorm: {
+    icon: CloudRain,
+    color: 'text-cyan-300',
+    bg: 'bg-cyan-300/10',
+    border: 'border-cyan-300/20',
+    description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
+    stats: 'INITIATIVE -4 // RIPOSTE -2 // DAMAGE 95% // STAMINA DRAIN 120%',
   },
 };
 

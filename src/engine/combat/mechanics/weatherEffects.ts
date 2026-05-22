@@ -84,6 +84,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.9,
     description: 'Choking dust drains stamina and blinds fighters.',
   },
+  Tornado: {
+    staminaMult: 1.4,
+    initiativeMod: -6,
+    riposteMod: -2,
+    damageMult: 0.8,
+    description: 'Violent swirling winds threaten to lift fighters off their feet, destroying coordination.',
+  },
   Blizzard: {
     staminaMult: 1.5,
     initiativeMod: -4,
@@ -168,6 +175,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.1,
     description: 'A vile, clinging mist saps energy and clouds the mind, leaving fighters desperate.',
   },
+  Hailstorm: {
+    staminaMult: 1.2,
+    initiativeMod: -4,
+    riposteMod: -2,
+    damageMult: 0.95,
+    description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
+  },
 };
 
 /**
@@ -198,6 +212,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Blood Moon': 'A crimson moon hangs overhead. The crowd is already baying for blood.',
   Eclipse: 'Darkness falls mid-day. An eerie calm descends before the violence.',
   Sandstorm: 'A howling sandstorm blinds the arena. Every breath is a battle.',
+  Tornado: 'A terrifying tornado tears through the arena, throwing sand and debris everywhere.',
   Blizzard: 'A brutal blizzard freezes the arena. Survival is the only goal.',
   'Dense Fog': 'A thick mist swallows the fighters. Every shadow is a threat.',
   Mist: 'A light mist rolls across the sand, clinging to the fighters.',
@@ -210,6 +225,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Meteor Shower': 'The night sky burns with falling stars, casting chaotic shadows across the sand.',
   'Abyssal Gloom': 'A terrifying, supernatural darkness swallows the arena. Fighters vanish into the abyssal gloom.',
   'Cursed Miasma': 'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
+  Hailstorm: 'Ice falls from the sky like stones, battering armor and bare flesh alike.',
 };
 
 /**

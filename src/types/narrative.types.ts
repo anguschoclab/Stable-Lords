@@ -183,10 +183,12 @@ export interface GazetteHeadlines {
   LegendaryStreak: string[];
   HotStreak: string[];
   Streak: string[];
+  win_streak?: string[];
   LegacyRivalry: string[];
   Rivalry: string[];
   RisingStar: string[];
   Upset: string[];
+  major_upset?: string[];
   MultipleKills: string[];
   Kill: string[];
   MultipleKOs: string[];

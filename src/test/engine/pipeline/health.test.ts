@@ -4,6 +4,12 @@ import { type GameState, type InjuryData } from '@/types/game';
 import * as injuriesModule from '@/engine/injuries';
 import * as matchmakingModule from '@/engine/matchmaking/historyLogic';
 
+const mockTickInjuries = vi.hoisted(() => vi.fn());
+
+vi.mock('@/engine/injuries', () => ({
+  tickInjuries: mockTickInjuries,
+}));
+
 describe('pipeline/health', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -11,7 +17,6 @@ describe('pipeline/health', () => {
 
   describe('computeHealthImpact', () => {
     it('should handle warriors with missing, null, or string-only injuries gracefully', () => {
-      vi.spyOn(injuriesModule, 'tickInjuries');
       const mockState = {
         week: 5,
         roster: [
@@ -46,7 +51,7 @@ describe('pipeline/health', () => {
         ],
       } as unknown as GameState;
 
-      vi.spyOn(injuriesModule, 'tickInjuries').mockReturnValue({
+      vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
         active: [{ ...mockInjury, weeksRemaining: 1 }],
         healed: ['sprain'],
       });
@@ -96,7 +101,7 @@ describe('pipeline/health', () => {
         roster: [{ id: 'w1', name: 'Warrior 1', injuries: [mockInjury] }],
       } as unknown as GameState;
 
-      vi.spyOn(injuriesModule, 'tickInjuries').mockReturnValue({
+      vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
         active: [{ ...mockInjury, weeksRemaining: 1 }],
         healed: [],
       });
@@ -127,7 +132,7 @@ describe('pipeline/health', () => {
         newsletter: [],
       } as unknown as GameState;
 
-      vi.spyOn(injuriesModule, 'tickInjuries').mockReturnValue({
+      vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
         active: [{ ...mockInjury, weeksRemaining: 1 }],
         healed: ['sprain'],
       });
@@ -160,7 +165,7 @@ describe('pipeline/health', () => {
         roster: [{ id: 'w1', name: 'Warrior 1', injuries: [mockInjury] }],
       } as unknown as GameState;
 
-      vi.spyOn(injuriesModule, 'tickInjuries').mockReturnValue({
+      vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
         active: [],
         healed: ['sprain'],
       });

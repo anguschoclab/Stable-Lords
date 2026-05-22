@@ -8,7 +8,7 @@ import narrativeContent from '@/data/narrativeContent.json';
 export const FLAIR_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.flair;
 export const TITLE_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.title;
 export const INJURY_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.injury;
-export const STATUS_DESCRIPTIONS: Record<string, string> = (narrativeContent.meta as any).status;
+export const STATUS_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.status;
 
 /**
  * Get a tooltip description for any warrior tag.

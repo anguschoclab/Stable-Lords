@@ -1,60 +1,50 @@
 /**
  * advanceWeek pipeline tests — verifies orchestration of the weekly pipeline
+ * NOTE: The pipeline uses a pass-based architecture. Mocks target pass modules directly.
  */
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import * as Training from '@/engine/training';
-import * as Economy from '@/engine/economy';
-import * as Aging from '@/engine/aging';
-import * as Health from '@/engine/health';
+
+const mockResolveImpacts = vi.hoisted(() => vi.fn((state: any) => (state ? { ...state } : {})));
+const mockArchiveWeekLogs = vi.hoisted(() => vi.fn((s: any) => s));
+const mockRunWarriorPass = vi.hoisted(() => vi.fn(() => ({})));
+const mockRunEconomyPass = vi.hoisted(() => vi.fn(() => ({})));
+const mockRunBoutSimulationPass = vi.hoisted(() => vi.fn(() => ({})));
+
+vi.mock('@/engine/pipeline/passes/WarriorPass', () => ({ runWarriorPass: mockRunWarriorPass }));
+vi.mock('@/engine/pipeline/passes/EconomyPass', () => ({ runEconomyPass: mockRunEconomyPass }));
+vi.mock('@/engine/pipeline/passes/EquipmentPass', () => ({ runEquipmentPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/RecruitmentPass', () => ({ runRecruitmentPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/RivalStrategyPass', () => ({ runRivalStrategyPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/WorldPass', () => ({ runWorldPass: vi.fn(() => ({})), computeNextSeason: vi.fn(() => 'Summer') }));
+vi.mock('@/engine/pipeline/passes/SystemPass', () => ({ runSystemPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/RankingsPass', () => ({ runRankingsPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/PromoterPass', () => ({ runPromoterPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/PromoterLifecyclePass', () => ({ runPromoterLifecyclePass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/TrainerPass', () => ({ runTrainerPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/EventPass', () => ({ runEventPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/NarrativePass', () => ({ runNarrativePass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/seasonal', () => ({ runSeasonalPass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/BoutSimulationPass', () => ({ runBoutSimulationPass: mockRunBoutSimulationPass }));
+vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({ archiveWeekLogs: mockArchiveWeekLogs }));
+vi.mock('@/engine/impacts', () => ({
+  resolveImpacts: mockResolveImpacts,
+  mergeImpacts: vi.fn((impacts: any) => impacts),
+  StateImpact: {},
+}));
+
+import * as WarriorPass from '@/engine/pipeline/passes/WarriorPass';
+import * as EconomyPass from '@/engine/pipeline/passes/EconomyPass';
 import * as Impacts from '@/engine/impacts';
-import * as Recruitment from '@/engine/recruitment';
-import * as Gazette from '@/engine/gazette/gazetteNarrative';
 
 describe('advanceWeek pipeline orchestration', () => {
-  beforeEach(() => {
-    // Use scoped mocks instead of hoisted mocks to prevent module cache pollution
-    vi.spyOn(Training, 'computeTrainingImpact').mockReturnValue({
-      updatedRoster: [],
-      updatedSeasonalGrowth: [],
-      results: [],
-    });
-    vi.spyOn(Training, 'trainingImpactToStateImpact').mockReturnValue({
-      impact: {},
-      seasonalGrowth: [],
-      results: [],
-    });
-    vi.spyOn(Economy, 'computeEconomyImpact').mockReturnValue({});
-    vi.spyOn(Aging, 'computeAgingImpact').mockReturnValue({});
-    vi.spyOn(Health, 'computeHealthImpact').mockReturnValue({});
-    vi.spyOn(Health, 'applyHealthUpdates').mockImplementation((state) => state);
-    vi.spyOn(Impacts, 'resolveImpacts').mockImplementation((state) => ({ ...state }));
-    vi.spyOn(Impacts, 'mergeImpacts').mockImplementation((impacts) => impacts);
-    vi.spyOn(Recruitment, 'partialRefreshPool').mockImplementation((pool) => pool);
-    vi.spyOn(Recruitment, 'aiDraftFromPool').mockReturnValue({
-      updatedPool: [],
-      updatedRivals: [],
-      gazetteItems: [],
-    });
-    vi.spyOn(Gazette, 'generateWeeklyGazette').mockReturnValue({
-      title: 'Test',
-      regions: [],
-    });
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
-  it('calls all impact computation functions', () => {
+  it('calls warrior and economy pass functions', () => {
     const state = createFreshState('test-seed-week');
     advanceWeek(state);
 
-    expect(Training.computeTrainingImpact).toHaveBeenCalled();
-    expect(Economy.computeEconomyImpact).toHaveBeenCalled();
-    expect(Aging.computeAgingImpact).toHaveBeenCalled();
-    expect(Health.computeHealthImpact).toHaveBeenCalled();
+    expect(WarriorPass.runWarriorPass).toHaveBeenCalled();
+    expect(EconomyPass.runEconomyPass).toHaveBeenCalled();
   });
 
   it('resolves collected impacts using resolveImpacts', () => {
@@ -67,9 +57,6 @@ describe('advanceWeek pipeline orchestration', () => {
   it('advances the week counter and returns a new state', () => {
     const state = createFreshState('test-seed');
     const originalWeek = state.week;
-
-    // We mock resolveImpacts to return the state it received
-    (Impacts.resolveImpacts as any).mockImplementation((s: any) => ({ ...s }));
 
     const next = advanceWeek(state);
 

@@ -6,13 +6,6 @@ import { STORE_KEYS } from '@/constants/storeKeys';
  * Uses Howler for high-performance audio playback.
  */
 
-// Initialize HowlerGlobal for Electron environment
-declare global {
-  interface Window {
-    HowlerGlobal?: any;
-  }
-}
-
 /**
  * Supported sound effect types for audio playback.
  */
@@ -27,13 +20,15 @@ export type SfxType =
   | 'arena_ambient';
 
 export class AudioManager {
-  private static instance: AudioManager;
+  private static instance: AudioManager | undefined;
   private sfx: Map<SfxType, Howl> = new Map();
   private muted: boolean = false;
 
   private constructor() {
     // Initialize HowlerGlobal for Electron environment
-    if (typeof window !== 'undefined' && typeof (window as any).HowlerGlobal === 'undefined') {
+    // Note: Howler.js types expect HowlerGlobal to be a class, but we initialize
+    // as empty object for Electron compatibility. This is intentional.
+    if (typeof window !== 'undefined' && typeof window.HowlerGlobal === 'undefined') {
       (window as any).HowlerGlobal = {};
     }
     this.loadMuteState();
@@ -115,7 +110,7 @@ export class AudioManager {
    * This should be called in test beforeEach hooks to ensure a fresh state.
    */
   public static resetForTesting(): void {
-    AudioManager.instance = undefined as any;
+    AudioManager.instance = undefined;
   }
 }
 

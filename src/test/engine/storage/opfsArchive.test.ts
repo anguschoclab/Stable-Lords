@@ -17,19 +17,20 @@ describe('OPFS Archival System', () => {
   describe('Suite 2: Archiving Play-by-Play (PBP) Logs (Append-Only)', () => {
     it('Test 2.1: archiveBoutLog does not throw with valid inputs', async () => {
       const service = new OPFSArchiveService();
-      await expect(service.archiveBoutLog(1, 1, 'b-123', [])).resolves.toBeUndefined();
+      await expect(service.archiveBoutLog(1, 1, 'b-suite2-t1', [], true)).resolves.toBeUndefined();
     });
 
     it('Test 2.2: archiveBoutLog handles empty payload', async () => {
       const service = new OPFSArchiveService();
-      await expect(service.archiveBoutLog(1, 2, 'b-999', [])).resolves.toBeUndefined();
+      await expect(service.archiveBoutLog(1, 2, 'b-suite2-t2', [], true)).resolves.toBeUndefined();
     });
   });
 
   describe('Suite 3: Retrieval & Hydration', () => {
     it('Test 3.1: retrieveBoutLog does not throw', async () => {
       const service = new OPFSArchiveService();
-      const result = await service.retrieveBoutLog(1, 1, 'b-123');
+      // retrieveBoutLog always catches errors and returns null — it never throws
+      const result = await service.retrieveBoutLog(99, 99, 'b-nonexistent-9999');
       expect(result).toBeNull();
     });
   });
@@ -45,7 +46,7 @@ describe('OPFS Archival System', () => {
   describe('Suite 5: Fallback & Quota Management', () => {
     it('Test 5.1: Graceful degradation on errors', async () => {
       const service = new OPFSArchiveService();
-      await expect(service.archiveBoutLog(1, 1, 'b-123', [])).resolves.toBeUndefined();
+      await expect(service.archiveBoutLog(1, 1, 'b-suite5-t1', [], true)).resolves.toBeUndefined();
     });
   });
 });

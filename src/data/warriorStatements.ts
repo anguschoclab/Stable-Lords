@@ -103,7 +103,7 @@ export function generateWarriorStatements(
   function getStatement(skillKey: string, baseValue: number, highThreshold: number): string {
     const witKey = isGoodWit ? 'good' : 'bad';
     const orderKey = baseValue >= highThreshold ? 'high' : 'low';
-    const category = (p[witKey] as any)?.[skillKey];
+    const category = (p[witKey] as { [key: string]: any })?.[skillKey];
     const entries = category?.[orderKey];
     // Personas in the archive use the WT itself for the sub-selection min values
     return pickFromArchive(entries, wt);

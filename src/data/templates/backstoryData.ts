@@ -24,7 +24,10 @@ export function getTemplatesByBackstoryGroup(): Record<
   StableTemplate['backstoryId'],
   StableTemplate[]
 > {
-  const grouped: Record<StableTemplate['backstoryId'], StableTemplate[]> = {} as any;
+  const grouped: Record<StableTemplate['backstoryId'], StableTemplate[]> = {} as Record<
+    StableTemplate['backstoryId'],
+    StableTemplate[]
+  >;
 
   ALL_TEMPLATES.forEach((template) => {
     if (!grouped[template.backstoryId]) {
@@ -41,7 +44,10 @@ export function getTemplatesByBackstoryGroup(): Record<
  */
 export function getBackstoryCounts(): Record<StableTemplate['backstoryId'], number> {
   const grouped = getTemplatesByBackstoryGroup();
-  const counts: Record<StableTemplate['backstoryId'], number> = {} as any;
+  const counts: Record<StableTemplate['backstoryId'], number> = {} as Record<
+    StableTemplate['backstoryId'],
+    number
+  >;
 
   Object.keys(grouped).forEach((backstoryId) => {
     counts[backstoryId as StableTemplate['backstoryId']] =

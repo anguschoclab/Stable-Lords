@@ -3,39 +3,54 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import Trainers from '@/pages/Trainers';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { GameState, Trainer as TrainerData } from '@/types/state.types';
 import '@/test/setup';
 
+let storeOverride: any = {
+  trainers: [],
+  hiringPool: [],
+  treasury: 500,
+  ledger: [],
+};
+
+const defaultStoreState = {
+  roster: [],
+  newsletter: [],
+  ledger: [],
+  matchHistory: [],
+  moodHistory: [],
+  graveyard: [],
+  retired: [],
+  week: 1,
+  season: 'Spring',
+  year: 1,
+  treasury: 500,
+  tournaments: [],
+  rivals: [],
+  arenaHistory: [],
+  trainers: [],
+  hiringPool: [],
+  trainingAssignments: [],
+  fame: 0,
+  player: {
+    id: 'p1',
+    name: 'Player',
+    stableName: "Dragon's Hearth",
+    fame: 0,
+    renown: 0,
+    titles: 0,
+  },
+};
+
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: () => ({
-    roster: [],
-    newsletter: [],
-    ledger: [],
-    matchHistory: [],
-    moodHistory: [],
-    graveyard: [],
-    retired: [],
-    week: 1,
-    season: 'Spring',
-    year: 1,
-    treasury: 500,
-    tournaments: [],
-    rivals: [],
-    arenaHistory: [],
-    trainers: [],
-    trainingAssignments: [],
-    fame: 0,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: "Dragon's Hearth",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
+    ...defaultStoreState,
+    ...storeOverride,
+    setState: vi.fn((fn: (draft: any) => void) => { fn(storeOverride); }),
   }),
 }));
 // Mock the router components
@@ -93,10 +108,17 @@ describe('Trainers Component', () => {
     // Seed trainers
     mockState.trainers = [dummyTrainer];
     mockState.hiringPool = [poolTrainer];
+
+    storeOverride = {
+      trainers: [...mockState.trainers],
+      hiringPool: [...mockState.hiringPool],
+      treasury: mockState.treasury,
+      ledger: [],
+    };
   });
 
   it('renders current trainers correctly', async () => {
-    render(<Trainers />);
+    render(<TooltipProvider><Trainers /></TooltipProvider>);
 
     const staffElements = await screen.findAllByText('Master Splinter');
     expect(staffElements.length).toBeGreaterThan(0);
@@ -107,7 +129,7 @@ describe('Trainers Component', () => {
   });
 
   it('renders hiring pool correctly', async () => {
-    render(<Trainers />);
+    render(<TooltipProvider><Trainers /></TooltipProvider>);
 
     const poolElements = await screen.findAllByText('Coach Rocky');
     expect(poolElements.length).toBeGreaterThan(0);
@@ -117,7 +139,7 @@ describe('Trainers Component', () => {
   });
 
   it('allows firing a trainer', async () => {
-    render(<Trainers />);
+    render(<TooltipProvider><Trainers /></TooltipProvider>);
 
     // Find the current trainer card
     const trainerCards = await screen.findAllByTestId('trainer-card');
@@ -128,12 +150,12 @@ describe('Trainers Component', () => {
     const fireBtn = within(trainerCard as HTMLElement).getByLabelText(/release trainer/i);
     fireEvent.click(fireBtn);
 
-    // Test the state mutation implicitly by observing UI removal
-    expect(screen.queryByText('Master Splinter')).not.toBeInTheDocument();
+    // Verify setState was called and the mutation removed the trainer
+    expect(storeOverride.trainers.find((t: any) => t.id === 't1')).toBeUndefined();
   });
 
   it('allows hiring a trainer', async () => {
-    render(<Trainers />);
+    render(<TooltipProvider><Trainers /></TooltipProvider>);
 
     // Find the tab content for hire
     const hireTab = screen.getByTestId('tab-content-hire');
@@ -147,7 +169,8 @@ describe('Trainers Component', () => {
     const hireBtn = within(trainerCard as HTMLElement).getByText(/Secure Contract/i);
     fireEvent.click(hireBtn);
 
-    // Test that the card is moved (it should be removed from the hire tab)
-    expect(within(hireTab).queryByText('Coach Rocky')).not.toBeInTheDocument();
+    // Verify the hire mutation occurred: trainer moved from hiringPool to trainers
+    expect(storeOverride.hiringPool.find((t: any) => t.id === 't2')).toBeUndefined();
+    expect(storeOverride.trainers.find((t: any) => t.id === 't2')).toBeDefined();
   });
 });

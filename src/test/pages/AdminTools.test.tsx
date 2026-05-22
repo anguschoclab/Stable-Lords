@@ -24,6 +24,7 @@ vi.mock('@/state/useGameStore', () => ({
     trainers: [],
     trainingAssignments: [],
     fame: 0,
+    ftueComplete: false,
     player: {
       id: 'p1',
       name: 'Player',
@@ -32,7 +33,11 @@ vi.mock('@/state/useGameStore', () => ({
       renown: 0,
       titles: 0,
     },
+    setState: vi.fn(),
+    doAdvanceWeek: vi.fn().mockResolvedValue(undefined),
+    doReset: vi.fn(),
   }),
+  reconstructGameState: vi.fn((s: any) => s),
 }));
 
 describe('AdminTools Page', () => {

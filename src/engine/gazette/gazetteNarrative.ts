@@ -89,7 +89,7 @@ export function generateGazetteHeadline(
     } else if (top.streak >= 7) {
       return t(rngService.pick(gh.HotStreak), { week, name: top.name, streak: top.streak });
     } else {
-      return t(rngService.pick((gh as any).win_streak ? (gh as any).win_streak : gh.Streak), {
+      return t(rngService.pick(gh.win_streak ? gh.win_streak : gh.Streak), {
         week,
         name: top.name,
         streak: top.streak,
@@ -115,8 +115,8 @@ export function generateGazetteHeadline(
       return t(rngService.pick(gh.Standard), { week, adj: rngService.pick(tone.adjectives) });
     }
     const upsetHeadline =
-      (gh as any).major_upset && upset.loserFame / upset.winnerFame >= 3
-        ? (gh as any).major_upset
+      gh.major_upset && upset.loserFame / upset.winnerFame >= 3
+        ? gh.major_upset
         : gh.Upset;
     return t(rngService.pick(upsetHeadline), { week, winner: upset.winner, loser: upset.loser });
   } else if (kills.length >= 2) {

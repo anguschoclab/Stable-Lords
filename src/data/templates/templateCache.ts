@@ -149,7 +149,7 @@ export function getTemplatesByStyle(style: string): StableTemplate[] {
   }
 
   const result = ALL_TEMPLATES.filter((template) =>
-    template.preferredStyles.includes(style as any)
+    template.preferredStyles.includes(style)
   );
 
   templateCache.set(cacheKey, result);
@@ -241,7 +241,7 @@ export function searchTemplates(criteria: {
   }
 
   if (criteria.style) {
-    result = result.filter((template) => template.preferredStyles.includes(criteria.style as any));
+    result = result.filter((template) => template.preferredStyles.includes(criteria.style));
   }
 
   if (criteria.minFame !== undefined || criteria.maxFame !== undefined) {

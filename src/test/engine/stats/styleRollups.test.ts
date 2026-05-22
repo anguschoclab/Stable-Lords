@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
 import { StyleRollups } from '@/engine/stats/styleRollups';
 
 describe('StyleRollups', () => {
@@ -7,15 +7,31 @@ describe('StyleRollups', () => {
     const mockSetItem = vi.fn();
     const mockRemoveItem = vi.fn();
     const mockClear = vi.fn();
+    let originalLS: Storage;
+
+    beforeAll(() => {
+      originalLS = globalThis.localStorage;
+    });
+
+    afterAll(() => {
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: originalLS,
+        configurable: true,
+        writable: true,
+      });
+    });
 
     beforeEach(() => {
-      // In jsdom, localStorage is already defined, so we assign directly
-      (globalThis as any).localStorage = {
-        getItem: mockGetItem,
-        setItem: mockSetItem,
-        removeItem: mockRemoveItem,
-        clear: mockClear,
-      };
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: {
+          getItem: mockGetItem,
+          setItem: mockSetItem,
+          removeItem: mockRemoveItem,
+          clear: mockClear,
+        },
+        configurable: true,
+        writable: true,
+      });
       mockClear.mockClear();
       mockGetItem.mockClear();
       mockSetItem.mockClear();
@@ -23,7 +39,7 @@ describe('StyleRollups', () => {
     });
 
     it('returns {} if localStorage is undefined', () => {
-      (globalThis as any).localStorage = undefined;
+      Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true, writable: true });
       expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
     });
 
@@ -75,14 +91,31 @@ describe('StyleRollups', () => {
     const mockSetItem2 = vi.fn();
     const mockRemoveItem2 = vi.fn();
     const mockClear2 = vi.fn();
+    let originalLS2: Storage;
+
+    beforeAll(() => {
+      originalLS2 = globalThis.localStorage;
+    });
+
+    afterAll(() => {
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: originalLS2,
+        configurable: true,
+        writable: true,
+      });
+    });
 
     beforeEach(() => {
-      (globalThis as any).localStorage = {
-        getItem: mockGetItem2,
-        setItem: mockSetItem2,
-        removeItem: mockRemoveItem2,
-        clear: mockClear2,
-      };
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: {
+          getItem: mockGetItem2,
+          setItem: mockSetItem2,
+          removeItem: mockRemoveItem2,
+          clear: mockClear2,
+        },
+        configurable: true,
+        writable: true,
+      });
       mockClear2.mockClear();
       mockGetItem2.mockClear();
       mockSetItem2.mockClear();
@@ -90,7 +123,7 @@ describe('StyleRollups', () => {
     });
 
     it('returns [] if localStorage is undefined', () => {
-      (globalThis as any).localStorage = undefined;
+      Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true, writable: true });
       expect(StyleRollups.last10()).toEqual([]);
     });
 
@@ -150,14 +183,31 @@ describe('StyleRollups', () => {
     const mockSetItem3 = vi.fn();
     const mockRemoveItem3 = vi.fn();
     const mockClear3 = vi.fn();
+    let originalLS3: Storage;
+
+    beforeAll(() => {
+      originalLS3 = globalThis.localStorage;
+    });
+
+    afterAll(() => {
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: originalLS3,
+        configurable: true,
+        writable: true,
+      });
+    });
 
     beforeEach(() => {
-      (globalThis as any).localStorage = {
-        getItem: mockGetItem3,
-        setItem: mockSetItem3,
-        removeItem: mockRemoveItem3,
-        clear: mockClear3,
-      };
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: {
+          getItem: mockGetItem3,
+          setItem: mockSetItem3,
+          removeItem: mockRemoveItem3,
+          clear: mockClear3,
+        },
+        configurable: true,
+        writable: true,
+      });
       mockClear3.mockClear();
       mockGetItem3.mockClear();
       mockSetItem3.mockClear();
@@ -165,7 +215,7 @@ describe('StyleRollups', () => {
     });
 
     it('returns [] if localStorage is undefined', () => {
-      (globalThis as any).localStorage = undefined;
+      Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true, writable: true });
       expect(StyleRollups.tournament('tour1')).toEqual([]);
     });
 

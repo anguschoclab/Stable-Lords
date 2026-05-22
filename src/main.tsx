@@ -10,7 +10,9 @@ import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import './index.css';
 
 // Initialize HowlerGlobal for Electron environment
-if (typeof (window as any).HowlerGlobal === 'undefined') {
+// Note: Howler.js types expect HowlerGlobal to be a class, but we initialize
+// as empty object for Electron compatibility. This is intentional.
+if (typeof window.HowlerGlobal === 'undefined') {
   (window as any).HowlerGlobal = {};
 }
 

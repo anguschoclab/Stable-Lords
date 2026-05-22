@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, within } from '@testing-library/react';
 import HallOfFame from '@/pages/HallOfFame';
@@ -56,7 +57,16 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-// Utility to create a dummy warrior
+/**
+ * Utility to create a dummy warrior for testing.
+ * @param name - The warrior's name.
+ * @param status - The warrior's status.
+ * @param wins - Number of wins.
+ * @param losses - Number of losses.
+ * @param fame - Fame value.
+ * @param overrides - Optional partial warrior properties to override defaults.
+ * @returns A warrior object for testing.
+ */
 function createDummyWarrior(
   name: string,
   status: Warrior['status'],

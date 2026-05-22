@@ -20,7 +20,10 @@ const INTENSITY_LABELS: Record<number, string> = {
   5: 'Blood Feud',
 };
 
-/** Synthesize an impact/war-drum sound using Web Audio API */
+/**
+ * Synthesize an impact/war-drum sound using Web Audio API.
+ * @param intensity - The rivalry intensity level (1-5), affects sound depth.
+ */
 function playImpactSFX(intensity: number) {
   try {
     const ctx = new (
@@ -79,7 +82,10 @@ function playImpactSFX(intensity: number) {
   }
 }
 
-/** Apply screen shake + red flash to the document */
+/**
+ * Apply screen shake + red flash to the document for dramatic effect.
+ * @param intensity - The rivalry intensity level (1-5), affects flash opacity.
+ */
 function triggerScreenShake(intensity: number) {
   const root = document.getElementById('root');
   if (!root) return;
@@ -100,6 +106,10 @@ function triggerScreenShake(intensity: number) {
   }, 800);
 }
 
+/**
+ * Hook to detect rivalry intensity escalation and fire toast notifications.
+ * Blood Feud level (4-5) triggers screen shake + impact SFX via Web Audio API.
+ */
 export function useRivalryAlerts() {
   const state = useWorldState();
 

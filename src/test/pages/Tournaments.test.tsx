@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, beforeAll, Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Tournaments from '../../pages/Tournaments';

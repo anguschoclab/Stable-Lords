@@ -13,6 +13,9 @@ declare global {
   }
 }
 
+/**
+ * Supported sound effect types for audio playback.
+ */
 export type SfxType =
   | 'ui_click'
   | 'hit'
@@ -23,7 +26,7 @@ export type SfxType =
   | 'coin'
   | 'arena_ambient';
 
-class AudioManager {
+export class AudioManager {
   private static instance: AudioManager;
   private sfx: Map<SfxType, Howl> = new Map();
   private muted: boolean = false;
@@ -36,6 +39,9 @@ class AudioManager {
     this.loadMuteState();
   }
 
+  /**
+   * Load the mute state from persistent storage (Electron or localStorage).
+   */
   private async loadMuteState() {
     if (typeof window !== 'undefined' && window.electronAPI) {
       try {
@@ -49,6 +55,10 @@ class AudioManager {
     }
   }
 
+  /**
+   * Get the singleton instance of AudioManager.
+   * @returns The AudioManager singleton instance.
+   */
   public static getInstance(): AudioManager {
     if (!this.instance) {
       this.instance = new AudioManager();
@@ -56,12 +66,20 @@ class AudioManager {
     return this.instance;
   }
 
+  /**
+   * Play a sound effect of the specified type.
+   * @param type - The type of sound effect to play.
+   */
   public play(type: SfxType) {
     if (this.muted) return;
     const sound = this.sfx.get(type);
     if (sound) sound.play();
   }
 
+  /**
+   * Set the mute state and persist it to storage.
+   * @param muted - Whether audio should be muted.
+   */
   public async setMuted(muted: boolean) {
     this.muted = muted;
     if (typeof window !== 'undefined' && window.electronAPI) {
@@ -84,8 +102,20 @@ class AudioManager {
     }
   }
 
+  /**
+   * Check if audio is currently muted.
+   * @returns True if audio is muted, false otherwise.
+   */
   public isMuted() {
     return this.muted;
+  }
+
+  /**
+   * Reset the singleton instance for test cleanup.
+   * This should be called in test beforeEach hooks to ensure a fresh state.
+   */
+  public static resetForTesting(): void {
+    AudioManager.instance = undefined as any;
   }
 }
 

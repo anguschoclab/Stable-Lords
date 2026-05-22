@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 // Test utilities
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';

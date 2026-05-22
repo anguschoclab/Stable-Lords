@@ -5,6 +5,11 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { PERSONALITY_CLASH, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
 
+/**
+ * Calculate stable statistics for a rival stable.
+ * @param rival - The rival stable data.
+ * @returns The stable statistics including roster size and average attributes.
+ */
 export function stableStats(rival: RivalStableData) {
   const stats = calculateStableStats(rival.roster);
   return {
@@ -14,6 +19,12 @@ export function stableStats(rival: RivalStableData) {
   };
 }
 
+/**
+ * Hook for comparing two rival stables side-by-side.
+ * Provides statistics, grudges, personality clashes, and philosophy modifiers.
+ * @param rivals - Array of rival stables to compare.
+ * @returns Comparison state including selected rivals, their stats, and relationship data.
+ */
 export function useStableComparison(rivals: RivalStableData[]) {
   const [idA, setIdA] = useState<string | null>(null);
   const [idB, setIdB] = useState<string | null>(null);

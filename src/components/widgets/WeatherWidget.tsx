@@ -98,7 +98,7 @@ const WEATHER_METADATA = {
     bg: 'bg-cyan-300/10',
     border: 'border-cyan-300/20',
     description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
-    stats: 'INITIATIVE & RIPOSTE PENALTY -2 // STAMINA DRAIN 120%',
+    stats: 'INITIATIVE -4 // RIPOSTE -2 // DAMAGE 95% // STAMINA DRAIN 120%',
   },
 };
 

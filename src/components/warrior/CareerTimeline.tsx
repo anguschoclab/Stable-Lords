@@ -15,6 +15,17 @@ import { getAllFightsForWarrior } from '@/engine/core/historyUtils';/**
  */
 
 
+/**
+ * Career timeline.
+ * @param {
+  warrior,
+  arenaHistory,
+} - {
+  warrior,
+  arena history,
+}.
+ * @returns The result.
+ */
 export function CareerTimeline({
   warrior,
   arenaHistory,

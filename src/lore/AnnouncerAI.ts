@@ -9,6 +9,9 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
  */
 
 
+/**
+ * Announce tone type.
+ */
 export type AnnounceTone = 'neutral' | 'hype' | 'grim';
 
 /**

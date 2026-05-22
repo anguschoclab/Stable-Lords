@@ -5,6 +5,9 @@ import { cn } from '@/lib/utils';/**
  */
 
 
+/**
+ * Defines the shape of stat battery props.
+ */
 export interface StatBatteryProps {
   label: string;
   value: number;
@@ -17,6 +20,9 @@ export interface StatBatteryProps {
  */
 
 
+/**
+ * Stat battery.
+ */
 export const StatBattery = React.forwardRef<HTMLDivElement, StatBatteryProps>(function StatBattery(
   { label, value, max = 100, labelValue, colorClass, className },
   ref

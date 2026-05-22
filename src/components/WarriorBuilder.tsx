@@ -73,6 +73,19 @@ interface WarriorBuilderProps {
  */
 
 
+/**
+ * Warrior builder.
+ * @param {
+  onCreateWarrior,
+  maxRoster = 10,
+  currentRosterSize = 0,
+} - {
+  on create warrior,
+  max roster = 10,
+  current roster size = 0,
+}.
+ * @returns The result.
+ */
 export default function WarriorBuilder({
   onCreateWarrior,
   maxRoster = 10,

@@ -9,6 +9,14 @@ import { StateImpact } from '@/engine/impacts';/**
  */
 
 
+/**
+ * Respond to bout offer.
+ * @param state - State.
+ * @param offerId - Offer id.
+ * @param warriorId - Warrior id.
+ * @param response - Response.
+ * @returns The result.
+ */
 export function respondToBoutOffer(
   state: GameState,
   offerId: string,

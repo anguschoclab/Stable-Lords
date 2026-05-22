@@ -60,6 +60,23 @@ interface DigestSummary {
  */
 
 
+/**
+ * Weekly digest widget.
+ * @param {
+  week,
+  season,
+  arenaHistory,
+  boutOffers,
+  currentWeek,
+} - {
+  week,
+  season,
+  arena history,
+  bout offers,
+  current week,
+}.
+ * @returns The result.
+ */
 export function WeeklyDigestWidget({
   week,
   season,

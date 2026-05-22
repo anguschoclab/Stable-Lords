@@ -44,6 +44,9 @@ function save(arr: FightSummary[]) {
  */
 
 
+/**
+ * Arena history.
+ */
 export const ArenaHistory = {
   all(): FightSummary[] {
     return load();

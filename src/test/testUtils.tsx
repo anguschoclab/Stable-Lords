@@ -34,6 +34,12 @@ import type { GameState } from '@/types/game';/**
 
 
 // A helper to inject a mock state into the Zustand store before rendering
+/**
+ * Render with game state.
+ * @param ui - Ui.
+ * @param partialState - Partial state.
+ * @returns The result.
+ */
 export function renderWithGameState(
   ui: React.ReactElement,
   partialState: Partial<ReturnType<typeof createFreshState>> = {}

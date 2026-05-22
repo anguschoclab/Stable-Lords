@@ -8,6 +8,9 @@ import PromoterDetail from '@/pages/PromoterDetail';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/promoter/$id')({
   component: PromoterDetail,
 });

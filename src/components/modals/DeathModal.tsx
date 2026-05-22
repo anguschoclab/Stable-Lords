@@ -9,6 +9,10 @@ import { PaperDoll } from '@/components/ui/PaperDoll';/**
  */
 
 
+/**
+ * Death modal.
+ * @returns The result.
+ */
 export function DeathModal() {
   const state = useWorldState();
   const acknowledgeDeathAction = useGameStore((s) => s.acknowledgeDeath);

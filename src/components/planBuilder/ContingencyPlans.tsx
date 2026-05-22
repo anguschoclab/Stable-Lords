@@ -15,6 +15,11 @@ interface ContingencyPlansProps {
  */
 
 
+/**
+ * Contingency plans.
+ * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @returns The result.
+ */
 export default function ContingencyPlans({ plan, onPlanChange }: ContingencyPlansProps) {
   const [showConditions, setShowConditions] = useState(!!plan.conditions?.length);
 

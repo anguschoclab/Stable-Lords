@@ -68,6 +68,27 @@ function getOutcomeStyles(by: FightOutcomeBy) {
  */
 
 
+/**
+ * Bout resolution.
+ * @param {
+  isComplete,
+  winner,
+  winnerName,
+  by,
+  minutes,
+  totalEvents,
+  announcement,
+} - {
+  is complete,
+  winner,
+  winner name,
+  by,
+  minutes,
+  total events,
+  announcement,
+}.
+ * @returns The result.
+ */
 export default function BoutResolution({
   isComplete,
   winner,

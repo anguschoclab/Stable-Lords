@@ -33,6 +33,10 @@ import { cn } from '@/lib/utils';/**
  */
 
 
+/**
+ * Stable ledger.
+ * @returns The result.
+ */
 export default function StableLedger() {
   const store = useGameStore();
   const { season, week, treasury } = store;

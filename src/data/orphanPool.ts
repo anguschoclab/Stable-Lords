@@ -16,6 +16,9 @@ import { shuffled } from '@/utils/random';/**
  */
 
 
+/**
+ * Defines the shape of orphan warrior.
+ */
 export interface OrphanWarrior {
   id: string;
   name: string;
@@ -52,6 +55,12 @@ const TRAIT_IDS = Object.keys(TRAITS);/**
 
 // ── Generation Logic ─────────────────────────────────────────────────────
 
+/**
+ * Generate orphan pool.
+ * @param count - Count.
+ * @param seed - Seed. (optional)
+ * @returns The result.
+ */
 export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarrior[] {
   const rng = seededRng(seed ?? Date.now());
   const styles = Object.values(FightingStyle);

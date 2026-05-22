@@ -32,6 +32,9 @@ import { createTournamentSlice, TournamentSlice } from './slices/tournamentSlice
  */
 
 
+/**
+ * Defines the shape of game store state.
+ */
 export interface GameStoreState {
   atTitleScreen: boolean;
   lastSavedAt: string | null;
@@ -45,6 +48,9 @@ export interface GameStoreState {
  */
 
 
+/**
+ * Defines the shape of game store actions.
+ */
 export interface GameStoreActions {
   setSimulating: (simulating: boolean) => void;
   toggleEventLog: () => void;
@@ -72,6 +78,9 @@ export interface GameStoreActions {
  */
 
 
+/**
+ * Game store type.
+ */
 export type GameStore = GameStoreState &
   GameStoreActions &
   EconomySlice &
@@ -140,6 +149,11 @@ let lastStoreValues: GameStateValues | null = null;/**
  */
 
 
+/**
+ * Reconstruct game state.
+ * @param store - Store.
+ * @returns The result.
+ */
 export function reconstructGameState(store: GameStore): GameState {
   const currentValues = {
     treasury: store.treasury,
@@ -228,6 +242,9 @@ export function reconstructGameState(store: GameStore): GameState {
  */
 
 
+/**
+ * Use game store.
+ */
 export const useGameStore = create<GameStore>()(
   subscribeWithSelector(
     immer((set, get, ...args) => ({
@@ -478,31 +495,55 @@ export const useWorldState = () => useGameStore(reconstructGameState, shallow);/
  * @returns The result.
  */
 
+/**
+ * React hook: use player.
+ * @returns The result.
+ */
 export const usePlayer = () => useGameStore((s) => s.player);/**
  * React hook: use roster.
  * @returns The result.
  */
 
+/**
+ * React hook: use roster.
+ * @returns The result.
+ */
 export const useRoster = () => useGameStore((s) => s.roster);/**
  * React hook: use rivals.
  * @returns The result.
  */
 
+/**
+ * React hook: use rivals.
+ * @returns The result.
+ */
 export const useRivals = () => useGameStore((s) => s.rivals);/**
  * React hook: use treasury.
  * @returns The result.
  */
 
+/**
+ * React hook: use treasury.
+ * @returns The result.
+ */
 export const useTreasury = () => useGameStore((s) => s.treasury);/**
  * React hook: use week.
  * @returns The result.
  */
 
+/**
+ * React hook: use week.
+ * @returns The result.
+ */
 export const useWeek = () => useGameStore((s) => s.week);/**
  * React hook: use is simulating.
  * @returns The result.
  */
 
+/**
+ * React hook: use is simulating.
+ * @returns The result.
+ */
 export const useIsSimulating = () => useGameStore((s) => s.isSimulating);
 
 /** --- Computed Selectors (Derived State) --- */
@@ -517,6 +558,10 @@ interface StyleStatsRow {
  */
 
 
+/**
+ * React hook: use style stats.
+ * @returns The result.
+ */
 export const useStyleStats = (): StyleStatsRow[] =>
   useGameStore((s) => {
     const map = new Map<string, { wins: number; losses: number }>();

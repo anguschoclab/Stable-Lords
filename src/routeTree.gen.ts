@@ -281,6 +281,9 @@ const OpsPromoterIdRoute = OpsPromoterIdRouteImport.update({
  */
 
 
+/**
+ * Defines the shape of file routes by full path.
+ */
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
@@ -331,6 +334,9 @@ export interface FileRoutesByFullPath {
  * Defines the shape of file routes by to.
  */
 
+/**
+ * Defines the shape of file routes by to.
+ */
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
@@ -378,6 +384,9 @@ export interface FileRoutesByTo {
  * Defines the shape of file routes by id.
  */
 
+/**
+ * Defines the shape of file routes by id.
+ */
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
@@ -429,6 +438,9 @@ export interface FileRoutesById {
  * Defines the shape of file route types.
  */
 
+/**
+ * Defines the shape of file route types.
+ */
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -573,6 +585,9 @@ export interface FileRouteTypes {
  * Defines the shape of root route children.
  */
 
+/**
+ * Defines the shape of root route children.
+ */
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
@@ -991,6 +1006,9 @@ const rootRouteChildren: RootRouteChildren = {
  * Route tree.
  */
 
+/**
+ * Route tree.
+ */
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

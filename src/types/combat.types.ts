@@ -19,6 +19,9 @@ import type { BoutResult } from '@/engine/boutProcessor';/**
  */
 
 
+/**
+ * Weapon type type.
+ */
 export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist';/**
  * Armor weight type.
  */
@@ -26,11 +29,17 @@ export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist';/**
 
 // ─── Equipment Constants ───────────────────────────────────────────────────
 
+/**
+ * Armor weight type.
+ */
 export type ArmorWeight = 'None' | 'Light' | 'Medium' | 'Heavy' | 'Ultra-Heavy';/**
  * Armor_weight_map.
  */
 
 
+/**
+ * Armor_weight_map.
+ */
 export const ARMOR_WEIGHT_MAP: Record<
   ArmorWeight,
   { minWeight: number; maxWeight: number; speedPenalty: number }
@@ -45,11 +54,17 @@ export const ARMOR_WEIGHT_MAP: Record<
  */
 
 
+/**
+ * Equipment slot type.
+ */
 export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';/**
  * Defines the shape of armor encumbrance.
  */
 
 
+/**
+ * Defines the shape of armor encumbrance.
+ */
 export interface ArmorEncumbrance {
   totalWeight: number;
   speedPenalty: number;
@@ -62,6 +77,9 @@ export interface ArmorEncumbrance {
 
 // ─── Fight Results ──────────────────────────────────────────────────────────
 
+/**
+ * Death cause bucket type.
+ */
 export type DeathCauseBucket =
   | 'FATAL_DAMAGE'
   | 'EXECUTION'
@@ -73,11 +91,17 @@ export type DeathCauseBucket =
  */
 
 
+/**
+ * Fight outcome by type.
+ */
 export type FightOutcomeBy = 'Kill' | 'KO' | 'Exhaustion' | 'Stoppage' | 'Draw' | null;/**
  * Combat event type type.
  */
 
 
+/**
+ * Combat event type type.
+ */
 export type CombatEventType =
   | 'INITIATIVE'
   | 'ATTACK'
@@ -99,6 +123,9 @@ export type CombatEventType =
  */
 
 
+/**
+ * Defines the shape of combat event.
+ */
 export interface CombatEvent {
   type: CombatEventType;
   actor: 'A' | 'D';
@@ -112,6 +139,9 @@ export interface CombatEvent {
  */
 
 
+/**
+ * Defines the shape of minute event.
+ */
 export interface MinuteEvent {
   minute: number;
   text: string;
@@ -159,6 +189,9 @@ export interface ExchangeLogEntry {
  */
 
 
+/**
+ * Defines the shape of fight outcome.
+ */
 export interface FightOutcome {
   winner: 'A' | 'D' | null;
   by: FightOutcomeBy;
@@ -184,6 +217,9 @@ export interface FightOutcome {
  */
 
 
+/**
+ * Defines the shape of fight summary.
+ */
 export interface FightSummary {
   id: FightId;
   week: number;

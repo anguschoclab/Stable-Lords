@@ -114,6 +114,10 @@ const WEATHER_METADATA = {
  */
 
 
+/**
+ * Weather widget.
+ * @returns The result.
+ */
 export function WeatherWidget() {
   const state = useWorldState();
   const weather = state.weather || 'Clear';

@@ -9,6 +9,9 @@ import { WEAPONS } from '@/data/equipment';/**
  */
 
 
+/**
+ * Defines the shape of favorites display info.
+ */
 export interface FavoritesDisplayInfo {
   weapon: string | null;
   weaponHint: string | null;

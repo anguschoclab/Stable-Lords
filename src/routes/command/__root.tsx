@@ -7,6 +7,9 @@ import { Outlet, createFileRoute } from '@tanstack/react-router';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/command/__root')({
   component: CommandLayout,
 });

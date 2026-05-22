@@ -8,6 +8,9 @@ function StableRedirect() {
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/stable/$id')({
   component: StableRedirect,
 });

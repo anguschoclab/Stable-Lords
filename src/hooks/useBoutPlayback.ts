@@ -8,6 +8,11 @@ import { classifyEvent } from '@/lib/boutUtils';/**
  */
 
 
+/**
+ * React hook: use bout playback.
+ * @param log - Log.
+ * @returns The result.
+ */
 export function useBoutPlayback(log: MinuteEvent[]) {
   const [visibleCount, setVisibleCount] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);

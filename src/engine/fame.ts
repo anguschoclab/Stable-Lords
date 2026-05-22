@@ -13,6 +13,11 @@ export interface FamePop {
  */
 
 
+/**
+ * Fame from tags.
+ * @param tags - Tags.
+ * @returns The result.
+ */
 export function fameFromTags(tags: string[] = []): FamePop {
   let fame = 0;
   let pop = 0;

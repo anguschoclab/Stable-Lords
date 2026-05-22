@@ -54,4 +54,7 @@ function buildProxy(): AsyncEngine {
  */
 
 
+/**
+ * Engine proxy.
+ */
 export const engineProxy = buildProxy();

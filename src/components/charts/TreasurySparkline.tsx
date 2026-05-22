@@ -28,6 +28,19 @@ interface TreasurySparklineProps {
  */
 
 
+/**
+ * Treasury sparkline.
+ * @param {
+  className,
+  height = 40,
+  showLabel = true,
+} - {
+  class name,
+  height = 40,
+  show label = true,
+}.
+ * @returns The result.
+ */
 export function TreasurySparkline({
   className,
   height = 40,

@@ -18,6 +18,11 @@ interface RivalStableListProps {
  */
 
 
+/**
+ * Rival stable list.
+ * @param { rivals, selectedRivalId, onSelectRival } - { rivals, selected rival id, on select rival }.
+ * @returns The result.
+ */
 export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: RivalStableListProps) {
   const ownerGrudges = useGameStore(useShallow((s) => s.ownerGrudges ?? []));
 

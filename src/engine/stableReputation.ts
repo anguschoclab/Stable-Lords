@@ -9,6 +9,9 @@ import type { FightSummary } from '@/types/combat.types';/**
  */
 
 
+/**
+ * Defines the shape of stable reputation.
+ */
 export interface StableReputation {
   fame: number; // 0-100: public acclaim
   notoriety: number; // 0-100: feared reputation

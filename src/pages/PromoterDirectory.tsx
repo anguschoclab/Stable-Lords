@@ -171,6 +171,10 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
  */
 
 
+/**
+ * Promoter directory.
+ * @returns The result.
+ */
 export default function PromoterDirectory() {
   const { promoters, boutOffers, week } = useGameStore();
 

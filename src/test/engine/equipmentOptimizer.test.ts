@@ -90,4 +90,41 @@ describe('Equipment Optimizer', () => {
       expect(hasArmorTip).toBe(true);
     });
   });
+
+  describe('tank profile selects heaviest valid armor and helm (Bug 5)', () => {
+    it('TotalParry tank recommendation uses plate_armor', () => {
+      const recs = generateRecommendations(FightingStyle.TotalParry, 30);
+      const tankRec = recs[0]; // tank is first profile for TotalParry
+      expect(tankRec?.loadout.armor).toBe('plate_armor');
+    });
+
+    it('TotalParry tank recommendation uses full_helm', () => {
+      const recs = generateRecommendations(FightingStyle.TotalParry, 30);
+      const tankRec = recs[0];
+      expect(tankRec?.loadout.helm).toBe('full_helm');
+    });
+
+    it('WallOfSteel tank recommendation uses plate_armor', () => {
+      const recs = generateRecommendations(FightingStyle.WallOfSteel, 30);
+      const tankRec = recs[0]; // tank is first profile for WallOfSteel
+      expect(tankRec?.loadout.armor).toBe('plate_armor');
+    });
+
+    it('BashingAttack tank recommendation uses plate_armor', () => {
+      // BashingAttack profiles: ['damage', 'tank'], so tank is index 1
+      const recs = generateRecommendations(FightingStyle.BashingAttack, 30);
+      const tankRec = recs[1];
+      expect(tankRec?.loadout.armor).toBe('plate_armor');
+    });
+  });
+
+  describe('balanced profile armor selection (Amendment 8)', () => {
+    it('balanced recommendation prefers leather over padded for body protection', () => {
+      const recs = generateRecommendations(FightingStyle.ParryRiposte, 15);
+      // ParryRiposte profiles: ['balanced', 'speed'], balanced is first
+      const balancedRec = recs[0];
+      // leather (weight 4) should score higher than padded (weight 2) for balanced
+      expect(balancedRec?.loadout.armor).toBe('leather');
+    });
+  });
 });

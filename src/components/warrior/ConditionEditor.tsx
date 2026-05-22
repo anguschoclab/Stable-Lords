@@ -62,6 +62,11 @@ function triggerDisplayValue(cond: PlanCondition): string {
  */
 
 
+/**
+ * Condition editor.
+ * @param { conditions, onChange } - { conditions, on change }.
+ * @returns The result.
+ */
 export default function ConditionEditor({ conditions, onChange }: ConditionEditorProps) {
   function addCondition() {
     onChange([...conditions, { ...DEFAULT_CONDITION, override: { OE: 4 } }]);

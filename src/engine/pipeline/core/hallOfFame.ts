@@ -12,6 +12,13 @@ import { StateImpact } from '@/engine/impacts';/**
  */
 
 
+/**
+ * Process hall of fame.
+ * @param state - State.
+ * @param newWeek - New week.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
 export function processHallOfFame(
   state: GameState,
   newWeek: number,
@@ -206,6 +213,11 @@ function applyAward(
  */
 
 
+/**
+ * Create yearly snapshots.
+ * @param state - State.
+ * @returns The result.
+ */
 export function createYearlySnapshots(state: GameState): StateImpact {
   const currentYear = state.year;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();

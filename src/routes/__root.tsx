@@ -20,6 +20,9 @@ function RouterHooks() {
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createRootRoute({
   component: () => (
     <>

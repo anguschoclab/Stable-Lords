@@ -14,6 +14,11 @@ interface GazetteStepProps {
  */
 
 
+/**
+ * Gazette step.
+ * @param { gazette } - { gazette }.
+ * @returns The result.
+ */
 export function GazetteStep({ gazette }: GazetteStepProps) {
   return (
     <motion.div

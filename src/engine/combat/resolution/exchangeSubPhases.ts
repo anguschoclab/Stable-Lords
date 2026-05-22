@@ -8,6 +8,9 @@ import { contestDistance, transitionZone, resetZone } from '../mechanics/distanc
 
 // ─── ExchangeState Accumulator ────────────────────────────────────────────────
 
+/**
+ * Defines the shape of exchange state.
+ */
 export interface ExchangeState {
   rangeModA: number;
   rangeModD: number;
@@ -25,6 +28,10 @@ export interface ExchangeState {
  */
 
 
+/**
+ * Make exchange state.
+ * @returns The result.
+ */
 export function makeExchangeState(): ExchangeState {
   return {
     rangeModA: 0,
@@ -53,6 +60,17 @@ export function makeExchangeState(): ExchangeState {
 
 // ─── Approach Sub-Phase ───────────────────────────────────────────────────────
 
+/**
+ * Run approach.
+ * @param rng - Rng.
+ * @param fA - F a.
+ * @param fD - F d.
+ * @param OE_A - Oe_a.
+ * @param OE_D - Oe_d.
+ * @param ctx - Ctx.
+ * @param es - Es.
+ * @returns The result.
+ */
 export function runApproach(
   rng: () => number,
   fA: FighterState,
@@ -78,6 +96,9 @@ export function runApproach(
 
 // ─── Feint Sub-Phase ──────────────────────────────────────────────────────────
 
+/**
+ * Defines the shape of feint result.
+ */
 export interface FeintResult {
   triggered: boolean;
   succeeded?: boolean;
@@ -130,6 +151,9 @@ export function runFeint(rng: () => number, att: FighterState, def: FighterState
 
 // ─── Commit Sub-Phase ─────────────────────────────────────────────────────────
 
+/**
+ * Defines the shape of commit result.
+ */
 export interface CommitResult {
   level: CommitLevel;
   attBonus: number;

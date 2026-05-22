@@ -46,6 +46,10 @@ const stepTransition = {
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
+/**
+ * Orphanage.
+ * @returns The result.
+ */
 export default function Orphanage() {
   const navigate = useNavigate();
   const state = useGameStore();

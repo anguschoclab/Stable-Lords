@@ -11,6 +11,11 @@ interface ConditionBatteryProps {
  */
 
 
+/**
+ * Condition battery.
+ * @param { value, className, showText = false } - { value, class name, show text = false }.
+ * @returns The result.
+ */
 export function ConditionBattery({ value, className, showText = false }: ConditionBatteryProps) {
   // Determine color segment
   const color = value > 70 ? 'bg-primary' : value > 30 ? 'bg-arena-gold' : 'bg-destructive';

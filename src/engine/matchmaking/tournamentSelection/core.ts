@@ -5,6 +5,9 @@ import { committeeSelection, buildTournament } from './committee';/**
  */
 
 
+/**
+ * Tournament_tiers.
+ */
 export const TOURNAMENT_TIERS = [
   { id: 'Gold', name: 'Imperial Gold Cup', minRank: 1, maxRank: 64 },
   { id: 'Silver', name: 'Proconsul Silver Plate', minRank: 65, maxRank: 128 },
@@ -20,6 +23,14 @@ export const TOURNAMENT_TIERS = [
  */
 
 
+/**
+ * Generate seasonal tiers.
+ * @param state - State.
+ * @param week - Week.
+ * @param season - Season.
+ * @param seed - Seed.
+ * @returns The result.
+ */
 export function generateSeasonalTiers(
   state: GameState,
   week: number,

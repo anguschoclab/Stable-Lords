@@ -10,6 +10,9 @@ import { getRecentFights } from '@/engine/core/historyUtils';/**
  */
 
 
+/**
+ * Defines the shape of derived rivalry.
+ */
 export interface DerivedRivalry {
   stableName: string;
   ownerId: string;
@@ -164,6 +167,10 @@ const intensityColor = (n: number) =>
 
 
 // Main Widget Component
+/**
+ * Rivalry widget.
+ * @returns The result.
+ */
 export function RivalryWidget() {
   const state = useWorldState();
   const rosterNames = usePlayerRosterNames(state as GameState);

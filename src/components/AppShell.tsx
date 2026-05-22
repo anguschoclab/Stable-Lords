@@ -18,6 +18,11 @@ import { ResetDialog } from '@/components/layout/ResetDialog';/**
  */
 
 
+/**
+ * App shell.
+ * @param { children } - { children }.
+ * @returns The result.
+ */
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const {
     week,

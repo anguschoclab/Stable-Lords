@@ -47,4 +47,7 @@ function buildProxy(): AsyncArchiveWorker {
  */
 
 
+/**
+ * Archive worker proxy.
+ */
 export const archiveWorkerProxy = buildProxy();

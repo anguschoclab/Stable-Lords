@@ -4,6 +4,9 @@ import Graveyard from '@/pages/Graveyard';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/world/graveyard')({
   component: Graveyard,
 });

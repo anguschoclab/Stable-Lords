@@ -398,6 +398,9 @@ export {
  */
 
 
+/**
+ * Damage_labels.
+ */
 export const DAMAGE_LABELS = [
   '',
   'Little',

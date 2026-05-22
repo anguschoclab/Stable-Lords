@@ -9,6 +9,9 @@ import type { StableTemplate } from './stableTemplate.types';/**
  */
 
 
+/**
+ * Legendary_templates.
+ */
 export const LEGENDARY_TEMPLATES: StableTemplate[] = [
   {
     stableName: 'The Eternal Colosseum',

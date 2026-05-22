@@ -31,6 +31,23 @@ interface TournamentPrepDialogProps {
  */
 
 
+/**
+ * Tournament prep dialog.
+ * @param {
+  isOpen,
+  onOpenChange,
+  activeWarriors,
+  seasonName,
+  onStart,
+} - {
+  is open,
+  on open change,
+  active warriors,
+  season name,
+  on start,
+}.
+ * @returns The result.
+ */
 export function TournamentPrepDialog({
   isOpen,
   onOpenChange,

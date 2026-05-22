@@ -73,6 +73,9 @@ export const STABLE_PREFIXES = [
  */
 
 
+/**
+ * Stable_suffixes.
+ */
 export const STABLE_SUFFIXES = [
   'Slaughterhouse',
   'Abattoir',
@@ -140,6 +143,9 @@ export const STABLE_SUFFIXES = [
  */
 
 
+/**
+ * Stable_alt.
+ */
 export const STABLE_ALT = [
   'The Bloodied Gauntlet',
   'Cult of the Severed Head',

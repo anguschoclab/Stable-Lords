@@ -21,6 +21,9 @@ import type {
 
 
 // Combined all equipment for convenience
+/**
+ * All_equipment.
+ */
 export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS, ...HELMS];/**
  * Get item by id.
  * @param id - Id.
@@ -28,6 +31,11 @@ export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS
  */
 
 
+/**
+ * Get item by id.
+ * @param id - Id.
+ * @returns The result.
+ */
 export function getItemById(id: string): EquipmentItem | undefined {
   return ALL_EQUIPMENT.find((item) => item.id === id);
 }/**
@@ -37,6 +45,11 @@ export function getItemById(id: string): EquipmentItem | undefined {
  */
 
 
+/**
+ * Get item by code.
+ * @param code - Code.
+ * @returns The result.
+ */
 export function getItemByCode(code: string): EquipmentItem | undefined {
   return ALL_EQUIPMENT.find((item) => item.code === code);
 }/**
@@ -47,6 +60,12 @@ export function getItemByCode(code: string): EquipmentItem | undefined {
  */
 
 
+/**
+ * Get available items.
+ * @param slot - Slot.
+ * @param style - Style.
+ * @returns The result.
+ */
 export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): EquipmentItem[] {
   const pool =
     slot === 'weapon' ? WEAPONS : slot === 'armor' ? ARMORS : slot === 'shield' ? SHIELDS : HELMS;
@@ -59,6 +78,12 @@ export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): Eq
  */
 
 
+/**
+ * Is preferred weapon.
+ * @param item - Item.
+ * @param style - Style.
+ * @returns The result.
+ */
 export function isPreferredWeapon(item: EquipmentItem, style: FightingStyle): boolean {
   return item.preferredStyles?.includes(style) ?? false;
 }/**
@@ -66,6 +91,9 @@ export function isPreferredWeapon(item: EquipmentItem, style: FightingStyle): bo
  */
 
 
+/**
+ * Default_loadout.
+ */
 export const DEFAULT_LOADOUT: EquipmentLoadout = {
   weapon: 'broadsword',
   armor: 'leather',
@@ -98,6 +126,11 @@ export function getStyleDefaultLoadout(style: FightingStyle): EquipmentLoadout {
  */
 
 
+/**
+ * Get loadout weight.
+ * @param loadout - Loadout.
+ * @returns The result.
+ */
 export function getLoadoutWeight(loadout: EquipmentLoadout): number {
   return [loadout.weapon, loadout.armor, loadout.shield, loadout.helm].reduce(
     (sum, id) => sum + (getItemById(id)?.weight ?? 0),
@@ -163,6 +196,12 @@ export function checkWeaponRequirements(
  */
 
 
+/**
+ * Is over encumbered.
+ * @param loadout - Loadout.
+ * @param carryCap - Carry cap.
+ * @returns The result.
+ */
 export function isOverEncumbered(loadout: EquipmentLoadout, carryCap: number): boolean {
   return getLoadoutWeight(loadout) > carryCap;
 }

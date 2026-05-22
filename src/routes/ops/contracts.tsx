@@ -8,6 +8,9 @@ import BookingOffice from '@/pages/BookingOffice';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/contracts')({
   component: BookingOffice,
 });

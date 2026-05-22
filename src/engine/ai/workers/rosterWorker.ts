@@ -152,7 +152,7 @@ export function processRoster(
 /**
  * Apply an equipment upgrade — validated through the same loadout + weapon-
  * requirement gates the player hits via `StableEquipment.tsx`. Walks the
- * optimizer recommendations in synergy order, skipping any that fail
+ * optimizer recommendations in profile-priority order, skipping any that fail
  * `validateLoadout` (catches two-handed + shield) or `checkWeaponRequirements`
  * (ST/SZ/WT/DF gates). If every recommendation fails, the warrior is returned
  * untouched — no attribute nudge, no invalid gear applied.
@@ -164,7 +164,7 @@ export function processRoster(
  * shared validator.
  */
 function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
-  const recommendations = generateRecommendations(w.style, w.attributes.SZ);
+  const recommendations = generateRecommendations(w.style, w.derivedStats.encumbrance);
   const attrs = {
     ST: w.attributes.ST,
     SZ: w.attributes.SZ,

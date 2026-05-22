@@ -12,6 +12,10 @@ import {
  */
 
 
+/**
+ * Toaster.
+ * @returns The result.
+ */
 export function Toaster() {
   const { toasts } = useToast();
 

@@ -15,6 +15,11 @@ interface PhaseOverridesProps {
  */
 
 
+/**
+ * Phase overrides.
+ * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @returns The result.
+ */
 export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesProps) {
   const [phaseMode, setPhaseMode] = useState(!!plan.phases);
 

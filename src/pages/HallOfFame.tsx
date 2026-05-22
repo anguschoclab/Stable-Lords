@@ -34,6 +34,10 @@ import UpsetsList, { type UpsetEntry } from '@/components/awards/UpsetsList';/**
  */
 
 
+/**
+ * Render the HallOfFame component.
+ * @returns The result.
+ */
 export default function HallOfFame() {
   const { roster, graveyard, retired, rivals, awards, year, player, season } = useGameStore();
   const allFights = useMemo(() => ArenaHistory.all(), []);

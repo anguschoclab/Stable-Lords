@@ -13,6 +13,10 @@ import { cn } from '@/lib/utils';/**
  */
 
 
+/**
+ * Trainer table.
+ * @returns The result.
+ */
 export function TrainerTable() {
   const state = useWorldState();
   const trainers = (state.trainers ?? []).filter((t) => t.contractWeeksLeft > 0);

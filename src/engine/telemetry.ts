@@ -54,6 +54,9 @@ export const telemetry = {
 
 
 // Named telemetry events for consistency
+/**
+ * Telemetry events.
+ */
 export const TelemetryEvents = {
   // Timing events
   ADVANCE_QUARTER: 'advance_quarter',
@@ -80,6 +83,9 @@ export const TelemetryEvents = {
 
 
 // Common tag keys
+/**
+ * Telemetry tags.
+ */
 export const TelemetryTags = {
   HEADLESS: 'headless',
   STOP_REASON: 'stop_reason',

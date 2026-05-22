@@ -74,6 +74,12 @@ const DEFINING_MOMENTS = [
  */
 
 
+/**
+ * Generate lore.
+ * @param name - Name.
+ * @param rng - Rng.
+ * @returns The result.
+ */
 export function generateLore(name: string, rng: IRNGService): string {
   const r = () => rng.next();
   const childhood = pick(CHILDHOOD_TRAITS, r);
@@ -86,6 +92,11 @@ export function generateLore(name: string, rng: IRNGService): string {
  */
 
 
+/**
+ * Generate origin.
+ * @param rng - Rng.
+ * @returns The result.
+ */
 export function generateOrigin(rng: IRNGService): string {
   return pick(ORIGINS, () => rng.next());
 }

@@ -20,6 +20,9 @@ export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral';/**
  */
 
 
+/**
+ * Defines the shape of agent context.
+ */
 export interface AgentContext {
   rival: RivalStableData;
   state: GameState;
@@ -34,6 +37,12 @@ export interface AgentContext {
  */
 
 
+/**
+ * Create agent context.
+ * @param rival - Rival.
+ * @param state - State.
+ * @returns The result.
+ */
 export function createAgentContext(rival: RivalStableData, state: GameState): AgentContext {
   // ⚡ Skeptical Memory: Initialize memory if missing
   const agentMemory: AIAgentMemory = rival.agentMemory || {

@@ -3,6 +3,9 @@ import type { Gear, FightingStyle } from './game';/**
  */
 
 
+/**
+ * Defines the shape of fighter pose.
+ */
 export interface FighterPose {
   /** Position 0-100 across the arena (left to right) */
   x: number;
@@ -25,6 +28,9 @@ export interface FighterPose {
  */
 
 
+/**
+ * Defines the shape of speech bubble.
+ */
 export interface SpeechBubble {
   id: string;
   text: string;
@@ -36,6 +42,9 @@ export interface SpeechBubble {
  */
 
 
+/**
+ * Defines the shape of arena state.
+ */
 export interface ArenaState {
   fighterA: FighterPose;
   fighterD: FighterPose;
@@ -49,6 +58,9 @@ export interface ArenaState {
  */
 
 
+/**
+ * Defines the shape of fighter stats.
+ */
 export interface FighterStats {
   maxHp: number;
   currentHp: number;
@@ -59,6 +71,9 @@ export interface FighterStats {
  */
 
 
+/**
+ * Defines the shape of arena fighter data.
+ */
 export interface ArenaFighterData {
   name: string;
   style: FightingStyle;

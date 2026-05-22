@@ -16,6 +16,11 @@ interface MathStepProps {
  */
 
 
+/**
+ * Math step.
+ * @param { lastSimulationReport } - { last simulation report }.
+ * @returns The result.
+ */
 export function MathStep({ lastSimulationReport }: MathStepProps) {
   return (
     <motion.div

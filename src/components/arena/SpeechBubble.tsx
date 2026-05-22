@@ -13,6 +13,11 @@ interface SpeechBubbleProps {
  */
 
 
+/**
+ * Speech bubble.
+ * @param { bubble, onDismiss, position = 'left' } - { bubble, on dismiss, position = 'left' }.
+ * @returns The result.
+ */
 export default function SpeechBubble({ bubble, onDismiss, position = 'left' }: SpeechBubbleProps) {
   useEffect(() => {
     const timer = setTimeout(() => {

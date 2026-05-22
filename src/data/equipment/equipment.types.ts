@@ -7,11 +7,17 @@ import { FightingStyle } from '@/types/game';/**
  */
 
 
+/**
+ * Equipment slot type.
+ */
 export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';/**
  * Defines the shape of equipment item.
  */
 
 
+/**
+ * Defines the shape of equipment item.
+ */
 export interface EquipmentItem {
   id: string;
   code: string; // canonical 2-letter code (DA, EP, BS, etc.)
@@ -37,6 +43,9 @@ export interface EquipmentItem {
  */
 
 
+/**
+ * Defines the shape of equipment loadout.
+ */
 export interface EquipmentLoadout {
   weapon: string; // item id
   armor: string;
@@ -56,6 +65,9 @@ export interface WeaponReqCheck {
  */
 
 
+/**
+ * Defines the shape of weapon req result.
+ */
 export interface WeaponReqResult {
   met: boolean;
   failures: WeaponReqCheck[];

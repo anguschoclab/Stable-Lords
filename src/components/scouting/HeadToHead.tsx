@@ -20,6 +20,11 @@ interface HeadToHeadProps {
  */
 
 
+/**
+ * Head to head.
+ * @param { rosterA, rosterB } - { roster a, roster b }.
+ * @returns The result.
+ */
 export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' | 'nameB'>) {
   const state = useGameStore();
   const allFights = useMemo(() => ArenaHistory.all() || [], []);

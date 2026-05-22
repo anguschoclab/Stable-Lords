@@ -26,6 +26,11 @@ interface WarriorComparisonProps {
  */
 
 
+/**
+ * Warrior comparison.
+ * @param { rivals, playerRoster } - { rivals, player roster }.
+ * @returns The result.
+ */
 export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonProps) {
   const [wIdA, setWIdA] = useState<string | null>(null);
   const [wIdB, setWIdB] = useState<string | null>(null);

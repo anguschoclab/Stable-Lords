@@ -68,6 +68,10 @@ function StatBar({ label, value, max = 21 }: { label: string; value: number; max
  */
 
 
+/**
+ * Stable detail.
+ * @returns The result.
+ */
 export default function StableDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const state = useWorldState();

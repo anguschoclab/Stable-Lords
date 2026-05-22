@@ -17,6 +17,11 @@ import { ImperialRing } from '@/components/ui/ImperialRing';/**
  */
 
 
+/**
+ * Favorites card.
+ * @param { warrior, onUpdate } - { warrior, on update }.
+ * @returns The result.
+ */
 export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () => void }) {
   const state = useWorldState();
   const setState = useGameStore((s) => s.setState);

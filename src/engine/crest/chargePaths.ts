@@ -9,6 +9,9 @@ import type { ChargeType } from '@/types/crest.types';/**
  */
 
 
+/**
+ * Defines the shape of charge path.
+ */
 export interface ChargePath {
   path: string;
   viewBox: string;
@@ -19,6 +22,9 @@ export interface ChargePath {
 
 
 // BEAST CHARGES
+/**
+ * Beast_paths.
+ */
 export const BEAST_PATHS: Record<string, ChargePath> = {
   lion: {
     path: 'M65,25c-5,0-10,3-13,8c-8-5-18-3-23,4c-3,5-2,11,1,16c-5,2-9,7-9,13c0,8,7,14,15,14c3,0,6-1,8-3c2,3,6,5,10,5c8,0,14-6,14-14c0-3-1-6-3-8c5-2,9-7,9-13C74,32,70,25,65,25z M32,55c-2,0-4,2-4,4s2,4,4,4s4-2,4-4S34,55,32,55z M68,55c-2,0-4,2-4,4s2,4,4,4s4-2,4-4S70,55,68,55z M50,75c-8,0-15,4-20,10c5,2,11,4,20,4c9,0,15-2,20-4C65,79,58,75,50,75z',
@@ -98,6 +104,9 @@ export const BEAST_PATHS: Record<string, ChargePath> = {
 
 
 // WEAPON CHARGES
+/**
+ * Weapon_paths.
+ */
 export const WEAPON_PATHS: Record<string, ChargePath> = {
   sword: {
     path: 'M50,10c-1,0-2,1-2,2v45c0,1-1,2-2,2H20c-1,0-2,1-2,2v15c0,1,1,2,2,2h26c1,0,2,1,2,2v7c0,1,1,2,2,2s2-1,2-2v-7c0-1,1-2,2-2h26c1,0,2-1,2-2V61c0-1-1-2-2-2H54c-1,0-2-1-2-2V12c0-1-1-2-2-2z M28,65h15v10H28V65z M57,65h15v10H57V65z',
@@ -170,6 +179,9 @@ export const WEAPON_PATHS: Record<string, ChargePath> = {
 
 
 // SYMBOL CHARGES
+/**
+ * Symbol_paths.
+ */
 export const SYMBOL_PATHS: Record<string, ChargePath> = {
   crown: {
     path: 'M50,20c-15,0-30,5-35,15c5,5,10,10,15,10c5,0,10-3,13-8c3,5,8,8,13,8c5,0,10-5,15-10C80,25,65,20,50,20z M25,50c-1,0-2,1-2,2v15c0,1,1,2,2,2h50c1,0,2-1,2-2V52c0-1-1-2-2-2H25z',
@@ -247,6 +259,9 @@ export const SYMBOL_PATHS: Record<string, ChargePath> = {
 
 
 // NATURE CHARGES
+/**
+ * Nature_paths.
+ */
 export const NATURE_PATHS: Record<string, ChargePath> = {
   oak: {
     path: 'M50,15c-2,0-4,1-5,3c-3,8-8,15-15,20c-5,4-8,10-8,16c0,8,5,15,13,17c-1,3-2,6-2,10c0,10,7,19,17,19c10,0,17-9,17-19c0-4-1-7-2-10c8-2,13-9,13-17c0-6-3-12-8-16c-7-5-12-12-15-20c-1-2-3-3-5-3z M42,50c0,0-1,0-1,1c-1,1-1,3,0,4c1,1,3,1,4,0c1-1,1-3,0-4C44,50,43,50,42,50z M58,50c0,0-1,0-1,1c-1,1-1,3,0,4c1,1,3,1,4,0c1-1,1-3,0-4C60,50,59,50,58,50z M50,75c-4,0-7,3-9,6c2,2,5,3,9,3c4,0,7-1,9-3C57,78,54,75,50,75z',
@@ -324,6 +339,9 @@ export const NATURE_PATHS: Record<string, ChargePath> = {
 
 
 // CELESTIAL CHARGES
+/**
+ * Celestial_paths.
+ */
 export const CELESTIAL_PATHS: Record<string, ChargePath> = {
   star: {
     path: 'M50,10L60,35L85,40L68,58L73,85L50,72L27,85L32,58L15,40L40,35L50,10z M50,25L55,40L70,42L60,52L63,68L50,60L37,68L40,52L30,42L45,40L50,25z',
@@ -371,6 +389,9 @@ export const CELESTIAL_PATHS: Record<string, ChargePath> = {
 
 
 // MYTHICAL CHARGES
+/**
+ * Mythical_paths.
+ */
 export const MYTHICAL_PATHS: Record<string, ChargePath> = {
   phoenix: {
     path: 'M50,10c-15,0-30,10-30,25c0,10,5,18,13,22c-3,5-5,11-5,17c0,8,4,15,11,18c-1,2-2,5-2,8c0,7,5,13,12,13c4,0,7-2,9-5c2,3,5,5,9,5c7,0,12-6,12-13c0-3-1-6-2-8c7-3,11-10,11-18c0-6-2-12-5-17c8-4,13-12,13-22c0-15-15-25-30-25c-2,0-4,0-6,1C54,11,52,10,50,10z M35,35c-2,0-3,2-3,3s2,3,3,3s3-2,3-3S37,35,35,35z M65,35c-2,0-3,2-3,3s2,3,3,3s3-2,3-3S67,35,65,35z M50,70c-6,0-11,3-15,8c4,2,9,3,15,3c6,0,11-1,15-3C61,73,56,70,50,70z',
@@ -440,6 +461,11 @@ export const MYTHICAL_PATHS: Record<string, ChargePath> = {
 
 
 // Helper to get all charge paths by type
+/**
+ * Get charge paths by type.
+ * @param type - Type.
+ * @returns The result.
+ */
 export function getChargePathsByType(type: ChargeType): Record<string, ChargePath> {
   switch (type) {
     case 'beast':
@@ -466,6 +492,12 @@ export function getChargePathsByType(type: ChargeType): Record<string, ChargePat
 
 
 // Helper to get a random charge from a type
+/**
+ * Get random charge.
+ * @param type - Type.
+ * @param seed - Seed.
+ * @returns The result.
+ */
 export function getRandomCharge(type: ChargeType, seed: number): ChargePath & { name: string } {
   const paths = getChargePathsByType(type);
   const keys = Object.keys(paths);

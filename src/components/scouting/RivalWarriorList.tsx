@@ -31,6 +31,23 @@ interface RivalWarriorListProps {
  */
 
 
+/**
+ * Rival warrior list.
+ * @param {
+  warriors,
+  selectedWarriorId,
+  onSelectWarrior,
+  reports,
+  stableName,
+} - {
+  warriors,
+  selected warrior id,
+  on select warrior,
+  reports,
+  stable name,
+}.
+ * @returns The result.
+ */
 export function RivalWarriorList({
   warriors,
   selectedWarriorId,

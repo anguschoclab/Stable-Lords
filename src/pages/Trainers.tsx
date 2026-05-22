@@ -45,6 +45,10 @@ import { toast } from 'sonner';/**
  */
 
 
+/**
+ * Trainers.
+ * @returns The result.
+ */
 export default function Trainers() {
   // Flat destructuring from 1.0 store
   const { trainers, hiringPool, week, retired, graveyard, treasury, setState } = useGameStore();

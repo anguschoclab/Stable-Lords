@@ -93,6 +93,11 @@ export const PERSONALITY_STYLE_PREFS: Record<OwnerPersonality, FightingStyle[]> 
  */
 
 
+/**
+ * Get philosophy styles.
+ * @param philosophy - Philosophy.
+ * @returns The result.
+ */
 export function getPhilosophyStyles(philosophy: string): FightingStyle[] {
   return PHILOSOPHY_TO_STYLES[philosophy] ?? Object.values(FightingStyle);
 }/**
@@ -101,12 +106,21 @@ export function getPhilosophyStyles(philosophy: string): FightingStyle[] {
 
 
 // ─── 1.0 Hardening: Thresholds ───────────────────────────────────────────
+/**
+ * Philosophy_evolve_threshold_win.
+ */
 export const PHILOSOPHY_EVOLVE_THRESHOLD_WIN = 0.7;/**
  * Philosophy_evolve_threshold_loss.
  */
 
+/**
+ * Philosophy_evolve_threshold_loss.
+ */
 export const PHILOSOPHY_EVOLVE_THRESHOLD_LOSS = 0.3;/**
  * Philosophy_min_fights.
  */
 
+/**
+ * Philosophy_min_fights.
+ */
 export const PHILOSOPHY_MIN_FIGHTS = 4;

@@ -6,6 +6,9 @@ type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank';/**
  */
 
 
+/**
+ * Style_archetype.
+ */
 export const STYLE_ARCHETYPE: Record<FightingStyle, Archetype> = {
   [FightingStyle.BashingAttack]: 'brutal',
   [FightingStyle.StrikingAttack]: 'brutal',

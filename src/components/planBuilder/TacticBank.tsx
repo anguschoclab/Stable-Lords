@@ -5,6 +5,9 @@ import type { FightPlan, OffensiveTactic, DefensiveTactic } from '@/types/game';
  */
 
 
+/**
+ * Tactic_bank.
+ */
 export const TACTIC_BANK = [
   { id: 'Lunge', type: 'offensive', label: 'Lunge', icon: Zap },
   { id: 'Slash', type: 'offensive', label: 'Slash', icon: Swords },
@@ -26,6 +29,11 @@ interface TacticBankProps {
  */
 
 
+/**
+ * Tactic bank.
+ * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @returns The result.
+ */
 export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {}) {
   const handleClick = (t: (typeof TACTIC_BANK)[number]) => {
     if (!plan || !onPlanChange) return;

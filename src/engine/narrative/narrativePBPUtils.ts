@@ -12,6 +12,9 @@ type RNG = () => number;/**
  */
 
 
+/**
+ * Defines the shape of combat context.
+ */
 export interface CombatContext {
   attacker?: string;
   defender?: string;

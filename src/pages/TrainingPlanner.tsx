@@ -349,6 +349,10 @@ function WarriorPlannerCard({
  */
 
 
+/**
+ * Training planner.
+ * @returns The result.
+ */
 export default function TrainingPlanner() {
   const { roster, trainers, seasonalGrowth, season } = useGameStore();
   const activeWarriors = roster.filter((w) => w.status === 'Active');

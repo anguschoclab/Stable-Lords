@@ -148,6 +148,10 @@ function calculateStats(
  */
 
 
+/**
+ * Promoter detail.
+ * @returns The result.
+ */
 export default function PromoterDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const { promoters, boutOffers, week } = useGameStore();

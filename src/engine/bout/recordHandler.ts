@@ -27,6 +27,20 @@ function isTournamentParticipant(state: GameState, warriorId: string): boolean {
  */
 
 
+/**
+ * Apply records.
+ * @param s - S.
+ * @param wA - W a.
+ * @param wD - W d.
+ * @param outcome - Outcome.
+ * @param tags - Tags.
+ * @param fameA - Fame a.
+ * @param popA - Pop a.
+ * @param fameD - Fame d.
+ * @param popD - Pop d.
+ * @param rivalStableId - Rival stable id. (optional)
+ * @returns The result.
+ */
 export function applyRecords(
   s: GameState,
   wA: Warrior,

@@ -60,6 +60,13 @@ export function clearWarriorCache(): void {
  */
 
 
+/**
+ * Find warrior by id.
+ * @param state - State.
+ * @param warriorId - Warrior id.
+ * @param tournament - Tournament. (optional)
+ * @returns The result.
+ */
 export function findWarriorById(
   state: GameState,
   warriorId: string,

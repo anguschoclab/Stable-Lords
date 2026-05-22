@@ -16,6 +16,9 @@ const templateCache = new Map<string, StableTemplate[]>();/**
 
 
 // Combined all templates for convenience
+/**
+ * All_templates.
+ */
 export const ALL_TEMPLATES: StableTemplate[] = [
   ...LEGENDARY_TEMPLATES,
   ...MAJOR_TEMPLATES,
@@ -27,6 +30,9 @@ export const ALL_TEMPLATES: StableTemplate[] = [
 
 
 // Pre-computed tier caches for instant access
+/**
+ * Tier_caches.
+ */
 export const TIER_CACHES: Record<StableTier, StableTemplate[]> = {
   Legendary: LEGENDARY_TEMPLATES,
   Major: MAJOR_TEMPLATES,

@@ -9,10 +9,17 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
  */
 
 
+/**
+ * The SeededRNG class.
+ */
 export class SeededRNG {
   private state: number;
 
-  constructor(seed: number) {
+  /**
+ * Constructor.
+ * @param seed - Seed.
+ */
+constructor(seed: number) {
     this.state = seed;
   }
 

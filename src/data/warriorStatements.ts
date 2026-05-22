@@ -8,6 +8,9 @@ import type { NarrativeContent } from '@/types/narrative.types';/**
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
+/**
+ * Defines the shape of warrior overview statements.
+ */
 export interface WarriorOverviewStatements {
   initiative: string;
   riposte: string;
@@ -102,6 +105,14 @@ function getQuicknessStatement(defBase: number, parBase: number, wt: number): st
 
 // ─── Generator ─────────────────────────────────────────────────────────────
 
+/**
+ * Generate warrior statements.
+ * @param wt - Wt.
+ * @param sp - Sp.
+ * @param df - Df.
+ * @param skills - Skills.
+ * @returns The result.
+ */
 export function generateWarriorStatements(
   wt: number,
   sp: number,

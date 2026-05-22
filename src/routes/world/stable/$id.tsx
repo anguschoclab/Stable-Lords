@@ -8,6 +8,9 @@ import StableDetail from '@/pages/StableDetail';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/world/stable/$id')({
   component: StableDetail,
 });

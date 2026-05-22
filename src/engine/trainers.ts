@@ -12,6 +12,9 @@ export type { TrainerTier, TrainerFocus };/**
  */
 
 
+/**
+ * Trainer_focuses.
+ */
 export const TRAINER_FOCUSES: TrainerFocus[] = [
   'Aggression',
   'Defense',
@@ -22,11 +25,17 @@ export const TRAINER_FOCUSES: TrainerFocus[] = [
  * Trainer_max_per_stable.
  */
 
+/**
+ * Trainer_max_per_stable.
+ */
 export const TRAINER_MAX_PER_STABLE = 5;/**
  * Focus_descriptions.
  */
 
 
+/**
+ * Focus_descriptions.
+ */
 export const FOCUS_DESCRIPTIONS: Record<TrainerFocus, string> = {
   Aggression: 'Boosts ATT and OE effectiveness. Best for offensive warriors.',
   Defense: 'Boosts PAR and DEF. Best for parry and defensive styles.',
@@ -38,6 +47,9 @@ export const FOCUS_DESCRIPTIONS: Record<TrainerFocus, string> = {
  */
 
 
+/**
+ * Focus_icons.
+ */
 export const FOCUS_ICONS: Record<TrainerFocus, string> = {
   Aggression: '⚔️',
   Defense: '🛡️',
@@ -49,6 +61,9 @@ export const FOCUS_ICONS: Record<TrainerFocus, string> = {
  */
 
 
+/**
+ * Tier_cost.
+ */
 export const TIER_COST: Record<TrainerTier, number> = {
   Novice: 50,
   Seasoned: 100,
@@ -58,6 +73,9 @@ export const TIER_COST: Record<TrainerTier, number> = {
  */
 
 
+/**
+ * Trainer_weekly_salary.
+ */
 export const TRAINER_WEEKLY_SALARY: Record<TrainerTier, number> = {
   Novice: 10,
   Seasoned: 25,
@@ -67,6 +85,9 @@ export const TRAINER_WEEKLY_SALARY: Record<TrainerTier, number> = {
  */
 
 
+/**
+ * Tier_bonus.
+ */
 export const TIER_BONUS: Record<TrainerTier, number> = {
   Novice: 1,
   Seasoned: 2,

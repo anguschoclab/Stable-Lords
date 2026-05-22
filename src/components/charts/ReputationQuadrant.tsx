@@ -22,6 +22,11 @@ interface QuadrantDot {
  */
 
 
+/**
+ * Reputation quadrant.
+ * @param { className } - { class name }.
+ * @returns The result.
+ */
 export function ReputationQuadrant({ className }: { className?: string }) {
   const worldState = useWorldState();
   const { rivals } = useGameStore(useShallow((s) => ({ rivals: s.rivals })));

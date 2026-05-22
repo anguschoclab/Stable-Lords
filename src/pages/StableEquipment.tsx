@@ -34,6 +34,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
  */
 
 
+/**
+ * Stable equipment.
+ * @returns The result.
+ */
 export default function StableEquipment() {
   const { roster, updateWarriorEquipment } = useGameStore();
   const activeWarriors = roster.filter((w) => w.status === 'Active');

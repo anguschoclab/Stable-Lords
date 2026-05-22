@@ -10,6 +10,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 
 
+/**
+ * Chronicle.
+ * @returns The result.
+ */
 export function Chronicle() {
   const state = useWorldState();
 

@@ -11,6 +11,11 @@ interface SectionDividerProps {
  */
 
 
+/**
+ * Section divider.
+ * @param { label, className, variant = 'muted' } - { label, class name, variant = 'muted' }.
+ * @returns The result.
+ */
 export function SectionDivider({ label, className, variant = 'muted' }: SectionDividerProps) {
   const variantClasses = {
     primary: 'text-primary/80 from-primary/30 via-primary/5',

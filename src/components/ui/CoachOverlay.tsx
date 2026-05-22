@@ -19,6 +19,10 @@ interface CoachWarning {
  */
 
 
+/**
+ * Coach overlay.
+ * @returns The result.
+ */
 export function CoachOverlay() {
   const state = useWorldState();
 

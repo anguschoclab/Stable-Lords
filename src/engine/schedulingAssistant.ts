@@ -129,6 +129,9 @@ const MATCHUP_MATRIX: Record<FightingStyle, Record<FightingStyle, number>> = {
  */
 
 
+/**
+ * Defines the shape of matchup score.
+ */
 export interface MatchupScore {
   playerWarriorId: string;
   rivalWarrior: Warrior;

@@ -37,6 +37,25 @@ interface MissionControlTabProps {
  */
 
 
+/**
+ * Mission control tab.
+ * @param {
+  warrior,
+  displayWarrior,
+  currentPlan,
+  currentLoadout,
+  onPlanChange,
+  onEquipmentChange,
+} - {
+  warrior,
+  display warrior,
+  current plan,
+  current loadout,
+  on plan change,
+  on equipment change,
+}.
+ * @returns The result.
+ */
 export function MissionControlTab({
   warrior,
   displayWarrior,

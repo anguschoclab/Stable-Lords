@@ -135,6 +135,10 @@ function LinkifiedText({ text, names }: { text: string; names: string[] }) {
  */
 
 
+/**
+ * Event log.
+ * @returns The result.
+ */
 export default function EventLog() {
   const state = useWorldState();
   const navigate = useNavigate();

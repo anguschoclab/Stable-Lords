@@ -29,6 +29,25 @@ interface IdentityStepProps {
  */
 
 
+/**
+ * Identity step.
+ * @param {
+  ownerInput,
+  setOwnerInput,
+  stableInput,
+  setStableInput,
+  onBack,
+  onSubmit,
+} - {
+  owner input,
+  set owner input,
+  stable input,
+  set stable input,
+  on back,
+  on submit,
+}.
+ * @returns The result.
+ */
 export default function IdentityStep({
   ownerInput,
   setOwnerInput,

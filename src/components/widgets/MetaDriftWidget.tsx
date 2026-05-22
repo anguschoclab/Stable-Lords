@@ -13,6 +13,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
  */
 
 
+/**
+ * Meta drift widget.
+ * @returns The result.
+ */
 export function MetaDriftWidget() {
   const state = useWorldState();
 

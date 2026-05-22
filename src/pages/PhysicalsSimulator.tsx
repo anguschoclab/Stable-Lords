@@ -22,6 +22,10 @@ import { Surface } from '@/components/ui/Surface';/**
  */
 
 
+/**
+ * Physicals simulator.
+ * @returns The result.
+ */
 export default function PhysicalsSimulator() {
   const { roster } = useGameStore();
   const activeWarriors = roster.filter((w: Warrior) => w.status === 'Active');

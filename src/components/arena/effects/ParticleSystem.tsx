@@ -4,6 +4,9 @@ import { cn } from '@/lib/utils';/**
  */
 
 
+/**
+ * Particle type type.
+ */
 export type ParticleType = 'blood' | 'spark' | 'dust' | 'sweat';
 
 interface Particle {
@@ -40,6 +43,21 @@ interface ParticleSystemProps {
  */
 
 
+/**
+ * Particle system.
+ * @param {
+  trigger,
+  sourceX,
+  sourceY,
+  className,
+} - {
+  trigger,
+  source x,
+  source y,
+  class name,
+}.
+ * @returns The result.
+ */
 export default function ParticleSystem({
   trigger,
   sourceX,

@@ -255,7 +255,7 @@ export function simulateFight(
         style: planA.style,
         weaponId: weaponA,
         armorId: (warriorA?.equipment ?? DEFAULT_LOADOUT).armor,
-        helmId: (warriorD?.equipment ?? DEFAULT_LOADOUT).helm,
+        helmId: (warriorA?.equipment ?? DEFAULT_LOADOUT).helm,
         attributes: warriorA?.attributes,
         backupWeaponId: (warriorA?.equipment as { backup?: string } | undefined)?.backup,
       },

@@ -13,6 +13,11 @@ interface InjuriesStepProps {
  */
 
 
+/**
+ * Injuries step.
+ * @param { injuries, deaths } - { injuries, deaths }.
+ * @returns The result.
+ */
 export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
   return (
     <motion.div

@@ -8,6 +8,9 @@ import TrainingPlanner from '@/pages/TrainingPlanner';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/command/tactics')({
   component: TrainingPlanner,
 });

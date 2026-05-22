@@ -23,6 +23,11 @@ const CROWD_SOUNDS: Record<CrowdState, string | null> = {
  */
 
 
+/**
+ * Crowd audio.
+ * @param { state, volume, enabled } - { state, volume, enabled }.
+ * @returns The result.
+ */
 export default function CrowdAudio({ state, volume, enabled }: CrowdAudioProps) {
   const lastStateRef = useRef<CrowdState>('idle');
   const [isInitialized, setIsInitialized] = useState(false);

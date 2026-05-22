@@ -16,11 +16,17 @@ import { generateId } from '@/utils/idUtils';/**
  */
 
 
+/**
+ * Scout quality type.
+ */
 export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert';/**
  * Defines the shape of scout report.
  */
 
 
+/**
+ * Defines the shape of scout report.
+ */
 export interface ScoutReport {
   id: string;
   warriorName: string;
@@ -53,6 +59,11 @@ const SCOUT_COST: Record<ScoutQuality, number> = {
  */
 
 
+/**
+ * Get scout cost.
+ * @param quality - Quality.
+ * @returns The result.
+ */
 export function getScoutCost(quality: ScoutQuality): number {
   return SCOUT_COST[quality];
 }

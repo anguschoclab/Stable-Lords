@@ -14,6 +14,11 @@ interface MemorialStepProps {
  */
 
 
+/**
+ * Memorial step.
+ * @param { deadWarriors } - { dead warriors }.
+ * @returns The result.
+ */
 export function MemorialStep({ deadWarriors }: MemorialStepProps) {
   return (
     <motion.div

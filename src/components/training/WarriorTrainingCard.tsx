@@ -38,6 +38,27 @@ import { cn } from '@/lib/utils';/**
  */
 
 
+/**
+ * Warrior training card.
+ * @param {
+  warrior,
+  assignment,
+  seasonalGains,
+  trainers,
+  onAssign,
+  onAssignRecovery,
+  onClear,
+} - {
+  warrior,
+  assignment,
+  seasonal gains,
+  trainers,
+  on assign,
+  on assign recovery,
+  on clear,
+}.
+ * @returns The result.
+ */
 export function WarriorTrainingCard({
   warrior,
   assignment,

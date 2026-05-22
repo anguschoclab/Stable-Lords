@@ -18,6 +18,17 @@ import { cn } from '@/lib/utils';/**
  */
 
 
+/**
+ * Warrior fight history.
+ * @param {
+  warriorName,
+  arenaHistory,
+} - {
+  warrior name,
+  arena history,
+}.
+ * @returns The result.
+ */
 export function WarriorFightHistory({
   warriorName,
   arenaHistory,

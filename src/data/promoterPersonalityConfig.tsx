@@ -5,6 +5,9 @@ import type { PromoterPersonality } from '@/types/state.types';/**
  */
 
 
+/**
+ * Defines the shape of personality entry.
+ */
 export interface PersonalityEntry {
   color: string;
   icon: React.ReactNode;
@@ -17,6 +20,9 @@ export interface PersonalityEntry {
  */
 
 
+/**
+ * Personality_config.
+ */
 export const PERSONALITY_CONFIG: Record<PromoterPersonality, PersonalityEntry> = {
   Greedy: {
     color: 'bg-arena-gold/20 text-arena-gold border-arena-gold/30',

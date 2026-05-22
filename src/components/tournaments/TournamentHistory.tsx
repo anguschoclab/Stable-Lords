@@ -25,6 +25,21 @@ interface TournamentHistoryProps {
  */
 
 
+/**
+ * Tournament history.
+ * @param {
+  pastTournaments,
+  seasonIcons,
+  seasonNames,
+  currentSeason,
+} - {
+  past tournaments,
+  season icons,
+  season names,
+  current season,
+}.
+ * @returns The result.
+ */
 export function TournamentHistory({
   pastTournaments,
   seasonIcons,

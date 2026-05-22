@@ -361,6 +361,10 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
  */
 
 
+/**
+ * Treasury overview.
+ * @returns The result.
+ */
 export function TreasuryOverview() {
   const state = useWorldState();
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);

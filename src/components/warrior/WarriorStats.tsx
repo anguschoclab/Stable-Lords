@@ -19,6 +19,21 @@ import { StatBattery } from '@/components/ui/StatBattery';/**
  */
 
 
+/**
+ * Attr bar.
+ * @param {
+  label,
+  value,
+  potential,
+  max = 25,
+} - {
+  label,
+  value,
+  potential,
+  max = 25,
+}.
+ * @returns The result.
+ */
 export function AttrBar({
   label,
   value,
@@ -71,6 +86,19 @@ export function AttrBar({
  */
 
 
+/**
+ * Render the SkillBar component.
+ * @param {
+  label,
+  value,
+  max = 20,
+} - {
+  label,
+  value,
+  max = 20,
+}.
+ * @returns The result.
+ */
 export function SkillBar({
   label,
   value,
@@ -88,6 +116,11 @@ export function SkillBar({
  */
 
 
+/**
+ * Render the WarriorStatementsPanel component.
+ * @param { warrior } - { warrior }.
+ * @returns The result.
+ */
 export function WarriorStatementsPanel({ warrior }: { warrior: Warrior }) {
   if (!warrior.baseSkills) return null;
   const statements = generateWarriorStatements(

@@ -9,6 +9,9 @@ import type { StableTemplate } from './stableTemplate.types';/**
  */
 
 
+/**
+ * Minor_templates.
+ */
 export const MINOR_TEMPLATES: StableTemplate[] = [
   {
     stableName: 'Obsidian Fang',

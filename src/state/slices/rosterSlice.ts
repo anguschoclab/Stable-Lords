@@ -21,6 +21,9 @@ import {
  */
 
 
+/**
+ * Defines the shape of roster slice.
+ */
 export interface RosterSlice {
   roster: Warrior[];
   graveyard: Warrior[];
@@ -58,6 +61,12 @@ export interface RosterSlice {
  */
 
 
+/**
+ * Create roster slice.
+ * @param set - Set.
+ * @param get - Get.
+ * @returns The result.
+ */
 export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (set, get) => ({
   roster: [],
   graveyard: [],

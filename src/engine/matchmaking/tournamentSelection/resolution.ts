@@ -14,6 +14,13 @@ import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';/**
  */
 
 
+/**
+ * Resolve round.
+ * @param state - State.
+ * @param tournamentId - Tournament id.
+ * @param seed - Seed.
+ * @returns The result.
+ */
 export function resolveRound(
   state: GameState,
   tournamentId: string,
@@ -166,6 +173,13 @@ export function resolveRound(
  */
 
 
+/**
+ * Resolve complete tournament.
+ * @param state - State.
+ * @param tournamentId - Tournament id.
+ * @param seed - Seed.
+ * @returns The result.
+ */
 export function resolveCompleteTournament(
   state: GameState,
   tournamentId: string,
@@ -195,6 +209,18 @@ export function resolveCompleteTournament(
  */
 
 
+/**
+ * Apply bout results.
+ * @param state - State.
+ * @param wA - W a.
+ * @param wD - W d.
+ * @param outcome - Outcome.
+ * @param tId - T id.
+ * @param tName - T name.
+ * @param rng - Rng.
+ * @param skipFatigue - Skip fatigue. (optional)
+ * @returns The result.
+ */
 export function applyBoutResults(
   state: GameState,
   wA: Warrior,

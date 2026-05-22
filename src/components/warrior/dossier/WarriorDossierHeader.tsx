@@ -19,6 +19,11 @@ interface WarriorDossierHeaderProps {
  */
 
 
+/**
+ * Warrior dossier header.
+ * @param { warrior, record, rankings } - { warrior, record, rankings }.
+ * @returns The result.
+ */
 export function WarriorDossierHeader({ warrior, record, rankings }: WarriorDossierHeaderProps) {
   return (
     <div className="flex items-center justify-between">

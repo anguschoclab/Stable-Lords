@@ -13,6 +13,10 @@ import { resolveWarriorName, resolveStableName, findWarrior } from '@/utils/hist
  */
 
 
+/**
+ * Next bout widget.
+ * @returns The result.
+ */
 export function NextBoutWidget() {
   const state = useGameStore();
 

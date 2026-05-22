@@ -4,11 +4,17 @@ import { ArrowUpDown } from 'lucide-react';/**
  */
 
 
+/**
+ * Sort dir type.
+ */
 export type SortDir = 'asc' | 'desc';/**
  * Defines the shape of sort header props.
  */
 
 
+/**
+ * Defines the shape of sort header props.
+ */
 export interface SortHeaderProps {
   label: React.ReactNode;
   active: boolean;
@@ -21,6 +27,11 @@ export interface SortHeaderProps {
  */
 
 
+/**
+ * Sort header.
+ * @param { label, active, dir, onClick } - { label, active, dir, on click }.
+ * @returns The result.
+ */
 export function SortHeader({ label, active, dir, onClick }: SortHeaderProps) {
   const ariaLabel = typeof label === 'string' ? `Sort by ${label}` : 'Sort table column';
 

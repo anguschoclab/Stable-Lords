@@ -9,6 +9,9 @@ import type { EquipmentItem } from './equipment.types';/**
  */
 
 
+/**
+ * Weapons.
+ */
 export const WEAPONS: EquipmentItem[] = [
   // Light weapons (weight 1-2) — low requirements
   // preferredStyles = Terrablood W or CW rating; restrictedStyles = hard blocks (2H+shield conflicts or U-rated for style identity)
@@ -329,10 +332,16 @@ export const WEAPONS: EquipmentItem[] = [
  */
 
 
+/**
+ * Shield_item_ids.
+ */
 export const SHIELD_ITEM_IDS = ['small_shield', 'medium_shield', 'large_shield'] as const;/**
  * Shield_coverage.
  */
 
+/**
+ * Shield_coverage.
+ */
 export const SHIELD_COVERAGE: Record<string, 'LOW' | 'MEDIUM' | 'HIGH'> = {
   small_shield: 'MEDIUM',
   medium_shield: 'MEDIUM',

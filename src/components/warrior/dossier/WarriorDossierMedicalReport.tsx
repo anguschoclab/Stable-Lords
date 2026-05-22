@@ -13,6 +13,11 @@ interface WarriorDossierMedicalReportProps {
  */
 
 
+/**
+ * Warrior dossier medical report.
+ * @param { warrior } - { warrior }.
+ * @returns The result.
+ */
 export function WarriorDossierMedicalReport({ warrior }: WarriorDossierMedicalReportProps) {
   if (!warrior.injuries || warrior.injuries.length === 0) {
     return null;

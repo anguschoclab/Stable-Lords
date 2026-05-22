@@ -13,11 +13,17 @@ import type { FightPlan } from '@/types/combat.types';/**
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
+/**
+ * Phase type.
+ */
 export type Phase = 'OPENING' | 'MID' | 'LATE';/**
  * Defines the shape of style passive result.
  */
 
 
+/**
+ * Defines the shape of style passive result.
+ */
 export interface StylePassiveResult {
   attBonus: number;
   parBonus: number;
@@ -34,6 +40,9 @@ export interface StylePassiveResult {
  */
 
 
+/**
+ * Defines the shape of kill mechanic.
+ */
 export interface KillMechanic {
   killBonus: number;
   decBonus: number;
@@ -45,6 +54,9 @@ export interface KillMechanic {
  */
 
 
+/**
+ * Defines the shape of style strategy.
+ */
 export interface StyleStrategy {
   tempo: {
     opening: number;
@@ -63,6 +75,9 @@ export interface StyleStrategy {
  */
 
 
+/**
+ * Defines the shape of style passive context.
+ */
 export interface StylePassiveContext {
   phase: Phase;
   exchange: number;
@@ -79,6 +94,9 @@ export interface StylePassiveContext {
  */
 
 
+/**
+ * Defines the shape of kill context.
+ */
 export interface KillContext {
   phase: Phase;
   hitsLanded: number;
@@ -94,23 +112,38 @@ export interface KillContext {
 // Non-mechanical flags consumed by the narrator to pick voice/flavour per style,
 // and by crowd-mood + kill-text assembly to bias tone.
 
+/**
+ * Style voice type.
+ */
 export type StyleVoice = 'Surgical' | 'Brutal' | 'Explosive' | 'Fortified' | 'Flowing' | 'Cunning';/**
  * Attack freq type.
  */
 
+/**
+ * Attack freq type.
+ */
 export type AttackFreq = 'Sparing' | 'Measured' | 'Relentless';/**
  * Kill bias type.
  */
 
+/**
+ * Kill bias type.
+ */
 export type KillBias = 'Opportunistic' | 'Methodical' | 'Savage';/**
  * Fatigue burn type.
  */
 
+/**
+ * Fatigue burn type.
+ */
 export type FatigueBurn = 'Low' | 'Moderate' | 'High';/**
  * Defines the shape of style identity.
  */
 
 
+/**
+ * Defines the shape of style identity.
+ */
 export interface StyleIdentity {
   voice: StyleVoice;
   attackFreq: AttackFreq;
@@ -123,6 +156,9 @@ export interface StyleIdentity {
  */
 
 
+/**
+ * Style_identity.
+ */
 export const STYLE_IDENTITY: Record<FightingStyle, StyleIdentity> = {
   [FightingStyle.AimedBlow]: {
     voice: 'Surgical',
@@ -211,11 +247,17 @@ export function getStyleIdentity(style: FightingStyle): StyleIdentity {
 
 // ─── Mastery System ───────────────────────────────────────────────────────
 
+/**
+ * Mastery tier type.
+ */
 export type MasteryTier = 'Novice' | 'Practiced' | 'Veteran' | 'Master' | 'Grandmaster';/**
  * Defines the shape of mastery info.
  */
 
 
+/**
+ * Defines the shape of mastery info.
+ */
 export interface MasteryInfo {
   tier: MasteryTier;
   fights: number;

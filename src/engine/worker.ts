@@ -18,6 +18,9 @@ const engine = {
  */
 
 
+/**
+ * Engine worker type.
+ */
 export type EngineWorker = typeof engine;
 
 Comlink.expose(engine);

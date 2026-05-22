@@ -24,6 +24,13 @@ function t(template: string, data: Record<string, string | number>): string {
  */
 
 
+/**
+ * Run event pass.
+ * @param state - State.
+ * @param nextWeek - Next week.
+ * @param rootRng - Root rng. (optional)
+ * @returns The result.
+ */
 export function runEventPass(
   state: GameState,
   nextWeek: number,

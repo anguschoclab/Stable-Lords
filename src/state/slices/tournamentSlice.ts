@@ -6,6 +6,9 @@ import type { GameStore } from '@/state/useGameStore';/**
  */
 
 
+/**
+ * Defines the shape of tournament slice.
+ */
 export interface TournamentSlice {
   tournaments: TournamentEntry[];
   isTournamentWeek: boolean;
@@ -20,6 +23,11 @@ export interface TournamentSlice {
  */
 
 
+/**
+ * Create tournament slice.
+ * @param set - Set.
+ * @returns The result.
+ */
 export const createTournamentSlice: StateCreator<GameStore, [], [], TournamentSlice> = (set) => ({
   tournaments: [],
   isTournamentWeek: false,

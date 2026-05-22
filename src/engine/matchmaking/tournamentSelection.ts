@@ -13,6 +13,9 @@ export { TOURNAMENT_TIERS };/**
  */
 
 
+/**
+ * Tournament selection service.
+ */
 export const TournamentSelectionService = {
   generateSeasonalTiers,
   committeeSelection,

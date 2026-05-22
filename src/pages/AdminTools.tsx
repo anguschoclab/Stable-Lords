@@ -28,6 +28,10 @@ import type { GameState, RivalStableData } from '@/types/state.types';/**
  */
 
 
+/**
+ * Admin tools.
+ * @returns The result.
+ */
 export default function AdminTools() {
   const {
     setState,

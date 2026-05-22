@@ -29,6 +29,9 @@ import { isFightReady } from '@/engine/warriorStatus';/**
  */
 
 
+/**
+ * Defines the shape of bout result.
+ */
 export interface BoutResult {
   a: Warrior;
   d: Warrior;
@@ -43,6 +46,9 @@ export interface BoutResult {
  * Defines the shape of bout impact.
  */
 
+/**
+ * Defines the shape of bout impact.
+ */
 export interface BoutImpact {
   impact: StateImpact;
   result: BoutResult;
@@ -57,6 +63,9 @@ export interface BoutImpact {
  * Defines the shape of week bout summary.
  */
 
+/**
+ * Defines the shape of week bout summary.
+ */
 export interface WeekBoutSummary {
   bouts: number;
   deaths: number;
@@ -69,6 +78,9 @@ export interface WeekBoutSummary {
  * Defines the shape of bout context.
  */
 
+/**
+ * Defines the shape of bout context.
+ */
 export interface BoutContext {
   warriorMap: Map<string, Warrior>;
   warrior: Warrior;
@@ -228,6 +240,12 @@ function collectBoutImpacts(
  */
 
 
+/**
+ * Resolve bout.
+ * @param state - State.
+ * @param ctx - Ctx.
+ * @returns The result.
+ */
 export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   const combatants = getValidatedCombatants(ctx);
   if (!combatants) return handleInvalidBout(ctx);
@@ -273,6 +291,11 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
  */
 
 
+/**
+ * Process week bouts.
+ * @param state - State.
+ * @returns The result.
+ */
 export function processWeekBouts(state: GameState): {
   impact: StateImpact;
   results: BoutResult[];

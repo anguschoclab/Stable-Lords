@@ -173,6 +173,10 @@ function GazetteEmptyState() {
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 
+/**
+ * Gazette.
+ * @returns The result.
+ */
 export default function Gazette() {
   const state = useWorldState();
   const { week, season, gazettes } = state;

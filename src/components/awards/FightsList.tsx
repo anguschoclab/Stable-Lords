@@ -15,6 +15,17 @@ import type { FightSummary } from '@/types/game';/**
  */
 
 
+/**
+ * Fights list.
+ * @param {
+  fights,
+  getRound,
+} - {
+  fights,
+  get round,
+}.
+ * @returns The result.
+ */
 export default function FightsList({
   fights,
   getRound,

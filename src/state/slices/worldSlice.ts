@@ -33,6 +33,9 @@ import {
  */
 
 
+/**
+ * Defines the shape of arena preferences.
+ */
 export interface ArenaPreferences {
   defaultViewMode: 'log' | 'arena';
   audioEnabled: boolean;
@@ -44,6 +47,9 @@ export interface ArenaPreferences {
  */
 
 
+/**
+ * Defines the shape of world slice.
+ */
 export interface WorldSlice {
   year: number;
   week: number;
@@ -104,6 +110,12 @@ export interface WorldSlice {
  */
 
 
+/**
+ * Create world slice.
+ * @param set - Set.
+ * @param get - Get.
+ * @returns The result.
+ */
 export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (set, get) => ({
   year: 1,
   week: 1,

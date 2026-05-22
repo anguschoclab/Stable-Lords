@@ -8,6 +8,9 @@ import Scouting from '@/pages/Scouting';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/world/intelligence')({
   component: Scouting,
 });

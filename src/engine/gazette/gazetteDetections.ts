@@ -7,6 +7,9 @@ import type { FightSummary } from '@/types/combat.types';/**
  */
 
 
+/**
+ * Defines the shape of gazette detections.
+ */
 export interface GazetteDetections {
   tags: string[];
   hotStreakers: { name: string; streak: number }[];

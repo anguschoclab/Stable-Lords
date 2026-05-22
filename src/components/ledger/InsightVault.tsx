@@ -8,6 +8,10 @@ import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from
  */
 
 
+/**
+ * Insight vault.
+ * @returns The result.
+ */
 export function InsightVault() {
   const state = useWorldState();
   const tokens = state.insightTokens ?? [];

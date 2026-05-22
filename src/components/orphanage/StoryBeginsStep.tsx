@@ -10,6 +10,11 @@ interface StoryBeginsStepProps {
  */
 
 
+/**
+ * Story begins step.
+ * @param { onFinish } - { on finish }.
+ * @returns The result.
+ */
 export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {
   return (
     <div

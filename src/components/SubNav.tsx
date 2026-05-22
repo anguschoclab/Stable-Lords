@@ -6,6 +6,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 
 
+/**
+ * Defines the shape of sub nav tab.
+ */
 export interface SubNavTab {
   id: string;
   label: string;
@@ -23,6 +26,11 @@ interface SubNavProps {
  */
 
 
+/**
+ * Sub nav.
+ * @param { tabs, activeTab, onTabChange } - { tabs, active tab, on tab change }.
+ * @returns The result.
+ */
 export default function SubNav({ tabs, activeTab, onTabChange }: SubNavProps) {
   const state = useWorldState();
   const isFTUE = state.isFTUE;

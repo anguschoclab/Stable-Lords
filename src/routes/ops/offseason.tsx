@@ -8,6 +8,9 @@ import Offseason from '@/pages/Offseason';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/offseason')({
   component: Offseason,
 });

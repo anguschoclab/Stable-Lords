@@ -20,6 +20,11 @@ interface BiometricsTabProps {
  */
 
 
+/**
+ * Biometrics tab.
+ * @param { warrior, displayWarrior } - { warrior, display warrior }.
+ * @returns The result.
+ */
 export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
   return (
     <div className="grid gap-8 lg:grid-cols-12 animate-in fade-in slide-in-from-bottom-4 duration-500">

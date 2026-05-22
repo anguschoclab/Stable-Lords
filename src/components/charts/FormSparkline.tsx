@@ -12,6 +12,9 @@ interface FormSparklineProps {
  */
 
 
+/**
+ * Form sparkline.
+ */
 export const FormSparkline = React.memo(function FormSparkline({
   warriorId,
   limit = 5,

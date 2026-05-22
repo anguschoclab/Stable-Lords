@@ -9,6 +9,9 @@ import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';/**
  */
 
 
+/**
+ * Suitability rating type.
+ */
 export type SuitabilityRating = 'WS' | 'S' | 'U';
 
 const OFFENSIVE_MATRIX: Record<FightingStyle, Record<string, SuitabilityRating>> = {
@@ -85,6 +88,9 @@ export function suitabilityMultiplier(rating: SuitabilityRating): number {
  */
 
 
+/**
+ * Suitability_colors.
+ */
 export const SUITABILITY_COLORS: Record<SuitabilityRating, string> = {
   WS: 'text-green-500',
   S: 'text-amber-500',
@@ -94,6 +100,9 @@ export const SUITABILITY_COLORS: Record<SuitabilityRating, string> = {
  */
 
 
+/**
+ * Suitability_labels.
+ */
 export const SUITABILITY_LABELS: Record<SuitabilityRating, string> = {
   WS: 'Well Suited',
   S: 'Suited',

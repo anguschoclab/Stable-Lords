@@ -14,6 +14,11 @@ interface RivalIntelligenceProps {
  */
 
 
+/**
+ * Rival intelligence.
+ * @param { rivals } - { rivals }.
+ * @returns The result.
+ */
 export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -16,6 +16,11 @@ interface ChronicleTabProps {
  */
 
 
+/**
+ * Chronicle tab.
+ * @param { warrior, arenaHistory } - { warrior, arena history }.
+ * @returns The result.
+ */
 export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
   return (
     <div className="grid gap-12 lg:grid-cols-12 animate-in fade-in slide-in-from-bottom-4 duration-500">

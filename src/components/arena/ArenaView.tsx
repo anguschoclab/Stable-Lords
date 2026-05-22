@@ -81,6 +81,47 @@ interface ArenaViewProps {
  */
 
 
+/**
+ * Arena view.
+ * @param {
+  nameA,
+  nameD,
+  styleA,
+  styleD,
+  log,
+  winner,
+  visibleCount,
+  isPlaying,
+  isComplete = false,
+  arenaTier = 'standard',
+  weather = 'Clear',
+  arenaId,
+  gearA,
+  gearD,
+  maxHpA = 50,
+  maxHpD = 50,
+  className,
+} - {
+  name a,
+  name d,
+  style a,
+  style d,
+  log,
+  winner,
+  visible count,
+  is playing,
+  is complete = false,
+  arena tier = 'standard',
+  weather = 'clear',
+  arena id,
+  gear a,
+  gear d,
+  max hp a = 50,
+  max hp d = 50,
+  class name,
+}.
+ * @returns The result.
+ */
 export default function ArenaView({
   nameA,
   nameD,

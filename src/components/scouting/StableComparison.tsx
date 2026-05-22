@@ -175,6 +175,11 @@ function StableSelector({
  */
 
 
+/**
+ * Stable comparison.
+ * @param { rivals } - { rivals }.
+ * @returns The result.
+ */
 export function StableComparison({ rivals }: StableComparisonProps) {
   const {
     idA,

@@ -8,6 +8,9 @@ import Trainers from '@/pages/Trainers';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/personnel')({
   component: Trainers,
 });

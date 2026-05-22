@@ -31,6 +31,11 @@ interface LeaderboardProps {
  */
 
 
+/**
+ * Gazette leaderboard.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
 export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
   const leaderData = useMemo(() => {
     const registry = new Map<
@@ -232,6 +237,11 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
  */
 
 
+/**
+ * Best by style.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
 export function BestByStyle({ allFights }: LeaderboardProps) {
   const styles = useMemo(
     () => ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler'],
@@ -329,6 +339,11 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
  */
 
 
+/**
+ * Rising stars.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
 export function RisingStars({ allFights }: LeaderboardProps) {
   const stars = useMemo(() => {
     const history = new Map<string, { wins: number; matches: number; firstWeek: number }>();

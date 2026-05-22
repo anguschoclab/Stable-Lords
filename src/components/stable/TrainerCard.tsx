@@ -37,6 +37,11 @@ interface TrainerCardProps {
  */
 
 
+/**
+ * Trainer card.
+ * @param { trainer, onFire, owned, action } - { trainer, on fire, owned, action }.
+ * @returns The result.
+ */
 export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps) {
   const icon = FOCUS_ICONS[trainer.focus as TrainerFocus] ?? '📋';
   const tierAccent = TIER_ACCENTS[trainer.tier] ?? '';

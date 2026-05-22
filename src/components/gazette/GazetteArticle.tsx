@@ -31,6 +31,11 @@ interface GazetteArticleProps {
  */
 
 
+/**
+ * Gazette article.
+ * @param { issue, season } - { issue, season }.
+ * @returns The result.
+ */
 export function GazetteArticle({ issue, season }: GazetteArticleProps) {
   return (
     <Surface

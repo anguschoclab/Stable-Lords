@@ -37,6 +37,9 @@ const DefenseSchema = z.object({
  */
 
 
+/**
+ * Narrative schema.
+ */
 export const NarrativeSchema = z.object({
   strikes: z.record(z.string(), CategorySchema),
   defenses: z.record(z.string(), DefenseSchema),

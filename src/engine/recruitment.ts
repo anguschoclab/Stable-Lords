@@ -27,11 +27,17 @@ import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
+/**
+ * Recruit tier type.
+ */
 export type RecruitTier = 'Common' | 'Promising' | 'Exceptional' | 'Prodigy';/**
  * Defines the shape of pool warrior.
  */
 
 
+/**
+ * Defines the shape of pool warrior.
+ */
 export interface PoolWarrior {
   id: string;
   name: string;
@@ -60,6 +66,9 @@ const getTierData = (tier: RecruitTier) =>
  */
 
 
+/**
+ * Tier_cost.
+ */
 export const TIER_COST: Record<RecruitTier, number> = {
   Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common.cost,
   Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising.cost,
@@ -70,6 +79,9 @@ export const TIER_COST: Record<RecruitTier, number> = {
  */
 
 
+/**
+ * Tier_stars.
+ */
 export const TIER_STARS: Record<RecruitTier, number> = {
   Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common.stars,
   Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising.stars,

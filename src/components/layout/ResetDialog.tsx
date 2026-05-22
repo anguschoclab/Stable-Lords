@@ -20,6 +20,11 @@ interface ResetDialogProps {
  */
 
 
+/**
+ * Reset dialog.
+ * @param { open, onOpenChange, onConfirm } - { open, on open change, on confirm }.
+ * @returns The result.
+ */
 export function ResetDialog({ open, onOpenChange, onConfirm }: ResetDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>

@@ -67,6 +67,13 @@ const WL_MOD_HP: Record<number, number> = {
  */
 
 
+/**
+ * Compute hp.
+ * @param cn - Cn.
+ * @param sz - Sz.
+ * @param wl - Wl.
+ * @returns The result.
+ */
 export function computeHP(cn: number, sz: number, wl: number): number {
   const szMod = SZ_MOD[Math.min(21, Math.max(3, sz))] ?? 0;
   const wlMod = WL_MOD_HP[Math.min(25, Math.max(3, wl))] ?? 0;
@@ -76,6 +83,9 @@ export function computeHP(cn: number, sz: number, wl: number): number {
  */
 
 
+/**
+ * Hp rating type.
+ */
 export type HPRating =
   | 'Very Frail'
   | 'Cannot Take a Lot'
@@ -89,6 +99,11 @@ export type HPRating =
  */
 
 
+/**
+ * Get hp rating.
+ * @param hp - Hp.
+ * @returns The result.
+ */
 export function getHPRating(hp: number): HPRating {
   if (hp >= 54) return 'Seemingly Unaffected';
   if (hp >= 41) return 'Tremendous';
@@ -105,6 +120,9 @@ export function getHPRating(hp: number): HPRating {
 // Lookup by ST(3-25) × SZ(3-21). Mode values encoded.
 // L=Little(1), N=Normal(2), G=Good(3), R=Great(4), T=Tremendous(5), A=Awesome(6), D=Devastating(7), S=Superhuman(8), U=Unearthly(9)
 
+/**
+ * Damage rating type.
+ */
 export type DamageRating =
   | 'Little'
   | 'Normal'
@@ -163,6 +181,12 @@ const DMG_TABLE: number[][] = [
  */
 
 
+/**
+ * Compute damage class.
+ * @param st - St.
+ * @param sz - Sz.
+ * @returns The result.
+ */
 export function computeDamageClass(st: number, sz: number): number {
   const stIdx = Math.min(22, Math.max(0, st - 3));
   const szIdx = Math.min(18, Math.max(0, sz - 3));
@@ -174,6 +198,11 @@ export function computeDamageClass(st: number, sz: number): number {
  */
 
 
+/**
+ * Get damage rating.
+ * @param damageClass - Damage class.
+ * @returns The result.
+ */
 export function getDamageRating(damageClass: number): DamageRating {
   return DMG_LABELS[Math.min(8, Math.max(0, damageClass - 1))] ?? 'Normal';
 }/**
@@ -185,6 +214,9 @@ export function getDamageRating(damageClass: number): DamageRating {
 // Lookup by ST(3-25) × CN(3-25). Returns class A-F.
 // A=very little(~9), B=cannot carry a lot(~18), C=normal(~27), D=good(~36), E=tremendous(~45), F=limitless(~54)
 
+/**
+ * Encumbrance class type.
+ */
 export type EncumbranceClass = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';/**
  * Encumbrance_capacity.
  */
@@ -193,6 +225,9 @@ export type EncumbranceClass = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';/**
 // Each class ≈ 6 weight points of gear capacity
 // Canonical: average warrior (ST12/CN12) = class C = 18 points
 // Max loadout weight: 2H(8) + Plate(14) + FullHelm(4) = 26 → only class E(30)/F(36) can carry it
+/**
+ * Encumbrance_capacity.
+ */
 export const ENCUMBRANCE_CAPACITY: Record<EncumbranceClass, number> = {
   A: 6,
   B: 12,
@@ -205,6 +240,9 @@ export const ENCUMBRANCE_CAPACITY: Record<EncumbranceClass, number> = {
  */
 
 
+/**
+ * Encumbrance_labels.
+ */
 export const ENCUMBRANCE_LABELS: Record<EncumbranceClass, string> = {
   A: 'Very Little Weight',
   B: 'Cannot Carry a Lot',
@@ -250,6 +288,12 @@ const ENC_CLASSES: EncumbranceClass[] = ['A', 'B', 'C', 'D', 'E', 'F'];/**
  */
 
 
+/**
+ * Compute encumbrance class.
+ * @param st - St.
+ * @param cn - Cn.
+ * @returns The result.
+ */
 export function computeEncumbranceClass(st: number, cn: number): EncumbranceClass {
   const stIdx = Math.min(22, Math.max(0, st - 3));
   const cnIdx = Math.min(22, Math.max(0, cn - 3));
@@ -263,6 +307,12 @@ export function computeEncumbranceClass(st: number, cn: number): EncumbranceClas
  */
 
 
+/**
+ * Compute encumbrance capacity.
+ * @param st - St.
+ * @param cn - Cn.
+ * @returns The result.
+ */
 export function computeEncumbranceCapacity(st: number, cn: number): number {
   return ENCUMBRANCE_CAPACITY[computeEncumbranceClass(st, cn)];
 }/**
@@ -274,11 +324,17 @@ export function computeEncumbranceCapacity(st: number, cn: number): number {
 // Lookup by (ST+CN) vs WL. Returns tier letter.
 // L=Very Little, P=Poor, N=Normal, G=Good, R=Great, T=Tremendous, A=Awesome, U=Limitless
 
+/**
+ * Endurance tier type.
+ */
 export type EnduranceTier = 'L' | 'P' | 'N' | 'G' | 'R' | 'T' | 'A' | 'U';/**
  * Endurance_labels.
  */
 
 
+/**
+ * Endurance_labels.
+ */
 export const ENDURANCE_LABELS: Record<EnduranceTier, string> = {
   L: 'Very Little',
   P: 'Poor',
@@ -329,6 +385,13 @@ export function computeEnduranceTier(st: number, cn: number, wl: number): Endura
  */
 
 
+/**
+ * Compute endurance value.
+ * @param st - St.
+ * @param cn - Cn.
+ * @param wl - Wl.
+ * @returns The result.
+ */
 export function computeEnduranceValue(st: number, cn: number, wl: number): number {
   return ENDURANCE_VALUES[computeEnduranceTier(st, cn, wl)];
 }/**
@@ -340,6 +403,9 @@ export function computeEnduranceValue(st: number, cn: number, wl: number): numbe
 // Based on INI base + RIP base (old style chart from Terrablood)
 // https://terrablood.com/duel-ii-formerly-known-as-duelmasters/warrior-activity-ratings/
 
+/**
+ * Activity rating type.
+ */
 export type ActivityRating =
   | 'Very Slow & Inactive'
   | 'Very Slow'
@@ -367,6 +433,12 @@ export type ActivityRating =
  */
 
 
+/**
+ * Compute activity rating.
+ * @param iniBase - Ini base.
+ * @param ripBase - Rip base.
+ * @returns The result.
+ */
 export function computeActivityRating(iniBase: number, ripBase: number): ActivityRating {
   const total = iniBase + ripBase;
 
@@ -407,6 +479,9 @@ export function computeActivityRating(iniBase: number, ripBase: number): Activit
 // ─── Coordination ───────────────────────────────────────────────────────────
 // https://terrablood.com/duel-ii-formerly-known-as-duelmasters/coordination-statements/
 
+/**
+ * Coordination rating type.
+ */
 export type CoordinationRating =
   | 'Clumsy'
   | 'Slightly Uncoordinated'
@@ -421,6 +496,12 @@ export type CoordinationRating =
  */
 
 
+/**
+ * Compute coordination.
+ * @param sp - Sp.
+ * @param df - Df.
+ * @returns The result.
+ */
 export function computeCoordination(sp: number, df: number): CoordinationRating {
   const total = sp + df;
   if (total >= 40) return 'Marvel of Fighting Coordination';

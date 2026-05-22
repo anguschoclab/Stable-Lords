@@ -29,6 +29,23 @@ interface EditableTextProps {
  */
 
 
+/**
+ * Editable text.
+ * @param {
+  value,
+  onSave,
+  className,
+  inputClassName,
+  label,
+} - {
+  value,
+  on save,
+  class name,
+  input class name,
+  label,
+}.
+ * @returns The result.
+ */
 export function EditableText({
   value,
   onSave,

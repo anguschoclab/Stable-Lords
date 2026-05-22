@@ -21,6 +21,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 
 
+/**
+ * Season widget.
+ * @returns The result.
+ */
 export function SeasonWidget() {
   const state = useWorldState();
   const week = ((state.week - 1) % 13) + 1;

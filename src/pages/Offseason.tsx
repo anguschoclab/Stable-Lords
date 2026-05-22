@@ -15,6 +15,10 @@ import { CalendarDays, UserPlus, GraduationCap, BookOpen, ArrowRight, History } 
  */
 
 
+/**
+ * Offseason.
+ * @returns The result.
+ */
 export default function Offseason() {
   return (
     <PageFrame maxWidth="xl" className="pb-32">

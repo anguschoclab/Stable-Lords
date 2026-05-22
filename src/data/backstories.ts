@@ -11,6 +11,9 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
  */
 
 
+/**
+ * Backstory id type.
+ */
 export type BackstoryId =
   | 'gladiator'
   | 'merchant'
@@ -25,6 +28,9 @@ export type BackstoryId =
  */
 
 
+/**
+ * Defines the shape of backstory economy.
+ */
 export interface BackstoryEconomy {
   treasuryDelta?: number;
   fameDelta?: number;
@@ -35,6 +41,9 @@ export interface BackstoryEconomy {
  */
 
 
+/**
+ * Defines the shape of backstory identity seed.
+ */
 export interface BackstoryIdentitySeed {
   personalityWeights: Partial<Record<OwnerPersonality, number>>;
   metaAdaptationWeights: Partial<Record<MetaAdaptation, number>>;
@@ -44,6 +53,9 @@ export interface BackstoryIdentitySeed {
  */
 
 
+/**
+ * Defines the shape of backstory def.
+ */
 export interface BackstoryDef {
   id: BackstoryId;
   name: string;
@@ -57,6 +69,9 @@ export interface BackstoryDef {
  */
 
 
+/**
+ * Backstories.
+ */
 export const BACKSTORIES: Record<BackstoryId, BackstoryDef> = {
   gladiator: {
     id: 'gladiator',
@@ -178,10 +193,16 @@ export const BACKSTORIES: Record<BackstoryId, BackstoryDef> = {
  */
 
 
+/**
+ * Backstory_list.
+ */
 export const BACKSTORY_LIST: BackstoryDef[] = Object.values(BACKSTORIES);/**
  * Backstory_ids.
  */
 
+/**
+ * Backstory_ids.
+ */
 export const BACKSTORY_IDS: BackstoryId[] = BACKSTORY_LIST.map((b) => b.id);
 
 /** Roll a key from a weight map. Falls back to first key if weights are empty. */

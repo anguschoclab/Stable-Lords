@@ -22,6 +22,11 @@ interface SpatialControlsProps {
  */
 
 
+/**
+ * Spatial controls.
+ * @param { plan, warrior, onPlanChange } - { plan, warrior, on plan change }.
+ * @returns The result.
+ */
 export default function SpatialControls({ plan, warrior, onPlanChange }: SpatialControlsProps) {
   return (
     <div className="bg-white/5 p-6 border border-white/5 space-y-6">

@@ -27,6 +27,10 @@ import { SectionDivider } from '@/components/ui/SectionDivider';/**
  */
 
 
+/**
+ * Training.
+ * @returns The result.
+ */
 export default function Training() {
   const navigate = useNavigate();
   const state = useWorldState();

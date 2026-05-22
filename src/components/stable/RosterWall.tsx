@@ -16,6 +16,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 
 
+/**
+ * Roster wall.
+ * @returns The result.
+ */
 export function RosterWall() {
   const navigate = useNavigate();
 

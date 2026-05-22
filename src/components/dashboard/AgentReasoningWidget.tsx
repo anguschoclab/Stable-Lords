@@ -77,6 +77,11 @@ const INTENT_METRICS: Record<
  */
 
 
+/**
+ * Agent reasoning widget.
+ * @param { rival } - { rival }.
+ * @returns The result.
+ */
 export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
   const currentIntent = rival.agentMemory?.currentIntent || 'SURVIVAL';
   const metric = INTENT_METRICS[currentIntent];

@@ -21,6 +21,11 @@ const TABS = [
  */
 
 
+/**
+ * Warrior dossier tabs.
+ * @param { activeTab, setActiveTab } - { active tab, set active tab }.
+ * @returns The result.
+ */
 export default function WarriorDossierTabs({ activeTab, setActiveTab }: Props) {
   return (
     <div className="flex items-center gap-8 border-b border-white/5">

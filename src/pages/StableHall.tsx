@@ -15,6 +15,10 @@ import { SectionDivider } from '@/components/ui/SectionDivider';/**
  */
 
 
+/**
+ * Stable hall.
+ * @returns The result.
+ */
 export default function StableHall() {
   const { player, fame, insightTokens } = useGameStore();
   const pendingTokens = (insightTokens ?? []).length;

@@ -50,4 +50,45 @@ describe('OPFS Archival System', () => {
       await expect(service.archiveBoutLog(1, 1, 'b-suite5-t1', [], true)).resolves.toBeUndefined();
     });
   });
+
+  describe('Suite 6: Path Traversal Input Validation', () => {
+    it('Test 6.1: archiveHotState rejects slotId with traversal chars', async () => {
+      const service = new OPFSArchiveService();
+      await expect(service.archiveHotState('../escape', {} as any)).rejects.toThrow(
+        'Invalid slotId'
+      );
+    });
+
+    it('Test 6.2: retrieveHotState rejects slotId with traversal chars', async () => {
+      const service = new OPFSArchiveService();
+      await expect(service.retrieveHotState('slot/../../etc/passwd')).rejects.toThrow(
+        'Invalid slotId'
+      );
+    });
+
+    it('Test 6.3: archiveBoutLog rejects boutId with traversal chars', async () => {
+      const service = new OPFSArchiveService();
+      await expect(service.archiveBoutLog(1, 1, 'foo../bar', [], true)).rejects.toThrow(
+        'Invalid boutId'
+      );
+    });
+
+    it('Test 6.4: retrieveBoutLog rejects boutId with traversal chars', async () => {
+      const service = new OPFSArchiveService();
+      await expect(service.retrieveBoutLog(1, 1, 'bout\\windows')).rejects.toThrow(
+        'Invalid boutId'
+      );
+    });
+
+    it('Test 6.5: archiveGazette still works with valid numeric week', async () => {
+      const service = new OPFSArchiveService();
+      await expect(service.archiveGazette(1, 1, '#')).resolves.toBeUndefined();
+    });
+
+    it('Test 6.6: valid IDs are accepted', async () => {
+      const service = new OPFSArchiveService();
+      await expect(service.archiveHotState('slot_abc-123', {} as any)).resolves.toBeUndefined();
+      await expect(service.archiveBoutLog(1, 1, 'b-valid-id_2', [], true)).resolves.toBeUndefined();
+    });
+  });
 });

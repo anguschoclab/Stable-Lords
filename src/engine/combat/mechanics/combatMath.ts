@@ -14,6 +14,12 @@ const PHASE_MID_THRESHOLD = 0.65;/**
  */
 
 
+/**
+ * Get phase.
+ * @param exchange - Exchange.
+ * @param maxExchanges - Max exchanges.
+ * @returns The result.
+ */
 export function getPhase(exchange: number, maxExchanges: number): Phase {
   if (maxExchanges <= 0) return 'opening';
   const ratio = exchange / maxExchanges;
@@ -28,6 +34,12 @@ export function getPhase(exchange: number, maxExchanges: number): Phase {
  */
 
 
+/**
+ * Pick text.
+ * @param rng - Rng.
+ * @param texts - Texts.
+ * @returns The result.
+ */
 export function pickText(rng: () => number, texts: string[]): string {
   if (texts.length === 0) return '';
   const index = Math.floor(rng() * texts.length);
@@ -41,6 +53,13 @@ export function pickText(rng: () => number, texts: string[]): string {
  */
 
 
+/**
+ * Skill check.
+ * @param rng - Rng.
+ * @param skill - Skill.
+ * @param modifier - Modifier.
+ * @returns The result.
+ */
 export function skillCheck(rng: () => number, skill: number, modifier: number = 0): boolean {
   const roll = Math.floor(rng() * 20) + 1;
   const target = Math.max(1, Math.min(19, Math.floor(skill) + modifier));
@@ -57,6 +76,15 @@ export function skillCheck(rng: () => number, skill: number, modifier: number = 
  */
 
 
+/**
+ * Contest check.
+ * @param rng - Rng.
+ * @param a - A.
+ * @param d - D.
+ * @param modA - Mod a.
+ * @param modD - Mod d.
+ * @returns The result.
+ */
 export function contestCheck(
   rng: () => number,
   a: number,
@@ -94,6 +122,11 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
  */
 
 
+/**
+ * Weather stamina modifier.
+ * @param weather - Weather. (optional)
+ * @returns The result.
+ */
 export function weatherStaminaModifier(weather?: string): number {
   if (!weather) return 1.0;
   return WEATHER_STAMINA_MOD[weather] ?? 1.0;

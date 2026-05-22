@@ -7,6 +7,9 @@ export type ShieldShape = 'heater' | 'french' | 'swiss' | 'spanish' | 'lozenge';
  */
 
 
+/**
+ * Field type type.
+ */
 export type FieldType =
   | 'solid'
   | 'fess'
@@ -26,21 +29,33 @@ export type FieldType =
  */
 
 
+/**
+ * Metal color type.
+ */
 export type MetalColor = 'gold' | 'silver';/**
  * Charge type type.
  */
 
 
+/**
+ * Charge type type.
+ */
 export type ChargeType = 'beast' | 'weapon' | 'symbol' | 'nature' | 'celestial' | 'mythical';/**
  * Beast posture type.
  */
 
 
+/**
+ * Beast posture type.
+ */
 export type BeastPosture = 'rampant' | 'passant' | 'sejant' | 'couchant' | 'statant' | 'forcene';/**
  * Defines the shape of crest charge.
  */
 
 
+/**
+ * Defines the shape of crest charge.
+ */
 export interface CrestCharge {
   type: ChargeType;
   name: string;
@@ -51,6 +66,9 @@ export interface CrestCharge {
  */
 
 
+/**
+ * Defines the shape of crest data.
+ */
 export interface CrestData {
   shieldShape: ShieldShape;
   fieldType: FieldType;
@@ -65,6 +83,9 @@ export interface CrestData {
  */
 
 
+/**
+ * Defines the shape of stable crest config.
+ */
 export interface StableCrestConfig {
   seed: number;
   philosophy: string;
@@ -75,6 +96,9 @@ export interface StableCrestConfig {
  */
 
 
+/**
+ * Defines the shape of crest inheritance config.
+ */
 export interface CrestInheritanceConfig {
   primaryColorChance: number;
   secondaryColorChance: number;
@@ -88,6 +112,9 @@ export interface CrestInheritanceConfig {
 
 
 // Color palette - traditional heraldic colors adapted for UI
+/**
+ * Crest_colors.
+ */
 export const CREST_COLORS = {
   // Gules (reds)
   crimson: '#8B2323',
@@ -137,12 +164,18 @@ export const CREST_COLORS = {
  */
 
 
+/**
+ * Crest color key type.
+ */
 export type CrestColorKey = keyof typeof CREST_COLORS;/**
  * Charge_definitions.
  */
 
 
 // Charge definitions with display names
+/**
+ * Charge_definitions.
+ */
 export const CHARGE_DEFINITIONS: Record<
   ChargeType,
   { names: string[]; descriptions: Record<string, string> }
@@ -343,6 +376,9 @@ export const CHARGE_DEFINITIONS: Record<
 
 
 // Philosophy to charge type preferences
+/**
+ * Philosophy_charge_preferences.
+ */
 export const PHILOSOPHY_CHARGE_PREFERENCES: Record<string, ChargeType[]> = {
   'Brute Force': ['beast', 'weapon', 'mythical'],
   'Speed Kills': ['beast', 'celestial', 'weapon'],
@@ -358,6 +394,9 @@ export const PHILOSOPHY_CHARGE_PREFERENCES: Record<string, ChargeType[]> = {
 
 
 // Shield shape weights by tier (higher = more likely)
+/**
+ * Shield_shape_weights.
+ */
 export const SHIELD_SHAPE_WEIGHTS: Record<
   'Minor' | 'Established' | 'Major' | 'Legendary',
   Record<ShieldShape, number>
@@ -372,6 +411,9 @@ export const SHIELD_SHAPE_WEIGHTS: Record<
 
 
 // Inheritance probability by generation (diminishing returns)
+/**
+ * Inheritance_chances.
+ */
 export const INHERITANCE_CHANCES: Record<number, CrestInheritanceConfig> = {
   0: {
     primaryColorChance: 1.0,
@@ -411,6 +453,9 @@ export const INHERITANCE_CHANCES: Record<number, CrestInheritanceConfig> = {
 
 
 // Default for generations beyond defined
+/**
+ * Default_inheritance.
+ */
 export const DEFAULT_INHERITANCE: CrestInheritanceConfig = {
   primaryColorChance: 0.2,
   secondaryColorChance: 0.15,

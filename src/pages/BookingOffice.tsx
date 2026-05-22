@@ -267,6 +267,10 @@ function OfferCard({
  */
 
 
+/**
+ * Booking office.
+ * @returns The result.
+ */
 export default function BookingOffice() {
   const state = useWorldState();
   const { setState } = useGameStore();

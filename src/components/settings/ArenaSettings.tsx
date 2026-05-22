@@ -16,6 +16,10 @@ import { Swords, ScrollText, Volume2, Sparkles, Activity } from 'lucide-react';/
  */
 
 
+/**
+ * Arena settings.
+ * @returns The result.
+ */
 export default function ArenaSettings() {
   const store = useGameStore();
   const prefs = store.arenaPreferences;

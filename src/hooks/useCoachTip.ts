@@ -11,6 +11,9 @@ import type { GameState, Warrior } from '@/types/game';/**
  */
 
 
+/**
+ * Defines the shape of coach tip.
+ */
 export interface CoachTip {
   id: string;
   /** Static message or dynamic builder from state + route params */

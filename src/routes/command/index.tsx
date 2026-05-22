@@ -8,6 +8,9 @@ import ControlCenter from '@/pages/ControlCenter';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/command/')({
   component: ControlCenter,
 });

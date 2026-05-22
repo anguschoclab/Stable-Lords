@@ -14,6 +14,11 @@ const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];/**
  */
 
 
+/**
+ * Compute next season.
+ * @param newWeek - New week.
+ * @returns The result.
+ */
 export function computeNextSeason(newWeek: number): Season {
   return SEASONS[Math.floor((newWeek - 1) / 13) % 4];
 }/**
@@ -24,6 +29,12 @@ export function computeNextSeason(newWeek: number): Season {
  */
 
 
+/**
+ * Roll weather.
+ * @param rng - Rng.
+ * @param season - Season.
+ * @returns The result.
+ */
 export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   const roll = rng.next();
 
@@ -81,6 +92,13 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
  */
 
 
+/**
+ * Run world pass.
+ * @param _state - _state.
+ * @param nextWeek - Next week.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
 export function runWorldPass(_state: GameState, nextWeek: number, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(nextWeek * 13);
   const nextSeason = computeNextSeason(nextWeek);

@@ -9,6 +9,9 @@ import type { StableTemplate } from './stableTemplate.types';/**
  */
 
 
+/**
+ * Established_templates.
+ */
 export const ESTABLISHED_TEMPLATES: StableTemplate[] = [
   {
     stableName: 'Golden Lions',

@@ -23,6 +23,10 @@ export interface SpecialtyMods {
  */
 
 
+/**
+ * Default specialty mods.
+ * @returns The result.
+ */
 export function defaultSpecialtyMods(): SpecialtyMods {
   return {
     attMod: 0,

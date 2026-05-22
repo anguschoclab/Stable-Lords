@@ -295,6 +295,11 @@ function WarriorLeaderboardRow({ row, index, isFiltered }: WarriorLeaderboardRow
  */
 
 
+/**
+ * Warrior leaderboard.
+ * @param { rows, sort, onSort } - { rows, sort, on sort }.
+ * @returns The result.
+ */
 export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardProps) {
   const {
     classes,

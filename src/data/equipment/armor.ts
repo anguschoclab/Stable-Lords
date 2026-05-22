@@ -9,6 +9,9 @@ import type { EquipmentItem } from './equipment.types';/**
  */
 
 
+/**
+ * Armors.
+ */
 export const ARMORS: EquipmentItem[] = [
   {
     id: 'none_armor',

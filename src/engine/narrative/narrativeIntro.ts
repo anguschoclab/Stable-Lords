@@ -13,6 +13,9 @@ type RNG = () => number;/**
  */
 
 
+/**
+ * Defines the shape of warrior intro data.
+ */
 export interface WarriorIntroData {
   name: string;
   style: FightingStyle;

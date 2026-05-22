@@ -386,6 +386,10 @@ const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
+/**
+ * Control center.
+ * @returns The result.
+ */
 export default function ControlCenter() {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const { player, week, season, arenaHistory, boutOffers } = useGameStore(

@@ -13,6 +13,11 @@ interface ComparisonHeaderProps {
  */
 
 
+/**
+ * Comparison header.
+ * @param { rivalA, rivalB } - { rival a, rival b }.
+ * @returns The result.
+ */
 export function ComparisonHeader({ rivalA, rivalB }: ComparisonHeaderProps) {
   return (
     <Surface

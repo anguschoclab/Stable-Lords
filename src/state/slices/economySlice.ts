@@ -13,6 +13,9 @@ import {
  */
 
 
+/**
+ * Defines the shape of economy slice.
+ */
 export interface EconomySlice {
   treasury: number;
   ledger: LedgerEntry[];
@@ -33,6 +36,12 @@ export interface EconomySlice {
  */
 
 
+/**
+ * Create economy slice.
+ * @param set - Set.
+ * @param get - Get.
+ * @returns The result.
+ */
 export const createEconomySlice: StateCreator<GameStore, [], [], EconomySlice> = (set, get) => ({
   treasury: 0,
   ledger: [],

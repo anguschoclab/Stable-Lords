@@ -13,6 +13,11 @@ interface CommonControlsProps {
  */
 
 
+/**
+ * Common controls.
+ * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @returns The result.
+ */
 export default function CommonControls({ plan, onPlanChange }: CommonControlsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/5 p-6 border border-white/5">

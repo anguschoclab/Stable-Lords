@@ -54,6 +54,13 @@ interface OffseasonEventNarrative {
  */
 
 
+/**
+ * Run seasonal pass.
+ * @param state - State.
+ * @param nextWeek - Next week.
+ * @param rootRng - Root rng. (optional)
+ * @returns The result.
+ */
 export function runSeasonalPass(
   state: GameState,
   nextWeek: number,

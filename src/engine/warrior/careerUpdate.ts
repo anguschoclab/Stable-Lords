@@ -8,6 +8,9 @@ import type { WarriorStatus, CareerRecord } from '@/types/warrior.types';/**
  */
 
 
+/**
+ * Defines the shape of career update input.
+ */
 export interface CareerUpdateInput {
   isWinner: boolean;
   isKill: boolean;
@@ -21,6 +24,9 @@ export interface CareerUpdateInput {
  */
 
 
+/**
+ * Defines the shape of career update result.
+ */
 export interface CareerUpdateResult {
   status: WarriorStatus;
   fatigue: number;

@@ -268,6 +268,23 @@ function SlotSelector({
  */
 
 
+/**
+ * Equipment loadout ui.
+ * @param {
+  loadout,
+  style,
+  carryCap,
+  warriorAttrs,
+  onChange,
+} - {
+  loadout,
+  style,
+  carry cap,
+  warrior attrs,
+  on change,
+}.
+ * @returns The result.
+ */
 export default function EquipmentLoadoutUI({
   loadout,
   style,

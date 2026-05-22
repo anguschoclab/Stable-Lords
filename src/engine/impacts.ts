@@ -32,6 +32,9 @@ import type { WarriorId, StableId, TournamentId } from '@/types/shared.types';/*
  */
 
 
+/**
+ * Defines the shape of state impact.
+ */
 export interface StateImpact {
   treasuryDelta?: number;
   fameDelta?: number;

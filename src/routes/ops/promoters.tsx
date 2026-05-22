@@ -8,6 +8,9 @@ import PromoterDirectory from '@/pages/PromoterDirectory';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/promoters')({
   component: PromoterDirectory,
 });

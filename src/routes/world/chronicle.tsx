@@ -8,6 +8,9 @@ import Gazette from '@/pages/Gazette';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/world/chronicle')({
   component: Gazette,
 });

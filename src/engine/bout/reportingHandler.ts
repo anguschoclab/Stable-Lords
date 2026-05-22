@@ -29,6 +29,25 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';/**
  */
 
 
+/**
+ * Handle reporting.
+ * @param wA - W a.
+ * @param wD - W d.
+ * @param outcome - Outcome.
+ * @param tags - Tags.
+ * @param fA - F a.
+ * @param pA - P a.
+ * @param fD - F d.
+ * @param pD - P d.
+ * @param week - Week.
+ * @param _rivalStableId - _rival stable id. (optional)
+ * @param isRivalry - Is rivalry. (optional)
+ * @param _day - _day.
+ * @param rng - Rng. (optional)
+ * @param arenaId - Arena id. (optional)
+ * @param weather - Weather. (optional)
+ * @returns The result.
+ */
 export function handleReporting(
   wA: Warrior,
   wD: Warrior,

@@ -3,11 +3,17 @@ import { cn } from '@/lib/utils';/**
  */
 
 
+/**
+ * Body part type.
+ */
 export type BodyPart = 'Head' | 'Torso' | 'LeftArm' | 'RightArm' | 'Legs';/**
  * Defines the shape of paper doll props.
  */
 
 
+/**
+ * Defines the shape of paper doll props.
+ */
 export interface PaperDollProps {
   healthMap: Partial<Record<BodyPart, number>>;
   className?: string;
@@ -18,6 +24,11 @@ export interface PaperDollProps {
  */
 
 
+/**
+ * Paper doll.
+ * @param { healthMap, className } - { health map, class name }.
+ * @returns The result.
+ */
 export function PaperDoll({ healthMap, className }: PaperDollProps) {
   const getPartColor = (part: BodyPart) => {
     const hp = healthMap[part] ?? 100;

@@ -9,6 +9,9 @@ export type RiskLevel = 'Safe' | 'Speculative' | 'Reckless';/**
  */
 
 
+/**
+ * Defines the shape of budget report.
+ */
 export interface BudgetReport {
   isAffordable: boolean;
   riskTier: AIEvent['riskTier'];
@@ -22,6 +25,13 @@ export interface BudgetReport {
  */
 
 
+/**
+ * Check budget.
+ * @param rival - Rival.
+ * @param cost - Cost.
+ * @param category - Category.
+ * @returns The result.
+ */
 export function checkBudget(
   rival: RivalStableData,
   cost: number,

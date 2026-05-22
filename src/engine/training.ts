@@ -20,6 +20,9 @@ export { computeGainChance };/**
  */
 
 
+/**
+ * Defines the shape of training impact.
+ */
 export interface TrainingImpact {
   updatedRoster: Warrior[];
   updatedSeasonalGrowth: SeasonalGrowth[];

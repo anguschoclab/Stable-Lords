@@ -23,6 +23,9 @@ import type { Archetype } from '@/data/names/archetypeNames';/**
  */
 
 
+/**
+ * Defines the shape of trait effect.
+ */
 export interface TraitEffect {
   // Static skill mods (applied at fighterState build)
   attMod?: number;
@@ -53,6 +56,9 @@ export interface TraitEffect {
  */
 
 
+/**
+ * Defines the shape of trait def.
+ */
 export interface TraitDef {
   id: string;
   name: string;
@@ -69,6 +75,9 @@ export interface TraitDef {
  */
 
 
+/**
+ * Traits.
+ */
 export const TRAITS: Record<string, TraitDef> = {
   quick: {
     id: 'quick',
@@ -362,6 +371,9 @@ export function getStaticTraitMods(warrior?: Warrior): {
  */
 
 
+/**
+ * Defines the shape of dynamic trait context.
+ */
 export interface DynamicTraitContext {
   phase: 'OPENING' | 'MID' | 'LATE';
   hpRatio: number;

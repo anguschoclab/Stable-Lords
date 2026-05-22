@@ -16,6 +16,11 @@ interface AutosimConsoleProps {
  */
 
 
+/**
+ * Autosim console.
+ * @param { isSimulating, progress, result, onStart } - { is simulating, progress, result, on start }.
+ * @returns The result.
+ */
 export function AutosimConsole({ isSimulating, progress, result, onStart }: AutosimConsoleProps) {
   const percent = progress ? Math.round((progress.current / progress.total) * 100) : 0;
 

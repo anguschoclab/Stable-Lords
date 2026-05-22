@@ -10,6 +10,9 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
  */
 
 
+/**
+ * Defines the shape of fight summary params.
+ */
 export interface FightSummaryParams {
   warriorA: Warrior;
   warriorD: Warrior;

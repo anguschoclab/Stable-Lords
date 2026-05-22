@@ -19,6 +19,18 @@ import { StateImpact } from '@/engine/impacts';/**
  */
 
 
+/**
+ * Handle death.
+ * @param s - S.
+ * @param wA - W a.
+ * @param wD - W d.
+ * @param outcome - Outcome.
+ * @param week - Week.
+ * @param tags - Tags.
+ * @param rivalStableId - Rival stable id. (optional)
+ * @param rng - Rng.
+ * @returns The result.
+ */
 export function handleDeath(
   s: GameState,
   wA: Warrior,

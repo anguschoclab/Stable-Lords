@@ -4,6 +4,9 @@ import Recruit from '@/pages/Recruit';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/recruit')({
   component: Recruit,
 });

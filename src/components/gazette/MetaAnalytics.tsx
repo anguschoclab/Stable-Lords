@@ -17,6 +17,11 @@ const TACTICAL_STYLES = ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'G
  */
 
 
+/**
+ * Tactical style analysis.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
 export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
   // ⚡ Bolt: Reduced O(S * N) repeated filter calls to O(N) single-pass aggregation and memoized result
   const stats = useMemo(() => {
@@ -137,6 +142,11 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
  */
 
 
+/**
+ * Style matchup heatmap.
+ * @param { allFights } - { all fights }.
+ * @returns The result.
+ */
 export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
   // ⚡ Bolt: Reduced O(S^2 * N) nested filtering to O(N) single-pass aggregation and memoized result
   const matchupStats = useMemo(() => {

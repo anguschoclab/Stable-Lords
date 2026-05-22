@@ -58,6 +58,10 @@ function getFatigueLabel(fatigue: number | undefined): { label: string; color: s
  */
 
 
+/**
+ * Tournaments.
+ * @returns The result.
+ */
 export default function Tournaments() {
   const {
     tournaments,

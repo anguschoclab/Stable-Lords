@@ -431,6 +431,11 @@ function TournamentRoundCard({
  */
 
 
+/**
+ * Tournament schedule.
+ * @param { tournament, currentWeek } - { tournament, current week }.
+ * @returns The result.
+ */
 export function TournamentSchedule({ tournament, currentWeek }: TournamentScheduleProps) {
   const state = useGameStore();
   const {

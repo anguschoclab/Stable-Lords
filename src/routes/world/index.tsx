@@ -4,6 +4,9 @@ import WorldOverview from '@/pages/WorldOverview';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/world/')({
   component: WorldOverview,
 });

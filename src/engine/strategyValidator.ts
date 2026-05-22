@@ -9,11 +9,17 @@ import { FightingStyle } from '@/types/shared.types';/**
  */
 
 
+/**
+ * Warning severity type.
+ */
 export type WarningSeverity = 'info' | 'warn' | 'error';/**
  * Defines the shape of strategy warning.
  */
 
 
+/**
+ * Defines the shape of strategy warning.
+ */
 export interface StrategyWarning {
   code: string;
   severity: WarningSeverity;
@@ -29,6 +35,12 @@ const LOW = 3;/**
  */
 
 
+/**
+ * Validate strategy.
+ * @param plan - Plan.
+ * @param warrior - Warrior. (optional)
+ * @returns The result.
+ */
 export function validateStrategy(plan: FightPlan, warrior?: Warrior): StrategyWarning[] {
   const out: StrategyWarning[] = [];
   const OE = plan.OE ?? 5;

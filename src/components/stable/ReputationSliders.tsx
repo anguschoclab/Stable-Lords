@@ -54,6 +54,10 @@ const REP_LABELS: {
  */
 
 
+/**
+ * Reputation sliders.
+ * @returns The result.
+ */
 export function ReputationSliders() {
   const state = useWorldState();
   const rep = useMemo(() => computeStableReputation(state), [state]);

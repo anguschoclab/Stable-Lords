@@ -16,6 +16,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 
 
+/**
+ * Hall of warriors.
+ * @returns The result.
+ */
 export function HallOfWarriors() {
   const state = useWorldState();
   const retired = state.retired ?? [];

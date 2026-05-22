@@ -29,6 +29,25 @@ interface WeaponTrailProps {
  */
 
 
+/**
+ * Weapon trail.
+ * @param {
+  trigger,
+  weaponType,
+  direction,
+  sourceX,
+  sourceY,
+  className,
+} - {
+  trigger,
+  weapon type,
+  direction,
+  source x,
+  source y,
+  class name,
+}.
+ * @returns The result.
+ */
 export default function WeaponTrail({
   trigger,
   weaponType,

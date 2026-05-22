@@ -6,6 +6,9 @@ import type { FightSummary } from '@/types/combat.types';/**
  */
 
 
+/**
+ * Defines the shape of fight card.
+ */
 export interface FightCard {
   summary: FightSummary;
   transcript: string[];
@@ -14,6 +17,9 @@ export interface FightCard {
  */
 
 
+/**
+ * Defines the shape of newsletter issue.
+ */
 export interface NewsletterIssue {
   id: string;
   week: number;
@@ -105,6 +111,9 @@ const current: FightCard[] = [];/**
  */
 
 
+/**
+ * Newsletter feed.
+ */
 export const NewsletterFeed = {
   appendFightResult(card: FightCard) {
     current.push(card);

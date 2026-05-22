@@ -4,6 +4,7 @@ import {
   rollHitLocation,
   applyProtectMod,
   computeHitDamage,
+  applyArmorTypeMod,
   HIT_LOCATIONS,
 } from '@/engine/combat/mechanics/combatDamage';
 
@@ -201,6 +202,44 @@ describe('combatDamage engine', () => {
       // base = -10 + 2 = -8
       // even with negative base, min is 1
       expect(result).toBe(1);
+    });
+  });
+
+  describe('applyArmorTypeMod — armor ID corrections (Bug 2)', () => {
+    it('padded armor resists bash damage', () => {
+      // mace → bash; padded: { bash: 0.9 } → floor(100 * 0.9) = 90
+      expect(applyArmorTypeMod(100, 'mace', 'padded')).toBe(90);
+    });
+
+    it('padded armor is weak to pierce damage', () => {
+      // dagger → pierce; padded: { pierce: 1.05 } → floor(100 * 1.05) = 105
+      expect(applyArmorTypeMod(100, 'dagger', 'padded')).toBe(105);
+    });
+
+    it('studded_leather armor resists slash damage', () => {
+      // longsword → slash; studded_leather: { slash: 0.88 } → floor(100 * 0.88) = 88
+      expect(applyArmorTypeMod(100, 'longsword', 'studded_leather')).toBe(88);
+    });
+
+    it('studded_leather armor is weak to pierce damage', () => {
+      // dagger → pierce; studded_leather: { pierce: 1.05 } → floor(100 * 1.05) = 105
+      expect(applyArmorTypeMod(100, 'dagger', 'studded_leather')).toBe(105);
+    });
+
+    it('plate_armor resists slash damage at least as well as plate_mail', () => {
+      // plate_mail: { slash: 0.85 } = 85; plate_armor: { slash: 0.80 } = 80
+      const plateMailResult = applyArmorTypeMod(100, 'longsword', 'plate_mail');
+      const plateArmorResult = applyArmorTypeMod(100, 'longsword', 'plate_armor');
+      expect(plateArmorResult).toBeLessThanOrEqual(plateMailResult);
+      expect(plateArmorResult).toBe(80);
+    });
+
+    it('plate_armor resists bash damage', () => {
+      expect(applyArmorTypeMod(100, 'mace', 'plate_armor')).toBe(80);
+    });
+
+    it('plate_armor resists pierce damage', () => {
+      expect(applyArmorTypeMod(100, 'dagger', 'plate_armor')).toBe(80);
     });
   });
 });

@@ -198,6 +198,11 @@ export function resolveEffectiveWeather(weather: WeatherType, arenaTags: string[
  */
 
 
+/**
+ * Get weather effect.
+ * @param weather - Weather.
+ * @returns The result.
+ */
 export function getWeatherEffect(weather: WeatherType): WeatherEffect {
   return WEATHER_EFFECTS[weather] ?? WEATHER_EFFECTS['Clear'];
 }

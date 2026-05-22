@@ -10,6 +10,11 @@ interface MarkdownReaderProps {
  */
 
 
+/**
+ * Markdown reader.
+ * @param { content } - { content }.
+ * @returns The result.
+ */
 export function MarkdownReader({ content }: MarkdownReaderProps) {
   return (
     <div

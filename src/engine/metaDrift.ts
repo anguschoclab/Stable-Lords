@@ -9,6 +9,9 @@ import { clamp } from '@/utils/math';/**
  */
 
 
+/**
+ * Style meta type.
+ */
 export type StyleMeta = Record<FightingStyle, number>; // -10 to +10 drift
 
 /**

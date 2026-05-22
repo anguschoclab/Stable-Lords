@@ -33,6 +33,10 @@ const TOKEN_CFG: Record<
  */
 
 
+/**
+ * Insight manager.
+ * @returns The result.
+ */
 export function InsightManager() {
   const state = useWorldState();
   const { consumeInsightToken } = useGameStore();

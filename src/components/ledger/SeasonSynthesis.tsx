@@ -12,6 +12,10 @@ import { Trophy, Flame, TrendingUp, ScrollText, ArrowUpRight, ArrowDownLeft } fr
  */
 
 
+/**
+ * Season synthesis.
+ * @returns The result.
+ */
 export function SeasonSynthesis() {
   const { rivals, ownerGrudges, newsletter, arenaHistory, season } = useGameStore(
     useShallow((s) => ({

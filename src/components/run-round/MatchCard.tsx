@@ -16,6 +16,11 @@ interface MatchCardProps {
  */
 
 
+/**
+ * Match card.
+ * @param { pairing, crowdMood } - { pairing, crowd mood }.
+ * @returns The result.
+ */
 export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
   const { a: wA, d: wB, rivalStable, isRivalry: isRivalryBout } = pairing;
 

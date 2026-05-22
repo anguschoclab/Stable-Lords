@@ -16,6 +16,10 @@ import { motion } from 'framer-motion';/**
  */
 
 
+/**
+ * Graveyard.
+ * @returns The result.
+ */
 export default function Graveyard() {
   const { graveyard, player, season } = useGameStore();
 

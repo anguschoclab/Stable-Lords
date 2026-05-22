@@ -5,6 +5,9 @@ import { ChevronDown, Zap, Swords } from 'lucide-react';/**
  */
 
 
+/**
+ * Defines the shape of upset entry.
+ */
 export interface UpsetEntry {
   winner: string;
   loser: string;
@@ -19,6 +22,11 @@ export interface UpsetEntry {
  */
 
 
+/**
+ * Upsets list.
+ * @param { upsets } - { upsets }.
+ * @returns The result.
+ */
 export default function UpsetsList({ upsets }: { upsets: UpsetEntry[] }) {
   if (!upsets || upsets.length === 0) return null;
 

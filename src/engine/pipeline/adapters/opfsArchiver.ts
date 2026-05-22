@@ -9,6 +9,11 @@ const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];/**
  * @returns The result.
  */
 
+/**
+ * Season to number.
+ * @param season - Season.
+ * @returns The result.
+ */
 export function seasonToNumber(season: Season): number {
   return SEASONS.indexOf(season);
 }
@@ -60,6 +65,11 @@ export function flushDeferredArchivesOffThread(state: GameState): GameState {
  */
 
 
+/**
+ * Archive week logs.
+ * @param state - State.
+ * @returns The result.
+ */
 export function archiveWeekLogs(state: GameState): GameState {
   const opfs = new OPFSArchiveService();
   if (!opfs.isSupported()) return state;

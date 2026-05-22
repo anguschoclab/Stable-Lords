@@ -8,21 +8,43 @@ interface State {
  */
 
 
+/**
+ * The ErrorBoundary class.
+ */
 export class ErrorBoundary extends React.Component<React.PropsWithChildren, State> {
-  constructor(props: React.PropsWithChildren) {
+  /**
+ * Constructor.
+ * @param props - Props.
+ */
+constructor(props: React.PropsWithChildren) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  /**
+ * Get derived state from error.
+ * @param error - Error.
+ * @returns The result.
+ */
+static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
+  /**
+ * Component did catch.
+ * @param error - Error.
+ * @param info - Info.
+ * @returns The result.
+ */
+componentDidCatch(error: Error, info: React.ErrorInfo) {
     console.error('[ErrorBoundary] Unhandled render error:', error, info.componentStack);
   }
 
-  render() {
+  /**
+ * Render.
+ * @returns The result.
+ */
+render() {
     if (!this.state.hasError) return this.props.children;
 
     return (

@@ -24,6 +24,11 @@ interface StyleRow {
  */
 
 
+/**
+ * Style meter table.
+ * @param { className } - { class name }.
+ * @returns The result.
+ */
 export function StyleMeterTable({ className }: StyleMeterTableProps) {
   const styleStats = useGameStore((s) => {
     const map = new Map<string, { wins: number; losses: number }>();

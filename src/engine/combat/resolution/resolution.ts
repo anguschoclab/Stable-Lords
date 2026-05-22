@@ -49,6 +49,9 @@ import {
  */
 
 
+/**
+ * Decision_hit_margin.
+ */
 export const DECISION_HIT_MARGIN = 3;/**
  * Get matchup bonus.
  * @param styleA - Style a.
@@ -57,6 +60,12 @@ export const DECISION_HIT_MARGIN = 3;/**
  */
 
 
+/**
+ * Get matchup bonus.
+ * @param styleA - Style a.
+ * @param styleD - Style d.
+ * @returns The result.
+ */
 export function getMatchupBonus(styleA: FightingStyle, styleD: FightingStyle): number {
   return rawMatchupBonus(styleA, styleD);
 }
@@ -76,6 +85,9 @@ import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResoluti
 
 // ─── Fighter State & Context ───────────────────────────────────────────────
 
+/**
+ * Defines the shape of fighter state.
+ */
 export interface FighterState {
   label: 'A' | 'D';
   style: FightingStyle;
@@ -127,6 +139,9 @@ export interface FighterState {
  */
 
 
+/**
+ * Defines the shape of resolution context.
+ */
 export interface ResolutionContext {
   rng: () => number;
   phase: 'OPENING' | 'MID' | 'LATE';
@@ -168,6 +183,12 @@ export interface ResolutionContext {
  */
 
 
+/**
+ * Resolve effective tactics.
+ * @param plan - Plan.
+ * @param phaseKey - Phase key.
+ * @returns The result.
+ */
 export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | 'mid' | 'late') {
   const phase = plan.phases?.[phaseKey];
   return {
@@ -182,6 +203,11 @@ export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | '
  */
 
 
+/**
+ * Apply aggression bias.
+ * @param aggressionBias - Aggression bias.
+ * @returns The result.
+ */
 export function applyAggressionBias(aggressionBias: number): [number, number] {
   return aggressionBias > 5
     ? [(aggressionBias - 5) * 0.5, -(aggressionBias - 5) * 0.5]
@@ -197,6 +223,13 @@ export function applyAggressionBias(aggressionBias: number): [number, number] {
 
 // ─── Phase Handlers ─────────────────────────────────────────────────────────
 
+/**
+ * Resolve exchange.
+ * @param ctx - Ctx.
+ * @param fA - F a.
+ * @param fD - F d.
+ * @returns The result.
+ */
 export function resolveExchange(
   ctx: ResolutionContext,
   fA: FighterState,

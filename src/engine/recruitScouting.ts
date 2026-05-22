@@ -22,6 +22,9 @@ type AttrKey = (typeof ATTRIBUTE_KEYS)[number];/**
  */
 
 
+/**
+ * Defines the shape of potential scout report.
+ */
 export interface PotentialScoutReport {
   recruitId: string;
   week: number;

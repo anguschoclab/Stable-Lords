@@ -82,6 +82,9 @@ const CHANCE_HINT = 0.1;/**
  */
  // 10% chance to learn a hint regardless
 
+/**
+ * Defines the shape of discovery result.
+ */
 export interface DiscoveryResult {
   updated: boolean;
   hints: string[];
@@ -96,6 +99,13 @@ export interface DiscoveryResult {
  */
 
 
+/**
+ * Check discovery.
+ * @param warrior - Warrior.
+ * @param rng - Rng.
+ * @param context - Context. (optional)
+ * @returns The result.
+ */
 export function checkDiscovery(
   warrior: Warrior,
   rng: IRNGService,

@@ -4,6 +4,9 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
  */
 
 
+/**
+ * Defines the shape of combat context.
+ */
 export interface CombatContext {
   attacker?: string;
   defender?: string;
@@ -21,7 +24,10 @@ export interface CombatContext {
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class NarrativeTemplateEngine {
-  private constructor() {}
+  /**
+ * Constructor.
+ */
+private constructor() {}
   /**
    * Replaces canonical tokens (%A, %D, %W, %BP, %H) and Handlebars {{token}} with contextual values.
    * ⚡ Bolt Optimization: Switched from chained .replace() to a single-pass regex dictionary

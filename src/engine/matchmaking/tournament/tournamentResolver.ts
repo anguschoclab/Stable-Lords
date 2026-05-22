@@ -13,6 +13,9 @@ import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';/**
  */
 
 
+/**
+ * Defines the shape of round resolution result.
+ */
 export interface RoundResolutionResult {
   impact: StateImpact;
   roundResults: string[];

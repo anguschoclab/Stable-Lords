@@ -37,6 +37,11 @@ const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
  */
 
 
+/**
+ * Get weapon preferred range.
+ * @param weaponId - Weapon id. (optional)
+ * @returns The result.
+ */
 export function getWeaponPreferredRange(weaponId?: string): DistanceRange {
   if (!weaponId) return 'Striking';
   return WEAPON_PREFERRED_RANGE[weaponId] ?? 'Striking';
@@ -109,6 +114,9 @@ export function computeReachScore(
 
 // ─── Distance Contest ─────────────────────────────────────────────────────────
 
+/**
+ * Defines the shape of distance contest result.
+ */
 export interface DistanceContestResult {
   distanceWinner: 'A' | 'D' | null;
   rangeModA: number;

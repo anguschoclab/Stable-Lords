@@ -27,6 +27,9 @@ import { getWeaponDisplayName } from '../../narrative/narrativeUtils';/**
  */
 
 
+/**
+ * Defines the shape of narration context.
+ */
 export interface NarrationContext {
   rng: () => number;
   nameA: string;
@@ -52,6 +55,13 @@ export interface NarrationContext {
  */
 
 
+/**
+ * Narrate events.
+ * @param events - Events.
+ * @param ctx - Ctx.
+ * @param minute - Minute.
+ * @returns The result.
+ */
 export function narrateEvents(
   events: CombatEvent[],
   ctx: NarrationContext,

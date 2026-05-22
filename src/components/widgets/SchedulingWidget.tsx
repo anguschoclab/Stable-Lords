@@ -111,6 +111,11 @@ interface SchedulingWidgetProps {
  */
 
 
+/**
+ * Scheduling widget.
+ * @param { warrior } - { warrior }.
+ * @returns The result.
+ */
 export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
   const state = useWorldState();
 

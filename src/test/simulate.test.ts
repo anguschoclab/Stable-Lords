@@ -710,6 +710,44 @@ describe('simulateFight — post-fight stats', () => {
   });
 });
 
+describe('simulateFight — intro narration helm assignment (Bug 3)', () => {
+  it("uses fighter A's own helm in their intro, not fighter D's", () => {
+    const warriorA = makeWarrior(
+      'Goliath',
+      FightingStyle.BashingAttack,
+      {},
+      { equipment: { weapon: 'maul', armor: 'chain_mail', shield: 'none_shield', helm: 'full_helm' } }
+    );
+    const warriorD = makeWarrior(
+      'Swift',
+      FightingStyle.AimedBlow,
+      {},
+      { equipment: { weapon: 'epee', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' } }
+    );
+
+    const result = simulateFight(
+      makePlan(FightingStyle.BashingAttack),
+      makePlan(FightingStyle.AimedBlow),
+      warriorA,
+      warriorD,
+      99
+    );
+
+    // Minute 0 contains both intros. They are separated by an empty-text entry.
+    const minute0 = result.log.filter((e) => e.minute === 0).map((e) => e.text);
+    const sepIdx = minute0.indexOf('');
+    const introALines = sepIdx >= 0 ? minute0.slice(0, sepIdx) : minute0;
+    const introDLines = sepIdx >= 0 ? minute0.slice(sepIdx + 1) : [];
+
+    // A's intro must announce FULL HELM (A's own helm)
+    expect(introALines.some((l) => l.includes('FULL HELM'))).toBe(true);
+    // A's intro must NOT announce LEATHER CAP (D's helm)
+    expect(introALines.some((l) => l.includes('LEATHER CAP'))).toBe(false);
+    // D's intro must announce LEATHER CAP (D's own helm)
+    expect(introDLines.some((l) => l.includes('LEATHER CAP'))).toBe(true);
+  });
+});
+
 // ─── Spatial System Integration Tests ────────────────────────────────────────
 
 describe('simulateFight — arena system', () => {

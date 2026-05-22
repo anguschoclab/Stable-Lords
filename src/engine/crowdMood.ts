@@ -7,16 +7,25 @@ import type { FightSummary } from '@/types/combat.types';/**
  */
 
 
+/**
+ * Crowd mood type.
+ */
 export type CrowdMood = 'Calm' | 'Bloodthirsty' | 'Theatrical' | 'Solemn' | 'Festive';/**
  * Crowd_moods.
  */
 
 
+/**
+ * Crowd_moods.
+ */
 export const CROWD_MOODS: CrowdMood[] = ['Calm', 'Bloodthirsty', 'Theatrical', 'Solemn', 'Festive'];/**
  * Mood_descriptions.
  */
 
 
+/**
+ * Mood_descriptions.
+ */
 export const MOOD_DESCRIPTIONS: Record<CrowdMood, string> = {
   Calm: 'The crowd watches with quiet anticipation.',
   Bloodthirsty: 'The mob roars for blood! Kill probability increased.',
@@ -28,6 +37,9 @@ export const MOOD_DESCRIPTIONS: Record<CrowdMood, string> = {
  */
 
 
+/**
+ * Mood_icons.
+ */
 export const MOOD_ICONS: Record<CrowdMood, string> = {
   Calm: '😐',
   Bloodthirsty: '🩸',
@@ -39,6 +51,9 @@ export const MOOD_ICONS: Record<CrowdMood, string> = {
  */
 
 
+/**
+ * Defines the shape of mood modifiers.
+ */
 export interface MoodModifiers {
   fameMultiplier: number;
   popMultiplier: number;
@@ -50,6 +65,11 @@ export interface MoodModifiers {
  */
 
 
+/**
+ * Get mood modifiers.
+ * @param mood - Mood.
+ * @returns The result.
+ */
 export function getMoodModifiers(mood: CrowdMood): MoodModifiers {
   switch (mood) {
     case 'Bloodthirsty':

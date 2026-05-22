@@ -17,34 +17,58 @@ import { getSeasonalGains, updateSeasonalGains } from './facilityUpkeep';/**
  */
 
 
+/**
+ * Total_cap.
+ */
 export const TOTAL_CAP = 120;/**
  * Base_gain_chance.
  */
 
+/**
+ * Base_gain_chance.
+ */
 export const BASE_GAIN_CHANCE = 0.55;/**
  * Seasonal_cap_per_attr.
  */
 
+/**
+ * Seasonal_cap_per_attr.
+ */
 export const SEASONAL_CAP_PER_ATTR = 3;/**
  * Base_training_injury_chance.
  */
 
+/**
+ * Base_training_injury_chance.
+ */
 export const BASE_TRAINING_INJURY_CHANCE = 0.03;/**
  * Gain_chance_min.
  */
 
+/**
+ * Gain_chance_min.
+ */
 export const GAIN_CHANCE_MIN = 0.15;/**
  * Gain_chance_max.
  */
 
+/**
+ * Gain_chance_max.
+ */
 export const GAIN_CHANCE_MAX = 0.85;/**
  * Injury_chance_min.
  */
 
+/**
+ * Injury_chance_min.
+ */
 export const INJURY_CHANCE_MIN = 0.01;/**
  * Injury_chance_max.
  */
 
+/**
+ * Injury_chance_max.
+ */
 export const INJURY_CHANCE_MAX = 0.1;/**
  * Skill_drill_cap.
  */
@@ -54,23 +78,38 @@ export const INJURY_CHANCE_MAX = 0.1;/**
 // Drilling a combat skill (ATT/PAR/DEF/INI/RIP/DEC) grants a flat bonus on top
 // of the attribute-derived baseSkills. Per-skill cap keeps drilling a supplement,
 // not a replacement for attribute training.
+/**
+ * Skill_drill_cap.
+ */
 export const SKILL_DRILL_CAP = 3;/**
  * Skill_drill_base_chance.
  */
 
+/**
+ * Skill_drill_base_chance.
+ */
 export const SKILL_DRILL_BASE_CHANCE = 0.4;/**
  * Skill_drill_gain_min.
  */
 
+/**
+ * Skill_drill_gain_min.
+ */
 export const SKILL_DRILL_GAIN_MIN = 0.15;/**
  * Skill_drill_gain_max.
  */
 
+/**
+ * Skill_drill_gain_max.
+ */
 export const SKILL_DRILL_GAIN_MAX = 0.7;/**
  * Skill_trainer_focus.
  */
 
 
+/**
+ * Skill_trainer_focus.
+ */
 export const SKILL_TRAINER_FOCUS: Record<
   keyof BaseSkills,
   import('@/types/shared.types').TrainerFocus
@@ -86,6 +125,9 @@ export const SKILL_TRAINER_FOCUS: Record<
  */
 
 
+/**
+ * Training_injuries.
+ */
 export const TRAINING_INJURIES = [
   {
     name: 'Pulled Muscle',
@@ -122,6 +164,9 @@ export const TRAINING_INJURIES = [
  */
 
 
+/**
+ * Defines the shape of training result.
+ */
 export interface TrainingResult {
   type: 'gain' | 'injury' | 'recovery' | 'blocked';
   warriorId: string;

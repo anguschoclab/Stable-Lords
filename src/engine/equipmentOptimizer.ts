@@ -18,6 +18,9 @@ import {
  */
 
 
+/**
+ * Defines the shape of gear recommendation.
+ */
 export interface GearRecommendation {
   loadout: EquipmentLoadout;
   label: string;
@@ -74,9 +77,9 @@ function scoreWeapon(item: EquipmentItem, style: FightingStyle, profile: BuildPr
 function scoreArmor(item: EquipmentItem, profile: BuildProfile): number {
   if (profile === 'speed') return item.weight <= 1 ? 30 : item.weight <= 2 ? 15 : 0;
   if (profile === 'damage') return item.weight <= 3 ? 20 : 10;
-  if (profile === 'tank') return item.weight >= 5 ? 30 : item.weight >= 3 ? 20 : 5;
-  // balanced
-  return item.weight >= 2 && item.weight <= 4 ? 25 : 10;
+  if (profile === 'tank') return item.weight >= 5 ? 20 + item.weight : item.weight >= 3 ? 20 : 5;
+  // balanced: 2-4 weight sweet spot; weight breaks ties so leather (w=4) beats padded (w=2)
+  return item.weight >= 2 && item.weight <= 4 ? 15 + item.weight : 5;
 }
 
 function scoreShield(item: EquipmentItem, profile: BuildProfile): number {
@@ -88,7 +91,7 @@ function scoreShield(item: EquipmentItem, profile: BuildProfile): number {
 
 function scoreHelm(item: EquipmentItem, profile: BuildProfile): number {
   if (item.id === 'none_helm') return profile === 'speed' ? 20 : 5;
-  if (profile === 'tank') return item.weight >= 2 ? 25 : 15;
+  if (profile === 'tank') return item.weight >= 2 ? 20 + item.weight : 15;
   if (profile === 'speed') return item.weight <= 1 ? 20 : 5;
   return item.weight <= 2 ? 20 : 10;
 }

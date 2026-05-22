@@ -13,6 +13,11 @@ interface BackstoryPickerProps {
  */
 
 
+/**
+ * Backstory picker.
+ * @param { value, onChange, onRandomize } - { value, on change, on randomize }.
+ * @returns The result.
+ */
 export default function BackstoryPicker({ value, onChange, onRandomize }: BackstoryPickerProps) {
   return (
     <div className="space-y-3">

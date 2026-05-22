@@ -20,6 +20,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 
 
+/**
+ * Recent bouts widget.
+ * @returns The result.
+ */
 export function RecentBoutsWidget() {
   const state = useGameStore();
 

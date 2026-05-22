@@ -45,6 +45,9 @@ export const NAMES_BRUTAL = [
  */
 
 
+/**
+ * Names_agile.
+ */
 export const NAMES_AGILE = [
   'SILVANE',
   'VEXIA',
@@ -89,6 +92,9 @@ export const NAMES_AGILE = [
  */
 
 
+/**
+ * Names_cunning.
+ */
 export const NAMES_CUNNING = [
   'FERRIK',
   'MORKA',
@@ -133,6 +139,9 @@ export const NAMES_CUNNING = [
  */
 
 
+/**
+ * Names_mixed.
+ */
 export const NAMES_MIXED = [
   'VICTUS',
   'MAXIMAR',
@@ -176,11 +185,17 @@ export const NAMES_MIXED = [
  */
 
 
+/**
+ * Archetype type.
+ */
 export type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank';/**
  * Archetype_names.
  */
 
 
+/**
+ * Archetype_names.
+ */
 export const ARCHETYPE_NAMES: Record<Archetype, string[]> = {
   brutal: NAMES_BRUTAL,
   agile: NAMES_AGILE,

@@ -42,6 +42,11 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
  */
 
 
+/**
+ * Weather audio.
+ * @param { weather, volume, enabled, arenaId } - { weather, volume, enabled, arena id }.
+ * @returns The result.
+ */
 export default function WeatherAudio({ weather, volume, enabled, arenaId }: WeatherAudioProps) {
   const currentWeatherRef = useRef<WeatherType | null>(null);
   const isIndoor = isIndoorArena(arenaId);

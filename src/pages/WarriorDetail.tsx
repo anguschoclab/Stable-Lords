@@ -41,6 +41,10 @@ const TABS: SubNavTab[] = [
  */
 
 
+/**
+ * Warrior detail.
+ * @returns The result.
+ */
 export default function WarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const navigate = useNavigate();

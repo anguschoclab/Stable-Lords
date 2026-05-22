@@ -20,4 +20,7 @@ Comlink.expose(archiveWorkerApi);/**
  * Archive worker type.
  */
 
+/**
+ * Archive worker type.
+ */
 export type ArchiveWorker = typeof archiveWorkerApi;

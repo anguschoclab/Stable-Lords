@@ -8,6 +8,9 @@ import StableLedger from '@/pages/StableLedger';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/finance')({
   component: StableLedger,
 });

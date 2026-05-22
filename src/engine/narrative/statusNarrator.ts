@@ -7,7 +7,10 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
  */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class StatusNarrator {
-  private constructor() {}
+  /**
+ * Constructor.
+ */
+private constructor() {}
   /**
    * Generates damage severity line based on damage ratio.
    */
@@ -223,52 +226,91 @@ export class StatusNarrator {
 
 
 // Export static methods as standalone functions for backward compatibility
+/**
+ * Damage severity line.
+ */
 export const damageSeverityLine = StatusNarrator.damageSeverityLine.bind(StatusNarrator);/**
  * State change line.
  */
 
+/**
+ * State change line.
+ */
 export const stateChangeLine = StatusNarrator.stateChangeLine.bind(StatusNarrator);/**
  * Fatigue line.
  */
 
+/**
+ * Fatigue line.
+ */
 export const fatigueLine = StatusNarrator.fatigueLine.bind(StatusNarrator);/**
  * Crowd reaction.
  */
 
+/**
+ * Crowd reaction.
+ */
 export const crowdReaction = StatusNarrator.crowdReaction.bind(StatusNarrator);/**
  * Minute status line.
  */
 
+/**
+ * Minute status line.
+ */
 export const minuteStatusLine = StatusNarrator.minuteStatusLine.bind(StatusNarrator);/**
  * Popularity line.
  */
 
+/**
+ * Popularity line.
+ */
 export const popularityLine = StatusNarrator.popularityLine.bind(StatusNarrator);/**
  * Skill learn line.
  */
 
+/**
+ * Skill learn line.
+ */
 export const skillLearnLine = StatusNarrator.skillLearnLine.bind(StatusNarrator);/**
  * Trading blows line.
  */
 
+/**
+ * Trading blows line.
+ */
 export const tradingBlowsLine = StatusNarrator.tradingBlowsLine.bind(StatusNarrator);/**
  * Stalemate line.
  */
 
+/**
+ * Stalemate line.
+ */
 export const stalemateLine = StatusNarrator.stalemateLine.bind(StatusNarrator);/**
  * Taunt line.
  */
 
+/**
+ * Taunt line.
+ */
 export const tauntLine = StatusNarrator.tauntLine.bind(StatusNarrator);/**
  * Conserving line.
  */
 
+/**
+ * Conserving line.
+ */
 export const conservingLine = StatusNarrator.conservingLine.bind(StatusNarrator);/**
  * Pressing line.
  */
 
+/**
+ * Pressing line.
+ */
 export const pressingLine = StatusNarrator.pressingLine.bind(StatusNarrator);/**
  * Narrate insight hint.
  */
 
+/**
+ * Narrate insight hint.
+ */
 export const narrateInsightHint = StatusNarrator.narrateInsightHint.bind(StatusNarrator);

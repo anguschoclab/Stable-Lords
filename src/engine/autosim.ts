@@ -7,6 +7,9 @@ import { TimeAdvanceService, type SoftStopCondition } from './tick/TimeAdvanceSe
  */
 
 
+/**
+ * Defines the shape of autosim week summary.
+ */
 export interface AutosimWeekSummary {
   week: number;
   bouts: number;
@@ -19,6 +22,9 @@ export interface AutosimWeekSummary {
  */
 
 
+/**
+ * Defines the shape of autosim result.
+ */
 export interface AutosimResult {
   finalState: GameState;
   weeksSimmed: number;
@@ -56,6 +62,9 @@ function mapStopReason(reason: string | null | undefined): AutosimResult['stopRe
  */
 
 
+/**
+ * Defines the shape of autosim options.
+ */
 export interface AutosimOptions {
   weeksToSim: number;
   onProgress?: (current: number, total: number) => void;

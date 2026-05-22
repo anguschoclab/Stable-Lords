@@ -139,6 +139,12 @@ function calculatePersonalityPurseModifier(
  */
 
 
+/**
+ * Run promoter pass.
+ * @param state - State.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
 export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(state.week * 881 + 17);
   const rankings = state.realmRankings || {};

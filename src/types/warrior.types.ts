@@ -24,6 +24,9 @@ import type { AnnualAward } from './state.types';/**
 
 // ─── UI Prop Types ──────────────────────────────────────────────────────────
 
+/**
+ * Defines the shape of tag badge props.
+ */
 export interface TagBadgeProps {
   tag: string;
   type: 'flair' | 'title' | 'injury';
@@ -33,6 +36,9 @@ export interface TagBadgeProps {
  */
 
 
+/**
+ * Defines the shape of stat badge props.
+ */
 export interface StatBadgeProps {
   styleName: FightingStyle;
   career?: CareerRecord;
@@ -44,6 +50,9 @@ export interface StatBadgeProps {
  */
 
 
+/**
+ * Defines the shape of warrior name tag props.
+ */
 export interface WarriorNameTagProps {
   id?: string;
   name: string;
@@ -58,6 +67,9 @@ export interface WarriorNameTagProps {
 
 // ─── Warrior ────────────────────────────────────────────────────────────────
 
+/**
+ * Defines the shape of career record.
+ */
 export interface CareerRecord {
   wins: number;
   losses: number;
@@ -73,6 +85,9 @@ export interface CareerRecord {
  */
 
 
+/**
+ * Warrior status type.
+ */
 export type WarriorStatus = 'Active' | 'Dead' | 'Retired';
 
 /** Injury severity tiers (per Design Bible §Injuries) */
@@ -101,6 +116,9 @@ export type InjuryLocation =
  */
 
 
+/**
+ * Defines the shape of injury data.
+ */
 export interface InjuryData {
   id: InjuryId;
   name: string;
@@ -115,11 +133,17 @@ export interface InjuryData {
  */
 
 
+/**
+ * Attribute potential type.
+ */
 export type AttributePotential = Record<keyof Attributes, number>;/**
  * Defines the shape of warrior favorites.
  */
 
 
+/**
+ * Defines the shape of warrior favorites.
+ */
 export interface WarriorFavorites {
   weaponId: string;
   rhythm: { oe: number; al: number };
@@ -134,6 +158,9 @@ export interface WarriorFavorites {
  */
 
 
+/**
+ * Defines the shape of warrior lineage.
+ */
 export interface WarriorLineage {
   parentId?: WarriorId;
   stableId?: StableId;
@@ -145,6 +172,9 @@ export interface WarriorLineage {
  */
 
 
+/**
+ * Defines the shape of warrior.
+ */
 export interface Warrior {
   id: WarriorId;
   name: string;

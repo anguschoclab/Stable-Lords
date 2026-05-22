@@ -10,6 +10,9 @@ type RNG = () => number;/**
  */
 
 
+/**
+ * Range_names.
+ */
 export const RANGE_NAMES: Record<string, string> = {
   Grapple: 'grappling range',
   Tight: 'tight quarters',

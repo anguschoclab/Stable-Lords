@@ -119,6 +119,35 @@ interface AppHeaderProps {
  */
 
 
+/**
+ * Render the AppHeader component.
+ * @param {
+  week,
+  day,
+  isTournamentWeek,
+  treasury,
+  fame,
+  crowdMood,
+  weather,
+  isSimulating,
+  lastSavedAt,
+  onResetPrompt,
+  returnToTitle,
+} - {
+  week,
+  day,
+  is tournament week,
+  treasury,
+  fame,
+  crowd mood,
+  weather,
+  is simulating,
+  last saved at,
+  on reset prompt,
+  return to title,
+}.
+ * @returns The result.
+ */
 export function AppHeader({
   week,
   day,

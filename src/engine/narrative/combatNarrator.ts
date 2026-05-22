@@ -10,6 +10,9 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
  */
 
 
+/**
+ * Defines the shape of warrior intro data.
+ */
 export interface WarriorIntroData {
   name: string;
   style: FightingStyle;
@@ -311,6 +314,9 @@ function getStrikeSeverity(
 
 
 // Backward compatibility object
+/**
+ * Combat narrator.
+ */
 export const CombatNarrator = {
   generateWarriorIntro,
   battleOpener,

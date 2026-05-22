@@ -17,6 +17,9 @@ interface LegacyCandidate {
  */
 
 
+/**
+ * Seasonal retirement service.
+ */
 export const SeasonalRetirementService = {
   /**
    * Processes seasonal retirement for all rival stables.

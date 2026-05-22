@@ -12,6 +12,10 @@ import { AgentReasoningWidget } from './AgentReasoningWidget';/**
  */
 
 
+/**
+ * Intelligence hub widget.
+ * @returns The result.
+ */
 export function IntelligenceHubWidget() {
   const state = useWorldState();
 

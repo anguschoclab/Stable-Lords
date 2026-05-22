@@ -13,6 +13,12 @@ import { getSpecialtyMods } from '@/engine/trainerSpecialties';/**
  */
 
 
+/**
+ * Create rng for context.
+ * @param seed - Seed.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
 export function createRNGForContext(seed: number, rng?: IRNGService): IRNGService {
   return rng || new SeededRNGService(seed);
 }/**
@@ -22,6 +28,11 @@ export function createRNGForContext(seed: number, rng?: IRNGService): IRNGServic
  */
 
 
+/**
+ * Setup rng.
+ * @param providedRng - Provided rng. (optional)
+ * @returns The result.
+ */
 export function setupRng(providedRng?: (() => number) | number): () => number {
   if (typeof providedRng === 'function') {
     return providedRng;
@@ -41,6 +52,15 @@ export function setupRng(providedRng?: (() => number) | number): () => number {
  */
 
 
+/**
+ * Get trainer mods.
+ * @param trainers - Trainers.
+ * @param style - Style.
+ * @param fighter - Fighter. (optional)
+ * @param opponent - Opponent. (optional)
+ * @param ctx - Ctx. (optional)
+ * @returns The result.
+ */
 export function getTrainerMods(
   trainers: Trainer[] | undefined,
   style: FightingStyle,
@@ -108,6 +128,14 @@ export function getTrainerMods(
  */
 
 
+/**
+ * Process outcome tags.
+ * @param winner - Winner.
+ * @param by - By.
+ * @param fA - F a.
+ * @param fD - F d.
+ * @returns The result.
+ */
 export function processOutcomeTags(
   winner: 'A' | 'D',
   by: FightOutcome['by'],

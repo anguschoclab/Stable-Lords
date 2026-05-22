@@ -30,6 +30,25 @@ interface WarriorSelectionStepProps {
  */
 
 
+/**
+ * Warrior selection step.
+ * @param {
+  orphanPool,
+  selected,
+  onToggleWarrior,
+  onRerollPool,
+  onBack,
+  onNext,
+} - {
+  orphan pool,
+  selected,
+  on toggle warrior,
+  on reroll pool,
+  on back,
+  on next,
+}.
+ * @returns The result.
+ */
 export default function WarriorSelectionStep({
   orphanPool,
   selected,

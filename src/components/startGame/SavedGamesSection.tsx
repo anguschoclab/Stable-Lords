@@ -29,6 +29,25 @@ interface SavedGamesSectionProps {
  */
 
 
+/**
+ * Saved games section.
+ * @param {
+  slots,
+  maxSaveSlots,
+  onLoad,
+  onExport,
+  onDelete,
+  formatDate,
+} - {
+  slots,
+  max save slots,
+  on load,
+  on export,
+  on delete,
+  format date,
+}.
+ * @returns The result.
+ */
 export default function SavedGamesSection({
   slots,
   maxSaveSlots,

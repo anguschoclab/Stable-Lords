@@ -183,6 +183,9 @@ function saveTour(m: Record<string, Record<string, RollingBucket>>) {
 
 // ── Public types ──────────────────────────────────────────────────────────
 
+/**
+ * Style record type.
+ */
 export type StyleRecord = {
   style: string;
   W: number;
@@ -197,6 +200,9 @@ export type StyleRecord = {
 
 // ── Combined API ──────────────────────────────────────────────────────────
 
+/**
+ * Style rollups.
+ */
 export const StyleRollups = {
   /** Record a fight in both week-rollup and rolling-window trackers */
   addFight(opts: {

@@ -282,6 +282,10 @@ function ArenaLeaderboard() {
 
 // ─── Main Hub Page ────────────────────────────────────────────────────────────
 
+/**
+ * Arena hub.
+ * @returns The result.
+ */
 export default function ArenaHub() {
   const store = useGameStore();
   const { roster, player, setState, doAdvanceDay, doAdvanceWeek, setSimulating } = store;

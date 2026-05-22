@@ -15,6 +15,10 @@ import { onWarriorDeath } from '@/engine/deathNotifier';/**
  */
 
 
+/**
+ * React hook: use death notifications.
+ * @returns The result.
+ */
 export function useDeathNotifications(): void {
   useEffect(() => {
     const off = onWarriorDeath(({ name }) => {

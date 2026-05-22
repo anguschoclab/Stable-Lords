@@ -4,6 +4,9 @@ import Help from '@/pages/Help';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/help')({
   component: Help,
 });

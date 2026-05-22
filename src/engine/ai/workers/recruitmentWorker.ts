@@ -3,6 +3,7 @@ import { PERSONALITY_STYLE_PREFS } from '@/data/ownerData';
 import { logAgentAction } from '../agentCore';
 import { checkBudget } from './budgetWorker';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { getStyleDefaultLoadout } from '@/data/equipment';
 
 /**
  * RecruitmentWorker: Handles drafting warriors from the pool.
@@ -115,7 +116,9 @@ export function processRecruitment(
         age: recruit.age,
         stableId: updatedRival.id,
         lineage: recruit.lineage,
-        traits: [],
+        traits: recruit.traits,
+        favorites: recruit.favorites,
+        equipment: getStyleDefaultLoadout(recruit.style),
         isStarInvestment: recruit.tier === 'Prodigy',
       };
 

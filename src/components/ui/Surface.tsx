@@ -81,6 +81,9 @@ const surfaceVariants = cva('relative overflow-hidden transition-all duration-30
  */
 
 
+/**
+ * Defines the shape of surface props.
+ */
 export interface SurfaceProps
   extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof surfaceVariants> {
   asChild?: boolean;

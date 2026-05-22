@@ -13,6 +13,10 @@ import { WarriorLink } from '@/components/EntityLink';/**
  */
 
 
+/**
+ * Medical audit widget.
+ * @returns The result.
+ */
 export function MedicalAuditWidget() {
   const state = useWorldState();
 

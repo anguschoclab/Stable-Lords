@@ -43,6 +43,33 @@ interface BoutControlsProps {
  */
 
 
+/**
+ * Bout controls.
+ * @param {
+  viewMode,
+  onViewModeChange,
+  isPlaying,
+  speed,
+  setSpeed,
+  visibleCount,
+  totalEvents,
+  onReset,
+  onTogglePlay,
+  onSkipToEnd,
+} - {
+  view mode,
+  on view mode change,
+  is playing,
+  speed,
+  set speed,
+  visible count,
+  total events,
+  on reset,
+  on toggle play,
+  on skip to end,
+}.
+ * @returns The result.
+ */
 export default function BoutControls({
   viewMode,
   onViewModeChange,

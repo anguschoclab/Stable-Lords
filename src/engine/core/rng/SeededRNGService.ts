@@ -9,7 +9,11 @@ import { IRNGService } from './IRNGService';
 export class SeededRNGService implements IRNGService {
   private rng: SeededRNG;
 
-  constructor(seed: number) {
+  /**
+ * Constructor.
+ * @param seed - Seed.
+ */
+constructor(seed: number) {
     this.rng = new SeededRNG(seed);
   }
 

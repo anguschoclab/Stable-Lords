@@ -23,6 +23,10 @@ type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';/**
  */
 
 
+/**
+ * Resolution reveal.
+ * @returns The result.
+ */
 export default function ResolutionReveal() {
   const store = useGameStore();
   const state = reconstructGameState(store);

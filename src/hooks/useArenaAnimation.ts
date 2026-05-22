@@ -26,6 +26,9 @@ const MIN_DISTANCE = 20;/**
  */
  // Minimum distance between fighters
 
+/**
+ * Defines the shape of use arena animation return.
+ */
 export interface UseArenaAnimationReturn extends ArenaState {
   /** Add a speech bubble */
   addBubble: (bubble: Omit<SpeechBubble, 'id'>) => void;
@@ -386,6 +389,12 @@ export function useArenaAnimation(
  */
 
 
+/**
+ * Set fighter names.
+ * @param a - A.
+ * @param d - D.
+ * @returns The result.
+ */
 export function setFighterNames(a: string, d: string) {
   nameA = a.toLowerCase();
   nameD = d.toLowerCase();

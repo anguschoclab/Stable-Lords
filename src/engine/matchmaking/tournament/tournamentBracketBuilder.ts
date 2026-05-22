@@ -5,6 +5,9 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';/**
  */
 
 
+/**
+ * Defines the shape of tournament bracket config.
+ */
 export interface TournamentBracketConfig {
   tierId: string;
   tierName: string;
@@ -17,6 +20,9 @@ export interface TournamentBracketConfig {
  */
 
 
+/**
+ * Defines the shape of bracket match.
+ */
 export interface BracketMatch {
   round: number;
   matchIndex: number;

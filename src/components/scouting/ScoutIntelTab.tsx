@@ -40,6 +40,29 @@ interface ScoutIntelTabProps {
  */
 
 
+/**
+ * Scout intel tab.
+ * @param {
+  rivals,
+  reports,
+  selectedRivalId,
+  onSelectRival,
+  selectedWarriorId,
+  onSelectWarrior,
+  treasury,
+  onScout,
+} - {
+  rivals,
+  reports,
+  selected rival id,
+  on select rival,
+  selected warrior id,
+  on select warrior,
+  treasury,
+  on scout,
+}.
+ * @returns The result.
+ */
 export function ScoutIntelTab({
   rivals,
   reports,

@@ -9,6 +9,12 @@ import { findWarriorById } from './utils';/**
  */
 
 
+/**
+ * Award tournament prizes.
+ * @param tournament - Tournament.
+ * @param state - State.
+ * @returns The result.
+ */
 export function awardTournamentPrizes(tournament: TournamentEntry, state: GameState): GameState {
   const bracket = tournament.bracket;
   const finals = bracket.find((b) => b.round === 6 && b.matchIndex === 0);
@@ -126,6 +132,13 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
  */
 
 
+/**
+ * Modify warrior.
+ * @param state - State.
+ * @param warriorId - Warrior id.
+ * @param transform - Transform.
+ * @returns The result.
+ */
 export function modifyWarrior(
   state: GameState,
   warriorId: string,

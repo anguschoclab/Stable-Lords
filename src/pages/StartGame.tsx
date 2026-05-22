@@ -49,6 +49,10 @@ type Screen = 'title' | 'newGame';/**
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
+/**
+ * Start game.
+ * @returns The result.
+ */
 export default function StartGame() {
   const { loadGame } = useGameStore();
   const [screen, setScreen] = useState<Screen>('title');

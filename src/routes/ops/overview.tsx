@@ -8,6 +8,9 @@ import StableHall from '@/pages/StableHall';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/overview')({
   component: StableHall,
 });

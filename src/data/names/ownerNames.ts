@@ -90,6 +90,9 @@ export const OWNER_FIRST = [
  */
 
 
+/**
+ * Owner_last.
+ */
 export const OWNER_LAST = [
   'Blackthorn',
   'Ironhand',

@@ -12,6 +12,10 @@ import { BookOpen } from 'lucide-react';/**
  */
 
 
+/**
+ * Help.
+ * @returns The result.
+ */
 export default function Help() {
   return (
     <div className="space-y-6 max-w-3xl">

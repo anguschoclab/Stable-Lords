@@ -8,6 +8,9 @@ import StableEquipment from '@/pages/StableEquipment';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/equipment')({
   component: StableEquipment,
 });

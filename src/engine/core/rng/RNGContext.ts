@@ -7,17 +7,35 @@ import { SeededRNGService } from './SeededRNGService';
  * Manages RNG instances with a base seed and supports child contexts.
  */
 export class RNGContext implements IRNGContext {
-  constructor(private baseSeed: number) {}
+  /**
+ * Constructor.
+ * @param baseSeed - Base seed.
+ */
+constructor(private baseSeed: number) {}
 
-  getRNG(seed?: number): IRNGService {
+  /**
+ * Get rng.
+ * @param seed - Seed. (optional)
+ * @returns The result.
+ */
+getRNG(seed?: number): IRNGService {
     return new SeededRNGService(seed ?? this.baseSeed);
   }
 
-  createChild(seedOffset: number): IRNGContext {
+  /**
+ * Create child.
+ * @param seedOffset - Seed offset.
+ * @returns The result.
+ */
+createChild(seedOffset: number): IRNGContext {
     return new RNGContext(this.baseSeed + seedOffset);
   }
 
-  getBaseSeed(): number {
+  /**
+ * Get base seed.
+ * @returns The result.
+ */
+getBaseSeed(): number {
     return this.baseSeed;
   }
 }

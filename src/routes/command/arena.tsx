@@ -8,6 +8,9 @@ import ArenaHub from '@/pages/ArenaHub';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/command/arena')({
   component: ArenaHub,
 });

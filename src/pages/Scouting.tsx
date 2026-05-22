@@ -21,6 +21,10 @@ import { ImperialRing } from '@/components/ui/ImperialRing';/**
  */
 
 
+/**
+ * Scouting.
+ * @returns The result.
+ */
 export default function Scouting() {
   const { treasury, week, rivals, scoutReports, roster, setState } = useGameStore();
   const [selectedRivalId, setSelectedRivalId] = useState<string | null>(null);

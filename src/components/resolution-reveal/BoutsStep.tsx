@@ -16,6 +16,11 @@ interface BoutsStepProps {
  */
 
 
+/**
+ * Bouts step.
+ * @param { bouts } - { bouts }.
+ * @returns The result.
+ */
 export function BoutsStep({ bouts }: BoutsStepProps) {
   return (
     <motion.div

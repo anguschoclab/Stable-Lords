@@ -4,6 +4,10 @@ import { Swords, Star } from 'lucide-react';/**
  */
 
 
+/**
+ * Title screen hero.
+ * @returns The result.
+ */
 export default function TitleScreenHero() {
   return (
     <div className="text-center space-y-5">

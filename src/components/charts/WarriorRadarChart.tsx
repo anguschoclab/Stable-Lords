@@ -26,6 +26,9 @@ const chartConfig: ChartConfig = {
  */
 
 
+/**
+ * Warrior radar chart.
+ */
 export const WarriorRadarChart = React.memo(function WarriorRadarChart({
   warrior,
 }: WarriorRadarChartProps) {

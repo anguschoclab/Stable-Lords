@@ -8,6 +8,9 @@ import Training from '@/pages/Training';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/command/training')({
   component: Training,
 });

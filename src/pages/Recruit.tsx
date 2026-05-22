@@ -309,6 +309,10 @@ function RecruitCard({
  */
 
 
+/**
+ * Recruit.
+ * @returns The result.
+ */
 export default function Recruit() {
   const store = useGameStore();
   const { roster, treasury, rosterBonus, recruitPool, setState } = store;

@@ -4,6 +4,9 @@ import { Warrior, InsightToken, FightingStyle, Attributes, FightPlan } from '@/t
 
 
 // Obfuscated representation of a warrior for the UI
+/**
+ * Defines the shape of obfuscated warrior.
+ */
 export interface ObfuscatedWarrior extends Omit<
   Warrior,
   'style' | 'attributes' | 'plan' | 'equipment'

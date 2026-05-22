@@ -8,6 +8,9 @@ import type { BackstoryId } from '@/data/backstories';/**
  */
 
 
+/**
+ * Defines the shape of stable template.
+ */
 export interface StableTemplate {
   stableName: string;
   motto: string;
@@ -39,11 +42,17 @@ export interface StableTemplate {
  */
 
 
+/**
+ * Stable tier type.
+ */
 export type StableTier = 'Minor' | 'Established' | 'Major' | 'Legendary';/**
  * Stable philosophy type.
  */
 
 
+/**
+ * Stable philosophy type.
+ */
 export type StablePhilosophy =
   | 'Brute Force'
   | 'Speed Kills'

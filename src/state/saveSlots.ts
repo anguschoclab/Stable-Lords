@@ -6,6 +6,9 @@ import { STORE_KEYS } from '@/constants/storeKeys';/**
  */
 
 
+/**
+ * Defines the shape of save slot meta.
+ */
 export interface SaveSlotMeta {
   id: string;
   name: string;
@@ -19,6 +22,9 @@ const STORAGE_KEY = STORE_KEYS.SAVE_SLOTS;/**
  * Max_save_slots.
  */
 
+/**
+ * Max_save_slots.
+ */
 export const MAX_SAVE_SLOTS = 10;
 
 async function getStoredMeta(): Promise<SaveSlotMeta[]> {
@@ -82,6 +88,10 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
  */
 
 
+/**
+ * List save slots.
+ * @returns The result.
+ */
 export async function listSaveSlots(): Promise<SaveSlotMeta[]> {
   return await getStoredMeta();
 }/**
@@ -93,6 +103,13 @@ export async function listSaveSlots(): Promise<SaveSlotMeta[]> {
  */
 
 
+/**
+ * Save to slot.
+ * @param slotId - Slot id.
+ * @param name - Name.
+ * @param state - State.
+ * @returns The result.
+ */
 export async function saveToSlot(slotId: string, name: string, state: GameState) {
   const meta: SaveSlotMeta = {
     id: slotId,
@@ -124,6 +141,11 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
  */
 
 
+/**
+ * Load from slot.
+ * @param slotId - Slot id.
+ * @returns The result.
+ */
 export async function loadFromSlot(slotId: string): Promise<GameState | null> {
   return await archiveService.retrieveHotState(slotId);
 }/**
@@ -133,6 +155,11 @@ export async function loadFromSlot(slotId: string): Promise<GameState | null> {
  */
 
 
+/**
+ * Delete slot.
+ * @param slotId - Slot id.
+ * @returns The result.
+ */
 export async function deleteSlot(slotId: string) {
   const currentMeta = await getStoredMeta();
   const filtered = currentMeta.filter((m) => m.id !== slotId);
@@ -152,6 +179,10 @@ export async function deleteSlot(slotId: string) {
  */
 
 
+/**
+ * New slot id.
+ * @returns The result.
+ */
 export function newSlotId(): string {
   return `slot_${crypto.randomUUID()}`;
 }/**
@@ -161,6 +192,11 @@ export function newSlotId(): string {
  */
 
 
+/**
+ * Export slot.
+ * @param slotId - Slot id.
+ * @returns The result.
+ */
 export async function exportSlot(slotId: string): Promise<string | null> {
   const state = await loadFromSlot(slotId);
   if (!state) return null;
@@ -174,6 +210,11 @@ export async function exportSlot(slotId: string): Promise<string | null> {
  */
 
 
+/**
+ * Import save to new slot.
+ * @param data - Data.
+ * @returns The result.
+ */
 export async function importSaveToNewSlot(data: any): Promise<string | null> {
   try {
     const state = typeof data === 'string' ? JSON.parse(data) : data;

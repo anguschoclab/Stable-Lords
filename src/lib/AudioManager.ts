@@ -22,12 +22,18 @@ export type SfxType =
  */
 
 
+/**
+ * The AudioManager class.
+ */
 export class AudioManager {
   private static instance: AudioManager | undefined;
   private sfx: Map<SfxType, Howl> = new Map();
   private muted: boolean = false;
 
-  private constructor() {
+  /**
+ * Constructor.
+ */
+private constructor() {
     // Initialize HowlerGlobal for Electron environment
     // Note: Howler.js types expect HowlerGlobal to be a class, but we initialize
     // as empty object for Electron compatibility. This is intentional.
@@ -120,4 +126,7 @@ export class AudioManager {
  */
 
 
+/**
+ * Audio manager.
+ */
 export const audioManager = AudioManager.getInstance();

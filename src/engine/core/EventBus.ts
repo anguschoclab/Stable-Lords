@@ -8,6 +8,9 @@ import type { FightSummary } from '@/types/combat.types';/**
  */
 
 
+/**
+ * Engine event type.
+ */
 export type EngineEvent =
   | { type: 'WEEK_ADVANCED'; payload: { week: number; state: GameState } }
   | { type: 'BOUT_COMPLETED'; payload: { summary: FightSummary; transcript?: string[] } }
@@ -49,4 +52,7 @@ class EventBus {
  */
 
 
+/**
+ * Engine event bus.
+ */
 export const engineEventBus = new EventBus();

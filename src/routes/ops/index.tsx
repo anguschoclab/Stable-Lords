@@ -7,6 +7,9 @@ import { createFileRoute, Navigate } from '@tanstack/react-router';/**
  */
 
 
+/**
+ * Route.
+ */
 export const Route = createFileRoute('/ops/')({
   component: () => <Navigate to="/ops/overview" />,
 });

@@ -9,6 +9,9 @@ import { resolveImpacts } from '@/engine/impacts';/**
  */
 
 
+/**
+ * Defines the shape of simulation config.
+ */
 export interface SimulationConfig {
   weeks: number;
   seed: number;
@@ -19,6 +22,9 @@ export interface SimulationConfig {
  */
 
 
+/**
+ * Defines the shape of simulation result.
+ */
 export interface SimulationResult {
   finalState: GameState;
   pulses: SimPulse[];

@@ -7,6 +7,9 @@ import { cn } from '@/lib/utils';/**
 
 
 // Format: { [key]: { label: string, color: string } }
+/**
+ * Chart config type.
+ */
 export type ChartConfig = Record<
   string,
   {

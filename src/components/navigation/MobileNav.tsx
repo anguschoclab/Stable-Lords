@@ -140,6 +140,11 @@ interface MobileNavProps {
  */
 
 
+/**
+ * Mobile nav.
+ * @param { className } - { class name }.
+ * @returns The result.
+ */
 export function MobileNav({ className }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const location = useLocation();

@@ -9,6 +9,9 @@ import type { StableTemplate } from './stableTemplate.types';/**
  */
 
 
+/**
+ * Major_templates.
+ */
 export const MAJOR_TEMPLATES: StableTemplate[] = [
   {
     stableName: 'The Iron Wolves',

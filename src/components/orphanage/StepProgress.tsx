@@ -17,6 +17,11 @@ interface StepProgressProps {
  */
 
 
+/**
+ * Step progress.
+ * @param { step, total } - { step, total }.
+ * @returns The result.
+ */
 export default function StepProgress({ step, total }: StepProgressProps) {
   return (
     <div className="space-y-2">

@@ -14,6 +14,11 @@ interface Props {
  */
 
 
+/**
+ * Warrior dossier stats.
+ * @param { warrior } - { warrior }.
+ * @returns The result.
+ */
 export default function WarriorDossierStats({ warrior }: Props) {
   return (
     <div className="space-y-8">

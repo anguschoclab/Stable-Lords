@@ -18,6 +18,14 @@ import { generateFreelancer } from './utils';/**
  */
 
 
+/**
+ * Committee selection.
+ * @param state - State.
+ * @param tier - Tier.
+ * @param seed - Seed.
+ * @param lockedIds - Locked ids.
+ * @returns The result.
+ */
 export function committeeSelection(
   state: GameState,
   tier: string,
@@ -100,6 +108,16 @@ export function committeeSelection(
  */
 
 
+/**
+ * Build tournament.
+ * @param tierId - Tier id.
+ * @param tierName - Tier name.
+ * @param warriors - Warriors.
+ * @param week - Week.
+ * @param season - Season.
+ * @param rng - Rng.
+ * @returns The result.
+ */
 export function buildTournament(
   tierId: string,
   tierName: string,

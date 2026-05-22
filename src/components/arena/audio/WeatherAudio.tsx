@@ -22,6 +22,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Blood Moon': 'ambience-blood-moon',
   Eclipse: 'ambience-eclipse',
   Sandstorm: 'ambience-wind-gale',
+  Tornado: 'ambience-wind-gale',
   Mist: null,
   'Scorching Wind': 'ambience-wind-gale',
   'Spooky Night': 'ambience-wind-breezy',

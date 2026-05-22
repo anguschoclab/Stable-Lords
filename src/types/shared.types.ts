@@ -291,6 +291,7 @@ export type WeatherType =
   | 'Blood Moon'
   | 'Eclipse'
   | 'Sandstorm'
+  | 'Tornado'
   | 'Blizzard'
   | 'Dense Fog'
   | 'Mist'

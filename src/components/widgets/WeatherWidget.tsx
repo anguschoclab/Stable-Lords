@@ -39,6 +39,14 @@ const WEATHER_METADATA = {
     description: 'Fierce winds. Substantial penalty to stamina.',
     stats: 'STAMINA DRAIN 115%',
   },
+  Tornado: {
+    icon: Wind,
+    color: 'text-orange-500',
+    bg: 'bg-orange-500/10',
+    border: 'border-orange-500/20',
+    description: 'Violent swirling winds. Severe penalty to coordination and stamina.',
+    stats: 'STAMINA DRAIN 140% // SEVERE INITIATIVE PENALTY',
+  },
   Sweltering: {
     icon: ThermometerSun,
     color: 'text-arena-blood',

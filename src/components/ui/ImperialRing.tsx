@@ -7,12 +7,7 @@ interface ImperialRingProps {
   variant?: 'bronze' | 'gold' | 'blood';
 }/**
  * Imperial ring.
- * @param {
-  children,
-  className,
-  size = 'md',
-  variant = 'bronze',
-} - {
+ * @param  - {
   children,
   class name,
   size = 'md',
@@ -24,12 +19,7 @@ interface ImperialRingProps {
 
 /**
  * Imperial ring.
- * @param {
-  children,
-  className,
-  size = 'md',
-  variant = 'bronze',
-} - {
+ * @param  - {
   children,
   class name,
   size = 'md',

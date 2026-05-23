@@ -14,13 +14,7 @@ interface RivalWarriorListProps {
   stableName: string | undefined;
 }/**
  * Rival warrior list.
- * @param {
-  warriors,
-  selectedWarriorId,
-  onSelectWarrior,
-  reports,
-  stableName,
-} - {
+ * @param  - {
   warriors,
   selected warrior id,
   on select warrior,
@@ -33,13 +27,7 @@ interface RivalWarriorListProps {
 
 /**
  * Rival warrior list.
- * @param {
-  warriors,
-  selectedWarriorId,
-  onSelectWarrior,
-  reports,
-  stableName,
-} - {
+ * @param  - {
   warriors,
   selected warrior id,
   on select warrior,

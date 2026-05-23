@@ -5,14 +5,14 @@ interface StoryBeginsStepProps {
   onFinish: () => void;
 }/**
  * Story begins step.
- * @param { onFinish } - { on finish }.
+ * @param - { on finish }.
  * @returns The result.
  */
 
 
 /**
  * Story begins step.
- * @param { onFinish } - { on finish }.
+ * @param - { on finish }.
  * @returns The result.
  */
 export default function StoryBeginsStep({ onFinish }: StoryBeginsStepProps) {

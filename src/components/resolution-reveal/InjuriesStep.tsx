@@ -8,14 +8,14 @@ interface InjuriesStepProps {
   deaths: string[];
 }/**
  * Injuries step.
- * @param { injuries, deaths } - { injuries, deaths }.
+ * @param - { injuries, deaths }.
  * @returns The result.
  */
 
 
 /**
  * Injuries step.
- * @param { injuries, deaths } - { injuries, deaths }.
+ * @param - { injuries, deaths }.
  * @returns The result.
  */
 export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {

@@ -32,6 +32,9 @@ const TRAINER_FIRST_NAMES = [
 
 export { TRAINER_FIRST_NAMES };
 
+/**
+ * Philosophy_to_focus.
+ */
 const PHILOSOPHY_TO_FOCUS: Record<
   string,
   ('Aggression' | 'Defense' | 'Endurance' | 'Mind' | 'Healing')[]

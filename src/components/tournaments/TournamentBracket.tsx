@@ -25,12 +25,7 @@ interface TournamentBracketProps {
   onToggleExpand: (key: string | null) => void;
 }/**
  * Tournament bracket.
- * @param {
-  bouts,
-  arenaHistory,
-  expandedBout,
-  onToggleExpand,
-} - {
+ * @param  - {
   bouts,
   arena history,
   expanded bout,
@@ -42,12 +37,7 @@ interface TournamentBracketProps {
 
 /**
  * Tournament bracket.
- * @param {
-  bouts,
-  arenaHistory,
-  expandedBout,
-  onToggleExpand,
-} - {
+ * @param  - {
   bouts,
   arena history,
   expanded bout,
@@ -367,11 +357,7 @@ interface ChampionDisplayProps {
   tournamentName: string;
 }/**
  * Champion display.
- * @param {
-  championName,
-  championId,
-  tournamentName,
-} - {
+ * @param  - {
   champion name,
   champion id,
   tournament name,
@@ -382,11 +368,7 @@ interface ChampionDisplayProps {
 
 /**
  * Champion display.
- * @param {
-  championName,
-  championId,
-  tournamentName,
-} - {
+ * @param  - {
   champion name,
   champion id,
   tournament name,
@@ -438,14 +420,14 @@ interface BronzeHighlightProps {
   thirdPlaceId?: string;
 }/**
  * Bronze highlight.
- * @param { thirdPlaceName, thirdPlaceId } - { third place name, third place id }.
+ * @param - { third place name, third place id }.
  * @returns The result.
  */
 
 
 /**
  * Bronze highlight.
- * @param { thirdPlaceName, thirdPlaceId } - { third place name, third place id }.
+ * @param - { third place name, third place id }.
  * @returns The result.
  */
 export function BronzeHighlight({ thirdPlaceName, thirdPlaceId }: BronzeHighlightProps) {
@@ -484,12 +466,7 @@ interface TournamentProgressProps {
   totalMatches: number;
 }/**
  * Tournament progress.
- * @param {
-  currentRound,
-  totalRounds,
-  completedMatches,
-  totalMatches,
-} - {
+ * @param  - {
   current round,
   total rounds,
   completed matches,
@@ -501,12 +478,7 @@ interface TournamentProgressProps {
 
 /**
  * Tournament progress.
- * @param {
-  currentRound,
-  totalRounds,
-  completedMatches,
-  totalMatches,
-} - {
+ * @param  - {
   current round,
   total rounds,
   completed matches,

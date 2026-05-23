@@ -18,14 +18,14 @@ const CROWD_SOUNDS: Record<CrowdState, string | null> = {
   chant: 'crowd-blood-moon',
 };/**
  * Crowd audio.
- * @param { state, volume, enabled } - { state, volume, enabled }.
+ * @param - { state, volume, enabled }.
  * @returns The result.
  */
 
 
 /**
  * Crowd audio.
- * @param { state, volume, enabled } - { state, volume, enabled }.
+ * @param - { state, volume, enabled }.
  * @returns The result.
  */
 export default function CrowdAudio({ state, volume, enabled }: CrowdAudioProps) {

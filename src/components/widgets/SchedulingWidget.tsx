@@ -106,14 +106,14 @@ interface SchedulingWidgetProps {
   warrior: Warrior;
 }/**
  * Scheduling widget.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 
 
 /**
  * Scheduling widget.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {

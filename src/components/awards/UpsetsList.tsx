@@ -17,14 +17,14 @@ export interface UpsetEntry {
   round?: number; // Used in Tournament
 }/**
  * Upsets list.
- * @param { upsets } - { upsets }.
+ * @param - { upsets }.
  * @returns The result.
  */
 
 
 /**
  * Upsets list.
- * @param { upsets } - { upsets }.
+ * @param - { upsets }.
  * @returns The result.
  */
 export default function UpsetsList({ upsets }: { upsets: UpsetEntry[] }) {

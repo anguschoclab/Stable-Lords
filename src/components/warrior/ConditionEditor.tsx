@@ -57,14 +57,14 @@ function triggerDisplayValue(cond: PlanCondition): string {
   return String(cond.trigger.value);
 }/**
  * Condition editor.
- * @param { conditions, onChange } - { conditions, on change }.
+ * @param - { conditions, on change }.
  * @returns The result.
  */
 
 
 /**
  * Condition editor.
- * @param { conditions, onChange } - { conditions, on change }.
+ * @param - { conditions, on change }.
  * @returns The result.
  */
 export default function ConditionEditor({ conditions, onChange }: ConditionEditorProps) {

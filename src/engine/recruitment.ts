@@ -89,7 +89,13 @@ export const TIER_STARS: Record<RecruitTier, number> = {
   Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy.stars,
 };
 
+/**
+ * Refresh_cost.
+ */
 const REFRESH_COST = 50;
+/**
+ * Default_pool_size.
+ */
 const DEFAULT_POOL_SIZE = 12; // Increased from 5 to maintain world population
 export { REFRESH_COST, DEFAULT_POOL_SIZE };
 

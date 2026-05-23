@@ -2,6 +2,9 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * Table.
+ */
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
     <div className="relative w-full overflow-auto">
@@ -11,6 +14,9 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
 );
 Table.displayName = 'Table';
 
+/**
+ * Table header.
+ */
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
@@ -23,6 +29,9 @@ const TableHeader = React.forwardRef<
 ));
 TableHeader.displayName = 'TableHeader';
 
+/**
+ * Table body.
+ */
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
@@ -31,6 +40,9 @@ const TableBody = React.forwardRef<
 ));
 TableBody.displayName = 'TableBody';
 
+/**
+ * Table footer.
+ */
 const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
@@ -48,6 +60,9 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   'data-player'?: boolean;
 }
 
+/**
+ * Table row.
+ */
 const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
   ({ className, 'data-player': isPlayer, ...props }, ref) => (
     <tr
@@ -65,6 +80,9 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
 );
 TableRow.displayName = 'TableRow';
 
+/**
+ * Table head.
+ */
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
@@ -85,6 +103,9 @@ interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   'data-numeric'?: boolean;
 }
 
+/**
+ * Table cell.
+ */
 const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
   ({ className, 'data-numeric': isNumeric, ...props }, ref) => (
     <td
@@ -101,6 +122,9 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
 );
 TableCell.displayName = 'TableCell';
 
+/**
+ * Table caption.
+ */
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
   React.HTMLAttributes<HTMLTableCaptionElement>

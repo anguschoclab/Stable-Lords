@@ -9,14 +9,14 @@ interface Props {
   warrior: Warrior;
 }/**
  * Warrior dossier stats.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 
 
 /**
  * Warrior dossier stats.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 export default function WarriorDossierStats({ warrior }: Props) {

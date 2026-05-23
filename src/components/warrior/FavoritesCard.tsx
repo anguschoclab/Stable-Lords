@@ -12,14 +12,14 @@ import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';/**
  * Favorites card.
- * @param { warrior, onUpdate } - { warrior, on update }.
+ * @param - { warrior, on update }.
  * @returns The result.
  */
 
 
 /**
  * Favorites card.
- * @param { warrior, onUpdate } - { warrior, on update }.
+ * @param - { warrior, on update }.
  * @returns The result.
  */
 export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () => void }) {

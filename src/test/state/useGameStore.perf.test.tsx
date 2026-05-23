@@ -1,4 +1,7 @@
-/** @vitest-environment jsdom */
+/**
+ * useGameStore performance tests.
+ * @vitest-environment jsdom
+ */
 import { render, act } from '@testing-library/react';
 import { useGameStore } from '@/state/useGameStore';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -8,8 +11,6 @@ import '@/test/setup';
 
 /**
  * Mock component that tracks renders via ref for performance testing.
- * @param selector - Zustand state selector function.
- * @param renderCountRef - Mutable ref to track render count.
  */
 const RenderTracker = ({
   selector,

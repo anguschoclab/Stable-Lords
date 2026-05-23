@@ -47,7 +47,9 @@ export function enduranceCost(oe: number, al: number, weather?: WeatherType | st
 
 /**
  * Returns the skill roll penalty for the fighter's current fatigue level.
- * @param penaltyReduction Optional fraction to reduce the penalty (0 = no reduction, 0.5 = halved). From RopeADope trainer specialty.
+ * @param endurance - Current endurance value.
+ * @param maxEndurance - Maximum endurance value.
+ * @param penaltyReduction - Optional fraction to reduce the penalty (0 = no reduction, 0.5 = halved). From RopeADope trainer specialty.
  */
 export function fatiguePenalty(
   endurance: number,

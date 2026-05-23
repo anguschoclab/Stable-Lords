@@ -105,13 +105,7 @@ const SEASON_MODIFIERS: Record<
   },
 };/**
  * Arena background.
- * @param {
-  tier = 'standard',
-  season = 'summer',
-  weather,
-  arenaId,
-  className,
-} - {
+ * @param  - {
   tier = 'standard',
   season = 'summer',
   weather,
@@ -124,13 +118,7 @@ const SEASON_MODIFIERS: Record<
 
 /**
  * Arena background.
- * @param {
-  tier = 'standard',
-  season = 'summer',
-  weather,
-  arenaId,
-  className,
-} - {
+ * @param  - {
   tier = 'standard',
   season = 'summer',
   weather,

@@ -12,13 +12,7 @@ interface MiniCombatLogProps {
   onClose?: () => void;
 }/**
  * Mini combat log.
- * @param {
-  events,
-  visibleCount,
-  isPlaying,
-  className,
-  onClose,
-} - {
+ * @param  - {
   events,
   visible count,
   is playing,
@@ -31,13 +25,7 @@ interface MiniCombatLogProps {
 
 /**
  * Mini combat log.
- * @param {
-  events,
-  visibleCount,
-  isPlaying,
-  className,
-  onClose,
-} - {
+ * @param  - {
   events,
   visible count,
   is playing,

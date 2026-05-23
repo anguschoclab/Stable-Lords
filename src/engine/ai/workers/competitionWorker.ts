@@ -23,6 +23,9 @@ import { scoreMatchup } from '@/engine/schedulingAssistant';
  * never scouting rivals. Keep it forked.
  */
 
+/**
+ * Defines the shape of bout bid.
+ */
 export interface BoutBid {
   proposingWarriorId: string;
   targetStableId?: string; // Specific ID for VENDETTA
@@ -31,23 +34,15 @@ export interface BoutBid {
   maxFame?: number;
   priority: number; // 1-10
   description?: string;
-}/**
- * Generate bout bids.
- * @param rival - Rival.
- * @param currentWeek - Current week.
- * @param weather - Weather.
- * @param crowdMood - Crowd mood.
- * @returns The result.
- */
-
+}
 
 /**
- * Generate bout bids.
- * @param rival - Rival.
+ * Generate bout bids for a rival stable.
+ * @param rival - Rival stable data.
  * @param currentWeek - Current week.
- * @param weather - Weather.
- * @param crowdMood - Crowd mood.
- * @returns The result.
+ * @param weather - Current weather.
+ * @param crowdMood - Current crowd mood.
+ * @returns Generated bout bids.
  */
 export function generateBoutBids(
   rival: RivalStableData,

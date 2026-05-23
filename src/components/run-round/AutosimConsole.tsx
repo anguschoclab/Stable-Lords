@@ -11,14 +11,14 @@ interface AutosimConsoleProps {
   onStart: (weeks: number) => void;
 }/**
  * Autosim console.
- * @param { isSimulating, progress, result, onStart } - { is simulating, progress, result, on start }.
+ * @param - { is simulating, progress, result, on start }.
  * @returns The result.
  */
 
 
 /**
  * Autosim console.
- * @param { isSimulating, progress, result, onStart } - { is simulating, progress, result, on start }.
+ * @param - { is simulating, progress, result, on start }.
  * @returns The result.
  */
 export function AutosimConsole({ isSimulating, progress, result, onStart }: AutosimConsoleProps) {

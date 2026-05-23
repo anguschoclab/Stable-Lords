@@ -5,14 +5,14 @@ interface MarkdownReaderProps {
   content: string;
 }/**
  * Markdown reader.
- * @param { content } - { content }.
+ * @param - { content }.
  * @returns The result.
  */
 
 
 /**
  * Markdown reader.
- * @param { content } - { content }.
+ * @param - { content }.
  * @returns The result.
  */
 export function MarkdownReader({ content }: MarkdownReaderProps) {

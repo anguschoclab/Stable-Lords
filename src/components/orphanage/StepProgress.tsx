@@ -12,14 +12,14 @@ interface StepProgressProps {
   total: number;
 }/**
  * Step progress.
- * @param { step, total } - { step, total }.
+ * @param - { step, total }.
  * @returns The result.
  */
 
 
 /**
  * Step progress.
- * @param { step, total } - { step, total }.
+ * @param - { step, total }.
  * @returns The result.
  */
 export default function StepProgress({ step, total }: StepProgressProps) {

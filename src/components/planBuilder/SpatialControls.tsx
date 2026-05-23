@@ -17,14 +17,14 @@ interface SpatialControlsProps {
   onPlanChange: (plan: FightPlan) => void;
 }/**
  * Spatial controls.
- * @param { plan, warrior, onPlanChange } - { plan, warrior, on plan change }.
+ * @param - { plan, warrior, on plan change }.
  * @returns The result.
  */
 
 
 /**
  * Spatial controls.
- * @param { plan, warrior, onPlanChange } - { plan, warrior, on plan change }.
+ * @param - { plan, warrior, on plan change }.
  * @returns The result.
  */
 export default function SpatialControls({ plan, warrior, onPlanChange }: SpatialControlsProps) {

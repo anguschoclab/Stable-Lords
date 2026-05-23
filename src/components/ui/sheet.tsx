@@ -5,14 +5,29 @@ import { X } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * Sheet.
+ */
 const Sheet = SheetPrimitive.Root;
 
+/**
+ * Sheet trigger.
+ */
 const SheetTrigger = SheetPrimitive.Trigger;
 
+/**
+ * Sheet close.
+ */
 const SheetClose = SheetPrimitive.Close;
 
+/**
+ * Sheet portal.
+ */
 const SheetPortal = SheetPrimitive.Portal;
 
+/**
+ * Sheet overlay.
+ */
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
@@ -52,6 +67,9 @@ interface SheetContentProps
     React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {}
 
+/**
+ * Sheet content.
+ */
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
   SheetContentProps
@@ -69,11 +87,21 @@ const SheetContent = React.forwardRef<
 ));
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
+/**
+ * Sheet header.
+ * @param - { class name, ...props }.
+ * @returns The result.
+ */
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
 );
 SheetHeader.displayName = 'SheetHeader';
 
+/**
+ * Sheet footer.
+ * @param - { class name, ...props }.
+ * @returns The result.
+ */
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
@@ -82,6 +110,9 @@ const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
 );
 SheetFooter.displayName = 'SheetFooter';
 
+/**
+ * Sheet title.
+ */
 const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
@@ -94,6 +125,9 @@ const SheetTitle = React.forwardRef<
 ));
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
+/**
+ * Sheet description.
+ */
 const SheetDescription = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>

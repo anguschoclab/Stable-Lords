@@ -1,4 +1,7 @@
-/** @vitest-environment node */
+/**
+ * ownerAI tests.
+ * @vitest-environment node
+ */
 import { describe, it, expect } from 'vitest';
 import { aiPlanForWarrior, getStyleMatchupMods } from '@/engine/ownerAI';
 import { FightingStyle } from '@/types/game';

@@ -12,6 +12,9 @@ interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'ti
   icon?: React.ElementType;
 }
 
+/**
+ * Page header.
+ */
 const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
   ({ className, title, subtitle, eyebrow, actions, icon: Icon, ...props }, ref) => {
     return (

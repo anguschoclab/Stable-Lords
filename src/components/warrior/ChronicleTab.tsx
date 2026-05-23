@@ -11,14 +11,14 @@ interface ChronicleTabProps {
   arenaHistory: FightSummary[];
 }/**
  * Chronicle tab.
- * @param { warrior, arenaHistory } - { warrior, arena history }.
+ * @param - { warrior, arena history }.
  * @returns The result.
  */
 
 
 /**
  * Chronicle tab.
- * @param { warrior, arenaHistory } - { warrior, arena history }.
+ * @param - { warrior, arena history }.
  * @returns The result.
  */
 export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {

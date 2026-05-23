@@ -16,14 +16,14 @@ interface CrowdReactionsProps {
   className?: string;
 }/**
  * Crowd reactions.
- * @param { tier, state, className } - { tier, state, class name }.
+ * @param - { tier, state, class name }.
  * @returns The result.
  */
 
 
 /**
  * Crowd reactions.
- * @param { tier, state, className } - { tier, state, class name }.
+ * @param - { tier, state, class name }.
  * @returns The result.
  */
 export default function CrowdReactions({ tier, state, className }: CrowdReactionsProps) {

@@ -72,14 +72,14 @@ const INTENT_METRICS: Record<
   },
 };/**
  * Agent reasoning widget.
- * @param { rival } - { rival }.
+ * @param - { rival }.
  * @returns The result.
  */
 
 
 /**
  * Agent reasoning widget.
- * @param { rival } - { rival }.
+ * @param - { rival }.
  * @returns The result.
  */
 export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {

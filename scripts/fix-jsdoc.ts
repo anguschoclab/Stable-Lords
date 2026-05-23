@@ -128,8 +128,17 @@ function buildJSDoc(
 
 function getExportedDeclarations(sourceFile: ts.SourceFile): ts.Node[] {
   const result: ts.Node[] = [];
+  const exportNames = new Set<string>();
 
   function visit(node: ts.Node) {
+    // Collect names from export { foo, bar } and export { type Foo }
+    if (ts.isExportDeclaration(node) && node.exportClause && ts.isNamedExports(node.exportClause)) {
+      for (const elem of node.exportClause.elements) {
+        const localName = (elem.propertyName || elem.name).getText();
+        exportNames.add(localName);
+      }
+    }
+
     if (ts.canHaveModifiers(node)) {
       const mods = ts.getModifiers(node);
       if (mods && mods.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) {
@@ -168,6 +177,36 @@ function getExportedDeclarations(sourceFile: ts.SourceFile): ts.Node[] {
   }
 
   ts.forEachChild(sourceFile, visit);
+
+  // Second pass: find declarations matching export { ... } names
+  function findExportedByName(node: ts.Node) {
+    if (ts.isFunctionDeclaration(node) && node.name && exportNames.has(node.name.getText())) {
+      if (!result.includes(node)) result.push(node);
+    }
+    if (ts.isClassDeclaration(node) && node.name && exportNames.has(node.name.getText())) {
+      if (!result.includes(node)) result.push(node);
+    }
+    if (ts.isInterfaceDeclaration(node) && exportNames.has(node.name.getText())) {
+      if (!result.includes(node)) result.push(node);
+    }
+    if (ts.isTypeAliasDeclaration(node) && exportNames.has(node.name.getText())) {
+      if (!result.includes(node)) result.push(node);
+    }
+    if (ts.isEnumDeclaration(node) && exportNames.has(node.name.getText())) {
+      if (!result.includes(node)) result.push(node);
+    }
+    if (ts.isVariableStatement(node)) {
+      for (const vd of node.declarationList.declarations) {
+        if (ts.isIdentifier(vd.name) && exportNames.has(vd.name.getText())) {
+          if (!result.includes(node)) result.push(node);
+        }
+      }
+    }
+    ts.forEachChild(node, findExportedByName);
+  }
+
+  ts.forEachChild(sourceFile, findExportedByName);
+
   return result;
 }
 

@@ -12,14 +12,14 @@ interface RunResultsProps {
   onToggleExpand: (id: string | null) => void;
 }/**
  * Run results.
- * @param { results, expandedId, onToggleExpand } - { results, expanded id, on toggle expand }.
+ * @param - { results, expanded id, on toggle expand }.
  * @returns The result.
  */
 
 
 /**
  * Run results.
- * @param { results, expandedId, onToggleExpand } - { results, expanded id, on toggle expand }.
+ * @param - { results, expanded id, on toggle expand }.
  * @returns The result.
  */
 export function RunResults({ results, expandedId, onToggleExpand }: RunResultsProps) {

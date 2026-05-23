@@ -8,14 +8,14 @@ interface ComparisonHeaderProps {
   rivalB: RivalStableData;
 }/**
  * Comparison header.
- * @param { rivalA, rivalB } - { rival a, rival b }.
+ * @param - { rival a, rival b }.
  * @returns The result.
  */
 
 
 /**
  * Comparison header.
- * @param { rivalA, rivalB } - { rival a, rival b }.
+ * @param - { rival a, rival b }.
  * @returns The result.
  */
 export function ComparisonHeader({ rivalA, rivalB }: ComparisonHeaderProps) {

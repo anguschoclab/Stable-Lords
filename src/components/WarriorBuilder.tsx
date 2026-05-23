@@ -60,11 +60,7 @@ interface WarriorBuilderProps {
   currentRosterSize?: number;
 }/**
  * Warrior builder.
- * @param {
-  onCreateWarrior,
-  maxRoster = 10,
-  currentRosterSize = 0,
-} - {
+ * @param  - {
   on create warrior,
   max roster = 10,
   current roster size = 0,
@@ -75,11 +71,7 @@ interface WarriorBuilderProps {
 
 /**
  * Warrior builder.
- * @param {
-  onCreateWarrior,
-  maxRoster = 10,
-  currentRosterSize = 0,
-} - {
+ * @param  - {
   on create warrior,
   max roster = 10,
   current roster size = 0,

@@ -11,14 +11,14 @@ interface MatchCardProps {
   crowdMood: string;
 }/**
  * Match card.
- * @param { pairing, crowdMood } - { pairing, crowd mood }.
+ * @param - { pairing, crowd mood }.
  * @returns The result.
  */
 
 
 /**
  * Match card.
- * @param { pairing, crowdMood } - { pairing, crowd mood }.
+ * @param - { pairing, crowd mood }.
  * @returns The result.
  */
 export function MatchCard({ pairing, crowdMood }: MatchCardProps) {

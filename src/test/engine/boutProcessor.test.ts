@@ -1,4 +1,7 @@
-/** @vitest-environment node */
+/**
+ * boutProcessor tests.
+ * @vitest-environment node
+ */
 import { describe, it, expect, vi } from 'vitest';
 import { resolveBout, generatePairings } from '@/engine/boutProcessor';
 import { FightingStyle } from '@/types/game';

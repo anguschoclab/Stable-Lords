@@ -10,14 +10,7 @@ interface SavedGamesSectionProps {
   formatDate: (iso: string) => string;
 }/**
  * Saved games section.
- * @param {
-  slots,
-  maxSaveSlots,
-  onLoad,
-  onExport,
-  onDelete,
-  formatDate,
-} - {
+ * @param  - {
   slots,
   max save slots,
   on load,
@@ -31,14 +24,7 @@ interface SavedGamesSectionProps {
 
 /**
  * Saved games section.
- * @param {
-  slots,
-  maxSaveSlots,
-  onLoad,
-  onExport,
-  onDelete,
-  formatDate,
-} - {
+ * @param  - {
   slots,
   max save slots,
   on load,

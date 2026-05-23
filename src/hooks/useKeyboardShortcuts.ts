@@ -26,14 +26,14 @@ interface UseKeyboardShortcutsOpts {
   onToggleSidebar: () => void;
 }/**
  * React hook: use keyboard shortcuts.
- * @param { onToggleSidebar } - { on toggle sidebar }.
+ * @param - { on toggle sidebar }.
  * @returns The result.
  */
 
 
 /**
  * React hook: use keyboard shortcuts.
- * @param { onToggleSidebar } - { on toggle sidebar }.
+ * @param - { on toggle sidebar }.
  * @returns The result.
  */
 export function useKeyboardShortcuts({ onToggleSidebar }: UseKeyboardShortcutsOpts) {

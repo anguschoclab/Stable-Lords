@@ -19,14 +19,14 @@ export interface PaperDollProps {
   className?: string;
 }/**
  * Paper doll.
- * @param { healthMap, className } - { health map, class name }.
+ * @param - { health map, class name }.
  * @returns The result.
  */
 
 
 /**
  * Paper doll.
- * @param { healthMap, className } - { health map, class name }.
+ * @param - { health map, class name }.
  * @returns The result.
  */
 export function PaperDoll({ healthMap, className }: PaperDollProps) {

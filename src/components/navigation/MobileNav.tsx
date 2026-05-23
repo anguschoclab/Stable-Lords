@@ -135,14 +135,14 @@ interface MobileNavProps {
   className?: string;
 }/**
  * Mobile nav.
- * @param { className } - { class name }.
+ * @param - { class name }.
  * @returns The result.
  */
 
 
 /**
  * Mobile nav.
- * @param { className } - { class name }.
+ * @param - { class name }.
  * @returns The result.
  */
 export function MobileNav({ className }: MobileNavProps) {

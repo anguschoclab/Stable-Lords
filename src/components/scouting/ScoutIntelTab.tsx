@@ -17,16 +17,7 @@ interface ScoutIntelTabProps {
   onScout: (quality: ScoutQuality) => void;
 }/**
  * Scout intel tab.
- * @param {
-  rivals,
-  reports,
-  selectedRivalId,
-  onSelectRival,
-  selectedWarriorId,
-  onSelectWarrior,
-  treasury,
-  onScout,
-} - {
+ * @param  - {
   rivals,
   reports,
   selected rival id,
@@ -42,16 +33,7 @@ interface ScoutIntelTabProps {
 
 /**
  * Scout intel tab.
- * @param {
-  rivals,
-  reports,
-  selectedRivalId,
-  onSelectRival,
-  selectedWarriorId,
-  onSelectWarrior,
-  treasury,
-  onScout,
-} - {
+ * @param  - {
   rivals,
   reports,
   selected rival id,

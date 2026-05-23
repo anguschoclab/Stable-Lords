@@ -12,14 +12,14 @@ interface WarriorCardProps {
   onClick: () => void;
 }/**
  * Render the WarriorCard component.
- * @param { warrior, isSelected, canSelect, onClick } - { warrior, is selected, can select, on click }.
+ * @param - { warrior, is selected, can select, on click }.
  * @returns The result.
  */
 
 
 /**
  * Render the WarriorCard component.
- * @param { warrior, isSelected, canSelect, onClick } - { warrior, is selected, can select, on click }.
+ * @param - { warrior, is selected, can select, on click }.
  * @returns The result.
  */
 export default function WarriorCard({ warrior, isSelected, canSelect, onClick }: WarriorCardProps) {

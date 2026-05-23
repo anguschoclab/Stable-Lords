@@ -1,4 +1,7 @@
-/** @vitest-environment node */
+/**
+ * ownerRoster tests.
+ * @vitest-environment node
+ */
 import { describe, it, expect, vi } from 'vitest';
 
 // Ensure crypto is mocked for the test environment

@@ -21,14 +21,14 @@ interface SubNavProps {
   onTabChange: (tabId: string) => void;
 }/**
  * Sub nav.
- * @param { tabs, activeTab, onTabChange } - { tabs, active tab, on tab change }.
+ * @param - { tabs, active tab, on tab change }.
  * @returns The result.
  */
 
 
 /**
  * Sub nav.
- * @param { tabs, activeTab, onTabChange } - { tabs, active tab, on tab change }.
+ * @param - { tabs, active tab, on tab change }.
  * @returns The result.
  */
 export default function SubNav({ tabs, activeTab, onTabChange }: SubNavProps) {

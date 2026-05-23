@@ -170,14 +170,14 @@ function StableSelector({
   );
 }/**
  * Stable comparison.
- * @param { rivals } - { rivals }.
+ * @param - { rivals }.
  * @returns The result.
  */
 
 
 /**
  * Stable comparison.
- * @param { rivals } - { rivals }.
+ * @param - { rivals }.
  * @returns The result.
  */
 export function StableComparison({ rivals }: StableComparisonProps) {

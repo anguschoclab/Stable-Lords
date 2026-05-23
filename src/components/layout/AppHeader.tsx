@@ -90,19 +90,7 @@ interface AppHeaderProps {
   returnToTitle: () => void;
 }/**
  * Render the AppHeader component.
- * @param {
-  week,
-  day,
-  isTournamentWeek,
-  treasury,
-  fame,
-  crowdMood,
-  weather,
-  isSimulating,
-  lastSavedAt,
-  onResetPrompt,
-  returnToTitle,
-} - {
+ * @param  - {
   week,
   day,
   is tournament week,
@@ -121,19 +109,7 @@ interface AppHeaderProps {
 
 /**
  * Render the AppHeader component.
- * @param {
-  week,
-  day,
-  isTournamentWeek,
-  treasury,
-  fame,
-  crowdMood,
-  weather,
-  isSimulating,
-  lastSavedAt,
-  onResetPrompt,
-  returnToTitle,
-} - {
+ * @param  - {
   week,
   day,
   is tournament week,

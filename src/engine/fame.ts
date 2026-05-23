@@ -2,21 +2,19 @@
  * Fame/Popularity calculation from fight outcome tags.
  */
 
+/**
+ * Fame and popularity values extracted from fight outcome tags.
+ */
 export interface FamePop {
   fame: number;
   pop: number;
   labels: string[];
-}/**
- * Fame from tags.
- * @param tags - Tags.
- * @returns The result.
- */
-
+}
 
 /**
- * Fame from tags.
- * @param tags - Tags.
- * @returns The result.
+ * Compute fame and popularity modifiers from outcome tags.
+ * @param tags - Fight outcome tags to evaluate.
+ * @returns Fame, popularity, and descriptive labels.
  */
 export function fameFromTags(tags: string[] = []): FamePop {
   let fame = 0;

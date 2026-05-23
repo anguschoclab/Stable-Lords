@@ -24,7 +24,7 @@ const localStorageMock = (function () {
      * Set an item in the mock storage.
      * @param key - The key to set.
      * @param value - The value to store.
-     * @throws {Error} If quota is exceeded.
+     * @throws If quota is exceeded.
      */
     setItem: function (key: string, value: string) {
       if (quotaExceeded) {

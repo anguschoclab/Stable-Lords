@@ -126,11 +126,11 @@ interface StableLinkProps {
  * Renders a clickable link for a stable that opens its records in a side panel.
  * Falls back to plain text if the stable cannot be resolved.
  * 
- * @param {StableLinkProps} props - The component props.
- * @param {string} props.name - The name of the stable.
- * @param {string} [props.className] - Optional CSS class name for styling.
- * @param {React.ReactNode} [props.children] - Optional custom content to display inside the link.
- * @returns {JSX.Element} A clickable sheet trigger or a plain span if ID cannot be resolved.
+ * @param props - The component props.
+ * @param props.name - The name of the stable.
+ * @param [props.className] - Optional CSS class name for styling.
+ * @param [props.children] - Optional custom content to display inside the link.
+ * @returns A clickable sheet trigger or a plain span if ID cannot be resolved.
  */
 export function StableLink({ name, className, children }: StableLinkProps) {
   const state = useWorldState();

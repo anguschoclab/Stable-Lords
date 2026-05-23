@@ -13,14 +13,14 @@ import EventLog from '@/components/EventLog';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { ResetDialog } from '@/components/layout/ResetDialog';/**
  * App shell.
- * @param { children } - { children }.
+ * @param - { children }.
  * @returns The result.
  */
 
 
 /**
  * App shell.
- * @param { children } - { children }.
+ * @param - { children }.
  * @returns The result.
  */
 export default function AppShell({ children }: { children: React.ReactNode }) {

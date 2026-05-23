@@ -45,14 +45,14 @@ interface StableRankingsProps {
   onSort: (field: string) => void;
 }/**
  * Stable rankings.
- * @param { rows, sort, onSort } - { rows, sort, on sort }.
+ * @param - { rows, sort, on sort }.
  * @returns The result.
  */
 
 
 /**
  * Stable rankings.
- * @param { rows, sort, onSort } - { rows, sort, on sort }.
+ * @param - { rows, sort, on sort }.
  * @returns The result.
  */
 export function StableRankings({ rows, sort, onSort }: StableRankingsProps) {

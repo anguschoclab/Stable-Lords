@@ -19,14 +19,14 @@ interface StyleRow {
   winRate: number;
 }/**
  * Style meter table.
- * @param { className } - { class name }.
+ * @param - { class name }.
  * @returns The result.
  */
 
 
 /**
  * Style meter table.
- * @param { className } - { class name }.
+ * @param - { class name }.
  * @returns The result.
  */
 export function StyleMeterTable({ className }: StyleMeterTableProps) {

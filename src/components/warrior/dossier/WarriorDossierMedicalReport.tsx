@@ -8,14 +8,14 @@ interface WarriorDossierMedicalReportProps {
   warrior: Warrior;
 }/**
  * Warrior dossier medical report.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 
 
 /**
  * Warrior dossier medical report.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 export function WarriorDossierMedicalReport({ warrior }: WarriorDossierMedicalReportProps) {

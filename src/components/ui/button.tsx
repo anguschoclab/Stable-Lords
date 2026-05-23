@@ -5,6 +5,9 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
+/**
+ * Button variants.
+ */
 const buttonVariants = cva(
   // Hard edges (rounded-none) — stone-cut aesthetic throughout
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-medium ring-offset-background transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
@@ -53,6 +56,9 @@ export interface ButtonProps
   tooltipSide?: 'top' | 'bottom' | 'left' | 'right';
 }
 
+/**
+ * Button.
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, tooltip, tooltipSide = 'top', ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';

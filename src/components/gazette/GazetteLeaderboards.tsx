@@ -26,14 +26,14 @@ interface LeaderboardProps {
   allFights: import('@/types/game').FightSummary[];
 }/**
  * Gazette leaderboard.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 
 
 /**
  * Gazette leaderboard.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
@@ -232,14 +232,14 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
   );
 }/**
  * Best by style.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 
 
 /**
  * Best by style.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 export function BestByStyle({ allFights }: LeaderboardProps) {
@@ -334,14 +334,14 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
   );
 }/**
  * Rising stars.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 
 
 /**
  * Rising stars.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 export function RisingStars({ allFights }: LeaderboardProps) {

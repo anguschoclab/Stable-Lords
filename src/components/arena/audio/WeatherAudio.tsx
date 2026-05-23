@@ -37,14 +37,14 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   Hailstorm: 'ambience-acid-rain',
 };/**
  * Weather audio.
- * @param { weather, volume, enabled, arenaId } - { weather, volume, enabled, arena id }.
+ * @param - { weather, volume, enabled, arena id }.
  * @returns The result.
  */
 
 
 /**
  * Weather audio.
- * @param { weather, volume, enabled, arenaId } - { weather, volume, enabled, arena id }.
+ * @param - { weather, volume, enabled, arena id }.
  * @returns The result.
  */
 export default function WeatherAudio({ weather, volume, enabled, arenaId }: WeatherAudioProps) {

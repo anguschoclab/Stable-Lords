@@ -6,14 +6,14 @@ interface WarriorDossierTraitsProps {
   warrior: Warrior;
 }/**
  * Warrior dossier traits.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 
 
 /**
  * Warrior dossier traits.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 export function WarriorDossierTraits({ warrior }: WarriorDossierTraitsProps) {

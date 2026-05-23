@@ -31,15 +31,7 @@ interface WarriorHeroHeaderProps {
   insightTokens?: InsightToken[];
 }/**
  * Render the WarriorHeroHeader component.
- * @param {
-  warrior,
-  record,
-  streakLabel,
-  streakVal,
-  id,
-  isPlayerOwned,
-  insightTokens,
-} - {
+ * @param  - {
   warrior,
   record,
   streak label,
@@ -54,15 +46,7 @@ interface WarriorHeroHeaderProps {
 
 /**
  * Render the WarriorHeroHeader component.
- * @param {
-  warrior,
-  record,
-  streakLabel,
-  streakVal,
-  id,
-  isPlayerOwned,
-  insightTokens,
-} - {
+ * @param  - {
   warrior,
   record,
   streak label,

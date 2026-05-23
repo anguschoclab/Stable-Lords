@@ -24,14 +24,14 @@ interface TacticBankProps {
   onPlanChange?: (plan: FightPlan) => void;
 }/**
  * Tactic bank.
- * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @param - { plan, on plan change }.
  * @returns The result.
  */
 
 
 /**
  * Tactic bank.
- * @param { plan, onPlanChange } - { plan, on plan change }.
+ * @param - { plan, on plan change }.
  * @returns The result.
  */
 export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {}) {

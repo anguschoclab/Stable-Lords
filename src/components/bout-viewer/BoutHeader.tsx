@@ -19,19 +19,7 @@ interface BoutHeaderProps {
   onToggleExpanded: () => void;
 }/**
  * Bout header.
- * @param {
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  winner,
-  isRivalry,
-  minutes,
-  totalEvents,
-  visibleCount,
-  expanded,
-  onToggleExpanded,
-} - {
+ * @param  - {
   name a,
   name d,
   style a,
@@ -50,19 +38,7 @@ interface BoutHeaderProps {
 
 /**
  * Bout header.
- * @param {
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  winner,
-  isRivalry,
-  minutes,
-  totalEvents,
-  visibleCount,
-  expanded,
-  onToggleExpanded,
-} - {
+ * @param  - {
   name a,
   name d,
   style a,

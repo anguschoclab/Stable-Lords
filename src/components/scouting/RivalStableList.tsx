@@ -13,14 +13,14 @@ interface RivalStableListProps {
   onSelectRival: (id: string) => void;
 }/**
  * Rival stable list.
- * @param { rivals, selectedRivalId, onSelectRival } - { rivals, selected rival id, on select rival }.
+ * @param - { rivals, selected rival id, on select rival }.
  * @returns The result.
  */
 
 
 /**
  * Rival stable list.
- * @param { rivals, selectedRivalId, onSelectRival } - { rivals, selected rival id, on select rival }.
+ * @param - { rivals, selected rival id, on select rival }.
  * @returns The result.
  */
 export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: RivalStableListProps) {

@@ -57,19 +57,7 @@ function getWeaponCategory(weaponName: string): 'slash' | 'bash' | 'pierce' | 's
   return 'slash'; // default
 }/**
  * Arena fighter.
- * @param {
-  name,
-  pose,
-  stats,
-  style,
-  weaponName = 'Longsword',
-  shieldName,
-  isWinner,
-  isDead,
-  isActive,
-  className,
-  size = 120,
-} - {
+ * @param  - {
   name,
   pose,
   stats,
@@ -88,19 +76,7 @@ function getWeaponCategory(weaponName: string): 'slash' | 'bash' | 'pierce' | 's
 
 /**
  * Arena fighter.
- * @param {
-  name,
-  pose,
-  stats,
-  style,
-  weaponName = 'Longsword',
-  shieldName,
-  isWinner,
-  isDead,
-  isActive,
-  className,
-  size = 120,
-} - {
+ * @param  - {
   name,
   pose,
   stats,

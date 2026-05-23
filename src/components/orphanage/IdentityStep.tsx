@@ -10,14 +10,7 @@ interface IdentityStepProps {
   onSubmit: () => void;
 }/**
  * Identity step.
- * @param {
-  ownerInput,
-  setOwnerInput,
-  stableInput,
-  setStableInput,
-  onBack,
-  onSubmit,
-} - {
+ * @param  - {
   owner input,
   set owner input,
   stable input,
@@ -31,14 +24,7 @@ interface IdentityStepProps {
 
 /**
  * Identity step.
- * @param {
-  ownerInput,
-  setOwnerInput,
-  stableInput,
-  setStableInput,
-  onBack,
-  onSubmit,
-} - {
+ * @param  - {
   owner input,
   set owner input,
   stable input,

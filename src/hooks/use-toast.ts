@@ -146,6 +146,11 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, 'id'>;
 
+/**
+ * Toast.
+ * @param - { ...props }.
+ * @returns The result.
+ */
 function toast({ ...props }: Toast) {
   const id = genId();
 
@@ -175,6 +180,10 @@ function toast({ ...props }: Toast) {
   };
 }
 
+/**
+ * React hook: use toast.
+ * @returns The result.
+ */
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState);
 

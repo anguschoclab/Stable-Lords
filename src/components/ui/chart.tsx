@@ -34,6 +34,9 @@ function useChart() {
   return context;
 }
 
+/**
+ * Chart container.
+ */
 const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<'div'> & {
@@ -75,8 +78,14 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = 'Chart';
 
+/**
+ * Chart tooltip.
+ */
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+/**
+ * Chart tooltip content.
+ */
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
@@ -218,8 +227,14 @@ const ChartTooltipContent = React.forwardRef<
 );
 ChartTooltipContent.displayName = 'ChartTooltip';
 
+/**
+ * Chart legend.
+ */
 const ChartLegend = RechartsPrimitive.Legend;
 
+/**
+ * Chart legend content.
+ */
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<'div'> &

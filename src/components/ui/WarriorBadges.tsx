@@ -60,13 +60,7 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
   );
 }/**
  * Stat badge.
- * @param {
-  styleName,
-  career,
-  variant = 'outline',
-  showFullName = false,
-  className,
-} - {
+ * @param  - {
   style name,
   career,
   variant = 'outline',
@@ -81,13 +75,7 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
 
 /**
  * Stat badge.
- * @param {
-  styleName,
-  career,
-  variant = 'outline',
-  showFullName = false,
-  className,
-} - {
+ * @param  - {
   style name,
   career,
   variant = 'outline',
@@ -120,14 +108,7 @@ export function StatBadge({
   );
 }/**
  * Warrior name tag.
- * @param {
-  id,
-  name,
-  isChampion,
-  injuryCount = 0,
-  useCrown = false,
-  isDead = false,
-} - {
+ * @param  - {
   id,
   name,
   is champion,
@@ -143,14 +124,7 @@ export function StatBadge({
 
 /**
  * Warrior name tag.
- * @param {
-  id,
-  name,
-  isChampion,
-  injuryCount = 0,
-  useCrown = false,
-  isDead = false,
-} - {
+ * @param  - {
   id,
   name,
   is champion,

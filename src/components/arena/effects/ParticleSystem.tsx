@@ -28,12 +28,7 @@ interface ParticleSystemProps {
   className?: string;
 }/**
  * Particle system.
- * @param {
-  trigger,
-  sourceX,
-  sourceY,
-  className,
-} - {
+ * @param  - {
   trigger,
   source x,
   source y,
@@ -45,12 +40,7 @@ interface ParticleSystemProps {
 
 /**
  * Particle system.
- * @param {
-  trigger,
-  sourceX,
-  sourceY,
-  className,
-} - {
+ * @param  - {
   trigger,
   source x,
   source y,

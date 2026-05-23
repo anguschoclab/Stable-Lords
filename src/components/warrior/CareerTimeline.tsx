@@ -4,10 +4,7 @@ import { type Warrior, type FightSummary } from '@/types/game';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils';/**
  * Career timeline.
- * @param {
-  warrior,
-  arenaHistory,
-} - {
+ * @param  - {
   warrior,
   arena history,
 }.
@@ -17,10 +14,7 @@ import { getAllFightsForWarrior } from '@/engine/core/historyUtils';/**
 
 /**
  * Career timeline.
- * @param {
-  warrior,
-  arenaHistory,
-} - {
+ * @param  - {
   warrior,
   arena history,
 }.

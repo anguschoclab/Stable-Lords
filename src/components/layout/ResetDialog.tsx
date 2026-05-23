@@ -15,14 +15,14 @@ interface ResetDialogProps {
   onConfirm: () => void;
 }/**
  * Reset dialog.
- * @param { open, onOpenChange, onConfirm } - { open, on open change, on confirm }.
+ * @param - { open, on open change, on confirm }.
  * @returns The result.
  */
 
 
 /**
  * Reset dialog.
- * @param { open, onOpenChange, onConfirm } - { open, on open change, on confirm }.
+ * @param - { open, on open change, on confirm }.
  * @returns The result.
  */
 export function ResetDialog({ open, onOpenChange, onConfirm }: ResetDialogProps) {

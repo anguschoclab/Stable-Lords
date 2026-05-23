@@ -16,12 +16,7 @@ interface ViewModeToggleProps {
   className?: string;
 }/**
  * View mode toggle.
- * @param {
-  mode,
-  onChange,
-  disabled = false,
-  className,
-} - {
+ * @param  - {
   mode,
   on change,
   disabled = false,
@@ -33,12 +28,7 @@ interface ViewModeToggleProps {
 
 /**
  * View mode toggle.
- * @param {
-  mode,
-  onChange,
-  disabled = false,
-  className,
-} - {
+ * @param  - {
   mode,
   on change,
   disabled = false,

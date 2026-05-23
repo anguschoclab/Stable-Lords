@@ -8,14 +8,14 @@ interface BackstoryPickerProps {
   onRandomize: () => void;
 }/**
  * Backstory picker.
- * @param { value, onChange, onRandomize } - { value, on change, on randomize }.
+ * @param - { value, on change, on randomize }.
  * @returns The result.
  */
 
 
 /**
  * Backstory picker.
- * @param { value, onChange, onRandomize } - { value, on change, on randomize }.
+ * @param - { value, on change, on randomize }.
  * @returns The result.
  */
 export default function BackstoryPicker({ value, onChange, onRandomize }: BackstoryPickerProps) {

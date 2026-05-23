@@ -9,14 +9,14 @@ interface WorldStatsProps {
   topStable: string;
 }/**
  * World stats.
- * @param { stableCount, warriorCount, killCount, topStable } - { stable count, warrior count, kill count, top stable }.
+ * @param - { stable count, warrior count, kill count, top stable }.
  * @returns The result.
  */
 
 
 /**
  * World stats.
- * @param { stableCount, warriorCount, killCount, topStable } - { stable count, warrior count, kill count, top stable }.
+ * @param - { stable count, warrior count, kill count, top stable }.
  * @returns The result.
  */
 export function WorldStats({ stableCount, warriorCount, killCount, topStable }: WorldStatsProps) {

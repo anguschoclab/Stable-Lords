@@ -32,14 +32,14 @@ interface TrainerCardProps {
   action?: React.ReactNode;
 }/**
  * Trainer card.
- * @param { trainer, onFire, owned, action } - { trainer, on fire, owned, action }.
+ * @param - { trainer, on fire, owned, action }.
  * @returns The result.
  */
 
 
 /**
  * Trainer card.
- * @param { trainer, onFire, owned, action } - { trainer, on fire, owned, action }.
+ * @param - { trainer, on fire, owned, action }.
  * @returns The result.
  */
 export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps) {

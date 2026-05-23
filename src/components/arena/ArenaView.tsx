@@ -40,25 +40,7 @@ interface ArenaViewProps {
   className?: string;
 }/**
  * Arena view.
- * @param {
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  log,
-  winner,
-  visibleCount,
-  isPlaying,
-  isComplete = false,
-  arenaTier = 'standard',
-  weather = 'Clear',
-  arenaId,
-  gearA,
-  gearD,
-  maxHpA = 50,
-  maxHpD = 50,
-  className,
-} - {
+ * @param  - {
   name a,
   name d,
   style a,
@@ -83,25 +65,7 @@ interface ArenaViewProps {
 
 /**
  * Arena view.
- * @param {
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  log,
-  winner,
-  visibleCount,
-  isPlaying,
-  isComplete = false,
-  arenaTier = 'standard',
-  weather = 'Clear',
-  arenaId,
-  gearA,
-  gearD,
-  maxHpA = 50,
-  maxHpD = 50,
-  className,
-} - {
+ * @param  - {
   name a,
   name d,
   style a,

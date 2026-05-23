@@ -14,13 +14,7 @@ interface TournamentPrepDialogProps {
   onStart: () => void;
 }/**
  * Tournament prep dialog.
- * @param {
-  isOpen,
-  onOpenChange,
-  activeWarriors,
-  seasonName,
-  onStart,
-} - {
+ * @param  - {
   is open,
   on open change,
   active warriors,
@@ -33,13 +27,7 @@ interface TournamentPrepDialogProps {
 
 /**
  * Tournament prep dialog.
- * @param {
-  isOpen,
-  onOpenChange,
-  activeWarriors,
-  seasonName,
-  onStart,
-} - {
+ * @param  - {
   is open,
   on open change,
   active warriors,

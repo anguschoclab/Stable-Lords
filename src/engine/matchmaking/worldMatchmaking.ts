@@ -12,6 +12,12 @@ const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
  * Ensures the world evolves (XP, fame, mortality) even without player input.
  */
 
+/**
+ * Plan world bouts.
+ * @param state - The current game state.
+ * @param rng - RNG service.
+ * @returns The result.
+ */
 export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
   const eligibleWarriors: { warrior: Warrior; stable: RivalStableData }[] = [];
 

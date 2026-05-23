@@ -12,14 +12,14 @@ interface MetaAnalyticsProps {
 
 const TACTICAL_STYLES = ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler'];/**
  * Tactical style analysis.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 
 
 /**
  * Tactical style analysis.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
@@ -137,14 +137,14 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
   );
 }/**
  * Style matchup heatmap.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 
 
 /**
  * Style matchup heatmap.
- * @param { allFights } - { all fights }.
+ * @param - { all fights }.
  * @returns The result.
  */
 export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {

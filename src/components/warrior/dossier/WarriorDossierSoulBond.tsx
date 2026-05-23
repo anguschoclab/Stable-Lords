@@ -8,14 +8,14 @@ interface Props {
   warrior: Warrior;
 }/**
  * Warrior dossier soul bond.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 
 
 /**
  * Warrior dossier soul bond.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 export default function WarriorDossierSoulBond({ warrior }: Props) {

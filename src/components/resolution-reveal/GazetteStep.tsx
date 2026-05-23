@@ -9,14 +9,14 @@ interface GazetteStepProps {
   gazette: NewsletterItem[];
 }/**
  * Gazette step.
- * @param { gazette } - { gazette }.
+ * @param - { gazette }.
  * @returns The result.
  */
 
 
 /**
  * Gazette step.
- * @param { gazette } - { gazette }.
+ * @param - { gazette }.
  * @returns The result.
  */
 export function GazetteStep({ gazette }: GazetteStepProps) {

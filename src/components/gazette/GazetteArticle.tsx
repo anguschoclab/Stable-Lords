@@ -26,14 +26,14 @@ interface GazetteArticleProps {
   season: string;
 }/**
  * Gazette article.
- * @param { issue, season } - { issue, season }.
+ * @param - { issue, season }.
  * @returns The result.
  */
 
 
 /**
  * Gazette article.
- * @param { issue, season } - { issue, season }.
+ * @param - { issue, season }.
  * @returns The result.
  */
 export function GazetteArticle({ issue, season }: GazetteArticleProps) {

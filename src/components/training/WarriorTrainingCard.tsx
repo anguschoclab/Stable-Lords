@@ -17,15 +17,7 @@ import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';/**
  * Warrior training card.
- * @param {
-  warrior,
-  assignment,
-  seasonalGains,
-  trainers,
-  onAssign,
-  onAssignRecovery,
-  onClear,
-} - {
+ * @param  - {
   warrior,
   assignment,
   seasonal gains,
@@ -40,15 +32,7 @@ import { cn } from '@/lib/utils';/**
 
 /**
  * Warrior training card.
- * @param {
-  warrior,
-  assignment,
-  seasonalGains,
-  trainers,
-  onAssign,
-  onAssignRecovery,
-  onClear,
-} - {
+ * @param  - {
   warrior,
   assignment,
   seasonal gains,

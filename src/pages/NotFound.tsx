@@ -1,6 +1,9 @@
 import { useLocation, Link } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+/**
+ * Render the NotFound component.
+ */
 const NotFound = () => {
   const location = useLocation();
 

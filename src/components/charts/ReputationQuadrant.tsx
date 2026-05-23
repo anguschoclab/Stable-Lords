@@ -17,14 +17,14 @@ interface QuadrantDot {
   isPlayer: boolean;
 }/**
  * Reputation quadrant.
- * @param { className } - { class name }.
+ * @param - { class name }.
  * @returns The result.
  */
 
 
 /**
  * Reputation quadrant.
- * @param { className } - { class name }.
+ * @param - { class name }.
  * @returns The result.
  */
 export function ReputationQuadrant({ className }: { className?: string }) {

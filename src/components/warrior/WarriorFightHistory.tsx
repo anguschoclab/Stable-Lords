@@ -7,10 +7,7 @@ import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
 import BoutViewer from '@/components/BoutViewer';
 import { cn } from '@/lib/utils';/**
  * Warrior fight history.
- * @param {
-  warriorName,
-  arenaHistory,
-} - {
+ * @param  - {
   warrior name,
   arena history,
 }.
@@ -20,10 +17,7 @@ import { cn } from '@/lib/utils';/**
 
 /**
  * Warrior fight history.
- * @param {
-  warriorName,
-  arenaHistory,
-} - {
+ * @param  - {
   warrior name,
   arena history,
 }.

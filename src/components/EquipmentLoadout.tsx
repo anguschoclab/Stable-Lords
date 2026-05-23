@@ -251,13 +251,7 @@ function SlotSelector({
   );
 }/**
  * Equipment loadout ui.
- * @param {
-  loadout,
-  style,
-  carryCap,
-  warriorAttrs,
-  onChange,
-} - {
+ * @param  - {
   loadout,
   style,
   carry cap,
@@ -270,13 +264,7 @@ function SlotSelector({
 
 /**
  * Equipment loadout ui.
- * @param {
-  loadout,
-  style,
-  carryCap,
-  warriorAttrs,
-  onChange,
-} - {
+ * @param  - {
   loadout,
   style,
   carry cap,

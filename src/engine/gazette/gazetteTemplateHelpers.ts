@@ -9,6 +9,9 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 
+/**
+ * Mood_tone.
+ */
 const MOOD_TONE: Record<
   CrowdMoodType,
   { adjectives: string[]; opener: string[]; closer: string[] }

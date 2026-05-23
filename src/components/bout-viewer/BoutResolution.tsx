@@ -47,15 +47,7 @@ function getOutcomeStyles(by: FightOutcomeBy) {
   }
 }/**
  * Bout resolution.
- * @param {
-  isComplete,
-  winner,
-  winnerName,
-  by,
-  minutes,
-  totalEvents,
-  announcement,
-} - {
+ * @param  - {
   is complete,
   winner,
   winner name,
@@ -70,15 +62,7 @@ function getOutcomeStyles(by: FightOutcomeBy) {
 
 /**
  * Bout resolution.
- * @param {
-  isComplete,
-  winner,
-  winnerName,
-  by,
-  minutes,
-  totalEvents,
-  announcement,
-} - {
+ * @param  - {
   is complete,
   winner,
   winner name,

@@ -21,14 +21,14 @@ interface WarriorComparisonProps {
   playerRoster: Warrior[];
 }/**
  * Warrior comparison.
- * @param { rivals, playerRoster } - { rivals, player roster }.
+ * @param - { rivals, player roster }.
  * @returns The result.
  */
 
 
 /**
  * Warrior comparison.
- * @param { rivals, playerRoster } - { rivals, player roster }.
+ * @param - { rivals, player roster }.
  * @returns The result.
  */
 export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonProps) {

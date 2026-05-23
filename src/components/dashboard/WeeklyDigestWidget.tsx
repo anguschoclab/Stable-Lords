@@ -43,13 +43,7 @@ interface DigestSummary {
   tournamentActive: boolean;
 }/**
  * Weekly digest widget.
- * @param {
-  week,
-  season,
-  arenaHistory,
-  boutOffers,
-  currentWeek,
-} - {
+ * @param  - {
   week,
   season,
   arena history,
@@ -62,13 +56,7 @@ interface DigestSummary {
 
 /**
  * Weekly digest widget.
- * @param {
-  week,
-  season,
-  arenaHistory,
-  boutOffers,
-  currentWeek,
-} - {
+ * @param  - {
   week,
   season,
   arena history,

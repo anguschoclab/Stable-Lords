@@ -16,14 +16,14 @@ interface StylePassivesProps {
   warrior?: Warrior;
 }/**
  * Style passives.
- * @param { plan, warrior } - { plan, warrior }.
+ * @param - { plan, warrior }.
  * @returns The result.
  */
 
 
 /**
  * Style passives.
- * @param { plan, warrior } - { plan, warrior }.
+ * @param - { plan, warrior }.
  * @returns The result.
  */
 export default function StylePassives({ plan, warrior }: StylePassivesProps) {

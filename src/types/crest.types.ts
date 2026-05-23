@@ -2,10 +2,10 @@
  * Crest Types - Procedural heraldic crest system for Stable Lords
  */
 
-export type ShieldShape = 'heater' | 'french' | 'swiss' | 'spanish' | 'lozenge';/**
- * Field type type.
+/**
+ * Shield shape type.
  */
-
+export type ShieldShape = 'heater' | 'french' | 'swiss' | 'spanish' | 'lozenge';
 
 /**
  * Field type type.

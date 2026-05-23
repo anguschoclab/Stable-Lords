@@ -16,14 +16,14 @@ const TABS = [
   { id: 'biography', label: 'Subject History', icon: FileText },
 ];/**
  * Warrior dossier tabs.
- * @param { activeTab, setActiveTab } - { active tab, set active tab }.
+ * @param - { active tab, set active tab }.
  * @returns The result.
  */
 
 
 /**
  * Warrior dossier tabs.
- * @param { activeTab, setActiveTab } - { active tab, set active tab }.
+ * @param - { active tab, set active tab }.
  * @returns The result.
  */
 export default function WarriorDossierTabs({ activeTab, setActiveTab }: Props) {

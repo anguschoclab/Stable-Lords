@@ -4,12 +4,7 @@ import { growthNarrative } from './GrowthHelpers';
 import { generateWarriorStatements } from '@/data/warriorStatements';
 import { StatBattery } from '@/components/ui/StatBattery';/**
  * Attr bar.
- * @param {
-  label,
-  value,
-  potential,
-  max = 25,
-} - {
+ * @param  - {
   label,
   value,
   potential,
@@ -21,12 +16,7 @@ import { StatBattery } from '@/components/ui/StatBattery';/**
 
 /**
  * Attr bar.
- * @param {
-  label,
-  value,
-  potential,
-  max = 25,
-} - {
+ * @param  - {
   label,
   value,
   potential,
@@ -73,11 +63,7 @@ export function AttrBar({
   );
 }/**
  * Render the SkillBar component.
- * @param {
-  label,
-  value,
-  max = 20,
-} - {
+ * @param  - {
   label,
   value,
   max = 20,
@@ -88,11 +74,7 @@ export function AttrBar({
 
 /**
  * Render the SkillBar component.
- * @param {
-  label,
-  value,
-  max = 20,
-} - {
+ * @param  - {
   label,
   value,
   max = 20,
@@ -111,14 +93,14 @@ export function SkillBar({
   return <StatBattery label={label} value={value} max={max} />;
 }/**
  * Render the WarriorStatementsPanel component.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 
 
 /**
  * Render the WarriorStatementsPanel component.
- * @param { warrior } - { warrior }.
+ * @param - { warrior }.
  * @returns The result.
  */
 export function WarriorStatementsPanel({ warrior }: { warrior: Warrior }) {

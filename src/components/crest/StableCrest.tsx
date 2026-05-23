@@ -20,6 +20,9 @@ interface StableCrestProps {
 }
 
 // Size mappings
+/**
+ * Size_map.
+ */
 const SIZE_MAP = {
   xs: 16,
   sm: 24,
@@ -339,17 +342,7 @@ function Helmet({ metal }: { metal: string }): React.ReactNode {
   );
 }/**
  * Stable crest.
- * @param {
-  crest,
-  size = 'md',
-  showMantling,
-  showHelmet,
-  animate = false,
-  className = '',
-  selected = false,
-  showTooltip = true,
-  showGenerationBadge = true,
-} - {
+ * @param  - {
   crest,
   size = 'md',
   show mantling,
@@ -366,17 +359,7 @@ function Helmet({ metal }: { metal: string }): React.ReactNode {
 
 /**
  * Stable crest.
- * @param {
-  crest,
-  size = 'md',
-  showMantling,
-  showHelmet,
-  animate = false,
-  className = '',
-  selected = false,
-  showTooltip = true,
-  showGenerationBadge = true,
-} - {
+ * @param  - {
   crest,
   size = 'md',
   show mantling,

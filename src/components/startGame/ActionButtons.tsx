@@ -12,14 +12,7 @@ interface ActionButtonsProps {
   onImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }/**
  * Action buttons.
- * @param {
-  mostRecent,
-  slots,
-  maxSaveSlots,
-  onContinue,
-  onNewGame,
-  onImport,
-} - {
+ * @param  - {
   most recent,
   slots,
   max save slots,
@@ -33,14 +26,7 @@ interface ActionButtonsProps {
 
 /**
  * Action buttons.
- * @param {
-  mostRecent,
-  slots,
-  maxSaveSlots,
-  onContinue,
-  onNewGame,
-  onImport,
-} - {
+ * @param  - {
   most recent,
   slots,
   max save slots,

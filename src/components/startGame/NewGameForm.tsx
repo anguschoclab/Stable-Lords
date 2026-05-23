@@ -23,19 +23,7 @@ interface NewGameFormProps {
   canCreate: boolean;
 }/**
  * New game form.
- * @param {
-  ownerName,
-  setOwnerName,
-  stableName,
-  setStableName,
-  playerCrest,
-  setPlayerCrest,
-  backstoryId,
-  setBackstoryId,
-  onBack,
-  onSubmit,
-  canCreate,
-} - {
+ * @param  - {
   owner name,
   set owner name,
   stable name,
@@ -54,19 +42,7 @@ interface NewGameFormProps {
 
 /**
  * New game form.
- * @param {
-  ownerName,
-  setOwnerName,
-  stableName,
-  setStableName,
-  playerCrest,
-  setPlayerCrest,
-  backstoryId,
-  setBackstoryId,
-  onBack,
-  onSubmit,
-  canCreate,
-} - {
+ * @param  - {
   owner name,
   set owner name,
   stable name,

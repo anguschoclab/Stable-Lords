@@ -15,14 +15,14 @@ interface HeadToHeadProps {
   rosterB: Warrior[];
 }/**
  * Head to head.
- * @param { rosterA, rosterB } - { roster a, roster b }.
+ * @param - { roster a, roster b }.
  * @returns The result.
  */
 
 
 /**
  * Head to head.
- * @param { rosterA, rosterB } - { roster a, roster b }.
+ * @param - { roster a, roster b }.
  * @returns The result.
  */
 export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' | 'nameB'>) {

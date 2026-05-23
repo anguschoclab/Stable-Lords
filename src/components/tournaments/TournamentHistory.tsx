@@ -10,12 +10,7 @@ interface TournamentHistoryProps {
   currentSeason: string;
 }/**
  * Tournament history.
- * @param {
-  pastTournaments,
-  seasonIcons,
-  seasonNames,
-  currentSeason,
-} - {
+ * @param  - {
   past tournaments,
   season icons,
   season names,
@@ -27,12 +22,7 @@ interface TournamentHistoryProps {
 
 /**
  * Tournament history.
- * @param {
-  pastTournaments,
-  seasonIcons,
-  seasonNames,
-  currentSeason,
-} - {
+ * @param  - {
   past tournaments,
   season icons,
   season names,

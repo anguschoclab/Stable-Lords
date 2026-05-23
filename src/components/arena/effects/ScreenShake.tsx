@@ -9,13 +9,7 @@ interface ScreenShakeProps {
   children: React.ReactNode;
 }/**
  * Screen shake.
- * @param {
-  trigger,
-  intensity = 'medium',
-  disabled = false,
-  className,
-  children,
-} - {
+ * @param  - {
   trigger,
   intensity = 'medium',
   disabled = false,
@@ -28,13 +22,7 @@ interface ScreenShakeProps {
 
 /**
  * Screen shake.
- * @param {
-  trigger,
-  intensity = 'medium',
-  disabled = false,
-  className,
-  children,
-} - {
+ * @param  - {
   trigger,
   intensity = 'medium',
   disabled = false,

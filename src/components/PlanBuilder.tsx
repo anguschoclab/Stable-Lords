@@ -24,14 +24,14 @@ interface PlanBuilderProps {
   rivalStyle?: FightingStyle;
 }/**
  * Plan builder.
- * @param { plan, onPlanChange, warrior, rivalStyle } - { plan, on plan change, warrior, rival style }.
+ * @param - { plan, on plan change, warrior, rival style }.
  * @returns The result.
  */
 
 
 /**
  * Plan builder.
- * @param { plan, onPlanChange, warrior, rivalStyle } - { plan, on plan change, warrior, rival style }.
+ * @param - { plan, on plan change, warrior, rival style }.
  * @returns The result.
  */
 export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }: PlanBuilderProps) {

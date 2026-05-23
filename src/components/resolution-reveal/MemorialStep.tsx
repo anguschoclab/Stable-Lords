@@ -9,14 +9,14 @@ interface MemorialStepProps {
   deadWarriors: (Warrior | undefined)[];
 }/**
  * Memorial step.
- * @param { deadWarriors } - { dead warriors }.
+ * @param - { dead warriors }.
  * @returns The result.
  */
 
 
 /**
  * Memorial step.
- * @param { deadWarriors } - { dead warriors }.
+ * @param - { dead warriors }.
  * @returns The result.
  */
 export function MemorialStep({ deadWarriors }: MemorialStepProps) {

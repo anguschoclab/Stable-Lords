@@ -15,11 +15,7 @@ interface TreasurySparklineProps {
   showLabel?: boolean;
 }/**
  * Treasury sparkline.
- * @param {
-  className,
-  height = 40,
-  showLabel = true,
-} - {
+ * @param  - {
   class name,
   height = 40,
   show label = true,
@@ -30,11 +26,7 @@ interface TreasurySparklineProps {
 
 /**
  * Treasury sparkline.
- * @param {
-  className,
-  height = 40,
-  showLabel = true,
-} - {
+ * @param  - {
   class name,
   height = 40,
   show label = true,

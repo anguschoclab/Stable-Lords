@@ -11,14 +11,14 @@ interface BoutsStepProps {
   bouts: BoutResult[];
 }/**
  * Bouts step.
- * @param { bouts } - { bouts }.
+ * @param - { bouts }.
  * @returns The result.
  */
 
 
 /**
  * Bouts step.
- * @param { bouts } - { bouts }.
+ * @param - { bouts }.
  * @returns The result.
  */
 export function BoutsStep({ bouts }: BoutsStepProps) {

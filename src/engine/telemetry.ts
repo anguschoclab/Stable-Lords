@@ -1,8 +1,11 @@
 /**
- * Simple telemetry interface for batch advancement monitoring
- * Implement this interface in your application to collect metrics
+ * Simple telemetry interface for batch advancement monitoring.
+ * Implement this interface in your application to collect metrics.
  */
 
+/**
+ * Defines the shape of telemetry provider.
+ */
 export interface TelemetryProvider {
   /** Record timing for an operation */
   timing(name: string, durationMs: number, tags?: Record<string, string>): void;

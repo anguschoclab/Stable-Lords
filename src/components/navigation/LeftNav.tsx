@@ -36,6 +36,9 @@ import { useShallow } from 'zustand/react/shallow';
 
 // ─── Hub + sub-page definitions ─────────────────────────────────────────────
 
+/**
+ * Hubs.
+ */
 const HUBS = [
   {
     id: 'command',
@@ -84,6 +87,9 @@ const HUBS = [
   },
 ] as const;
 
+/**
+ * Hub id type.
+ */
 type HubId = (typeof HUBS)[number]['id'];
 
 // ─── Alert badge helper ──────────────────────────────────────────────────────
@@ -150,14 +156,14 @@ interface LeftNavProps {
   className?: string;
 }/**
  * Left nav.
- * @param { className } - { class name }.
+ * @param - { class name }.
  * @returns The result.
  */
 
 
 /**
  * Left nav.
- * @param { className } - { class name }.
+ * @param - { class name }.
  * @returns The result.
  */
 export function LeftNav({ className }: LeftNavProps) {

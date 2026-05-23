@@ -6,14 +6,14 @@ interface ConditionBatteryProps {
   showText?: boolean;
 }/**
  * Condition battery.
- * @param { value, className, showText = false } - { value, class name, show text = false }.
+ * @param - { value, class name, show text = false }.
  * @returns The result.
  */
 
 
 /**
  * Condition battery.
- * @param { value, className, showText = false } - { value, class name, show text = false }.
+ * @param - { value, class name, show text = false }.
  * @returns The result.
  */
 export function ConditionBattery({ value, className, showText = false }: ConditionBatteryProps) {

@@ -12,13 +12,7 @@ interface EditableTextProps {
   label?: string;
 }/**
  * Editable text.
- * @param {
-  value,
-  onSave,
-  className,
-  inputClassName,
-  label,
-} - {
+ * @param  - {
   value,
   on save,
   class name,
@@ -31,13 +25,7 @@ interface EditableTextProps {
 
 /**
  * Editable text.
- * @param {
-  value,
-  onSave,
-  className,
-  inputClassName,
-  label,
-} - {
+ * @param  - {
   value,
   on save,
   class name,

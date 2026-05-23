@@ -22,14 +22,14 @@ export interface SortHeaderProps {
   onClick: () => void;
 }/**
  * Sort header.
- * @param { label, active, dir, onClick } - { label, active, dir, on click }.
+ * @param - { label, active, dir, on click }.
  * @returns The result.
  */
 
 
 /**
  * Sort header.
- * @param { label, active, dir, onClick } - { label, active, dir, on click }.
+ * @param - { label, active, dir, on click }.
  * @returns The result.
  */
 export function SortHeader({ label, active, dir, onClick }: SortHeaderProps) {

@@ -9,13 +9,7 @@ interface SaveSlotCardProps {
   formatDate: (iso: string) => string;
 }/**
  * Save slot card.
- * @param {
-  slot,
-  onLoad,
-  onExport,
-  onDelete,
-  formatDate,
-} - {
+ * @param  - {
   slot,
   on load,
   on export,
@@ -28,13 +22,7 @@ interface SaveSlotCardProps {
 
 /**
  * Save slot card.
- * @param {
-  slot,
-  onLoad,
-  onExport,
-  onDelete,
-  formatDate,
-} - {
+ * @param  - {
   slot,
   on load,
   on export,

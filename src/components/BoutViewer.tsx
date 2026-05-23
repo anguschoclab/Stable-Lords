@@ -29,20 +29,7 @@ interface BoutViewerProps {
   transcript?: string[];
 }/**
  * Bout viewer.
- * @param {
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  log,
-  winner,
-  by,
-  announcement,
-  isRivalry,
-  arenaTier = 'standard',
-  weather = 'Clear',
-  arenaId,
-} - {
+ * @param  - {
   name a,
   name d,
   style a,
@@ -62,20 +49,7 @@ interface BoutViewerProps {
 
 /**
  * Bout viewer.
- * @param {
-  nameA,
-  nameD,
-  styleA,
-  styleD,
-  log,
-  winner,
-  by,
-  announcement,
-  isRivalry,
-  arenaTier = 'standard',
-  weather = 'Clear',
-  arenaId,
-} - {
+ * @param  - {
   name a,
   name d,
   style a,

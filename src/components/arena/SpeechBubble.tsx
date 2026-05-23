@@ -8,14 +8,14 @@ interface SpeechBubbleProps {
   position?: 'left' | 'right';
 }/**
  * Speech bubble.
- * @param { bubble, onDismiss, position = 'left' } - { bubble, on dismiss, position = 'left' }.
+ * @param - { bubble, on dismiss, position = 'left' }.
  * @returns The result.
  */
 
 
 /**
  * Speech bubble.
- * @param { bubble, onDismiss, position = 'left' } - { bubble, on dismiss, position = 'left' }.
+ * @param - { bubble, on dismiss, position = 'left' }.
  * @returns The result.
  */
 export default function SpeechBubble({ bubble, onDismiss, position = 'left' }: SpeechBubbleProps) {

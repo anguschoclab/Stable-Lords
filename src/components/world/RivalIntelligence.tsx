@@ -9,14 +9,14 @@ interface RivalIntelligenceProps {
   rivals: RivalStableData[];
 }/**
  * Rival intelligence.
- * @param { rivals } - { rivals }.
+ * @param - { rivals }.
  * @returns The result.
  */
 
 
 /**
  * Rival intelligence.
- * @param { rivals } - { rivals }.
+ * @param - { rivals }.
  * @returns The result.
  */
 export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {

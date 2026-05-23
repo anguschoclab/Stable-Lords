@@ -16,18 +16,7 @@ interface BoutControlsProps {
   onSkipToEnd: () => void;
 }/**
  * Bout controls.
- * @param {
-  viewMode,
-  onViewModeChange,
-  isPlaying,
-  speed,
-  setSpeed,
-  visibleCount,
-  totalEvents,
-  onReset,
-  onTogglePlay,
-  onSkipToEnd,
-} - {
+ * @param  - {
   view mode,
   on view mode change,
   is playing,
@@ -45,18 +34,7 @@ interface BoutControlsProps {
 
 /**
  * Bout controls.
- * @param {
-  viewMode,
-  onViewModeChange,
-  isPlaying,
-  speed,
-  setSpeed,
-  visibleCount,
-  totalEvents,
-  onReset,
-  onTogglePlay,
-  onSkipToEnd,
-} - {
+ * @param  - {
   view mode,
   on view mode change,
   is playing,

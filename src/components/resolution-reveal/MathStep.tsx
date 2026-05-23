@@ -11,14 +11,14 @@ interface MathStepProps {
   lastSimulationReport: GameState['lastSimulationReport'];
 }/**
  * Math step.
- * @param { lastSimulationReport } - { last simulation report }.
+ * @param - { last simulation report }.
  * @returns The result.
  */
 
 
 /**
  * Math step.
- * @param { lastSimulationReport } - { last simulation report }.
+ * @param - { last simulation report }.
  * @returns The result.
  */
 export function MathStep({ lastSimulationReport }: MathStepProps) {

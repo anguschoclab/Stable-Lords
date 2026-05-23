@@ -4,10 +4,7 @@ import { cn } from '@/lib/utils';
 import { ChevronDown, Swords, Skull } from 'lucide-react';
 import type { FightSummary } from '@/types/game';/**
  * Fights list.
- * @param {
-  fights,
-  getRound,
-} - {
+ * @param  - {
   fights,
   get round,
 }.
@@ -17,10 +14,7 @@ import type { FightSummary } from '@/types/game';/**
 
 /**
  * Fights list.
- * @param {
-  fights,
-  getRound,
-} - {
+ * @param  - {
   fights,
   get round,
 }.

@@ -2,6 +2,9 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 
+/**
+ * Surface variants.
+ */
 const surfaceVariants = cva('relative overflow-hidden transition-all duration-300', {
   variants: {
     variant: {
@@ -90,6 +93,9 @@ export interface SurfaceProps
   glow?: boolean;
 }
 
+/**
+ * Surface.
+ */
 const Surface = React.forwardRef<HTMLDivElement, SurfaceProps>(
   ({ className, variant, padding, rounded, glow, ...props }, ref) => {
     return (

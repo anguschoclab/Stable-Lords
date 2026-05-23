@@ -5,8 +5,8 @@
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';/**
- * Defines the shape of stable reputation.
- */
+                                                          * Defines the shape of stable reputation.
+                                                          */
 
 
 /**

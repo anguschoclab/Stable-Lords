@@ -16,8 +16,8 @@ import { checkBudget } from './workers/budgetWorker';
  * Implements "Skeptical Memory" and "Hierarchical Delegation".
  */
 export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral';/**
- * Defines the shape of agent context.
- */
+                                                                     * Defines the shape of agent context.
+                                                                     */
 
 
 /**
@@ -30,11 +30,11 @@ export interface AgentContext {
   budgetReport?: BudgetReport; // ⚡ Bolt: Cache budget report for the week
   playerThreatLevel: PlayerThreatLevel;
 }/**
- * Create agent context.
- * @param rival - Rival.
- * @param state - State.
- * @returns The result.
- */
+  * Create agent context.
+  * @param rival - Rival.
+  * @param state - State.
+  * @returns The result.
+  */
 
 
 /**

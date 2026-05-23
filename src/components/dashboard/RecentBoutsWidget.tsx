@@ -15,9 +15,9 @@ import {
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
- * Recent bouts widget.
- * @returns The result.
- */
+                                                                                   * Recent bouts widget.
+                                                                                   * @returns The result.
+                                                                                   */
 
 
 /**

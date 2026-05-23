@@ -24,8 +24,8 @@ const badgeVariants = cva(
     },
   }
 );/**
- * Defines the shape of badge props.
- */
+   * Defines the shape of badge props.
+   */
 
 
 /**
@@ -46,4 +46,5 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(function Badge(
   return <div ref={ref} className={cn(badgeVariants({ variant }), className)} {...props} />;
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { Badge, badgeVariants };

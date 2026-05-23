@@ -49,11 +49,11 @@ export function computeHealthImpact(state: GameState, rngService?: IRNGService):
         : [],
   };
 }/**
- * Apply health updates.
- * @param state - State.
- * @param rng - Rng.
- * @returns The result.
- */
+  * Apply health updates.
+  * @param state - State.
+  * @param rng - Rng.
+  * @returns The result.
+  */
 
 
 /**

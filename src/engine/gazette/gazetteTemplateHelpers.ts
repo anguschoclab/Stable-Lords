@@ -7,6 +7,7 @@ import type { NarrativeContent } from '@/types/narrative.types';
 import type { CrowdMoodType } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 
 /**
@@ -38,7 +39,7 @@ export function t(
   const result = Array.isArray(template)
     ? rng
       ? rng.pick(template)
-      : template[Math.floor(new SeededRNGService(Date.now()).next() * template.length)] || ''
+      : template[Math.floor(new SeededRNGService(cryptoRandomInt(0, 2147483647)).next() * template.length)] || ''
     : template;
 
   if (!result || typeof result !== 'string' || !result.includes('{{')) return result || '';

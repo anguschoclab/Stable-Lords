@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { Button } from '@/components/ui/button';
 import {
   Settings,
@@ -23,9 +24,9 @@ import { toast } from 'sonner';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import type { GameState, RivalStableData } from '@/types/state.types';/**
- * Admin tools.
- * @returns The result.
- */
+                                                                       * Admin tools.
+                                                                       * @returns The result.
+                                                                       */
 
 
 /**
@@ -123,7 +124,7 @@ export default function AdminTools() {
 
   const resetRivals = useCallback(() => {
     import('@/engine/rivals').then(({ generateRivalStables }) => {
-      const newRivals = generateRivalStables(23, Date.now()) as RivalStableData[];
+      const newRivals = generateRivalStables(23, cryptoRandomInt(0, 2147483647)) as RivalStableData[];
       setState((draft) => {
         draft.rivals = newRivals;
       });

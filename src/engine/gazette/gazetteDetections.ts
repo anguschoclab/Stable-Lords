@@ -3,8 +3,8 @@
  * Extracted from gazetteNarrative.ts to follow SRP
  */
 import type { FightSummary } from '@/types/combat.types';/**
- * Defines the shape of gazette detections.
- */
+                                                          * Defines the shape of gazette detections.
+                                                          */
 
 
 /**

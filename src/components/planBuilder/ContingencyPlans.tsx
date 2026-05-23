@@ -9,10 +9,10 @@ interface ContingencyPlansProps {
   plan: FightPlan;
   onPlanChange: (plan: FightPlan) => void;
 }/**
- * Contingency plans.
- * @param - { plan, on plan change }.
- * @returns The result.
- */
+  * Contingency plans.
+  * @param - { plan, on plan change }.
+  * @returns The result.
+  */
 
 
 /**

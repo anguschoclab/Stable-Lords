@@ -123,7 +123,7 @@ function HighlightLog({ log, visibleCount }: Props) {
     const cap = visibleCount ?? log.length;
     // ⚡ Bolt: O(H) filter on the much smaller highlights array instead of O(N) log scan
     return allHighlights.filter((h) => h.eventIndex < cap).slice(-8);
-  }, [allHighlights, visibleCount]);
+  }, [allHighlights, visibleCount, log.length]);
 
   if (highlights.length === 0) return null;
 

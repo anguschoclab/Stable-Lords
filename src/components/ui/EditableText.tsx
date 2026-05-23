@@ -11,16 +11,16 @@ interface EditableTextProps {
   inputClassName?: string;
   label?: string;
 }/**
- * Editable text.
- * @param  - {
+  * Editable text.
+  * @param  - {
   value,
   on save,
   class name,
   input class name,
   label,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

@@ -3,24 +3,24 @@
  * Arena-wide mood states that affect fame gain, kill probability, and gazette tone.
  */
 import type { FightSummary } from '@/types/combat.types';/**
- * Crowd mood type.
- */
+                                                          * Crowd mood type.
+                                                          */
 
 
 /**
  * Crowd mood type.
  */
 export type CrowdMood = 'Calm' | 'Bloodthirsty' | 'Theatrical' | 'Solemn' | 'Festive';/**
- * Crowd_moods.
- */
+                                                                                       * Crowd_moods.
+                                                                                       */
 
 
 /**
  * Crowd_moods.
  */
 export const CROWD_MOODS: CrowdMood[] = ['Calm', 'Bloodthirsty', 'Theatrical', 'Solemn', 'Festive'];/**
- * Mood_descriptions.
- */
+                                                                                                     * Mood_descriptions.
+                                                                                                     */
 
 
 /**
@@ -33,8 +33,8 @@ export const MOOD_DESCRIPTIONS: Record<CrowdMood, string> = {
   Solemn: 'A somber mood lingers after recent deaths. Fame gains are muted.',
   Festive: 'Festival atmosphere! Fame and popularity gains are boosted.',
 };/**
- * Mood_icons.
- */
+   * Mood_icons.
+   */
 
 
 /**
@@ -47,8 +47,8 @@ export const MOOD_ICONS: Record<CrowdMood, string> = {
   Solemn: '🕯️',
   Festive: '🎉',
 };/**
- * Defines the shape of mood modifiers.
- */
+   * Defines the shape of mood modifiers.
+   */
 
 
 /**
@@ -59,10 +59,10 @@ export interface MoodModifiers {
   popMultiplier: number;
   killChanceBonus: number;
 }/**
- * Get mood modifiers.
- * @param mood - Mood.
- * @returns The result.
- */
+  * Get mood modifiers.
+  * @param mood - Mood.
+  * @returns The result.
+  */
 
 
 /**

@@ -12,10 +12,10 @@ import { TacticalBar } from '@/components/navigation/TacticalBar';
 import EventLog from '@/components/EventLog';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { ResetDialog } from '@/components/layout/ResetDialog';/**
- * App shell.
- * @param - { children }.
- * @returns The result.
- */
+                                                               * App shell.
+                                                               * @param - { children }.
+                                                               * @returns The result.
+                                                               */
 
 
 /**

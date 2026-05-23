@@ -43,21 +43,21 @@ import {
   getDefensiveTacticMods,
 } from '../mechanics/tacticResolution';
 import { type FighterState, type ResolutionContext, resolveEffectiveTactics } from './resolution';/**
- * Perform attack check.
- * @param rng - Rng.
- * @param att - Att.
- * @param curAttOE - Cur att oe.
- * @param matchup - Matchup.
- * @param fat - Fat.
- * @param curOffMods - Cur off mods.
- * @param curPass - Cur pass.
- * @param curAntiSyn - Cur anti syn.
- * @param curBiasAtt - Cur bias att.
- * @param overAtt - Over att.
- * @param curAttWepReq - Cur att wep req.
- * @param extraBonus - Extra bonus.
- * @returns The result.
- */
+                                                                                                   * Perform attack check.
+                                                                                                   * @param rng - Rng.
+                                                                                                   * @param att - Att.
+                                                                                                   * @param curAttOE - Cur att oe.
+                                                                                                   * @param matchup - Matchup.
+                                                                                                   * @param fat - Fat.
+                                                                                                   * @param curOffMods - Cur off mods.
+                                                                                                   * @param curPass - Cur pass.
+                                                                                                   * @param curAntiSyn - Cur anti syn.
+                                                                                                   * @param curBiasAtt - Cur bias att.
+                                                                                                   * @param overAtt - Over att.
+                                                                                                   * @param curAttWepReq - Cur att wep req.
+                                                                                                   * @param extraBonus - Extra bonus.
+                                                                                                   * @returns The result.
+                                                                                                   */
 
 
 /**
@@ -111,16 +111,16 @@ export function performAttackCheck(
       commitBonus
   );
 }/**
- * Perform riposte check.
- * @param rng - Rng.
- * @param def - Def.
- * @param matchup - Matchup.
- * @param fat - Fat.
- * @param penaltyOrBonus - Penalty or bonus.
- * @param curPass - Cur pass.
- * @param curAntiSynDef - Cur anti syn def. (optional)
- * @returns The result.
- */
+  * Perform riposte check.
+  * @param rng - Rng.
+  * @param def - Def.
+  * @param matchup - Matchup.
+  * @param fat - Fat.
+  * @param penaltyOrBonus - Penalty or bonus.
+  * @param curPass - Cur pass.
+  * @param curAntiSynDef - Cur anti syn def. (optional)
+  * @returns The result.
+  */
 
 
 /**
@@ -150,24 +150,24 @@ export function performRiposteCheck(
     matchup + fat + penaltyOrBonus + curPass.ripBonus + antiSyn
   );
 }/**
- * Perform defense check.
- * @param rng - Rng.
- * @param def - Def.
- * @param curDefOE - Cur def oe.
- * @param matchup - Matchup.
- * @param fat - Fat.
- * @param curDefMods - Cur def mods.
- * @param curPassD - Cur pass d.
- * @param curBiasDef - Cur bias def.
- * @param overDef - Over def.
- * @param isDodge - Is dodge.
- * @param curAntiSynDef - Cur anti syn def.
- * @param curOffMods - Cur off mods.
- * @param ctx - Ctx. (optional)
- * @param attacker - Attacker. (optional)
- * @param extraDefPenalty - Extra def penalty.
- * @returns The result.
- */
+  * Perform defense check.
+  * @param rng - Rng.
+  * @param def - Def.
+  * @param curDefOE - Cur def oe.
+  * @param matchup - Matchup.
+  * @param fat - Fat.
+  * @param curDefMods - Cur def mods.
+  * @param curPassD - Cur pass d.
+  * @param curBiasDef - Cur bias def.
+  * @param overDef - Over def.
+  * @param isDodge - Is dodge.
+  * @param curAntiSynDef - Cur anti syn def.
+  * @param curOffMods - Cur off mods.
+  * @param ctx - Ctx. (optional)
+  * @param attacker - Attacker. (optional)
+  * @param extraDefPenalty - Extra def penalty.
+  * @returns The result.
+  */
 
 
 /**
@@ -248,18 +248,18 @@ export function performDefenseCheck(
     return { success, type: 'PARRY' as const };
   }
 }/**
- * Execute riposte.
- * @param events - Events.
- * @param rng - Rng.
- * @param attacker - Attacker.
- * @param defender - Defender.
- * @param defTactics - Def tactics.
- * @param defPassive - Def passive.
- * @param attLabel - Att label.
- * @param defLabel - Def label.
- * @param specialtyRiposteMult - Specialty riposte mult.
- * @returns The result.
- */
+  * Execute riposte.
+  * @param events - Events.
+  * @param rng - Rng.
+  * @param attacker - Attacker.
+  * @param defender - Defender.
+  * @param defTactics - Def tactics.
+  * @param defPassive - Def passive.
+  * @param attLabel - Att label.
+  * @param defLabel - Def label.
+  * @param specialtyRiposteMult - Specialty riposte mult.
+  * @returns The result.
+  */
 
 
 /**
@@ -317,26 +317,26 @@ export function executeRiposte(
     });
   }
 }/**
- * Execute hit.
- * @param events - Events.
- * @param rng - Rng.
- * @param attacker - Attacker.
- * @param defender - Defender.
- * @param attTactics - Att tactics.
- * @param attOffMods - Att off mods.
- * @param attPassive - Att passive.
- * @param attLabel - Att label.
- * @param defLabel - Def label.
- * @param stylePhase - Style phase.
- * @param phase - Phase.
- * @param attKD - Att kd.
- * @param attOE - Att oe.
- * @param attAL - Att al.
- * @param attMatchup - Att matchup.
- * @param ctx - Ctx. (optional)
- * @param defPassive - Def passive. (optional)
- * @returns The result.
- */
+  * Execute hit.
+  * @param events - Events.
+  * @param rng - Rng.
+  * @param attacker - Attacker.
+  * @param defender - Defender.
+  * @param attTactics - Att tactics.
+  * @param attOffMods - Att off mods.
+  * @param attPassive - Att passive.
+  * @param attLabel - Att label.
+  * @param defLabel - Def label.
+  * @param stylePhase - Style phase.
+  * @param phase - Phase.
+  * @param attKD - Att kd.
+  * @param attOE - Att oe.
+  * @param attAL - Att al.
+  * @param attMatchup - Att matchup.
+  * @param ctx - Ctx. (optional)
+  * @param defPassive - Def passive. (optional)
+  * @returns The result.
+  */
 
 
 /**
@@ -589,22 +589,22 @@ export function executeHit(
     }
   }
 }/**
- * Apply endurance costs.
- * @param events - Events.
- * @param ctx - Ctx.
- * @param fA - F a.
- * @param fD - F d.
- * @param aGoesFirst - A goes first.
- * @param curAttOE - Cur att oe.
- * @param curAttAL - Cur att al.
- * @param curAttWepReq - Cur att wep req.
- * @param curDefWepReq - Cur def wep req.
- * @param OE_D - Oe_d.
- * @param AL_D - Al_d.
- * @param OE_A - Oe_a.
- * @param AL_A - Al_a.
- * @returns The result.
- */
+  * Apply endurance costs.
+  * @param events - Events.
+  * @param ctx - Ctx.
+  * @param fA - F a.
+  * @param fD - F d.
+  * @param aGoesFirst - A goes first.
+  * @param curAttOE - Cur att oe.
+  * @param curAttAL - Cur att al.
+  * @param curAttWepReq - Cur att wep req.
+  * @param curDefWepReq - Cur def wep req.
+  * @param OE_D - Oe_d.
+  * @param AL_D - Al_d.
+  * @param OE_A - Oe_a.
+  * @param AL_A - Al_a.
+  * @returns The result.
+  */
 
 
 /**

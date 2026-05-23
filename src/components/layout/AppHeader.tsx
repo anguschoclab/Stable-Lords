@@ -89,8 +89,8 @@ interface AppHeaderProps {
   onResetPrompt: () => void;
   returnToTitle: () => void;
 }/**
- * Render the AppHeader component.
- * @param  - {
+  * Render the AppHeader component.
+  * @param  - {
   week,
   day,
   is tournament week,
@@ -103,8 +103,8 @@ interface AppHeaderProps {
   on reset prompt,
   return to title,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

@@ -1,7 +1,7 @@
 import narrativeContent from '@/data/narrativeContent.json';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
- * Defines the shape of combat context.
- */
+                                                                  * Defines the shape of combat context.
+                                                                  */
 
 
 /**
@@ -25,8 +25,8 @@ export interface CombatContext {
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class NarrativeTemplateEngine {
   /**
- * Constructor.
- */
+   * Constructor.
+   */
 private constructor() {}
   /**
    * Replaces canonical tokens (%A, %D, %W, %BP, %H) and Handlebars {{token}} with contextual values.

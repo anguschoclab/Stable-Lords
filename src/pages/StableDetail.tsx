@@ -63,9 +63,9 @@ function StatBar({ label, value, max = 21 }: { label: string; value: number; max
     </div>
   );
 }/**
- * Stable detail.
- * @returns The result.
- */
+  * Stable detail.
+  * @returns The result.
+  */
 
 
 /**

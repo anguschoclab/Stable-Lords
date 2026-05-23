@@ -4,10 +4,11 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior } from '@/types/game';
 import { FightingStyle, type FightSummary } from '@/types/game';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { generateId } from '@/utils/idUtils';
 
 function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
-    id: `w_${Math.random().toString(36).slice(2)}`,
+    id: generateId(undefined, 'w') as Warrior['id'],
     name: 'TestWarrior',
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },

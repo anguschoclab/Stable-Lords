@@ -3,8 +3,8 @@ import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
 import { TimeAdvanceService, type SoftStopCondition } from './tick/TimeAdvanceService';/**
- * Defines the shape of autosim week summary.
- */
+                                                                                        * Defines the shape of autosim week summary.
+                                                                                        */
 
 
 /**
@@ -18,8 +18,8 @@ export interface AutosimWeekSummary {
   deathNames: string[];
   injuryNames: string[];
 }/**
- * Defines the shape of autosim result.
- */
+  * Defines the shape of autosim result.
+  */
 
 
 /**
@@ -58,8 +58,8 @@ const STOP_REASON_MAP: Record<string, AutosimResult['stopReason']> = {
 function mapStopReason(reason: string | null | undefined): AutosimResult['stopReason'] {
   return (reason && STOP_REASON_MAP[reason]) || 'max_weeks';
 }/**
- * Defines the shape of autosim options.
- */
+  * Defines the shape of autosim options.
+  */
 
 
 /**

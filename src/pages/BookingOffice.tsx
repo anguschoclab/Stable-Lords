@@ -262,9 +262,9 @@ function OfferCard({
     </Surface>
   );
 }/**
- * Booking office.
- * @returns The result.
- */
+  * Booking office.
+  * @returns The result.
+  */
 
 
 /**

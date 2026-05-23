@@ -3,11 +3,11 @@ import { StateImpact } from '@/engine/impacts';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
 import { fameFromTags } from '@/engine/fame';/**
- * Validate bout combatants.
- * @param currentW - Current w. (optional)
- * @param currentO - Current o. (optional)
- * @returns The result.
- */
+                                              * Validate bout combatants.
+                                              * @param currentW - Current w. (optional)
+                                              * @param currentO - Current o. (optional)
+                                              * @returns The result.
+                                              */
 
 
 /**
@@ -19,12 +19,12 @@ import { fameFromTags } from '@/engine/fame';/**
 export function validateBoutCombatants(currentW?: Warrior, currentO?: Warrior): boolean {
   return !!currentW && currentW.status === 'Active' && !!currentO;
 }/**
- * Get winner id.
- * @param outcome - Outcome.
- * @param wId - W id.
- * @param oId - O id.
- * @returns The result.
- */
+  * Get winner id.
+  * @param outcome - Outcome.
+  * @param wId - W id.
+  * @param oId - O id.
+  * @returns The result.
+  */
 
 
 /**
@@ -39,13 +39,13 @@ export function getWinnerId(outcome: FightOutcome, wId: string, oId: string): st
   if (outcome.winner === 'D') return oId;
   return null;
 }/**
- * Calculate bout fame.
- * @param outcome - Outcome.
- * @param tags - Tags.
- * @param moodMods - Mood mods.
- * @param isRivalry - Is rivalry.
- * @returns The result.
- */
+  * Calculate bout fame.
+  * @param outcome - Outcome.
+  * @param tags - Tags.
+  * @param moodMods - Mood mods.
+  * @param isRivalry - Is rivalry.
+  * @returns The result.
+  */
 
 
 /**
@@ -71,14 +71,14 @@ export function calculateBoutFame(
     popD: Math.round(rawFameD.pop * moodMods.popMultiplier),
   };
 }/**
- * Process contract payouts.
- * @param state - State.
- * @param contract - Contract.
- * @param winnerId - Winner id.
- * @param currentWId - Current w id.
- * @param currentOId - Current o id.
- * @returns The result.
- */
+  * Process contract payouts.
+  * @param state - State.
+  * @param contract - Contract.
+  * @param winnerId - Winner id.
+  * @param currentWId - Current w id.
+  * @param currentOId - Current o id.
+  * @returns The result.
+  */
 
 
 /**
@@ -151,11 +151,11 @@ export function processContractPayouts(
 
   return impacts;
 }/**
- * Get default plan.
- * @param w - W.
- * @param defaultPlanForWarrior - Default plan for warrior.
- * @returns The result.
- */
+  * Get default plan.
+  * @param w - W.
+  * @param defaultPlanForWarrior - Default plan for warrior.
+  * @returns The result.
+  */
 
 
 /**

@@ -31,10 +31,10 @@ const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
   maul: 'Extended',
   quarterstaff: 'Extended',
 };/**
- * Get weapon preferred range.
- * @param weaponId - Weapon id. (optional)
- * @returns The result.
- */
+   * Get weapon preferred range.
+   * @param weaponId - Weapon id. (optional)
+   * @returns The result.
+   */
 
 
 /**
@@ -108,8 +108,8 @@ export function computeReachScore(
 ): number {
   return ini + (OE - 5) * 2 + motivationBonus - recoveryDebt * 2;
 }/**
- * Defines the shape of distance contest result.
- */
+  * Defines the shape of distance contest result.
+  */
 
 
 // ─── Distance Contest ─────────────────────────────────────────────────────────

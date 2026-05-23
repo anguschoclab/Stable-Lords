@@ -12,7 +12,7 @@ import { WarriorDossier } from '@/components/WarriorDossier';
 import { StableDossier } from '@/components/StableDossier';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, User, Landmark } from 'lucide-react';
-import type { GameState, Warrior } from '@/types/game';
+import type { GameState } from '@/types/game';
 import { findWarrior, findStableId } from '@/utils/historyResolver';
 
 /**

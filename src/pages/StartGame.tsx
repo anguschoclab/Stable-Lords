@@ -5,6 +5,7 @@
  */
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import {
   listSaveSlots,
@@ -42,9 +43,9 @@ import ActionButtons from '@/components/startGame/ActionButtons';
 import SavedGamesSection from '@/components/startGame/SavedGamesSection';
 
 type Screen = 'title' | 'newGame';/**
- * Start game.
- * @returns The result.
- */
+                                   * Start game.
+                                   * @returns The result.
+                                   */
 
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -63,7 +64,7 @@ export default function StartGame() {
 
   const [playerCrest, setPlayerCrest] = useState<CrestData>(() =>
     generateCrest({
-      seed: Math.floor(Math.random() * 100000),
+      seed: cryptoRandomInt(0, 99999),
       philosophy: 'Balanced',
       tier: 'Established',
     })

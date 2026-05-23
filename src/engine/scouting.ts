@@ -12,16 +12,16 @@ import type { InsightToken, InsightTokenType } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/shared.types';
 import { generateId } from '@/utils/idUtils';/**
- * Scout quality type.
- */
+                                              * Scout quality type.
+                                              */
 
 
 /**
  * Scout quality type.
  */
 export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert';/**
- * Defines the shape of scout report.
- */
+                                                            * Defines the shape of scout report.
+                                                            */
 
 
 /**
@@ -53,10 +53,10 @@ const SCOUT_COST: Record<ScoutQuality, number> = {
   Detailed: 50,
   Expert: 100,
 };/**
- * Get scout cost.
- * @param quality - Quality.
- * @returns The result.
- */
+   * Get scout cost.
+   * @param quality - Quality.
+   * @returns The result.
+   */
 
 
 /**

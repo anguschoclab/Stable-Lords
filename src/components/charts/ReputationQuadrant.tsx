@@ -16,10 +16,10 @@ interface QuadrantDot {
   notoriety: number;
   isPlayer: boolean;
 }/**
- * Reputation quadrant.
- * @param - { class name }.
- * @returns The result.
- */
+  * Reputation quadrant.
+  * @param - { class name }.
+  * @returns The result.
+  */
 
 
 /**

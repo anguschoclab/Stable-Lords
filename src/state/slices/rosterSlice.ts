@@ -11,14 +11,14 @@ import {
   RestState,
 } from '@/types/state.types';
 import type { GameStore } from '@/state/useGameStore';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import {
   type WarriorId,
   type StableId,
   type InsightId,
-  type ShieldSize,
 } from '@/types/shared.types';/**
- * Defines the shape of roster slice.
- */
+                               * Defines the shape of roster slice.
+                               */
 
 
 /**
@@ -54,11 +54,11 @@ export interface RosterSlice {
   renameWarrior: (warriorId: WarriorId, newName: string) => void;
   acknowledgeDeath: (warriorId: WarriorId) => void;
 }/**
- * Create roster slice.
- * @param set - Set.
- * @param get - Get.
- * @returns The result.
- */
+  * Create roster slice.
+  * @param set - Set.
+  * @param get - Get.
+  * @returns The result.
+  */
 
 
 /**
@@ -155,7 +155,7 @@ export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (
             draft.baseSkills = { ...draft.baseSkills, ATT: draft.baseSkills.ATT + 1 };
         } else if (token.type === 'Attribute') {
           const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
-          const attrKey = primaries[Math.floor(Math.random() * primaries.length)];
+          const attrKey = primaries[cryptoRandomInt(0, primaries.length - 1)];
           if (attrKey) {
             draft.attributes = {
               ...draft.attributes,
@@ -182,13 +182,7 @@ export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (
         if (w.id !== warriorId) return w;
         return {
           ...w,
-          gear: {
-            ...w.gear,
-            weapon: { name: equipment.weapon },
-            armor: equipment.armor,
-            shield: equipment.shield as ShieldSize,
-            helm: equipment.helm,
-          },
+          equipment,  // Direct assignment, no conversion
         };
       });
 

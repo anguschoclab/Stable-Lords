@@ -7,9 +7,9 @@ import { computeMetaDrift, getMetaLabel, getMetaColor } from '@/engine/metaDrift
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import { cn } from '@/lib/utils';
 import { Trophy, Flame, TrendingUp, ScrollText, ArrowUpRight, ArrowDownLeft } from 'lucide-react';/**
- * Season synthesis.
- * @returns The result.
- */
+                                                                                                   * Season synthesis.
+                                                                                                   * @returns The result.
+                                                                                                   */
 
 
 /**

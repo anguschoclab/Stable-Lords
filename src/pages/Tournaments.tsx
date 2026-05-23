@@ -4,6 +4,7 @@
  */
 import React, { useState, useCallback, useMemo } from 'react';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -53,9 +54,9 @@ function getFatigueLabel(fatigue: number | undefined): { label: string; color: s
   if (f < 60) return { label: 'Tired', color: 'text-arena-gold' };
   return { label: 'Exhausted', color: 'text-destructive' };
 }/**
- * Tournaments.
- * @returns The result.
- */
+  * Tournaments.
+  * @returns The result.
+  */
 
 
 /**
@@ -127,7 +128,7 @@ export default function Tournaments() {
       const { updatedState, roundResults } = await engineProxy.resolveTournamentRound(
         currentFullState,
         currentTournament.id,
-        Date.now()
+        cryptoRandomInt(0, 2147483647)
       );
 
       loadGame(activeSlotId || 'autosave', updatedState);

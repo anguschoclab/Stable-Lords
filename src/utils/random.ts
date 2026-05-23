@@ -5,8 +5,8 @@
  * deterministic randomness in the engine.
  */
 import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
- * The SeededRNG class.
- */
+                                                                  * The SeededRNG class.
+                                                                  */
 
 
 /**
@@ -16,9 +16,9 @@ export class SeededRNG {
   private state: number;
 
   /**
- * Constructor.
- * @param seed - Seed.
- */
+   * Constructor.
+   * @param seed - Seed.
+   */
 constructor(seed: number) {
     this.state = seed;
   }
@@ -86,6 +86,38 @@ constructor(seed: number) {
     clone.state = this.state;
     return clone;
   }
+
+  /**
+   * Weighted random selection from items array.
+   * Implements IRNGService.pickWeighted for direct interface compliance.
+   */
+  pickWeighted<T>(items: T[], weights: number[]): T {
+    if (items.length !== weights.length) {
+      throw new Error('Items and weights must have same length');
+    }
+    if (items.length === 0) throw new Error('Cannot pick from empty array');
+    const totalWeight = weights.reduce((a, b) => a + b, 0);
+    let random = this.next() * totalWeight;
+    for (let i = 0; i < items.length; i++) {
+      const weight = weights[i];
+      if (weight === undefined) {
+        throw new Error('Weight index out of bounds');
+      }
+      random -= weight;
+      if (random <= 0) {
+        const item = items[i];
+        if (item === undefined) {
+          throw new Error('Item index out of bounds');
+        }
+        return item;
+      }
+    }
+    const fallback = items[items.length - 1];
+    if (fallback === undefined) {
+      throw new Error('No items available for weighted pick');
+    }
+    return fallback;
+  }
 }
 
 /**
@@ -143,7 +175,13 @@ export function shuffled<T>(arr: T[], rng: (() => number) | IRNGService): T[] {
   for (let i = copy.length - 1; i > 0; i--) {
     const j =
       typeof rng === 'function' ? Math.floor(rng() * (i + 1)) : Math.floor(rng.next() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+    const tempI = copy[i];
+    const tempJ = copy[j];
+    if (tempI === undefined || tempJ === undefined) {
+      throw new Error('Shuffle index out of bounds');
+    }
+    copy[i] = tempJ;
+    copy[j] = tempI;
   }
   return copy;
 }

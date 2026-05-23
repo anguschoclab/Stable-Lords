@@ -5,9 +5,9 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollText, ChevronRight, History, Activity, ShieldCheck, Terminal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
- * Chronicle.
- * @returns The result.
- */
+                                                                                   * Chronicle.
+                                                                                   * @returns The result.
+                                                                                   */
 
 
 /**

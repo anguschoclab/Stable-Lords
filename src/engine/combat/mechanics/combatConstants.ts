@@ -5,109 +5,109 @@ import { FightingStyle } from '@/types/shared.types';
  */
 
 export const GLOBAL_ATT_BONUS = 2.5;/**
- * Global_par_penalty.
- */
+                                     * Global_par_penalty.
+                                     */
 
 /**
  * Global_par_penalty.
  */
 export const GLOBAL_PAR_PENALTY = -2.5;/**
- * Max_exchanges.
- */
+                                        * Max_exchanges.
+                                        */
 
 /**
  * Max_exchanges.
  */
 export const MAX_EXCHANGES = 30;/**
- * Exchanges_per_minute.
- */
+                                 * Exchanges_per_minute.
+                                 */
  // 10 minutes (Death Rattle calibration)
 /**
  * Exchanges_per_minute.
  */
 export const EXCHANGES_PER_MINUTE = 3;/**
- * Initiative_press_bonus.
- */
+                                       * Initiative_press_bonus.
+                                       */
 
 /**
  * Initiative_press_bonus.
  */
 export const INITIATIVE_PRESS_BONUS = 1;/**
- * Win_xp.
- */
+                                         * Win_xp.
+                                         */
 
 /**
  * Win_xp.
  */
 export const WIN_XP = 2;/**
- * Loss_xp.
- */
+                         * Loss_xp.
+                         */
 
 /**
  * Loss_xp.
  */
 export const LOSS_XP = 1;/**
- * Oe_att_scaling.
- */
+                          * Oe_att_scaling.
+                          */
 
 
 /**
  * Oe_att_scaling.
  */
 export const OE_ATT_SCALING = 0.85;/**
- * Oe_def_scaling.
- */
+                                    * Oe_def_scaling.
+                                    */
 
 /**
  * Oe_def_scaling.
  */
 export const OE_DEF_SCALING = 0.5;/**
- * Al_ini_scaling.
- */
+                                   * Al_ini_scaling.
+                                   */
 
 /**
  * Al_ini_scaling.
  */
 export const AL_INI_SCALING = 0.7;/**
- * Al_attr_scaling.
- */
+                                   * Al_attr_scaling.
+                                   */
 
 /**
  * Al_attr_scaling.
  */
 export const AL_ATTR_SCALING = 0.5;/**
- * Defender_endurance_discount.
- */
+                                    * Defender_endurance_discount.
+                                    */
 
 
 /**
  * Defender_endurance_discount.
  */
 export const DEFENDER_ENDURANCE_DISCOUNT = 0.6;/**
- * Kill_window_endurance.
- */
+                                                * Kill_window_endurance.
+                                                */
 
 /**
  * Kill_window_endurance.
  */
 export const KILL_WINDOW_ENDURANCE = 0.4;/**
- * Tactic_overuse_cap.
- */
+                                          * Tactic_overuse_cap.
+                                          */
  // middle endurance threshold in calculateKillWindow
 
 /**
  * Tactic_overuse_cap.
  */
 export const TACTIC_OVERUSE_CAP = 3;/**
- * Crit_damage_mult.
- */
+                                     * Crit_damage_mult.
+                                     */
 
 /**
  * Crit_damage_mult.
  */
 export const CRIT_DAMAGE_MULT = 1.7;/**
- * Style_order.
- */
+                                     * Style_order.
+                                     */
 
 
 // ─── Style Matchup Matrix ──────────────────────────────────────────────────
@@ -169,11 +169,11 @@ export const MATCHUP_MATRIX: number[][] = [
   [-1, 0, 0, -1, 0, 0, +1, -1, 0, -1], // TP
   [-4, 0, -1, -2, -1, -3, -2, -2, 0, 0], // WS (Nerfed matrix entries globally)
 ];/**
- * Get matchup bonus.
- * @param attStyle - Att style.
- * @param defStyle - Def style.
- * @returns The result.
- */
+   * Get matchup bonus.
+   * @param attStyle - Att style.
+   * @param defStyle - Def style.
+   * @returns The result.
+   */
 
 
 /**

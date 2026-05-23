@@ -289,10 +289,10 @@ function WarriorLeaderboardRow({ row, index, isFiltered }: WarriorLeaderboardRow
     </TableRow>
   );
 }/**
- * Warrior leaderboard.
- * @param - { rows, sort, on sort }.
- * @returns The result.
- */
+  * Warrior leaderboard.
+  * @param - { rows, sort, on sort }.
+  * @returns The result.
+  */
 
 
 /**

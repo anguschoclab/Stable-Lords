@@ -19,10 +19,10 @@ interface WarriorScore {
 
 // Pre-allocated arrays for style buckets to avoid repeated allocations
 const STYLE_BUCKETS: FightingStyle[] = Object.values(FightingStyle);/**
- * Run rankings pass.
- * @param state - State.
- * @returns The result.
- */
+                                                                     * Run rankings pass.
+                                                                     * @param state - State.
+                                                                     * @returns The result.
+                                                                     */
 
 
 /**

@@ -9,15 +9,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Check, X, Heart, AlertTriangle, Lock, Zap, Gauge, ArrowUpRight } from 'lucide-react';
 import { computeGainChance } from '@/engine/training';
 import { canGrow } from '@/engine/potential';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';/**
- * Warrior training card.
- * @param  - {
+                                  * Warrior training card.
+                                  * @param  - {
   warrior,
   assignment,
   seasonal gains,
@@ -26,8 +26,8 @@ import { cn } from '@/lib/utils';/**
   on assign recovery,
   on clear,
 }.
- * @returns The result.
- */
+                                  * @returns The result.
+                                  */
 
 
 /**

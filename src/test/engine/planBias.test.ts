@@ -4,6 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import { autoTuneFromBias, reconcileGearTwoHanded, type Bias } from '@/engine/planBias';
 import { FightingStyle, type FightPlan } from '@/types/game';
+import type { EquipmentLoadout } from '@/data/equipment';
 
 describe('Plan Bias', () => {
   describe('autoTuneFromBias', () => {
@@ -108,111 +109,66 @@ describe('Plan Bias', () => {
 
   describe('reconcileGearTwoHanded', () => {
     it('should remove shield when weapon is two-handed', () => {
-      const plan: FightPlan = {
-        OE: 5,
-        AL: 5,
-        killDesire: 5,
-        style: FightingStyle.StrikingAttack,
-        target: 'Any',
-        offensiveTactic: 'none',
-        defensiveTactic: 'none',
-        gear: {
-          weapon: { name: 'Greatsword', twoHanded: true },
-          shield: 'Large',
-          armor: 'Leather',
-          helm: 'None',
-        },
+      const equipment: EquipmentLoadout = {
+        weapon: 'greatsword',  // two-handed weapon ID
+        shield: 'large_shield',
+        armor: 'leather',
+        helm: 'none_helm',
       };
 
       const draft: Partial<FightPlan> = {};
-      reconcileGearTwoHanded(plan, draft);
+      reconcileGearTwoHanded(draft, equipment);
 
-      expect(draft.gear?.shield).toBe('None');
+      expect(draft.equipment?.shield).toBe('none_shield');
     });
 
-    it('should not modify gear if weapon is one-handed', () => {
-      const plan: FightPlan = {
-        OE: 5,
-        AL: 5,
-        killDesire: 5,
-        style: FightingStyle.StrikingAttack,
-        target: 'Any',
-        offensiveTactic: 'none',
-        defensiveTactic: 'none',
-        gear: {
-          weapon: { name: 'Sword', twoHanded: false },
-          shield: 'Medium',
-          armor: 'Leather',
-          helm: 'None',
-        },
+    it('should not modify equipment if weapon is one-handed', () => {
+      const equipment: EquipmentLoadout = {
+        weapon: 'broadsword',  // one-handed weapon ID
+        shield: 'medium_shield',
+        armor: 'leather',
+        helm: 'none_helm',
       };
 
       const draft: Partial<FightPlan> = {};
-      reconcileGearTwoHanded(plan, draft);
+      reconcileGearTwoHanded(draft, equipment);
 
-      expect(draft.gear).toBeUndefined();
+      expect(draft.equipment).toBeUndefined();
     });
 
-    it('should not modify gear if no shield equipped', () => {
-      const plan: FightPlan = {
-        OE: 5,
-        AL: 5,
-        killDesire: 5,
-        style: FightingStyle.StrikingAttack,
-        target: 'Any',
-        offensiveTactic: 'none',
-        defensiveTactic: 'none',
-        gear: {
-          weapon: { name: 'Greatsword', twoHanded: true },
-          shield: 'None',
-          armor: 'Leather',
-          helm: 'None',
-        },
+    it('should not modify equipment if no shield equipped', () => {
+      const equipment: EquipmentLoadout = {
+        weapon: 'greatsword',  // two-handed weapon ID
+        shield: 'none_shield',
+        armor: 'leather',
+        helm: 'none_helm',
       };
 
       const draft: Partial<FightPlan> = {};
-      reconcileGearTwoHanded(plan, draft);
+      reconcileGearTwoHanded(draft, equipment);
 
-      expect(draft.gear).toBeUndefined();
+      expect(draft.equipment).toBeUndefined();
     });
 
-    it('should handle missing gear gracefully', () => {
-      const plan: FightPlan = {
-        OE: 5,
-        AL: 5,
-        killDesire: 5,
-        style: FightingStyle.StrikingAttack,
-        target: 'Any',
-        offensiveTactic: 'none',
-        defensiveTactic: 'none',
-      };
-
+    it('should handle missing equipment gracefully', () => {
       const draft: Partial<FightPlan> = {};
-      expect(() => reconcileGearTwoHanded(plan, draft)).not.toThrow();
+      expect(() => reconcileGearTwoHanded(draft)).not.toThrow();
     });
 
-    it('should preserve other gear properties when removing shield', () => {
-      const plan: FightPlan = {
-        OE: 5,
-        AL: 5,
-        killDesire: 5,
-        style: FightingStyle.StrikingAttack,
-        target: 'Any',
-        offensiveTactic: 'none',
-        defensiveTactic: 'none',
-        gear: {
-          weapon: { name: 'Greatsword', twoHanded: true },
-          shield: 'Large',
-          armor: 'Plate',
-          helm: 'None',
-        },
+    it('should preserve other equipment properties when removing shield', () => {
+      const equipment: EquipmentLoadout = {
+        weapon: 'greatsword',  // two-handed weapon ID
+        shield: 'large_shield',
+        armor: 'plate',
+        helm: 'none_helm',
       };
 
       const draft: Partial<FightPlan> = {};
-      reconcileGearTwoHanded(plan, draft);
+      reconcileGearTwoHanded(draft, equipment);
 
-      expect(draft.gear?.weapon?.name).toBe('Greatsword');
-      expect(draft.gear?.armor).toBe('Plate');
+      expect(draft.equipment?.weapon).toBe('greatsword');
+      expect(draft.equipment?.armor).toBe('plate');
+      expect(draft.equipment?.helm).toBe('none_helm');
     });
   });
 });

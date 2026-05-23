@@ -44,10 +44,10 @@ interface StableRankingsProps {
   sort: { field: string; dir: 'asc' | 'desc' };
   onSort: (field: string) => void;
 }/**
- * Stable rankings.
- * @param - { rows, sort, on sort }.
- * @returns The result.
- */
+  * Stable rankings.
+  * @param - { rows, sort, on sort }.
+  * @returns The result.
+  */
 
 
 /**

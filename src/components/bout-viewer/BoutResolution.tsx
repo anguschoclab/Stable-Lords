@@ -46,8 +46,8 @@ function getOutcomeStyles(by: FightOutcomeBy) {
       };
   }
 }/**
- * Bout resolution.
- * @param  - {
+  * Bout resolution.
+  * @param  - {
   is complete,
   winner,
   winner name,
@@ -56,8 +56,8 @@ function getOutcomeStyles(by: FightOutcomeBy) {
   total events,
   announcement,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

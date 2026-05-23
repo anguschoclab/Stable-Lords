@@ -1,6 +1,5 @@
 /**
  * boutProcessor tests.
- * @vitest-environment node
  */
 import { describe, it, expect, vi } from 'vitest';
 import { resolveBout, generatePairings } from '@/engine/boutProcessor';

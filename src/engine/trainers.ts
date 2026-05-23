@@ -8,8 +8,8 @@ import type { Warrior } from '@/types/warrior.types';
 import type { GameState, Trainer } from '@/types/state.types';
 
 export type { TrainerTier, TrainerFocus };/**
- * Trainer_focuses.
- */
+                                           * Trainer_focuses.
+                                           */
 
 
 /**
@@ -22,15 +22,15 @@ export const TRAINER_FOCUSES: TrainerFocus[] = [
   'Mind',
   'Healing',
 ];/**
- * Trainer_max_per_stable.
- */
+   * Trainer_max_per_stable.
+   */
 
 /**
  * Trainer_max_per_stable.
  */
 export const TRAINER_MAX_PER_STABLE = 5;/**
- * Focus_descriptions.
- */
+                                         * Focus_descriptions.
+                                         */
 
 
 /**
@@ -43,8 +43,8 @@ export const FOCUS_DESCRIPTIONS: Record<TrainerFocus, string> = {
   Mind: 'Boosts INI and DEC. Improves decision-making and initiative.',
   Healing: 'Accelerates injury recovery and reduces death risk from wounds.',
 };/**
- * Focus_icons.
- */
+   * Focus_icons.
+   */
 
 
 /**
@@ -57,8 +57,8 @@ export const FOCUS_ICONS: Record<TrainerFocus, string> = {
   Mind: '🧠',
   Healing: '💊',
 };/**
- * Tier_cost.
- */
+   * Tier_cost.
+   */
 
 
 /**
@@ -69,8 +69,8 @@ export const TIER_COST: Record<TrainerTier, number> = {
   Seasoned: 100,
   Master: 200,
 };/**
- * Trainer_weekly_salary.
- */
+   * Trainer_weekly_salary.
+   */
 
 
 /**
@@ -81,8 +81,8 @@ export const TRAINER_WEEKLY_SALARY: Record<TrainerTier, number> = {
   Seasoned: 25,
   Master: 75,
 };/**
- * Tier_bonus.
- */
+   * Tier_bonus.
+   */
 
 
 /**

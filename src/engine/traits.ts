@@ -19,8 +19,8 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Archetype } from '@/data/names/archetypeNames';/**
- * Defines the shape of trait effect.
- */
+                                                              * Defines the shape of trait effect.
+                                                              */
 
 
 /**
@@ -52,8 +52,8 @@ export interface TraitEffect {
   fightPlanMod?: Partial<import('@/types/shared.types').FightPlan>;
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;
 }/**
- * Defines the shape of trait def.
- */
+  * Defines the shape of trait def.
+  */
 
 
 /**
@@ -71,8 +71,8 @@ export interface TraitDef {
   /** Archetypes this trait clashes with (0.3× pick weight). */
   antiSynergy?: Archetype[];
 }/**
- * Traits.
- */
+  * Traits.
+  */
 
 
 /**
@@ -367,8 +367,8 @@ export function getStaticTraitMods(warrior?: Warrior): {
   }
   return acc;
 }/**
- * Defines the shape of dynamic trait context.
- */
+  * Defines the shape of dynamic trait context.
+  */
 
 
 /**

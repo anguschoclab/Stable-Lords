@@ -46,12 +46,12 @@ interface OffseasonEventNarrative {
     | 'midnight_feast';
   newsletter: string[];
 }/**
- * Run seasonal pass.
- * @param state - State.
- * @param nextWeek - Next week.
- * @param rootRng - Root rng. (optional)
- * @returns The result.
- */
+  * Run seasonal pass.
+  * @param state - State.
+  * @param nextWeek - Next week.
+  * @param rootRng - Root rng. (optional)
+  * @returns The result.
+  */
 
 
 /**
@@ -501,7 +501,7 @@ export function runSeasonalPass(
       const chosen = seasonRng.pick(activeWarriors);
       if (chosen) {
         const roll = seasonRng.next();
-        let effectMsg = '';
+        let effectMsg: string;
 
         if (roll < 0.33) {
           // Buff: XP gain

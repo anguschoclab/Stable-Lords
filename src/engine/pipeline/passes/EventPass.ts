@@ -16,12 +16,12 @@ function t(template: string, data: Record<string, string | number>): string {
     return value !== undefined && Object.hasOwn(data, key) ? String(value) : match;
   });
 }/**
- * Run event pass.
- * @param state - State.
- * @param nextWeek - Next week.
- * @param rootRng - Root rng. (optional)
- * @returns The result.
- */
+  * Run event pass.
+  * @param state - State.
+  * @param nextWeek - Next week.
+  * @param rootRng - Root rng. (optional)
+  * @returns The result.
+  */
 
 
 /**

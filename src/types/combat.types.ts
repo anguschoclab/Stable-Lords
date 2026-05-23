@@ -1,7 +1,6 @@
 import {
   FightingStyle,
   type NewsletterItem,
-  type Gear,
   type FightPlan,
   type AttackTarget,
   type ProtectTarget,
@@ -15,16 +14,16 @@ import {
   type TournamentId,
 } from './shared.types';
 import type { BoutResult } from '@/engine/boutProcessor';/**
- * Weapon type type.
- */
+                                                          * Weapon type type.
+                                                          */
 
 
 /**
  * Weapon type type.
  */
 export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist';/**
- * Armor weight type.
- */
+                                                                       * Armor weight type.
+                                                                       */
 
 
 // ─── Equipment Constants ───────────────────────────────────────────────────
@@ -33,8 +32,8 @@ export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist';/**
  * Armor weight type.
  */
 export type ArmorWeight = 'None' | 'Light' | 'Medium' | 'Heavy' | 'Ultra-Heavy';/**
- * Armor_weight_map.
- */
+                                                                                 * Armor_weight_map.
+                                                                                 */
 
 
 /**
@@ -50,16 +49,16 @@ export const ARMOR_WEIGHT_MAP: Record<
   Heavy: { minWeight: 9, maxWeight: 12, speedPenalty: 4 },
   'Ultra-Heavy': { minWeight: 13, maxWeight: 20, speedPenalty: 6 },
 };/**
- * Equipment slot type.
- */
+   * Equipment slot type.
+   */
 
 
 /**
  * Equipment slot type.
  */
 export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';/**
- * Defines the shape of armor encumbrance.
- */
+                                                                    * Defines the shape of armor encumbrance.
+                                                                    */
 
 
 /**
@@ -71,8 +70,8 @@ export interface ArmorEncumbrance {
   fatigueMult: number;
   weightClass: ArmorWeight;
 }/**
- * Death cause bucket type.
- */
+  * Death cause bucket type.
+  */
 
 
 // ─── Fight Results ──────────────────────────────────────────────────────────
@@ -87,16 +86,16 @@ export type DeathCauseBucket =
   | 'FATIGUE_COLLAPSE'
   | 'ARMOR_FAILURE'
   | 'RIVALRY_FINISH';/**
- * Fight outcome by type.
- */
+                      * Fight outcome by type.
+                      */
 
 
 /**
  * Fight outcome by type.
  */
 export type FightOutcomeBy = 'Kill' | 'KO' | 'Exhaustion' | 'Stoppage' | 'Draw' | null;/**
- * Combat event type type.
- */
+                                                                                        * Combat event type type.
+                                                                                        */
 
 
 /**
@@ -119,8 +118,8 @@ export type CombatEventType =
   | 'FEINT_SUCCESS'
   | 'FEINT_FAIL'
   | 'ZONE_SHIFT';/**
- * Defines the shape of combat event.
- */
+                  * Defines the shape of combat event.
+                  */
 
 
 /**
@@ -135,8 +134,8 @@ export interface CombatEvent {
   result?: string | boolean;
   metadata?: Record<string, unknown>;
 }/**
- * Defines the shape of minute event.
- */
+  * Defines the shape of minute event.
+  */
 
 
 /**
@@ -185,8 +184,8 @@ export interface ExchangeLogEntry {
   /** Telemetry reason codes e.g. AI_PUSH_FATIGUE, CROWD_BLOODTHIRSTY_LETHAL. */
   reasonCodes?: string[];
 }/**
- * Defines the shape of fight outcome.
- */
+  * Defines the shape of fight outcome.
+  */
 
 
 /**
@@ -213,8 +212,8 @@ export interface FightOutcome {
     tags?: string[];
   };
 }/**
- * Defines the shape of fight summary.
- */
+  * Defines the shape of fight summary.
+  */
 
 
 /**
@@ -264,7 +263,6 @@ export interface FightSummary {
 export {
   FightingStyle,
   type NewsletterItem,
-  type Gear,
   type FightPlan,
   type AttackTarget,
   type ProtectTarget,

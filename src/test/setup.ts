@@ -1,5 +1,8 @@
 import '@testing-library/jest-dom';
 import { enableMapSet } from 'immer';
+import { clearWarriorCache as clearTournamentCache } from '@/engine/matchmaking/tournament/tournamentStateMutator';
+import { clearWarriorCache as clearSelectionCache } from '@/engine/matchmaking/tournamentSelection/utils';
+import { clearHistoryResolverCaches } from '@/utils/historyResolver';
 
 enableMapSet();
 
@@ -76,43 +79,46 @@ Object.defineProperty(global, 'localStorage', {
   configurable: true,
 });
 
+/**
+ * Create a mock FileSystemDirectoryHandle for OPFS testing.
+ * @param name - The name of the directory.
+ * @returns A mock directory handle with nested file/directory capabilities.
+ */
+const createMockDirHandle = (name: string) => ({
+  kind: 'directory',
+  name,
+  getDirectoryHandle: async (dirName: string) => createMockDirHandle(dirName),
+  getFileHandle: async () => ({
+    kind: 'file',
+    createWritable: async () => ({
+      write: async () => {},
+      close: async () => {},
+    }),
+    getFile: async () => ({
+      text: async () => '{}',
+    }),
+  }),
+  values: async function* () {},
+});
+
+// Set up navigator.storage mock at top level (before any tests run)
+if (typeof global.navigator === 'undefined') {
+  (global as any).navigator = {};
+}
+
+Object.defineProperty(global.navigator, 'storage', {
+  value: {
+    getDirectory: async () => createMockDirHandle('root'),
+  },
+  configurable: true,
+});
+
 // Reset localStorage before each test
 beforeEach(() => {
   if (typeof localStorage !== 'undefined') {
     localStorage.clear();
     (localStorage as any)._resetQuota?.();
   }
-});
-
-// Reset navigator.storage mock before each test
-beforeEach(() => {
-  const createMockDirHandle = (name: string) => ({
-    kind: 'directory',
-    name,
-    getDirectoryHandle: async (dirName: string) => createMockDirHandle(dirName),
-    getFileHandle: async () => ({
-      kind: 'file',
-      createWritable: async () => ({
-        write: async () => {},
-        close: async () => {},
-      }),
-      getFile: async () => ({
-        text: async () => '{}',
-      }),
-    }),
-    values: async function* () {},
-  });
-
-  if (typeof global.navigator === 'undefined') {
-    (global as any).navigator = {};
-  }
-
-  Object.defineProperty(global.navigator, 'storage', {
-    value: {
-      getDirectory: async () => createMockDirHandle('root'),
-    },
-    configurable: true,
-  });
 });
 
 // Clear vi mocks after each test to prevent state pollution
@@ -123,15 +129,21 @@ afterEach(() => {
 // Clear module-level WeakMap caches to prevent state pollution across tests
 afterEach(() => {
   try {
-    const { clearWarriorCache: clearTournamentCache } = require('@/engine/matchmaking/tournament/tournamentStateMutator');
-    const { clearWarriorCache: clearSelectionCache } = require('@/engine/matchmaking/tournamentSelection/utils');
-    const { clearHistoryResolverCaches } = require('@/utils/historyResolver');
-
     clearTournamentCache?.();
     clearSelectionCache?.();
     clearHistoryResolverCaches?.();
   } catch (e) {
     // Ignore if modules don't export clear functions
+  }
+});
+
+// Clear module cache for tests that modify global state
+afterEach(() => {
+  try {
+    // Clear OPFS-related modules that may have cached state
+    vi.unmock('@/engine/storage/opfsArchive');
+  } catch (e) {
+    // Ignore if module doesn't exist
   }
 });
 
@@ -155,39 +167,6 @@ class MockResizeObserver {
   disconnect() {}
 }
 global.ResizeObserver = MockResizeObserver as typeof ResizeObserver;
-
-/**
- * Create a mock FileSystemDirectoryHandle for OPFS testing.
- * @param name - The name of the directory.
- * @returns A mock directory handle with nested file/directory capabilities.
- */
-const createMockDirHandle = (name: string) => ({
-  kind: 'directory',
-  name,
-  getDirectoryHandle: async (dirName: string) => createMockDirHandle(dirName),
-  getFileHandle: async () => ({
-    kind: 'file',
-    createWritable: async () => ({
-      write: async () => {},
-      close: async () => {},
-    }),
-    getFile: async () => ({
-      text: async () => '{}',
-    }),
-  }),
-  values: async function* () {},
-});
-
-if (typeof global.navigator === 'undefined') {
-  (global as any).navigator = {};
-}
-
-Object.defineProperty(global.navigator, 'storage', {
-  value: {
-    getDirectory: async () => createMockDirHandle('root'),
-  },
-  configurable: true,
-});
 
 /**
  * Mock Worker for Vitest environment.

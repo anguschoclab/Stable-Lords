@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge';
 import { Eye, Swords, Target, ChevronRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Surface } from '@/components/ui/Surface';
@@ -13,16 +12,16 @@ interface RivalWarriorListProps {
   reports: ScoutReportData[];
   stableName: string | undefined;
 }/**
- * Rival warrior list.
- * @param  - {
+  * Rival warrior list.
+  * @param  - {
   warriors,
   selected warrior id,
   on select warrior,
   reports,
   stable name,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

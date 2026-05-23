@@ -15,8 +15,8 @@ interface BoutControlsProps {
   onTogglePlay: () => void;
   onSkipToEnd: () => void;
 }/**
- * Bout controls.
- * @param  - {
+  * Bout controls.
+  * @param  - {
   view mode,
   on view mode change,
   is playing,
@@ -28,8 +28,8 @@ interface BoutControlsProps {
   on toggle play,
   on skip to end,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

@@ -11,9 +11,10 @@ import { TRAITS } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
-import { shuffled } from '@/utils/random';/**
- * Defines the shape of orphan warrior.
- */
+import { shuffled } from '@/utils/random';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';/**
+                                                        * Defines the shape of orphan warrior.
+                                                        */
 
 
 /**
@@ -46,11 +47,11 @@ function pick<T>(arr: T[], rng: () => number): T {
 }
 
 const TRAIT_IDS = Object.keys(TRAITS);/**
- * Generate orphan pool.
- * @param count - Count.
- * @param seed - Seed. (optional)
- * @returns The result.
- */
+                                       * Generate orphan pool.
+                                       * @param count - Count.
+                                       * @param seed - Seed. (optional)
+                                       * @returns The result.
+                                       */
 
 
 // ── Generation Logic ─────────────────────────────────────────────────────
@@ -62,7 +63,7 @@ const TRAIT_IDS = Object.keys(TRAITS);/**
  * @returns The result.
  */
 export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarrior[] {
-  const rng = seededRng(seed ?? Date.now());
+  const rng = seededRng(seed ?? cryptoRandomInt(0, 2147483647));
   const styles = Object.values(FightingStyle);
   const usedNames = new Set<string>();
   const pool: OrphanWarrior[] = [];

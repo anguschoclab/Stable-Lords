@@ -16,9 +16,9 @@ import { WarriorComparison } from '@/components/scouting/WarriorComparison';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { ImperialRing } from '@/components/ui/ImperialRing';/**
- * Scouting.
- * @returns The result.
- */
+                                                             * Scouting.
+                                                             * @returns The result.
+                                                             */
 
 
 /**

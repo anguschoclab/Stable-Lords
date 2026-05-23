@@ -1,7 +1,6 @@
 import { useStableComparison } from '@/hooks/scouting/useStableComparison';
 import {
   Shield,
-  ArrowLeftRight,
   Swords,
   Trophy,
   Hexagon,
@@ -169,10 +168,10 @@ function StableSelector({
     </div>
   );
 }/**
- * Stable comparison.
- * @param - { rivals }.
- * @returns The result.
- */
+  * Stable comparison.
+  * @param - { rivals }.
+  * @returns The result.
+  */
 
 
 /**

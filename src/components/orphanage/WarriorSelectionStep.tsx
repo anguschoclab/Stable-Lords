@@ -10,8 +10,8 @@ interface WarriorSelectionStepProps {
   onBack: () => void;
   onNext: () => void;
 }/**
- * Warrior selection step.
- * @param  - {
+  * Warrior selection step.
+  * @param  - {
   orphan pool,
   selected,
   on toggle warrior,
@@ -19,8 +19,8 @@ interface WarriorSelectionStepProps {
   on back,
   on next,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

@@ -331,7 +331,6 @@ function processFile(filePath: string): boolean {
     // Remove any malformed JSDoc in the leading trivia
     for (const r of jsdocRanges) {
       edits.push({ start: r.pos, end: r.end, text: "" });
-      modified = true;
     }
 
     // Insert new JSDoc at decl.getStart() (before the token, after trivia)

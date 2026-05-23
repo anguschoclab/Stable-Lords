@@ -23,8 +23,8 @@ import {
   narrateZoneShift,
 } from '../../narrativePBP';
 import { getWeaponDisplayName } from '../../narrative/narrativeUtils';/**
- * Defines the shape of narration context.
- */
+                                                                       * Defines the shape of narration context.
+                                                                       */
 
 
 /**
@@ -47,12 +47,12 @@ export interface NarrationContext {
   isFavoriteA?: boolean;
   isFavoriteD?: boolean;
 }/**
- * Narrate events.
- * @param events - Events.
- * @param ctx - Ctx.
- * @param minute - Minute.
- * @returns The result.
- */
+  * Narrate events.
+  * @param events - Events.
+  * @param ctx - Ctx.
+  * @param minute - Minute.
+  * @returns The result.
+  */
 
 
 /**

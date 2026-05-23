@@ -1,6 +1,6 @@
 import type { GameState } from '@/types/state.types';/**
- * Defines the shape of archive service.
- */
+                                                      * Defines the shape of archive service.
+                                                      */
 
 
 /**
@@ -30,8 +30,8 @@ export interface ArchiveService {
   // Utility
   getArchivedBoutIdsForSeason: (season: number) => Promise<string[]>;
 }/**
- * The ArchiveConflictError class.
- */
+  * The ArchiveConflictError class.
+  */
 
 
 /**
@@ -39,9 +39,9 @@ export interface ArchiveService {
  */
 export class ArchiveConflictError extends Error {
   /**
- * Constructor.
- * @param message - Message.
- */
+   * Constructor.
+   * @param message - Message.
+   */
 constructor(message: string) {
     super(message);
     this.name = 'ArchiveConflictError';
@@ -63,10 +63,10 @@ export class OPFSArchiveService implements ArchiveService {
   private writeQueue: Promise<void> = Promise.resolve();
 
   /**
- * Enqueue.
- * @param task - Task.
- * @returns The result.
- */
+   * Enqueue.
+   * @param task - Task.
+   * @returns The result.
+   */
 private async enqueue<T>(task: () => Promise<T>): Promise<T> {
     const p = this.writeQueue.then(task);
     this.writeQueue = p.catch(() => {}); // catch errors to allow next task in queue
@@ -74,9 +74,9 @@ private async enqueue<T>(task: () => Promise<T>): Promise<T> {
   }
 
   /**
- * Is supported.
- * @returns The result.
- */
+   * Is supported.
+   * @returns The result.
+   */
 isSupported(): boolean {
     return (
       typeof navigator !== 'undefined' &&
@@ -86,11 +86,11 @@ isSupported(): boolean {
   }
 
   /**
- * Get directory.
- * @param season - Season.
- * @param type - Type.
- * @returns The result.
- */
+   * Get directory.
+   * @param season - Season.
+   * @param type - Type.
+   * @returns The result.
+   */
 private async getDirectory(
     season: number,
     type: 'bouts' | 'gazettes'
@@ -113,9 +113,9 @@ private async getDirectory(
   }
 
   /**
- * Get hot state directory.
- * @returns The result.
- */
+   * Get hot state directory.
+   * @returns The result.
+   */
 private async getHotStateDirectory(): Promise<FileSystemDirectoryHandle | null> {
     if (!this.isSupported()) return null;
     try {
@@ -131,11 +131,11 @@ private async getHotStateDirectory(): Promise<FileSystemDirectoryHandle | null> 
   }
 
   /**
- * Archive hot state.
- * @param slotId - Slot id.
- * @param stateData - State data.
- * @returns The result.
- */
+   * Archive hot state.
+   * @param slotId - Slot id.
+   * @param stateData - State data.
+   * @returns The result.
+   */
 async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
     assertSafeFileNamePart(slotId, 'slotId');
     let writable: FileSystemWritableFileStream | null = null;
@@ -169,10 +169,10 @@ async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
   }
 
   /**
- * Retrieve hot state.
- * @param slotId - Slot id.
- * @returns The result.
- */
+   * Retrieve hot state.
+   * @param slotId - Slot id.
+   * @returns The result.
+   */
 async retrieveHotState(slotId: string): Promise<GameState | null> {
     assertSafeFileNamePart(slotId, 'slotId');
     try {
@@ -196,14 +196,14 @@ async retrieveHotState(slotId: string): Promise<GameState | null> {
   }
 
   /**
- * Archive bout log.
- * @param year - Year.
- * @param season - Season.
- * @param boutId - Bout id.
- * @param logData - Log data.
- * @param overwrite - Overwrite.
- * @returns The result.
- */
+   * Archive bout log.
+   * @param year - Year.
+   * @param season - Season.
+   * @param boutId - Bout id.
+   * @param logData - Log data.
+   * @param overwrite - Overwrite.
+   * @returns The result.
+   */
 async archiveBoutLog(
     year: number,
     season: number,
@@ -267,12 +267,12 @@ async archiveBoutLog(
   }
 
   /**
- * Retrieve bout log.
- * @param year - Year.
- * @param season - Season.
- * @param boutId - Bout id.
- * @returns The result.
- */
+   * Retrieve bout log.
+   * @param year - Year.
+   * @param season - Season.
+   * @param boutId - Bout id.
+   * @returns The result.
+   */
 async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
     assertSafeFileNamePart(boutId, 'boutId');
     try {
@@ -299,12 +299,12 @@ async retrieveBoutLog(year: number, season: number, boutId: string): Promise<str
   }
 
   /**
- * Archive gazette.
- * @param season - Season.
- * @param week - Week.
- * @param markdown - Markdown.
- * @returns The result.
- */
+   * Archive gazette.
+   * @param season - Season.
+   * @param week - Week.
+   * @param markdown - Markdown.
+   * @returns The result.
+   */
 async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
     return this.enqueue(async () => {
       assertSafeFileNamePart(String(week), 'week');
@@ -342,11 +342,11 @@ async archiveGazette(season: number, week: number, markdown: string): Promise<vo
   }
 
   /**
- * Retrieve gazette.
- * @param season - Season.
- * @param week - Week.
- * @returns The result.
- */
+   * Retrieve gazette.
+   * @param season - Season.
+   * @param week - Week.
+   * @returns The result.
+   */
 async retrieveGazette(season: number, week: number): Promise<string | null> {
     assertSafeFileNamePart(String(week), 'week');
     try {
@@ -371,10 +371,10 @@ async retrieveGazette(season: number, week: number): Promise<string | null> {
   }
 
   /**
- * Get archived bout ids for season.
- * @param season - Season.
- * @returns The result.
- */
+   * Get archived bout ids for season.
+   * @param season - Season.
+   * @returns The result.
+   */
 async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
     try {
       const dirHandle = await this.getDirectory(season, 'bouts');
@@ -394,8 +394,8 @@ async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
     }
   }
 }/**
- * Opfs archive.
- */
+  * Opfs archive.
+  */
 
 
 /**

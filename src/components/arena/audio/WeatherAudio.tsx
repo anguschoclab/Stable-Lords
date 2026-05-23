@@ -36,10 +36,10 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Cursed Miasma': 'ambience-acid-rain',
   Hailstorm: 'ambience-acid-rain',
 };/**
- * Weather audio.
- * @param - { weather, volume, enabled, arena id }.
- * @returns The result.
- */
+   * Weather audio.
+   * @param - { weather, volume, enabled, arena id }.
+   * @returns The result.
+   */
 
 
 /**

@@ -3,6 +3,7 @@
  * Create a new warrior: allocate 70 points across 7 attributes, pick style, name.
  */
 import React, { useState, useMemo, useCallback } from 'react';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,12 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import {
   UserPlus,
   Shuffle,
-  Shield,
   Swords,
   Heart,
   Zap,
@@ -59,14 +58,14 @@ interface WarriorBuilderProps {
   maxRoster?: number;
   currentRosterSize?: number;
 }/**
- * Warrior builder.
- * @param  - {
+  * Warrior builder.
+  * @param  - {
   on create warrior,
   max roster = 10,
   current roster size = 0,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**
@@ -116,17 +115,17 @@ export default function WarriorBuilder({
     const keys = [...ATTRIBUTE_KEYS];
     // Distribute randomly
     while (pool > 0) {
-      const key = keys[Math.floor(Math.random() * keys.length)];
+      const key = keys[cryptoRandomInt(0, keys.length - 1)];
       const maxAdd = Math.min(pool, ATTRIBUTE_MAX - newAttrs[key]);
       if (maxAdd <= 0) continue;
-      const add = Math.min(maxAdd, Math.floor(Math.random() * 5) + 1);
+      const add = Math.min(maxAdd, cryptoRandomInt(1, 5));
       newAttrs[key] += add;
       pool -= add;
     }
     setAttrs(newAttrs);
     // Random style
     const styles = Object.values(FightingStyle);
-    setStyle(styles[Math.floor(Math.random() * styles.length)]);
+    setStyle(styles[cryptoRandomInt(0, styles.length - 1)]);
     setName(randomWarriorName());
   }, []);
 

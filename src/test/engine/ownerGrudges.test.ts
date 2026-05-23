@@ -1,6 +1,5 @@
 /**
  * ownerGrudges tests.
- * @vitest-environment node
  */
 import { describe, it, expect } from 'vitest';
 import { processOwnerGrudges, calculateRivalryScore } from '@/engine/ownerGrudges';

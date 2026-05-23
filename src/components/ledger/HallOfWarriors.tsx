@@ -11,9 +11,9 @@ import {
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Trophy, Landmark, Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
- * Hall of warriors.
- * @returns The result.
- */
+                                                                                   * Hall of warriors.
+                                                                                   * @returns The result.
+                                                                                   */
 
 
 /**

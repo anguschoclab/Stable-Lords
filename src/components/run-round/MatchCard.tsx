@@ -10,10 +10,10 @@ interface MatchCardProps {
   pairing: MatchPairing;
   crowdMood: string;
 }/**
- * Match card.
- * @param - { pairing, crowd mood }.
- * @returns The result.
- */
+  * Match card.
+  * @param - { pairing, crowd mood }.
+  * @returns The result.
+  */
 
 
 /**

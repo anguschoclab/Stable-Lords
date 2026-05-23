@@ -5,8 +5,8 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import { WEAPONS } from '@/data/equipment';/**
- * Defines the shape of favorites display info.
- */
+                                            * Defines the shape of favorites display info.
+                                            */
 
 
 /**

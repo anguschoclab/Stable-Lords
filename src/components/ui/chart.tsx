@@ -2,8 +2,8 @@ import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
 
 import { cn } from '@/lib/utils';/**
- * Chart config type.
- */
+                                  * Chart config type.
+                                  */
 
 
 // Format: { [key]: { label: string, color: string } }

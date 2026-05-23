@@ -17,9 +17,9 @@ import { computeWarriorStats } from '@/engine/skillCalc';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';/**
- * Physicals simulator.
- * @returns The result.
- */
+                                                   * Physicals simulator.
+                                                   * @returns The result.
+                                                   */
 
 
 /**

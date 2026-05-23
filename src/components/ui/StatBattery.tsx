@@ -1,8 +1,8 @@
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';/**
- * Defines the shape of stat battery props.
- */
+                                  * Defines the shape of stat battery props.
+                                  */
 
 
 /**
@@ -16,8 +16,8 @@ export interface StatBatteryProps {
   colorClass?: string; // Tailwind class for the progress bar color
   className?: string; // Optional wrapper class
 }/**
- * Stat battery.
- */
+  * Stat battery.
+  */
 
 
 /**

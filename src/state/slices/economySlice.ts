@@ -2,15 +2,15 @@ import { StateCreator } from 'zustand';
 import { LedgerEntry, Promoter, BoutOffer, RankingEntry, AnnualAward } from '@/types/state.types';
 import { canTransact as _canTransact } from '@/utils/economyUtils';
 import type { GameStore } from '@/state/useGameStore';
-import { hashStr } from '@/utils/random';
+import { generateId } from '@/utils/idUtils';
 import {
   type PromoterId,
   type BoutOfferId,
   type WarriorId,
   type LedgerEntryId,
 } from '@/types/shared.types';/**
- * Defines the shape of economy slice.
- */
+                               * Defines the shape of economy slice.
+                               */
 
 
 /**
@@ -29,11 +29,11 @@ export interface EconomySlice {
   addFunds: (amount: number, label: string, category: LedgerEntry['category']) => void;
   deductFunds: (amount: number, label: string, category: LedgerEntry['category']) => boolean;
 }/**
- * Create economy slice.
- * @param set - Set.
- * @param get - Get.
- * @returns The result.
- */
+  * Create economy slice.
+  * @param set - Set.
+  * @param get - Get.
+  * @returns The result.
+  */
 
 
 /**
@@ -59,7 +59,7 @@ export const createEconomySlice: StateCreator<GameStore, [], [], EconomySlice> =
       ledger: [
         ...state.ledger,
         {
-          id: String(hashStr(`${state.week}-${label}-${Date.now()}`)) as LedgerEntryId,
+          id: generateId() as LedgerEntryId,
           week: state.week,
           label,
           amount,
@@ -79,7 +79,7 @@ export const createEconomySlice: StateCreator<GameStore, [], [], EconomySlice> =
       ledger: [
         ...state.ledger,
         {
-          id: String(hashStr(`${state.week}-${label}-${Date.now()}`)) as LedgerEntryId,
+          id: generateId() as LedgerEntryId,
           week: state.week,
           label,
           amount: -amount,

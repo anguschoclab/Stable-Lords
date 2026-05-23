@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';/**
- * Route.
- */
+                                                                    * Route.
+                                                                    */
 
 
 /**

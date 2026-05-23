@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { cryptoRandom } from '@/utils/cryptoRandom';
 import type { ArenaTier } from '../ArenaBackground';/**
- * Crowd state type.
- */
+                                                     * Crowd state type.
+                                                     */
 
 
 /**
@@ -15,10 +16,10 @@ interface CrowdReactionsProps {
   state: CrowdState;
   className?: string;
 }/**
- * Crowd reactions.
- * @param - { tier, state, class name }.
- * @returns The result.
- */
+  * Crowd reactions.
+  * @param - { tier, state, class name }.
+  * @returns The result.
+  */
 
 
 /**
@@ -79,8 +80,8 @@ export default function CrowdReactions({ tier, state, className }: CrowdReaction
         {/* Crowd silhouettes */}
         {Array.from({ length: density }).map((_, i) => {
           const x = (i / density) * 100;
-          const height = 8 + Math.random() * 10;
-          const width = 2 + Math.random() * 2;
+          const height = 8 + cryptoRandom() * 10;
+          const width = 2 + cryptoRandom() * 2;
           const delay = i * 0.05;
 
           return (

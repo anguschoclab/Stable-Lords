@@ -11,16 +11,16 @@ interface MiniCombatLogProps {
   className?: string;
   onClose?: () => void;
 }/**
- * Mini combat log.
- * @param  - {
+  * Mini combat log.
+  * @param  - {
   events,
   visible count,
   is playing,
   class name,
   on close,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

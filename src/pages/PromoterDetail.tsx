@@ -143,9 +143,9 @@ function calculateStats(
     totalHype: promoterOffers.reduce((sum, o) => sum + o.hype, 0),
   };
 }/**
- * Promoter detail.
- * @returns The result.
- */
+  * Promoter detail.
+  * @returns The result.
+  */
 
 
 /**

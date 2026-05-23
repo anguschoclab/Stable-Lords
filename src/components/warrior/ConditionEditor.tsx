@@ -56,10 +56,10 @@ function triggerDisplayValue(cond: PlanCondition): string {
   if (opt.inputType === 'phase') return String(cond.trigger.value);
   return String(cond.trigger.value);
 }/**
- * Condition editor.
- * @param - { conditions, on change }.
- * @returns The result.
- */
+  * Condition editor.
+  * @param - { conditions, on change }.
+  * @returns The result.
+  */
 
 
 /**

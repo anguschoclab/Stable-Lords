@@ -1,8 +1,8 @@
 import { MinuteEvent } from '@/types/game';/**
- * Classify event.
- * @param event - Event.
- * @returns The result.
- */
+                                            * Classify event.
+                                            * @param event - Event.
+                                            * @returns The result.
+                                            */
 
 
 /**

@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Flame, Skull, Target, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getRecentFights } from '@/engine/core/historyUtils';/**
- * Defines the shape of derived rivalry.
- */
+                                                              * Defines the shape of derived rivalry.
+                                                              */
 
 
 /**
@@ -109,7 +109,7 @@ function useRivalriesList(
     }
 
     return [...map.values()].filter((r) => r.bouts > 0).sort((a, b) => b.intensity - a.intensity);
-  }, [state.arenaHistory, state.week, rosterNames, rivalWarriorStable, state.rivals]);
+  }, [state.arenaHistory, state.week, rosterNames, rivalWarriorStable]);
 }
 
 // Custom Hook to calculate the most wanted rival
@@ -161,9 +161,9 @@ const intensityLabel = (n: number) =>
 
 const intensityColor = (n: number) =>
   n >= 4 ? 'text-destructive' : n >= 2 ? 'text-arena-gold' : 'text-primary';/**
- * Rivalry widget.
- * @returns The result.
- */
+                                                                             * Rivalry widget.
+                                                                             * @returns The result.
+                                                                             */
 
 
 // Main Widget Component

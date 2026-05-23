@@ -22,9 +22,9 @@ import { Surface } from '@/components/ui/Surface';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';/**
- * Training.
- * @returns The result.
- */
+                                                                 * Training.
+                                                                 * @returns The result.
+                                                                 */
 
 
 /**

@@ -8,8 +8,8 @@
  */
 
 import type { EquipmentItem } from './equipment.types';/**
- * Shields.
- */
+                                                        * Shields.
+                                                        */
 
 
 /**

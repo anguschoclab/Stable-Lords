@@ -1,5 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import type { GameState } from '@/types/game';
+import { useGameStore } from '@/state/useGameStore';
 
 // Provide a default mock for localStorage BEFORE importing game store
 const localStorageMock = (function () {
@@ -20,17 +24,12 @@ const localStorageMock = (function () {
     },
   };
 })();
-Object.defineProperty(global, 'localStorage', { value: localStorageMock, writable: true });
-
-// Import the state modules dynamically
-import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import type { GameState } from '@/types/game';/**
- * Render with game state.
- * @param ui - Ui.
- * @param partialState - Partial state.
- * @returns The result.
- */
+Object.defineProperty(global, 'localStorage', { value: localStorageMock, writable: true });/**
+                                                                                            * Render with game state.
+                                                                                            * @param ui - Ui.
+                                                                                            * @param partialState - Partial state.
+                                                                                            * @returns The result.
+                                                                                            */
 
 
 // A helper to inject a mock state into the Zustand store before rendering
@@ -44,9 +43,6 @@ export function renderWithGameState(
   ui: React.ReactElement,
   partialState: Partial<ReturnType<typeof createFreshState>> = {}
 ) {
-  // Import useGameStore dynamically inside the function to ensure it's initialized
-  const { useGameStore } = require('@/state/useGameStore');
-  
   // Get a clean base state
   const baseState = createFreshState('test-seed');
 

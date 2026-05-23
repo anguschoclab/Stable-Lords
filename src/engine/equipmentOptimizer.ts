@@ -14,8 +14,8 @@ import {
   getLoadoutWeight,
   isPreferredWeapon,
 } from '@/data/equipment';/**
- * Defines the shape of gear recommendation.
- */
+                           * Defines the shape of gear recommendation.
+                           */
 
 
 /**

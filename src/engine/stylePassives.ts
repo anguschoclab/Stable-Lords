@@ -7,8 +7,8 @@
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';/**
- * Phase type.
- */
+                                                       * Phase type.
+                                                       */
 
 
 // ─── Types ────────────────────────────────────────────────────────────────
@@ -17,8 +17,8 @@ import type { FightPlan } from '@/types/combat.types';/**
  * Phase type.
  */
 export type Phase = 'OPENING' | 'MID' | 'LATE';/**
- * Defines the shape of style passive result.
- */
+                                                * Defines the shape of style passive result.
+                                                */
 
 
 /**
@@ -36,8 +36,8 @@ export interface StylePassiveResult {
   hasPassiveNarrative?: boolean;
   narrative?: string;
 }/**
- * Defines the shape of kill mechanic.
- */
+  * Defines the shape of kill mechanic.
+  */
 
 
 /**
@@ -50,8 +50,8 @@ export interface KillMechanic {
   killWindowHpMult: number;
   killNarrative: string;
 }/**
- * Defines the shape of style strategy.
- */
+  * Defines the shape of style strategy.
+  */
 
 
 /**
@@ -71,8 +71,8 @@ export interface StyleStrategy {
     defTactic?: string
   ) => { offMult: number; defMult: number; warning?: string };
 }/**
- * Defines the shape of style passive context.
- */
+  * Defines the shape of style passive context.
+  */
 
 
 /**
@@ -90,8 +90,8 @@ export interface StylePassiveContext {
   opponentStyle: FightingStyle;
   targetedLocation?: string;
 }/**
- * Defines the shape of kill context.
- */
+  * Defines the shape of kill context.
+  */
 
 
 /**
@@ -104,8 +104,8 @@ export interface KillContext {
   targetedLocation?: string;
   hitLocation: string;
 }/**
- * Style voice type.
- */
+  * Style voice type.
+  */
 
 
 // ─── Style Identity (narrative flags) ─────────────────────────────────────
@@ -116,29 +116,29 @@ export interface KillContext {
  * Style voice type.
  */
 export type StyleVoice = 'Surgical' | 'Brutal' | 'Explosive' | 'Fortified' | 'Flowing' | 'Cunning';/**
- * Attack freq type.
- */
+                                                                                                    * Attack freq type.
+                                                                                                    */
 
 /**
  * Attack freq type.
  */
 export type AttackFreq = 'Sparing' | 'Measured' | 'Relentless';/**
- * Kill bias type.
- */
+                                                                * Kill bias type.
+                                                                */
 
 /**
  * Kill bias type.
  */
 export type KillBias = 'Opportunistic' | 'Methodical' | 'Savage';/**
- * Fatigue burn type.
- */
+                                                                  * Fatigue burn type.
+                                                                  */
 
 /**
  * Fatigue burn type.
  */
 export type FatigueBurn = 'Low' | 'Moderate' | 'High';/**
- * Defines the shape of style identity.
- */
+                                                       * Defines the shape of style identity.
+                                                       */
 
 
 /**
@@ -152,8 +152,8 @@ export interface StyleIdentity {
   /** Short narrative tagline, safe for use in kill-text assembly. */
   tagline: string;
 }/**
- * Style_identity.
- */
+  * Style_identity.
+  */
 
 
 /**
@@ -241,8 +241,8 @@ export const STYLE_IDENTITY: Record<FightingStyle, StyleIdentity> = {
 export function getStyleIdentity(style: FightingStyle): StyleIdentity {
   return STYLE_IDENTITY[style];
 }/**
- * Mastery tier type.
- */
+  * Mastery tier type.
+  */
 
 
 // ─── Mastery System ───────────────────────────────────────────────────────
@@ -251,8 +251,8 @@ export function getStyleIdentity(style: FightingStyle): StyleIdentity {
  * Mastery tier type.
  */
 export type MasteryTier = 'Novice' | 'Practiced' | 'Veteran' | 'Master' | 'Grandmaster';/**
- * Defines the shape of mastery info.
- */
+                                                                                         * Defines the shape of mastery info.
+                                                                                         */
 
 
 /**

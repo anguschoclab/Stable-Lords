@@ -192,10 +192,10 @@ export function resolveEffectiveWeather(weather: WeatherType, arenaTags: string[
   const isIndoor = arenaTags.includes('indoor');
   return isIndoor ? 'Clear' : weather;
 }/**
- * Get weather effect.
- * @param weather - Weather.
- * @returns The result.
- */
+  * Get weather effect.
+  * @param weather - Weather.
+  * @returns The result.
+  */
 
 
 /**

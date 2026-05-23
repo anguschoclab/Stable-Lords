@@ -14,7 +14,7 @@ import CrowdAudio from './audio/CrowdAudio';
 import WeatherAudio from './audio/WeatherAudio';
 import { useArenaAnimation, setFighterNames } from '@/hooks/useArenaAnimation';
 import type { MinuteEvent } from '@/types/combat.types';
-import type { Gear, FightingStyle, WeatherType } from '@/types/game';
+import type { FightingStyle, WeatherType } from '@/types/game';
 import type { ArenaTier } from './ArenaBackground';
 import type { CrowdState } from './crowd/CrowdReactions';
 
@@ -32,15 +32,13 @@ interface ArenaViewProps {
   arenaTier?: ArenaTier;
   weather?: WeatherType;
   arenaId?: string;
-  gearA?: Gear;
-  gearD?: Gear;
   maxHpA?: number;
   maxHpD?: number;
   transcript?: string[];
   className?: string;
 }/**
- * Arena view.
- * @param  - {
+  * Arena view.
+  * @param  - {
   name a,
   name d,
   style a,
@@ -59,8 +57,8 @@ interface ArenaViewProps {
   max hp d = 50,
   class name,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**
@@ -99,8 +97,6 @@ export default function ArenaView({
   arenaTier = 'standard',
   weather = 'Clear',
   arenaId,
-  gearA,
-  gearD,
   maxHpA = 50,
   maxHpD = 50,
   className,
@@ -164,33 +160,6 @@ export default function ArenaView({
     return 'idle';
   }, [lastEventType, isComplete, visibleCount]);
 
-  // Get weapon category for trail
-  const getWeaponCategory = (gear?: Gear): 'slash' | 'bash' | 'pierce' | 'fist' => {
-    const name = gear?.weapon?.name?.toLowerCase() || '';
-    if (
-      name.includes('sword') ||
-      name.includes('scimitar') ||
-      name.includes('axe') ||
-      name.includes('blade')
-    )
-      return 'slash';
-    if (
-      name.includes('mace') ||
-      name.includes('hammer') ||
-      name.includes('flail') ||
-      name.includes('maul')
-    )
-      return 'bash';
-    if (
-      name.includes('spear') ||
-      name.includes('dagger') ||
-      name.includes('épée') ||
-      name.includes('epee')
-    )
-      return 'pierce';
-    return 'fist';
-  };
-
   return (
     <ScreenShake
       trigger={lastEventType}
@@ -232,26 +201,6 @@ export default function ArenaView({
         <ParticleSystem trigger={lastEventType} sourceX={50} sourceY={50} />
       )}
 
-      {/* Weapon Trails */}
-      {arenaPrefs.effectsEnabled && weaponSwing.active && (
-        <>
-          <WeaponTrail
-            trigger={weaponSwing.fighter === 'A'}
-            weaponType={getWeaponCategory(gearA)}
-            direction="right"
-            sourceX={fighterA.x}
-            sourceY={45}
-          />
-          <WeaponTrail
-            trigger={weaponSwing.fighter === 'D'}
-            weaponType={getWeaponCategory(gearD)}
-            direction="left"
-            sourceX={fighterD.x}
-            sourceY={45}
-          />
-        </>
-      )}
-
       {/* Speech Bubbles */}
       {bubbles.map((bubble) => (
         <div
@@ -283,8 +232,6 @@ export default function ArenaView({
           currentFp: fpA,
         }}
         style={styleA}
-        weaponName={gearA?.weapon?.name}
-        shieldName={gearA?.shield}
         isWinner={isWinnerA}
         isDead={isDeadA}
         isActive={fighterA.stance === 'lunging' || fighterA.stance === 'advancing'}
@@ -301,8 +248,6 @@ export default function ArenaView({
           currentFp: fpD,
         }}
         style={styleD}
-        weaponName={gearD?.weapon?.name}
-        shieldName={gearD?.shield}
         isWinner={isWinnerD}
         isDead={isDeadD}
         isActive={fighterD.stance === 'lunging' || fighterD.stance === 'advancing'}

@@ -18,8 +18,8 @@ interface BoutHeaderProps {
   expanded: boolean;
   onToggleExpanded: () => void;
 }/**
- * Bout header.
- * @param  - {
+  * Bout header.
+  * @param  - {
   name a,
   name d,
   style a,
@@ -32,8 +32,8 @@ interface BoutHeaderProps {
   expanded,
   on toggle expanded,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

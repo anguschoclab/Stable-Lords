@@ -11,9 +11,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { StatBattery } from '@/components/ui/StatBattery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
- * Roster wall.
- * @returns The result.
- */
+                                                                                   * Roster wall.
+                                                                                   * @returns The result.
+                                                                                   */
 
 
 /**

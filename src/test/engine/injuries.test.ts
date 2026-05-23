@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { generateInjury } from '@/engine/injuries';
+import { generateInjury, isTooInjuredToFight } from '@/engine/injuries';
 import { FightingStyle } from '@/types/shared.types';
-import type { Warrior } from '@/types/warrior.types';
+import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
+import type { InjuryId } from '@/types/shared.types';
 
 describe('rollForInjury', () => {
   const mockWarrior: Warrior = {
@@ -46,5 +47,112 @@ describe('rollForInjury', () => {
       expect(res.name).toBeDefined();
       expect(res.weeksRemaining).toBeGreaterThan(0);
     }
+  });
+});
+
+describe('isTooInjuredToFight', () => {
+  const makeInjury = (severity: InjuryData['severity'], weeksRemaining: number): InjuryData => ({
+    id: 'test-injury' as InjuryId,
+    name: 'Test Injury',
+    description: 'Test',
+    severity,
+    weeksRemaining,
+    penalties: {},
+  });
+
+  describe('empty and non-Severe severities', () => {
+    it('returns false for empty injury array', () => {
+      expect(isTooInjuredToFight([])).toBe(false);
+    });
+
+    it('returns false for Minor injuries (any weeksRemaining)', () => {
+      expect(isTooInjuredToFight([makeInjury('Minor', 10)])).toBe(false);
+    });
+
+    it('returns false for Moderate injuries (any weeksRemaining)', () => {
+      expect(isTooInjuredToFight([makeInjury('Moderate', 10)])).toBe(false);
+    });
+
+    it('returns false for Critical injuries (any weeksRemaining) - intentional exclusion', () => {
+      expect(isTooInjuredToFight([makeInjury('Critical', 10)])).toBe(false);
+    });
+
+    it('returns false for Permanent injuries (any weeksRemaining) - intentional exclusion', () => {
+      expect(isTooInjuredToFight([makeInjury('Permanent', 999)])).toBe(false);
+    });
+  });
+
+  describe('Severe injury border cases', () => {
+    it('returns false when severe injury has exactly 2 weeks remaining (border case)', () => {
+      expect(isTooInjuredToFight([makeInjury('Severe', 2)])).toBe(false);
+    });
+
+    it('returns false when severe injury has 1 week remaining', () => {
+      expect(isTooInjuredToFight([makeInjury('Severe', 1)])).toBe(false);
+    });
+
+    it('returns false when severe injury has 0 weeks remaining (healed)', () => {
+      expect(isTooInjuredToFight([makeInjury('Severe', 0)])).toBe(false);
+    });
+
+    it('returns false when severe injury has negative weeksRemaining (edge case)', () => {
+      expect(isTooInjuredToFight([makeInjury('Severe', -1)])).toBe(false);
+    });
+
+    it('returns true when severe injury has 3 weeks remaining', () => {
+      expect(isTooInjuredToFight([makeInjury('Severe', 3)])).toBe(true);
+    });
+
+    it('returns true when severe injury has >2 weeks remaining (6 weeks)', () => {
+      expect(isTooInjuredToFight([makeInjury('Severe', 6)])).toBe(true);
+    });
+
+    it('returns true when severe injury has >2 weeks remaining (12 weeks)', () => {
+      expect(isTooInjuredToFight([makeInjury('Severe', 12)])).toBe(true);
+    });
+  });
+
+  describe('multiple injury combinations', () => {
+    it('returns true when multiple injuries include one severe with >2 weeks', () => {
+      const injuries = [
+        makeInjury('Minor', 1),
+        makeInjury('Moderate', 2),
+        makeInjury('Severe', 5),
+      ];
+      expect(isTooInjuredToFight(injuries)).toBe(true);
+    });
+
+    it('returns false when multiple injuries but none are severe with >2 weeks', () => {
+      const injuries = [
+        makeInjury('Minor', 1),
+        makeInjury('Moderate', 2),
+        makeInjury('Severe', 2),
+      ];
+      expect(isTooInjuredToFight(injuries)).toBe(false);
+    });
+
+    it('returns true when multiple severe injuries, at least one with >2 weeks', () => {
+      const injuries = [
+        makeInjury('Severe', 1),
+        makeInjury('Severe', 5),
+      ];
+      expect(isTooInjuredToFight(injuries)).toBe(true);
+    });
+
+    it('returns false when multiple severe injuries but all have <=2 weeks', () => {
+      const injuries = [
+        makeInjury('Severe', 1),
+        makeInjury('Severe', 2),
+      ];
+      expect(isTooInjuredToFight(injuries)).toBe(false);
+    });
+
+    it('short-circuits on first matching injury (some() behavior)', () => {
+      const injuries = [
+        makeInjury('Severe', 10),
+        makeInjury('Severe', 1),
+      ];
+      expect(isTooInjuredToFight(injuries)).toBe(true);
+    });
   });
 });

@@ -2,21 +2,22 @@ import { useMemo } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle, ShieldAlert, Coins, History, Zap, Activity } from 'lucide-react';
+import { Coins, Zap, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { LucideIcon } from 'lucide-react';
 
 interface CoachWarning {
   id: string;
   type: 'CRITICAL' | 'WARNING' | 'ADVICE';
   label: string;
   description: string;
-  icon: any;
+  icon: LucideIcon;
   color: string;
 }/**
- * Coach overlay.
- * @returns The result.
- */
+  * Coach overlay.
+  * @returns The result.
+  */
 
 
 /**
@@ -131,7 +132,7 @@ export function CoachOverlay() {
   );
 }
 
-function Badge({ children, className, variant }: any) {
+function Badge({ children, className, variant: _variant }: { children: React.ReactNode; className?: string; variant?: string }) {
   return (
     <span
       className={cn('px-2 py-0.5 rounded-none text-foreground text-[10px] font-black', className)}

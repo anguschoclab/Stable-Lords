@@ -8,6 +8,7 @@ import { StableCrest } from '@/components/crest/StableCrest';
 import type { CrestData } from '@/types/crest.types';
 import BackstoryPicker from '@/components/startGame/BackstoryPicker';
 import { BACKSTORY_IDS, type BackstoryId } from '@/data/backstories';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
 
 interface NewGameFormProps {
   ownerName: string;
@@ -22,8 +23,8 @@ interface NewGameFormProps {
   onSubmit: () => void;
   canCreate: boolean;
 }/**
- * New game form.
- * @param  - {
+  * New game form.
+  * @param  - {
   owner name,
   set owner name,
   stable name,
@@ -36,8 +37,8 @@ interface NewGameFormProps {
   on submit,
   can create,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**
@@ -72,7 +73,7 @@ export default function NewGameForm({
 }: NewGameFormProps) {
   const randomizeCrest = () => {
     const newCrest = generateCrest({
-      seed: Math.floor(Math.random() * 100000),
+      seed: cryptoRandomInt(0, 99999),
       philosophy: 'Balanced',
       tier: 'Established',
     });
@@ -80,7 +81,7 @@ export default function NewGameForm({
   };
 
   const randomizeBackstory = () => {
-    const id = BACKSTORY_IDS[Math.floor(Math.random() * BACKSTORY_IDS.length)];
+    const id = BACKSTORY_IDS[cryptoRandomInt(0, BACKSTORY_IDS.length - 1)];
     if (id) {
       setBackstoryId(id);
     }

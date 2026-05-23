@@ -18,9 +18,9 @@ export interface SpecialtyMods {
   riposteDamageMult: number; // multiplier on outgoing riposte damage
   fatiguePenaltyReduction: number; // fraction to reduce the fatigue skill penalty (0 = no change)
 }/**
- * Default specialty mods.
- * @returns The result.
- */
+  * Default specialty mods.
+  * @returns The result.
+  */
 
 
 /**

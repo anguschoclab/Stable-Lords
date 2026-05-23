@@ -132,11 +132,11 @@ function calculatePersonalityPurseModifier(
 ): number {
   return (PERSONALITY_PURSE_MOD[promoter.personality] ?? (() => 1.0))(warriorA, warriorB, baseHype);
 }/**
- * Run promoter pass.
- * @param state - State.
- * @param rng - Rng. (optional)
- * @returns The result.
- */
+  * Run promoter pass.
+  * @param state - State.
+  * @param rng - Rng. (optional)
+  * @returns The result.
+  */
 
 
 /**

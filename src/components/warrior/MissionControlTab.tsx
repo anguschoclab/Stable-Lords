@@ -1,5 +1,4 @@
 import { Crosshair, Shield, Target, Settings2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import PlanBuilder from '@/components/PlanBuilder';
 import EquipmentLoadoutUI from '@/components/EquipmentLoadout';
 import { SchedulingWidget } from '@/components/widgets';
@@ -17,8 +16,8 @@ interface MissionControlTabProps {
   onPlanChange: (plan: FightPlan) => void;
   onEquipmentChange: (loadout: EquipmentLoadout) => void;
 }/**
- * Mission control tab.
- * @param  - {
+  * Mission control tab.
+  * @param  - {
   warrior,
   display warrior,
   current plan,
@@ -26,8 +25,8 @@ interface MissionControlTabProps {
   on plan change,
   on equipment change,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

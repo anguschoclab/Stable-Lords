@@ -25,10 +25,10 @@ interface GazetteArticleProps {
   issue: GazetteIssue;
   season: string;
 }/**
- * Gazette article.
- * @param - { issue, season }.
- * @returns The result.
- */
+  * Gazette article.
+  * @param - { issue, season }.
+  * @returns The result.
+  */
 
 
 /**
@@ -69,7 +69,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
             </span>
             <div className="flex items-center gap-2">
               <Sparkles className="h-3 w-3 text-arena-gold" />
-              <span>HASH: {Math.random().toString(16).slice(2, 10).toUpperCase()}</span>
+              <span>HASH: {crypto.randomUUID().slice(0, 8).toUpperCase()}</span>
             </div>
           </div>
         </div>

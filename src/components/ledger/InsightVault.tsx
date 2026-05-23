@@ -3,9 +3,9 @@ import { useWorldState } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from 'lucide-react';/**
- * Insight vault.
- * @returns The result.
- */
+                                                                                                 * Insight vault.
+                                                                                                 * @returns The result.
+                                                                                                 */
 
 
 /**

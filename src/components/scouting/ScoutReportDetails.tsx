@@ -10,7 +10,6 @@ import {
   Info,
   Swords,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Surface } from '@/components/ui/Surface';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { ScoutReportData, ScoutQuality } from '@/types/game';
@@ -24,15 +23,15 @@ interface ScoutReportDetailsProps {
   treasury: number;
   onScout: (quality: ScoutQuality) => void;
 }/**
- * Scout report details.
- * @param  - {
+  * Scout report details.
+  * @param  - {
   report,
   warrior name,
   treasury,
   on scout,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

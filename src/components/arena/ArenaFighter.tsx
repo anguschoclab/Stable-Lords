@@ -56,8 +56,8 @@ function getWeaponCategory(weaponName: string): 'slash' | 'bash' | 'pierce' | 's
   if (w.includes('staff') || w.includes('fist') || w.includes('gauntlet')) return 'fist';
   return 'slash'; // default
 }/**
- * Arena fighter.
- * @param  - {
+  * Arena fighter.
+  * @param  - {
   name,
   pose,
   stats,
@@ -70,8 +70,8 @@ function getWeaponCategory(weaponName: string): 'slash' | 'bash' | 'pierce' | 's
   class name,
   size = 120,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

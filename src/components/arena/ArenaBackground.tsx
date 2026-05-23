@@ -1,14 +1,15 @@
-import { cn } from '@/lib/utils';/**
- * Arena tier type.
- */
+import { cn } from '@/lib/utils';
+import { cryptoRandom } from '@/utils/cryptoRandom';/**
+                                                     * Arena tier type.
+                                                     */
 
 
 /**
  * Arena tier type.
  */
 export type ArenaTier = 'training' | 'standard' | 'championship' | 'grand';/**
- * Season type.
- */
+                                                                            * Season type.
+                                                                            */
 
 /**
  * Season type.
@@ -104,16 +105,16 @@ const SEASON_MODIFIERS: Record<
     decorations: true,
   },
 };/**
- * Arena background.
- * @param  - {
+   * Arena background.
+   * @param  - {
   tier = 'standard',
   season = 'summer',
   weather,
   arena id,
   class name,
 }.
- * @returns The result.
- */
+   * @returns The result.
+   */
 
 
 /**
@@ -220,8 +221,8 @@ function CrowdLayer({ density, tier }: { density: ArenaStyle['crowdDensity']; ti
         {/* Crowd silhouettes as simple paths */}
         {Array.from({ length: count }).map((_, i) => {
           const x = (i / count) * 100;
-          const height = 8 + Math.random() * 8;
-          const width = 3 + Math.random() * 3;
+          const height = 8 + cryptoRandom() * 8;
+          const width = 3 + cryptoRandom() * 3;
           return (
             <path
               key={i}
@@ -279,9 +280,9 @@ function WeatherOverlay({ weather }: { weather: string }) {
             key={i}
             className="absolute w-px h-4 bg-blue-300/30 animate-rain"
             style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${0.5 + Math.random() * 0.5}s`,
+              left: `${cryptoRandom() * 100}%`,
+              animationDelay: `${cryptoRandom() * 2}s`,
+              animationDuration: `${0.5 + cryptoRandom() * 0.5}s`,
             }}
           />
         ))}
@@ -348,11 +349,11 @@ function WeatherOverlay({ weather }: { weather: string }) {
             key={i}
             className={cn('absolute h-px bg-white/20 animate-wind', isGale ? 'w-16' : 'w-8')}
             style={{
-              top: `${Math.random() * 100}%`,
+              top: `${cryptoRandom() * 100}%`,
               left: `-20%`,
-              animationDelay: `${Math.random() * 4}s`,
-              animationDuration: `${0.8 + Math.random() * 1.5}s`,
-              opacity: 0.05 + Math.random() * 0.15,
+              animationDelay: `${cryptoRandom() * 4}s`,
+              animationDuration: `${0.8 + cryptoRandom() * 1.5}s`,
+              opacity: 0.05 + cryptoRandom() * 0.15,
             }}
           />
         ))}
@@ -422,10 +423,10 @@ function WeatherOverlay({ weather }: { weather: string }) {
             key={i}
             className="absolute w-1 h-1 bg-white/60 rounded-full animate-snow"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 2}s`,
+              left: `${cryptoRandom() * 100}%`,
+              top: `${cryptoRandom() * 100}%`,
+              animationDelay: `${cryptoRandom() * 3}s`,
+              animationDuration: `${2 + cryptoRandom() * 2}s`,
               filter: 'blur(1px)',
             }}
           />
@@ -464,9 +465,9 @@ function WeatherOverlay({ weather }: { weather: string }) {
             key={i}
             className="absolute w-px h-6 bg-blue-200/40 animate-rain"
             style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${0.4 + Math.random() * 0.3}s`,
+              left: `${cryptoRandom() * 100}%`,
+              animationDelay: `${cryptoRandom() * 2}s`,
+              animationDuration: `${0.4 + cryptoRandom() * 0.3}s`,
             }}
           />
         ))}
@@ -484,9 +485,9 @@ function WeatherOverlay({ weather }: { weather: string }) {
             key={i}
             className="absolute w-1 h-1 bg-stone-500/40 animate-ash-fall"
             style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${4 + Math.random() * 3}s`,
+              left: `${cryptoRandom() * 100}%`,
+              animationDelay: `${cryptoRandom() * 5}s`,
+              animationDuration: `${4 + cryptoRandom() * 3}s`,
             }}
           />
         ))}
@@ -504,9 +505,9 @@ function WeatherOverlay({ weather }: { weather: string }) {
             key={i}
             className="absolute w-px h-5 bg-lime-400/30 animate-rain"
             style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${0.6 + Math.random() * 0.4}s`,
+              left: `${cryptoRandom() * 100}%`,
+              animationDelay: `${cryptoRandom() * 2}s`,
+              animationDuration: `${0.6 + cryptoRandom() * 0.4}s`,
             }}
           />
         ))}
@@ -535,11 +536,11 @@ function WeatherOverlay({ weather }: { weather: string }) {
             className="absolute w-1.5 h-1.5 bg-fuchsia-400/40 rounded-full animate-mana-spark"
             style={
               {
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                '--tx': `${(Math.random() - 0.5) * 100}px`,
-                '--ty': `${(Math.random() - 0.5) * 100}px`,
-                animationDelay: `${Math.random() * 4}s`,
+                left: `${cryptoRandom() * 100}%`,
+                top: `${cryptoRandom() * 100}%`,
+                '--tx': `${(cryptoRandom() - 0.5) * 100}px`,
+                '--ty': `${(cryptoRandom() - 0.5) * 100}px`,
+                animationDelay: `${cryptoRandom() * 4}s`,
               } as any
             }
           />

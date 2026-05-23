@@ -3,13 +3,13 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { ChevronDown, Swords, Skull } from 'lucide-react';
 import type { FightSummary } from '@/types/game';/**
- * Fights list.
- * @param  - {
+                                                  * Fights list.
+                                                  * @param  - {
   fights,
   get round,
 }.
- * @returns The result.
- */
+                                                  * @returns The result.
+                                                  */
 
 
 /**

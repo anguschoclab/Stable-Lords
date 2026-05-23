@@ -250,16 +250,16 @@ function SlotSelector({
     </div>
   );
 }/**
- * Equipment loadout ui.
- * @param  - {
+  * Equipment loadout ui.
+  * @param  - {
   loadout,
   style,
   carry cap,
   warrior attrs,
   on change,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

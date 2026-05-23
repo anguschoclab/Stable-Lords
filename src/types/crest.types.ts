@@ -25,32 +25,32 @@ export type FieldType =
   | 'pale-environ'
   | 'chevron-inverted'
   | 'quarterly';/**
- * Metal color type.
- */
+                 * Metal color type.
+                 */
 
 
 /**
  * Metal color type.
  */
 export type MetalColor = 'gold' | 'silver';/**
- * Charge type type.
- */
+                                            * Charge type type.
+                                            */
 
 
 /**
  * Charge type type.
  */
 export type ChargeType = 'beast' | 'weapon' | 'symbol' | 'nature' | 'celestial' | 'mythical';/**
- * Beast posture type.
- */
+                                                                                              * Beast posture type.
+                                                                                              */
 
 
 /**
  * Beast posture type.
  */
 export type BeastPosture = 'rampant' | 'passant' | 'sejant' | 'couchant' | 'statant' | 'forcene';/**
- * Defines the shape of crest charge.
- */
+                                                                                                  * Defines the shape of crest charge.
+                                                                                                  */
 
 
 /**
@@ -62,8 +62,8 @@ export interface CrestCharge {
   posture?: BeastPosture;
   count: 1 | 2 | 3;
 }/**
- * Defines the shape of crest data.
- */
+  * Defines the shape of crest data.
+  */
 
 
 /**
@@ -79,8 +79,8 @@ export interface CrestData {
   generation: number;
   parentCrest?: CrestData;
 }/**
- * Defines the shape of stable crest config.
- */
+  * Defines the shape of stable crest config.
+  */
 
 
 /**
@@ -92,8 +92,8 @@ export interface StableCrestConfig {
   tier: 'Minor' | 'Established' | 'Major' | 'Legendary';
   parentCrest?: CrestData;
 }/**
- * Defines the shape of crest inheritance config.
- */
+  * Defines the shape of crest inheritance config.
+  */
 
 
 /**
@@ -107,8 +107,8 @@ export interface CrestInheritanceConfig {
   chargeTypeChance: number;
   metalColorChance: number;
 }/**
- * Crest_colors.
- */
+  * Crest_colors.
+  */
 
 
 // Color palette - traditional heraldic colors adapted for UI
@@ -160,16 +160,16 @@ export const CREST_COLORS = {
   midnight: '#191970',
   moss: '#4A5D23',
 } as const;/**
- * Crest color key type.
- */
+            * Crest color key type.
+            */
 
 
 /**
  * Crest color key type.
  */
 export type CrestColorKey = keyof typeof CREST_COLORS;/**
- * Charge_definitions.
- */
+                                                       * Charge_definitions.
+                                                       */
 
 
 // Charge definitions with display names
@@ -371,8 +371,8 @@ export const CHARGE_DEFINITIONS: Record<
     },
   },
 };/**
- * Philosophy_charge_preferences.
- */
+   * Philosophy_charge_preferences.
+   */
 
 
 // Philosophy to charge type preferences
@@ -389,8 +389,8 @@ export const PHILOSOPHY_CHARGE_PREFERENCES: Record<string, ChargeType[]> = {
   Balanced: ['symbol', 'nature', 'celestial'],
   Specialist: ['weapon', 'symbol', 'mythical'],
 };/**
- * Shield_shape_weights.
- */
+   * Shield_shape_weights.
+   */
 
 
 // Shield shape weights by tier (higher = more likely)
@@ -406,8 +406,8 @@ export const SHIELD_SHAPE_WEIGHTS: Record<
   Major: { heater: 35, french: 20, swiss: 25, spanish: 15, lozenge: 5 },
   Legendary: { heater: 30, french: 15, swiss: 20, spanish: 20, lozenge: 15 },
 };/**
- * Inheritance_chances.
- */
+   * Inheritance_chances.
+   */
 
 
 // Inheritance probability by generation (diminishing returns)
@@ -448,8 +448,8 @@ export const INHERITANCE_CHANCES: Record<number, CrestInheritanceConfig> = {
     metalColorChance: 0.1,
   },
 };/**
- * Default_inheritance.
- */
+   * Default_inheritance.
+   */
 
 
 // Default for generations beyond defined

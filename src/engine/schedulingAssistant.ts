@@ -125,8 +125,8 @@ const MATCHUP_MATRIX: Record<FightingStyle, Record<FightingStyle, number>> = {
     [FightingStyle.WallOfSteel]: 0,
   },
 };/**
- * Defines the shape of matchup score.
- */
+   * Defines the shape of matchup score.
+   */
 
 
 /**

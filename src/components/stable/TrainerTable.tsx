@@ -1,16 +1,15 @@
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { Link } from '@tanstack/react-router';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
 import { Surface } from '@/components/ui/Surface';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { GraduationCap, ChevronRight, Target, Coins, Activity, Zap } from 'lucide-react';
+import { GraduationCap, Target, Coins, Zap } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';/**
- * Trainer table.
- * @returns The result.
- */
+                                  * Trainer table.
+                                  * @returns The result.
+                                  */
 
 
 /**

@@ -1,15 +1,12 @@
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
 import { Surface } from '@/components/ui/Surface';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   GraduationCap,
   UserMinus,
   Sparkles,
-  Clock,
   Target,
   Trophy,
-  ChevronRight,
   Briefcase,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -31,10 +28,10 @@ interface TrainerCardProps {
   owned: boolean;
   action?: React.ReactNode;
 }/**
- * Trainer card.
- * @param - { trainer, on fire, owned, action }.
- * @returns The result.
- */
+  * Trainer card.
+  * @param - { trainer, on fire, owned, action }.
+  * @returns The result.
+  */
 
 
 /**

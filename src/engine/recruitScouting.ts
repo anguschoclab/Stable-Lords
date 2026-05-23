@@ -18,8 +18,8 @@ import { hashStr } from '@/utils/random';
 
 const ATTRIBUTE_KEYS = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF'] as const;
 type AttrKey = (typeof ATTRIBUTE_KEYS)[number];/**
- * Defines the shape of potential scout report.
- */
+                                                * Defines the shape of potential scout report.
+                                                */
 
 
 /**

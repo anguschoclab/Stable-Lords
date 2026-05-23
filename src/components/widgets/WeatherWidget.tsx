@@ -109,9 +109,9 @@ const WEATHER_METADATA = {
     stats: 'INITIATIVE -4 // RIPOSTE -2 // DAMAGE 95% // STAMINA DRAIN 120%',
   },
 };/**
- * Weather widget.
- * @returns The result.
- */
+   * Weather widget.
+   * @returns The result.
+   */
 
 
 /**

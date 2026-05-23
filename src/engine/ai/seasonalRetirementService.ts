@@ -13,8 +13,8 @@ interface LegacyCandidate {
   warriorId?: string; // Lineage breadcrumb — mirrors Trainer.retiredFromWarrior
   fightingStyle?: import('@/types/shared.types').FightingStyle;
 }/**
- * Seasonal retirement service.
- */
+  * Seasonal retirement service.
+  */
 
 
 /**

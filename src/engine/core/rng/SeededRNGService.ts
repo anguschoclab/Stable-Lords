@@ -10,9 +10,9 @@ export class SeededRNGService implements IRNGService {
   private rng: SeededRNG;
 
   /**
- * Constructor.
- * @param seed - Seed.
- */
+   * Constructor.
+   * @param seed - Seed.
+   */
 constructor(seed: number) {
     this.rng = new SeededRNG(seed);
   }

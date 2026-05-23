@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { computeStableReputation } from '@/engine/stableReputation';
 import { Surface } from '@/components/ui/Surface';
-import { Badge } from '@/components/ui/badge';
 import { StatBattery } from '@/components/ui/StatBattery';
 import { Shield, Skull, Sparkles, Star, Eye, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -49,9 +48,9 @@ const REP_LABELS: {
     desc: 'Strategic responsiveness to the shifting combat meta. High adaptability allows your warriors to better capitalize on tactical openings.',
   },
 ];/**
- * Reputation sliders.
- * @returns The result.
- */
+   * Reputation sliders.
+   * @returns The result.
+   */
 
 
 /**

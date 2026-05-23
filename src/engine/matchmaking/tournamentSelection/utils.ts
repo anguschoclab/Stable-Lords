@@ -1,75 +1,19 @@
-import type { GameState, Warrior, TournamentEntry } from '@/types/state.types';
+import type { GameState, Warrior } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { aiPlanForWarrior, defaultPlanForWarrior } from '@/engine';
+import { findWarriorById, clearWarriorCache } from '@/engine/core/warriorLookup';
 
-let warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
-
-/**
- * Clears the warrior cache to prevent state pollution across tests.
- * This should be called in test cleanup hooks.
- */
-export function clearWarriorCache(): void {
-  warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
-}/**
- * Find warrior by id.
- * @param state - State.
- * @param warriorId - Warrior id.
- * @param tournament - Tournament. (optional)
- * @returns The result.
- */
-
-
-/**
- * Find warrior by id.
- * @param state - State.
- * @param warriorId - Warrior id.
- * @param tournament - Tournament. (optional)
- * @returns The result.
- */
-export function findWarriorById(
-  state: GameState,
-  warriorId: string,
-  tournament?: TournamentEntry
-): Warrior | undefined {
-  let map = warriorCache.get(state);
-  if (!map) {
-    map = new Map<string, Warrior>();
-    for (let i = 0; i < state.roster.length; i++) {
-      const w = state.roster[i];
-      map.set(w.id, w);
-    }
-    for (let i = 0; i < state.rivals.length; i++) {
-      const r = state.rivals[i];
-      for (let j = 0; j < r.roster.length; j++) {
-        const w = r.roster[j];
-        map.set(w.id, w);
-      }
-    }
-    warriorCache.set(state, map);
-  }
-
-  const w = map.get(warriorId);
-  if (w) return w;
-
-  if (tournament) {
-    for (let i = 0; i < tournament.participants.length; i++) {
-      if (tournament.participants[i].id === warriorId) {
-        return tournament.participants[i];
-      }
-    }
-  }
-
-  return undefined;
-}/**
- * Get ai plan.
- * @param state - State.
- * @param w - W.
- * @param opponentStyle - Opponent style. (optional)
- * @param opponentOwnerId - Opponent owner id. (optional)
- * @returns The result.
- */
+// Re-export for backward compatibility
+export { findWarriorById, clearWarriorCache };/**
+                                               * Get ai plan.
+                                               * @param state - State.
+                                               * @param w - W.
+                                               * @param opponentStyle - Opponent style. (optional)
+                                               * @param opponentOwnerId - Opponent owner id. (optional)
+                                               * @returns The result.
+                                               */
 
 
 /**
@@ -87,7 +31,7 @@ export function getAIPlan(
   opponentOwnerId?: string
 ) {
   // warrior.stableId is rival.id (StableId), not owner.id
-  const rival = state.rivalMap?.get(w.stableId);
+  const rival = w.stableId ? state.rivalMap?.get(w.stableId) : undefined;
   if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
 
   let grudgeIntensity = 0;
@@ -110,12 +54,12 @@ export function getAIPlan(
     grudgeIntensity
   );
 }/**
- * Generate freelancer.
- * @param tier - Tier.
- * @param index - Index.
- * @param rng - Rng.
- * @returns The result.
- */
+  * Generate freelancer.
+  * @param tier - Tier.
+  * @param index - Index.
+  * @param rng - Rng.
+  * @returns The result.
+  */
 
 
 /**

@@ -16,11 +16,11 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Flashy',
   'Corporate',
 ];/**
- * Run promoter lifecycle pass.
- * @param state - State.
- * @param rng - Rng. (optional)
- * @returns The result.
- */
+   * Run promoter lifecycle pass.
+   * @param state - State.
+   * @param rng - Rng. (optional)
+   * @returns The result.
+   */
 
 
 /**
@@ -75,10 +75,10 @@ export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): S
         };
 
         // Apply removals safely
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete newPromoters[id];
         newPromoters[newId] = successor;
 
-        // This is a bit complex inside a loop. Better: re-read the file and use a cleaner approach.
         news.push(
           `🏠 SUCCESSION: The legendary promoter ${p.name} has retired. Their protege, ${successorName}, takes over the ${p.tier} circuit.`
         );

@@ -10,10 +10,10 @@ interface AutosimConsoleProps {
   result: AutosimResult | null;
   onStart: (weeks: number) => void;
 }/**
- * Autosim console.
- * @param - { is simulating, progress, result, on start }.
- * @returns The result.
- */
+  * Autosim console.
+  * @param - { is simulating, progress, result, on start }.
+  * @returns The result.
+  */
 
 
 /**

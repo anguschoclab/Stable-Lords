@@ -29,8 +29,8 @@ import {
   type FightId,
   type TournamentId,
 } from '@/types/shared.types';/**
- * Defines the shape of arena preferences.
- */
+                               * Defines the shape of arena preferences.
+                               */
 
 
 /**
@@ -43,8 +43,8 @@ export interface ArenaPreferences {
   effectsEnabled: boolean;
   screenShakeIntensity: 'off' | 'low' | 'medium' | 'high';
 }/**
- * Defines the shape of world slice.
- */
+  * Defines the shape of world slice.
+  */
 
 
 /**
@@ -103,11 +103,11 @@ export interface WorldSlice {
   renameStable: (newName: string) => void;
   renamePlayer: (newName: string) => void;
 }/**
- * Create world slice.
- * @param set - Set.
- * @param get - Get.
- * @returns The result.
- */
+  * Create world slice.
+  * @param set - Set.
+  * @param get - Get.
+  * @returns The result.
+  */
 
 
 /**

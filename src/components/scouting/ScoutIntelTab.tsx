@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Search, Eye, Target, Activity } from 'lucide-react';
+import { Search, Target } from 'lucide-react';
 import type { RivalStableData, ScoutReportData, ScoutQuality } from '@/types/game';
 import { RivalStableList } from './RivalStableList';
 import { RivalWarriorList } from './RivalWarriorList';
@@ -16,8 +16,8 @@ interface ScoutIntelTabProps {
   treasury: number;
   onScout: (quality: ScoutQuality) => void;
 }/**
- * Scout intel tab.
- * @param  - {
+  * Scout intel tab.
+  * @param  - {
   rivals,
   reports,
   selected rival id,
@@ -27,8 +27,8 @@ interface ScoutIntelTabProps {
   treasury,
   on scout,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

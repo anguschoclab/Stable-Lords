@@ -52,8 +52,8 @@ export const telemetry = {
     globalProvider.gauge(name, value, tags);
   },
 };/**
- * Telemetry events.
- */
+   * Telemetry events.
+   */
 
 
 // Named telemetry events for consistency
@@ -81,8 +81,8 @@ export const TelemetryEvents = {
   FEATURE_FLAG_HEADLESS: 'feature_flag_headless',
   DEFERRED_LOGS_COUNT: 'deferred_logs_count',
 } as const;/**
- * Telemetry tags.
- */
+            * Telemetry tags.
+            */
 
 
 // Common tag keys

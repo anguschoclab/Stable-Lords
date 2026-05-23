@@ -59,12 +59,12 @@ const WL_MOD_HP: Record<number, number> = {
   24: 9,
   25: 10,
 };/**
- * Compute hp.
- * @param cn - Cn.
- * @param sz - Sz.
- * @param wl - Wl.
- * @returns The result.
- */
+   * Compute hp.
+   * @param cn - Cn.
+   * @param sz - Sz.
+   * @param wl - Wl.
+   * @returns The result.
+   */
 
 
 /**
@@ -79,8 +79,8 @@ export function computeHP(cn: number, sz: number, wl: number): number {
   const wlMod = WL_MOD_HP[Math.min(25, Math.max(3, wl))] ?? 0;
   return cn * 2 + szMod + wlMod;
 }/**
- * Hp rating type.
- */
+  * Hp rating type.
+  */
 
 
 /**
@@ -93,10 +93,10 @@ export type HPRating =
   | 'A Lot'
   | 'Tremendous'
   | 'Seemingly Unaffected';/**
- * Get hp rating.
- * @param hp - Hp.
- * @returns The result.
- */
+                            * Get hp rating.
+                            * @param hp - Hp.
+                            * @returns The result.
+                            */
 
 
 /**
@@ -112,8 +112,8 @@ export function getHPRating(hp: number): HPRating {
   if (hp >= 22) return 'Cannot Take a Lot';
   return 'Very Frail';
 }/**
- * Damage rating type.
- */
+  * Damage rating type.
+  */
 
 
 // ─── Damage ─────────────────────────────────────────────────────────────────
@@ -174,11 +174,11 @@ const DMG_TABLE: number[][] = [
   /*ST24*/ [4, 4, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 9],
   /*ST25*/ [5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9],
 ];/**
- * Compute damage class.
- * @param st - St.
- * @param sz - Sz.
- * @returns The result.
- */
+   * Compute damage class.
+   * @param st - St.
+   * @param sz - Sz.
+   * @returns The result.
+   */
 
 
 /**
@@ -192,10 +192,10 @@ export function computeDamageClass(st: number, sz: number): number {
   const szIdx = Math.min(18, Math.max(0, sz - 3));
   return DMG_TABLE[stIdx]?.[szIdx] ?? 2;
 }/**
- * Get damage rating.
- * @param damageClass - Damage class.
- * @returns The result.
- */
+  * Get damage rating.
+  * @param damageClass - Damage class.
+  * @returns The result.
+  */
 
 
 /**
@@ -206,8 +206,8 @@ export function computeDamageClass(st: number, sz: number): number {
 export function getDamageRating(damageClass: number): DamageRating {
   return DMG_LABELS[Math.min(8, Math.max(0, damageClass - 1))] ?? 'Normal';
 }/**
- * Encumbrance class type.
- */
+  * Encumbrance class type.
+  */
 
 
 // ─── Encumbrance ────────────────────────────────────────────────────────────
@@ -218,8 +218,8 @@ export function getDamageRating(damageClass: number): DamageRating {
  * Encumbrance class type.
  */
 export type EncumbranceClass = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';/**
- * Encumbrance_capacity.
- */
+                                                                  * Encumbrance_capacity.
+                                                                  */
 
 
 // Each class ≈ 6 weight points of gear capacity
@@ -236,8 +236,8 @@ export const ENCUMBRANCE_CAPACITY: Record<EncumbranceClass, number> = {
   E: 30,
   F: 36,
 };/**
- * Encumbrance_labels.
- */
+   * Encumbrance_labels.
+   */
 
 
 /**
@@ -281,11 +281,11 @@ const ENC_TABLE: number[][] = [
 ];
 
 const ENC_CLASSES: EncumbranceClass[] = ['A', 'B', 'C', 'D', 'E', 'F'];/**
- * Compute encumbrance class.
- * @param st - St.
- * @param cn - Cn.
- * @returns The result.
- */
+                                                                        * Compute encumbrance class.
+                                                                        * @param st - St.
+                                                                        * @param cn - Cn.
+                                                                        * @returns The result.
+                                                                        */
 
 
 /**
@@ -300,11 +300,11 @@ export function computeEncumbranceClass(st: number, cn: number): EncumbranceClas
   const classIdx = ENC_TABLE[stIdx]?.[cnIdx] ?? 2;
   return ENC_CLASSES[classIdx];
 }/**
- * Compute encumbrance capacity.
- * @param st - St.
- * @param cn - Cn.
- * @returns The result.
- */
+  * Compute encumbrance capacity.
+  * @param st - St.
+  * @param cn - Cn.
+  * @returns The result.
+  */
 
 
 /**
@@ -316,8 +316,8 @@ export function computeEncumbranceClass(st: number, cn: number): EncumbranceClas
 export function computeEncumbranceCapacity(st: number, cn: number): number {
   return ENCUMBRANCE_CAPACITY[computeEncumbranceClass(st, cn)];
 }/**
- * Endurance tier type.
- */
+  * Endurance tier type.
+  */
 
 
 // ─── Endurance ──────────────────────────────────────────────────────────────
@@ -328,8 +328,8 @@ export function computeEncumbranceCapacity(st: number, cn: number): number {
  * Endurance tier type.
  */
 export type EnduranceTier = 'L' | 'P' | 'N' | 'G' | 'R' | 'T' | 'A' | 'U';/**
- * Endurance_labels.
- */
+                                                                           * Endurance_labels.
+                                                                           */
 
 
 /**
@@ -377,12 +377,12 @@ export function computeEnduranceTier(st: number, cn: number, wl: number): Endura
   if (score >= 35) return 'P';
   return 'L';
 }/**
- * Compute endurance value.
- * @param st - St.
- * @param cn - Cn.
- * @param wl - Wl.
- * @returns The result.
- */
+  * Compute endurance value.
+  * @param st - St.
+  * @param cn - Cn.
+  * @param wl - Wl.
+  * @returns The result.
+  */
 
 
 /**
@@ -395,8 +395,8 @@ export function computeEnduranceTier(st: number, cn: number, wl: number): Endura
 export function computeEnduranceValue(st: number, cn: number, wl: number): number {
   return ENDURANCE_VALUES[computeEnduranceTier(st, cn, wl)];
 }/**
- * Activity rating type.
- */
+  * Activity rating type.
+  */
 
 
 // ─── Activity Ratings ───────────────────────────────────────────────────────
@@ -426,11 +426,11 @@ export type ActivityRating =
   | 'Sensationally Quick & Active'
   | 'Sensationally Quick'
   | 'Sensationally Active';/**
- * Compute activity rating.
- * @param iniBase - Ini base.
- * @param ripBase - Rip base.
- * @returns The result.
- */
+                            * Compute activity rating.
+                            * @param iniBase - Ini base.
+                            * @param ripBase - Rip base.
+                            * @returns The result.
+                            */
 
 
 /**
@@ -472,8 +472,8 @@ export function computeActivityRating(iniBase: number, ripBase: number): Activit
   if (ripBase >= iniBase + 3) return 'Very Inactive';
   return 'Very Slow & Inactive';
 }/**
- * Coordination rating type.
- */
+  * Coordination rating type.
+  */
 
 
 // ─── Coordination ───────────────────────────────────────────────────────────
@@ -489,11 +489,11 @@ export type CoordinationRating =
   | 'Highly Coordinated'
   | 'Very Highly Coordinated'
   | 'Marvel of Fighting Coordination';/**
- * Compute coordination.
- * @param sp - Sp.
- * @param df - Df.
- * @returns The result.
- */
+                                       * Compute coordination.
+                                       * @param sp - Sp.
+                                       * @param df - Df.
+                                       * @returns The result.
+                                       */
 
 
 /**

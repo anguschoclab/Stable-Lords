@@ -9,8 +9,8 @@ interface IdentityStepProps {
   onBack: () => void;
   onSubmit: () => void;
 }/**
- * Identity step.
- * @param  - {
+  * Identity step.
+  * @param  - {
   owner input,
   set owner input,
   stable input,
@@ -18,8 +18,8 @@ interface IdentityStepProps {
   on back,
   on submit,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

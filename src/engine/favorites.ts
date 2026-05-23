@@ -78,8 +78,8 @@ export function generateFavorites(style: FightingStyle, rng: IRNGService): Warri
 const CHANCE_REVEAL_BASE = 0.02; // 2% "Lucky Epiphany"
 const CHANCE_REVEAL_SYMMETRY = 0.25; // 25% if using correct gear
 const CHANCE_HINT = 0.1;/**
- * Defines the shape of discovery result.
- */
+                         * Defines the shape of discovery result.
+                         */
  // 10% chance to learn a hint regardless
 
 /**
@@ -91,12 +91,12 @@ export interface DiscoveryResult {
   weaponRevealed: boolean;
   rhythmRevealed: boolean;
 }/**
- * Check discovery.
- * @param warrior - Warrior.
- * @param rng - Rng.
- * @param context - Context. (optional)
- * @returns The result.
- */
+  * Check discovery.
+  * @param warrior - Warrior.
+  * @param rng - Rng.
+  * @param context - Context. (optional)
+  * @returns The result.
+  */
 
 
 /**

@@ -1,6 +1,6 @@
 import { Warrior, InsightToken, FightingStyle, Attributes, FightPlan } from '@/types/game';/**
- * Defines the shape of obfuscated warrior.
- */
+                                                                                            * Defines the shape of obfuscated warrior.
+                                                                                            */
 
 
 // Obfuscated representation of a warrior for the UI
@@ -38,8 +38,8 @@ export function obfuscateWarrior(
     return {
       ...warrior,
       isFullyRevealed: true,
-      equipment: warrior.equipment || ('HIDDEN' as any), // Fallback for type safety
-    } as ObfuscatedWarrior;
+      equipment: warrior.equipment || 'HIDDEN',
+    };
   }
 
   const warriorInsights = insights.filter((i) => i.warriorId === warrior.id);
@@ -70,7 +70,7 @@ export function obfuscateWarrior(
 
   return {
     ...warrior,
-    style: knowsStyle ? warrior.style : ('UNKNOWN' as any),
+    style: knowsStyle ? warrior.style : 'UNKNOWN',
     attributes: {
       ST: getAttr('ST'),
       CN: getAttr('CN'),

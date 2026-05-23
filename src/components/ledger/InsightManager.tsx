@@ -28,9 +28,9 @@ const TOKEN_CFG: Record<
   Attribute: { Icon: TrendingUp, color: 'bg-primary/20 text-primary', label: 'Attribute' },
   Tactic: { Icon: Brain, color: 'bg-purple-500/20 text-purple-500', label: 'Tactic' },
 };/**
- * Insight manager.
- * @returns The result.
- */
+   * Insight manager.
+   * @returns The result.
+   */
 
 
 /**

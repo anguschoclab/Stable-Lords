@@ -16,8 +16,8 @@ import { getHealingTrainerBonus } from './training/coachLogic';
 
 // ─── Exports for backward compatibility ───
 export { computeGainChance };/**
- * Defines the shape of training impact.
- */
+                              * Defines the shape of training impact.
+                              */
 
 
 /**

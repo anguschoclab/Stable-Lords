@@ -5,10 +5,10 @@ import type { Warrior } from '@/types/warrior.types';
 interface WarriorDossierTraitsProps {
   warrior: Warrior;
 }/**
- * Warrior dossier traits.
- * @param - { warrior }.
- * @returns The result.
- */
+  * Warrior dossier traits.
+  * @param - { warrior }.
+  * @returns The result.
+  */
 
 
 /**

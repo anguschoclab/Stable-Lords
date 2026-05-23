@@ -45,19 +45,19 @@ import {
   calculateFinalOEAL,
   alIniMod,
 } from '../mechanics/tacticResolution';/**
- * Decision_hit_margin.
- */
+                                        * Decision_hit_margin.
+                                        */
 
 
 /**
  * Decision_hit_margin.
  */
 export const DECISION_HIT_MARGIN = 3;/**
- * Get matchup bonus.
- * @param styleA - Style a.
- * @param styleD - Style d.
- * @returns The result.
- */
+                                      * Get matchup bonus.
+                                      * @param styleA - Style a.
+                                      * @param styleD - Style d.
+                                      * @returns The result.
+                                      */
 
 
 /**
@@ -79,8 +79,8 @@ import {
   type ExchangeState,
 } from './exchangeSubPhases';
 import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';/**
- * Defines the shape of fighter state.
- */
+                                                                                     * Defines the shape of fighter state.
+                                                                                     */
 
 
 // ─── Fighter State & Context ───────────────────────────────────────────────
@@ -135,8 +135,8 @@ export interface FighterState {
    */
   recoveryDebt: number;
 }/**
- * Defines the shape of resolution context.
- */
+  * Defines the shape of resolution context.
+  */
 
 
 /**
@@ -176,11 +176,11 @@ export interface ResolutionContext {
   /** Crowd-mood lethality delta injected by simulate.ts. */
   crowdKillBonus?: number;
 }/**
- * Resolve effective tactics.
- * @param plan - Plan.
- * @param phaseKey - Phase key.
- * @returns The result.
- */
+  * Resolve effective tactics.
+  * @param plan - Plan.
+  * @param phaseKey - Phase key.
+  * @returns The result.
+  */
 
 
 /**
@@ -197,10 +197,10 @@ export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | '
     target: phase?.target ?? plan.target ?? 'Any',
   };
 }/**
- * Apply aggression bias.
- * @param aggressionBias - Aggression bias.
- * @returns The result.
- */
+  * Apply aggression bias.
+  * @param aggressionBias - Aggression bias.
+  * @returns The result.
+  */
 
 
 /**
@@ -213,12 +213,12 @@ export function applyAggressionBias(aggressionBias: number): [number, number] {
     ? [(aggressionBias - 5) * 0.5, -(aggressionBias - 5) * 0.5]
     : [(aggressionBias - 5) * 0.5, (5 - aggressionBias) * 0.5];
 }/**
- * Resolve exchange.
- * @param ctx - Ctx.
- * @param fA - F a.
- * @param fD - F d.
- * @returns The result.
- */
+  * Resolve exchange.
+  * @param ctx - Ctx.
+  * @param fA - F a.
+  * @param fD - F d.
+  * @returns The result.
+  */
 
 
 // ─── Phase Handlers ─────────────────────────────────────────────────────────

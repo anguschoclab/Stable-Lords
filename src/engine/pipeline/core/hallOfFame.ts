@@ -4,12 +4,12 @@ import { FightingStyle, type WarriorId, type StableId } from '@/types/shared.typ
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { StateImpact } from '@/engine/impacts';/**
- * Process hall of fame.
- * @param state - State.
- * @param newWeek - New week.
- * @param rng - Rng. (optional)
- * @returns The result.
- */
+                                                * Process hall of fame.
+                                                * @param state - State.
+                                                * @param newWeek - New week.
+                                                * @param rng - Rng. (optional)
+                                                * @returns The result.
+                                                */
 
 
 /**
@@ -207,10 +207,10 @@ function applyAward(
 
   return { updatedWarrior };
 }/**
- * Create yearly snapshots.
- * @param state - State.
- * @returns The result.
- */
+  * Create yearly snapshots.
+  * @param state - State.
+  * @returns The result.
+  */
 
 
 /**

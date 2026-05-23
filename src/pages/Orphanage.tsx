@@ -18,6 +18,8 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { Promoter, GameState } from '@/types/state.types';
 import type { Warrior, FightSummary } from '@/types/game';
 import { generatePotential } from '@/engine/potential';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
+import { generateId } from '@/utils/idUtils';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { generateOrphanPool, TRAIT_DATA } from '@/data/orphanPool';
 import { createBoutSummary } from '@/engine/core/fightSummaryFactory';
@@ -39,9 +41,9 @@ const stepTransition = {
   duration: 0.4,
   ease: [0.16, 1, 0.3, 1] as [number, number, number, number], // Custom cubic-bezier for smooth deceleration
 };/**
- * Orphanage.
- * @returns The result.
- */
+   * Orphanage.
+   * @returns The result.
+   */
 
 
 // ─── Main Component ────────────────────────────────────────────────────────────
@@ -61,7 +63,7 @@ export default function Orphanage() {
   const [ownerInput, setOwnerInput] = useState(state.player.name || '');
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [poolSeedValue, setPoolSeedValue] = useState(() => Math.floor(Math.random() * 1000000));
+  const [poolSeedValue, setPoolSeedValue] = useState(() => cryptoRandomInt(0, 999999));
 
   const orphanPool = useMemo(() => generateOrphanPool(8, poolSeedValue), [poolSeedValue]);
 
@@ -104,7 +106,7 @@ export default function Orphanage() {
     const outcome = simulateFight(planA, planB, wA, wB);
     const tags = outcome.post?.tags ?? [];
 
-    const summary = createBoutSummary(wA, wB, outcome, 1, { uuid: () => `ftue_${Date.now()}` });
+    const summary = createBoutSummary(wA, wB, outcome, 1, { uuid: () => generateId(undefined, 'ftue') });
     summary.flashyTags = tags;
     summary.fameDeltaA = outcome.winner === 'A' ? 1 : 0;
     summary.fameDeltaD = outcome.winner === 'D' ? 1 : 0;

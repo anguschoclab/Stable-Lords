@@ -42,16 +42,16 @@ interface DigestSummary {
   signedOffers: number;
   tournamentActive: boolean;
 }/**
- * Weekly digest widget.
- * @param  - {
+  * Weekly digest widget.
+  * @param  - {
   week,
   season,
   arena history,
   bout offers,
   current week,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

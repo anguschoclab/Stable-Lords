@@ -1,5 +1,7 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+import { generateId } from '@/utils/idUtils';
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import type { GameState } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/shared.types';
@@ -40,9 +42,9 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { toast } from 'sonner';/**
- * Trainers.
- * @returns The result.
- */
+                                * Trainers.
+                                * @returns The result.
+                                */
 
 
 /**
@@ -62,7 +64,7 @@ export default function Trainers() {
   // Auto-populate hiring pool on first visit if empty
   useEffect(() => {
     if (currentHiringPool.length === 0) {
-      const pool = generateHiringPool(4, week * 1000 + Date.now());
+      const pool = generateHiringPool(4, week * 1000 + cryptoRandomInt(0, 2147483647));
       setState((draft: GameState) => {
         draft.hiringPool = pool;
       });
@@ -71,7 +73,7 @@ export default function Trainers() {
 
   // Refresh hiring pool
   const refreshPool = useCallback(() => {
-    const pool = generateHiringPool(4, week * 1000 + Date.now());
+    const pool = generateHiringPool(4, week * 1000 + cryptoRandomInt(0, 2147483647));
     setState((draft: GameState) => {
       draft.hiringPool = pool;
     });
@@ -90,7 +92,7 @@ export default function Trainers() {
         draft.hiringPool = draft.hiringPool.filter((t) => t.id !== trainer.id);
         draft.treasury -= cost;
         draft.ledger.push({
-          id: new SeededRNGService(Date.now()).uuid(),
+          id: generateId(),
           week: draft.week,
           label: `Acquisition: ${trainer.name}`,
           amount: -cost,

@@ -14,14 +14,14 @@ interface TreasurySparklineProps {
   height?: number;
   showLabel?: boolean;
 }/**
- * Treasury sparkline.
- * @param  - {
+  * Treasury sparkline.
+  * @param  - {
   class name,
   height = 40,
   show label = true,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

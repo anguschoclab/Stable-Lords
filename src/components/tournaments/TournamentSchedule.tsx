@@ -234,7 +234,7 @@ function TournamentFilterBar({
 function TournamentBoutRow({
   bout,
   state,
-  round,
+  round: _round,
 }: {
   bout: TournamentBout;
   state: GameState;
@@ -425,10 +425,10 @@ function TournamentRoundCard({
     </Card>
   );
 }/**
- * Tournament schedule.
- * @param - { tournament, current week }.
- * @returns The result.
- */
+  * Tournament schedule.
+  * @param - { tournament, current week }.
+  * @returns The result.
+  */
 
 
 /**

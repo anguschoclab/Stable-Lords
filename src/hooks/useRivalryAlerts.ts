@@ -3,6 +3,7 @@
  * Blood Feud level (4-5) triggers screen shake + impact SFX via Web Audio API.
  */
 import { useEffect, useRef, useMemo } from 'react';
+import { cryptoRandom } from '@/utils/cryptoRandom';
 import { useWorldState, useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { toast } from '@/hooks/use-toast';
@@ -49,7 +50,7 @@ function playImpactSFX(intensity: number) {
     const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const noiseData = noiseBuffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-      noiseData[i] = (Math.random() * 2 - 1) * 0.3;
+      noiseData[i] = (cryptoRandom() * 2 - 1) * 0.3;
     }
     const noise = ctx.createBufferSource();
     noise.buffer = noiseBuffer;

@@ -6,13 +6,13 @@ import { Badge } from '@/components/ui/badge';
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils';
 import BoutViewer from '@/components/BoutViewer';
 import { cn } from '@/lib/utils';/**
- * Warrior fight history.
- * @param  - {
+                                  * Warrior fight history.
+                                  * @param  - {
   warrior name,
   arena history,
 }.
- * @returns The result.
- */
+                                  * @returns The result.
+                                  */
 
 
 /**

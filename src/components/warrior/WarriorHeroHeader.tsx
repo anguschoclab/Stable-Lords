@@ -1,5 +1,4 @@
-import { Trophy, Flame, Users, Eye, Target, Shield, Heart, Zap } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Eye, Target, Shield, Heart, Zap } from 'lucide-react';
 import { TagBadge } from '@/components/ui/WarriorBadges';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
 import { EditableText } from '@/components/ui/EditableText';
@@ -30,8 +29,8 @@ interface WarriorHeroHeaderProps {
   isPlayerOwned?: boolean;
   insightTokens?: InsightToken[];
 }/**
- * Render the WarriorHeroHeader component.
- * @param  - {
+  * Render the WarriorHeroHeader component.
+  * @param  - {
   warrior,
   record,
   streak label,
@@ -40,8 +39,8 @@ interface WarriorHeroHeaderProps {
   is player owned,
   insight tokens,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

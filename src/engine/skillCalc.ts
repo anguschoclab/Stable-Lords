@@ -394,8 +394,8 @@ export {
   type EnduranceTier,
   type EncumbranceClass,
 } from '@/data/terrabloodCharts';/**
- * Damage_labels.
- */
+                                  * Damage_labels.
+                                  */
 
 
 /**

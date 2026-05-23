@@ -2,20 +2,22 @@
  * Plan bias + style-aware auto-tune helpers.
  */
 import { FightingStyle } from '@/types/shared.types';
-import type { FightPlan } from '@/types/combat.types';/**
- * Bias type.
- */
+import type { FightPlan } from '@/types/combat.types';
+import { getItemById } from '@/data/equipment';
+import type { EquipmentLoadout } from '@/data/equipment';/**
+                                                          * Bias type.
+                                                          */
 
 
 /**
  * Bias type.
  */
 export type Bias = 'head-hunt' | 'hamstring' | 'gut' | 'guard-break' | 'balanced';/**
- * Auto tune from bias.
- * @param plan - Plan.
- * @param bias - Bias.
- * @returns The result.
- */
+                                                                                   * Auto tune from bias.
+                                                                                   * @param plan - Plan.
+                                                                                   * @param bias - Bias.
+                                                                                   * @returns The result.
+                                                                                   */
 
 
 /**
@@ -58,11 +60,11 @@ export function autoTuneFromBias(plan: FightPlan, bias: Bias): Partial<FightPlan
 
   return tuned;
 }/**
- * Reconcile gear two handed.
- * @param plan - Plan.
- * @param draft - Draft.
- * @returns The result.
- */
+  * Reconcile gear two handed.
+  * @param plan - Plan.
+  * @param draft - Draft.
+  * @returns The result.
+  */
 
 
 /**
@@ -71,9 +73,14 @@ export function autoTuneFromBias(plan: FightPlan, bias: Bias): Partial<FightPlan
  * @param draft - Draft.
  * @returns The result.
  */
-export function reconcileGearTwoHanded(plan: FightPlan, draft: Partial<FightPlan>): void {
-  const next = { ...plan, ...draft };
-  if (next.gear?.weapon?.twoHanded && next.gear?.shield && next.gear.shield !== 'None') {
-    draft.gear = { ...next.gear, shield: 'None' };
+export function reconcileGearTwoHanded(
+  draft: Partial<FightPlan>,
+  equipment?: EquipmentLoadout
+): void {
+  if (!equipment) return;
+  const weapon = getItemById(equipment.weapon);
+  if (weapon?.twoHanded && equipment.shield && equipment.shield !== 'none_shield') {
+    // Update draft with corrected equipment
+    draft.equipment = { ...equipment, shield: 'none_shield' };
   }
 }

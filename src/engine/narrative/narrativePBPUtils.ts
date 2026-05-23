@@ -8,8 +8,8 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { pick } from './narrativeUtils';
 
 type RNG = () => number;/**
- * Defines the shape of combat context.
- */
+                         * Defines the shape of combat context.
+                         */
 
 
 /**

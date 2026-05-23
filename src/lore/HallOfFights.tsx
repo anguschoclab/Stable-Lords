@@ -15,9 +15,9 @@ import { Button } from '@/components/ui/button';
 import { WarriorLink } from '@/components/EntityLink';
 import Gazette from '@/pages/Gazette';
 import Graveyard from '@/pages/Graveyard';/**
- * Hall of fights.
- * @returns The result.
- */
+                                           * Hall of fights.
+                                           * @returns The result.
+                                           */
 
 
 /**

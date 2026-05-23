@@ -47,9 +47,9 @@ interface StableRow {
   motto: string;
   isPlayer: boolean;
 }/**
- * World overview.
- * @returns The result.
- */
+  * World overview.
+  * @returns The result.
+  */
 
 
 /**

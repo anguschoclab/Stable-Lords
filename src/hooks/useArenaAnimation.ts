@@ -22,8 +22,8 @@ const DEFAULT_POSE_D: FighterPose = {
 };
 
 const MIN_DISTANCE = 20;/**
- * Defines the shape of use arena animation return.
- */
+                         * Defines the shape of use arena animation return.
+                         */
  // Minimum distance between fighters
 
 /**
@@ -338,7 +338,7 @@ export function useArenaAnimation(
   }, [isComplete, winner]);
 
   const addBubble = useCallback((bubble: Omit<SpeechBubble, 'id'>) => {
-    const id = `bubble-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const id = `bubble-${crypto.randomUUID()}`;
     setState((prev) => ({
       ...prev,
       bubbles: [...prev.bubbles, { ...bubble, id }],
@@ -382,11 +382,11 @@ export function useArenaAnimation(
     updatePose,
   };
 }/**
- * Set fighter names.
- * @param a - A.
- * @param d - D.
- * @returns The result.
- */
+  * Set fighter names.
+  * @param a - A.
+  * @param d - D.
+  * @returns The result.
+  */
 
 
 /**

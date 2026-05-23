@@ -1,6 +1,6 @@
 import type { Warrior } from '@/types/warrior.types';/**
- * Defines the shape of stable stats.
- */
+                                                      * Defines the shape of stable stats.
+                                                      */
 
 
 /**

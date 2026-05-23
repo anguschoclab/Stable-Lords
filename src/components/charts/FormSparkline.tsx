@@ -8,8 +8,8 @@ interface FormSparklineProps {
   warriorId: string;
   limit?: number;
 }/**
- * Form sparkline.
- */
+  * Form sparkline.
+  */
 
 
 /**

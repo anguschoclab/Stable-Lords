@@ -1,20 +1,19 @@
-import React, { useMemo } from 'react';
-import { Eye, Lightbulb, Swords, Zap, Activity, Download } from 'lucide-react';
+import React from 'react';
+import { Swords, Zap, Activity } from 'lucide-react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { type Warrior } from '@/types/game';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getFavoritesDisplay } from '@/components/warrior/favoritesDisplay';
 import { applyInsightToken } from '@/engine/favorites';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';/**
- * Favorites card.
- * @param - { warrior, on update }.
- * @returns The result.
- */
+                                                             * Favorites card.
+                                                             * @param - { warrior, on update }.
+                                                             * @returns The result.
+                                                             */
 
 
 /**

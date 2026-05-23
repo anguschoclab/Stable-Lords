@@ -8,10 +8,10 @@ import { StateImpact } from '@/engine/impacts';
  * Handles seasonal transitions and weather changes.
  */
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];/**
- * Compute next season.
- * @param newWeek - New week.
- * @returns The result.
- */
+                                                                  * Compute next season.
+                                                                  * @param newWeek - New week.
+                                                                  * @returns The result.
+                                                                  */
 
 
 /**
@@ -22,11 +22,11 @@ const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];/**
 export function computeNextSeason(newWeek: number): Season {
   return SEASONS[Math.floor((newWeek - 1) / 13) % 4];
 }/**
- * Roll weather.
- * @param rng - Rng.
- * @param season - Season.
- * @returns The result.
- */
+  * Roll weather.
+  * @param rng - Rng.
+  * @param season - Season.
+  * @returns The result.
+  */
 
 
 /**
@@ -84,12 +84,12 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.998) return 'Eclipse';
   return 'Mana Surge';
 }/**
- * Run world pass.
- * @param _state - _state.
- * @param nextWeek - Next week.
- * @param rng - Rng. (optional)
- * @returns The result.
- */
+  * Run world pass.
+  * @param _state - _state.
+  * @param nextWeek - Next week.
+  * @param rng - Rng. (optional)
+  * @returns The result.
+  */
 
 
 /**

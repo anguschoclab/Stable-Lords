@@ -32,9 +32,9 @@ interface Alert {
     to: string;
   };
 }/**
- * Tactical bar.
- * @returns The result.
- */
+  * Tactical bar.
+  * @returns The result.
+  */
 
 
 /**
@@ -44,7 +44,7 @@ interface Alert {
 export function TacticalBar() {
   const [expanded, setExpanded] = useState(false);
   const location = useLocation();
-  const { trainers, trainingAssignments, boutOffers, isTournamentWeek, day, week, roster } = useGameStore();
+  const { trainingAssignments, boutOffers, isTournamentWeek, day, week, roster } = useGameStore();
   const warriorStatusData = useGameStore(
     useShallow((s: GameStore) => s.roster.map((w) => ({ id: w.id, status: w.status })))
   );
@@ -112,7 +112,7 @@ export function TacticalBar() {
     }
 
     return result;
-  }, [warriorStatusData, roster, trainingAssignments, boutOffers, isTournamentWeek, day, trainers]);
+  }, [warriorStatusData, roster, trainingAssignments, boutOffers, isTournamentWeek, day]);
 
   // Don't show on certain pages (welcome, warrior detail)
   const hiddenPaths = ['/welcome', '/help'];

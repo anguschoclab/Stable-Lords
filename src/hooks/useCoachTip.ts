@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
 import type { GameState, Warrior } from '@/types/game';/**
- * Defines the shape of coach tip.
- */
+                                                        * Defines the shape of coach tip.
+                                                        */
 
 
 /**
@@ -165,7 +165,7 @@ const COACH_ROUTES: RouteEntry[] = [
         id: 'warrior-equipment',
         message:
           '⚔️ Equip your warrior! Weapon choice affects damage and speed. Heavier armor protects but slows you down.',
-        condition: (s, ctx) => !!ctx?.warrior && !ctx.warrior.equipment && !ctx.warrior.gear,
+        condition: (s, ctx) => !!ctx?.warrior && !ctx.warrior.equipment,
       },
       {
         id: 'warrior-strategy',

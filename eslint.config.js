@@ -113,13 +113,22 @@ export default tseslint.config(
     rules: { "no-console": "off" },
   },
   {
-    /* TEST FILES: Allow non-null assertions for convenience in tests */
+    /* TEST FILES: Allow non-null assertions, 'any', and unused vars for convenience in tests */
     files: ["src/test/**/*.{ts,tsx}", "**/*.test.{ts,tsx}"],
-    rules: { "@typescript-eslint/no-non-null-assertion": "off" },
+    rules: {
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+    },
   },
   {
     /* SCRATCH/SCRIPTS: Utility/debug files - allow non-null assertions */
     files: ["scratch/**/*.{ts,tsx}", "scripts/**/*.{ts,tsx}", "src/scripts/**/*.{ts,tsx}", "*.ts"],
+    rules: { "@typescript-eslint/no-non-null-assertion": "off" },
+  },
+  {
+    /* CRYPTO UTILS: Allow non-null assertion for crypto.getRandomValues which always populates array */
+    files: ["src/utils/cryptoRandom.ts"],
     rules: { "@typescript-eslint/no-non-null-assertion": "off" },
   }
 );

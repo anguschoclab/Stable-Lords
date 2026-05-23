@@ -341,8 +341,8 @@ function Helmet({ metal }: { metal: string }): React.ReactNode {
     </g>
   );
 }/**
- * Stable crest.
- * @param  - {
+  * Stable crest.
+  * @param  - {
   crest,
   size = 'md',
   show mantling,
@@ -353,8 +353,8 @@ function Helmet({ metal }: { metal: string }): React.ReactNode {
   show tooltip = true,
   show generation badge = true,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

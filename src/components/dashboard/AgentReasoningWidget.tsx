@@ -71,10 +71,10 @@ const INTENT_METRICS: Record<
     description: 'Resting injured warriors and avoiding high-stakes bouts.',
   },
 };/**
- * Agent reasoning widget.
- * @param - { rival }.
- * @returns The result.
- */
+   * Agent reasoning widget.
+   * @param - { rival }.
+   * @returns The result.
+   */
 
 
 /**

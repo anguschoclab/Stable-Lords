@@ -7,10 +7,10 @@ import type { Warrior, InjuryData } from '@/types/warrior.types';
 interface WarriorDossierMedicalReportProps {
   warrior: Warrior;
 }/**
- * Warrior dossier medical report.
- * @param - { warrior }.
- * @returns The result.
- */
+  * Warrior dossier medical report.
+  * @param - { warrior }.
+  * @returns The result.
+  */
 
 
 /**

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { cryptoRandom } from '@/utils/cryptoRandom';
 import { cn } from '@/lib/utils';/**
- * Particle type type.
- */
+                                  * Particle type type.
+                                  */
 
 
 /**
@@ -27,15 +28,15 @@ interface ParticleSystemProps {
   sourceY: number;
   className?: string;
 }/**
- * Particle system.
- * @param  - {
+  * Particle system.
+  * @param  - {
   trigger,
   source x,
   source y,
   class name,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**
@@ -65,19 +66,19 @@ export default function ParticleSystem({
       trigger === 'crit' || trigger === 'death' ? 'blood' : trigger === 'hit' ? 'spark' : 'dust';
 
     for (let i = 0; i < count; i++) {
-      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
-      const speed = 2 + Math.random() * 3;
+      const angle = (Math.PI * 2 * i) / count + (cryptoRandom() - 0.5) * 0.5;
+      const speed = 2 + cryptoRandom() * 3;
 
       newParticles.push({
-        id: `${Date.now()}-${i}`,
+        id: crypto.randomUUID(),
         type,
         x: sourceX,
         y: sourceY,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed - (type === 'blood' ? 1 : 0),
         life: 1,
-        maxLife: 30 + Math.random() * 20,
-        size: type === 'blood' ? 3 + Math.random() * 4 : 2 + Math.random() * 2,
+        maxLife: 30 + cryptoRandom() * 20,
+        size: type === 'blood' ? 3 + cryptoRandom() * 4 : 2 + cryptoRandom() * 2,
       });
     }
 

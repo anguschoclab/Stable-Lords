@@ -5,8 +5,8 @@
  */
 import { FightingStyle } from '@/types/shared.types';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';/**
- * Suitability rating type.
- */
+                                                                              * Suitability rating type.
+                                                                              */
 
 
 /**
@@ -84,8 +84,8 @@ export function suitabilityMultiplier(rating: SuitabilityRating): number {
   };
   return multipliers[rating];
 }/**
- * Suitability_colors.
- */
+  * Suitability_colors.
+  */
 
 
 /**
@@ -96,8 +96,8 @@ export const SUITABILITY_COLORS: Record<SuitabilityRating, string> = {
   S: 'text-amber-500',
   U: 'text-destructive',
 };/**
- * Suitability_labels.
- */
+   * Suitability_labels.
+   */
 
 
 /**

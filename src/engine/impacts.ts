@@ -28,8 +28,8 @@ import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { PoolWarrior } from '@/engine/recruitment';
 import type { WarriorId, StableId, TournamentId } from '@/types/shared.types';/**
- * Defines the shape of state impact.
- */
+                                                                               * Defines the shape of state impact.
+                                                                               */
 
 
 /**

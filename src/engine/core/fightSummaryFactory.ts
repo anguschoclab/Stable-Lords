@@ -6,8 +6,8 @@ import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { FightSummary } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
- * Defines the shape of fight summary params.
- */
+                                                                  * Defines the shape of fight summary params.
+                                                                  */
 
 
 /**

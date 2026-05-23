@@ -13,10 +13,10 @@ interface Props {
   width?: number;
   height?: number;
 }/**
- * Stamina curve.
- * @param - { plan, warrior, width = 240, height = 56 }.
- * @returns The result.
- */
+  * Stamina curve.
+  * @param - { plan, warrior, width = 240, height = 56 }.
+  * @returns The result.
+  */
 
 
 /**

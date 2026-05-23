@@ -112,10 +112,10 @@ const TacticalLogEntry = React.memo(
     );
   }
 );/**
- * Tactical log view.
- * @param - { log, visible count, class name }.
- * @returns The result.
- */
+   * Tactical log view.
+   * @param - { log, visible count, class name }.
+   * @returns The result.
+   */
 
 
 /**

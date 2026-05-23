@@ -1,13 +1,13 @@
 /**
  * ownerRoster tests.
- * @vitest-environment node
  */
 import { describe, it, expect, vi } from 'vitest';
 
 // Ensure crypto is mocked for the test environment
+let mockUuidCounter = 0;
 if (typeof crypto === 'undefined' || !crypto.randomUUID) {
   Object.defineProperty(global, 'crypto', {
-    value: { randomUUID: () => 'mock-uuid-' + Math.random() },
+    value: { randomUUID: () => 'mock-uuid-' + ++mockUuidCounter },
     configurable: true,
   });
 }

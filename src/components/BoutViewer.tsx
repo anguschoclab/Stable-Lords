@@ -28,8 +28,8 @@ interface BoutViewerProps {
   arenaId?: string;
   transcript?: string[];
 }/**
- * Bout viewer.
- * @param  - {
+  * Bout viewer.
+  * @param  - {
   name a,
   name d,
   style a,
@@ -43,8 +43,8 @@ interface BoutViewerProps {
   weather = 'clear',
   arena id,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

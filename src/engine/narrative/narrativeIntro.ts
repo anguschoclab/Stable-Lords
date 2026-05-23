@@ -9,8 +9,8 @@ import { szToHeight, getWeaponDisplayName } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate, type CombatContext } from './narrativePBPUtils';
 
 type RNG = () => number;/**
- * Defines the shape of warrior intro data.
- */
+                         * Defines the shape of warrior intro data.
+                         */
 
 
 /**

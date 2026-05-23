@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ScrollText, Swords } from 'lucide-react';/**
- * View mode type.
- */
+                                                   * View mode type.
+                                                   */
 
 
 /**
@@ -15,15 +15,15 @@ interface ViewModeToggleProps {
   disabled?: boolean;
   className?: string;
 }/**
- * View mode toggle.
- * @param  - {
+  * View mode toggle.
+  * @param  - {
   mode,
   on change,
   disabled = false,
   class name,
 }.
- * @returns The result.
- */
+  * @returns The result.
+  */
 
 
 /**

@@ -2,8 +2,8 @@ import type { GameState } from '@/types/state.types';
 import { archiveService } from '@/engine/storage/electronArchive';
 import { truncateState } from '@/engine/storage/truncation';
 import { STORE_KEYS } from '@/constants/storeKeys';/**
- * Defines the shape of save slot meta.
- */
+                                                    * Defines the shape of save slot meta.
+                                                    */
 
 
 /**
@@ -19,8 +19,8 @@ export interface SaveSlotMeta {
 }
 
 const STORAGE_KEY = STORE_KEYS.SAVE_SLOTS;/**
- * Max_save_slots.
- */
+                                           * Max_save_slots.
+                                           */
 
 /**
  * Max_save_slots.
@@ -83,9 +83,9 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
     }
   }
 }/**
- * List save slots.
- * @returns The result.
- */
+  * List save slots.
+  * @returns The result.
+  */
 
 
 /**
@@ -95,12 +95,12 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
 export async function listSaveSlots(): Promise<SaveSlotMeta[]> {
   return await getStoredMeta();
 }/**
- * Save to slot.
- * @param slotId - Slot id.
- * @param name - Name.
- * @param state - State.
- * @returns The result.
- */
+  * Save to slot.
+  * @param slotId - Slot id.
+  * @param name - Name.
+  * @param state - State.
+  * @returns The result.
+  */
 
 
 /**
@@ -135,10 +135,10 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
   const truncatedState = truncateState(state);
   await archiveService.archiveHotState(slotId, truncatedState);
 }/**
- * Load from slot.
- * @param slotId - Slot id.
- * @returns The result.
- */
+  * Load from slot.
+  * @param slotId - Slot id.
+  * @returns The result.
+  */
 
 
 /**
@@ -149,10 +149,10 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
 export async function loadFromSlot(slotId: string): Promise<GameState | null> {
   return await archiveService.retrieveHotState(slotId);
 }/**
- * Delete slot.
- * @param slotId - Slot id.
- * @returns The result.
- */
+  * Delete slot.
+  * @param slotId - Slot id.
+  * @returns The result.
+  */
 
 
 /**
@@ -174,9 +174,9 @@ export async function deleteSlot(slotId: string) {
     }
   }
 }/**
- * New slot id.
- * @returns The result.
- */
+  * New slot id.
+  * @returns The result.
+  */
 
 
 /**
@@ -186,10 +186,10 @@ export async function deleteSlot(slotId: string) {
 export function newSlotId(): string {
   return `slot_${crypto.randomUUID()}`;
 }/**
- * Export slot.
- * @param slotId - Slot id.
- * @returns The result.
- */
+  * Export slot.
+  * @param slotId - Slot id.
+  * @returns The result.
+  */
 
 
 /**
@@ -204,10 +204,10 @@ export async function exportSlot(slotId: string): Promise<string | null> {
   const truncatedState = truncateState(state);
   return JSON.stringify(truncatedState);
 }/**
- * Import save to new slot.
- * @param data - Data.
- * @returns The result.
- */
+  * Import save to new slot.
+  * @param data - Data.
+  * @returns The result.
+  */
 
 
 /**

@@ -14,10 +14,10 @@ interface BiometricsTabProps {
   warrior: Warrior;
   displayWarrior: import('@/types/game').Warrior;
 }/**
- * Biometrics tab.
- * @param - { warrior, display warrior }.
- * @returns The result.
- */
+  * Biometrics tab.
+  * @param - { warrior, display warrior }.
+  * @returns The result.
+  */
 
 
 /**

@@ -80,8 +80,8 @@ const surfaceVariants = cva('relative overflow-hidden transition-all duration-30
     rounded: 'none', // Stone-cut default — hard edges throughout
   },
 });/**
- * Defines the shape of surface props.
- */
+    * Defines the shape of surface props.
+    */
 
 
 /**

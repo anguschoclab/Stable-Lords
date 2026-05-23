@@ -1,7 +1,6 @@
 import { GameState, Warrior, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { generateId } from '@/utils/idUtils';
-import { FightingStyle, type BoutOfferId, type PromoterId } from '@/types/shared.types';
+import { type BoutOfferId, type PromoterId } from '@/types/shared.types';
 
 const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
 

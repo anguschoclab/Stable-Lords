@@ -117,7 +117,7 @@ export function getFromArchive(rng: RNG | IRNGService, path: string[]): string {
       const rngFn = typeof rng === 'function' ? rng : () => rng.next();
       return pick(current, rngFn);
     }
-  } catch (e) {
+  } catch {
     console.error(`Narrative Archive Error: Missing path ${path.join('.')}`);
   }
   return 'A fierce exchange occurs.';

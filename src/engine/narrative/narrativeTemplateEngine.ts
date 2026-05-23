@@ -83,7 +83,7 @@ private constructor() {}
       if (Array.isArray(current) && current.length > 0) {
         return rng.pick(current);
       }
-    } catch (e) {
+    } catch {
       console.error(`Narrative Archive Error: Missing path ${path.join('.')}`);
     }
     return 'A fierce exchange occurs.'; // Ultimate fallback

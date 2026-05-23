@@ -2,7 +2,7 @@
  * Narrative Post-Bout - Post-bout narration functions
  * Extracted from narrativePBP.ts to follow SRP
  */
-import { getWeaponDisplayName, getWeaponType, pick } from './narrativeUtils';
+import { getWeaponDisplayName, getWeaponType } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate, peekArchive } from './narrativePBPUtils';
 import { audioManager } from '@/lib/AudioManager';
 

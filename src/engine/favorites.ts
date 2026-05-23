@@ -12,7 +12,7 @@
  */
 import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
-import { WEAPONS, getAvailableItems, STYLE_CLASSIC_WEAPONS } from '@/data/equipment';
+import { WEAPONS, getAvailableItems } from '@/data/equipment';
 
 // ─── Generation ─────────────────────────────────────────────────────────
 

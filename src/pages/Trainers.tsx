@@ -40,12 +40,7 @@ import { canTransact } from '@/utils/economyUtils';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
-import { toast } from 'sonner';/**
-                                * Trainers.
-                                * @returns The result.
-                                */
-
+import { toast } from 'sonner';
 
 /**
  * Trainers.

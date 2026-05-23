@@ -3,7 +3,7 @@
  * Extracted from narrativePBP.ts to follow SRP
  */
 import type { FightingStyle } from '@/types/shared.types';
-import { getWeaponDisplayName, getWeaponType, pick } from './narrativeUtils';
+import { getWeaponDisplayName, getWeaponType } from './narrativeUtils';
 import {
   getFromArchive,
   interpolateTemplate,

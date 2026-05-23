@@ -1,3 +1,4 @@
+import { findWarrior } from '@/utils/historyResolver';
 import React, { useState } from 'react';
 import { useGameStore, reconstructGameState, type GameStore } from '@/state/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -9,19 +10,12 @@ import { audioManager } from '@/lib/AudioManager';
 import type { FightSummary } from '@/types/combat.types';
 import narrativeContent from '@/data/narrativeContent.json';
 
-import {
-  GazetteStep,
-  InjuriesStep,
-  BoutsStep,
-  MathStep,
-  MemorialStep,
-} from './resolution-reveal';
+import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './resolution-reveal';
 
-type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';/**
-                                                                          * Resolution reveal.
-                                                                          * @returns The result.
-                                                                          */
-
+type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial'; /**
+ * Resolution reveal.
+ * @returns The result.
+ */
 
 /**
  * Resolution reveal.
@@ -38,9 +32,7 @@ export default function ResolutionReveal() {
 
   const deadWarriors = React.useMemo(() => {
     if (!data) return [];
-    return data.deaths
-      .map((name: string) => state.graveyard.find((w) => w.name === name))
-      .filter(Boolean);
+    return data.deaths.map((name: string) => findWarrior(state, undefined, name)).filter(Boolean);
   }, [data, state.graveyard]);
 
   if (!data) return null;

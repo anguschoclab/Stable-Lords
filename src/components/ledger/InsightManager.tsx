@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import type { InsightTokenType } from '@/types/state.types';
 import { motion, AnimatePresence } from 'framer-motion';
+import { findWarrior } from '@/utils/historyResolver';
 
 const TOKEN_CFG: Record<
   InsightTokenType,
@@ -27,11 +28,10 @@ const TOKEN_CFG: Record<
   Style: { Icon: Zap, color: 'bg-arena-gold/20 text-arena-gold', label: 'Style' },
   Attribute: { Icon: TrendingUp, color: 'bg-primary/20 text-primary', label: 'Attribute' },
   Tactic: { Icon: Brain, color: 'bg-purple-500/20 text-purple-500', label: 'Tactic' },
-};/**
-   * Insight manager.
-   * @returns The result.
-   */
-
+}; /**
+ * Insight manager.
+ * @returns The result.
+ */
 
 /**
  * Insight manager.
@@ -53,7 +53,7 @@ export function InsightManager() {
   const roster = state.roster ?? [];
 
   const selectedToken = tokens.find((t) => t.id === selectedTokenId);
-  const selectedWarrior = roster.find((w) => w.id === selectedWarriorId);
+  const selectedWarrior = findWarrior(state, selectedWarriorId);
 
   const handleReveal = () => {
     if (!selectedToken || !selectedWarrior) return;

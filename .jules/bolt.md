@@ -25,3 +25,7 @@
 ## 2025-02-23 - [Caching compiled Regexes using WeakMap for Component Instances]
 **Learning:** Found that using `useMemo` for expensive operations like compiling a `new RegExp` or instantiating a `new Set` is only component-scoped. In lists where many components (like `LinkifiedText` in `EventLog.tsx`) receive the exact same array reference (e.g. `allWarriorNames`), this results in compiling the regex N times during the initial render.
 **Action:** Use a module-level `WeakMap` cache keyed by referentially stable arrays (e.g. `names` array) to share the compilation result across all instances, reducing CPU cycles and allocations significantly.
+
+## 2024-05-13 - [O(1) lookups for resolveStableName]
+**Learning:** Found multiple places in React components doing `.find` on `state.rivals` arrays. This is an O(N) operation per lookup, inside render cycles. The project specifically has O(1) caching utilities `resolveStableName` in `src/utils/historyResolver.ts`.
+**Action:** Replace `state.rivals.find(...)` manual O(N) loops with `resolveStableName(state, id, fallback)` where possible to resolve the N+1 array scan bottleneck.

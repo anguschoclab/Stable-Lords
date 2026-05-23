@@ -6,11 +6,18 @@ import { calculateStableStats } from '@/engine/stats/stableStats';
 import { computeMetaDrift, getMetaLabel, getMetaColor } from '@/engine/metaDrift';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import { cn } from '@/lib/utils';
-import { Trophy, Flame, TrendingUp, ScrollText, ArrowUpRight, ArrowDownLeft } from 'lucide-react';/**
+import {
+  Trophy,
+  Flame,
+  TrendingUp,
+  ScrollText,
+  ArrowUpRight,
+  ArrowDownLeft,
+} from 'lucide-react'; /**
+import { resolveStableName } from '@/utils/historyResolver';
                                                                                                    * Season synthesis.
                                                                                                    * @returns The result.
                                                                                                    */
-
 
 /**
  * Season synthesis.
@@ -166,10 +173,8 @@ export function SeasonSynthesis() {
               </p>
             ) : (
               grudges.map((g, i) => {
-                const stableA =
-                  rivals?.find((r) => r.owner.id === g.ownerIdA)?.owner.stableName ?? g.ownerIdA;
-                const stableB =
-                  rivals?.find((r) => r.owner.id === g.ownerIdB)?.owner.stableName ?? g.ownerIdB;
+                const stableA = resolveStableName(state, g.ownerIdA, g.ownerIdA);
+                const stableB = resolveStableName(state, g.ownerIdB, g.ownerIdB);
                 return (
                   <div
                     key={i}

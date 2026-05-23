@@ -4,11 +4,13 @@ import type { WarriorId } from '@/types/shared.types';
 import { motion } from 'framer-motion';
 import { Skull, Scroll, HeartOff, Crosshair } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PaperDoll } from '@/components/ui/PaperDoll';/**
-                                                       * Death modal.
-                                                       * @returns The result.
-                                                       */
+import { PaperDoll } from '@/components/ui/PaperDoll';
+import { findWarrior } from '@/utils/historyResolver';
 
+/**
+ * Death modal.
+ * @returns The result.
+ */
 
 /**
  * Death modal.
@@ -22,10 +24,7 @@ export function DeathModal() {
   const acknowledgeDeath = (id: WarriorId) => acknowledgeDeathAction(id);
 
   const currentDeathId = unacknowledgedDeaths[0];
-  const warrior = useMemo(
-    () => graveyard.find((w) => w.id === currentDeathId),
-    [graveyard, currentDeathId]
-  );
+  const warrior = useMemo(() => findWarrior(state, currentDeathId), [state, currentDeathId]);
 
   if (!warrior) return null;
 

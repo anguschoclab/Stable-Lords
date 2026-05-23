@@ -1,14 +1,5 @@
-import {
-  FightingStyle,
-  type Attributes,
-  type BaseSkills,
-  type DerivedStats,
-  type OffensiveTactic,
-  type DefensiveTactic,
-} from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { CombatEvent } from '@/types/combat.types';
-import type { Trainer } from '@/types/state.types';
 import { skillCheck } from '../mechanics/combatMath';
 import {
   computeHitDamage,

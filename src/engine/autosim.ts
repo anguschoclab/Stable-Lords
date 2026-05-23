@@ -263,7 +263,7 @@ async function runBatchAutosim(
     const sequentialResult = await runSequentialAutosim(
       state,
       remainingWeeks,
-      onProgress ? (c, t) => onProgress(weeksSimmed + c, weeksToSim) : undefined,
+      onProgress ? (c, _t) => onProgress(weeksSimmed + c, weeksToSim) : undefined,
       deferArchives
     );
 

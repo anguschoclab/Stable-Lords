@@ -15,16 +15,14 @@ import {
   fatigueLine,
   crowdReaction,
   narrateInitiative,
-  tauntLine,
   narrateInsightHint,
   narratePassive,
   narrateRangeShift,
   narrateFeint,
   narrateZoneShift,
-} from '../../narrativePBP';
-import { getWeaponDisplayName } from '../../narrative/narrativeUtils';/**
-                                                                       * Defines the shape of narration context.
-                                                                       */
+} from '../../narrativePBP';/**
+                             * Defines the shape of narration context.
+                             */
 
 
 /**

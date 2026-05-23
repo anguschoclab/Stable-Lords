@@ -3,10 +3,8 @@ import { type Warrior } from '@/types/warrior.types';
 import { type FightPlan } from '@/types/combat.types';
 import { type Trainer } from '@/types/state.types';
 import {
-  DEFAULT_LOADOUT,
   getClassicWeaponBonus,
   checkWeaponRequirements,
-  getLoadoutWeight,
   isOverEncumbered,
   getStyleDefaultLoadout,
 } from '@/data/equipment';

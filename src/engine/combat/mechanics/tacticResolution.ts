@@ -1,6 +1,5 @@
 import { FightingStyle, type OffensiveTactic, type DefensiveTactic } from '@/types/shared.types';
 import type { FightPlan } from '@/types/combat.types';
-import type { Warrior } from '@/types/warrior.types';
 import {
   suitabilityMultiplier,
   getOffensiveSuitability,

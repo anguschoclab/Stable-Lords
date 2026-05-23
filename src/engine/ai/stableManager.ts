@@ -1,11 +1,8 @@
 import type {
   GameState,
   RivalStableData,
-  AIIntent,
-  AIStrategy,
   Trainer,
 } from '@/types/state.types';
-import type { Season } from '@/types/shared.types';
 import { processStaff } from './workers/staffWorker';
 import { processRoster } from './workers/rosterWorker';
 import { consolidateAgentMemory, createAgentContext } from './agentCore';

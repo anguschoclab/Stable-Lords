@@ -1,7 +1,4 @@
-import React from 'react';
-import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
-import { type Warrior } from '@/types/warrior.types';
 import { LayoutDashboard, Swords, FileText, Activity } from 'lucide-react';
 
 interface Props {

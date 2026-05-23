@@ -35,7 +35,7 @@ export interface BudgetReport {
 export function checkBudget(
   rival: RivalStableData,
   cost: number,
-  category: 'STAFF' | 'ROSTER' | 'OTHER'
+  _category: 'STAFF' | 'ROSTER' | 'OTHER'
 ): BudgetReport {
   const personality = rival.owner.personality ?? 'Pragmatic';
   const burnRate = rival.agentMemory?.burnRate || 0;

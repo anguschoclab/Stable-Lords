@@ -4,15 +4,12 @@
  * Uses the Mulberry32 algorithm for fast, high-quality,
  * deterministic randomness in the engine.
  */
-import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
-                                                                  * The SeededRNG class.
-                                                                  */
-
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
- * The SeededRNG class.
+ * The SeededRNG class - implements IRNGService directly
  */
-export class SeededRNG {
+export class SeededRNG implements IRNGService {
   private state: number;
 
   /**

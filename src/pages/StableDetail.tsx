@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import { useWorldState } from '@/state/useGameStore';
-import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS } from '@/types/game';
+import { ATTRIBUTE_KEYS } from '@/types/game';
 import { isActive, isDead } from '@/engine/warriorStatus';
 import { Badge } from '@/components/ui/badge';
 import { WarriorLink } from '@/components/EntityLink';
@@ -11,7 +11,6 @@ import {
   Swords,
   Skull,
   Trophy,
-  Star,
   ArrowLeft,
   Activity,
   Heart,

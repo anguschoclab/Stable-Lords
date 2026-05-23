@@ -3,7 +3,6 @@ import { Swords, Zap, Activity } from 'lucide-react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { type Warrior } from '@/types/game';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getFavoritesDisplay } from '@/components/warrior/favoritesDisplay';
 import { applyInsightToken } from '@/engine/favorites';
 import { toast } from 'sonner';

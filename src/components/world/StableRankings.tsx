@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { SortHeader } from '@/components/ui/sort-header';
-import { Trophy, Star, Swords, Skull, Target, Activity } from 'lucide-react';
+import { Trophy, Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StatBattery } from '@/components/ui/StatBattery';
 

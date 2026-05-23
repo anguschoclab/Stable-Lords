@@ -22,7 +22,6 @@ import {
 import {
   generateGazetteHeadline,
   generateGazetteBody,
-  generateSeasonSummary,
 } from './gazetteNarrative';
 
 /**

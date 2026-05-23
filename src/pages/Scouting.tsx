@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting';
-import { type ScoutReportData, type RivalStableData, type Warrior } from '@/types/game';
+import { type ScoutReportData, type Warrior } from '@/types/game';
 import { Radio } from 'lucide-react';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { hashStr } from '@/utils/random';

@@ -1,4 +1,4 @@
-import type { GameState, SeasonalGrowth } from '@/types/state.types';
+import type { GameState } from '@/types/state.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import { tickInjuries } from '@/engine/injuries';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';

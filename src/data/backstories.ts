@@ -3,7 +3,6 @@ import type {
   Owner,
   OwnerPersonality,
   MetaAdaptation,
-  RivalStableData,
 } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';/**

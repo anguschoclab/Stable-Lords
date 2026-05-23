@@ -76,7 +76,6 @@ import {
   runFeint,
   runCommit,
   runRecovery,
-  type ExchangeState,
 } from './exchangeSubPhases';
 import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';/**
                                                                                      * Defines the shape of fighter state.

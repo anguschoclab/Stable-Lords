@@ -11,7 +11,7 @@
  *  - Trainer salaries: 35g per active trainer per week
  *  - Training costs: 15g per warrior in training
  */
-import type { GameState, LedgerEntry, Warrior } from '@/types/state.types';
+import type { GameState, LedgerEntry } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import {

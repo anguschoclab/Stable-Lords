@@ -3,7 +3,6 @@ import { TagBadge } from '@/components/ui/WarriorBadges';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
 import { EditableText } from '@/components/ui/EditableText';
 import { useGameStore } from '@/state/useGameStore';
-import { cn } from '@/lib/utils';
 import type { InsightToken } from '@/types/state.types';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
@@ -59,8 +58,8 @@ interface WarriorHeroHeaderProps {
 export function WarriorHeroHeader({
   warrior,
   record,
-  streakLabel,
-  streakVal,
+  streakLabel: _streakLabel,
+  streakVal: _streakVal,
   id,
   isPlayerOwned,
   insightTokens,

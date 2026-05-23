@@ -1,6 +1,5 @@
 import { StateCreator } from 'zustand';
 import {
-  GameState,
   Warrior,
   PoolWarrior,
   DeathEvent,

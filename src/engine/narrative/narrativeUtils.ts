@@ -1,5 +1,6 @@
 import { getItemById, getItemByCode } from '@/data/equipment';
 import { type WeaponType } from '@/types/combat.types';
+import { randomPick } from '@/utils/random';
 
 /**
  * Stable Lords — Narrative Helpers
@@ -7,10 +8,12 @@ import { type WeaponType } from '@/types/combat.types';
 
 type RNGFn = () => number;
 
-/** Pick a random element from an array using the provided RNG */
+/**
+ * Pick a random element from an array using the provided RNG.
+ * @deprecated Use randomPick from @/utils/random instead
+ */
 export function pick<T>(arr: T[], rng: RNGFn): T {
-  if (!arr || arr.length === 0) throw new Error('Cannot pick from empty array');
-  return arr[Math.floor(rng() * arr.length)];
+  return randomPick(arr, rng);
 }
 
 /** Approximate DM-style heights from SZ attribute */

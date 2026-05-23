@@ -103,18 +103,6 @@ function hasJsxReturn(node: ts.Node): boolean {
   return found;
 }
 
-function getJsxTagName(node: ts.Node): string | null {
-  if (ts.isJsxElement(node)) {
-    return ts.isJsxOpeningElement(node.openingElement)
-      ? node.openingElement.tagName.getText()
-      : null;
-  }
-  if (ts.isJsxSelfClosingElement(node)) {
-    return node.tagName.getText();
-  }
-  return null;
-}
-
 function buildJSDoc(
   name: string,
   kind: string,

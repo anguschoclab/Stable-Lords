@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { Trophy, ChevronUp, ChevronDown, Medal, Crown, StepForward, Activity } from 'lucide-react';
+import { Trophy, ChevronUp, ChevronDown, Medal, Crown, StepForward } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import BoutViewer from '@/components/BoutViewer';
 import { Surface } from '@/components/ui/Surface';

@@ -1,4 +1,4 @@
-import { Shield, Activity, Eye, Zap, TrendingUp } from 'lucide-react';
+import { Activity, Eye, Zap, TrendingUp } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { WarriorRadarChart } from '@/components/charts/WarriorRadarChart';
 import { FormSparkline } from '@/components/charts/FormSparkline';

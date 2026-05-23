@@ -8,7 +8,6 @@ import SpeechBubble from './SpeechBubble';
 import MiniCombatLog from './MiniCombatLog';
 import ParticleSystem from './effects/ParticleSystem';
 import ScreenShake from './effects/ScreenShake';
-import WeaponTrail from './effects/WeaponTrail';
 import CrowdReactions from './crowd/CrowdReactions';
 import CrowdAudio from './audio/CrowdAudio';
 import WeatherAudio from './audio/WeatherAudio';

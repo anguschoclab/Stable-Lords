@@ -611,6 +611,7 @@ export type WeatherType =
   | 'Scorching Wind'
   | 'Spooky Night'
   | 'Meteor Shower'
+  | 'Solar Flare'
   | 'Abyssal Gloom'
   | 'Cursed Miasma'
   | 'Hailstorm';/**

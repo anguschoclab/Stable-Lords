@@ -8,7 +8,6 @@ import {
   type YearAdvanceResult,
   type AdvanceOptions,
 } from './TimeAdvanceService';
-import { WEEKS_PER_YEAR } from '@/engine/core/constants';
 
 /**
  * Stable Lords — Unified Tick Orchestrator

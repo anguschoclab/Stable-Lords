@@ -1,6 +1,5 @@
-import type { GameState } from '@/types/state.types';/**
-                                                      * Defines the shape of archive service.
-                                                      */
+import type { GameState } from '@/types/state.types';
+import { ArchiveConflictError } from './ArchiveConflictError';
 
 
 /**
@@ -29,24 +28,9 @@ export interface ArchiveService {
 
   // Utility
   getArchivedBoutIdsForSeason: (season: number) => Promise<string[]>;
-}/**
-  * The ArchiveConflictError class.
-  */
-
-
-/**
- * The ArchiveConflictError class.
- */
-export class ArchiveConflictError extends Error {
-  /**
-   * Constructor.
-   * @param message - Message.
-   */
-constructor(message: string) {
-    super(message);
-    this.name = 'ArchiveConflictError';
-  }
 }
+
+export { ArchiveConflictError };
 
 function assertSafeFileNamePart(value: string, label: string): void {
   if (!/^[a-zA-Z0-9_.-]+$/.test(value) || value.includes('..')) {

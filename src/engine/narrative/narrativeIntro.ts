@@ -6,11 +6,9 @@ import { type FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { getItemById, checkWeaponRequirements, type EquipmentItem } from '@/data/equipment';
 import type { Attributes } from '@/types/shared.types';
 import { szToHeight, getWeaponDisplayName } from './narrativeUtils';
-import { getFromArchive, interpolateTemplate, type CombatContext } from './narrativePBPUtils';
+import { getFromArchive, interpolateTemplate } from './narrativePBPUtils';
+import type { RNG } from './types';
 
-type RNG = () => number;/**
-                         * Defines the shape of warrior intro data.
-                         */
 
 
 /**

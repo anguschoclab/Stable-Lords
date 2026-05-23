@@ -5,10 +5,7 @@
 import { pick } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate } from './narrativePBPUtils';
 
-type RNG = () => number;/**
-                         * Range_names.
-                         */
-
+import type { RNG } from './types';
 
 /**
  * Range_names.

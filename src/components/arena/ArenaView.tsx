@@ -105,7 +105,7 @@ export default function ArenaView({
 
   // Track event triggers for effects
   const [lastEventType, setLastEventType] = useState<string | null>(null);
-  const [weaponSwing, setWeaponSwing] = useState<{ active: boolean; fighter: 'A' | 'D' | null }>({
+  const [_weaponSwing, setWeaponSwing] = useState<{ active: boolean; fighter: 'A' | 'D' | null }>({ // eslint-disable-line @typescript-eslint/no-unused-vars
     active: false,
     fighter: null,
   });

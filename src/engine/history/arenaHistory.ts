@@ -59,7 +59,7 @@ export const ArenaHistory = {
 
     const cleaned = arr.map((f, i, array) => {
       if (array.length - i > 20 && f.transcript) {
-        const { transcript, ...rest } = f;
+        const { transcript, ...rest } = f; // eslint-disable-line @typescript-eslint/no-unused-vars
         return rest as FightSummary;
       }
       return f;

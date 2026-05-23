@@ -4,11 +4,9 @@
  * This module uses a Strategy Pattern to define style-specific behaviors,
  * eliminating massive switch statements and improving extensibility.
  */
-import { FightingStyle } from '@/types/shared.types';
-import type { Warrior } from '@/types/warrior.types';
-import type { FightPlan } from '@/types/combat.types';/**
-                                                       * Phase type.
-                                                       */
+import { FightingStyle } from '@/types/shared.types';/**
+                                                      * Phase type.
+                                                      */
 
 
 // ─── Types ────────────────────────────────────────────────────────────────

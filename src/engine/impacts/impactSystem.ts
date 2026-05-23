@@ -46,7 +46,7 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
       if (value !== undefined) {
         const handler = impactHandlers[key] as ImpactHandler<typeof key>;
         if (handler) {
-          handler(newState, value as any); // Cast only here because of the generic key loss in forEach
+          handler(newState, value as any); // eslint-disable-line @typescript-eslint/no-explicit-any -- Cast only here because of the generic key loss in forEach
         }
       }
     });

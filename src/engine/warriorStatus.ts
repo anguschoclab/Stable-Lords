@@ -3,7 +3,7 @@
  * Single source of truth for warrior lifecycle checks.
  * Import these instead of checking `.status === "Dead"` manually.
  */
-import type { Warrior, WarriorStatus, InjuryData } from '@/types/warrior.types';
+import type { Warrior, InjuryData } from '@/types/warrior.types';
 import { isTooInjuredToFight } from '@/engine/injuries';
 
 /** Whether a warrior is dead (killed in combat) */

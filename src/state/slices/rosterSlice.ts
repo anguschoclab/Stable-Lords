@@ -13,7 +13,6 @@ import type { GameStore } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import {
   type WarriorId,
-  type StableId,
   type InsightId,
 } from '@/types/shared.types';/**
                                * Defines the shape of roster slice.
@@ -66,7 +65,7 @@ export interface RosterSlice {
  * @param get - Get.
  * @returns The result.
  */
-export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (set, get) => ({
+export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (set, _get) => ({
   roster: [],
   graveyard: [],
   retired: [],

@@ -461,10 +461,10 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    (mods as any).OE > 0 ? 'text-arena-blood' : 'text-sky-400'
+                                    (mods as any).OE > 0 ? 'text-arena-blood' : 'text-sky-400' // eslint-disable-line @typescript-eslint/no-explicit-any
                                   )}
                                 >
-                                  {modLabel((mods as any).OE)}
+                                  {modLabel((mods as any).OE)} // eslint-disable-line @typescript-eslint/no-explicit-any
                                 </span>
                               </div>
                             )}
@@ -474,10 +474,10 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    (mods as any).AL > 0 ? 'text-arena-blood' : 'text-sky-400'
+                                    (mods as any).AL > 0 ? 'text-arena-blood' : 'text-sky-400' // eslint-disable-line @typescript-eslint/no-explicit-any
                                   )}
                                 >
-                                  {modLabel((mods as any).AL)}
+                                  {modLabel((mods as any).AL)} // eslint-disable-line @typescript-eslint/no-explicit-any
                                 </span>
                               </div>
                             )}
@@ -490,10 +490,10 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                     'font-mono font-black',
                                     (mods as any).killDesire > 0
                                       ? 'text-arena-blood'
-                                      : 'text-sky-400'
+                                      : 'text-sky-400'  
                                   )}
                                 >
-                                  {modLabel((mods as any).killDesire)}
+                                  {modLabel((mods as any).killDesire)} // eslint-disable-line @typescript-eslint/no-explicit-any
                                 </span>
                               </div>
                             )}

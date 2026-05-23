@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useWorldState, useGameStore } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { HeartPulse, Activity, Skull, ShieldAlert } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
@@ -18,8 +18,6 @@ import { WarriorLink } from '@/components/EntityLink';/**
  * @returns The result.
  */
 export function MedicalAuditWidget() {
-  const state = useWorldState();
-
   const atRiskData = useGameStore(
     useShallow((s) =>
       s.roster

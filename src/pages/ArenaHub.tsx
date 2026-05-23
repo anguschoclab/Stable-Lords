@@ -1,5 +1,4 @@
 import { useMemo, useState, useCallback } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, reconstructGameState, type GameStore } from '@/state/useGameStore';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { isFightReady } from '@/engine/warriorStatus';

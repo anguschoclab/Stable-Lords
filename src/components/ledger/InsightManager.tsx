@@ -118,7 +118,7 @@ export function InsightManager() {
             </div>
           ) : (
             <div className="space-y-2">
-              {tokens.map((token: any) => (
+              {tokens.map((token) => (
                 <Surface
                   key={token.id}
                   variant={selectedTokenId === token.id ? 'paper' : 'glass'}
@@ -175,7 +175,7 @@ export function InsightManager() {
             {selectedTokenId ? (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  {roster.map((w: any) => {
+                  {roster.map((w) => {
                     const isRevealed =
                       selectedToken?.type === 'Weapon'
                         ? w.favorites?.discovered.weapon

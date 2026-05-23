@@ -11,8 +11,7 @@ import {
   getStrikeSeverity,
 } from './narrativePBPUtils';
 import { audioManager } from '@/lib/AudioManager';
-
-type RNG = () => number;
+import type { RNG } from './types';
 
 /**
  * Narrates an attack/whiff.

@@ -6,7 +6,7 @@ import { TickOrchestrator } from '@/engine/tick/TickOrchestrator';
  * Stable Lords — Daily Progression Pipeline
  * Thin wrapper around the Unified Tick Orchestrator.
  */
-export function advanceDay(state: GameState, rng?: IRNGService): GameState {
+export function advanceDay(state: GameState, _rng?: IRNGService): GameState {
   // Use the unified orchestrator for consistent day/week/tournament logic
   return TickOrchestrator.advanceDay(state);
 }

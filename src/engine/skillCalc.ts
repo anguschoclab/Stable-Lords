@@ -10,22 +10,13 @@
  * Formula: base_skill = Σ(attribute_contributions) + style_penalty
  * Clamped to [1, 20].
  */
-import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX, type Attributes } from '@/types/shared.types';
-import type { Warrior, AttributePotential } from '@/types/warrior.types';
+import { type Attributes } from '@/types/shared.types';
 import { FightingStyle, type BaseSkills, type DerivedStats } from '@/types/shared.types';
 import {
   computeHP as canonicalHP,
   computeDamageClass,
-  getDamageRating,
   computeEncumbranceCapacity,
   computeEnduranceValue,
-  computeEnduranceTier,
-  getHPRating,
-  computeEncumbranceClass,
-  type DamageRating,
-  type HPRating,
-  type EnduranceTier,
-  type EncumbranceClass,
 } from '@/data/terrabloodCharts';
 
 // ─── Breakpoint Helper ────────────────────────────────────────────────────

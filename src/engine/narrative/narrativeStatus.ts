@@ -3,8 +3,7 @@
  * Extracted from narrativePBP.ts to follow SRP
  */
 import { getFromArchive, interpolateTemplate } from './narrativePBPUtils';
-
-type RNG = () => number;
+import type { RNG } from './types';
 
 /**
  * Generates damage severity line.

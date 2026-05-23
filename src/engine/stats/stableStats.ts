@@ -1,7 +1,5 @@
-import type { Warrior } from '@/types/warrior.types';/**
-                                                      * Defines the shape of stable stats.
-                                                      */
-
+import type { Warrior } from '@/types/warrior.types';
+import { ATTRIBUTE_KEYS } from '@/types/shared.types';
 
 /**
  * Defines the shape of stable stats.
@@ -18,8 +16,6 @@ export interface StableStats {
   avgAttributes: Record<string, number>;
   topWarrior: Warrior | null;
 }
-
-const ATTRIBUTE_KEYS = ['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF'] as const;
 
 /**
  * Standardized O(N) calculation for a stable's performance metrics.

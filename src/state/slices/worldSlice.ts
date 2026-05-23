@@ -27,7 +27,6 @@ import {
   type PromoterId,
   type BoutOfferId,
   type FightId,
-  type TournamentId,
 } from '@/types/shared.types';/**
                                * Defines the shape of arena preferences.
                                */
@@ -116,7 +115,7 @@ export interface WorldSlice {
  * @param get - Get.
  * @returns The result.
  */
-export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (set, get) => ({
+export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (set, _get) => ({
   year: 1,
   week: 1,
   day: 0,

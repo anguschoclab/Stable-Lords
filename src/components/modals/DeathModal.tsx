@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
+import type { WarriorId } from '@/types/shared.types';
 import { motion } from 'framer-motion';
 import { Skull, Scroll, HeartOff, Crosshair } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,7 @@ export function DeathModal() {
   const acknowledgeDeathAction = useGameStore((s) => s.acknowledgeDeath);
 
   const { unacknowledgedDeaths, graveyard } = state;
-  const acknowledgeDeath = (id: any) => acknowledgeDeathAction(id);
+  const acknowledgeDeath = (id: WarriorId) => acknowledgeDeathAction(id);
 
   const currentDeathId = unacknowledgedDeaths[0];
   const warrior = useMemo(

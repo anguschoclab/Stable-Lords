@@ -1,18 +1,17 @@
 import { getItemById, getItemByCode } from '@/data/equipment';
 import { type WeaponType } from '@/types/combat.types';
 import { randomPick } from '@/utils/random';
+import type { RNG } from './types';
 
 /**
  * Stable Lords — Narrative Helpers
  */
 
-type RNGFn = () => number;
-
 /**
  * Pick a random element from an array using the provided RNG.
  * @deprecated Use randomPick from @/utils/random instead
  */
-export function pick<T>(arr: T[], rng: RNGFn): T {
+export function pick<T>(arr: T[], rng: RNG): T {
   return randomPick(arr, rng);
 }
 

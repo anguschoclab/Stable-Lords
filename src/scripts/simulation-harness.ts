@@ -1,12 +1,10 @@
 import { type GameState } from '@/types/state.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
-import { processWeekBouts } from '@/engine/boutProcessor';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics';
-import { resolveImpacts } from '@/engine/impacts';/**
-                                                   * Defines the shape of simulation config.
-                                                   */
+import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics';/**
+                                                                                * Defines the shape of simulation config.
+                                                                                */
 
 
 /**

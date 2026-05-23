@@ -5,8 +5,7 @@
 import { getWeaponDisplayName, getWeaponType } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate, peekArchive } from './narrativePBPUtils';
 import { audioManager } from '@/lib/AudioManager';
-
-type RNG = () => number;
+import type { RNG } from './types';
 
 /**
  * Narrates bout end.

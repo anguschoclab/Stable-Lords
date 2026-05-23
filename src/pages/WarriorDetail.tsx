@@ -5,7 +5,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from '@tanstack/react-router';
 import { obfuscateWarrior } from '@/lib/obfuscation';
-import { useGameStore, type GameStore } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
 import { type FightPlan, type GameState } from '@/types/game';
 import type { Warrior } from '@/types/state.types';
 import { Button } from '@/components/ui/button';

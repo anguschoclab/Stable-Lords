@@ -33,7 +33,7 @@ export function styleName(style: string): string {
  */
 export function t(
   template: string | string[],
-  data: Record<string, any>,
+  data: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
   rng?: IRNGService
 ): string {
   const result = Array.isArray(template)

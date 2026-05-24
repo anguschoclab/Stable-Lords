@@ -41,6 +41,7 @@ import NewGameForm from '@/components/startGame/NewGameForm';
 import TitleScreenHero from '@/components/startGame/TitleScreenHero';
 import ActionButtons from '@/components/startGame/ActionButtons';
 import SavedGamesSection from '@/components/startGame/SavedGamesSection';
+import { formatDate } from '@/utils/dateUtils';
 
 type Screen = 'title' | 'newGame';/**
                                    * Start game.
@@ -149,19 +150,6 @@ export default function StartGame() {
     [loadGame, refreshSlots]
   );
 
-  const formatDate = (iso: string) => {
-    try {
-      const d = new Date(iso);
-      return d.toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    } catch {
-      return iso;
-    }
-  };
 
   // ── New Game Screen ────────────────────────────────────────────────────────
 

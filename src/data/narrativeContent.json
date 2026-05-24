@@ -4,74 +4,29 @@
     "description": "Unified Bard 1.0 — Universal Narrative Archive",
     "mood_tone": {
       "Calm": {
-        "adjectives": [
-          "measured",
-          "technical",
-          "efficient",
-          "precise"
-        ],
-        "opener": [
-          "The arena is quiet today, the air heavy with expectation."
-        ],
-        "closer": [
-          "A professional display by the arena's finest."
-        ]
+        "adjectives": ["measured", "technical", "efficient", "precise"],
+        "opener": ["The arena is quiet today, the air heavy with expectation."],
+        "closer": ["A professional display by the arena's finest."]
       },
       "Bloodthirsty": {
-        "adjectives": [
-          "visceral",
-          "savage",
-          "brutal",
-          "unforgiving"
-        ],
-        "opener": [
-          "They want blood, and the arena delivers!"
-        ],
-        "closer": [
-          "No mercy was found today in the circle of truth."
-        ]
+        "adjectives": ["visceral", "savage", "brutal", "unforgiving"],
+        "opener": ["They want blood, and the arena delivers!"],
+        "closer": ["No mercy was found today in the circle of truth."]
       },
       "Theatrical": {
-        "adjectives": [
-          "stunning",
-          "operatic",
-          "magnificent",
-          "dramatic"
-        ],
-        "opener": [
-          "A drama unfolds on the sands today!"
-        ],
-        "closer": [
-          "A performance for the ages, etched in the memories of all who watched."
-        ]
+        "adjectives": ["stunning", "operatic", "magnificent", "dramatic"],
+        "opener": ["A drama unfolds on the sands today!"],
+        "closer": ["A performance for the ages, etched in the memories of all who watched."]
       },
       "Solemn": {
-        "adjectives": [
-          "heavy",
-          "shadowed",
-          "somber",
-          "mournful"
-        ],
-        "opener": [
-          "A heavy silence hangs over the arena walls."
-        ],
-        "closer": [
-          "The games continue, though the air remains thick with memory."
-        ]
+        "adjectives": ["heavy", "shadowed", "somber", "mournful"],
+        "opener": ["A heavy silence hangs over the arena walls."],
+        "closer": ["The games continue, though the air remains thick with memory."]
       },
       "Festive": {
-        "adjectives": [
-          "vibrant",
-          "energetic",
-          "celebratory",
-          "boisterous"
-        ],
-        "opener": [
-          "Music and laughter fill the air as the festive games begin!"
-        ],
-        "closer": [
-          "A day of celebration ends with hearts full and wine flowing."
-        ]
+        "adjectives": ["vibrant", "energetic", "celebratory", "boisterous"],
+        "opener": ["Music and laughter fill the air as the festive games begin!"],
+        "closer": ["A day of celebration ends with hearts full and wine flowing."]
       }
     }
   },
@@ -422,9 +377,7 @@
       ]
     },
     "bashing": {
-      "glancing": [
-        "{{attacker}}'s {{weapon}} bounces off the {{bodyPart}} with a hollow clang."
-      ],
+      "glancing": ["{{attacker}}'s {{weapon}} bounces off the {{bodyPart}} with a hollow clang."],
       "solid": [
         "{{attacker}} roars, bringing the {{weapon}} down like an executioner's maul on the {{bodyPart}}!"
       ],
@@ -688,23 +641,10 @@
       ]
     },
     "damage_severity": {
-      "deadly": [
-        "It was a deadly attack!",
-        "What a massive blow!",
-        "What a devastating attack!"
-      ],
-      "terrific": [
-        "It was an incredible blow!",
-        "It is a terrific blow!"
-      ],
-      "powerful": [
-        "It is a tremendous blow!",
-        "It was a powerful blow!"
-      ],
-      "glancing": [
-        "The attack is a glancing blow only.",
-        "The stroke lands ineffectively."
-      ],
+      "deadly": ["It was a deadly attack!", "What a massive blow!", "What a devastating attack!"],
+      "terrific": ["It was an incredible blow!", "It is a terrific blow!"],
+      "powerful": ["It is a tremendous blow!", "It was a powerful blow!"],
+      "glancing": ["The attack is a glancing blow only.", "The stroke lands ineffectively."],
       "fatal": [
         "{{attacker}} executes a merciless coup de grâce, ending {{defender}}'s misery.",
         "The crowd falls dead silent as {{attacker}}'s strike abruptly ends {{defender}}'s life.",
@@ -728,16 +668,9 @@
       ]
     },
     "status_changes": {
-      "severe": [
-        "{{name}} is severely hurt!!",
-        "{{name}} is dangerously stunned!"
-      ],
-      "desperate": [
-        "{{name}} appears DESPERATE!"
-      ],
-      "serious": [
-        "{{name}} has sustained serious wounds!"
-      ]
+      "severe": ["{{name}} is severely hurt!!", "{{name}} is dangerously stunned!"],
+      "desperate": ["{{name}} appears DESPERATE!"],
+      "serious": ["{{name}} has sustained serious wounds!"]
     },
     "defenses": {
       "counterstrike": {
@@ -813,9 +746,7 @@
           "With a powerful forward shove, {{defender}} uses their shield to violently rebuff the incoming attack."
         ]
       },
-      "parry_break": [
-        "The parry breaks!"
-      ]
+      "parry_break": ["The parry breaks!"]
     },
     "pacing": {
       "stalemate": [
@@ -824,9 +755,7 @@
         "A tense standoff ensues, the hot sand baking as they study each other's footwork.",
         "Both warriors pause, chests heaving, evaluating their next move in this deadly dance."
       ],
-      "trading_blows": [
-        "The two warriors fiercely trade attacks and parry."
-      ],
+      "trading_blows": ["The two warriors fiercely trade attacks and parry."],
       "pressing": [
         "{{attacker}} presses the attack relentlessly, giving their foe no room to breathe!",
         "{{attacker}} surges forward, driving {{defender}} backward with a relentless flurry of attacks.",
@@ -835,12 +764,8 @@
       ]
     },
     "reactions": {
-      "positive": [
-        "The crowd ROARS in approval!"
-      ],
-      "negative": [
-        "Boos and jeers echo from the arena walls."
-      ],
+      "positive": ["The crowd ROARS in approval!"],
+      "negative": ["Boos and jeers echo from the arena walls."],
       "encourage": [
         "The crowd urges the warriors on.",
         "The stands rhythmically stomp their feet, demanding a finishing blow!",
@@ -932,22 +857,12 @@
       "With a sudden burst of speed, {{attacker}} seizes the opening!",
       "{{attacker}} dictating the pace of the exchange."
     ],
-    "feints": [
-      "{{attacker}} feints a high line, drawing {{defender}} out of position."
-    ],
+    "feints": ["{{attacker}} feints a high line, drawing {{defender}} out of position."],
     "insights": {
-      "ST": [
-        "His parry shatters under your monstrous strength!"
-      ],
-      "SP": [
-        "He moves with blinding speed, leaving you swinging at shadows."
-      ],
-      "DF": [
-        "He clumsily overextends, leaving himself wide open."
-      ],
-      "WL": [
-        "Despite the punishment, his iron will keeps him standing."
-      ]
+      "ST": ["His parry shatters under your monstrous strength!"],
+      "SP": ["He moves with blinding speed, leaving you swinging at shadows."],
+      "DF": ["He clumsily overextends, leaving himself wide open."],
+      "WL": ["Despite the punishment, his iron will keeps him standing."]
     },
     "fatal_damage": [
       "{{attacker}} feints low, catching {{defender}} off guard before severing their sword-arm at the elbow. The crowd erupts!",
@@ -1006,16 +921,10 @@
     ],
     "meta": {
       "popularity": {
-        "great": [
-          "Great fame!"
-        ],
-        "normal": [
-          "Fame gained."
-        ]
+        "great": ["Great fame!"],
+        "normal": ["Fame gained."]
       },
-      "skill_learns": [
-        "Skill learned!"
-      ]
+      "skill_learns": ["Skill learned!"]
     }
   },
   "conclusions": {
@@ -1060,9 +969,7 @@
       "They're not getting up from that one. A clean, decisive knockout!",
       "The impact echoed all the way to the cheap seats. Goodnight!"
     ],
-    "Kill": [
-      "What a brutal finish!"
-    ],
+    "Kill": ["What a brutal finish!"],
     "Flashy": [
       "What a flashy display of skill!",
       "{{attacker}} is putting on a show!",
@@ -1103,9 +1010,7 @@
     },
     "mysterious_patron": {
       "title": "A Mysterious Patron!",
-      "newsletter": [
-        "A mysterious patron was impressed by your stable and donated {{gold}} gold!"
-      ]
+      "newsletter": ["A mysterious patron was impressed by your stable and donated {{gold}} gold!"]
     },
     "midnight_feast": {
       "title": "Midnight Feast",
@@ -1389,12 +1294,7 @@
     "btn_honor": "Honor the Fallen",
     "btn_planning": "Acknowledge & Begin Planning",
     "btn_next": "Next Report",
-    "armor_intro_verbs": [
-      "is wearing",
-      "is armored in",
-      "steps forth in",
-      "glimmers in"
-    ],
+    "armor_intro_verbs": ["is wearing", "is armored in", "steps forth in", "glimmers in"],
     "weapon_intro_verbs": [
       "is armed with %W",
       "clutches a %W",
@@ -1889,34 +1789,22 @@
     ],
     "tiers": {
       "Common": {
-        "points": [
-          66,
-          70
-        ],
+        "points": [66, 70],
         "cost": 100,
         "stars": 0
       },
       "Promising": {
-        "points": [
-          70,
-          74
-        ],
+        "points": [70, 74],
         "cost": 150,
         "stars": 1
       },
       "Exceptional": {
-        "points": [
-          74,
-          78
-        ],
+        "points": [74, 78],
         "cost": 250,
         "stars": 2
       },
       "Prodigy": {
-        "points": [
-          78,
-          82
-        ],
+        "points": [78, 82],
         "cost": 400,
         "stars": 3
       }
@@ -1926,12 +1814,8 @@
       "A former soldier seeking glory."
     ],
     "style_blurbs": {
-      "Aimed Blow": [
-        "Precise and calculating."
-      ],
-      "Bashing Attack": [
-        "Raw power incarnate."
-      ]
+      "Aimed Blow": ["Precise and calculating."],
+      "Bashing Attack": ["Raw power incarnate."]
     }
   },
   "meta": {
@@ -1952,9 +1836,7 @@
     }
   },
   "passives": {
-    "AIMED BLOW": [
-      "{{attacker}} studies the opponent's rhythm, waiting for the perfect opening."
-    ],
+    "AIMED BLOW": ["{{attacker}} studies the opponent's rhythm, waiting for the perfect opening."],
     "BASHING ATTACK": [
       "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"
     ],
@@ -2167,6 +2049,13 @@
       "effectType": "mysterious_patron",
       "newsletter": [
         "A mysterious patron was impressed by your stable and anonymously donated {{gold}} gold!"
+      ]
+    },
+    "shadow_training": {
+      "title": "Shadow Training",
+      "effectType": "shadow_training",
+      "newsletter": [
+        "{{name}} was seen practicing bizarre, forbidden techniques in the dead of night. The locals are disturbed, but their skills are undoubtedly sharper. (+{{xp}} XP, -{{fame}} Fame)"
       ]
     }
   },

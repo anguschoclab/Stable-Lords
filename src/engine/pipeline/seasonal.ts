@@ -43,16 +43,16 @@ interface OffseasonEventNarrative {
     | 'chaotic_spells'
     | 'mysterious_patron'
     | 'loyal_stray'
-    | 'midnight_feast';
+    | 'midnight_feast'
+    | 'shadow_training';
   newsletter: string[];
-}/**
-  * Run seasonal pass.
-  * @param state - State.
-  * @param nextWeek - Next week.
-  * @param rootRng - Root rng. (optional)
-  * @returns The result.
-  */
-
+} /**
+ * Run seasonal pass.
+ * @param state - State.
+ * @param nextWeek - Next week.
+ * @param rootRng - Root rng. (optional)
+ * @returns The result.
+ */
 
 /**
  * Run seasonal pass.
@@ -503,7 +503,7 @@ export function runSeasonalPass(
       const chosen = seasonRng.pick(activeWarriors);
       if (chosen) {
         const roll = seasonRng.next();
-        let effectMsg: string;
+        let effectMsg = '';
 
         if (roll < 0.33) {
           // Buff: XP gain
@@ -611,6 +611,33 @@ export function runSeasonalPass(
           t(seasonRng.pick(e.newsletter) || '', { name: 'Someone', xp: 0, fame: 0, gold: cost }),
         ],
       });
+    }
+  } else if (e.effectType === 'shadow_training') {
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (chosen) {
+        const xpGained = 20 + Math.floor(seasonRng.next() * 11); // 20-30 XP
+        const fameLost = 5 + Math.floor(seasonRng.next() * 6); // 5-10 Fame
+
+        rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+          fame: Math.max(0, (chosen.fame || 0) - fameLost),
+        });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [
+            t(seasonRng.pick(e.newsletter) || '', {
+              name: chosen.name,
+              xp: xpGained,
+              fame: fameLost,
+            }),
+          ],
+        });
+      }
     }
   }
   // Record this event in the State so the UI can pick it up

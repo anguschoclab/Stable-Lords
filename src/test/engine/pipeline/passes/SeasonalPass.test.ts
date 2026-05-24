@@ -12,14 +12,14 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the black_market_raid offseason event, deduct gold, and newsletter', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 8.5 / 17; // picks index 8 = black_market_raid
+      if (callCount === 1) return 8.5 / 18; // picks index 8 = black_market_raid
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-seasonal-raid' as WarriorId;
     const state: Partial<GameState> = {
@@ -44,14 +44,14 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the grand_feast offseason event, deduct gold, award XP to all active', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 9.5 / 17; // picks index 9 = grand_feast
+      if (callCount === 1) return 9.5 / 18; // picks index 9 = grand_feast
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const state: Partial<GameState> = {
       year: 1,
@@ -106,14 +106,14 @@ describe('runSeasonalPass', () => {
     // merchant_blessing(2), offseason_epiphany(3), tavern_brawl(4)
     // To pick index 4 out of 5: Math.floor(x * 5) === 4 → x in [0.8, 1.0)
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 5.5 / 17; // picks index 5 = tavern_brawl
+      if (callCount === 1) return 5.5 / 18; // picks index 5 = tavern_brawl
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-seasonal' as WarriorId;
     const state: Partial<GameState> = {
@@ -143,14 +143,14 @@ describe('runSeasonalPass', () => {
 
   it('should not add a Bruised Ribs injury to an already-injured warrior in tavern_brawl', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 5.5 / 17; // picks tavern_brawl
+      if (callCount === 1) return 5.5 / 18; // picks tavern_brawl
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-injured' as WarriorId;
     const state: Partial<GameState> = {
@@ -183,14 +183,14 @@ describe('runSeasonalPass', () => {
 
   it('should trigger wandering_healer and cure an injury if someone is injured', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 10.5 / 17; // picks index 10 = wandering_healer
+      if (callCount === 1) return 10.5 / 18; // picks index 10 = wandering_healer
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-injured' as WarriorId;
     const state: Partial<GameState> = {
@@ -243,14 +243,14 @@ describe('runSeasonalPass', () => {
 
   it('should trigger wandering_healer and offer snake oil if no one is injured', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 10.5 / 17; // picks index 10 = wandering_healer
+      if (callCount === 1) return 10.5 / 18; // picks index 10 = wandering_healer
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const state: Partial<GameState> = {
       year: 1,
@@ -285,14 +285,14 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the mystic_vision offseason event, award xp and fame, and add a newsletter item', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 11.5 / 17; // picks index 11 = mystic_vision
+      if (callCount === 1) return 11.5 / 18; // picks index 11 = mystic_vision
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-mystic' as WarriorId;
     const state: Partial<GameState> = {
@@ -316,14 +316,14 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the wild_animal_attack offseason event, award fame, and add a Bite Wound injury', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 12.5 / 17; // picks index 12 = wild_animal_attack
+      if (callCount === 1) return 12.5 / 18; // picks index 12 = wild_animal_attack
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-animal' as WarriorId;
     const state: Partial<GameState> = {
@@ -340,14 +340,14 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the loyal_stray offseason event, award xp and fame, and deduct gold', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 13.5 / 17; // picks index 13 = loyal_stray
+      if (callCount === 1) return 13.5 / 18; // picks index 13 = loyal_stray
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-stray' as WarriorId;
     const state: Partial<GameState> = {
@@ -374,14 +374,14 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the street_performance offseason event, gaining fame and gold, and adding a tag', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 14.5 / 17; // picks index 14 = street_performance
+      if (callCount === 1) return 14.5 / 18; // picks index 14 = street_performance
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-performer' as WarriorId;
     const state: Partial<GameState> = {
@@ -410,16 +410,16 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the chaotic_spells offseason event and award xp (roll < 0.33)', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 15.5 / 17; // picks index 15 = chaotic_spells
+      if (callCount === 1) return 15.5 / 18; // picks index 15 = chaotic_spells
       if (callCount === 3) return 0.2; // roll < 0.33, triggers XP gain
       if (callCount === 4) return 0.5; // for xp roll
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-magic' as WarriorId;
     const state: Partial<GameState> = {
@@ -441,16 +441,16 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the chaotic_spells offseason event and add injury (roll < 0.66)', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 15.5 / 17; // picks index 15 = chaotic_spells
+      if (callCount === 1) return 15.5 / 18; // picks index 15 = chaotic_spells
       if (callCount === 3) return 0.5; // roll < 0.66, triggers minor injury
       if (callCount === 4) return 0.5; // for weeksRemaining roll
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-magic' as WarriorId;
     const state: Partial<GameState> = {
@@ -474,16 +474,16 @@ describe('runSeasonalPass', () => {
 
   it('should trigger the chaotic_spells offseason event and reduce fame (roll >= 0.66)', () => {
     const rng = new SeededRNGService(99);
-    const originalNext = rng.next.bind(rng);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 15.5 / 17; // picks index 15 = chaotic_spells
+      if (callCount === 1) return 15.5 / 18; // picks index 15 = chaotic_spells
       if (callCount === 3) return 0.8; // roll >= 0.66, triggers fame loss
       if (callCount === 4) return 0.5; // for fame roll
       return originalNext();
     };
-    rng.next = mockNext;
+    (rng as any).rng.next = mockNext;
 
     const warriorId = 'w-magic' as WarriorId;
     const state: Partial<GameState> = {
@@ -500,5 +500,40 @@ describe('runSeasonalPass', () => {
 
     expect(impact.newsletterItems).toHaveLength(1);
     expect(impact.newsletterItems?.[0]?.items[0]).toContain('shade of purple');
+  });
+});
+
+describe('SeasonalPass shadow_training event', () => {
+  it('should trigger the shadow_training offseason event, awarding XP but reducing Fame', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 17.5 / 18; // picks index 17 = shadow_training
+      if (callCount === 3) return 0.5; // for xp roll
+      if (callCount === 4) return 0.5; // for fame roll
+      return originalNext();
+    };
+    (rng as any).rng.next = mockNext;
+
+    const warriorId = 'w-shadow' as import('@/types/core.types').WarriorId;
+    const state: Partial<import('@/types/core.types').GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Shadow', status: 'Active', xp: 10, fame: 20 } as any],
+      newsletter: [],
+    };
+
+    const impact = runSeasonalPass(state as import('@/types/core.types').GameState, 1, rng);
+
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update).toBeDefined();
+    // 20 + Math.floor(0.5 * 11) = 25.  10 + 25 = 35
+    expect(update?.xp).toBe(35);
+    // 5 + Math.floor(0.5 * 6) = 8.  20 - 8 = 12
+    expect(update?.fame).toBe(12);
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('Shadow Training');
   });
 });

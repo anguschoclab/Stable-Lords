@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { makeFightSummary } from '@/engine/factories/combatFactory';
 import { setMockIdGenerator } from '@/utils/idUtils';
+import type { FightId } from '@/types/shared.types';
 
 describe('combatFactory', () => {
   describe('makeFightSummary', () => {
@@ -27,7 +28,7 @@ describe('combatFactory', () => {
 
     it('should handle partial overrides', () => {
       const overrides = {
-        id: 'custom-fight-id',
+        id: 'custom-fight-id' as FightId,
         week: 42,
         a: 'Custom Attacker',
         d: 'Custom Defender',

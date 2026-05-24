@@ -21,7 +21,6 @@ export function aiDraftFromPool(
   const isMajorDraftWeek = week % 4 === 0;
 
   let currentPool = [...pool];
-  const updatedRivals: RivalStableData[] = [];
   const globalGazetteItems: string[] = [];
 
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);

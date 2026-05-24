@@ -96,6 +96,7 @@ export function EditableText({
             className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
             onClick={handleSave}
             aria-label="Save"
+            title="Save changes"
           >
             <Check className="h-4 w-4" />
           </Button>
@@ -105,6 +106,7 @@ export function EditableText({
             className="h-8 w-8 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
             onClick={handleCancel}
             aria-label="Cancel"
+            title="Cancel changes"
           >
             <X className="h-4 w-4" />
           </Button>

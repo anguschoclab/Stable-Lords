@@ -25,3 +25,7 @@
 ## 2025-02-23 - [Caching compiled Regexes using WeakMap for Component Instances]
 **Learning:** Found that using `useMemo` for expensive operations like compiling a `new RegExp` or instantiating a `new Set` is only component-scoped. In lists where many components (like `LinkifiedText` in `EventLog.tsx`) receive the exact same array reference (e.g. `allWarriorNames`), this results in compiling the regex N times during the initial render.
 **Action:** Use a module-level `WeakMap` cache keyed by referentially stable arrays (e.g. `names` array) to share the compilation result across all instances, reducing CPU cycles and allocations significantly.
+
+## 2024-05-18 - [Optimizing Single Element Array Updates]
+**Learning:** Found that `updateEntityInList` was using `.map()` over potentially large arrays (e.g. `state.roster`) to update just one item. `.map()` executes the callback function for *every single item* and creates a brand new array every time.
+**Action:** When updating a single element in an array based on an ID, use `.findIndex()` followed by a shallow array clone `[...list]` and direct index assignment instead of `.map()`. This early returns out of the array search once the item is found, reducing N function calls down to an average of N/2 native comparisons, and does a fast native shallow copy rather than repeated array pushes.

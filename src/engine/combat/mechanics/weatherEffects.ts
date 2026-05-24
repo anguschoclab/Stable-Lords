@@ -162,13 +162,6 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.15,
     description: 'Falling stars distract fighters and add a chaotic unpredictability to combat.',
   },
-  'Solar Flare': {
-    staminaMult: 1.5,
-    initiativeMod: +2,
-    riposteMod: -4,
-    damageMult: 1.25,
-    description: 'Intense blinding light and unnatural heat bake the arena.',
-  },
   'Abyssal Gloom': {
     staminaMult: 0.9,
     initiativeMod: -5,
@@ -201,18 +194,8 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
 export function resolveEffectiveWeather(weather: WeatherType, arenaTags: string[]): WeatherType {
   const isIndoor = arenaTags.includes('indoor');
   return isIndoor ? 'Clear' : weather;
-}/**
-  * Get weather effect.
-  * @param weather - Weather.
-  * @returns The result.
-  */
+}
 
-
-/**
- * Get weather effect.
- * @param weather - Weather.
- * @returns The result.
- */
 export function getWeatherEffect(weather: WeatherType): WeatherEffect {
   return WEATHER_EFFECTS[weather] ?? WEATHER_EFFECTS['Clear'];
 }
@@ -241,11 +224,14 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Acid Rain': 'Hissing rain burns the skin. This fight will be short and brutal.',
   'Mana Surge': 'The air crackles with power. The fighters move with impossible speed.',
   'Scorching Wind': 'A hot, dry wind sweeps the arena, parching throats and sapping strength.',
-  'Spooky Night': 'An unnatural chill settles over the arena, and shadows seem to move on their own.',
-  'Meteor Shower': 'The night sky burns with falling stars, casting chaotic shadows across the sand.',
-  'Solar Flare': 'A blinding flash engulfs the arena as a rogue solar flare strikes, baking the sand.',
-  'Abyssal Gloom': 'A terrifying, supernatural darkness swallows the arena. Fighters vanish into the abyssal gloom.',
-  'Cursed Miasma': 'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
+  'Spooky Night':
+    'An unnatural chill settles over the arena, and shadows seem to move on their own.',
+  'Meteor Shower':
+    'The night sky burns with falling stars, casting chaotic shadows across the sand.',
+  'Abyssal Gloom':
+    'A terrifying, supernatural darkness swallows the arena. Fighters vanish into the abyssal gloom.',
+  'Cursed Miasma':
+    'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
   Hailstorm: 'Ice falls from the sky like stones, battering armor and bare flesh alike.',
 };
 

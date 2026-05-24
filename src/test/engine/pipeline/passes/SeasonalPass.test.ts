@@ -48,7 +48,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 9.5 / 18; // picks index 9 = grand_feast
+      if (callCount === 1) return 9.5 / 17; // picks index 9 = grand_feast
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -110,7 +110,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 5.5 / 18; // picks index 5 = tavern_brawl
+      if (callCount === 1) return 5.5 / 17; // picks index 5 = tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -147,7 +147,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 5.5 / 18; // picks tavern_brawl
+      if (callCount === 1) return 5.5 / 17; // picks tavern_brawl
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -187,7 +187,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 10.5 / 18; // picks index 10 = wandering_healer
+      if (callCount === 1) return 10.5 / 17; // picks index 10 = wandering_healer
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -247,7 +247,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 10.5 / 18; // picks index 10 = wandering_healer
+      if (callCount === 1) return 10.5 / 17; // picks index 10 = wandering_healer
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -289,7 +289,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 11.5 / 18; // picks index 11 = mystic_vision
+      if (callCount === 1) return 11.5 / 17; // picks index 11 = mystic_vision
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -320,7 +320,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 12.5 / 18; // picks index 12 = wild_animal_attack
+      if (callCount === 1) return 12.5 / 17; // picks index 12 = wild_animal_attack
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -344,7 +344,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 13.5 / 18; // picks index 13 = loyal_stray
+      if (callCount === 1) return 13.5 / 17; // picks index 13 = loyal_stray
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -378,7 +378,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 14.5 / 18; // picks index 14 = street_performance
+      if (callCount === 1) return 14.5 / 17; // picks index 14 = street_performance
       return originalNext();
     };
     (rng as any).rng.next = mockNext;
@@ -414,7 +414,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 15.5 / 18; // picks index 15 = chaotic_spells
+      if (callCount === 1) return 15.5 / 17; // picks index 15 = chaotic_spells
       if (callCount === 3) return 0.2; // roll < 0.33, triggers XP gain
       if (callCount === 4) return 0.5; // for xp roll
       return originalNext();
@@ -445,7 +445,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 15.5 / 18; // picks index 15 = chaotic_spells
+      if (callCount === 1) return 15.5 / 17; // picks index 15 = chaotic_spells
       if (callCount === 3) return 0.5; // roll < 0.66, triggers minor injury
       if (callCount === 4) return 0.5; // for weeksRemaining roll
       return originalNext();
@@ -478,7 +478,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return 15.5 / 18; // picks index 15 = chaotic_spells
+      if (callCount === 1) return 15.5 / 17; // picks index 15 = chaotic_spells
       if (callCount === 3) return 0.8; // roll >= 0.66, triggers fame loss
       if (callCount === 4) return 0.5; // for fame roll
       return originalNext();
@@ -500,40 +500,5 @@ describe('runSeasonalPass', () => {
 
     expect(impact.newsletterItems).toHaveLength(1);
     expect(impact.newsletterItems?.[0]?.items[0]).toContain('shade of purple');
-  });
-});
-
-describe('SeasonalPass shadow_training event', () => {
-  it('should trigger the shadow_training offseason event, awarding XP but reducing Fame', () => {
-    const rng = new SeededRNGService(99);
-    const originalNext = (rng as any).rng.next.bind((rng as any).rng);
-    let callCount = 0;
-    const mockNext = () => {
-      callCount++;
-      if (callCount === 1) return 17.5 / 18; // picks index 17 = shadow_training
-      if (callCount === 3) return 0.5; // for xp roll
-      if (callCount === 4) return 0.5; // for fame roll
-      return originalNext();
-    };
-    (rng as any).rng.next = mockNext;
-
-    const warriorId = 'w-shadow' as import('@/types/core.types').WarriorId;
-    const state: Partial<import('@/types/core.types').GameState> = {
-      year: 1,
-      roster: [{ id: warriorId, name: 'Shadow', status: 'Active', xp: 10, fame: 20 } as any],
-      newsletter: [],
-    };
-
-    const impact = runSeasonalPass(state as import('@/types/core.types').GameState, 1, rng);
-
-    const update = impact.rosterUpdates?.get(warriorId);
-    expect(update).toBeDefined();
-    // 20 + Math.floor(0.5 * 11) = 25.  10 + 25 = 35
-    expect(update?.xp).toBe(35);
-    // 5 + Math.floor(0.5 * 6) = 8.  20 - 8 = 12
-    expect(update?.fame).toBe(12);
-
-    expect(impact.newsletterItems).toHaveLength(1);
-    expect(impact.newsletterItems?.[0]?.title).toBe('Shadow Training');
   });
 });

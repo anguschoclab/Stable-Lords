@@ -12,6 +12,7 @@ import type { WarriorId, StableId } from '@/types/shared.types';
 import { computeWarriorStats } from './skillCalc';
 import { type StateImpact } from './impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { updateEntityInList } from '@/utils/stateUtils';
 
 const WEEKS_PER_YEAR = 52;
 const AGING_PENALTY_START = 25;
@@ -107,7 +108,7 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
         if (!rival) continue;
         const rUpdate = rivalsUpdates.get(rKey) || { roster: [...rival.roster] };
         if (rUpdate.roster) {
-          rUpdate.roster = rUpdate.roster.map((rw) => (rw.id === w.id ? { ...rw, ...update } : rw));
+          rUpdate.roster = updateEntityInList(rUpdate.roster, w.id, (rw) => ({ ...rw, ...update }));
         }
         rivalsUpdates.set(rKey, rUpdate);
       }

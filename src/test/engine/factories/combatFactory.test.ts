@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { makeFightSummary } from '@/engine/factories/combatFactory';
 import { setMockIdGenerator } from '@/utils/idUtils';
-import { FightingStyle } from '@/types/shared.types';
+import type { FightId } from '@/types/shared.types';
 
 describe('combatFactory', () => {
   describe('makeFightSummary', () => {
@@ -16,8 +16,8 @@ describe('combatFactory', () => {
       expect(summary.d).toBe('Defender');
       expect(summary.warriorIdA).toBe('warrior-a');
       expect(summary.warriorIdD).toBe('warrior-d');
-      expect(summary.styleA).toBe(FightingStyle.BashingAttack);
-      expect(summary.styleD).toBe(FightingStyle.TotalParry);
+      expect(summary.styleA).toBe('Brawler');
+      expect(summary.styleD).toBe('Balanced');
       expect(summary.winner).toBe('A');
       expect(summary.by).toBe('KO');
       expect(summary.title).toBe('Practice Match');
@@ -28,7 +28,7 @@ describe('combatFactory', () => {
 
     it('should handle partial overrides', () => {
       const overrides = {
-        id: 'custom-fight-id',
+        id: 'custom-fight-id' as FightId,
         week: 42,
         a: 'Custom Attacker',
         d: 'Custom Defender',

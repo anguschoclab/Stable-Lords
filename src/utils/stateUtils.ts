@@ -6,6 +6,11 @@
  * Updates a specific item in an array based on its ID.
  * Replaces the repetitive .map(item => item.id === id ? { ...item, ...updates } : item) pattern.
  *
+ * ⚡ Bolt Optimization: Using .findIndex() and direct array assignment instead of .map()
+ * 💡 What: Replaced .map() traversal with a targeted index update.
+ * 🎯 Why: Avoids O(N) allocations and redundant iterations when modifying a single element.
+ * 📊 Impact: Significantly reduces GC pressure during hot loops updating game state arrays (e.g. rosters, rivals).
+ *
  * @param list - The array to search
  * @param id - The ID of the item to update
  * @param updater - A function that returns the updated item

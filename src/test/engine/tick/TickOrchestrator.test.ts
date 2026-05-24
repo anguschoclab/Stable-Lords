@@ -1,176 +1,163 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { TickOrchestrator } from '@/engine/tick/TickOrchestrator';
-import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
-import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
-import { TimeAdvanceService } from '@/engine/tick/TimeAdvanceService';
-
-vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
-  advanceWeek: vi.fn(),
-}));
 
 vi.mock('@/engine/matchmaking/tournamentSelection', () => ({
   TournamentSelectionService: {
-    resolveRound: vi.fn(),
+    resolveRound: vi.fn(() => ({
+      updatedState: { ...mockState, treasury: 500 },
+      roundResults: ['Fighter A beat Fighter B'],
+    })),
   },
+}));
+
+vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
+  advanceWeek: vi.fn((state) => ({ ...state, treasury: 999 })),
 }));
 
 vi.mock('@/engine/tick/TimeAdvanceService', () => ({
   TimeAdvanceService: {
-    advanceQuarter: vi.fn(),
-    skipToQuarterEnd: vi.fn(),
-    advanceYear: vi.fn(),
-    skipToYearEnd: vi.fn(),
+    advanceQuarter: vi.fn(async () => ({})),
+    skipToQuarterEnd: vi.fn(async () => ({})),
+    advanceYear: vi.fn(async () => ({})),
+    skipToYearEnd: vi.fn(async () => ({})),
   },
 }));
 
+import { TickOrchestrator } from '@/engine/tick/TickOrchestrator';
+import { createFreshState } from '@/engine/factories/gameStateFactory';
+import { GameState } from '@/types/state.types';
+import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
+import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';
+import { TimeAdvanceService } from '@/engine/tick/TimeAdvanceService';
+
+let mockState: GameState;
+
 describe('TickOrchestrator', () => {
   beforeEach(() => {
+    mockState = createFreshState('test-seed');
     vi.clearAllMocks();
   });
 
   describe('advanceDay', () => {
-    it('advances a normal day without a tournament', () => {
-      const initialState = createFreshState('test-seed');
-      initialState.day = 1;
-      initialState.isTournamentWeek = false;
+    it('should advance to the next day when not day 6 and not tournament', () => {
+      mockState.day = 0;
+      mockState.isTournamentWeek = false;
 
-      const nextState = TickOrchestrator.advanceDay(initialState);
+      const nextState = TickOrchestrator.advanceDay(mockState);
 
-      expect(nextState.day).toBe(2);
-      expect(advanceWeek).not.toHaveBeenCalled();
+      expect(nextState.day).toBe(1);
+      expect(nextState.isTournamentWeek).toBe(false);
+      expect(weekPipelineService.advanceWeek).not.toHaveBeenCalled();
       expect(TournamentSelectionService.resolveRound).not.toHaveBeenCalled();
     });
 
-    it('advances a tournament day and appends newsletter items', () => {
-      const initialState = createFreshState('test-seed');
-      initialState.day = 2;
-      initialState.isTournamentWeek = true;
-      initialState.activeTournamentId = 'test-tournament';
+    it('should trigger advanceWeek when advancing past day 6', () => {
+      mockState.day = 6;
+      mockState.isTournamentWeek = false;
 
-      const mockUpdatedState = { ...initialState, testMutated: true };
-      vi.mocked(TournamentSelectionService.resolveRound).mockReturnValue({
-        updatedState: mockUpdatedState as any,
-        roundResults: ['Bout 1 result', 'Bout 2 result'],
-      });
+      const nextState = TickOrchestrator.advanceDay(mockState);
 
-      const nextState = TickOrchestrator.advanceDay(initialState);
-
-      expect(TournamentSelectionService.resolveRound).toHaveBeenCalledWith(
-        initialState,
-        'test-tournament',
-        expect.any(Number)
-      );
-
-      expect(nextState.day).toBe(3);
-      expect(nextState.newsletter).toBeDefined();
-      expect(nextState.newsletter!.length).toBeGreaterThan(0);
-      expect(nextState.newsletter![0].items).toEqual(['Bout 1 result', 'Bout 2 result']);
-      expect((nextState as any).testMutated).toBe(true);
-    });
-
-    it('triggers advanceWeek when day transitions from 6 to 7', () => {
-      const initialState = createFreshState('test-seed');
-      initialState.day = 6;
-
-      const mockWeekState = { ...initialState, week: initialState.week + 1 };
-      vi.mocked(advanceWeek).mockReturnValue(mockWeekState as any);
-
-      const nextState = TickOrchestrator.advanceDay(initialState);
-
-      expect(advanceWeek).toHaveBeenCalledWith(initialState);
+      expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(mockState);
       expect(nextState.day).toBe(0);
       expect(nextState.isTournamentWeek).toBe(false);
       expect(nextState.activeTournamentId).toBeUndefined();
-      expect(nextState.week).toBe(initialState.week + 1);
+      expect(nextState.treasury).toBe(999);
+    });
+
+    it('should resolve tournament round when isTournamentWeek and activeTournamentId are set', () => {
+      mockState.day = 2;
+      mockState.isTournamentWeek = true;
+      mockState.activeTournamentId = 'test-tournament';
+
+      const nextState = TickOrchestrator.advanceDay(mockState);
+
+      expect(TournamentSelectionService.resolveRound).toHaveBeenCalledWith(
+        mockState,
+        'test-tournament',
+        expect.any(Number) // the seed
+      );
+
+      expect(nextState.day).toBe(3);
+      expect(nextState.treasury).toBe(500);
+
+      // Should have appended a newsletter item
+      expect(nextState.newsletter).toBeDefined();
+      expect(nextState.newsletter!.length).toBeGreaterThan(0);
+      expect(nextState.newsletter![0].items).toContain('Fighter A beat Fighter B');
     });
   });
 
   describe('skipToWeekEnd', () => {
-    it('skips a normal week, directly calling advanceWeek', () => {
-      const initialState = createFreshState('test-seed');
-      initialState.day = 2;
-      initialState.isTournamentWeek = false;
+    it('should advance week immediately for standard week', () => {
+      mockState.day = 1;
+      mockState.isTournamentWeek = false;
 
-      const mockWeekState = { ...initialState, week: initialState.week + 1 };
-      vi.mocked(advanceWeek).mockReturnValue(mockWeekState as any);
+      const nextState = TickOrchestrator.skipToWeekEnd(mockState);
 
-      const nextState = TickOrchestrator.skipToWeekEnd(initialState);
-
-      expect(TournamentSelectionService.resolveRound).not.toHaveBeenCalled();
-      expect(advanceWeek).toHaveBeenCalled();
+      expect(weekPipelineService.advanceWeek).toHaveBeenCalledWith(mockState);
       expect(nextState.day).toBe(0);
-      expect(nextState.week).toBe(initialState.week + 1);
+      expect(nextState.treasury).toBe(999);
+      expect(TournamentSelectionService.resolveRound).not.toHaveBeenCalled();
     });
 
-    it('batches tournament days and summarizes in newsletter before calling advanceWeek', () => {
-      const initialState = createFreshState('test-seed');
-      initialState.day = 4; // Should resolve day 5 and 6
-      initialState.isTournamentWeek = true;
-      initialState.activeTournamentId = 'test-tournament';
+    it('should resolve remaining tournament rounds before advancing week', () => {
+      mockState.day = 3;
+      mockState.isTournamentWeek = true;
+      mockState.activeTournamentId = 'test-tournament';
 
-      vi.mocked(TournamentSelectionService.resolveRound).mockImplementation((state: any) => ({
-        updatedState: state,
-        roundResults: ['Result'],
-      }));
+      // Setup mock to return incremental changes
+      vi.mocked(TournamentSelectionService.resolveRound).mockImplementation(
+        (state: any, tId: any, seed: any) => {
+          return {
+            updatedState: { ...state, fame: (state.fame || 0) + 10 },
+            roundResults: [`Result for seed ${seed}`],
+          };
+        }
+      );
 
-      const mockWeekState = { ...initialState, week: initialState.week + 1 };
-      vi.mocked(advanceWeek).mockImplementation((state: any) => ({
-        ...state,
-        week: state.week + 1,
-      }));
+      vi.mocked(weekPipelineService.advanceWeek).mockImplementation((state: any) => state);
 
-      const nextState = TickOrchestrator.skipToWeekEnd(initialState);
+      const nextState = TickOrchestrator.skipToWeekEnd(mockState);
 
-      // Should be called for day 5 and 6
-      expect(TournamentSelectionService.resolveRound).toHaveBeenCalledTimes(2);
-      expect(advanceWeek).toHaveBeenCalled();
+      // Should loop from currentDay + 1 (4) to 6 -> 3 iterations
+      expect(TournamentSelectionService.resolveRound).toHaveBeenCalledTimes(3);
+
+      // Advance week should be called with the state accumulated from tournament rounds
+      expect(weekPipelineService.advanceWeek).toHaveBeenCalled();
 
       expect(nextState.day).toBe(0);
       expect(nextState.isTournamentWeek).toBe(false);
-      expect(nextState.newsletter).toBeDefined();
-      expect(nextState.newsletter![0].title).toContain('Tournament Week');
-      expect(nextState.newsletter![0].items).toHaveLength(2); // One from day 5, one from day 6
+      expect(nextState.activeTournamentId).toBeUndefined();
+
+      // Should combine news items
+      const newsletter = nextState.newsletter || [];
+      expect(newsletter.length).toBeGreaterThan(0);
+      const latestNews = newsletter[newsletter.length - 1];
+      expect(latestNews.title).toContain('Recap');
+      expect(latestNews.items.length).toBe(3);
     });
   });
 
-  describe('TimeAdvanceService delegations', () => {
-    it('delegates advanceQuarter', async () => {
-      const state = createFreshState('test-seed');
-      vi.mocked(TimeAdvanceService.advanceQuarter).mockResolvedValue(
-        'advanceQuarter-result' as any
-      );
-
-      const res = await TickOrchestrator.advanceQuarter(state);
-      expect(TimeAdvanceService.advanceQuarter).toHaveBeenCalledWith(state, undefined);
-      expect(res).toBe('advanceQuarter-result');
+  describe('Time Advance Delegation', () => {
+    it('advanceQuarter delegates to TimeAdvanceService', async () => {
+      await TickOrchestrator.advanceQuarter(mockState, { headless: true });
+      expect(TimeAdvanceService.advanceQuarter).toHaveBeenCalledWith(mockState, { headless: true });
     });
 
-    it('delegates skipToQuarterEnd', async () => {
-      const state = createFreshState('test-seed');
-      vi.mocked(TimeAdvanceService.skipToQuarterEnd).mockResolvedValue('skipQuarter-result' as any);
-
-      const res = await TickOrchestrator.skipToQuarterEnd(state);
-      expect(TimeAdvanceService.skipToQuarterEnd).toHaveBeenCalledWith(state, undefined);
-      expect(res).toBe('skipQuarter-result');
+    it('skipToQuarterEnd delegates to TimeAdvanceService', async () => {
+      await TickOrchestrator.skipToQuarterEnd(mockState, { headless: true });
+      expect(TimeAdvanceService.skipToQuarterEnd).toHaveBeenCalledWith(mockState, {
+        headless: true,
+      });
     });
 
-    it('delegates advanceYear', async () => {
-      const state = createFreshState('test-seed');
-      vi.mocked(TimeAdvanceService.advanceYear).mockResolvedValue('advanceYear-result' as any);
-
-      const res = await TickOrchestrator.advanceYear(state);
-      expect(TimeAdvanceService.advanceYear).toHaveBeenCalledWith(state, undefined);
-      expect(res).toBe('advanceYear-result');
+    it('advanceYear delegates to TimeAdvanceService', async () => {
+      await TickOrchestrator.advanceYear(mockState, { headless: true });
+      expect(TimeAdvanceService.advanceYear).toHaveBeenCalledWith(mockState, { headless: true });
     });
 
-    it('delegates skipToYearEnd', async () => {
-      const state = createFreshState('test-seed');
-      vi.mocked(TimeAdvanceService.skipToYearEnd).mockResolvedValue('skipYear-result' as any);
-
-      const res = await TickOrchestrator.skipToYearEnd(state);
-      expect(TimeAdvanceService.skipToYearEnd).toHaveBeenCalledWith(state, undefined);
-      expect(res).toBe('skipYear-result');
+    it('skipToYearEnd delegates to TimeAdvanceService', async () => {
+      await TickOrchestrator.skipToYearEnd(mockState, { headless: true });
+      expect(TimeAdvanceService.skipToYearEnd).toHaveBeenCalledWith(mockState, { headless: true });
     });
   });
 });

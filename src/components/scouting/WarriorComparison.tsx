@@ -36,11 +36,18 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
 
   const allWarriors = useMemo(() => {
     const list: { warrior: Warrior; stable: string }[] = [];
-    for (const w of playerRoster.filter((w) => w.status === 'Active'))
-      list.push({ warrior: w, stable: 'User Stable' });
+    for (const w of playerRoster) {
+      if (w.status === 'Active') {
+        list.push({ warrior: w, stable: 'User Stable' });
+      }
+    }
     for (const r of rivals) {
-      for (const w of r.roster.filter((w) => w.status === 'Active'))
-        list.push({ warrior: w, stable: r.owner.stableName });
+      const stableName = r.owner.stableName;
+      for (const w of r.roster) {
+        if (w.status === 'Active') {
+          list.push({ warrior: w, stable: stableName });
+        }
+      }
     }
     return list;
   }, [rivals, playerRoster]);

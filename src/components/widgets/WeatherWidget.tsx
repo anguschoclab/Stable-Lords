@@ -1,5 +1,5 @@
 import { useWorldState } from '@/state/useGameStore';
-import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon, Sparkles } from 'lucide-react';
+import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon, Sparkles, Flame } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -81,6 +81,15 @@ const WEATHER_METADATA = {
     description:
       'Falling stars light up the sky. The chaotic spectacle distracts fighters and exhausts stamina.',
     stats: 'INITIATIVE & RIPOSTE PENALTY -3 // STAMINA DRAIN 120%',
+  },
+  'Solar Flare': {
+    icon: Flame,
+    color: 'text-orange-500',
+    bg: 'bg-orange-500/10',
+    border: 'border-orange-500/20',
+    description:
+      'A blinding flash of light bakes the arena, draining stamina aggressively while giving eager attackers a burst of destructive energy.',
+    stats: 'STAMINA DRAIN 150% // DAMAGE +25%',
   },
   'Abyssal Gloom': {
     icon: Moon,

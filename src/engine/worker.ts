@@ -3,6 +3,7 @@ import { advanceWeek } from './pipeline/services/weekPipelineService';
 import { advanceDay } from './dayPipeline';
 import { createFreshState } from './factories/gameStateFactory';
 import { TournamentSelectionService } from './matchmaking/tournamentSelection';
+import { TickOrchestrator } from './tick/TickOrchestrator';
 
 /**
  * Stable Lords — Engine Worker
@@ -11,6 +12,7 @@ import { TournamentSelectionService } from './matchmaking/tournamentSelection';
 const engine = {
   advanceWeek,
   advanceDay,
+  skipToWeekEnd: TickOrchestrator.skipToWeekEnd,
   resolveTournamentRound: TournamentSelectionService.resolveRound.bind(TournamentSelectionService),
   createFreshState,
 };/**

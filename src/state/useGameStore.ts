@@ -206,10 +206,7 @@ export const useGameStore = create<GameStore>()(
         try {
           let next: GameState;
           if (cleanState.isTournamentWeek) {
-            next = cleanState;
-            for (let i = cleanState.day; i < 7; i++) {
-              next = await Promise.race([engineProxy.advanceDay(next), timeout]);
-            }
+            next = await Promise.race([engineProxy.skipToWeekEnd(cleanState), timeout]);
           } else {
             next = await Promise.race([engineProxy.advanceWeek(cleanState), timeout]);
           }

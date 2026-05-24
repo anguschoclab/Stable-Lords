@@ -50,13 +50,7 @@ describe('PlanBuilder Matchup Rendering', () => {
 
   it('renders no badge when matchup is neutral', () => {
     render(
-      <TooltipProvider>
-        <PlanBuilder
-          plan={mockPlan}
-          onPlanChange={vi.fn()}
-          rivalStyle={FightingStyle.AimedBlow}
-        />
-      </TooltipProvider>
+      <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} rivalStyle={FightingStyle.AimedBlow} />
     );
 
     expect(screen.queryByText('MATCHUP ADV')).not.toBeInTheDocument();

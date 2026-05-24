@@ -138,9 +138,7 @@ describe('HallOfFights Component', () => {
 
     // Setup LoreArchive mock for hall entries
     const mockAllHall = LoreArchive.allHall as any;
-    mockAllHall.mockReturnValue([
-      { week: 10, label: 'Fight of the Week', fightId: 'f1' },
-    ]);
+    mockAllHall.mockReturnValue([{ week: 10, label: 'Fight of the Week', fightId: 'f1' }]);
   });
 
   it('groups and displays fights from the arenaHistory by week correctly', async () => {

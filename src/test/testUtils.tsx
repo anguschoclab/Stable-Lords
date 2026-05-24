@@ -43,6 +43,9 @@ export function renderWithGameState(
   ui: React.ReactElement,
   partialState: Partial<ReturnType<typeof createFreshState>> = {}
 ) {
+  // Import useGameStore dynamically inside the function to ensure it's initialized
+  const { useGameStore } = require('@/state/useGameStore');
+
   // Get a clean base state
   const baseState = createFreshState('test-seed');
 

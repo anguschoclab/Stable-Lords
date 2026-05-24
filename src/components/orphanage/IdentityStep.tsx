@@ -60,7 +60,10 @@ export default function IdentityStep({
 
       <div className="space-y-4">
         <div className="space-y-1.5">
-          <label htmlFor="owner-name" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70">
+          <label
+            htmlFor="owner-name"
+            className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70"
+          >
             YOUR NAME
           </label>
           <input
@@ -79,7 +82,10 @@ export default function IdentityStep({
           />
         </div>
         <div className="space-y-1.5">
-          <label htmlFor="stable-name" className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70">
+          <label
+            htmlFor="stable-name"
+            className="text-[10px] font-black uppercase tracking-[0.3em] text-accent/70"
+          >
             STABLE NAME
           </label>
           <input

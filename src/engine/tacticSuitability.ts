@@ -42,7 +42,7 @@ const DEFENSIVE_MATRIX: Record<FightingStyle, Record<string, SuitabilityRating>>
 
 /**
  * Retrieves the suitability rating for an offensive tactic based on the fighting style.
- * 
+ *
  * @param style - The warrior's fighting style
  * @param tactic - The offensive tactic to evaluate
  * @returns The suitability rating (WS, S, or U)
@@ -57,7 +57,7 @@ export function getOffensiveSuitability(
 
 /**
  * Retrieves the suitability rating for a defensive tactic based on the fighting style.
- * 
+ *
  * @param style - The warrior's fighting style
  * @param tactic - The defensive tactic to evaluate
  * @returns The suitability rating (WS, S, or U)
@@ -72,7 +72,7 @@ export function getDefensiveSuitability(
 
 /**
  * Converts a suitability rating into a numerical multiplier for combat calculations.
- * 
+ *
  * @param rating - The suitability rating to convert
  * @returns The numerical multiplier (1.0, 0.6, or 0.3)
  */

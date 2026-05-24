@@ -296,9 +296,15 @@ async function main() {
   const newTemplatesMap: Record<string, string[]> = {};
   const targetDeficits = deficits.slice(0, 5);
 
-  for (const path of targetDeficits) {
-    console.log(`Processing: ${path}...`);
-    const validated = await validate_with_retry(path);
+  console.log(`Processing ${targetDeficits.length} paths in parallel...`);
+  const results = await Promise.all(
+    targetDeficits.map(async (path) => {
+      const validated = await validate_with_retry(path);
+      return { path, validated };
+    })
+  );
+
+  for (const { path, validated } of results) {
     if (validated) {
       newTemplatesMap[path] = validated;
     }

@@ -70,7 +70,10 @@ const ZERO_OFF: OffensiveMods = {
  * Strategy map: each offensive tactic (excluding 'none') maps to a function
  * that accepts the suitability multiplier and returns the resolved mods.
  */
-const OFFENSIVE_TACTIC_MAP: Record<Exclude<OffensiveTactic, 'none'>, (mult: number) => OffensiveMods> = {
+const OFFENSIVE_TACTIC_MAP: Record<
+  Exclude<OffensiveTactic, 'none'>,
+  (mult: number) => OffensiveMods
+> = {
   Lunge: (mult) => ({
     attBonus: Math.round(2 * mult),
     dmgBonus: 0,
@@ -105,13 +108,10 @@ const OFFENSIVE_TACTIC_MAP: Record<Exclude<OffensiveTactic, 'none'>, (mult: numb
   }),
 };
 
-/**
- * Resolve offensive tactic modifiers.
- * @param tactic - Offensive tactic.
- * @param style - Fighting style.
- * @returns Resolved offensive modifiers.
- */
-export function getOffensiveTacticMods(tactic: OffensiveTactic | undefined, style: FightingStyle): OffensiveMods {
+export function getOffensiveTacticMods(
+  tactic: OffensiveTactic | undefined,
+  style: FightingStyle
+): OffensiveMods {
   if (!tactic || tactic === 'none') return ZERO_OFF;
   const mult = suitabilityMultiplier(getOffensiveSuitability(style, tactic));
   return (OFFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_OFF))(mult);
@@ -131,7 +131,10 @@ const ZERO_DEF: DefensiveMods = { parBonus: 0, defBonus: 0, ripBonus: 0, iniBonu
  * Strategy map: each defensive tactic (excluding 'none') maps to a function
  * that accepts the suitability multiplier and returns the resolved mods.
  */
-const DEFENSIVE_TACTIC_MAP: Record<Exclude<DefensiveTactic, 'none'>, (mult: number) => DefensiveMods> = {
+const DEFENSIVE_TACTIC_MAP: Record<
+  Exclude<DefensiveTactic, 'none'>,
+  (mult: number) => DefensiveMods
+> = {
   Parry: (mult) => ({
     parBonus: Math.round(3 * mult),
     defBonus: 0,
@@ -150,16 +153,18 @@ const DEFENSIVE_TACTIC_MAP: Record<Exclude<DefensiveTactic, 'none'>, (mult: numb
     ripBonus: Math.round(3 * mult),
     iniBonus: 0,
   }),
-  Responsiveness: (mult) => ({ parBonus: 0, defBonus: 0, ripBonus: 0, iniBonus: Math.round(2 * mult) }),
+  Responsiveness: (mult) => ({
+    parBonus: 0,
+    defBonus: 0,
+    ripBonus: 0,
+    iniBonus: Math.round(2 * mult),
+  }),
 };
 
-/**
- * Resolve defensive tactic modifiers.
- * @param tactic - Defensive tactic.
- * @param style - Fighting style.
- * @returns Resolved defensive modifiers.
- */
-export function getDefensiveTacticMods(tactic: DefensiveTactic | undefined, style: FightingStyle): DefensiveMods {
+export function getDefensiveTacticMods(
+  tactic: DefensiveTactic | undefined,
+  style: FightingStyle
+): DefensiveMods {
   if (!tactic || tactic === 'none') return ZERO_DEF;
   const mult = suitabilityMultiplier(getDefensiveSuitability(style, tactic));
   return (DEFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_DEF))(mult);

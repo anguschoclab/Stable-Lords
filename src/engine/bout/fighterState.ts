@@ -16,7 +16,7 @@ import { type FighterState } from '../combat/resolution';
 
 /**
  * Calculates attribute and skill modifiers provided by a list of active trainers.
- * 
+ *
  * @param trainers - Array of active trainer entities
  * @param style - The warrior's fighting style to determine specialty compatibility
  * @returns An object containing various combat modifiers (ATT, DEF, INI, etc.)

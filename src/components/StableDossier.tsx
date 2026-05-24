@@ -15,11 +15,11 @@ interface StableDossierProps {
 /**
  * Renders a dossier for a specific stable (either the player's or a rival's).
  * Displays the stable's crest, owner information, fame, and active roster.
- * 
- * @param props - The component props.
- * @param [props.stableId] - The unique ID of the stable owner.
- * @param [props.stableName] - The name of the stable to display.
- * @returns The rendered stable dossier or a "not found" message.
+ *
+ * @param {StableDossierProps} props - The component props.
+ * @param {string} [props.stableId] - The unique ID of the stable owner.
+ * @param {string} [props.stableName] - The name of the stable to display.
+ * @returns {JSX.Element} The rendered stable dossier or a "not found" message.
  */
 export function StableDossier({ stableId, stableName }: StableDossierProps) {
   const state = useWorldState();

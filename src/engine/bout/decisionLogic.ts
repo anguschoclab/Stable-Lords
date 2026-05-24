@@ -31,13 +31,17 @@ const JUDGE_SCORERS: Record<JudgeArchetype, JudgeScorerFn> = {
 
 /**
  * Scores a fight from one judge's perspective using their archetype-specific logic.
- * 
+ *
  * @param archetype - The judge's scoring archetype (Crowd, Technical, or Blood)
  * @param fA - The state of fighter A
  * @param fD - The state of fighter D
  * @returns The label of the fighter favored by the judge ('A' or 'D'), or null for a tie.
  */
-function judgeScore(archetype: JudgeArchetype, fA: FighterState, fD: FighterState): 'A' | 'D' | null {
+function judgeScore(
+  archetype: JudgeArchetype,
+  fA: FighterState,
+  fD: FighterState
+): 'A' | 'D' | null {
   const { scoreA, scoreD } = JUDGE_SCORERS[archetype](fA, fD);
   if (scoreA > scoreD + 0.5) return 'A';
   if (scoreD > scoreA + 0.5) return 'D';
@@ -46,7 +50,7 @@ function judgeScore(archetype: JudgeArchetype, fA: FighterState, fD: FighterStat
 
 /**
  * Generates a narrative summary of a judge's decision.
- * 
+ *
  * @param winner - The winning fighter's label ('A' or 'D')
  * @param loser - The losing fighter's label ('A' or 'D')
  * @param winName - The winner's display name

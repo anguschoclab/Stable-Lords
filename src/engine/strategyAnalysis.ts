@@ -54,7 +54,7 @@ export function computeStrategyScore(plan: FightPlan, warrior?: Warrior): number
 
 /**
  * Returns the CSS class for a strategy score based on its value.
- * 
+ *
  * @param score - The numerical strategy score (0-100)
  * @returns A string containing Tailwind CSS classes
  */

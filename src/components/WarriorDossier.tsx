@@ -21,10 +21,10 @@ interface WarriorDossierProps {
  * Renders a comprehensive dossier for a specific warrior.
  * Includes header information, traits, stats, soul bond status, and medical reports.
  * Searches across active roster, graveyard, retired, and rival rosters to find the warrior.
- * 
- * @param props - The component props.
- * @param props.warriorId - The unique ID of the warrior to display.
- * @returns The rendered warrior dossier or a "not found" message.
+ *
+ * @param {WarriorDossierProps} props - The component props.
+ * @param {string} props.warriorId - The unique ID of the warrior to display.
+ * @returns {JSX.Element} The rendered warrior dossier or a "not found" message.
  */
 export const WarriorDossier = React.memo(function WarriorDossier({
   warriorId,

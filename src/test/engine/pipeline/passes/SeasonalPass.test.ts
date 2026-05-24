@@ -408,7 +408,6 @@ describe('runSeasonalPass', () => {
     expect(wUpdate?.flair).toContain('Local Hero');
   });
 
-
   it('should trigger the chaotic_spells offseason event and award xp (roll < 0.33)', () => {
     const rng = new SeededRNGService(99);
     const originalNext = (rng as any).rng.next.bind((rng as any).rng);
@@ -456,7 +455,9 @@ describe('runSeasonalPass', () => {
     const warriorId = 'w-magic' as WarriorId;
     const state: Partial<GameState> = {
       year: 1,
-      roster: [{ id: warriorId, name: 'Grok', status: 'Active', xp: 5, fame: 5, injuries: [] } as any],
+      roster: [
+        { id: warriorId, name: 'Grok', status: 'Active', xp: 5, fame: 5, injuries: [] } as any,
+      ],
       newsletter: [],
     };
 
@@ -500,5 +501,4 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems).toHaveLength(1);
     expect(impact.newsletterItems?.[0]?.items[0]).toContain('shade of purple');
   });
-
 });

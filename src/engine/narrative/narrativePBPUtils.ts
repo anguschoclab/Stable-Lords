@@ -32,12 +32,18 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
   return template.replace(/%([A-Z]+)|\{\{\s*([^{}\s]+)\s*\}\}/g, (match, shortKey, longKey) => {
     if (shortKey) {
       switch (shortKey) {
-        case 'A': return ctx.attacker || ctx.name || 'The warrior';
-        case 'D': return ctx.defender || 'the opponent';
-        case 'W': return ctx.weapon || 'weapon';
-        case 'BP': return ctx.bodyPart || 'body';
-        case 'H': return String(ctx.hits || '');
-        default: return match;
+        case 'A':
+          return ctx.attacker || ctx.name || 'The warrior';
+        case 'D':
+          return ctx.defender || 'the opponent';
+        case 'W':
+          return ctx.weapon || 'weapon';
+        case 'BP':
+          return ctx.bodyPart || 'body';
+        case 'H':
+          return String(ctx.hits || '');
+        default:
+          return match;
       }
     }
 

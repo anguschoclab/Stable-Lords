@@ -209,7 +209,9 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
                   </select>
                 ) : (
                   <div className="flex items-center gap-1">
-                    <label htmlFor={`condition-${idx}-value`} className="sr-only">Trigger Value</label>
+                    <label htmlFor={`condition-${idx}-value`} className="sr-only">
+                      Trigger Value
+                    </label>
                     <input
                       id={`condition-${idx}-value`}
                       type="number"
@@ -402,7 +404,10 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
 
               {/* Label */}
               <div className="space-y-1.5">
-                <label htmlFor={`condition-${idx}-label`} className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 block">
+                <label
+                  htmlFor={`condition-${idx}-label`}
+                  className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 block"
+                >
                   Label (optional)
                 </label>
                 <input

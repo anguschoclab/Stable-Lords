@@ -5,6 +5,14 @@ import { PSYCH_STATE_MODS } from '../mechanics/conditionEngine';
 import type { FighterState } from './types';
 import type { ResolutionContext } from './types';
 import type { CombatEvent } from '@/types/combat.types';
+import type { PsychState } from '@/types/shared.types';
+
+/**
+ * Condition result with psych state.
+ */
+export interface ConditionResult {
+  psychState: PsychState;
+}
 
 /**
  * Evaluate and apply psych state changes.
@@ -13,8 +21,8 @@ export function evaluatePsychState(
   fA: FighterState,
   fD: FighterState,
   _ctx: ResolutionContext,
-  condResultA: { psychState: any }, // eslint-disable-line @typescript-eslint/no-explicit-any
-  condResultD: { psychState: any } // eslint-disable-line @typescript-eslint/no-explicit-any
+  condResultA: ConditionResult,
+  condResultD: ConditionResult
 ): CombatEvent[] {
   const events: CombatEvent[] = [];
 

@@ -125,7 +125,7 @@ export function generateWarriorStatements(
   function getStatement(skillKey: string, baseValue: number, highThreshold: number): string {
     const witKey = isGoodWit ? 'good' : 'bad';
     const orderKey = baseValue >= highThreshold ? 'high' : 'low';
-    const category = (p[witKey] as { [key: string]: any })?.[skillKey]; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const category = (p[witKey] as unknown as Record<string, Record<string, StatementEntry[]>>)?.[skillKey];
     const entries = category?.[orderKey];
     // Personas in the archive use the WT itself for the sub-selection min values
     return pickFromArchive(entries, wt);

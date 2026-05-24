@@ -21,6 +21,11 @@ const MOOD_TONE: Record<
 export { MOOD_TONE };
 
 /**
+ * Template data type for substitution.
+ */
+export type TemplateData = Record<string, string | number | boolean | undefined>;
+
+/**
  * Gets display name for a fighting style.
  */
 export function styleName(style: string): string {
@@ -33,7 +38,7 @@ export function styleName(style: string): string {
  */
 export function t(
   template: string | string[],
-  data: Record<string, any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+  data: TemplateData,
   rng?: IRNGService
 ): string {
   const result = Array.isArray(template)

@@ -1,4 +1,9 @@
-import { GameState, BoutOffer } from '@/types/game'; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { GameState, BoutOfferId } from '@/types/game';
+
+/**
+ * Bout responses type.
+ */
+type BoutResponses = Record<string, 'Accepted' | 'Declined' | 'Pending'>;
 
 /**
  * Pure mutation for responding to a bout offer.
@@ -6,14 +11,14 @@ import { GameState, BoutOffer } from '@/types/game'; // eslint-disable-line @typ
  */
 export function respondToBoutOffer(
   state: GameState,
-  offerId: string,
+  offerId: BoutOfferId,
   warriorId: string,
   response: 'Accepted' | 'Declined'
 ): Partial<GameState> {
   const offer = state.boutOffers[offerId];
   if (!offer) return {};
 
-  const newResponses = {
+  const newResponses: BoutResponses = {
     ...offer.responses,
     [warriorId]: response,
   };

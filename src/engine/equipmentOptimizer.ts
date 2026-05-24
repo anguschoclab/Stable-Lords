@@ -2,12 +2,8 @@
  * Equipment Optimizer — recommends optimal gear by fighting style.
  * Analyzes encumbrance tradeoffs and style synergy.
  */
-import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types'; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { FightingStyle } from '@/types/shared.types';
 import {
-  WEAPONS, // eslint-disable-line @typescript-eslint/no-unused-vars
-  ARMORS, // eslint-disable-line @typescript-eslint/no-unused-vars
-  SHIELDS, // eslint-disable-line @typescript-eslint/no-unused-vars
-  HELMS, // eslint-disable-line @typescript-eslint/no-unused-vars
   type EquipmentItem,
   type EquipmentLoadout,
   getAvailableItems,
@@ -95,7 +91,10 @@ function scoreHelm(item: EquipmentItem, profile: BuildProfile): number {
 }
 
 function bestItem(items: EquipmentItem[], scorer: (i: EquipmentItem) => number): EquipmentItem {
-  return items.reduce((best, item) => (scorer(item) > scorer(best) ? item : best), items[0]);
+  if (items.length === 0) {
+    throw new Error('Cannot select best item from empty array');
+  }
+  return items.reduce((best, item) => (scorer(item) > scorer(best) ? item : best), items[0]!);
 }
 
 /**
@@ -121,7 +120,7 @@ export function generateRecommendations(
     const isTwoHanded = weapon.twoHanded ?? false;
     const armor = bestItem(armors, (a) => scoreArmor(a, profile));
     const shield = isTwoHanded
-      ? (shields.find((s) => s.id === 'none_shield') ?? shields[0])
+      ? (shields.find((s) => s.id === 'none_shield') ?? shields[0]!)
       : bestItem(shields, (s) => scoreShield(s, profile));
     const helm = bestItem(helms, (h) => scoreHelm(h, profile));
 
@@ -150,8 +149,8 @@ export function generateRecommendations(
       breakdown: {
         weapon: { item: weapon, preferred },
         armor: { item: armor },
-        shield: { item: shield as any, blocked: isTwoHanded }, // eslint-disable-line @typescript-eslint/no-explicit-any
-        helm: { item: helm as any }, // eslint-disable-line @typescript-eslint/no-explicit-any
+        shield: { item: shield, blocked: isTwoHanded },
+        helm: { item: helm },
       },
     };
   });

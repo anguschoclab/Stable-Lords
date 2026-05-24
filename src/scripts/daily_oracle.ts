@@ -7,12 +7,6 @@ const WEEKS_TO_SIMULATE = 1000;
 
 const REPORT_FILE = path.join(process.cwd(), 'Daily_Balance_Report.md');
 
-interface MetricStats { // eslint-disable-line @typescript-eslint/no-unused-vars
-  styleWinRates: Record<string, number>;
-  mortalityRate: number;
-  avgEconomy: number;
-}
-
 async function main() {
   console.log(`Starting Autobalance Simulation for ${WEEKS_TO_SIMULATE} weeks...`);
 
@@ -51,8 +45,8 @@ async function main() {
 
   const styleWinRates: Record<string, number> = {};
   for (const style in styleWins) {
-    const wins = styleWins[style];
-    const losses = styleLosses[style];
+    const wins = styleWins[style] ?? 0;
+    const losses = styleLosses[style] ?? 0;
     const total = wins + losses;
     if (total > 0) {
       styleWinRates[style] = wins / total;

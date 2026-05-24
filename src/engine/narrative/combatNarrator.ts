@@ -139,40 +139,6 @@ export function narrateBoutEnd(
   return [conclusionText];
 }
 
-// Helper methods
-
-function richHitLocation(rng: IRNGService, location: string): string { // eslint-disable-line @typescript-eslint/no-unused-vars
-  const hitLocations = (narrativeContent as NarrativeContent).pbp.hit_locations;
-  const key = location.toLowerCase() as keyof typeof hitLocations;
-  const variants = hitLocations[key];
-  if (!variants) return location.toUpperCase();
-  return rng.pick(variants);
-}
-
-function getStrikeSeverity( // eslint-disable-line @typescript-eslint/no-unused-vars
-  damage: number,
-  maxHp: number,
-  isFatal: boolean,
-  isCrit: boolean,
-  isFavorite: boolean,
-  fame: number
-): 'glancing' | 'solid' | 'mastery' | 'critical_human' | 'critical_supernatural' | 'fatal' {
-  if (isFatal) return 'fatal';
-
-  const ratio = damage / maxHp;
-  if (isCrit || ratio >= 0.25) {
-    return fame >= 100 ? 'critical_supernatural' : 'critical_human';
-  }
-
-  if (isFavorite) return 'mastery';
-
-  if (ratio >= 0.1) return 'solid';
-  return 'glancing';
-}/**
-  * Combat narrator.
-  */
-
-
 // Backward compatibility object
 /**
  * Combat narrator.

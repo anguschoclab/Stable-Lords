@@ -31,7 +31,7 @@ const PERSONALITIES: PromoterPersonality[] = [
  */
 export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(state.week * 777 + 1);
-  const newPromoters: Record<string, Promoter> = { ...state.promoters };
+  let newPromoters: Record<string, Promoter> = { ...state.promoters };
   const news: string[] = [];
   const WEEKS_PER_YEAR = 52;
   const isAgingWeek = state.week % WEEKS_PER_YEAR === 0;
@@ -74,10 +74,9 @@ export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): S
           },
         };
 
-        // Apply removals safely
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete newPromoters[id];
-        newPromoters[newId] = successor;
+        // Apply removals safely using immutable pattern
+        const { [id]: removed, ...rest } = newPromoters;
+        newPromoters = { ...rest, [newId]: successor };
 
         news.push(
           `🏠 SUCCESSION: The legendary promoter ${p.name} has retired. Their protege, ${successorName}, takes over the ${p.tier} circuit.`

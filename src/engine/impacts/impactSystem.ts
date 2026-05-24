@@ -107,7 +107,8 @@ const MERGE_CONFIG: MergeConfig = {
 };
 
 // 🌩️ Pure helpers for merging strategies (Strategy Pattern)
-const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: any) => void> = { // eslint-disable-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic type loss in forEach loop (fundamental TypeScript limitation with generic key iteration)
+const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: any) => void> = {
   accumulate: (merged, key, value) => {
     if (typeof value === 'number') {
       merged[key] = (merged[key] || 0) + value;
@@ -152,11 +153,14 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
     const config = MERGE_CONFIG[key];
     if (!config) return;
     if (Array.isArray(config.defaultValue)) {
-      (merged as any)[key] = [...config.defaultValue]; // eslint-disable-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic type loss in forEach loop (fundamental TypeScript limitation with generic key iteration)
+      (merged as any)[key] = [...config.defaultValue];
     } else if (config.defaultValue instanceof Map) {
-      (merged as any)[key] = new Map(config.defaultValue as never); // eslint-disable-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic type loss in forEach loop (fundamental TypeScript limitation with generic key iteration)
+      (merged as any)[key] = new Map(config.defaultValue as never);
     } else {
-      (merged as any)[key] = config.defaultValue; // eslint-disable-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic type loss in forEach loop (fundamental TypeScript limitation with generic key iteration)
+      (merged as any)[key] = config.defaultValue;
     }
   });
 

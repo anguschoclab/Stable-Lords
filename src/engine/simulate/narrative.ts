@@ -15,6 +15,14 @@ import type { WeatherType } from '@/types/shared.types';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 
 /**
+ * Arena configuration type.
+ */
+export interface ArenaConfig {
+  name: string;
+  description: string;
+}
+
+/**
  * Generate introduction narrative for both fighters.
  */
 export function generateIntroductions(
@@ -27,7 +35,7 @@ export function generateIntroductions(
   warriorD?: Warrior,
   weather: WeatherType = 'Clear',
   arenaId: string = 'standard_arena',
-  arenaConfig?: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  arenaConfig?: ArenaConfig
 ): MinuteEvent[] {
   const log: MinuteEvent[] = [];
 

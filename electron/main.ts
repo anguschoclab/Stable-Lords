@@ -292,7 +292,8 @@ function createMenu() {
     },
   ];
 
-  const menu = Menu.buildFromTemplate(template as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Electron Menu.buildFromTemplate API mismatch (external library)
+  const menu = Menu.buildFromTemplate(template as any);
   Menu.setApplicationMenu(menu);
 }
 

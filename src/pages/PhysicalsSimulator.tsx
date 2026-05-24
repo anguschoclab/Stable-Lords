@@ -16,11 +16,16 @@ import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV, type Warrior } from '
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
-import { Surface } from '@/components/ui/Surface';/**
-                                                   * Physicals simulator.
-                                                   * @returns The result.
-                                                   */
+import { Surface } from '@/components/ui/Surface';
 
+/**
+ * Fighter stats for simulator.
+ */
+export interface FighterStats {
+  strength: number;
+  quickness: number;
+  vitality: number;
+}
 
 /**
  * Physicals simulator.
@@ -33,8 +38,8 @@ export default function PhysicalsSimulator() {
   const [styleA, setStyleA] = useState<FightingStyle>(FightingStyle.BashingAttack);
   const [styleB, setStyleB] = useState<FightingStyle>(FightingStyle.ParryRiposte);
 
-  const [statsA, setStatsA] = useState({ strength: 10, quickness: 10, vitality: 10 });
-  const [statsB, setStatsB] = useState({ strength: 10, quickness: 10, vitality: 10 });
+  const [statsA, setStatsA] = useState<FighterStats>({ strength: 10, quickness: 10, vitality: 10 });
+  const [statsB, setStatsB] = useState<FighterStats>({ strength: 10, quickness: 10, vitality: 10 });
 
   const [fighterAId, setFighterAId] = useState<string | null>(null);
   const [fighterBId, setFighterBId] = useState<string | null>(null);
@@ -125,9 +130,9 @@ export default function PhysicalsSimulator() {
   const renderFighterConfig = (
     label: string,
     style: FightingStyle,
-    setStyle: (s: any) => void, // eslint-disable-line @typescript-eslint/no-explicit-any
-    stats: any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    setStats: (s: any) => void // eslint-disable-line @typescript-eslint/no-explicit-any
+    setStyle: (s: FightingStyle) => void,
+    stats: FighterStats,
+    setStats: (s: FighterStats) => void
   ) => (
     <Card>
       <CardHeader className="pb-4 border-b border-border">

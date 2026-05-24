@@ -4,7 +4,7 @@
 import { resolveDecision } from '../bout/decisionLogic';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, WIN_XP, LOSS_XP } from '../combat/mechanics/combatConstants';
 import type { FighterState } from '../combat/resolution/resolution';
-import type { FightOutcomeBy } from '@/types/combat.types';
+import type { FightOutcomeBy, DeathCauseBucket, MinuteEvent } from '@/types/combat.types';
 
 /**
  * Generate outcome tags based on fight statistics.
@@ -44,7 +44,7 @@ export function buildPostFightStats(
   fA: FighterState,
   fD: FighterState,
   tags: string[],
-  causeBucket?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  causeBucket?: DeathCauseBucket,
   fatalHitLocation?: string,
   fatalExchangeIndex?: number
 ) {
@@ -71,7 +71,7 @@ export function handleTimeLimit(
   nameA: string,
   nameD: string,
   rng: () => number,
-  log: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
+  log: MinuteEvent[]
 ): { winner: 'A' | 'D' | null; by: FightOutcomeBy | null } {
   const finalOutcome = resolveDecision(fA, fD, nameA, nameD, rng);
   log.push({

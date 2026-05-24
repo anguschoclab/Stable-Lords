@@ -7,7 +7,7 @@ import { narrateEvents, NarrationContext } from '../combat/narrative/narrator';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '../combat/mechanics/combatConstants';
 import type { FighterState } from '../combat/resolution';
 import type { ResolutionContext } from '../combat/resolution/resolution';
-import type { MinuteEvent, DeathCauseBucket, FightOutcomeBy } from '@/types/combat.types';
+import type { MinuteEvent, DeathCauseBucket, FightOutcomeBy, ExchangeLogEntry } from '@/types/combat.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import { buildExchangeLogEntry } from './logging';
@@ -47,7 +47,7 @@ export function runSimulationLoop(
   crowdMood?: string
 ): {
   log: MinuteEvent[];
-  exchangeLog: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+  exchangeLog: ExchangeLogEntry[];
   winner: 'A' | 'D' | null;
   by: FightOutcomeBy | null;
   causeBucket: DeathCauseBucket | undefined;
@@ -55,7 +55,7 @@ export function runSimulationLoop(
   fatalExchangeIndex: number | undefined;
 } {
   const log: MinuteEvent[] = [];
-  const exchangeLog: any[] = []; // eslint-disable-line @typescript-eslint/no-explicit-any
+  const exchangeLog: ExchangeLogEntry[] = [];
   let prevHpRatioA = 1.0;
   let prevHpRatioD = 1.0;
   let winner: 'A' | 'D' | null = null;

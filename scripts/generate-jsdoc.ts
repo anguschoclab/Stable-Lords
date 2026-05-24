@@ -223,7 +223,6 @@ function processFile(filePath: string): boolean {
     const insertPos = decl.getFullStart();
     const leadingTriviaWidth = decl.getLeadingTriviaWidth(sourceFile);
     const triviaStart = insertPos;
-    const triviaEnd = insertPos + leadingTriviaWidth; // eslint-disable-line @typescript-eslint/no-unused-vars
 
     // Insert before any leading trivia (like comments or blank lines)
     edits.push({ start: triviaStart, end: triviaStart, text: comment + "\n" });

@@ -1,4 +1,4 @@
-import type { GameState } from '@/types/state.types';
+import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { StateImpact } from '@/engine/impacts';
 import { findWarriorById, clearWarriorCache } from '@/engine/core/warriorLookup';
@@ -15,7 +15,7 @@ export function modifyWarrior(
   transform: (w: Warrior) => void
 ): StateImpact {
   const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, any>(); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
 
   state.roster.forEach((w) => {
     if (w.id === warriorId) {

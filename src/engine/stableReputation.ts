@@ -35,7 +35,7 @@ export function computeStableReputation(state: GameState): StableReputation {
   // ⚡ Bolt: Single pass over roster to collect active warriors, total kills, and unique styles
   for (let i = 0; i < state.roster.length; i++) {
     const w = state.roster[i];
-    if (w.status === 'Active') {
+    if (w && w.status === 'Active') {
       activeWarriors.push(w);
       uniqueStyles.add(w.style);
       totalKills += w.career?.kills || 0;
@@ -44,7 +44,10 @@ export function computeStableReputation(state: GameState): StableReputation {
 
   // ⚡ Bolt: Single pass over graveyard to collect kills
   for (let i = 0; i < state.graveyard.length; i++) {
-    graveyardKills += state.graveyard[i].career?.kills || 0;
+    const g = state.graveyard[i];
+    if (g) {
+      graveyardKills += g.career?.kills || 0;
+    }
   }
 
   let killBouts = 0;
@@ -53,10 +56,12 @@ export function computeStableReputation(state: GameState): StableReputation {
   // ⚡ Bolt: Single pass over arena history to collect bout stats
   for (let i = 0; i < state.arenaHistory.length; i++) {
     const f = state.arenaHistory[i];
-    if (f.by === 'Kill') {
-      killBouts++;
-    } else if (f.winner !== null) {
-      cleanBouts++;
+    if (f) {
+      if (f.by === 'Kill') {
+        killBouts++;
+      } else if (f.winner !== null) {
+        cleanBouts++;
+      }
     }
   }
 
@@ -66,11 +71,14 @@ export function computeStableReputation(state: GameState): StableReputation {
   // ⚡ Bolt: Single pass over newsletter for mentions
   if (state.newsletter) {
     for (let i = 0; i < state.newsletter.length; i++) {
-      const items = state.newsletter[i].items;
-      for (let j = 0; j < items.length; j++) {
-        if (items[j].includes(stableName)) {
-          gazetteMentions++;
-          break; // Count once per newsletter
+      const items = state.newsletter[i]?.items;
+      if (items) {
+        for (let j = 0; j < items.length; j++) {
+          const item = items[j];
+          if (item && item.includes(stableName)) {
+            gazetteMentions++;
+            break; // Count once per newsletter
+          }
         }
       }
     }
@@ -78,21 +86,26 @@ export function computeStableReputation(state: GameState): StableReputation {
 
   // ── Fame ──
   // ⚡ Bolt: Fixed accidental mutation of activeWarriors and optimized O(N log N) sort to O(N) bounded tracking
-  const topFame = [];
+  const topFame: Warrior[] = [];
   for (let i = 0; i < activeWarriors.length; i++) {
     const w = activeWarriors[i];
-    if (topFame.length < 5) {
-      topFame.push(w);
-      topFame.sort((a, b) => b.fame - a.fame);
-    } else if (w.fame > topFame[4].fame) {
-      topFame[4] = w;
-      topFame.sort((a, b) => b.fame - a.fame);
+    if (w) {
+      if (topFame.length < 5) {
+        topFame.push(w);
+        topFame.sort((a, b) => b.fame - a.fame);
+      } else if (w.fame > (topFame[4]?.fame ?? 0)) {
+        topFame[4] = w;
+        topFame.sort((a, b) => b.fame - a.fame);
+      }
     }
   }
 
   let topFameSum = 0;
   for (let i = 0; i < topFame.length; i++) {
-    topFameSum += topFame[i].fame;
+    const w = topFame[i];
+    if (w) {
+      topFameSum += w.fame;
+    }
   }
   const avgFame = topFame.length > 0 ? topFameSum / topFame.length : 0;
   // Reduced average fame multiplier and scaled down carryover fame to prevent early-game snowballing
@@ -125,8 +138,8 @@ export function computeStableReputation(state: GameState): StableReputation {
  */
 export function computeRivalReputation(
   roster: Warrior[],
-  arenaHistory: FightSummary[], // eslint-disable-line @typescript-eslint/no-unused-vars
-  stableName: string // eslint-disable-line @typescript-eslint/no-unused-vars
+  _arenaHistory: FightSummary[],
+  _stableName: string
 ): StableReputation {
   let totalKills = 0;
   let cleanBouts = 0;
@@ -136,32 +149,39 @@ export function computeRivalReputation(
   // ⚡ Bolt: Single pass over roster to compute stats instead of multiple filters and reduce
   for (let i = 0; i < roster.length; i++) {
     const w = roster[i];
-    if (w.status === 'Active') {
-      activeWarriors.push(w);
-      uniqueStyles.add(w.style);
-    }
+    if (w) {
+      if (w.status === 'Active') {
+        activeWarriors.push(w);
+        uniqueStyles.add(w.style);
+      }
 
-    // Total kills and clean bouts uses full roster, not just active
-    totalKills += w.career?.kills || 0;
-    cleanBouts += (w.career?.wins || 0) + (w.career?.losses || 0) - (w.career?.kills || 0);
+      // Total kills and clean bouts uses full roster, not just active
+      totalKills += w.career?.kills || 0;
+      cleanBouts += (w.career?.wins || 0) + (w.career?.losses || 0) - (w.career?.kills || 0);
+    }
   }
 
   // ⚡ Bolt: Fixed accidental mutation of activeWarriors and optimized O(N log N) sort to O(N) bounded tracking
-  const topFame = [];
+  const topFame: Warrior[] = [];
   for (let i = 0; i < activeWarriors.length; i++) {
     const w = activeWarriors[i];
-    if (topFame.length < 5) {
-      topFame.push(w);
-      topFame.sort((a, b) => b.fame - a.fame);
-    } else if (w.fame > topFame[4].fame) {
-      topFame[4] = w;
-      topFame.sort((a, b) => b.fame - a.fame);
+    if (w) {
+      if (topFame.length < 5) {
+        topFame.push(w);
+        topFame.sort((a, b) => b.fame - a.fame);
+      } else if (w.fame > (topFame[4]?.fame ?? 0)) {
+        topFame[4] = w;
+        topFame.sort((a, b) => b.fame - a.fame);
+      }
     }
   }
 
   let topFameSum = 0;
   for (let i = 0; i < topFame.length; i++) {
-    topFameSum += topFame[i].fame;
+    const w = topFame[i];
+    if (w) {
+      topFameSum += w.fame;
+    }
   }
   const avgFame = topFame.length > 0 ? topFameSum / topFame.length : 0;
   const fame = Math.min(100, Math.round(avgFame * 2.0));

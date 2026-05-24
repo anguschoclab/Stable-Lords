@@ -1,5 +1,6 @@
-import type { GameState, Warrior, FightSummary } from '@/types/state.types';
+import type { GameState, Warrior, FightSummary, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import type { FightOutcome } from '@/types/combat.types';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ownerAI';
@@ -231,7 +232,7 @@ function applyBoutResultsToImpact(
   state: GameState,
   wA: Warrior,
   wD: Warrior,
-  outcome: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  outcome: FightOutcome,
   tId: string,
   tName: string,
   rng: IRNGService
@@ -239,7 +240,7 @@ function applyBoutResultsToImpact(
   const isKill = outcome.by === 'Kill';
   const winnerSide = outcome.winner;
   const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, any>(); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
 
   const summary: FightSummary = createFightSummary({
     warriorA: wA,

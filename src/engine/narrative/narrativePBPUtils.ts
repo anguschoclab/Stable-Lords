@@ -45,7 +45,7 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
       if (longKey === 'name' && !ctx.name && ctx.attacker) return String(ctx.attacker);
       if (longKey === 'attacker' && !ctx.attacker && ctx.name) return String(ctx.name);
 
-      const value = (ctx as any)[longKey]; // eslint-disable-line @typescript-eslint/no-explicit-any
+      const value = ctx[longKey as keyof CombatContext];
       return value !== undefined && Object.hasOwn(ctx, longKey) ? String(value) : match;
     }
 

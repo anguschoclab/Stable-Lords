@@ -23,10 +23,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
-import type { GameState, RivalStableData } from '@/types/state.types';/**
-                                                                       * Admin tools.
-                                                                       * @returns The result.
-                                                                       */
+import type { GameState, RivalStableData, Owner } from '@/types/state.types';
 
 
 /**
@@ -117,7 +114,7 @@ export default function AdminTools() {
       };
       draft.ftueComplete = true;
       draft.isFTUE = false;
-      draft.player = { ...defaultPlayer, ...(draft.player || {}) } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+      draft.player = { ...defaultPlayer, ...(draft.player || {}) } as Owner;
     });
     toast.success('FTUE constraints bypassed.');
   }, [setState]);

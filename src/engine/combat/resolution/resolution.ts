@@ -6,25 +6,8 @@ import {
   executeHit,
   applyEnduranceCosts,
 } from './exchangeHelpers';
-import { FightingStyle } from '@/types/shared.types';
-import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
-import type { FightPlan, CombatEvent } from '@/types/combat.types';
-import type {
-  BaseSkills,
-  Attributes,
-  DerivedStats,
-  WeatherType,
-  PsychState,
-  OffensiveTactic,
-  DefensiveTactic,
-  DistanceRange,
-  ArenaZone,
-  ArenaConfig,
-  SurfaceMod,
-} from '@/types/shared.types';
-import type { WeatherEffect } from '../mechanics/weatherEffects';
-import { evaluateConditions, PSYCH_STATE_MODS } from '../mechanics/conditionEngine';
-import { getSpecialtyMods } from '../../trainerSpecialties';
+import type { CombatEvent } from '@/types/combat.types';
+import { evaluateConditions } from '../mechanics/conditionEngine';
 import { contestCheck } from '../mechanics/combatMath';
 import { enduranceCost, fatiguePenalty } from '../mechanics/combatFatigue';
 import {
@@ -37,39 +20,13 @@ import { getFavoriteRhythmBonus } from '../../favorites';
 import { getDynamicTraitMods, type DynamicTraitContext } from '../../traits';
 import {
   TACTIC_OVERUSE_CAP,
-  getMatchupBonus as rawMatchupBonus,
 } from '../mechanics/combatConstants';
 import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,
   calculateFinalOEAL,
   alIniMod,
-} from '../mechanics/tacticResolution';/**
-                                        * Decision_hit_margin.
-                                        */
-
-
-/**
- * Decision_hit_margin.
- */
-export const DECISION_HIT_MARGIN = 3;/**
-                                      * Get matchup bonus.
-                                      * @param styleA - Style a.
-                                      * @param styleD - Style d.
-                                      * @returns The result.
-                                      */
-
-
-/**
- * Get matchup bonus.
- * @param styleA - Style a.
- * @param styleD - Style d.
- * @returns The result.
- */
-export function getMatchupBonus(styleA: FightingStyle, styleD: FightingStyle): number {
-  return rawMatchupBonus(styleA, styleD);
-}
-
+} from '../mechanics/tacticResolution';
 import {
   makeExchangeState,
   runApproach,
@@ -77,147 +34,23 @@ import {
   runCommit,
   runRecovery,
 } from './exchangeSubPhases';
-import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';/**
-                                                                                     * Defines the shape of fighter state.
-                                                                                     */
+import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';
+import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
+import { applySpecialtyMods } from './specialtyMods';
+import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 
-
-// ─── Fighter State & Context ───────────────────────────────────────────────
-
-/**
- * Defines the shape of fighter state.
- */
-export interface FighterState {
-  label: 'A' | 'D';
-  style: FightingStyle;
-  attributes: Attributes;
-  skills: BaseSkills;
-  derived: DerivedStats;
-  plan: FightPlan;
-  /** Current effective plan — may diverge from plan when a PlanCondition fires */
-  activePlan: FightPlan;
-  /** Psychological state derived each exchange from fight metrics */
-  psychState: PsychState;
-  hp: number;
-  maxHp: number;
-  endurance: number;
-  maxEndurance: number;
-  hitsLanded: number;
-  hitsTaken: number;
-  ripostes: number;
-  consecutiveHits: number;
-  armHits: number;
-  legHits: number;
-  favorites?: WarriorFavorites;
-  /** Inherent traits — Berserker, Patient, etc. Static mods are baked into
-   *  `skills`; conditional ones are evaluated each exchange in `resolveExchange`. */
-  traits?: string[];
-  /** Static endurance multiplier (e.g. Iron Lung trait). Multiplied into the
-   *  per-exchange endurance cost in applyEnduranceCosts. Defaults to 1. */
-  staticEnduranceMult?: number;
-  totalFights: number;
-  encumbrancePenalty?: { iniPenalty: number; enduranceMult: number };
-  weaponId?: string;
-  armorId?: string;
-  shieldId?: string;
-  desperate?: boolean;
-  /** Momentum counter: −3 to +3. Builds on hits/parries, swings on ripostes. Gates kill window. */
-  momentum: number;
-  /** True when fighter has committed (HP < 35%, high killDesire): +20% ATT/DMG, fully open. */
-  committed: boolean;
-  /** True when fighter survived a commit attack — grants a free riposte on next exchange. */
-  survivalStrike: boolean;
-  /**
-   * Recovery debt from CommitLevel. 0–3.
-   * Penalises the Approach sub-phase roll by 2 per point. Decays by 1 each exchange.
-   * Set via: recoveryDebt = Math.min(3, Math.max(existing, toWrite))
-   */
-  recoveryDebt: number;
-}/**
-  * Defines the shape of resolution context.
-  */
-
-
-/**
- * Defines the shape of resolution context.
- */
-export interface ResolutionContext {
-  rng: () => number;
-  phase: 'OPENING' | 'MID' | 'LATE';
-  exchange: number;
-  weather: WeatherType;
-  weatherEffect: WeatherEffect;
-  matchupA: number;
-  matchupD: number;
-  trainerModsA: Record<string, number>;
-  trainerModsD: Record<string, number>;
-  /** Raw trainer list — used for per-exchange specialty recalculation */
-  trainers?: import('@/types/state.types').Trainer[];
-  /** Snapshot of base trainer mods (without specialties) — preserved so per-exchange specialty deltas stay additive */
-  baseTrainerModsA?: Record<string, number>;
-  baseTrainerModsD?: Record<string, number>;
-  weaponReqA: { endurancePenalty: number; attPenalty: number };
-  weaponReqD: { endurancePenalty: number; attPenalty: number };
-  tacticStreakA: number;
-  tacticStreakD: number;
-  lastOffTacticA?: string;
-  lastOffTacticD?: string;
-  /** Current distance range between fighters */
-  range: DistanceRange;
-  /** Current zone of the pushed-back fighter */
-  zone: ArenaZone;
-  /** Arena configuration (zone penalties, surface mods) */
-  arenaConfig: ArenaConfig;
-  /** Which fighter is currently in the disadvantaged zone position */
-  pushedFighter?: 'A' | 'D';
-  /** Surface modifiers from arenaConfig, unpacked for convenience */
-  surfaceMod: SurfaceMod;
-  /** Crowd-mood lethality delta injected by simulate.ts. */
-  crowdKillBonus?: number;
-}/**
-  * Resolve effective tactics.
-  * @param plan - Plan.
-  * @param phaseKey - Phase key.
-  * @returns The result.
-  */
-
-
-/**
- * Resolve effective tactics.
- * @param plan - Plan.
- * @param phaseKey - Phase key.
- * @returns The result.
- */
-export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | 'mid' | 'late') {
-  const phase = plan.phases?.[phaseKey];
-  return {
-    offTactic: (phase?.offensiveTactic ?? plan.offensiveTactic ?? 'none') as OffensiveTactic,
-    defTactic: (phase?.defensiveTactic ?? plan.defensiveTactic ?? 'none') as DefensiveTactic,
-    target: phase?.target ?? plan.target ?? 'Any',
-  };
-}/**
-  * Apply aggression bias.
-  * @param aggressionBias - Aggression bias.
-  * @returns The result.
-  */
-
-
-/**
- * Apply aggression bias.
- * @param aggressionBias - Aggression bias.
- * @returns The result.
- */
-export function applyAggressionBias(aggressionBias: number): [number, number] {
-  return aggressionBias > 5
-    ? [(aggressionBias - 5) * 0.5, -(aggressionBias - 5) * 0.5]
-    : [(aggressionBias - 5) * 0.5, (5 - aggressionBias) * 0.5];
-}/**
-  * Resolve exchange.
-  * @param ctx - Ctx.
-  * @param fA - F a.
-  * @param fD - F d.
-  * @returns The result.
-  */
+// Import from split modules
+export type { FighterState, ResolutionContext } from './types';
+export { resolveEffectiveTactics, applyAggressionBias } from './tactics';
+export { DECISION_HIT_MARGIN, getMatchupBonus } from './constants';
+export { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
+export { applySpecialtyMods } from './specialtyMods';/**
+                                                      * Resolve exchange.
+                                                      * @param ctx - Ctx.
+                                                      * @param fA - F a.
+                                                      * @param fD - F d.
+                                                      * @returns The result.
+                                                      */
 
 
 // ─── Phase Handlers ─────────────────────────────────────────────────────────
@@ -246,93 +79,18 @@ export function resolveExchange(
   const condResultD = evaluateConditions(fD, fA, ctx, wtD);
   fA.activePlan = condResultA.newPlan;
   fD.activePlan = condResultD.newPlan;
-  if (condResultA.psychState !== fA.psychState) {
-    fA.psychState = condResultA.psychState;
-    if (condResultA.psychState !== 'Neutral') {
-      events.push({
-        type: 'STATE_CHANGE',
-        actor: 'A',
-        result: `PSYCH_${condResultA.psychState.toUpperCase()}`,
-      });
-    }
-  }
-  if (condResultD.psychState !== fD.psychState) {
-    fD.psychState = condResultD.psychState;
-    if (condResultD.psychState !== 'Neutral') {
-      events.push({
-        type: 'STATE_CHANGE',
-        actor: 'D',
-        result: `PSYCH_${condResultD.psychState.toUpperCase()}`,
-      });
-    }
-  }
 
-  // ── Per-exchange specialty mods (conditional on current fight state) ──
-  // Specialties like KillerInstinct/Finisher/IronGuard depend on live HP/momentum/endurance.
-  // We snapshot the static base mods on exchange 0 and always diff from that snapshot,
-  // so each exchange gets a fresh specialty computation without compounding.
-  if (ctx.trainers?.length) {
-    if (!ctx.baseTrainerModsA) ctx.baseTrainerModsA = { ...ctx.trainerModsA };
-    if (!ctx.baseTrainerModsD) ctx.baseTrainerModsD = { ...ctx.trainerModsD };
-    const specA = getSpecialtyMods(ctx.trainers, fA, fD, ctx);
-    const specD = getSpecialtyMods(ctx.trainers, fD, fA, ctx);
-    const baseA = ctx.baseTrainerModsA;
-    const baseD = ctx.baseTrainerModsD;
-    ctx.trainerModsA = {
-      attMod: (baseA.attMod ?? 0) + specA.attMod,
-      parMod: (baseA.parMod ?? 0) + specA.parMod,
-      defMod: (baseA.defMod ?? 0) + specA.defMod,
-      iniMod: (baseA.iniMod ?? 0) + specA.iniMod,
-      decMod: (baseA.decMod ?? 0) + specA.decMod,
-      endMod: (baseA.endMod ?? 0) + specA.endMod,
-      healMod: baseA.healMod ?? 0,
-      killWindowBonus: specA.killWindowBonus,
-      damageReceivedMult: specA.damageReceivedMult,
-      riposteDamageMult: specA.riposteDamageMult,
-      fatiguePenaltyReduction: specA.fatiguePenaltyReduction,
-    };
-    ctx.trainerModsD = {
-      attMod: (baseD.attMod ?? 0) + specD.attMod,
-      parMod: (baseD.parMod ?? 0) + specD.parMod,
-      defMod: (baseD.defMod ?? 0) + specD.defMod,
-      iniMod: (baseD.iniMod ?? 0) + specD.iniMod,
-      decMod: (baseD.decMod ?? 0) + specD.decMod,
-      endMod: (baseD.endMod ?? 0) + specD.endMod,
-      healMod: baseD.healMod ?? 0,
-      killWindowBonus: specD.killWindowBonus,
-      damageReceivedMult: specD.damageReceivedMult,
-      riposteDamageMult: specD.riposteDamageMult,
-      fatiguePenaltyReduction: specD.fatiguePenaltyReduction,
-    };
-  }
+  // ── Psych state evaluation ──
+  events.push(...evaluatePsychState(fA, fD, ctx, condResultA, condResultD));
+
+  // ── Per-exchange specialty mods ──
+  applySpecialtyMods(ctx, fA, fD);
 
   // ── Psych state modifier lookup ──
-  const psychA = PSYCH_STATE_MODS[fA.psychState];
-  const psychD = PSYCH_STATE_MODS[fD.psychState];
+  const { psychA, psychD } = getPsychStateMods(fA, fD);
 
-  // Canonical desperate state: override plan when HP < 30% OR endurance < 20%
-  for (const f of [fA, fD] as FighterState[]) {
-    if (
-      !f.desperate &&
-      f.plan.desperatePlan &&
-      (f.hp < f.maxHp * 0.3 || f.endurance < f.maxEndurance * 0.2)
-    ) {
-      const dp = f.plan.desperatePlan;
-      f.activePlan = {
-        ...f.plan,
-        OE: dp.OE,
-        AL: dp.AL,
-        ...(dp.killDesire !== undefined && { killDesire: dp.killDesire }),
-        offensiveTactic: dp.offensiveTactic ?? f.plan.offensiveTactic,
-        defensiveTactic: dp.defensiveTactic ?? f.plan.defensiveTactic,
-        target: dp.target ?? f.plan.target,
-        protect: dp.protect ?? f.plan.protect,
-        phases: undefined,
-      };
-      f.desperate = true;
-      events.push({ type: 'STATE_CHANGE', actor: f.label, result: 'DESPERATE' });
-    }
-  }
+  // ── Desperate state handling ──
+  events.push(...handleDesperateState(fA, fD));
 
   // Use activePlan for all tactic/OE/AL lookups
   const tactA = resolveEffectiveTactics(fA.activePlan, phaseKey);

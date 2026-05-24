@@ -112,7 +112,7 @@ export interface WorldSlice {
 /**
  * Create world slice.
  * @param set - Set.
- * @param get - Get.
+ * @param _get - Get.
  * @returns The result.
  */
 export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (set, _get) => ({
@@ -182,7 +182,7 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
         (f: FightSummary, i: number, arr: FightSummary[]) => {
           // Keep transcripts only for the last 20 fights to save memory
           if (arr.length - i > 20 && f.transcript) {
-            const { transcript, ...rest } = f;
+            const { transcript: _transcript, ...rest } = f; // eslint-disable-line @typescript-eslint/no-unused-vars
             return rest;
           }
           return f;
@@ -234,7 +234,7 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
 
   replacePromoter: (oldId, newPromoter) => {
     set((state: WorldSlice) => {
-      const { [oldId]: removed, ...remainingPromoters } = state.promoters;
+      const { [oldId]: removed, ...remainingPromoters } = state.promoters; // eslint-disable-line @typescript-eslint/no-unused-vars
       const newPromoters = { ...remainingPromoters, [newPromoter.id]: newPromoter };
 
       return {

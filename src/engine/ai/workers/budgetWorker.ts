@@ -29,7 +29,7 @@ export interface BudgetReport {
  * Check budget.
  * @param rival - Rival.
  * @param cost - Cost.
- * @param category - Category.
+ * @param _category - Category.
  * @returns The result.
  */
 export function checkBudget(

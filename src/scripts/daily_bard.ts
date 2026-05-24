@@ -127,7 +127,7 @@ async function request_bardic_inspiration(
   deficitPath: string,
   context: string = ''
 ): Promise<string> {
-  const [root, type, leaf] = deficitPath.split('.');
+  const [root, type, leaf] = deficitPath.split('.'); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   const systemPrompt = `You are the Bard of the Blood Sands, a brutal arena announcer.
 You generate high-fantasy combat and world descriptions for a text-based game.
@@ -155,7 +155,7 @@ Context: You are writing for ${deficitPath}. ${context}`;
         `${systemPrompt}\n\nGenerate 3 new templates for ${deficitPath}.`
       );
       return result.response.text();
-    } catch (error: any) {
+    } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       console.error('Gemini API Error:', error.message);
       return '{}';
     }
@@ -190,7 +190,7 @@ async function validate_with_retry(deficitPath: string, retries = 3): Promise<st
       }
 
       return templates;
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       console.warn(
         `Validation failed for ${deficitPath} (Attempt ${i + 1}/${retries}): ${err.message}`
       );
@@ -212,7 +212,7 @@ async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
 
   for (const [path, items] of Object.entries(newTemplatesMap)) {
     const segments = path.split('.');
-    let target: any = data;
+    let target: any = data; // eslint-disable-line @typescript-eslint/no-explicit-any
     for (let i = 0; i < segments.length - 1; i++) {
       target = target[segments[i]];
     }
@@ -244,12 +244,12 @@ async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
 function deduplicate_full_archive(data: ValidatedJSON) {
   for (const severities of Object.values(data.strikes)) {
     for (const sev of Object.keys(severities)) {
-      (severities as any)[sev] = [...new Set((severities as any)[sev])];
+      (severities as any)[sev] = [...new Set((severities as any)[sev])]; // eslint-disable-line @typescript-eslint/no-explicit-any
     }
   }
   for (const outcomes of Object.values(data.defenses)) {
     for (const outcome of Object.keys(outcomes)) {
-      (outcomes as any)[outcome] = [...new Set((outcomes as any)[outcome])];
+      (outcomes as any)[outcome] = [...new Set((outcomes as any)[outcome])]; // eslint-disable-line @typescript-eslint/no-explicit-any
     }
   }
   const extraCategories: (keyof ValidatedJSON)[] = [
@@ -268,13 +268,13 @@ function deduplicate_full_archive(data: ValidatedJSON) {
   for (const cat of extraCategories) {
     if (!data[cat]) continue;
     for (const subCat of Object.keys(data[cat])) {
-      const val = (data[cat] as any)[subCat];
+      const val = (data[cat] as any)[subCat]; // eslint-disable-line @typescript-eslint/no-explicit-any
       if (Array.isArray(val)) {
-        (data[cat] as any)[subCat] = [...new Set(val)];
+        (data[cat] as any)[subCat] = [...new Set(val)]; // eslint-disable-line @typescript-eslint/no-explicit-any
       } else if (typeof val === 'object') {
         for (const leaf of Object.keys(val)) {
           if (Array.isArray(val[leaf])) {
-            val[leaf] = [...new Set(val[leaf])];
+            val[leaf] = [...new Set(val[leaf])];  
           }
         }
       }

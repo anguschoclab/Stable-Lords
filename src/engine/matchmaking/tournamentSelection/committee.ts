@@ -7,16 +7,7 @@ import type {
 } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
-import { generateId } from '@/utils/idUtils';
-import { generateFreelancer } from './utils';/**
-                                              * Committee selection.
-                                              * @param state - State.
-                                              * @param tier - Tier.
-                                              * @param seed - Seed.
-                                              * @param lockedIds - Locked ids.
-                                              * @returns The result.
-                                              */
-
+import { generateFreelancer } from './utils';
 
 /**
  * Committee selection.

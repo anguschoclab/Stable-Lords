@@ -62,7 +62,7 @@ export function updateRivalriesFromBouts(
     pairs.set(key, entry);
   }
 
-  for (const [_, data] of pairs.entries()) {
+  for (const [, data] of pairs.entries()) {
     const existing = rivalries.find(
       (r) =>
         (r.stableIdA === data.a && r.stableIdB === data.b) ||

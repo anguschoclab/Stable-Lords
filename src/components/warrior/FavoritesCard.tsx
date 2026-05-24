@@ -1,6 +1,6 @@
 import React from 'react';
 import { Swords, Zap, Activity } from 'lucide-react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
 import { type Warrior } from '@/types/game';
 import { Button } from '@/components/ui/button';
 import { getFavoritesDisplay } from '@/components/warrior/favoritesDisplay';
@@ -21,7 +21,6 @@ import { ImperialRing } from '@/components/ui/ImperialRing';/**
  * @returns The result.
  */
 export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () => void }) {
-  const state = useWorldState();
   const setState = useGameStore((s) => s.setState);
   const favDisplay = getFavoritesDisplay(warrior);
 

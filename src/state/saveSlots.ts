@@ -1,10 +1,7 @@
 import type { GameState } from '@/types/state.types';
 import { archiveService } from '@/engine/storage/electronArchive';
 import { truncateState } from '@/engine/storage/truncation';
-import { STORE_KEYS } from '@/constants/storeKeys';/**
-                                                    * Defines the shape of save slot meta.
-                                                    */
-
+import { STORE_KEYS } from '@/constants/storeKeys';
 
 /**
  * Defines the shape of save slot meta.
@@ -215,7 +212,7 @@ export async function exportSlot(slotId: string): Promise<string | null> {
  * @param data - Data.
  * @returns The result.
  */
-export async function importSaveToNewSlot(data: any): Promise<string | null> {
+export async function importSaveToNewSlot(data: any): Promise<string | null> { // eslint-disable-line @typescript-eslint/no-explicit-any
   try {
     const state = typeof data === 'string' ? JSON.parse(data) : data;
     if (!state.meta || !state.week) throw new Error('Invalid save data');

@@ -59,18 +59,12 @@ export function autoTuneFromBias(plan: FightPlan, bias: Bias): Partial<FightPlan
   if (plan.style === FightingStyle.TotalParry) tuned.defensiveTactic = 'Parry';
 
   return tuned;
-}/**
-  * Reconcile gear two handed.
-  * @param plan - Plan.
-  * @param draft - Draft.
-  * @returns The result.
-  */
-
+}
 
 /**
  * Reconcile gear two handed.
- * @param plan - Plan.
  * @param draft - Draft.
+ * @param equipment - Equipment.
  * @returns The result.
  */
 export function reconcileGearTwoHanded(

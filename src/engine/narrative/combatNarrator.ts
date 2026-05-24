@@ -1,14 +1,20 @@
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { getItemById } from '@/data/equipment';
-import { audioManager } from '@/lib/AudioManager';
 import narrativeContent from '@/data/narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { NarrativeTemplateEngine } from './narrativeTemplateEngine';
 import { szToHeight, getWeaponDisplayName, getWeaponType } from './narrativeUtils';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
-                                                                  * Defines the shape of warrior intro data.
-                                                                  */
-
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import {
+  narrateAttack,
+  narratePassive,
+  narrateParry,
+  narrateDodge,
+  narrateCounterstrike,
+  narrateHit,
+  narrateParryBreak,
+  narrateInitiative,
+} from './combatNarrators';
 
 /**
  * Defines the shape of warrior intro data.
@@ -86,154 +92,8 @@ export function battleOpener(rng: IRNGService): string {
   return NarrativeTemplateEngine.interpolateTemplate(template, {});
 }
 
-/**
- * Narrates an attack (whiff).
- */
-export function narrateAttack(
-  rng: IRNGService,
-  attackerName: string,
-  weaponId?: string,
-  _isMastery?: boolean
-): string {
-  const wName = getWeaponDisplayName(weaponId);
-  const template = NarrativeTemplateEngine.getFromArchive(rng, ['pbp', 'whiffs']);
-  return NarrativeTemplateEngine.interpolateTemplate(template, {
-    attacker: attackerName,
-    weapon: wName,
-  });
-}
-
-/**
- * Narrates a passive style activation.
- */
-export function narratePassive(rng: IRNGService, style: FightingStyle, actorName: string): string {
-  const template = NarrativeTemplateEngine.getFromArchive(rng, ['passives', style]);
-  return NarrativeTemplateEngine.interpolateTemplate(template, { attacker: actorName });
-}
-
-/**
- * Narrates a successful parry.
- */
-export function narrateParry(rng: IRNGService, defenderName: string, weaponId?: string): string {
-  const wName = getWeaponDisplayName(weaponId);
-  const isShield = weaponId && ['small_shield', 'medium_shield', 'large_shield'].includes(weaponId);
-  const type = isShield ? 'shield' : 'parry';
-
-  const template = NarrativeTemplateEngine.getFromArchive(rng, [
-    'pbp',
-    'defenses',
-    type,
-    'success',
-  ]);
-  return NarrativeTemplateEngine.interpolateTemplate(template, {
-    defender: defenderName,
-    weapon: wName,
-  });
-}
-
-/**
- * Narrates a successful dodge.
- */
-export function narrateDodge(rng: IRNGService, defenderName: string): string {
-  const template = NarrativeTemplateEngine.getFromArchive(rng, [
-    'pbp',
-    'defenses',
-    'dodge',
-    'success',
-  ]);
-  return NarrativeTemplateEngine.interpolateTemplate(template, { defender: defenderName });
-}
-
-/**
- * Narrates a counterstrike.
- */
-export function narrateCounterstrike(rng: IRNGService, name: string): string {
-  const template =
-    NarrativeTemplateEngine.getFromArchive(rng, ['pbp', 'defenses', 'counterstrike']) ||
-    '{{attacker}} counters!';
-  return NarrativeTemplateEngine.interpolateTemplate(template, { attacker: name });
-}
-
-/**
- * Narrates a hit with severity tiers.
- */
-export function narrateHit(
-  rng: IRNGService,
-  defenderName: string,
-  location: string,
-  _isMastery?: boolean,
-  isSuperFlashy?: boolean,
-  attackerName?: string,
-  weaponId?: string,
-  damage?: number,
-  maxHp?: number,
-  isFatal?: boolean,
-  attackerFame?: number,
-  isFavorite?: boolean
-): string {
-  const richLoc = richHitLocation(rng, location);
-  const wName = getWeaponDisplayName(weaponId);
-  const wType = getWeaponType(weaponId);
-
-  const severity = getStrikeSeverity(
-    damage || 0,
-    maxHp || 100,
-    isFatal || false,
-    isSuperFlashy || false,
-    isFavorite || false,
-    attackerFame || 0
-  );
-
-  if (severity === 'critical_human' || severity === 'critical_supernatural') {
-    audioManager.play('crit');
-  }
-
-  const template =
-    NarrativeTemplateEngine.getFromArchive(rng, ['strikes', wType, severity]) ||
-    NarrativeTemplateEngine.getFromArchive(rng, ['strikes', 'generic']);
-
-  return NarrativeTemplateEngine.interpolateTemplate(template, {
-    attacker: attackerName,
-    defender: defenderName,
-    weapon: wName,
-    bodyPart: richLoc,
-  });
-}
-
-/**
- * Narrates a parry break.
- */
-export function narrateParryBreak(
-  rng: IRNGService,
-  attackerName: string,
-  weaponId?: string
-): string {
-  const wName = getWeaponDisplayName(weaponId);
-  const template =
-    NarrativeTemplateEngine.getFromArchive(rng, ['pbp', 'defenses', 'parry_break']) ||
-    '{{attacker}} breaks the guard!';
-  return NarrativeTemplateEngine.interpolateTemplate(template, {
-    attacker: attackerName,
-    weapon: wName,
-  });
-}
-
-/**
- * Narrates initiative winner.
- */
-export function narrateInitiative(
-  rng: IRNGService,
-  winnerName: string,
-  isFeint: boolean,
-  defenderName?: string
-): string {
-  const path = isFeint ? ['pbp', 'feints'] : ['pbp', 'initiative'];
-  const template = NarrativeTemplateEngine.getFromArchive(rng, path);
-  return NarrativeTemplateEngine.interpolateTemplate(template, {
-    attacker: winnerName,
-    defender: defenderName,
-  });
-}
+// Re-export from unified combatNarrators
+export { narrateAttack, narratePassive, narrateParry, narrateDodge, narrateCounterstrike, narrateHit, narrateParryBreak, narrateInitiative };
 
 /**
  * Narrates bout conclusion.
@@ -281,7 +141,7 @@ export function narrateBoutEnd(
 
 // Helper methods
 
-function richHitLocation(rng: IRNGService, location: string): string {
+function richHitLocation(rng: IRNGService, location: string): string { // eslint-disable-line @typescript-eslint/no-unused-vars
   const hitLocations = (narrativeContent as NarrativeContent).pbp.hit_locations;
   const key = location.toLowerCase() as keyof typeof hitLocations;
   const variants = hitLocations[key];
@@ -289,7 +149,7 @@ function richHitLocation(rng: IRNGService, location: string): string {
   return rng.pick(variants);
 }
 
-function getStrikeSeverity(
+function getStrikeSeverity( // eslint-disable-line @typescript-eslint/no-unused-vars
   damage: number,
   maxHp: number,
   isFatal: boolean,

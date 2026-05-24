@@ -4,14 +4,11 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ownerAI';
 import { FightingStyle } from '@/types/shared.types';
-import { findWarriorById, modifyWarrior } from './tournamentStateMutator';
+import { findWarriorById } from './tournamentStateMutator';
 import { StateImpact, mergeImpacts, resolveImpacts } from '@/engine/impacts';
 import type { BracketMatch } from './tournamentBracketBuilder';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
-import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';/**
-                                                                              * Defines the shape of round resolution result.
-                                                                              */
-
+import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
 
 /**
  * Defines the shape of round resolution result.
@@ -234,7 +231,7 @@ function applyBoutResultsToImpact(
   state: GameState,
   wA: Warrior,
   wD: Warrior,
-  outcome: any,
+  outcome: any, // eslint-disable-line @typescript-eslint/no-explicit-any
   tId: string,
   tName: string,
   rng: IRNGService
@@ -242,7 +239,7 @@ function applyBoutResultsToImpact(
   const isKill = outcome.by === 'Kill';
   const winnerSide = outcome.winner;
   const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, any>();
+  const rivalsUpdates = new Map<string, any>(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   const summary: FightSummary = createFightSummary({
     warriorA: wA,

@@ -451,6 +451,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                           </span>
                         </div>
                         {Object.keys(mods).length > 0 && (
+                          /* eslint-disable @typescript-eslint/no-explicit-any */
                           <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
                             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-2">
                               Combat Modifiers
@@ -461,10 +462,10 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    (mods as any).OE > 0 ? 'text-arena-blood' : 'text-sky-400' // eslint-disable-line @typescript-eslint/no-explicit-any
+                                    ((mods as any).OE > 0 ? 'text-arena-blood' : 'text-sky-400') as string
                                   )}
                                 >
-                                  {modLabel((mods as any).OE)} // eslint-disable-line @typescript-eslint/no-explicit-any
+                                  {modLabel((mods as any).OE as number)}
                                 </span>
                               </div>
                             )}
@@ -474,10 +475,10 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    (mods as any).AL > 0 ? 'text-arena-blood' : 'text-sky-400' // eslint-disable-line @typescript-eslint/no-explicit-any
+                                    ((mods as any).AL > 0 ? 'text-arena-blood' : 'text-sky-400') as string
                                   )}
                                 >
-                                  {modLabel((mods as any).AL)} // eslint-disable-line @typescript-eslint/no-explicit-any
+                                  {modLabel((mods as any).AL as number)}
                                 </span>
                               </div>
                             )}
@@ -493,11 +494,12 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                       : 'text-sky-400'  
                                   )}
                                 >
-                                  {modLabel((mods as any).killDesire)} // eslint-disable-line @typescript-eslint/no-explicit-any
+                                  {modLabel((mods as any).killDesire as number)}
                                 </span>
                               </div>
                             )}
                           </div>
+                          /* eslint-enable @typescript-eslint/no-explicit-any */
                         )}
                       </div>
                     </div>

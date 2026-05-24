@@ -1,6 +1,6 @@
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
-import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { Warrior } from '@/types/warrior.types';
 import { isTooInjuredToFight } from './injuries';
 
 const MATCHUP_MATRIX: Record<FightingStyle, Record<FightingStyle, number>> = {

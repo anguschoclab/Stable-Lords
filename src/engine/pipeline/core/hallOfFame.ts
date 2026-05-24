@@ -79,7 +79,6 @@ export function processHallOfFame(
       rosterUpdates.set(woty.w.id, updatedWarrior);
     } else if (woty.w.stableId) {
       const stableId = woty.w.stableId;
-      const existingRoster = rivalsUpdates.get(stableId)?.roster || [];
       const currentRoster =
         rivalsUpdates.get(stableId)?.roster ||
         state.rivalMap?.get(stableId)?.roster ||

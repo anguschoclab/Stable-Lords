@@ -2,7 +2,6 @@ import type { GameState, RivalStableData } from '@/types/state.types';
 import { type Season } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
-import { generateId } from '@/utils/idUtils';
 import { hashStr } from '@/utils/random';
 import type { PoolWarrior } from '@/engine/recruitment';
 import { StateImpact } from '@/engine/impacts';

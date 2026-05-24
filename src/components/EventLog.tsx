@@ -302,18 +302,7 @@ export default function EventLog() {
 
     all.sort((a, b) => b.week - a.week || b.id.localeCompare(a.id));
     return all;
-  }, [
-    state,
-    state.arenaHistory,
-    state.graveyard,
-    state.retired,
-    state.newsletter,
-    state.tournaments,
-    state.roster,
-    state.trainingAssignments,
-    state.week,
-    state.gazettes,
-  ]);
+  }, [state]);
 
   // Group by week
   const grouped = useMemo(() => {

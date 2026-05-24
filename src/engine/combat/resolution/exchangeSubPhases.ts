@@ -1,10 +1,6 @@
 import type { CommitLevel } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
-import type { FighterState, ResolutionContext } from './resolution';
-import { contestDistance, transitionZone, resetZone } from '../mechanics/distanceResolution';/**
-                                                                                              * Defines the shape of exchange state.
-                                                                                              */
-
+import { contestDistance, transitionZone, resetZone } from '../mechanics/distanceResolution';
 
 // ─── ExchangeState Accumulator ────────────────────────────────────────────────
 
@@ -238,7 +234,6 @@ export function runRecovery(
   } else {
     // No hit: drift zone back toward Center
     if (ctx.pushedFighter) {
-      const prev = ctx.zone;
       ctx.zone = resetZone(currentZone);
       if (ctx.zone === 'Center') {
         ctx.pushedFighter = undefined;

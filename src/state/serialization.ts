@@ -22,7 +22,7 @@ export function stripNonSerializable<
 >(
   state: T
 ): Omit<T, 'warriorMap' | 'cachedMetaDrift' | 'warriorToStableMap' | 'rivalMap'> {
-  const { warriorMap, cachedMetaDrift, warriorToStableMap, rivalMap, ...rest } = state;
+  const { warriorMap, cachedMetaDrift, warriorToStableMap, rivalMap, ...rest } = state; // eslint-disable-line @typescript-eslint/no-unused-vars
   return rest;
 }
 
@@ -170,7 +170,7 @@ export function reconstructGameState(store: GameStore): GameState {
     playerAvoids: store.playerAvoids || [],
     // Type assertion to handle FightOutcome vs SimulationReport mismatch
     // This preserves existing behavior while extracting the logic
-    lastSimulationReport: store.lastSimulationReport as any,
+    lastSimulationReport: store.lastSimulationReport as any, // eslint-disable-line @typescript-eslint/no-explicit-any
   };
 
   lastResult = result;

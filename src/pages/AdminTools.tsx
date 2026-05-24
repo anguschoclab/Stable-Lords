@@ -117,7 +117,7 @@ export default function AdminTools() {
       };
       draft.ftueComplete = true;
       draft.isFTUE = false;
-      draft.player = { ...defaultPlayer, ...(draft.player || {}) } as any;
+      draft.player = { ...defaultPlayer, ...(draft.player || {}) } as any; // eslint-disable-line @typescript-eslint/no-explicit-any
     });
     toast.success('FTUE constraints bypassed.');
   }, [setState]);

@@ -2,13 +2,7 @@ import { GameState, Warrior, BoutOffer } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
-import { fameFromTags } from '@/engine/fame';/**
-                                              * Validate bout combatants.
-                                              * @param currentW - Current w. (optional)
-                                              * @param currentO - Current o. (optional)
-                                              * @returns The result.
-                                              */
-
+import { fameFromTags } from '@/engine/fame';
 
 /**
  * Validate bout combatants.
@@ -18,14 +12,7 @@ import { fameFromTags } from '@/engine/fame';/**
  */
 export function validateBoutCombatants(currentW?: Warrior, currentO?: Warrior): boolean {
   return !!currentW && currentW.status === 'Active' && !!currentO;
-}/**
-  * Get winner id.
-  * @param outcome - Outcome.
-  * @param wId - W id.
-  * @param oId - O id.
-  * @returns The result.
-  */
-
+}
 
 /**
  * Get winner id.
@@ -38,15 +25,7 @@ export function getWinnerId(outcome: FightOutcome, wId: string, oId: string): st
   if (outcome.winner === 'A') return wId;
   if (outcome.winner === 'D') return oId;
   return null;
-}/**
-  * Calculate bout fame.
-  * @param outcome - Outcome.
-  * @param tags - Tags.
-  * @param moodMods - Mood mods.
-  * @param isRivalry - Is rivalry.
-  * @returns The result.
-  */
-
+}
 
 /**
  * Calculate bout fame.
@@ -70,16 +49,7 @@ export function calculateBoutFame(
     fameD: Math.round(rawFameD.fame * moodMods.fameMultiplier),
     popD: Math.round(rawFameD.pop * moodMods.popMultiplier),
   };
-}/**
-  * Process contract payouts.
-  * @param state - State.
-  * @param contract - Contract.
-  * @param winnerId - Winner id.
-  * @param currentWId - Current w id.
-  * @param currentOId - Current o id.
-  * @returns The result.
-  */
-
+}
 
 /**
  * Process contract payouts.
@@ -146,17 +116,11 @@ export function processContractPayouts(
   impacts.push({ promoters: updatedPromoters });
 
   // Close the contract
-  const { [contract.id]: _, ...remainingBoutOffers } = state.boutOffers;
+  const { [contract.id]: _removed, ...remainingBoutOffers } = state.boutOffers; // eslint-disable-line @typescript-eslint/no-unused-vars
   impacts.push({ boutOffers: remainingBoutOffers });
 
   return impacts;
-}/**
-  * Get default plan.
-  * @param w - W.
-  * @param defaultPlanForWarrior - Default plan for warrior.
-  * @returns The result.
-  */
-
+}
 
 /**
  * Get default plan.

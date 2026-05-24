@@ -45,7 +45,7 @@ export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesPro
                   <button
                     onClick={() => {
                       if (!plan.phases) return;
-                      const { [p]: _, ...rest } = plan.phases;
+                      const { [p]: _removed, ...rest } = plan.phases; // eslint-disable-line @typescript-eslint/no-unused-vars
                       onPlanChange({
                         ...plan,
                         phases: Object.keys(rest).length ? rest : undefined,

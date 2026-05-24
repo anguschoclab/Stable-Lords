@@ -220,11 +220,11 @@ export default function WorldOverview() {
       }
 
       if (f === 'name' || f === 'stable' || f === 'style') {
-        const va = f === 'stable' ? a.stableName : (a as any)[f];
-        const vb = f === 'stable' ? b.stableName : (b as any)[f];
+        const va = f === 'stable' ? a.stableName : (a as any)[f]; // eslint-disable-line @typescript-eslint/no-explicit-any
+        const vb = f === 'stable' ? b.stableName : (b as any)[f]; // eslint-disable-line @typescript-eslint/no-explicit-any
         return String(va).localeCompare(String(vb)) * dir;
       }
-      return (((a as any)[f] as number) - ((b as any)[f] as number)) * dir;
+      return (((a as any)[f] as number) - ((b as any)[f] as number)) * dir; // eslint-disable-line @typescript-eslint/no-explicit-any
     });
   }, [state, warriorSort]);
 

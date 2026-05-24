@@ -37,7 +37,7 @@ export { ArchiveConflictError };
  * The ElectronArchiveService class.
  */
 export class ElectronArchiveService implements ArchiveService {
-  private writeQueue: Promise<any> = Promise.resolve();
+  private writeQueue: Promise<any> = Promise.resolve(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   /**
    * Enqueue.

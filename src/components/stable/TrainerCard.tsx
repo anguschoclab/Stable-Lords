@@ -15,13 +15,6 @@ import type { Trainer as TrainerData, TrainerFocus, TrainerTier } from '@/types/
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { FOCUS_ICONS, FOCUS_DESCRIPTIONS, TIER_BONUS } from '@/engine/trainers';
 
-const TIER_ACCENTS: Record<string, string> = {
-  Novice: 'border-border/40 text-muted-foreground',
-  Seasoned: 'border-stone-500/40 text-stone-300 bg-stone-500/10',
-  Master:
-    'border-arena-gold text-arena-gold bg-arena-gold/10 shadow-[0_0_15px_rgba(201,151,42,0.15)]',
-};
-
 interface TrainerCardProps {
   trainer: TrainerData;
   onFire?: () => void;
@@ -41,7 +34,6 @@ interface TrainerCardProps {
  */
 export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps) {
   const icon = FOCUS_ICONS[trainer.focus as TrainerFocus] ?? '📋';
-  const tierAccent = TIER_ACCENTS[trainer.tier] ?? '';
   const desc = FOCUS_DESCRIPTIONS[trainer.focus as TrainerFocus] ?? '';
   const bonus = TIER_BONUS[trainer.tier as TrainerTier] ?? 1;
 

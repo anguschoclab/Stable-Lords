@@ -292,7 +292,7 @@ function createMenu() {
     },
   ];
 
-  const menu = Menu.buildFromTemplate(template as any);
+  const menu = Menu.buildFromTemplate(template as any); // eslint-disable-line @typescript-eslint/no-explicit-any
   Menu.setApplicationMenu(menu);
 }
 

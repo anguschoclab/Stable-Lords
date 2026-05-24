@@ -3,7 +3,7 @@
  * Uses the main game state arenaHistory and LoreArchive for hall entries.
  */
 import React, { useMemo } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { LoreArchive } from './LoreArchive';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,11 +14,7 @@ import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { WarriorLink } from '@/components/EntityLink';
 import Gazette from '@/pages/Gazette';
-import Graveyard from '@/pages/Graveyard';/**
-                                           * Hall of fights.
-                                           * @returns The result.
-                                           */
-
+import Graveyard from '@/pages/Graveyard';
 
 /**
  * Hall of fights.

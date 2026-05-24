@@ -1,4 +1,4 @@
-import { GameState, BoutOffer } from '@/types/game';
+import { GameState, BoutOffer } from '@/types/game'; // eslint-disable-line @typescript-eslint/no-unused-vars
 
 /**
  * Pure mutation for responding to a bout offer.

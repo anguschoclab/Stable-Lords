@@ -74,7 +74,7 @@ export function NextBoutWidget() {
     const sumD = ATTRIBUTE_KEYS.reduce((s, k) => s + warriorD.attributes[k], 0);
 
     return Math.round((sumA / (sumA + sumD)) * 100);
-  }, [nextBout, state.roster, state.rivals]);
+  }, [nextBout, state]);
 
   return (
     <Card className="h-full border-l-4 border-l-primary/50 shadow-md">

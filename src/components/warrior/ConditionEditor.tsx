@@ -113,7 +113,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
   ) {
     const cond = conditions[idx];
     if (val === undefined) {
-      const { [key]: _, ...rest } = cond.override;
+      const { [key]: _removed, ...rest } = cond.override; // eslint-disable-line @typescript-eslint/no-unused-vars
       updateCondition(idx, { override: rest });
     } else {
       updateCondition(idx, { override: { ...cond.override, [key]: val } });
@@ -127,7 +127,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
   ) {
     const cond = conditions[idx];
     if (val === 'none') {
-      const { [key]: _, ...rest } = cond.override;
+      const { [key]: _removed, ...rest } = cond.override; // eslint-disable-line @typescript-eslint/no-unused-vars
       updateCondition(idx, { override: rest });
     } else {
       updateCondition(idx, { override: { ...cond.override, [key]: val } });

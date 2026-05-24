@@ -1,0 +1,247 @@
+/**
+ * Hit Execution - Execute hit damage, momentum, and kill window logic
+ */
+import type { CombatEvent } from '@/types/combat.types';
+import type { Warrior } from '@/types/warrior.types';
+import type { FighterState } from '../../types';
+import type { ResolutionContext } from '../../types';
+import { resolveEffectiveTactics } from '../../tactics';
+import { getOffensiveTacticMods } from '../../../mechanics/tacticResolution';
+import { getStylePassive } from '@/engine/stylePassives';
+import { getKillMechanic, Phase as StylePhase } from '@/engine/stylePassives';
+import { getDynamicTraitMods } from '@/engine/traits';
+import {
+  computeHitDamage,
+  rollHitLocation,
+  applyProtectMod,
+  applyArmorTypeMod,
+  applyShieldZoneMod,
+  calculateKillWindow,
+} from '../../../mechanics/combatDamage';
+import { SHIELD_COVERAGE } from '@/data/equipment';
+import { CRIT_DAMAGE_MULT } from '../../../mechanics/combatConstants';
+
+/**
+ * Execute hit.
+ */
+export function executeHit(
+  events: CombatEvent[],
+  rng: () => number,
+  attacker: FighterState,
+  defender: FighterState,
+  attTactics: ReturnType<typeof resolveEffectiveTactics>,
+  attOffMods: ReturnType<typeof getOffensiveTacticMods>,
+  attPassive: ReturnType<typeof getStylePassive>,
+  attLabel: 'A' | 'D',
+  defLabel: 'A' | 'D',
+  stylePhase: StylePhase,
+  phase: string,
+  attKD: number,
+  attOE: number,
+  attAL: number,
+  attMatchup: number,
+  ctx?: ResolutionContext,
+  defPassive?: ReturnType<typeof getStylePassive>
+) {
+  // ── Survival Strike: defender has earned a free counter — skip this attack ──
+  if (defender.survivalStrike) {
+    defender.survivalStrike = false;
+    // Defender fires back as a free riposte — re-use executeRiposte logic inline
+    const freeRipLoc = rollHitLocation(rng, attTactics.target, attacker.activePlan.protect);
+    let freeRipDmg = computeHitDamage(
+      rng,
+      defender.derived.damage + (defPassive?.dmgBonus ?? 0),
+      freeRipLoc
+    );
+    freeRipDmg = applyArmorTypeMod(freeRipDmg, defender.weaponId, attacker.armorId);
+    freeRipDmg = applyProtectMod(freeRipDmg, freeRipLoc, attacker.activePlan.protect);
+    events.push({ type: 'DEFENSE', actor: defLabel, result: 'RIPOSTE' });
+    events.push({
+      type: 'HIT',
+      actor: defLabel,
+      target: attLabel,
+      location: freeRipLoc,
+      value: freeRipDmg,
+    });
+    attacker.hp -= freeRipDmg;
+    attacker.hitsTaken++;
+    defender.hitsLanded++;
+    if (attacker.hp <= 0) {
+      events.push({
+        type: 'BOUT_END',
+        actor: defLabel,
+        result: 'KO',
+        metadata: { location: freeRipLoc, cause: 'SURVIVAL_STRIKE' },
+      });
+    }
+    return;
+  }
+
+  // ── Commit mechanic: attacker at low HP with high kill desire commits ──
+  const kdForCommit = attacker.activePlan.killDesire ?? attKD;
+  const isAtLowHp = attacker.hp / attacker.maxHp < 0.35;
+  if (!attacker.committed && isAtLowHp && kdForCommit >= 7) {
+    attacker.committed = true;
+    events.push({ type: 'STATE_CHANGE', actor: attLabel, result: 'COMMIT' });
+  }
+
+  const hitLoc = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
+  let rawDamage = computeHitDamage(
+    rng,
+    attacker.derived.damage + attOffMods.dmgBonus + attPassive.dmgBonus,
+    hitLoc
+  );
+  rawDamage = applyArmorTypeMod(rawDamage, attacker.weaponId, defender.armorId);
+
+  // Apply weather damage multiplier
+  const weatherDamageMult = ctx?.weatherEffect?.damageMult ?? 1.0;
+  rawDamage = Math.round(rawDamage * weatherDamageMult);
+
+  // Commit: +20% damage
+  if (attacker.committed) {
+    rawDamage = Math.round(rawDamage * 1.2);
+  }
+
+  // Apply specialty damage received reduction on the defender
+  const defSpecDamageMult = ctx
+    ? defender.label === 'A'
+      ? (ctx.trainerModsA.damageReceivedMult ?? 1.0)
+      : (ctx.trainerModsD.damageReceivedMult ?? 1.0)
+    : 1.0;
+  rawDamage = Math.round(rawDamage * defSpecDamageMult);
+
+  if (attPassive.critChance > 0 && rng() < attPassive.critChance) {
+    rawDamage = Math.round(rawDamage * CRIT_DAMAGE_MULT);
+    events.push({
+      type: 'HIT',
+      actor: attLabel,
+      target: defLabel,
+      location: hitLoc,
+      value: rawDamage,
+      metadata: { crit: true },
+    });
+  } else {
+    events.push({
+      type: 'HIT',
+      actor: attLabel,
+      target: defLabel,
+      location: hitLoc,
+      value: rawDamage,
+    });
+  }
+
+  // Shield-zone mitigation
+  const defShieldCov =
+    SHIELD_COVERAGE[defender.shieldId ?? ''] ?? SHIELD_COVERAGE[defender.weaponId ?? ''];
+  const postShieldDamage = applyShieldZoneMod(rawDamage, hitLoc, defShieldCov);
+  const damage = applyProtectMod(postShieldDamage, hitLoc, defender.activePlan.protect);
+  defender.hp -= damage;
+  defender.hitsTaken++;
+  attacker.hitsLanded++;
+  attacker.consecutiveHits++;
+  defender.consecutiveHits = 0;
+  if (hitLoc.includes('arm')) defender.armHits++;
+  if (hitLoc.includes('leg')) defender.legHits++;
+
+  // ── Momentum: hit shifts momentum toward attacker ──
+  const prevAttMom = attacker.momentum;
+  const prevDefMom = defender.momentum;
+  attacker.momentum = Math.min(3, attacker.momentum + 1);
+  defender.momentum = Math.max(-3, defender.momentum - 1);
+  if (attacker.momentum !== prevAttMom || defender.momentum !== prevDefMom) {
+    events.push({
+      type: 'MOMENTUM_SHIFT',
+      actor: attLabel,
+      target: defLabel,
+      value: attacker.momentum,
+      metadata: { prev: prevAttMom, oppPrev: prevDefMom, oppNew: defender.momentum },
+    });
+  }
+
+  // ── Survival Strike: committed attacker who doesn't kill enables defender counter ──
+  if (attacker.committed && defender.hp > 0) {
+    defender.survivalStrike = true;
+    events.push({ type: 'STATE_CHANGE', actor: defLabel, result: 'SURVIVAL_STRIKE' });
+  }
+
+  if (damage > 0 && rng() < 0.2) {
+    const attrs = ['ST', 'SP', 'DF', 'WL'];
+    events.push({
+      type: 'INSIGHT',
+      actor: attLabel,
+      metadata: { attribute: attrs[Math.floor(rng() * attrs.length)] },
+    });
+  }
+
+  const killMech = getKillMechanic(attacker.style, {
+    phase: stylePhase,
+    hitsLanded: attacker.hitsLanded,
+    consecutiveHits: attacker.consecutiveHits,
+    targetedLocation: attTactics.target,
+    hitLocation: hitLoc,
+  });
+
+  let didKill = false;
+  let causeBucket: string = 'EXECUTION';
+
+  if (defender.hp <= defender.maxHp * killMech.killWindowHpMult) {
+    const killPos = phase === 'LATE' ? 2 : phase === 'MID' ? 1 : 0;
+    const effectiveDec = attacker.skills.DEC + killMech.decBonus;
+    const specKillBonus = ctx
+      ? attacker.label === 'A'
+        ? (ctx.trainerModsA.killWindowBonus ?? 0)
+        : (ctx.trainerModsD.killWindowBonus ?? 0)
+      : 0;
+    const attackerTraitKill = attacker.traits
+      ? getDynamicTraitMods({ traits: attacker.traits } as unknown as Warrior, {
+          phase: phase as 'OPENING' | 'MID' | 'LATE',
+          hpRatio: attacker.hp / attacker.maxHp,
+          endRatio: attacker.endurance / attacker.maxEndurance,
+          consecutiveHits: attacker.consecutiveHits,
+        }).killWindowBonus
+      : 0;
+    const crowdKillBonus = ctx?.crowdKillBonus ?? 0;
+    const killThreshold = calculateKillWindow(
+      defender.hp / defender.maxHp,
+      defender.endurance / defender.maxEndurance,
+      hitLoc,
+      attKD + killMech.killBonus,
+      killPos,
+      attOE,
+      attAL,
+      attMatchup,
+      effectiveDec,
+      attacker.momentum,
+      specKillBonus + attackerTraitKill,
+      crowdKillBonus
+    );
+    if (rng() < killThreshold) {
+      defender.hp = 0;
+      didKill = true;
+      if (attacker.consecutiveHits >= 3) {
+        causeBucket = 'CRITICAL_CHAIN';
+      } else {
+        const wasCovered = !!defender.activePlan.protect && defender.activePlan.protect !== 'Any';
+        if (wasCovered && rawDamage >= 20) causeBucket = 'ARMOR_FAILURE';
+      }
+    }
+  }
+
+  if (defender.hp <= 0) {
+    if (didKill) {
+      events.push({
+        type: 'BOUT_END',
+        actor: attLabel,
+        result: 'Kill',
+        metadata: { location: hitLoc, cause: causeBucket },
+      });
+    } else {
+      events.push({
+        type: 'BOUT_END',
+        actor: attLabel,
+        result: 'KO',
+        metadata: { location: hitLoc, cause: 'FATAL_DAMAGE' },
+      });
+    }
+  }
+}

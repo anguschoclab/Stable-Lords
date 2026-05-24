@@ -5,12 +5,9 @@ import {
   type TrainerFocus,
 } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { GameState, Trainer } from '@/types/state.types';
+import type { Trainer } from '@/types/state.types';  
 
-export type { TrainerTier, TrainerFocus };/**
-                                           * Trainer_focuses.
-                                           */
-
+export type { TrainerTier, TrainerFocus };
 
 /**
  * Trainer_focuses.

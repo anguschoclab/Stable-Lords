@@ -62,7 +62,7 @@ export interface RosterSlice {
 /**
  * Create roster slice.
  * @param set - Set.
- * @param get - Get.
+ * @param _get - Get.
  * @returns The result.
  */
 export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (set, _get) => ({

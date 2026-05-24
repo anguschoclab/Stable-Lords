@@ -1,5 +1,4 @@
 import type { GameState, Season, RivalStableData } from '@/types/state.types';
-import type { FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getRecentFights } from '@/engine/core/historyUtils';
 import {
@@ -31,7 +30,7 @@ export function evolvePhilosophies(
   const performanceMap = new Map<string, { wins: number; total: number }>();
   for (const fight of recentFights) {
     const winnerId = fight.winner === 'A' ? fight.a : fight.d;
-    const loserId = fight.winner === 'A' ? fight.d : fight.a;
+    const _loserId = fight.winner === 'A' ? fight.d : fight.a; // eslint-disable-line @typescript-eslint/no-unused-vars
 
     // We don't have stable IDs in FightSummary, so we use warrior names as keys.
     // This assumes names are unique within a season (which recruitment.ts enforces).

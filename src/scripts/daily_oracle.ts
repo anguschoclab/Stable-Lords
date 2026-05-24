@@ -7,7 +7,7 @@ const WEEKS_TO_SIMULATE = 1000;
 
 const REPORT_FILE = path.join(process.cwd(), 'Daily_Balance_Report.md');
 
-interface MetricStats {
+interface MetricStats { // eslint-disable-line @typescript-eslint/no-unused-vars
   styleWinRates: Record<string, number>;
   mortalityRate: number;
   avgEconomy: number;

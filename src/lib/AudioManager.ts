@@ -38,7 +38,7 @@ private constructor() {
     // Note: Howler.js types expect HowlerGlobal to be a class, but we initialize
     // as empty object for Electron compatibility. This is intentional.
     if (typeof window !== 'undefined' && typeof window.HowlerGlobal === 'undefined') {
-      (window as any).HowlerGlobal = {};
+      (window as any).HowlerGlobal = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
     }
     this.loadMuteState();
   }

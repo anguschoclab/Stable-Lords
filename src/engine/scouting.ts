@@ -8,21 +8,14 @@
  * - Known injuries
  * - Suspected fight plan tendencies
  */
-import type { InsightToken, InsightTokenType } from '@/types/state.types';
+import type { InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/shared.types';
-import { generateId } from '@/utils/idUtils';/**
-                                              * Scout quality type.
-                                              */
-
 
 /**
  * Scout quality type.
  */
-export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert';/**
-                                                            * Defines the shape of scout report.
-                                                            */
-
+export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert';
 
 /**
  * Defines the shape of scout report.

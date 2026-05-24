@@ -15,7 +15,7 @@ export function modifyWarrior(
   transform: (w: Warrior) => void
 ): StateImpact {
   const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, any>();
+  const rivalsUpdates = new Map<string, any>(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
   state.roster.forEach((w) => {
     if (w.id === warriorId) {

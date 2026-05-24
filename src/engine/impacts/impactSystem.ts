@@ -107,7 +107,7 @@ const MERGE_CONFIG: MergeConfig = {
 };
 
 // 🌩️ Pure helpers for merging strategies (Strategy Pattern)
-const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: any) => void> = {
+const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: any) => void> = { // eslint-disable-line @typescript-eslint/no-explicit-any
   accumulate: (merged, key, value) => {
     if (typeof value === 'number') {
       merged[key] = (merged[key] || 0) + value;
@@ -152,11 +152,11 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
     const config = MERGE_CONFIG[key];
     if (!config) return;
     if (Array.isArray(config.defaultValue)) {
-      (merged as any)[key] = [...config.defaultValue];
+      (merged as any)[key] = [...config.defaultValue]; // eslint-disable-line @typescript-eslint/no-explicit-any
     } else if (config.defaultValue instanceof Map) {
-      (merged as any)[key] = new Map(config.defaultValue as never);
+      (merged as any)[key] = new Map(config.defaultValue as never); // eslint-disable-line @typescript-eslint/no-explicit-any
     } else {
-      (merged as any)[key] = config.defaultValue;
+      (merged as any)[key] = config.defaultValue; // eslint-disable-line @typescript-eslint/no-explicit-any
     }
   });
 

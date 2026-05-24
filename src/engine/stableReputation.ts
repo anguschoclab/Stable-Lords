@@ -125,8 +125,8 @@ export function computeStableReputation(state: GameState): StableReputation {
  */
 export function computeRivalReputation(
   roster: Warrior[],
-  arenaHistory: FightSummary[],
-  stableName: string
+  arenaHistory: FightSummary[], // eslint-disable-line @typescript-eslint/no-unused-vars
+  stableName: string // eslint-disable-line @typescript-eslint/no-unused-vars
 ): StableReputation {
   let totalKills = 0;
   let cleanBouts = 0;

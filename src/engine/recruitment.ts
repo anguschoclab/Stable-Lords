@@ -60,10 +60,6 @@ export interface PoolWarrior {
 // ─── Constants ────────────────────────────────────────────────────────────
 
 // TIER data is now fetched from narrativeContent.json
-const getTierData = (tier: RecruitTier) =>
-  (narrativeContent as NarrativeContent).recruitment.tiers[tier];/**
-                                                                  * Tier_cost.
-                                                                  */
 
 
 /**

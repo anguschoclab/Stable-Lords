@@ -61,7 +61,7 @@ export const LoreArchive = {
     // Strip transcripts from older entries to save localstorage
     const cleaned = fights.map((fight, i, arr) => {
       if (arr.length - i > 20 && fight.transcript) {
-        const { transcript, ...rest } = fight;
+        const { transcript: _transcript, ...rest } = fight; // eslint-disable-line @typescript-eslint/no-unused-vars
         return rest as FightSummary;
       }
       return fight;

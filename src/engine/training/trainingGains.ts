@@ -1,4 +1,4 @@
-import { type GameState, type TrainingAssignment } from '@/types/state.types';
+import { type GameState } from '@/types/state.types';
 import { type Warrior, type InjuryData } from '@/types/warrior.types';
 import {
   type Attributes,

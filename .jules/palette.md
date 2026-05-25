@@ -33,3 +33,7 @@
 ## 2024-05-14 - Add ARIA Labels to Sortable Table Headers
 **Learning:** React components acting as interactive table headers (like `SortHeader`) often lack semantic indication to screen readers that they are clickable sorting toggles. Adding `aria-label` provides crucial context without altering the visual design.
 **Action:** Always verify that interactive icon or text components used for sorting have an explicit `aria-label` or `aria-sort` attribute to ensure screen reader users understand the component's interactive purpose.
+
+## 2026-05-24 - Add tooltips to icon-only buttons
+**Learning:** Icon-only buttons often have `aria-label`s for screen readers but lack visual labels for sighted users. The custom `Button` component in this codebase automatically converts the `title` attribute into a rich UI tooltip (`Tooltip` from shadcn/ui).
+**Action:** When creating or modifying icon-only buttons, always provide a `title` prop (or `tooltip` prop) so that the `Button` component generates an accessible and beautiful tooltip.

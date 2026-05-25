@@ -614,7 +614,8 @@ export type WeatherType =
   | 'Solar Flare'
   | 'Abyssal Gloom'
   | 'Cursed Miasma'
-  | 'Hailstorm';/**
+  | 'Hailstorm'
+  | 'Arcane Storm';/**
                  * Defines the shape of death event.
                  */
 

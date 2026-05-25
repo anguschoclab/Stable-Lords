@@ -31,3 +31,7 @@
 **What:** The `useGameStore` simulation action used to iterate day-by-day `advanceDay` through the worker proxy up to day 7 when `isTournamentWeek` was true. This involved awaiting a Promise.race over the worker bridge on every loop iteration. It has been replaced by delegating the entire `for` loop to `engineProxy.skipToWeekEnd`.
 **Why:** Batching the simulation ticks inside `TickOrchestrator.skipToWeekEnd` before crossing the worker communication boundary drastically reduces asynchronous promise queuing and worker messaging overhead.
 **Impact:** Local benchmark showed execution dropping from `102ms` to `63ms` (a ~38% speedup).
+
+## 2024-05-18 - [Optimizing O(N) lookup inside React map with precomputed Map]
+**Learning:** Found an O(N) operation `rivals?.find(...)` being called multiple times inside a `.map` loop during rendering in `src/components/ledger/SeasonSynthesis.tsx`, turning what should be an O(N) pass into an O(N^2) bottleneck. Repeated array searches inside mapping logic are a common performance anti-pattern.
+**Action:** Replace `Array.prototype.find` inside a `.map` loop with an O(1) `Map` lookup by extracting the data into a precomputed dictionary created with `useMemo`. Iterate over the source array once to populate the Map, converting the complexity from O(N^2) to O(N + M).

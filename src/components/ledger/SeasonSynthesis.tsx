@@ -63,6 +63,16 @@ export function SeasonSynthesis() {
 
   const grudges = ownerGrudges ?? [];
 
+  const rivalMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if (rivals) {
+      for (const rival of rivals) {
+        map.set(rival.owner.id, rival.owner.stableName);
+      }
+    }
+    return map;
+  }, [rivals]);
+
   if (!rivals?.length) return null;
 
   return (
@@ -166,10 +176,8 @@ export function SeasonSynthesis() {
               </p>
             ) : (
               grudges.map((g, i) => {
-                const stableA =
-                  rivals?.find((r) => r.owner.id === g.ownerIdA)?.owner.stableName ?? g.ownerIdA;
-                const stableB =
-                  rivals?.find((r) => r.owner.id === g.ownerIdB)?.owner.stableName ?? g.ownerIdB;
+                const stableA = rivalMap.get(g.ownerIdA) ?? g.ownerIdA;
+                const stableB = rivalMap.get(g.ownerIdB) ?? g.ownerIdB;
                 return (
                   <div
                     key={i}

@@ -8,6 +8,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { generateRecommendations } from '@/engine/equipmentOptimizer';
 import { validateLoadout, checkWeaponRequirements } from '@/data/equipment';
+import { updateEntityInList } from '@/utils/stateUtils';
 import {
   processAttributeTraining,
   processRecovery,
@@ -46,10 +47,16 @@ export function processRoster(
   const healingBonus = getHealingTrainerBonus(updatedRival.trainers ?? []);
   for (const wounded of activeRoster.filter((w) => (w.injuries ?? []).length > 0)) {
     const { updatedInjuries } = processRecovery(wounded, healingBonus);
-    updatedRival.roster = updatedRival.roster.map((w) =>
-      w.id === wounded.id ? { ...w, injuries: updatedInjuries } : w
-    );
+    updatedRival.roster = updateEntityInList(updatedRival.roster, wounded.id, (w) => ({
+      ...w,
+      injuries: updatedInjuries,
+    }));
   }
+
+  // ⚡ Bolt Optimization: Using updateEntityInList instead of .map()
+  // 💡 What: Replaced .map() traversal with a targeted index update.
+  // 🎯 Why: Avoids O(N) allocations and redundant iterations when modifying a single element.
+  // 📊 Impact: Significantly reduces GC pressure during hot loops updating game state arrays.
 
   // 1. Training (Low Risk)
   // ⚡ TSA: Prioritize Champion or high-fame units for training.
@@ -78,8 +85,8 @@ export function processRoster(
       // the rest of the time.
       const doDrill = rngService.next() < 0.25;
       if (doDrill) {
-        updatedRival.roster = updatedRival.roster.map((w) =>
-          w.id === trainee.id ? performAISkillDrill(trainee, updatedRival, rngService) : w
+        updatedRival.roster = updateEntityInList(updatedRival.roster, trainee.id, () =>
+          performAISkillDrill(trainee, updatedRival, rngService)
         );
       } else {
         const { warrior, seasonalGrowth: nextGrowth } = performAITraining(
@@ -91,7 +98,7 @@ export function processRoster(
           healingBonus
         );
         seasonalGrowth = nextGrowth;
-        updatedRival.roster = updatedRival.roster.map((w) => (w.id === warrior.id ? warrior : w));
+        updatedRival.roster = updateEntityInList(updatedRival.roster, warrior.id, () => warrior);
       }
     }
   }
@@ -107,8 +114,8 @@ export function processRoster(
     const champWarrior = activeForGear.find((w) => w.champion);
     if (budgetReport.isAffordable && champWarrior) {
       updatedRival.treasury -= gearCost;
-      updatedRival.roster = updatedRival.roster.map((w) =>
-        w.id === champWarrior.id ? applyGearUpgrade(w, rngService) : w
+      updatedRival.roster = updateEntityInList(updatedRival.roster, champWarrior.id, (w) =>
+        applyGearUpgrade(w, rngService)
       );
       updatedRival = logAgentAction(
         updatedRival,
@@ -132,8 +139,8 @@ export function processRoster(
 
       if (gearCandidate) {
         updatedRival.treasury -= gearCost;
-        updatedRival.roster = updatedRival.roster.map((w) =>
-          w.id === gearCandidate.id ? applyGearUpgrade(w, rngService) : w
+        updatedRival.roster = updateEntityInList(updatedRival.roster, gearCandidate.id, (w) =>
+          applyGearUpgrade(w, rngService)
         );
         updatedRival = logAgentAction(
           updatedRival,

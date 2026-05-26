@@ -21,7 +21,7 @@ import {
   WARRIOR_UPKEEP_BASE,
   TRAINING_COST,
   TRAINER_WEEKLY_SALARY,
-} from '@/data/economyConstants';
+} from '@/constants/economy';
 
 /**
  * Represents the financial summary for a game week.

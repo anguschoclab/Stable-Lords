@@ -14,7 +14,7 @@ import {
   FAME_DIVIDEND,
   WARRIOR_UPKEEP_BASE,
   TRAINER_WEEKLY_SALARY,
-} from '@/data/economyConstants';
+} from '@/constants/economy';
 
 /**
  * processAIStable - The Lead Agent Orchestrator for a Rival Stable.

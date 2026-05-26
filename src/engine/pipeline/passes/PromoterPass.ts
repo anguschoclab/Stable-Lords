@@ -3,7 +3,7 @@ import { StateImpact } from '@/engine/impacts';
 import type { BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
-import { FIGHT_PURSE } from '@/data/economyConstants';
+import { FIGHT_PURSE } from '@/constants/economy';
 import { collectAllActiveWarriors } from '@/engine/core/warriorCollection';
 import {
   TIER_MULTIPLIERS,

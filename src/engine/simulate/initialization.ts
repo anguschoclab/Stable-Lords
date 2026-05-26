@@ -17,7 +17,7 @@ import type { FightPlan } from '@/types/combat.types';
 import type { WeatherType, DistanceRange, ArenaZone } from '@/types/shared.types';
 import type { CrowdMood } from '@/engine/crowdMood';
 import type { ResolutionContext } from '../combat/resolution/resolution';
-import { getMatchupBonus } from '../combat/mechanics/combatConstants';
+import { getMatchupBonus } from '@/constants/combat';
 
 /**
  * Per-mood kill-window deltas.

@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { FightingStyle, STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, type Attributes } from '@/types/game';
-import { BASE_ROSTER_CAP } from '@/data/constants';
+import { BASE_ROSTER_CAP } from '@/constants/roster';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { hashStr } from '@/utils/random';

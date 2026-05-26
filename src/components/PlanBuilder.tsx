@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { FightPlan, Warrior } from '@/types/game';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
-import { getMatchupBonus } from '@/engine/combat/mechanics/combatConstants';
+import { getMatchupBonus } from '@/constants/combat';
 import { computeStrategyScore, getScoreColor } from '@/engine/strategyAnalysis';
 import TacticBank from './planBuilder/TacticBank';
 import CommonControls from './planBuilder/CommonControls';

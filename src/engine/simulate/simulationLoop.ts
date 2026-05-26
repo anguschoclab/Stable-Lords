@@ -4,7 +4,7 @@
 import { resolveEffectiveTactics } from '../combat/resolution/resolution';
 import { resolveExchange } from '../combat/resolution/resolution';
 import { narrateEvents, NarrationContext } from '../combat/narrative/narrator';
-import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '../combat/mechanics/combatConstants';
+import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '@/constants/combat';
 import type { FighterState } from '../combat/resolution';
 import type { ResolutionContext } from '../combat/resolution/resolution';
 import type { MinuteEvent, DeathCauseBucket, FightOutcomeBy, ExchangeLogEntry } from '@/types/combat.types';

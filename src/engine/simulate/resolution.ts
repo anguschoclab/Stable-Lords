@@ -2,7 +2,7 @@
  * Simulation Resolution - Decision logic and tag generation
  */
 import { resolveDecision } from '../bout/decisionLogic';
-import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, WIN_XP, LOSS_XP } from '../combat/mechanics/combatConstants';
+import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, WIN_XP, LOSS_XP } from '@/constants/combat';
 import type { FighterState } from '../combat/resolution/resolution';
 import type { FightOutcomeBy, DeathCauseBucket, MinuteEvent } from '@/types/combat.types';
 

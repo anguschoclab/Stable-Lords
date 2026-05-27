@@ -44,7 +44,8 @@ interface OffseasonEventNarrative {
     | 'mysterious_patron'
     | 'loyal_stray'
     | 'midnight_feast'
-    | 'shadow_training';
+    | 'shadow_training'
+    | 'meteor_shower';
   newsletter: string[];
 } /**
  * Run seasonal pass.
@@ -634,6 +635,33 @@ export function runSeasonalPass(
               name: chosen.name,
               xp: xpGained,
               fame: fameLost,
+            }),
+          ],
+        });
+      }
+    }
+  } else if (e.effectType === 'meteor_shower') {
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (chosen) {
+        const xpGained = 15 + Math.floor(seasonRng.next() * 11); // 15-25 XP
+        const fameGained = 10 + Math.floor(seasonRng.next() * 6); // 10-15 Fame
+
+        rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+          fame: (chosen.fame || 0) + fameGained,
+        });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [
+            t(seasonRng.pick(e.newsletter) || '', {
+              name: chosen.name,
+              xp: xpGained,
+              fame: fameGained,
             }),
           ],
         });

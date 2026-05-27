@@ -41,16 +41,17 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   // Summer: Hot, dry, and storm-prone
   if (season === 'Summer') {
     if (roll < 0.3) return 'Clear';
-    if (roll < 0.4) return 'Blazing Sun';
-    if (roll < 0.5) return 'Scorching Wind';
-    if (roll < 0.6) return 'Sweltering';
-    if (roll < 0.7) return 'Overcast';
-    if (roll < 0.8) return 'Thunderstorm';
-    if (roll < 0.88) return 'Sandstorm';
-    if (roll < 0.94) return 'Ashfall';
-    if (roll < 0.97) return 'Gale';
-    if (roll < 0.995) return 'Blood Moon'; // Includes 0.99
-    if (roll < 0.998) return 'Eclipse';
+    if (roll < 0.38) return 'Blazing Sun';
+    if (roll < 0.45) return 'Scorching Wind';
+    if (roll < 0.55) return 'Sweltering';
+    if (roll < 0.65) return 'Overcast';
+    if (roll < 0.75) return 'Thunderstorm';
+    if (roll < 0.83) return 'Sandstorm';
+    if (roll < 0.89) return 'Ashfall';
+    if (roll < 0.92) return 'Gale';
+    if (roll < 0.95) return 'Solar Flare';
+    if (roll < 0.98) return 'Blood Moon'; // Includes 0.99
+    if (roll < 0.995) return 'Eclipse';
     return 'Mana Surge';
   }
 

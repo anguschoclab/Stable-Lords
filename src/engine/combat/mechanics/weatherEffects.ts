@@ -185,6 +185,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.95,
     description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
   },
+  'Solar Flare': {
+    staminaMult: 1.5,
+    initiativeMod: 0,
+    riposteMod: 0,
+    damageMult: 1.25,
+    description: 'A blinding flash of light bakes the arena, draining stamina aggressively while giving eager attackers a burst of destructive energy.',
+  },
 };
 
 /**
@@ -233,6 +240,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Cursed Miasma':
     'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
   Hailstorm: 'Ice falls from the sky like stones, battering armor and bare flesh alike.',
+  'Solar Flare': 'A blinding flash of light bakes the arena. The sun itself seems to attack the fighters.',
 };
 
 /**

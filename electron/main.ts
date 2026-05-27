@@ -620,6 +620,23 @@ function registerIPCHandlers() {
   });
 }
 app.whenReady().then(async () => {
+  // Security: Prevent arbitrary navigation in all web contents
+  app.on('web-contents-created', (event, contents) => {
+    contents.on('will-navigate', (event, navigationUrl) => {
+      const parsedUrl = new URL(navigationUrl);
+      if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:' && parsedUrl.protocol !== 'file:') {
+        console.warn(`Blocked unauthorized navigation to: ${navigationUrl}`);
+        event.preventDefault();
+      } else if (isDev && parsedUrl.hostname !== 'localhost' && parsedUrl.hostname !== '127.0.0.1') {
+        console.warn(`Blocked unauthorized navigation to: ${navigationUrl}`);
+        event.preventDefault();
+      } else if (!isDev && parsedUrl.protocol !== 'file:') {
+        console.warn(`Blocked unauthorized navigation to: ${navigationUrl}`);
+        event.preventDefault();
+      }
+    });
+  });
+
   // Initialize config path now that app is ready
   configPath = path.join(app.getPath('userData'), 'config.json');
   await loadConfig();

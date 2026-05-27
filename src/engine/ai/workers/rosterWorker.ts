@@ -1,3 +1,4 @@
+import { updateEntityInList } from '@/utils/stateUtils';
 import type { GameState, RivalStableData, SeasonalGrowth } from '@/types/state.types';
 import type { Attributes, Season } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -46,9 +47,10 @@ export function processRoster(
   const healingBonus = getHealingTrainerBonus(updatedRival.trainers ?? []);
   for (const wounded of activeRoster.filter((w) => (w.injuries ?? []).length > 0)) {
     const { updatedInjuries } = processRecovery(wounded, healingBonus);
-    updatedRival.roster = updatedRival.roster.map((w) =>
-      w.id === wounded.id ? { ...w, injuries: updatedInjuries } : w
-    );
+    updatedRival.roster = updateEntityInList(updatedRival.roster, wounded.id, (w) => ({
+      ...w,
+      injuries: updatedInjuries,
+    }));
   }
 
   // 1. Training (Low Risk)
@@ -78,8 +80,8 @@ export function processRoster(
       // the rest of the time.
       const doDrill = rngService.next() < 0.25;
       if (doDrill) {
-        updatedRival.roster = updatedRival.roster.map((w) =>
-          w.id === trainee.id ? performAISkillDrill(trainee, updatedRival, rngService) : w
+        updatedRival.roster = updateEntityInList(updatedRival.roster, trainee.id, () =>
+          performAISkillDrill(trainee, updatedRival, rngService)
         );
       } else {
         const { warrior, seasonalGrowth: nextGrowth } = performAITraining(
@@ -91,7 +93,7 @@ export function processRoster(
           healingBonus
         );
         seasonalGrowth = nextGrowth;
-        updatedRival.roster = updatedRival.roster.map((w) => (w.id === warrior.id ? warrior : w));
+        updatedRival.roster = updateEntityInList(updatedRival.roster, warrior.id, () => warrior);
       }
     }
   }
@@ -107,8 +109,8 @@ export function processRoster(
     const champWarrior = activeForGear.find((w) => w.champion);
     if (budgetReport.isAffordable && champWarrior) {
       updatedRival.treasury -= gearCost;
-      updatedRival.roster = updatedRival.roster.map((w) =>
-        w.id === champWarrior.id ? applyGearUpgrade(w, rngService) : w
+      updatedRival.roster = updateEntityInList(updatedRival.roster, champWarrior.id, (w) =>
+        applyGearUpgrade(w, rngService)
       );
       updatedRival = logAgentAction(
         updatedRival,
@@ -132,8 +134,8 @@ export function processRoster(
 
       if (gearCandidate) {
         updatedRival.treasury -= gearCost;
-        updatedRival.roster = updatedRival.roster.map((w) =>
-          w.id === gearCandidate.id ? applyGearUpgrade(w, rngService) : w
+        updatedRival.roster = updateEntityInList(updatedRival.roster, gearCandidate.id, (w) =>
+          applyGearUpgrade(w, rngService)
         );
         updatedRival = logAgentAction(
           updatedRival,

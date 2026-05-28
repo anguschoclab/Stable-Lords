@@ -619,6 +619,24 @@ function registerIPCHandlers() {
     return { success: true };
   });
 }
+app.on('web-contents-created', (event, webContents) => {
+  webContents.on('will-navigate', (event, navigationUrl) => {
+    try {
+      const parsedUrl = new URL(navigationUrl);
+      const isFile = parsedUrl.protocol === 'file:';
+      const isLocalhost = isDev && (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') && (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1');
+
+      if (!isFile && !isLocalhost) {
+        event.preventDefault();
+        console.warn(`Blocked unauthorized navigation to: ${navigationUrl}`);
+      }
+    } catch (err) {
+      event.preventDefault();
+      console.error(`Invalid URL in will-navigate: ${navigationUrl}`);
+    }
+  });
+});
+
 app.whenReady().then(async () => {
   // Initialize config path now that app is ready
   configPath = path.join(app.getPath('userData'), 'config.json');

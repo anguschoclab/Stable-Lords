@@ -48,7 +48,8 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
     if (roll < 0.8) return 'Thunderstorm';
     if (roll < 0.88) return 'Sandstorm';
     if (roll < 0.94) return 'Ashfall';
-    if (roll < 0.97) return 'Gale';
+    if (roll < 0.96) return 'Gale';
+    if (roll < 0.98) return 'Solar Flare'; // Spontaneous feature by Chaos Weaver
     if (roll < 0.995) return 'Blood Moon'; // Includes 0.99
     if (roll < 0.998) return 'Eclipse';
     return 'Mana Surge';

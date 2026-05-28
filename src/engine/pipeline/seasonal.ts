@@ -44,7 +44,8 @@ interface OffseasonEventNarrative {
     | 'mysterious_patron'
     | 'loyal_stray'
     | 'midnight_feast'
-    | 'shadow_training';
+    | 'shadow_training'
+    | 'underground_pit_fight';
   newsletter: string[];
 } /**
  * Run seasonal pass.
@@ -634,6 +635,43 @@ export function runSeasonalPass(
               name: chosen.name,
               xp: xpGained,
               fame: fameLost,
+            }),
+          ],
+        });
+      }
+    }
+
+  } else if (e.effectType === 'underground_pit_fight') {
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = seasonRng.pick(activeWarriors);
+      if (chosen) {
+        const fameGained = 15 + Math.floor(seasonRng.next() * 16); // 15-30 fame
+
+        const newInjury: InjuryData = {
+          id: seasonRng.uuid('injury') as InjuryId,
+          name: 'Busted Knuckles',
+          description: 'A messy wound from a bare-knuckle pit fight.',
+          severity: 'Minor',
+          weeksRemaining: 1 + Math.floor(seasonRng.next() * 3), // 1-3 weeks
+          penalties: { SP: -1, CN: -1 },
+        };
+
+        const currentInjuries = chosen.injuries || [];
+
+        rosterUpdates.set(chosen.id, {
+          fame: (chosen.fame || 0) + fameGained,
+          injuries: [...currentInjuries, newInjury],
+        });
+
+        newsletterItems.push({
+          id: seasonRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [
+            t(seasonRng.pick(e.newsletter) || '', {
+              name: chosen.name,
+              fame: fameGained,
             }),
           ],
         });

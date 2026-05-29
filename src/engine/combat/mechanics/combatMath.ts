@@ -112,6 +112,7 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   Gale: 1.15, // 15% more stamina drain
   Breezy: 0.9, // 10% less stamina drain
   Eclipse: 0.8, // 20% less stamina drain, slow methodical fights
+  'Blood Rain': 1.1, // 10% more stamina drain
   'Meteor Shower': 1.2, // 20% more stamina drain
   'Abyssal Gloom': 0.9, // 10% less stamina drain
   // Clear / Overcast / Rainy → 1.0 (default)

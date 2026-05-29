@@ -116,6 +116,14 @@ const WEATHER_METADATA = {
     description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
     stats: 'INITIATIVE -4 // RIPOSTE -2 // DAMAGE 95% // STAMINA DRAIN 120%',
   },
+  'Blood Rain': {
+    icon: CloudRain,
+    color: 'text-red-500',
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/20',
+    description: 'Red rain slickens the sand. Violence feels inevitable.',
+    stats: 'INITIATIVE -2 // RIPOSTE +2 // DAMAGE 120% // STAMINA DRAIN 110%',
+  },
 };/**
    * Weather widget.
    * @returns The result.

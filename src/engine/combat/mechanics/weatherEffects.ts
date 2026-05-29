@@ -185,6 +185,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.95,
     description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
   },
+  'Blood Rain': {
+    staminaMult: 1.1,
+    initiativeMod: -2,
+    riposteMod: +2,
+    damageMult: 1.2,
+    description: 'Red rain slickens the sand. Violence feels inevitable.',
+  },
 };
 
 /**
@@ -233,6 +240,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Cursed Miasma':
     'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
   Hailstorm: 'Ice falls from the sky like stones, battering armor and bare flesh alike.',
+  'Blood Rain': 'Thick red drops fall from an unnatural sky. The air smells of copper and dread.',
 };
 
 /**

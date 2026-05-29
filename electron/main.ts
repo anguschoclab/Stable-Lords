@@ -635,6 +635,31 @@ app.whenReady().then(async () => {
       createWindow();
     }
   });
+
+  // Security: Block arbitrary window navigation
+  app.on('web-contents-created', (_event, contents) => {
+    contents.on('will-navigate', (event, navigationUrl) => {
+      const parsedUrl = new URL(navigationUrl);
+
+      // Allow only safe protocols
+      if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:' && parsedUrl.protocol !== 'file:') {
+        event.preventDefault();
+        console.warn(`Blocked arbitrary window navigation to unsafe protocol: ${navigationUrl}`);
+        return;
+      }
+
+      // Restrict http/https to local development only
+      if ((parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') && isDev) {
+        if (parsedUrl.hostname !== 'localhost' && parsedUrl.hostname !== '127.0.0.1') {
+          event.preventDefault();
+          console.warn(`Blocked arbitrary window navigation to external host in dev: ${navigationUrl}`);
+        }
+      } else if (!isDev && (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:')) {
+         event.preventDefault();
+         console.warn(`Blocked arbitrary window navigation to http/https in production: ${navigationUrl}`);
+      }
+    });
+  });
 });
 
 app.on('window-all-closed', () => {

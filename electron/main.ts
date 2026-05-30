@@ -1,4 +1,14 @@
-import { app, BrowserWindow, ipcMain, Menu, dialog, shell, Tray, nativeImage, Notification } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  dialog,
+  shell,
+  Tray,
+  nativeImage,
+  Notification,
+} from 'electron';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import * as os from 'os';
@@ -31,7 +41,7 @@ async function loadConfig() {
     }
     const data = await fs.readFile(configPath, 'utf-8');
     const parsed = JSON.parse(data);
-    Object.keys(parsed).forEach(key => store.set(key, parsed[key]));
+    Object.keys(parsed).forEach((key) => store.set(key, parsed[key]));
   } catch (e) {
     console.error('Failed to load config:', e);
   }
@@ -82,23 +92,25 @@ async function ensureSaveDirectory() {
   } catch {
     await fs.mkdir(saveDir, { recursive: true });
   }
-  
+
   // Create subdirectories
   const subdirs = ['hot_state', 'seasons'];
-  await Promise.all(subdirs.map(async (dir) => {
-    const dirPath = path.join(saveDir, dir);
-    try {
-      await fs.access(dirPath);
-    } catch {
-      await fs.mkdir(dirPath, { recursive: true });
-    }
-  }));
+  await Promise.all(
+    subdirs.map(async (dir) => {
+      const dirPath = path.join(saveDir, dir);
+      try {
+        await fs.access(dirPath);
+      } catch {
+        await fs.mkdir(dirPath, { recursive: true });
+      }
+    })
+  );
 }
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: (store.get('windowBounds.width')) || 1400,
-    height: (store.get('windowBounds.height')) || 900,
+    width: store.get('windowBounds.width') || 1400,
+    height: store.get('windowBounds.height') || 900,
     x: store.get('windowBounds.x'),
     y: store.get('windowBounds.y'),
     minWidth: 1024,
@@ -116,13 +128,15 @@ function createWindow() {
   // Load the app
   if (isDev) {
     console.log(`Loading from http://localhost:${devPort}`);
-    mainWindow.loadURL(`http://localhost:${devPort}`)
-      .catch(err => console.error('Failed to load URL:', err));
+    mainWindow
+      .loadURL(`http://localhost:${devPort}`)
+      .catch((err) => console.error('Failed to load URL:', err));
     mainWindow.webContents.openDevTools();
   } else {
     console.log(`Loading from ${path.join(__dirname, '../dist/index.html')}`);
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
-      .catch(err => console.error('Failed to load file:', err));
+    mainWindow
+      .loadFile(path.join(__dirname, '../dist/index.html'))
+      .catch((err) => console.error('Failed to load file:', err));
   }
 
   // Log any loading errors
@@ -144,9 +158,10 @@ function createWindow() {
 
   // Check if preload script loaded
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents.executeJavaScript('window.electronAPI ? "preload loaded" : "preload NOT loaded"')
-      .then(result => console.log('Preload script status:', result))
-      .catch(err => console.error('Failed to check preload:', err));
+    mainWindow.webContents
+      .executeJavaScript('window.electronAPI ? "preload loaded" : "preload NOT loaded"')
+      .then((result) => console.log('Preload script status:', result))
+      .catch((err) => console.error('Failed to check preload:', err));
   });
 
   // Save window bounds on resize/move
@@ -178,7 +193,9 @@ function createWindow() {
       if (safeProtocols.includes(parsedUrl.protocol)) {
         shell.openExternal(url);
       } else {
-        console.warn(`Blocked attempt to open external URL with unsafe protocol: ${parsedUrl.protocol}`);
+        console.warn(
+          `Blocked attempt to open external URL with unsafe protocol: ${parsedUrl.protocol}`
+        );
       }
     } catch (e) {
       console.error(`Invalid URL in windowOpenHandler: ${url}`);
@@ -310,9 +327,9 @@ function createMenu() {
 function createTray() {
   const iconPath = path.join(__dirname, '../public/icons/icon-192.png');
   const image = nativeImage.createFromPath(iconPath);
-  
+
   tray = new Tray(image);
-  
+
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Show Stable Lords',
@@ -347,10 +364,10 @@ function createTray() {
       },
     },
   ]);
-  
+
   tray.setToolTip('Stable Lords');
   tray.setContextMenu(contextMenu);
-  
+
   tray.on('click', () => {
     if (mainWindow) {
       if (mainWindow.isVisible()) {
@@ -503,7 +520,13 @@ function registerIPCHandlers() {
       if (!validateBoutId(boutId)) {
         return { success: false, error: 'Invalid bout ID format' };
       }
-      const filePath = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'bouts', `${year}_${boutId}.json`);
+      const filePath = path.join(
+        getSaveDirectory(),
+        'seasons',
+        `season_${season}`,
+        'bouts',
+        `${year}_${boutId}.json`
+      );
       try {
         await fs.access(filePath);
       } catch {
@@ -552,7 +575,13 @@ function registerIPCHandlers() {
       if (!validateSeasonWeek(week)) {
         return { success: false, error: 'Invalid week' };
       }
-      const filePath = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'gazettes', `week_${week}.md`);
+      const filePath = path.join(
+        getSaveDirectory(),
+        'seasons',
+        `season_${season}`,
+        'gazettes',
+        `week_${week}.md`
+      );
       try {
         await fs.access(filePath);
       } catch {
@@ -619,11 +648,33 @@ function registerIPCHandlers() {
     return { success: true };
   });
 }
+app.on('web-contents-created', (event, contents) => {
+  contents.on('will-navigate', (event, navigationUrl) => {
+    try {
+      const parsedUrl = new URL(navigationUrl);
+
+      // In development, allow localhost navigation
+      if (isDev && (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1')) {
+        return;
+      }
+
+      // In production, block all external navigation
+      // Our application is an SPA, all navigation is handled client-side via React Router.
+      // Top level window navigation is unauthorized.
+      console.warn(`Blocked unauthorized navigation to: ${navigationUrl}`);
+      event.preventDefault();
+    } catch (e) {
+      console.error(`Invalid navigation URL: ${navigationUrl}`);
+      event.preventDefault();
+    }
+  });
+});
+
 app.whenReady().then(async () => {
   // Initialize config path now that app is ready
   configPath = path.join(app.getPath('userData'), 'config.json');
   await loadConfig();
-  
+
   await ensureSaveDirectory();
   registerIPCHandlers();
   createWindow();

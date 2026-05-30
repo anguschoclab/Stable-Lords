@@ -16,3 +16,7 @@
 **Vulnerability:** The Electron main process allowed any URL passed to `setWindowOpenHandler` to be opened via `shell.openExternal(url)`, risking execution of arbitrary URIs (e.g., `file://`, `smb://`).
 **Learning:** In Electron, web content can try to open new windows with any URI scheme. If `shell.openExternal` is used without validation, it can lead to remote code execution or unauthorized access to local files.
 **Prevention:** Always validate the protocol of the URL using `new URL(url).protocol` against an allowlist of safe protocols (like `http:`, `https:`, `mailto:`) before calling `shell.openExternal()`.
+## 2024-06-10 - Prevent Arbitrary Window Navigation in Electron
+**Vulnerability:** The application did not prevent arbitrary window navigation. If an attacker managed to execute code or find an open redirect in the renderer process, they could redirect the main window to a malicious site or execute arbitrary local files by changing the window location (`window.location.href`).
+**Learning:** By default, Electron allows renderer processes to navigate to any URL. This is a risk because it can lead to phishing attacks, execution of untrusted code, or unauthorized local file access.
+**Prevention:** Add a `web-contents-created` event listener to the `app` object and intercept the `will-navigate` event on `webContents`. Validate the destination URL and call `event.preventDefault()` if it points to an unauthorized or unsafe location.

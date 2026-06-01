@@ -35,10 +35,9 @@ function routeUpdate(
     rosterUpdates.set(warrior.id, { ...existing, ...partial });
     return;
   }
-  // Find owning rival
-  const rival = (s.rivals || []).find(
-    (r) => r.id === warrior.stableId || r.roster.some((w) => w.id === warrior.id)
-  );
+  // Find owning rival via O(1) maps
+  const stableInfo = s.warriorToStableMap?.get(warrior.id);
+  const rival = stableInfo && !stableInfo.isPlayer ? s.rivalMap?.get(stableInfo.stableId) : undefined;
   if (!rival) return;
   const existingRival = rivalsUpdates.get(rival.id);
   const baseRoster = (existingRival?.roster as Warrior[] | undefined) ?? rival.roster;

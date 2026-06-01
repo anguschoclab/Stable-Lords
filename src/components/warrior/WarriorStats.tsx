@@ -129,7 +129,7 @@ export function WarriorStatementsPanel({ warrior }: { warrior: Warrior }) {
   return (
     <ul className="space-y-1.5">
       {lines.map((line, i) => (
-        <li key={i} className="text-xs text-muted-foreground italic leading-relaxed">
+        <li key={`${line.slice(0, 30)}-${i}`} className="text-xs text-muted-foreground italic leading-relaxed">
           • {line}
         </li>
       ))}

@@ -139,15 +139,23 @@ export function evaluateStopConditions(
  * Extract a summary from current state
  */
 function extractWeekSummary(state: GameState): WeekSummary {
-  const weekFights = state.arenaHistory?.filter((f) => f.week === state.week) ?? [];
-  const deaths = weekFights.filter((f) => f.by === 'Kill').length;
+  const { bouts, deaths } = (state.arenaHistory || []).reduce(
+    (acc, f) => {
+      if (f.week === state.week) {
+        acc.bouts++;
+        if (f.by === 'Kill') acc.deaths++;
+      }
+      return acc;
+    },
+    { bouts: 0, deaths: 0 }
+  );
 
   return {
     week: state.week,
     year: state.year,
     treasury: state.treasury,
     rosterSize: state.roster.length,
-    bouts: weekFights.length,
+    bouts,
     deaths,
   };
 }

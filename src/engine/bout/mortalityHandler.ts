@@ -1,4 +1,5 @@
 import type { GameState, RivalStableData, NewsletterItem } from '@/types/state.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
@@ -102,8 +103,8 @@ export function handleDeath(
     deathEvent: { ...event, causeBucket } as typeof event & { causeBucket: string },
   };
 
-  const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
   const newsletterItems: NewsletterItem[] = [];
 
   // Remove victim from roster
@@ -132,10 +133,10 @@ export function handleDeath(
     // Player killed a rival. rivalStableId is rival.id (StableId), not owner.id —
     // looking up by owner.id silently failed, so the dead warrior stayed in
     // the rival's roster while ALSO being added to the graveyard.
-    const rival = (s.rivals || []).find((r: RivalStableData) => r.id === rivalStableId);
+    const rival = s.rivalMap?.get(rivalStableId as StableId);
     if (rival) {
       const updatedRoster = rival.roster.filter((w: Warrior) => w.id !== wD.id);
-      rivalsUpdates.set(rivalStableId, { roster: updatedRoster });
+      rivalsUpdates.set(rivalStableId as StableId, { roster: updatedRoster });
     }
   }
 

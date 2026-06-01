@@ -37,6 +37,7 @@ export const ExpansionService = {
 
     const neededCount = targetCount - currentCount;
     const newStables: RivalStableData[] = [];
+    const rivalsById = new Map((state.rivals || []).map((r) => [r.id, r]));
 
     for (let i = 0; i < neededCount; i++) {
       if (rng.next() < 0.3) {
@@ -83,7 +84,7 @@ export const ExpansionService = {
           let parentGeneration = 0;
 
           if (legacy.parentStableId) {
-            const parentStable = state.rivals?.find((r) => r.id === legacy.parentStableId);
+            const parentStable = rivalsById.get(legacy.parentStableId as import('@/types/shared.types').StableId);
             if (parentStable?.crest) {
               parentCrest = parentStable.crest;
               parentGeneration = parentStable.owner?.generation ?? 0;

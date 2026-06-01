@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { MinuteEvent } from '@/types/combat.types';
@@ -32,7 +32,7 @@ function getEventIcon(type: ReturnType<typeof classifyEvent>) {
     case 'phase':
       return <Target className="h-3 w-3 text-primary/60" />;
     case 'spatial':
-      return <MoveHorizontal className="h-3 w-3 text-blue-400" />;
+      return <MoveHorizontal className="h-3 w-3 text-accent" />;
     default:
       return <div className="h-2 w-2 rounded-full bg-muted-foreground/20" />;
   }
@@ -59,7 +59,7 @@ function getEventColor(type: ReturnType<typeof classifyEvent>) {
     case 'phase':
       return 'border-primary/40 bg-primary/10 py-3 my-2';
     case 'spatial':
-      return 'border-blue-500/20 bg-blue-500/5';
+      return 'border-accent/20 bg-accent/5';
     default:
       return 'border-white/5 bg-transparent';
   }
@@ -69,7 +69,7 @@ function getEventColor(type: ReturnType<typeof classifyEvent>) {
 // Because the log frequently appends new events (changing visibleCount), memoization
 // ensures that previously rendered log events do not re-render unnecessarily.
 // This changes rendering per tick from O(N) to O(1) during long simulated battles.
-const TacticalLogEntry = React.memo(
+const TacticalLogEntry = memo(
   ({
     event,
     index,

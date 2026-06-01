@@ -10,10 +10,10 @@ import {
   BrainCircuit,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Surface } from '@/components/ui/Surface';
 import type { RivalStableData } from '@/types/game';
 import { ATTRIBUTE_KEYS, STYLE_DISPLAY_NAMES } from '@/types/game';
+import type { FightPlan } from '@/types/shared.types';
 import { ComparisonBar } from './ComparisonBar';
 import { ComparisonHeader } from './ComparisonHeader';
 import { HeadToHead } from './HeadToHead';
@@ -307,55 +307,53 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                           </span>
                         </div>
                         {Object.keys(mods).length > 0 && (
-                          /* eslint-disable @typescript-eslint/no-explicit-any */
                           <div className="mt-3 pt-3 border-t border-white/5 space-y-1">
                             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-2">
                               Combat Modifiers
                             </div>
-                            {(mods as Record<string, number | undefined>).OE !== undefined && (
+                            {((mods as Partial<FightPlan>).OE ?? undefined) !== undefined && (
                               <div className="flex justify-between text-[9px]">
                                 <span className="text-muted-foreground/50">Offensive Effort</span>
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    ((mods as any).OE > 0 ? 'text-arena-blood' : 'text-sky-400') as string
+                                    (((mods as Partial<FightPlan>).OE ?? 0) > 0 ? 'text-arena-blood' : 'text-sky-400')
                                   )}
                                 >
-                                  {modLabel((mods as any).OE as number)}
+                                  {modLabel((mods as Partial<FightPlan>).OE ?? 0)}
                                 </span>
                               </div>
                             )}
-                            {(mods as Record<string, number | undefined>).AL !== undefined && (
+                            {((mods as Partial<FightPlan>).AL ?? undefined) !== undefined && (
                               <div className="flex justify-between text-[9px]">
                                 <span className="text-muted-foreground/50">Activity Level</span>
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    ((mods as any).AL > 0 ? 'text-arena-blood' : 'text-sky-400') as string
+                                    (((mods as Partial<FightPlan>).AL ?? 0) > 0 ? 'text-arena-blood' : 'text-sky-400')
                                   )}
                                 >
-                                  {modLabel((mods as any).AL as number)}
+                                  {modLabel((mods as Partial<FightPlan>).AL ?? 0)}
                                 </span>
                               </div>
                             )}
-                            {(mods as Record<string, number | undefined>).killDesire !==
+                            {((mods as Partial<FightPlan>).killDesire ?? undefined) !==
                               undefined && (
                               <div className="flex justify-between text-[9px]">
                                 <span className="text-muted-foreground/50">Kill Desire</span>
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    (mods as any).killDesire > 0
+                                    ((mods as Partial<FightPlan>).killDesire ?? 0) > 0
                                       ? 'text-arena-blood'
-                                      : 'text-sky-400'  
+                                      : 'text-sky-400'
                                   )}
                                 >
-                                  {modLabel((mods as any).killDesire as number)}
+                                  {modLabel((mods as Partial<FightPlan>).killDesire ?? 0)}
                                 </span>
                               </div>
                             )}
                           </div>
-                          /* eslint-enable @typescript-eslint/no-explicit-any */
                         )}
                       </div>
                     </div>

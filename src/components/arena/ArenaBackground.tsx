@@ -541,7 +541,7 @@ function WeatherOverlay({ weather }: { weather: string }) {
                 '--tx': `${(cryptoRandom() - 0.5) * 100}px`,
                 '--ty': `${(cryptoRandom() - 0.5) * 100}px`,
                 animationDelay: `${cryptoRandom() * 4}s`,
-              } as any // eslint-disable-next-line @typescript-eslint/no-explicit-any -- CSS custom properties (React style object limitation)
+              } as React.CSSProperties & Record<string, string>
             }
           />
         ))}

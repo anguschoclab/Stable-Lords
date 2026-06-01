@@ -39,9 +39,9 @@ export default function UpsetsList({ upsets }: { upsets: UpsetEntry[] }) {
       </CollapsibleTrigger>
       <CollapsibleContent>
         <div className="mt-2 space-y-1.5">
-          {upsets.map((u, i) => (
+          {upsets.map((u) => (
             <div
-              key={i}
+              key={`${u.winner}-${u.loser}`}
               className="flex items-center justify-between py-1.5 px-3 rounded-none bg-secondary/40 border border-border/30"
             >
               <div className="flex items-center gap-2 text-xs">

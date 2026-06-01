@@ -12,6 +12,8 @@
  *  - Training costs: 15g per warrior in training
  */
 import type { GameState, LedgerEntry } from '@/types/state.types';
+import type { StateImpact } from '@/engine/impacts';
+import type { LedgerEntryId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import {
@@ -55,7 +57,7 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
   // ⚡ Bolt: Fast backward search in O(1) instead of an O(N) filter.
   // We can break early because `arenaHistory` is guaranteed chronological.
   for (let i = state.arenaHistory.length - 1; i >= 0; i--) {
-    const f = state.arenaHistory[i];
+    const f = state.arenaHistory[i]!;
     if (f.week !== week) break;
 
     const aIsPlayer = playerWarriorIds.has(f.warriorIdA);
@@ -114,13 +116,18 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
     }
   }
 
-  const activeTrainers = state.trainers.filter((t) => t.contractWeeksLeft > 0);
-  if (activeTrainers.length > 0) {
-    const trainerCost = activeTrainers.reduce(
-      (sum, t) => sum + (TRAINER_WEEKLY_SALARY[t.tier] ?? 35),
-      0
-    );
-    expenses.push({ label: `Trainer salaries (${activeTrainers.length})`, amount: trainerCost });
+  const { activeTrainerCount, trainerCost } = state.trainers.reduce(
+    (acc, t) => {
+      if (t.contractWeeksLeft > 0) {
+        acc.activeTrainerCount++;
+        acc.trainerCost += TRAINER_WEEKLY_SALARY[t.tier] ?? 35;
+      }
+      return acc;
+    },
+    { activeTrainerCount: 0, trainerCost: 0 }
+  );
+  if (activeTrainerCount > 0) {
+    expenses.push({ label: `Trainer salaries (${activeTrainerCount})`, amount: trainerCost });
   }
 
   const trainingCount = (state.trainingAssignments ?? []).length;
@@ -132,10 +139,10 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
 
   // ⚡ Bolt: Optimized calculation over constant size small arrays.
   let totalIncome = 0;
-  for (let i = 0; i < income.length; i++) totalIncome += income[i].amount;
+  for (let i = 0; i < income.length; i++) totalIncome += income[i]!.amount;
 
   let totalExpenses = 0;
-  for (let i = 0; i < expenses.length; i++) totalExpenses += expenses[i].amount;
+  for (let i = 0; i < expenses.length; i++) totalExpenses += expenses[i]!.amount;
 
   return { income, expenses, totalIncome, totalExpenses, net: totalIncome - totalExpenses };
 }
@@ -155,7 +162,7 @@ export function computeEconomyImpact(state: GameState, rng?: IRNGService): State
 
   for (const i of breakdown.income) {
     entries.push({
-      id: rngService.uuid(),
+      id: rngService.uuid() as LedgerEntryId,
       week: state.week,
       label: i.label,
       amount: i.amount,
@@ -164,7 +171,7 @@ export function computeEconomyImpact(state: GameState, rng?: IRNGService): State
   }
   for (const e of breakdown.expenses) {
     entries.push({
-      id: rngService.uuid(),
+      id: rngService.uuid() as LedgerEntryId,
       week: state.week,
       label: e.label,
       amount: -e.amount,

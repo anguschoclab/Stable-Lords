@@ -105,12 +105,12 @@ export function ReputationQuadrant({ className }: { className?: string }) {
 
         {/* Dots */}
         <TooltipProvider>
-          {dots.map((dot, i) => {
+          {dots.map((dot) => {
             const x = dot.fame; // 0-100 → 0-100%
             const y = 100 - dot.notoriety; // flip Y so high notoriety = top
 
             return (
-              <Tooltip key={i}>
+              <Tooltip key={dot.label}>
                 <TooltipTrigger asChild>
                   <div
                     className={cn(

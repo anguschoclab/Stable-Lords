@@ -173,24 +173,16 @@ function ArenaLeaderboard() {
     };
 
     const playerStable = player.stableName;
-    for (let i = 0; i < roster.length; i++) {
-      const w = roster[i];
-      if (w.status === 'Active') {
-        insert({ warrior: w, stableName: playerStable, isPlayer: true });
-      }
-    }
-
-    if (rivals) {
-      for (let i = 0; i < rivals.length; i++) {
-        const r = rivals[i];
-        const rivalStable = r.owner.stableName;
-        for (let j = 0; j < r.roster.length; j++) {
-          const w = r.roster[j];
-          if (w.status === 'Active') {
-            insert({ warrior: w, stableName: rivalStable, isPlayer: false });
-          }
-        }
-      }
+    const allActive = [
+      ...roster.filter((w) => w.status === 'Active').map((w) => ({ warrior: w, stableName: playerStable, isPlayer: true as const })),
+      ...(rivals ?? []).flatMap((r) =>
+        r.roster
+          .filter((w) => w.status === 'Active')
+          .map((w) => ({ warrior: w, stableName: r.owner.stableName, isPlayer: false as const }))
+      ),
+    ];
+    for (const entry of allActive) {
+      insert(entry);
     }
 
     return top10;

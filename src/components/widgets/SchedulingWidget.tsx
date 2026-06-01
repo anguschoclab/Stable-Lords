@@ -76,7 +76,7 @@ function MatchupCard({ matchup, type }: MatchupCardProps) {
       <div className="space-y-2 mb-4">
         {matchup.notes.map((note, i) => (
           <div
-            key={i}
+            key={`${note.slice(0, 20)}-${i}`}
             className="text-[9px] text-muted-foreground/60 flex items-center gap-2 italic uppercase font-black tracking-tight"
           >
             <div className={cn('h-1 w-1', isGood ? 'bg-primary' : 'bg-destructive')} />
@@ -134,7 +134,7 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
           <SectionDivider label="Strategic Opportunities" />
           <div className="space-y-4">
             {recommendations.length > 0 ? (
-              recommendations.map((m, i) => <MatchupCard key={i} matchup={m} type="recommend" />)
+              recommendations.map((m) => <MatchupCard key={m.rivalStableName} matchup={m} type="recommend" />)
             ) : (
               <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
                 No prime targets available.
@@ -148,7 +148,7 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
           <SectionDivider label="High Risk Vectors" variant="blood" />
           <div className="space-y-4">
             {toAvoid.length > 0 ? (
-              toAvoid.map((m, i) => <MatchupCard key={i} matchup={m} type="avoid" />)
+              toAvoid.map((m) => <MatchupCard key={m.rivalStableName} matchup={m} type="avoid" />)
             ) : (
               <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
                 No imminent threats detected.

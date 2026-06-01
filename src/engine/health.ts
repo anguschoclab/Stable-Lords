@@ -1,5 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { WarriorId } from '@/types/shared.types';
 import { tickInjuries } from '@/engine/injuries';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import type { StateImpact } from './impacts';
@@ -12,7 +13,7 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
  */
 export function computeHealthImpact(state: GameState, rngService?: IRNGService): StateImpact {
   const injuryNews: string[] = [];
-  const rosterUpdates = new Map<string, Partial<Warrior>>();
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rng = rngService || new SeededRNGService(state.week);
 
   for (const w of state.roster) {
@@ -68,10 +69,11 @@ export const applyHealthUpdates: (state: GameState, rng?: IRNGService) => GameSt
 ) => {
   const impact = computeHealthImpact(state, rng);
   let roster = [...state.roster];
-
-  if (impact.rosterUpdates) {
-    impact.rosterUpdates.forEach((update, id) => {
-      roster = roster.map((w) => (w.id === id ? { ...w, ...update } : w));
+  const rosterUpdates = impact.rosterUpdates;
+  if (rosterUpdates) {
+    roster = roster.map((w) => {
+      const update = rosterUpdates.get(w.id);
+      return update ? { ...w, ...update } : w;
     });
   }
 

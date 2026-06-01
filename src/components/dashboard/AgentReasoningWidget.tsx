@@ -138,7 +138,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
             {rival.actionHistory && rival.actionHistory.length > 0 ? (
               rival.actionHistory.map((event, i) => (
                 <div
-                  key={i}
+                  key={`${event.description.slice(0, 30)}-${i}`}
                   className="flex items-start gap-3 p-2 rounded-none bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
                 >
                   <span className="text-[8px] font-mono text-primary mt-0.5">W{event.week}</span>

@@ -212,7 +212,7 @@ export async function exportSlot(slotId: string): Promise<string | null> {
  * @param data - Data.
  * @returns The result.
  */
-export async function importSaveToNewSlot(data: any): Promise<string | null> { // eslint-disable-line @typescript-eslint/no-explicit-any
+export async function importSaveToNewSlot(data: unknown): Promise<string | null> {
   try {
     const state = typeof data === 'string' ? JSON.parse(data) : data;
     if (!state.meta || !state.week) throw new Error('Invalid save data');

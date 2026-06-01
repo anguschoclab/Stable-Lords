@@ -100,7 +100,7 @@ export function IntelligenceHubWidget() {
                   <div className="py-6 space-y-8">
                     {recentGazettes.map((story, i) => (
                       <div
-                        key={i}
+                        key={`${story.headline.slice(0, 30)}-${i}`}
                         className="group/story relative pl-12 border-l border-white/5 hover:border-primary/40 transition-colors py-1"
                       >
                         <div className="absolute left-[-5px] top-2 h-2.5 w-2.5 rounded-full bg-neutral-800 border boder-white/10 group-hover/story:bg-primary group-hover/story:shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all" />
@@ -141,7 +141,7 @@ export function IntelligenceHubWidget() {
                   <div className="py-6 space-y-8">
                     {recentNewsletter.map((report, i) => (
                       <div
-                        key={i}
+                        key={`${report.title.slice(0, 30)}-${i}`}
                         className="group/report relative space-y-3 bg-white/[0.02] border border-white/5 rounded-none p-4 hover:border-arena-gold/30 transition-all"
                       >
                         <div className="flex items-center justify-between">

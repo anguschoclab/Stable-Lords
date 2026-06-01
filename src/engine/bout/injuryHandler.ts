@@ -1,4 +1,5 @@
 import type { GameState, RivalStableData, RestState } from '@/types/state.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import { generateInjury } from '@/engine/injuries';
@@ -39,8 +40,8 @@ export function handleInjuries(
 ) {
   let injured = false;
   const names: string[] = [];
-  const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
   const restStates: RestState[] = [];
 
   if (outcome.by === 'KO') {
@@ -61,13 +62,13 @@ export function handleInjuries(
       // rivalStableId is set from `rival.id` (StableId) by pairings/world bouts,
       // not owner.id. Looking up by owner.id silently dropped every rival
       // injury — they remained completely unmaimed across the whole sim.
-      const rival = (s.rivals || []).find((r) => r.id === rivalStableId);
+      const rival = s.rivalMap?.get(rivalStableId as StableId);
       if (rival) {
         const updatedRoster = updateEntityInList(rival.roster, wA.id, (w) => ({
           ...w,
           injuries: [...(w.injuries || []), injA],
         }));
-        rivalsUpdates.set(rivalStableId, { roster: updatedRoster });
+        rivalsUpdates.set(rivalStableId as StableId, { roster: updatedRoster });
       }
     }
   }
@@ -85,13 +86,13 @@ export function handleInjuries(
       // rivalStableId is set from `rival.id` (StableId) by pairings/world bouts,
       // not owner.id. Looking up by owner.id silently dropped every rival
       // injury — they remained completely unmaimed across the whole sim.
-      const rival = (s.rivals || []).find((r) => r.id === rivalStableId);
+      const rival = s.rivalMap?.get(rivalStableId as StableId);
       if (rival) {
         const updatedRoster = updateEntityInList(rival.roster, wD.id, (w) => ({
           ...w,
           injuries: [...(w.injuries || []), injD],
         }));
-        rivalsUpdates.set(rivalStableId, { roster: updatedRoster });
+        rivalsUpdates.set(rivalStableId as StableId, { roster: updatedRoster });
       }
     }
   }

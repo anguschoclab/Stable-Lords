@@ -80,11 +80,15 @@ function getInjuryBadge(
   };
 }
 
+interface RivalWarriorMap {
+  [warriorId: string]: Warrior & { stableName: string };
+}
+
 interface OfferCardProps {
   offer: BoutOffer;
   promoters: ReturnType<typeof useWorldState>['promoters'];
   roster: ReturnType<typeof useWorldState>['roster'];
-  rivals: ReturnType<typeof useWorldState>['rivals'];
+  rivalWarriorMap: RivalWarriorMap;
   signedOfferIds: Set<string>;
   onResponse: (
     offerId: string,
@@ -97,7 +101,7 @@ function OfferCard({
   offer,
   promoters,
   roster,
-  rivals,
+  rivalWarriorMap,
   signedOfferIds,
   onResponse,
 }: OfferCardProps) {
@@ -106,14 +110,7 @@ function OfferCard({
   const playerWarriorId = playerWarrior?.id;
   const opponentId = offer.warriorIds.find((id) => id !== playerWarriorId);
 
-  let opponent: ({ stableName: string } & (typeof rivals)[0]['roster'][0]) | null = null;
-  for (const rival of rivals || []) {
-    const found = rival.roster.find((w) => w.id === opponentId);
-    if (found) {
-      opponent = { ...found, stableName: rival.owner.stableName };
-      break;
-    }
-  }
+  const opponent = opponentId ? rivalWarriorMap[opponentId] ?? null : null;
 
   const personality = promoter?.personality as PromoterPersonality;
   const personalityConfig = personality ? PERSONALITY_CONFIG[personality] : null;
@@ -285,6 +282,16 @@ export default function BookingOffice() {
     setSignedOfferIds(new Set());
     setSelectedWarriorId(null);
   }
+
+  const rivalWarriorMap = useMemo<RivalWarriorMap>(() => {
+    const map: RivalWarriorMap = {};
+    for (const rival of rivals || []) {
+      for (const warrior of rival.roster) {
+        map[warrior.id] = { ...warrior, stableName: rival.owner.stableName };
+      }
+    }
+    return map;
+  }, [rivals]);
 
   const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(() => {
     const playerOffers = Object.values(boutOffers).filter(
@@ -543,7 +550,7 @@ export default function BookingOffice() {
                       offer={o}
                       promoters={promoters}
                       roster={roster}
-                      rivals={rivals}
+                      rivalWarriorMap={rivalWarriorMap}
                       signedOfferIds={signedOfferIds}
                       onResponse={handleResponse}
                     />
@@ -578,7 +585,7 @@ export default function BookingOffice() {
                       offer={o}
                       promoters={promoters}
                       roster={roster}
-                      rivals={rivals}
+                      rivalWarriorMap={rivalWarriorMap}
                       signedOfferIds={signedOfferIds}
                       onResponse={handleResponse}
                     />

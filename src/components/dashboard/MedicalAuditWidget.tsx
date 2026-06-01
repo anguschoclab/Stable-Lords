@@ -128,9 +128,9 @@ export function MedicalAuditWidget() {
 
                   {isInjured && (
                     <div className="mt-2 flex flex-wrap gap-1.5 pl-1 border-l border-destructive/30 ml-0.5">
-                      {w.injuries.map((inj, i) => (
+                      {w.injuries.map((inj) => (
                         <span
-                          key={i}
+                          key={typeof inj === 'string' ? inj : inj.name}
                           className="text-[8px] font-black uppercase tracking-[0.1em] text-destructive py-0.5 px-1.5 bg-destructive/10 border border-destructive/20 rounded-none"
                         >
                           {typeof inj === 'string' ? inj : inj.name.replace(/_/g, ' ')}

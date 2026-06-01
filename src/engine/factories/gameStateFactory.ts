@@ -17,7 +17,7 @@ import { BACKSTORY_IDS } from '@/data/backstories';
  */
 export function createFreshState(
   seed: string,
-  createdAt: string = new Date().toISOString()
+  createdAt: string = '2024-01-01T00:00:00.000Z'
 ): GameState {
   const numericSeed = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const rng = new SeededRNGService(numericSeed);

@@ -11,6 +11,7 @@ import {
   type InjuryId,
 } from '@/types/shared.types';
 import type { InsightToken } from '@/types/state.types';
+import type { NewsletterItem } from '@/types/shared.types';
 
 /**
  * Stable Lords — Seasonal Pipeline Pass (Offseason)
@@ -53,7 +54,7 @@ interface OffseasonEventNarrative {
 
 interface OffseasonEventContext {
   rosterUpdates: Map<WarriorId, Partial<Warrior>>;
-  newsletterItems: any[];
+  newsletterItems: NewsletterItem[];
   ledgerEntries: LedgerEntry[];
   insightTokens: InsightToken[];
   treasuryDelta: number;

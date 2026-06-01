@@ -84,7 +84,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
               </div>
               <div className="p-8 space-y-8">
                 {warrior.awards.map((award, i) => (
-                  <div key={i} className="space-y-3">
+                  <div key={`${award.year}-${award.type}-${i}`} className="space-y-3">
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
                         <span className="text-[8px] font-black uppercase text-primary tracking-[0.3em]">

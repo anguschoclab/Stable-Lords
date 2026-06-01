@@ -101,9 +101,10 @@ function processPlayerOffers(state: GameState): GameState {
  */
 function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
   const boutSummaries = state.lastSimulationReport?.bouts ?? [];
-  const deathNames = boutSummaries
-    .filter((b) => b.by === 'Kill')
-    .map((b) => (b.winner === 'A' ? b.d : b.a));
+  const deathNames = boutSummaries.reduce<string[]>((acc, b) => {
+    if (b.by === 'Kill') acc.push(b.winner === 'A' ? b.d : b.a);
+    return acc;
+  }, []);
 
   return {
     week: weekNumber,

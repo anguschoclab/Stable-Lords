@@ -45,11 +45,12 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
     if (!impact) continue;
     for (const key in impact) {
       if (Object.prototype.hasOwnProperty.call(impact, key)) {
-        const value = (impact as any)[key];
+        const k = key as keyof StateImpact;
+        const value = impact[k];
         if (value !== undefined) {
-          const handler = (impactHandlers as any)[key];
+          const handler = impactHandlers[k];
           if (handler) {
-            handler(newState, value);
+            handler(newState, value as never);
           }
         }
       }
@@ -111,21 +112,25 @@ const MERGE_CONFIG: MergeConfig = {
 };
 
 // 🌩️ Pure helpers for merging strategies (Strategy Pattern)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic type loss in forEach loop (fundamental TypeScript limitation with generic key iteration)
-const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: any) => void> = {
+const mergeStrategies: Record<
+  MergeStrategy,
+  (merged: StateImpact, key: keyof StateImpact, value: unknown) => void
+> = {
   accumulate: (merged, key, value) => {
+    const m = merged as Record<keyof StateImpact, unknown>;
     if (typeof value === 'number') {
-      merged[key] = (merged[key] || 0) + value;
+      m[key] = ((m[key] as number | undefined) || 0) + value;
     }
   },
   append: (merged, key, value) => {
+    const m = merged as Record<keyof StateImpact, unknown>;
     if (Array.isArray(value)) {
-      merged[key] = (merged[key] || []).concat(value);
+      m[key] = ((m[key] as unknown[] | undefined) || []).concat(value);
     }
   },
   mapMerge: (merged, key, value) => {
     if (value instanceof Map) {
-      const targetMap = merged[key] as Map<string, object>;
+      const targetMap = (merged as Record<keyof StateImpact, unknown>)[key] as Map<string, object>;
       value.forEach((val, mapKey) => {
         const existing = targetMap.get(mapKey) || {};
         targetMap.set(mapKey, { ...existing, ...val });
@@ -133,12 +138,13 @@ const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: a
     }
   },
   dictMerge: (merged, key, value) => {
+    const m = merged as Record<keyof StateImpact, unknown>;
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      merged[key] = { ...(merged[key] ?? {}), ...value };
+      m[key] = { ...((m[key] as Record<string, unknown> | undefined) ?? {}), ...(value as Record<string, unknown>) };
     }
   },
   replace: (merged, key, value) => {
-    merged[key] = value;
+    (merged as Record<keyof StateImpact, unknown>)[key] = value;
   },
 };
 
@@ -166,12 +172,13 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
     const key = MERGE_KEYS[i];
     const config = MERGE_CONFIG[key];
     if (!config) continue;
+    const m = merged as Record<keyof StateImpact, unknown>;
     if (Array.isArray(config.defaultValue)) {
-      (merged as any)[key] = [...config.defaultValue];
+      m[key] = [...config.defaultValue];
     } else if (config.defaultValue instanceof Map) {
-      (merged as any)[key] = new Map(config.defaultValue as never);
+      m[key] = new Map(config.defaultValue as never);
     } else {
-      (merged as any)[key] = config.defaultValue;
+      m[key] = config.defaultValue;
     }
   }
 
@@ -185,7 +192,7 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
       if (Object.prototype.hasOwnProperty.call(imp, key)) {
         const config = MERGE_CONFIG[key as keyof StateImpact];
         if (!config) continue;
-        const value = (imp as any)[key];
+        const value = imp[key as keyof StateImpact];
         if (value === undefined || value === null) continue;
 
         const strategyFn = mergeStrategies[config.strategy];

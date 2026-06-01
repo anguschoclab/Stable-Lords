@@ -326,11 +326,11 @@ function AlertStrip() {
 
   return (
     <div className="border-t border-white/5 p-2 flex flex-col gap-1">
-      {alerts.map((a, i) => {
+      {alerts.map((a) => {
         const Icon = a.icon;
         return (
           <Link
-            key={i}
+            key={a.label}
             to={a.to as never}
             className={cn(
               'flex items-center gap-2 px-2 py-1 text-[9px] font-black uppercase tracking-widest transition-opacity hover:opacity-70',

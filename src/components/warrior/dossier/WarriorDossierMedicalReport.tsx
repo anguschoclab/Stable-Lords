@@ -28,12 +28,12 @@ export function WarriorDossierMedicalReport({ warrior }: WarriorDossierMedicalRe
         <Activity className="h-3 w-3 text-destructive" /> Medical Report
       </h3>
       <div className="grid gap-2">
-        {warrior.injuries.map((inj: InjuryData, i: number) => {
+        {warrior.injuries.map((inj: InjuryData) => {
           const name = typeof inj === 'string' ? inj : inj.name;
           const severity = typeof inj === 'string' ? 'Minor' : inj.severity;
           return (
             <Badge
-              key={i}
+              key={name}
               variant="outline"
               className={cn(
                 'justify-start py-1.5 px-3 border-destructive/20 text-[10px] gap-3 font-bold uppercase tracking-wider',

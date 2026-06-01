@@ -1,133 +1,7 @@
-import { FightingStyle } from '@/types/shared.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { isTooInjuredToFight } from './injuries';
-
-const MATCHUP_MATRIX: Record<FightingStyle, Record<FightingStyle, number>> = {
-  [FightingStyle.AimedBlow]: {
-    [FightingStyle.AimedBlow]: 0,
-    [FightingStyle.BashingAttack]: 1,
-    [FightingStyle.LungingAttack]: 0,
-    [FightingStyle.ParryLunge]: -1,
-    [FightingStyle.ParryRiposte]: -2,
-    [FightingStyle.ParryStrike]: -2,
-    [FightingStyle.SlashingAttack]: 1,
-    [FightingStyle.StrikingAttack]: 0,
-    [FightingStyle.TotalParry]: -2,
-    [FightingStyle.WallOfSteel]: -2,
-  },
-  [FightingStyle.BashingAttack]: {
-    [FightingStyle.AimedBlow]: -1,
-    [FightingStyle.BashingAttack]: 0,
-    [FightingStyle.LungingAttack]: 1,
-    [FightingStyle.ParryLunge]: 0,
-    [FightingStyle.ParryRiposte]: -1,
-    [FightingStyle.ParryStrike]: -1,
-    [FightingStyle.SlashingAttack]: 2,
-    [FightingStyle.StrikingAttack]: 1,
-    [FightingStyle.TotalParry]: -2,
-    [FightingStyle.WallOfSteel]: -2,
-  },
-  [FightingStyle.LungingAttack]: {
-    [FightingStyle.AimedBlow]: 0,
-    [FightingStyle.BashingAttack]: -1,
-    [FightingStyle.LungingAttack]: 0,
-    [FightingStyle.ParryLunge]: 1,
-    [FightingStyle.ParryRiposte]: 0,
-    [FightingStyle.ParryStrike]: -1,
-    [FightingStyle.SlashingAttack]: 1,
-    [FightingStyle.StrikingAttack]: 1,
-    [FightingStyle.TotalParry]: -1,
-    [FightingStyle.WallOfSteel]: -2,
-  },
-  [FightingStyle.ParryLunge]: {
-    [FightingStyle.AimedBlow]: 1,
-    [FightingStyle.BashingAttack]: 0,
-    [FightingStyle.LungingAttack]: -1,
-    [FightingStyle.ParryLunge]: 0,
-    [FightingStyle.ParryRiposte]: 1,
-    [FightingStyle.ParryStrike]: 0,
-    [FightingStyle.SlashingAttack]: 0,
-    [FightingStyle.StrikingAttack]: -1,
-    [FightingStyle.TotalParry]: -1,
-    [FightingStyle.WallOfSteel]: -2,
-  },
-  [FightingStyle.ParryRiposte]: {
-    [FightingStyle.AimedBlow]: 2,
-    [FightingStyle.BashingAttack]: 1,
-    [FightingStyle.LungingAttack]: 0,
-    [FightingStyle.ParryLunge]: -1,
-    [FightingStyle.ParryRiposte]: 0,
-    [FightingStyle.ParryStrike]: 1,
-    [FightingStyle.SlashingAttack]: -1,
-    [FightingStyle.StrikingAttack]: -2,
-    [FightingStyle.TotalParry]: -1,
-    [FightingStyle.WallOfSteel]: -2,
-  },
-  [FightingStyle.ParryStrike]: {
-    [FightingStyle.AimedBlow]: 2,
-    [FightingStyle.BashingAttack]: 1,
-    [FightingStyle.LungingAttack]: 1,
-    [FightingStyle.ParryLunge]: 0,
-    [FightingStyle.ParryRiposte]: -1,
-    [FightingStyle.ParryStrike]: 0,
-    [FightingStyle.SlashingAttack]: -1,
-    [FightingStyle.StrikingAttack]: -2,
-    [FightingStyle.TotalParry]: -1,
-    [FightingStyle.WallOfSteel]: -2,
-  },
-  [FightingStyle.SlashingAttack]: {
-    [FightingStyle.AimedBlow]: -1,
-    [FightingStyle.BashingAttack]: -2,
-    [FightingStyle.LungingAttack]: -1,
-    [FightingStyle.ParryLunge]: 0,
-    [FightingStyle.ParryRiposte]: 1,
-    [FightingStyle.ParryStrike]: 1,
-    [FightingStyle.SlashingAttack]: 0,
-    [FightingStyle.StrikingAttack]: 1,
-    [FightingStyle.TotalParry]: -1,
-    [FightingStyle.WallOfSteel]: -2,
-  },
-  [FightingStyle.StrikingAttack]: {
-    [FightingStyle.AimedBlow]: 0,
-    [FightingStyle.BashingAttack]: -1,
-    [FightingStyle.LungingAttack]: -1,
-    [FightingStyle.ParryLunge]: 1,
-    [FightingStyle.ParryRiposte]: 2,
-    [FightingStyle.ParryStrike]: 2,
-    [FightingStyle.SlashingAttack]: -1,
-    [FightingStyle.StrikingAttack]: 0,
-    [FightingStyle.TotalParry]: -1,
-    [FightingStyle.WallOfSteel]: -2,
-  },
-  [FightingStyle.TotalParry]: {
-    [FightingStyle.AimedBlow]: 2,
-    [FightingStyle.BashingAttack]: 2,
-    [FightingStyle.LungingAttack]: 1,
-    [FightingStyle.ParryLunge]: 1,
-    [FightingStyle.ParryRiposte]: 1,
-    [FightingStyle.ParryStrike]: 1,
-    [FightingStyle.SlashingAttack]: 1,
-    [FightingStyle.StrikingAttack]: 1,
-    [FightingStyle.TotalParry]: 0,
-    [FightingStyle.WallOfSteel]: -1,
-  },
-  [FightingStyle.WallOfSteel]: {
-    [FightingStyle.AimedBlow]: 2,
-    [FightingStyle.BashingAttack]: 2,
-    [FightingStyle.LungingAttack]: 2,
-    [FightingStyle.ParryLunge]: 2,
-    [FightingStyle.ParryRiposte]: 2,
-    [FightingStyle.ParryStrike]: 2,
-    [FightingStyle.SlashingAttack]: 2,
-    [FightingStyle.StrikingAttack]: 2,
-    [FightingStyle.TotalParry]: 1,
-    [FightingStyle.WallOfSteel]: 0,
-  },
-};/**
-   * Defines the shape of matchup score.
-   */
-
+import { getMatchupBonus } from '@/constants/combat';
 
 /**
  * Defines the shape of matchup score.
@@ -156,7 +30,11 @@ export function scoreMatchup(
   rivalWarrior: Warrior,
   state: GameState
 ): number {
-  const styleAdvantage = MATCHUP_MATRIX[playerWarrior.style]?.[rivalWarrior.style] ?? 0;
+  if (!state) {
+    return 100;
+  }
+
+  const styleAdvantage = getMatchupBonus(playerWarrior.style, rivalWarrior.style);
   const fameDiff = playerWarrior.fame - rivalWarrior.fame;
 
   let score = 100;
@@ -172,10 +50,11 @@ export function scoreMatchup(
   }
 
   const pWinRate =
-    playerWarrior.career.wins /
-    Math.max(1, playerWarrior.career.wins + playerWarrior.career.losses);
+    (playerWarrior.career?.wins ?? 0) /
+    Math.max(1, (playerWarrior.career?.wins ?? 0) + (playerWarrior.career?.losses ?? 0));
   const rWinRate =
-    rivalWarrior.career.wins / Math.max(1, rivalWarrior.career.wins + rivalWarrior.career.losses);
+    (rivalWarrior.career?.wins ?? 0) /
+    Math.max(1, (rivalWarrior.career?.wins ?? 0) + (rivalWarrior.career?.losses ?? 0));
   score += (pWinRate - rWinRate) * 20;
 
   // Rivalry multiplier for grudge matches
@@ -252,7 +131,7 @@ export function getRecommendedChallenges(
     const score = scoreMatchup(playerWarrior, r.warrior, state);
 
     if (topScores.length < limit) {
-      const styleAdvantage = MATCHUP_MATRIX[playerWarrior.style]?.[r.warrior.style] ?? 0;
+      const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       topScores.push({
         playerWarriorId: playerWarrior.id,
@@ -265,7 +144,7 @@ export function getRecommendedChallenges(
       });
       topScores.sort((a, b) => b.score - a.score);
     } else if (score > topScores[limit - 1].score) {
-      const styleAdvantage = MATCHUP_MATRIX[playerWarrior.style]?.[r.warrior.style] ?? 0;
+      const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       topScores[limit - 1] = {
         playerWarriorId: playerWarrior.id,
@@ -307,7 +186,7 @@ export function getMatchupsToAvoid(
     const score = scoreMatchup(playerWarrior, r.warrior, state);
 
     if (bottomScores.length < limit) {
-      const styleAdvantage = MATCHUP_MATRIX[playerWarrior.style]?.[r.warrior.style] ?? 0;
+      const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       bottomScores.push({
         playerWarriorId: playerWarrior.id,
@@ -320,7 +199,7 @@ export function getMatchupsToAvoid(
       });
       bottomScores.sort((a, b) => a.score - b.score);
     } else if (score < bottomScores[limit - 1].score) {
-      const styleAdvantage = MATCHUP_MATRIX[playerWarrior.style]?.[r.warrior.style] ?? 0;
+      const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       bottomScores[limit - 1] = {
         playerWarriorId: playerWarrior.id,

@@ -1,4 +1,5 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import { updateEntityInList } from '@/utils/stateUtils';
@@ -53,8 +54,8 @@ export function applyRecords(
   popD: number,
   rivalStableId?: string
 ): StateImpact {
-  const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
 
   // 🔒 Tournament fatigue exemption: Check if warriors are tournament participants
   const skipFatigueA = isTournamentParticipant(s, wA.id);
@@ -86,8 +87,10 @@ export function applyRecords(
         skipFatigueD
       )
     );
-  } else {
-    const rival = (s.rivals || []).find((r) => r.owner.id === rivalStableId);
+  } else if (rivalStableId) {
+    const rival =
+      s.rivalMap?.get(rivalStableId as StableId) ??
+      new Map((s.rivals || []).map((r) => [r.owner.id, r])).get(rivalStableId as StableId);
     if (rival) {
       const updatedRoster = updateEntityInList(rival.roster, wD.id, (w) =>
         updateWarriorAfterBout(
@@ -100,7 +103,7 @@ export function applyRecords(
           skipFatigueD
         )
       );
-      rivalsUpdates.set(rivalStableId, { roster: updatedRoster });
+      rivalsUpdates.set(rivalStableId as StableId, { roster: updatedRoster });
     }
   }
 

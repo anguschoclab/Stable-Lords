@@ -278,9 +278,9 @@ export function RivalryWidget() {
 
                   {r.kills.length > 0 && (
                     <div className="space-y-1.5">
-                      {r.kills.slice(-2).map((k, i) => (
+                      {r.kills.slice(-2).map((k) => (
                         <div
-                          key={i}
+                          key={`${k.killer}-${k.victim}`}
                           className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest"
                         >
                           <Skull

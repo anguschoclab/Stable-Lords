@@ -123,7 +123,7 @@ export function CareerTimeline({
           <div className="absolute left-[15px] top-3 bottom-3 w-px bg-border" />
           <div className="space-y-4">
             {milestones.map((m, i) => (
-              <div key={i} className="flex items-start gap-3 relative">
+              <div key={`${m.label}-${m.week}-${i}`} className="flex items-start gap-3 relative">
                 <div
                   className={`relative z-10 flex items-center justify-center h-8 w-8 rounded-full ${m.color} text-primary-foreground shrink-0 shadow-sm`}
                 >

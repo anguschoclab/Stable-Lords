@@ -118,7 +118,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
                         <div className="flex items-center gap-0.5 shrink-0 ml-2">
                           {Array.from({ length: grudge.intensity }).map((_, i) => (
                             <Flame
-                              key={i}
+                              key={`flame-${i}`}
                               className="h-3 w-3 text-arena-blood"
                               style={{ opacity: 0.4 + i * 0.12 }}
                             />

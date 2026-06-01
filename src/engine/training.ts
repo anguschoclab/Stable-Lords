@@ -1,5 +1,6 @@
-import type { GameState, SeasonalGrowth } from '@/types/state.types';
+import type { GameState, SeasonalGrowth, TrainingAssignment } from '@/types/state.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
+import type { WarriorId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { type StateImpact } from './impacts';
@@ -46,7 +47,7 @@ function processRecoveryAssignment(
  * Helper to process the skill drilling training assignment.
  */
 function processSkillDrillAssignment(
-  assignment: any,
+  assignment: TrainingAssignment,
   warrior: Warrior,
   healingBonus: number,
   currentRoster: Warrior[],
@@ -91,7 +92,7 @@ function processSkillDrillAssignment(
  * Helper to process the attribute training assignment.
  */
 function processAttributeAssignment(
-  assignment: any,
+  assignment: TrainingAssignment,
   warrior: Warrior,
   healingBonus: number,
   currentRoster: Warrior[],
@@ -238,7 +239,7 @@ export function trainingImpactToStateImpact(
   impact: TrainingImpact,
   rng: IRNGService
 ): { impact: StateImpact; seasonalGrowth: SeasonalGrowth[]; results: TrainingResult[] } {
-  const rosterUpdates = new Map<string, Partial<Warrior>>();
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const seasonalGrowth = impact.updatedSeasonalGrowth ? [...impact.updatedSeasonalGrowth] : [];
 
   impact.updatedRoster.forEach((w) => {
@@ -257,7 +258,10 @@ export function trainingImpactToStateImpact(
     }
   });
 
-  const newsItems = impact.results.filter((r) => r.type !== 'blocked').map((r) => r.message);
+  const newsItems = impact.results.reduce<string[]>((acc, r) => {
+    if (r.type !== 'blocked') acc.push(r.message);
+    return acc;
+  }, []);
 
   return {
     impact: {

@@ -37,7 +37,7 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
         {bouts.length > 0 ? (
           <div className="space-y-6">
             {bouts.map((r: BoutResult, i: number) => (
-              <div key={i} className="space-y-2">
+              <div key={`${r.a.name}-${r.d.name}-${i}`} className="space-y-2">
                 {r.isRivalry && (
                   <div className="text-xs text-destructive font-semibold uppercase tracking-wider">
                     Rivalry Bout

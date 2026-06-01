@@ -11,7 +11,7 @@ import { generateId } from '@/utils/idUtils';
  */
 export function makeFightSummary(
   overrides: Partial<FightSummary> = {},
-  createdAt: string = new Date().toISOString()
+  createdAt: string = '2024-01-01T00:00:00.000Z'
 ): FightSummary {
   return {
     id: generateId(undefined, 'fight'),

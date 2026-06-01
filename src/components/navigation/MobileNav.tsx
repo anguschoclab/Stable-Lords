@@ -307,10 +307,10 @@ function AlertStrip({ alerts }: { alerts: Record<HubId, number> }) {
 
   return (
     <div className="border-t border-white/5 p-2 flex flex-col gap-1">
-      {alertItems.map((a, i) => {
+      {alertItems.map((a) => {
         const Icon = a.icon;
         return (
-          <SheetClose asChild key={i}>
+          <SheetClose asChild key={a.label}>
             <Link
               to={a.to as never}
               className={cn(

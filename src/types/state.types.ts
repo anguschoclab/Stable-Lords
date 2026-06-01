@@ -206,7 +206,7 @@ export interface TournamentEntry {
   name: string;
   bracket: TournamentBout[];
   participants: Warrior[];
-  champion?: WarriorId;
+  champion?: string;
   completed: boolean;
 }/**
   * Defines the shape of training assignment.

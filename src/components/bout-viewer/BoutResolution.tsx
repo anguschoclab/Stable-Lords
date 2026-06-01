@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { FightOutcomeBy } from '@/types/game';
+import { getOutcomeStyles } from '@/utils/combat';
 import { Skull, Swords, Zap, Shield, Activity, Crosshair } from 'lucide-react';
 
 interface BoutResolutionProps {
@@ -12,40 +13,12 @@ interface BoutResolutionProps {
   announcement?: string;
 }
 
-function getOutcomeStyles(by: FightOutcomeBy) {
-  switch (by) {
-    case 'Kill':
-      return {
-        bg: 'bg-arena-blood/20 border-arena-blood/40',
-        text: 'text-arena-blood',
-        icon: <Skull className="h-4 w-4" />,
-      };
-    case 'KO':
-      return {
-        bg: 'bg-arena-gold/20 border-arena-gold/40',
-        text: 'text-arena-gold',
-        icon: <Zap className="h-4 w-4" />,
-      };
-    case 'Exhaustion':
-      return {
-        bg: 'bg-neutral-800 border-white/5',
-        text: 'text-muted-foreground',
-        icon: <Activity className="h-4 w-4" />,
-      };
-    case 'Stoppage':
-      return {
-        bg: 'bg-primary/10 border-primary/20',
-        text: 'text-primary',
-        icon: <Shield className="h-4 w-4" />,
-      };
-    default:
-      return {
-        bg: 'bg-neutral-900 border-white/5',
-        text: 'text-muted-foreground',
-        icon: <Swords className="h-4 w-4" />,
-      };
-  }
-}/**
+const ICON_MAP: Record<string, React.ReactNode> = {
+  Skull: <Skull className="h-4 w-4" />,
+  Zap: <Zap className="h-4 w-4" />,
+  Shield: <Shield className="h-4 w-4" />,
+  Activity: <Activity className="h-4 w-4" />,
+};/**
   * Bout resolution.
   * @param  - {
   is complete,
@@ -93,18 +66,18 @@ export default function BoutResolution({
         <div
           className={cn(
             'p-8 border-t flex flex-col items-center gap-6 animate-in slide-in-from-bottom-8 duration-1000 bg-neutral-950/80 backdrop-blur-3xl relative overflow-hidden',
-            outcomeStyle.bg
+            outcomeStyle.bgClasses
           )}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
 
           <div className="flex items-center gap-8 relative z-10 w-full justify-center">
-            <div className={outcomeStyle.text}>{outcomeStyle.icon}</div>
+            <div className={outcomeStyle.textClass}>{ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}</div>
             <div className="text-center space-y-2">
               <h2
                 className={cn(
                   'font-display font-black text-3xl uppercase tracking-tighter italic',
-                  outcomeStyle.text
+                  outcomeStyle.textClass
                 )}
               >
                 {winnerName} VICTORY
@@ -117,7 +90,7 @@ export default function BoutResolution({
                 <span className="h-px w-8 bg-white/10" />
               </div>
             </div>
-            <div className={outcomeStyle.text}>{outcomeStyle.icon}</div>
+            <div className={outcomeStyle.textClass}>{ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}</div>
           </div>
 
           <div className="flex items-center gap-8 relative z-10">

@@ -12,6 +12,7 @@
  */
 import type { Warrior, WarriorFavorites } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { WEAPONS, getAvailableItems } from '@/data/equipment';
 
 // ─── Generation ─────────────────────────────────────────────────────────
@@ -77,35 +78,15 @@ export function generateFavorites(style: FightingStyle, rng: IRNGService): Warri
 
 const CHANCE_REVEAL_BASE = 0.02; // 2% "Lucky Epiphany"
 const CHANCE_REVEAL_SYMMETRY = 0.25; // 25% if using correct gear
-const CHANCE_HINT = 0.1;/**
-                         * Defines the shape of discovery result.
-                         */
- // 10% chance to learn a hint regardless
+const CHANCE_HINT = 0.1; // 10% chance to learn a hint regardless
 
-/**
- * Defines the shape of discovery result.
- */
 export interface DiscoveryResult {
   updated: boolean;
   hints: string[];
   weaponRevealed: boolean;
   rhythmRevealed: boolean;
-}/**
-  * Check discovery.
-  * @param warrior - Warrior.
-  * @param rng - Rng.
-  * @param context - Context. (optional)
-  * @returns The result.
-  */
+}
 
-
-/**
- * Check discovery.
- * @param warrior - Warrior.
- * @param rng - Rng.
- * @param context - Context. (optional)
- * @returns The result.
- */
 export function checkDiscovery(
   warrior: Warrior,
   rng: IRNGService,
@@ -130,13 +111,13 @@ export function checkDiscovery(
       weaponRevealed = true;
       const weaponItem = WEAPONS.find((w) => w.id === fav.weaponId);
       const sparkLine = isUsingFav
-        ? `✨ A moment of pure clarity! ${warrior.name} has mastered the ${weaponItem?.name ?? fav.weaponId}!`
-        : `💡 A sudden epiphany! ${warrior.name} realizes their true weapon preference is the ${weaponItem?.name ?? fav.weaponId}.`;
+        ? `EUREKA! ${warrior.name} has mastered the ${weaponItem?.name ?? fav.weaponId}!`
+        : `Insight: ${warrior.name} realizes their true weapon preference is the ${weaponItem?.name ?? fav.weaponId}.`;
       hints.push(sparkLine);
       updated = true;
     } else if (r() < CHANCE_HINT && fav.discovered.weaponHints < 2) {
       fav.discovered.weaponHints++;
-      hints.push(`🔍 ${warrior.name} is developing a distinct feel for certain weapons...`);
+      hints.push(`Observing: ${warrior.name} is developing a distinct feel for certain weapons...`);
       updated = true;
     }
   }
@@ -153,12 +134,12 @@ export function checkDiscovery(
       fav.discovered.rhythm = true;
       rhythmRevealed = true;
       hints.push(
-        `✨ ${warrior.name} has found their natural soul-rhythm: OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}!`
+        `EUREKA! ${warrior.name} has found their natural soul-rhythm: OE ${fav.rhythm.oe}, AL ${fav.rhythm.al}!`
       );
       updated = true;
     } else if (r() < CHANCE_HINT && fav.discovered.rhythmHints < 2) {
       fav.discovered.rhythmHints++;
-      hints.push(`🔍 ${warrior.name} is finding their own unique rhythm in the chaos of battle.`);
+      hints.push(`Observing: ${warrior.name} is finding their own unique rhythm in the chaos of battle.`);
       updated = true;
     }
   }

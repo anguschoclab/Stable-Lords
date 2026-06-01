@@ -43,32 +43,8 @@ function routeUpdate(
   const baseRoster = (existingRival?.roster as Warrior[] | undefined) ?? rival.roster;
   const updatedRoster = updateEntityInList(baseRoster, warrior.id, (w) => ({ ...w, ...partial }));
   rivalsUpdates.set(rival.id, { ...existingRival, roster: updatedRoster });
-}/**
-  * Handle progressions.
-  * @param s - S.
-  * @param wA - W a.
-  * @param wD - W d.
-  * @param outcome - Outcome.
-  * @param tags - Tags.
-  * @param week - Week.
-  * @param rivalStableId - Rival stable id. (optional)
-  * @param rng - Rng. (optional)
-  * @returns The result.
-  */
+}
 
-
-/**
- * Handle progressions.
- * @param s - S.
- * @param wA - W a.
- * @param wD - W d.
- * @param outcome - Outcome.
- * @param tags - Tags.
- * @param week - Week.
- * @param rivalStableId - Rival stable id. (optional)
- * @param rng - Rng. (optional)
- * @returns The result.
- */
 export function handleProgressions(
   s: GameState,
   wA: Warrior,
@@ -93,7 +69,7 @@ export function handleProgressions(
   // Favorites discovery — also for both fighters (was player-only)
   const discRng = rng;
   for (const w of [wA, wD]) {
-    const disc = checkDiscovery(w, discRng ?? { next: () => 0.5, uuid: () => 'uuid' });
+    const disc = checkDiscovery(w, discRng ?? { next: () => 0.5, uuid: () => 'uuid', pick: <T>(arr: T[]) => arr[0]!, roll: (min: number) => min, shuffle: <T>(arr: T[]) => arr, pickWeighted: <T>(items: T[]) => items[0]!, chance: () => false });
     if (disc.updated) {
       routeUpdate(s, w, { favorites: w.favorites }, rosterUpdates, rivalsUpdates);
       if (disc.hints.length > 0) {

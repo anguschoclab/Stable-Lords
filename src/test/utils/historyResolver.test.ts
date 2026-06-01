@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { resolveWarriorName, resolveStableName, findWarrior } from '@/utils/historyResolver';
-import { GameState } from '@/types/state.types';
+import {
+  resolveWarriorName,
+  resolveStableName,
+  findWarrior,
+  findStableId,
+  clearHistoryResolverCaches,
+} from '@/utils/historyResolver';
 
 describe('historyResolver', () => {
   const mockState: any = {
@@ -50,6 +55,25 @@ describe('historyResolver', () => {
     it('should prioritize roster > graveyard > retired > rivals', () => {
       expect(resolveWarriorName(mockState, 'shared-id', 'Fallback')).toBe('Roster Warrior');
     });
+
+    it('should return legacyName when warriorId is undefined', () => {
+      expect(resolveWarriorName(mockState, undefined, 'Fallback')).toBe('Fallback');
+    });
+
+    it('should return legacyName when warriorId is empty string', () => {
+      expect(resolveWarriorName(mockState, '', 'Fallback')).toBe('Fallback');
+    });
+
+    it('should return legacyName when warrior is removed from all lists', () => {
+      const emptyState: any = {
+        player: mockState.player,
+        roster: [],
+        graveyard: [],
+        retired: [],
+        rivals: [],
+      };
+      expect(resolveWarriorName(emptyState, 'w1', 'Fallback')).toBe('Fallback');
+    });
   });
 
   describe('resolveStableName', () => {
@@ -63,6 +87,14 @@ describe('historyResolver', () => {
 
     it('should use fallback if not found', () => {
       expect(resolveStableName(mockState, 'unknown', 'Fallback')).toBe('Fallback');
+    });
+
+    it('should return legacyName when stableId is undefined', () => {
+      expect(resolveStableName(mockState, undefined, 'Fallback')).toBe('Fallback');
+    });
+
+    it('should return legacyName when stableId is empty string', () => {
+      expect(resolveStableName(mockState, '', 'Fallback')).toBe('Fallback');
     });
   });
 
@@ -89,6 +121,52 @@ describe('historyResolver', () => {
       };
       const w = findWarrior(stateWithNameConflict, undefined, 'Warrior 4');
       expect(w?.id).toBe('w-new');
+    });
+
+    it('should return undefined when neither id nor name is provided', () => {
+      expect(findWarrior(mockState)).toBeUndefined();
+    });
+
+    it('should return undefined when warrior is not found by id or name', () => {
+      expect(findWarrior(mockState, 'non-existent', 'Non Existent')).toBeUndefined();
+    });
+
+    it('should find by name when id is not found but name is', () => {
+      const w = findWarrior(mockState, 'non-existent-id', 'Warrior 1');
+      expect(w?.id).toBe('w1');
+    });
+  });
+
+  describe('findStableId', () => {
+    it('should return player id when name matches player stableName', () => {
+      expect(findStableId(mockState, 'Player Stable')).toBe('p1');
+    });
+
+    it('should return rival id when name matches rival owner.stableName', () => {
+      expect(findStableId(mockState, 'Rival Stable 1')).toBe('r1');
+    });
+
+    it('should return undefined when name is not found', () => {
+      expect(findStableId(mockState, 'Unknown Stable')).toBeUndefined();
+    });
+
+    it('should return undefined when name is empty string', () => {
+      expect(findStableId(mockState, '')).toBeUndefined();
+    });
+  });
+
+  describe('clearHistoryResolverCaches', () => {
+    it('should clear caches so a removed warrior falls back after cache clear', () => {
+      const stateWithW1: any = { ...mockState };
+      expect(resolveWarriorName(stateWithW1, 'w1', 'Fallback')).toBe('Warrior 1');
+
+      clearHistoryResolverCaches();
+
+      const stateWithoutW1: any = {
+        ...mockState,
+        roster: mockState.roster.filter((w: any) => w.id !== 'w1'),
+      };
+      expect(resolveWarriorName(stateWithoutW1, 'w1', 'Fallback')).toBe('Fallback');
     });
   });
 

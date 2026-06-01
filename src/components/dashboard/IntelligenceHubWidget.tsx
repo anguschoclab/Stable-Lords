@@ -1,21 +1,15 @@
 import { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
-import { Newspaper, Quote, ChevronRight, Info, Zap, Target, Send } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { Send } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AgentReasoningWidget } from './AgentReasoningWidget';/**
-                                                               * Intelligence hub widget.
-                                                               * @returns The result.
-                                                               */
+import { AgentReasoningWidget } from './AgentReasoningWidget';
+import { IntelligenceHubHeader } from './IntelligenceHubHeader';
+import { GazetteTab } from './GazetteTab';
+import { BriefingTab } from './BriefingTab';
+import { IntelligenceHubFooter } from './IntelligenceHubFooter';
+import type { RivalStableData } from '@/types/state.types';
 
-
-/**
- * Intelligence hub widget.
- * @returns The result.
- */
 export function IntelligenceHubWidget() {
   const state = useWorldState();
 
@@ -39,27 +33,7 @@ export function IntelligenceHubWidget() {
         <Send className="h-48 w-48 text-primary" />
       </div>
 
-      <div className="p-6 border-b border-white/5 bg-neutral-900/40 relative z-10 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="p-2.5 rounded-none bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]">
-            <Newspaper className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Intelligence Hub
-            </h3>
-            <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Tactical Comms Synchronizer
-            </p>
-          </div>
-        </div>
-        <Badge
-          variant="outline"
-          className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest uppercase"
-        >
-          {totalCommCount.toString().padStart(2, '0')} ACTIVE STREAMS
-        </Badge>
-      </div>
+      <IntelligenceHubHeader totalCommCount={totalCommCount} />
 
       <div className="p-0 flex-1 relative z-10 overflow-hidden">
         <Tabs defaultValue="gazette" className="h-full flex flex-col">
@@ -88,127 +62,21 @@ export function IntelligenceHubWidget() {
 
           <div className="flex-1 overflow-hidden">
             <TabsContent value="gazette" className="m-0 h-full">
-              <ScrollArea className="h-72 px-6">
-                {recentGazettes.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 opacity-20">
-                    <Zap className="h-8 w-8 mb-4" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">
-                      No Arena Transmission
-                    </p>
-                  </div>
-                ) : (
-                  <div className="py-6 space-y-8">
-                    {recentGazettes.map((story, i) => (
-                      <div
-                        key={`${story.headline.slice(0, 30)}-${i}`}
-                        className="group/story relative pl-12 border-l border-white/5 hover:border-primary/40 transition-colors py-1"
-                      >
-                        <div className="absolute left-[-5px] top-2 h-2.5 w-2.5 rounded-full bg-neutral-800 border boder-white/10 group-hover/story:bg-primary group-hover/story:shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)] transition-all" />
-
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-[9px] font-mono font-black text-primary/60">
-                            WK {story.week.toString().padStart(2, '0')}
-                          </span>
-                          <h4 className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/story:text-foreground transition-colors italic">
-                            {story.headline}
-                          </h4>
-                        </div>
-
-                        <div className="relative">
-                          <Quote className="absolute -left-6 top-0 h-4 w-4 text-primary/10" />
-                          <p className="text-[11px] text-muted-foreground/70 group-hover/story:text-muted-foreground leading-relaxed italic line-clamp-3">
-                            {story.body}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <div className="h-6" />
-              </ScrollArea>
+              <GazetteTab stories={recentGazettes} />
             </TabsContent>
-
             <TabsContent value="briefing" className="m-0 h-full">
-              <ScrollArea className="h-72 px-6">
-                {recentNewsletter.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 opacity-20">
-                    <Info className="h-8 w-8 mb-4 text-arena-gold" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">
-                      No Strategic Intel
-                    </p>
-                  </div>
-                ) : (
-                  <div className="py-6 space-y-8">
-                    {recentNewsletter.map((report, i) => (
-                      <div
-                        key={`${report.title.slice(0, 30)}-${i}`}
-                        className="group/report relative space-y-3 bg-white/[0.02] border border-white/5 rounded-none p-4 hover:border-arena-gold/30 transition-all"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-1.5 rounded-none bg-arena-gold/10 border border-arena-gold/20">
-                              <Zap className="h-3 w-3 text-arena-gold" />
-                            </div>
-                            <span className="text-[9px] font-mono font-black text-arena-gold opacity-60 uppercase tracking-widest">
-                              Wk {report.week} Strategic Update
-                            </span>
-                          </div>
-                        </div>
-
-                        <h4 className="text-xs font-black uppercase tracking-tight text-arena-gold/80 group-hover/report:text-arena-gold transition-colors">
-                          {report.title}
-                        </h4>
-
-                        <ul className="space-y-2">
-                          {report.items.map((item, j) => (
-                            <li
-                              key={j}
-                              className="flex gap-3 text-[10px] text-muted-foreground leading-relaxed"
-                            >
-                              <span className="text-arena-gold/40 font-mono mt-0.5">[{j + 1}]</span>
-                              <span className="flex-1">{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <div className="h-6" />
-              </ScrollArea>
+              <BriefingTab reports={recentNewsletter} />
             </TabsContent>
             <TabsContent value="reasoning" className="m-0 h-full">
-              <ScrollArea className="h-72 px-6">
-                <div className="py-6">
-                  <AgentReasoningWidget
-                    rival={state.rivals?.[0] as import('@/types/state.types').RivalStableData}
-                  />
-                </div>
-                <div className="h-6" />
-              </ScrollArea>
+              <div className="py-6 px-6">
+                <AgentReasoningWidget rival={state.rivals?.[0] as RivalStableData} />
+              </div>
             </TabsContent>
           </div>
         </Tabs>
       </div>
 
-      <div className="p-4 border-t border-white/5 bg-black/40 flex items-center justify-between relative z-10 mt-auto gap-4">
-        <Link
-          to="/world/chronicle"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
-        >
-          Sync Full Archive{' '}
-          <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
-        </Link>
-        <Link
-          to="/world/intelligence"
-          title="Gather intel before booking bouts"
-          className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-arena-gold/70 hover:text-arena-gold border border-arena-gold/20 hover:border-arena-gold/50 bg-arena-gold/5 hover:bg-arena-gold/10 px-3 py-1.5 transition-all group"
-        >
-          <Target className="h-3 w-3 shrink-0" />
-          Scout Rivals
-          <ChevronRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
-      </div>
+      <IntelligenceHubFooter />
     </Surface>
   );
 }

@@ -1,176 +1,17 @@
-import { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { GameState } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { Flame, Skull, Target, TrendingUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { getRecentFights } from '@/engine/core/historyUtils';/**
-                                                              * Defines the shape of derived rivalry.
-                                                              */
+import { Flame, TrendingUp } from 'lucide-react';
+import {
+  usePlayerRosterNames,
+  useRivalWarriorStable,
+  useRivalriesList,
+  useMostWantedRival,
+} from '@/hooks/useRivalries';
+import { RivalryCard } from './RivalryCard';
+import { MostWantedBanner } from './MostWantedBanner';
 
-
-/**
- * Defines the shape of derived rivalry.
- */
-export interface DerivedRivalry {
-  stableName: string;
-  ownerId: string;
-  intensity: number;
-  kills: { killer: string; victim: string; week: number }[];
-  bouts: number;
-  playerWins: number;
-  playerLosses: number;
-}
-
-// Custom Hook to gather player roster names
-function usePlayerRosterNames(state: GameState): Set<string> {
-  return useMemo(
-    () =>
-      new Set(
-        (state.roster || []).map((w) => w.name).concat(state.graveyard?.map((w) => w.name) ?? [])
-      ),
-    [state.roster, state.graveyard]
-  );
-}
-
-// Custom Hook to map rival warrior names to their stable
-function useRivalWarriorStable(
-  state: GameState
-): Map<string, { stableName: string; ownerId: string }> {
-  return useMemo(() => {
-    const m = new Map<string, { stableName: string; ownerId: string }>();
-    for (const r of state.rivals ?? []) {
-      if (r.roster) {
-        const info = { stableName: r.owner.stableName, ownerId: r.owner.id };
-        for (const w of r.roster) m.set(w.name, info);
-      }
-    }
-    return m;
-  }, [state.rivals]);
-}
-
-// Custom Hook to compute ongoing rivalries
-function useRivalriesList(
-  state: GameState,
-  rosterNames: Set<string>,
-  rivalWarriorStable: Map<string, { stableName: string; ownerId: string }>
-): DerivedRivalry[] {
-  return useMemo(() => {
-    const map = new Map<string, DerivedRivalry>();
-    const recentHistory = getRecentFights(state.arenaHistory || [], Math.max(1, state.week - 13));
-
-    for (const bout of recentHistory) {
-      const aIsPlayer = rosterNames.has(bout.a);
-      const dIsPlayer = rosterNames.has(bout.d);
-      if (!aIsPlayer && !dIsPlayer) continue;
-
-      const rivalName = aIsPlayer ? bout.d : bout.a;
-      const stableInfo = rivalWarriorStable.get(rivalName);
-      if (!stableInfo) continue;
-      const stable = stableInfo.stableName;
-
-      if (!map.has(stable)) {
-        map.set(stable, {
-          stableName: stable,
-          ownerId: stableInfo.ownerId,
-          intensity: 0,
-          kills: [],
-          bouts: 0,
-          playerWins: 0,
-          playerLosses: 0,
-        });
-      }
-
-      const r = map.get(stable);
-      if (!r) continue;
-      r.bouts++;
-
-      const playerIsA = aIsPlayer;
-      const playerWon = (playerIsA && bout.winner === 'A') || (!playerIsA && bout.winner === 'D');
-      if (playerWon) r.playerWins++;
-      else if (bout.winner) r.playerLosses++;
-
-      if (bout.by === 'Kill' && bout.winner) {
-        const killerIsPlayer = playerWon;
-        r.kills.push({
-          killer: killerIsPlayer ? (playerIsA ? bout.a : bout.d) : rivalName,
-          victim: killerIsPlayer ? rivalName : playerIsA ? bout.a : bout.d,
-          week: bout.week,
-        });
-      }
-    }
-
-    for (const r of map.values()) {
-      let intensity = 0;
-      intensity += Math.min(r.kills.length * 2, 4);
-      intensity += r.bouts >= 5 ? 1 : 0;
-      r.intensity = Math.max(1, Math.min(5, intensity));
-    }
-
-    return [...map.values()].filter((r) => r.bouts > 0).sort((a, b) => b.intensity - a.intensity);
-  }, [state.arenaHistory, state.week, rosterNames, rivalWarriorStable]);
-}
-
-// Custom Hook to calculate the most wanted rival
-function useMostWantedRival(
-  state: GameState,
-  rosterNames: Set<string>,
-  rivalWarriorStable: Map<string, { stableName: string; ownerId: string }>
-) {
-  return useMemo(() => {
-    const winCounts = new Map<
-      string,
-      { name: string; stable: string; wins: number; kills: number }
-    >();
-    const recentHistory = getRecentFights(state.arenaHistory || [], Math.max(1, state.week - 13));
-    for (const bout of recentHistory) {
-      const aIsPlayer = rosterNames.has(bout.a);
-      const dIsPlayer = rosterNames.has(bout.d);
-      if (!aIsPlayer && !dIsPlayer) continue;
-
-      const playerWon = (aIsPlayer && bout.winner === 'A') || (dIsPlayer && bout.winner === 'D');
-      if (playerWon || !bout.winner) continue;
-
-      const rivalName = aIsPlayer ? bout.d : bout.a;
-      const stable = rivalWarriorStable.get(rivalName)?.stableName ?? 'Unknown';
-      const entry = winCounts.get(rivalName) ?? { name: rivalName, stable, wins: 0, kills: 0 };
-      entry.wins++;
-      if (bout.by === 'Kill') entry.kills++;
-      winCounts.set(rivalName, entry);
-    }
-
-    // ⚡ Bolt Optimization: Use a single O(N) scan to find the max entry instead of converting to array and sorting.
-    // Reduces array allocations and O(N log N) GC pressure inside this useMemo hook.
-    let maxEntry: { name: string; stable: string; wins: number; kills: number } | null = null;
-    for (const entry of winCounts.values()) {
-      if (
-        !maxEntry ||
-        entry.wins > maxEntry.wins ||
-        (entry.wins === maxEntry.wins && entry.kills > maxEntry.kills)
-      ) {
-        maxEntry = entry;
-      }
-    }
-    return maxEntry;
-  }, [state.arenaHistory, state.week, rosterNames, rivalWarriorStable]);
-}
-
-const intensityLabel = (n: number) =>
-  n >= 5 ? 'Blood Feud' : n >= 4 ? 'Bitter' : n >= 3 ? 'Heated' : n >= 2 ? 'Tense' : 'Simmering';
-
-const intensityColor = (n: number) =>
-  n >= 4 ? 'text-destructive' : n >= 2 ? 'text-arena-gold' : 'text-primary';/**
-                                                                             * Rivalry widget.
-                                                                             * @returns The result.
-                                                                             */
-
-
-// Main Widget Component
-/**
- * Rivalry widget.
- * @returns The result.
- */
 export function RivalryWidget() {
   const state = useWorldState();
   const rosterNames = usePlayerRosterNames(state as GameState);
@@ -221,118 +62,17 @@ export function RivalryWidget() {
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {rivalries.slice(0, 4).map((r) => (
-                <div
-                  key={r.ownerId}
-                  className="space-y-4 p-4 bg-white/2 rounded-none border border-white/5 hover:border-destructive/20 transition-all group/item"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/item:text-destructive transition-colors">
-                        {r.stableName}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={cn(
-                            'h-1 w-1 rounded-none',
-                            r.intensity >= 4 ? 'bg-destructive animate-pulse' : 'bg-arena-gold'
-                          )}
-                        />
-                        <span
-                          className={cn(
-                            'text-[8px] font-black uppercase tracking-widest',
-                            intensityColor(r.intensity)
-                          )}
-                        >
-                          {intensityLabel(r.intensity)}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-[10px] font-mono font-black text-foreground opacity-60">
-                        {r.playerWins}W <span className="text-foreground/10 mx-0.5">/</span>{' '}
-                        {r.playerLosses}L
-                      </div>
-                      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30">
-                        Engagement Ratio
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1 flex gap-1 h-1.5">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <div
-                          key={i}
-                          className={cn(
-                            'flex-1 rounded-none transition-all duration-500',
-                            i <= r.intensity
-                              ? i >= 4
-                                ? 'bg-destructive shadow-[0_0_8px_rgba(var(--destructive-rgb),0.5)]'
-                                : 'bg-arena-gold'
-                              : 'bg-white/5'
-                          )}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {r.kills.length > 0 && (
-                    <div className="space-y-1.5">
-                      {r.kills.slice(-2).map((k) => (
-                        <div
-                          key={`${k.killer}-${k.victim}`}
-                          className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest"
-                        >
-                          <Skull
-                            className={cn(
-                              'h-3 w-3',
-                              rosterNames.has(k.killer) ? 'text-primary' : 'text-destructive'
-                            )}
-                          />
-                          <span className="text-muted-foreground/60">{k.killer}</span>
-                          <span className="text-foreground/10">→</span>
-                          <span className="text-foreground/80">{k.victim}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <RivalryCard key={r.ownerId} rivalry={r} rosterNames={rosterNames} />
               ))}
             </div>
 
             {mostWanted && (
-              <div className="border-t border-white/5 pt-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Target className="h-3.5 w-3.5 text-destructive opacity-60" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
-                    High Priority Target
-                  </span>
-                </div>
-                <div className="flex items-center justify-between p-4 bg-destructive/5 border border-destructive/10 rounded-none group/wanted hover:bg-destructive/10 transition-all">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-none bg-destructive/20 flex items-center justify-center border border-destructive/30">
-                      <Skull className="h-5 w-5 text-destructive animate-pulse" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-black uppercase tracking-tight text-foreground transition-colors group-wanted:text-destructive">
-                        {mostWanted.name}
-                      </span>
-                      <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-                        Stable: {mostWanted.stable}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs font-mono font-black text-destructive">
-                      {mostWanted.wins} VICTORIES <span className="text-foreground/10 mx-1">|</span>{' '}
-                      {mostWanted.kills} TERMINATIONS
-                    </div>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-destructive/40">
-                      AGGRESSION RATING: EXTREME
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <MostWantedBanner
+                name={mostWanted.name}
+                stable={mostWanted.stable}
+                wins={mostWanted.wins}
+                kills={mostWanted.kills}
+              />
             )}
           </div>
         )}

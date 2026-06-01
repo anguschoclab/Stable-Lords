@@ -10,6 +10,7 @@ import { RivalIntelligence } from '@/components/world/RivalIntelligence';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { getStableTemplates } from '@/engine/rivals';
 import type { Warrior } from '@/types/game';
+import type { StableRow, WarriorRow } from '@/types/leaderboard';
 
 type SortField =
   | 'rank'
@@ -33,29 +34,6 @@ type WarriorSortField =
   | 'officialRank'
   | 'compositeScore';
 
-interface StableRow {
-  id: string;
-  name: string;
-  ownerName: string;
-  fame: number;
-  wins: number;
-  losses: number;
-  kills: number;
-  winRate: number;
-  roster: number;
-  tier: string;
-  motto: string;
-  isPlayer: boolean;
-}/**
-  * World overview.
-  * @returns The result.
-  */
-
-
-/**
- * World overview.
- * @returns The result.
- */
 export default function WorldOverview() {
   const state = useWorldState();
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: 'asc' | 'desc' }>({
@@ -144,22 +122,6 @@ export default function WorldOverview() {
       return (va - vb) * dir;
     });
   }, [state, stableSort, templates]);
-
-  interface WarriorRow {
-    id: string;
-    name: string;
-    stableName: string;
-    stableId: string;
-    fame: number;
-    wins: number;
-    losses: number;
-    kills: number;
-    winRate: number;
-    style: string;
-    isPlayer: boolean;
-    officialRank: number;
-    compositeScore: number;
-  }
 
   const warriorRows = useMemo<WarriorRow[]>(() => {
     const mapWarrior = (

@@ -110,6 +110,7 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   Hailstorm: 1.2, // 20% more stamina drain
   'Blood Moon': 1.1, // 10% more stamina drain
   Gale: 1.15, // 15% more stamina drain
+  'Solar Flare': 1.5, // 50% more stamina drain
   Breezy: 0.9, // 10% less stamina drain
   Eclipse: 0.8, // 20% less stamina drain, slow methodical fights
   'Meteor Shower': 1.2, // 20% more stamina drain

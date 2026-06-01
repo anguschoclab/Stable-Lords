@@ -2189,6 +2189,13 @@
       "newsletter": [
         "A stunning meteor shower lit up the night sky! {{name}} watched in awe and feels inspired for the upcoming season. (+{{xp}} XP, +{{fame}} Fame)"
       ]
+    },
+    "underground_pit_fight": {
+      "title": "Underground Pit Fight",
+      "effectType": "underground_pit_fight",
+      "newsletter": [
+        "{{name}} snuck out to participate in an illegal underground pit fight. They earned some brutal notoriety, but the lack of rules came with a cost. (+{{fame}} Fame, Minor Injury)"
+      ]
     }
   },
   "crowd_reactions": {

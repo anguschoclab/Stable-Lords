@@ -35,7 +35,8 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Abyssal Gloom': 'ambience-eclipse',
   'Cursed Miasma': 'ambience-acid-rain',
   Hailstorm: 'ambience-acid-rain',
-  'Solar Flare': null,
+  'Solar Flare': 'ambience-blood-moon',
+  'Meteor Shower': 'ambience-mana-surge',
 };/**
    * Weather audio.
    * @param - { weather, volume, enabled, arena id }.

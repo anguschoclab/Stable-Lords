@@ -26,6 +26,130 @@ export interface TrainingImpact {
 }
 
 /**
+ * Helper to process the recovery training assignment.
+ */
+function processRecoveryAssignment(
+  warrior: Warrior,
+  healingBonus: number,
+  currentRoster: Warrior[],
+  results: TrainingResult[]
+): Warrior[] {
+  const { updatedInjuries, message } = processRecovery(warrior, healingBonus);
+  results.push({ type: 'recovery', warriorId: warrior.id, message });
+  return updateEntityInList(currentRoster, warrior.id, (w) => ({
+    ...w,
+    injuries: updatedInjuries as InjuryData[],
+  }));
+}
+
+/**
+ * Helper to process the skill drilling training assignment.
+ */
+function processSkillDrillAssignment(
+  assignment: any,
+  warrior: Warrior,
+  healingBonus: number,
+  currentRoster: Warrior[],
+  results: TrainingResult[],
+  state: GameState,
+  rng: IRNGService,
+  weather: import('@/types/shared.types').WeatherType
+): Warrior[] {
+  if (!assignment.skill) return currentRoster;
+  const { updatedWarrior, result, hardCapped } = processSkillDrillTraining(
+    warrior,
+    assignment.skill,
+    state,
+    rng
+  );
+  if (result.message !== '') {
+    results.push(result);
+  }
+  let roster = currentRoster;
+  if (updatedWarrior) {
+    roster = updateEntityInList(roster, warrior.id, () => updatedWarrior);
+  }
+  if (hardCapped) return roster;
+  // Skill drilling still carries injury risk, though slightly lower than attribute training
+  const { injury, result: injuryResult } = rollForTrainingInjury(
+    updatedWarrior || warrior,
+    healingBonus + 1,
+    rng,
+    weather
+  );
+  if (injury && injuryResult) {
+    roster = updateEntityInList(roster, warrior.id, (w) => ({
+      ...w,
+      injuries: [...w.injuries, injury] as InjuryData[],
+    }));
+    results.push(injuryResult);
+  }
+  return roster;
+}
+
+/**
+ * Helper to process the attribute training assignment.
+ */
+function processAttributeAssignment(
+  assignment: any,
+  warrior: Warrior,
+  healingBonus: number,
+  currentRoster: Warrior[],
+  results: TrainingResult[],
+  state: GameState,
+  seasonalGrowth: SeasonalGrowth[],
+  rng: IRNGService,
+  weather: import('@/types/shared.types').WeatherType
+): { currentRoster: Warrior[]; seasonalGrowth: SeasonalGrowth[] } {
+  const attr = assignment.attribute;
+  if (!attr) return { currentRoster, seasonalGrowth };
+
+  const { updatedWarrior, updatedSeasonalGrowth, result, hardCapped } = processAttributeTraining(
+    warrior,
+    attr,
+    state,
+    seasonalGrowth,
+    rng
+  );
+
+  if (result.message !== '') {
+    results.push(result);
+  }
+
+  let roster = currentRoster;
+  if (updatedWarrior) {
+    roster = updateEntityInList(roster, warrior.id, () => updatedWarrior);
+  }
+
+  let growth = seasonalGrowth;
+  if (updatedSeasonalGrowth) {
+    growth = updatedSeasonalGrowth;
+  }
+
+  // Skip injury rolls if training was blocked/capped
+  if (hardCapped || (result.type === 'blocked' && result.message !== '')) {
+    return { currentRoster: roster, seasonalGrowth: growth };
+  }
+
+  // ── Training Injury Roll ──
+  const { injury, result: injuryResult } = rollForTrainingInjury(
+    updatedWarrior || warrior,
+    healingBonus,
+    rng,
+    weather
+  );
+  if (injury && injuryResult) {
+    roster = updateEntityInList(roster, warrior.id, (w) => ({
+      ...w,
+      injuries: [...w.injuries, injury] as InjuryData[],
+    }));
+    results.push(injuryResult);
+  }
+
+  return { currentRoster: roster, seasonalGrowth: growth };
+}
+
+/**
  * Compute the impact of training assignments for the current week.
  * Returns a pure impact object without modifying game state directly.
  *
@@ -58,89 +182,44 @@ export function computeTrainingImpact(
 
     // ── Recovery Mode ──
     if (assignment.type === 'recovery') {
-      const { updatedInjuries, message } = processRecovery(warrior, healingBonus);
-      currentRoster = updateEntityInList(currentRoster, warrior.id, (w) => ({
-        ...w,
-        injuries: updatedInjuries as InjuryData[],
-      }));
-      results.push({ type: 'recovery', warriorId: warrior.id, message });
+      currentRoster = processRecoveryAssignment(
+        warrior,
+        healingBonus,
+        currentRoster,
+        results
+      );
       continue;
     }
 
     // ── Skill Drilling ──
     if (assignment.type === 'skillDrill') {
-      if (!assignment.skill) continue;
-      const { updatedWarrior, result, hardCapped } = processSkillDrillTraining(
+      currentRoster = processSkillDrillAssignment(
+        assignment,
         warrior,
-        assignment.skill,
+        healingBonus,
+        currentRoster,
+        results,
         state,
-        rng
-      );
-      if (result.message !== '') results.push(result);
-      if (updatedWarrior) {
-        currentRoster = updateEntityInList(currentRoster, warrior.id, () => updatedWarrior);
-      }
-      if (hardCapped) continue;
-      // Skill drilling still carries injury risk, though slightly lower than attribute training
-      const { injury, result: injuryResult } = rollForTrainingInjury(
-        updatedWarrior || warrior,
-        healingBonus + 1,
         rng,
         weather
       );
-      if (injury && injuryResult) {
-        currentRoster = updateEntityInList(currentRoster, warrior.id, (w) => ({
-          ...w,
-          injuries: [...w.injuries, injury] as InjuryData[],
-        }));
-        results.push(injuryResult);
-      }
       continue;
     }
 
     // ── Attribute Training ──
-    const attr = assignment.attribute;
-    if (!attr) continue;
-
-    const { updatedWarrior, updatedSeasonalGrowth, result, hardCapped } = processAttributeTraining(
+    const outcome = processAttributeAssignment(
+      assignment,
       warrior,
-      attr,
+      healingBonus,
+      currentRoster,
+      results,
       state,
       seasonalGrowth,
-      rng
-    );
-
-    if (result.message !== '') {
-      results.push(result);
-    }
-
-    if (updatedWarrior) {
-      currentRoster = updateEntityInList(currentRoster, warrior.id, () => updatedWarrior);
-    }
-
-    if (updatedSeasonalGrowth) {
-      seasonalGrowth = updatedSeasonalGrowth;
-    }
-
-    // Skip injury rolls if training was blocked/capped
-    if (hardCapped || (result.type === 'blocked' && result.message !== '')) {
-      continue;
-    }
-
-    // ── Training Injury Roll ──
-    const { injury, result: injuryResult } = rollForTrainingInjury(
-      updatedWarrior || warrior,
-      healingBonus,
       rng,
       weather
     );
-    if (injury && injuryResult) {
-      currentRoster = updateEntityInList(currentRoster, warrior.id, (w) => ({
-        ...w,
-        injuries: [...w.injuries, injury] as InjuryData[],
-      }));
-      results.push(injuryResult);
-    }
+    currentRoster = outcome.currentRoster;
+    seasonalGrowth = outcome.seasonalGrowth;
   }
 
   return { updatedRoster: currentRoster, updatedSeasonalGrowth: seasonalGrowth, results };

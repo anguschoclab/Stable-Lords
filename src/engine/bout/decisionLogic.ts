@@ -112,6 +112,72 @@ function decisionNarrative(
  * Three judges with different archetypes score the bout.
  * Close (1-1-1 with ties) triggers an overtime exchange via rng.
  */
+/**
+ * Helper to resolve the overtime exchange or HP-based tiebreaker when judges cannot agree.
+ */
+function resolveOvertimeOrTiebreaker(
+  fA: FighterState,
+  fD: FighterState,
+  nameA: string,
+  nameD: string,
+  aVotes: number,
+  dVotes: number,
+  rng?: () => number
+): { winner: 'A' | 'D' | null; by: FightOutcome['by']; narrative: string } {
+  // ── Contested / overtime ──
+  if (rng) {
+    const hpA = fA.hp / fA.maxHp;
+    const hpD = fD.hp / fD.maxHp;
+    const total = hpA + hpD;
+    if (total > 0) {
+      if (rng() < hpA / total) {
+        return {
+          winner: 'A',
+          by: 'Stoppage',
+          narrative: decisionNarrative('A', 'D', nameA, nameD, fA, fD, 'overtime'),
+        };
+      } else {
+        return {
+          winner: 'D',
+          by: 'Stoppage',
+          narrative: decisionNarrative('D', 'A', nameD, nameA, fD, fA, 'overtime'),
+        };
+      }
+    }
+  }
+
+  // Pure draw fallback
+  if (aVotes === 1 && dVotes === 1) {
+    return {
+      winner: null,
+      by: 'Draw',
+      narrative: `Time! The judges are divided. The Arenamaster rules a draw.`,
+    };
+  }
+
+  // Tiebreaker by raw HP remaining
+  if (fA.hp > fD.hp) {
+    return {
+      winner: 'A',
+      by: 'Stoppage',
+      narrative: `Time! ${nameA} wins on the narrowest of margins — bleeding less than their opponent.`,
+    };
+  }
+  if (fD.hp > fA.hp) {
+    return {
+      winner: 'D',
+      by: 'Stoppage',
+      narrative: `Time! ${nameD} wins on the narrowest of margins — bleeding less than their opponent.`,
+    };
+  }
+  return { winner: null, by: 'Draw', narrative: `Time! The Arenamaster declares a draw.` };
+}
+
+/**
+ * Resolves a fight that reached the time limit.
+ * Three judges with different archetypes score the bout.
+ * Close (1-1-1 with ties) triggers an overtime exchange via rng.
+ */
 export function resolveDecision(
   fA: FighterState,
   fD: FighterState,
@@ -161,51 +227,6 @@ export function resolveDecision(
     };
   }
 
-  // ── Contested / overtime ──
-  if (rng) {
-    const hpA = fA.hp / fA.maxHp;
-    const hpD = fD.hp / fD.maxHp;
-    const total = hpA + hpD;
-    if (total > 0) {
-      if (rng() < hpA / total) {
-        return {
-          winner: 'A',
-          by: 'Stoppage',
-          narrative: decisionNarrative('A', 'D', nameA, nameD, fA, fD, 'overtime'),
-        };
-      } else {
-        return {
-          winner: 'D',
-          by: 'Stoppage',
-          narrative: decisionNarrative('D', 'A', nameD, nameA, fD, fA, 'overtime'),
-        };
-      }
-    }
-  }
-
-  // Pure draw fallback
-  if (aVotes === 1 && dVotes === 1) {
-    return {
-      winner: null,
-      by: 'Draw',
-      narrative: `Time! The judges are divided. The Arenamaster rules a draw.`,
-    };
-  }
-
-  // Tiebreaker by raw HP remaining
-  if (fA.hp > fD.hp) {
-    return {
-      winner: 'A',
-      by: 'Stoppage',
-      narrative: `Time! ${nameA} wins on the narrowest of margins — bleeding less than their opponent.`,
-    };
-  }
-  if (fD.hp > fA.hp) {
-    return {
-      winner: 'D',
-      by: 'Stoppage',
-      narrative: `Time! ${nameD} wins on the narrowest of margins — bleeding less than their opponent.`,
-    };
-  }
-  return { winner: null, by: 'Draw', narrative: `Time! The Arenamaster declares a draw.` };
+  // ── Contested / overtime / HP Tiebreaker ──
+  return resolveOvertimeOrTiebreaker(fA, fD, nameA, nameD, aVotes, dVotes, rng);
 }

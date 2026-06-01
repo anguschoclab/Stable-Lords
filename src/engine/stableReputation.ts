@@ -20,6 +20,63 @@ export interface StableReputation {
 }
 
 /**
+ * Calculate stable Fame based on top active warriors' fame and gazette mentions.
+ */
+function calculateFame(state: GameState, activeWarriors: Warrior[], gazetteMentions: number): number {
+  const topFame: Warrior[] = [];
+  for (let i = 0; i < activeWarriors.length; i++) {
+    const w = activeWarriors[i];
+    if (w) {
+      if (topFame.length < 5) {
+        topFame.push(w);
+        topFame.sort((a, b) => b.fame - a.fame);
+      } else if (w.fame > (topFame[4]?.fame ?? 0)) {
+        topFame[4] = w;
+        topFame.sort((a, b) => b.fame - a.fame);
+      }
+    }
+  }
+
+  let topFameSum = 0;
+  for (let i = 0; i < topFame.length; i++) {
+    const w = topFame[i];
+    if (w) {
+      topFameSum += w.fame;
+    }
+  }
+  const avgFame = topFame.length > 0 ? topFameSum / topFame.length : 0;
+  return Math.min(
+    100,
+    Math.round(avgFame * 2.0 + gazetteMentions * 1.0 + (state.fame ?? 0) * 0.85)
+  );
+}
+
+/**
+ * Calculate stable Notoriety based on kills and lethal bouts.
+ */
+function calculateNotoriety(totalKills: number, graveyardKills: number, killBouts: number): number {
+  const notorietyRaw = totalKills * 4 + graveyardKills * 2 + killBouts * 5;
+  return Math.min(100, Math.round(notorietyRaw * 2));
+}
+
+/**
+ * Calculate stable Honor based on clean vs lethal bouts.
+ */
+function calculateHonor(cleanBouts: number, totalKills: number): number {
+  const honorRaw = 50 + cleanBouts * 0.5 - totalKills * 5;
+  return Math.min(100, Math.max(0, Math.round(honorRaw)));
+}
+
+/**
+ * Calculate stable Adaptability based on style diversity and training setups.
+ */
+function calculateAdaptability(state: GameState, uniqueStyles: Set<string>): number {
+  const trainingCount = (state.trainingAssignments ?? []).length;
+  const adaptRaw = uniqueStyles.size * 8 + trainingCount * 3 + (state.trainers?.length ?? 0) * 2;
+  return Math.min(100, Math.round(adaptRaw));
+}
+
+/**
  * Compute stable reputation from current game state.
  * Fame = average top-5 warrior fame + gazette mentions
  * Notoriety = kills * 2 + fatal finishers * 3 + rival kills * 5
@@ -84,51 +141,10 @@ export function computeStableReputation(state: GameState): StableReputation {
     }
   }
 
-  // ── Fame ──
-  // ⚡ Bolt: Fixed accidental mutation of activeWarriors and optimized O(N log N) sort to O(N) bounded tracking
-  const topFame: Warrior[] = [];
-  for (let i = 0; i < activeWarriors.length; i++) {
-    const w = activeWarriors[i];
-    if (w) {
-      if (topFame.length < 5) {
-        topFame.push(w);
-        topFame.sort((a, b) => b.fame - a.fame);
-      } else if (w.fame > (topFame[4]?.fame ?? 0)) {
-        topFame[4] = w;
-        topFame.sort((a, b) => b.fame - a.fame);
-      }
-    }
-  }
-
-  let topFameSum = 0;
-  for (let i = 0; i < topFame.length; i++) {
-    const w = topFame[i];
-    if (w) {
-      topFameSum += w.fame;
-    }
-  }
-  const avgFame = topFame.length > 0 ? topFameSum / topFame.length : 0;
-  // Reduced average fame multiplier and scaled down carryover fame to prevent early-game snowballing
-  const fame = Math.min(
-    100,
-    Math.round(avgFame * 2.0 + gazetteMentions * 1.0 + (state.fame ?? 0) * 0.85)
-  );
-
-  // ── Notoriety ──
-  // Make recent kills and historical lethality impact reputation more quickly
-  const notorietyRaw = totalKills * 4 + graveyardKills * 2 + killBouts * 5;
-  const notoriety = Math.min(100, Math.round(notorietyRaw * 2));
-
-  // ── Honor ──
-  // Base 50, reduced by kills, boosted by clean bouts
-  const honorRaw = 50 + cleanBouts * 0.5 - totalKills * 5;
-  const honor = Math.min(100, Math.max(0, Math.round(honorRaw)));
-
-  // ── Adaptability ──
-  // Style diversity among roster + training activity
-  const trainingCount = (state.trainingAssignments ?? []).length;
-  const adaptRaw = uniqueStyles.size * 8 + trainingCount * 3 + (state.trainers?.length ?? 0) * 2;
-  const adaptability = Math.min(100, Math.round(adaptRaw));
+  const fame = calculateFame(state, activeWarriors, gazetteMentions);
+  const notoriety = calculateNotoriety(totalKills, graveyardKills, killBouts);
+  const honor = calculateHonor(cleanBouts, totalKills);
+  const adaptability = calculateAdaptability(state, uniqueStyles);
 
   return { fame, notoriety, honor, adaptability };
 }

@@ -8,26 +8,22 @@ import { getStablePairKey } from '@/utils/keyUtils';
 /**
  * Detects and updates rivalries based on recent bouts, deaths, and upsets.
  */
-export function updateRivalriesFromBouts(
-  existingRivalries: Rivalry[],
-  weekFights: FightSummary[],
-  week: number,
-  rng: IRNGService
-): Rivalry[] {
-  const rivalries = [...existingRivalries];
-  const pairs = new Map<
-    string,
-    {
-      a: string;
-      b: string;
-      bouts: number;
-      deaths: number;
-      upsets: number;
-      lastReason: string;
-      aFame: number;
-      dFame: number;
-    }
-  >();
+interface PairingStats {
+  a: string;
+  b: string;
+  bouts: number;
+  deaths: number;
+  upsets: number;
+  lastReason: string;
+  aFame: number;
+  dFame: number;
+}
+
+/**
+ * Helper to aggregate match stats and upset records for stable pairings from week fights.
+ */
+function aggregatePairingStats(weekFights: FightSummary[], week: number): Map<string, PairingStats> {
+  const pairs = new Map<string, PairingStats>();
 
   for (const f of weekFights) {
     if (!f.a || !f.d) continue;
@@ -62,6 +58,18 @@ export function updateRivalriesFromBouts(
     pairs.set(key, entry);
   }
 
+  return pairs;
+}
+
+/**
+ * Helper to process and apply intensity updates to existing or newly created rivalries.
+ */
+function processRivalryUpdates(
+  pairs: Map<string, PairingStats>,
+  rivalries: Rivalry[],
+  week: number,
+  rng: IRNGService
+): void {
   for (const [, data] of pairs.entries()) {
     const existing = rivalries.find(
       (r) =>
@@ -106,6 +114,19 @@ export function updateRivalriesFromBouts(
       });
     }
   }
+}
 
+/**
+ * Detects and updates rivalries based on recent bouts, deaths, and upsets.
+ */
+export function updateRivalriesFromBouts(
+  existingRivalries: Rivalry[],
+  weekFights: FightSummary[],
+  week: number,
+  rng: IRNGService
+): Rivalry[] {
+  const rivalries = [...existingRivalries];
+  const pairs = aggregatePairingStats(weekFights, week);
+  processRivalryUpdates(pairs, rivalries, week, rng);
   return rivalries;
 }

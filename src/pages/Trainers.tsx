@@ -19,7 +19,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
   GraduationCap,
   UserPlus,
@@ -39,6 +38,9 @@ import { TrainerCard } from '@/components/stable/TrainerCard';
 import { canTransact } from '@/utils/economyUtils';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+import { VeteranReassignmentDialog } from '@/components/stable/VeteranReassignmentDialog';
+import { LegacyMentorsTab } from '@/components/stable/LegacyMentorsTab';
+import { FallenLegendsTab } from '@/components/stable/FallenLegendsTab';
 
 import { toast } from 'sonner';
 
@@ -354,211 +356,22 @@ export default function Trainers() {
           </div>
         </TabsContent>
 
-        <TabsContent
-          value="mentors"
-          className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
-        >
-          <SectionDivider label="Legacy Mentors" variant="gold" />
-          {(() => {
-            const ranked = [...currentTrainers]
-              .map((t) => ({
-                t,
-                score: (t.legacyWins ?? 0) * 2 + (t.legacyKills ?? 0) * 3 + (t.fame ?? 0),
-              }))
-              .filter((x) => x.score > 0)
-              .sort((a, b) => b.score - a.score)
-              .slice(0, 8);
-            if (ranked.length === 0) {
-              return (
-                <Surface
-                  variant="glass"
-                  className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
-                >
-                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
-                    <Award className="h-8 w-8" />
-                  </ImperialRing>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
-                    No mentor legacy recorded yet.
-                  </p>
-                </Surface>
-              );
-            }
-            return (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {ranked.map(({ t, score }, i) => (
-                  <Surface
-                    key={t.id}
-                    variant="glass"
-                    className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all"
-                  >
-                    <div className="flex items-center gap-6">
-                      <span className="text-3xl font-display font-black text-arena-gold/30 group-hover:text-arena-gold transition-colors w-8 text-center">
-                        {i + 1}
-                      </span>
-                      <div className="flex flex-col">
-                        <span className="text-[12px] font-black uppercase tracking-tight text-foreground">
-                          {t.name}
-                        </span>
-                        <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">
-                          {t.tier} · {t.focus} SPECIALIST
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-8 text-[10px] font-black uppercase tracking-widest">
-                      <div className="flex flex-col items-center">
-                        <span className="text-muted-foreground/30 text-[8px] mb-1">Wins</span>
-                        <span className="text-primary">{t.legacyWins ?? 0}</span>
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="text-muted-foreground/30 text-[8px] mb-1">Kills</span>
-                        <span className="text-destructive">{t.legacyKills ?? 0}</span>
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="text-muted-foreground/30 text-[8px] mb-1">Score</span>
-                        <span className="text-arena-gold">{score}</span>
-                      </div>
-                    </div>
-                  </Surface>
-                ))}
-              </div>
-            );
-          })()}
+        <TabsContent value="mentors" className="mt-0">
+          <LegacyMentorsTab currentTrainers={currentTrainers} />
         </TabsContent>
 
-        <TabsContent
-          value="legends"
-          className="mt-0 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
-        >
-          <SectionDivider label="Fallen Legends" variant="blood" />
-          {(() => {
-            const fallen = [
-              ...(graveyard ?? []).map((w) => ({
-                name: w.name,
-                style: w.style,
-                kind: 'fallen' as const,
-                fame: w.fame ?? 0,
-                week: w.deathWeek,
-              })),
-              ...(retired ?? []).map((w) => ({
-                name: w.name,
-                style: w.style,
-                kind: 'retired' as const,
-                fame: w.fame ?? 0,
-                week: w.retiredWeek ?? 0,
-              })),
-            ]
-              .sort((a, b) => b.fame - a.fame)
-              .slice(0, 12);
-            if (fallen.length === 0) {
-              return (
-                <Surface
-                  variant="glass"
-                  className="py-32 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
-                >
-                  <ImperialRing size="lg" variant="bronze" className="opacity-20">
-                    <Skull className="h-8 w-8" />
-                  </ImperialRing>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
-                    No legends memorialized in the archives.
-                  </p>
-                </Surface>
-              );
-            }
-            return (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {fallen.map((w, i) => (
-                  <Surface
-                    key={`${w.kind}-${w.name}-${i}`}
-                    variant="glass"
-                    className="p-6 border-white/5 flex items-center justify-between group hover:bg-white/[0.03] transition-all"
-                  >
-                    <div className="flex items-center gap-6">
-                      <div
-                        className={cn(
-                          'p-3 border transition-all',
-                          w.kind === 'fallen'
-                            ? 'bg-destructive/5 border-destructive/20 text-destructive'
-                            : 'bg-white/5 border-white/10 text-muted-foreground/40'
-                        )}
-                      >
-                        {w.kind === 'fallen' ? (
-                          <Skull className="h-4 w-4" />
-                        ) : (
-                          <Armchair className="h-4 w-4" />
-                        )}
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[12px] font-black uppercase tracking-tight text-foreground">
-                          {w.name}
-                        </span>
-                        <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">
-                          {STYLE_DISPLAY_NAMES[w.style as FightingStyle]} ·{' '}
-                          {w.kind === 'fallen' ? 'Fallen' : 'Retired'} · Wk {w.week}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-muted-foreground/30 text-[8px] font-black uppercase tracking-widest block mb-1">
-                        Fame
-                      </span>
-                      <span className="font-display font-black text-arena-gold text-xl leading-none">
-                        {w.fame}
-                      </span>
-                    </div>
-                  </Surface>
-                ))}
-              </div>
-            );
-          })()}
+        <TabsContent value="legends" className="mt-0">
+          <FallenLegendsTab graveyard={graveyard} retired={retired} />
         </TabsContent>
       </Tabs>
 
       {/* Convert Dialog */}
-      <Dialog open={convertDialogOpen} onOpenChange={setConvertDialogOpen}>
-        <DialogContent className="bg-neutral-950/95 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-none">
-          <div className="p-10 border-b border-white/5 bg-primary/5">
-            <h3 className="font-display text-3xl font-black uppercase tracking-tight flex items-center gap-6">
-              <ImperialRing size="lg" variant="blood">
-                <GraduationCap className="h-8 w-8 text-primary" />
-              </ImperialRing>
-              Veteran Reassignment
-            </h3>
-          </div>
-
-          <div className="p-10 space-y-6 overflow-y-auto no-scrollbar">
-            {convertableRetired.map((w) => {
-              const preview = convertRetiredToTrainer(w);
-              return (
-                <div
-                  key={w.id}
-                  className="flex items-center justify-between p-6 bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-all"
-                >
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-4">
-                      <span className="text-lg font-black uppercase tracking-tight">{w.name}</span>
-                      <StatBadge styleName={w.style as FightingStyle} />
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase tracking-widest rounded-none">
-                        {preview.tier} Staff
-                      </Badge>
-                      <span className="text-[10px] text-muted-foreground/40 uppercase tracking-widest italic">
-                        Specialization: {preview.focus}
-                      </span>
-                    </div>
-                  </div>
-                  <Button
-                    onClick={() => convertWarrior(w.id)}
-                    className="h-10 px-6 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-widest rounded-none"
-                  >
-                    Establish Staff
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <VeteranReassignmentDialog
+        open={convertDialogOpen}
+        onOpenChange={setConvertDialogOpen}
+        convertableRetired={convertableRetired}
+        onConvert={convertWarrior}
+      />
     </PageFrame>
   );
 }

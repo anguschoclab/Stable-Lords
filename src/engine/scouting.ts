@@ -83,15 +83,14 @@ export function getAttributeRangeDescription(low: number, high: number): string 
 
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
-/** Generate a scout report for a warrior */
-export function generateScoutReport(
+/**
+ * Generate range descriptions for attributes during scouting.
+ */
+function generateScoutAttributeRanges(
   warrior: Warrior,
-  quality: ScoutQuality,
-  week: number,
+  fuzz: number,
   rng: IRNGService
-): { report: ScoutReport; newInsights: InsightToken[] } {
-  const fuzz = QUALITY_FUZZ[quality];
-
+): Record<string, string> {
   const attributeRanges: Record<string, string> = {};
   for (const key of ATTRIBUTE_KEYS) {
     const val = warrior.attributes[key];
@@ -99,36 +98,76 @@ export function generateScoutReport(
     const high = Math.min(25, val + fuzz - Math.floor(rng.next() * 2));
     attributeRanges[key] = getAttributeRangeDescription(low, high);
   }
+  return attributeRanges;
+}
 
-  const record = `${warrior.career.wins}W-${warrior.career.losses}L`;
-
+/**
+ * Discover known injuries based on scouting quality.
+ */
+function discoverScoutInjuries(warrior: Warrior, quality: ScoutQuality): string[] {
   const knownInjuries: string[] = [];
   if (quality !== 'Basic') {
-    // Show injury names (not details)
     for (const inj of warrior.injuries) {
-      if (typeof inj === 'string') knownInjuries.push(inj);
+      if (typeof inj === 'string') {
+        knownInjuries.push(inj);
+      }
     }
   }
+  return knownInjuries;
+}
 
-  let suspectedOE: string | undefined;
-  let suspectedAL: string | undefined;
+/**
+ * Identify suspected fight plan tendencies (OE/AL) for expert scouting.
+ */
+function getSuspectedPlanTendencies(
+  warrior: Warrior,
+  quality: ScoutQuality
+): { suspectedOE?: string; suspectedAL?: string } {
   if (quality === 'Expert' && warrior.plan) {
-    suspectedOE = warrior.plan.OE >= 7 ? 'High' : warrior.plan.OE >= 4 ? 'Medium' : 'Low';
-    suspectedAL = warrior.plan.AL >= 7 ? 'High' : warrior.plan.AL >= 4 ? 'Medium' : 'Low';
+    return {
+      suspectedOE: warrior.plan.OE >= 7 ? 'High' : warrior.plan.OE >= 4 ? 'Medium' : 'Low',
+      suspectedAL: warrior.plan.AL >= 7 ? 'High' : warrior.plan.AL >= 4 ? 'Medium' : 'Low',
+    };
   }
+  return {};
+}
 
+/**
+ * Generate qualitative notes about the warrior based on scouting quality.
+ */
+function generateScoutReportNotes(
+  warrior: Warrior,
+  quality: ScoutQuality,
+  record: string
+): string {
   const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
-  const notes =
-    quality === 'Basic'
-      ? `${warrior.name} fights as a ${styleName}. Limited intel available.`
-      : quality === 'Detailed'
-        ? `${warrior.name} is a ${styleName} with ${record}. ${warrior.fame > 3 ? 'Well-known in the arena.' : 'Relatively unknown.'}`
-        : `${warrior.name} is an experienced ${styleName} (${record}). ${
-            warrior.career.kills > 0
-              ? `Known killer (${warrior.career.kills} kills).`
-              : 'No kills on record.'
-          }`;
+  if (quality === 'Basic') {
+    return `${warrior.name} fights as a ${styleName}. Limited intel available.`;
+  }
+  if (quality === 'Detailed') {
+    return `${warrior.name} is a ${styleName} with ${record}. ${
+      warrior.fame > 3 ? 'Well-known in the arena.' : 'Relatively unknown.'
+    }`;
+  }
+  return `${warrior.name} is an experienced ${styleName} (${record}). ${
+    warrior.career.kills > 0
+      ? `Known killer (${warrior.career.kills} kills).`
+      : 'No kills on record.'
+  }`;
+}
 
+/**
+ * Generate insight tokens discovered during scouting.
+ */
+function generateScoutInsights(
+  warrior: Warrior,
+  quality: ScoutQuality,
+  week: number,
+  rng: IRNGService,
+  styleName: string,
+  suspectedOE?: string,
+  suspectedAL?: string
+): InsightToken[] {
   const newInsights: InsightToken[] = [];
 
   // Basic scouting reveals Style
@@ -141,7 +180,7 @@ export function generateScoutReport(
     discoveredWeek: week,
   });
 
-  // Detailed scouting reveals 2 random attributes
+  // Detailed/Expert scouting reveals random attributes
   if (quality === 'Detailed' || quality === 'Expert') {
     const attrsToReveal = [...ATTRIBUTE_KEYS]
       .sort(() => 0.5 - rng.next())
@@ -170,6 +209,35 @@ export function generateScoutReport(
       discoveredWeek: week,
     });
   }
+
+  return newInsights;
+}
+
+/** Generate a scout report for a warrior */
+export function generateScoutReport(
+  warrior: Warrior,
+  quality: ScoutQuality,
+  week: number,
+  rng: IRNGService
+): { report: ScoutReport; newInsights: InsightToken[] } {
+  const fuzz = QUALITY_FUZZ[quality];
+
+  const attributeRanges = generateScoutAttributeRanges(warrior, fuzz, rng);
+  const record = `${warrior.career.wins}W-${warrior.career.losses}L`;
+  const knownInjuries = discoverScoutInjuries(warrior, quality);
+  const { suspectedOE, suspectedAL } = getSuspectedPlanTendencies(warrior, quality);
+  const notes = generateScoutReportNotes(warrior, quality, record);
+  const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
+
+  const newInsights = generateScoutInsights(
+    warrior,
+    quality,
+    week,
+    rng,
+    styleName,
+    suspectedOE,
+    suspectedAL
+  );
 
   return {
     report: {

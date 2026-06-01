@@ -15,22 +15,19 @@ import { computeNextSeason } from './WorldPass';
  * Stable Lords — System & Season Pipeline Pass
  * Bundles systemic updates like Hall of Fame, Tier Progression, and AI Seasonal Churn.
  */
-export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImpact {
-  const nextWeek = state.week + 1 > 52 ? 1 : state.week + 1;
-  const nextYear = nextWeek === 1 ? state.year + 1 : state.year;
-  const rng = rootRng || new SeededRNGService(state.week * 881 + 17);
-
-  // 1. Systemic Progression (Draft-heavy)
+/**
+ * Helper to process systemic progression, including hall of fame, snapshots, and tier progressions.
+ */
+function processSystemicProgression(
+  state: GameState,
+  nextWeek: number,
+  nextYear: number
+): StateImpact {
   const hofImpact = processHallOfFame(state, nextWeek);
 
-  // 2. Yearly Warrior Snapshots
-  // Snapshots are created on the transition tick (Week 52 → Week 1) so that
-  // the baseline for the new year is captured before any Year N+1 bouts are fought.
   let snapshotImpact: StateImpact = {};
   const isFirstTick = state.week === 1 && state.year === 1;
   const isYearTransition = nextWeek === 1 && state.year >= 1;
-
-  // Check if we need to initialize snapshots for the current year
   const needsInitialSnapshot = isFirstTick && !state.roster.some((w) => w.yearlySnapshots?.[1]);
 
   if (isYearTransition || needsInitialSnapshot) {
@@ -39,28 +36,27 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
 
   const tierImpact = processTierProgression(state, state.season, nextWeek);
 
-  // SystemPass runs AFTER WorldPass in the pipeline, so we must not override these values
-  const impact: StateImpact = {
+  return {
     ...hofImpact,
     ...snapshotImpact,
     ...tierImpact,
     seasonalGrowth: state.seasonalGrowth ? [...state.seasonalGrowth] : [],
-    // Do NOT set season or weather here - WorldPass handles them
   };
+}
 
-  // 2. Player Bankruptcy Check (after economy pass)
-  const bankruptcyResult = BankruptcyService.processPlayerBankruptcy(state, rng);
-  if (bankruptcyResult.bankrupt) {
-    Object.assign(impact, bankruptcyResult.impact);
-  }
-
-  // 3. Seasonal Churn & AI Philosophy Evolution
-  // This usually runs only on season change (handled by internal logic or check here)
-  // The new season is set by WorldPass, so we use state.season (which will be updated by the time this runs)
-  // Calculate the next season to check for season change
-  const nextSeason = computeNextSeason(nextWeek);
+/**
+ * Helper to process seasonal churn and evolution of AI philosophies on season change.
+ */
+function processSeasonalChurnAndPhilosophy(
+  state: GameState,
+  nextWeek: number,
+  nextSeason: number,
+  impact: StateImpact,
+  rng: IRNGService
+): void {
+  const nextSeasonName = computeNextSeason(nextWeek);
   const prevSeason = state.season;
-  if (prevSeason !== nextSeason) {
+  if (prevSeason !== nextSeasonName) {
     const seasonSeed = nextWeek * 133;
     const rngContext = new RNGContext(seasonSeed + 55);
     const { news } = WorldManagementService.processSeasonalChurn(state, rngContext);
@@ -74,7 +70,6 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
 
     impact.rivalsUpdates = new Map();
     philRivals.forEach((r) => {
-      // Key by rival.id (StableId) — handler in impacts.ts indexes by r.id.
       if (impact.rivalsUpdates) impact.rivalsUpdates.set(r.id, r);
     });
 
@@ -92,28 +87,61 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
       ];
     }
   }
+}
 
-  // 4. Weekly fame / popularity decay (half-life ≈ 52 weeks; decays ~1.33% per week).
-  // Applied as negative deltas so the resolveImpacts pipeline handles merging normally.
-  // Rivals decay in the same rivalsUpdates map to keep prestige from becoming permanent.
+/**
+ * Helper to apply the weekly decay rate to player and rival fame/prestige.
+ */
+function applyWeeklyPrestigeDecay(state: GameState, impact: StateImpact): void {
   const DECAY_RATE = 0.0133;
   const decayAmount = (v: number) => Math.max(0, Math.floor(v * DECAY_RATE));
   const playerFameLoss = decayAmount(state.fame ?? 0);
   const playerPopLoss = decayAmount(state.popularity ?? 0);
-  if (playerFameLoss > 0) impact.fameDelta = (impact.fameDelta ?? 0) - playerFameLoss;
-  if (playerPopLoss > 0) impact.popularityDelta = (impact.popularityDelta ?? 0) - playerPopLoss;
+  if (playerFameLoss > 0) {
+    impact.fameDelta = (impact.fameDelta ?? 0) - playerFameLoss;
+  }
+  if (playerPopLoss > 0) {
+    impact.popularityDelta = (impact.popularityDelta ?? 0) - playerPopLoss;
+  }
 
   if (state.rivals && state.rivals.length > 0) {
     const rivalDecayMap = impact.rivalsUpdates ?? new Map();
     for (const r of state.rivals) {
       const loss = decayAmount(r.fame ?? 0);
       if (loss <= 0) continue;
-      // Key by rival.id (StableId) — handler indexes by r.id, not owner.id.
       const prev = rivalDecayMap.get(r.id) ?? {};
       rivalDecayMap.set(r.id, { ...prev, fame: Math.max(0, (prev.fame ?? r.fame) - loss) });
     }
-    if (rivalDecayMap.size > 0) impact.rivalsUpdates = rivalDecayMap;
+    if (rivalDecayMap.size > 0) {
+      impact.rivalsUpdates = rivalDecayMap;
+    }
   }
+}
+
+/**
+ * Stable Lords — System & Season Pipeline Pass
+ * Bundles systemic updates like Hall of Fame, Tier Progression, and AI Seasonal Churn.
+ */
+export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImpact {
+  const nextWeek = state.week + 1 > 52 ? 1 : state.week + 1;
+  const nextYear = nextWeek === 1 ? state.year + 1 : state.year;
+  const rng = rootRng || new SeededRNGService(state.week * 881 + 17);
+
+  // 1. Systemic Progression (Draft-heavy)
+  const impact = processSystemicProgression(state, nextWeek, nextYear);
+
+  // 2. Player Bankruptcy Check (after economy pass)
+  const bankruptcyResult = BankruptcyService.processPlayerBankruptcy(state, rng);
+  if (bankruptcyResult.bankrupt) {
+    Object.assign(impact, bankruptcyResult.impact);
+  }
+
+  // 3. Seasonal Churn & AI Philosophy Evolution
+  const nextSeason = computeNextSeason(nextWeek);
+  processSeasonalChurnAndPhilosophy(state, nextWeek, nextSeason, impact, rng);
+
+  // 4. Weekly fame / popularity decay
+  applyWeeklyPrestigeDecay(state, impact);
 
   return impact;
 }

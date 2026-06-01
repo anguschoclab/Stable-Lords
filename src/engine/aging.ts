@@ -24,6 +24,81 @@ const AGING_PENALTY_START = 25;
 const FORCED_RETIRE_MIN = 26;
 const FORCED_RETIRE_MAX = 32;
 
+interface AgingResult {
+  retired: boolean;
+  retiredObj?: Warrior;
+  update?: Partial<Warrior>;
+  ageEvent?: string;
+}
+
+/**
+ * Process aging and forced retirement check for a single warrior.
+ */
+function processWarriorAging(
+  w: Warrior,
+  isPlayer: boolean,
+  rivalId: string | undefined,
+  state: GameState,
+  rng: IRNGService,
+  isAgeTick: boolean
+): AgingResult {
+  let currentAge = w.age ?? 18;
+  const update: Partial<Warrior> = {};
+  let ageEvent: string | undefined;
+
+  // 1. Age tick
+  if (isAgeTick) {
+    currentAge += 1;
+    update.age = currentAge;
+
+    if (currentAge > AGING_PENALTY_START) {
+      const penalty = Math.floor((currentAge - AGING_PENALTY_START) / 3);
+      if (penalty > 0) {
+        const newAttrs = {
+          ...w.attributes,
+          SP: Math.max(3, w.attributes.SP - 1),
+          DF: Math.max(3, w.attributes.DF - 1),
+        };
+        const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, w.style);
+        Object.assign(update, { attributes: newAttrs, baseSkills, derivedStats });
+        if (isPlayer) {
+          ageEvent = `${w.name} shows signs of aging (SP/DF declining).`;
+        }
+      }
+    }
+  }
+
+  // 2. Forced retirement check
+  let retired = false;
+  if (currentAge >= FORCED_RETIRE_MAX) {
+    retired = true;
+    if (isPlayer) {
+      ageEvent = `${w.name} (age ${currentAge}) has been forced to retire — too old to fight.`;
+    }
+  } else if (currentAge >= FORCED_RETIRE_MIN) {
+    const retireChance =
+      ((currentAge - FORCED_RETIRE_MIN) / (FORCED_RETIRE_MAX - FORCED_RETIRE_MIN)) * 0.15;
+    if (rng.next() < retireChance) {
+      retired = true;
+      if (isPlayer) {
+        ageEvent = `${w.name} (age ${currentAge}) has decided to hang up the blade.`;
+      }
+    }
+  }
+
+  if (retired) {
+    const retiredObj = {
+      ...w,
+      age: currentAge,
+      status: 'Retired' as WarriorStatus,
+      retiredWeek: state.week,
+    };
+    return { retired: true, retiredObj, ageEvent };
+  }
+
+  return { retired: false, update: Object.keys(update).length > 0 ? update : undefined, ageEvent };
+}
+
 /**
  * Compute the aging impact of the current week.
  *
@@ -47,59 +122,19 @@ export function computeAgingImpact(state: GameState, rng: IRNGService): StateImp
   const isAgeTick = state.week % WEEKS_PER_YEAR === 0;
 
   for (const { w, isPlayer, rivalId } of allWarriors) {
-    let currentAge = w.age ?? 18;
-    const update: Partial<Warrior> = {};
+    const result = processWarriorAging(w, isPlayer, rivalId, state, rng, isAgeTick);
 
-    // 1. Age tick
-    if (isAgeTick) {
-      currentAge += 1;
-      update.age = currentAge;
-
-      if (currentAge > AGING_PENALTY_START) {
-        const penalty = Math.floor((currentAge - AGING_PENALTY_START) / 3);
-        if (penalty > 0) {
-          const newAttrs = {
-            ...w.attributes,
-            SP: Math.max(3, w.attributes.SP - 1),
-            DF: Math.max(3, w.attributes.DF - 1),
-          };
-          const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, w.style);
-          Object.assign(update, { attributes: newAttrs, baseSkills, derivedStats });
-          if (isPlayer) ageEvents.push(`${w.name} shows signs of aging (SP/DF declining).`);
-        }
-      }
+    if (result.ageEvent) {
+      ageEvents.push(result.ageEvent);
     }
 
-    // 2. Forced retirement check
-    let retired = false;
-    if (currentAge >= FORCED_RETIRE_MAX) {
-      retired = true;
-      if (isPlayer)
-        ageEvents.push(
-          `${w.name} (age ${currentAge}) has been forced to retire — too old to fight.`
-        );
-    } else if (currentAge >= FORCED_RETIRE_MIN) {
-      const retireChance =
-        ((currentAge - FORCED_RETIRE_MIN) / (FORCED_RETIRE_MAX - FORCED_RETIRE_MIN)) * 0.15;
-      if (rng.next() < retireChance) {
-        retired = true;
-        if (isPlayer)
-          ageEvents.push(`${w.name} (age ${currentAge}) has decided to hang up the blade.`);
-      }
-    }
-
-    if (retired) {
-      const retiredObj = {
-        ...w,
-        age: currentAge,
-        status: 'Retired' as WarriorStatus,
-        retiredWeek: state.week,
-      };
-      retiredWarriors.push(retiredObj);
+    if (result.retired && result.retiredObj) {
+      retiredWarriors.push(result.retiredObj);
       if (isPlayer) {
         toRetire.push(w.id);
       }
-    } else if (Object.keys(update).length > 0) {
+    } else if (result.update) {
+      const update = result.update;
       if (isPlayer) {
         rosterUpdates.set(w.id, update);
       } else if (rivalId) {

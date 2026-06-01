@@ -37,6 +37,7 @@ export function updateEntityInList<T extends { id: string }>(
  * @returns Truncated array
  */
 export function truncateArray<T>(list: T[], limit: number): T[] {
+  if (limit <= 0) return [];
   if (list.length <= limit) return list;
   return list.slice(-limit);
 }

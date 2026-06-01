@@ -2,7 +2,8 @@ import { type GameState } from '@/types/state.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
-import { TimeAdvanceService, type SoftStopCondition } from './tick/TimeAdvanceService';/**
+import { TimeAdvanceService, type SoftStopCondition } from './tick/TimeAdvanceService';
+import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';/**
                                                                                         * Defines the shape of autosim week summary.
                                                                                         */
 
@@ -120,7 +121,7 @@ function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSu
  * Check bankruptcy condition
  */
 function checkBankruptcy(state: GameState): boolean {
-  return state.treasury < -500;
+  return state.treasury < BANKRUPTCY_THRESHOLD;
 }
 
 /**

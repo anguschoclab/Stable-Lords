@@ -37,6 +37,11 @@ export function generateDynasticName(originalName: string, seed: number): string
     // Surname match: Lucius Blackwood
     const last = originalName.split(' ').slice(1).join(' ');
     const newFirst = ['Marcus', 'Lucius', 'Julius', 'Titus', 'Gaius', 'Aurelius'];
+    if (!last) {
+      // Single-word names fall back to prefix style
+      const prefix = rng.pick(PREFIXES);
+      return `${prefix} ${originalName}`;
+    }
     return `${rng.pick(newFirst)} ${last}`;
   }
 }

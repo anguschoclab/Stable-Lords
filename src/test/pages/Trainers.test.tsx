@@ -51,6 +51,7 @@ vi.mock('@/state/useGameStore', () => ({
     ...defaultStoreState,
     ...storeOverride,
     setState: vi.fn((fn: (draft: any) => void) => { fn(storeOverride); }),
+    deductFunds: vi.fn(() => true),
   }),
 }));
 // Mock the router components

@@ -153,9 +153,7 @@ export function computeStableReputation(state: GameState): StableReputation {
  * Compute a rival stable's reputation from its data.
  */
 export function computeRivalReputation(
-  roster: Warrior[],
-  _arenaHistory: FightSummary[],
-  _stableName: string
+  roster: Warrior[]
 ): StableReputation {
   let totalKills = 0;
   let cleanBouts = 0;

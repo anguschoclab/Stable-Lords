@@ -5,6 +5,11 @@
 
 // ─── Base Economy ─────────────────────────────────────────────────────────
 /**
+ * Starting treasury for new stables
+ */
+export const STARTING_TREASURY = 500;
+
+/**
  * Fight purse (base payment for a bout)
  */
 export const FIGHT_PURSE = 90;

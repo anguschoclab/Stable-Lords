@@ -159,7 +159,7 @@ describe('computeStableReputation', () => {
 
 describe('computeRivalReputation', () => {
   it('returns base reputation for empty roster', () => {
-    const rep = computeRivalReputation([], [], 'Rival Stable');
+    const rep = computeRivalReputation([]);
     expect(rep.fame).toBe(0);
     expect(rep.notoriety).toBe(0);
     expect(rep.honor).toBe(50);
@@ -173,7 +173,7 @@ describe('computeRivalReputation', () => {
       createMockWarrior({ fame: 30 }),
     ];
 
-    const rep = computeRivalReputation(roster, [], 'Rival Stable');
+    const rep = computeRivalReputation(roster);
 
     // avgFame = 20
     // fame = 20 * 2.0 = 40
@@ -186,7 +186,7 @@ describe('computeRivalReputation', () => {
       createMockWarrior({ career: { wins: 3, losses: 1, kills: 0 } as unknown }),
     ];
 
-    const rep = computeRivalReputation(roster, [], 'Rival Stable');
+    const rep = computeRivalReputation(roster);
 
     // totalKills = 2
     // cleanBouts for w1 = 5 + 2 - 2 = 5
@@ -208,7 +208,7 @@ describe('computeRivalReputation', () => {
       createMockWarrior({ style: 'Gladiator' as unknown }), // Duplicate
     ];
 
-    const rep = computeRivalReputation(roster, [], 'Rival Stable');
+    const rep = computeRivalReputation(roster);
 
     // uniqueStyles = 3
     // adaptability = 3 * 10 = 30
@@ -229,12 +229,12 @@ describe('computeRivalReputation', () => {
       }),
     ];
 
-    const rep1 = computeRivalReputation([roster[0]], [], 'Rival Stable');
+    const rep1 = computeRivalReputation([roster[0]]);
     expect(rep1.fame).toBe(100);
     expect(rep1.notoriety).toBe(100);
     expect(rep1.honor).toBe(0); // Min 0
 
-    const rep2 = computeRivalReputation([roster[1]], [], 'Rival Stable');
+    const rep2 = computeRivalReputation([roster[1]]);
     expect(rep2.honor).toBe(100); // Max 100
   });
 
@@ -244,7 +244,7 @@ describe('computeRivalReputation', () => {
       createMockWarrior({ status: 'Dead', fame: 100 }),
     ];
 
-    const rep = computeRivalReputation(roster, [], 'Rival Stable');
+    const rep = computeRivalReputation(roster);
 
     // avgFame should be 10
     // fame = 10 * 2.0 = 20

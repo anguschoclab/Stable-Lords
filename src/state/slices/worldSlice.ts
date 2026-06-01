@@ -19,6 +19,7 @@ import {
 } from '@/types/state.types';
 import { FightSummary } from '@/types/combat.types';
 import { truncateArray } from '@/utils/stateUtils';
+import { STARTING_TREASURY } from '@/constants/economy';
 import { updatePromoterHistory as engineUpdatePromoterHistory } from '@/engine/promoters';
 import { respondToBoutOffer as engineRespondToBoutOffer } from '@/state/mutations/contractMutations';
 import {
@@ -172,7 +173,7 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
         name,
         stableName,
       },
-      treasury: 500, // Starts capital
+      treasury: STARTING_TREASURY, // Starts capital
     }));
   },
 

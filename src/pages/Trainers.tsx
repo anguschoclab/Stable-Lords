@@ -1,6 +1,5 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { generateId } from '@/utils/idUtils';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import type { GameState } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
@@ -50,7 +49,7 @@ import { toast } from 'sonner';
  */
 export default function Trainers() {
   // Flat destructuring from 1.0 store
-  const { trainers, hiringPool, week, retired, graveyard, treasury, setState } = useGameStore();
+  const { trainers, hiringPool, week, retired, graveyard, treasury, setState, deductFunds } = useGameStore();
 
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 
@@ -80,25 +79,17 @@ export default function Trainers() {
   const hireTrainer = useCallback(
     (trainer: Trainer) => {
       const cost = TIER_COST[trainer.tier as TrainerTier] ?? 50;
-      if (!canTransact(treasury, cost)) {
+      if (!deductFunds(cost, `Acquisition: ${trainer.name}`, 'trainer')) {
         toast.error(`Insufficient credits. Access to ${trainer.name} requires ${cost}G.`);
         return;
       }
       setState((draft: GameState) => {
         draft.trainers.push(trainer);
         draft.hiringPool = draft.hiringPool.filter((t) => t.id !== trainer.id);
-        draft.treasury -= cost;
-        draft.ledger.push({
-          id: generateId(),
-          week: draft.week,
-          label: `Acquisition: ${trainer.name}`,
-          amount: -cost,
-          category: 'trainer',
-        });
       });
       toast.success(`${trainer.name} has signed with your stable. Personnel synchronized.`);
     },
-    [treasury, setState]
+    [deductFunds, setState]
   );
 
   const fireTrainer = useCallback(

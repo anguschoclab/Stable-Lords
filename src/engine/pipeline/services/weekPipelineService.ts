@@ -5,6 +5,7 @@ import { archiveWeekLogs } from '../adapters/opfsArchiver';
 import { computeMetaDrift } from '@/engine/metaDrift';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
+import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 
 /**
  * Options for week advancement
@@ -119,7 +120,7 @@ function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
 function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): boolean {
   const economyImpact = coreImpacts.find((i) => i.treasuryDelta !== undefined);
   const estimatedTreasury = state.treasury + (economyImpact?.treasuryDelta || 0);
-  return estimatedTreasury < -500;
+  return estimatedTreasury < BANKRUPTCY_THRESHOLD;
 }
 
 function collectRemainingImpacts(

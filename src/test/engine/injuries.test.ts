@@ -73,12 +73,12 @@ describe('isTooInjuredToFight', () => {
       expect(isTooInjuredToFight([makeInjury('Moderate', 10)])).toBe(false);
     });
 
-    it('returns false for Critical injuries (any weeksRemaining) - intentional exclusion', () => {
-      expect(isTooInjuredToFight([makeInjury('Critical', 10)])).toBe(false);
+    it('returns true for Critical injuries with more than 2 weeks remaining', () => {
+      expect(isTooInjuredToFight([makeInjury('Critical', 10)])).toBe(true);
     });
 
-    it('returns false for Permanent injuries (any weeksRemaining) - intentional exclusion', () => {
-      expect(isTooInjuredToFight([makeInjury('Permanent', 999)])).toBe(false);
+    it('returns true for Permanent injuries with more than 2 weeks remaining', () => {
+      expect(isTooInjuredToFight([makeInjury('Permanent', 999)])).toBe(true);
     });
   });
 

@@ -116,6 +116,14 @@ const WEATHER_METADATA = {
     description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
     stats: 'INITIATIVE -4 // RIPOSTE -2 // DAMAGE 95% // STAMINA DRAIN 120%',
   },
+  'Arcane Storm': {
+    icon: Sparkles,
+    color: 'text-violet-400',
+    bg: 'bg-violet-400/10',
+    border: 'border-violet-400/20',
+    description: 'Raw magic warps reality, supercharging strikes and quickening reflexes.',
+    stats: 'INITIATIVE +8 // RIPOSTE +5 // DAMAGE 140% // STAMINA CONSERVATION 20%',
+  },
 };/**
    * Weather widget.
    * @returns The result.

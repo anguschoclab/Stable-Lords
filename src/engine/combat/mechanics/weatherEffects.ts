@@ -192,6 +192,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.25,
     description: 'A blinding flash of light bakes the arena, draining stamina aggressively while giving eager attackers a burst of destructive energy.',
   },
+  'Arcane Storm': {
+    staminaMult: 0.8,
+    initiativeMod: +8,
+    riposteMod: +5,
+    damageMult: 1.4,
+    description: 'Raw magical energy warps reality, supercharging strikes and accelerating reflexes wildly.',
+  },
 };
 
 /**
@@ -241,6 +248,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
   Hailstorm: 'Ice falls from the sky like stones, battering armor and bare flesh alike.',
   'Solar Flare': 'A blinding flash of light bakes the arena. The sun itself seems to attack the fighters.',
+  'Arcane Storm': 'The air rips open with raw arcane power. Reality itself seems to bend.',
 };
 
 /**

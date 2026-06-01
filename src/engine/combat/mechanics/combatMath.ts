@@ -115,7 +115,7 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   Eclipse: 0.8, // 20% less stamina drain, slow methodical fights
   'Meteor Shower': 1.2, // 20% more stamina drain
   'Abyssal Gloom': 0.9, // 10% less stamina drain
-  'Solar Flare': 1.5, // 50% more stamina drain
+  'Arcane Storm': 0.8, // 20% less stamina drain
   // Clear / Overcast / Rainy → 1.0 (default)
 };/**
    * Weather stamina modifier.

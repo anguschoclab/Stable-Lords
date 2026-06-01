@@ -38,8 +38,10 @@ import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResoluti
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
+import type { FighterState, ResolutionContext } from './types';
+import type { Warrior } from '@/types/warrior.types';
 
-// Import from split modules
+// Re-export from split modules
 export type { FighterState, ResolutionContext } from './types';
 export { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 export { DECISION_HIT_MARGIN, getMatchupBonus } from '@/constants/combat';

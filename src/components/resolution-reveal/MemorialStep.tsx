@@ -1,8 +1,7 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Skull } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import type { Warrior } from '@/types/combat.types';
+import type { Warrior } from '@/types/warrior.types';
 import narrativeContent from '@/data/narrativeContent.json';
 
 interface MemorialStepProps {

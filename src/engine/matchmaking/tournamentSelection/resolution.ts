@@ -24,7 +24,8 @@ import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';/**
 export function resolveRound(
   state: GameState,
   tournamentId: string,
-  seed: number
+  seed: number,
+  headless?: boolean
 ): { updatedState: GameState; roundResults: string[] } {
   const rng = new SeededRNG(seed);
   let updatedState = { ...state };
@@ -73,7 +74,8 @@ export function resolveRound(
       updatedState.trainers,
       updatedState.weather,
       'bloodsands_arena',
-      updatedState.crowdMood
+      updatedState.crowdMood,
+      headless
     );
 
     bout.winner = outcome.winner;
@@ -183,14 +185,15 @@ export function resolveRound(
 export function resolveCompleteTournament(
   state: GameState,
   tournamentId: string,
-  seed: number
+  seed: number,
+  headless?: boolean
 ): GameState {
   let current = { ...state };
   let safety = 0;
   while (safety < 10) {
     const tour = (current.tournaments || []).find((t) => t.id === tournamentId);
     if (!tour || tour.completed) break;
-    const result = resolveRound(current, tournamentId, seed + safety);
+    const result = resolveRound(current, tournamentId, seed + safety, headless);
     current = result.updatedState;
     safety++;
   }

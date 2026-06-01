@@ -215,3 +215,20 @@ export function narrateInsightHint(rng: IRNGService, attribute: string): string 
   const templateStr = Array.isArray(template) ? template[0] : template;
   return interpolateTemplate(templateStr, {});
 }
+
+export const StatusNarrator = {
+  damageSeverityLine,
+  stateChangeLine,
+  fatigueLine,
+  crowdReaction,
+  minuteStatusLine,
+  popularityLine,
+  skillLearnLine,
+  tradingBlowsLine,
+  stalemateLine,
+  tauntLine,
+  conservingLine,
+  pressingLine,
+  narrateInsightHint,
+};
+

@@ -71,12 +71,16 @@ export function handleTimeLimit(
   nameA: string,
   nameD: string,
   rng: () => number,
-  log: MinuteEvent[]
+  log: MinuteEvent[],
+  headless?: boolean
 ): { winner: 'A' | 'D' | null; by: FightOutcomeBy | null } {
   const finalOutcome = resolveDecision(fA, fD, nameA, nameD, rng);
-  log.push({
-    minute: Math.floor(MAX_EXCHANGES / EXCHANGES_PER_MINUTE),
-    text: finalOutcome.narrative,
-  });
+  if (!headless) {
+    log.push({
+      minute: Math.floor(MAX_EXCHANGES / EXCHANGES_PER_MINUTE),
+      text: finalOutcome.narrative,
+    });
+  }
   return { winner: finalOutcome.winner, by: finalOutcome.by };
 }
+

@@ -3,6 +3,7 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TimeAdvanceService } from '@/engine/tick/TimeAdvanceService';
+import { truncateState } from '@/engine/storage/truncation';
 
 // Mock the archiver adapter (used by weekPipelineService) to avoid disk I/O during tests
 vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({
@@ -94,11 +95,12 @@ describe('Quarter/Year Advancement Determinism', () => {
 
     // Compare functional state (week, year, treasury, roster size, etc.)
     // Note: Exact IDs may differ due to RNG usage patterns, but functional values should match
-    expect(batchResult.state.week).toBe(sequentialState.week);
-    expect(batchResult.state.year).toBe(sequentialState.year);
-    expect(batchResult.state.treasury).toBe(sequentialState.treasury);
-    expect(batchResult.state.roster.length).toBe(sequentialState.roster.length);
-    expect(batchResult.state.arenaHistory.length).toBe(sequentialState.arenaHistory.length);
+    const expectedSequential = truncateState(sequentialState);
+    expect(batchResult.state.week).toBe(expectedSequential.week);
+    expect(batchResult.state.year).toBe(expectedSequential.year);
+    expect(batchResult.state.treasury).toBe(expectedSequential.treasury);
+    expect(batchResult.state.roster.length).toBe(expectedSequential.roster.length);
+    expect(batchResult.state.arenaHistory.length).toBe(expectedSequential.arenaHistory.length);
 
     // Compare week summaries structure
     expect(batchResult.summaries.length).toBe(13);
@@ -131,11 +133,12 @@ describe('Quarter/Year Advancement Determinism', () => {
     }
 
     // Compare functional state (week, year, treasury, roster size, etc.)
-    expect(batchResult.state.week).toBe(sequentialState.week);
-    expect(batchResult.state.year).toBe(sequentialState.year);
-    expect(batchResult.state.treasury).toBe(sequentialState.treasury);
-    expect(batchResult.state.roster.length).toBe(sequentialState.roster.length);
-    expect(batchResult.state.arenaHistory.length).toBe(sequentialState.arenaHistory.length);
+    const expectedSequential = truncateState(sequentialState);
+    expect(batchResult.state.week).toBe(expectedSequential.week);
+    expect(batchResult.state.year).toBe(expectedSequential.year);
+    expect(batchResult.state.treasury).toBe(expectedSequential.treasury);
+    expect(batchResult.state.roster.length).toBe(expectedSequential.roster.length);
+    expect(batchResult.state.arenaHistory.length).toBe(expectedSequential.arenaHistory.length);
 
     // Verify we completed 4 quarters
     expect(batchResult.quarterResults.length).toBe(4);

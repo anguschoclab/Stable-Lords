@@ -18,11 +18,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 8.5 / 19; // picks index 8 = black_market_raid
-=======
       if (callCount === 1) return 8.5 / eventCount; // picks index 8 = black_market_raid
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -54,11 +50,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 9.5 / 19; // picks index 9 = grand_feast
-=======
       if (callCount === 1) return 9.5 / eventCount; // picks index 9 = grand_feast
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -120,11 +112,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 5.5 / 19; // picks index 5 = tavern_brawl
-=======
       if (callCount === 1) return 5.5 / eventCount; // picks index 5 = tavern_brawl
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -161,11 +149,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 5.5 / 19; // picks tavern_brawl
-=======
       if (callCount === 1) return 5.5 / eventCount; // picks tavern_brawl
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -205,11 +189,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 10.5 / 19; // picks index 10 = wandering_healer
-=======
       if (callCount === 1) return 10.5 / eventCount; // picks index 10 = wandering_healer
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -269,11 +249,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 10.5 / 19; // picks index 10 = wandering_healer
-=======
       if (callCount === 1) return 10.5 / eventCount; // picks index 10 = wandering_healer
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -315,11 +291,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 11.5 / 19; // picks index 11 = mystic_vision
-=======
       if (callCount === 1) return 11.5 / eventCount; // picks index 11 = mystic_vision
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -350,11 +322,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 12.5 / 19; // picks index 12 = wild_animal_attack
-=======
       if (callCount === 1) return 12.5 / eventCount; // picks index 12 = wild_animal_attack
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -378,11 +346,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 13.5 / 19; // picks index 13 = loyal_stray
-=======
       if (callCount === 1) return 13.5 / eventCount; // picks index 13 = loyal_stray
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -416,11 +380,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 14.5 / 19; // picks index 14 = street_performance
-=======
       if (callCount === 1) return 14.5 / eventCount; // picks index 14 = street_performance
->>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -456,11 +416,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 15.5 / 19; // picks index 15 = chaotic_spells
-=======
       if (callCount === 1) return 15.5 / eventCount; // picks index 15 = chaotic_spells
->>>>>>> Stashed changes
       if (callCount === 3) return 0.2; // roll < 0.33, triggers XP gain
       if (callCount === 4) return 0.5; // for xp roll
       return originalNext();
@@ -491,11 +447,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 15.5 / 19; // picks index 15 = chaotic_spells
-=======
       if (callCount === 1) return 15.5 / eventCount; // picks index 15 = chaotic_spells
->>>>>>> Stashed changes
       if (callCount === 3) return 0.5; // roll < 0.66, triggers minor injury
       if (callCount === 4) return 0.5; // for weeksRemaining roll
       return originalNext();
@@ -528,11 +480,7 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-<<<<<<< Updated upstream
-      if (callCount === 1) return 15.5 / 19; // picks index 15 = chaotic_spells
-=======
       if (callCount === 1) return 15.5 / eventCount; // picks index 15 = chaotic_spells
->>>>>>> Stashed changes
       if (callCount === 3) return 0.8; // roll >= 0.66, triggers fame loss
       if (callCount === 4) return 0.5; // for fame roll
       return originalNext();
@@ -554,5 +502,37 @@ describe('runSeasonalPass', () => {
 
     expect(impact.newsletterItems).toHaveLength(1);
     expect(impact.newsletterItems?.[0]?.items[0]).toContain('shade of purple');
+  });
+
+  it('should trigger the gladiator_olympics offseason event, award xp and fame, and add a newsletter item', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 18.5 / eventCount; // picks index 18 = gladiator_olympics
+      return originalNext();
+    };
+    rng.next = mockNext;
+
+    const warriorId = 'w-olympic' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Hercules', status: 'Active', xp: 10, fame: 20 } as any],
+      newsletter: [],
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update).toBeDefined();
+    expect(update?.xp).toBeGreaterThanOrEqual(25); // 10 + 15 to 25
+    expect(update?.xp).toBeLessThanOrEqual(35);
+    expect(update?.fame).toBeGreaterThanOrEqual(30); // 20 + 10 to 20
+    expect(update?.fame).toBeLessThanOrEqual(40);
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('Gladiator Olympics');
+    expect(impact.newsletterItems?.[0]?.items[0]).toContain('Hercules');
   });
 });

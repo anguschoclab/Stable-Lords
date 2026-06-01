@@ -56,29 +56,49 @@ function prepareWeekContext(state: GameState): WeekContext {
   };
 }
 
-function runBoutPhase(state: GameState, ctx: WeekContext): GameState {
+function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): GameState {
+  // Pre-build and cache maps so that generatePairings and bout resolution can use them O(1)
+  const warriorMap = new Map<WarriorId, Warrior>();
+  state.roster.forEach((w) => warriorMap.set(w.id, w));
+  (state.rivals || []).forEach((r) => r.roster.forEach((w) => warriorMap.set(w.id, w)));
+  state.warriorMap = warriorMap;
+
+  const warriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
+  state.roster.forEach((w) =>
+    warriorToStableMap.set(w.id, { stableId: state.player.id, isPlayer: true })
+  );
+  (state.rivals || []).forEach((r) =>
+    r.roster.forEach((w) => warriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false }))
+  );
+  state.warriorToStableMap = warriorToStableMap;
+
+  const rivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
+  (state.rivals || []).forEach((r) => rivalMap.set(r.id, r));
+  state.rivalMap = rivalMap;
+
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
-  const boutImpact = runBoutSimulationPass(state, ctx.rootRng);
+  const boutImpact = runBoutSimulationPass(state, ctx.rootRng, headless);
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 
-  const warriorMap = new Map<WarriorId, Warrior>();
-  settledState.roster.forEach((w) => warriorMap.set(w.id, w));
-  (settledState.rivals || []).forEach((r) => r.roster.forEach((w) => warriorMap.set(w.id, w)));
-  settledState.warriorMap = warriorMap;
+  // Re-build maps on settledState for downstream passes (since some warriors might have died/retired)
+  const postWarriorMap = new Map<WarriorId, Warrior>();
+  settledState.roster.forEach((w) => postWarriorMap.set(w.id, w));
+  (settledState.rivals || []).forEach((r) => r.roster.forEach((w) => postWarriorMap.set(w.id, w)));
+  settledState.warriorMap = postWarriorMap;
 
-  const warriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
+  const postWarriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
   settledState.roster.forEach((w) =>
-    warriorToStableMap.set(w.id, { stableId: settledState.player.id, isPlayer: true })
+    postWarriorToStableMap.set(w.id, { stableId: settledState.player.id, isPlayer: true })
   );
   (settledState.rivals || []).forEach((r) =>
-    r.roster.forEach((w) => warriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false }))
+    r.roster.forEach((w) => postWarriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false }))
   );
-  settledState.warriorToStableMap = warriorToStableMap;
+  settledState.warriorToStableMap = postWarriorToStableMap;
 
-  const rivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
-  (settledState.rivals || []).forEach((r) => rivalMap.set(r.id, r));
-  settledState.rivalMap = rivalMap;
+  const postRivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
+  (settledState.rivals || []).forEach((r) => postRivalMap.set(r.id, r));
+  settledState.rivalMap = postRivalMap;
 
   return settledState;
 }
@@ -114,7 +134,7 @@ function collectRemainingImpacts(
     runPromoterPass(state),
     runPromoterLifecyclePass(state, ctx.rootRng),
     runTrainerPass(state, ctx.rootRng),
-    runRivalStrategyPass(state, ctx.nextWeek, ctx.rootRng),
+    runRivalStrategyPass(state, ctx.nextWeek, ctx.rootRng, opts?.headless),
   ];
 
   // In headless mode, skip expensive content generation passes
@@ -201,7 +221,7 @@ export function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): GameSt
   const headless = opts?.headless;
 
   const ctx = prepareWeekContext(state);
-  const settledState = runBoutPhase(state, ctx);
+  const settledState = runBoutPhase(state, ctx, headless);
   const coreImpacts = collectCoreImpacts(settledState, ctx);
 
   if (checkBankruptcy(settledState, coreImpacts)) {

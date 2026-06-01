@@ -81,7 +81,8 @@ export const TickOrchestrator = {
         const { updatedState, roundResults } = TournamentSelectionService.resolveRound(
           currentState,
           tournamentId,
-          daySeed
+          daySeed,
+          true
         );
         currentState = updatedState;
         if (roundResults.length > 0) {

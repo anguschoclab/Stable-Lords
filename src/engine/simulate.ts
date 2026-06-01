@@ -44,7 +44,8 @@ export function simulateFight(
   trainers?: Trainer[],
   weather: WeatherType = 'Clear',
   arenaId: string = 'standard_arena',
-  crowdMood?: CrowdMood
+  crowdMood?: CrowdMood,
+  headless?: boolean
 ): FightOutcome {
   // 1. Initialize RNG
   const { rng } = initializeRng(providedRng);
@@ -80,18 +81,20 @@ export function simulateFight(
 
   // 4. Generate introductions
   const arenaConfig = resCtx.arenaConfig;
-  const introLog = generateIntroductions(
-    rng,
-    nameA,
-    nameD,
-    planA,
-    planD,
-    warriorA,
-    warriorD,
-    weather,
-    arenaId,
-    arenaConfig
-  );
+  const introLog = headless
+    ? []
+    : generateIntroductions(
+        rng,
+        nameA,
+        nameD,
+        planA,
+        planD,
+        warriorA,
+        warriorD,
+        weather,
+        arenaId,
+        arenaConfig
+      );
 
   // 5. Run simulation loop
   const {
@@ -102,6 +105,7 @@ export function simulateFight(
     causeBucket,
     fatalHitLocation,
     fatalExchangeIndex,
+    fightMinutes,
   } = runSimulationLoop(
     fA,
     fD,
@@ -114,18 +118,20 @@ export function simulateFight(
     warriorD,
     planA,
     planD,
-    crowdMood
+    crowdMood,
+    headless
   );
 
-  const log = [...introLog, ...loopLog];
+  const log = headless ? [] : [...introLog, ...loopLog];
 
   // 6. Handle time limit if no winner
   if (!winner) {
-    const timeLimitResult = handleTimeLimit(fA, fD, nameA, nameD, rng, log);
+    const timeLimitResult = handleTimeLimit(fA, fD, nameA, nameD, rng, log, headless);
+    const finalMinutes = headless ? fightMinutes : Math.max(1, log[log.length - 1]?.minute ?? 1);
     return {
       winner: timeLimitResult.winner,
       by: timeLimitResult.by,
-      minutes: Math.max(1, log[log.length - 1]?.minute ?? 1),
+      minutes: finalMinutes,
       log,
       exchangeLog,
       post: buildPostFightStats(
@@ -138,20 +144,20 @@ export function simulateFight(
           timeLimitResult.by,
           fA,
           fD,
-          Math.max(1, log[log.length - 1]?.minute ?? 1)
+          finalMinutes
         )
       ),
     };
   }
 
   // 7. Generate outcome tags and post-fight stats
-  const fightMinutes = Math.max(1, log[log.length - 1]?.minute ?? 1);
-  const tags = generateOutcomeTags(winner, by, fA, fD, fightMinutes);
+  const finalMinutes = headless ? fightMinutes : Math.max(1, log[log.length - 1]?.minute ?? 1);
+  const tags = generateOutcomeTags(winner, by, fA, fD, finalMinutes);
 
   return {
     winner,
     by,
-    minutes: fightMinutes,
+    minutes: finalMinutes,
     log,
     exchangeLog,
     post: buildPostFightStats(winner, by, fA, fD, tags, causeBucket, fatalHitLocation, fatalExchangeIndex),

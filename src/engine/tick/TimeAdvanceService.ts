@@ -5,6 +5,7 @@ import {
 } from '@/engine/pipeline/services/weekPipelineService';
 import { flushDeferredArchivesOffThread, flushDeferredArchives } from '@/engine/pipeline/adapters/opfsArchiver';
 import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/telemetry';
+import { truncateState } from '@/engine/storage/truncation';
 
 /**
  * Stop condition types for batch operations
@@ -198,6 +199,7 @@ export const TimeAdvanceService = {
           if (opts.deferArchives) {
             await flushDeferredArchives(currentState);
           }
+          currentState = truncateState(currentState);
 
           const duration = performance.now() - startTime;
           telemetry.timing(TelemetryEvents.ADVANCE_QUARTER, duration, {
@@ -236,6 +238,8 @@ export const TimeAdvanceService = {
     if (opts?.deferArchives) {
       await flushDeferredArchives(currentState);
     }
+
+    currentState = truncateState(currentState);
 
     const duration = performance.now() - startTime;
     telemetry.timing(TelemetryEvents.ADVANCE_QUARTER, duration, {

@@ -44,7 +44,8 @@ export function runSimulationLoop(
   warriorD?: Warrior,
   planA?: FightPlan,
   planD?: FightPlan,
-  crowdMood?: string
+  crowdMood?: string,
+  headless?: boolean
 ): {
   log: MinuteEvent[];
   exchangeLog: ExchangeLogEntry[];
@@ -53,6 +54,7 @@ export function runSimulationLoop(
   causeBucket: DeathCauseBucket | undefined;
   fatalHitLocation: string | undefined;
   fatalExchangeIndex: number | undefined;
+  fightMinutes: number;
 } {
   const log: MinuteEvent[] = [];
   const exchangeLog: ExchangeLogEntry[] = [];
@@ -62,6 +64,7 @@ export function runSimulationLoop(
   let by: FightOutcomeBy | null = null;
   let lastPhase: string | null = null;
   let lastMinuteMarker = 0;
+  let currentMinute = 1;
 
   let causeBucket: DeathCauseBucket | undefined;
   let fatalHitLocation: string | undefined;
@@ -69,6 +72,7 @@ export function runSimulationLoop(
 
   for (let ex = 0; ex < MAX_EXCHANGES; ex++) {
     const min = Math.floor(ex / EXCHANGES_PER_MINUTE) + 1;
+    currentMinute = min;
     const phase = getPhase(ex, MAX_EXCHANGES);
     resCtx.phase = phase;
     resCtx.exchange = ex;
@@ -76,35 +80,41 @@ export function runSimulationLoop(
     // Phase Change & Tactic Reveal
     if (phase !== lastPhase) {
       lastPhase = phase;
-      const phaseKey = phase.toLowerCase() as 'opening' | 'mid' | 'late';
-      const tacticsA = resolveEffectiveTactics(fA.plan, phaseKey);
-      const tacticsD = resolveEffectiveTactics(fD.plan, phaseKey);
-      log.push({
-        minute: min,
-        text: `— ${phase.charAt(0) + phase.slice(1).toLowerCase()} Phase —`,
-        phase,
-        offTacticA: tacticsA.offTactic !== 'none' ? tacticsA.offTactic : undefined,
-        defTacticA: tacticsA.defTactic !== 'none' ? tacticsA.defTactic : undefined,
-        offTacticD: tacticsD.offTactic !== 'none' ? tacticsD.offTactic : undefined,
-        defTacticD: tacticsD.defTactic !== 'none' ? tacticsD.defTactic : undefined,
-      });
+      if (!headless) {
+        const phaseKey = phase.toLowerCase() as 'opening' | 'mid' | 'late';
+        const tacticsA = resolveEffectiveTactics(fA.plan, phaseKey);
+        const tacticsD = resolveEffectiveTactics(fD.plan, phaseKey);
+        log.push({
+          minute: min,
+          text: `— ${phase.charAt(0) + phase.slice(1).toLowerCase()} Phase —`,
+          phase,
+          offTacticA: tacticsA.offTactic !== 'none' ? tacticsA.offTactic : undefined,
+          defTacticA: tacticsA.defTactic !== 'none' ? tacticsA.defTactic : undefined,
+          offTacticD: tacticsD.offTactic !== 'none' ? tacticsD.offTactic : undefined,
+          defTacticD: tacticsD.defTactic !== 'none' ? tacticsD.defTactic : undefined,
+        });
+      }
     }
 
     if (min > lastMinuteMarker && min > 1) {
       lastMinuteMarker = min;
-      log.push({ minute: min, text: `MINUTE ${min}.` });
-      log.push({
-        minute: min,
-        text: minuteStatusLine(resCtx.rng, min, nameA, nameD, fA.hitsLanded, fD.hitsLanded),
-      });
+      if (!headless) {
+        log.push({ minute: min, text: `MINUTE ${min}.` });
+        log.push({
+          minute: min,
+          text: minuteStatusLine(resCtx.rng, min, nameA, nameD, fA.hitsLanded, fD.hitsLanded),
+        });
+      }
     }
 
     // A. Resolve Math (Dice)
     const events = resolveExchange(resCtx, fA, fD);
-    exchangeLog.push(buildExchangeLogEntry(ex, min, phase, events));
+    if (!headless) {
+      exchangeLog.push(buildExchangeLogEntry(ex, min, phase, events));
+    }
 
     // B. Resolve Narration (Drama)
-    {
+    if (!headless) {
       const narCtx: NarrationContext = {
         rng: resCtx.rng,
         nameA,
@@ -154,28 +164,30 @@ export function runSimulationLoop(
         winner = boutEnd.actor === 'A' ? 'A' : 'D';
       }
 
-      const boutActorIsWinner = by !== 'Stoppage';
-      const narWinner = boutActorIsWinner
-        ? boutEnd.actor === 'A'
-          ? nameA
-          : nameD
-        : boutEnd.actor === 'A'
-          ? nameD
-          : nameA;
-      const narLoser = boutActorIsWinner
-        ? boutEnd.actor === 'A'
-          ? nameD
-          : nameA
-        : boutEnd.actor === 'A'
-          ? nameA
-          : nameD;
-      const winnerStyle = boutEnd.actor === 'A' ? planA?.style : planD?.style;
-      const boutEndLines = narrateBoutEnd(resCtx.rng, by as string, narWinner, narLoser, undefined, {
-        cause: causeBucket,
-        style: winnerStyle,
-        mood: crowdMood,
-      });
-      boutEndLines.forEach((line) => log.push({ minute: min, text: line }));
+      if (!headless) {
+        const boutActorIsWinner = by !== 'Stoppage';
+        const narWinner = boutActorIsWinner
+          ? boutEnd.actor === 'A'
+            ? nameA
+            : nameD
+          : boutEnd.actor === 'A'
+            ? nameD
+            : nameA;
+        const narLoser = boutActorIsWinner
+          ? boutEnd.actor === 'A'
+            ? nameD
+            : nameA
+          : boutEnd.actor === 'A'
+            ? nameA
+            : nameD;
+        const winnerStyle = boutEnd.actor === 'A' ? planA?.style : planD?.style;
+        const boutEndLines = narrateBoutEnd(resCtx.rng, by as string, narWinner, narLoser, undefined, {
+          cause: causeBucket,
+          style: winnerStyle,
+          mood: crowdMood,
+        });
+        boutEndLines.forEach((line) => log.push({ minute: min, text: line }));
+      }
       break;
     }
   }
@@ -188,5 +200,7 @@ export function runSimulationLoop(
     causeBucket,
     fatalHitLocation,
     fatalExchangeIndex,
+    fightMinutes: Math.max(1, currentMinute),
   };
 }
+

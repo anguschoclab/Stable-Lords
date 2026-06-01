@@ -19,7 +19,8 @@ import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 export function runRivalStrategyPass(
   state: GameState,
   nextWeek: number,
-  rootRng?: IRNGService
+  rootRng?: IRNGService,
+  headless?: boolean
 ): StateImpact {
   const rng = rootRng || new SeededRNGService(nextWeek * 7919 + 13);
   const impacts: StateImpact[] = [];
@@ -116,7 +117,7 @@ export function runRivalStrategyPass(
 
   // 5. Tournament Handling (Every 13 weeks)
   if (nextWeek > 0 && nextWeek % 13 === 0) {
-    const tournamentImpact = handleSeasonalTournaments(state, nextWeek, rng);
+    const tournamentImpact = handleSeasonalTournaments(state, nextWeek, rng, headless);
     impacts.push(tournamentImpact);
   }
 
@@ -187,7 +188,7 @@ function handleOwnerLifecycle(
   return { updatedRival, gazetteItems };
 }
 
-function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGService): StateImpact {
+function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGService, headless?: boolean): StateImpact {
   const tournaments = TournamentSelectionService.generateSeasonalTiers(
     state,
     week,
@@ -215,7 +216,8 @@ function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGServ
     workingState = TournamentSelectionService.resolveCompleteTournament(
       workingState,
       tour.id,
-      week * 500 + hashStr(tour.id)
+      week * 500 + hashStr(tour.id),
+      headless
     );
     tournamentNews.push(`🏆 ${tour.name} finalized: Champion crowned.`);
   });

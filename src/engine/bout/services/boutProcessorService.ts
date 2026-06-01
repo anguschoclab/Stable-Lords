@@ -92,6 +92,7 @@ export interface BoutContext {
   week: number;
   playerId: string;
   contract?: BoutOffer;
+  headless?: boolean;
 }
 
 function getValidatedCombatants(ctx: BoutContext): { cW: Warrior; cO: Warrior } | null {
@@ -139,7 +140,8 @@ function runBoutSimulation(
     state.trainers,
     state.weather,
     undefined,
-    state.crowdMood
+    state.crowdMood,
+    _ctx.headless
   );
 }
 
@@ -296,7 +298,7 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
  * @param state - State.
  * @returns The result.
  */
-export function processWeekBouts(state: GameState): {
+export function processWeekBouts(state: GameState, headless?: boolean): {
   impact: StateImpact;
   results: BoutResult[];
   summary: WeekBoutSummary;
@@ -345,6 +347,7 @@ export function processWeekBouts(state: GameState): {
       playerId: state.player.id,
       warriorMap,
       contract,
+      headless,
     });
     impacts.push(res.impact);
     results.push(res.result);

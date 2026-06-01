@@ -149,38 +149,53 @@ const mergeStrategies: Record<MergeStrategy, (merged: any, key: string, value: a
  * @param impacts - An array of state impacts to merge
  * @returns A single merged state impact
  */
+const MERGE_KEYS = Object.keys(MERGE_CONFIG) as Array<keyof StateImpact>;
+
+/**
+ * Merges multiple state impacts into a single combined impact.
+ * Uses specific merge strategies (accumulate, append, replace, etc.) for each field.
+ *
+ * @param impacts - An array of state impacts to merge
+ * @returns A single merged state impact
+ */
 export function mergeImpacts(impacts: StateImpact[]): StateImpact {
   const merged: StateImpact = {} as StateImpact;
 
-  // Initialize merged with default values
-  (Object.keys(MERGE_CONFIG) as Array<keyof StateImpact>).forEach((key) => {
+  // Initialize merged with default values using standard for loop
+  for (let i = 0; i < MERGE_KEYS.length; i++) {
+    const key = MERGE_KEYS[i];
     const config = MERGE_CONFIG[key];
-    if (!config) return;
+    if (!config) continue;
     if (Array.isArray(config.defaultValue)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic type loss in forEach loop (fundamental TypeScript limitation with generic key iteration)
       (merged as any)[key] = [...config.defaultValue];
     } else if (config.defaultValue instanceof Map) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic type loss in forEach loop (fundamental TypeScript limitation with generic key iteration)
       (merged as any)[key] = new Map(config.defaultValue as never);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic type loss in forEach loop (fundamental TypeScript limitation with generic key iteration)
       (merged as any)[key] = config.defaultValue;
     }
-  });
+  }
 
-  for (const imp of impacts) {
-    (Object.keys(MERGE_CONFIG) as Array<keyof StateImpact>).forEach((key) => {
-      const config = MERGE_CONFIG[key];
-      if (!config) return;
-      const value = imp[key];
-      if (value === undefined || value === null) return;
+  // Iterate over actual impact objects
+  for (let i = 0; i < impacts.length; i++) {
+    const imp = impacts[i];
+    if (!imp) continue;
 
-      const strategyFn = mergeStrategies[config.strategy];
-      if (strategyFn) {
-        strategyFn(merged, key, value);
+    // Only iterate over properties present in the impact object
+    for (const key in imp) {
+      if (Object.prototype.hasOwnProperty.call(imp, key)) {
+        const config = MERGE_CONFIG[key as keyof StateImpact];
+        if (!config) continue;
+        const value = (imp as any)[key];
+        if (value === undefined || value === null) continue;
+
+        const strategyFn = mergeStrategies[config.strategy];
+        if (strategyFn) {
+          strategyFn(merged, key, value);
+        }
       }
-    });
+    }
   }
 
   return merged;
 }
+

@@ -1,3 +1,4 @@
+import React, { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, ChevronUp, ChevronDown, Medal, Crown, StepForward } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -59,6 +60,15 @@ export function TournamentBracket({
     roundsMap.set(b.round, arr);
   });
 
+  // Precompute arena history lookups to avoid O(N) array scans per bout
+  const fightHistoryMap = useMemo(() => {
+    const map = new Map<string, FightSummary>();
+    for (const f of arenaHistory) {
+      map.set(f.id, f);
+    }
+    return map;
+  }, [arenaHistory]);
+
   const sortedRounds = Array.from(roundsMap.entries()).sort(([a], [b]) => a - b);
   const totalRounds = sortedRounds.length;
 
@@ -77,7 +87,7 @@ export function TournamentBracket({
               const boutKey = `${round}_${bIdx}`;
               const isExpanded = expandedBout === boutKey;
               const fightSummary = bout.fightId
-                ? arenaHistory.find((f) => f.id === bout.fightId)
+                ? fightHistoryMap.get(bout.fightId)
                 : null;
               const hasTranscript = fightSummary?.transcript && fightSummary.transcript.length > 0;
 

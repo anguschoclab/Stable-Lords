@@ -31,3 +31,7 @@
 **What:** The `useGameStore` simulation action used to iterate day-by-day `advanceDay` through the worker proxy up to day 7 when `isTournamentWeek` was true. This involved awaiting a Promise.race over the worker bridge on every loop iteration. It has been replaced by delegating the entire `for` loop to `engineProxy.skipToWeekEnd`.
 **Why:** Batching the simulation ticks inside `TickOrchestrator.skipToWeekEnd` before crossing the worker communication boundary drastically reduces asynchronous promise queuing and worker messaging overhead.
 **Impact:** Local benchmark showed execution dropping from `102ms` to `63ms` (a ~38% speedup).
+
+## 2024-06-03 - [Optimizing O(N) Lookups in Rendering Loops]
+**Learning:** Found that `TournamentBracket` was using `.find()` over `arenaHistory` (which can grow very large) for *every single bout* in the rendered bracket map. This results in $O(N \times M)$ scans per render, where N is total rounds/bouts and M is history length.
+**Action:** When mapping over items that need to frequently cross-reference a large history or state array, precompute a lookup map with `useMemo` so that lookups per rendered item drop from $O(M)$ to $O(1)$.

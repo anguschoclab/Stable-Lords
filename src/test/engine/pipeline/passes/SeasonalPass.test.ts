@@ -535,4 +535,36 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems?.[0]?.title).toBe('Gladiator Olympics');
     expect(impact.newsletterItems?.[0]?.items[0]).toContain('Hercules');
   });
+
+  it('should trigger the meteor_shower offseason event and award xp and fame', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 19.5 / eventCount; // picks index 19 = meteor_shower
+      return originalNext();
+    };
+    rng.next = mockNext;
+
+    const warriorId = 'w-meteor' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Orion', status: 'Active', xp: 10, fame: 20 } as any],
+      newsletter: [],
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update).toBeDefined();
+    expect(update?.xp).toBeGreaterThanOrEqual(25); // 10 + 15 to 25
+    expect(update?.xp).toBeLessThanOrEqual(35);
+    expect(update?.fame).toBeGreaterThanOrEqual(30); // 20 + 10 to 15
+    expect(update?.fame).toBeLessThanOrEqual(35);
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('Meteor Shower');
+    expect(impact.newsletterItems?.[0]?.items[0]).toContain('Orion');
+  });
 });

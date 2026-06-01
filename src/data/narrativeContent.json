@@ -2182,6 +2182,13 @@
       "newsletter": [
         "During the local Gladiator Olympics, {{name}} absolutely dominated the competition! The crowd loved the spectacle. (+{{xp}} XP, +{{fame}} Fame)"
       ]
+    },
+    "meteor_shower": {
+      "title": "Meteor Shower",
+      "effectType": "meteor_shower",
+      "newsletter": [
+        "A stunning meteor shower lit up the night sky! {{name}} watched in awe and feels inspired for the upcoming season. (+{{xp}} XP, +{{fame}} Fame)"
+      ]
     }
   },
   "crowd_reactions": {

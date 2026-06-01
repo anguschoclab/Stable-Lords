@@ -567,4 +567,36 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems?.[0]?.title).toBe('Meteor Shower');
     expect(impact.newsletterItems?.[0]?.items[0]).toContain('Orion');
   });
+
+  it('should trigger the underground_pit_fight offseason event, award fame and add an injury', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 20.5 / eventCount; // picks index 20 = underground_pit_fight
+      return originalNext();
+    };
+    rng.next = mockNext;
+
+    const warriorId = 'w-pit' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Brutus', status: 'Active', xp: 10, fame: 20, injuries: [] } as any],
+      newsletter: [],
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update).toBeDefined();
+    expect(update?.fame).toBeGreaterThanOrEqual(35); // 20 + 15 to 30
+    expect(update?.fame).toBeLessThanOrEqual(50);
+    expect(update?.injuries).toBeDefined();
+    expect(update?.injuries?.length).toBeGreaterThanOrEqual(1);
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('Underground Pit Fight');
+    expect(impact.newsletterItems?.[0]?.items[0]).toContain('Brutus');
+  });
 });

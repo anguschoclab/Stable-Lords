@@ -31,7 +31,6 @@
 **What:** The `useGameStore` simulation action used to iterate day-by-day `advanceDay` through the worker proxy up to day 7 when `isTournamentWeek` was true. This involved awaiting a Promise.race over the worker bridge on every loop iteration. It has been replaced by delegating the entire `for` loop to `engineProxy.skipToWeekEnd`.
 **Why:** Batching the simulation ticks inside `TickOrchestrator.skipToWeekEnd` before crossing the worker communication boundary drastically reduces asynchronous promise queuing and worker messaging overhead.
 **Impact:** Local benchmark showed execution dropping from `102ms` to `63ms` (a ~38% speedup).
-
 ## 2024-06-03 - [Optimizing O(N) Lookups in Rendering Loops]
 **Learning:** Found that `TournamentBracket` was using `.find()` over `arenaHistory` (which can grow very large) for *every single bout* in the rendered bracket map. This results in $O(N \times M)$ scans per render, where N is total rounds/bouts and M is history length.
 **Action:** When mapping over items that need to frequently cross-reference a large history or state array, precompute a lookup map with `useMemo` so that lookups per rendered item drop from $O(M)$ to $O(1)$.
@@ -43,3 +42,7 @@
 ## 2024-05-18 - [Optimizing O(N) lookup inside React map with precomputed Map]
 **Learning:** Found an O(N) operation `rivals?.find(...)` being called multiple times inside a `.map` loop during rendering in `src/components/ledger/SeasonSynthesis.tsx`, turning what should be an O(N) pass into an O(N^2) bottleneck. Repeated array searches inside mapping logic are a common performance anti-pattern.
 **Action:** Replace `Array.prototype.find` inside a `.map` loop with an O(1) `Map` lookup by extracting the data into a precomputed dictionary created with `useMemo`. Iterate over the source array once to populate the Map, converting the complexity from O(N^2) to O(N + M).
+
+## 2024-05-26 - [Avoid Redundant Array Allocations in Game Loop]
+**Learning:** The game loop processes rosters, rivals, and their nested entities heavily. Modifying a single element in an array using `.map()` creates an entire new array and allocates N object wrappers if not careful, leading to high garbage collection pressure. There is a centralized utility `updateEntityInList` in `src/utils/stateUtils.ts` that optimizes this to O(N) but avoids the extra N allocations by finding the index and directly assigning.
+**Action:** Replace `array.map(item => item.id === target ? ... : item)` with `updateEntityInList(array, target, item => ...)` whenever updating a specific entity in a list during engine processing, particularly inside heavy loops like AI workers.

@@ -79,26 +79,86 @@ Object.defineProperty(global, 'localStorage', {
   configurable: true,
 });
 
+type OPFSOp = 'getDirectory' | 'getDirectoryHandle' | 'getFileHandle' | 'createWritable' | 'write' | 'close' | 'getFile' | 'values' | 'text';
+
+let mockOpfsError: { name: string; target: OPFSOp | 'all' } | null = null;
+let mockOpfsFileText: string | null = null;
+
+function throwIfTargeted(target: OPFSOp) {
+  if (mockOpfsError && (mockOpfsError.target === 'all' || mockOpfsError.target === target)) {
+    const err = new Error(mockOpfsError.name);
+    (err as any).name = mockOpfsError.name;
+    throw err;
+  }
+}
+
+/**
+ * Configure the OPFS mock to throw a named error on the next targeted operation.
+ * @param name - The Error.name to throw (e.g. 'QuotaExceededError', 'NotFoundError').
+ * @param target - The specific OPFS operation to fail, or 'all' for every operation.
+ */
+export function setMockOPFSError(name: string, target: OPFSOp | 'all' = 'all'): void {
+  mockOpfsError = { name, target };
+}
+
+/**
+ * Clear any configured OPFS error so subsequent operations succeed.
+ */
+export function clearMockOPFSError(): void {
+  mockOpfsError = null;
+  mockOpfsFileText = null;
+}
+
+/**
+ * Override the text content returned by the mock file's text() method.
+ * @param text - The string to return from file.text().
+ */
+export function setMockOPFSFileText(text: string): void {
+  mockOpfsFileText = text;
+}
+
 /**
  * Create a mock FileSystemDirectoryHandle for OPFS testing.
  * @param name - The name of the directory.
  * @returns A mock directory handle with nested file/directory capabilities.
  */
 const createMockDirHandle = (name: string) => ({
-  kind: 'directory',
+  kind: 'directory' as const,
   name,
-  getDirectoryHandle: async (dirName: string) => createMockDirHandle(dirName),
-  getFileHandle: async () => ({
-    kind: 'file',
-    createWritable: async () => ({
-      write: async () => {},
-      close: async () => {},
-    }),
-    getFile: async () => ({
-      text: async () => '{}',
-    }),
-  }),
-  values: async function* () {},
+  getDirectoryHandle: async (dirName: string, _opts?: { create?: boolean }) => {
+    throwIfTargeted('getDirectoryHandle');
+    return createMockDirHandle(dirName);
+  },
+  getFileHandle: async (_name?: string, _opts?: { create?: boolean }) => {
+    throwIfTargeted('getFileHandle');
+    return {
+      kind: 'file' as const,
+      createWritable: async () => {
+        throwIfTargeted('createWritable');
+        return {
+          write: async () => {
+            throwIfTargeted('write');
+          },
+          close: async () => {
+            throwIfTargeted('close');
+          },
+        };
+      },
+      getFile: async () => {
+        throwIfTargeted('getFile');
+        return {
+          text: async () => {
+            throwIfTargeted('text');
+            return mockOpfsFileText ?? '{}';
+          },
+        };
+      },
+    };
+  },
+  values: async function* () {
+    throwIfTargeted('values');
+    yield* [];
+  },
 });
 
 // Set up navigator.storage mock at top level (before any tests run)
@@ -108,17 +168,21 @@ if (typeof global.navigator === 'undefined') {
 
 Object.defineProperty(global.navigator, 'storage', {
   value: {
-    getDirectory: async () => createMockDirHandle('root'),
+    getDirectory: async () => {
+      throwIfTargeted('getDirectory');
+      return createMockDirHandle('root');
+    },
   },
   configurable: true,
 });
 
-// Reset localStorage before each test
+// Reset localStorage and OPFS mock before each test
 beforeEach(() => {
   if (typeof localStorage !== 'undefined') {
     localStorage.clear();
     (localStorage as any)._resetQuota?.();
   }
+  clearMockOPFSError();
 });
 
 // Clear vi mocks after each test to prevent state pollution

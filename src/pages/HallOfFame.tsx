@@ -42,14 +42,16 @@ export default function HallOfFame() {
   const { roster, graveyard, retired, rivals, awards, year, player, season } = useGameStore();
   const allFights = useMemo(() => ArenaHistory.all(), []);
 
-  const allWarriors = useMemo(() => {
+  const { allWarriors, warriorById } = useMemo(() => {
     const list: Warrior[] = [
       ...roster,
       ...graveyard,
       ...retired,
       ...(rivals ?? []).flatMap((r) => r.roster),
     ];
-    return list;
+    const map = new Map<string, Warrior>();
+    for (const w of list) map.set(w.id, w);
+    return { allWarriors: list, warriorById: map };
   }, [roster, graveyard, retired, rivals]);
 
   const yearlyAwards = useMemo(() => {
@@ -211,7 +213,7 @@ export default function HallOfFame() {
                         </motion.div>
                       );
                     }
-                    const warrior = allWarriors.find((w) => w.id === award.warriorId);
+                    const warrior = warriorById.get(award.warriorId as string);
                     if (!warrior) return null;
                     return (
                       <InducteeCard

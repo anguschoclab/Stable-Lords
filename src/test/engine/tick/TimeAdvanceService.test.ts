@@ -22,7 +22,14 @@ describe('TimeAdvanceService - evaluateStopConditions', () => {
         id: 'w1',
         name: 'Test',
         status: 'Active',
-        isDead: false,
+        fatigue: 0,
+        injuries: [],
+      } as any,
+      {
+        id: 'w2',
+        name: 'Test2',
+        status: 'Active',
+        fatigue: 0,
         injuries: [],
       } as any,
     ];
@@ -86,6 +93,80 @@ describe('TimeAdvanceService - evaluateStopConditions', () => {
     expect(result.reason).toBe('no_pairings');
   });
 
+  it('should NOT stop when rival stables have eligible fighters even if player does not', () => {
+    mockState.roster = [
+      {
+        id: 'w1',
+        status: 'Active',
+        fatigue: 60, // Too tired to fight (non-tournament)
+        injuries: [],
+      } as any,
+    ];
+    mockState.rivals = [
+      {
+        id: 'rival-1',
+        roster: [
+          { id: 'w2', status: 'Active', fatigue: 0, injuries: [] } as any,
+          { id: 'w3', status: 'Active', fatigue: 0, injuries: [] } as any,
+        ],
+      } as any,
+    ];
+
+    const conditions: SoftStopCondition[] = [{ type: 'noPairings' }];
+
+    const result = evaluateStopConditions(mockState, conditions);
+    expect(result.shouldStop).toBe(false);
+  });
+
+  it('should stop when total eligible across all stables is fewer than 2', () => {
+    mockState.roster = [
+      {
+        id: 'w1',
+        status: 'Active',
+        fatigue: 0,
+        injuries: [],
+      } as any,
+    ];
+    mockState.rivals = [
+      {
+        id: 'rival-1',
+        roster: [
+          { id: 'w2', status: 'Active', fatigue: 60, injuries: [] } as any,
+        ],
+      } as any,
+    ];
+
+    const conditions: SoftStopCondition[] = [{ type: 'noPairings' }];
+
+    const result = evaluateStopConditions(mockState, conditions);
+    expect(result.shouldStop).toBe(true);
+    expect(result.reason).toBe('no_pairings');
+  });
+
+  it('should NOT stop when exactly 2 eligible warriors exist across all stables', () => {
+    mockState.roster = [
+      {
+        id: 'w1',
+        status: 'Active',
+        fatigue: 0,
+        injuries: [],
+      } as any,
+    ];
+    mockState.rivals = [
+      {
+        id: 'rival-1',
+        roster: [
+          { id: 'w2', status: 'Active', fatigue: 0, injuries: [] } as any,
+        ],
+      } as any,
+    ];
+
+    const conditions: SoftStopCondition[] = [{ type: 'noPairings' }];
+
+    const result = evaluateStopConditions(mockState, conditions);
+    expect(result.shouldStop).toBe(false);
+  });
+
   it('should evaluate custom conditions', () => {
     mockState.roster = [];
 
@@ -121,7 +202,7 @@ describe('TimeAdvanceService methods', () => {
       return { ...state, week: state.week + 1, arenaHistory: [] };
     });
 
-    vi.spyOn(opfsArchiver, 'flushDeferredArchives').mockResolvedValue(undefined);
+    vi.spyOn(opfsArchiver, 'flushDeferredArchives').mockResolvedValue({} as GameState);
   });
 
   afterEach(() => {

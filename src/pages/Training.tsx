@@ -54,9 +54,14 @@ export default function Training() {
 
   const assignments = state.trainingAssignments ?? [];
 
+  const rosterNameMap = useMemo(
+    () => new Map((state.roster ?? []).map((w: Warrior) => [w.id, w.name])),
+    [state.roster]
+  );
+
   const handleAssign = (warriorId: string, attribute: keyof Attributes) => {
     if (attribute === 'SZ') return;
-    const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
+    const name = rosterNameMap.get(warriorId);
     setState((s: GameStore) => {
       s.trainingAssignments = [
         ...(s.trainingAssignments ?? []).filter(
@@ -65,11 +70,11 @@ export default function Training() {
         { warriorId, type: 'attribute', attribute },
       ];
     });
-    toast.success(`${warrior?.name} assigned to train ${ATTRIBUTE_LABELS[attribute]}`);
+    toast.success(`${name ?? 'Warrior'} assigned to train ${ATTRIBUTE_LABELS[attribute]}`);
   };
 
   const handleAssignRecovery = (warriorId: string) => {
-    const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
+    const name = rosterNameMap.get(warriorId);
     setState((s: GameStore) => {
       s.trainingAssignments = [
         ...(s.trainingAssignments ?? []).filter(
@@ -78,7 +83,7 @@ export default function Training() {
         { warriorId, type: 'recovery' },
       ];
     });
-    toast.success(`${warrior?.name} assigned to active recovery`);
+    toast.success(`${name ?? 'Warrior'} assigned to active recovery`);
   };
 
   const handleClear = (warriorId: string) => {

@@ -36,7 +36,6 @@ describe('processHallOfFame', () => {
     fame: 0,
     roster: [],
     rivals: [],
-    awards: [],
     newsletter: [],
   };
 
@@ -54,9 +53,11 @@ describe('processHallOfFame', () => {
     expect(res).toEqual(state);
   });
 
-  it('correctly calculates and applies annual awards at Year 2 start', () => {
+  it('correctly calculates and applies annual awards on the transition tick (week 52 → 1)', () => {
     const state = {
       ...baseState,
+      week: 52,
+      year: 1,
       roster: [mkW('w1', 'Winner', 10, 0, 10, 'p1')],
       rivals: [
         {
@@ -75,5 +76,17 @@ describe('processHallOfFame', () => {
     const awardTypes = res.awards?.map((a) => a.type);
     expect(awardTypes).toContain('WARRIOR_OF_YEAR');
     expect(awardTypes).toContain('KILLER_OF_YEAR');
+  });
+
+  it('skips HOF processing on a post-rollover tick (already handled on transition)', () => {
+    const state = {
+      ...baseState,
+      week: 1,
+      year: 2,
+    } as GameState;
+
+    const impact = processHallOfFame(state, 2);
+
+    expect(impact).toEqual({});
   });
 });

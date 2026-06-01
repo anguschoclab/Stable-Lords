@@ -102,8 +102,8 @@ function OfferCard({
   onResponse,
 }: OfferCardProps) {
   const promoter = promoters[offer.promoterId];
-  const playerWarriorId = offer.warriorIds.find((id) => roster.some((w) => w.id === id));
-  const playerWarrior = roster.find((w) => w.id === playerWarriorId);
+  const playerWarrior = roster.find((w) => offer.warriorIds.includes(w.id));
+  const playerWarriorId = playerWarrior?.id;
   const opponentId = offer.warriorIds.find((id) => id !== playerWarriorId);
 
   let opponent: ({ stableName: string } & (typeof rivals)[0]['roster'][0]) | null = null;
@@ -354,15 +354,13 @@ export default function BookingOffice() {
     );
     let accepted = 0;
     honorableOffers.forEach((offer) => {
-      const warriorId = offer.warriorIds.find((id) => roster.some((w) => w.id === id));
-      const warrior = roster.find((w) => w.id === warriorId);
+      const warrior = roster.find((w) => offer.warriorIds.includes(w.id));
       if (
-        warriorId &&
         warrior &&
         (warrior.fatigue ?? 0) <= 60 &&
         !getInjuryBadge(warrior.injuries || [])
       ) {
-        handleResponse(offer.id, warriorId, 'Accepted');
+        handleResponse(offer.id, warrior.id, 'Accepted');
         accepted++;
       }
     });

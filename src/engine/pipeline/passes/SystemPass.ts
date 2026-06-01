@@ -17,24 +17,24 @@ import { computeNextSeason } from './WorldPass';
  */
 export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImpact {
   const nextWeek = state.week + 1 > 52 ? 1 : state.week + 1;
+  const nextYear = nextWeek === 1 ? state.year + 1 : state.year;
   const rng = rootRng || new SeededRNGService(state.week * 881 + 17);
 
   // 1. Systemic Progression (Draft-heavy)
   const hofImpact = processHallOfFame(state, nextWeek);
 
-  // 🏛️ Hall of Fame Snapshotting (1.0 Fix)
-
-  // We create snapshots at the BEGINNING of every year (Week 1) to provide a baseline.
-  // We also check for Year 1 Week 1 to ensure the very first baseline is captured.
+  // 2. Yearly Warrior Snapshots
+  // Snapshots are created on the transition tick (Week 52 → Week 1) so that
+  // the baseline for the new year is captured before any Year N+1 bouts are fought.
   let snapshotImpact: StateImpact = {};
   const isFirstTick = state.week === 1 && state.year === 1;
-  const isYearTransition = state.week === 1 && state.year > 1;
+  const isYearTransition = nextWeek === 1 && state.year >= 1;
 
   // Check if we need to initialize snapshots for the current year
   const needsInitialSnapshot = isFirstTick && !state.roster.some((w) => w.yearlySnapshots?.[1]);
 
   if (isYearTransition || needsInitialSnapshot) {
-    snapshotImpact = createYearlySnapshots(state);
+    snapshotImpact = createYearlySnapshots(state, nextYear);
   }
 
   const tierImpact = processTierProgression(state, state.season, nextWeek);

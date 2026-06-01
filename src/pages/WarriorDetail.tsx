@@ -64,28 +64,32 @@ export default function WarriorDetail() {
 
   const [activeTab, setActiveTab] = useState('biometrics');
 
-  // Find warrior across all possible states
-  const warrior = useMemo(() => {
-    let w =
-      roster.find((w) => w.id === id) ||
-      graveyard.find((w) => w.id === id) ||
-      retired.find((w) => w.id === id);
-    if (w) return w;
-    for (const rs of rivals || []) {
-      w = rs.roster.find((w) => w.id === id);
-      if (w) return w;
-    }
-    return undefined;
-  }, [id, roster, graveyard, retired, rivals]);
+  // Single-pass Map lookup across all warrior pools
+  const { warrior, isPlayerOwned } = useMemo(() => {
+    const allMap = new Map<string, Warrior>();
+    const playerIds = new Set<string>();
 
-  const isPlayerOwned = useMemo(() => {
-    if (!warrior) return false;
-    return !!(
-      roster.find((w) => w.id === id) ||
-      graveyard.find((w) => w.id === id) ||
-      retired.find((w) => w.id === id)
-    );
-  }, [warrior, id, roster, graveyard, retired]);
+    for (const w of roster) {
+      allMap.set(w.id, w);
+      playerIds.add(w.id);
+    }
+    for (const w of graveyard) {
+      allMap.set(w.id, w);
+      playerIds.add(w.id);
+    }
+    for (const w of retired) {
+      allMap.set(w.id, w);
+      playerIds.add(w.id);
+    }
+    for (const rs of rivals || []) {
+      for (const w of rs.roster) {
+        allMap.set(w.id, w);
+      }
+    }
+
+    const found = allMap.get(id);
+    return { warrior: found, isPlayerOwned: found ? playerIds.has(id) : false };
+  }, [id, roster, graveyard, retired, rivals]);
 
   const displayWarrior = useMemo(() => {
     if (!warrior) return null;

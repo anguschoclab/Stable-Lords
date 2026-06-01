@@ -1,4 +1,4 @@
-import type { GameState, NewsletterItem, LedgerEntry } from '@/types/state.types';
+import type { GameState, LedgerEntry } from '@/types/state.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
@@ -49,21 +49,696 @@ interface OffseasonEventNarrative {
     | 'meteor_shower'
     | 'underground_pit_fight';
   newsletter: string[];
-} /**
- * Run seasonal pass.
- * @param state - State.
- * @param nextWeek - Next week.
- * @param rootRng - Root rng. (optional)
- * @returns The result.
- */
+}
 
-/**
- * Run seasonal pass.
- * @param state - State.
- * @param nextWeek - Next week.
- * @param rootRng - Root rng. (optional)
- * @returns The result.
- */
+interface OffseasonEventContext {
+  rosterUpdates: Map<WarriorId, Partial<Warrior>>;
+  newsletterItems: any[];
+  ledgerEntries: LedgerEntry[];
+  insightTokens: InsightToken[];
+  treasuryDelta: number;
+}
+
+// ─── Individual Offseason Event Handlers ───
+
+function handleFameBoost(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+    ctx.rosterUpdates.set(chosen.id, {
+      fame: (chosen.fame || 0) + 25,
+    });
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(rng.pick(e.newsletter) || '', { name: chosen.name, fame: 25 })],
+    });
+  }
+}
+
+function handleWinterChill(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const cost = 150 + Math.floor(rng.next() * 100);
+  ctx.treasuryDelta -= cost;
+  ctx.ledgerEntries.push({
+    id: rng.uuid('ledger') as LedgerEntryId,
+    week: nextWeek,
+    label: 'Winter Heating & Supplies',
+    amount: -cost,
+    category: 'other',
+  });
+  ctx.newsletterItems.push({
+    id: rng.uuid('newsletter'),
+    week: nextWeek,
+    title: e.title,
+    items: [t(rng.pick(e.newsletter) || '', { gold: cost })],
+  });
+}
+
+function handleMerchantBlessing(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const gold = 200 + Math.floor(rng.next() * 200);
+  ctx.treasuryDelta += gold;
+  ctx.ledgerEntries.push({
+    id: rng.uuid('ledger') as LedgerEntryId,
+    week: nextWeek,
+    label: 'Offseason Sponsorship',
+    amount: gold,
+    category: 'other',
+  });
+  ctx.newsletterItems.push({
+    id: rng.uuid('newsletter'),
+    week: nextWeek,
+    title: e.title,
+    items: [t(rng.pick(e.newsletter) || '', { gold })],
+  });
+}
+
+function handleEpiphany(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+
+    ctx.rosterUpdates.set(chosen.id, {
+      fame: (chosen.fame || 0) + 10,
+      xp: (chosen.xp || 0) + 15,
+    });
+
+    ctx.insightTokens.push({
+      id: rng.uuid('insight') as InsightId,
+      type: 'Attribute',
+      targetKey: 'ST',
+      warriorId: chosen.id,
+      warriorName: chosen.name,
+      detail: 'Discovered a hidden reserve of strength during offseason meditation.',
+      discoveredWeek: nextWeek,
+    });
+
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(rng.pick(e.newsletter) || '', { name: chosen.name })],
+    });
+  }
+}
+
+function handleTavernBrawl(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter(
+    (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
+  );
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+    const fameGained = 10 + Math.floor(rng.next() * 11);
+
+    const newInjury: InjuryData = {
+      id: rng.uuid('injury') as InjuryId,
+      name: 'Bruised Ribs',
+      description: 'Painful but manageable.',
+      severity: 'Minor',
+      weeksRemaining: 1 + Math.floor(rng.next() * 2),
+      penalties: { CN: -1 },
+    };
+
+    ctx.rosterUpdates.set(chosen.id, {
+      fame: (chosen.fame || 0) + fameGained,
+      injuries: [...(chosen.injuries || []), newInjury],
+    });
+
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(rng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
+    });
+  }
+}
+
+function handleBardsSong(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+    const fameGained = 15 + Math.floor(rng.next() * 20);
+    ctx.rosterUpdates.set(chosen.id, {
+      fame: (chosen.fame || 0) + fameGained,
+    });
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(rng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
+    });
+  }
+}
+
+function handlePlagueOutbreak(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter(
+    (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
+  );
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+    const fameLost = 5 + Math.floor(rng.next() * 10);
+
+    const newInjury: InjuryData = {
+      id: rng.uuid('injury') as InjuryId,
+      name: 'Camp Fever',
+      description: 'Leaves the victim weak and fatigued.',
+      severity: 'Minor',
+      weeksRemaining: 2 + Math.floor(rng.next() * 2),
+      penalties: { CN: -2, ST: -1 },
+    };
+
+    ctx.rosterUpdates.set(chosen.id, {
+      fame: Math.max(0, (chosen.fame || 0) - fameLost),
+      injuries: [...(chosen.injuries || []), newInjury],
+    });
+
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(rng.pick(e.newsletter) || '', { name: chosen.name, fame: fameLost })],
+    });
+  }
+}
+
+function handleBlackMarketRaid(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  const goldLost = 50 + Math.floor(rng.next() * 101);
+  ctx.treasuryDelta -= goldLost;
+  ctx.ledgerEntries.push({
+    id: rng.uuid('ledger') as LedgerEntryId,
+    week: nextWeek,
+    label: 'Black Market Fines',
+    amount: -goldLost,
+    category: 'other',
+  });
+
+  const chosen = activeWarriors.length > 0 ? rng.pick(activeWarriors) : null;
+  ctx.newsletterItems.push({
+    id: rng.uuid('newsletter'),
+    week: nextWeek,
+    title: e.title,
+    items: [t(rng.pick(e.newsletter) || '', { name: chosen ? chosen.name : 'Someone', gold: goldLost })],
+  });
+}
+
+function handleGrandFeast(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const goldCost = 200 + Math.floor(rng.next() * 201);
+  ctx.treasuryDelta -= goldCost;
+  ctx.ledgerEntries.push({
+    id: rng.uuid('ledger') as LedgerEntryId,
+    week: nextWeek,
+    label: 'Grand Feast Expenses',
+    amount: -goldCost,
+    category: 'other',
+  });
+
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  for (const w of activeWarriors) {
+    ctx.rosterUpdates.set(w.id, {
+      xp: (w.xp || 0) + 10,
+    });
+  }
+
+  ctx.newsletterItems.push({
+    id: rng.uuid('newsletter'),
+    week: nextWeek,
+    title: e.title,
+    items: [t(rng.pick(e.newsletter) || '', { gold: goldCost })],
+  });
+}
+
+function handleWanderingHealer(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const goldCost = 50 + Math.floor(rng.next() * 51);
+  ctx.treasuryDelta -= goldCost;
+  ctx.ledgerEntries.push({
+    id: rng.uuid('ledger') as LedgerEntryId,
+    week: nextWeek,
+    label: 'Medical Tonics',
+    amount: -goldCost,
+    category: 'medical',
+  });
+
+  const activeInjured = state.roster.filter(
+    (w) => w.status === 'Active' && w.injuries && w.injuries.length > 0
+  );
+
+  const chosen = activeInjured.length > 0 ? rng.pick(activeInjured) : null;
+  if (chosen) {
+    const remainingInjuries = [...(chosen.injuries || [])];
+    if (remainingInjuries.length > 0) {
+      const injuryIndex = Math.floor(rng.next() * remainingInjuries.length);
+      remainingInjuries.splice(injuryIndex, 1);
+    }
+    ctx.rosterUpdates.set(chosen.id, {
+      injuries: remainingInjuries,
+    });
+
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(e.newsletter[0] || '', { name: chosen.name, gold: goldCost })],
+    });
+  } else {
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(e.newsletter[1] || '', { gold: goldCost })],
+    });
+  }
+}
+
+function handleMysticVision(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + 15,
+      fame: (chosen.fame || 0) + 10,
+    });
+
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(rng.pick(e.newsletter) || '', { name: chosen.name, xp: 15, fame: 10 })],
+    });
+  }
+}
+
+function handleWildAnimalAttack(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter(
+    (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
+  );
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+    const fameGained = 5 + Math.floor(rng.next() * 6);
+
+    const newInjury: InjuryData = {
+      id: rng.uuid('injury') as InjuryId,
+      name: 'Bite Wound',
+      description: 'A nasty bite from a wild beast.',
+      severity: 'Minor',
+      weeksRemaining: 1 + Math.floor(rng.next() * 2),
+      penalties: { CN: -1 },
+    };
+
+    ctx.rosterUpdates.set(chosen.id, {
+      fame: (chosen.fame || 0) + fameGained,
+      injuries: [...(chosen.injuries || []), newInjury],
+    });
+
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(rng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
+    });
+  }
+}
+
+function handleStrangeDream(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (!chosen) return;
+
+    const xpGained = 5 + Math.floor(rng.next() * 11);
+
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+    });
+
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [t(rng.pick(e.newsletter) || '', { name: chosen.name, xp: xpGained })],
+    });
+  }
+}
+
+function handleLoyalStray(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const cost = 25;
+  ctx.treasuryDelta -= cost;
+  ctx.ledgerEntries.push({
+    id: rng.uuid('ledger') as LedgerEntryId,
+    week: nextWeek,
+    label: 'Dog Food & Treats',
+    amount: -cost,
+    category: 'other',
+  });
+
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + 10,
+        fame: (chosen.fame || 0) + 5,
+      });
+
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [
+          t(rng.pick(e.newsletter) || '', {
+            name: chosen.name,
+            xp: 10,
+            fame: 5,
+            gold: cost,
+          }),
+        ],
+      });
+    }
+  }
+}
+
+function handleStreetPerformance(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const fameGained = 15;
+      const goldGained = 50 + Math.floor(rng.next() * 50);
+      ctx.treasuryDelta += goldGained;
+
+      ctx.ledgerEntries.push({
+        id: rng.uuid('ledger') as LedgerEntryId,
+        week: nextWeek,
+        label: 'Street Performance Tips',
+        amount: goldGained,
+        category: 'other',
+      });
+
+      const currentFlair = chosen.flair || [];
+      const newFlair = currentFlair.includes('Local Hero')
+        ? currentFlair
+        : [...currentFlair, 'Local Hero'];
+
+      ctx.rosterUpdates.set(chosen.id, {
+        fame: (chosen.fame || 0) + fameGained,
+        flair: newFlair,
+      });
+
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [
+          t(rng.pick(e.newsletter) || '', {
+            name: chosen.name,
+            fame: fameGained,
+            gold: goldGained,
+          }),
+        ],
+      });
+    }
+  }
+}
+
+function handleChaoticSpells(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const roll = rng.next();
+      let effectMsg = '';
+
+      if (roll < 0.33) {
+        const xpGained = 10 + Math.floor(rng.next() * 11);
+        ctx.rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+        });
+        effectMsg = `They feel a surge of unnatural energy! (+${xpGained} XP)`;
+      } else if (roll < 0.66) {
+        const newInjury: InjuryData = {
+          id: rng.uuid('injury') as InjuryId,
+          name: 'Arcane Burns',
+          description: 'Singed by erratic magic.',
+          severity: 'Minor',
+          weeksRemaining: 1 + Math.floor(rng.next() * 2),
+          penalties: { SP: -1, CN: -1 },
+        };
+        ctx.rosterUpdates.set(chosen.id, {
+          injuries: [...(chosen.injuries || []), newInjury],
+        });
+        effectMsg = 'They sustained mild arcane burns. (Minor Injury)';
+      } else {
+        const fameLost = 5 + Math.floor(rng.next() * 6);
+        ctx.rosterUpdates.set(chosen.id, {
+          fame: Math.max(0, (chosen.fame || 0) - fameLost),
+        });
+        effectMsg = `They were temporarily turned an embarrassing shade of purple. (-${fameLost} Fame)`;
+      }
+
+      const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [`${baseMsg} ${effectMsg}`],
+      });
+    }
+  }
+}
+
+function handleMysteriousPatron(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const goldGained = 100 + Math.floor(rng.next() * 201);
+  ctx.treasuryDelta += goldGained;
+
+  ctx.ledgerEntries.push({
+    id: rng.uuid('ledger') as LedgerEntryId,
+    week: nextWeek,
+    label: 'Mysterious Patron Donation',
+    amount: goldGained,
+    category: 'other',
+  });
+
+  ctx.newsletterItems.push({
+    id: rng.uuid('newsletter'),
+    week: nextWeek,
+    title: e.title,
+    items: [t(rng.pick(e.newsletter) || '', { gold: goldGained })],
+  });
+}
+
+function handleMidnightFeast(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const cost = 40 + Math.floor(rng.next() * 61);
+  ctx.treasuryDelta -= cost;
+
+  ctx.ledgerEntries.push({
+    id: rng.uuid('ledger') as LedgerEntryId,
+    week: nextWeek,
+    label: 'Midnight Feast Tab',
+    amount: -cost,
+    category: 'other',
+  });
+
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  const chosen = activeWarriors.length > 0 ? rng.pick(activeWarriors) : null;
+  if (chosen) {
+    const xpGained = 15;
+    const fameGained = 10;
+
+    ctx.rosterUpdates.set(chosen.id, {
+      xp: (chosen.xp || 0) + xpGained,
+      fame: (chosen.fame || 0) + fameGained,
+    });
+
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [
+        t(rng.pick(e.newsletter) || '', {
+          name: chosen.name,
+          xp: xpGained,
+          fame: fameGained,
+          gold: cost,
+        }),
+      ],
+    });
+  } else {
+    ctx.newsletterItems.push({
+      id: rng.uuid('newsletter'),
+      week: nextWeek,
+      title: e.title,
+      items: [
+        t(rng.pick(e.newsletter) || '', { name: 'Someone', xp: 0, fame: 0, gold: cost }),
+      ],
+    });
+  }
+}
+
+function handleShadowTraining(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 20 + Math.floor(rng.next() * 11);
+      const fameLost = 5 + Math.floor(rng.next() * 6);
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        fame: Math.max(0, (chosen.fame || 0) - fameLost),
+      });
+
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [
+          t(rng.pick(e.newsletter) || '', {
+            name: chosen.name,
+            xp: xpGained,
+            fame: fameLost,
+          }),
+        ],
+      });
+    }
+  }
+}
+
+function handleGladiatorOlympics(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15 + Math.floor(rng.next() * 11);
+      const fameGained = 10 + Math.floor(rng.next() * 11);
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        fame: (chosen.fame || 0) + fameGained,
+      });
+
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [
+          t(rng.pick(e.newsletter) || '', {
+            name: chosen.name,
+            xp: xpGained,
+            fame: fameGained,
+          }),
+        ],
+      });
+    }
+  }
+}
+
+function handleUndergroundPitFight(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const fameGained = 15 + Math.floor(rng.next() * 16);
+
+      const newInjury: InjuryData = {
+        id: rng.uuid('injury') as InjuryId,
+        name: 'Busted Knuckles',
+        description: 'A messy wound from a bare-knuckle pit fight.',
+        severity: 'Minor',
+        weeksRemaining: 1 + Math.floor(rng.next() * 3),
+        penalties: { SP: -1, CN: -1 },
+      };
+
+      ctx.rosterUpdates.set(chosen.id, {
+        fame: (chosen.fame || 0) + fameGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [
+          t(rng.pick(e.newsletter) || '', {
+            name: chosen.name,
+            fame: fameGained,
+          }),
+        ],
+      });
+    }
+  }
+}
+
+function handleMeteorShower(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15 + Math.floor(rng.next() * 11);
+      const fameGained = 10 + Math.floor(rng.next() * 6);
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        fame: (chosen.fame || 0) + fameGained,
+      });
+
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [
+          t(rng.pick(e.newsletter) || '', {
+            name: chosen.name,
+            xp: xpGained,
+            fame: fameGained,
+          }),
+        ],
+      });
+    }
+  }
+}
+
+const EVENT_HANDLERS: Record<
+  string,
+  (
+    state: GameState,
+    nextWeek: number,
+    e: OffseasonEventNarrative,
+    rng: IRNGService,
+    ctx: OffseasonEventContext
+  ) => void
+> = {
+  fame_boost: handleFameBoost,
+  winter_chill: handleWinterChill,
+  merchant_blessing: handleMerchantBlessing,
+  epiphany: handleEpiphany,
+  tavern_brawl: handleTavernBrawl,
+  bards_song: handleBardsSong,
+  plague_outbreak: handlePlagueOutbreak,
+  black_market_raid: handleBlackMarketRaid,
+  grand_feast: handleGrandFeast,
+  wandering_healer: handleWanderingHealer,
+  mystic_vision: handleMysticVision,
+  wild_animal_attack: handleWildAnimalAttack,
+  strange_dream: handleStrangeDream,
+  loyal_stray: handleLoyalStray,
+  street_performance: handleStreetPerformance,
+  chaotic_spells: handleChaoticSpells,
+  mysterious_patron: handleMysteriousPatron,
+  midnight_feast: handleMidnightFeast,
+  shadow_training: handleShadowTraining,
+  gladiator_olympics: handleGladiatorOlympics,
+  underground_pit_fight: handleUndergroundPitFight,
+  meteor_shower: handleMeteorShower,
+};
+
 export function runSeasonalPass(
   state: GameState,
   nextWeek: number,
@@ -75,11 +750,6 @@ export function runSeasonalPass(
   }
 
   const seasonRng = rootRng || new SeededRNGService(state.year * 999 + 1);
-  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
-  const newsletterItems: NewsletterItem[] = [];
-  let treasuryDelta = 0;
-  const ledgerEntries: LedgerEntry[] = [];
-  const insightTokens: InsightToken[] = [];
 
   // Safe cast for our dynamic offseason data
   const events = (
@@ -96,650 +766,27 @@ export function runSeasonalPass(
   const chosenEventKey = seasonRng.pick(eventKeys);
   if (!chosenEventKey) return {};
   const e = events[chosenEventKey];
-
   if (!e) return {};
 
-  if (e.effectType === 'fame_boost' && state.roster.length > 0) {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (!chosen) return {};
-      rosterUpdates.set(chosen.id, {
-        fame: (chosen.fame || 0) + 25,
-      });
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: 25 })],
-      });
-    }
-  } else if (e.effectType === 'winter_chill') {
-    // Costs some gold to heat the stable
-    const cost = 150 + Math.floor(seasonRng.next() * 100);
-    treasuryDelta -= cost;
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Winter Heating & Supplies',
-      amount: -cost,
-      category: 'other',
-    });
-    newsletterItems.push({
-      id: seasonRng.uuid('newsletter'),
-      week: nextWeek,
-      title: e.title,
-      items: [t(seasonRng.pick(e.newsletter) || '', { gold: cost })],
-    });
-  } else if (e.effectType === 'merchant_blessing') {
-    // A traveling merchant donates to the stable
-    const gold = 200 + Math.floor(seasonRng.next() * 200);
-    treasuryDelta += gold;
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Offseason Sponsorship',
-      amount: gold,
-      category: 'other',
-    });
-    newsletterItems.push({
-      id: seasonRng.uuid('newsletter'),
-      week: nextWeek,
-      title: e.title,
-      items: [t(seasonRng.pick(e.newsletter) || '', { gold })],
-    });
-  } else if (e.effectType === 'epiphany') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (!chosen) return {};
+  const ctx: OffseasonEventContext = {
+    rosterUpdates: new Map<WarriorId, Partial<Warrior>>(),
+    newsletterItems: [],
+    ledgerEntries: [],
+    insightTokens: [],
+    treasuryDelta: 0,
+  };
 
-      rosterUpdates.set(chosen.id, {
-        fame: (chosen.fame || 0) + 10,
-        xp: (chosen.xp || 0) + 15,
-      });
-
-      insightTokens.push({
-        id: seasonRng.uuid('insight') as InsightId,
-        type: 'Attribute',
-        targetKey: 'ST',
-        warriorId: chosen.id,
-        warriorName: chosen.name,
-        detail: 'Discovered a hidden reserve of strength during offseason meditation.',
-        discoveredWeek: nextWeek,
-      });
-
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name })],
-      });
-    }
-  } else if (e.effectType === 'tavern_brawl') {
-    const activeWarriors = state.roster.filter(
-      (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
-    );
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (!chosen) return {};
-      const fameGained = 10 + Math.floor(seasonRng.next() * 11);
-
-      const newInjury: InjuryData = {
-        id: seasonRng.uuid('injury') as InjuryId,
-        name: 'Bruised Ribs',
-        description: 'Painful but manageable.',
-        severity: 'Minor',
-        weeksRemaining: 1 + Math.floor(seasonRng.next() * 2), // 1-2 weeks
-        penalties: { CN: -1 },
-      };
-
-      const currentInjuries = chosen.injuries || [];
-
-      rosterUpdates.set(chosen.id, {
-        fame: (chosen.fame || 0) + fameGained,
-        injuries: [...currentInjuries, newInjury],
-      });
-
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
-      });
-    }
-  } else if (e.effectType === 'bards_song') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (!chosen) return {};
-      const fameGained = 15 + Math.floor(seasonRng.next() * 20);
-      rosterUpdates.set(chosen.id, {
-        fame: (chosen.fame || 0) + fameGained,
-      });
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
-      });
-    }
-  } else if (e.effectType === 'plague_outbreak') {
-    const activeWarriors = state.roster.filter(
-      (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
-    );
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (!chosen) return {};
-      const fameLost = 5 + Math.floor(seasonRng.next() * 10);
-
-      const newInjury: InjuryData = {
-        id: seasonRng.uuid('injury') as InjuryId,
-        name: 'Camp Fever',
-        description: 'Leaves the victim weak and fatigued.',
-        severity: 'Minor',
-        weeksRemaining: 2 + Math.floor(seasonRng.next() * 2), // 2-3 weeks
-        penalties: { CN: -2, ST: -1 },
-      };
-
-      const currentInjuries = chosen.injuries || [];
-
-      rosterUpdates.set(chosen.id, {
-        fame: Math.max(0, (chosen.fame || 0) - fameLost),
-        injuries: [...currentInjuries, newInjury],
-      });
-
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: fameLost })],
-      });
-    }
-  } else if (e.effectType === 'black_market_raid') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    const goldLost = 50 + Math.floor(seasonRng.next() * 101); // 50-150 gold
-    treasuryDelta -= goldLost;
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Black Market Fines',
-      amount: -goldLost,
-      category: 'other',
-    });
-
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, gold: goldLost })],
-        });
-      }
-    } else {
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: 'Someone', gold: goldLost })],
-      });
-    }
-  } else if (e.effectType === 'grand_feast') {
-    const goldCost = 200 + Math.floor(seasonRng.next() * 201); // 200-400 gold
-    treasuryDelta -= goldCost;
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Grand Feast Expenses',
-      amount: -goldCost,
-      category: 'other',
-    });
-
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    for (const w of activeWarriors) {
-      rosterUpdates.set(w.id, {
-        xp: (w.xp || 0) + 10,
-      });
-    }
-
-    newsletterItems.push({
-      id: seasonRng.uuid('newsletter'),
-      week: nextWeek,
-      title: e.title,
-      items: [t(seasonRng.pick(e.newsletter) || '', { gold: goldCost })],
-    });
-  } else if (e.effectType === 'wandering_healer') {
-    const goldCost = 50 + Math.floor(seasonRng.next() * 51); // 50-100 gold
-    treasuryDelta -= goldCost;
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Medical Tonics',
-      amount: -goldCost,
-      category: 'medical',
-    });
-
-    const activeInjured = state.roster.filter(
-      (w) => w.status === 'Active' && w.injuries && w.injuries.length > 0
-    );
-
-    if (activeInjured.length > 0) {
-      const chosen = seasonRng.pick(activeInjured);
-      if (chosen) {
-        const remainingInjuries = [...(chosen.injuries || [])];
-        if (remainingInjuries.length > 0) {
-          // Remove a random injury
-          const injuryIndex = Math.floor(seasonRng.next() * remainingInjuries.length);
-          remainingInjuries.splice(injuryIndex, 1);
-        }
-        rosterUpdates.set(chosen.id, {
-          injuries: remainingInjuries,
-        });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [t(e.newsletter[0] || '', { name: chosen.name, gold: goldCost })],
-        });
-      }
-    } else {
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(e.newsletter[1] || '', { gold: goldCost })],
-      });
-    }
-  } else if (e.effectType === 'mystic_vision') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (!chosen) return {};
-
-      rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + 15,
-        fame: (chosen.fame || 0) + 10,
-      });
-
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, xp: 15, fame: 10 })],
-      });
-    }
-  } else if (e.effectType === 'wild_animal_attack') {
-    const activeWarriors = state.roster.filter(
-      (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
-    );
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (!chosen) return {};
-      const fameGained = 5 + Math.floor(seasonRng.next() * 6); // 5-10 fame
-
-      const newInjury: InjuryData = {
-        id: seasonRng.uuid('injury') as InjuryId,
-        name: 'Bite Wound',
-        description: 'A nasty bite from a wild beast.',
-        severity: 'Minor',
-        weeksRemaining: 1 + Math.floor(seasonRng.next() * 2), // 1-2 weeks
-        penalties: { CN: -1 },
-      };
-
-      const currentInjuries = chosen.injuries || [];
-
-      rosterUpdates.set(chosen.id, {
-        fame: (chosen.fame || 0) + fameGained,
-        injuries: [...currentInjuries, newInjury],
-      });
-
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, fame: fameGained })],
-      });
-    }
-  } else if (e.effectType === 'strange_dream') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (!chosen) return {};
-
-      const xpGained = 5 + Math.floor(seasonRng.next() * 11); // 5-15 XP
-
-      rosterUpdates.set(chosen.id, {
-        xp: (chosen.xp || 0) + xpGained,
-      });
-
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(seasonRng.pick(e.newsletter) || '', { name: chosen.name, xp: xpGained })],
-      });
-    }
-  } else if (e.effectType === 'loyal_stray') {
-    const cost = 25;
-    treasuryDelta -= cost;
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Dog Food & Treats',
-      amount: -cost,
-      category: 'other',
-    });
-
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        rosterUpdates.set(chosen.id, {
-          xp: (chosen.xp || 0) + 10,
-          fame: (chosen.fame || 0) + 5,
-        });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [
-            t(seasonRng.pick(e.newsletter) || '', {
-              name: chosen.name,
-              xp: 10,
-              fame: 5,
-              gold: cost,
-            }),
-          ],
-        });
-      }
-    }
-  } else if (e.effectType === 'street_performance') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        const fameGained = 15;
-        const goldGained = 50 + Math.floor(seasonRng.next() * 50); // 50-99 gold
-        treasuryDelta += goldGained;
-
-        ledgerEntries.push({
-          id: seasonRng.uuid('ledger') as LedgerEntryId,
-          week: nextWeek,
-          label: 'Street Performance Tips',
-          amount: goldGained,
-          category: 'other',
-        });
-
-        // Ensure "Local Hero" tag is present
-        // Ensure "Local Hero" flair is present
-        const currentFlair = chosen.flair || [];
-        const newFlair = currentFlair.includes('Local Hero')
-          ? currentFlair
-          : [...currentFlair, 'Local Hero'];
-
-        rosterUpdates.set(chosen.id, {
-          fame: (chosen.fame || 0) + fameGained,
-          flair: newFlair,
-        });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [
-            t(seasonRng.pick(e.newsletter) || '', {
-              name: chosen.name,
-              fame: fameGained,
-              gold: goldGained,
-            }),
-          ],
-        });
-      }
-    }
-  } else if (e.effectType === 'chaotic_spells') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        const roll = seasonRng.next();
-        let effectMsg = '';
-
-        if (roll < 0.33) {
-          // Buff: XP gain
-          const xpGained = 10 + Math.floor(seasonRng.next() * 11); // 10-20
-          rosterUpdates.set(chosen.id, {
-            xp: (chosen.xp || 0) + xpGained,
-          });
-          effectMsg = `They feel a surge of unnatural energy! (+${xpGained} XP)`;
-        } else if (roll < 0.66) {
-          // Debuff: Minor Injury
-          const newInjury: InjuryData = {
-            id: seasonRng.uuid('injury') as InjuryId,
-            name: 'Arcane Burns',
-            description: 'Singed by erratic magic.',
-            severity: 'Minor',
-            weeksRemaining: 1 + Math.floor(seasonRng.next() * 2), // 1-2 weeks
-            penalties: { SP: -1, CN: -1 },
-          };
-          const currentInjuries = chosen.injuries || [];
-          rosterUpdates.set(chosen.id, {
-            injuries: [...currentInjuries, newInjury],
-          });
-          effectMsg = 'They sustained mild arcane burns. (Minor Injury)';
-        } else {
-          // Debuff: Fame loss
-          const fameLost = 5 + Math.floor(seasonRng.next() * 6); // 5-10
-          rosterUpdates.set(chosen.id, {
-            fame: Math.max(0, (chosen.fame || 0) - fameLost),
-          });
-          effectMsg = `They were temporarily turned an embarrassing shade of purple. (-${fameLost} Fame)`;
-        }
-
-        const baseMsg = t(seasonRng.pick(e.newsletter) || '', { name: chosen.name });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [`${baseMsg} ${effectMsg}`],
-        });
-      }
-    }
-  } else if (e.effectType === 'mysterious_patron') {
-    const goldGained = 100 + Math.floor(seasonRng.next() * 201); // 100-300 gold
-    treasuryDelta += goldGained;
-
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Mysterious Patron Donation',
-      amount: goldGained,
-      category: 'other',
-    });
-
-    newsletterItems.push({
-      id: seasonRng.uuid('newsletter'),
-      week: nextWeek,
-      title: e.title,
-      items: [t(seasonRng.pick(e.newsletter) || '', { gold: goldGained })],
-    });
-  } else if (e.effectType === 'midnight_feast') {
-    const cost = 40 + Math.floor(seasonRng.next() * 61); // 40-100 gold
-    treasuryDelta -= cost;
-
-    ledgerEntries.push({
-      id: seasonRng.uuid('ledger') as LedgerEntryId,
-      week: nextWeek,
-      label: 'Midnight Feast Tab',
-      amount: -cost,
-      category: 'other',
-    });
-
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        const xpGained = 15;
-        const fameGained = 10;
-
-        rosterUpdates.set(chosen.id, {
-          xp: (chosen.xp || 0) + xpGained,
-          fame: (chosen.fame || 0) + fameGained,
-        });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [
-            t(seasonRng.pick(e.newsletter) || '', {
-              name: chosen.name,
-              xp: xpGained,
-              fame: fameGained,
-              gold: cost,
-            }),
-          ],
-        });
-      }
-    } else {
-      newsletterItems.push({
-        id: seasonRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [
-          t(seasonRng.pick(e.newsletter) || '', { name: 'Someone', xp: 0, fame: 0, gold: cost }),
-        ],
-      });
-    }
-  } else if (e.effectType === 'shadow_training') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        const xpGained = 20 + Math.floor(seasonRng.next() * 11); // 20-30 XP
-        const fameLost = 5 + Math.floor(seasonRng.next() * 6); // 5-10 Fame
-
-        rosterUpdates.set(chosen.id, {
-          xp: (chosen.xp || 0) + xpGained,
-          fame: Math.max(0, (chosen.fame || 0) - fameLost),
-        });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [
-            t(seasonRng.pick(e.newsletter) || '', {
-              name: chosen.name,
-              xp: xpGained,
-              fame: fameLost,
-            }),
-          ],
-        });
-      }
-    }
-  } else if (e.effectType === 'gladiator_olympics') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        const xpGained = 15 + Math.floor(seasonRng.next() * 11); // 15-25 XP
-        const fameGained = 10 + Math.floor(seasonRng.next() * 11); // 10-20 Fame
-
-        rosterUpdates.set(chosen.id, {
-          xp: (chosen.xp || 0) + xpGained,
-          fame: (chosen.fame || 0) + fameGained,
-        });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [
-            t(seasonRng.pick(e.newsletter) || '', {
-              name: chosen.name,
-              xp: xpGained,
-              fame: fameGained,
-            }),
-          ],
-        });
-      }
-    }
-  } else if (e.effectType === 'underground_pit_fight') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        const fameGained = 15 + Math.floor(seasonRng.next() * 16); // 15-30 fame
-
-        const newInjury: InjuryData = {
-          id: seasonRng.uuid('injury') as InjuryId,
-          name: 'Busted Knuckles',
-          description: 'A messy wound from a bare-knuckle pit fight.',
-          severity: 'Minor',
-          weeksRemaining: 1 + Math.floor(seasonRng.next() * 3), // 1-3 weeks
-          penalties: { SP: -1, CN: -1 },
-        };
-
-        const currentInjuries = chosen.injuries || [];
-
-        rosterUpdates.set(chosen.id, {
-          fame: (chosen.fame || 0) + fameGained,
-          injuries: [...currentInjuries, newInjury],
-        });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [
-            t(seasonRng.pick(e.newsletter) || '', {
-              name: chosen.name,
-              fame: fameGained,
-            }),
-          ],
-        });
-      }
-    }
-  } else if (e.effectType === 'meteor_shower') {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
-    if (activeWarriors.length > 0) {
-      const chosen = seasonRng.pick(activeWarriors);
-      if (chosen) {
-        const xpGained = 15 + Math.floor(seasonRng.next() * 11); // 15-25 XP
-        const fameGained = 10 + Math.floor(seasonRng.next() * 6); // 10-15 Fame
-
-        rosterUpdates.set(chosen.id, {
-          xp: (chosen.xp || 0) + xpGained,
-          fame: (chosen.fame || 0) + fameGained,
-        });
-
-        newsletterItems.push({
-          id: seasonRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [
-            t(seasonRng.pick(e.newsletter) || '', {
-              name: chosen.name,
-              xp: xpGained,
-              fame: fameGained,
-            }),
-          ],
-        });
-      }
-    }
+  const handler = EVENT_HANDLERS[e.effectType];
+  if (handler) {
+    handler(state, nextWeek, e, seasonRng, ctx);
   }
-  // Record this event in the State so the UI can pick it up
+
   const impact: StateImpact = {
-    rosterUpdates,
-    newsletterItems,
-    ...(ledgerEntries.length > 0 ? { ledgerEntries } : {}),
-    ...(treasuryDelta !== 0 ? { treasuryDelta } : {}),
-    ...(insightTokens.length > 0 ? { insightTokens } : {}),
+    rosterUpdates: ctx.rosterUpdates,
+    newsletterItems: ctx.newsletterItems,
+    ...(ctx.ledgerEntries.length > 0 ? { ledgerEntries: ctx.ledgerEntries } : {}),
+    ...(ctx.treasuryDelta !== 0 ? { treasuryDelta: ctx.treasuryDelta } : {}),
+    ...(ctx.insightTokens.length > 0 ? { insightTokens: ctx.insightTokens } : {}),
   };
 
   return impact;

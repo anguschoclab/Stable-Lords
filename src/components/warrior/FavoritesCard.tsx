@@ -33,11 +33,17 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
   const weaponProgress = isWeaponDiscovered ? 100 : (weaponHints / 2) * 100;
   const rhythmProgress = isRhythmDiscovered ? 100 : (rhythmHints / 2) * 100;
 
-  const handleInsight = (type: 'weapon' | 'rhythm') => {
-    const msg = applyInsightToken(warrior, type);
+  const mutateRosterWarrior = (fn: (w: typeof warrior) => void) => {
     setState((s) => {
       const w = s.roster.find((x) => x.id === warrior.id);
-      if (w?.favorites) w.favorites = warrior.favorites;
+      if (w) fn(w);
+    });
+  };
+
+  const handleInsight = (type: 'weapon' | 'rhythm') => {
+    const msg = applyInsightToken(warrior, type);
+    mutateRosterWarrior((w) => {
+      if (w.favorites) w.favorites = warrior.favorites;
     });
     toast.success(msg);
     onUpdate();
@@ -46,9 +52,8 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
   const handleApplyRhythm = () => {
     const fav = warrior.favorites;
     if (!fav?.discovered.rhythm) return;
-    setState((s) => {
-      const w = s.roster.find((x) => x.id === warrior.id);
-      if (w && fav?.rhythm) {
+    mutateRosterWarrior((w) => {
+      if (fav?.rhythm) {
         if (!w.plan) w.plan = { style: w.style, OE: fav.rhythm.oe, AL: fav.rhythm.al };
         else {
           w.plan.OE = fav.rhythm.oe;
@@ -65,18 +70,15 @@ export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdat
   const handleEquipFavoriteWeapon = () => {
     const fav = warrior.favorites;
     if (!fav?.discovered.weapon) return;
-    setState((s) => {
-      const w = s.roster.find((x) => x.id === warrior.id);
-      if (w) {
-        if (!w.equipment)
-          w.equipment = {
-            weapon: fav.weaponId,
-            armor: 'none_armor',
-            shield: 'none_shield',
-            helm: 'none_helm',
-          };
-        else w.equipment.weapon = fav.weaponId;
-      }
+    mutateRosterWarrior((w) => {
+      if (!w.equipment)
+        w.equipment = {
+          weapon: fav.weaponId,
+          armor: 'none_armor',
+          shield: 'none_shield',
+          helm: 'none_helm',
+        };
+      else w.equipment.weapon = fav.weaponId;
     });
     const weaponName = favDisplay.weapon ?? fav.weaponId;
     toast.success(`Biological Lock: ${weaponName} equipped.`);

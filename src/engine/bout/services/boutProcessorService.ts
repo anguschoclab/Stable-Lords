@@ -24,10 +24,7 @@ import { finalizeWeekSideEffectsToImpact } from './WeekFinalizationService';
 import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
 import { buildWarriorMap } from '@/utils/roster';
 
-import { isFightReady } from '@/engine/warriorStatus';/**
-                                                       * Defines the shape of bout result.
-                                                       */
-
+import { isFightReady } from '@/engine/warriorStatus';
 
 /**
  * Defines the shape of bout result.
@@ -42,9 +39,7 @@ export interface BoutResult {
   contractId?: string;
   arenaId?: string;
   weather?: import('@/types/shared.types').WeatherType;
-}/**
-  * Defines the shape of bout impact.
-  */
+}
 
 /**
  * Defines the shape of bout impact.
@@ -59,9 +54,7 @@ export interface BoutImpact {
     deathNames: string[];
     injuredNames: string[];
   };
-}/**
-  * Defines the shape of week bout summary.
-  */
+}
 
 /**
  * Defines the shape of week bout summary.
@@ -74,9 +67,7 @@ export interface WeekBoutSummary {
   injuryNames: string[];
   hadPlayerDeath: boolean;
   hadRivalryEscalation: boolean;
-}/**
-  * Defines the shape of bout context.
-  */
+}
 
 /**
  * Defines the shape of bout context.
@@ -167,8 +158,7 @@ function collectBoutImpacts(
     ctx.contract,
     getWinnerId(outcome, validCW.id, validCO.id),
     validCW.id,
-    validCO.id,
-    ctx.rivalStableId
+    validCO.id
   );
   impacts.push(
     applyRecords(
@@ -224,7 +214,7 @@ function collectBoutImpacts(
     ctx.isRivalry,
     0,
     rng,
-    ctx.contract?.arenaId,
+    undefined,
     state.weather
   );
   impacts.push({ arenaHistory: [summary] });
@@ -234,12 +224,7 @@ function collectBoutImpacts(
   });
 
   return { impacts, deathRes, injuryRes, announcement, summary };
-}/**
-  * Resolve bout.
-  * @param state - State.
-  * @param ctx - Ctx.
-  * @returns The result.
-  */
+}
 
 
 /**
@@ -275,7 +260,6 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
       isRivalry: ctx.isRivalry,
       rivalStable: ctx.rivalStable,
       contractId: ctx.contract?.id,
-      arenaId: ctx.contract?.arenaId,
       weather: state.weather,
     },
     stats: {
@@ -286,11 +270,7 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
       injuredNames: injuryRes.injuredNames,
     },
   };
-}/**
-  * Process week bouts.
-  * @param state - State.
-  * @returns The result.
-  */
+}
 
 
 /**
@@ -305,26 +285,15 @@ export function processWeekBouts(state: GameState, headless?: boolean): {
 } {
   const warriorMap = state.warriorMap || buildWarriorMap(state);
 
-  // 🏟️ Minimum Viable Arena (1.0 Fix)
-
-  // Ensure at least 2 warriors are healthy/active across all stables.
+  // Minimum Viable Arena: skip combat phase if fewer than 2 eligible warriors
+  // exist across all stables. Economy, training, and aging still proceed.
   const eligibleCount = Array.from(warriorMap.values()).filter((w) =>
     isFightReady(w, state.isTournamentWeek)
   ).length;
   if (eligibleCount < 2) {
-    const quietImpact: StateImpact = {
-      newsletterItems: [
-        {
-          id: `quiet-week-${state.week}`,
-          week: state.week,
-          title: 'Arena Gazette',
-          items: [
-            '🏟️ A quiet week in the arena... Not enough able-bodied warriors were fit to fight.',
-          ],
-        },
-      ],
-    };
-    return { impact: quietImpact, results: [], summary: createWeekBoutSummary() };
+    const summary = createWeekBoutSummary();
+    const quietImpact = finalizeWeekSideEffectsToImpact(state, []);
+    return { impact: quietImpact, results: [], summary };
   }
 
   const moodMods = getMoodModifiers(state.crowdMood);

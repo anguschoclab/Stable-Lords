@@ -3,21 +3,14 @@ import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle, type WarriorId, type StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
-import { StateImpact } from '@/engine/impacts';/**
-                                                * Process hall of fame.
-                                                * @param state - State.
-                                                * @param newWeek - New week.
-                                                * @param rng - Rng. (optional)
-                                                * @returns The result.
-                                                */
-
-
+import { StateImpact } from '@/engine/impacts';
 /**
- * Process hall of fame.
- * @param state - State.
- * @param newWeek - New week.
- * @param rng - Rng. (optional)
- * @returns The result.
+ * Process hall of fame awards for the completed year.
+ *
+ * @param state   - Current game state (old week/year before rollover).
+ * @param newWeek - The week we are advancing *to* (used for newsletter timing).
+ * @param rng     - Optional RNG service.
+ * @returns       - StateImpact with awards, roster/rival updates, and newsletter items.
  */
 export function processHallOfFame(
   state: GameState,
@@ -25,9 +18,13 @@ export function processHallOfFame(
   rng?: IRNGService
 ): StateImpact {
   const rngService = rng || new SeededRNGService(state.year * 777);
-  if (state.week !== 1 || state.year === 1) return {};
 
-  const prevYear = state.year - 1;
+  // completedYear = the year that just finished.
+  // On the transition tick (week=52→1): state.year is the completed year.
+  // On a post-rollover tick (week=1, year=2): state.year - 1 is the completed year.
+  const completedYear = state.week === 1 ? state.year - 1 : state.year;
+
+  if (newWeek !== 1 || completedYear < 1) return {};
   const hofNews: string[] = [];
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
@@ -42,7 +39,7 @@ export function processHallOfFame(
   const eligible: WarriorStats[] = [];
 
   const collect = (w: Warrior) => {
-    const snapshot = w.yearlySnapshots?.[prevYear] || { wins: 0, losses: 0, kills: 0, fame: 0 };
+    const snapshot = w.yearlySnapshots?.[completedYear] || { wins: 0, losses: 0, kills: 0, fame: 0 };
     const wins = (w.career?.wins || 0) - (snapshot.wins || 0);
     const kills = (w.career?.kills || 0) - (snapshot.kills || 0);
     const fameGain = (w.fame || 0) - (snapshot.fame || 0);
@@ -66,13 +63,13 @@ export function processHallOfFame(
   );
   if (woty && woty.wins > 0) {
     const award: AnnualAward = {
-      year: prevYear,
+      year: completedYear,
       type: 'WARRIOR_OF_YEAR',
       warriorId: woty.w.id,
       warriorName: woty.w.name,
       stableId: woty.w.stableId,
       value: woty.wins,
-      reason: `Recorded ${woty.wins} victories in Year ${prevYear}`,
+      reason: `Recorded ${woty.wins} victories in Year ${completedYear}`,
     };
     const { updatedWarrior } = applyAward(woty.w, award, 50);
     if (woty.w.stableId === state.player.id) {
@@ -94,7 +91,7 @@ export function processHallOfFame(
     }
     awards.push(award);
     hofNews.push(
-      `🏛️ WARRIOR OF THE YEAR: ${woty.w.name} is the champion of Year ${prevYear} with ${woty.wins} wins!`
+      `🏛️ WARRIOR OF THE YEAR: ${woty.w.name} is the champion of Year ${completedYear} with ${woty.wins} wins!`
     );
   }
 
@@ -105,13 +102,13 @@ export function processHallOfFame(
   );
   if (koty && koty.kills > 0) {
     const award: AnnualAward = {
-      year: prevYear,
+      year: completedYear,
       type: 'KILLER_OF_YEAR',
       warriorId: koty.w.id,
       warriorName: koty.w.name,
       stableId: koty.w.stableId,
       value: koty.kills,
-      reason: `Claimed ${koty.kills} lives in Year ${prevYear}`,
+      reason: `Claimed ${koty.kills} lives in Year ${completedYear}`,
     };
     const { updatedWarrior } = applyAward(koty.w, award, 50);
     if (koty.w.stableId === state.player.id) {
@@ -143,14 +140,14 @@ export function processHallOfFame(
         : undefined;
     if (mvp && mvp.wins > 0) {
       const award: AnnualAward = {
-        year: prevYear,
+        year: completedYear,
         type: 'CLASS_MVP',
         warriorId: mvp.w.id,
         warriorName: mvp.w.name,
         stableId: mvp.w.stableId,
         style,
         value: mvp.wins,
-        reason: `Leading ${style} specialist in Year ${prevYear}`,
+        reason: `Leading ${style} specialist in Year ${completedYear}`,
       };
       const { updatedWarrior } = applyAward(mvp.w, award, 20);
       if (mvp.w.stableId === state.player.id) {
@@ -205,20 +202,17 @@ function applyAward(
   };
 
   return { updatedWarrior };
-}/**
-  * Create yearly snapshots.
-  * @param state - State.
-  * @returns The result.
-  */
-
+}
 
 /**
- * Create yearly snapshots.
- * @param state - State.
- * @returns The result.
+ * Create yearly warrior-career snapshots used as baselines for award calculations.
+ *
+ * @param state        - Current game state.
+ * @param snapshotYear - The year key to store the snapshot under. Defaults to `state.year`.
+ * @returns            - StateImpact with rosterUpdates and rivalsUpdates.
  */
-export function createYearlySnapshots(state: GameState): StateImpact {
-  const currentYear = state.year;
+export function createYearlySnapshots(state: GameState, snapshotYear?: number): StateImpact {
+  const currentYear = snapshotYear ?? state.year;
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
 

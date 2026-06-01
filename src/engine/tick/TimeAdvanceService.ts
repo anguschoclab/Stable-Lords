@@ -3,9 +3,10 @@ import {
   advanceWeek,
   type WeekAdvanceOptions,
 } from '@/engine/pipeline/services/weekPipelineService';
-import { flushDeferredArchivesOffThread, flushDeferredArchives } from '@/engine/pipeline/adapters/opfsArchiver';
+import { flushDeferredArchives } from '@/engine/pipeline/adapters/opfsArchiver';
 import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/telemetry';
 import { truncateState } from '@/engine/storage/truncation';
+import { isFightReady } from '@/engine/warriorStatus';
 
 /**
  * Stop condition types for batch operations
@@ -113,11 +114,13 @@ export function evaluateStopConditions(
         }
         break;
       case 'noPairings': {
-        // Check if there are no eligible fighters
-        const hasEligible = state.roster.some(
-          (w) => w.status === 'Active' && !w.isDead && (!w.injuries || w.injuries.length === 0)
-        );
-        if (!hasEligible) {
+        // Check if there are fewer than 2 eligible fighters across all stables
+        const allWarriors = [
+          ...state.roster,
+          ...(state.rivals || []).flatMap((r) => r.roster),
+        ];
+        const eligibleCount = allWarriors.filter((w) => isFightReady(w, state.isTournamentWeek)).length;
+        if (eligibleCount < 2) {
           return { shouldStop: true, reason: 'no_pairings' };
         }
         break;

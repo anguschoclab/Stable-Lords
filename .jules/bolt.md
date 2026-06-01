@@ -39,3 +39,7 @@
 ## 2024-05-18 - [Optimization: Preventing O(N) re-renders in Dashboard Widgets]
 **Learning:** React components inside Dashboard widgets (like `RecentBoutsWidget` and `WeeklyDigestWidget`) were directly calling `const state = useGameStore();`. This means the component re-renders whenever *any* part of the global game state changes, even unrelated state like `fame`, `treasury`, or `week`.
 **Action:** When a component only needs specific parts of a large Zustand store (e.g., `NameResolutionState` for `resolveStableName`), always use `useShallow` with an explicit selector to restrict re-renders to only those specific state fields.
+
+## 2024-05-18 - [Optimizing O(N) lookup inside React map with precomputed Map]
+**Learning:** Found an O(N) operation `rivals?.find(...)` being called multiple times inside a `.map` loop during rendering in `src/components/ledger/SeasonSynthesis.tsx`, turning what should be an O(N) pass into an O(N^2) bottleneck. Repeated array searches inside mapping logic are a common performance anti-pattern.
+**Action:** Replace `Array.prototype.find` inside a `.map` loop with an O(1) `Map` lookup by extracting the data into a precomputed dictionary created with `useMemo`. Iterate over the source array once to populate the Map, converting the complexity from O(N^2) to O(N + M).

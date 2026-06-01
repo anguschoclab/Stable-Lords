@@ -1,36 +1,16 @@
-import {
-  Calendar,
-  Clock,
-  Activity,
-  Hexagon,
-  CloudRain,
-  Sun,
-  Cloud,
-  Wind,
-  Moon,
-  PartyPopper,
-} from 'lucide-react';
+import { Calendar, Clock, Hexagon, PartyPopper } from 'lucide-react';
 import { useWorldState } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
-                                                                                   * Season widget.
-                                                                                   * @returns The result.
-                                                                                   */
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { WeatherBadge } from './WeatherBadge';
+import { SeasonProgressBar } from './SeasonProgressBar';
 
-
-/**
- * Season widget.
- * @returns The result.
- */
 export function SeasonWidget() {
   const state = useWorldState();
   const week = ((state.week - 1) % 13) + 1;
   const season = state.season;
 
-  // Progress within a 13-week standard season
   const progress = (week / 13) * 100;
 
   const phase = week <= 4 ? 'Initialization' : week <= 9 ? 'Mid Sequence' : 'Championship Peak';
@@ -41,7 +21,6 @@ export function SeasonWidget() {
         ? 'Intense divisional rivalries and meta-drift analysis.'
         : 'Final championship qualification and legendary bouts.';
 
-  // Offseason Event Check (Week 1 only)
   const isOffseason = week === 1;
   const latestOffseasonEvent = state.newsletter
     ?.filter(
@@ -52,59 +31,6 @@ export function SeasonWidget() {
     .pop();
 
   const weather = state.weather || 'Clear';
-  let WeatherIcon = Sun;
-  let weatherColor = 'text-arena-gold';
-  let weatherBg = 'bg-arena-gold/10 border-arena-gold/20';
-
-  if (weather === 'Rainy') {
-    WeatherIcon = CloudRain;
-    weatherColor = 'text-stone-400';
-    weatherBg = 'bg-stone-400/10 border-stone-400/20';
-  } else if (weather === 'Blazing Sun') {
-    WeatherIcon = Sun;
-    weatherColor = 'text-destructive';
-    weatherBg = 'bg-destructive/10 border-destructive/20';
-  } else if (weather === 'Sweltering') {
-    WeatherIcon = Sun;
-    weatherColor = 'text-arena-gold';
-    weatherBg = 'bg-arena-gold/10 border-arena-gold/20';
-  } else if (weather === 'Blood Moon') {
-    WeatherIcon = Moon;
-    weatherColor = 'text-arena-blood';
-    weatherBg = 'bg-arena-blood/10 border-arena-blood/30 glow-neon-red';
-  } else if (weather === 'Overcast') {
-    WeatherIcon = Cloud;
-    weatherColor = 'text-muted-foreground';
-    weatherBg = 'bg-muted/10 border-border/40';
-  } else if (weather === 'Gale') {
-    WeatherIcon = Wind;
-    weatherColor = 'text-primary';
-    weatherBg = 'bg-primary/10 border-primary/20';
-  } else if (weather === 'Breezy') {
-    WeatherIcon = Wind;
-    weatherColor = 'text-stone-300';
-    weatherBg = 'bg-stone-300/10 border-stone-300/20';
-  } else if (weather === 'Eclipse') {
-    WeatherIcon = Moon;
-    weatherColor = 'text-arena-fame';
-    weatherBg = 'bg-arena-fame/10 border-arena-fame/20';
-  } else if (weather === 'Sandstorm') {
-    WeatherIcon = Wind;
-    weatherColor = 'text-arena-gold';
-    weatherBg = 'bg-arena-gold/10 border-arena-gold/20';
-  } else if (weather === 'Mist') {
-    WeatherIcon = Cloud;
-    weatherColor = 'text-stone-300';
-    weatherBg = 'bg-stone-300/10 border-stone-300/20';
-  } else if (weather === 'Scorching Wind') {
-    WeatherIcon = Wind;
-    weatherColor = 'text-destructive';
-    weatherBg = 'bg-destructive/10 border-destructive/20';
-  } else if (weather === 'Spooky Night') {
-    WeatherIcon = Moon;
-    weatherColor = 'text-arena-fame';
-    weatherBg = 'bg-arena-fame/10 border-arena-fame/20 glow-neon-purple';
-  }
 
   return (
     <Surface variant="glass" className="h-full border-border/10 group overflow-hidden relative p-0">
@@ -168,25 +94,7 @@ export function SeasonWidget() {
             </div>
           )}
 
-          <div className="space-y-3">
-            <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-              <div className="flex items-center gap-2">
-                <Activity className="h-3 w-3" />
-                <span>Seasonal Completion</span>
-              </div>
-              <span className="font-mono text-primary">{Math.round(progress)}%</span>
-            </div>
-            <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 relative">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 1.2, ease: 'easeOut' }}
-                className="h-full bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)] relative"
-              >
-                <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.2)_50%,transparent_100%)] animate-shimmer" />
-              </motion.div>
-            </div>
-          </div>
+          <SeasonProgressBar progress={progress} />
 
           <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-4">
             <Tooltip>
@@ -209,46 +117,7 @@ export function SeasonWidget() {
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
                 Weather Condition
               </span>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="inline-flex cursor-help mt-1">
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        'text-[9px] font-mono font-black uppercase tracking-widest gap-1',
-                        weatherBg,
-                        weatherColor
-                      )}
-                    >
-                      <WeatherIcon className="h-3 w-3" />
-                      {weather}
-                    </Badge>
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest w-full max-w-xs">
-                  {weather === 'Blazing Sun'
-                    ? '30% more stamina drain in combat.'
-                    : weather === 'Sweltering'
-                      ? '20% more stamina drain in combat.'
-                      : weather === 'Blood Moon'
-                        ? 'A crimson moon rises. Fighters are bloodthirsty, vastly increasing lethality. 10% more stamina drain.'
-                        : weather === 'Gale'
-                          ? 'Fierce winds. 15% more stamina drain in combat.'
-                          : weather === 'Breezy'
-                            ? '10% less stamina drain in combat.'
-                            : weather === 'Eclipse'
-                              ? '20% less stamina drain in combat. Fights are slow and methodical.'
-                              : weather === 'Rainy'
-                                ? 'Poor visibility and slick ground penalize initiative and attack.'
-                                : weather === 'Scorching Wind'
-                                  ? '30% more stamina drain in combat. Fighters push harder and act rashly.'
-                                  : weather === 'Mist'
-                                    ? 'Reduced visibility makes initial strikes trickier.'
-                                    : weather === 'Spooky Night'
-                                      ? 'An unnatural chill and eerie shadows make fighters nervous and jumpy.'
-                                      : 'Standard atmospheric conditions.'}
-                </TooltipContent>
-              </Tooltip>
+              <WeatherBadge weather={weather} />
             </div>
           </div>
         </div>

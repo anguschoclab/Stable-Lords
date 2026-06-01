@@ -6,16 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { StatBattery } from '@/components/ui/StatBattery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { WarriorLink } from '@/components/EntityLink';/**
-                                                       * Medical audit widget.
-                                                       * @returns The result.
-                                                       */
+import { WarriorLink } from '@/components/EntityLink';
 
-
-/**
- * Medical audit widget.
- * @returns The result.
- */
 export function MedicalAuditWidget() {
   const atRisk = useGameStore(
     useShallow((s) => {

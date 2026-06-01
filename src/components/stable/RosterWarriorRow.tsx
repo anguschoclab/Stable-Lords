@@ -6,6 +6,8 @@ import { StatBattery } from '@/components/ui/StatBattery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { potentialRating, potentialGrade } from '@/engine/potential';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type FightingStyle } from '@/types/game';
+import type { AttributePotential, CareerRecord } from '@/types/warrior.types';
+import type { Attributes } from '@/types/shared.types';
 
 interface RosterWarriorRowProps {
   warrior: {
@@ -14,9 +16,9 @@ interface RosterWarriorRowProps {
     fame: number;
     style: string;
     champion: boolean;
-    potential?: string | null;
-    attributes: Record<string, number>;
-    career: { wins: number; losses: number; kills: number };
+    potential?: AttributePotential | null;
+    attributes: Attributes;
+    career: CareerRecord;
     injuries?: any[];
     flair?: any[];
   };

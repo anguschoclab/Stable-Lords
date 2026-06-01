@@ -1,46 +1,40 @@
-import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { useNavigate, Link } from '@tanstack/react-router';
 import { Surface } from '@/components/ui/Surface';
 import { Button } from '@/components/ui/button';
 import { Users, ChevronRight, Swords } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RosterWarriorRow } from './RosterWarriorRow';/**
-                                                                                   * Roster wall.
-                                                                                   * @returns The result.
-                                                                                   */
+import { useActiveRoster } from '@/hooks/useActiveRoster';
+import { RosterWarriorRow } from './RosterWarriorRow';
 
+function EmptyRosterState() {
+  return (
+    <Surface
+      variant="glass"
+      className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-6"
+    >
+      <div className="relative">
+        <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full" />
+        <Swords className="h-16 w-16 text-muted-foreground opacity-20 relative z-10" />
+      </div>
+      <div className="space-y-2">
+        <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">
+          Roster Data Empty
+        </p>
+        <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
+          Synchronization failed. All personnel berths are currently vacant. Proceed to the
+          recruitment terminal to enlist your first combatant asset.
+        </p>
+      </div>
+      <Link to="/ops/recruit" className="mt-4">
+        <Button>Initialize Sync</Button>
+      </Link>
+    </Surface>
+  );
+}
 
-/**
- * Roster wall.
- * @returns The result.
- */
 export function RosterWall() {
   const navigate = useNavigate();
-
-  const sortedRoster = useGameStore(
-    useShallow((s) => {
-      const result = [];
-      for (const w of s.roster) {
-        if (w.status === 'Active') {
-          result.push({
-            id: w.id,
-            name: w.name,
-            fame: w.fame,
-            style: w.style,
-            champion: w.champion,
-            potential: w.potential,
-            attributes: w.attributes,
-            career: w.career,
-            injuries: w.injuries,
-            flair: w.flair,
-          });
-        }
-      }
-      result.sort((a, b) => b.fame - a.fame);
-      return result;
-    })
-  );
+  const sortedRoster = useActiveRoster();
 
   return (
     <Surface variant="glass" padding="none" className="border-border/10 relative shadow-2xl">
@@ -73,27 +67,7 @@ export function RosterWall() {
 
       <div className="p-8">
         {sortedRoster.length === 0 ? (
-          <Surface
-            variant="glass"
-            className="py-24 text-center border-dashed border-border/40 flex flex-col items-center gap-6"
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/10 blur-2xl rounded-full" />
-              <Swords className="h-16 w-16 text-muted-foreground opacity-20 relative z-10" />
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">
-                Roster Data Empty
-              </p>
-              <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
-                Synchronization failed. All personnel berths are currently vacant. Proceed to the
-                recruitment terminal to enlist your first combatant asset.
-              </p>
-            </div>
-            <Link to="/ops/recruit" className="mt-4">
-              <Button>Initialize Sync</Button>
-            </Link>
-          </Surface>
+          <EmptyRosterState />
         ) : (
           <div className="grid gap-6">
             <AnimatePresence mode="popLayout">

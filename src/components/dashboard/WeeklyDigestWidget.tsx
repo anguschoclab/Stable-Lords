@@ -41,30 +41,8 @@ interface DigestSummary {
   pendingOffers: number;
   signedOffers: number;
   tournamentActive: boolean;
-}/**
-  * Weekly digest widget.
-  * @param  - {
-  week,
-  season,
-  arena history,
-  bout offers,
-  current week,
-}.
-  * @returns The result.
-  */
+}
 
-
-/**
- * Weekly digest widget.
- * @param  - {
-  week,
-  season,
-  arena history,
-  bout offers,
-  current week,
-}.
- * @returns The result.
- */
 export function WeeklyDigestWidget({
   week,
   season,

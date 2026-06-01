@@ -15,16 +15,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
-                                                                                   * Recent bouts widget.
-                                                                                   * @returns The result.
-                                                                                   */
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import type { FightSummary } from '@/types/game';
 
-
-/**
- * Recent bouts widget.
- * @returns The result.
- */
 export function RecentBoutsWidget() {
   const state = useGameStore(
     useShallow((s) => ({
@@ -41,7 +34,7 @@ export function RecentBoutsWidget() {
   const recentBouts = useMemo(() => {
     const playerStableId = state.player.id;
     const history = state.arenaHistory || [];
-    const results: import('@/types/game').CombatEvent[] = [];
+    const results: FightSummary[] = [];
 
     // ⚡ Bolt: Replaced O(N) full-array filter and slice with an O(1) forward scan
     // to find the first 5 bouts without scanning or allocating the entire history.

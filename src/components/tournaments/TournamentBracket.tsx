@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, ChevronUp, ChevronDown, Medal, Crown, StepForward } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -24,7 +24,7 @@ interface TournamentBracketProps {
   arenaHistory: FightSummary[];
   expandedBout: string | null;
   onToggleExpand: (key: string | null) => void;
-}/**
+} /**
   * Tournament bracket.
   * @param  - {
   bouts,
@@ -34,7 +34,6 @@ interface TournamentBracketProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Tournament bracket.
@@ -53,6 +52,7 @@ export function TournamentBracket({
   onToggleExpand,
 }: TournamentBracketProps) {
   const state = useGameStore();
+
   const roundsMap = new Map<number, TournamentBout[]>();
   bouts.forEach((b) => {
     const arr = roundsMap.get(b.round) || [];
@@ -86,9 +86,7 @@ export function TournamentBracket({
             {roundBouts.map((bout, bIdx) => {
               const boutKey = `${round}_${bIdx}`;
               const isExpanded = expandedBout === boutKey;
-              const fightSummary = bout.fightId
-                ? fightHistoryMap.get(bout.fightId)
-                : null;
+              const fightSummary = bout.fightId ? fightHistoryMap.get(bout.fightId) : null;
               const hasTranscript = fightSummary?.transcript && fightSummary.transcript.length > 0;
 
               const isAChosen = bout.winner === 'A';
@@ -365,7 +363,7 @@ interface ChampionDisplayProps {
   championName: string;
   championId?: string;
   tournamentName: string;
-}/**
+} /**
   * Champion display.
   * @param  - {
   champion name,
@@ -374,7 +372,6 @@ interface ChampionDisplayProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Champion display.
@@ -428,12 +425,11 @@ export function ChampionDisplay({
 interface BronzeHighlightProps {
   thirdPlaceName: string;
   thirdPlaceId?: string;
-}/**
-  * Bronze highlight.
-  * @param - { third place name, third place id }.
-  * @returns The result.
-  */
-
+} /**
+ * Bronze highlight.
+ * @param - { third place name, third place id }.
+ * @returns The result.
+ */
 
 /**
  * Bronze highlight.
@@ -474,7 +470,7 @@ interface TournamentProgressProps {
   totalRounds: number;
   completedMatches: number;
   totalMatches: number;
-}/**
+} /**
   * Tournament progress.
   * @param  - {
   current round,
@@ -484,7 +480,6 @@ interface TournamentProgressProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Tournament progress.

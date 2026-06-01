@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import path from 'path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { z } from 'zod';
@@ -204,7 +204,7 @@ async function validate_with_retry(deficitPath: string, retries = 3): Promise<st
  * Atomic merge and write to the archive.
  */
 async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
-  const rawData = fs.readFileSync(NARRATIVE_FILE, 'utf-8');
+  const rawData = (await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString();
   const data: ValidatedJSON = JSON.parse(rawData);
 
   let report = '# Daily Bard Report\n\n';
@@ -230,8 +230,8 @@ async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
   }
 
   if (addedCount > 0) {
-    fs.writeFileSync(NARRATIVE_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    fs.writeFileSync(REPORT_FILE, report, 'utf-8');
+    await fs.writeFile(NARRATIVE_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    await fs.writeFile(REPORT_FILE, report, 'utf-8');
     console.log(`Successfully added ${addedCount} new templates.`);
   } else {
     console.log('No new templates were added.');
@@ -285,7 +285,7 @@ function deduplicate_full_archive(data: ValidatedJSON) {
 async function main() {
   console.log('📜 The Bard of the Blood Sands is waking up...');
 
-  const rawData = fs.readFileSync(NARRATIVE_FILE, 'utf-8');
+  const rawData = (await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString();
   const data: ValidatedJSON = NarrativeSchema.parse(JSON.parse(rawData));
 
   // 1. Deficit Detection
@@ -314,9 +314,9 @@ async function main() {
   await commit_to_archive(newTemplatesMap);
 
   // 4. Final Full-Sweep Cleanup (ensures even static/legacy duplicates are purged)
-  const freshData = JSON.parse(fs.readFileSync(NARRATIVE_FILE, 'utf-8'));
+  const freshData = JSON.parse((await fs.readFile(NARRATIVE_FILE, 'utf-8')).toString());
   deduplicate_full_archive(freshData);
-  fs.writeFileSync(NARRATIVE_FILE, JSON.stringify(freshData, null, 2), 'utf-8');
+  await fs.writeFile(NARRATIVE_FILE, JSON.stringify(freshData, null, 2), 'utf-8');
 
   console.log('✅ Bardic duties complete.');
 }

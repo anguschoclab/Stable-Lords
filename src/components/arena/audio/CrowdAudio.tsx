@@ -41,7 +41,7 @@ export default function CrowdAudio({ state, volume, enabled }: CrowdAudioProps) 
       if (soundId) {
         // For now, use existing audio manager with volume adjustment
         // In full implementation, would load specific crowd sounds
-        console.log(`[CrowdAudio] Would play: ${soundId} at ${volume * 100}% volume`);
+        // Audio placeholder — implement actual playback here
       }
       lastStateRef.current = state;
     }

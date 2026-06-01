@@ -16,7 +16,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { WeatherType, DistanceRange, ArenaZone } from '@/types/shared.types';
 import type { CrowdMood } from '@/engine/crowdMood';
-import type { ResolutionContext } from '../combat/resolution/resolution';
+import type { ResolutionContext } from '../combat/resolution/types';
 import { getMatchupBonus } from '@/constants/combat';
 
 /**

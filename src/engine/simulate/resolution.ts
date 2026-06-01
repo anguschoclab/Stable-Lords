@@ -3,7 +3,7 @@
  */
 import { resolveDecision } from '../bout/decisionLogic';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE, WIN_XP, LOSS_XP } from '@/constants/combat';
-import type { FighterState } from '../combat/resolution/resolution';
+import type { FighterState } from '../combat/resolution/types';
 import type { FightOutcomeBy, DeathCauseBucket, MinuteEvent } from '@/types/combat.types';
 
 /**

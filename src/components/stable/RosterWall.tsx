@@ -19,23 +19,27 @@ export function RosterWall() {
   const navigate = useNavigate();
 
   const sortedRoster = useGameStore(
-    useShallow((s) =>
-      s.roster
-        .filter((w) => w.status === 'Active')
-        .map((w) => ({
-          id: w.id,
-          name: w.name,
-          fame: w.fame,
-          style: w.style,
-          champion: w.champion,
-          potential: w.potential,
-          attributes: w.attributes,
-          career: w.career,
-          injuries: w.injuries,
-          flair: w.flair,
-        }))
-        .sort((a, b) => b.fame - a.fame)
-    )
+    useShallow((s) => {
+      const result = [];
+      for (const w of s.roster) {
+        if (w.status === 'Active') {
+          result.push({
+            id: w.id,
+            name: w.name,
+            fame: w.fame,
+            style: w.style,
+            champion: w.champion,
+            potential: w.potential,
+            attributes: w.attributes,
+            career: w.career,
+            injuries: w.injuries,
+            flair: w.flair,
+          });
+        }
+      }
+      result.sort((a, b) => b.fame - a.fame);
+      return result;
+    })
   );
 
   return (

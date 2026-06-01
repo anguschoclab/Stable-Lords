@@ -1,5 +1,5 @@
 import type { Trainer, TrainerSpecialty } from '@/types/shared.types';
-import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/resolution';
+import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import { TIER_BONUS } from '@/engine/trainers';
 
 /**

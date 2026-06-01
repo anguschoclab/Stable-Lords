@@ -67,9 +67,7 @@ export default function WeatherAudio({ weather, volume, enabled, arenaId }: Weat
       const newAmbience = WEATHER_AMBIENCE[effectiveWeather];
 
       if (oldAmbience !== newAmbience) {
-        console.log(
-          `[WeatherAudio] Crossfade: ${oldAmbience || 'none'} → ${newAmbience || 'none'} at ${volume * 100}%`
-        );
+        // Audio crossfade placeholder — implement actual playback here
       }
 
       currentWeatherRef.current = effectiveWeather;
@@ -82,7 +80,7 @@ export default function WeatherAudio({ weather, volume, enabled, arenaId }: Weat
 
     const ambience = WEATHER_AMBIENCE[currentWeatherRef.current];
     if (ambience) {
-      console.log(`[WeatherAudio] Volume update: ${ambience} at ${volume * 100}%`);
+      // Volume update placeholder — implement actual playback here
     }
   }, [volume, enabled]);
 

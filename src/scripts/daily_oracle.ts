@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import { promises as fs } from 'fs';
 import * as path from 'path';
 
 import { runSimulation } from './simulation-harness';
@@ -126,7 +126,7 @@ ${Object.entries(styleWinRates)
 ${recommendations}
 `;
 
-  fs.writeFileSync(REPORT_FILE, report);
+  await fs.writeFile(REPORT_FILE, report);
   console.log(`\nWrote Daily_Balance_Report.md`);
 }
 

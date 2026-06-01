@@ -6,7 +6,7 @@ import { FightingStyle } from '@/types/shared.types';
 
 function makeMinimalWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
-    id: `w-${Math.random().toString(36).slice(2)}` as any,
+    id: crypto.randomUUID() as any,
     name: 'Test Warrior',
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },

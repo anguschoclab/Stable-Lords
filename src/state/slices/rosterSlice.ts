@@ -11,6 +11,7 @@ import {
 } from '@/types/state.types';
 import type { GameStore } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
+import { computeWarriorStats } from '@/engine/skillCalc';
 import {
   type WarriorId,
   type InsightId,
@@ -149,8 +150,11 @@ export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (
         } else if (token.type === 'Rhythm') {
           draft.favorites.discovered.rhythm = true;
         } else if (token.type === 'Style') {
-          if (draft.baseSkills)
+          if (draft.baseSkills) {
             draft.baseSkills = { ...draft.baseSkills, ATT: draft.baseSkills.ATT + 1 };
+            const recalc = computeWarriorStats(draft.attributes, draft.style);
+            draft.derivedStats = recalc.derivedStats;
+          }
         } else if (token.type === 'Attribute') {
           const primaries = ['ST', 'WT', 'SP', 'DF'] as const;
           const attrKey = primaries[cryptoRandomInt(0, primaries.length - 1)];
@@ -159,6 +163,9 @@ export const createRosterSlice: StateCreator<GameStore, [], [], RosterSlice> = (
               ...draft.attributes,
               [attrKey]: (draft.attributes[attrKey] || 10) + 1,
             };
+            const recalc = computeWarriorStats(draft.attributes, draft.style);
+            draft.baseSkills = recalc.baseSkills;
+            draft.derivedStats = recalc.derivedStats;
           }
         } else if (token.type === 'Tactic') {
           draft.flair = [...(draft.flair || []), 'Tactical Insight'];

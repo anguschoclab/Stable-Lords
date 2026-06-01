@@ -100,10 +100,7 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
     // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
     const rosterUpkeep = state.roster.reduce((sum, w) => {
       const famePremium = Math.floor((w.fame || 0) / 10) * 15; // Increased from 10 to 15 for 1.0 balance
-      let weatherPremium = 0;
-      if (state.weather === 'Sweltering') weatherPremium = 5;
-      if (state.weather === 'Blizzard') weatherPremium = 10;
-      return sum + WARRIOR_UPKEEP_BASE + famePremium + weatherPremium;
+      return sum + WARRIOR_UPKEEP_BASE + famePremium;
     }, 0);
     expenses.push({ label: `Warrior upkeep (${state.roster.length})`, amount: rosterUpkeep });
 

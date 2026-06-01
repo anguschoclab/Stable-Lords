@@ -2,6 +2,7 @@ import type { GameState } from '@/types/state.types';
 import { archiveService } from '@/engine/storage/archiveService';
 import { truncateState } from '@/engine/storage/truncation';
 import { STORE_KEYS } from '@/constants/storeKeys';
+import { GameStateSchema, SaveSlotMetaSchema } from '@/schemas/gameStateSchema';
 
 /**
  * Defines the shape of save slot meta.
@@ -29,7 +30,7 @@ async function getStoredMeta(): Promise<SaveSlotMeta[]> {
   if (typeof window !== 'undefined' && window.electronAPI) {
     try {
       const stored = await window.electronAPI.storeGet(STORAGE_KEY);
-      if (stored) return stored as SaveSlotMeta[];
+      if (stored) return SaveSlotMetaSchema.array().parse(stored);
     } catch (e) {
       console.error('Failed to parse save slot metadata from electron-store', e);
     }
@@ -40,7 +41,7 @@ async function getStoredMeta(): Promise<SaveSlotMeta[]> {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (!stored) return [];
   try {
-    return JSON.parse(stored);
+    return SaveSlotMetaSchema.array().parse(JSON.parse(stored));
   } catch (e) {
     console.error('Failed to parse save slot metadata from localStorage', e);
     return [];
@@ -215,10 +216,10 @@ export async function exportSlot(slotId: string): Promise<string | null> {
 export async function importSaveToNewSlot(data: unknown): Promise<string | null> {
   try {
     const state = typeof data === 'string' ? JSON.parse(data) : data;
-    if (!state.meta || !state.week) throw new Error('Invalid save data');
+    const validatedState = GameStateSchema.parse(state) as GameState;
 
     const slotId = newSlotId();
-    await saveToSlot(slotId, `Imported: ${state.player.stableName}`, state);
+    await saveToSlot(slotId, `Imported: ${validatedState.player.stableName}`, validatedState);
     return slotId;
   } catch (e) {
     console.error('Import failed', e);

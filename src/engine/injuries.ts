@@ -218,5 +218,9 @@ export function getInjuryPenalties(injuries: InjuryData[]): Record<string, numbe
  * @returns True if the warrior has a severe injury with more than 2 weeks remaining
  */
 export function isTooInjuredToFight(injuries: InjuryData[]): boolean {
-  return injuries.some((i) => i.severity === 'Severe' && i.weeksRemaining > 2);
+  return injuries.some(
+    (i) =>
+      (i.severity === 'Severe' || i.severity === 'Critical' || i.severity === 'Permanent') &&
+      i.weeksRemaining > 2
+  );
 }

@@ -59,7 +59,7 @@ export default tseslint.config(
         {
           object: "Math",
           property: "random",
-          message: "Do not use Math.random() in engine code. Use rngFromSeed/rngForWorld (src/engine/rng.ts).",
+          message: "Do not use Math.random() in engine code. Use SeededRNG from @/utils/random or SeededRNGService from @/engine/core/rng/SeededRNGService.",
         },
       ],
       "no-restricted-imports": [

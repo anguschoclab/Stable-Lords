@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import type { GameState, RivalStableData, Owner } from '@/types/state.types';
+import { GameStateSchema } from '@/schemas/gameStateSchema';
 
 
 /**
@@ -35,6 +36,7 @@ export default function AdminTools() {
     setState,
     doReset,
     doAdvanceWeek,
+    loadGame,
     treasury,
     fame,
     week,
@@ -72,18 +74,24 @@ export default function AdminTools() {
           if (typeof content !== 'string') throw new Error('Invalid file content');
           const data = JSON.parse(content);
           if (data && data.state) {
-            setState(() => data.state as GameState);
+            const validatedState = GameStateSchema.parse(data.state) as GameState;
+            loadGame('autosave', validatedState);
             toast.success('Temporal state synchronization restored.');
           } else {
             toast.error('Invalid save signature detected.');
           }
         } catch (err) {
-          toast.error(err instanceof Error ? err.message : 'Telemetry reconstruction failed.');
+          if (err instanceof Error && err.name === 'ZodError') {
+            toast.error('Invalid save data: schema validation failed');
+            console.error('Zod validation error:', err);
+          } else {
+            toast.error(err instanceof Error ? err.message : 'Telemetry reconstruction failed.');
+          }
         }
       };
       reader.readAsText(file);
     },
-    [setState]
+    [loadGame]
   );
 
   const skipWeek = useCallback(async () => {

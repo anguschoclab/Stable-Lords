@@ -2,13 +2,15 @@
  * Arena history — persists fight summaries to localStorage.
  */
 import type { FightSummary } from '@/types/combat.types';
+import { FightSummarySchema } from '@/schemas/gameStateSchema';
 
 const KEY = 'sl.arenaHistory';
 
 function load(): FightSummary[] {
   if (typeof localStorage === 'undefined') return [];
   try {
-    return JSON.parse(localStorage.getItem(KEY) || '[]');
+    const parsed = JSON.parse(localStorage.getItem(KEY) || '[]');
+    return FightSummarySchema.array().parse(parsed) as FightSummary[];
   } catch {
     return [];
   }

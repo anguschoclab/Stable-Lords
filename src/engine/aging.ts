@@ -56,8 +56,8 @@ function processWarriorAging(
       if (penalty > 0) {
         const newAttrs = {
           ...w.attributes,
-          SP: Math.max(3, w.attributes.SP - 1),
-          DF: Math.max(3, w.attributes.DF - 1),
+          SP: Math.max(3, w.attributes.SP - penalty),
+          DF: Math.max(3, w.attributes.DF - penalty),
         };
         const { baseSkills, derivedStats } = computeWarriorStats(newAttrs, w.style);
         Object.assign(update, { attributes: newAttrs, baseSkills, derivedStats });

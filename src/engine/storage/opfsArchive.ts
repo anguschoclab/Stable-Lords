@@ -1,5 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import { ArchiveConflictError } from './ArchiveConflictError';
+import { GameStateSchema } from '@/schemas/gameStateSchema';
 
 
 /**
@@ -167,7 +168,8 @@ async retrieveHotState(slotId: string): Promise<GameState | null> {
       const file = await fileHandle.getFile();
       if (typeof file.text === 'function') {
         const text = await file.text();
-        return JSON.parse(text);
+        const parsed = JSON.parse(text);
+        return GameStateSchema.parse(parsed) as GameState;
       }
       return null;
     } catch (error) {

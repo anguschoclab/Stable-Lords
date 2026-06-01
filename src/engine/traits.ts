@@ -389,10 +389,12 @@ export interface DynamicTraitContext {
  * @param ctx - The dynamic combat context (phase, HP, etc.)
  * @returns Object containing cumulative dynamic modifiers
  */
+export type DynamicTraitMods = { attMod: number; parMod: number; defMod: number; iniMod: number; killWindowBonus: number };
+
 export function getDynamicTraitMods(
   warrior: Warrior | undefined,
   ctx: DynamicTraitContext
-): { attMod: number; parMod: number; defMod: number; iniMod: number; killWindowBonus: number } {
+): DynamicTraitMods {
   const acc = { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, killWindowBonus: 0 };
   if (!warrior?.traits) return acc;
   for (const id of warrior.traits) {

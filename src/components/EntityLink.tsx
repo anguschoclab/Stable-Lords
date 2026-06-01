@@ -2,7 +2,7 @@
  * Entity Links — Warriors and Stables.
  * Now triggers a side-panel <Sheet> (flyout) with full dossiers.
  */
-import React from 'react';
+import type { ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { useWorldState } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
@@ -26,7 +26,7 @@ interface WarriorLinkProps {
   /** Optional CSS class name */
   className?: string;
   /** Optional custom children to render as the link */
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 /**
@@ -119,7 +119,7 @@ interface StableLinkProps {
   /** Optional CSS class name */
   className?: string;
   /** Optional custom children to render as the link */
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 /**

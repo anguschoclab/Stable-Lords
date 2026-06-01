@@ -1,4 +1,3 @@
-import React from 'react';
 import type { FightOutcome } from '@/types/combat.types';
 import { WarriorLink } from '@/components/EntityLink';
 import { Badge } from '@/components/ui/badge';

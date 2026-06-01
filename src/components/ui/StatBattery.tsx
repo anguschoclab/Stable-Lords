@@ -1,4 +1,4 @@
-import React from 'react';
+import { forwardRef } from 'react';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';/**
                                   * Defines the shape of stat battery props.
@@ -23,7 +23,7 @@ export interface StatBatteryProps {
 /**
  * Stat battery.
  */
-export const StatBattery = React.forwardRef<HTMLDivElement, StatBatteryProps>(function StatBattery(
+export const StatBattery = forwardRef<HTMLDivElement, StatBatteryProps>(function StatBattery(
   { label, value, max = 100, labelValue, colorClass, className },
   ref
 ) {

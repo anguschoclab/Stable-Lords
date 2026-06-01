@@ -175,12 +175,12 @@ export function SeasonSynthesis() {
                 No active grudges
               </p>
             ) : (
-              grudges.map((g, i) => {
+              grudges.map((g) => {
                 const stableA = rivalMap.get(g.ownerIdA) ?? g.ownerIdA;
                 const stableB = rivalMap.get(g.ownerIdB) ?? g.ownerIdB;
                 return (
                   <div
-                    key={i}
+                    key={`${g.ownerIdA}-${g.ownerIdB}`}
                     className="flex items-center justify-between px-3 py-2 bg-white/[0.02] border border-white/5"
                   >
                     <div className="flex items-center gap-2 text-[10px] font-black min-w-0">
@@ -273,7 +273,7 @@ export function SeasonSynthesis() {
           <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
             {seasonGazette.slice(0, 12).map((item, i) => (
               <div
-                key={i}
+                key={`${item.slice(0, 40)}-${i}`}
                 className="px-3 py-2 bg-white/[0.02] border border-white/5 text-[10px] text-foreground/70 italic leading-snug"
               >
                 {item}

@@ -72,7 +72,7 @@ export function Chronicle() {
           <AnimatePresence mode="popLayout">
             {news.map((n, i) => (
               <motion.div
-                key={i}
+                key={`${n.week}-${n.title?.slice(0, 20) || i}`}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.05, duration: 0.5 }}

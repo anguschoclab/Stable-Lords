@@ -3,7 +3,7 @@
  * Slot-based equipment selection with style restrictions, encumbrance tracking,
  * and canonical weapon requirement checks with visible penalty warnings.
  */
-import React from 'react';
+import type { ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -121,7 +121,7 @@ function SlotSelector({
 }: {
   slot: EquipmentSlot;
   label: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   selectedId: string;
   style: FightingStyle;
   disabled: boolean;

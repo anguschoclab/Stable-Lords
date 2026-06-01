@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Skull } from 'lucide-react';
 import narrativeContent from '@/data/narrativeContent.json';
@@ -39,8 +38,8 @@ export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
             <h4>Fallen Warriors</h4>
           </div>
           <ul className="list-disc list-inside text-sm text-destructive-foreground">
-            {deaths.map((name: string, i: number) => (
-              <li key={i}>{name}</li>
+            {deaths.map((name: string) => (
+              <li key={name}>{name}</li>
             ))}
           </ul>
         </div>
@@ -53,8 +52,8 @@ export function InjuriesStep({ injuries, deaths }: InjuriesStepProps) {
             <h4>Injured Roster</h4>
           </div>
           <ul className="list-disc list-inside text-sm text-arena-gold">
-            {injuries.map((name: string, i: number) => (
-              <li key={i}>{name}</li>
+            {injuries.map((name: string) => (
+              <li key={name}>{name}</li>
             ))}
           </ul>
         </div>

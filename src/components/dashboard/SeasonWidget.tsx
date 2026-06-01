@@ -102,8 +102,8 @@ export function SeasonWidget() {
     weatherBg = 'bg-destructive/10 border-destructive/20';
   } else if (weather === 'Spooky Night') {
     WeatherIcon = Moon;
-    weatherColor = 'text-purple-400';
-    weatherBg = 'bg-purple-500/10 border-purple-500/20 glow-neon-purple';
+    weatherColor = 'text-arena-fame';
+    weatherBg = 'bg-arena-fame/10 border-arena-fame/20 glow-neon-purple';
   }
 
   return (

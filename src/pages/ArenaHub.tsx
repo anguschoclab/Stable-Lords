@@ -684,6 +684,7 @@ export default function ArenaHub() {
                 progress={autosimProgress}
                 result={autosimResult}
                 onStart={handleStartAutosim}
+                onReset={() => setAutosimResult(null)}
               />
             </div>
           </div>

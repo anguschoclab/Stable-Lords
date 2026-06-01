@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import {
   ChartConfig,
@@ -29,7 +29,7 @@ const chartConfig: ChartConfig = {
 /**
  * Warrior radar chart.
  */
-export const WarriorRadarChart = React.memo(function WarriorRadarChart({
+export const WarriorRadarChart = memo(function WarriorRadarChart({
   warrior,
 }: WarriorRadarChartProps) {
   const data = ATTRIBUTE_KEYS.map((key) => ({

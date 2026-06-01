@@ -74,8 +74,8 @@ function GlobalTreasuryMatrix({
           variant: 'blood' as const,
           desc: 'Final cessation incidents recorded during arena engagements.',
         },
-      ].map((stat, i) => (
-        <Tooltip key={i}>
+      ].map((stat) => (
+        <Tooltip key={stat.label}>
           <TooltipTrigger asChild>
             <Surface
               variant={stat.variant}
@@ -163,7 +163,7 @@ function FiscalTrajectoryMonitor({ breakdown, week }: FiscalTrajectoryMonitorPro
           <div className="space-y-2">
             {breakdown.income.map((item, i) => (
               <div
-                key={i}
+                key={`${item.label}-${i}`}
                 className="flex justify-between items-center group/item hover:bg-white/2 p-1.5 rounded-none transition-colors"
               >
                 <span className="text-[11px] font-medium text-foreground/70 group-hover/item:text-foreground">
@@ -191,7 +191,7 @@ function FiscalTrajectoryMonitor({ breakdown, week }: FiscalTrajectoryMonitorPro
           <div className="space-y-2">
             {breakdown.expenses.map((item, i) => (
               <div
-                key={i}
+                key={`${item.label}-${i}`}
                 className="flex justify-between items-center group/item hover:bg-white/2 p-1.5 rounded-none transition-colors"
               >
                 <span className="text-[11px] font-medium text-foreground/70 group-hover/item:text-foreground">

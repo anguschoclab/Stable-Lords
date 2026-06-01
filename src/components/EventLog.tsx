@@ -122,9 +122,9 @@ function LinkifiedText({ text, names }: { text: string; names: string[] }) {
     <>
       {parts.map((part, i) =>
         nameSet.has(part) ? (
-          <WarriorLink key={i} name={part} className="font-semibold" />
+          <WarriorLink key={`${part}-${i}`} name={part} className="font-semibold" />
         ) : (
-          <React.Fragment key={i}>{part}</React.Fragment>
+          <React.Fragment key={`${part}-${i}`}>{part}</React.Fragment>
         )
       )}
     </>
@@ -295,7 +295,7 @@ export default function EventLog() {
         title: g.headline,
         subtitle: g.body.slice(0, 80) + '...',
         icon: EVENT_ICONS.news.icon,
-        iconColor: 'text-amber-400',
+        iconColor: 'text-arena-gold',
         linkTo: '/world/chronicle',
       });
     });

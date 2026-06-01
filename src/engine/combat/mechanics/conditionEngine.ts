@@ -116,17 +116,16 @@ export function evaluateConditions(
 /**
  * Psych state modifiers applied to skill rolls in resolveExchange.
  */
-export const PSYCH_STATE_MODS: Record<
-  PsychState,
-  {
-    attMod: number;
-    iniMod: number;
-    defMod: number;
-    parMod: number;
-    decMod: number;
-    enduranceCostMult: number;
-  }
-> = {
+export type PsychStateMod = {
+  attMod: number;
+  iniMod: number;
+  defMod: number;
+  parMod: number;
+  decMod: number;
+  enduranceCostMult: number;
+};
+
+export const PSYCH_STATE_MODS: Record<PsychState, PsychStateMod> = {
   Neutral: { attMod: 0, iniMod: 0, defMod: 0, parMod: 0, decMod: 0, enduranceCostMult: 1.0 },
   InTheZone: { attMod: 5, iniMod: 3, defMod: 0, parMod: 0, decMod: 0, enduranceCostMult: 1.0 },
   Rattled: { attMod: 0, iniMod: 0, defMod: -5, parMod: -3, decMod: 0, enduranceCostMult: 1.0 },

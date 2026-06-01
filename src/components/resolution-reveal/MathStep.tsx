@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -72,7 +71,7 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
           <div className="space-y-4">
             {lastSimulationReport?.trainingGains.map(
               (g: { warriorName: string; gain: number; attr: string }, i: number) => (
-                <div key={i} className="flex items-center justify-between text-sm">
+                <div key={`${g.warriorName}-${g.attr}-${i}`} className="flex items-center justify-between text-sm">
                   <span className="font-medium">{g.warriorName}</span>
                   <div className="flex gap-2 font-mono">
                     <Badge variant="outline" className="text-primary">

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { cn } from '@/lib/utils';

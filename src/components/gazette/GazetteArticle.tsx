@@ -97,7 +97,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                 <div className="flex -space-x-2">
                   {[1, 2].map((i) => (
                     <div
-                      key={i}
+                      key={`archive-${i}`}
                       className="h-6 w-6 rounded-full border border-black bg-white/5 flex items-center justify-center"
                     >
                       <History className="h-3 w-3 text-muted-foreground" />
@@ -136,7 +136,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
             <div className="space-y-8">
               {issue.sideStories.map((story, i) => (
                 <div
-                  key={i}
+                  key={`${story.slice(0, 30)}-${i}`}
                   className="group/short space-y-3 relative pl-6 border-l border-white/5 hover:border-arena-gold/30 transition-all"
                 >
                   <div className="absolute -left-0.5 top-0 w-1 h-3 bg-arena-gold opacity-0 group-hover/short:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,215,0,0.5)]" />

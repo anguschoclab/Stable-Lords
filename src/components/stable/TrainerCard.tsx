@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import { Surface } from '@/components/ui/Surface';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -19,7 +19,7 @@ interface TrainerCardProps {
   trainer: TrainerData;
   onFire?: () => void;
   owned: boolean;
-  action?: React.ReactNode;
+  action?: ReactNode;
 }/**
   * Trainer card.
   * @param - { trainer, on fire, owned, action }.

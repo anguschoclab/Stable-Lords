@@ -26,7 +26,7 @@ const TOKEN_CFG: Record<
   Rhythm: { Icon: RotateCw, color: 'bg-cyan-500/20 text-cyan-500', label: 'Rhythm' },
   Style: { Icon: Zap, color: 'bg-arena-gold/20 text-arena-gold', label: 'Style' },
   Attribute: { Icon: TrendingUp, color: 'bg-primary/20 text-primary', label: 'Attribute' },
-  Tactic: { Icon: Brain, color: 'bg-purple-500/20 text-purple-500', label: 'Tactic' },
+  Tactic: { Icon: Brain, color: 'bg-arena-fame/20 text-arena-fame', label: 'Tactic' },
 };/**
    * Insight manager.
    * @returns The result.

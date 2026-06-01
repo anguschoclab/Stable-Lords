@@ -1,4 +1,3 @@
-import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Activity, Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';

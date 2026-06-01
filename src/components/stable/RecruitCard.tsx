@@ -1,4 +1,3 @@
-import React from 'react';
 import { type PoolWarrior, type RecruitTier, TIER_STARS } from '@/engine/recruitment';
 import { type PotentialScoutReport } from '@/engine/recruitScouting';
 import { potentialRating, potentialGrade } from '@/engine/potential';
@@ -64,7 +63,7 @@ function TierBadge({ tier }: { tier: RecruitTier }) {
       {stars > 0 && (
         <div className="flex items-center gap-0.5">
           {Array.from({ length: stars }).map((_, i) => (
-            <Star key={i} className="h-2 w-2 fill-current" />
+            <Star key={`star-${i}`} className="h-2 w-2 fill-current" />
           ))}
         </div>
       )}

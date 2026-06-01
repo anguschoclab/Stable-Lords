@@ -1,4 +1,3 @@
-import React from 'react';
 import { Swords, Zap, Activity } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
 import { type Warrior } from '@/types/game';

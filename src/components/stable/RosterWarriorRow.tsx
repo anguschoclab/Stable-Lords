@@ -1,4 +1,3 @@
-import React from 'react';
 import { Crown, Star, Activity, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';

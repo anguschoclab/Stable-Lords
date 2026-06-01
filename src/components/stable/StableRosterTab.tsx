@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Warrior } from '@/types/shared.types';
 import { ATTRIBUTE_KEYS } from '@/types/game';
 import { WarriorLink } from '@/components/EntityLink';

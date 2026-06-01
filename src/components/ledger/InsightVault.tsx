@@ -1,4 +1,4 @@
-import React from 'react';
+import type { SVGProps } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
@@ -295,6 +295,6 @@ export function InsightVault() {
 }
 
 // Minimal Unlocked shim since it's used at the end
-function Unlocked(props: React.SVGProps<SVGSVGElement>) {
+function Unlocked(props: SVGProps<SVGSVGElement>) {
   return <Unlock {...props} />;
 }

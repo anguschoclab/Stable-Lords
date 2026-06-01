@@ -7,7 +7,13 @@ import type { OffensiveTactic, DefensiveTactic } from '@/types/shared.types';
 /**
  * Resolve effective tactics.
  */
-export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | 'mid' | 'late') {
+export interface ResolvedTactics {
+  offTactic: OffensiveTactic;
+  defTactic: DefensiveTactic;
+  target: string;
+}
+
+export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | 'mid' | 'late'): ResolvedTactics {
   const phase = plan.phases?.[phaseKey];
   return {
     offTactic: (phase?.offensiveTactic ?? plan.offensiveTactic ?? 'none') as OffensiveTactic,

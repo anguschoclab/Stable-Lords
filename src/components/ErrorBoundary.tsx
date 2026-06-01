@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, type PropsWithChildren, type ErrorInfo } from 'react';
 
 interface State {
   hasError: boolean;
@@ -11,12 +11,12 @@ interface State {
 /**
  * The ErrorBoundary class.
  */
-export class ErrorBoundary extends React.Component<React.PropsWithChildren, State> {
+export class ErrorBoundary extends Component<PropsWithChildren, State> {
   /**
    * Constructor.
    * @param props - Props.
    */
-constructor(props: React.PropsWithChildren) {
+constructor(props: PropsWithChildren) {
     super(props);
     this.state = { hasError: false, error: null };
   }
@@ -36,7 +36,7 @@ static getDerivedStateFromError(error: Error): State {
    * @param info - Info.
    * @returns The result.
    */
-componentDidCatch(error: Error, info: React.ErrorInfo) {
+componentDidCatch(error: Error, info: ErrorInfo) {
     console.error('[ErrorBoundary] Unhandled render error:', error, info.componentStack);
   }
 
@@ -67,8 +67,8 @@ render() {
           </details>
         )}
         <button
-          aria-label="Reboot System and Reload Page"
-          onClick={() => window.location.reload()}
+          aria-label="Reboot System"
+          onClick={() => this.setState({ hasError: false, error: null })}
           className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-black transition-colors"
         >
           Reboot System

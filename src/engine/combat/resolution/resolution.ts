@@ -8,6 +8,7 @@ import {
 } from './exchangeHelpers';
 import type { CombatEvent } from '@/types/combat.types';
 import { evaluateConditions } from '../mechanics/conditionEngine';
+import type { PsychStateMod } from '../mechanics/conditionEngine';
 import { contestCheck } from '../mechanics/combatMath';
 import { enduranceCost, fatiguePenalty } from '../mechanics/combatFatigue';
 import {
@@ -16,8 +17,9 @@ import {
   getStyleAntiSynergy,
   type Phase as StylePhase,
 } from '../../stylePassives';
+import type { StylePassiveResult } from '../../stylePassives';
 import { getFavoriteRhythmBonus } from '../../favorites';
-import { getDynamicTraitMods, type DynamicTraitContext } from '../../traits';
+import { getDynamicTraitMods, type DynamicTraitContext, type DynamicTraitMods } from '../../traits';
 import {
   TACTIC_OVERUSE_CAP,
 } from '@/constants/combat';
@@ -26,6 +28,8 @@ import {
   getDefensiveTacticMods,
   calculateFinalOEAL,
   alIniMod,
+  type OffensiveMods,
+  type DefensiveMods,
 } from '../mechanics/tacticResolution';
 import {
   makeExchangeState,
@@ -33,11 +37,13 @@ import {
   runFeint,
   runCommit,
   runRecovery,
+  type ExchangeState,
+  type CommitResult,
 } from './exchangeSubPhases';
 import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
-import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
+import { resolveEffectiveTactics, applyAggressionBias, type ResolvedTactics } from './tactics';
 import type { FighterState, ResolutionContext } from './types';
 import type { Warrior } from '@/types/warrior.types';
 
@@ -72,14 +78,14 @@ function resolveInitiativePhase(
   AL_D: number,
   fatA: number,
   fatD: number,
-  defModsA: any,
-  defModsD: any,
-  passA: any,
-  passD: any,
-  psychA: any,
-  psychD: any,
-  dynTraitsA: any,
-  dynTraitsD: any
+  defModsA: DefensiveMods,
+  defModsD: DefensiveMods,
+  passA: StylePassiveResult,
+  passD: StylePassiveResult,
+  psychA: PsychStateMod,
+  psychD: PsychStateMod,
+  dynTraitsA: DynamicTraitMods,
+  dynTraitsD: DynamicTraitMods
 ): {
   aGoesFirst: boolean;
   iniA: number;
@@ -159,27 +165,27 @@ function resolveCombatOffenseDefense(
   AL_D: number,
   fatA: number,
   fatD: number,
-  offModsA: any,
-  offModsD: any,
-  defModsA: any,
-  defModsD: any,
-  passA: any,
-  passD: any,
+  offModsA: OffensiveMods,
+  offModsD: OffensiveMods,
+  defModsA: DefensiveMods,
+  defModsD: DefensiveMods,
+  passA: StylePassiveResult,
+  passD: StylePassiveResult,
   biasAttA: number,
   biasDefA: number,
   biasAttD: number,
   biasDefD: number,
-  tactA: any,
-  tactD: any,
-  psychA: any,
-  psychD: any,
-  dynTraitsA: any,
-  dynTraitsD: any,
+  tactA: ResolvedTactics,
+  tactD: ResolvedTactics,
+  psychA: PsychStateMod,
+  psychD: PsychStateMod,
+  dynTraitsA: DynamicTraitMods,
+  dynTraitsD: DynamicTraitMods,
   feintAttBonus: number,
   feintDefBonus: number,
-  attCommit: any,
-  defCommit: any,
-  es: any,
+  attCommit: CommitResult,
+  defCommit: CommitResult,
+  es: ExchangeState,
   phaseKey: 'opening' | 'mid' | 'late',
   stylePhase: StylePhase,
   events: CombatEvent[]

@@ -9,6 +9,7 @@ interface AutosimConsoleProps {
   progress: { current: number; total: number; lastSummary?: WeekSummary } | null;
   result: AutosimResult | null;
   onStart: (weeks: number) => void;
+  onReset?: () => void;
 }/**
   * Autosim console.
   * @param - { is simulating, progress, result, on start }.
@@ -21,7 +22,7 @@ interface AutosimConsoleProps {
  * @param - { is simulating, progress, result, on start }.
  * @returns The result.
  */
-export function AutosimConsole({ isSimulating, progress, result, onStart }: AutosimConsoleProps) {
+export function AutosimConsole({ isSimulating, progress, result, onStart, onReset }: AutosimConsoleProps) {
   const percent = progress ? Math.round((progress.current / progress.total) * 100) : 0;
 
   return (
@@ -139,7 +140,7 @@ export function AutosimConsole({ isSimulating, progress, result, onStart }: Auto
 
             <Button
               variant="outline"
-              onClick={() => window.location.reload()}
+              onClick={() => onReset?.()}
               className="w-full h-10 font-black uppercase text-[10px] tracking-widest"
             >
               Return to Console

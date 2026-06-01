@@ -10,9 +10,11 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
 
     const initialWarriorCount =
       (state.rivals || []).reduce((acc, r) => acc + r.roster.length, 0) + state.roster.length;
-    console.log(
-      `Initial World Population: ${initialWarriorCount} warriors across ${state.rivals?.length} stables.`
-    );
+    if (process.env.DEBUG_SIM) {
+      console.log(
+        `Initial World Population: ${initialWarriorCount} warriors across ${state.rivals?.length} stables.`
+      );
+    }
 
     for (let i = 0; i < 104; i++) {
       state = advanceWeek(state);
@@ -23,11 +25,13 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
     const initialWarriorCountAdjusted = Math.max(initialWarriorCount, 1);
     const annualDeathRate = totalDeaths / 2 / initialWarriorCountAdjusted;
 
-    console.log(`--- SIMULATION AUDIT RESULTS (WEEK 104) ---`);
-    console.log(`Final Rival Stables: ${finalRivalCount} (Target: 30-45)`);
-    console.log(`Total Deaths: ${totalDeaths}`);
-    console.log(`Est. Annual Mortality: ${(annualDeathRate * 100).toFixed(2)}% (Target: ~10%)`);
-    console.log(`Championships Run: ${state.tournaments?.length || 0}`);
+    if (process.env.DEBUG_SIM) {
+      console.log(`--- SIMULATION AUDIT RESULTS (WEEK 104) ---`);
+      console.log(`Final Rival Stables: ${finalRivalCount} (Target: 30-45)`);
+      console.log(`Total Deaths: ${totalDeaths}`);
+      console.log(`Est. Annual Mortality: ${(annualDeathRate * 100).toFixed(2)}% (Target: ~10%)`);
+      console.log(`Championships Run: ${state.tournaments?.length || 0}`);
+    }
 
     // --- Assertions ---
 

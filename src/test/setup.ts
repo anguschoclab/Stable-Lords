@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { cleanup } from '@testing-library/react';
 import { enableMapSet } from 'immer';
 import { clearWarriorCache as clearTournamentCache } from '@/engine/matchmaking/tournament/tournamentStateMutator';
 import { clearWarriorCache as clearSelectionCache } from '@/engine/matchmaking/tournamentSelection/utils';
@@ -209,6 +210,11 @@ afterEach(() => {
   } catch (e) {
     // Ignore if module doesn't exist
   }
+});
+
+// Clean up rendered components after each test in jsdom environment
+afterEach(() => {
+  cleanup();
 });
 
 // Mock ResizeObserver for JSDOM

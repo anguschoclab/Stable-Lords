@@ -3,28 +3,7 @@ import { render } from '@testing-library/react';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { GameState } from '@/types/game';
-import { useGameStore } from '@/state/useGameStore';
-
-// Provide a default mock for localStorage BEFORE importing game store
-const localStorageMock = (function () {
-  let store: Record<string, string> = {};
-  return {
-    getItem: function (key: string) {
-      return store[key] || null;
-    },
-    setItem: function (key: string, value: string) {
-      store[key] = value.toString();
-    },
-    removeItem: function (key: string) {
-      const { [key]: _, ...rest } = store;
-      store = rest;
-    },
-    clear: function () {
-      store = {};
-    },
-  };
-})();
-Object.defineProperty(global, 'localStorage', { value: localStorageMock, writable: true });/**
+import '@/test/setup';/**
                                                                                             * Render with game state.
                                                                                             * @param ui - Ui.
                                                                                             * @param partialState - Partial state.

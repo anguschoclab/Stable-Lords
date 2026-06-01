@@ -4,7 +4,6 @@ import type { FightOutcome, FightOutcomeBy } from '@/types/combat.types';
 import { FightingStyle, type WarriorId, type StableId, type TournamentId } from '@/types/shared.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNG } from '@/utils/random';
-import { clearWarriorCache } from '@/engine/core/warriorLookup';
 // ─── Mock simulateFight before importing resolution ───
 vi.mock('@/engine/simulate', () => ({
   simulateFight: vi.fn(() => ({
@@ -456,10 +455,6 @@ describe('modifyWarrior (awards.ts)', () => {
 // ─── resolveRound ───
 
 describe('resolveRound (tournamentSelection/resolution.ts)', () => {
-  beforeEach(() => {
-    clearWarriorCache();
-  });
-
   it('returns empty results for missing tournament', () => {
     const state = makeBaseState();
     const { updatedState, roundResults } = resolveRound(state, 'nonexistent', 1);
@@ -686,10 +681,6 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
 // ─── resolveCompleteTournament ───
 
 describe('resolveCompleteTournament', () => {
-  beforeEach(() => {
-    clearWarriorCache();
-  });
-
   it('resolves all rounds to completion', () => {
     const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
     const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
@@ -754,10 +745,6 @@ describe('resolveCompleteTournament', () => {
 // ─── applyBoutResults ───
 
 describe('applyBoutResults', () => {
-  beforeEach(() => {
-    clearWarriorCache();
-  });
-
   it('creates fight summary and appends to arena history', () => {
     const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
     const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);

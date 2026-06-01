@@ -32,7 +32,7 @@ export function findWarriorById(
   // Check tournament first if provided (optimized order from tournamentStateMutator.ts)
   if (tournament) {
     for (const participant of tournament.participants) {
-      if (participant.id === warriorId) {
+      if (participant.id === warriorId && participant.attributes) {
         return participant;
       }
     }

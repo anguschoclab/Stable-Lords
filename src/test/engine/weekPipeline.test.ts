@@ -4,10 +4,8 @@ import { GameState, RivalStableData } from '../../types/game';
 
 describe('processTierProgression', () => {
   const mockState = {
-    meta: { createdAt: '2024-01-01' },
     season: 'Spring',
     week: 1,
-    meta: { createdAt: 'mock-date' },
     rivals: [
       {
         // rivalsUpdates is keyed by rival.id (StableId) — owner.id is the OwnerId.

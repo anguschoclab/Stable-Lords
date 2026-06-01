@@ -961,7 +961,7 @@ describe('Scheduling Assistant Engine', () => {
       expect(avoid[0]?.rivalWarrior.id).toBe('r1');
     });
 
-    it('includes rivals with Critical injuries', () => {
+    it('excludes rivals with Critical injuries (>2 weeks)', () => {
       const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
       const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
         { id: 'inj1' as any, name: 'Critical Wound', description: '', severity: 'Critical', weeksRemaining: 10, penalties: {} },
@@ -970,8 +970,7 @@ describe('Scheduling Assistant Engine', () => {
       const state = mockState([injuredRival]);
       const avoid = getMatchupsToAvoid(state, player, 1);
 
-      expect(avoid.length).toBe(1);
-      expect(avoid[0]?.rivalWarrior.id).toBe('r1');
+      expect(avoid.length).toBe(0);
     });
   });
 

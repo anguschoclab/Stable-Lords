@@ -51,8 +51,9 @@ export function findWarriorById(
   // Check tournament first if provided
   if (tournament) {
     for (let i = 0; i < tournament.participants.length; i++) {
-      if (tournament.participants[i].id === warriorId) {
-        return tournament.participants[i];
+      const participant = tournament.participants[i];
+      if (participant.id === warriorId && participant.attributes) {
+        return participant;
       }
     }
   }

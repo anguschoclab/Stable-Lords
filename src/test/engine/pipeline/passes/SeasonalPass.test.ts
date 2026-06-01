@@ -599,4 +599,69 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems?.[0]?.title).toBe('Underground Pit Fight');
     expect(impact.newsletterItems?.[0]?.items[0]).toContain('Brutus');
   });
+
+  it('should trigger the rogue_alchemist offseason event and award xp (success)', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 21.5 / eventCount; // picks index 21 = rogue_alchemist
+      if (callCount === 3) return 0.2; // roll < 0.5, success
+      if (callCount === 4) return 0.5; // xp roll
+      if (callCount === 5) return 0.5; // fame roll
+      return originalNext();
+    };
+    rng.next = mockNext;
+
+    const warriorId = 'w-alch-success' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Potion Drinker', status: 'Active', xp: 10, fame: 20 } as any],
+      newsletter: [],
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update).toBeDefined();
+    expect(update?.xp).toBe(35); // 10 + (20 + 5)
+    expect(update?.fame).toBe(28); // 20 + (5 + 3)
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('Rogue Alchemist');
+    expect(impact.newsletterItems?.[0]?.items[0]).toContain('mutagenic success');
+  });
+
+  it('should trigger the rogue_alchemist offseason event and add an injury (failure)', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 21.5 / eventCount; // picks index 21 = rogue_alchemist
+      if (callCount === 3) return 0.8; // roll >= 0.5, failure
+      return originalNext();
+    };
+    rng.next = mockNext;
+
+    const warriorId = 'w-alch-fail' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Poor Drinker', status: 'Active', injuries: [] } as any],
+      newsletter: [],
+    };
+
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+
+    const update = impact.rosterUpdates?.get(warriorId);
+    expect(update).toBeDefined();
+    expect(update?.injuries).toBeDefined();
+    expect(update?.injuries).toHaveLength(1);
+    expect(update?.injuries?.[0]?.name).toBe('Alchemical Sickness');
+
+    expect(impact.newsletterItems).toHaveLength(1);
+    expect(impact.newsletterItems?.[0]?.title).toBe('Rogue Alchemist');
+    expect(impact.newsletterItems?.[0]?.items[0]).toContain('battery acid');
+  });
 });

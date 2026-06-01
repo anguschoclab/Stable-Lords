@@ -637,6 +637,25 @@ app.whenReady().then(async () => {
   });
 });
 
+app.on('web-contents-created', (event, contents) => {
+  contents.on('will-navigate', (event, navigationUrl) => {
+    const parsedUrl = new URL(navigationUrl);
+
+    // In dev, only allow localhost. In prod, only allow file: protocol
+    if (isDev) {
+      if (parsedUrl.hostname !== 'localhost' && parsedUrl.hostname !== '127.0.0.1') {
+        console.warn('Blocked arbitrary navigation to:', navigationUrl);
+        event.preventDefault();
+      }
+    } else {
+      if (parsedUrl.protocol !== 'file:') {
+        console.warn('Blocked arbitrary navigation to:', navigationUrl);
+        event.preventDefault();
+      }
+    }
+  });
+});
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();

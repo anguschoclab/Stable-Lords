@@ -1,0 +1,3 @@
+## 2024-05-19 - Zustand useWorldState Causes N+1 Re-Renders in List Item Components
+**Learning:** `useWorldState()` subscribes to the entire global state object by default. When used in a component that is rendered inside a large list (like `FormSparkline` in a roster table), it completely breaks `React.memo()`. Any unrelated global state change (e.g., ticking the week, treasury changing) will trigger a re-render for every single item in the list, causing massive O(N) performance regressions.
+**Action:** In small list components, never call `useWorldState()` directly. Instead, extract exactly what you need using `useGameStore(useShallow((s) => s.specificSlice))` to maintain `React.memo` isolation.

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -20,8 +21,7 @@ export const FormSparkline = React.memo(function FormSparkline({
   limit = 5,
 }: FormSparklineProps) {
   // Only select what we need: the history array
-  const state = useWorldState();
-  const arenaHistory = state.arenaHistory;
+  const arenaHistory = useGameStore(useShallow((s) => s.arenaHistory));
 
   const history = useMemo(() => {
     return getRecentFightsForWarrior(arenaHistory, warriorId, limit);

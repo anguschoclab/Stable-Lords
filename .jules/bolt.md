@@ -35,3 +35,7 @@
 ## 2024-06-03 - [Optimizing O(N) Lookups in Rendering Loops]
 **Learning:** Found that `TournamentBracket` was using `.find()` over `arenaHistory` (which can grow very large) for *every single bout* in the rendered bracket map. This results in $O(N \times M)$ scans per render, where N is total rounds/bouts and M is history length.
 **Action:** When mapping over items that need to frequently cross-reference a large history or state array, precompute a lookup map with `useMemo` so that lookups per rendered item drop from $O(M)$ to $O(1)$.
+
+## 2024-05-18 - [Optimization: Preventing O(N) re-renders in Dashboard Widgets]
+**Learning:** React components inside Dashboard widgets (like `RecentBoutsWidget` and `WeeklyDigestWidget`) were directly calling `const state = useGameStore();`. This means the component re-renders whenever *any* part of the global game state changes, even unrelated state like `fame`, `treasury`, or `week`.
+**Action:** When a component only needs specific parts of a large Zustand store (e.g., `NameResolutionState` for `resolveStableName`), always use `useShallow` with an explicit selector to restrict re-renders to only those specific state fields.

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ChevronRight, Swords, Trophy, Activity, Shield } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { resolveStableName } from '@/utils/historyResolver';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
@@ -25,7 +26,16 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  * @returns The result.
  */
 export function RecentBoutsWidget() {
-  const state = useGameStore();
+  const state = useGameStore(
+    useShallow((s) => ({
+      player: s.player,
+      arenaHistory: s.arenaHistory,
+      rivals: s.rivals,
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+    }))
+  );
 
   // Get the last 5 bouts involving the player's stable
   const recentBouts = useMemo(() => {

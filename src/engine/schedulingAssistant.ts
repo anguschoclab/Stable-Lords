@@ -1,7 +1,18 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
+import type { FightSummary } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import { isTooInjuredToFight } from './injuries';
 import { getMatchupBonus } from '@/constants/combat';
+
+/**
+ * Defines the shape of head-to-head record.
+ */
+interface HeadToHeadRecord {
+  wins: number;
+  losses: number;
+  total: number;
+  lastWinner: 'player' | 'rival' | 'draw' | null;
+}
 
 /**
  * Defines the shape of matchup score.
@@ -14,6 +25,8 @@ export interface MatchupScore {
   styleAdvantage: number;
   fameDiff: number;
   notes: string[];
+  rankDiff?: number;
+  headToHead?: HeadToHeadRecord;
 }
 
 /**
@@ -73,6 +86,33 @@ export function scoreMatchup(
     }
   }
 
+  // Rank modifier
+  const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
+  const rivalRank = state.realmRankings?.[rivalWarrior.id]?.overallRank;
+  if (playerRank !== undefined && rivalRank !== undefined) {
+    const rankDiff = Math.abs(playerRank - rivalRank);
+    if (rankDiff <= 3) {
+      score += 15;
+    } else if (rankDiff <= 10) {
+      score += 5;
+    } else {
+      score -= 10;
+    }
+  }
+
+  // Head-to-head history modifier
+  if (state.arenaHistory && state.arenaHistory.length > 0) {
+    const hh = getHeadToHeadRecord(playerWarrior, rivalWarrior, state.arenaHistory);
+    if (hh.total === 0) {
+      score += 3; // Novelty bonus
+    } else {
+      if (hh.lastWinner === 'player') score += 5;
+      if (hh.lastWinner === 'rival') score += 10;
+      if (hh.total >= 3 && hh.wins === hh.total) score -= 5; // Repetitive farm
+      if (hh.total >= 3 && hh.losses === hh.total) score -= 15; // Curb stomp
+    }
+  }
+
   return score;
 }
 
@@ -88,11 +128,50 @@ function getEligibleRivals(state: GameState): { warrior: Warrior; stable: RivalS
   return rivals;
 }
 
-function getMatchupNotes(
+function getHeadToHeadRecord(
   playerWarrior: Warrior,
   rivalWarrior: Warrior,
+  arenaHistory: FightSummary[] | undefined
+): HeadToHeadRecord {
+  let wins = 0;
+  let losses = 0;
+  let total = 0;
+  let lastWinner: 'player' | 'rival' | 'draw' | null = null;
+
+  if (!arenaHistory) {
+    return { wins: 0, losses: 0, total: 0, lastWinner: null };
+  }
+
+  for (let i = 0; i < arenaHistory.length; i++) {
+    const fight = arenaHistory[i];
+    if (!fight) continue;
+    const playerIsA = fight.warriorIdA === playerWarrior.id;
+    const playerIsD = fight.warriorIdD === playerWarrior.id;
+    const rivalIsA = fight.warriorIdA === rivalWarrior.id;
+    const rivalIsD = fight.warriorIdD === rivalWarrior.id;
+
+    if ((playerIsA && rivalIsD) || (playerIsD && rivalIsA)) {
+      total++;
+      if (fight.winner === null) {
+        lastWinner = 'draw';
+      } else if ((playerIsA && fight.winner === 'A') || (playerIsD && fight.winner === 'D')) {
+        wins++;
+        lastWinner = 'player';
+      } else {
+        losses++;
+        lastWinner = 'rival';
+      }
+    }
+  }
+
+  return { wins, losses, total, lastWinner };
+}
+
+function getMatchupNotes(
   styleAdvantage: number,
-  fameDiff: number
+  fameDiff: number,
+  rankDiff?: number,
+  headToHead?: HeadToHeadRecord
 ): string[] {
   const notes: string[] = [];
   if (styleAdvantage >= 2) notes.push('Hard counter! Excellent style advantage.');
@@ -102,6 +181,23 @@ function getMatchupNotes(
 
   if (fameDiff > 15) notes.push('Safe fight, but low fame reward.');
   else if (fameDiff < -15) notes.push('Dangerous fight, but high fame reward!');
+
+  if (rankDiff !== undefined) {
+    const absRankDiff = Math.abs(rankDiff);
+    if (absRankDiff <= 3) notes.push('Close rank matchup — competitive bout!');
+    else if (absRankDiff > 10) notes.push('Rank mismatch — uneven competition.');
+  }
+
+  if (headToHead) {
+    if (headToHead.total === 0) {
+      notes.push('Fresh matchup — no prior encounters.');
+    } else {
+      if (headToHead.lastWinner === 'rival') notes.push('Revenge opportunity — they beat you last time!');
+      if (headToHead.lastWinner === 'player') notes.push('Favorable history — you\'ve beaten them before.');
+      if (headToHead.wins >= 3) notes.push(`Dominant streak — you've beaten them ${headToHead.wins} times.`);
+      if (headToHead.losses >= 3) notes.push(`Curb stomp risk — they've beaten you ${headToHead.losses} times.`);
+    }
+  }
 
   return notes;
 }
@@ -126,13 +222,16 @@ export function getRecommendedChallenges(
   // Bolt Optimization: Bounded Insertion Sort (O(N) instead of O(N log N))
   // Prevents allocating and sorting a massive array when we only need the top K items
   // Additionally saves execution time by lazy-evaluating getMatchupNotes
-  for (let i = 0; i < eligibleRivals.length; i++) {
-    const r = eligibleRivals[i];
+  for (const r of eligibleRivals) {
     const score = scoreMatchup(playerWarrior, r.warrior, state);
 
     if (topScores.length < limit) {
       const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
+      const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
+      const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
+      const rankDiff = playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+      const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
       topScores.push({
         playerWarriorId: playerWarrior.id,
         rivalWarrior: r.warrior,
@@ -140,12 +239,18 @@ export function getRecommendedChallenges(
         score,
         styleAdvantage,
         fameDiff,
-        notes: getMatchupNotes(playerWarrior, r.warrior, styleAdvantage, fameDiff),
+        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead),
+        rankDiff,
+        headToHead,
       });
       topScores.sort((a, b) => b.score - a.score);
-    } else if (score > topScores[limit - 1].score) {
+    } else if (score > topScores[limit - 1]!.score) {
       const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
+      const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
+      const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
+      const rankDiff = playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+      const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
       topScores[limit - 1] = {
         playerWarriorId: playerWarrior.id,
         rivalWarrior: r.warrior,
@@ -153,7 +258,9 @@ export function getRecommendedChallenges(
         score,
         styleAdvantage,
         fameDiff,
-        notes: getMatchupNotes(playerWarrior, r.warrior, styleAdvantage, fameDiff),
+        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead),
+        rankDiff,
+        headToHead,
       };
       topScores.sort((a, b) => b.score - a.score);
     }
@@ -181,13 +288,16 @@ export function getMatchupsToAvoid(
   // Bolt Optimization: Bounded Insertion Sort (O(N) instead of O(N log N))
   // Prevents allocating and sorting a massive array when we only need the top K items
   // Additionally saves execution time by lazy-evaluating getMatchupNotes
-  for (let i = 0; i < eligibleRivals.length; i++) {
-    const r = eligibleRivals[i];
+  for (const r of eligibleRivals) {
     const score = scoreMatchup(playerWarrior, r.warrior, state);
 
     if (bottomScores.length < limit) {
       const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
+      const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
+      const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
+      const rankDiff = playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+      const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
       bottomScores.push({
         playerWarriorId: playerWarrior.id,
         rivalWarrior: r.warrior,
@@ -195,12 +305,18 @@ export function getMatchupsToAvoid(
         score,
         styleAdvantage,
         fameDiff,
-        notes: getMatchupNotes(playerWarrior, r.warrior, styleAdvantage, fameDiff),
+        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead),
+        rankDiff,
+        headToHead,
       });
       bottomScores.sort((a, b) => a.score - b.score);
-    } else if (score < bottomScores[limit - 1].score) {
+    } else if (score < bottomScores[limit - 1]!.score) {
       const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
+      const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
+      const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
+      const rankDiff = playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+      const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
       bottomScores[limit - 1] = {
         playerWarriorId: playerWarrior.id,
         rivalWarrior: r.warrior,
@@ -208,7 +324,9 @@ export function getMatchupsToAvoid(
         score,
         styleAdvantage,
         fameDiff,
-        notes: getMatchupNotes(playerWarrior, r.warrior, styleAdvantage, fameDiff),
+        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead),
+        rankDiff,
+        headToHead,
       };
       bottomScores.sort((a, b) => a.score - b.score);
     }

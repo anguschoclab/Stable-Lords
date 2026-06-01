@@ -43,10 +43,12 @@ export function useStableComparison(rivals: RivalStableData[]) {
 
   const grudge = useMemo(() => {
     if (!rivalA || !rivalB) return null;
-    return ownerGrudges.find(
-      (g) =>
-        (g.ownerIdA === rivalA.owner.id && g.ownerIdB === rivalB.owner.id) ||
-        (g.ownerIdA === rivalB.owner.id && g.ownerIdB === rivalA.owner.id)
+    return (
+      ownerGrudges.find(
+        (g) =>
+          (g.ownerIdA === rivalA.owner.id && g.ownerIdB === rivalB.owner.id) ||
+          (g.ownerIdA === rivalB.owner.id && g.ownerIdB === rivalA.owner.id)
+      ) ?? null
     );
   }, [ownerGrudges, rivalA, rivalB]);
 

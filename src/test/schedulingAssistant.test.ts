@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { FightingStyle, type Warrior, type GameState, type RivalStableData, type Rivalry } from '@/types/game';
+import { FightingStyle, type Warrior, type GameState, type RivalStableData, type Rivalry, type FightSummary } from '@/types/game';
 import {
   scoreMatchup,
   getRecommendedChallenges,
@@ -124,6 +124,43 @@ describe('Scheduling Assistant Engine', () => {
     reason,
     startWeek: 1,
   });
+
+  // Helper to create a mock fight between two warriors
+  const mockFightBetween = (
+    playerId: string,
+    rivalId: string,
+    winner: 'A' | 'D',
+    week = 1
+  ): FightSummary => ({
+    id: `fight-${playerId}-${rivalId}-${week}` as any,
+    week,
+    a: 'Attacker',
+    d: 'Defender',
+    warriorIdA: playerId as any,
+    warriorIdD: rivalId as any,
+    styleA: FightingStyle.BashingAttack,
+    styleD: FightingStyle.TotalParry,
+    winner,
+    by: 'KO',
+    title: 'Test Match',
+    transcript: [],
+    createdAt: '2024-01-01T00:00:00.000Z',
+  });
+
+  // Helper to populate realmRankings on a state
+  const stateWithRankings = (
+    state: GameState,
+    rankings: Record<string, { overallRank: number; classRank?: number; compositeScore?: number }>
+  ): GameState => {
+    state.realmRankings = rankings as any;
+    return state;
+  };
+
+  // Helper to populate arenaHistory on a state
+  const stateWithHistory = (state: GameState, fights: FightSummary[]): GameState => {
+    state.arenaHistory = fights;
+    return state;
+  };
 
   it('should correctly score a favorable style matchup (e.g. TP vs AB)', () => {
     const tp = mockWarrior('tp1', FightingStyle.TotalParry);
@@ -614,6 +651,263 @@ describe('Scheduling Assistant Engine', () => {
         // Base 100
         expect(score).toBe(100);
       });
+    });
+  });
+
+  describe('Rank-Based Scoring', () => {
+    it('prefers close-ranked opponent over distant-ranked', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const closeRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const farRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([closeRival, farRival]);
+      state = stateWithRankings(state, {
+        p1: { overallRank: 5 },
+        r1: { overallRank: 6 },
+        r2: { overallRank: 60 },
+      });
+
+      const scoreClose = scoreMatchup(player, closeRival, state);
+      const scoreFar = scoreMatchup(player, farRival, state);
+
+      // Close rank (diff=1) gets +15, far rank (diff=55) gets -10
+      expect(scoreClose).toBeGreaterThan(scoreFar);
+      expect(scoreClose - scoreFar).toBe(25);
+    });
+
+    it('penalizes rank mismatch', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const reasonableRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const mismatchRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([reasonableRival, mismatchRival]);
+      state = stateWithRankings(state, {
+        p1: { overallRank: 5 },
+        r1: { overallRank: 14 },
+        r2: { overallRank: 50 },
+      });
+
+      const scoreReasonable = scoreMatchup(player, reasonableRival, state);
+      const scoreMismatch = scoreMatchup(player, mismatchRival, state);
+
+      // Reasonable (diff=9) gets +5, mismatch (diff=45) gets -10
+      expect(scoreReasonable).toBeGreaterThan(scoreMismatch);
+      expect(scoreReasonable - scoreMismatch).toBe(15);
+    });
+
+    it('handles missing realmRankings gracefully', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rival]); // realmRankings is {}
+
+      const score = scoreMatchup(player, rival, state);
+      // No crash, base score 100 (same style/fame/career, no rivalry)
+      expect(score).toBe(100);
+    });
+  });
+
+  describe('History-Based Scoring', () => {
+    it('boosts opponent who defeated player previously (grudge match)', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const grudgeRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([grudgeRival, neutralRival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'D', 1), // rival won
+        mockFightBetween('other', 'also_other', 'A', 1), // filler to make arenaHistory non-empty
+      ]);
+
+      const scoreGrudge = scoreMatchup(player, grudgeRival, state);
+      const scoreNeutral = scoreMatchup(player, neutralRival, state);
+
+      // Grudge: base + 10 = base + 10. Neutral: base + 3 (novelty) = base + 3
+      expect(scoreGrudge).toBeGreaterThan(scoreNeutral);
+      expect(scoreGrudge - scoreNeutral).toBe(7);
+    });
+
+    it('slightly boosts opponent player previously beat (momentum)', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const beatenRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([beatenRival, neutralRival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 1), // player won
+        mockFightBetween('other', 'also_other', 'A', 1),
+      ]);
+
+      const scoreBeaten = scoreMatchup(player, beatenRival, state);
+      const scoreNeutral = scoreMatchup(player, neutralRival, state);
+
+      // Beaten: base + 5. Neutral: base + 3
+      expect(scoreBeaten).toBeGreaterThan(scoreNeutral);
+      expect(scoreBeaten - scoreNeutral).toBe(2);
+    });
+
+    it('penalizes repetitive farm matchups', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const farmRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([farmRival, neutralRival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 1),
+        mockFightBetween('p1', 'r1', 'A', 2),
+        mockFightBetween('p1', 'r1', 'A', 3),
+        mockFightBetween('other', 'also_other', 'A', 1),
+      ]);
+
+      const scoreFarm = scoreMatchup(player, farmRival, state);
+      const scoreNeutral = scoreMatchup(player, neutralRival, state);
+
+      // Farm: base + 5 (last winner player) - 5 (farm penalty) = base + 0
+      // Neutral: base + 3 (novelty)
+      expect(scoreNeutral).toBeGreaterThan(scoreFarm);
+      expect(scoreNeutral - scoreFarm).toBe(3);
+    });
+
+    it('penalizes curb stomp matchups', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const curbRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([curbRival, neutralRival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'D', 1),
+        mockFightBetween('p1', 'r1', 'D', 2),
+        mockFightBetween('p1', 'r1', 'D', 3),
+        mockFightBetween('other', 'also_other', 'A', 1),
+      ]);
+
+      const scoreCurb = scoreMatchup(player, curbRival, state);
+      const scoreNeutral = scoreMatchup(player, neutralRival, state);
+
+      // Curb: base + 10 (last winner rival) - 15 (curb stomp) = base - 5
+      // Neutral: base + 3 (novelty)
+      expect(scoreNeutral).toBeGreaterThan(scoreCurb);
+      expect(scoreNeutral - scoreCurb).toBe(8);
+    });
+
+    it('gives novelty bonus to never-fought opponents', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rivalA = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const rivalB = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([rivalA, rivalB]);
+      // arenaHistory has fights but none involving these warriors
+      state = stateWithHistory(state, [
+        mockFightBetween('other1', 'other2', 'A', 1),
+        mockFightBetween('other3', 'other4', 'D', 2),
+      ]);
+
+      const scoreA = scoreMatchup(player, rivalA, state);
+      const scoreB = scoreMatchup(player, rivalB, state);
+
+      // Both get +3 novelty since they never fought the player
+      expect(scoreA).toBe(scoreB);
+      expect(scoreA).toBe(103); // base 100 + 3 novelty
+    });
+
+    it('handles empty arenaHistory gracefully', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([rival]); // arenaHistory is []
+
+      const score = scoreMatchup(player, rival, state);
+      // No crash, no history modifier
+      expect(score).toBe(100);
+    });
+  });
+
+  describe('Integration: Rank + History + Existing Factors', () => {
+    it('ranks correctly when all factors differ', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 20, 5, 5);
+      // r1: close rank + player beat them before + same style = strong recommendation
+      // r2: far rank + lost to them + bad style = weak recommendation
+      const r1 = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const r2 = mockWarrior('r2', FightingStyle.WallOfSteel, 10, 5, 5);
+
+      let state = mockState([r1, r2]);
+      state = stateWithRankings(state, {
+        p1: { overallRank: 5 },
+        r1: { overallRank: 6 },
+        r2: { overallRank: 50 },
+      });
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 1), // player won
+        mockFightBetween('p1', 'r2', 'D', 1), // rival won
+      ]);
+
+      const challenges = getRecommendedChallenges(state, player, 2);
+
+      expect(challenges.length).toBe(2);
+      expect(challenges[0]?.rivalWarrior.id).toBe('r1');
+      expect(challenges[1]?.rivalWarrior.id).toBe('r2');
+    });
+
+    it('notes include rank and history context', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([rival]);
+      state = stateWithRankings(state, {
+        p1: { overallRank: 5 },
+        r1: { overallRank: 6 },
+      });
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 1),
+      ]);
+
+      const challenges = getRecommendedChallenges(state, player, 1);
+
+      expect(challenges.length).toBe(1);
+      const notes = challenges[0]?.notes ?? [];
+      expect(notes).toContain('Close rank matchup — competitive bout!');
+      expect(notes).toContain('Favorable history — you\'ve beaten them before.');
+    });
+
+    it('getMatchupsToAvoid includes historically dominated opponent', () => {
+      const player = mockWarrior('p1', FightingStyle.AimedBlow, 10, 5, 5);
+      // r1: curb stomp record + bad style matchup
+      // r2: neutral
+      // r3: neutral
+      const r1 = mockWarrior('r1', FightingStyle.ParryRiposte, 10, 5, 5);
+      const r2 = mockWarrior('r2', FightingStyle.BashingAttack, 10, 5, 5);
+      const r3 = mockWarrior('r3', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([r1, r2, r3]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'D', 1),
+        mockFightBetween('p1', 'r1', 'D', 2),
+        mockFightBetween('p1', 'r1', 'D', 3),
+      ]);
+
+      const avoid = getMatchupsToAvoid(state, player, 2);
+
+      expect(avoid.length).toBe(2);
+      // r1 should be the most avoided (bad style + curb stomp penalty)
+      expect(avoid[0]?.rivalWarrior.id).toBe('r1');
+    });
+
+    it('recommends higher-ranked rival when all else equal', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const highRankRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const lowRankRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([highRankRival, lowRankRival]);
+      state = stateWithRankings(state, {
+        p1: { overallRank: 10 },
+        r1: { overallRank: 8 },  // higher rank than player
+        r2: { overallRank: 50 }, // much lower rank
+      });
+
+      const challenges = getRecommendedChallenges(state, player, 2);
+
+      // Both have close rank diff: |10-8|=2 -> +15, |10-50|=40 -> -10
+      expect(challenges[0]?.rivalWarrior.id).toBe('r1');
     });
   });
 });

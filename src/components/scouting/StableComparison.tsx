@@ -317,7 +317,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    (((mods as Partial<FightPlan>).OE ?? 0) > 0 ? 'text-arena-blood' : 'text-sky-400')
+                                    (((mods as Partial<FightPlan>).OE ?? 0) > 0 ? 'text-arena-blood' : 'text-arena-pop')
                                   )}
                                 >
                                   {modLabel((mods as Partial<FightPlan>).OE ?? 0)}
@@ -330,7 +330,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                 <span
                                   className={cn(
                                     'font-mono font-black',
-                                    (((mods as Partial<FightPlan>).AL ?? 0) > 0 ? 'text-arena-blood' : 'text-sky-400')
+                                    (((mods as Partial<FightPlan>).AL ?? 0) > 0 ? 'text-arena-blood' : 'text-arena-pop')
                                   )}
                                 >
                                   {modLabel((mods as Partial<FightPlan>).AL ?? 0)}
@@ -346,7 +346,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
                                     'font-mono font-black',
                                     ((mods as Partial<FightPlan>).killDesire ?? 0) > 0
                                       ? 'text-arena-blood'
-                                      : 'text-sky-400'
+                                      : 'text-arena-pop'
                                   )}
                                 >
                                   {modLabel((mods as Partial<FightPlan>).killDesire ?? 0)}

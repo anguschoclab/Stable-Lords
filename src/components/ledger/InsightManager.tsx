@@ -23,7 +23,7 @@ const TOKEN_CFG: Record<
   { Icon: React.ElementType; color: string; label: string }
 > = {
   Weapon: { Icon: Swords, color: 'bg-arena-blood/20 text-arena-blood', label: 'Weapon' },
-  Rhythm: { Icon: RotateCw, color: 'bg-cyan-500/20 text-cyan-500', label: 'Rhythm' },
+  Rhythm: { Icon: RotateCw, color: 'bg-arena-pop/20 text-arena-pop', label: 'Rhythm' },
   Style: { Icon: Zap, color: 'bg-arena-gold/20 text-arena-gold', label: 'Style' },
   Attribute: { Icon: TrendingUp, color: 'bg-primary/20 text-primary', label: 'Attribute' },
   Tactic: { Icon: Brain, color: 'bg-arena-fame/20 text-arena-fame', label: 'Tactic' },

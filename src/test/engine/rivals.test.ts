@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { generateRivalStables } from '../../engine/rivals';
-import { MetaAdaptation } from '../../types/game';
+import { generateRivalStables } from '@/engine/rivals';
+import { MetaAdaptation } from '@/types/game';
 
 describe('generateRivalStables', () => {
   it('should generate a variety of metaAdaptation types', () => {

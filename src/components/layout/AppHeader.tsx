@@ -59,21 +59,21 @@ const WEATHER_ICONS: Record<string, React.ElementType> = {
 
 const WEATHER_COLORS: Record<string, string> = {
   Clear: 'text-arena-gold',
-  Overcast: 'text-slate-400',
-  Rainy: 'text-blue-400',
+  Overcast: 'text-arena-steel',
+  Rainy: 'text-arena-pop',
   Sweltering: 'text-arena-blood',
   Breezy: 'text-primary',
   'Blazing Sun': 'text-destructive',
-  Gale: 'text-cyan-400',
+  Gale: 'text-arena-pop',
   'Blood Moon': 'text-destructive',
   Eclipse: 'text-arena-fame',
   Sandstorm: 'text-arena-gold',
-  Blizzard: 'text-blue-200',
-  'Dense Fog': 'text-slate-400',
+  Blizzard: 'text-arena-pop',
+  'Dense Fog': 'text-arena-steel',
   Thunderstorm: 'text-arena-gold',
-  Ashfall: 'text-stone-500',
-  'Acid Rain': 'text-lime-500',
-  'Mana Surge': 'text-fuchsia-400',
+  Ashfall: 'text-muted-foreground',
+  'Acid Rain': 'text-arena-gold',
+  'Mana Surge': 'text-arena-fame',
 };
 
 interface AppHeaderProps {
@@ -247,7 +247,7 @@ export function AppHeader({
                 <span
                   className={cn(
                     'font-mono font-black text-[10px] flex items-center gap-1.5 px-2 py-0.5 rounded-none border border-white/5 bg-white/5 cursor-help transition-all hover:bg-white/10 uppercase tracking-widest',
-                    WEATHER_COLORS[weather] || 'text-sky-400'
+                    WEATHER_COLORS[weather] || 'text-arena-pop'
                   )}
                 >
                   {(() => {

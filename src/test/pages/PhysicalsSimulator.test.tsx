@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import PhysicalsSimulator from '../../pages/PhysicalsSimulator';
+import PhysicalsSimulator from '@/pages/PhysicalsSimulator';
 
 // Mocking getBoundingClientRect for Radix UI select and slider
 // This is often needed in JSDOM when rendering complex UI components

@@ -186,7 +186,7 @@ export default function Training() {
                     kind === 'gain' && 'bg-primary/5 text-primary border border-primary/10',
                     kind === 'injury' &&
                       'bg-arena-gold/5 text-arena-gold border border-arena-gold/10',
-                    kind === 'recovery' && 'bg-sky-500/5 text-sky-400 border border-sky-500/10'
+                    kind === 'recovery' && 'bg-arena-pop/5 text-arena-pop border border-arena-pop/10'
                   )}
                 >
                   {kind === 'gain' ? (

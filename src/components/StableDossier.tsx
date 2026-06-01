@@ -73,7 +73,7 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
                 {stable.owner.stableName}
               </h2>
               {stable.isPlayer ? (
-                <Badge className="bg-arena-fame text-black">Your Stable</Badge>
+                <Badge className="bg-arena-fame text-primary-foreground">Your Stable</Badge>
               ) : (
                 <Badge variant="outline">Rival</Badge>
               )}

@@ -72,7 +72,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
                   {icon}
                 </div>
                 {trainer.tier === 'Master' && (
-                  <div className="absolute -top-2 -right-2 bg-arena-gold text-black p-1 rounded-none shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+                  <div className="absolute -top-2 -right-2 bg-arena-gold text-primary-foreground p-1 rounded-none shadow-[0_0_10px_rgba(255,215,0,0.5)]">
                     <Trophy className="h-3 w-3" />
                   </div>
                 )}

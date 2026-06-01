@@ -26,7 +26,7 @@ export function SectionDivider({ label, className, variant = 'muted' }: SectionD
 
   return (
     <div className={cn('flex items-center gap-4 py-4', className)}>
-      <span className="text-[10px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
+      <span className="codex-label whitespace-nowrap">
         {label}
       </span>
       <div className={cn('h-px flex-1 bg-gradient-to-r to-transparent', variantClasses[variant])} />

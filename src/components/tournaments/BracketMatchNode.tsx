@@ -107,11 +107,11 @@ export function BracketMatchNode({
           </div>
           {isPending ? (
             isBye ? (
-              <Badge className="h-3 px-1.5 text-[7px] bg-stone-500/20 text-stone-400 border-none">
+              <Badge className="h-3 px-1.5 text-[7px] bg-muted-foreground/20 text-muted-foreground border-none">
                 BYE
               </Badge>
             ) : (
-              <Badge className="h-3 px-1.5 text-[7px] bg-stone-500/20 text-stone-400 border-none">
+              <Badge className="h-3 px-1.5 text-[7px] bg-muted-foreground/20 text-muted-foreground border-none">
                 PENDING
               </Badge>
             )

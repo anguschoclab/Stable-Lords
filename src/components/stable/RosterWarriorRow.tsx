@@ -120,7 +120,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                           : grade === 'A'
                             ? 'text-primary border-primary/40'
                             : grade === 'B'
-                              ? 'text-primary border-emerald-400/40'
+                              ? 'text-primary border-primary/40'
                               : grade === 'C'
                                 ? 'text-muted-foreground border-white/10'
                                 : 'text-muted-foreground/60 border-white/5';

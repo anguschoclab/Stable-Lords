@@ -184,7 +184,7 @@ export default function AdminTools() {
                 className={cn(
                   'w-full flex items-center gap-4 px-4 py-3 text-[10px] font-black uppercase tracking-widest transition-all duration-300 group',
                   activeCategory === cat.id
-                    ? 'bg-primary text-black'
+                    ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground/60 hover:bg-white/5 hover:text-foreground'
                 )}
               >
@@ -192,7 +192,7 @@ export default function AdminTools() {
                   className={cn(
                     'h-4 w-4 transition-colors',
                     activeCategory === cat.id
-                      ? 'text-black'
+                      ? 'text-primary-foreground'
                       : 'text-muted-foreground/40 group-hover:text-primary'
                   )}
                 />

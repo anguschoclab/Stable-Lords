@@ -23,7 +23,7 @@ function RankCell({ row, index, isFiltered }: WarriorLeaderboardRowProps) {
             row.officialRank <= 64
               ? 'bg-arena-gold/10 text-arena-gold border-arena-gold/20'
               : row.officialRank <= 128
-                ? 'bg-slate-400/10 text-slate-400 border-slate-400/20'
+                ? 'bg-arena-steel/10 text-arena-steel border-arena-steel/20'
                 : 'bg-neutral-800 text-muted-foreground border-border/10'
           )}
         >
@@ -47,7 +47,7 @@ function NameCell({ row }: { row: WarriorRow }) {
           <Link
             to="/warrior/$id"
             params={{ id: row.id }}
-            className="font-display font-black uppercase text-xs tracking-tight text-primary hover:text-white transition-all flex items-center gap-2"
+            className="font-display font-black uppercase text-xs tracking-tight text-primary hover:text-foreground transition-all flex items-center gap-2"
           >
             {row.name}
             {row.officialRank === 1 && <Crown className="h-3 w-3 text-arena-gold" />}

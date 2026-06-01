@@ -95,7 +95,7 @@ const TacticalLogEntry = memo(
         <div className="flex-1 leading-relaxed">
           <span
             className={cn(
-              'font-serif',
+              'font-display',
               type === 'crit' && 'font-bold text-destructive',
               type === 'death' && 'font-bold text-arena-blood'
             )}

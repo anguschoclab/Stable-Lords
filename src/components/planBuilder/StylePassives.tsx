@@ -88,7 +88,7 @@ export default function StylePassives({ plan, warrior }: StylePassivesProps) {
               <span className="text-muted-foreground/60">
                 Fights: {(warrior?.career?.wins || 0) + (warrior?.career?.losses || 0)}
               </span>
-              <Badge className="rounded-none border-none font-black text-[9px] uppercase px-2 py-0.5 bg-arena-gold text-black">
+              <Badge className="rounded-none border-none font-black text-[9px] uppercase px-2 py-0.5 bg-arena-gold text-primary-foreground">
                 {getMastery((warrior?.career?.wins || 0) + (warrior?.career?.losses || 0)).tier}
               </Badge>
             </div>

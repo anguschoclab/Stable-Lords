@@ -92,8 +92,8 @@ export function suitabilityMultiplier(rating: SuitabilityRating): number {
  * Suitability_colors.
  */
 export const SUITABILITY_COLORS: Record<SuitabilityRating, string> = {
-  WS: 'text-green-500',
-  S: 'text-amber-500',
+  WS: 'text-primary',
+  S: 'text-arena-gold',
   U: 'text-destructive',
 };/**
    * Suitability_labels.

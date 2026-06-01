@@ -56,25 +56,25 @@ export default function MiniCombatLog({
   const getEventIcon = (type: ReturnType<typeof classifyEvent>) => {
     switch (type) {
       case 'hit':
-        return '⚔️';
+        return 'HIT';
       case 'crit':
-        return '⚡';
+        return 'CRT';
       case 'death':
-        return '💀';
+        return 'KIL';
       case 'ko':
-        return '😵';
+        return 'KO';
       case 'miss':
-        return '🛡️';
+        return 'MISS';
       case 'riposte':
-        return '↩️';
+        return 'RIP';
       case 'initiative':
-        return '⚡';
+        return 'INI';
       case 'exhaust':
-        return '😮‍💨';
+        return 'EXH';
       case 'phase':
-        return '◆';
+        return 'PHS';
       case 'spatial':
-        return '↔';
+        return 'SPT';
       default:
         return '•';
     }
@@ -159,7 +159,7 @@ export default function MiniCombatLog({
                       isLatest && 'bg-white/5'
                     )}
                   >
-                    <span className="text-[10px] shrink-0 mt-0.5">{getEventIcon(type)}</span>
+                    <span className="text-[9px] font-black uppercase tracking-tighter shrink-0 mt-0.5 text-muted-foreground/60">{getEventIcon(type)}</span>
                     <div className="flex-1 min-w-0">
                       <p
                         className={cn(

@@ -173,7 +173,7 @@ export default function ArenaFighter({
         <span
           className={cn(
             'text-xs font-bold px-2 py-0.5 rounded-none',
-            isWinner ? 'bg-arena-gold/80 text-black' : 'bg-black/60 text-foreground/90'
+            isWinner ? 'bg-arena-gold/80 text-primary-foreground' : 'bg-black/60 text-foreground/90'
           )}
         >
           {name}

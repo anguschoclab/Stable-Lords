@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { computeEndurance } from '../../engine/skillCalc';
-import type { Attributes } from '../../types/game';
+import { computeEndurance } from '@/engine/skillCalc';
+import type { Attributes } from '@/types/game';
 
 describe('skillCalc - computeEndurance', () => {
   // Helper to quickly create an Attributes object with default values

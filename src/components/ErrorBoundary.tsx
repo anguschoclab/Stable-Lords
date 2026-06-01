@@ -69,7 +69,7 @@ render() {
         <button
           aria-label="Reboot System"
           onClick={() => this.setState({ hasError: false, error: null })}
-          className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-black transition-colors"
+          className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-primary-foreground transition-colors"
         >
           Reboot System
         </button>

@@ -175,7 +175,7 @@ export default function WarriorDetail() {
                 variant="outline"
                 size="sm"
                 onClick={handleRetire}
-                className="gap-2 text-[10px] font-black uppercase tracking-widest h-10 px-6 rounded-none border-white/10 hover:bg-destructive hover:text-white transition-all duration-300"
+                className="gap-2 text-[10px] font-black uppercase tracking-widest h-10 px-6 rounded-none border-white/10 hover:bg-destructive hover:text-primary-foreground transition-all duration-300"
               >
                 <Armchair className="h-3.5 w-3.5" /> Decommission
               </Button>

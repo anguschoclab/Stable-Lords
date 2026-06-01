@@ -23,7 +23,7 @@ const NotFound = () => {
         </p>
         <Link
           to="/"
-          className="text-primary text-[10px] uppercase tracking-[0.4em] border border-primary px-6 py-2 hover:bg-primary hover:text-black transition-colors"
+          className="text-primary text-[10px] uppercase tracking-[0.4em] border border-primary px-6 py-2 hover:bg-primary hover:text-primary-foreground transition-colors"
         >
           Return to Hub
         </Link>

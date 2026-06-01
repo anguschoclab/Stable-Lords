@@ -227,7 +227,7 @@ export default function StableEquipment() {
                         {rec.synergy}% SYNERGY
                       </Badge>
                       {i === 0 && (
-                        <Badge className="bg-arena-gold text-black font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border-none">
+                        <Badge className="bg-arena-gold text-primary-foreground font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border-none">
                           OPTIMAL PATH
                         </Badge>
                       )}
@@ -354,7 +354,7 @@ export default function StableEquipment() {
                       className={cn(
                         'w-full h-12 font-black uppercase text-[10px] tracking-[0.4em] transition-all',
                         i === 0
-                          ? 'bg-primary text-black hover:bg-primary/90'
+                          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                           : 'bg-white/[0.05] border-white/10 hover:bg-white/[0.1] text-foreground'
                       )}
                       onClick={() => handleApply(rec.loadout, rec.label)}

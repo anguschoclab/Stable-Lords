@@ -67,7 +67,7 @@ export default function SpeechBubble({ bubble, onDismiss, position = 'left' }: S
         />
 
         {/* Quote marks */}
-        <span className="absolute -top-2 -left-1 text-lg opacity-40 font-serif">"</span>
+        <span className="absolute -top-2 -left-1 text-lg opacity-40 font-display">"</span>
 
         {bubble.text}
       </div>

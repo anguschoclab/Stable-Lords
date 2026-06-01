@@ -93,7 +93,7 @@ export function TrainerTable() {
                         className={cn(
                           'text-[8px] font-black border-none uppercase tracking-widest px-1.5 h-4',
                           t.tier === 'Master'
-                            ? 'bg-arena-gold text-black'
+                            ? 'bg-arena-gold text-primary-foreground'
                             : 'bg-primary text-primary-foreground'
                         )}
                       >

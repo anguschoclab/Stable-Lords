@@ -131,7 +131,7 @@ export default function BoutResolution({
             <div className="p-2 rounded-none bg-arena-gold/10 border border-arena-gold/20 shrink-0">
               <Activity className="h-4 w-4 text-arena-gold" />
             </div>
-            <p className="text-[13px] italic text-muted-foreground/80 leading-relaxed font-serif py-0.5">
+            <p className="text-[13px] italic text-muted-foreground/80 leading-relaxed font-display py-0.5">
               " {announcement} "
             </p>
           </div>

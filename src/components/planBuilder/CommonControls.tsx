@@ -78,7 +78,7 @@ export default function CommonControls({ plan, onPlanChange }: CommonControlsPro
               <Badge>{plan.offensiveTactic}</Badge>
             )}
             {plan.defensiveTactic && plan.defensiveTactic !== 'none' && (
-              <Badge className="bg-arena-gold text-black rounded-none uppercase font-black tracking-widest px-3 py-1">
+              <Badge className="bg-arena-gold text-primary-foreground rounded-none uppercase font-black tracking-widest px-3 py-1">
                 {plan.defensiveTactic}
               </Badge>
             )}

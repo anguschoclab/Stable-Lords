@@ -80,7 +80,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                       rival.strategy?.intent === 'VENDETTA'
                         ? 'bg-destructive/20 text-destructive'
                         : rival.strategy?.intent === 'EXPANSION'
-                          ? 'bg-stone-500/20 text-stone-400'
+                          ? 'bg-muted-foreground/20 text-muted-foreground'
                           : rival.strategy?.intent === 'RECOVERY'
                             ? 'bg-arena-blood/20 text-arena-blood'
                             : 'bg-primary/20 text-primary'

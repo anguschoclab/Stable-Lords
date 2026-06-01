@@ -415,7 +415,7 @@ export default function PromoterDetail() {
             promoterOffers.map((offer) => (
               <Card
                 key={offer.id}
-                className={offer.status === 'Signed' ? 'border-emerald-500/30' : ''}
+                className={offer.status === 'Signed' ? 'border-primary/30' : ''}
               >
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start">

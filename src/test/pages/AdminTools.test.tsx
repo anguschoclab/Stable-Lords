@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import AdminTools from '../../pages/AdminTools';
+import AdminTools from '@/pages/AdminTools';
 import '@/test/setup';
 
 // Mock useGameStore to avoid store initialization issues

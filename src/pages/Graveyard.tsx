@@ -153,7 +153,7 @@ function FallenGrid({
                     TERMINATED
                   </Badge>
                   {w.career?.medals?.gold > 0 && (
-                    <Badge className="bg-arena-gold text-black text-[8px] font-black tracking-widest px-2">
+                    <Badge className="bg-arena-gold text-primary-foreground text-[8px] font-black tracking-widest px-2">
                       CHAMPION
                     </Badge>
                   )}

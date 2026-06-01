@@ -2,7 +2,6 @@
  * Weekly Digest Dashboard Widget
  * Summary of weekly events, match results, and upcoming bouts
  */
-import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,25 +21,14 @@ import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
+import { useDigestSummary } from '@/hooks/useDigestSummary';
 
-interface WeeklyDigestProps {
+export interface WeeklyDigestProps {
   week: number;
   season: string;
   arenaHistory: FightSummary[];
   boutOffers: Record<string, BoutOffer>;
   currentWeek: number;
-}
-
-interface DigestSummary {
-  totalFights: number;
-  wins: number;
-  losses: number;
-  kills: number;
-  deaths: number;
-  upcomingBouts: number;
-  pendingOffers: number;
-  signedOffers: number;
-  tournamentActive: boolean;
 }
 
 export function WeeklyDigestWidget({
@@ -54,57 +42,12 @@ export function WeeklyDigestWidget({
     useShallow((s) => new Set<WarriorId>(s.roster.map((w) => w.id)))
   );
 
-  const summary = useMemo<DigestSummary>(() => {
-    // Filter fights for current week
-    const thisWeekFights = arenaHistory.filter((f) => f.week === currentWeek);
-
-    // Determine player wins/losses by checking if player warriors are winners
-    let wins = 0;
-    let losses = 0;
-    let kills = 0;
-    let deaths = 0;
-
-    thisWeekFights.forEach((f) => {
-      const playerIsA = playerWarriorIds.has(f.warriorIdA);
-      const playerIsD = playerWarriorIds.has(f.warriorIdD);
-
-      if (!playerIsA && !playerIsD) return; // Skip fights without player warriors
-
-      const playerWon = (playerIsA && f.winner === 'A') || (playerIsD && f.winner === 'D');
-      const playerLost = (playerIsA && f.winner === 'D') || (playerIsD && f.winner === 'A');
-
-      if (playerWon) {
-        wins++;
-        if (f.by === 'Kill') kills++;
-      } else if (playerLost) {
-        losses++;
-        if (f.by === 'Kill') deaths++;
-      }
-    });
-
-    // Count offers — single pass
-    const { pending, signed, upcoming } = Object.values(boutOffers).reduce(
-      (acc, o) => {
-        if (o.status === 'Proposed' && o.boutWeek >= currentWeek) acc.pending++;
-        if (o.status === 'Signed' && o.boutWeek === currentWeek) acc.signed++;
-        if (o.status === 'Signed' && o.boutWeek > currentWeek) acc.upcoming++;
-        return acc;
-      },
-      { pending: 0, signed: 0, upcoming: 0 }
-    );
-
-    return {
-      totalFights: thisWeekFights.length,
-      wins,
-      losses,
-      kills,
-      deaths,
-      upcomingBouts: upcoming,
-      pendingOffers: pending,
-      signedOffers: signed,
-      tournamentActive: false, // Set by parent if needed
-    };
-  }, [arenaHistory, boutOffers, currentWeek, playerWarriorIds]);
+  const summary = useDigestSummary({
+    arenaHistory,
+    boutOffers,
+    currentWeek,
+    playerWarriorIds,
+  });
 
   const hasActivity =
     summary.totalFights > 0 || summary.pendingOffers > 0 || summary.signedOffers > 0;
@@ -151,25 +94,25 @@ export function WeeklyDigestWidget({
             icon={<Trophy className="h-3.5 w-3.5" />}
             label="Wins"
             value={summary.wins}
-            color="emerald"
+            color="primary"
           />
           <StatBox
             icon={<TrendingDown className="h-3.5 w-3.5" />}
             label="Losses"
             value={summary.losses}
-            color="red"
+            color="destructive"
           />
           <StatBox
             icon={<Flame className="h-3.5 w-3.5" />}
             label="Kills"
             value={summary.kills}
-            color="orange"
+            color="arena-gold"
           />
           <StatBox
             icon={<Swords className="h-3.5 w-3.5" />}
             label="Upcoming"
             value={summary.upcomingBouts}
-            color="blue"
+            color="accent"
           />
         </div>
 
@@ -219,15 +162,15 @@ interface StatBoxProps {
   icon: React.ReactNode;
   label: string;
   value: number;
-  color: 'emerald' | 'red' | 'orange' | 'blue';
+  color: 'primary' | 'destructive' | 'arena-gold' | 'accent';
 }
 
 function StatBox({ icon, label, value, color }: StatBoxProps) {
   const colorClasses = {
-    emerald: 'text-primary bg-primary/10',
-    red: 'text-destructive bg-destructive/10',
-    orange: 'text-arena-gold bg-arena-gold/10',
-    blue: 'text-accent bg-accent/10',
+    primary: 'text-primary bg-primary/10',
+    destructive: 'text-destructive bg-destructive/10',
+    'arena-gold': 'text-arena-gold bg-arena-gold/10',
+    accent: 'text-accent bg-accent/10',
   };
 
   return (
@@ -273,25 +216,3 @@ function AlertBox({ type, message }: AlertBoxProps) {
   );
 }
 
-/** Mini digest for compact dashboard display */
-export function WeeklyDigestMini({
-  week,
-  arenaHistory,
-  currentWeek,
-}: Omit<WeeklyDigestProps, 'season' | 'boutOffers'>) {
-  const fightsThisWeek = arenaHistory.filter((f) => f.week === currentWeek).length;
-
-  return (
-    <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-none">
-      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-        <span className="text-lg font-black">{week}</span>
-      </div>
-      <div>
-        <p className="text-sm font-bold">Week {week} Summary</p>
-        <p className="text-xs text-muted-foreground">
-          {fightsThisWeek > 0 ? `${fightsThisWeek} fights recorded` : 'No fights yet'}
-        </p>
-      </div>
-    </div>
-  );
-}

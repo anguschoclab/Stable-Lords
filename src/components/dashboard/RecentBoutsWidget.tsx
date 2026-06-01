@@ -1,22 +1,20 @@
 import { useMemo } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronRight, Swords, Trophy, Activity, Shield } from 'lucide-react';
+import { ChevronRight, Swords, Activity } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
-import { resolveStableName } from '@/utils/historyResolver';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { FightSummary } from '@/types/game';
+import { BoutTableRow } from './BoutTableRow';
+import { EmptyBoutsState } from './EmptyBoutsState';
 
 export function RecentBoutsWidget() {
   const state = useGameStore(
@@ -30,14 +28,11 @@ export function RecentBoutsWidget() {
     }))
   );
 
-  // Get the last 5 bouts involving the player's stable
   const recentBouts = useMemo(() => {
     const playerStableId = state.player.id;
     const history = state.arenaHistory || [];
     const results: FightSummary[] = [];
 
-    // ⚡ Bolt: Replaced O(N) full-array filter and slice with an O(1) forward scan
-    // to find the first 5 bouts without scanning or allocating the entire history.
     for (let i = 0; i < history.length; i++) {
       const bout = history[i];
       if (bout && (bout.stableIdA === playerStableId || bout.stableIdD === playerStableId)) {
@@ -100,83 +95,16 @@ export function RecentBoutsWidget() {
           </TableHeader>
           <TableBody>
             {recentBouts.length === 0 ? (
-              <TableRow className="hover:bg-transparent border-none">
-                <TableCell colSpan={4} className="py-12 text-center opacity-20 italic">
-                  <p className="text-[10px] uppercase tracking-[0.3em]">No engagement data yet</p>
-                </TableCell>
-              </TableRow>
+              <EmptyBoutsState />
             ) : (
-              recentBouts.map((bout) => {
-                const isPlayerA = bout.stableIdA === state.player.id;
-                const playerWon =
-                  (isPlayerA && bout.winner === 'A') || (!isPlayerA && bout.winner === 'D');
-
-                return (
-                  <TableRow
-                    key={bout.id}
-                    className="border-white/5 group/row hover:bg-white/2 transition-colors"
-                  >
-                    <TableCell className="pl-6 py-4">
-                      <span className="text-[10px] font-mono font-black text-foreground/20 group-hover/row:text-primary transition-colors">
-                        WK {bout.week.toString().padStart(2, '0')}
-                      </span>
-                    </TableCell>
-                    <TableCell className="py-4">
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/row:text-foreground">
-                          {resolveStableName(
-                            state,
-                            isPlayerA ? bout.stableIdA : bout.stableIdD,
-                            isPlayerA ? bout.a : bout.d
-                          )}
-                        </span>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
-                          VS //{' '}
-                          {resolveStableName(
-                            state,
-                            isPlayerA ? bout.stableIdD : bout.stableIdA,
-                            isPlayerA ? bout.d : bout.a
-                          )}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center py-4">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div
-                            className={cn(
-                              'inline-flex items-center gap-2 px-3 py-1 rounded-none border font-black text-[9px] tracking-[0.2em] uppercase transition-all',
-                              playerWon
-                                ? 'bg-arena-pop/10 border-arena-pop/20 text-arena-pop'
-                                : 'bg-destructive/10 border-destructive/20 text-destructive'
-                            )}
-                          >
-                            {playerWon ? (
-                              <Trophy className="h-2.5 w-2.5" />
-                            ) : (
-                              <Shield className="h-2.5 w-2.5" />
-                            )}
-                            {playerWon ? 'VICTORY' : 'DEFEAT'}
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-                          {playerWon
-                            ? 'Combat objectives achieved.'
-                            : 'Strategic failure detected.'}
-                        </TooltipContent>
-                      </Tooltip>
-                    </TableCell>
-                    <TableCell className="text-right pr-6 py-4">
-                      <div className="flex flex-col items-end">
-                        <span className="text-[10px] font-mono font-black text-muted-foreground/60 uppercase">
-                          {bout.by || 'JUDICIAL_DECREE'}
-                        </span>
-                        <div className="h-0.5 w-8 bg-white/5 rounded-full mt-1 group-hover/row:bg-primary/40 transition-colors" />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })
+              recentBouts.map((bout) => (
+                <BoutTableRow
+                  key={bout.id}
+                  bout={bout}
+                  playerStableId={state.player.id}
+                  state={state}
+                />
+              ))
             )}
           </TableBody>
         </Table>

@@ -1,32 +1,12 @@
-import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
-import { HeartPulse, Activity, Skull, ShieldAlert } from 'lucide-react';
+import { HeartPulse, Activity, ShieldAlert } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { StatBattery } from '@/components/ui/StatBattery';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { WarriorLink } from '@/components/EntityLink';
+import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
+import { WarriorAuditCard } from './WarriorAuditCard';
 
 export function MedicalAuditWidget() {
-  const atRisk = useGameStore(
-    useShallow((s) => {
-      const result: { id: string; name: string; fatigue: number; injuries: typeof s.roster[number]['injuries'] }[] = [];
-      for (const w of s.roster) {
-        const fatigue = w.fatigue ?? 0;
-        if (w.status === 'Active' && (fatigue > 60 || w.injuries.length > 0)) {
-          result.push({
-            id: w.id,
-            name: w.name,
-            fatigue: w.fatigue ?? 0,
-            injuries: w.injuries,
-          });
-        }
-      }
-      result.sort((a, b) => b.fatigue - a.fatigue);
-      return result;
-    })
-  );
+  const atRisk = useAtRiskWarriors();
 
   const criticalCount = atRisk.filter((w) => (w.fatigue ?? 0) > 85 || w.injuries.length > 1).length;
 
@@ -36,7 +16,6 @@ export function MedicalAuditWidget() {
       padding="none"
       className="h-full border-border/10 group overflow-hidden relative flex flex-col shadow-2xl"
     >
-      {/* Background Decor */}
       <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
         <HeartPulse className="h-48 w-48 text-destructive" />
       </div>
@@ -77,62 +56,9 @@ export function MedicalAuditWidget() {
           </div>
         ) : (
           <div className="space-y-6">
-            {atRisk.map((w) => {
-              const fatigue = w.fatigue ?? 0;
-              const condition = Math.max(0, 100 - fatigue);
-              const isInjured = w.injuries.length > 0;
-
-              return (
-                <div key={w.id} className="group/item relative">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex flex-col">
-                      <WarriorLink
-                        name={w.name}
-                        id={w.id}
-                        className="text-xs font-black uppercase tracking-tight text-foreground/80 hover:text-primary transition-colors"
-                      />
-                      <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
-                        Operative ID: {w.id.slice(0, 8)}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {isInjured && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Skull className="h-3.5 w-3.5 text-destructive animate-pulse cursor-help" />
-                          </TooltipTrigger>
-                          <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest text-destructive">
-                            TRAUMATIC TISSUE FAILURE
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </div>
-                  </div>
-
-                  <StatBattery
-                    label="VIT"
-                    value={condition}
-                    max={100}
-                    labelValue={`${condition}%`}
-                    colorClass={condition < 40 ? 'bg-destructive' : 'bg-arena-gold'}
-                    className="mt-1 w-full"
-                  />
-
-                  {isInjured && (
-                    <div className="mt-2 flex flex-wrap gap-1.5 pl-1 border-l border-destructive/30 ml-0.5">
-                      {w.injuries.map((inj) => (
-                        <span
-                          key={typeof inj === 'string' ? inj : inj.name}
-                          className="text-[8px] font-black uppercase tracking-[0.1em] text-destructive py-0.5 px-1.5 bg-destructive/10 border border-destructive/20 rounded-none"
-                        >
-                          {typeof inj === 'string' ? inj : inj.name.replace(/_/g, ' ')}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+            {atRisk.map((w) => (
+              <WarriorAuditCard key={w.id} warrior={w} />
+            ))}
           </div>
         )}
       </div>

@@ -6,7 +6,12 @@ import {
   getZonePenalty,
   transitionZone,
   resetZone,
+  WEAPON_PREFERRED_RANGE,
+  WEAPON_RANGE_MODIFIERS,
 } from '@/engine/combat/mechanics/distanceResolution';
+import { WEAPON_DAMAGE_TYPE } from '@/engine/combat/mechanics/combatDamage';
+import { WEAPONS, SHIELD_ITEM_IDS } from '@/data/equipment/weapons';
+import { STYLE_CLASSIC_WEAPONS } from '@/data/equipment/equipment.utils';
 
 describe('computeReachScore', () => {
   it('returns INI + 0 when OE=5, no motivation, no debt', () => {
@@ -151,5 +156,49 @@ describe('resetZone', () => {
   });
   it('Center stays Center on reset', () => {
     expect(resetZone('Center')).toBe('Center');
+  });
+});
+
+// ─── Regression: Weapon ID lookups must reference canonical WEAPONS ─────────
+
+const WEAPON_IDS = new Set(WEAPONS.map((w) => w.id));
+
+describe('WEAPON_PREFERRED_RANGE keys', () => {
+  it('every key exists in canonical WEAPONS', () => {
+    for (const id of Object.keys(WEAPON_PREFERRED_RANGE)) {
+      expect(WEAPON_IDS.has(id)).toBe(true);
+    }
+  });
+});
+
+describe('WEAPON_RANGE_MODIFIERS keys', () => {
+  it('every key exists in canonical WEAPONS', () => {
+    for (const id of Object.keys(WEAPON_RANGE_MODIFIERS)) {
+      expect(WEAPON_IDS.has(id)).toBe(true);
+    }
+  });
+});
+
+describe('WEAPON_DAMAGE_TYPE keys', () => {
+  it('every key exists in canonical WEAPONS', () => {
+    for (const id of Object.keys(WEAPON_DAMAGE_TYPE)) {
+      expect(WEAPON_IDS.has(id)).toBe(true);
+    }
+  });
+});
+
+describe('STYLE_CLASSIC_WEAPONS values', () => {
+  it('every value exists in canonical WEAPONS', () => {
+    for (const id of Object.values(STYLE_CLASSIC_WEAPONS)) {
+      expect(WEAPON_IDS.has(id)).toBe(true);
+    }
+  });
+});
+
+describe('SHIELD_ITEM_IDS', () => {
+  it('every shield id exists in canonical WEAPONS', () => {
+    for (const id of SHIELD_ITEM_IDS) {
+      expect(WEAPON_IDS.has(id)).toBe(true);
+    }
   });
 });

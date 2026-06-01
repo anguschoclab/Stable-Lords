@@ -5,11 +5,7 @@ import { contestCheck } from './combatMath';
 
 // ─── Weapon → Preferred Range ─────────────────────────────────────────────────
 
-// Weapon IDs MUST match those in `src/data/equipment.ts` (e.g. `broadsword`,
-// `longsword`, `short_spear`). Prior versions used `broad_sword`/`long_sword`/
-// `spear`/`flail` which silently miss the lookup → every warrior using their
-// canonical equipment fell through to the Striking default and got 0 range mod.
-const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
+export const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
   // ── Tight (close, fast weapons) ────────────────────────────────────────────
   dagger: 'Tight',
   short_sword: 'Tight',
@@ -56,9 +52,7 @@ export function getWeaponPreferredRange(weaponId?: string): DistanceRange {
 // Design intent: a dagger user at Grapple gets +4 ATT — they should close range.
 //               A pike user at Grapple gets −10 ATT — they should flee to Extended.
 
-// WARNING: Weapon IDs MUST match those in `src/data/equipment.ts`.
-// This is not a TODO, but a critical note: see the above warning regarding a past id-mismatch bug that silently disabled this system.
-const WEAPON_RANGE_MODIFIERS: Record<string, Partial<Record<DistanceRange, number>>> = {
+export const WEAPON_RANGE_MODIFIERS: Record<string, Partial<Record<DistanceRange, number>>> = {
   // ── Tight-preferred (close, fast) ────────────────────────────────────────
   dagger: { Grapple: +3, Tight: +4, Striking: 0, Extended: -5 },
   short_sword: { Grapple: +2, Tight: +4, Striking: 0, Extended: -4 },
@@ -180,7 +174,7 @@ function shiftRangeToward(current: DistanceRange, target: DistanceRange): Distan
   const ci = RANGE_ORDER.indexOf(current);
   const ti = RANGE_ORDER.indexOf(target);
   if (ci === ti) return current;
-  return RANGE_ORDER[ci + (ti > ci ? 1 : -1)];
+  return RANGE_ORDER[ci + (ti > ci ? 1 : -1)]!;
 }
 
 // ─── Zone Penalties ───────────────────────────────────────────────────────────

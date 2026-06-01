@@ -71,7 +71,7 @@ const LOCATION_KILL_MULT: Record<HitLocation, number> = {
 
 type DamageType = 'slash' | 'bash' | 'pierce' | 'none';
 
-const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
+export const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
   // Pierce
   dagger: 'pierce',
   epee: 'pierce',
@@ -187,12 +187,12 @@ export function rollHitLocation(rng: () => number, target?: string, protect?: st
   if (rng() < 0.3) {
     const exposed = HIT_LOCATIONS.filter((l) => !covered.includes(l));
     if (exposed.length > 0) {
-      return exposed[Math.floor(rng() * exposed.length)];
+      return exposed[Math.floor(rng() * exposed.length)]!;
     }
   }
 
   // Fallback to completely random
-  return HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)];
+  return HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)]!;
 }/**
   * Apply protect mod.
   * @param damage - Damage.

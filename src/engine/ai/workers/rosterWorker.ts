@@ -1,3 +1,4 @@
+import { updateEntityInList } from '@/utils/stateUtils';
 import type { GameState, RivalStableData, SeasonalGrowth } from '@/types/state.types';
 import type { Attributes, Season } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';

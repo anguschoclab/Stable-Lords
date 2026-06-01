@@ -46,3 +46,7 @@
 ## 2024-05-26 - [Avoid Redundant Array Allocations in Game Loop]
 **Learning:** The game loop processes rosters, rivals, and their nested entities heavily. Modifying a single element in an array using `.map()` creates an entire new array and allocates N object wrappers if not careful, leading to high garbage collection pressure. There is a centralized utility `updateEntityInList` in `src/utils/stateUtils.ts` that optimizes this to O(N) but avoids the extra N allocations by finding the index and directly assigning.
 **Action:** Replace `array.map(item => item.id === target ? ... : item)` with `updateEntityInList(array, target, item => ...)` whenever updating a specific entity in a list during engine processing, particularly inside heavy loops like AI workers.
+
+## 2024-05-27 - [Optimizing Single Element Array Updates in AI Loop]
+**Learning:** Found that `rosterWorker.ts` was using `.map()` over `updatedRival.roster` multiple times inside loops (such as for training, recovery, and gearing) to update single elements. `.map()` allocates a new array and calls the lambda on every element.
+**Action:** Replaced these full-array traversals with the project's `updateEntityInList` utility. This utility leverages `.findIndex()` and targeted index assignment, preventing redundant O(N) array mapping when updating single warriors in the AI loop.

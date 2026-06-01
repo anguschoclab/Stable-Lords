@@ -10,11 +10,12 @@ import { computeTrainerAging } from '@/engine/trainerAging';
  */
 export function runTrainerPass(state: GameState, rootRng?: IRNGService): StateImpact {
   const rng = rootRng || new SeededRNGService(state.week * 1337 + 7);
-  const { updatedTrainers, news, updatedHiringPool } = computeTrainerAging(state, rng);
+  const { updatedTrainers, news, updatedHiringPool, rivalsUpdates } = computeTrainerAging(state, rng);
 
   const impact: StateImpact = {
     trainers: updatedTrainers,
     hiringPool: updatedHiringPool,
+    rivalsUpdates,
   };
 
   if (news.length > 0) {

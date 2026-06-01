@@ -34,9 +34,9 @@ export function generateOwnerNarratives(
     // Aggressive owner losing badly
     if (personality === 'Aggressive' && winRate < 0.35 && totalFights >= 4) {
       const templates = [
-        `😤 ${rival.owner.name} (${rival.owner.stableName}) rages: "Heads will roll if results don't improve!"`,
-        `🔥 ${rival.owner.name} fires ${rival.owner.stableName}'s head trainer after a dismal ${state.season}!`,
-        `⚔️ ${rival.owner.name} declares: "Next season, we fight with fury or not at all!"`,
+        `${rival.owner.name} (${rival.owner.stableName}) rages: "Heads will roll if results don't improve!"`,
+        `${rival.owner.name} fires ${rival.owner.stableName}'s head trainer after a dismal ${state.season}!`,
+        `${rival.owner.name} declares: "Next season, we fight with fury or not at all!"`,
       ];
       gazetteItems.push(rngService.pick(templates));
     }
@@ -44,42 +44,42 @@ export function generateOwnerNarratives(
     // Methodical owner on a winning streak
     if (personality === 'Methodical' && winRate >= 0.7 && totalFights >= 4) {
       gazetteItems.push(
-        `📊 ${rival.owner.name} (${rival.owner.stableName}): "Our preparation is paying dividends — ${wins}W/${losses}L this ${state.season}."`
+        `${rival.owner.name} (${rival.owner.stableName}): "Our preparation is paying dividends — ${wins}W/${losses}L this ${state.season}."`
       );
     }
 
     // Showman with lots of kills
     if (personality === 'Showman' && kills >= 2) {
       gazetteItems.push(
-        `🎭 ${rival.owner.name} (${rival.owner.stableName}) boasts: "${kills} kills this ${state.season}! The crowd demands blood, and we deliver!"`
+        `${rival.owner.name} (${rival.owner.stableName}) boasts: "${kills} kills this ${state.season}! The crowd demands blood, and we deliver!"`
       );
     }
 
     // Pragmatic owner suffering deaths
     if (personality === 'Pragmatic' && deaths >= 2) {
       gazetteItems.push(
-        `💀 ${rival.owner.name} (${rival.owner.stableName}) grimly assesses: "${deaths} warriors lost this ${state.season}. Costs are unsustainable."`
+        `${rival.owner.name} (${rival.owner.stableName}) grimly assesses: "${deaths} warriors lost this ${state.season}. Costs are unsustainable."`
       );
     }
 
     // Tactician dominating
     if (personality === 'Tactician' && winRate >= 0.65 && kills === 0 && totalFights >= 3) {
       gazetteItems.push(
-        `🧠 ${rival.owner.name} (${rival.owner.stableName}): "Clean victories, no unnecessary bloodshed — ${wins}W/${losses}L. Strategy prevails."`
+        `${rival.owner.name} (${rival.owner.stableName}): "Clean victories, no unnecessary bloodshed — ${wins}W/${losses}L. Strategy prevails."`
       );
     }
 
     // Any owner with a dominant season
     if (winRate >= 0.8 && totalFights >= 5) {
       gazetteItems.push(
-        `🏆 ${rival.owner.stableName} dominated ${state.season} with a record of ${wins}-${losses}!`
+        `${rival.owner.stableName} dominated ${state.season} with a record of ${wins}-${losses}!`
       );
     }
 
     // Any owner with devastating losses
     if (deaths >= 3) {
       gazetteItems.push(
-        `⚰️ A grim ${state.season} for ${rival.owner.stableName} — ${deaths} warriors fell in the arena.`
+        `A grim ${state.season} for ${rival.owner.stableName} — ${deaths} warriors fell in the arena.`
       );
     }
   }
@@ -94,10 +94,10 @@ export function generateOwnerNarratives(
 
     if (rivalry && rivalry.intensity >= 4 && rngService.next() < 0.25) {
       const tauntTemplates = [
-        `🗣️ "${state.player.stableName} is a disgrace to the sands. I will see them bleed," vows ${rival.owner.name} (${rival.owner.stableName}).`,
-        `🗣️ ${rival.owner.name} (${rival.owner.stableName}) issues a public challenge: "My warriors will hunt down the dogs of ${state.player.stableName}."`,
-        `🗣️ "The feud with ${state.player.stableName} ends when their stable is ash," declares ${rival.owner.name}.`,
-        `🗣️ Public Grudge: ${rival.owner.name} (${rival.owner.stableName}) was heard mocking the recent performances of ${state.player.stableName}.`,
+        `"${state.player.stableName} is a disgrace to the sands. I will see them bleed," vows ${rival.owner.name} (${rival.owner.stableName}).`,
+        `${rival.owner.name} (${rival.owner.stableName}) issues a public challenge: "My warriors will hunt down the dogs of ${state.player.stableName}."`,
+        `"The feud with ${state.player.stableName} ends when their stable is ash," declares ${rival.owner.name}.`,
+        `Public Grudge: ${rival.owner.name} (${rival.owner.stableName}) was heard mocking the recent performances of ${state.player.stableName}.`,
       ];
       gazetteItems.push(rngService.pick(tauntTemplates));
     }

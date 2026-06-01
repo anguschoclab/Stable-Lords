@@ -74,7 +74,7 @@ export function evolvePhilosophies(
 
       if (nextPhilosophy !== currentPhilosophy) {
         gazetteItems.push(
-          `💡 ${rival.owner.name} (${rival.owner.stableName}) shifts strategy from ${currentPhilosophy} to ${nextPhilosophy}.`
+          `${rival.owner.name} (${rival.owner.stableName}) shifts strategy from ${currentPhilosophy} to ${nextPhilosophy}.`
         );
         return { ...rival, philosophy: nextPhilosophy } as RivalStableData;
       }

@@ -12,6 +12,7 @@ interface HeadToHeadRecord {
   losses: number;
   total: number;
   lastWinner: 'player' | 'rival' | 'draw' | null;
+  lastFightWeek?: number;
 }
 
 /**
@@ -111,6 +112,14 @@ export function scoreMatchup(
       if (hh.total >= 3 && hh.wins === hh.total) score -= 5; // Repetitive farm
       if (hh.total >= 3 && hh.losses === hh.total) score -= 15; // Curb stomp
     }
+    // Recency penalty — rematches within last 2 weeks
+    if (
+      hh.lastFightWeek !== undefined &&
+      state.week - hh.lastFightWeek >= 0 &&
+      state.week - hh.lastFightWeek <= 2
+    ) {
+      score -= 15;
+    }
   }
 
   return score;
@@ -137,6 +146,7 @@ function getHeadToHeadRecord(
   let losses = 0;
   let total = 0;
   let lastWinner: 'player' | 'rival' | 'draw' | null = null;
+  let lastFightWeek: number | undefined;
 
   if (!arenaHistory) {
     return { wins: 0, losses: 0, total: 0, lastWinner: null };
@@ -152,6 +162,7 @@ function getHeadToHeadRecord(
 
     if ((playerIsA && rivalIsD) || (playerIsD && rivalIsA)) {
       total++;
+      lastFightWeek = fight.week;
       if (fight.winner === null) {
         lastWinner = 'draw';
       } else if ((playerIsA && fight.winner === 'A') || (playerIsD && fight.winner === 'D')) {
@@ -164,14 +175,15 @@ function getHeadToHeadRecord(
     }
   }
 
-  return { wins, losses, total, lastWinner };
+  return { wins, losses, total, lastWinner, lastFightWeek };
 }
 
 function getMatchupNotes(
   styleAdvantage: number,
   fameDiff: number,
   rankDiff?: number,
-  headToHead?: HeadToHeadRecord
+  headToHead?: HeadToHeadRecord,
+  currentWeek?: number
 ): string[] {
   const notes: string[] = [];
   if (styleAdvantage >= 2) notes.push('Hard counter! Excellent style advantage.');
@@ -196,6 +208,14 @@ function getMatchupNotes(
       if (headToHead.lastWinner === 'player') notes.push('Favorable history — you\'ve beaten them before.');
       if (headToHead.wins >= 3) notes.push(`Dominant streak — you've beaten them ${headToHead.wins} times.`);
       if (headToHead.losses >= 3) notes.push(`Curb stomp risk — they've beaten you ${headToHead.losses} times.`);
+      if (
+        currentWeek !== undefined &&
+        headToHead.lastFightWeek !== undefined &&
+        currentWeek - headToHead.lastFightWeek >= 0 &&
+        currentWeek - headToHead.lastFightWeek <= 2
+      ) {
+        notes.push('Recent rematch — fought within last 2 weeks.');
+      }
     }
   }
 
@@ -239,7 +259,7 @@ export function getRecommendedChallenges(
         score,
         styleAdvantage,
         fameDiff,
-        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead),
+        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
         rankDiff,
         headToHead,
       });
@@ -258,7 +278,7 @@ export function getRecommendedChallenges(
         score,
         styleAdvantage,
         fameDiff,
-        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead),
+        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
         rankDiff,
         headToHead,
       };
@@ -305,7 +325,7 @@ export function getMatchupsToAvoid(
         score,
         styleAdvantage,
         fameDiff,
-        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead),
+        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
         rankDiff,
         headToHead,
       });
@@ -324,7 +344,7 @@ export function getMatchupsToAvoid(
         score,
         styleAdvantage,
         fameDiff,
-        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead),
+        notes: getMatchupNotes(styleAdvantage, fameDiff, rankDiff, headToHead, state.week),
         rankDiff,
         headToHead,
       };

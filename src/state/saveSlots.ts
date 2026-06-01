@@ -1,5 +1,5 @@
 import type { GameState } from '@/types/state.types';
-import { archiveService } from '@/engine/storage/electronArchive';
+import { archiveService } from '@/engine/storage/archiveService';
 import { truncateState } from '@/engine/storage/truncation';
 import { STORE_KEYS } from '@/constants/storeKeys';
 

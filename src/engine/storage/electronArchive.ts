@@ -205,24 +205,4 @@ async getArchivedBoutIdsForSeason(_season: number): Promise<string[]> {
     // For now, return empty array as this is not critical for Electron version
     return [];
   }
-}/**
-  * Archive service.
-  */
-
-
-// Export appropriate archive service based on environment
-/**
- * Archive service.
- */
-export let archiveService: ArchiveService;
-
-if (typeof window !== 'undefined' && window.electronAPI) {
-  archiveService = new ElectronArchiveService();
-} else {
-  // Fallback to OPFS for web version (will be removed after full Electron migration)
-  const { OPFSArchiveService } = await import('./opfsArchive');
-  archiveService = new OPFSArchiveService();
-}
-
-// Re-export the instance for backward compatibility
-export { archiveService as opfsArchive };
+} // ElectronArchiveService

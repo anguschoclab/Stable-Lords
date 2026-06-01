@@ -24,6 +24,7 @@ export const TRAINER_AGING = {
   BASE_AGE: 45,
   RETIREMENT_START: 65,
   DEATH_THRESHOLD: 80,
+  WEEKS_PER_YEAR: 52,
 } as const;
 
 // ─── Retirement Chances ─────────────────────────────────────────────────────

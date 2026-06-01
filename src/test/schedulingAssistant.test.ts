@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { FightingStyle, type Warrior, type GameState, type RivalStableData, type Rivalry, type FightSummary } from '@/types/game';
+import type { InjuryData } from '@/types/warrior.types';
 import {
   scoreMatchup,
   getRecommendedChallenges,
@@ -15,7 +16,8 @@ describe('Scheduling Assistant Engine', () => {
     wins = 0,
     losses = 0,
     stableId?: string,
-    career?: { wins: number; losses: number; kills: number }
+    career?: { wins: number; losses: number; kills: number },
+    injuries?: InjuryData[]
   ): Warrior => ({
     id: id as any,
     name: `Warrior ${id}`,
@@ -24,7 +26,7 @@ describe('Scheduling Assistant Engine', () => {
     fame,
     popularity: 0,
     titles: [],
-    injuries: [],
+    injuries: injuries ?? [],
     flair: [],
     career: career ?? { wins, losses, kills: 0 },
     champion: false,
@@ -718,6 +720,7 @@ describe('Scheduling Assistant Engine', () => {
         mockFightBetween('p1', 'r1', 'D', 1), // rival won
         mockFightBetween('other', 'also_other', 'A', 1), // filler to make arenaHistory non-empty
       ]);
+      state.week = 10; // push forward so fight is not "recent"
 
       const scoreGrudge = scoreMatchup(player, grudgeRival, state);
       const scoreNeutral = scoreMatchup(player, neutralRival, state);
@@ -737,6 +740,7 @@ describe('Scheduling Assistant Engine', () => {
         mockFightBetween('p1', 'r1', 'A', 1), // player won
         mockFightBetween('other', 'also_other', 'A', 1),
       ]);
+      state.week = 10;
 
       const scoreBeaten = scoreMatchup(player, beatenRival, state);
       const scoreNeutral = scoreMatchup(player, neutralRival, state);
@@ -758,6 +762,7 @@ describe('Scheduling Assistant Engine', () => {
         mockFightBetween('p1', 'r1', 'A', 3),
         mockFightBetween('other', 'also_other', 'A', 1),
       ]);
+      state.week = 10;
 
       const scoreFarm = scoreMatchup(player, farmRival, state);
       const scoreNeutral = scoreMatchup(player, neutralRival, state);
@@ -780,6 +785,7 @@ describe('Scheduling Assistant Engine', () => {
         mockFightBetween('p1', 'r1', 'D', 3),
         mockFightBetween('other', 'also_other', 'A', 1),
       ]);
+      state.week = 10;
 
       const scoreCurb = scoreMatchup(player, curbRival, state);
       const scoreNeutral = scoreMatchup(player, neutralRival, state);
@@ -840,6 +846,7 @@ describe('Scheduling Assistant Engine', () => {
         mockFightBetween('p1', 'r1', 'A', 1), // player won
         mockFightBetween('p1', 'r2', 'D', 1), // rival won
       ]);
+      state.week = 10;
 
       const challenges = getRecommendedChallenges(state, player, 2);
 
@@ -860,6 +867,7 @@ describe('Scheduling Assistant Engine', () => {
       state = stateWithHistory(state, [
         mockFightBetween('p1', 'r1', 'A', 1),
       ]);
+      state.week = 10;
 
       const challenges = getRecommendedChallenges(state, player, 1);
 
@@ -884,6 +892,7 @@ describe('Scheduling Assistant Engine', () => {
         mockFightBetween('p1', 'r1', 'D', 2),
         mockFightBetween('p1', 'r1', 'D', 3),
       ]);
+      state.week = 10;
 
       const avoid = getMatchupsToAvoid(state, player, 2);
 
@@ -908,6 +917,166 @@ describe('Scheduling Assistant Engine', () => {
 
       // Both have close rank diff: |10-8|=2 -> +15, |10-50|=40 -> -10
       expect(challenges[0]?.rivalWarrior.id).toBe('r1');
+    });
+  });
+
+  describe('getMatchupsToAvoid Injury Exclusion', () => {
+    it('excludes rivals with Severe injury and weeksRemaining > 2', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
+        { id: 'inj1' as any, name: 'Broken Arm', description: '', severity: 'Severe', weeksRemaining: 3, penalties: {} },
+      ]);
+      const healthyRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      const state = mockState([injuredRival, healthyRival]);
+      const avoid = getMatchupsToAvoid(state, player, 3);
+
+      expect(avoid.length).toBe(1);
+      expect(avoid[0]?.rivalWarrior.id).toBe('r2');
+    });
+
+    it('includes rivals with Moderate injuries', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
+        { id: 'inj1' as any, name: 'Concussion', description: '', severity: 'Moderate', weeksRemaining: 4, penalties: {} },
+      ]);
+
+      const state = mockState([injuredRival]);
+      const avoid = getMatchupsToAvoid(state, player, 1);
+
+      expect(avoid.length).toBe(1);
+      expect(avoid[0]?.rivalWarrior.id).toBe('r1');
+    });
+
+    it('includes rivals with Severe injury at exactly 2 weeks remaining', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
+        { id: 'inj1' as any, name: 'Skull Fracture', description: '', severity: 'Severe', weeksRemaining: 2, penalties: {} },
+      ]);
+
+      const state = mockState([injuredRival]);
+      const avoid = getMatchupsToAvoid(state, player, 1);
+
+      expect(avoid.length).toBe(1);
+      expect(avoid[0]?.rivalWarrior.id).toBe('r1');
+    });
+
+    it('includes rivals with Critical injuries', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
+        { id: 'inj1' as any, name: 'Critical Wound', description: '', severity: 'Critical', weeksRemaining: 10, penalties: {} },
+      ]);
+
+      const state = mockState([injuredRival]);
+      const avoid = getMatchupsToAvoid(state, player, 1);
+
+      expect(avoid.length).toBe(1);
+      expect(avoid[0]?.rivalWarrior.id).toBe('r1');
+    });
+  });
+
+  describe('getMatchupsToAvoid Recency Penalty', () => {
+    it('penalizes and flags recent rematch within 1 week', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const recentRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([recentRival, neutralRival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 4),
+      ]);
+      state.week = 5;
+
+      const avoid = getMatchupsToAvoid(state, player, 2);
+
+      const recentEntry = avoid.find((a) => a.rivalWarrior.id === 'r1');
+      expect(recentEntry).toBeDefined();
+      expect(recentEntry!.notes).toContain('Recent rematch — fought within last 2 weeks.');
+    });
+
+    it('penalizes and flags recent rematch within 2 weeks', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const recentRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([recentRival, neutralRival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 3),
+      ]);
+      state.week = 5;
+
+      const avoid = getMatchupsToAvoid(state, player, 2);
+
+      const recentEntry = avoid.find((a) => a.rivalWarrior.id === 'r1');
+      expect(recentEntry).toBeDefined();
+      expect(recentEntry!.notes).toContain('Recent rematch — fought within last 2 weeks.');
+    });
+
+    it('does not penalize rematch older than 2 weeks', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const oldRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([oldRival, neutralRival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 2),
+      ]);
+      state.week = 5;
+
+      const avoid = getMatchupsToAvoid(state, player, 2);
+
+      const oldEntry = avoid.find((a) => a.rivalWarrior.id === 'r1');
+      expect(oldEntry).toBeDefined();
+      expect(oldEntry!.notes).not.toContain('Recent rematch — fought within last 2 weeks.');
+    });
+
+    it('promotes recent rematch into avoid list over otherwise equal rival', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const recentRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+      const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([recentRival, neutralRival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 4),
+      ]);
+      state.week = 5;
+
+      const avoid = getMatchupsToAvoid(state, player, 1);
+
+      expect(avoid.length).toBe(1);
+      expect(avoid[0]?.rivalWarrior.id).toBe('r1');
+    });
+  });
+
+  describe('scoreMatchup Recency Edge Cases', () => {
+    it('applies -15 recency penalty for fight within last 2 weeks', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([rival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 4),
+      ]);
+      state.week = 5;
+
+      const score = scoreMatchup(player, rival, state);
+      // Base 100 + 5 (last winner player) - 15 (recency) = 90
+      expect(score).toBe(90);
+    });
+
+    it('applies no recency penalty when last fight was 3+ weeks ago', () => {
+      const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
+      const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
+
+      let state = mockState([rival]);
+      state = stateWithHistory(state, [
+        mockFightBetween('p1', 'r1', 'A', 2),
+      ]);
+      state.week = 5;
+
+      const score = scoreMatchup(player, rival, state);
+      // Base 100 + 5 (last winner player) = 105
+      expect(score).toBe(105);
     });
   });
 });

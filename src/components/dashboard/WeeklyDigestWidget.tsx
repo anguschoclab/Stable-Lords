@@ -104,13 +104,16 @@ export function WeeklyDigestWidget({
       }
     });
 
-    // Count offers
-    const offers = Object.values(boutOffers);
-    const pending = offers.filter(
-      (o) => o.status === 'Proposed' && o.boutWeek >= currentWeek
-    ).length;
-    const signed = offers.filter((o) => o.status === 'Signed' && o.boutWeek === currentWeek).length;
-    const upcoming = offers.filter((o) => o.status === 'Signed' && o.boutWeek > currentWeek).length;
+    // Count offers — single pass
+    const { pending, signed, upcoming } = Object.values(boutOffers).reduce(
+      (acc, o) => {
+        if (o.status === 'Proposed' && o.boutWeek >= currentWeek) acc.pending++;
+        if (o.status === 'Signed' && o.boutWeek === currentWeek) acc.signed++;
+        if (o.status === 'Signed' && o.boutWeek > currentWeek) acc.upcoming++;
+        return acc;
+      },
+      { pending: 0, signed: 0, upcoming: 0 }
+    );
 
     return {
       totalFights: thisWeekFights.length,

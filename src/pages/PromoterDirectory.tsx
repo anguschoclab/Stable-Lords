@@ -28,12 +28,16 @@ function calculatePromoterStats(
   offers: Record<string, BoutOffer>,
   currentWeek: number
 ) {
-  const promoterOffers = Object.values(offers).filter((o) => o.promoterId === promoterId);
-  const activeThisWeek = promoterOffers.filter(
-    (o) => o.boutWeek === currentWeek && o.status === 'Signed'
-  ).length;
-  const pendingProposals = promoterOffers.filter((o) => o.status === 'Proposed').length;
-  const totalOffers = promoterOffers.length;
+  const { activeThisWeek, pendingProposals, totalOffers } = Object.values(offers).reduce(
+    (acc, o) => {
+      if (o.promoterId !== promoterId) return acc;
+      acc.totalOffers++;
+      if (o.boutWeek === currentWeek && o.status === 'Signed') acc.activeThisWeek++;
+      if (o.status === 'Proposed') acc.pendingProposals++;
+      return acc;
+    },
+    { activeThisWeek: 0, pendingProposals: 0, totalOffers: 0 }
+  );
 
   return { activeThisWeek, pendingProposals, totalOffers };
 }

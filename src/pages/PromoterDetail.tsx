@@ -122,25 +122,41 @@ function calculateStats(
   offers: Record<string, BoutOffer>,
   currentWeek: number
 ) {
-  const promoterOffers = Object.values(offers).filter((o) => o.promoterId === promoter.id);
-  const signedOffers = promoterOffers.filter((o) => o.status === 'Signed');
-  const proposedOffers = promoterOffers.filter((o) => o.status === 'Proposed');
-  const thisWeekBouts = signedOffers.filter((o) => o.boutWeek === currentWeek);
+  const { signedOffers, proposedOffers, thisWeekBouts, totalOffers, totalHype, totalPurse } =
+    Object.values(offers).reduce(
+      (acc, o) => {
+        if (o.promoterId !== promoter.id) return acc;
+        acc.totalOffers++;
+        acc.totalHype += o.hype;
+        acc.totalPurse += o.purse;
+        if (o.status === 'Signed') {
+          acc.signedOffers.push(o);
+          if (o.boutWeek === currentWeek) acc.thisWeekBouts.push(o);
+        }
+        if (o.status === 'Proposed') acc.proposedOffers.push(o);
+        return acc;
+      },
+      {
+        signedOffers: [] as BoutOffer[],
+        proposedOffers: [] as BoutOffer[],
+        thisWeekBouts: [] as BoutOffer[],
+        totalOffers: 0,
+        totalHype: 0,
+        totalPurse: 0,
+      }
+    );
 
-  const avgPurse =
-    promoterOffers.length > 0
-      ? promoterOffers.reduce((sum, o) => sum + o.purse, 0) / promoterOffers.length
-      : 0;
+  const avgPurse = totalOffers > 0 ? totalPurse / totalOffers : 0;
 
   return {
-    totalOffers: promoterOffers.length,
+    totalOffers,
     signedCount: signedOffers.length,
     proposedCount: proposedOffers.length,
     thisWeekActive: thisWeekBouts.length,
     capacityUsed: thisWeekBouts.length,
     capacityPercent: (thisWeekBouts.length / promoter.capacity) * 100,
     avgPurse: Math.round(avgPurse),
-    totalHype: promoterOffers.reduce((sum, o) => sum + o.hype, 0),
+    totalHype,
   };
 }/**
   * Promoter detail.

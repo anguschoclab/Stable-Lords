@@ -84,8 +84,14 @@ function useTournamentSchedule(tournament: TournamentEntry) {
 
   const stats = useMemo(() => {
     const total = tournament.bracket.length;
-    const completed = tournament.bracket.filter((b) => b.winner !== undefined).length;
-    const byes = tournament.bracket.filter(isByeMatch).length;
+    const { completed, byes } = tournament.bracket.reduce(
+      (acc, b) => {
+        if (b.winner !== undefined) acc.completed++;
+        if (isByeMatch(b)) acc.byes++;
+        return acc;
+      },
+      { completed: 0, byes: 0 }
+    );
     const upcoming = total - completed;
 
     return { total, completed, byes, upcoming };

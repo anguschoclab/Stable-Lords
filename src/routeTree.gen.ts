@@ -276,14 +276,8 @@ const OpsPromoterIdRoute = OpsPromoterIdRouteImport.update({
   id: '/ops/promoter/$id',
   path: '/ops/promoter/$id',
   getParentRoute: () => rootRouteImport,
-} as any)/**
- * Defines the shape of file routes by full path.
- */
+} as any)
 
-
-/**
- * Defines the shape of file routes by full path.
- */
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
@@ -330,13 +324,7 @@ export interface FileRoutesByFullPath {
   '/world/': typeof WorldIndexRoute
   '/ops/promoter/$id': typeof OpsPromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
-}/**
- * Defines the shape of file routes by to.
- */
-
-/**
- * Defines the shape of file routes by to.
- */
+}
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
@@ -380,13 +368,7 @@ export interface FileRoutesByTo {
   '/stable': typeof StableIndexRoute
   '/ops/promoter/$id': typeof OpsPromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
-}/**
- * Defines the shape of file routes by id.
- */
-
-/**
- * Defines the shape of file routes by id.
- */
+}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
@@ -434,13 +416,7 @@ export interface FileRoutesById {
   '/world/': typeof WorldIndexRoute
   '/ops/promoter/$id': typeof OpsPromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
-}/**
- * Defines the shape of file route types.
- */
-
-/**
- * Defines the shape of file route types.
- */
+}
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -581,13 +557,7 @@ export interface FileRouteTypes {
     | '/ops/promoter/$id'
     | '/world/stable/$id'
   fileRoutesById: FileRoutesById
-}/**
- * Defines the shape of root route children.
- */
-
-/**
- * Defines the shape of root route children.
- */
+}
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
@@ -1002,13 +972,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorldIndexRoute: WorldIndexRoute,
   OpsPromoterIdRoute: OpsPromoterIdRoute,
   WorldStableIdRoute: WorldStableIdRoute,
-}/**
- * Route tree.
- */
-
-/**
- * Route tree.
- */
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

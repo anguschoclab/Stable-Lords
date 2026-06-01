@@ -26,15 +26,21 @@ describe('Promoter Generator', () => {
     // Tiers array is 30 elements long: 15 Local, 8 Regional, 5 National, 2 Legendary
     const promoters = generatePromoters(30, 555);
 
-    const local = promoters.filter((p) => p.tier === 'Local');
-    const regional = promoters.filter((p) => p.tier === 'Regional');
-    const national = promoters.filter((p) => p.tier === 'National');
-    const legendary = promoters.filter((p) => p.tier === 'Legendary');
+    const { local, regional, national, legendary } = promoters.reduce(
+      (acc, p) => {
+        if (p.tier === 'Local') acc.local++;
+        if (p.tier === 'Regional') acc.regional++;
+        if (p.tier === 'National') acc.national++;
+        if (p.tier === 'Legendary') acc.legendary++;
+        return acc;
+      },
+      { local: 0, regional: 0, national: 0, legendary: 0 }
+    );
 
-    expect(local).toHaveLength(15);
-    expect(regional).toHaveLength(8);
-    expect(national).toHaveLength(5);
-    expect(legendary).toHaveLength(2);
+    expect(local).toBe(15);
+    expect(regional).toBe(8);
+    expect(national).toBe(5);
+    expect(legendary).toBe(2);
   });
 
   it('should generate valid promoter attributes', () => {

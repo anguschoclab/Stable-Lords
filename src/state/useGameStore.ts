@@ -8,6 +8,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
 import { opfsArchive } from '@/engine/storage/opfsArchive';
 import { stripNonSerializable, reconstructGameState } from './serialization';
+export { reconstructGameState };
 
 // ─── Slices ────────────────────────────────────────────────────────────────
 import { createEconomySlice, EconomySlice } from './slices/economySlice';

@@ -17,8 +17,16 @@ export function pickWeeklyIntent(
 ): AIIntent {
   const rngService = rng || new SeededRNGService(seed ?? state.week * 131 + rival.owner.id.length);
   const personality = rival.owner.personality ?? 'Pragmatic';
-  const activeRoster = rival.roster.filter((w) => w.status === 'Active');
-  const injuryCount = activeRoster.filter((w) => w.injuries && w.injuries.length > 0).length;
+  const { activeRoster, injuryCount, lungeCount } = rival.roster.reduce(
+    (acc, w) => {
+      if (w.status !== 'Active') return acc;
+      acc.activeRoster.push(w);
+      if (w.injuries && w.injuries.length > 0) acc.injuryCount++;
+      if (w.style === 'LUNGING ATTACK') acc.lungeCount++;
+      return acc;
+    },
+    { activeRoster: [] as typeof rival.roster, injuryCount: 0, lungeCount: 0 }
+  );
 
   // ⚡ Environmental Awareness
   const isRainy = state.weather === 'Rainy';
@@ -30,7 +38,7 @@ export function pickWeeklyIntent(
 
   // Weather Pivot: Avoid the arena if the stable is precision-heavy and it's raining
   const precisionHeavy =
-    activeRoster.filter((w) => w.style === 'LUNGING ATTACK').length >= activeRoster.length * 0.5;
+    activeRoster.length === 0 || lungeCount / activeRoster.length >= 0.5;
   if (isRainy && precisionHeavy && personality !== 'Aggressive') {
     return 'RECOVERY';
   }

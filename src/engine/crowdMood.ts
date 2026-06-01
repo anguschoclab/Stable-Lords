@@ -92,9 +92,15 @@ export function computeCrowdMood(recentFights: FightSummary[]): CrowdMood {
   if (recentFights.length === 0) return 'Calm';
 
   const last5 = recentFights.slice(-5);
-  const kills = last5.filter((f) => f.by === 'Kill').length;
-  const flashy = last5.filter((f) => f.flashyTags?.includes('Flashy')).length;
-  const draws = last5.filter((f) => f.winner === null).length;
+  const { kills, flashy, draws } = last5.reduce(
+    (acc, f) => {
+      if (f.by === 'Kill') acc.kills++;
+      if (f.flashyTags?.includes('Flashy')) acc.flashy++;
+      if (f.winner === null) acc.draws++;
+      return acc;
+    },
+    { kills: 0, flashy: 0, draws: 0 }
+  );
 
   if (kills >= 2) return 'Bloodthirsty';
   if (kills >= 1 && draws >= 2) return 'Solemn';

@@ -25,8 +25,14 @@ interface RunResultsProps {
 export function RunResults({ results, expandedId, onToggleExpand }: RunResultsProps) {
   if (results.length === 0) return null;
 
-  const deaths = results.filter((r) => r.outcome.by === 'Kill').length;
-  const KOs = results.filter((r) => r.outcome.by === 'KO').length;
+  const { deaths, KOs } = results.reduce(
+    (acc, r) => {
+      if (r.outcome.by === 'Kill') acc.deaths++;
+      if (r.outcome.by === 'KO') acc.KOs++;
+      return acc;
+    },
+    { deaths: 0, KOs: 0 }
+  );
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">

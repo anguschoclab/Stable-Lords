@@ -313,8 +313,16 @@ export default function BookingOffice() {
       return Array.from(map.values());
     };
 
-    const thisWeek = bestByPromoter(filtered.filter((o) => o.boutWeek === week + 2));
-    const upcoming = bestByPromoter(filtered.filter((o) => o.boutWeek > week + 2));
+    const { thisWeek: thisWeekRaw, upcoming: upcomingRaw } = filtered.reduce(
+      (acc, o) => {
+        if (o.boutWeek === week + 2) acc.thisWeek.push(o);
+        if (o.boutWeek > week + 2) acc.upcoming.push(o);
+        return acc;
+      },
+      { thisWeek: [] as BoutOffer[], upcoming: [] as BoutOffer[] }
+    );
+    const thisWeek = bestByPromoter(thisWeekRaw);
+    const upcoming = bestByPromoter(upcomingRaw);
 
     const warriorsWithOffers = new Set(playerOffers.flatMap((o) => o.warriorIds));
     const idle = roster.filter((w) => w.status === 'Active' && !warriorsWithOffers.has(w.id));

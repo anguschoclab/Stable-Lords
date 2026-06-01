@@ -48,10 +48,21 @@ export function CoachOverlay() {
     }
 
     // 🚑 Injury Check (Fighters assigned to bouts with low health) - needs full roster for derivedStats
-    const activeFighters = state.roster.filter((w) =>
-      state.arenaHistory.some((f) => (f.a === w.id || f.d === w.id) && f.winner === null)
+    const { activeFighters, injuredActive } = state.roster.reduce(
+      (acc, w) => {
+        const inActiveBout = state.arenaHistory.some(
+          (f) => (f.a === w.id || f.d === w.id) && f.winner === null
+        );
+        if (!inActiveBout) return acc;
+        acc.activeFighters.push(w);
+        if ((w.derivedStats?.hp || 0) < 30) acc.injuredActive.push(w);
+        return acc;
+      },
+      {
+        activeFighters: [] as typeof state.roster,
+        injuredActive: [] as typeof state.roster,
+      }
     );
-    const injuredActive = activeFighters.filter((w) => (w.derivedStats?.hp || 0) < 30);
     if (injuredActive.length > 0) {
       list.push({
         id: 'crit_injury',

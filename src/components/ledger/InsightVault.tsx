@@ -15,9 +15,15 @@ import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from
 export function InsightVault() {
   const state = useWorldState();
   const tokens = state.insightTokens ?? [];
-  const weaponTokens = tokens.filter((t) => t.type === 'Weapon');
-  const rhythmTokens = tokens.filter((t) => t.type === 'Rhythm');
-  const statTokens = tokens.filter((t) => t.type === 'Attribute');
+  const { weaponTokens, rhythmTokens, statTokens } = tokens.reduce(
+    (acc, t) => {
+      if (t.type === 'Weapon') acc.weaponTokens.push(t);
+      if (t.type === 'Rhythm') acc.rhythmTokens.push(t);
+      if (t.type === 'Attribute') acc.statTokens.push(t);
+      return acc;
+    },
+    { weaponTokens: [] as typeof tokens, rhythmTokens: [] as typeof tokens, statTokens: [] as typeof tokens }
+  );
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">

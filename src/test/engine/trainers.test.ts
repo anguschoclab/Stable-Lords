@@ -60,9 +60,15 @@ describe('Trainer System', () => {
 
     it('should generate mostly Novice/Seasoned trainers', () => {
       const pool = generateHiringPool(100, 12345);
-      const noviceCount = pool.filter((t) => t.tier === 'Novice').length;
-      const seasonedCount = pool.filter((t) => t.tier === 'Seasoned').length;
-      const masterCount = pool.filter((t) => t.tier === 'Master').length;
+      const { noviceCount, seasonedCount, masterCount } = pool.reduce(
+        (acc, t) => {
+          if (t.tier === 'Novice') acc.noviceCount++;
+          if (t.tier === 'Seasoned') acc.seasonedCount++;
+          if (t.tier === 'Master') acc.masterCount++;
+          return acc;
+        },
+        { noviceCount: 0, seasonedCount: 0, masterCount: 0 }
+      );
 
       // Expected distribution: ~50% Novice, ~35% Seasoned, ~15% Master
       expect(noviceCount).toBeGreaterThan(masterCount);

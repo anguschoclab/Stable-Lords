@@ -64,13 +64,19 @@ export function processRoster(
   // Injured warriors are excluded — they are already in the recovery path above
   // and training them would stack the injury penalty from trainingGains.ts.
   const trainingLimit = updatedRival.treasury > 500 ? 3 : 1;
-  const trainableWarriors = updatedRival.roster.filter(
-    (w) => w.status === 'Active' && (w.injuries ?? []).length === 0
+  const { champions, nonChampions } = updatedRival.roster.reduce(
+    (acc, w) => {
+      if (w.status !== 'Active' || (w.injuries ?? []).length > 0) return acc;
+      if (w.champion || w.isStarInvestment) acc.champions.push(w);
+      else acc.nonChampions.push(w);
+      return acc;
+    },
+    {
+      champions: [] as typeof updatedRival.roster,
+      nonChampions: [] as typeof updatedRival.roster,
+    }
   );
-  const champions = trainableWarriors.filter((w) => w.champion || w.isStarInvestment);
-  const nonChampions = trainableWarriors
-    .filter((w) => !w.champion && !w.isStarInvestment)
-    .sort((a, b) => (b.fame || 0) - (a.fame || 0));
+  nonChampions.sort((a, b) => (b.fame || 0) - (a.fame || 0));
   const trainees = [...champions, ...nonChampions].slice(0, trainingLimit);
 
   for (const trainee of trainees) {

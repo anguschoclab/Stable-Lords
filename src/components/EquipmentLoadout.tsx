@@ -169,9 +169,19 @@ function SlotSelector({
 
             // Group: preferred+met | non-preferred+met | preferred+failed
             // Non-preferred + failed are hidden (too noisy, not class-relevant)
-            const classReady = annotated.filter((a) => a.preferred && a.req.met);
-            const offClassReady = annotated.filter((a) => !a.preferred && a.req.met);
-            const classUnmet = annotated.filter((a) => a.preferred && !a.req.met);
+            const { classReady, offClassReady, classUnmet } = annotated.reduce(
+              (acc, a) => {
+                if (a.preferred && a.req.met) acc.classReady.push(a);
+                if (!a.preferred && a.req.met) acc.offClassReady.push(a);
+                if (a.preferred && !a.req.met) acc.classUnmet.push(a);
+                return acc;
+              },
+              {
+                classReady: [] as typeof annotated,
+                offClassReady: [] as typeof annotated,
+                classUnmet: [] as typeof annotated,
+              }
+            );
 
             const renderItem = ({ item, preferred, req }: (typeof annotated)[number]) => (
               <SelectItem key={item.id} value={item.id}>

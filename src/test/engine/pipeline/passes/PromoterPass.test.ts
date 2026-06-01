@@ -376,8 +376,14 @@ describe('PromoterPass', () => {
       const offers = Object.values(result.boutOffers || {});
 
       // Both should generate reasonable numbers of offers with standard gap
-      const sadisticCount = offers.filter((o) => o.promoterId === 'sadistic').length;
-      const flashyCount = offers.filter((o) => o.promoterId === 'flashy').length;
+      const { sadisticCount, flashyCount } = offers.reduce(
+        (acc, o) => {
+          if (o.promoterId === 'sadistic') acc.sadisticCount++;
+          if (o.promoterId === 'flashy') acc.flashyCount++;
+          return acc;
+        },
+        { sadisticCount: 0, flashyCount: 0 }
+      );
 
       // Both should be able to generate offers
       expect(sadisticCount + flashyCount).toBeGreaterThan(0);

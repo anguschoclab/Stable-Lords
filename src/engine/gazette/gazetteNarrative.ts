@@ -74,8 +74,14 @@ export function generateGazetteHeadline(
   tone: { adjectives: string[] }
 ): string {
   const gh = (narrativeContent as NarrativeContent).gazette.headlines;
-  const kills = fights.filter((f) => f.by === 'Kill');
-  const knockouts = fights.filter((f) => f.by === 'KO');
+  const { kills, knockouts } = fights.reduce(
+    (acc, f) => {
+      if (f.by === 'Kill') acc.kills.push(f);
+      if (f.by === 'KO') acc.knockouts.push(f);
+      return acc;
+    },
+    { kills: [] as typeof fights, knockouts: [] as typeof fights }
+  );
 
   if (detections.hotStreakers.length > 0) {
     const top = detections.hotStreakers.reduce(

@@ -188,8 +188,14 @@ export function resolveDecision(
   const archetypes: JudgeArchetype[] = ['Crowd', 'Technical', 'Blood'];
   const votes = archetypes.map((a) => judgeScore(a, fA, fD));
 
-  const aVotes = votes.filter((v) => v === 'A').length;
-  const dVotes = votes.filter((v) => v === 'D').length;
+  const { aVotes, dVotes } = votes.reduce(
+    (acc, v) => {
+      if (v === 'A') acc.aVotes++;
+      if (v === 'D') acc.dVotes++;
+      return acc;
+    },
+    { aVotes: 0, dVotes: 0 }
+  );
 
   // ── Unanimous ──
   if (aVotes === 3) {

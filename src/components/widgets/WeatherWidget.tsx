@@ -124,6 +124,14 @@ const WEATHER_METADATA = {
     description: 'Raw magic warps reality, supercharging strikes and quickening reflexes.',
     stats: 'INITIATIVE +8 // RIPOSTE +5 // DAMAGE 140% // STAMINA CONSERVATION 20%',
   },
+  'Blood Rain': {
+    icon: CloudRain,
+    color: 'text-red-500',
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/20',
+    description: 'Red rain slickens the sand. Violence feels inevitable.',
+    stats: 'INITIATIVE -2 // RIPOSTE +2 // DAMAGE 120% // STAMINA DRAIN 110%',
+  },
 };/**
    * Weather widget.
    * @returns The result.

@@ -199,6 +199,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.4,
     description: 'Raw magical energy warps reality, supercharging strikes and accelerating reflexes wildly.',
   },
+  'Blood Rain': {
+    staminaMult: 1.1,
+    initiativeMod: -2,
+    riposteMod: +2,
+    damageMult: 1.2,
+    description: 'Red rain slickens the sand. Violence feels inevitable.',
+  },
 };
 
 /**
@@ -249,6 +256,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Hailstorm: 'Ice falls from the sky like stones, battering armor and bare flesh alike.',
   'Solar Flare': 'A blinding flash of light bakes the arena. The sun itself seems to attack the fighters.',
   'Arcane Storm': 'The air rips open with raw arcane power. Reality itself seems to bend.',
+  'Blood Rain': 'Thick red drops fall from an unnatural sky. The air smells of copper and dread.',
 };
 
 /**

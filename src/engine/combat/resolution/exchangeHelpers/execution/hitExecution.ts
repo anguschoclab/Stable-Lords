@@ -19,7 +19,7 @@ import {
   calculateKillWindow,
 } from '../../../mechanics/combatDamage';
 import { SHIELD_COVERAGE } from '@/data/equipment';
-import { CRIT_DAMAGE_MULT } from '../../../mechanics/combatConstants';
+import { CRIT_DAMAGE_MULT } from '@/constants/combat';
 
 /**
  * Execute hit.

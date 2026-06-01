@@ -2,7 +2,7 @@
  * Combat Damage — hit location, protection, and damage calculations.
  * Single source of truth for damage mechanics used by simulate.ts.
  */
-import { KILL_WINDOW_ENDURANCE } from './combatConstants';/**
+import { KILL_WINDOW_ENDURANCE } from '@/constants/combat';/**
                                                            * Hit location type.
                                                            */
 

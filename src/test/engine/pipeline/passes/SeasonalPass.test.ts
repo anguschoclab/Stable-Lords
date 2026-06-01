@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { runSeasonalPass } from '@/engine/pipeline/seasonal';
+import narrativeContent from '@/data/narrativeContent.json';
+const eventCount = Object.keys((narrativeContent as any).offseason_events).length;
 import type { GameState } from '@/types/state.types';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import type { WarriorId } from '@/types/shared.types';
@@ -16,7 +18,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 8.5 / 19; // picks index 8 = black_market_raid
+=======
+      if (callCount === 1) return 8.5 / eventCount; // picks index 8 = black_market_raid
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -48,7 +54,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 9.5 / 19; // picks index 9 = grand_feast
+=======
+      if (callCount === 1) return 9.5 / eventCount; // picks index 9 = grand_feast
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -110,7 +120,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 5.5 / 19; // picks index 5 = tavern_brawl
+=======
+      if (callCount === 1) return 5.5 / eventCount; // picks index 5 = tavern_brawl
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -147,7 +161,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 5.5 / 19; // picks tavern_brawl
+=======
+      if (callCount === 1) return 5.5 / eventCount; // picks tavern_brawl
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -187,7 +205,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 10.5 / 19; // picks index 10 = wandering_healer
+=======
+      if (callCount === 1) return 10.5 / eventCount; // picks index 10 = wandering_healer
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -247,7 +269,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 10.5 / 19; // picks index 10 = wandering_healer
+=======
+      if (callCount === 1) return 10.5 / eventCount; // picks index 10 = wandering_healer
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -289,7 +315,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 11.5 / 19; // picks index 11 = mystic_vision
+=======
+      if (callCount === 1) return 11.5 / eventCount; // picks index 11 = mystic_vision
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -320,7 +350,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 12.5 / 19; // picks index 12 = wild_animal_attack
+=======
+      if (callCount === 1) return 12.5 / eventCount; // picks index 12 = wild_animal_attack
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -344,7 +378,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 13.5 / 19; // picks index 13 = loyal_stray
+=======
+      if (callCount === 1) return 13.5 / eventCount; // picks index 13 = loyal_stray
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -378,7 +416,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 14.5 / 19; // picks index 14 = street_performance
+=======
+      if (callCount === 1) return 14.5 / eventCount; // picks index 14 = street_performance
+>>>>>>> Stashed changes
       return originalNext();
     };
     rng.next = mockNext;
@@ -414,7 +456,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 15.5 / 19; // picks index 15 = chaotic_spells
+=======
+      if (callCount === 1) return 15.5 / eventCount; // picks index 15 = chaotic_spells
+>>>>>>> Stashed changes
       if (callCount === 3) return 0.2; // roll < 0.33, triggers XP gain
       if (callCount === 4) return 0.5; // for xp roll
       return originalNext();
@@ -445,7 +491,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 15.5 / 19; // picks index 15 = chaotic_spells
+=======
+      if (callCount === 1) return 15.5 / eventCount; // picks index 15 = chaotic_spells
+>>>>>>> Stashed changes
       if (callCount === 3) return 0.5; // roll < 0.66, triggers minor injury
       if (callCount === 4) return 0.5; // for weeksRemaining roll
       return originalNext();
@@ -478,7 +528,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
+<<<<<<< Updated upstream
       if (callCount === 1) return 15.5 / 19; // picks index 15 = chaotic_spells
+=======
+      if (callCount === 1) return 15.5 / eventCount; // picks index 15 = chaotic_spells
+>>>>>>> Stashed changes
       if (callCount === 3) return 0.8; // roll >= 0.66, triggers fame loss
       if (callCount === 4) return 0.5; // for fame roll
       return originalNext();

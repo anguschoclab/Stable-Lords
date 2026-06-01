@@ -16,8 +16,8 @@ describe('combatFactory', () => {
       expect(summary.d).toBe('Defender');
       expect(summary.warriorIdA).toBe('warrior-a');
       expect(summary.warriorIdD).toBe('warrior-d');
-      expect(summary.styleA).toBe('Brawler');
-      expect(summary.styleD).toBe('Balanced');
+      expect(summary.styleA).toBe('BASHING ATTACK');
+      expect(summary.styleD).toBe('TOTAL PARRY');
       expect(summary.winner).toBe('A');
       expect(summary.by).toBe('KO');
       expect(summary.title).toBe('Practice Match');

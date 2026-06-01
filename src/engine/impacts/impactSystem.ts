@@ -40,16 +40,20 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
  */
 export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameState {
   const newState = { ...state };
-  for (const impact of impacts) {
-    (Object.keys(impact) as Array<keyof StateImpact>).forEach((key) => {
-      const value = impact[key];
-      if (value !== undefined) {
-        const handler = impactHandlers[key] as ImpactHandler<typeof key>;
-        if (handler) {
-          handler(newState, value as any); // eslint-disable-line @typescript-eslint/no-explicit-any -- Cast only here because of the generic key loss in forEach
+  for (let i = 0; i < impacts.length; i++) {
+    const impact = impacts[i];
+    if (!impact) continue;
+    for (const key in impact) {
+      if (Object.prototype.hasOwnProperty.call(impact, key)) {
+        const value = (impact as any)[key];
+        if (value !== undefined) {
+          const handler = (impactHandlers as any)[key];
+          if (handler) {
+            handler(newState, value);
+          }
         }
       }
-    });
+    }
   }
   return newState;
 }

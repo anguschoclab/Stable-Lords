@@ -3,7 +3,7 @@
  */
 import { skillCheck } from '../../../mechanics/combatMath';
 import { oeAttMod } from '../../../mechanics/tacticResolution';
-import { INITIATIVE_PRESS_BONUS, GLOBAL_ATT_BONUS } from '../../../mechanics/combatConstants';
+import { INITIATIVE_PRESS_BONUS, GLOBAL_ATT_BONUS } from '@/constants/combat';
 import type { FighterState } from '../../types';
 import { getOffensiveTacticMods } from '../../../mechanics/tacticResolution';
 import { getStylePassive } from '@/engine/stylePassives';

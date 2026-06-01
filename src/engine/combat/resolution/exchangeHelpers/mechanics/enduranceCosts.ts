@@ -7,7 +7,7 @@ import type { ResolutionContext } from '../../types';
 import { enduranceCost } from '../../../mechanics/combatFatigue';
 import { PSYCH_STATE_MODS } from '../../../mechanics/conditionEngine';
 import { getEnduranceMult } from '@/engine/stylePassives';
-import { DEFENDER_ENDURANCE_DISCOUNT } from '../../../mechanics/combatConstants';
+import { DEFENDER_ENDURANCE_DISCOUNT } from '@/constants/combat';
 
 /**
  * Apply endurance costs.

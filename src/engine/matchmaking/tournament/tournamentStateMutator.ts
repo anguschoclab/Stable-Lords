@@ -76,3 +76,7 @@ export function findWarriorById(
 
   return map.get(warriorId);
 }
+
+export function clearWarriorCache(): void {
+  // No-op because we use a WeakMap now
+}

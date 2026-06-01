@@ -3,7 +3,7 @@
  */
 import { skillCheck } from '../../../mechanics/combatMath';
 import { oeDefMod } from '../../../mechanics/tacticResolution';
-import { GLOBAL_PAR_PENALTY } from '../../../mechanics/combatConstants';
+import { GLOBAL_PAR_PENALTY } from '@/constants/combat';
 import type { FighterState } from '../../types';
 import { getDefensiveTacticMods } from '../../../mechanics/tacticResolution';
 import { getOffensiveTacticMods } from '../../../mechanics/tacticResolution';

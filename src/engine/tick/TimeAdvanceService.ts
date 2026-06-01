@@ -3,7 +3,7 @@ import {
   advanceWeek,
   type WeekAdvanceOptions,
 } from '@/engine/pipeline/services/weekPipelineService';
-import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
+import { flushDeferredArchivesOffThread, flushDeferredArchives } from '@/engine/pipeline/adapters/opfsArchiver';
 import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/telemetry';
 
 /**
@@ -194,9 +194,9 @@ export const TimeAdvanceService = {
       if (opts?.stopConditions && (i + 1) % checkpointInterval === 0) {
         const stopResult = evaluateStopConditions(currentState, opts.stopConditions);
         if (stopResult.shouldStop) {
-          // Flush any deferred archives before returning (off-thread, non-blocking)
+          // Flush any deferred archives before returning (async)
           if (opts.deferArchives) {
-            flushDeferredArchivesOffThread(currentState);
+            await flushDeferredArchives(currentState);
           }
 
           const duration = performance.now() - startTime;
@@ -232,9 +232,9 @@ export const TimeAdvanceService = {
       }
     }
 
-    // Flush deferred archives at quarter end (off-thread, non-blocking)
+    // Flush deferred archives at quarter end (async)
     if (opts?.deferArchives) {
-      flushDeferredArchivesOffThread(currentState);
+      await flushDeferredArchives(currentState);
     }
 
     const duration = performance.now() - startTime;
@@ -271,20 +271,13 @@ export const TimeAdvanceService = {
     const startYear = state.year;
     const startTreasury = state.treasury;
 
-    const quarterOpts = opts?.deferArchives ? { ...opts, deferArchives: false } : opts;
-
     for (let q = 0; q < 4; q++) {
-      const result = await this.advanceQuarter(currentState, quarterOpts);
+      const result = await this.advanceQuarter(currentState, opts);
       quarterResults.push(result);
       currentState = result.state;
 
       // Early termination if stop condition triggered
       if (result.stopReason) {
-        if (opts?.deferArchives) {
-          const flushStart = performance.now();
-          await flushDeferredArchives(currentState);
-          telemetry.timing(TelemetryEvents.FLUSH_DEFERRED_ARCHIVES, performance.now() - flushStart);
-        }
         return {
           state: currentState,
           quarterResults,
@@ -304,12 +297,6 @@ export const TimeAdvanceService = {
           stopReason: result.stopReason,
         };
       }
-    }
-
-    if (opts?.deferArchives) {
-      const flushStart = performance.now();
-      await flushDeferredArchives(currentState);
-      telemetry.timing(TelemetryEvents.FLUSH_DEFERRED_ARCHIVES, performance.now() - flushStart);
     }
 
     return {

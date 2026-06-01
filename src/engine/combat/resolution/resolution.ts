@@ -20,7 +20,7 @@ import { getFavoriteRhythmBonus } from '../../favorites';
 import { getDynamicTraitMods, type DynamicTraitContext } from '../../traits';
 import {
   TACTIC_OVERUSE_CAP,
-} from '../mechanics/combatConstants';
+} from '@/constants/combat';
 import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,
@@ -42,7 +42,7 @@ import { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 // Import from split modules
 export type { FighterState, ResolutionContext } from './types';
 export { resolveEffectiveTactics, applyAggressionBias } from './tactics';
-export { DECISION_HIT_MARGIN, getMatchupBonus } from './constants';
+export { DECISION_HIT_MARGIN, getMatchupBonus } from '@/constants/combat';
 export { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 export { applySpecialtyMods } from './specialtyMods';/**
                                                       * Resolve exchange.

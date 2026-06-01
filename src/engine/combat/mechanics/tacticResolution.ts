@@ -5,7 +5,7 @@ import {
   getOffensiveSuitability,
   getDefensiveSuitability,
 } from '../../tacticSuitability';
-import { OE_ATT_SCALING, OE_DEF_SCALING, AL_INI_SCALING } from './combatConstants';
+import { OE_ATT_SCALING, OE_DEF_SCALING, AL_INI_SCALING } from '@/constants/combat';
 
 /**
  * Stable Lords — Tactic & Attr Scaling Resolution

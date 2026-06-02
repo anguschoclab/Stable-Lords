@@ -2196,6 +2196,14 @@
       "newsletter": [
         "{{name}} snuck out to participate in an illegal underground pit fight. They earned some brutal notoriety, but the lack of rules came with a cost. (+{{fame}} Fame, Minor Injury)"
       ]
+    },
+    "rogue_alchemist": {
+      "title": "Rogue Alchemist",
+      "effectType": "rogue_alchemist",
+      "newsletter": [
+        "A strange rogue alchemist visited the stable, offering a glowing green potion to {{name}}. They drank it...",
+        "{{name}} accepted a bubbling concoction from a wandering alchemist."
+      ]
     }
   },
   "crowd_reactions": {

@@ -48,7 +48,8 @@ interface OffseasonEventNarrative {
     | 'shadow_training'
     | 'gladiator_olympics'
     | 'meteor_shower'
-    | 'underground_pit_fight';
+    | 'underground_pit_fight'
+    | 'rogue_alchemist';
   newsletter: string[];
 }
 
@@ -677,6 +678,50 @@ function handleUndergroundPitFight(state: GameState, nextWeek: number, e: Offsea
   }
 }
 
+function handleRogueAlchemist(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const roll = rng.next();
+      let effectMsg = '';
+
+      if (roll < 0.5) {
+        // Success
+        const xpGained = 20 + Math.floor(rng.next() * 11);
+        const fameGained = 5 + Math.floor(rng.next() * 6);
+        ctx.rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+          fame: (chosen.fame || 0) + fameGained,
+        });
+        effectMsg = `It was a mutagenic success! They feel incredibly powerful. (+${xpGained} XP, +${fameGained} Fame)`;
+      } else {
+        // Failure
+        const newInjury: InjuryData = {
+          id: rng.uuid('injury') as InjuryId,
+          name: 'Alchemical Sickness',
+          description: 'Nausea, cold sweats, and strange bodily humming.',
+          severity: 'Minor',
+          weeksRemaining: 1 + Math.floor(rng.next() * 2),
+          penalties: { SP: -1, CN: -1 },
+        };
+        ctx.rosterUpdates.set(chosen.id, {
+          injuries: [...(chosen.injuries || []), newInjury],
+        });
+        effectMsg = `It tasted like battery acid. They are violently ill. (Minor Injury)`;
+      }
+
+      const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [`${baseMsg} ${effectMsg}`],
+      });
+    }
+  }
+}
+
 function handleMeteorShower(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
   const activeWarriors = state.roster.filter((w) => w.status === 'Active');
   if (activeWarriors.length > 0) {
@@ -738,6 +783,7 @@ const EVENT_HANDLERS: Record<
   gladiator_olympics: handleGladiatorOlympics,
   underground_pit_fight: handleUndergroundPitFight,
   meteor_shower: handleMeteorShower,
+  rogue_alchemist: handleRogueAlchemist,
 };
 
 export function runSeasonalPass(

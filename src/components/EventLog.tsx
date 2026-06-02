@@ -4,7 +4,7 @@
  * Entity names are rendered as clickable links via WarriorLink.
  */
 import React, { useMemo } from 'react';
-import { useWorldState, useGameStore } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
@@ -140,7 +140,14 @@ function LinkifiedText({ text, names }: { text: string; names: string[] }) {
  * @returns The result.
  */
 export default function EventLog() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      arenaHistory: s.arenaHistory,
+    }))
+  );
   const navigate = useNavigate();
 
   const rosterNames = useGameStore(

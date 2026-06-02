@@ -702,7 +702,7 @@ function handleRogueAlchemist(state: GameState, nextWeek: number, e: OffseasonEv
           name: 'Alchemical Sickness',
           description: 'Nausea, cold sweats, and strange bodily humming.',
           severity: 'Minor',
-          weeksRemaining: 1 + Math.floor(rng.next() * 3),
+          weeksRemaining: 1 + Math.floor(rng.next() * 2),
           penalties: { SP: -1, CN: -1 },
         };
         ctx.rosterUpdates.set(chosen.id, {

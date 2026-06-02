@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';

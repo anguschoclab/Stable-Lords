@@ -3,14 +3,14 @@ import { Link } from '@tanstack/react-router';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
 import { Surface } from '@/components/ui/Surface';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { GraduationCap, Target, Coins, Zap } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';/**
-                                  * Trainer table.
-                                  * @returns The result.
-                                  */
-
+import { cn } from '@/lib/utils'; /**
+ * Trainer table.
+ * @returns The result.
+ */
 
 /**
  * Trainer table.
@@ -36,14 +36,15 @@ export function TrainerTable() {
             </p>
           </div>
         </div>
-        <Link to="/ops/personnel">
-          <button
-            aria-label="Manage Staff"
-            className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary-foreground hover:bg-primary/20 px-3 py-1.5 rounded-none transition-all border border-primary/20"
-          >
+        <Button
+          asChild
+          variant="outline"
+          className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary-foreground hover:bg-primary/20 px-3 py-1.5 rounded-none transition-all border border-primary/20 bg-transparent h-auto"
+        >
+          <Link to="/ops/personnel" aria-label="Manage Staff">
             Manage Staff
-          </button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       <div className="p-6">

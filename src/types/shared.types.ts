@@ -616,7 +616,8 @@ export type WeatherType =
   | 'Cursed Miasma'
   | 'Hailstorm'
   | 'Arcane Storm'
-  | 'Blood Rain';/**
+  | 'Blood Rain'
+  | 'Locust Swarm';/**
                  * Defines the shape of death event.
                  */
 

@@ -11,12 +11,59 @@ import { CoachOverlay } from '@/components/ui/CoachOverlay';
 import { TacticalBar } from '@/components/navigation/TacticalBar';
 import EventLog from '@/components/EventLog';
 import { AppHeader } from '@/components/layout/AppHeader';
-import { ResetDialog } from '@/components/layout/ResetDialog';/**
-                                                               * App shell.
-                                                               * @param - { children }.
-                                                               * @returns The result.
-                                                               */
+import { ResetDialog } from '@/components/layout/ResetDialog';
 
+// ─── Loading Overlay Component ─────────────────────────────────────────────
+
+interface LoadingOverlayProps {
+  isInitialized: boolean;
+}
+
+function LoadingOverlay({ isInitialized }: LoadingOverlayProps) {
+  return (
+    <AnimatePresence>
+      {!isInitialized && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 z-50 bg-[#0C0806] flex items-center justify-center flex-col gap-4"
+        >
+          <div className="w-12 h-12 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
+          <div className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 animate-pulse">
+            Unsealing the Archive...
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ─── Event Log Rail Component ───────────────────────────────────────────────
+
+interface EventLogRailProps {
+  eventLogOpen: boolean;
+  children: React.ReactNode;
+}
+
+function EventLogRail({ eventLogOpen, children }: EventLogRailProps) {
+  return (
+    <AnimatePresence>
+      {eventLogOpen && (
+        <motion.aside
+          key="event-log"
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: 320, opacity: 1 }}
+          exit={{ width: 0, opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="flex-shrink-0 border-l border-white/10 bg-[#08090b] overflow-hidden flex flex-col"
+        >
+          {children}
+        </motion.aside>
+      )}
+    </AnimatePresence>
+  );
+}
 
 /**
  * App shell.
@@ -144,38 +191,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <CoachOverlay />
           <TacticalBar />
 
-          <AnimatePresence>
-            {!isInitialized && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 z-50 bg-[#0C0806] flex items-center justify-center flex-col gap-4"
-              >
-                <div className="w-12 h-12 rounded-none border-2 border-primary/20 border-t-primary animate-spin" />
-                <div className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 animate-pulse">
-                  Unsealing the Archive...
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <LoadingOverlay isInitialized={isInitialized} />
         </main>
 
         {/* ─── Event Log Right Rail ─── */}
-        <AnimatePresence>
-          {eventLogOpen && (
-            <motion.aside
-              key="event-log"
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 320, opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-shrink-0 border-l border-white/10 bg-[#08090b] overflow-hidden flex flex-col"
-            >
-              <EventLog />
-            </motion.aside>
-          )}
-        </AnimatePresence>
+        <EventLogRail eventLogOpen={eventLogOpen}>
+          <EventLog />
+        </EventLogRail>
       </div>
 
       <DeathModal />

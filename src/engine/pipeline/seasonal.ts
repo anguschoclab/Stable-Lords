@@ -429,7 +429,7 @@ function handleChaoticSpells(state: GameState, nextWeek: number, e: OffseasonEve
     const chosen = rng.pick(activeWarriors);
     if (chosen) {
       const roll = rng.next();
-      let effectMsg = '';
+      let effectMsg: string;
 
       if (roll < 0.33) {
         const xpGained = 10 + Math.floor(rng.next() * 11);
@@ -585,7 +585,7 @@ function handleRogueAlchemist(state: GameState, nextWeek: number, e: OffseasonEv
     const chosen = rng.pick(activeWarriors);
     if (chosen) {
       const roll = rng.next();
-      let effectMsg = '';
+      let effectMsg: string;
 
       if (roll < 0.5) {
         // Success

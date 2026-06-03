@@ -79,7 +79,8 @@
       "Bash(git add *)",
       "Bash(git commit -q -m ' *)",
       "Bash(git merge *)",
-      "Bash(git branch *)"
+      "Bash(git branch *)",
+      "Bash(git fetch *)"
     ]
   },
   "hooks": {

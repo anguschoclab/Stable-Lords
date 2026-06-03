@@ -4,8 +4,9 @@
  */
 
 import React, { useMemo } from 'react';
-import type { CrestData, ShieldShape, FieldType } from '@/types/crest.types';
+import type { CrestData, ShieldShape } from '@/types/crest.types';
 import { getChargePathsByType, type ChargePath } from '@/engine/crest/chargePaths';
+import { getFieldPattern } from './fieldPatterns';
 
 interface StableCrestProps {
   crest: CrestData;
@@ -40,154 +41,6 @@ const SHIELD_PATHS: Record<ShieldShape, string> = {
     'M10,10 h80 c0,20 -10,35 -20,45 l20,25 l-40,-25 l-40,25 l20,-25 c-10,-10 -20,-25 -20,-45 z',
   lozenge: 'M50,10 l40,40 l-40,40 l-40,-40 z',
 };
-
-// Field pattern definitions
-function getFieldPattern(
-  fieldType: FieldType,
-  colors: { primary: string; secondary?: string; metal: string }
-): React.ReactNode {
-  const { primary, secondary = primary, metal } = colors;
-
-  switch (fieldType) {
-    case 'solid':
-      return <rect x="0" y="0" width="100" height="100" fill={primary} />;
-
-    case 'fess':
-      return (
-        <>
-          <rect x="0" y="0" width="100" height="35" fill={primary} />
-          <rect x="0" y="35" width="100" height="30" fill={secondary} />
-          <rect x="0" y="65" width="100" height="35" fill={primary} />
-        </>
-      );
-
-    case 'pale':
-      return (
-        <>
-          <rect x="0" y="0" width="35" height="100" fill={primary} />
-          <rect x="35" y="0" width="30" height="100" fill={secondary} />
-          <rect x="65" y="0" width="35" height="100" fill={primary} />
-        </>
-      );
-
-    case 'bend':
-      return (
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-          <polygon points="0,0 30,0 100,70 100,100 70,100 0,30" fill={primary} />
-          <polygon
-            points="30,0 100,70 100,100 70,100 0,30 0,0"
-            fill={secondary}
-            transform="translate(10,-10)"
-          />
-        </svg>
-      );
-
-    case 'chevron':
-      return (
-        <>
-          <polygon points="0,0 50,35 100,0 100,15 50,50 0,15" fill={primary} />
-          <polygon points="0,15 50,50 100,15 100,100 0,100" fill={secondary} />
-        </>
-      );
-
-    case 'cross':
-      return (
-        <>
-          <rect x="0" y="0" width="35" height="35" fill={primary} />
-          <rect x="65" y="0" width="35" height="35" fill={primary} />
-          <rect x="0" y="65" width="35" height="35" fill={primary} />
-          <rect x="65" y="65" width="35" height="35" fill={primary} />
-          <rect x="35" y="0" width="30" height="35" fill={secondary} />
-          <rect x="35" y="65" width="30" height="35" fill={secondary} />
-          <rect x="0" y="35" width="35" height="30" fill={secondary} />
-          <rect x="65" y="35" width="35" height="30" fill={secondary} />
-          <rect x="35" y="35" width="30" height="30" fill={metal} />
-        </>
-      );
-
-    case 'saltire':
-      return (
-        <>
-          <polygon
-            points="0,0 25,0 50,25 75,0 100,0 100,25 75,50 100,75 100,100 75,100 50,75 25,100 0,100 0,75 25,50 0,25"
-            fill={primary}
-          />
-          <polygon
-            points="25,0 50,25 75,0 100,25 75,50 100,75 75,100 50,75 25,100 0,75 25,50 0,25"
-            fill={secondary}
-          />
-        </>
-      );
-
-    case 'per-pale':
-      return (
-        <>
-          <rect x="0" y="0" width="50" height="100" fill={primary} />
-          <rect x="50" y="0" width="50" height="100" fill={secondary} />
-        </>
-      );
-
-    case 'per-fess':
-      return (
-        <>
-          <rect x="0" y="0" width="100" height="50" fill={primary} />
-          <rect x="0" y="50" width="100" height="50" fill={secondary} />
-        </>
-      );
-
-    case 'gyronny':
-      return (
-        <>
-          <polygon points="50,0 100,0 100,50 50,50" fill={primary} />
-          <polygon points="50,0 50,50 0,50 0,0" fill={secondary} />
-          <polygon points="0,50 50,50 50,100 0,100" fill={primary} />
-          <polygon points="50,50 100,50 100,100 50,100" fill={secondary} />
-        </>
-      );
-
-    case 'bend-sinister':
-      return (
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-          <polygon points="100,0 70,0 0,70 0,100 30,100 100,30" fill={primary} />
-          <polygon
-            points="70,0 0,70 0,100 30,100 100,30 100,0"
-            fill={secondary}
-            transform="translate(-10,10)"
-          />
-        </svg>
-      );
-
-    case 'chevron-inverted':
-      return (
-        <>
-          <polygon points="0,0 100,0 100,85 50,50 0,85" fill={primary} />
-          <polygon points="0,85 50,50 100,85 100,100 0,100" fill={secondary} />
-        </>
-      );
-
-    case 'pale-environ':
-      return (
-        <>
-          <rect x="0" y="0" width="25" height="100" fill={primary} />
-          <rect x="25" y="0" width="50" height="100" fill={secondary} />
-          <rect x="75" y="0" width="25" height="100" fill={primary} />
-        </>
-      );
-
-    case 'quarterly':
-      return (
-        <>
-          <rect x="0" y="0" width="50" height="50" fill={primary} />
-          <rect x="50" y="0" width="50" height="50" fill={secondary} />
-          <rect x="0" y="50" width="50" height="50" fill={secondary} />
-          <rect x="50" y="50" width="50" height="50" fill={primary} />
-        </>
-      );
-
-    default:
-      return <rect x="0" y="0" width="100" height="100" fill={primary} />;
-  }
-}
 
 // Posture transforms applied within the 100x100 charge path space (centered at 50,50)
 function getPostureTransform(posture?: CrestData['charge']['posture']): string {

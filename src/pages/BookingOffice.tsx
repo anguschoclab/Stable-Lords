@@ -25,6 +25,7 @@ import type { InjuryData } from '@/types/warrior.types';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
+import { filterAndSortOffers } from '@/utils/boutOfferFilters';
 
 /** Get fatigue status for display */
 function getFatigueStatus(fatigue: number): {
@@ -293,57 +294,10 @@ export default function BookingOffice() {
     return map;
   }, [rivals]);
 
-  const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(() => {
-    const playerOffers = Object.values(boutOffers).filter(
-      (offer: BoutOffer) =>
-        offer.warriorIds.some((wId: string) =>
-          roster.some((playerW: Warrior) => playerW.id === wId)
-        ) &&
-        (offer.status === 'Proposed' || signedOfferIds.has(offer.id))
-    );
-
-    const filtered = selectedWarriorId
-      ? playerOffers.filter((o) =>
-          o.warriorIds.includes(selectedWarriorId as import('@/types/warrior.types').WarriorId)
-        )
-      : playerOffers;
-
-    const bestByPromoter = (offers: BoutOffer[]): BoutOffer[] => {
-      const map = new Map<string, BoutOffer>();
-      offers.forEach((o) => {
-        const score = o.purse * o.hype;
-        const existing = map.get(o.promoterId);
-        if (!existing || score > existing.purse * existing.hype) {
-          map.set(o.promoterId, o);
-        }
-      });
-      return Array.from(map.values());
-    };
-
-    const { thisWeek: thisWeekRaw, upcoming: upcomingRaw } = filtered.reduce(
-      (acc, o) => {
-        if (o.boutWeek === week + 2) acc.thisWeek.push(o);
-        if (o.boutWeek > week + 2) acc.upcoming.push(o);
-        return acc;
-      },
-      { thisWeek: [] as BoutOffer[], upcoming: [] as BoutOffer[] }
-    );
-    const thisWeek = bestByPromoter(thisWeekRaw);
-    const upcoming = bestByPromoter(upcomingRaw);
-
-    const warriorsWithOffers = new Set(playerOffers.flatMap((o) => o.warriorIds));
-    const idle = roster.filter((w) => w.status === 'Active' && !warriorsWithOffers.has(w.id));
-    const maxPurse = playerOffers.length > 0 ? Math.max(...playerOffers.map((o) => o.purse)) : 0;
-
-    return {
-      thisWeekOffers: thisWeek.sort((a, b) =>
-        (promoters[b.promoterId]?.tier ?? '') > (promoters[a.promoterId]?.tier ?? '') ? 1 : -1
-      ),
-      upcomingOffers: upcoming.sort((a, b) => a.boutWeek - b.boutWeek),
-      idleWarriors: idle,
-      highestPurse: maxPurse,
-    };
-  }, [boutOffers, roster, week, promoters, signedOfferIds, selectedWarriorId]);
+  const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(
+    () => filterAndSortOffers(boutOffers, roster, week, promoters, signedOfferIds, selectedWarriorId),
+    [boutOffers, roster, week, promoters, signedOfferIds, selectedWarriorId]
+  );
 
   const handleResponse = (
     offerId: string,

@@ -85,17 +85,18 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
               Warrior Dossier
             </div>
             {resolvedId && (
-              <Link to={`/warrior/$id`} params={{ id: resolvedId }}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground"
-                  title="View full profile"
-                  aria-label="View full warrior profile"
-                >
+              <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground"
+                title="View full profile"
+                aria-label="View full warrior profile"
+              >
+                <Link to={`/warrior/$id`} params={{ id: resolvedId }}>
                   <ExternalLink className="h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             )}
           </SheetTitle>
         </SheetHeader>
@@ -187,29 +188,31 @@ export function StableLink({ name, className, children }: StableLinkProps) {
               Stable Records
             </div>
             {isPlayer ? (
-              <Link to="/ops/overview">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground"
-                  title="View full stable"
-                  aria-label="View full stable"
-                >
+              <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground"
+                title="View full stable"
+                aria-label="View full stable"
+              >
+                <Link to="/ops/overview">
                   <ExternalLink className="h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ) : stableId ? (
-              <Link to="/world/stable/$id" params={{ id: stableId }}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground"
-                  title="View full stable"
-                  aria-label="View full stable"
-                >
+              <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground"
+                title="View full stable"
+                aria-label="View full stable"
+              >
+                <Link to="/world/stable/$id" params={{ id: stableId }}>
                   <ExternalLink className="h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ) : null}
           </SheetTitle>
         </SheetHeader>

@@ -41,6 +41,7 @@ import {
   type CommitResult,
 } from './exchangeSubPhases';
 import { getZonePenalty, getWeaponRangeMod } from '../mechanics/distanceResolution';
+import { getWeaponInitiativeMod } from '../mechanics/weaponStats';
 import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias, type ResolvedTactics } from './tactics';
@@ -117,6 +118,7 @@ function resolveInitiativePhase(
     (ctx.trainerModsA.iniMod ?? 0) +
     ctx.weatherEffect.initiativeMod +
     ctx.surfaceMod.initiativeMod +
+    getWeaponInitiativeMod(fA.weaponId) +
     dynTraitsA.iniMod;
 
   const iniD =
@@ -134,6 +136,7 @@ function resolveInitiativePhase(
     (ctx.trainerModsD.iniMod ?? 0) +
     ctx.weatherEffect.initiativeMod +
     ctx.surfaceMod.initiativeMod +
+    getWeaponInitiativeMod(fD.weaponId) +
     dynTraitsD.iniMod;
 
   const aGoesFirst = contestCheck(rng, iniA, iniD);

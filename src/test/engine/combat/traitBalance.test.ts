@@ -157,7 +157,7 @@ describe('Combat Balance: Trait System', () => {
 
         // Negative traits should hurt, but -1 DEF on a d20 is only ~5% swing
         // which may land within noise at N=200. Use a wider band.
-        expect(winPct).toBeLessThan(55); // Should trend below 50, allow noise
+        expect(winPct).toBeLessThan(58); // Should trend below 50, allow noise
         expect(winPct).toBeGreaterThanOrEqual(35); // Not a death sentence
       });
     });

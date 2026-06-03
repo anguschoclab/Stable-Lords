@@ -14,6 +14,13 @@ import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan
 import { buildPhasePlan, buildDesperatePlan, buildUniversalConditions } from '@/engine/ai/plan/phasePlanner';
 import { getPersonalityAdaptations } from '@/engine/ai/plan/personalityEngine';
 import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
+import {
+  getAITarget,
+  getAIProtect,
+  getAIAggressionBias,
+  getAIOpeningMove,
+  getAIRangePreference,
+} from '@/engine/ai/plan/levers';
 
 /**
  * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
@@ -101,6 +108,16 @@ export function aiPlanForWarrior(
   const bestDefTactic = getBestDefensiveTactic(w.style);
   if (bestOffTactic !== 'none') plan.offensiveTactic = bestOffTactic;
   if (bestDefTactic !== 'none') plan.defensiveTactic = bestDefTactic;
+
+  // Strategic levers the AI previously left at defaults — hit-location target,
+  // protected zone, aggression bias, opening move, and range preference — so NPCs
+  // contest the same systems a human player can exploit.
+  plan.target = getAITarget(w.style, personality, plan.killDesire ?? 5, intent);
+  plan.protect = getAIProtect(w.style, personality, intent);
+  plan.aggressionBias = getAIAggressionBias(personality, intent);
+  plan.openingMove = getAIOpeningMove(personality);
+  const rangePref = getAIRangePreference(w.style);
+  if (rangePref) plan.rangePreference = rangePref;
 
   // Phase-stratified effort curves — opening is conservative, late is personality-modified
   plan.phases = buildPhasePlan(plan, personality, w.style);

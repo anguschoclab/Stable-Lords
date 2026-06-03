@@ -181,12 +181,16 @@ export function checkWeaponRequirements(
       deficit: item.reqDF - attrs.DF,
     });
 
-  const failCount = checks.length;
+  let totalDeficit = 0;
+  for (const check of checks) {
+    totalDeficit += check.deficit;
+  }
+
   return {
-    met: failCount === 0,
+    met: checks.length === 0,
     failures: checks,
-    attPenalty: failCount * -2,
-    endurancePenalty: 1 + failCount * 0.1,
+    attPenalty: totalDeficit * -2,
+    endurancePenalty: 1 + totalDeficit * 0.1,
   };
 }/**
   * Is over encumbered.

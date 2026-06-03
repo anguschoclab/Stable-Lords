@@ -1,7 +1,8 @@
 /**
  * Tactic Suitability Matrix — defines how well each style uses each tactic.
  * WS = Well Suited (1.0), S = Suited (0.6), U = Unsuited (0.3)
- * From Fighting Styles Compendium v0.3 & Strategy Editor Spec v1.0
+ * Canonical source: Duel II "Styles & Tactics" chart by Pagan (terrablood.com).
+ * See memory terrablood-canon-sources / terrablood-weapon-tables.
  */
 import { FightingStyle } from '@/types/shared.types';
 import type { OffensiveTactic, DefensiveTactic } from '@/types/combat.types';/**
@@ -28,12 +29,12 @@ const OFFENSIVE_MATRIX: Record<FightingStyle, Record<string, SuitabilityRating>>
 };
 
 const DEFENSIVE_MATRIX: Record<FightingStyle, Record<string, SuitabilityRating>> = {
-  [FightingStyle.AimedBlow]: { Dodge: 'WS', Parry: 'S', Riposte: 'U', Responsiveness: 'U' },
+  [FightingStyle.AimedBlow]: { Dodge: 'WS', Parry: 'U', Riposte: 'WS', Responsiveness: 'U' },
   [FightingStyle.BashingAttack]: { Dodge: 'U', Parry: 'U', Riposte: 'U', Responsiveness: 'U' },
   [FightingStyle.LungingAttack]: { Dodge: 'WS', Parry: 'U', Riposte: 'WS', Responsiveness: 'U' },
   [FightingStyle.ParryLunge]: { Dodge: 'WS', Parry: 'WS', Riposte: 'S', Responsiveness: 'U' },
-  [FightingStyle.ParryRiposte]: { Dodge: 'S', Parry: 'WS', Riposte: 'WS', Responsiveness: 'U' },
-  [FightingStyle.ParryStrike]: { Dodge: 'U', Parry: 'WS', Riposte: 'S', Responsiveness: 'WS' },
+  [FightingStyle.ParryRiposte]: { Dodge: 'U', Parry: 'WS', Riposte: 'WS', Responsiveness: 'U' },
+  [FightingStyle.ParryStrike]: { Dodge: 'WS', Parry: 'WS', Riposte: 'WS', Responsiveness: 'WS' },
   [FightingStyle.SlashingAttack]: { Dodge: 'U', Parry: 'U', Riposte: 'U', Responsiveness: 'U' },
   [FightingStyle.StrikingAttack]: { Dodge: 'U', Parry: 'U', Riposte: 'S', Responsiveness: 'WS' },
   [FightingStyle.TotalParry]: { Dodge: 'WS', Parry: 'WS', Riposte: 'WS', Responsiveness: 'WS' },

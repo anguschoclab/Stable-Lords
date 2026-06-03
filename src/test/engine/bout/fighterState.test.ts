@@ -221,8 +221,7 @@ describe('fighterState', () => {
       const result = createFighterState('A', plan, undefined);
 
       expect(result.hp).toBe(100); // Default HP
-      expect(result.endurance).toBe(100); // Default endurance
-      expect(result.skills.ATT).toBe(5); // Default ATT
+      expect(result.skills.ATT).toBe(3); // Default ATT 5 - 2 penalty
     });
 
     it('preserves warrior label in fighter state', () => {

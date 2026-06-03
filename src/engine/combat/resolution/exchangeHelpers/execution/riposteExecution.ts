@@ -11,6 +11,7 @@ import {
   applyProtectMod,
   applyArmorTypeMod,
 } from '../../../mechanics/combatDamage';
+import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 
 /**
  * Execute riposte.
@@ -27,7 +28,11 @@ export function executeRiposte(
   specialtyRiposteMult: number = 1.0
 ) {
   const ripLoc = rollHitLocation(rng, defTactics.target, attacker.activePlan.protect);
-  let ripDmgRaw = computeHitDamage(rng, defender.derived.damage + defPassive.dmgBonus, ripLoc);
+  let ripDmgRaw = computeHitDamage(
+    rng,
+    defender.derived.damage + defPassive.dmgBonus + weaponDamageBonus(defender.weaponId, defender.style),
+    ripLoc
+  );
   ripDmgRaw = applyArmorTypeMod(ripDmgRaw, defender.weaponId, attacker.armorId);
   ripDmgRaw = Math.round(ripDmgRaw * specialtyRiposteMult);
   const ripDmg = applyProtectMod(ripDmgRaw, ripLoc, attacker.activePlan.protect);

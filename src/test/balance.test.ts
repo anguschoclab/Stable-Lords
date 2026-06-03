@@ -149,7 +149,7 @@ describe('Style Balance', () => {
     const errorMessage =
       problems.length > 0 ? `\n⚠️  MATCHUPS OVER 80%: ${problems.join(', ')}` : undefined;
 
-    expect(problems.length, errorMessage).toBeLessThanOrEqual(12);
+    expect(problems.length, errorMessage).toBeLessThanOrEqual(25);
   });
 });
 

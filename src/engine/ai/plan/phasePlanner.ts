@@ -26,12 +26,20 @@ export function buildPhasePlan(
     style === FightingStyle.WallOfSteel ||
     style === FightingStyle.ParryRiposte;
   const openingOE = clamp(plan.OE - (isDefensive ? 2 : 1), 1, 10);
+  // Aggression bias ramps across the bout: feel the opponent out, then open up late.
+  const baseBias = plan.aggressionBias ?? 5;
   const opening: PhaseStrategy = {
     OE: openingOE,
     AL: plan.AL,
     killDesire: Math.max(1, (plan.killDesire ?? 5) - 1),
+    aggressionBias: clamp(baseBias - 1, 0, 10),
   };
-  const mid: PhaseStrategy = { OE: plan.OE, AL: plan.AL, killDesire: plan.killDesire ?? 5 };
+  const mid: PhaseStrategy = {
+    OE: plan.OE,
+    AL: plan.AL,
+    killDesire: plan.killDesire ?? 5,
+    aggressionBias: baseBias,
+  };
   const lateOE =
     personality === 'Aggressive' || personality === 'Showman'
       ? clamp(plan.OE + 1, 1, 10)
@@ -42,7 +50,16 @@ export function buildPhasePlan(
     personality === 'Methodical' || personality === 'Tactician'
       ? clamp(plan.AL + 1, 1, 10)
       : plan.AL;
-  const late: PhaseStrategy = { OE: lateOE, AL: lateAL, killDesire: plan.killDesire ?? 5 };
+  const lateBias =
+    personality === 'Aggressive' || personality === 'Showman'
+      ? clamp(baseBias + 1, 0, 10)
+      : baseBias;
+  const late: PhaseStrategy = {
+    OE: lateOE,
+    AL: lateAL,
+    killDesire: plan.killDesire ?? 5,
+    aggressionBias: lateBias,
+  };
   return { opening, mid, late };
 }
 

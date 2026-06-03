@@ -80,7 +80,8 @@
       "Bash(git commit -q -m ' *)",
       "Bash(git merge *)",
       "Bash(git branch *)",
-      "Bash(git fetch *)"
+      "Bash(git fetch *)",
+      "Bash(npx eslint *)"
     ]
   },
   "hooks": {

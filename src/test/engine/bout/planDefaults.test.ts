@@ -43,6 +43,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'Bash',
+        defensiveTactic: 'none',
       });
     });
 
@@ -57,6 +59,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'Lunge',
+        defensiveTactic: 'Dodge',
       });
     });
 
@@ -71,6 +75,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'Decisiveness',
+        defensiveTactic: 'none',
       });
     });
 
@@ -85,6 +91,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'Slash',
+        defensiveTactic: 'none',
       });
     });
   });
@@ -101,6 +109,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'none',
+        defensiveTactic: 'Parry',
       });
     });
 
@@ -115,6 +125,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'Bash',
+        defensiveTactic: 'Parry',
       });
     });
 
@@ -129,6 +141,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'none',
+        defensiveTactic: 'Parry',
       });
     });
 
@@ -143,6 +157,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'Slash',
+        defensiveTactic: 'Dodge',
       });
     });
   });
@@ -159,6 +175,8 @@ describe('defaultPlanForWarrior', () => {
         target: 'Any',
         protect: 'Any',
         feintTendency: 0,
+        offensiveTactic: 'Lunge',
+        defensiveTactic: 'Parry',
       });
     });
   });

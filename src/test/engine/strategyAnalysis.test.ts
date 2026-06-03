@@ -109,7 +109,7 @@ describe('computeStrategyScore', () => {
     });
 
     it('adds +5 for S-rated defensive tactic', () => {
-      const plan = createPlan(FightingStyle.AimedBlow, { defensiveTactic: 'Parry' });
+      const plan = createPlan(FightingStyle.ParryLunge, { defensiveTactic: 'Riposte' });
       expect(computeStrategyScore(plan)).toBe(65);
     });
 
@@ -138,7 +138,7 @@ describe('computeStrategyScore', () => {
 
     it('does not penalize S-rated defensive tactic when WT < 10', () => {
       const warrior = createWarrior({ WT: 9 });
-      const plan = createPlan(FightingStyle.AimedBlow, { defensiveTactic: 'Parry' });
+      const plan = createPlan(FightingStyle.ParryLunge, { defensiveTactic: 'Riposte' });
       expect(computeStrategyScore(plan, warrior)).toBe(65);
     });
 

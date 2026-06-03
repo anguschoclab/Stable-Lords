@@ -19,6 +19,7 @@ import {
   calculateKillWindow,
 } from '../../../mechanics/combatDamage';
 import { SHIELD_COVERAGE } from '@/data/equipment';
+import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 import { CRIT_DAMAGE_MULT } from '@/constants/combat';
 
 /**
@@ -50,7 +51,9 @@ export function executeHit(
     const freeRipLoc = rollHitLocation(rng, attTactics.target, attacker.activePlan.protect);
     let freeRipDmg = computeHitDamage(
       rng,
-      defender.derived.damage + (defPassive?.dmgBonus ?? 0),
+      defender.derived.damage +
+        (defPassive?.dmgBonus ?? 0) +
+        weaponDamageBonus(defender.weaponId, defender.style),
       freeRipLoc
     );
     freeRipDmg = applyArmorTypeMod(freeRipDmg, defender.weaponId, attacker.armorId);
@@ -88,7 +91,10 @@ export function executeHit(
   const hitLoc = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
   let rawDamage = computeHitDamage(
     rng,
-    attacker.derived.damage + attOffMods.dmgBonus + attPassive.dmgBonus,
+    attacker.derived.damage +
+      attOffMods.dmgBonus +
+      attPassive.dmgBonus +
+      weaponDamageBonus(attacker.weaponId, attacker.style),
     hitLoc
   );
   rawDamage = applyArmorTypeMod(rawDamage, attacker.weaponId, defender.armorId);

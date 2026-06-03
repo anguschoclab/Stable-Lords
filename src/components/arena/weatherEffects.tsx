@@ -1,15 +1,19 @@
 import type { CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 import { cryptoRandom } from '@/utils/cryptoRandom';
+import type { WeatherType } from '@/types/shared.types';
 
 /**
  * Self-contained weather overlay effects for the arena background.
  *
- * The effects are dispatched through {@link WEATHER_EFFECTS}, an *ordered*
- * registry: the first entry whose `match` predicate accepts the (lowercased)
- * weather string wins. Ordering is significant and intentionally mirrors the
- * original if/else chain — e.g. the generic `rain` matcher precedes (and thus
- * shadows) `acid rain`, preserving historical behavior.
+ * Effects are dispatched through {@link WEATHER_VISUALS}, an *exhaustive*
+ * `Record<WeatherType, …>`. Because every member of the {@link WeatherType}
+ * union must appear as a key, adding a new weather type will fail to compile
+ * until a visual (or an explicit `null`) is registered for it — guaranteeing
+ * no type is ever silently left without a matched effect.
+ *
+ * `Clear` and `Overcast` map to `null` on purpose: they are neutral conditions
+ * with no atmospheric treatment (mirroring the engine's weather opening lines).
  */
 
 function RainEffect() {
@@ -26,6 +30,26 @@ function RainEffect() {
           }}
         />
       ))}
+    </div>
+  );
+}
+
+function BloodRainEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {Array.from({ length: 55 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute w-px h-4 bg-red-700/40 animate-rain"
+          style={{
+            left: `${cryptoRandom() * 100}%`,
+            animationDelay: `${cryptoRandom() * 2}s`,
+            animationDuration: `${0.5 + cryptoRandom() * 0.5}s`,
+          }}
+        />
+      ))}
+      {/* Crimson pooling on the sand */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-red-900/10 blur-xl" />
     </div>
   );
 }
@@ -59,6 +83,19 @@ function HeatEffect() {
   );
 }
 
+function SolarFlareEffect() {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none animate-pulse-slow"
+      style={{
+        background:
+          'radial-gradient(ellipse at top, rgba(255,240,180,0.25) 0%, rgba(255,200,80,0.08) 40%, transparent 75%)',
+        mixBlendMode: 'screen',
+      }}
+    />
+  );
+}
+
 function AbyssalGloomEffect() {
   return (
     <div
@@ -72,14 +109,30 @@ function AbyssalGloomEffect() {
   );
 }
 
-function WindEffect({ weather }: { weather: string }) {
-  const isGale = weather.includes('gale') || weather.includes('scorching wind');
+function CursedMiasmaEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div
+        className="absolute inset-0 animate-fog-drift"
+        style={{
+          background:
+            'radial-gradient(ellipse at 50% 80%, rgba(120,40,160,0.12) 0%, rgba(80,20,110,0.45) 100%)',
+          filter: 'blur(30px)',
+          width: '120%',
+          left: '-10%',
+        }}
+      />
+    </div>
+  );
+}
+
+function WindEffect({ strong }: { strong: boolean }) {
   return (
     <div className="absolute inset-0 pointer-events-none">
-      {Array.from({ length: isGale ? 40 : 15 }).map((_, i) => (
+      {Array.from({ length: strong ? 40 : 15 }).map((_, i) => (
         <div
           key={i}
-          className={cn('absolute h-px bg-white/20 animate-wind', isGale ? 'w-16' : 'w-8')}
+          className={cn('absolute h-px bg-white/20 animate-wind', strong ? 'w-16' : 'w-8')}
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: `-20%`,
@@ -219,6 +272,26 @@ function AshfallEffect() {
   );
 }
 
+function MeteorShowerEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {Array.from({ length: 30 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute w-px h-8 bg-gradient-to-b from-orange-300/60 to-transparent animate-rain"
+          style={{
+            left: `${cryptoRandom() * 100}%`,
+            top: '-10%',
+            transform: 'rotate(18deg)',
+            animationDelay: `${cryptoRandom() * 3}s`,
+            animationDuration: `${0.6 + cryptoRandom() * 0.6}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function AcidRainEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -271,39 +344,67 @@ function ManaSurgeEffect() {
   );
 }
 
-interface WeatherEffectEntry {
-  match: (weather: string) => boolean;
-  render: (weather: string) => JSX.Element;
+function LocustSwarmEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 bg-amber-950/10 mix-blend-multiply" />
+      {Array.from({ length: 60 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute w-1 h-1 bg-stone-800/70 rounded-full animate-mana-spark"
+          style={
+            {
+              left: `${cryptoRandom() * 100}%`,
+              top: `${cryptoRandom() * 100}%`,
+              '--tx': `${(cryptoRandom() - 0.5) * 80}px`,
+              '--ty': `${(cryptoRandom() - 0.5) * 80}px`,
+              animationDelay: `${cryptoRandom() * 3}s`,
+            } as CSSProperties & Record<string, string>
+          }
+        />
+      ))}
+    </div>
+  );
 }
 
-/** Ordered registry; first matching entry wins (see file header). */
-const WEATHER_EFFECTS: WeatherEffectEntry[] = [
-  { match: (w) => w.includes('rain'), render: () => <RainEffect /> },
-  { match: (w) => w === 'mist', render: () => <MistEffect /> },
-  {
-    match: (w) => w.includes('blazing') || w.includes('sweltering'),
-    render: () => <HeatEffect />,
-  },
-  { match: (w) => w.includes('abyssal gloom'), render: () => <AbyssalGloomEffect /> },
-  {
-    match: (w) => w.includes('gale') || w.includes('breezy') || w.includes('scorching wind'),
-    render: (w) => <WindEffect weather={w} />,
-  },
-  { match: (w) => w.includes('eclipse'), render: () => <EclipseEffect /> },
-  { match: (w) => w.includes('blood moon'), render: () => <BloodMoonEffect /> },
-  { match: (w) => w.includes('spooky night'), render: () => <SpookyNightEffect /> },
-  { match: (w) => w.includes('sandstorm'), render: () => <SandstormEffect /> },
-  { match: (w) => w.includes('blizzard'), render: () => <BlizzardEffect /> },
-  { match: (w) => w.includes('dense fog'), render: () => <DenseFogEffect /> },
-  { match: (w) => w.includes('thunderstorm'), render: () => <ThunderstormEffect /> },
-  { match: (w) => w.includes('ashfall'), render: () => <AshfallEffect /> },
-  { match: (w) => w.includes('acid rain'), render: () => <AcidRainEffect /> },
-  { match: (w) => w.includes('mana surge'), render: () => <ManaSurgeEffect /> },
-];
+/**
+ * Exhaustive map of weather type → overlay renderer. `null` means the weather
+ * is intentionally neutral (no particle effect). The compiler enforces that
+ * every {@link WeatherType} has an entry.
+ */
+// eslint-disable-next-line react-refresh/only-export-components -- intentional registry export consumed by tests
+export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = {
+  Clear: null,
+  Overcast: null,
+  Rainy: () => <RainEffect />,
+  Sweltering: () => <HeatEffect />,
+  Breezy: () => <WindEffect strong={false} />,
+  'Blazing Sun': () => <HeatEffect />,
+  Gale: () => <WindEffect strong />,
+  'Blood Moon': () => <BloodMoonEffect />,
+  Eclipse: () => <EclipseEffect />,
+  Sandstorm: () => <SandstormEffect />,
+  Tornado: () => <WindEffect strong />,
+  Blizzard: () => <BlizzardEffect />,
+  'Dense Fog': () => <DenseFogEffect />,
+  Mist: () => <MistEffect />,
+  Thunderstorm: () => <ThunderstormEffect />,
+  Ashfall: () => <AshfallEffect />,
+  'Acid Rain': () => <AcidRainEffect />,
+  'Mana Surge': () => <ManaSurgeEffect />,
+  'Scorching Wind': () => <WindEffect strong />,
+  'Spooky Night': () => <SpookyNightEffect />,
+  'Meteor Shower': () => <MeteorShowerEffect />,
+  'Solar Flare': () => <SolarFlareEffect />,
+  'Abyssal Gloom': () => <AbyssalGloomEffect />,
+  'Cursed Miasma': () => <CursedMiasmaEffect />,
+  Hailstorm: () => <BlizzardEffect />,
+  'Arcane Storm': () => <ManaSurgeEffect />,
+  'Blood Rain': () => <BloodRainEffect />,
+  'Locust Swarm': () => <LocustSwarmEffect />,
+};
 
-/** Renders the first weather effect matching `weather`, or nothing. */
+/** Renders the registered weather effect for `weather`, or nothing. */
 export function WeatherOverlay({ weather }: { weather: string }) {
-  const weatherLower = weather.toLowerCase();
-  const effect = WEATHER_EFFECTS.find((entry) => entry.match(weatherLower));
-  return effect ? effect.render(weatherLower) : null;
+  return WEATHER_VISUALS[weather as WeatherType]?.() ?? null;
 }

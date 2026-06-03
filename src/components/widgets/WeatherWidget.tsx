@@ -1,5 +1,5 @@
 import { useWorldState } from '@/state/useGameStore';
-import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon, Sparkles, Flame } from 'lucide-react';
+import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon, Sparkles, Flame, Skull } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -131,6 +131,14 @@ const WEATHER_METADATA = {
     border: 'border-destructive/20',
     description: 'Red rain slickens the sand. Violence feels inevitable.',
     stats: 'INITIATIVE -2 // RIPOSTE +2 // DAMAGE 120% // STAMINA DRAIN 110%',
+  },
+  'Locust Swarm': {
+    icon: Skull,
+    color: 'text-arena-pop',
+    bg: 'bg-arena-pop/10',
+    border: 'border-arena-pop/20',
+    description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
+    stats: 'INITIATIVE -3 // DAMAGE 90% // STAMINA DRAIN 120%',
   },
 };/**
    * Weather widget.

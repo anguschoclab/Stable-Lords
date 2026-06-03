@@ -206,6 +206,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.2,
     description: 'Red rain slickens the sand. Violence feels inevitable.',
   },
+  'Locust Swarm': {
+    staminaMult: 1.2,
+    initiativeMod: -3,
+    riposteMod: 0,
+    damageMult: 0.9,
+    description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
+  },
 };
 
 /**
@@ -257,6 +264,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Solar Flare': 'A blinding flash of light bakes the arena. The sun itself seems to attack the fighters.',
   'Arcane Storm': 'The air rips open with raw arcane power. Reality itself seems to bend.',
   'Blood Rain': 'Thick red drops fall from an unnatural sky. The air smells of copper and dread.',
+  'Locust Swarm': 'A deafening swarm of locusts descends upon the arena, gnawing at everything in sight.',
 };
 
 /**

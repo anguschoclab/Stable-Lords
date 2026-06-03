@@ -1,14 +1,11 @@
-import { useMemo, useState, useCallback } from 'react';
-import { useGameStore, reconstructGameState, type GameStore } from '@/state/useGameStore';
+import { useMemo } from 'react';
+import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { isFightReady } from '@/engine/warriorStatus';
-import { processWeekBouts, type BoutResult } from '@/engine/boutProcessor';
-import { runAutosim, type AutosimResult } from '@/engine/autosim';
 import type { RivalStableData } from '@/types/game';
-import { toast } from 'sonner';
-import { MatchCard } from '@/components/run-round/MatchCard';
-import { AutosimConsole } from '@/components/run-round/AutosimConsole';
-import { RunResults } from '@/components/run-round/RunResults';
+import { useCombatExecution } from '@/hooks/useCombatExecution';
+import { calculateArenaLeaderboard } from '@/utils/arenaLeaderboardCalculations';
+import { CombatExecutionPanel } from '@/components/arena/CombatExecutionPanel';
 import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import type { Warrior } from '@/types/warrior.types';
@@ -151,42 +148,10 @@ function CrowdMoodWidget() {
 function ArenaLeaderboard() {
   const { roster, rivals, player } = useGameStore();
 
-  const allWarriors = useMemo(() => {
-    type Entry = { warrior: Warrior; stableName: string; isPlayer: boolean };
-    const top10: Entry[] = [];
-
-    const insert = (entry: Entry) => {
-      const fame = entry.warrior.fame;
-      if (top10.length === 10 && fame <= top10[9].warrior.fame) {
-        return;
-      }
-
-      let i = top10.length - 1;
-      while (i >= 0 && top10[i].warrior.fame < fame) {
-        i--;
-      }
-
-      top10.splice(i + 1, 0, entry);
-      if (top10.length > 10) {
-        top10.pop();
-      }
-    };
-
-    const playerStable = player.stableName;
-    const allActive = [
-      ...roster.filter((w) => w.status === 'Active').map((w) => ({ warrior: w, stableName: playerStable, isPlayer: true as const })),
-      ...(rivals ?? []).flatMap((r) =>
-        r.roster
-          .filter((w) => w.status === 'Active')
-          .map((w) => ({ warrior: w, stableName: r.owner.stableName, isPlayer: false as const }))
-      ),
-    ];
-    for (const entry of allActive) {
-      insert(entry);
-    }
-
-    return top10;
-  }, [roster, rivals, player.stableName]);
+  const allWarriors = useMemo(
+    () => calculateArenaLeaderboard(roster, rivals, player.stableName),
+    [roster, rivals, player.stableName]
+  );
 
   return (
     <Surface
@@ -279,23 +244,12 @@ function ArenaLeaderboard() {
  */
 export default function ArenaHub() {
   const store = useGameStore();
-  const { roster, player, setState, doAdvanceDay, doAdvanceWeek, setSimulating } = store;
+  const { roster, player } = store;
   const { week, isTournamentWeek } = useGameStore(
     useShallow((s) => ({ week: s.week, isTournamentWeek: s.isTournamentWeek }))
   );
   // const navigate = useNavigate();
   const gameState = useMemo(() => reconstructGameState(store), [store]);
-
-  const [showCombat, setShowCombat] = useState(false);
-  const [results, setResults] = useState<BoutResult[]>([]);
-  const [running, setRunning] = useState(false);
-  const [autosimming, setAutosimming] = useState(false);
-  const [autosimProgress, setAutosimProgress] = useState<{
-    current: number;
-    total: number;
-  } | null>(null);
-  const [autosimResult, setAutosimResult] = useState<AutosimResult | null>(null);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const fightReady = useMemo(
     () => gameState.roster.filter((w: Warrior) => isFightReady(w)),
@@ -314,61 +268,11 @@ export default function ArenaHub() {
     [gameState]
   );
 
-  const handleExecuteCycle = useCallback(() => {
-    if (running) return;
-    setRunning(true);
-    if (matchCard.length === 0 && fightReady.length < 2) {
-      setRunning(false);
-      toast.error('No valid pairings available for this mission.');
-      return;
-    }
-    const processed = processWeekBouts(gameState);
-    setResults(processed.results);
-    if (gameState.isTournamentWeek) {
-      doAdvanceDay(
-        undefined,
-        processed.results,
-        processed.summary.deathNames,
-        processed.summary.injuryNames
-      );
-      toast.success(`Empire Day ${gameState.day + 1} concluded.`);
-    } else {
-      doAdvanceWeek(
-        undefined,
-        processed.results,
-        processed.summary.deathNames,
-        processed.summary.injuryNames
-      );
-      toast.success(`Week ${gameState.week} concluded.`);
-    }
-    setRunning(false);
-    setExpandedId(null);
-  }, [gameState, running, matchCard.length, fightReady.length, doAdvanceDay, doAdvanceWeek]);
-
-  const handleStartAutosim = useCallback(
-    async (weeks: number) => {
-      if (autosimming) return;
-      setAutosimming(true);
-      setSimulating(true);
-      setAutosimResult(null);
-      try {
-        const result = await runAutosim(gameState, weeks, (currentWeek: number) => {
-          setAutosimProgress({ current: currentWeek, total: weeks });
-        });
-        setAutosimResult(result);
-        setState((draft: GameStore) => {
-          Object.assign(draft, result.finalState);
-        });
-      } catch (err) {
-        console.error('Autosim failed', err);
-        toast.error('Auto-simulation encountered an archive corruption.');
-      } finally {
-        setAutosimming(false);
-        setSimulating(false);
-      }
-    },
-    [gameState, setState, autosimming, setSimulating]
-  );
+  const combat = useCombatExecution({
+    gameState,
+    matchCardLength: matchCard.length,
+    fightReadyLength: fightReady.length,
+  });
 
   const lifetimeKills = useMemo(
     () => roster.reduce((s, w) => s + (w.career?.kills || 0), 0),
@@ -419,11 +323,11 @@ export default function ArenaHub() {
         </div>
         <Button
           onClick={() => {
-            setShowCombat(true);
-            setResults([]);
-            setAutosimResult(null);
+            combat.setShowCombat(true);
+            combat.setResults([]);
+            combat.setAutosimResult(null);
           }}
-          disabled={showCombat}
+          disabled={combat.showCombat}
           className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] text-[11px] hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all duration-300 rounded-none shrink-0"
         >
           <Zap className="h-4 w-4 mr-3 fill-current" />
@@ -532,156 +436,12 @@ export default function ArenaHub() {
       </div>
 
       {/* ── Inline Combat Execution Panel ── */}
-      {showCombat && (
-        <div className="space-y-10 border-t-2 border-primary/20 pt-16 animate-in slide-in-from-bottom-10 duration-700 ease-out">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <ImperialRing size="md" variant="blood">
-                <Zap className="h-5 w-5 text-primary" />
-              </ImperialRing>
-              <div className="flex flex-col">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-                  Engage Mode
-                </span>
-                <h3 className="font-display font-black text-xl uppercase tracking-tight text-foreground">
-                  {' '}
-                  Engagement Console
-                </h3>
-              </div>
-            </div>
-            {results.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setShowCombat(false);
-                  setResults([]);
-                  setAutosimResult(null);
-                }}
-                className="text-[10px] font-black uppercase tracking-[0.2em] border-white/10 h-12 px-8 rounded-none hover:bg-white/5 transition-all"
-              >
-                Seal Results
-              </Button>
-            )}
-          </div>
-
-          <Surface
-            variant="glass"
-            className="flex items-center gap-12 p-8 border-l-4 border-l-primary shadow-xl"
-          >
-            <div className="flex flex-col gap-1">
-              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">
-                Readiness State
-              </span>
-              <div className="flex items-center gap-4">
-                <Activity className="h-5 w-5 text-primary" />
-                <span className="font-display font-black text-xl uppercase tracking-tighter">
-                  Operational
-                </span>
-              </div>
-            </div>
-            <div className="h-12 w-px bg-white/5" />
-            <div className="flex items-center gap-12">
-              <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1">
-                  Mission Ready
-                </span>
-                <span className="font-display font-black text-3xl text-primary leading-none">
-                  {fightReady.length}
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-[0.2em] mb-1">
-                  Combat Pairs
-                </span>
-                <span className="font-display font-black text-3xl text-arena-gold leading-none">
-                  {matchCard.length}
-                </span>
-              </div>
-            </div>
-            {!autosimming && !autosimResult && results.length === 0 && (
-              <div className="ml-auto">
-                <Button
-                  onClick={handleExecuteCycle}
-                  disabled={running || (matchCard.length === 0 && fightReady.length < 2)}
-                  className="h-14 px-12 gap-4 font-black uppercase text-[14px] tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(135,34,40,0.4)] transition-all rounded-none"
-                >
-                  <Zap className="h-5 w-5 fill-current" />
-                  EXECUTE CYLCE
-                </Button>
-              </div>
-            )}
-          </Surface>
-
-          {/* Match Card / Results */}
-          <div className="max-w-4xl mx-auto space-y-12">
-            {results.length > 0 ? (
-              <RunResults
-                results={results}
-                expandedId={expandedId}
-                onToggleExpand={setExpandedId}
-              />
-            ) : (
-              <Surface variant="glass" className="p-0 border-accent/20 overflow-hidden">
-                <div className="p-6 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <ImperialRing size="sm" variant="gold">
-                      <Activity className="h-3.5 w-3.5 text-accent" />
-                    </ImperialRing>
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground/80">
-                      Active Manifest
-                    </span>
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className="text-[9px] font-black uppercase tracking-[0.2em] border-white/10 rounded-none h-8 px-4"
-                  >
-                    {matchCard.length} PAIRINGS
-                  </Badge>
-                </div>
-                <div className="p-8">
-                  {matchCard.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-6">
-                      {matchCard.map((p, i) => (
-                        <MatchCard
-                          key={i}
-                          pairing={{
-                            a: p.playerWarrior,
-                            d: p.rivalWarrior,
-                            rivalStable: p.rivalStable?.owner?.stableName || 'Rival Stable',
-                            isRivalry: p.isRivalryBout,
-                          }}
-                          crowdMood={gameState.crowdMood}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="py-24 text-center">
-                      <ImperialRing size="lg" variant="bronze" className="mx-auto mb-6 opacity-10">
-                        <Skull className="h-8 w-8" />
-                      </ImperialRing>
-                      <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/30 leading-relaxed">
-                        Zero Engagement Pairs Detected
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </Surface>
-            )}
-
-            {/* Autosim */}
-            <div className="pt-16 border-t border-white/5">
-              <SectionDivider label="Autonomous Simulation Bridge" />
-              <AutosimConsole
-                isSimulating={autosimming}
-                progress={autosimProgress}
-                result={autosimResult}
-                onStart={handleStartAutosim}
-                onReset={() => setAutosimResult(null)}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      <CombatExecutionPanel
+        combat={combat}
+        fightReadyCount={fightReady.length}
+        matchCard={matchCard}
+        crowdMood={gameState.crowdMood}
+      />
     </PageFrame>
   );
 }

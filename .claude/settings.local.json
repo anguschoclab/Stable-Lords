@@ -78,7 +78,8 @@
       "Bash(bunx eslint *)",
       "Bash(git add *)",
       "Bash(git commit -q -m ' *)",
-      "Bash(git merge *)"
+      "Bash(git merge *)",
+      "Bash(git branch *)"
     ]
   },
   "hooks": {

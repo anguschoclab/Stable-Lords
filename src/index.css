@@ -674,6 +674,30 @@
 .animate-ash-fall { animation: ash-fall 5s linear infinite; }
 .animate-mana-spark { animation: mana-spark 4s ease-in-out infinite; }
 
+/* Wind streaks sweeping horizontally across the arena */
+@keyframes wind {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(120vw); opacity: 0; }
+}
+.animate-wind { animation: wind 1.5s linear infinite; }
+
+/* Hail — fast, hard pellets falling steeply with slight drift */
+@keyframes hail {
+  0% { transform: translate(0, -10px); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate(-24px, 320px); opacity: 0.9; }
+}
+.animate-hail { animation: hail 0.45s linear infinite; }
+
+/* Slow rotation for swirling vortex (tornado funnel) */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+
 /* Blood pool expansion */
 @keyframes blood-pool {
   0% { transform: scale(0); opacity: 0; }

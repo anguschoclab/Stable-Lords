@@ -367,6 +367,135 @@ function LocustSwarmEffect() {
   );
 }
 
+function TornadoEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Swirling funnel */}
+      <div
+        className="absolute left-1/2 top-0 -translate-x-1/2 h-full w-2/3 animate-spin-slow opacity-30"
+        style={{
+          background:
+            'conic-gradient(from 0deg at 50% 60%, rgba(120,120,130,0) 0deg, rgba(160,160,170,0.28) 90deg, rgba(120,120,130,0) 180deg, rgba(160,160,170,0.28) 270deg, rgba(120,120,130,0) 360deg)',
+          filter: 'blur(8px)',
+          clipPath: 'polygon(36% 0, 64% 0, 90% 100%, 10% 100%)',
+        }}
+      />
+      {/* Fast wind streaks */}
+      {Array.from({ length: 30 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute h-px w-20 bg-stone-300/25 animate-wind"
+          style={{
+            top: `${cryptoRandom() * 100}%`,
+            left: '-20%',
+            animationDelay: `${cryptoRandom() * 1.5}s`,
+            animationDuration: `${0.5 + cryptoRandom() * 0.6}s`,
+          }}
+        />
+      ))}
+      {/* Whipping debris */}
+      {Array.from({ length: 25 }).map((_, i) => (
+        <div
+          key={`d${i}`}
+          className="absolute w-1 h-1 bg-stone-600/60 rounded-sm animate-mana-spark"
+          style={
+            {
+              left: `${30 + cryptoRandom() * 40}%`,
+              top: `${cryptoRandom() * 100}%`,
+              '--tx': `${(cryptoRandom() - 0.5) * 70}px`,
+              '--ty': `${(cryptoRandom() - 0.5) * 70}px`,
+              animationDelay: `${cryptoRandom() * 3}s`,
+            } as CSSProperties & Record<string, string>
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
+function ScorchingWindEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Warm haze */}
+      <div
+        className="absolute inset-0 animate-heat-shimmer"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(255,170,80,0.06) 0%, rgba(255,140,60,0.12) 60%, transparent 100%)',
+        }}
+      />
+      {/* Hot wind streaks */}
+      {Array.from({ length: 22 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute h-px w-24 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent animate-wind"
+          style={{
+            top: `${cryptoRandom() * 100}%`,
+            left: '-20%',
+            animationDelay: `${cryptoRandom() * 2}s`,
+            animationDuration: `${0.7 + cryptoRandom() * 0.8}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function HailstormEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 bg-cyan-200/5 mix-blend-overlay" />
+      {Array.from({ length: 70 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute w-1 h-1.5 bg-cyan-100/70 animate-hail"
+          style={{
+            left: `${cryptoRandom() * 100}%`,
+            top: '-5%',
+            animationDelay: `${cryptoRandom() * 1.2}s`,
+            animationDuration: `${0.35 + cryptoRandom() * 0.3}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ArcaneStormEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Reality-warping sky */}
+      <div
+        className="absolute inset-0 opacity-25"
+        style={{
+          background:
+            'linear-gradient(120deg, rgba(80,0,200,0.15), rgba(0,200,255,0.12), rgba(160,0,255,0.15))',
+          backgroundSize: '200% 200%',
+          animation: 'bronzeShimmer 4s linear infinite',
+        }}
+      />
+      {/* Lightning flashes */}
+      <div className="absolute inset-0 bg-violet-200/10 animate-pulse" />
+      {/* Crackling arcane sparks */}
+      {Array.from({ length: 35 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute w-1 h-1 bg-cyan-300/70 rounded-full animate-mana-spark"
+          style={
+            {
+              left: `${cryptoRandom() * 100}%`,
+              top: `${cryptoRandom() * 100}%`,
+              '--tx': `${(cryptoRandom() - 0.5) * 140}px`,
+              '--ty': `${(cryptoRandom() - 0.5) * 140}px`,
+              animationDelay: `${cryptoRandom() * 3}s`,
+            } as CSSProperties & Record<string, string>
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
 /**
  * Exhaustive map of weather type → overlay renderer. `null` means the weather
  * is intentionally neutral (no particle effect). The compiler enforces that
@@ -384,7 +513,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Blood Moon': () => <BloodMoonEffect />,
   Eclipse: () => <EclipseEffect />,
   Sandstorm: () => <SandstormEffect />,
-  Tornado: () => <WindEffect strong />,
+  Tornado: () => <TornadoEffect />,
   Blizzard: () => <BlizzardEffect />,
   'Dense Fog': () => <DenseFogEffect />,
   Mist: () => <MistEffect />,
@@ -392,14 +521,14 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   Ashfall: () => <AshfallEffect />,
   'Acid Rain': () => <AcidRainEffect />,
   'Mana Surge': () => <ManaSurgeEffect />,
-  'Scorching Wind': () => <WindEffect strong />,
+  'Scorching Wind': () => <ScorchingWindEffect />,
   'Spooky Night': () => <SpookyNightEffect />,
   'Meteor Shower': () => <MeteorShowerEffect />,
   'Solar Flare': () => <SolarFlareEffect />,
   'Abyssal Gloom': () => <AbyssalGloomEffect />,
   'Cursed Miasma': () => <CursedMiasmaEffect />,
-  Hailstorm: () => <BlizzardEffect />,
-  'Arcane Storm': () => <ManaSurgeEffect />,
+  Hailstorm: () => <HailstormEffect />,
+  'Arcane Storm': () => <ArcaneStormEffect />,
   'Blood Rain': () => <BloodRainEffect />,
   'Locust Swarm': () => <LocustSwarmEffect />,
 };

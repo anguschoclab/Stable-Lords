@@ -198,7 +198,7 @@ export function resolveStableName(
  * @param name - Optional display name
  * @returns The resolved Warrior object, or undefined if not found
  */
-export function findWarrior(state: GameState, id?: string, name?: string): Warrior | undefined {
+export function findWarrior(state: GameState | NameResolutionState, id?: string, name?: string): Warrior | undefined {
   const cache = ensureWarriorCache(state);
 
   if (id) {

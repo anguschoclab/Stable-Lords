@@ -1,3 +1,7 @@
 ## 2024-05-19 - Zustand useWorldState Causes N+1 Re-Renders in List Item Components
 **Learning:** `useWorldState()` subscribes to the entire global state object by default. When used in a component that is rendered inside a large list (like `FormSparkline` in a roster table), it completely breaks `React.memo()`. Any unrelated global state change (e.g., ticking the week, treasury changing) will trigger a re-render for every single item in the list, causing massive O(N) performance regressions.
 **Action:** In small list components, never call `useWorldState()` directly. Instead, extract exactly what you need using a narrow selector like `useGameStore((s) => s.specificSlice)` to maintain `React.memo` isolation. Only use `useShallow` if the selector returns a newly constructed object or array.
+
+## 2024-06-02 - EntityLink re-rendering optimization
+**Learning:** `WarriorLink` and `StableLink` components were using `useWorldState()` to fetch global game state just to resolve names to IDs. This caused them to re-render constantly on every game state change, even when their target warrior/stable wasn't affected. Since these components are used everywhere (e.g. `EventLog`, `WarriorAuditCard`), it created a massive performance bottleneck, triggering re-renders across the app.
+**Action:** Replace `useWorldState()` with `useGameStore(useShallow(...))` to only subscribe to the strictly necessary state slices (`player`, `rivals`, `roster`, `graveyard`, `retired`) needed for name resolution.

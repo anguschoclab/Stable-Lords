@@ -71,7 +71,14 @@
       "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" run *)",
       "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" x *)",
       "Bash(\"C:\\\\Users\\\\amauricia\\\\.bun\\\\bin\\\\bun.exe\" install *)",
-      "Skill(superpowers:test-driven-development)"
+      "Skill(superpowers:test-driven-development)",
+      "Bash(awk '$1 > 400 && $2 != \"total\"')",
+      "Bash(git checkout *)",
+      "Bash(echo \"TSC EXIT: $?\")",
+      "Bash(bunx eslint *)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git merge *)"
     ]
   },
   "hooks": {

@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Simple development mode check - force dev mode for now since we're testing
-const isDev = true;
+const isDev = !app.isPackaged;
 // Vite uses port 8080 by default, but may use 8081 if 8080 is in use
 const devPort = process.env.VITE_PORT || '8080';
 
@@ -168,22 +168,6 @@ function createWindow() {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
-  });
-
-  // Handle external links
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    try {
-      const parsedUrl = new URL(url);
-      const safeProtocols = ['http:', 'https:', 'mailto:'];
-      if (safeProtocols.includes(parsedUrl.protocol)) {
-        shell.openExternal(url);
-      } else {
-        console.warn(`Blocked attempt to open external URL with unsafe protocol: ${parsedUrl.protocol}`);
-      }
-    } catch (e) {
-      console.error(`Invalid URL in windowOpenHandler: ${url}`);
-    }
-    return { action: 'deny' };
   });
 }
 
@@ -653,6 +637,28 @@ app.on('web-contents-created', (event, contents) => {
         event.preventDefault();
       }
     }
+  });
+
+  // Handle external links securely for all web contents
+  contents.setWindowOpenHandler(({ url }) => {
+    try {
+      const parsedUrl = new URL(url);
+      const safeProtocols = ['http:', 'https:', 'mailto:'];
+      if (safeProtocols.includes(parsedUrl.protocol)) {
+        shell.openExternal(url);
+      } else {
+        console.warn(`Blocked attempt to open external URL with unsafe protocol: ${parsedUrl.protocol}`);
+      }
+    } catch (e) {
+      console.error(`Invalid URL in windowOpenHandler: ${url}`);
+    }
+    return { action: 'deny' };
+  });
+
+  // Block creation of webviews globally
+  contents.on('will-attach-webview', (e) => {
+    e.preventDefault();
+    console.warn('Blocked attempt to attach webview');
   });
 });
 

@@ -10,7 +10,6 @@ import { defaultPlanForWarrior } from '@/engine/simulate';
 import { PERSONALITY_PLAN_MODS, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
 import { clamp } from '@/utils/math';
 import { getStyleMatchupMods, getStyleSuitabilityBias } from '@/engine/ai/matchup/styleMatcher';
-import { getBestOffensiveTactic, getBestDefensiveTactic } from '@/engine/ai/plan/tacticAdvisor';
 import { buildPhasePlan, buildDesperatePlan, buildUniversalConditions } from '@/engine/ai/plan/phasePlanner';
 import { getPersonalityAdaptations } from '@/engine/ai/plan/personalityEngine';
 import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
@@ -99,15 +98,11 @@ export function aiPlanForWarrior(
   plan.OE = clamp(plan.OE + styleSuitabilityBias.oe, 1, 10);
   plan.AL = clamp(plan.AL + styleSuitabilityBias.al, 1, 10);
 
-  // In-bout personality adaptation — appended AFTER any user-authored conditions
-  // so player overrides take precedence (evaluateConditions is first-match-wins).
-  // Each personality gets at most one adaptation condition to keep behaviour
-  // legible in transcripts and bounded (±1/2 nudges, never beyond plan caps).
-  // Style-appropriate tactic assignment — pick best-rated offensive + defensive tactic
-  const bestOffTactic = getBestOffensiveTactic(w.style);
-  const bestDefTactic = getBestDefensiveTactic(w.style);
-  if (bestOffTactic !== 'none') plan.offensiveTactic = bestOffTactic;
-  if (bestDefTactic !== 'none') plan.defensiveTactic = bestDefTactic;
+  // Offensive/defensive tactics come from the base plan (defaultPlanForWarrior →
+  // getAITactics), which assigns each style its canonical Duel II Favorite Tactics.
+  // We intentionally do NOT override them here: some styles canonically run a
+  // signature tactic on one side and 'none' on the other (e.g. aggressive styles
+  // commit offense and carry no defensive tactic), and that choice must survive.
 
   // Strategic levers the AI previously left at defaults — hit-location target,
   // protected zone, aggression bias, opening move, and range preference — so NPCs

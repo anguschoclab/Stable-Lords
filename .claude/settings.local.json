@@ -81,7 +81,12 @@
       "Bash(git merge *)",
       "Bash(git branch *)",
       "Bash(git fetch *)",
-      "Bash(npx eslint *)"
+      "Bash(npx eslint *)",
+      "Bash(awk '{print $3}')",
+      "Bash(awk ' *)",
+      "Bash(awk '/id: .longsword/{f=1} f&&/code:|reqST:|reqSZ:|reqWT:|reqDF:/{print} f&&/restrictedStyles/{exit}' src/data/equipment/weapons.ts)",
+      "Bash(sed -n '185,215p' src/engine/recruitment.ts)",
+      "Bash(sed -n '180,205p' src/engine/ownerRoster.ts)"
     ]
   },
   "hooks": {

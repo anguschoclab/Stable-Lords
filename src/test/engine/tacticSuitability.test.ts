@@ -108,6 +108,24 @@ describe('Tactic Suitability', () => {
     it('should rate Slashing Attack as U for Parry', () => {
       expect(getDefensiveSuitability(FightingStyle.SlashingAttack, 'Parry')).toBe('U');
     });
+
+    // Canonical defensive cells from the Pagan "Styles & Tactics" chart (terrablood.com).
+    // These four styles previously diverged from canon; lock them in.
+    it('should rate Aimed Blow as U for Parry and WS for Riposte (canon: AB dodges & ripostes, does not parry)', () => {
+      expect(getDefensiveSuitability(FightingStyle.AimedBlow, 'Parry')).toBe('U');
+      expect(getDefensiveSuitability(FightingStyle.AimedBlow, 'Riposte')).toBe('WS');
+    });
+
+    it('should rate Parry-Riposte as U for Dodge (canon: PR parries/ripostes rather than dodging)', () => {
+      expect(getDefensiveSuitability(FightingStyle.ParryRiposte, 'Dodge')).toBe('U');
+    });
+
+    it('should rate Parry-Striker as WS for all four defensive tactics (canon)', () => {
+      expect(getDefensiveSuitability(FightingStyle.ParryStrike, 'Parry')).toBe('WS');
+      expect(getDefensiveSuitability(FightingStyle.ParryStrike, 'Dodge')).toBe('WS');
+      expect(getDefensiveSuitability(FightingStyle.ParryStrike, 'Riposte')).toBe('WS');
+      expect(getDefensiveSuitability(FightingStyle.ParryStrike, 'Responsiveness')).toBe('WS');
+    });
   });
 
   describe('suitabilityMultiplier', () => {

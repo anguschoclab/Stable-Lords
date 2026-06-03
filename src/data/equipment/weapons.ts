@@ -50,6 +50,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 15,
     reqDF: 15,
     description: 'Thrusting weapon. CW for Parry-Riposte. W for most styles.',
+    favoredStyles: [FightingStyle.ParryRiposte],
     preferredStyles: [
       FightingStyle.AimedBlow,
       FightingStyle.LungingAttack,
@@ -100,7 +101,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqSZ: 3,
     reqWT: 11,
     reqDF: 3,
-    description: 'Quick slashing weapon. Versatile.',
+    description: 'Quick slashing weapon. Versatile. CW for Parry-Strike.',
+    favoredStyles: [FightingStyle.ParryStrike],
     preferredStyles: [
       FightingStyle.AimedBlow,
       FightingStyle.LungingAttack,
@@ -127,6 +129,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 11,
     reqDF: 11,
     description: 'Curved slashing blade. CW for Slashing Attack.',
+    favoredStyles: [FightingStyle.SlashingAttack],
     preferredStyles: [
       FightingStyle.AimedBlow,
       FightingStyle.ParryLunge,
@@ -150,6 +153,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 5,
     reqDF: 7,
     description: 'One-handed thrusting spear. CW for Lunging Attack.',
+    favoredStyles: [FightingStyle.LungingAttack],
     preferredStyles: [
       FightingStyle.AimedBlow,
       FightingStyle.LungingAttack,
@@ -177,6 +181,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 9,
     reqDF: 7,
     description: 'Standard slashing weapon. CW for Striking Attack.',
+    favoredStyles: [FightingStyle.StrikingAttack],
     preferredStyles: [
       FightingStyle.ParryStrike,
       FightingStyle.SlashingAttack,
@@ -197,6 +202,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 13,
     reqDF: 11,
     description: 'Versatile thrusting/slashing sword. CW for Parry-Lunge.',
+    favoredStyles: [FightingStyle.ParryLunge],
     preferredStyles: [
       FightingStyle.AimedBlow,
       FightingStyle.LungingAttack,
@@ -213,6 +219,32 @@ export const WEAPONS: EquipmentItem[] = [
     ],
   },
   {
+    id: 'long_spear',
+    code: 'LS',
+    name: 'Long Spear',
+    slot: 'weapon',
+    weight: 4,
+    reqST: 11,
+    reqSZ: 9,
+    reqWT: 5,
+    reqDF: 9,
+    description: 'Long reach thrusting spear. Dominates at Extended range.',
+    preferredStyles: [
+      FightingStyle.AimedBlow,
+      FightingStyle.LungingAttack,
+      FightingStyle.ParryLunge,
+      FightingStyle.ParryRiposte,
+      FightingStyle.ParryStrike,
+      FightingStyle.StrikingAttack,
+      FightingStyle.TotalParry,
+    ],
+    restrictedStyles: [
+      FightingStyle.BashingAttack,
+      FightingStyle.SlashingAttack,
+      FightingStyle.WallOfSteel,
+    ],
+  },
+  {
     id: 'mace',
     code: 'MA',
     name: 'Mace',
@@ -223,6 +255,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 3,
     reqDF: 5,
     description: 'One-handed crushing weapon. CW for Bashing Attack.',
+    favoredStyles: [FightingStyle.BashingAttack],
     preferredStyles: [FightingStyle.BashingAttack, FightingStyle.StrikingAttack],
     restrictedStyles: [
       FightingStyle.AimedBlow,
@@ -244,6 +277,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 9,
     reqDF: 11,
     description: 'Spiked crushing weapon. CW for Wall of Steel.',
+    favoredStyles: [FightingStyle.WallOfSteel],
     preferredStyles: [
       FightingStyle.BashingAttack,
       FightingStyle.StrikingAttack,
@@ -284,6 +318,32 @@ export const WEAPONS: EquipmentItem[] = [
     ],
   },
   {
+    id: 'war_hammer',
+    code: 'WH',
+    name: 'War Hammer',
+    slot: 'weapon',
+    weight: 5,
+    reqST: 13,
+    reqSZ: 3,
+    reqWT: 5,
+    reqDF: 7,
+    description: 'Heavy crushing hammer. Slow but punishing.',
+    preferredStyles: [
+      FightingStyle.BashingAttack,
+      FightingStyle.ParryStrike,
+      FightingStyle.StrikingAttack,
+      FightingStyle.TotalParry,
+    ],
+    restrictedStyles: [
+      FightingStyle.AimedBlow,
+      FightingStyle.LungingAttack,
+      FightingStyle.ParryLunge,
+      FightingStyle.ParryRiposte,
+      FightingStyle.SlashingAttack,
+      FightingStyle.WallOfSteel,
+    ],
+  },
+  {
     id: 'small_shield',
     code: 'SM',
     name: 'Small Shield',
@@ -307,7 +367,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqSZ: 3,
     reqWT: 3,
     reqDF: 7,
-    description: 'Round shield. +2 DEF, no ATT penalty.',
+    description: 'Round shield. CW for Total-Parry. +2 DEF, no ATT penalty.',
+    favoredStyles: [FightingStyle.TotalParry],
     preferredStyles: [FightingStyle.TotalParry, FightingStyle.ParryStrike, FightingStyle.WallOfSteel],
     restrictedStyles: [FightingStyle.AimedBlow],
     coverage: 'MEDIUM',
@@ -323,6 +384,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 3,
     reqDF: 7,
     description: 'Tower shield. CW for Total-Parry. +3 DEF, -1 ATT.',
+    favoredStyles: [FightingStyle.TotalParry],
     preferredStyles: [FightingStyle.TotalParry],
     restrictedStyles: [
       FightingStyle.LungingAttack,
@@ -345,6 +407,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqDF: 11,
     twoHanded: true,
     description: 'Balanced staff. CW for Aimed-Blow. W for many styles.',
+    favoredStyles: [FightingStyle.AimedBlow],
     preferredStyles: [
       FightingStyle.AimedBlow,
       FightingStyle.BashingAttack,
@@ -426,8 +489,10 @@ export const WEAPONS: EquipmentItem[] = [
     twoHanded: true,
     description: 'Heavy two-handed axe. No shield.',
     preferredStyles: [
+      FightingStyle.ParryStrike,
       FightingStyle.SlashingAttack,
       FightingStyle.StrikingAttack,
+      FightingStyle.TotalParry,
       FightingStyle.WallOfSteel,
     ],
     restrictedStyles: [
@@ -435,8 +500,6 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.LungingAttack,
       FightingStyle.ParryLunge,
       FightingStyle.ParryRiposte,
-      FightingStyle.ParryStrike,
-      FightingStyle.TotalParry,
     ],
   },
   {

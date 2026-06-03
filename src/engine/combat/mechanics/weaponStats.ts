@@ -3,30 +3,33 @@
  *
  * Gives weapon choice real in-combat consequences beyond range and stat
  * requirements: heavier weapons hit harder but swing slower, lighter weapons the
- * reverse, and a weapon tuned for the wielder's style (preferredStyles) lands a
- * small edge. Both heft curves are centred on weight 3 so the population-wide
- * mortality baseline is preserved (mean contribution ~0 across the weapon table).
+ * reverse, and the canonical per-style weapon suitability (W/M/U) shifts damage —
+ * a Well-suited weapon lands an edge, an Unorthodox one a penalty. The heft curve
+ * is centred on weight 3 so the population-wide mortality baseline is preserved
+ * (mean contribution ~0 across the weapon table).
  */
 import type { FightingStyle } from '@/types/shared.types';
 import { WEAPONS } from '@/data/equipment/weapons';
+import { getWeaponSuitability, weaponSuitabilityDamageMod } from '@/engine/weaponSuitability';
 
 const WEAPON_BY_ID = new Map(WEAPONS.map((w) => [w.id, w]));
 
 /**
- * Flat damage-class bonus from the weapon: heft (weight-driven) plus a matched-style
- * edge. Added to the attacker's damage class before {@link computeHitDamage}.
+ * Flat damage-class bonus from the weapon: heft (weight-driven) plus the canonical
+ * weapon-style suitability modifier (CW +1 / W 0 / M −1 / U −2). Added to the
+ * attacker's damage class before {@link computeHitDamage}.
  *
  * @param weaponId - Equipped weapon id (optional).
- * @param style - Wielder's fighting style, for the matched-weapon bonus (optional).
- * @returns Damage-class delta (roughly -2 for a dagger to +3 for a matched maul).
+ * @param style - Wielder's fighting style, for the suitability modifier (optional).
+ * @returns Damage-class delta (favorite weapon ≈ heft +1; unorthodox ≈ heft −2).
  */
 export function weaponDamageBonus(weaponId?: string, style?: FightingStyle): number {
   if (!weaponId) return 0;
   const w = WEAPON_BY_ID.get(weaponId);
   if (!w) return 0;
   const heft = Math.round((w.weight - 3) * 0.8);
-  const matched = style && w.preferredStyles?.includes(style) ? 1 : 0;
-  return heft + matched;
+  const suitability = style ? weaponSuitabilityDamageMod(getWeaponSuitability(weaponId, style)) : 0;
+  return heft + suitability;
 }
 
 /**

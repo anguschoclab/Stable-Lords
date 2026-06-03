@@ -182,6 +182,9 @@ export interface Warrior {
   attributes: Attributes;
   potential?: AttributePotential;
   baseSkills?: BaseSkills;
+  /** Hidden canonical ±4-per-skill "luckfactor" rolled at creation. Applied in combat
+   *  (fighterState), NOT shown in the overview — two identical builds differ in the arena. */
+  luckfactor?: BaseSkills;
   derivedStats?: DerivedStats;
   fame: number;
   popularity: number;

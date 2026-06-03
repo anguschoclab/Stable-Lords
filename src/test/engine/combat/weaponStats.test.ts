@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { weaponDamageBonus, getWeaponInitiativeMod } from '@/engine/combat/mechanics/weaponStats';
-import { WEAPONS } from '@/data/equipment/weapons';
+import { WEAPONS, SHIELD_ITEM_IDS } from '@/data/equipment/weapons';
+import { WEAPON_DAMAGE_TYPE } from '@/engine/combat/mechanics/combatDamage';
+import {
+  WEAPON_PREFERRED_RANGE,
+  WEAPON_RANGE_MODIFIERS,
+} from '@/engine/combat/mechanics/distanceResolution';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('weaponStats', () => {
@@ -22,15 +27,13 @@ describe('weaponStats', () => {
       expect(weaponDamageBonus('longsword')).toBe(0);
     });
 
-    it('grants a matched-style bonus when the weapon prefers the wielder style', () => {
-      // broadsword preferredStyles includes StrikingAttack
-      expect(weaponDamageBonus('broadsword', FightingStyle.StrikingAttack)).toBe(
-        weaponDamageBonus('broadsword') + 1
-      );
-      // AimedBlow is not preferred by broadsword → no bonus
-      expect(weaponDamageBonus('broadsword', FightingStyle.AimedBlow)).toBe(
-        weaponDamageBonus('broadsword')
-      );
+    it('applies the full CW/W/M/U suitability gradient (relative to heft-only base)', () => {
+      const base = weaponDamageBonus('broadsword'); // heft only, no style
+      // broadsword: CW for Striking, W for Slashing, M for Aimed Blow, U for Lunging
+      expect(weaponDamageBonus('broadsword', FightingStyle.StrikingAttack)).toBe(base + 1); // CW
+      expect(weaponDamageBonus('broadsword', FightingStyle.SlashingAttack)).toBe(base + 0); // W
+      expect(weaponDamageBonus('broadsword', FightingStyle.AimedBlow)).toBe(base - 1); // M
+      expect(weaponDamageBonus('broadsword', FightingStyle.LungingAttack)).toBe(base - 2); // U
     });
   });
 
@@ -50,6 +53,18 @@ describe('weaponStats', () => {
     });
   });
 
+  describe('newly-added canonical weapons', () => {
+    it('war hammer hits harder than a neutral weapon and is slower', () => {
+      expect(weaponDamageBonus('war_hammer')).toBeGreaterThan(0);
+      expect(weaponDamageBonus('war_hammer')).toBeGreaterThan(weaponDamageBonus('longsword'));
+      expect(getWeaponInitiativeMod('war_hammer')).toBeLessThan(0);
+    });
+
+    it('long spear carries a small heft bonus (its real edge is reach, handled by range)', () => {
+      expect(weaponDamageBonus('long_spear')).toBeGreaterThan(0);
+    });
+  });
+
   describe('weapon data integrity', () => {
     it('all weapon ids are unique', () => {
       const ids = WEAPONS.map((w) => w.id);
@@ -59,6 +74,21 @@ describe('weaponStats', () => {
     it('all weapon codes are unique (no canonical-code collisions)', () => {
       const codes = WEAPONS.map((w) => w.code);
       expect(new Set(codes).size).toBe(codes.length);
+    });
+
+    it('every weapon has a damage type mapping (wiring guard)', () => {
+      for (const w of WEAPONS) {
+        expect(WEAPON_DAMAGE_TYPE[w.id], `missing WEAPON_DAMAGE_TYPE for ${w.id}`).toBeDefined();
+      }
+    });
+
+    it('every non-shield weapon has a preferred range and range modifiers (wiring guard)', () => {
+      const shields = new Set<string>(SHIELD_ITEM_IDS);
+      for (const w of WEAPONS) {
+        if (shields.has(w.id)) continue;
+        expect(WEAPON_PREFERRED_RANGE[w.id], `missing WEAPON_PREFERRED_RANGE for ${w.id}`).toBeDefined();
+        expect(WEAPON_RANGE_MODIFIERS[w.id], `missing WEAPON_RANGE_MODIFIERS for ${w.id}`).toBeDefined();
+      }
     });
   });
 });

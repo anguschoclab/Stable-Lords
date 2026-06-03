@@ -4,7 +4,7 @@
  */
 import type { Warrior } from '@/types/state.types';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { computeWarriorStats, rollLuckfactor } from '@/engine/skillCalc';
 import { generateFavorites } from '@/engine/favorites';
 import { generateTraits } from '@/engine/traits';
 import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';

@@ -11,6 +11,7 @@ export const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
   short_sword: 'Tight',
   mace: 'Tight',
   hatchet: 'Tight',
+  war_hammer: 'Tight',
   // ── Striking (medium, balanced — most weapons) ────────────────────────────
   broadsword: 'Striking',
   longsword: 'Striking',
@@ -24,6 +25,7 @@ export const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
   greatsword: 'Extended',
   great_axe: 'Extended',
   short_spear: 'Extended',
+  long_spear: 'Extended',
   maul: 'Extended',
   quarterstaff: 'Extended',
 };/**
@@ -70,6 +72,8 @@ export const WEAPON_RANGE_MODIFIERS: Record<string, Partial<Record<DistanceRange
 
   // ── Extended-preferred (polearms / two-handers) ──────────────────────────
   short_spear: { Grapple: -4, Tight: -2, Striking: 0, Extended: +3 },
+  long_spear: { Grapple: -5, Tight: -3, Striking: 0, Extended: +4 },
+  war_hammer: { Grapple: -2, Tight: +2, Striking: 0, Extended: -3 },
   halberd: { Grapple: -7, Tight: -4, Striking: 0, Extended: +4 },
   greatsword: { Grapple: -6, Tight: -3, Striking: 0, Extended: +3 },
   great_axe: { Grapple: -6, Tight: -3, Striking: 0, Extended: +3 },

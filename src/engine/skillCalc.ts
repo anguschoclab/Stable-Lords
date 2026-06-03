@@ -12,6 +12,7 @@
  */
 import { type Attributes } from '@/types/shared.types';
 import { FightingStyle, type BaseSkills, type DerivedStats } from '@/types/shared.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import {
   computeHP as canonicalHP,
   computeDamageClass,
@@ -328,6 +329,42 @@ export function computeBaseSkills(attrs: Attributes, style: FightingStyle): Base
     INI: Math.max(1, Math.min(20, INI_raw)),
     RIP: Math.max(1, Math.min(20, RIP_raw)),
     DEC: Math.max(1, Math.min(20, DEC_raw)),
+  };
+}
+
+// ─── Luckfactor (Canonical ±4 per skill) ────────────────────────────────
+// Canon: each of the 6 skill categories gets a hidden random ±4 "luckfactor" at
+// creation, so two warriors with identical stats+style differ. The OVERVIEW shows
+// luck-free skills (computeBaseSkills); combat applies the stored luckfactor.
+
+/**
+ * Roll a per-warrior luckfactor: a hidden ±4 modifier for each of the 6 skills.
+ * Generated once at creation and stored on the warrior.
+ *
+ * @param rng - Seeded RNG service for deterministic generation.
+ * @returns A BaseSkills object of deltas, each in [-4, +4].
+ */
+export function rollLuckfactor(rng: IRNGService): BaseSkills {
+  const d = () => rng.roll(-4, 5); // roll: min inclusive, max exclusive → -4..4
+  return { ATT: d(), PAR: d(), DEF: d(), INI: d(), RIP: d(), DEC: d() };
+}
+
+/**
+ * Apply a stored luckfactor to base skills (combat-time). Each skill floored at 1.
+ *
+ * @param skills - Luck-free base skills (from computeBaseSkills).
+ * @param luck - Optional stored luckfactor deltas. Absent → skills unchanged.
+ * @returns Luck-adjusted skills for combat.
+ */
+export function applyLuckfactor(skills: BaseSkills, luck?: Partial<BaseSkills>): BaseSkills {
+  if (!luck) return skills;
+  return {
+    ATT: Math.max(1, skills.ATT + (luck.ATT ?? 0)),
+    PAR: Math.max(1, skills.PAR + (luck.PAR ?? 0)),
+    DEF: Math.max(1, skills.DEF + (luck.DEF ?? 0)),
+    INI: Math.max(1, skills.INI + (luck.INI ?? 0)),
+    RIP: Math.max(1, skills.RIP + (luck.RIP ?? 0)),
+    DEC: Math.max(1, skills.DEC + (luck.DEC ?? 0)),
   };
 }
 

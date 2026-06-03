@@ -26,8 +26,14 @@ export interface EquipmentItem {
   weight: number; // canonical encumbrance cost
   description: string;
   twoHanded?: boolean; // weapons only — blocks shield slot
-  restrictedStyles?: FightingStyle[]; // styles that CANNOT use this
-  preferredStyles?: FightingStyle[]; // styles that get a bonus with this
+  // Canonical Duel II weapon-vs-style suitability tiers (terrablood.com):
+  //   favoredStyles    = CW (Can't-go-Wrong / favorite weapon)  — must be a subset of preferredStyles
+  //   preferredStyles  = W  (Well suited; includes the CW favorites)
+  //   restrictedStyles = U  (Unorthodox)
+  //   anything in none of the three = M (Marginal)
+  restrictedStyles?: FightingStyle[]; // styles that CANNOT use this (U)
+  preferredStyles?: FightingStyle[]; // styles that are well suited or better (W ∪ CW)
+  favoredStyles?: FightingStyle[]; // CW — styles this is the favorite/"can't go wrong" weapon for
   // Weapon stat requirements (canonical minimums from Terrablood)
   reqST?: number; // minimum Strength
   reqSZ?: number; // minimum Size
@@ -71,8 +77,8 @@ export interface WeaponReqCheck {
 export interface WeaponReqResult {
   met: boolean;
   failures: WeaponReqCheck[];
-  attPenalty: number; // -2 per failed requirement
-  endurancePenalty: number; // +10% per failed requirement (as multiplier, e.g. 1.2)
+  attPenalty: number; // -2 ATT per point of total stat deficit (summed across unmet ST/SZ/WT/DF)
+  endurancePenalty: number; // endurance multiplier: 1 + 0.10 per point of total deficit (e.g. 1.5 at deficit 5)
 }
 
 /**

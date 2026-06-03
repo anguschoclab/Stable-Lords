@@ -1,4 +1,5 @@
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import {
   Table,
@@ -21,8 +22,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  * @returns The result.
  */
 export function HallOfWarriors() {
-  const state = useWorldState();
-  const retired = state.retired ?? [];
+  // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
+  const { retired } = useGameStore(useShallow((s) => ({ retired: s.retired })));
+  const safeRetired = retired ?? [];
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -37,7 +39,7 @@ export function HallOfWarriors() {
               Legends_Registry_Eminent
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Immortal_Status // Assets_Recovered: {retired.length}
+              Immortal_Status // Assets_Recovered: {safeRetired.length}
             </p>
           </div>
           <div className="h-px flex-1 bg-gradient-to-r from-arena-gold/20 via-border/5 to-transparent mx-8 hidden md:block" />
@@ -51,7 +53,7 @@ export function HallOfWarriors() {
           <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-arena-gold/40 via-transparent to-transparent opacity-40" />
 
           <div className="overflow-x-auto custom-scrollbar">
-            {retired.length === 0 ? (
+            {safeRetired.length === 0 ? (
               <div className="py-24 text-center opacity-30 group">
                 <Landmark className="h-16 w-16 mx-auto mb-4 text-arena-gold/40 group-hover:scale-110 transition-transform duration-700" />
                 <p className="text-sm font-display font-black uppercase tracking-[0.3em]">
@@ -86,7 +88,7 @@ export function HallOfWarriors() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {retired.map((w) => (
+                  {safeRetired.map((w) => (
                     <TableRow
                       key={w.id}
                       className="border-arena-gold/5 hover:bg-arena-gold/5 transition-all group"

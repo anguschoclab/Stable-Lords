@@ -1,4 +1,5 @@
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Link } from '@tanstack/react-router';
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
 import { Surface } from '@/components/ui/Surface';
@@ -33,9 +34,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  * @returns The result.
  */
 export function ContractManager() {
-  const state = useWorldState();
-  const trainers = state.trainers ?? [];
-  const activeTrainers = trainers.filter((t) => t.contractWeeksLeft > 0);
+  // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
+  const { trainers } = useGameStore(useShallow((s) => ({ trainers: s.trainers })));
+  const safeTrainers = trainers ?? [];
+  const activeTrainers = safeTrainers.filter((t) => t.contractWeeksLeft > 0);
 
   const totalWeeklyExpense = activeTrainers.reduce(
     (sum, t) => sum + (TRAINER_WEEKLY_SALARY[t.tier] ?? 35),

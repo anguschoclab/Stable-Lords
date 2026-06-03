@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Button } from '@/components/ui/button';
 import {
@@ -38,8 +39,12 @@ const TOKEN_CFG: Record<
  * @returns The result.
  */
 export function InsightManager() {
-  const state = useWorldState();
-  const { consumeInsightToken } = useGameStore();
+  // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
+  const { insightTokens, roster, consumeInsightToken } = useGameStore(useShallow((s) => ({
+    insightTokens: s.insightTokens,
+    roster: s.roster,
+    consumeInsightToken: s.consumeInsightToken,
+  })));
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [isRevealing, setIsRevealing] = useState(false);
@@ -49,11 +54,11 @@ export function InsightManager() {
     result: string;
   } | null>(null);
 
-  const tokens = state.insightTokens ?? [];
-  const roster = state.roster ?? [];
+  const tokens = insightTokens ?? [];
+  const safeRoster = roster ?? [];
 
   const selectedToken = tokens.find((t) => t.id === selectedTokenId);
-  const selectedWarrior = roster.find((w) => w.id === selectedWarriorId);
+  const selectedWarrior = safeRoster.find((w) => w.id === selectedWarriorId);
 
   const handleReveal = () => {
     if (!selectedToken || !selectedWarrior) return;
@@ -175,7 +180,7 @@ export function InsightManager() {
             {selectedTokenId ? (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                  {roster.map((w) => {
+                  {safeRoster.map((w) => {
                     const isRevealed =
                       selectedToken?.type === 'Weapon'
                         ? w.favorites?.discovered.weapon

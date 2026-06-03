@@ -1,5 +1,6 @@
 import type { SVGProps } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from 'lucide-react';/**
@@ -13,8 +14,9 @@ import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from
  * @returns The result.
  */
 export function InsightVault() {
-  const state = useWorldState();
-  const tokens = state.insightTokens ?? [];
+  // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
+  const { insightTokens } = useGameStore(useShallow((s) => ({ insightTokens: s.insightTokens })));
+  const tokens = insightTokens ?? [];
   const { weaponTokens, rhythmTokens, statTokens } = tokens.reduce(
     (acc, t) => {
       if (t.type === 'Weapon') acc.weaponTokens.push(t);

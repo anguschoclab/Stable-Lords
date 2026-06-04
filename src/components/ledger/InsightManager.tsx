@@ -48,6 +48,15 @@ export function InsightManager() {
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [isRevealing, setIsRevealing] = useState(false);
+  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
   const [revealData, setRevealData] = useState<{
     name: string;
     type: string;

@@ -16,6 +16,29 @@ export const WEAPONS: EquipmentItem[] = [
   // Light weapons (weight 1-2) — low requirements
   // preferredStyles = Terrablood W or CW rating; restrictedStyles = hard blocks (2H+shield conflicts or U-rated for style identity)
   {
+    id: 'fist',
+    code: 'FI',
+    name: 'Fist',
+    slot: 'weapon',
+    weight: 0,
+    // Canon: Fist has no stat requirements.
+    description: 'Bare fists. No requirements, but minimal reach and power.',
+    preferredStyles: [
+      FightingStyle.AimedBlow,
+      FightingStyle.BashingAttack,
+      FightingStyle.ParryStrike,
+      FightingStyle.StrikingAttack,
+    ],
+    restrictedStyles: [
+      FightingStyle.LungingAttack,
+      FightingStyle.ParryLunge,
+      FightingStyle.ParryRiposte,
+      FightingStyle.SlashingAttack,
+      FightingStyle.TotalParry,
+      FightingStyle.WallOfSteel,
+    ],
+  },
+  {
     id: 'dagger',
     code: 'DA',
     name: 'Dagger',
@@ -49,6 +72,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqSZ: 3,
     reqWT: 15,
     reqDF: 15,
+    dualWieldReq: { DF: 22 }, // canon: 2× Epée requires >21 DF
+    dualWieldReqAmbi: { DF: 17 }, // …17 if ambidextrous
     description: 'Thrusting weapon. CW for Parry-Riposte. W for most styles.',
     favoredStyles: [FightingStyle.ParryRiposte],
     preferredStyles: [
@@ -101,6 +126,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqSZ: 3,
     reqWT: 11,
     reqDF: 3,
+    dualWieldReq: { ST: 7 }, // canon: 2× Shortsword requires 7 ST
     description: 'Quick slashing weapon. Versatile. CW for Parry-Strike.',
     favoredStyles: [FightingStyle.ParryStrike],
     preferredStyles: [
@@ -128,6 +154,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqSZ: 3,
     reqWT: 11,
     reqDF: 11,
+    dualWieldReq: { DF: 17 }, // canon: 2× Scimitar requires 17 DF
+    dualWieldReqAmbi: { DF: 15 }, // …15 if ambidextrous
     description: 'Curved slashing blade. CW for Slashing Attack.',
     favoredStyles: [FightingStyle.SlashingAttack],
     preferredStyles: [
@@ -201,6 +229,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqSZ: 3,
     reqWT: 13,
     reqDF: 11,
+    dualWieldReq: { DF: 17 }, // canon: 2× Long Sword requires 17 DF
+    dualWieldReqAmbi: { DF: 15 }, // …15 if ambidextrous
     description: 'Versatile thrusting/slashing sword. CW for Parry-Lunge.',
     favoredStyles: [FightingStyle.ParryLunge],
     preferredStyles: [
@@ -383,6 +413,7 @@ export const WEAPONS: EquipmentItem[] = [
     reqSZ: 3,
     reqWT: 3,
     reqDF: 7,
+    offHandReq: { WT: 3 }, // canon: LG can be WT 3 when used in the off-hand
     description: 'Tower shield. CW for Total-Parry. +3 DEF, -1 ATT.',
     favoredStyles: [FightingStyle.TotalParry],
     preferredStyles: [FightingStyle.TotalParry],
@@ -487,7 +518,8 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 7,
     reqDF: 9,
     twoHanded: true,
-    description: 'Heavy two-handed axe. No shield.',
+    twoHandedReq: { SZ: 3 }, // canon: BA can be SZ 3 when used two-handed
+    description: 'Heavy two-handed axe. No shield. SZ requirement eases when gripped two-handed.',
     preferredStyles: [
       FightingStyle.ParryStrike,
       FightingStyle.SlashingAttack,

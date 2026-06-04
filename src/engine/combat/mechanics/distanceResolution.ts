@@ -7,6 +7,7 @@ import { contestCheck } from './combatMath';
 
 export const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
   // ── Tight (close, fast weapons) ────────────────────────────────────────────
+  fist: 'Tight',
   dagger: 'Tight',
   short_sword: 'Tight',
   mace: 'Tight',
@@ -56,6 +57,7 @@ export function getWeaponPreferredRange(weaponId?: string): DistanceRange {
 
 export const WEAPON_RANGE_MODIFIERS: Record<string, Partial<Record<DistanceRange, number>>> = {
   // ── Tight-preferred (close, fast) ────────────────────────────────────────
+  fist: { Grapple: +4, Tight: +3, Striking: -2, Extended: -7 },
   dagger: { Grapple: +3, Tight: +4, Striking: 0, Extended: -5 },
   short_sword: { Grapple: +2, Tight: +4, Striking: 0, Extended: -4 },
   mace: { Grapple: -1, Tight: +3, Striking: 0, Extended: -2 },

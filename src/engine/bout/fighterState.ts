@@ -12,6 +12,7 @@ import { getTrainingBonus } from '@/engine/trainers';
 import { getFavoriteWeaponBonus } from '@/engine/favorites';
 import { getStaticTraitMods, getTraitFightPlanMods } from '@/engine/traits';
 import { getInjuryPenalties } from '@/engine/injuries';
+import { applyLuckfactor } from '@/engine/skillCalc';
 import { type FighterState } from '../combat/resolution';
 
 /**
@@ -44,7 +45,12 @@ export function createFighterState(
   trainers?: Trainer[]
 ): FighterState {
   const attrs = warrior?.attributes ?? { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 };
-  const skills = warrior?.baseSkills ?? { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 };
+  // Apply the hidden luckfactor (canonical ±4/skill) at combat time — the overview
+  // shows luck-free baseSkills, but the arena uses the luck-adjusted values.
+  const skills = applyLuckfactor(
+    warrior?.baseSkills ?? { ATT: 5, PAR: 5, DEF: 5, INI: 5, RIP: 5, DEC: 5 },
+    warrior?.luckfactor
+  );
   const derived = warrior?.derivedStats ?? { hp: 100, endurance: 100, damage: 5, encumbrance: 0 };
 
   // Style-aware fallback: if warrior has no equipment, use the style's classic loadout

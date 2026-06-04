@@ -87,6 +87,7 @@ export const WEAPON_DAMAGE_TYPE: Record<string, DamageType> = {
   greatsword: 'slash',
   great_axe: 'slash',
   // Bash
+  fist: 'bash',
   mace: 'bash',
   war_hammer: 'bash',
   morning_star: 'bash',

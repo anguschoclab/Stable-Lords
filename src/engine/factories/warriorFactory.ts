@@ -49,6 +49,9 @@ export function makeWarrior(
     style,
     attributes: attrs,
     baseSkills,
+    // Hidden ±4-per-skill luckfactor (canonical) — only rolled for seeded/real-game
+    // warriors; rng-less test builds stay luck-neutral.
+    luckfactor: rng ? rollLuckfactor(rng) : undefined,
     derivedStats,
     fame: 0,
     popularity: 0,

@@ -86,7 +86,9 @@
       "Bash(awk ' *)",
       "Bash(awk '/id: .longsword/{f=1} f&&/code:|reqST:|reqSZ:|reqWT:|reqDF:/{print} f&&/restrictedStyles/{exit}' src/data/equipment/weapons.ts)",
       "Bash(sed -n '185,215p' src/engine/recruitment.ts)",
-      "Bash(sed -n '180,205p' src/engine/ownerRoster.ts)"
+      "Bash(sed -n '180,205p' src/engine/ownerRoster.ts)",
+      "Bash(sed -n '/export function getAvailableItems/,/^}/p' src/data/equipment/equipment.utils.ts)",
+      "Bash(sed -n '/export function getStyleEquipmentTips/,/^}/p' src/engine/equipmentOptimizer.ts)"
     ]
   },
   "hooks": {

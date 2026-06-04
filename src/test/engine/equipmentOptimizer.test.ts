@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipmentOptimizer';
+import { getLoadoutWeight } from '@/data/equipment';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('Equipment Optimizer', () => {
@@ -42,11 +43,18 @@ describe('Equipment Optimizer', () => {
       }
     });
 
+    it('can recommend Fist for Aimed Blow (canonically Well-suited)', () => {
+      const recommendations = generateRecommendations(FightingStyle.AimedBlow, 10);
+      expect(recommendations.some((r) => r.loadout.weapon === 'fist')).toBe(true);
+    });
+
     it('should calculate total weight correctly', () => {
       const recommendations = generateRecommendations(FightingStyle.AimedBlow, 10);
-      const rec = recommendations[0];
-      if (rec) {
-        expect(rec.totalWeight).toBeGreaterThan(0);
+      for (const rec of recommendations) {
+        // totalWeight must equal the actual summed loadout weight (≥ 0 — a light
+        // unarmed Aimed-Blow build using Fist can legitimately weigh very little).
+        expect(rec.totalWeight).toBe(getLoadoutWeight(rec.loadout));
+        expect(rec.totalWeight).toBeGreaterThanOrEqual(0);
       }
     });
   });

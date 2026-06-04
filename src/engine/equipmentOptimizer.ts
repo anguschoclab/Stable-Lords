@@ -8,8 +8,11 @@ import {
   type EquipmentLoadout,
   getAvailableItems,
   getLoadoutWeight,
-  isPreferredWeapon,
 } from '@/data/equipment';
+import {
+  getWeaponSuitability,
+  type WeaponSuitability,
+} from '@/engine/weaponSuitability';
 
 
 /**
@@ -22,7 +25,7 @@ export interface GearRecommendation {
   totalWeight: number;
   synergy: number; // 0-100 score
   breakdown: {
-    weapon: { item: EquipmentItem; preferred: boolean };
+    weapon: { item: EquipmentItem; preferred: boolean; suitability: WeaponSuitability };
     armor: { item: EquipmentItem };
     shield: { item: EquipmentItem; blocked: boolean };
     helm: { item: EquipmentItem };
@@ -58,9 +61,15 @@ const PROFILE_DESCS: Record<BuildProfile, string> = {
   damage: 'Heavy weapons for maximum damage output.',
 };
 
+/** Score contribution from canonical weapon-vs-style suitability (CW > W > M > U). */
+function suitabilityScore(suit: WeaponSuitability): number {
+  return suit === 'CW' ? 40 : suit === 'W' ? 30 : suit === 'M' ? 5 : 0;
+}
+
 function scoreWeapon(item: EquipmentItem, style: FightingStyle, profile: BuildProfile): number {
-  let score = 10;
-  if (isPreferredWeapon(item, style)) score += 30;
+  // Tier-aware: the canonical favorite (CW) outranks merely well-suited (W) weapons,
+  // which outrank marginal (M); unorthodox (U) are already filtered from the pool.
+  let score = 10 + suitabilityScore(getWeaponSuitability(item.id, style));
   if (profile === 'speed' && item.weight <= 2) score += 15;
   if (profile === 'damage' && item.weight >= 5) score += 15;
   if (profile === 'balanced' && item.weight >= 2 && item.weight <= 4) score += 10;
@@ -132,11 +141,12 @@ export function generateRecommendations(
     };
 
     const totalWeight = getLoadoutWeight(loadout);
-    const preferred = isPreferredWeapon(weapon, style);
+    const suitability = getWeaponSuitability(weapon.id, style);
+    const preferred = suitability === 'CW' || suitability === 'W';
 
-    // Synergy score: 0-100
+    // Synergy score: 0-100 — the canonical favorite (CW) earns the most.
     let synergy = 40;
-    if (preferred) synergy += 25;
+    synergy += suitability === 'CW' ? 30 : suitability === 'W' ? 25 : 0;
     if (totalWeight <= carryCap) synergy += 20;
     if (totalWeight <= carryCap * 0.7) synergy += 15;
 
@@ -147,7 +157,7 @@ export function generateRecommendations(
       totalWeight,
       synergy: Math.min(100, synergy),
       breakdown: {
-        weapon: { item: weapon, preferred },
+        weapon: { item: weapon, preferred, suitability },
         armor: { item: armor },
         shield: { item: shield, blocked: isTwoHanded },
         helm: { item: helm },
@@ -165,7 +175,7 @@ export function generateRecommendations(
 export function getStyleEquipmentTips(style: FightingStyle): string[] {
   const tips: Record<FightingStyle, string[]> = {
     [FightingStyle.AimedBlow]: [
-      'Daggers and epées are your best friends — light weapons maximize your precision.',
+      "The quarterstaff is your can't-go-wrong favorite; daggers, epées, even bare fists also suit your precision.",
       'Avoid heavy armor — you need the mobility for targeted strikes.',
       'Full helms are restricted for your style (blocks aimed shots).',
     ],

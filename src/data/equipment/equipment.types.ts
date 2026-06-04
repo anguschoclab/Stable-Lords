@@ -39,6 +39,14 @@ export interface EquipmentItem {
   reqSZ?: number; // minimum Size
   reqWT?: number; // minimum Wit
   reqDF?: number; // minimum Deftness
+  // Canonical Duel II special-case requirement overrides for non-standard wielding.
+  // Each is a partial set of stat minimums that REPLACE the base req for that stat
+  // when the weapon is held that way (e.g. Battle Axe needs only SZ 3 two-handed,
+  // dual Epées need DF 22 — or 17 if ambidextrous).
+  twoHandedReq?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>; // used two-handed
+  offHandReq?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>; // used in the off-hand
+  dualWieldReq?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>; // wielding two of this weapon
+  dualWieldReqAmbi?: Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>>; // dual-wielded, ambidextrous
   // Shield-only: which hit-location band the shield reliably covers.
   // LOW = legs/groin, MEDIUM = torso/arms, HIGH = head/throat/shoulders.
   // Used by combatDamage to apply zone-specific mitigation when the defender

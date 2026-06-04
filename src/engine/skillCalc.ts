@@ -345,7 +345,7 @@ export function computeBaseSkills(attrs: Attributes, style: FightingStyle): Base
  * @returns A BaseSkills object of deltas, each in [-4, +4].
  */
 export function rollLuckfactor(rng: IRNGService): BaseSkills {
-  const d = () => rng.roll(-4, 5); // roll: min inclusive, max exclusive → -4..4
+  const d = () => rng.roll(-4, 4); // roll is inclusive on both ends → -4..4
   return { ATT: d(), PAR: d(), DEF: d(), INI: d(), RIP: d(), DEC: d() };
 }
 

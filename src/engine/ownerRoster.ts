@@ -3,7 +3,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { FightingStyle } from '@/types/shared.types';
 import { computeMetaDrift, type StyleMeta } from './metaDrift';
-import { computeWarriorStats } from './skillCalc';
+import { computeWarriorStats, rollLuckfactor } from './skillCalc';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { META_RECRUIT_QUOTES, getPhilosophyStyles } from '@/data/ownerData';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
@@ -219,6 +219,7 @@ function generateAIRecruit(
     style,
     attributes: attrs,
     baseSkills,
+    luckfactor: rollLuckfactor(rng),
     derivedStats,
     fame: 0,
     popularity: 0,

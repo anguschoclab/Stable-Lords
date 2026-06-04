@@ -47,6 +47,7 @@ const COLUMN_ORDER: FightingStyle[] = [
 // favorite ("can't go wrong") weapon — mirrors weapons.ts favoredStyles.
 const RAW_ROWS: Record<string, Row> = {
   //              AIM   BAS   LUN   PLU   PRP   PST   STR   SLA   TPS   WOS
+  fist:          ['W',  'W',  'U',  'U',  'U',  'W',  'W',  'U',  'U',  'U'],
   dagger:        ['W',  'U',  'M',  'U',  'U',  'W',  'W',  'M',  'W',  'U'],
   short_sword:   ['W',  'U',  'W',  'W',  'W',  'CW', 'W',  'W',  'W',  'U'],
   hatchet:       ['M',  'U',  'U',  'U',  'W',  'W',  'W',  'W',  'W',  'U'],

@@ -138,48 +138,69 @@ export function getLoadoutWeight(loadout: EquipmentLoadout): number {
   );
 }
 
-/** Check weapon stat requirements against warrior attributes. Returns penalty details. */
+/** How a weapon is being held — selects the canonical requirement special-cases. */
+export type WieldMode = 'normal' | 'two_handed' | 'off_hand' | 'dual';
+
+/** Options for {@link checkWeaponRequirements}. */
+export interface WieldOptions {
+  /** Defaults to 'two_handed' for two-handed weapons, otherwise 'normal'. */
+  wield?: WieldMode;
+  /** Ambidextrous warriors get eased dual-wield requirements. */
+  ambidextrous?: boolean;
+}
+
+/**
+ * Effective stat minimums for a weapon, applying the canonical wield-mode override
+ * (two-handed / off-hand / dual-wield) on top of the base requirements.
+ */
+function effectiveWeaponReqs(
+  item: EquipmentItem,
+  mode: WieldMode,
+  ambidextrous: boolean
+): Partial<Record<'ST' | 'SZ' | 'WT' | 'DF', number>> {
+  const base = { ST: item.reqST, SZ: item.reqSZ, WT: item.reqWT, DF: item.reqDF };
+  const override =
+    mode === 'two_handed'
+      ? item.twoHandedReq
+      : mode === 'off_hand'
+        ? item.offHandReq
+        : mode === 'dual'
+          ? (ambidextrous ? (item.dualWieldReqAmbi ?? item.dualWieldReq) : item.dualWieldReq)
+          : undefined;
+  return { ...base, ...(override ?? {}) };
+}
+
+/**
+ * Check weapon stat requirements against warrior attributes. Returns penalty details.
+ * Applies canonical wield-mode special cases (e.g. Battle Axe SZ 3 two-handed, dual
+ * Epées DF 22 / 17-ambidextrous). Two-handed weapons default to 'two_handed' mode.
+ */
 export function checkWeaponRequirements(
   weaponId: string,
-  attrs: { ST: number; SZ: number; WT: number; DF: number }
+  attrs: { ST: number; SZ: number; WT: number; DF: number },
+  opts?: WieldOptions
 ): WeaponReqResult {
   const item = getItemById(weaponId);
   if (!item || item.slot !== 'weapon')
     return { met: true, failures: [], attPenalty: 0, endurancePenalty: 1 };
 
+  const mode: WieldMode = opts?.wield ?? (item.twoHanded ? 'two_handed' : 'normal');
+  const req = effectiveWeaponReqs(item, mode, opts?.ambidextrous ?? false);
+
   const checks: WeaponReqCheck[] = [];
-  if (item.reqST && attrs.ST < item.reqST)
-    checks.push({
-      stat: 'ST',
-      label: 'Strength',
-      required: item.reqST,
-      current: attrs.ST,
-      deficit: item.reqST - attrs.ST,
-    });
-  if (item.reqSZ && attrs.SZ < item.reqSZ)
-    checks.push({
-      stat: 'SZ',
-      label: 'Size',
-      required: item.reqSZ,
-      current: attrs.SZ,
-      deficit: item.reqSZ - attrs.SZ,
-    });
-  if (item.reqWT && attrs.WT < item.reqWT)
-    checks.push({
-      stat: 'WT',
-      label: 'Wit',
-      required: item.reqWT,
-      current: attrs.WT,
-      deficit: item.reqWT - attrs.WT,
-    });
-  if (item.reqDF && attrs.DF < item.reqDF)
-    checks.push({
-      stat: 'DF',
-      label: 'Deftness',
-      required: item.reqDF,
-      current: attrs.DF,
-      deficit: item.reqDF - attrs.DF,
-    });
+  const consider = (
+    stat: 'ST' | 'SZ' | 'WT' | 'DF',
+    label: string,
+    required: number | undefined,
+    current: number
+  ) => {
+    if (required && current < required)
+      checks.push({ stat, label, required, current, deficit: required - current });
+  };
+  consider('ST', 'Strength', req.ST, attrs.ST);
+  consider('SZ', 'Size', req.SZ, attrs.SZ);
+  consider('WT', 'Wit', req.WT, attrs.WT);
+  consider('DF', 'Deftness', req.DF, attrs.DF);
 
   let totalDeficit = 0;
   for (const check of checks) {

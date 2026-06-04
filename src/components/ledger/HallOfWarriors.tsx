@@ -23,7 +23,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 export function HallOfWarriors() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
-  const { retired } = useGameStore(useShallow((s) => ({ retired: s.retired })));
+  const retired = useGameStore((s) => s.retired);
   const safeRetired = retired ?? [];
 
   return (

@@ -213,6 +213,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.9,
     description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
   },
+  'Chaotic Winds': {
+    staminaMult: 1.3,
+    initiativeMod: -4,
+    riposteMod: +3,
+    damageMult: 0.85,
+    description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
+  },
 };
 
 /**
@@ -265,6 +272,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Arcane Storm': 'The air rips open with raw arcane power. Reality itself seems to bend.',
   'Blood Rain': 'Thick red drops fall from an unnatural sky. The air smells of copper and dread.',
   'Locust Swarm': 'A deafening swarm of locusts descends upon the arena, gnawing at everything in sight.',
+  'Chaotic Winds': 'Fierce, swirling winds kick up the sand, creating unpredictable combat conditions.',
 };
 
 /**

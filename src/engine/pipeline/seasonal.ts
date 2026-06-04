@@ -579,6 +579,32 @@ function handleUndergroundPitFight(state: GameState, nextWeek: number, e: Offsea
   }
 }
 
+function handleDreamweaverVisit(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15 + Math.floor(rng.next() * 11);
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight'),
+        type: 'Minor',
+        origin: 'Dreamweaver',
+        expiresWeek: nextWeek + 4,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+      });
+    }
+  }
+}
+
 function handleRogueAlchemist(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
@@ -678,6 +704,7 @@ const EVENT_HANDLERS: Record<
   underground_pit_fight: handleUndergroundPitFight,
   meteor_shower: handleMeteorShower,
   rogue_alchemist: handleRogueAlchemist,
+  dreamweaver_visit: handleDreamweaverVisit,
 };
 
 export function runSeasonalPass(

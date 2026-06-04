@@ -77,6 +77,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.6) return 'Rainy';
   if (roll < 0.65) return 'Mist';
   if (roll < 0.75) return 'Breezy';
+  if (roll < 0.78) return 'Chaotic Winds';
   if (roll < 0.8) return 'Dense Fog';
   if (roll < 0.85) return 'Thunderstorm';
   if (roll < 0.9) return 'Acid Rain';

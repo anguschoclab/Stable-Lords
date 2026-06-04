@@ -140,6 +140,14 @@ const WEATHER_METADATA = {
     description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
     stats: 'INITIATIVE -3 // DAMAGE 90% // STAMINA DRAIN 120%',
   },
+  'Chaotic Winds': {
+    icon: Wind,
+    color: 'text-primary',
+    bg: 'bg-primary/10',
+    border: 'border-primary/20',
+    description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
+    stats: 'INITIATIVE -4 // RIPOSTE +3 // DAMAGE 85% // STAMINA DRAIN 130%',
+  },
 };/**
    * Weather widget.
    * @returns The result.

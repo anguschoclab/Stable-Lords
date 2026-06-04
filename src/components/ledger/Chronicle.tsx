@@ -17,7 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 export function Chronicle() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
-  const { newsletter } = useGameStore(useShallow((s) => ({ newsletter: s.newsletter })));
+  const newsletter = useGameStore((s) => s.newsletter);
 
   const news = useMemo(
     () => [...(newsletter || [])].reverse().slice(0, 50),

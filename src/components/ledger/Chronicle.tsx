@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { ScrollText, ChevronRight, History, Activity, ShieldCheck, Terminal } from 'lucide-react';
@@ -15,11 +16,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  * @returns The result.
  */
 export function Chronicle() {
-  const state = useWorldState();
+  // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
+  const newsletter = useGameStore((s) => s.newsletter);
 
   const news = useMemo(
-    () => [...(state.newsletter || [])].reverse().slice(0, 50),
-    [state.newsletter]
+    () => [...(newsletter || [])].reverse().slice(0, 50),
+    [newsletter]
   );
 
   return (

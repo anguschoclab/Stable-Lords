@@ -35,7 +35,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
  */
 export function ContractManager() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
-  const { trainers } = useGameStore(useShallow((s) => ({ trainers: s.trainers })));
+  const trainers = useGameStore((s) => s.trainers);
   const safeTrainers = trainers ?? [];
   const activeTrainers = safeTrainers.filter((t) => t.contractWeeksLeft > 0);
 

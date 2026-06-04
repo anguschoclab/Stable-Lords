@@ -15,7 +15,7 @@ import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from
  */
 export function InsightVault() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
-  const { insightTokens } = useGameStore(useShallow((s) => ({ insightTokens: s.insightTokens })));
+  const insightTokens = useGameStore((s) => s.insightTokens);
   const tokens = insightTokens ?? [];
   const { weaponTokens, rhythmTokens, statTokens } = tokens.reduce(
     (acc, t) => {

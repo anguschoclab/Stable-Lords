@@ -590,7 +590,7 @@ export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert';/**
  * Weather type type.
  */
 export type WeatherType =
-  | 'Clear'
+| 'Clear'
   | 'Rainy'
   | 'Sweltering'
   | 'Breezy'
@@ -617,7 +617,8 @@ export type WeatherType =
   | 'Hailstorm'
   | 'Arcane Storm'
   | 'Blood Rain'
-  | 'Locust Swarm';/**
+  | 'Locust Swarm'
+  | 'Aurora Borealis';/**
                  * Defines the shape of death event.
                  */
 

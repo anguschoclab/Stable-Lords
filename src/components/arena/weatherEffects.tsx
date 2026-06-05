@@ -531,6 +531,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Arcane Storm': () => <ArcaneStormEffect />,
   'Blood Rain': () => <BloodRainEffect />,
   'Locust Swarm': () => <LocustSwarmEffect />,
+  'Aurora Borealis': () => <ManaSurgeEffect />,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

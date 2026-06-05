@@ -140,6 +140,14 @@ const WEATHER_METADATA = {
     description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
     stats: 'INITIATIVE -3 // DAMAGE 90% // STAMINA DRAIN 120%',
   },
+  'Aurora Borealis': {
+    icon: Sparkles,
+    color: 'text-arena-fame',
+    bg: 'bg-arena-fame/10',
+    border: 'border-arena-fame/20',
+    description: 'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
+    stats: 'STAMINA CONSERVATION 15% // INITIATIVE +2',
+  },
 };/**
    * Weather widget.
    * @returns The result.

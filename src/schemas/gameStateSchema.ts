@@ -44,7 +44,7 @@ export const CrowdMoodTypeSchema = z.enum([
  * WeatherType enum schema
  */
 export const WeatherTypeSchema = z.enum([
-  'Clear',
+'Clear',
   'Rainy',
   'Sweltering',
   'Breezy',
@@ -71,6 +71,7 @@ export const WeatherTypeSchema = z.enum([
   'Hailstorm',
   'Arcane Storm',
   'Blood Rain',
+  'Aurora Borealis',
 ]);
 
 /**

@@ -213,6 +213,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.9,
     description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
   },
+  'Aurora Borealis': {
+    staminaMult: 0.85,
+    initiativeMod: 2,
+    riposteMod: 1,
+    damageMult: 0.95,
+    description: 'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
+  },
 };
 
 /**
@@ -265,6 +272,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Arcane Storm': 'The air rips open with raw arcane power. Reality itself seems to bend.',
   'Blood Rain': 'Thick red drops fall from an unnatural sky. The air smells of copper and dread.',
   'Locust Swarm': 'A deafening swarm of locusts descends upon the arena, gnawing at everything in sight.',
+  'Aurora Borealis': 'The heavens are ablaze with ethereal, dancing lights. A serene calm settles over the sands.',
 };
 
 /**

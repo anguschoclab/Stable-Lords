@@ -162,6 +162,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-arena-fame/20',
     description: 'Magical energy surges through the arena, enhancing special abilities.',
   },
+  'Aurora Borealis': {
+    icon: Sparkles,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
+  },
 };
 
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {

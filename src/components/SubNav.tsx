@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
-                                                                                   * Defines the shape of sub nav tab.
-                                                                                   */
-
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'; /**
+ * Defines the shape of sub nav tab.
+ */
 
 /**
  * Defines the shape of sub nav tab.
@@ -19,12 +19,11 @@ interface SubNavProps {
   tabs: SubNavTab[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
-}/**
-  * Sub nav.
-  * @param - { tabs, active tab, on tab change }.
-  * @returns The result.
-  */
-
+} /**
+ * Sub nav.
+ * @param - { tabs, active tab, on tab change }.
+ * @returns The result.
+ */
 
 /**
  * Sub nav.
@@ -32,7 +31,11 @@ interface SubNavProps {
  * @returns The result.
  */
 export default function SubNav({ tabs, activeTab, onTabChange }: SubNavProps) {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      isFTUE: s.isFTUE,
+    }))
+  );
   const isFTUE = state.isFTUE;
   if (isFTUE) return null;
 

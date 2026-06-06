@@ -1,5 +1,6 @@
 import { Calendar, Clock, Hexagon, PartyPopper } from 'lucide-react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -7,7 +8,14 @@ import { WeatherBadge } from './WeatherBadge';
 import { SeasonProgressBar } from './SeasonProgressBar';
 
 export function SeasonWidget() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      week: s.week,
+      season: s.season,
+      newsletter: s.newsletter,
+      weather: s.weather,
+    }))
+  );
   const week = ((state.week - 1) % 13) + 1;
   const season = state.season;
 

@@ -40,6 +40,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Arcane Storm': 'ambience-mana-surge',
   'Blood Rain': 'ambience-rain',
   'Locust Swarm': 'ambience-wind-gale',
+  'Aether Storm': 'ambience-wind-gale',
 };/**
    * Weather audio.
    * @param - { weather, volume, enabled, arena id }.

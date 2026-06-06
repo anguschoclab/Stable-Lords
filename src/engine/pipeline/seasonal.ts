@@ -579,6 +579,53 @@ function handleUndergroundPitFight(state: GameState, nextWeek: number, e: Offsea
   }
 }
 
+function handleAbyssalBargain(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const roll = rng.next();
+      let effectMsg: string;
+
+      if (roll < 0.6) {
+        // They accept the bargain
+        const xpGained = 40 + Math.floor(rng.next() * 21);
+        const fameLost = 15 + Math.floor(rng.next() * 11);
+        const newInjury = makeInjury(rng, {
+          name: 'Soul Rot',
+          description: 'A lingering supernatural curse.',
+          severity: 'Moderate',
+          weeksBase: 3,
+          weeksRange: 2,
+          penalties: { CN: -2, WL: -2 },
+        });
+
+        ctx.rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+          fame: Math.max(0, (chosen.fame || 0) - fameLost),
+          injuries: [...(chosen.injuries || []), newInjury],
+        });
+        effectMsg = `They accepted the bargain. Power surges within them, but their soul feels tarnished. (+${xpGained} XP, -${fameLost} Fame, Moderate Injury)`;
+      } else {
+        // They refuse
+        const fameGained = 15 + Math.floor(rng.next() * 11);
+        ctx.rosterUpdates.set(chosen.id, {
+          fame: (chosen.fame || 0) + fameGained,
+        });
+        effectMsg = `They bravely refused the shadowed figure! The town applauds their moral fortitude. (+${fameGained} Fame)`;
+      }
+
+      const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [`${baseMsg} ${effectMsg}`],
+      });
+    }
+  }
+}
+
 function handleRogueAlchemist(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
@@ -678,6 +725,7 @@ const EVENT_HANDLERS: Record<
   underground_pit_fight: handleUndergroundPitFight,
   meteor_shower: handleMeteorShower,
   rogue_alchemist: handleRogueAlchemist,
+  abyssal_bargain: handleAbyssalBargain,
 };
 
 export function runSeasonalPass(

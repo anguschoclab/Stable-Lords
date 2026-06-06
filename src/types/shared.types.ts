@@ -617,7 +617,8 @@ export type WeatherType =
   | 'Hailstorm'
   | 'Arcane Storm'
   | 'Blood Rain'
-  | 'Locust Swarm';/**
+  | 'Locust Swarm'
+  | 'Aether Storm';/**
                  * Defines the shape of death event.
                  */
 

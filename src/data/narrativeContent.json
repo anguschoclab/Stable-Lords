@@ -2204,6 +2204,13 @@
         "A strange rogue alchemist visited the stable, offering a glowing green potion to {{name}}. They drank it...",
         "{{name}} accepted a bubbling concoction from a wandering alchemist."
       ]
+    },
+    "abyssal_bargain": {
+      "title": "Abyssal Bargain",
+      "effectType": "abyssal_bargain",
+      "newsletter": [
+        "{{name}} was approached by a shadowed figure in the dead of night offering terrible power for a terrible price..."
+      ]
     }
   },
   "crowd_reactions": {

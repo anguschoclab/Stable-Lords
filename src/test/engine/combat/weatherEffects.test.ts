@@ -68,7 +68,7 @@ describe('weatherEffects', () => {
     });
 
     it('all weather types have required effect properties', () => {
-      const allWeatherTypes: WeatherType[] = ['Clear', 'Rainy', 'Sweltering', 'Breezy', 'Overcast', 'Blazing Sun', 'Gale', 'Blood Moon', 'Eclipse', 'Sandstorm', 'Tornado', 'Blizzard', 'Dense Fog', 'Mist', 'Thunderstorm', 'Ashfall', 'Acid Rain', 'Mana Surge', 'Scorching Wind', 'Spooky Night', 'Meteor Shower', 'Abyssal Gloom', 'Cursed Miasma', 'Hailstorm', 'Solar Flare', 'Arcane Storm', 'Blood Rain'];
+      const allWeatherTypes: WeatherType[] = ['Clear', 'Rainy', 'Sweltering', 'Breezy', 'Overcast', 'Blazing Sun', 'Gale', 'Blood Moon', 'Eclipse', 'Sandstorm', 'Tornado', 'Blizzard', 'Dense Fog', 'Mist', 'Thunderstorm', 'Ashfall', 'Acid Rain', 'Mana Surge', 'Scorching Wind', 'Spooky Night', 'Meteor Shower', 'Abyssal Gloom', 'Cursed Miasma', 'Hailstorm', 'Solar Flare', 'Arcane Storm', 'Blood Rain', 'Locust Swarm', 'Aether Storm'];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
         expect(effect).toHaveProperty('staminaMult');

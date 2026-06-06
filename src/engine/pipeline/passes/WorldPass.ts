@@ -83,6 +83,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.94) return 'Gale';
   if (roll < 0.97) return 'Spooky Night'; // Added Spooky Night to Spring/Fall!
   if (roll < 0.985) return 'Blood Rain';
+  if (roll < 0.992) return 'Aether Storm';
   if (roll < 0.995) return 'Blood Moon'; // Includes 0.99
   if (roll < 0.998) return 'Eclipse';
   return 'Mana Surge';

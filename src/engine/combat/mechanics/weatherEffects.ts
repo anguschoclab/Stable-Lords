@@ -213,6 +213,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.9,
     description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
   },
+  'Aether Storm': {
+    staminaMult: 0.8,
+    initiativeMod: +8,
+    riposteMod: +3,
+    damageMult: 1.3,
+    description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
+  },
 };
 
 /**
@@ -265,6 +272,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Arcane Storm': 'The air rips open with raw arcane power. Reality itself seems to bend.',
   'Blood Rain': 'Thick red drops fall from an unnatural sky. The air smells of copper and dread.',
   'Locust Swarm': 'A deafening swarm of locusts descends upon the arena, gnawing at everything in sight.',
+  'Aether Storm': 'Raw aether winds rip through the arena. The boundaries of reality are fraying.',
 };
 
 /**

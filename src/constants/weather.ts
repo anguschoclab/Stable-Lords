@@ -162,6 +162,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-arena-fame/20',
     description: 'Magical energy surges through the arena, enhancing special abilities.',
   },
+  'Aether Storm': {
+    icon: Sparkles,
+    colorClass: 'text-arena-gold',
+    bgClass: 'bg-arena-gold/10',
+    borderClass: 'border-arena-gold/20',
+    description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
+  },
 };
 
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {

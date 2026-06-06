@@ -140,6 +140,14 @@ const WEATHER_METADATA = {
     description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
     stats: 'INITIATIVE -3 // DAMAGE 90% // STAMINA DRAIN 120%',
   },
+  'Aether Storm': {
+    icon: Sparkles,
+    color: 'text-arena-gold',
+    bg: 'bg-arena-gold/10',
+    border: 'border-arena-gold/20',
+    description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
+    stats: 'INITIATIVE +8 // RIPOSTE +3 // DAMAGE 130% // STAMINA CONSERVATION 20%',
+  },
 };/**
    * Weather widget.
    * @returns The result.

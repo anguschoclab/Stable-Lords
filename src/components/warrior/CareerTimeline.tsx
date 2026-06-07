@@ -29,7 +29,7 @@ export function CareerTimeline({
 }) {
   const milestones = useMemo(() => {
     const events: { week: number; label: string; icon: React.ReactNode; color: string }[] = [];
-    const fights = getAllFightsForWarrior(arenaHistory, warrior.name);
+    const fights = getAllFightsForWarrior(arenaHistory, warrior.id);
     const sorted = [...fights].sort((a, b) => a.week - b.week);
 
     if (sorted.length > 0) {
@@ -42,7 +42,7 @@ export function CareerTimeline({
     }
 
     const firstWin = sorted.find((f) => {
-      const isA = f.a === warrior.name;
+      const isA = f.warriorIdA === warrior.id;
       return (isA && f.winner === 'A') || (!isA && f.winner === 'D');
     });
     if (firstWin) {
@@ -55,7 +55,7 @@ export function CareerTimeline({
     }
 
     const firstKill = sorted.find((f) => {
-      const isA = f.a === warrior.name;
+      const isA = f.warriorIdA === warrior.id;
       return ((isA && f.winner === 'A') || (!isA && f.winner === 'D')) && f.by === 'Kill';
     });
     if (firstKill) {
@@ -71,7 +71,7 @@ export function CareerTimeline({
       const champFight = sorted.find(
         (f) =>
           f.tournamentId &&
-          ((f.a === warrior.name && f.winner === 'A') || (f.d === warrior.name && f.winner === 'D'))
+          ((f.warriorIdA === warrior.id && f.winner === 'A') || (f.warriorIdD === warrior.id && f.winner === 'D'))
       );
       events.push({
         week: champFight?.week ?? warrior.career.wins,

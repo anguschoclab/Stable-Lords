@@ -81,6 +81,12 @@ function computeStyleRollups(
   return rollups;
 }
 
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
+}
+
 function computeTopMovers(
   fights: FightCard[]
 ): { name: string; fameDelta: number; popDelta: number }[] {
@@ -88,17 +94,18 @@ function computeTopMovers(
 
   for (const card of fights) {
     const f = card.summary;
+    const n = getNamesFromTitle(f.title);
     // Track fighter A
-    const existA = movers.get(f.a) ?? { name: f.a, fameDelta: 0, popDelta: 0 };
+    const existA = movers.get(f.warriorIdA) ?? { name: n.a, fameDelta: 0, popDelta: 0 };
     existA.fameDelta += f.fameDeltaA ?? 0;
     existA.popDelta += f.popularityDeltaA ?? 0;
-    movers.set(f.a, existA);
+    movers.set(f.warriorIdA, existA);
 
     // Track fighter D
-    const existD = movers.get(f.d) ?? { name: f.d, fameDelta: 0, popDelta: 0 };
+    const existD = movers.get(f.warriorIdD) ?? { name: n.d, fameDelta: 0, popDelta: 0 };
     existD.fameDelta += f.fameDeltaD ?? 0;
     existD.popDelta += f.popularityDeltaD ?? 0;
-    movers.set(f.d, existD);
+    movers.set(f.warriorIdD, existD);
   }
 
   return [...movers.values()]

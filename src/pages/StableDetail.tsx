@@ -103,9 +103,9 @@ export default function StableDetail() {
 
   const tierCfg = TIER_CONFIG[rival.tier ?? 'Minor'] ?? TIER_CONFIG.Minor;
 
-  const stableWarriorNames = new Set(rival.roster.map((w) => w.name));
+  const stableWarriorIds = new Set(rival.roster.map((w) => w.id));
   const recentBouts = state.arenaHistory
-    .filter((f) => stableWarriorNames.has(f.a) || stableWarriorNames.has(f.d))
+    .filter((f) => stableWarriorIds.has(f.warriorIdA) || stableWarriorIds.has(f.warriorIdD))
     .slice(-12)
     .reverse();
 
@@ -327,7 +327,7 @@ export default function StableDetail() {
             {activeTab === 'LOGS' && (
               <StableLogsTab
                 recentBouts={recentBouts}
-                stableWarriorNames={stableWarriorNames}
+                stableWarriorIds={stableWarriorIds}
               />
             )}
           </div>

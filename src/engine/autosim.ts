@@ -100,10 +100,19 @@ function processPlayerOffers(state: GameState): GameState {
 /**
  * Extract week summary from state after advancement
  */
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
+}
+
 function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
   const boutSummaries = state.lastSimulationReport?.bouts ?? [];
   const deathNames = boutSummaries.reduce<string[]>((acc, b) => {
-    if (b.by === 'Kill') acc.push(b.winner === 'A' ? b.d : b.a);
+    if (b.by === 'Kill') {
+      const n = getNamesFromTitle(b.title);
+      acc.push(b.winner === 'A' ? n.d : n.a);
+    }
     return acc;
   }, []);
 

@@ -1,29 +1,40 @@
 import { useMemo } from 'react';
 import type { GameState } from '@/types/game';
+import type { WarriorId } from '@/types/shared.types';
 import { getRecentFights } from '@/engine/core/historyUtils';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 
-// Custom Hook to gather player roster names
-export function usePlayerRosterNames(state: GameState): Set<string> {
+function buildNameResolver(state: GameState): Map<WarriorId, string> {
+  const map = new Map<WarriorId, string>();
+  for (const w of state.roster ?? []) map.set(w.id, w.name);
+  for (const w of state.graveyard ?? []) map.set(w.id, w.name);
+  for (const r of state.rivals ?? []) {
+    for (const w of r.roster ?? []) map.set(w.id, w.name);
+  }
+  return map;
+}
+
+// Custom Hook to gather player roster IDs
+export function usePlayerRosterIds(state: GameState): Set<WarriorId> {
   return useMemo(
     () =>
       new Set(
-        (state.roster || []).map((w) => w.name).concat(state.graveyard?.map((w) => w.name) ?? [])
+        (state.roster || []).map((w) => w.id).concat(state.graveyard?.map((w) => w.id) ?? [])
       ),
     [state.roster, state.graveyard]
   );
 }
 
-// Custom Hook to map rival warrior names to their stable
+// Custom Hook to map rival warrior IDs to their stable
 export function useRivalWarriorStable(
   state: GameState
-): Map<string, { stableName: string; ownerId: string }> {
+): Map<WarriorId, { stableName: string; ownerId: string }> {
   return useMemo(() => {
-    const m = new Map<string, { stableName: string; ownerId: string }>();
+    const m = new Map<WarriorId, { stableName: string; ownerId: string }>();
     for (const r of state.rivals ?? []) {
       if (r.roster) {
         const info = { stableName: r.owner.stableName, ownerId: r.owner.id };
-        for (const w of r.roster) m.set(w.name, info);
+        for (const w of r.roster) m.set(w.id, info);
       }
     }
     return m;
@@ -33,20 +44,21 @@ export function useRivalWarriorStable(
 // Custom Hook to compute ongoing rivalries
 export function useRivalriesList(
   state: GameState,
-  rosterNames: Set<string>,
-  rivalWarriorStable: Map<string, { stableName: string; ownerId: string }>
+  rosterIds: Set<WarriorId>,
+  rivalWarriorStable: Map<WarriorId, { stableName: string; ownerId: string }>
 ): DerivedRivalry[] {
   return useMemo(() => {
+    const nameResolver = buildNameResolver(state);
     const map = new Map<string, DerivedRivalry>();
     const recentHistory = getRecentFights(state.arenaHistory || [], Math.max(1, state.week - 13));
 
     for (const bout of recentHistory) {
-      const aIsPlayer = rosterNames.has(bout.a);
-      const dIsPlayer = rosterNames.has(bout.d);
+      const aIsPlayer = rosterIds.has(bout.warriorIdA);
+      const dIsPlayer = rosterIds.has(bout.warriorIdD);
       if (!aIsPlayer && !dIsPlayer) continue;
 
-      const rivalName = aIsPlayer ? bout.d : bout.a;
-      const stableInfo = rivalWarriorStable.get(rivalName);
+      const rivalId = aIsPlayer ? bout.warriorIdD : bout.warriorIdA;
+      const stableInfo = rivalWarriorStable.get(rivalId);
       if (!stableInfo) continue;
       const stable = stableInfo.stableName;
 
@@ -73,9 +85,11 @@ export function useRivalriesList(
 
       if (bout.by === 'Kill' && bout.winner) {
         const killerIsPlayer = playerWon;
+        const playerName = playerIsA ? nameResolver.get(bout.warriorIdA) ?? 'Unknown' : nameResolver.get(bout.warriorIdD) ?? 'Unknown';
+        const rivalName = nameResolver.get(rivalId) ?? 'Unknown';
         r.kills.push({
-          killer: killerIsPlayer ? (playerIsA ? bout.a : bout.d) : rivalName,
-          victim: killerIsPlayer ? rivalName : playerIsA ? bout.a : bout.d,
+          killer: killerIsPlayer ? playerName : rivalName,
+          victim: killerIsPlayer ? rivalName : playerName,
           week: bout.week,
         });
       }
@@ -89,35 +103,37 @@ export function useRivalriesList(
     }
 
     return [...map.values()].filter((r) => r.bouts > 0).sort((a, b) => b.intensity - a.intensity);
-  }, [state.arenaHistory, state.week, rosterNames, rivalWarriorStable]);
+  }, [state.arenaHistory, state.week, rosterIds, rivalWarriorStable, state.roster, state.graveyard, state.rivals]);
 }
 
 // Custom Hook to calculate the most wanted rival
 export function useMostWantedRival(
   state: GameState,
-  rosterNames: Set<string>,
-  rivalWarriorStable: Map<string, { stableName: string; ownerId: string }>
+  rosterIds: Set<WarriorId>,
+  rivalWarriorStable: Map<WarriorId, { stableName: string; ownerId: string }>
 ) {
   return useMemo(() => {
+    const nameResolver = buildNameResolver(state);
     const winCounts = new Map<
-      string,
+      WarriorId,
       { name: string; stable: string; wins: number; kills: number }
     >();
     const recentHistory = getRecentFights(state.arenaHistory || [], Math.max(1, state.week - 13));
     for (const bout of recentHistory) {
-      const aIsPlayer = rosterNames.has(bout.a);
-      const dIsPlayer = rosterNames.has(bout.d);
+      const aIsPlayer = rosterIds.has(bout.warriorIdA);
+      const dIsPlayer = rosterIds.has(bout.warriorIdD);
       if (!aIsPlayer && !dIsPlayer) continue;
 
       const playerWon = (aIsPlayer && bout.winner === 'A') || (dIsPlayer && bout.winner === 'D');
       if (playerWon || !bout.winner) continue;
 
-      const rivalName = aIsPlayer ? bout.d : bout.a;
-      const stable = rivalWarriorStable.get(rivalName)?.stableName ?? 'Unknown';
-      const entry = winCounts.get(rivalName) ?? { name: rivalName, stable, wins: 0, kills: 0 };
+      const rivalId = aIsPlayer ? bout.warriorIdD : bout.warriorIdA;
+      const stable = rivalWarriorStable.get(rivalId)?.stableName ?? 'Unknown';
+      const rivalName = nameResolver.get(rivalId) ?? 'Unknown';
+      const entry = winCounts.get(rivalId) ?? { name: rivalName, stable, wins: 0, kills: 0 };
       entry.wins++;
       if (bout.by === 'Kill') entry.kills++;
-      winCounts.set(rivalName, entry);
+      winCounts.set(rivalId, entry);
     }
 
     // ⚡ Bolt Optimization: Use a single O(N) scan to find the max entry instead of converting to array and sorting.
@@ -133,5 +149,5 @@ export function useMostWantedRival(
       }
     }
     return maxEntry;
-  }, [state.arenaHistory, state.week, rosterNames, rivalWarriorStable]);
+  }, [state.arenaHistory, state.week, rosterIds, rivalWarriorStable, state.roster, state.graveyard, state.rivals]);
 }

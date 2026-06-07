@@ -137,6 +137,9 @@ export const HallOfFights: React.FC = () => {
                   {fights.map((f) => {
                     const isKill = f.by === 'Kill';
                     const isKO = f.by === 'KO';
+                    const n = f.title.split(' (')[0]!.split(' vs ');
+                    const nameA = n[0] || 'Unknown';
+                    const nameD = n[1] || 'Unknown';
                     return (
                       <div
                         key={f.id}
@@ -148,9 +151,9 @@ export const HallOfFights: React.FC = () => {
                           ) : (
                             <Swords className="h-4 w-4 text-muted-foreground shrink-0" />
                           )}
-                          <WarriorLink name={f.a} className="text-sm font-medium" />
+                          <WarriorLink name={nameA} className="text-sm font-medium" />
                           <span className="text-xs text-muted-foreground">vs</span>
-                          <WarriorLink name={f.d} className="text-sm font-medium" />
+                          <WarriorLink name={nameD} className="text-sm font-medium" />
                         </div>
                         <div className="flex items-center gap-1.5 sm:gap-2 ml-6 sm:ml-0 flex-wrap">
                           {f.flashyTags?.map((t) => (
@@ -162,7 +165,7 @@ export const HallOfFights: React.FC = () => {
                             variant={isKill ? 'destructive' : isKO ? 'default' : 'outline'}
                             className="text-xs whitespace-nowrap"
                           >
-                            {f.winner ? `${f.winner === 'A' ? f.a : f.d} — ${f.by}` : 'Draw'}
+                            {f.winner ? `${f.winner === 'A' ? nameA : nameD} — ${f.by}` : 'Draw'}
                           </Badge>
                         </div>
                       </div>
@@ -194,12 +197,19 @@ export const HallOfFights: React.FC = () => {
                         </Badge>
                       </div>
                     </div>
-                    <div className="text-sm">
-                      <WarriorLink name={f.a} className="font-medium" />
-                      {' vs '}
-                      <WarriorLink name={f.d} className="font-medium" />
-                      {f.by && ` — ${f.winner === 'A' ? f.a : f.d} by ${f.by}`}
-                    </div>
+                    {(() => {
+                      const n = f.title.split(' (')[0]!.split(' vs ');
+                      const nameA = n[0] || 'Unknown';
+                      const nameD = n[1] || 'Unknown';
+                      return (
+                        <div className="text-sm">
+                          <WarriorLink name={nameA} className="font-medium" />
+                          {' vs '}
+                          <WarriorLink name={nameD} className="font-medium" />
+                          {f.by && ` — ${f.winner === 'A' ? nameA : nameD} by ${f.by}`}
+                        </div>
+                      );
+                    })()}
                     {f.flashyTags && f.flashyTags.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-1">
                         {f.flashyTags.map((t) => (

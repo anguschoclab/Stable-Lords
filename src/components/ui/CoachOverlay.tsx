@@ -55,7 +55,7 @@ export function CoachOverlay() {
     const { activeFighters, injuredActive } = state.roster.reduce(
       (acc, w) => {
         const inActiveBout = state.arenaHistory.some(
-          (f) => (f.a === w.id || f.d === w.id) && f.winner === null
+          (f) => (f.warriorIdA === w.id || f.warriorIdD === w.id) && f.winner === null
         );
         if (!inActiveBout) return acc;
         acc.activeFighters.push(w);

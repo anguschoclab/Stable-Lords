@@ -1,4 +1,5 @@
 import type { FightSummary } from '@/types/game';
+import type { WarriorId } from '@/types/shared.types';
 
 export interface LeaderboardEntry {
   name: string;
@@ -23,6 +24,22 @@ export interface RisingStarEntry {
   firstWeek: number;
 }
 
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
+}
+
+function buildNameMap(fights: FightSummary[]): Map<WarriorId, string> {
+  const map = new Map<WarriorId, string>();
+  for (const f of fights) {
+    const n = getNamesFromTitle(f.title);
+    if (!map.has(f.warriorIdA)) map.set(f.warriorIdA, n.a);
+    if (!map.has(f.warriorIdD)) map.set(f.warriorIdD, n.d);
+  }
+  return map;
+}
+
 /**
  * Calculates leaderboard data from fight summaries.
  * Uses a bounded insertion sort (O(N)) to find top 5 warriors by wins and win rate.
@@ -30,8 +47,9 @@ export interface RisingStarEntry {
 export function calculateLeaderboardData(
   allFights: FightSummary[]
 ): LeaderboardEntry[] {
+  const nameMap = buildNameMap(allFights);
   const registry = new Map<
-    string,
+    WarriorId,
     { w: number; l: number; k: number; fame: number; style: string }
   >();
 
@@ -39,16 +57,16 @@ export function calculateLeaderboardData(
     const f = allFights[i];
     if (!f) continue;
 
-    let aData = registry.get(f.a);
+    let aData = registry.get(f.warriorIdA);
     if (!aData) {
       aData = { w: 0, l: 0, k: 0, fame: f.fameA || 0, style: f.styleA };
-      registry.set(f.a, aData);
+      registry.set(f.warriorIdA, aData);
     }
 
-    let dData = registry.get(f.d);
+    let dData = registry.get(f.warriorIdD);
     if (!dData) {
       dData = { w: 0, l: 0, k: 0, fame: f.fameD || 0, style: f.styleD };
-      registry.set(f.d, dData);
+      registry.set(f.warriorIdD, dData);
     }
 
     if (f.winner === 'A') {
@@ -63,17 +81,17 @@ export function calculateLeaderboardData(
       aData.l++;
       const fD = f.fameD || 0;
       if (fD > dData.fame) dData.fame = fD;
-      if (fD > aData.fame) aData.fame = fD;
+      if (fD > aData.fame) dData.fame = fD;
       if (f.by === 'Kill') dData.k++;
     }
   }
 
   // Bounded insertion sort (Top 5) - O(N) instead of O(N log N)
   const result: LeaderboardEntry[] = [];
-  for (const [name, data] of registry.entries()) {
+  for (const [id, data] of registry.entries()) {
     const rate = data.w / (data.w + data.l || 1);
     const entry = {
-      name,
+      name: nameMap.get(id) || 'Unknown',
       w: data.w,
       l: data.l,
       k: data.k,
@@ -108,35 +126,36 @@ export function calculateBestByStyle(
   allFights: FightSummary[],
   styles: string[]
 ): BestByStyleEntry[] {
+  const nameMap = buildNameMap(allFights);
   return styles.map((style) => {
-    const warriors: Record<string, number> = {};
+    const warriors: Record<WarriorId, number> = {};
     for (let i = 0; i < allFights.length; i++) {
       const f = allFights[i];
       if (!f) continue;
       let wStyle: string | null = null;
-      let wName: string | null = null;
+      let wId: WarriorId | null = null;
 
       if (f.winner === 'A') {
         wStyle = f.styleA;
-        wName = f.a;
+        wId = f.warriorIdA;
       } else if (f.winner === 'D') {
         wStyle = f.styleD;
-        wName = f.d;
+        wId = f.warriorIdD;
       }
 
-      if (wStyle === style && wName) {
-        warriors[wName] = (warriors[wName] || 0) + 1;
+      if (wStyle === style && wId) {
+        warriors[wId] = (warriors[wId] || 0) + 1;
       }
     }
-    let topName = 'No Data';
+    let topId: WarriorId | null = null;
     let topWins = 0;
-    for (const [name, wins] of Object.entries(warriors)) {
+    for (const [id, wins] of Object.entries(warriors)) {
       if (wins > topWins) {
         topWins = wins;
-        topName = name;
+        topId = id as WarriorId;
       }
     }
-    return { style, name: topName, wins: topWins };
+    return { style, name: topId ? (nameMap.get(topId) || 'Unknown') : 'No Data', wins: topWins };
   });
 }
 
@@ -145,22 +164,23 @@ export function calculateBestByStyle(
  * Uses bounded insertion sort (O(N)) to find top 3 warriors with <= 5 matches and >= 3 wins.
  */
 export function calculateRisingStars(allFights: FightSummary[]): RisingStarEntry[] {
-  const history = new Map<string, { wins: number; matches: number; firstWeek: number }>();
+  const nameMap = buildNameMap(allFights);
+  const history = new Map<WarriorId, { wins: number; matches: number; firstWeek: number }>();
 
   for (let i = 0; i < allFights.length; i++) {
     const f = allFights[i];
     if (!f) continue;
 
-    let aData = history.get(f.a);
+    let aData = history.get(f.warriorIdA);
     if (!aData) {
       aData = { wins: 0, matches: 0, firstWeek: f.week };
-      history.set(f.a, aData);
+      history.set(f.warriorIdA, aData);
     }
 
-    let dData = history.get(f.d);
+    let dData = history.get(f.warriorIdD);
     if (!dData) {
       dData = { wins: 0, matches: 0, firstWeek: f.week };
-      history.set(f.d, dData);
+      history.set(f.warriorIdD, dData);
     }
 
     aData.matches++;
@@ -172,9 +192,9 @@ export function calculateRisingStars(allFights: FightSummary[]): RisingStarEntry
 
   // Bounded insertion sort (Top 3) - O(N) instead of O(N log N)
   const result: RisingStarEntry[] = [];
-  for (const [name, data] of history.entries()) {
+  for (const [id, data] of history.entries()) {
     if (data.matches <= 5 && data.wins >= 3) {
-      const entry = { name, wins: data.wins, matches: data.matches, firstWeek: data.firstWeek };
+      const entry = { name: nameMap.get(id) || 'Unknown', wins: data.wins, matches: data.matches, firstWeek: data.firstWeek };
       let i = result.length - 1;
       while (i >= 0) {
         const current = result[i];

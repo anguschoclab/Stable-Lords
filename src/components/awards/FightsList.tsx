@@ -40,6 +40,9 @@ export default function FightsList({
         <div className="mt-2 space-y-1">
           {fights.map((f) => {
             const round = getRound ? getRound(f.id) : undefined;
+            const n = f.title.split(' (')[0]!.split(' vs ');
+            const nameA = n[0] || 'Unknown';
+            const nameD = n[1] || 'Unknown';
             return (
               <div
                 key={f.id}
@@ -57,7 +60,7 @@ export default function FightsList({
                       f.winner === 'A' ? 'font-bold text-foreground' : 'text-muted-foreground'
                     )}
                   >
-                    {f.a}
+                    {nameA}
                   </span>
                   <span className="text-muted-foreground">vs</span>
                   <span
@@ -66,7 +69,7 @@ export default function FightsList({
                       f.winner === 'D' ? 'font-bold text-foreground' : 'text-muted-foreground'
                     )}
                   >
-                    {f.d}
+                    {nameD}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">

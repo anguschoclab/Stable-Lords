@@ -124,7 +124,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
             </div>
           </div>
           <div className="p-4 md:p-8">
-            <WarriorFightHistory warriorName={warrior.name} arenaHistory={arenaHistory} />
+            <WarriorFightHistory warriorId={warrior.id} arenaHistory={arenaHistory} />
           </div>
         </Surface>
       </div>

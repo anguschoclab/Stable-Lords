@@ -33,7 +33,7 @@ export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps)
             {resolveStableName(
               state,
               isPlayerA ? bout.stableIdA : bout.stableIdD,
-              isPlayerA ? bout.a : bout.d
+              'Unknown'
             )}
           </span>
           <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
@@ -41,7 +41,7 @@ export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps)
             {resolveStableName(
               state,
               isPlayerA ? bout.stableIdD : bout.stableIdA,
-              isPlayerA ? bout.d : bout.a
+              'Unknown'
             )}
           </span>
         </div>

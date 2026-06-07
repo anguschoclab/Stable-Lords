@@ -149,9 +149,9 @@ export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' |
                   (idsB.has(f.warriorIdD) && f.winner === 'D');
 
                 const warriorIdLeft = aIsStableA ? f.warriorIdA : f.warriorIdD;
-                const warriorNameLeft = aIsStableA ? f.a : f.d;
+                const warriorNameLeft = 'Unknown';
                 const warriorIdRight = aIsStableA ? f.warriorIdD : f.warriorIdA;
-                const warriorNameRight = aIsStableA ? f.d : f.a;
+                const warriorNameRight = 'Unknown';
 
                 return (
                   <div

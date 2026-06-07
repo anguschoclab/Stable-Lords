@@ -8,30 +8,37 @@ import BoutViewer from '@/components/BoutViewer';
 import { cn } from '@/lib/utils';/**
                                   * Warrior fight history.
                                   * @param  - {
+  warrior id,
   warrior name,
   arena history,
 }.
                                   * @returns The result.
                                   */
 
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
+}
 
 /**
  * Warrior fight history.
  * @param  - {
+  warrior id,
   warrior name,
   arena history,
 }.
  * @returns The result.
  */
 export function WarriorFightHistory({
-  warriorName,
+  warriorId,
   arenaHistory,
 }: {
-  warriorName: string;
+  warriorId: string;
   arenaHistory: FightSummary[];
 }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const fights = getAllFightsForWarrior(arenaHistory, warriorName);
+  const fights = getAllFightsForWarrior(arenaHistory, warriorId);
 
   const h2h = useMemo(() => {
     const map = new Map<
@@ -39,8 +46,9 @@ export function WarriorFightHistory({
       { wins: number; losses: number; draws: number; kills: number; deaths: number }
     >();
     for (const f of fights) {
-      const isA = f.a === warriorName;
-      const opponent = isA ? f.d : f.a;
+      const n = getNamesFromTitle(f.title);
+      const isA = f.warriorIdA === warriorId;
+      const opponent = isA ? n.d : n.a;
       let rec = map.get(opponent);
       if (!rec) {
         rec = { wins: 0, losses: 0, draws: 0, kills: 0, deaths: 0 };
@@ -59,7 +67,7 @@ export function WarriorFightHistory({
       }
     }
     return map;
-  }, [fights, warriorName]);
+  }, [fights, warriorId]);
 
   if (fights.length === 0) {
     return (
@@ -78,8 +86,9 @@ export function WarriorFightHistory({
         .slice(-10)
         .reverse()
         .map((f) => {
-          const isA = f.a === warriorName;
-          const opponent = isA ? f.d : f.a;
+          const n = getNamesFromTitle(f.title);
+          const isA = f.warriorIdA === warriorId;
+          const opponent = isA ? n.d : n.a;
           const won = (isA && f.winner === 'A') || (!isA && f.winner === 'D');
           const isExpanded = expandedId === f.id;
           const hasTranscript = f.transcript && f.transcript.length > 0;
@@ -98,7 +107,7 @@ export function WarriorFightHistory({
                 )}
                 onClick={() => setExpandedId(isExpanded ? null : f.id)}
                 aria-expanded={isExpanded}
-                aria-label={`${isExpanded ? 'Collapse' : 'Expand'} bout details between ${f.a} and ${f.d}`}
+                aria-label={`${isExpanded ? 'Collapse' : 'Expand'} bout details between ${n.a} and ${n.d}`}
               >
                 <div className="flex items-center gap-2">
                   <Badge
@@ -139,8 +148,8 @@ export function WarriorFightHistory({
               {isExpanded && hasTranscript && (
                 <div className="p-4 border-t border-white/5 animate-fade-in">
                   <BoutViewer
-                    nameA={f.a}
-                    nameD={f.d}
+                    nameA={n.a}
+                    nameD={n.d}
                     styleA={f.styleA}
                     styleD={f.styleD}
                     log={(f.transcript || []).map((text, i) => ({ minute: i + 1, text }))}

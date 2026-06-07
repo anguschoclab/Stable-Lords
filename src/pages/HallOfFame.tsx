@@ -91,8 +91,11 @@ export default function HallOfFame() {
       .map((f) => {
         const fameA = fameByWarriorId.get(f.warriorIdA ?? '') ?? 0;
         const fameD = fameByWarriorId.get(f.warriorIdD ?? '') ?? 0;
-        const winnerName = f.winner === 'A' ? f.a : f.d;
-        const loserName = f.winner === 'A' ? f.d : f.a;
+        const n = f.title.split(' (')[0]!.split(' vs ');
+        const nameA = n[0] || 'Unknown';
+        const nameD = n[1] || 'Unknown';
+        const winnerName = f.winner === 'A' ? nameA : nameD;
+        const loserName = f.winner === 'A' ? nameD : nameA;
         const winnerFame = f.winner === 'A' ? fameA : fameD;
         const loserFame = f.winner === 'A' ? fameD : fameA;
         const fameDiff = loserFame - winnerFame;

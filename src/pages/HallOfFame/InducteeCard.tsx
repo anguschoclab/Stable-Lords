@@ -10,9 +10,17 @@ import { Surface } from '@/components/ui/Surface';
 
 /* ── helpers ─────────────────────────────────────────────── */
 
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
+}
+
 function bestFight(warrior: Warrior, fights: FightSummary[]): FightSummary | null {
-  const wFights = fights.filter((f) => f.a === warrior.name || f.d === warrior.name);
+  const wFights = fights.filter((f) => f.warriorIdA === warrior.id || f.warriorIdD === warrior.id);
   if (wFights.length === 0) return null;
+  const first = wFights[0];
+  if (!first) return null;
   return wFights.reduce((best, f) => {
     const score = (t: FightSummary) => {
       let s = 0;
@@ -23,7 +31,7 @@ function bestFight(warrior: Warrior, fights: FightSummary[]): FightSummary | nul
       return s;
     };
     return score(f) > score(best) ? f : best;
-  }, wFights[0]);
+  }, first);
 }
 
 /* ── Inductee Card ───────────────────────────────────────── */
@@ -151,39 +159,45 @@ export function InducteeCard({
                 <span>CHRONICLE_PEAK</span>
                 <span>WK_{best.week}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span
-                  className={cn(
-                    'text-[11px] font-display font-black uppercase tracking-tight',
-                    (best.winner === 'A' && best.a === warrior.name) ||
-                      (best.winner === 'D' && best.d === warrior.name)
-                      ? 'text-foreground'
-                      : 'text-muted-foreground/40'
-                  )}
-                >
-                  {best.a}
-                </span>
-                <div className="flex flex-col items-center gap-1">
-                  <Swords className="h-3 w-3 text-muted-foreground/40" />
-                  <Badge
-                    variant="outline"
-                    className="text-[8px] font-black py-0 px-1 border-muted-foreground/20"
-                  >
-                    {best.by}
-                  </Badge>
-                </div>
-                <span
-                  className={cn(
-                    'text-[11px] font-display font-black uppercase tracking-tight text-right',
-                    (best.winner === 'D' && best.d === warrior.name) ||
-                      (best.winner === 'A' && best.a === warrior.name)
-                      ? 'text-foreground'
-                      : 'text-muted-foreground/40'
-                  )}
-                >
-                  {best.d}
-                </span>
-              </div>
+              {(() => {
+                const n = getNamesFromTitle(best.title);
+                const warriorIsA = best.warriorIdA === warrior.id;
+                return (
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={cn(
+                        'text-[11px] font-display font-black uppercase tracking-tight',
+                        (best.winner === 'A' && warriorIsA) ||
+                          (best.winner === 'D' && !warriorIsA)
+                          ? 'text-foreground'
+                          : 'text-muted-foreground/40'
+                      )}
+                    >
+                      {n.a}
+                    </span>
+                    <div className="flex flex-col items-center gap-1">
+                      <Swords className="h-3 w-3 text-muted-foreground/40" />
+                      <Badge
+                        variant="outline"
+                        className="text-[8px] font-black py-0 px-1 border-muted-foreground/20"
+                      >
+                        {best.by}
+                      </Badge>
+                    </div>
+                    <span
+                      className={cn(
+                        'text-[11px] font-display font-black uppercase tracking-tight text-right',
+                        (best.winner === 'D' && !warriorIsA) ||
+                          (best.winner === 'A' && warriorIsA)
+                          ? 'text-foreground'
+                          : 'text-muted-foreground/40'
+                      )}
+                    >
+                      {n.d}
+                    </span>
+                  </div>
+                );
+              })()}
               {best.flashyTags && best.flashyTags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-3 justify-center">
                   {best.flashyTags.map((t) => (

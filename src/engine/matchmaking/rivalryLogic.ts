@@ -1,16 +1,23 @@
 import type { Rivalry } from '@/types/state.types';
+import type { StableId, RivalryId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { MatchScoringService } from '../matchmakingServices';
 import { calculateRivalryScore } from '../ownerGrudges';
 import { getStablePairKey } from '@/utils/keyUtils';
 
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
+}
+
 /**
  * Detects and updates rivalries based on recent bouts, deaths, and upsets.
  */
 interface PairingStats {
-  a: string;
-  b: string;
+  stableIdA: StableId;
+  stableIdB: StableId;
   bouts: number;
   deaths: number;
   upsets: number;
@@ -26,11 +33,11 @@ function aggregatePairingStats(weekFights: FightSummary[], week: number): Map<st
   const pairs = new Map<string, PairingStats>();
 
   for (const f of weekFights) {
-    if (!f.a || !f.d) continue;
-    const key = getStablePairKey(f.a, f.d);
+    if (!f.stableIdA || !f.stableIdD) continue;
+    const key = getStablePairKey(f.stableIdA, f.stableIdD);
     const entry = pairs.get(key) ?? {
-      a: f.a,
-      b: f.d,
+      stableIdA: f.stableIdA,
+      stableIdB: f.stableIdD,
       bouts: 0,
       deaths: 0,
       upsets: 0,
@@ -39,10 +46,11 @@ function aggregatePairingStats(weekFights: FightSummary[], week: number): Map<st
       dFame: f.fameD || 0,
     };
 
+    const n = getNamesFromTitle(f.title);
     entry.bouts++;
     if (f.by === 'Kill') {
       entry.deaths++;
-      entry.lastReason = `${f.winner === 'A' ? f.a : f.d} killed ${f.winner === 'A' ? f.d : f.a} in Week ${week}`;
+      entry.lastReason = `${f.winner === 'A' ? n.a : n.d} killed ${f.winner === 'A' ? n.d : n.a} in Week ${week}`;
     }
 
     if (f.winner && f.fameA !== undefined && f.fameD !== undefined) {
@@ -51,7 +59,7 @@ function aggregatePairingStats(weekFights: FightSummary[], week: number): Map<st
       if (loserFame > winnerFame + 20) {
         entry.upsets++;
         if (!entry.lastReason || f.by !== 'Kill') {
-          entry.lastReason = `${f.winner === 'A' ? f.a : f.d} upset ${f.winner === 'A' ? f.d : f.a} in Week ${week}`;
+          entry.lastReason = `${f.winner === 'A' ? n.a : n.d} upset ${f.winner === 'A' ? n.d : n.a} in Week ${week}`;
         }
       }
     }
@@ -73,8 +81,8 @@ function processRivalryUpdates(
   for (const [, data] of pairs.entries()) {
     const existing = rivalries.find(
       (r) =>
-        (r.stableIdA === data.a && r.stableIdB === data.b) ||
-        (r.stableIdB === data.a && r.stableIdA === data.b)
+        (r.stableIdA === data.stableIdA && r.stableIdB === data.stableIdB) ||
+        (r.stableIdB === data.stableIdA && r.stableIdA === data.stableIdB)
     );
 
     const rawDelta = calculateRivalryScore(data.bouts, data.deaths, data.upsets);
@@ -82,8 +90,8 @@ function processRivalryUpdates(
       MatchScoringService.calculatePairingScore({
         p_fame: data.aFame || 0,
         r_fame: data.dFame || 0,
-        playerStableId: data.a,
-        rivalStableId: data.b,
+        playerStableId: data.stableIdA,
+        rivalStableId: data.stableIdB,
         week: week,
         isRecentStyleMatch: false,
         isChallenged: false,
@@ -105,9 +113,9 @@ function processRivalryUpdates(
     } else if (data.bouts >= 1) {
       // Any clash can start a rivalry
       rivalries.push({
-        id: rng.uuid('rivalry'),
-        stableIdA: data.a,
-        stableIdB: data.b,
+        id: rng.uuid('rivalry') as RivalryId,
+        stableIdA: data.stableIdA,
+        stableIdB: data.stableIdB,
         intensity: Math.min(5, intensityDelta + (rawDelta - 1)),
         reason: data.lastReason || `Clashed in the arena`,
         startWeek: week,

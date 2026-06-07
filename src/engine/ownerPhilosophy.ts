@@ -29,16 +29,14 @@ export function evolvePhilosophies(
   // Complexity reduction from O(Rivals * Fights) to O(Fights + Rivals)
   const performanceMap = new Map<string, { wins: number; total: number }>();
   for (const fight of recentFights) {
-    const winnerId = fight.winner === 'A' ? fight.a : fight.d;
-    const _loserId = fight.winner === 'A' ? fight.d : fight.a; // eslint-disable-line @typescript-eslint/no-unused-vars
+    const winnerId = fight.winner === 'A' ? fight.warriorIdA : fight.warriorIdD;
 
-    // We don't have stable IDs in FightSummary, so we use warrior names as keys.
-    // This assumes names are unique within a season (which recruitment.ts enforces).
-    [fight.a, fight.d].forEach((name) => {
-      const current = performanceMap.get(name) || { wins: 0, total: 0 };
-      if (name === winnerId) current.wins++;
+    // Track by warriorId; resolve to names via roster lookups
+    [fight.warriorIdA, fight.warriorIdD].forEach((id) => {
+      const current = performanceMap.get(id) || { wins: 0, total: 0 };
+      if (id === winnerId) current.wins++;
       current.total++;
-      performanceMap.set(name, current);
+      performanceMap.set(id, current);
     });
   }
 
@@ -52,7 +50,7 @@ export function evolvePhilosophies(
     let wins = 0;
     let totalFights = 0;
     rival.roster.forEach((w) => {
-      const stats = performanceMap.get(w.name);
+      const stats = performanceMap.get(w.id);
       if (stats) {
         wins += stats.wins;
         totalFights += stats.total;

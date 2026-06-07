@@ -1,4 +1,4 @@
-import type { FightOutcome } from '@/types/combat.types';
+import type { FightSummary } from '@/types/game';
 import { WarriorLink } from '@/components/EntityLink';
 import { Badge } from '@/components/ui/badge';
 import { Surface } from '@/components/ui/Surface';
@@ -6,18 +6,25 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface StableLogsTabProps {
-  recentBouts: FightOutcome[];
-  stableWarriorNames: Set<string>;
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
 }
 
-export function StableLogsTab({ recentBouts, stableWarriorNames }: StableLogsTabProps) {
+interface StableLogsTabProps {
+  recentBouts: FightSummary[];
+  stableWarriorIds: Set<string>;
+}
+
+export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabProps) {
   return (
     <Surface variant="glass" className="p-0 border-white/5 overflow-hidden">
       <div className="divide-y divide-white/5">
         {recentBouts.length > 0 ? (
           recentBouts.map((f) => {
-            const isStableA = stableWarriorNames.has(f.a);
+            const n = getNamesFromTitle(f.title);
+            const isStableA = stableWarriorIds.has(f.warriorIdA);
             const won =
               (f.winner === 'A' && isStableA) || (f.winner === 'D' && !isStableA);
             return (
@@ -39,7 +46,7 @@ export function StableLogsTab({ recentBouts, stableWarriorNames }: StableLogsTab
                   <div>
                     <div className="flex items-center gap-4 mb-1.5">
                       <WarriorLink
-                        name={f.a}
+                        name={n.a}
                         className={cn(
                           'text-[11px] font-black uppercase tracking-widest',
                           won && isStableA
@@ -51,7 +58,7 @@ export function StableLogsTab({ recentBouts, stableWarriorNames }: StableLogsTab
                         vs
                       </span>
                       <WarriorLink
-                        name={f.d}
+                        name={n.d}
                         className={cn(
                           'text-[11px] font-black uppercase tracking-widest',
                           won && !isStableA

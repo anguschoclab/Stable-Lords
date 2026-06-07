@@ -6,6 +6,7 @@ import { useEffect, useRef, useMemo } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
 import { useWorldState, useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
+import type { WarriorId } from '@/types/shared.types';
 import { toast } from '@/hooks/use-toast';
 
 interface RivalrySnapshot {
@@ -114,20 +115,20 @@ function triggerScreenShake(intensity: number) {
 export function useRivalryAlerts() {
   const state = useWorldState();
 
-  const rosterNames = useGameStore(
-    useShallow((s) => new Set(s.roster.map((w) => w.name)))
+  const rosterIds = useGameStore(
+    useShallow((s) => new Set<WarriorId>(s.roster.map((w) => w.id)))
   );
 
-  const allRosterNames = useMemo(
+  const allRosterIds = useMemo(
     () =>
-      new Set([...rosterNames].concat(state.graveyard?.map((w) => w.name) ?? [])),
-    [rosterNames, state.graveyard]
+      new Set<WarriorId>([...rosterIds].concat(state.graveyard?.map((w) => w.id) ?? [])),
+    [rosterIds, state.graveyard]
   );
 
   const rivalWarriorStable = useMemo(() => {
-    const m: Record<string, string> = Object.create(null);
+    const m: Record<WarriorId, string> = Object.create(null);
     for (const r of state.rivals ?? []) {
-      for (const w of r.roster) m[w.name] = r.owner.stableName;
+      for (const w of r.roster) m[w.id] = r.owner.stableName;
     }
     return m;
   }, [state.rivals]);
@@ -138,12 +139,12 @@ export function useRivalryAlerts() {
     const result: { stableName: string; kills: number; bouts: number }[] = [];
 
     for (const bout of state.arenaHistory) {
-      const aIsPlayer = allRosterNames.has(bout.a);
-      const dIsPlayer = allRosterNames.has(bout.d);
+      const aIsPlayer = allRosterIds.has(bout.warriorIdA);
+      const dIsPlayer = allRosterIds.has(bout.warriorIdD);
       if (!aIsPlayer && !dIsPlayer) continue;
 
-      const rivalName = aIsPlayer ? bout.d : bout.a;
-      const stable = rivalWarriorStable[rivalName];
+      const rivalId = aIsPlayer ? bout.warriorIdD : bout.warriorIdA;
+      const stable = rivalWarriorStable[rivalId];
       if (!stable) continue;
 
       let r = map[stable];
@@ -161,7 +162,7 @@ export function useRivalryAlerts() {
       intensity = Math.max(1, Math.min(5, intensity));
       return { stableName: r.stableName, intensity };
     });
-  }, [state.arenaHistory, allRosterNames, rivalWarriorStable]);
+  }, [state.arenaHistory, allRosterIds, rivalWarriorStable]);
 
   const prevRef = useRef<Map<string, number>>(new Map());
 

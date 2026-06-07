@@ -12,6 +12,12 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { styleName, t, MOOD_TONE } from './gazetteTemplateHelpers';
 import type { GazetteDetections } from './gazetteDetections';
 
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
+}
+
 /**
  * Generates narrative for a single fight.
  */
@@ -25,8 +31,9 @@ export function generateFightNarrative(
   if (!MOOD_TONE[mood] && mood !== 'Calm')
     console.error(`Missing mood tone logic for: ${mood}, falling back to Calm`);
   const adj = safeRng.pick(toneResource.adjectives);
-  const winner = fight.winner === 'A' ? fight.a : fight.winner === 'D' ? fight.d : null;
-  const loser = fight.winner === 'A' ? fight.d : fight.winner === 'D' ? fight.a : null;
+  const n = getNamesFromTitle(fight.title);
+  const winner = fight.winner === 'A' ? n.a : fight.winner === 'D' ? n.d : '';
+  const loser = fight.winner === 'A' ? n.d : fight.winner === 'D' ? n.a : '';
   const g = (narrativeContent as NarrativeContent).gazette.fights;
 
   const data = {
@@ -35,8 +42,8 @@ export function generateFightNarrative(
     loser,
     styleW: styleName(fight.winner === 'A' ? fight.styleA : fight.styleD),
     styleL: styleName(fight.winner === 'A' ? fight.styleD : fight.styleA),
-    a: fight.a,
-    d: fight.d,
+    a: n.a,
+    d: n.d,
   };
 
   if (fight.by === 'Kill' && winner && loser) {
@@ -69,7 +76,7 @@ export function generateGazetteHeadline(
   detections: GazetteDetections,
   fights: FightSummary[],
   week: number,
-  mood: CrowdMoodType,
+  _mood: CrowdMoodType,
   rngService: IRNGService,
   tone: { adjectives: string[] }
 ): string {
@@ -128,10 +135,12 @@ export function generateGazetteHeadline(
   } else if (kills.length >= 2) {
     return t(rngService.pick(gh.MultipleKills), { week, count: kills.length });
   } else if (kills.length === 1) {
+    const k = kills[0];
+    const killNames = k ? getNamesFromTitle(k.title) : { a: 'Unknown', d: 'Unknown' };
     return t(rngService.pick(gh.Kill), {
       week,
-      killer: kills[0]?.winner === 'A' ? kills[0]?.a : kills[0]?.d,
-      loser: kills[0]?.winner === 'A' ? kills[0]?.d : kills[0]?.a,
+      killer: k?.winner === 'A' ? killNames.a : killNames.d,
+      loser: k?.winner === 'A' ? killNames.d : killNames.a,
     });
   } else if (knockouts.length >= 2) {
     return t(rngService.pick(gh.MultipleKOs), { week, adj: rngService.pick(tone.adjectives) });

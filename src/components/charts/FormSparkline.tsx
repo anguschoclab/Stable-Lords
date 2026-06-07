@@ -33,7 +33,7 @@ export const FormSparkline = React.memo(function FormSparkline({
           <span className="text-[10px] text-muted-foreground font-mono">NEW</span>
         ) : (
           history.map((fight) => {
-            const isA = fight.a === warriorId;
+            const isA = fight.warriorIdA === warriorId;
             const won = (isA && fight.winner === 'A') || (!isA && fight.winner === 'D');
             const byKill = fight.by === 'Kill';
             const isDraw = fight.winner === null;
@@ -69,7 +69,7 @@ export const FormSparkline = React.memo(function FormSparkline({
                     <p className="font-bold">
                       Week {fight.week}: {label}
                     </p>
-                    <p className="text-muted-foreground">vs {isA ? fight.d : fight.a}</p>
+                    <p className="text-muted-foreground">vs {fight.title.replace(/^.*? vs /, '').split(' (')[0] || 'Unknown'}</p>
                   </div>
                 </TooltipContent>
               </Tooltip>

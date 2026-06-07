@@ -34,8 +34,8 @@ export function processOwnerGrudges(
       if (!clash) continue;
 
       // Check if they've had kills against each other recently
-      const aNamesSet = new Set(rA.roster.map((w) => w.name));
-      const bNamesSet = new Set(rB.roster.map((w) => w.name));
+      const aIdsSet = new Set(rA.roster.map((w) => w.id));
+      const bIdsSet = new Set(rB.roster.map((w) => w.id));
 
       let hasCrossFight = false;
       let hasKill = false;
@@ -44,7 +44,8 @@ export function processOwnerGrudges(
         const f = recentFights[k];
         if (!f) continue;
         const isCrossFight =
-          (aNamesSet.has(f.a) && bNamesSet.has(f.d)) || (bNamesSet.has(f.a) && aNamesSet.has(f.d));
+          (aIdsSet.has(f.warriorIdA) && bIdsSet.has(f.warriorIdD)) ||
+          (bIdsSet.has(f.warriorIdA) && aIdsSet.has(f.warriorIdD));
 
         if (isCrossFight) {
           hasCrossFight = true;

@@ -23,9 +23,9 @@ export function generateOwnerNarratives(
 
   for (const rival of rivals) {
     const personality = rival.owner.personality ?? 'Pragmatic';
-    const names = new Set(rival.roster.map((w) => w.name));
+    const ids = new Set(rival.roster.map((w) => w.id));
 
-    const { wins, losses, kills, deaths } = calculateRecentRecord(recentFights, names);
+    const { wins, losses, kills, deaths } = calculateRecentRecord(recentFights, ids);
 
     const totalFights = wins + losses;
     if (totalFights === 0) continue;
@@ -106,14 +106,14 @@ export function generateOwnerNarratives(
   return gazetteItems;
 }
 
-function calculateRecentRecord(recentFights: FightSummary[], rosterNames: Set<string>) {
+function calculateRecentRecord(recentFights: FightSummary[], rosterIds: Set<string>) {
   let wins = 0,
     losses = 0,
     kills = 0,
     deaths = 0;
   for (const f of recentFights) {
-    const isA = rosterNames.has(f.a),
-      isD = rosterNames.has(f.d);
+    const isA = rosterIds.has(f.warriorIdA),
+      isD = rosterIds.has(f.warriorIdD);
     if (isA || isD) {
       const isWin = (isA && f.winner === 'A') || (isD && f.winner === 'D');
       const isLoss = (isA && f.winner === 'D') || (isD && f.winner === 'A');

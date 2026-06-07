@@ -238,6 +238,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.3,
     description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
   },
+  Mirage: {
+    staminaMult: 1.1,
+    initiativeMod: -5,
+    riposteMod: -2,
+    damageMult: 0.9,
+    description: 'Shimmering heat distortions create optical illusions. Fighters struggle to judge distance.',
+  },
 };
 
 /**
@@ -297,6 +304,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Chaotic Winds':
     'Fierce, swirling winds kick up the sand, creating unpredictable combat conditions.',
   'Aether Storm': 'Raw aether winds rip through the arena. The boundaries of reality are fraying.',
+  Mirage: 'The arena shimmers with intense heat, causing the air itself to ripple with illusions.',
 };
 
 /**

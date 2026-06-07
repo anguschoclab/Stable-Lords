@@ -184,6 +184,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-primary/20',
     description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
   },
+  Mirage: {
+    icon: Sun,
+    colorClass: 'text-arena-gold',
+    bgClass: 'bg-arena-gold/10',
+    borderClass: 'border-arena-gold/20',
+    description: '10% more stamina drain in combat. Illusions penalty initiative.',
+  },
 };
 
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {

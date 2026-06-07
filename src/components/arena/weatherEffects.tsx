@@ -533,6 +533,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Aurora Borealis': () => <ManaSurgeEffect />,
   'Chaotic Winds': null,
   'Aether Storm': null,
+  Mirage: () => <ScorchingWindEffect />,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

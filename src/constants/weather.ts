@@ -169,6 +169,20 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-arena-fame/20',
     description: 'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
   },
+  'Aether Storm': {
+    icon: Sparkles,
+    colorClass: 'text-arena-gold',
+    bgClass: 'bg-arena-gold/10',
+    borderClass: 'border-arena-gold/20',
+    description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
+  },
+  'Chaotic Winds': {
+    icon: Wind,
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
+    description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
+  },
 };
 
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {

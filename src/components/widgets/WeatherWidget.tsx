@@ -169,6 +169,14 @@ const WEATHER_METADATA = {
     description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
     stats: 'INITIATIVE -4 // RIPOSTE +3 // DAMAGE 85% // STAMINA DRAIN 130%',
   },
+  'Aether Storm': {
+    icon: Sparkles,
+    color: 'text-arena-gold',
+    bg: 'bg-arena-gold/10',
+    border: 'border-arena-gold/20',
+    description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
+    stats: 'INITIATIVE +8 // RIPOSTE +3 // DAMAGE 130% // STAMINA CONSERVATION 20%',
+  },
 }; /**
  * Weather widget.
  * @returns The result.

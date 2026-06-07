@@ -2538,6 +2538,13 @@
         "A mysterious dreamweaver visited {{name}} in their sleep. They awoke with profound new insights into combat. (+{{xp}} XP, +1 Insight Token)",
         "{{name}} experienced vivid, guiding visions from a passing dreamweaver, sharpening their mind. (+{{xp}} XP, +1 Insight Token)"
       ]
+    },
+    "abyssal_bargain": {
+      "title": "Abyssal Bargain",
+      "effectType": "abyssal_bargain",
+      "newsletter": [
+        "{{name}} was approached by a shadowed figure in the dead of night offering terrible power for a terrible price..."
+      ]
     }
   },
   "crowd_reactions": {

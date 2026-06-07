@@ -532,6 +532,8 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Blood Rain': () => <BloodRainEffect />,
   'Locust Swarm': () => <LocustSwarmEffect />,
   'Aurora Borealis': () => <ManaSurgeEffect />,
+  'Chaotic Winds': null,
+  'Aether Storm': null,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

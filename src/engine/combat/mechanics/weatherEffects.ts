@@ -227,6 +227,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.85,
     description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
   },
+  'Aether Storm': {
+    staminaMult: 0.8,
+    initiativeMod: +8,
+    riposteMod: +3,
+    damageMult: 1.3,
+    description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
+  },
 };
 
 /**
@@ -281,6 +288,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Locust Swarm': 'A deafening swarm of locusts descends upon the arena, gnawing at everything in sight.',
   'Aurora Borealis': 'The heavens are ablaze with ethereal, dancing lights. A serene calm settles over the sands.',
   'Chaotic Winds': 'Fierce, swirling winds kick up the sand, creating unpredictable combat conditions.',
+  'Aether Storm': 'Raw aether winds rip through the arena. The boundaries of reality are fraying.',
 };
 
 /**

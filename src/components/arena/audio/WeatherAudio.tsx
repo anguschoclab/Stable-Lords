@@ -41,14 +41,8 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Blood Rain': 'ambience-rain',
   'Locust Swarm': 'ambience-wind-gale',
   'Aurora Borealis': 'ambience-mana-surge',
+  'Chaotic Winds': 'ambience-wind-gale',
 };/**
-   * Weather audio.
-   * @param - { weather, volume, enabled, arena id }.
-   * @returns The result.
-   */
-
-
-/**
  * Weather audio.
  * @param - { weather, volume, enabled, arena id }.
  * @returns The result.

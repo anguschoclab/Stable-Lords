@@ -220,6 +220,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.95,
     description: 'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
   },
+  'Chaotic Winds': {
+    staminaMult: 1.3,
+    initiativeMod: -4,
+    riposteMod: +3,
+    damageMult: 0.85,
+    description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
+  },
 };
 
 /**
@@ -273,6 +280,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Blood Rain': 'Thick red drops fall from an unnatural sky. The air smells of copper and dread.',
   'Locust Swarm': 'A deafening swarm of locusts descends upon the arena, gnawing at everything in sight.',
   'Aurora Borealis': 'The heavens are ablaze with ethereal, dancing lights. A serene calm settles over the sands.',
+  'Chaotic Winds': 'Fierce, swirling winds kick up the sand, creating unpredictable combat conditions.',
 };
 
 /**

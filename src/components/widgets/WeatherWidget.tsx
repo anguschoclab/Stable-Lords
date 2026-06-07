@@ -161,6 +161,14 @@ const WEATHER_METADATA = {
     description: 'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
     stats: 'STAMINA CONSERVATION 15% // INITIATIVE +2',
   },
+  'Chaotic Winds': {
+    icon: Wind,
+    color: 'text-primary',
+    bg: 'bg-primary/10',
+    border: 'border-primary/20',
+    description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
+    stats: 'INITIATIVE -4 // RIPOSTE +3 // DAMAGE 85% // STAMINA DRAIN 130%',
+  },
 }; /**
  * Weather widget.
  * @returns The result.

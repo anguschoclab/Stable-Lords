@@ -2530,6 +2530,14 @@
         "A strange rogue alchemist visited the stable, offering a glowing green potion to {{name}}. They drank it...",
         "{{name}} accepted a bubbling concoction from a wandering alchemist."
       ]
+    },
+    "dreamweaver_visit": {
+      "title": "Dreamweaver's Visit",
+      "effectType": "dreamweaver_visit",
+      "newsletter": [
+        "A mysterious dreamweaver visited {{name}} in their sleep. They awoke with profound new insights into combat. (+{{xp}} XP, +1 Insight Token)",
+        "{{name}} experienced vivid, guiding visions from a passing dreamweaver, sharpening their mind. (+{{xp}} XP, +1 Insight Token)"
+      ]
     }
   },
   "crowd_reactions": {

@@ -618,10 +618,8 @@ export type WeatherType =
   | 'Arcane Storm'
   | 'Blood Rain'
   | 'Locust Swarm'
-  | 'Aurora Borealis';/**
-                 * Defines the shape of death event.
-                 */
-
+  | 'Aurora Borealis'
+  | 'Chaotic Winds';
 
 /**
  * Defines the shape of death event.

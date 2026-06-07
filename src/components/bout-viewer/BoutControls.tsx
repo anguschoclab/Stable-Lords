@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Play, Pause, SkipForward, RotateCcw } from 'lucide-react';
 import { ViewModeToggle, type ViewMode } from '@/components/arena';
+import { Button } from '@/components/ui/button';
 
 interface BoutControlsProps {
   viewMode: ViewMode;
@@ -70,9 +71,15 @@ export default function BoutControls({
         <div className="flex items-center px-4 py-2 rounded-none bg-black border border-white/5 gap-4">
           <Tooltip>
             <TooltipTrigger asChild>
-              <button onClick={onReset} aria-label="Reset bout viewer">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                onClick={onReset}
+                aria-label="Reset bout viewer"
+              >
                 <RotateCcw className="h-4 w-4" />
-              </button>
+              </Button>
             </TooltipTrigger>
             <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
               RESET BUFFER
@@ -84,10 +91,10 @@ export default function BoutControls({
           <button
             onClick={onTogglePlay}
             className={cn(
-              'flex items-center justify-center p-2.5 rounded-full transition-all active:scale-95 group/play',
+              'flex items-center justify-center p-2.5 rounded-full transition-all active:scale-95 group/play focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
               isPlaying
                 ? 'bg-foreground/10 text-foreground'
-                : 'bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]'
+                : 'bg-primary text-primary-foreground shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_0_25px_rgba(var(--primary-rgb),0.6)] hover:bg-primary/90'
             )}
             aria-label={isPlaying ? 'Pause playback' : 'Play bout'}
           >
@@ -102,9 +109,15 @@ export default function BoutControls({
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <button onClick={onSkipToEnd} aria-label="Skip to end of bout">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                onClick={onSkipToEnd}
+                aria-label="Skip to end of bout"
+              >
                 <SkipForward className="h-4 w-4" />
-              </button>
+              </Button>
             </TooltipTrigger>
             <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest">
               SKIP TO RESOLVE
@@ -118,7 +131,7 @@ export default function BoutControls({
               key={s}
               onClick={() => setSpeed(s as 1 | 2 | 3)}
               className={cn(
-                'px-4 py-1.5 rounded-none text-[10px] font-mono font-black transition-all',
+                'px-4 py-1.5 rounded-none text-[10px] font-mono font-black transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary hover:bg-white/5',
                 speed === s
                   ? 'bg-foreground/10 text-foreground'
                   : 'text-muted-foreground/20 hover:text-muted-foreground/60'

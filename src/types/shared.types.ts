@@ -599,7 +599,8 @@ export type WeatherType =
   | 'Locust Swarm'
   | 'Aurora Borealis'
   | 'Chaotic Winds'
-  | 'Aether Storm';
+  | 'Aether Storm'
+  | 'Mirage';
 
 /**
  * Defines the shape of death event.

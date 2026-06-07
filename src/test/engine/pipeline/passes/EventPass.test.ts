@@ -99,6 +99,7 @@ describe('EventPass', () => {
       if (callCount === 2) return 0.5; // fail Star-crossed Blessing
       if (callCount === 3) return 0.5; // fail Lost Relic
       if (callCount === 4) return 0.01; // succeed Mysterious Patron
+      if (callCount === 5) return 0.5; // fail Goblin Merchant
       return originalNext();
     };
     (rng as any).next = mockNext;
@@ -113,5 +114,49 @@ describe('EventPass', () => {
 
     expect(impact.treasuryDelta).toBeGreaterThanOrEqual(100);
     expect(impact.newsletterItems?.[0]?.title).toBe('A Mysterious Patron!');
+  });
+
+  it('should trigger the Goblin Merchant event, deduct 20 gold, and award +5 XP', () => {
+    const rng = new SeededRNGService(42);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1) return 0.5; // fail Tavern Brawl
+      if (callCount === 2) return 0.5; // fail Star-crossed Blessing
+      if (callCount === 3) return 0.5; // fail Lost Relic
+      if (callCount === 4) return 0.5; // fail Mysterious Patron
+      if (callCount === 5) return 0.01; // succeed Goblin Merchant
+      return originalNext();
+    };
+    (rng as any).next = mockNext;
+
+    const w: Partial<Warrior> = {
+      id: 'w-goblin' as WarriorId,
+      name: 'Trader',
+      status: 'Active',
+      xp: 10,
+    };
+    const state: Partial<GameState> = {
+      roster: [w as Warrior],
+      newsletter: [],
+      treasury: 100,
+    };
+
+    const impact = runEventPass(state as GameState, 4, rng);
+    const nextState = resolveImpacts(state as GameState, [impact]);
+
+    // Impact checks
+    expect(impact.treasuryDelta).toBe(-20);
+    expect(impact.ledgerEntries?.[0]?.amount).toBe(-20);
+
+    // State checks
+    const warrior = nextState.roster.find((r: Warrior) => r.id === 'w-goblin');
+    expect(warrior?.xp).toBe(15);
+    expect(nextState.treasury).toBe(80);
+
+    const newsletter = nextState.newsletter?.[0];
+    expect(newsletter?.title).toBe('Goblin Merchant');
+    expect(newsletter?.items[0]).toContain('traded some scrap');
   });
 });

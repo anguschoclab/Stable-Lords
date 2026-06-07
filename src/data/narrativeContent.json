@@ -1439,6 +1439,12 @@
       "newsletter": [
         "{{name}} snuck out for a legendary midnight feast! The resulting food coma lasted for days, but the stories are incredible. (+{{xp}} XP, +{{fame}} Fame, -{{gold}} Gold)"
       ]
+    },
+    "goblin_merchant": {
+      "title": "Goblin Merchant",
+      "newsletter": [
+        "A shady goblin merchant visited the stables! {{name}} traded some scrap for a curious trinket. (+{{xp}} XP, -20 Gold)"
+      ]
     }
   },
   "gazette": {

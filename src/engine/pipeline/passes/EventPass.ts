@@ -152,10 +152,43 @@ export function runEventPass(
     }
   }
 
+  // 👺 Goblin Merchant Event
+  if (brawlRng.next() < 0.04 && (state.treasury || 0) + treasuryDelta >= 20 && state.roster.length > 0) {
+    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    if (activeWarriors.length > 0) {
+      const chosen = brawlRng.pick(activeWarriors);
+      const e = events.goblin_merchant;
+      if (chosen && e) {
+        const existingUpdate = rosterUpdates.get(chosen.id) || {};
+        rosterUpdates.set(chosen.id, {
+          ...existingUpdate,
+          xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 5,
+        });
+
+        treasuryDelta -= 20;
+        ledgerEntries.push({
+          id: brawlRng.uuid('ledger') as LedgerEntryId,
+          week: nextWeek,
+          label: 'Goblin Merchant',
+          amount: -20,
+          category: 'other',
+        });
+
+        newsletterItems.push({
+          id: brawlRng.uuid('newsletter'),
+          week: nextWeek,
+          title: e.title,
+          items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, xp: 5 })],
+          category: 'event',
+        });
+      }
+    }
+  }
+
   return {
     rosterUpdates,
     newsletterItems,
     ...(ledgerEntries.length > 0 ? { ledgerEntries } : {}),
-    ...(treasuryDelta > 0 ? { treasuryDelta } : {}),
+    ...(treasuryDelta !== 0 ? { treasuryDelta } : {}),
   };
 }

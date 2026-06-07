@@ -178,6 +178,14 @@ const WEATHER_METADATA = {
     description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
     stats: 'INITIATIVE +8 // RIPOSTE +3 // DAMAGE 130% // STAMINA CONSERVATION 20%',
   },
+  Mirage: {
+    icon: Sun,
+    color: 'text-arena-gold',
+    bg: 'bg-arena-gold/10',
+    border: 'border-arena-gold/20',
+    description: 'Shimmering heat distortions create optical illusions. Fighters struggle to judge distance.',
+    stats: 'INITIATIVE -5 // RIPOSTE -2 // DAMAGE 90% // STAMINA DRAIN 110%',
+  },
 }; /**
  * Weather widget.
  * @returns The result.

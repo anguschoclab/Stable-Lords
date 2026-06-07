@@ -19,6 +19,8 @@ export function calculateArenaLeaderboard(
   playerStableName: string,
   limit = 10
 ): ArenaLeaderboardEntry[] {
+  if (limit <= 0) return [];
+
   const top: ArenaLeaderboardEntry[] = [];
 
   const insert = (entry: ArenaLeaderboardEntry) => {

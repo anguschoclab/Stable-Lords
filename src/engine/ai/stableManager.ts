@@ -2,6 +2,7 @@ import type {
   GameState,
   RivalStableData,
   Trainer,
+  Warrior,
 } from '@/types/state.types';
 import { processStaff } from './workers/staffWorker';
 import { processRoster } from './workers/rosterWorker';
@@ -38,7 +39,7 @@ export function processAIStable(
   const impacts: StateImpact[] = [];
 
   // ── Fatigue Decay & HP Recovery for AI Warriors ──
-  updatedRival.roster = updatedRival.roster.map((w) => {
+  updatedRival.roster = updatedRival.roster.map((w): Warrior => {
     if (w.status === 'Active') {
       const fatigue = Math.max(0, (w.fatigue || 0) - 25);
       const currentHP = w.derivedStats?.hp ?? 100;
@@ -46,8 +47,8 @@ export function processAIStable(
       return {
         ...w,
         fatigue,
-        derivedStats: { ...w.derivedStats, hp },
-      };
+        derivedStats: { ...(w.derivedStats || {}), hp },
+      } as Warrior;
     }
     return w;
   });
@@ -58,16 +59,15 @@ export function processAIStable(
   // calling `RivalStrategyPass`. That means `state.arenaHistory` already
   // reflects this week's bouts when we read it here — no stale N-1 income.
   // FightSummary records the participants' stable identity in `stableIdA`/`stableIdD`
-  // (set by createFightSummary). The legacy `stableA`/`stableD` fields are
-  // never populated, and the comparison should match the rival's `id` (StableId),
+  // (set by createFightSummary). The comparison should match the rival's `id` (StableId).
   // Some parts of the codebase might still be using the old stable format or
   // populated the 'owner.id' instead of the stable 'id' for the stable identifier,
   // so we check both 'updatedRival.id' and 'updatedRival.owner.id' against the FightSummary stable.
   let weeklyIncome = 0;
   const weekFights = state.arenaHistory.filter((f) => f.week === state.week);
   for (const f of weekFights) {
-    const stableA = f.stableIdA ?? f.stableA;
-    const stableD = f.stableIdD ?? f.stableD;
+    const stableA = f.stableIdA;
+    const stableD = f.stableIdD;
     const isOwnerA = updatedRival.id === stableA || updatedRival.owner.id === stableA;
     const isOwnerD = updatedRival.id === stableD || updatedRival.owner.id === stableD;
     if (isOwnerA || isOwnerD) {
@@ -152,7 +152,7 @@ export function processAIStable(
   updatedRival = consolidateAgentMemory(updatedRival, state.week);
 
   // Collect impact for this rival
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
+  const rivalsUpdates = new Map<import('@/types/shared.types').StableId, Partial<RivalStableData>>();
   rivalsUpdates.set(rival.id, updatedRival);
   impacts.push({ rivalsUpdates });
 

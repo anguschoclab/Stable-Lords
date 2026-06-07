@@ -136,10 +136,10 @@ describe('Scheduling Assistant Engine', () => {
   ): FightSummary => ({
     id: `fight-${playerId}-${rivalId}-${week}` as any,
     week,
-    a: 'Attacker',
-    d: 'Defender',
     warriorIdA: playerId as any,
     warriorIdD: rivalId as any,
+    stableIdA: 'stable-a' as any,
+    stableIdD: 'stable-d' as any,
     styleA: FightingStyle.BashingAttack,
     styleD: FightingStyle.TotalParry,
     winner,

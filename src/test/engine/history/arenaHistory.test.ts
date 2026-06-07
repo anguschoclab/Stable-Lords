@@ -7,10 +7,10 @@ describe('ArenaHistory persistence error handling', () => {
   const createMockFight = (overrides: Partial<FightSummary>): FightSummary => ({
     id: 'mock-id' as any,
     title: 'Mock Fight',
-    a: 'Attacker',
-    d: 'Defender',
     warriorIdA: 'attacker-id' as any,
     warriorIdD: 'defender-id' as any,
+    stableIdA: 'stable-a' as any,
+    stableIdD: 'stable-d' as any,
     winner: 'A',
     by: 'KO',
     styleA: FightingStyle.StrikingAttack,

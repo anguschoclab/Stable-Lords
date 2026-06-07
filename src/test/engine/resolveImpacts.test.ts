@@ -76,10 +76,10 @@ function makeFightSummary(id: string = 'fight-1'): FightSummary {
   return {
     id: id as any,
     week: 1,
-    a: 'Alice',
-    d: 'Bob',
     warriorIdA: 'w1' as any,
     warriorIdD: 'w2' as any,
+    stableIdA: 's-a' as any,
+    stableIdD: 's-d' as any,
     styleA: FightingStyle.StrikingAttack,
     styleD: FightingStyle.TotalParry,
     winner: 'A',

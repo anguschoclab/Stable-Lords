@@ -203,8 +203,6 @@ describe('aiDraftFromPool', () => {
             id: 'fight1' as FightId,
             week: 1,
             title: 'Test Fight',
-            a: 'Warrior A',
-            d: 'Warrior D',
             warriorIdA: 'w1' as any,
             warriorIdD: 'w2' as any,
             winner: 'A',

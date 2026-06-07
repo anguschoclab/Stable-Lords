@@ -31,8 +31,6 @@ describe('processAIStable', () => {
       id: 'fight-1' as any,
       week: 10, // Must match state.week
       title: 'A vs B',
-      a: 'Warrior A',
-      d: 'Warrior B',
       warriorIdA: 'warA' as any,
       warriorIdD: 'warB' as any,
       stableIdA: rivalId, // This stable

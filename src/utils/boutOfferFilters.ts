@@ -1,5 +1,13 @@
 import type { Warrior, BoutOffer } from '@/types/state.types';
 import type { Promoter } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
+
+const TIER_RANK: Record<string, number> = {
+  Local: 0,
+  Regional: 1,
+  National: 2,
+  Legendary: 3,
+};
 
 export interface FilteredOffersResult {
   thisWeekOffers: BoutOffer[];
@@ -41,12 +49,12 @@ export function filterAndSortOffers(
       offer.warriorIds.some((wId: string) =>
         roster.some((playerW: Warrior) => playerW.id === wId)
       ) &&
-      (offer.status === 'Proposed' || signedOfferIds.has(offer.id))
+      (offer.status === 'Proposed' || offer.status === 'Signed' || signedOfferIds.has(offer.id))
   );
 
   // Filter by selected warrior if any
   const filtered = selectedWarriorId
-    ? playerOffers.filter((o) => o.warriorIds.includes(selectedWarriorId as any))
+    ? playerOffers.filter((o) => o.warriorIds.includes(selectedWarriorId as WarriorId))
     : playerOffers;
 
   // Split into this week and upcoming
@@ -64,8 +72,10 @@ export function filterAndSortOffers(
   const upcoming = bestByPromoter(upcomingRaw);
 
   // Sort this week by promoter tier
-  thisWeek.sort((a, b) =>
-    (promoters[b.promoterId]?.tier ?? '') > (promoters[a.promoterId]?.tier ?? '') ? 1 : -1
+  thisWeek.sort(
+    (a, b) =>
+      (TIER_RANK[promoters[b.promoterId]?.tier ?? ''] ?? 0) -
+      (TIER_RANK[promoters[a.promoterId]?.tier ?? ''] ?? 0)
   );
 
   // Sort upcoming by bout week

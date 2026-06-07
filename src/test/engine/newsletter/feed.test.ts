@@ -11,7 +11,7 @@ describe('NewsletterFeed', () => {
     setMockIdGenerator(() => 'mock-id');
   });
 
-  const createMockCard = (overrides: Partial<FightSummary> = {}): FightCard => ({
+  const createMockCard = (overrides: any = {}): FightCard => ({
     summary: makeFightSummary(overrides),
     transcript: [],
   });
@@ -72,8 +72,9 @@ describe('NewsletterFeed', () => {
   it('should compute top movers based on fame + pop delta', () => {
     NewsletterFeed.appendFightResult(
       createMockCard({
-        a: 'Fighter 1',
-        d: 'Fighter 2',
+        title: 'Fighter 1 vs Fighter 2',
+        warriorIdA: 'f1' as any,
+        warriorIdD: 'f2' as any,
         fameDeltaA: 10,
         popularityDeltaA: 5,
         fameDeltaD: -5,
@@ -82,8 +83,9 @@ describe('NewsletterFeed', () => {
     );
     NewsletterFeed.appendFightResult(
       createMockCard({
-        a: 'Fighter 3',
-        d: 'Fighter 1',
+        title: 'Fighter 3 vs Fighter 1',
+        warriorIdA: 'f3' as any,
+        warriorIdD: 'f1' as any,
         fameDeltaA: 20,
         popularityDeltaA: 10,
         fameDeltaD: 5,

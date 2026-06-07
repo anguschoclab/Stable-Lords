@@ -1,15 +1,14 @@
 import { cn } from '@/lib/utils';
-import { cryptoRandom } from '@/utils/cryptoRandom';/**
-                                                     * Arena tier type.
-                                                     */
-
+import { cryptoRandom } from '@/utils/cryptoRandom'; /**
+ * Arena tier type.
+ */
 
 /**
  * Arena tier type.
  */
-export type ArenaTier = 'training' | 'standard' | 'championship' | 'grand';/**
-                                                                            * Season type.
-                                                                            */
+export type ArenaTier = 'training' | 'standard' | 'championship' | 'grand'; /**
+ * Season type.
+ */
 
 /**
  * Season type.
@@ -105,7 +104,7 @@ const SEASON_MODIFIERS: Record<
     accentColor: '#DC143C',
     decorations: true,
   },
-};/**
+}; /**
    * Arena background.
    * @param  - {
   tier = 'standard',
@@ -116,7 +115,6 @@ const SEASON_MODIFIERS: Record<
 }.
    * @returns The result.
    */
-
 
 /**
  * Arena background.
@@ -268,4 +266,3 @@ function SeasonDecorations({ season, tier }: { season: Season; tier: ArenaTier }
     </div>
   );
 }
-

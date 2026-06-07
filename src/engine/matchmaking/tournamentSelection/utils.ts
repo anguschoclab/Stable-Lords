@@ -6,15 +6,14 @@ import { aiPlanForWarrior, defaultPlanForWarrior } from '@/engine';
 import { findWarriorById, clearWarriorCache } from '@/engine/core/warriorLookup';
 
 // Re-export for backward compatibility
-export { findWarriorById, clearWarriorCache };/**
-                                               * Get ai plan.
-                                               * @param state - State.
-                                               * @param w - W.
-                                               * @param opponentStyle - Opponent style. (optional)
-                                               * @param opponentOwnerId - Opponent owner id. (optional)
-                                               * @returns The result.
-                                               */
-
+export { findWarriorById, clearWarriorCache }; /**
+ * Get ai plan.
+ * @param state - State.
+ * @param w - W.
+ * @param opponentStyle - Opponent style. (optional)
+ * @param opponentOwnerId - Opponent owner id. (optional)
+ * @returns The result.
+ */
 
 /**
  * Get ai plan.
@@ -53,14 +52,13 @@ export function getAIPlan(
     rival.strategy?.intent,
     grudgeIntensity
   );
-}/**
-  * Generate freelancer.
-  * @param tier - Tier.
-  * @param index - Index.
-  * @param rng - Rng.
-  * @returns The result.
-  */
-
+} /**
+ * Generate freelancer.
+ * @param tier - Tier.
+ * @param index - Index.
+ * @param rng - Rng.
+ * @returns The result.
+ */
 
 /**
  * Generate freelancer.

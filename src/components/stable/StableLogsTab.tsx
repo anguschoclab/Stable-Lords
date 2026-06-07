@@ -25,8 +25,7 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
           recentBouts.map((f) => {
             const n = getNamesFromTitle(f.title);
             const isStableA = stableWarriorIds.has(f.warriorIdA);
-            const won =
-              (f.winner === 'A' && isStableA) || (f.winner === 'D' && !isStableA);
+            const won = (f.winner === 'A' && isStableA) || (f.winner === 'D' && !isStableA);
             return (
               <div
                 key={f.id}
@@ -49,21 +48,15 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
                         name={n.a}
                         className={cn(
                           'text-[11px] font-black uppercase tracking-widest',
-                          won && isStableA
-                            ? 'text-foreground'
-                            : 'text-muted-foreground/40'
+                          won && isStableA ? 'text-foreground' : 'text-muted-foreground/40'
                         )}
                       />
-                      <span className="text-[9px] font-black text-muted-foreground/20">
-                        vs
-                      </span>
+                      <span className="text-[9px] font-black text-muted-foreground/20">vs</span>
                       <WarriorLink
                         name={n.d}
                         className={cn(
                           'text-[11px] font-black uppercase tracking-widest',
-                          won && !isStableA
-                            ? 'text-foreground'
-                            : 'text-muted-foreground/40'
+                          won && !isStableA ? 'text-foreground' : 'text-muted-foreground/40'
                         )}
                       />
                     </div>

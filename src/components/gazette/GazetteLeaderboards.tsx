@@ -29,12 +29,11 @@ import {
 
 interface LeaderboardProps {
   allFights: import('@/types/game').FightSummary[];
-}/**
-  * Gazette leaderboard.
-  * @param - { all fights }.
-  * @returns The result.
-  */
-
+} /**
+ * Gazette leaderboard.
+ * @param - { all fights }.
+ * @returns The result.
+ */
 
 /**
  * Gazette leaderboard.
@@ -157,12 +156,11 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
       </div>
     </Surface>
   );
-}/**
-  * Best by style.
-  * @param - { all fights }.
-  * @returns The result.
-  */
-
+} /**
+ * Best by style.
+ * @param - { all fights }.
+ * @returns The result.
+ */
 
 /**
  * Best by style.
@@ -228,12 +226,11 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
       </div>
     </Surface>
   );
-}/**
-  * Rising stars.
-  * @param - { all fights }.
-  * @returns The result.
-  */
-
+} /**
+ * Rising stars.
+ * @param - { all fights }.
+ * @returns The result.
+ */
 
 /**
  * Rising stars.

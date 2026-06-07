@@ -114,44 +114,27 @@ describe('isTooInjuredToFight', () => {
 
   describe('multiple injury combinations', () => {
     it('returns true when multiple injuries include one severe with >2 weeks', () => {
-      const injuries = [
-        makeInjury('Minor', 1),
-        makeInjury('Moderate', 2),
-        makeInjury('Severe', 5),
-      ];
+      const injuries = [makeInjury('Minor', 1), makeInjury('Moderate', 2), makeInjury('Severe', 5)];
       expect(isTooInjuredToFight(injuries)).toBe(true);
     });
 
     it('returns false when multiple injuries but none are severe with >2 weeks', () => {
-      const injuries = [
-        makeInjury('Minor', 1),
-        makeInjury('Moderate', 2),
-        makeInjury('Severe', 2),
-      ];
+      const injuries = [makeInjury('Minor', 1), makeInjury('Moderate', 2), makeInjury('Severe', 2)];
       expect(isTooInjuredToFight(injuries)).toBe(false);
     });
 
     it('returns true when multiple severe injuries, at least one with >2 weeks', () => {
-      const injuries = [
-        makeInjury('Severe', 1),
-        makeInjury('Severe', 5),
-      ];
+      const injuries = [makeInjury('Severe', 1), makeInjury('Severe', 5)];
       expect(isTooInjuredToFight(injuries)).toBe(true);
     });
 
     it('returns false when multiple severe injuries but all have <=2 weeks', () => {
-      const injuries = [
-        makeInjury('Severe', 1),
-        makeInjury('Severe', 2),
-      ];
+      const injuries = [makeInjury('Severe', 1), makeInjury('Severe', 2)];
       expect(isTooInjuredToFight(injuries)).toBe(false);
     });
 
     it('short-circuits on first matching injury (some() behavior)', () => {
-      const injuries = [
-        makeInjury('Severe', 10),
-        makeInjury('Severe', 1),
-      ];
+      const injuries = [makeInjury('Severe', 10), makeInjury('Severe', 1)];
       expect(isTooInjuredToFight(injuries)).toBe(true);
     });
   });

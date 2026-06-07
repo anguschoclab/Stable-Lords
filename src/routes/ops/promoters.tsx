@@ -3,10 +3,9 @@
  * Directory of all promoters in the realm
  */
 import { createFileRoute } from '@tanstack/react-router';
-import PromoterDirectory from '@/pages/PromoterDirectory';/**
-                                                           * Route.
-                                                           */
-
+import PromoterDirectory from '@/pages/PromoterDirectory'; /**
+ * Route.
+ */
 
 /**
  * Route.

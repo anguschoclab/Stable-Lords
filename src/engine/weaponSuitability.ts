@@ -47,46 +47,51 @@ const COLUMN_ORDER: FightingStyle[] = [
 // favorite ("can't go wrong") weapon — mirrors weapons.ts favoredStyles.
 const RAW_ROWS: Record<string, Row> = {
   //              AIM   BAS   LUN   PLU   PRP   PST   STR   SLA   TPS   WOS
-  fist:          ['W',  'W',  'U',  'U',  'U',  'W',  'W',  'U',  'U',  'U'],
-  dagger:        ['W',  'U',  'M',  'U',  'U',  'W',  'W',  'M',  'W',  'U'],
-  short_sword:   ['W',  'U',  'W',  'W',  'W',  'CW', 'W',  'W',  'W',  'U'],
-  hatchet:       ['M',  'U',  'U',  'U',  'W',  'W',  'W',  'W',  'W',  'U'],
-  epee:          ['W',  'U',  'W',  'W',  'CW', 'W',  'W',  'W',  'W',  'U'],
-  scimitar:      ['W',  'U',  'M',  'W',  'W',  'W',  'W',  'CW', 'W',  'W'],
-  short_spear:   ['W',  'U',  'CW', 'W',  'W',  'W',  'W',  'U',  'M',  'U'],
-  longsword:     ['W',  'U',  'W',  'CW', 'W',  'W',  'W',  'W',  'W',  'U'], // LO = Long Sword
-  broadsword:    ['M',  'M',  'U',  'M',  'U',  'W',  'CW', 'W',  'W',  'W'],
-  quarterstaff:  ['CW', 'W',  'U',  'U',  'U',  'W',  'W',  'U',  'W',  'W'],
-  long_spear:    ['W',  'U',  'W',  'W',  'W',  'W',  'W',  'U',  'W',  'U'], // LS = Long Spear
-  war_hammer:    ['U',  'W',  'U',  'U',  'U',  'W',  'W',  'U',  'W',  'U'],
-  mace:          ['U',  'CW', 'U',  'U',  'U',  'M',  'W',  'U',  'M',  'U'],
-  war_flail:     ['U',  'W',  'U',  'U',  'U',  'M',  'W',  'U',  'U',  'W'],
-  morning_star:  ['U',  'W',  'U',  'U',  'U',  'M',  'W',  'U',  'U',  'CW'],
-  great_axe:     ['U',  'W',  'U',  'U',  'U',  'U',  'W',  'W',  'U',  'W'],
-  battle_axe:    ['U',  'M',  'U',  'U',  'U',  'W',  'W',  'W',  'W',  'W'],
-  greatsword:    ['U',  'W',  'U',  'U',  'U',  'W',  'W',  'M',  'W',  'W'],
-  maul:          ['U',  'W',  'U',  'U',  'U',  'U',  'W',  'U',  'U',  'U'],
-  halberd:       ['U',  'W',  'M',  'U',  'U',  'U',  'W',  'U',  'U',  'U'],
+  fist: ['W', 'W', 'U', 'U', 'U', 'W', 'W', 'U', 'U', 'U'],
+  dagger: ['W', 'U', 'M', 'U', 'U', 'W', 'W', 'M', 'W', 'U'],
+  short_sword: ['W', 'U', 'W', 'W', 'W', 'CW', 'W', 'W', 'W', 'U'],
+  hatchet: ['M', 'U', 'U', 'U', 'W', 'W', 'W', 'W', 'W', 'U'],
+  epee: ['W', 'U', 'W', 'W', 'CW', 'W', 'W', 'W', 'W', 'U'],
+  scimitar: ['W', 'U', 'M', 'W', 'W', 'W', 'W', 'CW', 'W', 'W'],
+  short_spear: ['W', 'U', 'CW', 'W', 'W', 'W', 'W', 'U', 'M', 'U'],
+  longsword: ['W', 'U', 'W', 'CW', 'W', 'W', 'W', 'W', 'W', 'U'], // LO = Long Sword
+  broadsword: ['M', 'M', 'U', 'M', 'U', 'W', 'CW', 'W', 'W', 'W'],
+  quarterstaff: ['CW', 'W', 'U', 'U', 'U', 'W', 'W', 'U', 'W', 'W'],
+  long_spear: ['W', 'U', 'W', 'W', 'W', 'W', 'W', 'U', 'W', 'U'], // LS = Long Spear
+  war_hammer: ['U', 'W', 'U', 'U', 'U', 'W', 'W', 'U', 'W', 'U'],
+  mace: ['U', 'CW', 'U', 'U', 'U', 'M', 'W', 'U', 'M', 'U'],
+  war_flail: ['U', 'W', 'U', 'U', 'U', 'M', 'W', 'U', 'U', 'W'],
+  morning_star: ['U', 'W', 'U', 'U', 'U', 'M', 'W', 'U', 'U', 'CW'],
+  great_axe: ['U', 'W', 'U', 'U', 'U', 'U', 'W', 'W', 'U', 'W'],
+  battle_axe: ['U', 'M', 'U', 'U', 'U', 'W', 'W', 'W', 'W', 'W'],
+  greatsword: ['U', 'W', 'U', 'U', 'U', 'W', 'W', 'M', 'W', 'W'],
+  maul: ['U', 'W', 'U', 'U', 'U', 'U', 'W', 'U', 'U', 'U'],
+  halberd: ['U', 'W', 'M', 'U', 'U', 'U', 'W', 'U', 'U', 'U'],
   // Shields — derived from each shield's gear suitability in weapons.ts.
   //              AIM   BAS   LUN   PLU   PRP   PST   STR   SLA   TPS   WOS
-  small_shield:  ['M',  'M',  'M',  'W',  'W',  'W',  'M',  'M',  'M',  'M'],
-  medium_shield: ['U',  'M',  'M',  'M',  'M',  'W',  'M',  'M',  'CW', 'W'],
-  large_shield:  ['U',  'M',  'U',  'M',  'M',  'M',  'M',  'U',  'CW', 'M'],
+  small_shield: ['M', 'M', 'M', 'W', 'W', 'W', 'M', 'M', 'M', 'M'],
+  medium_shield: ['U', 'M', 'M', 'M', 'M', 'W', 'M', 'M', 'CW', 'W'],
+  large_shield: ['U', 'M', 'U', 'M', 'M', 'M', 'M', 'U', 'CW', 'M'],
 };
 
 /** Expanded matrix: weaponId → (style → suitability). */
-export const WEAPON_STYLE_SUITABILITY: Record<string, Partial<Record<FightingStyle, WeaponSuitability>>> =
-  Object.fromEntries(
-    Object.entries(RAW_ROWS).map(([weaponId, row]) => [
-      weaponId,
-      Object.fromEntries(COLUMN_ORDER.map((style, i) => [style, row[i]])),
-    ])
-  );
+export const WEAPON_STYLE_SUITABILITY: Record<
+  string,
+  Partial<Record<FightingStyle, WeaponSuitability>>
+> = Object.fromEntries(
+  Object.entries(RAW_ROWS).map(([weaponId, row]) => [
+    weaponId,
+    Object.fromEntries(COLUMN_ORDER.map((style, i) => [style, row[i]])),
+  ])
+);
 
 /**
  * Suitability of a weapon for a fighting style. Unknown / unrated ids default to Marginal.
  */
-export function getWeaponSuitability(weaponId: string | undefined, style: FightingStyle): WeaponSuitability {
+export function getWeaponSuitability(
+  weaponId: string | undefined,
+  style: FightingStyle
+): WeaponSuitability {
   if (!weaponId) return 'M';
   return WEAPON_STYLE_SUITABILITY[weaponId]?.[style] ?? 'M';
 }

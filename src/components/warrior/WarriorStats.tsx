@@ -2,7 +2,7 @@ import { type Warrior } from '@/types/game';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { growthNarrative } from './GrowthHelpers';
 import { generateWarriorStatements } from '@/data/warriorStatements';
-import { StatBattery } from '@/components/ui/StatBattery';/**
+import { StatBattery } from '@/components/ui/StatBattery'; /**
                                                            * Attr bar.
                                                            * @param  - {
   label,
@@ -12,7 +12,6 @@ import { StatBattery } from '@/components/ui/StatBattery';/**
 }.
                                                            * @returns The result.
                                                            */
-
 
 /**
  * Attr bar.
@@ -61,7 +60,7 @@ export function AttrBar({
       <StatBattery label="" value={value} max={max} className="[&>span:first-child]:hidden" />
     </div>
   );
-}/**
+} /**
   * Render the SkillBar component.
   * @param  - {
   label,
@@ -70,7 +69,6 @@ export function AttrBar({
 }.
   * @returns The result.
   */
-
 
 /**
  * Render the SkillBar component.
@@ -91,12 +89,11 @@ export function SkillBar({
   max?: number;
 }) {
   return <StatBattery label={label} value={value} max={max} />;
-}/**
-  * Render the WarriorStatementsPanel component.
-  * @param - { warrior }.
-  * @returns The result.
-  */
-
+} /**
+ * Render the WarriorStatementsPanel component.
+ * @param - { warrior }.
+ * @returns The result.
+ */
 
 /**
  * Render the WarriorStatementsPanel component.
@@ -129,7 +126,10 @@ export function WarriorStatementsPanel({ warrior }: { warrior: Warrior }) {
   return (
     <ul className="space-y-1.5">
       {lines.map((line, i) => (
-        <li key={`${line.slice(0, 30)}-${i}`} className="text-xs text-muted-foreground italic leading-relaxed">
+        <li
+          key={`${line.slice(0, 30)}-${i}`}
+          className="text-xs text-muted-foreground italic leading-relaxed"
+        >
           • {line}
         </li>
       ))}

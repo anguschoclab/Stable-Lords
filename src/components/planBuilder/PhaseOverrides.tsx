@@ -8,12 +8,11 @@ import type { FightPlan } from '@/types/game';
 interface PhaseOverridesProps {
   plan: FightPlan;
   onPlanChange: (plan: FightPlan) => void;
-}/**
-  * Phase overrides.
-  * @param - { plan, on plan change }.
-  * @returns The result.
-  */
-
+} /**
+ * Phase overrides.
+ * @param - { plan, on plan change }.
+ * @returns The result.
+ */
 
 /**
  * Phase overrides.

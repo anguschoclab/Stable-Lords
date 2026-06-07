@@ -19,10 +19,7 @@ import {
   detectDebuts,
   type GazetteDetections,
 } from './gazetteDetections';
-import {
-  generateGazetteHeadline,
-  generateGazetteBody,
-} from './gazetteNarrative';
+import { generateGazetteHeadline, generateGazetteBody } from './gazetteNarrative';
 
 /**
  * Generates a weekly gazette from fight data.
@@ -41,7 +38,9 @@ export function generateWeeklyGazette(
   const tone = MOOD_TONE[moodKey];
 
   // Run all detections
-  const streaks = allFights ? computeStreaks(allFights) : new Map<import('@/types/shared.types').WarriorId, number>();
+  const streaks = allFights
+    ? computeStreaks(allFights)
+    : new Map<import('@/types/shared.types').WarriorId, number>();
   const hotStreakers = detectHotStreakers(fights, streaks);
   const rivalryPair = detectRivalryMatchup(fights, allFights ?? []);
   const risingStars = detectRisingStars(fights, allFights ?? []);

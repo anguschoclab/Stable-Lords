@@ -3,10 +3,9 @@
  * Shows rival stable identity, owner, roster, career records
  */
 import { createFileRoute } from '@tanstack/react-router';
-import StableDetail from '@/pages/StableDetail';/**
-                                                 * Route.
-                                                 */
-
+import StableDetail from '@/pages/StableDetail'; /**
+ * Route.
+ */
 
 /**
  * Route.

@@ -11,7 +11,11 @@ import type { ResolutionContext } from './types';
  * We snapshot the static base mods on exchange 0 and always diff from that snapshot,
  * so each exchange gets a fresh specialty computation without compounding.
  */
-export function applySpecialtyMods(ctx: ResolutionContext, fA: FighterState, fD: FighterState): void {
+export function applySpecialtyMods(
+  ctx: ResolutionContext,
+  fA: FighterState,
+  fD: FighterState
+): void {
   if (ctx.trainers?.length) {
     if (!ctx.baseTrainerModsA) ctx.baseTrainerModsA = { ...ctx.trainerModsA };
     if (!ctx.baseTrainerModsD) ctx.baseTrainerModsD = { ...ctx.trainerModsD };

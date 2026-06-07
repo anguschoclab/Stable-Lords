@@ -18,10 +18,8 @@ export function stripNonSerializable<
     cachedMetaDrift?: unknown;
     warriorToStableMap?: unknown;
     rivalMap?: unknown;
-  }
->(
-  state: T
-): Omit<T, 'warriorMap' | 'cachedMetaDrift' | 'warriorToStableMap' | 'rivalMap'> {
+  },
+>(state: T): Omit<T, 'warriorMap' | 'cachedMetaDrift' | 'warriorToStableMap' | 'rivalMap'> {
   const { warriorMap, cachedMetaDrift, warriorToStableMap, rivalMap, ...rest } = state; // eslint-disable-line @typescript-eslint/no-unused-vars
   return rest;
 }

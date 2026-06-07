@@ -6,12 +6,11 @@ import narrativeContent from '@/data/narrativeContent.json';
 
 interface GazetteStepProps {
   gazette: NewsletterItem[];
-}/**
-  * Gazette step.
-  * @param - { gazette }.
-  * @returns The result.
-  */
-
+} /**
+ * Gazette step.
+ * @param - { gazette }.
+ * @returns The result.
+ */
 
 /**
  * Gazette step.
@@ -35,11 +34,17 @@ export function GazetteStep({ gazette }: GazetteStepProps) {
         {gazette.length > 0 ? (
           <div className="space-y-6">
             {gazette.map((item: NewsletterItem, i: number) => (
-              <div key={`${item.title.slice(0, 30)}-${i}`} className="space-y-2 border-l-2 border-primary/50 pl-4">
+              <div
+                key={`${item.title.slice(0, 30)}-${i}`}
+                className="space-y-2 border-l-2 border-primary/50 pl-4"
+              >
                 <h4 className="text-lg font-bold font-display leading-tight">{item.title}</h4>
                 <ul className="list-disc list-inside space-y-1">
                   {item.items.map((line: string, li: number) => (
-                    <li key={`${line.slice(0, 30)}-${li}`} className="text-sm text-muted-foreground">
+                    <li
+                      key={`${line.slice(0, 30)}-${li}`}
+                      className="text-sm text-muted-foreground"
+                    >
                       {line}
                     </li>
                   ))}

@@ -15,10 +15,9 @@ function RouterHooks() {
   useKeyboardShortcuts({ onToggleSidebar: toggleEventLog });
 
   return null;
-}/**
-  * Route.
-  */
-
+} /**
+ * Route.
+ */
 
 /**
  * Route.

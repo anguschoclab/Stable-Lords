@@ -12,10 +12,9 @@ import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { shuffled } from '@/utils/random';
-import { cryptoRandomInt } from '@/utils/cryptoRandom';/**
-                                                        * Defines the shape of orphan warrior.
-                                                        */
-
+import { cryptoRandomInt } from '@/utils/cryptoRandom'; /**
+ * Defines the shape of orphan warrior.
+ */
 
 /**
  * Defines the shape of orphan warrior.
@@ -46,13 +45,12 @@ function pick<T>(arr: T[], rng: () => number): T {
   return arr[Math.floor(rng() * arr.length)];
 }
 
-const TRAIT_IDS = Object.keys(TRAITS);/**
-                                       * Generate orphan pool.
-                                       * @param count - Count.
-                                       * @param seed - Seed. (optional)
-                                       * @returns The result.
-                                       */
-
+const TRAIT_IDS = Object.keys(TRAITS); /**
+ * Generate orphan pool.
+ * @param count - Count.
+ * @param seed - Seed. (optional)
+ * @returns The result.
+ */
 
 // ── Generation Logic ─────────────────────────────────────────────────────
 

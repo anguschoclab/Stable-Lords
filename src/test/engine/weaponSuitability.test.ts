@@ -23,7 +23,7 @@ describe('weaponSuitability', () => {
       expect(getWeaponSuitability('dagger', FightingStyle.AimedBlow)).toBe('W');
     });
 
-    it('marks each style favorite as CW (Can\'t-go-Wrong)', () => {
+    it("marks each style favorite as CW (Can't-go-Wrong)", () => {
       // The classic favorite weapon for each style is the top tier
       expect(getWeaponSuitability('broadsword', FightingStyle.StrikingAttack)).toBe('CW');
       expect(getWeaponSuitability('mace', FightingStyle.BashingAttack)).toBe('CW');
@@ -67,7 +67,9 @@ describe('weaponSuitability', () => {
       for (const w of WEAPONS) {
         const preferred = new Set(w.preferredStyles ?? []);
         for (const style of w.favoredStyles ?? []) {
-          expect(preferred.has(style), `${w.id}/${style}: favored must also be preferred`).toBe(true);
+          expect(preferred.has(style), `${w.id}/${style}: favored must also be preferred`).toBe(
+            true
+          );
         }
       }
     });
@@ -84,11 +86,15 @@ describe('weaponSuitability', () => {
           if (rating === 'CW') {
             expect(favored.has(style), `${w.id}/${style}: CW must be in favoredStyles`).toBe(true);
           } else if (rating === 'W') {
-            expect(preferred.has(style), `${w.id}/${style}: W must be in preferredStyles`).toBe(true);
+            expect(preferred.has(style), `${w.id}/${style}: W must be in preferredStyles`).toBe(
+              true
+            );
             expect(favored.has(style), `${w.id}/${style}: W must not be favored`).toBe(false);
             expect(restricted.has(style), `${w.id}/${style}: W must not be restricted`).toBe(false);
           } else if (rating === 'U') {
-            expect(restricted.has(style), `${w.id}/${style}: U must be in restrictedStyles`).toBe(true);
+            expect(restricted.has(style), `${w.id}/${style}: U must be in restrictedStyles`).toBe(
+              true
+            );
             expect(preferred.has(style), `${w.id}/${style}: U must not be preferred`).toBe(false);
           } else {
             // Marginal: neither preferred nor restricted

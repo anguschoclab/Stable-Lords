@@ -147,7 +147,11 @@ describe('ArenaHistory persistence error handling', () => {
 
   describe('load() error handling', () => {
     it('returns empty array when localStorage is undefined', () => {
-      Object.defineProperty(global, 'localStorage', { value: undefined, configurable: true, writable: true });
+      Object.defineProperty(global, 'localStorage', {
+        value: undefined,
+        configurable: true,
+        writable: true,
+      });
       const result = ArenaHistory.all();
       expect(result).toEqual([]);
       // Restore localStorage for other tests

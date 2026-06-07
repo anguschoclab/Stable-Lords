@@ -263,9 +263,7 @@ describe('generateOwnerNarratives', () => {
           roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
-      arenaHistory: [
-        createMockFight({ week: 10, a: 'WarriorA', d: 'Other', winner: 'D' }),
-      ],
+      arenaHistory: [createMockFight({ week: 10, a: 'WarriorA', d: 'Other', winner: 'D' })],
       rivalries: [
         {
           id: 'riv1',

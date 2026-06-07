@@ -6,11 +6,7 @@ import { useState } from 'react';
 import { useLocation, Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ChevronUp,
-  ChevronDown,
-  AlertCircle,
-} from 'lucide-react';
+import { ChevronUp, ChevronDown, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -62,9 +58,7 @@ function TacticalBarHeader({
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-          W{week}
-        </span>
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">W{week}</span>
         <Button
           variant="ghost"
           size="icon"
@@ -197,9 +191,7 @@ export function TacticalBar() {
         onToggle={() => setExpanded(!expanded)}
       />
 
-      <AnimatePresence>
-        {expanded && <TacticalBarContent alerts={alerts} />}
-      </AnimatePresence>
+      <AnimatePresence>{expanded && <TacticalBarContent alerts={alerts} />}</AnimatePresence>
     </motion.div>
   );
 }

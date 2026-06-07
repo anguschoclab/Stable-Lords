@@ -11,14 +11,14 @@ export class RNGContext implements IRNGContext {
    * Constructor.
    * @param baseSeed - Base seed.
    */
-constructor(private baseSeed: number) {}
+  constructor(private baseSeed: number) {}
 
   /**
    * Get rng.
    * @param seed - Seed. (optional)
    * @returns The result.
    */
-getRNG(seed?: number): IRNGService {
+  getRNG(seed?: number): IRNGService {
     return new SeededRNGService(seed ?? this.baseSeed);
   }
 
@@ -27,7 +27,7 @@ getRNG(seed?: number): IRNGService {
    * @param seedOffset - Seed offset.
    * @returns The result.
    */
-createChild(seedOffset: number): IRNGContext {
+  createChild(seedOffset: number): IRNGContext {
     return new RNGContext(this.baseSeed + seedOffset);
   }
 
@@ -35,7 +35,7 @@ createChild(seedOffset: number): IRNGContext {
    * Get base seed.
    * @returns The result.
    */
-getBaseSeed(): number {
+  getBaseSeed(): number {
     return this.baseSeed;
   }
 }

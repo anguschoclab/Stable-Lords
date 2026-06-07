@@ -15,19 +15,32 @@ const mockRunBoutSimulationPass = vi.hoisted(() => vi.fn(() => ({})));
 vi.mock('@/engine/pipeline/passes/WarriorPass', () => ({ runWarriorPass: mockRunWarriorPass }));
 vi.mock('@/engine/pipeline/passes/EconomyPass', () => ({ runEconomyPass: mockRunEconomyPass }));
 vi.mock('@/engine/pipeline/passes/EquipmentPass', () => ({ runEquipmentPass: vi.fn(() => ({})) }));
-vi.mock('@/engine/pipeline/passes/RecruitmentPass', () => ({ runRecruitmentPass: vi.fn(() => ({})) }));
-vi.mock('@/engine/pipeline/passes/RivalStrategyPass', () => ({ runRivalStrategyPass: vi.fn(() => ({})) }));
-vi.mock('@/engine/pipeline/passes/WorldPass', () => ({ runWorldPass: vi.fn(() => ({})), computeNextSeason: vi.fn(() => 'Summer') }));
+vi.mock('@/engine/pipeline/passes/RecruitmentPass', () => ({
+  runRecruitmentPass: vi.fn(() => ({})),
+}));
+vi.mock('@/engine/pipeline/passes/RivalStrategyPass', () => ({
+  runRivalStrategyPass: vi.fn(() => ({})),
+}));
+vi.mock('@/engine/pipeline/passes/WorldPass', () => ({
+  runWorldPass: vi.fn(() => ({})),
+  computeNextSeason: vi.fn(() => 'Summer'),
+}));
 vi.mock('@/engine/pipeline/passes/SystemPass', () => ({ runSystemPass: vi.fn(() => ({})) }));
 vi.mock('@/engine/pipeline/passes/RankingsPass', () => ({ runRankingsPass: vi.fn(() => ({})) }));
 vi.mock('@/engine/pipeline/passes/PromoterPass', () => ({ runPromoterPass: vi.fn(() => ({})) }));
-vi.mock('@/engine/pipeline/passes/PromoterLifecyclePass', () => ({ runPromoterLifecyclePass: vi.fn(() => ({})) }));
+vi.mock('@/engine/pipeline/passes/PromoterLifecyclePass', () => ({
+  runPromoterLifecyclePass: vi.fn(() => ({})),
+}));
 vi.mock('@/engine/pipeline/passes/TrainerPass', () => ({ runTrainerPass: vi.fn(() => ({})) }));
 vi.mock('@/engine/pipeline/passes/EventPass', () => ({ runEventPass: vi.fn(() => ({})) }));
 vi.mock('@/engine/pipeline/passes/NarrativePass', () => ({ runNarrativePass: vi.fn(() => ({})) }));
 vi.mock('@/engine/pipeline/seasonal', () => ({ runSeasonalPass: vi.fn(() => ({})) }));
-vi.mock('@/engine/pipeline/passes/BoutSimulationPass', () => ({ runBoutSimulationPass: mockRunBoutSimulationPass }));
-vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({ archiveWeekLogs: mockArchiveWeekLogs }));
+vi.mock('@/engine/pipeline/passes/BoutSimulationPass', () => ({
+  runBoutSimulationPass: mockRunBoutSimulationPass,
+}));
+vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({
+  archiveWeekLogs: mockArchiveWeekLogs,
+}));
 vi.mock('@/engine/impacts', () => ({
   resolveImpacts: mockResolveImpacts,
   mergeImpacts: vi.fn((impacts: any) => impacts),

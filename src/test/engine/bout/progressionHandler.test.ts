@@ -15,7 +15,11 @@ describe('progressionHandler', () => {
       name: 'Warrior A',
       fame: 10,
       popularity: 5,
-      favorites: { weaponId: 'broadsword', rhythm: { oe: 5, al: 5 }, discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 } },
+      favorites: {
+        weaponId: 'broadsword',
+        rhythm: { oe: 5, al: 5 },
+        discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+      },
       flair: [],
       career: { wins: 5, losses: 3, kills: 1 },
       ...overrides,
@@ -29,17 +33,16 @@ describe('progressionHandler', () => {
       warriorToStableMap: new Map(),
       player: { id: 'player-1' as StableId },
       ...overrides,
-    } as unknown as GameState);
+    }) as unknown as GameState;
 
-  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome =>
-    ({
-      winner: 'A',
-      by: 'KO',
-      minutes: 5,
-      log: [],
-      post: { xpA: 100, xpD: 50 },
-      ...overrides,
-    });
+  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
+    winner: 'A',
+    by: 'KO',
+    minutes: 5,
+    log: [],
+    post: { xpA: 100, xpD: 50 },
+    ...overrides,
+  });
 
   describe('handleProgressions', () => {
     it('applies XP to both fighters', () => {
@@ -69,13 +72,13 @@ describe('progressionHandler', () => {
       const warriorId = 'rival-warrior' as WarriorId;
       const wA = createMockWarrior();
       const wD = createMockWarrior({ id: warriorId, name: 'Rival Warrior', stableId: rivalId });
-      
+
       const s = createMockState({
         roster: [],
         warriorToStableMap: new Map([[warriorId, { stableId: rivalId, isPlayer: false }]]),
         rivalMap: new Map([[rivalId, { id: rivalId, roster: [wD] } as unknown as RivalStableData]]),
       });
-      
+
       const outcome = createMockOutcome({ winner: 'A' });
 
       const result = handleProgressions(s, wA, wD, outcome, [], 1, rivalId);
@@ -114,7 +117,11 @@ describe('progressionHandler', () => {
 
     it('requires fame gap of 10+ for Giant Killer', () => {
       const wA = createMockWarrior({ fame: 10, flair: [] });
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'SlightlyFamous', fame: 15 }); // gap only 5
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'SlightlyFamous',
+        fame: 15,
+      }); // gap only 5
       const s = createMockState();
       const outcome = createMockOutcome({ winner: 'A' });
 
@@ -141,11 +148,33 @@ describe('progressionHandler', () => {
     });
 
     it('applies favorites discovery for both fighters', () => {
-      const wA = createMockWarrior({ favorites: { weaponId: 'broadsword', rhythm: { oe: 5, al: 5 }, discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 } } });
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', favorites: { weaponId: 'broadsword', rhythm: { oe: 5, al: 5 }, discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 } } });
+      const wA = createMockWarrior({
+        favorites: {
+          weaponId: 'broadsword',
+          rhythm: { oe: 5, al: 5 },
+          discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+        },
+      });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        favorites: {
+          weaponId: 'broadsword',
+          rhythm: { oe: 5, al: 5 },
+          discovered: { weapon: false, rhythm: false, weaponHints: 0, rhythmHints: 0 },
+        },
+      });
       const s = createMockState();
       const outcome = createMockOutcome();
-      const rng = { next: () => 0.5, uuid: () => 'uuid', pick: <T>(arr: T[]) => arr[0]!, roll: (min: number) => min, shuffle: <T>(arr: T[]) => arr, pickWeighted: <T>(items: T[]) => items[0]!, chance: () => false };
+      const rng = {
+        next: () => 0.5,
+        uuid: () => 'uuid',
+        pick: <T>(arr: T[]) => arr[0]!,
+        roll: (min: number) => min,
+        shuffle: <T>(arr: T[]) => arr,
+        pickWeighted: <T>(items: T[]) => items[0]!,
+        chance: () => false,
+      };
 
       const result = handleProgressions(s, wA, wD, outcome, [], 1, undefined, rng);
 

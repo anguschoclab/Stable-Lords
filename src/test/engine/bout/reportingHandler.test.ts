@@ -17,14 +17,13 @@ describe('reportingHandler', () => {
       ...overrides,
     }) as Warrior;
 
-  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome =>
-    ({
-      winner: 'A',
-      by: 'KO',
-      minutes: 5,
-      log: [],
-      ...overrides,
-    });
+  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
+    winner: 'A',
+    by: 'KO',
+    minutes: 5,
+    log: [],
+    ...overrides,
+  });
 
   describe('handleReporting', () => {
     it('generates FightSummary for bout outcome', () => {
@@ -77,9 +76,19 @@ describe('reportingHandler', () => {
       const wA = createMockWarrior();
       const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D' });
       const outcome = createMockOutcome();
-      const rng = { next: () => 0.5, uuid: () => 'uuid', pick: <T>(arr: T[]) => arr[0]!, roll: (min: number, max: number) => min, shuffle: <T>(arr: T[]) => arr, pickWeighted: <T>(items: { item: T; weight: number }[]) => items[0]?.item!, chance: (pct: number) => false };
+      const rng = {
+        next: () => 0.5,
+        uuid: () => 'uuid',
+        pick: <T>(arr: T[]) => arr[0]!,
+        roll: (min: number, max: number) => min,
+        shuffle: <T>(arr: T[]) => arr,
+        pickWeighted: <T>(items: { item: T; weight: number }[]) => items[0]?.item!,
+        chance: (pct: number) => false,
+      };
 
-      expect(() => handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1, undefined, false, 1, rng as any)).not.toThrow();
+      expect(() =>
+        handleReporting(wA, wD, outcome, [], 10, 5, 8, 4, 1, undefined, false, 1, rng as any)
+      ).not.toThrow();
     });
 
     it('returns consistent structure regardless of bout type', () => {

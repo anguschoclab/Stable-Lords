@@ -193,7 +193,7 @@ function Helmet({ metal }: { metal: string }): React.ReactNode {
       <circle cx="9" cy="4" r="0.8" fill={highlight} />
     </g>
   );
-}/**
+} /**
   * Stable crest.
   * @param  - {
   crest,
@@ -208,7 +208,6 @@ function Helmet({ metal }: { metal: string }): React.ReactNode {
 }.
   * @returns The result.
   */
-
 
 /**
  * Stable crest.

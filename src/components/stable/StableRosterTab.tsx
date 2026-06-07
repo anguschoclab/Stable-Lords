@@ -86,10 +86,7 @@ export function StableRosterTab({ activeRoster }: StableRosterTabProps) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-8">
                     <div className="flex items-center gap-3">
-                      <ConditionBattery
-                        value={100 - (w.fatigue ?? 0)}
-                        className="h-1.5 w-16"
-                      />
+                      <ConditionBattery value={100 - (w.fatigue ?? 0)} className="h-1.5 w-16" />
                       <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
                         Condition
                       </span>

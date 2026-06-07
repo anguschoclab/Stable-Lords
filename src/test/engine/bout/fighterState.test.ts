@@ -21,14 +21,13 @@ describe('fighterState', () => {
       ...overrides,
     }) as Warrior;
 
-  const createMockPlan = (overrides: Partial<FightPlan> = {}): FightPlan =>
-    ({
-      style: 'StrikingAttack' as FightingStyle,
-      OE: 5,
-      AL: 5,
-      killDesire: 5,
-      ...overrides,
-    });
+  const createMockPlan = (overrides: Partial<FightPlan> = {}): FightPlan => ({
+    style: 'StrikingAttack' as FightingStyle,
+    OE: 5,
+    AL: 5,
+    killDesire: 5,
+    ...overrides,
+  });
 
   describe('createFighterState', () => {
     it('creates fighter state with calculated skills', () => {
@@ -48,7 +47,14 @@ describe('fighterState', () => {
       const warriorNoInjuries = createMockWarrior();
       const warriorWithInjuries = createMockWarrior({
         injuries: [
-          { name: 'Sprained Wrist', description: 'test', severity: 'Minor', penalties: { ATT: -2, DF: -1 }, weeksRemaining: 2, id: 'inj-1' as InjuryId },
+          {
+            name: 'Sprained Wrist',
+            description: 'test',
+            severity: 'Minor',
+            penalties: { ATT: -2, DF: -1 },
+            weeksRemaining: 2,
+            id: 'inj-1' as InjuryId,
+          },
         ],
       });
       const plan = createMockPlan();
@@ -64,8 +70,22 @@ describe('fighterState', () => {
       const warriorNoInjuries = createMockWarrior();
       const warriorWithMultipleInjuries = createMockWarrior({
         injuries: [
-          { name: 'Injury1', description: 'test', severity: 'Minor', penalties: { ATT: -2 }, weeksRemaining: 2, id: 'inj-1' as InjuryId },
-          { name: 'Injury2', description: 'test', severity: 'Moderate', penalties: { ATT: -3, DEF: -2 }, weeksRemaining: 3, id: 'inj-2' as InjuryId },
+          {
+            name: 'Injury1',
+            description: 'test',
+            severity: 'Minor',
+            penalties: { ATT: -2 },
+            weeksRemaining: 2,
+            id: 'inj-1' as InjuryId,
+          },
+          {
+            name: 'Injury2',
+            description: 'test',
+            severity: 'Moderate',
+            penalties: { ATT: -3, DEF: -2 },
+            weeksRemaining: 3,
+            id: 'inj-2' as InjuryId,
+          },
         ],
       });
       const plan = createMockPlan();

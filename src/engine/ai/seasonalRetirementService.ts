@@ -12,10 +12,9 @@ interface LegacyCandidate {
   parentStableId?: string; // 🛡️ Track parent stable for crest inheritance
   warriorId?: string; // Lineage breadcrumb — mirrors Trainer.retiredFromWarrior
   fightingStyle?: import('@/types/shared.types').FightingStyle;
-}/**
-  * Seasonal retirement service.
-  */
-
+} /**
+ * Seasonal retirement service.
+ */
 
 /**
  * Seasonal retirement service.

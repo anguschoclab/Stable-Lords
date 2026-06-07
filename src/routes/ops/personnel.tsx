@@ -3,10 +3,9 @@
  * Trainers and Recruitment unified
  */
 import { createFileRoute } from '@tanstack/react-router';
-import Trainers from '@/pages/Trainers';/**
-                                         * Route.
-                                         */
-
+import Trainers from '@/pages/Trainers'; /**
+ * Route.
+ */
 
 /**
  * Route.

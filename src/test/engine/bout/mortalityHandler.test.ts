@@ -26,22 +26,25 @@ describe('mortalityHandler', () => {
       rivalMap: new Map(),
       rivalries: [],
       ...overrides,
-    } as unknown as GameState);
+    }) as unknown as GameState;
 
-  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome =>
-    ({
-      winner: 'A',
-      by: 'Kill',
-      minutes: 5,
-      log: [],
-      ...overrides,
-    });
+  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
+    winner: 'A',
+    by: 'Kill',
+    minutes: 5,
+    log: [],
+    ...overrides,
+  });
 
   describe('handleDeath', () => {
     it('returns no death for non-kill outcomes', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'KO' });
 
       const result = handleDeath(s, wA, wD, outcome, 1, []);
@@ -54,7 +57,11 @@ describe('mortalityHandler', () => {
     it('processes death for Kill outcome', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'Kill' });
 
       const result = handleDeath(s, wA, wD, outcome, 1, []);
@@ -67,7 +74,11 @@ describe('mortalityHandler', () => {
       const warrior = createMockWarrior({ id: 'player-warrior' as WarriorId });
       const s = createMockState({ roster: [warrior] });
       const wA = warrior;
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome: FightOutcome = {
         winner: 'D',
         by: 'Kill',
@@ -84,7 +95,11 @@ describe('mortalityHandler', () => {
     it('routes rival warrior death correctly', () => {
       const s = createMockState({ roster: [] });
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'rival-warrior' as WarriorId, name: 'Rival Warrior', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'rival-warrior' as WarriorId,
+        name: 'Rival Warrior',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'Kill' });
 
       const result = handleDeath(s, wA, wD, outcome, 1, []);
@@ -96,11 +111,22 @@ describe('mortalityHandler', () => {
     it('detects rivalry kill', () => {
       const s = createMockState({
         rivalries: [
-          { id: 'rivalry-1' as import('@/types/shared.types').RivalryId, stableIdA: 'player-1' as StableId, stableIdB: 'rival-1' as StableId, intensity: 5, reason: 'Insult', startWeek: 1 },
+          {
+            id: 'rivalry-1' as import('@/types/shared.types').RivalryId,
+            stableIdA: 'player-1' as StableId,
+            stableIdB: 'rival-1' as StableId,
+            intensity: 5,
+            reason: 'Insult',
+            startWeek: 1,
+          },
         ],
       });
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'rival-warrior' as WarriorId, name: 'Rival Warrior', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'rival-warrior' as WarriorId,
+        name: 'Rival Warrior',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'Kill', winner: 'A' });
 
       const result = handleDeath(s, wA, wD, outcome, 1, []);
@@ -111,7 +137,11 @@ describe('mortalityHandler', () => {
     it('includes cause of death info when available', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({
         by: 'Kill',
         post: { xpA: 100, xpD: 50, causeBucket: 'FATAL_DAMAGE', fatalHitLocation: 'Head' },
@@ -125,7 +155,11 @@ describe('mortalityHandler', () => {
     it('adds to graveyard on death', () => {
       const s = createMockState({ roster: [], graveyard: [] });
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'Kill' });
 
       const result = handleDeath(s, wA, wD, outcome, 1, []);
@@ -137,7 +171,11 @@ describe('mortalityHandler', () => {
       const warrior = createMockWarrior({ id: 'player-warrior' as WarriorId });
       const s = createMockState({ roster: [warrior], graveyard: [] });
       const wA = warrior;
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome: FightOutcome = {
         winner: 'D',
         by: 'Kill',
@@ -155,18 +193,28 @@ describe('mortalityHandler', () => {
       // Not a realistic scenario but test the structure
       const s = createMockState({ roster: [], graveyard: [] });
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       // When winner is null with Kill, implementation may handle differently
 
       // Just verify no crash
-      expect(() => handleDeath(s, wA, wD, createMockOutcome({ by: 'Kill', winner: 'A' }), 1, [])).not.toThrow();
+      expect(() =>
+        handleDeath(s, wA, wD, createMockOutcome({ by: 'Kill', winner: 'A' }), 1, [])
+      ).not.toThrow();
     });
 
     it('updates unacknowledgedDeaths for player death', () => {
       const warrior = createMockWarrior({ id: 'player-warrior' as WarriorId });
       const s = createMockState({ roster: [warrior], unacknowledgedDeaths: [] });
       const wA = warrior;
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome: FightOutcome = {
         winner: 'D',
         by: 'Kill',
@@ -182,7 +230,11 @@ describe('mortalityHandler', () => {
     it('triggers event bus notification', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'Kill' });
 
       // Spy on event bus - would need actual spy setup
@@ -195,7 +247,11 @@ describe('mortalityHandler', () => {
     it('returns proper StateImpact structure', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'Kill' });
 
       const result = handleDeath(s, wA, wD, outcome, 1, []);
@@ -210,7 +266,11 @@ describe('mortalityHandler', () => {
     it('respects week parameter for death record', () => {
       const s = createMockState({ roster: [], graveyard: [] });
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'Kill' });
 
       const result = handleDeath(s, wA, wD, outcome, 42, []);
@@ -221,7 +281,11 @@ describe('mortalityHandler', () => {
     it('accepts optional tags parameter', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', stableId: 'rival-1' as StableId });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        stableId: 'rival-1' as StableId,
+      });
       const outcome = createMockOutcome({ by: 'Kill' });
 
       // Should not throw with tags

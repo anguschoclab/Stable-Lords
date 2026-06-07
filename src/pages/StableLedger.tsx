@@ -26,11 +26,10 @@ import {
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { computeWeeklyBreakdown } from '@/engine/economy';
-import { cn } from '@/lib/utils';/**
-                                  * Stable ledger.
-                                  * @returns The result.
-                                  */
-
+import { cn } from '@/lib/utils'; /**
+ * Stable ledger.
+ * @returns The result.
+ */
 
 /**
  * Stable ledger.

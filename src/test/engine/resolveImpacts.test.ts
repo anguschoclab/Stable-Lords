@@ -2,7 +2,27 @@ import { describe, it, expect } from 'vitest';
 import { resolveImpacts, type StateImpact } from '@/engine/impacts';
 import type { GameState, Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
-import type { FightSummary, Trainer, RivalStableData, RestState, HallEntry, MatchRecord, ScoutReportData, InsightToken, AnnualAward, SeasonalGrowth, RankingEntry, Promoter, PoolWarrior, GazetteStory, OwnerGrudge, Rivalry, TrainingAssignment, BoutOffer, TournamentEntry } from '@/types/state.types';
+import type {
+  FightSummary,
+  Trainer,
+  RivalStableData,
+  RestState,
+  HallEntry,
+  MatchRecord,
+  ScoutReportData,
+  InsightToken,
+  AnnualAward,
+  SeasonalGrowth,
+  RankingEntry,
+  Promoter,
+  PoolWarrior,
+  GazetteStory,
+  OwnerGrudge,
+  Rivalry,
+  TrainingAssignment,
+  BoutOffer,
+  TournamentEntry,
+} from '@/types/state.types';
 import type { CrowdMoodType, WeatherType } from '@/types/shared.types';
 
 function makeWarrior(id: string, name: string): Warrior {
@@ -107,7 +127,14 @@ function makeRival(id: string = 'rival-1'): RivalStableData {
   return {
     id: id as any,
     fame: 50,
-    owner: { id: 'owner-1' as any, name: 'Rival Owner', fame: 50, stableName: 'Rival Stable', renown: 5, titles: 0 },
+    owner: {
+      id: 'owner-1' as any,
+      name: 'Rival Owner',
+      fame: 50,
+      stableName: 'Rival Stable',
+      renown: 5,
+      titles: 0,
+    },
     roster: [makeWarrior('r1', 'Rival1')],
     treasury: 1000,
     tier: 'Established' as any,
@@ -236,7 +263,12 @@ describe('resolveImpacts', () => {
 
   it('handles hallOfFame - appends hall entries', () => {
     const state = makeInitialState();
-    const hallEntry: HallEntry = { id: 'h1' as any, week: 1, label: 'Fight of the Week', fightId: 'f1' as any };
+    const hallEntry: HallEntry = {
+      id: 'h1' as any,
+      week: 1,
+      label: 'Fight of the Week',
+      fightId: 'f1' as any,
+    };
     const impact: StateImpact = { hallOfFame: [hallEntry] };
     const newState = resolveImpacts(state, [impact]);
 
@@ -246,7 +278,12 @@ describe('resolveImpacts', () => {
 
   it('handles matchHistory - appends match records', () => {
     const state = makeInitialState();
-    const matchRecord: MatchRecord = { week: 1, playerWarriorId: 'w1' as any, opponentWarriorId: 'w2' as any, opponentStableId: 'rival-1' as any };
+    const matchRecord: MatchRecord = {
+      week: 1,
+      playerWarriorId: 'w1' as any,
+      opponentWarriorId: 'w2' as any,
+      opponentStableId: 'rival-1' as any,
+    };
     const impact: StateImpact = { matchHistory: [matchRecord] };
     const newState = resolveImpacts(state, [impact]);
 
@@ -266,16 +303,16 @@ describe('resolveImpacts', () => {
 
   it('handles scoutReports - appends scout data', () => {
     const state = makeInitialState();
-    const scoutReport: ScoutReportData = { 
-      id: 's1' as any, 
-      warriorName: 'Alice', 
-      style: 'Striking', 
-      quality: 'High' as any, 
+    const scoutReport: ScoutReportData = {
+      id: 's1' as any,
+      warriorName: 'Alice',
+      style: 'Striking',
+      quality: 'High' as any,
       week: 1,
       attributeRanges: {} as any,
       record: '0-0',
       knownInjuries: [],
-      notes: 'Test'
+      notes: 'Test',
     };
     const impact: StateImpact = { scoutReports: [scoutReport] };
     const newState = resolveImpacts(state, [impact]);
@@ -286,7 +323,14 @@ describe('resolveImpacts', () => {
 
   it('handles insightTokens - appends insight tokens', () => {
     const state = makeInitialState();
-    const token: InsightToken = { id: 't1' as any, type: 'Weapon' as any, warriorId: 'w1' as any, warriorName: 'Alice', detail: 'Test', discoveredWeek: 1 };
+    const token: InsightToken = {
+      id: 't1' as any,
+      type: 'Weapon' as any,
+      warriorId: 'w1' as any,
+      warriorName: 'Alice',
+      detail: 'Test',
+      discoveredWeek: 1,
+    };
     const impact: StateImpact = { insightTokens: [token] };
     const newState = resolveImpacts(state, [impact]);
 
@@ -332,7 +376,14 @@ describe('resolveImpacts', () => {
 
   it('handles awards - appends annual awards', () => {
     const state = makeInitialState();
-    const award: AnnualAward = { year: 1, type: 'Most Kills' as any, warriorId: 'w1' as any, warriorName: 'Alice', value: 10, reason: 'Test' };
+    const award: AnnualAward = {
+      year: 1,
+      type: 'Most Kills' as any,
+      warriorId: 'w1' as any,
+      warriorName: 'Alice',
+      value: 10,
+      reason: 'Test',
+    };
     const impact: StateImpact = { awards: [award] };
     const newState = resolveImpacts(state, [impact]);
 
@@ -386,7 +437,9 @@ describe('resolveImpacts', () => {
 
   it('handles realmRankings - replaces rankings object', () => {
     const state = makeInitialState();
-    const rankings: Record<string, RankingEntry> = { 'w1': { overallRank: 1, tierRank: 1, fame: 100 } as any };
+    const rankings: Record<string, RankingEntry> = {
+      w1: { overallRank: 1, tierRank: 1, fame: 100 } as any,
+    };
     const impact: StateImpact = { realmRankings: rankings };
     const newState = resolveImpacts(state, [impact]);
 
@@ -429,7 +482,7 @@ describe('resolveImpacts', () => {
   it('handles promoters - replaces promoters object', () => {
     const state = makeInitialState();
     const promoters: Record<string, Promoter> = {
-      'p1': {
+      p1: {
         id: 'p1' as any,
         name: 'Promoter 1',
         age: 40,
@@ -437,8 +490,8 @@ describe('resolveImpacts', () => {
         tier: 'Local',
         capacity: 5,
         biases: [],
-        history: { totalPursePaid: 1000, notableBouts: [], legacyFame: 0 }
-      }
+        history: { totalPursePaid: 1000, notableBouts: [], legacyFame: 0 },
+      },
     };
     const impact: StateImpact = { promoters };
     const newState = resolveImpacts(state, [impact]);
@@ -476,7 +529,14 @@ describe('resolveImpacts', () => {
 
   it('handles gazettes - replaces gazettes array', () => {
     const state = makeInitialState();
-    const gazette: GazetteStory = { id: 'g1' as any, week: 1, headline: 'Test', body: 'Test body', mood: 'Calm' as CrowdMoodType, tags: ['test'] };
+    const gazette: GazetteStory = {
+      id: 'g1' as any,
+      week: 1,
+      headline: 'Test',
+      body: 'Test body',
+      mood: 'Calm' as CrowdMoodType,
+      tags: ['test'],
+    };
     const impact: StateImpact = { gazettes: [gazette] };
     const newState = resolveImpacts(state, [impact]);
 
@@ -486,7 +546,15 @@ describe('resolveImpacts', () => {
 
   it('handles ownerGrudges - replaces grudges array', () => {
     const state = makeInitialState();
-    const grudge: OwnerGrudge = { id: 'g1' as any, ownerIdA: 'player' as any, ownerIdB: 'rival-1' as any, intensity: 5, reason: 'Test', startWeek: 1, lastEscalation: 1 };
+    const grudge: OwnerGrudge = {
+      id: 'g1' as any,
+      ownerIdA: 'player' as any,
+      ownerIdB: 'rival-1' as any,
+      intensity: 5,
+      reason: 'Test',
+      startWeek: 1,
+      lastEscalation: 1,
+    };
     const impact: StateImpact = { ownerGrudges: [grudge] };
     const newState = resolveImpacts(state, [impact]);
 
@@ -496,7 +564,14 @@ describe('resolveImpacts', () => {
 
   it('handles rivalries - replaces rivalries array', () => {
     const state = makeInitialState();
-    const rivalry: Rivalry = { id: 'r1' as any, stableIdA: 'player' as any, stableIdB: 'rival-1' as any, intensity: 5, reason: 'Test', startWeek: 1 };
+    const rivalry: Rivalry = {
+      id: 'r1' as any,
+      stableIdA: 'player' as any,
+      stableIdB: 'rival-1' as any,
+      intensity: 5,
+      reason: 'Test',
+      startWeek: 1,
+    };
     const impact: StateImpact = { rivalries: [rivalry] };
     const newState = resolveImpacts(state, [impact]);
 
@@ -506,7 +581,11 @@ describe('resolveImpacts', () => {
 
   it('handles trainingAssignments - replaces assignments array', () => {
     const state = makeInitialState();
-    const assignment: TrainingAssignment = { warriorId: 'w1' as any, type: 'attribute', attribute: 'ST' };
+    const assignment: TrainingAssignment = {
+      warriorId: 'w1' as any,
+      type: 'attribute',
+      attribute: 'ST',
+    };
     const impact: StateImpact = { trainingAssignments: [assignment] };
     const newState = resolveImpacts(state, [impact]);
 
@@ -545,8 +624,18 @@ describe('resolveImpacts', () => {
 
   it('handles boutOffers - dict merge (object spread)', () => {
     const state = makeInitialState();
-    const boutOffer: BoutOffer = { id: 'b1' as any, promoterId: 'p1' as any, warriorIds: ['w1' as any], boutWeek: 1, expirationWeek: 2, purse: 500, hype: 0, status: 'Pending' as any, responses: {} };
-    const impact: StateImpact = { boutOffers: { 'b1': boutOffer } as any };
+    const boutOffer: BoutOffer = {
+      id: 'b1' as any,
+      promoterId: 'p1' as any,
+      warriorIds: ['w1' as any],
+      boutWeek: 1,
+      expirationWeek: 2,
+      purse: 500,
+      hype: 0,
+      status: 'Pending' as any,
+      responses: {},
+    };
+    const impact: StateImpact = { boutOffers: { b1: boutOffer } as any };
     const newState = resolveImpacts(state, [impact]);
 
     expect(newState.boutOffers['b1' as any]).toEqual(boutOffer);
@@ -554,10 +643,30 @@ describe('resolveImpacts', () => {
 
   it('handles boutOffers - key collision', () => {
     const state = makeInitialState();
-    const offer1: BoutOffer = { id: 'b1' as any, promoterId: 'p1' as any, warriorIds: ['w1' as any], boutWeek: 1, expirationWeek: 2, purse: 500, hype: 0, status: 'Pending' as any, responses: {} };
-    const offer2: BoutOffer = { id: 'b1' as any, promoterId: 'p2' as any, warriorIds: ['w2' as any], boutWeek: 1, expirationWeek: 2, purse: 600, hype: 0, status: 'Pending' as any, responses: {} };
-    const impact1: StateImpact = { boutOffers: { 'b1': offer1 } as any };
-    const impact2: StateImpact = { boutOffers: { 'b1': offer2 } as any };
+    const offer1: BoutOffer = {
+      id: 'b1' as any,
+      promoterId: 'p1' as any,
+      warriorIds: ['w1' as any],
+      boutWeek: 1,
+      expirationWeek: 2,
+      purse: 500,
+      hype: 0,
+      status: 'Pending' as any,
+      responses: {},
+    };
+    const offer2: BoutOffer = {
+      id: 'b1' as any,
+      promoterId: 'p2' as any,
+      warriorIds: ['w2' as any],
+      boutWeek: 1,
+      expirationWeek: 2,
+      purse: 600,
+      hype: 0,
+      status: 'Pending' as any,
+      responses: {},
+    };
+    const impact1: StateImpact = { boutOffers: { b1: offer1 } as any };
+    const impact2: StateImpact = { boutOffers: { b1: offer2 } as any };
     const newState = resolveImpacts(state, [impact1, impact2]);
 
     expect(newState.boutOffers['b1' as any]).toEqual(offer2); // Later impact wins
@@ -565,7 +674,16 @@ describe('resolveImpacts', () => {
 
   it('handles tournaments - hybrid merge (update existing by ID)', () => {
     const state = makeInitialState();
-    const tournament: TournamentEntry = { id: 't1' as any, season: 'Spring', week: 1, tierId: 'regional', name: 'Tournament 1', bracket: [], participants: [], completed: false };
+    const tournament: TournamentEntry = {
+      id: 't1' as any,
+      season: 'Spring',
+      week: 1,
+      tierId: 'regional',
+      name: 'Tournament 1',
+      bracket: [],
+      participants: [],
+      completed: false,
+    };
     state.tournaments = [tournament];
     const updatedTournament: TournamentEntry = { ...tournament, completed: true };
     const impact: StateImpact = { tournaments: [updatedTournament] };
@@ -577,8 +695,26 @@ describe('resolveImpacts', () => {
 
   it('handles tournaments - hybrid merge (add new)', () => {
     const state = makeInitialState();
-    const tournament1: TournamentEntry = { id: 't1' as any, season: 'Spring', week: 1, tierId: 'regional', name: 'Tournament 1', bracket: [], participants: [], completed: false };
-    const tournament2: TournamentEntry = { id: 't2' as any, season: 'Spring', week: 2, tierId: 'national', name: 'Tournament 2', bracket: [], participants: [], completed: false };
+    const tournament1: TournamentEntry = {
+      id: 't1' as any,
+      season: 'Spring',
+      week: 1,
+      tierId: 'regional',
+      name: 'Tournament 1',
+      bracket: [],
+      participants: [],
+      completed: false,
+    };
+    const tournament2: TournamentEntry = {
+      id: 't2' as any,
+      season: 'Spring',
+      week: 2,
+      tierId: 'national',
+      name: 'Tournament 2',
+      bracket: [],
+      participants: [],
+      completed: false,
+    };
     state.tournaments = [tournament1];
     const impact: StateImpact = { tournaments: [tournament2] };
     const newState = resolveImpacts(state, [impact]);
@@ -589,8 +725,26 @@ describe('resolveImpacts', () => {
 
   it('handles tournaments - ID collision (update existing)', () => {
     const state = makeInitialState();
-    const tournament1: TournamentEntry = { id: 't1' as any, season: 'Spring', week: 1, tierId: 'regional', name: 'Tournament 1', bracket: [], participants: [], completed: false };
-    const tournament2: TournamentEntry = { id: 't1' as any, season: 'Spring', week: 1, tierId: 'national', name: 'Tournament 1 Updated', bracket: [], participants: [], completed: true };
+    const tournament1: TournamentEntry = {
+      id: 't1' as any,
+      season: 'Spring',
+      week: 1,
+      tierId: 'regional',
+      name: 'Tournament 1',
+      bracket: [],
+      participants: [],
+      completed: false,
+    };
+    const tournament2: TournamentEntry = {
+      id: 't1' as any,
+      season: 'Spring',
+      week: 1,
+      tierId: 'national',
+      name: 'Tournament 1 Updated',
+      bracket: [],
+      participants: [],
+      completed: true,
+    };
     state.tournaments = [tournament1];
     const impact: StateImpact = { tournaments: [tournament2] };
     const newState = resolveImpacts(state, [impact]);
@@ -602,7 +756,16 @@ describe('resolveImpacts', () => {
   it('handles tournaments - empty state', () => {
     const state = makeInitialState();
     state.tournaments = [];
-    const tournament: TournamentEntry = { id: 't1' as any, season: 'Spring', week: 1, tierId: 'regional', name: 'Tournament 1', bracket: [], participants: [], completed: false };
+    const tournament: TournamentEntry = {
+      id: 't1' as any,
+      season: 'Spring',
+      week: 1,
+      tierId: 'regional',
+      name: 'Tournament 1',
+      bracket: [],
+      participants: [],
+      completed: false,
+    };
     const impact: StateImpact = { tournaments: [tournament] };
     const newState = resolveImpacts(state, [impact]);
 

@@ -343,11 +343,10 @@ function WarriorPlannerCard({
       </Surface>
     </div>
   );
-}/**
-  * Training planner.
-  * @returns The result.
-  */
-
+} /**
+ * Training planner.
+ * @returns The result.
+ */
 
 /**
  * Training planner.

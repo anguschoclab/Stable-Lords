@@ -99,9 +99,21 @@ export function battleOpener(rng: IRNGService): string {
 
 // Re-export from unified combatNarrators
 export {
-  narrateAttack, narratePassive, narrateParry, narrateDodge, narrateCounterstrike,
-  narrateHit, narrateParryBreak, narrateInitiative, narrateKnockdown, narrateRecovery,
-  getEpithet, narrateContextLine, narrateCrowdReaction, narrateTaunt, narrateInsightHint
+  narrateAttack,
+  narratePassive,
+  narrateParry,
+  narrateDodge,
+  narrateCounterstrike,
+  narrateHit,
+  narrateParryBreak,
+  narrateInitiative,
+  narrateKnockdown,
+  narrateRecovery,
+  getEpithet,
+  narrateContextLine,
+  narrateCrowdReaction,
+  narrateTaunt,
+  narrateInsightHint,
 };
 
 /**

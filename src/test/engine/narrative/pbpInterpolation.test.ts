@@ -22,9 +22,9 @@ describe('PBP interpolation — no raw {{token}} leaks', () => {
     });
 
     it('still renders provided values', () => {
-      expect(interpolateTemplate('{{attacker}} vs {{defender}}', { attacker: 'A', defender: 'D' })).toBe(
-        'A vs D'
-      );
+      expect(
+        interpolateTemplate('{{attacker}} vs {{defender}}', { attacker: 'A', defender: 'D' })
+      ).toBe('A vs D');
     });
   });
 

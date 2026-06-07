@@ -1,9 +1,4 @@
-import type {
-  GameState,
-  RivalStableData,
-  Trainer,
-  Warrior,
-} from '@/types/state.types';
+import type { GameState, RivalStableData, Trainer, Warrior } from '@/types/state.types';
 import { processStaff } from './workers/staffWorker';
 import { processRoster } from './workers/rosterWorker';
 import { consolidateAgentMemory, createAgentContext } from './agentCore';
@@ -152,7 +147,10 @@ export function processAIStable(
   updatedRival = consolidateAgentMemory(updatedRival, state.week);
 
   // Collect impact for this rival
-  const rivalsUpdates = new Map<import('@/types/shared.types').StableId, Partial<RivalStableData>>();
+  const rivalsUpdates = new Map<
+    import('@/types/shared.types').StableId,
+    Partial<RivalStableData>
+  >();
   rivalsUpdates.set(rival.id, updatedRival);
   impacts.push({ rivalsUpdates });
 

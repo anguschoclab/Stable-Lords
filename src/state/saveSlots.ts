@@ -16,9 +16,9 @@ export interface SaveSlotMeta {
   version: string;
 }
 
-const STORAGE_KEY = STORE_KEYS.SAVE_SLOTS;/**
-                                           * Max_save_slots.
-                                           */
+const STORAGE_KEY = STORE_KEYS.SAVE_SLOTS; /**
+ * Max_save_slots.
+ */
 
 /**
  * Max_save_slots.
@@ -80,11 +80,10 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
       console.error('Failed to save save slot metadata', error);
     }
   }
-}/**
-  * List save slots.
-  * @returns The result.
-  */
-
+} /**
+ * List save slots.
+ * @returns The result.
+ */
 
 /**
  * List save slots.
@@ -92,14 +91,13 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
  */
 export async function listSaveSlots(): Promise<SaveSlotMeta[]> {
   return await getStoredMeta();
-}/**
-  * Save to slot.
-  * @param slotId - Slot id.
-  * @param name - Name.
-  * @param state - State.
-  * @returns The result.
-  */
-
+} /**
+ * Save to slot.
+ * @param slotId - Slot id.
+ * @param name - Name.
+ * @param state - State.
+ * @returns The result.
+ */
 
 /**
  * Save to slot.
@@ -132,12 +130,11 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
   // Truncate state to keep save file size manageable
   const truncatedState = truncateState(state);
   await archiveService.archiveHotState(slotId, truncatedState);
-}/**
-  * Load from slot.
-  * @param slotId - Slot id.
-  * @returns The result.
-  */
-
+} /**
+ * Load from slot.
+ * @param slotId - Slot id.
+ * @returns The result.
+ */
 
 /**
  * Load from slot.
@@ -146,12 +143,11 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
  */
 export async function loadFromSlot(slotId: string): Promise<GameState | null> {
   return await archiveService.retrieveHotState(slotId);
-}/**
-  * Delete slot.
-  * @param slotId - Slot id.
-  * @returns The result.
-  */
-
+} /**
+ * Delete slot.
+ * @param slotId - Slot id.
+ * @returns The result.
+ */
 
 /**
  * Delete slot.
@@ -171,11 +167,10 @@ export async function deleteSlot(slotId: string) {
       console.error('Failed to delete save file from disk:', error);
     }
   }
-}/**
-  * New slot id.
-  * @returns The result.
-  */
-
+} /**
+ * New slot id.
+ * @returns The result.
+ */
 
 /**
  * New slot id.
@@ -183,12 +178,11 @@ export async function deleteSlot(slotId: string) {
  */
 export function newSlotId(): string {
   return `slot_${crypto.randomUUID()}`;
-}/**
-  * Export slot.
-  * @param slotId - Slot id.
-  * @returns The result.
-  */
-
+} /**
+ * Export slot.
+ * @param slotId - Slot id.
+ * @returns The result.
+ */
 
 /**
  * Export slot.
@@ -201,12 +195,11 @@ export async function exportSlot(slotId: string): Promise<string | null> {
   // Truncate state to keep export file size manageable
   const truncatedState = truncateState(state);
   return JSON.stringify(truncatedState);
-}/**
-  * Import save to new slot.
-  * @param data - Data.
-  * @returns The result.
-  */
-
+} /**
+ * Import save to new slot.
+ * @param data - Data.
+ * @returns The result.
+ */
 
 /**
  * Import save to new slot.

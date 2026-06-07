@@ -4,10 +4,9 @@
  */
 import { FightingStyle } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
-import { clamp } from '@/utils/math';/**
-                                      * Style meta type.
-                                      */
-
+import { clamp } from '@/utils/math'; /**
+ * Style meta type.
+ */
 
 /**
  * Style meta type.

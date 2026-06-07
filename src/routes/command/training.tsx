@@ -3,10 +3,9 @@
  * Unified training management with Overview | Assignments | Analysis tabs
  */
 import { createFileRoute } from '@tanstack/react-router';
-import Training from '@/pages/Training';/**
-                                         * Route.
-                                         */
-
+import Training from '@/pages/Training'; /**
+ * Route.
+ */
 
 /**
  * Route.

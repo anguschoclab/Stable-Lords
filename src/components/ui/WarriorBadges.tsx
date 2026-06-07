@@ -58,7 +58,7 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
       </TooltipContent>
     </Tooltip>
   );
-}/**
+} /**
   * Stat badge.
   * @param  - {
   style name,
@@ -69,7 +69,6 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
 }.
   * @returns The result.
   */
-
 
 // ─── StatBadge ────────────────────────────────────────────────────────────
 
@@ -106,7 +105,7 @@ export function StatBadge({
       )}
     </div>
   );
-}/**
+} /**
   * Warrior name tag.
   * @param  - {
   id,
@@ -118,7 +117,6 @@ export function StatBadge({
 }.
   * @returns The result.
   */
-
 
 // ─── WarriorNameTag ───────────────────────────────────────────────────────
 

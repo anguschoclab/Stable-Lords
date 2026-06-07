@@ -1,10 +1,9 @@
 /**
  * Operations Hub Root Layout
  */
-import { Outlet, createFileRoute } from '@tanstack/react-router';/**
-                                                                  * Route.
-                                                                  */
-
+import { Outlet, createFileRoute } from '@tanstack/react-router'; /**
+ * Route.
+ */
 
 /**
  * Route.

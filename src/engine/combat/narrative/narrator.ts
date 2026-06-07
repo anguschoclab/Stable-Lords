@@ -20,10 +20,9 @@ import {
   narrateRangeShift,
   narrateFeint,
   narrateZoneShift,
-} from '../../narrativePBP';/**
-                             * Defines the shape of narration context.
-                             */
-
+} from '../../narrativePBP'; /**
+ * Defines the shape of narration context.
+ */
 
 /**
  * Defines the shape of narration context.
@@ -44,14 +43,13 @@ export interface NarrationContext {
   fameD: number;
   isFavoriteA?: boolean;
   isFavoriteD?: boolean;
-}/**
-  * Narrate events.
-  * @param events - Events.
-  * @param ctx - Ctx.
-  * @param minute - Minute.
-  * @returns The result.
-  */
-
+} /**
+ * Narrate events.
+ * @param events - Events.
+ * @param ctx - Ctx.
+ * @param minute - Minute.
+ * @returns The result.
+ */
 
 /**
  * Narrate events.

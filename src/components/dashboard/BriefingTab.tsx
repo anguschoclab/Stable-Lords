@@ -12,9 +12,7 @@ export function BriefingTab({ reports }: BriefingTabProps) {
       {reports.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 opacity-20">
           <Info className="h-8 w-8 mb-4 text-arena-gold" />
-          <p className="text-[10px] font-black uppercase tracking-[0.4em]">
-            No Strategic Intel
-          </p>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em]">No Strategic Intel</p>
         </div>
       ) : (
         <div className="py-6 space-y-8">

@@ -6,7 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from '@tanstack/react-router';
 import { obfuscateWarrior } from '@/lib/obfuscation';
 import { useGameStore } from '@/state/useGameStore';
-import { type FightPlan, type GameState } from '@/types/game';
+import { type FightPlan } from '@/types/game';
 import type { Warrior } from '@/types/state.types';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Armchair, Target, ScrollText, User } from 'lucide-react';
@@ -35,11 +35,10 @@ const TABS: SubNavTab[] = [
   { id: 'biometrics', label: 'BIOMETRICS', icon: <User className="h-4 w-4" /> },
   { id: 'mission', label: 'MISSION CONTROL', icon: <Target className="h-4 w-4" /> },
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
-];/**
-   * Warrior detail.
-   * @returns The result.
-   */
-
+]; /**
+ * Warrior detail.
+ * @returns The result.
+ */
 
 /**
  * Warrior detail.
@@ -99,10 +98,10 @@ export default function WarriorDetail() {
   const handlePlanChange = useCallback(
     (newPlan: FightPlan) => {
       if (!warrior) return;
-      setState((draft: GameState) => {
+      setState((draft) => {
         const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
         if (index !== -1) {
-          draft.roster[index].plan = newPlan;
+          draft.roster[index]!.plan = newPlan;
         }
       });
     },
@@ -119,10 +118,10 @@ export default function WarriorDetail() {
   const handleEquipmentChange = useCallback(
     (newLoadout: EquipmentLoadout) => {
       if (!warrior) return;
-      setState((draft: GameState) => {
+      setState((draft) => {
         const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
         if (index !== -1) {
-          draft.roster[index].equipment = newLoadout;
+          draft.roster[index]!.equipment = newLoadout;
         }
       });
     },
@@ -147,7 +146,7 @@ export default function WarriorDetail() {
   const record = `${displayWarrior.career.wins}W - ${displayWarrior.career.losses}L - ${displayWarrior.career.kills}K`;
 
   const streakMap = computeStreaks(arenaHistory);
-  const streakVal = streakMap.get(displayWarrior.name) ?? 0;
+  const streakVal = streakMap.get(warrior.id) ?? 0;
   const streakLabel =
     streakVal > 0
       ? `${streakVal}W Streak`
@@ -222,7 +221,6 @@ export default function WarriorDetail() {
             {activeTab === 'mission' && (
               <MissionControlTab
                 warrior={warrior}
-                displayWarrior={displayWarrior}
                 currentPlan={currentPlan}
                 currentLoadout={currentLoadout}
                 onPlanChange={handlePlanChange}

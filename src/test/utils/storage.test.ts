@@ -51,7 +51,7 @@ describe('handleLocalStorageQuotaError', () => {
   it('trims array data when quota is exceeded on the first attempt, then succeeds', () => {
     // Mock the first call to throw a quota error, and the second to succeed
     let calls = 0;
-     
+
     (localStorage.setItem as any).mockImplementation((_key: string, _value: string) => {
       calls++;
       if (calls === 1) {
@@ -80,7 +80,6 @@ describe('handleLocalStorageQuotaError', () => {
   });
 
   it('throws an error if data is an object and quota is exceeded', () => {
-     
     (localStorage.setItem as any).mockImplementation(() => {
       const err = new Error('QuotaExceededError');
       err.name = 'QuotaExceededError';
@@ -99,7 +98,6 @@ describe('handleLocalStorageQuotaError', () => {
   });
 
   it('handles empty array with quota error', () => {
-     
     (localStorage.setItem as any).mockImplementation(() => {
       const err = new Error('QuotaExceededError');
       err.name = 'QuotaExceededError';
@@ -108,7 +106,6 @@ describe('handleLocalStorageQuotaError', () => {
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-     
     const data: any[] = [];
 
     expect(() => {

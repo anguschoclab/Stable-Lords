@@ -93,5 +93,4 @@ describe('useActiveRoster', () => {
     expect(item.career).toEqual({ wins: 5, losses: 2, kills: 1 });
     expect(item.attributes).toEqual({ ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 });
   });
-
 });

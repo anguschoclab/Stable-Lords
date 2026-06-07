@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import Orphanage from '@/pages/Orphanage';/**
-                                           * Route.
-                                           */
-
+import Orphanage from '@/pages/Orphanage'; /**
+ * Route.
+ */
 
 /**
  * Route.

@@ -1,10 +1,11 @@
+import { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { GameState } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Flame, TrendingUp } from 'lucide-react';
 import {
-  usePlayerRosterNames,
+  usePlayerRosterIds,
   useRivalWarriorStable,
   useRivalriesList,
   useMostWantedRival,
@@ -14,10 +15,14 @@ import { MostWantedBanner } from './MostWantedBanner';
 
 export function RivalryWidget() {
   const state = useWorldState();
-  const rosterNames = usePlayerRosterNames(state as GameState);
+  const rosterIds = usePlayerRosterIds(state as GameState);
+  const rosterNames = useMemo(
+    () => new Set((state.roster || []).map((w) => w.name)),
+    [state.roster]
+  );
   const rivalWarriorStable = useRivalWarriorStable(state as GameState);
-  const rivalries = useRivalriesList(state as GameState, rosterNames, rivalWarriorStable);
-  const mostWanted = useMostWantedRival(state as GameState, rosterNames, rivalWarriorStable);
+  const rivalries = useRivalriesList(state as GameState, rosterIds, rivalWarriorStable);
+  const mostWanted = useMostWantedRival(state as GameState, rosterIds, rivalWarriorStable);
 
   return (
     <Surface

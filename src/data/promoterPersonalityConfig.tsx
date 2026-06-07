@@ -1,9 +1,8 @@
 import React from 'react';
 import { Award, AlertTriangle, Building2, DollarSign, Zap } from 'lucide-react';
-import type { PromoterPersonality } from '@/types/state.types';/**
-                                                                * Defines the shape of personality entry.
-                                                                */
-
+import type { PromoterPersonality } from '@/types/state.types'; /**
+ * Defines the shape of personality entry.
+ */
 
 /**
  * Defines the shape of personality entry.
@@ -15,10 +14,9 @@ export interface PersonalityEntry {
   description: string;
   desc: string;
   tooltip: string;
-}/**
-  * Personality_config.
-  */
-
+} /**
+ * Personality_config.
+ */
 
 /**
  * Personality_config.

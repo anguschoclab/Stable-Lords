@@ -50,7 +50,14 @@ describe('gameStoreSecurity', () => {
   describe('SaveSlotMetaSchema validation', () => {
     it('accepts valid save slot metadata', () => {
       const valid = [
-        { id: '1', name: 'Save 1', week: 1, year: 1, timestamp: '2024-01-01T00:00:00Z', version: '1.0' },
+        {
+          id: '1',
+          name: 'Save 1',
+          week: 1,
+          year: 1,
+          timestamp: '2024-01-01T00:00:00Z',
+          version: '1.0',
+        },
       ];
       expect(() => SaveSlotMetaSchema.array().parse(valid)).not.toThrow();
     });

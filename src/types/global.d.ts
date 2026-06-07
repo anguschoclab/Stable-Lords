@@ -44,7 +44,10 @@ declare global {
       getAppInfo: () => Promise<{ name: string; version: string; platform: string }>;
 
       // Notifications
-      showNotification: (options: { title: string; body: string }) => Promise<{ success: boolean; error?: string }>;
+      showNotification: (options: {
+        title: string;
+        body: string;
+      }) => Promise<{ success: boolean; error?: string }>;
     };
 
     // Seasonal flavor strings (documented but not yet implemented)

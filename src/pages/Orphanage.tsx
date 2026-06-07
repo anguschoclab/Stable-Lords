@@ -10,7 +10,7 @@ import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { simulateFight, defaultPlanForWarrior } from '@/engine';
 import type { GameState } from '@/types/state.types';
-import type { Warrior, FightSummary } from '@/types/game';
+import type { Warrior, FightSummary, WarriorId } from '@/types/game';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { generateId } from '@/utils/idUtils';
 import { generateOrphanPool } from '@/data/orphanPool';
@@ -33,11 +33,10 @@ const stepVariants = {
 const stepTransition = {
   duration: 0.4,
   ease: [0.16, 1, 0.3, 1] as [number, number, number, number], // Custom cubic-bezier for smooth deceleration
-};/**
-   * Orphanage.
-   * @returns The result.
-   */
-
+}; /**
+ * Orphanage.
+ * @returns The result.
+ */
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
@@ -91,15 +90,18 @@ export default function Orphanage() {
 
   const runTutorialBout = useCallback(() => {
     if (selectedWarriors.length < 2) return;
-    const [poolA, poolB] = selectedWarriors;
-    const wA = makeWarrior(poolA.id, poolA.name, poolA.style, poolA.attrs);
-    const wB = makeWarrior(poolB.id, poolB.name, poolB.style, poolB.attrs);
+    const poolA = selectedWarriors[0]!;
+    const poolB = selectedWarriors[1]!;
+    const wA = makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
+    const wB = makeWarrior(poolB.id as WarriorId, poolB.name, poolB.style, poolB.attrs);
     const planA = defaultPlanForWarrior(wA);
     const planB = defaultPlanForWarrior(wB);
     const outcome = simulateFight(planA, planB, wA, wB);
     const tags = outcome.post?.tags ?? [];
 
-    const summary = createBoutSummary(wA, wB, outcome, 1, { uuid: () => generateId(undefined, 'ftue') });
+    const summary = createBoutSummary(wA, wB, outcome, 1, {
+      uuid: () => generateId(undefined, 'ftue'),
+    });
     summary.flashyTags = tags;
     summary.fameDeltaA = outcome.winner === 'A' ? 1 : 0;
     summary.fameDeltaD = outcome.winner === 'D' ? 1 : 0;

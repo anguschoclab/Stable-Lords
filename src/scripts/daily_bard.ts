@@ -32,10 +32,9 @@ const CategorySchema = z.object({
 const DefenseSchema = z.object({
   success: z.array(templateStringSchema),
   stumbling: z.array(templateStringSchema),
-});/**
-    * Narrative schema.
-    */
-
+}); /**
+ * Narrative schema.
+ */
 
 /**
  * Narrative schema.
@@ -127,7 +126,7 @@ async function request_bardic_inspiration(
   deficitPath: string,
   context: string = ''
 ): Promise<string> {
-  const [root, type, leaf] = deficitPath.split('.'); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [_root, _type, _leaf] = deficitPath.split('.');
 
   const systemPrompt = `You are the Bard of the Blood Sands, a brutal arena announcer.
 You generate high-fantasy combat and world descriptions for a text-based game.
@@ -155,7 +154,8 @@ Context: You are writing for ${deficitPath}. ${context}`;
         `${systemPrompt}\n\nGenerate 3 new templates for ${deficitPath}.`
       );
       return result.response.text();
-    } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      // eslint-disable-line @typescript-eslint/no-explicit-any
       console.error('Gemini API Error:', error.message);
       return '{}';
     }
@@ -190,7 +190,8 @@ async function validate_with_retry(deficitPath: string, retries = 3): Promise<st
       }
 
       return templates;
-    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      // eslint-disable-line @typescript-eslint/no-explicit-any
       console.warn(
         `Validation failed for ${deficitPath} (Attempt ${i + 1}/${retries}): ${err.message}`
       );
@@ -214,9 +215,9 @@ async function commit_to_archive(newTemplatesMap: Record<string, string[]>) {
     const segments = path.split('.');
     let target: any = data; // eslint-disable-line @typescript-eslint/no-explicit-any
     for (let i = 0; i < segments.length - 1; i++) {
-      target = target[segments[i]];
+      target = target[segments[i]!];
     }
-    const leaf = segments[segments.length - 1];
+    const leaf = segments[segments.length - 1]!;
 
     // Merge and Deduplicate
     const uniqueTemplates = [...new Set([...target[leaf], ...items])];
@@ -274,7 +275,7 @@ function deduplicate_full_archive(data: ValidatedJSON) {
       } else if (typeof val === 'object') {
         for (const leaf of Object.keys(val)) {
           if (Array.isArray(val[leaf])) {
-            val[leaf] = [...new Set(val[leaf])];  
+            val[leaf] = [...new Set(val[leaf])];
           }
         }
       }

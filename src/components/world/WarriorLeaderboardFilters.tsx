@@ -2,8 +2,7 @@ import { type ReactNode } from 'react';
 import { Crown, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const ACTIVE_CLASSES =
-  'bg-primary/20 text-primary border-primary/40';
+const ACTIVE_CLASSES = 'bg-primary/20 text-primary border-primary/40';
 const INACTIVE_CLASSES =
   'bg-white/5 text-muted-foreground/50 border-white/10 hover:text-foreground hover:border-white/20';
 

@@ -97,7 +97,7 @@ describe('simulationMetrics', () => {
       const expectedLines = [
         'Week | Treasury | Roster | Dead | Rivals | Avg Rival Treas',
         '---- | -------- | ------ | ---- | ------ | --------------',
-        '10   | 5000     | 4      | 0    | 2      | 3000'
+        '10   | 5000     | 4      | 0    | 2      | 3000',
       ];
 
       expect(result).toBe(expectedLines.join('\n'));
@@ -124,7 +124,7 @@ describe('simulationMetrics', () => {
           rivalCount: 3,
           avgRivalTreasury: 4200,
           totalBouts: 50,
-        }
+        },
       ];
 
       const result = formatPulseTable(pulses);
@@ -133,7 +133,7 @@ describe('simulationMetrics', () => {
         'Week | Treasury | Roster | Dead | Rivals | Avg Rival Treas',
         '---- | -------- | ------ | ---- | ------ | --------------',
         '1    | 100      | 1      | 0    | 4      | 1500',
-        '100  | 12500    | 10     | 5    | 3      | 4200'
+        '100  | 12500    | 10     | 5    | 3      | 4200',
       ];
 
       expect(result).toBe(expectedLines.join('\n'));

@@ -421,10 +421,9 @@ export {
   type HPRating,
   type EnduranceTier,
   type EncumbranceClass,
-} from '@/data/terrabloodCharts';/**
-                                  * Damage_labels.
-                                  */
-
+} from '@/data/terrabloodCharts'; /**
+ * Damage_labels.
+ */
 
 /**
  * Damage_labels.

@@ -111,7 +111,7 @@ function OfferCard({
   const playerWarriorId = playerWarrior?.id;
   const opponentId = offer.warriorIds.find((id) => id !== playerWarriorId);
 
-  const opponent = opponentId ? rivalWarriorMap[opponentId] ?? null : null;
+  const opponent = opponentId ? (rivalWarriorMap[opponentId] ?? null) : null;
 
   const personality = promoter?.personality as PromoterPersonality;
   const personalityConfig = personality ? PERSONALITY_CONFIG[personality] : null;
@@ -259,11 +259,10 @@ function OfferCard({
       </div>
     </Surface>
   );
-}/**
-  * Booking office.
-  * @returns The result.
-  */
-
+} /**
+ * Booking office.
+ * @returns The result.
+ */
 
 /**
  * Booking office.
@@ -295,7 +294,8 @@ export default function BookingOffice() {
   }, [rivals]);
 
   const { thisWeekOffers, upcomingOffers, idleWarriors, highestPurse } = useMemo(
-    () => filterAndSortOffers(boutOffers, roster, week, promoters, signedOfferIds, selectedWarriorId),
+    () =>
+      filterAndSortOffers(boutOffers, roster, week, promoters, signedOfferIds, selectedWarriorId),
     [boutOffers, roster, week, promoters, signedOfferIds, selectedWarriorId]
   );
 
@@ -324,11 +324,7 @@ export default function BookingOffice() {
     let accepted = 0;
     honorableOffers.forEach((offer) => {
       const warrior = roster.find((w) => offer.warriorIds.includes(w.id));
-      if (
-        warrior &&
-        (warrior.fatigue ?? 0) <= 60 &&
-        !getInjuryBadge(warrior.injuries || [])
-      ) {
+      if (warrior && (warrior.fatigue ?? 0) <= 60 && !getInjuryBadge(warrior.injuries || [])) {
         handleResponse(offer.id, warrior.id, 'Accepted');
         accepted++;
       }

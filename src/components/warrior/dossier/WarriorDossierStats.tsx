@@ -6,12 +6,11 @@ import { ATTRIBUTE_LABELS, ATTRIBUTE_KEYS } from '@/types/game';
 
 interface Props {
   warrior: Warrior;
-}/**
-  * Warrior dossier stats.
-  * @param - { warrior }.
-  * @returns The result.
-  */
-
+} /**
+ * Warrior dossier stats.
+ * @param - { warrior }.
+ * @returns The result.
+ */
 
 /**
  * Warrior dossier stats.

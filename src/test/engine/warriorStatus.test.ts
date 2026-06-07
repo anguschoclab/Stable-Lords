@@ -87,7 +87,11 @@ describe('isActive', () => {
 });
 
 describe('isFightReady', () => {
-  const makeWarrior = (status: 'Active' | 'Dead' | 'Retired', fatigue?: number, injuries?: InjuryData[]): Warrior => ({
+  const makeWarrior = (
+    status: 'Active' | 'Dead' | 'Retired',
+    fatigue?: number,
+    injuries?: InjuryData[]
+  ): Warrior => ({
     id: 'test-warrior' as WarriorId,
     name: 'Test Warrior',
     style: FightingStyle.StrikingAttack,

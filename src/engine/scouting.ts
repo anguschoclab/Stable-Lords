@@ -45,12 +45,11 @@ const SCOUT_COST: Record<ScoutQuality, number> = {
   Basic: 25,
   Detailed: 50,
   Expert: 100,
-};/**
-   * Get scout cost.
-   * @param quality - Quality.
-   * @returns The result.
-   */
-
+}; /**
+ * Get scout cost.
+ * @param quality - Quality.
+ * @returns The result.
+ */
 
 /**
  * Get scout cost.
@@ -135,11 +134,7 @@ function getSuspectedPlanTendencies(
 /**
  * Generate qualitative notes about the warrior based on scouting quality.
  */
-function generateScoutReportNotes(
-  warrior: Warrior,
-  quality: ScoutQuality,
-  record: string
-): string {
+function generateScoutReportNotes(warrior: Warrior, quality: ScoutQuality, record: string): string {
   const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
   if (quality === 'Basic') {
     return `${warrior.name} fights as a ${styleName}. Limited intel available.`;

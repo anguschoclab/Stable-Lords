@@ -6,11 +6,10 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from '@/components/ui/toast';/**
-                                * Toaster.
-                                * @returns The result.
-                                */
-
+} from '@/components/ui/toast'; /**
+ * Toaster.
+ * @returns The result.
+ */
 
 /**
  * Toaster.

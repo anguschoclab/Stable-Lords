@@ -1,13 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import {
-  UserRoundSearch,
-  Swords,
-  Crosshair,
-  Hexagon,
-  BarChart3,
-  TrendingUp,
-} from 'lucide-react';
+import { UserRoundSearch, Swords, Crosshair, Hexagon, BarChart3, TrendingUp } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import type { RivalStableData, Warrior } from '@/types/game';
 import { ATTRIBUTE_KEYS, STYLE_DISPLAY_NAMES } from '@/types/game';
@@ -18,12 +11,11 @@ import { cn } from '@/lib/utils';
 interface WarriorComparisonProps {
   rivals: RivalStableData[];
   playerRoster: Warrior[];
-}/**
-  * Warrior comparison.
-  * @param - { rivals, player roster }.
-  * @returns The result.
-  */
-
+} /**
+ * Warrior comparison.
+ * @param - { rivals, player roster }.
+ * @returns The result.
+ */
 
 /**
  * Warrior comparison.

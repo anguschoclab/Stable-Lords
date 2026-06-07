@@ -128,9 +128,7 @@ export function generateGazetteHeadline(
       return t(rngService.pick(gh.Standard), { week, adj: rngService.pick(tone.adjectives) });
     }
     const upsetHeadline =
-      gh.major_upset && upset.loserFame / upset.winnerFame >= 3
-        ? gh.major_upset
-        : gh.Upset;
+      gh.major_upset && upset.loserFame / upset.winnerFame >= 3 ? gh.major_upset : gh.Upset;
     return t(rngService.pick(upsetHeadline), { week, winner: upset.winner, loser: upset.loser });
   } else if (kills.length >= 2) {
     return t(rngService.pick(gh.MultipleKills), { week, count: kills.length });

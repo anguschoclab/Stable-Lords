@@ -28,6 +28,7 @@ import {
   Brain,
   Dumbbell,
   Dices,
+  Shield,
 } from 'lucide-react';
 import { randomWarriorName } from '@/data/names';
 import { SkillBar } from '@/components/warrior/WarriorStats';
@@ -57,7 +58,7 @@ interface WarriorBuilderProps {
   onCreateWarrior: (data: { name: string; style: FightingStyle; attributes: Attributes }) => void;
   maxRoster?: number;
   currentRosterSize?: number;
-}/**
+} /**
   * Warrior builder.
   * @param  - {
   on create warrior,
@@ -66,7 +67,6 @@ interface WarriorBuilderProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Warrior builder.
@@ -115,7 +115,7 @@ export default function WarriorBuilder({
     const keys = [...ATTRIBUTE_KEYS];
     // Distribute randomly
     while (pool > 0) {
-      const key = keys[cryptoRandomInt(0, keys.length - 1)];
+      const key = keys[cryptoRandomInt(0, keys.length - 1)]!;
       const maxAdd = Math.min(pool, ATTRIBUTE_MAX - newAttrs[key]);
       if (maxAdd <= 0) continue;
       const add = Math.min(maxAdd, cryptoRandomInt(1, 5));
@@ -125,7 +125,7 @@ export default function WarriorBuilder({
     setAttrs(newAttrs);
     // Random style
     const styles = Object.values(FightingStyle);
-    setStyle(styles[cryptoRandomInt(0, styles.length - 1)]);
+    setStyle(styles[cryptoRandomInt(0, styles.length - 1)]!);
     setName(randomWarriorName());
   }, []);
 
@@ -231,7 +231,7 @@ export default function WarriorBuilder({
                   </div>
                   <Slider
                     value={[attrs[key]]}
-                    onValueChange={([v]) => updateAttr(key, v)}
+                    onValueChange={([v]) => updateAttr(key, v!)}
                     min={ATTRIBUTE_MIN}
                     max={ATTRIBUTE_MAX}
                     step={1}

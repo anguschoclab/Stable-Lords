@@ -3,10 +3,9 @@
  * Unified archive: Gazette + Hall of Fame + Graveyard + Analytics + History
  */
 import { createFileRoute } from '@tanstack/react-router';
-import Gazette from '@/pages/Gazette';/**
-                                       * Route.
-                                       */
-
+import Gazette from '@/pages/Gazette'; /**
+ * Route.
+ */
 
 /**
  * Route.

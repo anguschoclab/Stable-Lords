@@ -3,10 +3,9 @@
  * Armory and gear management
  */
 import { createFileRoute } from '@tanstack/react-router';
-import StableEquipment from '@/pages/StableEquipment';/**
-                                                       * Route.
-                                                       */
-
+import StableEquipment from '@/pages/StableEquipment'; /**
+ * Route.
+ */
 
 /**
  * Route.

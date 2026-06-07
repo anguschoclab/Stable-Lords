@@ -26,13 +26,19 @@ describe('decisionLogic', () => {
       // - Technical: more ripostes, fewer hitsTaken
       // - Blood: dealt more damage (D.hp lower relative to max)
       const fA = createMockFighter({
-        hp: 95, maxHp: 100, // took little damage
-        hitsLanded: 15, hitsTaken: 2, ripostes: 5
+        hp: 95,
+        maxHp: 100, // took little damage
+        hitsLanded: 15,
+        hitsTaken: 2,
+        ripostes: 5,
       });
       const fD = createMockFighter({
         label: 'D',
-        hp: 30, maxHp: 100, // took lots of damage
-        hitsLanded: 2, hitsTaken: 15, ripostes: 0
+        hp: 30,
+        maxHp: 100, // took lots of damage
+        hitsLanded: 2,
+        hitsTaken: 15,
+        ripostes: 0,
       });
 
       const result = resolveDecision(fA, fD, 'Fighter A', 'Fighter D');
@@ -44,13 +50,19 @@ describe('decisionLogic', () => {
 
     it('returns unanimous decision for fighter D when dominating all criteria', () => {
       const fA = createMockFighter({
-        hp: 30, maxHp: 100,
-        hitsLanded: 2, hitsTaken: 15, ripostes: 0
+        hp: 30,
+        maxHp: 100,
+        hitsLanded: 2,
+        hitsTaken: 15,
+        ripostes: 0,
       });
       const fD = createMockFighter({
         label: 'D',
-        hp: 95, maxHp: 100,
-        hitsLanded: 15, hitsTaken: 2, ripostes: 5
+        hp: 95,
+        maxHp: 100,
+        hitsLanded: 15,
+        hitsTaken: 2,
+        ripostes: 5,
       });
 
       const result = resolveDecision(fA, fD, 'Fighter A', 'Fighter D');
@@ -82,13 +94,19 @@ describe('decisionLogic', () => {
 
     it('includes fighter names in narrative', () => {
       const fA = createMockFighter({
-        hp: 95, maxHp: 100,
-        hitsLanded: 15, hitsTaken: 2, ripostes: 5
+        hp: 95,
+        maxHp: 100,
+        hitsLanded: 15,
+        hitsTaken: 2,
+        ripostes: 5,
       });
       const fD = createMockFighter({
         label: 'D',
-        hp: 30, maxHp: 100,
-        hitsLanded: 2, hitsTaken: 15, ripostes: 0
+        hp: 30,
+        maxHp: 100,
+        hitsLanded: 2,
+        hitsTaken: 15,
+        ripostes: 0,
       });
 
       const result = resolveDecision(fA, fD, 'Thunder', 'Lightning');
@@ -100,7 +118,13 @@ describe('decisionLogic', () => {
     it('can return draw when judges are divided', () => {
       // Create very even fight - this may trigger contested/overtime path
       const fA = createMockFighter({ hitsLanded: 5, hitsTaken: 5, hp: 50, ripostes: 1 });
-      const fD = createMockFighter({ label: 'D', hitsLanded: 5, hitsTaken: 5, hp: 50, ripostes: 1 });
+      const fD = createMockFighter({
+        label: 'D',
+        hitsLanded: 5,
+        hitsTaken: 5,
+        hp: 50,
+        ripostes: 1,
+      });
 
       const result = resolveDecision(fA, fD, 'Fighter A', 'Fighter D');
 
@@ -123,8 +147,21 @@ describe('decisionLogic', () => {
     it('uses RNG overtime when judges are divided and rng provided', () => {
       // Even stats that could result in divided judges (1-1-1 or 0-0-3)
       // Use very even stats to force overtime path
-      const fA = createMockFighter({ hp: 50, maxHp: 100, hitsLanded: 5, hitsTaken: 5, ripostes: 2 });
-      const fD = createMockFighter({ label: 'D', hp: 50, maxHp: 100, hitsLanded: 5, hitsTaken: 5, ripostes: 2 });
+      const fA = createMockFighter({
+        hp: 50,
+        maxHp: 100,
+        hitsLanded: 5,
+        hitsTaken: 5,
+        ripostes: 2,
+      });
+      const fD = createMockFighter({
+        label: 'D',
+        hp: 50,
+        maxHp: 100,
+        hitsLanded: 5,
+        hitsTaken: 5,
+        ripostes: 2,
+      });
       const rng = vi.fn().mockReturnValue(0.4); // Below 0.5 threshold
 
       const result = resolveDecision(fA, fD, 'Fighter A', 'Fighter D', rng);

@@ -4,10 +4,9 @@ import type { RivalStableData, AIEvent } from '@/types/state.types';
  * BudgetWorker: Handles risk-tiered spending checks.
  * Implements "Risk-Tiered Execution" and "Blocking Budgets".
  */
-export type RiskLevel = 'Safe' | 'Speculative' | 'Reckless';/**
-                                                             * Defines the shape of budget report.
-                                                             */
-
+export type RiskLevel = 'Safe' | 'Speculative' | 'Reckless'; /**
+ * Defines the shape of budget report.
+ */
 
 /**
  * Defines the shape of budget report.
@@ -16,14 +15,13 @@ export interface BudgetReport {
   isAffordable: boolean;
   riskTier: AIEvent['riskTier'];
   adjustedTreasury: number;
-}/**
-  * Check budget.
-  * @param rival - Rival.
-  * @param cost - Cost.
-  * @param category - Category.
-  * @returns The result.
-  */
-
+} /**
+ * Check budget.
+ * @param rival - Rival.
+ * @param cost - Cost.
+ * @param category - Category.
+ * @returns The result.
+ */
 
 /**
  * Check budget.

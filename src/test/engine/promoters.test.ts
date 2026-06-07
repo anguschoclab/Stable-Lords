@@ -29,7 +29,10 @@ describe('updatePromoterHistory', () => {
     const newState = updatePromoterHistory(state, promoterId, purse, boutId);
 
     expect(newState.promoters[promoterId].history.totalPursePaid).toBe(1500);
-    expect(newState.promoters[promoterId].history.notableBouts).toEqual(['old-bout' as FightId, boutId]);
+    expect(newState.promoters[promoterId].history.notableBouts).toEqual([
+      'old-bout' as FightId,
+      boutId,
+    ]);
   });
 
   it('keeps only the last 10 notable bouts', () => {
@@ -65,7 +68,12 @@ describe('updatePromoterHistory', () => {
 
   it('returns original state if promoter does not exist', () => {
     const state = createFreshState('test-seed');
-    const newState = updatePromoterHistory(state, 'non-existent' as PromoterId, 100, 'bout-1' as FightId);
+    const newState = updatePromoterHistory(
+      state,
+      'non-existent' as PromoterId,
+      100,
+      'bout-1' as FightId
+    );
     expect(newState).toBe(state);
   });
 

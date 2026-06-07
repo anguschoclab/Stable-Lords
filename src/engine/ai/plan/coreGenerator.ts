@@ -10,7 +10,11 @@ import { defaultPlanForWarrior } from '@/engine/simulate';
 import { PERSONALITY_PLAN_MODS, PHILOSOPHY_PLAN_MODS } from '@/data/ownerData';
 import { clamp } from '@/utils/math';
 import { getStyleMatchupMods, getStyleSuitabilityBias } from '@/engine/ai/matchup/styleMatcher';
-import { buildPhasePlan, buildDesperatePlan, buildUniversalConditions } from '@/engine/ai/plan/phasePlanner';
+import {
+  buildPhasePlan,
+  buildDesperatePlan,
+  buildUniversalConditions,
+} from '@/engine/ai/plan/phasePlanner';
 import { getPersonalityAdaptations } from '@/engine/ai/plan/personalityEngine';
 import { validateAndAdjustPlan } from '@/engine/ai/plan/strategyValidator';
 import {

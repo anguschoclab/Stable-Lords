@@ -4,10 +4,9 @@
  */
 
 import { FightingStyle } from '@/types/game';
-import type { EquipmentItem } from './equipment.types';/**
-                                                        * Armors.
-                                                        */
-
+import type { EquipmentItem } from './equipment.types'; /**
+ * Armors.
+ */
 
 /**
  * Armors.

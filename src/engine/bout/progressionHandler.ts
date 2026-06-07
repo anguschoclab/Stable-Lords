@@ -37,7 +37,8 @@ function routeUpdate(
   }
   // Find owning rival via O(1) maps
   const stableInfo = s.warriorToStableMap?.get(warrior.id);
-  const rival = stableInfo && !stableInfo.isPlayer ? s.rivalMap?.get(stableInfo.stableId) : undefined;
+  const rival =
+    stableInfo && !stableInfo.isPlayer ? s.rivalMap?.get(stableInfo.stableId) : undefined;
   if (!rival) return;
   const existingRival = rivalsUpdates.get(rival.id);
   const baseRoster = (existingRival?.roster as Warrior[] | undefined) ?? rival.roster;
@@ -69,7 +70,18 @@ export function handleProgressions(
   // Favorites discovery — also for both fighters (was player-only)
   const discRng = rng;
   for (const w of [wA, wD]) {
-    const disc = checkDiscovery(w, discRng ?? { next: () => 0.5, uuid: () => 'uuid', pick: <T>(arr: T[]) => arr[0]!, roll: (min: number) => min, shuffle: <T>(arr: T[]) => arr, pickWeighted: <T>(items: T[]) => items[0]!, chance: () => false });
+    const disc = checkDiscovery(
+      w,
+      discRng ?? {
+        next: () => 0.5,
+        uuid: () => 'uuid',
+        pick: <T>(arr: T[]) => arr[0]!,
+        roll: (min: number) => min,
+        shuffle: <T>(arr: T[]) => arr,
+        pickWeighted: <T>(items: T[]) => items[0]!,
+        chance: () => false,
+      }
+    );
     if (disc.updated) {
       routeUpdate(s, w, { favorites: w.favorites }, rosterUpdates, rivalsUpdates);
       if (disc.hints.length > 0) {

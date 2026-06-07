@@ -135,7 +135,13 @@ function pushNarrative(
 
 // ─── Individual Offseason Event Handlers ───
 
-function handleFameBoost(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleFameBoost(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -147,21 +153,39 @@ function handleFameBoost(state: GameState, nextWeek: number, e: OffseasonEventNa
   }
 }
 
-function handleWinterChill(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleWinterChill(
+  _state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const cost = 150 + Math.floor(rng.next() * 100);
   ctx.treasuryDelta -= cost;
   addLedger(ctx, rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other');
   pushNarrative(ctx, rng, nextWeek, e, { gold: cost });
 }
 
-function handleMerchantBlessing(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleMerchantBlessing(
+  _state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const gold = 200 + Math.floor(rng.next() * 200);
   ctx.treasuryDelta += gold;
   addLedger(ctx, rng, nextWeek, 'Offseason Sponsorship', gold, 'other');
   pushNarrative(ctx, rng, nextWeek, e, { gold });
 }
 
-function handleEpiphany(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleEpiphany(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -186,7 +210,13 @@ function handleEpiphany(state: GameState, nextWeek: number, e: OffseasonEventNar
   }
 }
 
-function handleTavernBrawl(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleTavernBrawl(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state, true);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -211,7 +241,13 @@ function handleTavernBrawl(state: GameState, nextWeek: number, e: OffseasonEvent
   }
 }
 
-function handleBardsSong(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleBardsSong(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -224,7 +260,13 @@ function handleBardsSong(state: GameState, nextWeek: number, e: OffseasonEventNa
   }
 }
 
-function handlePlagueOutbreak(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handlePlagueOutbreak(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state, true);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -249,7 +291,13 @@ function handlePlagueOutbreak(state: GameState, nextWeek: number, e: OffseasonEv
   }
 }
 
-function handleBlackMarketRaid(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleBlackMarketRaid(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   const goldLost = 50 + Math.floor(rng.next() * 101);
   ctx.treasuryDelta -= goldLost;
@@ -262,7 +310,13 @@ function handleBlackMarketRaid(state: GameState, nextWeek: number, e: OffseasonE
   });
 }
 
-function handleGrandFeast(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleGrandFeast(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const goldCost = 200 + Math.floor(rng.next() * 201);
   ctx.treasuryDelta -= goldCost;
   addLedger(ctx, rng, nextWeek, 'Grand Feast Expenses', -goldCost, 'other');
@@ -277,10 +331,16 @@ function handleGrandFeast(state: GameState, nextWeek: number, e: OffseasonEventN
   pushNarrative(ctx, rng, nextWeek, e, { gold: goldCost });
 }
 
-function handleWanderingHealer(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleWanderingHealer(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const goldCost = 50 + Math.floor(rng.next() * 51);
   ctx.treasuryDelta -= goldCost;
-  addLedger(ctx, rng, nextWeek, 'Medical Tonics', -goldCost, 'medical');
+  addLedger(ctx, rng, nextWeek, 'Medical Tonics', -goldCost, 'upkeep');
 
   const activeInjured = state.roster.filter(
     (w) => w.status === 'Active' && w.injuries && w.injuries.length > 0
@@ -313,7 +373,13 @@ function handleWanderingHealer(state: GameState, nextWeek: number, e: OffseasonE
   }
 }
 
-function handleMysticVision(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleMysticVision(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -328,7 +394,13 @@ function handleMysticVision(state: GameState, nextWeek: number, e: OffseasonEven
   }
 }
 
-function handleWildAnimalAttack(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleWildAnimalAttack(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state, true);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -353,7 +425,13 @@ function handleWildAnimalAttack(state: GameState, nextWeek: number, e: Offseason
   }
 }
 
-function handleStrangeDream(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleStrangeDream(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -369,7 +447,13 @@ function handleStrangeDream(state: GameState, nextWeek: number, e: OffseasonEven
   }
 }
 
-function handleLoyalStray(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleLoyalStray(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const cost = 25;
   ctx.treasuryDelta -= cost;
   addLedger(ctx, rng, nextWeek, 'Dog Food & Treats', -cost, 'other');
@@ -393,7 +477,13 @@ function handleLoyalStray(state: GameState, nextWeek: number, e: OffseasonEventN
   }
 }
 
-function handleStreetPerformance(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleStreetPerformance(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -423,7 +513,13 @@ function handleStreetPerformance(state: GameState, nextWeek: number, e: Offseaso
   }
 }
 
-function handleChaoticSpells(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleChaoticSpells(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -469,7 +565,13 @@ function handleChaoticSpells(state: GameState, nextWeek: number, e: OffseasonEve
   }
 }
 
-function handleMysteriousPatron(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleMysteriousPatron(
+  _state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const goldGained = 100 + Math.floor(rng.next() * 201);
   ctx.treasuryDelta += goldGained;
 
@@ -478,7 +580,13 @@ function handleMysteriousPatron(state: GameState, nextWeek: number, e: Offseason
   pushNarrative(ctx, rng, nextWeek, e, { gold: goldGained });
 }
 
-function handleMidnightFeast(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleMidnightFeast(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const cost = 40 + Math.floor(rng.next() * 61);
   ctx.treasuryDelta -= cost;
 
@@ -506,7 +614,13 @@ function handleMidnightFeast(state: GameState, nextWeek: number, e: OffseasonEve
   }
 }
 
-function handleShadowTraining(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleShadowTraining(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -528,7 +642,13 @@ function handleShadowTraining(state: GameState, nextWeek: number, e: OffseasonEv
   }
 }
 
-function handleGladiatorOlympics(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleGladiatorOlympics(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -550,7 +670,13 @@ function handleGladiatorOlympics(state: GameState, nextWeek: number, e: Offseaso
   }
 }
 
-function handleUndergroundPitFight(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleUndergroundPitFight(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -579,7 +705,13 @@ function handleUndergroundPitFight(state: GameState, nextWeek: number, e: Offsea
   }
 }
 
-function handleDreamweaverVisit(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleDreamweaverVisit(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -591,10 +723,12 @@ function handleDreamweaverVisit(state: GameState, nextWeek: number, e: Offseason
       });
 
       ctx.insightTokens.push({
-        id: rng.uuid('insight'),
-        type: 'Minor',
-        origin: 'Dreamweaver',
-        expiresWeek: nextWeek + 4,
+        id: rng.uuid('insight') as InsightId,
+        type: 'Style' as InsightToken['type'],
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'Dreamweaver vision revealed hidden stylistic knowledge.',
+        discoveredWeek: nextWeek,
       });
 
       pushNarrative(ctx, rng, nextWeek, e, {
@@ -605,7 +739,13 @@ function handleDreamweaverVisit(state: GameState, nextWeek: number, e: Offseason
   }
 }
 
-function handleAbyssalBargain(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleAbyssalBargain(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -652,7 +792,13 @@ function handleAbyssalBargain(state: GameState, nextWeek: number, e: OffseasonEv
   }
 }
 
-function handleRogueAlchemist(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleRogueAlchemist(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);
@@ -696,7 +842,13 @@ function handleRogueAlchemist(state: GameState, nextWeek: number, e: OffseasonEv
   }
 }
 
-function handleMeteorShower(state: GameState, nextWeek: number, e: OffseasonEventNarrative, rng: IRNGService, ctx: OffseasonEventContext) {
+function handleMeteorShower(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
   const activeWarriors = getActiveWarriors(state);
   if (activeWarriors.length > 0) {
     const chosen = rng.pick(activeWarriors);

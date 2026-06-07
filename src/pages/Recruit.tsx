@@ -20,14 +20,7 @@ import WarriorBuilder from '@/components/WarriorBuilder';
 import { Button } from '@/components/ui/button';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  RefreshCw,
-  Hammer,
-  Search,
-  Coins,
-  Shield,
-  Target,
-} from 'lucide-react';
+import { RefreshCw, Hammer, Search, Coins, Shield, Target } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
@@ -47,10 +40,9 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 const CUSTOM_COST = 200;
 
 /**
-  * Recruit.
-  * @returns The result.
-  */
-
+ * Recruit.
+ * @returns The result.
+ */
 
 /**
  * Recruit.

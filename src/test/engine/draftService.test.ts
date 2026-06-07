@@ -82,8 +82,24 @@ describe('aiDraftFromPool', () => {
       makePoolWarrior({ id: 'recruit3', name: 'Recruit 3', style: FightingStyle.BashingAttack }),
     ];
     rivals = [
-      makeMinimalRival({ id: 'rival1' as StableId, owner: { ...makeMinimalRival().owner, id: 'owner1' as StableId, name: 'Owner 1', stableName: 'Stable 1' } }),
-      makeMinimalRival({ id: 'rival2' as StableId, owner: { ...makeMinimalRival().owner, id: 'owner2' as StableId, name: 'Owner 2', stableName: 'Stable 2' } }),
+      makeMinimalRival({
+        id: 'rival1' as StableId,
+        owner: {
+          ...makeMinimalRival().owner,
+          id: 'owner1' as StableId,
+          name: 'Owner 1',
+          stableName: 'Stable 1',
+        },
+      }),
+      makeMinimalRival({
+        id: 'rival2' as StableId,
+        owner: {
+          ...makeMinimalRival().owner,
+          id: 'owner2' as StableId,
+          name: 'Owner 2',
+          stableName: 'Stable 2',
+        },
+      }),
     ];
   });
 
@@ -131,18 +147,24 @@ describe('aiDraftFromPool', () => {
   describe('Snake Draft Priority', () => {
     it('sorts by fewest active warriors (primary)', () => {
       const rivalA = makeMinimalRival({ id: 'rivalA' as StableId, roster: [] }); // 0 active
-      const rivalB = makeMinimalRival({ id: 'rivalB' as StableId, roster: [
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-      ]}); // 3 active
-      const rivalC = makeMinimalRival({ id: 'rivalC' as StableId, roster: [
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-      ]}); // 5 active
+      const rivalB = makeMinimalRival({
+        id: 'rivalB' as StableId,
+        roster: [
+          { status: 'Active' } as any,
+          { status: 'Active' } as any,
+          { status: 'Active' } as any,
+        ],
+      }); // 3 active
+      const rivalC = makeMinimalRival({
+        id: 'rivalC' as StableId,
+        roster: [
+          { status: 'Active' } as any,
+          { status: 'Active' } as any,
+          { status: 'Active' } as any,
+          { status: 'Active' } as any,
+          { status: 'Active' } as any,
+        ],
+      }); // 5 active
 
       const result = aiDraftFromPool(pool, [rivalA, rivalB, rivalC], 4, state);
 
@@ -151,18 +173,21 @@ describe('aiDraftFromPool', () => {
     });
 
     it('sorts by lowest treasury (secondary)', () => {
-      const rivalA = makeMinimalRival({ id: 'rivalA' as StableId, treasury: 500, roster: [
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-      ]});
-      const rivalB = makeMinimalRival({ id: 'rivalB' as StableId, treasury: 1000, roster: [
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-      ]});
-      const rivalC = makeMinimalRival({ id: 'rivalC' as StableId, treasury: 1500, roster: [
-        { status: 'Active' } as any,
-        { status: 'Active' } as any,
-      ]});
+      const rivalA = makeMinimalRival({
+        id: 'rivalA' as StableId,
+        treasury: 500,
+        roster: [{ status: 'Active' } as any, { status: 'Active' } as any],
+      });
+      const rivalB = makeMinimalRival({
+        id: 'rivalB' as StableId,
+        treasury: 1000,
+        roster: [{ status: 'Active' } as any, { status: 'Active' } as any],
+      });
+      const rivalC = makeMinimalRival({
+        id: 'rivalC' as StableId,
+        treasury: 1500,
+        roster: [{ status: 'Active' } as any, { status: 'Active' } as any],
+      });
 
       const result = aiDraftFromPool(pool, [rivalA, rivalB, rivalC], 4, state);
 
@@ -170,9 +195,33 @@ describe('aiDraftFromPool', () => {
     });
 
     it('preserves original rival order in output', () => {
-      const rivalA = makeMinimalRival({ id: 'rivalA' as StableId, owner: { ...makeMinimalRival().owner, id: 'ownerA' as StableId, name: 'Owner A', stableName: 'Stable A' } });
-      const rivalB = makeMinimalRival({ id: 'rivalB' as StableId, owner: { ...makeMinimalRival().owner, id: 'ownerB' as StableId, name: 'Owner B', stableName: 'Stable B' } });
-      const rivalC = makeMinimalRival({ id: 'rivalC' as StableId, owner: { ...makeMinimalRival().owner, id: 'ownerC' as StableId, name: 'Owner C', stableName: 'Stable C' } });
+      const rivalA = makeMinimalRival({
+        id: 'rivalA' as StableId,
+        owner: {
+          ...makeMinimalRival().owner,
+          id: 'ownerA' as StableId,
+          name: 'Owner A',
+          stableName: 'Stable A',
+        },
+      });
+      const rivalB = makeMinimalRival({
+        id: 'rivalB' as StableId,
+        owner: {
+          ...makeMinimalRival().owner,
+          id: 'ownerB' as StableId,
+          name: 'Owner B',
+          stableName: 'Stable B',
+        },
+      });
+      const rivalC = makeMinimalRival({
+        id: 'rivalC' as StableId,
+        owner: {
+          ...makeMinimalRival().owner,
+          id: 'ownerC' as StableId,
+          name: 'Owner C',
+          stableName: 'Stable C',
+        },
+      });
 
       const inputOrder = [rivalA, rivalB, rivalC];
       const result = aiDraftFromPool(pool, inputOrder, 4, state);
@@ -248,14 +297,20 @@ describe('aiDraftFromPool', () => {
     });
 
     it('major week increases recruitment likelihood', () => {
-      const richRivals = rivals.map(r => makeMinimalRival({ ...r, treasury: 5000 }));
+      const richRivals = rivals.map((r) => makeMinimalRival({ ...r, treasury: 5000 }));
 
       const majorWeekResult = aiDraftFromPool(pool, richRivals, 4, state);
       const normalWeekResult = aiDraftFromPool(pool, richRivals, 5, state);
 
       // Major week should have at least as many recruits signed
-      const majorWeekRecruits = majorWeekResult.updatedRivals.reduce((sum, r) => sum + r.roster.length, 0);
-      const normalWeekRecruits = normalWeekResult.updatedRivals.reduce((sum, r) => sum + r.roster.length, 0);
+      const majorWeekRecruits = majorWeekResult.updatedRivals.reduce(
+        (sum, r) => sum + r.roster.length,
+        0
+      );
+      const normalWeekRecruits = normalWeekResult.updatedRivals.reduce(
+        (sum, r) => sum + r.roster.length,
+        0
+      );
 
       expect(majorWeekRecruits).toBeGreaterThanOrEqual(normalWeekRecruits);
     });
@@ -311,7 +366,7 @@ describe('aiDraftFromPool', () => {
     });
 
     it('gazette items aggregated across all rivals', () => {
-      const richRivals = rivals.map(r => makeMinimalRival({ ...r, treasury: 5000 }));
+      const richRivals = rivals.map((r) => makeMinimalRival({ ...r, treasury: 5000 }));
       const result = aiDraftFromPool(pool, richRivals, 4, state);
 
       // Gazettes should be an array (may be empty if no recruits signed)
@@ -319,7 +374,7 @@ describe('aiDraftFromPool', () => {
     });
 
     it('no gazette items when no recruits signed', () => {
-      const poorRivals = rivals.map(r => makeMinimalRival({ ...r, treasury: 10 }));
+      const poorRivals = rivals.map((r) => makeMinimalRival({ ...r, treasury: 10 }));
       const result = aiDraftFromPool(pool, poorRivals, 1, state);
 
       expect(result.gazetteItems).toEqual([]);
@@ -339,7 +394,7 @@ describe('aiDraftFromPool', () => {
     });
 
     it('pool shared across rivals (snake draft)', () => {
-      const richRivals = rivals.map(r => makeMinimalRival({ ...r, treasury: 5000 }));
+      const richRivals = rivals.map((r) => makeMinimalRival({ ...r, treasury: 5000 }));
       const result = aiDraftFromPool(pool, richRivals, 4, state);
 
       // Total recruits in rosters + remaining pool should equal initial pool
@@ -348,7 +403,7 @@ describe('aiDraftFromPool', () => {
     });
 
     it('pool unchanged when no recruits signed', () => {
-      const poorRivals = rivals.map(r => makeMinimalRival({ ...r, treasury: 10 }));
+      const poorRivals = rivals.map((r) => makeMinimalRival({ ...r, treasury: 10 }));
       const result = aiDraftFromPool(pool, poorRivals, 1, state);
 
       expect(result.updatedPool.length).toBe(pool.length);
@@ -370,7 +425,9 @@ describe('aiDraftFromPool', () => {
       const aggressiveRival = makeMinimalRival({
         owner: { ...makeMinimalRival().owner, personality: 'Aggressive' },
         treasury: 10000,
-        roster: Array(10).fill(null).map(() => ({ status: 'Active' } as any)),
+        roster: Array(10)
+          .fill(null)
+          .map(() => ({ status: 'Active' }) as any),
       });
       if (!aggressiveRival.owner) throw new Error('Owner missing');
       const result = aiDraftFromPool(pool, [aggressiveRival], 4, state);
@@ -383,7 +440,9 @@ describe('aiDraftFromPool', () => {
       const pragmaticRival = makeMinimalRival({
         owner: { ...makeMinimalRival().owner, personality: 'Pragmatic' },
         treasury: 10000,
-        roster: Array(8).fill(null).map(() => ({ status: 'Active' } as any)),
+        roster: Array(8)
+          .fill(null)
+          .map(() => ({ status: 'Active' }) as any),
       });
       if (!pragmaticRival.owner) throw new Error('Owner missing');
       const result = aiDraftFromPool(pool, [pragmaticRival], 4, state);
@@ -443,7 +502,7 @@ describe('aiDraftFromPool', () => {
     });
 
     it('accumulates results from all rivals', () => {
-      const richRivals = rivals.map(r => makeMinimalRival({ ...r, treasury: 5000 }));
+      const richRivals = rivals.map((r) => makeMinimalRival({ ...r, treasury: 5000 }));
       const result = aiDraftFromPool(pool, richRivals, 4, state);
 
       const totalRecruits = result.updatedRivals.reduce((sum, r) => sum + r.roster.length, 0);

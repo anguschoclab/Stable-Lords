@@ -58,8 +58,7 @@ export default function WorldOverview() {
     let pLosses = 0;
     let pKills = 0;
     let pActive = 0;
-    for (let i = 0; i < state.roster.length; i++) {
-      const w = state.roster[i];
+    for (const w of state.roster) {
       pWins += w.career.wins;
       pLosses += w.career.losses;
       pKills += w.career.kills;
@@ -87,8 +86,7 @@ export default function WorldOverview() {
       let rLosses = 0;
       let rKills = 0;
       let rActive = 0;
-      for (let i = 0; i < r.roster.length; i++) {
-        const w = r.roster[i];
+      for (const w of r.roster) {
         rWins += w.career.wins;
         rLosses += w.career.losses;
         rKills += w.career.kills;
@@ -157,13 +155,11 @@ export default function WorldOverview() {
     }, []);
 
     if (state.rivals) {
-      for (let i = 0; i < state.rivals.length; i++) {
-        const r = state.rivals[i];
+      for (const r of state.rivals) {
         const rRoster = r.roster;
         const rName = r.owner.stableName;
         const rId = r.owner.id;
-        for (let j = 0; j < rRoster.length; j++) {
-          const w = rRoster[j];
+        for (const w of rRoster) {
           if (w.status === 'Active') {
             rows.push(mapWarrior(w, rName, rId, false));
           }
@@ -252,7 +248,7 @@ export default function WorldOverview() {
           <StableRankings
             rows={stableRows}
             sort={stableSort}
-            onSort={(field: SortField) =>
+            onSort={(field) =>
               setStableSort((prev) => ({
                 field: field as SortField,
                 dir: prev.field === field && prev.dir === 'desc' ? 'asc' : 'desc',
@@ -271,7 +267,7 @@ export default function WorldOverview() {
           <WarriorLeaderboard
             rows={warriorRows}
             sort={warriorSort}
-            onSort={(field: WarriorSortField) =>
+            onSort={(field) =>
               setWarriorSort((prev) => ({
                 field: field as WarriorSortField,
                 dir: prev.field === field && prev.dir === 'desc' ? 'asc' : 'desc',

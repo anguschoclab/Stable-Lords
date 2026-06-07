@@ -26,7 +26,6 @@ import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import type { GameState, RivalStableData, Owner } from '@/types/state.types';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 
-
 /**
  * Admin tools.
  * @returns The result.
@@ -129,7 +128,10 @@ export default function AdminTools() {
 
   const resetRivals = useCallback(() => {
     import('@/engine/rivals').then(({ generateRivalStables }) => {
-      const newRivals = generateRivalStables(23, cryptoRandomInt(0, 2147483647)) as RivalStableData[];
+      const newRivals = generateRivalStables(
+        23,
+        cryptoRandomInt(0, 2147483647)
+      ) as RivalStableData[];
       setState((draft) => {
         draft.rivals = newRivals;
       });
@@ -325,7 +327,7 @@ export default function AdminTools() {
                   <div className="p-8 space-y-4">
                     <Button
                       onClick={() => {
-                        setState((draft: GameState) => {
+                        setState((draft) => {
                           draft.roster.forEach((w) => {
                             if (w.favorites) {
                               w.favorites.discovered = {

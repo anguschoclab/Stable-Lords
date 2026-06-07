@@ -27,7 +27,9 @@ function makeMockRng(values: number[]): IRNGService {
   };
 }
 
-function makeWarrior(overrides: { favorites?: WarriorFavorites; name?: string; equipment?: { weapon: string } } = {}): Warrior {
+function makeWarrior(
+  overrides: { favorites?: WarriorFavorites; name?: string; equipment?: { weapon: string } } = {}
+): Warrior {
   return {
     id: 'warrior-test' as import('@/types/shared.types').WarriorId,
     name: overrides.name ?? 'Test Warrior',
@@ -127,7 +129,9 @@ describe('generateFavorites', () => {
 // ─── checkDiscovery ─────────────────────────────────────────────────────────
 
 describe('checkDiscovery', () => {
-  function makeDiscoveredFavorites(partial: Partial<WarriorFavorites['discovered']> = {}): WarriorFavorites {
+  function makeDiscoveredFavorites(
+    partial: Partial<WarriorFavorites['discovered']> = {}
+  ): WarriorFavorites {
     return {
       weaponId: 'longsword',
       rhythm: { oe: 7, al: 5 },

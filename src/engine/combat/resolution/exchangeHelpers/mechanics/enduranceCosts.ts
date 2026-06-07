@@ -35,7 +35,7 @@ export function applyEnduranceCosts(
   const psychEndMultD = PSYCH_STATE_MODS[fD.psychState]?.enduranceCostMult ?? 1;
   const traitEndMultAtt = att.staticEnduranceMult ?? 1;
   const traitEndMultDef = def.staticEnduranceMult ?? 1;
-  
+
   att.endurance -= Math.round(
     enduranceCost(curAttOE, curAttAL, ctx.weather) *
       getEnduranceMult(att.style) *
@@ -45,7 +45,7 @@ export function applyEnduranceCosts(
       (aGoesFirst ? psychEndMultA : psychEndMultD) *
       traitEndMultAtt
   );
-  
+
   def.endurance -= Math.max(
     1,
     Math.round(

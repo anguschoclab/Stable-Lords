@@ -21,8 +21,7 @@ export function buildFTUEInitialState(
 
   const warriors = selectedWarriors.map((pw) => {
     // Use the orphan's pre-generated potential (or regenerate if somehow missing)
-    const potential =
-      pw.potential ?? generatePotential(pw.attrs, 'Common', () => finishRng.next());
+    const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', () => finishRng.next());
     // Build base plan and merge trait-based modifiers
     const basePlan = defaultPlanForWarrior(makeWarrior(undefined, pw.name, pw.style, pw.attrs));
     const traitData = TRAIT_DATA[pw.trait];
@@ -60,8 +59,7 @@ export function buildFTUEInitialState(
             losses: won ? 0 : 1,
             kills: killed ? 1 : 0,
           },
-          flair:
-            (boutResult.outcome.post?.tags ?? []).includes('Flashy') && won ? ['Flashy'] : [],
+          flair: (boutResult.outcome.post?.tags ?? []).includes('Flashy') && won ? ['Flashy'] : [],
         };
       }
     }

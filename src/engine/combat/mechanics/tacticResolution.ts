@@ -168,19 +168,18 @@ export function getDefensiveTacticMods(
   if (!tactic || tactic === 'none') return ZERO_DEF;
   const mult = suitabilityMultiplier(getDefensiveSuitability(style, tactic));
   return (DEFENSIVE_TACTIC_MAP[tactic] ?? (() => ZERO_DEF))(mult);
-}/**
-  * Calculate final oeal.
-  * @param effOE - Eff oe.
-  * @param effAL - Eff al.
-  * @param plan - Plan.
-  * @param hp - Hp.
-  * @param maxHp - Max hp.
-  * @param end - End.
-  * @param maxEnd - Max end.
-  * @param exchange - Exchange.
-  * @returns The result.
-  */
-
+} /**
+ * Calculate final oeal.
+ * @param effOE - Eff oe.
+ * @param effAL - Eff al.
+ * @param plan - Plan.
+ * @param hp - Hp.
+ * @param maxHp - Max hp.
+ * @param end - End.
+ * @param maxEnd - Max end.
+ * @param exchange - Exchange.
+ * @returns The result.
+ */
 
 /**
  * Calculate final oeal.

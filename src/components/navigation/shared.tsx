@@ -158,7 +158,11 @@ interface HubSwitcherProps {
   activeHubId: HubId | null;
   alerts: Record<HubId, number>;
   alertLinks: Record<HubId, string>;
-  LinkComponent?: React.ComponentType<{ to: string; children: React.ReactNode; className?: string }>;
+  LinkComponent?: React.ComponentType<{
+    to: string;
+    children: React.ReactNode;
+    className?: string;
+  }>;
   linkClassName?: string;
   iconClassName?: string;
   showChevron?: boolean;
@@ -217,7 +221,9 @@ export function HubSwitcher({
                 {alertCount}
               </button>
             )}
-            {showChevron && isActive && <ChevronRight className="h-3 w-3 text-primary/60 shrink-0" />}
+            {showChevron && isActive && (
+              <ChevronRight className="h-3 w-3 text-primary/60 shrink-0" />
+            )}
           </LinkComponent>
         );
       })}
@@ -230,7 +236,11 @@ export function HubSwitcher({
 interface SubPageListProps {
   activeHubId: HubId | null;
   currentPath: string;
-  LinkComponent?: React.ComponentType<{ to: string; children: React.ReactNode; className?: string }>;
+  LinkComponent?: React.ComponentType<{
+    to: string;
+    children: React.ReactNode;
+    className?: string;
+  }>;
   pageLinkClassName?: string;
   iconClassName?: string;
   useMotionIndicator?: boolean;
@@ -310,7 +320,11 @@ export function SubPageList({
 
 interface AlertStripProps {
   alerts: Record<HubId, number>;
-  LinkComponent?: React.ComponentType<{ to: string; children: React.ReactNode; className?: string }>;
+  LinkComponent?: React.ComponentType<{
+    to: string;
+    children: React.ReactNode;
+    className?: string;
+  }>;
   itemClassName?: string;
 }
 

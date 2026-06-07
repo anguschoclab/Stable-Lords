@@ -8,7 +8,7 @@ interface SavedGamesSectionProps {
   onExport: (slotId: string) => void;
   onDelete: (slot: SaveSlotMeta) => void;
   formatDate: (iso: string) => string;
-}/**
+} /**
   * Saved games section.
   * @param  - {
   slots,
@@ -20,7 +20,6 @@ interface SavedGamesSectionProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Saved games section.

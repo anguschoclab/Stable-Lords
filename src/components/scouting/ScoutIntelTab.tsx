@@ -15,7 +15,7 @@ interface ScoutIntelTabProps {
   onSelectWarrior: (id: string) => void;
   treasury: number;
   onScout: (quality: ScoutQuality) => void;
-}/**
+} /**
   * Scout intel tab.
   * @param  - {
   rivals,
@@ -29,7 +29,6 @@ interface ScoutIntelTabProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Scout intel tab.
@@ -55,10 +54,7 @@ export function ScoutIntelTab({
   treasury,
   onScout,
 }: ScoutIntelTabProps) {
-  const rivalMap = useMemo(
-    () => new Map(rivals.map((r) => [r.owner.id as string, r])),
-    [rivals]
-  );
+  const rivalMap = useMemo(() => new Map(rivals.map((r) => [r.owner.id as string, r])), [rivals]);
 
   const activeRival = useMemo(
     () => (selectedRivalId ? rivalMap.get(selectedRivalId) : undefined),

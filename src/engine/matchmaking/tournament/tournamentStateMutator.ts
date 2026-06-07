@@ -1,5 +1,6 @@
 import type { GameState, TournamentEntry } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 import { StateImpact } from '@/engine/impacts';
 import { updateEntityInList } from '@/utils/stateUtils';
 
@@ -8,11 +9,11 @@ import { updateEntityInList } from '@/utils/stateUtils';
  */
 export function modifyWarrior(
   state: GameState,
-  warriorId: string,
+  warriorId: WarriorId,
   transform: (w: Warrior) => void
 ): StateImpact {
-  const rosterUpdates = new Map<string, Partial<Warrior>>();
-  const rivalsUpdates = new Map<string, any>();
+  const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
+  const rivalsUpdates = new Map<StableId, Partial<import('@/types/game').RivalStableData>>();
 
   state.roster.forEach((w) => {
     if (w.id === warriorId) {
@@ -31,7 +32,7 @@ export function modifyWarrior(
       return newW;
     });
     if (modified) {
-      rivalsUpdates.set(r.id, { roster: updatedRoster });
+      rivalsUpdates.set(r.id as StableId, { roster: updatedRoster });
     }
   });
 
@@ -41,17 +42,16 @@ export function modifyWarrior(
   };
 }
 
-const warriorCache = new WeakMap<GameState, Map<string, Warrior>>();
+const warriorCache = new WeakMap<GameState, Map<WarriorId, Warrior>>();
 
 export function findWarriorById(
   state: GameState,
-  warriorId: string,
+  warriorId: WarriorId,
   tournament?: TournamentEntry
 ): Warrior | undefined {
   // Check tournament first if provided
   if (tournament) {
-    for (let i = 0; i < tournament.participants.length; i++) {
-      const participant = tournament.participants[i];
+    for (const participant of tournament.participants) {
       if (participant.id === warriorId && participant.attributes) {
         return participant;
       }
@@ -60,15 +60,12 @@ export function findWarriorById(
 
   let map = warriorCache.get(state);
   if (!map) {
-    map = new Map<string, Warrior>();
-    for (let i = 0; i < state.roster.length; i++) {
-      const w = state.roster[i];
+    map = new Map<WarriorId, Warrior>();
+    for (const w of state.roster) {
       map.set(w.id, w);
     }
-    for (let i = 0; i < state.rivals.length; i++) {
-      const r = state.rivals[i];
-      for (let j = 0; j < r.roster.length; j++) {
-        const w = r.roster[j];
+    for (const r of state.rivals) {
+      for (const w of r.roster) {
         map.set(w.id, w);
       }
     }

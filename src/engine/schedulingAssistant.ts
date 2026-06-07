@@ -204,10 +204,14 @@ function getMatchupNotes(
     if (headToHead.total === 0) {
       notes.push('Fresh matchup — no prior encounters.');
     } else {
-      if (headToHead.lastWinner === 'rival') notes.push('Revenge opportunity — they beat you last time!');
-      if (headToHead.lastWinner === 'player') notes.push('Favorable history — you\'ve beaten them before.');
-      if (headToHead.wins >= 3) notes.push(`Dominant streak — you've beaten them ${headToHead.wins} times.`);
-      if (headToHead.losses >= 3) notes.push(`Curb stomp risk — they've beaten you ${headToHead.losses} times.`);
+      if (headToHead.lastWinner === 'rival')
+        notes.push('Revenge opportunity — they beat you last time!');
+      if (headToHead.lastWinner === 'player')
+        notes.push("Favorable history — you've beaten them before.");
+      if (headToHead.wins >= 3)
+        notes.push(`Dominant streak — you've beaten them ${headToHead.wins} times.`);
+      if (headToHead.losses >= 3)
+        notes.push(`Curb stomp risk — they've beaten you ${headToHead.losses} times.`);
       if (
         currentWeek !== undefined &&
         headToHead.lastFightWeek !== undefined &&
@@ -250,7 +254,8 @@ export function getRecommendedChallenges(
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
       const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
-      const rankDiff = playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+      const rankDiff =
+        playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
       const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
       topScores.push({
         playerWarriorId: playerWarrior.id,
@@ -269,7 +274,8 @@ export function getRecommendedChallenges(
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
       const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
-      const rankDiff = playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+      const rankDiff =
+        playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
       const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
       topScores[limit - 1] = {
         playerWarriorId: playerWarrior.id,
@@ -316,7 +322,8 @@ export function getMatchupsToAvoid(
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
       const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
-      const rankDiff = playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+      const rankDiff =
+        playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
       const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
       bottomScores.push({
         playerWarriorId: playerWarrior.id,
@@ -335,7 +342,8 @@ export function getMatchupsToAvoid(
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
       const rivalRank = state.realmRankings?.[r.warrior.id]?.overallRank;
-      const rankDiff = playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
+      const rankDiff =
+        playerRank !== undefined && rivalRank !== undefined ? playerRank - rivalRank : undefined;
       const headToHead = getHeadToHeadRecord(playerWarrior, r.warrior, state.arenaHistory);
       bottomScores[limit - 1] = {
         playerWarriorId: playerWarrior.id,

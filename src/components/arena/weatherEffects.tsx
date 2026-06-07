@@ -101,8 +101,7 @@ function AbyssalGloomEffect() {
     <div
       className="absolute inset-0 pointer-events-none"
       style={{
-        background:
-          'radial-gradient(circle at center, rgba(30,0,50,0.3) 10%, rgba(0,0,0,0.7) 90%)',
+        background: 'radial-gradient(circle at center, rgba(30,0,50,0.3) 10%, rgba(0,0,0,0.7) 90%)',
         mixBlendMode: 'multiply',
       }}
     />

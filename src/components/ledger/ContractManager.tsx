@@ -23,11 +23,10 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
-                                                                                   * Contract manager.
-                                                                                   * @returns The result.
-                                                                                   */
-
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'; /**
+ * Contract manager.
+ * @returns The result.
+ */
 
 /**
  * Contract manager.

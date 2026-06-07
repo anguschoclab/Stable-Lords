@@ -130,9 +130,7 @@ describe('TimeAdvanceService - evaluateStopConditions', () => {
     mockState.rivals = [
       {
         id: 'rival-1',
-        roster: [
-          { id: 'w2', status: 'Active', fatigue: 60, injuries: [] } as any,
-        ],
+        roster: [{ id: 'w2', status: 'Active', fatigue: 60, injuries: [] } as any],
       } as any,
     ];
 
@@ -155,9 +153,7 @@ describe('TimeAdvanceService - evaluateStopConditions', () => {
     mockState.rivals = [
       {
         id: 'rival-1',
-        roster: [
-          { id: 'w2', status: 'Active', fatigue: 0, injuries: [] } as any,
-        ],
+        roster: [{ id: 'w2', status: 'Active', fatigue: 0, injuries: [] } as any],
       } as any,
     ];
 

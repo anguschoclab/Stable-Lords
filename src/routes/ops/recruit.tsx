@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import Recruit from '@/pages/Recruit';/**
-                                       * Route.
-                                       */
-
+import Recruit from '@/pages/Recruit'; /**
+ * Route.
+ */
 
 /**
  * Route.

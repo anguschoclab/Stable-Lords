@@ -7,12 +7,7 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { isFightReady } from '@/engine/warriorStatus';
-import {
-  Dumbbell,
-  ScrollText,
-  Swords,
-  Trophy,
-} from 'lucide-react';
+import { Dumbbell, ScrollText, Swords, Trophy } from 'lucide-react';
 
 export interface TacticalAlert {
   id: string;

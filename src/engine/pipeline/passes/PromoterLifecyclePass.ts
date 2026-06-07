@@ -15,13 +15,12 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Sadistic',
   'Flashy',
   'Corporate',
-];/**
-   * Run promoter lifecycle pass.
-   * @param state - State.
-   * @param rng - Rng. (optional)
-   * @returns The result.
-   */
-
+]; /**
+ * Run promoter lifecycle pass.
+ * @param state - State.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
 
 /**
  * Run promoter lifecycle pass.
@@ -38,6 +37,7 @@ export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): S
 
   for (const id in newPromoters) {
     const p = newPromoters[id];
+    if (!p) continue;
     let currentAge = p.age ?? 45;
     if (isAgingWeek) currentAge++;
 
@@ -59,7 +59,7 @@ export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): S
           rngService.next() < 0.5 ? p.personality : rngService.pick(PERSONALITIES);
 
         const successor: Promoter = {
-          id: newId,
+          id: newId as Promoter['id'],
           name: successorName,
           age: 25 + rngService.roll(0, 10),
           personality,

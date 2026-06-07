@@ -36,7 +36,12 @@ function createMockWarrior(style: FightingStyle, wt: number = 10): Warrior {
 }
 
 // Helper function to create mock fight plan
-function createMockFightPlan(style: FightingStyle, oe: number = 5, al: number = 5, killDesire: number = 5): FightPlan {
+function createMockFightPlan(
+  style: FightingStyle,
+  oe: number = 5,
+  al: number = 5,
+  killDesire: number = 5
+): FightPlan {
   return {
     style,
     OE: oe,
@@ -660,7 +665,9 @@ describe('estimateStaminaCurve', () => {
       const curveLow = estimateStaminaCurve(plan, warriorLow);
       const curveHigh = estimateStaminaCurve(plan, warriorHigh);
       // Higher WT should have higher final stamina (slower burn)
-      expect(curveHigh[curveHigh.length - 1] ?? 0).toBeGreaterThan(curveLow[curveLow.length - 1] ?? 0);
+      expect(curveHigh[curveHigh.length - 1] ?? 0).toBeGreaterThan(
+        curveLow[curveLow.length - 1] ?? 0
+      );
     });
   });
 
@@ -686,7 +693,9 @@ describe('estimateStaminaCurve', () => {
       const curve = estimateStaminaCurve(plan);
       expect(curve[0]).toBe(70); // default WT=10
       // Should deplete faster than baseline
-      const baseline = estimateStaminaCurve(createMockFightPlan(FightingStyle.StrikingAttack, 5, 5));
+      const baseline = estimateStaminaCurve(
+        createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
+      );
       expect(curve[curve.length - 1] ?? 0).toBeLessThan(baseline[baseline.length - 1] ?? 0);
     });
 
@@ -695,7 +704,9 @@ describe('estimateStaminaCurve', () => {
       const curve = estimateStaminaCurve(plan);
       expect(curve[0]).toBe(70); // default WT=10
       // Should deplete slower than baseline
-      const baseline = estimateStaminaCurve(createMockFightPlan(FightingStyle.StrikingAttack, 5, 5));
+      const baseline = estimateStaminaCurve(
+        createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
+      );
       expect(curve[curve.length - 1] ?? 0).toBeGreaterThan(baseline[baseline.length - 1] ?? 0);
     });
   });
@@ -710,7 +721,9 @@ describe('estimateStaminaCurve', () => {
       };
       const curve = estimateStaminaCurve(plan);
       // First few minutes should deplete faster due to high opening phase effort
-      const baseline = estimateStaminaCurve(createMockFightPlan(FightingStyle.StrikingAttack, 5, 5));
+      const baseline = estimateStaminaCurve(
+        createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
+      );
       expect(curve[5] ?? 0).toBeLessThan(baseline[5] ?? 0);
     });
 
@@ -723,7 +736,9 @@ describe('estimateStaminaCurve', () => {
       };
       const curve = estimateStaminaCurve(plan);
       // Minutes 6-14 should deplete faster
-      const baseline = estimateStaminaCurve(createMockFightPlan(FightingStyle.StrikingAttack, 5, 5));
+      const baseline = estimateStaminaCurve(
+        createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
+      );
       expect(curve[14] ?? 0).toBeLessThan(baseline[14] ?? 0);
     });
 
@@ -736,7 +751,9 @@ describe('estimateStaminaCurve', () => {
       };
       const curve = estimateStaminaCurve(plan);
       // Minutes 15-20 should deplete faster
-      const baseline = estimateStaminaCurve(createMockFightPlan(FightingStyle.StrikingAttack, 5, 5));
+      const baseline = estimateStaminaCurve(
+        createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
+      );
       expect(curve[20] ?? 0).toBeLessThan(baseline[20] ?? 0);
     });
 
@@ -809,7 +826,9 @@ describe('estimateStaminaCurve', () => {
         phases: {},
       };
       const curve = estimateStaminaCurve(plan);
-      const baseline = estimateStaminaCurve(createMockFightPlan(FightingStyle.StrikingAttack, 5, 5));
+      const baseline = estimateStaminaCurve(
+        createMockFightPlan(FightingStyle.StrikingAttack, 5, 5)
+      );
       expect(curve).toEqual(baseline);
     });
 

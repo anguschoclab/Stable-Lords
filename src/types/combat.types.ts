@@ -13,28 +13,25 @@ import {
   type FightId,
   type TournamentId,
 } from './shared.types';
-import type { BoutResult } from '@/engine/boutProcessor';/**
-                                                          * Weapon type type.
-                                                          */
-
+import type { BoutResult } from '@/engine/boutProcessor'; /**
+ * Weapon type type.
+ */
 
 /**
  * Weapon type type.
  */
-export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist';/**
-                                                                       * Armor weight type.
-                                                                       */
-
+export type WeaponType = 'slashing' | 'bashing' | 'piercing' | 'fist'; /**
+ * Armor weight type.
+ */
 
 // ─── Equipment Constants ───────────────────────────────────────────────────
 
 /**
  * Armor weight type.
  */
-export type ArmorWeight = 'None' | 'Light' | 'Medium' | 'Heavy' | 'Ultra-Heavy';/**
-                                                                                 * Armor_weight_map.
-                                                                                 */
-
+export type ArmorWeight = 'None' | 'Light' | 'Medium' | 'Heavy' | 'Ultra-Heavy'; /**
+ * Armor_weight_map.
+ */
 
 /**
  * Armor_weight_map.
@@ -48,18 +45,16 @@ export const ARMOR_WEIGHT_MAP: Record<
   Medium: { minWeight: 5, maxWeight: 8, speedPenalty: 2 },
   Heavy: { minWeight: 9, maxWeight: 12, speedPenalty: 4 },
   'Ultra-Heavy': { minWeight: 13, maxWeight: 20, speedPenalty: 6 },
-};/**
-   * Equipment slot type.
-   */
-
+}; /**
+ * Equipment slot type.
+ */
 
 /**
  * Equipment slot type.
  */
-export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';/**
-                                                                    * Defines the shape of armor encumbrance.
-                                                                    */
-
+export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm'; /**
+ * Defines the shape of armor encumbrance.
+ */
 
 /**
  * Defines the shape of armor encumbrance.
@@ -69,10 +64,9 @@ export interface ArmorEncumbrance {
   speedPenalty: number;
   fatigueMult: number;
   weightClass: ArmorWeight;
-}/**
-  * Death cause bucket type.
-  */
-
+} /**
+ * Death cause bucket type.
+ */
 
 // ─── Fight Results ──────────────────────────────────────────────────────────
 
@@ -85,18 +79,16 @@ export type DeathCauseBucket =
   | 'CRITICAL_CHAIN'
   | 'FATIGUE_COLLAPSE'
   | 'ARMOR_FAILURE'
-  | 'RIVALRY_FINISH';/**
-                      * Fight outcome by type.
-                      */
-
+  | 'RIVALRY_FINISH'; /**
+ * Fight outcome by type.
+ */
 
 /**
  * Fight outcome by type.
  */
-export type FightOutcomeBy = 'Kill' | 'KO' | 'Exhaustion' | 'Stoppage' | 'Draw' | null;/**
-                                                                                        * Combat event type type.
-                                                                                        */
-
+export type FightOutcomeBy = 'Kill' | 'KO' | 'Exhaustion' | 'Stoppage' | 'Draw' | null; /**
+ * Combat event type type.
+ */
 
 /**
  * Combat event type type.
@@ -119,10 +111,9 @@ export type CombatEventType =
   | 'FEINT_FAIL'
   | 'ZONE_SHIFT'
   | 'KNOCKDOWN'
-  | 'RECOVERY';/**
-                  * Defines the shape of combat event.
-                  */
-
+  | 'RECOVERY'; /**
+ * Defines the shape of combat event.
+ */
 
 /**
  * Defines the shape of combat event.
@@ -135,10 +126,9 @@ export interface CombatEvent {
   location?: string;
   result?: string | boolean;
   metadata?: Record<string, unknown>;
-}/**
-  * Defines the shape of minute event.
-  */
-
+} /**
+ * Defines the shape of minute event.
+ */
 
 /**
  * Defines the shape of minute event.
@@ -185,10 +175,9 @@ export interface ExchangeLogEntry {
   executionFlag?: boolean;
   /** Telemetry reason codes e.g. AI_PUSH_FATIGUE, CROWD_BLOODTHIRSTY_LETHAL. */
   reasonCodes?: string[];
-}/**
-  * Defines the shape of fight outcome.
-  */
-
+} /**
+ * Defines the shape of fight outcome.
+ */
 
 /**
  * Defines the shape of fight outcome.
@@ -213,10 +202,9 @@ export interface FightOutcome {
     fatalExchangeIndex?: number;
     tags?: string[];
   };
-}/**
-  * Defines the shape of fight summary.
-  */
-
+} /**
+ * Defines the shape of fight summary.
+ */
 
 /**
  * Defines the shape of fight summary.

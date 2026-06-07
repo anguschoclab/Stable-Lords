@@ -2,7 +2,6 @@ import type { GameState } from '@/types/state.types';
 import { ArchiveConflictError } from './ArchiveConflictError';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 
-
 /**
  * Defines the shape of archive service.
  */
@@ -52,7 +51,7 @@ export class OPFSArchiveService implements ArchiveService {
    * @param task - Task.
    * @returns The result.
    */
-private async enqueue<T>(task: () => Promise<T>): Promise<T> {
+  private async enqueue<T>(task: () => Promise<T>): Promise<T> {
     const p = this.writeQueue.then(task);
     this.writeQueue = p.catch(() => {}); // catch errors to allow next task in queue
     return p;
@@ -62,7 +61,7 @@ private async enqueue<T>(task: () => Promise<T>): Promise<T> {
    * Is supported.
    * @returns The result.
    */
-isSupported(): boolean {
+  isSupported(): boolean {
     return (
       typeof navigator !== 'undefined' &&
       typeof navigator.storage !== 'undefined' &&
@@ -76,7 +75,7 @@ isSupported(): boolean {
    * @param type - Type.
    * @returns The result.
    */
-private async getDirectory(
+  private async getDirectory(
     season: number,
     type: 'bouts' | 'gazettes'
   ): Promise<FileSystemDirectoryHandle | null> {
@@ -101,7 +100,7 @@ private async getDirectory(
    * Get hot state directory.
    * @returns The result.
    */
-private async getHotStateDirectory(): Promise<FileSystemDirectoryHandle | null> {
+  private async getHotStateDirectory(): Promise<FileSystemDirectoryHandle | null> {
     if (!this.isSupported()) return null;
     try {
       const rootHandle = await navigator.storage.getDirectory();
@@ -121,7 +120,7 @@ private async getHotStateDirectory(): Promise<FileSystemDirectoryHandle | null> 
    * @param stateData - State data.
    * @returns The result.
    */
-async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
+  async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
     assertSafeFileNamePart(slotId, 'slotId');
     let writable: FileSystemWritableFileStream | null = null;
     try {
@@ -158,7 +157,7 @@ async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
    * @param slotId - Slot id.
    * @returns The result.
    */
-async retrieveHotState(slotId: string): Promise<GameState | null> {
+  async retrieveHotState(slotId: string): Promise<GameState | null> {
     assertSafeFileNamePart(slotId, 'slotId');
     try {
       const dirHandle = await this.getHotStateDirectory();
@@ -190,7 +189,7 @@ async retrieveHotState(slotId: string): Promise<GameState | null> {
    * @param overwrite - Overwrite.
    * @returns The result.
    */
-async archiveBoutLog(
+  async archiveBoutLog(
     year: number,
     season: number,
     boutId: string,
@@ -259,7 +258,7 @@ async archiveBoutLog(
    * @param boutId - Bout id.
    * @returns The result.
    */
-async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
+  async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
     assertSafeFileNamePart(boutId, 'boutId');
     try {
       const dirHandle = await this.getDirectory(season, 'bouts');
@@ -291,7 +290,7 @@ async retrieveBoutLog(year: number, season: number, boutId: string): Promise<str
    * @param markdown - Markdown.
    * @returns The result.
    */
-async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
+  async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
     return this.enqueue(async () => {
       assertSafeFileNamePart(String(week), 'week');
       let writable: FileSystemWritableFileStream | null = null;
@@ -333,7 +332,7 @@ async archiveGazette(season: number, week: number, markdown: string): Promise<vo
    * @param week - Week.
    * @returns The result.
    */
-async retrieveGazette(season: number, week: number): Promise<string | null> {
+  async retrieveGazette(season: number, week: number): Promise<string | null> {
     assertSafeFileNamePart(String(week), 'week');
     try {
       const dirHandle = await this.getDirectory(season, 'gazettes');
@@ -361,7 +360,7 @@ async retrieveGazette(season: number, week: number): Promise<string | null> {
    * @param season - Season.
    * @returns The result.
    */
-async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
+  async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
     try {
       const dirHandle = await this.getDirectory(season, 'bouts');
       if (!dirHandle) return [];
@@ -379,10 +378,9 @@ async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
       return [];
     }
   }
-}/**
-  * Opfs archive.
-  */
-
+} /**
+ * Opfs archive.
+ */
 
 /**
  * Opfs archive.

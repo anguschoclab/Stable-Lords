@@ -5,12 +5,11 @@ import narrativeContent from '@/data/narrativeContent.json';
 interface InjuriesStepProps {
   injuries: string[];
   deaths: string[];
-}/**
-  * Injuries step.
-  * @param - { injuries, deaths }.
-  * @returns The result.
-  */
-
+} /**
+ * Injuries step.
+ * @param - { injuries, deaths }.
+ * @returns The result.
+ */
 
 /**
  * Injuries step.

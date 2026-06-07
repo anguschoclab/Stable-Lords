@@ -158,7 +158,8 @@ const WEATHER_METADATA = {
     color: 'text-arena-fame',
     bg: 'bg-arena-fame/10',
     border: 'border-arena-fame/20',
-    description: 'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
+    description:
+      'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
     stats: 'STAMINA CONSERVATION 15% // INITIATIVE +2',
   },
   'Chaotic Winds': {

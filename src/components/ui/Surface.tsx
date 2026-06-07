@@ -6,8 +6,7 @@ import { surfaceVariants, type SurfaceVariants } from './surface-utils';
 /**
  * Defines the shape of surface props.
  */
-export interface SurfaceProps
-  extends React.HTMLAttributes<HTMLDivElement>, SurfaceVariants {
+export interface SurfaceProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceVariants {
   asChild?: boolean;
   glow?: boolean;
 }

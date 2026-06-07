@@ -24,8 +24,19 @@ describe('conditionEngine', () => {
       hitsTaken: 0,
       attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
       psychState: 'Neutral',
-      plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 5, AL: 5, killDesire: 5, conditions: [] },
-      activePlan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 5, AL: 5, killDesire: 5 },
+      plan: {
+        style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+        OE: 5,
+        AL: 5,
+        killDesire: 5,
+        conditions: [],
+      },
+      activePlan: {
+        style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+        OE: 5,
+        AL: 5,
+        killDesire: 5,
+      },
       ...overrides,
     }) as FighterState;
 
@@ -277,7 +288,14 @@ describe('conditionEngine', () => {
 
   describe('PSYCH_STATE_MODS', () => {
     it('has defined mods for all psych states', () => {
-      const states = ['Neutral', 'InTheZone', 'Rattled', 'Desperate', 'Cruising', 'FatiguePanic'] as const;
+      const states = [
+        'Neutral',
+        'InTheZone',
+        'Rattled',
+        'Desperate',
+        'Cruising',
+        'FatiguePanic',
+      ] as const;
       for (const state of states) {
         expect(PSYCH_STATE_MODS[state]).toBeDefined();
         expect(PSYCH_STATE_MODS[state]).toHaveProperty('attMod');

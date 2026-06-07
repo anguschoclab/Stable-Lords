@@ -6,19 +6,18 @@ import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
-import { StateImpact } from '@/engine/impacts';/**
-                                                * Handle death.
-                                                * @param s - S.
-                                                * @param wA - W a.
-                                                * @param wD - W d.
-                                                * @param outcome - Outcome.
-                                                * @param week - Week.
-                                                * @param tags - Tags.
-                                                * @param rivalStableId - Rival stable id. (optional)
-                                                * @param rng - Rng.
-                                                * @returns The result.
-                                                */
-
+import { StateImpact } from '@/engine/impacts'; /**
+ * Handle death.
+ * @param s - S.
+ * @param wA - W a.
+ * @param wD - W d.
+ * @param outcome - Outcome.
+ * @param week - Week.
+ * @param tags - Tags.
+ * @param rivalStableId - Rival stable id. (optional)
+ * @param rng - Rng.
+ * @returns The result.
+ */
 
 /**
  * Handle death.

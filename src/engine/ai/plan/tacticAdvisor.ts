@@ -4,7 +4,10 @@
  */
 import { FightingStyle, type OffensiveTactic, type DefensiveTactic } from '@/types/shared.types';
 import { getOffensiveSuitability, getDefensiveSuitability } from '@/engine/tacticSuitability';
-import { getOffensiveTacticMods, getDefensiveTacticMods } from '@/engine/combat/mechanics/tacticResolution';
+import {
+  getOffensiveTacticMods,
+  getDefensiveTacticMods,
+} from '@/engine/combat/mechanics/tacticResolution';
 
 const suitabilityScore = (r: 'WS' | 'S' | 'U'): number => (r === 'WS' ? 2 : r === 'S' ? 1 : 0);
 
@@ -16,7 +19,9 @@ const suitabilityScore = (r: 'WS' | 'S' | 'U'): number => (r === 'WS' ? 2 : r ==
 function offensiveTacticValue(style: FightingStyle, tactic: OffensiveTactic): number {
   if (tactic === 'none') return 0;
   const m = getOffensiveTacticMods(tactic, style);
-  return m.attBonus + m.dmgBonus + m.parryBypass * 0.5 + m.decBonus - m.defPenalty - m.endCost * 0.5;
+  return (
+    m.attBonus + m.dmgBonus + m.parryBypass * 0.5 + m.decBonus - m.defPenalty - m.endCost * 0.5
+  );
 }
 
 /** Net defensive payoff of a tactic for a style, used to break suitability ties. */

@@ -1,5 +1,6 @@
 import type { CommitLevel } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
+import type { FighterState, ResolutionContext } from './types';
 import { contestDistance, transitionZone, resetZone } from '../mechanics/distanceResolution';
 
 // ─── ExchangeState Accumulator ────────────────────────────────────────────────
@@ -18,11 +19,10 @@ export interface ExchangeState {
   recoveryDebtToWriteA: number;
   recoveryDebtToWriteD: number;
   events: CombatEvent[];
-}/**
-  * Make exchange state.
-  * @returns The result.
-  */
-
+} /**
+ * Make exchange state.
+ * @returns The result.
+ */
 
 /**
  * Make exchange state.
@@ -41,18 +41,17 @@ export function makeExchangeState(): ExchangeState {
     recoveryDebtToWriteD: 0,
     events: [],
   };
-}/**
-  * Run approach.
-  * @param rng - Rng.
-  * @param fA - F a.
-  * @param fD - F d.
-  * @param OE_A - Oe_a.
-  * @param OE_D - Oe_d.
-  * @param ctx - Ctx.
-  * @param es - Es.
-  * @returns The result.
-  */
-
+} /**
+ * Run approach.
+ * @param rng - Rng.
+ * @param fA - F a.
+ * @param fD - F d.
+ * @param OE_A - Oe_a.
+ * @param OE_D - Oe_d.
+ * @param ctx - Ctx.
+ * @param es - Es.
+ * @returns The result.
+ */
 
 // ─── Approach Sub-Phase ───────────────────────────────────────────────────────
 
@@ -85,10 +84,9 @@ export function runApproach(
   es.distanceWinner = result.distanceWinner;
   es.events.push(...result.events);
   ctx.range = result.newRange;
-}/**
-  * Defines the shape of feint result.
-  */
-
+} /**
+ * Defines the shape of feint result.
+ */
 
 // ─── Feint Sub-Phase ──────────────────────────────────────────────────────────
 
@@ -140,10 +138,9 @@ export function runFeint(rng: () => number, att: FighterState, def: FighterState
     feintFailed: !succeeded,
     events,
   };
-}/**
-  * Defines the shape of commit result.
-  */
-
+} /**
+ * Defines the shape of commit result.
+ */
 
 // ─── Commit Sub-Phase ─────────────────────────────────────────────────────────
 

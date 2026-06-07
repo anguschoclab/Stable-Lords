@@ -2,10 +2,9 @@
  * Command Hub Root Layout
  * Provides the layout for all Command hub pages with sub-navigation
  */
-import { Outlet, createFileRoute } from '@tanstack/react-router';/**
-                                                                  * Route.
-                                                                  */
-
+import { Outlet, createFileRoute } from '@tanstack/react-router'; /**
+ * Route.
+ */
 
 /**
  * Route.

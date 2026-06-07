@@ -1,4 +1,4 @@
-import { Swords, Zap, Activity } from 'lucide-react';
+import { Swords, Zap, Activity, Eye } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
 import { type Warrior } from '@/types/game';
 import { Button } from '@/components/ui/button';
@@ -7,12 +7,11 @@ import { applyInsightToken } from '@/engine/favorites';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
-import { ImperialRing } from '@/components/ui/ImperialRing';/**
-                                                             * Favorites card.
-                                                             * @param - { warrior, on update }.
-                                                             * @returns The result.
-                                                             */
-
+import { ImperialRing } from '@/components/ui/ImperialRing'; /**
+ * Favorites card.
+ * @param - { warrior, on update }.
+ * @returns The result.
+ */
 
 /**
  * Favorites card.

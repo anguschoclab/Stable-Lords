@@ -43,32 +43,20 @@ export function SimulatorResults({ simulation }: SimulatorResultsProps) {
             </h4>
             <div className="grid grid-cols-2 gap-2">
               <div className="bg-black/20 p-3 border border-white/5">
-                <div className="text-muted-foreground text-[8px] uppercase font-black">
-                  HP
-                </div>
+                <div className="text-muted-foreground text-[8px] uppercase font-black">HP</div>
                 <div className="font-mono font-black text-lg">{simulation.calcA.hp}</div>
               </div>
               <div className="bg-black/20 p-3 border border-white/5">
-                <div className="text-muted-foreground text-[8px] uppercase font-black">
-                  ENDUR
-                </div>
-                <div className="font-mono font-black text-lg">
-                  {simulation.calcA.endurance}
-                </div>
+                <div className="text-muted-foreground text-[8px] uppercase font-black">ENDUR</div>
+                <div className="font-mono font-black text-lg">{simulation.calcA.endurance}</div>
               </div>
               <div className="bg-black/20 p-3 border border-white/5">
-                <div className="text-muted-foreground text-[8px] uppercase font-black">
-                  DMG
-                </div>
+                <div className="text-muted-foreground text-[8px] uppercase font-black">DMG</div>
                 <div className="font-mono font-black text-lg">{simulation.calcA.damage}</div>
               </div>
               <div className="bg-black/20 p-3 border border-white/5">
-                <div className="text-muted-foreground text-[8px] uppercase font-black">
-                  ENCUM
-                </div>
-                <div className="font-mono font-black text-lg">
-                  {simulation.calcA.encumbrance}
-                </div>
+                <div className="text-muted-foreground text-[8px] uppercase font-black">ENCUM</div>
+                <div className="font-mono font-black text-lg">{simulation.calcA.encumbrance}</div>
               </div>
             </div>
           </div>
@@ -96,32 +84,20 @@ export function SimulatorResults({ simulation }: SimulatorResultsProps) {
             </h4>
             <div className="grid grid-cols-2 gap-2">
               <div className="bg-black/20 p-3 border border-white/5">
-                <div className="text-muted-foreground text-[8px] uppercase font-black">
-                  HP
-                </div>
+                <div className="text-muted-foreground text-[8px] uppercase font-black">HP</div>
                 <div className="font-mono font-black text-lg">{simulation.calcB.hp}</div>
               </div>
               <div className="bg-black/20 p-3 border border-white/5">
-                <div className="text-muted-foreground text-[8px] uppercase font-black">
-                  ENDUR
-                </div>
-                <div className="font-mono font-black text-lg">
-                  {simulation.calcB.endurance}
-                </div>
+                <div className="text-muted-foreground text-[8px] uppercase font-black">ENDUR</div>
+                <div className="font-mono font-black text-lg">{simulation.calcB.endurance}</div>
               </div>
               <div className="bg-black/20 p-3 border border-white/5">
-                <div className="text-muted-foreground text-[8px] uppercase font-black">
-                  DMG
-                </div>
+                <div className="text-muted-foreground text-[8px] uppercase font-black">DMG</div>
                 <div className="font-mono font-black text-lg">{simulation.calcB.damage}</div>
               </div>
               <div className="bg-black/20 p-3 border border-white/5">
-                <div className="text-muted-foreground text-[8px] uppercase font-black">
-                  ENCUM
-                </div>
-                <div className="font-mono font-black text-lg">
-                  {simulation.calcB.encumbrance}
-                </div>
+                <div className="text-muted-foreground text-[8px] uppercase font-black">ENCUM</div>
+                <div className="font-mono font-black text-lg">{simulation.calcB.encumbrance}</div>
               </div>
             </div>
           </div>

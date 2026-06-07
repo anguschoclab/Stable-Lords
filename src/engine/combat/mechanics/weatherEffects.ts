@@ -190,14 +190,16 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: 0,
     riposteMod: 0,
     damageMult: 1.25,
-    description: 'A blinding flash of light bakes the arena, draining stamina aggressively while giving eager attackers a burst of destructive energy.',
+    description:
+      'A blinding flash of light bakes the arena, draining stamina aggressively while giving eager attackers a burst of destructive energy.',
   },
   'Arcane Storm': {
     staminaMult: 0.8,
     initiativeMod: +8,
     riposteMod: +5,
     damageMult: 1.4,
-    description: 'Raw magical energy warps reality, supercharging strikes and accelerating reflexes wildly.',
+    description:
+      'Raw magical energy warps reality, supercharging strikes and accelerating reflexes wildly.',
   },
   'Blood Rain': {
     staminaMult: 1.1,
@@ -211,14 +213,16 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: -3,
     riposteMod: 0,
     damageMult: 0.9,
-    description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
+    description:
+      'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
   },
   'Aurora Borealis': {
     staminaMult: 0.85,
     initiativeMod: 2,
     riposteMod: 1,
     damageMult: 0.95,
-    description: 'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
+    description:
+      'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
   },
   'Chaotic Winds': {
     staminaMult: 1.3,
@@ -282,12 +286,16 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Cursed Miasma':
     'A sickening purple miasma clings to the arena floor, draining life and hope alike.',
   Hailstorm: 'Ice falls from the sky like stones, battering armor and bare flesh alike.',
-  'Solar Flare': 'A blinding flash of light bakes the arena. The sun itself seems to attack the fighters.',
+  'Solar Flare':
+    'A blinding flash of light bakes the arena. The sun itself seems to attack the fighters.',
   'Arcane Storm': 'The air rips open with raw arcane power. Reality itself seems to bend.',
   'Blood Rain': 'Thick red drops fall from an unnatural sky. The air smells of copper and dread.',
-  'Locust Swarm': 'A deafening swarm of locusts descends upon the arena, gnawing at everything in sight.',
-  'Aurora Borealis': 'The heavens are ablaze with ethereal, dancing lights. A serene calm settles over the sands.',
-  'Chaotic Winds': 'Fierce, swirling winds kick up the sand, creating unpredictable combat conditions.',
+  'Locust Swarm':
+    'A deafening swarm of locusts descends upon the arena, gnawing at everything in sight.',
+  'Aurora Borealis':
+    'The heavens are ablaze with ethereal, dancing lights. A serene calm settles over the sands.',
+  'Chaotic Winds':
+    'Fierce, swirling winds kick up the sand, creating unpredictable combat conditions.',
   'Aether Storm': 'Raw aether winds rip through the arena. The boundaries of reality are fraying.',
 };
 

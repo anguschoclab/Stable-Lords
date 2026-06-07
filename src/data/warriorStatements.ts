@@ -1,10 +1,9 @@
 import { BaseSkills } from '@/types/shared.types';
 import { computeCoordination, computeActivityRating } from './terrabloodCharts';
 import narrativeContent from './narrativeContent.json';
-import type { NarrativeContent } from '@/types/narrative.types';/**
-                                                                 * Defines the shape of warrior overview statements.
-                                                                 */
-
+import type { NarrativeContent } from '@/types/narrative.types'; /**
+ * Defines the shape of warrior overview statements.
+ */
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -93,15 +92,14 @@ function getQuicknessStatement(defBase: number, parBase: number, wt: number): st
   }
 
   return qualifier ? `${speed}, ${qualifier}` : speed;
-}/**
-  * Generate warrior statements.
-  * @param wt - Wt.
-  * @param sp - Sp.
-  * @param df - Df.
-  * @param skills - Skills.
-  * @returns The result.
-  */
-
+} /**
+ * Generate warrior statements.
+ * @param wt - Wt.
+ * @param sp - Sp.
+ * @param df - Df.
+ * @param skills - Skills.
+ * @returns The result.
+ */
 
 // ─── Generator ─────────────────────────────────────────────────────────────
 
@@ -125,7 +123,9 @@ export function generateWarriorStatements(
   function getStatement(skillKey: string, baseValue: number, highThreshold: number): string {
     const witKey = isGoodWit ? 'good' : 'bad';
     const orderKey = baseValue >= highThreshold ? 'high' : 'low';
-    const category = (p[witKey] as unknown as Record<string, Record<string, StatementEntry[]>>)?.[skillKey];
+    const category = (p[witKey] as unknown as Record<string, Record<string, StatementEntry[]>>)?.[
+      skillKey
+    ];
     const entries = category?.[orderKey];
     // Personas in the archive use the WT itself for the sub-selection min values
     return pickFromArchive(entries, wt);

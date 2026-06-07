@@ -229,7 +229,6 @@ function collectBoutImpacts(
   return { impacts, deathRes, injuryRes, announcement, summary };
 }
 
-
 /**
  * Resolve bout.
  * @param state - State.
@@ -275,13 +274,15 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   };
 }
 
-
 /**
  * Process week bouts.
  * @param state - State.
  * @returns The result.
  */
-export function processWeekBouts(state: GameState, headless?: boolean): {
+export function processWeekBouts(
+  state: GameState,
+  headless?: boolean
+): {
   impact: StateImpact;
   results: BoutResult[];
   summary: WeekBoutSummary;

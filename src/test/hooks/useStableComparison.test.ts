@@ -281,10 +281,26 @@ describe('useStableComparison', () => {
 
   it('detects personality clash', () => {
     const rival1 = createMockRival('r1', {
-      owner: { id: 'r1' as StableId, name: 'O1', stableName: 'S1', fame: 0, renown: 0, titles: 0, personality: 'Aggressive' },
+      owner: {
+        id: 'r1' as StableId,
+        name: 'O1',
+        stableName: 'S1',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: 'Aggressive',
+      },
     });
     const rival2 = createMockRival('r2', {
-      owner: { id: 'r2' as StableId, name: 'O2', stableName: 'S2', fame: 0, renown: 0, titles: 0, personality: 'Methodical' },
+      owner: {
+        id: 'r2' as StableId,
+        name: 'O2',
+        stableName: 'S2',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: 'Methodical',
+      },
     });
     const { result } = renderHook(() => useStableComparison([rival1, rival2]));
 
@@ -375,10 +391,26 @@ describe('useStableComparison', () => {
 
   it('returns false for compatible personalities', () => {
     const rival1 = createMockRival('r1', {
-      owner: { id: 'r1' as StableId, name: 'O1', stableName: 'S1', fame: 0, renown: 0, titles: 0, personality: 'Pragmatic' },
+      owner: {
+        id: 'r1' as StableId,
+        name: 'O1',
+        stableName: 'S1',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: 'Pragmatic',
+      },
     });
     const rival2 = createMockRival('r2', {
-      owner: { id: 'r2' as StableId, name: 'O2', stableName: 'S2', fame: 0, renown: 0, titles: 0, personality: 'Aggressive' },
+      owner: {
+        id: 'r2' as StableId,
+        name: 'O2',
+        stableName: 'S2',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: 'Aggressive',
+      },
     });
     const { result } = renderHook(() => useStableComparison([rival1, rival2]));
 
@@ -392,10 +424,26 @@ describe('useStableComparison', () => {
 
   it('returns false when one rival has no personality', () => {
     const rival1 = createMockRival('r1', {
-      owner: { id: 'r1' as StableId, name: 'O1', stableName: 'S1', fame: 0, renown: 0, titles: 0, personality: undefined },
+      owner: {
+        id: 'r1' as StableId,
+        name: 'O1',
+        stableName: 'S1',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: undefined,
+      },
     });
     const rival2 = createMockRival('r2', {
-      owner: { id: 'r2' as StableId, name: 'O2', stableName: 'S2', fame: 0, renown: 0, titles: 0, personality: 'Aggressive' },
+      owner: {
+        id: 'r2' as StableId,
+        name: 'O2',
+        stableName: 'S2',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: 'Aggressive',
+      },
     });
     const { result } = renderHook(() => useStableComparison([rival1, rival2]));
 
@@ -409,10 +457,26 @@ describe('useStableComparison', () => {
 
   it('returns false when both rivals have no personality', () => {
     const rival1 = createMockRival('r1', {
-      owner: { id: 'r1' as StableId, name: 'O1', stableName: 'S1', fame: 0, renown: 0, titles: 0, personality: undefined },
+      owner: {
+        id: 'r1' as StableId,
+        name: 'O1',
+        stableName: 'S1',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: undefined,
+      },
     });
     const rival2 = createMockRival('r2', {
-      owner: { id: 'r2' as StableId, name: 'O2', stableName: 'S2', fame: 0, renown: 0, titles: 0, personality: undefined },
+      owner: {
+        id: 'r2' as StableId,
+        name: 'O2',
+        stableName: 'S2',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: undefined,
+      },
     });
     const { result } = renderHook(() => useStableComparison([rival1, rival2]));
 
@@ -488,7 +552,15 @@ describe('useStableComparison', () => {
   it('handles same rival selected for both A and B', () => {
     const rival1 = createMockRival('r1', {
       roster: [createMockWarrior('w1', { career: { wins: 3, losses: 1, kills: 0 }, fame: 20 })],
-      owner: { id: 'r1' as StableId, name: 'O1', stableName: 'S1', fame: 0, renown: 0, titles: 0, personality: 'Aggressive' },
+      owner: {
+        id: 'r1' as StableId,
+        name: 'O1',
+        stableName: 'S1',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+        personality: 'Aggressive',
+      },
     });
     const { result } = renderHook(() => useStableComparison([rival1]));
 

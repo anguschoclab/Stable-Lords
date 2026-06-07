@@ -7,16 +7,7 @@ import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Button } from '@/components/ui/button';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
-import {
-  Eye,
-  Heart,
-  Zap,
-  Quote,
-  Star,
-  Coins,
-  Sword,
-  Info,
-} from 'lucide-react';
+import { Eye, Heart, Zap, Quote, Star, Coins, Sword, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const TIER_CONFIG: Record<

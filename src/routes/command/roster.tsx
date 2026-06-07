@@ -3,10 +3,9 @@
  * Full warrior roster grid with quick actions
  */
 import { createFileRoute } from '@tanstack/react-router';
-import StableHall from '@/pages/StableHall';/**
-                                             * Route.
-                                             */
-
+import StableHall from '@/pages/StableHall'; /**
+ * Route.
+ */
 
 /**
  * Route.

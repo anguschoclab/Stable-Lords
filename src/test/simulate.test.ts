@@ -455,7 +455,12 @@ describe('simulateFight — equipment modifiers', () => {
       FightingStyle.BashingAttack,
       { ST: 18 },
       {
-        equipment: { weapon: 'great_axe', armor: 'scale_mail', helm: 'none_helm', shield: 'none_shield' },
+        equipment: {
+          weapon: 'great_axe',
+          armor: 'scale_mail',
+          helm: 'none_helm',
+          shield: 'none_shield',
+        },
       }
     );
     const wLight = makeWarrior(
@@ -716,13 +721,22 @@ describe('simulateFight — intro narration helm assignment (Bug 3)', () => {
       'Goliath',
       FightingStyle.BashingAttack,
       {},
-      { equipment: { weapon: 'maul', armor: 'chain_mail', shield: 'none_shield', helm: 'full_helm' } }
+      {
+        equipment: {
+          weapon: 'maul',
+          armor: 'chain_mail',
+          shield: 'none_shield',
+          helm: 'full_helm',
+        },
+      }
     );
     const warriorD = makeWarrior(
       'Swift',
       FightingStyle.AimedBlow,
       {},
-      { equipment: { weapon: 'epee', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' } }
+      {
+        equipment: { weapon: 'epee', armor: 'leather', shield: 'none_shield', helm: 'leather_cap' },
+      }
     );
 
     const result = simulateFight(
@@ -830,7 +844,12 @@ describe('simulateFight — distance system', () => {
       FightingStyle.LungingAttack,
       { SP: 14, DF: 13 },
       {
-        equipment: { weapon: 'short_spear', armor: 'leather', helm: 'none_helm', shield: 'none_shield' },
+        equipment: {
+          weapon: 'short_spear',
+          armor: 'leather',
+          helm: 'none_helm',
+          shield: 'none_shield',
+        },
       }
     );
     const wGrap = makeWarrior(
@@ -838,7 +857,12 @@ describe('simulateFight — distance system', () => {
       FightingStyle.BashingAttack,
       { ST: 14, CN: 13 },
       {
-        equipment: { weapon: 'dagger', armor: 'none_armor', helm: 'none_helm', shield: 'none_shield' },
+        equipment: {
+          weapon: 'dagger',
+          armor: 'none_armor',
+          helm: 'none_helm',
+          shield: 'none_shield',
+        },
       }
     );
 

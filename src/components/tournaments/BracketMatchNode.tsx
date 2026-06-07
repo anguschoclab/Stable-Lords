@@ -92,16 +92,10 @@ export function BracketMatchNode({
         >
           <div className="flex items-center gap-1">
             <span className="text-[8px] font-black text-muted-foreground/60 tracking-widest uppercase">
-              {bronze
-                ? 'BRONZE'
-                : championship
-                  ? 'FINAL'
-                  : `MATCH ${bout.matchIndex + 1}`}
+              {bronze ? 'BRONZE' : championship ? 'FINAL' : `MATCH ${bout.matchIndex + 1}`}
             </span>
             {bronze && <Medal className="h-3 w-3 text-arena-gold" />}
-            {championship && !isPending && (
-              <Crown className="h-3 w-3 text-arena-gold" />
-            )}
+            {championship && !isPending && <Crown className="h-3 w-3 text-arena-gold" />}
           </div>
           {isPending ? (
             isBye ? (
@@ -229,9 +223,7 @@ export function BracketMatchNode({
 
         {hasTranscript && (
           <button
-            aria-label={
-              isExpanded ? 'Collapse Engagement Log' : 'Expand Engagement Log'
-            }
+            aria-label={isExpanded ? 'Collapse Engagement Log' : 'Expand Engagement Log'}
             onClick={() => onToggleExpand(isExpanded ? null : boutKey)}
             className="w-full py-1.5 px-3 border-t border-border/10 flex items-center justify-center gap-1.5 hover:bg-primary/5 transition-colors group"
           >
@@ -259,25 +251,14 @@ export function BracketMatchNode({
                 Archive: {resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')} vs{' '}
                 {resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}
               </span>
-              <Badge
-                variant="outline"
-                className="text-[9px] font-black uppercase border-white/10"
-              >
+              <Badge variant="outline" className="text-[9px] font-black uppercase border-white/10">
                 {fightSummary.by || '???'}
               </Badge>
             </div>
             <div className="p-0 max-h-[500px] overflow-y-auto thin-scrollbar bg-background/60">
               <BoutViewer
-                nameA={resolveWarriorName(
-                  gameState,
-                  fightSummary.warriorIdA,
-                  'Unknown'
-                )}
-                nameD={resolveWarriorName(
-                  gameState,
-                  fightSummary.warriorIdD,
-                  'Unknown'
-                )}
+                nameA={resolveWarriorName(gameState, fightSummary.warriorIdA, 'Unknown')}
+                nameD={resolveWarriorName(gameState, fightSummary.warriorIdD, 'Unknown')}
                 styleA={fightSummary.styleA || ''}
                 styleD={fightSummary.styleD || ''}
                 log={(fightSummary.transcript || []).map((text, idx) => ({

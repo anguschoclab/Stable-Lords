@@ -27,7 +27,7 @@ interface WarriorHeroHeaderProps {
   id?: string;
   isPlayerOwned?: boolean;
   insightTokens?: InsightToken[];
-}/**
+} /**
   * Render the WarriorHeroHeader component.
   * @param  - {
   warrior,
@@ -40,7 +40,6 @@ interface WarriorHeroHeaderProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Render the WarriorHeroHeader component.

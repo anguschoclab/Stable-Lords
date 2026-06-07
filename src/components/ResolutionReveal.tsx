@@ -9,19 +9,12 @@ import { audioManager } from '@/lib/AudioManager';
 import type { FightSummary } from '@/types/combat.types';
 import narrativeContent from '@/data/narrativeContent.json';
 
-import {
-  GazetteStep,
-  InjuriesStep,
-  BoutsStep,
-  MathStep,
-  MemorialStep,
-} from './resolution-reveal';
+import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './resolution-reveal';
 
-type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial';/**
-                                                                          * Resolution reveal.
-                                                                          * @returns The result.
-                                                                          */
-
+type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial'; /**
+ * Resolution reveal.
+ * @returns The result.
+ */
 
 /**
  * Resolution reveal.
@@ -41,9 +34,7 @@ export default function ResolutionReveal() {
     const graveyardByName = new Map(
       (state.graveyard ?? []).map((w: { name: string }) => [w.name, w])
     );
-    return data.deaths
-      .map((name: string) => graveyardByName.get(name))
-      .filter(Boolean);
+    return data.deaths.map((name: string) => graveyardByName.get(name)).filter(Boolean);
   }, [data, state.graveyard]);
 
   if (!data) return null;

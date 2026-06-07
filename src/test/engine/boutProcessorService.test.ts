@@ -128,7 +128,14 @@ describe('processWeekBouts — Minimum Viable Arena', () => {
     state.rivals = [
       {
         id: 'rival-1',
-        owner: { id: 'owner-1', name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 } as any,
+        owner: {
+          id: 'owner-1',
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        } as any,
         roster: [makeMinimalWarrior({ id: 'w2' as any, name: 'Rival Ready', fatigue: 0 })],
         treasury: 100,
         fame: 0,
@@ -150,7 +157,14 @@ describe('processWeekBouts — Minimum Viable Arena', () => {
     state.rivals = [
       {
         id: 'rival-1',
-        owner: { id: 'owner-1', name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 } as any,
+        owner: {
+          id: 'owner-1',
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        } as any,
         roster: [makeMinimalWarrior({ id: 'w2' as any, name: 'Tired', fatigue: 60 })],
         treasury: 100,
         fame: 0,

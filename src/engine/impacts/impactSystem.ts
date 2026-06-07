@@ -140,7 +140,10 @@ const mergeStrategies: Record<
   dictMerge: (merged, key, value) => {
     const m = merged as Record<keyof StateImpact, unknown>;
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      m[key] = { ...((m[key] as Record<string, unknown> | undefined) ?? {}), ...(value as Record<string, unknown>) };
+      m[key] = {
+        ...((m[key] as Record<string, unknown> | undefined) ?? {}),
+        ...(value as Record<string, unknown>),
+      };
     }
   },
   replace: (merged, key, value) => {
@@ -205,4 +208,3 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
 
   return merged;
 }
-

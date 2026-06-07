@@ -6,13 +6,12 @@
 type Phase = 'opening' | 'mid' | 'late';
 
 const PHASE_OPENING_THRESHOLD = 0.25;
-const PHASE_MID_THRESHOLD = 0.65;/**
-                                  * Get phase.
-                                  * @param exchange - Exchange.
-                                  * @param maxExchanges - Max exchanges.
-                                  * @returns The result.
-                                  */
-
+const PHASE_MID_THRESHOLD = 0.65; /**
+ * Get phase.
+ * @param exchange - Exchange.
+ * @param maxExchanges - Max exchanges.
+ * @returns The result.
+ */
 
 /**
  * Get phase.
@@ -26,13 +25,12 @@ export function getPhase(exchange: number, maxExchanges: number): Phase {
   if (ratio <= PHASE_OPENING_THRESHOLD) return 'opening';
   if (ratio <= PHASE_MID_THRESHOLD) return 'mid';
   return 'late';
-}/**
-  * Pick text.
-  * @param rng - Rng.
-  * @param texts - Texts.
-  * @returns The result.
-  */
-
+} /**
+ * Pick text.
+ * @param rng - Rng.
+ * @param texts - Texts.
+ * @returns The result.
+ */
 
 /**
  * Pick text.
@@ -44,14 +42,13 @@ export function pickText(rng: () => number, texts: string[]): string {
   if (texts.length === 0) return '';
   const index = Math.floor(rng() * texts.length);
   return texts[index] ?? '';
-}/**
-  * Skill check.
-  * @param rng - Rng.
-  * @param skill - Skill.
-  * @param modifier - Modifier.
-  * @returns The result.
-  */
-
+} /**
+ * Skill check.
+ * @param rng - Rng.
+ * @param skill - Skill.
+ * @param modifier - Modifier.
+ * @returns The result.
+ */
 
 /**
  * Skill check.
@@ -65,16 +62,15 @@ export function skillCheck(rng: () => number, skill: number, modifier: number = 
   const target = Math.max(1, Math.min(19, Math.floor(skill) + modifier));
   const success = roll === 1 || (roll !== 20 && roll <= target);
   return success;
-}/**
-  * Contest check.
-  * @param rng - Rng.
-  * @param a - A.
-  * @param d - D.
-  * @param modA - Mod a.
-  * @param modD - Mod d.
-  * @returns The result.
-  */
-
+} /**
+ * Contest check.
+ * @param rng - Rng.
+ * @param a - A.
+ * @param d - D.
+ * @param modA - Mod a.
+ * @param modD - Mod d.
+ * @returns The result.
+ */
 
 /**
  * Contest check.
@@ -122,7 +118,7 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   'Aether Storm': 0.8, // 20% less stamina drain
   // Clear / Overcast / Rainy → 1.0 (default)
   'Aurora Borealis': 0.85, // 15% less stamina drain
-};/**
+}; /**
  * Weather stamina modifier.
  * @param weather - Weather. (optional)
  * @returns The result.

@@ -44,9 +44,7 @@ function buildNameMap(fights: FightSummary[]): Map<WarriorId, string> {
  * Calculates leaderboard data from fight summaries.
  * Uses a bounded insertion sort (O(N)) to find top 5 warriors by wins and win rate.
  */
-export function calculateLeaderboardData(
-  allFights: FightSummary[]
-): LeaderboardEntry[] {
+export function calculateLeaderboardData(allFights: FightSummary[]): LeaderboardEntry[] {
   const nameMap = buildNameMap(allFights);
   const registry = new Map<
     WarriorId,
@@ -155,7 +153,7 @@ export function calculateBestByStyle(
         topId = id as WarriorId;
       }
     }
-    return { style, name: topId ? (nameMap.get(topId) || 'Unknown') : 'No Data', wins: topWins };
+    return { style, name: topId ? nameMap.get(topId) || 'Unknown' : 'No Data', wins: topWins };
   });
 }
 
@@ -194,7 +192,12 @@ export function calculateRisingStars(allFights: FightSummary[]): RisingStarEntry
   const result: RisingStarEntry[] = [];
   for (const [id, data] of history.entries()) {
     if (data.matches <= 5 && data.wins >= 3) {
-      const entry = { name: nameMap.get(id) || 'Unknown', wins: data.wins, matches: data.matches, firstWeek: data.firstWeek };
+      const entry = {
+        name: nameMap.get(id) || 'Unknown',
+        wins: data.wins,
+        matches: data.matches,
+        firstWeek: data.firstWeek,
+      };
       let i = result.length - 1;
       while (i >= 0) {
         const current = result[i];

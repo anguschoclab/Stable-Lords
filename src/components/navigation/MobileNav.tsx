@@ -33,9 +33,19 @@ export function MobileNav({ className }: MobileNavProps) {
     ?.id ?? null) as HubId | null;
 
   // SheetClose wrapper for links
-  const SheetCloseLink = ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => (
+  const SheetCloseLink = ({
+    to,
+    children,
+    className,
+  }: {
+    to: string;
+    children: React.ReactNode;
+    className?: string;
+  }) => (
     <SheetClose asChild>
-      <Link to={to} className={className}>{children}</Link>
+      <Link to={to} className={className}>
+        {children}
+      </Link>
     </SheetClose>
   );
 
@@ -65,7 +75,11 @@ export function MobileNav({ className }: MobileNavProps) {
             <HubSwitcher
               activeHubId={activeHubId}
               alerts={alerts}
-              alertLinks={{ command: '/command/training', ops: '/ops/contracts', world: '/world/tournaments' }}
+              alertLinks={{
+                command: '/command/training',
+                ops: '/ops/contracts',
+                world: '/world/tournaments',
+              }}
               LinkComponent={SheetCloseLink}
               showChevron={true}
               linkClassName="px-3 py-3"
@@ -91,4 +105,3 @@ export function MobileNav({ className }: MobileNavProps) {
     </div>
   );
 }
-

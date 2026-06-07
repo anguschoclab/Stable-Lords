@@ -2,18 +2,16 @@
  * Equipment type definitions for Stable Lords.
  */
 
-import { FightingStyle } from '@/types/game';/**
-                                              * Equipment slot type.
-                                              */
-
+import { FightingStyle } from '@/types/game'; /**
+ * Equipment slot type.
+ */
 
 /**
  * Equipment slot type.
  */
-export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm';/**
-                                                                    * Defines the shape of equipment item.
-                                                                    */
-
+export type EquipmentSlot = 'weapon' | 'armor' | 'shield' | 'helm'; /**
+ * Defines the shape of equipment item.
+ */
 
 /**
  * Defines the shape of equipment item.
@@ -52,10 +50,9 @@ export interface EquipmentItem {
   // Used by combatDamage to apply zone-specific mitigation when the defender
   // is protecting that band.
   coverage?: 'LOW' | 'MEDIUM' | 'HIGH';
-}/**
-  * Defines the shape of equipment loadout.
-  */
-
+} /**
+ * Defines the shape of equipment loadout.
+ */
 
 /**
  * Defines the shape of equipment loadout.
@@ -74,10 +71,9 @@ export interface WeaponReqCheck {
   required: number;
   current: number;
   deficit: number;
-}/**
-  * Defines the shape of weapon req result.
-  */
-
+} /**
+ * Defines the shape of weapon req result.
+ */
 
 /**
  * Defines the shape of weapon req result.

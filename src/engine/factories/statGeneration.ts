@@ -1,10 +1,9 @@
 import { FightingStyle, type Attributes, ATTRIBUTE_KEYS } from '@/types/shared.types';
 import { pick, shuffled } from '@/utils/random';
 
-type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank';/**
-                                                          * Style_archetype.
-                                                          */
-
+type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank'; /**
+ * Style_archetype.
+ */
 
 /**
  * Style_archetype.

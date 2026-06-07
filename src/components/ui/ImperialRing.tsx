@@ -3,9 +3,9 @@ import { cn } from '@/lib/utils';
 interface ImperialRingProps {
   children: React.ReactNode;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   variant?: 'bronze' | 'silver' | 'gold' | 'blood';
-}/**
+} /**
   * Imperial ring.
   * @param  - {
   children,
@@ -15,7 +15,6 @@ interface ImperialRingProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Imperial ring.
@@ -34,6 +33,7 @@ export function ImperialRing({
   variant = 'bronze',
 }: ImperialRingProps) {
   const sizeClasses = {
+    xs: 'w-5 h-5 p-0.5',
     sm: 'w-6 h-6 p-0.5',
     md: 'w-10 h-10 p-1',
     lg: 'w-14 h-14 p-1.5',

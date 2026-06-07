@@ -36,12 +36,10 @@ const TIER_CONFIG: Record<
   Minor: { label: 'Minor', ring: 'bronze', text: 'text-muted-foreground' },
 };
 
-
 /**
-  * Stable detail.
-  * @returns The result.
-  */
-
+ * Stable detail.
+ * @returns The result.
+ */
 
 /**
  * Stable detail.
@@ -57,14 +55,14 @@ export default function StableDetail() {
     [state.rivals]
   );
 
-  const rival = useMemo(
-    () => (id ? rivalMap.get(id) : undefined),
-    [rivalMap, id]
-  );
+  const rival = useMemo(() => (id ? rivalMap.get(id) : undefined), [rivalMap, id]);
 
   if (!rival) {
     return (
-      <PageFrame maxWidth="xl" className="flex flex-col items-center justify-center py-48 text-center">
+      <PageFrame
+        maxWidth="xl"
+        className="flex flex-col items-center justify-center py-48 text-center"
+      >
         <ImperialRing size="lg" variant="bronze" className="opacity-20 mb-8">
           <Shield className="h-10 w-10" />
         </ImperialRing>
@@ -320,15 +318,10 @@ export default function StableDetail() {
               </div>
             )}
 
-            {activeTab === 'ROSTER' && (
-              <StableRosterTab activeRoster={activeRoster} />
-            )}
+            {activeTab === 'ROSTER' && <StableRosterTab activeRoster={activeRoster} />}
 
             {activeTab === 'LOGS' && (
-              <StableLogsTab
-                recentBouts={recentBouts}
-                stableWarriorIds={stableWarriorIds}
-              />
+              <StableLogsTab recentBouts={recentBouts} stableWarriorIds={stableWarriorIds} />
             )}
           </div>
         </div>

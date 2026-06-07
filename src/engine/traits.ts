@@ -18,10 +18,9 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import type { Archetype } from '@/data/names/archetypeNames';/**
-                                                              * Defines the shape of trait effect.
-                                                              */
-
+import type { Archetype } from '@/data/names/archetypeNames'; /**
+ * Defines the shape of trait effect.
+ */
 
 /**
  * Defines the shape of trait effect.
@@ -51,10 +50,9 @@ export interface TraitEffect {
   // Personality / Combat AI modifiers (from FTUE)
   fightPlanMod?: Partial<import('@/types/shared.types').FightPlan>;
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;
-}/**
-  * Defines the shape of trait def.
-  */
-
+} /**
+ * Defines the shape of trait def.
+ */
 
 /**
  * Defines the shape of trait def.
@@ -70,10 +68,9 @@ export interface TraitDef {
   synergy?: Archetype[];
   /** Archetypes this trait clashes with (0.3× pick weight). */
   antiSynergy?: Archetype[];
-}/**
-  * Traits.
-  */
-
+} /**
+ * Traits.
+ */
 
 /**
  * Traits.
@@ -366,10 +363,9 @@ export function getStaticTraitMods(warrior?: Warrior): {
     if (t.effect.enduranceMult != null) acc.enduranceMult *= t.effect.enduranceMult;
   }
   return acc;
-}/**
-  * Defines the shape of dynamic trait context.
-  */
-
+} /**
+ * Defines the shape of dynamic trait context.
+ */
 
 /**
  * Defines the shape of dynamic trait context.
@@ -389,7 +385,13 @@ export interface DynamicTraitContext {
  * @param ctx - The dynamic combat context (phase, HP, etc.)
  * @returns Object containing cumulative dynamic modifiers
  */
-export type DynamicTraitMods = { attMod: number; parMod: number; defMod: number; iniMod: number; killWindowBonus: number };
+export type DynamicTraitMods = {
+  attMod: number;
+  parMod: number;
+  defMod: number;
+  iniMod: number;
+  killWindowBonus: number;
+};
 
 export function getDynamicTraitMods(
   warrior: Warrior | undefined,

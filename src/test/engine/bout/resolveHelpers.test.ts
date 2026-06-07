@@ -23,19 +23,22 @@ describe('resolveHelpers', () => {
       ...overrides,
     }) as Warrior;
 
-  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome =>
-    ({
-      winner: 'A',
-      by: 'KO',
-      minutes: 5,
-      log: [],
-      ...overrides,
-    });
+  const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
+    winner: 'A',
+    by: 'KO',
+    minutes: 5,
+    log: [],
+    ...overrides,
+  });
 
   describe('validateBoutCombatants', () => {
     it('returns true for active warriors', () => {
       const wA = createMockWarrior({ status: 'Active' });
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', status: 'Active' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        status: 'Active',
+      });
 
       const result = validateBoutCombatants(wA, wD);
 
@@ -60,7 +63,11 @@ describe('resolveHelpers', () => {
 
     it('returns false for non-active status', () => {
       const wA = createMockWarrior({ status: 'Dead' });
-      const wD = createMockWarrior({ id: 'warrior-d' as WarriorId, name: 'Warrior D', status: 'Active' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as WarriorId,
+        name: 'Warrior D',
+        status: 'Active',
+      });
 
       const result = validateBoutCombatants(wA, wD);
 
@@ -157,6 +164,5 @@ describe('resolveHelpers', () => {
 
       expect(result).toEqual([]);
     });
-
   });
 });

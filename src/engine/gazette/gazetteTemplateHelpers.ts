@@ -36,15 +36,13 @@ export function styleName(style: string): string {
  * Template substitution function.
  * Replaces {{key}} placeholders in templates with data values.
  */
-export function t(
-  template: string | string[],
-  data: TemplateData,
-  rng?: IRNGService
-): string {
+export function t(template: string | string[], data: TemplateData, rng?: IRNGService): string {
   const result = Array.isArray(template)
     ? rng
       ? rng.pick(template)
-      : template[Math.floor(new SeededRNGService(cryptoRandomInt(0, 2147483647)).next() * template.length)] || ''
+      : template[
+          Math.floor(new SeededRNGService(cryptoRandomInt(0, 2147483647)).next() * template.length)
+        ] || ''
     : template;
 
   if (!result || typeof result !== 'string' || !result.includes('{{')) return result || '';

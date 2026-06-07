@@ -6,10 +6,9 @@ import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { FightSummary } from '@/types/state.types';
 import type { FightId, TournamentId } from '@/types/shared.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
-                                                                  * Defines the shape of fight summary params.
-                                                                  */
-
+import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
+ * Defines the shape of fight summary params.
+ */
 
 /**
  * Defines the shape of fight summary params.
@@ -32,7 +31,9 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
   const { warriorA, warriorD, outcome, week, tournamentId, tournamentName, rng } = params;
 
   // Generate unique ID
-  const id = (typeof rng.uuid === 'function' ? rng.uuid('bout') : (rng as IRNGService).uuid()) as FightId;
+  const id = (
+    typeof rng.uuid === 'function' ? rng.uuid('bout') : (rng as IRNGService).uuid()
+  ) as FightId;
 
   // Build title
   const title = tournamentName
@@ -92,7 +93,9 @@ export function createMinimalFightSummary(
   week: number,
   rng: { uuid: (prefix?: string) => string } | IRNGService
 ): FightSummary {
-  const id = (typeof rng.uuid === 'function' ? rng.uuid('bout') : (rng as IRNGService).uuid()) as FightId;
+  const id = (
+    typeof rng.uuid === 'function' ? rng.uuid('bout') : (rng as IRNGService).uuid()
+  ) as FightId;
 
   return {
     id,

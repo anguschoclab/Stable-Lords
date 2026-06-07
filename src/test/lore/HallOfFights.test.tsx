@@ -142,7 +142,11 @@ describe('HallOfFights Component', () => {
   });
 
   it('groups and displays fights from the arenaHistory by week correctly', async () => {
-    render(<TooltipProvider><HallOfFights /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <HallOfFights />
+      </TooltipProvider>
+    );
 
     // There should be section for week 11 and week 10
     const week10Headers = await screen.findAllByText(/Week 10/);
@@ -161,7 +165,11 @@ describe('HallOfFights Component', () => {
   });
 
   it('renders style stats correctly based on arena history', async () => {
-    render(<TooltipProvider><HallOfFights /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <HallOfFights />
+      </TooltipProvider>
+    );
 
     // We mocked TabsContent so all tabs' content is rendered into the DOM
     // The table should list styles from the fights

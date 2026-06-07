@@ -3,10 +3,9 @@
  * Tournament prep and bout planning
  */
 import { createFileRoute } from '@tanstack/react-router';
-import TrainingPlanner from '@/pages/TrainingPlanner';/**
-                                                       * Route.
-                                                       */
-
+import TrainingPlanner from '@/pages/TrainingPlanner'; /**
+ * Route.
+ */
 
 /**
  * Route.

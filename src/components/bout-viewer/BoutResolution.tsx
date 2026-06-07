@@ -18,7 +18,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Zap: <Zap className="h-4 w-4" />,
   Shield: <Shield className="h-4 w-4" />,
   Activity: <Activity className="h-4 w-4" />,
-};/**
+}; /**
   * Bout resolution.
   * @param  - {
   is complete,
@@ -31,7 +31,6 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 }.
   * @returns The result.
   */
-
 
 /**
  * Bout resolution.
@@ -72,7 +71,9 @@ export default function BoutResolution({
           <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
 
           <div className="flex items-center gap-8 relative z-10 w-full justify-center">
-            <div className={outcomeStyle.textClass}>{ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}</div>
+            <div className={outcomeStyle.textClass}>
+              {ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}
+            </div>
             <div className="text-center space-y-2">
               <h2
                 className={cn(
@@ -90,7 +91,9 @@ export default function BoutResolution({
                 <span className="h-px w-8 bg-white/10" />
               </div>
             </div>
-            <div className={outcomeStyle.textClass}>{ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}</div>
+            <div className={outcomeStyle.textClass}>
+              {ICON_MAP[outcomeStyle.icon ?? ''] ?? <Swords className="h-4 w-4" />}
+            </div>
           </div>
 
           <div className="flex items-center gap-8 relative z-10">

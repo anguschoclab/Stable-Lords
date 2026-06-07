@@ -139,7 +139,9 @@ export function checkDiscovery(
       updated = true;
     } else if (r() < CHANCE_HINT && fav.discovered.rhythmHints < 2) {
       fav.discovered.rhythmHints++;
-      hints.push(`Observing: ${warrior.name} is finding their own unique rhythm in the chaos of battle.`);
+      hints.push(
+        `Observing: ${warrior.name} is finding their own unique rhythm in the chaos of battle.`
+      );
       updated = true;
     }
   }

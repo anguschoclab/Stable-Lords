@@ -178,9 +178,7 @@ export function ConditionItem({
               <Label
                 className={cn(
                   'text-[9px] font-black uppercase tracking-widest',
-                  cond.override.OE !== undefined
-                    ? 'text-arena-gold'
-                    : 'text-muted-foreground/40'
+                  cond.override.OE !== undefined ? 'text-arena-gold' : 'text-muted-foreground/40'
                 )}
               >
                 OE {cond.override.OE !== undefined ? cond.override.OE : '—'}
@@ -220,9 +218,7 @@ export function ConditionItem({
               <Label
                 className={cn(
                   'text-[9px] font-black uppercase tracking-widest',
-                  cond.override.AL !== undefined
-                    ? 'text-arena-fame'
-                    : 'text-muted-foreground/40'
+                  cond.override.AL !== undefined ? 'text-arena-fame' : 'text-muted-foreground/40'
                 )}
               >
                 AL {cond.override.AL !== undefined ? cond.override.AL : '—'}

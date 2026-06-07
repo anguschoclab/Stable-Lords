@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { FightingStyle, type Warrior, type GameState, type RivalStableData, type Rivalry, type FightSummary } from '@/types/game';
+import {
+  FightingStyle,
+  type Warrior,
+  type GameState,
+  type RivalStableData,
+  type Rivalry,
+  type FightSummary,
+} from '@/types/game';
 import type { InjuryData } from '@/types/warrior.types';
 import {
   scoreMatchup,
@@ -864,9 +871,7 @@ describe('Scheduling Assistant Engine', () => {
         p1: { overallRank: 5 },
         r1: { overallRank: 6 },
       });
-      state = stateWithHistory(state, [
-        mockFightBetween('p1', 'r1', 'A', 1),
-      ]);
+      state = stateWithHistory(state, [mockFightBetween('p1', 'r1', 'A', 1)]);
       state.week = 10;
 
       const challenges = getRecommendedChallenges(state, player, 1);
@@ -874,7 +879,7 @@ describe('Scheduling Assistant Engine', () => {
       expect(challenges.length).toBe(1);
       const notes = challenges[0]?.notes ?? [];
       expect(notes).toContain('Close rank matchup — competitive bout!');
-      expect(notes).toContain('Favorable history — you\'ve beaten them before.');
+      expect(notes).toContain("Favorable history — you've beaten them before.");
     });
 
     it('getMatchupsToAvoid includes historically dominated opponent', () => {
@@ -909,7 +914,7 @@ describe('Scheduling Assistant Engine', () => {
       let state = mockState([highRankRival, lowRankRival]);
       state = stateWithRankings(state, {
         p1: { overallRank: 10 },
-        r1: { overallRank: 8 },  // higher rank than player
+        r1: { overallRank: 8 }, // higher rank than player
         r2: { overallRank: 50 }, // much lower rank
       });
 
@@ -923,9 +928,25 @@ describe('Scheduling Assistant Engine', () => {
   describe('getMatchupsToAvoid Injury Exclusion', () => {
     it('excludes rivals with Severe injury and weeksRemaining > 2', () => {
       const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
-      const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
-        { id: 'inj1' as any, name: 'Broken Arm', description: '', severity: 'Severe', weeksRemaining: 3, penalties: {} },
-      ]);
+      const injuredRival = mockWarrior(
+        'r1',
+        FightingStyle.TotalParry,
+        10,
+        5,
+        5,
+        'rival1',
+        undefined,
+        [
+          {
+            id: 'inj1' as any,
+            name: 'Broken Arm',
+            description: '',
+            severity: 'Severe',
+            weeksRemaining: 3,
+            penalties: {},
+          },
+        ]
+      );
       const healthyRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
 
       const state = mockState([injuredRival, healthyRival]);
@@ -937,9 +958,25 @@ describe('Scheduling Assistant Engine', () => {
 
     it('includes rivals with Moderate injuries', () => {
       const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
-      const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
-        { id: 'inj1' as any, name: 'Concussion', description: '', severity: 'Moderate', weeksRemaining: 4, penalties: {} },
-      ]);
+      const injuredRival = mockWarrior(
+        'r1',
+        FightingStyle.TotalParry,
+        10,
+        5,
+        5,
+        'rival1',
+        undefined,
+        [
+          {
+            id: 'inj1' as any,
+            name: 'Concussion',
+            description: '',
+            severity: 'Moderate',
+            weeksRemaining: 4,
+            penalties: {},
+          },
+        ]
+      );
 
       const state = mockState([injuredRival]);
       const avoid = getMatchupsToAvoid(state, player, 1);
@@ -950,9 +987,25 @@ describe('Scheduling Assistant Engine', () => {
 
     it('includes rivals with Severe injury at exactly 2 weeks remaining', () => {
       const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
-      const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
-        { id: 'inj1' as any, name: 'Skull Fracture', description: '', severity: 'Severe', weeksRemaining: 2, penalties: {} },
-      ]);
+      const injuredRival = mockWarrior(
+        'r1',
+        FightingStyle.TotalParry,
+        10,
+        5,
+        5,
+        'rival1',
+        undefined,
+        [
+          {
+            id: 'inj1' as any,
+            name: 'Skull Fracture',
+            description: '',
+            severity: 'Severe',
+            weeksRemaining: 2,
+            penalties: {},
+          },
+        ]
+      );
 
       const state = mockState([injuredRival]);
       const avoid = getMatchupsToAvoid(state, player, 1);
@@ -963,9 +1016,25 @@ describe('Scheduling Assistant Engine', () => {
 
     it('excludes rivals with Critical injuries (>2 weeks)', () => {
       const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 5, 5);
-      const injuredRival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5, 'rival1', undefined, [
-        { id: 'inj1' as any, name: 'Critical Wound', description: '', severity: 'Critical', weeksRemaining: 10, penalties: {} },
-      ]);
+      const injuredRival = mockWarrior(
+        'r1',
+        FightingStyle.TotalParry,
+        10,
+        5,
+        5,
+        'rival1',
+        undefined,
+        [
+          {
+            id: 'inj1' as any,
+            name: 'Critical Wound',
+            description: '',
+            severity: 'Critical',
+            weeksRemaining: 10,
+            penalties: {},
+          },
+        ]
+      );
 
       const state = mockState([injuredRival]);
       const avoid = getMatchupsToAvoid(state, player, 1);
@@ -981,9 +1050,7 @@ describe('Scheduling Assistant Engine', () => {
       const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
 
       let state = mockState([recentRival, neutralRival]);
-      state = stateWithHistory(state, [
-        mockFightBetween('p1', 'r1', 'A', 4),
-      ]);
+      state = stateWithHistory(state, [mockFightBetween('p1', 'r1', 'A', 4)]);
       state.week = 5;
 
       const avoid = getMatchupsToAvoid(state, player, 2);
@@ -999,9 +1066,7 @@ describe('Scheduling Assistant Engine', () => {
       const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
 
       let state = mockState([recentRival, neutralRival]);
-      state = stateWithHistory(state, [
-        mockFightBetween('p1', 'r1', 'A', 3),
-      ]);
+      state = stateWithHistory(state, [mockFightBetween('p1', 'r1', 'A', 3)]);
       state.week = 5;
 
       const avoid = getMatchupsToAvoid(state, player, 2);
@@ -1017,9 +1082,7 @@ describe('Scheduling Assistant Engine', () => {
       const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
 
       let state = mockState([oldRival, neutralRival]);
-      state = stateWithHistory(state, [
-        mockFightBetween('p1', 'r1', 'A', 2),
-      ]);
+      state = stateWithHistory(state, [mockFightBetween('p1', 'r1', 'A', 2)]);
       state.week = 5;
 
       const avoid = getMatchupsToAvoid(state, player, 2);
@@ -1035,9 +1098,7 @@ describe('Scheduling Assistant Engine', () => {
       const neutralRival = mockWarrior('r2', FightingStyle.TotalParry, 10, 5, 5);
 
       let state = mockState([recentRival, neutralRival]);
-      state = stateWithHistory(state, [
-        mockFightBetween('p1', 'r1', 'A', 4),
-      ]);
+      state = stateWithHistory(state, [mockFightBetween('p1', 'r1', 'A', 4)]);
       state.week = 5;
 
       const avoid = getMatchupsToAvoid(state, player, 1);
@@ -1053,9 +1114,7 @@ describe('Scheduling Assistant Engine', () => {
       const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
 
       let state = mockState([rival]);
-      state = stateWithHistory(state, [
-        mockFightBetween('p1', 'r1', 'A', 4),
-      ]);
+      state = stateWithHistory(state, [mockFightBetween('p1', 'r1', 'A', 4)]);
       state.week = 5;
 
       const score = scoreMatchup(player, rival, state);
@@ -1068,9 +1127,7 @@ describe('Scheduling Assistant Engine', () => {
       const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 5, 5);
 
       let state = mockState([rival]);
-      state = stateWithHistory(state, [
-        mockFightBetween('p1', 'r1', 'A', 2),
-      ]);
+      state = stateWithHistory(state, [mockFightBetween('p1', 'r1', 'A', 2)]);
       state.week = 5;
 
       const score = scoreMatchup(player, rival, state);

@@ -1,8 +1,5 @@
 import { Plus } from 'lucide-react';
-import type {
-  PlanCondition,
-  ConditionTriggerType,
-} from '@/types/game';
+import type { PlanCondition, ConditionTriggerType } from '@/types/game';
 import { ConditionItem, TRIGGER_OPTIONS } from './ConditionItem';
 
 interface ConditionEditorProps {
@@ -13,12 +10,11 @@ interface ConditionEditorProps {
 const DEFAULT_CONDITION: PlanCondition = {
   trigger: { type: 'HP_BELOW', value: 35 },
   override: { OE: 4 },
-};/**
-  * Condition editor.
-  * @param - { conditions, on change }.
-  * @returns The result.
-  */
-
+}; /**
+ * Condition editor.
+ * @param - { conditions, on change }.
+ * @returns The result.
+ */
 
 /**
  * Condition editor.
@@ -51,6 +47,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
 
   function updateTriggerValue(idx: number, raw: string) {
     const cond = conditions[idx];
+    if (!cond) return;
     const opt = TRIGGER_OPTIONS.find((o) => o.type === cond.trigger.type);
     if (!opt) return;
 
@@ -70,6 +67,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
     val: number | undefined
   ) {
     const cond = conditions[idx];
+    if (!cond) return;
     if (val === undefined) {
       const { [key]: _removed, ...rest } = cond.override; // eslint-disable-line @typescript-eslint/no-unused-vars
       updateCondition(idx, { override: rest });
@@ -84,6 +82,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
     val: string
   ) {
     const cond = conditions[idx];
+    if (!cond) return;
     if (val === 'none') {
       const { [key]: _removed, ...rest } = cond.override; // eslint-disable-line @typescript-eslint/no-unused-vars
       updateCondition(idx, { override: rest });

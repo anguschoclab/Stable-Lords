@@ -80,7 +80,16 @@ Object.defineProperty(global, 'localStorage', {
   configurable: true,
 });
 
-type OPFSOp = 'getDirectory' | 'getDirectoryHandle' | 'getFileHandle' | 'createWritable' | 'write' | 'close' | 'getFile' | 'values' | 'text';
+type OPFSOp =
+  | 'getDirectory'
+  | 'getDirectoryHandle'
+  | 'getFileHandle'
+  | 'createWritable'
+  | 'write'
+  | 'close'
+  | 'getFile'
+  | 'values'
+  | 'text';
 
 let mockOpfsError: { name: string; target: OPFSOp | 'all' } | null = null;
 let mockOpfsFileText: string | null = null;

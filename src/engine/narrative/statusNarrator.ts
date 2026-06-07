@@ -12,41 +12,25 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 export function damageSeverityLine(rng: IRNGService, damage: number, maxHp: number): string | null {
   const ratio = damage / maxHp;
   if (ratio >= 0.35) {
-    const template = getFromArchive(rng, [
-      'pbp',
-      'damage_severity',
-      'deadly',
-    ]);
+    const template = getFromArchive(rng, ['pbp', 'damage_severity', 'deadly']);
     if (!template) return null;
     const templateStr = Array.isArray(template) ? template[0] : template;
     return interpolateTemplate(templateStr, {});
   }
   if (ratio >= 0.25) {
-    const template = getFromArchive(rng, [
-      'pbp',
-      'damage_severity',
-      'terrific',
-    ]);
+    const template = getFromArchive(rng, ['pbp', 'damage_severity', 'terrific']);
     if (!template) return null;
     const templateStr = Array.isArray(template) ? template[0] : template;
     return interpolateTemplate(templateStr, {});
   }
   if (ratio >= 0.15) {
-    const template = getFromArchive(rng, [
-      'pbp',
-      'damage_severity',
-      'powerful',
-    ]);
+    const template = getFromArchive(rng, ['pbp', 'damage_severity', 'powerful']);
     if (!template) return null;
     const templateStr = Array.isArray(template) ? template[0] : template;
     return interpolateTemplate(templateStr, {});
   }
   if (ratio <= 0.05) {
-    const template = getFromArchive(rng, [
-      'pbp',
-      'damage_severity',
-      'glancing',
-    ]);
+    const template = getFromArchive(rng, ['pbp', 'damage_severity', 'glancing']);
     if (!template) return null;
     const templateStr = Array.isArray(template) ? template[0] : template;
     return interpolateTemplate(templateStr, {});
@@ -131,12 +115,7 @@ export function minuteStatusLine(
 export function popularityLine(rng: IRNGService, name: string, popDelta: number): string | null {
   const cat = popDelta >= 3 ? 'great' : popDelta >= 1 ? 'normal' : '';
   if (!cat) return null;
-  const template = getFromArchive(rng, [
-    'pbp',
-    'meta',
-    'popularity',
-    cat,
-  ]);
+  const template = getFromArchive(rng, ['pbp', 'meta', 'popularity', cat]);
   return interpolateTemplate(template, { name });
 }
 
@@ -155,11 +134,7 @@ export function skillLearnLine(rng: IRNGService, name: string): string {
  * Generates trading blows line.
  */
 export function tradingBlowsLine(rng: IRNGService): string {
-  const template = getFromArchive(rng, [
-    'pbp',
-    'pacing',
-    'trading_blows',
-  ]);
+  const template = getFromArchive(rng, ['pbp', 'pacing', 'trading_blows']);
   if (!template) return 'A fierce exchange occurs.';
   const templateStr = Array.isArray(template) ? template[0] : template;
   return interpolateTemplate(templateStr, {});
@@ -231,4 +206,3 @@ export const StatusNarrator = {
   pressingLine,
   narrateInsightHint,
 };
-

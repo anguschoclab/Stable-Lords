@@ -43,11 +43,10 @@ import ActionButtons from '@/components/startGame/ActionButtons';
 import SavedGamesSection from '@/components/startGame/SavedGamesSection';
 import { formatDate } from '@/utils/dateUtils';
 
-type Screen = 'title' | 'newGame';/**
-                                   * Start game.
-                                   * @returns The result.
-                                   */
-
+type Screen = 'title' | 'newGame'; /**
+ * Start game.
+ * @returns The result.
+ */
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -149,7 +148,6 @@ export default function StartGame() {
     },
     [loadGame, refreshSlots]
   );
-
 
   // ── New Game Screen ────────────────────────────────────────────────────────
 

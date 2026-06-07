@@ -115,11 +115,10 @@ export function evaluateStopConditions(
         break;
       case 'noPairings': {
         // Check if there are fewer than 2 eligible fighters across all stables
-        const allWarriors = [
-          ...state.roster,
-          ...(state.rivals || []).flatMap((r) => r.roster),
-        ];
-        const eligibleCount = allWarriors.filter((w) => isFightReady(w, state.isTournamentWeek)).length;
+        const allWarriors = [...state.roster, ...(state.rivals || []).flatMap((r) => r.roster)];
+        const eligibleCount = allWarriors.filter((w) =>
+          isFightReady(w, state.isTournamentWeek)
+        ).length;
         if (eligibleCount < 2) {
           return { shouldStop: true, reason: 'no_pairings' };
         }

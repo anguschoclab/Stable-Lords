@@ -26,10 +26,7 @@ function createMockWarrior(
   } as Warrior;
 }
 
-function createMockRival(
-  stableName: string,
-  warriors: Warrior[]
-): RivalStableData {
+function createMockRival(stableName: string, warriors: Warrior[]): RivalStableData {
   return {
     id: `rival-${stableName}` as RivalStableData['id'],
     owner: {
@@ -76,10 +73,7 @@ describe('calculateArenaLeaderboard', () => {
 
   it('ranks rival warriors by fame descending when player roster is empty', () => {
     const rivals = [
-      createMockRival('Rival A', [
-        createMockWarrior('r-low', 10),
-        createMockWarrior('r-high', 50),
-      ]),
+      createMockRival('Rival A', [createMockWarrior('r-low', 10), createMockWarrior('r-high', 50)]),
     ];
     const result = calculateArenaLeaderboard([], rivals, 'Player Stable');
     expect(result).toHaveLength(2);
@@ -117,9 +111,7 @@ describe('calculateArenaLeaderboard', () => {
   });
 
   it('respects default limit of 10', () => {
-    const roster = Array.from({ length: 15 }, (_, i) =>
-      createMockWarrior(`w${i}`, i * 10)
-    );
+    const roster = Array.from({ length: 15 }, (_, i) => createMockWarrior(`w${i}`, i * 10));
     const result = calculateArenaLeaderboard(roster, undefined, 'Player Stable');
     expect(result).toHaveLength(10);
     // Highest fame is w14 (140), so top 10 should be w14 down to w5
@@ -148,10 +140,7 @@ describe('calculateArenaLeaderboard', () => {
   });
 
   it('handles limit = 1', () => {
-    const roster = [
-      createMockWarrior('low', 10),
-      createMockWarrior('high', 50),
-    ];
+    const roster = [createMockWarrior('low', 10), createMockWarrior('high', 50)];
     const result = calculateArenaLeaderboard(roster, undefined, 'Player Stable', 1);
     expect(result).toHaveLength(1);
     expect(result[0]!.warrior.id).toBe('high');
@@ -185,9 +174,7 @@ describe('calculateArenaLeaderboard', () => {
   });
 
   it('correctly handles bounded sort with 50+ warriors', () => {
-    const roster = Array.from({ length: 50 }, (_, i) =>
-      createMockWarrior(`w${i}`, i * 2)
-    );
+    const roster = Array.from({ length: 50 }, (_, i) => createMockWarrior(`w${i}`, i * 2));
     const result = calculateArenaLeaderboard(roster, undefined, 'Player Stable', 5);
     expect(result).toHaveLength(5);
     // Highest fame is w49 (98), then w48 (96), w47 (94), w46 (92), w45 (90)

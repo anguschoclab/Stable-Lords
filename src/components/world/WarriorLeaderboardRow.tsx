@@ -1,8 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import {
-  TableCell,
-  TableRow,
-} from '@/components/ui/table';
+import { TableCell, TableRow } from '@/components/ui/table';
 import { Crown, Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { WarriorRow } from '@/types/leaderboard';
@@ -30,9 +27,7 @@ function RankCell({ row, index, isFiltered }: WarriorLeaderboardRowProps) {
           {isFiltered ? `#${index + 1}` : `#${row.officialRank}`}
         </div>
         {isFiltered && (
-          <span className="text-[8px] font-mono text-muted-foreground/30">
-            #{row.officialRank}
-          </span>
+          <span className="text-[8px] font-mono text-muted-foreground/30">#{row.officialRank}</span>
         )}
       </div>
     </TableCell>

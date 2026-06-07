@@ -24,8 +24,18 @@ describe('psychState', () => {
       consecutiveHits: 0,
       hitsLanded: 0,
       hitsTaken: 0,
-      plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 5, AL: 5, killDesire: 5 },
-      activePlan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 5, AL: 5, killDesire: 5 },
+      plan: {
+        style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+        OE: 5,
+        AL: 5,
+        killDesire: 5,
+      },
+      activePlan: {
+        style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+        OE: 5,
+        AL: 5,
+        killDesire: 5,
+      },
       desperate: false,
       ...overrides,
     }) as FighterState;
@@ -35,7 +45,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Neutral' });
       const fD = createMockFighter({ label: 'D' });
 
-      const events = evaluatePsychState(fA, fD, { exchange: 1, phase: 'OPENING' } as any, { psychState: 'Neutral' }, { psychState: 'Neutral' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        { exchange: 1, phase: 'OPENING' } as any,
+        { psychState: 'Neutral' },
+        { psychState: 'Neutral' }
+      );
 
       expect(events).toHaveLength(0);
     });
@@ -44,7 +60,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Neutral' });
       const fD = createMockFighter({ label: 'D' });
 
-      const events = evaluatePsychState(fA, fD, {} as any, { psychState: 'InTheZone' }, { psychState: 'Neutral' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        {} as any,
+        { psychState: 'InTheZone' },
+        { psychState: 'Neutral' }
+      );
 
       expect(events).toHaveLength(1);
       expect(events[0]!.type).toBe('STATE_CHANGE');
@@ -56,7 +78,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Neutral' });
       const fD = createMockFighter({ label: 'D' });
 
-      const events = evaluatePsychState(fA, fD, {} as any, { psychState: 'Rattled' }, { psychState: 'Neutral' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        {} as any,
+        { psychState: 'Rattled' },
+        { psychState: 'Neutral' }
+      );
 
       expect(events).toHaveLength(1);
       expect(events[0]!.result).toBe('PSYCH_RATTLED');
@@ -66,7 +94,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Neutral' });
       const fD = createMockFighter({ label: 'D' });
 
-      const events = evaluatePsychState(fA, fD, {} as any, { psychState: 'Desperate' }, { psychState: 'Neutral' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        {} as any,
+        { psychState: 'Desperate' },
+        { psychState: 'Neutral' }
+      );
 
       expect(events).toHaveLength(1);
       expect(events[0]!.result).toBe('PSYCH_DESPERATE');
@@ -76,7 +110,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Neutral' });
       const fD = createMockFighter({ label: 'D' });
 
-      const events = evaluatePsychState(fA, fD, {} as any, { psychState: 'Cruising' }, { psychState: 'Neutral' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        {} as any,
+        { psychState: 'Cruising' },
+        { psychState: 'Neutral' }
+      );
 
       expect(events).toHaveLength(1);
       expect(events[0]!.result).toBe('PSYCH_CRUISING');
@@ -86,7 +126,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Neutral' });
       const fD = createMockFighter({ label: 'D' });
 
-      const events = evaluatePsychState(fA, fD, {} as any, { psychState: 'FatiguePanic' }, { psychState: 'Neutral' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        {} as any,
+        { psychState: 'FatiguePanic' },
+        { psychState: 'Neutral' }
+      );
 
       expect(events).toHaveLength(1);
       expect(events[0]!.result).toBe('PSYCH_FATIGUEPANIC');
@@ -96,7 +142,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Desperate' });
       const fD = createMockFighter({ label: 'D' });
 
-      const events = evaluatePsychState(fA, fD, {} as any, { psychState: 'Neutral' }, { psychState: 'Neutral' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        {} as any,
+        { psychState: 'Neutral' },
+        { psychState: 'Neutral' }
+      );
 
       expect(events).toHaveLength(0);
     });
@@ -105,7 +157,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Neutral' });
       const fD = createMockFighter({ label: 'D', psychState: 'Neutral' });
 
-      const events = evaluatePsychState(fA, fD, {} as any, { psychState: 'Desperate' }, { psychState: 'InTheZone' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        {} as any,
+        { psychState: 'Desperate' },
+        { psychState: 'InTheZone' }
+      );
 
       expect(events).toHaveLength(2);
       expect(events.some((e) => e.actor === 'A' && e.result === 'PSYCH_DESPERATE')).toBe(true);
@@ -125,7 +183,13 @@ describe('psychState', () => {
       const fA = createMockFighter({ psychState: 'Desperate' });
       const fD = createMockFighter({ label: 'D' });
 
-      const events = evaluatePsychState(fA, fD, {} as any, { psychState: 'Desperate' }, { psychState: 'Neutral' });
+      const events = evaluatePsychState(
+        fA,
+        fD,
+        {} as any,
+        { psychState: 'Desperate' },
+        { psychState: 'Neutral' }
+      );
 
       expect(events).toHaveLength(0);
     });
@@ -198,7 +262,13 @@ describe('psychState', () => {
   describe('handleDesperateState', () => {
     it('returns empty events when no fighter is desperate', () => {
       const fA = createMockFighter({ hp: 100, maxHp: 100, endurance: 100, maxEndurance: 100 });
-      const fD = createMockFighter({ label: 'D', hp: 100, maxHp: 100, endurance: 100, maxEndurance: 100 });
+      const fD = createMockFighter({
+        label: 'D',
+        hp: 100,
+        maxHp: 100,
+        endurance: 100,
+        maxEndurance: 100,
+      });
 
       const events = handleDesperateState(fA, fD);
 
@@ -209,7 +279,14 @@ describe('psychState', () => {
       const fA = createMockFighter({
         hp: 25,
         maxHp: 100,
-        plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 7, AL: 7, killDesire: 5, fallbackCondition: 'FLEE', desperatePlan: { OE: 3, AL: 3 } },
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 7,
+          AL: 7,
+          killDesire: 5,
+          fallbackCondition: 'FLEE',
+          desperatePlan: { OE: 3, AL: 3 },
+        },
         desperate: false,
       });
       const fD = createMockFighter({ label: 'D' });
@@ -227,7 +304,14 @@ describe('psychState', () => {
         maxHp: 100,
         endurance: 15,
         maxEndurance: 100,
-        plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 7, AL: 7, killDesire: 5, fallbackCondition: 'TURTLE', desperatePlan: { OE: 3, AL: 3 } },
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 7,
+          AL: 7,
+          killDesire: 5,
+          fallbackCondition: 'TURTLE',
+          desperatePlan: { OE: 3, AL: 3 },
+        },
         desperate: false,
       });
       const fD = createMockFighter({ label: 'D' });
@@ -242,7 +326,14 @@ describe('psychState', () => {
       const fA = createMockFighter({
         hp: 25,
         maxHp: 100,
-        plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 7, AL: 7, killDesire: 5, fallbackCondition: 'BERZERK', desperatePlan: { OE: 10, AL: 9, killDesire: 10 } },
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 7,
+          AL: 7,
+          killDesire: 5,
+          fallbackCondition: 'BERZERK',
+          desperatePlan: { OE: 10, AL: 9, killDesire: 10 },
+        },
         desperate: false,
       });
       const fD = createMockFighter({ label: 'D' });
@@ -259,7 +350,14 @@ describe('psychState', () => {
       const fA = createMockFighter({
         hp: 25,
         maxHp: 100,
-        plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 7, AL: 7, killDesire: 5, fallbackCondition: 'FLEE', desperatePlan: { OE: 3, AL: 3 } },
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 7,
+          AL: 7,
+          killDesire: 5,
+          fallbackCondition: 'FLEE',
+          desperatePlan: { OE: 3, AL: 3 },
+        },
         desperate: true,
       });
       const fD = createMockFighter({ label: 'D' });
@@ -273,7 +371,13 @@ describe('psychState', () => {
       const fA = createMockFighter({
         hp: 25,
         maxHp: 100,
-        plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 7, AL: 7, killDesire: 5, fallbackCondition: 'FLEE' },
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 7,
+          AL: 7,
+          killDesire: 5,
+          fallbackCondition: 'FLEE',
+        },
         desperate: false,
       });
       const fD = createMockFighter({ label: 'D' });
@@ -288,14 +392,28 @@ describe('psychState', () => {
       const fA = createMockFighter({
         hp: 25,
         maxHp: 100,
-        plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 7, AL: 7, killDesire: 5, fallbackCondition: 'FLEE', desperatePlan: { OE: 3, AL: 3 } },
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 7,
+          AL: 7,
+          killDesire: 5,
+          fallbackCondition: 'FLEE',
+          desperatePlan: { OE: 3, AL: 3 },
+        },
         desperate: false,
       });
       const fD = createMockFighter({
         label: 'D',
         hp: 20,
         maxHp: 100,
-        plan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 7, AL: 7, killDesire: 5, fallbackCondition: 'FLEE', desperatePlan: { OE: 3, AL: 3 } },
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 7,
+          AL: 7,
+          killDesire: 5,
+          fallbackCondition: 'FLEE',
+          desperatePlan: { OE: 3, AL: 3 },
+        },
         desperate: false,
       });
 
@@ -319,7 +437,13 @@ describe('psychState', () => {
           fallbackCondition: 'FLEE',
           desperatePlan: { OE: 3, AL: 3, killDesire: 1, target: 'Any', offensiveTactic: 'Lunge' },
         },
-        activePlan: { style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle, OE: 7, AL: 7, killDesire: 5, target: 'Head' },
+        activePlan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 7,
+          AL: 7,
+          killDesire: 5,
+          target: 'Head',
+        },
         desperate: false,
       });
       const fD = createMockFighter({ label: 'D' });

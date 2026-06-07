@@ -19,12 +19,11 @@ export const TACTIC_BANK = [
 interface TacticBankProps {
   plan?: FightPlan;
   onPlanChange?: (plan: FightPlan) => void;
-}/**
-  * Tactic bank.
-  * @param - { plan, on plan change }.
-  * @returns The result.
-  */
-
+} /**
+ * Tactic bank.
+ * @param - { plan, on plan change }.
+ * @returns The result.
+ */
 
 /**
  * Tactic bank.

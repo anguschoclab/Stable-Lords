@@ -24,12 +24,11 @@ interface GazetteIssue {
 interface GazetteArticleProps {
   issue: GazetteIssue;
   season: string;
-}/**
-  * Gazette article.
-  * @param - { issue, season }.
-  * @returns The result.
-  */
-
+} /**
+ * Gazette article.
+ * @param - { issue, season }.
+ * @returns The result.
+ */
 
 /**
  * Gazette article.

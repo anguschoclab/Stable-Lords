@@ -4,10 +4,9 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import type { FightSummary } from '@/types/combat.types';/**
-                                                          * Defines the shape of stable reputation.
-                                                          */
-
+import type { FightSummary } from '@/types/combat.types'; /**
+ * Defines the shape of stable reputation.
+ */
 
 /**
  * Defines the shape of stable reputation.
@@ -22,7 +21,11 @@ export interface StableReputation {
 /**
  * Calculate stable Fame based on top active warriors' fame and gazette mentions.
  */
-function calculateFame(state: GameState, activeWarriors: Warrior[], gazetteMentions: number): number {
+function calculateFame(
+  state: GameState,
+  activeWarriors: Warrior[],
+  gazetteMentions: number
+): number {
   const topFame: Warrior[] = [];
   for (let i = 0; i < activeWarriors.length; i++) {
     const w = activeWarriors[i];
@@ -152,9 +155,7 @@ export function computeStableReputation(state: GameState): StableReputation {
 /**
  * Compute a rival stable's reputation from its data.
  */
-export function computeRivalReputation(
-  roster: Warrior[]
-): StableReputation {
+export function computeRivalReputation(roster: Warrior[]): StableReputation {
   let totalKills = 0;
   let cleanBouts = 0;
   const uniqueStyles = new Set<string>();

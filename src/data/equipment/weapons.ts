@@ -4,10 +4,9 @@
  */
 
 import { FightingStyle } from '@/types/game';
-import type { EquipmentItem } from './equipment.types';/**
-                                                        * Weapons.
-                                                        */
-
+import type { EquipmentItem } from './equipment.types'; /**
+ * Weapons.
+ */
 
 /**
  * Weapons.
@@ -86,10 +85,7 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.StrikingAttack,
       FightingStyle.TotalParry,
     ],
-    restrictedStyles: [
-      FightingStyle.BashingAttack,
-      FightingStyle.WallOfSteel,
-    ],
+    restrictedStyles: [FightingStyle.BashingAttack, FightingStyle.WallOfSteel],
   },
   {
     id: 'hatchet',
@@ -139,10 +135,7 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.StrikingAttack,
       FightingStyle.TotalParry,
     ],
-    restrictedStyles: [
-      FightingStyle.BashingAttack,
-      FightingStyle.WallOfSteel,
-    ],
+    restrictedStyles: [FightingStyle.BashingAttack, FightingStyle.WallOfSteel],
   },
   {
     id: 'scimitar',
@@ -243,10 +236,7 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.StrikingAttack,
       FightingStyle.TotalParry,
     ],
-    restrictedStyles: [
-      FightingStyle.BashingAttack,
-      FightingStyle.WallOfSteel,
-    ],
+    restrictedStyles: [FightingStyle.BashingAttack, FightingStyle.WallOfSteel],
   },
   {
     id: 'long_spear',
@@ -384,7 +374,11 @@ export const WEAPONS: EquipmentItem[] = [
     reqWT: 3,
     reqDF: 7,
     description: 'Buckler. +1 DEF, no ATT penalty.',
-    preferredStyles: [FightingStyle.ParryRiposte, FightingStyle.ParryLunge, FightingStyle.ParryStrike],
+    preferredStyles: [
+      FightingStyle.ParryRiposte,
+      FightingStyle.ParryLunge,
+      FightingStyle.ParryStrike,
+    ],
     coverage: 'MEDIUM',
   },
   {
@@ -399,7 +393,11 @@ export const WEAPONS: EquipmentItem[] = [
     reqDF: 7,
     description: 'Round shield. CW for Total-Parry. +2 DEF, no ATT penalty.',
     favoredStyles: [FightingStyle.TotalParry],
-    preferredStyles: [FightingStyle.TotalParry, FightingStyle.ParryStrike, FightingStyle.WallOfSteel],
+    preferredStyles: [
+      FightingStyle.TotalParry,
+      FightingStyle.ParryStrike,
+      FightingStyle.WallOfSteel,
+    ],
     restrictedStyles: [FightingStyle.AimedBlow],
     coverage: 'MEDIUM',
   },
@@ -581,17 +579,16 @@ export const WEAPONS: EquipmentItem[] = [
       FightingStyle.WallOfSteel,
     ],
   },
-];/**
-   * Shield_item_ids.
-   */
-
+]; /**
+ * Shield_item_ids.
+ */
 
 /**
  * Shield_item_ids.
  */
-export const SHIELD_ITEM_IDS = ['small_shield', 'medium_shield', 'large_shield'] as const;/**
-                                                                                           * Shield_coverage.
-                                                                                           */
+export const SHIELD_ITEM_IDS = ['small_shield', 'medium_shield', 'large_shield'] as const; /**
+ * Shield_coverage.
+ */
 
 /**
  * Shield_coverage.

@@ -15,10 +15,9 @@ const engine = {
   skipToWeekEnd: TickOrchestrator.skipToWeekEnd,
   resolveTournamentRound: TournamentSelectionService.resolveRound.bind(TournamentSelectionService),
   createFreshState,
-};/**
-   * Engine worker type.
-   */
-
+}; /**
+ * Engine worker type.
+ */
 
 /**
  * Engine worker type.

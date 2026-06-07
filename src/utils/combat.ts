@@ -3,10 +3,9 @@
  * Provides common operations for combat-related styling and logic
  * Eliminates DRY violations of outcome styling patterns
  */
-import type { FightOutcomeBy } from '@/types/combat.types';/**
-                                                            * Defines the shape of outcome style.
-                                                            */
-
+import type { FightOutcomeBy } from '@/types/combat.types'; /**
+ * Defines the shape of outcome style.
+ */
 
 /**
  * Defines the shape of outcome style.

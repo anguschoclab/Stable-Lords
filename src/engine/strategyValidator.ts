@@ -4,18 +4,16 @@
  * can consume the same ruleset.
  */
 import type { FightPlan, Warrior, PhaseStrategy } from '@/types/shared.types';
-import { FightingStyle } from '@/types/shared.types';/**
-                                                      * Warning severity type.
-                                                      */
-
+import { FightingStyle } from '@/types/shared.types'; /**
+ * Warning severity type.
+ */
 
 /**
  * Warning severity type.
  */
-export type WarningSeverity = 'info' | 'warn' | 'error';/**
-                                                         * Defines the shape of strategy warning.
-                                                         */
-
+export type WarningSeverity = 'info' | 'warn' | 'error'; /**
+ * Defines the shape of strategy warning.
+ */
 
 /**
  * Defines the shape of strategy warning.
@@ -27,13 +25,12 @@ export interface StrategyWarning {
 }
 
 const HIGH = 8;
-const LOW = 3;/**
-               * Validate strategy.
-               * @param plan - Plan.
-               * @param warrior - Warrior. (optional)
-               * @returns The result.
-               */
-
+const LOW = 3; /**
+ * Validate strategy.
+ * @param plan - Plan.
+ * @param warrior - Warrior. (optional)
+ * @returns The result.
+ */
 
 /**
  * Validate strategy.

@@ -7,12 +7,11 @@ import { StateImpact } from '@/engine/impacts';
  * Stable Lords — World Pipeline Pass
  * Handles seasonal transitions and weather changes.
  */
-const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];/**
-                                                                  * Compute next season.
-                                                                  * @param newWeek - New week.
-                                                                  * @returns The result.
-                                                                  */
-
+const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter']; /**
+ * Compute next season.
+ * @param newWeek - New week.
+ * @returns The result.
+ */
 
 /**
  * Compute next season.
@@ -21,13 +20,12 @@ const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];/**
  */
 export function computeNextSeason(newWeek: number): Season {
   return SEASONS[Math.floor((newWeek - 1) / 13) % 4];
-}/**
-  * Roll weather.
-  * @param rng - Rng.
-  * @param season - Season.
-  * @returns The result.
-  */
-
+} /**
+ * Roll weather.
+ * @param rng - Rng.
+ * @param season - Season.
+ * @returns The result.
+ */
 
 /**
  * Roll weather.

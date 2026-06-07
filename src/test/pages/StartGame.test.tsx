@@ -35,7 +35,7 @@ vi.mock('@/engine/crest/crestGenerator', () => ({
 }));
 
 vi.mock('@/components/startGame/ColomseumArch', () => ({
-  default: () => <div data-testid="ColomseumArch" />
+  default: () => <div data-testid="ColomseumArch" />,
 }));
 
 describe('StartGame', () => {
@@ -50,7 +50,7 @@ describe('StartGame', () => {
     // Set up FileReader mock BEFORE render
     const mockFileReader = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      readAsText: vi.fn().mockImplementation(function(this: any, _file: Blob) {
+      readAsText: vi.fn().mockImplementation(function (this: any, _file: Blob) {
         // Simulate successful file read
         if (this.onload) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

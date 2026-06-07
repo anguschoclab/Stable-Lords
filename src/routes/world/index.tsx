@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import WorldOverview from '@/pages/WorldOverview';/**
-                                                   * Route.
-                                                   */
-
+import WorldOverview from '@/pages/WorldOverview'; /**
+ * Route.
+ */
 
 /**
  * Route.

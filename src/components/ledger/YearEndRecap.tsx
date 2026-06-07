@@ -8,11 +8,10 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Trophy, Skull, Coins, Swords, Users, Flame } from 'lucide-react';
-import { cn } from '@/lib/utils';/**
-                                  * Year end recap.
-                                  * @returns The result.
-                                  */
-
+import { cn } from '@/lib/utils'; /**
+ * Year end recap.
+ * @returns The result.
+ */
 
 /**
  * Year end recap.
@@ -22,7 +21,9 @@ export function YearEndRecap() {
   const { roster, graveyard, retired, ledger, rivalries, season, week } = useGameStore();
 
   const rosterFameData = useGameStore(
-    useShallow((s) => s.roster.map((w) => ({ id: w.id, name: w.name, fame: w.fame, career: w.career })))
+    useShallow((s) =>
+      s.roster.map((w) => ({ id: w.id, name: w.name, fame: w.fame, career: w.career }))
+    )
   );
 
   const recap = useMemo(() => {

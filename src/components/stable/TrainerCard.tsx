@@ -1,14 +1,7 @@
 import type { ReactNode } from 'react';
 import { Surface } from '@/components/ui/Surface';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import {
-  GraduationCap,
-  UserMinus,
-  Sparkles,
-  Target,
-  Trophy,
-  Briefcase,
-} from 'lucide-react';
+import { GraduationCap, UserMinus, Sparkles, Target, Trophy, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StatBattery } from '@/components/ui/StatBattery';
 import type { Trainer as TrainerData, TrainerFocus, TrainerTier } from '@/types/state.types';
@@ -20,12 +13,11 @@ interface TrainerCardProps {
   onFire?: () => void;
   owned: boolean;
   action?: ReactNode;
-}/**
-  * Trainer card.
-  * @param - { trainer, on fire, owned, action }.
-  * @returns The result.
-  */
-
+} /**
+ * Trainer card.
+ * @param - { trainer, on fire, owned, action }.
+ * @returns The result.
+ */
 
 /**
  * Trainer card.

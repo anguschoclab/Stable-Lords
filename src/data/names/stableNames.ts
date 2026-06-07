@@ -68,10 +68,9 @@ export const STABLE_PREFIXES = [
   'The Bloodstained',
   'The Ironbound',
   'The Sanguine',
-];/**
-   * Stable_suffixes.
-   */
-
+]; /**
+ * Stable_suffixes.
+ */
 
 /**
  * Stable_suffixes.
@@ -138,10 +137,9 @@ export const STABLE_SUFFIXES = [
   'Devils',
   'Vanguards',
   'Desolators',
-];/**
-   * Stable_alt.
-   */
-
+]; /**
+ * Stable_alt.
+ */
 
 /**
  * Stable_alt.

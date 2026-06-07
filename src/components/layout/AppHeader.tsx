@@ -417,7 +417,12 @@ export function AppHeader({
         </div>
 
         <div className="hidden xl:flex items-center gap-1">
-          <CycleStatus week={week} day={day} isTournamentWeek={isTournamentWeek} isSimulating={isSimulating} />
+          <CycleStatus
+            week={week}
+            day={day}
+            isTournamentWeek={isTournamentWeek}
+            isSimulating={isSimulating}
+          />
           <TreasuryDisplay treasury={treasury} />
           <InfluenceDisplay fame={fame} />
           <CrowdMoodDisplay crowdMood={crowdMood} />

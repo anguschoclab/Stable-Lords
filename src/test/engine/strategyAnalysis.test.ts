@@ -15,7 +15,10 @@ function createPlan(style: FightingStyle, overrides?: Partial<FightPlan>): Fight
   };
 }
 
-function createWarrior(attributesOverride?: Partial<Warrior['attributes']>, otherOverrides?: Partial<Warrior>): Warrior {
+function createWarrior(
+  attributesOverride?: Partial<Warrior['attributes']>,
+  otherOverrides?: Partial<Warrior>
+): Warrior {
   const baseAttributes = {
     ST: 10,
     CN: 10,
@@ -330,8 +333,12 @@ describe('computeStrategyScore', () => {
 
 describe('getScoreColor', () => {
   it('returns gold classes for score >= 85', () => {
-    expect(getScoreColor(90)).toBe('text-arena-gold shadow-[0_0_10px_rgba(var(--arena-gold-rgb),0.5)]');
-    expect(getScoreColor(85)).toBe('text-arena-gold shadow-[0_0_10px_rgba(var(--arena-gold-rgb),0.5)]');
+    expect(getScoreColor(90)).toBe(
+      'text-arena-gold shadow-[0_0_10px_rgba(var(--arena-gold-rgb),0.5)]'
+    );
+    expect(getScoreColor(85)).toBe(
+      'text-arena-gold shadow-[0_0_10px_rgba(var(--arena-gold-rgb),0.5)]'
+    );
   });
 
   it('returns primary class for score 70–84', () => {

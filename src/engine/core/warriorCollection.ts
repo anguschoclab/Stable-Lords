@@ -9,10 +9,7 @@ import type { Warrior } from '@/types/warrior.types';
  * Collects all warriors from player roster and rival stables
  * Optionally filters by a predicate function
  */
-export function collectAllWarriors(
-  state: GameState,
-  filter?: (w: Warrior) => boolean
-): Warrior[] {
+export function collectAllWarriors(state: GameState, filter?: (w: Warrior) => boolean): Warrior[] {
   const result: Warrior[] = [];
 
   // Add player roster warriors
@@ -46,10 +43,7 @@ export function collectAllActiveWarriors(state: GameState): Warrior[] {
  * Collects all warriors available for matchmaking
  * (Active and not already booked for upcoming weeks)
  */
-export function collectAvailableWarriors(
-  state: GameState,
-  targetWeek: number
-): Warrior[] {
+export function collectAvailableWarriors(state: GameState, targetWeek: number): Warrior[] {
   // Get all warriors already signed for target week
   const bookedWarriorIds = new Set<string>();
 

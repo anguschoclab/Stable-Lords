@@ -1,9 +1,7 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import type { GameState } from '@/types/state.types';
 import type { Trainer } from '@/types/shared.types';
-import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/shared.types';
 import {
   TRAINER_FOCUSES,
   TRAINER_MAX_PER_STABLE,
@@ -14,9 +12,7 @@ import {
   convertRetiredToTrainer,
   type TrainerTier,
 } from '@/engine/trainers';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   GraduationCap,
@@ -28,8 +24,6 @@ import {
   Award,
   Skull,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { Surface } from '@/components/ui/Surface';
@@ -49,7 +43,8 @@ import { toast } from 'sonner';
  */
 export default function Trainers() {
   // Flat destructuring from 1.0 store
-  const { trainers, hiringPool, week, retired, graveyard, treasury, setState, deductFunds } = useGameStore();
+  const { trainers, hiringPool, week, retired, graveyard, treasury, setState, deductFunds } =
+    useGameStore();
 
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 
@@ -61,7 +56,7 @@ export default function Trainers() {
   useEffect(() => {
     if (currentHiringPool.length === 0) {
       const pool = generateHiringPool(4, week * 1000 + cryptoRandomInt(0, 2147483647));
-      setState((draft: GameState) => {
+      setState((draft) => {
         draft.hiringPool = pool;
       });
     }
@@ -70,7 +65,7 @@ export default function Trainers() {
   // Refresh hiring pool
   const refreshPool = useCallback(() => {
     const pool = generateHiringPool(4, week * 1000 + cryptoRandomInt(0, 2147483647));
-    setState((draft: GameState) => {
+    setState((draft) => {
       draft.hiringPool = pool;
     });
     toast.success('Personnel registry updated. New candidates available.');
@@ -83,7 +78,7 @@ export default function Trainers() {
         toast.error(`Insufficient credits. Access to ${trainer.name} requires ${cost}G.`);
         return;
       }
-      setState((draft: GameState) => {
+      setState((draft) => {
         draft.trainers.push(trainer);
         draft.hiringPool = draft.hiringPool.filter((t) => t.id !== trainer.id);
       });
@@ -94,7 +89,7 @@ export default function Trainers() {
 
   const fireTrainer = useCallback(
     (trainerId: string) => {
-      setState((draft: GameState) => {
+      setState((draft) => {
         draft.trainers = draft.trainers.filter((t) => t.id !== trainerId);
       });
     },
@@ -111,7 +106,7 @@ export default function Trainers() {
       const warrior = retired.find((w) => w.id === warriorId);
       if (!warrior) return;
       const trainer = convertRetiredToTrainer(warrior);
-      setState((draft: GameState) => {
+      setState((draft) => {
         draft.trainers.push(trainer);
       });
       toast.success(

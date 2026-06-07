@@ -13,7 +13,10 @@ export interface ResolvedTactics {
   target: string;
 }
 
-export function resolveEffectiveTactics(plan: FightPlan, phaseKey: 'opening' | 'mid' | 'late'): ResolvedTactics {
+export function resolveEffectiveTactics(
+  plan: FightPlan,
+  phaseKey: 'opening' | 'mid' | 'late'
+): ResolvedTactics {
   const phase = plan.phases?.[phaseKey];
   return {
     offTactic: (phase?.offensiveTactic ?? plan.offensiveTactic ?? 'none') as OffensiveTactic,

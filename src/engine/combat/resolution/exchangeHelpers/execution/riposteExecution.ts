@@ -30,7 +30,9 @@ export function executeRiposte(
   const ripLoc = rollHitLocation(rng, defTactics.target, attacker.activePlan.protect);
   let ripDmgRaw = computeHitDamage(
     rng,
-    defender.derived.damage + defPassive.dmgBonus + weaponDamageBonus(defender.weaponId, defender.style),
+    defender.derived.damage +
+      defPassive.dmgBonus +
+      weaponDamageBonus(defender.weaponId, defender.style),
     ripLoc
   );
   ripDmgRaw = applyArmorTypeMod(ripDmgRaw, defender.weaponId, attacker.armorId);

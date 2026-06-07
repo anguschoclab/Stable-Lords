@@ -2,10 +2,9 @@ import { type GameState } from '@/types/state.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics';/**
-                                                                                * Defines the shape of simulation config.
-                                                                                */
-
+import { collectPulse, type SimPulse } from '@/engine/stats/simulationMetrics'; /**
+ * Defines the shape of simulation config.
+ */
 
 /**
  * Defines the shape of simulation config.
@@ -15,10 +14,9 @@ export interface SimulationConfig {
   seed: number;
   logFrequency?: number; // Log every N weeks
   ignoreBankruptcy?: boolean;
-}/**
-  * Defines the shape of simulation result.
-  */
-
+} /**
+ * Defines the shape of simulation result.
+ */
 
 /**
  * Defines the shape of simulation result.

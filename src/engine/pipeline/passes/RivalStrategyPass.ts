@@ -188,7 +188,12 @@ function handleOwnerLifecycle(
   return { updatedRival, gazetteItems };
 }
 
-function handleSeasonalTournaments(state: GameState, week: number, rng: IRNGService, headless?: boolean): StateImpact {
+function handleSeasonalTournaments(
+  state: GameState,
+  week: number,
+  rng: IRNGService,
+  headless?: boolean
+): StateImpact {
   const tournaments = TournamentSelectionService.generateSeasonalTiers(
     state,
     week,

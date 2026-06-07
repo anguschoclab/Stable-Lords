@@ -3,11 +3,10 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from 'lucide-react';/**
-                                                                                                 * Insight vault.
-                                                                                                 * @returns The result.
-                                                                                                 */
-
+import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from 'lucide-react'; /**
+ * Insight vault.
+ * @returns The result.
+ */
 
 /**
  * Insight vault.
@@ -24,7 +23,11 @@ export function InsightVault() {
       if (t.type === 'Attribute') acc.statTokens.push(t);
       return acc;
     },
-    { weaponTokens: [] as typeof tokens, rhythmTokens: [] as typeof tokens, statTokens: [] as typeof tokens }
+    {
+      weaponTokens: [] as typeof tokens,
+      rhythmTokens: [] as typeof tokens,
+      statTokens: [] as typeof tokens,
+    }
   );
 
   return (

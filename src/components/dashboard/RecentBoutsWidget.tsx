@@ -5,13 +5,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { FightSummary } from '@/types/game';
 import { BoutTableRow } from './BoutTableRow';
 import { EmptyBoutsState } from './EmptyBoutsState';

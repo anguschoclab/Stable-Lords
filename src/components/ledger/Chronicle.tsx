@@ -5,11 +5,10 @@ import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { ScrollText, ChevronRight, History, Activity, ShieldCheck, Terminal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';/**
-                                                                                   * Chronicle.
-                                                                                   * @returns The result.
-                                                                                   */
-
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'; /**
+ * Chronicle.
+ * @returns The result.
+ */
 
 /**
  * Chronicle.
@@ -19,10 +18,7 @@ export function Chronicle() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
   const newsletter = useGameStore((s) => s.newsletter);
 
-  const news = useMemo(
-    () => [...(newsletter || [])].reverse().slice(0, 50),
-    [newsletter]
-  );
+  const news = useMemo(() => [...(newsletter || [])].reverse().slice(0, 50), [newsletter]);
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">

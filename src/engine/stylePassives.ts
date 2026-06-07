@@ -6,9 +6,28 @@
  */
 
 // Re-export from split modules
-export type { Phase, StylePassiveResult, KillMechanic, StyleStrategy, StylePassiveContext, KillContext } from './stylePassives/types';
-export type { StyleVoice, AttackFreq, KillBias, FatigueBurn, StyleIdentity } from './stylePassives/types';
+export type {
+  Phase,
+  StylePassiveResult,
+  KillMechanic,
+  StyleStrategy,
+  StylePassiveContext,
+  KillContext,
+} from './stylePassives/types';
+export type {
+  StyleVoice,
+  AttackFreq,
+  KillBias,
+  FatigueBurn,
+  StyleIdentity,
+} from './stylePassives/types';
 export type { MasteryTier, MasteryInfo } from './stylePassives/types';
 export { STYLE_IDENTITY, getStyleIdentity } from './stylePassives/identity';
 export { getMastery } from './stylePassives/mastery';
-export { getTempoBonus, getEnduranceMult, getStylePassive, getKillMechanic, getStyleAntiSynergy } from './stylePassives/api';
+export {
+  getTempoBonus,
+  getEnduranceMult,
+  getStylePassive,
+  getKillMechanic,
+  getStyleAntiSynergy,
+} from './stylePassives/api';

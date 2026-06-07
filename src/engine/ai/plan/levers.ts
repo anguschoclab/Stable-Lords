@@ -6,7 +6,13 @@
  * style, owner personality, strategic intent, and kill desire.
  */
 import { FightingStyle } from '@/types/shared.types';
-import type { AttackTarget, ProtectTarget, DistanceRange, OffensiveTactic, DefensiveTactic } from '@/types/shared.types';
+import type {
+  AttackTarget,
+  ProtectTarget,
+  DistanceRange,
+  OffensiveTactic,
+  DefensiveTactic,
+} from '@/types/shared.types';
 import type { OwnerPersonality, AIIntent } from '@/types/state.types';
 import { clamp } from '@/utils/math';
 
@@ -88,7 +94,8 @@ export function getAIOpeningMove(
  * style rather than the weapon. Returns undefined to defer to the weapon default.
  */
 export function getAIRangePreference(style: FightingStyle): DistanceRange | undefined {
-  if (style === FightingStyle.LungingAttack || style === FightingStyle.ParryLunge) return 'Extended';
+  if (style === FightingStyle.LungingAttack || style === FightingStyle.ParryLunge)
+    return 'Extended';
   if (style === FightingStyle.BashingAttack || style === FightingStyle.WallOfSteel) return 'Tight';
   if (style === FightingStyle.AimedBlow) return 'Striking';
   return undefined;
@@ -98,19 +105,32 @@ export function getAIRangePreference(style: FightingStyle): DistanceRange | unde
  * Returns the canonical Favorite Tactics for a given fighting style.
  * These drive the AI's baseline tactic selection unless overridden by dynamic traits.
  */
-export function getAITactics(style: FightingStyle): { offTactic: OffensiveTactic; defTactic: DefensiveTactic } {
+export function getAITactics(style: FightingStyle): {
+  offTactic: OffensiveTactic;
+  defTactic: DefensiveTactic;
+} {
   switch (style) {
-    case FightingStyle.AimedBlow: return { offTactic: 'Slash', defTactic: 'Dodge' };
-    case FightingStyle.BashingAttack: return { offTactic: 'Bash', defTactic: 'none' };
-    case FightingStyle.LungingAttack: return { offTactic: 'Lunge', defTactic: 'Dodge' };
-    case FightingStyle.ParryLunge: return { offTactic: 'Lunge', defTactic: 'Parry' };
-    case FightingStyle.ParryRiposte: return { offTactic: 'none', defTactic: 'Parry' };
-    case FightingStyle.ParryStrike: return { offTactic: 'Decisiveness', defTactic: 'Parry' };
-    case FightingStyle.SlashingAttack: return { offTactic: 'Slash', defTactic: 'none' };
-    case FightingStyle.StrikingAttack: return { offTactic: 'Decisiveness', defTactic: 'none' };
-    case FightingStyle.TotalParry: return { offTactic: 'none', defTactic: 'Parry' };
-    case FightingStyle.WallOfSteel: return { offTactic: 'Bash', defTactic: 'Parry' };
-    default: return { offTactic: 'none', defTactic: 'none' };
+    case FightingStyle.AimedBlow:
+      return { offTactic: 'Slash', defTactic: 'Dodge' };
+    case FightingStyle.BashingAttack:
+      return { offTactic: 'Bash', defTactic: 'none' };
+    case FightingStyle.LungingAttack:
+      return { offTactic: 'Lunge', defTactic: 'Dodge' };
+    case FightingStyle.ParryLunge:
+      return { offTactic: 'Lunge', defTactic: 'Parry' };
+    case FightingStyle.ParryRiposte:
+      return { offTactic: 'none', defTactic: 'Parry' };
+    case FightingStyle.ParryStrike:
+      return { offTactic: 'Decisiveness', defTactic: 'Parry' };
+    case FightingStyle.SlashingAttack:
+      return { offTactic: 'Slash', defTactic: 'none' };
+    case FightingStyle.StrikingAttack:
+      return { offTactic: 'Decisiveness', defTactic: 'none' };
+    case FightingStyle.TotalParry:
+      return { offTactic: 'none', defTactic: 'Parry' };
+    case FightingStyle.WallOfSteel:
+      return { offTactic: 'Bash', defTactic: 'Parry' };
+    default:
+      return { offTactic: 'none', defTactic: 'none' };
   }
 }
-

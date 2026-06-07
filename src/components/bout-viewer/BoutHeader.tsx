@@ -17,7 +17,7 @@ interface BoutHeaderProps {
   visibleCount: number;
   expanded: boolean;
   onToggleExpanded: () => void;
-}/**
+} /**
   * Bout header.
   * @param  - {
   name a,
@@ -34,7 +34,6 @@ interface BoutHeaderProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Bout header.

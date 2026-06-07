@@ -17,10 +17,9 @@ export type SfxType =
   | 'death'
   | 'recovery'
   | 'coin'
-  | 'arena_ambient';/**
-                     * The AudioManager class.
-                     */
-
+  | 'arena_ambient'; /**
+ * The AudioManager class.
+ */
 
 /**
  * The AudioManager class.
@@ -33,7 +32,7 @@ export class AudioManager {
   /**
    * Constructor.
    */
-private constructor() {
+  private constructor() {
     // Initialize HowlerGlobal for Electron environment
     // Note: Howler.js types expect HowlerGlobal to be a class, but we initialize
     // as empty object for Electron compatibility. This is intentional.
@@ -122,10 +121,9 @@ private constructor() {
   public static resetForTesting(): void {
     AudioManager.instance = undefined;
   }
-}/**
-  * Audio manager.
-  */
-
+} /**
+ * Audio manager.
+ */
 
 /**
  * Audio manager.

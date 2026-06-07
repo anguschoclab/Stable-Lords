@@ -28,11 +28,10 @@ const TOKEN_CFG: Record<
   Style: { Icon: Zap, color: 'bg-arena-gold/20 text-arena-gold', label: 'Style' },
   Attribute: { Icon: TrendingUp, color: 'bg-primary/20 text-primary', label: 'Attribute' },
   Tactic: { Icon: Brain, color: 'bg-arena-fame/20 text-arena-fame', label: 'Tactic' },
-};/**
-   * Insight manager.
-   * @returns The result.
-   */
-
+}; /**
+ * Insight manager.
+ * @returns The result.
+ */
 
 /**
  * Insight manager.
@@ -40,11 +39,13 @@ const TOKEN_CFG: Record<
  */
 export function InsightManager() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
-  const { insightTokens, roster, consumeInsightToken } = useGameStore(useShallow((s) => ({
-    insightTokens: s.insightTokens,
-    roster: s.roster,
-    consumeInsightToken: s.consumeInsightToken,
-  })));
+  const { insightTokens, roster, consumeInsightToken } = useGameStore(
+    useShallow((s) => ({
+      insightTokens: s.insightTokens,
+      roster: s.roster,
+      consumeInsightToken: s.consumeInsightToken,
+    }))
+  );
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [isRevealing, setIsRevealing] = useState(false);

@@ -8,10 +8,9 @@ import {
 } from './tournamentSelection/resolution';
 import { findWarriorById, getAIPlan, generateFreelancer } from './tournamentSelection/utils';
 
-export { TOURNAMENT_TIERS };/**
-                             * Tournament selection service.
-                             */
-
+export { TOURNAMENT_TIERS }; /**
+ * Tournament selection service.
+ */
 
 /**
  * Tournament selection service.

@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import Graveyard from '@/pages/Graveyard';/**
-                                           * Route.
-                                           */
-
+import Graveyard from '@/pages/Graveyard'; /**
+ * Route.
+ */
 
 /**
  * Route.

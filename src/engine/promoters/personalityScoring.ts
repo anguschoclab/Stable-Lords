@@ -67,7 +67,8 @@ export const PERSONALITY_PURSE_MOD: Record<PromoterPersonality, PurseModFn> = {
   // +10% hype (competitive matches draw more interest)
   Honorable: (_a, _b, baseHype) => (baseHype > 120 ? 1.05 : 1.0),
   // Already +25 hype for kill warriors; add +20% on injury-risk pairings
-  Sadistic: (warriorA, warriorB) => (hasInjuryRisk(warriorA) || hasInjuryRisk(warriorB) ? 1.2 : 1.0),
+  Sadistic: (warriorA, warriorB) =>
+    hasInjuryRisk(warriorA) || hasInjuryRisk(warriorB) ? 1.2 : 1.0,
   // Already +15 hype for fame; add +20% purse when both fame > 75
   Flashy: (warriorA, warriorB) => (warriorA.fame > 75 && warriorB.fame > 75 ? 1.2 : 1.0),
   // +5% purse, stable

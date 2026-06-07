@@ -50,7 +50,9 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: () => ({
     ...defaultStoreState,
     ...storeOverride,
-    setState: vi.fn((fn: (draft: any) => void) => { fn(storeOverride); }),
+    setState: vi.fn((fn: (draft: any) => void) => {
+      fn(storeOverride);
+    }),
     deductFunds: vi.fn(() => true),
   }),
 }));
@@ -119,7 +121,11 @@ describe('Trainers Component', () => {
   });
 
   it('renders current trainers correctly', async () => {
-    render(<TooltipProvider><Trainers /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <Trainers />
+      </TooltipProvider>
+    );
 
     const staffElements = await screen.findAllByText('Master Splinter');
     expect(staffElements.length).toBeGreaterThan(0);
@@ -130,7 +136,11 @@ describe('Trainers Component', () => {
   });
 
   it('renders hiring pool correctly', async () => {
-    render(<TooltipProvider><Trainers /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <Trainers />
+      </TooltipProvider>
+    );
 
     const poolElements = await screen.findAllByText('Coach Rocky');
     expect(poolElements.length).toBeGreaterThan(0);
@@ -140,7 +150,11 @@ describe('Trainers Component', () => {
   });
 
   it('allows firing a trainer', async () => {
-    render(<TooltipProvider><Trainers /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <Trainers />
+      </TooltipProvider>
+    );
 
     // Find the current trainer card
     const trainerCards = await screen.findAllByTestId('trainer-card');
@@ -156,7 +170,11 @@ describe('Trainers Component', () => {
   });
 
   it('allows hiring a trainer', async () => {
-    render(<TooltipProvider><Trainers /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <Trainers />
+      </TooltipProvider>
+    );
 
     // Find the tab content for hire
     const hireTab = screen.getByTestId('tab-content-hire');

@@ -66,13 +66,12 @@ const DEFINING_MOMENTS = [
   'looking for the one fight that will finally set them free',
   'with a spirit that refuses to be broken by the grinding poverty of the pits',
   'now standing at the threshold of a legacy they are eager to claim',
-];/**
-   * Generate lore.
-   * @param name - Name.
-   * @param rng - Rng.
-   * @returns The result.
-   */
-
+]; /**
+ * Generate lore.
+ * @param name - Name.
+ * @param rng - Rng.
+ * @returns The result.
+ */
 
 /**
  * Generate lore.
@@ -85,12 +84,11 @@ export function generateLore(name: string, rng: IRNGService): string {
   const childhood = pick(CHILDHOOD_TRAITS, r);
   const defining = pick(DEFINING_MOMENTS, r);
   return `${name} ${childhood}, ${defining}.`;
-}/**
-  * Generate origin.
-  * @param rng - Rng.
-  * @returns The result.
-  */
-
+} /**
+ * Generate origin.
+ * @param rng - Rng.
+ * @returns The result.
+ */
 
 /**
  * Generate origin.

@@ -136,10 +136,7 @@ const FIELD_PATTERNS: Record<FieldType, FieldPatternRenderer> = {
  * Gets the field pattern renderer for a given field type.
  * Falls back to solid pattern if the type is not found.
  */
-export function getFieldPattern(
-  fieldType: FieldType,
-  colors: FieldColors
-): React.ReactNode {
+export function getFieldPattern(fieldType: FieldType, colors: FieldColors): React.ReactNode {
   const renderer = FIELD_PATTERNS[fieldType] || FIELD_PATTERNS.solid;
   return renderer(colors);
 }

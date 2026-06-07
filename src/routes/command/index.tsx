@@ -3,10 +3,9 @@
  * Merged Dashboard + Critical Alerts
  */
 import { createFileRoute } from '@tanstack/react-router';
-import ControlCenter from '@/pages/ControlCenter';/**
-                                                   * Route.
-                                                   */
-
+import ControlCenter from '@/pages/ControlCenter'; /**
+ * Route.
+ */
 
 /**
  * Route.

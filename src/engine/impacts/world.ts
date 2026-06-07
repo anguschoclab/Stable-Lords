@@ -2,7 +2,13 @@
  * World Domain Impacts
  * Handles week, day, season, weather, recruit pool, seasonal growth, and rankings.
  */
-import type { GameState, RankingEntry, Season, WeatherType, SeasonalGrowth } from '@/types/state.types';
+import type {
+  GameState,
+  RankingEntry,
+  Season,
+  WeatherType,
+  SeasonalGrowth,
+} from '@/types/state.types';
 import type { PoolWarrior } from '@/engine/recruitment';
 
 /**

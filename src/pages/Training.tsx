@@ -21,11 +21,10 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { PageFrame } from '@/components/ui/PageFrame';
-import { SectionDivider } from '@/components/ui/SectionDivider';/**
-                                                                 * Training.
-                                                                 * @returns The result.
-                                                                 */
-
+import { SectionDivider } from '@/components/ui/SectionDivider'; /**
+ * Training.
+ * @returns The result.
+ */
 
 /**
  * Training.
@@ -186,7 +185,8 @@ export default function Training() {
                     kind === 'gain' && 'bg-primary/5 text-primary border border-primary/10',
                     kind === 'injury' &&
                       'bg-arena-gold/5 text-arena-gold border border-arena-gold/10',
-                    kind === 'recovery' && 'bg-arena-pop/5 text-arena-pop border border-arena-pop/10'
+                    kind === 'recovery' &&
+                      'bg-arena-pop/5 text-arena-pop border border-arena-pop/10'
                   )}
                 >
                   {kind === 'gain' ? (

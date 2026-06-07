@@ -86,8 +86,14 @@ describe('weaponStats', () => {
       const shields = new Set<string>(SHIELD_ITEM_IDS);
       for (const w of WEAPONS) {
         if (shields.has(w.id)) continue;
-        expect(WEAPON_PREFERRED_RANGE[w.id], `missing WEAPON_PREFERRED_RANGE for ${w.id}`).toBeDefined();
-        expect(WEAPON_RANGE_MODIFIERS[w.id], `missing WEAPON_RANGE_MODIFIERS for ${w.id}`).toBeDefined();
+        expect(
+          WEAPON_PREFERRED_RANGE[w.id],
+          `missing WEAPON_PREFERRED_RANGE for ${w.id}`
+        ).toBeDefined();
+        expect(
+          WEAPON_RANGE_MODIFIERS[w.id],
+          `missing WEAPON_RANGE_MODIFIERS for ${w.id}`
+        ).toBeDefined();
       }
     });
   });

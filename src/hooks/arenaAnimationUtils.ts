@@ -4,10 +4,7 @@ import { classifyEvent } from '@/lib/boutUtils';
 
 const MIN_DISTANCE = 20; // Minimum distance between fighters
 
-export function getBubbleFromEvent(
-  event: MinuteEvent,
-  index: number
-): SpeechBubble | null {
+export function getBubbleFromEvent(event: MinuteEvent, index: number): SpeechBubble | null {
   const type = classifyEvent(event);
 
   // Check for taunt-worthy events

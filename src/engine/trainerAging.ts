@@ -46,14 +46,14 @@ export function computeTrainerAging(
           RETIREMENT_CHANCES.BASE +
           (currentAge - TRAINER_AGING.RETIREMENT_START) * RETIREMENT_CHANCES.AGE_INCREMENT;
 
-        const fameDiscount = Math.min(
-          RETIREMENT_CHANCES.FAME_DISCOUNT_MAX,
-          (t.fame || 0) * 0.001
-        );
+        const fameDiscount = Math.min(RETIREMENT_CHANCES.FAME_DISCOUNT_MAX, (t.fame || 0) * 0.001);
 
         const legacyDiscount = t.retiredFromWarrior ? RETIREMENT_CHANCES.LEGACY_DISCOUNT : 0;
 
-        const finalChance = Math.max(RETIREMENT_CHANCES.MIN_CHANCE, baseChance - fameDiscount - legacyDiscount);
+        const finalChance = Math.max(
+          RETIREMENT_CHANCES.MIN_CHANCE,
+          baseChance - fameDiscount - legacyDiscount
+        );
 
         if (rngService.next() < finalChance) {
           retired = true;

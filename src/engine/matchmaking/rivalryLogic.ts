@@ -29,7 +29,10 @@ interface PairingStats {
 /**
  * Helper to aggregate match stats and upset records for stable pairings from week fights.
  */
-function aggregatePairingStats(weekFights: FightSummary[], week: number): Map<string, PairingStats> {
+function aggregatePairingStats(
+  weekFights: FightSummary[],
+  week: number
+): Map<string, PairingStats> {
   const pairs = new Map<string, PairingStats>();
 
   for (const f of weekFights) {

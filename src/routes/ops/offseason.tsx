@@ -3,10 +3,9 @@
  * Year-end retrospective + offseason transition flow.
  */
 import { createFileRoute } from '@tanstack/react-router';
-import Offseason from '@/pages/Offseason';/**
-                                           * Route.
-                                           */
-
+import Offseason from '@/pages/Offseason'; /**
+ * Route.
+ */
 
 /**
  * Route.

@@ -220,14 +220,8 @@ describe('planWorldBouts', () => {
 
   it('prioritizes high-fame warriors when fame gap exceeds 100', () => {
     const state = makeTestState([
-      makeTestRival('r1', [
-        makeTestWarrior('w_high', 500),
-        makeTestWarrior('w_low', 10),
-      ]),
-      makeTestRival('r2', [
-        makeTestWarrior('w_mid', 200),
-        makeTestWarrior('w_other', 5),
-      ]),
+      makeTestRival('r1', [makeTestWarrior('w_high', 500), makeTestWarrior('w_low', 10)]),
+      makeTestRival('r2', [makeTestWarrior('w_mid', 200), makeTestWarrior('w_other', 5)]),
     ]);
     const offers = planWorldBouts(state, rng);
     // w_high (500 fame) should be sorted first and get priority in pairing
@@ -237,13 +231,8 @@ describe('planWorldBouts', () => {
 
   it('falls back to lastBoutWeek inactivity when fame difference is within 100', () => {
     const state = makeTestState([
-      makeTestRival('r1', [
-        makeTestWarrior('w_old', 150, 1),
-        makeTestWarrior('w_recent', 150, 5),
-      ]),
-      makeTestRival('r2', [
-        makeTestWarrior('w_opp', 150, 3),
-      ]),
+      makeTestRival('r1', [makeTestWarrior('w_old', 150, 1), makeTestWarrior('w_recent', 150, 5)]),
+      makeTestRival('r2', [makeTestWarrior('w_opp', 150, 3)]),
     ]);
     const offers = planWorldBouts(state, rng);
     expect(offers.length).toBe(1);
@@ -253,15 +242,9 @@ describe('planWorldBouts', () => {
 
   it('pairs warriors with close fame when multiple options exist', () => {
     const state = makeTestState([
-      makeTestRival('r1', [
-        makeTestWarrior('w1', 300),
-      ]),
-      makeTestRival('r2', [
-        makeTestWarrior('w2', 305),
-      ]),
-      makeTestRival('r3', [
-        makeTestWarrior('w3', 100),
-      ]),
+      makeTestRival('r1', [makeTestWarrior('w1', 300)]),
+      makeTestRival('r2', [makeTestWarrior('w2', 305)]),
+      makeTestRival('r3', [makeTestWarrior('w3', 100)]),
     ]);
     const offers = planWorldBouts(state, rng);
     expect(offers.length).toBe(1);
@@ -274,14 +257,8 @@ describe('planWorldBouts', () => {
 
   it('never pairs a warrior into more than one bout', () => {
     const state = makeTestState([
-      makeTestRival('r1', [
-        makeTestWarrior('w1', 100),
-        makeTestWarrior('w2', 100),
-      ]),
-      makeTestRival('r2', [
-        makeTestWarrior('w3', 100),
-        makeTestWarrior('w4', 100),
-      ]),
+      makeTestRival('r1', [makeTestWarrior('w1', 100), makeTestWarrior('w2', 100)]),
+      makeTestRival('r2', [makeTestWarrior('w3', 100), makeTestWarrior('w4', 100)]),
     ]);
     const offers = planWorldBouts(state, rng);
     const idCounts = new Map<string, number>();

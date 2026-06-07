@@ -10,7 +10,7 @@ interface MiniCombatLogProps {
   isPlaying: boolean;
   className?: string;
   onClose?: () => void;
-}/**
+} /**
   * Mini combat log.
   * @param  - {
   events,
@@ -21,7 +21,6 @@ interface MiniCombatLogProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Mini combat log.
@@ -159,7 +158,9 @@ export default function MiniCombatLog({
                       isLatest && 'bg-white/5'
                     )}
                   >
-                    <span className="text-[9px] font-black uppercase tracking-tighter shrink-0 mt-0.5 text-muted-foreground/60">{getEventIcon(type)}</span>
+                    <span className="text-[9px] font-black uppercase tracking-tighter shrink-0 mt-0.5 text-muted-foreground/60">
+                      {getEventIcon(type)}
+                    </span>
                     <div className="flex-1 min-w-0">
                       <p
                         className={cn(

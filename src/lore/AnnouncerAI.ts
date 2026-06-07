@@ -4,10 +4,9 @@
  */
 
 import { getFromArchive, interpolateTemplate } from '@/engine/narrativePBP';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
-                                                                  * Announce tone type.
-                                                                  */
-
+import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
+ * Announce tone type.
+ */
 
 /**
  * Announce tone type.

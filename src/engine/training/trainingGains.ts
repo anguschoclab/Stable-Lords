@@ -12,67 +12,65 @@ import { computeWarriorStats } from '@/engine/skillCalc';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { generateId } from '@/utils/idUtils';
 import { computeTrainerBonus } from './coachLogic';
-import { getSeasonalGains, updateSeasonalGains } from './facilityUpkeep';/**
-                                                                          * Total_cap.
-                                                                          */
-
+import { getSeasonalGains, updateSeasonalGains } from './facilityUpkeep'; /**
+ * Total_cap.
+ */
 
 /**
  * Total_cap.
  */
-export const TOTAL_CAP = 120;/**
-                              * Base_gain_chance.
-                              */
+export const TOTAL_CAP = 120; /**
+ * Base_gain_chance.
+ */
 
 /**
  * Base_gain_chance.
  */
-export const BASE_GAIN_CHANCE = 0.55;/**
-                                      * Seasonal_cap_per_attr.
-                                      */
+export const BASE_GAIN_CHANCE = 0.55; /**
+ * Seasonal_cap_per_attr.
+ */
 
 /**
  * Seasonal_cap_per_attr.
  */
-export const SEASONAL_CAP_PER_ATTR = 3;/**
-                                        * Base_training_injury_chance.
-                                        */
+export const SEASONAL_CAP_PER_ATTR = 3; /**
+ * Base_training_injury_chance.
+ */
 
 /**
  * Base_training_injury_chance.
  */
-export const BASE_TRAINING_INJURY_CHANCE = 0.03;/**
-                                                 * Gain_chance_min.
-                                                 */
+export const BASE_TRAINING_INJURY_CHANCE = 0.03; /**
+ * Gain_chance_min.
+ */
 
 /**
  * Gain_chance_min.
  */
-export const GAIN_CHANCE_MIN = 0.15;/**
-                                     * Gain_chance_max.
-                                     */
+export const GAIN_CHANCE_MIN = 0.15; /**
+ * Gain_chance_max.
+ */
 
 /**
  * Gain_chance_max.
  */
-export const GAIN_CHANCE_MAX = 0.85;/**
-                                     * Injury_chance_min.
-                                     */
+export const GAIN_CHANCE_MAX = 0.85; /**
+ * Injury_chance_min.
+ */
 
 /**
  * Injury_chance_min.
  */
-export const INJURY_CHANCE_MIN = 0.01;/**
-                                       * Injury_chance_max.
-                                       */
+export const INJURY_CHANCE_MIN = 0.01; /**
+ * Injury_chance_max.
+ */
 
 /**
  * Injury_chance_max.
  */
-export const INJURY_CHANCE_MAX = 0.1;/**
-                                      * Skill_drill_cap.
-                                      */
-
+export const INJURY_CHANCE_MAX = 0.1; /**
+ * Skill_drill_cap.
+ */
 
 // ─── Skill Drilling ────────────────────────────────────────────────────────
 // Drilling a combat skill (ATT/PAR/DEF/INI/RIP/DEC) grants a flat bonus on top
@@ -81,31 +79,30 @@ export const INJURY_CHANCE_MAX = 0.1;/**
 /**
  * Skill_drill_cap.
  */
-export const SKILL_DRILL_CAP = 3;/**
-                                  * Skill_drill_base_chance.
-                                  */
+export const SKILL_DRILL_CAP = 3; /**
+ * Skill_drill_base_chance.
+ */
 
 /**
  * Skill_drill_base_chance.
  */
-export const SKILL_DRILL_BASE_CHANCE = 0.4;/**
-                                            * Skill_drill_gain_min.
-                                            */
+export const SKILL_DRILL_BASE_CHANCE = 0.4; /**
+ * Skill_drill_gain_min.
+ */
 
 /**
  * Skill_drill_gain_min.
  */
-export const SKILL_DRILL_GAIN_MIN = 0.15;/**
-                                          * Skill_drill_gain_max.
-                                          */
+export const SKILL_DRILL_GAIN_MIN = 0.15; /**
+ * Skill_drill_gain_max.
+ */
 
 /**
  * Skill_drill_gain_max.
  */
-export const SKILL_DRILL_GAIN_MAX = 0.7;/**
-                                         * Skill_trainer_focus.
-                                         */
-
+export const SKILL_DRILL_GAIN_MAX = 0.7; /**
+ * Skill_trainer_focus.
+ */
 
 /**
  * Skill_trainer_focus.
@@ -120,10 +117,9 @@ export const SKILL_TRAINER_FOCUS: Record<
   INI: 'Mind',
   RIP: 'Aggression',
   DEC: 'Mind',
-};/**
-   * Training_injuries.
-   */
-
+}; /**
+ * Training_injuries.
+ */
 
 /**
  * Training_injuries.
@@ -159,10 +155,9 @@ export const TRAINING_INJURIES = [
     penalties: { WT: -1 },
     weeksRange: [2, 3],
   },
-];/**
-   * Defines the shape of training result.
-   */
-
+]; /**
+ * Defines the shape of training result.
+ */
 
 /**
  * Defines the shape of training result.

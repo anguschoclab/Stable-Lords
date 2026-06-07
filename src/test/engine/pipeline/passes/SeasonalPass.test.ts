@@ -18,7 +18,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('black_market_raid') + 0.5) / eventCount; // picks black_market_raid
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('black_market_raid') +
+            0.5) /
+          eventCount
+        ); // picks black_market_raid
       return originalNext();
     };
     rng.next = mockNext;
@@ -50,7 +55,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('grand_feast') + 0.5) / eventCount; // picks grand_feast
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('grand_feast') + 0.5) /
+          eventCount
+        ); // picks grand_feast
       return originalNext();
     };
     rng.next = mockNext;
@@ -112,7 +121,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('tavern_brawl') + 0.5) / eventCount; // picks tavern_brawl
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('tavern_brawl') + 0.5) /
+          eventCount
+        ); // picks tavern_brawl
       return originalNext();
     };
     rng.next = mockNext;
@@ -149,7 +162,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('tavern_brawl') + 0.5) / eventCount; // picks tavern_brawl
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('tavern_brawl') + 0.5) /
+          eventCount
+        ); // picks tavern_brawl
       return originalNext();
     };
     rng.next = mockNext;
@@ -189,7 +206,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_healer') + 0.5) / eventCount; // picks wandering_healer
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_healer') +
+            0.5) /
+          eventCount
+        ); // picks wandering_healer
       return originalNext();
     };
     rng.next = mockNext;
@@ -249,7 +271,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_healer') + 0.5) / eventCount; // picks wandering_healer
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_healer') +
+            0.5) /
+          eventCount
+        ); // picks wandering_healer
       return originalNext();
     };
     rng.next = mockNext;
@@ -291,7 +318,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('mystic_vision') + 0.5) / eventCount; // picks mystic_vision
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('mystic_vision') + 0.5) /
+          eventCount
+        ); // picks mystic_vision
       return originalNext();
     };
     rng.next = mockNext;
@@ -322,7 +353,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('wild_animal_attack') + 0.5) / eventCount; // picks wild_animal_attack
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('wild_animal_attack') +
+            0.5) /
+          eventCount
+        ); // picks wild_animal_attack
       return originalNext();
     };
     rng.next = mockNext;
@@ -346,7 +382,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('loyal_stray') + 0.5) / eventCount; // picks loyal_stray
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('loyal_stray') + 0.5) /
+          eventCount
+        ); // picks loyal_stray
       return originalNext();
     };
     rng.next = mockNext;
@@ -380,7 +420,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('street_performance') + 0.5) / eventCount; // picks street_performance
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('street_performance') +
+            0.5) /
+          eventCount
+        ); // picks street_performance
       return originalNext();
     };
     rng.next = mockNext;
@@ -416,7 +461,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('chaotic_spells') + 0.5) / eventCount; // picks chaotic_spells
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('chaotic_spells') +
+            0.5) /
+          eventCount
+        ); // picks chaotic_spells
       if (callCount === 3) return 0.2; // roll < 0.33, triggers XP gain
       if (callCount === 4) return 0.5; // for xp roll
       return originalNext();
@@ -447,7 +497,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('chaotic_spells') + 0.5) / eventCount; // picks chaotic_spells
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('chaotic_spells') +
+            0.5) /
+          eventCount
+        ); // picks chaotic_spells
       if (callCount === 3) return 0.5; // roll < 0.66, triggers minor injury
       if (callCount === 4) return 0.5; // for weeksRemaining roll
       return originalNext();
@@ -480,7 +535,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('chaotic_spells') + 0.5) / eventCount; // picks chaotic_spells
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('chaotic_spells') +
+            0.5) /
+          eventCount
+        ); // picks chaotic_spells
       if (callCount === 3) return 0.8; // roll >= 0.66, triggers fame loss
       if (callCount === 4) return 0.5; // for fame roll
       return originalNext();
@@ -510,7 +570,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('gladiator_olympics') + 0.5) / eventCount; // picks gladiator_olympics
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('gladiator_olympics') +
+            0.5) /
+          eventCount
+        ); // picks gladiator_olympics
       return originalNext();
     };
     rng.next = mockNext;
@@ -542,7 +607,11 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('meteor_shower') + 0.5) / eventCount; // picks meteor_shower
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('meteor_shower') + 0.5) /
+          eventCount
+        ); // picks meteor_shower
       return originalNext();
     };
     rng.next = mockNext;
@@ -574,7 +643,14 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('underground_pit_fight') + 0.5) / eventCount; // picks underground_pit_fight
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf(
+            'underground_pit_fight'
+          ) +
+            0.5) /
+          eventCount
+        ); // picks underground_pit_fight
       return originalNext();
     };
     rng.next = mockNext;
@@ -582,7 +658,9 @@ describe('runSeasonalPass', () => {
     const warriorId = 'w-pit' as WarriorId;
     const state: Partial<GameState> = {
       year: 1,
-      roster: [{ id: warriorId, name: 'Brutus', status: 'Active', xp: 10, fame: 20, injuries: [] } as any],
+      roster: [
+        { id: warriorId, name: 'Brutus', status: 'Active', xp: 10, fame: 20, injuries: [] } as any,
+      ],
       newsletter: [],
     };
 
@@ -606,7 +684,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('rogue_alchemist') + 0.5) / eventCount; // picks rogue_alchemist
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('rogue_alchemist') +
+            0.5) /
+          eventCount
+        ); // picks rogue_alchemist
       if (callCount === 3) return 0.2; // roll < 0.5, success
       if (callCount === 4) return 0.5; // xp roll
       if (callCount === 5) return 0.5; // fame roll
@@ -617,7 +700,9 @@ describe('runSeasonalPass', () => {
     const warriorId = 'w-alch-success' as WarriorId;
     const state: Partial<GameState> = {
       year: 1,
-      roster: [{ id: warriorId, name: 'Potion Drinker', status: 'Active', xp: 10, fame: 20 } as any],
+      roster: [
+        { id: warriorId, name: 'Potion Drinker', status: 'Active', xp: 10, fame: 20 } as any,
+      ],
       newsletter: [],
     };
 
@@ -639,7 +724,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('rogue_alchemist') + 0.5) / eventCount; // picks rogue_alchemist
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('rogue_alchemist') +
+            0.5) /
+          eventCount
+        ); // picks rogue_alchemist
       if (callCount === 3) return 0.8; // roll >= 0.5, failure
       return originalNext();
     };
@@ -663,7 +753,7 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems).toHaveLength(1);
     expect(impact.newsletterItems?.[0]?.title).toBe('Rogue Alchemist');
     expect(impact.newsletterItems?.[0]?.items[0]).toContain('battery acid');
-    });
+  });
 
   it('should trigger the dreamweaver_visit offseason event, award xp and insight token', () => {
     const rng = new SeededRNGService(99);
@@ -671,7 +761,12 @@ describe('runSeasonalPass', () => {
     let callCount = 0;
     const mockNext = () => {
       callCount++;
-      if (callCount === 1) return (Object.keys((narrativeContent as any).offseason_events).indexOf('dreamweaver_visit') + 0.5) / eventCount; // picks dreamweaver_visit
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('dreamweaver_visit') +
+            0.5) /
+          eventCount
+        ); // picks dreamweaver_visit
       if (callCount === 2) return 0.5; // pick active warrior
       if (callCount === 3) return 0.5; // xp roll
       return originalNext();
@@ -695,5 +790,4 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems).toHaveLength(1);
     expect(impact.newsletterItems?.[0]?.title).toBe("Dreamweaver's Visit");
   });
-
 });

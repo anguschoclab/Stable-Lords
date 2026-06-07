@@ -3,10 +3,9 @@ import { Component, type PropsWithChildren, type ErrorInfo } from 'react';
 interface State {
   hasError: boolean;
   error: Error | null;
-}/**
-  * The ErrorBoundary class.
-  */
-
+} /**
+ * The ErrorBoundary class.
+ */
 
 /**
  * The ErrorBoundary class.
@@ -16,7 +15,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
    * Constructor.
    * @param props - Props.
    */
-constructor(props: PropsWithChildren) {
+  constructor(props: PropsWithChildren) {
     super(props);
     this.state = { hasError: false, error: null };
   }
@@ -26,7 +25,7 @@ constructor(props: PropsWithChildren) {
    * @param error - Error.
    * @returns The result.
    */
-static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
@@ -36,7 +35,7 @@ static getDerivedStateFromError(error: Error): State {
    * @param info - Info.
    * @returns The result.
    */
-componentDidCatch(error: Error, info: ErrorInfo) {
+  componentDidCatch(error: Error, info: ErrorInfo) {
     console.error('[ErrorBoundary] Unhandled render error:', error, info.componentStack);
   }
 
@@ -44,7 +43,7 @@ componentDidCatch(error: Error, info: ErrorInfo) {
    * Render.
    * @returns The result.
    */
-render() {
+  render() {
     if (!this.state.hasError) return this.props.children;
 
     return (

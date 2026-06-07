@@ -6,8 +6,7 @@ import { badgeVariants, type BadgeVariants } from './badge-utils';
 /**
  * Defines the shape of badge props.
  */
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>, BadgeVariants {
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, BadgeVariants {
   children?: React.ReactNode;
 }
 

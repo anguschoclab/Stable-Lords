@@ -44,7 +44,7 @@ export const CrowdMoodTypeSchema = z.enum([
  * WeatherType enum schema
  */
 export const WeatherTypeSchema = z.enum([
-'Clear',
+  'Clear',
   'Rainy',
   'Sweltering',
   'Breezy',
@@ -84,13 +84,7 @@ export const TrainerTierSchema = z.enum(['Novice', 'Seasoned', 'Master']);
 /**
  * TrainerFocus enum schema
  */
-export const TrainerFocusSchema = z.enum([
-  'Aggression',
-  'Defense',
-  'Endurance',
-  'Mind',
-  'Healing',
-]);
+export const TrainerFocusSchema = z.enum(['Aggression', 'Defense', 'Endurance', 'Mind', 'Healing']);
 
 /**
  * TrainerSpecialty enum schema
@@ -194,24 +188,12 @@ export const AttackTargetSchema = z.enum([
 /**
  * ProtectTarget enum schema
  */
-export const ProtectTargetSchema = z.enum([
-  'Head',
-  'Body',
-  'Arms',
-  'Legs',
-  'Any',
-]);
+export const ProtectTargetSchema = z.enum(['Head', 'Body', 'Arms', 'Legs', 'Any']);
 
 /**
  * OffensiveTactic enum schema
  */
-export const OffensiveTacticSchema = z.enum([
-  'Lunge',
-  'Slash',
-  'Bash',
-  'Decisiveness',
-  'none',
-]);
+export const OffensiveTacticSchema = z.enum(['Lunge', 'Slash', 'Bash', 'Decisiveness', 'none']);
 
 /**
  * DefensiveTactic enum schema
@@ -251,12 +233,7 @@ export const PsychStateSchema = z.enum([
 /**
  * DistanceRange enum schema
  */
-export const DistanceRangeSchema = z.enum([
-  'Grapple',
-  'Tight',
-  'Striking',
-  'Extended',
-]);
+export const DistanceRangeSchema = z.enum(['Grapple', 'Tight', 'Striking', 'Extended']);
 
 /**
  * ArenaZone enum schema
@@ -284,13 +261,7 @@ export const ArenaTagSchema = z.enum([
 /**
  * ShieldShape enum schema
  */
-export const ShieldShapeSchema = z.enum([
-  'heater',
-  'french',
-  'swiss',
-  'spanish',
-  'lozenge',
-]);
+export const ShieldShapeSchema = z.enum(['heater', 'french', 'swiss', 'spanish', 'lozenge']);
 
 /**
  * FieldType enum schema
@@ -344,13 +315,7 @@ export const BeastPostureSchema = z.enum([
 /**
  * ArmorWeight enum schema
  */
-export const ArmorWeightSchema = z.enum([
-  'None',
-  'Light',
-  'Medium',
-  'Heavy',
-  'Ultra-Heavy',
-]);
+export const ArmorWeightSchema = z.enum(['None', 'Light', 'Medium', 'Heavy', 'Ultra-Heavy']);
 
 /**
  * WeaponType enum schema
@@ -535,13 +500,7 @@ export const WarriorLineageSchema = z.object({
   parentId: z.string().optional(),
   stableId: z.string().optional(),
   generation: z.number(),
-  pedigree: z.enum([
-    'Commoner',
-    'Second Generation',
-    'Legacy',
-    'Noble Blood',
-    'Exiled Legend',
-  ]),
+  pedigree: z.enum(['Commoner', 'Second Generation', 'Legacy', 'Noble Blood', 'Exiled Legend']),
   mentorName: z.string().optional(),
 });
 

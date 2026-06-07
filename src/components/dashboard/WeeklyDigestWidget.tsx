@@ -215,4 +215,3 @@ function AlertBox({ type, message }: AlertBoxProps) {
     </div>
   );
 }
-

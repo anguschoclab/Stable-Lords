@@ -10,7 +10,7 @@ interface EditableTextProps {
   className?: string;
   inputClassName?: string;
   label?: string;
-}/**
+} /**
   * Editable text.
   * @param  - {
   value,
@@ -21,7 +21,6 @@ interface EditableTextProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Editable text.

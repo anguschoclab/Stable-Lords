@@ -7,10 +7,9 @@
  * without a shield, or when the weapon IS a shield.
  */
 
-import type { EquipmentItem } from './equipment.types';/**
-                                                        * Shields.
-                                                        */
-
+import type { EquipmentItem } from './equipment.types'; /**
+ * Shields.
+ */
 
 /**
  * Shields.

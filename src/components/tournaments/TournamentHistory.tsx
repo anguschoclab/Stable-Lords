@@ -8,7 +8,7 @@ interface TournamentHistoryProps {
   seasonIcons: Record<string, string>;
   seasonNames: Record<string, string>;
   currentSeason: string;
-}/**
+} /**
   * Tournament history.
   * @param  - {
   past tournaments,
@@ -18,7 +18,6 @@ interface TournamentHistoryProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Tournament history.

@@ -39,7 +39,11 @@ describe('StyleRollups', () => {
     });
 
     it('returns {} if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true, writable: true });
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: undefined,
+        configurable: true,
+        writable: true,
+      });
       expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
     });
 
@@ -123,7 +127,11 @@ describe('StyleRollups', () => {
     });
 
     it('returns [] if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true, writable: true });
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: undefined,
+        configurable: true,
+        writable: true,
+      });
       expect(StyleRollups.last10()).toEqual([]);
     });
 
@@ -215,7 +223,11 @@ describe('StyleRollups', () => {
     });
 
     it('returns [] if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true, writable: true });
+      Object.defineProperty(globalThis, 'localStorage', {
+        value: undefined,
+        configurable: true,
+        writable: true,
+      });
       expect(StyleRollups.tournament('tour1')).toEqual([]);
     });
 

@@ -1,8 +1,7 @@
 import { GameState, Warrior } from '@/types/state.types';
-import { buildWarriorMap } from '@/utils/roster';/**
-                                                  * Defines the shape of bout pairing.
-                                                  */
-
+import { buildWarriorMap } from '@/utils/roster'; /**
+ * Defines the shape of bout pairing.
+ */
 
 /**
  * Defines the shape of bout pairing.
@@ -14,12 +13,11 @@ export interface BoutPairing {
   rivalStable?: string;
   rivalStableId?: string;
   contractId?: string;
-}/**
-  * Generate pairings.
-  * @param state - State.
-  * @returns The result.
-  */
-
+} /**
+ * Generate pairings.
+ * @param state - State.
+ * @returns The result.
+ */
 
 /**
  * Generate pairings.
@@ -48,7 +46,8 @@ export function generatePairings(state: GameState): BoutPairing[] {
     if (wA && wD) {
       // Find which stable wD belongs to using O(1) map lookup
       const stableInfo = state.warriorToStableMap?.get(wD.id);
-      const rivalStable = stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
+      const rivalStable =
+        stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
 
       pairings.push({
         a: wA,
@@ -80,8 +79,7 @@ export function generatePairings(state: GameState): BoutPairing[] {
             a: wA,
             d: wD,
             isRivalry: true, // Tournaments are always high stakes
-            rivalStable:
-              state.rivalMap?.get(bout.stableIdD || '')?.owner.stableName || 'Rival',
+            rivalStable: state.rivalMap?.get(bout.stableIdD || '')?.owner.stableName || 'Rival',
             rivalStableId: bout.stableIdD,
             contractId: `tour_${tournament.id}_${bout.round}_${bout.matchIndex}`,
           });

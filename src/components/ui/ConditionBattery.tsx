@@ -4,12 +4,11 @@ interface ConditionBatteryProps {
   value: number; // 0-100
   className?: string;
   showText?: boolean;
-}/**
-  * Condition battery.
-  * @param - { value, class name, show text = false }.
-  * @returns The result.
-  */
-
+} /**
+ * Condition battery.
+ * @param - { value, class name, show text = false }.
+ * @returns The result.
+ */
 
 /**
  * Condition battery.

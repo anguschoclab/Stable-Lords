@@ -53,11 +53,10 @@ function getFatigueLabel(fatigue: number | undefined): { label: string; color: s
   if (f < 30) return { label: 'Fresh', color: 'text-primary' };
   if (f < 60) return { label: 'Tired', color: 'text-arena-gold' };
   return { label: 'Exhausted', color: 'text-destructive' };
-}/**
-  * Tournaments.
-  * @returns The result.
-  */
-
+} /**
+ * Tournaments.
+ * @returns The result.
+ */
 
 /**
  * Tournaments.

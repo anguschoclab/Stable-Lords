@@ -49,7 +49,11 @@ export function resolveRound(
     if (bout.warriorIdD === 'bye') {
       bout.winner = 'A';
       const wABye = findWarriorById(state, bout.warriorIdA, tournament);
-      winners.push({ id: bout.warriorIdA, name: wABye?.name ?? 'Unknown', stableId: bout.stableIdA });
+      winners.push({
+        id: bout.warriorIdA,
+        name: wABye?.name ?? 'Unknown',
+        stableId: bout.stableIdA,
+      });
       continue;
     }
 

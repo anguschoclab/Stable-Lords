@@ -8,12 +8,11 @@ import type { GameState } from '@/types/state.types';
 
 interface MathStepProps {
   lastSimulationReport: GameState['lastSimulationReport'];
-}/**
-  * Math step.
-  * @param - { last simulation report }.
-  * @returns The result.
-  */
-
+} /**
+ * Math step.
+ * @param - { last simulation report }.
+ * @returns The result.
+ */
 
 /**
  * Math step.
@@ -71,7 +70,10 @@ export function MathStep({ lastSimulationReport }: MathStepProps) {
           <div className="space-y-4">
             {lastSimulationReport?.trainingGains.map(
               (g: { warriorName: string; gain: number; attr: string }, i: number) => (
-                <div key={`${g.warriorName}-${g.attr}-${i}`} className="flex items-center justify-between text-sm">
+                <div
+                  key={`${g.warriorName}-${g.attr}-${i}`}
+                  className="flex items-center justify-between text-sm"
+                >
                   <span className="font-medium">{g.warriorName}</span>
                   <div className="flex gap-2 font-mono">
                     <Badge variant="outline" className="text-primary">

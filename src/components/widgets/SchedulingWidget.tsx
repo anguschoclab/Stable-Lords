@@ -104,12 +104,11 @@ function MatchupCard({ matchup, type }: MatchupCardProps) {
 
 interface SchedulingWidgetProps {
   warrior: Warrior;
-}/**
-  * Scheduling widget.
-  * @param - { warrior }.
-  * @returns The result.
-  */
-
+} /**
+ * Scheduling widget.
+ * @param - { warrior }.
+ * @returns The result.
+ */
 
 /**
  * Scheduling widget.
@@ -134,7 +133,9 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
           <SectionDivider label="Strategic Opportunities" />
           <div className="space-y-4">
             {recommendations.length > 0 ? (
-              recommendations.map((m) => <MatchupCard key={m.rivalStableName} matchup={m} type="recommend" />)
+              recommendations.map((m) => (
+                <MatchupCard key={m.rivalStableName} matchup={m} type="recommend" />
+              ))
             ) : (
               <p className="text-[10px] text-muted-foreground/20 italic p-12 border border-dashed border-white/5 text-center uppercase font-black tracking-widest">
                 No prime targets available.

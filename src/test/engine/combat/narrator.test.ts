@@ -50,7 +50,15 @@ describe('narrator', () => {
 
     it('describes different event types', () => {
       const ctx = createMockContext();
-      const eventTypes: CombatEvent['type'][] = ['ATTACK', 'DEFENSE', 'HIT', 'FATIGUE', 'STATE_CHANGE', 'INITIATIVE', 'ENDURANCE'];
+      const eventTypes: CombatEvent['type'][] = [
+        'ATTACK',
+        'DEFENSE',
+        'HIT',
+        'FATIGUE',
+        'STATE_CHANGE',
+        'INITIATIVE',
+        'ENDURANCE',
+      ];
 
       for (const type of eventTypes) {
         const events: CombatEvent[] = [{ type, actor: 'A' }];
@@ -87,9 +95,7 @@ describe('narrator', () => {
 
     it('handles FATIGUE events', () => {
       const ctx = createMockContext();
-      const events: CombatEvent[] = [
-        { type: 'FATIGUE', actor: 'A', value: 5 },
-      ];
+      const events: CombatEvent[] = [{ type: 'FATIGUE', actor: 'A', value: 5 }];
 
       const result = narrateEvents(events, ctx, 1);
 
@@ -98,9 +104,7 @@ describe('narrator', () => {
 
     it('handles STATE_CHANGE events', () => {
       const ctx = createMockContext();
-      const events: CombatEvent[] = [
-        { type: 'STATE_CHANGE', actor: 'A', result: 'InTheZone' },
-      ];
+      const events: CombatEvent[] = [{ type: 'STATE_CHANGE', actor: 'A', result: 'InTheZone' }];
 
       const result = narrateEvents(events, ctx, 1);
 

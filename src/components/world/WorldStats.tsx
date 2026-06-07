@@ -7,12 +7,11 @@ interface WorldStatsProps {
   warriorCount: number;
   killCount: number;
   topStable: string;
-}/**
-  * World stats.
-  * @param - { stable count, warrior count, kill count, top stable }.
-  * @returns The result.
-  */
-
+} /**
+ * World stats.
+ * @param - { stable count, warrior count, kill count, top stable }.
+ * @returns The result.
+ */
 
 /**
  * World stats.

@@ -135,7 +135,10 @@ describe('warriorStateUpdater', () => {
     });
 
     it('preserves other warrior properties', () => {
-      const warrior = createMockWarrior({ name: 'Special Name', id: 'special-id' as import('@/types/shared.types').WarriorId });
+      const warrior = createMockWarrior({
+        name: 'Special Name',
+        id: 'special-id' as import('@/types/shared.types').WarriorId,
+      });
       const result = updateWarriorAfterBout(warrior, 5, 3, true, false, []);
 
       expect(result.name).toBe('Special Name');

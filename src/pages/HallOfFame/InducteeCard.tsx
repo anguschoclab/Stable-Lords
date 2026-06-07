@@ -167,8 +167,7 @@ export function InducteeCard({
                     <span
                       className={cn(
                         'text-[11px] font-display font-black uppercase tracking-tight',
-                        (best.winner === 'A' && warriorIsA) ||
-                          (best.winner === 'D' && !warriorIsA)
+                        (best.winner === 'A' && warriorIsA) || (best.winner === 'D' && !warriorIsA)
                           ? 'text-foreground'
                           : 'text-muted-foreground/40'
                       )}
@@ -187,8 +186,7 @@ export function InducteeCard({
                     <span
                       className={cn(
                         'text-[11px] font-display font-black uppercase tracking-tight text-right',
-                        (best.winner === 'D' && !warriorIsA) ||
-                          (best.winner === 'A' && warriorIsA)
+                        (best.winner === 'D' && !warriorIsA) || (best.winner === 'A' && warriorIsA)
                           ? 'text-foreground'
                           : 'text-muted-foreground/40'
                       )}

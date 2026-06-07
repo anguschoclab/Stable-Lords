@@ -22,7 +22,7 @@ interface NewGameFormProps {
   onBack: () => void;
   onSubmit: () => void;
   canCreate: boolean;
-}/**
+} /**
   * New game form.
   * @param  - {
   owner name,
@@ -39,7 +39,6 @@ interface NewGameFormProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * New game form.

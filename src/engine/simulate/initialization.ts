@@ -4,10 +4,7 @@
 import { createFighterState } from '../bout/fighterState';
 import { DEFAULT_LOADOUT, checkWeaponRequirements } from '@/data/equipment';
 import { getTrainerMods } from '../combat/mechanics/simulateHelpers';
-import {
-  getWeatherEffect,
-  resolveEffectiveWeather,
-} from '../combat/mechanics/weatherEffects';
+import { getWeatherEffect, resolveEffectiveWeather } from '../combat/mechanics/weatherEffects';
 import { getArenaById } from '@/data/arenas';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -33,12 +30,17 @@ const CROWD_KILL_BONUS: Record<CrowdMood, number> = {
 /**
  * Initialize RNG service from provided seed or generate new one.
  */
-export function initializeRng(providedRng?: IRNGService | number): { rngService: IRNGService; rng: () => number } {
+export function initializeRng(providedRng?: IRNGService | number): {
+  rngService: IRNGService;
+  rng: () => number;
+} {
   let rngService: IRNGService;
   if (providedRng && typeof providedRng === 'object') {
     rngService = providedRng;
   } else {
-    const seed = (typeof providedRng === 'number' ? providedRng : crypto.getRandomValues(new Uint32Array(1))[0]) as number;
+    const seed = (
+      typeof providedRng === 'number' ? providedRng : crypto.getRandomValues(new Uint32Array(1))[0]
+    ) as number;
     rngService = new SeededRNGService(seed);
   }
   const rng = () => rngService.next();
@@ -56,7 +58,11 @@ export function initializeFighters(
   trainers?: Trainer[],
   weather: WeatherType = 'Clear',
   arenaId: string = 'standard_arena'
-): { fA: ReturnType<typeof createFighterState>; fD: ReturnType<typeof createFighterState>; effectiveWeather: WeatherType } {
+): {
+  fA: ReturnType<typeof createFighterState>;
+  fD: ReturnType<typeof createFighterState>;
+  effectiveWeather: WeatherType;
+} {
   const arena = getArenaById(arenaId);
   const effectiveWeather = resolveEffectiveWeather(weather, arena.tags);
 

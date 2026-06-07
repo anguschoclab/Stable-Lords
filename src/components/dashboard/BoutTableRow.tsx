@@ -14,14 +14,10 @@ interface BoutTableRowProps {
 
 export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps) {
   const isPlayerA = bout.stableIdA === playerStableId;
-  const playerWon =
-    (isPlayerA && bout.winner === 'A') || (!isPlayerA && bout.winner === 'D');
+  const playerWon = (isPlayerA && bout.winner === 'A') || (!isPlayerA && bout.winner === 'D');
 
   return (
-    <TableRow
-      key={bout.id}
-      className="border-white/5 group/row hover:bg-white/2 transition-colors"
-    >
+    <TableRow key={bout.id} className="border-white/5 group/row hover:bg-white/2 transition-colors">
       <TableCell className="pl-6 py-4">
         <span className="text-[10px] font-mono font-black text-foreground/20 group-hover/row:text-primary transition-colors">
           WK {bout.week.toString().padStart(2, '0')}
@@ -30,19 +26,10 @@ export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps)
       <TableCell className="py-4">
         <div className="flex flex-col">
           <span className="text-xs font-black uppercase tracking-tight text-foreground/80 group-hover/row:text-foreground">
-            {resolveStableName(
-              state,
-              isPlayerA ? bout.stableIdA : bout.stableIdD,
-              'Unknown'
-            )}
+            {resolveStableName(state, isPlayerA ? bout.stableIdA : bout.stableIdD, 'Unknown')}
           </span>
           <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
-            VS //{' '}
-            {resolveStableName(
-              state,
-              isPlayerA ? bout.stableIdD : bout.stableIdA,
-              'Unknown'
-            )}
+            VS // {resolveStableName(state, isPlayerA ? bout.stableIdD : bout.stableIdA, 'Unknown')}
           </span>
         </div>
       </TableCell>
@@ -57,18 +44,12 @@ export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps)
                   : 'bg-destructive/10 border-destructive/20 text-destructive'
               )}
             >
-              {playerWon ? (
-                <Trophy className="h-2.5 w-2.5" />
-              ) : (
-                <Shield className="h-2.5 w-2.5" />
-              )}
+              {playerWon ? <Trophy className="h-2.5 w-2.5" /> : <Shield className="h-2.5 w-2.5" />}
               {playerWon ? 'VICTORY' : 'DEFEAT'}
             </div>
           </TooltipTrigger>
           <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-            {playerWon
-              ? 'Combat objectives achieved.'
-              : 'Strategic failure detected.'}
+            {playerWon ? 'Combat objectives achieved.' : 'Strategic failure detected.'}
           </TooltipContent>
         </Tooltip>
       </TableCell>

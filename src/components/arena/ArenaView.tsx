@@ -35,7 +35,7 @@ interface ArenaViewProps {
   maxHpD?: number;
   transcript?: string[];
   className?: string;
-}/**
+} /**
   * Arena view.
   * @param  - {
   name a,
@@ -58,7 +58,6 @@ interface ArenaViewProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Arena view.

@@ -24,13 +24,16 @@ describe('injuryHandler', () => {
       restStates: [],
       rivalMap: new Map(),
       warriorToStableMap: new Map(),
-    } as unknown as GameState);
+    }) as unknown as GameState;
 
   describe('handleInjuries', () => {
     it('returns no injuries for non-KO outcome without injuries', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: 'A',
         by: 'Kill',
@@ -48,7 +51,10 @@ describe('injuryHandler', () => {
     it('adds rest state for KO victim in impact', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: 'A',
         by: 'KO',
@@ -64,7 +70,10 @@ describe('injuryHandler', () => {
     it('adds rest state for D when A wins by KO', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: 'A',
         by: 'KO',
@@ -83,7 +92,10 @@ describe('injuryHandler', () => {
     it('adds rest state for A when D wins by KO', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: 'D',
         by: 'KO',
@@ -102,7 +114,10 @@ describe('injuryHandler', () => {
     it('returns impact with proper structure', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: 'A',
         by: 'KO',
@@ -123,7 +138,10 @@ describe('injuryHandler', () => {
     it('handles Draw outcome (no KO, no winner)', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: null,
         by: 'Draw',
@@ -140,7 +158,10 @@ describe('injuryHandler', () => {
     it('handles Exhaustion outcome', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: 'A',
         by: 'Exhaustion',
@@ -158,7 +179,10 @@ describe('injuryHandler', () => {
     it('handles Stoppage outcome', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: 'A',
         by: 'Stoppage',
@@ -175,7 +199,10 @@ describe('injuryHandler', () => {
     it('passes seed to injury generation', () => {
       const s = createMockState();
       const wA = createMockWarrior();
-      const wD = createMockWarrior({ id: 'warrior-d' as import('@/types/shared.types').WarriorId, name: 'Warrior D' });
+      const wD = createMockWarrior({
+        id: 'warrior-d' as import('@/types/shared.types').WarriorId,
+        name: 'Warrior D',
+      });
       const outcome: FightOutcome = {
         winner: 'A',
         by: 'Kill',

@@ -259,7 +259,7 @@ function SlotSelector({
       )}
     </div>
   );
-}/**
+} /**
   * Equipment loadout ui.
   * @param  - {
   loadout,
@@ -270,7 +270,6 @@ function SlotSelector({
 }.
   * @returns The result.
   */
-
 
 /**
  * Equipment loadout ui.

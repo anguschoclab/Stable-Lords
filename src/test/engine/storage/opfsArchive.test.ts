@@ -125,7 +125,9 @@ describe('OPFS Archival System', () => {
       (global as any).window = { dispatchEvent: dispatchSpy };
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      await expect(service.archiveBoutLog(1, 1, 'b-quota', ['line'], true)).resolves.toBeUndefined();
+      await expect(
+        service.archiveBoutLog(1, 1, 'b-quota', ['line'], true)
+      ).resolves.toBeUndefined();
       expect(dispatchSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'OPFS_QUOTA_EXCEEDED',
@@ -170,9 +172,9 @@ describe('OPFS Archival System', () => {
       const service = new OPFSArchiveService();
       setMockOPFSError('NoModificationAllowedError', 'createWritable');
 
-      await expect(service.archiveBoutLog(1, 1, 'b-conflict', ['line'], true)).rejects.toBeInstanceOf(
-        ArchiveConflictError
-      );
+      await expect(
+        service.archiveBoutLog(1, 1, 'b-conflict', ['line'], true)
+      ).rejects.toBeInstanceOf(ArchiveConflictError);
     });
   });
 
@@ -232,7 +234,9 @@ describe('OPFS Archival System', () => {
       setMockOPFSError('UnknownError', 'write');
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      await expect(service.archiveBoutLog(1, 1, 'b-unknown', ['line'], true)).resolves.toBeUndefined();
+      await expect(
+        service.archiveBoutLog(1, 1, 'b-unknown', ['line'], true)
+      ).resolves.toBeUndefined();
       expect(consoleSpy).toHaveBeenCalledWith(
         'Unknown error during bout log archival',
         expect.any(Error)
@@ -262,7 +266,9 @@ describe('OPFS Archival System', () => {
       setMockOPFSError('AbortError', 'close');
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-      await expect(service.archiveBoutLog(1, 1, 'b-close', ['line'], true)).resolves.toBeUndefined();
+      await expect(
+        service.archiveBoutLog(1, 1, 'b-close', ['line'], true)
+      ).resolves.toBeUndefined();
       expect(consoleSpy).toHaveBeenCalledWith(
         'Failed to close writable stream:',
         expect.any(Error)
@@ -294,10 +300,7 @@ describe('OPFS Archival System', () => {
 
       const result = await service.retrieveHotState('slot-bad-json');
       expect(result).toBeNull();
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error retrieving hot state:',
-        expect.any(Error)
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('Error retrieving hot state:', expect.any(Error));
 
       consoleSpy.mockRestore();
     });

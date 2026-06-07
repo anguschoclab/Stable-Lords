@@ -7,7 +7,7 @@ interface ScreenShakeProps {
   disabled?: boolean;
   className?: string;
   children: React.ReactNode;
-}/**
+} /**
   * Screen shake.
   * @param  - {
   trigger,
@@ -18,7 +18,6 @@ interface ScreenShakeProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Screen shake.

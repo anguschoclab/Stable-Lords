@@ -10,7 +10,11 @@ import { StateImpact } from '@/engine/impacts';
  * Stable Lords — Bout Simulation Pipeline Pass
  * Integrates the legacy bout processor into the standard modular pipeline.
  */
-export function runBoutSimulationPass(state: GameState, _rng: IRNGService, headless?: boolean): StateImpact {
+export function runBoutSimulationPass(
+  state: GameState,
+  _rng: IRNGService,
+  headless?: boolean
+): StateImpact {
   // Although processWeekBouts uses its own deterministic seeds via hashStr,
   // we wrap it here to maintain pipeline consistency for the 1.0 release.
   const { impact: boutImpact, results } = processWeekBouts(state, headless);

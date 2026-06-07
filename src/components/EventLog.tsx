@@ -129,11 +129,10 @@ function LinkifiedText({ text, names }: { text: string; names: string[] }) {
       )}
     </>
   );
-}/**
-  * Event log.
-  * @returns The result.
-  */
-
+} /**
+ * Event log.
+ * @returns The result.
+ */
 
 /**
  * Event log.
@@ -157,9 +156,7 @@ export default function EventLog() {
   );
   const navigate = useNavigate();
 
-  const rosterNames = useGameStore(
-    useShallow((s) => s.roster.map((w) => w.name))
-  );
+  const rosterNames = useGameStore(useShallow((s) => s.roster.map((w) => w.name)));
 
   // Collect all known warrior names for linkification
   const allWarriorNames = useMemo(() => {

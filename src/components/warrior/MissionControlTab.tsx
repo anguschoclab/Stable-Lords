@@ -10,12 +10,11 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 
 interface MissionControlTabProps {
   warrior: Warrior;
-  displayWarrior: import('@/types/game').Warrior;
   currentPlan: FightPlan;
   currentLoadout: EquipmentLoadout;
   onPlanChange: (plan: FightPlan) => void;
   onEquipmentChange: (loadout: EquipmentLoadout) => void;
-}/**
+} /**
   * Mission control tab.
   * @param  - {
   warrior,
@@ -27,7 +26,6 @@ interface MissionControlTabProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Mission control tab.
@@ -43,7 +41,6 @@ interface MissionControlTabProps {
  */
 export function MissionControlTab({
   warrior,
-  displayWarrior,
   currentPlan,
   currentLoadout,
   onPlanChange,
@@ -72,7 +69,6 @@ export function MissionControlTab({
               warrior={warrior}
               plan={currentPlan}
               onPlanChange={onPlanChange}
-              warriorName={displayWarrior.name}
             />
           </div>
         </Surface>

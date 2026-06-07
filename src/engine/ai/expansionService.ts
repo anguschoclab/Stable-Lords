@@ -84,7 +84,9 @@ export const ExpansionService = {
           let parentGeneration = 0;
 
           if (legacy.parentStableId) {
-            const parentStable = rivalsById.get(legacy.parentStableId as import('@/types/shared.types').StableId);
+            const parentStable = rivalsById.get(
+              legacy.parentStableId as import('@/types/shared.types').StableId
+            );
             if (parentStable?.crest) {
               parentCrest = parentStable.crest;
               parentGeneration = parentStable.owner?.generation ?? 0;

@@ -32,8 +32,7 @@ export function MostWantedBanner({ name, stable, wins, kills }: MostWantedBanner
         </div>
         <div className="text-right">
           <div className="text-xs font-mono font-black text-destructive">
-            {wins} VICTORIES <span className="text-foreground/10 mx-1">|</span>{' '}
-            {kills} TERMINATIONS
+            {wins} VICTORIES <span className="text-foreground/10 mx-1">|</span> {kills} TERMINATIONS
           </div>
           <span className="text-[8px] font-black uppercase tracking-widest text-destructive/40">
             AGGRESSION RATING: EXTREME

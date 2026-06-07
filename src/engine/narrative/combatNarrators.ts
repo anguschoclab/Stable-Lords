@@ -85,11 +85,7 @@ export function narrateParry(
 /**
  * Narrates a successful dodge with SP-based tiering.
  */
-export function narrateDodge(
-  rng: IRNGService | RNG,
-  defenderName: string,
-  speed?: number
-): string {
+export function narrateDodge(rng: IRNGService | RNG, defenderName: string, speed?: number): string {
   const r = normalizeRng(rng);
 
   // Determine tier based on SP attribute
@@ -113,10 +109,7 @@ export function narrateDodge(
 /**
  * Narrates a knockdown.
  */
-export function narrateKnockdown(
-  rng: IRNGService | RNG,
-  name: string
-): string {
+export function narrateKnockdown(rng: IRNGService | RNG, name: string): string {
   const r = normalizeRng(rng);
   const template = getFromArchive(r, ['pbp', 'knockdown', 'fall']);
   return interpolateTemplate(template, { name });
@@ -125,10 +118,7 @@ export function narrateKnockdown(
 /**
  * Narrates a recovery from knockdown.
  */
-export function narrateRecovery(
-  rng: IRNGService | RNG,
-  name: string
-): string {
+export function narrateRecovery(rng: IRNGService | RNG, name: string): string {
   const r = normalizeRng(rng);
   const template = getFromArchive(r, ['pbp', 'knockdown', 'recovery']);
   return interpolateTemplate(template, { name });
@@ -244,8 +234,12 @@ export function narrateTaunt(
 
   // Use rivalry taunts if applicable
   const category = isRivalry
-    ? (isWinner ? 'rivalry_winner' : 'rivalry_loser')
-    : (isWinner ? 'winner' : 'loser');
+    ? isWinner
+      ? 'rivalry_winner'
+      : 'rivalry_loser'
+    : isWinner
+      ? 'winner'
+      : 'loser';
 
   const template = getFromArchive(r, ['pbp', 'taunts', category]);
   return interpolateTemplate(template, {
@@ -329,8 +323,7 @@ export function narrateHit(
 
   if (!template || template === 'A fierce exchange occurs.') {
     template =
-      getFromArchive(r, ['strikes', 'generic']) ||
-      getFromArchive(r, ['pbp', 'hits', 'generic']);
+      getFromArchive(r, ['strikes', 'generic']) || getFromArchive(r, ['pbp', 'hits', 'generic']);
   }
 
   return interpolateTemplate(template, {

@@ -7,7 +7,7 @@ interface SaveSlotCardProps {
   onExport: () => void;
   onDelete: () => void;
   formatDate: (iso: string) => string;
-}/**
+} /**
   * Save slot card.
   * @param  - {
   slot,
@@ -18,7 +18,6 @@ interface SaveSlotCardProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Save slot card.

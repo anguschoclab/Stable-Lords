@@ -37,8 +37,7 @@ export function pickWeeklyIntent(
   const metaIsHostile = favoredStyles.some((s) => (meta[s] || 0) < -2);
 
   // Weather Pivot: Avoid the arena if the stable is precision-heavy and it's raining
-  const precisionHeavy =
-    activeRoster.length === 0 || lungeCount / activeRoster.length >= 0.5;
+  const precisionHeavy = activeRoster.length === 0 || lungeCount / activeRoster.length >= 0.5;
   if (isRainy && precisionHeavy && personality !== 'Aggressive') {
     return 'RECOVERY';
   }
@@ -127,9 +126,7 @@ export function pickWeeklyIntent(
   // 6. EXPANSION: If roster is thin — boosted if a known rival has grown recently
   const minSize = personality === 'Aggressive' ? 8 : personality === 'Methodical' ? 5 : 6;
   const knownRivals = rival.agentMemory?.knownRivals ?? [];
-  const rivalsByOwnerId = new Map(
-    (state.rivals || []).map((rv) => [rv.owner.id, rv])
-  );
+  const rivalsByOwnerId = new Map((state.rivals || []).map((rv) => [rv.owner.id, rv]));
   const rivalExpanding = knownRivals.some((rivalId) => {
     const r = rivalsByOwnerId.get(rivalId);
     if (!r || !r.agentMemory?.seasonRecord) return false;
@@ -161,7 +158,10 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   if (strategy.intent !== 'RECOVERY' && rival.treasury < 150) return true;
 
   // Skepticism Tier 2: Roster Depletion
-  const activeCount = rival.roster.reduce((count, w) => (w.status === 'Active' ? count + 1 : count), 0);
+  const activeCount = rival.roster.reduce(
+    (count, w) => (w.status === 'Active' ? count + 1 : count),
+    0
+  );
   if (strategy.intent === 'VENDETTA' && activeCount < 3) return true;
 
   // Skepticism Tier 3: Meta Hostility (Methodical/Tactician agents only)
@@ -173,8 +173,9 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
 
   // Skepticism Tier 4: Environmental Hazard (Strategic Abort)
   const isRainy = state.weather === 'Rainy';
-  const precisionHeavy =
-    rival.roster.some((w) => w.status === 'Active' && w.style === 'LUNGING ATTACK');
+  const precisionHeavy = rival.roster.some(
+    (w) => w.status === 'Active' && w.style === 'LUNGING ATTACK'
+  );
   if (
     isRainy &&
     (strategy.intent === 'VENDETTA' || strategy.intent === 'EXPANSION') &&

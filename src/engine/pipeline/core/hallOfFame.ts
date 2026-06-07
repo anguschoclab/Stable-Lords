@@ -39,7 +39,12 @@ export function processHallOfFame(
   const eligible: WarriorStats[] = [];
 
   const collect = (w: Warrior) => {
-    const snapshot = w.yearlySnapshots?.[completedYear] || { wins: 0, losses: 0, kills: 0, fame: 0 };
+    const snapshot = w.yearlySnapshots?.[completedYear] || {
+      wins: 0,
+      losses: 0,
+      kills: 0,
+      fame: 0,
+    };
     const wins = (w.career?.wins || 0) - (snapshot.wins || 0);
     const kills = (w.career?.kills || 0) - (snapshot.kills || 0);
     const fameGain = (w.fame || 0) - (snapshot.fame || 0);
@@ -59,7 +64,7 @@ export function processHallOfFame(
   const woty = eligible.reduce(
     (max, curr) =>
       curr.wins > max.wins || (curr.wins === max.wins && curr.fame > max.fame) ? curr : max,
-    eligible[0]
+    eligible[0]!
   );
   if (woty && woty.wins > 0) {
     const award: AnnualAward = {
@@ -77,9 +82,7 @@ export function processHallOfFame(
     } else if (woty.w.stableId) {
       const stableId = woty.w.stableId;
       const currentRoster =
-        rivalsUpdates.get(stableId)?.roster ||
-        state.rivalMap?.get(stableId)?.roster ||
-        [];
+        rivalsUpdates.get(stableId)?.roster || state.rivalMap?.get(stableId)?.roster || [];
       const updatedRoster = [...currentRoster];
       const index = updatedRoster.findIndex((w: Warrior) => w.id === woty.w.id);
       if (index !== -1) {
@@ -98,7 +101,7 @@ export function processHallOfFame(
   const koty = eligible.reduce(
     (max, curr) =>
       curr.kills > max.kills || (curr.kills === max.kills && curr.wins > max.wins) ? curr : max,
-    eligible[0]
+    eligible[0]!
   );
   if (koty && koty.kills > 0) {
     const award: AnnualAward = {

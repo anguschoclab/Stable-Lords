@@ -8,7 +8,7 @@ interface WeaponTrailProps {
   sourceX: number;
   sourceY: number;
   className?: string;
-}/**
+} /**
   * Weapon trail.
   * @param  - {
   trigger,
@@ -20,7 +20,6 @@ interface WeaponTrailProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Weapon trail.

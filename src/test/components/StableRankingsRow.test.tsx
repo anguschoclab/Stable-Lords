@@ -13,11 +13,12 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/components/ui/tooltip', () => ({
   TooltipProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  TooltipTrigger: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) => (
-    asChild ? <>{children}</> : <div>{children}</div>
-  ),
+  TooltipTrigger: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) =>
+    asChild ? <>{children}</> : <div>{children}</div>,
   TooltipContent: ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <div data-testid="tooltip-content" className={className}>{children}</div>
+    <div data-testid="tooltip-content" className={className}>
+      {children}
+    </div>
   ),
 }));
 
@@ -40,7 +41,11 @@ function makeRow(overrides: Partial<StableRow> = {}): StableRow {
 }
 
 function renderInTable(element: React.ReactElement) {
-  return render(<table><tbody>{element}</tbody></table>);
+  return render(
+    <table>
+      <tbody>{element}</tbody>
+    </table>
+  );
 }
 
 describe('StableRankingsRow', () => {

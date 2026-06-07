@@ -13,7 +13,7 @@ interface TreasurySparklineProps {
   className?: string;
   height?: number;
   showLabel?: boolean;
-}/**
+} /**
   * Treasury sparkline.
   * @param  - {
   class name,
@@ -22,7 +22,6 @@ interface TreasurySparklineProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Treasury sparkline.

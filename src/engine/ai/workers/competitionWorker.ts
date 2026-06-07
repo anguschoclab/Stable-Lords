@@ -343,7 +343,8 @@ export function processAllRivalsBoutOffers(
     offer.warriorIds.forEach((wId) => {
       // Find which rival owns this warrior using O(1) map lookup
       const stableInfo = state.warriorToStableMap?.get(wId);
-      const owningRival = stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
+      const owningRival =
+        stableInfo && !stableInfo.isPlayer ? state.rivalMap?.get(stableInfo.stableId) : undefined;
       if (!owningRival) return;
 
       // Group by rival stable ID

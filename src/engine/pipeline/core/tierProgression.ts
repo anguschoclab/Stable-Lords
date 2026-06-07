@@ -45,15 +45,14 @@ const tierRules: Record<NonNullable<RivalStableData['tier']>, TierRule[]> = {
         : null,
   ],
   Legendary: [],
-};/**
-   * Process tier progression.
-   * @param state - State.
-   * @param newSeason - New season.
-   * @param newWeek - New week.
-   * @param rng - Rng. (optional)
-   * @returns The result.
-   */
-
+}; /**
+ * Process tier progression.
+ * @param state - State.
+ * @param newSeason - New season.
+ * @param newWeek - New week.
+ * @param rng - Rng. (optional)
+ * @returns The result.
+ */
 
 /**
  * Process tier progression.

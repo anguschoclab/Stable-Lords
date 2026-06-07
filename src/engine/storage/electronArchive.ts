@@ -1,7 +1,6 @@
 import type { GameState } from '@/types/state.types';
 import { ArchiveConflictError } from './ArchiveConflictError';
 
-
 /**
  * Defines the shape of archive service.
  */
@@ -32,7 +31,6 @@ export interface ArchiveService {
 
 export { ArchiveConflictError };
 
-
 /**
  * The ElectronArchiveService class.
  */
@@ -45,7 +43,7 @@ export class ElectronArchiveService implements ArchiveService {
    * @param task - Task.
    * @returns The result.
    */
-private async enqueue<T>(task: () => Promise<T>): Promise<T> {
+  private async enqueue<T>(task: () => Promise<T>): Promise<T> {
     const p = this.writeQueue.then(task);
     this.writeQueue = p.catch(() => {}); // catch errors to allow next task in queue
     return p;
@@ -55,7 +53,7 @@ private async enqueue<T>(task: () => Promise<T>): Promise<T> {
    * Is supported.
    * @returns The result.
    */
-isSupported(): boolean {
+  isSupported(): boolean {
     return typeof window !== 'undefined' && window.electronAPI !== undefined;
   }
 
@@ -65,7 +63,7 @@ isSupported(): boolean {
    * @param stateData - State data.
    * @returns The result.
    */
-async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
+  async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
     return this.enqueue(async () => {
       if (!this.isSupported() || !window.electronAPI) return;
 
@@ -85,7 +83,7 @@ async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
    * @param slotId - Slot id.
    * @returns The result.
    */
-async retrieveHotState(slotId: string): Promise<GameState | null> {
+  async retrieveHotState(slotId: string): Promise<GameState | null> {
     if (!this.isSupported() || !window.electronAPI) return null;
 
     try {
@@ -109,7 +107,7 @@ async retrieveHotState(slotId: string): Promise<GameState | null> {
    * @param _overwrite - _overwrite. (optional)
    * @returns The result.
    */
-async archiveBoutLog(
+  async archiveBoutLog(
     year: number,
     season: number,
     boutId: string,
@@ -137,7 +135,7 @@ async archiveBoutLog(
    * @param boutId - Bout id.
    * @returns The result.
    */
-async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
+  async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
     if (!this.isSupported() || !window.electronAPI) return null;
 
     try {
@@ -159,7 +157,7 @@ async retrieveBoutLog(year: number, season: number, boutId: string): Promise<str
    * @param markdown - Markdown.
    * @returns The result.
    */
-async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
+  async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
     return this.enqueue(async () => {
       if (!this.isSupported() || !window.electronAPI) return;
 
@@ -180,7 +178,7 @@ async archiveGazette(season: number, week: number, markdown: string): Promise<vo
    * @param week - Week.
    * @returns The result.
    */
-async retrieveGazette(season: number, week: number): Promise<string | null> {
+  async retrieveGazette(season: number, week: number): Promise<string | null> {
     if (!this.isSupported() || !window.electronAPI) return null;
 
     try {
@@ -200,7 +198,7 @@ async retrieveGazette(season: number, week: number): Promise<string | null> {
    * @param _season - _season.
    * @returns The result.
    */
-async getArchivedBoutIdsForSeason(_season: number): Promise<string[]> {
+  async getArchivedBoutIdsForSeason(_season: number): Promise<string[]> {
     // This would require additional IPC handler to list bout IDs in a season
     // For now, return empty array as this is not critical for Electron version
     return [];

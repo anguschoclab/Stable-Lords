@@ -2,7 +2,13 @@
  * Narrative Domain Impacts
  * Handles gazettes, scout reports, insight tokens, and last simulation report.
  */
-import type { GameState, GazetteStory, ScoutReportData, InsightToken, SimulationReport } from '@/types/state.types';
+import type {
+  GameState,
+  GazetteStory,
+  ScoutReportData,
+  InsightToken,
+  SimulationReport,
+} from '@/types/state.types';
 
 /**
  * Apply gazettes to state.

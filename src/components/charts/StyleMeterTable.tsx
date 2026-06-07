@@ -17,12 +17,11 @@ interface StyleRow {
   wins: number;
   losses: number;
   winRate: number;
-}/**
-  * Style meter table.
-  * @param - { class name }.
-  * @returns The result.
-  */
-
+} /**
+ * Style meter table.
+ * @param - { class name }.
+ * @returns The result.
+ */
 
 /**
  * Style meter table.

@@ -259,9 +259,9 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'r': makeOffer({ status: 'Rejected' }),
-          'c': makeOffer({ status: 'Canceled' }),
-          'e': makeOffer({ status: 'Expired' }),
+          r: makeOffer({ status: 'Rejected' }),
+          c: makeOffer({ status: 'Canceled' }),
+          e: makeOffer({ status: 'Expired' }),
         },
         currentWeek,
         playerWarriorIds,
@@ -276,7 +276,7 @@ describe('useDigestSummary', () => {
     const { result } = renderHook(() =>
       useDigestSummary({
         arenaHistory: [makeFight()],
-        boutOffers: { 'o1': makeOffer() },
+        boutOffers: { o1: makeOffer() },
         currentWeek,
         playerWarriorIds,
       })
@@ -290,7 +290,12 @@ describe('useDigestSummary', () => {
         arenaHistory: [
           makeFight({ winner: 'A', by: 'Kill' }),
           makeFight({ winner: 'D', by: 'KO' }),
-          makeFight({ winner: 'A', by: 'KO', warriorIdA: 'rival-a' as WarriorId, warriorIdD: 'rival-d' as WarriorId }),
+          makeFight({
+            winner: 'A',
+            by: 'KO',
+            warriorIdA: 'rival-a' as WarriorId,
+            warriorIdD: 'rival-d' as WarriorId,
+          }),
         ],
         boutOffers: {},
         currentWeek,

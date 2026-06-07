@@ -14,12 +14,11 @@ import {
 interface StylePassivesProps {
   plan: FightPlan;
   warrior?: Warrior;
-}/**
-  * Style passives.
-  * @param - { plan, warrior }.
-  * @returns The result.
-  */
-
+} /**
+ * Style passives.
+ * @param - { plan, warrior }.
+ * @returns The result.
+ */
 
 /**
  * Style passives.

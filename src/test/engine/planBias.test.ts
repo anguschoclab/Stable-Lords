@@ -110,7 +110,7 @@ describe('Plan Bias', () => {
   describe('reconcileGearTwoHanded', () => {
     it('should remove shield when weapon is two-handed', () => {
       const equipment: EquipmentLoadout = {
-        weapon: 'greatsword',  // two-handed weapon ID
+        weapon: 'greatsword', // two-handed weapon ID
         shield: 'large_shield',
         armor: 'leather',
         helm: 'none_helm',
@@ -124,7 +124,7 @@ describe('Plan Bias', () => {
 
     it('should not modify equipment if weapon is one-handed', () => {
       const equipment: EquipmentLoadout = {
-        weapon: 'broadsword',  // one-handed weapon ID
+        weapon: 'broadsword', // one-handed weapon ID
         shield: 'medium_shield',
         armor: 'leather',
         helm: 'none_helm',
@@ -138,7 +138,7 @@ describe('Plan Bias', () => {
 
     it('should not modify equipment if no shield equipped', () => {
       const equipment: EquipmentLoadout = {
-        weapon: 'greatsword',  // two-handed weapon ID
+        weapon: 'greatsword', // two-handed weapon ID
         shield: 'none_shield',
         armor: 'leather',
         helm: 'none_helm',
@@ -157,7 +157,7 @@ describe('Plan Bias', () => {
 
     it('should preserve other equipment properties when removing shield', () => {
       const equipment: EquipmentLoadout = {
-        weapon: 'greatsword',  // two-handed weapon ID
+        weapon: 'greatsword', // two-handed weapon ID
         shield: 'large_shield',
         armor: 'plate',
         helm: 'none_helm',

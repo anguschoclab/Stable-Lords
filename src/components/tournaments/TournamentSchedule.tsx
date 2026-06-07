@@ -190,7 +190,9 @@ function TournamentStatsHeader({
           <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase font-bold">
             <Users className="h-3.5 w-3.5" /> Byes
           </div>
-          <div className="text-xl font-black font-mono mt-1 text-muted-foreground">{stats.byes}</div>
+          <div className="text-xl font-black font-mono mt-1 text-muted-foreground">
+            {stats.byes}
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -429,12 +431,11 @@ function TournamentRoundCard({
       )}
     </Card>
   );
-}/**
-  * Tournament schedule.
-  * @param - { tournament, current week }.
-  * @returns The result.
-  */
-
+} /**
+ * Tournament schedule.
+ * @param - { tournament, current week }.
+ * @returns The result.
+ */
 
 /**
  * Tournament schedule.

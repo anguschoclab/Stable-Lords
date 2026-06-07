@@ -21,8 +21,6 @@ import { calculateHype } from '@/engine/promoters/hypeCalculator';
  * Logic incorporates Hype Matrix, Rank Requirements, and Personality biases.
  */
 
-
-
 export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(state.week * 881 + 17);
   const rankings = state.realmRankings || {};
@@ -66,9 +64,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
     tournamentLockedIds.forEach((id) => unavailableWarriorIds.add(id));
   }
 
-  const availableWarriors = allWarriors.filter(
-    (warrior) => !unavailableWarriorIds.has(warrior.id)
-  );
+  const availableWarriors = allWarriors.filter((warrior) => !unavailableWarriorIds.has(warrior.id));
 
   // 2. Iterate through Promoters
   Object.values(state.promoters || []).forEach((promoter) => {
@@ -108,11 +104,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         const gap = Math.abs(scoreA - scoreB) / maxScoreA;
         if (gap > gapThreshold) continue;
 
-        const personalityScore = calculatePersonalityMatchScore(
-          warriorA,
-          candidate,
-          promoter
-        );
+        const personalityScore = calculatePersonalityMatchScore(warriorA, candidate, promoter);
 
         // Calculate composite score for comparison
         let candidateScore: number;
@@ -168,4 +160,3 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
     boutOffers: newOffers,
   };
 }
-

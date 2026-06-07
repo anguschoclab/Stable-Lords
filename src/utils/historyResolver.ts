@@ -1,16 +1,14 @@
-import { GameState, Warrior } from '@/types/state.types';/**
-                                                          * Warrior minimal type.
-                                                          */
-
+import { GameState, Warrior } from '@/types/state.types'; /**
+ * Warrior minimal type.
+ */
 
 // Minimal types for history resolution — avoids importing full RivalStableData
 /**
  * Warrior minimal type.
  */
-export type WarriorMinimal = Pick<Warrior, 'id' | 'name'>;/**
-                                                           * Rival shallow type.
-                                                           */
-
+export type WarriorMinimal = Pick<Warrior, 'id' | 'name'>; /**
+ * Rival shallow type.
+ */
 
 /**
  * Rival shallow type.
@@ -19,10 +17,9 @@ export type RivalShallow = {
   id: string;
   owner: { stableName: string };
   roster?: WarriorMinimal[];
-};/**
-   * Defines the shape of name resolution state.
-   */
-
+}; /**
+ * Defines the shape of name resolution state.
+ */
 
 /**
  * Defines the shape of name resolution state.
@@ -198,7 +195,11 @@ export function resolveStableName(
  * @param name - Optional display name
  * @returns The resolved Warrior object, or undefined if not found
  */
-export function findWarrior(state: GameState | NameResolutionState, id?: string, name?: string): Warrior | undefined {
+export function findWarrior(
+  state: GameState | NameResolutionState,
+  id?: string,
+  name?: string
+): Warrior | undefined {
   const cache = ensureWarriorCache(state);
 
   if (id) {

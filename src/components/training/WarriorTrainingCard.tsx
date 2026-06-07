@@ -15,7 +15,7 @@ import { computeGainChance } from '@/engine/training';
 import { canGrow } from '@/engine/potential';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { Surface } from '@/components/ui/Surface';
-import { cn } from '@/lib/utils';/**
+import { cn } from '@/lib/utils'; /**
                                   * Warrior training card.
                                   * @param  - {
   warrior,
@@ -28,7 +28,6 @@ import { cn } from '@/lib/utils';/**
 }.
                                   * @returns The result.
                                   */
-
 
 /**
  * Warrior training card.

@@ -5,12 +5,11 @@ const registry = new Map<string, ArenaConfig>();
 // Internal caches for optimized retrieval
 let allCache: ArenaConfig[] | null = null;
 const tagIndex = new Map<ArenaTag, ArenaConfig[]>();
-const tierIndex = new Map<number, ArenaConfig[]>();/**
-                                                    * Register arena.
-                                                    * @param arena - Arena.
-                                                    * @returns The result.
-                                                    */
-
+const tierIndex = new Map<number, ArenaConfig[]>(); /**
+ * Register arena.
+ * @param arena - Arena.
+ * @returns The result.
+ */
 
 /**
  * Register arena.
@@ -23,12 +22,11 @@ export function registerArena(arena: ArenaConfig): void {
   allCache = null;
   tagIndex.clear();
   tierIndex.clear();
-}/**
-  * Get arena by id.
-  * @param id - Id.
-  * @returns The result.
-  */
-
+} /**
+ * Get arena by id.
+ * @param id - Id.
+ * @returns The result.
+ */
 
 /**
  * Get arena by id.
@@ -37,11 +35,10 @@ export function registerArena(arena: ArenaConfig): void {
  */
 export function getArenaById(id: string): ArenaConfig {
   return registry.get(id) ?? STANDARD_ARENA;
-}/**
-  * Get all arenas.
-  * @returns The result.
-  */
-
+} /**
+ * Get all arenas.
+ * @returns The result.
+ */
 
 /**
  * Get all arenas.
@@ -52,12 +49,11 @@ export function getAllArenas(): ArenaConfig[] {
     allCache = Array.from(registry.values());
   }
   return [...allCache];
-}/**
-  * Get arenas by tag.
-  * @param tag - Tag.
-  * @returns The result.
-  */
-
+} /**
+ * Get arenas by tag.
+ * @param tag - Tag.
+ * @returns The result.
+ */
 
 /**
  * Get arenas by tag.
@@ -71,12 +67,11 @@ export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
     tagIndex.set(tag, results);
   }
   return [...results];
-}/**
-  * Get arenas by tier.
-  * @param tier - Tier.
-  * @returns The result.
-  */
-
+} /**
+ * Get arenas by tier.
+ * @param tier - Tier.
+ * @returns The result.
+ */
 
 /**
  * Get arenas by tier.
@@ -90,12 +85,11 @@ export function getArenasByTier(tier: 1 | 2 | 3): ArenaConfig[] {
     tierIndex.set(tier, results);
   }
   return [...results];
-}/**
-  * Is indoor arena.
-  * @param id - Id. (optional)
-  * @returns The result.
-  */
-
+} /**
+ * Is indoor arena.
+ * @param id - Id. (optional)
+ * @returns The result.
+ */
 
 /**
  * Is indoor arena.
@@ -106,10 +100,9 @@ export function isIndoorArena(id?: string): boolean {
   if (!id) return false;
   const arena = registry.get(id);
   return !!arena?.tags.includes('indoor');
-}/**
-  * Standard_arena.
-  */
-
+} /**
+ * Standard_arena.
+ */
 
 // ─── Seed Arenas ─────────────────────────────────────────────────────────────
 
@@ -125,10 +118,9 @@ export const STANDARD_ARENA: ArenaConfig = {
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
   startingZone: 'Center',
-};/**
-   * Mudpit_arena.
-   */
-
+}; /**
+ * Mudpit_arena.
+ */
 
 /**
  * Mudpit_arena.
@@ -142,10 +134,9 @@ export const MUDPIT_ARENA: ArenaConfig = {
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: -1 },
   startingZone: 'Center',
-};/**
-   * Bloodsands_arena.
-   */
-
+}; /**
+ * Bloodsands_arena.
+ */
 
 /**
  * Bloodsands_arena.
@@ -159,10 +150,9 @@ export const BLOODSANDS_ARENA: ArenaConfig = {
   zoneDef: { Edge: -2, Corner: -3 },
   surfaceMod: { initiativeMod: 1, enduranceMult: 0.95, riposteMod: 1 },
   startingZone: 'Center',
-};/**
-   * Underpit_arena.
-   */
-
+}; /**
+ * Underpit_arena.
+ */
 
 /**
  * Underpit_arena.

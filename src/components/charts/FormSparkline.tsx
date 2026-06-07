@@ -7,10 +7,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 interface FormSparklineProps {
   warriorId: string;
   limit?: number;
-}/**
-  * Form sparkline.
-  */
-
+} /**
+ * Form sparkline.
+ */
 
 /**
  * Form sparkline.
@@ -69,7 +68,9 @@ export const FormSparkline = React.memo(function FormSparkline({
                     <p className="font-bold">
                       Week {fight.week}: {label}
                     </p>
-                    <p className="text-muted-foreground">vs {fight.title.replace(/^.*? vs /, '').split(' (')[0] || 'Unknown'}</p>
+                    <p className="text-muted-foreground">
+                      vs {fight.title.replace(/^.*? vs /, '').split(' (')[0] || 'Unknown'}
+                    </p>
                   </div>
                 </TooltipContent>
               </Tooltip>

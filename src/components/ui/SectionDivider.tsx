@@ -4,12 +4,11 @@ interface SectionDividerProps {
   label: string;
   className?: string;
   variant?: 'primary' | 'gold' | 'blood' | 'muted';
-}/**
-  * Section divider.
-  * @param - { label, class name, variant = 'muted' }.
-  * @returns The result.
-  */
-
+} /**
+ * Section divider.
+ * @param - { label, class name, variant = 'muted' }.
+ * @returns The result.
+ */
 
 /**
  * Section divider.
@@ -26,9 +25,7 @@ export function SectionDivider({ label, className, variant = 'muted' }: SectionD
 
   return (
     <div className={cn('flex items-center gap-4 py-4', className)}>
-      <span className="codex-label whitespace-nowrap">
-        {label}
-      </span>
+      <span className="codex-label whitespace-nowrap">{label}</span>
       <div className={cn('h-px flex-1 bg-gradient-to-r to-transparent', variantClasses[variant])} />
     </div>
   );

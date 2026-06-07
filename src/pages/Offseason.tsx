@@ -9,11 +9,17 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { YearEndRecap, SeasonSynthesis } from '@/components/ledger';
-import { CalendarDays, UserPlus, GraduationCap, BookOpen, ArrowRight, History } from 'lucide-react';/**
-                                                                                                     * Offseason.
-                                                                                                     * @returns The result.
-                                                                                                     */
-
+import {
+  CalendarDays,
+  UserPlus,
+  GraduationCap,
+  BookOpen,
+  ArrowRight,
+  History,
+} from 'lucide-react'; /**
+ * Offseason.
+ * @returns The result.
+ */
 
 /**
  * Offseason.

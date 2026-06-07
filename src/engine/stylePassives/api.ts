@@ -2,7 +2,13 @@
  * Style Passives API - Public API functions for style-specific combat behaviors
  */
 import { FightingStyle } from '@/types/shared.types';
-import type { Phase, StylePassiveContext, KillContext, StylePassiveResult, KillMechanic } from './types';
+import type {
+  Phase,
+  StylePassiveContext,
+  KillContext,
+  StylePassiveResult,
+  KillMechanic,
+} from './types';
 import { STYLES } from './strategies';
 import { getMastery } from './mastery';
 
@@ -31,7 +37,17 @@ export function getStylePassive(
 ): StylePassiveResult {
   const m = getMastery(context.totalFights ?? 0);
   const strategy = STYLES[style];
-  if (!strategy) return { attBonus: 0, parBonus: 0, defBonus: 0, ripBonus: 0, dmgBonus: 0, critChance: 0, iniBonus: 0, mastery: m.tier };
+  if (!strategy)
+    return {
+      attBonus: 0,
+      parBonus: 0,
+      defBonus: 0,
+      ripBonus: 0,
+      dmgBonus: 0,
+      critChance: 0,
+      iniBonus: 0,
+      mastery: m.tier,
+    };
   return strategy.getPassive(context, m);
 }
 

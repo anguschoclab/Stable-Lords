@@ -158,11 +158,10 @@ function calculateStats(
     avgPurse: Math.round(avgPurse),
     totalHype,
   };
-}/**
-  * Promoter detail.
-  * @returns The result.
-  */
-
+} /**
+ * Promoter detail.
+ * @returns The result.
+ */
 
 /**
  * Promoter detail.
@@ -413,10 +412,7 @@ export default function PromoterDetail() {
             </Card>
           ) : (
             promoterOffers.map((offer) => (
-              <Card
-                key={offer.id}
-                className={offer.status === 'Signed' ? 'border-primary/30' : ''}
-              >
+              <Card key={offer.id} className={offer.status === 'Signed' ? 'border-primary/30' : ''}>
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start">
                     <div className="space-y-1">

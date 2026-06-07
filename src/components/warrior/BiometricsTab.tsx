@@ -6,19 +6,19 @@ import { FavoritesCard } from '@/components/warrior/FavoritesCard';
 import { AttrBar, SkillBar, WarriorStatementsPanel } from '@/components/warrior/WarriorStats';
 import { overallGrowthNarrative } from '@/components/warrior/GrowthHelpers';
 import { Warrior } from '@/types/game';
+import { ObfuscatedWarrior } from '@/lib/obfuscation';
 import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 
 interface BiometricsTabProps {
   warrior: Warrior;
-  displayWarrior: import('@/types/game').Warrior;
-}/**
-  * Biometrics tab.
-  * @param - { warrior, display warrior }.
-  * @returns The result.
-  */
-
+  displayWarrior: ObfuscatedWarrior;
+} /**
+ * Biometrics tab.
+ * @param - { warrior, display warrior }.
+ * @returns The result.
+ */
 
 /**
  * Biometrics tab.

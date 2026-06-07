@@ -87,17 +87,16 @@ export function committeeSelection(
   }
 
   return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
-}/**
-  * Build tournament.
-  * @param tierId - Tier id.
-  * @param tierName - Tier name.
-  * @param warriors - Warriors.
-  * @param week - Week.
-  * @param season - Season.
-  * @param rng - Rng.
-  * @returns The result.
-  */
-
+} /**
+ * Build tournament.
+ * @param tierId - Tier id.
+ * @param tierName - Tier name.
+ * @param warriors - Warriors.
+ * @param week - Week.
+ * @param season - Season.
+ * @param rng - Rng.
+ * @returns The result.
+ */
 
 /**
  * Build tournament.

@@ -183,12 +183,7 @@ export function computeTrainingImpact(
 
     // ── Recovery Mode ──
     if (assignment.type === 'recovery') {
-      currentRoster = processRecoveryAssignment(
-        warrior,
-        healingBonus,
-        currentRoster,
-        results
-      );
+      currentRoster = processRecoveryAssignment(warrior, healingBonus, currentRoster, results);
       continue;
     }
 

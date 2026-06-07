@@ -1,11 +1,5 @@
 import { Surface } from '@/components/ui/Surface';
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { SortHeader } from '@/components/ui/sort-header';
 import { useWarriorLeaderboard } from '@/hooks/useWarriorLeaderboard';
 import { WarriorLeaderboardFilters } from './WarriorLeaderboardFilters';

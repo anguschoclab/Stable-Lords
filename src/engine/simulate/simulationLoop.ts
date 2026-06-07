@@ -6,15 +6,16 @@ import { resolveExchange } from '../combat/resolution/resolution';
 import { narrateEvents, NarrationContext } from '../combat/narrative/narrator';
 import { MAX_EXCHANGES, EXCHANGES_PER_MINUTE } from '@/constants/combat';
 import type { FighterState, ResolutionContext } from '../combat/resolution/types';
-import type { MinuteEvent, DeathCauseBucket, FightOutcomeBy, ExchangeLogEntry } from '@/types/combat.types';
+import type {
+  MinuteEvent,
+  DeathCauseBucket,
+  FightOutcomeBy,
+  ExchangeLogEntry,
+} from '@/types/combat.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import { buildExchangeLogEntry } from './logging';
-import {
-  minuteStatusLine,
-  tacticStreakLine,
-  narrateBoutEnd,
-} from '../narrativePBP';
+import { minuteStatusLine, tacticStreakLine, narrateBoutEnd } from '../narrativePBP';
 
 type Phase = 'OPENING' | 'MID' | 'LATE';
 
@@ -180,11 +181,18 @@ export function runSimulationLoop(
             ? nameA
             : nameD;
         const winnerStyle = boutEnd.actor === 'A' ? planA?.style : planD?.style;
-        const boutEndLines = narrateBoutEnd(resCtx.rng, by as string, narWinner, narLoser, undefined, {
-          cause: causeBucket,
-          style: winnerStyle,
-          mood: crowdMood,
-        });
+        const boutEndLines = narrateBoutEnd(
+          resCtx.rng,
+          by as string,
+          narWinner,
+          narLoser,
+          undefined,
+          {
+            cause: causeBucket,
+            style: winnerStyle,
+            mood: crowdMood,
+          }
+        );
         boutEndLines.forEach((line) => log.push({ minute: min, text: line }));
       }
       break;
@@ -202,4 +210,3 @@ export function runSimulationLoop(
     fightMinutes: Math.max(1, currentMinute),
   };
 }
-

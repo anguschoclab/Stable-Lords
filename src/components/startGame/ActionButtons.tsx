@@ -10,7 +10,7 @@ interface ActionButtonsProps {
   onContinue: () => void;
   onNewGame: () => void;
   onImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}/**
+} /**
   * Action buttons.
   * @param  - {
   most recent,
@@ -22,7 +22,6 @@ interface ActionButtonsProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Action buttons.

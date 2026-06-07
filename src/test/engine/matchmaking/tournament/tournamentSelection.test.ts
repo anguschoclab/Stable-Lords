@@ -1,7 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { GameState, TournamentEntry, TournamentBout, Warrior } from '@/types/state.types';
 import type { FightOutcome, FightOutcomeBy } from '@/types/combat.types';
-import { FightingStyle, type WarriorId, type StableId, type TournamentId } from '@/types/shared.types';
+import {
+  FightingStyle,
+  type WarriorId,
+  type StableId,
+  type TournamentId,
+} from '@/types/shared.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNG } from '@/utils/random';
 // ─── Mock simulateFight before importing resolution ───
@@ -14,11 +19,19 @@ vi.mock('@/engine/simulate', () => ({
     exchangeLog: [],
     post: { tags: [] },
   })),
-  defaultPlanForWarrior: vi.fn((w: Warrior) => ({ killDesire: 5, weapon: 'Broadsword', planStyle: w.style })),
+  defaultPlanForWarrior: vi.fn((w: Warrior) => ({
+    killDesire: 5,
+    weapon: 'Broadsword',
+    planStyle: w.style,
+  })),
 }));
 
 vi.mock('@/engine', () => ({
-  aiPlanForWarrior: vi.fn((w: Warrior) => ({ killDesire: 7, weapon: 'Broadsword', planStyle: w.style })),
+  aiPlanForWarrior: vi.fn((w: Warrior) => ({
+    killDesire: 7,
+    weapon: 'Broadsword',
+    planStyle: w.style,
+  })),
 }));
 
 vi.mock('@/engine/tokens/patronTokenService', () => ({
@@ -37,10 +50,7 @@ import {
   resolveCompleteTournament,
   applyBoutResults,
 } from '@/engine/matchmaking/tournamentSelection/resolution';
-import {
-  getAIPlan,
-  generateFreelancer,
-} from '@/engine/matchmaking/tournamentSelection/utils';
+import { getAIPlan, generateFreelancer } from '@/engine/matchmaking/tournamentSelection/utils';
 
 // ─── Helpers ───
 
@@ -220,7 +230,14 @@ describe('awardTournamentPrizes', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2, w3, w4],
         treasury: 500,
         fame: 0,
@@ -251,7 +268,14 @@ describe('awardTournamentPrizes', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2, w3, w4],
         treasury: 500,
         fame: 0,
@@ -278,7 +302,14 @@ describe('awardTournamentPrizes', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2, w3, w4],
         treasury: 500,
         fame: 0,
@@ -304,7 +335,14 @@ describe('awardTournamentPrizes', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2, w3, w4],
         treasury: 500,
         fame: 0,
@@ -329,7 +367,14 @@ describe('awardTournamentPrizes', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2, w3, w4],
         treasury: 500,
         fame: 0,
@@ -354,7 +399,14 @@ describe('awardTournamentPrizes', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2],
         treasury: 500,
         fame: 0,
@@ -367,7 +419,9 @@ describe('awardTournamentPrizes', () => {
     const updated = awardTournamentPrizes(tournament, state);
 
     expect(updated.roster[0]!.career.medals!.gold).toBe(1);
-    expect(updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2')!.career.medals!.silver).toBe(1);
+    expect(
+      updated.rivals[0]!.roster.find((w: Warrior) => w.id === 'w2')!.career.medals!.silver
+    ).toBe(1);
   });
 
   it('updates rival stable treasury and fame', () => {
@@ -381,7 +435,14 @@ describe('awardTournamentPrizes', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2, w3, w4],
         treasury: 500,
         fame: 10,
@@ -419,7 +480,14 @@ describe('modifyWarrior (awards.ts)', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w],
         treasury: 500,
         fame: 0,
@@ -473,7 +541,12 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const warriors: Warrior[] = [];
     for (let i = 0; i < 4; i++) {
       warriors.push(
-        makeTestWarrior(`w${i}`, `Warrior ${i}`, FightingStyle.StrikingAttack, i % 2 === 0 ? PLAYER_ID : RIVAL_ID)
+        makeTestWarrior(
+          `w${i}`,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+        )
       );
     }
 
@@ -482,7 +555,14 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: warriors.filter((_, i) => i % 2 === 1),
         treasury: 500,
         fame: 0,
@@ -494,10 +574,14 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
 
     const { updatedState } = resolveRound(state, tournament.id, 1);
 
-    const r1Bouts = updatedState.tournaments[0]!.bracket.filter((b: TournamentBout) => b.round === 1);
+    const r1Bouts = updatedState.tournaments[0]!.bracket.filter(
+      (b: TournamentBout) => b.round === 1
+    );
     expect(r1Bouts.every((b: TournamentBout) => b.winner !== undefined)).toBe(true);
 
-    const r2Bouts = updatedState.tournaments[0]!.bracket.filter((b: TournamentBout) => b.round === 2);
+    const r2Bouts = updatedState.tournaments[0]!.bracket.filter(
+      (b: TournamentBout) => b.round === 2
+    );
     expect(r2Bouts.length).toBe(1);
   });
 
@@ -505,7 +589,12 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const warriors: Warrior[] = [];
     for (let i = 0; i < 6; i++) {
       warriors.push(
-        makeTestWarrior(`w${i}`, `Warrior ${i}`, FightingStyle.StrikingAttack, i % 2 === 0 ? PLAYER_ID : RIVAL_ID)
+        makeTestWarrior(
+          `w${i}`,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+        )
       );
     }
 
@@ -514,7 +603,14 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: warriors.filter((_, i) => i % 2 === 1),
         treasury: 500,
         fame: 0,
@@ -528,7 +624,9 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const { updatedState } = resolveRound(state, tournament.id, 1);
 
     // After round 1, round 2 should be generated with 1 bout + 1 bye
-    const r2Bouts = updatedState.tournaments[0]!.bracket.filter((b: TournamentBout) => b.round === 2);
+    const r2Bouts = updatedState.tournaments[0]!.bracket.filter(
+      (b: TournamentBout) => b.round === 2
+    );
     expect(r2Bouts.length).toBe(2);
 
     // Now resolve round 2 which contains the bye
@@ -547,7 +645,10 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const state = makeBaseState();
     state.roster = [w1];
 
-    const tournament = makeTournamentWithR1([w1, { id: 'w2', name: 'B', stableId: RIVAL_ID } as Warrior]);
+    const tournament = makeTournamentWithR1([
+      w1,
+      { id: 'w2', name: 'B', stableId: RIVAL_ID } as Warrior,
+    ]);
     state.tournaments = [tournament];
 
     const { updatedState } = resolveRound(state, tournament.id, 1);
@@ -560,7 +661,12 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const warriors: Warrior[] = [];
     for (let i = 0; i < 8; i++) {
       warriors.push(
-        makeTestWarrior(`w${i}`, `Warrior ${i}`, FightingStyle.StrikingAttack, i % 2 === 0 ? PLAYER_ID : RIVAL_ID)
+        makeTestWarrior(
+          `w${i}`,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+        )
       );
     }
 
@@ -569,7 +675,14 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: warriors.filter((_, i) => i % 2 === 1),
         treasury: 500,
         fame: 0,
@@ -627,7 +740,14 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2],
         treasury: 500,
         fame: 0,
@@ -678,7 +798,14 @@ describe('resolveCompleteTournament', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2],
         treasury: 500,
         fame: 0,
@@ -740,7 +867,14 @@ describe('applyBoutResults', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2],
         treasury: 500,
         fame: 0,
@@ -764,7 +898,14 @@ describe('applyBoutResults', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2],
         treasury: 500,
         fame: 0,
@@ -792,7 +933,14 @@ describe('applyBoutResults', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2],
         treasury: 500,
         fame: 0,
@@ -819,7 +967,14 @@ describe('applyBoutResults', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2],
         treasury: 500,
         fame: 0,
@@ -846,7 +1001,14 @@ describe('applyBoutResults', () => {
     state.rivals = [
       {
         id: RIVAL_ID,
-        owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
         roster: [w2],
         treasury: 500,
         fame: 0,
@@ -886,7 +1048,15 @@ describe('getAIPlan', () => {
         RIVAL_ID,
         {
           id: RIVAL_ID,
-          owner: { id: RIVAL_ID, name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0, personality: 'Aggressive' },
+          owner: {
+            id: RIVAL_ID,
+            name: 'Rival',
+            stableName: 'Rival Stable',
+            fame: 0,
+            renown: 0,
+            titles: 0,
+            personality: 'Aggressive',
+          },
           roster: [],
           treasury: 500,
           fame: 0,
@@ -907,7 +1077,14 @@ describe('getAIPlan', () => {
         RIVAL_ID,
         {
           id: RIVAL_ID,
-          owner: { id: 'owner-rival', name: 'Rival', stableName: 'Rival Stable', fame: 0, renown: 0, titles: 0 },
+          owner: {
+            id: 'owner-rival',
+            name: 'Rival',
+            stableName: 'Rival Stable',
+            fame: 0,
+            renown: 0,
+            titles: 0,
+          },
           roster: [],
           treasury: 500,
           fame: 0,

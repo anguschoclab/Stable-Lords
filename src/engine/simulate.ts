@@ -3,15 +3,16 @@ import { DEFAULT_LOADOUT } from '@/data/equipment';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Trainer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import type {
-  FightPlan,
-  FightOutcome,
-} from '@/types/combat.types';
+import type { FightPlan, FightOutcome } from '@/types/combat.types';
 import type { WeatherType } from '@/types/shared.types';
 import type { CrowdMood } from '@/engine/crowdMood';
 
 // Import from split modules
-import { initializeRng, initializeFighters, initializeResolutionContext } from './simulate/initialization';
+import {
+  initializeRng,
+  initializeFighters,
+  initializeResolutionContext,
+} from './simulate/initialization';
 import { runSimulationLoop } from './simulate/simulationLoop';
 import { generateIntroductions } from './simulate/narrative';
 import { generateOutcomeTags, buildPostFightStats, handleTimeLimit } from './simulate/resolution';
@@ -139,13 +140,7 @@ export function simulateFight(
         timeLimitResult.by,
         fA,
         fD,
-        generateOutcomeTags(
-          timeLimitResult.winner,
-          timeLimitResult.by,
-          fA,
-          fD,
-          finalMinutes
-        )
+        generateOutcomeTags(timeLimitResult.winner, timeLimitResult.by, fA, fD, finalMinutes)
       ),
     };
   }
@@ -160,6 +155,15 @@ export function simulateFight(
     minutes: finalMinutes,
     log,
     exchangeLog,
-    post: buildPostFightStats(winner, by, fA, fD, tags, causeBucket, fatalHitLocation, fatalExchangeIndex),
+    post: buildPostFightStats(
+      winner,
+      by,
+      fA,
+      fD,
+      tags,
+      causeBucket,
+      fatalHitLocation,
+      fatalExchangeIndex
+    ),
   };
 }

@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
-import AdminTools from '@/pages/AdminTools';/**
-                                             * Route.
-                                             */
-
+import AdminTools from '@/pages/AdminTools'; /**
+ * Route.
+ */
 
 /**
  * Route.

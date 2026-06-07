@@ -21,9 +21,9 @@ describe('weapon wield-mode requirements (canonical special cases)', () => {
     // dual epee needs DF 22 → DF 18 fails
     expect(checkWeaponRequirements('epee', df18, { wield: 'dual' }).met).toBe(false);
     // …but ambidextrous only needs DF 17 → DF 18 passes
-    expect(
-      checkWeaponRequirements('epee', df18, { wield: 'dual', ambidextrous: true }).met
-    ).toBe(true);
+    expect(checkWeaponRequirements('epee', df18, { wield: 'dual', ambidextrous: true }).met).toBe(
+      true
+    );
   });
 
   it('dual Long Sword / Scimitar require DF 17 (15 ambidextrous)', () => {

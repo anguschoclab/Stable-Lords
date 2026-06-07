@@ -14,7 +14,7 @@ interface BoutControlsProps {
   onReset: () => void;
   onTogglePlay: () => void;
   onSkipToEnd: () => void;
-}/**
+} /**
   * Bout controls.
   * @param  - {
   view mode,
@@ -30,7 +30,6 @@ interface BoutControlsProps {
 }.
   * @returns The result.
   */
-
 
 /**
  * Bout controls.

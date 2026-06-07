@@ -7,12 +7,11 @@ import { cn } from '@/lib/utils';
 
 interface RivalIntelligenceProps {
   rivals: RivalStableData[];
-}/**
-  * Rival intelligence.
-  * @param - { rivals }.
-  * @returns The result.
-  */
-
+} /**
+ * Rival intelligence.
+ * @param - { rivals }.
+ * @returns The result.
+ */
 
 /**
  * Rival intelligence.

@@ -83,4 +83,3 @@ export function handleTimeLimit(
   }
   return { winner: finalOutcome.winner, by: finalOutcome.by };
 }
-

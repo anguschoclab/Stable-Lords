@@ -70,9 +70,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
           >
             {rankIndex + 1}
           </span>
-          {rankIndex === 0 && (
-            <Crown className="h-4 w-4 mt-1 text-arena-gold animate-bounce" />
-          )}
+          {rankIndex === 0 && <Crown className="h-4 w-4 mt-1 text-arena-gold animate-bounce" />}
         </div>
 
         {/* Main Body */}
@@ -89,17 +87,12 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                   useCrown
                 />
                 <div className="flex items-center gap-3">
-                  <StatBadge
-                    styleName={warrior.style as FightingStyle}
-                    career={warrior.career}
-                  />
+                  <StatBadge styleName={warrior.style as FightingStyle} career={warrior.career} />
                   <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-black border border-white/5 opacity-80 group-hover:border-primary/30 group-hover:opacity-100 transition-all">
                     <Star
                       className={cn(
                         'h-3 w-3',
-                        warrior.fame > 1000
-                          ? 'text-arena-gold'
-                          : 'text-muted-foreground/60'
+                        warrior.fame > 1000 ? 'text-arena-gold' : 'text-muted-foreground/60'
                       )}
                     />
                     <span
@@ -136,9 +129,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                               <span className="text-[8px] font-black uppercase tracking-widest opacity-60">
                                 POT
                               </span>
-                              <span className="text-[10px] font-mono font-black">
-                                {grade}
-                              </span>
+                              <span className="text-[10px] font-mono font-black">{grade}</span>
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>
@@ -155,9 +146,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                   <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
                     Victory
                   </span>
-                  <span className="font-mono font-black text-primary text-sm">
-                    {winRate}%
-                  </span>
+                  <span className="font-mono font-black text-primary text-sm">{winRate}%</span>
                 </div>
                 <div className="h-8 w-px bg-white/5" />
                 <div className="text-center">
@@ -167,9 +156,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                   <span
                     className={cn(
                       'font-mono font-black text-sm',
-                      warrior.career.kills > 0
-                        ? 'text-destructive'
-                        : 'text-muted-foreground/40'
+                      warrior.career.kills > 0 ? 'text-destructive' : 'text-muted-foreground/40'
                     )}
                   >
                     {warrior.career.kills}
@@ -216,10 +203,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                 </span>
                 <div className="flex items-center gap-1.5 mt-1">
                   <Activity
-                    className={cn(
-                      'h-3 w-3',
-                      injuryCount > 0 ? 'text-destructive' : 'text-primary'
-                    )}
+                    className={cn('h-3 w-3', injuryCount > 0 ? 'text-destructive' : 'text-primary')}
                   />
                   <span
                     className={cn(
@@ -231,9 +215,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                   </span>
                 </div>
               </div>
-              <div
-                className="flex items-center gap-2 group/btn px-4 py-1.5 rounded-none bg-white/5 border border-white/5 hover:border-primary/50 transition-all"
-              >
+              <div className="flex items-center gap-2 group/btn px-4 py-1.5 rounded-none bg-white/5 border border-white/5 hover:border-primary/50 transition-all">
                 <span className="text-[9px] font-black uppercase tracking-widest group-hover/btn:text-primary transition-colors">
                   Tactical Report
                 </span>

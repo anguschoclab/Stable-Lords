@@ -59,7 +59,12 @@ describe('useQuadrantDots', () => {
 
   it('returns rival dots with isPlayer false', () => {
     const state = createMockGameState();
-    const rivals = [createMockRival(), createMockRival({ owner: { stableName: 'Another Rival' } as unknown as RivalStableData['owner'] })];
+    const rivals = [
+      createMockRival(),
+      createMockRival({
+        owner: { stableName: 'Another Rival' } as unknown as RivalStableData['owner'],
+      }),
+    ];
     const { result } = renderHook(() => useQuadrantDots(state, rivals));
 
     expect(result.current).toHaveLength(3);
@@ -72,7 +77,9 @@ describe('useQuadrantDots', () => {
 
   it('computes fame/notoriety via engine functions', () => {
     const state = createMockGameState({ fame: 99 });
-    const rivals = [createMockRival({ roster: [{}, {}, {}] as unknown as RivalStableData['roster'] })];
+    const rivals = [
+      createMockRival({ roster: [{}, {}, {}] as unknown as RivalStableData['roster'] }),
+    ];
     const { result } = renderHook(() => useQuadrantDots(state, rivals));
 
     expect(result.current[0]!.fame).toBe(99);
@@ -91,10 +98,9 @@ describe('useQuadrantDots', () => {
   it('memoizes result for same inputs', () => {
     const state = createMockGameState();
     const rivals = [createMockRival()];
-    const { result, rerender } = renderHook(
-      ({ state, rivals }) => useQuadrantDots(state, rivals),
-      { initialProps: { state, rivals } }
-    );
+    const { result, rerender } = renderHook(({ state, rivals }) => useQuadrantDots(state, rivals), {
+      initialProps: { state, rivals },
+    });
 
     const first = result.current;
     rerender({ state, rivals });

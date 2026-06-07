@@ -8,10 +8,9 @@ export const STORE_KEYS = {
   UI_PREFS: 'sl.ui.prefs',
   AUDIO_MUTED: 'sl_muted',
   WINDOW_BOUNDS: 'windowBounds',
-} as const;/**
-            * Store key type.
-            */
-
+} as const; /**
+ * Store key type.
+ */
 
 /**
  * Store key type.

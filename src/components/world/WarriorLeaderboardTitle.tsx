@@ -6,7 +6,10 @@ interface WarriorLeaderboardTitleProps {
   filteredCount: number;
 }
 
-export function WarriorLeaderboardTitle({ isFiltered, filteredCount }: WarriorLeaderboardTitleProps) {
+export function WarriorLeaderboardTitle({
+  isFiltered,
+  filteredCount,
+}: WarriorLeaderboardTitleProps) {
   return (
     <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">
       <div className="flex items-center gap-3">

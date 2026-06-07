@@ -1,4 +1,5 @@
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Link } from '@tanstack/react-router';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
@@ -17,7 +18,11 @@ import { cn } from '@/lib/utils'; /**
  * @returns The result.
  */
 export function TrainerTable() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      trainers: s.trainers,
+    }))
+  );
   const trainers = (state.trainers ?? []).filter((t) => t.contractWeeksLeft > 0);
 
   return (

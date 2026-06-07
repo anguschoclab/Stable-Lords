@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Send } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,7 +12,15 @@ import { IntelligenceHubFooter } from './IntelligenceHubFooter';
 import type { RivalStableData } from '@/types/state.types';
 
 export function IntelligenceHubWidget() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      week: s.week,
+      newsletter: s.newsletter,
+      gazettes: s.gazettes,
+      types: s.types,
+      rivals: s.rivals,
+    }))
+  );
 
   const recentGazettes = useMemo(() => {
     return (state.gazettes || []).slice(-5).reverse();

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { computeMetaDrift, getMetaLabel, getMetaColor } from '@/engine/metaDrift';
 import { Surface } from '@/components/ui/Surface';
@@ -7,18 +8,26 @@ import { Badge } from '@/components/ui/badge';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Activity, TrendingUp, TrendingDown, Minus, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';/**
-                                                                                                    * Meta drift widget.
-                                                                                                    * @returns The result.
-                                                                                                    */
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'; /**
+ * Meta drift widget.
+ * @returns The result.
+ */
 
 /**
  * Meta drift widget.
  * @returns The result.
  */
 export function MetaDriftWidget() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      arenaHistory: s.arenaHistory,
+    }))
+  );
 
   const meta = useMemo(() => computeMetaDrift(state.arenaHistory || []), [state.arenaHistory]);
 

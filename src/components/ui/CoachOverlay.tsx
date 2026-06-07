@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Card, CardContent } from '@/components/ui/card';
 import { Coins, Zap, Activity } from 'lucide-react';
@@ -14,18 +14,22 @@ interface CoachWarning {
   description: string;
   icon: LucideIcon;
   color: string;
-}/**
-  * Coach overlay.
-  * @returns The result.
-  */
-
+} /**
+ * Coach overlay.
+ * @returns The result.
+ */
 
 /**
  * Coach overlay.
  * @returns The result.
  */
 export function CoachOverlay() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      arenaHistory: s.arenaHistory,
+    }))
+  );
 
   const rosterLength = useGameStore(useShallow((s) => s.roster.length));
   const trainersLength = useGameStore(useShallow((s) => s.trainers.length));
@@ -143,7 +147,15 @@ export function CoachOverlay() {
   );
 }
 
-function Badge({ children, className, variant: _variant }: { children: React.ReactNode; className?: string; variant?: string }) {
+function Badge({
+  children,
+  className,
+  variant: _variant,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  variant?: string;
+}) {
   return (
     <span
       className={cn('px-2 py-0.5 rounded-none text-foreground text-[10px] font-black', className)}

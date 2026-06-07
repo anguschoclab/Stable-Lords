@@ -1,5 +1,17 @@
-import { useWorldState } from '@/state/useGameStore';
-import { Cloud, Sun, CloudRain, ThermometerSun, Wind, Info, Moon, Sparkles, Flame, Skull } from 'lucide-react';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
+import {
+  Cloud,
+  Sun,
+  CloudRain,
+  ThermometerSun,
+  Wind,
+  Info,
+  Moon,
+  Sparkles,
+  Flame,
+  Skull,
+} from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -137,21 +149,25 @@ const WEATHER_METADATA = {
     color: 'text-arena-pop',
     bg: 'bg-arena-pop/10',
     border: 'border-arena-pop/20',
-    description: 'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
+    description:
+      'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
     stats: 'INITIATIVE -3 // DAMAGE 90% // STAMINA DRAIN 120%',
   },
-};/**
-   * Weather widget.
-   * @returns The result.
-   */
-
+}; /**
+ * Weather widget.
+ * @returns The result.
+ */
 
 /**
  * Weather widget.
  * @returns The result.
  */
 export function WeatherWidget() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      weather: s.weather,
+    }))
+  );
   const weather = state.weather || 'Clear';
   const meta = WEATHER_METADATA[weather as keyof typeof WEATHER_METADATA] || WEATHER_METADATA.Clear;
   const Icon = meta.icon;

@@ -7,8 +7,6 @@ import type {
 } from '@/types/state.types';
 import { hashStr } from '../../utils/random';
 import { computeMetaDrift } from '../metaDrift';
-import type { BudgetReport } from './workers/budgetWorker';
-import { checkBudget } from './workers/budgetWorker';
 
 /**
  * LeadAgent Orchestrator
@@ -27,7 +25,6 @@ export interface AgentContext {
   rival: RivalStableData;
   state: GameState;
   meta: Record<string, number>;
-  budgetReport?: BudgetReport; // ⚡ Bolt: Cache budget report for the week
   playerThreatLevel: PlayerThreatLevel;
 }/**
   * Create agent context.
@@ -58,9 +55,6 @@ export function createAgentContext(rival: RivalStableData, state: GameState): Ag
   // ⚡ Continuous Alignment: Compute meta awareness from current arena history (use cached if available)
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
 
-  // ⚡ Bolt: Pre-compute budget report for the week
-  const budgetReport = checkBudget(rival, 0, 'OTHER'); // Zero cost for baseline report
-
   // Player threat level from realm rankings — rivals use this to decide VENDETTA targets
   const playerThreatLevel = computePlayerThreatLevel(state);
 
@@ -68,7 +62,6 @@ export function createAgentContext(rival: RivalStableData, state: GameState): Ag
     rival: { ...rival, agentMemory },
     state,
     meta,
-    budgetReport,
     playerThreatLevel,
   };
 }

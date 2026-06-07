@@ -9,7 +9,6 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { generateRecommendations } from '@/engine/equipmentOptimizer';
 import { validateLoadout, checkWeaponRequirements } from '@/data/equipment';
-import { updateEntityInList } from '@/utils/stateUtils';
 import {
   processAttributeTraining,
   processRecovery,
@@ -46,7 +45,8 @@ export function processRoster(
   // 0. Recovery — tick injuries for all active wounded warriors, applying any
   // healing trainer bonus exactly as the player path does in training.ts.
   const healingBonus = getHealingTrainerBonus(updatedRival.trainers ?? []);
-  for (const wounded of activeRoster.filter((w) => (w.injuries ?? []).length > 0)) {
+  for (const wounded of activeRoster) {
+    if ((wounded.injuries ?? []).length === 0) continue;
     const { updatedInjuries } = processRecovery(wounded, healingBonus);
     updatedRival.roster = updateEntityInList(updatedRival.roster, wounded.id, (w) => ({
       ...w,
@@ -92,8 +92,8 @@ export function processRoster(
       // the rest of the time.
       const doDrill = rngService.next() < 0.25;
       if (doDrill) {
-        updatedRival.roster = updateEntityInList(updatedRival.roster, trainee.id, () =>
-          performAISkillDrill(trainee, updatedRival, rngService)
+        updatedRival.roster = updateEntityInList(updatedRival.roster, trainee.id, (w) =>
+          performAISkillDrill(w, updatedRival, rngService)
         );
       } else {
         const { warrior, seasonalGrowth: nextGrowth } = performAITraining(
@@ -113,13 +113,13 @@ export function processRoster(
 
   // 2. Equipment (High Risk)
   // Champions always get gear consideration regardless of intent (treasury gate only).
+  // activeForGear is derived fresh (post-training) so gear candidates reflect current state.
   const activeForGear = updatedRival.roster.filter((w) => w.status === 'Active');
-  const hasChampion = activeForGear.some((w) => w.champion);
-  if (hasChampion && updatedRival.treasury > 800) {
+  const champWarrior = activeForGear.find((w) => w.champion);
+  if (champWarrior && updatedRival.treasury > 800) {
     const gearCost = 150;
     const budgetReport = checkBudget(updatedRival, gearCost, 'ROSTER');
-    const champWarrior = activeForGear.find((w) => w.champion);
-    if (budgetReport.isAffordable && champWarrior) {
+    if (budgetReport.isAffordable) {
       updatedRival.treasury -= gearCost;
       updatedRival.roster = updateEntityInList(updatedRival.roster, champWarrior.id, (w) =>
         applyGearUpgrade(w, rngService)
@@ -137,12 +137,12 @@ export function processRoster(
     const gearCost = 150;
     const budgetReport = checkBudget(updatedRival, gearCost, 'ROSTER');
 
-    if (budgetReport.isAffordable && activeRoster.length > 0) {
+    if (budgetReport.isAffordable && activeForGear.length > 0) {
       // ⚡ TSA: Role-Based Gearing (Prioritize Champion or the 'Muddy' Basher for rain insurance)
       const gearCandidate =
-        activeRoster.find((w) => w.champion) ||
-        activeRoster.find((w) => w.style === 'BASHING ATTACK') ||
-        rngService.pick(activeRoster);
+        activeForGear.find((w) => w.champion) ??
+        activeForGear.find((w) => w.style === FightingStyle.BashingAttack) ??
+        rngService.pick(activeForGear);
 
       if (gearCandidate) {
         updatedRival.treasury -= gearCost;
@@ -178,7 +178,7 @@ export function processRoster(
  * shared validator.
  */
 function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
-  const recommendations = generateRecommendations(w.style, w.derivedStats.encumbrance);
+  const recommendations = generateRecommendations(w.style, w.derivedStats?.encumbrance ?? 0);
   const attrs = {
     ST: w.attributes.ST,
     SZ: w.attributes.SZ,

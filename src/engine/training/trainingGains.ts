@@ -492,11 +492,7 @@ export function processRecovery(
   warrior: Warrior,
   healingBonus: number
 ): { updatedInjuries: InjuryData[]; message: string } {
-  const activeInjuries = (warrior.injuries || []).filter(
-    (i): i is InjuryData => typeof i !== 'string' && i.weeksRemaining > 0
-  );
-
-  if (activeInjuries.length === 0) {
+  if ((warrior.injuries || []).length === 0) {
     return {
       updatedInjuries: warrior.injuries as InjuryData[],
       message: `${warrior.name} rested but has no injuries to heal.`,

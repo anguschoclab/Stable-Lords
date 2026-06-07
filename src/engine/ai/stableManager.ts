@@ -33,7 +33,6 @@ export function processAIStable(
   // 1. Initialize Context & Skeptical Memory
   const context = createAgentContext(rival, state);
   let updatedRival = { ...context.rival };
-  const activeRoster = updatedRival.roster.filter((w) => w.status === 'Active');
   let currentHiringPool = [...(state.hiringPool || [])];
   const gazetteItems: string[] = [];
   const impacts: StateImpact[] = [];
@@ -78,9 +77,8 @@ export function processAIStable(
       }
     }
   }
-  const weeklyIncomeFromFights = weeklyIncome; // Bouts income
   const fameDividend = Math.round((updatedRival.owner.fame || 0) * FAME_DIVIDEND);
-  weeklyIncome = weeklyIncomeFromFights + fameDividend;
+  weeklyIncome += fameDividend;
 
   // 3. Delegate to Workers (Hierarchical Delegation)
 
@@ -101,6 +99,8 @@ export function processAIStable(
   let weeklyExpenses = 0; // Removed 20g hidden tax for parity
 
   // 🏛️ Unification: Fame-bracketed upkeep for AI
+  // Derived after workers run so newly-recruited or status-changed warriors are included.
+  const activeRoster = updatedRival.roster.filter((w) => w.status === 'Active');
   const rosterUpkeep = activeRoster.reduce((sum, w) => {
     const famePremium = Math.floor((w.fame || 0) / 10) * 10;
     return sum + WARRIOR_UPKEEP_BASE + famePremium;
@@ -116,6 +116,7 @@ export function processAIStable(
   const treasuryDelta = weeklyIncome - weeklyExpenses;
   const newTreasury = updatedRival.treasury + treasuryDelta;
   // 🏛️ 1.0 Hardening: League Subsidy (Prevent economic death spiral)
+  // isBankrupt is always false: the subsidy floor prevents true bankruptcy.
   const SUBSIDY_FLOOR = 500;
   const isBankrupt = false;
   if (newTreasury < SUBSIDY_FLOOR) {

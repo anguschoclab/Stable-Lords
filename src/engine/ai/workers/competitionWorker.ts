@@ -48,7 +48,8 @@ export function generateBoutBids(
   rival: RivalStableData,
   currentWeek: number,
   weather: WeatherType = 'Clear',
-  crowdMood: CrowdMood = 'Calm'
+  crowdMood: CrowdMood = 'Calm',
+  rivals: RivalStableData[] = []
 ): { bids: BoutBid[]; updatedRival: RivalStableData } {
   const intent = rival.strategy?.intent ?? 'CONSOLIDATION';
   const activeRoster = rival.roster.filter((w) => w.status === 'Active');
@@ -75,7 +76,7 @@ export function generateBoutBids(
     retired: [],
     arenaHistory: [],
     newsletter: [],
-    rivals: [],
+    rivals,
     gazettes: [],
     hallOfFame: [],
     crowdMood,

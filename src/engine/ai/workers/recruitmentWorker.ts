@@ -49,6 +49,12 @@ export function processRecruitment(
   const prefs = PERSONALITY_STYLE_PREFS[personality] || [];
   const prefsSet = new Set(prefs);
 
+  const activeStyleCounts = new Map<string, number>();
+  for (const r of updatedRival.roster) {
+    if (r.status !== 'Active') continue;
+    activeStyleCounts.set(r.style, (activeStyleCounts.get(r.style) ?? 0) + 1);
+  }
+
   let bestIdx = -1;
   let bestScore = -Infinity;
 
@@ -66,9 +72,7 @@ export function processRecruitment(
     score += drift * 5; // Reward styles that are trending up
 
     // ⚡ TSA: Style Diversity Guard
-    const styleCount = updatedRival.roster.filter(
-      (r) => r.status === 'Active' && r.style === w.style
-    ).length;
+    const styleCount = activeStyleCounts.get(w.style) ?? 0;
     if (styleCount > 0) {
       score -= styleCount * 15; // Penalize duplicates to avoid "Weather Fragility"
     }

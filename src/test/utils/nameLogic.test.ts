@@ -18,7 +18,6 @@ describe('nameLogic', () => {
     });
 
     it('does not produce trailing whitespace for single-word names', () => {
-      // Previously a bug: surname-match branch produced "Marcus " for single-word names
       for (let seed = 0; seed < 50; seed++) {
         const result = generateDynasticName('Marcus', seed);
         expect(result.endsWith(' ')).toBe(false);
@@ -30,6 +29,22 @@ describe('nameLogic', () => {
         const result = generateDynasticName('Single', seed);
         expect(result.length).toBeGreaterThan(0);
       }
+    });
+
+    it('handles empty string input gracefully', () => {
+      const result = generateDynasticName('', 0);
+      expect(result).toBe('Legacy of Unknown');
+    });
+
+    it('handles leading and trailing spaces', () => {
+      const result = generateDynasticName('  Marcus  ', 999);
+      expect(result.endsWith(' ')).toBe(false);
+      expect(result.startsWith(' ')).toBe(false);
+    });
+
+    it('handles multiple consecutive internal spaces', () => {
+      const result = generateDynasticName('Marcus  Aurelius  Blackwood', 0);
+      expect(result.includes('  ')).toBe(false);
     });
   });
 });

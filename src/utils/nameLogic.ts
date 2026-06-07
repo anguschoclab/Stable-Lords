@@ -21,26 +21,32 @@ const PREFIXES = ['Legacy of', 'Blood of', 'Protege of', 'Shadow of'];/**
  * @returns The result.
  */
 export function generateDynasticName(originalName: string, seed: number): string {
+  const trimmed = originalName.trim().replace(/\s+/g, ' ');
+  if (!trimmed) {
+    return 'Legacy of Unknown';
+  }
+
   const rng = new SeededRNGService(seed);
   const roll = rng.next();
 
   if (roll < 0.6) {
     // Suffix style: Silas Blackwood II
     const suffix = rng.pick(HONORIFICS);
-    return `${originalName} ${suffix}`;
+    return `${trimmed} ${suffix}`;
   } else if (roll < 0.9) {
     // Prefix style: Legacy of Silas Blackwood
-    const first = originalName.split(' ')[0];
+    const first = trimmed.split(/\s+/)[0];
     const prefix = rng.pick(PREFIXES);
     return `${prefix} ${first}`;
   } else {
     // Surname match: Lucius Blackwood
-    const last = originalName.split(' ').slice(1).join(' ');
+    const parts = trimmed.split(/\s+/);
+    const last = parts.slice(1).join(' ');
     const newFirst = ['Marcus', 'Lucius', 'Julius', 'Titus', 'Gaius', 'Aurelius'];
     if (!last) {
       // Single-word names fall back to prefix style
       const prefix = rng.pick(PREFIXES);
-      return `${prefix} ${originalName}`;
+      return `${prefix} ${trimmed}`;
     }
     return `${rng.pick(newFirst)} ${last}`;
   }

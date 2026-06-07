@@ -32,6 +32,7 @@ function makeWarrior(style: FightingStyle, overrides?: Partial<Warrior>): Warrio
     champion: false,
     status: 'Retired',
     age: 28,
+    traits: [],
     ...overrides,
   };
 }
@@ -39,12 +40,12 @@ function makeWarrior(style: FightingStyle, overrides?: Partial<Warrior>): Warrio
 describe('Trainer System', () => {
   describe('generateHiringPool', () => {
     it('should generate the requested number of trainers', () => {
-      const pool = generateHiringPool(5, new SeededRNGService(1));
+      const pool = generateHiringPool(5, 1);
       expect(pool).toHaveLength(5);
     });
 
     it('should generate trainers with valid properties', () => {
-      const pool = generateHiringPool(10, new SeededRNGService(1));
+      const pool = generateHiringPool(10, 1);
 
       for (const trainer of pool) {
         expect(trainer.id).toBeDefined();
@@ -74,7 +75,7 @@ describe('Trainer System', () => {
     });
 
     it('should assign fame based on tier', () => {
-      const pool = generateHiringPool(100, new SeededRNGService(1));
+      const pool = generateHiringPool(100, 1);
 
       for (const trainer of pool) {
         if (trainer.tier === 'Master') expect(trainer.fame).toBe(5);
@@ -183,19 +184,21 @@ describe('Trainer System', () => {
     it('should apply tier bonuses', () => {
       const trainers: Trainer[] = [
         {
-          id: 't1',
+          id: 't1' as import('@/types/shared.types').TrainerId,
           name: 'Novice Trainer',
           tier: 'Novice',
           focus: 'Aggression',
           fame: 1,
+          age: 30,
           contractWeeksLeft: 52,
         },
         {
-          id: 't2',
+          id: 't2' as import('@/types/shared.types').TrainerId,
           name: 'Master Trainer',
           tier: 'Master',
           focus: 'Defense',
           fame: 5,
+          age: 30,
           contractWeeksLeft: 52,
         },
       ];
@@ -209,11 +212,12 @@ describe('Trainer System', () => {
     it('should ignore expired trainers', () => {
       const trainers: Trainer[] = [
         {
-          id: 't1',
+          id: 't1' as import('@/types/shared.types').TrainerId,
           name: 'Expired Trainer',
           tier: 'Master',
           focus: 'Aggression',
           fame: 5,
+          age: 30,
           contractWeeksLeft: 0,
         },
       ];
@@ -226,11 +230,12 @@ describe('Trainer System', () => {
     it('should apply style affinity bonus', () => {
       const trainers: Trainer[] = [
         {
-          id: 't1',
+          id: 't1' as import('@/types/shared.types').TrainerId,
           name: 'Style Specialist',
           tier: 'Novice',
           focus: 'Aggression',
           fame: 1,
+          age: 30,
           contractWeeksLeft: 52,
           styleBonusStyle: FightingStyle.BashingAttack,
         },
@@ -245,19 +250,21 @@ describe('Trainer System', () => {
     it('should stack multiple trainers of same focus', () => {
       const trainers: Trainer[] = [
         {
-          id: 't1',
+          id: 't1' as import('@/types/shared.types').TrainerId,
           name: 'Trainer 1',
           tier: 'Seasoned',
           focus: 'Mind',
           fame: 3,
+          age: 30,
           contractWeeksLeft: 52,
         },
         {
-          id: 't2',
+          id: 't2' as import('@/types/shared.types').TrainerId,
           name: 'Trainer 2',
           tier: 'Master',
           focus: 'Mind',
           fame: 5,
+          age: 30,
           contractWeeksLeft: 52,
         },
       ];

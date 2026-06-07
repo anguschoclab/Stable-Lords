@@ -12,7 +12,7 @@ describe('Promoter Succession', () => {
   });
 
   it('should age promoters every week', () => {
-    const pId = Object.keys(state.promoters)[0];
+    const pId = Object.keys(state.promoters)[0] as import('@/types/shared.types').PromoterId;
     if (!state.promoters[pId]) return;
 
     const initialAge = state.promoters[pId].age;
@@ -23,13 +23,13 @@ describe('Promoter Succession', () => {
   });
 
   it('should replace a promoter when they retire', () => {
-    const pId = Object.keys(state.promoters)[0];
+    const pId = Object.keys(state.promoters)[0] as import('@/types/shared.types').PromoterId;
     const oldPromoter = state.promoters[pId];
     if (!oldPromoter) return;
 
     const newPromoter: Promoter = {
       ...oldPromoter,
-      id: 'promoter_new_gen',
+      id: 'promoter_new_gen' as import('@/types/shared.types').PromoterId,
       name: `${oldPromoter.name} II`,
       age: 25,
       history: {

@@ -5,8 +5,6 @@ import { describe, it, expect } from 'vitest';
 import {
   generateScoutReport,
   getScoutCost,
-  type ScoutQuality,
-  getAttributeDescription,
 } from '@/engine/scouting';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
@@ -18,7 +16,7 @@ function makeWarrior(overrides?: Partial<Warrior>): Warrior {
   const attrs = { ST: 15, CN: 12, SZ: 10, WT: 14, WL: 13, SP: 16, DF: 11 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.SlashingAttack);
   return {
-    id: 'w1',
+    id: 'w1' as import('@/types/shared.types').WarriorId,
     name: 'Opponent',
     style: FightingStyle.SlashingAttack,
     attributes: attrs,
@@ -33,6 +31,7 @@ function makeWarrior(overrides?: Partial<Warrior>): Warrior {
     champion: false,
     status: 'Active',
     age: 24,
+    traits: [],
     plan: { OE: 7, AL: 5, killDesire: 6 } as any,
     ...overrides,
   };
@@ -68,14 +67,14 @@ describe('Scouting System', () => {
 
       // We expect ST (15) to be described with Great/Good range at most
       expect(typeof expertReport.attributeRanges.ST).toBe('string');
-      expect(expertReport.attributeRanges.ST.length).toBeGreaterThan(0);
+      expect(expertReport.attributeRanges.ST!.length).toBeGreaterThan(0);
     });
 
     it('should not show injuries in Basic report', () => {
       const warrior = makeWarrior({
         injuries: [
           {
-            id: 'i1',
+            id: 'i1' as import('@/types/shared.types').InjuryId,
             name: 'Cut',
             description: 'Ouch',
             severity: 'Minor',

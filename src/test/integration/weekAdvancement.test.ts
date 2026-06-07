@@ -10,7 +10,6 @@
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { createWarrior } from '@/engine/factories/warriorFactory';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { FightingStyle } from '@/types/shared.types';
 import type { GameState, Warrior } from '@/types/state.types';
@@ -20,7 +19,7 @@ function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Wa
   const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
   return {
-    id,
+    id: id as import('@/types/shared.types').WarriorId,
     name,
     style: FightingStyle.StrikingAttack,
     attributes: attrs,
@@ -35,6 +34,7 @@ function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Wa
     champion: false,
     status: 'Active',
     age: 20,
+    traits: [],
     ...overrides,
   };
 }
@@ -198,7 +198,7 @@ describe('Week Advancement Integration', () => {
       let state: GameState = {
         ...initialState,
         trainingAssignments: [
-          { warriorId: 'w1', type: 'attribute' as const, attribute: 'ST' as const },
+          { warriorId: 'w1' as import('@/types/shared.types').WarriorId, type: 'attribute' as const, attribute: 'ST' as const },
         ],
       };
 
@@ -281,7 +281,7 @@ describe('Week Advancement Integration', () => {
         roster: state.roster.filter((w) => w.id !== 'w1'),
         graveyard: [
           {
-            ...state.roster[0],
+            ...state.roster[0]!,
             status: 'Dead' as const,
             deathWeek: 1,
             deathCause: 'Test',
@@ -308,7 +308,7 @@ describe('Week Advancement Integration', () => {
       const state = {
         ...initialState,
         trainingAssignments: [
-          { warriorId: 'w1', type: 'attribute' as const, attribute: 'ST' as const },
+          { warriorId: 'w1' as import('@/types/shared.types').WarriorId, type: 'attribute' as const, attribute: 'ST' as const },
         ],
       };
 

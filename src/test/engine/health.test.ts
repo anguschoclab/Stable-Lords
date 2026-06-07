@@ -1,12 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { computeHealthImpact, applyHealthUpdates } from '@/engine/health';
-import { type GameState, type Warrior, type InjuryData } from '@/types/game';
+import { type GameState, type InjuryData } from '@/types/game';
 
 describe('Health System (Boundary Testing)', () => {
   it('should handle warrior health / injuries correctly at boundaries', () => {
     // Setting up a warrior with negative weeks remaining to ensure tick logic is safe
     const mockInjury: InjuryData = {
-      id: 'i1',
+      id: 'i1' as import('@/types/shared.types').InjuryId,
       name: 'cut',
       description: 'cut',
       severity: 'Minor',
@@ -16,7 +16,7 @@ describe('Health System (Boundary Testing)', () => {
 
     // Setting up another warrior with 0 weeks remaining
     const mockInjury2: InjuryData = {
-      id: 'i2',
+      id: 'i2' as import('@/types/shared.types').InjuryId,
       name: 'bruise',
       description: 'bruise',
       severity: 'Minor',
@@ -36,8 +36,8 @@ describe('Health System (Boundary Testing)', () => {
     const impact = computeHealthImpact(mockState);
 
     // The negative and 0 week injuries should instantly heal since -1 - 1 = -2 <= 0
-    expect(impact.rosterUpdates?.get('w1')?.injuries).toEqual([]);
-    expect(impact.rosterUpdates?.get('w2')?.injuries).toEqual([]);
+    expect(impact.rosterUpdates?.get('w1' as import('@/types/shared.types').WarriorId)?.injuries).toEqual([]);
+    expect(impact.rosterUpdates?.get('w2' as import('@/types/shared.types').WarriorId)?.injuries).toEqual([]);
 
     expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 1 recovered from cut.');
     expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 2 recovered from bruise.');

@@ -134,7 +134,7 @@ describe('Combat Balance: Trait System', () => {
 
     COMBAT_TRAITS.forEach((traitId) => {
       it(`${traitId}: win% delta within ±12pp of 50% baseline`, () => {
-        const { traited, baseline, drawCount } = runMirrorBouts([traitId]);
+        const { traited, baseline: _baseline, drawCount } = runMirrorBouts([traitId]);
         const decidedBouts = SAMPLE_SIZE - drawCount;
         const winPct = decidedBouts > 0 ? (traited.wins / decidedBouts) * 100 : 50;
         const killPct = (traited.kills / SAMPLE_SIZE) * 100;
@@ -151,7 +151,7 @@ describe('Combat Balance: Trait System', () => {
   describe('Negative combat traits', () => {
     NEGATIVE_TRAITS.forEach((traitId) => {
       it(`${traitId}: should confer a disadvantage (W% < 50%)`, () => {
-        const { traited, baseline, drawCount } = runMirrorBouts([traitId]);
+        const { traited, baseline: _baseline, drawCount } = runMirrorBouts([traitId]);
         const decidedBouts = SAMPLE_SIZE - drawCount;
         const winPct = decidedBouts > 0 ? (traited.wins / decidedBouts) * 100 : 50;
 
@@ -197,7 +197,7 @@ describe('Combat Balance: Trait System', () => {
   describe('Personality traits (fightPlanMod)', () => {
     PERSONALITY_TRAITS.forEach((traitId) => {
       it(`${traitId}: win% delta within ±18pp of 50% baseline`, () => {
-        const { traited, baseline, drawCount } = runMirrorBouts([traitId]);
+        const { traited, baseline: _baseline, drawCount } = runMirrorBouts([traitId]);
         const decidedBouts = SAMPLE_SIZE - drawCount;
         const winPct = decidedBouts > 0 ? (traited.wins / decidedBouts) * 100 : 50;
 

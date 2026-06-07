@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { calculateXP, applyXP } from '@/engine/progression';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
@@ -80,7 +80,7 @@ describe('Warrior Progression', () => {
       warrior.xp = 4;
       const rng = {
         next: () => 0.5,
-        pick: (arr: any[]) => arr[0],
+        pick: (_arr: any[]) => _arr[0],
       } as any;
 
       const { warrior: updated, gain } = applyXP(warrior, 2, rng); // Total 6 XP
@@ -102,7 +102,7 @@ describe('Warrior Progression', () => {
 
       const rng = {
         next: () => 0.5,
-        pick: (arr: any[]) => arr[0],
+        pick: (_arr: any[]) => _arr[0],
       } as any;
 
       const { warrior: updated, gain } = applyXP(warrior, 2, rng);
@@ -124,7 +124,7 @@ describe('Warrior Progression', () => {
 
       const rng = {
         next: () => 0.5,
-        pick: (arr: any[]) => arr[0],
+        pick: (_arr: any[]) => _arr[0],
       } as any;
 
       const { warrior: updated, gain } = applyXP(warrior, 2, rng);
@@ -142,7 +142,7 @@ describe('Warrior Progression', () => {
       // Force rng to trigger potential reveal (< 0.15)
       const rng = {
         next: () => 0.1, // 0.1 < 0.15, triggers reveal
-        pick: (arr: any[]) => 'ST', // always pick ST
+        pick: (_arr: any[]) => 'ST', // always pick ST
       } as any;
 
       const { warrior: updated, gain } = applyXP(warrior, 1, rng);
@@ -155,7 +155,7 @@ describe('Warrior Progression', () => {
       const warrior = mockWarrior();
       const rng = {
         next: () => 0.9, // 0.9 > 0.15, no reveal
-        pick: (arr: any[]) => 'ST',
+        pick: (_arr: any[]) => 'ST',
       } as any;
 
       const { warrior: updated, gain } = applyXP(warrior, 1, rng);

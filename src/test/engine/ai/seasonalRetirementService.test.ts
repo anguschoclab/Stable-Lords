@@ -1,12 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { createFreshState } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import { SeasonalRetirementService } from '@/engine/ai/seasonalRetirementService';
-import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { makeWarrior } from '@/engine/factories/warriorFactory';
-import type { GameState, IRNGService } from '@/types/state.types';
+import type { GameState } from '@/types/state.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { makeWarrior } from '@/engine/factories/warriorFactory';
 
 describe('SeasonalRetirementService', () => {
   let state: GameState;

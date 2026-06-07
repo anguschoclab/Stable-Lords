@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import AdminTools from '@/pages/AdminTools';
 import '@/test/setup';
@@ -41,36 +41,6 @@ vi.mock('@/state/useGameStore', () => ({
 }));
 
 describe('AdminTools Page', () => {
-  const mockSetState = vi.fn();
-  const mockDoReset = vi.fn();
-  const mockState = {
-    newsletter: [],
-    ledger: [],
-    matchHistory: [],
-    moodHistory: [],
-    graveyard: [],
-    retired: [],
-    week: 1,
-    season: 'Spring',
-    year: 1,
-    roster: [],
-    treasury: 500,
-    tournaments: [],
-    rivals: [],
-    arenaHistory: [],
-    trainers: [],
-    trainingAssignments: [],
-    fame: 0,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: "Dragon's Hearth",
-      fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
   });

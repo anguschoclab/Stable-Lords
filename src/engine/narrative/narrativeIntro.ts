@@ -82,7 +82,7 @@ export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: numb
   const weaponItem: EquipmentItem | undefined = data.weaponId
     ? getItemById(data.weaponId)
     : undefined;
-  if (data.attributes && weaponItem && weaponItem.id !== 'open_hand') {
+  if (data.attributes && weaponItem && weaponItem.id !== 'fist') {
     const fit = checkWeaponRequirements(weaponItem.id, data.attributes);
     if (fit.attPenalty < 0) {
       lines.push(`${n} strains against the ${weaponItem.name} — ill-suited to its demands.`);
@@ -95,7 +95,7 @@ export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: numb
 
   // Backup weapon mention — flavour only, surfaced when present.
   const backupItem = data.backupWeaponId ? getItemById(data.backupWeaponId) : undefined;
-  if (backupItem && backupItem.id !== 'none_backup' && backupItem.id !== 'open_hand') {
+  if (backupItem && backupItem.id !== 'none_backup' && backupItem.id !== 'fist') {
     lines.push(`${n} carries a ${backupItem.name} as backup.`);
   }
 

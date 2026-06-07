@@ -6,12 +6,10 @@ import {
   generateHiringPool,
   convertRetiredToTrainer,
   getTrainingBonus,
-  type Trainer,
-  type TrainerFocus,
-  type TrainerTier,
   TIER_COST,
   TIER_BONUS,
 } from '@/engine/trainers';
+import type { Trainer } from '@/types/shared.types';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 
@@ -19,7 +17,7 @@ function makeWarrior(style: FightingStyle, overrides?: Partial<Warrior>): Warrio
   const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   return {
-    id: 'w1',
+    id: 'w1' as import('@/types/shared.types').WarriorId,
     name: 'Test Warrior',
     style,
     attributes: attrs,
@@ -41,12 +39,12 @@ function makeWarrior(style: FightingStyle, overrides?: Partial<Warrior>): Warrio
 describe('Trainer System', () => {
   describe('generateHiringPool', () => {
     it('should generate the requested number of trainers', () => {
-      const pool = generateHiringPool(5);
+      const pool = generateHiringPool(5, new SeededRNGService(1));
       expect(pool).toHaveLength(5);
     });
 
     it('should generate trainers with valid properties', () => {
-      const pool = generateHiringPool(10);
+      const pool = generateHiringPool(10, new SeededRNGService(1));
 
       for (const trainer of pool) {
         expect(trainer.id).toBeDefined();
@@ -76,7 +74,7 @@ describe('Trainer System', () => {
     });
 
     it('should assign fame based on tier', () => {
-      const pool = generateHiringPool(100);
+      const pool = generateHiringPool(100, new SeededRNGService(1));
 
       for (const trainer of pool) {
         if (trainer.tier === 'Master') expect(trainer.fame).toBe(5);

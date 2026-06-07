@@ -160,9 +160,10 @@ export function runEventPass(
       const e = events.goblin_merchant;
       if (chosen && e) {
         const existingUpdate = rosterUpdates.get(chosen.id) || {};
+        const currentXp = existingUpdate.xp !== undefined ? existingUpdate.xp : (chosen.xp || 0);
         rosterUpdates.set(chosen.id, {
           ...existingUpdate,
-          xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 5,
+          xp: currentXp + 5,
         });
 
         treasuryDelta -= 20;

@@ -72,10 +72,8 @@ export function generatePairings(state: GameState): BoutPairing[] {
       );
 
       tournamentBouts.forEach((bout) => {
-        const wA =
-          warriorMap.get(bout.a) || Array.from(warriorMap.values()).find((w) => w.name === bout.a);
-        const wD =
-          warriorMap.get(bout.d) || Array.from(warriorMap.values()).find((w) => w.name === bout.d);
+        const wA = warriorMap.get(bout.warriorIdA);
+        const wD = warriorMap.get(bout.warriorIdD);
 
         if (wA && wD) {
           pairings.push({
@@ -83,9 +81,8 @@ export function generatePairings(state: GameState): BoutPairing[] {
             d: wD,
             isRivalry: true, // Tournaments are always high stakes
             rivalStable:
-              (state.rivals || []).find((r) => r.owner.id === bout.stableD)?.owner.stableName ||
-              'Rival',
-            rivalStableId: bout.stableD,
+              state.rivalMap?.get(bout.stableIdD || '')?.owner.stableName || 'Rival',
+            rivalStableId: bout.stableIdD,
             contractId: `tour_${tournament.id}_${bout.round}_${bout.matchIndex}`,
           });
         }

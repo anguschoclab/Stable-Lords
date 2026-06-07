@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { GameState, TournamentEntry, TournamentBout, Warrior } from '@/types/state.types';
 import type { FightOutcome, FightOutcomeBy } from '@/types/combat.types';
 import { FightingStyle, type WarriorId, type StableId, type TournamentId } from '@/types/shared.types';
@@ -150,8 +150,6 @@ function makeCompletedTournament(
     {
       round: 6,
       matchIndex: 0,
-      a: wA.name,
-      d: wB.name,
       warriorIdA: wA.id,
       warriorIdD: wB.id,
       stableIdA: wA.stableId,
@@ -162,8 +160,6 @@ function makeCompletedTournament(
     {
       round: 6,
       matchIndex: 1,
-      a: wC.name,
-      d: wD.name,
       warriorIdA: wC.id,
       warriorIdD: wD.id,
       stableIdA: wC.stableId,
@@ -192,8 +188,6 @@ function makeTournamentWithR1(warriors: Warrior[]): TournamentEntry {
     bracket.push({
       round: 1,
       matchIndex: i / 2,
-      a: warriors[i]!.name,
-      d: warriors[i + 1]!.name,
       warriorIdA: warriors[i]!.id,
       warriorIdD: warriors[i + 1]!.id,
       stableIdA: warriors[i]!.stableId,
@@ -541,7 +535,7 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
     const { updatedState: finalState } = resolveRound(updatedState, tournament.id, 2);
 
     const byeBout = finalState.tournaments[0]!.bracket.find(
-      (b: TournamentBout) => b.round === 2 && b.d === '(bye)'
+      (b: TournamentBout) => b.round === 2 && b.warriorIdD === 'bye'
     );
     expect(byeBout).toBeDefined();
     expect(byeBout!.winner).toBe('A');
@@ -586,8 +580,6 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
       {
         round: 5,
         matchIndex: 0,
-        a: warriors[0]!.name,
-        d: warriors[1]!.name,
         warriorIdA: warriors[0]!.id,
         warriorIdD: warriors[1]!.id,
         stableIdA: warriors[0]!.stableId,
@@ -596,8 +588,6 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
       {
         round: 5,
         matchIndex: 1,
-        a: warriors[2]!.name,
-        d: warriors[3]!.name,
         warriorIdA: warriors[2]!.id,
         warriorIdD: warriors[3]!.id,
         stableIdA: warriors[2]!.stableId,
@@ -624,8 +614,8 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
       (b: TournamentBout) => b.round === 6 && b.matchIndex === 1
     );
     expect(bronzeMatch).toBeDefined();
-    expect(bronzeMatch!.a).toBeDefined();
-    expect(bronzeMatch!.d).toBeDefined();
+    expect(bronzeMatch!.warriorIdA).toBeDefined();
+    expect(bronzeMatch!.warriorIdD).toBeDefined();
   });
 
   it('marks tournament complete after finals and sets champion', () => {
@@ -655,8 +645,6 @@ describe('resolveRound (tournamentSelection/resolution.ts)', () => {
         {
           round: 7,
           matchIndex: 0,
-          a: w1.name,
-          d: w2.name,
           warriorIdA: w1.id,
           warriorIdD: w2.id,
           stableIdA: w1.stableId,
@@ -708,8 +696,6 @@ describe('resolveCompleteTournament', () => {
         {
           round: 7,
           matchIndex: 0,
-          a: w1.name,
-          d: w2.name,
           warriorIdA: w1.id,
           warriorIdD: w2.id,
           stableIdA: w1.stableId,

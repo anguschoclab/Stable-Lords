@@ -20,8 +20,6 @@ export function runBoutSimulationPass(state: GameState, _rng: IRNGService, headl
     id: (r.contractId || generateId()) as FightId,
     week: state.week,
     title: `${r.a.name} vs ${r.d.name}`,
-    a: r.a.name,
-    d: r.d.name,
     warriorIdA: r.a.id,
     warriorIdD: r.d.id,
     winner: r.outcome.winner,

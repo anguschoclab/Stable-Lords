@@ -5,7 +5,7 @@ import type {
   TournamentBout,
   Season,
 } from '@/types/state.types';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type TournamentId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { generateFreelancer } from './utils';
 
@@ -117,7 +117,7 @@ export function buildTournament(
   season: Season,
   rng: SeededRNG
 ): TournamentEntry {
-  const id = `t-${tierId.toLowerCase()}-${season.toLowerCase()}-${week}`;
+  const id = `t-${tierId.toLowerCase()}-${season.toLowerCase()}-${week}` as TournamentId;
   const shuffled = rng.shuffle([...warriors]);
   const bracket: TournamentBout[] = [];
 
@@ -125,14 +125,10 @@ export function buildTournament(
     bracket.push({
       round: 1,
       matchIndex: i / 2,
-      a: shuffled[i].name,
-      d: shuffled[i + 1].name,
-      warriorIdA: shuffled[i].id,
-      warriorIdD: shuffled[i + 1].id,
-      stableIdA: shuffled[i].stableId,
-      stableIdD: shuffled[i + 1].stableId,
-      stableA: shuffled[i].stableId,
-      stableD: shuffled[i + 1].stableId,
+      warriorIdA: shuffled[i]!.id,
+      warriorIdD: shuffled[i + 1]!.id,
+      stableIdA: shuffled[i]!.stableId,
+      stableIdD: shuffled[i + 1]!.stableId,
     });
   }
 

@@ -71,8 +71,6 @@ export function handleReporting(
     id: boutId,
     week,
     title: `${wA.name} vs ${wD.name}`,
-    a: wA.name,
-    d: wD.name,
     warriorIdA: wA.id,
     warriorIdD: wD.id,
     arenaId,

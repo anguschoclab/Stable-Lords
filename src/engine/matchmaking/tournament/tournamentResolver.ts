@@ -46,9 +46,10 @@ export function resolveRound(
   const impacts: StateImpact[] = [];
 
   for (const bout of roundBouts) {
-    if (bout.d === '(bye)') {
+    if (bout.warriorIdD === 'bye') {
       bout.winner = 'A';
-      winners.push({ id: bout.warriorIdA, name: bout.a, stableId: bout.stableIdA });
+      const wABye = findWarriorById(state, bout.warriorIdA, tournament);
+      winners.push({ id: bout.warriorIdA, name: wABye?.name ?? 'Unknown', stableId: bout.stableIdA });
       continue;
     }
 
@@ -117,8 +118,6 @@ export function resolveRound(
         bracket.push({
           round: nextRound,
           matchIndex: i / 2,
-          a: winners[i]!.name,
-          d: winners[i + 1]!.name,
           warriorIdA: winners[i]!.id,
           warriorIdD: winners[i + 1]!.id,
           stableIdA: winners[i]!.stableId,
@@ -128,8 +127,6 @@ export function resolveRound(
         bracket.push({
           round: nextRound,
           matchIndex: i / 2,
-          a: winners[i]!.name,
-          d: '(bye)',
           warriorIdA: winners[i]!.id,
           warriorIdD: 'bye' as unknown as WarriorId,
           winner: 'A',
@@ -142,8 +139,6 @@ export function resolveRound(
       const bronzeBout = {
         round: 6, // Bronze Match happens alongside the Finals
         matchIndex: 1, // Finals is index 0
-        a: losers[0]!.name,
-        d: losers[1]!.name,
         warriorIdA: losers[0]!.id,
         warriorIdD: losers[1]!.id,
         stableIdA: losers[0]!.stableId,

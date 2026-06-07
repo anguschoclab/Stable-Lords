@@ -179,14 +179,10 @@ export interface Owner {
 export interface TournamentBout {
   round: number;
   matchIndex: number;
-  a: string; // snapshots name for display
-  d: string;
   warriorIdA: WarriorId;
   warriorIdD: WarriorId;
   stableIdA?: StableId;
   stableIdD?: StableId;
-  stableA?: string;
-  stableD?: string;
   winner?: 'A' | 'D' | null;
   by?: FightOutcomeBy;
   fightId?: FightId;

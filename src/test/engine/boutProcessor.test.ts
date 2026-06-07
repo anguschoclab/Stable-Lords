@@ -1,7 +1,7 @@
 /**
  * boutProcessor tests.
  */
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { resolveBout, generatePairings } from '@/engine/boutProcessor';
 import { FightingStyle } from '@/types/game';
 
@@ -56,8 +56,74 @@ describe('boutProcessor - generatePairings', () => {
     };
     const pairings = generatePairings(state);
     expect(pairings.length).toBe(1);
-    expect(pairings[0].a.id).toBe('w1');
-    expect(pairings[0].d.id).toBe('w2');
+    expect(pairings[0]!.a.id).toBe('w1');
+    expect(pairings[0]!.d.id).toBe('w2');
+  });
+
+  it('should generate tournament pairings using ID lookups and rivalMap', () => {
+    const wA = { id: 'wa', name: 'WarA', status: 'Active', stableId: 's1' };
+    const wD = { id: 'wd', name: 'WarD', status: 'Active', stableId: 's2' };
+    const state: any = {
+      week: 1,
+      day: 1,
+      isTournamentWeek: true,
+      activeTournamentId: 't1',
+      player: { id: 'p1', stableName: 'Player' },
+      roster: [wA],
+      rivals: [
+        {
+          id: 's2',
+          owner: { id: 's2', stableName: 'RivalStab' },
+          roster: [wD],
+        },
+      ],
+      tournaments: [
+        {
+          id: 't1',
+          bracket: [
+            { round: 1, matchIndex: 0, warriorIdA: 'wa', warriorIdD: 'wd', stableIdD: 's2' },
+          ],
+        },
+      ],
+      warriorMap: new Map([
+        ['wa', wA],
+        ['wd', wD],
+      ]),
+      rivalMap: new Map([['s2', { id: 's2', owner: { stableName: 'RivalStab' } }]]),
+      boutOffers: {},
+    };
+    const pairings = generatePairings(state);
+    expect(pairings.length).toBe(1);
+    expect(pairings[0]!.a.id).toBe('wa');
+    expect(pairings[0]!.d.id).toBe('wd');
+    expect(pairings[0]!.isRivalry).toBe(true);
+    expect(pairings[0]!.rivalStable).toBe('RivalStab');
+    expect(pairings[0]!.rivalStableId).toBe('s2');
+  });
+
+  it('should skip tournament pairings when warrior IDs are missing from warriorMap', () => {
+    const state: any = {
+      week: 1,
+      day: 1,
+      isTournamentWeek: true,
+      activeTournamentId: 't1',
+      player: { id: 'p1', stableName: 'Player' },
+      roster: [],
+      rivals: [],
+      tournaments: [
+        {
+          id: 't1',
+          bracket: [
+            { round: 1, matchIndex: 0, warriorIdA: 'missing', warriorIdD: 'gone', stableIdD: 's1' },
+          ],
+        },
+      ],
+      warriorMap: new Map(),
+      rivalMap: new Map(),
+      boutOffers: {},
+    };
+    const pairings = generatePairings(state);
+    expect(pairings.length).toBe(0);
   });
 });
 

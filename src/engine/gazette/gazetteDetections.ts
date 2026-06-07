@@ -2,10 +2,21 @@
  * Gazette Detection Functions - Detects patterns in fight data for gazette generation
  * Extracted from gazetteNarrative.ts to follow SRP
  */
-import type { FightSummary } from '@/types/combat.types';/**
+import type { FightSummary } from '@/types/combat.types';
+import type { WarriorId } from '@/types/shared.types';/**
                                                           * Defines the shape of gazette detections.
                                                           */
 
+
+/**
+ * Extract warrior display names from the FightSummary title.
+ * Title format: "${nameA} vs ${nameB}" or "${nameA} vs ${nameB} (${tournament})"
+ */
+function getNamesFromTitle(title: string): { a: string; d: string } {
+  const base = title.split(' (')[0]!;
+  const parts = base.split(' vs ');
+  return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
+}
 
 /**
  * Defines the shape of gazette detections.
@@ -27,42 +38,50 @@ export interface GazetteDetections {
  */
 export function detectDebuts(weekFights: FightSummary[], allFights: FightSummary[]): string[] {
   const priorCount = Math.max(0, allFights.length - weekFights.length);
-  const priorNames = new Set<string>();
+  const priorIds = new Set<WarriorId>();
   for (let i = 0; i < priorCount; i++) {
     const f = allFights[i];
     if (!f) continue;
-    priorNames.add(f.a);
-    priorNames.add(f.d);
+    priorIds.add(f.warriorIdA);
+    priorIds.add(f.warriorIdD);
   }
-  const debuts = new Set<string>();
+  const debutIds = new Set<WarriorId>();
   for (const f of weekFights) {
-    if (!priorNames.has(f.a)) debuts.add(f.a);
-    if (!priorNames.has(f.d)) debuts.add(f.d);
+    if (!priorIds.has(f.warriorIdA)) debutIds.add(f.warriorIdA);
+    if (!priorIds.has(f.warriorIdD)) debutIds.add(f.warriorIdD);
   }
-  return [...debuts];
+  // Resolve IDs back to names using title for display
+  const names = new Set<string>();
+  for (const f of weekFights) {
+    const n = getNamesFromTitle(f.title);
+    if (debutIds.has(f.warriorIdA)) names.add(n.a);
+    if (debutIds.has(f.warriorIdD)) names.add(n.d);
+  }
+  return [...names];
 }
 
 /**
  * Compute current win streaks from fight history.
+ * Keys streaks by warriorId for stable identity tracking.
  */
-export function computeStreaks(allFights: FightSummary[]): Map<string, number> {
-  const streaks = new Map<string, number>();
+export function computeStreaks(allFights: FightSummary[]): Map<WarriorId, number> {
+  const streaks = new Map<WarriorId, number>();
   for (let i = 0; i < allFights.length; i++) {
     const f = allFights[i];
     if (!f) continue;
     if (f.winner === 'A') {
-      const aStreak = streaks.get(f.a) ?? 0;
-      const dStreak = streaks.get(f.d) ?? 0;
-      streaks.set(f.a, aStreak >= 0 ? aStreak + 1 : 1);
-      streaks.set(f.d, dStreak <= 0 ? dStreak - 1 : -1);
+      const aStreak = streaks.get(f.warriorIdA) ?? 0;
+      const dStreak = streaks.get(f.warriorIdD) ?? 0;
+      streaks.set(f.warriorIdA, aStreak >= 0 ? aStreak + 1 : 1);
+      streaks.set(f.warriorIdD, dStreak <= 0 ? dStreak - 1 : -1);
     } else if (f.winner === 'D') {
-      const aStreak = streaks.get(f.a) ?? 0;
-      const dStreak = streaks.get(f.d) ?? 0;
-      streaks.set(f.d, dStreak >= 0 ? dStreak + 1 : 1);
-      streaks.set(f.a, aStreak <= 0 ? aStreak - 1 : -1);
+      const aStreak = streaks.get(f.warriorIdA) ?? 0;
+      const dStreak = streaks.get(f.warriorIdD) ?? 0;
+      streaks.set(f.warriorIdD, dStreak >= 0 ? dStreak + 1 : 1);
+      streaks.set(f.warriorIdA, aStreak <= 0 ? aStreak - 1 : -1);
     } else {
-      streaks.set(f.a, 0);
-      streaks.set(f.d, 0);
+      streaks.set(f.warriorIdA, 0);
+      streaks.set(f.warriorIdD, 0);
     }
   }
   return streaks;
@@ -76,13 +95,17 @@ export function detectRivalryMatchup(
   allFights: FightSummary[]
 ): { a: string; b: string; count: number } | null {
   const candidatePairs = new Set<string>();
-  const names = new Set<string>();
+  const ids = new Set<WarriorId>();
   for (let i = 0; i < weekFights.length; i++) {
     const f = weekFights[i];
     if (!f) continue;
-    candidatePairs.add(f.a < f.d ? `${f.a}||${f.d}` : `${f.d}||${f.a}`);
-    names.add(f.a);
-    names.add(f.d);
+    candidatePairs.add(
+      f.warriorIdA < f.warriorIdD
+        ? `${f.warriorIdA}||${f.warriorIdD}`
+        : `${f.warriorIdD}||${f.warriorIdA}`
+    );
+    ids.add(f.warriorIdA);
+    ids.add(f.warriorIdD);
   }
 
   const pairCounts = new Map<string, number>();
@@ -93,8 +116,11 @@ export function detectRivalryMatchup(
   for (let i = 0; i < allFights.length; i++) {
     const f = allFights[i];
     if (!f) continue;
-    if (names.has(f.a) && names.has(f.d)) {
-      const key = f.a < f.d ? `${f.a}||${f.d}` : `${f.d}||${f.a}`;
+    if (ids.has(f.warriorIdA) && ids.has(f.warriorIdD)) {
+      const key =
+        f.warriorIdA < f.warriorIdD
+          ? `${f.warriorIdA}||${f.warriorIdD}`
+          : `${f.warriorIdD}||${f.warriorIdA}`;
       const currentCount = pairCounts.get(key);
       if (currentCount !== undefined) {
         pairCounts.set(key, currentCount + 1);
@@ -106,10 +132,14 @@ export function detectRivalryMatchup(
   for (let i = 0; i < weekFights.length; i++) {
     const f = weekFights[i];
     if (!f) continue;
-    const key = f.a < f.d ? `${f.a}||${f.d}` : `${f.d}||${f.a}`;
+    const key =
+      f.warriorIdA < f.warriorIdD
+        ? `${f.warriorIdA}||${f.warriorIdD}`
+        : `${f.warriorIdD}||${f.warriorIdA}`;
     const count = pairCounts.get(key) ?? 0;
     if (count >= 3 && (!best || count > best.count)) {
-      best = { a: f.a, b: f.d, count };
+      const n = getNamesFromTitle(f.title);
+      best = { a: n.a, b: n.d, count };
     }
   }
   return best;
@@ -140,14 +170,18 @@ export function detectGazetteTags(fights: FightSummary[], detections: GazetteDet
  */
 export function detectHotStreakers(
   fights: FightSummary[],
-  streaks: Map<string, number>
+  streaks: Map<WarriorId, number>
 ): { name: string; streak: number }[] {
   const hotStreakers: { name: string; streak: number }[] = [];
   for (const f of fights) {
     if (!f.winner) continue;
-    const winnerName = f.winner === 'A' ? f.a : f.d;
-    const s = streaks.get(winnerName) ?? 0;
-    if (s >= 5) hotStreakers.push({ name: winnerName, streak: s });
+    const winnerId = f.winner === 'A' ? f.warriorIdA : f.warriorIdD;
+    const s = streaks.get(winnerId) ?? 0;
+    if (s >= 5) {
+      const n = getNamesFromTitle(f.title);
+      const winnerName = f.winner === 'A' ? n.a : n.d;
+      hotStreakers.push({ name: winnerName, streak: s });
+    }
   }
   return hotStreakers;
 }
@@ -159,28 +193,28 @@ export function detectRisingStars(fights: FightSummary[], allFights: FightSummar
   const risingStars: string[] = [];
   if (!allFights || fights.length === 0) return risingStars;
 
-  const candidates = new Set<string>();
+  const candidates = new Set<WarriorId>();
   for (const f of fights) {
     if (f.winner) {
-      candidates.add(f.winner === 'A' ? f.a : f.d);
+      candidates.add(f.winner === 'A' ? f.warriorIdA : f.warriorIdD);
     }
   }
 
-  const stats = new Map<string, { total: number; wins: number }>();
+  const stats = new Map<WarriorId, { total: number; wins: number }>();
   for (const c of candidates) {
     stats.set(c, { total: 0, wins: 0 });
   }
 
   for (const af of allFights) {
-    if (candidates.has(af.a)) {
-      const s = stats.get(af.a);
+    if (candidates.has(af.warriorIdA)) {
+      const s = stats.get(af.warriorIdA);
       if (s) {
         s.total++;
         if (af.winner === 'A') s.wins++;
       }
     }
-    if (candidates.has(af.d)) {
-      const s = stats.get(af.d);
+    if (candidates.has(af.warriorIdD)) {
+      const s = stats.get(af.warriorIdD);
       if (s) {
         s.total++;
         if (af.winner === 'D') s.wins++;
@@ -188,14 +222,21 @@ export function detectRisingStars(fights: FightSummary[], allFights: FightSummar
     }
   }
 
+  // Resolve rising star IDs back to names using fights from the week
+  const risingIds = new Set<WarriorId>();
   for (const c of candidates) {
     const s = stats.get(c);
     if (s && s.total === 3 && s.wins === 3) {
-      risingStars.push(c);
+      risingIds.add(c);
     }
   }
-
-  return risingStars;
+  const names = new Set<string>();
+  for (const f of fights) {
+    const n = getNamesFromTitle(f.title);
+    if (risingIds.has(f.warriorIdA)) names.add(n.a);
+    if (risingIds.has(f.warriorIdD)) names.add(n.d);
+  }
+  return [...names];
 }
 
 /**
@@ -209,8 +250,9 @@ export function detectUpsets(
     if (!f.winner || f.fameA == null || f.fameD == null) continue;
     const winnerFame = f.winner === 'A' ? f.fameA : f.fameD;
     const loserFame = f.winner === 'A' ? f.fameD : f.fameA;
-    const winnerName = f.winner === 'A' ? f.a : f.d;
-    const loserName = f.winner === 'A' ? f.d : f.a;
+    const n = getNamesFromTitle(f.title);
+    const winnerName = f.winner === 'A' ? n.a : n.d;
+    const loserName = f.winner === 'A' ? n.d : n.a;
     if (loserFame >= winnerFame + 10 && loserFame >= winnerFame * 2) {
       upsets.push({ winner: winnerName, loser: loserName, winnerFame, loserFame });
     }

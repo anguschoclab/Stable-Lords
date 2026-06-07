@@ -27,8 +27,6 @@ function isChampionshipFinal(bout: TournamentBout, totalRounds: number): boolean
   return bout.round === totalRounds && bout.round >= 6;
 }
 
-const MIN_DISTANCE = 20;
-
 export function BracketMatchNode({
   bout,
   boutKey,
@@ -36,7 +34,7 @@ export function BracketMatchNode({
   onToggleExpand,
   fightSummary,
   rIdx,
-  bIdx,
+  bIdx: _bIdx,
   totalRounds,
   gameState,
 }: BracketMatchNodeProps) {
@@ -44,7 +42,7 @@ export function BracketMatchNode({
   const isAChosen = bout.winner === 'A';
   const isDChosen = bout.winner === 'D';
   const isPending = bout.winner === undefined;
-  const isBye = bout.d === '(bye)' || bout.warriorIdD === 'bye';
+  const isBye = bout.warriorIdD === 'bye';
   const bronze = isBronzeMatch(bout);
   const championship = isChampionshipFinal(bout, totalRounds);
 
@@ -157,7 +155,7 @@ export function BracketMatchNode({
                 )}
               />
               <span className="text-xs truncate">
-                {resolveWarriorName(gameState, bout.warriorIdA, bout.a)}
+                {resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')}
               </span>
               {isBye && <StepForward className="h-3 w-3 text-muted-foreground/50" />}
             </div>
@@ -217,7 +215,7 @@ export function BracketMatchNode({
                 )}
               />
               <span className="text-xs truncate">
-                {isBye ? '(bye)' : resolveWarriorName(gameState, bout.warriorIdD, bout.d)}
+                {isBye ? '(bye)' : resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}
               </span>
             </div>
             {isDChosen && championship && (
@@ -258,8 +256,8 @@ export function BracketMatchNode({
           >
             <div className="p-4 border-b border-white/5 bg-secondary/40 flex items-center justify-between">
               <span className="text-[10px] font-black uppercase tracking-widest text-foreground truncate max-w-[80%]">
-                Archive: {resolveWarriorName(gameState, bout.warriorIdA, bout.a)} vs{' '}
-                {resolveWarriorName(gameState, bout.warriorIdD, bout.d)}
+                Archive: {resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')} vs{' '}
+                {resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}
               </span>
               <Badge
                 variant="outline"
@@ -273,12 +271,12 @@ export function BracketMatchNode({
                 nameA={resolveWarriorName(
                   gameState,
                   fightSummary.warriorIdA,
-                  fightSummary.a
+                  'Unknown'
                 )}
                 nameD={resolveWarriorName(
                   gameState,
                   fightSummary.warriorIdD,
-                  fightSummary.d
+                  'Unknown'
                 )}
                 styleA={fightSummary.styleA || ''}
                 styleD={fightSummary.styleD || ''}

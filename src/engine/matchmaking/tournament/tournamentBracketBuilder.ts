@@ -1,4 +1,5 @@
-import type { Warrior, TournamentEntry, Season } from '@/types/state.types';
+import type { Warrior, TournamentEntry, TournamentBout, Season } from '@/types/state.types';
+import type { TournamentId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';/**
                                                                   * Defines the shape of tournament bracket config.
                                                                   */
@@ -22,19 +23,6 @@ export interface TournamentBracketConfig {
 /**
  * Defines the shape of bracket match.
  */
-export interface BracketMatch {
-  round: number;
-  matchIndex: number;
-  a: string;
-  d: string;
-  warriorIdA: string;
-  warriorIdD: string;
-  stableIdA?: string;
-  stableIdD?: string;
-  stableA?: string;
-  stableD?: string;
-}
-
 /**
  * Builds a tournament bracket from selected warriors.
  * Creates a 64-warrior single-elimination bracket.
@@ -42,22 +30,18 @@ export interface BracketMatch {
 export function buildTournament(config: TournamentBracketConfig): TournamentEntry {
   const { tierId, tierName, warriors, week, season, rng } = config;
   const rngService = rng;
-  const id = `t-${tierId.toLowerCase()}-${season.toLowerCase()}-${week}`;
+  const id = `t-${tierId.toLowerCase()}-${season.toLowerCase()}-${week}` as TournamentId;
   const shuffled = rngService.shuffle([...warriors]);
-  const bracket: BracketMatch[] = [];
+  const bracket: TournamentBout[] = [];
 
   for (let i = 0; i < 64; i += 2) {
     bracket.push({
       round: 1,
       matchIndex: i / 2,
-      a: shuffled[i].name,
-      d: shuffled[i + 1].name,
-      warriorIdA: shuffled[i].id,
-      warriorIdD: shuffled[i + 1].id,
-      stableIdA: shuffled[i].stableId,
-      stableIdD: shuffled[i + 1].stableId,
-      stableA: shuffled[i].stableId,
-      stableD: shuffled[i + 1].stableId,
+      warriorIdA: shuffled[i]!.id,
+      warriorIdD: shuffled[i + 1]!.id,
+      stableIdA: shuffled[i]!.stableId,
+      stableIdD: shuffled[i + 1]!.stableId,
     });
   }
 

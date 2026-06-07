@@ -18,9 +18,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/state/useGameStore';
-import { resolveWarriorName } from '@/utils/historyResolver';
+import { resolveWarriorName, type NameResolutionState } from '@/utils/historyResolver';
 import type { TournamentBout, TournamentEntry } from '@/types/game';
-import { GameState } from '@/types/game';
 
 interface TournamentScheduleProps {
   tournament: TournamentEntry;
@@ -49,7 +48,7 @@ function getRoundName(round: number, totalRounds: number): string {
 
 /** Check if bout is a bye */
 function isByeMatch(bout: TournamentBout): boolean {
-  return bout.d === '(bye)' || bout.warriorIdD === 'bye';
+  return bout.warriorIdD === 'bye';
 }
 
 /** Check if bout is bronze match */
@@ -243,7 +242,7 @@ function TournamentBoutRow({
   round: _round,
 }: {
   bout: TournamentBout;
-  state: GameState;
+  state: NameResolutionState;
   round: number;
 }) {
   const isBye = isByeMatch(bout);
@@ -275,7 +274,7 @@ function TournamentBoutRow({
               )}
             />
             <span className="text-sm truncate max-w-32">
-              {resolveWarriorName(state, bout.warriorIdA, bout.a)}
+              {resolveWarriorName(state, bout.warriorIdA, 'Unknown')}
             </span>
             {bout.winner === 'A' && <Trophy className="h-3 w-3 text-arena-gold" />}
           </div>
@@ -295,7 +294,7 @@ function TournamentBoutRow({
                 )}
               />
               <span className="text-sm truncate max-w-32">
-                {resolveWarriorName(state, bout.warriorIdD, bout.d)}
+                {resolveWarriorName(state, bout.warriorIdD, 'Unknown')}
               </span>
               {bout.winner === 'D' && <Trophy className="h-3 w-3 text-arena-gold" />}
             </div>
@@ -349,7 +348,7 @@ function TournamentRoundCard({
   currentWeek: number;
   totalRounds: number;
   toggleRound: (round: number) => void;
-  state: GameState;
+  state: NameResolutionState;
 }) {
   const estimatedWeek = getEstimatedWeek(tournamentWeek, round);
   const isPast = estimatedWeek < currentWeek;

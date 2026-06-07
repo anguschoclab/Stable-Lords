@@ -234,12 +234,8 @@ export interface FightSummary {
   };
   tournamentId?: TournamentId | null;
   title: string;
-  a: string;
-  d: string;
   warriorIdA: WarriorId;
   warriorIdD: WarriorId;
-  stableA?: string;
-  stableD?: string;
   stableIdA?: StableId;
   stableIdD?: StableId;
   winner: 'A' | 'D' | null;

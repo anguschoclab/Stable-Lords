@@ -29,12 +29,8 @@ export function NextBoutWidget() {
         return {
           type: 'Tournament',
           name: activeTourney.name,
-          a: pendingMatch.a,
-          d: pendingMatch.d,
           warriorIdA: pendingMatch.warriorIdA,
           warriorIdD: pendingMatch.warriorIdD,
-          stableA: pendingMatch.stableA,
-          stableD: pendingMatch.stableD,
           stableIdA: pendingMatch.stableIdA,
           stableIdD: pendingMatch.stableIdD,
         };
@@ -48,10 +44,10 @@ export function NextBoutWidget() {
       return {
         type: 'Standard Matchup',
         name: 'Upcoming Scrimmage',
-        a: state.roster[0].name,
-        d: primaryRival.roster[0].name,
-        warriorIdA: state.roster[0].id,
-        warriorIdD: primaryRival.roster[0].id,
+        a: state.roster[0]!.name,
+        d: primaryRival.roster[0]!.name,
+        warriorIdA: state.roster[0]!.id,
+        warriorIdD: primaryRival.roster[0]!.id,
         stableA: state.player.stableName,
         stableD: primaryRival.owner.stableName,
         stableIdA: state.player.id,
@@ -122,10 +118,10 @@ export function NextBoutWidget() {
               <div className="flex items-center justify-between gap-2 py-1">
                 <div className="flex-1 text-center">
                   <p className="text-[11px] font-black truncate">
-                    {resolveWarriorName(state, nextBout.warriorIdA, nextBout.a || 'Unknown')}
+                    {resolveWarriorName(state, nextBout.warriorIdA, 'Unknown')}
                   </p>
                   <p className="text-[9px] text-muted-foreground truncate uppercase">
-                    {resolveStableName(state, nextBout.stableIdA, nextBout.stableA || 'Unknown')}
+                    {resolveStableName(state, nextBout.stableIdA, 'Unknown')}
                   </p>
                 </div>
                 <div className="flex flex-col items-center">
@@ -136,10 +132,10 @@ export function NextBoutWidget() {
                 </div>
                 <div className="flex-1 text-center">
                   <p className="text-[11px] font-black truncate">
-                    {resolveWarriorName(state, nextBout.warriorIdD, nextBout.d || 'Unknown')}
+                    {resolveWarriorName(state, nextBout.warriorIdD, 'Unknown')}
                   </p>
                   <p className="text-[9px] text-muted-foreground truncate uppercase">
-                    {resolveStableName(state, nextBout.stableIdD, nextBout.stableD || 'Unknown')}
+                    {resolveStableName(state, nextBout.stableIdD, 'Unknown')}
                   </p>
                 </div>
               </div>

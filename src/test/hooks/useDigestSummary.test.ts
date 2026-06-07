@@ -308,4 +308,46 @@ describe('useDigestSummary', () => {
     expect(result.current.losses).toBe(1);
     expect(result.current.deaths).toBe(0);
   });
+
+  it('does not count kills when by is null', () => {
+    const { result } = renderHook(() =>
+      useDigestSummary({
+        arenaHistory: [makeFight({ winner: 'A', by: null })],
+        boutOffers: {},
+        currentWeek,
+        playerWarriorIds,
+      })
+    );
+    expect(result.current.wins).toBe(1);
+    expect(result.current.kills).toBe(0);
+  });
+
+  it('does not count kills when by is Exhaustion', () => {
+    const { result } = renderHook(() =>
+      useDigestSummary({
+        arenaHistory: [makeFight({ winner: 'A', by: 'Exhaustion' })],
+        boutOffers: {},
+        currentWeek,
+        playerWarriorIds,
+      })
+    );
+    expect(result.current.wins).toBe(1);
+    expect(result.current.kills).toBe(0);
+  });
+
+  it('ignores Signed offers with boutWeek < currentWeek', () => {
+    const { result } = renderHook(() =>
+      useDigestSummary({
+        arenaHistory: [],
+        boutOffers: {
+          'offer-1': makeOffer({ status: 'Signed', boutWeek: 9 }),
+        },
+        currentWeek,
+        playerWarriorIds,
+      })
+    );
+    expect(result.current.signedOffers).toBe(0);
+    expect(result.current.upcomingBouts).toBe(0);
+    expect(result.current.pendingOffers).toBe(0);
+  });
 });

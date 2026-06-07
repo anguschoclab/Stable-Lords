@@ -338,7 +338,7 @@ describe('fameFromTags', () => {
   });
 
   it('handles undefined tags gracefully', () => {
-    const result = fameFromTags(undefined as unknown as string[]);
+    const result = fameFromTags(undefined as any as string[]);
     expect(result.fame).toBe(0);
     expect(result.pop).toBe(0);
   });

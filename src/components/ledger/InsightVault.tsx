@@ -1,6 +1,5 @@
 import type { SVGProps } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Zap, Target, Database, Binary, Search, Box, Lock, Unlock } from 'lucide-react'; /**

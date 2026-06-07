@@ -81,7 +81,7 @@ function makeGameState(week: number, roster: Warrior[]): GameState {
     activeTournamentId: undefined,
     isFTUE: false,
     unacknowledgedDeaths: [],
-  } as unknown as GameState;
+  } as any as GameState;
 }
 
 // ─── Tests ────────────────────────────────────────────────────────────────

@@ -19,7 +19,7 @@ const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter']; /**
  * @returns The result.
  */
 export function computeNextSeason(newWeek: number): Season {
-  return SEASONS[Math.floor((newWeek - 1) / 13) % 4];
+  return SEASONS[Math.floor((newWeek - 1) / 13) % 4]!;
 } /**
  * Roll weather.
  * @param rng - Rng.

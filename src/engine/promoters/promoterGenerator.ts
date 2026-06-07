@@ -109,10 +109,10 @@ export function generatePromoters(count: number, seed: number, rng?: IRNGService
     const id = rngService.uuid();
     const firstName = rngService.pick(PROMOTER_FIRST_NAMES);
     const lastName = rngService.pick(PROMOTER_LAST_NAMES);
-    const tier = tiers[i % tiers.length];
+    const tier = tiers[i % tiers.length]!;
 
     promoters.push({
-      id,
+      id: id as import('@/types/shared.types').PromoterId,
       name: `${firstName} ${lastName}`,
       age: 35 + Math.floor(rngService.next() * 31),
       personality: rngService.pick(PERSONALITIES),

@@ -25,12 +25,12 @@ export function calculateArenaLeaderboard(
 
   const insert = (entry: ArenaLeaderboardEntry) => {
     const fame = entry.warrior.fame;
-    if (top.length === limit && fame <= top[limit - 1].warrior.fame) {
+    if (top.length === limit && fame <= top[limit - 1]!.warrior.fame) {
       return;
     }
 
     let i = top.length - 1;
-    while (i >= 0 && top[i].warrior.fame < fame) {
+    while (i >= 0 && top[i]!.warrior.fame < fame) {
       i--;
     }
 

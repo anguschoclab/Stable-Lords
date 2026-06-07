@@ -155,8 +155,8 @@ describe('detectDebuts', () => {
   it('safely handles undefined or null entries in allFights', () => {
     const allFights = [
       createFight({ id: 'f1', a: 'Alice', d: 'Bob' }),
-      undefined as unknown as FightSummary,
-      null as unknown as FightSummary,
+      undefined as any as FightSummary,
+      null as any as FightSummary,
     ];
     const weekFights = [createFight({ id: 'f2', a: 'Alice', d: 'Charlie' })];
     // Ensure allFights length includes the undefined/nulls to test loop logic properly
@@ -318,9 +318,9 @@ describe('detectRivalryMatchup', () => {
     const f2 = createFight({ a: 'Alice', d: 'Bob' });
     const f3 = createFight({ a: 'Alice', d: 'Bob' });
 
-    // Explicitly add undefined/null (as unknown as FightSummary to bypass type check in test)
-    const allFights = [f1, null, f2, undefined, f3] as unknown as FightSummary[];
-    const weekFights = [null, f3] as unknown as FightSummary[];
+    // Explicitly add undefined/null (as any as FightSummary to bypass type check in test)
+    const allFights = [f1, null, f2, undefined, f3] as any as FightSummary[];
+    const weekFights = [null, f3] as any as FightSummary[];
 
     const rivalry = detectRivalryMatchup(weekFights, allFights);
     expect(rivalry).toEqual({ a: 'Alice', b: 'Bob', count: 3 });
@@ -339,8 +339,8 @@ describe('detectHotStreakers', () => {
     ];
     const hot = detectHotStreakers(weekFights, streaks);
     expect(hot).toHaveLength(1);
-    expect(hot[0].name).toBe('Alice');
-    expect(hot[0].streak).toBe(5);
+    expect(hot[0]!.name).toBe('Alice');
+    expect(hot[0]!.streak).toBe(5);
   });
 });
 

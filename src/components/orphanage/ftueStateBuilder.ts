@@ -21,14 +21,14 @@ export function buildFTUEInitialState(
 
   const warriors = selectedWarriors.map((pw) => {
     // Use the orphan's pre-generated potential (or regenerate if somehow missing)
-    const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', () => finishRng.next());
+    const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', finishRng);
     // Build base plan and merge trait-based modifiers
     const basePlan = defaultPlanForWarrior(makeWarrior(undefined, pw.name, pw.style, pw.attrs));
     const traitData = TRAIT_DATA[pw.trait];
     const traitMods = traitData?.effect.fightPlanMod ?? {};
     const plan = { ...basePlan, ...traitMods };
     const w = makeWarrior(
-      finishRng.uuid(),
+      finishRng.uuid() as import('@/types/shared.types').WarriorId,
       pw.name,
       pw.style,
       pw.attrs,

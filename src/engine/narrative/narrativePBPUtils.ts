@@ -61,9 +61,9 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
         case 'bodyPart':
           return String(ctx.bodyPart ?? 'body');
         case 'winner':
-          return String(ctx.winner ?? 'the winner');
+          return String((ctx as Record<string, unknown>).winner ?? 'the winner');
         case 'loser':
-          return String(ctx.loser ?? 'the loser');
+          return String((ctx as Record<string, unknown>).loser ?? 'the loser');
         default: {
           const value = ctx[longKey as keyof CombatContext];
           return value !== undefined && Object.hasOwn(ctx, longKey) ? String(value) : match;

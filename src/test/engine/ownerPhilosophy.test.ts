@@ -68,7 +68,7 @@ describe('ownerPhilosophy - evolvePhilosophies', () => {
   it('should evolve philosophy on season change if performance is poor', () => {
     const { updatedRivals, gazetteItems } = evolvePhilosophies(mockState, 'Summer');
 
-    expect(updatedRivals[0].philosophy).not.toBe('Brute Force');
+    expect(updatedRivals[0]!.philosophy).not.toBe('Brute Force');
     expect(gazetteItems[0]).toContain('shifts strategy');
   });
 
@@ -79,7 +79,7 @@ describe('ownerPhilosophy - evolvePhilosophies', () => {
     };
     const { updatedRivals, gazetteItems } = evolvePhilosophies(winningState as any, 'Summer');
 
-    expect(updatedRivals[0].philosophy).toBe('Brute Force');
+    expect(updatedRivals[0]!.philosophy).toBe('Brute Force');
     expect(gazetteItems.length).toBe(0);
   });
 });

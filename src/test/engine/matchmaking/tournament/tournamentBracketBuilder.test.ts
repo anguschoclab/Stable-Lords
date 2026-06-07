@@ -193,7 +193,7 @@ describe('TournamentBracketBuilder', () => {
       });
 
       // Same seed should produce same bracket
-      expect(tournament1.bracket[0].a).toBe(tournament2.bracket[0].a);
+      expect(tournament1.bracket[0]!.a).toBe(tournament2.bracket[0]!.a);
     });
 
     it('should generate unique tournament ID', () => {

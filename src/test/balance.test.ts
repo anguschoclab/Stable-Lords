@@ -19,7 +19,7 @@ const STD_ATTRS = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
 function makeTestWarrior(style: FightingStyle, id: string): Warrior {
   const { baseSkills, derivedStats } = computeWarriorStats(STD_ATTRS, style);
   return {
-    id,
+    id: id as import('@/types/shared.types').WarriorId,
     name: id,
     style,
     attributes: STD_ATTRS,
@@ -34,6 +34,7 @@ function makeTestWarrior(style: FightingStyle, id: string): Warrior {
     champion: false,
     status: 'Active',
     age: 20,
+    traits: [],
   };
 }
 
@@ -67,15 +68,15 @@ for (const styleA of ALL_STYLES) {
       const seed = (idxA * 10 + idxD) * 100000 + i * 7919 + 42;
       const outcome = simulateFight(planA, planD, wA, wD, seed);
 
-      styleFights[styleA]++;
-      styleFights[styleD]++;
+      styleFights[styleA]!++;
+      styleFights[styleD]!++;
       totalFightsRun++;
 
       if (outcome.winner === 'A') {
-        styleWins[styleA]++;
-        matchupWins[styleA][styleD]++;
+        styleWins[styleA]!++;
+        matchupWins[styleA]![styleD]!++;
       } else if (outcome.winner === 'D') {
-        styleWins[styleD]++;
+        styleWins[styleD]!++;
       }
       if (outcome.by === 'Kill') totalKills++;
     }
@@ -89,7 +90,7 @@ describe('Style Balance', () => {
     const report: string[] = [];
 
     for (const s of ALL_STYLES) {
-      const rate = styleFights[s] > 0 ? styleWins[s] / styleFights[s] : 0;
+      const rate = styleFights[s]! > 0 ? styleWins[s]! / styleFights[s]! : 0;
       const pct = (rate * 100).toFixed(1);
       report.push(`  ${s.padEnd(22)} ${pct}%`);
       if (rate > 0.75) problems.push(`${s}: ${pct}%`);
@@ -105,7 +106,7 @@ describe('Style Balance', () => {
           row += '   -  ';
           continue;
         }
-        const wins = matchupWins[a][d];
+        const wins = matchupWins[a]![d]!;
         const pct = ((wins / FIGHTS_PER_MATCHUP) * 100).toFixed(0);
         row += `${pct.padStart(5)}% `;
       }
@@ -123,7 +124,7 @@ describe('Style Balance', () => {
   it('should have no style with <22% overall win rate (too weak)', () => {
     const problems: string[] = [];
     for (const s of ALL_STYLES) {
-      const rate = styleFights[s] > 0 ? styleWins[s] / styleFights[s] : 0;
+      const rate = styleFights[s]! > 0 ? styleWins[s]! / styleFights[s]! : 0;
       if (rate < 0.22) problems.push(`${s}: ${(rate * 100).toFixed(1)}%`);
     }
 
@@ -138,7 +139,7 @@ describe('Style Balance', () => {
     for (const a of ALL_STYLES) {
       for (const d of ALL_STYLES) {
         if (a === d) continue;
-        const wins = matchupWins[a][d];
+        const wins = matchupWins[a]![d]!;
         const rate = wins / FIGHTS_PER_MATCHUP;
         if (rate > 0.8) {
           problems.push(`${a} vs ${d}: ${(rate * 100).toFixed(0)}%`);

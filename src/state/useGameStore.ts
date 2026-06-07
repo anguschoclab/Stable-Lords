@@ -1,8 +1,8 @@
 import { create } from 'zustand';
-import { shallow } from 'zustand/shallow';
 import { immer } from 'zustand/middleware/immer';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { GameState } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
 import { type BoutResult } from '@/engine/boutProcessor';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
@@ -131,7 +131,7 @@ export const useGameStore = create<GameStore>()(
           draft.rivals = state.rivals;
           draft.gazettes = state.gazettes;
           draft.scoutReports = state.scoutReports || [];
-          draft.unacknowledgedDeaths = state.unacknowledgedDeaths || [];
+          draft.unacknowledgedDeaths = (state.unacknowledgedDeaths || []) as WarriorId[];
           draft.rosterBonus = state.rosterBonus || 0;
           draft.tournaments = state.tournaments || [];
           draft.isTournamentWeek = state.isTournamentWeek || false;
@@ -162,7 +162,7 @@ export const useGameStore = create<GameStore>()(
           draft.pendingResolutionData = state.pendingResolutionData;
           draft.playerChallenges = state.playerChallenges || [];
           draft.playerAvoids = state.playerAvoids || [];
-          draft.lastSimulationReport = state.lastSimulationReport;
+          draft.lastSimulationReport = state.lastSimulationReport as never;
 
           draft.activeSlotId = slotId;
           draft.atTitleScreen = false;
@@ -319,7 +319,7 @@ export const useGameStore = create<GameStore>()(
 );
 
 /** --- Fine-Grained Selectors (v4.1: Source from Slice only) --- */
-export const useWorldState = () => useGameStore(reconstructGameState, shallow); /**
+export const useWorldState = () => useGameStore(reconstructGameState); /**
  * React hook: use player.
  * @returns The result.
  */

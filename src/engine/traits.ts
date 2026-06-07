@@ -434,7 +434,7 @@ export function getTraitFightPlanMods(
     for (const [key, val] of Object.entries(t.effect.fightPlanMod)) {
       const k = key as keyof import('@/types/shared.types').FightPlan;
       if (typeof val === 'number') {
-        mods[k] = ((mods[k] as number) || 0) + val;
+        (mods as Record<string, number>)[k] = ((mods[k] as number) || 0) + val;
       }
     }
   }

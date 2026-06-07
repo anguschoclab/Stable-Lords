@@ -19,31 +19,31 @@ describe('mergeImpacts', () => {
     ];
     const result = mergeImpacts(impacts);
     expect(result.newsletterItems).toHaveLength(2);
-    expect(result.newsletterItems[0].id).toBe('1');
-    expect(result.newsletterItems[1].id).toBe('2');
+    expect(result.newsletterItems![0]!.id).toBe('1');
+    expect(result.newsletterItems![1]!.id).toBe('2');
   });
 
   it('merges Maps by merging values', () => {
-    const map1 = new Map([['warrior1', { fame: 100 }]]);
-    const map2 = new Map([['warrior2', { fame: 50 }]]);
+    const map1 = new Map([['warrior1' as import('@/types/shared.types').WarriorId, { fame: 100 }]]);
+    const map2 = new Map([['warrior2' as import('@/types/shared.types').WarriorId, { fame: 50 }]]);
     const impacts: StateImpact[] = [{ rosterUpdates: map1 }, { rosterUpdates: map2 }];
     const result = mergeImpacts(impacts);
     expect(result.rosterUpdates?.size).toBe(2);
-    expect(result.rosterUpdates?.get('warrior1')).toEqual({ fame: 100 });
-    expect(result.rosterUpdates?.get('warrior2')).toEqual({ fame: 50 });
+    expect(result.rosterUpdates?.get('warrior1' as import('@/types/shared.types').WarriorId)).toEqual({ fame: 100 });
+    expect(result.rosterUpdates?.get('warrior2' as import('@/types/shared.types').WarriorId)).toEqual({ fame: 50 });
   });
 
   it('merges Maps by combining values for same key', () => {
-    const map1 = new Map([['warrior1', { fame: 100 }]]);
-    const map2 = new Map([['warrior1', { popularity: 50 }]]);
+    const map1 = new Map([['warrior1' as import('@/types/shared.types').WarriorId, { fame: 100 }]]);
+    const map2 = new Map([['warrior1' as import('@/types/shared.types').WarriorId, { popularity: 50 }]]);
     const impacts: StateImpact[] = [{ rosterUpdates: map1 }, { rosterUpdates: map2 }];
     const result = mergeImpacts(impacts);
     expect(result.rosterUpdates?.size).toBe(1);
-    expect(result.rosterUpdates?.get('warrior1')).toEqual({ fame: 100, popularity: 50 });
+    expect(result.rosterUpdates?.get('warrior1' as import('@/types/shared.types').WarriorId)).toEqual({ fame: 100, popularity: 50 });
   });
 
   it('replaces values for replace strategy properties', () => {
-    const impacts: StateImpact[] = [{ weather: 'Rainy' }, { weather: 'Sunny' }];
+    const impacts: StateImpact[] = [{ weather: 'Rainy' }, { weather: 'Sunny' as import('@/types/shared.types').WeatherType }];
     const result = mergeImpacts(impacts);
     expect(result.weather).toBe('Sunny');
   });
@@ -87,9 +87,9 @@ describe('mergeImpacts', () => {
       {
         insightTokens: [
           {
-            id: 'token1',
+            id: 'token1' as import('@/types/shared.types').InsightId,
             type: 'Weapon',
-            warriorId: 'w1',
+            warriorId: 'w1' as import('@/types/shared.types').WarriorId,
             warriorName: 'Warrior1',
             detail: 'Test',
             discoveredWeek: 1,
@@ -99,9 +99,9 @@ describe('mergeImpacts', () => {
       {
         insightTokens: [
           {
-            id: 'token2',
+            id: 'token2' as import('@/types/shared.types').InsightId,
             type: 'Rhythm',
-            warriorId: 'w2',
+            warriorId: 'w2' as import('@/types/shared.types').WarriorId,
             warriorName: 'Warrior2',
             detail: 'Test2',
             discoveredWeek: 1,

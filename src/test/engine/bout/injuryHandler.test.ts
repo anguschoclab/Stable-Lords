@@ -24,7 +24,7 @@ describe('injuryHandler', () => {
       restStates: [],
       rivalMap: new Map(),
       warriorToStableMap: new Map(),
-    }) as unknown as GameState;
+    }) as any as GameState;
 
   describe('handleInjuries', () => {
     it('returns no injuries for non-KO outcome without injuries', () => {

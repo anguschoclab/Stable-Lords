@@ -29,7 +29,7 @@ describe('Contract System Cycle', () => {
     const promoterImpact = runPromoterPass(state);
     const offers = Object.values(promoterImpact.boutOffers || {}) as BoutOffer[];
     expect(offers.length).toBeGreaterThan(0);
-    expect(offers[0].status).toBe('Proposed');
+    expect(offers[0]!.status).toBe('Proposed');
   });
 
   it("should transition offer to 'Signed' when accepted by player", () => {
@@ -42,19 +42,19 @@ describe('Contract System Cycle', () => {
       o.warriorIds.some((wId) => stateWithOffers.roster.some((pW) => pW.id === wId))
     );
     expect(offer).toBeDefined();
+    if (!offer) throw new Error('Offer not found');
     const playerWarrior = stateWithOffers.roster.find((w) => offer.warriorIds.includes(w.id));
     if (!playerWarrior) throw new Error('Player warrior not found for offer');
-    const playerWarriorId = playerWarrior.id;
 
     // Simulate accepting an offer. Since both warriors in the test are player warriors (rivals removed),
     // we need BOTH warriors to accept to reach 'Signed' status.
-    const w1 = offer.warriorIds[0];
-    const w2 = offer.warriorIds[1];
+    const w1 = offer.warriorIds[0]!;
+    const w2 = offer.warriorIds[1]!;
     let impact = respondToBoutOffer(stateWithOffers, offer.id, w1, 'Accepted');
     let signedState = resolveImpacts(stateWithOffers, [impact]);
     impact = respondToBoutOffer(signedState, offer.id, w2, 'Accepted');
     signedState = resolveImpacts(signedState, [impact]);
-    expect(signedState.boutOffers![offer.id].status).toBe('Signed');
+    expect(signedState.boutOffers![offer.id as import('@/types/shared.types').BoutOfferId]!.status).toBe('Signed');
   });
 
   it('should payout the purse upon bout resolution via processWeekBouts', () => {
@@ -65,14 +65,14 @@ describe('Contract System Cycle', () => {
       o.warriorIds.some((wId) => s.roster.some((pW) => pW.id === wId))
     );
     expect(offer).toBeDefined();
+    if (!offer) throw new Error('Offer not found');
     const playerWarrior = s.roster.find((w) => offer.warriorIds.includes(w.id));
     if (!playerWarrior) throw new Error('Player warrior not found for offer in payout test');
-    const playerWarriorId = playerWarrior.id;
     const initialGold = s.treasury;
 
     // Sign the first offer for both warriors
-    const w1 = offer.warriorIds[0];
-    const w2 = offer.warriorIds[1];
+    const w1 = offer.warriorIds[0]!;
+    const w2 = offer.warriorIds[1]!;
     let signImpact = respondToBoutOffer(s, offer.id, w1, 'Accepted');
     s = resolveImpacts(s, [signImpact]);
     signImpact = respondToBoutOffer(s, offer.id, w2, 'Accepted');
@@ -82,12 +82,12 @@ describe('Contract System Cycle', () => {
     s = resolveImpacts(s, [
       {
         boutOffers: {
-          [offer.id]: {
+          [offer.id as import('@/types/shared.types').BoutOfferId]: {
             ...s.boutOffers![offer.id],
             boutWeek: s.week,
             status: 'Signed',
           },
-        },
+        } as Record<import('@/types/shared.types').BoutOfferId, import('@/types/state.types').BoutOffer>,
       },
     ]);
 
@@ -98,6 +98,7 @@ describe('Contract System Cycle', () => {
     expect(processed.results.length).toBeGreaterThan(0);
     const ourBout = processed.results.find((r) => r.contractId === offer.id);
     expect(ourBout).toBeDefined();
+    if (!ourBout) throw new Error('Bout not found');
 
     const resolvedState = resolveImpacts(s, [processed.impact]);
 

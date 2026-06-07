@@ -89,7 +89,7 @@ export class ElectronArchiveService implements ArchiveService {
     try {
       const result = await window.electronAPI.loadGame(slotId);
       if (result.success && result.data) {
-        return result.data;
+        return result.data as GameState;
       }
       return null;
     } catch (error) {

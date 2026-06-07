@@ -80,7 +80,7 @@ export function WarriorHeroHeader({
               {isPlayerOwned && id ? (
                 <EditableText
                   value={warrior.name}
-                  onSave={(newName) => store.renameWarrior(id, newName)}
+                  onSave={(newName) => store.renameWarrior(id as import('@/types/shared.types').WarriorId, newName)}
                   className="text-4xl font-display font-black uppercase tracking-tight"
                   label="Rename Asset"
                 />

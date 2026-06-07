@@ -47,12 +47,12 @@ function processTournamentPlaceAward(
   };
   const placeLabel = place === 1 ? '🥇' : place === 2 ? '🥈' : '🥉';
   const source = `${tournament.name} (${placeLabel})`;
-  const tokens = (tokenMap[tier] ?? tokenMap.IRON)[place] ?? [];
+  const tokens = ((tokenMap[tier] ?? tokenMap.IRON)![place as keyof typeof tokenMap.IRON] as string[]) ?? [];
 
   if (isPlayer) {
     updatedState.treasury += prizeGold;
     updatedState.ledger.push({
-      id: awardRng.uuid('ledger'),
+      id: awardRng.uuid('ledger') as import('@/types/shared.types').LedgerEntryId,
       week: updatedState.week,
       label: `${tournament.name} (${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'})`,
       amount: prizeGold,
@@ -65,7 +65,7 @@ function processTournamentPlaceAward(
     };
     if (place === 1) updatedState.rosterBonus = (updatedState.rosterBonus || 0) + 1;
     for (const tokenType of tokens) {
-      updatedState = PatronTokenService.awardToken(updatedState, tokenType, source, awardRng);
+      updatedState = PatronTokenService.awardToken(updatedState, tokenType as import('@/types/state.types').InsightTokenType, source, awardRng);
     }
   } else {
     // warrior.stableId is rival.id (StableId), not owner.id

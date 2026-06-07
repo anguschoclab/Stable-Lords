@@ -72,8 +72,8 @@ function getInjuryBadge(
     Critical: 'text-destructive',
     Permanent: 'text-arena-fame',
   };
-  const severity = severest.severity ?? 'Moderate';
-  const color = colorMap[severity] ?? colorMap['Moderate'];
+  const severity: string = severest.severity ?? 'Moderate';
+  const color = colorMap[severity] ?? colorMap['Moderate'] ?? 'text-arena-gold';
   return {
     label: severity,
     color,
@@ -333,7 +333,7 @@ export default function BookingOffice() {
   };
 
   return (
-    <PageFrame size="xl">
+    <PageFrame>
       <PageHeader
         title="Booking Intelligence"
         subtitle={`OPS · CONTRACT_MANAGEMENT · WK ${week}`}

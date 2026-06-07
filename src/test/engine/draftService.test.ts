@@ -31,7 +31,7 @@ function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStable
       knownRivals: [],
     },
     ...overrides,
-  } as unknown as RivalStableData;
+  } as any as RivalStableData;
 }
 
 function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {
@@ -545,7 +545,7 @@ describe('aiDraftFromPool', () => {
         fame: 50,
         roster: [],
         treasury: 1000,
-      } as unknown as RivalStableData;
+      } as any as RivalStableData;
 
       const result = aiDraftFromPool(pool, [minimalRival], 4, state);
 

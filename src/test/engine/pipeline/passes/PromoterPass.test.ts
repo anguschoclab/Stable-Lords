@@ -1,15 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { createFreshState } from '@/engine/factories/warriorFactory';
 import { populateTestState } from '@/test/testHelpers';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { FightingStyle } from '@/types/shared.types';
-import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import type { GameState, Promoter, TournamentEntry, Warrior } from '@/types/state.types';
-import type { InjuryData } from '@/types/warrior.types';
-import type { WarriorId, InjuryId } from '@/types/shared.types';
+import type { WarriorId, InjuryId, TournamentId } from '@/types/shared.types';
 import { generateId } from '@/utils/idUtils';
 import { resolveImpacts } from '@/engine/impacts';
 
@@ -23,7 +20,7 @@ function createTestPromoter(
   biases: FightingStyle[] = [FightingStyle.StrikingAttack]
 ): Promoter {
   return {
-    id,
+    id: id as import('@/types/shared.types').PromoterId,
     name,
     age: 45,
     personality,
@@ -61,7 +58,7 @@ function addTournamentParticipants(
     .filter((w): w is Warrior => w !== undefined);
 
   const tournament: TournamentEntry = {
-    id: `t-gold-spring-${week}`,
+    id: `t-gold-spring-${week}` as TournamentId,
     name: 'Test Tournament',
     tierId: 'Gold',
     season: 'Spring',
@@ -92,8 +89,8 @@ describe('PromoterPass', () => {
   describe('Personality-based purse modifiers', () => {
     it('should apply +15% purse modifier for Greedy promoters', () => {
       // Replace promoters with just a Greedy one
-      state.promoters = {
-        greedy_promoter: createTestPromoter(
+      (state as any).promoters = {
+        ['greedy_promoter' as import('@/types/shared.types').PromoterId]: createTestPromoter(
           'greedy_promoter',
           'Greedy Gary',
           'Greedy',
@@ -140,8 +137,8 @@ describe('PromoterPass', () => {
       state.roster = [...state.roster, highFameWarrior1, highFameWarrior2];
       runRankingsPass(state);
 
-      state.promoters = {
-        flashy_promoter: createTestPromoter(
+      (state as any).promoters = {
+        ['flashy_promoter' as import('@/types/shared.types').PromoterId]: createTestPromoter(
           'flashy_promoter',
           'Flashy Fred',
           'Flashy',
@@ -173,8 +170,8 @@ describe('PromoterPass', () => {
     });
 
     it('should apply +5% purse for Corporate promoters', () => {
-      state.promoters = {
-        corporate_promoter: createTestPromoter(
+      (state as any).promoters = {
+        ['corporate_promoter' as import('@/types/shared.types').PromoterId]: createTestPromoter(
           'corporate_promoter',
           'Corporate Carl',
           'Corporate',
@@ -201,7 +198,7 @@ describe('PromoterPass', () => {
   describe('Personality-based hype modifiers', () => {
     it('should reduce hype by 10% for Greedy promoters', () => {
       // Create two identical scenarios, one with Greedy, one with Corporate
-      state.promoters = {
+      (state as any).promoters = {
         greedy: createTestPromoter('greedy', 'Greedy', 'Greedy', 'Local', 1),
         corporate: createTestPromoter('corporate', 'Corporate', 'Corporate', 'Local', 1),
       };
@@ -242,7 +239,7 @@ describe('PromoterPass', () => {
       state.roster = [...state.roster, warrior1, warrior2];
       runRankingsPass(state);
 
-      state.promoters = {
+      (state as any).promoters = {
         honorable: createTestPromoter('honorable', 'Honorable', 'Honorable', 'Local', 2),
       };
 
@@ -286,7 +283,7 @@ describe('PromoterPass', () => {
       state.roster = [...state.roster, killer, victim];
       runRankingsPass(state);
 
-      state.promoters = {
+      (state as any).promoters = {
         sadistic: createTestPromoter('sadistic', 'Sadistic', 'Sadistic', 'Local', 2),
       };
 
@@ -319,7 +316,7 @@ describe('PromoterPass', () => {
       state.roster = [...state.roster, famousWarrior];
       runRankingsPass(state);
 
-      state.promoters = {
+      (state as any).promoters = {
         flashy: createTestPromoter('flashy', 'Flashy', 'Flashy', 'Local', 2),
       };
 
@@ -340,7 +337,7 @@ describe('PromoterPass', () => {
   describe('Personality-based skill gap thresholds', () => {
     it('should allow larger skill gaps (0.35) for Greedy promoters', () => {
       // Greedy allows 35% skill gap vs default 25%
-      state.promoters = {
+      (state as any).promoters = {
         greedy: createTestPromoter('greedy', 'Greedy', 'Greedy', 'Legendary', 5),
       };
 
@@ -353,7 +350,7 @@ describe('PromoterPass', () => {
 
     it('should restrict skill gaps to 0.10 for Honorable promoters', () => {
       // Honorable restricts to 10% skill gap (tight parity)
-      state.promoters = {
+      (state as any).promoters = {
         honorable: createTestPromoter('honorable', 'Honorable', 'Honorable', 'Legendary', 5),
       };
 
@@ -367,7 +364,7 @@ describe('PromoterPass', () => {
     });
 
     it('should use 0.25 skill gap for Sadistic and Flashy promoters', () => {
-      state.promoters = {
+      (state as any).promoters = {
         sadistic: createTestPromoter('sadistic', 'Sadistic', 'Sadistic', 'Legendary', 3),
         flashy: createTestPromoter('flashy', 'Flashy', 'Flashy', 'Legendary', 3),
       };
@@ -390,7 +387,7 @@ describe('PromoterPass', () => {
     });
 
     it('should use 0.20 skill gap for Corporate promoters', () => {
-      state.promoters = {
+      (state as any).promoters = {
         corporate: createTestPromoter('corporate', 'Corporate', 'Corporate', 'Legendary', 5),
       };
 
@@ -413,7 +410,7 @@ describe('PromoterPass', () => {
       state = addTournamentParticipants(state, [playerWarrior.id as string]);
 
       // Clear other promoters and add one simple promoter
-      state.promoters = {
+      (state as any).promoters = {
         local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
       };
 
@@ -438,7 +435,7 @@ describe('PromoterPass', () => {
       const rankingsImpact = runRankingsPass(state);
       state = resolveImpacts(state, [rankingsImpact]);
 
-      state.promoters = {
+      (state as any).promoters = {
         local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
       };
 
@@ -455,7 +452,7 @@ describe('PromoterPass', () => {
       state.isTournamentWeek = false;
       state.tournaments = [];
 
-      state.promoters = {
+      (state as any).promoters = {
         local: createTestPromoter('local', 'Local', 'Corporate', 'Local', 10),
       };
 
@@ -494,7 +491,7 @@ describe('PromoterPass', () => {
       state.roster = [...state.roster, injuredWarrior];
       runRankingsPass(state);
 
-      state.promoters = {
+      (state as any).promoters = {
         sadistic: createTestPromoter('sadistic', 'Sadistic', 'Sadistic', 'Local', 5),
       };
 
@@ -509,7 +506,7 @@ describe('PromoterPass', () => {
     it('should apply +20% purse modifier for injury-risk matchups with Sadistic promoters', () => {
       // This is harder to test deterministically, but we verify the function exists
       // and that Sadistic promoters generate offers
-      state.promoters = {
+      (state as any).promoters = {
         sadistic: createTestPromoter('sadistic', 'Sadistic', 'Sadistic', 'Regional', 5),
       };
 
@@ -544,7 +541,7 @@ describe('PromoterPass', () => {
       state.roster = [...state.roster, showyWarrior1, showyWarrior2];
       runRankingsPass(state);
 
-      state.promoters = {
+      (state as any).promoters = {
         flashy: createTestPromoter('flashy', 'Flashy', 'Flashy', 'Local', 5),
       };
 
@@ -578,7 +575,7 @@ describe('PromoterPass', () => {
       state.roster = [...state.roster, showy1, showy2];
       runRankingsPass(state);
 
-      state.promoters = {
+      (state as any).promoters = {
         flashy: createTestPromoter('flashy', 'Flashy', 'Flashy', 'Local', 5),
       };
 
@@ -601,7 +598,7 @@ describe('PromoterPass', () => {
 
   describe('Edge cases and error handling', () => {
     it('should handle empty promoters gracefully', () => {
-      state.promoters = {};
+      (state as any).promoters = {};
 
       const result = runPromoterPass(state);
 
@@ -610,7 +607,7 @@ describe('PromoterPass', () => {
     });
 
     it('should handle promoters with zero capacity', () => {
-      state.promoters = {
+      (state as any).promoters = {
         no_capacity: createTestPromoter('no_cap', 'No Capacity', 'Corporate', 'Local', 0),
       };
 
@@ -640,12 +637,12 @@ describe('PromoterPass', () => {
         responses: {},
       };
 
-      state.boutOffers = { expired_test: expiredOffer };
+      (state as any).boutOffers = { expired_test: expiredOffer };
 
       const result = runPromoterPass(state);
 
       // Expired offer should be removed
-      expect(result.boutOffers['expired_test']).toBeUndefined();
+      expect(result.boutOffers!['expired_test']).toBeUndefined();
     });
 
     it('should preserve signed offers for current week', () => {
@@ -669,7 +666,7 @@ describe('PromoterPass', () => {
         },
       };
 
-      state.boutOffers = { signed_test: signedOffer };
+      (state as any).boutOffers = { signed_test: signedOffer };
 
       const result = runPromoterPass(state);
 

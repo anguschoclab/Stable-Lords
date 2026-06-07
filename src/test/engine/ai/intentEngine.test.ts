@@ -101,7 +101,7 @@ describe('pickWeeklyIntent', () => {
       rivals: [],
       arenaHistory: [],
       ...overrides,
-    }) as unknown as GameState;
+    }) as any as GameState;
 
   it('returns RECOVERY when treasury is low', () => {
     const rival = createMockRival({ treasury: 100 });
@@ -152,7 +152,7 @@ describe('verifyIntentSkepticism', () => {
       rivals: [],
       arenaHistory: [],
       ...overrides,
-    }) as unknown as GameState;
+    }) as any as GameState;
 
   it('returns true when no strategy exists', () => {
     const rival = createMockRival({ strategy: undefined });
@@ -216,7 +216,7 @@ describe('updateAIStrategy', () => {
       rivals: [],
       arenaHistory: [],
       ...overrides,
-    }) as unknown as GameState;
+    }) as any as GameState;
 
   it('creates new strategy when none exists', () => {
     const rival = createMockRival({ strategy: undefined });

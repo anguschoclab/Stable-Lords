@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { intensityLabel, intensityColor } from '@/utils/rivalryDisplay';
+import { intensityLabel, intensityColor, intensityBgColor } from '@/utils/rivalryDisplay';
 
 describe('intensityLabel', () => {
   it('returns Simmering for negative values', () => {
@@ -48,5 +48,28 @@ describe('intensityColor', () => {
     expect(intensityColor(4)).toBe('text-destructive');
     expect(intensityColor(5)).toBe('text-destructive');
     expect(intensityColor(100)).toBe('text-destructive');
+  });
+
+  it('handles non-integer boundaries correctly', () => {
+    expect(intensityColor(1.5)).toBe('text-primary');
+    expect(intensityColor(3.5)).toBe('text-arena-gold');
+    expect(intensityColor(4.5)).toBe('text-destructive');
+  });
+});
+
+describe('intensityBgColor', () => {
+  it('returns bg-destructive for 4 and above', () => {
+    expect(intensityBgColor(4)).toBe('bg-destructive');
+    expect(intensityBgColor(5)).toBe('bg-destructive');
+    expect(intensityBgColor(100)).toBe('bg-destructive');
+  });
+
+  it('returns bg-arena-gold for below 4', () => {
+    expect(intensityBgColor(-1)).toBe('bg-arena-gold');
+    expect(intensityBgColor(0)).toBe('bg-arena-gold');
+    expect(intensityBgColor(1)).toBe('bg-arena-gold');
+    expect(intensityBgColor(2)).toBe('bg-arena-gold');
+    expect(intensityBgColor(3)).toBe('bg-arena-gold');
+    expect(intensityBgColor(3.9)).toBe('bg-arena-gold');
   });
 });

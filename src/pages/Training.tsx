@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStore';
 import { ATTRIBUTE_LABELS, type TrainingAssignment, type Attributes } from '@/types/game';
+import type { WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/state.types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -58,7 +59,7 @@ export default function Training() {
     [state.roster]
   );
 
-  const handleAssign = (warriorId: string, attribute: keyof Attributes) => {
+  const handleAssign = (warriorId: WarriorId, attribute: keyof Attributes) => {
     if (attribute === 'SZ') return;
     const name = rosterNameMap.get(warriorId);
     setState((s: GameStore) => {
@@ -66,26 +67,26 @@ export default function Training() {
         ...(s.trainingAssignments ?? []).filter(
           (a: TrainingAssignment) => a.warriorId !== warriorId
         ),
-        { warriorId, type: 'attribute', attribute },
+        { warriorId: warriorId as WarriorId, type: 'attribute', attribute },
       ];
     });
     toast.success(`${name ?? 'Warrior'} assigned to train ${ATTRIBUTE_LABELS[attribute]}`);
   };
 
-  const handleAssignRecovery = (warriorId: string) => {
+  const handleAssignRecovery = (warriorId: WarriorId) => {
     const name = rosterNameMap.get(warriorId);
     setState((s: GameStore) => {
       s.trainingAssignments = [
         ...(s.trainingAssignments ?? []).filter(
           (a: TrainingAssignment) => a.warriorId !== warriorId
         ),
-        { warriorId, type: 'recovery' },
+        { warriorId: warriorId as WarriorId, type: 'recovery' },
       ];
     });
     toast.success(`${name ?? 'Warrior'} assigned to active recovery`);
   };
 
-  const handleClear = (warriorId: string) => {
+  const handleClear = (warriorId: WarriorId) => {
     setState((s: GameStore) => {
       s.trainingAssignments = (s.trainingAssignments ?? []).filter(
         (a: TrainingAssignment) => a.warriorId !== warriorId
@@ -123,7 +124,7 @@ export default function Training() {
   }
 
   return (
-    <PageFrame size="xl">
+    <PageFrame>
       <PageHeader
         eyebrow="STABLE_MANAGEMENT"
         title="Training Grounds"

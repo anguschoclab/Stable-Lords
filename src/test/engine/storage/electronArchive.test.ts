@@ -11,7 +11,7 @@ function createMockElectronAPI(overrides?: Partial<typeof window.electronAPI>) {
     archiveGazette: vi.fn().mockResolvedValue({ success: true }),
     retrieveGazette: vi.fn().mockResolvedValue({ success: true, data: '' }),
     ...overrides,
-  } as unknown as typeof window.electronAPI;
+  } as any as typeof window.electronAPI;
 }
 
 describe('ElectronArchiveService', () => {

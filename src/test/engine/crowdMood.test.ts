@@ -64,7 +64,7 @@ describe('crowdMood system', () => {
       });
 
       // Assert default fallback is same as Calm
-      expect(getMoodModifiers('Unknown' as unknown)).toMatchObject({
+      expect(getMoodModifiers('Unknown' as any)).toMatchObject({
         fameMultiplier: 1.0,
         popMultiplier: 1.0,
         killChanceBonus: 0,

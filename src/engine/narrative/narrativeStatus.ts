@@ -41,7 +41,7 @@ export function stateChangeLine(
 /**
  * Generates fatigue line.
  */
-export function fatigueLine(rng: RNG, name: string, endRatio: number): string | null {
+export function fatigueLine(_rng: RNG, name: string, endRatio: number): string | null {
   if (endRatio <= 0.15) return `${name} is tired and barely able to defend himself!`;
   if (endRatio <= 0.3) return `${name} is breathing heavily.`;
   return null;
@@ -53,7 +53,7 @@ export function fatigueLine(rng: RNG, name: string, endRatio: number): string | 
 export function crowdReaction(
   rng: RNG,
   loserName: string,
-  winnerName: string,
+  _winnerName: string,
   hpRatio: number
 ): string | null {
   if (rng() > 0.25) return null;
@@ -74,7 +74,7 @@ export function crowdReaction(
  */
 export function minuteStatusLine(
   rng: RNG,
-  minute: number,
+  _minute: number,
   nameA: string,
   nameD: string,
   hitsA: number,

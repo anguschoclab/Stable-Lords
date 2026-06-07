@@ -21,7 +21,7 @@ describe('processTierProgression', () => {
     meta: { createdAt: new Date().toISOString(), gameName: 'Stable Lords', version: '1.0' },
     newsletter: [],
     recruitPool: [{ id: 'old' }],
-  } as unknown as GameState;
+  } as any as GameState;
 
   it('should return StateImpact with tier promotion when season changes', () => {
     const impact = processTierProgression(mockState, 'Summer', 14);
@@ -42,7 +42,7 @@ describe('processTierProgression', () => {
     // Should add newsletter items
     expect(impact.newsletterItems).toBeDefined();
     expect(impact.newsletterItems?.length).toBeGreaterThan(0);
-    expect(impact.newsletterItems?.[0].title).toBe('Stable Rankings Update');
+    expect(impact.newsletterItems?.[0]!.title).toBe('Stable Rankings Update');
   });
 
   it("should return empty StateImpact if season hasn't changed", () => {

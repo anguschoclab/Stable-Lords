@@ -1,5 +1,5 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
-import { type Season } from '@/types/shared.types';
+import { type Season, type StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { hashStr } from '@/utils/random';
@@ -74,12 +74,11 @@ export function processTierProgression(
   const rngService = rng || new SeededRNGService(hashStr(createdAt) + state.week);
 
   const promotionNews: string[] = [];
-  const rivalsUpdates = new Map<string, Partial<RivalStableData>>();
+  const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
 
   (state.rivals || []).forEach((r) => {
     const stats: TierStats = { totalWins: 0, totalKills: 0, totalFights: 0, activeCount: 0 };
-    for (let i = 0; i < r.roster.length; i++) {
-      const w = r.roster[i];
+    for (const w of r.roster) {
       stats.totalWins += w.career.wins;
       stats.totalKills += w.career.kills;
       stats.totalFights += w.career.wins + w.career.losses;
@@ -92,7 +91,7 @@ export function processTierProgression(
       if (result) {
         promotionNews.push(result.newsTemplate.replace('{name}', r.owner.stableName));
         // Key by rival.id (StableId), not owner.id — rivalsUpdates handler indexes by r.id.
-        rivalsUpdates.set(r.id, { tier: result.newTier });
+        rivalsUpdates.set(r.id as StableId, { tier: result.newTier });
         break;
       }
     }

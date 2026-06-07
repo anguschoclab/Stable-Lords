@@ -8,7 +8,7 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import type { Warrior } from '@/types/warrior.types';
 
 function mockWarrior(traits: string[]): Warrior {
-  return { traits } as unknown as Warrior;
+  return { traits } as any as Warrior;
 }
 
 describe('Warrior Traits', () => {

@@ -50,7 +50,7 @@ describe('NCAA-style Tournament Selection Committee', () => {
       1
     );
     expect(tournaments.length).toBe(4); // Gold, Silver, Bronze, Iron
-    expect(tournaments[0].name).toBe('Imperial Gold Cup');
-    expect(tournaments[0].participants.length).toBe(64);
+    expect(tournaments[0]!.name).toBe('Imperial Gold Cup');
+    expect(tournaments[0]!.participants.length).toBe(64);
   });
 });

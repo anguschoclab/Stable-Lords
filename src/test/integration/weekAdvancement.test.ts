@@ -64,22 +64,22 @@ describe('Week Advancement Integration', () => {
     it('should maintain roster across weeks', () => {
       const week1 = advanceWeek(initialState);
       expect(week1.roster).toHaveLength(1);
-      expect(week1.roster[0].name).toBe('Test Warrior');
+      expect(week1.roster[0]!.name).toBe('Test Warrior');
 
       const week2 = advanceWeek(week1);
       expect(week2.roster).toHaveLength(1);
-      expect(week2.roster[0].name).toBe('Test Warrior');
+      expect(week2.roster[0]!.name).toBe('Test Warrior');
     });
 
     it('should preserve warrior IDs across weeks', () => {
-      const originalId = initialState.roster[0].id;
+      const originalId = initialState.roster[0]!.id;
 
       let state = initialState;
       for (let i = 0; i < 5; i++) {
         state = advanceWeek(state);
       }
 
-      expect(state.roster[0].id).toBe(originalId);
+      expect(state.roster[0]!.id).toBe(originalId);
     });
 
     it('should not mutate the input state', () => {

@@ -144,7 +144,7 @@ function handleOwnerLifecycle(
   rival: RivalStableData,
   state: GameState,
   nextWeek: number,
-  rng: SeededRNGService
+  rng: IRNGService
 ): { updatedRival: RivalStableData; gazetteItems: string[] } {
   const updatedRival = { ...rival, owner: { ...rival.owner } };
   const gazetteItems: string[] = [];

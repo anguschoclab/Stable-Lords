@@ -172,7 +172,7 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
 
   // Initialize merged with default values using standard for loop
   for (let i = 0; i < MERGE_KEYS.length; i++) {
-    const key = MERGE_KEYS[i];
+    const key = MERGE_KEYS[i]!;
     const config = MERGE_CONFIG[key];
     if (!config) continue;
     const m = merged as Record<keyof StateImpact, unknown>;
@@ -200,7 +200,7 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
 
         const strategyFn = mergeStrategies[config.strategy];
         if (strategyFn) {
-          strategyFn(merged, key, value);
+          strategyFn(merged, key as keyof StateImpact, value);
         }
       }
     }

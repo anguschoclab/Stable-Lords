@@ -51,9 +51,9 @@ export default function WarriorDossierStats({ warrior }: Props) {
       <SectionDivider label="Derived Tactical Metrics" />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { label: 'Health Reserve', value: warrior.derivedStats.hp, sub: 'VITAL_SIGNS' },
-          { label: 'Max Endurance', value: warrior.derivedStats.endurance, sub: 'SYNC_CAPACITY' },
-          { label: 'Base Speed', value: warrior.derivedStats.speed, sub: 'REFLEX_THRESHOLD' },
+          { label: 'Health Reserve', value: warrior.derivedStats?.hp, sub: 'VITAL_SIGNS' },
+          { label: 'Max Endurance', value: warrior.derivedStats?.endurance, sub: 'SYNC_CAPACITY' },
+          { label: 'Base Speed', value: warrior.attributes?.SP, sub: 'REFLEX_THRESHOLD' },
         ].map((stat) => (
           <Surface key={stat.label} variant="glass" className="p-6 border-white/5">
             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">

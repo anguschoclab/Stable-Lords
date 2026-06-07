@@ -53,7 +53,7 @@ export class OPFSArchiveService implements ArchiveService {
    */
   private async enqueue<T>(task: () => Promise<T>): Promise<T> {
     const p = this.writeQueue.then(task);
-    this.writeQueue = p.catch(() => {}); // catch errors to allow next task in queue
+    this.writeQueue = p.catch(() => {}) as Promise<void>; // catch errors to allow next task in queue
     return p;
   }
 

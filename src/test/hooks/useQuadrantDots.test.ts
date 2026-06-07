@@ -30,17 +30,17 @@ function createMockGameState(overrides: Partial<GameState> = {}): GameState {
     trainingAssignments: [],
     trainers: [],
     ...overrides,
-  } as unknown as GameState;
+  } as any as GameState;
 }
 
 function createMockRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
   return {
     id: 'rival-1',
-    owner: { stableName: 'Rival Stable' } as unknown as RivalStableData['owner'],
-    roster: [{}, {}] as unknown as RivalStableData['roster'],
+    owner: { stableName: 'Rival Stable' } as any as RivalStableData['owner'],
+    roster: [{}, {}] as any as RivalStableData['roster'],
     treasury: 0,
     ...overrides,
-  } as unknown as RivalStableData;
+  } as any as RivalStableData;
 }
 
 describe('useQuadrantDots', () => {
@@ -62,7 +62,7 @@ describe('useQuadrantDots', () => {
     const rivals = [
       createMockRival(),
       createMockRival({
-        owner: { stableName: 'Another Rival' } as unknown as RivalStableData['owner'],
+        owner: { stableName: 'Another Rival' } as any as RivalStableData['owner'],
       }),
     ];
     const { result } = renderHook(() => useQuadrantDots(state, rivals));
@@ -78,7 +78,7 @@ describe('useQuadrantDots', () => {
   it('computes fame/notoriety via engine functions', () => {
     const state = createMockGameState({ fame: 99 });
     const rivals = [
-      createMockRival({ roster: [{}, {}, {}] as unknown as RivalStableData['roster'] }),
+      createMockRival({ roster: [{}, {}, {}] as any as RivalStableData['roster'] }),
     ];
     const { result } = renderHook(() => useQuadrantDots(state, rivals));
 

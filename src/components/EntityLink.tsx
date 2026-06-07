@@ -13,7 +13,6 @@ import { WarriorDossier } from '@/components/WarriorDossier';
 import { StableDossier } from '@/components/StableDossier';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, User, Landmark } from 'lucide-react';
-import type { GameState } from '@/types/game';
 import type { NameResolutionState } from '@/utils/historyResolver';
 import { findWarrior, findStableId } from '@/utils/historyResolver';
 
@@ -101,7 +100,7 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
           </SheetTitle>
         </SheetHeader>
         <div className="mt-6 h-full">
-          <WarriorDossier warriorId={resolvedId} />
+          <WarriorDossier warriorId={resolvedId as import('@/types/shared.types').WarriorId} />
         </div>
       </SheetContent>
     </Sheet>
@@ -153,7 +152,7 @@ export function StableLink({ name, className, children }: StableLinkProps) {
 
   // Resolve stable name to owner ID
   // ⚡ Bolt: Prevent O(N) array scans by delegating to O(1) cached lookup
-  const resolvedStableId = findStableId(state, name);
+  const resolvedStableId = findStableId(state as unknown as NameResolutionState, name);
   const isPlayer = resolvedStableId === state.player.id;
   const stableId = isPlayer ? 'player' : resolvedStableId;
 

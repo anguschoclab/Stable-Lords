@@ -1,11 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import {
-  computeGainChance,
   processAttributeTraining,
   rollForTrainingInjury,
   processRecovery,
-  TOTAL_CAP,
   SEASONAL_CAP_PER_ATTR,
   SKILL_DRILL_CAP,
   computeSkillDrillChance,
@@ -13,12 +11,11 @@ import {
 } from '@/engine/training/trainingGains';
 import { FightingStyle, type Warrior, type GameState, type InjuryData } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
-import { SeededRNG } from '@/utils/random';
 
 function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
   return {
-    id: 'w1',
+    id: 'w1' as import('@/types/shared.types').WarriorId,
     name: 'Test',
     style: FightingStyle.StrikingAttack,
     attributes: attrs,
@@ -34,6 +31,7 @@ function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
     status: 'Active',
     age: 20,
     potential: { ST: 18, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 },
+    traits: [],
     ...overrides,
   };
 }
@@ -59,7 +57,7 @@ describe('trainingGains', () => {
       const warrior = makeWarrior({ ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 });
       const state = { season: 'Spring' } as GameState;
       const seasonalGrowth = [
-        { warriorId: 'w1', season: 'Spring' as const, gains: { ST: SEASONAL_CAP_PER_ATTR } as any },
+        { warriorId: 'w1' as import('@/types/shared.types').WarriorId, season: 'Spring' as const, gains: { ST: SEASONAL_CAP_PER_ATTR } as any },
       ];
       const rng = new SeededRNGService(1);
       const res = processAttributeTraining(warrior, 'ST', state, seasonalGrowth, rng);
@@ -132,7 +130,7 @@ describe('trainingGains', () => {
         {
           injuries: [
             {
-              id: 'i1',
+              id: 'i1' as import('@/types/shared.types').InjuryId,
               name: 'Cut',
               description: 'O',
               severity: 'Minor',
@@ -153,7 +151,7 @@ describe('trainingGains', () => {
         {
           injuries: [
             {
-              id: 'i1',
+              id: 'i1' as import('@/types/shared.types').InjuryId,
               name: 'Cut',
               description: 'O',
               severity: 'Minor',
@@ -328,7 +326,7 @@ describe('processAttributeTraining - successful gain', () => {
         { ST: 12, CN: 12, SZ: 12, WT: 10, WL: 12, SP: 12, DF: 12 },
         { skillDrills: {}, age: 38 }
       );
-      const chance = computeSkillDrillChance(warrior, 'Punching', []);
+      const chance = computeSkillDrillChance(warrior, 'Punching' as any, []);
       // age penalty = (38 - 28) * 0.02 = 0.2
       // raw = (0.4 - 0.2) = 0.2 -> 0.2
       expect(chance).toBeCloseTo(0.2);
@@ -337,9 +335,9 @@ describe('processAttributeTraining - successful gain', () => {
     it('should apply diminishing returns from existing drills', () => {
       const warrior = makeWarrior(
         { ST: 12, CN: 12, SZ: 12, WT: 10, WL: 12, SP: 12, DF: 12 },
-        { skillDrills: { Punching: 2 } }
+        { skillDrills: { Punching: 2 } as any as any }
       );
-      const chance = computeSkillDrillChance(warrior, 'Punching', []);
+      const chance = computeSkillDrillChance(warrior, 'Punching' as any, []);
       // dr = Math.pow(0.6, 2) = 0.36
       // raw = 0.4 * 0.36 = 0.144 -> clamped to min (0.15)
       expect(chance).toBeCloseTo(0.15);
@@ -350,11 +348,11 @@ describe('processAttributeTraining - successful gain', () => {
     it('should block if already capped', () => {
       const warrior = makeWarrior(
         { ST: 12, CN: 12, SZ: 12, WT: 10, WL: 12, SP: 12, DF: 12 },
-        { skillDrills: { Punching: SKILL_DRILL_CAP } }
+        { skillDrills: { Punching: SKILL_DRILL_CAP } as any }
       );
       const res = processSkillDrillTraining(
         warrior,
-        'Punching',
+        'Punching' as any,
         {} as any,
         new SeededRNGService(1)
       );
@@ -366,12 +364,12 @@ describe('processAttributeTraining - successful gain', () => {
     it('should increase drill count on success', () => {
       const warrior = makeWarrior(
         { ST: 12, CN: 12, SZ: 12, WT: 10, WL: 12, SP: 12, DF: 12 },
-        { skillDrills: { Punching: 1 } }
+        { skillDrills: { Punching: 1 } as any }
       );
       const rng = { next: () => 0.05 } as any;
-      const res = processSkillDrillTraining(warrior, 'Punching', {} as any, rng);
+      const res = processSkillDrillTraining(warrior, 'Punching' as any, {} as any, rng);
 
-      expect(res.updatedWarrior?.skillDrills?.['Punching']).toBe(2);
+      expect((res.updatedWarrior?.skillDrills as any)?.['Punching']).toBe(2);
       expect(res.result.type).toBe('gain');
       expect(res.result.message).toMatch(/sharpened their Punching/);
     });
@@ -379,10 +377,10 @@ describe('processAttributeTraining - successful gain', () => {
     it('should fail and block if roll misses', () => {
       const warrior = makeWarrior(
         { ST: 12, CN: 12, SZ: 12, WT: 10, WL: 12, SP: 12, DF: 12 },
-        { skillDrills: { Punching: 1 } }
+        { skillDrills: { Punching: 1 } as any }
       );
       const rng = { next: () => 0.99 } as any;
-      const res = processSkillDrillTraining(warrior, 'Punching', {} as any, rng);
+      const res = processSkillDrillTraining(warrior, 'Punching' as any, {} as any, rng);
 
       expect(res.updatedWarrior).toBeNull();
       expect(res.result.type).toBe('blocked');
@@ -401,7 +399,7 @@ describe('processAttributeTraining - successful gain', () => {
     it('should hard cap training if potential is reached', () => {
       const warrior = makeWarrior(
         { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 },
-        { potential: { ST: 12 } }
+        { potential: { ST: 12, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 } }
       );
       const rng = new SeededRNGService(1);
       const res = processAttributeTraining(warrior, 'ST', {} as GameState, [], rng);

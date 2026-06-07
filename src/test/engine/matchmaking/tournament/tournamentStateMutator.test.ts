@@ -9,6 +9,7 @@ import {
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState } from '@/types/state.types';
 import type { TournamentEntry } from '@/types/state.types';
+import type { WarriorId, TournamentId } from '@/types/shared.types';
 
 describe('TournamentStateMutator', () => {
   let state: GameState;
@@ -58,28 +59,28 @@ describe('TournamentStateMutator', () => {
 
   describe('findWarriorById', () => {
     it('should find warrior in player roster', () => {
-      const warrior = findWarriorById(state, state.roster[0].id);
+      const warrior = findWarriorById(state, state.roster[0]!.id);
       expect(warrior).toBeDefined();
-      expect(warrior?.id).toBe(state.roster[0].id);
+      expect(warrior?.id).toBe(state.roster[0]!.id);
       expect(warrior?.name).toBe('Player Warrior');
     });
 
     it('should find warrior in rival roster', () => {
-      const rivalId = state.rivals[0].roster[0].id;
+      const rivalId = state.rivals[0]!.roster[0]!.id;
       const warrior = findWarriorById(state, rivalId);
       expect(warrior).toBeDefined();
       expect(warrior?.id).toBe(rivalId);
     });
 
     it('should return undefined for non-existent warrior', () => {
-      const warrior = findWarriorById(state, 'non-existent-id');
+      const warrior = findWarriorById(state, 'non-existent-id' as WarriorId);
       expect(warrior).toBeUndefined();
     });
 
     it('should find warrior in tournament participants', () => {
       const tournamentId = 'test-tournament';
       const tournament: TournamentEntry = {
-        id: tournamentId,
+        id: tournamentId as TournamentId,
         season: 'Spring',
         week: 1,
         tierId: 'Gold',
@@ -100,7 +101,7 @@ describe('TournamentStateMutator', () => {
       };
 
       state.tournaments = [tournament];
-      const warrior = findWarriorById(state, tournament.participants[0].id, tournament);
+      const warrior = findWarriorById(state, tournament.participants[0]!.id, tournament);
       expect(warrior).toBeDefined();
       expect(warrior?.name).toBe('Tournament Warrior');
     });
@@ -111,7 +112,7 @@ describe('TournamentStateMutator', () => {
       state.roster = [];
 
       const tournament: TournamentEntry = {
-        id: 'test-tournament',
+        id: 'test-tournament' as TournamentId,
         season: 'Spring',
         week: 1,
         tierId: 'Gold',
@@ -130,10 +131,10 @@ describe('TournamentStateMutator', () => {
         ],
         completed: false,
       };
-      tournament.participants[0].id = warriorId;
+      tournament.participants[0]!.id = warriorId as WarriorId;
       state.tournaments = [tournament];
 
-      const warrior = findWarriorById(state, warriorId, tournament);
+      const warrior = findWarriorById(state, warriorId as WarriorId, tournament);
       expect(warrior).toBeDefined();
       expect(warrior?.name).toBe('Tournament Warrior');
     });
@@ -141,20 +142,20 @@ describe('TournamentStateMutator', () => {
 
   describe('modifyWarrior', () => {
     it('should modify warrior in player roster', () => {
-      const originalFame = state.roster[0].fame;
-      const impact = modifyWarrior(state, state.roster[0].id, (w) => {
+      const originalFame = state.roster[0]!.fame;
+      const impact = modifyWarrior(state, state.roster[0]!.id, (w) => {
         w.fame = 100;
       });
       const updatedState = resolveImpacts(state, [impact]);
 
-      const updatedWarrior = updatedState.roster.find((w) => w.id === state.roster[0].id);
+      const updatedWarrior = updatedState.roster.find((w) => w.id === state.roster[0]!.id);
       expect(updatedWarrior?.fame).toBe(100);
       expect(updatedWarrior?.fame).not.toBe(originalFame);
     });
 
     it('should modify warrior in rival roster', () => {
-      const rivalId = state.rivals[0].roster[0].id;
-      const originalFame = state.rivals[0].roster[0].fame;
+      const rivalId = state.rivals[0]!.roster[0]!.id;
+      const originalFame = state.rivals[0]!.roster[0]!.fame;
 
       const impact = modifyWarrior(state, rivalId, (w) => {
         w.fame = 50;
@@ -162,13 +163,13 @@ describe('TournamentStateMutator', () => {
       const updatedState = resolveImpacts(state, [impact]);
 
       const updatedRival = updatedState.rivals[0];
-      const updatedWarrior = updatedRival.roster.find((w) => w.id === rivalId);
+      const updatedWarrior = updatedRival!.roster.find((w) => w.id === rivalId);
       expect(updatedWarrior?.fame).toBe(50);
       expect(updatedWarrior?.fame).not.toBe(originalFame);
     });
 
     it('should return unchanged state for non-existent warrior', () => {
-      const impact = modifyWarrior(state, 'non-existent-id', (w) => {
+      const impact = modifyWarrior(state, 'non-existent-id' as WarriorId, (w) => {
         w.fame = 100;
       });
       const updatedState = resolveImpacts(state, [impact]);
@@ -179,26 +180,26 @@ describe('TournamentStateMutator', () => {
     });
 
     it('should apply complex transform function', () => {
-      const impact = modifyWarrior(state, state.roster[0].id, (w) => {
+      const impact = modifyWarrior(state, state.roster[0]!.id, (w) => {
         w.fame = w.fame + 10;
         w.career.wins = w.career.wins + 1;
         w.popularity = w.popularity + 5;
       });
       const updatedState = resolveImpacts(state, [impact]);
 
-      const updatedWarrior = updatedState.roster.find((w) => w.id === state.roster[0].id);
+      const updatedWarrior = updatedState.roster.find((w) => w.id === state.roster[0]!.id);
       expect(updatedWarrior?.fame).toBe(10);
       expect(updatedWarrior?.career.wins).toBe(1);
       expect(updatedWarrior?.popularity).toBe(5);
     });
 
     it('should not mutate original state', () => {
-      const originalFame = state.roster[0].fame;
-      modifyWarrior(state, state.roster[0].id, (w) => {
+      const originalFame = state.roster[0]!.fame;
+      modifyWarrior(state, state.roster[0]!.id, (w) => {
         w.fame = 100;
       });
 
-      expect(state.roster[0].fame).toBe(originalFame);
+      expect(state.roster[0]!.fame).toBe(originalFame);
     });
   });
 });

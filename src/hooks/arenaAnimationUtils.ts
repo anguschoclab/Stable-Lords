@@ -1,4 +1,4 @@
-import type { FighterPose, SpeechBubble, ArenaState } from '@/types/arena.types';
+import type { SpeechBubble, ArenaState } from '@/types/arena.types';
 import type { MinuteEvent } from '@/types/combat.types';
 import { classifyEvent } from '@/lib/boutUtils';
 

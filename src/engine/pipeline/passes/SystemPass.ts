@@ -1,4 +1,4 @@
-import type { GameState } from '@/types/state.types';
+import type { GameState, Season } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
@@ -50,7 +50,7 @@ function processSystemicProgression(
 function processSeasonalChurnAndPhilosophy(
   state: GameState,
   nextWeek: number,
-  nextSeason: number,
+  nextSeason: Season,
   impact: StateImpact,
   rng: IRNGService
 ): void {

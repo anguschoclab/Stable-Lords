@@ -69,10 +69,10 @@ function ensureWarriorCache(state: NameResolutionState | GameState): WarriorCach
   const idMap = new Map<string, CachedWarrior>();
   const nameMap = new Map<string, CachedWarrior>();
 
-  const processWarrior = (w: CachedWarrior | undefined) => {
+  const processWarrior = (w: { id: string | import('@/types/shared.types').WarriorId; name: string } | undefined) => {
     if (!w) return;
-    idMap.set(w.id, w);
-    nameMap.set(w.name, w);
+    idMap.set(w.id as string, w as CachedWarrior);
+    nameMap.set(w.name, w as CachedWarrior);
   };
 
   // Process in reverse order of precedence so earlier items overwrite later ones
@@ -81,7 +81,7 @@ function ensureWarriorCache(state: NameResolutionState | GameState): WarriorCach
   // Rivals (last to first)
   const rivals = state.rivals || [];
   for (let i = rivals.length - 1; i >= 0; i--) {
-    const rival = rivals[i];
+    const rival = rivals[i]!;
     const roster = rival.roster || [];
     for (let j = roster.length - 1; j >= 0; j--) {
       processWarrior(roster[j]);
@@ -204,12 +204,12 @@ export function findWarrior(
 
   if (id) {
     const w = cache.idMap.get(id);
-    if (w) return w as Warrior;
+    if (w) return w as unknown as Warrior;
   }
 
   if (name) {
     const w = cache.nameMap.get(name);
-    if (w) return w as Warrior;
+    if (w) return w as unknown as Warrior;
   }
 
   return undefined;

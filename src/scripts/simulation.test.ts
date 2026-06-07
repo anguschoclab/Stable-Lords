@@ -1,6 +1,5 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest';
+import { describe, test, vi, beforeEach } from 'vitest';
 import { runSimulation } from './simulation-harness';
-import { formatPulseTable } from '@/engine/stats/simulationMetrics';
 import { setMockIdGenerator } from '@/utils/idUtils';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
@@ -39,7 +38,7 @@ describe('Headless Simulation Harness', () => {
     };
 
     console.log(`\n[Sim] Starting 104-week balance check with seed: ${seed}`);
-    const result = runSimulation(config);
+    runSimulation(config);
 
     console.log('SUCCESS');
   }, 300000);

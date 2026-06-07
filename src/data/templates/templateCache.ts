@@ -4,6 +4,7 @@
  */
 
 import type { StableTemplate, StableTier } from './stableTemplate.types';
+import type { FightingStyle } from '@/types/game';
 import { LEGENDARY_TEMPLATES } from './legendaryTemplates';
 import { MAJOR_TEMPLATES } from './majorTemplates';
 import { ESTABLISHED_TEMPLATES } from './establishedTemplates';
@@ -158,7 +159,7 @@ export function getTemplatesByStyle(style: string): StableTemplate[] {
     return cached;
   }
 
-  const result = ALL_TEMPLATES.filter((template) => template.preferredStyles.includes(style));
+  const result = ALL_TEMPLATES.filter((template) => template.preferredStyles.includes(style as FightingStyle));
 
   templateCache.set(cacheKey, result);
   return result;
@@ -249,7 +250,7 @@ export function searchTemplates(criteria: {
   }
 
   if (criteria.style) {
-    result = result.filter((template) => template.preferredStyles.includes(criteria.style));
+    result = result.filter((template) => template.preferredStyles.includes(criteria.style as FightingStyle));
   }
 
   if (criteria.minFame !== undefined || criteria.maxFame !== undefined) {

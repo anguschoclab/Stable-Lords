@@ -47,7 +47,8 @@ export function isValidOwnerName(fullName: string): boolean {
   const parts = fullName.trim().split(/\s+/);
   if (parts.length !== 2) return false;
 
-  const [firstName, lastName] = parts;
+  const firstName = parts[0]!;
+  const lastName = parts[1]!;
   return isValidOwnerFirstName(firstName) && isValidOwnerLastName(lastName);
 }
 
@@ -96,7 +97,8 @@ export function isValidStableName(stableName: string): boolean {
   // Check if it's prefix+suffix format
   const parts = stableName.trim().split(/\s+/);
   if (parts.length === 2) {
-    const [prefix, suffix] = parts;
+    const prefix = parts[0]!;
+    const suffix = parts[1]!;
     return isValidStablePrefix(prefix) && isValidStableSuffix(suffix);
   }
 
@@ -116,7 +118,8 @@ export function getStableNameFormat(stableName: string): 'alt' | 'prefixed' | 'i
 
   const parts = stableName.trim().split(/\s+/);
   if (parts.length === 2) {
-    const [prefix, suffix] = parts;
+    const prefix = parts[0]!;
+    const suffix = parts[1]!;
     if (isValidStablePrefix(prefix) && isValidStableSuffix(suffix)) {
       return 'prefixed';
     }

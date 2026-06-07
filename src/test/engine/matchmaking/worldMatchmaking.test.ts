@@ -104,7 +104,7 @@ function makeTestState(rivals: RivalStableData[], week: number = 1): GameState {
     realmRankings: {},
     awards: [],
     promoters: {},
-  } as unknown as GameState;
+  } as any as GameState;
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────────────

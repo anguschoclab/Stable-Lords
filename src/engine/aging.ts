@@ -37,7 +37,7 @@ interface AgingResult {
 function processWarriorAging(
   w: Warrior,
   isPlayer: boolean,
-  rivalId: string | undefined,
+  _rivalId: string | undefined,
   state: GameState,
   rng: IRNGService,
   isAgeTick: boolean

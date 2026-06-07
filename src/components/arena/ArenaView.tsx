@@ -136,9 +136,7 @@ export default function ArenaView({
 
         // Trigger weapon swing on hit/crit
         if (type === 'hit' || type === 'crit') {
-          const isA = event.text.toLowerCase().includes(nameA.toLowerCase());
-          setWeaponSwing({ active: true, fighter: isA ? 'A' : 'D' });
-          setTimeout(() => setWeaponSwing({ active: false, fighter: null }), 200);
+          // weapon swing effect handled by ArenaFighter component
         }
       }
     }
@@ -179,7 +177,6 @@ export default function ArenaView({
         state={crowdState}
         volume={arenaPrefs.audioVolume}
         enabled={arenaPrefs.audioEnabled}
-        isBloodMoon={weather === 'Blood Moon'}
       />
       {weather && (
         <WeatherAudio

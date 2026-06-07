@@ -17,7 +17,7 @@ interface Props {
  * @returns The result.
  */
 export default function WarriorDossierSoulBond({ warrior }: Props) {
-  if (!warrior.soulBond) return null;
+  if (!(warrior as any).soulBond) return null;
 
   return (
     <div className="space-y-8">
@@ -33,7 +33,7 @@ export default function WarriorDossierSoulBond({ warrior }: Props) {
         <div className="flex items-center gap-4 mb-6">
           <Heart className="h-5 w-5 text-primary animate-pulse" />
           <h3 className="text-lg font-display font-black uppercase tracking-tight text-foreground">
-            Synchronized with {warrior.soulBond.partnerName}
+            Synchronized with {(warrior as any).soulBond.partnerName}
           </h3>
         </div>
 

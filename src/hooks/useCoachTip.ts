@@ -164,19 +164,19 @@ const COACH_ROUTES: RouteEntry[] = [
         id: 'warrior-equipment',
         message:
           '⚔️ Equip your warrior! Weapon choice affects damage and speed. Heavier armor protects but slows you down.',
-        condition: (s, ctx) => !!ctx?.warrior && !ctx.warrior.equipment,
+        condition: (_s, ctx) => !!ctx?.warrior && !ctx.warrior.equipment,
       },
       {
         id: 'warrior-strategy',
         message:
           '📋 Set a fight strategy! Adjust Offensive Effort (OE) and Activity Level (AL) to control aggression. Try phase-based overrides for advanced tactics.',
-        condition: (s, ctx) => !!ctx?.warrior && !ctx.warrior.plan,
+        condition: (_s, ctx) => !!ctx?.warrior && !ctx.warrior.plan,
       },
       {
         id: 'warrior-strategy-tune',
         message:
           '🎛️ Lost a few fights? Try adjusting OE/AL. Lower OE conserves energy for longer bouts. Higher AL keeps pressure on aggressive opponents.',
-        condition: (s, ctx) => {
+        condition: (_s, ctx) => {
           const w = ctx?.warrior;
           if (!w) return false;
           return w.career.losses >= 2 && w.career.wins === 0 && !!w.plan;
@@ -186,7 +186,7 @@ const COACH_ROUTES: RouteEntry[] = [
         id: 'warrior-retirement',
         message:
           '🏖️ This veteran has earned their rest. Consider retiring them — retired warriors can become trainers with style bonuses!',
-        condition: (s, ctx) => {
+        condition: (_s, ctx) => {
           const w = ctx?.warrior;
           if (!w) return false;
           return w.career.wins + w.career.losses >= 8 && w.fame >= 5;
@@ -196,13 +196,13 @@ const COACH_ROUTES: RouteEntry[] = [
         id: 'warrior-injured',
         message:
           '🩹 This warrior is injured! Injuries reduce combat effectiveness. Consider resting them or adjusting their strategy to play defensively.',
-        condition: (s, ctx) => (ctx?.warrior?.injuries?.length ?? 0) >= 1,
+        condition: (_s, ctx) => (ctx?.warrior?.injuries?.length ?? 0) >= 1,
       },
       {
         id: 'warrior-champion',
         message:
           '👑 Your champion commands respect! They gain extra fame from victories. Protect this warrior — losing a champion hurts stable morale.',
-        condition: (s, ctx) => ctx?.warrior?.champion === true,
+        condition: (_s, ctx) => ctx?.warrior?.champion === true,
       },
       {
         id: 'warrior-first-visit',

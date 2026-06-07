@@ -30,7 +30,7 @@ describe('SeasonalRetirementService', () => {
 
     it('should retire warriors based on age', () => {
       // Create a rival with old warriors
-      state.rivals[0].roster = [
+      state.rivals[0]!.roster = [
         makeWarrior(
           undefined,
           'Old Warrior',
@@ -66,12 +66,12 @@ describe('SeasonalRetirementService', () => {
       const rng = new SeededRNGService(12345);
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
-      const oldWarrior = updatedState.rivals[0].roster.find((w) => w.name === 'Old Warrior');
+      const oldWarrior = updatedState.rivals[0]!.roster.find((w) => w.name === 'Old Warrior');
       expect(oldWarrior?.status).toBe('Retired');
     });
 
     it('should not retire young warriors', () => {
-      state.rivals[0].roster = [
+      state.rivals[0]!.roster = [
         makeWarrior(
           undefined,
           'Young Warrior',
@@ -92,14 +92,14 @@ describe('SeasonalRetirementService', () => {
       const rng = new SeededRNGService(12345);
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
-      const youngWarrior = updatedState.rivals[0].roster.find((w) => w.name === 'Young Warrior');
+      const youngWarrior = updatedState.rivals[0]!.roster.find((w) => w.name === 'Young Warrior');
       expect(youngWarrior?.status).toBe('Active');
     });
 
     it('should identify legacy founder candidates', () => {
-      state.rivals[0].owner.name = 'Legend';
-      state.rivals[0].owner.stableName = 'Academy';
-      state.rivals[0].roster = [
+      state.rivals[0]!.owner.name = 'Legend';
+      state.rivals[0]!.owner.stableName = 'Academy';
+      state.rivals[0]!.roster = [
         makeWarrior(
           undefined,
           'Legend',
@@ -126,7 +126,7 @@ describe('SeasonalRetirementService', () => {
     });
 
     it('should not create legacy candidates for non-legendary warriors', () => {
-      state.rivals[0].roster = [
+      state.rivals[0]!.roster = [
         makeWarrior(
           undefined,
           'Average',
@@ -153,7 +153,7 @@ describe('SeasonalRetirementService', () => {
     });
 
     it('should set retiredWeek on retired warriors', () => {
-      state.rivals[0].roster = [
+      state.rivals[0]!.roster = [
         makeWarrior(
           undefined,
           'Old Warrior',
@@ -174,7 +174,7 @@ describe('SeasonalRetirementService', () => {
       const rng = new SeededRNGService(12345);
       const { updatedState } = SeasonalRetirementService.processSeasonalRetirement(state, rng);
 
-      const oldWarrior = updatedState.rivals[0].roster.find((w) => w.name === 'Old Warrior');
+      const oldWarrior = updatedState.rivals[0]!.roster.find((w) => w.name === 'Old Warrior');
       expect(oldWarrior?.status).toBe('Retired');
       if (oldWarrior?.status === 'Retired') {
         expect(oldWarrior.retiredWeek).toBe(state.week);

@@ -19,9 +19,9 @@ export const PatronTokenService = {
     rng?: IRNGService
   ): GameState {
     const newToken: InsightToken = {
-      id: rng?.uuid() || generateId(undefined, 'insight'),
+      id: (rng?.uuid() || generateId(undefined, 'insight')) as import('@/types/shared.types').InsightId,
       type,
-      warriorId: '', // Initially unassigned
+      warriorId: '' as import('@/types/shared.types').WarriorId, // Initially unassigned
       warriorName: 'Unassigned',
       detail: `Awarded from ${source}`,
       discoveredWeek: state.week,

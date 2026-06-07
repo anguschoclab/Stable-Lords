@@ -229,7 +229,7 @@ describe('CombatNarrator', () => {
 
       expect(Array.isArray(narration)).toBe(true);
       expect(narration.length).toBe(1);
-      expect(narration[0].length).toBeGreaterThan(0);
+      expect(narration[0]!.length).toBeGreaterThan(0);
     });
 
     it('should narrate bout conclusion for Kill', () => {

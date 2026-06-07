@@ -21,6 +21,7 @@ import {
   HardHat,
   Package,
   HelpCircle,
+  Activity,
 } from 'lucide-react';
 import { checkWeaponRequirements } from '@/data/equipment';
 import { cn } from '@/lib/utils';
@@ -67,7 +68,7 @@ export default function StableEquipment() {
       toast.error('Select a warrior first');
       return;
     }
-    updateWarriorEquipment(targetWarriorId, loadout);
+    updateWarriorEquipment(targetWarriorId as import('@/types/shared.types').WarriorId, loadout);
     toast.success(`Applied ${label} loadout to ${targetWarrior?.name}`);
   };
 

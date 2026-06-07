@@ -11,7 +11,7 @@ function createMockWarrior(overrides: Partial<Warrior> = {}): Warrior {
     fame: 0,
     career: { wins: 0, losses: 0, kills: 0 },
     ...overrides,
-  } as unknown as Warrior;
+  } as any as Warrior;
 }
 
 function createMockGameState(overrides: Partial<GameState> = {}): GameState {
@@ -25,7 +25,7 @@ function createMockGameState(overrides: Partial<GameState> = {}): GameState {
     trainingAssignments: [],
     trainers: [],
     ...overrides,
-  } as unknown as GameState;
+  } as any as GameState;
 }
 
 function createMockFightSummary(overrides: Partial<FightSummary> = {}): FightSummary {
@@ -34,7 +34,7 @@ function createMockFightSummary(overrides: Partial<FightSummary> = {}): FightSum
     by: 'KO',
     winner: 'A',
     ...overrides,
-  } as unknown as FightSummary;
+  } as any as FightSummary;
 }
 
 describe('computeStableReputation', () => {
@@ -56,9 +56,9 @@ describe('computeStableReputation', () => {
         createMockWarrior({ fame: 30 }),
       ],
       newsletter: [
-        { items: ['Player Stable won the match!'] } as unknown,
-        { items: ['Another stable won.'] } as unknown,
-        { items: ['Player Stable is looking strong.'] } as unknown,
+        { items: ['Player Stable won the match!'] } as any,
+        { items: ['Another stable won.'] } as any,
+        { items: ['Player Stable is looking strong.'] } as any,
       ],
       fame: 5,
     });
@@ -83,8 +83,8 @@ describe('computeStableReputation', () => {
 
   it('calculates notoriety correctly', () => {
     const state = createMockGameState({
-      roster: [createMockWarrior({ career: { wins: 0, losses: 0, kills: 2 } as unknown })],
-      graveyard: [createMockWarrior({ career: { wins: 0, losses: 0, kills: 3 } as unknown })],
+      roster: [createMockWarrior({ career: { wins: 0, losses: 0, kills: 2 } as any })],
+      graveyard: [createMockWarrior({ career: { wins: 0, losses: 0, kills: 3 } as any })],
       arenaHistory: [
         createMockFightSummary({ by: 'Kill' }),
         createMockFightSummary({ by: 'Kill' }),
@@ -104,7 +104,7 @@ describe('computeStableReputation', () => {
 
   it('calculates honor correctly', () => {
     const state = createMockGameState({
-      roster: [createMockWarrior({ career: { wins: 0, losses: 0, kills: 1 } as unknown })],
+      roster: [createMockWarrior({ career: { wins: 0, losses: 0, kills: 1 } as any })],
       arenaHistory: [
         createMockFightSummary({ by: 'KO', winner: 'A' }),
         createMockFightSummary({ by: 'KO', winner: 'D' }),
@@ -124,12 +124,12 @@ describe('computeStableReputation', () => {
   it('calculates adaptability correctly', () => {
     const state = createMockGameState({
       roster: [
-        createMockWarrior({ style: 'Gladiator' as unknown }),
-        createMockWarrior({ style: 'Gladiator' as unknown }),
-        createMockWarrior({ style: 'Brawler' as unknown }),
+        createMockWarrior({ style: 'Gladiator' as any }),
+        createMockWarrior({ style: 'Gladiator' as any }),
+        createMockWarrior({ style: 'Brawler' as any }),
       ],
-      trainingAssignments: [{}, {}, {}] as unknown, // 3 assignments
-      trainers: [{}, {}] as unknown, // 2 trainers
+      trainingAssignments: [{}, {}, {}] as any, // 3 assignments
+      trainers: [{}, {}] as any, // 2 trainers
     });
 
     const rep = computeStableReputation(state);
@@ -182,8 +182,8 @@ describe('computeRivalReputation', () => {
 
   it('calculates rival notoriety and honor correctly', () => {
     const roster = [
-      createMockWarrior({ career: { wins: 5, losses: 2, kills: 2 } as unknown }),
-      createMockWarrior({ career: { wins: 3, losses: 1, kills: 0 } as unknown }),
+      createMockWarrior({ career: { wins: 5, losses: 2, kills: 2 } as any }),
+      createMockWarrior({ career: { wins: 3, losses: 1, kills: 0 } as any }),
     ];
 
     const rep = computeRivalReputation(roster);
@@ -202,10 +202,10 @@ describe('computeRivalReputation', () => {
 
   it('calculates rival adaptability correctly', () => {
     const roster = [
-      createMockWarrior({ style: 'Gladiator' as unknown }),
-      createMockWarrior({ style: 'Brawler' as unknown }),
-      createMockWarrior({ style: 'Rogue' as unknown }),
-      createMockWarrior({ style: 'Gladiator' as unknown }), // Duplicate
+      createMockWarrior({ style: 'Gladiator' as any }),
+      createMockWarrior({ style: 'Brawler' as any }),
+      createMockWarrior({ style: 'Rogue' as any }),
+      createMockWarrior({ style: 'Gladiator' as any }), // Duplicate
     ];
 
     const rep = computeRivalReputation(roster);
@@ -219,22 +219,22 @@ describe('computeRivalReputation', () => {
     const roster = [
       createMockWarrior({
         fame: 100,
-        career: { wins: 0, losses: 0, kills: 100 } as unknown, // Causes huge notoriety, zero honor
-        style: 'Gladiator' as unknown,
+        career: { wins: 0, losses: 0, kills: 100 } as any, // Causes huge notoriety, zero honor
+        style: 'Gladiator' as any,
       }),
       createMockWarrior({
         fame: 100,
-        career: { wins: 1000, losses: 0, kills: 0 } as unknown, // Causes huge honor
-        style: 'Brawler' as unknown,
+        career: { wins: 1000, losses: 0, kills: 0 } as any, // Causes huge honor
+        style: 'Brawler' as any,
       }),
     ];
 
-    const rep1 = computeRivalReputation([roster[0]]);
+    const rep1 = computeRivalReputation([roster[0]!]);
     expect(rep1.fame).toBe(100);
     expect(rep1.notoriety).toBe(100);
     expect(rep1.honor).toBe(0); // Min 0
 
-    const rep2 = computeRivalReputation([roster[1]]);
+    const rep2 = computeRivalReputation([roster[1]!]);
     expect(rep2.honor).toBe(100); // Max 100
   });
 

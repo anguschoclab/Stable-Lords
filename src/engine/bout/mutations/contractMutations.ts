@@ -22,10 +22,10 @@ export function respondToBoutOffer(
   warriorId: string,
   response: 'Accepted' | 'Declined'
 ): StateImpact {
-  const offer = state.boutOffers[offerId];
+  const offer = state.boutOffers[offerId as import('@/types/shared.types').BoutOfferId];
   if (!offer) return {};
 
-  const newResponses = {
+  const newResponses: Record<string, string> = {
     ...offer.responses,
     [warriorId]: response,
   };

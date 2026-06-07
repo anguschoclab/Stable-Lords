@@ -80,7 +80,7 @@ describe('crestGenerator', () => {
 
       // Each philosophy should have some preferred charge types
       philosophies.forEach((philosophy) => {
-        expect(chargeTypesByPhilosophy[philosophy].size).toBeGreaterThan(0);
+        expect(chargeTypesByPhilosophy[philosophy]!.size).toBeGreaterThan(0);
       });
     });
 

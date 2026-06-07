@@ -1,4 +1,5 @@
 import { FightingStyle, type Attributes, ATTRIBUTE_KEYS } from '@/types/shared.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { pick, shuffled } from '@/utils/random';
 
 type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank'; /**

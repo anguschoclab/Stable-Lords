@@ -33,7 +33,7 @@ describe('progressionHandler', () => {
       warriorToStableMap: new Map(),
       player: { id: 'player-1' as StableId },
       ...overrides,
-    }) as unknown as GameState;
+    }) as any as GameState;
 
   const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
     winner: 'A',
@@ -76,7 +76,7 @@ describe('progressionHandler', () => {
       const s = createMockState({
         roster: [],
         warriorToStableMap: new Map([[warriorId, { stableId: rivalId, isPlayer: false }]]),
-        rivalMap: new Map([[rivalId, { id: rivalId, roster: [wD] } as unknown as RivalStableData]]),
+        rivalMap: new Map([[rivalId, { id: rivalId, roster: [wD] } as any as RivalStableData]]),
       });
 
       const outcome = createMockOutcome({ winner: 'A' });

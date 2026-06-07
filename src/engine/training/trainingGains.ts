@@ -455,7 +455,7 @@ export function rollForTrainingInjury(
     const [minW, maxW] = template.weeksRange;
     const weeks = rng.roll(minW || 1, (maxW ?? (minW || 1)) + 1);
     const injury: InjuryData = {
-      id: generateId(),
+      id: generateId() as import('@/types/shared.types').InjuryId,
       name: template.name,
       description: template.description,
       severity: 'Minor',

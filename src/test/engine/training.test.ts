@@ -7,11 +7,12 @@ import {
   computeTrainingImpact,
   trainingImpactToStateImpact,
 } from '@/engine/training';
-import { FightingStyle, type GameState, type Warrior, type TrainingAssignment } from '@/types/game';
+import { FightingStyle, type GameState, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { resolveImpacts } from '@/engine/impacts';
 import { vi } from 'vitest';
 import { SeededRNG } from '@/utils/random';
+import type { WarriorId, StableId, InjuryId } from '@/types/shared.types';
 import * as trainingGains from '@/engine/training/trainingGains';
 
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
@@ -19,7 +20,7 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
   return {
-    id: 'w1',
+    id: 'w1' as WarriorId,
     name: 'Test',
     style: FightingStyle.StrikingAttack,
     attributes: attrs,
@@ -35,6 +36,7 @@ function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
     status: 'Active',
     age: 20,
     potential: { ST: 18, CN: 18, SZ: 15, WT: 18, WL: 18, SP: 18, DF: 18 },
+    traits: [],
     ...overrides,
   };
 }
@@ -46,7 +48,7 @@ function makeState(overrides?: Partial<GameState>): GameState {
     ftueComplete: true,
     ftueStep: 0,
     coachDismissed: [],
-    player: { id: 'p1', name: 'Player', stableName: 'Test Stable', fame: 0, renown: 0, titles: 0 },
+    player: { id: 'p1' as StableId, name: 'Player', stableName: 'Test Stable', fame: 0, renown: 0, titles: 0 },
     fame: 0,
     popularity: 0,
     treasury: 500,
@@ -80,6 +82,14 @@ function makeState(overrides?: Partial<GameState>): GameState {
     gazettes: [],
     isFTUE: false,
     unacknowledgedDeaths: [],
+    year: 1,
+    weather: 'Clear',
+    day: 1,
+    isTournamentWeek: false,
+    promoters: {},
+    boutOffers: {},
+    realmRankings: {},
+    awards: [],
     ...overrides,
   };
 }
@@ -126,7 +136,7 @@ describe('Training System', () => {
         {
           injuries: [
             {
-              id: 'i1',
+              id: 'i1' as InjuryId,
               name: 'Cut',
               description: 'Ouch',
               severity: 'Minor',
@@ -178,7 +188,7 @@ describe('Training System', () => {
       const warrior = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 });
       const state = makeState({
         roster: [warrior],
-        trainingAssignments: [{ warriorId: 'w1', type: 'attribute', attribute: 'ST' }],
+        trainingAssignments: [{ warriorId: 'w1' as WarriorId, type: 'attribute', attribute: 'ST' }],
       });
 
       const rng = new SeededRNGService(1);
@@ -192,7 +202,7 @@ describe('Training System', () => {
       const warrior = makeWarrior({ ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 });
       const state = makeState({
         roster: [warrior],
-        trainingAssignments: [{ warriorId: 'w1', type: 'attribute', attribute: 'SZ' }],
+        trainingAssignments: [{ warriorId: 'w1' as WarriorId, type: 'attribute', attribute: 'SZ' }],
       });
 
       const rng = new SeededRNGService(1);
@@ -201,7 +211,7 @@ describe('Training System', () => {
       const newState = resolveImpacts(state, [stateImpact]);
 
       // Should not increase SZ
-      expect(newState.roster[0].attributes.SZ).toBe(12);
+      expect(newState.roster[0]!.attributes.SZ).toBe(12);
     });
   });
 
@@ -209,7 +219,7 @@ describe('Training System', () => {
     it('should process skillDrill assignments correctly and roll for injury', () => {
       const warrior = makeWarrior(
         { ST: 12, CN: 12, SZ: 12, WT: 18, WL: 12, SP: 12, DF: 12 },
-        { skillDrills: { Punching: 1 } }
+        { skillDrills: { Punching: 1 } as any }
       );
       const state = makeState({
         roster: [warrior],
@@ -217,7 +227,7 @@ describe('Training System', () => {
       });
 
       const processSpy = vi.spyOn(trainingGains, 'processSkillDrillTraining').mockReturnValue({
-        updatedWarrior: { ...warrior, skillDrills: { Punching: 2 } },
+        updatedWarrior: { ...warrior, skillDrills: { Punching: 2 } as any },
         result: { type: 'gain', warriorId: 'w1', message: 'Sharpened' } as any,
         hardCapped: false,
       });
@@ -239,8 +249,8 @@ describe('Training System', () => {
 
       expect(impact.results.some((r) => r.message === 'Sharpened')).toBe(true);
       expect(impact.results.some((r) => r.message === 'Ouch')).toBe(true);
-      expect(impact.updatedRoster[0].skillDrills?.['Punching']).toBe(2);
-      expect(impact.updatedRoster[0].injuries.length).toBe(1);
+      expect((impact.updatedRoster[0]!.skillDrills as any)?.['Punching']).toBe(2);
+      expect(impact.updatedRoster[0]!.injuries.length).toBe(1);
 
       processSpy.mockRestore();
       injurySpy.mockRestore();
@@ -249,7 +259,7 @@ describe('Training System', () => {
     it('should skip skillDrill injury roll if hard capped', () => {
       const warrior = makeWarrior(
         { ST: 12, CN: 12, SZ: 12, WT: 18, WL: 12, SP: 12, DF: 12 },
-        { skillDrills: { Punching: 3 } }
+        { skillDrills: { Punching: 3 } as any }
       );
       const state = makeState({
         roster: [warrior],
@@ -364,7 +374,7 @@ describe('Training System', () => {
       expect(impact.results.filter((r) => r.type === 'injury')).toHaveLength(0);
       // When injury result is undefined, the injury should not be applied to the roster
       if (impact.updatedRoster[0]) {
-        expect(impact.updatedRoster[0].injuries).toHaveLength(0);
+        expect(impact.updatedRoster[0]!.injuries).toHaveLength(0);
       }
       spy.mockRestore();
     });
@@ -386,7 +396,7 @@ describe('Training System', () => {
       const rng = new SeededRNG(1);
       const impact = computeTrainingImpact(state as any, rng as any);
 
-      expect(impact.results.filter((r) => r.type === 'attribute')).toHaveLength(1);
+      expect(impact.results.filter((r) => r.type === 'attribute' as typeof r.type)).toHaveLength(1);
       expect(impact.updatedSeasonalGrowth).toHaveLength(1);
       spy.mockRestore();
     });
@@ -458,7 +468,7 @@ describe('Training System', () => {
       const impact = computeTrainingImpact(state as any, rng as any);
 
       expect(impact.results.filter((r) => r.type === 'injury')).toHaveLength(1);
-      expect(impact.updatedRoster[0].injuries).toContain(injuryObj);
+      expect(impact.updatedRoster[0]!.injuries).toContain(injuryObj);
       spy1.mockRestore();
       spy2.mockRestore();
     });
@@ -505,10 +515,10 @@ describe('Training System', () => {
       expect(res.impact.newsletterItems).toBeDefined();
       expect(res.impact.newsletterItems?.length).toBe(1);
       if (res.impact.newsletterItems) {
-        expect(res.impact.newsletterItems[0].id).toBe('newsletter-123');
-        expect(res.impact.newsletterItems[0].title).toBe('Training Report');
-        expect(res.impact.newsletterItems[0].items).toEqual(['Gained ST!']);
-        expect(res.impact.newsletterItems[0].week).toBe(10);
+        expect(res.impact.newsletterItems[0]!.id).toBe('newsletter-123');
+        expect(res.impact.newsletterItems[0]!.title).toBe('Training Report');
+        expect(res.impact.newsletterItems[0]!.items).toEqual(['Gained ST!']);
+        expect(res.impact.newsletterItems[0]!.week).toBe(10);
       }
       expect(rng.uuid).toHaveBeenCalledWith('newsletter');
     });

@@ -20,7 +20,7 @@ describe('trainerSpecialties', () => {
       phase,
       round: 1,
       exchange: 1,
-    }) as ResolutionContext;
+    }) as unknown as ResolutionContext;
 
   it('should return default mods if trainers is undefined', () => {
     const mods = getSpecialtyMods(
@@ -49,18 +49,20 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'KillerInstinct',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: 0,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
       {
         id: '2',
         name: 'T2',
         specialty: 'IronConditioning',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: -1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const mods = getSpecialtyMods(
@@ -79,9 +81,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'KillerInstinct',
         tier: 'Novice',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const mods = getSpecialtyMods(
@@ -100,9 +103,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'KillerInstinct',
         tier: 'Seasoned',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const mods = getSpecialtyMods(
@@ -121,9 +125,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'IronConditioning',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       }, // Master = 3
     ];
     const mods = getSpecialtyMods(
@@ -142,9 +147,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'IronConditioning',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const mods = getSpecialtyMods(
@@ -163,9 +169,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'CounterFighter',
         tier: 'Seasoned',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       }, // Seasoned = 2
     ];
     const mods = getSpecialtyMods(
@@ -184,9 +191,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'Footwork',
         tier: 'Novice',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const modsMid = getSpecialtyMods(
@@ -205,9 +213,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'Footwork',
         tier: 'Novice',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const modsOpening = getSpecialtyMods(
@@ -226,9 +235,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'IronGuard',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       }, // Master = 3
     ];
     const mods = getSpecialtyMods(
@@ -247,9 +257,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'IronGuard',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const mods = getSpecialtyMods(
@@ -268,9 +279,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'Finisher',
         tier: 'Seasoned',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       }, // Seasoned = 2
     ];
     const mods = getSpecialtyMods(
@@ -289,9 +301,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'Finisher',
         tier: 'Seasoned',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const mods = getSpecialtyMods(
@@ -310,9 +323,10 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'RopeADope',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       }, // Master = 3. 0.3 * 3 = 0.9. Cap is 0.5.
     ];
     const mods = getSpecialtyMods(
@@ -331,18 +345,20 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'KillerInstinct',
         tier: 'Novice',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       }, // 0.01 * 1 (halved 2026-04)
       {
         id: '2',
         name: 'T2',
         specialty: 'Finisher',
         tier: 'Novice',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       }, // 0.1 * 1
     ];
     const mods = getSpecialtyMods(
@@ -366,18 +382,20 @@ describe('trainerSpecialties', () => {
         name: 'T1',
         specialty: 'IronGuard',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
       {
         id: '2',
         name: 'T2',
         specialty: 'IronGuard',
         tier: 'Master',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       },
     ];
     const mods = getSpecialtyMods(
@@ -396,9 +414,10 @@ describe('trainerSpecialties', () => {
         id: '1',
         name: 'T1',
         specialty: 'Footwork',
-        cost: 10,
         contractWeeksLeft: 1,
-        isPlayer: false,
+      focus: 'Aggression',
+      fame: 0,
+      age: 30,
       }, // Missing tier
     ];
     const mods = getSpecialtyMods(

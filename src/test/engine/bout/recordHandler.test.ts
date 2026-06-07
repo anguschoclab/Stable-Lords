@@ -27,7 +27,7 @@ describe('applyRecords', () => {
         intelligence: 1,
       },
       ...overrides,
-    }) as unknown as Warrior;
+    }) as any as Warrior;
 
   const createMockState = (overrides: Partial<GameState> = {}): GameState =>
     ({
@@ -35,7 +35,7 @@ describe('applyRecords', () => {
       tournaments: [],
       rivals: [],
       ...overrides,
-    }) as unknown as GameState;
+    }) as any as GameState;
 
   it('updates stats correctly when A wins and no kill occurs', () => {
     const s = createMockState();
@@ -45,8 +45,8 @@ describe('applyRecords', () => {
 
     const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1);
 
-    const updatedA = impact.rosterUpdates!.get('A')!;
-    const updatedD = impact.rosterUpdates!.get('D')!;
+    const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
+    const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
 
     expect(updatedA).toBeDefined();
     expect(updatedD).toBeDefined();
@@ -72,8 +72,8 @@ describe('applyRecords', () => {
 
     const impact = applyRecords(s, wA, wD, outcome, ['Flashy'], 1, 1, 5, 2);
 
-    const updatedA = impact.rosterUpdates!.get('A')!;
-    const updatedD = impact.rosterUpdates!.get('D')!;
+    const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
+    const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
 
     expect(updatedA).toBeDefined();
     expect(updatedD).toBeDefined();
@@ -95,24 +95,25 @@ describe('applyRecords', () => {
 
   it('populates rivalsUpdates correctly when rivalStableId is provided', () => {
     const wD = createMockWarrior('D');
-    const rival: RivalStableData = {
+    const rival = {
+      id: 'rival-1' as import('@/types/shared.types').StableId,
       owner: {
-        id: 'rival-1',
+        id: 'rival-1' as import('@/types/shared.types').StableId,
         name: 'Rival Stable',
         personality: 'Aggressive',
-        archetype: 'Veteran',
         stableName: 'RS',
+        fame: 0,
+        renown: 0,
+        titles: 0,
       },
+      fame: 0,
+      treasury: 0,
       roster: [wD],
-      graveyard: [],
-      retired: [],
-      wins: 0,
-      losses: 0,
       targetClass: 1,
       baseFame: 10,
       weeklyMultiplier: 1,
       baseStats: { minFame: 1, maxFame: 10, popModifier: 1 },
-    };
+    } as unknown as RivalStableData;
     const s = createMockState({ rivals: [rival] });
     const wA = createMockWarrior('A');
 
@@ -120,10 +121,10 @@ describe('applyRecords', () => {
 
     const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1, 'rival-1');
 
-    expect(impact.rosterUpdates?.has('D')).toBeFalsy();
-    expect(impact.rivalsUpdates?.has('rival-1')).toBeTruthy();
+    expect(impact.rosterUpdates?.has('D' as import('@/types/shared.types').WarriorId)).toBeFalsy();
+    expect(impact.rivalsUpdates?.has('rival-1' as import('@/types/shared.types').StableId)).toBeTruthy();
 
-    const updatedRivalData = impact.rivalsUpdates!.get('rival-1')!;
+    const updatedRivalData = impact.rivalsUpdates!.get('rival-1' as import('@/types/shared.types').StableId)!;
     expect(updatedRivalData.roster).toBeDefined();
     const updatedWD = updatedRivalData.roster?.find((w) => w.id === 'D');
     expect(updatedWD).toBeDefined();
@@ -136,15 +137,17 @@ describe('applyRecords', () => {
       isTournamentWeek: true,
       tournaments: [
         {
-          id: 'tourney-1',
+          id: 'tourney-1' as import('@/types/shared.types').TournamentId,
           name: 'Tournament',
+          season: 'Spring',
+          week: 1,
+          tierId: 'Gold',
+          bracket: [],
           participants: [
-            { id: 'A', stableId: 'player' },
-            { id: 'D', stableId: 'rival' },
+            { id: 'A' as import('@/types/shared.types').WarriorId, stableId: 'player' as import('@/types/shared.types').StableId } as any,
+            { id: 'D' as import('@/types/shared.types').WarriorId, stableId: 'rival' as import('@/types/shared.types').StableId } as any,
           ],
           completed: false,
-          prizes: { stable: 0, warrior: 0 },
-          bouts: [],
         },
       ],
     });
@@ -154,8 +157,8 @@ describe('applyRecords', () => {
 
     const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1);
 
-    const updatedA = impact.rosterUpdates!.get('A')!;
-    const updatedD = impact.rosterUpdates!.get('D')!;
+    const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
+    const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
 
     expect(updatedA.fatigue).toBe(20); // No change
     expect(updatedD.fatigue).toBe(30); // No change
@@ -169,8 +172,8 @@ describe('applyRecords', () => {
     const wD2 = createMockWarrior('D', { fatigue: undefined });
     const impact = applyRecords(s, wA2, wD2, outcome, [], 0, 0, 0, 0);
 
-    const updatedA = impact.rosterUpdates!.get('A')!;
-    const updatedD = impact.rosterUpdates!.get('D')!;
+    const updatedA = impact.rosterUpdates!.get('A' as import('@/types/shared.types').WarriorId)!;
+    const updatedD = impact.rosterUpdates!.get('D' as import('@/types/shared.types').WarriorId)!;
 
     expect(updatedA.fatigue).toBe(25); // 0 + 25
     expect(updatedD.fatigue).toBe(25); // 0 + 25

@@ -39,7 +39,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     const { grudges, gazetteItems } = processOwnerGrudges(mockState, []);
 
     expect(grudges.length).toBe(1);
-    expect(grudges[0].intensity).toBe(2);
+    expect(grudges[0]!.intensity).toBe(2);
     expect(gazetteItems[0]).toContain('NEW RIVALRY');
   });
 
@@ -56,7 +56,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
 
     const { grudges, gazetteItems } = processOwnerGrudges(mockState, [existingGrudge as any]);
 
-    expect(grudges[0].intensity).toBe(3);
+    expect(grudges[0]!.intensity).toBe(3);
     expect(gazetteItems[0]).toContain('GRUDGE DEEPENS');
   });
 });

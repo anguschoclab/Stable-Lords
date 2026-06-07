@@ -10,7 +10,7 @@
  */
 import type { InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS } from '@/types/shared.types';
+import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type InsightId } from '@/types/shared.types';
 
 /**
  * Scout quality type.
@@ -167,7 +167,7 @@ function generateScoutInsights(
 
   // Basic scouting reveals Style
   newInsights.push({
-    id: rng.uuid(),
+    id: rng.uuid() as InsightId,
     type: 'Style',
     warriorId: warrior.id,
     warriorName: warrior.name,
@@ -182,7 +182,7 @@ function generateScoutInsights(
       .slice(0, quality === 'Expert' ? 4 : 2);
     attrsToReveal.forEach((attr) => {
       newInsights.push({
-        id: rng.uuid(),
+        id: rng.uuid() as InsightId,
         type: 'Attribute',
         warriorId: warrior.id,
         warriorName: warrior.name,
@@ -196,7 +196,7 @@ function generateScoutInsights(
   // Expert scouting reveals Tactics
   if (quality === 'Expert' && warrior.plan) {
     newInsights.push({
-      id: rng.uuid(),
+      id: rng.uuid() as InsightId,
       type: 'Tactic',
       warriorId: warrior.id,
       warriorName: warrior.name,

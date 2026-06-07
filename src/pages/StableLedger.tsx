@@ -38,7 +38,7 @@ import { cn } from '@/lib/utils'; /**
 export default function StableLedger() {
   const store = useGameStore();
   const { season, week, treasury } = store;
-  const breakdown = computeWeeklyBreakdown(store);
+  const breakdown = computeWeeklyBreakdown(store as unknown as import('@/types/state.types').GameState);
   const runway = breakdown.totalExpenses > 0 ? Math.floor(treasury / breakdown.totalExpenses) : 99;
   const isEmergency = runway < 4;
 

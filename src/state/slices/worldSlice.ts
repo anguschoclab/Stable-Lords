@@ -158,9 +158,9 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
   setWeek: (week) => set({ week }),
 
   setArenaPreferences: (prefs: Partial<ArenaPreferences>) => {
-    set((draft: WorldSlice) => {
-      draft.arenaPreferences = { ...draft.arenaPreferences, ...prefs };
-    });
+    set((draft) => ({
+      arenaPreferences: { ...draft.arenaPreferences, ...prefs },
+    }));
   },
 
   initializeStable: (name: string, stableName: string) => {
@@ -206,7 +206,7 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
   },
 
   respondToBoutOffer: (offerId, warriorId, response) => {
-    set((state) => engineRespondToBoutOffer(state, offerId, warriorId, response));
+    set((state) => engineRespondToBoutOffer(state as unknown as GameState, offerId, warriorId, response) as unknown as Partial<GameStore>);
   },
 
   clearExpiredOffers: () => {
@@ -216,6 +216,7 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
 
       (Object.keys(newOffers) as BoutOfferId[]).forEach((id) => {
         const offer = newOffers[id];
+        if (!offer) return;
         if (offer.status === 'Proposed' && state.week >= offer.expirationWeek) {
           newOffers[id] = { ...offer, status: 'Expired' };
           changed = true;
@@ -227,7 +228,7 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
   },
 
   updatePromoterHistory: (promoterId, purse, boutId) => {
-    set((state) => engineUpdatePromoterHistory(state, promoterId, purse, boutId));
+    set((state) => engineUpdatePromoterHistory(state as unknown as GameState, promoterId, purse, boutId) as unknown as Partial<GameStore>);
   },
 
   replacePromoter: (oldId, newPromoter) => {

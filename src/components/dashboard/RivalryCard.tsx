@@ -1,6 +1,6 @@
 import { Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { intensityLabel, intensityColor } from '@/utils/rivalryDisplay';
+import { intensityLabel, intensityColor, intensityBgColor } from '@/utils/rivalryDisplay';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 
 interface RivalryCardProps {
@@ -22,7 +22,8 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
             <div
               className={cn(
                 'h-1 w-1 rounded-none',
-                r.intensity >= 4 ? 'bg-destructive animate-pulse' : 'bg-arena-gold'
+                intensityBgColor(r.intensity),
+                r.intensity >= 4 && 'animate-pulse'
               )}
             />
             <span
@@ -53,9 +54,10 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
               className={cn(
                 'flex-1 rounded-none transition-all duration-500',
                 i <= r.intensity
-                  ? i >= 4
-                    ? 'bg-destructive shadow-[0_0_8px_rgba(var(--destructive-rgb),0.5)]'
-                    : 'bg-arena-gold'
+                  ? cn(
+                      intensityBgColor(i),
+                      i >= 4 && 'shadow-[0_0_8px_rgba(var(--destructive-rgb),0.5)]'
+                    )
                   : 'bg-white/5'
               )}
             />

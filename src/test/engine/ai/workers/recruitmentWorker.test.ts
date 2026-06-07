@@ -23,7 +23,7 @@ function makeMinimalRival(overrides: Partial<RivalStableData> = {}): RivalStable
     tier: 'Established',
     actionHistory: [],
     ...overrides,
-  } as unknown as RivalStableData;
+  } as any as RivalStableData;
 }
 
 function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {

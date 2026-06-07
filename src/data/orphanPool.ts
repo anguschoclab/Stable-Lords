@@ -12,7 +12,8 @@ import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { shuffled } from '@/utils/random';
-import { cryptoRandomInt } from '@/utils/cryptoRandom'; /**
+import { cryptoRandomInt } from '@/utils/cryptoRandom';
+import { SeededRNGService } from '@/engine/core/rng/SeededRNGService'; /**
  * Defines the shape of orphan warrior.
  */
 
@@ -33,18 +34,6 @@ export interface OrphanWarrior {
 
 // ── RNG & Helpers ────────────────────────────────────────────────────────
 
-function seededRng(seed: number) {
-  let s = seed;
-  return () => {
-    s = (s * 1103515245 + 12345) & 0x7fffffff;
-    return s / 0x7fffffff;
-  };
-}
-
-function pick<T>(arr: T[], rng: () => number): T {
-  return arr[Math.floor(rng() * arr.length)];
-}
-
 const TRAIT_IDS = Object.keys(TRAITS); /**
  * Generate orphan pool.
  * @param count - Count.
@@ -61,47 +50,44 @@ const TRAIT_IDS = Object.keys(TRAITS); /**
  * @returns The result.
  */
 export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarrior[] {
-  const rng = seededRng(seed ?? cryptoRandomInt(0, 2147483647));
+  const rng = new SeededRNGService(seed ?? cryptoRandomInt(0, 2147483647));
   const styles = Object.values(FightingStyle);
   const usedNames = new Set<string>();
   const pool: OrphanWarrior[] = [];
 
   const guaranteedStyles = shuffled(
     [
-      pick([FightingStyle.BashingAttack, FightingStyle.StrikingAttack], rng),
-      pick([FightingStyle.LungingAttack, FightingStyle.SlashingAttack], rng),
-      pick(
-        [
-          FightingStyle.AimedBlow,
-          FightingStyle.ParryRiposte,
-          FightingStyle.ParryLunge,
-          FightingStyle.ParryStrike,
-        ],
-        rng
-      ),
-      pick([FightingStyle.TotalParry, FightingStyle.WallOfSteel], rng),
+      rng.pick([FightingStyle.BashingAttack, FightingStyle.StrikingAttack]),
+      rng.pick([FightingStyle.LungingAttack, FightingStyle.SlashingAttack]),
+      rng.pick([
+        FightingStyle.AimedBlow,
+        FightingStyle.ParryRiposte,
+        FightingStyle.ParryLunge,
+        FightingStyle.ParryStrike,
+      ]),
+      rng.pick([FightingStyle.TotalParry, FightingStyle.WallOfSteel]),
     ],
     rng
   );
 
   for (let i = 0; i < count; i++) {
-    const style = i < guaranteedStyles.length ? guaranteedStyles[i] : pick(styles, rng);
+    const style = i < guaranteedStyles.length ? guaranteedStyles[i]! : rng.pick(styles);
     const archetype = STYLE_ARCHETYPE[style];
 
     // Combine the archetype name pool with the generic "tank" mixed pool for variety
     const namePool = [...ARCHETYPE_NAMES[archetype], ...ARCHETYPE_NAMES.tank].filter(
       (n) => !usedNames.has(n)
     );
-    const name = namePool.length > 0 ? pick(namePool, rng) : `ORPHAN_${i}`;
+    const name = namePool.length > 0 ? rng.pick(namePool) : `ORPHAN_${i}`;
     usedNames.add(name);
 
-    const age = Math.floor(rng() * 5) + 15;
+    const age = Math.floor(rng.next() * 5) + 15;
     const attrs = generateArchetypeAttrs(style, rng);
     const origin = generateOrigin(rng);
-    const trait = pick(TRAIT_IDS, rng);
+    const trait = rng.pick(TRAIT_IDS);
     const lore = generateLore(name, rng);
 
-    const rarityRoll = rng();
+    const rarityRoll = rng.next();
     let tier: 'Common' | 'Promising' | 'Exceptional' | 'Prodigy' = 'Common';
     if (rarityRoll > 0.99) tier = 'Prodigy';
     else if (rarityRoll > 0.95) tier = 'Exceptional';
@@ -117,7 +103,7 @@ export function generateOrphanPool(count: number = 8, seed?: number): OrphanWarr
     const potential = generatePotential(attrs, tier, rng);
 
     pool.push({
-      id: `orp_${i}_${Math.floor(rng() * 1e6)}`,
+      id: `orp_${i}_${Math.floor(rng.next() * 1e6)}`,
       name,
       age,
       style,

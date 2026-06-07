@@ -288,7 +288,7 @@ export function computeEncumbranceClass(st: number, cn: number): EncumbranceClas
   const stIdx = Math.min(22, Math.max(0, st - 3));
   const cnIdx = Math.min(22, Math.max(0, cn - 3));
   const classIdx = ENC_TABLE[stIdx]?.[cnIdx] ?? 2;
-  return ENC_CLASSES[classIdx];
+  return ENC_CLASSES[classIdx]!;
 } /**
  * Compute encumbrance capacity.
  * @param st - St.

@@ -12,6 +12,7 @@ import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX, type Attributes } from '@/types/shared.t
 import type { AttributePotential } from '@/types/warrior.types';
 import { clamp } from '@/utils/math';
 import type { RecruitTier } from './recruitment';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 // ─── Potential Range by Tier ──────────────────────────────────────────────
 // [headroom_min, headroom_max] added ON TOP of the warrior's starting attribute.

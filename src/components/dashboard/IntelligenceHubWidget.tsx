@@ -17,7 +17,6 @@ export function IntelligenceHubWidget() {
       week: s.week,
       newsletter: s.newsletter,
       gazettes: s.gazettes,
-      types: s.types,
       rivals: s.rivals,
     }))
   );

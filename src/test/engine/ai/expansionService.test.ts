@@ -127,7 +127,7 @@ describe('ExpansionService', () => {
 
       expect(stables1.length).toBe(stables2.length);
       if (stables1.length > 0 && stables2.length > 0) {
-        expect(stables1[0].owner.name).toBe(stables2[0].owner.name);
+        expect(stables1[0]!.owner.name).toBe(stables2[0]!.owner.name);
       }
     });
 

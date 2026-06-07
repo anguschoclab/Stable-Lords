@@ -19,18 +19,18 @@ describe('BankruptcyService', () => {
     });
 
     it('should remove bankrupt stables', () => {
-      state.rivals[0].treasury = -600;
+      state.rivals[0]!.treasury = -600;
 
       const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
 
       expect(bankruptStables.length).toBe(1);
-      expect(bankruptStables[0]).toBe(state.rivals[0].owner.stableName);
+      expect(bankruptStables[0]).toBe(state.rivals[0]!.owner.stableName);
       expect(updatedState.rivals.length).toBe(state.rivals.length - 1);
     });
 
     it('should keep solvent stables', () => {
-      state.rivals[0].treasury = 1000;
-      state.rivals[1].treasury = 500;
+      state.rivals[0]!.treasury = 1000;
+      state.rivals[1]!.treasury = 500;
 
       const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
 
@@ -48,7 +48,7 @@ describe('BankruptcyService', () => {
     });
 
     it('should handle stables at bankruptcy threshold', () => {
-      state.rivals[0].treasury = -500;
+      state.rivals[0]!.treasury = -500;
 
       const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
 
@@ -58,7 +58,7 @@ describe('BankruptcyService', () => {
     });
 
     it('should handle stables above bankruptcy threshold', () => {
-      state.rivals[0].treasury = -499;
+      state.rivals[0]!.treasury = -499;
 
       const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
 
@@ -66,8 +66,8 @@ describe('BankruptcyService', () => {
     });
 
     it('should return stable names of bankrupt stables', () => {
-      state.rivals[0].treasury = -600;
-      state.rivals[1].treasury = -700;
+      state.rivals[0]!.treasury = -600;
+      state.rivals[1]!.treasury = -700;
 
       const { bankruptStables } = BankruptcyService.processBankruptcy(state);
 

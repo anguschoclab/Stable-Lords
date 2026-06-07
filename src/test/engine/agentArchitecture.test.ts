@@ -7,12 +7,12 @@ describe('AI Agent Architecture - Skeptical Intent', () => {
     week: 10,
     arenaHistory: [],
     rivals: [],
-  } as unknown as GameState;
+  } as any as GameState;
 
   const mockRival: Partial<RivalStableData> = {
-    owner: { id: 'r1', personality: 'Methodical' } as unknown,
+    owner: { id: 'r1', personality: 'Methodical' } as any,
     treasury: 500,
-    roster: [{ status: 'Active' }, { status: 'Active' }, { status: 'Active' }] as unknown,
+    roster: [{ status: 'Active' }, { status: 'Active' }, { status: 'Active' }] as any,
     strategy: { intent: 'VENDETTA', planWeeksRemaining: 5 },
   };
 
@@ -31,7 +31,7 @@ describe('AI Agent Architecture - Skeptical Intent', () => {
     const weakRival = {
       ...mockRival,
       roster: [{ status: 'Active' }, { status: 'Inactive' }],
-    } as unknown as RivalStableData;
+    } as any as RivalStableData;
     const isDisproved = verifyIntentSkepticism(weakRival, mockState);
     expect(isDisproved).toBe(true);
   });
@@ -39,7 +39,7 @@ describe('AI Agent Architecture - Skeptical Intent', () => {
   it('should NOT disprove if personality is Aggressive despite low treasury (higher risk tolerance)', () => {
     const aggressiveRival = {
       ...mockRival,
-      owner: { id: 'r1', personality: 'Aggressive' } as unknown,
+      owner: { id: 'r1', personality: 'Aggressive' } as any,
       treasury: 140,
     } as RivalStableData;
     const isDisproved = verifyIntentSkepticism(aggressiveRival, mockState);
@@ -56,14 +56,14 @@ describe('AI Agent Architecture - Weather Skepticism', () => {
     name: 'Lunge Buster',
     style: FightingStyle.LungingAttack,
     attributes: { CN: 7, CON: 10 },
-  } as unknown as Warrior;
+  } as any as Warrior;
 
   const tankWarrior = {
     id: 'w2',
     name: 'Iron Wall',
     style: 'Guard',
     attributes: { CN: 60, CON: 60 },
-  } as unknown as Warrior;
+  } as any as Warrior;
 
   const mockRival = { treasury: 500, owner: { personality: 'Methodical' } } as RivalStableData;
 
@@ -71,7 +71,7 @@ describe('AI Agent Architecture - Weather Skepticism', () => {
     const mockCalculated = {
       treasury: 500,
       owner: { personality: 'Calculated' },
-    } as unknown as RivalStableData;
+    } as any as RivalStableData;
     const decision = verifyBoutAcceptance(mockCalculated, lungeWarrior, tankWarrior, 'Rainy');
     expect(decision.accepted).toBe(false);
     expect(decision.reason).toContain('rain');
@@ -81,7 +81,7 @@ describe('AI Agent Architecture - Weather Skepticism', () => {
     const mockCalculated = {
       treasury: 500,
       owner: { personality: 'Calculated' },
-    } as unknown as RivalStableData;
+    } as any as RivalStableData;
     const decision = verifyBoutAcceptance(mockCalculated, lungeWarrior, tankWarrior, 'Clear');
     expect(decision.accepted).toBe(true);
   });
@@ -96,7 +96,7 @@ describe('AI Agent Architecture - Weather Skepticism', () => {
     const mockCalculated = {
       treasury: 500,
       owner: { personality: 'Calculated' },
-    } as unknown as RivalStableData;
+    } as any as RivalStableData;
     const decision = verifyBoutAcceptance(mockCalculated, tankWarrior, lungeWarrior, 'Sweltering');
     expect(decision.accepted).toBe(true);
   });

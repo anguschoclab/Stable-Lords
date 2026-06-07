@@ -168,7 +168,7 @@ export function generateInjury(
 
   return {
     ...template,
-    id: rngService.uuid(),
+    id: rngService.uuid() as import('@/types/shared.types').InjuryId,
     weeksRemaining: weeks,
   };
 }

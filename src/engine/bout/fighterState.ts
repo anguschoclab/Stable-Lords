@@ -13,7 +13,7 @@ import { getFavoriteWeaponBonus } from '@/engine/favorites';
 import { getStaticTraitMods, getTraitFightPlanMods } from '@/engine/traits';
 import { getInjuryPenalties } from '@/engine/injuries';
 import { applyLuckfactor } from '@/engine/skillCalc';
-import { type FighterState } from '../combat/resolution';
+import { type FighterState } from '../combat/resolution/types';
 
 /**
  * Calculates attribute and skill modifiers provided by a list of active trainers.
@@ -142,11 +142,11 @@ export function createFighterState(
   if (aiMods.OE != null) traitPlan.OE = Math.max(0, Math.min(10, traitPlan.OE + aiMods.OE));
   if (aiMods.AL != null) traitPlan.AL = Math.max(0, Math.min(10, traitPlan.AL + aiMods.AL));
   if (aiMods.killDesire != null)
-    traitPlan.killDesire = Math.max(0, Math.min(100, traitPlan.killDesire + aiMods.killDesire));
+    traitPlan.killDesire = Math.max(0, Math.min(100, (traitPlan.killDesire ?? 0) + aiMods.killDesire));
   if (aiMods.feintTendency != null)
     traitPlan.feintTendency = Math.max(
       0,
-      Math.min(100, traitPlan.feintTendency + aiMods.feintTendency)
+      Math.min(100, (traitPlan.feintTendency ?? 0) + aiMods.feintTendency)
     );
 
   return {

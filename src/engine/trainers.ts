@@ -141,7 +141,7 @@ export function generateHiringPool(count: number, seed: number): Trainer[] {
 
   const pool: Trainer[] = [];
   for (let i = 0; i < count; i++) {
-    const focus = TRAINER_FOCUSES[Math.floor(rng() * TRAINER_FOCUSES.length)];
+    const focus = TRAINER_FOCUSES[Math.floor(rng() * TRAINER_FOCUSES.length)]!;
     const tierRoll = rng();
     const tier: TrainerTier = tierRoll < 0.5 ? 'Novice' : tierRoll < 0.85 ? 'Seasoned' : 'Master';
     pool.push({

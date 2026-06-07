@@ -64,7 +64,7 @@ export function generateWeeklyGazette(
   const body = generateGazetteBody(detections, fights, mood, week, graveyard, rngService, tone);
 
   return {
-    id: storyId,
+    id: storyId as import('@/types/shared.types').NewsId,
     headline,
     body,
     mood,

@@ -5,7 +5,6 @@
 import type { Attributes } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { FightingStyle } from '@/types/shared.types';
 import { makeWarrior } from '../factories/warriorFactory';
 
@@ -53,7 +52,7 @@ export function createRivalWarrior(
   attrs: Attributes,
   stableId: string,
   fameRange: [number, number],
-  rng: SeededRNGService
+  rng: IRNGService
 ): Warrior {
   // Create a wrapper object compatible with SeededRNG for makeWarrior
   const rngWrapper: IRNGService = {
@@ -111,14 +110,14 @@ export function createRivalWarrior(
   };
 
   return makeWarrior(
-    wId,
+    wId as import('@/types/shared.types').WarriorId,
     wName,
     style,
     attrs,
     {
       fame: Math.floor(rng.next() * (fameRange[1] - fameRange[0] + 1)) + fameRange[0],
       popularity: Math.floor(rng.next() * 5),
-      stableId,
+      stableId: stableId as import('@/types/shared.types').StableId,
     },
     rngWrapper
   );

@@ -98,7 +98,7 @@ function createDummyWarrior(
     injuries: [],
     flair: [],
     champion: false,
-  } as unknown;
+  } as any;
 }
 
 describe('WorldOverview Component', () => {
@@ -136,7 +136,7 @@ describe('WorldOverview Component', () => {
           personality: 'Aggressive' as const,
         },
         roster: [createDummyWarrior('RivalWarrior1', 'Active', 20, 0, 90)],
-      } as unknown,
+      } as any,
     ];
 
     storeOverride = {

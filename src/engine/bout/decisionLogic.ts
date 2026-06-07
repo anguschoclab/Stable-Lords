@@ -1,5 +1,5 @@
 import type { FightOutcome } from '@/types/combat.types';
-import { type FighterState } from '../combat/resolution';
+import { type FighterState } from '../combat/resolution/types';
 
 type JudgeArchetype = 'Crowd' | 'Technical' | 'Blood';
 
@@ -62,8 +62,8 @@ function judgeScore(
  * @returns A formatted narrative string describing the decision
  */
 function decisionNarrative(
-  winner: 'A' | 'D',
-  loser: 'A' | 'D',
+  _winner: 'A' | 'D',
+  _loser: 'A' | 'D',
   winName: string,
   loseName: string,
   fW: FighterState,

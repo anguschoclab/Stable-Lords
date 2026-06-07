@@ -1,4 +1,4 @@
-import type { GameState, Warrior } from '@/types/state.types';
+import type { GameState, Warrior, BoutOffer } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { archiveWeekLogs } from '../adapters/opfsArchiver';

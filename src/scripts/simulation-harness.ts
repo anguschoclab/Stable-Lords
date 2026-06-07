@@ -1,4 +1,5 @@
 import { type GameState } from '@/types/state.types';
+import type { Warrior } from '@/types/warrior.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
@@ -83,7 +84,7 @@ export function runSimulation(config: SimulationConfig): SimulationResult {
     // Auto-recruit if empty roster (to keep the simulation running)
     if (state.roster.length === 0) {
       if (state.recruitPool.length > 0) {
-        state.roster.push({ ...state.recruitPool[0] });
+        state.roster.push({ ...state.recruitPool[0] } as Warrior);
         state.recruitPool.shift();
       }
     }

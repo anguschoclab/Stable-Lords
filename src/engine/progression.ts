@@ -104,11 +104,11 @@ export function applyXP(
         });
         const totalWeight = weights.reduce((s, w) => s + w, 0);
         let roll = rngService.next() * totalWeight;
-        let chosen = improvableAttrs[0];
+        let chosen = improvableAttrs[0]!;
         for (let i = 0; i < improvableAttrs.length; i++) {
-          roll -= weights[i];
+          roll -= weights[i]!;
           if (roll <= 0) {
-            chosen = improvableAttrs[i];
+            chosen = improvableAttrs[i]!;
             break;
           }
         }

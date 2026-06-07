@@ -36,7 +36,7 @@ export function setupRng(providedRng?: (() => number) | number): () => number {
     return providedRng;
   }
   const seed =
-    typeof providedRng === 'number' ? providedRng : crypto.getRandomValues(new Uint32Array(1))[0];
+    typeof providedRng === 'number' ? providedRng : crypto.getRandomValues(new Uint32Array(1))[0]!;
   const sRng = new SeededRNGService(seed);
   return () => sRng.next();
 } /**

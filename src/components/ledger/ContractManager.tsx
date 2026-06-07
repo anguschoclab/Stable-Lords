@@ -1,5 +1,4 @@
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { Link } from '@tanstack/react-router';
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
 import { Surface } from '@/components/ui/Surface';

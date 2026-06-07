@@ -10,7 +10,7 @@ export function updatePromoterHistory(
   purse: number,
   boutId: string
 ): GameState {
-  const promoter = state.promoters[promoterId];
+  const promoter = state.promoters[promoterId as import('@/types/shared.types').PromoterId];
   if (!promoter) return state;
 
   return {

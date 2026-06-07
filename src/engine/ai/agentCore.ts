@@ -151,7 +151,7 @@ export function computePlayerThreatLevel(state: GameState): PlayerThreatLevel {
   // This changes complexity from O(total realm rankings) to O(player roster size)
   // and avoids allocating a large array of key-value pairs per tick.
   for (let i = 0; i < roster.length; i++) {
-    const entry = rankings[roster[i].id];
+    const entry = rankings[roster[i]!.id];
     if (entry && (playerBestRank === null || entry.overallRank < playerBestRank)) {
       playerBestRank = entry.overallRank;
     }

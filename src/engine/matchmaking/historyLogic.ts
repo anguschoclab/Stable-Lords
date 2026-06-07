@@ -1,4 +1,5 @@
 import type { RestState, MatchRecord } from '@/types/state.types';
+import type { WarriorId, StableId } from '@/types/shared.types';
 
 /**
  * Adds a mandatory rest period for a warrior (e.g., after a KO).
@@ -10,7 +11,7 @@ export function addRestState(
   week: number
 ): RestState[] {
   if (outcome === 'KO') {
-    return [...restStates, { warriorId, restUntilWeek: week + 1 }];
+    return [...restStates, { warriorId: warriorId as WarriorId, restUntilWeek: week + 1 }];
   }
   return restStates;
 }
@@ -33,5 +34,5 @@ export function addMatchRecord(
   week: number
 ): MatchRecord[] {
   const pruned = history.filter((m) => m.week >= week - 8);
-  return [...pruned, { week, playerWarriorId, opponentWarriorId, opponentStableId }];
+  return [...pruned, { week, playerWarriorId: playerWarriorId as WarriorId, opponentWarriorId: opponentWarriorId as WarriorId, opponentStableId: opponentStableId as StableId }];
 }

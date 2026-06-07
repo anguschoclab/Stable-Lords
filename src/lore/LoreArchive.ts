@@ -72,14 +72,14 @@ export const LoreArchive = {
   markFightOfWeek(week: number, fightId: string) {
     const label = 'Fight of the Week';
     const hall = LoreArchive.allHall().filter((h) => !(h.label === label && h.week === week));
-    hall.push({ id: `hall-${week}-${label.replace(/ /g, '-')}`, week, label, fightId });
+    hall.push({ id: `hall-${week}-${label.replace(/ /g, '-')}` as import('@/types/shared.types').HallEntryId, week, label, fightId: fightId as import('@/types/shared.types').FightId });
     saveArray(KEY_HALL, hall);
   },
 
   markFightOfTournament(week: number, fightId: string) {
     const label = 'Fight of the Tournament';
     const hall = LoreArchive.allHall().filter((h) => !(h.label === label && h.week === week));
-    hall.push({ id: `hall-${week}-${label.replace(/ /g, '-')}`, week, label, fightId });
+    hall.push({ id: `hall-${week}-${label.replace(/ /g, '-')}` as import('@/types/shared.types').HallEntryId, week, label, fightId: fightId as import('@/types/shared.types').FightId });
     saveArray(KEY_HALL, hall);
   },
 };

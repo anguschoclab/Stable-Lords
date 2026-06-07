@@ -33,7 +33,7 @@ function pickFromArchive(entries: StatementEntry[] | undefined, witValue: number
   for (const e of sorted) {
     if (witValue >= e.min) return e.text;
   }
-  return entries[entries.length - 1].text;
+  return entries[entries.length - 1]!.text;
 }
 
 function getQuicknessStatement(defBase: number, parBase: number, wt: number): string {

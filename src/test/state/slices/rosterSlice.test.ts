@@ -41,7 +41,7 @@ describe('RosterSlice', () => {
       useTestStore.getState().addWarrior(mockWarrior);
     });
     expect(useTestStore.getState().roster).toHaveLength(1);
-    expect(useTestStore.getState().roster[0].id).toBe('w1');
+    expect(useTestStore.getState().roster[0]!.id).toBe('w1');
   });
 
   it('should kill a warrior and move them to the graveyard', () => {
@@ -73,6 +73,6 @@ describe('RosterSlice', () => {
 
     expect(useTestStore.getState().roster).toHaveLength(0);
     expect(useTestStore.getState().retired).toHaveLength(1);
-    expect(useTestStore.getState().retired[0].status).toBe('Retired');
+    expect(useTestStore.getState().retired[0]!.status).toBe('Retired');
   });
 });

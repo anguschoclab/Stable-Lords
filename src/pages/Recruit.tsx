@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
-import { FightingStyle, STYLE_DISPLAY_NAMES, type Attributes } from '@/types/game';
+import { FightingStyle, STYLE_DISPLAY_NAMES, type Attributes, type WarriorId } from '@/types/game';
 import { BASE_ROSTER_CAP } from '@/constants/roster';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
@@ -25,7 +25,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { RecruitCard, TIER_CONFIG } from '@/components/stable/RecruitCard';
-import type { Warrior } from '@/types/shared.types';
+import type { Warrior } from '@/types/game';
 import {
   Select,
   SelectContent,
@@ -168,7 +168,7 @@ export default function Recruit() {
 
       setState((draft: GameStore) => {
         const rng = new SeededRNGService(draft.week + hashStr(data.name));
-        const id = rng.uuid('warrior');
+        const id = rng.uuid('warrior') as WarriorId;
         const warrior = makeWarrior(id, data.name, data.style, data.attributes);
 
         draft.roster.push(warrior);
@@ -211,7 +211,7 @@ export default function Recruit() {
   };
 
   return (
-    <PageFrame size="xl">
+    <PageFrame>
       <PageHeader
         title="Personnel Acquisition"
         subtitle="STABLE · CONTRACT_MARKET · Wk {week}"
@@ -324,7 +324,7 @@ export default function Recruit() {
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                     Tactical Archetype
                   </label>
-                  <Select value={activeStyle} onValueChange={(v) => setActiveStyle(v as string)}>
+                  <Select value={activeStyle} onValueChange={(v) => setActiveStyle(v as unknown as FightingStyle | 'all')}>
                     <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
                       <SelectValue placeholder="All Archetypes" />
                     </SelectTrigger>
@@ -344,7 +344,7 @@ export default function Recruit() {
                   <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                     Registry Sequence
                   </label>
-                  <Select value={sortBy} onValueChange={(v) => setSortBy(v as string)}>
+                  <Select value={sortBy} onValueChange={(v) => setSortBy(v as unknown as 'cost-asc' | 'cost-desc' | 'potential-desc' | 'age-asc')}>
                     <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
                       <SelectValue />
                     </SelectTrigger>

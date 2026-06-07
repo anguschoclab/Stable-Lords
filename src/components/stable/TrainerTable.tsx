@@ -5,6 +5,7 @@ import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
 import { Surface } from '@/components/ui/Surface';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { GraduationCap, Target, Coins, Zap } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';

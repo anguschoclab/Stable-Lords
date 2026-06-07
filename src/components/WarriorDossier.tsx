@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { findWarrior } from '@/utils/historyResolver';
+import type { WarriorId } from '@/types/shared.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { WarriorRadarChart } from '@/components/charts/WarriorRadarChart';
@@ -14,7 +15,7 @@ import WarriorDossierSoulBond from './warrior/dossier/WarriorDossierSoulBond';
 import { WarriorDossierMedicalReport } from './warrior/dossier/WarriorDossierMedicalReport';
 
 interface WarriorDossierProps {
-  warriorId: string;
+  warriorId: WarriorId;
 }
 
 /**
@@ -30,6 +31,7 @@ export const WarriorDossier = React.memo(function WarriorDossier({
   warriorId,
 }: WarriorDossierProps) {
   const state = useWorldState();
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Use fine-grained selector to find the warrior
   const warrior = useMemo(() => findWarrior(state, warriorId), [state, warriorId]);
@@ -41,8 +43,6 @@ export const WarriorDossier = React.memo(function WarriorDossier({
     return <div className="p-8 text-center text-muted-foreground">Warrior not found.</div>;
 
   const record = `${warrior.career.wins}W - ${warrior.career.losses}L - ${warrior.career.kills}K`;
-  const fatigue = warrior.fatigue ?? 0;
-  const condition = 100 - fatigue;
 
   return (
     <ScrollArea className="h-full pr-4">
@@ -53,8 +53,8 @@ export const WarriorDossier = React.memo(function WarriorDossier({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <WarriorDossierStats warrior={warrior} condition={condition} />
-          <WarriorDossierTabs warrior={warrior} />
+          <WarriorDossierStats warrior={warrior} />
+          <WarriorDossierTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

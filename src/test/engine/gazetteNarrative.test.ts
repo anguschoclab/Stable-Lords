@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import type { FightSummary, FightOutcomeBy } from '@/types/game';
+import type { FightId, WarriorId } from '@/types/shared.types';
 
 describe('computeStreaks', () => {
   const createFight = (
@@ -10,13 +11,11 @@ describe('computeStreaks', () => {
     d: string,
     winner: 'A' | 'D' | null
   ): FightSummary => ({
-    id: `fight-${week}`,
+    id: `fight-${week}` as FightId,
     week,
     title: `Week ${week} Fight`,
-    warriorIdA: `warrior-${a}`,
-    warriorIdD: `warrior-${d}`,
-    a,
-    d,
+    warriorIdA: `warrior-${a}` as WarriorId,
+    warriorIdD: `warrior-${d}` as WarriorId,
     winner,
     by: 'KO',
     styleA: 'Brawler',
@@ -33,8 +32,8 @@ describe('computeStreaks', () => {
     const fights = [createFight(1, 'Alice', 'Bob', 'A')];
     const streaks = computeStreaks(fights);
 
-    expect(streaks.get('Alice')).toBe(1);
-    expect(streaks.get('Bob')).toBe(-1);
+    expect(streaks.get('Alice' as WarriorId)).toBe(1);
+    expect(streaks.get('Bob' as WarriorId)).toBe(-1);
   });
 
   it('increments streaks for consecutive wins', () => {
@@ -45,10 +44,10 @@ describe('computeStreaks', () => {
     ];
     const streaks = computeStreaks(fights);
 
-    expect(streaks.get('Alice')).toBe(3);
-    expect(streaks.get('Bob')).toBe(-1);
-    expect(streaks.get('Charlie')).toBe(-1);
-    expect(streaks.get('Dave')).toBe(-1);
+    expect(streaks.get('Alice' as WarriorId)).toBe(3);
+    expect(streaks.get('Bob' as WarriorId)).toBe(-1);
+    expect(streaks.get('Charlie' as WarriorId)).toBe(-1);
+    expect(streaks.get('Dave' as WarriorId)).toBe(-1);
   });
 
   it('decrements streaks for consecutive losses', () => {
@@ -59,7 +58,7 @@ describe('computeStreaks', () => {
     ];
     const streaks = computeStreaks(fights);
 
-    expect(streaks.get('Bob')).toBe(-3);
+    expect(streaks.get('Bob' as WarriorId)).toBe(-3);
   });
 
   it('resets a winning streak to -1 on a loss', () => {
@@ -70,8 +69,8 @@ describe('computeStreaks', () => {
     ];
     const streaks = computeStreaks(fights);
 
-    expect(streaks.get('Alice')).toBe(-1);
-    expect(streaks.get('Dave')).toBe(1);
+    expect(streaks.get('Alice' as WarriorId)).toBe(-1);
+    expect(streaks.get('Dave' as WarriorId)).toBe(1);
   });
 
   it('resets a losing streak to 1 on a win', () => {
@@ -82,8 +81,8 @@ describe('computeStreaks', () => {
     ];
     const streaks = computeStreaks(fights);
 
-    expect(streaks.get('Bob')).toBe(1);
-    expect(streaks.get('Dave')).toBe(-1);
+    expect(streaks.get('Bob' as WarriorId)).toBe(1);
+    expect(streaks.get('Dave' as WarriorId)).toBe(-1);
   });
 
   it('resets streaks to 0 on a draw', () => {
@@ -94,8 +93,8 @@ describe('computeStreaks', () => {
     ];
     const streaks = computeStreaks(fights);
 
-    expect(streaks.get('Alice')).toBe(0);
-    expect(streaks.get('Dave')).toBe(0);
+    expect(streaks.get('Alice' as WarriorId)).toBe(0);
+    expect(streaks.get('Dave' as WarriorId)).toBe(0);
   });
 
   it('processes fights in chronological order regardless of input order', () => {
@@ -111,7 +110,7 @@ describe('computeStreaks', () => {
     // Week 3: Alice loses (streak -1)
     const streaks = computeStreaks(fights);
 
-    expect(streaks.get('Alice')).toBe(-1);
+    expect(streaks.get('Alice' as WarriorId)).toBe(-1);
   });
 
   it('handles complex multi-character scenarios correctly', () => {
@@ -124,22 +123,20 @@ describe('computeStreaks', () => {
     ];
     const streaks = computeStreaks(fights);
 
-    expect(streaks.get('A')).toBe(-1);
-    expect(streaks.get('B')).toBe(2);
-    expect(streaks.get('C')).toBe(-1);
-    expect(streaks.get('D')).toBe(-2);
+    expect(streaks.get('A' as WarriorId)).toBe(-1);
+    expect(streaks.get('B' as WarriorId)).toBe(2);
+    expect(streaks.get('C' as WarriorId)).toBe(-1);
+    expect(streaks.get('D' as WarriorId)).toBe(-2);
   });
 });
 
 describe('generateFightNarrative', () => {
   const createFight = (winner: 'A' | 'D' | null, by: FightOutcomeBy): FightSummary => ({
-    id: 'fight-1',
+    id: 'fight-1' as FightId,
     week: 1,
     title: 'Week 1 Fight',
-    warriorIdA: 'warrior-Alice',
-    warriorIdD: 'warrior-Bob',
-    a: 'Alice',
-    d: 'Bob',
+    warriorIdA: 'warrior-Alice' as WarriorId,
+    warriorIdD: 'warrior-Bob' as WarriorId,
     winner,
     by,
     styleA: 'Brawler',

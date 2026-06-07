@@ -120,8 +120,8 @@ export default function BoutViewer({
       <BoutHeader
         nameA={nameA}
         nameD={nameD}
-        styleA={styleA}
-        styleD={styleD}
+        styleA={styleA as FightingStyle}
+        styleD={styleD as FightingStyle}
         winner={winner}
         isRivalry={isRivalry}
         minutes={minutes}
@@ -164,7 +164,7 @@ export default function BoutViewer({
               isPlaying={isPlaying}
               isComplete={isComplete}
               arenaTier={arenaTier}
-              weather={effectiveWeather}
+              weather={effectiveWeather as import('@/types/game').WeatherType}
               arenaId={arenaId}
               maxHpA={50}
               maxHpD={50}

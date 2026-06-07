@@ -221,7 +221,7 @@ export default function Gazette() {
               <BestByStyle allFights={allFights} />
             </div>
             <div className="lg:col-span-4">
-              <RisingStars allFights={allFights} currentWeek={week} />
+              <RisingStars allFights={allFights} />
             </div>
           </div>
 

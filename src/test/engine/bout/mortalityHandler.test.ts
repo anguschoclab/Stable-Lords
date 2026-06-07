@@ -26,7 +26,7 @@ describe('mortalityHandler', () => {
       rivalMap: new Map(),
       rivalries: [],
       ...overrides,
-    }) as unknown as GameState;
+    }) as any as GameState;
 
   const createMockOutcome = (overrides: Partial<FightOutcome> = {}): FightOutcome => ({
     winner: 'A',

@@ -22,7 +22,7 @@ function evaluationInterval(wt: number): number {
 function conditionMet(
   trigger: PlanCondition['trigger'],
   fighter: FighterState,
-  opponent: FighterState,
+  _opponent: FighterState,
   ctx: ResolutionContext
 ): boolean {
   const { type, value } = trigger;

@@ -54,7 +54,7 @@ export const ExpansionService = {
           newStable.owner.name = legacy.name;
           newStable.owner.stableName = legacy.stableName;
           newStable.owner.backstoryId = 'gladiator'; // Legacy founders are former arena warriors
-          newStable.owner.foundedByWarriorId = legacy.warriorId;
+          newStable.owner.foundedByWarriorId = legacy.warriorId as import('@/types/shared.types').WarriorId;
           // Derive personality/favoredStyles from the backstory seed + warrior's style
           // rather than hardcoding "Aggressive" for every legacy founder.
           const seedBasis = legacy.warriorId ?? legacy.name;

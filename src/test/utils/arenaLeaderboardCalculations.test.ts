@@ -161,7 +161,7 @@ describe('calculateArenaLeaderboard', () => {
 
   it('drops late-arriving equal-fame warriors at the capacity boundary', () => {
     // Gate uses <=, so with limit=2 and three warriors of fame=10,
-    // the third warrior sees top[1].fame === 10 and 10 <= 10 is true → dropped.
+    // the third warrior sees top[1]!.fame === 10 and 10 <= 10 is true → dropped.
     const roster = [
       createMockWarrior('a', 10),
       createMockWarrior('b', 10),

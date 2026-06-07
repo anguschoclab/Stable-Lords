@@ -16,7 +16,7 @@ import {
 import { audioManager } from '@/lib/AudioManager';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { MOOD_ICONS } from '@/engine/crowdMood';
+import { MOOD_ICONS, type CrowdMood } from '@/engine/crowdMood';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { MobileNav } from '@/components/navigation/MobileNav';
@@ -30,7 +30,7 @@ interface AppHeaderProps {
   isTournamentWeek: boolean;
   treasury: number;
   fame: number;
-  crowdMood: number;
+  crowdMood: CrowdMood;
   weather: WeatherType;
   isSimulating: boolean;
   lastSavedAt: string | null;
@@ -134,11 +134,11 @@ function InfluenceDisplay({ fame }: InfluenceDisplayProps) {
 // ─── Crowd Mood Display Component ──────────────────────────────────────────────
 
 interface CrowdMoodDisplayProps {
-  crowdMood: number;
+  crowdMood: CrowdMood;
 }
 
 function CrowdMoodDisplay({ crowdMood }: CrowdMoodDisplayProps) {
-  const moodIcon = MOOD_ICONS[crowdMood as keyof typeof MOOD_ICONS] ?? '😐';
+  const moodIcon = MOOD_ICONS[crowdMood] ?? '😐';
   return (
     <div className="flex flex-col px-4 border-l border-white/5">
       <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">

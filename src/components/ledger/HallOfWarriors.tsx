@@ -1,5 +1,4 @@
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import {
   Table,

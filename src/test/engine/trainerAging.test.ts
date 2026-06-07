@@ -135,7 +135,7 @@ describe('computeTrainerAging — basic aging', () => {
   });
 
   it('falls back to BASE_AGE when trainer age is undefined', () => {
-    const trainer = makeTrainer({ age: undefined as unknown as number });
+    const trainer = makeTrainer({ age: undefined as any as number });
     const state = makeGameState({ week: 51, trainers: [trainer] });
     const { updatedTrainers } = computeTrainerAging(state);
 
@@ -173,14 +173,14 @@ describe('computeTrainerAging — contract expiration', () => {
   });
 
   it('handles undefined trainers array gracefully', () => {
-    const state = makeGameState({ trainers: undefined as unknown as Trainer[] });
+    const state = makeGameState({ trainers: undefined as any as Trainer[] });
     const { updatedTrainers } = computeTrainerAging(state);
 
     expect(updatedTrainers).toHaveLength(0);
   });
 
   it('handles undefined hiringPool array gracefully', () => {
-    const state = makeGameState({ hiringPool: undefined as unknown as Trainer[] });
+    const state = makeGameState({ hiringPool: undefined as any as Trainer[] });
     const { updatedHiringPool } = computeTrainerAging(state);
 
     expect(updatedHiringPool).toHaveLength(0);

@@ -1,4 +1,5 @@
 import { GameState, Warrior, BoutOffer } from '@/types/state.types';
+import type { StableId, FightId } from '@/types/shared.types';
 import { StateImpact } from '@/engine/impacts';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
@@ -70,7 +71,7 @@ export function processContractPayouts(
   if (!contract) return [];
 
   const impacts: StateImpact[] = [];
-  const rivalsUpdates = new Map<string, Partial<GameState>>();
+  const rivalsUpdates = new Map<StableId, Partial<import('@/types/state.types').RivalStableData>>();
 
   const purse = contract.purse;
   const showFee = Math.floor(purse * 0.2);
@@ -101,15 +102,16 @@ export function processContractPayouts(
 
   // Update Promoter History
   const updatedPromoters = { ...state.promoters };
-  if (updatedPromoters[contract.promoterId]) {
+  const promoter = updatedPromoters[contract.promoterId];
+  if (promoter) {
     updatedPromoters[contract.promoterId] = {
-      ...updatedPromoters[contract.promoterId],
+      ...promoter,
       history: {
-        ...updatedPromoters[contract.promoterId].history,
-        totalPursePaid: (updatedPromoters[contract.promoterId].history.totalPursePaid || 0) + purse,
+        ...promoter.history,
+        totalPursePaid: (promoter.history.totalPursePaid || 0) + purse,
         notableBouts: [
-          ...(updatedPromoters[contract.promoterId].history.notableBouts || []),
-          `bout_${state.week}_${currentWId}_vs_${currentOId}`,
+          ...(promoter.history.notableBouts || []),
+          `bout_${state.week}_${currentWId}_vs_${currentOId}` as FightId,
         ],
       },
     };

@@ -3,7 +3,8 @@
  * Kept pure + deterministic so both the UI (PlanBuilder) and the AI planner
  * can consume the same ruleset.
  */
-import type { FightPlan, Warrior, PhaseStrategy } from '@/types/shared.types';
+import type { FightPlan, PhaseStrategy } from '@/types/shared.types';
+import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types'; /**
  * Warning severity type.
  */

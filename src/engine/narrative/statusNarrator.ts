@@ -65,7 +65,7 @@ export function stateChangeLine(
 /**
  * Generates fatigue line when endurance is low.
  */
-export function fatigueLine(rng: IRNGService, name: string, endRatio: number): string | null {
+export function fatigueLine(_rng: IRNGService, name: string, endRatio: number): string | null {
   if (endRatio <= 0.15) return `${name} is tired and barely able to defend himself!`;
   if (endRatio <= 0.3) return `${name} is breathing heavily.`;
   return null;
@@ -77,7 +77,7 @@ export function fatigueLine(rng: IRNGService, name: string, endRatio: number): s
 export function crowdReaction(
   rng: IRNGService,
   loserName: string,
-  winnerName: string,
+  _winnerName: string,
   hpRatio: number
 ): string | null {
   if (rng.next() > 0.25) return null;
@@ -94,7 +94,7 @@ export function crowdReaction(
  */
 export function minuteStatusLine(
   rng: IRNGService,
-  minute: number,
+  _minute: number,
   nameA: string,
   nameD: string,
   hitsA: number,

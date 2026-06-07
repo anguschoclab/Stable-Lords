@@ -1,4 +1,4 @@
-import type { Warrior } from '@/types/shared.types';
+import type { Warrior } from '@/types/warrior.types';
 import { ATTRIBUTE_KEYS } from '@/types/game';
 import { WarriorLink } from '@/components/EntityLink';
 import { Activity, Heart, Zap } from 'lucide-react';
@@ -102,13 +102,13 @@ export function StableRosterTab({ activeRoster }: StableRosterTabProps) {
                     <div className="flex items-center gap-2">
                       <Heart className="h-3.5 w-3.5 text-destructive" />
                       <span className="text-sm font-display font-black text-foreground">
-                        {w.derivedStats.hp}
+                        {w.derivedStats?.hp}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Zap className="h-3.5 w-3.5 text-arena-fame" />
                       <span className="text-sm font-display font-black text-foreground">
-                        {w.derivedStats.endurance}
+                        {w.derivedStats?.endurance}
                       </span>
                     </div>
                   </div>

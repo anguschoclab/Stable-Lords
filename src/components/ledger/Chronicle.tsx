@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { ScrollText, ChevronRight, History, Activity, ShieldCheck, Terminal } from 'lucide-react';

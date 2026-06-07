@@ -82,7 +82,7 @@ describe('TickOrchestrator', () => {
       // Should have appended a newsletter item
       expect(nextState.newsletter).toBeDefined();
       expect(nextState.newsletter!.length).toBeGreaterThan(0);
-      expect(nextState.newsletter![0].items).toContain('Fighter A beat Fighter B');
+      expect(nextState.newsletter![0]!.items).toContain('Fighter A beat Fighter B');
     });
   });
 

@@ -31,7 +31,7 @@ describe('Health System (Boundary Testing)', () => {
         { id: 'w2', name: 'Warrior 2', injuries: [mockInjury2] },
       ],
       restStates: [],
-    } as unknown as GameState;
+    } as any as GameState;
 
     const impact = computeHealthImpact(mockState);
 
@@ -39,8 +39,8 @@ describe('Health System (Boundary Testing)', () => {
     expect(impact.rosterUpdates?.get('w1')?.injuries).toEqual([]);
     expect(impact.rosterUpdates?.get('w2')?.injuries).toEqual([]);
 
-    expect(impact.newsletterItems?.[0].items).toContain('Warrior 1 recovered from cut.');
-    expect(impact.newsletterItems?.[0].items).toContain('Warrior 2 recovered from bruise.');
+    expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 1 recovered from cut.');
+    expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 2 recovered from bruise.');
   });
 
   it('should handle empty injuries array safely', () => {
@@ -48,9 +48,9 @@ describe('Health System (Boundary Testing)', () => {
       week: 5,
       roster: [{ id: 'w3', name: 'Warrior 3', injuries: [] }],
       restStates: [],
-    } as unknown as GameState;
+    } as any as GameState;
 
     const newState = applyHealthUpdates(mockState);
-    expect(newState.roster[0].injuries).toEqual([]);
+    expect(newState.roster[0]!.injuries).toEqual([]);
   });
 });

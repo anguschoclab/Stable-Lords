@@ -24,7 +24,7 @@ describe('pipeline/health', () => {
           { id: 'w2', name: 'Warrior 2', injuries: null }, // null injuries
           { id: 'w3', name: 'Warrior 3', injuries: ['string_injury'] }, // string-only injuries
         ],
-      } as unknown as GameState;
+      } as any as GameState;
 
       const impact = computeHealthImpact(mockState);
 
@@ -49,7 +49,7 @@ describe('pipeline/health', () => {
           { id: 'w2', name: 'Warrior 2', injuries: [] },
           { id: 'w3', name: 'Warrior 3', injuries: ['old_format'] },
         ],
-      } as unknown as GameState;
+      } as any as GameState;
 
       vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
         active: [{ ...mockInjury, weeksRemaining: 1 }],
@@ -78,7 +78,7 @@ describe('pipeline/health', () => {
       const mockState = {
         week: 5,
         roster: [{ id: 'w2', name: 'Warrior 2', injuries: [] }],
-      } as unknown as GameState;
+      } as any as GameState;
 
       const impact = computeHealthImpact(mockState);
 
@@ -99,7 +99,7 @@ describe('pipeline/health', () => {
       const mockState = {
         week: 5,
         roster: [{ id: 'w1', name: 'Warrior 1', injuries: [mockInjury] }],
-      } as unknown as GameState;
+      } as any as GameState;
 
       vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
         active: [{ ...mockInjury, weeksRemaining: 1 }],
@@ -130,7 +130,7 @@ describe('pipeline/health', () => {
         ],
         restStates: [{ warriorId: 'w1', restUntilWeek: 4 }],
         newsletter: [],
-      } as unknown as GameState;
+      } as any as GameState;
 
       vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
         active: [{ ...mockInjury, weeksRemaining: 1 }],
@@ -163,7 +163,7 @@ describe('pipeline/health', () => {
       const mockState = {
         week: 5,
         roster: [{ id: 'w1', name: 'Warrior 1', injuries: [mockInjury] }],
-      } as unknown as GameState;
+      } as any as GameState;
 
       vi.mocked(injuriesModule.tickInjuries).mockReturnValue({
         active: [],

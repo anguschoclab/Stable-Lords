@@ -380,7 +380,7 @@ export default function TrainingPlanner() {
   }, [activeWarriors, currentTrainers]);
 
   return (
-    <PageFrame size="xl">
+    <PageFrame>
       <PageHeader
         title="Training Logistics"
         subtitle="STABLE · DEVELOPMENT_PLANNER · WK {season}"

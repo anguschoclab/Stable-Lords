@@ -23,7 +23,7 @@ export default function StableHall() {
   const pendingTokens = (insightTokens ?? []).length;
 
   return (
-    <PageFrame size="xl">
+    <PageFrame>
       <PageHeader
         eyebrow="INSTITUTIONAL_PROFILE"
         title={player.stableName}

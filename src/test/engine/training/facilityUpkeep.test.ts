@@ -27,7 +27,7 @@ describe('facilityUpkeep', () => {
       const growth: SeasonalGrowth[] = [{ warriorId: 'w1', season: 'Spring', gains: { ST: 1 } }];
       const result = updateSeasonalGains(growth, 'w1', 'Spring', 'ST');
       expect(result).toHaveLength(1);
-      expect(result[0].gains.ST).toBe(2);
+      expect(result[0]!.gains.ST).toBe(2);
     });
   });
 });

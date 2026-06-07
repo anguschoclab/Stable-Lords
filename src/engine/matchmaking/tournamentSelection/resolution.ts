@@ -76,7 +76,7 @@ export function resolveRound(
       wD,
       rng.roll(0, 1000000),
       updatedState.trainers,
-      updatedState.weather,
+      'Clear',
       'bloodsands_arena',
       updatedState.crowdMood,
       headless

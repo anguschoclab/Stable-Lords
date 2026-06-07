@@ -77,7 +77,7 @@ export function resolveRound(
       wD,
       Math.floor(rngService.next() * 1000000),
       state.trainers,
-      state.weather,
+      'Clear',
       'bloodsands_arena',
       state.crowdMood
     );

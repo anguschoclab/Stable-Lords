@@ -84,6 +84,7 @@ export interface BoutContext {
   playerId: string;
   contract?: BoutOffer;
   headless?: boolean;
+  isTournamentBout?: boolean;
 }
 
 function getValidatedCombatants(ctx: BoutContext): { cW: Warrior; cO: Warrior } | null {
@@ -122,6 +123,8 @@ function runBoutSimulation(
   validCO: Warrior,
   boutSeed: number
 ) {
+  // Tournament bouts always run in perfect 'Clear' conditions
+  const weather = _ctx.isTournamentBout ? 'Clear' : state.weather;
   return simulateFight(
     getDefaultPlan(validCW, defaultPlanForWarrior),
     getDefaultPlan(validCO, defaultPlanForWarrior),
@@ -129,7 +132,7 @@ function runBoutSimulation(
     validCO,
     boutSeed,
     state.trainers,
-    state.weather,
+    weather,
     undefined,
     state.crowdMood,
     _ctx.headless
@@ -305,6 +308,8 @@ export function processWeekBouts(state: GameState, headless?: boolean): {
 
   pairings.forEach((p) => {
     const contract = p.contractId ? state.boutOffers[p.contractId as BoutOfferId] : undefined;
+    // Tournament bouts have synthetic contractIds starting with 'tour_'
+    const isTournamentBout = p.contractId?.startsWith('tour_') ?? false;
     const res = resolveBout(state, {
       warrior: p.a,
       opponent: p.d,
@@ -317,6 +322,7 @@ export function processWeekBouts(state: GameState, headless?: boolean): {
       warriorMap,
       contract,
       headless,
+      isTournamentBout,
     });
     impacts.push(res.impact);
     results.push(res.result);

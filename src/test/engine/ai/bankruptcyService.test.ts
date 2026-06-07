@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import type { GameState } from '@/types/state.types';
+import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 
 describe('BankruptcyService', () => {
   let state: GameState;
@@ -12,7 +13,8 @@ describe('BankruptcyService', () => {
 
   describe('processBankruptcy', () => {
     it('should process bankruptcy for all rival stables', () => {
-      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
+      const rng = new SeededRNGService(1);
+      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(Array.isArray(updatedState.rivals)).toBe(true);
       expect(Array.isArray(bankruptStables)).toBe(true);
@@ -21,7 +23,8 @@ describe('BankruptcyService', () => {
     it('should remove bankrupt stables', () => {
       state.rivals[0]!.treasury = -600;
 
-      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
+      const rng = new SeededRNGService(1);
+      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(bankruptStables.length).toBe(1);
       expect(bankruptStables[0]).toBe(state.rivals[0]!.owner.stableName);
@@ -32,7 +35,8 @@ describe('BankruptcyService', () => {
       state.rivals[0]!.treasury = 1000;
       state.rivals[1]!.treasury = 500;
 
-      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
+      const rng = new SeededRNGService(1);
+      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(bankruptStables.length).toBe(0);
       expect(updatedState.rivals.length).toBe(state.rivals.length);
@@ -41,7 +45,8 @@ describe('BankruptcyService', () => {
     it('should handle empty rivals list', () => {
       state.rivals = [];
 
-      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
+      const rng = new SeededRNGService(1);
+      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(updatedState.rivals.length).toBe(0);
       expect(bankruptStables.length).toBe(0);
@@ -50,7 +55,8 @@ describe('BankruptcyService', () => {
     it('should handle stables at bankruptcy threshold', () => {
       state.rivals[0]!.treasury = -500;
 
-      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
+      const rng = new SeededRNGService(1);
+      const { bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       // Bankruptcy threshold may be different than -500
       // Just verify the function runs without error
@@ -60,7 +66,8 @@ describe('BankruptcyService', () => {
     it('should handle stables above bankruptcy threshold', () => {
       state.rivals[0]!.treasury = -499;
 
-      const { updatedState, bankruptStables } = BankruptcyService.processBankruptcy(state);
+      const rng = new SeededRNGService(1);
+      const { bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       expect(bankruptStables.length).toBe(0);
     });
@@ -69,7 +76,8 @@ describe('BankruptcyService', () => {
       state.rivals[0]!.treasury = -600;
       state.rivals[1]!.treasury = -700;
 
-      const { bankruptStables } = BankruptcyService.processBankruptcy(state);
+      const rng = new SeededRNGService(1);
+      const { bankruptStables } = BankruptcyService.processBankruptcy(state, rng);
 
       bankruptStables.forEach((name) => {
         expect(typeof name).toBe('string');

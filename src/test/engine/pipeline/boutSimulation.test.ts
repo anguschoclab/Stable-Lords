@@ -11,7 +11,7 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
 
     // 1. Setup a minimal state with a signed bout
     const warriorA = makeWarrior(
-      'warrior-a',
+      'warrior-a' as import('@/types/shared.types').WarriorId,
       'Fighter A',
       FightingStyle.StrikingAttack,
       { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
@@ -20,7 +20,7 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
     );
 
     const warriorD = makeWarrior(
-      'warrior-d',
+      'warrior-d' as import('@/types/shared.types').WarriorId,
       'Fighter D',
       FightingStyle.BashingAttack,
       { ST: 12, CN: 12, SZ: 10, WT: 10, WL: 10, SP: 8, DF: 10 },
@@ -29,7 +29,7 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
     );
 
     const promoter: Promoter = {
-      id: 'promoter-1',
+      id: 'promoter-1' as import('@/types/shared.types').PromoterId,
       name: 'Test Promoter',
       age: 40,
       personality: 'Honorable',
@@ -40,15 +40,15 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
     };
 
     const offer: BoutOffer = {
-      id: 'offer-1',
-      promoterId: 'promoter-1',
-      warriorIds: ['warrior-a', 'warrior-d'],
+      id: 'offer-1' as import('@/types/shared.types').BoutOfferId,
+      promoterId: 'promoter-1' as import('@/types/shared.types').PromoterId,
+      warriorIds: ['warrior-a' as import('@/types/shared.types').WarriorId, 'warrior-d' as import('@/types/shared.types').WarriorId],
       boutWeek: 1,
       expirationWeek: 2,
       purse: 500,
       hype: 100,
       status: 'Signed',
-      responses: { 'warrior-a': 'Accepted', 'warrior-d': 'Accepted' },
+      responses: { ['warrior-a' as import('@/types/shared.types').WarriorId]: 'Accepted', ['warrior-d' as import('@/types/shared.types').WarriorId]: 'Accepted' },
     };
 
     const initialState: Partial<GameState> = {
@@ -74,8 +74,8 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
           fame: 0,
         } as any,
       ],
-      boutOffers: { 'offer-1': offer },
-      promoters: { 'promoter-1': promoter },
+      boutOffers: { ['offer-1' as import('@/types/shared.types').BoutOfferId]: offer as any },
+      promoters: { ['promoter-1' as import('@/types/shared.types').PromoterId]: promoter as any },
       arenaHistory: [],
       newsletter: [],
       gazettes: [],
@@ -103,7 +103,7 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
     expect(nextState.arenaHistory.length).toBe(1);
 
     // - The offer should be removed from boutOffers (assuming processWeekBouts prunes it)
-    expect(nextState.boutOffers['offer-1']).toBeUndefined();
+    expect((nextState.boutOffers as any)['offer-1']).toBeUndefined();
 
     // - Treasury should have changed (purse or show fee)
     expect(nextState.treasury).not.toBe(1000);

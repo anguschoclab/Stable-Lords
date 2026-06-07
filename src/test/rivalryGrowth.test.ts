@@ -11,13 +11,11 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
     // Two celebrated warriors (fame 80+) should generate high intensity delta
     const highFameFights: FightSummary[] = [
       {
-        id: 'f1',
+        id: 'f1' as import('@/types/shared.types').FightId,
         title: 'Bout',
         createdAt: new Date().toISOString(),
-        a: 'PlayerStable',
-        d: 'RivalStable',
-        warriorIdA: 'warrior1',
-        warriorIdD: 'warrior2',
+        warriorIdA: 'warrior1' as import('@/types/shared.types').WarriorId,
+        warriorIdD: 'warrior2' as import('@/types/shared.types').WarriorId,
         winner: 'A',
         by: 'KO',
         styleA: 'WS',
@@ -42,13 +40,11 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
     // --- CASE 2: Low Fame Rivalry (Slow Growth) ---
     const lowFameFights: FightSummary[] = [
       {
-        id: 'f2',
+        id: 'f2' as import('@/types/shared.types').FightId,
         title: 'Bout',
         createdAt: new Date().toISOString(),
-        a: 'NewStable',
-        d: 'OtherStable',
-        warriorIdA: 'warrior3',
-        warriorIdD: 'warrior4',
+        warriorIdA: 'warrior3' as import('@/types/shared.types').WarriorId,
+        warriorIdD: 'warrior4' as import('@/types/shared.types').WarriorId,
         winner: 'D',
         by: 'Stoppage',
         styleA: 'LU',
@@ -75,13 +71,11 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
     // Simulate 3 weeks of high-fame bouts between the same stables
     for (let w = 1; w <= 3; w++) {
       const bout: FightSummary = {
-        id: `f_b_${w}`,
+        id: `f_b_${w}` as import('@/types/shared.types').FightId,
         title: 'Bout',
         createdAt: new Date().toISOString(),
-        a: 'TitanStable',
-        d: 'ColossusStable',
-        warriorIdA: `warriorA_${w}`,
-        warriorIdD: `warriorD_${w}`,
+        warriorIdA: `warriorA_${w}` as import('@/types/shared.types').WarriorId,
+        warriorIdD: `warriorD_${w}` as import('@/types/shared.types').WarriorId,
         winner: 'A',
         by: 'Kill',
         styleA: 'BA',

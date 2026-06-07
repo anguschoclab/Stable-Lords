@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import WorldOverview from '@/pages/WorldOverview';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/game';
@@ -110,7 +110,7 @@ describe('WorldOverview Component', () => {
 
     // Setup player stable
     mockState.player = {
-      id: 'p1',
+      id: 'p1' as import('@/types/shared.types').StableId,
       name: 'Player Owner',
       stableName: 'Player Stable',
       fame: 100,
@@ -182,7 +182,7 @@ describe('WorldOverview Component', () => {
     const rw1Elements = await screen.findAllByText('RivalWarrior1');
     expect(rw1Elements.length).toBeGreaterThan(0);
 
-    const pw1Row = pw1Elements[0].closest('tr');
+    const pw1Row = pw1Elements[0]!.closest('tr');
     if (!pw1Row) throw new Error('PW1 row not found');
     const pw1Cells = within(pw1Row).getAllByText(/Player Stable/i);
     expect(pw1Cells.length).toBeGreaterThan(0);

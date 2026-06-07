@@ -7,7 +7,7 @@ import type { Warrior } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 
 const mockWarrior: Warrior = {
-  id: 'w1',
+  id: 'w1' as import('@/types/shared.types').WarriorId,
   name: 'Gaius',
   style: FightingStyle.AimedBlow,
   attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
@@ -19,14 +19,16 @@ const mockWarrior: Warrior = {
   career: { wins: 0, losses: 0, kills: 0 },
   champion: false,
   status: 'Active',
+  traits: [],
+  age: 20,
 };
 
 const createTestStore = () =>
   create<RosterSlice & { week: number }>()(
-    immer((set, get, ...args) => ({
-      ...createRosterSlice(set, get, ...args),
+    immer((set: any, get: any, api: any) => ({
+      ...createRosterSlice(set, get, api),
       week: 1,
-    }))
+    })) as any
   );
 
 describe('RosterSlice', () => {
@@ -50,7 +52,7 @@ describe('RosterSlice', () => {
     });
 
     act(() => {
-      useTestStore.getState().killWarrior('w1', 'rival_1', 'Decapitation');
+      useTestStore.getState().killWarrior('w1' as import('@/types/shared.types').WarriorId, 'rival_1', 'Decapitation');
     });
 
     expect(useTestStore.getState().roster).toHaveLength(0);
@@ -68,7 +70,7 @@ describe('RosterSlice', () => {
     });
 
     act(() => {
-      useTestStore.getState().retireWarrior('w1');
+      useTestStore.getState().retireWarrior('w1' as import('@/types/shared.types').WarriorId);
     });
 
     expect(useTestStore.getState().roster).toHaveLength(0);

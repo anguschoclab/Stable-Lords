@@ -61,6 +61,7 @@ describe('recruitScouting', () => {
         (a, b) => (b[1] as number) - (a[1] as number)
       );
       const topAttr = entries[0];
+      if (!topAttr) throw new Error('No top attribute found');
       const othersCount = entries.length - 1;
 
       const expectedSummary =

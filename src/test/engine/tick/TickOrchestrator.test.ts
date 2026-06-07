@@ -66,7 +66,7 @@ describe('TickOrchestrator', () => {
     it('should resolve tournament round when isTournamentWeek and activeTournamentId are set', () => {
       mockState.day = 2;
       mockState.isTournamentWeek = true;
-      mockState.activeTournamentId = 'test-tournament';
+      mockState.activeTournamentId = 'test-tournament' as import('@/types/shared.types').TournamentId;
 
       const nextState = TickOrchestrator.advanceDay(mockState);
 
@@ -102,11 +102,11 @@ describe('TickOrchestrator', () => {
     it('should resolve remaining tournament rounds before advancing week', () => {
       mockState.day = 3;
       mockState.isTournamentWeek = true;
-      mockState.activeTournamentId = 'test-tournament';
+      mockState.activeTournamentId = 'test-tournament' as import('@/types/shared.types').TournamentId;
 
       // Setup mock to return incremental changes
       vi.mocked(TournamentSelectionService.resolveRound).mockImplementation(
-        (state: any, tId: any, seed: any) => {
+        (state: any, _tId: any, seed: any) => {
           return {
             updatedState: { ...state, fame: (state.fame || 0) + 10 },
             roundResults: [`Result for seed ${seed}`],
@@ -131,7 +131,7 @@ describe('TickOrchestrator', () => {
       // Should combine news items
       const newsletter = nextState.newsletter || [];
       expect(newsletter.length).toBeGreaterThan(0);
-      const latestNews = newsletter[newsletter.length - 1];
+      const latestNews = newsletter[newsletter.length - 1]!;
       expect(latestNews.title).toContain('Recap');
       expect(latestNews.items.length).toBe(3);
     });

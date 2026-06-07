@@ -35,10 +35,15 @@ export function narrateRangeShift(rng: RNG, moverName: string, newRange: string)
 /**
  * Narrates feint attempt.
  */
-export function narrateFeint(rng: RNG, attackerName: string, succeeded: boolean): string {
+export function narrateFeint(
+  rng: RNG,
+  attackerName: string,
+  succeeded: boolean,
+  defenderName?: string
+): string {
   if (succeeded) {
     const template = getFromArchive(rng, ['pbp', 'feints']);
-    return interpolateTemplate(template, { attacker: attackerName });
+    return interpolateTemplate(template, { attacker: attackerName, defender: defenderName });
   } else {
     const templates = [
       `%A's feint is read — the deception falls flat.`,

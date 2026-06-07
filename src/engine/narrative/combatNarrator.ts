@@ -1,7 +1,5 @@
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { getItemById } from '@/data/equipment';
-import narrativeContent from '@/data/narrativeContent.json';
-import type { NarrativeContent } from '@/types/narrative.types';
 import { NarrativeTemplateEngine } from './narrativeTemplateEngine';
 import { szToHeight, getWeaponDisplayName, getWeaponType } from './narrativeUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -14,6 +12,13 @@ import {
   narrateHit,
   narrateParryBreak,
   narrateInitiative,
+  narrateKnockdown,
+  narrateRecovery,
+  getEpithet,
+  narrateContextLine,
+  narrateCrowdReaction,
+  narrateTaunt,
+  narrateInsightHint,
 } from './combatNarrators';
 
 /**
@@ -93,7 +98,11 @@ export function battleOpener(rng: IRNGService): string {
 }
 
 // Re-export from unified combatNarrators
-export { narrateAttack, narratePassive, narrateParry, narrateDodge, narrateCounterstrike, narrateHit, narrateParryBreak, narrateInitiative };
+export {
+  narrateAttack, narratePassive, narrateParry, narrateDodge, narrateCounterstrike,
+  narrateHit, narrateParryBreak, narrateInitiative, narrateKnockdown, narrateRecovery,
+  getEpithet, narrateContextLine, narrateCrowdReaction, narrateTaunt, narrateInsightHint
+};
 
 /**
  * Narrates bout conclusion.
@@ -113,6 +122,8 @@ export function narrateBoutEnd(
     KO: 'KO',
     Stoppage: 'Stoppage',
     Exhaustion: 'Exhaustion',
+    Surrender: 'Surrender',
+    Incapacitated: 'Incapacitated',
   };
 
   const category = categoryMap[by] || 'KO';
@@ -155,4 +166,11 @@ export const CombatNarrator = {
   narrateParryBreak,
   narrateInitiative,
   narrateBoutEnd,
+  narrateKnockdown,
+  narrateRecovery,
+  getEpithet,
+  narrateContextLine,
+  narrateCrowdReaction,
+  narrateTaunt,
+  narrateInsightHint,
 } as const;

@@ -81,7 +81,7 @@ export function generateIntroductions(
     log.push({ minute: 0, text: arenaIntroLine(arenaConfig) });
   }
 
-  log.push({ minute: 1, text: battleOpener(rng) });
+  log.push({ minute: 1, text: battleOpener(rng, nameA, nameD) });
   if (planA.OE <= 3) log.push({ minute: 1, text: conservingLine(nameA) });
   if (planD.OE <= 3) log.push({ minute: 1, text: conservingLine(nameD) });
 

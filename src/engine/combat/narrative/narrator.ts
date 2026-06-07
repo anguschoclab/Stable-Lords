@@ -296,11 +296,11 @@ export function narrateEvents(
       }
 
       case 'FEINT_SUCCESS':
-        log.push({ minute, text: narrateFeint(rng, actorName, true) });
+        log.push({ minute, text: narrateFeint(rng, actorName, true, opponentName) });
         break;
 
       case 'FEINT_FAIL':
-        log.push({ minute, text: narrateFeint(rng, actorName, false) });
+        log.push({ minute, text: narrateFeint(rng, actorName, false, opponentName) });
         break;
 
       case 'ZONE_SHIFT': {

@@ -103,8 +103,10 @@ export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: numb
 }
 
 /**
- * Generates battle opener text.
+ * Generates battle opener text, interpolating the two fighters' names so the
+ * archive's {{attacker}}/{{defender}} tokens resolve (rather than leaking raw).
  */
-export function battleOpener(rng: RNG): string {
-  return getFromArchive(rng, ['pbp', 'openers']);
+export function battleOpener(rng: RNG, attackerName?: string, defenderName?: string): string {
+  const template = getFromArchive(rng, ['pbp', 'openers']);
+  return interpolateTemplate(template, { attacker: attackerName, defender: defenderName });
 }

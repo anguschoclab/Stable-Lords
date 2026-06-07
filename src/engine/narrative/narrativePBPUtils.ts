@@ -48,11 +48,28 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
     }
 
     if (longKey) {
-      if (longKey === 'name' && !ctx.name && ctx.attacker) return String(ctx.attacker);
-      if (longKey === 'attacker' && !ctx.attacker && ctx.name) return String(ctx.name);
-
-      const value = ctx[longKey as keyof CombatContext];
-      return value !== undefined && Object.hasOwn(ctx, longKey) ? String(value) : match;
+      // Standard tokens always resolve to sensible text so a missing context value
+      // never leaks a raw {{token}} into the play-by-play.
+      switch (longKey) {
+        case 'attacker':
+          return String(ctx.attacker ?? ctx.name ?? 'The warrior');
+        case 'name':
+          return String(ctx.name ?? ctx.attacker ?? 'The warrior');
+        case 'defender':
+          return String(ctx.defender ?? 'the opponent');
+        case 'weapon':
+          return String(ctx.weapon ?? 'weapon');
+        case 'bodyPart':
+          return String(ctx.bodyPart ?? 'body');
+        case 'winner':
+          return String(ctx.winner ?? 'the winner');
+        case 'loser':
+          return String(ctx.loser ?? 'the loser');
+        default: {
+          const value = ctx[longKey as keyof CombatContext];
+          return value !== undefined && Object.hasOwn(ctx, longKey) ? String(value) : match;
+        }
+      }
     }
 
     return match;

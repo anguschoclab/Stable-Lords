@@ -176,6 +176,7 @@ export interface StatusChanges {
   severe: string[];
   desperate: string[];
   serious: string[];
+  panic: string[];
 }/**
   * Defines the shape of defenses.
   */
@@ -184,10 +185,19 @@ export interface StatusChanges {
 /**
  * Defines the shape of defenses.
  */
+export interface DodgeTiers {
+  tier1_low: string[];
+  tier2_medium: string[];
+  tier3_high: string[];
+  tier4_supernatural: string[];
+}
+
 export interface Defenses {
-  dodge: { success: string[] };
+  counterstrike: { success: string[] };
+  dodge: DodgeTiers;
   parry: { success: string[] };
   shield: { success: string[] };
+  parry_break: string[];
 }/**
   * Defines the shape of pacing.
   */
@@ -196,10 +206,17 @@ export interface Defenses {
 /**
  * Defines the shape of pacing.
  */
+export interface Tempo {
+  ahead: string[];
+  equal: string[];
+  movement: string[];
+}
+
 export interface Pacing {
   stalemate: string[];
   trading_blows: string[];
   pressing: string[];
+  tempo: Tempo;
 }/**
   * Defines the shape of reactions.
   */
@@ -212,6 +229,9 @@ export interface Reactions {
   positive: string[];
   negative: string[];
   encourage: string[];
+  gasp: string[];
+  cheer: string[];
+  boo: string[];
 }/**
   * Defines the shape of taunts.
   */
@@ -223,6 +243,8 @@ export interface Reactions {
 export interface Taunts {
   winner: string[];
   loser: string[];
+  rivalry_winner: string[];
+  rivalry_loser: string[];
 }/**
   * Defines the shape of insights.
   */
@@ -236,6 +258,8 @@ export interface Insights {
   SP: string[];
   DF: string[];
   WL: string[];
+  CN: string[];
+  CT: string[];
 }/**
   * Defines the shape of pbp narratives.
   */
@@ -244,19 +268,58 @@ export interface Insights {
 /**
  * Defines the shape of pbp narratives.
  */
+export interface Attacks {
+  piercing: string[];
+  slashing: string[];
+  bashing: string[];
+  fist: string[];
+}
+
+export interface Knockdown {
+  fall: string[];
+  recovery: string[];
+}
+
+export interface Epithets {
+  origin: string[];
+  race: string[];
+  style: string[];
+}
+
+export interface StyleMatchups {
+  [key: string]: string[];
+}
+
+export interface Context {
+  rivalry: string[];
+  fame_great: string[];
+  fame_unknown: string[];
+  style_matchups: StyleMatchups;
+}
+
 export interface PbpNarratives {
   openers: string[];
-  whiffs: string[];
+  attacks: Attacks;
   hit_locations: HitLocations;
   damage_severity: DamageSeverity;
   status_changes: StatusChanges;
   defenses: Defenses;
+  knockdown: Knockdown;
+  epithets: Epithets;
   pacing: Pacing;
   reactions: Reactions;
   taunts: Taunts;
   initiative: string[];
   feints: string[];
   insights: Insights;
+  context: Context;
+  executions: string[];
+  fatal_damage: string[];
+  hits: { generic: string[] };
+  meta: {
+    popularity: { great: string[]; normal: string[] };
+    skill_learns: string[];
+  };
 }/**
   * Defines the shape of conclusions.
   */
@@ -272,6 +335,8 @@ export interface Conclusions {
   KO: string | string[];
   Stoppage: string | string[];
   Exhaustion: string | string[];
+  Surrender: string | string[];
+  Incapacitated: string | string[];
 }/**
   * Defines the shape of event narrative.
   */

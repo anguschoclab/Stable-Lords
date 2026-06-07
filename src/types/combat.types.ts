@@ -117,7 +117,9 @@ export type CombatEventType =
   | 'RANGE_SHIFT'
   | 'FEINT_SUCCESS'
   | 'FEINT_FAIL'
-  | 'ZONE_SHIFT';/**
+  | 'ZONE_SHIFT'
+  | 'KNOCKDOWN'
+  | 'RECOVERY';/**
                   * Defines the shape of combat event.
                   */
 

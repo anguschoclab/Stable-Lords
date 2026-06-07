@@ -89,14 +89,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.995) return 'Blood Moon'; // Includes 0.99
   if (roll < 0.998) return 'Eclipse';
   return 'Mana Surge';
-}/**
-  * Run world pass.
-  * @param _state - _state.
-  * @param nextWeek - Next week.
-  * @param rng - Rng. (optional)
-  * @returns The result.
-  */
-
+}
 
 /**
  * Run world pass.

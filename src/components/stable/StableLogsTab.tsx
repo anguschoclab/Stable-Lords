@@ -84,7 +84,7 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
                 </div>
                 <div className="flex items-center gap-6">
                   {f.by === 'Kill' && (
-                    <ImperialRing size="xs" variant="blood">
+                    <ImperialRing size="sm" variant="blood">
                       <Skull className="h-3 w-3 text-primary" />
                     </ImperialRing>
                   )}

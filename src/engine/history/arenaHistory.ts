@@ -73,8 +73,13 @@ export const ArenaHistory = {
   query(opts: { week?: number; warriorName?: string } = {}): FightSummary[] {
     let arr = load();
     if (opts.week != null) arr = arr.filter((f) => f.week === opts.week);
-    if (opts.warriorName)
-      arr = arr.filter((f) => f.a === opts.warriorName || f.d === opts.warriorName);
+    if (opts.warriorName) {
+      arr = arr.filter((f) => {
+        const base = f.title.split(' (')[0]!;
+        const names = base.split(' vs ');
+        return names[0] === opts.warriorName || names[1] === opts.warriorName;
+      });
+    }
     return arr;
   },
 };

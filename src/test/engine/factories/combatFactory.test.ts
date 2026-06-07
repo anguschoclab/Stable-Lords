@@ -12,8 +12,6 @@ describe('combatFactory', () => {
 
       expect(summary.id).toBe('mock-fight-id');
       expect(summary.week).toBe(1);
-      expect(summary.a).toBe('Attacker');
-      expect(summary.d).toBe('Defender');
       expect(summary.warriorIdA).toBe('warrior-a');
       expect(summary.warriorIdD).toBe('warrior-d');
       expect(summary.styleA).toBe('BASHING ATTACK');
@@ -30,8 +28,6 @@ describe('combatFactory', () => {
       const overrides = {
         id: 'custom-fight-id' as FightId,
         week: 42,
-        a: 'Custom Attacker',
-        d: 'Custom Defender',
         styleA: 'Speed' as any,
         styleD: 'Power' as any,
         winner: 'D' as const,
@@ -43,8 +39,6 @@ describe('combatFactory', () => {
 
       expect(summary.id).toBe('custom-fight-id');
       expect(summary.week).toBe(42);
-      expect(summary.a).toBe('Custom Attacker');
-      expect(summary.d).toBe('Custom Defender');
       expect(summary.styleA).toBe('Speed');
       expect(summary.styleD).toBe('Power');
       expect(summary.winner).toBe('D');

@@ -146,6 +146,13 @@ export default function EventLog() {
       retired: s.retired,
       rivals: s.rivals,
       arenaHistory: s.arenaHistory,
+      roster: s.roster,
+      week: s.week,
+      trainingAssignments: s.trainingAssignments,
+      newsletter: s.newsletter,
+      tournaments: s.tournaments,
+      gazettes: s.gazettes,
+      player: s.player,
     }))
   );
   const navigate = useNavigate();
@@ -172,19 +179,22 @@ export default function EventLog() {
     // Fight results
     state.arenaHistory.forEach((f) => {
       const isKill = f.by === 'Kill';
-      const winnerName = f.winner === 'A' ? f.a : f.winner === 'D' ? f.d : null;
+      const n = f.title.split(' (')[0]!.split(' vs ');
+      const nameA = n[0] || 'Unknown';
+      const nameD = n[1] || 'Unknown';
+      const winnerName = f.winner === 'A' ? nameA : f.winner === 'D' ? nameD : null;
       all.push({
         id: `fight-${f.id}`,
         week: f.week,
         type: isKill ? 'kill' : 'fight',
         title: winnerName
-          ? `${winnerName} defeats ${f.winner === 'A' ? f.d : f.a}`
-          : `${f.a} vs ${f.d} — Draw`,
+          ? `${winnerName} defeats ${f.winner === 'A' ? nameD : nameA}`
+          : `${nameA} vs ${nameD} — Draw`,
         subtitle: isKill ? `Killed in combat` : `Victory by ${f.by ?? 'decision'}`,
         icon: EVENT_ICONS[isKill ? 'kill' : 'fight'].icon,
         iconColor: EVENT_ICONS[isKill ? 'kill' : 'fight'].color,
         linkTo: '/world/chronicle',
-        entityNames: [f.a, f.d],
+        entityNames: [nameA, nameD],
       });
     });
 

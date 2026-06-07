@@ -13,21 +13,27 @@ const mockRng: IRNGService = {
   chance: () => true,
 };
 
-const createMockFight = (overrides: Partial<FightSummary> = {}): FightSummary => ({
-  id: `fight-${overrides.week ?? 10}` as any,
-  week: overrides.week ?? 10,
-  title: 'Test Fight',
-  a: overrides.a ?? 'WarriorA',
-  d: overrides.d ?? 'WarriorB',
-  warriorIdA: 'w-a' as any,
-  warriorIdD: 'w-b' as any,
-  winner: overrides.winner ?? 'A',
-  by: overrides.by ?? 'KO',
-  styleA: 'Brawler',
-  styleD: 'Swordsman',
-  createdAt: new Date().toISOString(),
-  ...overrides,
-});
+const nameToId = (name: string) => `w-${name.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+
+const createMockFight = (overrides: any = {}): FightSummary => {
+  const { a, d, ...rest } = overrides;
+  const title = rest.title || `${a || 'WarriorA'} vs ${d || 'WarriorB'}`;
+  return {
+    id: `fight-${rest.week ?? 10}` as any,
+    week: rest.week ?? 10,
+    title,
+    warriorIdA: (rest.warriorIdA || nameToId(a || 'WarriorA')) as any,
+    warriorIdD: (rest.warriorIdD || nameToId(d || 'WarriorB')) as any,
+    stableIdA: 's-a' as any,
+    stableIdD: 's-b' as any,
+    winner: rest.winner ?? 'A',
+    by: rest.by ?? 'KO',
+    styleA: 'Brawler',
+    styleD: 'Swordsman',
+    createdAt: new Date().toISOString(),
+    ...rest,
+  };
+};
 
 const createMockState = (overrides: any = {}): any => ({
   week: 14,
@@ -52,7 +58,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
     });
@@ -66,7 +72,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -90,7 +96,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Methodical' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -114,7 +120,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Showman' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -135,7 +141,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Pragmatic' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -156,7 +162,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Tactician' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -179,7 +185,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Pragmatic' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -202,7 +208,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Pragmatic' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -227,7 +233,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Showman' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -254,7 +260,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [
@@ -288,7 +294,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [],
@@ -314,7 +320,7 @@ describe('generateOwnerNarratives', () => {
       rivals: [
         {
           owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },
-          roster: [{ name: 'WarriorA' }],
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
         },
       ],
       arenaHistory: [],

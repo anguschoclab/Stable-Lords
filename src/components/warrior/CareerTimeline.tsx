@@ -32,9 +32,10 @@ export function CareerTimeline({
     const fights = getAllFightsForWarrior(arenaHistory, warrior.id);
     const sorted = [...fights].sort((a, b) => a.week - b.week);
 
-    if (sorted.length > 0) {
+    const firstBout = sorted[0];
+    if (firstBout) {
       events.push({
-        week: sorted[0].week,
+        week: firstBout.week,
         label: 'First Bout',
         icon: <Swords className="h-3.5 w-3.5" />,
         color: 'bg-primary',

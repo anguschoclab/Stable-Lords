@@ -3,6 +3,7 @@
  * Extracted from factories.ts to follow SRP
  */
 import type { FightSummary } from '@/types/state.types';
+import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import { FightingStyle } from '@/types/shared.types';
 import { generateId } from '@/utils/idUtils';
 
@@ -14,12 +15,12 @@ export function makeFightSummary(
   createdAt: string = '2024-01-01T00:00:00.000Z'
 ): FightSummary {
   return {
-    id: generateId(undefined, 'fight'),
+    id: generateId(undefined, 'fight') as FightId,
     week: 1,
-    a: 'Attacker',
-    d: 'Defender',
-    warriorIdA: 'warrior-a',
-    warriorIdD: 'warrior-d',
+    warriorIdA: 'warrior-a' as WarriorId,
+    warriorIdD: 'warrior-d' as WarriorId,
+    stableIdA: 'stable-a' as StableId,
+    stableIdD: 'stable-d' as StableId,
     styleA: FightingStyle.BashingAttack,
     styleD: FightingStyle.TotalParry,
     winner: 'A',

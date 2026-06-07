@@ -52,24 +52,21 @@ export const HallOfFights: React.FC = () => {
     const stats: Record<string, { wins: number; losses: number; kills: number; fights: number }> =
       {};
     for (const f of state.arenaHistory) {
-      const ensure = (s: string) => {
-        if (!stats[s]) stats[s] = { wins: 0, losses: 0, kills: 0, fights: 0 };
-      };
-      ensure(f.styleA);
-      ensure(f.styleD);
-      stats[f.styleA].fights++;
-      stats[f.styleD].fights++;
+      stats[f.styleA] ||= { wins: 0, losses: 0, kills: 0, fights: 0 };
+      stats[f.styleD] ||= { wins: 0, losses: 0, kills: 0, fights: 0 };
+      stats[f.styleA]!.fights++;
+      stats[f.styleD]!.fights++;
       if (f.winner === 'A') {
-        stats[f.styleA].wins++;
-        stats[f.styleD].losses++;
+        stats[f.styleA]!.wins++;
+        stats[f.styleD]!.losses++;
       }
       if (f.winner === 'D') {
-        stats[f.styleD].wins++;
-        stats[f.styleA].losses++;
+        stats[f.styleD]!.wins++;
+        stats[f.styleA]!.losses++;
       }
       if (f.by === 'Kill') {
-        if (f.winner === 'A') stats[f.styleA].kills++;
-        if (f.winner === 'D') stats[f.styleD].kills++;
+        if (f.winner === 'A') stats[f.styleA]!.kills++;
+        if (f.winner === 'D') stats[f.styleD]!.kills++;
       }
     }
     return Object.entries(stats)

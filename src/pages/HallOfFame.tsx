@@ -58,7 +58,7 @@ export default function HallOfFame() {
     const groups: Record<number, AnnualAward[]> = {};
     for (const award of awards || []) {
       if (!groups[award.year]) groups[award.year] = [];
-      groups[award.year].push(award);
+      groups[award.year]!.push(award);
     }
     return Object.entries(groups)
       .map(([y, aws]) => ({ year: parseInt(y), awards: aws }))

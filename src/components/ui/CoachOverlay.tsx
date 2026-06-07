@@ -52,7 +52,7 @@ export function CoachOverlay() {
     }
 
     // 🚑 Injury Check (Fighters assigned to bouts with low health) - needs full roster for derivedStats
-    const { activeFighters, injuredActive } = state.roster.reduce(
+    const { activeFighters: _activeFighters, injuredActive } = state.roster.reduce(
       (acc, w) => {
         const inActiveBout = state.arenaHistory.some(
           (f) => (f.warriorIdA === w.id || f.warriorIdD === w.id) && f.winner === null
@@ -72,7 +72,7 @@ export function CoachOverlay() {
         id: 'crit_injury',
         type: 'CRITICAL',
         label: 'Critical Condition',
-        description: `${injuredActive[0].name} is entering the arena with <30% health. Mortality risk is extremely high.`,
+        description: `${injuredActive[0]?.name ?? 'A fighter'} is entering the arena with <30% health. Mortality risk is extremely high.`,
         icon: Activity,
         color: 'text-arena-blood border-arena-blood/20 bg-arena-blood/10',
       });
@@ -89,7 +89,7 @@ export function CoachOverlay() {
         id: 'encumbrance_mismatch',
         type: 'WARNING',
         label: 'Tactical Mismatch',
-        description: `${mismatchedSprints[0].name} loadout exceeds endurance. High fatigue penalties will apply.`,
+        description: `${mismatchedSprints[0]?.name ?? 'A fighter'} loadout exceeds endurance. High fatigue penalties will apply.`,
         icon: Zap,
         color: 'text-arena-gold border-arena-gold/20 bg-arena-gold/10',
       });

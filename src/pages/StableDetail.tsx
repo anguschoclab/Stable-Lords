@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
 import { useWorldState } from '@/state/useGameStore';
 import { isActive, isDead } from '@/engine/warriorStatus';
@@ -64,7 +64,7 @@ export default function StableDetail() {
 
   if (!rival) {
     return (
-      <PageFrame size="xl" className="flex flex-col items-center justify-center py-48 text-center">
+      <PageFrame maxWidth="xl" className="flex flex-col items-center justify-center py-48 text-center">
         <ImperialRing size="lg" variant="bronze" className="opacity-20 mb-8">
           <Shield className="h-10 w-10" />
         </ImperialRing>
@@ -101,7 +101,7 @@ export default function StableDetail() {
   const totalFights = totalWins + totalLosses;
   const winRate = totalFights > 0 ? Math.round((totalWins / totalFights) * 100) : 0;
 
-  const tierCfg = TIER_CONFIG[rival.tier ?? 'Minor'] ?? TIER_CONFIG.Minor;
+  const tierCfg = (TIER_CONFIG[rival.tier ?? 'Minor'] ?? TIER_CONFIG.Minor)!;
 
   const stableWarriorIds = new Set(rival.roster.map((w) => w.id));
   const recentBouts = state.arenaHistory
@@ -110,7 +110,7 @@ export default function StableDetail() {
     .reverse();
 
   return (
-    <PageFrame size="xl">
+    <PageFrame maxWidth="xl">
       <div className="mb-8">
         <Button
           variant="ghost"
@@ -130,7 +130,7 @@ export default function StableDetail() {
       <PageHeader
         eyebrow="STABLE_DOSSIER"
         title={rival.owner.stableName}
-        subtitle={`${rival.owner.personality.toUpperCase()} · ${rival.tier?.toUpperCase() || 'MINOR'} CLASS ASSET`}
+        subtitle={`${(rival.owner.personality ?? '').toUpperCase()} · ${rival.tier?.toUpperCase() || 'MINOR'} CLASS ASSET`}
         icon={Shield}
         actions={
           <div className="flex items-center gap-8">

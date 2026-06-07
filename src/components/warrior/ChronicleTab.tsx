@@ -75,7 +75,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
             <SectionDivider label="Accolades" />
             <Surface variant="glass" className="border-white/5">
               <div className="p-6 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
-                <ImperialRing size="xs" variant="blood">
+                <ImperialRing size="sm" variant="blood">
                   <Star className="h-3 w-3 text-primary" />
                 </ImperialRing>
                 <span className="text-[10px] font-black uppercase tracking-widest text-foreground">

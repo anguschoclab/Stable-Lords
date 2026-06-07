@@ -9,24 +9,31 @@ import {
   detectRisingStars,
 } from '@/engine/gazette/gazetteDetections';
 import type { FightSummary } from '@/types/combat.types';
+import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 
-const createFight = (overrides: Partial<FightSummary> = {}): FightSummary => ({
-  id: 'f1',
-  week: 1,
-  title: 'Fight',
-  a: 'Alice',
-  d: 'Bob',
-  warriorIdA: 'wa',
-  warriorIdD: 'wd',
-  winner: 'A',
-  by: 'KO',
-  styleA: 'Brawler',
-  styleD: 'Swordsman',
-  createdAt: new Date().toISOString(),
-  fameA: 10,
-  fameD: 10,
-  ...overrides,
-});
+const nameToId = (name: string) => `w-${name.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+
+const createFight = (overrides: any = {}): FightSummary => {
+  const { a, d, ...rest } = overrides;
+  const title = rest.title || `${a || 'Alice'} vs ${d || 'Bob'}`;
+  return {
+    id: 'f1' as FightId,
+    week: 1,
+    title,
+    warriorIdA: (rest.warriorIdA || nameToId(a || 'Alice')) as WarriorId,
+    warriorIdD: (rest.warriorIdD || nameToId(d || 'Bob')) as WarriorId,
+    stableIdA: 'sa' as StableId,
+    stableIdD: 'sd' as StableId,
+    winner: 'A',
+    by: 'KO',
+    styleA: 'Brawler',
+    styleD: 'Swordsman',
+    createdAt: new Date().toISOString(),
+    fameA: 10,
+    fameD: 10,
+    ...rest,
+  };
+};
 
 describe('detectUpsets', () => {
   it('detects an upset when the underdog wins significantly', () => {
@@ -168,18 +175,18 @@ describe('computeStreaks', () => {
       createFight({ a: 'Alice', d: 'Eve', winner: 'D' }), // Alice -1, Eve 1
     ];
     const streaks = computeStreaks(fights);
-    expect(streaks.get('Alice')).toBe(-1);
-    expect(streaks.get('Bob')).toBe(-1);
-    expect(streaks.get('Charlie')).toBe(-1);
-    expect(streaks.get('Dave')).toBe(-1);
-    expect(streaks.get('Eve')).toBe(1);
+    expect(streaks.get('w-alice' as WarriorId)).toBe(-1);
+    expect(streaks.get('w-bob' as WarriorId)).toBe(-1);
+    expect(streaks.get('w-charlie' as WarriorId)).toBe(-1);
+    expect(streaks.get('w-dave' as WarriorId)).toBe(-1);
+    expect(streaks.get('w-eve' as WarriorId)).toBe(1);
   });
 
   it('initializes streaks to 1 and -1 on a single win/loss', () => {
     const fights = [createFight({ a: 'Hero', d: 'Villain', winner: 'A' })];
     const streaks = computeStreaks(fights);
-    expect(streaks.get('Hero')).toBe(1);
-    expect(streaks.get('Villain')).toBe(-1);
+    expect(streaks.get('w-hero' as WarriorId)).toBe(1);
+    expect(streaks.get('w-villain' as WarriorId)).toBe(-1);
   });
 
   it('builds positive streaks correctly on consecutive wins', () => {
@@ -189,10 +196,10 @@ describe('computeStreaks', () => {
       createFight({ a: 'Hero', d: 'Villain3', winner: 'A' }),
     ];
     const streaks = computeStreaks(fights);
-    expect(streaks.get('Hero')).toBe(3);
-    expect(streaks.get('Villain1')).toBe(-1);
-    expect(streaks.get('Villain2')).toBe(-1);
-    expect(streaks.get('Villain3')).toBe(-1);
+    expect(streaks.get('w-hero' as WarriorId)).toBe(3);
+    expect(streaks.get('w-villain1' as WarriorId)).toBe(-1);
+    expect(streaks.get('w-villain2' as WarriorId)).toBe(-1);
+    expect(streaks.get('w-villain3' as WarriorId)).toBe(-1);
   });
 
   it('builds negative streaks correctly on consecutive losses', () => {
@@ -202,10 +209,10 @@ describe('computeStreaks', () => {
       createFight({ a: 'Hero', d: 'Villain3', winner: 'D' }),
     ];
     const streaks = computeStreaks(fights);
-    expect(streaks.get('Hero')).toBe(-3);
-    expect(streaks.get('Villain1')).toBe(1);
-    expect(streaks.get('Villain2')).toBe(1);
-    expect(streaks.get('Villain3')).toBe(1);
+    expect(streaks.get('w-hero' as WarriorId)).toBe(-3);
+    expect(streaks.get('w-villain1' as WarriorId)).toBe(1);
+    expect(streaks.get('w-villain2' as WarriorId)).toBe(1);
+    expect(streaks.get('w-villain3' as WarriorId)).toBe(1);
   });
 
   it('breaks a losing streak and sets the streak to 1 on a win', () => {
@@ -215,8 +222,8 @@ describe('computeStreaks', () => {
       createFight({ a: 'Hero', d: 'Villain3', winner: 'A' }), // Hero wins! Streak becomes 1
     ];
     const streaks = computeStreaks(fights);
-    expect(streaks.get('Hero')).toBe(1);
-    expect(streaks.get('Villain3')).toBe(-1);
+    expect(streaks.get('w-hero' as WarriorId)).toBe(1);
+    expect(streaks.get('w-villain3' as WarriorId)).toBe(-1);
   });
 
   it('breaks a winning streak and sets the streak to -1 on a loss', () => {
@@ -226,8 +233,8 @@ describe('computeStreaks', () => {
       createFight({ a: 'Hero', d: 'Villain3', winner: 'D' }), // Hero loses! Streak becomes -1
     ];
     const streaks = computeStreaks(fights);
-    expect(streaks.get('Hero')).toBe(-1);
-    expect(streaks.get('Villain3')).toBe(1);
+    expect(streaks.get('w-hero' as WarriorId)).toBe(-1);
+    expect(streaks.get('w-villain3' as WarriorId)).toBe(1);
   });
 
   it('resets both fighters streaks to 0 on a draw', () => {
@@ -237,8 +244,8 @@ describe('computeStreaks', () => {
       createFight({ a: 'Hero', d: 'Villain2', winner: null }), // Draw!
     ];
     const streaks = computeStreaks(fights);
-    expect(streaks.get('Hero')).toBe(0);
-    expect(streaks.get('Villain2')).toBe(0);
+    expect(streaks.get('w-hero' as WarriorId)).toBe(0);
+    expect(streaks.get('w-villain2' as WarriorId)).toBe(0);
   });
 
   it('gracefully ignores null or undefined fight objects', () => {
@@ -249,7 +256,7 @@ describe('computeStreaks', () => {
       createFight({ a: 'Hero', d: 'Villain2', winner: 'A' }),
     ];
     const streaks = computeStreaks(fights);
-    expect(streaks.get('Hero')).toBe(2);
+    expect(streaks.get('w-hero' as WarriorId)).toBe(2);
   });
 });
 
@@ -322,9 +329,9 @@ describe('detectRivalryMatchup', () => {
 
 describe('detectHotStreakers', () => {
   it('detects winners on a streak of 5+', () => {
-    const streaks = new Map([
-      ['Alice', 5],
-      ['Bob', 4],
+    const streaks = new Map<WarriorId, number>([
+      ['w-alice' as WarriorId, 5],
+      ['w-bob' as WarriorId, 4],
     ]);
     const weekFights = [
       createFight({ a: 'Alice', d: 'Charlie', winner: 'A' }),

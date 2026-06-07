@@ -47,34 +47,30 @@ function computeStyleRollups(
 ): Record<string, { w: number; l: number; k: number; pct: number; fights: number }> {
   const rollups: Record<string, { w: number; l: number; k: number; pct: number; fights: number }> =
     {};
-  const ensure = (s: string) => {
-    if (!rollups[s]) rollups[s] = { w: 0, l: 0, k: 0, pct: 0, fights: 0 };
-  };
-
   for (const card of fights) {
     const f = card.summary;
-    ensure(f.styleA);
-    ensure(f.styleD);
-    rollups[f.styleA].fights++;
-    rollups[f.styleD].fights++;
+    rollups[f.styleA] ||= { w: 0, l: 0, k: 0, pct: 0, fights: 0 };
+    rollups[f.styleD] ||= { w: 0, l: 0, k: 0, pct: 0, fights: 0 };
+    rollups[f.styleA]!.fights++;
+    rollups[f.styleD]!.fights++;
 
     if (f.winner === 'A') {
-      rollups[f.styleA].w++;
-      rollups[f.styleD].l++;
+      rollups[f.styleA]!.w++;
+      rollups[f.styleD]!.l++;
     } else if (f.winner === 'D') {
-      rollups[f.styleD].w++;
-      rollups[f.styleA].l++;
+      rollups[f.styleD]!.w++;
+      rollups[f.styleA]!.l++;
     }
 
     if (f.by === 'Kill') {
-      if (f.winner === 'A') rollups[f.styleA].k++;
-      else if (f.winner === 'D') rollups[f.styleD].k++;
+      if (f.winner === 'A') rollups[f.styleA]!.k++;
+      else if (f.winner === 'D') rollups[f.styleD]!.k++;
     }
   }
 
   // Calculate percentages
   for (const key of Object.keys(rollups)) {
-    const r = rollups[key];
+    const r = rollups[key]!;
     r.pct = r.fights > 0 ? Math.round((r.w / r.fights) * 100) : 0;
   }
 

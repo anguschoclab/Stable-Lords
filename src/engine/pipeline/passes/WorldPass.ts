@@ -67,7 +67,8 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
     if (roll < 0.96) return 'Breezy';
     if (roll < 0.98) return 'Abyssal Gloom';
     if (roll < 0.995) return 'Blood Moon'; // Includes 0.99
-    if (roll < 0.998) return 'Eclipse';
+    if (roll < 0.997) return 'Eclipse';
+    if (roll < 0.999) return 'Aurora Borealis';
     return 'Mana Surge';
   }
 

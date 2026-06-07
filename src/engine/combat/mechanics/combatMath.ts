@@ -119,6 +119,7 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   'Arcane Storm': 0.8, // 20% less stamina drain
   'Locust Swarm': 1.2, // 20% more stamina drain
   // Clear / Overcast / Rainy → 1.0 (default)
+  'Aurora Borealis': 0.85, // 15% less stamina drain
 };/**
    * Weather stamina modifier.
    * @param weather - Weather. (optional)

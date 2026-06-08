@@ -73,39 +73,37 @@ function RecruitFilters({
             Market Tier Filter
           </label>
           <div className="grid grid-cols-1 gap-3">
-            {(['Common', 'Promising', 'Exceptional', 'Prodigy'] as RecruitTier[]).map(
-              (tier) => {
-                const isActive = activeTiers.has(tier);
-                const config = TIER_CONFIG[tier];
-                return (
-                  <button
-                    key={tier}
-                    onClick={() => toggleTier(tier)}
-                    className={cn(
-                      'group flex items-center justify-between p-4 border transition-all',
-                      isActive
-                        ? 'bg-white/[0.05] border-white/20'
-                        : 'bg-transparent border-white/5 opacity-20 grayscale hover:opacity-100 hover:grayscale-0'
-                    )}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={cn('w-1.5 h-1.5', config.bg)} />
-                      <span
-                        className={cn(
-                          'text-[10px] font-black uppercase tracking-widest',
-                          isActive ? 'text-foreground' : 'text-muted-foreground'
-                        )}
-                      >
-                        {tier}
-                      </span>
-                    </div>
-                    <span className="font-display font-black text-[10px] text-arena-gold">
-                      {TIER_COST[tier]}G
+            {(['Common', 'Promising', 'Exceptional', 'Prodigy'] as RecruitTier[]).map((tier) => {
+              const isActive = activeTiers.has(tier);
+              const config = TIER_CONFIG[tier];
+              return (
+                <button
+                  key={tier}
+                  onClick={() => toggleTier(tier)}
+                  className={cn(
+                    'group flex items-center justify-between p-4 border transition-all',
+                    isActive
+                      ? 'bg-white/[0.05] border-white/20'
+                      : 'bg-transparent border-white/5 opacity-20 grayscale hover:opacity-100 hover:grayscale-0'
+                  )}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={cn('w-1.5 h-1.5', config.bg)} />
+                    <span
+                      className={cn(
+                        'text-[10px] font-black uppercase tracking-widest',
+                        isActive ? 'text-foreground' : 'text-muted-foreground'
+                      )}
+                    >
+                      {tier}
                     </span>
-                  </button>
-                );
-              }
-            )}
+                  </div>
+                  <span className="font-display font-black text-[10px] text-arena-gold">
+                    {TIER_COST[tier]}G
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -114,7 +112,10 @@ function RecruitFilters({
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
             Tactical Archetype
           </label>
-          <Select value={activeStyle} onValueChange={(v) => setActiveStyle(v as unknown as FightingStyle | 'all')}>
+          <Select
+            value={activeStyle}
+            onValueChange={(v) => setActiveStyle(v as unknown as FightingStyle | 'all')}
+          >
             <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
               <SelectValue placeholder="All Archetypes" />
             </SelectTrigger>
@@ -134,7 +135,12 @@ function RecruitFilters({
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
             Registry Sequence
           </label>
-          <Select value={sortBy} onValueChange={(v) => setSortBy(v as unknown as 'cost-asc' | 'cost-desc' | 'potential-desc' | 'age-asc')}>
+          <Select
+            value={sortBy}
+            onValueChange={(v) =>
+              setSortBy(v as unknown as 'cost-asc' | 'cost-desc' | 'potential-desc' | 'age-asc')
+            }
+          >
             <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
               <SelectValue />
             </SelectTrigger>
@@ -155,15 +161,11 @@ function RecruitFilters({
         >
           <div className="flex items-center gap-4">
             <RefreshCw className="h-4 w-4 text-primary group-hover:rotate-180 transition-all duration-700" />
-            <span className="text-[10px] font-black uppercase tracking-widest">
-              Sync Registry
-            </span>
+            <span className="text-[10px] font-black uppercase tracking-widest">Sync Registry</span>
           </div>
           <div className="flex items-center gap-2">
             <Coins className="h-3 w-3 text-arena-gold" />
-            <span className="font-display font-black text-arena-gold text-xs">
-              {REFRESH_COST}G
-            </span>
+            <span className="font-display font-black text-arena-gold text-xs">{REFRESH_COST}G</span>
           </div>
         </Button>
       </div>

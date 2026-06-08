@@ -83,7 +83,9 @@ function TokenCard({ token, config: { icon: Icon, textColor, dropShadowClass } }
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2">
           <Icon className={`h-3 w-3 ${textColor} opacity-60`} />
-          <span className={`text-[11px] font-display font-black uppercase ${textColor} tracking-tight ${dropShadowClass} transition-all`}>
+          <span
+            className={`text-[11px] font-display font-black uppercase ${textColor} tracking-tight ${dropShadowClass} transition-all`}
+          >
             {token.warriorName}
           </span>
         </div>

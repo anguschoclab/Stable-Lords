@@ -2,10 +2,7 @@
  * Scouting System Tests
  */
 import { describe, it, expect } from 'vitest';
-import {
-  generateScoutReport,
-  getScoutCost,
-} from '@/engine/scouting';
+import { generateScoutReport, getScoutCost } from '@/engine/scouting';
 import { FightingStyle, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';

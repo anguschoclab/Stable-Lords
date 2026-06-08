@@ -52,7 +52,9 @@ describe('RosterSlice', () => {
     });
 
     act(() => {
-      useTestStore.getState().killWarrior('w1' as import('@/types/shared.types').WarriorId, 'rival_1', 'Decapitation');
+      useTestStore
+        .getState()
+        .killWarrior('w1' as import('@/types/shared.types').WarriorId, 'rival_1', 'Decapitation');
     });
 
     expect(useTestStore.getState().roster).toHaveLength(0);

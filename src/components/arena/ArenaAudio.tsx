@@ -15,12 +15,7 @@ interface ArenaAudioProps {
  * Combined audio component for crowd reactions and weather ambience.
  * Extracts audio logic from ArenaView for better separation of concerns.
  */
-export default function ArenaAudio({
-  crowdState,
-  weather,
-  arenaId,
-  arenaPrefs,
-}: ArenaAudioProps) {
+export default function ArenaAudio({ crowdState, weather, arenaId, arenaPrefs }: ArenaAudioProps) {
   return (
     <>
       <CrowdAudio

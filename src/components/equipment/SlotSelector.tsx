@@ -1,6 +1,12 @@
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Star } from 'lucide-react';
 import {
   type EquipmentSlot,

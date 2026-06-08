@@ -314,7 +314,12 @@ export default function ArenaFighter({
   const shieldInfo = parseShieldInfo(shieldName);
   const hpPercent = calculatePercent(stats.currentHp, stats.maxHp);
   const fpPercent = calculatePercent(stats.currentFp, stats.maxFp);
-  const { containerStyle, containerClassName } = useFighterStyles({ pose, isDead, isActive, className });
+  const { containerStyle, containerClassName } = useFighterStyles({
+    pose,
+    isDead,
+    isActive,
+    className,
+  });
   const stanceClass = getStanceAnimationClass(pose.stance);
   const idleClass = !isDead && pose.stance === 'neutral' ? getIdleAnimation(style) : '';
 

@@ -44,7 +44,12 @@ export function WarriorSelector({
             {label}
           </span>
         </div>
-        <div className={cn('h-px flex-1 bg-gradient-to-r border/20 via-border/20 to-transparent', 'from-' + colors.text.replace('text-', '') + '/20')} />
+        <div
+          className={cn(
+            'h-px flex-1 bg-gradient-to-r border/20 via-border/20 to-transparent',
+            'from-' + colors.text.replace('text-', '') + '/20'
+          )}
+        />
       </div>
 
       <div className="max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
@@ -140,9 +145,7 @@ function WarriorSelectionCard({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] font-mono text-muted-foreground/40">
-            {warrior.age}y
-          </span>
+          <span className="text-[9px] font-mono text-muted-foreground/40">{warrior.age}y</span>
           {isSelected && (
             <div className={cn('w-2 h-2 rounded-full animate-pulse', colors.bg, colors.text)} />
           )}

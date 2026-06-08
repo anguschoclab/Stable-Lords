@@ -23,11 +23,7 @@ export function DoctrineIntelligenceSection({
   grudge,
 }: DoctrineIntelligenceSectionProps) {
   return (
-    <Surface
-      variant="glass"
-      padding="none"
-      className="border-arena-gold/10 overflow-hidden"
-    >
+    <Surface variant="glass" padding="none" className="border-arena-gold/10 overflow-hidden">
       <div className="p-4 border-b border-white/5 bg-arena-gold/5 flex items-center gap-3">
         <div className="p-1.5 rounded-none bg-arena-gold/10 border border-arena-gold/20">
           <BrainCircuit className="h-3.5 w-3.5 text-arena-gold" />
@@ -67,10 +63,7 @@ export function DoctrineIntelligenceSection({
             bgColor: 'bg-accent/5',
           },
         ].map(({ rival, mods, color, borderColor, bgColor }) => (
-          <div
-            key={rival.owner.id}
-            className={cn('p-4 border rounded-none', borderColor, bgColor)}
-          >
+          <div key={rival.owner.id} className={cn('p-4 border rounded-none', borderColor, bgColor)}>
             <div
               className={cn(
                 'text-[9px] font-black uppercase tracking-widest mb-3 opacity-60',
@@ -90,9 +83,7 @@ export function DoctrineIntelligenceSection({
                 <span className="text-muted-foreground/60 font-black uppercase tracking-widest">
                   Philosophy
                 </span>
-                <span className="font-black text-foreground/80">
-                  {rival.philosophy ?? '—'}
-                </span>
+                <span className="font-black text-foreground/80">{rival.philosophy ?? '—'}</span>
               </div>
               <div className="flex justify-between text-[10px]">
                 <span className="text-muted-foreground/60 font-black uppercase tracking-widest">

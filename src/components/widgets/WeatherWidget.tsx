@@ -183,7 +183,8 @@ const WEATHER_METADATA = {
     color: 'text-arena-gold',
     bg: 'bg-arena-gold/10',
     border: 'border-arena-gold/20',
-    description: 'Shimmering heat distortions create optical illusions. Fighters struggle to judge distance.',
+    description:
+      'Shimmering heat distortions create optical illusions. Fighters struggle to judge distance.',
     stats: 'INITIATIVE -5 // RIPOSTE -2 // DAMAGE 90% // STAMINA DRAIN 110%',
   },
 }; /**

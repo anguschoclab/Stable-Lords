@@ -69,7 +69,9 @@ export default function Scouting() {
         draft.scoutReports = newReports;
         draft.treasury = (treasury ?? 0) - cost;
         draft.ledger.push({
-          id: String(hashStr(`${week}-${activeWarrior.name}-${quality}`)) as import('@/types/shared.types').LedgerEntryId,
+          id: String(
+            hashStr(`${week}-${activeWarrior.name}-${quality}`)
+          ) as import('@/types/shared.types').LedgerEntryId,
           week: week,
           label: `Intelligence: ${activeWarrior.name} (${quality})`,
           amount: -cost,

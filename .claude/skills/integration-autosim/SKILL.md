@@ -16,38 +16,43 @@ Tests end-to-end autosimulation including week advancement, stop conditions, det
 
 ## Test Groups
 
-| Filter keyword | What it targets |
-|----------------|----------------|
-| (none) | Full integration test suite (13-week season smoke) |
-| determinism | Determinism check (same seed = same result) |
-| long | Long simulation (100 weeks) |
-| autosim | src/test/integration/autosim.test.ts |
-| week | src/test/integration/weekAdvancement.test.ts |
-| smoke | scripts/season_smoke.ts (season smoke test) |
+| Filter keyword | What it targets                                    |
+| -------------- | -------------------------------------------------- |
+| (none)         | Full integration test suite (13-week season smoke) |
+| determinism    | Determinism check (same seed = same result)        |
+| long           | Long simulation (100 weeks)                        |
+| autosim        | src/test/integration/autosim.test.ts               |
+| week           | src/test/integration/weekAdvancement.test.ts       |
+| smoke          | scripts/season_smoke.ts (season smoke test)        |
 
 ## Commands
 
 **Run full integration test (13 weeks):**
+
 ```bash
 bun scripts/season_smoke.ts
 ```
 
 **Run with a filter (e.g. /integration-autosim autosim):**
+
 ```bash
 bun run test --reporter=verbose -- <filter>
 ```
 
 **Run determinism check:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/determinism.test.ts
 ```
 
 **Run autosim integration tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/integration/autosim.test.ts src/test/integration/weekAdvancement.test.ts
 ```
 
 **Run week advancement tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/advanceWeek.test.ts src/test/engine/weekPipeline.test.ts
 ```

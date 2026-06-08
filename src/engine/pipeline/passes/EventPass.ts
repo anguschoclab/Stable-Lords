@@ -153,14 +153,18 @@ export function runEventPass(
   }
 
   // 👺 Goblin Merchant Event
-  if (brawlRng.next() < 0.04 && (state.treasury || 0) + treasuryDelta >= 20 && state.roster.length > 0) {
+  if (
+    brawlRng.next() < 0.04 &&
+    (state.treasury || 0) + treasuryDelta >= 20 &&
+    state.roster.length > 0
+  ) {
     const activeWarriors = state.roster.filter((w) => w.status === 'Active');
     if (activeWarriors.length > 0) {
       const chosen = brawlRng.pick(activeWarriors);
       const e = events.goblin_merchant;
       if (chosen && e) {
         const existingUpdate = rosterUpdates.get(chosen.id) || {};
-        const currentXp = existingUpdate.xp !== undefined ? existingUpdate.xp : (chosen.xp || 0);
+        const currentXp = existingUpdate.xp !== undefined ? existingUpdate.xp : chosen.xp || 0;
         rosterUpdates.set(chosen.id, {
           ...existingUpdate,
           xp: currentXp + 5,

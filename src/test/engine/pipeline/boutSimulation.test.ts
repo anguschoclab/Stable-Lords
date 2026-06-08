@@ -42,13 +42,19 @@ describe('Bout Simulation Integration - getFromArchive function issue', () => {
     const offer: BoutOffer = {
       id: 'offer-1' as import('@/types/shared.types').BoutOfferId,
       promoterId: 'promoter-1' as import('@/types/shared.types').PromoterId,
-      warriorIds: ['warrior-a' as import('@/types/shared.types').WarriorId, 'warrior-d' as import('@/types/shared.types').WarriorId],
+      warriorIds: [
+        'warrior-a' as import('@/types/shared.types').WarriorId,
+        'warrior-d' as import('@/types/shared.types').WarriorId,
+      ],
       boutWeek: 1,
       expirationWeek: 2,
       purse: 500,
       hype: 100,
       status: 'Signed',
-      responses: { ['warrior-a' as import('@/types/shared.types').WarriorId]: 'Accepted', ['warrior-d' as import('@/types/shared.types').WarriorId]: 'Accepted' },
+      responses: {
+        ['warrior-a' as import('@/types/shared.types').WarriorId]: 'Accepted',
+        ['warrior-d' as import('@/types/shared.types').WarriorId]: 'Accepted',
+      },
     };
 
     const initialState: Partial<GameState> = {

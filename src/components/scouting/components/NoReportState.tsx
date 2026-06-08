@@ -14,10 +14,7 @@ export function NoReportState({ warriorName, treasury, onScout }: NoReportStateP
   const QUALITIES: ScoutQuality[] = ['Basic', 'Detailed', 'Expert'];
 
   return (
-    <Surface
-      variant="glass"
-      className="border-border/40 shadow-2xl relative overflow-hidden group"
-    >
+    <Surface variant="glass" className="border-border/40 shadow-2xl relative overflow-hidden group">
       <div className="absolute -right-12 -bottom-12 opacity-5 transform rotate-12 group-hover:scale-110 transition-transform duration-1000">
         <Target className="h-48 w-48 text-primary" />
       </div>

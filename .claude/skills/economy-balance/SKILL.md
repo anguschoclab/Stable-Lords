@@ -16,38 +16,43 @@ Runs economic balance simulations to track treasury health, lethality rates, and
 
 ## Test Groups
 
-| Filter keyword | What it targets |
-|----------------|----------------|
-| (none) | Full 100-week balance simulation via daily oracle |
-| quick | Quick 50-week balance check |
-| meta | Meta-drift analysis only |
-| economy | src/test/engine/economy.test.ts |
-| balance | src/test/balance.test.ts |
-| hardening | src/test/simulation_hardening.test.ts |
+| Filter keyword | What it targets                                   |
+| -------------- | ------------------------------------------------- |
+| (none)         | Full 100-week balance simulation via daily oracle |
+| quick          | Quick 50-week balance check                       |
+| meta           | Meta-drift analysis only                          |
+| economy        | src/test/engine/economy.test.ts                   |
+| balance        | src/test/balance.test.ts                          |
+| hardening      | src/test/simulation_hardening.test.ts             |
 
 ## Commands
 
 **Run full balance report (100 weeks):**
+
 ```bash
 bun scripts/daily_oracle.ts
 ```
 
 **Run with a filter (e.g. /economy-balance economy):**
+
 ```bash
 bun run test --reporter=verbose -- <filter>
 ```
 
 **Run balance tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/balance.test.ts src/test/simulation_hardening.test.ts
 ```
 
 **Run economy tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/economy.test.ts
 ```
 
 **Run meta-drift analysis:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/metaDrift.test.ts
 ```

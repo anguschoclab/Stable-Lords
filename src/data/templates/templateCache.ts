@@ -159,7 +159,9 @@ export function getTemplatesByStyle(style: string): StableTemplate[] {
     return cached;
   }
 
-  const result = ALL_TEMPLATES.filter((template) => template.preferredStyles.includes(style as FightingStyle));
+  const result = ALL_TEMPLATES.filter((template) =>
+    template.preferredStyles.includes(style as FightingStyle)
+  );
 
   templateCache.set(cacheKey, result);
   return result;
@@ -250,7 +252,9 @@ export function searchTemplates(criteria: {
   }
 
   if (criteria.style) {
-    result = result.filter((template) => template.preferredStyles.includes(criteria.style as FightingStyle));
+    result = result.filter((template) =>
+      template.preferredStyles.includes(criteria.style as FightingStyle)
+    );
   }
 
   if (criteria.minFame !== undefined || criteria.maxFame !== undefined) {

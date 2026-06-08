@@ -16,43 +16,49 @@ Tests the recruitment and scouting systems including warrior generation by tier,
 
 ## Test Groups
 
-| Filter keyword | What it targets |
-|----------------|----------------|
-| (none) | All recruitment and scouting tests |
-| generation | src/test/engine/recruitment.test.ts |
-| bloodlines | Warrior generation with legacy/bloodline inheritance |
-| draft | src/test/engine/draftService.test.ts |
-| scouting | src/test/engine/scouting.test.ts |
-| potential | src/test/engine/potential.test.ts |
+| Filter keyword | What it targets                                      |
+| -------------- | ---------------------------------------------------- |
+| (none)         | All recruitment and scouting tests                   |
+| generation     | src/test/engine/recruitment.test.ts                  |
+| bloodlines     | Warrior generation with legacy/bloodline inheritance |
+| draft          | src/test/engine/draftService.test.ts                 |
+| scouting       | src/test/engine/scouting.test.ts                     |
+| potential      | src/test/engine/potential.test.ts                    |
 
 ## Commands
 
 **Run all recruitment tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/recruitment.test.ts src/test/engine/scouting.test.ts src/test/engine/draftService.test.ts src/test/engine/potential.test.ts
 ```
 
 **Run with a filter (e.g. /recruitment-scout generation):**
+
 ```bash
 bun run test --reporter=verbose -- <filter>
 ```
 
 **Run recruitment generation tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/recruitment.test.ts
 ```
 
 **Run scouting tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/scouting.test.ts
 ```
 
 **Run draft service tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/draftService.test.ts
 ```
 
 **Run potential tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/potential.test.ts
 ```

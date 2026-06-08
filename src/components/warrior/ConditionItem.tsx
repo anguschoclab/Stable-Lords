@@ -1,7 +1,4 @@
-import type {
-  PlanCondition,
-  ConditionTriggerType,
-} from '@/types/game';
+import type { PlanCondition, ConditionTriggerType } from '@/types/game';
 import {
   ConditionHeader,
   ConditionTriggerSection,
@@ -45,11 +42,7 @@ export function ConditionItem({
 }: ConditionItemProps) {
   return (
     <div className="border border-white/10 bg-black/30 p-4 space-y-4">
-      <ConditionHeader
-        idx={idx}
-        label={cond.label}
-        onRemove={() => removeCondition(idx)}
-      />
+      <ConditionHeader idx={idx} label={cond.label} onRemove={() => removeCondition(idx)} />
 
       <ConditionTriggerSection
         cond={cond}

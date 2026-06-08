@@ -63,9 +63,9 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
         case 'possessive':
           return ctx.possessive ?? 'their';
         case 'pronoun':
-          return (ctx as Record<string, unknown>).pronoun as string ?? 'he';
+          return ((ctx as Record<string, unknown>).pronoun as string) ?? 'he';
         case 'reflexive':
-          return (ctx as Record<string, unknown>).reflexive as string ?? 'himself';
+          return ((ctx as Record<string, unknown>).reflexive as string) ?? 'himself';
         default:
           return match;
       }

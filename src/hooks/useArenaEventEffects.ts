@@ -7,10 +7,7 @@ import type { CrowdState } from '@/components/arena/crowd/CrowdReactions';
  * Hook to track the last event type based on visible count.
  * Extracts event classification logic from ArenaView.
  */
-export function useLastEventType(
-  log: MinuteEvent[],
-  visibleCount: number
-): string | null {
+export function useLastEventType(log: MinuteEvent[], visibleCount: number): string | null {
   const [lastEventType, setLastEventType] = useState<string | null>(null);
 
   useEffect(() => {

@@ -7,14 +7,7 @@ import { computeMetaDrift, getMetaLabel, getMetaColor } from '@/engine/metaDrift
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import { cn } from '@/lib/utils';
 import type { OwnerGrudge } from '@/types/state.types';
-import {
-  Trophy,
-  Flame,
-  TrendingUp,
-  ScrollText,
-  ArrowUpRight,
-  ArrowDownLeft,
-} from 'lucide-react';
+import { Trophy, Flame, TrendingUp, ScrollText, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -326,15 +319,8 @@ function SeasonDeclarations({ seasonGazette }: { seasonGazette: string[] }) {
  * grudge network, meta drift, and season declarations.
  */
 export function SeasonSynthesis() {
-  const {
-    rivals,
-    rivalPerformance,
-    seasonGazette,
-    metaData,
-    grudges,
-    rivalMap,
-    season,
-  } = useSeasonData();
+  const { rivals, rivalPerformance, seasonGazette, metaData, grudges, rivalMap, season } =
+    useSeasonData();
 
   if (!rivals?.length) return null;
 
@@ -351,10 +337,7 @@ export function SeasonSynthesis() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <GrudgeNetwork grudges={grudges} rivalMap={rivalMap} />
-        <StyleOfTheSeason
-          metaEntries={metaData.metaEntries}
-          topStyle={metaData.topStyle}
-        />
+        <StyleOfTheSeason metaEntries={metaData.metaEntries} topStyle={metaData.topStyle} />
       </div>
 
       <SeasonDeclarations seasonGazette={seasonGazette} />

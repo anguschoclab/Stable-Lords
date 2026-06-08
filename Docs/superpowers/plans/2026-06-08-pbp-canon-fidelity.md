@@ -9,6 +9,7 @@
 **Tech Stack:** TypeScript, Vitest. Run tests with `npx vitest run <path>`. Typecheck with `npx tsc --noEmit`. Canonical phrasing reference: memory `terrablood-pbp-format`.
 
 **Verification reference (current bugs, from a seeded bout):**
+
 - `m3 🔍 Your strength forces {{defender}} back on {{possessive}} heels!` ← leaks BOTH tokens.
 - `{{possessive}}` appears in ~30 templates in `narrativeContent.json` but is handled by **neither** interpolation engine.
 - `narrateKnockdown` / `narrateRecovery` / `getEpithet` exist in `combatNarrators.ts` but are **never called** from `narrator.ts` (dead code).
@@ -30,6 +31,7 @@
 ## Task 1: Resolve `{{possessive}}` (and any unknown standard token) instead of leaking it
 
 **Files:**
+
 - Modify: `src/engine/narrative/narrativePBPUtils.ts` (the `interpolateTemplate` `longKey` switch)
 - Modify: `src/engine/narrative/narrativeTemplateEngine.ts` (the `interpolateTemplate` `longKey` switch)
 - Test: `src/test/engine/narrative/pbpInterpolation.test.ts`
@@ -90,6 +92,7 @@ template **without** interpolation. The `pbp.insights.ST` array mixes 2nd-person
 3rd-person (`{{defender}}`) lines.
 
 **Files:**
+
 - Modify: `src/engine/narrative/narrativePositioning.ts` (`narrateInsightHint`)
 - Modify: `src/engine/combat/narrative/narrator.ts` (the `case 'INSIGHT'` ~line 226)
 - Test: `src/test/engine/narrative/pbpInterpolation.test.ts`
@@ -158,9 +161,10 @@ git commit -m "fix(pbp): interpolate insight-hint lines so {{defender}}/{{posses
 
 ## Task 3: Whole-bout regression guard (would have caught both regressions)
 
-The existing tests check individual functions; nothing scans a *full simulated bout*. Add that.
+The existing tests check individual functions; nothing scans a _full simulated bout_. Add that.
 
 **Files:**
+
 - Test: `src/test/engine/narrative/pbpFullBout.test.ts` (create)
 
 - [ ] **Step 1: Write the test**
@@ -178,11 +182,29 @@ describe('PBP full-bout output is clean', () => {
   it('never emits raw {{tokens}} or "a [vowel]" article errors across many bouts', () => {
     const leaks: string[] = [];
     for (let seed = 1; seed <= 60; seed++) {
-      const A = makeWarrior(undefined, 'Aragor', STYLES[seed % STYLES.length],
-        { ST: 13, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 }, undefined, new SeededRNGService(seed));
-      const D = makeWarrior(undefined, 'Belisar', STYLES[(seed + 3) % STYLES.length],
-        { ST: 13, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 }, undefined, new SeededRNGService(seed + 500));
-      const out = simulateFight(defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D, seed * 31 + 7);
+      const A = makeWarrior(
+        undefined,
+        'Aragor',
+        STYLES[seed % STYLES.length],
+        { ST: 13, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 },
+        undefined,
+        new SeededRNGService(seed)
+      );
+      const D = makeWarrior(
+        undefined,
+        'Belisar',
+        STYLES[(seed + 3) % STYLES.length],
+        { ST: 13, CN: 13, SZ: 13, WT: 13, WL: 13, SP: 13, DF: 13 },
+        undefined,
+        new SeededRNGService(seed + 500)
+      );
+      const out = simulateFight(
+        defaultPlanForWarrior(A),
+        defaultPlanForWarrior(D),
+        A,
+        D,
+        seed * 31 + 7
+      );
       for (const e of out.log) {
         if (/\{\{|\}\}|\b a [AEIOUaeiou]/.test(e.text)) leaks.push(`seed ${seed}: ${e.text}`);
       }
@@ -213,6 +235,7 @@ git commit -m "test(pbp): full-bout scan for raw tokens / article errors"
 and epithets can't fire.
 
 **Files:**
+
 - Modify: the narrator-ctx type (find via `grep -rn "nameA" src/engine/combat/narrative/`; likely `narrator.ts` params or a `NarrationContext` interface)
 - Modify: `src/engine/combat/narrative/narrator.ts`
 - Modify: the caller that builds the ctx (find via `grep -rn "narrateEvents(" src/engine | grep -v test`)
@@ -239,8 +262,8 @@ In the function that calls `narrateEvents` (the simulate/narrative builder), pas
 Next to the existing `getName`/`getWeapon`, add:
 
 ```typescript
-  const getSpeed = (actor: 'A' | 'D') => (actor === 'A' ? ctx.spA : ctx.spD);
-  const getOrigin = (actor: 'A' | 'D') => (actor === 'A' ? ctx.originA : ctx.originD);
+const getSpeed = (actor: 'A' | 'D') => (actor === 'A' ? ctx.spA : ctx.spD);
+const getOrigin = (actor: 'A' | 'D') => (actor === 'A' ? ctx.originA : ctx.originD);
 ```
 
 - [ ] **Step 4: Typecheck + commit (no behavior change yet)**
@@ -258,6 +281,7 @@ git add -A && git commit -m "feat(pbp): thread fighter SP + origin into the narr
 supernatural). `narrator.ts` calls it without `speed`.
 
 **Files:**
+
 - Modify: `src/engine/combat/narrative/narrator.ts` (the two `narrateDodge(...)` calls, ~lines 99, 117)
 - Test: `src/test/engine/narrative/combatNarrator.test.ts`
 
@@ -305,6 +329,7 @@ git add -A && git commit -m "feat(pbp): SP-tiered dodge narration (quickness sta
 (`combatNarrators.ts:112,121`). `narrator.ts` has no cases for them.
 
 **Files:**
+
 - Modify: `src/engine/combat/narrative/narrator.ts` (add two `case`s to the event switch)
 - Verify: that resolution actually emits these events — `grep -rn "'KNOCKDOWN'\|KNOCKDOWN" src/engine/combat/resolution`. If nothing emits them, that is a separate engine task (out of scope here); note it and skip wiring until events exist.
 - Test: `src/test/engine/narrative/combatNarrator.test.ts`
@@ -357,6 +382,7 @@ git add -A && git commit -m "feat(pbp): narrate KNOCKDOWN/RECOVERY events"
 every single line.
 
 **Files:**
+
 - Modify: `src/engine/combat/narrative/narrator.ts` — replace the raw `getName(actor)` used in
   attack/hit lines with an epithet-aware helper.
 - Test: `src/test/engine/narrative/combatNarrator.test.ts`
@@ -372,7 +398,7 @@ const displayName = (actor: 'A' | 'D') => {
 ```
 
 Import `getEpithet` from `combatNarrators`. Then in the ATTACK/HIT narration calls, use
-`displayName(event.actor)` instead of `actorName` for the *attacker subject* (keep the literal
+`displayName(event.actor)` instead of `actorName` for the _attacker subject_ (keep the literal
 `getName` for places that must be unambiguous, e.g. the hit-location target, to avoid confusion).
 
 - [ ] **Step 2: Write the test**
@@ -381,8 +407,9 @@ Import `getEpithet` from `combatNarrators`. Then in the ATTACK/HIT narration cal
 import { getEpithet } from '@/engine/narrative/combatNarrators';
 it('getEpithet uses origin when it fires', () => {
   // force the 30% branch by scanning seeds
-  const hits = Array.from({ length: 50 }, (_, s) => getEpithet(new SeededRNGService(s), 'Kolact'))
-    .filter(Boolean);
+  const hits = Array.from({ length: 50 }, (_, s) =>
+    getEpithet(new SeededRNGService(s), 'Kolact')
+  ).filter(Boolean);
   expect(hits.length).toBeGreaterThan(0);
   expect(hits.every((h) => typeof h === 'string')).toBe(true);
 });
@@ -405,20 +432,22 @@ git add -A && git commit -m "feat(pbp): epithet-aware naming to reduce repetitio
 ## Task 8 (polish): hit-line variety + verb possessive
 
 Two cosmetic canon gaps from the sample bout:
+
 - The main hit sentence repeats verbatim (~5×/bout): "X drops his center and drives a blinding lunge with his EPÉE into the LOC!". Widen that template pool.
 - Weapon-verb lines dropped the possessive: "whips EPÉE in a deceptive thrust!" should read "whips his EPÉE…".
 
 **Files:**
+
 - Modify: `src/data/narrativeContent.json` (the hit-line array — find via
   `grep -n "drops his center and drives a blinding lunge" src/data/narrativeContent.json`; and the
   weapon-verb arrays — find via `grep -n "whips %W\|whips {{weapon}}" src/data/narrativeContent.json`)
 
 - [ ] **Step 1:** In the weapon-verb arrays, ensure every `%W`/`{{weapon}}` is preceded by a
-  possessive or article: change `"whips %W in a deceptive thrust!"` → `"whips {{possessive}} %W in a deceptive thrust!"` (and similar). `{{possessive}}` now resolves (Task 1).
+      possessive or article: change `"whips %W in a deceptive thrust!"` → `"whips {{possessive}} %W in a deceptive thrust!"` (and similar). `{{possessive}}` now resolves (Task 1).
 - [ ] **Step 2:** Add 4–6 alternate hit sentences to the main hit-line array using canon phrasing
-  from memory `terrablood-pbp-format` (e.g. "%A's %W bites deep into the %BP!", "%A drives the %W home — %D is struck on the %BP!").
+      from memory `terrablood-pbp-format` (e.g. "%A's %W bites deep into the %BP!", "%A drives the %W home — %D is struck on the %BP!").
 - [ ] **Step 3:** Run `npx vitest run src/test/engine/narrative/pbpFullBout.test.ts` (article guard
-  catches any new "a EPÉE") and commit.
+      catches any new "a EPÉE") and commit.
 
 ```bash
 git add src/data/narrativeContent.json
@@ -430,12 +459,15 @@ git commit -m "polish(pbp): hit-line variety + possessive on weapon verbs"
 ## ⚠️ VERIFICATION FINDINGS (2026-06-08, post-implementation)
 
 Implementation reviewed. Status per task:
+
 - **Tasks 1, 2, 3, 4, 5, 7 — DONE & verified.** Epithets fire ("The warrior from Convince…"), dodge wording varies, insight lines interpolate, `{{possessive}}` resolves in BOTH engines, `pbpFullBout.test.ts` passes (0 token/article leaks). Typecheck clean.
-- **Task 6 — wired but DEAD.** `narrator.ts` handles `KNOCKDOWN`/`RECOVERY`, but `resolution.ts` emits **no such events** (confirmed: only AI `'RECOVERY'` *intent* references exist). Prerequisite engine work (emit the events) is still required, as flagged.
+- **Task 6 — wired but DEAD.** `narrator.ts` handles `KNOCKDOWN`/`RECOVERY`, but `resolution.ts` emits **no such events** (confirmed: only AI `'RECOVERY'` _intent_ references exist). Prerequisite engine work (emit the events) is still required, as flagged.
 - **Task 8 — INCOMPLETE.** Weapon-verb lines still drop the possessive ("drives a blinding lunge with EPÉE!" → should be "with his EPÉE"); the main hit sentence still repeats ~4×/bout.
 
 ### 🛑 P0 REGRESSION introduced by Tasks 5 & 7 — fix before anything else
+
 **19 deterministic tests fail.** Of these, the combat-RNG-dependent ones (`balance.test` Wall of Steel **76.5% > 75% cap**, `rivalryGrowth`, `ownerGrudges`, `traitBalance` sturdy) are caused by narration now drawing a **different number of RNG values from the SHARED sim stream**:
+
 - `src/engine/simulate/simulationLoop.ts:119` sets `narCtx.rng = resCtx.rng` — the narrator and combat resolution share one RNG instance, and narration runs interleaved per minute (non-headless).
 - `getEpithet` (`combatNarrators.ts`) calls `r()` **unconditionally** (`if (r() > 0.3) return null;`) on every `displayName(...)`, and the dodge-tier change altered archive-pick draws — so the draw count shifted, desyncing every seeded bout.
 - (The other failures — `gazetteNarrative` computeStreaks returning **undefined**, `weatherVisuals`, `TournamentBracket`, `seasonal` — are **structural and unrelated to this plan**; track separately.)
@@ -443,6 +475,7 @@ Implementation reviewed. Status per task:
 **This is a gap in the original plan:** Tasks 5 & 7 add RNG draws without isolating narration from combat. Flavor must NEVER affect mechanics.
 
 ### Task 0 (NEW, P0): Decouple narration RNG from combat resolution
+
 **Files:** `src/engine/simulate/simulationLoop.ts` (both `narCtx` builds, ~lines 119 & the second `rng: resCtx.rng`), plus wherever the seed enters the loop.
 
 - [ ] **Step 1: Write a guard test** — `src/test/engine/narrative/narrationDeterminism.test.ts`: run the SAME seeded `simulateFight` twice and assert identical `winner`/`by`/`minutes` AND that a headless run yields the SAME mechanical result as a narrated run (narration must not change outcomes).
@@ -455,14 +488,47 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { FightingStyle } from '@/types/shared.types';
 
 it('narration does not affect mechanical outcome (narrated === headless)', () => {
-  const mk = (s: number) => makeWarrior(undefined, 'A', FightingStyle.StrikingAttack,
-    { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, undefined, new SeededRNGService(s));
+  const mk = (s: number) =>
+    makeWarrior(
+      undefined,
+      'A',
+      FightingStyle.StrikingAttack,
+      { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 },
+      undefined,
+      new SeededRNGService(s)
+    );
   for (let seed = 1; seed <= 30; seed++) {
-    const A = mk(seed), D = mk(seed + 100);
-    const narrated = simulateFight(defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D, seed, undefined, 'Clear', 'standard_arena', undefined, false);
-    const headless = simulateFight(defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D, seed, undefined, 'Clear', 'standard_arena', undefined, true);
-    expect({ w: narrated.winner, b: narrated.by, m: narrated.minutes })
-      .toEqual({ w: headless.winner, b: headless.by, m: headless.minutes });
+    const A = mk(seed),
+      D = mk(seed + 100);
+    const narrated = simulateFight(
+      defaultPlanForWarrior(A),
+      defaultPlanForWarrior(D),
+      A,
+      D,
+      seed,
+      undefined,
+      'Clear',
+      'standard_arena',
+      undefined,
+      false
+    );
+    const headless = simulateFight(
+      defaultPlanForWarrior(A),
+      defaultPlanForWarrior(D),
+      A,
+      D,
+      seed,
+      undefined,
+      'Clear',
+      'standard_arena',
+      undefined,
+      true
+    );
+    expect({ w: narrated.winner, b: narrated.by, m: narrated.minutes }).toEqual({
+      w: headless.winner,
+      b: headless.by,
+      m: headless.minutes,
+    });
   }
 });
 ```
@@ -470,11 +536,12 @@ it('narration does not affect mechanical outcome (narrated === headless)', () =>
 - [ ] **Step 2: Run it — expect FAIL** (narrated diverges from headless today).
 - [ ] **Step 3: Give the narrator its own RNG.** In `simulationLoop.ts`, build a separate deterministic stream for narration (seeded once from the bout seed, e.g. `new SeededRNGService(boutSeed ^ 0x5f3759df)`), and set `narCtx.rng = narrationRng.next`-style fn instead of `resCtx.rng`. Combat resolution keeps `resCtx.rng` untouched.
 - [ ] **Step 4: Run the guard test — expect PASS.**
-- [ ] **Step 5: Re-baseline + re-tune.** Run `npx vitest run`. The deterministic combat tests will now produce *narration-independent* outcomes. If `balance.test` Wall of Steel still exceeds 75%, re-tune per [[combat-balance-canon]] (do NOT touch canonical suitability/mortality data). Commit once balance + combat-determinism suites are green.
+- [ ] **Step 5: Re-baseline + re-tune.** Run `npx vitest run`. The deterministic combat tests will now produce _narration-independent_ outcomes. If `balance.test` Wall of Steel still exceeds 75%, re-tune per [[combat-balance-canon]] (do NOT touch canonical suitability/mortality data). Commit once balance + combat-determinism suites are green.
 
 ---
 
 ## Self-Review notes
+
 - **Spec coverage:** P0 leaks (Tasks 1–2) + guard (Task 3); the "engineers' dead code" (dodge SP-tier, knockdown, epithet) wired in Tasks 4–7; remaining canon polish in Task 8. The canon gap list lives in memory `terrablood-pbp-format`.
 - **Two interpolation engines:** Task 1 deliberately edits BOTH `narrativePBPUtils.ts` and `narrativeTemplateEngine.ts` — keep their `longKey` switches identical or the leak recurs on the other path.
 - **Knockdown caveat:** Task 6 only narrates events; if `resolution.ts` doesn't emit `KNOCKDOWN`/`RECOVERY`, that engine work is a prerequisite (flagged in the task).

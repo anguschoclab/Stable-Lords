@@ -42,7 +42,9 @@ describe('PBP interpolation — no raw {{token}} leaks', () => {
     });
 
     it('resolves {{reflexive}} (defaults to "himself", honors context)', () => {
-      expect(interpolateTemplate('leaves {{reflexive}} exposed', {})).toBe('leaves himself exposed');
+      expect(interpolateTemplate('leaves {{reflexive}} exposed', {})).toBe(
+        'leaves himself exposed'
+      );
     });
 
     it('no raw tokens leak for possessive/pronoun/reflexive when context is empty', () => {
@@ -52,7 +54,9 @@ describe('PBP interpolation — no raw {{token}} leaks', () => {
         '{{defender}} leaves {{reflexive}} exposed with every strike!',
       ];
       for (const t of templates) {
-        expect(noRawTokens(interpolateTemplate(t, { attacker: 'Bob', defender: 'Rex' }))).toBe(true);
+        expect(noRawTokens(interpolateTemplate(t, { attacker: 'Bob', defender: 'Rex' }))).toBe(
+          true
+        );
       }
     });
   });

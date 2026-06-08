@@ -29,21 +29,32 @@ describe('mergeImpacts', () => {
     const impacts: StateImpact[] = [{ rosterUpdates: map1 }, { rosterUpdates: map2 }];
     const result = mergeImpacts(impacts);
     expect(result.rosterUpdates?.size).toBe(2);
-    expect(result.rosterUpdates?.get('warrior1' as import('@/types/shared.types').WarriorId)).toEqual({ fame: 100 });
-    expect(result.rosterUpdates?.get('warrior2' as import('@/types/shared.types').WarriorId)).toEqual({ fame: 50 });
+    expect(
+      result.rosterUpdates?.get('warrior1' as import('@/types/shared.types').WarriorId)
+    ).toEqual({ fame: 100 });
+    expect(
+      result.rosterUpdates?.get('warrior2' as import('@/types/shared.types').WarriorId)
+    ).toEqual({ fame: 50 });
   });
 
   it('merges Maps by combining values for same key', () => {
     const map1 = new Map([['warrior1' as import('@/types/shared.types').WarriorId, { fame: 100 }]]);
-    const map2 = new Map([['warrior1' as import('@/types/shared.types').WarriorId, { popularity: 50 }]]);
+    const map2 = new Map([
+      ['warrior1' as import('@/types/shared.types').WarriorId, { popularity: 50 }],
+    ]);
     const impacts: StateImpact[] = [{ rosterUpdates: map1 }, { rosterUpdates: map2 }];
     const result = mergeImpacts(impacts);
     expect(result.rosterUpdates?.size).toBe(1);
-    expect(result.rosterUpdates?.get('warrior1' as import('@/types/shared.types').WarriorId)).toEqual({ fame: 100, popularity: 50 });
+    expect(
+      result.rosterUpdates?.get('warrior1' as import('@/types/shared.types').WarriorId)
+    ).toEqual({ fame: 100, popularity: 50 });
   });
 
   it('replaces values for replace strategy properties', () => {
-    const impacts: StateImpact[] = [{ weather: 'Rainy' }, { weather: 'Sunny' as import('@/types/shared.types').WeatherType }];
+    const impacts: StateImpact[] = [
+      { weather: 'Rainy' },
+      { weather: 'Sunny' as import('@/types/shared.types').WeatherType },
+    ];
     const result = mergeImpacts(impacts);
     expect(result.weather).toBe('Sunny');
   });

@@ -77,9 +77,7 @@ describe('useQuadrantDots', () => {
 
   it('computes fame/notoriety via engine functions', () => {
     const state = createMockGameState({ fame: 99 });
-    const rivals = [
-      createMockRival({ roster: [{}, {}, {}] as any as RivalStableData['roster'] }),
-    ];
+    const rivals = [createMockRival({ roster: [{}, {}, {}] as any as RivalStableData['roster'] })];
     const { result } = renderHook(() => useQuadrantDots(state, rivals));
 
     expect(result.current[0]!.fame).toBe(99);

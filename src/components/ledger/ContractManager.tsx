@@ -101,8 +101,8 @@ function EmptyContractState() {
           The_Academy_Is_Offline
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
-          No specialists are currently under contract. Institutional growth is stagnant.
-          Access the recruitment terminal to restore faculty operations.
+          No specialists are currently under contract. Institutional growth is stagnant. Access the
+          recruitment terminal to restore faculty operations.
         </p>
       </div>
       <Link to="/ops/recruit" className="mt-4">
@@ -244,7 +244,14 @@ interface SummaryCardProps {
   sublabel: string;
 }
 
-function SummaryCard({ icon: Icon, iconClass, borderClass, label, value, sublabel }: SummaryCardProps) {
+function SummaryCard({
+  icon: Icon,
+  iconClass,
+  borderClass,
+  label,
+  value,
+  sublabel,
+}: SummaryCardProps) {
   return (
     <Surface
       variant="glass"
@@ -254,12 +261,7 @@ function SummaryCard({ icon: Icon, iconClass, borderClass, label, value, sublabe
         borderClass
       )}
     >
-      <div
-        className={cn(
-          'p-4 rounded-none border transition-all',
-          iconClass
-        )}
-      >
+      <div className={cn('p-4 rounded-none border transition-all', iconClass)}>
         <Icon className="h-6 w-6" />
       </div>
       <div>
@@ -287,10 +289,7 @@ export function ContractManager() {
   const safeTrainers = trainers ?? [];
   const activeTrainers = safeTrainers.filter((t) => t.contractWeeksLeft > 0);
 
-  const totalWeeklyExpense = activeTrainers.reduce(
-    (sum, t) => sum + getSalary(t.tier),
-    0
-  );
+  const totalWeeklyExpense = activeTrainers.reduce((sum, t) => sum + getSalary(t.tier), 0);
 
   const expiringSoonCount = activeTrainers.filter((t) => t.contractWeeksLeft <= 4).length;
 

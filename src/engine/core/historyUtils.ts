@@ -82,10 +82,7 @@ export function getAllFightsForWarrior(
  * Extracts all fights that took place in a specific arena.
  * Full scan — arenaHistory is not sorted by arenaId.
  */
-export function getFightsForArena(
-  arenaHistory: FightSummary[],
-  arenaId: string
-): FightSummary[] {
+export function getFightsForArena(arenaHistory: FightSummary[], arenaId: string): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = 0; i < arenaHistory.length; i++) {
     const f = arenaHistory[i]!;

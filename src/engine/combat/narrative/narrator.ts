@@ -121,8 +121,14 @@ export function narrateEvents(
 
       case 'ATTACK':
         if (event.result === 'WHIFF') {
-          log.push({ minute, text: narrateAttack(rng, displayName(event.actor), weapon, false, opponentName) });
-          log.push({ minute, text: narrateDodge(rng, opponentName, getSpeed(event.actor === 'A' ? 'D' : 'A')) });
+          log.push({
+            minute,
+            text: narrateAttack(rng, displayName(event.actor), weapon, false, opponentName),
+          });
+          log.push({
+            minute,
+            text: narrateDodge(rng, opponentName, getSpeed(event.actor === 'A' ? 'D' : 'A')),
+          });
         }
         break;
 

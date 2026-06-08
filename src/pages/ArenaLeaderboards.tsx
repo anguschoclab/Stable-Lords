@@ -132,9 +132,7 @@ function ArenaTable({
                 {showKills ? (
                   <span className="text-arena-blood">{entry.kills}</span>
                 ) : (
-                  <span className="text-arena-gold">
-                    {(entry.winRate * 100).toFixed(0)}%
-                  </span>
+                  <span className="text-arena-gold">{(entry.winRate * 100).toFixed(0)}%</span>
                 )}
               </TableCell>
             </TableRow>
@@ -159,13 +157,7 @@ export default function ArenaLeaderboards() {
   );
 
   const allLeaderboards = useMemo(
-    () =>
-      calculatePerArenaLeaderboards(
-        roster,
-        player.stableName,
-        rivals,
-        arenaHistory
-      ),
+    () => calculatePerArenaLeaderboards(roster, player.stableName, rivals, arenaHistory),
     [roster, rivals, player.stableName, arenaHistory]
   );
 

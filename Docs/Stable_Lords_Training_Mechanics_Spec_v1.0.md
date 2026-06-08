@@ -9,6 +9,7 @@ Generated: 2026-03-08
 This specification defines the **complete training resolution system** — the core management pillar that governs how warriors improve between fights.
 
 It covers:
+
 1. Weekly training actions and resolution
 2. Attribute growth limits and caps
 3. Training risk (injury during training)
@@ -19,6 +20,7 @@ It covers:
 8. How player training differs from AI training
 
 **Depends on:**
+
 - Warrior Design & Creation Spec v0.3 (attribute model, caps)
 - Injury System (`src/engine/injuries.ts`)
 - Trainer module (`src/modules/trainers.ts`)
@@ -26,6 +28,7 @@ It covers:
 - Economy system (`src/engine/economy.ts`)
 
 **Consumed by:**
+
 - `src/pages/Training.tsx` (UI)
 - `src/engine/training.ts` (resolution)
 - `src/state/gameStore.ts` (`advanceWeek` → `processTraining`)
@@ -35,11 +38,13 @@ It covers:
 ## 1) Design Intent
 
 ### Player Value
+
 - **Agency**: Players choose WHAT each warrior trains, creating divergent builds from identical starting points.
 - **Risk/Reward**: Training is safer than fighting but slower. Training injuries exist but are rare.
 - **Trade-off**: A warrior in training cannot fight that week (mutual exclusion with matchmaking).
 
 ### Core Principle
+
 > Training is how the player sculpts a warrior's future. Fighting is how they prove it.
 
 ---
@@ -50,17 +55,18 @@ It covers:
 
 Each warrior may be assigned to **one training focus per week**:
 
-| Training Type | Target | Description |
-|--------------|--------|-------------|
-| **Attribute Training** | Any of ST/CN/SZ/WT/WL/SP/DF | Direct attribute improvement attempt |
-| **Skill Drilling** | ATT/PAR/DEF/INI/RIP/DEC | Practice a specific combat skill (future expansion) |
-| **Recovery** | — | Accelerate injury healing (see §6) |
+| Training Type          | Target                      | Description                                         |
+| ---------------------- | --------------------------- | --------------------------------------------------- |
+| **Attribute Training** | Any of ST/CN/SZ/WT/WL/SP/DF | Direct attribute improvement attempt                |
+| **Skill Drilling**     | ATT/PAR/DEF/INI/RIP/DEC     | Practice a specific combat skill (future expansion) |
+| **Recovery**           | —                           | Accelerate injury healing (see §6)                  |
 
 **Current implementation scope**: Attribute Training and Recovery only. Skill Drilling is reserved for future expansion.
 
 ### 2.2 Mutual Exclusion
 
 A warrior can do exactly ONE of these per week:
+
 - Fight in the arena
 - Train an attribute
 - Recover from injury
@@ -79,23 +85,23 @@ When a warrior trains an attribute, the chance of gaining +1 is:
 gainChance = BASE_CHANCE + trainerBonus + wtBonus - agePenalty - injuryPenalty
 ```
 
-| Factor | Value | Notes |
-|--------|-------|-------|
-| `BASE_CHANCE` | 0.55 (55%) | Current implementation |
-| `trainerBonus` | +0.05 per trainer tier point | Novice +0.05, Seasoned +0.10, Master +0.15 |
-| `wtBonus` | +(WT - 10) * 0.01 | Smarter warriors learn faster |
-| `agePenalty` | -0.02 per year over 25 | Older warriors learn slower |
-| `injuryPenalty` | -0.10 if any active injury | Can train while minorly injured, but less effectively |
+| Factor          | Value                        | Notes                                                 |
+| --------------- | ---------------------------- | ----------------------------------------------------- |
+| `BASE_CHANCE`   | 0.55 (55%)                   | Current implementation                                |
+| `trainerBonus`  | +0.05 per trainer tier point | Novice +0.05, Seasoned +0.10, Master +0.15            |
+| `wtBonus`       | +(WT - 10) \* 0.01           | Smarter warriors learn faster                         |
+| `agePenalty`    | -0.02 per year over 25       | Older warriors learn slower                           |
+| `injuryPenalty` | -0.10 if any active injury   | Can train while minorly injured, but less effectively |
 
 **Clamp**: `gainChance` is clamped to [0.15, 0.85] — never guaranteed, never impossible.
 
 ### 3.2 Attribute Caps
 
-| Cap | Value | Design Rationale |
-|-----|-------|-----------------|
-| Single attribute max | 25 | Canonical Duelmasters cap |
-| Total attribute sum max | 80 | Starting budget 70 + 10 growth room |
-| Growth per attribute per season (13 weeks) | 3 max | Prevents hyper-focused grinding |
+| Cap                                        | Value | Design Rationale                    |
+| ------------------------------------------ | ----- | ----------------------------------- |
+| Single attribute max                       | 25    | Canonical Duelmasters cap           |
+| Total attribute sum max                    | 80    | Starting budget 70 + 10 growth room |
+| Growth per attribute per season (13 weeks) | 3 max | Prevents hyper-focused grinding     |
 
 **Seasonal growth cap (new)**: No attribute can gain more than 3 points in a single 13-week season. This prevents degenerate strategies of training SP to 25 immediately.
 
@@ -135,13 +141,13 @@ processTraining(state):
 
 Trainers provide **passive bonuses** to all warriors in the stable, not direct training assignments.
 
-| Trainer Focus | Training Effect | Combat Effect |
-|--------------|-----------------|---------------|
-| Aggression | +gain chance for ST, SP | +ATT/OE effectiveness in bouts |
-| Defense | +gain chance for CN, WL | +PAR/DEF effectiveness in bouts |
-| Endurance | +gain chance for CN, WL | +endurance capacity in bouts |
-| Mind | +gain chance for WT, DF | +INI/DEC effectiveness in bouts |
-| Healing | +injury recovery speed | -death risk from wounds |
+| Trainer Focus | Training Effect         | Combat Effect                   |
+| ------------- | ----------------------- | ------------------------------- |
+| Aggression    | +gain chance for ST, SP | +ATT/OE effectiveness in bouts  |
+| Defense       | +gain chance for CN, WL | +PAR/DEF effectiveness in bouts |
+| Endurance     | +gain chance for CN, WL | +endurance capacity in bouts    |
+| Mind          | +gain chance for WT, DF | +INI/DEC effectiveness in bouts |
+| Healing       | +injury recovery speed  | -death risk from wounds         |
 
 ### 4.2 Trainer Bonus Application
 
@@ -155,13 +161,13 @@ trainerBonus(attribute, trainers, warriorStyle):
 
 **Focus → Attribute mapping:**
 
-| Focus | Primary Attributes | Secondary |
-|-------|-------------------|-----------|
-| Aggression | ST, SP | — |
-| Defense | CN, WL | — |
-| Endurance | CN, WL | ST |
-| Mind | WT, DF | — |
-| Healing | — (healing only) | — |
+| Focus      | Primary Attributes | Secondary |
+| ---------- | ------------------ | --------- |
+| Aggression | ST, SP             | —         |
+| Defense    | CN, WL             | —         |
+| Endurance  | CN, WL             | ST        |
+| Mind       | WT, DF             | —         |
+| Healing    | — (healing only)   | —         |
 
 ### 4.3 Style Affinity
 
@@ -187,17 +193,18 @@ Clamped to [0.01, 0.10].
 
 Training injuries are always **Minor severity** (1-3 week recovery):
 
-| Injury | Penalty | Weeks |
-|--------|---------|-------|
-| Pulled Muscle | ST -1 | 1-2 |
-| Twisted Knee | SP -1 | 1-2 |
-| Sparring Cut | CN -1 | 1 |
-| Strained Back | ST -1, CN -1 | 2-3 |
-| Practice Concussion | WT -1 | 2-3 |
+| Injury              | Penalty      | Weeks |
+| ------------------- | ------------ | ----- |
+| Pulled Muscle       | ST -1        | 1-2   |
+| Twisted Knee        | SP -1        | 1-2   |
+| Sparring Cut        | CN -1        | 1     |
+| Strained Back       | ST -1, CN -1 | 2-3   |
+| Practice Concussion | WT -1        | 2-3   |
 
 ### 5.3 Healing Trainer Effect
 
 A Healing-focus trainer reduces:
+
 - Training injury chance by `TIER_BONUS * 0.01`
 - Injury recovery time by `TIER_BONUS` weeks (minimum 1 week)
 
@@ -208,17 +215,18 @@ A Healing-focus trainer reduces:
 ### 6.1 Mechanics
 
 A warrior assigned to **Recovery** instead of training:
+
 - Heals injuries `1 + healingTrainerBonus` weeks faster per actual week
 - Cannot fight or train
 - 100% safe (no training injury risk)
 
 ### 6.2 Natural Healing vs Active Recovery
 
-| Mode | Healing Rate | Notes |
-|------|-------------|-------|
-| **Natural** (fighting or idle) | 1 week per week | Default, injuries tick down normally |
-| **Active Recovery** (assigned) | 1 + healingBonus weeks per week | Requires explicit assignment |
-| **With Healing Trainer** | +TIER_BONUS to active recovery | Stacks |
+| Mode                           | Healing Rate                    | Notes                                |
+| ------------------------------ | ------------------------------- | ------------------------------------ |
+| **Natural** (fighting or idle) | 1 week per week                 | Default, injuries tick down normally |
+| **Active Recovery** (assigned) | 1 + healingBonus weeks per week | Requires explicit assignment         |
+| **With Healing Trainer**       | +TIER_BONUS to active recovery  | Stacks                               |
 
 ### 6.3 Medical Costs (Economy)
 
@@ -238,25 +246,26 @@ Already accounted for in economy system as "Training fees."
 
 Warriors improve through TWO parallel systems:
 
-| Path | Source | Effect | Speed |
-|------|--------|--------|-------|
-| **Training** | Weekly assignment | +1 to chosen attribute (55% chance) | Controlled, safe |
-| **XP (Learn-by-Doing)** | Fighting | +1 to random attribute every 5 XP | Uncontrolled, risky |
+| Path                    | Source            | Effect                              | Speed               |
+| ----------------------- | ----------------- | ----------------------------------- | ------------------- |
+| **Training**            | Weekly assignment | +1 to chosen attribute (55% chance) | Controlled, safe    |
+| **XP (Learn-by-Doing)** | Fighting          | +1 to random attribute every 5 XP   | Uncontrolled, risky |
 
 ### 7.2 XP Gain Rules (Current Implementation)
 
-| Trigger | XP |
-|---------|-----|
-| Win | +2 |
-| Loss | +1 |
-| Draw | +1 |
-| Kill (winner only) | +1 bonus |
-| Flashy tag | +1 bonus |
+| Trigger               | XP       |
+| --------------------- | -------- |
+| Win                   | +2       |
+| Loss                  | +1       |
+| Draw                  | +1       |
+| Kill (winner only)    | +1 bonus |
+| Flashy tag            | +1 bonus |
 | Comeback tag (winner) | +1 bonus |
 
 ### 7.3 Level-Up Resolution
 
 Every 5 XP, the warrior "levels up":
+
 1. Select a random improvable attribute (not at max, total not at cap)
 2. +1 to that attribute
 3. Recompute baseSkills and derivedStats
@@ -282,6 +291,7 @@ aiTrainingDecision(warrior, ownerPersonality):
 ```
 
 AI training uses the same resolution as player training but:
+
 - AI trainers are implied (each rival stable has an implied Novice trainer of random focus)
 - AI training results appear in the gazette only for notable events (+2 or more in a single stat)
 
@@ -296,6 +306,7 @@ AI warriors train at **80% of player training effectiveness** (lower gain chance
 ### 9.1 Eligibility
 
 A retired warrior can become a trainer if:
+
 - Status is "Retired"
 - Has not already been converted
 - Stable has fewer than `TRAINER_MAX_PER_STABLE` trainers
@@ -304,13 +315,11 @@ A retired warrior can become a trainer if:
 
 ```ts
 // From modules/trainers.ts
-tier = fights >= 15 || kills >= 3 ? "Master"
-     : fights >= 7 ? "Seasoned"
-     : "Novice";
+tier = fights >= 15 || kills >= 3 ? 'Master' : fights >= 7 ? 'Seasoned' : 'Novice';
 
 focus = styleFocusMap[warrior.style]; // e.g., Basher → Aggression
-styleBonusStyle = warrior.style;      // bonus for same-style warriors
-contractWeeksLeft = 52;               // 1 year
+styleBonusStyle = warrior.style; // bonus for same-style warriors
+contractWeeksLeft = 52; // 1 year
 ```
 
 ### 9.3 Conversion Costs
@@ -320,6 +329,7 @@ Converting a retired warrior to a trainer is **free** (the warrior earned it thr
 ### 9.4 Converted Trainer Quality
 
 The conversion produces trainers with:
+
 - **Style affinity**: +1 bonus for warriors of the same style
 - **Fame inheritance**: trainer starts with the warrior's fame score
 - **Narrative value**: gazette coverage, "KRAGOS hangs up the blade and picks up the chalk"
@@ -332,8 +342,8 @@ The conversion produces trainers with:
 // Enhanced training assignment
 interface TrainingAssignment {
   warriorId: string;
-  type: "attribute" | "recovery";  // NEW: recovery option
-  attribute?: keyof Attributes;    // required if type === "attribute"
+  type: 'attribute' | 'recovery'; // NEW: recovery option
+  attribute?: keyof Attributes; // required if type === "attribute"
 }
 
 // Seasonal growth tracking
@@ -346,7 +356,7 @@ interface SeasonalGrowth {
 // Add to GameState
 interface GameState {
   // ... existing ...
-  seasonalGrowth: SeasonalGrowth[];  // NEW
+  seasonalGrowth: SeasonalGrowth[]; // NEW
 }
 ```
 
@@ -376,22 +386,23 @@ Current: assign attribute per warrior.
 
 ## 12) Integration Points
 
-| System | Training Provides | Training Consumes |
-|--------|------------------|-------------------|
-| Matchmaking | Ineligibility flag | — |
-| Injuries | Healing acceleration | Active injury data |
-| Economy | Training costs | Gold deduction |
-| Progression (XP) | — | Parallel growth path |
-| Trainers | — | Bonus calculations |
-| Aging | — | Age penalties |
-| Gazette | Training news items | — |
-| Save State | Growth data | Persistence |
+| System           | Training Provides    | Training Consumes    |
+| ---------------- | -------------------- | -------------------- |
+| Matchmaking      | Ineligibility flag   | —                    |
+| Injuries         | Healing acceleration | Active injury data   |
+| Economy          | Training costs       | Gold deduction       |
+| Progression (XP) | —                    | Parallel growth path |
+| Trainers         | —                    | Bonus calculations   |
+| Aging            | —                    | Age penalties        |
+| Gazette          | Training news items  | —                    |
+| Save State       | Growth data          | Persistence          |
 
 ---
 
 ## 13) Acceptance Criteria
 
 ### Functional
+
 - [ ] Warriors can be assigned to attribute training or recovery
 - [ ] Training resolves at week-end with correct gain chance
 - [ ] SZ cannot be trained
@@ -404,6 +415,7 @@ Current: assign attribute per warrior.
 - [ ] AI stables train automatically
 
 ### Behavioral
+
 - [ ] A new warrior with WT 17 trains faster than one with WT 7
 - [ ] A 35-year-old warrior trains slower than a 20-year-old
 - [ ] A Master trainer gives noticeably better results than no trainer
@@ -411,6 +423,7 @@ Current: assign attribute per warrior.
 - [ ] Seasonal caps prevent degenerate min-maxing
 
 ### Edge Cases
+
 - [ ] Warrior at attribute cap 25: training that attribute does nothing (greyed out)
 - [ ] Warrior at total cap 80: all training greyed out
 - [ ] Warrior with all 3 seasonal gains used for an attribute: that attribute locked this season

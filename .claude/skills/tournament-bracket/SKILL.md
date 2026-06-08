@@ -16,39 +16,44 @@ Tests the tournament system including bracket generation, round resolution, bron
 
 ## Test Groups
 
-| Filter keyword | What it targets |
-|----------------|----------------|
-| (none) | All tournament system tests |
-| resolution | src/test/engine/matchmaking/tournament/tournamentResolver.test.ts |
-| selection | src/test/engine/matchmaking/tournamentSelection/*.test.ts |
-| builder | src/test/engine/matchmaking/tournament/tournamentBracketBuilder.test.ts |
-| state | src/test/engine/matchmaking/tournament/tournamentStateMutator.test.ts |
-| committee | src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts |
-| matchmaking | src/test/engine/matchmaking/*.test.ts |
+| Filter keyword | What it targets                                                             |
+| -------------- | --------------------------------------------------------------------------- |
+| (none)         | All tournament system tests                                                 |
+| resolution     | src/test/engine/matchmaking/tournament/tournamentResolver.test.ts           |
+| selection      | src/test/engine/matchmaking/tournamentSelection/\*.test.ts                  |
+| builder        | src/test/engine/matchmaking/tournament/tournamentBracketBuilder.test.ts     |
+| state          | src/test/engine/matchmaking/tournament/tournamentStateMutator.test.ts       |
+| committee      | src/test/engine/matchmaking/tournament/tournamentSelectionCommittee.test.ts |
+| matchmaking    | src/test/engine/matchmaking/\*.test.ts                                      |
 
 ## Commands
 
 **Run all tournament tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/matchmaking/tournament/ src/test/engine/matchmaking/tournamentSelection/ src/test/engine/matchmaking/tournamentSelectionCommittee.test.ts src/test/engine/matchmaking/worldMatchmaking.test.ts src/test/engine/matchmaking/historyLogic.test.ts src/test/engine/matchmaking/rivalryLogic.test.ts
 ```
 
 **Run with a filter (e.g. /tournament-bracket resolution):**
+
 ```bash
 bun run test --reporter=verbose -- <filter>
 ```
 
 **Run tournament resolution tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/matchmaking/tournament/tournamentResolver.test.ts
 ```
 
 **Run bracket builder tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/matchmaking/tournament/tournamentBracketBuilder.test.ts
 ```
 
 **Run tournament selection tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/matchmaking/tournamentSelection/
 ```

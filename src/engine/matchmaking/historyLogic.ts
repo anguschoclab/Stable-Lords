@@ -34,5 +34,13 @@ export function addMatchRecord(
   week: number
 ): MatchRecord[] {
   const pruned = history.filter((m) => m.week >= week - 8);
-  return [...pruned, { week, playerWarriorId: playerWarriorId as WarriorId, opponentWarriorId: opponentWarriorId as WarriorId, opponentStableId: opponentStableId as StableId }];
+  return [
+    ...pruned,
+    {
+      week,
+      playerWarriorId: playerWarriorId as WarriorId,
+      opponentWarriorId: opponentWarriorId as WarriorId,
+      opponentStableId: opponentStableId as StableId,
+    },
+  ];
 }

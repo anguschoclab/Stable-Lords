@@ -54,17 +54,20 @@ export function processDeathEvents(graveyard: Warrior[]): GameEvent[] {
 }
 
 export function processRetirementEvents(retired: Warrior[]): GameEvent[] {
-  return retired.map((w) => ({
-    id: `retire-${w.id}`,
-    week: w.retiredWeek ?? 0,
-    type: 'retirement' as EventType,
-    title: `${w.name} Retired`,
-    subtitle: `${w.career.wins}W-${w.career.losses}L career`,
-    icon: EVENT_ICONS.retirement.icon,
-    iconColor: EVENT_ICONS.retirement.color,
-    linkTo: `/warrior/${w.id}`,
-    entityNames: [w.name],
-  } as GameEvent));
+  return retired.map(
+    (w) =>
+      ({
+        id: `retire-${w.id}`,
+        week: w.retiredWeek ?? 0,
+        type: 'retirement' as EventType,
+        title: `${w.name} Retired`,
+        subtitle: `${w.career.wins}W-${w.career.losses}L career`,
+        icon: EVENT_ICONS.retirement.icon,
+        iconColor: EVENT_ICONS.retirement.color,
+        linkTo: `/warrior/${w.id}`,
+        entityNames: [w.name],
+      }) as GameEvent
+  );
 }
 
 export function processInjuryEvents(roster: Warrior[], week: number): GameEvent[] {
@@ -155,16 +158,19 @@ export function processTournamentEvents(tournaments: TournamentEntry[]): GameEve
 }
 
 export function processGazetteEvents(gazettes: GazetteStory[]): GameEvent[] {
-  return gazettes.map((g) => ({
-    id: `gazette-${g.id}`,
-    week: g.week,
-    type: 'news' as EventType,
-    title: g.headline,
-    subtitle: g.body.slice(0, 80) + '...',
-    icon: EVENT_ICONS.news.icon,
-    iconColor: 'text-arena-gold',
-    linkTo: '/world/chronicle',
-  } as GameEvent));
+  return gazettes.map(
+    (g) =>
+      ({
+        id: `gazette-${g.id}`,
+        week: g.week,
+        type: 'news' as EventType,
+        title: g.headline,
+        subtitle: g.body.slice(0, 80) + '...',
+        icon: EVENT_ICONS.news.icon,
+        iconColor: 'text-arena-gold',
+        linkTo: '/world/chronicle',
+      }) as GameEvent
+  );
 }
 
 export function groupEventsByWeek(events: GameEvent[]): Array<[number, GameEvent[]]> {

@@ -48,7 +48,14 @@ function makeState(overrides?: Partial<GameState>): GameState {
     ftueComplete: true,
     ftueStep: 0,
     coachDismissed: [],
-    player: { id: 'p1' as StableId, name: 'Player', stableName: 'Test Stable', fame: 0, renown: 0, titles: 0 },
+    player: {
+      id: 'p1' as StableId,
+      name: 'Player',
+      stableName: 'Test Stable',
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
     fame: 0,
     popularity: 0,
     treasury: 500,
@@ -396,7 +403,9 @@ describe('Training System', () => {
       const rng = new SeededRNG(1);
       const impact = computeTrainingImpact(state as any, rng as any);
 
-      expect(impact.results.filter((r) => r.type === 'attribute' as typeof r.type)).toHaveLength(1);
+      expect(impact.results.filter((r) => r.type === ('attribute' as typeof r.type))).toHaveLength(
+        1
+      );
       expect(impact.updatedSeasonalGrowth).toHaveLength(1);
       spy.mockRestore();
     });

@@ -52,11 +52,7 @@ export function WarriorSlots({
           <div
             className={cn(
               'w-1 h-4 rounded-full',
-              isAChosen
-                ? championship
-                  ? 'bg-arena-gold'
-                  : 'bg-primary'
-                : 'bg-muted-foreground/20'
+              isAChosen ? (championship ? 'bg-arena-gold' : 'bg-primary') : 'bg-muted-foreground/20'
             )}
           />
           <span className="text-xs truncate">
@@ -64,9 +60,7 @@ export function WarriorSlots({
           </span>
           {isBye && <StepForward className="h-3 w-3 text-muted-foreground/50" />}
         </div>
-        {isAChosen && championship && (
-          <Trophy className="h-3 w-3 text-arena-gold animate-pulse" />
-        )}
+        {isAChosen && championship && <Trophy className="h-3 w-3 text-arena-gold animate-pulse" />}
         {isAChosen && !championship && (
           <Trophy className="h-3 w-3 animate-bounce shadow-glow text-arena-gold" />
         )}
@@ -112,20 +106,14 @@ export function WarriorSlots({
           <div
             className={cn(
               'w-1 h-4 rounded-full',
-              isDChosen
-                ? championship
-                  ? 'bg-arena-gold'
-                  : 'bg-primary'
-                : 'bg-muted-foreground/20'
+              isDChosen ? (championship ? 'bg-arena-gold' : 'bg-primary') : 'bg-muted-foreground/20'
             )}
           />
           <span className="text-xs truncate">
             {isBye ? '(bye)' : resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}
           </span>
         </div>
-        {isDChosen && championship && (
-          <Trophy className="h-3 w-3 text-arena-gold animate-pulse" />
-        )}
+        {isDChosen && championship && <Trophy className="h-3 w-3 text-arena-gold animate-pulse" />}
         {isDChosen && !championship && (
           <Trophy className="h-3 w-3 animate-bounce shadow-glow text-arena-gold" />
         )}

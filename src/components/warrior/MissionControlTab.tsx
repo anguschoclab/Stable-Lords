@@ -65,11 +65,7 @@ export function MissionControlTab({
             </div>
           </div>
           <div className="p-10">
-            <PlanBuilder
-              warrior={warrior}
-              plan={currentPlan}
-              onPlanChange={onPlanChange}
-            />
+            <PlanBuilder warrior={warrior} plan={currentPlan} onPlanChange={onPlanChange} />
           </div>
         </Surface>
       </div>

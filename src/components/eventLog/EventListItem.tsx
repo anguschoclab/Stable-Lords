@@ -27,17 +27,11 @@ export function EventListItem({ event, allWarriorNames, onClick }: EventListItem
       </div>
       <div className="min-w-0 flex-1">
         <div className="text-xs font-medium text-foreground leading-tight truncate">
-          <LinkifiedText
-            text={event.title}
-            names={event.entityNames ?? allWarriorNames}
-          />
+          <LinkifiedText text={event.title} names={event.entityNames ?? allWarriorNames} />
         </div>
         {event.subtitle && (
           <div className="text-[11px] text-muted-foreground leading-tight mt-0.5 truncate">
-            <LinkifiedText
-              text={event.subtitle}
-              names={event.entityNames ?? allWarriorNames}
-            />
+            <LinkifiedText text={event.subtitle} names={event.entityNames ?? allWarriorNames} />
           </div>
         )}
       </div>

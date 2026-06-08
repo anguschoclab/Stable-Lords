@@ -4,5 +4,4 @@ export const intensityLabel = (n: number) =>
 export const intensityColor = (n: number) =>
   n >= 4 ? 'text-destructive' : n >= 2 ? 'text-arena-gold' : 'text-primary';
 
-export const intensityBgColor = (n: number) =>
-  n >= 4 ? 'bg-destructive' : 'bg-arena-gold';
+export const intensityBgColor = (n: number) => (n >= 4 ? 'bg-destructive' : 'bg-arena-gold');

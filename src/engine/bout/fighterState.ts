@@ -142,7 +142,10 @@ export function createFighterState(
   if (aiMods.OE != null) traitPlan.OE = Math.max(0, Math.min(10, traitPlan.OE + aiMods.OE));
   if (aiMods.AL != null) traitPlan.AL = Math.max(0, Math.min(10, traitPlan.AL + aiMods.AL));
   if (aiMods.killDesire != null)
-    traitPlan.killDesire = Math.max(0, Math.min(100, (traitPlan.killDesire ?? 0) + aiMods.killDesire));
+    traitPlan.killDesire = Math.max(
+      0,
+      Math.min(100, (traitPlan.killDesire ?? 0) + aiMods.killDesire)
+    );
   if (aiMods.feintTendency != null)
     traitPlan.feintTendency = Math.max(
       0,

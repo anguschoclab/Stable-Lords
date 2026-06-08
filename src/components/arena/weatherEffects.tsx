@@ -509,7 +509,10 @@ function AetherStormEffect() {
         }}
       />
       {/* Energy pulses - faster flash rate */}
-      <div className="absolute inset-0 bg-cyan-200/15 animate-pulse" style={{ animationDuration: '1.5s' }} />
+      <div
+        className="absolute inset-0 bg-cyan-200/15 animate-pulse"
+        style={{ animationDuration: '1.5s' }}
+      />
       {/* Aether particles - more numerous and chaotic than Arcane Storm */}
       {Array.from({ length: 40 }).map((_, i) => (
         <div

@@ -28,5 +28,12 @@ export function updateSeasonalGains(
       sg === existing ? { ...sg, gains: { ...sg.gains, [attr]: (sg.gains[attr] ?? 0) + 1 } } : sg
     );
   }
-  return [...seasonalGrowth, { warriorId: warriorId as import('@/types/shared.types').WarriorId, season: season as Season, gains: { [attr]: 1 } }];
+  return [
+    ...seasonalGrowth,
+    {
+      warriorId: warriorId as import('@/types/shared.types').WarriorId,
+      season: season as Season,
+      gains: { [attr]: 1 },
+    },
+  ];
 }

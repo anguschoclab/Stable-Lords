@@ -1,7 +1,8 @@
 # Stable Lords — Control Center Design Spec v1.0
+
 ## "The Tablinum" — Dashboard Redesign
 
-> *"The patron sits in the tablinum. Before him: the ledger of the week, the roar of tomorrow's crowd, the whispers of the Senate. Everything that matters, carved into one wall of stone."*
+> _"The patron sits in the tablinum. Before him: the ledger of the week, the roar of tomorrow's crowd, the whispers of the Senate. Everything that matters, carved into one wall of stone."_
 
 Design system: **Codex Sanguis** (see [DESIGN_BIBLE_UI_v1.0.md](DESIGN_BIBLE_UI_v1.0.md))
 Route: `/` (replaces current Dashboard)
@@ -60,6 +61,7 @@ Grid at ≥1280px: `grid-cols-[240px_1fr_320px]`. At <1024px: stack (nav → dra
 **Height**: `h-14`, `bg-card/80 backdrop-blur`, bottom border `border-border`.
 
 Left → right:
+
 - **Hamburger** (mobile only) → opens left nav drawer.
 - **Pill: DATE** — `codex-label` "DATE" above value `Year 412 AE · Wk 12 · Autumn`.
 - **Pill: CYCLE STATUS** — bronze-bordered, amber dot + `Autumn Season · Week 12`. Click → scrolls to Season Progress card.
@@ -115,6 +117,7 @@ Optional muted subtitle sentence.
 ### 5.1 Hero Storyline Card (top, full width)
 
 **Purpose**: The one narrative pressing the player this week. Generated from current game state — priority order:
+
 1. Champion contention (warrior at top of rankings)
 2. Imminent death/retirement of legendary warrior
 3. Rivalry climax (grudge match scheduled)
@@ -123,6 +126,7 @@ Optional muted subtitle sentence.
 6. Default: highest-fame warrior's form arc
 
 **Layout**:
+
 - Left: 96×96 imperial-ring badge with thematic glyph (laurel wreath for champion, skull for death, swords for rivalry, coins for bankruptcy).
 - Middle: `codex-label` eyebrow (e.g. `IMPERIAL LAURELS · CONTENDER`), Cinzel 700 title, 2-line parchment prose subtitle.
 - Right: primary action button (e.g. `REVIEW DOSSIER`, `VIEW BOUT`, `SEEK SPONSOR`) + small meta row ("Senate · 4 / 5 in favor" equivalent → e.g. "Patrons · 3 / 5 backing").
@@ -131,13 +135,15 @@ Optional muted subtitle sentence.
 
 ### 5.2 Treasury Panel (left, col-span-1)
 
-Eyebrow: `PATRON · COFFERS`  Title: `Quarterly Outlook`
+Eyebrow: `PATRON · COFFERS` Title: `Quarterly Outlook`
 
 Two stat columns:
+
 - **GOLD**: `3,240g` in Cinzel 40px `arena-gold`, delta `+420g this week` in `text-emerald-400/80`.
 - **RUNWAY**: `11 wk` — `At current burn`. If <4wk, number renders `arena-blood` + danger glow.
 
 Below: two stat-bars with labels + values on right:
+
 - `WAGES · COVERED` — arena-gold fill, `64%`
 - `SPONSORSHIPS ACTIVE` — arena-pop fill, `3 OF 5`
 
@@ -145,9 +151,10 @@ Stat bars use the "sand in carved groove" spec (1.5–3px, `bg-secondary/30 bord
 
 ### 5.3 Season Progress (right, col-span-1)
 
-Eyebrow: `AUTUMN SEASON · IN PROGRESS`  Title: `Week 12 of 16`
+Eyebrow: `AUTUMN SEASON · IN PROGRESS` Title: `Week 12 of 16`
 
 Two stat columns:
+
 - **TOP RECORD**: `9 – 3` · subtitle `Marcus Varro · leading stable`
 - **STANDING**: `T-2nd` · subtitle `Two wins behind House Corvinus`
 
@@ -155,9 +162,10 @@ Bottom: `SEASON PROGRESS` stat-bar — gradient from primary to accent, `75%` ti
 
 ### 5.4 This Week's Card (left, col-span-1) — the "Active Matchups" equivalent
 
-Eyebrow: `WEEK 12 · CARD`  Title: `Scheduled Bouts`  Action icon: shuffle/reroll (tournament only).
+Eyebrow: `WEEK 12 · CARD` Title: `Scheduled Bouts` Action icon: shuffle/reroll (tournament only).
 
 Bout rows (repeat up to 4, then "View all N bouts →"):
+
 - Player bouts get a gold `★` prefix and `bg-primary/[0.03] border-l-2 border-primary`.
 - Row layout: `[Warrior name + rank badge]   H2H 3-1   [Opponent name + rank]   [style-badge: GRAPPLE/BLADE/etc.]`
 - Rank badges: small parchment tiles with `font-mono font-black` (e.g. `TOP 3`, `#18`, `CHMP`).
@@ -165,29 +173,32 @@ Bout rows (repeat up to 4, then "View all N bouts →"):
 
 ### 5.5 Imperial Standings (right, col-span-1) — Top Ranks
 
-Eyebrow: `IMPERIAL REGISTRY · TOP RANKS`  Title: `Standings`  Action: jump to World Overview.
+Eyebrow: `IMPERIAL REGISTRY · TOP RANKS` Title: `Standings` Action: jump to World Overview.
 
 Dense two-column list of top 10 stables (5 per column, mirrored around a divider like the PDF). Each row: stable name + `W-L` in font-mono. Player's stable row: crimson left-border, bold. Empty slot ("vacant throne"): em-dash placeholder (used e.g. when a Grand Champion seat is unfilled — preserves the vacant-yokozuna flavor).
 
 ### 5.6 Active Regimens (left, col-span-1)
 
-Eyebrow: `LUDUS · TRAINING`  Title: `Active Regimens`
+Eyebrow: `LUDUS · TRAINING` Title: `Active Regimens`
 
 Up to 4 rows:
+
 ```
 Warrior Name                          ▓▓▓▓▓▓░░░░  63%
 PROGRAM · FOCUS_NOTE
 ```
+
 Fill color encodes program type:
+
 - Strength/Weight → `arena-gold`
 - Skill/Technique → `arena-pop` (teal)
 - Conditioning → emerald
 - Recovery/Medical → `arena-blood`
-Tooltip on hover shows ETA and coach assigned. Click → Training Planner.
+  Tooltip on hover shows ETA and coach assigned. Click → Training Planner.
 
 ### 5.7 Leading Warriors (right, col-span-1)
 
-Eyebrow: `LUDUS · TOP RANKS`  Title: `Leading Warriors`
+Eyebrow: `LUDUS · TOP RANKS` Title: `Leading Warriors`
 
 Dense ledger table:
 | WARRIOR | RANK | W–L | FORM |
@@ -203,12 +214,15 @@ Header: `text-[9px] font-black uppercase tracking-widest`. Numbers: `font-mono f
 ## 6. Right Rail — Event Log
 
 `w-80`, sticky, own scroll container. Header:
+
 ```
 Event Log                         [ALL] [ARENA] [NEWS]
 ```
+
 Tab pills: arena-blood active, others muted outline.
 
 Entry format (12–14 per screen):
+
 ```
 [icon tint]  YR12 · WK12 · DAY 3 · 09:12
              Bold title line (Cinzel 500, 15px)
@@ -216,6 +230,7 @@ Entry format (12–14 per screen):
 ```
 
 Icon tints map to event kind:
+
 - Trophy (gold) — wins, titles, fame milestones
 - Alert-triangle (blood) — injury, death, financial danger
 - Link (gold) — sponsorship secured
@@ -225,7 +240,7 @@ Icon tints map to event kind:
 
 Dividers between entries: `border-border/30`. Rows hover to `bg-white/[0.03]`. Each row clickable → relevant detail page. "Day N begins" markers render with a slightly thicker top border to group bursts.
 
-Empty state: *"The Presses Are Silent."*
+Empty state: _"The Presses Are Silent."_
 
 ---
 
@@ -236,11 +251,13 @@ Just like the PDF's OVERVIEW / BOUTS / STABLE / FINANCIALS / STORYLINES:
 ```
 OVERVIEW · BOUTS · STABLE · FINANCES · STORYLINES
 ```
+
 - Text in Cinzel 700, ALL CAPS, `tracking-[0.05em]`.
 - Active tab: 2px primary underline + foreground color.
 - Inactive: muted-foreground, hover → foreground.
 
 Each tab reconfigures the main column's six-card grid:
+
 - **OVERVIEW** — as specified above (default).
 - **BOUTS** — expands bout card full-width, collapses treasury/season into slim strip.
 - **STABLE** — foregrounds roster and training, hides standings.
@@ -252,11 +269,13 @@ Each tab reconfigures the main column's six-card grid:
 ## 8. Tokens & Class Hooks (hand-off)
 
 Existing (from bible):
+
 - `bg-background`, `bg-card`, `bg-primary`, `text-foreground`, `text-accent`, `text-muted-foreground`
 - `arena-gold`, `arena-blood`, `arena-fame`, `arena-pop`, `arena-steel`, `arena-bone`
 - `imperial-ring`, `codex-label`, `glow-blood`, `glow-gold`
 
 New (introduce):
+
 - `.control-grid` — `grid gap-4 lg:grid-cols-[240px_1fr_320px]`
 - `.control-panel` — card shell (`variant="glass"` wrapper)
 - `.control-statnum` — `font-cinzel font-black text-[40px] leading-none tracking-[0.02em]`
@@ -268,12 +287,12 @@ New (introduce):
 
 ## 9. Responsive
 
-| Breakpoint | Change |
-|---|---|
-| ≥1280px | Full three-column layout as drawn. |
-| 1024–1279px | Event Log collapses into a right-edge toggle drawer. Main grid stays 2×3. |
-| 768–1023px | Single column. Nav → top drawer. Treasury & Season become a 2-up strip. Event log → bottom sheet accessible via bell icon. |
-| <768px | Everything stacks. Hero card keeps priority. Cards become full-width. Top bar: date pill + CTA button only; other pills collapse into a popover. |
+| Breakpoint  | Change                                                                                                                                           |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ≥1280px     | Full three-column layout as drawn.                                                                                                               |
+| 1024–1279px | Event Log collapses into a right-edge toggle drawer. Main grid stays 2×3.                                                                        |
+| 768–1023px  | Single column. Nav → top drawer. Treasury & Season become a 2-up strip. Event log → bottom sheet accessible via bell icon.                       |
+| <768px      | Everything stacks. Hero card keeps priority. Cards become full-width. Top bar: date pill + CTA button only; other pills collapse into a popover. |
 
 Secondary tabs scroll horizontally with fade-edge on mobile.
 
@@ -282,6 +301,7 @@ Secondary tabs scroll horizontally with fade-edge on mobile.
 ## 10. Motion
 
 Per bible §9 — no bouncy, no rotations.
+
 - Page mount: `fade-in + slide-in-from-bottom-2`, stagger cards by 60ms.
 - Hero card on storyline change: `fade-in + zoom-in-[0.98]`, 300ms.
 - Event log new entry: slide-in-from-top-1, 240ms.
@@ -292,21 +312,24 @@ Per bible §9 — no bouncy, no rotations.
 ## 11. Copy Examples (dev placeholders)
 
 Hero (champion contender):
+
 > eyebrow: `IMPERIAL LAURELS · CONTENDER`
-> title: *Marcus Varro approaches the final laurel.*
+> title: _Marcus Varro approaches the final laurel._
 > body: The patrons have seen the blood he has spilled. One more tournament victory and the Senate will not be able to refuse his crown.
-> meta: `Patrons · 4 / 5 backing`  action: `REVIEW DOSSIER`
+> meta: `Patrons · 4 / 5 backing` action: `REVIEW DOSSIER`
 
 Event log samples:
+
 - `YR412 · WK12 · DAY 3 · 09:12` — **Week Twelve Opens** · Card posted. Varro drawn against Octavian (#7). Crowd estimate 11,100.
 - `DAY 3 · 08:40` — **Wages Unmet** · Ludus maintenance outstanding. Coffers will not cover without a new patron.
 - `DAY 2 · 16:45` — **Varro felled Tiberius** · Yoke-break. Fourth straight victory. Record 9–3.
-- `DAY 2 · 11:30` — **Gazette · Senate Watch** · Censor Lucretius: *"One more triumph and the question becomes unavoidable."*
+- `DAY 2 · 11:30` — **Gazette · Senate Watch** · Censor Lucretius: _"One more triumph and the question becomes unavoidable."_
 
 Empty states:
-- Event log: *"The Presses Are Silent."*
-- No regimens: *"The ludus sleeps. No regimens are inscribed."*
-- No scheduled bouts: *"The sand awaits. No bouts declared this week."*
+
+- Event log: _"The Presses Are Silent."_
+- No regimens: _"The ludus sleeps. No regimens are inscribed."_
+- No scheduled bouts: _"The sand awaits. No bouts declared this week."_
 
 ---
 
@@ -325,4 +348,4 @@ Empty states:
 
 ---
 
-*Stable Lords — Control Center Spec v1.0. Derived from Codex Sanguis Design Bible v1.0.*
+_Stable Lords — Control Center Spec v1.0. Derived from Codex Sanguis Design Bible v1.0._

@@ -66,7 +66,8 @@ describe('TickOrchestrator', () => {
     it('should resolve tournament round when isTournamentWeek and activeTournamentId are set', () => {
       mockState.day = 2;
       mockState.isTournamentWeek = true;
-      mockState.activeTournamentId = 'test-tournament' as import('@/types/shared.types').TournamentId;
+      mockState.activeTournamentId =
+        'test-tournament' as import('@/types/shared.types').TournamentId;
 
       const nextState = TickOrchestrator.advanceDay(mockState);
 
@@ -102,7 +103,8 @@ describe('TickOrchestrator', () => {
     it('should resolve remaining tournament rounds before advancing week', () => {
       mockState.day = 3;
       mockState.isTournamentWeek = true;
-      mockState.activeTournamentId = 'test-tournament' as import('@/types/shared.types').TournamentId;
+      mockState.activeTournamentId =
+        'test-tournament' as import('@/types/shared.types').TournamentId;
 
       // Setup mock to return incremental changes
       vi.mocked(TournamentSelectionService.resolveRound).mockImplementation(

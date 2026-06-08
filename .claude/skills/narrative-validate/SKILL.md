@@ -16,34 +16,38 @@ Validates the Stable Lords narrative system for integrity, tag reference resolut
 
 ## Test Groups
 
-| Filter keyword | What it targets |
-|----------------|----------------|
-| (none) | All narrative validation tests |
-| combat | src/test/engine/narrative/combatNarrator.test.ts |
-| gazette | src/test/engine/gazetteNarrative.test.ts + src/test/engine/gazetteDetections.test.ts |
-| status | src/test/engine/narrative/statusNarrator.test.ts |
-| bout | src/test/engine/narrative/boutNarrator.test.ts |
-| template | src/test/engine/narrative/narrativeTemplateEngine.test.ts |
-| archive | scripts/validateNarrativeArchive.ts (tag reference validation) |
+| Filter keyword | What it targets                                                                      |
+| -------------- | ------------------------------------------------------------------------------------ |
+| (none)         | All narrative validation tests                                                       |
+| combat         | src/test/engine/narrative/combatNarrator.test.ts                                     |
+| gazette        | src/test/engine/gazetteNarrative.test.ts + src/test/engine/gazetteDetections.test.ts |
+| status         | src/test/engine/narrative/statusNarrator.test.ts                                     |
+| bout           | src/test/engine/narrative/boutNarrator.test.ts                                       |
+| template       | src/test/engine/narrative/narrativeTemplateEngine.test.ts                            |
+| archive        | scripts/validateNarrativeArchive.ts (tag reference validation)                       |
 
 ## Commands
 
 **Run all narrative tests:**
+
 ```bash
 bun run test --reporter=verbose src/test/engine/narrative/ src/test/engine/gazetteNarrative.test.ts src/test/engine/gazetteDetections.test.ts
 ```
 
 **Run with a filter (e.g. /narrative-validate combat):**
+
 ```bash
 bun run test --reporter=verbose -- <filter>
 ```
 
 **Run narrative archive validation (tag reference check):**
+
 ```bash
 bun scripts/validateNarrativeArchive.ts
 ```
 
 **Run specific mood tone validation:**
+
 ```bash
 bun run test --reporter=verbose -t "mood.*Calm"
 bun run test --reporter=verbose -t "mood.*Bloodthirsty"

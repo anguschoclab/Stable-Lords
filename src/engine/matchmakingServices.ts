@@ -93,17 +93,20 @@ export const AIBoutService = {
     return roster.map((w) => {
       if (w.id !== wId) return w;
       const prevByArena = w.career.byArena ?? {};
-      const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
-      const byArena = arenaId && arenaRecord
-        ? {
-            ...prevByArena,
-            [arenaId]: {
-              wins: arenaRecord.wins + (won ? 1 : 0),
-              losses: arenaRecord.losses + (won ? 0 : 1),
-              kills: arenaRecord.kills + (killed ? 1 : 0),
-            },
-          }
-        : prevByArena;
+      const arenaRecord = arenaId
+        ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 })
+        : null;
+      const byArena =
+        arenaId && arenaRecord
+          ? {
+              ...prevByArena,
+              [arenaId]: {
+                wins: arenaRecord.wins + (won ? 1 : 0),
+                losses: arenaRecord.losses + (won ? 0 : 1),
+                kills: arenaRecord.kills + (killed ? 1 : 0),
+              },
+            }
+          : prevByArena;
       return {
         ...w,
         career: {

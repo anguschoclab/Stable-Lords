@@ -26,16 +26,17 @@ export function updateWarriorAfterBout(
 
   const prevByArena = warrior.career.byArena ?? {};
   const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
-  const byArena = arenaId && arenaRecord
-    ? {
-        ...prevByArena,
-        [arenaId]: {
-          wins: arenaRecord.wins + (isWinner ? 1 : 0),
-          losses: arenaRecord.losses + (!isWinner ? 1 : 0),
-          kills: arenaRecord.kills + (wasKilled ? 1 : 0),
-        },
-      }
-    : prevByArena;
+  const byArena =
+    arenaId && arenaRecord
+      ? {
+          ...prevByArena,
+          [arenaId]: {
+            wins: arenaRecord.wins + (isWinner ? 1 : 0),
+            losses: arenaRecord.losses + (!isWinner ? 1 : 0),
+            kills: arenaRecord.kills + (wasKilled ? 1 : 0),
+          },
+        }
+      : prevByArena;
 
   return {
     ...warrior,
@@ -76,16 +77,17 @@ export function applyCareerStats(
 ): Warrior {
   const prevByArena = warrior.career.byArena ?? {};
   const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
-  const byArena = arenaId && arenaRecord
-    ? {
-        ...prevByArena,
-        [arenaId]: {
-          wins: arenaRecord.wins + (result.win ? 1 : 0),
-          losses: arenaRecord.losses + (!result.win ? 1 : 0),
-          kills: arenaRecord.kills + (result.kill ? 1 : 0),
-        },
-      }
-    : prevByArena;
+  const byArena =
+    arenaId && arenaRecord
+      ? {
+          ...prevByArena,
+          [arenaId]: {
+            wins: arenaRecord.wins + (result.win ? 1 : 0),
+            losses: arenaRecord.losses + (!result.win ? 1 : 0),
+            kills: arenaRecord.kills + (result.kill ? 1 : 0),
+          },
+        }
+      : prevByArena;
 
   return {
     ...warrior,

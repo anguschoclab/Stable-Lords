@@ -26,7 +26,7 @@ Each attribute's potential = `current_value + random(headroom_min, headroom_max)
 Headroom ranges vary by recruitment tier:
 
 | Tier        | Headroom Range | Typical Potential |
-|-------------|----------------|-------------------|
+| ----------- | -------------- | ----------------- |
 | Common      | +2 to +5       | 12–18             |
 | Promising   | +3 to +7       | 13–21             |
 | Exceptional | +5 to +9       | 15–23             |
@@ -54,11 +54,11 @@ When a warrior is first recruited, **all potential values are hidden**. The play
 
 Potential is revealed one attribute at a time through:
 
-| Trigger              | Chance per Event | Notes                                |
-|----------------------|------------------|--------------------------------------|
-| Fight participation  | 15% per fight    | Random unrevealed attribute          |
-| Scouting (future)    | Guaranteed       | Player chooses which attribute       |
-| Hitting ceiling      | 100%             | Auto-revealed when training fails    |
+| Trigger             | Chance per Event | Notes                             |
+| ------------------- | ---------------- | --------------------------------- |
+| Fight participation | 15% per fight    | Random unrevealed attribute       |
+| Scouting (future)   | Guaranteed       | Player chooses which attribute    |
+| Hitting ceiling     | 100%             | Auto-revealed when training fails |
 
 ### 2.3 Reveal State
 
@@ -83,24 +83,25 @@ Training **cannot** raise an attribute above its potential ceiling. If `current 
 As an attribute approaches its potential ceiling, training success chance decreases:
 
 | Distance from Ceiling | Multiplier on Base Chance |
-|----------------------|---------------------------|
-| 3+ points            | 1.0× (full chance)        |
-| 2 points             | 0.5× (half chance)        |
-| 1 point              | 0.25× (quarter chance)    |
-| 0 (at ceiling)       | 0.0× (impossible)         |
+| --------------------- | ------------------------- |
+| 3+ points             | 1.0× (full chance)        |
+| 2 points              | 0.5× (half chance)        |
+| 1 point               | 0.25× (quarter chance)    |
+| 0 (at ceiling)        | 0.0× (impossible)         |
 
 With a base training chance of 55%, effective chances become:
 
 | Gap | Effective Chance |
-|-----|-----------------|
-| 3+  | 55%             |
-| 2   | 27.5%           |
-| 1   | 13.75%          |
-| 0   | 0%              |
+| --- | ---------------- |
+| 3+  | 55%              |
+| 2   | 27.5%            |
+| 1   | 13.75%           |
+| 0   | 0%               |
 
 ### 3.3 Newsletter Feedback
 
 When a warrior hits their ceiling during training, the newsletter reports:
+
 > "KRAGOS improved ST to 18 through training. (reached potential ceiling)"
 
 This serves as an indirect reveal of that attribute's potential.
@@ -135,13 +136,13 @@ rating = sum(all_potential_values) / (7 × 25) × 100
 
 ### 5.2 Letter Grades
 
-| Rating | Grade | Description           |
-|--------|-------|-----------------------|
-| 85+    | S     | Generational talent   |
-| 70–84  | A     | Elite prospect        |
-| 55–69  | B     | Solid warrior         |
-| 40–54  | C     | Limited upside        |
-| <40    | D     | Journeyman            |
+| Rating | Grade | Description         |
+| ------ | ----- | ------------------- |
+| 85+    | S     | Generational talent |
+| 70–84  | A     | Elite prospect      |
+| 55–69  | B     | Solid warrior       |
+| 40–54  | C     | Limited upside      |
+| <40    | D     | Journeyman          |
 
 ### 5.3 Display Rules
 

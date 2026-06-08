@@ -40,14 +40,15 @@ export function DoctrinePanel({
       <div className={`text-[9px] font-black uppercase tracking-widest opacity-60 ${colors.text}`}>
         {stableName}
       </div>
-      
+
       <div className="space-y-2">
         {Object.entries(styleCounts)
           .sort(([, a], [, b]) => b - a) // Sort by count descending
           .map(([style, count]) => {
             const percentage = totalFights > 0 ? (count / totalFights) * 100 : 0;
-            const displayName = STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] || style;
-            
+            const displayName =
+              STYLE_DISPLAY_NAMES[style as keyof typeof STYLE_DISPLAY_NAMES] || style;
+
             return (
               <div key={style} className="flex items-center gap-3">
                 {textAlign === 'right' && (
@@ -60,7 +61,7 @@ export function DoctrinePanel({
                     </span>
                   </div>
                 )}
-                
+
                 <div className="flex-1 max-w-[120px]">
                   <div className="h-2 bg-neutral-900 rounded-none border border-white/5 overflow-hidden">
                     <div
@@ -69,7 +70,7 @@ export function DoctrinePanel({
                     />
                   </div>
                 </div>
-                
+
                 {textAlign === 'left' && (
                   <div className="flex items-center gap-2 flex-1">
                     <span className="text-[9px] text-muted-foreground/60 min-w-[8rem]">
@@ -84,8 +85,10 @@ export function DoctrinePanel({
             );
           })}
       </div>
-      
-      <div className={`text-[8px] text-muted-foreground/40 font-black uppercase tracking-widest ${colors.text}`}>
+
+      <div
+        className={`text-[8px] text-muted-foreground/40 font-black uppercase tracking-widest ${colors.text}`}
+      >
         {activeCount} Active Warriors
       </div>
     </div>

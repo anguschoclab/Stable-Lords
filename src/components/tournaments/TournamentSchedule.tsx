@@ -4,11 +4,7 @@
  */
 import { useGameStore } from '@/state/useGameStore';
 import { useTournamentSchedule } from '@/hooks/useTournamentSchedule';
-import {
-  TournamentStatsHeader,
-  TournamentFilterBar,
-  TournamentRoundCard,
-} from './schedule';
+import { TournamentStatsHeader, TournamentFilterBar, TournamentRoundCard } from './schedule';
 import type { TournamentEntry } from '@/types/game';
 
 interface TournamentScheduleProps {

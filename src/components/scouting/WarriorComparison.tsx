@@ -79,21 +79,12 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
 
       {entryA && entryB && (
         <div className="space-y-6">
-          <WarriorComparisonHeader
-            warriorA={entryA?.warrior}
-            warriorB={entryB?.warrior}
-          />
+          <WarriorComparisonHeader warriorA={entryA?.warrior} warriorB={entryB?.warrior} />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <AttributeComparison
-              warriorA={entryA.warrior}
-              warriorB={entryB.warrior}
-            />
+            <AttributeComparison warriorA={entryA.warrior} warriorB={entryB.warrior} />
 
-            <CareerComparison
-              warriorA={entryA.warrior}
-              warriorB={entryB.warrior}
-            />
+            <CareerComparison warriorA={entryA.warrior} warriorB={entryB.warrior} />
           </div>
         </div>
       )}

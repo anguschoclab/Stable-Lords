@@ -206,7 +206,15 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
   },
 
   respondToBoutOffer: (offerId, warriorId, response) => {
-    set((state) => engineRespondToBoutOffer(state as unknown as GameState, offerId, warriorId, response) as unknown as Partial<GameStore>);
+    set(
+      (state) =>
+        engineRespondToBoutOffer(
+          state as unknown as GameState,
+          offerId,
+          warriorId,
+          response
+        ) as unknown as Partial<GameStore>
+    );
   },
 
   clearExpiredOffers: () => {
@@ -228,7 +236,15 @@ export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (se
   },
 
   updatePromoterHistory: (promoterId, purse, boutId) => {
-    set((state) => engineUpdatePromoterHistory(state as unknown as GameState, promoterId, purse, boutId) as unknown as Partial<GameStore>);
+    set(
+      (state) =>
+        engineUpdatePromoterHistory(
+          state as unknown as GameState,
+          promoterId,
+          purse,
+          boutId
+        ) as unknown as Partial<GameStore>
+    );
   },
 
   replacePromoter: (oldId, newPromoter) => {

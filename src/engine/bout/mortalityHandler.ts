@@ -79,7 +79,9 @@ export function handleDeath(
   //   RIVALRY_FINISH (if the two stables were rivals at the time of the kill)
   //   > whatever the combat resolver stamped (EXECUTION / CRITICAL_CHAIN / ARMOR_FAILURE / FATIGUE_COLLAPSE)
   //   > FATAL_DAMAGE as the catch-all.
-  const stableIds = [wA.stableId, wD.stableId].filter((x): x is import('@/types/shared.types').StableId => !!x);
+  const stableIds = [wA.stableId, wD.stableId].filter(
+    (x): x is import('@/types/shared.types').StableId => !!x
+  );
   const isRivalryKill =
     stableIds.length === 2 &&
     (s.rivalries ?? []).some(

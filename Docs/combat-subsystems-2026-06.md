@@ -31,25 +31,25 @@ Kill is gated: `defender.hp ≤ maxHp × killWindowHpMult` must hold first (styl
 
 ### Tuning constants
 
-| Constant | Value | File:Line | Note |
-|---|---|---|---|
-| Base threshold | 0.012 | `combatDamage.ts:321` | History: 0.01 → 0.005 → 0.012 |
-| Cap | 0.04 | `combatDamage.ts:365` | History: 0.08 → 0.04 → 0.025 → 0.04 |
-| HP threshold 1 | 0.3 | `combatDamage.ts:324` | +0.004 |
-| HP threshold 2 | 0.5 | `combatDamage.ts:325` | +0.001 |
-| Endurance threshold (heavy) | 0.2 | `combatDamage.ts:328` | +0.006 |
-| Endurance threshold (moderate) | `KILL_WINDOW_ENDURANCE` = 0.4 | `combatDamage.ts:329`, `constants/combat.ts` | +0.003 |
-| Endurance threshold (light) | 0.6 | `combatDamage.ts:330` | +0.001 |
-| Location mult — head | 6.0 | `LOCATION_KILL_MULT` | dominates threshold |
-| Location mult — chest/abdomen | 3.5 | `LOCATION_KILL_MULT` | |
-| Location mult — limb | 0.1 | `LOCATION_KILL_MULT` | nearly unkillable |
-| killDesire scale | 0.002/point | `combatDamage.ts:343` | net range: −0.01..+0.01 |
-| DEC scale | 0.0003/point | `combatDamage.ts:346` | minor |
-| Phase escalation | 0.0015/level | `combatDamage.ts:349` | 0 / +0.0015 / +0.003 |
-| Momentum 3 | +0.0075 | `combatDamage.ts:352` | |
-| Momentum 2 | +0.004 | `combatDamage.ts:354` | |
-| Crowd kill bonus (Bloodthirsty) | +0.004 | `constants/combat.ts` `CROWD_KILL_BONUS` | |
-| `CRIT_DAMAGE_MULT` | 1.7 | `constants/combat.ts` | damage only, not threshold |
+| Constant                        | Value                         | File:Line                                    | Note                                |
+| ------------------------------- | ----------------------------- | -------------------------------------------- | ----------------------------------- |
+| Base threshold                  | 0.012                         | `combatDamage.ts:321`                        | History: 0.01 → 0.005 → 0.012       |
+| Cap                             | 0.04                          | `combatDamage.ts:365`                        | History: 0.08 → 0.04 → 0.025 → 0.04 |
+| HP threshold 1                  | 0.3                           | `combatDamage.ts:324`                        | +0.004                              |
+| HP threshold 2                  | 0.5                           | `combatDamage.ts:325`                        | +0.001                              |
+| Endurance threshold (heavy)     | 0.2                           | `combatDamage.ts:328`                        | +0.006                              |
+| Endurance threshold (moderate)  | `KILL_WINDOW_ENDURANCE` = 0.4 | `combatDamage.ts:329`, `constants/combat.ts` | +0.003                              |
+| Endurance threshold (light)     | 0.6                           | `combatDamage.ts:330`                        | +0.001                              |
+| Location mult — head            | 6.0                           | `LOCATION_KILL_MULT`                         | dominates threshold                 |
+| Location mult — chest/abdomen   | 3.5                           | `LOCATION_KILL_MULT`                         |                                     |
+| Location mult — limb            | 0.1                           | `LOCATION_KILL_MULT`                         | nearly unkillable                   |
+| killDesire scale                | 0.002/point                   | `combatDamage.ts:343`                        | net range: −0.01..+0.01             |
+| DEC scale                       | 0.0003/point                  | `combatDamage.ts:346`                        | minor                               |
+| Phase escalation                | 0.0015/level                  | `combatDamage.ts:349`                        | 0 / +0.0015 / +0.003                |
+| Momentum 3                      | +0.0075                       | `combatDamage.ts:352`                        |                                     |
+| Momentum 2                      | +0.004                        | `combatDamage.ts:354`                        |                                     |
+| Crowd kill bonus (Bloodthirsty) | +0.004                        | `constants/combat.ts` `CROWD_KILL_BONUS`     |                                     |
+| `CRIT_DAMAGE_MULT`              | 1.7                           | `constants/combat.ts`                        | damage only, not threshold          |
 
 ### Cause bucket assignment (`hitExecution.ts:241`)
 
@@ -78,10 +78,12 @@ Instead of `if (momentum < 0) return 0`, use `threshold += momentum × 0.001` (w
 
 **Priority 2 — Multiplicative endurance-location core (medium, needs regression)**
 Replace the additive `location × (base + hpFactor + enduranceFactor + ...)` chain with a multiplicative core for the two highest-signal terms:
+
 ```
 threshold = base × locMult × exhaustionMult
           + additive_flat_terms
 ```
+
 where `exhaustionMult = 1 + (enduranceRatio < 0.2 ? 0.5 : enduranceRatio < 0.4 ? 0.25 : 0)`. This makes a head-shot while truly exhausted feel correctly more dangerous without blowing past the 4% cap in normal conditions. Must re-tune base downward to ~0.009 to preserve mortality target.
 
 **Priority 3 — Expose kill-threshold telemetry in ExchangeLogEntry (low, non-breaking)**
@@ -113,13 +115,13 @@ ATT modifier from range = WEAPON_RANGE_MODIFIERS[weaponId][newRange]  (flat, app
 
 ### Tuning constants / tables
 
-| Table | Values | File |
-|---|---|---|
-| `WEAPON_PREFERRED_RANGE` | 27 weapons → Tight/Striking/Extended | `distanceResolution.ts:8` |
-| `WEAPON_RANGE_MODIFIERS` | 27 weapons × 4 ranges | `distanceResolution.ts:57` |
-| Motivation bonus | +2 (halved to +1 in cramped for out-of-cap weapons) | `distanceResolution.ts:147` |
-| Recovery debt penalty | −2 per point | `distanceResolution.ts:108` |
-| `ARENA_SIZE_PROFILES` | cramped: Tight/Striking/bias+1 — standard/open: Striking/Extended/bias+0 | `distanceResolution.ts` |
+| Table                    | Values                                                                   | File                        |
+| ------------------------ | ------------------------------------------------------------------------ | --------------------------- |
+| `WEAPON_PREFERRED_RANGE` | 27 weapons → Tight/Striking/Extended                                     | `distanceResolution.ts:8`   |
+| `WEAPON_RANGE_MODIFIERS` | 27 weapons × 4 ranges                                                    | `distanceResolution.ts:57`  |
+| Motivation bonus         | +2 (halved to +1 in cramped for out-of-cap weapons)                      | `distanceResolution.ts:147` |
+| Recovery debt penalty    | −2 per point                                                             | `distanceResolution.ts:108` |
+| `ARENA_SIZE_PROFILES`    | cramped: Tight/Striking/bias+1 — standard/open: Striking/Extended/bias+0 | `distanceResolution.ts`     |
 
 **Range ladder:** `Grapple → Tight → Striking → Extended` (indices 0–3). Shift moves one step per exchange. `clampRangeToMax` caps Extended at Striking in cramped arenas.
 
@@ -177,18 +179,18 @@ The penalty applies to all skill rolls (ATT, PAR, DEF, INI, DEC) via the `fatigu
 
 ### Tuning constants
 
-| Constant | Value | File:Line | Note |
-|---|---|---|---|
-| OE scaling | 0.18 | `combatFatigue.ts:14` | History: was 0.1 (floor truncated to 0 for OE≤9) |
-| AL scaling | 0.09 | `combatFatigue.ts:15` | |
-| Fatigue moderate threshold | 0.45 | `combatFatigue.ts:19` | ratio ≤ this → −4 |
-| Fatigue heavy threshold | 0.25 | `combatFatigue.ts:20` | ratio ≤ this → −8 |
-| Moderate penalty | −4 | `combatFatigue.ts:23` | |
-| Heavy penalty | −8 | `combatFatigue.ts:24` | |
-| Defender discount | 0.6 | `enduranceCosts.ts` `DEFENDER_ENDURANCE_DISCOUNT` | |
-| Mudpit enduranceMult | 1.15 | `arenas.ts:135` | surface mod |
-| Bloodsands enduranceMult | 1.0 | `arenas.ts:157` | zeroed for tournament neutrality |
-| Underpit enduranceMult | 1.05 | `arenas.ts:166` | |
+| Constant                   | Value | File:Line                                         | Note                                             |
+| -------------------------- | ----- | ------------------------------------------------- | ------------------------------------------------ |
+| OE scaling                 | 0.18  | `combatFatigue.ts:14`                             | History: was 0.1 (floor truncated to 0 for OE≤9) |
+| AL scaling                 | 0.09  | `combatFatigue.ts:15`                             |                                                  |
+| Fatigue moderate threshold | 0.45  | `combatFatigue.ts:19`                             | ratio ≤ this → −4                                |
+| Fatigue heavy threshold    | 0.25  | `combatFatigue.ts:20`                             | ratio ≤ this → −8                                |
+| Moderate penalty           | −4    | `combatFatigue.ts:23`                             |                                                  |
+| Heavy penalty              | −8    | `combatFatigue.ts:24`                             |                                                  |
+| Defender discount          | 0.6   | `enduranceCosts.ts` `DEFENDER_ENDURANCE_DISCOUNT` |                                                  |
+| Mudpit enduranceMult       | 1.15  | `arenas.ts:135`                                   | surface mod                                      |
+| Bloodsands enduranceMult   | 1.0   | `arenas.ts:157`                                   | zeroed for tournament neutrality                 |
+| Underpit enduranceMult     | 1.05  | `arenas.ts:166`                                   |                                                  |
 
 **Typical drain rate** (OE=7, AL=7, standard arena, no weather, no mults):
 `baseCost = 7×0.18 + 7×0.09 = 1.26 + 0.63 = 1.89 per exchange`.
@@ -208,11 +210,13 @@ A warrior with `maxEndurance = 25` (typical baseline) hits the 45% threshold at 
 
 **Priority 1 — Smooth fatigue ramp (medium, behaviour change)**
 Replace the two-cliff step function with a continuous penalty:
+
 ```
 if ratio ≤ 0.45:
   penalty = Math.round(-4 - max(0, (0.45 - ratio) / 0.20) × 4)
   // −4 at 0.45, linearly −8 at 0.25, stays −8 below 0.25
 ```
+
 This keeps the same terminal values but removes the strategy discontinuity. Fighters feel themselves slowing down gradually rather than falling off a cliff. Must regression-test mortality (exhaustion is a kill-window amplifier; gentler fatigue may slightly reduce per-bout kill rate).
 
 **Priority 2 — Tactic-aware defender discount (low, tuning)**
@@ -228,9 +232,9 @@ The `surfaceMod.enduranceMult` already exists and is applied. However, the `size
 
 ## Cross-subsystem interactions
 
-| Interaction | Effect |
-|---|---|
-| Long-weapon fighter in cramped arena | Starts at Tight; Extended unreachable; weapon ATT penalty applies every exchange; motivation halved → rarely escapes Tight/Striking |
-| High-momentum + exhausted defender | Momentum ≥ 2 (+0.004 threshold) + endurance <20% (+0.006) → ~0.022 before HP/location. Multiplied by head location × 6 = 0.132 → still capped at 4%. Cap absorbs the storm. |
-| Fatigue cliff + kill window | Fighter who crosses the 45% endurance threshold loses −4 to DEF/PAR, making them easier to hit → more HP drain → more hits → HP drops → kill window opens. Fatigue is an indirect kill enabler, not a direct one. |
-| Arena zone push + cramped bias | In Underpit (cramped), a hit pushes Center → Corner in one step (zoneStepBias=1). Cornered fighter faces −5 DEF, which increases hit rate, which increases HP drain and kill-window probability. Cramped arenas are genuinely more dangerous for the fighter who gets hit first. |
+| Interaction                          | Effect                                                                                                                                                                                                                                                                           |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Long-weapon fighter in cramped arena | Starts at Tight; Extended unreachable; weapon ATT penalty applies every exchange; motivation halved → rarely escapes Tight/Striking                                                                                                                                              |
+| High-momentum + exhausted defender   | Momentum ≥ 2 (+0.004 threshold) + endurance <20% (+0.006) → ~0.022 before HP/location. Multiplied by head location × 6 = 0.132 → still capped at 4%. Cap absorbs the storm.                                                                                                      |
+| Fatigue cliff + kill window          | Fighter who crosses the 45% endurance threshold loses −4 to DEF/PAR, making them easier to hit → more HP drain → more hits → HP drops → kill window opens. Fatigue is an indirect kill enabler, not a direct one.                                                                |
+| Arena zone push + cramped bias       | In Underpit (cramped), a hit pushes Center → Corner in one step (zoneStepBias=1). Cornered fighter faces −5 DEF, which increases hit rate, which increases HP drain and kill-window probability. Cramped arenas are genuinely more dangerous for the fighter who gets hit first. |

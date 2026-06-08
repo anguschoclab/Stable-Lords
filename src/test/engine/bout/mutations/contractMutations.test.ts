@@ -29,12 +29,21 @@ describe('contractMutations', () => {
         responses: { w1: 'Pending', w2: 'Pending' },
       };
 
-      const impact = respondToBoutOffer(state, 'offer1' as import('@/types/shared.types').BoutOfferId, 'w1' as import('@/types/shared.types').WarriorId, 'Accepted');
-      expect(impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.responses).toEqual({
+      const impact = respondToBoutOffer(
+        state,
+        'offer1' as import('@/types/shared.types').BoutOfferId,
+        'w1' as import('@/types/shared.types').WarriorId,
+        'Accepted'
+      );
+      expect(
+        impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.responses
+      ).toEqual({
         w1: 'Accepted',
         w2: 'Pending',
       });
-      expect(impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.status).toBe('Proposed');
+      expect(
+        impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.status
+      ).toBe('Proposed');
     });
 
     it('updates status to Signed when all warriors accept', () => {
@@ -50,12 +59,21 @@ describe('contractMutations', () => {
         responses: { w1: 'Accepted', w2: 'Pending' },
       };
 
-      const impact = respondToBoutOffer(state, 'offer1' as import('@/types/shared.types').BoutOfferId, 'w2' as import('@/types/shared.types').WarriorId, 'Accepted');
-      expect(impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.responses).toEqual({
+      const impact = respondToBoutOffer(
+        state,
+        'offer1' as import('@/types/shared.types').BoutOfferId,
+        'w2' as import('@/types/shared.types').WarriorId,
+        'Accepted'
+      );
+      expect(
+        impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.responses
+      ).toEqual({
         w1: 'Accepted',
         w2: 'Accepted',
       });
-      expect(impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.status).toBe('Signed');
+      expect(
+        impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.status
+      ).toBe('Signed');
     });
 
     it('updates status to Rejected when any warrior declines (all responded)', () => {
@@ -71,12 +89,21 @@ describe('contractMutations', () => {
         responses: { w1: 'Accepted', w2: 'Pending' },
       };
 
-      const impact = respondToBoutOffer(state, 'offer1' as import('@/types/shared.types').BoutOfferId, 'w2' as import('@/types/shared.types').WarriorId, 'Declined');
-      expect(impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.responses).toEqual({
+      const impact = respondToBoutOffer(
+        state,
+        'offer1' as import('@/types/shared.types').BoutOfferId,
+        'w2' as import('@/types/shared.types').WarriorId,
+        'Declined'
+      );
+      expect(
+        impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.responses
+      ).toEqual({
         w1: 'Accepted',
         w2: 'Declined',
       });
-      expect(impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.status).toBe('Rejected');
+      expect(
+        impact.boutOffers!['offer1' as import('@/types/shared.types').BoutOfferId]!.status
+      ).toBe('Rejected');
     });
   });
 });

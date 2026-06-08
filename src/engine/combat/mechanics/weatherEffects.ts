@@ -243,7 +243,8 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: -5,
     riposteMod: -2,
     damageMult: 0.9,
-    description: 'Shimmering heat distortions create optical illusions. Fighters struggle to judge distance.',
+    description:
+      'Shimmering heat distortions create optical illusions. Fighters struggle to judge distance.',
   },
 };
 

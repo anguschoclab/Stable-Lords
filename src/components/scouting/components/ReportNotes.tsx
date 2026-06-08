@@ -13,9 +13,7 @@ export function ReportNotes({ notes }: ReportNotesProps) {
             FIELD OBSERVATIONS
           </span>
         </div>
-        <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-          {notes}
-        </p>
+        <p className="text-xs text-muted-foreground leading-relaxed font-medium">{notes}</p>
       </div>
     </Surface>
   );

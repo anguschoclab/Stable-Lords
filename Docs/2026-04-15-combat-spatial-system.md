@@ -12,28 +12,29 @@
 
 ## File Map
 
-| File | Action | Responsibility |
-|---|---|---|
-| `src/types/shared.types.ts` | Modify | Add DistanceRange, ArenaZone, CommitLevel, ArenaConfig, SurfaceMod, update FightPlan |
-| `src/types/combat.types.ts` | Modify | Add RANGE_SHIFT, FEINT_SUCCESS, FEINT_FAIL, ZONE_SHIFT event types |
-| `src/engine/combat/resolution.ts` | Modify | Add recoveryDebt to FighterState; add spatial fields to ResolutionContext; wire sub-phases into resolveExchange |
-| `src/engine/bout/fighterState.ts` | Modify | Initialize recoveryDebt: 0 in createFighterState return |
-| `src/engine/combat/core/exchangeHelpers.ts` | Modify | Add extraDefPenalty param to performDefenseCheck |
-| `src/data/arenas.ts` | **Create** | Arena registry + 4 seed arenas |
-| `src/engine/combat/distanceResolution.ts` | **Create** | Distance contest + zone transition logic |
-| `src/engine/combat/exchangeSubPhases.ts` | **Create** | Approach / Feint / Commit / Recovery sub-phases + ExchangeState |
-| `src/engine/simulate.ts` | Modify | Accept arenaId param; initialize spatial fields on ResolutionContext |
-| `src/engine/narrativePBP.ts` | Modify | Add narrateRangeShift, narrateFeint, narrateZoneShift |
-| `src/engine/combat/narrator.ts` | Modify | Handle RANGE_SHIFT, FEINT_SUCCESS, FEINT_FAIL, ZONE_SHIFT events |
-| `src/test/engine/combat/distanceResolution.test.ts` | **Create** | Unit tests for distance + zone logic |
-| `src/test/engine/combat/exchangeSubPhases.test.ts` | **Create** | Unit tests for sub-phase pipeline |
-| `src/test/engine/arenas.test.ts` | **Create** | Unit tests for arena registry |
+| File                                                | Action     | Responsibility                                                                                                  |
+| --------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------- |
+| `src/types/shared.types.ts`                         | Modify     | Add DistanceRange, ArenaZone, CommitLevel, ArenaConfig, SurfaceMod, update FightPlan                            |
+| `src/types/combat.types.ts`                         | Modify     | Add RANGE_SHIFT, FEINT_SUCCESS, FEINT_FAIL, ZONE_SHIFT event types                                              |
+| `src/engine/combat/resolution.ts`                   | Modify     | Add recoveryDebt to FighterState; add spatial fields to ResolutionContext; wire sub-phases into resolveExchange |
+| `src/engine/bout/fighterState.ts`                   | Modify     | Initialize recoveryDebt: 0 in createFighterState return                                                         |
+| `src/engine/combat/core/exchangeHelpers.ts`         | Modify     | Add extraDefPenalty param to performDefenseCheck                                                                |
+| `src/data/arenas.ts`                                | **Create** | Arena registry + 4 seed arenas                                                                                  |
+| `src/engine/combat/distanceResolution.ts`           | **Create** | Distance contest + zone transition logic                                                                        |
+| `src/engine/combat/exchangeSubPhases.ts`            | **Create** | Approach / Feint / Commit / Recovery sub-phases + ExchangeState                                                 |
+| `src/engine/simulate.ts`                            | Modify     | Accept arenaId param; initialize spatial fields on ResolutionContext                                            |
+| `src/engine/narrativePBP.ts`                        | Modify     | Add narrateRangeShift, narrateFeint, narrateZoneShift                                                           |
+| `src/engine/combat/narrator.ts`                     | Modify     | Handle RANGE_SHIFT, FEINT_SUCCESS, FEINT_FAIL, ZONE_SHIFT events                                                |
+| `src/test/engine/combat/distanceResolution.test.ts` | **Create** | Unit tests for distance + zone logic                                                                            |
+| `src/test/engine/combat/exchangeSubPhases.test.ts`  | **Create** | Unit tests for sub-phase pipeline                                                                               |
+| `src/test/engine/arenas.test.ts`                    | **Create** | Unit tests for arena registry                                                                                   |
 
 ---
 
 ### Task 1: New Types
 
 **Files:**
+
 - Modify: `src/types/shared.types.ts` (after line 183, after `PlanCondition`)
 - Modify: `src/types/combat.types.ts` (line 50–62, `CombatEventType` union)
 
@@ -44,15 +45,22 @@
   ```ts
   // ─── Spatial / Distance System ─────────────────────────────────────────────
 
-  export type DistanceRange = "Grapple" | "Tight" | "Striking" | "Extended";
-  export type ArenaZone     = "Center" | "Edge" | "Corner" | "Obstacle";
-  export type CommitLevel   = "Cautious" | "Standard" | "Full";
-  export type ArenaTag      = "outdoor" | "indoor" | "elevated" | "water" | "cramped" | "open" | "premium";
+  export type DistanceRange = 'Grapple' | 'Tight' | 'Striking' | 'Extended';
+  export type ArenaZone = 'Center' | 'Edge' | 'Corner' | 'Obstacle';
+  export type CommitLevel = 'Cautious' | 'Standard' | 'Full';
+  export type ArenaTag =
+    | 'outdoor'
+    | 'indoor'
+    | 'elevated'
+    | 'water'
+    | 'cramped'
+    | 'open'
+    | 'premium';
 
   export interface SurfaceMod {
-    initiativeMod: number;   // flat bonus/penalty to INI rolls each exchange
-    enduranceMult: number;   // multiplier on endurance costs (1.0 = baseline)
-    riposteMod: number;      // flat bonus/penalty to riposte checks
+    initiativeMod: number; // flat bonus/penalty to INI rolls each exchange
+    enduranceMult: number; // multiplier on endurance costs (1.0 = baseline)
+    riposteMod: number; // flat bonus/penalty to riposte checks
   }
 
   export interface ArenaWeatherMod {
@@ -65,7 +73,7 @@
     id: string;
     name: string;
     tags: ArenaTag[];
-    tier: 1 | 2 | 3;          // 1=common, 2=prestigious, 3=special event
+    tier: 1 | 2 | 3; // 1=common, 2=prestigious, 3=special event
     description: string;
     /** DEF penalty per zone (negative = penalty). E.g. Edge: -2, Corner: -4 */
     zoneDef: Partial<Record<ArenaZone, number>>;
@@ -115,6 +123,7 @@
 ### Task 2: FighterState recoveryDebt
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution.ts` (FighterState interface, ~line 67–100)
 - Modify: `src/engine/bout/fighterState.ts` (createFighterState return, ~line 75–102)
 
@@ -157,6 +166,7 @@
 ### Task 3: Arena Registry + Seed Arenas
 
 **Files:**
+
 - Create: `src/data/arenas.ts`
 - Create: `src/test/engine/arenas.test.ts`
 
@@ -165,49 +175,53 @@
   Create `src/test/engine/arenas.test.ts`:
 
   ```ts
-  import { describe, it, expect, beforeEach } from "vitest";
+  import { describe, it, expect, beforeEach } from 'vitest';
   import {
-    registerArena, getArenaById, getAllArenas,
-    getArenasByTag, getArenasByTier, STANDARD_ARENA,
-  } from "@/data/arenas";
-  import type { ArenaConfig } from "@/types/shared.types";
+    registerArena,
+    getArenaById,
+    getAllArenas,
+    getArenasByTag,
+    getArenasByTier,
+    STANDARD_ARENA,
+  } from '@/data/arenas';
+  import type { ArenaConfig } from '@/types/shared.types';
 
-  describe("Arena Registry", () => {
-    it("getArenaById returns STANDARD_ARENA for unknown id", () => {
-      expect(getArenaById("nonexistent_arena")).toBe(STANDARD_ARENA);
+  describe('Arena Registry', () => {
+    it('getArenaById returns STANDARD_ARENA for unknown id', () => {
+      expect(getArenaById('nonexistent_arena')).toBe(STANDARD_ARENA);
     });
 
-    it("getArenaById returns the registered arena", () => {
-      expect(getArenaById("standard_arena")).toBe(STANDARD_ARENA);
+    it('getArenaById returns the registered arena', () => {
+      expect(getArenaById('standard_arena')).toBe(STANDARD_ARENA);
     });
 
-    it("getAllArenas includes standard_arena", () => {
+    it('getAllArenas includes standard_arena', () => {
       const all = getAllArenas();
-      expect(all.some(a => a.id === "standard_arena")).toBe(true);
+      expect(all.some((a) => a.id === 'standard_arena')).toBe(true);
     });
 
-    it("getArenasByTag returns only arenas with that tag", () => {
-      const outdoor = getArenasByTag("outdoor");
-      expect(outdoor.every(a => a.tags.includes("outdoor"))).toBe(true);
+    it('getArenasByTag returns only arenas with that tag', () => {
+      const outdoor = getArenasByTag('outdoor');
+      expect(outdoor.every((a) => a.tags.includes('outdoor'))).toBe(true);
     });
 
-    it("getArenasByTier returns only arenas of that tier", () => {
+    it('getArenasByTier returns only arenas of that tier', () => {
       const tier1 = getArenasByTier(1);
-      expect(tier1.every(a => a.tier === 1)).toBe(true);
+      expect(tier1.every((a) => a.tier === 1)).toBe(true);
     });
 
-    it("registerArena adds to the registry", () => {
+    it('registerArena adds to the registry', () => {
       const custom: ArenaConfig = {
-        id: "test_arena",
-        name: "Test Arena",
-        tags: ["indoor"],
+        id: 'test_arena',
+        name: 'Test Arena',
+        tags: ['indoor'],
         tier: 1,
-        description: "A test arena",
+        description: 'A test arena',
         zoneDef: { Edge: -2, Corner: -4 },
         surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
       };
       registerArena(custom);
-      expect(getArenaById("test_arena")).toEqual(custom);
+      expect(getArenaById('test_arena')).toEqual(custom);
     });
   });
   ```
@@ -221,7 +235,7 @@
 - [ ] **Step 3: Create src/data/arenas.ts**
 
   ```ts
-  import type { ArenaConfig, ArenaTag } from "@/types/shared.types";
+  import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
 
   const registry = new Map<string, ArenaConfig>();
 
@@ -238,57 +252,57 @@
   }
 
   export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
-    return getAllArenas().filter(a => a.tags.includes(tag));
+    return getAllArenas().filter((a) => a.tags.includes(tag));
   }
 
   export function getArenasByTier(tier: 1 | 2 | 3): ArenaConfig[] {
-    return getAllArenas().filter(a => a.tier === tier);
+    return getAllArenas().filter((a) => a.tier === tier);
   }
 
   // ─── Seed Arenas ─────────────────────────────────────────────────────────────
 
   export const STANDARD_ARENA: ArenaConfig = {
-    id: "standard_arena",
-    name: "The Proving Grounds",
-    tags: ["outdoor", "open"],
+    id: 'standard_arena',
+    name: 'The Proving Grounds',
+    tags: ['outdoor', 'open'],
     tier: 1,
-    description: "A flat, sandy arena. No particular advantage to either style.",
+    description: 'A flat, sandy arena. No particular advantage to either style.',
     zoneDef: { Edge: -2, Corner: -4 },
     surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
-    startingZone: "Center",
+    startingZone: 'Center',
   };
 
   export const MUDPIT_ARENA: ArenaConfig = {
-    id: "mudpit_arena",
-    name: "The Mudpit",
-    tags: ["outdoor", "water"],
+    id: 'mudpit_arena',
+    name: 'The Mudpit',
+    tags: ['outdoor', 'water'],
     tier: 1,
-    description: "A sunken, rain-soaked arena. Footing is treacherous.",
+    description: 'A sunken, rain-soaked arena. Footing is treacherous.',
     zoneDef: { Edge: -2, Corner: -4 },
     surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: -1 },
-    startingZone: "Center",
+    startingZone: 'Center',
   };
 
   export const BLOODSANDS_ARENA: ArenaConfig = {
-    id: "bloodsands_arena",
-    name: "The Bloodsands",
-    tags: ["outdoor", "open", "premium"],
+    id: 'bloodsands_arena',
+    name: 'The Bloodsands',
+    tags: ['outdoor', 'open', 'premium'],
     tier: 2,
-    description: "The grand arena. Fine sand, excellent footing, long sight lines.",
+    description: 'The grand arena. Fine sand, excellent footing, long sight lines.',
     zoneDef: { Edge: -2, Corner: -3 },
     surfaceMod: { initiativeMod: 1, enduranceMult: 0.95, riposteMod: 1 },
-    startingZone: "Center",
+    startingZone: 'Center',
   };
 
   export const UNDERPIT_ARENA: ArenaConfig = {
-    id: "underpit_arena",
-    name: "The Underpit",
-    tags: ["indoor", "cramped"],
+    id: 'underpit_arena',
+    name: 'The Underpit',
+    tags: ['indoor', 'cramped'],
     tier: 2,
-    description: "A torch-lit subterranean pit. Tight quarters favour close-range fighters.",
+    description: 'A torch-lit subterranean pit. Tight quarters favour close-range fighters.',
     zoneDef: { Edge: -3, Corner: -5, Obstacle: -1 },
     surfaceMod: { initiativeMod: -1, enduranceMult: 1.05, riposteMod: 0 },
-    startingZone: "Center",
+    startingZone: 'Center',
   };
 
   // ─── Auto-register seed arenas ────────────────────────────────────────────────
@@ -313,6 +327,7 @@
 ### Task 4: Distance Resolution Module
 
 **Files:**
+
 - Create: `src/engine/combat/distanceResolution.ts`
 - Create: `src/test/engine/combat/distanceResolution.test.ts`
 
@@ -321,107 +336,123 @@
   Create `src/test/engine/combat/distanceResolution.test.ts`:
 
   ```ts
-  import { describe, it, expect, vi } from "vitest";
+  import { describe, it, expect, vi } from 'vitest';
   import {
     computeReachScore,
     getWeaponPreferredRange,
     contestDistance,
     getZonePenalty,
     transitionZone,
-  } from "@/engine/combat/distanceResolution";
-  import type { DistanceRange, ArenaZone } from "@/types/shared.types";
+  } from '@/engine/combat/distanceResolution';
+  import type { DistanceRange, ArenaZone } from '@/types/shared.types';
 
-  describe("computeReachScore", () => {
-    it("returns INI + 0 when OE=5, no motivation, no debt", () => {
+  describe('computeReachScore', () => {
+    it('returns INI + 0 when OE=5, no motivation, no debt', () => {
       expect(computeReachScore(10, 5, 0, 0)).toBe(10);
     });
-    it("adds (OE-5)*2 for OE above 5", () => {
+    it('adds (OE-5)*2 for OE above 5', () => {
       expect(computeReachScore(10, 7, 0, 0)).toBe(14); // 10 + (7-5)*2
     });
-    it("subtracts (5-OE)*2 for OE below 5", () => {
-      expect(computeReachScore(10, 3, 0, 0)).toBe(6);  // 10 - (5-3)*2
+    it('subtracts (5-OE)*2 for OE below 5', () => {
+      expect(computeReachScore(10, 3, 0, 0)).toBe(6); // 10 - (5-3)*2
     });
-    it("adds motivation bonus", () => {
+    it('adds motivation bonus', () => {
       expect(computeReachScore(10, 5, 2, 0)).toBe(12);
     });
-    it("subtracts recoveryDebt*2", () => {
-      expect(computeReachScore(10, 5, 0, 2)).toBe(6);  // 10 - 2*2
+    it('subtracts recoveryDebt*2', () => {
+      expect(computeReachScore(10, 5, 0, 2)).toBe(6); // 10 - 2*2
     });
   });
 
-  describe("getWeaponPreferredRange", () => {
-    it("returns Grapple for open_hand", () => {
-      expect(getWeaponPreferredRange("open_hand")).toBe("Grapple");
+  describe('getWeaponPreferredRange', () => {
+    it('returns Grapple for open_hand', () => {
+      expect(getWeaponPreferredRange('open_hand')).toBe('Grapple');
     });
-    it("returns Extended for a polearm", () => {
-      expect(getWeaponPreferredRange("pike")).toBe("Extended");
+    it('returns Extended for a polearm', () => {
+      expect(getWeaponPreferredRange('pike')).toBe('Extended');
     });
-    it("returns Striking as default for unknown weapon", () => {
-      expect(getWeaponPreferredRange("unknown_weapon")).toBe("Striking");
+    it('returns Striking as default for unknown weapon', () => {
+      expect(getWeaponPreferredRange('unknown_weapon')).toBe('Striking');
     });
   });
 
-  describe("contestDistance", () => {
-    it("winner gets +3 rangeMod, loser gets -3", () => {
+  describe('contestDistance', () => {
+    it('winner gets +3 rangeMod, loser gets -3', () => {
       // rng always returns 0.1 → A wins initiative contest every time
       const rng = vi.fn().mockReturnValue(0.1);
-      const fA = { skills: { INI: 15 }, activePlan: { OE: 5, feintTendency: 0 }, recoveryDebt: 0 } as any;
-      const fD = { skills: { INI: 5  }, activePlan: { OE: 5, feintTendency: 0 }, recoveryDebt: 0 } as any;
-      const result = contestDistance(rng, fA, fD, 5, 5, "Striking");
+      const fA = {
+        skills: { INI: 15 },
+        activePlan: { OE: 5, feintTendency: 0 },
+        recoveryDebt: 0,
+      } as any;
+      const fD = {
+        skills: { INI: 5 },
+        activePlan: { OE: 5, feintTendency: 0 },
+        recoveryDebt: 0,
+      } as any;
+      const result = contestDistance(rng, fA, fD, 5, 5, 'Striking');
       expect(result.rangeModA).toBe(3);
       expect(result.rangeModD).toBe(-3);
-      expect(result.distanceWinner).toBe("A");
+      expect(result.distanceWinner).toBe('A');
     });
 
     it("produces newRange = winner's preferred range when they win", () => {
       const rng = vi.fn().mockReturnValue(0.1);
-      const fA = { skills: { INI: 15 }, activePlan: { OE: 5, rangePreference: "Extended", feintTendency: 0 }, recoveryDebt: 0 } as any;
-      const fD = { skills: { INI: 5  }, activePlan: { OE: 5, feintTendency: 0 }, recoveryDebt: 0 } as any;
-      const result = contestDistance(rng, fA, fD, 5, 5, "Striking");
-      expect(result.newRange).toBe("Extended");
+      const fA = {
+        skills: { INI: 15 },
+        activePlan: { OE: 5, rangePreference: 'Extended', feintTendency: 0 },
+        recoveryDebt: 0,
+      } as any;
+      const fD = {
+        skills: { INI: 5 },
+        activePlan: { OE: 5, feintTendency: 0 },
+        recoveryDebt: 0,
+      } as any;
+      const result = contestDistance(rng, fA, fD, 5, 5, 'Striking');
+      expect(result.newRange).toBe('Extended');
     });
 
-    it("keeps current range on a tie (equal scores)", () => {
+    it('keeps current range on a tie (equal scores)', () => {
       const rng = vi.fn().mockReturnValue(0.5);
       const fA = { skills: { INI: 10 }, activePlan: { OE: 5 }, recoveryDebt: 0 } as any;
       const fD = { skills: { INI: 10 }, activePlan: { OE: 5 }, recoveryDebt: 0 } as any;
       // With identical scores and rng=0.5 the contest resolves without RANGE_SHIFT
-      const result = contestDistance(rng, fA, fD, 5, 5, "Striking");
-      expect(result.newRange).toBe("Striking");
+      const result = contestDistance(rng, fA, fD, 5, 5, 'Striking');
+      expect(result.newRange).toBe('Striking');
     });
   });
 
-  describe("getZonePenalty", () => {
-    it("returns 0 for Center regardless of config", () => {
+  describe('getZonePenalty', () => {
+    it('returns 0 for Center regardless of config', () => {
       const config = { zoneDef: { Edge: -2, Corner: -4 } } as any;
-      expect(getZonePenalty("Center", config)).toBe(0);
+      expect(getZonePenalty('Center', config)).toBe(0);
     });
-    it("returns -2 for Edge in standard config", () => {
+    it('returns -2 for Edge in standard config', () => {
       const config = { zoneDef: { Edge: -2, Corner: -4 } } as any;
-      expect(getZonePenalty("Edge", config)).toBe(-2);
+      expect(getZonePenalty('Edge', config)).toBe(-2);
     });
-    it("returns -4 for Corner in standard config", () => {
+    it('returns -4 for Corner in standard config', () => {
       const config = { zoneDef: { Edge: -2, Corner: -4 } } as any;
-      expect(getZonePenalty("Corner", config)).toBe(-4);
+      expect(getZonePenalty('Corner', config)).toBe(-4);
     });
-    it("returns 0 when zone not in config", () => {
+    it('returns 0 when zone not in config', () => {
       const config = { zoneDef: {} } as any;
-      expect(getZonePenalty("Edge", config)).toBe(0);
+      expect(getZonePenalty('Edge', config)).toBe(0);
     });
   });
 
-  describe("transitionZone", () => {
-    it("Center → Edge when fighter is pushed", () => {
-      expect(transitionZone("Center")).toBe("Edge");
+  describe('transitionZone', () => {
+    it('Center → Edge when fighter is pushed', () => {
+      expect(transitionZone('Center')).toBe('Edge');
     });
-    it("Edge → Corner when fighter is pushed again", () => {
-      expect(transitionZone("Edge")).toBe("Corner");
+    it('Edge → Corner when fighter is pushed again', () => {
+      expect(transitionZone('Edge')).toBe('Corner');
     });
-    it("Corner stays Corner (no escape without reset)", () => {
-      expect(transitionZone("Corner")).toBe("Corner");
+    it('Corner stays Corner (no escape without reset)', () => {
+      expect(transitionZone('Corner')).toBe('Corner');
     });
-    it("Obstacle stays Obstacle", () => {
-      expect(transitionZone("Obstacle")).toBe("Obstacle");
+    it('Obstacle stays Obstacle', () => {
+      expect(transitionZone('Obstacle')).toBe('Obstacle');
     });
   });
   ```
@@ -437,41 +468,41 @@
   Create `src/engine/combat/distanceResolution.ts`:
 
   ```ts
-  import type { DistanceRange, ArenaZone, ArenaConfig } from "@/types/shared.types";
-  import type { FighterState } from "./resolution";
-  import type { CombatEvent } from "@/types/combat.types";
-  import { contestCheck } from "./combatMath";
+  import type { DistanceRange, ArenaZone, ArenaConfig } from '@/types/shared.types';
+  import type { FighterState } from './resolution';
+  import type { CombatEvent } from '@/types/combat.types';
+  import { contestCheck } from './combatMath';
 
   // ─── Weapon → Preferred Range ────────────────────────────────────────────────
 
   const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
     // Grapple
-    open_hand: "Grapple",
+    open_hand: 'Grapple',
     // Tight
-    dagger: "Tight",
-    club: "Tight",
-    short_sword: "Tight",
-    mace: "Tight",
+    dagger: 'Tight',
+    club: 'Tight',
+    short_sword: 'Tight',
+    mace: 'Tight',
     // Striking (default)
-    broad_sword: "Striking",
-    long_sword: "Striking",
-    axe: "Striking",
-    scimitar: "Striking",
-    falchion: "Striking",
-    battle_axe: "Striking",
-    war_hammer: "Striking",
-    morning_star: "Striking",
-    flail: "Striking",
+    broad_sword: 'Striking',
+    long_sword: 'Striking',
+    axe: 'Striking',
+    scimitar: 'Striking',
+    falchion: 'Striking',
+    battle_axe: 'Striking',
+    war_hammer: 'Striking',
+    morning_star: 'Striking',
+    flail: 'Striking',
     // Extended
-    halberd: "Extended",
-    great_sword: "Extended",
-    pike: "Extended",
-    spear: "Extended",
+    halberd: 'Extended',
+    great_sword: 'Extended',
+    pike: 'Extended',
+    spear: 'Extended',
   };
 
   export function getWeaponPreferredRange(weaponId?: string): DistanceRange {
-    if (!weaponId) return "Striking";
-    return WEAPON_PREFERRED_RANGE[weaponId] ?? "Striking";
+    if (!weaponId) return 'Striking';
+    return WEAPON_PREFERRED_RANGE[weaponId] ?? 'Striking';
   }
 
   // ─── Reach Score ─────────────────────────────────────────────────────────────
@@ -492,7 +523,7 @@
   // ─── Distance Contest ────────────────────────────────────────────────────────
 
   export interface DistanceContestResult {
-    distanceWinner: "A" | "D" | null;
+    distanceWinner: 'A' | 'D' | null;
     rangeModA: number;
     rangeModD: number;
     newRange: DistanceRange;
@@ -530,15 +561,15 @@
       return { distanceWinner: null, rangeModA: 0, rangeModD: 0, newRange: currentRange, events };
     }
 
-    const winner: "A" | "D" = aWins ? "A" : "D";
-    const loser:  "A" | "D" = aWins ? "D" : "A";
+    const winner: 'A' | 'D' = aWins ? 'A' : 'D';
+    const loser: 'A' | 'D' = aWins ? 'D' : 'A';
     const winnerPref = aWins ? prefA : prefD;
 
     // Shift range 1 step toward winner's preferred range
     const newRange = shiftRangeToward(currentRange, winnerPref);
 
     if (newRange !== currentRange) {
-      events.push({ type: "RANGE_SHIFT", actor: winner, target: loser, result: newRange });
+      events.push({ type: 'RANGE_SHIFT', actor: winner, target: loser, result: newRange });
     }
 
     return {
@@ -552,7 +583,7 @@
 
   // ─── Range Shift Helper ───────────────────────────────────────────────────────
 
-  const RANGE_ORDER: DistanceRange[] = ["Grapple", "Tight", "Striking", "Extended"];
+  const RANGE_ORDER: DistanceRange[] = ['Grapple', 'Tight', 'Striking', 'Extended'];
 
   function shiftRangeToward(current: DistanceRange, target: DistanceRange): DistanceRange {
     const ci = RANGE_ORDER.indexOf(current);
@@ -567,7 +598,10 @@
    * Returns the DEF penalty for a fighter in the given zone.
    * Always negative or 0 (a penalty, not a bonus).
    */
-  export function getZonePenalty(zone: ArenaZone, arenaConfig: Pick<ArenaConfig, "zoneDef">): number {
+  export function getZonePenalty(
+    zone: ArenaZone,
+    arenaConfig: Pick<ArenaConfig, 'zoneDef'>
+  ): number {
     return arenaConfig.zoneDef[zone] ?? 0;
   }
 
@@ -579,10 +613,14 @@
    */
   export function transitionZone(current: ArenaZone): ArenaZone {
     switch (current) {
-      case "Center":   return "Edge";
-      case "Edge":     return "Corner";
-      case "Corner":   return "Corner";
-      case "Obstacle": return "Obstacle";
+      case 'Center':
+        return 'Edge';
+      case 'Edge':
+        return 'Corner';
+      case 'Corner':
+        return 'Corner';
+      case 'Obstacle':
+        return 'Obstacle';
     }
   }
 
@@ -592,9 +630,12 @@
    */
   export function resetZone(current: ArenaZone): ArenaZone {
     switch (current) {
-      case "Corner":   return "Edge";
-      case "Edge":     return "Center";
-      default:         return current;
+      case 'Corner':
+        return 'Edge';
+      case 'Edge':
+        return 'Center';
+      default:
+        return current;
     }
   }
   ```
@@ -617,6 +658,7 @@
 ### Task 5: Exchange Sub-Phases Module
 
 **Files:**
+
 - Create: `src/engine/combat/exchangeSubPhases.ts`
 - Create: `src/test/engine/combat/exchangeSubPhases.test.ts`
 
@@ -625,129 +667,162 @@
   Create `src/test/engine/combat/exchangeSubPhases.test.ts`:
 
   ```ts
-  import { describe, it, expect, vi } from "vitest";
+  import { describe, it, expect, vi } from 'vitest';
   import {
     runApproach,
     runFeint,
     runCommit,
     runRecovery,
     makeExchangeState,
-  } from "@/engine/combat/exchangeSubPhases";
-  import type { CommitLevel } from "@/types/shared.types";
-  import type { FighterState } from "@/engine/combat/resolution";
+  } from '@/engine/combat/exchangeSubPhases';
+  import type { CommitLevel } from '@/types/shared.types';
+  import type { FighterState } from '@/engine/combat/resolution';
 
   function makeFighter(overrides: Partial<FighterState> = {}): FighterState {
     return {
-      label: "A",
-      style: "SLASHING ATTACK" as any,
+      label: 'A',
+      style: 'SLASHING ATTACK' as any,
       attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
       skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
       derived: { hp: 100, endurance: 100, damage: 5, encumbrance: 0 },
-      plan: { style: "SLASHING ATTACK" as any, OE: 5, AL: 5 },
-      activePlan: { style: "SLASHING ATTACK" as any, OE: 5, AL: 5 },
-      psychState: "Neutral",
-      hp: 100, maxHp: 100,
-      endurance: 100, maxEndurance: 100,
-      hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0,
-      armHits: 0, legHits: 0,
+      plan: { style: 'SLASHING ATTACK' as any, OE: 5, AL: 5 },
+      activePlan: { style: 'SLASHING ATTACK' as any, OE: 5, AL: 5 },
+      psychState: 'Neutral',
+      hp: 100,
+      maxHp: 100,
+      endurance: 100,
+      maxEndurance: 100,
+      hitsLanded: 0,
+      hitsTaken: 0,
+      ripostes: 0,
+      consecutiveHits: 0,
+      armHits: 0,
+      legHits: 0,
       totalFights: 0,
-      momentum: 0, committed: false, survivalStrike: false,
+      momentum: 0,
+      committed: false,
+      survivalStrike: false,
       recoveryDebt: 0,
       ...overrides,
     } as FighterState;
   }
 
-  describe("makeExchangeState", () => {
-    it("initialises with zero modifiers", () => {
+  describe('makeExchangeState', () => {
+    it('initialises with zero modifiers', () => {
       const es = makeExchangeState();
       expect(es.rangeModA).toBe(0);
       expect(es.rangeModD).toBe(0);
       expect(es.distanceWinner).toBeNull();
       expect(es.feintBonus).toBe(0);
       expect(es.feintFailed).toBe(false);
-      expect(es.commitLevelA).toBe("Standard");
-      expect(es.commitLevelD).toBe("Standard");
+      expect(es.commitLevelA).toBe('Standard');
+      expect(es.commitLevelD).toBe('Standard');
       expect(es.recoveryDebtToWriteA).toBe(0);
       expect(es.recoveryDebtToWriteD).toBe(0);
       expect(es.events).toEqual([]);
     });
   });
 
-  describe("runCommit", () => {
-    it("returns Cautious when OE ≤ 3", () => {
-      const fA = makeFighter({ activePlan: { style: "SLASHING ATTACK" as any, OE: 3, AL: 5 } });
+  describe('runCommit', () => {
+    it('returns Cautious when OE ≤ 3', () => {
+      const fA = makeFighter({ activePlan: { style: 'SLASHING ATTACK' as any, OE: 3, AL: 5 } });
       const result = runCommit(fA, 3);
-      expect(result.level).toBe("Cautious");
+      expect(result.level).toBe('Cautious');
       expect(result.attBonus).toBe(-2);
       expect(result.defPenalty).toBe(2);
       expect(result.debtToWrite).toBe(0);
     });
 
-    it("returns Full when OE ≥ 7", () => {
-      const fA = makeFighter({ activePlan: { style: "SLASHING ATTACK" as any, OE: 7, AL: 5 }, momentum: 0 });
+    it('returns Full when OE ≥ 7', () => {
+      const fA = makeFighter({
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 7, AL: 5 },
+        momentum: 0,
+      });
       const result = runCommit(fA, 7);
-      expect(result.level).toBe("Full");
+      expect(result.level).toBe('Full');
       expect(result.attBonus).toBe(3);
       expect(result.defPenalty).toBe(-3);
       expect(result.debtToWrite).toBe(2);
     });
 
-    it("returns Full when momentum ≥ 2 regardless of OE", () => {
-      const fA = makeFighter({ momentum: 2, activePlan: { style: "SLASHING ATTACK" as any, OE: 5, AL: 5 } });
+    it('returns Full when momentum ≥ 2 regardless of OE', () => {
+      const fA = makeFighter({
+        momentum: 2,
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 5, AL: 5 },
+      });
       const result = runCommit(fA, 5);
-      expect(result.level).toBe("Full");
+      expect(result.level).toBe('Full');
     });
 
-    it("returns Cautious when HP < 30% regardless of OE", () => {
-      const fA = makeFighter({ hp: 25, maxHp: 100, activePlan: { style: "SLASHING ATTACK" as any, OE: 8, AL: 5 } });
+    it('returns Cautious when HP < 30% regardless of OE', () => {
+      const fA = makeFighter({
+        hp: 25,
+        maxHp: 100,
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 8, AL: 5 },
+      });
       const result = runCommit(fA, 8);
-      expect(result.level).toBe("Cautious");
+      expect(result.level).toBe('Cautious');
     });
 
-    it("returns Standard for OE 4-6 without special conditions", () => {
-      const fA = makeFighter({ activePlan: { style: "SLASHING ATTACK" as any, OE: 5, AL: 5 }, momentum: 0 });
+    it('returns Standard for OE 4-6 without special conditions', () => {
+      const fA = makeFighter({
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 5, AL: 5 },
+        momentum: 0,
+      });
       const result = runCommit(fA, 5);
-      expect(result.level).toBe("Standard");
+      expect(result.level).toBe('Standard');
       expect(result.attBonus).toBe(0);
       expect(result.debtToWrite).toBe(0);
     });
   });
 
-  describe("runFeint", () => {
-    it("does not trigger when feintTendency is 0", () => {
+  describe('runFeint', () => {
+    it('does not trigger when feintTendency is 0', () => {
       const rng = vi.fn();
-      const att = makeFighter({ attributes: { ST: 10, CN: 10, SZ: 10, WT: 15, WL: 10, SP: 10, DF: 10 }, activePlan: { style: "SLASHING ATTACK" as any, OE: 6, AL: 5, feintTendency: 0 } });
+      const att = makeFighter({
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 15, WL: 10, SP: 10, DF: 10 },
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 6, AL: 5, feintTendency: 0 },
+      });
       const def = makeFighter();
       const result = runFeint(rng, att, def);
       expect(result.triggered).toBe(false);
       expect(rng).not.toHaveBeenCalled();
     });
 
-    it("does not trigger when WT < 15", () => {
+    it('does not trigger when WT < 15', () => {
       const rng = vi.fn();
-      const att = makeFighter({ attributes: { ST: 10, CN: 10, SZ: 10, WT: 14, WL: 10, SP: 10, DF: 10 }, activePlan: { style: "SLASHING ATTACK" as any, OE: 6, AL: 5, feintTendency: 5 } });
+      const att = makeFighter({
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 14, WL: 10, SP: 10, DF: 10 },
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 6, AL: 5, feintTendency: 5 },
+      });
       const def = makeFighter();
       const result = runFeint(rng, att, def);
       expect(result.triggered).toBe(false);
     });
 
-    it("does not trigger when OE < 4", () => {
+    it('does not trigger when OE < 4', () => {
       const rng = vi.fn();
-      const att = makeFighter({ attributes: { ST: 10, CN: 10, SZ: 10, WT: 15, WL: 10, SP: 10, DF: 10 }, activePlan: { style: "SLASHING ATTACK" as any, OE: 3, AL: 5, feintTendency: 5 } });
+      const att = makeFighter({
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 15, WL: 10, SP: 10, DF: 10 },
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 3, AL: 5, feintTendency: 5 },
+      });
       const def = makeFighter();
       const result = runFeint(rng, att, def);
       expect(result.triggered).toBe(false);
     });
 
-    it("succeeds when roll is within threshold", () => {
+    it('succeeds when roll is within threshold', () => {
       // roll = WT(15) + feintTendency(5) - AL(5) - WT_opponent(10)*0.5 = 10
       // threshold on 20-point scale = 10/20 = 0.5; rng returns 0.3 → success
       const rng = vi.fn().mockReturnValue(0.3);
       const att = makeFighter({
         attributes: { ST: 10, CN: 10, SZ: 10, WT: 15, WL: 10, SP: 10, DF: 10 },
-        activePlan: { style: "SLASHING ATTACK" as any, OE: 6, AL: 5, feintTendency: 5 },
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 6, AL: 5, feintTendency: 5 },
       });
-      const def = makeFighter({ attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }, activePlan: { style: "SLASHING ATTACK" as any, OE: 5, AL: 5 } });
+      const def = makeFighter({
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        activePlan: { style: 'SLASHING ATTACK' as any, OE: 5, AL: 5 },
+      });
       const result = runFeint(rng, att, def);
       expect(result.triggered).toBe(true);
       expect(result.succeeded).toBe(true);
@@ -755,22 +830,22 @@
     });
   });
 
-  describe("runRecovery", () => {
-    it("writes recoveryDebt to fighter, capped at 3", () => {
+  describe('runRecovery', () => {
+    it('writes recoveryDebt to fighter, capped at 3', () => {
       const fA = makeFighter({ recoveryDebt: 1 });
       const fD = makeFighter({ recoveryDebt: 0 });
       runRecovery(fA, fD, 3, 0, []);
       expect(fA.recoveryDebt).toBe(3); // Math.min(3, Math.max(1, 3))
     });
 
-    it("decays recoveryDebt by 1 per exchange if toWrite is 0", () => {
+    it('decays recoveryDebt by 1 per exchange if toWrite is 0', () => {
       const fA = makeFighter({ recoveryDebt: 2 });
       const fD = makeFighter({ recoveryDebt: 0 });
       runRecovery(fA, fD, 0, 0, []);
       expect(fA.recoveryDebt).toBe(1); // decay
     });
 
-    it("does not decay below 0", () => {
+    it('does not decay below 0', () => {
       const fA = makeFighter({ recoveryDebt: 0 });
       const fD = makeFighter({ recoveryDebt: 0 });
       runRecovery(fA, fD, 0, 0, []);
@@ -790,17 +865,17 @@
   Create `src/engine/combat/exchangeSubPhases.ts`:
 
   ```ts
-  import type { CommitLevel, DistanceRange, ArenaConfig, ArenaZone } from "@/types/shared.types";
-  import type { CombatEvent } from "@/types/combat.types";
-  import type { FighterState, ResolutionContext } from "./resolution";
-  import { contestDistance } from "./distanceResolution";
+  import type { CommitLevel, DistanceRange, ArenaConfig, ArenaZone } from '@/types/shared.types';
+  import type { CombatEvent } from '@/types/combat.types';
+  import type { FighterState, ResolutionContext } from './resolution';
+  import { contestDistance } from './distanceResolution';
 
   // ─── ExchangeState Accumulator ────────────────────────────────────────────────
 
   export interface ExchangeState {
     rangeModA: number;
     rangeModD: number;
-    distanceWinner: "A" | "D" | null;
+    distanceWinner: 'A' | 'D' | null;
     feintBonus: number;
     feintFailed: boolean;
     commitLevelA: CommitLevel;
@@ -812,10 +887,15 @@
 
   export function makeExchangeState(): ExchangeState {
     return {
-      rangeModA: 0, rangeModD: 0, distanceWinner: null,
-      feintBonus: 0, feintFailed: false,
-      commitLevelA: "Standard", commitLevelD: "Standard",
-      recoveryDebtToWriteA: 0, recoveryDebtToWriteD: 0,
+      rangeModA: 0,
+      rangeModD: 0,
+      distanceWinner: null,
+      feintBonus: 0,
+      feintFailed: false,
+      commitLevelA: 'Standard',
+      commitLevelD: 'Standard',
+      recoveryDebtToWriteA: 0,
+      recoveryDebtToWriteD: 0,
       events: [],
     };
   }
@@ -859,11 +939,7 @@
    * Success threshold (0–1): roll / 20. Success = +4 ATT bonus.
    * Failure = defender gets a free +2 DEF bonus this exchange.
    */
-  export function runFeint(
-    rng: () => number,
-    att: FighterState,
-    def: FighterState
-  ): FeintResult {
+  export function runFeint(rng: () => number, att: FighterState, def: FighterState): FeintResult {
     const plan = att.activePlan;
     const wt = att.attributes.WT;
     const feintTendency = plan.feintTendency ?? 0;
@@ -881,7 +957,7 @@
     const succeeded = rng() < threshold;
 
     const events: CombatEvent[] = [];
-    const eventType = succeeded ? "FEINT_SUCCESS" : "FEINT_FAIL";
+    const eventType = succeeded ? 'FEINT_SUCCESS' : 'FEINT_FAIL';
     events.push({ type: eventType, actor: att.label, target: def.label });
 
     return {
@@ -911,13 +987,13 @@
   export function runCommit(fighter: FighterState, OE: number): CommitResult {
     const hpRatio = fighter.hp / fighter.maxHp;
 
-    if (hpRatio < 0.30 || OE <= 3) {
-      return { level: "Cautious", attBonus: -2, defPenalty: 2, debtToWrite: 0 };
+    if (hpRatio < 0.3 || OE <= 3) {
+      return { level: 'Cautious', attBonus: -2, defPenalty: 2, debtToWrite: 0 };
     }
     if (OE >= 7 || fighter.momentum >= 2) {
-      return { level: "Full", attBonus: 3, defPenalty: -3, debtToWrite: 2 };
+      return { level: 'Full', attBonus: 3, defPenalty: -3, debtToWrite: 2 };
     }
-    return { level: "Standard", attBonus: 0, defPenalty: 0, debtToWrite: 0 };
+    return { level: 'Standard', attBonus: 0, defPenalty: 0, debtToWrite: 0 };
   }
 
   // ─── Recovery Sub-Phase ───────────────────────────────────────────────────────
@@ -951,30 +1027,30 @@
 
     // Zone transitions: push the fighter that took a hit back one zone
     if (!ctx) return;
-    const hitOnA = events.some(e => e.type === "HIT" && e.target === "A");
-    const hitOnD = events.some(e => e.type === "HIT" && e.target === "D");
+    const hitOnA = events.some((e) => e.type === 'HIT' && e.target === 'A');
+    const hitOnD = events.some((e) => e.type === 'HIT' && e.target === 'D');
     if (hitOnA) {
-      const { transitionZone, resetZone } = require("./distanceResolution");
+      const { transitionZone, resetZone } = require('./distanceResolution');
       const newZone = transitionZone(ctx.zone);
       if (newZone !== ctx.zone) {
-        ctx.pushedFighter = "A";
+        ctx.pushedFighter = 'A';
         ctx.zone = newZone;
-        events.push({ type: "ZONE_SHIFT", actor: "D", target: "A", result: newZone });
+        events.push({ type: 'ZONE_SHIFT', actor: 'D', target: 'A', result: newZone });
       }
     } else if (hitOnD) {
-      const { transitionZone } = require("./distanceResolution");
+      const { transitionZone } = require('./distanceResolution');
       const newZone = transitionZone(ctx.zone);
       if (newZone !== ctx.zone) {
-        ctx.pushedFighter = "D";
+        ctx.pushedFighter = 'D';
         ctx.zone = newZone;
-        events.push({ type: "ZONE_SHIFT", actor: "A", target: "D", result: newZone });
+        events.push({ type: 'ZONE_SHIFT', actor: 'A', target: 'D', result: newZone });
       }
     } else {
       // No hit: zone drifts back toward center if fighter was pushed
       if (ctx.pushedFighter) {
-        const { resetZone } = require("./distanceResolution");
+        const { resetZone } = require('./distanceResolution');
         ctx.zone = resetZone(ctx.zone);
-        if (ctx.zone === "Center") ctx.pushedFighter = undefined;
+        if (ctx.zone === 'Center') ctx.pushedFighter = undefined;
       }
     }
   }
@@ -985,9 +1061,11 @@
   Fix the file to use top-level imports instead of `require()`:
 
   Replace the `runRecovery` body zone transition code with:
+
   ```ts
-  import { transitionZone, resetZone } from "./distanceResolution";
+  import { transitionZone, resetZone } from './distanceResolution';
   ```
+
   at the top and remove the `require()` calls inside the function.
 
 - [ ] **Step 4: Run tests to verify they pass**
@@ -1008,6 +1086,7 @@
 ### Task 6: performDefenseCheck extraDefPenalty
 
 **Files:**
+
 - Modify: `src/engine/combat/core/exchangeHelpers.ts` (`performDefenseCheck`, line 97–123)
 
 The current `performDefenseCheck` has no spatial penalty parameter. Zone penalties need to be passed in.
@@ -1017,6 +1096,7 @@ The current `performDefenseCheck` has no spatial penalty parameter. Zone penalti
   In `src/engine/combat/core/exchangeHelpers.ts`, update the `performDefenseCheck` signature. The last parameter currently is `attacker?: FighterState`. Add a new parameter after it:
 
   Current signature (line 97–112):
+
   ```ts
   export function performDefenseCheck(
     rng: () => number,
@@ -1033,10 +1113,11 @@ The current `performDefenseCheck` has no spatial penalty parameter. Zone penalti
     curOffMods: ReturnType<typeof getOffensiveTacticMods>,
     ctx?: { weatherEffect?: { riposteMod: number } },
     attacker?: FighterState
-  )
+  );
   ```
 
   New signature (add final param):
+
   ```ts
   export function performDefenseCheck(
     rng: () => number,
@@ -1054,17 +1135,50 @@ The current `performDefenseCheck` has no spatial penalty parameter. Zone penalti
     ctx?: { weatherEffect?: { riposteMod: number } },
     attacker?: FighterState,
     extraDefPenalty: number = 0
-  )
+  );
   ```
 
   Then in the body, apply `extraDefPenalty` to both branches. For the dodge branch (line 116):
+
   ```ts
-  const success = skillCheck(rng, def.skills.DEF, oeDefMod(curDefOE) + matchup + fat + curDefMods.defBonus + curPassD.defBonus + curBiasDef - overDef - def.legHits + commitPenalty - extraDefPenalty);
+  const success = skillCheck(
+    rng,
+    def.skills.DEF,
+    oeDefMod(curDefOE) +
+      matchup +
+      fat +
+      curDefMods.defBonus +
+      curPassD.defBonus +
+      curBiasDef -
+      overDef -
+      def.legHits +
+      commitPenalty -
+      extraDefPenalty
+  );
   ```
 
   For the parry branch (line 119–120):
+
   ```ts
-  const success = skillCheck(rng, def.skills.PAR, oeDefMod(curDefOE) + matchup + fat + curDefMods.parBonus + curPassD.parBonus + Math.round((curAntiSynDef.defMult - 1) * 3) - curOffMods.defPenalty - curOffMods.parryBypass + GLOBAL_PAR_PENALTY + curBiasDef - overDef - def.armHits + commitPenalty + riposteMod - extraDefPenalty);
+  const success = skillCheck(
+    rng,
+    def.skills.PAR,
+    oeDefMod(curDefOE) +
+      matchup +
+      fat +
+      curDefMods.parBonus +
+      curPassD.parBonus +
+      Math.round((curAntiSynDef.defMult - 1) * 3) -
+      curOffMods.defPenalty -
+      curOffMods.parryBypass +
+      GLOBAL_PAR_PENALTY +
+      curBiasDef -
+      overDef -
+      def.armHits +
+      commitPenalty +
+      riposteMod -
+      extraDefPenalty
+  );
   ```
 
 - [ ] **Step 2: Verify existing call sites compile**
@@ -1085,6 +1199,7 @@ The current `performDefenseCheck` has no spatial penalty parameter. Zone penalti
 ### Task 7: ResolutionContext Spatial Fields
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution.ts` (`ResolutionContext` interface, line 102–123)
 
 - [ ] **Step 1: Add spatial fields to ResolutionContext**
@@ -1105,8 +1220,9 @@ The current `performDefenseCheck` has no spatial penalty parameter. Zone penalti
   ```
 
   Also add the necessary imports at the top of `resolution.ts`:
+
   ```ts
-  import type { DistanceRange, ArenaZone, ArenaConfig, SurfaceMod } from "@/types/shared.types";
+  import type { DistanceRange, ArenaZone, ArenaConfig, SurfaceMod } from '@/types/shared.types';
   ```
 
 - [ ] **Step 2: Verify compilation**
@@ -1127,6 +1243,7 @@ The current `performDefenseCheck` has no spatial penalty parameter. Zone penalti
 ### Task 8: Wire Sub-Phases into resolveExchange + Patch simulate.ts
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution.ts` (`resolveExchange` function, line 142–333)
 - Modify: `src/engine/simulate.ts` (ResolutionContext construction, ~line 90–105)
 
@@ -1135,12 +1252,14 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
 - [ ] **Step 1: Update simulate.ts ResolutionContext construction**
 
   In `src/engine/simulate.ts`, add imports at the top:
+
   ```ts
-  import { STANDARD_ARENA, getArenaById } from "@/data/arenas";
-  import type { DistanceRange } from "@/types/shared.types";
+  import { STANDARD_ARENA, getArenaById } from '@/data/arenas';
+  import type { DistanceRange } from '@/types/shared.types';
   ```
 
   Update the `simulateFight` function signature to accept an optional `arenaId`:
+
   ```ts
   export function simulateFight(
     planA: FightPlan,
@@ -1149,19 +1268,20 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
     warriorD?: Warrior,
     providedRng?: (() => number) | number,
     trainers?: Trainer[],
-    weather: WeatherType = "Clear",
-    arenaId: string = "standard_arena"
-  ): FightOutcome
+    weather: WeatherType = 'Clear',
+    arenaId: string = 'standard_arena'
+  ): FightOutcome;
   ```
 
   Look up the arena and add spatial fields to `resCtx`:
+
   ```ts
   const arenaConfig = getArenaById(arenaId);
 
   const resCtx: ResolutionContext = {
     // ... all existing fields ...
-    range: "Striking" as DistanceRange,
-    zone: arenaConfig.startingZone ?? "Center",
+    range: 'Striking' as DistanceRange,
+    zone: arenaConfig.startingZone ?? 'Center',
     arenaConfig,
     surfaceMod: arenaConfig.surfaceMod,
     pushedFighter: undefined,
@@ -1171,6 +1291,7 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
 - [ ] **Step 2: Wire sub-phases into resolveExchange**
 
   In `src/engine/combat/resolution.ts`, add imports:
+
   ```ts
   import {
     makeExchangeState,
@@ -1179,8 +1300,8 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
     runCommit,
     runRecovery,
     type ExchangeState,
-  } from "./exchangeSubPhases";
-  import { getZonePenalty } from "./distanceResolution";
+  } from './exchangeSubPhases';
+  import { getZonePenalty } from './distanceResolution';
   ```
 
   In `resolveExchange`, add the ExchangeState at the start of the function body (after the existing setup, before initiative):
@@ -1195,12 +1316,14 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
   ```
 
   Then update the INI calculation to include surface mods. Find the line:
+
   ```ts
   const iniA = fA.skills.INI + ... + ctx.weatherEffect.initiativeMod;
   const iniD = fD.skills.INI + ... + ctx.weatherEffect.initiativeMod;
   ```
 
   Add `ctx.surfaceMod.initiativeMod` to both:
+
   ```ts
   const iniA = fA.skills.INI + ... + ctx.weatherEffect.initiativeMod + ctx.surfaceMod.initiativeMod;
   const iniD = fD.skills.INI + ... + ctx.weatherEffect.initiativeMod + ctx.surfaceMod.initiativeMod;
@@ -1223,11 +1346,13 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
   ```
 
   Update the `performAttackCheck` call to include range and commit bonuses. Find:
+
   ```ts
   const attSucc = performAttackCheck(rng, att, curAttOE, ..., attMomentumBonus + attPsychMod);
   ```
 
   Replace the last argument:
+
   ```ts
   const rangeMod = aGoesFirst ? es.rangeModA : es.rangeModD;
   const commitMod = (aGoesFirst ? commitA : commitD).attBonus;
@@ -1235,11 +1360,13 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
   ```
 
   Update the `performDefenseCheck` call to add `extraDefPenalty`. Find:
+
   ```ts
   const defCheck = performDefenseCheck(rng, def, curDefOE, ..., ctx, att);
   ```
 
   Replace with:
+
   ```ts
   const zonePenalty = (ctx.pushedFighter === def.label)
     ? Math.abs(getZonePenalty(ctx.zone, ctx.arenaConfig))
@@ -1259,6 +1386,7 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
   Also apply `surfaceMod.enduranceMult` in `applyEnduranceCosts`. In `exchangeHelpers.ts`, `applyEnduranceCosts` uses `getEnduranceMult(att.style)` — the surface mult should be applied at the call site in `resolveExchange`. Find the `applyEnduranceCosts` call and note that you can't easily pass surfaceMod there without refactoring that function. Instead, apply it inline before calling:
 
   > **Note:** Surface endurance mult is a minor effect. For this implementation, apply it as a post-hoc adjustment: after `applyEnduranceCosts`, adjust endurance by the delta:
+
   ```ts
   // Apply surface endurance multiplier (minor adjustment after base cost)
   if (ctx.surfaceMod.enduranceMult !== 1.0) {
@@ -1288,6 +1416,7 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
 ### Task 9: Narrative for Spatial Events
 
 **Files:**
+
 - Modify: `src/engine/narrativePBP.ts`
 - Modify: `src/engine/combat/narrator.ts`
 
@@ -1299,10 +1428,10 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
   // ─── Spatial Narrative ───────────────────────────────────────────────────────
 
   const RANGE_NAMES: Record<string, string> = {
-    Grapple: "in close",
-    Tight: "at tight quarters",
-    Striking: "at striking range",
-    Extended: "at distance",
+    Grapple: 'in close',
+    Tight: 'at tight quarters',
+    Striking: 'at striking range',
+    Extended: 'at distance',
   };
 
   export function narrateRangeShift(rng: RNG, moverName: string, newRange: string): string {
@@ -1335,9 +1464,9 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
 
   export function narrateZoneShift(rng: RNG, pushedName: string, zone: string): string {
     const zoneDesc: Record<string, string> = {
-      Edge: "to the edge of the arena",
-      Corner: "into the corner — nowhere to run",
-      Center: "back toward the center",
+      Edge: 'to the edge of the arena',
+      Corner: 'into the corner — nowhere to run',
+      Center: 'back toward the center',
     };
     const desc = zoneDesc[zone] ?? zone.toLowerCase();
     const templates = [
@@ -1352,33 +1481,45 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
 - [ ] **Step 2: Wire spatial events into narrator.ts**
 
   In `src/engine/combat/narrator.ts`, add imports for the new narrative functions:
+
   ```ts
   import {
-    narrateAttack, narrateParry, narrateDodge, narrateCounterstrike,
-    narrateHit, damageSeverityLine, stateChangeLine,
-    fatigueLine, crowdReaction, narrateInitiative,
-    tauntLine, narrateInsightHint, narratePassive,
-    narrateRangeShift, narrateFeint, narrateZoneShift,
-  } from "../narrativePBP";
+    narrateAttack,
+    narrateParry,
+    narrateDodge,
+    narrateCounterstrike,
+    narrateHit,
+    damageSeverityLine,
+    stateChangeLine,
+    fatigueLine,
+    crowdReaction,
+    narrateInitiative,
+    tauntLine,
+    narrateInsightHint,
+    narratePassive,
+    narrateRangeShift,
+    narrateFeint,
+    narrateZoneShift,
+  } from '../narrativePBP';
   ```
 
   In the `narrateEvents` for-loop (currently handles INITIATIVE, ATTACK, DEFENSE, HIT, etc.), add cases for the new event types. Find the `switch` or `if/else` blocks inside the for-loop and add:
 
   ```ts
-  if (event.type === "RANGE_SHIFT") {
+  if (event.type === 'RANGE_SHIFT') {
     const moverName = getName(event.actor);
     const newRange = event.result as string;
     log.push({ minute, text: narrateRangeShift(rng, moverName, newRange) });
     continue;
   }
 
-  if (event.type === "FEINT_SUCCESS" || event.type === "FEINT_FAIL") {
+  if (event.type === 'FEINT_SUCCESS' || event.type === 'FEINT_FAIL') {
     const attackerName = getName(event.actor);
-    log.push({ minute, text: narrateFeint(rng, attackerName, event.type === "FEINT_SUCCESS") });
+    log.push({ minute, text: narrateFeint(rng, attackerName, event.type === 'FEINT_SUCCESS') });
     continue;
   }
 
-  if (event.type === "ZONE_SHIFT") {
+  if (event.type === 'ZONE_SHIFT') {
     const pushedName = getName(event.target ?? event.actor);
     const zone = event.result as string;
     log.push({ minute, text: narrateZoneShift(rng, pushedName, zone) });
@@ -1386,7 +1527,7 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
   }
   ```
 
-  > **How to find the right place:** The narrator loop processes events in order. The spatial events (RANGE_SHIFT, FEINT_*) should be emitted early in the exchange before the HIT narration. Add these cases at the beginning of the for-loop body, before the INITIATIVE handling.
+  > **How to find the right place:** The narrator loop processes events in order. The spatial events (RANGE*SHIFT, FEINT*\*) should be emitted early in the exchange before the HIT narration. Add these cases at the beginning of the for-loop body, before the INITIATIVE handling.
 
 - [ ] **Step 3: Run the full test suite**
 
@@ -1406,6 +1547,7 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
 ### Task 10: Integration Test
 
 **Files:**
+
 - Modify: `src/test/simulate.test.ts` (add spatial integration test)
 
 - [ ] **Step 1: Add a spatial integration test**
@@ -1413,33 +1555,56 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
   Open `src/test/simulate.test.ts` and add a describe block:
 
   ```ts
-  import { getArenaById } from "@/data/arenas";
+  import { getArenaById } from '@/data/arenas';
 
-  describe("spatial system integration", () => {
-    it("simulateFight runs 100 fights with mudpit arena without throwing", () => {
+  describe('spatial system integration', () => {
+    it('simulateFight runs 100 fights with mudpit arena without throwing', () => {
       for (let seed = 0; seed < 100; seed++) {
         const plan: FightPlan = {
           style: FightingStyle.SlashingAttack,
-          OE: 6, AL: 5, killDesire: 5,
+          OE: 6,
+          AL: 5,
+          killDesire: 5,
           feintTendency: 3,
-          rangePreference: "Striking",
+          rangePreference: 'Striking',
         };
         expect(() =>
-          simulateFight(plan, plan, undefined, undefined, seed, undefined, "Clear", "mudpit_arena")
+          simulateFight(plan, plan, undefined, undefined, seed, undefined, 'Clear', 'mudpit_arena')
         ).not.toThrow();
       }
     });
 
-    it("mudpit arena has higher endurance cost than standard (over 50 fights)", () => {
-      let standardEndAvg = 0, mudpitEndAvg = 0;
+    it('mudpit arena has higher endurance cost than standard (over 50 fights)', () => {
+      let standardEndAvg = 0,
+        mudpitEndAvg = 0;
       const n = 50;
       for (let seed = 0; seed < n; seed++) {
         const plan: FightPlan = {
           style: FightingStyle.SlashingAttack,
-          OE: 7, AL: 5, killDesire: 5,
+          OE: 7,
+          AL: 5,
+          killDesire: 5,
         };
-        const standard = simulateFight(plan, plan, undefined, undefined, seed, undefined, "Clear", "standard_arena");
-        const mudpit = simulateFight(plan, plan, undefined, undefined, seed, undefined, "Clear", "mudpit_arena");
+        const standard = simulateFight(
+          plan,
+          plan,
+          undefined,
+          undefined,
+          seed,
+          undefined,
+          'Clear',
+          'standard_arena'
+        );
+        const mudpit = simulateFight(
+          plan,
+          plan,
+          undefined,
+          undefined,
+          seed,
+          undefined,
+          'Clear',
+          'mudpit_arena'
+        );
         standardEndAvg += standard.minutes;
         mudpitEndAvg += mudpit.minutes;
       }
@@ -1448,22 +1613,39 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
       expect(mudpitEndAvg / n).toBeLessThanOrEqual(standardEndAvg / n + 1.5);
     });
 
-    it("RANGE_SHIFT events appear in the fight log when fighters have different range preferences", () => {
+    it('RANGE_SHIFT events appear in the fight log when fighters have different range preferences', () => {
       const planLunger: FightPlan = {
         style: FightingStyle.LungingAttack,
-        OE: 7, AL: 5, killDesire: 5,
-        rangePreference: "Extended",
+        OE: 7,
+        AL: 5,
+        killDesire: 5,
+        rangePreference: 'Extended',
       };
       const planGrappler: FightPlan = {
         style: FightingStyle.StrikingAttack,
-        OE: 7, AL: 5, killDesire: 5,
-        rangePreference: "Grapple",
+        OE: 7,
+        AL: 5,
+        killDesire: 5,
+        rangePreference: 'Grapple',
       };
       let foundRangeShift = false;
       for (let seed = 0; seed < 20; seed++) {
-        const outcome = simulateFight(planLunger, planGrappler, undefined, undefined, seed, undefined, "Clear", "standard_arena");
-        const allText = outcome.log.map(l => l.text).join(" ");
-        if (allText.includes("controls the distance") || allText.includes("dictating range") || allText.includes("footwork")) {
+        const outcome = simulateFight(
+          planLunger,
+          planGrappler,
+          undefined,
+          undefined,
+          seed,
+          undefined,
+          'Clear',
+          'standard_arena'
+        );
+        const allText = outcome.log.map((l) => l.text).join(' ');
+        if (
+          allText.includes('controls the distance') ||
+          allText.includes('dictating range') ||
+          allText.includes('footwork')
+        ) {
           foundRangeShift = true;
           break;
         }
@@ -1496,23 +1678,23 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
 
 ## Appendix: Key Formulas Reference
 
-| Formula | Where |
-|---|---|
-| `reachScore = INI + (OE−5)×2 + motivationBonus − (recoveryDebt×2)` | `distanceResolution.ts: computeReachScore` |
-| Range winner: `+3 ATT`, loser: `−3 ATT` | `distanceResolution.ts: contestDistance` |
-| Range shifts 1 step toward winner's preferred range | `distanceResolution.ts: shiftRangeToward` |
-| Feint roll: `WT + feintTendency − AL_def − WT_def×0.5` → threshold `roll/20` | `exchangeSubPhases.ts: runFeint` |
-| Feint success: `+4 ATT`; Feint fail: defender gets `+2 DEF` | `exchangeSubPhases.ts: runFeint` |
-| Cautious commit (OE≤3 or HP<30%): `−2 ATT`, `+2 DEF`, 0 debt | `exchangeSubPhases.ts: runCommit` |
-| Full commit (OE≥7 or momentum≥2): `+3 ATT`, `−3 DEF`, 2 debt | `exchangeSubPhases.ts: runCommit` |
-| Recovery debt: `Math.min(3, Math.max(existing, toWrite))`, decays 1/exchange | `exchangeSubPhases.ts: runRecovery` |
-| Zone transitions: Center→Edge→Corner (pinned) | `distanceResolution.ts: transitionZone` |
-| Zone reset: Corner→Edge→Center (on no-hit exchange) | `distanceResolution.ts: resetZone` |
-| Zone DEF penalty: Center=0, Edge=−2, Corner=−4 (arena-configurable) | `distanceResolution.ts: getZonePenalty` |
+| Formula                                                                      | Where                                      |
+| ---------------------------------------------------------------------------- | ------------------------------------------ |
+| `reachScore = INI + (OE−5)×2 + motivationBonus − (recoveryDebt×2)`           | `distanceResolution.ts: computeReachScore` |
+| Range winner: `+3 ATT`, loser: `−3 ATT`                                      | `distanceResolution.ts: contestDistance`   |
+| Range shifts 1 step toward winner's preferred range                          | `distanceResolution.ts: shiftRangeToward`  |
+| Feint roll: `WT + feintTendency − AL_def − WT_def×0.5` → threshold `roll/20` | `exchangeSubPhases.ts: runFeint`           |
+| Feint success: `+4 ATT`; Feint fail: defender gets `+2 DEF`                  | `exchangeSubPhases.ts: runFeint`           |
+| Cautious commit (OE≤3 or HP<30%): `−2 ATT`, `+2 DEF`, 0 debt                 | `exchangeSubPhases.ts: runCommit`          |
+| Full commit (OE≥7 or momentum≥2): `+3 ATT`, `−3 DEF`, 2 debt                 | `exchangeSubPhases.ts: runCommit`          |
+| Recovery debt: `Math.min(3, Math.max(existing, toWrite))`, decays 1/exchange | `exchangeSubPhases.ts: runRecovery`        |
+| Zone transitions: Center→Edge→Corner (pinned)                                | `distanceResolution.ts: transitionZone`    |
+| Zone reset: Corner→Edge→Center (on no-hit exchange)                          | `distanceResolution.ts: resetZone`         |
+| Zone DEF penalty: Center=0, Edge=−2, Corner=−4 (arena-configurable)          | `distanceResolution.ts: getZonePenalty`    |
 
 ## Appendix: Arena Registry Lookup
 
 ```ts
-import { getArenaById } from "@/data/arenas";
-const arena = getArenaById("bloodsands_arena"); // falls back to STANDARD_ARENA if unknown
+import { getArenaById } from '@/data/arenas';
+const arena = getArenaById('bloodsands_arena'); // falls back to STANDARD_ARENA if unknown
 ```

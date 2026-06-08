@@ -58,11 +58,21 @@ interface FighterPanelProps {
   victorClass: string;
 }
 
-function FighterPanel({ label, name, style, isWinner, isLoser, accentClass, victorClass }: FighterPanelProps) {
+function FighterPanel({
+  label,
+  name,
+  style,
+  isWinner,
+  isLoser,
+  accentClass,
+  victorClass,
+}: FighterPanelProps) {
   return (
     <div className="text-center flex-1 space-y-4">
       <div className="space-y-1">
-        <h4 className={cn('text-[9px] font-black tracking-[0.4em] uppercase opacity-40', accentClass)}>
+        <h4
+          className={cn('text-[9px] font-black tracking-[0.4em] uppercase opacity-40', accentClass)}
+        >
           {label}
         </h4>
         <h3
@@ -86,7 +96,12 @@ function FighterPanel({ label, name, style, isWinner, isLoser, accentClass, vict
           {STYLE_DISPLAY_NAMES[style] ?? style}
         </Badge>
         {isWinner && (
-          <div className={cn('flex items-center gap-2 text-[10px] font-black tracking-[0.2em] animate-pulse', accentClass)}>
+          <div
+            className={cn(
+              'flex items-center gap-2 text-[10px] font-black tracking-[0.2em] animate-pulse',
+              accentClass
+            )}
+          >
             <Trophy className="h-3 w-3" /> VICTOR_SYNC
           </div>
         )}

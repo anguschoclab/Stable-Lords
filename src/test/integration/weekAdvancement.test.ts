@@ -198,7 +198,11 @@ describe('Week Advancement Integration', () => {
       let state: GameState = {
         ...initialState,
         trainingAssignments: [
-          { warriorId: 'w1' as import('@/types/shared.types').WarriorId, type: 'attribute' as const, attribute: 'ST' as const },
+          {
+            warriorId: 'w1' as import('@/types/shared.types').WarriorId,
+            type: 'attribute' as const,
+            attribute: 'ST' as const,
+          },
         ],
       };
 
@@ -308,7 +312,11 @@ describe('Week Advancement Integration', () => {
       const state = {
         ...initialState,
         trainingAssignments: [
-          { warriorId: 'w1' as import('@/types/shared.types').WarriorId, type: 'attribute' as const, attribute: 'ST' as const },
+          {
+            warriorId: 'w1' as import('@/types/shared.types').WarriorId,
+            type: 'attribute' as const,
+            attribute: 'ST' as const,
+          },
         ],
       };
 

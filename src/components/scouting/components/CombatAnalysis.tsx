@@ -15,13 +15,9 @@ export function CombatAnalysis({ suspectedOE, suspectedAL, knownInjuries }: Comb
 
   return (
     <Surface variant="glass" className="bg-black/40 border-border/20 p-6 space-y-6">
-      {suspectedOE && (
-        <SuspectedModifiers suspectedOE={suspectedOE} suspectedAL={suspectedAL} />
-      )}
+      {suspectedOE && <SuspectedModifiers suspectedOE={suspectedOE} suspectedAL={suspectedAL} />}
 
-      {knownInjuries.length > 0 && (
-        <InjuryList injuries={knownInjuries} />
-      )}
+      {knownInjuries.length > 0 && <InjuryList injuries={knownInjuries} />}
     </Surface>
   );
 }

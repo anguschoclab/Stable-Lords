@@ -69,7 +69,9 @@ function ensureWarriorCache(state: NameResolutionState | GameState): WarriorCach
   const idMap = new Map<string, CachedWarrior>();
   const nameMap = new Map<string, CachedWarrior>();
 
-  const processWarrior = (w: { id: string | import('@/types/shared.types').WarriorId; name: string } | undefined) => {
+  const processWarrior = (
+    w: { id: string | import('@/types/shared.types').WarriorId; name: string } | undefined
+  ) => {
     if (!w) return;
     idMap.set(w.id as string, w as CachedWarrior);
     nameMap.set(w.name, w as CachedWarrior);

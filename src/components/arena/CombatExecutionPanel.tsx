@@ -170,9 +170,7 @@ function CombatResultsSection({
   onToggleExpand,
 }: CombatResultsSectionProps) {
   if (results.length > 0) {
-    return (
-      <RunResults results={results} expandedId={expandedId} onToggleExpand={onToggleExpand} />
-    );
+    return <RunResults results={results} expandedId={expandedId} onToggleExpand={onToggleExpand} />;
   }
 
   return (

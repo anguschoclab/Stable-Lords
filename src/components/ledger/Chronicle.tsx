@@ -33,13 +33,7 @@ function ChronicleEmptyState() {
   );
 }
 
-function ChronicleTimelineItem({
-  item,
-  index,
-}: {
-  item: NewsletterItem;
-  index: number;
-}) {
+function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: number }) {
   return (
     <motion.div
       key={`${item.week}-${item.title?.slice(0, 20) || index}`}
@@ -178,7 +172,11 @@ export function Chronicle() {
       ) : (
         <div className="relative ml-4 md:ml-8 border-l border-white/5 pl-8 md:pl-12 space-y-12 pb-12">
           {news.map((n, i) => (
-            <ChronicleTimelineItem key={`${n.week}-${n.title?.slice(0, 20) || i}`} item={n} index={i} />
+            <ChronicleTimelineItem
+              key={`${n.week}-${n.title?.slice(0, 20) || i}`}
+              item={n}
+              index={i}
+            />
           ))}
 
           <div className="absolute left-[-2px] bottom-0 w-1 h-32 bg-gradient-to-t from-transparent via-primary/20 to-transparent" />

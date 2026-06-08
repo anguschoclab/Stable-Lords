@@ -57,7 +57,11 @@ describe('trainingGains', () => {
       const warrior = makeWarrior({ ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 });
       const state = { season: 'Spring' } as GameState;
       const seasonalGrowth = [
-        { warriorId: 'w1' as import('@/types/shared.types').WarriorId, season: 'Spring' as const, gains: { ST: SEASONAL_CAP_PER_ATTR } as any },
+        {
+          warriorId: 'w1' as import('@/types/shared.types').WarriorId,
+          season: 'Spring' as const,
+          gains: { ST: SEASONAL_CAP_PER_ATTR } as any,
+        },
       ];
       const rng = new SeededRNGService(1);
       const res = processAttributeTraining(warrior, 'ST', state, seasonalGrowth, rng);

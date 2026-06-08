@@ -10,7 +10,12 @@
  */
 import type { InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
-import { STYLE_DISPLAY_NAMES, ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type InsightId } from '@/types/shared.types';
+import {
+  STYLE_DISPLAY_NAMES,
+  ATTRIBUTE_KEYS,
+  ATTRIBUTE_LABELS,
+  type InsightId,
+} from '@/types/shared.types';
 
 /**
  * Scout quality type.

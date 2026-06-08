@@ -151,8 +151,7 @@ export const BLOODSANDS_ARENA: ArenaConfig = {
   // 'standard' keeps the full Grapple→Extended range ladder available to all
   // weapon types without the 'open' flag's future extended-reach bias.
   size: 'standard',
-  description:
-    'The grand arena. Fine sand, firm and even footing — no surface favours any style.',
+  description: 'The grand arena. Fine sand, firm and even footing — no surface favours any style.',
   // Mirror the Proving Grounds zone penalties exactly so cornering pressure
   // is identical to the baseline neutral arena.
   zoneDef: { Edge: -2, Corner: -4 },

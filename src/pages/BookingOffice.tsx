@@ -242,7 +242,11 @@ function OfferCard({
                 </div>
                 {playerWarrior && (
                   <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
-                    {describeArenaFit(playerWarrior, offer.arenaId, playerWarrior.plan ?? undefined)}
+                    {describeArenaFit(
+                      playerWarrior,
+                      offer.arenaId,
+                      playerWarrior.plan ?? undefined
+                    )}
                   </div>
                 )}
               </div>

@@ -5,13 +5,7 @@
  */
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  Shield,
-  Swords,
-  HardHat,
-  Shirt,
-  XCircle,
-} from 'lucide-react';
+import { Shield, Swords, HardHat, Shirt, XCircle } from 'lucide-react';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import {
   type EquipmentLoadout as Loadout,

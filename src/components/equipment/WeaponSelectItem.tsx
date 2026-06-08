@@ -19,9 +19,7 @@ export function WeaponSelectItem({ item, preferred, req }: WeaponSelectItemProps
             2H
           </Badge>
         )}
-        {preferred && req.met && (
-          <Star className="h-3 w-3 text-arena-gold fill-arena-gold" />
-        )}
+        {preferred && req.met && <Star className="h-3 w-3 text-arena-gold fill-arena-gold" />}
         {!req.met && (
           <span className="text-muted-foreground text-[9px] font-mono">
             {req.failures.map((f) => `${f.stat}${f.required}`).join('/')}

@@ -73,7 +73,9 @@ export function TournamentBracket({
             {roundBouts.map((bout, bIdx) => {
               const boutKey = `${round}_${bIdx}`;
               const isExpanded = expandedBout === boutKey;
-              const fightSummary = bout.fightId ? (fightHistoryMap.get(bout.fightId) ?? null) : null;
+              const fightSummary = bout.fightId
+                ? (fightHistoryMap.get(bout.fightId) ?? null)
+                : null;
 
               return (
                 <BracketMatchNode

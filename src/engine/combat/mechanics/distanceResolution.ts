@@ -177,10 +177,8 @@ export function contestDistance(
   // In a cramped arena, a fighter whose preferred range exceeds the arena cap
   // can never reach it, so their motivation to create distance is halved —
   // they're literally running out of room.
-  const prefABeyondCap =
-    RANGE_ORDER.indexOf(prefA) > RANGE_ORDER.indexOf(profile.maxRange);
-  const prefDBeyondCap =
-    RANGE_ORDER.indexOf(prefD) > RANGE_ORDER.indexOf(profile.maxRange);
+  const prefABeyondCap = RANGE_ORDER.indexOf(prefA) > RANGE_ORDER.indexOf(profile.maxRange);
+  const prefDBeyondCap = RANGE_ORDER.indexOf(prefD) > RANGE_ORDER.indexOf(profile.maxRange);
 
   const rawMotA = prefA !== currentRange ? 2 : 0;
   const rawMotD = prefD !== currentRange ? 2 : 0;

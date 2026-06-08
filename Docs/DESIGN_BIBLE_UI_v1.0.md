@@ -1,9 +1,10 @@
 # Stable Lords — UI/Visual Design Bible v1.0
+
 ## "Codex Sanguis" Design System
 
 ---
 
-> *"In the arena, everything is recorded. Every drop of blood. Every roar of the crowd. Every gold coin that changes hands. The Codex Sanguis is our record."*
+> _"In the arena, everything is recorded. Every drop of blood. Every roar of the crowd. Every gold coin that changes hands. The Codex Sanguis is our record."_
 
 ---
 
@@ -11,7 +12,7 @@
 
 ### The Core Idea
 
-Stable Lords is a gladiatorial management game where you act as a powerful Roman-era patron — a *dominus ludi* (master of games) — who maintains meticulous records of their fighters, finances, and fights. The UI is the physical manifestation of **your office**: dimly lit by torchlight, shelves heavy with wax-sealed scrolls, bronze ornaments on dark wood furniture, parchment ledgers stacked beside iron-bound chests.
+Stable Lords is a gladiatorial management game where you act as a powerful Roman-era patron — a _dominus ludi_ (master of games) — who maintains meticulous records of their fighters, finances, and fights. The UI is the physical manifestation of **your office**: dimly lit by torchlight, shelves heavy with wax-sealed scrolls, bronze ornaments on dark wood furniture, parchment ledgers stacked beside iron-bound chests.
 
 The design system is called **Codex Sanguis** (The Blood Record). It renders this ancient record-keeping system in digital form — warm, authoritative, earned through blood and glory.
 
@@ -38,21 +39,21 @@ The design system is called **Codex Sanguis** (The Blood Record). It renders thi
 
 ### Direct Inspirations
 
-| Game/Medium | What We Borrow |
-|---|---|
-| **Darkest Dungeon** | Dark atmosphere, gothic gravitas, narrative weight |
-| **Crusader Kings III** | Dynasty/legacy framing, medieval record aesthetics, coat of arms |
-| **Hades** | Cohesive warm palette, mythological authority |
-| **Football Manager (classic)** | Dense data management, ledger-style tables |
-| **Shadow of Rome** | Literal gladiatorial aesthetic, Roman architecture |
-| **Gladiator (2000 film)** | Dusty colosseum atmosphere, blood + glory tone |
-| **Illuminated Manuscripts** | Ornate borders, decorated headers, parchment feel |
+| Game/Medium                    | What We Borrow                                                   |
+| ------------------------------ | ---------------------------------------------------------------- |
+| **Darkest Dungeon**            | Dark atmosphere, gothic gravitas, narrative weight               |
+| **Crusader Kings III**         | Dynasty/legacy framing, medieval record aesthetics, coat of arms |
+| **Hades**                      | Cohesive warm palette, mythological authority                    |
+| **Football Manager (classic)** | Dense data management, ledger-style tables                       |
+| **Shadow of Rome**             | Literal gladiatorial aesthetic, Roman architecture               |
+| **Gladiator (2000 film)**      | Dusty colosseum atmosphere, blood + glory tone                   |
+| **Illuminated Manuscripts**    | Ornate borders, decorated headers, parchment feel                |
 
 ### Visual References
 
 - Roman forum inscription stonework: deep engraved uppercase lettering
 - Leather-bound ledger books: warm dark covers, cream pages
-- Bronze military seals and signet rings: official stamps of authority  
+- Bronze military seals and signet rings: official stamps of authority
 - Mosaic floor patterns: geometric decorative elements
 - Amphitheatre architecture: arched forms, stone colonnades
 - Oil lamp / torch lighting: warm amber pools in darkness
@@ -86,18 +87,19 @@ Border:        #2A1E13  (HSL 30 18% 16%)  — Weathered wood grain
 
 ### Color Semantics
 
-| Color | Used For |
-|---|---|
-| **Blood Crimson** (Primary) | Actions, CTAs, danger states, weapon kills |
-| **Bronze Gold** (Accent) | Fame, gold/treasury, achievements, trophies |
-| **Papyrus** (Foreground) | Primary body text, card content |
-| **Arena Fame** (Purple) | Fame scores, legendary status, prestige |
-| **Arena Pop** (Teal) | Crowd stats, popularity, event indicators |
-| **Destructive** | Permanent actions, death, injury alerts |
+| Color                       | Used For                                    |
+| --------------------------- | ------------------------------------------- |
+| **Blood Crimson** (Primary) | Actions, CTAs, danger states, weapon kills  |
+| **Bronze Gold** (Accent)    | Fame, gold/treasury, achievements, trophies |
+| **Papyrus** (Foreground)    | Primary body text, card content             |
+| **Arena Fame** (Purple)     | Fame scores, legendary status, prestige     |
+| **Arena Pop** (Teal)        | Crowd stats, popularity, event indicators   |
+| **Destructive**             | Permanent actions, death, injury alerts     |
 
 ### Atmospheric Gradients
 
 The background uses two radial gradients creating a torchlit room:
+
 1. **Warm amber corner glow** (upper-left): Like a torch mounted on the wall
 2. **Crimson warmth** (lower-right): The distant memory of the arena
 
@@ -107,14 +109,14 @@ The background uses two radial gradients creating a torchlit room:
 
 ### Type Scale
 
-| Role | Font | Treatment |
-|---|---|---|
-| **Hero Titles** | Cinzel 900 | ALL CAPS, tracking 0.06em, text-shadow carved |
-| **Page Headers** | Cinzel 700 | ALL CAPS, tracking 0.05em |
-| **Section Labels** | Cinzel 400 | ALL CAPS, tracking 0.4em, bronze/muted color |
-| **Body Text** | Inter 400 | Normal case, slightly warm on dark |
-| **Stat Numbers** | Inter/mono 700 | Tabular numerals, bold |
-| **System Labels** | Inter 900 | UPPERCASE, tracking 0.2-0.4em (the "codex notation") |
+| Role               | Font           | Treatment                                            |
+| ------------------ | -------------- | ---------------------------------------------------- |
+| **Hero Titles**    | Cinzel 900     | ALL CAPS, tracking 0.06em, text-shadow carved        |
+| **Page Headers**   | Cinzel 700     | ALL CAPS, tracking 0.05em                            |
+| **Section Labels** | Cinzel 400     | ALL CAPS, tracking 0.4em, bronze/muted color         |
+| **Body Text**      | Inter 400      | Normal case, slightly warm on dark                   |
+| **Stat Numbers**   | Inter/mono 700 | Tabular numerals, bold                               |
+| **System Labels**  | Inter 900      | UPPERCASE, tracking 0.2-0.4em (the "codex notation") |
 
 ### Typography Rules
 
@@ -147,27 +149,30 @@ The background uses two radial gradients creating a torchlit room:
 
 **Radius is 0px** throughout — all surfaces are **hard-edged**. This evokes stone-cut tablets, wax impressions, and iron-bound chests. No rounded softness — this is a blood sport management system.
 
-The *only* exceptions:
+The _only_ exceptions:
+
 - Tooltips (slight 2px for readability)
 - Badges (2px so text doesn't clip)
 - Progress bars (full rounding for the fill metaphor)
 
 ### Depth Hierarchy
 
-| Level | Element | Treatment |
-|---|---|---|
-| 0 | Page background | `#0C0806` + texture |
-| 1 | Main content area | Inherits background |
-| 2 | Cards / Surfaces | `#140F09` + subtle gradient |
-| 3 | Active/hover states | +brightness, border glow |
-| 4 | Modals / Popovers | Darker + backdrop blur |
+| Level | Element             | Treatment                   |
+| ----- | ------------------- | --------------------------- |
+| 0     | Page background     | `#0C0806` + texture         |
+| 1     | Main content area   | Inherits background         |
+| 2     | Cards / Surfaces    | `#140F09` + subtle gradient |
+| 3     | Active/hover states | +brightness, border glow    |
+| 4     | Modals / Popovers   | Darker + backdrop blur      |
 
 ---
 
 ## 6. Surface Variants
 
 ### `variant="glass"` — Primary card surface
+
 Dark warm surface with subtle gradient overlay. The workhorse card style.
+
 ```
 bg: rgba(#120D09, 0.7) with backdrop-blur
 border: 1px warm dark (#2A1E13)
@@ -175,19 +180,25 @@ top-border: slightly lighter for depth
 ```
 
 ### `variant="gold"` — Trophy/achievement surfaces
+
 Bronze-gold accented for fame and glory elements.
+
 ```
 border: arena-gold/30 with gold glow shadow
 ```
 
 ### `variant="blood"` — Danger/kill surfaces
+
 Crimson accented for lethal results and warnings.
+
 ```
 border: arena-blood/30 with blood glow shadow
 ```
 
 ### `variant="parchment"` — Historical/archive surfaces
+
 Aged warm surface for Gazette, Hall of Fame, chronicle content.
+
 ```
 bg: very dark warm with parchment-texture overlay
 border-double style effect
@@ -200,6 +211,7 @@ border-double style effect
 ### Page Headers
 
 Every page has a `<PageHeader>` with:
+
 - **Icon**: Displayed in an `imperial-ring` container (bronze-bordered square)
 - **Title**: Large Cinzel display font with carved text-shadow
 - **Subtitle**: Small ALL_CAPS_CODEX_NOTATION in muted/60 opacity
@@ -209,6 +221,7 @@ Every page has a `<PageHeader>` with:
 ### Section Labels
 
 Section dividers use the pattern:
+
 ```jsx
 <span className="codex-label">SECTION NAME</span>
 <div className="h-px flex-1 bg-gradient-to-r from-accent/20 via-border/20 to-transparent" />
@@ -219,6 +232,7 @@ This creates a "scratched into stone" visual for each major content area.
 ### Data Tables
 
 Tables follow these conventions:
+
 - Header row: `bg-white/[0.03]` — barely visible distinction
 - Header text: `text-[9px] font-black uppercase tracking-widest` — tiny but authoritative
 - Rows: Alternating subtle hover states
@@ -228,6 +242,7 @@ Tables follow these conventions:
 ### Badges
 
 Tiers use color-coded outlines:
+
 ```
 Common:     border-border/40 text-muted-foreground
 Promising:  border-blue-500/30 text-blue-400 bg-blue-500/10
@@ -238,6 +253,7 @@ Prodigy:    border-arena-gold text-arena-gold bg-arena-gold/10 (+ stronger glow)
 ### Stat Bars
 
 Progress/stat bars should feel like **sand filling a carved groove**:
+
 - Track: `bg-secondary/30 border border-border/20` — dark carved groove
 - Fill: `bg-primary` or gradient — warm fill
 - Height: 1.5px or 3px — delicate but precise
@@ -245,17 +261,19 @@ Progress/stat bars should feel like **sand filling a carved groove**:
 ### Buttons
 
 Primary buttons use the crimson brand color:
+
 ```
-bg: primary (blood crimson) 
+bg: primary (blood crimson)
 hover: brightness up + slight scale
 text: warm papyrus white
 shadow: subtle glow-blood on primary actions
 ```
 
 Secondary buttons:
+
 ```
 bg: neutral-900/60 border border-white/5
-text: muted-foreground 
+text: muted-foreground
 hover: subtle white/5 increase
 ```
 
@@ -268,6 +286,7 @@ hover: subtle white/5 increase
 **Atmosphere**: Stone threshold before the arena gates. Torch flames in the corners. The game title carved into the arch above.
 
 **Key Elements**:
+
 - Large `STABLE LORDS` title in Cinzel 900 with carved text-shadow and faint gold glow
 - Subtitle: "Build a stable. Train warriors. Fight for glory." — italic, parchment-toned
 - Save slots displayed as engraved stone tablets (dark cards with header-ornament border treatment)
@@ -282,6 +301,7 @@ hover: subtle white/5 increase
 **Atmosphere**: A cold anteroom where warriors are assessed. Official bureaucratic intake process.
 
 **Key Elements**:
+
 - Progress bar looks like a scroll being unrolled (fills left to right with warmth)
 - Step labels in codex notation: "ESTABLISH IDENTITY / CHOOSE WARRIORS / FIRST BLOOD / YOUR STORY BEGINS"
 - Warrior selection cards: Each has a "gladiatorial registration" feel — name prominent, style badge like a wax seal, stats as engraved numbers
@@ -290,9 +310,10 @@ hover: subtle white/5 increase
 
 ### Dashboard (`/`)
 
-**Atmosphere**: The *tablinum* (patron's office) — everything you need to manage your empire at a glance.
+**Atmosphere**: The _tablinum_ (patron's office) — everything you need to manage your empire at a glance.
 
 **Key Elements**:
+
 - Stable name in hero Cinzel as the page title
 - Owner name below in small muted italic — "By [Name] • Command Center"
 - Gold/Fame stats in a warm-bordered HUD panel in the header actions
@@ -305,6 +326,7 @@ hover: subtle white/5 increase
 **Atmosphere**: Standing in the sponsor's box overlooking the colosseum floor.
 
 **Key Elements**:
+
 - PageHeader with Swords icon in imperial-ring
 - Leaderboard: Stone-carved table with rank numbers in `font-mono font-black`
 - Crowd Mood widget: Large mood icon (like an omen/auspice) + bronze modifier stats
@@ -315,6 +337,7 @@ hover: subtle white/5 increase
 **Atmosphere**: The arena floor is prepared. Warriors are ready. The signal must be given.
 
 **Key Elements**:
+
 - `EXECUTE WEEK [N] CYCLE` button: Maximum visual weight — primary large, blood crimson
 - Match cards: Each bout looks like an official bout declaration — fighter names prominent, vs divider
 - "Stable Readiness" sidebar: Quick data panel, like an official manifest
@@ -325,6 +348,7 @@ hover: subtle white/5 increase
 **Atmosphere**: The trophy room and great hall of your stable. Warrior portraits line the walls.
 
 **Key Elements**:
+
 - Stable name as the massive header title
 - Fame and Titles displayed in bronze-bordered HUD
 - Roster displayed as a wall of warrior portraits (cards with fighter stats)
@@ -336,6 +360,7 @@ hover: subtle white/5 increase
 **Atmosphere**: The gymnasium — dusty, functional, purposeful.
 
 **Key Elements**:
+
 - Three stat surfaces at top: "Active Drills / Medical Bay / Reserve Pool" — clean data panels
 - Training cards: Assignment feels like writing a training mandate on a wax tablet
 - Recovery state: Subtle warm red tint — medical/healing connotation
@@ -346,6 +371,7 @@ hover: subtle white/5 increase
 **Atmosphere**: The fighter market — browsing warrior contracts at the forum.
 
 **Key Elements**:
+
 - Warrior cards feel like fighter contracts/dossiers
 - Tier badges use the wax-seal visual language — increasingly ornate for higher tiers
 - Cost display: Gold coin icon + bronze-colored number
@@ -353,21 +379,23 @@ hover: subtle white/5 increase
 
 ### The Gazette (`/gazette`)
 
-**Atmosphere**: The *acta diurna* — Rome's daily gazette, pinned at the forum.
+**Atmosphere**: The _acta diurna_ — Rome's daily gazette, pinned at the forum.
 
 **Key Elements**:
+
 - This is the most distinctive screen — it should feel like an actual historical newspaper
 - Masthead: Ornate, centered, `THE ARENA GAZETTE` in largest Cinzel with decorative rules above/below
 - Issue numbers: "Week 12 // Season Autumn // Est. 412 AE"
 - Articles: Generous typography, parchment surface backgrounds for article cards
 - Leaderboards: Feel like official rankings posted at the forum — stone tablet style
-- No page-wide glass UI feel — this is a *newspaper*, so more contrast and legibility
+- No page-wide glass UI feel — this is a _newspaper_, so more contrast and legibility
 
 ### Warrior Detail (`/warrior/:id`)
 
 **Atmosphere**: The official gladiatorial dossier — everything we know about this fighter.
 
 **Key Elements**:
+
 - Hero header: Fighter name in massive Cinzel + style badge as a seal
 - Tabs: "BIOMETRICS / MISSION CONTROL / CHRONICLE" — official records categories
 - Stats: Engraved table format — attribute scores feel carved into stone
@@ -379,6 +407,7 @@ hover: subtle white/5 increase
 **Atmosphere**: The Imperial Census and Rankings Board.
 
 **Key Elements**:
+
 - "NATIONAL COMMISSION ARCHIVE" subtitle
 - Tabs: STABLES / WARRIORS / INTELLIGENCE — official record categories
 - Rankings tables: Player's stable highlighted with crimson left-border
@@ -389,6 +418,7 @@ hover: subtle white/5 increase
 **Atmosphere**: The memorial wall. Solemn, heavy, permanent.
 
 **Key Elements**:
+
 - Skull icon with blood shadow in the page header
 - Cards feel like memorial plaques — darker, more solemn than regular warrior cards
 - "Cause of death" in small muted italic
@@ -400,6 +430,7 @@ hover: subtle white/5 increase
 **Atmosphere**: The shrine room. Legendary warriors immortalized.
 
 **Key Elements**:
+
 - Crown icon + golden glow treatment
 - Inductee cards feel like commemorative plaques — bordered in gold
 - Annual award sections with ornate year headings
@@ -415,14 +446,14 @@ Animations should feel like a page being turned or a door being opened — **pur
 
 ### Used Animations
 
-| Animation | Where | Effect |
-|---|---|---|
-| `fade-in + slide-in-from-bottom` | Page content on load | 300-500ms, ease-out |
-| `fade-in + zoom-in-95` | Cards and widgets | 200-400ms |
-| `staggered children` | Lists and grids | 50-100ms delay per item |
-| `torchFlicker` | Background glow | 3s, very subtle |
-| `livePulse` | Status indicators | 2s breathe |
-| Page transitions | Route changes | Instant with fade — no sliding pages |
+| Animation                        | Where                | Effect                               |
+| -------------------------------- | -------------------- | ------------------------------------ |
+| `fade-in + slide-in-from-bottom` | Page content on load | 300-500ms, ease-out                  |
+| `fade-in + zoom-in-95`           | Cards and widgets    | 200-400ms                            |
+| `staggered children`             | Lists and grids      | 50-100ms delay per item              |
+| `torchFlicker`                   | Background glow      | 3s, very subtle                      |
+| `livePulse`                      | Status indicators    | 2s breathe                           |
+| Page transitions                 | Route changes        | Instant with fade — no sliding pages |
 
 ### DON'Ts
 
@@ -442,27 +473,28 @@ Animations should feel like a page being turned or a door being opened — **pur
 
 ### Semantic Icon Mapping
 
-| Icon | Meaning |
-|---|---|
-| `Swords` | Combat, battles, arena, fight actions |
-| `Shield` | Stable identity, defense, protection |
-| `Crown` | Champion status, tournament wins, titles |
-| `Trophy` | Rankings, leaderboards, achievements |
-| `Skull` | Death, kills, graveyard |
-| `Flame / Zap` | Energy, action, immediate execution |
-| `Star` | Fame, rating, quality tier |
-| `Globe` | World overview, world state |
-| `Newspaper` | Gazette, news, narrative |
-| `Dumbbell` | Training, strength, physical development |
-| `Coins / Gold` | Treasury, economy, gold values |
-| `Users` | Roster, group, stable members |
-| `Activity` | Stats, performance, live data |
-| `Brain` | Intelligence, scouting, strategy |
-| `Heart` | Health, recovery, medical |
+| Icon           | Meaning                                  |
+| -------------- | ---------------------------------------- |
+| `Swords`       | Combat, battles, arena, fight actions    |
+| `Shield`       | Stable identity, defense, protection     |
+| `Crown`        | Champion status, tournament wins, titles |
+| `Trophy`       | Rankings, leaderboards, achievements     |
+| `Skull`        | Death, kills, graveyard                  |
+| `Flame / Zap`  | Energy, action, immediate execution      |
+| `Star`         | Fame, rating, quality tier               |
+| `Globe`        | World overview, world state              |
+| `Newspaper`    | Gazette, news, narrative                 |
+| `Dumbbell`     | Training, strength, physical development |
+| `Coins / Gold` | Treasury, economy, gold values           |
+| `Users`        | Roster, group, stable members            |
+| `Activity`     | Stats, performance, live data            |
+| `Brain`        | Intelligence, scouting, strategy         |
+| `Heart`        | Health, recovery, medical                |
 
 ### Icon Containers
 
 Icons in page headers use the `imperial-ring` class:
+
 ```jsx
 <div className="imperial-ring">
   <Icon className="h-5 w-5 text-accent" />
@@ -483,7 +515,7 @@ The game uses a dual-voice system:
    - Examples: `STABLE COMPOSITION`, `ARENA ANALYTICS`, `WEEK 12 CYCLE`
 
 2. **Narrative Voice** (game content): Dramatic, period-appropriate prose. Used in: Gazette articles, flavor text, lore descriptions, warrior bios.
-   - Examples: *"The orphanage doors creak open. Beyond them lies the roar of the crowd..."*
+   - Examples: _"The orphanage doors creak open. Beyond them lies the roar of the crowd..."_
 
 ### UI Text Rules
 
@@ -491,7 +523,7 @@ The game uses a dual-voice system:
 - Button text: Title Case for primary actions, UPPERCASE for secondary/system buttons
 - Stat labels: Short, ALL CAPS, 2-4 characters preferred (`ATK`, `END`, `HP`)
 - Numbers: Never spell out numbers for stats — always numerals
-- Empty states: Use evocative language: *"The Presses Are Silent"* not *"No data available"*
+- Empty states: Use evocative language: _"The Presses Are Silent"_ not _"No data available"_
 
 ---
 
@@ -499,11 +531,11 @@ The game uses a dual-voice system:
 
 ### Breakpoints
 
-| Breakpoint | Content Width | Layout Changes |
-|---|---|---|
-| Mobile (< 768px) | Full width + padding | Single column, stacked headers |
-| Tablet (768-1024px) | Full width | 2-column grids, condensed nav |
-| Desktop (> 1024px) | Max-w-7xl centered | Full 3-column layouts, expanded headers |
+| Breakpoint          | Content Width        | Layout Changes                          |
+| ------------------- | -------------------- | --------------------------------------- |
+| Mobile (< 768px)    | Full width + padding | Single column, stacked headers          |
+| Tablet (768-1024px) | Full width           | 2-column grids, condensed nav           |
+| Desktop (> 1024px)  | Max-w-7xl centered   | Full 3-column layouts, expanded headers |
 
 ### Key Responsive Behaviors
 
@@ -526,6 +558,7 @@ The game uses a dual-voice system:
 ### Focus States
 
 Focus rings use `--ring` (crimson) with a warm offset:
+
 ```css
 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background
 ```
@@ -533,6 +566,7 @@ focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 f
 ### Motion Preferences
 
 Respect `prefers-reduced-motion`:
+
 - All CSS animations reference `animation` properties that can be disabled
 - Key functional transitions (accordion, dialog) should use instant state change as fallback
 
@@ -556,6 +590,6 @@ When building new screens or updating existing ones, watch for:
 
 ---
 
-*Codex Sanguis Design System — Stable Lords UI/Visual Design Bible v1.0*
-*Reference games: Darkest Dungeon, Crusader Kings III, Hades, Gladiator (2000), Shadow of Rome*
-*Maintained by: Design team. Last updated: April 2026*
+_Codex Sanguis Design System — Stable Lords UI/Visual Design Bible v1.0_
+_Reference games: Darkest Dungeon, Crusader Kings III, Hades, Gladiator (2000), Shadow of Rome_
+_Maintained by: Design team. Last updated: April 2026_

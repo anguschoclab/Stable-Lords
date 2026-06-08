@@ -11,13 +11,14 @@ All new functionality is gated behind feature flags for gradual rollout:
 ```typescript
 // src/engine/featureFlags.ts
 interface FeatureFlags {
-  quarterPipeline: boolean;      // Enable 13-week batch advancement
-  yearPipeline: boolean;         // Enable 52-week batch advancement
-  headlessWeekAdvance: boolean;  // Skip UI-facing passes for performance
+  quarterPipeline: boolean; // Enable 13-week batch advancement
+  yearPipeline: boolean; // Enable 52-week batch advancement
+  headlessWeekAdvance: boolean; // Skip UI-facing passes for performance
 }
 ```
 
 ### Default State (Production)
+
 ```typescript
 const DEFAULTS: FeatureFlags = {
   quarterPipeline: false,
@@ -29,6 +30,7 @@ const DEFAULTS: FeatureFlags = {
 ## Rollout Phases
 
 ### Phase 1: Internal Testing (Week 1)
+
 - Enable on dev/staging environments
 - Run full test suite (851 tests)
 - Manual QA on quarter/year advancement
@@ -43,6 +45,7 @@ setFeatureFlags({
 ```
 
 ### Phase 2: Canary Release (Week 2)
+
 - Enable for 5% of new games
 - Monitor error rates and performance
 - A/B test: batch vs sequential
@@ -58,11 +61,13 @@ setFeatureFlags({
 ```
 
 ### Phase 3: Gradual Rollout (Week 3-4)
+
 - Increase to 25% → 50% → 75% → 100%
 - Monitor metrics at each step
 - Keep rollback plan ready
 
 ### Phase 4: Full Enablement (Week 5+)
+
 - Enable for all games
 - Remove feature flag checks (future cleanup)
 
@@ -71,6 +76,7 @@ setFeatureFlags({
 ### Key Metrics to Track
 
 1. **Performance Metrics**
+
    ```typescript
    // Log timing for batch operations
    telemetry.timing('advance_quarter', durationMs);
@@ -79,6 +85,7 @@ setFeatureFlags({
    ```
 
 2. **Error Rates**
+
    ```typescript
    // Track failures
    telemetry.increment('advance_quarter_error');
@@ -86,9 +93,11 @@ setFeatureFlags({
    ```
 
 3. **Determinism Validation**
+
    ```typescript
    // Periodic determinism checks
-   if (Math.random() < 0.01) { // 1% sample
+   if (Math.random() < 0.01) {
+     // 1% sample
      runDeterminismCheck(state);
    }
    ```
@@ -124,16 +133,16 @@ setFeatureFlags({
 // In TimeAdvanceService - automatic rollback on error
 async advanceQuarter(state: GameState, opts?: AdvanceOptions): Promise<QuarterAdvanceResult> {
   const flags = getFeatureFlags();
-  
+
   if (!flags.quarterPipeline) {
     throw new Error('Quarter pipeline not enabled');
   }
-  
+
   try {
     return await this._advanceQuarterInternal(state, opts);
   } catch (error) {
     telemetry.increment('advance_quarter_error');
-    
+
     // Automatic rollback to sequential mode
     console.error('Batch quarter advance failed, falling back to sequential:', error);
     return this._sequentialQuarterFallback(state, opts);
@@ -163,10 +172,10 @@ localStorage.removeItem('featureFlags');
 // Allow individual users to opt out
 function setUserBatchPreference(enabled: boolean) {
   localStorage.setItem('userBatchPreference', enabled ? 'true' : 'false');
-  
+
   const userPref = localStorage.getItem('userBatchPreference');
   const globalEnabled = getFeatureFlags().quarterPipeline;
-  
+
   setFeatureFlags({
     quarterPipeline: globalEnabled && userPref !== 'false',
     yearPipeline: globalEnabled && userPref !== 'false',
@@ -180,11 +189,13 @@ function setUserBatchPreference(enabled: boolean) {
 ### When to Use Batch Mode
 
 **Recommended for:**
+
 - Autosim operations (long-running simulations)
 - Background season advancement
 - Multiple AI rival processing
 
 **Not recommended for:**
+
 - User-initiated single week advancement (user expects immediate feedback)
 - Tournament weeks (need full UI feedback)
 - When player death/bankruptcy detection is critical
@@ -208,7 +219,7 @@ const result = await TickOrchestrator.skipToYearEnd(currentState, {
 // Autosim with batch mode
 const result = await runAutosim(state, {
   weeksToSim: 52,
-  useBatchMode: true,  // Uses quarter chunks internally
+  useBatchMode: true, // Uses quarter chunks internally
   deferArchives: true,
 });
 ```
@@ -236,6 +247,7 @@ Before full enablement, verify:
 ## Support
 
 For issues with batch advancement:
+
 1. Check feature flag status
 2. Review telemetry logs
 3. Try sequential fallback

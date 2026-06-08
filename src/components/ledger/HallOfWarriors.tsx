@@ -72,7 +72,9 @@ function CareerRecordCell({ wins, losses, kills }: CareerRecordCellProps) {
           <span className="text-foreground/20">/</span>
           <span className="text-destructive/60">{losses}L</span>
           <span className="text-foreground/20">/</span>
-          <span className="text-arena-gold drop-shadow-[0_0_5px_rgba(255,215,0,0.3)]">{kills}K</span>
+          <span className="text-arena-gold drop-shadow-[0_0_5px_rgba(255,215,0,0.3)]">
+            {kills}K
+          </span>
         </div>
       </TooltipTrigger>
       <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
@@ -88,10 +90,7 @@ interface RetiredWarriorRowProps {
 
 function RetiredWarriorRow({ warrior: w }: RetiredWarriorRowProps) {
   return (
-    <TableRow
-      key={w.id}
-      className="border-arena-gold/5 hover:bg-arena-gold/5 transition-all group"
-    >
+    <TableRow key={w.id} className="border-arena-gold/5 hover:bg-arena-gold/5 transition-all group">
       <TableCell className="pl-8 py-5">
         <div className="flex flex-col">
           <span>{w.name}</span>

@@ -21,48 +21,48 @@
 @layer base {
   :root {
     /* ── Core Background Layers ───────────────────────────── */
-    --background: 24 18% 5%;          /* #0C0806 — charred wood/aged parchment ground */
-    --foreground: 34 38% 86%;         /* #E7D3AF — warm papyrus ivory */
+    --background: 24 18% 5%; /* #0C0806 — charred wood/aged parchment ground */
+    --foreground: 34 38% 86%; /* #E7D3AF — warm papyrus ivory */
 
-    --card: 26 20% 8%;                /* #140F09 — dark leather/aged timber */
+    --card: 26 20% 8%; /* #140F09 — dark leather/aged timber */
     --card-foreground: 34 38% 86%;
 
-    --popover: 24 22% 6%;             /* Slightly darker than card */
+    --popover: 24 22% 6%; /* Slightly darker than card */
     --popover-foreground: 34 38% 86%;
 
     /* ── Brand Colors ────────────────────────────────────── */
-    --primary: 358 65% 32%;           /* #872228 — deep blood crimson */
+    --primary: 358 65% 32%; /* #872228 — deep blood crimson */
     --primary-foreground: 34 38% 95%; /* Near-white papyrus */
 
-    --secondary: 26 18% 12%;          /* #1E1510 — dark weathered oak */
+    --secondary: 26 18% 12%; /* #1E1510 — dark weathered oak */
     --secondary-foreground: 34 28% 72%; /* Aged text */
 
-    --muted: 26 16% 14%;              /* #221811 — muted warm dark */
-    --muted-foreground: 32 16% 48%;   /* #7B6A50 — aged ink on parchment */
+    --muted: 26 16% 14%; /* #221811 — muted warm dark */
+    --muted-foreground: 32 16% 48%; /* #7B6A50 — aged ink on parchment */
 
-    --accent: 38 58% 44%;             /* #BD8A24 — burnished bronze-gold */
-    --accent-foreground: 24 30% 6%;   /* Dark on gold */
+    --accent: 38 58% 44%; /* #BD8A24 — burnished bronze-gold */
+    --accent-foreground: 24 30% 6%; /* Dark on gold */
 
-    --destructive: 358 72% 40%;       /* Brighter blood for alerts */
+    --destructive: 358 72% 40%; /* Brighter blood for alerts */
     --destructive-foreground: 34 38% 95%;
 
     /* ── Structural ──────────────────────────────────────── */
-    --border: 30 18% 16%;             /* #2A1E13 — weathered wood grain */
-    --input: 26 16% 11%;              /* Form fields */
-    --ring: 358 65% 32%;              /* Focus ring — crimson */
+    --border: 30 18% 16%; /* #2A1E13 — weathered wood grain */
+    --input: 26 16% 11%; /* Form fields */
+    --ring: 358 65% 32%; /* Focus ring — crimson */
 
-    --radius: 0px;                    /* Pure hard edges — stone-cut */
+    --radius: 0px; /* Pure hard edges — stone-cut */
 
     /* ── Arena Color Tokens ──────────────────────────────── */
-    --arena-gold: 38 62% 50%;         /* #C9972A — burnished arena gold */
-    --arena-blood: 358 70% 36%;       /* #912228 — arena crimson */
-    --arena-fame: 275 42% 58%;        /* #8B5FC4 — fame purple */
-    --arena-pop: 188 55% 46%;         /* #337F8C — crowd teal */
-    --arena-steel: 210 10% 62%;       /* #93939B — cold steel */
-    --arena-bone: 34 28% 72%;         /* #BBA882 — parchment/bone */
+    --arena-gold: 38 62% 50%; /* #C9972A — burnished arena gold */
+    --arena-blood: 358 70% 36%; /* #912228 — arena crimson */
+    --arena-fame: 275 42% 58%; /* #8B5FC4 — fame purple */
+    --arena-pop: 188 55% 46%; /* #337F8C — crowd teal */
+    --arena-steel: 210 10% 62%; /* #93939B — cold steel */
+    --arena-bone: 34 28% 72%; /* #BBA882 — parchment/bone */
 
     /* ── Special Effect Tokens ───────────────────────────── */
-    --torch-glow: rgba(200, 120, 20, 0.10);
+    --torch-glow: rgba(200, 120, 20, 0.1);
     --blood-glow-rgb: 135, 34, 40;
     --gold-glow-rgb: 201, 151, 42;
     --marble-vein: rgba(255, 245, 220, 0.018);
@@ -90,17 +90,25 @@
       /* Torch glow — upper left warm amber */
       radial-gradient(ellipse 60% 40% at 0% 0%, var(--torch-glow) 0px, transparent 100%),
       /* Blood warmth — lower right subtle */
-      radial-gradient(ellipse 50% 50% at 100% 100%, rgba(135, 34, 40, 0.06) 0px, transparent 100%),
+        radial-gradient(ellipse 50% 50% at 100% 100%, rgba(135, 34, 40, 0.06) 0px, transparent 100%),
       /* Stone/papyrus micro-texture */
-      url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.04'/%3E%3C/svg%3E");
+        url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.04'/%3E%3C/svg%3E");
     background-attachment: fixed;
   }
 
   /* Display headings — Cinzel Roman serif, engraved feel */
-  h1, h2, h3, h4, h5, h6, .font-display {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-display {
     font-family: 'Cinzel', 'Times New Roman', serif;
     @apply font-bold tracking-[0.06em] uppercase;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(0, 0, 0, 0.9);
+    text-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.7),
+      0 1px 0 rgba(0, 0, 0, 0.9);
   }
 
   /* Clean anchor resets */
@@ -118,11 +126,11 @@
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0C0806;
+  background: #0c0806;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2A1E13;
-  border: 1px solid #3D2B1A;
+  background: #2a1e13;
+  border: 1px solid #3d2b1a;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--accent) / 0.5);
@@ -133,14 +141,25 @@
 ───────────────────────────────────────────────────────────────────────────── */
 
 @layer utilities {
-
   /* ── Text Colors ────────────────────────────────────────── */
-  .text-arena-gold   { color: hsl(var(--arena-gold)); }
-  .text-arena-fame   { color: hsl(var(--arena-fame)); }
-  .text-arena-pop    { color: hsl(var(--arena-pop)); }
-  .text-arena-blood  { color: hsl(var(--arena-blood)); }
-  .text-arena-steel  { color: hsl(var(--arena-steel)); }
-  .text-arena-bone   { color: hsl(var(--arena-bone)); }
+  .text-arena-gold {
+    color: hsl(var(--arena-gold));
+  }
+  .text-arena-fame {
+    color: hsl(var(--arena-fame));
+  }
+  .text-arena-pop {
+    color: hsl(var(--arena-pop));
+  }
+  .text-arena-blood {
+    color: hsl(var(--arena-blood));
+  }
+  .text-arena-steel {
+    color: hsl(var(--arena-steel));
+  }
+  .text-arena-bone {
+    color: hsl(var(--arena-bone));
+  }
 
   /* ── Torch Glow Effects (warm amber — NOT cold blue/white) ── */
   .glow-gold {
@@ -163,15 +182,21 @@
 
   /* ── Text Glow ───────────────────────────────────────────── */
   .text-glow-blood {
-    text-shadow: 0 0 12px hsl(var(--arena-blood) / 0.65), 0 2px 4px rgba(0,0,0,0.5);
+    text-shadow:
+      0 0 12px hsl(var(--arena-blood) / 0.65),
+      0 2px 4px rgba(0, 0, 0, 0.5);
   }
 
   .text-glow-gold {
-    text-shadow: 0 0 12px hsl(var(--arena-gold) / 0.55), 0 2px 4px rgba(0,0,0,0.5);
+    text-shadow:
+      0 0 12px hsl(var(--arena-gold) / 0.55),
+      0 2px 4px rgba(0, 0, 0, 0.5);
   }
 
   .text-glow-crimson {
-    text-shadow: 0 0 16px hsl(var(--primary) / 0.7), 0 2px 8px rgba(0,0,0,0.6);
+    text-shadow:
+      0 0 16px hsl(var(--primary) / 0.7),
+      0 2px 8px rgba(0, 0, 0, 0.6);
   }
 
   /* ── Engraved / Carved Text ─────────────────────────────── */
@@ -240,15 +265,11 @@
   /* Ornamental horizontal rule */
   .codex-divider {
     @apply relative flex items-center gap-4;
-    &::before, &::after {
+    &::before,
+    &::after {
       content: '';
       @apply flex-1 h-px;
-      background: linear-gradient(
-        to right,
-        transparent,
-        rgba(201, 151, 42, 0.2),
-        transparent
-      );
+      background: linear-gradient(to right, transparent, rgba(201, 151, 42, 0.2), transparent);
     }
   }
 
@@ -262,12 +283,7 @@
   /* ── Marble vein micro-texture ───────────────────────────── */
   .marble-vein {
     background-image:
-      repeating-linear-gradient(
-        48deg,
-        var(--marble-vein) 0px,
-        transparent 2px,
-        transparent 16px
-      ),
+      repeating-linear-gradient(48deg, var(--marble-vein) 0px, transparent 2px, transparent 16px),
       repeating-linear-gradient(
         -33deg,
         var(--parchment-texture) 0px,
@@ -283,11 +299,7 @@
 
   /* ── Stat Bars — look like carved stone fills ────────────── */
   .stat-bar-fill {
-    background: linear-gradient(
-      90deg,
-      hsl(var(--primary)) 0%,
-      hsl(var(--primary) / 0.7) 100%
-    );
+    background: linear-gradient(90deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.7) 100%);
   }
 
   /* ── Blood / Kill Accent ─────────────────────────────────── */
@@ -367,39 +379,90 @@
 ───────────────────────────────────────────────────────────────────────────── */
 
 @keyframes torchFlicker {
-  0%   { opacity: 0.85; filter: brightness(0.95); }
-  20%  { opacity: 0.92; filter: brightness(1.02); }
-  40%  { opacity: 0.88; filter: brightness(0.97); }
-  60%  { opacity: 0.95; filter: brightness(1.05); }
-  80%  { opacity: 0.87; filter: brightness(0.94); }
-  100% { opacity: 0.93; filter: brightness(1.03); }
+  0% {
+    opacity: 0.85;
+    filter: brightness(0.95);
+  }
+  20% {
+    opacity: 0.92;
+    filter: brightness(1.02);
+  }
+  40% {
+    opacity: 0.88;
+    filter: brightness(0.97);
+  }
+  60% {
+    opacity: 0.95;
+    filter: brightness(1.05);
+  }
+  80% {
+    opacity: 0.87;
+    filter: brightness(0.94);
+  }
+  100% {
+    opacity: 0.93;
+    filter: brightness(1.03);
+  }
 }
 
 @keyframes livePulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.4; transform: scale(0.85); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
 }
 
 @keyframes bloodDrip {
-  0%   { transform: translateY(-2px); opacity: 0; }
-  20%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { transform: translateY(6px); opacity: 0; }
+  0% {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
 }
 
 @keyframes bronzeShimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -407,13 +470,15 @@
 ───────────────────────────────────────────────────────────────────────────── */
 
 @layer base {
-
   /* Input fields — leather/wood inset styling */
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     @apply caret-accent;
   }
 
-  input::placeholder, textarea::placeholder {
+  input::placeholder,
+  textarea::placeholder {
     color: rgba(123, 106, 80, 0.5);
   }
 
@@ -430,8 +495,7 @@
 
 /* Atmospheric vignette for full-screen pages */
 .screen-vignette {
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(0, 0, 0, 0.7) 100%);
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(0, 0, 0, 0.7) 100%);
 }
 
 /* Colosseum arch CSS ornament */
@@ -521,7 +585,8 @@
 
 /* Heat shimmer for blazing sun */
 @keyframes heat-shimmer {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) scaleY(1);
     opacity: 0.5;
   }
@@ -537,214 +602,466 @@
 
 /* Crowd animations */
 @keyframes crowd-cheer {
-  0%, 100% { transform: translateY(0); }
-  25% { transform: translateY(-5px); }
-  50% { transform: translateY(0); }
-  75% { transform: translateY(-3px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-3px);
+  }
 }
 
 @keyframes crowd-gasp {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.95); }
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.95);
+  }
 }
 
 @keyframes crowd-chant {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(3px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
 }
 
 /* Fighter stance animations */
 @keyframes advancing {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
 }
 
 @keyframes retreating {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
 }
 
 @keyframes lunging {
-  0% { transform: translateX(0) scaleX(1); }
-  30% { transform: translateX(15px) scaleX(1.1); }
-  100% { transform: translateX(0) scaleX(1); }
+  0% {
+    transform: translateX(0) scaleX(1);
+  }
+  30% {
+    transform: translateX(15px) scaleX(1.1);
+  }
+  100% {
+    transform: translateX(0) scaleX(1);
+  }
 }
 
 @keyframes defending {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(-5deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
 }
 
 @keyframes stunned {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  75% { transform: translateX(3px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
 }
 
 @keyframes victorious {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-10px) scale(1.05); }
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.05);
+  }
 }
 
 @keyframes defeated {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(90deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
 }
 
 /* Idle animations by fighting style */
 @keyframes idle-aggressive {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
 @keyframes idle-defensive {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
 }
 
 @keyframes idle-balanced {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(3px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
 }
 
 @keyframes idle-aimed {
-  0%, 100% { transform: rotate(0deg); }
-  90% { transform: rotate(0deg); }
-  95% { transform: rotate(2deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  90% {
+    transform: rotate(0deg);
+  }
+  95% {
+    transform: rotate(2deg);
+  }
 }
 
 @keyframes idle-striking {
-  0%, 100% { transform: translateY(0); }
-  25% { transform: translateY(-1px); }
-  75% { transform: translateY(-1px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-1px);
+  }
+  75% {
+    transform: translateY(-1px);
+  }
 }
 
 /* Screen shake for critical hits */
 @keyframes screen-shake {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-4px, -4px); }
-  20% { transform: translate(4px, 4px); }
-  30% { transform: translate(-4px, 4px); }
-  40% { transform: translate(4px, -4px); }
-  50% { transform: translate(-2px, 2px); }
-  60% { transform: translate(2px, -2px); }
-  70% { transform: translate(-2px, -2px); }
-  80% { transform: translate(2px, 2px); }
-  90% { transform: translate(-1px, 1px); }
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-4px, -4px);
+  }
+  20% {
+    transform: translate(4px, 4px);
+  }
+  30% {
+    transform: translate(-4px, 4px);
+  }
+  40% {
+    transform: translate(4px, -4px);
+  }
+  50% {
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    transform: translate(2px, -2px);
+  }
+  70% {
+    transform: translate(-2px, -2px);
+  }
+  80% {
+    transform: translate(2px, 2px);
+  }
+  90% {
+    transform: translate(-1px, 1px);
+  }
 }
 
 /* Weapon trail fade */
 @keyframes weapon-trail {
-  0% { opacity: 1; stroke-width: 3; }
-  100% { opacity: 0; stroke-width: 1; }
+  0% {
+    opacity: 1;
+    stroke-width: 3;
+  }
+  100% {
+    opacity: 0;
+    stroke-width: 1;
+  }
 }
 
 /* Particle animations */
 @keyframes particle-fade {
-  0% { opacity: 1; transform: translate(0, 0) scale(1); }
-  100% { opacity: 0; transform: translate(var(--tx, 20px), var(--ty, -20px)) scale(0.5); }
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx, 20px), var(--ty, -20px)) scale(0.5);
+  }
 }
 
 @keyframes snow {
-  0% { transform: translate(0, -10px) rotate(0deg); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translate(15px, 300px) rotate(360deg); opacity: 0; }
+  0% {
+    transform: translate(0, -10px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(15px, 300px) rotate(360deg);
+    opacity: 0;
+  }
 }
 
 @keyframes fog-drift {
-  0% { transform: translateX(-10%); }
-  100% { transform: translateX(10%); }
+  0% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(10%);
+  }
 }
 
 @keyframes ash-fall {
-  0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
-  20% { opacity: 0.6; }
-  80% { opacity: 0.6; }
-  100% { transform: translateY(300px) rotate(180deg); opacity: 0; }
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(300px) rotate(180deg);
+    opacity: 0;
+  }
 }
 
 @keyframes mana-spark {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
-  50% { transform: translate(var(--tx), var(--ty)) scale(1.5); opacity: 0.8; }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(var(--tx), var(--ty)) scale(1.5);
+    opacity: 0.8;
+  }
 }
 
-.animate-snow { animation: snow 3s linear infinite; }
-.animate-fog-drift { animation: fog-drift 10s ease-in-out infinite alternate; }
-.animate-ash-fall { animation: ash-fall 5s linear infinite; }
-.animate-mana-spark { animation: mana-spark 4s ease-in-out infinite; }
+.animate-snow {
+  animation: snow 3s linear infinite;
+}
+.animate-fog-drift {
+  animation: fog-drift 10s ease-in-out infinite alternate;
+}
+.animate-ash-fall {
+  animation: ash-fall 5s linear infinite;
+}
+.animate-mana-spark {
+  animation: mana-spark 4s ease-in-out infinite;
+}
 
 /* Wind streaks sweeping horizontally across the arena */
 @keyframes wind {
-  0% { transform: translateX(0); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateX(120vw); opacity: 0; }
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120vw);
+    opacity: 0;
+  }
 }
-.animate-wind { animation: wind 1.5s linear infinite; }
+.animate-wind {
+  animation: wind 1.5s linear infinite;
+}
 
 /* Hail — fast, hard pellets falling steeply with slight drift */
 @keyframes hail {
-  0% { transform: translate(0, -10px); opacity: 0; }
-  10% { opacity: 1; }
-  100% { transform: translate(-24px, 320px); opacity: 0.9; }
+  0% {
+    transform: translate(0, -10px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-24px, 320px);
+    opacity: 0.9;
+  }
 }
-.animate-hail { animation: hail 0.45s linear infinite; }
+.animate-hail {
+  animation: hail 0.45s linear infinite;
+}
 
 /* Slow rotation for swirling vortex (tornado funnel) */
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
-.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
 
 /* Chaotic drift for sand/debris particles in erratic wind */
 @keyframes chaotic-drift {
-  0%, 100% { transform: translate(0, 0); opacity: 0.3; }
-  25% { transform: translate(var(--tx, 20px), var(--ty, -10px)); opacity: 0.6; }
-  50% { transform: translate(calc(var(--tx, 20px) * -0.5), calc(var(--ty, -10px) * 0.5)); opacity: 0.5; }
-  75% { transform: translate(calc(var(--tx, 20px) * 0.3), calc(var(--ty, -10px) * -0.3)); opacity: 0.7; }
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(var(--tx, 20px), var(--ty, -10px));
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(calc(var(--tx, 20px) * -0.5), calc(var(--ty, -10px) * 0.5));
+    opacity: 0.5;
+  }
+  75% {
+    transform: translate(calc(var(--tx, 20px) * 0.3), calc(var(--ty, -10px) * -0.3));
+    opacity: 0.7;
+  }
 }
-.animate-chaotic-drift { animation: chaotic-drift 3s ease-in-out infinite; }
+.animate-chaotic-drift {
+  animation: chaotic-drift 3s ease-in-out infinite;
+}
 
 /* Blood pool expansion */
 @keyframes blood-pool {
-  0% { transform: scale(0); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: scale(1); opacity: 0.7; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
 }
 
 /* Dust cloud */
 @keyframes dust-cloud {
-  0% { transform: scale(0.5); opacity: 0; }
-  20% { opacity: 0.6; }
-  100% { transform: scale(2); opacity: 0; }
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
 }
 
 /* Apply animations with utility classes */
-.animate-advancing { animation: advancing 1.5s ease-in-out infinite; }
-.animate-retreating { animation: retreating 1.5s ease-in-out infinite; }
-.animate-lunging { animation: lunging 0.5s ease-out; }
-.animate-defending { animation: defending 2s ease-in-out infinite; }
-.animate-stunned { animation: stunned 0.5s ease-in-out 3; }
-.animate-victorious { animation: victorious 1s ease-in-out infinite; }
-.animate-defeated { animation: defeated 0.5s ease-out forwards; }
+.animate-advancing {
+  animation: advancing 1.5s ease-in-out infinite;
+}
+.animate-retreating {
+  animation: retreating 1.5s ease-in-out infinite;
+}
+.animate-lunging {
+  animation: lunging 0.5s ease-out;
+}
+.animate-defending {
+  animation: defending 2s ease-in-out infinite;
+}
+.animate-stunned {
+  animation: stunned 0.5s ease-in-out 3;
+}
+.animate-victorious {
+  animation: victorious 1s ease-in-out infinite;
+}
+.animate-defeated {
+  animation: defeated 0.5s ease-out forwards;
+}
 
-.animate-idle-aggressive { animation: idle-aggressive 1.5s ease-in-out infinite; }
-.animate-idle-defensive { animation: idle-defensive 2s ease-in-out infinite; }
-.animate-idle-balanced { animation: idle-balanced 2s ease-in-out infinite; }
-.animate-idle-aimed { animation: idle-aimed 4s ease-in-out infinite; }
-.animate-idle-striking { animation: idle-striking 1s ease-in-out infinite; }
+.animate-idle-aggressive {
+  animation: idle-aggressive 1.5s ease-in-out infinite;
+}
+.animate-idle-defensive {
+  animation: idle-defensive 2s ease-in-out infinite;
+}
+.animate-idle-balanced {
+  animation: idle-balanced 2s ease-in-out infinite;
+}
+.animate-idle-aimed {
+  animation: idle-aimed 4s ease-in-out infinite;
+}
+.animate-idle-striking {
+  animation: idle-striking 1s ease-in-out infinite;
+}
 
 /* Screen shake intensity variants */
-.animate-shake-low { animation: screen-shake 0.3s ease-in-out; }
-.animate-shake-medium { animation: screen-shake 0.4s ease-in-out; }
-.animate-shake-high { animation: screen-shake 0.5s ease-in-out; }
+.animate-shake-low {
+  animation: screen-shake 0.3s ease-in-out;
+}
+.animate-shake-medium {
+  animation: screen-shake 0.4s ease-in-out;
+}
+.animate-shake-high {
+  animation: screen-shake 0.5s ease-in-out;
+}
 
 /* Crowd reaction states */
-.crowd-cheer { animation: crowd-cheer 0.5s ease-in-out; }
-.crowd-gasp { animation: crowd-gasp 0.3s ease-in-out; }
-.crowd-chant { animation: crowd-chant 1s ease-in-out infinite; }
+.crowd-cheer {
+  animation: crowd-cheer 0.5s ease-in-out;
+}
+.crowd-gasp {
+  animation: crowd-gasp 0.3s ease-in-out;
+}
+.crowd-chant {
+  animation: crowd-chant 1s ease-in-out infinite;
+}
 
 /* ─────────────────────────────────────────────────────────────────────────
    ACCESSIBILITY: REDUCED MOTION

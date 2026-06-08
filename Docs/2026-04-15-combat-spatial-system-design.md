@@ -1,4 +1,5 @@
 # Combat Spatial System — Unified Design Spec
+
 **Date:** 2026-04-15  
 **Status:** Approved for implementation  
 **Scope:** Distance State Machine · Phase-Within-Exchange · Spatial/Arena System
@@ -13,10 +14,10 @@ This spec adds three interlocking systems that make **range real**, **commitment
 
 The three systems ship as one unified feature:
 
-| System | What it adds |
-|--------|-------------|
-| **Distance State Machine** | Four range bands; weapons have preferred ranges and ATT modifiers per band; fighters contest range each exchange |
-| **Phase-Within-Exchange** | `resolveExchange` becomes a 5-sub-phase pipeline: Approach → Feint → Commit → Resolution → Recovery |
+| System                     | What it adds                                                                                                         |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Distance State Machine** | Four range bands; weapons have preferred ranges and ATT modifiers per band; fighters contest range each exchange     |
+| **Phase-Within-Exchange**  | `resolveExchange` becomes a 5-sub-phase pipeline: Approach → Feint → Commit → Resolution → Recovery                  |
 | **Spatial / Arena System** | Zone state (Center / Edge / Corner / Obstacle); arena data model with extensible registry; surface and weather hooks |
 
 ---
@@ -35,41 +36,41 @@ simulate.ts
 
 ### Data model changes summary
 
-| Location | Change |
-|----------|--------|
-| `ResolutionContext` | Add `range`, `zone`, `arenaConfig` |
-| `FighterState` | Add `recoveryDebt: number` |
-| `FightPlan` | Add `feintTendency?: number`, `rangePreference?: DistanceRange` |
-| `EquipmentItem` | Add `rangeModifiers?: Partial<Record<DistanceRange, number>>` |
-| `CombatEventType` | Add `RANGE_SHIFT`, `FEINT_SUCCESS`, `FEINT_FAIL`, `ZONE_SHIFT`, `COMMIT` |
-| `GameState` | Add `arenas: ArenaConfig[]`, `activeArenaId?: string` |
-| `BoutOffer` | Add `arenaId?: string` |
-| `simulateFight` signature | Add optional `arenaConfig?: ArenaConfig` final parameter |
+| Location                  | Change                                                                   |
+| ------------------------- | ------------------------------------------------------------------------ |
+| `ResolutionContext`       | Add `range`, `zone`, `arenaConfig`                                       |
+| `FighterState`            | Add `recoveryDebt: number`                                               |
+| `FightPlan`               | Add `feintTendency?: number`, `rangePreference?: DistanceRange`          |
+| `EquipmentItem`           | Add `rangeModifiers?: Partial<Record<DistanceRange, number>>`            |
+| `CombatEventType`         | Add `RANGE_SHIFT`, `FEINT_SUCCESS`, `FEINT_FAIL`, `ZONE_SHIFT`, `COMMIT` |
+| `GameState`               | Add `arenas: ArenaConfig[]`, `activeArenaId?: string`                    |
+| `BoutOffer`               | Add `arenaId?: string`                                                   |
+| `simulateFight` signature | Add optional `arenaConfig?: ArenaConfig` final parameter                 |
 
 ### New files
 
-| File | Purpose |
-|------|---------|
-| `src/data/arenas.ts` | Arena registry, seed configs, registration helpers |
-| `src/engine/combat/distanceResolution.ts` | Distance contest algorithm, zone transition logic |
-| `src/engine/combat/exchangeSubPhases.ts` | Approach / Feint / Commit / Recovery sub-phase functions |
-| `src/test/distance.test.ts` | Unit tests for distance, feint, commit, zone, arena registry |
+| File                                      | Purpose                                                      |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| `src/data/arenas.ts`                      | Arena registry, seed configs, registration helpers           |
+| `src/engine/combat/distanceResolution.ts` | Distance contest algorithm, zone transition logic            |
+| `src/engine/combat/exchangeSubPhases.ts`  | Approach / Feint / Commit / Recovery sub-phase functions     |
+| `src/test/distance.test.ts`               | Unit tests for distance, feint, commit, zone, arena registry |
 
 ### Modified files
 
-| File | Change |
-|------|--------|
-| `src/types/shared.types.ts` | `DistanceRange`, `ArenaZone`, `ArenaTag`, `CommitLevel`, `ZoneTransitionTable`, `SurfaceMod`, `ArenaWeatherMod` types |
-| `src/types/combat.types.ts` | New event types, `FightPlan` additions |
-| `src/data/equipment.ts` | `rangeModifiers` field on `EquipmentItem`, populated for all 22 weapons |
-| `src/engine/combat/resolution.ts` | `ResolutionContext` additions; `resolveExchange` restructured as pipeline |
-| `src/engine/bout/fighterState.ts` | `recoveryDebt` field, initialised to 0 |
-| `src/engine/simulate.ts` | `arenaConfig` parameter; arena context initialisation |
-| `src/engine/narrativePBP.ts` | New narrative functions for range, feint, zone, commit events |
-| `src/data/narrativeContent.json` | New template arrays under `pbp.range_shift`, `pbp.feints`, `pbp.zone`, `pbp.commit`, `pbp.overextended` |
-| `src/types/state.types.ts` | `GameState.activeArenaId`, `BoutOffer.arenaId` |
-| `src/engine/bout/services/boutProcessorService.ts` | Arena lookup and pass-through to `simulateFight` |
-| `src/test/balance.test.ts` | Weapon differentiation, arena, feint, and regression assertions |
+| File                                               | Change                                                                                                                |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `src/types/shared.types.ts`                        | `DistanceRange`, `ArenaZone`, `ArenaTag`, `CommitLevel`, `ZoneTransitionTable`, `SurfaceMod`, `ArenaWeatherMod` types |
+| `src/types/combat.types.ts`                        | New event types, `FightPlan` additions                                                                                |
+| `src/data/equipment.ts`                            | `rangeModifiers` field on `EquipmentItem`, populated for all 22 weapons                                               |
+| `src/engine/combat/resolution.ts`                  | `ResolutionContext` additions; `resolveExchange` restructured as pipeline                                             |
+| `src/engine/bout/fighterState.ts`                  | `recoveryDebt` field, initialised to 0                                                                                |
+| `src/engine/simulate.ts`                           | `arenaConfig` parameter; arena context initialisation                                                                 |
+| `src/engine/narrativePBP.ts`                       | New narrative functions for range, feint, zone, commit events                                                         |
+| `src/data/narrativeContent.json`                   | New template arrays under `pbp.range_shift`, `pbp.feints`, `pbp.zone`, `pbp.commit`, `pbp.overextended`               |
+| `src/types/state.types.ts`                         | `GameState.activeArenaId`, `BoutOffer.arenaId`                                                                        |
+| `src/engine/bout/services/boutProcessorService.ts` | Arena lookup and pass-through to `simulateFight`                                                                      |
+| `src/test/balance.test.ts`                         | Weapon differentiation, arena, feint, and regression assertions                                                       |
 
 ---
 
@@ -78,7 +79,7 @@ simulate.ts
 ### 3.1 Type
 
 ```ts
-export type DistanceRange = "Grapple" | "Tight" | "Striking" | "Extended";
+export type DistanceRange = 'Grapple' | 'Tight' | 'Striking' | 'Extended';
 ```
 
 Ordered closest → furthest. The distance contest can shift range by at most one step per exchange.
@@ -87,30 +88,30 @@ Ordered closest → furthest. The distance contest can shift range by at most on
 
 Added as `rangeModifiers: Partial<Record<DistanceRange, number>>` on `EquipmentItem`. Values are flat ATT bonuses/penalties applied during Resolution. Omitted ranges default to 0.
 
-| Weapon | Grapple | Tight | Striking | Extended |
-|--------|---------|-------|----------|----------|
-| Dagger | +4 | +2 | 0 | −6 |
-| Epée | −4 | −1 | +3 | +1 |
-| Hatchet | +1 | +3 | 0 | −3 |
-| Shortsword | +2 | +2 | 0 | −2 |
-| Small Shield | +3 | +2 | 0 | −3 |
-| War Hammer | −2 | +2 | +1 | −1 |
-| Scimitar | −3 | 0 | +2 | +1 |
-| Mace | −1 | +2 | +1 | −2 |
-| Longsword | −3 | 0 | +2 | +1 |
-| Battle Axe | −4 | −1 | +2 | 0 |
-| Broadsword | −2 | +1 | +2 | 0 |
-| Medium Shield | +2 | +2 | 0 | −3 |
-| Morning Star | −4 | −2 | +2 | +1 |
-| Short Spear | −5 | −2 | +3 | +2 |
-| War Flail | −4 | −1 | +2 | +1 |
-| Large Shield | +1 | +2 | 0 | −4 |
-| Quarterstaff | −4 | −1 | +2 | +3 |
-| Great Axe | −5 | −2 | +2 | +1 |
-| Greatsword | −5 | −1 | +2 | +2 |
-| Long Spear | −8 | −4 | +1 | +4 |
-| Halberd | −8 | −3 | +1 | +3 |
-| Maul | −4 | −1 | +2 | 0 |
+| Weapon        | Grapple | Tight | Striking | Extended |
+| ------------- | ------- | ----- | -------- | -------- |
+| Dagger        | +4      | +2    | 0        | −6       |
+| Epée          | −4      | −1    | +3       | +1       |
+| Hatchet       | +1      | +3    | 0        | −3       |
+| Shortsword    | +2      | +2    | 0        | −2       |
+| Small Shield  | +3      | +2    | 0        | −3       |
+| War Hammer    | −2      | +2    | +1       | −1       |
+| Scimitar      | −3      | 0     | +2       | +1       |
+| Mace          | −1      | +2    | +1       | −2       |
+| Longsword     | −3      | 0     | +2       | +1       |
+| Battle Axe    | −4      | −1    | +2       | 0        |
+| Broadsword    | −2      | +1    | +2       | 0        |
+| Medium Shield | +2      | +2    | 0        | −3       |
+| Morning Star  | −4      | −2    | +2       | +1       |
+| Short Spear   | −5      | −2    | +3       | +2       |
+| War Flail     | −4      | −1    | +2       | +1       |
+| Large Shield  | +1      | +2    | 0        | −4       |
+| Quarterstaff  | −4      | −1    | +2       | +3       |
+| Great Axe     | −5      | −2    | +2       | +1       |
+| Greatsword    | −5      | −1    | +2       | +2       |
+| Long Spear    | −8      | −4    | +1       | +4       |
+| Halberd       | −8      | −3    | +1       | +3       |
+| Maul          | −4      | −1    | +2       | 0        |
 
 ### 3.3 Preferred Range
 
@@ -130,6 +131,7 @@ reachScore = INI + (OE − 5) × 2 + motivationBonus − (recoveryDebt × 2)
 The fighter with the higher `reachScore` shifts range one step toward their preferred zone. Ties leave range unchanged.
 
 Result:
+
 - Range changed → emit `RANGE_SHIFT` event (`metadata: { from, to, actor }`)
 - Range unchanged → no event emitted
 - Write `rangeMod = getWeaponRangeMod(weaponId, newRange)` to `ExchangeState`
@@ -151,15 +153,15 @@ export function getWeaponRangeMod(weaponId: string, range: DistanceRange): numbe
 ### 4.1 Exchange State Accumulator
 
 ```ts
-export type CommitLevel = "Cautious" | "Standard" | "Full";
+export type CommitLevel = 'Cautious' | 'Standard' | 'Full';
 
 interface ExchangeState {
-  rangeMod: number;       // ATT delta from weapon range at current distance
-  feintBonus: number;     // ATT bonus for feinter on success
+  rangeMod: number; // ATT delta from weapon range at current distance
+  feintBonus: number; // ATT bonus for feinter on success
   commitLevel: CommitLevel;
-  attBonus: number;       // net ATT modifier from Commit
-  defPenalty: number;     // net DEF modifier from Commit
-  events: CombatEvent[];  // accumulates across all sub-phases
+  attBonus: number; // net ATT modifier from Commit
+  defPenalty: number; // net DEF modifier from Commit
+  events: CombatEvent[]; // accumulates across all sub-phases
 }
 ```
 
@@ -175,31 +177,34 @@ interface ExchangeState {
 ### 4.3 Sub-phase 2 — Feint
 
 **Trigger conditions (all must hold):**
+
 - Attacker `WT ≥ 15`
 - `plan.feintTendency > 0`
 - Current OE ≥ 4
 
 **Roll:**
+
 ```
 feintRoll = attacker.WT + feintTendency − defender.AL − defender.WT × 0.5
 ```
+
 Success when `feintRoll > 0`.
 
-| Outcome | Effect |
-|---------|--------|
-| Success | `feintBonus = +4`, emit `FEINT_SUCCESS` |
-| Failure | No bonus, +1 endurance drain on attacker, emit `FEINT_FAIL` |
-| Not triggered | No-op |
+| Outcome       | Effect                                                      |
+| ------------- | ----------------------------------------------------------- |
+| Success       | `feintBonus = +4`, emit `FEINT_SUCCESS`                     |
+| Failure       | No bonus, +1 endurance drain on attacker, emit `FEINT_FAIL` |
+| Not triggered | No-op                                                       |
 
 ### 4.4 Sub-phase 3 — Commit
 
 Determines exposure level from OE and fight state. Sets `attBonus` and `defPenalty` on `ExchangeState`. Emits `COMMIT` event.
 
-| Level | Condition | ATT | DEF | Recovery Debt Written |
-|-------|-----------|-----|-----|-----------------------|
-| Cautious | OE ≤ 3 or HP < 30% | −2 | +2 | 0 |
-| Standard | OE 4–6 | 0 | 0 | 0 |
-| Full | OE ≥ 7 or momentum ≥ 2 | +3 | −3 | 2 |
+| Level    | Condition              | ATT | DEF | Recovery Debt Written |
+| -------- | ---------------------- | --- | --- | --------------------- |
+| Cautious | OE ≤ 3 or HP < 30%     | −2  | +2  | 0                     |
+| Standard | OE 4–6                 | 0   | 0   | 0                     |
+| Full     | OE ≥ 7 or momentum ≥ 2 | +3  | −3  | 2                     |
 
 Recovery debt is written to the **attacker's** `FighterState.recoveryDebt` after Resolution. Debt is set, not stacked: `recoveryDebt = Math.max(existing, written)`.
 
@@ -245,7 +250,7 @@ rangePreference?: DistanceRange; // overrides weapon-derived preferred range for
 ### 5.1 Zone Type
 
 ```ts
-export type ArenaZone = "Center" | "Edge" | "Corner" | "Obstacle";
+export type ArenaZone = 'Center' | 'Edge' | 'Corner' | 'Obstacle';
 ```
 
 Zone state lives on `ResolutionContext` alongside `range`. Starts at `arenaConfig.startingZone` (almost always `"Center"`).
@@ -256,10 +261,10 @@ Applied as a flat DEF penalty to the pushed fighter during Resolution.
 
 ```ts
 const ZONE_DEF_MODS: Record<ArenaZone, number> = {
-  Center:   0,
-  Edge:     -2,
-  Corner:   -4,
-  Obstacle:  0,  // future: cover blocks ranged/thrown weapons
+  Center: 0,
+  Edge: -2,
+  Corner: -4,
+  Obstacle: 0, // future: cover blocks ranged/thrown weapons
 };
 ```
 
@@ -269,12 +274,12 @@ Only the fighter who occupies the non-Center zone takes the penalty. Zone owners
 
 Evaluated in the Approach sub-phase after range is resolved. The fighter who **lost** the distance contest this exchange is the candidate for a zone push.
 
-| Condition | Transition | Default Probability |
-|-----------|------------|---------------------|
-| Range = Extended, distance contest loser's HP dropped this exchange, `hasEdges` | Center → Edge | 20% |
-| Zone = Edge, range = Extended, distance contest lost again, `hasCorners` | Edge → Corner | 15% |
-| Zone = Edge or Corner, distance contest won by the pushed fighter | toward Center (one step) | 40% |
-| Zone = Obstacle (arena `hasObstacles`, range = Tight) | Enter Obstacle | 10% |
+| Condition                                                                       | Transition               | Default Probability |
+| ------------------------------------------------------------------------------- | ------------------------ | ------------------- |
+| Range = Extended, distance contest loser's HP dropped this exchange, `hasEdges` | Center → Edge            | 20%                 |
+| Zone = Edge, range = Extended, distance contest lost again, `hasCorners`        | Edge → Corner            | 15%                 |
+| Zone = Edge or Corner, distance contest won by the pushed fighter               | toward Center (one step) | 40%                 |
+| Zone = Obstacle (arena `hasObstacles`, range = Tight)                           | Enter Obstacle           | 10%                 |
 
 All probabilities are overridable via `arenaConfig.zoneTransitionOverrides`.
 
@@ -287,8 +292,8 @@ export interface ArenaConfig {
   id: string;
   name: string;
   description: string;
-  tier: "Training" | "Standard" | "Championship" | "Grand";
-  surface: "Sand" | "Stone" | "Mud" | "Wood" | "Grass";
+  tier: 'Training' | 'Standard' | 'Championship' | 'Grand';
+  surface: 'Sand' | 'Stone' | 'Mud' | 'Wood' | 'Grass';
   startingRange: DistanceRange;
   startingZone: ArenaZone;
   hasEdges: boolean;
@@ -298,34 +303,40 @@ export interface ArenaConfig {
 
   // ── Extensibility hooks ──────────────────────────────────────────────────
   tags?: ArenaTag[];
-  weatherExposure?: number;                              // 0–1. 0 = enclosed, 1 = fully open
+  weatherExposure?: number; // 0–1. 0 = enclosed, 1 = fully open
   weatherModifiers?: Partial<Record<WeatherType, ArenaWeatherMod>>;
   zoneTransitionOverrides?: Partial<ZoneTransitionTable>;
   surfaceModifiers?: SurfaceMod;
 }
 
 export type ArenaTag =
-  | "outdoor" | "indoor" | "underground"
-  | "ceremonial" | "seasonal" | "tournament-legal"
-  | "gladiatorial" | "execution" | "training";
+  | 'outdoor'
+  | 'indoor'
+  | 'underground'
+  | 'ceremonial'
+  | 'seasonal'
+  | 'tournament-legal'
+  | 'gladiatorial'
+  | 'execution'
+  | 'training';
 
 export interface ArenaWeatherMod {
-  edgePushChanceBonus?: number;   // additive on zone push probability
-  rangeShiftBonus?: number;       // +/- on distance contest roll
-  surfaceSlip?: number;           // flat DEF penalty to both fighters
+  edgePushChanceBonus?: number; // additive on zone push probability
+  rangeShiftBonus?: number; // +/- on distance contest roll
+  surfaceSlip?: number; // flat DEF penalty to both fighters
 }
 
 export interface ZoneTransitionTable {
-  centerToEdgeChance: number;     // default 0.20
-  edgeToCornerChance: number;     // default 0.15
-  recoveryChance: number;         // default 0.40
-  obstacleEntryChance: number;    // default 0.10
+  centerToEdgeChance: number; // default 0.20
+  edgeToCornerChance: number; // default 0.15
+  recoveryChance: number; // default 0.40
+  obstacleEntryChance: number; // default 0.10
 }
 
 export interface SurfaceMod {
-  iniMod?: number;                // e.g. Mud: −2 INI both fighters
-  enduranceMult?: number;         // e.g. Stone: 1.05× fatigue
-  riposteMod?: number;            // e.g. Mud: +3 riposte (slipping = openings)
+  iniMod?: number; // e.g. Mud: −2 INI both fighters
+  enduranceMult?: number; // e.g. Stone: 1.05× fatigue
+  riposteMod?: number; // e.g. Mud: +3 riposte (slipping = openings)
 }
 ```
 
@@ -343,7 +354,7 @@ export function registerArena(config: ArenaConfig): void {
 }
 
 export function getArenaById(id: string): ArenaConfig {
-  return ARENA_REGISTRY.get(id) ?? ARENA_REGISTRY.get("standard_arena")!;
+  return ARENA_REGISTRY.get(id) ?? ARENA_REGISTRY.get('standard_arena')!;
 }
 
 export function getAllArenas(): ArenaConfig[] {
@@ -351,11 +362,11 @@ export function getAllArenas(): ArenaConfig[] {
 }
 
 export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
-  return getAllArenas().filter(a => a.tags?.includes(tag));
+  return getAllArenas().filter((a) => a.tags?.includes(tag));
 }
 
-export function getArenasByTier(tier: ArenaConfig["tier"]): ArenaConfig[] {
-  return getAllArenas().filter(a => a.tier === tier);
+export function getArenasByTier(tier: ArenaConfig['tier']): ArenaConfig[] {
+  return getAllArenas().filter((a) => a.tier === tier);
 }
 ```
 
@@ -363,37 +374,41 @@ The four seed arenas are registered at module load. Any future arena — seasona
 
 ### 5.6 Seed Arenas
 
-| id | Name | Tier | Surface | Start Range | Edges | Corners | Obstacles | Tags | Weather Exposure |
-|----|------|------|---------|-------------|-------|---------|-----------|------|-----------------|
-| `training_pit` | The Pit | Training | Sand | Tight | No | No | No | training | 0.3 |
-| `standard_arena` | The Arena | Standard | Sand | Striking | Yes | Yes | No | outdoor, tournament-legal | 0.8 |
-| `championship_arena` | The Grand Sand | Championship | Stone | Striking | Yes | Yes | No | outdoor, tournament-legal, ceremonial | 0.9 |
-| `grand_colosseum` | The Colosseum | Grand | Stone | Striking | Yes | Yes | Yes | outdoor, tournament-legal, ceremonial, gladiatorial | 1.0 |
+| id                   | Name           | Tier         | Surface | Start Range | Edges | Corners | Obstacles | Tags                                                | Weather Exposure |
+| -------------------- | -------------- | ------------ | ------- | ----------- | ----- | ------- | --------- | --------------------------------------------------- | ---------------- |
+| `training_pit`       | The Pit        | Training     | Sand    | Tight       | No    | No      | No        | training                                            | 0.3              |
+| `standard_arena`     | The Arena      | Standard     | Sand    | Striking    | Yes   | Yes     | No        | outdoor, tournament-legal                           | 0.8              |
+| `championship_arena` | The Grand Sand | Championship | Stone   | Striking    | Yes   | Yes     | No        | outdoor, tournament-legal, ceremonial               | 0.9              |
+| `grand_colosseum`    | The Colosseum  | Grand        | Stone   | Striking    | Yes   | Yes     | Yes       | outdoor, tournament-legal, ceremonial, gladiatorial | 1.0              |
 
 `standard_arena` is the default when no arena is specified. Its behaviour matches current implicit assumptions — Striking start, standard zone probabilities, no surface modifiers.
 
 **Example custom arena:**
+
 ```ts
 registerArena({
-  id: "mud_pits",
-  name: "The Mud Pits",
-  tier: "Standard",
-  surface: "Mud",
-  startingRange: "Tight",
-  hasEdges: true, hasCorners: false, hasObstacles: false,
-  tags: ["outdoor", "gladiatorial"],
+  id: 'mud_pits',
+  name: 'The Mud Pits',
+  tier: 'Standard',
+  surface: 'Mud',
+  startingRange: 'Tight',
+  hasEdges: true,
+  hasCorners: false,
+  hasObstacles: false,
+  tags: ['outdoor', 'gladiatorial'],
   weatherExposure: 1.0,
   surfaceModifiers: { iniMod: -2, riposteMod: +3 },
   weatherModifiers: {
-    Rainy: { surfaceSlip: -2, edgePushChanceBonus: 0.10 },
+    Rainy: { surfaceSlip: -2, edgePushChanceBonus: 0.1 },
   },
-  zoneTransitionOverrides: { centerToEdgeChance: 0.30 },
+  zoneTransitionOverrides: { centerToEdgeChance: 0.3 },
 });
 ```
 
 ### 5.7 Wiring into the Game
 
 **`simulateFight` signature addition:**
+
 ```ts
 export function simulateFight(
   planA: FightPlan,
@@ -402,19 +417,21 @@ export function simulateFight(
   warriorD?: Warrior,
   providedRng?: (() => number) | number,
   trainers?: Trainer[],
-  weather: WeatherType = "Clear",
-  arenaConfig?: ArenaConfig           // NEW — defaults to standard_arena
-): FightOutcome
+  weather: WeatherType = 'Clear',
+  arenaConfig?: ArenaConfig // NEW — defaults to standard_arena
+): FightOutcome;
 ```
 
 **`ResolutionContext` additions:**
+
 ```ts
-range: DistanceRange;        // initialised from arenaConfig.startingRange
-zone: ArenaZone;             // initialised from arenaConfig.startingZone
-arenaConfig: ArenaConfig;    // full config for zone transition lookups
+range: DistanceRange; // initialised from arenaConfig.startingRange
+zone: ArenaZone; // initialised from arenaConfig.startingZone
+arenaConfig: ArenaConfig; // full config for zone transition lookups
 ```
 
 **`boutProcessorService` resolution:**
+
 ```ts
 const arenaId = bout.arenaId ?? state.activeArenaId ?? "standard_arena";
 const arenaConfig = getArenaById(arenaId);
@@ -422,12 +439,14 @@ simulateFight(..., arenaConfig);
 ```
 
 **`GameState` additions:**
+
 ```ts
 arenas: ArenaConfig[];       // populated from getAllArenas() at game init
 activeArenaId?: string;      // which arena is currently active for bouts
 ```
 
 **`BoutOffer` addition:**
+
 ```ts
 arenaId?: string;            // optional per-bout arena override
 ```
@@ -463,15 +482,15 @@ arenaIntroLine(arena: ArenaConfig): string  // emitted at minute 0, non-default 
 
 ### 6.2 Emit Rules
 
-| Function | Trigger | Frequency |
-|----------|---------|-----------|
-| `rangeShiftLine` | `RANGE_SHIFT` event | Every shift |
-| `feintSuccessLine` | `FEINT_SUCCESS` event | Every occurrence |
-| `feintFailLine` | `FEINT_FAIL` event | Every occurrence |
-| `zoneShiftLine` | `ZONE_SHIFT` event | Every shift |
-| `commitLine` | `COMMIT` event, level = Full | Every Full commit |
-| `overextendedLine` | Recovery, debt written ≥ 2 | Once per debt write |
-| `arenaIntroLine` | `minute: 0`, `arenaId !== "standard_arena"` | Once per fight |
+| Function           | Trigger                                     | Frequency           |
+| ------------------ | ------------------------------------------- | ------------------- |
+| `rangeShiftLine`   | `RANGE_SHIFT` event                         | Every shift         |
+| `feintSuccessLine` | `FEINT_SUCCESS` event                       | Every occurrence    |
+| `feintFailLine`    | `FEINT_FAIL` event                          | Every occurrence    |
+| `zoneShiftLine`    | `ZONE_SHIFT` event                          | Every shift         |
+| `commitLine`       | `COMMIT` event, level = Full                | Every Full commit   |
+| `overextendedLine` | Recovery, debt written ≥ 2                  | Once per debt write |
+| `arenaIntroLine`   | `minute: 0`, `arenaId !== "standard_arena"` | Once per fight      |
 
 ### 6.3 New Template Paths in `narrativeContent.json`
 
@@ -484,14 +503,14 @@ arenaIntroLine(arena: ArenaConfig): string  // emitted at minute 0, non-default 
     },
     "feints": {
       "success": ["(authored — e.g. '%A feints low — %D commits too early.')"],
-      "fail":    ["(authored — e.g. '%A's feint is read immediately.')"]
+      "fail": ["(authored — e.g. '%A's feint is read immediately.')"]
     },
     "zone": {
-      "edge_push":   ["(authored — e.g. '%A is forced back toward the wall.')"],
+      "edge_push": ["(authored — e.g. '%A is forced back toward the wall.')"],
       "corner_push": ["(authored — e.g. '%A is trapped in the corner with nowhere to retreat.')"],
-      "recovery":    ["(authored — e.g. '%A fights back to the centre.')"]
+      "recovery": ["(authored — e.g. '%A fights back to the centre.')"]
     },
-    "commit":       ["(authored — e.g. '%A throws everything into the attack.')"],
+    "commit": ["(authored — e.g. '%A throws everything into the attack.')"],
     "overextended": ["(authored — e.g. '%A is badly overextended.')"]
   }
 }
@@ -506,6 +525,7 @@ arenaIntroLine(arena: ArenaConfig): string  // emitted at minute 0, non-default 
 ### 7.1 `src/test/distance.test.ts` — New File
 
 **Distance contest**
+
 - Fighter with higher reachScore shifts range one step toward preferred
 - Tie leaves range unchanged
 - Range cannot shift below Grapple or above Extended
@@ -513,30 +533,35 @@ arenaIntroLine(arena: ArenaConfig): string  // emitted at minute 0, non-default 
 - recoveryDebt reduces Approach roll by 2 per point
 
 **Weapon range modifiers**
+
 - `getWeaponRangeMod` returns correct ATT delta for each weapon/range combination
 - Long spear: +4 at Extended, −8 at Grapple
 - Dagger: +4 at Grapple, −6 at Extended
 - Broadsword: +2 at Striking, −2 at Grapple (baseline weapon)
 
 **Zone transitions**
+
 - `centerToEdge` fires at correct probability given `arena.hasEdges`
 - `edgeToCorner` fires at correct probability given `arena.hasCorners`
 - Zone push does not fire when `arena.hasEdges = false` (training_pit)
 - `zoneTransitionOverrides` partial merge leaves unspecified fields at defaults
 
 **Feint sub-phase**
+
 - Feint not triggered when `feintTendency = 0`
 - Feint not triggered when `WT < 15`
 - Feint success sets `feintBonus = +4` on `ExchangeState`
 - Feint failure sets no bonus and costs +1 endurance
 
 **Commit sub-phase**
+
 - Full commit writes `recoveryDebt = 2` to attacker
 - Cautious commit writes `recoveryDebt = 0`
 - Existing debt is not stacked — `max(existing, written)`
 - Recovery decays debt by 1 per exchange, floor 0
 
 **Arena registry**
+
 - `getArenaById` returns `standard_arena` as fallback for unknown id
 - `registerArena` adds arena to registry, retrievable by id
 - `getArenasByTag` filters correctly
@@ -547,18 +572,22 @@ arenaIntroLine(arena: ArenaConfig): string  // emitted at minute 0, non-default 
 The existing 10k-fight style matrix test must still pass: no style > 65% win rate, no style < 35%, kill rate 8–12%. The distance system is active in all these fights via the default `standard_arena`.
 
 **Weapon range differentiation**
+
 - Long spear vs dagger: long spear win rate > 60% at default Striking start
 - Long spear vs dagger: win rate drops below 55% when starting range = Tight (training_pit)
 - Dagger warrior win rate in training_pit > dagger warrior win rate in standard_arena
 
 **Arena surface modifiers**
+
 - Mud surface applies −2 INI to both fighters (verified via average initiative wins)
 - Stone `enduranceMult = 1.05` produces measurably shorter fight durations at equal OE vs Sand baseline
 
 **Feinting**
+
 - Warrior with WT = 17, `feintTendency = 8` lands statistically more first-exchange hits than identical warrior with `feintTendency = 0` over 500 fights
 
 **Style balance regression**
+
 - All existing style win-rate assertions still pass after spatial system is enabled
 
 ### 7.3 Integration Smoke Tests
@@ -579,6 +608,7 @@ These are explicitly **not in scope** for this implementation. They are designed
 ### 8.1 Ring-Outs
 
 When a fighter at `zone: "Edge"` or `zone: "Corner"` takes a hit above a damage threshold, a ring-out roll occurs. On success the fight ends with a new `FightOutcomeBy` value `"RingOut"`. Requires:
+
 - Adding `"RingOut"` to `FightOutcomeBy` union
 - New narrative templates under `conclusions.RingOut`
 - `injuryHandler` consideration (ring-out landing injury)
@@ -587,6 +617,7 @@ When a fighter at `zone: "Edge"` or `zone: "Corner"` takes a hit above a damage 
 ### 8.2 Corner Pin
 
 When a fighter at `zone: "Corner"` loses the distance contest, the `retreat` step in Approach is skipped — range cannot improve that exchange. The pinned fighter cannot move range toward their preferred zone regardless of contest outcome. Requires:
+
 - A `pinned: boolean` flag on `FighterState`
 - Approach sub-phase pin check before contest resolution
 - Narrative line for pin state entry and escape
@@ -607,9 +638,9 @@ Arenas gated behind progression milestones (fame threshold, season ranking, care
 
 ## 9. Open Questions / Known Risks
 
-| Risk | Mitigation |
-|------|-----------|
-| Range modifiers shift existing style balance | Balance suite must pass before merge; tune modifier magnitudes if needed |
-| Phase-Within-Exchange adds ~5× sub-calls to hot path | Profile against 10-second performance gate; flatten if needed |
+| Risk                                                     | Mitigation                                                                                                          |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Range modifiers shift existing style balance             | Balance suite must pass before merge; tune modifier magnitudes if needed                                            |
+| Phase-Within-Exchange adds ~5× sub-calls to hot path     | Profile against 10-second performance gate; flatten if needed                                                       |
 | `resolveExchange` restructure is the highest-risk change | Wrap existing logic without touching internals; validate with full fight log comparison against pre-change baseline |
-| Weapon range table values are design estimates | Treat as v1 starting point; tune after balance suite results |
+| Weapon range table values are design estimates           | Treat as v1 starting point; tune after balance suite results                                                        |

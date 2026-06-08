@@ -17,6 +17,7 @@ It closes the integration gap between stable management and bout resolution by s
 6. How matchmaking feeds into bout resolution, fame, gazette, and chronicle
 
 **Depends on:**
+
 - Warrior Design & Creation Spec v0.3
 - Dueling Bout System & Style × Style Matchup Matrix v0.1
 - AI Dueling Behavior Spec v0.1
@@ -26,6 +27,7 @@ It closes the integration gap between stable management and bout resolution by s
 - AI Rival Stables (`src/engine/rivals.ts`)
 
 **Consumed by:**
+
 - `src/pages/RunRound.tsx` (weekly bout execution)
 - `src/pages/Tournaments.tsx` (bracket play)
 - `src/engine/rivals.ts` (AI stable participation)
@@ -37,11 +39,13 @@ It closes the integration gap between stable management and bout resolution by s
 ## 1) Design Intent
 
 ### Player Value
-- **Agency**: Players choose *which* warriors fight (via roster management), but not *whom* they fight. Matchmaking provides opposition.
+
+- **Agency**: Players choose _which_ warriors fight (via roster management), but not _whom_ they fight. Matchmaking provides opposition.
 - **Stakes**: Every week, the player's warriors are tested against external threats they cannot fully predict or control.
 - **Narrative**: Cross-stable rivalries emerge naturally from repeated matchups, kills, and fame differential.
 
 ### Core Principle
+
 > The arena books fights. The player manages the stable. The intersection is where strategy lives.
 
 ---
@@ -50,13 +54,13 @@ It closes the integration gap between stable management and bout resolution by s
 
 ### 2.1 Phases per Week
 
-| Phase | Timing | Description |
-|-------|--------|-------------|
-| **Management** | Before \"Run Round\" | Player assigns training, adjusts plans, equips warriors |
-| **Booking** | On \"Run Round\" click | Matchmaker generates pairings |
-| **Resolution** | Immediate after booking | Bouts simulated in sequence |
-| **Processing** | After all bouts | XP, injuries, fame, economy, gazette |
-| **Advance** | End | Week counter increments, season checks |
+| Phase          | Timing                  | Description                                             |
+| -------------- | ----------------------- | ------------------------------------------------------- |
+| **Management** | Before \"Run Round\"    | Player assigns training, adjusts plans, equips warriors |
+| **Booking**    | On \"Run Round\" click  | Matchmaker generates pairings                           |
+| **Resolution** | Immediate after booking | Bouts simulated in sequence                             |
+| **Processing** | After all bouts         | XP, injuries, fame, economy, gazette                    |
+| **Advance**    | End                     | Week counter increments, season checks                  |
 
 ### 2.2 Match Card Size
 
@@ -71,11 +75,11 @@ It closes the integration gap between stable management and bout resolution by s
 
 A warrior is **eligible to fight** if ALL of:
 
-| Rule | Check | Reference |
-|------|-------|-----------|
-| Status is \"Active\" | `w.status === \"Active\"` | types/game.ts |
-| Not severely injured | `!isTooInjuredToFight(injuries)` | injuries.ts |
-| Not resting | `!isResting(w, state.week)` | New: see §3.1 |
+| Rule                      | Check                                                  | Reference        |
+| ------------------------- | ------------------------------------------------------ | ---------------- |
+| Status is \"Active\"      | `w.status === \"Active\"`                              | types/game.ts    |
+| Not severely injured      | `!isTooInjuredToFight(injuries)`                       | injuries.ts      |
+| Not resting               | `!isResting(w, state.week)`                            | New: see §3.1    |
 | Not in training this week | `!trainingAssignments.find(a => a.warriorId === w.id)` | Mutual exclusion |
 
 ### 3.1 Rest Rule (New)
@@ -90,6 +94,7 @@ interface RestState {
 ```
 
 **Rest duration:**
+
 - Normal bout (win or loss by Exhaustion/Stoppage): 0 weeks (fight next week)
 - KO loss: 1 week mandatory rest
 - Kill (winner): 0 weeks
@@ -100,6 +105,7 @@ interface RestState {
 ### 3.2 Training Exclusion
 
 A warrior assigned to training **cannot fight that week**. This is a meaningful management trade-off:
+
 - Train → guaranteed growth chance, no risk, no fame
 - Fight → XP, fame, risk of injury/death, no training gain
 
@@ -136,14 +142,14 @@ score = baseScore
       + randomJitter
 ```
 
-| Factor | Weight | Description |
-|--------|--------|-------------|
-| `baseScore` | 100 | Ensures any match is possible |
-| `fameProximityBonus` | 0–30 | Prefer opponents within ±5 fame. `30 - abs(P.fame - R.fame) * 3` clamped to 0 |
-| `rivalryBonus` | 0–50 | If P's stable and R's stable have an active rivalry, +50 |
-| `styleDiversityBonus` | 0–20 | +20 if this style matchup hasn't occurred in last 4 weeks |
-| `repeatPenalty` | -100 | -100 if P fought R in the last 2 weeks |
-| `randomJitter` | 0–15 | Seeded random to prevent deterministic booking |
+| Factor                | Weight | Description                                                                   |
+| --------------------- | ------ | ----------------------------------------------------------------------------- |
+| `baseScore`           | 100    | Ensures any match is possible                                                 |
+| `fameProximityBonus`  | 0–30   | Prefer opponents within ±5 fame. `30 - abs(P.fame - R.fame) * 3` clamped to 0 |
+| `rivalryBonus`        | 0–50   | If P's stable and R's stable have an active rivalry, +50                      |
+| `styleDiversityBonus` | 0–20   | +20 if this style matchup hasn't occurred in last 4 weeks                     |
+| `repeatPenalty`       | -100   | -100 if P fought R in the last 2 weeks                                        |
+| `randomJitter`        | 0–15   | Seeded random to prevent deterministic booking                                |
 
 ### 4.3 AI vs AI Background Bouts
 
@@ -170,18 +176,20 @@ interface Rivalry {
   stableIdA: string;
   stableIdB: string;
   intensity: number; // 1-5
-  reason: string;    // \"KRAGOS killed BRUTUS in Week 4\"
+  reason: string; // \"KRAGOS killed BRUTUS in Week 4\"
   startWeek: number;
 }
 ```
 
 Triggers:
+
 - A kill between stables → intensity 3 + rivalry created
 - 3+ bouts between same stables in 8 weeks → intensity 1
 - Tournament elimination → intensity 2
 - Existing rivalry + another kill → intensity +2 (max 5)
 
 Rivalry effects:
+
 - +50 matchmaking score (more likely to be paired)
 - +1 fame multiplier for bouts between rivals
 - Gazette special coverage (\"The blood feud between X and Y continues...\")
@@ -210,17 +218,18 @@ Tournaments use a **separate bracket system** (already implemented in `Tournamen
 
 ## 6) Roster Disruption Handling
 
-| Event | Effect on Schedule |
-|-------|-------------------|
-| **Death** | Immediate removal. Opponent gets a \"bye\" if mid-round. |
-| **Severe Injury** | Warrior ineligible until healed. No replacement. |
-| **Retirement** | Warrior removed from pool. Newsletter note. |
-| **All warriors injured** | Week skipped for that stable. Gazette: \"stable rests.\" |
-| **Rival stable eliminated** | New rival stable generated at next season boundary. |
+| Event                       | Effect on Schedule                                       |
+| --------------------------- | -------------------------------------------------------- |
+| **Death**                   | Immediate removal. Opponent gets a \"bye\" if mid-round. |
+| **Severe Injury**           | Warrior ineligible until healed. No replacement.         |
+| **Retirement**              | Warrior removed from pool. Newsletter note.              |
+| **All warriors injured**    | Week skipped for that stable. Gazette: \"stable rests.\" |
+| **Rival stable eliminated** | New rival stable generated at next season boundary.      |
 
 ### 6.1 Minimum Viable Arena
 
 The arena requires **at least 2 eligible warriors across all stables** to run a week. If fewer:
+
 - Skip combat phase
 - Process only economy, training, aging
 - Gazette: \"A quiet week in the arena. No challengers stepped forward.\"
@@ -233,9 +242,9 @@ The arena requires **at least 2 eligible warriors across all stables** to run a 
 // Add to GameState
 interface GameState {
   // ... existing fields ...
-  restStates: RestState[];       // warriors on mandatory rest
-  rivalries: Rivalry[];          // detected cross-stable rivalries
-  matchHistory: MatchRecord[];   // last 8 weeks of pairings for repeat avoidance
+  restStates: RestState[]; // warriors on mandatory rest
+  rivalries: Rivalry[]; // detected cross-stable rivalries
+  matchHistory: MatchRecord[]; // last 8 weeks of pairings for repeat avoidance
 }
 
 interface RestState {
@@ -278,12 +287,14 @@ Current: shows results only.
 ### 8.2 Dashboard Gazette
 
 AI vs AI bout results appear as gazette items:
+
 - \"In rival action: BRUTUS (Iron Wolves) defeated SHADE (Blood Ravens) by KO.\"
 - \"A quiet week in the rival arenas — no notable bouts.\"
 
 ### 8.3 Rivalry Panel (New)
 
 On Dashboard or dedicated sub-section:
+
 - Active rivalries with intensity meter
 - Kill history between stables
 - \"Most Wanted\" — rival warrior with most wins against player
@@ -292,22 +303,23 @@ On Dashboard or dedicated sub-section:
 
 ## 9) Integration Points
 
-| System | Matchmaking Provides | Matchmaking Consumes |
-|--------|---------------------|---------------------|
-| Bout Engine | Pairing data (warrior refs, plans) | Fight outcomes |
-| Injury System | — | Eligibility checks |
-| Fame/Crowd | — | Rivalry bonuses |
-| Economy | — | Fight purse triggers |
-| Gazette | Bout summaries, AI results | — |
-| Meta Drift | AI bout style data | — |
-| Scouting | — | Rival warrior data |
-| Progression | — | XP triggers |
+| System        | Matchmaking Provides               | Matchmaking Consumes |
+| ------------- | ---------------------------------- | -------------------- |
+| Bout Engine   | Pairing data (warrior refs, plans) | Fight outcomes       |
+| Injury System | —                                  | Eligibility checks   |
+| Fame/Crowd    | —                                  | Rivalry bonuses      |
+| Economy       | —                                  | Fight purse triggers |
+| Gazette       | Bout summaries, AI results         | —                    |
+| Meta Drift    | AI bout style data                 | —                    |
+| Scouting      | —                                  | Rival warrior data   |
+| Progression   | —                                  | XP triggers          |
 
 ---
 
 ## 10) Acceptance Criteria
 
 ### Functional
+
 - [ ] Player warriors fight rival warriors, not each other (outside FTUE/tournaments)
 - [ ] AI vs AI bouts happen each week and update rival records
 - [ ] Repeat matchups are avoided for 2 weeks
@@ -318,6 +330,7 @@ On Dashboard or dedicated sub-section:
 - [ ] Tournament brackets can include AI warriors as fill
 
 ### Behavioral
+
 - [ ] A new player with 3 warriors sees 1-3 bouts per week
 - [ ] No warrior fights the same opponent 3 weeks in a row
 - [ ] Killing a rival's warrior creates a visible rivalry
@@ -325,6 +338,7 @@ On Dashboard or dedicated sub-section:
 - [ ] The gazette feels alive even when the player doesn't run a round (AI activity)
 
 ### Edge Cases
+
 - [ ] 0 eligible warriors → week skipped gracefully
 - [ ] 1 eligible warrior → no combat, newsletter note
 - [ ] All rival stables eliminated → new stables generated

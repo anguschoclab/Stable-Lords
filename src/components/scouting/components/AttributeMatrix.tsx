@@ -18,9 +18,7 @@ export function AttributeMatrix({ attributeRanges }: AttributeMatrixProps) {
         {ATTRIBUTE_KEYS.map((key) => {
           const range = attributeRanges[key];
           if (!range) return null;
-          return (
-            <AttributeRangeRow key={key} attribute={key} range={range} />
-          );
+          return <AttributeRangeRow key={key} attribute={key} range={range} />;
         })}
       </div>
     </div>

@@ -6,22 +6,22 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
-  
+
   /* Run tests in files in parallel */
   fullyParallel: true,
-  
+
   /* Fail the build on CI if you accidentally left test.only in the source code */
   forbidOnly: !!process.env.CI,
-  
+
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  
+
   /* Opt out of parallel tests on CI */
   workers: process.env.CI ? 1 : undefined,
-  
+
   /* Reporter to use */
   reporter: 'html',
-  
+
   /* Shared settings for all the projects below */
   use: {
     /* Base URL to use in actions like `await page.goto('/')` */
@@ -29,7 +29,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test */
     trace: 'on-first-retry',
-    
+
     /* Screenshot on failure */
     screenshot: 'only-on-failure',
   },
@@ -59,10 +59,10 @@ export default defineConfig({
     },
   ],
 
-  /* 
+  /*
    * Note: You need to start the dev server manually before running e2e tests:
    * bun run dev
-   * 
+   *
    * For CI environments, uncomment the webServer config below:
    */
   // webServer: {

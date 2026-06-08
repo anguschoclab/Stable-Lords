@@ -4,7 +4,9 @@ import { FightingStyle, type FightSummary } from '@/types/game';
 import type { FightId, WarriorId } from '@/types/shared.types';
 
 describe('getRecentFightsForWarrior', () => {
-  const createMockFight = (opts: { warriorIdA?: string; warriorIdD?: string; week?: number } = {}): FightSummary => ({
+  const createMockFight = (
+    opts: { warriorIdA?: string; warriorIdD?: string; week?: number } = {}
+  ): FightSummary => ({
     id: 'mock-id' as FightId,
     title: 'Mock Fight',
     warriorIdA: (opts.warriorIdA ?? 'Attacker') as WarriorId,

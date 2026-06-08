@@ -128,13 +128,7 @@ function SparklineDot({ points, min, range, H, W, PAD, isUp }: SparklineDotProps
   // TODO: verify isUp color — both branches currently render red
   const color = isUp ? 'rgb(255,0,0)' : 'rgb(239,68,68)';
   return (
-    <circle
-      cx={x}
-      cy={y}
-      r={3}
-      fill={color}
-      className="drop-shadow-[0_0_4px_rgba(255,0,0,0.8)]"
-    />
+    <circle cx={x} cy={y} r={3} fill={color} className="drop-shadow-[0_0_4px_rgba(255,0,0,0.8)]" />
   );
 }
 
@@ -151,7 +145,18 @@ interface SparklineSVGProps {
   height: number;
 }
 
-function SparklineSVG({ pathD, areaD, points, min, range, H, W, PAD, isUp, height }: SparklineSVGProps) {
+function SparklineSVG({
+  pathD,
+  areaD,
+  points,
+  min,
+  range,
+  H,
+  W,
+  PAD,
+  isUp,
+  height,
+}: SparklineSVGProps) {
   // TODO: verify isUp color — both branches currently render red
   const strokeColor = isUp ? 'rgb(255,0,0)' : 'rgb(239,68,68)';
   const gradientColor = isUp ? 'rgb(255,0,0)' : 'rgb(239,68,68)';
@@ -209,10 +214,7 @@ export function TreasurySparkline({
   );
 
   // Build weekly treasury snapshots from ledger entries in chronological order
-  const points = useMemo(
-    () => buildWeeklyPoints(ledger, week, treasury),
-    [ledger, treasury, week]
-  );
+  const points = useMemo(() => buildWeeklyPoints(ledger, week, treasury), [ledger, treasury, week]);
 
   const values = points.map((p) => p.value);
   const min = Math.min(...values);

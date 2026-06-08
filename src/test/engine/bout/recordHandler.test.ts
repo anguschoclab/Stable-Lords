@@ -122,9 +122,13 @@ describe('applyRecords', () => {
     const impact = applyRecords(s, wA, wD, outcome, [], 5, 2, 1, 1, 'rival-1');
 
     expect(impact.rosterUpdates?.has('D' as import('@/types/shared.types').WarriorId)).toBeFalsy();
-    expect(impact.rivalsUpdates?.has('rival-1' as import('@/types/shared.types').StableId)).toBeTruthy();
+    expect(
+      impact.rivalsUpdates?.has('rival-1' as import('@/types/shared.types').StableId)
+    ).toBeTruthy();
 
-    const updatedRivalData = impact.rivalsUpdates!.get('rival-1' as import('@/types/shared.types').StableId)!;
+    const updatedRivalData = impact.rivalsUpdates!.get(
+      'rival-1' as import('@/types/shared.types').StableId
+    )!;
     expect(updatedRivalData.roster).toBeDefined();
     const updatedWD = updatedRivalData.roster?.find((w) => w.id === 'D');
     expect(updatedWD).toBeDefined();
@@ -144,8 +148,14 @@ describe('applyRecords', () => {
           tierId: 'Gold',
           bracket: [],
           participants: [
-            { id: 'A' as import('@/types/shared.types').WarriorId, stableId: 'player' as import('@/types/shared.types').StableId } as any,
-            { id: 'D' as import('@/types/shared.types').WarriorId, stableId: 'rival' as import('@/types/shared.types').StableId } as any,
+            {
+              id: 'A' as import('@/types/shared.types').WarriorId,
+              stableId: 'player' as import('@/types/shared.types').StableId,
+            } as any,
+            {
+              id: 'D' as import('@/types/shared.types').WarriorId,
+              stableId: 'rival' as import('@/types/shared.types').StableId,
+            } as any,
           ],
           completed: false,
         },

@@ -18,8 +18,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Gazette archiving
   archiveGazette: (season, week, markdown) =>
     ipcRenderer.invoke('archive-gazette', season, week, markdown),
-  retrieveGazette: (season, week) =>
-    ipcRenderer.invoke('retrieve-gazette', season, week),
+  retrieveGazette: (season, week) => ipcRenderer.invoke('retrieve-gazette', season, week),
 
   // Simple key-value store
   storeGet: (key) => ipcRenderer.invoke('store-get', key),

@@ -28,24 +28,17 @@ const TOKEN_CFG: Record<
   Style: { Icon: Zap, color: 'bg-arena-gold/20 text-arena-gold', label: 'Style' },
   Attribute: { Icon: TrendingUp, color: 'bg-primary/20 text-primary', label: 'Attribute' },
   Tactic: { Icon: Brain, color: 'bg-arena-fame/20 text-arena-fame', label: 'Tactic' },
-}; /**
- * Insight manager.
- * @returns The result.
- */
+};
 
-/**
- * Insight manager.
- * @returns The result.
- */
-export function InsightManager() {
-  // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes
-  const { insightTokens, roster, consumeInsightToken } = useGameStore(
-    useShallow((s) => ({
-      insightTokens: s.insightTokens,
-      roster: s.roster,
-      consumeInsightToken: s.consumeInsightToken,
-    }))
-  );
+// ─── Custom Hook ────────────────────────────────────────────────────────────
+
+import type { InsightId, WarriorId } from '@/types/shared.types';
+
+function useInsightManager(
+  consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => void,
+  insightTokens: Parameters<Parameters<typeof useGameStore>[0]>[0]['insightTokens'],
+  roster: Parameters<Parameters<typeof useGameStore>[0]>[0]['roster']
+) {
   const [selectedTokenId, setSelectedTokenId] = useState<string | null>(null);
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [isRevealing, setIsRevealing] = useState(false);
@@ -58,6 +51,7 @@ export function InsightManager() {
       }
     };
   }, []);
+
   const [revealData, setRevealData] = useState<{
     name: string;
     type: string;
@@ -75,7 +69,6 @@ export function InsightManager() {
 
     setIsRevealing(true);
 
-    // Artificial delay for "Scanning" effect
     setTimeout(() => {
       const type = selectedToken.type;
       let result = 'Unknown';
@@ -106,6 +99,249 @@ export function InsightManager() {
     }, 2000);
   };
 
+  return {
+    tokens,
+    safeRoster,
+    selectedTokenId,
+    setSelectedTokenId,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    selectedToken,
+    selectedWarrior,
+    isRevealing,
+    setIsRevealing,
+    revealData,
+    setRevealData,
+    handleReveal,
+  };
+}
+
+// ─── Sub-Components ─────────────────────────────────────────────────────────
+
+interface TokenIconProps {
+  type: InsightTokenType;
+}
+
+function TokenIcon({ type }: TokenIconProps) {
+  const cfg = TOKEN_CFG[type] ?? TOKEN_CFG.Weapon;
+  const Icon = cfg.Icon;
+  return (
+    <div className={`p-2 rounded-none ${cfg.color}`}>
+      <Icon className="h-4 w-4" />
+    </div>
+  );
+}
+
+interface TokenCardProps {
+  token: { id: string; type: InsightTokenType; discoveredWeek: number };
+  isSelected: boolean;
+  onSelect: () => void;
+}
+
+function TokenCard({ token, isSelected, onSelect }: TokenCardProps) {
+  return (
+    <Surface
+      variant={isSelected ? 'paper' : 'glass'}
+      padding="none"
+      className={cn(
+        'transition-all border overflow-hidden relative',
+        isSelected
+          ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] bg-primary/10'
+          : 'border-white/5 hover:border-white/20'
+      )}
+    >
+      <button
+        aria-label={`Select ${token.type} Insight Token, discovered week ${token.discoveredWeek}`}
+        onClick={onSelect}
+        className="w-full text-left p-4 outline-none"
+      >
+        <div className="flex items-center gap-3 relative z-10">
+          <TokenIcon type={token.type} />
+          <div>
+            <span>{token.type}_Token</span>
+            <span className="block text-[9px] text-muted-foreground uppercase tracking-widest font-mono opacity-60">
+              WK_{token.discoveredWeek} // {token.id.slice(0, 8)}
+            </span>
+          </div>
+        </div>
+      </button>
+      {isSelected && (
+        <motion.div
+          layoutId="token-active"
+          className="absolute left-0 top-0 w-1 h-full bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
+        />
+      )}
+    </Surface>
+  );
+}
+
+interface WarriorTargetCardProps {
+  warrior: { id: string; name: string; style: string };
+  isSelected: boolean;
+  isRevealed: boolean;
+  isRevealing: boolean;
+  onSelect: () => void;
+}
+
+function WarriorTargetCard({
+  warrior,
+  isSelected,
+  isRevealed,
+  isRevealing,
+  onSelect,
+}: WarriorTargetCardProps) {
+  return (
+    <Surface
+      variant={isSelected ? 'gold' : 'glass'}
+      padding="none"
+      className={cn(
+        'transition-all border text-center overflow-hidden relative',
+        isSelected
+          ? 'border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)] bg-primary/20'
+          : isRevealed
+            ? 'opacity-20 grayscale border-white/5 bg-transparent'
+            : 'border-white/5 hover:border-white/20'
+      )}
+    >
+      <button
+        aria-label={`Select warrior ${warrior.name} for insight`}
+        disabled={isRevealed || isRevealing}
+        onClick={onSelect}
+        className="w-full p-3 outline-none"
+      >
+        <span className="block text-[10px] font-black uppercase tracking-widest mb-1 truncate">
+          {warrior.name}
+        </span>
+        {isRevealed ? (
+          <CheckCircle2 className="h-4 w-4 mx-auto text-primary" />
+        ) : (
+          <div className="text-[9px] font-black font-mono opacity-40 uppercase">
+            {warrior.style.slice(0, 3)}
+          </div>
+        )}
+      </button>
+      {isSelected && (
+        <div className="absolute top-0 right-0 p-1">
+          <Target className="h-3 w-3 text-primary animate-pulse" />
+        </div>
+      )}
+    </Surface>
+  );
+}
+
+interface TargetSummaryProps {
+  warrior: { name: string } | null;
+  canReveal: boolean;
+  isRevealing: boolean;
+  onReveal: () => void;
+}
+
+function TargetSummary({ warrior, canReveal, isRevealing, onReveal }: TargetSummaryProps) {
+  return (
+    <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="flex items-center gap-4">
+        <div className="w-12 h-12 rounded-full border-2 border-primary/20 flex items-center justify-center bg-primary/5">
+          {warrior ? (
+            <div className="text-[10px] font-black text-primary uppercase">
+              {warrior.name.slice(0, 2)}
+            </div>
+          ) : (
+            <AlertCircle className="h-5 w-5 text-muted-foreground/30" />
+          )}
+        </div>
+        <div>
+          <p>{warrior?.name || 'Target Required'}</p>
+          <p className="text-[9px] text-muted-foreground uppercase tracking-widest opacity-60">
+            Ready For Extraction
+          </p>
+        </div>
+      </div>
+
+      <Button
+        disabled={!canReveal || isRevealing}
+        onClick={onReveal}
+        className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.2)] group"
+      >
+        {isRevealing ? (
+          <RotateCw className="h-4 w-4 mr-2 animate-spin" />
+        ) : (
+          <Zap className="h-4 w-4 mr-2 group-hover:scale-125 transition-transform" />
+        )}
+        {isRevealing ? 'CONSULTING ORACLES...' : 'SEQUENCE START'}
+      </Button>
+    </div>
+  );
+}
+
+interface RevealModalProps {
+  data: { name: string; type: string; result: string } | null;
+  onClose: () => void;
+}
+
+function RevealModal({ data, onClose }: RevealModalProps) {
+  if (!data) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+      >
+        <div className="bg-neutral-950 border-2 border-primary/40 rounded-none p-10 max-w-md w-full text-center relative shadow-[0_0_50px_rgba(255,0,0,0.2)]">
+          <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-none bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.5)]">
+            <Sparkles />
+          </div>
+
+          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">
+            Discovery Successful
+          </h4>
+          <h2>{data.name}</h2>
+
+          <div className="bg-white/5 border border-white/10 rounded-none p-6 mb-8">
+            <span className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">
+              {data.type} AUTHENTICATED
+            </span>
+            <span className="block text-2xl font-mono font-black text-arena-gold uppercase tracking-tighter drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]">
+              {data.result}
+            </span>
+          </div>
+
+          <Button onClick={onClose}>Close Sequence</Button>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+/**
+ * Insight manager component for consuming insight tokens.
+ */
+export function InsightManager() {
+  const { insightTokens, roster, consumeInsightToken } = useGameStore(
+    useShallow((s) => ({
+      insightTokens: s.insightTokens,
+      roster: s.roster,
+      consumeInsightToken: s.consumeInsightToken,
+    }))
+  );
+
+  const {
+    tokens,
+    safeRoster,
+    selectedTokenId,
+    setSelectedTokenId,
+    selectedWarriorId,
+    setSelectedWarriorId,
+    selectedToken,
+    selectedWarrior,
+    isRevealing,
+    revealData,
+    setRevealData,
+    handleReveal,
+  } = useInsightManager(consumeInsightToken, insightTokens, roster);
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-center gap-4 px-1">
@@ -134,47 +370,12 @@ export function InsightManager() {
           ) : (
             <div className="space-y-2">
               {tokens.map((token) => (
-                <Surface
+                <TokenCard
                   key={token.id}
-                  variant={selectedTokenId === token.id ? 'paper' : 'glass'}
-                  padding="none"
-                  className={cn(
-                    'transition-all border overflow-hidden relative',
-                    selectedTokenId === token.id
-                      ? 'border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)] bg-primary/10'
-                      : 'border-white/5 hover:border-white/20'
-                  )}
-                >
-                  <button
-                    aria-label={`Select ${token.type} Insight Token, discovered week ${token.discoveredWeek}`}
-                    onClick={() => setSelectedTokenId(token.id)}
-                    className="w-full text-left p-4 outline-none"
-                  >
-                    <div className="flex items-center gap-3 relative z-10">
-                      {(() => {
-                        const cfg = TOKEN_CFG[token.type as InsightTokenType] ?? TOKEN_CFG.Weapon;
-                        const Icon = cfg.Icon;
-                        return (
-                          <div className={`p-2 rounded-none ${cfg.color}`}>
-                            <Icon className="h-4 w-4" />
-                          </div>
-                        );
-                      })()}
-                      <div>
-                        <span>{token.type}_Token</span>
-                        <span className="block text-[9px] text-muted-foreground uppercase tracking-widest font-mono opacity-60">
-                          WK_{token.discoveredWeek} // {token.id.slice(0, 8)}
-                        </span>
-                      </div>
-                    </div>
-                  </button>
-                  {selectedTokenId === token.id && (
-                    <motion.div
-                      layoutId="token-active"
-                      className="absolute left-0 top-0 w-1 h-full bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
-                    />
-                  )}
-                </Surface>
+                  token={token}
+                  isSelected={selectedTokenId === token.id}
+                  onSelect={() => setSelectedTokenId(token.id)}
+                />
               ))}
             </div>
           )}
@@ -196,81 +397,27 @@ export function InsightManager() {
                         ? w.favorites?.discovered.weapon
                         : selectedToken?.type === 'Rhythm'
                           ? w.favorites?.discovered.rhythm
-                          : false; // Style/Attribute/Tactic are stat boosts — always applicable
+                          : false;
 
                     return (
-                      <Surface
+                      <WarriorTargetCard
                         key={w.id}
-                        variant={selectedWarriorId === w.id ? 'gold' : 'glass'}
-                        padding="none"
-                        className={cn(
-                          'transition-all border text-center overflow-hidden relative',
-                          selectedWarriorId === w.id
-                            ? 'border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)] bg-primary/20'
-                            : isRevealed
-                              ? 'opacity-20 grayscale border-white/5 bg-transparent'
-                              : 'border-white/5 hover:border-white/20'
-                        )}
-                      >
-                        <button
-                          aria-label={`Select warrior ${w.name} for insight`}
-                          disabled={isRevealed || isRevealing}
-                          onClick={() => setSelectedWarriorId(w.id)}
-                          className="w-full p-3 outline-none"
-                        >
-                          <span className="block text-[10px] font-black uppercase tracking-widest mb-1 truncate">
-                            {w.name}
-                          </span>
-                          {isRevealed ? (
-                            <CheckCircle2 className="h-4 w-4 mx-auto text-primary" />
-                          ) : (
-                            <div className="text-[9px] font-black font-mono opacity-40 uppercase">
-                              {w.style.slice(0, 3)}
-                            </div>
-                          )}
-                        </button>
-                        {selectedWarriorId === w.id && (
-                          <div className="absolute top-0 right-0 p-1">
-                            <Target className="h-3 w-3 text-primary animate-pulse" />
-                          </div>
-                        )}
-                      </Surface>
+                        warrior={{ id: w.id, name: w.name, style: w.style }}
+                        isSelected={selectedWarriorId === w.id}
+                        isRevealed={!!isRevealed}
+                        isRevealing={isRevealing}
+                        onSelect={() => setSelectedWarriorId(w.id)}
+                      />
                     );
                   })}
                 </div>
 
-                <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full border-2 border-primary/20 flex items-center justify-center bg-primary/5">
-                      {selectedWarrior ? (
-                        <div className="text-[10px] font-black text-primary uppercase">
-                          {selectedWarrior.name.slice(0, 2)}
-                        </div>
-                      ) : (
-                        <AlertCircle className="h-5 w-5 text-muted-foreground/30" />
-                      )}
-                    </div>
-                    <div>
-                      <p>{selectedWarrior?.name || 'Target Required'}</p>
-                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest opacity-60">
-                        Ready For Extraction
-                      </p>
-                    </div>
-                  </div>
-
-                  <Button
-                    disabled={!selectedWarriorId || isRevealing}
-                    onClick={handleReveal}
-                    className="h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[11px] tracking-widest shadow-[0_0_20px_rgba(255,0,0,0.2)] group"
-                  >
-                    {isRevealing ? (
-                      <RotateCw className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Zap className="h-4 w-4 mr-2 group-hover:scale-125 transition-transform" />
-                    )}
-                    {isRevealing ? 'CONSULTING ORACLES...' : 'SEQUENCE START'}
-                  </Button>
-                </div>
+                <TargetSummary
+                  warrior={selectedWarrior ? { name: selectedWarrior.name } : null}
+                  canReveal={!!selectedWarriorId}
+                  isRevealing={isRevealing}
+                  onReveal={handleReveal}
+                />
               </div>
             ) : (
               <div className="py-20 text-center opacity-20">
@@ -288,38 +435,7 @@ export function InsightManager() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {revealData && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
-          >
-            <div className="bg-neutral-950 border-2 border-primary/40 rounded-none p-10 max-w-md w-full text-center relative shadow-[0_0_50px_rgba(255,0,0,0.2)]">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-none bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(255,0,0,0.5)]">
-                <Sparkles />
-              </div>
-
-              <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary mb-2">
-                Discovery Successful
-              </h4>
-              <h2>{revealData.name}</h2>
-
-              <div className="bg-white/5 border border-white/10 rounded-none p-6 mb-8">
-                <span className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">
-                  {revealData.type} AUTHENTICATED
-                </span>
-                <span className="block text-2xl font-mono font-black text-arena-gold uppercase tracking-tighter drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]">
-                  {revealData.result}
-                </span>
-              </div>
-
-              <Button onClick={() => setRevealData(null)}>Close Sequence</Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <RevealModal data={revealData} onClose={() => setRevealData(null)} />
     </div>
   );
 }

@@ -2,11 +2,11 @@ import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Swords, History, Zap, Target } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
-import { ArenaHistory } from '@/engine/history/arenaHistory';
 import type { Warrior } from '@/types/game';
 import { resolveWarriorName } from '@/utils/historyResolver';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
+import { useHeadToHeadData } from '@/hooks/scouting/useHeadToHeadData';
 
 interface HeadToHeadProps {
   nameA: string;
@@ -26,42 +26,9 @@ interface HeadToHeadProps {
  */
 export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' | 'nameB'>) {
   const state = useGameStore();
-  const allFights = useMemo(() => ArenaHistory.all() || [], []);
+  const { h2hReversed, winsA, winsB, draws, h2hLength } = useHeadToHeadData({ rosterA, rosterB });
   const idsA = useMemo(() => new Set(rosterA.map((w) => w.id)), [rosterA]);
   const idsB = useMemo(() => new Set(rosterB.map((w) => w.id)), [rosterB]);
-
-  // ⚡ Bolt: Reduced multiple O(N) array filter/slice/reverse operations into a single O(N) pass
-  // with a pre-reversed list to prevent blocking the render loop.
-  const { h2hReversed, winsA, winsB, draws } = useMemo(() => {
-    const reversed = [];
-    let wA = 0;
-    let wB = 0;
-    let d = 0;
-
-    for (let i = allFights.length - 1; i >= 0; i--) {
-      const f = allFights[i];
-      if (!f) continue;
-      const idA = f.warriorIdA;
-      const idD = f.warriorIdD;
-      const aIsA = idsA.has(idA);
-
-      if (aIsA && idsB.has(idD)) {
-        reversed.push(f);
-        if (f.winner === 'A') wA++;
-        else if (f.winner === 'D') wB++;
-        else d++;
-      } else if (idsA.has(idD) && idsB.has(idA)) {
-        reversed.push(f);
-        if (f.winner === 'D') wA++;
-        else if (f.winner === 'A') wB++;
-        else d++;
-      }
-    }
-
-    return { h2hReversed: reversed, winsA: wA, winsB: wB, draws: d };
-  }, [allFights, idsA, idsB]);
-
-  const h2hLength = h2hReversed.length;
 
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden relative">

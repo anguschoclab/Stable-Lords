@@ -10,10 +10,134 @@ import {
 } from '@/components/ui/table';
 import { StatBadge } from '@/components/ui/WarriorBadges';
 import { Trophy, Landmark, Sparkles } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'; /**
- * Hall of warriors.
- * @returns The result.
- */
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { type FightingStyle } from '@/types/game';
+import type { Warrior, CareerRecord } from '@/types/game';
+
+// ─── Sub-components ──────────────────────────────────────────────────────────
+
+function EmptyRegistry() {
+  return (
+    <div className="py-24 text-center opacity-30 group">
+      <Landmark className="h-16 w-16 mx-auto mb-4 text-arena-gold/40 group-hover:scale-110 transition-transform duration-700" />
+      <p className="text-sm font-display font-black uppercase tracking-[0.3em]">
+        Registry_Currently_Vacant
+      </p>
+      <p className="text-[10px] lowercase italic font-medium mt-2">
+        No warriors have earned retirement status through merit or tenure...
+      </p>
+    </div>
+  );
+}
+
+interface MedalDisplayProps {
+  medals: CareerRecord['medals'];
+}
+
+function MedalDisplay({ medals }: MedalDisplayProps) {
+  if (!medals) return null;
+  return (
+    <div className="flex items-center justify-center gap-1">
+      {medals.gold ? (
+        <span className="p-1 rounded-none bg-arena-gold/20 text-arena-gold text-[10px] font-black">
+          G·{medals.gold}
+        </span>
+      ) : null}
+      {medals.silver ? (
+        <span className="p-1 rounded-none bg-foreground/10 text-muted-foreground text-[10px] font-black">
+          S·{medals.silver}
+        </span>
+      ) : null}
+      {medals.bronze ? (
+        <span className="p-1 rounded-none bg-arena-gold/10 text-arena-gold text-[10px] font-black">
+          B·{medals.bronze}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+interface CareerRecordCellProps {
+  wins: number;
+  losses: number;
+  kills: number;
+}
+
+function CareerRecordCell({ wins, losses, kills }: CareerRecordCellProps) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className="flex items-center justify-center gap-3 text-xs font-mono font-black">
+          <span className="text-arena-pop border-b border-arena-pop/20">{wins}W</span>
+          <span className="text-foreground/20">/</span>
+          <span className="text-destructive/60">{losses}L</span>
+          <span className="text-foreground/20">/</span>
+          <span className="text-arena-gold drop-shadow-[0_0_5px_rgba(255,215,0,0.3)]">{kills}K</span>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
+        Final Career Record
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+interface RetiredWarriorRowProps {
+  warrior: Warrior;
+}
+
+function RetiredWarriorRow({ warrior: w }: RetiredWarriorRowProps) {
+  return (
+    <TableRow
+      key={w.id}
+      className="border-arena-gold/5 hover:bg-arena-gold/5 transition-all group"
+    >
+      <TableCell className="pl-8 py-5">
+        <div className="flex flex-col">
+          <span>{w.name}</span>
+          <div className="flex items-center gap-2 mt-1">
+            <Sparkles className="h-2.5 w-2.5 text-arena-gold/40" />
+            <span className="text-[8px] font-black text-arena-gold/40 uppercase tracking-widest">
+              RANK: EMERITUS
+            </span>
+          </div>
+        </div>
+      </TableCell>
+      <TableCell className="py-5">
+        <StatBadge styleName={w.style as FightingStyle} />
+      </TableCell>
+      <TableCell className="py-5 text-center">
+        <MedalDisplay medals={w.career?.medals} />
+      </TableCell>
+      <TableCell className="text-center py-5">
+        <CareerRecordCell wins={w.career.wins} losses={w.career.losses} kills={w.career.kills} />
+      </TableCell>
+      <TableCell className="text-right py-5">
+        <div className="flex flex-col items-end">
+          <div className="flex items-center justify-end gap-1.5 text-sm font-mono font-black text-arena-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.2)]">
+            <span>{w.fame.toLocaleString()}</span>
+            <Trophy className="h-3 w-3 opacity-40" />
+          </div>
+          <span className="text-[8px] font-black text-arena-gold/30 uppercase tracking-widest mt-0.5">
+            LEGACY_FAME
+          </span>
+        </div>
+      </TableCell>
+      <TableCell className="text-right pr-8 py-5">
+        <div className="flex flex-col items-end">
+          <span className="font-mono font-black text-[10px] text-foreground/40 uppercase tracking-widest group-hover:text-foreground/60 transition-colors">
+            WK_{w.retiredWeek?.toString().padStart(2, '0') ?? '??'}
+          </span>
+          <span className="text-[8px] font-black text-foreground/20 uppercase tracking-widest">
+            Cessation_Week
+          </span>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
 
 /**
  * Hall of warriors.
@@ -52,15 +176,7 @@ export function HallOfWarriors() {
 
           <div className="overflow-x-auto custom-scrollbar">
             {safeRetired.length === 0 ? (
-              <div className="py-24 text-center opacity-30 group">
-                <Landmark className="h-16 w-16 mx-auto mb-4 text-arena-gold/40 group-hover:scale-110 transition-transform duration-700" />
-                <p className="text-sm font-display font-black uppercase tracking-[0.3em]">
-                  Registry_Currently_Vacant
-                </p>
-                <p className="text-[10px] lowercase italic font-medium mt-2">
-                  No warriors have earned retirement status through merit or tenure...
-                </p>
-              </div>
+              <EmptyRegistry />
             ) : (
               <Table>
                 <TableHeader className="bg-arena-gold/10 sticky top-0 z-10 backdrop-blur-md">
@@ -87,89 +203,7 @@ export function HallOfWarriors() {
                 </TableHeader>
                 <TableBody>
                   {safeRetired.map((w) => (
-                    <TableRow
-                      key={w.id}
-                      className="border-arena-gold/5 hover:bg-arena-gold/5 transition-all group"
-                    >
-                      <TableCell className="pl-8 py-5">
-                        <div className="flex flex-col">
-                          <span>{w.name}</span>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Sparkles className="h-2.5 w-2.5 text-arena-gold/40" />
-                            <span className="text-[8px] font-black text-arena-gold/40 uppercase tracking-widest">
-                              RANK: EMERITUS
-                            </span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-5">
-                        <StatBadge styleName={w.style as import('@/types/game').FightingStyle} />
-                      </TableCell>
-                      <TableCell className="py-5 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          {w.career?.medals && (
-                            <>
-                              {w.career.medals.gold ? (
-                                <span className="p-1 rounded-none bg-arena-gold/20 text-arena-gold text-[10px] font-black">
-                                  G·{w.career.medals.gold}
-                                </span>
-                              ) : null}
-                              {w.career.medals.silver ? (
-                                <span className="p-1 rounded-none bg-foreground/10 text-muted-foreground text-[10px] font-black">
-                                  S·{w.career.medals.silver}
-                                </span>
-                              ) : null}
-                              {w.career.medals.bronze ? (
-                                <span className="p-1 rounded-none bg-arena-gold/10 text-arena-gold text-[10px] font-black">
-                                  B·{w.career.medals.bronze}
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center py-5">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="flex items-center justify-center gap-3 text-xs font-mono font-black">
-                              <span className="text-arena-pop border-b border-arena-pop/20">
-                                {w.career.wins}W
-                              </span>
-                              <span className="text-foreground/20">/</span>
-                              <span className="text-destructive/60">{w.career.losses}L</span>
-                              <span className="text-foreground/20">/</span>
-                              <span className="text-arena-gold drop-shadow-[0_0_5px_rgba(255,215,0,0.3)]">
-                                {w.career.kills}K
-                              </span>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-                            Final Career Record
-                          </TooltipContent>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell className="text-right py-5">
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center justify-end gap-1.5 text-sm font-mono font-black text-arena-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.2)]">
-                            <span>{w.fame.toLocaleString()}</span>
-                            <Trophy className="h-3 w-3 opacity-40" />
-                          </div>
-                          <span className="text-[8px] font-black text-arena-gold/30 uppercase tracking-widest mt-0.5">
-                            LEGACY_FAME
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right pr-8 py-5">
-                        <div className="flex flex-col items-end">
-                          <span className="font-mono font-black text-[10px] text-foreground/40 uppercase tracking-widest group-hover:text-foreground/60 transition-colors">
-                            WK_{w.retiredWeek?.toString().padStart(2, '0') ?? '??'}
-                          </span>
-                          <span className="text-[8px] font-black text-foreground/20 uppercase tracking-widest">
-                            Cessation_Week
-                          </span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                    <RetiredWarriorRow key={w.id} warrior={w} />
                   ))}
                 </TableBody>
               </Table>

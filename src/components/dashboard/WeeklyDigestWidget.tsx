@@ -10,18 +10,17 @@ import {
   TrendingDown,
   Swords,
   Trophy,
-  AlertTriangle,
   ChevronRight,
   Flame,
   Target,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { Link } from '@tanstack/react-router';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useDigestSummary } from '@/hooks/useDigestSummary';
+import { StatBox, AlertBox, EmptyDigestState } from './digest';
 
 export interface WeeklyDigestProps {
   week: number;
@@ -53,22 +52,7 @@ export function WeeklyDigestWidget({
     summary.totalFights > 0 || summary.pendingOffers > 0 || summary.signedOffers > 0;
 
   if (!hasActivity) {
-    return (
-      <Card className="bg-muted/30 border-dashed">
-        <CardContent className="p-6 text-center">
-          <Calendar className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
-          <h3 className="font-bold uppercase tracking-wider text-muted-foreground">
-            Week {week} — {season}
-          </h3>
-          <p className="text-sm text-muted-foreground mt-2">No activity recorded yet this week.</p>
-          <Link to="/ops/contracts">
-            <Button variant="outline" size="sm" className="mt-4 text-[10px] uppercase">
-              Browse Offers <ChevronRight className="h-3 w-3 ml-1" />
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-    );
+    return <EmptyDigestState week={week} season={season} />;
   }
 
   return (
@@ -154,64 +138,5 @@ export function WeeklyDigestWidget({
         )}
       </CardContent>
     </Card>
-  );
-}
-
-/** Individual stat box for digest grid */
-interface StatBoxProps {
-  icon: React.ReactNode;
-  label: string;
-  value: number;
-  color: 'primary' | 'destructive' | 'arena-gold' | 'accent';
-}
-
-function StatBox({ icon, label, value, color }: StatBoxProps) {
-  const colorClasses = {
-    primary: 'text-primary bg-primary/10',
-    destructive: 'text-destructive bg-destructive/10',
-    'arena-gold': 'text-arena-gold bg-arena-gold/10',
-    accent: 'text-accent bg-accent/10',
-  };
-
-  return (
-    <div className={cn('p-2 rounded-none text-center', colorClasses[color])}>
-      <div className="flex justify-center mb-1">{icon}</div>
-      <div className="text-lg font-black font-mono">{value}</div>
-      <div className="text-[9px] uppercase font-bold opacity-70">{label}</div>
-    </div>
-  );
-}
-
-/** Alert box for important notifications */
-interface AlertBoxProps {
-  type: 'death' | 'offer' | 'tournament';
-  message: string;
-}
-
-function AlertBox({ type, message }: AlertBoxProps) {
-  const configs = {
-    death: {
-      icon: <AlertTriangle className="h-4 w-4" />,
-      className: 'bg-destructive/10 border-destructive/30 text-destructive',
-    },
-    offer: {
-      icon: <Target className="h-4 w-4" />,
-      className: 'bg-arena-gold/10 border-arena-gold/30 text-arena-gold',
-    },
-    tournament: {
-      icon: <Trophy className="h-4 w-4" />,
-      className: 'bg-accent/10 border-accent/30 text-accent',
-    },
-  };
-
-  const config = configs[type];
-
-  return (
-    <div
-      className={cn('flex items-center gap-2 p-2 rounded-none border text-sm', config.className)}
-    >
-      {config.icon}
-      <span className="font-medium">{message}</span>
-    </div>
   );
 }

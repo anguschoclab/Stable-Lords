@@ -584,7 +584,9 @@
         "{{attacker}} feints low, then thrusts high with {{weapon}}!",
         "{{attacker}} lunges forward, {{weapon}} seeking {{defender}}'s vitals!",
         "{{attacker}} whips {{weapon}} in a deceptive thrust!",
-        "{{attacker}} stabs with {{weapon}}, all his reach behind the blow!"
+        "{{attacker}} stabs with {{weapon}}, all his reach behind the blow!",
+        "{{attacker}} raises {{possessive}} arm and drives {{weapon}} in a sudden thrust!",
+        "{{attacker}} snaps {{possessive}} wrist, turning the point of {{weapon}} into {{defender}}'s guard!"
       ],
       "slashing": [
         "{{attacker}} slashes with {{weapon}}!",
@@ -601,7 +603,9 @@
         "{{attacker}} lashes out with {{weapon}} in a lightning quick assault!",
         "{{attacker}} sweeps {{weapon}} in a brutal horizontal arc!",
         "{{attacker}} hacks downward with {{weapon}}!",
-        "{{attacker}} slashes viciously with {{weapon}}!"
+        "{{attacker}} slashes viciously with {{weapon}}!",
+        "{{attacker}} shifts {{possessive}} weight and cuts low with {{weapon}}!",
+        "{{attacker}} drops {{possessive}} shoulder and rips {{weapon}} through in a vicious diagonal slash!"
       ],
       "bashing": [
         "{{attacker}} bashes with {{weapon}}!",
@@ -1224,7 +1228,12 @@
         "{{attacker}} finds an opening, carving into {{defender}}'s {{bodyPart}} with their {{weapon}}.",
         "A sickening thud echoes as the {{weapon}} connects with {{defender}}'s {{bodyPart}}.",
         "{{defender}} winces as {{attacker}}'s {{weapon}} scores a clean hit to the {{bodyPart}}.",
-        "The crowd roars as {{attacker}} draws first blood on {{defender}}'s {{bodyPart}}."
+        "The crowd roars as {{attacker}} draws first blood on {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} exploits a gap in {{defender}}'s guard, punishing the {{bodyPart}}.",
+        "A sharp crack — {{attacker}}'s {{weapon}} finds {{defender}}'s {{bodyPart}} clean.",
+        "{{defender}} cannot stop the blow; {{attacker}}'s strike hammers the {{bodyPart}} hard.",
+        "The {{weapon}} lands with authority on {{defender}}'s {{bodyPart}} — a telling hit.",
+        "{{attacker}} slips inside {{defender}}'s reach and punishes the {{bodyPart}} without mercy."
       ]
     },
     "executions": [

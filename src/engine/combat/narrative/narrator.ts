@@ -20,7 +20,8 @@ import {
   narrateRangeShift,
   narrateFeint,
   narrateZoneShift,
-} from '../../narrativePBP'; /**
+} from '../../narrativePBP';
+import { narrateKnockdown, narrateRecovery } from '../../narrative/combatNarrators'; /**
  * Defines the shape of narration context.
  */
 
@@ -104,6 +105,14 @@ export function narrateEvents(
           log.push({ minute, text: narrateAttack(rng, actorName, weapon, false, opponentName) });
           log.push({ minute, text: narrateDodge(rng, opponentName, getSpeed(event.actor === 'A' ? 'D' : 'A')) });
         }
+        break;
+
+      case 'KNOCKDOWN':
+        log.push({ minute, text: narrateKnockdown(rng, actorName) });
+        break;
+
+      case 'RECOVERY':
+        log.push({ minute, text: narrateRecovery(rng, actorName) });
         break;
 
       case 'DEFENSE':

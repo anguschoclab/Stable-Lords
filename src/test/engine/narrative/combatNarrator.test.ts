@@ -225,6 +225,32 @@ describe('CombatNarrator', () => {
     });
   });
 
+  describe('narrateKnockdown', () => {
+    it('should narrate a knockdown containing the fighter name and no raw tokens', () => {
+      const noRaw = (s: string) => !/\{\{|\}\}/.test(s);
+      for (let seed = 1; seed <= 20; seed++) {
+        const r = new SeededRNGService(seed);
+        const line = CombatNarrator.narrateKnockdown(r, 'Garath');
+        expect(typeof line).toBe('string');
+        expect(line.length).toBeGreaterThan(0);
+        expect(noRaw(line), `seed ${seed}: ${line}`).toBe(true);
+      }
+    });
+  });
+
+  describe('narrateRecovery', () => {
+    it('should narrate a recovery containing the fighter name and no raw tokens', () => {
+      const noRaw = (s: string) => !/\{\{|\}\}/.test(s);
+      for (let seed = 1; seed <= 20; seed++) {
+        const r = new SeededRNGService(seed);
+        const line = CombatNarrator.narrateRecovery(r, 'Garath');
+        expect(typeof line).toBe('string');
+        expect(line.length).toBeGreaterThan(0);
+        expect(noRaw(line), `seed ${seed}: ${line}`).toBe(true);
+      }
+    });
+  });
+
   describe('narrateParryBreak', () => {
     it('should narrate a parry break', () => {
       const narration = CombatNarrator.narrateParryBreak(rng, 'Attacker', 'mace');

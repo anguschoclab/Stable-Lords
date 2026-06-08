@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
+import { calculatePercent, parseShieldInfo, type ShieldInfo } from './arenaUtils';
 import type { FighterPose, FighterStats } from '@/types/arena.types';
-import type { FightingStyle } from '@/types/game';
+import { FightingStyle } from '@/types/game';
 
 interface ArenaFighterProps {
   name: string;
@@ -15,6 +16,31 @@ interface ArenaFighterProps {
   className?: string;
   size?: number;
 }
+
+// Module-level constants - not recreated on every render
+const STANCE_ANIMATION_CLASSES: Record<FighterPose['stance'], string> = {
+  neutral: '',
+  advancing: 'animate-advancing',
+  retreating: 'animate-retreating',
+  lunging: 'animate-lunging',
+  defending: 'animate-defending',
+  stunned: 'animate-stunned',
+  victorious: 'animate-victorious',
+  defeated: 'animate-defeated',
+};
+
+const IDLE_ANIMATION_MAP: Record<FightingStyle, string> = {
+  [FightingStyle.LungingAttack]: 'animate-idle-aggressive',
+  [FightingStyle.BashingAttack]: 'animate-idle-aggressive',
+  [FightingStyle.TotalParry]: 'animate-idle-defensive',
+  [FightingStyle.WallOfSteel]: 'animate-idle-defensive',
+  [FightingStyle.ParryLunge]: 'animate-idle-balanced',
+  [FightingStyle.ParryRiposte]: 'animate-idle-balanced',
+  [FightingStyle.ParryStrike]: 'animate-idle-balanced',
+  [FightingStyle.AimedBlow]: 'animate-idle-aimed',
+  [FightingStyle.SlashingAttack]: 'animate-idle-striking',
+  [FightingStyle.StrikingAttack]: 'animate-idle-striking',
+};
 
 // Weapon category detection
 function getWeaponCategory(weaponName: string): 'slash' | 'bash' | 'pierce' | 'shield' | 'fist' {
@@ -55,40 +81,221 @@ function getWeaponCategory(weaponName: string): 'slash' | 'bash' | 'pierce' | 's
     return 'pierce';
   if (w.includes('staff') || w.includes('fist') || w.includes('gauntlet')) return 'fist';
   return 'slash'; // default
-} /**
-  * Arena fighter.
-  * @param  - {
-  name,
-  pose,
-  stats,
-  style,
-  weapon name = 'longsword',
-  shield name,
-  is winner,
-  is dead,
-  is active,
-  class name,
-  size = 120,
-}.
-  * @returns The result.
-  */
+}
+
+// Helper functions
+function getStanceAnimationClass(stance: FighterPose['stance']): string {
+  return STANCE_ANIMATION_CLASSES[stance] ?? '';
+}
+
+function getIdleAnimation(style: FightingStyle): string {
+  return IDLE_ANIMATION_MAP[style] ?? 'animate-idle-balanced';
+}
+
+interface FighterStylesParams {
+  pose: FighterPose;
+  isDead?: boolean;
+  isActive?: boolean;
+  className?: string;
+}
+
+function useFighterStyles({ pose, isDead, isActive, className }: FighterStylesParams) {
+  const containerClassName = cn('absolute transition-all duration-300', className);
+
+  const containerStyle = {
+    left: `${pose.x}%`,
+    bottom: `${30 + pose.y}%`,
+    transform: `translateX(-50%) ${pose.facing === 'left' ? 'scaleX(-1)' : ''} ${isDead ? 'rotate(90deg)' : ''}`,
+    zIndex: isActive ? 10 : 5,
+    opacity: isDead ? 0.6 : 1,
+  } as React.CSSProperties;
+
+  return { containerClassName, containerStyle };
+}
+
+// Sub-component: HP/FP Bars
+interface FighterBarsProps {
+  hpPercent: number;
+  fpPercent: number;
+  isWinner?: boolean;
+}
+
+function FighterBars({ hpPercent, fpPercent, isWinner }: FighterBarsProps) {
+  return (
+    <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-24">
+      {/* HP Bar */}
+      <div className="h-1.5 bg-black/50 rounded-none mb-0.5 overflow-hidden">
+        <div
+          className={cn(
+            'h-full transition-all duration-300',
+            hpPercent > 50 ? 'bg-primary' : hpPercent > 25 ? 'bg-arena-gold' : 'bg-destructive'
+          )}
+          style={{ width: `${hpPercent}%` }}
+        />
+      </div>
+      {/* FP Bar */}
+      <div className="h-1 bg-black/50 rounded-none overflow-hidden">
+        <div
+          className="h-full bg-accent transition-all duration-300"
+          style={{ width: `${fpPercent}%` }}
+        />
+      </div>
+      {/* Winner glow */}
+      {isWinner && <div className="absolute -inset-1 bg-arena-gold/30 blur-sm animate-pulse" />}
+    </div>
+  );
+}
+
+// Sub-component: Name Plate
+interface FighterNamePlateProps {
+  name: string;
+  isWinner?: boolean;
+}
+
+function FighterNamePlate({ name, isWinner }: FighterNamePlateProps) {
+  return (
+    <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">
+      <span
+        className={cn(
+          'text-xs font-bold px-2 py-0.5 rounded-none',
+          isWinner ? 'bg-arena-gold/80 text-primary-foreground' : 'bg-black/60 text-foreground/90'
+        )}
+      >
+        {name}
+      </span>
+    </div>
+  );
+}
+
+// Sub-component: Body Part
+interface FighterBodyPartProps {
+  isDead?: boolean;
+  part: 'head' | 'torso' | 'abdomen' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg';
+}
+
+function FighterBodyPart({ isDead, part }: FighterBodyPartProps) {
+  const deadFill = {
+    head: 'fill-gray-400/80',
+    torso: 'fill-gray-600/60',
+    abdomen: 'fill-gray-700/50',
+    leftArm: 'fill-gray-400/70',
+    rightArm: 'fill-gray-400/70',
+    leftLeg: 'fill-gray-600/60',
+    rightLeg: 'fill-gray-600/60',
+  }[part];
+
+  const aliveFill = {
+    head: 'fill-amber-200/80',
+    torso: 'fill-amber-800/60',
+    abdomen: 'fill-amber-700/50',
+    leftArm: 'fill-amber-200/70',
+    rightArm: 'fill-amber-200/70',
+    leftLeg: 'fill-amber-700/60',
+    rightLeg: 'fill-amber-700/60',
+  }[part];
+
+  const commonClasses = 'stroke-amber-900/40';
+
+  switch (part) {
+    case 'head':
+      return (
+        <circle
+          cx="50"
+          cy="15"
+          r="10"
+          className={cn(aliveFill, commonClasses, isDead && deadFill)}
+          strokeWidth="2"
+        />
+      );
+    case 'torso':
+      return (
+        <path
+          d="M35 25 H65 V55 H35 V25 Z"
+          className={cn(aliveFill, commonClasses, isDead && deadFill)}
+          strokeWidth="2"
+        />
+      );
+    case 'abdomen':
+      return (
+        <path
+          d="M38 56 H62 V80 L50 90 L38 80 V56 Z"
+          className={cn(aliveFill, commonClasses, isDead && deadFill)}
+          strokeWidth="2"
+        />
+      );
+    case 'leftArm':
+      return (
+        <path
+          d="M35 30 L20 40 L15 65 L25 70 L32 32 Z"
+          className={cn(aliveFill, commonClasses, isDead && deadFill)}
+          strokeWidth="2"
+        />
+      );
+    case 'rightArm':
+      return (
+        <path
+          d="M65 30 L80 40 L85 65 L75 70 L68 32 Z"
+          className={cn(aliveFill, commonClasses, isDead && deadFill)}
+          strokeWidth="2"
+        />
+      );
+    case 'leftLeg':
+      return (
+        <path
+          d="M38 85 L30 140 L45 140 L48 90 L38 85 Z"
+          className={cn(aliveFill, commonClasses, isDead && deadFill)}
+          strokeWidth="2"
+        />
+      );
+    case 'rightLeg':
+      return (
+        <path
+          d="M62 85 L70 140 L55 140 L52 90 L62 85 Z"
+          className={cn(aliveFill, commonClasses, isDead && deadFill)}
+          strokeWidth="2"
+        />
+      );
+  }
+}
+
+// Sub-component: Fighter Figure
+interface FighterFigureProps {
+  isDead?: boolean;
+  weaponCategory: ReturnType<typeof getWeaponCategory>;
+  shieldInfo: ShieldInfo;
+  pose: FighterPose;
+}
+
+function FighterFigure({ isDead, weaponCategory, shieldInfo, pose }: FighterFigureProps) {
+  return (
+    <svg
+      viewBox="0 0 100 150"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full filter drop-shadow-lg"
+    >
+      {/* Fighter body */}
+      <g className={cn('transition-transform duration-200', isDead && 'translate-y-8')}>
+        <FighterBodyPart part="head" isDead={isDead} />
+        <FighterBodyPart part="torso" isDead={isDead} />
+        <FighterBodyPart part="abdomen" isDead={isDead} />
+        <FighterBodyPart part="leftArm" isDead={isDead} />
+        <FighterBodyPart part="rightArm" isDead={isDead} />
+        <FighterBodyPart part="leftLeg" isDead={isDead} />
+        <FighterBodyPart part="rightLeg" isDead={isDead} />
+
+        {/* Weapon */}
+        {!isDead && <WeaponIcon category={weaponCategory} pose={pose.stance} x={85} y={55} />}
+
+        {/* Shield */}
+        {shieldInfo.hasShield && !isDead && <ShieldIcon size={shieldInfo.size} x={15} y={55} />}
+      </g>
+    </svg>
+  );
+}
 
 /**
- * Arena fighter.
- * @param  - {
-  name,
-  pose,
-  stats,
-  style,
-  weapon name = 'longsword',
-  shield name,
-  is winner,
-  is dead,
-  is active,
-  class name,
-  size = 120,
-}.
- * @returns The result.
+ * Arena fighter component - renders a fighter with HP/FP bars, name plate, and SVG figure.
  */
 export default function ArenaFighter({
   name,
@@ -104,152 +311,27 @@ export default function ArenaFighter({
   size = 120,
 }: ArenaFighterProps) {
   const weaponCategory = getWeaponCategory(weaponName);
-  const hasShield =
-    shieldName &&
-    shieldName.toLowerCase() !== 'none' &&
-    !shieldName.toLowerCase().includes('shield');
-  const shieldSize = shieldName?.toLowerCase().includes('large')
-    ? 'large'
-    : shieldName?.toLowerCase().includes('small')
-      ? 'small'
-      : 'medium';
-
-  // Calculate HP percentage
-  const hpPercent = Math.max(0, (stats.currentHp / stats.maxHp) * 100);
-  const fpPercent = Math.max(0, (stats.currentFp / stats.maxFp) * 100);
-
-  // Animation classes based on stance
-  const stanceAnimation = {
-    neutral: '',
-    advancing: 'animate-advancing',
-    retreating: 'animate-retreating',
-    lunging: 'animate-lunging',
-    defending: 'animate-defending',
-    stunned: 'animate-stunned',
-    victorious: 'animate-victorious',
-    defeated: 'animate-defeated',
-  }[pose.stance];
-
-  // Idle animation based on fighting style
-  const idleAnimation = !isDead && pose.stance === 'neutral' ? getIdleAnimation(style) : '';
+  const shieldInfo = parseShieldInfo(shieldName);
+  const hpPercent = calculatePercent(stats.currentHp, stats.maxHp);
+  const fpPercent = calculatePercent(stats.currentFp, stats.maxFp);
+  const { containerStyle, containerClassName } = useFighterStyles({ pose, isDead, isActive, className });
+  const stanceClass = getStanceAnimationClass(pose.stance);
+  const idleClass = !isDead && pose.stance === 'neutral' ? getIdleAnimation(style) : '';
 
   return (
-    <div
-      className={cn('absolute transition-all duration-300', className)}
-      style={{
-        left: `${pose.x}%`,
-        bottom: `${30 + pose.y}%`,
-        transform: `translateX(-50%) ${pose.facing === 'left' ? 'scaleX(-1)' : ''} ${isDead ? 'rotate(90deg)' : ''}`,
-        zIndex: isActive ? 10 : 5,
-        opacity: isDead ? 0.6 : 1,
-      }}
-    >
-      {/* HP/FP Bars */}
-      <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-24">
-        {/* HP Bar */}
-        <div className="h-1.5 bg-black/50 rounded-none mb-0.5 overflow-hidden">
-          <div
-            className={cn(
-              'h-full transition-all duration-300',
-              hpPercent > 50 ? 'bg-primary' : hpPercent > 25 ? 'bg-arena-gold' : 'bg-destructive'
-            )}
-            style={{ width: `${hpPercent}%` }}
-          />
-        </div>
-        {/* FP Bar */}
-        <div className="h-1 bg-black/50 rounded-none overflow-hidden">
-          <div
-            className="h-full bg-accent transition-all duration-300"
-            style={{ width: `${fpPercent}%` }}
-          />
-        </div>
-        {/* Winner glow */}
-        {isWinner && <div className="absolute -inset-1 bg-arena-gold/30 blur-sm animate-pulse" />}
-      </div>
-
-      {/* Name Plate */}
-      <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">
-        <span
-          className={cn(
-            'text-xs font-bold px-2 py-0.5 rounded-none',
-            isWinner ? 'bg-arena-gold/80 text-primary-foreground' : 'bg-black/60 text-foreground/90'
-          )}
-        >
-          {name}
-        </span>
-      </div>
-
-      {/* Fighter SVG */}
+    <div className={containerClassName} style={containerStyle}>
+      <FighterBars hpPercent={hpPercent} fpPercent={fpPercent} isWinner={isWinner} />
+      <FighterNamePlate name={name} isWinner={isWinner} />
       <div
-        className={cn('relative', stanceAnimation, idleAnimation)}
+        className={cn('relative', stanceClass, idleClass)}
         style={{ width: size, height: size * 1.5 }}
       >
-        <svg
-          viewBox="0 0 100 150"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full filter drop-shadow-lg"
-        >
-          {/* Fighter body */}
-          <g className={cn('transition-transform duration-200', isDead && 'translate-y-8')}>
-            {/* Head */}
-            <circle
-              cx="50"
-              cy="15"
-              r="10"
-              className={cn('fill-amber-200/80 stroke-amber-900/40', isDead && 'fill-gray-400/80')}
-              strokeWidth="2"
-            />
-
-            {/* Torso */}
-            <path
-              d="M35 25 H65 V55 H35 V25 Z"
-              className={cn('fill-amber-800/60 stroke-amber-900/40', isDead && 'fill-gray-600/60')}
-              strokeWidth="2"
-            />
-
-            {/* Abdomen */}
-            <path
-              d="M38 56 H62 V80 L50 90 L38 80 V56 Z"
-              className={cn('fill-amber-700/50 stroke-amber-900/40', isDead && 'fill-gray-700/50')}
-              strokeWidth="2"
-            />
-
-            {/* Left Arm (Shield arm) */}
-            <path
-              d="M35 30 L20 40 L15 65 L25 70 L32 32 Z"
-              className={cn('fill-amber-200/70 stroke-amber-900/40', isDead && 'fill-gray-400/70')}
-              strokeWidth="2"
-            />
-
-            {/* Right Arm (Weapon arm) */}
-            <path
-              d="M65 30 L80 40 L85 65 L75 70 L68 32 Z"
-              className={cn('fill-amber-200/70 stroke-amber-900/40', isDead && 'fill-gray-400/70')}
-              strokeWidth="2"
-            />
-
-            {/* Left Leg */}
-            <path
-              d="M38 85 L30 140 L45 140 L48 90 L38 85 Z"
-              className={cn('fill-amber-700/60 stroke-amber-900/40', isDead && 'fill-gray-600/60')}
-              strokeWidth="2"
-            />
-
-            {/* Right Leg */}
-            <path
-              d="M62 85 L70 140 L55 140 L52 90 L62 85 Z"
-              className={cn('fill-amber-700/60 stroke-amber-900/40', isDead && 'fill-gray-600/60')}
-              strokeWidth="2"
-            />
-
-            {/* Weapon */}
-            {!isDead && <WeaponIcon category={weaponCategory} pose={pose.stance} x={85} y={55} />}
-
-            {/* Shield */}
-            {hasShield && !isDead && <ShieldIcon size={shieldSize} x={15} y={55} />}
-          </g>
-        </svg>
+        <FighterFigure
+          isDead={isDead}
+          weaponCategory={weaponCategory}
+          shieldInfo={shieldInfo}
+          pose={pose}
+        />
       </div>
     </div>
   );
@@ -362,21 +444,4 @@ function ShieldIcon({ size, x, y }: { size: string; x: number; y: number }) {
       strokeWidth="2"
     />
   );
-}
-
-function getIdleAnimation(style: FightingStyle): string {
-  const animations: Record<string, string> = {
-    'Lunging Attack': 'animate-idle-aggressive',
-    'Bashing Attack': 'animate-idle-aggressive',
-    'Total Parry': 'animate-idle-defensive',
-    'Wall of Steel': 'animate-idle-defensive',
-    'Parry-Lunge': 'animate-idle-balanced',
-    'Parry-Riposte': 'animate-idle-balanced',
-    'Parry-Strike': 'animate-idle-balanced',
-    'Aimed Blow': 'animate-idle-aimed',
-    'Slashing Attack': 'animate-idle-striking',
-    'Striking Attack': 'animate-idle-striking',
-  };
-
-  return animations[style] || 'animate-idle-balanced';
 }

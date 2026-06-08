@@ -123,8 +123,12 @@ function runBoutSimulation(
   validCO: Warrior,
   boutSeed: number
 ) {
-  // Tournament bouts always run in perfect 'Clear' conditions
+  // Tournament bouts always run in perfect 'Clear' conditions at the Bloodsands.
+  // Non-tournament bouts use the arena selected at offer time (contract.arenaId).
   const weather = _ctx.isTournamentBout ? 'Clear' : state.weather;
+  const arenaId = _ctx.isTournamentBout
+    ? 'bloodsands_arena'
+    : (_ctx.contract?.arenaId ?? undefined);
   return simulateFight(
     getDefaultPlan(validCW, defaultPlanForWarrior),
     getDefaultPlan(validCO, defaultPlanForWarrior),
@@ -133,7 +137,7 @@ function runBoutSimulation(
     boutSeed,
     state.trainers,
     weather,
-    undefined,
+    arenaId,
     state.crowdMood,
     _ctx.headless
   );
@@ -163,6 +167,9 @@ function collectBoutImpacts(
     validCW.id,
     validCO.id
   );
+  const boutArenaId = ctx.isTournamentBout
+    ? 'bloodsands_arena'
+    : (ctx.contract?.arenaId ?? undefined);
   impacts.push(
     applyRecords(
       state,
@@ -174,7 +181,8 @@ function collectBoutImpacts(
       popA,
       fameD,
       popD,
-      ctx.rivalStableId
+      ctx.rivalStableId,
+      boutArenaId
     )
   );
 
@@ -203,6 +211,9 @@ function collectBoutImpacts(
     handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, ctx.rivalStableId, rng)
   );
 
+  const resolvedArenaId = ctx.isTournamentBout
+    ? 'bloodsands_arena'
+    : (ctx.contract?.arenaId ?? undefined);
   const { summary, announcement } = handleReporting(
     validCW,
     validCO,
@@ -217,7 +228,7 @@ function collectBoutImpacts(
     ctx.isRivalry,
     0,
     rng,
-    undefined,
+    resolvedArenaId,
     state.weather
   );
   impacts.push({ arenaHistory: [summary] });

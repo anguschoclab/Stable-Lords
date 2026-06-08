@@ -3,6 +3,31 @@ import type { FighterState } from '../resolution/types';
 import type { CombatEvent } from '@/types/combat.types';
 import { contestCheck } from './combatMath';
 
+// ─── Arena Size Profiles ──────────────────────────────────────────────────────
+
+/**
+ * Derived combat properties of an arena's physical size.
+ * Single source of truth — built here alongside the range ladder it governs.
+ */
+export interface ArenaSizeProfile {
+  /** Range where the bout opens. */
+  startRange: DistanceRange;
+  /** Furthest range fighters can reach via the distance contest. */
+  maxRange: DistanceRange;
+  /**
+   * Extra outward zone steps applied on a successful hit.
+   * 0 = normal (Center→Edge→Corner in two hits).
+   * 1 = cramped (Center→Corner in one hit).
+   */
+  zoneStepBias: number;
+}
+
+export const ARENA_SIZE_PROFILES: Record<ArenaConfig['size'], ArenaSizeProfile> = {
+  cramped: { startRange: 'Tight', maxRange: 'Striking', zoneStepBias: 1 },
+  standard: { startRange: 'Striking', maxRange: 'Extended', zoneStepBias: 0 },
+  open: { startRange: 'Striking', maxRange: 'Extended', zoneStepBias: 0 },
+};
+
 // ─── Weapon → Preferred Range ─────────────────────────────────────────────────
 
 export const WEAPON_PREFERRED_RANGE: Record<string, DistanceRange> = {
@@ -128,7 +153,10 @@ export interface DistanceContestResult {
  * Winner gains +1 initiative advantage (rangeModA/D = ±1).
  * More importantly, both fighters immediately feel the effect of the current
  * range via getWeaponRangeMod() applied to their attack checks.
- * Range shifts one step toward the winner's preferred weapon range.
+ * Range shifts one step toward the winner's preferred weapon range, capped by
+ * the arena's maxRange (a cramped arena never allows Extended range).
+ *
+ * @param sizeProfile - Optional arena size profile. Defaults to standard if omitted.
  */
 export function contestDistance(
   rng: () => number,
@@ -136,16 +164,28 @@ export function contestDistance(
   fD: FighterState,
   OE_A: number,
   OE_D: number,
-  currentRange: DistanceRange
+  currentRange: DistanceRange,
+  sizeProfile?: ArenaSizeProfile
 ): DistanceContestResult {
   const events: CombatEvent[] = [];
+  const profile = sizeProfile ?? ARENA_SIZE_PROFILES['standard'];
 
   const prefA = fA.activePlan.rangePreference ?? getWeaponPreferredRange(fA.weaponId);
   const prefD = fD.activePlan.rangePreference ?? getWeaponPreferredRange(fD.weaponId);
 
-  // Motivation bonus: +2 when fighting to shift toward your preferred range
-  const motA = prefA !== currentRange ? 2 : 0;
-  const motD = prefD !== currentRange ? 2 : 0;
+  // Motivation bonus: +2 when fighting to shift toward your preferred range.
+  // In a cramped arena, a fighter whose preferred range exceeds the arena cap
+  // can never reach it, so their motivation to create distance is halved —
+  // they're literally running out of room.
+  const prefABeyondCap =
+    RANGE_ORDER.indexOf(prefA) > RANGE_ORDER.indexOf(profile.maxRange);
+  const prefDBeyondCap =
+    RANGE_ORDER.indexOf(prefD) > RANGE_ORDER.indexOf(profile.maxRange);
+
+  const rawMotA = prefA !== currentRange ? 2 : 0;
+  const rawMotD = prefD !== currentRange ? 2 : 0;
+  const motA = prefABeyondCap ? Math.floor(rawMotA / 2) : rawMotA;
+  const motD = prefDBeyondCap ? Math.floor(rawMotD / 2) : rawMotD;
 
   const reachA = computeReachScore(fA.skills.INI, OE_A, motA, fA.recoveryDebt);
   const reachD = computeReachScore(fD.skills.INI, OE_D, motD, fD.recoveryDebt);
@@ -154,8 +194,9 @@ export function contestDistance(
   const winner: 'A' | 'D' = aWins ? 'A' : 'D';
   const winnerPref = aWins ? prefA : prefD;
 
-  // Shift range one step toward winner's preferred range
-  const newRange = shiftRangeToward(currentRange, winnerPref);
+  // Shift range one step toward winner's preferred range, then clamp to arena cap.
+  const shifted = shiftRangeToward(currentRange, winnerPref);
+  const newRange = clampRangeToMax(shifted, profile.maxRange);
 
   if (newRange !== currentRange) {
     events.push({ type: 'RANGE_SHIFT', actor: winner, result: newRange });
@@ -172,13 +213,23 @@ export function contestDistance(
 
 // ─── Range Shift Helper ───────────────────────────────────────────────────────
 
-const RANGE_ORDER: DistanceRange[] = ['Grapple', 'Tight', 'Striking', 'Extended'];
+export const RANGE_ORDER: DistanceRange[] = ['Grapple', 'Tight', 'Striking', 'Extended'];
 
 function shiftRangeToward(current: DistanceRange, target: DistanceRange): DistanceRange {
   const ci = RANGE_ORDER.indexOf(current);
   const ti = RANGE_ORDER.indexOf(target);
   if (ci === ti) return current;
   return RANGE_ORDER[ci + (ti > ci ? 1 : -1)]!;
+}
+
+/**
+ * Clamps `range` to the furthest range allowed in the arena.
+ * A cramped arena caps at Striking — fighters can never reach Extended.
+ */
+export function clampRangeToMax(range: DistanceRange, maxRange: DistanceRange): DistanceRange {
+  const ri = RANGE_ORDER.indexOf(range);
+  const mi = RANGE_ORDER.indexOf(maxRange);
+  return ri > mi ? maxRange : range;
 }
 
 // ─── Zone Penalties ───────────────────────────────────────────────────────────

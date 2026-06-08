@@ -65,6 +65,8 @@ export function executeHit(
       target: attLabel,
       location: freeRipLoc,
       value: freeRipDmg,
+      // survival strike has no shield/protect mitigation, so raw = applied
+      metadata: { appliedDamage: freeRipDmg },
     });
     attacker.hp -= freeRipDmg;
     attacker.hitsTaken++;
@@ -116,15 +118,27 @@ export function executeHit(
     : 1.0;
   rawDamage = Math.round(rawDamage * defSpecDamageMult);
 
-  if (attPassive.critChance > 0 && rng() < attPassive.critChance) {
+  const isCrit = attPassive.critChance > 0 && rng() < attPassive.critChance;
+  if (isCrit) {
     rawDamage = Math.round(rawDamage * CRIT_DAMAGE_MULT);
+  }
+
+  // Shield-zone mitigation is applied AFTER the event is pushed so that
+  // event.value always reflects the raw (pre-mitigation) hit — used for
+  // visual severity. The post-mitigation figure is in metadata.appliedDamage.
+  const defShieldCov =
+    SHIELD_COVERAGE[defender.shieldId ?? ''] ?? SHIELD_COVERAGE[defender.weaponId ?? ''];
+  const postShieldDamage = applyShieldZoneMod(rawDamage, hitLoc, defShieldCov);
+  const damage = applyProtectMod(postShieldDamage, hitLoc, defender.activePlan.protect);
+
+  if (isCrit) {
     events.push({
       type: 'HIT',
       actor: attLabel,
       target: defLabel,
       location: hitLoc,
       value: rawDamage,
-      metadata: { crit: true },
+      metadata: { crit: true, appliedDamage: damage },
     });
   } else {
     events.push({
@@ -133,14 +147,10 @@ export function executeHit(
       target: defLabel,
       location: hitLoc,
       value: rawDamage,
+      metadata: { appliedDamage: damage },
     });
   }
 
-  // Shield-zone mitigation
-  const defShieldCov =
-    SHIELD_COVERAGE[defender.shieldId ?? ''] ?? SHIELD_COVERAGE[defender.weaponId ?? ''];
-  const postShieldDamage = applyShieldZoneMod(rawDamage, hitLoc, defShieldCov);
-  const damage = applyProtectMod(postShieldDamage, hitLoc, defender.activePlan.protect);
   defender.hp -= damage;
   defender.hitsTaken++;
   attacker.hitsLanded++;

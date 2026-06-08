@@ -98,7 +98,7 @@ export function simulateFight(
         planD,
         warriorA,
         warriorD,
-        weather,
+        effectiveWeather,
         arenaId,
         arenaConfig
       );

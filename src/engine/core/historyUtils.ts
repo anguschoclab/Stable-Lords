@@ -79,7 +79,23 @@ export function getAllFightsForWarrior(
 }
 
 /**
- * Extracts all fights for a specific tournament.
+ * Extracts all fights that took place in a specific arena.
+ * Full scan — arenaHistory is not sorted by arenaId.
+ */
+export function getFightsForArena(
+  arenaHistory: FightSummary[],
+  arenaId: string
+): FightSummary[] {
+  const result: FightSummary[] = [];
+  for (let i = 0; i < arenaHistory.length; i++) {
+    const f = arenaHistory[i]!;
+    if (f.arenaId === arenaId) result.push(f);
+  }
+  return result;
+}
+
+/**
+ * Extracts all fights that took place in a specific arena.
  * Uses a backward loop because tournaments typically happen in the recent past,
  * stopping if we reach a point where no tournament fights could exist (e.g. before the tournament week, if known).
  * To be safe without knowing the exact tournament week, we just do a standard backward scan.

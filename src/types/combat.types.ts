@@ -175,6 +175,19 @@ export interface ExchangeLogEntry {
   executionFlag?: boolean;
   /** Telemetry reason codes e.g. AI_PUSH_FATIGUE, CROWD_BLOODTHIRSTY_LETHAL. */
   reasonCodes?: string[];
+  /**
+   * Which fighter was knocked down during this exchange.
+   * NOTE: the matching RECOVERY event fires at the start of the *next* exchange —
+   * so knockdown and recovery will appear in consecutive log entries, not the same one.
+   */
+  knockdown?: 'A' | 'D';
+  /**
+   * Which fighter spent this exchange recovering from a knockdown (cleared knockedDown).
+   * This is the RECOVERY emitted at the start of this exchange for the prior exchange's knockdown.
+   */
+  recovery?: 'A' | 'D';
+  /** Momentum shift that occurred during this exchange (first shift wins if multiple). */
+  momentumShift?: { actor: 'A' | 'D'; to: number; from: number };
 } /**
  * Defines the shape of fight outcome.
  */

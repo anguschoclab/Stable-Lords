@@ -122,16 +122,16 @@ describe('narrator', () => {
       expect(result5).toBeDefined();
     });
 
-    it('returns hp ratios for tracking', () => {
+    it('returns a log array', () => {
+      // HP tracking has moved to simulationLoop.ts (reads fA.hp/maxHp directly).
+      // narrateEvents only returns { log }.
       const ctx = createMockContext();
       const events: CombatEvent[] = [{ type: 'HIT', actor: 'A', target: 'D', value: 10 }];
 
       const result = narrateEvents(events, ctx, 1);
 
-      expect(result).toHaveProperty('lastHpRatioA');
-      expect(result).toHaveProperty('lastHpRatioD');
-      expect(typeof result.lastHpRatioA).toBe('number');
-      expect(typeof result.lastHpRatioD).toBe('number');
+      expect(result).toHaveProperty('log');
+      expect(Array.isArray(result.log)).toBe(true);
     });
   });
 

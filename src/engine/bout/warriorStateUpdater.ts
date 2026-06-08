@@ -12,7 +12,9 @@ export function updateWarriorAfterBout(
   wasKilled: boolean,
   tags: string[],
   /** If true, skip fatigue accrual (for tournament participants during tournament week) */
-  skipFatigue?: boolean
+  skipFatigue?: boolean,
+  /** Arena where the bout took place — used to maintain per-arena career breakdown */
+  arenaId?: string
 ): Warrior {
   // Calculate fatigue: reset to 0 if killed, otherwise +25 (capped at 100)
   // 🔒 Skip fatigue accrual for tournament participants during tournament week
@@ -21,6 +23,19 @@ export function updateWarriorAfterBout(
     : skipFatigue
       ? warrior.fatigue || 0 // Keep current fatigue (no accrual)
       : Math.min(100, (warrior.fatigue || 0) + 25); // Normal +25 fatigue
+
+  const prevByArena = warrior.career.byArena ?? {};
+  const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
+  const byArena = arenaId && arenaRecord
+    ? {
+        ...prevByArena,
+        [arenaId]: {
+          wins: arenaRecord.wins + (isWinner ? 1 : 0),
+          losses: arenaRecord.losses + (!isWinner ? 1 : 0),
+          kills: arenaRecord.kills + (wasKilled ? 1 : 0),
+        },
+      }
+    : prevByArena;
 
   return {
     ...warrior,
@@ -31,6 +46,7 @@ export function updateWarriorAfterBout(
       wins: (warrior.career.wins || 0) + (isWinner ? 1 : 0),
       losses: (warrior.career.losses || 0) + (!isWinner ? 1 : 0),
       kills: (warrior.career.kills || 0) + (wasKilled ? 1 : 0),
+      byArena,
     },
     flair:
       isWinner && tags.includes('Flashy')
@@ -55,8 +71,22 @@ export function applyFameDelta(warrior: Warrior, delta: number): Warrior {
  */
 export function applyCareerStats(
   warrior: Warrior,
-  result: { win: boolean; kill: boolean }
+  result: { win: boolean; kill: boolean },
+  arenaId?: string
 ): Warrior {
+  const prevByArena = warrior.career.byArena ?? {};
+  const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
+  const byArena = arenaId && arenaRecord
+    ? {
+        ...prevByArena,
+        [arenaId]: {
+          wins: arenaRecord.wins + (result.win ? 1 : 0),
+          losses: arenaRecord.losses + (!result.win ? 1 : 0),
+          kills: arenaRecord.kills + (result.kill ? 1 : 0),
+        },
+      }
+    : prevByArena;
+
   return {
     ...warrior,
     career: {
@@ -64,6 +94,7 @@ export function applyCareerStats(
       wins: (warrior.career.wins || 0) + (result.win ? 1 : 0),
       losses: (warrior.career.losses || 0) + (!result.win ? 1 : 0),
       kills: (warrior.career.kills || 0) + (result.kill ? 1 : 0),
+      byArena,
     },
   };
 }

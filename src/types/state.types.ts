@@ -92,6 +92,8 @@ export interface BoutOffer {
   proposerStableId?: StableId;
   conditions?: string[];
   createdAt?: string;
+  /** Arena where this bout will take place. Absent only for legacy/tournament offers. */
+  arenaId?: string;
 } /**
  * Promoter personality type.
  */

@@ -514,6 +514,14 @@ export interface ArenaConfig {
   tags: ArenaTag[];
   tier: 1 | 2 | 3; // 1=common, 2=prestigious, 3=special event
   description: string;
+  /**
+   * Physical size of the arena.
+   * Drives starting range, reachable-range cap, and zone-push depth.
+   * cramped: fighters open at Tight, Extended is unreachable, hits push faster.
+   * standard: default — opens at Striking, full range ladder available.
+   * open: same as standard for range/zone; future use for extended motivation bonus.
+   */
+  size: 'cramped' | 'standard' | 'open';
   /** DEF penalty per zone (negative = penalty). E.g. Edge: -2, Corner: -4 */
   zoneDef: Partial<Record<ArenaZone, number>>;
   surfaceMod: SurfaceMod;

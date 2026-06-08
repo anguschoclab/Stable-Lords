@@ -26,6 +26,9 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { filterAndSortOffers } from '@/utils/boutOfferFilters';
+import { getArenaById } from '@/data/arenas';
+import { describeArenaFit } from '@/engine/matchmaking/arenaFit';
+import { MapPin } from 'lucide-react';
 
 /** Get fatigue status for display */
 function getFatigueStatus(fatigue: number): {
@@ -230,6 +233,21 @@ function OfferCard({
               {offer.hype}% Expected Hype
             </div>
           </div>
+          {offer.arenaId && (
+            <div className="col-span-2 pt-4 border-t border-white/5 flex items-start gap-2">
+              <MapPin className="h-3 w-3 text-muted-foreground/40 mt-0.5 shrink-0" />
+              <div>
+                <div className="text-[11px] font-display font-black uppercase text-foreground/80">
+                  {getArenaById(offer.arenaId).name}
+                </div>
+                {playerWarrior && (
+                  <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
+                    {describeArenaFit(playerWarrior, offer.arenaId, playerWarrior.plan ?? undefined)}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

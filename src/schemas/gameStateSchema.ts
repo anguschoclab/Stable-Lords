@@ -520,6 +520,9 @@ export const CareerRecordSchema = z.object({
       bronze: z.number(),
     })
     .optional(),
+  byArena: z
+    .record(z.string(), z.object({ wins: z.number(), losses: z.number(), kills: z.number() }))
+    .optional(),
 });
 
 /**
@@ -743,6 +746,7 @@ export const BoutOfferSchema = z.object({
   proposerStableId: z.string().optional(),
   conditions: z.array(z.string()).optional(),
   createdAt: z.string().optional(),
+  arenaId: z.string().optional(),
 });
 
 /**
@@ -1177,6 +1181,7 @@ export const ArenaConfigSchema = z.object({
   name: z.string(),
   tags: z.array(ArenaTagSchema),
   tier: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+  size: z.union([z.literal('cramped'), z.literal('standard'), z.literal('open')]),
   description: z.string(),
   zoneDef: z.record(ArenaZoneSchema, z.number()),
   surfaceMod: SurfaceModSchema,

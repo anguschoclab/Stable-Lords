@@ -39,6 +39,7 @@ describe('Arena Registry', () => {
       name: 'Test Arena',
       tags: ['indoor'],
       tier: 1,
+      size: 'standard',
       description: 'A test arena',
       zoneDef: { Edge: -2, Corner: -4 },
       surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },

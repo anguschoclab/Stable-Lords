@@ -15,6 +15,7 @@ import {
   calculatePersonalityPurseModifier,
 } from '@/engine/promoters/personalityScoring';
 import { calculateHype } from '@/engine/promoters/hypeCalculator';
+import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
 /**
  * Stable Lords — Promoter Pass
  * Phase 2: Promoters scan the world and dispatch bout offers.
@@ -65,6 +66,9 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
   }
 
   const availableWarriors = allWarriors.filter((warrior) => !unavailableWarriorIds.has(warrior.id));
+
+  // Pre-build a set of player warrior ids for arena-selection favour weighting
+  const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
 
   // 2. Iterate through Promoters
   Object.values(state.promoters || []).forEach((promoter) => {
@@ -136,6 +140,16 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         );
         const finalPurse = Math.floor(basePurse * (hype / 100) * purseModifier);
 
+        // Favour the player's warrior when selecting arena fit
+        const isWarriorAPlayer = playerWarriorIds.has(warriorA.id);
+        const favorWarrior = isWarriorAPlayer ? warriorA : opponentB;
+        const otherWarrior = isWarriorAPlayer ? opponentB : warriorA;
+        const arenaId = selectArenaForMatchup(favorWarrior, otherWarrior, rngService, {
+          favorWeight: 1.2,
+          planA: favorWarrior.plan ?? undefined,
+          planB: otherWarrior.plan ?? undefined,
+        });
+
         const typedOfferId = offerId as BoutOfferId;
         newOffers[typedOfferId] = {
           id: typedOfferId,
@@ -150,6 +164,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
             [warriorA.id]: 'Pending',
             [opponentB.id]: 'Pending',
           },
+          arenaId,
         };
         generated++;
       }

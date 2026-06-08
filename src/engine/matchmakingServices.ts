@@ -83,15 +83,34 @@ export const AIBoutService = {
    * Updates a rival warrior's record after a background bout.
    * This is a pure-ish helper that returns the updated roster.
    */
-  updateWarriorRecord(roster: Warrior[], wId: string, won: boolean, killed: boolean): Warrior[] {
+  updateWarriorRecord(
+    roster: Warrior[],
+    wId: string,
+    won: boolean,
+    killed: boolean,
+    arenaId?: string
+  ): Warrior[] {
     return roster.map((w) => {
       if (w.id !== wId) return w;
+      const prevByArena = w.career.byArena ?? {};
+      const arenaRecord = arenaId ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 }) : null;
+      const byArena = arenaId && arenaRecord
+        ? {
+            ...prevByArena,
+            [arenaId]: {
+              wins: arenaRecord.wins + (won ? 1 : 0),
+              losses: arenaRecord.losses + (won ? 0 : 1),
+              kills: arenaRecord.kills + (killed ? 1 : 0),
+            },
+          }
+        : prevByArena;
       return {
         ...w,
         career: {
           wins: w.career.wins + (won ? 1 : 0),
           losses: w.career.losses + (won ? 0 : 1),
           kills: w.career.kills + (killed ? 1 : 0),
+          byArena,
         },
         fame: Math.max(0, w.fame + (won ? (killed ? 3 : 1) : 0)),
       };

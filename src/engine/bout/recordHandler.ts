@@ -51,7 +51,8 @@ export function applyRecords(
   popA: number,
   fameD: number,
   popD: number,
-  rivalStableId?: string
+  rivalStableId?: string,
+  arenaId?: string
 ): StateImpact {
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const rivalsUpdates = new Map<StableId, Partial<RivalStableData>>();
@@ -69,7 +70,8 @@ export function applyRecords(
       outcome.winner === 'A',
       outcome.winner === 'A' && outcome.by === 'Kill',
       tags,
-      skipFatigueA
+      skipFatigueA,
+      arenaId
     )
   );
 
@@ -83,7 +85,8 @@ export function applyRecords(
         outcome.winner === 'D',
         outcome.winner === 'D' && outcome.by === 'Kill',
         tags,
-        skipFatigueD
+        skipFatigueD,
+        arenaId
       )
     );
   } else if (rivalStableId) {
@@ -99,7 +102,8 @@ export function applyRecords(
           outcome.winner === 'D',
           outcome.winner === 'D' && outcome.by === 'Kill',
           tags,
-          skipFatigueD
+          skipFatigueD,
+          arenaId
         )
       );
       rivalsUpdates.set(rivalStableId as StableId, { roster: updatedRoster });

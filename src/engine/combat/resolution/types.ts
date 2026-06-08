@@ -104,6 +104,16 @@ export interface ResolutionContext {
   pushedFighter?: 'A' | 'D';
   /** Surface modifiers from arenaConfig, unpacked for convenience */
   surfaceMod: SurfaceMod;
+  /**
+   * Furthest range reachable in this arena (from arena size profile).
+   * Standard/open = 'Extended'; cramped = 'Striking'.
+   */
+  maxRange: DistanceRange;
+  /**
+   * Extra outward zone steps per hit in this arena (from arena size profile).
+   * 0 = standard (Corner in 2 hits); 1 = cramped (Corner in 1 hit).
+   */
+  zoneStepBias: number;
   /** Crowd-mood lethality delta injected by simulate.ts. */
   crowdKillBonus?: number;
 }

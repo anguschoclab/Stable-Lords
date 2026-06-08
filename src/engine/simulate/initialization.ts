@@ -11,10 +11,11 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Trainer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan } from '@/types/combat.types';
-import type { WeatherType, DistanceRange, ArenaZone } from '@/types/shared.types';
+import type { WeatherType, ArenaZone } from '@/types/shared.types';
 import type { CrowdMood } from '@/engine/crowdMood';
 import type { ResolutionContext } from '../combat/resolution/types';
 import { getMatchupBonus } from '@/constants/combat';
+import { ARENA_SIZE_PROFILES } from '../combat/mechanics/distanceResolution';
 
 /**
  * Per-mood kill-window deltas.
@@ -135,10 +136,12 @@ export function initializeResolutionContext(
     },
     tacticStreakA: 0,
     tacticStreakD: 0,
-    range: 'Striking' as DistanceRange,
-    zone: 'Center' as ArenaZone,
+    range: ARENA_SIZE_PROFILES[arenaConfig.size].startRange,
+    zone: (arenaConfig.startingZone ?? 'Center') as ArenaZone,
     arenaConfig,
     surfaceMod: arenaConfig.surfaceMod,
+    maxRange: ARENA_SIZE_PROFILES[arenaConfig.size].maxRange,
+    zoneStepBias: ARENA_SIZE_PROFILES[arenaConfig.size].zoneStepBias,
     pushedFighter: undefined,
     crowdKillBonus: crowdMood ? CROWD_KILL_BONUS[crowdMood] : 0,
   };

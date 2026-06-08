@@ -38,8 +38,18 @@ export interface NarrationContext {
   styleD: FightingStyle;
   maxHpA: number;
   maxHpD: number;
+  /** HP ratio at the start of this exchange (before resolveExchange ran). */
   prevHpRatioA: number;
   prevHpRatioD: number;
+  /**
+   * Authoritative post-exchange HP ratios from the engine state (fA.hp/maxHp).
+   * These are post-mitigation (shield + protect reductions applied).
+   * Narration uses these for state-change and severity lines instead of
+   * re-deriving from the pre-mitigation event.value.
+   * Optional for backwards-compat with tests that don't supply them.
+   */
+  postHpRatioA?: number;
+  postHpRatioD?: number;
   fameA: number;
   fameD: number;
   isFavoriteA?: boolean;
@@ -67,12 +77,9 @@ export function narrateEvents(
   events: CombatEvent[],
   ctx: NarrationContext,
   minute: number
-): { log: MinuteEvent[]; lastHpRatioA: number; lastHpRatioD: number } {
+): { log: MinuteEvent[] } {
   const { rng, nameA, nameD, weaponA, weaponD } = ctx;
   const log: MinuteEvent[] = [];
-
-  let currentHpRatioA = ctx.prevHpRatioA;
-  let currentHpRatioD = ctx.prevHpRatioD;
 
   const getName = (actor: 'A' | 'D') => (actor === 'A' ? nameA : nameD);
   const getOpponentName = (actor: 'A' | 'D') => (actor === 'A' ? nameD : nameA);
@@ -87,10 +94,17 @@ export function narrateEvents(
     const epithet = getEpithet(rng, getOrigin(actor));
     return epithet ?? base;
   };
-  const getHpRatio = (actor: 'A' | 'D') => (actor === 'A' ? currentHpRatioA : currentHpRatioD);
-  const setHpRatio = (actor: 'A' | 'D', ratio: number) => {
-    if (actor === 'A') currentHpRatioA = ratio;
-    else currentHpRatioD = ratio;
+  // Post-exchange authoritative HP ratio for the target of a HIT event.
+  // When postHpRatio* is supplied we use it directly (most accurate).
+  // Without it, fall back to re-deriving from event.metadata.appliedDamage
+  // (which is post-mitigation), or from raw event.value as last resort.
+  const getPostHitRatio = (target: 'A' | 'D', event: CombatEvent): number => {
+    if (target === 'A' && ctx.postHpRatioA !== undefined) return ctx.postHpRatioA;
+    if (target === 'D' && ctx.postHpRatioD !== undefined) return ctx.postHpRatioD;
+    // Legacy fallback: use appliedDamage if available, otherwise raw value
+    const appliedDmg = (event.metadata?.appliedDamage as number | undefined) ?? event.value ?? 0;
+    const prevRatio = target === 'A' ? ctx.prevHpRatioA : ctx.prevHpRatioD;
+    return Math.max(0, prevRatio - appliedDmg / getMaxHp(target));
   };
 
   for (const event of events) {
@@ -207,18 +221,13 @@ export function narrateEvents(
             );
             if (sevLine) log.push({ minute, text: sevLine });
 
-            // HP Ratio update and state change narration
-            const newHpRatio =
-              getHpRatio(event.target as 'A' | 'D') -
-              event.value / getMaxHp(event.target as 'A' | 'D');
-            const sLine = stateChangeLine(
-              rng,
-              opponentName,
-              newHpRatio,
-              getHpRatio(event.target as 'A' | 'D')
-            );
+            // Use authoritative post-mitigation HP ratio for state-change and
+            // crowd lines. prevHpRatio is the ratio at the start of this exchange.
+            const target = event.target as 'A' | 'D';
+            const prevRatio = target === 'A' ? ctx.prevHpRatioA : ctx.prevHpRatioD;
+            const newHpRatio = getPostHitRatio(target, event);
+            const sLine = stateChangeLine(rng, opponentName, newHpRatio, prevRatio);
             if (sLine) log.push({ minute, text: sLine });
-            setHpRatio(event.target as 'A' | 'D', newHpRatio);
 
             // Crowd reaction
             const crowd = crowdReaction(rng, opponentName, actorName, newHpRatio);
@@ -331,5 +340,5 @@ export function narrateEvents(
     }
   }
 
-  return { log, lastHpRatioA: currentHpRatioA, lastHpRatioD: currentHpRatioD };
+  return { log };
 }

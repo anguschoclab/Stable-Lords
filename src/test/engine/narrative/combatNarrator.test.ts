@@ -371,9 +371,11 @@ describe('CombatNarrator', () => {
           tacticStreakD: 0,
           range: 'MELEE',
           zone: 'CENTER',
-          arenaConfig: { zones: {}, surface: 'sand' },
+          arenaConfig: { zones: {}, surface: 'sand', size: 'standard' },
           pushedFighter: undefined,
           surfaceMod: { initiativeMod: 0, enduranceMod: 0 },
+          maxRange: 'Extended',
+          zoneStepBias: 0,
         };
         const events = resolveExchange(ctx, fA, fD);
         if (events.some((e) => e.type === 'KNOCKDOWN')) {
@@ -432,9 +434,11 @@ describe('CombatNarrator', () => {
         tacticStreakD: 0,
         range: 'MELEE',
         zone: 'CENTER',
-        arenaConfig: { zones: {}, surface: 'sand' },
+        arenaConfig: { zones: {}, surface: 'sand', size: 'standard' },
         pushedFighter: undefined,
         surfaceMod: { initiativeMod: 0, enduranceMod: 0 },
+        maxRange: 'Extended',
+        zoneStepBias: 0,
       };
       const events = resolveExchange(ctx, fA, fD);
       expect(events.some((e) => e.type === 'RECOVERY')).toBe(true);

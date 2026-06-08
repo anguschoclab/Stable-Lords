@@ -1,6 +1,7 @@
 import { GameState, Warrior, RivalStableData, BoutOffer } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { type BoutOfferId, type PromoterId } from '@/types/shared.types';
+import { selectArenaForMatchup } from './arenaFit';
 
 const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
 
@@ -86,6 +87,11 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
       pairedIds.add(bestOpponent.warrior.id);
 
       const offerId = `world_bout_${rng.uuid()}` as BoutOfferId;
+      const arenaId = selectArenaForMatchup(
+        entryA.warrior,
+        bestOpponent.warrior,
+        rng
+      );
       const offer: BoutOffer = {
         id: offerId,
         promoterId: WORLD_MATCHMAKING,
@@ -104,6 +110,7 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
         createdAt: new Date(
           Date.UTC(2026, 0, 1) + (state.week - 1) * 7 * 24 * 60 * 60 * 1000
         ).toISOString(),
+        arenaId,
       };
       offers.push(offer);
     }

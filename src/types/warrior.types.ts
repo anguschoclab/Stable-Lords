@@ -76,6 +76,8 @@ export interface CareerRecord {
     silver: number;
     bronze: number;
   };
+  /** Per-arena cumulative breakdown. Key = arenaId. */
+  byArena?: Record<string, { wins: number; losses: number; kills: number }>;
 } /**
  * Warrior status type.
  */

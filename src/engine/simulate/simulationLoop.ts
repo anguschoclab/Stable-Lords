@@ -117,6 +117,12 @@ export function runSimulationLoop(
 
     // B. Resolve Narration (Drama)
     if (!headless) {
+      // Use authoritative post-mitigation HP ratios from the engine state.
+      // These are already correct — resolveExchange mutated fA.hp and fD.hp
+      // with the real (post-shield, post-protect) damage figure.
+      const postHpRatioA = Math.max(0, fA.hp / fA.maxHp);
+      const postHpRatioD = Math.max(0, fD.hp / fD.maxHp);
+
       const narCtx: NarrationContext = {
         rng: flavorRng,
         nameA,
@@ -129,6 +135,10 @@ export function runSimulationLoop(
         maxHpD: fD.maxHp,
         prevHpRatioA,
         prevHpRatioD,
+        // Authoritative post-exchange HP ratios — narrator reads these instead
+        // of re-deriving from pre-mitigation event.value.
+        postHpRatioA,
+        postHpRatioD,
         fameA: warriorA?.fame ?? 0,
         fameD: warriorD?.fame ?? 0,
         isFavoriteA: !!warriorA?.favorites?.discovered?.weapon,
@@ -138,10 +148,10 @@ export function runSimulationLoop(
         originA: warriorA?.origin,
         originD: warriorD?.origin,
       };
-      const { log: newLines, lastHpRatioA, lastHpRatioD } = narrateEvents(events, narCtx, min);
+      const { log: newLines } = narrateEvents(events, narCtx, min);
       log.push(...newLines);
-      prevHpRatioA = lastHpRatioA;
-      prevHpRatioD = lastHpRatioD;
+      prevHpRatioA = postHpRatioA;
+      prevHpRatioD = postHpRatioD;
 
       // Tactic streak commentary
       if ((resCtx.tacticStreakA === 3 || resCtx.tacticStreakA === 5) && resCtx.lastOffTacticA) {

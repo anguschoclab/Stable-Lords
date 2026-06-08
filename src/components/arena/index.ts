@@ -6,3 +6,4 @@ export { default as MiniCombatLog } from './MiniCombatLog';
 export { default as SpeechBubble } from './SpeechBubble';
 export { default as TacticalLogView } from './TacticalLogView';
 export { default as ViewModeToggle, type ViewMode } from './ViewModeToggle';
+export { calculatePercent, parseShieldInfo, type ShieldInfo } from './arenaUtils';

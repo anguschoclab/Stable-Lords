@@ -1,7 +1,12 @@
 import type { CommitLevel } from '@/types/shared.types';
 import type { CombatEvent } from '@/types/combat.types';
 import type { FighterState, ResolutionContext } from './types';
-import { contestDistance, transitionZone, resetZone } from '../mechanics/distanceResolution';
+import {
+  contestDistance,
+  transitionZone,
+  resetZone,
+  ARENA_SIZE_PROFILES,
+} from '../mechanics/distanceResolution';
 
 // ─── ExchangeState Accumulator ────────────────────────────────────────────────
 
@@ -75,7 +80,12 @@ export function runApproach(
   ctx: ResolutionContext & { range: import('@/types/shared.types').DistanceRange },
   es: ExchangeState
 ): void {
-  const result = contestDistance(rng, fA, fD, OE_A, OE_D, ctx.range);
+  const sizeProfile = {
+    startRange: ARENA_SIZE_PROFILES[ctx.arenaConfig.size].startRange,
+    maxRange: ctx.maxRange,
+    zoneStepBias: ctx.zoneStepBias,
+  };
+  const result = contestDistance(rng, fA, fD, OE_A, OE_D, ctx.range, sizeProfile);
   // rangeModA/D are intentionally 0: the contest winner shifts the range (which
   // matters for weapon range mods), but does NOT grant a flat ATT bonus. A flat
   // bonus is correlated with OE and double-stacks with commit level, breaking balance.
@@ -210,19 +220,28 @@ export function runRecovery(
   // Store zone in a local variable after null check
   const currentZone = ctx.zone;
 
-  // Zone transitions
+  // Zone transitions.
+  // In cramped arenas (zoneStepBias=1) a hit applies an extra transition step,
+  // pushing fighters to Corner in a single hit instead of the usual two.
+  const zoneStepBias = (ctx as ResolutionContext).zoneStepBias ?? 0;
   const hitOnA = events.some((e) => e.type === 'HIT' && e.target === 'A');
   const hitOnD = events.some((e) => e.type === 'HIT' && e.target === 'D');
 
   if (hitOnA) {
-    const newZone = transitionZone(currentZone);
+    let newZone = transitionZone(currentZone);
+    if (zoneStepBias > 0 && newZone !== 'Corner' && newZone !== 'Obstacle') {
+      newZone = transitionZone(newZone);
+    }
     if (newZone !== ctx.zone) {
       ctx.pushedFighter = 'A';
       ctx.zone = newZone;
       events.push({ type: 'ZONE_SHIFT', actor: 'D', target: 'A', result: newZone });
     }
   } else if (hitOnD) {
-    const newZone = transitionZone(currentZone);
+    let newZone = transitionZone(currentZone);
+    if (zoneStepBias > 0 && newZone !== 'Corner' && newZone !== 'Obstacle') {
+      newZone = transitionZone(newZone);
+    }
     if (newZone !== ctx.zone) {
       ctx.pushedFighter = 'D';
       ctx.zone = newZone;

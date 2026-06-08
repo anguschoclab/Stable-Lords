@@ -48,6 +48,22 @@ export function buildExchangeLogEntry(
         entry.executionFlag = e.result === 'Kill';
         entry.killWindow ??= e.result === 'Kill';
         break;
+      case 'KNOCKDOWN':
+        // actor is the fighter who was knocked down (defender of the hit)
+        entry.knockdown ??= e.actor;
+        break;
+      case 'RECOVERY':
+        // actor is the fighter who recovers (clears knockedDown at start of exchange)
+        entry.recovery ??= e.actor;
+        break;
+      case 'MOMENTUM_SHIFT':
+        // first shift per exchange wins; subsequent parry/riposte swings in same exchange are noise
+        entry.momentumShift ??= {
+          actor: e.actor,
+          to: e.value ?? 0,
+          from: (e.metadata?.prev as number) ?? 0,
+        };
+        break;
     }
   }
   if (reasonCodes.length) entry.reasonCodes = reasonCodes;

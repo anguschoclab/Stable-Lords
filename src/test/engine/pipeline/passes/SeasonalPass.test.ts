@@ -5,6 +5,7 @@ const eventCount = Object.keys((narrativeContent as any).offseason_events).lengt
 import type { GameState } from '@/types/state.types';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import type { WarriorId } from '@/types/shared.types';
+import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 describe('runSeasonalPass', () => {
   it('should not do anything if nextWeek is not 1', () => {
@@ -789,5 +790,58 @@ describe('runSeasonalPass', () => {
 
     expect(impact.newsletterItems).toHaveLength(1);
     expect(impact.newsletterItems?.[0]?.title).toBe("Dreamweaver's Visit");
+  });
+  it('should trigger the tavern_brawl_surprise offseason event, updating fame and applying injury', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf(
+            'tavern_brawl_surprise'
+          ) +
+            0.5) /
+          eventCount
+        ); // picks tavern_brawl_surprise
+      if (callCount === 2) return 0.0; // rng.pick(activeWarriors) - picks index 0 ('Spartacus')
+      if (callCount === 3) return 0.5; // fame roll
+      if (callCount === 4) return 0.5; // injury weeks roll
+      return originalNext();
+    };
+    rng.next = mockNext;
+
+    const baseState = createFreshState('test-seed', 1);
+    baseState.year = 1;
+    baseState.week = 12; // about to become 1
+    baseState.roster = [
+      {
+        id: 'w1' as WarriorId,
+        name: 'Spartacus',
+        fame: 10,
+        status: 'Active',
+        injuries: [],
+        retired: false,
+        isDead: false,
+      } as Warrior,
+    ];
+
+    const impact = runSeasonalPass(baseState, 1, rng);
+
+    expect(impact.rosterUpdates).toBeDefined();
+    const update = impact.rosterUpdates!.get('w1' as WarriorId);
+    expect(update).toBeDefined();
+    expect(update?.fame).toBe(10 + 15 + Math.floor(0.5 * 11)); // 10 base + 15 base gain + 5 from roll = 30
+    expect(update?.injuries).toBeDefined();
+    expect(update?.injuries!.length).toBe(1);
+    expect(update?.injuries![0].name).toBe('Tavern Bruises');
+    expect(update?.injuries![0].severity).toBe('Minor');
+    expect(update?.injuries![0].penalties?.SP).toBe(-1);
+
+    expect(impact.newsletterItems).toBeDefined();
+    expect(impact.newsletterItems!.length).toBe(1);
+    expect(impact.newsletterItems![0].title).toBe('A Spontaneous Tavern Brawl');
+    expect(impact.newsletterItems![0].items[0]).toContain('Spartacus');
   });
 });

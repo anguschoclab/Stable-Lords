@@ -741,6 +741,41 @@ function handleDreamweaverVisit(
   }
 }
 
+function handleTavernBrawlSurprise(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const fameGained = 15 + Math.floor(rng.next() * 11);
+
+      const newInjury = makeInjury(rng, {
+        name: 'Tavern Bruises',
+        description: 'Scrapes and bruises from a sudden tavern brawl.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 1,
+        penalties: { SP: -1 },
+      });
+
+      ctx.rosterUpdates.set(chosen.id, {
+        fame: (chosen.fame || 0) + fameGained,
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        fame: fameGained,
+      });
+    }
+  }
+}
+
 function handleAbyssalBargain(
   state: GameState,
   nextWeek: number,
@@ -907,6 +942,7 @@ const EVENT_HANDLERS: Record<
   rogue_alchemist: handleRogueAlchemist,
   dreamweaver_visit: handleDreamweaverVisit,
   abyssal_bargain: handleAbyssalBargain,
+  tavern_brawl_surprise: handleTavernBrawlSurprise,
 };
 
 export function runSeasonalPass(

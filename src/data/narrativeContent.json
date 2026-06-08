@@ -2303,6 +2303,13 @@
     ]
   },
   "offseason_events": {
+    "tavern_brawl_surprise": {
+      "title": "A Spontaneous Tavern Brawl",
+      "effectType": "tavern_brawl_surprise",
+      "newsletter": [
+        "{{name}} got into a massive, unexpected brawl at the local tavern. They took some scrapes, but the patrons loved the show! (+{{fame}} Fame, Minor Injury)"
+      ]
+    },
     "strange_dream": {
       "title": "A Strange Dream",
       "effectType": "strange_dream",

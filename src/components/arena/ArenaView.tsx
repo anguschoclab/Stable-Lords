@@ -1,21 +1,20 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/state/useGameStore';
-import { classifyEvent } from '@/lib/boutUtils';
 import ArenaBackground from './ArenaBackground';
-import ArenaFighter from './ArenaFighter';
-import SpeechBubble from './SpeechBubble';
+import ArenaAudio from './ArenaAudio';
+import SpeechBubbles from './SpeechBubbles';
+import FighterPair from './FighterPair';
 import MiniCombatLog from './MiniCombatLog';
 import ParticleSystem from './effects/ParticleSystem';
 import ScreenShake from './effects/ScreenShake';
 import CrowdReactions from './crowd/CrowdReactions';
-import CrowdAudio from './audio/CrowdAudio';
-import WeatherAudio from './audio/WeatherAudio';
 import { useArenaAnimation, setFighterNames } from '@/hooks/useArenaAnimation';
+import { useLastEventType, useCrowdState } from '@/hooks/useArenaEventEffects';
+import { calculateFighterStatuses } from './arenaUtils';
 import type { MinuteEvent } from '@/types/combat.types';
 import type { FightingStyle, WeatherType } from '@/types/game';
 import type { ArenaTier } from './ArenaBackground';
-import type { CrowdState } from './crowd/CrowdReactions';
 
 interface ArenaViewProps {
   nameA: string;
@@ -102,9 +101,6 @@ export default function ArenaView({
   const store = useGameStore();
   const arenaPrefs = store.arenaPreferences;
 
-  // Track event triggers for effects
-  const [lastEventType, setLastEventType] = useState<string | null>(null);
-
   // Set fighter names for text matching
   useEffect(() => {
     setFighterNames(nameA, nameD);
@@ -120,37 +116,12 @@ export default function ArenaView({
     isComplete
   );
 
-  // Determine if fighters are dead
-  const isDeadA = isComplete && winner === 'D';
-  const isDeadD = isComplete && winner === 'A';
-  const isWinnerA = isComplete && winner === 'A';
-  const isWinnerD = isComplete && winner === 'D';
+  // Extracted: Event tracking and crowd state
+  const lastEventType = useLastEventType(log, visibleCount);
+  const crowdState = useCrowdState(lastEventType, isComplete, visibleCount);
 
-  // Track visible events for effects
-  useEffect(() => {
-    if (visibleCount > 0 && visibleCount <= log.length) {
-      const event = log[visibleCount - 1];
-      if (event) {
-        const type = classifyEvent(event);
-        setLastEventType(type);
-
-        // Trigger weapon swing on hit/crit
-        if (type === 'hit' || type === 'crit') {
-          // weapon swing effect handled by ArenaFighter component
-        }
-      }
-    }
-  }, [visibleCount, log, nameA]);
-
-  // Determine crowd state based on recent events
-  const crowdState: CrowdState = useMemo(() => {
-    if (!lastEventType) return 'idle';
-    if (lastEventType === 'death') return isComplete ? 'silence' : 'roar';
-    if (lastEventType === 'crit') return 'roar';
-    if (lastEventType === 'hit') return 'cheer';
-    if (visibleCount > 0 && visibleCount < 3) return 'anticipation';
-    return 'idle';
-  }, [lastEventType, isComplete, visibleCount]);
+  // Extracted: Fighter status calculations
+  const { isDeadA, isDeadD, isWinnerA, isWinnerD } = calculateFighterStatuses(winner, isComplete);
 
   return (
     <ScreenShake
@@ -173,19 +144,12 @@ export default function ArenaView({
       {arenaPrefs.effectsEnabled && <CrowdReactions tier={arenaTier} state={crowdState} />}
 
       {/* Audio Systems */}
-      <CrowdAudio
-        state={crowdState}
-        volume={arenaPrefs.audioVolume}
-        enabled={arenaPrefs.audioEnabled}
+      <ArenaAudio
+        crowdState={crowdState}
+        weather={weather}
+        arenaId={arenaId}
+        arenaPrefs={arenaPrefs}
       />
-      {weather && (
-        <WeatherAudio
-          weather={weather}
-          arenaId={arenaId}
-          volume={arenaPrefs.audioVolume}
-          enabled={arenaPrefs.audioEnabled}
-        />
-      )}
 
       {/* Particle System */}
       {arenaPrefs.effectsEnabled && (
@@ -193,55 +157,31 @@ export default function ArenaView({
       )}
 
       {/* Speech Bubbles */}
-      {bubbles.map((bubble) => (
-        <div
-          key={bubble.id}
-          className="absolute"
-          style={{
-            left: bubble.speaker === 'A' ? `${fighterA.x}%` : `${fighterD.x}%`,
-            bottom: bubble.speaker === 'A' ? `${40 + fighterA.y}%` : `${40 + fighterD.y}%`,
-            transform: 'translateX(-50%)',
-            zIndex: 20,
-          }}
-        >
-          <SpeechBubble
-            bubble={bubble}
-            position={bubble.speaker === 'A' ? 'left' : 'right'}
-            onDismiss={removeBubble}
-          />
-        </div>
-      ))}
-
-      {/* Fighter A */}
-      <ArenaFighter
-        name={nameA}
-        pose={fighterA}
-        stats={{
-          maxHp: maxHpA,
-          currentHp: hpA,
-          maxFp: 100,
-          currentFp: fpA,
-        }}
-        style={styleA}
-        isWinner={isWinnerA}
-        isDead={isDeadA}
-        isActive={fighterA.stance === 'lunging' || fighterA.stance === 'advancing'}
+      <SpeechBubbles
+        bubbles={bubbles}
+        fighterA={fighterA}
+        fighterD={fighterD}
+        onDismiss={removeBubble}
       />
 
-      {/* Fighter D */}
-      <ArenaFighter
-        name={nameD}
-        pose={fighterD}
-        stats={{
-          maxHp: maxHpD,
-          currentHp: hpD,
-          maxFp: 100,
-          currentFp: fpD,
-        }}
-        style={styleD}
-        isWinner={isWinnerD}
-        isDead={isDeadD}
-        isActive={fighterD.stance === 'lunging' || fighterD.stance === 'advancing'}
+      {/* Fighter Pair */}
+      <FighterPair
+        nameA={nameA}
+        nameD={nameD}
+        styleA={styleA}
+        styleD={styleD}
+        fighterA={fighterA}
+        fighterD={fighterD}
+        hpA={hpA}
+        hpD={hpD}
+        fpA={fpA}
+        fpD={fpD}
+        maxHpA={maxHpA}
+        maxHpD={maxHpD}
+        isWinnerA={isWinnerA}
+        isWinnerD={isWinnerD}
+        isDeadA={isDeadA}
+        isDeadD={isDeadD}
       />
 
       {/* Mini Combat Log - positioned at bottom */}

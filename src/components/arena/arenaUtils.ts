@@ -50,3 +50,36 @@ export function parseShieldInfo(shieldName?: string): ShieldInfo {
 
   return { hasShield, size };
 }
+
+/**
+ * Fighter status information extracted from winner and completion state.
+ */
+export interface FighterStatuses {
+  /** Fighter A is dead (lost the fight) */
+  isDeadA: boolean;
+  /** Fighter D is dead (lost the fight) */
+  isDeadD: boolean;
+  /** Fighter A is the winner */
+  isWinnerA: boolean;
+  /** Fighter D is the winner */
+  isWinnerD: boolean;
+}
+
+/**
+ * Calculate fighter statuses based on winner and completion state.
+ *
+ * @param winner - The winner of the fight ('A', 'D', or null if incomplete)
+ * @param isComplete - Whether the fight has completed
+ * @returns FighterStatuses with death and winner flags for both fighters
+ */
+export function calculateFighterStatuses(
+  winner: 'A' | 'D' | null,
+  isComplete: boolean
+): FighterStatuses {
+  return {
+    isDeadA: isComplete && winner === 'D',
+    isDeadD: isComplete && winner === 'A',
+    isWinnerA: isComplete && winner === 'A',
+    isWinnerD: isComplete && winner === 'D',
+  };
+}

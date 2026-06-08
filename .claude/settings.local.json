@@ -89,7 +89,9 @@
       "Bash(sed -n '180,205p' src/engine/ownerRoster.ts)",
       "Bash(sed -n '/export function getAvailableItems/,/^}/p' src/data/equipment/equipment.utils.ts)",
       "Bash(sed -n '/export function getStyleEquipmentTips/,/^}/p' src/engine/equipmentOptimizer.ts)",
-      "WebFetch(domain:www.terrablood.com)"
+      "WebFetch(domain:www.terrablood.com)",
+      "Bash(sed -n '105,113p' src/engine/narrative/narrativePositioning.ts)",
+      "Bash(sed -n '40,90p' src/engine/combat/narrative/narrator.ts)"
     ]
   },
   "hooks": {

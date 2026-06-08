@@ -149,6 +149,20 @@ export function executeHit(
   if (hitLoc.includes('arm')) defender.armHits++;
   if (hitLoc.includes('leg')) defender.legHits++;
 
+  // ── Knockdown check: heavy hits can knock the defender down ──
+  const hpRatioAfterHit = defender.hp / defender.maxHp;
+  const damageRatio = damage / defender.maxHp;
+  if (
+    !defender.knockedDown &&
+    defender.hp > 0 &&
+    hpRatioAfterHit < 0.4 &&
+    damageRatio >= 0.12 &&
+    rng() < Math.min(0.35, damageRatio + defender.legHits * 0.05)
+  ) {
+    defender.knockedDown = true;
+    events.push({ type: 'KNOCKDOWN', actor: defLabel });
+  }
+
   // ── Momentum: hit shifts momentum toward attacker ──
   const prevAttMom = attacker.momentum;
   const prevDefMom = defender.momentum;

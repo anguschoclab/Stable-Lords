@@ -367,10 +367,10 @@
     "slashing": {
       "glancing": [
         "{{attacker}}'s {{weapon}} skips harmlessly off {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} slashes with his {{weapon}}, but the strike is a glancing blow only."
+        "{{attacker}} slashes with {{possessive}} {{weapon}}, but the strike is a glancing blow only."
       ],
       "solid": [
-        "{{attacker}} unleashes a blinding flurry of cuts with his {{weapon}}, biting into the {{bodyPart}}!",
+        "{{attacker}} unleashes a blinding flurry of cuts with {{possessive}} {{weapon}}, biting into the {{bodyPart}}!",
         "{{attacker}}'s {{weapon}} lunges with awesome cutting power, rending the {{bodyPart}}!",
         "{{attacker}} lunges with sudden ferocity, leaving a bloody trail across {{defender}}'s {{bodyPart}}!",
         "{{attacker}}'s blade bites deep into {{defender}}'s {{bodyPart}}.",
@@ -382,7 +382,7 @@
         "The {{weapon}} moves like an extension of {{attacker}}'s own soul, carving a perfect line across the {{bodyPart}}."
       ],
       "critical_human": [
-        "A horrifying display of speed as {{attacker}} carves a deep path through {{defender}}'s {{bodyPart}} with his {{weapon}}!",
+        "A horrifying display of speed as {{attacker}} carves a deep path through {{defender}}'s {{bodyPart}} with {{possessive}} {{weapon}}!",
         "{{attacker}}'s {{weapon}} flashes as he takes a sudden vicious slash, nearly severing the {{bodyPart}}!"
       ],
       "critical_supernatural": [
@@ -426,7 +426,11 @@
         "{{attacker}}'s {{weapon}} bounces off the {{bodyPart}} with a hollow clang."
       ],
       "solid": [
-        "{{attacker}} roars, bringing the {{weapon}} down like an executioner's maul on the {{bodyPart}}!"
+        "{{attacker}} roars, bringing the {{weapon}} down like an executioner's maul on the {{bodyPart}}!",
+        "{{attacker}}'s {{weapon}} crashes into {{defender}}'s {{bodyPart}} with bone-jarring force!",
+        "A thundering blow from {{attacker}} hammers into the {{bodyPart}}, rattling {{defender}} to the core!",
+        "{{attacker}} swings with terrible momentum, {{possessive}} {{weapon}} smashing the {{bodyPart}}!",
+        "The {{weapon}} connects with a sickening crunch against {{defender}}'s {{bodyPart}}!"
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision."
@@ -466,7 +470,11 @@
         "{{attacker}}'s {{weapon}} skips off the {{bodyPart}}, barely scratching the surface."
       ],
       "solid": [
-        "{{attacker}} drops his center and drives a blinding lunge with his {{weapon}} into the {{bodyPart}}!"
+        "{{attacker}} drops {{possessive}} center and drives a blinding lunge with {{possessive}} {{weapon}} into the {{bodyPart}}!",
+        "{{attacker}}'s {{weapon}} punches through {{defender}}'s guard and bites into the {{bodyPart}}!",
+        "{{attacker}} drives the {{weapon}} home — {{defender}} is struck on the {{bodyPart}}!",
+        "A clean thrust from {{attacker}} sinks into {{defender}}'s {{bodyPart}} with punishing accuracy!",
+        "{{attacker}} lunges with sudden ferocity, the {{weapon}} finding {{defender}}'s {{bodyPart}}!"
       ],
       "mastery": [
         "{{attacker}}'s {{weapon}} finds the microscopic gap in {{defender}}'s defense, sliding effortlessly into the {{bodyPart}}."
@@ -506,7 +514,11 @@
         "{{attacker}} throws a PUNCH, but it merely grazes {{defender}}'s {{bodyPart}}."
       ],
       "solid": [
-        "{{attacker}} steps inside the guard and unleashes a horrific combination on the {{bodyPart}}!"
+        "{{attacker}} steps inside the guard and unleashes a horrific combination on the {{bodyPart}}!",
+        "{{attacker}}'s fist connects with {{defender}}'s {{bodyPart}} — a punishing blow!",
+        "{{attacker}} drives a devastating strike into {{defender}}'s {{bodyPart}}!",
+        "A bone-crunching impact as {{attacker}} hammers {{defender}}'s {{bodyPart}}!",
+        "{{attacker}} snaps a vicious combination into {{defender}}'s {{bodyPart}} with precision!"
       ],
       "mastery": [
         "{{attacker}}'s limbs are a blur of technical perfection, striking the {{bodyPart}} with rhythmic violence."
@@ -573,53 +585,53 @@
     ],
     "attacks": {
       "piercing": [
-        "{{attacker}} thrusts with {{weapon}}!",
-        "{{attacker}} lunges wielding {{weapon}}!",
-        "{{attacker}} drops his center and drives a blinding lunge with {{weapon}}!",
-        "{{attacker}} stabs powerfully upward with {{weapon}}!",
-        "{{attacker}} makes a brilliant twisting thrust with {{weapon}}!",
-        "{{attacker}} makes a piercing lunge with {{weapon}}!",
-        "{{attacker}} drives {{weapon}} straight at {{defender}}!",
-        "{{attacker}} extends {{weapon}} in a lightning thrust!",
-        "{{attacker}} feints low, then thrusts high with {{weapon}}!",
-        "{{attacker}} lunges forward, {{weapon}} seeking {{defender}}'s vitals!",
-        "{{attacker}} whips {{weapon}} in a deceptive thrust!",
-        "{{attacker}} stabs with {{weapon}}, all his reach behind the blow!",
+        "{{attacker}} thrusts with {{possessive}} {{weapon}}!",
+        "{{attacker}} lunges wielding {{possessive}} {{weapon}}!",
+        "{{attacker}} drops {{possessive}} center and drives a blinding lunge with {{possessive}} {{weapon}}!",
+        "{{attacker}} stabs powerfully upward with {{possessive}} {{weapon}}!",
+        "{{attacker}} makes a brilliant twisting thrust with {{possessive}} {{weapon}}!",
+        "{{attacker}} makes a piercing lunge with {{possessive}} {{weapon}}!",
+        "{{attacker}} drives {{possessive}} {{weapon}} straight at {{defender}}!",
+        "{{attacker}} extends {{possessive}} {{weapon}} in a lightning thrust!",
+        "{{attacker}} feints low, then thrusts high with {{possessive}} {{weapon}}!",
+        "{{attacker}} lunges forward, {{possessive}} {{weapon}} seeking {{defender}}'s vitals!",
+        "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!",
+        "{{attacker}} stabs with {{possessive}} {{weapon}}, all his reach behind the blow!",
         "{{attacker}} raises {{possessive}} arm and drives {{weapon}} in a sudden thrust!",
         "{{attacker}} snaps {{possessive}} wrist, turning the point of {{weapon}} into {{defender}}'s guard!"
       ],
       "slashing": [
-        "{{attacker}} slashes with {{weapon}}!",
-        "{{attacker}} makes a slashing attack wielding {{weapon}}!",
-        "{{attacker}} slashes an arcing attack with {{weapon}}!",
-        "{{attacker}} unleashes {{weapon}} in a piercingly accurate thrust!",
-        "{{attacker}} whirls and strikes backhandedly with {{weapon}}!",
-        "{{attacker}} makes a downward cut with {{weapon}}!",
-        "{{attacker}} whips {{weapon}} blade back and forth as if to slash {{defender}} to ribbons!",
-        "{{attacker}} makes a cruel and cunning underhanded attack with {{weapon}}!",
-        "{{attacker}} makes a lunging attack with {{weapon}}!",
-        "{{attacker}} drives {{weapon}} in a forward slash!",
-        "{{attacker}} catapults forward, {{weapon}} flashing in a deadly assault!",
-        "{{attacker}} lashes out with {{weapon}} in a lightning quick assault!",
-        "{{attacker}} sweeps {{weapon}} in a brutal horizontal arc!",
-        "{{attacker}} hacks downward with {{weapon}}!",
-        "{{attacker}} slashes viciously with {{weapon}}!",
+        "{{attacker}} slashes with {{possessive}} {{weapon}}!",
+        "{{attacker}} makes a slashing attack wielding {{possessive}} {{weapon}}!",
+        "{{attacker}} slashes an arcing attack with {{possessive}} {{weapon}}!",
+        "{{attacker}} unleashes {{possessive}} {{weapon}} in a piercingly accurate thrust!",
+        "{{attacker}} whirls and strikes backhandedly with {{possessive}} {{weapon}}!",
+        "{{attacker}} makes a downward cut with {{possessive}} {{weapon}}!",
+        "{{attacker}} whips {{possessive}} {{weapon}} blade back and forth as if to slash {{defender}} to ribbons!",
+        "{{attacker}} makes a cruel and cunning underhanded attack with {{possessive}} {{weapon}}!",
+        "{{attacker}} makes a lunging attack with {{possessive}} {{weapon}}!",
+        "{{attacker}} drives {{possessive}} {{weapon}} in a forward slash!",
+        "{{attacker}} catapults forward, {{possessive}} {{weapon}} flashing in a deadly assault!",
+        "{{attacker}} lashes out with {{possessive}} {{weapon}} in a lightning quick assault!",
+        "{{attacker}} sweeps {{possessive}} {{weapon}} in a brutal horizontal arc!",
+        "{{attacker}} hacks downward with {{possessive}} {{weapon}}!",
+        "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
         "{{attacker}} shifts {{possessive}} weight and cuts low with {{weapon}}!",
         "{{attacker}} drops {{possessive}} shoulder and rips {{weapon}} through in a vicious diagonal slash!"
       ],
       "bashing": [
-        "{{attacker}} bashes with {{weapon}}!",
-        "{{attacker}} smashes with {{weapon}}!",
-        "{{attacker}} strikes using {{weapon}}!",
-        "{{attacker}} strikes forward with {{weapon}}, all his weight behind the blow!",
-        "{{attacker}} lashes out with {{weapon}} in a lightning quick assault!",
-        "{{attacker}} attempts to smash {{defender}} with {{weapon}}!",
-        "{{attacker}} cleverly tries to break {{defender}}'s defense with {{weapon}}!",
-        "{{attacker}} smashes downward with {{weapon}}!",
-        "{{attacker}} takes a swipe with {{weapon}}!",
-        "{{attacker}} bats murderously at {{defender}} with {{weapon}}!",
-        "{{attacker}} smashes through with {{weapon}}!",
-        "{{attacker}} throws his full weight behind {{weapon}} in an all-out assault!"
+        "{{attacker}} bashes with {{possessive}} {{weapon}}!",
+        "{{attacker}} smashes with {{possessive}} {{weapon}}!",
+        "{{attacker}} strikes using {{possessive}} {{weapon}}!",
+        "{{attacker}} strikes forward with {{possessive}} {{weapon}}, all {{possessive}} weight behind the blow!",
+        "{{attacker}} lashes out with {{possessive}} {{weapon}} in a lightning quick assault!",
+        "{{attacker}} attempts to smash {{defender}} with {{possessive}} {{weapon}}!",
+        "{{attacker}} cleverly tries to break {{defender}}'s defense with {{possessive}} {{weapon}}!",
+        "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
+        "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
+        "{{attacker}} bats murderously at {{defender}} with {{possessive}} {{weapon}}!",
+        "{{attacker}} smashes through with {{possessive}} {{weapon}}!",
+        "{{attacker}} throws {{possessive}} full weight behind the {{weapon}} in an all-out assault!"
       ],
       "fist": [
         "{{attacker}} PUNCHES from the waist with unbelievable quickness!",

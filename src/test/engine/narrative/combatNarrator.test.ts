@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { CombatNarrator } from '@/engine/narrative/combatNarrator';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { FightingStyle } from '@/types/shared.types';
+import { resolveExchange } from '@/engine/combat/resolution/resolution';
 
 describe('CombatNarrator', () => {
   const rng = new SeededRNGService(12345);
@@ -317,6 +318,127 @@ describe('CombatNarrator', () => {
       narration.forEach((line) => {
         expect(line.length).toBeGreaterThan(0);
       });
+    });
+  });
+
+  describe('knockdown/recovery narration from resolution', () => {
+    it('resolution emits KNOCKDOWN events on heavy hits to low-HP defenders', () => {
+      const makeFS = (label: 'A' | 'D') => ({
+        label,
+        style: FightingStyle.StrikingAttack,
+        attributes: { ST: 15, CN: 12, SZ: 14, WT: 12, WL: 12, SP: 14, DF: 12 },
+        skills: { ATT: 10, PAR: 10, DEF: 10, DEC: 10, INI: 10 },
+        derived: { attack: 10, defense: 10, damage: 8 },
+        plan: { OE: 7, AL: 3, killDesire: 7, protect: 'Any' },
+        activePlan: { OE: 7, AL: 3, killDesire: 7, protect: 'Any' },
+        psychState: 'NORMAL' as const,
+        hp: 8,
+        maxHp: 40,
+        endurance: 50,
+        maxEndurance: 50,
+        hitsLanded: 3,
+        hitsTaken: 5,
+        ripostes: 0,
+        consecutiveHits: 0,
+        armHits: 0,
+        legHits: 2,
+        totalFights: 5,
+        momentum: 0,
+        committed: false,
+        survivalStrike: false,
+        recoveryDebt: 0,
+        weaponId: 'gladius',
+      });
+
+      let knockdownSeen = false;
+      for (let seed = 1; seed <= 200; seed++) {
+        const svc = new SeededRNGService(seed);
+        const fA = makeFS('A');
+        const fD = { ...makeFS('D'), hp: 14, maxHp: 40, legHits: 3 };
+        const ctx = {
+          rng: () => svc.next(),
+          phase: 'MID',
+          exchange: 5,
+          weather: 'Clear',
+          weatherEffect: { damageMult: 1, initiativeMod: 0, riposteMod: 0 },
+          matchupA: 0,
+          matchupD: 0,
+          trainerModsA: {},
+          trainerModsD: {},
+          weaponReqA: { endurancePenalty: 0, attPenalty: 0 },
+          weaponReqD: { endurancePenalty: 0, attPenalty: 0 },
+          tacticStreakA: 0,
+          tacticStreakD: 0,
+          range: 'MELEE',
+          zone: 'CENTER',
+          arenaConfig: { zones: {}, surface: 'sand' },
+          pushedFighter: undefined,
+          surfaceMod: { initiativeMod: 0, enduranceMod: 0 },
+        };
+        const events = resolveExchange(ctx, fA, fD);
+        if (events.some((e) => e.type === 'KNOCKDOWN')) {
+          knockdownSeen = true;
+          break;
+        }
+      }
+      expect(knockdownSeen).toBe(true);
+    });
+
+    it('RECOVERY fires in the exchange after KNOCKDOWN', () => {
+      const svc = new SeededRNGService(42);
+      const makeFS = (label: 'A' | 'D') => ({
+        label,
+        style: FightingStyle.TotalParry,
+        attributes: { ST: 12, CN: 14, SZ: 12, WT: 12, WL: 14, SP: 12, DF: 14 },
+        skills: { ATT: 10, PAR: 12, DEF: 12, DEC: 8, INI: 10 },
+        derived: { attack: 8, defense: 12, damage: 6 },
+        plan: { OE: 3, AL: 7, killDesire: 3, protect: 'Any' },
+        activePlan: { OE: 3, AL: 7, killDesire: 3, protect: 'Any' },
+        psychState: 'NORMAL' as const,
+        hp: 30,
+        maxHp: 40,
+        endurance: 50,
+        maxEndurance: 50,
+        hitsLanded: 0,
+        hitsTaken: 0,
+        ripostes: 0,
+        consecutiveHits: 0,
+        armHits: 0,
+        legHits: 0,
+        totalFights: 5,
+        momentum: 0,
+        committed: false,
+        survivalStrike: false,
+        recoveryDebt: 0,
+        weaponId: 'gladius',
+        knockedDown: true,
+      });
+
+      const fA = makeFS('A');
+      const fD = makeFS('D');
+      const ctx = {
+        rng: () => svc.next(),
+        phase: 'MID',
+        exchange: 6,
+        weather: 'Clear',
+        weatherEffect: { damageMult: 1, initiativeMod: 0, riposteMod: 0 },
+        matchupA: 0,
+        matchupD: 0,
+        trainerModsA: {},
+        trainerModsD: {},
+        weaponReqA: { endurancePenalty: 0, attPenalty: 0 },
+        weaponReqD: { endurancePenalty: 0, attPenalty: 0 },
+        tacticStreakA: 0,
+        tacticStreakD: 0,
+        range: 'MELEE',
+        zone: 'CENTER',
+        arenaConfig: { zones: {}, surface: 'sand' },
+        pushedFighter: undefined,
+        surfaceMod: { initiativeMod: 0, enduranceMod: 0 },
+      };
+      const events = resolveExchange(ctx, fA, fD);
+      expect(events.some((e) => e.type === 'RECOVERY')).toBe(true);
+      expect(fA.knockedDown).toBe(false);
     });
   });
 });

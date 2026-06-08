@@ -1,6 +1,7 @@
 import { defaultPlanForWarrior } from './bout/planDefaults';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import type { Trainer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan, FightOutcome } from '@/types/combat.types';
@@ -49,7 +50,12 @@ export function simulateFight(
   headless?: boolean
 ): FightOutcome {
   // 1. Initialize RNG
-  const { rng } = initializeRng(providedRng);
+  const { rng, seed: boutSeed } = initializeRng(providedRng);
+
+  // Narration-only RNG — isolated from combat resolution so flavor
+  // draws never shift the mechanical outcome stream.
+  const narRngService = new SeededRNGService(boutSeed ^ 0x5f3759df);
+  const narRng = () => narRngService.next();
 
   const nameA = warriorA?.name ?? 'Attacker';
   const nameD = warriorD?.name ?? 'Defender';
@@ -85,7 +91,7 @@ export function simulateFight(
   const introLog = headless
     ? []
     : generateIntroductions(
-        rng,
+        narRng,
         nameA,
         nameD,
         planA,
@@ -120,7 +126,8 @@ export function simulateFight(
     planA,
     planD,
     crowdMood,
-    headless
+    headless,
+    narRng
   );
 
   const log = headless ? [] : [...introLog, ...loopLog];

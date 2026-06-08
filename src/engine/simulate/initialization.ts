@@ -33,18 +33,21 @@ const CROWD_KILL_BONUS: Record<CrowdMood, number> = {
 export function initializeRng(providedRng?: IRNGService | number): {
   rngService: IRNGService;
   rng: () => number;
+  seed: number;
 } {
   let rngService: IRNGService;
+  let seed: number;
   if (providedRng && typeof providedRng === 'object') {
     rngService = providedRng;
+    seed = Math.floor(rngService.next() * 0x7fffffff);
   } else {
-    const seed = (
+    seed = (
       typeof providedRng === 'number' ? providedRng : crypto.getRandomValues(new Uint32Array(1))[0]
     ) as number;
     rngService = new SeededRNGService(seed);
   }
   const rng = () => rngService.next();
-  return { rngService, rng };
+  return { rngService, rng, seed };
 }
 
 /**

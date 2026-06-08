@@ -427,6 +427,53 @@ git commit -m "polish(pbp): hit-line variety + possessive on weapon verbs"
 
 ---
 
+## ⚠️ VERIFICATION FINDINGS (2026-06-08, post-implementation)
+
+Implementation reviewed. Status per task:
+- **Tasks 1, 2, 3, 4, 5, 7 — DONE & verified.** Epithets fire ("The warrior from Convince…"), dodge wording varies, insight lines interpolate, `{{possessive}}` resolves in BOTH engines, `pbpFullBout.test.ts` passes (0 token/article leaks). Typecheck clean.
+- **Task 6 — wired but DEAD.** `narrator.ts` handles `KNOCKDOWN`/`RECOVERY`, but `resolution.ts` emits **no such events** (confirmed: only AI `'RECOVERY'` *intent* references exist). Prerequisite engine work (emit the events) is still required, as flagged.
+- **Task 8 — INCOMPLETE.** Weapon-verb lines still drop the possessive ("drives a blinding lunge with EPÉE!" → should be "with his EPÉE"); the main hit sentence still repeats ~4×/bout.
+
+### 🛑 P0 REGRESSION introduced by Tasks 5 & 7 — fix before anything else
+**19 deterministic tests fail.** Of these, the combat-RNG-dependent ones (`balance.test` Wall of Steel **76.5% > 75% cap**, `rivalryGrowth`, `ownerGrudges`, `traitBalance` sturdy) are caused by narration now drawing a **different number of RNG values from the SHARED sim stream**:
+- `src/engine/simulate/simulationLoop.ts:119` sets `narCtx.rng = resCtx.rng` — the narrator and combat resolution share one RNG instance, and narration runs interleaved per minute (non-headless).
+- `getEpithet` (`combatNarrators.ts`) calls `r()` **unconditionally** (`if (r() > 0.3) return null;`) on every `displayName(...)`, and the dodge-tier change altered archive-pick draws — so the draw count shifted, desyncing every seeded bout.
+- (The other failures — `gazetteNarrative` computeStreaks returning **undefined**, `weatherVisuals`, `TournamentBracket`, `seasonal` — are **structural and unrelated to this plan**; track separately.)
+
+**This is a gap in the original plan:** Tasks 5 & 7 add RNG draws without isolating narration from combat. Flavor must NEVER affect mechanics.
+
+### Task 0 (NEW, P0): Decouple narration RNG from combat resolution
+**Files:** `src/engine/simulate/simulationLoop.ts` (both `narCtx` builds, ~lines 119 & the second `rng: resCtx.rng`), plus wherever the seed enters the loop.
+
+- [ ] **Step 1: Write a guard test** — `src/test/engine/narrative/narrationDeterminism.test.ts`: run the SAME seeded `simulateFight` twice and assert identical `winner`/`by`/`minutes` AND that a headless run yields the SAME mechanical result as a narrated run (narration must not change outcomes).
+
+```typescript
+import { describe, it, expect } from 'vitest';
+import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
+import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { FightingStyle } from '@/types/shared.types';
+
+it('narration does not affect mechanical outcome (narrated === headless)', () => {
+  const mk = (s: number) => makeWarrior(undefined, 'A', FightingStyle.StrikingAttack,
+    { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 }, undefined, new SeededRNGService(s));
+  for (let seed = 1; seed <= 30; seed++) {
+    const A = mk(seed), D = mk(seed + 100);
+    const narrated = simulateFight(defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D, seed, undefined, 'Clear', 'standard_arena', undefined, false);
+    const headless = simulateFight(defaultPlanForWarrior(A), defaultPlanForWarrior(D), A, D, seed, undefined, 'Clear', 'standard_arena', undefined, true);
+    expect({ w: narrated.winner, b: narrated.by, m: narrated.minutes })
+      .toEqual({ w: headless.winner, b: headless.by, m: headless.minutes });
+  }
+});
+```
+
+- [ ] **Step 2: Run it — expect FAIL** (narrated diverges from headless today).
+- [ ] **Step 3: Give the narrator its own RNG.** In `simulationLoop.ts`, build a separate deterministic stream for narration (seeded once from the bout seed, e.g. `new SeededRNGService(boutSeed ^ 0x5f3759df)`), and set `narCtx.rng = narrationRng.next`-style fn instead of `resCtx.rng`. Combat resolution keeps `resCtx.rng` untouched.
+- [ ] **Step 4: Run the guard test — expect PASS.**
+- [ ] **Step 5: Re-baseline + re-tune.** Run `npx vitest run`. The deterministic combat tests will now produce *narration-independent* outcomes. If `balance.test` Wall of Steel still exceeds 75%, re-tune per [[combat-balance-canon]] (do NOT touch canonical suitability/mortality data). Commit once balance + combat-determinism suites are green.
+
+---
+
 ## Self-Review notes
 - **Spec coverage:** P0 leaks (Tasks 1–2) + guard (Task 3); the "engineers' dead code" (dodge SP-tier, knockdown, epithet) wired in Tasks 4–7; remaining canon polish in Task 8. The canon gap list lives in memory `terrablood-pbp-format`.
 - **Two interpolation engines:** Task 1 deliberately edits BOTH `narrativePBPUtils.ts` and `narrativeTemplateEngine.ts` — keep their `longKey` switches identical or the leak recurs on the other path.

@@ -66,6 +66,8 @@ export interface FighterState {
    * Set via: recoveryDebt = Math.min(3, Math.max(existing, toWrite))
    */
   recoveryDebt: number;
+  /** True when fighter was knocked down by a heavy hit — cleared on RECOVERY next exchange. */
+  knockedDown?: boolean;
 }
 
 /**

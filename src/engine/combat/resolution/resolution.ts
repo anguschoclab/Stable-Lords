@@ -520,6 +520,16 @@ export function resolveExchange(
   const stylePhase = phase as StylePhase;
   const phaseKey = phase === 'OPENING' ? 'opening' : phase === 'MID' ? 'mid' : 'late';
 
+  // ── Recovery from knockdown ──
+  if (fA.knockedDown) {
+    fA.knockedDown = false;
+    events.push({ type: 'RECOVERY', actor: 'A' });
+  }
+  if (fD.knockedDown) {
+    fD.knockedDown = false;
+    events.push({ type: 'RECOVERY', actor: 'D' });
+  }
+
   // ── Evaluate conditional fight plans (WT-gated) ──
   const wtA = fA.attributes.WT;
   const wtD = fD.attributes.WT;

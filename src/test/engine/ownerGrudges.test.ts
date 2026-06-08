@@ -25,11 +25,11 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     rivals: [
       {
         owner: { id: 'o1', personality: 'Aggressive', stableName: 'Aggro' },
-        roster: [{ name: 'W1', status: 'Active' }],
+        roster: [{ id: 'w1', name: 'W1', status: 'Active' }],
       },
       {
         owner: { id: 'o2', personality: 'Tactician', stableName: 'Tact' },
-        roster: [{ name: 'W2', status: 'Active' }],
+        roster: [{ id: 'w2', name: 'W2', status: 'Active' }],
       },
     ],
   };

@@ -45,7 +45,8 @@ export function runSimulationLoop(
   planA?: FightPlan,
   planD?: FightPlan,
   crowdMood?: string,
-  headless?: boolean
+  headless?: boolean,
+  narRng?: () => number
 ): {
   log: MinuteEvent[];
   exchangeLog: ExchangeLogEntry[];
@@ -56,6 +57,7 @@ export function runSimulationLoop(
   fatalExchangeIndex: number | undefined;
   fightMinutes: number;
 } {
+  const flavorRng = narRng ?? resCtx.rng;
   const log: MinuteEvent[] = [];
   const exchangeLog: ExchangeLogEntry[] = [];
   let prevHpRatioA = 1.0;
@@ -102,7 +104,7 @@ export function runSimulationLoop(
         log.push({ minute: min, text: `MINUTE ${min}.` });
         log.push({
           minute: min,
-          text: minuteStatusLine(resCtx.rng, min, nameA, nameD, fA.hitsLanded, fD.hitsLanded),
+          text: minuteStatusLine(flavorRng, min, nameA, nameD, fA.hitsLanded, fD.hitsLanded),
         });
       }
     }
@@ -116,7 +118,7 @@ export function runSimulationLoop(
     // B. Resolve Narration (Drama)
     if (!headless) {
       const narCtx: NarrationContext = {
-        rng: resCtx.rng,
+        rng: flavorRng,
         nameA,
         nameD,
         weaponA,
@@ -186,7 +188,7 @@ export function runSimulationLoop(
             : nameD;
         const winnerStyle = boutEnd.actor === 'A' ? planA?.style : planD?.style;
         const boutEndLines = narrateBoutEnd(
-          resCtx.rng,
+          flavorRng,
           by as string,
           narWinner,
           narLoser,

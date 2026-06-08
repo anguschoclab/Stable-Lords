@@ -495,6 +495,126 @@ function ArcaneStormEffect() {
   );
 }
 
+function AetherStormEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Reality-warping prismatic background - faster and more chaotic than Arcane Storm */}
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          background:
+            'linear-gradient(135deg, rgba(0,255,255,0.15), rgba(139,0,255,0.12), rgba(255,215,0,0.15), rgba(0,200,255,0.1))',
+          backgroundSize: '300% 300%',
+          animation: 'bronzeShimmer 3s linear infinite',
+        }}
+      />
+      {/* Energy pulses - faster flash rate */}
+      <div className="absolute inset-0 bg-cyan-200/15 animate-pulse" style={{ animationDuration: '1.5s' }} />
+      {/* Aether particles - more numerous and chaotic than Arcane Storm */}
+      {Array.from({ length: 40 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute w-1.5 h-1.5 bg-cyan-300/50 rounded-full animate-mana-spark"
+          style={
+            {
+              left: `${cryptoRandom() * 100}%`,
+              top: `${cryptoRandom() * 100}%`,
+              '--tx': `${(cryptoRandom() - 0.5) * 160}px`,
+              '--ty': `${(cryptoRandom() - 0.5) * 160}px`,
+              animationDelay: `${cryptoRandom() * 4}s`,
+              animationDuration: `${2 + cryptoRandom() * 2}s`,
+            } as CSSProperties & Record<string, string>
+          }
+        />
+      ))}
+      {/* Violet secondary particles for prismatic effect */}
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div
+          key={`v-${i}`}
+          className="absolute w-1 h-1 bg-violet-400/40 rounded-full animate-mana-spark"
+          style={
+            {
+              left: `${cryptoRandom() * 100}%`,
+              top: `${cryptoRandom() * 100}%`,
+              '--tx': `${(cryptoRandom() - 0.5) * 120}px`,
+              '--ty': `${(cryptoRandom() - 0.5) * 120}px`,
+              animationDelay: `${cryptoRandom() * 3}s`,
+              animationDuration: `${2.5 + cryptoRandom() * 2}s`,
+            } as CSSProperties & Record<string, string>
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
+function ChaoticWindsEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Hazy sand atmosphere */}
+      <div className="absolute inset-0 bg-amber-900/10 mix-blend-multiply" />
+
+      {/* Bi-directional wind streaks - left to right */}
+      {Array.from({ length: 25 }).map((_, i) => (
+        <div
+          key={`lr-${i}`}
+          className="absolute h-px bg-gradient-to-r from-transparent via-amber-400/25 to-transparent animate-wind"
+          style={{
+            top: `${cryptoRandom() * 100}%`,
+            left: '-20%',
+            width: `${16 + cryptoRandom() * 24}px`,
+            animationDelay: `${cryptoRandom() * 3}s`,
+            animationDuration: `${0.4 + cryptoRandom() * 0.8}s`,
+          }}
+        />
+      ))}
+
+      {/* Bi-directional wind streaks - right to left (reversed) */}
+      {Array.from({ length: 25 }).map((_, i) => (
+        <div
+          key={`rl-${i}`}
+          className="absolute h-px bg-gradient-to-l from-transparent via-stone-400/20 to-transparent"
+          style={{
+            top: `${cryptoRandom() * 100}%`,
+            right: '-20%',
+            width: `${16 + cryptoRandom() * 24}px`,
+            animationDelay: `${cryptoRandom() * 3}s`,
+            animation: `wind ${0.5 + cryptoRandom() * 0.9}s linear infinite reverse`,
+          }}
+        />
+      ))}
+
+      {/* Swirling vortex hint - subtle center disturbance */}
+      <div
+        className="absolute left-1/2 top-1/4 -translate-x-1/2 h-1/2 w-1/2 animate-spin-slow opacity-20"
+        style={{
+          background:
+            'conic-gradient(from 0deg at 50% 50%, rgba(180,120,50,0) 0deg, rgba(160,140,100,0.2) 90deg, rgba(180,120,50,0) 180deg, rgba(160,140,100,0.2) 270deg, rgba(180,120,50,0) 360deg)',
+          filter: 'blur(12px)',
+        }}
+      />
+
+      {/* Sand debris particles with chaotic drift */}
+      {Array.from({ length: 35 }).map((_, i) => (
+        <div
+          key={`d-${i}`}
+          className="absolute w-0.5 h-0.5 bg-amber-600/50 rounded-full animate-chaotic-drift"
+          style={
+            {
+              left: `${cryptoRandom() * 100}%`,
+              top: `${cryptoRandom() * 100}%`,
+              '--tx': `${(cryptoRandom() - 0.5) * 100}px`,
+              '--ty': `${(cryptoRandom() - 0.5) * 60}px`,
+              animationDelay: `${cryptoRandom() * 3}s`,
+              animationDuration: `${2 + cryptoRandom() * 2}s`,
+            } as CSSProperties & Record<string, string>
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
 /**
  * Exhaustive map of weather type → overlay renderer. `null` means the weather
  * is intentionally neutral (no particle effect). The compiler enforces that
@@ -531,8 +651,8 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Blood Rain': () => <BloodRainEffect />,
   'Locust Swarm': () => <LocustSwarmEffect />,
   'Aurora Borealis': () => <ManaSurgeEffect />,
-  'Chaotic Winds': null,
-  'Aether Storm': null,
+  'Chaotic Winds': () => <ChaoticWindsEffect />,
+  'Aether Storm': () => <AetherStormEffect />,
   Mirage: () => <ScorchingWindEffect />,
 };
 

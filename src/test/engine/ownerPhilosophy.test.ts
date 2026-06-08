@@ -59,7 +59,7 @@ describe('ownerPhilosophy - evolvePhilosophies', () => {
           metaAdaptation: 'Opportunist',
           stableName: 'Stab',
         },
-        roster: [{ name: 'W1', status: 'Active' }],
+        roster: [{ id: 'w1', name: 'W1', status: 'Active' }],
         philosophy: 'Brute Force',
       },
     ],

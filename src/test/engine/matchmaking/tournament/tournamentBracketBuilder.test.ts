@@ -145,8 +145,6 @@ describe('TournamentBracketBuilder', () => {
 
       round1Matches.forEach((match) => {
         expect(match.round).toBe(1);
-        expect(match.a).toBeDefined();
-        expect(match.d).toBeDefined();
         expect(match.warriorIdA).toBeDefined();
         expect(match.warriorIdD).toBeDefined();
         expect(match.winner).toBeUndefined();
@@ -193,7 +191,7 @@ describe('TournamentBracketBuilder', () => {
       });
 
       // Same seed should produce same bracket
-      expect(tournament1.bracket[0]!.a).toBe(tournament2.bracket[0]!.a);
+      expect(tournament1.bracket[0]!.warriorIdA).toBe(tournament2.bracket[0]!.warriorIdA);
     });
 
     it('should generate unique tournament ID', () => {

@@ -288,7 +288,7 @@ const STYLE_PENALTIES: Record<FightingStyle, [number, number, number, number, nu
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
   [FightingStyle.TotalParry]: /*TP*/ [-12, +1, -9, -4, -2, 0], // was -41, now -26: PAR buff is identity; ATT stays low
-  [FightingStyle.WallOfSteel]: /*WS*/ [-2, -2, -9, 2, -2, 0], // was -27, now -13: small universal buff; INI positive = reads attacks
+  [FightingStyle.WallOfSteel]: /*WS*/ [-4, -2, -9, 0, -2, 0], // was -13, now -17: ATT reduced, INI neutral; keeps defensive identity
 };
 
 // ─── Base Skill Computation ───────────────────────────────────────────────

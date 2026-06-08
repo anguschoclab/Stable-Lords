@@ -425,6 +425,7 @@ export interface InsightToken {
   warriorName: string;
   detail: string;
   targetKey?: string;
+  origin?: string;
   discoveredWeek: number;
 } /**
  * Defines the shape of hall entry.

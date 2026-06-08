@@ -203,6 +203,7 @@ function handleEpiphany(
       warriorId: chosen.id,
       warriorName: chosen.name,
       detail: 'Discovered a hidden reserve of strength during offseason meditation.',
+      origin: 'Epiphany',
       discoveredWeek: nextWeek,
     });
 
@@ -728,6 +729,7 @@ function handleDreamweaverVisit(
         warriorId: chosen.id,
         warriorName: chosen.name,
         detail: 'Dreamweaver vision revealed hidden stylistic knowledge.',
+        origin: 'Dreamweaver',
         discoveredWeek: nextWeek,
       });
 

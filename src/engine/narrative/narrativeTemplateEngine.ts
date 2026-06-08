@@ -13,6 +13,7 @@ export interface CombatContext {
   hits?: string | number;
   winner?: string;
   loser?: string;
+  possessive?: string;
 }
 
 /**
@@ -59,6 +60,12 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
           return ctx.winner || 'the winner';
         case 'loser':
           return ctx.loser || 'the loser';
+        case 'possessive':
+          return ctx.possessive ?? 'their';
+        case 'pronoun':
+          return (ctx as Record<string, unknown>).pronoun as string ?? 'he';
+        case 'reflexive':
+          return (ctx as Record<string, unknown>).reflexive as string ?? 'himself';
         default:
           return match;
       }

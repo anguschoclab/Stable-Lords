@@ -110,8 +110,13 @@ export function pressingLine(rng: RNG, name: string): string {
 /**
  * Narrates insight hint.
  */
-export function narrateInsightHint(rng: RNG, attribute: string): string | null {
+export function narrateInsightHint(
+  rng: RNG,
+  attribute: string,
+  attackerName?: string,
+  defenderName?: string
+): string | null {
   const template = getFromArchive(rng, ['pbp', 'insights', attribute]);
   if (!template || template === 'A fierce exchange occurs.') return null;
-  return template;
+  return interpolateTemplate(template, { attacker: attackerName, defender: defenderName });
 }

@@ -225,7 +225,7 @@ export function narrateEvents(
 
       case 'INSIGHT': {
         const attribute = (event.metadata?.attribute as string) || 'ST';
-        const hint = narrateInsightHint(rng, attribute);
+        const hint = narrateInsightHint(rng, attribute, actorName, opponentName);
         if (hint) log.push({ minute, text: `🔍 ${hint}` });
         break;
       }

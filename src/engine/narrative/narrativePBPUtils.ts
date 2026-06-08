@@ -18,6 +18,7 @@ export interface CombatContext {
   weapon?: string;
   bodyPart?: string;
   hits?: string | number;
+  possessive?: string;
 }
 
 /**
@@ -64,6 +65,12 @@ export function interpolateTemplate(template: string, ctx: CombatContext): strin
           return String((ctx as Record<string, unknown>).winner ?? 'the winner');
         case 'loser':
           return String((ctx as Record<string, unknown>).loser ?? 'the loser');
+        case 'possessive':
+          return String(ctx.possessive ?? 'their');
+        case 'pronoun':
+          return String((ctx as Record<string, unknown>).pronoun ?? 'he');
+        case 'reflexive':
+          return String((ctx as Record<string, unknown>).reflexive ?? 'himself');
         default: {
           const value = ctx[longKey as keyof CombatContext];
           return value !== undefined && Object.hasOwn(ctx, longKey) ? String(value) : match;

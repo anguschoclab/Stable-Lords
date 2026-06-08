@@ -43,6 +43,10 @@ export interface NarrationContext {
   fameD: number;
   isFavoriteA?: boolean;
   isFavoriteD?: boolean;
+  spA?: number;
+  spD?: number;
+  originA?: string;
+  originD?: string;
 } /**
  * Narrate events.
  * @param events - Events.
@@ -75,6 +79,8 @@ export function narrateEvents(
   const getMaxHp = (actor: 'A' | 'D') => (actor === 'A' ? ctx.maxHpA : ctx.maxHpD);
   const getFame = (actor: 'A' | 'D') => (actor === 'A' ? ctx.fameA : ctx.fameD);
   const getIsFavorite = (actor: 'A' | 'D') => (actor === 'A' ? ctx.isFavoriteA : ctx.isFavoriteD);
+  const getSpeed = (actor: 'A' | 'D') => (actor === 'A' ? ctx.spA : ctx.spD);
+  const getOrigin = (actor: 'A' | 'D') => (actor === 'A' ? ctx.originA : ctx.originD);
   const getHpRatio = (actor: 'A' | 'D') => (actor === 'A' ? currentHpRatioA : currentHpRatioD);
   const setHpRatio = (actor: 'A' | 'D', ratio: number) => {
     if (actor === 'A') currentHpRatioA = ratio;
@@ -96,7 +102,7 @@ export function narrateEvents(
       case 'ATTACK':
         if (event.result === 'WHIFF') {
           log.push({ minute, text: narrateAttack(rng, actorName, weapon, false, opponentName) });
-          log.push({ minute, text: narrateDodge(rng, opponentName) });
+          log.push({ minute, text: narrateDodge(rng, opponentName, getSpeed(event.actor === 'A' ? 'D' : 'A')) });
         }
         break;
 
@@ -114,7 +120,7 @@ export function narrateEvents(
           });
           log.push({ minute, text: narrateParry(rng, actorName, weapon) });
         } else if (event.result === 'DODGE') {
-          log.push({ minute, text: narrateDodge(rng, actorName) });
+          log.push({ minute, text: narrateDodge(rng, actorName, getSpeed(event.actor)) });
         } else if (event.result === 'RIPOSTE') {
           log.push({ minute, text: narrateCounterstrike(rng, actorName) });
         }

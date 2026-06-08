@@ -126,6 +126,34 @@ describe('CombatNarrator', () => {
       expect(narration.length).toBeGreaterThan(0);
       expect(narration).toContain('Defender');
     });
+
+    it('tier4_supernatural wording fires at SP >= 26 across 50 seeds', () => {
+      const tier4Keywords = ['inhumanly', 'smoke', 'unbelievably', 'supernatural', 'shifts'];
+      let tier4Fired = false;
+      for (let seed = 1; seed <= 50; seed++) {
+        const r = new SeededRNGService(seed);
+        const line = CombatNarrator.narrateDodge(r, 'Defender', 28);
+        if (tier4Keywords.some((kw) => line.toLowerCase().includes(kw))) {
+          tier4Fired = true;
+          break;
+        }
+      }
+      expect(tier4Fired).toBe(true);
+    });
+
+    it('tier1 wording fires when speed is undefined (no-speed fallback)', () => {
+      const tier1Keywords = ['ducks', 'dodges', 'leans', 'steps aside', 'sways'];
+      let tier1Fired = false;
+      for (let seed = 1; seed <= 50; seed++) {
+        const r = new SeededRNGService(seed);
+        const line = CombatNarrator.narrateDodge(r, 'Defender');
+        if (tier1Keywords.some((kw) => line.toLowerCase().includes(kw))) {
+          tier1Fired = true;
+          break;
+        }
+      }
+      expect(tier1Fired).toBe(true);
+    });
   });
 
   describe('narrateCounterstrike', () => {

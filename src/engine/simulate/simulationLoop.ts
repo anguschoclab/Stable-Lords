@@ -131,6 +131,10 @@ export function runSimulationLoop(
         fameD: warriorD?.fame ?? 0,
         isFavoriteA: !!warriorA?.favorites?.discovered?.weapon,
         isFavoriteD: !!warriorD?.favorites?.discovered?.weapon,
+        spA: warriorA?.attributes.SP,
+        spD: warriorD?.attributes.SP,
+        originA: warriorA?.origin,
+        originD: warriorD?.origin,
       };
       const { log: newLines, lastHpRatioA, lastHpRatioD } = narrateEvents(events, narCtx, min);
       log.push(...newLines);

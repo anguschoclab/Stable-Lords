@@ -21,7 +21,7 @@ import {
   narrateFeint,
   narrateZoneShift,
 } from '../../narrativePBP';
-import { narrateKnockdown, narrateRecovery } from '../../narrative/combatNarrators'; /**
+import { narrateKnockdown, narrateRecovery, getEpithet } from '../../narrative/combatNarrators'; /**
  * Defines the shape of narration context.
  */
 
@@ -82,6 +82,11 @@ export function narrateEvents(
   const getIsFavorite = (actor: 'A' | 'D') => (actor === 'A' ? ctx.isFavoriteA : ctx.isFavoriteD);
   const getSpeed = (actor: 'A' | 'D') => (actor === 'A' ? ctx.spA : ctx.spD);
   const getOrigin = (actor: 'A' | 'D') => (actor === 'A' ? ctx.originA : ctx.originD);
+  const displayName = (actor: 'A' | 'D') => {
+    const base = getName(actor);
+    const epithet = getEpithet(rng, getOrigin(actor));
+    return epithet ?? base;
+  };
   const getHpRatio = (actor: 'A' | 'D') => (actor === 'A' ? currentHpRatioA : currentHpRatioD);
   const setHpRatio = (actor: 'A' | 'D', ratio: number) => {
     if (actor === 'A') currentHpRatioA = ratio;
@@ -102,7 +107,7 @@ export function narrateEvents(
 
       case 'ATTACK':
         if (event.result === 'WHIFF') {
-          log.push({ minute, text: narrateAttack(rng, actorName, weapon, false, opponentName) });
+          log.push({ minute, text: narrateAttack(rng, displayName(event.actor), weapon, false, opponentName) });
           log.push({ minute, text: narrateDodge(rng, opponentName, getSpeed(event.actor === 'A' ? 'D' : 'A')) });
         }
         break;
@@ -161,12 +166,12 @@ export function narrateEvents(
           ) {
             log.push({
               minute,
-              text: narrateAttack(rng, actorName, weapon, isMastery, opponentName),
+              text: narrateAttack(rng, displayName(event.actor), weapon, isMastery, opponentName),
             });
           } else if (!events.some((e) => e.type === 'DEFENSE' && e.actor === event.target)) {
             log.push({
               minute,
-              text: narrateAttack(rng, actorName, weapon, isMastery, opponentName),
+              text: narrateAttack(rng, displayName(event.actor), weapon, isMastery, opponentName),
             });
           }
 

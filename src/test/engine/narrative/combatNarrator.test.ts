@@ -225,6 +225,29 @@ describe('CombatNarrator', () => {
     });
   });
 
+  describe('getEpithet', () => {
+    it('fires and returns a non-empty string for at least some seeds when origin is provided', () => {
+      let fired = false;
+      for (let seed = 1; seed <= 50; seed++) {
+        const r = new SeededRNGService(seed);
+        const result = CombatNarrator.getEpithet(r, 'Kolact');
+        if (result !== null) {
+          expect(typeof result).toBe('string');
+          expect(result.length).toBeGreaterThan(0);
+          fired = true;
+          break;
+        }
+      }
+      expect(fired).toBe(true);
+    });
+
+    it('returns null when no origin/race/style provided', () => {
+      const r = new SeededRNGService(1);
+      const result = CombatNarrator.getEpithet(r);
+      expect(result).toBeNull();
+    });
+  });
+
   describe('narrateKnockdown', () => {
     it('should narrate a knockdown containing the fighter name and no raw tokens', () => {
       const noRaw = (s: string) => !/\{\{|\}\}/.test(s);

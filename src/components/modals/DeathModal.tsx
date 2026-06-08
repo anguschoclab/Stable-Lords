@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import type { WarriorId } from '@/types/shared.types';
 import { motion } from 'framer-motion';
 import {
@@ -14,16 +15,21 @@ import {
  * @returns The result.
  */
 export function DeathModal() {
-  const state = useWorldState();
-  const acknowledgeDeathAction = useGameStore((s) => s.acknowledgeDeath);
-
-  const { unacknowledgedDeaths, graveyard } = state;
+  const { unacknowledgedDeaths, graveyard, acknowledgeDeathAction } = useGameStore(
+    useShallow((s) => ({
+      unacknowledgedDeaths: s.unacknowledgedDeaths,
+      graveyard: s.graveyard,
+      acknowledgeDeathAction: s.acknowledgeDeath,
+    }))
+  );
   const acknowledgeDeath = (id: WarriorId) => acknowledgeDeathAction(id);
 
-  const currentDeathId = unacknowledgedDeaths[0];
+  const safeDeaths = unacknowledgedDeaths ?? [];
+  const safeGraveyard = graveyard ?? [];
+  const currentDeathId = safeDeaths[0];
   const warrior = useMemo(
-    () => graveyard.find((w) => w.id === currentDeathId),
-    [graveyard, currentDeathId]
+    () => safeGraveyard.find((w) => w.id === currentDeathId),
+    [safeGraveyard, currentDeathId]
   );
 
   if (!warrior) return null;

@@ -6,6 +6,7 @@ import type { GameState } from '@/types/state.types';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import type { Warrior } from '@/types/warrior.types';
 
 describe('runSeasonalPass', () => {
   it('should not do anything if nextWeek is not 1', () => {
@@ -812,7 +813,7 @@ describe('runSeasonalPass', () => {
     };
     rng.next = mockNext;
 
-    const baseState = createFreshState('test-seed', 1);
+    const baseState = createFreshState('test-seed');
     baseState.year = 1;
     baseState.week = 12; // about to become 1
     baseState.roster = [
@@ -822,9 +823,8 @@ describe('runSeasonalPass', () => {
         fame: 10,
         status: 'Active',
         injuries: [],
-        retired: false,
         isDead: false,
-      } as Warrior,
+      } as unknown as Warrior,
     ];
 
     const impact = runSeasonalPass(baseState, 1, rng);

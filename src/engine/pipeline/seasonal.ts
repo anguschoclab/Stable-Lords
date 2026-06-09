@@ -49,7 +49,10 @@ interface OffseasonEventNarrative {
     | 'gladiator_olympics'
     | 'meteor_shower'
     | 'underground_pit_fight'
-    | 'rogue_alchemist';
+    | 'rogue_alchemist'
+    | 'tavern_brawl_surprise'
+    | 'dreamweaver_visit'
+    | 'abyssal_bargain';
   newsletter: string[];
 }
 

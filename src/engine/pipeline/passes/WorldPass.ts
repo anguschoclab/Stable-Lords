@@ -45,12 +45,13 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
     if (roll < 0.55) return 'Sweltering';
     if (roll < 0.65) return 'Overcast';
     if (roll < 0.75) return 'Thunderstorm';
-    if (roll < 0.83) return 'Sandstorm';
-    if (roll < 0.86) return 'Ashfall';
-    if (roll < 0.89) return 'Locust Swarm';
-    if (roll < 0.92) return 'Gale';
-    if (roll < 0.95) return 'Solar Flare';
-    if (roll < 0.98) return 'Blood Moon'; // Includes 0.99
+    if (roll < 0.81) return 'Sandstorm';
+    if (roll < 0.84) return 'Tornado';
+    if (roll < 0.87) return 'Ashfall';
+    if (roll < 0.90) return 'Locust Swarm';
+    if (roll < 0.93) return 'Gale';
+    if (roll < 0.96) return 'Solar Flare';
+    if (roll < 0.985) return 'Blood Moon';
     if (roll < 0.995) return 'Eclipse';
     return 'Mana Surge';
   }
@@ -60,14 +61,16 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
     if (roll < 0.25) return 'Clear';
     if (roll < 0.5) return 'Overcast';
     if (roll < 0.65) return 'Blizzard';
-    if (roll < 0.75) return 'Rainy';
-    if (roll < 0.85) return 'Dense Fog';
+    if (roll < 0.70) return 'Hailstorm';
+    if (roll < 0.78) return 'Rainy';
+    if (roll < 0.86) return 'Dense Fog';
     if (roll < 0.92) return 'Gale';
     if (roll < 0.96) return 'Breezy';
     if (roll < 0.98) return 'Abyssal Gloom';
-    if (roll < 0.995) return 'Blood Moon'; // Includes 0.99
-    if (roll < 0.997) return 'Eclipse';
-    if (roll < 0.999) return 'Aurora Borealis';
+    if (roll < 0.985) return 'Blood Moon';
+    if (roll < 0.99) return 'Eclipse';
+    if (roll < 0.995) return 'Meteor Shower';
+    if (roll < 0.998) return 'Aurora Borealis';
     return 'Mana Surge';
   }
 
@@ -78,15 +81,17 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.65) return 'Mist';
   if (roll < 0.75) return 'Breezy';
   if (roll < 0.78) return 'Chaotic Winds';
-  if (roll < 0.8) return 'Dense Fog';
-  if (roll < 0.85) return 'Thunderstorm';
-  if (roll < 0.9) return 'Acid Rain';
-  if (roll < 0.94) return 'Gale';
-  if (roll < 0.97) return 'Spooky Night'; // Added Spooky Night to Spring/Fall!
-  if (roll < 0.985) return 'Blood Rain';
-  if (roll < 0.992) return 'Aether Storm';
-  if (roll < 0.995) return 'Blood Moon'; // Includes 0.99
-  if (roll < 0.998) return 'Eclipse';
+  if (roll < 0.80) return 'Dense Fog';
+  if (roll < 0.83) return 'Cursed Miasma';
+  if (roll < 0.88) return 'Thunderstorm';
+  if (roll < 0.93) return 'Acid Rain';
+  if (roll < 0.95) return 'Gale';
+  if (roll < 0.97) return 'Arcane Storm';
+  if (roll < 0.985) return 'Spooky Night';
+  if (roll < 0.992) return 'Blood Rain';
+  if (roll < 0.995) return 'Aether Storm';
+  if (roll < 0.998) return 'Blood Moon';
+  if (roll < 0.999) return 'Eclipse';
   return 'Mana Surge';
 }
 

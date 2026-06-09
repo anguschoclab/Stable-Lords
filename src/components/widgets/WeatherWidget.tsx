@@ -1,192 +1,46 @@
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
-import {
-  Cloud,
-  Sun,
-  CloudRain,
-  ThermometerSun,
-  Wind,
-  Info,
-  Moon,
-  Sparkles,
-  Flame,
-  Skull,
-} from 'lucide-react';
+import { Info, Cloud } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { getWeatherConfig } from '@/constants/weather';
+import type { WeatherType } from '@/types/shared.types';
 
-const WEATHER_METADATA = {
-  Clear: {
-    icon: Sun,
-    color: 'text-arena-gold',
-    bg: 'bg-arena-gold/10',
-    border: 'border-arena-gold/20',
-    description: 'Optimal conditions. No environmental modifiers applied to combat resolution.',
-    stats: 'NORMAL VISIBILITY // ZERO DRAIN',
-  },
-  Overcast: {
-    icon: Cloud,
-    color: 'text-arena-steel',
-    bg: 'bg-arena-steel/10',
-    border: 'border-arena-steel/20',
-    description: 'Cloudy skies. Slight reduction in precision for ranged and lunging attacks.',
-    stats: 'LOW VISIBILITY // STABLE ENDURANCE',
-  },
-  Rainy: {
-    icon: CloudRain,
-    color: 'text-arena-pop',
-    bg: 'bg-arena-pop/10',
-    border: 'border-arena-pop/20',
-    description:
-      'Driving rain. Significant penalties to precision and initiative. Footing is uncertain.',
-    stats: 'PRECISION PENALTY 15% // INITIATIVE -10',
-  },
-  Gale: {
-    icon: Wind,
-    color: 'text-primary',
-    bg: 'bg-primary/10',
-    border: 'border-primary/20',
-    description: 'Fierce winds. Substantial penalty to stamina.',
-    stats: 'STAMINA DRAIN 115%',
-  },
-  Tornado: {
-    icon: Wind,
-    color: 'text-arena-blood',
-    bg: 'bg-arena-blood/10',
-    border: 'border-arena-blood/20',
-    description: 'Violent swirling winds. Severe penalty to coordination and stamina.',
-    stats: 'STAMINA DRAIN 140% // SEVERE INITIATIVE PENALTY',
-  },
-  Sweltering: {
-    icon: ThermometerSun,
-    color: 'text-arena-blood',
-    bg: 'bg-arena-blood/10',
-    border: 'border-arena-blood/20',
-    description:
-      'Oppressive heat. Endurance consumption is doubled. High-constitution warriors favored.',
-    stats: 'ENDURANCE DRAIN 200% // FATIGUE ACCEL',
-  },
-  Breezy: {
-    icon: Wind,
-    color: 'text-arena-steel',
-    bg: 'bg-arena-steel/10',
-    border: 'border-arena-steel/20',
-    description: 'Strong shifting winds. Erratic initiative modifiers and slight energy drain.',
-    stats: 'INITIATIVE FLUX // STAMINA DRAIN 120%',
-  },
-  Eclipse: {
-    icon: Moon,
-    color: 'text-arena-fame',
-    bg: 'bg-arena-fame/10',
-    border: 'border-arena-fame/20',
-    description:
-      'Eerie darkness descends. Fights become slow and methodical as combatants hesitate.',
-    stats: 'STAMINA CONSERVATION 20% // HESITATION',
-  },
-  'Meteor Shower': {
-    icon: Sparkles,
-    color: 'text-arena-gold',
-    bg: 'bg-arena-gold/10',
-    border: 'border-arena-gold/20',
-    description:
-      'Falling stars light up the sky. The chaotic spectacle distracts fighters and exhausts stamina.',
-    stats: 'INITIATIVE & RIPOSTE PENALTY -3 // STAMINA DRAIN 120%',
-  },
-  'Solar Flare': {
-    icon: Flame,
-    color: 'text-arena-blood',
-    bg: 'bg-arena-blood/10',
-    border: 'border-arena-blood/20',
-    description:
-      'A blinding flash of light bakes the arena, draining stamina aggressively while giving eager attackers a burst of destructive energy.',
-    stats: 'STAMINA DRAIN 150% // DAMAGE +25%',
-  },
-  'Abyssal Gloom': {
-    icon: Moon,
-    color: 'text-arena-fame',
-    bg: 'bg-arena-fame/10',
-    border: 'border-arena-fame/20',
-    description:
-      'Impenetrable darkness. Drastic penalties to initiative, but strikes from the shadows are lethal.',
-    stats: 'INITIATIVE -5 // RIPOSTE +5 // DAMAGE 115%',
-  },
-  'Cursed Miasma': {
-    icon: Cloud,
-    color: 'text-arena-fame',
-    bg: 'bg-arena-fame/10',
-    border: 'border-arena-fame/20',
-    description: 'A vile purple mist clings to the arena, draining stamina and clouding the mind.',
-    stats: 'INITIATIVE & RIPOSTE PENALTY // STAMINA DRAIN 130%',
-  },
-  Hailstorm: {
-    icon: CloudRain,
-    color: 'text-arena-pop',
-    bg: 'bg-arena-pop/10',
-    border: 'border-arena-pop/20',
-    description: 'Pummeling hail batters the fighters, hurting momentum and stamina.',
-    stats: 'INITIATIVE -4 // RIPOSTE -2 // DAMAGE 95% // STAMINA DRAIN 120%',
-  },
-  'Arcane Storm': {
-    icon: Sparkles,
-    color: 'text-arena-fame',
-    bg: 'bg-arena-fame/10',
-    border: 'border-arena-fame/20',
-    description: 'Raw magic warps reality, supercharging strikes and quickening reflexes.',
-    stats: 'INITIATIVE +8 // RIPOSTE +5 // DAMAGE 140% // STAMINA CONSERVATION 20%',
-  },
-  'Blood Rain': {
-    icon: CloudRain,
-    color: 'text-destructive',
-    bg: 'bg-destructive/10',
-    border: 'border-destructive/20',
-    description: 'Red rain slickens the sand. Violence feels inevitable.',
-    stats: 'INITIATIVE -2 // RIPOSTE +2 // DAMAGE 120% // STAMINA DRAIN 110%',
-  },
-  'Locust Swarm': {
-    icon: Skull,
-    color: 'text-arena-pop',
-    bg: 'bg-arena-pop/10',
-    border: 'border-arena-pop/20',
-    description:
-      'A blinding swarm of locusts descends upon the arena, gnawing at everything in sight.',
-    stats: 'INITIATIVE -3 // DAMAGE 90% // STAMINA DRAIN 120%',
-  },
-  'Aurora Borealis': {
-    icon: Sparkles,
-    color: 'text-arena-fame',
-    bg: 'bg-arena-fame/10',
-    border: 'border-arena-fame/20',
-    description:
-      'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
-    stats: 'STAMINA CONSERVATION 15% // INITIATIVE +2',
-  },
-  'Chaotic Winds': {
-    icon: Wind,
-    color: 'text-primary',
-    bg: 'bg-primary/10',
-    border: 'border-primary/20',
-    description: 'Erratic winds buffet the arena, disrupting movement and throwing off attacks.',
-    stats: 'INITIATIVE -4 // RIPOSTE +3 // DAMAGE 85% // STAMINA DRAIN 130%',
-  },
-  'Aether Storm': {
-    icon: Sparkles,
-    color: 'text-arena-gold',
-    bg: 'bg-arena-gold/10',
-    border: 'border-arena-gold/20',
-    description: 'Raw aetherical winds warp reality, quickening reflexes and amplifying blows.',
-    stats: 'INITIATIVE +8 // RIPOSTE +3 // DAMAGE 130% // STAMINA CONSERVATION 20%',
-  },
-  Mirage: {
-    icon: Sun,
-    color: 'text-arena-gold',
-    bg: 'bg-arena-gold/10',
-    border: 'border-arena-gold/20',
-    description:
-      'Shimmering heat distortions create optical illusions. Fighters struggle to judge distance.',
-    stats: 'INITIATIVE -5 // RIPOSTE -2 // DAMAGE 90% // STAMINA DRAIN 110%',
-  },
+const WEATHER_STATS: Record<WeatherType, string> = {
+  Clear: 'NORMAL VISIBILITY // ZERO DRAIN',
+  Overcast: 'LOW VISIBILITY // STABLE ENDURANCE',
+  Rainy: 'INITIATIVE -3 // RIPOSTE +5 // DAMAGE -10%',
+  Sweltering: 'STAMINA DRAIN 130%',
+  Breezy: 'STAMINA CONSERVATION 10% // INITIATIVE +2',
+  'Blazing Sun': 'STAMINA DRAIN 140% // INITIATIVE -2 // DAMAGE +10%',
+  Gale: 'STAMINA DRAIN 120% // INITIATIVE -5 // RIPOSTE +3',
+  'Blood Moon': 'STAMINA CONSERVATION 10% // INITIATIVE +3 // DAMAGE +20%',
+  Eclipse: 'STAMINA CONSERVATION 20% // INITIATIVE +5 // RIPOSTE +5',
+  Sandstorm: 'STAMINA DRAIN 120% // INITIATIVE -4',
+  Tornado: 'STAMINA DRAIN 140% // INITIATIVE -6 // DAMAGE -20%',
+  Blizzard: 'STAMINA DRAIN 150% // INITIATIVE -4 // DAMAGE -20%',
+  'Dense Fog': 'INITIATIVE -8 // RIPOSTE +12 // DAMAGE +10%',
+  Mist: 'INITIATIVE -2 // RIPOSTE +2',
+  Thunderstorm: 'STAMINA DRAIN 120% // INITIATIVE -2 // DAMAGE +25%',
+  Ashfall: 'STAMINA DRAIN 140% // INITIATIVE -3',
+  'Acid Rain': 'STAMINA DRAIN 130% // RIPOSTE -6 // DAMAGE +20%',
+  'Mana Surge': 'STAMINA CONSERVATION 30% // INITIATIVE +10 // RIPOSTE +10 // DAMAGE +50%',
+  'Scorching Wind': 'STAMINA DRAIN 130% // INITIATIVE +1',
+  'Spooky Night': 'STAMINA DRAIN 110% // INITIATIVE -2 // RIPOSTE -2',
+  'Meteor Shower': 'INITIATIVE -3 // RIPOSTE -3 // DAMAGE +15%',
+  'Solar Flare': 'STAMINA DRAIN 150% // DAMAGE +25%',
+  'Abyssal Gloom': 'INITIATIVE -5 // RIPOSTE +5 // DAMAGE +15%',
+  'Cursed Miasma': 'STAMINA DRAIN 130% // INITIATIVE -4 // RIPOSTE -2',
+  Hailstorm: 'INITIATIVE -4 // RIPOSTE -2 // DAMAGE -5%',
+  'Arcane Storm': 'STAMINA CONSERVATION 20% // INITIATIVE +8 // RIPOSTE +5 // DAMAGE +40%',
+  'Blood Rain': 'INITIATIVE -2 // RIPOSTE +2 // DAMAGE +20%',
+  'Locust Swarm': 'INITIATIVE -3 // DAMAGE -10% // STAMINA DRAIN 120%',
+  'Aurora Borealis': 'STAMINA CONSERVATION 15% // INITIATIVE +2',
+  'Chaotic Winds': 'INITIATIVE -4 // RIPOSTE +3 // DAMAGE -15% // STAMINA DRAIN 130%',
+  'Aether Storm': 'STAMINA CONSERVATION 20% // INITIATIVE +8 // RIPOSTE +3 // DAMAGE +30%',
+  Mirage: 'INITIATIVE -5 // RIPOSTE -2 // DAMAGE -10%',
 }; /**
  * Weather widget.
  * @returns The result.
@@ -198,8 +52,8 @@ export function WeatherWidget() {
     }))
   );
   const weather = state.weather || 'Clear';
-  const meta = WEATHER_METADATA[weather as keyof typeof WEATHER_METADATA] || WEATHER_METADATA.Clear;
-  const Icon = meta.icon;
+  const config = getWeatherConfig(weather);
+  const Icon = config.icon;
 
   return (
     <Surface
@@ -217,9 +71,9 @@ export function WeatherWidget() {
           variant="outline"
           className={cn(
             'text-[9px] font-black tracking-widest uppercase',
-            meta.border,
-            meta.bg,
-            meta.color
+            config.borderClass,
+            config.bgClass,
+            config.colorClass
           )}
         >
           {weather}
@@ -230,7 +84,7 @@ export function WeatherWidget() {
         <Icon
           className={cn(
             'h-10 w-10 drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]',
-            meta.color
+            config.colorClass
           )}
         />
         <div className="text-right">
@@ -238,7 +92,7 @@ export function WeatherWidget() {
             Atmospheric Data
           </div>
           <p className="text-[10px] text-muted-foreground italic leading-tight w-full max-w-36 border-r-2 border-primary/20 pr-3">
-            {meta.description}
+            {config.description}
           </p>
         </div>
       </div>
@@ -256,7 +110,7 @@ export function WeatherWidget() {
             </TooltipTrigger>
             <TooltipContent className="bg-black/90 border-white/10 p-3 w-full max-w-xs">
               <p className="text-[10px] font-mono leading-relaxed text-primary/80 uppercase tracking-wider">
-                {meta.stats}
+                {WEATHER_STATS[weather as WeatherType] || ''}
               </p>
             </TooltipContent>
           </Tooltip>

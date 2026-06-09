@@ -8,9 +8,11 @@ import {
   RANGE_ORDER,
 } from '@/engine/combat/mechanics/distanceResolution';
 import { getAllArenas, getArenaById } from '@/data/arenas';
-
-// Arenas reserved for special scheduling — excluded from regular offer selection.
-const EXCLUDED_ARENA_IDS = new Set(['bloodsands_arena']);
+import {
+  ARENA_FIT,
+  ARENA_SELECTION,
+  ARENA_TAG_WEIGHTS,
+} from '@/constants/arena';
 
 // ─── Style classification helpers ─────────────────────────────────────────────
 
@@ -63,21 +65,21 @@ export function scoreArenaFitForWarrior(
   if (prefIdx <= maxIdx) {
     // Preferred range is reachable — reward proximity to preference
     const distanceFromPref = Math.abs(prefIdx - startIdx);
-    score += 1.5 - Math.min(1.5, distanceFromPref * 0.5);
+    score += ARENA_FIT.RANGE_FIT_MAX - Math.min(ARENA_FIT.RANGE_FIT_MAX, distanceFromPref * ARENA_FIT.RANGE_DISTANCE_PENALTY);
   } else {
     // Preferred range is beyond the cap — penalise
     const overshoot = prefIdx - maxIdx;
-    score -= overshoot * 0.5;
+    score -= overshoot * ARENA_FIT.RANGE_OVERSHOOT_PENALTY;
   }
 
   // 2. Riposte style vs surfaceMod.riposteMod
   if (RIPOSTE_STYLES.has(warrior.style)) {
-    score += arena.surfaceMod.riposteMod * 0.5; // ±0.5 max per point
+    score += arena.surfaceMod.riposteMod * ARENA_FIT.RIPOSTE_MOD_MULTIPLIER;
   }
 
   // 3. Initiative style vs surfaceMod.initiativeMod
   if (INITIATIVE_STYLES.has(warrior.style)) {
-    score += arena.surfaceMod.initiativeMod * 0.25; // ±0.25 per point
+    score += arena.surfaceMod.initiativeMod * ARENA_FIT.INITIATIVE_MOD_MULTIPLIER;
   }
 
   // 4. Endurance fit: high-aggression / low-CN warriors suffer in high-drain arenas
@@ -85,9 +87,28 @@ export function scoreArenaFitForWarrior(
   const isHighAgg = HIGH_AGGRESSION_STYLES.has(warrior.style);
   const drainStress = arena.surfaceMod.enduranceMult - 1.0; // positive = harder
   if (drainStress > 0) {
-    const cnPenaltyFactor = isHighAgg ? 1.5 : 1.0;
-    const cnRatio = Math.max(0, (15 - cn) / 15); // more penalty for low-CN
+    const cnPenaltyFactor = isHighAgg ? ARENA_FIT.HIGH_AGG_CN_FACTOR : 1.0;
+    const cnRatio = Math.max(0, (ARENA_FIT.CN_BASELINE - cn) / ARENA_FIT.CN_BASELINE); // more penalty for low-CN
     score -= drainStress * cnRatio * cnPenaltyFactor;
+  }
+
+  // 5. Tag-based scoring
+  for (const tag of arena.tags) {
+    const tagConfig = ARENA_TAG_WEIGHTS[tag as keyof typeof ARENA_TAG_WEIGHTS];
+    if (tagConfig) {
+      // Bonus for close-range fighters in cramped arenas
+      if (tag === 'cramped' && prefIdx <= 1) {
+        score += ARENA_FIT.CLOSE_RANGE_BONUS * tagConfig.weight;
+      }
+      // Bonus for reach fighters in open arenas
+      if (tag === 'open' && prefRange === 'Extended') {
+        score += ARENA_FIT.REACH_BONUS * tagConfig.weight;
+      }
+      // Penalty for initiative styles in uneven arenas
+      if (tag === 'uneven' && INITIATIVE_STYLES.has(warrior.style)) {
+        score -= ARENA_FIT.UNEVEN_INITIATIVE_PENALTY * tagConfig.weight;
+      }
+    }
   }
 
   return score;
@@ -114,8 +135,9 @@ export function selectArenaForMatchup(
   rng: IRNGService,
   opts?: { favorWeight?: number; planA?: FightPlan; planB?: FightPlan }
 ): string {
-  const favorWeight = opts?.favorWeight ?? 1.2;
-  const arenas = getAllArenas().filter((a) => !EXCLUDED_ARENA_IDS.has(a.id));
+  const favorWeight = opts?.favorWeight ?? ARENA_SELECTION.FAVOR_WEIGHT_DEFAULT;
+  const excludedIds = new Set<string>(ARENA_SELECTION.EXCLUDED_ARENA_IDS);
+  const arenas = getAllArenas().filter((a) => !excludedIds.has(a.id));
 
   if (arenas.length === 0) return 'standard_arena';
 
@@ -127,7 +149,7 @@ export function selectArenaForMatchup(
 
   // Shift all scores to be non-negative (softmax-style weighted draw)
   const minScore = Math.min(...scores);
-  const shifted = scores.map((s) => s - minScore + 0.1); // +0.1 ensures every arena has weight
+  const shifted = scores.map((s) => s - minScore + ARENA_SELECTION.SCORE_SHIFT_BUFFER);
   const total = shifted.reduce((a, b) => a + b, 0);
 
   let pick = rng.next() * total;
@@ -187,7 +209,7 @@ export function describeArenaFit(warrior: Warrior, arenaId: string, plan?: Fight
 
   // Endurance
   const drainStress = arena.surfaceMod.enduranceMult - 1.0;
-  if (drainStress >= 0.2) {
+  if (drainStress >= ARENA_FIT.DRAIN_DESCRIPTION_THRESHOLD) {
     if (HIGH_AGGRESSION_STYLES.has(warrior.style)) return 'High-drain — tests your stamina';
     return 'Grueling conditions';
   }

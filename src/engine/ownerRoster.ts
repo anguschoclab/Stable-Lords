@@ -7,6 +7,10 @@ import { computeWarriorStats, rollLuckfactor } from './skillCalc';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { META_RECRUIT_QUOTES, getPhilosophyStyles } from '@/data/ownerData';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { generateTraits, TRAITS } from '@/engine/traits';
+import { generateOrigin, generateLore } from '@/engine/narrative/loreGenerator';
+import { STYLE_ARCHETYPE } from '@/engine/factories/statGeneration';
+import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 
 /**
  * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
@@ -185,42 +189,40 @@ function generateAIRecruit(
 
   const style = pickRecruitStyle(adaptation, philosophy, favoredStyles, meta, rng);
   const attrs = generateRecruitAttrs(philosophy, rng);
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
 
-  const prefixes = [
-    'IRON',
-    'BLOOD',
-    'STORM',
-    'DARK',
-    'SWIFT',
-    'STONE',
-    'FLAME',
-    'FROST',
-    'SHADOW',
-    'STEEL',
-  ];
-  const suffixes = [
-    'FANG',
-    'BLADE',
-    'HEART',
-    'CLAW',
-    'MANE',
-    'STRIKE',
-    'BORN',
-    'FURY',
-    'WARD',
-    'JAW',
-  ];
-  const name = `${rng.pick(prefixes)}${rng.pick(suffixes)}`;
+  // Generate archetype-based traits and name (parity with player recruits)
+  const archetype = STYLE_ARCHETYPE[style];
+  const traits = generateTraits(rng, archetype);
+
+  // Apply personality attrBonus from traits at recruitment time
+  for (const tid of traits) {
+    const traitData = TRAITS[tid];
+    if (traitData?.effect.attrBonus) {
+      for (const [key, bonus] of Object.entries(traitData.effect.attrBonus)) {
+        attrs[key as keyof typeof attrs] += bonus as number;
+      }
+    }
+  }
+
+  // Recompute stats after trait attribute bonuses
+  const { baseSkills: finalBaseSkills, derivedStats: finalDerivedStats } = computeWarriorStats(attrs, style);
+
+  // Use archetype-based naming like player recruits
+  const namePool = [...ARCHETYPE_NAMES[archetype], ...ARCHETYPE_NAMES.tank];
+  const name = rng.pick(namePool);
+
+  // Generate origin and lore (parity with player recruits)
+  const origin = generateOrigin(rng);
+  const lore = generateLore(name, rng);
 
   return {
     id: rng.uuid('warrior') as import('@/types/shared.types').WarriorId,
     name,
     style,
     attributes: attrs,
-    baseSkills,
+    baseSkills: finalBaseSkills,
     luckfactor: rollLuckfactor(rng),
-    derivedStats,
+    derivedStats: finalDerivedStats,
     fame: 0,
     popularity: 0,
     titles: [],
@@ -231,7 +233,9 @@ function generateAIRecruit(
     status: 'Active',
     age: 17 + Math.floor(rng.next() * 5),
     stableId: rival.id,
-    traits: [],
+    traits,
+    origin,
+    lore,
   };
 }
 

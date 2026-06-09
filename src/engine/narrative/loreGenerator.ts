@@ -25,13 +25,22 @@ const ORIGINS = [
   'The child of a fallen knight, found wandering the high mountain passes',
   'A stowaway from the distant Southern Isles, discovered in a spice crate',
   'Born during a solar eclipse, considered an omen of blood and iron',
-  'Survived the burning of the Great Forest by hiding in a hollow log',
   'A street urchin who won a bet with an arena recruiter',
   'Found under the floorboards of a tailor shop after a city riot',
   'The only survivor of a mountain pass avalanche',
   'Raised by a retired trainer in a remote fishing village',
   'Found adrift on a raft in the middle of the Great Sea',
   'Discovered in the heart of a hedge maze, silent and watchful',
+  'Whispers of madness from the Asylum for Foundling Wretches',
+  'Sold by starving parents to the Salt Syndicate at age four',
+  'Survived the Bone Orchard plague pits by eating the dead',
+  'Born in a fighting pit, the afterbirth washed into the sand',
+  'Discovered chained in a debtor\'s basement, fed through a grate',
+  'Only survivor of the orphanage fire that claimed thirty souls',
+  'Raised by the Silent Sisters in their subterranean hospice',
+  'Found wandering the corpse-fields after the Battle of Hollow Hill',
+  'Survived the sinking of the prison hulk "Black Sepulchre"',
+  'Left as an infant in a weapons crate outside the barracks',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -51,6 +60,11 @@ const CHILDHOOD_TRAITS = [
   'was the only one brave enough to explore the haunted ruins',
   'taught themselves to fight by imitating the arena trainees',
   'became a local legend for never backing down from a challenge',
+  'would smile while bleeding, as if pain meant nothing',
+  'organized the other orphans into a protection racket',
+  'could identify every weapon in the trainer\'s rack by sound alone',
+  'kept a tally of scars as if they were coins in a purse',
+  'never spoke, but communicated threats with perfect clarity',
 ];
 
 const DEFINING_MOMENTS = [
@@ -66,6 +80,11 @@ const DEFINING_MOMENTS = [
   'looking for the one fight that will finally set them free',
   'with a spirit that refuses to be broken by the grinding poverty of the pits',
   'now standing at the threshold of a legacy they are eager to claim',
+  'until the day they killed their first man in the pit at age twelve',
+  'now seeking the only family that ever mattered—the crowd\'s roar',
+  'carrying the secrets of the dead like armor beneath the skin',
+  'driven by a promise made to someone who didn\'t survive',
+  'standing on the threshold where orphan ends and legend begins',
 ]; /**
     * Generate lore.
     * @param name - Name.

@@ -246,6 +246,140 @@ export const FLOODED_VAULT_ARENA: ArenaConfig = {
   startingZone: 'Center',
 };
 
+// ─── New Arena Variations ────────────────────────────────────────────────────
+
+// Outdoor, uneven, ruins — ancient arena with treacherous footing
+export const SUNDERED_COLISEUM: ArenaConfig = {
+  id: 'sundered_coliseum',
+  name: 'The Sundered Coliseum',
+  tags: ['outdoor', 'uneven', 'ruins'],
+  tier: 2,
+  size: 'standard',
+  description:
+    'Ancient arena crumbling into disrepair. Uneven footing from broken flagstones punishes fast movers and favors careful footwork.',
+  zoneDef: { Edge: -2, Corner: -4 },
+  surfaceMod: { initiativeMod: -1, enduranceMult: 1.05, riposteMod: -1 },
+  startingZone: 'Center',
+};
+
+// Indoor, water, cramped, uneven — flooded sacred site
+export const SUNKEN_TEMPLE: ArenaConfig = {
+  id: 'sunken_temple',
+  name: 'The Sunken Temple',
+  tags: ['indoor', 'water', 'cramped', 'uneven'],
+  tier: 3,
+  size: 'cramped',
+  description:
+    'Flooded sanctuary with submerged altars. Treacherous footing in sacred waters exhausts even hardy fighters.',
+  zoneDef: { Edge: -3, Corner: -5, Obstacle: -2 },
+  surfaceMod: { initiativeMod: -2, enduranceMult: 1.2, riposteMod: -2 },
+  startingZone: 'Center',
+};
+
+// Indoor, cramped, magical — crystal chamber with magical resonance
+export const CRYSTAL_CAVERN: ArenaConfig = {
+  id: 'crystal_cavern',
+  name: 'The Crystal Cavern',
+  tags: ['indoor', 'cramped', 'magical'],
+  tier: 3,
+  size: 'cramped',
+  description:
+    'Luminescent crystal chamber. Echoes amplify ripostes; tight quarters favor grapplers and short weapons.',
+  zoneDef: { Edge: -2, Corner: -3 },
+  surfaceMod: { initiativeMod: 0, enduranceMult: 0.95, riposteMod: 2 },
+  startingZone: 'Center',
+};
+
+// Outdoor, open, uneven, living — shifting forest floor
+export const WHISPERING_GROVE: ArenaConfig = {
+  id: 'whispering_grove',
+  name: 'The Whispering Grove',
+  tags: ['outdoor', 'open', 'uneven', 'living'],
+  tier: 2,
+  size: 'open',
+  description:
+    'Ancient grove with shifting root systems. Living forest watches and reacts to the battle, tangling the feet of lungers.',
+  zoneDef: { Edge: -2, Corner: -4 },
+  surfaceMod: { initiativeMod: -1, enduranceMult: 1.0, riposteMod: 1 },
+  startingZone: 'Center',
+};
+
+// Indoor, cramped, elevated, cursed — built over mass graves
+export const CHARNEL_PITS: ArenaConfig = {
+  id: 'charnel_pits',
+  name: 'The Charnel Pits',
+  tags: ['indoor', 'cramped', 'elevated', 'cursed'],
+  tier: 2,
+  size: 'cramped',
+  description:
+    'Arena built over mass graves. Blood stains the ancient stones; violence feels inevitable here, especially under a blood moon.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
+  startingZone: 'Center',
+};
+
+// Outdoor, uneven, living, cursed — carnivorous flora
+export const FLESH_GARDENS: ArenaConfig = {
+  id: 'flesh_gardens',
+  name: 'The Flesh Gardens',
+  tags: ['outdoor', 'uneven', 'living', 'cursed'],
+  tier: 3,
+  size: 'standard',
+  description:
+    'Twisted garden of carnivorous flora. The ground itself hungers; heavy-footed bashers crush thorns while nimble fighters risk entanglement.',
+  zoneDef: { Edge: -2, Corner: -4, Obstacle: -3 },
+  surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: 0 },
+  startingZone: 'Center',
+};
+
+// ─── Arena Lore ───────────────────────────────────────────────────────────────
+
+/**
+ * Arena lore entry type.
+ */
+export type ArenaLoreType = 'historical_battle' | 'famous_death' | 'architectural_quirk';
+
+/**
+ * Defines the shape of arena lore entry.
+ */
+export interface ArenaLoreEntry {
+  id: string;
+  arenaId: string;
+  type: ArenaLoreType;
+  title: string;
+  narrative: string;
+}
+
+/**
+ * Historical events, famous deaths, and architectural quirks for arenas.
+ */
+export const ARENA_LORE: ArenaLoreEntry[] = [
+  {
+    id: 'bloodsands_massacre_thirty',
+    arenaId: 'bloodsands_arena',
+    type: 'historical_battle',
+    title: 'The Massacre of the Thirty',
+    narrative:
+      'Three hundred warriors died in a single day when a riot broke out during a mass execution bout. The sand was so saturated with blood that arena workers had to replace it three times.',
+  },
+  {
+    id: 'underpit_whispering_stones',
+    arenaId: 'underpit_arena',
+    type: 'architectural_quirk',
+    title: 'The Whispering Stones',
+    narrative:
+      'Ancient limestone walls carry sound in impossible ways. Fighters report hearing confessions from warriors long dead echoing from the stones during quiet moments.',
+  },
+  {
+    id: 'flooded_drowning_seat',
+    arenaId: 'flooded_vault_arena',
+    type: 'famous_death',
+    title: 'The Drowning Seat',
+    narrative:
+      "A submerged stone chair where condemned prisoners were once chained to await the rising tide. Now it serves as the referee's station during bouts.",
+  },
+];
+
 // ─── Auto-register ────────────────────────────────────────────────────────────
 [
   STANDARD_ARENA,
@@ -257,4 +391,10 @@ export const FLOODED_VAULT_ARENA: ArenaConfig = {
   WALLED_COURT_ARENA,
   CLIFFTOP_ARENA,
   FLOODED_VAULT_ARENA,
+  SUNDERED_COLISEUM,
+  SUNKEN_TEMPLE,
+  CRYSTAL_CAVERN,
+  WHISPERING_GROVE,
+  CHARNEL_PITS,
+  FLESH_GARDENS,
 ].forEach(registerArena);

@@ -21,6 +21,7 @@ import {
 import { SHIELD_COVERAGE } from '@/data/equipment';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 import { CRIT_DAMAGE_MULT } from '@/constants/combat';
+import { getStyleWeatherModifier } from '@/constants/arena';
 
 /**
  * Execute hit.
@@ -103,7 +104,14 @@ export function executeHit(
 
   // Apply weather damage multiplier
   const weatherDamageMult = ctx?.weatherEffect?.damageMult ?? 1.0;
-  rawDamage = Math.round(rawDamage * weatherDamageMult);
+  
+  // Apply style-weather and arena-tag damage multipliers
+  const styleWeatherMod = ctx?.arenaConfig
+    ? getStyleWeatherModifier(attacker.style, ctx.weather, ctx.arenaConfig.tags)
+    : { damageMult: 1.0 };
+  
+  const totalDamageMult = weatherDamageMult * styleWeatherMod.damageMult;
+  rawDamage = Math.round(rawDamage * totalDamageMult);
 
   // Commit: +20% damage
   if (attacker.committed) {

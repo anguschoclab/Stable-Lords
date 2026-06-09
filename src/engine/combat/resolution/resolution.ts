@@ -45,6 +45,7 @@ import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias, type ResolvedTactics } from './tactics';
 import type { FighterState, ResolutionContext } from './types';
 import type { Warrior } from '@/types/warrior.types';
+import { getStyleWeatherModifier } from '@/constants/arena';
 
 // Re-export from split modules
 export type { FighterState, ResolutionContext } from './types';
@@ -100,6 +101,18 @@ function resolveInitiativePhase(
     ? getFavoriteRhythmBonus(fD as unknown as Warrior, OE_D, AL_D)
     : 0;
 
+  // Calculate style-weather modifiers
+  const styleWeatherModA = getStyleWeatherModifier(
+    fA.style,
+    ctx.weather,
+    ctx.arenaConfig.tags
+  );
+  const styleWeatherModD = getStyleWeatherModifier(
+    fD.style,
+    ctx.weather,
+    ctx.arenaConfig.tags
+  );
+
   const iniA =
     fA.skills.INI +
     alIniMod(AL_A) +
@@ -115,6 +128,7 @@ function resolveInitiativePhase(
     (ctx.trainerModsA.iniMod ?? 0) +
     ctx.weatherEffect.initiativeMod +
     ctx.surfaceMod.initiativeMod +
+    styleWeatherModA.initiativeMod +
     getWeaponInitiativeMod(fA.weaponId) +
     dynTraitsA.iniMod;
 
@@ -133,6 +147,7 @@ function resolveInitiativePhase(
     (ctx.trainerModsD.iniMod ?? 0) +
     ctx.weatherEffect.initiativeMod +
     ctx.surfaceMod.initiativeMod +
+    styleWeatherModD.initiativeMod +
     getWeaponInitiativeMod(fD.weaponId) +
     dynTraitsD.iniMod;
 

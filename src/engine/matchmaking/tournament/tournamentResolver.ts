@@ -10,6 +10,7 @@ import { findWarriorById } from './tournamentStateMutator';
 import { StateImpact, mergeImpacts, resolveImpacts } from '@/engine/impacts';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
+import { selectArenaForTournamentBout } from './tournamentArenaSelection';
 
 /**
  * Defines the shape of round resolution result.
@@ -74,6 +75,13 @@ export function resolveRound(
     const planA = wA.plan || getAIPlan(state, wA, wD.style, wD.stableId);
     const planD = wD.plan || getAIPlan(state, wD, wA.style, wA.stableId);
 
+    // Select arena dynamically for tournament bout
+    const bracketSize = tournament.bracket.length;
+    const tournamentArenaId = selectArenaForTournamentBout(
+      () => rngService.next(),
+      { bracketSize }
+    );
+
     const outcome = simulateFight(
       planA,
       planD,
@@ -82,7 +90,7 @@ export function resolveRound(
       Math.floor(rngService.next() * 1000000),
       state.trainers,
       'Clear',
-      'bloodsands_arena',
+      tournamentArenaId,
       state.crowdMood
     );
 

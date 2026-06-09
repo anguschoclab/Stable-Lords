@@ -479,7 +479,12 @@ export type ArenaTag =
   | 'water'
   | 'cramped'
   | 'open'
-  | 'premium'; /**
+  | 'premium'
+  | 'uneven'
+  | 'ruins'
+  | 'magical'
+  | 'living'
+  | 'cursed'; /**
                 * Defines the shape of surface mod.
                 */
 

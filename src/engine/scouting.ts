@@ -37,6 +37,8 @@ export interface ScoutReport {
   knownInjuries: string[];
   suspectedOE?: string; // "Low" | "Medium" | "High"
   suspectedAL?: string;
+  /** Traits suspected/discovered during scouting */
+  suspectedTraits?: string[];
   notes: string;
 }
 
@@ -157,6 +159,34 @@ function generateScoutReportNotes(warrior: Warrior, quality: ScoutQuality, recor
 }
 
 /**
+ * Discover traits based on scouting quality.
+ * Expert scouting has 60% chance to reveal 1 trait, 20% chance to reveal 2 traits.
+ */
+function discoverScoutTraits(warrior: Warrior, quality: ScoutQuality, rng: IRNGService): string[] {
+  if (quality !== 'Expert' || !warrior.traits || warrior.traits.length === 0) {
+    return [];
+  }
+
+  const suspectedTraits: string[] = [];
+  const traitRevealRoll = rng.next();
+
+  if (traitRevealRoll < 0.6) {
+    // Reveal 1 trait
+    suspectedTraits.push(rng.pick(warrior.traits));
+  } else if (traitRevealRoll < 0.8) {
+    // Reveal 2 traits (if warrior has 2+)
+    if (warrior.traits.length >= 2) {
+      const shuffled = [...warrior.traits].sort(() => 0.5 - rng.next());
+      suspectedTraits.push(...shuffled.slice(0, 2));
+    } else {
+      suspectedTraits.push(...warrior.traits);
+    }
+  }
+
+  return suspectedTraits;
+}
+
+/**
  * Generate insight tokens discovered during scouting.
  */
 function generateScoutInsights(
@@ -166,7 +196,8 @@ function generateScoutInsights(
   rng: IRNGService,
   styleName: string,
   suspectedOE?: string,
-  suspectedAL?: string
+  suspectedAL?: string,
+  suspectedTraits?: string[]
 ): InsightToken[] {
   const newInsights: InsightToken[] = [];
 
@@ -210,6 +241,20 @@ function generateScoutInsights(
     });
   }
 
+  // Expert scouting reveals Traits
+  if (quality === 'Expert' && suspectedTraits && suspectedTraits.length > 0) {
+    suspectedTraits.forEach((trait) => {
+      newInsights.push({
+        id: rng.uuid() as InsightId,
+        type: 'Trait',
+        warriorId: warrior.id,
+        warriorName: warrior.name,
+        detail: `Suspected trait: ${trait}`,
+        discoveredWeek: week,
+      });
+    });
+  }
+
   return newInsights;
 }
 
@@ -226,6 +271,7 @@ export function generateScoutReport(
   const record = `${warrior.career.wins}W-${warrior.career.losses}L`;
   const knownInjuries = discoverScoutInjuries(warrior, quality);
   const { suspectedOE, suspectedAL } = getSuspectedPlanTendencies(warrior, quality);
+  const suspectedTraits = discoverScoutTraits(warrior, quality, rng);
   const notes = generateScoutReportNotes(warrior, quality, record);
   const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
 
@@ -236,7 +282,8 @@ export function generateScoutReport(
     rng,
     styleName,
     suspectedOE,
-    suspectedAL
+    suspectedAL,
+    suspectedTraits
   );
 
   return {
@@ -251,6 +298,7 @@ export function generateScoutReport(
       knownInjuries,
       suspectedOE,
       suspectedAL,
+      suspectedTraits,
       notes,
     },
     newInsights,

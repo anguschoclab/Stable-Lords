@@ -11,10 +11,10 @@ interface WarriorCardProps {
   canSelect: boolean;
   onClick: () => void;
 } /**
-   * Render the WarriorCard component.
-   * @param - { warrior, is selected, can select, on click }.
-   * @returns The result.
-   */
+ * Render the WarriorCard component.
+ * @param - { warrior, is selected, can select, on click }.
+ * @returns The result.
+ */
 
 /**
  * Render the WarriorCard component.

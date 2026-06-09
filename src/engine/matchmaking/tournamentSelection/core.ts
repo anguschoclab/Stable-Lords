@@ -1,8 +1,8 @@
 import type { GameState, Season, TournamentEntry } from '@/types/state.types';
 import { SeededRNG } from '@/utils/random';
 import { committeeSelection, buildTournament } from './committee'; /**
-                                                                    * Tournament_tiers.
-                                                                    */
+ * Tournament_tiers.
+ */
 
 /**
  * Tournament_tiers.
@@ -13,13 +13,13 @@ export const TOURNAMENT_TIERS = [
   { id: 'Bronze', name: 'Steel Bronze Gauntlet', minRank: 129, maxRank: 192 },
   { id: 'Iron', name: 'Foundry Iron Trials', minRank: 193, maxRank: 256 },
 ]; /**
-    * Generate seasonal tiers.
-    * @param state - State.
-    * @param week - Week.
-    * @param season - Season.
-    * @param seed - Seed.
-    * @returns The result.
-    */
+ * Generate seasonal tiers.
+ * @param state - State.
+ * @param week - Week.
+ * @param season - Season.
+ * @param seed - Seed.
+ * @returns The result.
+ */
 
 /**
  * Generate seasonal tiers.

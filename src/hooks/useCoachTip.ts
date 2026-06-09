@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
 import type { GameState, Warrior } from '@/types/game'; /**
-                                                         * Defines the shape of coach tip.
-                                                         */
+ * Defines the shape of coach tip.
+ */
 
 /**
  * Defines the shape of coach tip.

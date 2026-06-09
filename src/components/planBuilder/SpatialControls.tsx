@@ -16,10 +16,10 @@ interface SpatialControlsProps {
   warrior?: Warrior;
   onPlanChange: (plan: FightPlan) => void;
 } /**
-   * Spatial controls.
-   * @param - { plan, warrior, on plan change }.
-   * @returns The result.
-   */
+ * Spatial controls.
+ * @param - { plan, warrior, on plan change }.
+ * @returns The result.
+ */
 
 /**
  * Spatial controls.

@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ScrollText, Swords } from 'lucide-react'; /**
-                                                    * View mode type.
-                                                    */
+ * View mode type.
+ */
 
 /**
  * View mode type.

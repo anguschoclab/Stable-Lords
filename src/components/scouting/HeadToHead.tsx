@@ -14,10 +14,10 @@ interface HeadToHeadProps {
   rosterA: Warrior[];
   rosterB: Warrior[];
 } /**
-   * Head to head.
-   * @param - { roster a, roster b }.
-   * @returns The result.
-   */
+ * Head to head.
+ * @param - { roster a, roster b }.
+ * @returns The result.
+ */
 
 /**
  * Head to head.

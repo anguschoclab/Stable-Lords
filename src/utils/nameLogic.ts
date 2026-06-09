@@ -7,11 +7,11 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 
 const HONORIFICS = ['II', 'III', 'IV', 'Jr.', 'the Younger', 'the Heir', 'V'];
 const PREFIXES = ['Legacy of', 'Blood of', 'Protege of', 'Shadow of']; /**
-                                                                        * Generate dynastic name.
-                                                                        * @param originalName - Original name.
-                                                                        * @param seed - Seed.
-                                                                        * @returns The result.
-                                                                        */
+ * Generate dynastic name.
+ * @param originalName - Original name.
+ * @param seed - Seed.
+ * @returns The result.
+ */
 
 /**
  * Generate dynastic name.

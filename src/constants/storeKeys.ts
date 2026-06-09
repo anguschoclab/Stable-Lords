@@ -9,8 +9,8 @@ export const STORE_KEYS = {
   AUDIO_MUTED: 'sl_muted',
   WINDOW_BOUNDS: 'windowBounds',
 } as const; /**
-             * Store key type.
-             */
+ * Store key type.
+ */
 
 /**
  * Store key type.

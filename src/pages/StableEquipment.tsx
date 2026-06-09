@@ -35,9 +35,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'; /**
-                                   * Stable equipment.
-                                   * @returns The result.
-                                   */
+ * Stable equipment.
+ * @returns The result.
+ */
 
 /**
  * Stable equipment.

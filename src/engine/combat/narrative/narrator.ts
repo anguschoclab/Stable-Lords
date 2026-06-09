@@ -22,8 +22,8 @@ import {
   narrateZoneShift,
 } from '../../narrativePBP';
 import { narrateKnockdown, narrateRecovery, getEpithet } from '../../narrative/combatNarrators'; /**
-                                                                                                  * Defines the shape of narration context.
-                                                                                                  */
+ * Defines the shape of narration context.
+ */
 
 /**
  * Defines the shape of narration context.
@@ -59,12 +59,12 @@ export interface NarrationContext {
   originA?: string;
   originD?: string;
 } /**
-   * Narrate events.
-   * @param events - Events.
-   * @param ctx - Ctx.
-   * @param minute - Minute.
-   * @returns The result.
-   */
+ * Narrate events.
+ * @param events - Events.
+ * @param ctx - Ctx.
+ * @param minute - Minute.
+ * @returns The result.
+ */
 
 /**
  * Narrate events.

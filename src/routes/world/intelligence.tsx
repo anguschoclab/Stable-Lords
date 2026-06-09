@@ -4,8 +4,8 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import Scouting from '@/pages/Scouting'; /**
-                                          * Route.
-                                          */
+ * Route.
+ */
 
 /**
  * Route.

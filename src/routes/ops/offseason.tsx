@@ -4,8 +4,8 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import Offseason from '@/pages/Offseason'; /**
-                                            * Route.
-                                            */
+ * Route.
+ */
 
 /**
  * Route.

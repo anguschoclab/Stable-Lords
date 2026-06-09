@@ -14,10 +14,10 @@ interface TrainerCardProps {
   owned: boolean;
   action?: ReactNode;
 } /**
-   * Trainer card.
-   * @param - { trainer, on fire, owned, action }.
-   * @returns The result.
-   */
+ * Trainer card.
+ * @param - { trainer, on fire, owned, action }.
+ * @returns The result.
+ */
 
 /**
  * Trainer card.

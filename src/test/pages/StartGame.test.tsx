@@ -49,17 +49,15 @@ describe('StartGame', () => {
 
     // Set up FileReader mock BEFORE render
     const mockFileReader = {
-       
       readAsText: vi.fn().mockImplementation(function (this: any, _file: Blob) {
         // Simulate successful file read
         if (this.onload) {
-           
           this.onload({ target: { result: '{"invalid": "json"}' } } as any);
         }
       }),
       onload: null,
     };
-     
+
     window.FileReader = vi.fn(() => mockFileReader) as any;
 
     render(<StartGame />);

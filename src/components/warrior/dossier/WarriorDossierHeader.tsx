@@ -12,10 +12,10 @@ interface WarriorDossierHeaderProps {
     compositeScore: number;
   };
 } /**
-   * Warrior dossier header.
-   * @param - { warrior, record, rankings }.
-   * @returns The result.
-   */
+ * Warrior dossier header.
+ * @param - { warrior, record, rankings }.
+ * @returns The result.
+ */
 
 /**
  * Warrior dossier header.

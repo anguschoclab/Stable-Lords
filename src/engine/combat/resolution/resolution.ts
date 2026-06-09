@@ -52,12 +52,12 @@ export { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 export { DECISION_HIT_MARGIN, getMatchupBonus } from '@/constants/combat';
 export { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 export { applySpecialtyMods } from './specialtyMods'; /**
-                                                       * Resolve exchange.
-                                                       * @param ctx - Ctx.
-                                                       * @param fA - F a.
-                                                       * @param fD - F d.
-                                                       * @returns The result.
-                                                       */
+ * Resolve exchange.
+ * @param ctx - Ctx.
+ * @param fA - F a.
+ * @param fD - F d.
+ * @returns The result.
+ */
 
 // ─── Phase Handlers ─────────────────────────────────────────────────────────
 

@@ -17,9 +17,9 @@ import {
   ArrowRight,
   History,
 } from 'lucide-react'; /**
-                        * Offseason.
-                        * @returns The result.
-                        */
+ * Offseason.
+ * @returns The result.
+ */
 
 /**
  * Offseason.

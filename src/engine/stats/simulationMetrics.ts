@@ -1,6 +1,6 @@
 import type { GameState } from '@/types/state.types'; /**
-                                                       * Defines the shape of sim pulse.
-                                                       */
+ * Defines the shape of sim pulse.
+ */
 
 /**
  * Defines the shape of sim pulse.

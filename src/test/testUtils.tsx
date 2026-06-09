@@ -4,11 +4,11 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { GameState } from '@/types/game';
 import '@/test/setup'; /**
-                        * Render with game state.
-                        * @param ui - Ui.
-                        * @param partialState - Partial state.
-                        * @returns The result.
-                        */
+ * Render with game state.
+ * @param ui - Ui.
+ * @param partialState - Partial state.
+ * @returns The result.
+ */
 
 // A helper to inject a mock state into the Zustand store before rendering
 /**

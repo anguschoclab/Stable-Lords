@@ -42,9 +42,9 @@ const WEATHER_STATS: Record<WeatherType, string> = {
   'Aether Storm': 'STAMINA CONSERVATION 20% // INITIATIVE +8 // RIPOSTE +3 // DAMAGE +30%',
   Mirage: 'INITIATIVE -5 // RIPOSTE -2 // DAMAGE -10%',
 }; /**
-    * Weather widget.
-    * @returns The result.
-    */
+ * Weather widget.
+ * @returns The result.
+ */
 export function WeatherWidget() {
   const state = useGameStore(
     useShallow((s) => ({

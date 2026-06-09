@@ -43,8 +43,8 @@ function buildProxy(): AsyncArchiveWorker {
   const worker = new Worker(new URL('./archiveWorker.ts', import.meta.url), { type: 'module' });
   return Comlink.wrap<ArchiveWorker>(worker) as unknown as AsyncArchiveWorker;
 } /**
-   * Archive worker proxy.
-   */
+ * Archive worker proxy.
+ */
 
 /**
  * Archive worker proxy.

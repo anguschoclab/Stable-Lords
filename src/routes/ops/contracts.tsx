@@ -4,8 +4,8 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import BookingOffice from '@/pages/BookingOffice'; /**
-                                                    * Route.
-                                                    */
+ * Route.
+ */
 
 /**
  * Route.

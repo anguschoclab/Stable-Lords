@@ -3,8 +3,8 @@
  * Single source of truth for damage mechanics used by simulate.ts.
  */
 import { KILL_WINDOW_ENDURANCE } from '@/constants/combat'; /**
-                                                             * Hit location type.
-                                                             */
+ * Hit location type.
+ */
 
 /**
  * Hit location type.
@@ -17,8 +17,8 @@ export type HitLocation =
   | 'left arm'
   | 'right leg'
   | 'left leg'; /**
-                 * Hit_locations.
-                 */
+ * Hit_locations.
+ */
 
 /**
  * Hit_locations.
@@ -111,12 +111,12 @@ const ARMOR_TYPE_MULT: Record<string, Partial<Record<DamageType, number>>> = {
   plate_mail: { slash: 0.85, bash: 0.85, pierce: 0.85 },
   plate_armor: { slash: 0.8, bash: 0.8, pierce: 0.8 },
 }; /**
-    * Apply armor type mod.
-    * @param damage - Damage.
-    * @param weaponId - Weapon id. (optional)
-    * @param armorId - Armor id. (optional)
-    * @returns The result.
-    */
+ * Apply armor type mod.
+ * @param damage - Damage.
+ * @param weaponId - Weapon id. (optional)
+ * @param armorId - Armor id. (optional)
+ * @returns The result.
+ */
 
 /**
  * Apply armor type mod.
@@ -132,10 +132,10 @@ export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: s
   const mult = ARMOR_TYPE_MULT[armorId]?.[dtype] ?? 1.0;
   return Math.round(damage * mult);
 } /**
-   * Protect covers.
-   * @param protect - Protect. (optional)
-   * @returns The result.
-   */
+ * Protect covers.
+ * @param protect - Protect. (optional)
+ * @returns The result.
+ */
 
 /**
  * Protect covers.
@@ -163,12 +163,12 @@ export function protectCovers(protect?: string): string[] {
 
   return [];
 } /**
-   * Roll hit location.
-   * @param rng - Rng.
-   * @param target - Target. (optional)
-   * @param protect - Protect. (optional)
-   * @returns The result.
-   */
+ * Roll hit location.
+ * @param rng - Rng.
+ * @param target - Target. (optional)
+ * @param protect - Protect. (optional)
+ * @returns The result.
+ */
 
 /**
  * Roll hit location.
@@ -199,12 +199,12 @@ export function rollHitLocation(rng: () => number, target?: string, protect?: st
   // Fallback to completely random
   return HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)]!;
 } /**
-   * Apply protect mod.
-   * @param damage - Damage.
-   * @param location - Location.
-   * @param protect - Protect. (optional)
-   * @returns The result.
-   */
+ * Apply protect mod.
+ * @param damage - Damage.
+ * @param location - Location.
+ * @param protect - Protect. (optional)
+ * @returns The result.
+ */
 
 /**
  * Apply protect mod.
@@ -238,12 +238,12 @@ const SHIELD_ZONE_MITIGATION: Record<'LOW' | 'MEDIUM' | 'HIGH', number> = {
   MEDIUM: 0.88, // 12% reduction
   HIGH: 0.85, // 15% reduction
 }; /**
-    * Apply shield zone mod.
-    * @param damage - Damage.
-    * @param location - Location.
-    * @param coverage - Coverage. (optional)
-    * @returns The result.
-    */
+ * Apply shield zone mod.
+ * @param damage - Damage.
+ * @param location - Location.
+ * @param coverage - Coverage. (optional)
+ * @returns The result.
+ */
 
 /**
  * Apply shield zone mod.
@@ -262,12 +262,12 @@ export function applyShieldZoneMod(
   if (!zones.includes(location)) return damage;
   return Math.floor(damage * SHIELD_ZONE_MITIGATION[coverage]);
 } /**
-   * Compute hit damage.
-   * @param rng - Rng.
-   * @param damageClass - Damage class.
-   * @param location - Location.
-   * @returns The result.
-   */
+ * Compute hit damage.
+ * @param rng - Rng.
+ * @param damageClass - Damage class.
+ * @param location - Location.
+ * @returns The result.
+ */
 
 /**
  * Compute hit damage.

@@ -26,8 +26,8 @@ const TOTAL_ATTR_CAP = 80;
 
 /** Chance to reveal an attribute's potential after each fight */
 const POTENTIAL_REVEAL_CHANCE = 0.15; /**
-                                       * Defines the shape of xp gain.
-                                       */
+ * Defines the shape of xp gain.
+ */
 
 /**
  * Defines the shape of xp gain.

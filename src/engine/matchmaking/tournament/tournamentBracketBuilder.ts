@@ -1,8 +1,8 @@
 import type { Warrior, TournamentEntry, TournamentBout, Season } from '@/types/state.types';
 import type { TournamentId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
-                                                                   * Defines the shape of tournament bracket config.
-                                                                   */
+ * Defines the shape of tournament bracket config.
+ */
 
 /**
  * Defines the shape of tournament bracket config.
@@ -15,8 +15,8 @@ export interface TournamentBracketConfig {
   season: Season;
   rng: IRNGService;
 } /**
-   * Defines the shape of bracket match.
-   */
+ * Defines the shape of bracket match.
+ */
 
 /**
  * Defines the shape of bracket match.

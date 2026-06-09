@@ -15,8 +15,8 @@ import { createEconomySlice, EconomySlice } from './slices/economySlice';
 import { createRosterSlice, RosterSlice } from './slices/rosterSlice';
 import { createWorldSlice, WorldSlice } from './slices/worldSlice';
 import { createTournamentSlice, TournamentSlice } from './slices/tournamentSlice'; /**
-                                                                                    * Defines the shape of game store state.
-                                                                                    */
+ * Defines the shape of game store state.
+ */
 
 /**
  * Defines the shape of game store state.
@@ -30,8 +30,8 @@ export interface GameStoreState {
   isInitialized: boolean;
   eventLogOpen: boolean;
 } /**
-   * Defines the shape of game store actions.
-   */
+ * Defines the shape of game store actions.
+ */
 
 /**
  * Defines the shape of game store actions.
@@ -59,8 +59,8 @@ export interface GameStoreActions {
   saveCurrentState: () => Promise<void>;
   setState: (fn: (state: GameStore) => void) => void;
 } /**
-   * Game store type.
-   */
+ * Game store type.
+ */
 
 /**
  * Game store type.
@@ -71,8 +71,8 @@ export type GameStore = GameStoreState &
   RosterSlice &
   WorldSlice &
   TournamentSlice; /**
-                    * Use game store.
-                    */
+ * Use game store.
+ */
 
 /**
  * Use game store.
@@ -320,54 +320,54 @@ export const useGameStore = create<GameStore>()(
 
 /** --- Fine-Grained Selectors (v4.1: Source from Slice only) --- */
 export const useWorldState = () => useGameStore(reconstructGameState); /**
-                                                                        * React hook: use player.
-                                                                        * @returns The result.
-                                                                        */
+ * React hook: use player.
+ * @returns The result.
+ */
 
 /**
  * React hook: use player.
  * @returns The result.
  */
 export const usePlayer = () => useGameStore((s) => s.player); /**
-                                                               * React hook: use roster.
-                                                               * @returns The result.
-                                                               */
+ * React hook: use roster.
+ * @returns The result.
+ */
 
 /**
  * React hook: use roster.
  * @returns The result.
  */
 export const useRoster = () => useGameStore((s) => s.roster); /**
-                                                               * React hook: use rivals.
-                                                               * @returns The result.
-                                                               */
+ * React hook: use rivals.
+ * @returns The result.
+ */
 
 /**
  * React hook: use rivals.
  * @returns The result.
  */
 export const useRivals = () => useGameStore((s) => s.rivals); /**
-                                                               * React hook: use treasury.
-                                                               * @returns The result.
-                                                               */
+ * React hook: use treasury.
+ * @returns The result.
+ */
 
 /**
  * React hook: use treasury.
  * @returns The result.
  */
 export const useTreasury = () => useGameStore((s) => s.treasury); /**
-                                                                   * React hook: use week.
-                                                                   * @returns The result.
-                                                                   */
+ * React hook: use week.
+ * @returns The result.
+ */
 
 /**
  * React hook: use week.
  * @returns The result.
  */
 export const useWeek = () => useGameStore((s) => s.week); /**
-                                                           * React hook: use is simulating.
-                                                           * @returns The result.
-                                                           */
+ * React hook: use is simulating.
+ * @returns The result.
+ */
 
 /**
  * React hook: use is simulating.
@@ -382,9 +382,9 @@ interface StyleStatsRow {
   losses: number;
   winRate: number;
 } /**
-   * React hook: use style stats.
-   * @returns The result.
-   */
+ * React hook: use style stats.
+ * @returns The result.
+ */
 
 /**
  * React hook: use style stats.

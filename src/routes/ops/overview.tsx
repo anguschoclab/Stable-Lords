@@ -4,8 +4,8 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import StableHall from '@/pages/StableHall'; /**
-                                              * Route.
-                                              */
+ * Route.
+ */
 
 /**
  * Route.

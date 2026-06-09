@@ -17,9 +17,9 @@ import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing'; /**
-                                                              * Scouting.
-                                                              * @returns The result.
-                                                              */
+ * Scouting.
+ * @returns The result.
+ */
 
 /**
  * Scouting.

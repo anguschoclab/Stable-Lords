@@ -86,8 +86,8 @@ export const OWNER_FIRST = [
   'Thane',
   'Kaelar',
 ]; /**
-    * Owner_last.
-    */
+ * Owner_last.
+ */
 
 /**
  * Owner_last.

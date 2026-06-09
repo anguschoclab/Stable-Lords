@@ -8,10 +8,10 @@ import { StateImpact } from '@/engine/impacts';
  * Handles seasonal transitions and weather changes.
  */
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter']; /**
-                                                                   * Compute next season.
-                                                                   * @param newWeek - New week.
-                                                                   * @returns The result.
-                                                                   */
+ * Compute next season.
+ * @param newWeek - New week.
+ * @returns The result.
+ */
 
 /**
  * Compute next season.
@@ -21,11 +21,11 @@ const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter']; /**
 export function computeNextSeason(newWeek: number): Season {
   return SEASONS[Math.floor((newWeek - 1) / 13) % 4]!;
 } /**
-   * Roll weather.
-   * @param rng - Rng.
-   * @param season - Season.
-   * @returns The result.
-   */
+ * Roll weather.
+ * @param rng - Rng.
+ * @param season - Season.
+ * @returns The result.
+ */
 
 /**
  * Roll weather.
@@ -48,7 +48,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
     if (roll < 0.81) return 'Sandstorm';
     if (roll < 0.84) return 'Tornado';
     if (roll < 0.87) return 'Ashfall';
-    if (roll < 0.90) return 'Locust Swarm';
+    if (roll < 0.9) return 'Locust Swarm';
     if (roll < 0.93) return 'Gale';
     if (roll < 0.96) return 'Solar Flare';
     if (roll < 0.985) return 'Blood Moon';
@@ -61,7 +61,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
     if (roll < 0.25) return 'Clear';
     if (roll < 0.5) return 'Overcast';
     if (roll < 0.65) return 'Blizzard';
-    if (roll < 0.70) return 'Hailstorm';
+    if (roll < 0.7) return 'Hailstorm';
     if (roll < 0.78) return 'Rainy';
     if (roll < 0.86) return 'Dense Fog';
     if (roll < 0.92) return 'Gale';
@@ -81,7 +81,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.65) return 'Mist';
   if (roll < 0.75) return 'Breezy';
   if (roll < 0.78) return 'Chaotic Winds';
-  if (roll < 0.80) return 'Dense Fog';
+  if (roll < 0.8) return 'Dense Fog';
   if (roll < 0.83) return 'Cursed Miasma';
   if (roll < 0.88) return 'Thunderstorm';
   if (roll < 0.93) return 'Acid Rain';

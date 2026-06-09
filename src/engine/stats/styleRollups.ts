@@ -177,8 +177,8 @@ function saveTour(m: Record<string, Record<string, RollingBucket>>) {
     }
   }
 } /**
-   * Style record type.
-   */
+ * Style record type.
+ */
 
 // ── Public types ──────────────────────────────────────────────────────────
 
@@ -193,8 +193,8 @@ export type StyleRecord = {
   P: number;
   fights: number;
 }; /**
-    * Style rollups.
-    */
+ * Style rollups.
+ */
 
 // ── Combined API ──────────────────────────────────────────────────────────
 

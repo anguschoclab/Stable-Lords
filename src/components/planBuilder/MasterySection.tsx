@@ -7,6 +7,9 @@ interface MasterySectionProps {
   warrior?: Warrior;
 }
 
+/**
+ *
+ */
 export default function MasterySection({ warrior }: MasterySectionProps) {
   const totalFights = (warrior?.career?.wins || 0) + (warrior?.career?.losses || 0);
   const mastery = getMastery(totalFights);

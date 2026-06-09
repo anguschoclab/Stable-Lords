@@ -1288,4 +1288,7 @@ export const SaveSlotMetaSchema = z.object({
  * Export type for inferred GameState type
  */
 export type ValidatedGameState = z.infer<typeof GameStateSchema>;
+/**
+ *
+ */
 export type ValidatedSaveSlotMeta = z.infer<typeof SaveSlotMetaSchema>;

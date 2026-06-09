@@ -6,6 +6,9 @@ interface ConditionLabelInputProps {
   onChange: (label: string | undefined) => void;
 }
 
+/**
+ *
+ */
 export function ConditionLabelInput({ cond, idx, onChange }: ConditionLabelInputProps) {
   return (
     <div className="space-y-1.5">

@@ -9,8 +9,8 @@ interface SavedGamesSectionProps {
   onDelete: (slot: SaveSlotMeta) => void;
   formatDate: (iso: string) => string;
 } /**
-  * Saved games section.
-  * @param  - {
+   * Saved games section.
+   * @param  - {
   slots,
   max save slots,
   on load,
@@ -18,8 +18,8 @@ interface SavedGamesSectionProps {
   on delete,
   format date,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Saved games section.

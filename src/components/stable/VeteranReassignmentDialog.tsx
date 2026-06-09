@@ -15,6 +15,9 @@ interface VeteranReassignmentDialogProps {
   onConvert: (warriorId: string) => void;
 }
 
+/**
+ *
+ */
 export function VeteranReassignmentDialog({
   open,
   onOpenChange,

@@ -12,15 +12,15 @@ interface TournamentBracketProps {
   expandedBout: string | null;
   onToggleExpand: (key: string | null) => void;
 } /**
-  * Tournament bracket.
-  * @param  - {
+   * Tournament bracket.
+   * @param  - {
   bouts,
   arena history,
   expanded bout,
   on toggle expand,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Tournament bracket.
@@ -105,14 +105,14 @@ interface ChampionDisplayProps {
   championId?: string;
   tournamentName: string;
 } /**
-  * Champion display.
-  * @param  - {
+   * Champion display.
+   * @param  - {
   champion name,
   champion id,
   tournament name,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Champion display.
@@ -167,10 +167,10 @@ interface BronzeHighlightProps {
   thirdPlaceName: string;
   thirdPlaceId?: string;
 } /**
- * Bronze highlight.
- * @param - { third place name, third place id }.
- * @returns The result.
- */
+   * Bronze highlight.
+   * @param - { third place name, third place id }.
+   * @returns The result.
+   */
 
 /**
  * Bronze highlight.
@@ -212,15 +212,15 @@ interface TournamentProgressProps {
   completedMatches: number;
   totalMatches: number;
 } /**
-  * Tournament progress.
-  * @param  - {
+   * Tournament progress.
+   * @param  - {
   current round,
   total rounds,
   completed matches,
   total matches,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Tournament progress.

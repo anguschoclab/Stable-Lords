@@ -8,6 +8,9 @@ interface RivalryCardProps {
   rosterNames: Set<string>;
 }
 
+/**
+ *
+ */
 export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
   const r = rivalry;
 

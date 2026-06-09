@@ -4,6 +4,9 @@ import { isActive } from '@/engine/warriorStatus';
 import type { CareerRecord, AttributePotential } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
 
+/**
+ *
+ */
 export interface ActiveRosterItem {
   id: string;
   name: string;
@@ -17,6 +20,9 @@ export interface ActiveRosterItem {
   flair?: any[];
 }
 
+/**
+ *
+ */
 export function useActiveRoster(): ActiveRosterItem[] {
   return useGameStore(
     useShallow((s) => {

@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export type EventType =
   | 'fight'
   | 'kill'
@@ -11,6 +14,9 @@ export type EventType =
   | 'event'
   | 'recovery';
 
+/**
+ *
+ */
 export interface GameEvent {
   id: string;
   week: number;

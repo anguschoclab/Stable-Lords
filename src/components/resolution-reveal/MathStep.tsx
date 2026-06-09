@@ -9,10 +9,10 @@ import type { GameState } from '@/types/state.types';
 interface MathStepProps {
   lastSimulationReport: GameState['lastSimulationReport'];
 } /**
- * Math step.
- * @param - { last simulation report }.
- * @returns The result.
- */
+   * Math step.
+   * @param - { last simulation report }.
+   * @returns The result.
+   */
 
 /**
  * Math step.

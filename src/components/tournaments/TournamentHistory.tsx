@@ -9,15 +9,15 @@ interface TournamentHistoryProps {
   seasonNames: Record<string, string>;
   currentSeason: string;
 } /**
-  * Tournament history.
-  * @param  - {
+   * Tournament history.
+   * @param  - {
   past tournaments,
   season icons,
   season names,
   current season,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Tournament history.

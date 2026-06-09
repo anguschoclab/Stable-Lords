@@ -11,6 +11,9 @@ interface StableRankingsProps {
   onSort: (field: string) => void;
 }
 
+/**
+ *
+ */
 export function StableRankings({ rows, sort, onSort }: StableRankingsProps) {
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">

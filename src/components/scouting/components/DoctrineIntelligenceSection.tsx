@@ -14,6 +14,9 @@ interface DoctrineIntelligenceSectionProps {
   grudge: { intensity: number; reason: string } | null;
 }
 
+/**
+ *
+ */
 export function DoctrineIntelligenceSection({
   rivalA,
   rivalB,

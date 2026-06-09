@@ -17,10 +17,10 @@ const CROWD_SOUNDS: Record<CrowdState, string | null> = {
   silence: null,
   chant: 'crowd-blood-moon',
 }; /**
- * Crowd audio.
- * @param - { state, volume, enabled }.
- * @returns The result.
- */
+    * Crowd audio.
+    * @param - { state, volume, enabled }.
+    * @returns The result.
+    */
 
 /**
  * Crowd audio.

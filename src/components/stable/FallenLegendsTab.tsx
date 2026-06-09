@@ -11,6 +11,9 @@ interface FallenLegendsTabProps {
   retired: Warrior[];
 }
 
+/**
+ *
+ */
 export function FallenLegendsTab({ graveyard, retired }: FallenLegendsTabProps) {
   const fallen = [
     ...(graveyard ?? []).map((w) => ({

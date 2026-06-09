@@ -14,6 +14,9 @@ interface BoutRowProps {
   onToggleExpand: (id: string | null) => void;
 }
 
+/**
+ *
+ */
 export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
   const isWinnerA = res.outcome.winner === 'A';
   const isWinnerD = res.outcome.winner === 'D';

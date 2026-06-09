@@ -9,6 +9,9 @@ interface EventListItemProps {
   onClick: () => void;
 }
 
+/**
+ *
+ */
 export function EventListItem({ event, allWarriorNames, onClick }: EventListItemProps) {
   const Icon = event.icon;
 

@@ -46,6 +46,9 @@ function routeUpdate(
   rivalsUpdates.set(rival.id, { ...existingRival, roster: updatedRoster });
 }
 
+/**
+ *
+ */
 export function handleProgressions(
   s: GameState,
   wA: Warrior,

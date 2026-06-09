@@ -5,6 +5,9 @@ import { cn } from '@/lib/utils';
 import { useAtRiskWarriors } from '@/hooks/useAtRiskWarriors';
 import { WarriorAuditCard } from './WarriorAuditCard';
 
+/**
+ *
+ */
 export function MedicalAuditWidget() {
   const atRisk = useAtRiskWarriors();
 

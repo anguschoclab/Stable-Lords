@@ -13,6 +13,9 @@ import {
 import { RivalryCard } from './RivalryCard';
 import { MostWantedBanner } from './MostWantedBanner';
 
+/**
+ *
+ */
 export function RivalryWidget() {
   const state = useWorldState();
   const rosterIds = usePlayerRosterIds(state as GameState);

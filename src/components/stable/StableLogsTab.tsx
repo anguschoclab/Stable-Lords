@@ -17,6 +17,9 @@ interface StableLogsTabProps {
   stableWarriorIds: Set<string>;
 }
 
+/**
+ *
+ */
 export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabProps) {
   return (
     <Surface variant="glass" className="p-0 border-white/5 overflow-hidden">

@@ -10,6 +10,9 @@ import type { FightSummary } from '@/types/game';
 import { BoutTableRow } from './BoutTableRow';
 import { EmptyBoutsState } from './EmptyBoutsState';
 
+/**
+ *
+ */
 export function RecentBoutsWidget() {
   const state = useGameStore(
     useShallow((s) => ({

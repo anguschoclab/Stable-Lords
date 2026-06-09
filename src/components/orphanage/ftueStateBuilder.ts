@@ -11,6 +11,9 @@ import type { GameState, Promoter } from '@/types/state.types';
 import { defaultPlanForWarrior } from '@/engine';
 import { TRAIT_DATA } from '@/data/orphanPool';
 
+/**
+ *
+ */
 export function buildFTUEInitialState(
   baseState: GameState,
   selectedWarriors: any[],

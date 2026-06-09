@@ -13,8 +13,8 @@ import type { GameStore } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { type WarriorId, type InsightId } from '@/types/shared.types'; /**
- * Defines the shape of roster slice.
- */
+                                                                        * Defines the shape of roster slice.
+                                                                        */
 
 /**
  * Defines the shape of roster slice.
@@ -49,11 +49,11 @@ export interface RosterSlice {
   renameWarrior: (warriorId: WarriorId, newName: string) => void;
   acknowledgeDeath: (warriorId: WarriorId) => void;
 } /**
- * Create roster slice.
- * @param set - Set.
- * @param get - Get.
- * @returns The result.
- */
+   * Create roster slice.
+   * @param set - Set.
+   * @param get - Get.
+   * @returns The result.
+   */
 
 /**
  * Create roster slice.

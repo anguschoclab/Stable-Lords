@@ -8,6 +8,9 @@ interface AttributeComparisonProps {
   warriorB: Warrior;
 }
 
+/**
+ *
+ */
 export function AttributeComparison({ warriorA, warriorB }: AttributeComparisonProps) {
   return (
     <Surface variant="glass" className="border-border/40 space-y-6">

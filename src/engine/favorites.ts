@@ -80,6 +80,9 @@ const CHANCE_REVEAL_BASE = 0.02; // 2% "Lucky Epiphany"
 const CHANCE_REVEAL_SYMMETRY = 0.25; // 25% if using correct gear
 const CHANCE_HINT = 0.1; // 10% chance to learn a hint regardless
 
+/**
+ *
+ */
 export interface DiscoveryResult {
   updated: boolean;
   hints: string[];
@@ -87,6 +90,9 @@ export interface DiscoveryResult {
   rhythmRevealed: boolean;
 }
 
+/**
+ *
+ */
 export function checkDiscovery(
   warrior: Warrior,
   rng: IRNGService,

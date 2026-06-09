@@ -6,6 +6,9 @@ interface BriefingTabProps {
   reports: NewsletterItem[];
 }
 
+/**
+ *
+ */
 export function BriefingTab({ reports }: BriefingTabProps) {
   return (
     <ScrollArea className="h-72 px-6">

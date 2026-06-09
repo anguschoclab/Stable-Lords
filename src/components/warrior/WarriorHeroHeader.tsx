@@ -28,8 +28,8 @@ interface WarriorHeroHeaderProps {
   isPlayerOwned?: boolean;
   insightTokens?: InsightToken[];
 } /**
-  * Render the WarriorHeroHeader component.
-  * @param  - {
+   * Render the WarriorHeroHeader component.
+   * @param  - {
   warrior,
   record,
   streak label,
@@ -38,8 +38,8 @@ interface WarriorHeroHeaderProps {
   is player owned,
   insight tokens,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Render the WarriorHeroHeader component.

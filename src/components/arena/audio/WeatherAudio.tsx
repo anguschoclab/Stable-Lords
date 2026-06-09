@@ -45,10 +45,10 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Aether Storm': 'ambience-wind-gale',
   Mirage: 'ambience-wind-gale',
 }; /**
- * Weather audio.
- * @param - { weather, volume, enabled, arena id }.
- * @returns The result.
- */
+    * Weather audio.
+    * @param - { weather, volume, enabled, arena id }.
+    * @returns The result.
+    */
 export default function WeatherAudio({ weather, volume, enabled, arenaId }: WeatherAudioProps) {
   const currentWeatherRef = useRef<WeatherType | null>(null);
   const isIndoor = isIndoorArena(arenaId);

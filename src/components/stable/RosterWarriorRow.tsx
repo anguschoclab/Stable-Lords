@@ -26,6 +26,9 @@ interface RosterWarriorRowProps {
   onClick: () => void;
 }
 
+/**
+ *
+ */
 export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorRowProps) {
   const fights = warrior.career.wins + warrior.career.losses;
   const winRate = fights > 0 ? Math.round((warrior.career.wins / fights) * 100) : 0;

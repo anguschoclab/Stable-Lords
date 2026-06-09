@@ -1,6 +1,9 @@
 import { useState, useMemo } from 'react';
 import type { WarriorRow } from '@/types/leaderboard';
 
+/**
+ *
+ */
 export function useWarriorLeaderboard(rows: WarriorRow[]) {
   const [classFilter, setClassFilter] = useState<string | null>(null);
   const [quickFilter, setQuickFilter] = useState<'kills' | 'wins' | 'winRate' | null>(null);

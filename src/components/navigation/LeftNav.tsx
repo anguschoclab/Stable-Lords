@@ -13,6 +13,9 @@ interface LeftNavProps {
   className?: string;
 }
 
+/**
+ *
+ */
 export function LeftNav({ className }: LeftNavProps) {
   const location = useLocation();
   const currentPath = location.pathname;

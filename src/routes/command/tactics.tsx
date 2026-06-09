@@ -4,8 +4,8 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import TrainingPlanner from '@/pages/TrainingPlanner'; /**
- * Route.
- */
+                                                        * Route.
+                                                        */
 
 /**
  * Route.

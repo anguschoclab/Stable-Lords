@@ -17,6 +17,9 @@ interface WeaponAffinitySectionProps {
   >;
 }
 
+/**
+ *
+ */
 export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectionProps) {
   const {
     handleInsight,

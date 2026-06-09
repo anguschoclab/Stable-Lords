@@ -16,8 +16,8 @@ interface ScoutIntelTabProps {
   treasury: number;
   onScout: (quality: ScoutQuality) => void;
 } /**
-  * Scout intel tab.
-  * @param  - {
+   * Scout intel tab.
+   * @param  - {
   rivals,
   reports,
   selected rival id,
@@ -27,8 +27,8 @@ interface ScoutIntelTabProps {
   treasury,
   on scout,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Scout intel tab.

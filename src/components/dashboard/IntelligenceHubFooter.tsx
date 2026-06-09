@@ -1,6 +1,9 @@
 import { ChevronRight, Target } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
+/**
+ *
+ */
 export function IntelligenceHubFooter() {
   return (
     <div className="p-4 border-t border-white/5 bg-black/40 flex items-center justify-between relative z-10 mt-auto gap-4">

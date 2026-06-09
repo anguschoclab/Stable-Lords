@@ -1,6 +1,9 @@
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 
+/**
+ *
+ */
 export interface AtRiskWarrior {
   id: string;
   name: string;
@@ -8,6 +11,9 @@ export interface AtRiskWarrior {
   injuries: { name: string }[] | string[];
 }
 
+/**
+ *
+ */
 export function useAtRiskWarriors() {
   return useGameStore(
     useShallow((s) => {

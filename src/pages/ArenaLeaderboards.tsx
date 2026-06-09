@@ -143,6 +143,9 @@ function ArenaTable({
   );
 }
 
+/**
+ *
+ */
 export default function ArenaLeaderboards() {
   const arenas = useMemo(() => getAllArenas(), []);
   const [selectedArenaId, setSelectedArenaId] = useState<string>(arenas[0]?.id ?? '');

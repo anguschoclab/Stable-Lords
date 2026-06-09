@@ -24,6 +24,9 @@ import {
   groupEventsByWeek,
 } from './eventLog/index';
 import type { GameEvent } from '@/types/eventLog';
+/**
+ *
+ */
 export default function EventLog() {
   const state = useGameStore(
     useShallow((s) => ({

@@ -12,6 +12,9 @@ interface StylePassivesProps {
   warrior?: Warrior;
 }
 
+/**
+ *
+ */
 export default function StylePassives({ plan, warrior }: StylePassivesProps) {
   const [showStylePassives, setShowStylePassives] = useState(false);
 

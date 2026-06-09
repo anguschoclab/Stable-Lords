@@ -11,6 +11,9 @@ import type {
 } from '@/types/state.types';
 import type { GameStore } from '@/state/useGameStore';
 
+/**
+ *
+ */
 export function processFightEvents(arenaHistory: FightSummary[]): GameEvent[] {
   return arenaHistory.map((f) => {
     const isKill = f.by === 'Kill';
@@ -35,6 +38,9 @@ export function processFightEvents(arenaHistory: FightSummary[]): GameEvent[] {
   });
 }
 
+/**
+ *
+ */
 export function processDeathEvents(graveyard: Warrior[]): GameEvent[] {
   return graveyard.map((w) => {
     const names = [w.name];
@@ -53,6 +59,9 @@ export function processDeathEvents(graveyard: Warrior[]): GameEvent[] {
   });
 }
 
+/**
+ *
+ */
 export function processRetirementEvents(retired: Warrior[]): GameEvent[] {
   return retired.map(
     (w) =>
@@ -70,6 +79,9 @@ export function processRetirementEvents(retired: Warrior[]): GameEvent[] {
   );
 }
 
+/**
+ *
+ */
 export function processInjuryEvents(roster: Warrior[], week: number): GameEvent[] {
   const events: GameEvent[] = [];
   roster.forEach((w) => {
@@ -92,6 +104,9 @@ export function processInjuryEvents(roster: Warrior[], week: number): GameEvent[
   return events;
 }
 
+/**
+ *
+ */
 export function processTrainingEvents(
   assignments: TrainingAssignment[],
   state: Pick<GameStore, 'player' | 'roster' | 'graveyard' | 'retired' | 'rivals'>,
@@ -120,6 +135,9 @@ export function processTrainingEvents(
     .filter((e): e is NonNullable<typeof e> => e !== null);
 }
 
+/**
+ *
+ */
 export function processNewsletterEvents(newsletter: NewsletterItem[]): GameEvent[] {
   return newsletter.map((n) => {
     const isEvent = n.category === 'event';
@@ -137,6 +155,9 @@ export function processNewsletterEvents(newsletter: NewsletterItem[]): GameEvent
   });
 }
 
+/**
+ *
+ */
 export function processTournamentEvents(tournaments: TournamentEntry[]): GameEvent[] {
   return tournaments
     .filter((t) => t.completed)
@@ -157,6 +178,9 @@ export function processTournamentEvents(tournaments: TournamentEntry[]): GameEve
     });
 }
 
+/**
+ *
+ */
 export function processGazetteEvents(gazettes: GazetteStory[]): GameEvent[] {
   return gazettes.map(
     (g) =>
@@ -173,6 +197,9 @@ export function processGazetteEvents(gazettes: GazetteStory[]): GameEvent[] {
   );
 }
 
+/**
+ *
+ */
 export function groupEventsByWeek(events: GameEvent[]): Array<[number, GameEvent[]]> {
   const map = new Map<number, GameEvent[]>();
   events.forEach((e) => {

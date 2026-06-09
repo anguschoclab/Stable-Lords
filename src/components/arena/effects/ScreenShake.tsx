@@ -8,16 +8,16 @@ interface ScreenShakeProps {
   className?: string;
   children: React.ReactNode;
 } /**
-  * Screen shake.
-  * @param  - {
+   * Screen shake.
+   * @param  - {
   trigger,
   intensity = 'medium',
   disabled = false,
   class name,
   children,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Screen shake.

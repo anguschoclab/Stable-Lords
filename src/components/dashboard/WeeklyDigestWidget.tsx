@@ -14,6 +14,9 @@ import { useShallow } from 'zustand/react/shallow';
 import { useDigestSummary } from '@/hooks/useDigestSummary';
 import { StatBox, AlertBox, EmptyDigestState } from './digest';
 
+/**
+ *
+ */
 export interface WeeklyDigestProps {
   week: number;
   season: string;
@@ -22,6 +25,9 @@ export interface WeeklyDigestProps {
   currentWeek: number;
 }
 
+/**
+ *
+ */
 export function WeeklyDigestWidget({
   week,
   season,

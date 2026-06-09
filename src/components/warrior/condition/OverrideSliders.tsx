@@ -8,6 +8,9 @@ interface OverrideSlidersProps {
   onSliderChange: (key: 'OE' | 'AL' | 'killDesire', val: number | undefined) => void;
 }
 
+/**
+ *
+ */
 export function OverrideSliders({ cond, onSliderChange }: OverrideSlidersProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

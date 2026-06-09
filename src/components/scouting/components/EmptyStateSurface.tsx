@@ -1,6 +1,9 @@
 import { Shield } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 
+/**
+ *
+ */
 export function EmptyStateSurface() {
   return (
     <Surface

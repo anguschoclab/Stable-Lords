@@ -33,8 +33,8 @@ const DefenseSchema = z.object({
   success: z.array(templateStringSchema),
   stumbling: z.array(templateStringSchema),
 }); /**
- * Narrative schema.
- */
+     * Narrative schema.
+     */
 
 /**
  * Narrative schema.
@@ -155,7 +155,7 @@ Context: You are writing for ${deficitPath}. ${context}`;
       );
       return result.response.text();
     } catch (error: any) {
-      // eslint-disable-line @typescript-eslint/no-explicit-any
+       
       console.error('Gemini API Error:', error.message);
       return '{}';
     }
@@ -191,7 +191,7 @@ async function validate_with_retry(deficitPath: string, retries = 3): Promise<st
 
       return templates;
     } catch (err: any) {
-      // eslint-disable-line @typescript-eslint/no-explicit-any
+       
       console.warn(
         `Validation failed for ${deficitPath} (Attempt ${i + 1}/${retries}): ${err.message}`
       );

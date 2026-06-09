@@ -12,6 +12,9 @@ interface MatchViewerProps {
   onToggleExpand: (key: string | null) => void;
 }
 
+/**
+ *
+ */
 export function MatchViewer({ bout, fightSummary, gameState, onToggleExpand }: MatchViewerProps) {
   return (
     <div className="absolute top-0 left-full ml-4 z-50 w-full max-w-md animate-in fade-in slide-in-from-left-4 duration-300">

@@ -5,6 +5,9 @@ interface TournamentStatsHeaderProps {
   stats: { total: number; completed: number; byes: number; upcoming: number };
 }
 
+/**
+ *
+ */
 export function TournamentStatsHeader({ stats }: TournamentStatsHeaderProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

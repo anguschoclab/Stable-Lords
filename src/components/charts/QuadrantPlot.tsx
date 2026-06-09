@@ -2,6 +2,9 @@ interface QuadrantPlotProps {
   children?: React.ReactNode;
 }
 
+/**
+ *
+ */
 export function QuadrantPlot({ children }: QuadrantPlotProps) {
   return (
     <div className="relative w-full aspect-square bg-white/[0.02] border border-white/5 rounded-none overflow-hidden">

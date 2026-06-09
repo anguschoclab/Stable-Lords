@@ -8,6 +8,9 @@ interface UpgradeButtonProps {
   onUpgrade: () => void;
 }
 
+/**
+ *
+ */
 export function UpgradeButton({ currentQuality, onUpgrade }: UpgradeButtonProps) {
   const upgradePath: Record<ScoutQuality, ScoutQuality | null> = {
     Basic: 'Detailed',

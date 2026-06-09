@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Calendar, ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
+/**
+ *
+ */
 export interface EmptyDigestStateProps {
   week: number;
   season: string;

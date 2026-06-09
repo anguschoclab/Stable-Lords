@@ -32,6 +32,9 @@ function EmptyRosterState() {
   );
 }
 
+/**
+ *
+ */
 export function RosterWall() {
   const navigate = useNavigate();
   const sortedRoster = useActiveRoster();

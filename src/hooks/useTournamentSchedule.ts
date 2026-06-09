@@ -15,6 +15,9 @@ interface UseTournamentScheduleResult {
   collapseAll: () => void;
 }
 
+/**
+ *
+ */
 export function useTournamentSchedule(tournament: TournamentEntry): UseTournamentScheduleResult {
   const [filter, setFilter] = useState<FilterStatus>('all');
   const [expandedRounds, setExpandedRounds] = useState<Set<number>>(new Set([1]));

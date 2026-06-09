@@ -7,6 +7,9 @@ interface WarriorComparisonHeaderProps {
   warriorB: Warrior | undefined;
 }
 
+/**
+ *
+ */
 export function WarriorComparisonHeader({ warriorA, warriorB }: WarriorComparisonHeaderProps) {
   return (
     <Surface

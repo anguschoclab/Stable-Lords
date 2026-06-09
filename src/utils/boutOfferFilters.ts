@@ -9,6 +9,9 @@ const TIER_RANK: Record<string, number> = {
   Legendary: 3,
 };
 
+/**
+ *
+ */
 export interface FilteredOffersResult {
   thisWeekOffers: BoutOffer[];
   upcomingOffers: BoutOffer[];

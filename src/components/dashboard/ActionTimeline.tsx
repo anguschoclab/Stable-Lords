@@ -11,6 +11,9 @@ interface ActionTimelineProps {
   events: ActionEvent[];
 }
 
+/**
+ *
+ */
 export function ActionTimeline({ events }: ActionTimelineProps) {
   return (
     <div className="space-y-3">

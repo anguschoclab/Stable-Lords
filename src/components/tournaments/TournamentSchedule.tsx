@@ -12,6 +12,9 @@ interface TournamentScheduleProps {
   currentWeek: number;
 }
 
+/**
+ *
+ */
 export function TournamentSchedule({ tournament, currentWeek }: TournamentScheduleProps) {
   const state = useGameStore();
   const {

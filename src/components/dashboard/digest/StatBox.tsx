@@ -8,6 +8,9 @@ export interface StatBoxProps {
   color: 'primary' | 'destructive' | 'arena-gold' | 'accent';
 }
 
+/**
+ *
+ */
 export function StatBox({ icon, label, value, color }: StatBoxProps) {
   const colorClasses = {
     primary: 'text-primary bg-primary/10',

@@ -9,6 +9,9 @@ interface ConditionTriggerSectionProps {
   onValueChange: (raw: string) => void;
 }
 
+/**
+ *
+ */
 export function ConditionTriggerSection({
   cond,
   idx,

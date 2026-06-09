@@ -11,6 +11,9 @@ interface StableSelectorProps {
   setIdB: (id: string | null) => void;
 }
 
+/**
+ *
+ */
 export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelectorProps) {
   return (
     <div className="grid grid-cols-2 gap-8">

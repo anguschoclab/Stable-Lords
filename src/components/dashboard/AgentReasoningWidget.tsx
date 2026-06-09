@@ -72,6 +72,9 @@ const INTENT_METRICS: Record<
   },
 };
 
+/**
+ *
+ */
 export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
   const currentIntent = rival.agentMemory?.currentIntent || 'SURVIVAL';
   const metric = INTENT_METRICS[currentIntent];

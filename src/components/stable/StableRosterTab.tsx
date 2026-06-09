@@ -35,6 +35,9 @@ interface StableRosterTabProps {
   activeRoster: Warrior[];
 }
 
+/**
+ *
+ */
 export function StableRosterTab({ activeRoster }: StableRosterTabProps) {
   return (
     <div className="space-y-8">

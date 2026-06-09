@@ -10,6 +10,9 @@ interface NoReportStateProps {
   onScout: (quality: ScoutQuality) => void;
 }
 
+/**
+ *
+ */
 export function NoReportState({ warriorName, treasury, onScout }: NoReportStateProps) {
   const QUALITIES: ScoutQuality[] = ['Basic', 'Detailed', 'Expert'];
 

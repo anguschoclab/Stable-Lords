@@ -4,6 +4,9 @@ interface ReportNotesProps {
   notes: string;
 }
 
+/**
+ *
+ */
 export function ReportNotes({ notes }: ReportNotesProps) {
   return (
     <Surface variant="glass" className="bg-black/40 border-border/20 p-6">

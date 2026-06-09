@@ -99,6 +99,9 @@ interface UseNavAlertsOptions {
   trackWeek?: boolean;
 }
 
+/**
+ *
+ */
 export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const { trackWeek = false } = options;
   const { week, isTournamentWeek } = useGameStore(
@@ -170,6 +173,9 @@ interface HubSwitcherProps {
   onAlertClick?: (hubId: HubId, link: string) => void;
 }
 
+/**
+ *
+ */
 export function HubSwitcher({
   activeHubId,
   alerts,
@@ -248,6 +254,9 @@ interface SubPageListProps {
   animationDuration?: number;
 }
 
+/**
+ *
+ */
 export function SubPageList({
   activeHubId,
   currentPath,
@@ -329,6 +338,9 @@ interface AlertStripProps {
   itemClassName?: string;
 }
 
+/**
+ *
+ */
 export function AlertStrip({ alerts, LinkComponent = Link, itemClassName }: AlertStripProps) {
   const { isTournamentWeek } = useGameStore(
     useShallow((s) => ({ isTournamentWeek: s.isTournamentWeek }))

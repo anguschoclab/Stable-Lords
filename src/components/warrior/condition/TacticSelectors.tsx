@@ -7,6 +7,9 @@ interface TacticSelectorsProps {
   onTacticChange: (key: 'offensiveTactic' | 'defensiveTactic', val: string) => void;
 }
 
+/**
+ *
+ */
 export function TacticSelectors({ cond, onTacticChange }: TacticSelectorsProps) {
   return (
     <div className="grid grid-cols-2 gap-4">

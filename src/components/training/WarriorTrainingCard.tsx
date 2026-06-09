@@ -16,8 +16,8 @@ import { canGrow } from '@/engine/potential';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils'; /**
-                                  * Warrior training card.
-                                  * @param  - {
+                                   * Warrior training card.
+                                   * @param  - {
   warrior,
   assignment,
   seasonal gains,
@@ -26,8 +26,8 @@ import { cn } from '@/lib/utils'; /**
   on assign recovery,
   on clear,
 }.
-                                  * @returns The result.
-                                  */
+                                   * @returns The result.
+                                   */
 
 /**
  * Warrior training card.

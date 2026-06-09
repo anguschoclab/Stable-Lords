@@ -11,6 +11,9 @@ import { useQuadrantDots } from '@/hooks/useQuadrantDots';
 import { QuadrantPlot } from './QuadrantPlot';
 import { QuadrantDotItem } from './QuadrantDot';
 
+/**
+ *
+ */
 export function ReputationQuadrant({ className }: { className?: string }) {
   const worldState = useWorldState();
   const { rivals } = useGameStore(useShallow((s) => ({ rivals: s.rivals })));

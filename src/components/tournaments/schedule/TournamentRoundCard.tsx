@@ -19,6 +19,9 @@ interface TournamentRoundCardProps {
   state: NameResolutionState;
 }
 
+/**
+ *
+ */
 export function TournamentRoundCard({
   round,
   bouts,

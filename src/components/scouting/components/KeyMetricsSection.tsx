@@ -15,6 +15,9 @@ interface KeyMetricsSectionProps {
   maxActive: number;
 }
 
+/**
+ *
+ */
 export function KeyMetricsSection({
   rivalA,
   rivalB,

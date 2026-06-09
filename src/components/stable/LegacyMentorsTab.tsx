@@ -8,6 +8,9 @@ interface LegacyMentorsTabProps {
   currentTrainers: Trainer[];
 }
 
+/**
+ *
+ */
 export function LegacyMentorsTab({ currentTrainers }: LegacyMentorsTabProps) {
   const ranked = [...currentTrainers]
     .map((t) => ({

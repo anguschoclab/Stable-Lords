@@ -6,6 +6,9 @@ interface TempoSectionProps {
   plan: FightPlan;
 }
 
+/**
+ *
+ */
 export default function TempoSection({ plan }: TempoSectionProps) {
   return (
     <div className="space-y-2">

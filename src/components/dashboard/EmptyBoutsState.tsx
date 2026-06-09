@@ -1,5 +1,8 @@
 import { TableRow, TableCell } from '@/components/ui/table';
 
+/**
+ *
+ */
 export function EmptyBoutsState() {
   return (
     <TableRow className="hover:bg-transparent border-none">

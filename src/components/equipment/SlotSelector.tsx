@@ -59,6 +59,9 @@ function groupWeaponsByStatus(
   );
 }
 
+/**
+ *
+ */
 export function SlotSelector({
   slot,
   label,

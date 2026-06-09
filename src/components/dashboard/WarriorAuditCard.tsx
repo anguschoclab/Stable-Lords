@@ -8,6 +8,9 @@ interface WarriorAuditCardProps {
   warrior: AtRiskWarrior;
 }
 
+/**
+ *
+ */
 export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
   const fatigue = warrior.fatigue ?? 0;
   const condition = Math.max(0, 100 - fatigue);

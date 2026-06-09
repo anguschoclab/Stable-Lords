@@ -173,6 +173,9 @@ function KillsCell({ row }: { row: StableRow }) {
   );
 }
 
+/**
+ *
+ */
 export function StableRankingsRow({ row, index }: StableRankingsRowProps) {
   return (
     <TableRow

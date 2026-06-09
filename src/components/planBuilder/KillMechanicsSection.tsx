@@ -13,6 +13,9 @@ const DEFAULT_KILL_CONTEXT = {
   hitLocation: 'body',
 };
 
+/**
+ *
+ */
 export default function KillMechanicsSection({ plan }: KillMechanicsSectionProps) {
   const mechanic = getKillMechanic(plan.style, DEFAULT_KILL_CONTEXT);
 

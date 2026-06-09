@@ -7,6 +7,9 @@ interface WeaponRequirementBadgeProps {
   reqResult: WeaponReqResult;
 }
 
+/**
+ *
+ */
 export function WeaponRequirementBadge({ reqResult }: WeaponRequirementBadgeProps) {
   if (reqResult.met) {
     return (

@@ -35,8 +35,8 @@ interface ArenaViewProps {
   transcript?: string[];
   className?: string;
 } /**
-  * Arena view.
-  * @param  - {
+   * Arena view.
+   * @param  - {
   name a,
   name d,
   style a,
@@ -55,8 +55,8 @@ interface ArenaViewProps {
   max hp d = 50,
   class name,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Arena view.

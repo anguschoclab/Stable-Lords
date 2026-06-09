@@ -26,10 +26,10 @@ function getLethalityScore(wA: Warrior, wB: Warrior, crowdMood: string) {
 
   return score;
 } /**
- * Lethality badge.
- * @param - { w a, w b, crowd mood }.
- * @returns The result.
- */
+   * Lethality badge.
+   * @param - { w a, w b, crowd mood }.
+   * @returns The result.
+   */
 
 /**
  * Lethality badge.

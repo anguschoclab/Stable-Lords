@@ -16,8 +16,8 @@ const engine = {
   resolveTournamentRound: TournamentSelectionService.resolveRound.bind(TournamentSelectionService),
   createFreshState,
 }; /**
- * Engine worker type.
- */
+    * Engine worker type.
+    */
 
 /**
  * Engine worker type.

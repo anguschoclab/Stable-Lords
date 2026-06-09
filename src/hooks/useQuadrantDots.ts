@@ -2,6 +2,9 @@ import { useMemo } from 'react';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { computeStableReputation, computeRivalReputation } from '@/engine/stableReputation';
 
+/**
+ *
+ */
 export interface QuadrantDot {
   label: string;
   fame: number;
@@ -9,6 +12,9 @@ export interface QuadrantDot {
   isPlayer: boolean;
 }
 
+/**
+ *
+ */
 export function useQuadrantDots(worldState: GameState, rivals: RivalStableData[]): QuadrantDot[] {
   return useMemo<QuadrantDot[]>(() => {
     const playerRep = computeStableReputation(worldState);

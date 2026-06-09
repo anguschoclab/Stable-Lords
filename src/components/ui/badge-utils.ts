@@ -22,4 +22,7 @@ export const badgeVariants = cva(
   }
 );
 
+/**
+ *
+ */
 export type BadgeVariants = VariantProps<typeof badgeVariants>;

@@ -15,8 +15,8 @@ interface MissionControlTabProps {
   onPlanChange: (plan: FightPlan) => void;
   onEquipmentChange: (loadout: EquipmentLoadout) => void;
 } /**
-  * Mission control tab.
-  * @param  - {
+   * Mission control tab.
+   * @param  - {
   warrior,
   display warrior,
   current plan,
@@ -24,8 +24,8 @@ interface MissionControlTabProps {
   on plan change,
   on equipment change,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Mission control tab.

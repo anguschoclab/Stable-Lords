@@ -10,6 +10,9 @@ import {
 } from '@/components/ui/select';
 import { FightingStyle, STYLE_DISPLAY_NAMES, STYLE_ABBREV } from '@/types/game';
 
+/**
+ *
+ */
 export interface FighterStats {
   strength: number;
   quickness: number;
@@ -24,6 +27,9 @@ interface FighterConfigCardProps {
   setStats: (s: FighterStats) => void;
 }
 
+/**
+ *
+ */
 export function FighterConfigCard({
   label,
   style,

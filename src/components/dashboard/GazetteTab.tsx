@@ -6,6 +6,9 @@ interface GazetteTabProps {
   stories: GazetteStory[];
 }
 
+/**
+ *
+ */
 export function GazetteTab({ stories }: GazetteTabProps) {
   return (
     <ScrollArea className="h-72 px-6">

@@ -7,6 +7,9 @@ interface ConnectionLinesProps {
   bronze: boolean;
 }
 
+/**
+ *
+ */
 export function ConnectionLines({ rIdx, isBye, isPending, bronze }: ConnectionLinesProps) {
   if (rIdx === 0) return null;
 

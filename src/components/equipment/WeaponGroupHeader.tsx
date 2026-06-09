@@ -2,6 +2,9 @@ interface WeaponGroupHeaderProps {
   type: 'class' | 'available' | 'unmet';
 }
 
+/**
+ *
+ */
 export function WeaponGroupHeader({ type }: WeaponGroupHeaderProps) {
   const headers = {
     class: { text: 'Class Weapons', color: 'text-arena-gold/70' },

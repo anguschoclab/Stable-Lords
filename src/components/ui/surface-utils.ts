@@ -79,4 +79,7 @@ export const surfaceVariants = cva('relative overflow-hidden transition-all dura
   },
 });
 
+/**
+ *
+ */
 export type SurfaceVariants = VariantProps<typeof surfaceVariants>;

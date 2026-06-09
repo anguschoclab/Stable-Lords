@@ -49,17 +49,17 @@ describe('StartGame', () => {
 
     // Set up FileReader mock BEFORE render
     const mockFileReader = {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       readAsText: vi.fn().mockImplementation(function (this: any, _file: Blob) {
         // Simulate successful file read
         if (this.onload) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           this.onload({ target: { result: '{"invalid": "json"}' } } as any);
         }
       }),
       onload: null,
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     window.FileReader = vi.fn(() => mockFileReader) as any;
 
     render(<StartGame />);

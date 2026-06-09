@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Filter } from 'lucide-react';
 
+/**
+ *
+ */
 export type FilterStatus = 'all' | 'upcoming' | 'completed' | 'current-round';
 
 interface TournamentFilterBarProps {
@@ -10,6 +13,9 @@ interface TournamentFilterBarProps {
   collapseAll: () => void;
 }
 
+/**
+ *
+ */
 export function TournamentFilterBar({
   filter,
   setFilter,

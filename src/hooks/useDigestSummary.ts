@@ -2,6 +2,9 @@ import { useMemo } from 'react';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
 
+/**
+ *
+ */
 export interface DigestSummary {
   totalFights: number;
   wins: number;
@@ -21,6 +24,9 @@ interface UseDigestSummaryOptions {
   playerWarriorIds: Set<WarriorId>;
 }
 
+/**
+ *
+ */
 export function useDigestSummary({
   arenaHistory,
   boutOffers,

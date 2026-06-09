@@ -6,6 +6,9 @@ interface WeeklyDigestMiniProps {
   currentWeek: number;
 }
 
+/**
+ *
+ */
 export function WeeklyDigestMini({ week, arenaHistory, currentWeek }: WeeklyDigestMiniProps) {
   const fightsThisWeek = arenaHistory.filter((f) => f.week === currentWeek).length;
 

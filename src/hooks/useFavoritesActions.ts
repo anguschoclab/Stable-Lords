@@ -4,6 +4,9 @@ import { getFavoritesDisplay } from '@/components/warrior/favoritesDisplay';
 import { toast } from 'sonner';
 import type { Warrior } from '@/types/game';
 
+/**
+ *
+ */
 export interface UseFavoritesActionsResult {
   handleInsight: (type: 'weapon' | 'rhythm') => void;
   handleApplyRhythm: () => void;
@@ -17,6 +20,9 @@ export interface UseFavoritesActionsResult {
   rhythmProgress: number;
 }
 
+/**
+ *
+ */
 export function useFavoritesActions(
   warrior: Warrior,
   onUpdate: () => void

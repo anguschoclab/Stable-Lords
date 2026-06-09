@@ -34,6 +34,9 @@ type WarriorSortField =
   | 'officialRank'
   | 'compositeScore';
 
+/**
+ *
+ */
 export default function WorldOverview() {
   const state = useWorldState();
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: 'asc' | 'desc' }>({

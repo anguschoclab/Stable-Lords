@@ -12,6 +12,9 @@ interface BoutTableRowProps {
   state: NameResolutionState;
 }
 
+/**
+ *
+ */
 export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps) {
   const isPlayerA = bout.stableIdA === playerStableId;
   const playerWon = (isPlayerA && bout.winner === 'A') || (!isPlayerA && bout.winner === 'D');

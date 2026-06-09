@@ -23,8 +23,8 @@ interface NewGameFormProps {
   onSubmit: () => void;
   canCreate: boolean;
 } /**
-  * New game form.
-  * @param  - {
+   * New game form.
+   * @param  - {
   owner name,
   set owner name,
   stable name,
@@ -37,8 +37,8 @@ interface NewGameFormProps {
   on submit,
   can create,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * New game form.

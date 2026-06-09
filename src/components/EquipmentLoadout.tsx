@@ -33,6 +33,9 @@ const SLOT_CONFIG: { slot: EquipmentSlot; label: string; icon: React.ReactNode }
   { slot: 'helm', label: 'Helm', icon: <HardHat className="h-4 w-4" /> },
 ];
 
+/**
+ *
+ */
 export default function EquipmentLoadoutUI({
   loadout,
   style,

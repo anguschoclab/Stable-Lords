@@ -7,6 +7,9 @@ interface MatchActionsProps {
   onToggleExpand: (key: string | null) => void;
 }
 
+/**
+ *
+ */
 export function MatchActions({
   hasTranscript,
   isExpanded,

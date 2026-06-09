@@ -7,6 +7,9 @@ interface ConditionHeaderProps {
   onRemove: () => void;
 }
 
+/**
+ *
+ */
 export function ConditionHeader({ idx, label, onRemove }: ConditionHeaderProps) {
   return (
     <div className="flex items-center justify-between">

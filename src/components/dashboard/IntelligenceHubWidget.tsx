@@ -11,6 +11,9 @@ import { BriefingTab } from './BriefingTab';
 import { IntelligenceHubFooter } from './IntelligenceHubFooter';
 import type { RivalStableData } from '@/types/state.types';
 
+/**
+ *
+ */
 export function IntelligenceHubWidget() {
   const state = useGameStore(
     useShallow((s) => ({

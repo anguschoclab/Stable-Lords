@@ -13,6 +13,9 @@ export interface ResolvedTactics {
   target: string;
 }
 
+/**
+ *
+ */
 export function resolveEffectiveTactics(
   plan: FightPlan,
   phaseKey: 'opening' | 'mid' | 'late'

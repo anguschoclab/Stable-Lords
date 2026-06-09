@@ -16,6 +16,9 @@ interface WarriorSlotsProps {
   isExpanded: boolean;
 }
 
+/**
+ *
+ */
 export function WarriorSlots({
   bout,
   boutKey,

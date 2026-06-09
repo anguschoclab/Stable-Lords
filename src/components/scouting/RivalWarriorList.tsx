@@ -12,16 +12,16 @@ interface RivalWarriorListProps {
   reports: ScoutReportData[];
   stableName: string | undefined;
 } /**
-  * Rival warrior list.
-  * @param  - {
+   * Rival warrior list.
+   * @param  - {
   warriors,
   selected warrior id,
   on select warrior,
   reports,
   stable name,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Rival warrior list.

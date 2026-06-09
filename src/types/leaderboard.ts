@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export interface WarriorRow {
   id: string;
   name: string;
@@ -14,6 +17,9 @@ export interface WarriorRow {
   compositeScore: number;
 }
 
+/**
+ *
+ */
 export interface StableRow {
   id: string;
   name: string;

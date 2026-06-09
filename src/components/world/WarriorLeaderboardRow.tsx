@@ -134,6 +134,9 @@ function KillsCell({ row }: { row: WarriorRow }) {
   );
 }
 
+/**
+ *
+ */
 export function WarriorLeaderboardRow({ row, index, isFiltered }: WarriorLeaderboardRowProps) {
   return (
     <TableRow

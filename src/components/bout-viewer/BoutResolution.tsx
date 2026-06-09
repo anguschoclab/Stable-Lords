@@ -19,8 +19,8 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Shield: <Shield className="h-4 w-4" />,
   Activity: <Activity className="h-4 w-4" />,
 }; /**
-  * Bout resolution.
-  * @param  - {
+    * Bout resolution.
+    * @param  - {
   is complete,
   winner,
   winner name,
@@ -29,8 +29,8 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   total events,
   announcement,
 }.
-  * @returns The result.
-  */
+    * @returns The result.
+    */
 
 /**
  * Bout resolution.

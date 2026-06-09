@@ -5,6 +5,9 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { useFavoritesActions } from '@/hooks/useFavoritesActions';
 import { WeaponAffinitySection, BioRhythmSection } from './favorites';
 
+/**
+ *
+ */
 export function FavoritesCard({ warrior, onUpdate }: { warrior: Warrior; onUpdate: () => void }) {
   const actions = useFavoritesActions(warrior, onUpdate);
 

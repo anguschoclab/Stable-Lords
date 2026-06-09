@@ -5,6 +5,9 @@ interface WeaponRequirementDetailsProps {
   reqResult: WeaponReqResult;
 }
 
+/**
+ *
+ */
 export function WeaponRequirementDetails({ reqResult }: WeaponRequirementDetailsProps) {
   return (
     <div className="pl-6 space-y-0.5">

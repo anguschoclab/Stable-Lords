@@ -3,15 +3,15 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { growthNarrative } from './GrowthHelpers';
 import { generateWarriorStatements } from '@/data/warriorStatements';
 import { StatBattery } from '@/components/ui/StatBattery'; /**
-                                                           * Attr bar.
-                                                           * @param  - {
+                                                            * Attr bar.
+                                                            * @param  - {
   label,
   value,
   potential,
   max = 25,
 }.
-                                                           * @returns The result.
-                                                           */
+                                                            * @returns The result.
+                                                            */
 
 /**
  * Attr bar.
@@ -61,14 +61,14 @@ export function AttrBar({
     </div>
   );
 } /**
-  * Render the SkillBar component.
-  * @param  - {
+   * Render the SkillBar component.
+   * @param  - {
   label,
   value,
   max = 20,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Render the SkillBar component.
@@ -90,10 +90,10 @@ export function SkillBar({
 }) {
   return <StatBattery label={label} value={value} max={max} />;
 } /**
- * Render the WarriorStatementsPanel component.
- * @param - { warrior }.
- * @returns The result.
- */
+   * Render the WarriorStatementsPanel component.
+   * @param - { warrior }.
+   * @returns The result.
+   */
 
 /**
  * Render the WarriorStatementsPanel component.

@@ -51,10 +51,10 @@ const SCOUT_COST: Record<ScoutQuality, number> = {
   Detailed: 50,
   Expert: 100,
 }; /**
- * Get scout cost.
- * @param quality - Quality.
- * @returns The result.
- */
+    * Get scout cost.
+    * @param quality - Quality.
+    * @returns The result.
+    */
 
 /**
  * Get scout cost.

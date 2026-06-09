@@ -4,8 +4,8 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import PromoterDetail from '@/pages/PromoterDetail'; /**
- * Route.
- */
+                                                      * Route.
+                                                      */
 
 /**
  * Route.

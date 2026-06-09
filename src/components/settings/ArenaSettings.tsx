@@ -11,9 +11,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Swords, ScrollText, Volume2, Sparkles, Activity } from 'lucide-react'; /**
- * Arena settings.
- * @returns The result.
- */
+                                                                                 * Arena settings.
+                                                                                 * @returns The result.
+                                                                                 */
 
 /**
  * Arena settings.

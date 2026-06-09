@@ -10,6 +10,9 @@ interface AverageAttributesSectionProps {
   maxAttr: number;
 }
 
+/**
+ *
+ */
 export function AverageAttributesSection({
   statsA,
   statsB,

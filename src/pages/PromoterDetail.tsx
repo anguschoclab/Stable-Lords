@@ -159,9 +159,9 @@ function calculateStats(
     totalHype,
   };
 } /**
- * Promoter detail.
- * @returns The result.
- */
+   * Promoter detail.
+   * @returns The result.
+   */
 
 /**
  * Promoter detail.

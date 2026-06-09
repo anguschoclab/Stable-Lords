@@ -25,6 +25,9 @@ const COLUMNS = [
   { key: 'kills', label: 'Kills', className: 'text-center' },
 ];
 
+/**
+ *
+ */
 export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardProps) {
   const {
     classes,

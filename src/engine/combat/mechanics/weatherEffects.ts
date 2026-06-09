@@ -257,6 +257,9 @@ export function resolveEffectiveWeather(weather: WeatherType, arenaTags: string[
   return isIndoor ? 'Clear' : weather;
 }
 
+/**
+ *
+ */
 export function getWeatherEffect(weather: WeatherType): WeatherEffect {
   return WEATHER_EFFECTS[weather] ?? WEATHER_EFFECTS['Clear'];
 }

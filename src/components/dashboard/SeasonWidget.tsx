@@ -7,6 +7,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { WeatherBadge } from './WeatherBadge';
 import { SeasonProgressBar } from './SeasonProgressBar';
 
+/**
+ *
+ */
 export function SeasonWidget() {
   const state = useGameStore(
     useShallow((s) => ({

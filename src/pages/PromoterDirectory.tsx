@@ -170,9 +170,9 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
     </Card>
   );
 } /**
- * Promoter directory.
- * @returns The result.
- */
+   * Promoter directory.
+   * @returns The result.
+   */
 
 /**
  * Promoter directory.

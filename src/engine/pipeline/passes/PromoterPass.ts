@@ -22,6 +22,9 @@ import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
  * Logic incorporates Hype Matrix, Rank Requirements, and Personality biases.
  */
 
+/**
+ *
+ */
 export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(state.week * 881 + 17);
   const rankings = state.realmRankings || {};

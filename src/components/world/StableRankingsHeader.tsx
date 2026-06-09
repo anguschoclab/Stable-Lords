@@ -6,6 +6,9 @@ interface StableRankingsHeaderProps {
   onSort: (field: string) => void;
 }
 
+/**
+ *
+ */
 export function StableRankingsHeader({ sort, onSort }: StableRankingsHeaderProps) {
   return (
     <TableHeader>

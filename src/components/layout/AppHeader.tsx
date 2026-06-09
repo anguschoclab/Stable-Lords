@@ -395,6 +395,9 @@ function HeaderActions({
   );
 }
 
+/**
+ *
+ */
 export function AppHeader({
   week,
   day,

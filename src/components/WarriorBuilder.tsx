@@ -323,14 +323,14 @@ function CreateButton({ disabled, onClick, status, remaining }: CreateButtonProp
 }
 
 /**
-  * Warrior builder.
-  * @param  - {
+ * Warrior builder.
+ * @param  - {
   on create warrior,
   max roster = 10,
   current roster size = 0,
 }.
-  * @returns The result.
-  */
+ * @returns The result.
+ */
 
 /**
  * Warrior builder.

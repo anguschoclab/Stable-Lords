@@ -23,6 +23,9 @@ interface MobileNavProps {
   className?: string;
 }
 
+/**
+ *
+ */
 export function MobileNav({ className }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const location = useLocation();

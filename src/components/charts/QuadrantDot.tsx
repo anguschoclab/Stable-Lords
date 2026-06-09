@@ -6,6 +6,9 @@ interface QuadrantDotProps {
   dot: QuadrantDot;
 }
 
+/**
+ *
+ */
 export function QuadrantDotItem({ dot }: QuadrantDotProps) {
   const x = dot.fame;
   const y = 100 - dot.notoriety;

@@ -8,6 +8,9 @@ interface CombatAnalysisProps {
   knownInjuries: string[];
 }
 
+/**
+ *
+ */
 export function CombatAnalysis({ suspectedOE, suspectedAL, knownInjuries }: CombatAnalysisProps) {
   const hasCombatData = suspectedOE || knownInjuries.length > 0;
 

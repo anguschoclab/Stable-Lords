@@ -3,13 +3,13 @@ import { History, Swords, Trophy, Skull, Star, Armchair } from 'lucide-react';
 import { type Warrior, type FightSummary } from '@/types/game';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { getAllFightsForWarrior } from '@/engine/core/historyUtils'; /**
-                                                                     * Career timeline.
-                                                                     * @param  - {
+                                                                      * Career timeline.
+                                                                      * @param  - {
   warrior,
   arena history,
 }.
-                                                                     * @returns The result.
-                                                                     */
+                                                                      * @returns The result.
+                                                                      */
 
 /**
  * Career timeline.

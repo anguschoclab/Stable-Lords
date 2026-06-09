@@ -4,8 +4,8 @@
 
 import type { GameState } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types'; /**
- * Engine event type.
- */
+                                                           * Engine event type.
+                                                           */
 
 /**
  * Engine event type.
@@ -47,8 +47,8 @@ class EventBus {
     this.handlers.clear();
   }
 } /**
- * Engine event bus.
- */
+   * Engine event bus.
+   */
 
 /**
  * Engine event bus.

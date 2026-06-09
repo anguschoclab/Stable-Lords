@@ -8,6 +8,9 @@ interface WeatherBadgeProps {
   weather: WeatherType | string;
 }
 
+/**
+ *
+ */
 export function WeatherBadge({ weather }: WeatherBadgeProps) {
   const config = getWeatherConfig(weather);
   const WeatherIcon = config.icon;

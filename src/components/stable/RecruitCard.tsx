@@ -100,6 +100,9 @@ interface RecruitCardProps {
   scoutReport?: PotentialScoutReport;
 }
 
+/**
+ *
+ */
 export function RecruitCard({
   warrior,
   canAfford,

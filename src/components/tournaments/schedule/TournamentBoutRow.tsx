@@ -11,6 +11,9 @@ interface TournamentBoutRowProps {
   round: number;
 }
 
+/**
+ *
+ */
 export function TournamentBoutRow({ bout, state, round: _round }: TournamentBoutRowProps) {
   const isBye = isByeMatch(bout);
   const isResolved = bout.winner !== undefined;

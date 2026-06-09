@@ -6,6 +6,9 @@ interface WarriorLeaderboardTitleProps {
   filteredCount: number;
 }
 
+/**
+ *
+ */
 export function WarriorLeaderboardTitle({
   isFiltered,
   filteredCount,

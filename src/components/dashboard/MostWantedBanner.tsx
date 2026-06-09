@@ -7,6 +7,9 @@ interface MostWantedBannerProps {
   kills: number;
 }
 
+/**
+ *
+ */
 export function MostWantedBanner({ name, stable, wins, kills }: MostWantedBannerProps) {
   return (
     <div className="border-t border-white/5 pt-6">

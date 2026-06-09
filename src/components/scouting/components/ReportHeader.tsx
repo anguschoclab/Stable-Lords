@@ -6,6 +6,9 @@ interface ReportHeaderProps {
   report: ScoutReportData;
 }
 
+/**
+ *
+ */
 export function ReportHeader({ report }: ReportHeaderProps) {
   return (
     <div className="p-6 border-b border-white/5 bg-primary/5 flex items-center justify-between">

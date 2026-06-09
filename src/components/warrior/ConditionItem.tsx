@@ -30,6 +30,9 @@ interface ConditionItemProps {
   updateCondition: (idx: number, partial: Partial<PlanCondition>) => void;
 }
 
+/**
+ *
+ */
 export function ConditionItem({
   cond,
   idx,

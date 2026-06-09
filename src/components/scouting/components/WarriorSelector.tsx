@@ -11,6 +11,9 @@ interface WarriorSelectorProps {
   colorVariant: 'primary' | 'accent';
 }
 
+/**
+ *
+ */
 export function WarriorSelector({
   warriors,
   selectedId,

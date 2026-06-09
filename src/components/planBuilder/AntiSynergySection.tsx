@@ -6,6 +6,9 @@ interface AntiSynergySectionProps {
   plan: FightPlan;
 }
 
+/**
+ *
+ */
 export default function AntiSynergySection({ plan }: AntiSynergySectionProps) {
   if (!plan.offensiveTactic && !plan.defensiveTactic) {
     return null;

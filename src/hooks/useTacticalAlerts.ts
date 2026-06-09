@@ -9,6 +9,9 @@ import { useShallow } from 'zustand/react/shallow';
 import { isFightReady } from '@/engine/warriorStatus';
 import { Dumbbell, ScrollText, Swords, Trophy } from 'lucide-react';
 
+/**
+ *
+ */
 export interface TacticalAlert {
   id: string;
   type: 'warning' | 'info' | 'urgent' | 'success';
@@ -20,6 +23,9 @@ export interface TacticalAlert {
   };
 }
 
+/**
+ *
+ */
 export function useTacticalAlerts(): TacticalAlert[] {
   const { trainingAssignments, boutOffers, isTournamentWeek, day, roster } = useGameStore(
     useShallow((s) => ({

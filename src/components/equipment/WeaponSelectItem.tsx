@@ -9,6 +9,9 @@ interface WeaponSelectItemProps {
   req: WeaponReqResult;
 }
 
+/**
+ *
+ */
 export function WeaponSelectItem({ item, preferred, req }: WeaponSelectItemProps) {
   return (
     <SelectItem key={item.id} value={item.id}>

@@ -7,6 +7,9 @@ interface CareerComparisonProps {
   warriorB: Warrior;
 }
 
+/**
+ *
+ */
 export function CareerComparison({ warriorA, warriorB }: CareerComparisonProps) {
   const maxWins = Math.max(warriorA.career.wins, warriorB.career.wins, 1);
   const maxKills = Math.max(warriorA.career.kills, warriorB.career.kills, 1);

@@ -4,6 +4,9 @@ import type { RivalStableData } from '@/types/state.types';
 import { getAllArenas, getArenaById } from '@/data/arenas';
 import { getFightsForArena } from '@/engine/core/historyUtils';
 
+/**
+ *
+ */
 export interface ArenaWarriorEntry {
   warriorId: string;
   name: string;
@@ -15,6 +18,9 @@ export interface ArenaWarriorEntry {
   winRate: number;
 }
 
+/**
+ *
+ */
 export interface ArenaLeaderboardData {
   arenaId: string;
   arenaName: string;

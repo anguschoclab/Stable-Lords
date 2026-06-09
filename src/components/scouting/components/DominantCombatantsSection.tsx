@@ -7,6 +7,9 @@ interface DominantCombatantsSectionProps {
   topWarriorB: any;
 }
 
+/**
+ *
+ */
 export function DominantCombatantsSection({
   topWarriorA,
   topWarriorB,

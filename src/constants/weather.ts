@@ -18,6 +18,9 @@ import {
 } from 'lucide-react';
 import type { WeatherType } from '@/types/shared.types';
 
+/**
+ *
+ */
 export interface WeatherConfig {
   icon: LucideIcon;
   colorClass: string;
@@ -256,6 +259,9 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
   },
 };
 
+/**
+ *
+ */
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {
   return WEATHER_CONFIG[weather] ?? WEATHER_CONFIG.Clear!;
 }

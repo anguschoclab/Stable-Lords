@@ -7,6 +7,9 @@ export interface AlertBoxProps {
   message: string;
 }
 
+/**
+ *
+ */
 export function AlertBox({ type, message }: AlertBoxProps) {
   const configs = {
     death: {

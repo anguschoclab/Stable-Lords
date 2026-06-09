@@ -7,6 +7,9 @@ interface EncumbranceBarProps {
   overEncumbered: boolean;
 }
 
+/**
+ *
+ */
 export function EncumbranceBar({ totalWeight, carryCap, overEncumbered }: EncumbranceBarProps) {
   const encPct = Math.min(100, (totalWeight / Math.max(1, carryCap)) * 100);
 

@@ -14,8 +14,8 @@ import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { shuffled } from '@/utils/random';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService'; /**
- * Defines the shape of orphan warrior.
- */
+                                                                        * Defines the shape of orphan warrior.
+                                                                        */
 
 /**
  * Defines the shape of orphan warrior.
@@ -35,11 +35,11 @@ export interface OrphanWarrior {
 // ── RNG & Helpers ────────────────────────────────────────────────────────
 
 const TRAIT_IDS = Object.keys(TRAITS); /**
- * Generate orphan pool.
- * @param count - Count.
- * @param seed - Seed. (optional)
- * @returns The result.
- */
+                                        * Generate orphan pool.
+                                        * @param count - Count.
+                                        * @param seed - Seed. (optional)
+                                        * @returns The result.
+                                        */
 
 // ── Generation Logic ─────────────────────────────────────────────────────
 

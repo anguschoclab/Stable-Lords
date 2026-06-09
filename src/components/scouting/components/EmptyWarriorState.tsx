@@ -1,6 +1,9 @@
 import { Users } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 
+/**
+ *
+ */
 export function EmptyWarriorState() {
   return (
     <Surface

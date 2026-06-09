@@ -15,6 +15,9 @@ function buildNameResolver(state: GameState): Map<WarriorId, string> {
 }
 
 // Custom Hook to gather player roster IDs
+/**
+ *
+ */
 export function usePlayerRosterIds(state: GameState): Set<WarriorId> {
   return useMemo(
     () =>
@@ -26,6 +29,9 @@ export function usePlayerRosterIds(state: GameState): Set<WarriorId> {
 }
 
 // Custom Hook to map rival warrior IDs to their stable
+/**
+ *
+ */
 export function useRivalWarriorStable(
   state: GameState
 ): Map<WarriorId, { stableName: string; ownerId: string }> {
@@ -42,6 +48,9 @@ export function useRivalWarriorStable(
 }
 
 // Custom Hook to compute ongoing rivalries
+/**
+ *
+ */
 export function useRivalriesList(
   state: GameState,
   rosterIds: Set<WarriorId>,
@@ -117,6 +126,9 @@ export function useRivalriesList(
 }
 
 // Custom Hook to calculate the most wanted rival
+/**
+ *
+ */
 export function useMostWantedRival(
   state: GameState,
   rosterIds: Set<WarriorId>,

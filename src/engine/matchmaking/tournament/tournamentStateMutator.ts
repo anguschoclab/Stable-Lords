@@ -44,6 +44,9 @@ export function modifyWarrior(
 
 const warriorCache = new WeakMap<GameState, Map<WarriorId, Warrior>>();
 
+/**
+ *
+ */
 export function findWarriorById(
   state: GameState,
   warriorId: WarriorId,
@@ -75,6 +78,9 @@ export function findWarriorById(
   return map.get(warriorId);
 }
 
+/**
+ *
+ */
 export function clearWarriorCache(): void {
   // No-op because we use a WeakMap now
 }

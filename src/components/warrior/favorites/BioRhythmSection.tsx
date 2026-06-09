@@ -17,6 +17,9 @@ interface BioRhythmSectionProps {
   >;
 }
 
+/**
+ *
+ */
 export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
   const {
     handleInsight,

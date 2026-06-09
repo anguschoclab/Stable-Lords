@@ -21,6 +21,9 @@ interface BracketMatchNodeProps {
   gameState: any; // The state object returned by useGameStore()
 }
 
+/**
+ *
+ */
 export function BracketMatchNode({
   bout,
   boutKey,

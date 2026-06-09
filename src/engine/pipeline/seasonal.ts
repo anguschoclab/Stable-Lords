@@ -948,6 +948,9 @@ const EVENT_HANDLERS: Record<
   tavern_brawl_surprise: handleTavernBrawlSurprise,
 };
 
+/**
+ *
+ */
 export function runSeasonalPass(
   state: GameState,
   nextWeek: number,

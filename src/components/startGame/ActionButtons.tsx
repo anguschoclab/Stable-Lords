@@ -11,8 +11,8 @@ interface ActionButtonsProps {
   onNewGame: () => void;
   onImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
 } /**
-  * Action buttons.
-  * @param  - {
+   * Action buttons.
+   * @param  - {
   most recent,
   slots,
   max save slots,
@@ -20,8 +20,8 @@ interface ActionButtonsProps {
   on new game,
   on import,
 }.
-  * @returns The result.
-  */
+   * @returns The result.
+   */
 
 /**
  * Action buttons.

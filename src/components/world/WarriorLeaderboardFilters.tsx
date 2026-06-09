@@ -41,6 +41,9 @@ interface WarriorLeaderboardFiltersProps {
   clearFilters: () => void;
 }
 
+/**
+ *
+ */
 export function WarriorLeaderboardFilters({
   classes,
   classFilter,

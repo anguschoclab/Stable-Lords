@@ -25,6 +25,9 @@ interface SimulatorResultsProps {
   };
 }
 
+/**
+ *
+ */
 export function SimulatorResults({ simulation }: SimulatorResultsProps) {
   return (
     <Surface variant="glass" className="border-accent/40 bg-accent/5 p-0 overflow-hidden">

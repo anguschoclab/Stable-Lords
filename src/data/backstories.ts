@@ -1,11 +1,9 @@
 import type { GameState, Owner, OwnerPersonality, MetaAdaptation } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
-                                                                   * Backstory id type.
-                                                                   */
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
- * Backstory id type.
+ * Union type of all available player backstory identifiers.
  */
 export type BackstoryId =
   | 'gladiator'
@@ -16,35 +14,29 @@ export type BackstoryId =
   | 'outcast'
   | 'cutpurse'
   | 'priest'
-  | 'sellsword'; /**
-                  * Defines the shape of backstory economy.
-                  */
+  | 'sellsword';
 
 /**
- * Defines the shape of backstory economy.
+ * Economy modifiers applied when selecting a backstory.
  */
 export interface BackstoryEconomy {
   treasuryDelta?: number;
   fameDelta?: number;
   renownDelta?: number;
   rosterBonusDelta?: number;
-} /**
-   * Defines the shape of backstory identity seed.
-   */
+}
 
 /**
- * Defines the shape of backstory identity seed.
+ * Personality and adaptation weights used to seed an Owner's identity.
  */
 export interface BackstoryIdentitySeed {
   personalityWeights: Partial<Record<OwnerPersonality, number>>;
   metaAdaptationWeights: Partial<Record<MetaAdaptation, number>>;
   favoredStyles?: FightingStyle[];
-} /**
-   * Defines the shape of backstory def.
-   */
+}
 
 /**
- * Defines the shape of backstory def.
+ * Complete definition of a player backstory including lore, economy, and identity.
  */
 export interface BackstoryDef {
   id: BackstoryId;
@@ -54,12 +46,10 @@ export interface BackstoryDef {
   bonusSummary: string[];
   economy: BackstoryEconomy;
   identitySeed: BackstoryIdentitySeed;
-} /**
-   * Backstories.
-   */
+}
 
 /**
- * Backstories.
+ * Registry of all available player backstories keyed by BackstoryId.
  */
 export const BACKSTORIES: Record<BackstoryId, BackstoryDef> = {
   gladiator: {
@@ -177,19 +167,15 @@ export const BACKSTORIES: Record<BackstoryId, BackstoryDef> = {
       metaAdaptationWeights: { Opportunist: 50, MetaChaser: 30, Innovator: 20 },
     },
   },
-}; /**
-    * Backstory_list.
-    */
+};
 
 /**
- * Backstory_list.
+ * Array of all backstory definitions.
  */
-export const BACKSTORY_LIST: BackstoryDef[] = Object.values(BACKSTORIES); /**
-                                                                           * Backstory_ids.
-                                                                           */
+export const BACKSTORY_LIST: BackstoryDef[] = Object.values(BACKSTORIES);
 
 /**
- * Backstory_ids.
+ * Array of all backstory IDs.
  */
 export const BACKSTORY_IDS: BackstoryId[] = BACKSTORY_LIST.map((b) => b.id);
 

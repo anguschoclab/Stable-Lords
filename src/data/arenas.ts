@@ -5,16 +5,12 @@ const registry = new Map<string, ArenaConfig>();
 // Internal caches for optimized retrieval
 let allCache: ArenaConfig[] | null = null;
 const tagIndex = new Map<ArenaTag, ArenaConfig[]>();
-const tierIndex = new Map<number, ArenaConfig[]>(); /**
-                                                     * Register arena.
-                                                     * @param arena - Arena.
-                                                     * @returns The result.
-                                                     */
+const tierIndex = new Map<number, ArenaConfig[]>();
 
 /**
- * Register arena.
- * @param arena - Arena.
- * @returns The result.
+ * Register an arena config in the global registry.
+ * Clears internal caches on change.
+ * @param arena - Arena configuration to register.
  */
 export function registerArena(arena: ArenaConfig): void {
   registry.set(arena.id, arena);
@@ -22,43 +18,32 @@ export function registerArena(arena: ArenaConfig): void {
   allCache = null;
   tagIndex.clear();
   tierIndex.clear();
-} /**
-   * Get arena by id.
-   * @param id - Id.
-   * @returns The result.
-   */
+}
 
 /**
  * Get arena by id.
- * @param id - Id.
- * @returns The result.
+ * @param id - Arena identifier.
+ * @returns The ArenaConfig, or STANDARD_ARENA if not found.
  */
 export function getArenaById(id: string): ArenaConfig {
   return registry.get(id) ?? STANDARD_ARENA;
-} /**
-   * Get all arenas.
-   * @returns The result.
-   */
+}
 
 /**
- * Get all arenas.
- * @returns The result.
+ * Get all registered arenas.
+ * @returns Array of all ArenaConfig entries.
  */
 export function getAllArenas(): ArenaConfig[] {
   if (!allCache) {
     allCache = Array.from(registry.values());
   }
   return [...allCache];
-} /**
-   * Get arenas by tag.
-   * @param tag - Tag.
-   * @returns The result.
-   */
+}
 
 /**
- * Get arenas by tag.
- * @param tag - Tag.
- * @returns The result.
+ * Get arenas filtered by a specific tag.
+ * @param tag - Arena tag to filter by.
+ * @returns Array of arenas matching the tag.
  */
 export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
   let results = tagIndex.get(tag);
@@ -67,16 +52,12 @@ export function getArenasByTag(tag: ArenaTag): ArenaConfig[] {
     tagIndex.set(tag, results);
   }
   return [...results];
-} /**
-   * Get arenas by tier.
-   * @param tier - Tier.
-   * @returns The result.
-   */
+}
 
 /**
- * Get arenas by tier.
- * @param tier - Tier.
- * @returns The result.
+ * Get arenas filtered by tier level.
+ * @param tier - Tier level (1, 2, or 3).
+ * @returns Array of arenas at the specified tier.
  */
 export function getArenasByTier(tier: 1 | 2 | 3): ArenaConfig[] {
   let results = tierIndex.get(tier);
@@ -85,29 +66,23 @@ export function getArenasByTier(tier: 1 | 2 | 3): ArenaConfig[] {
     tierIndex.set(tier, results);
   }
   return [...results];
-} /**
-   * Is indoor arena.
-   * @param id - Id. (optional)
-   * @returns The result.
-   */
+}
 
 /**
- * Is indoor arena.
- * @param id - Id. (optional)
- * @returns The result.
+ * Check if an arena is indoors.
+ * @param id - Arena identifier (optional).
+ * @returns True if the arena has the 'indoor' tag.
  */
 export function isIndoorArena(id?: string): boolean {
   if (!id) return false;
   const arena = registry.get(id);
   return !!arena?.tags.includes('indoor');
-} /**
-   * Standard_arena.
-   */
+}
 
 // ─── Seed Arenas ─────────────────────────────────────────────────────────────
 
 /**
- * Standard_arena.
+ * The baseline arena — flat sand, no modifiers, neutral footing.
  */
 export const STANDARD_ARENA: ArenaConfig = {
   id: 'standard_arena',
@@ -119,12 +94,10 @@ export const STANDARD_ARENA: ArenaConfig = {
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
   startingZone: 'Center',
-}; /**
-    * Mudpit_arena.
-    */
+};
 
 /**
- * Mudpit_arena.
+ * Sunken, rain-soaked arena with treacherous footing.
  */
 export const MUDPIT_ARENA: ArenaConfig = {
   id: 'mudpit_arena',
@@ -136,12 +109,10 @@ export const MUDPIT_ARENA: ArenaConfig = {
   zoneDef: { Edge: -2, Corner: -4 },
   surfaceMod: { initiativeMod: -2, enduranceMult: 1.15, riposteMod: -1 },
   startingZone: 'Center',
-}; /**
-    * Bloodsands_arena.
-    */
+};
 
 /**
- * Bloodsands_arena.
+ * The grand arena — fine sand, neutral footing, premium venue.
  */
 export const BLOODSANDS_ARENA: ArenaConfig = {
   id: 'bloodsands_arena',
@@ -158,12 +129,10 @@ export const BLOODSANDS_ARENA: ArenaConfig = {
   // All three surface modifiers zeroed: no initiative, endurance, or riposte skew.
   surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 0 },
   startingZone: 'Center',
-}; /**
-    * Underpit_arena.
-    */
+};
 
 /**
- * Underpit_arena.
+ * Torch-lit subterranean pit with tight quarters.
  */
 export const UNDERPIT_ARENA: ArenaConfig = {
   id: 'underpit_arena',

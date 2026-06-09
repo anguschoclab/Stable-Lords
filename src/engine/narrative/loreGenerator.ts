@@ -85,34 +85,25 @@ const DEFINING_MOMENTS = [
   'carrying the secrets of the dead like armor beneath the skin',
   'driven by a promise made to someone who didn\'t survive',
   'standing on the threshold where orphan ends and legend begins',
-]; /**
-    * Generate lore.
-    * @param name - Name.
-    * @param rng - Rng.
-    * @returns The result.
-    */
+];
 
 /**
- * Generate lore.
- * @param name - Name.
- * @param rng - Rng.
- * @returns The result.
+ * Generate warrior lore by combining a childhood trait and defining moment.
+ * @param name - The warrior's name.
+ * @param rng - RNG service for random selection.
+ * @returns A formatted lore string.
  */
 export function generateLore(name: string, rng: IRNGService): string {
   const r = () => rng.next();
   const childhood = pick(CHILDHOOD_TRAITS, r);
   const defining = pick(DEFINING_MOMENTS, r);
   return `${name} ${childhood}, ${defining}.`;
-} /**
-   * Generate origin.
-   * @param rng - Rng.
-   * @returns The result.
-   */
+}
 
 /**
- * Generate origin.
- * @param rng - Rng.
- * @returns The result.
+ * Generate a warrior's origin story.
+ * @param rng - RNG service for random selection.
+ * @returns An origin string from the ORIGINS pool.
  */
 export function generateOrigin(rng: IRNGService): string {
   return pick(ORIGINS, () => rng.next());

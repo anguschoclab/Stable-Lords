@@ -188,6 +188,15 @@ function discoverScoutTraits(warrior: Warrior, quality: ScoutQuality, rng: IRNGS
 
 /**
  * Generate insight tokens discovered during scouting.
+ * @param warrior - The warrior being scouted.
+ * @param quality - Scout quality level (Basic/Detailed/Expert).
+ * @param week - Current game week.
+ * @param rng - RNG service.
+ * @param styleName - Display name of the warrior's fighting style.
+ * @param suspectedOE - Suspected offensive eagerness level.
+ * @param suspectedAL - Suspected activity level.
+ * @param suspectedTraits - Traits discovered during expert scouting.
+ * @returns Array of new insight tokens.
  */
 function generateScoutInsights(
   warrior: Warrior,

@@ -133,9 +133,7 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
     ? parseInt(trainingAlert.message.match(/\d+/)?.[0] || '0')
     : 0;
   const offersAlert = alerts.find((a) => a.id === 'pending-offers');
-  const pendingOffers = offersAlert
-    ? parseInt(offersAlert.message.match(/\d+/)?.[0] || '0')
-    : 0;
+  const pendingOffers = offersAlert ? parseInt(offersAlert.message.match(/\d+/)?.[0] || '0') : 0;
 
   const showOpsAlert = trackWeek
     ? pendingOffers > 0 && !onOpsSection && week > lastSeenOpsWeek.current

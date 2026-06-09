@@ -16,7 +16,6 @@ export function renderWithGameState(
   ui: React.ReactElement,
   partialState: Partial<ReturnType<typeof createFreshState>> = {}
 ) {
-
   // Get a clean base state
   const baseState = createFreshState('test-seed');
 

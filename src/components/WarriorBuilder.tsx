@@ -97,7 +97,9 @@ function useWarriorBuilderState(
     let pool = ATTRIBUTE_TOTAL - 21;
     const keys = [...ATTRIBUTE_KEYS];
     while (pool > 0) {
-      const key = keys[cryptoRandomInt(0, keys.length - 1)]!;
+      const idx = cryptoRandomInt(0, keys.length - 1);
+      const key = keys[idx];
+      if (!key) continue;
       const maxAdd = Math.min(pool, ATTRIBUTE_MAX - newAttrs[key]);
       if (maxAdd <= 0) continue;
       const add = Math.min(maxAdd, cryptoRandomInt(1, 5));
@@ -106,7 +108,9 @@ function useWarriorBuilderState(
     }
     setAttrs(newAttrs);
     const styles = Object.values(FightingStyle);
-    setStyle(styles[cryptoRandomInt(0, styles.length - 1)]!);
+    const styleIdx = cryptoRandomInt(0, styles.length - 1);
+    const chosenStyle = styles[styleIdx];
+    if (chosenStyle) setStyle(chosenStyle);
     setName(randomWarriorName());
   }, []);
 
@@ -231,7 +235,7 @@ function AttributeSliders({ attrs, updateAttr, total, remaining }: AttributeSlid
             </div>
             <Slider
               value={[attrs[key]]}
-              onValueChange={([v]) => updateAttr(key, v!)}
+              onValueChange={([v]) => updateAttr(key, v ?? ATTRIBUTE_MIN)}
               min={ATTRIBUTE_MIN}
               max={ATTRIBUTE_MAX}
               step={1}

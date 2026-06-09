@@ -90,8 +90,9 @@ export default function Orphanage() {
 
   const runTutorialBout = useCallback(() => {
     if (selectedWarriors.length < 2) return;
-    const poolA = selectedWarriors[0]!;
-    const poolB = selectedWarriors[1]!;
+    const poolA = selectedWarriors[0];
+    const poolB = selectedWarriors[1];
+    if (!poolA || !poolB) return;
     const wA = makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
     const wB = makeWarrior(poolB.id as WarriorId, poolB.name, poolB.style, poolB.attrs);
     const planA = defaultPlanForWarrior(wA);

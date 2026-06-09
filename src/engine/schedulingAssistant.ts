@@ -269,7 +269,7 @@ export function getRecommendedChallenges(
         headToHead,
       });
       topScores.sort((a, b) => b.score - a.score);
-    } else if (score > topScores[limit - 1]!.score) {
+    } else if (score > (topScores[limit - 1]?.score ?? -Infinity)) {
       const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;
@@ -337,7 +337,7 @@ export function getMatchupsToAvoid(
         headToHead,
       });
       bottomScores.sort((a, b) => a.score - b.score);
-    } else if (score < bottomScores[limit - 1]!.score) {
+    } else if (score < (bottomScores[limit - 1]?.score ?? Infinity)) {
       const styleAdvantage = getMatchupBonus(playerWarrior.style, r.warrior.style);
       const fameDiff = playerWarrior.fame - r.warrior.fame;
       const playerRank = state.realmRankings?.[playerWarrior.id]?.overallRank;

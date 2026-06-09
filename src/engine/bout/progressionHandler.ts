@@ -78,10 +78,10 @@ export function handleProgressions(
       discRng ?? {
         next: () => 0.5,
         uuid: () => 'uuid',
-        pick: <T>(arr: T[]) => arr[0]!,
+        pick: <T>(arr: T[]) => arr[0] as T,
         roll: (min: number) => min,
         shuffle: <T>(arr: T[]) => arr,
-        pickWeighted: <T>(items: T[]) => items[0]!,
+        pickWeighted: <T>(items: T[]) => items[0] as T,
         chance: () => false,
       }
     );

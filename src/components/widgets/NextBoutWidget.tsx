@@ -39,14 +39,16 @@ export function NextBoutWidget() {
     // Check regular bouts? (If any)
     // For simplicity, let's just use the current roster of the primary rival
     const primaryRival = state.rivals[0];
-    if (primaryRival && state.roster.length > 0) {
+    const playerWarrior = state.roster[0];
+    const rivalWarrior = primaryRival?.roster[0];
+    if (primaryRival && playerWarrior && rivalWarrior) {
       return {
         type: 'Standard Matchup',
         name: 'Upcoming Scrimmage',
-        a: state.roster[0]!.name,
-        d: primaryRival.roster[0]!.name,
-        warriorIdA: state.roster[0]!.id,
-        warriorIdD: primaryRival.roster[0]!.id,
+        a: playerWarrior.name,
+        d: rivalWarrior.name,
+        warriorIdA: playerWarrior.id,
+        warriorIdD: rivalWarrior.id,
         stableA: state.player.stableName,
         stableD: primaryRival.owner.stableName,
         stableIdA: state.player.id,

@@ -39,7 +39,7 @@ export default function FightsList({
         <div className="mt-2 space-y-1">
           {fights.map((f) => {
             const round = getRound ? getRound(f.id) : undefined;
-            const n = f.title.split(' (')[0]!.split(' vs ');
+            const n = (f.title.split(' (')[0] ?? '').split(' vs ');
             const nameA = n[0] || 'Unknown';
             const nameD = n[1] || 'Unknown';
             return (

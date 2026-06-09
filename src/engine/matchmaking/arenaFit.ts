@@ -132,10 +132,14 @@ export function selectArenaForMatchup(
 
   let pick = rng.next() * total;
   for (let i = 0; i < arenas.length; i++) {
-    pick -= shifted[i]!;
-    if (pick <= 0) return arenas[i]!.id;
+    const s = shifted[i];
+    const arena = arenas[i];
+    if (s === undefined || !arena) continue;
+    pick -= s;
+    if (pick <= 0) return arena.id;
   }
-  return arenas[arenas.length - 1]!.id;
+  const lastArena = arenas[arenas.length - 1];
+  return lastArena ? lastArena.id : 'bloodsands_arena';
 }
 
 // ─── Offer card description ────────────────────────────────────────────────────

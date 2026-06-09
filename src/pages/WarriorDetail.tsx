@@ -100,8 +100,9 @@ export default function WarriorDetail() {
       if (!warrior) return;
       setState((draft) => {
         const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
-        if (index !== -1) {
-          draft.roster[index]!.plan = newPlan;
+        const found = draft.roster[index];
+        if (found) {
+          found.plan = newPlan;
         }
       });
     },
@@ -120,8 +121,9 @@ export default function WarriorDetail() {
       if (!warrior) return;
       setState((draft) => {
         const index = draft.roster.findIndex((w: Warrior) => w.id === warrior.id);
-        if (index !== -1) {
-          draft.roster[index]!.equipment = newLoadout;
+        const found = draft.roster[index];
+        if (found) {
+          found.equipment = newLoadout;
         }
       });
     },

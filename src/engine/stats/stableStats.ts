@@ -44,7 +44,7 @@ export function calculateStableStats(roster: Warrior[]): StableStats {
     styleCounts[w.style] = (styleCounts[w.style] ?? 0) + 1;
 
     for (const key of ATTRIBUTE_KEYS) {
-      sumAttrs[key]! += w.attributes[key] ?? 0;
+      sumAttrs[key] = (sumAttrs[key] ?? 0) + (w.attributes[key] ?? 0);
     }
 
     if (!topWarrior || (w.fame ?? 0) > (topWarrior.fame ?? 0)) {
@@ -60,7 +60,7 @@ export function calculateStableStats(roster: Warrior[]): StableStats {
   const avgAttributes: Record<string, number> = {};
   if (activeCount > 0) {
     for (const key of ATTRIBUTE_KEYS) {
-      avgAttributes[key] = Math.round(sumAttrs[key]! / activeCount);
+      avgAttributes[key] = Math.round((sumAttrs[key] ?? 0) / activeCount);
     }
   } else {
     for (const key of ATTRIBUTE_KEYS) {

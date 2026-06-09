@@ -64,7 +64,7 @@ export function processHallOfFame(
   const woty = eligible.reduce(
     (max, curr) =>
       curr.wins > max.wins || (curr.wins === max.wins && curr.fame > max.fame) ? curr : max,
-    eligible[0]!
+    eligible[0] as typeof eligible[number]
   );
   if (woty && woty.wins > 0) {
     const award: AnnualAward = {
@@ -101,7 +101,7 @@ export function processHallOfFame(
   const koty = eligible.reduce(
     (max, curr) =>
       curr.kills > max.kills || (curr.kills === max.kills && curr.wins > max.wins) ? curr : max,
-    eligible[0]!
+    eligible[0] as typeof eligible[number]
   );
   if (koty && koty.kills > 0) {
     const award: AnnualAward = {

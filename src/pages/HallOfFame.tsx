@@ -56,8 +56,9 @@ export default function HallOfFame() {
   const yearlyAwards = useMemo(() => {
     const groups: Record<number, AnnualAward[]> = {};
     for (const award of awards || []) {
-      if (!groups[award.year]) groups[award.year] = [];
-      groups[award.year]!.push(award);
+      const yearGroup = groups[award.year] ?? [];
+      yearGroup.push(award);
+      groups[award.year] = yearGroup;
     }
     return Object.entries(groups)
       .map(([y, aws]) => ({ year: parseInt(y), awards: aws }))
@@ -90,7 +91,7 @@ export default function HallOfFame() {
       .map((f) => {
         const fameA = fameByWarriorId.get(f.warriorIdA ?? '') ?? 0;
         const fameD = fameByWarriorId.get(f.warriorIdD ?? '') ?? 0;
-        const n = f.title.split(' (')[0]!.split(' vs ');
+        const n = (f.title.split(' (')[0] ?? '').split(' vs ');
         const nameA = n[0] || 'Unknown';
         const nameD = n[1] || 'Unknown';
         const winnerName = f.winner === 'A' ? nameA : nameD;

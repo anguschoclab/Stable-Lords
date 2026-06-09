@@ -17,7 +17,7 @@ import type { GameStore } from '@/state/useGameStore';
 export function processFightEvents(arenaHistory: FightSummary[]): GameEvent[] {
   return arenaHistory.map((f) => {
     const isKill = f.by === 'Kill';
-    const n = f.title.split(' (')[0]!.split(' vs ');
+    const n = (f.title.split(' (')[0] ?? '').split(' vs ');
     const nameA = n[0] || 'Unknown';
     const nameD = n[1] || 'Unknown';
     const winnerName = f.winner === 'A' ? nameA : f.winner === 'D' ? nameD : null;

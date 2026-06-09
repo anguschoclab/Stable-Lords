@@ -18,6 +18,7 @@ import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_MAX } from '@/types/shared.types';
+import type { Attributes } from '@/types/shared.types';
 import { computeWarriorStats } from './skillCalc';
 import { canGrow, diminishingReturnsFactor, revealPotential } from './potential';
 
@@ -104,11 +105,12 @@ export function applyXP(
         });
         const totalWeight = weights.reduce((s, w) => s + w, 0);
         let roll = rngService.next() * totalWeight;
-        let chosen = improvableAttrs[0]!;
+        let chosen = improvableAttrs[0] as keyof Attributes;
         for (let i = 0; i < improvableAttrs.length; i++) {
-          roll -= weights[i]!;
+          const w = weights[i] as number;
+          roll -= w;
           if (roll <= 0) {
-            chosen = improvableAttrs[i]!;
+            chosen = improvableAttrs[i] as keyof Attributes;
             break;
           }
         }

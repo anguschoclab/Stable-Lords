@@ -24,7 +24,7 @@ interface TokenSectionConfig {
   dropShadowClass: string;
 }
 
-const TOKEN_SECTIONS: TokenSectionConfig[] = [
+const TOKEN_SECTIONS: [TokenSectionConfig, TokenSectionConfig, TokenSectionConfig] = [
   {
     type: 'stat',
     title: 'Personnel Intel',
@@ -258,9 +258,9 @@ export function InsightVault() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 relative z-10">
-          <TokenSection config={TOKEN_SECTIONS[0]!} tokens={statTokens} />
-          <TokenSection config={TOKEN_SECTIONS[1]!} tokens={weaponTokens} />
-          <TokenSection config={TOKEN_SECTIONS[2]!} tokens={rhythmTokens} />
+          <TokenSection config={TOKEN_SECTIONS[0]} tokens={statTokens} />
+          <TokenSection config={TOKEN_SECTIONS[1]} tokens={weaponTokens} />
+          <TokenSection config={TOKEN_SECTIONS[2]} tokens={rhythmTokens} />
         </div>
       </Surface>
 

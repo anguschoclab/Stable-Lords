@@ -57,7 +57,8 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
   // ⚡ Bolt: Fast backward search in O(1) instead of an O(N) filter.
   // We can break early because `arenaHistory` is guaranteed chronological.
   for (let i = state.arenaHistory.length - 1; i >= 0; i--) {
-    const f = state.arenaHistory[i]!;
+    const f = state.arenaHistory[i];
+    if (!f) break;
     if (f.week !== week) break;
 
     const aIsPlayer = playerWarriorIds.has(f.warriorIdA);
@@ -135,11 +136,8 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
     });
 
   // ⚡ Bolt: Optimized calculation over constant size small arrays.
-  let totalIncome = 0;
-  for (let i = 0; i < income.length; i++) totalIncome += income[i]!.amount;
-
-  let totalExpenses = 0;
-  for (let i = 0; i < expenses.length; i++) totalExpenses += expenses[i]!.amount;
+  const totalIncome = income.reduce((s, item) => s + item.amount, 0);
+  const totalExpenses = expenses.reduce((s, item) => s + item.amount, 0);
 
   return { income, expenses, totalIncome, totalExpenses, net: totalIncome - totalExpenses };
 }

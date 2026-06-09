@@ -7,7 +7,7 @@ import { Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0]!;
+  const base = title.split(' (')[0] ?? '';
   const parts = base.split(' vs ');
   return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
 }

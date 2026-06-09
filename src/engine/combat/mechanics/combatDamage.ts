@@ -192,12 +192,14 @@ export function rollHitLocation(rng: () => number, target?: string, protect?: st
   if (rng() < 0.3) {
     const exposed = HIT_LOCATIONS.filter((l) => !covered.includes(l));
     if (exposed.length > 0) {
-      return exposed[Math.floor(rng() * exposed.length)]!;
+      const pick = exposed[Math.floor(rng() * exposed.length)];
+      if (pick) return pick;
     }
   }
 
   // Fallback to completely random
-  return HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)]!;
+  const pick = HIT_LOCATIONS[Math.floor(rng() * HIT_LOCATIONS.length)];
+  return pick ?? 'chest';
 } /**
    * Apply protect mod.
    * @param damage - Damage.

@@ -128,11 +128,13 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   }, [onCommandSection, week, trackWeek]);
 
   // Extract counts from tactical alerts
-  const untrainedCount = alerts.find((a) => a.id === 'unassigned-training')
-    ? parseInt(alerts.find((a) => a.id === 'unassigned-training')!.message.match(/\d+/)?.[0] || '0')
+  const trainingAlert = alerts.find((a) => a.id === 'unassigned-training');
+  const untrainedCount = trainingAlert
+    ? parseInt(trainingAlert.message.match(/\d+/)?.[0] || '0')
     : 0;
-  const pendingOffers = alerts.find((a) => a.id === 'pending-offers')
-    ? parseInt(alerts.find((a) => a.id === 'pending-offers')!.message.match(/\d+/)?.[0] || '0')
+  const offersAlert = alerts.find((a) => a.id === 'pending-offers');
+  const pendingOffers = offersAlert
+    ? parseInt(offersAlert.message.match(/\d+/)?.[0] || '0')
     : 0;
 
   const showOpsAlert = trackWeek

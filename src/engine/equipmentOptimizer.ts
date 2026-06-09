@@ -99,7 +99,9 @@ function bestItem(items: EquipmentItem[], scorer: (i: EquipmentItem) => number):
   if (items.length === 0) {
     throw new Error('Cannot select best item from empty array');
   }
-  return items.reduce((best, item) => (scorer(item) > scorer(best) ? item : best), items[0]!);
+  const first = items[0];
+  if (!first) throw new Error('Cannot select best item from empty array');
+  return items.reduce((best, item) => (scorer(item) > scorer(best) ? item : best), first);
 }
 
 /**
@@ -124,10 +126,12 @@ export function generateRecommendations(
     const weapon = bestItem(weapons, (w) => scoreWeapon(w, style, profile));
     const isTwoHanded = weapon.twoHanded ?? false;
     const armor = bestItem(armors, (a) => scoreArmor(a, profile));
-    const shield = isTwoHanded
-      ? (shields.find((s) => s.id === 'none_shield') ?? shields[0]!)
-      : bestItem(shields, (s) => scoreShield(s, profile));
     const helm = bestItem(helms, (h) => scoreHelm(h, profile));
+    const noShield = shields.find((s) => s.id === 'none_shield');
+    const shield = isTwoHanded
+      ? (noShield ?? shields[0])
+      : bestItem(shields, (s) => scoreShield(s, profile));
+    if (!shield) throw new Error('No shield available');
 
     const loadout: EquipmentLoadout = {
       weapon: weapon.id,

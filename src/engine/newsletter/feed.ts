@@ -47,28 +47,31 @@ function computeStyleRollups(
     {};
   for (const card of fights) {
     const f = card.summary;
-    rollups[f.styleA] ||= { w: 0, l: 0, k: 0, pct: 0, fights: 0 };
-    rollups[f.styleD] ||= { w: 0, l: 0, k: 0, pct: 0, fights: 0 };
-    rollups[f.styleA]!.fights++;
-    rollups[f.styleD]!.fights++;
+    const rA = rollups[f.styleA] ?? { w: 0, l: 0, k: 0, pct: 0, fights: 0 };
+    rollups[f.styleA] = rA;
+    const rD = rollups[f.styleD] ?? { w: 0, l: 0, k: 0, pct: 0, fights: 0 };
+    rollups[f.styleD] = rD;
+    rA.fights++;
+    rD.fights++;
 
     if (f.winner === 'A') {
-      rollups[f.styleA]!.w++;
-      rollups[f.styleD]!.l++;
+      rA.w++;
+      rD.l++;
     } else if (f.winner === 'D') {
-      rollups[f.styleD]!.w++;
-      rollups[f.styleA]!.l++;
+      rD.w++;
+      rA.l++;
     }
 
     if (f.by === 'Kill') {
-      if (f.winner === 'A') rollups[f.styleA]!.k++;
-      else if (f.winner === 'D') rollups[f.styleD]!.k++;
+      if (f.winner === 'A') rA.k++;
+      else if (f.winner === 'D') rD.k++;
     }
   }
 
   // Calculate percentages
   for (const key of Object.keys(rollups)) {
-    const r = rollups[key]!;
+    const r = rollups[key];
+    if (!r) continue;
     r.pct = r.fights > 0 ? Math.round((r.w / r.fights) * 100) : 0;
   }
 
@@ -76,7 +79,7 @@ function computeStyleRollups(
 }
 
 function getNamesFromTitle(title: string): { a: string; d: string } {
-  const base = title.split(' (')[0]!;
+  const base = title.split(' (')[0] ?? '';
   const parts = base.split(' vs ');
   return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
 }

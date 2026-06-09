@@ -52,21 +52,23 @@ export const HallOfFights: React.FC = () => {
     const stats: Record<string, { wins: number; losses: number; kills: number; fights: number }> =
       {};
     for (const f of state.arenaHistory) {
-      stats[f.styleA] ||= { wins: 0, losses: 0, kills: 0, fights: 0 };
-      stats[f.styleD] ||= { wins: 0, losses: 0, kills: 0, fights: 0 };
-      stats[f.styleA]!.fights++;
-      stats[f.styleD]!.fights++;
+      const sA = stats[f.styleA] ?? { wins: 0, losses: 0, kills: 0, fights: 0 };
+      stats[f.styleA] = sA;
+      const sD = stats[f.styleD] ?? { wins: 0, losses: 0, kills: 0, fights: 0 };
+      stats[f.styleD] = sD;
+      sA.fights++;
+      sD.fights++;
       if (f.winner === 'A') {
-        stats[f.styleA]!.wins++;
-        stats[f.styleD]!.losses++;
+        sA.wins++;
+        sD.losses++;
       }
       if (f.winner === 'D') {
-        stats[f.styleD]!.wins++;
-        stats[f.styleA]!.losses++;
+        sD.wins++;
+        sA.losses++;
       }
       if (f.by === 'Kill') {
-        if (f.winner === 'A') stats[f.styleA]!.kills++;
-        if (f.winner === 'D') stats[f.styleD]!.kills++;
+        if (f.winner === 'A') sA.kills++;
+        if (f.winner === 'D') sD.kills++;
       }
     }
     return Object.entries(stats)
@@ -134,7 +136,7 @@ export const HallOfFights: React.FC = () => {
                   {fights.map((f) => {
                     const isKill = f.by === 'Kill';
                     const isKO = f.by === 'KO';
-                    const n = f.title.split(' (')[0]!.split(' vs ');
+                    const n = (f.title.split(' (')[0] ?? '').split(' vs ');
                     const nameA = n[0] || 'Unknown';
                     const nameD = n[1] || 'Unknown';
                     return (
@@ -195,7 +197,7 @@ export const HallOfFights: React.FC = () => {
                       </div>
                     </div>
                     {(() => {
-                      const n = f.title.split(' (')[0]!.split(' vs ');
+                      const n = (f.title.split(' (')[0] ?? '').split(' vs ');
                       const nameA = n[0] || 'Unknown';
                       const nameD = n[1] || 'Unknown';
                       return (

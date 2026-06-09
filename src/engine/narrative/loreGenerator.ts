@@ -41,6 +41,12 @@ const ORIGINS = [
   'Found wandering the corpse-fields after the Battle of Hollow Hill',
   'Survived the sinking of the prison hulk "Black Sepulchre"',
   'Left as an infant in a weapons crate outside the barracks',
+  'Discovered huddled inside a hollowed-out beast carcass in the Frostmarches',
+  'Pulled from the churning waters of the Weeping Gorge as a toddler',
+  'Sold to a gladiator school by scavengers at the tender age of six',
+  'Found clinging to the wreckage of a burnt-out monastery',
+  'Brought to the city by a nameless mercenary who died the next day',
+  'Discovered starving but fiercely guarding a pile of silver coins',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -65,6 +71,10 @@ const CHILDHOOD_TRAITS = [
   'could identify every weapon in the trainer\'s rack by sound alone',
   'kept a tally of scars as if they were coins in a purse',
   'never spoke, but communicated threats with perfect clarity',
+  'slept with a rusted dagger beneath a straw pillow every night',
+  'showed a terrifyingly high tolerance for pain during beatings',
+  'would bite and claw older kids who tried to take their rations',
+  'memorized the patrol routes of guards just for the challenge of evading them',
 ];
 
 const DEFINING_MOMENTS = [
@@ -85,6 +95,10 @@ const DEFINING_MOMENTS = [
   'carrying the secrets of the dead like armor beneath the skin',
   'driven by a promise made to someone who didn\'t survive',
   'standing on the threshold where orphan ends and legend begins',
+  'finding solace only in the methodical rhythm of violence',
+  'realizing that blood spilled in the arena washes away past sins',
+  'embracing the fact that survival is only a matter of breaking the other person first',
+  'fueled by a hatred of the weakness that once kept them in chains',
 ];
 
 /**

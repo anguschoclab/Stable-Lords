@@ -7,9 +7,9 @@ import {
 } from '@/components/ui/accordion';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { BookOpen } from 'lucide-react'; /**
- * Help.
- * @returns The result.
- */
+                                          * Help.
+                                          * @returns The result.
+                                          */
 
 /**
  * Help.

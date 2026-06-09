@@ -118,20 +118,24 @@ export function resolveRound(
 
     // Standard Bracket progression
     for (let i = 0; i < winners.length; i += 2) {
+      const wA = winners[i];
+      if (!wA) continue;
       if (i + 1 < winners.length) {
+        const wD = winners[i + 1];
+        if (!wD) continue;
         bracket.push({
           round: nextRound,
           matchIndex: i / 2,
-          warriorIdA: winners[i]!.id,
-          warriorIdD: winners[i + 1]!.id,
-          stableIdA: winners[i]!.stableId,
-          stableIdD: winners[i + 1]!.stableId,
+          warriorIdA: wA.id,
+          warriorIdD: wD.id,
+          stableIdA: wA.stableId,
+          stableIdD: wD.stableId,
         });
       } else {
         bracket.push({
           round: nextRound,
           matchIndex: i / 2,
-          warriorIdA: winners[i]!.id,
+          warriorIdA: wA.id,
           warriorIdD: 'bye' as unknown as WarriorId,
           winner: 'A',
         });
@@ -140,20 +144,24 @@ export function resolveRound(
 
     // 🥉 Bronze Match Injection: If we just finished Semi-Finals (Round 5, winners.length === 2)
     if (currentRound === 5 && losers.length === 2) {
-      const bronzeBout = {
-        round: 6, // Bronze Match happens alongside the Finals
-        matchIndex: 1, // Finals is index 0
-        warriorIdA: losers[0]!.id,
-        warriorIdD: losers[1]!.id,
-        stableIdA: losers[0]!.stableId,
-        stableIdD: losers[1]!.stableId,
-      };
-      bracket.push(bronzeBout);
+      const bA = losers[0];
+      const bD = losers[1];
+      if (bA && bD) {
+        const bronzeBout = {
+          round: 6, // Bronze Match happens alongside the Finals
+          matchIndex: 1, // Finals is index 0
+          warriorIdA: bA.id,
+          warriorIdD: bD.id,
+          stableIdA: bA.stableId,
+          stableIdD: bD.stableId,
+        };
+        bracket.push(bronzeBout);
+      }
     }
   }
 
   const isComplete = winners.length <= 1;
-  const champion = isComplete && winners.length > 0 ? winners[0]!.name : undefined;
+  const champion = isComplete && winners.length > 0 ? winners[0]?.name : undefined;
 
   const updatedTournaments = (state.tournaments || []).map((t) =>
     t.id === tournamentId ? { ...t, bracket, completed: isComplete, champion } : t

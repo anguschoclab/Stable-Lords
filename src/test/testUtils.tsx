@@ -3,26 +3,19 @@ import { render } from '@testing-library/react';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { GameState } from '@/types/game';
-import '@/test/setup'; /**
- * Render with game state.
- * @param ui - Ui.
- * @param partialState - Partial state.
- * @returns The result.
- */
+import { useGameStore } from '@/state/useGameStore';
+import '@/test/setup';
 
-// A helper to inject a mock state into the Zustand store before rendering
 /**
- * Render with game state.
- * @param ui - Ui.
- * @param partialState - Partial state.
- * @returns The result.
+ * A helper to inject a mock state into the Zustand store before rendering.
+ * @param ui - React element to render.
+ * @param partialState - Partial state overrides.
+ * @returns The rendered result.
  */
 export function renderWithGameState(
   ui: React.ReactElement,
   partialState: Partial<ReturnType<typeof createFreshState>> = {}
 ) {
-  // Import useGameStore dynamically inside the function to ensure it's initialized
-  const { useGameStore } = require('@/state/useGameStore');
 
   // Get a clean base state
   const baseState = createFreshState('test-seed');

@@ -1,14 +1,14 @@
 import { cn } from '@/lib/utils';
 import { cryptoRandom } from '@/utils/cryptoRandom'; /**
- * Arena tier type.
- */
+                                                      * Arena tier type.
+                                                      */
 
 /**
  * Arena tier type.
  */
 export type ArenaTier = 'training' | 'standard' | 'championship' | 'grand'; /**
- * Season type.
- */
+                                                                             * Season type.
+                                                                             */
 
 /**
  * Season type.

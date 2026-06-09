@@ -44,9 +44,9 @@ import SavedGamesSection from '@/components/startGame/SavedGamesSection';
 import { formatDate } from '@/utils/dateUtils';
 
 type Screen = 'title' | 'newGame'; /**
- * Start game.
- * @returns The result.
- */
+                                    * Start game.
+                                    * @returns The result.
+                                    */
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 

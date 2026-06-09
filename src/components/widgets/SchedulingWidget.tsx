@@ -105,10 +105,10 @@ function MatchupCard({ matchup, type }: MatchupCardProps) {
 interface SchedulingWidgetProps {
   warrior: Warrior;
 } /**
- * Scheduling widget.
- * @param - { warrior }.
- * @returns The result.
- */
+   * Scheduling widget.
+   * @param - { warrior }.
+   * @returns The result.
+   */
 
 /**
  * Scheduling widget.

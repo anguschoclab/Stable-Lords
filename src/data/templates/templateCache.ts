@@ -12,8 +12,8 @@ import { MINOR_TEMPLATES } from './minorTemplates';
 
 // Cache storage for filtered results
 const templateCache = new Map<string, StableTemplate[]>(); /**
- * All_templates.
- */
+                                                            * All_templates.
+                                                            */
 
 // Combined all templates for convenience
 /**
@@ -25,8 +25,8 @@ export const ALL_TEMPLATES: StableTemplate[] = [
   ...ESTABLISHED_TEMPLATES,
   ...MINOR_TEMPLATES,
 ]; /**
- * Tier_caches.
- */
+    * Tier_caches.
+    */
 
 // Pre-computed tier caches for instant access
 /**

@@ -15,9 +15,9 @@ interface CoachWarning {
   icon: LucideIcon;
   color: string;
 } /**
- * Coach overlay.
- * @returns The result.
- */
+   * Coach overlay.
+   * @returns The result.
+   */
 
 /**
  * Coach overlay.

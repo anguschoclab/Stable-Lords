@@ -273,13 +273,13 @@ export function CombatExecutionPanel({
     handleStartAutosim,
   } = combat;
 
-  if (!showCombat) return null;
-
   const handleSealResults = useCallback(() => {
     setShowCombat(false);
     setResults([]);
     setAutosimResult(null);
   }, [setShowCombat, setResults, setAutosimResult]);
+
+  if (!showCombat) return null;
 
   return (
     <div className="space-y-10 border-t-2 border-primary/20 pt-16 animate-in slide-in-from-bottom-10 duration-700 ease-out">

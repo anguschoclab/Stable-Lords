@@ -88,15 +88,15 @@ export function committeeSelection(
 
   return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
 } /**
- * Build tournament.
- * @param tierId - Tier id.
- * @param tierName - Tier name.
- * @param warriors - Warriors.
- * @param week - Week.
- * @param season - Season.
- * @param rng - Rng.
- * @returns The result.
- */
+   * Build tournament.
+   * @param tierId - Tier id.
+   * @param tierName - Tier name.
+   * @param warriors - Warriors.
+   * @param week - Week.
+   * @param season - Season.
+   * @param rng - Rng.
+   * @returns The result.
+   */
 
 /**
  * Build tournament.
@@ -120,14 +120,17 @@ export function buildTournament(
   const shuffled = rng.shuffle([...warriors]);
   const bracket: TournamentBout[] = [];
 
-  for (let i = 0; i < 64; i += 2) {
+  for (let i = 0; i < shuffled.length && i < 64; i += 2) {
+    const wA = shuffled[i];
+    const wD = shuffled[i + 1];
+    if (!wA || !wD) break;
     bracket.push({
       round: 1,
       matchIndex: i / 2,
-      warriorIdA: shuffled[i]!.id,
-      warriorIdD: shuffled[i + 1]!.id,
-      stableIdA: shuffled[i]!.stableId,
-      stableIdD: shuffled[i + 1]!.stableId,
+      warriorIdA: wA.id,
+      warriorIdD: wD.id,
+      stableIdA: wA.stableId,
+      stableIdD: wD.stableId,
     });
   }
 

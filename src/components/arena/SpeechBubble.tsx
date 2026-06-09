@@ -7,10 +7,10 @@ interface SpeechBubbleProps {
   onDismiss: (id: string) => void;
   position?: 'left' | 'right';
 } /**
- * Speech bubble.
- * @param - { bubble, on dismiss, position = 'left' }.
- * @returns The result.
- */
+   * Speech bubble.
+   * @param - { bubble, on dismiss, position = 'left' }.
+   * @returns The result.
+   */
 
 /**
  * Speech bubble.

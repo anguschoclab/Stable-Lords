@@ -379,8 +379,8 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 } /**
- * Opfs archive.
- */
+   * Opfs archive.
+   */
 
 /**
  * Opfs archive.

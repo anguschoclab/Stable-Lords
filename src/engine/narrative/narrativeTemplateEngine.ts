@@ -98,9 +98,9 @@ export function getFromArchive(rng: IRNGService, path: string[]): string {
 }
 
 /**
- * Compatibility class namespace wrapping the standalone functions.
+ * Compatibility namespace wrapping the standalone functions.
  */
-export class NarrativeTemplateEngine {
-  static interpolateTemplate = interpolateTemplate;
-  static getFromArchive = getFromArchive;
-}
+export const NarrativeTemplateEngine = {
+  interpolateTemplate,
+  getFromArchive,
+} as const;

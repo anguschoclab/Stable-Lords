@@ -8,7 +8,8 @@ import type { FightSummary } from '@/types/combat.types';
 export function getFightsForWeek(arenaHistory: FightSummary[], week: number): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = arenaHistory.length - 1; i >= 0; i--) {
-    const f = arenaHistory[i]!;
+    const f = arenaHistory[i];
+    if (!f) continue;
     if (f.week === week) {
       result.push(f);
     } else if (f.week < week) {
@@ -26,7 +27,8 @@ export function getFightsForWeek(arenaHistory: FightSummary[], week: number): Fi
 export function getRecentFights(arenaHistory: FightSummary[], minWeek: number): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = arenaHistory.length - 1; i >= 0; i--) {
-    const f = arenaHistory[i]!;
+    const f = arenaHistory[i];
+    if (!f) continue;
     if (f.week >= minWeek) {
       result.push(f);
     } else {
@@ -48,7 +50,8 @@ export function getRecentFightsForWarrior(
 ): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = arenaHistory.length - 1; i >= 0; i--) {
-    const f = arenaHistory[i]!;
+    const f = arenaHistory[i];
+    if (!f) continue;
     if (f.warriorIdA === warriorId || f.warriorIdD === warriorId) {
       result.push(f);
       if (result.length >= limit) {
@@ -70,7 +73,8 @@ export function getAllFightsForWarrior(
 ): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = 0; i < arenaHistory.length; i++) {
-    const f = arenaHistory[i]!;
+    const f = arenaHistory[i];
+    if (!f) continue;
     if (f.warriorIdA === warriorId || f.warriorIdD === warriorId) {
       result.push(f);
     }
@@ -85,7 +89,8 @@ export function getAllFightsForWarrior(
 export function getFightsForArena(arenaHistory: FightSummary[], arenaId: string): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = 0; i < arenaHistory.length; i++) {
-    const f = arenaHistory[i]!;
+    const f = arenaHistory[i];
+    if (!f) continue;
     if (f.arenaId === arenaId) result.push(f);
   }
   return result;
@@ -103,7 +108,8 @@ export function getFightsForTournament(
 ): FightSummary[] {
   const result: FightSummary[] = [];
   for (let i = arenaHistory.length - 1; i >= 0; i--) {
-    const f = arenaHistory[i]!;
+    const f = arenaHistory[i];
+    if (!f) continue;
     if (f.tournamentId === tournamentId) {
       result.push(f);
     }

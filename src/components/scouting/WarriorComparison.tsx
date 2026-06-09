@@ -12,10 +12,10 @@ interface WarriorComparisonProps {
   rivals: RivalStableData[];
   playerRoster: Warrior[];
 } /**
- * Warrior comparison.
- * @param - { rivals, player roster }.
- * @returns The result.
- */
+   * Warrior comparison.
+   * @param - { rivals, player roster }.
+   * @returns The result.
+   */
 
 /**
  * Warrior comparison.

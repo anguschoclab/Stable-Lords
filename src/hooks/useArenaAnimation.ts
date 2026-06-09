@@ -135,11 +135,11 @@ export function useArenaAnimation(
     updatePose,
   };
 } /**
- * Set fighter names.
- * @param a - A.
- * @param d - D.
- * @returns The result.
- */
+   * Set fighter names.
+   * @param a - A.
+   * @param d - D.
+   * @returns The result.
+   */
 
 /**
  * Set fighter names.

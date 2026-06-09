@@ -1,8 +1,8 @@
 import type { Warrior, TournamentEntry, TournamentBout, Season } from '@/types/state.types';
 import type { TournamentId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
- * Defines the shape of tournament bracket config.
- */
+                                                                   * Defines the shape of tournament bracket config.
+                                                                   */
 
 /**
  * Defines the shape of tournament bracket config.
@@ -15,8 +15,8 @@ export interface TournamentBracketConfig {
   season: Season;
   rng: IRNGService;
 } /**
- * Defines the shape of bracket match.
- */
+   * Defines the shape of bracket match.
+   */
 
 /**
  * Defines the shape of bracket match.
@@ -32,14 +32,17 @@ export function buildTournament(config: TournamentBracketConfig): TournamentEntr
   const shuffled = rngService.shuffle([...warriors]);
   const bracket: TournamentBout[] = [];
 
-  for (let i = 0; i < 64; i += 2) {
+  for (let i = 0; i < shuffled.length && i < 64; i += 2) {
+    const wA = shuffled[i];
+    const wD = shuffled[i + 1];
+    if (!wA || !wD) break;
     bracket.push({
       round: 1,
       matchIndex: i / 2,
-      warriorIdA: shuffled[i]!.id,
-      warriorIdD: shuffled[i + 1]!.id,
-      stableIdA: shuffled[i]!.stableId,
-      stableIdD: shuffled[i + 1]!.stableId,
+      warriorIdA: wA.id,
+      warriorIdD: wD.id,
+      stableIdA: wA.stableId,
+      stableIdD: wD.stableId,
     });
   }
 

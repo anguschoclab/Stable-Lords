@@ -7,12 +7,12 @@ import { awardTournamentPrizes } from './awards';
 import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate'; /**
- * Resolve round.
- * @param state - State.
- * @param tournamentId - Tournament id.
- * @param seed - Seed.
- * @returns The result.
- */
+                                                                               * Resolve round.
+                                                                               * @param state - State.
+                                                                               * @param tournamentId - Tournament id.
+                                                                               * @param seed - Seed.
+                                                                               * @returns The result.
+                                                                               */
 
 /**
  * Resolve round.
@@ -116,20 +116,24 @@ export function resolveRound(
 
     // Standard Bracket progression
     for (let i = 0; i < winners.length; i += 2) {
+      const wA = winners[i];
+      if (!wA) continue;
       if (i + 1 < winners.length) {
+        const wD = winners[i + 1];
+        if (!wD) continue;
         bracket.push({
           round: nextRound,
           matchIndex: i / 2,
-          warriorIdA: winners[i]!.id,
-          warriorIdD: winners[i + 1]!.id,
-          stableIdA: winners[i]!.stableId,
-          stableIdD: winners[i + 1]!.stableId,
+          warriorIdA: wA.id,
+          warriorIdD: wD.id,
+          stableIdA: wA.stableId,
+          stableIdD: wD.stableId,
         });
       } else {
         bracket.push({
           round: nextRound,
           matchIndex: i / 2,
-          warriorIdA: winners[i]!.id,
+          warriorIdA: wA.id,
           warriorIdD: 'bye' as unknown as WarriorId,
           winner: 'A',
         });
@@ -138,21 +142,25 @@ export function resolveRound(
 
     // 🥉 Bronze Match Injection: If we just finished Semi-Finals (Round 5, winners.length === 2)
     if (currentRound === 5 && losers.length === 2) {
-      const bronzeBout: TournamentBout = {
-        round: 6, // Bronze Match happens alongside the Finals
-        matchIndex: 1, // Finals is index 0
-        warriorIdA: losers[0]!.id,
-        warriorIdD: losers[1]!.id,
-        stableIdA: losers[0]!.stableId,
-        stableIdD: losers[1]!.stableId,
-      };
-      bracket.push(bronzeBout);
+      const bA = losers[0];
+      const bD = losers[1];
+      if (bA && bD) {
+        const bronzeBout: TournamentBout = {
+          round: 6, // Bronze Match happens alongside the Finals
+          matchIndex: 1, // Finals is index 0
+          warriorIdA: bA.id,
+          warriorIdD: bD.id,
+          stableIdA: bA.stableId,
+          stableIdD: bD.stableId,
+        };
+        bracket.push(bronzeBout);
+      }
     }
   }
 
   // 🏆 7-round tournament: R1(32) → R2(16) → R3(8) → QF(4) → SF(2) → 3rd(1) → Finals(1)
   const isComplete = winners.length <= 1 && currentRound >= 7;
-  const champion = isComplete ? winners[0]!.name : undefined;
+  const champion = isComplete ? winners[0]?.name : undefined;
 
   updatedState.tournaments = (updatedState.tournaments || []).map((t) =>
     t.id === tournamentId ? { ...t, bracket, completed: isComplete, champion } : t
@@ -168,12 +176,12 @@ export function resolveRound(
       isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${tournament.name}!`] : [],
   };
 } /**
- * Resolve complete tournament.
- * @param state - State.
- * @param tournamentId - Tournament id.
- * @param seed - Seed.
- * @returns The result.
- */
+   * Resolve complete tournament.
+   * @param state - State.
+   * @param tournamentId - Tournament id.
+   * @param seed - Seed.
+   * @returns The result.
+   */
 
 /**
  * Resolve complete tournament.
@@ -199,17 +207,17 @@ export function resolveCompleteTournament(
   }
   return current;
 } /**
- * Apply bout results.
- * @param state - State.
- * @param wA - W a.
- * @param wD - W d.
- * @param outcome - Outcome.
- * @param tId - T id.
- * @param tName - T name.
- * @param rng - Rng.
- * @param skipFatigue - Skip fatigue. (optional)
- * @returns The result.
- */
+   * Apply bout results.
+   * @param state - State.
+   * @param wA - W a.
+   * @param wD - W d.
+   * @param outcome - Outcome.
+   * @param tId - T id.
+   * @param tName - T name.
+   * @param rng - Rng.
+   * @param skipFatigue - Skip fatigue. (optional)
+   * @returns The result.
+   */
 
 /**
  * Apply bout results.

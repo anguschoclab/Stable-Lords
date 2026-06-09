@@ -54,8 +54,8 @@ function buildProxy(): AsyncEngine {
   const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
   return Comlink.wrap<EngineWorker>(worker) as unknown as AsyncEngine;
 } /**
- * Engine proxy.
- */
+   * Engine proxy.
+   */
 
 /**
  * Engine proxy.

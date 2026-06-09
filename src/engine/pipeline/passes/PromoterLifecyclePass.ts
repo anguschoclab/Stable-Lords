@@ -16,11 +16,11 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Flashy',
   'Corporate',
 ]; /**
- * Run promoter lifecycle pass.
- * @param state - State.
- * @param rng - Rng. (optional)
- * @returns The result.
- */
+    * Run promoter lifecycle pass.
+    * @param state - State.
+    * @param rng - Rng. (optional)
+    * @returns The result.
+    */
 
 /**
  * Run promoter lifecycle pass.

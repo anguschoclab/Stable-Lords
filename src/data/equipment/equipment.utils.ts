@@ -16,18 +16,18 @@ import type {
   WeaponReqCheck,
   LoadoutIssue,
 } from './equipment.types'; /**
- * All_equipment.
- */
+                             * All_equipment.
+                             */
 
 // Combined all equipment for convenience
 /**
  * All_equipment.
  */
 export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS, ...HELMS]; /**
- * Get item by id.
- * @param id - Id.
- * @returns The result.
- */
+                                                                                              * Get item by id.
+                                                                                              * @param id - Id.
+                                                                                              * @returns The result.
+                                                                                              */
 
 /**
  * Get item by id.
@@ -37,10 +37,10 @@ export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS
 export function getItemById(id: string): EquipmentItem | undefined {
   return ALL_EQUIPMENT.find((item) => item.id === id);
 } /**
- * Get item by code.
- * @param code - Code.
- * @returns The result.
- */
+   * Get item by code.
+   * @param code - Code.
+   * @returns The result.
+   */
 
 /**
  * Get item by code.
@@ -50,11 +50,11 @@ export function getItemById(id: string): EquipmentItem | undefined {
 export function getItemByCode(code: string): EquipmentItem | undefined {
   return ALL_EQUIPMENT.find((item) => item.code === code);
 } /**
- * Get available items.
- * @param slot - Slot.
- * @param style - Style.
- * @returns The result.
- */
+   * Get available items.
+   * @param slot - Slot.
+   * @param style - Style.
+   * @returns The result.
+   */
 
 /**
  * Get available items.
@@ -67,11 +67,11 @@ export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): Eq
     slot === 'weapon' ? WEAPONS : slot === 'armor' ? ARMORS : slot === 'shield' ? SHIELDS : HELMS;
   return pool.filter((item) => !item.restrictedStyles?.includes(style));
 } /**
- * Is preferred weapon.
- * @param item - Item.
- * @param style - Style.
- * @returns The result.
- */
+   * Is preferred weapon.
+   * @param item - Item.
+   * @param style - Style.
+   * @returns The result.
+   */
 
 /**
  * Is preferred weapon.
@@ -82,8 +82,8 @@ export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): Eq
 export function isPreferredWeapon(item: EquipmentItem, style: FightingStyle): boolean {
   return item.preferredStyles?.includes(style) ?? false;
 } /**
- * Default_loadout.
- */
+   * Default_loadout.
+   */
 
 /**
  * Default_loadout.
@@ -114,10 +114,10 @@ export function getStyleDefaultLoadout(style: FightingStyle): EquipmentLoadout {
     helm: 'leather_cap',
   };
 } /**
- * Get loadout weight.
- * @param loadout - Loadout.
- * @returns The result.
- */
+   * Get loadout weight.
+   * @param loadout - Loadout.
+   * @returns The result.
+   */
 
 /**
  * Get loadout weight.
@@ -209,11 +209,11 @@ export function checkWeaponRequirements(
     endurancePenalty: 1 + totalDeficit * 0.1,
   };
 } /**
- * Is over encumbered.
- * @param loadout - Loadout.
- * @param carryCap - Carry cap.
- * @returns The result.
- */
+   * Is over encumbered.
+   * @param loadout - Loadout.
+   * @param carryCap - Carry cap.
+   * @returns The result.
+   */
 
 /**
  * Is over encumbered.

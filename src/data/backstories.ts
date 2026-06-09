@@ -1,8 +1,8 @@
 import type { GameState, Owner, OwnerPersonality, MetaAdaptation } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
- * Backstory id type.
- */
+                                                                   * Backstory id type.
+                                                                   */
 
 /**
  * Backstory id type.
@@ -17,8 +17,8 @@ export type BackstoryId =
   | 'cutpurse'
   | 'priest'
   | 'sellsword'; /**
- * Defines the shape of backstory economy.
- */
+                  * Defines the shape of backstory economy.
+                  */
 
 /**
  * Defines the shape of backstory economy.
@@ -29,8 +29,8 @@ export interface BackstoryEconomy {
   renownDelta?: number;
   rosterBonusDelta?: number;
 } /**
- * Defines the shape of backstory identity seed.
- */
+   * Defines the shape of backstory identity seed.
+   */
 
 /**
  * Defines the shape of backstory identity seed.
@@ -40,8 +40,8 @@ export interface BackstoryIdentitySeed {
   metaAdaptationWeights: Partial<Record<MetaAdaptation, number>>;
   favoredStyles?: FightingStyle[];
 } /**
- * Defines the shape of backstory def.
- */
+   * Defines the shape of backstory def.
+   */
 
 /**
  * Defines the shape of backstory def.
@@ -55,8 +55,8 @@ export interface BackstoryDef {
   economy: BackstoryEconomy;
   identitySeed: BackstoryIdentitySeed;
 } /**
- * Backstories.
- */
+   * Backstories.
+   */
 
 /**
  * Backstories.
@@ -178,15 +178,15 @@ export const BACKSTORIES: Record<BackstoryId, BackstoryDef> = {
     },
   },
 }; /**
- * Backstory_list.
- */
+    * Backstory_list.
+    */
 
 /**
  * Backstory_list.
  */
 export const BACKSTORY_LIST: BackstoryDef[] = Object.values(BACKSTORIES); /**
- * Backstory_ids.
- */
+                                                                           * Backstory_ids.
+                                                                           */
 
 /**
  * Backstory_ids.

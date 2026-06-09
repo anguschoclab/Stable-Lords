@@ -21,8 +21,8 @@ import { TRAITS, generateTraits } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator'; /**
- * Recruit tier type.
- */
+                                                                                  * Recruit tier type.
+                                                                                  */
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -30,8 +30,8 @@ import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
  * Recruit tier type.
  */
 export type RecruitTier = 'Common' | 'Promising' | 'Exceptional' | 'Prodigy'; /**
- * Defines the shape of pool warrior.
- */
+                                                                               * Defines the shape of pool warrior.
+                                                                               */
 
 /**
  * Defines the shape of pool warrior.
@@ -64,22 +64,22 @@ export interface PoolWarrior {
  * Tier_cost.
  */
 export const TIER_COST: Record<RecruitTier, number> = {
-  Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common!.cost,
-  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising!.cost,
-  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional!.cost,
-  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy!.cost,
+  Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common?.cost ?? 0,
+  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising?.cost ?? 0,
+  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional?.cost ?? 0,
+  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy?.cost ?? 0,
 }; /**
- * Tier_stars.
- */
+    * Tier_stars.
+    */
 
 /**
  * Tier_stars.
  */
 export const TIER_STARS: Record<RecruitTier, number> = {
-  Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common!.stars,
-  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising!.stars,
-  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional!.stars,
-  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy!.stars,
+  Common: (narrativeContent as NarrativeContent).recruitment.tiers.Common?.stars ?? 0,
+  Promising: (narrativeContent as NarrativeContent).recruitment.tiers.Promising?.stars ?? 0,
+  Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional?.stars ?? 0,
+  Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy?.stars ?? 0,
 };
 
 /**

@@ -60,7 +60,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
             <summary className="text-[10px] text-muted-foreground uppercase tracking-widest cursor-pointer hover:text-primary transition-colors">
               Error Details
             </summary>
-            <pre className="mt-2 text-[9px] text-red-400 bg-black/50 p-3 rounded overflow-auto max-h-40 whitespace-pre-wrap">
+            <pre className="mt-2 text-[9px] text-destructive bg-black/50 p-3 rounded overflow-auto max-h-40 whitespace-pre-wrap">
               {this.state.error.message}
             </pre>
           </details>

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { ArrowUpDown } from 'lucide-react'; /**
+import { ArrowUpDown } from 'lucide-react';
+import { Button } from '@/components/ui/button'; /**
  * Sort dir type.
  */
 
@@ -33,10 +34,12 @@ export function SortHeader({ label, active, dir, onClick }: SortHeaderProps) {
   const ariaLabel = typeof label === 'string' ? `Sort by ${label}` : 'Sort table column';
 
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={onClick}
       aria-label={ariaLabel}
-      className="flex items-center gap-1 hover:text-foreground transition-colors"
+      className="flex items-center gap-1 hover:text-foreground transition-colors group p-0 h-auto"
     >
       <span>{label}</span>
       <span className="sr-only">
@@ -49,9 +52,9 @@ export function SortHeader({ label, active, dir, onClick }: SortHeaderProps) {
           : ' (click to sort)'}
       </span>
       <ArrowUpDown
-        className={`h-3 w-3 ${active ? 'text-primary' : 'text-muted-foreground/40'}`}
+        className={`h-3 w-3 ${active ? 'text-primary' : 'text-muted-foreground/40 group-hover:text-muted-foreground/70'}`}
         aria-hidden="true"
       />
-    </button>
+    </Button>
   );
 }

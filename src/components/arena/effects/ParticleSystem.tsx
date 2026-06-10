@@ -115,9 +115,9 @@ export default function ParticleSystem({
           key={p.id}
           className={cn(
             'absolute rounded-full',
-            p.type === 'blood' && 'bg-red-600',
-            p.type === 'spark' && 'bg-yellow-400',
-            p.type === 'dust' && 'bg-amber-700/60',
+            p.type === 'blood' && 'bg-arena-blood',
+            p.type === 'spark' && 'bg-arena-gold',
+            p.type === 'dust' && 'bg-arena-bone/60',
             p.type === 'sweat' && 'bg-blue-300/40'
           )}
           style={{

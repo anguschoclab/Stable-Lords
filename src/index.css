@@ -1083,7 +1083,25 @@
   .animate-bounce,
   .animate-spin,
   .animate-pulse-slow,
-  .animate-fade-in {
+  .animate-fade-in,
+  .animate-advancing,
+  .animate-retreating,
+  .animate-lunging,
+  .animate-defending,
+  .animate-stunned,
+  .animate-victorious,
+  .animate-defeated,
+  .animate-idle-aggressive,
+  .animate-idle-defensive,
+  .animate-idle-balanced,
+  .animate-idle-aimed,
+  .animate-idle-striking,
+  .animate-shake-low,
+  .animate-shake-medium,
+  .animate-shake-high,
+  .crowd-cheer,
+  .crowd-gasp,
+  .crowd-chant {
     animation: none !important;
   }
 

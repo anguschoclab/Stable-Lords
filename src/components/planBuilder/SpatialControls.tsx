@@ -112,6 +112,7 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
             return (
               <button
                 key={r}
+                aria-label={`Set Range Preference to ${r}`}
                 onClick={() => onPlanChange({ ...plan, rangePreference: r })}
                 className={cn(
                   'py-1.5 text-[9px] font-black uppercase tracking-wider border transition-all',

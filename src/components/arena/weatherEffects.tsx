@@ -22,7 +22,7 @@ function RainEffect() {
       {Array.from({ length: 50 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-4 bg-blue-300/30 animate-rain"
+          className="absolute w-px h-4 bg-primary/30 animate-rain"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 2}s`,
@@ -40,7 +40,7 @@ function BloodRainEffect() {
       {Array.from({ length: 55 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-4 bg-red-700/40 animate-rain"
+          className="absolute w-px h-4 bg-arena-blood/40 animate-rain"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 2}s`,
@@ -49,7 +49,7 @@ function BloodRainEffect() {
         />
       ))}
       {/* Crimson pooling on the sand */}
-      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-red-900/10 blur-xl" />
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-arena-blood/10 blur-xl" />
     </div>
   );
 }

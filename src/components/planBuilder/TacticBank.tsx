@@ -49,6 +49,7 @@ export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {})
         {TACTIC_BANK.map((t) => (
           <button
             key={t.id}
+            aria-label={`Select Tactic: ${t.id}`}
             onClick={() => handleClick(t)}
             className={cn(
               'flex items-center gap-3 p-3 text-xs font-bold uppercase tracking-wider border transition-all duration-200 text-left',

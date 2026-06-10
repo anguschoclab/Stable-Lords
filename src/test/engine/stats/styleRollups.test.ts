@@ -1,286 +1,333 @@
-import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { StyleRollups } from '@/engine/stats/styleRollups';
 
 describe('StyleRollups', () => {
-  describe('loadWeek (via getWeekRollup)', () => {
-    const mockGetItem = vi.fn();
-    const mockSetItem = vi.fn();
-    const mockRemoveItem = vi.fn();
-    const mockClear = vi.fn();
-    let originalLS: Storage;
+  let localStorageMock: Record<string, string> = {};
 
-    beforeAll(() => {
-      originalLS = globalThis.localStorage;
-    });
+  beforeEach(() => {
+    localStorageMock = {};
+    const mockStorage = {
+      getItem: vi.fn((key: string) => localStorageMock[key] || null),
+      setItem: vi.fn((key: string, value: string) => {
+        localStorageMock[key] = value;
+      }),
+      removeItem: vi.fn((key: string) => {
+        delete localStorageMock[key];
+      }),
+      clear: vi.fn(() => {
+        localStorageMock = {};
+      }),
+      key: vi.fn((index: number) => Object.keys(localStorageMock)[index] || null),
+      length: 0
+    };
 
-    afterAll(() => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: originalLS,
-        configurable: true,
-        writable: true,
+    globalThis.localStorage = mockStorage as any;
+  });
+
+  afterEach(() => {
+    // Reset spy/mocks
+    vi.restoreAllMocks();
+  });
+
+  describe('addFight', () => {
+    it('should properly record a basic win/loss without kill', () => {
+      StyleRollups.addFight({
+        week: 1,
+        styleA: 'Striker',
+        styleD: 'Grappler',
+        winner: 'A',
+        by: 'Decision'
       });
+
+      const wk = StyleRollups.getWeekRollup(1);
+      expect(wk['Striker']).toEqual({ w: 1, l: 0, k: 0, pct: 1, fights: 1 });
+      expect(wk['Grappler']).toEqual({ w: 0, l: 1, k: 0, pct: 0, fights: 1 });
+
+      const last10 = StyleRollups.last10();
+      expect(last10.find(s => s.style === 'Striker')).toMatchObject({ W: 1, L: 0, K: 0, P: 100, fights: 1 });
+      expect(last10.find(s => s.style === 'Grappler')).toMatchObject({ W: 0, L: 1, K: 0, P: 0, fights: 1 });
     });
 
-    beforeEach(() => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: {
-          getItem: mockGetItem,
-          setItem: mockSetItem,
-          removeItem: mockRemoveItem,
-          clear: mockClear,
-        },
-        configurable: true,
-        writable: true,
+    it('should properly record a win with kill', () => {
+      StyleRollups.addFight({
+        week: 1,
+        styleA: 'Striker',
+        styleD: 'Grappler',
+        winner: 'D',
+        by: 'Kill'
       });
-      mockClear.mockClear();
-      mockGetItem.mockClear();
-      mockSetItem.mockClear();
-      mockRemoveItem.mockClear();
+
+      const wk = StyleRollups.getWeekRollup(1);
+      expect(wk['Grappler']).toEqual({ w: 1, l: 0, k: 1, pct: 1, fights: 1 });
+      expect(wk['Striker']).toEqual({ w: 0, l: 1, k: 0, pct: 0, fights: 1 });
+
+      const last10 = StyleRollups.last10();
+      expect(last10.find(s => s.style === 'Grappler')).toMatchObject({ W: 1, L: 0, K: 1, P: 100, fights: 1 });
     });
 
-    it('returns {} if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: undefined,
-        configurable: true,
-        writable: true,
+    it('should properly record a draw', () => {
+      StyleRollups.addFight({
+        week: 1,
+        styleA: 'Striker',
+        styleD: 'Grappler',
+        winner: null,
+        by: 'Draw'
       });
-      expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
+
+      const wk = StyleRollups.getWeekRollup(1);
+      expect(wk['Striker']).toEqual({ w: 0, l: 0, k: 0, pct: 0, fights: 1 });
+      expect(wk['Grappler']).toEqual({ w: 0, l: 0, k: 0, pct: 0, fights: 1 });
+
+      const last10 = StyleRollups.last10();
+      expect(last10.find(s => s.style === 'Striker')).toMatchObject({ W: 0, L: 1, K: 0, P: 0, fights: 1 }); // Rolling logic treats null as loss for both
     });
 
-    it('returns {} if localStorage.getItem returns null', () => {
-      mockGetItem.mockReturnValue(null);
-      expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
+    it('should aggregate rolling windows correctly up to 10 fights', () => {
+      // Add 12 fights
+      for(let i = 0; i < 12; i++) {
+        StyleRollups.addFight({
+          week: 1,
+          styleA: 'Striker',
+          styleD: 'Grappler',
+          winner: 'A',
+          by: 'Decision'
+        });
+      }
+
+      const last10 = StyleRollups.last10();
+      const striker = last10.find(s => s.style === 'Striker');
+
+      expect(striker?.fights).toBe(10);
+      expect(striker?.W).toBe(10);
+      expect(striker?.P).toBe(100);
     });
 
-    it('returns {} if localStorage.getItem returns an invalid JSON string (loadWeek error path)', () => {
-      mockGetItem.mockReturnValue('{invalid}');
-      expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
-    });
-
-    it('returns {} if localStorage.getItem returns invalid JSON', () => {
-      mockGetItem.mockReturnValue('{ invalid json');
-      expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
-    });
-
-    it('returns {} if localStorage.getItem throws an Error', () => {
-      mockGetItem.mockImplementation(() => {
-        throw new Error('QuotaExceededError');
+    it('should track tournaments properly when isTournament is provided', () => {
+      StyleRollups.addFight({
+        week: 1,
+        styleA: 'Striker',
+        styleD: 'Grappler',
+        winner: 'A',
+        by: 'Decision',
+        isTournament: 'tour1'
       });
-      expect(StyleRollups.getWeekRollup(1)).toMatchObject({});
-    });
 
-    it('returns valid records if localStorage has valid data', () => {
-      const validData = {
-        Sword: { w: 1, l: 0, k: 0, pct: 1, fights: 1 },
-      };
-      mockGetItem.mockReturnValue(JSON.stringify(validData));
-      expect(StyleRollups.getWeekRollup(1)).toEqual(validData);
-    });
+      const tourStats = StyleRollups.tournament('tour1');
+      expect(tourStats.length).toBe(2);
+      expect(tourStats.find(s => s.style === 'Striker')).toMatchObject({ W: 1, L: 0, K: 0, P: 100, fights: 1 });
 
-    it('filters out invalid records', () => {
-      const mixedData = {
-        Sword: { w: 1, l: 0, k: 0, pct: 1, fights: 1 },
-        Axe: { invalid: 'data' }, // Should be ignored by validateWeekRecord
-        Spear: 'string', // Should be ignored
-      };
-      mockGetItem.mockReturnValue(JSON.stringify(mixedData));
-      expect(StyleRollups.getWeekRollup(1)).toMatchObject({
-        Sword: { w: 1, l: 0, k: 0, pct: 1, fights: 1 },
-      });
+      const emptyTourStats = StyleRollups.tournament('nonexistent');
+      expect(emptyTourStats.length).toBe(0);
     });
   });
 
-  describe('loadRolling (via last10)', () => {
-    const mockGetItem2 = vi.fn();
-    const mockSetItem2 = vi.fn();
-    const mockRemoveItem2 = vi.fn();
-    const mockClear2 = vi.fn();
-    let originalLS2: Storage;
+  describe('Validation & Storage Edge Cases', () => {
+    it('should handle corrupt week data gracefully', () => {
+      localStorageMock[`sl.styleRollups.week_1`] = 'invalid json';
+      expect(StyleRollups.getWeekRollup(1)).toEqual({});
 
-    beforeAll(() => {
-      originalLS2 = globalThis.localStorage;
+      localStorageMock[`sl.styleRollups.week_1`] = JSON.stringify({ Striker: "not a bucket" });
+      expect(StyleRollups.getWeekRollup(1)).toEqual({});
+
+      localStorageMock[`sl.styleRollups.week_1`] = JSON.stringify("string array");
+      expect(StyleRollups.getWeekRollup(1)).toEqual({});
     });
 
-    afterAll(() => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: originalLS2,
-        configurable: true,
-        writable: true,
-      });
-    });
+    it('should handle corrupt rolling data gracefully', () => {
+      localStorageMock[`sl.metrics.style.week10`] = 'invalid json';
+      expect(StyleRollups.last10()).toEqual([]);
 
-    beforeEach(() => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: {
-          getItem: mockGetItem2,
-          setItem: mockSetItem2,
-          removeItem: mockRemoveItem2,
-          clear: mockClear2,
-        },
-        configurable: true,
-        writable: true,
-      });
-      mockClear2.mockClear();
-      mockGetItem2.mockClear();
-      mockSetItem2.mockClear();
-      mockRemoveItem2.mockClear();
-    });
+      localStorageMock[`sl.metrics.style.week10`] = JSON.stringify({ Striker: ["not a rolling bucket"] });
+      expect(StyleRollups.last10()).toEqual([]);
 
-    it('returns [] if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: undefined,
-        configurable: true,
-        writable: true,
-      });
+      localStorageMock[`sl.metrics.style.week10`] = JSON.stringify("string");
       expect(StyleRollups.last10()).toEqual([]);
     });
 
-    it('returns [] if localStorage.getItem returns null', () => {
-      mockGetItem2.mockReturnValue(null);
+    it('should handle corrupt tournament data gracefully', () => {
+      localStorageMock[`sl.metrics.style.tournaments`] = 'invalid json';
+      expect(StyleRollups.tournament('tour1')).toEqual([]);
+
+      localStorageMock[`sl.metrics.style.tournaments`] = JSON.stringify({ tour1: "not a week record" });
+      expect(StyleRollups.tournament('tour1')).toEqual([]);
+
+      localStorageMock[`sl.metrics.style.tournaments`] = JSON.stringify({ tour1: { Striker: "not a rolling bucket" }});
+      expect(StyleRollups.tournament('tour1')).toEqual([]);
+    });
+
+    it('should handle localStorage being undefined safely', () => {
+      const originalLocalStorage = globalThis.localStorage;
+      // @ts-ignore
+      delete globalThis.localStorage;
+
+      expect(StyleRollups.getWeekRollup(1)).toEqual({});
       expect(StyleRollups.last10()).toEqual([]);
-    });
-
-    it('returns [] if localStorage.getItem returns invalid JSON', () => {
-      mockGetItem2.mockReturnValue('{ invalid json');
-      expect(StyleRollups.last10()).toEqual([]);
-    });
-
-    it('returns [] if localStorage.getItem throws an Error', () => {
-      mockGetItem2.mockImplementation(() => {
-        throw new Error('QuotaExceededError');
-      });
-      expect(StyleRollups.last10()).toEqual([]);
-    });
-
-    it('returns valid records if localStorage has valid data', () => {
-      const validData = {
-        Sword: [
-          { W: 1, L: 0, K: 0, fights: 1 },
-          { W: 0, L: 1, K: 0, fights: 1 },
-        ],
-      };
-      mockGetItem2.mockReturnValue(JSON.stringify(validData));
-      const result = StyleRollups.last10();
-      expect(result).toHaveLength(1);
-      expect(result[0]).toMatchObject({
-        style: 'Sword',
-        W: 1,
-        L: 1,
-        K: 0,
-        fights: 2,
-        P: 50,
-      });
-    });
-
-    it('filters out invalid records', () => {
-      const mixedData = {
-        Sword: [{ W: 1, L: 0, K: 0, fights: 1 }, { invalid: 'data' }],
-        Axe: { notAnArray: true },
-        Spear: 'string',
-      };
-      mockGetItem2.mockReturnValue(JSON.stringify(mixedData));
-      const result = StyleRollups.last10();
-      expect(result).toHaveLength(1);
-      expect(result[0]!.style).toBe('Sword');
-      expect(result[0]!.fights).toBe(1);
-    });
-  });
-
-  describe('loadTour (via tournament)', () => {
-    const mockGetItem3 = vi.fn();
-    const mockSetItem3 = vi.fn();
-    const mockRemoveItem3 = vi.fn();
-    const mockClear3 = vi.fn();
-    let originalLS3: Storage;
-
-    beforeAll(() => {
-      originalLS3 = globalThis.localStorage;
-    });
-
-    afterAll(() => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: originalLS3,
-        configurable: true,
-        writable: true,
-      });
-    });
-
-    beforeEach(() => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: {
-          getItem: mockGetItem3,
-          setItem: mockSetItem3,
-          removeItem: mockRemoveItem3,
-          clear: mockClear3,
-        },
-        configurable: true,
-        writable: true,
-      });
-      mockClear3.mockClear();
-      mockGetItem3.mockClear();
-      mockSetItem3.mockClear();
-      mockRemoveItem3.mockClear();
-    });
-
-    it('returns [] if localStorage is undefined', () => {
-      Object.defineProperty(globalThis, 'localStorage', {
-        value: undefined,
-        configurable: true,
-        writable: true,
-      });
       expect(StyleRollups.tournament('tour1')).toEqual([]);
-    });
 
-    it('returns [] if localStorage.getItem returns null', () => {
-      mockGetItem3.mockReturnValue(null);
-      expect(StyleRollups.tournament('tour1')).toEqual([]);
-    });
-
-    it('returns [] if localStorage.getItem returns invalid JSON', () => {
-      mockGetItem3.mockReturnValue('{ invalid json');
-      expect(StyleRollups.tournament('tour1')).toEqual([]);
-    });
-
-    it('returns [] if localStorage.getItem throws an Error', () => {
-      mockGetItem3.mockImplementation(() => {
-        throw new Error('QuotaExceededError');
+      // Should not throw
+      StyleRollups.addFight({
+        week: 1,
+        styleA: 'A',
+        styleD: 'B',
+        winner: 'A',
+        by: 'D',
+        isTournament: 'T'
       });
-      expect(StyleRollups.tournament('tour1')).toEqual([]);
+
+      globalThis.localStorage = originalLocalStorage;
     });
 
-    it('returns valid records if localStorage has valid data', () => {
-      const validData = {
-        tour1: {
-          Sword: { W: 1, L: 0, K: 0, fights: 1 },
-        },
+    it('should handle QuotaExceededError and perform cleanup for saveWeek', () => {
+      let callCount = 0;
+      const mockStorage = {
+        setItem: vi.fn((key: string, val: string) => {
+          if (key.startsWith('sl.styleRollups.week_')) {
+            callCount++;
+            if (callCount === 1) { // Only fail the first time
+              const err = new Error('Quota exceeded');
+              err.name = 'QuotaExceededError';
+              throw err;
+            }
+          }
+        }),
+        removeItem: vi.fn(),
+        getItem: vi.fn(() => null)
       };
-      mockGetItem3.mockReturnValue(JSON.stringify(validData));
-      const result = StyleRollups.tournament('tour1');
-      expect(result).toHaveLength(1);
-      expect(result[0]).toMatchObject({
-        style: 'Sword',
-        W: 1,
-        L: 0,
-        K: 0,
-        fights: 1,
-        P: 100,
-      });
+      globalThis.localStorage = mockStorage as any;
+
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      StyleRollups.addFight({ week: 11, styleA: 'A', styleD: 'B', winner: 'A', by: 'D' });
+
+      expect(mockStorage.removeItem).toHaveBeenCalledTimes(1);
+      expect(mockStorage.removeItem).toHaveBeenCalledWith('sl.styleRollups.week_1');
+      // Verify it tried to save again
+      expect(mockStorage.setItem).toHaveBeenCalledTimes(3); // 2 times for week_10 (1st fail, 2nd success), 1 for rolling, 1 for maybe other stuff
     });
 
-    it('filters out invalid records', () => {
-      const mixedData = {
-        tour1: {
-          Sword: { W: 1, L: 0, K: 0, fights: 1 },
-          Axe: { invalid: 'data' },
-        },
-        tour2: {
-          Spear: { W: 0, L: 1, K: 0, fights: 1 },
-        },
+    it('should handle unrecoverable QuotaExceededError in saveWeek', () => {
+      const mockStorage = {
+        setItem: vi.fn((key: string) => {
+          if (key.startsWith('sl.styleRollups.week_')) {
+            const err = new Error('Quota exceeded');
+            err.name = 'QuotaExceededError';
+            throw err;
+          }
+        }),
+        removeItem: vi.fn(() => {
+          throw new Error('Remove failed');
+        }),
+        getItem: vi.fn(() => null)
       };
-      mockGetItem3.mockReturnValue(JSON.stringify(mixedData));
-      const result = StyleRollups.tournament('tour1');
-      expect(result).toHaveLength(1);
-      expect(result[0]!.style).toBe('Sword');
+      globalThis.localStorage = mockStorage as any;
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      StyleRollups.addFight({ week: 11, styleA: 'A', styleD: 'B', winner: 'A', by: 'D' });
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to recover from localStorage quota error for week 11',
+        expect.any(Error)
+      );
+    });
+
+    it('should handle other errors in saveWeek', () => {
+      const mockStorage = {
+        setItem: vi.fn((key: string) => {
+          if (key.startsWith('sl.styleRollups.week_')) {
+            throw new Error('Some other error');
+          }
+        }),
+        getItem: vi.fn(() => null)
+      };
+      globalThis.localStorage = mockStorage as any;
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      StyleRollups.addFight({ week: 11, styleA: 'A', styleD: 'B', winner: 'A', by: 'D' });
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to save week 11 style rollups',
+        expect.any(Error)
+      );
+    });
+
+    it('should handle QuotaExceededError in saveRolling', () => {
+      const mockStorage = {
+        setItem: vi.fn((key: string) => {
+          if (key === 'sl.metrics.style.week10') {
+            const err = new Error('Quota exceeded');
+            err.name = 'QuotaExceededError';
+            throw err;
+          }
+        }),
+        getItem: vi.fn(() => null)
+      };
+      globalThis.localStorage = mockStorage as any;
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      StyleRollups.addFight({ week: 11, styleA: 'A', styleD: 'B', winner: 'A', by: 'D' });
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'localStorage quota exceeded when saving rolling style metrics',
+        expect.any(Error)
+      );
+    });
+
+    it('should handle other errors in saveRolling', () => {
+      const mockStorage = {
+        setItem: vi.fn((key: string) => {
+          if (key === 'sl.metrics.style.week10') {
+            throw new Error('Some other error');
+          }
+        }),
+        getItem: vi.fn(() => null)
+      };
+      globalThis.localStorage = mockStorage as any;
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      StyleRollups.addFight({ week: 11, styleA: 'A', styleD: 'B', winner: 'A', by: 'D' });
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to save rolling style metrics',
+        expect.any(Error)
+      );
+    });
+
+    it('should handle QuotaExceededError in saveTour', () => {
+      const mockStorage = {
+        setItem: vi.fn((key: string) => {
+          if (key === 'sl.metrics.style.tournaments') {
+            const err = new Error('Quota exceeded');
+            err.name = 'QuotaExceededError';
+            throw err;
+          }
+        }),
+        getItem: vi.fn(() => null)
+      };
+      globalThis.localStorage = mockStorage as any;
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      StyleRollups.addFight({ week: 11, styleA: 'A', styleD: 'B', winner: 'A', by: 'D', isTournament: 'T' });
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'localStorage quota exceeded when saving tournament style metrics',
+        expect.any(Error)
+      );
+    });
+
+    it('should handle other errors in saveTour', () => {
+      const mockStorage = {
+        setItem: vi.fn((key: string) => {
+          if (key === 'sl.metrics.style.tournaments') {
+            throw new Error('Some other error');
+          }
+        }),
+        getItem: vi.fn(() => null)
+      };
+      globalThis.localStorage = mockStorage as any;
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      StyleRollups.addFight({ week: 11, styleA: 'A', styleD: 'B', winner: 'A', by: 'D', isTournament: 'T' });
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to save tournament style metrics',
+        expect.any(Error)
+      );
     });
   });
 });

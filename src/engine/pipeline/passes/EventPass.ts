@@ -6,22 +6,11 @@ import narrativeContent from '@/data/narrativeContent.json';
 import { StateImpact } from '@/engine/impacts';
 import { type WarriorId, type InjuryId, type LedgerEntryId } from '@/types/shared.types';
 import type { EventNarrative } from '@/types/narrative.types';
+import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 
 /**
  * Stable Lords — Random Event Pipeline Pass
  */
-function t(template: string, data: Record<string, string | number>): string {
-  return template.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
-    const value = data[key];
-    return value !== undefined && Object.hasOwn(data, key) ? String(value) : match;
-  });
-} /**
-   * Run event pass.
-   * @param state - State.
-   * @param nextWeek - Next week.
-   * @param rootRng - Root rng. (optional)
-   * @returns The result.
-   */
 
 /**
  * Run event pass.

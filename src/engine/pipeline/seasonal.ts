@@ -12,17 +12,12 @@ import {
 } from '@/types/shared.types';
 import type { InsightToken } from '@/types/state.types';
 import type { NewsletterItem } from '@/types/shared.types';
+import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 
 /**
  * Stable Lords — Seasonal Pipeline Pass (Offseason)
  * The Chaos Weaver 🎲
  */
-function t(template: string, data: Record<string, string | number>): string {
-  return template.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
-    const value = data[key];
-    return value !== undefined && Object.hasOwn(data, key) ? String(value) : match;
-  });
-}
 
 interface OffseasonEventNarrative {
   title: string;

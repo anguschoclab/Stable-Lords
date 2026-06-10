@@ -1,0 +1,62 @@
+[
+  {
+    "path": "pbp.attacks.slashing",
+    "text": "{{attacker}} makes a lunging attack with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "text": "{{attacker}} slashes an arcing attack with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "text": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "text": "{{attacker}} hacks downward with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "text": "{{attacker}} smashes with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "text": "{{attacker}} strikes using {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "text": "{{attacker}} smashes downward with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "text": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "text": "{{attacker}} smashes through with {{possessive}} {{weapon}}!"
+  },
+  {
+    "path": "pbp.defenses.dodge.tier4_supernatural",
+    "text": "{{defender}} contorts her body inhumanly as she unbelievably dodges the blow!"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "text": "{{name}} ducks under the blow and falls instantaneously into a roll to her feet!"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "This {{race}}"
+  },
+  {
+    "path": "pbp.epithets.style",
+    "text": "This {{style}}"
+  },
+  {
+    "path": "pbp.pacing.tempo.movement",
+    "text": "{{name}} leaps to {{possessive}} right!"
+  },
+  {
+    "path": "gazette.fights.KO",
+    "text": "{{loser}} crumpled like a puppet with cut strings after {{winner}}'s {{adj}} blow."
+  }
+]

@@ -246,6 +246,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'Shimmering heat distortions create optical illusions. Fighters struggle to judge distance.',
   },
+  Rainbow: {
+    staminaMult: 0.9,
+    initiativeMod: +1,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'A beautiful rainbow spans the sky. Spirits are high.',
+  },
 };
 
 /**
@@ -309,6 +316,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'Fierce, swirling winds kick up the sand, creating unpredictable combat conditions.',
   'Aether Storm': 'Raw aether winds rip through the arena. The boundaries of reality are fraying.',
   Mirage: 'The arena shimmers with intense heat, causing the air itself to ripple with illusions.',
+  Rainbow: 'A vibrant rainbow curves over the arena, bringing a moment of strange peace.',
 };
 
 /**

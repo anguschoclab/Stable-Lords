@@ -44,6 +44,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Chaotic Winds': 'ambience-wind-gale',
   'Aether Storm': 'ambience-wind-gale',
   Mirage: 'ambience-wind-gale',
+  Rainbow: null,
 }; /**
     * Weather audio.
     * @param - { weather, volume, enabled, arena id }.

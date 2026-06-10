@@ -657,6 +657,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Chaotic Winds': () => <ChaoticWindsEffect />,
   'Aether Storm': () => <AetherStormEffect />,
   Mirage: () => <ScorchingWindEffect />,
+  Rainbow: null,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

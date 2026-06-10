@@ -52,7 +52,8 @@ interface OffseasonEventNarrative {
     | 'rogue_alchemist'
     | 'tavern_brawl_surprise'
     | 'dreamweaver_visit'
-    | 'abyssal_bargain';
+    | 'abyssal_bargain'
+    | 'goblin_raid';
   newsletter: string[];
 }
 
@@ -674,6 +675,42 @@ function handleGladiatorOlympics(
   }
 }
 
+function handleGoblinRaid(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const goldLost = 20 + Math.floor(rng.next() * 31);
+      ctx.treasuryDelta -= goldLost;
+      addLedger(ctx, rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other');
+
+      const newInjury = makeInjury(rng, {
+        name: 'Goblin Scratch',
+        description: 'Nasty scratch from a tiny spear.',
+        severity: 'Minor',
+        weeksBase: 1,
+        weeksRange: 2,
+        penalties: { CN: -1 },
+      });
+
+      ctx.rosterUpdates.set(chosen.id, {
+        injuries: [...(chosen.injuries || []), newInjury],
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        gold: goldLost,
+      });
+    }
+  }
+}
+
 function handleUndergroundPitFight(
   state: GameState,
   nextWeek: number,
@@ -946,6 +983,7 @@ const EVENT_HANDLERS: Record<
   dreamweaver_visit: handleDreamweaverVisit,
   abyssal_bargain: handleAbyssalBargain,
   tavern_brawl_surprise: handleTavernBrawlSurprise,
+  goblin_raid: handleGoblinRaid,
 };
 
 /**

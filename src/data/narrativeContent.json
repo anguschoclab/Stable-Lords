@@ -2303,6 +2303,13 @@
         "{{name}} got into a massive, unexpected brawl at the local tavern. They took some scrapes, but the patrons loved the show! (+{{fame}} Fame, Minor Injury)"
       ]
     },
+    "goblin_raid": {
+      "title": "Goblin Raid",
+      "effectType": "goblin_raid",
+      "newsletter": [
+        "A sudden goblin raid on the stable! {{name}} fought them off but took a nasty scratch. The stable lost {{gold}} gold in the chaos. (-{{gold}} Gold, Minor Injury)"
+      ]
+    },
     "strange_dream": {
       "title": "A Strange Dream",
       "effectType": "strange_dream",

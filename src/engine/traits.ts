@@ -38,6 +38,7 @@ export interface TraitEffect {
 
   // Conditional mods (evaluated each exchange against context)
   attModLowHp?: number; // attacker HP < 0.5
+  defModLowHp?: number; // defender HP < 0.5
   parModHighHp?: number; // own HP > 0.75
   defModEarly?: number; // OPENING phase
   attModLate?: number; // LATE phase
@@ -173,6 +174,27 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '−1 initiative — late on the draw.',
     effect: { iniMod: -1 },
     weight: 0.4,
+  },
+  iron_grip: {
+    id: 'iron_grip',
+    name: 'Iron Grip',
+    description: '+1 damage, −1 initiative — sacrifices speed for a crushing hold on their weapon.',
+    effect: { dmgBonus: 1, iniMod: -1 },
+    weight: 0.6,
+  },
+  cornered_beast: {
+    id: 'cornered_beast',
+    name: 'Cornered Beast',
+    description: '+2 defense when bloodied (HP < 50%) — fights harder when backed into a corner.',
+    effect: { defModLowHp: 2 },
+    weight: 0.6,
+  },
+  perceptive: {
+    id: 'perceptive',
+    name: 'Perceptive',
+    description: '+1 decisiveness, +1 initiative — reads the subtle tells of an opponent.',
+    effect: { decMod: 1, iniMod: 1 },
+    weight: 0.5,
   },
   // ── Personality / Combat AI Traits ──
   aggressive: {
@@ -407,6 +429,7 @@ export function getDynamicTraitMods(
     if (!t) continue;
     const e = t.effect;
     if (e.attModLowHp != null && ctx.hpRatio < 0.5) acc.attMod += e.attModLowHp;
+    if (e.defModLowHp != null && ctx.hpRatio < 0.5) acc.defMod += e.defModLowHp;
     if (e.parModHighHp != null && ctx.hpRatio > 0.75) acc.parMod += e.parModHighHp;
     if (e.defModEarly != null && ctx.phase === 'OPENING') acc.defMod += e.defModEarly;
     if (e.attModLate != null && ctx.phase === 'LATE') acc.attMod += e.attModLate;

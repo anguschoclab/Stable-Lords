@@ -173,7 +173,7 @@ function discoverScoutTraits(warrior: Warrior, quality: ScoutQuality, rng: IRNGS
   if (traitRevealRoll < 0.6) {
     // Reveal 1 trait
     suspectedTraits.push(rng.pick(warrior.traits));
-  } else if (traitRevealRoll < 0.8) {
+  } else if (traitRevealRoll < 0.85) { // Slightly increased discovery weight for traits
     // Reveal 2 traits (if warrior has 2+)
     if (warrior.traits.length >= 2) {
       const shuffled = [...warrior.traits].sort(() => 0.5 - rng.next());

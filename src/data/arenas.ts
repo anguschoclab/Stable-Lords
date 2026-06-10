@@ -347,6 +347,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       "A submerged stone chair where condemned prisoners were once chained to await the rising tide. Now it serves as the referee's station during bouts.",
   },
+  {
+    id: 'mudpit_bone_harvest',
+    arenaId: 'mudpit_arena',
+    type: 'historical_battle',
+    title: 'The Bone Harvest',
+    narrative:
+      'After an abnormally long monsoon season, a fifty-man battle royale turned into a slog through waist-deep mud. The final survivor collapsed and drowned in a puddle just moments after the final bell.',
+  },
+  {
+    id: 'charnel_pits_screaming_winds',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: 'The Screaming Winds',
+    narrative:
+      'Gaps in the ancient stonework catch the wind perfectly, causing a sound identical to a chorus of shrieking men. Many new fighters find their morale breaking before a blow is even struck.',
+  },
+  {
+    id: 'sundered_coliseum_fallen_pillar',
+    arenaId: 'sundered_coliseum',
+    type: 'famous_death',
+    title: 'The Fallen Pillar',
+    narrative:
+      'A legendary champion met his end not from a weapon, but when a stray hammer throw struck a weakened marble pillar, collapsing it directly onto him and three of his challengers.',
+  },
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

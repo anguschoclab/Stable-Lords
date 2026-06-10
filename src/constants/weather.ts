@@ -257,6 +257,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-arena-pop/20',
     description: 'A blinding swarm descends upon the arena, gnawing at everything.',
   },
+  Rainbow: {
+    icon: Sparkles,
+    colorClass: 'text-yellow-300',
+    bgClass: 'bg-yellow-900/40',
+    borderClass: 'border-yellow-500/20',
+    description: 'A beautiful rainbow spans the sky. Spirits are high.',
+  },
 };
 
 /**

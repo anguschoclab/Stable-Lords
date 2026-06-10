@@ -371,6 +371,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A legendary champion met his end not from a weapon, but when a stray hammer throw struck a weakened marble pillar, collapsing it directly onto him and three of his challengers.',
   },
+  {
+    id: 'lantern_hall_architects_folly',
+    arenaId: 'lantern_hall_arena',
+    type: 'architectural_quirk',
+    title: "The Architect's Folly",
+    narrative:
+      'The original blueprints called for a vaulted ceiling entirely made of glass. During its maiden bout, the thunderous cheers shattered it, showering the combatants in lethal shards. The roof was rebuilt with heavy timber, but fighters still occasionally find glints of glass embedded in the packed sand.',
+  },
+  {
+    id: 'crystal_cavern_shattered_echo',
+    arenaId: 'crystal_cavern',
+    type: 'historical_battle',
+    title: 'The Shattered Echo',
+    narrative:
+      'In a furious exchange of maces, two colossal basher archetypes struck the central crystal spire simultaneously. The resulting harmonic blast deafened everyone in attendance and ruptured the eardrums of both fighters. The match was declared a draw when neither could find their footing again.',
+  },
+  {
+    id: 'whispering_grove_blood_roots',
+    arenaId: 'whispering_grove',
+    type: 'famous_death',
+    title: 'The Grasp of the Blood Roots',
+    narrative:
+      'An overconfident agility fighter ignored the subtle shifting of the forest floor, only to have their foot caught in a sudden snare of roots. Their opponent leisurely approached and delivered the killing blow while the forest itself seemed to hold the victim in place.',
+  },
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

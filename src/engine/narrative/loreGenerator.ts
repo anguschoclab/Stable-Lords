@@ -27,7 +27,6 @@ const ORIGINS = [
   'Born during a solar eclipse, considered an omen of blood and iron',
   'A street urchin who won a bet with an arena recruiter',
   'Found under the floorboards of a tailor shop after a city riot',
-  'The only survivor of a mountain pass avalanche',
   'Raised by a retired trainer in a remote fishing village',
   'Found adrift on a raft in the middle of the Great Sea',
   'Discovered in the heart of a hedge maze, silent and watchful',
@@ -38,7 +37,6 @@ const ORIGINS = [
   'Discovered chained in a debtor\'s basement, fed through a grate',
   'Only survivor of the orphanage fire that claimed thirty souls',
   'Raised by the Silent Sisters in their subterranean hospice',
-  'Found wandering the corpse-fields after the Battle of Hollow Hill',
   'Survived the sinking of the prison hulk "Black Sepulchre"',
   'Left as an infant in a weapons crate outside the barracks',
   'Discovered huddled inside a hollowed-out beast carcass in the Frostmarches',
@@ -47,6 +45,13 @@ const ORIGINS = [
   'Found clinging to the wreckage of a burnt-out monastery',
   'Brought to the city by a nameless mercenary who died the next day',
   'Discovered starving but fiercely guarding a pile of silver coins',
+  'Uncovered beneath the foundations of a ruined asylum',
+  'Born during the red comet, abandoned to the howling winds',
+  'A runaway from the deep mines, eyes unused to the sun',
+  'Raised in the shadow of the executioner\'s block',
+  'Found wandering the salt flats with no memory of their past',
+  'Sole survivor of a cult sacrifice in the forgotten catacombs',
+  'Taken from a raided nomadic tribe in the far deserts',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -75,6 +80,11 @@ const CHILDHOOD_TRAITS = [
   'showed a terrifyingly high tolerance for pain during beatings',
   'would bite and claw older kids who tried to take their rations',
   'memorized the patrol routes of guards just for the challenge of evading them',
+  'would dissect small animals to understand their anatomy',
+  'never flinched when the master raised a hand',
+  'was caught sharpening bone fragments into makeshift shivs',
+  'could perfectly mimic the screams of dying men',
+  'slept peacefully through the most deafening thunderstorms',
 ];
 
 const DEFINING_MOMENTS = [
@@ -99,6 +109,11 @@ const DEFINING_MOMENTS = [
   'realizing that blood spilled in the arena washes away past sins',
   'embracing the fact that survival is only a matter of breaking the other person first',
   'fueled by a hatred of the weakness that once kept them in chains',
+  'now hunting the very men who slaughtered their kin',
+  'until the arena offered a stage for their beautiful cruelty',
+  'carrying a quiet madness that only the sands can soothe',
+  'with nothing left to lose and everything to bleed for',
+  'ready to carve their name into the annals of history with steel',
 ];
 
 /**

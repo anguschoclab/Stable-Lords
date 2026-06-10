@@ -290,9 +290,45 @@ export const TRAITS: Record<string, TraitDef> = {
     synergy: ['brutal'],
     antiSynergy: ['cunning', 'tank'],
   },
+  // ── New Lore/Personality Traits ──
+  blood_drunk: {
+    id: 'blood_drunk',
+    name: 'Blood Drunk',
+    description: '+2 attack and −2 defense when bloodied (HP < 50%) — loses all sense of self-preservation once injured.',
+    effect: { attModLowHp: 2, defModLowHp: -2, fightPlanMod: { killDesire: 3 } },
+    weight: 0.6,
+    synergy: ['brutal', 'agile'],
+    antiSynergy: ['tank'],
+  },
+  paranoid: {
+    id: 'paranoid',
+    name: 'Paranoid',
+    description: '+2 defense in OPENING phase, but −1 decisiveness overall — constantly expects ambushes.',
+    effect: { defModEarly: 2, decMod: -1, fightPlanMod: { AL: -2 } },
+    weight: 0.6,
+    synergy: ['cunning'],
+  },
+  vengeful: {
+    id: 'vengeful',
+    name: 'Vengeful',
+    description: '+1 riposte, +2 kill desire — driven by spite to return every blow with interest.',
+    effect: { ripMod: 1, fightPlanMod: { killDesire: 2 } },
+    weight: 0.7,
+    synergy: ['cunning', 'brutal'],
+  },
+  cold_eyed: {
+    id: 'cold_eyed',
+    name: 'Cold-Eyed',
+    description: '+1 initiative, +1 decisiveness — unnervingly calm, viewing combat purely as geometry and physics.',
+    effect: { iniMod: 1, decMod: 1, fightPlanMod: { feintTendency: 4, AL: 2 } },
+    weight: 0.6,
+    synergy: ['cunning', 'tank'],
+    antiSynergy: ['brutal'],
+  },
 };
 
-const TRAIT_IDS = Object.keys(TRAITS);
+export type TraitId = keyof typeof TRAITS;
+const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 
 /**
  * Roll 0-2 traits at warrior creation, weighted by trait rarity.

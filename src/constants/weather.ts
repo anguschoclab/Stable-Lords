@@ -264,6 +264,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-yellow-500/20',
     description: 'A beautiful rainbow spans the sky. Spirits are high.',
   },
+  'Wildfire Smoke': {
+    icon: Flame,
+    colorClass: 'text-orange-500',
+    bgClass: 'bg-orange-500/10',
+    borderClass: 'border-orange-500/20',
+    description: 'Thick smoke reduces visibility and chokes the lungs.',
+  },
 };
 
 /**

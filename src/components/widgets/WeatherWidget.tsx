@@ -42,6 +42,7 @@ const WEATHER_STATS: Record<WeatherType, string> = {
   'Aether Storm': 'STAMINA CONSERVATION 20% // INITIATIVE +8 // RIPOSTE +3 // DAMAGE +30%',
   Mirage: 'INITIATIVE -5 // RIPOSTE -2 // DAMAGE -10%',
   Rainbow: 'STAMINA CONSERVATION 10% // INITIATIVE +1',
+  'Wildfire Smoke': 'STAMINA DRAIN 135% // INITIATIVE -4 // RIPOSTE +2 // DAMAGE -10%',
 }; /**
     * Weather widget.
     * @returns The result.

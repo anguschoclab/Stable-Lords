@@ -102,6 +102,7 @@ describe('weatherEffects', () => {
         'Aether Storm',
         'Mirage',
         'Rainbow',
+        'Wildfire Smoke',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);

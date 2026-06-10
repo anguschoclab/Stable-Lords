@@ -50,7 +50,8 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
     if (roll < 0.87) return 'Ashfall';
     if (roll < 0.9) return 'Locust Swarm';
     if (roll < 0.93) return 'Gale';
-    if (roll < 0.96) return 'Solar Flare';
+    if (roll < 0.95) return 'Wildfire Smoke';
+    if (roll < 0.97) return 'Solar Flare';
     if (roll < 0.985) return 'Blood Moon';
     if (roll < 0.995) return 'Eclipse';
     return 'Mana Surge';

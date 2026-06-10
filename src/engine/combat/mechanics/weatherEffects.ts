@@ -253,6 +253,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.0,
     description: 'A beautiful rainbow spans the sky. Spirits are high.',
   },
+  'Wildfire Smoke': {
+    staminaMult: 1.35,
+    initiativeMod: -4,
+    riposteMod: +2,
+    damageMult: 0.9,
+    description: 'Thick smoke chokes the lungs and stings the eyes, turning fights into desperate brawls.',
+  },
 };
 
 /**
@@ -317,6 +324,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Aether Storm': 'Raw aether winds rip through the arena. The boundaries of reality are fraying.',
   Mirage: 'The arena shimmers with intense heat, causing the air itself to ripple with illusions.',
   Rainbow: 'A vibrant rainbow curves over the arena, bringing a moment of strange peace.',
+  'Wildfire Smoke': 'A thick blanket of acrid smoke settles over the sands. Every breath burns.',
 };
 
 /**

@@ -4,3 +4,7 @@
 ## 2025-02-12 - Standardize Icon Button Accessibility in Controls
 **Learning:** Native `<button>` elements used in custom media/control bars (like `BoutControls.tsx`) often lack proper focus rings and hover states out of the box, failing keyboard accessibility checks and confusing mouse users.
 **Action:** When building or fixing icon-only control bars, immediately replace raw `<button>` elements with the standard `<Button variant="ghost" size="icon">` component from Shadcn to inherit robust `focus-visible` and hover interactions automatically. If replacing the element is not possible due to highly custom styling, strictly enforce the application of `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary` and explicit `hover:` classes.
+
+## 2024-06-10 - Keyboard accessibility for EditableText
+**Learning:** Adding keyboard accessibility (`role="button"`, `tabIndex={0}`, and an `onKeyDown` handler for 'Enter'/'Space') to custom interactive elements like `EditableText` makes them fully usable by keyboard users, providing parity with mouse interactions.
+**Action:** When creating custom elements that act like buttons but use a `div` wrapper, always apply `role="button"`, `tabIndex={0}`, and an `onKeyDown` handler (with `e.preventDefault()` to prevent scrolling for the spacebar).

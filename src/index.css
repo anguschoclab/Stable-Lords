@@ -1101,7 +1101,17 @@
   .animate-shake-high,
   .crowd-cheer,
   .crowd-gasp,
-  .crowd-chant {
+  .crowd-chant,
+  .animate-rain,
+  .animate-heat-shimmer,
+  .animate-snow,
+  .animate-fog-drift,
+  .animate-ash-fall,
+  .animate-mana-spark,
+  .animate-wind,
+  .animate-hail,
+  .animate-spin-slow,
+  .animate-chaotic-drift {
     animation: none !important;
   }
 

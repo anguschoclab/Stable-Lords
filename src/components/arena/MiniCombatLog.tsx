@@ -90,7 +90,8 @@ export default function MiniCombatLog({
         className={cn(
           'flex items-center justify-between gap-2 px-3 py-2',
           'bg-neutral-950/95 border border-white/10 backdrop-blur-md',
-          'rounded-none cursor-pointer hover:border-white/20 transition-colors'
+          'rounded-none cursor-pointer hover:border-white/20 transition-colors',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
         )}
         onClick={() => setIsExpanded(!isExpanded)}
         onKeyDown={(e) => {

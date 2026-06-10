@@ -1,5 +1,6 @@
 import { Shield, Clock, Download, Trash2 } from 'lucide-react';
 import type { SaveSlotMeta } from '@/state/saveSlots';
+import { Button } from '@/components/ui/button';
 
 interface SaveSlotCardProps {
   slot: SaveSlotMeta;
@@ -39,8 +40,16 @@ export default function SaveSlotCard({
 }: SaveSlotCardProps) {
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={onLoad}
-      className="group relative cursor-pointer transition-all duration-200"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onLoad();
+        }
+      }}
+      className="group relative cursor-pointer transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       style={{
         background: 'linear-gradient(145deg, #150F08 0%, #110C07 50%, #140E08 100%)',
         border: '1px solid rgba(60, 42, 22, 0.8)',
@@ -79,28 +88,32 @@ export default function SaveSlotCard({
         </div>
 
         <div className="flex items-center gap-0.5 shrink-0">
-          <button
-            className="p-1.5 text-muted-foreground/40 hover:text-accent transition-colors duration-150"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 text-muted-foreground/40 hover:text-accent hover:bg-accent/10 transition-colors duration-150"
             onClick={(e) => {
               e.stopPropagation();
               onExport();
             }}
-            title="Export save"
+            tooltip="Export save"
             aria-label={`Export save for ${slot.name}`}
           >
             <Download className="h-3.5 w-3.5" />
-          </button>
-          <button
-            className="p-1.5 text-muted-foreground/40 hover:text-destructive transition-colors duration-150"
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-colors duration-150"
             onClick={(e) => {
               e.stopPropagation();
               onDelete();
             }}
-            title="Delete save"
+            tooltip="Delete save"
             aria-label={`Delete save for ${slot.name}`}
           >
             <Trash2 className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -347,7 +347,7 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center">
         <button
           aria-label="Access Full Archive"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
+          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm"
         >
           Access Full Archive{' '}
           <ArrowDownRight className="h-3 w-3 group-hover:translate-y-0.5 transition-transform" />
@@ -356,9 +356,9 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
     </Surface>
   );
 } /**
-   * Treasury overview.
-   * @returns The result.
-   */
+ * Treasury overview.
+ * @returns The result.
+ */
 
 /**
  * Treasury overview.

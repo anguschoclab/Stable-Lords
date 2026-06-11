@@ -153,7 +153,7 @@ function TokenCard({ token, isSelected, onSelect }: TokenCardProps) {
       <button
         aria-label={`Select ${token.type} Insight Token, discovered week ${token.discoveredWeek}`}
         onClick={onSelect}
-        className="w-full text-left p-4 outline-none"
+        className="w-full text-left p-4 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
       >
         <div className="flex items-center gap-3 relative z-10">
           <TokenIcon type={token.type} />
@@ -207,7 +207,7 @@ function WarriorTargetCard({
         aria-label={`Select warrior ${warrior.name} for insight`}
         disabled={isRevealed || isRevealing}
         onClick={onSelect}
-        className="w-full p-3 outline-none"
+        className="w-full p-3 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
       >
         <span className="block text-[10px] font-black uppercase tracking-widest mb-1 truncate">
           {warrior.name}

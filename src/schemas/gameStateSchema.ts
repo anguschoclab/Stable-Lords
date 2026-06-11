@@ -76,6 +76,7 @@ export const WeatherTypeSchema = z.enum([
   'Chaotic Winds',
   'Aether Storm',
   'Mirage',
+  'Ember Rain',
 ]);
 
 /**

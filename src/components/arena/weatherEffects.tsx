@@ -551,6 +551,46 @@ function AetherStormEffect() {
   );
 }
 
+function EmberRainEffect() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Dark reddish-orange haze */}
+      <div className="absolute inset-0 bg-orange-950/20 mix-blend-multiply" />
+      {/* Falling embers */}
+      {Array.from({ length: 60 }).map((_, i) => (
+        <div
+          key={`ember-${i}`}
+          className="absolute w-1 h-1 bg-orange-400 rounded-full animate-hail drop-shadow-[0_0_4px_rgba(251,146,60,0.8)]"
+          style={{
+            left: `${cryptoRandom() * 100}%`,
+            top: '-5%',
+            animationDelay: `${cryptoRandom() * 2}s`,
+            animationDuration: `${1.5 + cryptoRandom() * 2}s`,
+            opacity: 0.6 + cryptoRandom() * 0.4,
+          }}
+        />
+      ))}
+      {/* Rising heat distortion/smoke */}
+      {Array.from({ length: 15 }).map((_, i) => (
+        <div
+          key={`smoke-${i}`}
+          className="absolute w-16 h-16 bg-stone-500/10 rounded-full blur-xl animate-chaotic-drift"
+          style={
+            {
+              left: `${cryptoRandom() * 100}%`,
+              bottom: '-10%',
+              '--tx': `${(cryptoRandom() - 0.5) * 50}px`,
+              '--ty': `-${100 + cryptoRandom() * 100}px`,
+              animationDelay: `${cryptoRandom() * 4}s`,
+              animationDuration: `${3 + cryptoRandom() * 3}s`,
+            } as CSSProperties & Record<string, string>
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
 function ChaoticWindsEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -658,6 +698,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Aether Storm': () => <AetherStormEffect />,
   Mirage: () => <ScorchingWindEffect />,
   Rainbow: null,
+  'Ember Rain': () => <EmberRainEffect />,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

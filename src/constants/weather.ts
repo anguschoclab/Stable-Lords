@@ -264,6 +264,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-yellow-500/20',
     description: 'A beautiful rainbow spans the sky. Spirits are high.',
   },
+  'Ember Rain': {
+    icon: Flame,
+    colorClass: 'text-orange-500',
+    bgClass: 'bg-orange-500/10',
+    borderClass: 'border-orange-500/20',
+    description: 'Hot ash and embers fall from the sky. 30% more stamina drain.',
+  },
 };
 
 /**

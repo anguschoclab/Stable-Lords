@@ -253,6 +253,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.0,
     description: 'A beautiful rainbow spans the sky. Spirits are high.',
   },
+  'Ember Rain': {
+    staminaMult: 1.3,
+    initiativeMod: -2,
+    riposteMod: 0,
+    damageMult: 1.1,
+    description: 'Hot ash and embers fall from the sky, causing minor burns and breathing difficulties.',
+  },
 };
 
 /**
@@ -317,6 +324,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Aether Storm': 'Raw aether winds rip through the arena. The boundaries of reality are fraying.',
   Mirage: 'The arena shimmers with intense heat, causing the air itself to ripple with illusions.',
   Rainbow: 'A vibrant rainbow curves over the arena, bringing a moment of strange peace.',
+  'Ember Rain': 'Glowing embers rain down from the sky, searing the sand and the fighters alike.',
 };
 
 /**

@@ -614,7 +614,8 @@ export type WeatherType =
   | 'Aurora Borealis'
   | 'Chaotic Winds'
   | 'Aether Storm'
-  | 'Mirage';
+  | 'Mirage'
+  | 'Ember Rain';
 
 /**
  * Defines the shape of death event.

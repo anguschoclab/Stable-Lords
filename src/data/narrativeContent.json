@@ -2402,6 +2402,13 @@
     ]
   },
   "offseason_events": {
+    "fey_trickster": {
+      "title": "A Fey Trickster's Visit",
+      "effectType": "fey_trickster",
+      "newsletter": [
+        "A mischievous fey creature visited {{name}} in the night, offering strange riddles."
+      ]
+    },
     "tavern_brawl_surprise": {
       "title": "A Spontaneous Tavern Brawl",
       "effectType": "tavern_brawl_surprise",

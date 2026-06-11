@@ -41,7 +41,9 @@ export interface TraitEffect {
   defModLowHp?: number; // defender HP < 0.5
   parModHighHp?: number; // own HP > 0.75
   defModEarly?: number; // OPENING phase
+  defModLate?: number; // LATE phase
   attModLate?: number; // LATE phase
+  parModLate?: number; // LATE phase
   iniModFresh?: number; // own endurance > 0.7
   killWindowBonus?: number; // adds directly to kill threshold
 
@@ -195,6 +197,20 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 decisiveness, +1 initiative — reads the subtle tells of an opponent.',
     effect: { decMod: 1, iniMod: 1 },
     weight: 0.5,
+  },
+  vengeful: {
+    id: 'vengeful',
+    name: 'Vengeful',
+    description: '+1 damage when bloodied (HP < 50%) — pain only makes them angrier.',
+    effect: { attModLowHp: 1, dmgBonus: 1 },
+    weight: 0.6,
+  },
+  stoic: {
+    id: 'stoic',
+    name: 'Stoic',
+    description: '+1 defense in LATE phase — ignores mounting fatigue and pain.',
+    effect: { defModLate: 1, parModLate: 1 },
+    weight: 0.7,
   },
   // ── Personality / Combat AI Traits ──
   aggressive: {
@@ -433,6 +449,8 @@ export function getDynamicTraitMods(
     if (e.parModHighHp != null && ctx.hpRatio > 0.75) acc.parMod += e.parModHighHp;
     if (e.defModEarly != null && ctx.phase === 'OPENING') acc.defMod += e.defModEarly;
     if (e.attModLate != null && ctx.phase === 'LATE') acc.attMod += e.attModLate;
+    if (e.defModLate != null && ctx.phase === 'LATE') acc.defMod += e.defModLate;
+    if (e.parModLate != null && ctx.phase === 'LATE') acc.parMod += e.parModLate;
     if (e.iniModFresh != null && ctx.endRatio > 0.7) acc.iniMod += e.iniModFresh;
     if (e.attModConsecutiveHits != null && ctx.consecutiveHits >= 2)
       acc.attMod += e.attModConsecutiveHits;

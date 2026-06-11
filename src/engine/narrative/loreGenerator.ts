@@ -47,6 +47,16 @@ const ORIGINS = [
   'Found clinging to the wreckage of a burnt-out monastery',
   'Brought to the city by a nameless mercenary who died the next day',
   'Discovered starving but fiercely guarding a pile of silver coins',
+  'A forgotten child of the Silent Order, marked by their shadow-brands',
+  'Surviving the collapse of the Blackwater Sluice through sheer, grim stubbornness',
+  'Cast out from the high spires for a crime they refuse to speak of',
+  'Found amidst the ash and embers of a burned-out bloodline',
+  'A gutter-rat from the stinking alleys of the Lower Wards',
+  'Torn from the arms of a condemned heretic at the steps of the Pyre',
+  'Raised by scavengers who picked the teeth of the dead in the Bone Wastes',
+  'The runt of a fighting pit, fed on raw meat and cruelty',
+  'A nameless stowaway discovered half-drowned in a merchant ship\'s bilge',
+  'Left bound and gagged at the crossroads, an offering to dark gods',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -75,6 +85,10 @@ const CHILDHOOD_TRAITS = [
   'showed a terrifyingly high tolerance for pain during beatings',
   'would bite and claw older kids who tried to take their rations',
   'memorized the patrol routes of guards just for the challenge of evading them',
+  'was known to stare unblinking at the flickering flames of the hearth',
+  'practiced the art of pain by holding hot coals without a sound',
+  'would carve intricate tallies of imagined kills into the stone walls',
+  'learned the anatomy of survival by dissecting rats in the alleyways',
 ];
 
 const DEFINING_MOMENTS = [
@@ -99,6 +113,10 @@ const DEFINING_MOMENTS = [
   'realizing that blood spilled in the arena washes away past sins',
   'embracing the fact that survival is only a matter of breaking the other person first',
   'fueled by a hatred of the weakness that once kept them in chains',
+  'transforming years of quiet abuse into a singular, razor-sharp focus',
+  'understanding that the world only respects the edge of a blade',
+  'carrying the cold certainty that everyone bleeds the same color',
+  'waiting for the moment the crowd screams a name that was once forbidden',
 ];
 
 /**

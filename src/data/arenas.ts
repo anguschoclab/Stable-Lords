@@ -371,6 +371,30 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A legendary champion met his end not from a weapon, but when a stray hammer throw struck a weakened marble pillar, collapsing it directly onto him and three of his challengers.',
   },
+  {
+    id: 'crystal_cavern_shattered_echoes',
+    arenaId: 'crystal_cavern',
+    type: 'architectural_quirk',
+    title: 'The Shattered Echoes',
+    narrative:
+      'The crystalline structure of the cavern captures the sound of snapping bone and amplifies it into a deafening roar. Veterans use this effect to strike terror into unseasoned recruits.',
+  },
+  {
+    id: 'flesh_gardens_crimson_bloom',
+    arenaId: 'flesh_gardens',
+    type: 'historical_battle',
+    title: 'The Crimson Bloom',
+    narrative:
+      'During a particularly savage mid-summer festival, so much blood was spilled that the dormant blood-vines erupted into violent bloom, entangling and consuming half the remaining combatants.',
+  },
+  {
+    id: 'lantern_hall_shadow_strike',
+    arenaId: 'lantern_hall_arena',
+    type: 'famous_death',
+    title: 'The Shadow Strike',
+    narrative:
+      'A cunning rogue bypassed a champion\'s legendary guard by timing their fatal thrust perfectly with a flickering torch, momentarily blinding their opponent in a sudden play of light and shadow.',
+  },
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

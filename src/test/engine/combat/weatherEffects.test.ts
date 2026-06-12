@@ -102,6 +102,7 @@ describe('weatherEffects', () => {
         'Aether Storm',
         'Mirage',
         'Rainbow',
+        'Zephyr',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -178,6 +179,7 @@ describe('weatherEffects', () => {
         'Aurora Borealis',
         'Mirage',
         'Rainbow',
+        'Zephyr',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);

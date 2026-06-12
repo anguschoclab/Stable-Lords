@@ -100,6 +100,7 @@ export function contestCheck(
 const WEATHER_STAMINA_MOD: Record<string, number> = {
   'Blazing Sun': 1.3, // 30% more stamina drain
   'Scorching Wind': 1.3, // 30% more stamina drain
+  Zephyr: 0.85, // 15% less stamina drain
   Tornado: 1.4, // 40% more stamina drain
   'Cursed Miasma': 1.3, // 30% more stamina drain
   Sweltering: 1.2, // 20% more stamina drain

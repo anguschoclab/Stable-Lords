@@ -12,6 +12,7 @@ interface WeatherAudioProps {
 
 // Weather to ambient sound mapping
 const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
+  Zephyr: 'ambience-wind-breezy',
   Clear: null,
   Overcast: null,
   Rainy: 'ambience-rain',

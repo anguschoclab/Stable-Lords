@@ -625,6 +625,7 @@ function ChaoticWindsEffect() {
  */
 // eslint-disable-next-line react-refresh/only-export-components -- intentional registry export consumed by tests
 export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = {
+  Zephyr: () => <WindEffect strong={false} />,
   Clear: null,
   Overcast: null,
   Rainy: () => <RainEffect />,

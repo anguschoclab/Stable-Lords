@@ -31,6 +31,13 @@ export interface WeatherConfig {
 }
 
 export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
+  Zephyr: {
+    icon: Wind,
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
+    description: '15% less stamina drain in combat. Fighters feel refreshed.',
+  },
   Clear: {
     icon: Sun,
     colorClass: 'text-arena-gold',

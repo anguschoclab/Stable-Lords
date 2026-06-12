@@ -14,6 +14,13 @@ export interface WeatherEffect {
 }
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+  Zephyr: {
+    staminaMult: 0.85,
+    initiativeMod: 2,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'A gentle, otherworldly breeze that refreshes combatants.',
+  },
   Clear: {
     staminaMult: 1.0,
     initiativeMod: 0,
@@ -276,6 +283,7 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',
   Clear: null,
   Overcast: null,
   Rainy: 'Rain slicks the sand — footwork will be treacherous today.',

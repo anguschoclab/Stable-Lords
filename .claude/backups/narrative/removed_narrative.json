@@ -1,0 +1,92 @@
+[
+  {
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} slashes with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} slashes an arcing attack with {{possessive}} {{weapon}}!",
+    "sim": 0.859504132231405
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} makes a slashing attack wielding {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} makes a lunging attack with {{possessive}} {{weapon}}!",
+    "sim": 0.8920863309352518
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} makes a downward cut with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} hacks downward with {{possessive}} {{weapon}}!",
+    "sim": 0.9193548387096774
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} slashes with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
+    "sim": 0.9122807017543859
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} bashes with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} smashes with {{possessive}} {{weapon}}!",
+    "sim": 0.970873786407767
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} bashes with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} strikes using {{possessive}} {{weapon}}!",
+    "sim": 0.8653846153846154
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} bashes with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
+    "sim": 0.8928571428571429
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} bashes with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
+    "sim": 0.8807339449541285
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} bashes with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} smashes through with {{possessive}} {{weapon}}!",
+    "sim": 0.9009009009009009
+  },
+  {
+    "path": "pbp.defenses.dodge.tier4_supernatural",
+    "kept": "{{defender}} contorts his body inhumanly as he unbelievably dodges the blow!",
+    "removed": "{{defender}} contorts her body inhumanly as she unbelievably dodges the blow!",
+    "sim": 0.9673202614379085
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "kept": "{{name}} ducks under the blow and falls instantaneously into a roll to his feet!",
+    "removed": "{{name}} ducks under the blow and falls instantaneously into a roll to her feet!",
+    "sim": 0.975
+  },
+  {
+    "path": "pbp.epithets.race",
+    "kept": "The {{race}}",
+    "removed": "This {{race}}",
+    "sim": 0.88
+  },
+  {
+    "path": "pbp.epithets.style",
+    "kept": "The {{style}}",
+    "removed": "This {{style}}",
+    "sim": 0.8888888888888888
+  },
+  {
+    "path": "pbp.pacing.tempo.movement",
+    "kept": "{{name}} leaps to {{possessive}} left!",
+    "removed": "{{name}} leaps to {{possessive}} right!",
+    "sim": 0.9090909090909091
+  },
+  {
+    "path": "gazette.fights.KO",
+    "kept": "{{loser}} crumbled like a puppet with cut strings after enduring {{winner}}'s {{adj}} assault.",
+    "removed": "{{loser}} crumpled like a puppet with cut strings after {{winner}}'s {{adj}} blow.",
+    "sim": 0.8863636363636364
+  }
+]

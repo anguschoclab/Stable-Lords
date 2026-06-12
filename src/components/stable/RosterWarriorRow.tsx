@@ -40,7 +40,10 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') onClick();
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
       }}
       className="w-full relative group cursor-pointer"
       aria-label={`View profile for ${warrior.name}`}

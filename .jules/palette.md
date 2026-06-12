@@ -4,3 +4,6 @@
 ## 2025-02-12 - Standardize Icon Button Accessibility in Controls
 **Learning:** Native `<button>` elements used in custom media/control bars (like `BoutControls.tsx`) often lack proper focus rings and hover states out of the box, failing keyboard accessibility checks and confusing mouse users.
 **Action:** When building or fixing icon-only control bars, immediately replace raw `<button>` elements with the standard `<Button variant="ghost" size="icon">` component from Shadcn to inherit robust `focus-visible` and hover interactions automatically. If replacing the element is not possible due to highly custom styling, strictly enforce the application of `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary` and explicit `hover:` classes.
+## 2024-11-20 - Custom Button Focus States
+**Learning:** Custom interactive elements lose keyboard accessibility when outline-none is applied, or are not properly outlined upon keyboard navigation.
+**Action:** Always apply focus-visible classes to custom buttons (`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`, and potentially `focus-visible:ring-offset-2 focus-visible:ring-offset-black` or `focus-visible:ring-inset`).

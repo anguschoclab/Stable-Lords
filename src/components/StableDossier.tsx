@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { filterActive } from '@/utils/roster';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,22 +24,26 @@ interface StableDossierProps {
  * @returns The rendered stable dossier or a "not found" message.
  */
 export function StableDossier({ stableId, stableName }: StableDossierProps) {
-  const state = useWorldState();
+  const { player, roster, rivals } = useGameStore(
+    useShallow((s) => ({
+      player: s.player,
+      roster: s.roster ?? [],
+      rivals: s.rivals ?? [],
+    }))
+  );
 
   const stable = useMemo(() => {
-    if (stableId === 'player' || stableName === state.player.stableName) {
+    if (stableId === 'player' || stableName === player.stableName) {
       return {
-        owner: state.player,
-        roster: state.roster,
+        owner: player,
+        roster,
         isPlayer: true,
       };
     }
-    const rival = state.rivals.find(
-      (r) => r.owner.id === stableId || r.owner.stableName === stableName
-    );
+    const rival = rivals.find((r) => r.owner.id === stableId || r.owner.stableName === stableName);
     if (rival) return { ...rival, isPlayer: false };
     return undefined;
-  }, [stableId, stableName, state.player, state.roster, state.rivals]);
+  }, [stableId, stableName, player, roster, rivals]);
 
   if (!stable)
     return <div className="p-8 text-center text-muted-foreground">Stable not found.</div>;
@@ -121,19 +126,19 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
           </h3>
           <div className="grid gap-2">
             {filterActive(stable.roster).map((w) => (
-                <div
-                  key={w.id}
-                  className="flex items-center justify-between p-2 rounded-none bg-secondary/10 border border-border/50"
-                >
-                  <div className="flex items-center gap-2">
-                    <StatBadge styleName={w.style} />
-                    <span className="text-sm font-medium">{w.name}</span>
-                  </div>
-                  <div className="text-[10px] font-mono text-muted-foreground">
-                    {w.career.wins}-{w.career.losses}
-                  </div>
+              <div
+                key={w.id}
+                className="flex items-center justify-between p-2 rounded-none bg-secondary/10 border border-border/50"
+              >
+                <div className="flex items-center gap-2">
+                  <StatBadge styleName={w.style} />
+                  <span className="text-sm font-medium">{w.name}</span>
                 </div>
-              ))}
+                <div className="text-[10px] font-mono text-muted-foreground">
+                  {w.career.wins}-{w.career.losses}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

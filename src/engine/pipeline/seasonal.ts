@@ -22,6 +22,7 @@ import { interpolateData as t } from '@/engine/narrative/templateHelpers';
 interface OffseasonEventNarrative {
   title: string;
   effectType:
+    | 'chaos_rift'
     | 'fame_boost'
     | 'winter_chill'
     | 'merchant_blessing'
@@ -134,6 +135,54 @@ function pushNarrative(
 }
 
 // ─── Individual Offseason Event Handlers ───
+
+function handleChaosRift(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 25;
+      const fameGained = 15;
+      const goldGained = 150;
+
+      ctx.treasuryDelta = (ctx.treasuryDelta || 0) + goldGained;
+      ctx.ledgerEntries.push({
+        id: rng.uuid('ledger'),
+        week: nextWeek,
+        description: 'Sold Chaos Crystal',
+        amount: goldGained,
+        category: 'other',
+      });
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        fame: (chosen.fame || 0) + fameGained,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight') as InsightId,
+        type: 'Style' as InsightToken['type'],
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'Touched the raw essence of the Chaos Rift.',
+        origin: 'Chaos Rift',
+        discoveredWeek: nextWeek,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+        fame: fameGained,
+      });
+    }
+  }
+}
 
 function handleFameBoost(
   state: GameState,
@@ -1010,6 +1059,7 @@ const EVENT_HANDLERS: Record<
     ctx: OffseasonEventContext
   ) => void
 > = {
+  chaos_rift: handleChaosRift,
   fame_boost: handleFameBoost,
   winter_chill: handleWinterChill,
   merchant_blessing: handleMerchantBlessing,

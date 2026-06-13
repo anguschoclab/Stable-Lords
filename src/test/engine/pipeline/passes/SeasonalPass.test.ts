@@ -9,6 +9,37 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { Warrior } from '@/types/warrior.types';
 
 describe('runSeasonalPass', () => {
+  it('should trigger the chaos_rift offseason event, updating XP, Fame, treasury and adding an Insight Token', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('chaos_rift') + 0.5) /
+          eventCount
+        );
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-chaos' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'Slippery Pete', status: 'Active' } as any],
+      newsletter: [],
+      treasury: 1000,
+    };
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+    expect(impact.treasuryDelta).toBe(150);
+    const updates = impact.rosterUpdates?.get(warriorId);
+    expect(updates?.xp).toBe(25);
+    expect(updates?.fame).toBe(15);
+    expect(impact.insightTokens?.length).toBe(1);
+    expect(impact.insightTokens![0].type).toBe('Style');
+    expect(impact.insightTokens![0].origin).toBe('Chaos Rift');
+    expect(impact.newsletterItems?.[0]?.title).toBe('The Chaos Rift');
+  });
   it('should not do anything if nextWeek is not 1', () => {
     const impact = runSeasonalPass({ year: 1 } as GameState, 2);
     expect(impact).toEqual({});

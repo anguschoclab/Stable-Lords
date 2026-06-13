@@ -3,6 +3,7 @@ import { useWorldState } from '@/state/useGameStore';
 import { GameState } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Flame, TrendingUp } from 'lucide-react';
 import {
   usePlayerRosterIds,
@@ -87,13 +88,14 @@ export function RivalryWidget() {
       </div>
 
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
-        <button
+        <Button
+          variant="ghost"
           aria-label="Access Conflict Archives"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
+          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-destructive transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           Access Conflict Archives{' '}
           <TrendingUp className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-        </button>
+        </Button>
       </div>
     </Surface>
   );

@@ -182,7 +182,7 @@ export function SandstormEffect() {
 export function BlizzardEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute inset-0 bg-blue-500/5 mix-blend-overlay" />
+      <div className="absolute inset-0 bg-arena-steel/5 mix-blend-overlay" />
       {Array.from({ length: 80 }).map((_, i) => (
         <div
           key={i}
@@ -220,13 +220,13 @@ export function DenseFogEffect() {
 export function ThunderstormEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute inset-0 bg-blue-900/20" />
+      <div className="absolute inset-0 bg-arena-steel/20" />
       {/* Lightning strike simulation */}
       <div className="absolute inset-0 animate-pulse-slow opacity-10 bg-white" />
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-6 bg-blue-200/40 animate-rain"
+          className="absolute w-px h-6 bg-arena-steel/40 animate-rain"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 2}s`,
@@ -429,11 +429,11 @@ export function ScorchingWindEffect() {
 export function HailstormEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 bg-cyan-200/5 mix-blend-overlay" />
+      <div className="absolute inset-0 bg-arena-pop/5 mix-blend-overlay" />
       {Array.from({ length: 70 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1.5 bg-cyan-100/70 animate-hail"
+          className="absolute w-1 h-1.5 bg-arena-pop/70 animate-hail"
           style={{
             left: `${cryptoRandom() * 100}%`,
             top: '-5%',
@@ -460,12 +460,12 @@ export function ArcaneStormEffect() {
         }}
       />
       {/* Lightning flashes */}
-      <div className="absolute inset-0 bg-violet-200/10 animate-pulse" />
+      <div className="absolute inset-0 bg-primary/10 animate-pulse" />
       {/* Crackling arcane sparks */}
       {Array.from({ length: 35 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1 bg-cyan-300/70 rounded-full animate-mana-spark"
+          className="absolute w-1 h-1 bg-arena-pop/70 rounded-full animate-mana-spark"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -496,14 +496,14 @@ export function AetherStormEffect() {
       />
       {/* Energy pulses - faster flash rate */}
       <div
-        className="absolute inset-0 bg-cyan-200/15 animate-pulse"
+        className="absolute inset-0 bg-arena-pop/15 animate-pulse"
         style={{ animationDuration: '1.5s' }}
       />
       {/* Aether particles - more numerous and chaotic than Arcane Storm */}
       {Array.from({ length: 40 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1.5 h-1.5 bg-cyan-300/50 rounded-full animate-mana-spark"
+          className="absolute w-1.5 h-1.5 bg-arena-pop/50 rounded-full animate-mana-spark"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -520,7 +520,7 @@ export function AetherStormEffect() {
       {Array.from({ length: 20 }).map((_, i) => (
         <div
           key={`v-${i}`}
-          className="absolute w-1 h-1 bg-violet-400/40 rounded-full animate-mana-spark"
+          className="absolute w-1 h-1 bg-primary/40 rounded-full animate-mana-spark"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -608,12 +608,12 @@ export function EmberRainEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Dark reddish-orange haze */}
-      <div className="absolute inset-0 bg-orange-950/20 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-arena-blood/20 mix-blend-multiply" />
       {/* Falling embers */}
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={`ember-${i}`}
-          className="absolute w-1 h-1 bg-orange-400 rounded-full animate-hail drop-shadow-[0_0_4px_rgba(251,146,60,0.8)]"
+          className="absolute w-1 h-1 bg-arena-blood rounded-full animate-hail drop-shadow-[0_0_4px_rgba(251,146,60,0.8)]"
           style={{
             left: `${cryptoRandom() * 100}%`,
             top: '-5%',

@@ -21,6 +21,7 @@
     "preview": "vite preview",
     "test": "npx vitest run",
     "test:watch": "npx vitest",
+    "test:bun": "bun test --isolate",
     "test:coverage": "vitest run --coverage",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",

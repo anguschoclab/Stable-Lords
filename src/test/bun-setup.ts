@@ -7,9 +7,13 @@
 import { JSDOM } from 'jsdom';
 import { vi } from 'vitest';
 
-// Polyfill vi.mocked for Bun compatibility (it's type-only at runtime in vitest)
+// Polyfill vi.mocked and vi.hoisted for Bun compatibility
+// vi.mocked is type-only at runtime; vi.hoisted is needed for hoisted mock variables
 if (!(vi as any).mocked) {
   (vi as any).mocked = (fn: any) => fn;
+}
+if (!(vi as any).hoisted) {
+  (vi as any).hoisted = (fn: any) => fn();
 }
 
 // Global flag so tests can conditionally skip under Bun's native runner

@@ -8,6 +8,7 @@ import type {
 import { FightingStyle, type TournamentId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { generateFreelancer } from './utils';
+import { filterActive } from '@/utils/roster';
 
 /**
  * Committee selection.
@@ -32,8 +33,8 @@ export function committeeSelection(
   const pool: { w: Warrior; rank: number; score: number }[] = [];
 
   const collect = (roster: Warrior[]) => {
-    roster.forEach((w) => {
-      if (w.status === 'Active' && !lockedIds.has(w.id)) {
+    filterActive(roster).forEach((w) => {
+      if (!lockedIds.has(w.id)) {
         // 🌩️ Tournament Entry Skepticism: Weather Check
         if (state.weather === 'Rainy' && w.style === FightingStyle.LungingAttack) return;
         if (state.weather === 'Sweltering' && (w.attributes.CN || 0) < 10) return;

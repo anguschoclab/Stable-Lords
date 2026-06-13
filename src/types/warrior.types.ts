@@ -16,6 +16,11 @@ import {
   type StableId,
   type InjuryId,
 } from './shared.types';
+import {
+  WARRIOR_STATUSES,
+  INJURY_SEVERITIES,
+  INJURY_LOCATIONS,
+} from './enumSources';
 import type { AnnualAward } from './state.types';
 import type { EquipmentLoadout } from '@/data/equipment'; /**
                                                            * Defines the shape of tag badge props.
@@ -85,10 +90,10 @@ export interface CareerRecord {
 /**
  * Warrior status type.
  */
-export type WarriorStatus = 'Active' | 'Dead' | 'Retired';
+export type WarriorStatus = (typeof WARRIOR_STATUSES)[number];
 
 /** Injury severity tiers (per Design Bible §Injuries) */
-export type InjurySeverity = 'Minor' | 'Moderate' | 'Severe' | 'Critical' | 'Permanent';
+export type InjurySeverity = (typeof INJURY_SEVERITIES)[number];
 
 /** Recovery time ranges by severity (in weeks) */
 export const INJURY_SEVERITY_WEEKS: Record<InjurySeverity, { min: number; max: number }> = {
@@ -100,15 +105,7 @@ export const INJURY_SEVERITY_WEEKS: Record<InjurySeverity, { min: number; max: n
 };
 
 /** Body locations that can sustain injuries */
-export type InjuryLocation =
-  | 'Head'
-  | 'Chest'
-  | 'Abdomen'
-  | 'Right Arm'
-  | 'Left Arm'
-  | 'Right Leg'
-  | 'Left Leg'
-  | 'General'; /**
+export type InjuryLocation = (typeof INJURY_LOCATIONS)[number]; /**
                 * Defines the shape of injury data.
                 */
 

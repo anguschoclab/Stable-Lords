@@ -152,16 +152,9 @@ export const STRATEGY_SCORE_THRESHOLDS = {
   ADEQUATE: 50,
 } as const;
 
-// ─── Fatigue System ───────────────────────────────────────────────────────
-/**
- * Fatigue mechanics constants
- */
-export const FATIGUE_CONSTANTS = {
-  CEILING: 50,
-  BOUT_GAIN: 25,
-  WEEKLY_DECAY: 25,
-  MAX: 100,
-} as const;
+// ─── Default Max HP ───────────────────────────────────────────────────────
+
+export const DEFAULT_MAX_HP = 50;
 
 // ─── Meta Drift ───────────────────────────────────────────────────────────
 /**
@@ -183,6 +176,12 @@ export const TOURNAMENT_FAME_PRIZES = {
   SECOND: 50,
   THIRD: 25,
 } as const;
+
+// ─── Trainer Specialty Thresholds ───────────────────────────────────────
+
+export const TRAINER_IRONGUARD_ENDURANCE = 0.6;
+export const TRAINER_ROPEADOPE_CAP = 0.5;
+export const DAMAGE_RECEIVED_MULT_FLOOR = 0.5;
 
 // ─── Trait Constants ─────────────────────────────────────────────────────
 /**

@@ -1,5 +1,6 @@
 import { type Warrior } from '@/types/game';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ATTRIBUTE_TRAINING, SKILL_MAX_DEFAULT } from '@/constants/training';
 import { growthNarrative } from './GrowthHelpers';
 import { generateWarriorStatements } from '@/data/warriorStatements';
 import { StatBattery } from '@/components/ui/StatBattery'; /**
@@ -27,7 +28,7 @@ export function AttrBar({
   label,
   value,
   potential,
-  max = 25,
+  max = ATTRIBUTE_TRAINING.MAX_VALUE,
 }: {
   label: string;
   value: number;
@@ -82,7 +83,7 @@ export function AttrBar({
 export function SkillBar({
   label,
   value,
-  max = 20,
+  max = SKILL_MAX_DEFAULT,
 }: {
   label: string;
   value: number;

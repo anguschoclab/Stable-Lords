@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { computeWeeklyBreakdown } from '@/engine/economy';
+import { filterActive } from '@/utils/roster';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -23,7 +24,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { type Warrior } from '@/types/game';
 import { TreasurySparkline } from '@/components/charts/TreasurySparkline';
 
 interface GlobalTreasuryMatrixProps {
@@ -347,7 +347,7 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center">
         <button
           aria-label="Access Full Archive"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
+          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-none"
         >
           Access Full Archive{' '}
           <ArrowDownRight className="h-3 w-3 group-hover:translate-y-0.5 transition-transform" />
@@ -369,9 +369,7 @@ export function TreasuryOverview() {
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);
   const gold = state.treasury ?? 0;
 
-  const activeWarriorsCount = (state.roster ?? []).filter(
-    (w: Warrior) => w.status === 'Active'
-  ).length;
+  const activeWarriorsCount = filterActive(state.roster ?? []).length;
 
   // ⚡ Bolt: Fast accumulation without allocating objects per iteration
   let totalWins = 0;

@@ -5,6 +5,7 @@
  */
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import { isTooInjuredToFight } from '@/engine/injuries';
+import { isExhausted } from '@/utils/fatigueUtils';
 
 /** Whether a warrior is dead (killed in combat) */
 export function isDead(w: Pick<Warrior, 'status'>): boolean {
@@ -23,14 +24,14 @@ export function isActive(w: Pick<Warrior, 'status'>): boolean {
 
 /**
  * Whether a warrior is active AND healthy enough to fight this week.
- * Enforces a fatigue ceiling of 50 for regular bouts.
+ * Enforces a fatigue ceiling of 60 (>60 = exhausted) for regular bouts.
  */
 export function isFightReady(w: Warrior, isTournament: boolean = false): boolean {
   if (!isActive(w)) return false;
 
   // ── Tournament Adrenaline ──
   // Fatigue is ignored during tournament weeks to allow for multi-round progression.
-  if (!isTournament && (w.fatigue || 0) >= 50) return false;
+  if (!isTournament && isExhausted(w.fatigue || 0)) return false;
 
   const injObjs = (w.injuries || []).filter((i): i is InjuryData => typeof i !== 'string');
   return !isTooInjuredToFight(injObjs);

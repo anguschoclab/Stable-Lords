@@ -1,6 +1,7 @@
 import type { Warrior, BoutOffer } from '@/types/state.types';
 import type { Promoter } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
+import { filterActive } from './roster';
 
 const TIER_RANK: Record<string, number> = {
   Local: 0,
@@ -85,7 +86,7 @@ export function filterAndSortOffers(
 
   // Find idle warriors (active but no offers)
   const warriorsWithOffers = new Set(playerOffers.flatMap((o) => o.warriorIds));
-  const idle = roster.filter((w) => w.status === 'Active' && !warriorsWithOffers.has(w.id));
+  const idle = filterActive(roster).filter((w) => !warriorsWithOffers.has(w.id));
 
   // Find highest purse
   const maxPurse = playerOffers.length > 0 ? Math.max(...playerOffers.map((o) => o.purse)) : 0;

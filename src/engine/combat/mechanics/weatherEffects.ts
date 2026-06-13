@@ -14,6 +14,13 @@ export interface WeatherEffect {
 }
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+  Zephyr: {
+    staminaMult: 0.85,
+    initiativeMod: 2,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'A gentle, otherworldly breeze that refreshes combatants.',
+  },
   Clear: {
     staminaMult: 1.0,
     initiativeMod: 0,
@@ -253,6 +260,20 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.0,
     description: 'A beautiful rainbow spans the sky. Spirits are high.',
   },
+  'Ember Rain': {
+    staminaMult: 1.2,
+    initiativeMod: -3,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'Glowing embers rain down from the sky, searing the sand and the fighters alike.',
+  },
+  'Wildfire Smoke': {
+    staminaMult: 1.35,
+    initiativeMod: -4,
+    riposteMod: +2,
+    damageMult: 0.9,
+    description: 'Thick smoke chokes the lungs and stings the eyes, turning fights into desperate brawls.',
+  },
 };
 
 /**
@@ -276,6 +297,7 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',
   Clear: null,
   Overcast: null,
   Rainy: 'Rain slicks the sand — footwork will be treacherous today.',
@@ -317,6 +339,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Aether Storm': 'Raw aether winds rip through the arena. The boundaries of reality are fraying.',
   Mirage: 'The arena shimmers with intense heat, causing the air itself to ripple with illusions.',
   Rainbow: 'A vibrant rainbow curves over the arena, bringing a moment of strange peace.',
+  'Ember Rain': 'Glowing embers rain down from the sky, searing the sand and the fighters alike.',
+  'Wildfire Smoke': 'A thick blanket of acrid smoke settles over the sands. Every breath burns.',
 };
 
 /**

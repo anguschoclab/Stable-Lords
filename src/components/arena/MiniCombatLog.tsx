@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { X, History, ChevronUp, ChevronDown } from 'lucide-react';
 import type { MinuteEvent } from '@/types/combat.types';
+import { COMBAT_LOG_TRUNCATION } from '@/constants/ui';
 import { classifyEvent } from '@/lib/boutUtils';
 
 interface MiniCombatLogProps {
@@ -90,7 +91,8 @@ export default function MiniCombatLog({
         className={cn(
           'flex items-center justify-between gap-2 px-3 py-2',
           'bg-neutral-950/95 border border-white/10 backdrop-blur-md',
-          'rounded-none cursor-pointer hover:border-white/20 transition-colors'
+          'rounded-none cursor-pointer hover:border-white/20 transition-colors',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary'
         )}
         onClick={() => setIsExpanded(!isExpanded)}
         onKeyDown={(e) => {
@@ -170,7 +172,9 @@ export default function MiniCombatLog({
                           type === 'crit' && 'text-destructive font-black'
                         )}
                       >
-                        {event.text.length > 60 ? event.text.substring(0, 60) + '...' : event.text}
+                        {event.text.length > COMBAT_LOG_TRUNCATION
+                          ? event.text.substring(0, COMBAT_LOG_TRUNCATION) + '...'
+                          : event.text}
                       </p>
                     </div>
                   </div>

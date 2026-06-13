@@ -4,6 +4,7 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import { filterActive } from '@/utils/roster';
 /**
  * Defines the shape of stable reputation.
  */
@@ -93,13 +94,10 @@ export function computeStableReputation(state: GameState): StableReputation {
   const activeWarriors: Warrior[] = [];
 
   // ⚡ Bolt: Single pass over roster to collect active warriors, total kills, and unique styles
-  for (let i = 0; i < state.roster.length; i++) {
-    const w = state.roster[i];
-    if (w && w.status === 'Active') {
-      activeWarriors.push(w);
-      uniqueStyles.add(w.style);
-      totalKills += w.career?.kills || 0;
-    }
+  for (const w of filterActive(state.roster)) {
+    activeWarriors.push(w);
+    uniqueStyles.add(w.style);
+    totalKills += w.career?.kills || 0;
   }
 
   // ⚡ Bolt: Single pass over graveyard to collect kills
@@ -162,14 +160,13 @@ export function computeRivalReputation(roster: Warrior[]): StableReputation {
   const activeWarriors: Warrior[] = [];
 
   // ⚡ Bolt: Single pass over roster to compute stats instead of multiple filters and reduce
+  for (const w of filterActive(roster)) {
+    activeWarriors.push(w);
+    uniqueStyles.add(w.style);
+  }
   for (let i = 0; i < roster.length; i++) {
     const w = roster[i];
     if (w) {
-      if (w.status === 'Active') {
-        activeWarriors.push(w);
-        uniqueStyles.add(w.style);
-      }
-
       // Total kills and clean bouts uses full roster, not just active
       totalKills += w.career?.kills || 0;
       cleanBouts += (w.career?.wins || 0) + (w.career?.losses || 0) - (w.career?.kills || 0);

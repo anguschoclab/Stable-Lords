@@ -123,28 +123,28 @@ describe('isFightReady', () => {
   });
 
   describe('fatigue checks', () => {
-    it('returns false for active warriors with fatigue >= 50 (regular bout)', () => {
-      const warrior = makeWarrior('Active', 50, []);
+    it('returns false for active warriors with fatigue > 60 (regular bout)', () => {
+      const warrior = makeWarrior('Active', 61, []);
       expect(isFightReady(warrior, false)).toBe(false);
     });
 
-    it('returns false for active warriors with fatigue > 50 (regular bout)', () => {
+    it('returns false for active warriors with fatigue >> 60 (regular bout)', () => {
       const warrior = makeWarrior('Active', 75, []);
       expect(isFightReady(warrior, false)).toBe(false);
     });
 
-    it('returns true for active warriors with fatigue >= 50 (tournament mode)', () => {
-      const warrior = makeWarrior('Active', 50, []);
+    it('returns true for active warriors with fatigue <= 60 (tournament mode)', () => {
+      const warrior = makeWarrior('Active', 60, []);
       expect(isFightReady(warrior, true)).toBe(true);
     });
 
-    it('returns true for active warriors with fatigue > 50 (tournament mode)', () => {
+    it('returns true for active warriors with fatigue >> 60 (tournament mode)', () => {
       const warrior = makeWarrior('Active', 75, []);
       expect(isFightReady(warrior, true)).toBe(true);
     });
 
-    it('returns true for active warriors with fatigue < 50 (regular bout)', () => {
-      const warrior = makeWarrior('Active', 49, []);
+    it('returns true for active warriors with fatigue <= 60 (regular bout)', () => {
+      const warrior = makeWarrior('Active', 60, []);
       expect(isFightReady(warrior, false)).toBe(true);
     });
   });

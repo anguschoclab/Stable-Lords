@@ -5,6 +5,7 @@ import { StatBadge, WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { StatBattery } from '@/components/ui/StatBattery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { potentialRating, potentialGrade } from '@/engine/potential';
+import { ATTRIBUTE_TRAINING, ATTRIBUTE_UI_THRESHOLDS, FAME_STAR_THRESHOLD } from '@/constants/training';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type FightingStyle } from '@/types/game';
 import type { AttributePotential, CareerRecord } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
@@ -40,9 +41,12 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') onClick();
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
       }}
-      className="w-full relative group cursor-pointer"
+      className="w-full relative group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       aria-label={`View profile for ${warrior.name}`}
     >
       <Surface
@@ -95,13 +99,17 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                     <Star
                       className={cn(
                         'h-3 w-3',
-                        warrior.fame > 1000 ? 'text-arena-gold' : 'text-muted-foreground/60'
+                        warrior.fame > FAME_STAR_THRESHOLD
+                          ? 'text-arena-gold'
+                          : 'text-muted-foreground/60'
                       )}
                     />
                     <span
                       className={cn(
                         'text-[10px] font-mono font-black',
-                        warrior.fame > 1000 ? 'text-arena-gold' : 'text-muted-foreground'
+                        warrior.fame > FAME_STAR_THRESHOLD
+                          ? 'text-arena-gold'
+                          : 'text-muted-foreground'
                       )}
                     >
                       {warrior.fame}G
@@ -178,18 +186,18 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                       <StatBattery
                         label={k}
                         value={val}
-                        max={25}
+                        max={ATTRIBUTE_TRAINING.MAX_VALUE}
                         colorClass={
-                          val >= 20
+                          val >= ATTRIBUTE_UI_THRESHOLDS.EXCELLENT
                             ? 'bg-arena-gold shadow-[0_0_10px_rgba(255,215,0,0.5)] group-hover:animate-pulse'
-                            : val >= 15
+                            : val >= ATTRIBUTE_UI_THRESHOLDS.GOOD
                               ? 'bg-primary group-hover:animate-pulse'
                               : 'bg-neutral-800'
                         }
                       />
                     </TooltipTrigger>
                     <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-                      {ATTRIBUTE_LABELS[k]}: {val} / 25
+                      {ATTRIBUTE_LABELS[k]}: {val} / {ATTRIBUTE_TRAINING.MAX_VALUE}
                     </TooltipContent>
                   </Tooltip>
                 );

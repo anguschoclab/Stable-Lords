@@ -100,6 +100,7 @@ export function contestCheck(
 const WEATHER_STAMINA_MOD: Record<string, number> = {
   'Blazing Sun': 1.3, // 30% more stamina drain
   'Scorching Wind': 1.3, // 30% more stamina drain
+  Zephyr: 0.85, // 15% less stamina drain
   Tornado: 1.4, // 40% more stamina drain
   'Cursed Miasma': 1.3, // 30% more stamina drain
   Sweltering: 1.2, // 20% more stamina drain
@@ -118,8 +119,10 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   'Aether Storm': 0.8, // 20% less stamina drain
   Mirage: 1.1, // 10% more stamina drain
   Rainbow: 0.9, // 10% less stamina drain
+  'Wildfire Smoke': 1.35, // 35% more stamina drain
   // Clear / Overcast / Rainy → 1.0 (default)
   'Aurora Borealis': 0.85, // 15% less stamina drain
+  'Ember Rain': 1.3, // 30% more stamina drain
 }; /**
     * Weather stamina modifier.
     * @param weather - Weather. (optional)

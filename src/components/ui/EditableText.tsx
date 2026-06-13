@@ -116,11 +116,19 @@ export function EditableText({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       className={cn(
         'group relative flex items-center gap-2 cursor-pointer transition-all duration-300',
         className
       )}
       onClick={() => setIsEditing(true)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setIsEditing(true);
+        }
+      }}
     >
       <span className="relative z-10">{value}</span>
       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">

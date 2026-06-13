@@ -48,7 +48,8 @@ interface OffseasonEventNarrative {
     | 'tavern_brawl_surprise'
     | 'dreamweaver_visit'
     | 'abyssal_bargain'
-    | 'goblin_raid';
+    | 'goblin_raid'
+    | 'fey_trickster';
   newsletter: string[];
 }
 
@@ -864,6 +865,63 @@ function handleAbyssalBargain(
   }
 }
 
+function handleFeyTrickster(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const roll = rng.next();
+      let effectMsg: string;
+
+      if (roll < 0.6) {
+        // Solved riddle
+        const xpGained = 20 + Math.floor(rng.next() * 16);
+        ctx.rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+        });
+        ctx.insightTokens.push({
+          id: rng.uuid('insight') as InsightId,
+          type: 'Style' as InsightToken['type'],
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: 'A fey trickster taught them an impossible maneuver.',
+          origin: 'Fey Trickster',
+          discoveredWeek: nextWeek,
+        });
+        effectMsg = `They solved the riddle! They gain strange insights. (+${xpGained} XP, Insight Gained)`;
+      } else {
+        // Tricked
+        const newInjury = makeInjury(rng, {
+          name: 'Fey Prank',
+          description: 'A deeply embarrassing magical prank.',
+          severity: 'Minor',
+          weeksBase: 1,
+          weeksRange: 1,
+          penalties: { WL: -1, SP: -1 },
+        });
+        ctx.rosterUpdates.set(chosen.id, {
+          injuries: [...(chosen.injuries || []), newInjury],
+        });
+        effectMsg = `They were made a fool of, suffering minor hexes. (Minor Injury)`;
+      }
+
+      const baseMsg = t(rng.pick(e.newsletter) || '', { name: chosen.name });
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [`${baseMsg} ${effectMsg}`],
+      });
+    }
+  }
+}
+
 function handleRogueAlchemist(
   state: GameState,
   nextWeek: number,
@@ -979,6 +1037,7 @@ const EVENT_HANDLERS: Record<
   abyssal_bargain: handleAbyssalBargain,
   tavern_brawl_surprise: handleTavernBrawlSurprise,
   goblin_raid: handleGoblinRaid,
+  fey_trickster: handleFeyTrickster,
 };
 
 /**

@@ -592,6 +592,7 @@ export type WeatherType =
   | 'Blood Moon'
   | 'Eclipse'
   | 'Sandstorm'
+  | 'Zephyr'
   | 'Tornado'
   | 'Blizzard'
   | 'Dense Fog'
@@ -614,7 +615,10 @@ export type WeatherType =
   | 'Aurora Borealis'
   | 'Chaotic Winds'
   | 'Aether Storm'
-  | 'Mirage';
+  | 'Mirage'
+  | 'Ember Rain'
+  | 'Zephyr'
+  | 'Wildfire Smoke';
 
 /**
  * Defines the shape of death event.

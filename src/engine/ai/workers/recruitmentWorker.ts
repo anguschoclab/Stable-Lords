@@ -4,6 +4,7 @@ import { logAgentAction } from '../agentCore';
 import { checkBudget } from './budgetWorker';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getStyleDefaultLoadout } from '@/data/equipment';
+import { filterActive } from '@/utils/roster';
 
 /**
  * RecruitmentWorker: Handles drafting warriors from the pool.
@@ -22,7 +23,7 @@ export function processRecruitment(
   const remainingPool = [...pool];
 
   const intent = updatedRival.strategy?.intent ?? 'CONSOLIDATION';
-  const activeCount = updatedRival.roster.filter((w) => w.status === 'Active').length;
+  const activeCount = filterActive(updatedRival.roster).length;
 
   // 1. Check Recruitment Chance
   // **Intentional asymmetry (audited 2026-04-19)**: personality-based soft cap

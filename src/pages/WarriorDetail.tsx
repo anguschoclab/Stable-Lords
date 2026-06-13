@@ -6,12 +6,14 @@ import { useCallback, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from '@tanstack/react-router';
 import { obfuscateWarrior } from '@/lib/obfuscation';
 import { useGameStore } from '@/state/useGameStore';
+import { buildWarriorMap } from '@/utils/warriorCollection';
 import { type FightPlan } from '@/types/game';
 import type { Warrior } from '@/types/state.types';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Armchair, Target, ScrollText, User } from 'lucide-react';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
+import { isActive } from '@/engine/warriorStatus';
 import { DEFAULT_LOADOUT, type EquipmentLoadout } from '@/data/equipment';
 import { toast } from 'sonner';
 import { type SubNavTab } from '@/components/SubNav';
@@ -65,26 +67,11 @@ export default function WarriorDetail() {
 
   // Single-pass Map lookup across all warrior pools
   const { warrior, isPlayerOwned } = useMemo(() => {
-    const allMap = new Map<string, Warrior>();
+    const allMap = buildWarriorMap({ roster, graveyard, retired, rivals });
     const playerIds = new Set<string>();
-
-    for (const w of roster) {
-      allMap.set(w.id, w);
-      playerIds.add(w.id);
-    }
-    for (const w of graveyard) {
-      allMap.set(w.id, w);
-      playerIds.add(w.id);
-    }
-    for (const w of retired) {
-      allMap.set(w.id, w);
-      playerIds.add(w.id);
-    }
-    for (const rs of rivals || []) {
-      for (const w of rs.roster) {
-        allMap.set(w.id, w);
-      }
-    }
+    for (const w of roster) playerIds.add(w.id);
+    for (const w of graveyard) playerIds.add(w.id);
+    for (const w of retired) playerIds.add(w.id);
 
     const found = allMap.get(id);
     return { warrior: found, isPlayerOwned: found ? playerIds.has(id) : false };
@@ -171,7 +158,7 @@ export default function WarriorDetail() {
               </span>
               <span className="font-mono font-black text-foreground text-sm">{record}</span>
             </div>
-            {isPlayerOwned && warrior.status === 'Active' && (
+            {isPlayerOwned && isActive(warrior) && (
               <Button
                 variant="outline"
                 size="sm"

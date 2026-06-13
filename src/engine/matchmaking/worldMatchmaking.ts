@@ -2,6 +2,7 @@ import { GameState, Warrior, RivalStableData, BoutOffer } from '@/types/state.ty
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { type BoutOfferId, type PromoterId } from '@/types/shared.types';
 import { selectArenaForMatchup } from './arenaFit';
+import { filterActive } from '@/utils/roster';
 
 const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
 
@@ -22,8 +23,8 @@ export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] 
   const eligibleWarriors: { warrior: Warrior; stable: RivalStableData }[] = [];
 
   (state.rivals || []).forEach((rival) => {
-    rival.roster.forEach((warrior) => {
-      if (warrior.status === 'Active' && !warrior.isDead) {
+    filterActive(rival.roster).forEach((warrior) => {
+      if (!warrior.isDead) {
         eligibleWarriors.push({ warrior, stable: rival });
       }
     });

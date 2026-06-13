@@ -51,3 +51,10 @@ export function filterActive(roster: Warrior[]): Warrior[] {
 export function filterByStatus(roster: Warrior[], status: string): Warrior[] {
   return roster.filter((w) => w.status === status);
 }
+
+/**
+ * Filters roster to active warriors with no injuries
+ */
+export function filterHealthy(roster: Warrior[]): Warrior[] {
+  return roster.filter((w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0));
+}

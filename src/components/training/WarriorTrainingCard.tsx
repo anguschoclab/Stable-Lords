@@ -13,6 +13,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Check, X, Heart, AlertTriangle, Lock, Zap, Gauge, ArrowUpRight } from 'lucide-react';
 import { computeGainChance } from '@/engine/training';
 import { canGrow } from '@/engine/potential';
+import {
+  ATTRIBUTE_TRAINING,
+  ATTRIBUTE_TOTAL_CAP,
+  SEASONAL_GAINS,
+  ATTRIBUTE_NEAR_CEILING_BUFFER,
+} from '@/constants/training';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils'; /**
@@ -60,7 +66,7 @@ export function WarriorTrainingCard({
   onClear: () => void;
 }) {
   const total = ATTRIBUTE_KEYS.reduce((sum, k) => sum + warrior.attributes[k], 0);
-  const atCap = total >= 80;
+  const atCap = total >= ATTRIBUTE_TOTAL_CAP;
   const hasInjury = warrior.injuries.length > 0;
   const isRecovery = assignment?.type === 'recovery';
   const isTraining = assignment?.type === 'attribute';
@@ -140,26 +146,26 @@ export function WarriorTrainingCard({
             {ATTRIBUTE_KEYS.map((key) => {
               const val = warrior.attributes[key];
               const isSelected = isTraining && assignment?.attribute === key;
-              const maxed = val >= 25;
+              const maxed = val >= ATTRIBUTE_TRAINING.MAX_VALUE;
               const isSZ = key === 'SZ';
-              const seasonCapped = (seasonalGains[key] ?? 0) >= 3;
+              const seasonCapped = (seasonalGains[key] ?? 0) >= SEASONAL_GAINS.CAP;
               const isRevealed = !!warrior.potentialRevealed?.[key];
-              const potVal = warrior.potential?.[key] ?? 25;
+              const potVal = warrior.potential?.[key] ?? ATTRIBUTE_TRAINING.MAX_VALUE;
               const ceilingHit = !canGrow(val, warrior.potential?.[key]);
-              const nearCeiling = isRevealed && val >= potVal - 1;
+              const nearCeiling = isRevealed && val >= potVal - ATTRIBUTE_NEAR_CEILING_BUFFER;
               const disabled = !!assignment || maxed || atCap || isSZ || seasonCapped || ceilingHit;
 
               // Determine the lock reason for the tooltip
               const lockReason = isSZ
                 ? 'Size is fixed'
                 : maxed
-                  ? 'Attribute max (25)'
+                  ? `Attribute max (${ATTRIBUTE_TRAINING.MAX_VALUE})`
                   : ceilingHit
                     ? 'At potential ceiling'
                     : atCap
-                      ? 'Total stat cap (80) reached'
+                      ? `Total stat cap (${ATTRIBUTE_TOTAL_CAP}) reached`
                       : seasonCapped
-                        ? 'Seasonal cap (3/3 this season)'
+                        ? `Seasonal cap (${SEASONAL_GAINS.CAP}/${SEASONAL_GAINS.CAP} this season)`
                         : null;
 
               const chance =
@@ -200,11 +206,11 @@ export function WarriorTrainingCard({
 
                       {/* Progress Bar */}
                       <div className="flex-1 relative">
-                        <Progress value={(val / 25) * 100} className="h-1 bg-white/5" />
+                        <Progress value={(val / ATTRIBUTE_TRAINING.MAX_VALUE) * 100} className="h-1 bg-white/5" />
                         {isRevealed && (
                           <div
                             className="absolute top-0 bottom-0 w-px bg-white/20 z-10"
-                            style={{ left: `${(potVal / 25) * 100}%` }}
+                            style={{ left: `${(potVal / ATTRIBUTE_TRAINING.MAX_VALUE) * 100}%` }}
                             title="Potential Ceiling"
                           />
                         )}

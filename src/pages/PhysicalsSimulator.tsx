@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { FightingStyle, STYLE_ABBREV, type Warrior } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { useGameStore } from '@/state/useGameStore';
+import { filterActive } from '@/utils/roster';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { FighterConfigCard, type FighterStats } from '@/components/stable/FighterConfigCard';
@@ -16,7 +17,7 @@ import { SimulatorResults } from '@/components/stable/SimulatorResults';
  */
 export default function PhysicalsSimulator() {
   const { roster } = useGameStore();
-  const activeWarriors = roster.filter((w: Warrior) => w.status === 'Active');
+  const activeWarriors = filterActive(roster);
 
   const [styleA, setStyleA] = useState<FightingStyle>(FightingStyle.BashingAttack);
   const [styleB, setStyleB] = useState<FightingStyle>(FightingStyle.ParryRiposte);

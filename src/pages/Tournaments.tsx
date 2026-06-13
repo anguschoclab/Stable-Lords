@@ -5,6 +5,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
+import { filterActive } from '@/utils/roster';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ import { audioManager } from '@/lib/AudioManager';
 import { engineProxy } from '@/engine/workerProxy';
 import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
+import { FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/utils/fatigueUtils';
 
 // Modular Components
 import {
@@ -50,8 +52,8 @@ const TIER_PRIZES: Record<string, { first: number; second: number; third: number
 
 function getFatigueLabel(fatigue: number | undefined): { label: string; color: string } {
   const f = fatigue ?? 0;
-  if (f < 30) return { label: 'Fresh', color: 'text-primary' };
-  if (f < 60) return { label: 'Tired', color: 'text-arena-gold' };
+  if (f < FATIGUE_FRESH) return { label: 'Fresh', color: 'text-primary' };
+  if (f < FATIGUE_ELEVATED) return { label: 'Tired', color: 'text-arena-gold' };
   return { label: 'Exhausted', color: 'text-destructive' };
 } /**
    * Tournaments.
@@ -85,7 +87,7 @@ export default function Tournaments() {
     [tournaments, season]
   );
 
-  const activeWarriors = useMemo(() => roster.filter((w) => w.status === 'Active'), [roster]);
+  const activeWarriors = useMemo(() => filterActive(roster), [roster]);
 
   // Warriors belonging to the player that are in the active tournament
   const playerWarriorsInTournament = useMemo(() => {
@@ -240,9 +242,9 @@ export default function Tournaments() {
                         <div
                           className={cn(
                             'h-full transition-all',
-                            (w.fatigue ?? 0) < 30
+                            (w.fatigue ?? 0) < FATIGUE_FRESH
                               ? 'bg-primary'
-                              : (w.fatigue ?? 0) < 60
+                              : (w.fatigue ?? 0) < FATIGUE_ELEVATED
                                 ? 'bg-arena-gold'
                                 : 'bg-destructive'
                           )}

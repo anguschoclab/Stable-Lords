@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
+import { filterActive } from '@/utils/roster';
 import { LeftNav } from '@/components/navigation/LeftNav';
 import { DeathModal } from '@/components/modals/DeathModal';
 import { CoachOverlay } from '@/components/ui/CoachOverlay';
@@ -105,9 +106,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       initialize: s.initialize,
     }))
   );
-  const warriorStatusData = useGameStore(
-    useShallow((s: GameStore) => s.roster.map((w) => w.status))
-  );
+  const roster = useGameStore(useShallow((s: GameStore) => s.roster));
   const navigate = useNavigate();
   const location = useLocation();
   const activePath = location.pathname;
@@ -124,11 +123,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     const exemptPaths = ['/welcome', '/ops/', '/admin', '/help'];
     if (exemptPaths.some((p) => activePath.startsWith(p))) return;
 
-    const activeWarriors = warriorStatusData.filter((status) => status === 'Active');
-    if (activeWarriors.length < 3) {
+    if (filterActive(roster).length < 3) {
       navigate({ to: '/welcome' });
     }
-  }, [warriorStatusData, activePath, navigate]);
+  }, [roster, activePath, navigate]);
 
   useEffect(() => {
     // Strategic Route-Aware Event Log Toggling

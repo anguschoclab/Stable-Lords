@@ -4,6 +4,7 @@ import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { computePlayerThreatLevel } from './agentCore';
+import { filterActive } from '@/utils/roster';
 
 /**
  * Determines the weekly strategic intent for an AI owner.
@@ -131,7 +132,7 @@ export function pickWeeklyIntent(
     const r = rivalsByOwnerId.get(rivalId);
     if (!r || !r.agentMemory?.seasonRecord) return false;
     return (
-      r.roster.reduce((count, w) => (w.status === 'Active' ? count + 1 : count), 0) >
+      filterActive(r.roster).length >
       r.agentMemory.seasonRecord.rosterSizeAtSeasonStart + 1
     );
   });
@@ -158,10 +159,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   if (strategy.intent !== 'RECOVERY' && rival.treasury < 150) return true;
 
   // Skepticism Tier 2: Roster Depletion
-  const activeCount = rival.roster.reduce(
-    (count, w) => (w.status === 'Active' ? count + 1 : count),
-    0
-  );
+  const activeCount = filterActive(rival.roster).length;
   if (strategy.intent === 'VENDETTA' && activeCount < 3) return true;
 
   // Skepticism Tier 3: Meta Hostility (Methodical/Tactician agents only)
@@ -173,8 +171,8 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
 
   // Skepticism Tier 4: Environmental Hazard (Strategic Abort)
   const isRainy = state.weather === 'Rainy';
-  const precisionHeavy = rival.roster.some(
-    (w) => w.status === 'Active' && w.style === 'LUNGING ATTACK'
+  const precisionHeavy = filterActive(rival.roster).some(
+    (w) => w.style === 'LUNGING ATTACK'
   );
   if (
     isRainy &&

@@ -27,3 +27,26 @@ export const ATTRIBUTE_TRAINING = {
   UI_HIGH_PERCENT: 50,
   UI_MEDIUM_PERCENT: 30,
 } as const;
+
+// ─── Attribute UI Quality Thresholds ──────────────────────────────────────
+
+export const ATTRIBUTE_UI_THRESHOLDS = {
+  EXCELLENT: 20,
+  GOOD: 15,
+} as const;
+
+// ─── Attribute Total Cap ──────────────────────────────────────────────────
+
+export const ATTRIBUTE_TOTAL_CAP = 80;
+
+// ─── Near-Ceiling Buffer ──────────────────────────────────────────────────
+
+export const ATTRIBUTE_NEAR_CEILING_BUFFER = 1;
+
+// ─── Skill Maximum Default ──────────────────────────────────────────────────
+
+export const SKILL_MAX_DEFAULT = 20;
+
+// ─── Fame Star Threshold ────────────────────────────────────────────────────
+
+export const FAME_STAR_THRESHOLD = 1000;

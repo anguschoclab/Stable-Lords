@@ -41,7 +41,9 @@ export interface TraitEffect {
   defModLowHp?: number; // defender HP < 0.5
   parModHighHp?: number; // own HP > 0.75
   defModEarly?: number; // OPENING phase
+  defModLate?: number; // LATE phase
   attModLate?: number; // LATE phase
+  parModLate?: number; // LATE phase
   iniModFresh?: number; // own endurance > 0.7
   killWindowBonus?: number; // adds directly to kill threshold
 
@@ -196,6 +198,20 @@ export const TRAITS: Record<string, TraitDef> = {
     effect: { decMod: 1, iniMod: 1 },
     weight: 0.5,
   },
+  vengeful: {
+    id: 'vengeful',
+    name: 'Vengeful',
+    description: '+1 damage when bloodied (HP < 50%) — pain only makes them angrier.',
+    effect: { attModLowHp: 1, dmgBonus: 1 },
+    weight: 0.6,
+  },
+  stoic: {
+    id: 'stoic',
+    name: 'Stoic',
+    description: '+1 defense in LATE phase — ignores mounting fatigue and pain.',
+    effect: { defModLate: 1, parModLate: 1 },
+    weight: 0.7,
+  },
   // ── Personality / Combat AI Traits ──
   aggressive: {
     id: 'aggressive',
@@ -290,9 +306,45 @@ export const TRAITS: Record<string, TraitDef> = {
     synergy: ['brutal'],
     antiSynergy: ['cunning', 'tank'],
   },
+  // ── New Lore/Personality Traits ──
+  blood_drunk: {
+    id: 'blood_drunk',
+    name: 'Blood Drunk',
+    description: '+2 attack and −2 defense when bloodied (HP < 50%) — loses all sense of self-preservation once injured.',
+    effect: { attModLowHp: 2, defModLowHp: -2, fightPlanMod: { killDesire: 3 } },
+    weight: 0.6,
+    synergy: ['brutal', 'agile'],
+    antiSynergy: ['tank'],
+  },
+  paranoid: {
+    id: 'paranoid',
+    name: 'Paranoid',
+    description: '+2 defense in OPENING phase, but −1 decisiveness overall — constantly expects ambushes.',
+    effect: { defModEarly: 2, decMod: -1, fightPlanMod: { AL: -2 } },
+    weight: 0.6,
+    synergy: ['cunning'],
+  },
+  vengeful: {
+    id: 'vengeful',
+    name: 'Vengeful',
+    description: '+1 riposte, +2 kill desire — driven by spite to return every blow with interest.',
+    effect: { ripMod: 1, fightPlanMod: { killDesire: 2 } },
+    weight: 0.7,
+    synergy: ['cunning', 'brutal'],
+  },
+  cold_eyed: {
+    id: 'cold_eyed',
+    name: 'Cold-Eyed',
+    description: '+1 initiative, +1 decisiveness — unnervingly calm, viewing combat purely as geometry and physics.',
+    effect: { iniMod: 1, decMod: 1, fightPlanMod: { feintTendency: 4, AL: 2 } },
+    weight: 0.6,
+    synergy: ['cunning', 'tank'],
+    antiSynergy: ['brutal'],
+  },
 };
 
-const TRAIT_IDS = Object.keys(TRAITS);
+export type TraitId = keyof typeof TRAITS;
+const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 
 /**
  * Roll 0-2 traits at warrior creation, weighted by trait rarity.
@@ -433,6 +485,8 @@ export function getDynamicTraitMods(
     if (e.parModHighHp != null && ctx.hpRatio > 0.75) acc.parMod += e.parModHighHp;
     if (e.defModEarly != null && ctx.phase === 'OPENING') acc.defMod += e.defModEarly;
     if (e.attModLate != null && ctx.phase === 'LATE') acc.attMod += e.attModLate;
+    if (e.defModLate != null && ctx.phase === 'LATE') acc.defMod += e.defModLate;
+    if (e.parModLate != null && ctx.phase === 'LATE') acc.parMod += e.parModLate;
     if (e.iniModFresh != null && ctx.endRatio > 0.7) acc.iniMod += e.iniModFresh;
     if (e.attModConsecutiveHits != null && ctx.consecutiveHits >= 2)
       acc.attMod += e.attModConsecutiveHits;

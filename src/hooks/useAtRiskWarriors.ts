@@ -1,5 +1,7 @@
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
+import { isExhausted } from '@/utils/fatigueUtils';
+import { filterActive } from '@/utils/roster';
 
 /**
  *
@@ -18,9 +20,9 @@ export function useAtRiskWarriors() {
   return useGameStore(
     useShallow((s) => {
       const result: AtRiskWarrior[] = [];
-      for (const w of s.roster) {
+      for (const w of filterActive(s.roster)) {
         const fatigue = w.fatigue ?? 0;
-        if (w.status === 'Active' && (fatigue > 60 || w.injuries.length > 0)) {
+        if (isExhausted(fatigue) || w.injuries.length > 0) {
           result.push({
             id: w.id,
             name: w.name,

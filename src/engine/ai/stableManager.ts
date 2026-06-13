@@ -3,6 +3,7 @@ import { processStaff } from './workers/staffWorker';
 import { processRoster } from './workers/rosterWorker';
 import { consolidateAgentMemory, createAgentContext } from './agentCore';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
+import { filterActive } from '@/utils/roster';
 
 import {
   FIGHT_PURSE,
@@ -35,6 +36,7 @@ export function processAIStable(
 
   // ── Fatigue Decay & HP Recovery for AI Warriors ──
   updatedRival.roster = updatedRival.roster.map((w): Warrior => {
+    // Intentional deviation: single-item status check inside map
     if (w.status === 'Active') {
       const fatigue = Math.max(0, (w.fatigue || 0) - 25);
       const currentHP = w.derivedStats?.hp ?? 100;
@@ -95,7 +97,7 @@ export function processAIStable(
 
   // 🏛️ Unification: Fame-bracketed upkeep for AI
   // Derived after workers run so newly-recruited or status-changed warriors are included.
-  const activeRoster = updatedRival.roster.filter((w) => w.status === 'Active');
+  const activeRoster = filterActive(updatedRival.roster);
   const rosterUpkeep = activeRoster.reduce((sum, w) => {
     const famePremium = Math.floor((w.fame || 0) / 10) * 10;
     return sum + WARRIOR_UPKEEP_BASE + famePremium;

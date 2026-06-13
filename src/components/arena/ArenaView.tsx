@@ -12,6 +12,7 @@ import CrowdReactions from './crowd/CrowdReactions';
 import { useArenaAnimation, setFighterNames } from '@/hooks/useArenaAnimation';
 import { useLastEventType, useCrowdState } from '@/hooks/useArenaEventEffects';
 import { calculateFighterStatuses } from './arenaUtils';
+import { DEFAULT_MAX_HP } from '@/constants/combat';
 import type { MinuteEvent } from '@/types/combat.types';
 import type { FightingStyle, WeatherType } from '@/types/game';
 import type { ArenaTier } from './ArenaBackground';
@@ -94,8 +95,8 @@ export default function ArenaView({
   arenaTier = 'standard',
   weather = 'Clear',
   arenaId,
-  maxHpA = 50,
-  maxHpD = 50,
+  maxHpA = DEFAULT_MAX_HP,
+  maxHpD = DEFAULT_MAX_HP,
   className,
 }: ArenaViewProps) {
   const store = useGameStore();

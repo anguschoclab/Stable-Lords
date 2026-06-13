@@ -12,6 +12,8 @@ interface WeatherAudioProps {
 
 // Weather to ambient sound mapping
 const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
+  Zephyr: 'ambience-wind-breezy',
+  'Ember Rain': null,
   Clear: null,
   Overcast: null,
   Rainy: 'ambience-rain',
@@ -45,6 +47,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Aether Storm': 'ambience-wind-gale',
   Mirage: 'ambience-wind-gale',
   Rainbow: null,
+  'Wildfire Smoke': null,
 }; /**
     * Weather audio.
     * @param - { weather, volume, enabled, arena id }.

@@ -1,0 +1,80 @@
+import type { WeatherType } from '@/types/shared.types';
+import {
+  RainEffect,
+  BloodRainEffect,
+  MistEffect,
+  HeatEffect,
+  SolarFlareEffect,
+  AbyssalGloomEffect,
+  CursedMiasmaEffect,
+  WindEffect,
+  EclipseEffect,
+  BloodMoonEffect,
+  SpookyNightEffect,
+  SandstormEffect,
+  BlizzardEffect,
+  DenseFogEffect,
+  ThunderstormEffect,
+  AshfallEffect,
+  MeteorShowerEffect,
+  AcidRainEffect,
+  ManaSurgeEffect,
+  LocustSwarmEffect,
+  TornadoEffect,
+  ScorchingWindEffect,
+  HailstormEffect,
+  ArcaneStormEffect,
+  AetherStormEffect,
+  ChaoticWindsEffect,
+  EmberRainEffect,
+} from './effects';
+
+/**
+ * Exhaustive map of weather type → overlay renderer. `null` means the weather
+ * is intentionally neutral (no particle effect). The compiler enforces that
+ * every {@link WeatherType} has an entry.
+ */
+// eslint-disable-next-line react-refresh/only-export-components -- intentional registry export consumed by tests
+export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = {
+  Clear: null,
+  Overcast: null,
+  Rainy: () => <RainEffect />,
+  Sweltering: () => <HeatEffect />,
+  Breezy: () => <WindEffect strong={false} />,
+  'Blazing Sun': () => <HeatEffect />,
+  Gale: () => <WindEffect strong />,
+  'Blood Moon': () => <BloodMoonEffect />,
+  Eclipse: () => <EclipseEffect />,
+  Sandstorm: () => <SandstormEffect />,
+  Tornado: () => <TornadoEffect />,
+  Blizzard: () => <BlizzardEffect />,
+  'Dense Fog': () => <DenseFogEffect />,
+  Mist: () => <MistEffect />,
+  Thunderstorm: () => <ThunderstormEffect />,
+  Ashfall: () => <AshfallEffect />,
+  'Acid Rain': () => <AcidRainEffect />,
+  'Mana Surge': () => <ManaSurgeEffect />,
+  'Scorching Wind': () => <ScorchingWindEffect />,
+  'Spooky Night': () => <SpookyNightEffect />,
+  'Meteor Shower': () => <MeteorShowerEffect />,
+  'Solar Flare': () => <SolarFlareEffect />,
+  'Abyssal Gloom': () => <AbyssalGloomEffect />,
+  'Cursed Miasma': () => <CursedMiasmaEffect />,
+  Hailstorm: () => <HailstormEffect />,
+  'Arcane Storm': () => <ArcaneStormEffect />,
+  'Blood Rain': () => <BloodRainEffect />,
+  'Locust Swarm': () => <LocustSwarmEffect />,
+  'Aurora Borealis': () => <ManaSurgeEffect />,
+  'Chaotic Winds': () => <ChaoticWindsEffect />,
+  'Aether Storm': () => <AetherStormEffect />,
+  Mirage: () => <ScorchingWindEffect />,
+  Rainbow: null,
+  'Ember Rain': () => <EmberRainEffect />,
+  Zephyr: () => <WindEffect strong={false} />,
+  'Wildfire Smoke': () => <AshfallEffect />,
+};
+
+/** Renders the registered weather effect for `weather`, or nothing. */
+export function WeatherOverlay({ weather }: { weather: string }) {
+  return WEATHER_VISUALS[weather as WeatherType]?.() ?? null;
+}

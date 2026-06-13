@@ -98,7 +98,7 @@ describe('TimeAdvanceService - evaluateStopConditions', () => {
       {
         id: 'w1',
         status: 'Active',
-        fatigue: 60, // Too tired to fight (non-tournament)
+        fatigue: 75, // Too tired to fight (>60 = exhausted, non-tournament)
         injuries: [],
       } as any,
     ];
@@ -130,7 +130,7 @@ describe('TimeAdvanceService - evaluateStopConditions', () => {
     mockState.rivals = [
       {
         id: 'rival-1',
-        roster: [{ id: 'w2', status: 'Active', fatigue: 60, injuries: [] } as any],
+        roster: [{ id: 'w2', status: 'Active', fatigue: 75, injuries: [] } as any],
       } as any,
     ];
 

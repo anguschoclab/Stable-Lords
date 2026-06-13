@@ -4,6 +4,7 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Collects all warriors from player roster and rival stables
@@ -36,7 +37,7 @@ export function collectAllWarriors(state: GameState, filter?: (w: Warrior) => bo
  * Most common use case - eliminates the repeated filtering pattern
  */
 export function collectAllActiveWarriors(state: GameState): Warrior[] {
-  return collectAllWarriors(state, (w) => w.status === 'Active');
+  return collectAllWarriors(state, (w) => isActive(w));
 }
 
 /**
@@ -56,7 +57,7 @@ export function collectAvailableWarriors(state: GameState, targetWeek: number): 
   }
 
   // Return active warriors who aren't booked
-  return collectAllWarriors(state, (w) => w.status === 'Active' && !bookedWarriorIds.has(w.id));
+  return collectAllWarriors(state, (w) => isActive(w) && !bookedWarriorIds.has(w.id));
 }
 
 /**
@@ -65,4 +66,14 @@ export function collectAvailableWarriors(state: GameState, targetWeek: number): 
  */
 export function countActiveWarriors(state: GameState): number {
   return collectAllActiveWarriors(state).length;
+}
+
+/**
+ * Collects only healthy active warriors (status === "Active" and no injuries)
+ */
+export function collectHealthyWarriors(state: GameState): Warrior[] {
+  return collectAllWarriors(
+    state,
+    (w) => isActive(w) && (!w.injuries || w.injuries.length === 0)
+  );
 }

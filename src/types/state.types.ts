@@ -128,22 +128,17 @@ export interface Promoter {
 
 // ─── Owner / Stable ─────────────────────────────────────────────────────────
 
+import { OWNER_PERSONALITIES, META_ADAPTATIONS } from './enumSources';
+
 /**
  * Owner personality type.
  */
-export type OwnerPersonality =
-  | 'Aggressive'
-  | 'Methodical'
-  | 'Showman'
-  | 'Pragmatic'
-  | 'Tactician'; /**
-                  * Meta adaptation type.
-                  */
+export type OwnerPersonality = (typeof OWNER_PERSONALITIES)[number];
 
 /**
  * Meta adaptation type.
  */
-export type MetaAdaptation = 'MetaChaser' | 'Traditionalist' | 'Opportunist' | 'Innovator'; /**
+export type MetaAdaptation = (typeof META_ADAPTATIONS)[number]; /**
                                                                                              * Defines the shape of owner.
                                                                                              */
 

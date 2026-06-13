@@ -13,21 +13,7 @@ import {
 import { audioManager } from '@/lib/AudioManager';
 import type { RNG } from './types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-
-/**
- * Adapter to convert IRNGService to RNG function
- */
-function rngFromService(service: IRNGService): RNG {
-  return () => service.next();
-}
-
-/**
- * Adapter to normalize RNG input
- */
-function normalizeRng(rng: IRNGService | RNG): RNG {
-  if (typeof rng === 'function') return rng;
-  return rngFromService(rng);
-}
+import { normalizeRng } from '@/engine/core/rng/normalize';
 
 /**
  * Narrates an attack with weapon-type-specific verbs.

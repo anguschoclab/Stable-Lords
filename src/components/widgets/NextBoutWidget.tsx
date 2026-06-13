@@ -6,6 +6,7 @@ import { Swords, Trophy, Target, ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
 import { cn } from '@/lib/utils';
+import { ODDS_THRESHOLDS } from '@/constants/ui';
 import { ATTRIBUTE_KEYS } from '@/types/game';
 import { resolveWarriorName, resolveStableName, findWarrior } from '@/utils/historyResolver'; /**
                                                                                                * Next bout widget.
@@ -104,9 +105,9 @@ export function NextBoutWidget() {
                   <span
                     className={cn(
                       'font-bold',
-                      odds > 60
+                      odds > ODDS_THRESHOLDS.FAVORITE
                         ? 'text-primary'
-                        : odds < 40
+                        : odds < ODDS_THRESHOLDS.UNDERDOG
                           ? 'text-destructive'
                           : 'text-arena-gold'
                     )}

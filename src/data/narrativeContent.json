@@ -648,29 +648,28 @@
         "{{attacker}} makes a downward cut with {{possessive}} {{weapon}}!",
         "{{attacker}} whips {{possessive}} {{weapon}} blade back and forth as if to slash {{defender}} to ribbons!",
         "{{attacker}} makes a cruel and cunning underhanded attack with {{possessive}} {{weapon}}!",
-        "{{attacker}} makes a lunging attack with {{possessive}} {{weapon}}!",
         "{{attacker}} drives {{possessive}} {{weapon}} in a forward slash!",
         "{{attacker}} catapults forward, {{possessive}} {{weapon}} flashing in a deadly assault!",
         "{{attacker}} lashes out with {{possessive}} {{weapon}} in a lightning quick assault!",
         "{{attacker}} sweeps {{possessive}} {{weapon}} in a brutal horizontal arc!",
-        "{{attacker}} hacks downward with {{possessive}} {{weapon}}!",
         "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
         "{{attacker}} shifts {{possessive}} weight and cuts low with {{weapon}}!",
         "{{attacker}} drops {{possessive}} shoulder and rips {{weapon}} through in a vicious diagonal slash!"
       ],
       "bashing": [
-        "{{attacker}} bashes with {{possessive}} {{weapon}}!",
-        "{{attacker}} smashes with {{possessive}} {{weapon}}!",
+        "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
         "{{attacker}} strikes using {{possessive}} {{weapon}}!",
         "{{attacker}} strikes forward with {{possessive}} {{weapon}}, all {{possessive}} weight behind the blow!",
         "{{attacker}} lashes out with {{possessive}} {{weapon}} in a lightning quick assault!",
         "{{attacker}} attempts to smash {{defender}} with {{possessive}} {{weapon}}!",
         "{{attacker}} cleverly tries to break {{defender}}'s defense with {{possessive}} {{weapon}}!",
-        "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
         "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
         "{{attacker}} bats murderously at {{defender}} with {{possessive}} {{weapon}}!",
-        "{{attacker}} smashes through with {{possessive}} {{weapon}}!",
-        "{{attacker}} throws {{possessive}} full weight behind the {{weapon}} in an all-out assault!"
+        "{{attacker}} throws {{possessive}} full weight behind the {{weapon}} in an all-out assault!",
+        "{{attacker}} swings heavily with {{possessive}} {{weapon}}!",
+        "{{attacker}} delivers a crushing blow using {{possessive}} {{weapon}}!",
+        "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!",
+        "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!"
       ],
       "fist": [
         "{{attacker}} PUNCHES from the waist with unbelievable quickness!",
@@ -710,7 +709,10 @@
         "BREAST",
         "STERNUM",
         "COLLARBONE",
-        "SHOULDER BLADE"
+        "SHOULDER BLADE",
+        "THORAX",
+        "UPPER TORSO",
+        "SOLAR PLEXUS"
       ],
       "abdomen": [
         "STOMACH",
@@ -735,7 +737,8 @@
         "RIGHT WRIST",
         "RIGHT SHOULDER",
         "RIGHT KNUCKLES",
-        "RIGHT UPPER ARM"
+        "RIGHT UPPER ARM",
+        "PRIMARY ARM"
       ],
       "left arm": [
         "LEFT ARM",
@@ -746,7 +749,8 @@
         "LEFT WRIST",
         "LEFT SHOULDER",
         "LEFT KNUCKLES",
-        "LEFT UPPER ARM"
+        "LEFT UPPER ARM",
+        "OFF-HAND ARM"
       ],
       "right leg": [
         "RIGHT LEG",
@@ -757,7 +761,9 @@
         "RIGHT HIP",
         "RIGHT CALF",
         "RIGHT ANKLE",
-        "RIGHT HAMSTRING"
+        "RIGHT HAMSTRING",
+        "RIGHT FOOT",
+        "RIGHT LOWER LEG"
       ],
       "left leg": [
         "LEFT LEG",
@@ -768,26 +774,59 @@
         "LEFT CALF",
         "LEFT ANKLE",
         "LEFT HAMSTRING",
-        "LEFT QUADRICEP"
+        "LEFT QUADRICEP",
+        "LEFT FOOT",
+        "LEFT LOWER LEG"
       ]
     },
     "damage_severity": {
       "deadly": [
         "It was a deadly attack!",
         "What a massive blow!",
-        "What a devastating attack!"
+        "What a devastating attack!",
+        "landing a potentially lethal blow",
+        "striking with murderous force",
+        "delivering a devastating wound",
+        "inflicting critical, life-threatening damage",
+        "with fatal intent",
+        "causing catastrophic injury",
+        "cleaving through defenses with deadly precision"
       ],
       "terrific": [
         "It was an incredible blow!",
-        "It is a terrific blow!"
+        "It is a terrific blow!",
+        "hitting with overwhelming power",
+        "delivering a terrific smash",
+        "striking with tremendous force",
+        "landing a brutal, bone-jarring blow",
+        "with staggering impact",
+        "causing a terrifying spray of blood",
+        "with immense and fearsome strength",
+        "landing a shockingly powerful strike"
       ],
       "powerful": [
         "It is a tremendous blow!",
-        "It was a powerful blow!"
+        "It was a powerful blow!",
+        "with a solid, muscular strike",
+        "landing a heavy blow",
+        "striking forcefully",
+        "delivering a strong and punishing hit",
+        "with resounding impact",
+        "putting incredible weight behind the attack",
+        "landing a deeply painful strike",
+        "with significant martial power"
       ],
       "glancing": [
         "The attack is a glancing blow only.",
-        "The stroke lands ineffectively."
+        "The stroke lands ineffectively.",
+        "grazing {{defender}} slightly",
+        "landing a shallow, glancing blow",
+        "barely connecting with {{defender}}",
+        "skimming off {{defender}}'s armor",
+        "delivering a superficial scrape",
+        "with a minor, deflected impact",
+        "causing only a minor scratch",
+        "landing a weak, off-balance strike"
       ],
       "fatal": [
         "{{attacker}} executes a merciless coup de grâce, ending {{defender}}'s misery.",
@@ -818,7 +857,12 @@
         "{{name}} is gravely injured!",
         "{{name}} is on the verge of shock!!",
         "{{name}} is bleeding badly!",
-        "{{name}} is severely wounded!!"
+        "{{name}} is severely wounded!!",
+        "{{name}} is bleeding profusely and struggling.",
+        "The injury to {{name}} looks severe; {{pronoun}} is visibly in pain.",
+        "{{name}}'s movements are hampered by the severe wound.",
+        "Blood flows freely from {{name}}'s grievous injury.",
+        "{{name}} is clearly in a severe state of distress."
       ],
       "desperate": [
         "{{name}} appears DESPERATE!",
@@ -827,14 +871,22 @@
         "{{name}} is becoming frantic!!!",
         "{{name}} is becoming frantically careless!!!",
         "{{name}} mutters a desperate prayer!",
-        "{{name}} reels with the fury of combat!"
+        "{{name}} reels with the fury of combat!",
+        "{{name}} looks desperate, clinging to life.",
+        "Panic and pain mix in {{name}}'s eyes.",
+        "{{name}} is on the verge of collapse."
       ],
       "serious": [
         "{{name}} has sustained serious wounds!",
         "{{name}} whitens with the pain of his wounds.",
         "{{name}} winces and smiles feebly.",
         "{{name}} winces, obviously feeling great pain.",
-        "{{name}} fights on, despite the pain."
+        "{{name}} fights on, despite the pain.",
+        "A serious wound that will slow {{name}} down.",
+        "{{name}} winces from the serious injury.",
+        "The strike leaves a serious mark on {{name}}'s combat effectiveness.",
+        "{{name}} grimaces, fighting through serious pain.",
+        "The wound to {{name}} looks bad, requiring immediate caution."
       ],
       "panic": [
         "{{name}} begins to panic and fights desperately!",
@@ -844,7 +896,11 @@
         "{{name}} is in dire straits - fighting on pure instinct!",
         "{{name}} appears DESPERATE!",
         "{{name}} can't find the rhythm. Something has broken their composure.",
-        "{{name}} fights on pure instinct now, their mind fracturing under the pressure."
+        "{{name}} fights on pure instinct now, their mind fracturing under the pressure.",
+        "Wild panic flashes across {{name}}'s face.",
+        "{{name}} reels backward, eyes wide with terror.",
+        "Fear takes hold of {{name}} as {{pronoun}} realizes the danger.",
+        "{{name}} scrambles desperately, panic setting in."
       ]
     },
     "defenses": {
@@ -866,12 +922,15 @@
         "tier1_low": [
           "{{defender}} ducks out of the way of the attack.",
           "{{defender}} dodges right, out of harm's way.",
-          "{{defender}} leans away from the attack.",
+          "{{defender}} barely leans away from the attack.",
           "{{defender}} nimbly eludes {{attacker}}'s attack.",
           "{{defender}} pivots to the left out of harm's way.",
           "{{defender}} ducks left out of harm's way.",
           "{{defender}} leans back from the incoming blow.",
-          "{{defender}} steps aside at the last moment."
+          "{{defender}} steps aside at the last moment.",
+          "{{defender}} clumsily stumbles back to avoid the blow.",
+          "{{defender}} jerks out of the way just in time.",
+          "{{defender}} awkwardly sidesteps the incoming weapon."
         ],
         "tier2_medium": [
           "{{defender}} gracefully dodges the blow.",
@@ -899,12 +958,16 @@
           "{{defender}} steps into the void, showing absolute confidence as the strike whiffs past."
         ],
         "tier4_supernatural": [
-          "{{defender}} contorts his body inhumanly as he unbelievably dodges the blow!",
           "{{defender}} contorts her body inhumanly as she unbelievably dodges the blow!",
           "{{defender}}'s form shifts like smoke, the blow passing through empty air!",
           "{{defender}} moves with preternatural speed, leaving only an afterimage!",
           "{{defender}} defies physics, twisting in ways no mortal should!",
-          "{{defender}} simply is not where the blow lands - impossible!"
+          "{{defender}} simply is not where the blow lands - impossible!",
+          "{{defender}} vanishes like a ghost, reappearing untouched.",
+          "{{defender}} moves with impossible, fluid grace to avoid the strike.",
+          "{{defender}} sidesteps with terrifying, preternatural speed.",
+          "{{defender}} evades the blow as if reading {{attacker}}'s mind.",
+          "{{defender}} dodges with an eerie, perfect calmness."
         ]
       },
       "parry": {
@@ -940,7 +1003,12 @@
           "Wood splinters and metal groans as {{defender}}'s shield absorbs the ferocious blow.",
           "{{defender}} hides behind their bulwark, letting the fierce blow ring harmlessly off the heavy wood.",
           "The shield takes a terrible gouge, but {{defender}} remains entirely unhurt behind it.",
-          "With a powerful forward shove, {{defender}} uses their shield to violently rebuff the incoming attack."
+          "With a powerful forward shove, {{defender}} uses their shield to violently rebuff the incoming attack.",
+          "{{defender}} blocks solidly with {{possessive}} shield.",
+          "{{defender}} catches the blow on {{possessive}} shield rim.",
+          "{{defender}} deflects the attack efficiently with {{possessive}} shield.",
+          "{{defender}} interposes {{possessive}} shield flawlessly.",
+          "{{defender}} absorbs the impact with a sturdy shield block."
         ]
       },
       "parry_break": [
@@ -948,7 +1016,13 @@
         "{{attacker}} smashes through the parry with {{weapon}}!",
         "{{attacker}} twists {{weapon}} around the parry!",
         "{{defender}}'s guard crumbles under the assault!",
-        "The parry shatters under the force of the blow!"
+        "The parry shatters under the force of the blow!",
+        "{{attacker}} smashes straight through {{defender}}'s attempted parry.",
+        "{{attacker}} batters aside {{defender}}'s defensive guard.",
+        "{{attacker}} forces {{possessive}} weapon through the weak block.",
+        "{{attacker}} overwhelms {{defender}}'s parry with brute strength.",
+        "{{attacker}} crushes {{defender}}'s guard completely.",
+        "{{attacker}} shatters {{defender}}'s defensive stance."
       ]
     },
     "knockdown": {
@@ -968,13 +1042,17 @@
         "{{name}} is standing once more!",
         "{{name}} ducks under the blow and falls instantaneously into a roll to his feet!",
         "{{name}} drops to his knees, avoiding the attack, then leaps back up!",
-        "{{name}} ducks under the blow and falls instantaneously into a roll to her feet!",
         "{{name}} rises from the sand, refusing to stay down!",
         "{{name}} scrambles back to his feet!",
         "{{defender}} scrambles backward like a cornered rat, desperately returning to their feet.",
         "With a grimace of pain, {{defender}} rolls to one knee and rises.",
         "Ignoring the dirt and blood, {{defender}} springs back up with surprising agility.",
-        "{{defender}} uses their weapon as a crutch, hauling themselves stubbornly back up."
+        "{{defender}} uses their weapon as a crutch, hauling themselves stubbornly back up.",
+        "{{name}} scrambles back to {{possessive}} feet.",
+        "{{name}} pushes {{reflexive}} up hurriedly.",
+        "{{name}} rolls and stands back up quickly.",
+        "{{name}} rises unsteadily but determinedly.",
+        "{{name}} hops back to a fighting stance."
       ]
     },
     "epithets": {
@@ -983,19 +1061,39 @@
         "The warrior from {{origin}}",
         "Our {{origin}}",
         "This {{origin}} fighter",
-        "The proud {{origin}}"
+        "The proud {{origin}}",
+        "the foreigner",
+        "the wanderer",
+        "the local champion",
+        "the exile",
+        "the outlander",
+        "the stranger"
       ],
       "race": [
         "Our lofty {{race}}",
         "The {{race}}",
         "This {{race}}",
         "Our {{race}}",
-        "The proud {{race}}"
+        "The proud {{race}}",
+        "the fierce one",
+        "the relentless fighter",
+        "the primal warrior",
+        "the proud kin",
+        "the ancient blood",
+        "the savage",
+        "the pureblood"
       ],
       "style": [
-        "The {{style}}",
+        "This {{style}}",
         "Our {{style}}",
-        "This {{style}}"
+        "the aggressive striker",
+        "the defensive wall",
+        "the agile dancer",
+        "the brutal brawler",
+        "the tactical master",
+        "the wild berserker",
+        "the precise duelist",
+        "the cunning trickster"
       ]
     },
     "pacing": {
@@ -1003,11 +1101,25 @@
         "The fighters slowly circle each other, looking for a weakness.",
         "The fighters circle each other warily, neither willing to commit to a fatal mistake.",
         "A tense standoff ensues, the hot sand baking as they study each other's footwork.",
-        "Both warriors pause, chests heaving, evaluating their next move in this deadly dance."
+        "Both warriors pause, chests heaving, evaluating their next move in this deadly dance.",
+        "The two circle each other cautiously, looking for an opening.",
+        "A tense moment of inaction as both fighters catch their breath.",
+        "Neither gladiator commits, testing the waters.",
+        "They lock eyes, waiting for the other to make a mistake.",
+        "A brief standoff ensues on the bloody sands.",
+        "Both warriors hold their ground, respecting the other's reach."
       ],
       "trading_blows": [
         "Both attack, weapons strike and rebound, strike and rebound.",
-        "The two warriors fiercely trade attacks and parry."
+        "The two warriors fiercely trade attacks and parry.",
+        "They exchange a rapid flurry of strikes.",
+        "Blows are traded evenly in a chaotic melee.",
+        "A brutal exchange leaves both fighters tested.",
+        "They clash violently, giving as good as they get.",
+        "Swords ring out as they trade heavy hits.",
+        "A relentless back-and-forth exchange begins.",
+        "Neither backs down, trading vicious blows.",
+        "They batter each other in a savage flurry."
       ],
       "tempo": {
         "ahead": [
@@ -1016,7 +1128,11 @@
           "{{name}} dominates the exchange!",
           "{{name}} controls the tempo of this bout!",
           "{{name}} is proving the mettle that made {{gender}} a Protector!",
-          "{{name}} is absolutely dominant - driving every exchange!"
+          "{{name}} is absolutely dominant - driving every exchange!",
+          "{{name}} is clearly dictating the pace of the fight.",
+          "Pressing {{possessive}} advantage, {{name}} keeps the pressure high.",
+          "{{name}} seems to be a step ahead in this exchange.",
+          "Driving the tempo, {{name}} forces {{possessive}} opponent to react."
         ],
         "equal": [
           "The warriors appear equal in skill.",
@@ -1024,38 +1140,75 @@
           "There is no decisive victor here yet.",
           "The warriors appear equal in overall abilities.",
           "The two are evenly matched.",
-          "Neither warrior can gain the upper hand."
+          "Neither warrior can gain the upper hand.",
+          "The tempo is perfectly matched.",
+          "They match each other step for step.",
+          "A perfectly balanced rhythm to the combat.",
+          "Neither can establish a clear rhythm over the other."
         ],
         "movement": [
           "{{name}} is moving constantly without pause!",
           "{{name}} is moving in circles around {{possessive}} opponent!",
           "{{name}} shifts continually back and forth!",
-          "{{name}} leaps to {{possessive}} left!",
           "{{name}} leaps to {{possessive}} right!",
           "{{name}} sidesteps, trying to throw {{possessive}} opponent off balance.",
           "{{name}} twists to the side, throwing {{possessive}} opponent off balance.",
-          "{{name}} looks for a better position."
+          "{{name}} looks for a better position.",
+          "They circle the arena, changing the angle of engagement.",
+          "Footwork becomes key as they maneuver for position.",
+          "They circle the arena quickly, changing the angle of engagement.",
+          "Footwork becomes key as they maneuver for a better position."
         ]
       },
       "pressing": [
         "{{attacker}} presses the attack relentlessly, giving their foe no room to breathe!",
         "{{attacker}} surges forward, driving {{defender}} backward with a relentless flurry of attacks.",
         "Smelling blood, {{attacker}} presses the advantage, giving {{defender}} no room to breathe.",
-        "The momentum shifts entirely as {{attacker}} goes on the offensive, overwhelming the defense."
+        "The momentum shifts entirely as {{attacker}} goes on the offensive, overwhelming the defense.",
+        "{{name}} presses forward relentlessly.",
+        "Driving {{possessive}} opponent toward the wall, {{name}} advances.",
+        "{{name}} moves in aggressively, giving no room to breathe.",
+        "{{name}} closes the distance, pressing the attack hard.",
+        "Advancing with grim determination, {{name}} forces the issue.",
+        "{{name}} swarms the foe, pressing every advantage."
       ]
     },
     "reactions": {
       "positive": [
-        "The crowd ROARS in approval!"
+        "The crowd ROARS in approval!",
+        "A triumphant roar echoes from {{name}}.",
+        "{{name}} nods grimly, satisfied with the hit.",
+        "A fierce grin spreads across {{name}}'s face.",
+        "{{name}} wipes blood from {{possessive}} weapon, looking confident.",
+        "A sharp exhalation of focused energy comes from {{name}}.",
+        "{{name}} spins {{possessive}} weapon with lethal flair.",
+        "{{name}} gives a cold, confident stare down.",
+        "{{name}} flexes, energized by the bloodletting.",
+        "{{name}} shouts a battle cry, morale surging."
       ],
       "negative": [
-        "Boos and jeers echo from the arena walls."
+        "Boos and jeers echo from the arena walls.",
+        "{{name}} stumbles, visibly shaken.",
+        "A curse escapes {{name}}'s lips.",
+        "{{name}} glances nervously at {{possessive}} wounds.",
+        "{{name}}'s grip falters for a brief second.",
+        "{{name}} backs away, looking overwhelmed.",
+        "A look of dread passes over {{name}}'s features.",
+        "{{name}} spits blood and scowls in frustration.",
+        "{{name}} shakes {{possessive}} head, trying to clear the pain.",
+        "{{name}} looks desperately toward the exit."
       ],
       "encourage": [
         "The crowd urges the warriors on.",
         "The stands rhythmically stomp their feet, demanding a finishing blow!",
         "'Finish it!' chants the crowd in terrifying unison.",
-        "The crowd roars an encouraging chant, whipping the warriors into a frenzy."
+        "The crowd roars an encouraging chant, whipping the warriors into a frenzy.",
+        "{{name}} taunts {{possessive}} opponent to come closer.",
+        "{{name}} bangs {{possessive}} weapon against {{possessive}} shield.",
+        "{{name}} gestures defiantly, urging the attack.",
+        "{{name}} laughs a dark, barking laugh.",
+        "{{name}} beckons with two fingers, a clear challenge.",
+        "{{name}} spreads {{possessive}} arms wide, inviting the next blow."
       ],
       "gasp": [
         "The crowd gasps at the shocking display!",
@@ -1184,10 +1337,27 @@
     },
     "initiative": [
       "With a sudden burst of speed, {{attacker}} seizes the opening!",
-      "{{attacker}} dictating the pace of the exchange."
+      "{{attacker}} dictating the pace of the exchange.",
+      "Seizing the initiative, {{attacker}} launches an assault.",
+      "{{attacker}} moves first, taking control of the engagement.",
+      "Exploding into action before {{defender}} can react, {{attacker}} strikes.",
+      "{{attacker}} dictates the start of the clash.",
+      "Taking the lead with a sudden, aggressive advance, {{attacker}} engages.",
+      "{{attacker}} strikes preemptively, catching {{defender}} off guard.",
+      "Winning the opening exchange of footwork, {{attacker}} strikes.",
+      "{{attacker}} forces the engagement on {{possessive}} own terms."
     ],
     "feints": [
-      "{{attacker}} feints a high line, drawing {{defender}} out of position."
+      "{{attacker}} feints a high line, drawing {{defender}} out of position.",
+      "{{attacker}} feints high and strikes low.",
+      "A clever fake by {{attacker}} draws {{defender}} out of position.",
+      "{{attacker}} sells a false strike beautifully.",
+      "A subtle shoulder dip by {{attacker}} tricks {{defender}}.",
+      "{{attacker}} feints a thrust, turning it into a slash.",
+      "A deceptive step by {{attacker}} opens up {{defender}}'s guard.",
+      "{{attacker}} pretends to stumble, baiting an attack from {{defender}}.",
+      "A lightning-fast feint by {{attacker}} creates the perfect opening.",
+      "{{attacker}} twitches {{possessive}} weapon, causing {{defender}} to flinch before striking."
     ],
     "insights": {
       "ST": [
@@ -1246,7 +1416,9 @@
         "{{defender}} shrugs off blows that would incapacitate most!",
         "{{defender}}'s physical resilience is remarkable!",
         "{{defender}} takes hits and keeps moving forward!",
-        "{{defender}}'s durability extends this bout!"
+        "{{defender}}'s durability extends this bout!",
+        "{{name}}'s endurance is being tested.",
+        "{{name}} is showing signs of deep physical wear."
       ],
       "CT": [
         "{{defender}} reads your intentions before you strike!",
@@ -1256,7 +1428,9 @@
         "{{defender}} exploits every mistake you make!",
         "{{defender}}'s battle awareness is uncanny!",
         "{{defender}} sees openings you didn't know you had!",
-        "{{defender}}'s cunning turns your aggression against you!"
+        "{{defender}}'s cunning turns your aggression against you!",
+        "{{name}}'s control over the fight is slipping.",
+        "{{name}} struggles to maintain combat control."
       ]
     },
     "fatal_damage": [
@@ -1268,7 +1442,10 @@
       "A blow that shakes the very soul! {{attacker}} inflicts horrific, unsurvivable damage to {{defender}}.",
       "{{defender}}'s form is mangled beyond recognition as {{attacker}} lands a strike of apocalyptic power.",
       "A spray of vital fluids arcs across the arena as {{attacker}} critically destroys {{defender}}'s internal organs.",
-      "The sheer trauma of {{attacker}}'s assault overwhelms {{defender}}'s body, causing instant and catastrophic failure."
+      "The sheer trauma of {{attacker}}'s assault overwhelms {{defender}}'s body, causing instant and catastrophic failure.",
+      "A killing blow that ends it instantly.",
+      "{{defender}} drops like a stone, life extinguished.",
+      "A fatal strike that leaves {{defender}} no chance for survival."
     ],
     "hits": {
       "generic": [
@@ -1322,14 +1499,41 @@
     "meta": {
       "popularity": {
         "great": [
-          "Great fame!"
+          "Great fame!",
+          "The crowd absolutely worships {{name}}.",
+          "{{name}} is the undeniable favorite here.",
+          "The audience hangs on {{name}}'s every move.",
+          "Deafening cheers greet {{name}}'s every success.",
+          "{{name}} bathes in the adoration of the arena.",
+          "The crowd chants {{name}}'s name in unison.",
+          "{{name}} is a true superstar of the sands.",
+          "The fans are going wild for their hero, {{name}}.",
+          "{{name}} commands the arena's love completely."
         ],
         "normal": [
-          "Fame gained."
+          "Fame gained.",
+          "The crowd offers polite applause for {{name}}.",
+          "{{name}} has a solid, average following.",
+          "The audience reacts normally to {{name}}'s actions.",
+          "A smattering of cheers can be heard for {{name}}.",
+          "{{name}} is respected, if not idolized.",
+          "The crowd watches {{name}} with standard interest.",
+          "{{name}} draws a typical arena reaction.",
+          "The fans appreciate {{name}}'s steady work.",
+          "{{name}} is a regular combatant in the eyes of the mob."
         ]
       },
       "skill_learns": [
-        "Skill learned!"
+        "Skill learned!",
+        "{{name}} seems to have grasped a new technique mid-fight!",
+        "A flash of insight leads to a new skill for {{name}}.",
+        "{{name}} suddenly executes a move {{pronoun}} has never shown before.",
+        "You can see {{name}} learning from the exchange.",
+        "A breakthrough moment! {{name}} has mastered something new.",
+        "{{name}} adapts brilliantly, discovering a new martial trick.",
+        "The heat of battle forges a new skill in {{name}}.",
+        "{{name}} pulls off a completely new technique.",
+        "An epiphany on the sands leads to a sudden improvement for {{name}}."
       ]
     },
     "context": {
@@ -1353,7 +1557,10 @@
         "{{name}} lives up to {{possessive}} reputation!",
         "The arena holds its breath watching {{name}}!",
         "{{name}} demonstrates why {{pronoun}}'s the crowd's favorite!",
-        "A performance worthy of {{name}}'s legendary status!"
+        "A performance worthy of {{name}}'s legendary status!",
+        "The legendary warrior, {{name}}, steps up.",
+        "{{name}}'s fame precedes them in the arena.",
+        "{{name}}, a true icon of the games."
       ],
       "fame_unknown": [
         "{{name}} announces {{reflexive}} to the arena with this display!",
@@ -1361,24 +1568,60 @@
         "{{name}} proves {{pronoun}} belongs in this arena!",
         "Who is this {{name}}? The crowd demands to know!",
         "{{name}} arrives on the scene with a bang!",
-        "An impressive debut from {{name}}!"
+        "An impressive debut from {{name}}!",
+        "A relative unknown, {{name}}, tries to make their mark.",
+        "Nobody knows {{name}}'s name yet.",
+        "{{name}}, an obscure fighter looking for a break.",
+        "{{name}} is a fresh face in the brutal sands."
       ],
       "style_matchups": {
         "aimed_blow_vs_bashing": [
           "Precision meets power in this fascinating clash!",
-          "The technician against the brawler!"
+          "The technician against the brawler!",
+          "Precision meets raw power in this clash.",
+          "The aimed striker tries to avoid the brutal bashing sweeps.",
+          "A battle between surgical strikes and blunt force.",
+          "They attempt to dissect the brawler's heavy attacks.",
+          "The precision fighter weaves through the wide, bashing swings.",
+          "A duel of careful targeting against unrefined smashing.",
+          "They look for the vital spots while avoiding the heavy clubs.",
+          "Calculated strikes against overwhelming, blunt momentum."
         ],
         "aimed_blow_vs_parry": [
           "A battle of patience and counter-striking!",
-          "Who will find the first opening?"
+          "Who will find the first opening?",
+          "The precision fighter tries to slip past the solid parries.",
+          "Aimed strikes test the defender's reliable guard.",
+          "They look for gaps in the defensive wall.",
+          "A tactical game of finding the perfect angle past the blade.",
+          "The striker attempts to bypass the tight parrying defense.",
+          "Careful thrusts against disciplined deflections.",
+          "A game of inches, trying to score past the parry.",
+          "They aim for the joints, testing the parry's speed."
         ],
         "bashing_vs_lunging": [
           "Power against reach - an explosive matchup!",
-          "The hammer against the spear!"
+          "The hammer against the spear!",
+          "Heavy swings try to catch the lunging attacker.",
+          "The brawler attempts to smash the agile lunger.",
+          "Raw sweeping power against sudden, piercing darts.",
+          "They try to swat the lunging fighter out of the air.",
+          "A heavy counter-swing meets the swift lunge.",
+          "The basher waits to crush the lunging advance.",
+          "Wide arcs of blunt force against straight, lunging lines.",
+          "They aim to break the lunger before they can connect."
         ],
         "parry_vs_slashing": [
           "Defense against relentless offense!",
-          "Can the shield hold against the storm?"
+          "Can the shield hold against the storm?",
+          "The defender raises their guard against the flurry of slashes.",
+          "Solid parries meet a storm of cutting blades.",
+          "They attempt to deflect the wide slashing arcs.",
+          "A test of the parry against relentless cutting attacks.",
+          "The defensive wall tries to hold against the slashing tide.",
+          "Sparks fly as the parry meets the slashing edge.",
+          "They try to bind the slashing weapon with tight parries.",
+          "The defender holds firm, deflecting the sweeping cuts."
         ]
       }
     }

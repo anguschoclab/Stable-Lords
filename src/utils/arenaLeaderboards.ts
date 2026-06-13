@@ -3,10 +3,77 @@ import type { FightSummary } from '@/types/combat.types';
 import type { RivalStableData } from '@/types/state.types';
 import { getAllArenas, getArenaById } from '@/data/arenas';
 import { getFightsForArena } from '@/engine/core/historyUtils';
+import { filterActive } from './roster';
+
+// ─── Global Fame Leaderboard ────────────────────────────────────────────────
+
+/** A single ranked warrior row in the global arena leaderboard. */
+export interface ArenaLeaderboardEntry {
+  warrior: Warrior;
+  stableName: string;
+  isPlayer: boolean;
+}
 
 /**
- *
+ * Computes the top N active warriors by fame across the player roster and all
+ * rival stables. Uses a bounded insertion sort (O(N·limit)) to avoid sorting
+ * the full population.
  */
+export function calculateGlobalFameLeaderboard(
+  roster: Warrior[],
+  rivals: RivalStableData[] | undefined,
+  playerStableName: string,
+  limit = 10
+): ArenaLeaderboardEntry[] {
+  if (limit <= 0) return [];
+
+  const top: ArenaLeaderboardEntry[] = [];
+
+  const insert = (entry: ArenaLeaderboardEntry) => {
+    const fame = entry.warrior.fame;
+    const last = top[limit - 1];
+    if (top.length === limit && last && fame <= last.warrior.fame) {
+      return;
+    }
+
+    let i = top.length - 1;
+    while (i >= 0) {
+      const entry = top[i];
+      if (!entry || entry.warrior.fame >= fame) break;
+      i--;
+    }
+
+    top.splice(i + 1, 0, entry);
+    if (top.length > limit) {
+      top.pop();
+    }
+  };
+
+  const allActive: ArenaLeaderboardEntry[] = [
+    ...filterActive(roster).map((w) => ({
+      warrior: w,
+      stableName: playerStableName,
+      isPlayer: true as const,
+    })),
+    ...(rivals ?? []).flatMap((r) =>
+      filterActive(r.roster).map((w) => ({
+        warrior: w,
+        stableName: r.owner.stableName,
+        isPlayer: false as const,
+      }))
+    ),
+  ];
+
+  for (const entry of allActive) {
+    insert(entry);
+  }
+
+  return top;
+}
+
+// ─── Per-Arena Leaderboards ─────────────────────────────────────────────────
+
+/** A warrior's performance record for a specific arena. */
 export interface ArenaWarriorEntry {
   warriorId: string;
   name: string;
@@ -18,9 +85,7 @@ export interface ArenaWarriorEntry {
   winRate: number;
 }
 
-/**
- *
- */
+/** Full leaderboard data for one arena. */
 export interface ArenaLeaderboardData {
   arenaId: string;
   arenaName: string;
@@ -72,12 +137,12 @@ export function calculatePerArenaLeaderboards(
 
   // Collect all warriors with their stable context once
   const allEntries: { warrior: Warrior; stableName: string; isPlayer: boolean }[] = [
-    ...playerRoster
-      .filter((w) => !w.isDead && w.status === 'Active')
+    ...filterActive(playerRoster)
+      .filter((w) => !w.isDead)
       .map((w) => ({ warrior: w, stableName: playerStableName, isPlayer: true })),
     ...rivals.flatMap((rival) =>
-      rival.roster
-        .filter((w) => !w.isDead && w.status === 'Active')
+      filterActive(rival.roster)
+        .filter((w) => !w.isDead)
         .map((w) => ({ warrior: w, stableName: rival.owner.name, isPlayer: false }))
     ),
   ];
@@ -118,12 +183,12 @@ export function calculateArenaLeaderboard(
 ): ArenaLeaderboardData {
   const arena = getArenaById(arenaId);
   const allEntries: { warrior: Warrior; stableName: string; isPlayer: boolean }[] = [
-    ...playerRoster
-      .filter((w) => !w.isDead && w.status === 'Active')
+    ...filterActive(playerRoster)
+      .filter((w) => !w.isDead)
       .map((w) => ({ warrior: w, stableName: playerStableName, isPlayer: true })),
     ...rivals.flatMap((rival) =>
-      rival.roster
-        .filter((w) => !w.isDead && w.status === 'Active')
+      filterActive(rival.roster)
+        .filter((w) => !w.isDead)
         .map((w) => ({ warrior: w, stableName: rival.owner.name, isPlayer: false }))
     ),
   ];

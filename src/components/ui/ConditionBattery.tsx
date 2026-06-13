@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { BATTERY_THRESHOLDS } from '@/constants/ui';
 
 interface ConditionBatteryProps {
   value: number; // 0-100
@@ -17,8 +18,18 @@ interface ConditionBatteryProps {
  */
 export function ConditionBattery({ value, className, showText = false }: ConditionBatteryProps) {
   // Determine color segment
-  const color = value > 70 ? 'bg-primary' : value > 30 ? 'bg-arena-gold' : 'bg-destructive';
-  const opacity = value > 70 ? 'opacity-100' : value > 30 ? 'opacity-80' : 'opacity-90';
+  const color =
+    value > BATTERY_THRESHOLDS.HIGH
+      ? 'bg-primary'
+      : value > BATTERY_THRESHOLDS.MEDIUM
+        ? 'bg-arena-gold'
+        : 'bg-destructive';
+  const opacity =
+    value > BATTERY_THRESHOLDS.HIGH
+      ? 'opacity-100'
+      : value > BATTERY_THRESHOLDS.MEDIUM
+        ? 'opacity-80'
+        : 'opacity-90';
 
   return (
     <div className={cn('flex flex-col gap-1', className)}>
@@ -27,7 +38,9 @@ export function ConditionBattery({ value, className, showText = false }: Conditi
           <span
             className={cn(
               'text-[9px] font-black uppercase tracking-widest',
-              value < 30 ? 'text-destructive' : 'text-muted-foreground/60'
+              value < BATTERY_THRESHOLDS.MEDIUM
+                ? 'text-destructive'
+                : 'text-muted-foreground/60'
             )}
           >
             Condition · {Math.round(value)}%

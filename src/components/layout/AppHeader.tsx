@@ -297,7 +297,7 @@ function ResetButton({ onResetPrompt }: ResetButtonProps) {
           size="icon"
           className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors"
           onClick={onResetPrompt}
-          aria-label="Reset game"
+          aria-label="Expunge Ledger"
         >
           <RotateCcw className="h-4 w-4" />
         </Button>

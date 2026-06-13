@@ -1,6 +1,12 @@
 import type { Trainer, TrainerSpecialty } from '@/types/shared.types';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import { TIER_BONUS } from '@/engine/trainers';
+import {
+  KILL_WINDOW_ENDURANCE,
+  TRAINER_IRONGUARD_ENDURANCE,
+  TRAINER_ROPEADOPE_CAP,
+  DAMAGE_RECEIVED_MULT_FLOOR,
+} from '@/constants/combat';
 
 /**
  * Specialty modifiers that stack on top of the base getTrainingBonus() values.
@@ -61,7 +67,7 @@ const SPECIALTY_HANDLERS: Record<TrainerSpecialty, SpecialtyHandlerFn> = {
     // Halved 2026-04 to stay proportional to the new 0.025 cap on
     // calculateKillWindow — at the prior 0.02*tier (up to +0.06 at Master)
     // a single trainer would saturate the cap on its own.
-    if (opponent.hp / opponent.maxHp < 0.4) {
+    if (opponent.hp / opponent.maxHp < KILL_WINDOW_ENDURANCE) {
       mods.killWindowBonus += 0.01 * tier;
     }
   },
@@ -83,7 +89,7 @@ const SPECIALTY_HANDLERS: Record<TrainerSpecialty, SpecialtyHandlerFn> = {
   },
   IronGuard: (mods, self, _opponent, _ctx, tier) => {
     // Damage reduction while endurance is above 60%
-    if (self.endurance / self.maxEndurance > 0.6) {
+    if (self.endurance / self.maxEndurance > TRAINER_IRONGUARD_ENDURANCE) {
       mods.damageReceivedMult *= 1 - 0.1 * tier;
     }
   },
@@ -95,7 +101,7 @@ const SPECIALTY_HANDLERS: Record<TrainerSpecialty, SpecialtyHandlerFn> = {
   },
   RopeADope: (mods, _self, _opponent, _ctx, tier) => {
     // Reduce fatigue penalty (caps at 50% reduction)
-    mods.fatiguePenaltyReduction = Math.min(0.5, mods.fatiguePenaltyReduction + 0.3 * tier);
+    mods.fatiguePenaltyReduction = Math.min(TRAINER_ROPEADOPE_CAP, mods.fatiguePenaltyReduction + 0.3 * tier);
   },
 };
 
@@ -130,12 +136,12 @@ export function getSpecialtyMods(
   if (
     hasKillerInstinct &&
     hasFinisher &&
-    opponent.hp / opponent.maxHp < 0.4 &&
+    opponent.hp / opponent.maxHp < KILL_WINDOW_ENDURANCE &&
     self.momentum >= 2
   ) {
     mods.killWindowBonus += 0.005;
   }
 
-  mods.damageReceivedMult = Math.max(0.5, mods.damageReceivedMult); // floor at 50% reduction
+  mods.damageReceivedMult = Math.max(DAMAGE_RECEIVED_MULT_FLOOR, mods.damageReceivedMult); // floor at 50% reduction
   return mods;
 }

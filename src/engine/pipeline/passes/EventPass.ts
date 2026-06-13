@@ -4,9 +4,12 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import narrativeContent from '@/data/narrativeContent.json';
 import { StateImpact } from '@/engine/impacts';
-import { type WarriorId, type InjuryId, type LedgerEntryId } from '@/types/shared.types';
+import { type WarriorId, type InjuryId } from '@/types/shared.types';
 import type { EventNarrative } from '@/types/narrative.types';
-import { interpolateData as t } from '@/engine/narrative/templateHelpers';
+import { rollRange } from '@/engine/core/rng/rollRange';
+import { makeLedgerEntry } from '@/engine/impacts/ledgerHelpers';
+import { makeNewsletterItem } from '@/engine/narrative/newsletterHelpers';
+import { filterActive, filterHealthy } from '@/utils/roster';
 
 /**
  * Stable Lords — Random Event Pipeline Pass
@@ -33,9 +36,7 @@ export function runEventPass(
 
   // 🍺 Tavern Brawl Event
   if (brawlRng.next() < 0.05 && state.roster.length > 0) {
-    const activeWarriors = state.roster.filter(
-      (w) => w.status === 'Active' && (!w.injuries || w.injuries.length === 0)
-    );
+    const activeWarriors = filterHealthy(state.roster);
     if (activeWarriors.length > 0) {
       const brawler = brawlRng.pick(activeWarriors);
       const e = events.tavern_brawl;
@@ -55,13 +56,9 @@ export function runEventPass(
           ],
         });
 
-        newsletterItems.push({
-          id: brawlRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [t(brawlRng.pick(e.newsletter), { name: brawler.name, fame: 5 })],
-          category: 'event',
-        });
+        newsletterItems.push(
+          makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { name: brawler.name, fame: 5 }, 'event')
+        );
       }
     }
   }
@@ -69,7 +66,7 @@ export function runEventPass(
   // ☄️ Star-crossed Blessing Event
   const blessingChance = state.weather === 'Mana Surge' ? 0.25 : 0.03;
   if (brawlRng.next() < blessingChance && state.roster.length > 0) {
-    const youngWarriors = state.roster.filter((w) => w.status === 'Active' && (w.age || 0) <= 25);
+    const youngWarriors = filterActive(state.roster).filter((w) => (w.age || 0) <= 25);
     if (youngWarriors.length > 0) {
       const chosen = brawlRng.pick(youngWarriors);
       const e = events.celestial_blessing;
@@ -81,20 +78,16 @@ export function runEventPass(
           xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 2,
         });
 
-        newsletterItems.push({
-          id: brawlRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 15, xp: 2 })],
-          category: 'event',
-        });
+        newsletterItems.push(
+          makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 15, xp: 2 }, 'event')
+        );
       }
     }
   }
 
   // 🏺 Lost Relic Discovery Event
   if (brawlRng.next() < 0.04 && state.roster.length > 0) {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    const activeWarriors = filterActive(state.roster);
     if (activeWarriors.length > 0) {
       const chosen = brawlRng.pick(activeWarriors);
       const e = events.lost_relic;
@@ -106,13 +99,9 @@ export function runEventPass(
           xp: (chosen.xp || 0) + (existingUpdate.xp || 0) + 5,
         });
 
-        newsletterItems.push({
-          id: brawlRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, fame: 10, xp: 5 })],
-          category: 'event',
-        });
+        newsletterItems.push(
+          makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 10, xp: 5 }, 'event')
+        );
       }
     }
   }
@@ -121,23 +110,13 @@ export function runEventPass(
   if (brawlRng.next() < 0.05) {
     const e = events.mysterious_patron;
     if (e) {
-      const gold = 100 + Math.floor(brawlRng.next() * 401); // 100-500 gold
+      const gold = rollRange(brawlRng, 100, 401); // 100-500 gold
       treasuryDelta += gold;
-      ledgerEntries.push({
-        id: brawlRng.uuid('ledger') as LedgerEntryId,
-        week: nextWeek,
-        label: 'Mysterious Patron Donation',
-        amount: gold,
-        category: 'other',
-      });
+      ledgerEntries.push(makeLedgerEntry(brawlRng, nextWeek, 'Mysterious Patron Donation', gold, 'other'));
 
-      newsletterItems.push({
-        id: brawlRng.uuid('newsletter'),
-        week: nextWeek,
-        title: e.title,
-        items: [t(brawlRng.pick(e.newsletter), { gold })],
-        category: 'event',
-      });
+      newsletterItems.push(
+        makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { gold }, 'event')
+      );
     }
   }
 
@@ -147,7 +126,7 @@ export function runEventPass(
     (state.treasury || 0) + treasuryDelta >= 20 &&
     state.roster.length > 0
   ) {
-    const activeWarriors = state.roster.filter((w) => w.status === 'Active');
+    const activeWarriors = filterActive(state.roster);
     if (activeWarriors.length > 0) {
       const chosen = brawlRng.pick(activeWarriors);
       const e = events.goblin_merchant;
@@ -160,21 +139,11 @@ export function runEventPass(
         });
 
         treasuryDelta -= 20;
-        ledgerEntries.push({
-          id: brawlRng.uuid('ledger') as LedgerEntryId,
-          week: nextWeek,
-          label: 'Goblin Merchant',
-          amount: -20,
-          category: 'other',
-        });
+        ledgerEntries.push(makeLedgerEntry(brawlRng, nextWeek, 'Goblin Merchant', -20, 'other'));
 
-        newsletterItems.push({
-          id: brawlRng.uuid('newsletter'),
-          week: nextWeek,
-          title: e.title,
-          items: [t(brawlRng.pick(e.newsletter), { name: chosen.name, xp: 5 })],
-          category: 'event',
-        });
+        newsletterItems.push(
+          makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { name: chosen.name, xp: 5 }, 'event')
+        );
       }
     }
   }

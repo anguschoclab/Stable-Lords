@@ -7,6 +7,7 @@ import type {
 } from '@/types/state.types';
 import { hashStr } from '../../utils/random';
 import { computeMetaDrift } from '../metaDrift';
+import { filterActive } from '@/utils/roster';
 
 /**
  * LeadAgent Orchestrator
@@ -121,7 +122,7 @@ export function consolidateAgentMemory(
         wins: 0,
         losses: 0,
         kills: 0,
-        rosterSizeAtSeasonStart: rival.roster.filter((w) => w.status === 'Active').length,
+        rosterSizeAtSeasonStart: filterActive(rival.roster).length,
       }
     : rival.agentMemory.seasonRecord;
 

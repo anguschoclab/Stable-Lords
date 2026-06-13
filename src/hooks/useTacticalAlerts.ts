@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { isFightReady } from '@/engine/warriorStatus';
+import { filterActive } from '@/utils/roster';
 import { Dumbbell, ScrollText, Swords, Trophy } from 'lucide-react';
 
 /**
@@ -37,10 +38,6 @@ export function useTacticalAlerts(): TacticalAlert[] {
     }))
   );
 
-  const warriorStatusData = useGameStore(
-    useShallow((s) => s.roster.map((w) => ({ id: w.id, status: w.status })))
-  );
-
   return useMemo<TacticalAlert[]>(() => {
     const result: TacticalAlert[] = [];
 
@@ -48,7 +45,7 @@ export function useTacticalAlerts(): TacticalAlert[] {
     const assignedIds = new Set(
       trainingAssignments?.map((a: { warriorId: string }) => a.warriorId) ?? []
     );
-    const activeWarriors = warriorStatusData.filter((w) => w.status === 'Active');
+    const activeWarriors = filterActive(roster ?? []);
     const unassigned = activeWarriors.filter((w) => !assignedIds.has(w.id));
 
     if (unassigned.length > 0) {
@@ -100,5 +97,5 @@ export function useTacticalAlerts(): TacticalAlert[] {
     }
 
     return result;
-  }, [warriorStatusData, roster, trainingAssignments, boutOffers, isTournamentWeek, day]);
+  }, [roster, trainingAssignments, boutOffers, isTournamentWeek, day]);
 }

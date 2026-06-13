@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ScrollText, Swords } from 'lucide-react'; /**
-                                                    * View mode type.
-                                                    */
+ * View mode type.
+ */
 
 /**
  * View mode type.
@@ -51,7 +51,7 @@ export default function ViewModeToggle({
       <button
         onClick={() => onChange('log')}
         className={cn(
-          'flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all',
+          'flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
           mode === 'log'
             ? 'bg-primary text-primary-foreground'
             : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
@@ -67,7 +67,7 @@ export default function ViewModeToggle({
       <button
         onClick={() => onChange('arena')}
         className={cn(
-          'flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all',
+          'flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
           mode === 'arena'
             ? 'bg-primary text-primary-foreground'
             : 'text-muted-foreground hover:text-foreground hover:bg-secondary'

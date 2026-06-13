@@ -4,7 +4,8 @@ import { generatePairings } from '@/engine/bout/core/pairings';
 import { isFightReady } from '@/engine/warriorStatus';
 import type { RivalStableData } from '@/types/game';
 import { useCombatExecution } from '@/hooks/useCombatExecution';
-import { calculateArenaLeaderboard } from '@/utils/arenaLeaderboardCalculations';
+import { calculateGlobalFameLeaderboard } from '@/utils/arenaLeaderboards';
+import { filterActive } from '@/utils/roster';
 import { CombatExecutionPanel } from '@/components/arena/CombatExecutionPanel';
 import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
@@ -149,7 +150,7 @@ function ArenaLeaderboard() {
   const { roster, rivals, player } = useGameStore();
 
   const allWarriors = useMemo(
-    () => calculateArenaLeaderboard(roster, rivals, player.stableName),
+    () => calculateGlobalFameLeaderboard(roster, rivals, player.stableName),
     [roster, rivals, player.stableName]
   );
 
@@ -292,7 +293,7 @@ export default function ArenaHub() {
               variant="outline"
               className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1 rounded-none"
             >
-              {roster.filter((w) => w.status === 'Active').length} UNITS ACTIVE
+              {filterActive(roster).length} UNITS ACTIVE
             </Badge>
           </div>
         }

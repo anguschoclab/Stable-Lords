@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { StableCrest } from '@/components/crest/StableCrest';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
+import { filterActive } from '@/utils/roster';
 
 interface RivalStableListProps {
   rivals: RivalStableData[];
@@ -92,7 +93,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
                           <div className="flex items-center gap-2 flex-wrap text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
                             <span className="flex items-center gap-1 font-mono">
                               <Users className="h-3 w-3" />
-                              {rival.roster.filter((w) => w.status === 'Active').length}
+                              {filterActive(rival.roster).length}
                             </span>
                             <span className="h-1 w-1 rounded-full bg-border/40" />
                             <span className="text-primary/60">{rival.owner.personality}</span>

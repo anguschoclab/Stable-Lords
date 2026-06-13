@@ -4,6 +4,7 @@ import { StateImpact } from '@/engine/impacts';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { FightOutcome } from '@/types/combat.types';
 import { fameFromTags } from '@/engine/fame';
+import { isActive } from '@/engine/warriorStatus';
 
 /**
  * Validate bout combatants.
@@ -12,7 +13,7 @@ import { fameFromTags } from '@/engine/fame';
  * @returns The result.
  */
 export function validateBoutCombatants(currentW?: Warrior, currentO?: Warrior): boolean {
-  return !!currentW && currentW.status === 'Active' && !!currentO;
+  return !!currentW && isActive(currentW) && !!currentO;
 }
 
 /**

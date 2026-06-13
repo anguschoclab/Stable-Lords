@@ -11,6 +11,8 @@ import type { Warrior, InjuryData, InjurySeverity } from '@/types/warrior.types'
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { rollRange } from '@/engine/core/rng/rollRange';
+import type { InjuryId } from '@/types/shared.types';
 
 const INJURY_TABLE: Omit<InjuryData, 'id' | 'weeksRemaining'>[] = [
   // Minor (1-3 weeks)
@@ -223,4 +225,114 @@ export function isTooInjuredToFight(injuries: InjuryData[]): boolean {
       (i.severity === 'Severe' || i.severity === 'Critical' || i.severity === 'Permanent') &&
       i.weeksRemaining > 2
   );
+}
+
+// ─── Offseason Injury Templates ─────────────────────────────────────────────
+
+/** Static definition for an offseason injury (RNG applied at creation). */
+export interface OffseasonInjuryTemplate {
+  name: string;
+  description: string;
+  severity: InjuryData['severity'];
+  weeksBase: number;
+  weeksRange: number;
+  penalties: InjuryData['penalties'];
+}
+
+/** Keyed offseason injury definitions used by the seasonal/event pipeline. */
+export const OFFSEASON_INJURY_TEMPLATES = {
+  bruisedRibs: {
+    name: 'Bruised Ribs',
+    description: 'Painful but manageable.',
+    severity: 'Minor',
+    weeksBase: 1,
+    weeksRange: 2,
+    penalties: { CN: -1 },
+  },
+  campFever: {
+    name: 'Camp Fever',
+    description: 'Leaves the victim weak and fatigued.',
+    severity: 'Minor',
+    weeksBase: 2,
+    weeksRange: 2,
+    penalties: { CN: -2, ST: -1 },
+  },
+  biteWound: {
+    name: 'Bite Wound',
+    description: 'A nasty bite from a wild beast.',
+    severity: 'Minor',
+    weeksBase: 1,
+    weeksRange: 2,
+    penalties: { CN: -1 },
+  },
+  arcaneBurns: {
+    name: 'Arcane Burns',
+    description: 'Singed by erratic magic.',
+    severity: 'Minor',
+    weeksBase: 1,
+    weeksRange: 2,
+    penalties: { SP: -1, CN: -1 },
+  },
+  goblinScratch: {
+    name: 'Goblin Scratch',
+    description: 'Nasty scratch from a tiny spear.',
+    severity: 'Minor',
+    weeksBase: 1,
+    weeksRange: 2,
+    penalties: { CN: -1 },
+  },
+  bustedKnuckles: {
+    name: 'Busted Knuckles',
+    description: 'A messy wound from a bare-knuckle pit fight.',
+    severity: 'Minor',
+    weeksBase: 1,
+    weeksRange: 3,
+    penalties: { SP: -1, CN: -1 },
+  },
+  tavernBruises: {
+    name: 'Tavern Bruises',
+    description: 'Scrapes and bruises from a sudden tavern brawl.',
+    severity: 'Minor',
+    weeksBase: 1,
+    weeksRange: 1,
+    penalties: { SP: -1 },
+  },
+  soulRot: {
+    name: 'Soul Rot',
+    description: 'A lingering supernatural curse.',
+    severity: 'Moderate',
+    weeksBase: 3,
+    weeksRange: 2,
+    penalties: { CN: -2, WL: -2 },
+  },
+  alchemicalSickness: {
+    name: 'Alchemical Sickness',
+    description: 'Nausea, cold sweats, and strange bodily humming.',
+    severity: 'Minor',
+    weeksBase: 1,
+    weeksRange: 2,
+    penalties: { SP: -1, CN: -1 },
+  },
+} as const;
+
+export type OffseasonInjuryKey = keyof typeof OFFSEASON_INJURY_TEMPLATES;
+
+/**
+ * Creates an InjuryData from a keyed offseason template.
+ * Consumes one `uuid('injury')` then one `rng.next()` for weeks — preserving
+ * deterministic order.
+ */
+export function createOffseasonInjury(
+  rng: IRNGService,
+  templateKey: OffseasonInjuryKey
+): InjuryData {
+  const tpl = OFFSEASON_INJURY_TEMPLATES[templateKey];
+  return {
+    id: rng.uuid('injury') as InjuryId,
+    name: tpl.name,
+    description: tpl.description,
+    severity: tpl.severity,
+    weeksRemaining: rollRange(rng, tpl.weeksBase, tpl.weeksRange),
+    penalties: tpl.penalties,
+  };
 }

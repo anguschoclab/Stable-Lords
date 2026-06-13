@@ -1,6 +1,0 @@
-## 2024-06-03 - [Fix nested interactive elements]
-**Learning:** Found `<Button>` components nested inside `<Link>` elements, which creates invalid HTML (a `<button>` within an `<a>`) and causes accessibility issues for keyboard and screen-reader users.
-**Action:** Use the Shadcn UI `asChild` prop on `<Button>` to wrap `<Link>` elements instead (e.g., `<Button asChild><Link>...</Link></Button>`). This preserves styles while rendering a single valid interactive element.
-## 2025-02-12 - Standardize Icon Button Accessibility in Controls
-**Learning:** Native `<button>` elements used in custom media/control bars (like `BoutControls.tsx`) often lack proper focus rings and hover states out of the box, failing keyboard accessibility checks and confusing mouse users.
-**Action:** When building or fixing icon-only control bars, immediately replace raw `<button>` elements with the standard `<Button variant="ghost" size="icon">` component from Shadcn to inherit robust `focus-visible` and hover interactions automatically. If replacing the element is not possible due to highly custom styling, strictly enforce the application of `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary` and explicit `hover:` classes.

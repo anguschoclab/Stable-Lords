@@ -31,6 +31,13 @@ export interface WeatherConfig {
 }
 
 export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
+  Zephyr: {
+    icon: Wind,
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
+    description: '15% less stamina drain in combat. Fighters feel refreshed.',
+  },
   Clear: {
     icon: Sun,
     colorClass: 'text-arena-gold',
@@ -263,6 +270,20 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     bgClass: 'bg-yellow-900/40',
     borderClass: 'border-yellow-500/20',
     description: 'A beautiful rainbow spans the sky. Spirits are high.',
+  },
+  'Ember Rain': {
+    icon: Flame,
+    colorClass: 'text-orange-500',
+    bgClass: 'bg-orange-500/10',
+    borderClass: 'border-orange-500/20',
+    description: 'Glowing embers rain down from the sky, searing the sand and fighters alike.',
+  },
+  'Wildfire Smoke': {
+    icon: Flame,
+    colorClass: 'text-orange-500',
+    bgClass: 'bg-orange-500/10',
+    borderClass: 'border-orange-500/20',
+    description: 'Thick smoke reduces visibility and chokes the lungs.',
   },
 };
 

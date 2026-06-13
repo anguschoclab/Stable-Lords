@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useWorldState } from '@/state/useGameStore';
+import { filterActive } from '@/utils/roster';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -107,7 +108,7 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
                 Roster
               </div>
               <div className="text-xl font-display font-black text-primary">
-                {stable.roster.filter((w) => w.status === 'Active').length}
+                {filterActive(stable.roster).length}
               </div>
             </CardContent>
           </Card>
@@ -119,9 +120,7 @@ export function StableDossier({ stableId, stableName }: StableDossierProps) {
             <Users className="h-3 w-3 text-primary" /> Active Roster
           </h3>
           <div className="grid gap-2">
-            {stable.roster
-              .filter((w) => w.status === 'Active')
-              .map((w) => (
+            {filterActive(stable.roster).map((w) => (
                 <div
                   key={w.id}
                   className="flex items-center justify-between p-2 rounded-none bg-secondary/10 border border-border/50"

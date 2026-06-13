@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Crosshair } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
+import { filterActive } from '@/utils/roster';
 import type { RivalStableData, Warrior } from '@/types/game';
 import { WarriorSelector } from './components/WarriorSelector';
 import { WarriorComparisonHeader } from './components/WarriorComparisonHeader';
@@ -28,17 +29,13 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
 
   const allWarriors = useMemo(() => {
     const list: { warrior: Warrior; stable: string }[] = [];
-    for (const w of playerRoster) {
-      if (w.status === 'Active') {
-        list.push({ warrior: w, stable: 'User Stable' });
-      }
+    for (const w of filterActive(playerRoster)) {
+      list.push({ warrior: w, stable: 'User Stable' });
     }
     for (const r of rivals) {
       const stableName = r.owner.stableName;
-      for (const w of r.roster) {
-        if (w.status === 'Active') {
-          list.push({ warrior: w, stable: stableName });
-        }
+      for (const w of filterActive(r.roster)) {
+        list.push({ warrior: w, stable: stableName });
       }
     }
     return list;

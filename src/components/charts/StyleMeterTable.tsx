@@ -5,6 +5,7 @@
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
+import { WIN_RATE_THRESHOLDS } from '@/constants/ui';
 import { STYLE_ABBREV } from '@/types/shared.types';
 
 interface StyleMeterTableProps {
@@ -68,7 +69,11 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
         {rows.map((row) => {
           const pct = Math.round(row.winRate * 100);
           const barColor =
-            pct >= 60 ? 'bg-primary' : pct >= 45 ? 'bg-arena-gold' : 'bg-destructive';
+            pct >= WIN_RATE_THRESHOLDS.HIGH
+              ? 'bg-primary'
+              : pct >= WIN_RATE_THRESHOLDS.MID
+                ? 'bg-arena-gold'
+                : 'bg-destructive';
 
           return (
             <div key={row.style} className="flex items-center gap-3">
@@ -84,7 +89,11 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
               <div
                 className={cn(
                   'w-10 text-right font-mono font-black text-[10px] shrink-0',
-                  pct >= 60 ? 'text-primary' : pct >= 45 ? 'text-arena-gold' : 'text-destructive'
+                  pct >= WIN_RATE_THRESHOLDS.HIGH
+                    ? 'text-primary'
+                    : pct >= WIN_RATE_THRESHOLDS.MID
+                      ? 'text-arena-gold'
+                      : 'text-destructive'
                 )}
               >
                 {pct}%

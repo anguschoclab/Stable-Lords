@@ -76,13 +76,13 @@ export interface AutosimOptions {
  * Process player bout offers after week advancement
  */
 function processPlayerOffers(state: GameState): GameState {
+  const playerIds = new Set(state.roster.map((w) => w.id));
   const playerOffers = Object.values(state.boutOffers).filter(
-    (o) =>
-      o.status === 'Proposed' && o.warriorIds.some((id) => state.roster.some((w) => w.id === id))
+    (o) => o.status === 'Proposed' && o.warriorIds.some((id) => playerIds.has(id))
   );
 
   playerOffers.forEach((offer) => {
-    const playerWarriorId = offer.warriorIds.find((id) => state.roster.some((w) => w.id === id));
+    const playerWarriorId = offer.warriorIds.find((id) => playerIds.has(id));
     if (!playerWarriorId) return;
     // Auto-accept logical offers (Hype > 100 or Purse > 200)
     if (offer.hype > 100 || offer.purse > 200) {

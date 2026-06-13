@@ -273,15 +273,20 @@ function applyBoutResultsToImpact(
   rosterUpdates.set(wD.id, updateWarriorFromBoutOutcome(wD, false, winnerSide, isKill));
 
   state.rivals.forEach((r) => {
+    let modified = false;
     const rosterChanges: Warrior[] = [];
-    r.roster.forEach((w) => {
-      if (w.id === wA.id)
+    for (const w of r.roster) {
+      if (w.id === wA.id) {
         rosterChanges.push(updateWarriorFromBoutOutcome(w, true, winnerSide, isKill));
-      else if (w.id === wD.id)
+        modified = true;
+      } else if (w.id === wD.id) {
         rosterChanges.push(updateWarriorFromBoutOutcome(w, false, winnerSide, isKill));
-      else rosterChanges.push(w);
-    });
-    if (rosterChanges.some((c) => c.id === wA.id || c.id === wD.id)) {
+        modified = true;
+      } else {
+        rosterChanges.push(w);
+      }
+    }
+    if (modified) {
       // Key by rival.id (StableId), not owner.id
       rivalsUpdates.set(r.id, { roster: rosterChanges });
     }

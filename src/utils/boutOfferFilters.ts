@@ -46,12 +46,11 @@ export function filterAndSortOffers(
   signedOfferIds: Set<string>,
   selectedWarriorId: string | null
 ): FilteredOffersResult {
+  const playerIds = new Set<string>(roster.map((w) => w.id as string));
   // Filter offers that involve player warriors
   const playerOffers = Object.values(boutOffers).filter(
     (offer: BoutOffer) =>
-      offer.warriorIds.some((wId: string) =>
-        roster.some((playerW: Warrior) => playerW.id === wId)
-      ) &&
+      offer.warriorIds.some((wId: string) => playerIds.has(wId)) &&
       (offer.status === 'Proposed' || offer.status === 'Signed' || signedOfferIds.has(offer.id))
   );
 

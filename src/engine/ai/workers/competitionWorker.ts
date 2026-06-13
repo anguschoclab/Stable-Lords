@@ -357,9 +357,11 @@ export function processAllRivalsBoutOffers(
     });
   });
 
+  const rivalById = new Map<string, RivalStableData>(rivals.map((r) => [r.id as string, r]));
+
   // Process each rival's slate
   offersByRival.forEach((rivalOffers, rivalId) => {
-    const owningRival = rivals.find((r) => r.id === rivalId);
+    const owningRival = rivalById.get(rivalId);
     if (!owningRival) return;
 
     // Track warriors already committed this week
@@ -373,8 +375,9 @@ export function processAllRivalsBoutOffers(
 
     sortedOffers.forEach((offer) => {
       offer.warriorIds.forEach((wId) => {
-        // Skip if warrior not owned by this rival
-        if (!owningRival.roster.some((w) => w.id === wId)) return;
+        // Skip if warrior not owned by this rival (O(1) map lookup)
+        const stableInfo = state.warriorToStableMap?.get(wId);
+        if (stableInfo?.stableId !== rivalId) return;
 
         // Skip if warrior already committed this week
         if (pickedWarriors.has(wId)) return;

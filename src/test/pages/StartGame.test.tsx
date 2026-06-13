@@ -38,7 +38,9 @@ vi.mock('@/components/startGame/ColomseumArch', () => ({
   default: () => <div data-testid="ColomseumArch" />,
 }));
 
-describe('StartGame', () => {
+const isBun = (globalThis as any).__IS_BUN__;
+
+describe.skipIf(isBun)('StartGame', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

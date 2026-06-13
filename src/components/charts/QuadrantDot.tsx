@@ -20,7 +20,7 @@ export function QuadrantDotItem({ dot }: QuadrantDotProps) {
           className={cn(
             'absolute w-3 h-3 rounded-none -translate-x-1/2 -translate-y-1/2 cursor-default transition-transform hover:scale-150',
             dot.isPlayer
-              ? 'bg-primary shadow-[0_0_8px_rgba(255,0,0,0.6)] z-10'
+              ? 'bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.6)] z-10'
               : 'bg-white/30 hover:bg-white/50'
           )}
           style={{ left: `${x}%`, top: `${y}%` }}

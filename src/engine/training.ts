@@ -2,7 +2,6 @@ import type { GameState, SeasonalGrowth, TrainingAssignment } from '@/types/stat
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { updateEntityInList } from '@/utils/stateUtils';
 import { type StateImpact } from './impacts';
 import {
   computeGainChance,
@@ -32,15 +31,16 @@ export interface TrainingImpact {
 function processRecoveryAssignment(
   warrior: Warrior,
   healingBonus: number,
-  currentRoster: Warrior[],
+  currentRoster: Map<WarriorId, Warrior>,
   results: TrainingResult[]
-): Warrior[] {
+): Map<WarriorId, Warrior> {
   const { updatedInjuries, message } = processRecovery(warrior, healingBonus);
   results.push({ type: 'recovery', warriorId: warrior.id, message });
-  return updateEntityInList(currentRoster, warrior.id, (w) => ({
-    ...w,
+  currentRoster.set(warrior.id, {
+    ...currentRoster.get(warrior.id)!,
     injuries: updatedInjuries as InjuryData[],
-  }));
+  });
+  return currentRoster;
 }
 
 /**
@@ -50,12 +50,12 @@ function processSkillDrillAssignment(
   assignment: TrainingAssignment,
   warrior: Warrior,
   healingBonus: number,
-  currentRoster: Warrior[],
+  currentRoster: Map<WarriorId, Warrior>,
   results: TrainingResult[],
   state: GameState,
   rng: IRNGService,
   weather: import('@/types/shared.types').WeatherType
-): Warrior[] {
+): Map<WarriorId, Warrior> {
   if (!assignment.skill) return currentRoster;
   const { updatedWarrior, result, hardCapped } = processSkillDrillTraining(
     warrior,
@@ -66,11 +66,10 @@ function processSkillDrillAssignment(
   if (result.message !== '') {
     results.push(result);
   }
-  let roster = currentRoster;
   if (updatedWarrior) {
-    roster = updateEntityInList(roster, warrior.id, () => updatedWarrior);
+    currentRoster.set(warrior.id, updatedWarrior);
   }
-  if (hardCapped) return roster;
+  if (hardCapped) return currentRoster;
   // Skill drilling still carries injury risk, though slightly lower than attribute training
   const { injury, result: injuryResult } = rollForTrainingInjury(
     updatedWarrior || warrior,
@@ -79,13 +78,11 @@ function processSkillDrillAssignment(
     weather
   );
   if (injury && injuryResult) {
-    roster = updateEntityInList(roster, warrior.id, (w) => ({
-      ...w,
-      injuries: [...w.injuries, injury] as InjuryData[],
-    }));
+    const w = currentRoster.get(warrior.id)!;
+    currentRoster.set(warrior.id, { ...w, injuries: [...w.injuries, injury] as InjuryData[] });
     results.push(injuryResult);
   }
-  return roster;
+  return currentRoster;
 }
 
 /**
@@ -95,13 +92,13 @@ function processAttributeAssignment(
   assignment: TrainingAssignment,
   warrior: Warrior,
   healingBonus: number,
-  currentRoster: Warrior[],
+  currentRoster: Map<WarriorId, Warrior>,
   results: TrainingResult[],
   state: GameState,
   seasonalGrowth: SeasonalGrowth[],
   rng: IRNGService,
   weather: import('@/types/shared.types').WeatherType
-): { currentRoster: Warrior[]; seasonalGrowth: SeasonalGrowth[] } {
+): { currentRoster: Map<WarriorId, Warrior>; seasonalGrowth: SeasonalGrowth[] } {
   const attr = assignment.attribute;
   if (!attr) return { currentRoster, seasonalGrowth };
 
@@ -117,9 +114,8 @@ function processAttributeAssignment(
     results.push(result);
   }
 
-  let roster = currentRoster;
   if (updatedWarrior) {
-    roster = updateEntityInList(roster, warrior.id, () => updatedWarrior);
+    currentRoster.set(warrior.id, updatedWarrior);
   }
 
   let growth = seasonalGrowth;
@@ -129,7 +125,7 @@ function processAttributeAssignment(
 
   // Skip injury rolls if training was blocked/capped
   if (hardCapped || (result.type === 'blocked' && result.message !== '')) {
-    return { currentRoster: roster, seasonalGrowth: growth };
+    return { currentRoster, seasonalGrowth: growth };
   }
 
   // ── Training Injury Roll ──
@@ -140,14 +136,12 @@ function processAttributeAssignment(
     weather
   );
   if (injury && injuryResult) {
-    roster = updateEntityInList(roster, warrior.id, (w) => ({
-      ...w,
-      injuries: [...w.injuries, injury] as InjuryData[],
-    }));
+    const w = currentRoster.get(warrior.id)!;
+    currentRoster.set(warrior.id, { ...w, injuries: [...w.injuries, injury] as InjuryData[] });
     results.push(injuryResult);
   }
 
-  return { currentRoster: roster, seasonalGrowth: growth };
+  return { currentRoster, seasonalGrowth: growth };
 }
 
 /**
@@ -173,12 +167,12 @@ export function computeTrainingImpact(
   }
 
   const results: TrainingResult[] = [];
-  let currentRoster = [...state.roster];
+  let currentRoster = new Map<WarriorId, Warrior>(state.roster.map((w) => [w.id, w]));
   let seasonalGrowth = [...(state.seasonalGrowth ?? [])];
   const healingBonus = getHealingTrainerBonus(state.trainers ?? []);
 
   for (const assignment of state.trainingAssignments) {
-    const warrior = currentRoster.find((w) => w.id === assignment.warriorId);
+    const warrior = currentRoster.get(assignment.warriorId);
     if (!warrior) continue;
 
     // ── Recovery Mode ──
@@ -218,7 +212,7 @@ export function computeTrainingImpact(
     seasonalGrowth = outcome.seasonalGrowth;
   }
 
-  return { updatedRoster: currentRoster, updatedSeasonalGrowth: seasonalGrowth, results };
+  return { updatedRoster: Array.from(currentRoster.values()), updatedSeasonalGrowth: seasonalGrowth, results };
 }
 
 /**
@@ -237,8 +231,9 @@ export function trainingImpactToStateImpact(
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
   const seasonalGrowth = impact.updatedSeasonalGrowth ? [...impact.updatedSeasonalGrowth] : [];
 
+  const originalById = new Map<WarriorId, Warrior>(state.roster.map((r) => [r.id, r]));
   impact.updatedRoster.forEach((w) => {
-    const original = state.roster.find((r) => r.id === w.id);
+    const original = originalById.get(w.id);
     if (original && original !== w) {
       // 🛠️ 1.0 Hardening: Return ONLY changed fields to avoid overwriting Aging/Health passes
       const delta: Partial<Warrior> = {

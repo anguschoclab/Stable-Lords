@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { cleanup } from '@testing-library/react';
+import { cleanup } from '@testing-library/react/pure';
 import { enableMapSet } from 'immer';
 import { clearWarriorCache as clearTournamentCache } from '@/engine/matchmaking/tournament/tournamentStateMutator';
 import { clearWarriorCache as clearSelectionCache } from '@/engine/matchmaking/tournamentSelection/utils';
@@ -193,6 +193,18 @@ beforeEach(() => {
     (localStorage as any)._resetQuota?.();
   }
   clearMockOPFSError();
+  // Bun resets navigator between test files, so re-apply the storage mock in beforeEach
+  if (typeof navigator !== 'undefined' && !navigator.storage) {
+    Object.defineProperty(navigator, 'storage', {
+      value: {
+        getDirectory: async () => {
+          throwIfTargeted('getDirectory');
+          return createMockDirHandle('root');
+        },
+      },
+      configurable: true,
+    });
+  }
 });
 
 // Clear vi mocks after each test to prevent state pollution
@@ -223,7 +235,12 @@ afterEach(() => {
 
 // Clean up rendered components after each test in jsdom environment
 afterEach(() => {
-  cleanup();
+  try {
+    cleanup();
+  } catch {
+    // Bun parallel runner can trigger concurrent cleanup()/act() calls;
+    // swallow the error so it doesn't cascade to unrelated tests.
+  }
 });
 
 // Mock ResizeObserver for JSDOM

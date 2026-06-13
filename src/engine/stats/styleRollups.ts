@@ -6,6 +6,10 @@ const KEY_WEEK = 'sl.styleRollups.week';
 const KEY_ROLLING = 'sl.metrics.style.week10';
 const KEY_TOUR = 'sl.metrics.style.tournaments';
 
+const weekCache = new Map<number, Record<string, Bucket>>();
+let rollingCache: Record<string, RollingBucket[]> | null = null;
+let tourCache: Record<string, Record<string, RollingBucket>> | null = null;
+
 type Bucket = { w: number; l: number; k: number; pct: number; fights: number };
 type RollingBucket = { W: number; L: number; K: number; fights: number };
 
@@ -81,18 +85,23 @@ function validateTourRecord(o: unknown): Record<string, Record<string, RollingBu
 // ── Week-based rollups ────────────────────────────────────────────────────
 
 function loadWeek(week: number): Record<string, Bucket> {
+  const cached = weekCache.get(week);
+  if (cached) return cached;
   if (typeof localStorage === 'undefined') return {};
   try {
     const raw = localStorage.getItem(`${KEY_WEEK}_${week}`);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
-    return validateWeekRecord(parsed);
+    const validated = validateWeekRecord(parsed);
+    weekCache.set(week, validated);
+    return validated;
   } catch {
     return {};
   }
 }
 
 function saveWeek(week: number, m: Record<string, Bucket>) {
+  weekCache.set(week, m);
   if (typeof localStorage !== 'undefined') {
     try {
       localStorage.setItem(`${KEY_WEEK}_${week}`, JSON.stringify(m));
@@ -103,6 +112,7 @@ function saveWeek(week: number, m: Record<string, Bucket>) {
         try {
           for (let i = week - 10; i >= 1; i--) {
             localStorage.removeItem(`${KEY_WEEK}_${i}`);
+            weekCache.delete(i);
           }
           // Retry saving
           localStorage.setItem(`${KEY_WEEK}_${week}`, JSON.stringify(m));
@@ -127,17 +137,21 @@ function ensure(style: string, m: Record<string, Bucket>): Bucket {
 // ── Rolling window (last 10 fights per style) ─────────────────────────────
 
 function loadRolling(): Record<string, RollingBucket[]> {
+  if (rollingCache) return rollingCache;
   if (typeof localStorage === 'undefined') return {};
   try {
     const raw = localStorage.getItem(KEY_ROLLING);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
-    return validateRollingRecord(parsed);
+    const validated = validateRollingRecord(parsed);
+    rollingCache = validated;
+    return validated;
   } catch {
     return {};
   }
 }
 function saveRolling(m: Record<string, RollingBucket[]>) {
+  rollingCache = m;
   if (typeof localStorage !== 'undefined') {
     try {
       localStorage.setItem(KEY_ROLLING, JSON.stringify(m));
@@ -153,17 +167,21 @@ function saveRolling(m: Record<string, RollingBucket[]>) {
 }
 
 function loadTour(): Record<string, Record<string, RollingBucket>> {
+  if (tourCache) return tourCache;
   if (typeof localStorage === 'undefined') return {};
   try {
     const raw = localStorage.getItem(KEY_TOUR);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
-    return validateTourRecord(parsed);
+    const validated = validateTourRecord(parsed);
+    tourCache = validated;
+    return validated;
   } catch {
     return {};
   }
 }
 function saveTour(m: Record<string, Record<string, RollingBucket>>) {
+  tourCache = m;
   if (typeof localStorage !== 'undefined') {
     try {
       localStorage.setItem(KEY_TOUR, JSON.stringify(m));
@@ -196,12 +214,20 @@ export type StyleRecord = {
     * Style rollups.
     */
 
+function clearCaches() {
+  weekCache.clear();
+  rollingCache = null;
+  tourCache = null;
+}
+
 // ── Combined API ──────────────────────────────────────────────────────────
 
 /**
  * Style rollups.
  */
 export const StyleRollups = {
+  /** Clear in-memory caches (useful for testing) */
+  _clearCaches: clearCaches,
   /** Record a fight in both week-rollup and rolling-window trackers */
   addFight(opts: {
     week: number;

@@ -125,10 +125,16 @@ function SparklineDot({ points, min, range, H, W, PAD, isUp }: SparklineDotProps
   const i = points.length - 1;
   const x = PAD + (i / (points.length - 1)) * (W - PAD * 2);
   const y = H - PAD - ((last.value - min) / range) * (H - PAD * 2);
-  // TODO: verify isUp color — both branches currently render red
-  const color = isUp ? 'rgb(255,0,0)' : 'rgb(239,68,68)';
+  const color = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';
+  const glowColor = isUp ? 'hsl(var(--primary) / 0.8)' : 'hsl(var(--destructive) / 0.8)';
   return (
-    <circle cx={x} cy={y} r={3} fill={color} className="drop-shadow-[0_0_4px_rgba(255,0,0,0.8)]" />
+    <circle
+      cx={x}
+      cy={y}
+      r={3}
+      fill={color}
+      style={{ filter: `drop-shadow(0 0 4px ${glowColor})` }}
+    />
   );
 }
 
@@ -157,9 +163,8 @@ function SparklineSVG({
   isUp,
   height,
 }: SparklineSVGProps) {
-  // TODO: verify isUp color — both branches currently render red
-  const strokeColor = isUp ? 'rgb(255,0,0)' : 'rgb(239,68,68)';
-  const gradientColor = isUp ? 'rgb(255,0,0)' : 'rgb(239,68,68)';
+  const strokeColor = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';
+  const gradientColor = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';
 
   return (
     <svg

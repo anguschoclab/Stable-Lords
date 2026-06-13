@@ -302,9 +302,10 @@ export function processWeekBouts(
 
   // Minimum Viable Arena: skip combat phase if fewer than 2 eligible warriors
   // exist across all stables. Economy, training, and aging still proceed.
-  const eligibleCount = Array.from(warriorMap.values()).filter((w) =>
-    isFightReady(w, state.isTournamentWeek)
-  ).length;
+  let eligibleCount = 0;
+  for (const w of warriorMap.values()) {
+    if (isFightReady(w, state.isTournamentWeek)) eligibleCount++;
+  }
   if (eligibleCount < 2) {
     const summary = createWeekBoutSummary();
     const quietImpact = finalizeWeekSideEffectsToImpact(state, []);

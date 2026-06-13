@@ -46,15 +46,13 @@ export function runSimulation(config: SimulationConfig): SimulationResult {
     // A. Weekly Decision Logic (AI/Player)
 
     // Headless: Auto-Respond to Player Contracts
+    const playerIds = new Set(state.roster.map((w) => w.id));
     const playerOffers = Object.values(state.boutOffers || {}).filter(
-      (o) =>
-        o.status === 'Proposed' && o.warriorIds.some((id) => state.roster.some((w) => w.id === id))
+      (o) => o.status === 'Proposed' && o.warriorIds.some((id) => playerIds.has(id))
     );
 
     playerOffers.forEach((offer) => {
-      const playerWarriorIds = offer.warriorIds.filter((id) =>
-        state.roster.some((w) => w.id === id)
-      );
+      const playerWarriorIds = offer.warriorIds.filter((id) => playerIds.has(id));
 
       if (offer.hype >= 20 || offer.purse >= 50) {
         playerWarriorIds.forEach((id) => {

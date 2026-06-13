@@ -52,8 +52,11 @@ describe('ArenaHistory persistence error handling', () => {
       const fights = Array.from({ length: 150 }, (_, i) => createMockFight({ id: `f${i}` as any }));
       localStorage.setItem('sl.arenaHistory', JSON.stringify(fights));
 
-      // Use the setup.ts mock's quota error simulation
-      (localStorage as any)._setQuotaExceeded(true);
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+        const err = new Error('QuotaExceededError');
+        (err as any).name = 'QuotaExceededError';
+        throw err;
+      });
 
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -66,7 +69,7 @@ describe('ArenaHistory persistence error handling', () => {
         expect.any(Error)
       );
 
-      (localStorage as any)._resetQuota();
+      setItemSpy.mockRestore();
       consoleSpy.mockRestore();
     });
 
@@ -75,8 +78,11 @@ describe('ArenaHistory persistence error handling', () => {
       const fights = Array.from({ length: 50 }, (_, i) => createMockFight({ id: `f${i}` as any }));
       localStorage.setItem('sl.arenaHistory', JSON.stringify(fights));
 
-      // Use the setup.ts mock's quota error simulation
-      (localStorage as any)._setQuotaExceeded(true);
+      const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+        const err = new Error('QuotaExceededError');
+        (err as any).name = 'QuotaExceededError';
+        throw err;
+      });
 
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -89,7 +95,7 @@ describe('ArenaHistory persistence error handling', () => {
         expect.any(Error)
       );
 
-      (localStorage as any)._resetQuota();
+      setItemSpy.mockRestore();
       consoleSpy.mockRestore();
     });
 

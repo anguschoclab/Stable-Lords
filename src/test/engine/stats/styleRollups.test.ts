@@ -22,6 +22,7 @@ describe('StyleRollups', () => {
     });
 
     beforeEach(() => {
+      StyleRollups._clearCaches();
       Object.defineProperty(globalThis, 'localStorage', {
         value: {
           getItem: mockGetItem,
@@ -110,6 +111,7 @@ describe('StyleRollups', () => {
     });
 
     beforeEach(() => {
+      StyleRollups._clearCaches();
       Object.defineProperty(globalThis, 'localStorage', {
         value: {
           getItem: mockGetItem2,
@@ -206,6 +208,7 @@ describe('StyleRollups', () => {
     });
 
     beforeEach(() => {
+      StyleRollups._clearCaches();
       Object.defineProperty(globalThis, 'localStorage', {
         value: {
           getItem: mockGetItem3,

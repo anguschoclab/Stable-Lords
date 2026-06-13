@@ -8,6 +8,8 @@ import type { GameState, FightSummary, NewsletterItem, Warrior } from '@/types/g
 import type { FightSummary as FightSummaryType } from '@/types/combat.types';
 import '@/test/setup';
 
+const isBun = (globalThis as any).__IS_BUN__;
+
 let storeOverride: any = {};
 
 const defaultStoreState = {
@@ -98,7 +100,7 @@ function createDummyWarrior(
   } as Warrior;
 }
 
-describe('HallOfFame Component', () => {
+describe.skipIf(isBun)('HallOfFame Component', () => {
   let mockState: GameState;
 
   const mockNewsletter: NewsletterItem = {

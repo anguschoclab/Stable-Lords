@@ -4,7 +4,7 @@ import { type GameState, type InjuryData } from '@/types/game';
 import * as injuriesModule from '@/engine/injuries';
 import * as matchmakingModule from '@/engine/matchmaking/historyLogic';
 
-const mockTickInjuries = vi.hoisted(() => vi.fn());
+const mockTickInjuries = vi.fn();
 
 vi.mock('@/engine/injuries', () => ({
   tickInjuries: mockTickInjuries,

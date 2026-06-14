@@ -11,7 +11,7 @@ import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import { generateWeeklyGazette } from '@/engine/gazette/gazetteFactory';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 /**
  * Finalizes week side effects into StateImpact

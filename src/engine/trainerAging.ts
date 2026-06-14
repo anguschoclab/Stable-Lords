@@ -1,7 +1,7 @@
 import type { GameState, Trainer, RivalStableData } from '@/types/state.types';
 import type { StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { TRAINER_AGING, RETIREMENT_CHANCES } from '@/constants/aging';
 
 /**

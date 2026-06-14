@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { rollLuckfactor, applyLuckfactor, computeBaseSkills } from '@/engine/skillCalc';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { FightingStyle, type BaseSkills } from '@/types/shared.types';
 
 const SKILLS: (keyof BaseSkills)[] = ['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC'];

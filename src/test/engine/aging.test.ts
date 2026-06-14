@@ -4,7 +4,7 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Warrior, Attributes } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 // ─── Test Helpers ─────────────────────────────────────────────────────────
 

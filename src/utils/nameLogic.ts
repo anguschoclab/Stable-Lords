@@ -1,4 +1,4 @@
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 /**
  * Stable Lords — Name Logic

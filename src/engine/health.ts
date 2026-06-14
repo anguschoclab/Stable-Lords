@@ -5,7 +5,7 @@ import { tickInjuries } from '@/engine/injuries';
 import { clearExpiredRest } from '@/engine/matchmaking/historyLogic';
 import type { StateImpact } from './impacts';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 /**
  * Health Impact calculation — extracted from the legacy pipeline.

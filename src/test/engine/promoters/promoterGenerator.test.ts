@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('Promoter Generator', () => {

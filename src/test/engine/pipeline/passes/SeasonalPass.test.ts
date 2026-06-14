@@ -3,7 +3,7 @@ import { runSeasonalPass } from '@/engine/pipeline/seasonal';
 import narrativeContent from '@/data/narrativeContent.json';
 const eventCount = Object.keys((narrativeContent as any).offseason_events).length;
 import type { GameState } from '@/types/state.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import type { WarriorId } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { Warrior } from '@/types/warrior.types';

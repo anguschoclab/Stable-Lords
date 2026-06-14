@@ -5,7 +5,7 @@ import {
   fullRefreshPool,
   DEFAULT_POOL_SIZE,
 } from '@/engine/recruitment';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 describe('partialRefreshPool', () => {
   it('returns a newly generated pool of DEFAULT_POOL_SIZE if given an empty pool', () => {

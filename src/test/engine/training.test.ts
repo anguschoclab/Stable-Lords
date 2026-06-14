@@ -15,7 +15,7 @@ import { SeededRNG } from '@/utils/random';
 import type { WarriorId, StableId, InjuryId } from '@/types/shared.types';
 import * as trainingGains from '@/engine/training/trainingGains';
 
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 function makeWarrior(attrs: any, overrides?: Partial<Warrior>): Warrior {
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);

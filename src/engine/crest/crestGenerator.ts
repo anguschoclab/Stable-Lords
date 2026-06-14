@@ -23,7 +23,7 @@ import {
   DEFAULT_INHERITANCE,
 } from '@/types/crest.types';
 import { getChargePathsByType } from './chargePaths';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 // Philosophy color preferences

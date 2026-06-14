@@ -26,7 +26,7 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId } from '@/types/shared.types';
 import { TRAITS, generateTraits } from '@/engine/traits';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { generateRecruit } from '@/engine/recruitment';
 
 // ── Test Helpers ────────────────────────────────────────────────────────────

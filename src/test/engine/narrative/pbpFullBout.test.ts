@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 

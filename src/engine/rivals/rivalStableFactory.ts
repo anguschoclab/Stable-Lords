@@ -16,7 +16,7 @@ import type { Warrior } from '@/types/warrior.types';
 import type { StableTemplate } from '@/data/templates';
 import type { StableId } from '@/types/shared.types';
 import { ALL_TEMPLATES } from '@/data/templates';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import { generateCrest } from '../crest/crestGenerator';
 import { biasedAttrs, createRivalWarrior } from './rivalWarriorFactory';

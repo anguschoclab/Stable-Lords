@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { calculateXP, applyXP } from '@/engine/progression';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 describe('Warrior Progression', () => {
   describe('calculateXP', () => {

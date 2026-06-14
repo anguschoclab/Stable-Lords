@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { FightingStyle } from '@/types/shared.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { buildTournament } from '@/engine/matchmaking/tournament/tournamentBracketBuilder';
 import {
   resolveRound,

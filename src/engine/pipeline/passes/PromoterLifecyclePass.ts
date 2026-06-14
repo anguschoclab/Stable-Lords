@@ -1,6 +1,6 @@
 import { GameState, Promoter, PromoterPersonality } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { generateDynasticName } from '@/utils/nameLogic';
 import { StateImpact } from '@/engine/impacts';
 

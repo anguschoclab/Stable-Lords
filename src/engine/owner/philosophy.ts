@@ -7,7 +7,7 @@ import {
   PHILOSOPHY_EVOLVE_THRESHOLD_LOSS,
   PHILOSOPHY_MIN_FIGHTS,
 } from '@/data/ownerData';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 /**
  * Evolve stable philosophies based on season results.

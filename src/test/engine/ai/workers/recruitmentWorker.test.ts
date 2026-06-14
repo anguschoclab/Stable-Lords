@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { processRecruitment } from '@/engine/ai/workers/recruitmentWorker';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import type { RivalStableData } from '@/types/state.types';
 import type { PoolWarrior } from '@/engine/recruitment';

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { interpolateTemplate } from '@/engine/narrative/narrativePBPUtils';
 import { battleOpener } from '@/engine/narrative/narrativeIntro';
 import { narrateFeint, narrateInsightHint } from '@/engine/narrative/narrativePositioning';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
 

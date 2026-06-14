@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { weatherStaminaModifier } from '@/engine/combat/mechanics/combatMath';
 import { rollWeather } from '@/engine/pipeline/passes/WorldPass';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 describe('Locust Swarm Feature', () => {
   it('should return a 1.2 multiplier for Locust Swarm stamina drain', () => {

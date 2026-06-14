@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { CombatNarrator } from '@/engine/narrative/combatNarrator';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 import { resolveExchange } from '@/engine/combat/resolution/resolution';
 

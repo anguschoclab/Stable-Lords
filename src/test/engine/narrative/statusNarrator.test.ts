@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { StatusNarrator } from '@/engine/narrative/statusNarrator';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 describe('StatusNarrator', () => {
   describe('damageSeverityLine', () => {

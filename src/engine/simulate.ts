@@ -1,7 +1,7 @@
 import { defaultPlanForWarrior } from './bout/planDefaults';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import type { Trainer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightPlan, FightOutcome } from '@/types/combat.types';
@@ -18,9 +18,6 @@ import { runSimulationLoop } from './simulate/simulationLoop';
 import { generateIntroductions } from './simulate/narrative';
 import { generateOutcomeTags, buildPostFightStats, handleTimeLimit } from './simulate/resolution';
 
-// ─── Exports from sub-modules for backward compatibility ───
-export { createFighterState } from './bout/fighterState';
-export { resolveDecision } from './bout/decisionLogic';
 export { defaultPlanForWarrior };
 
 /**

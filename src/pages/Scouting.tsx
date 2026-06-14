@@ -3,7 +3,7 @@ import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting';
 import { type ScoutReportData, type Warrior } from '@/types/game';
 import { Radio } from 'lucide-react';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { hashStr } from '@/utils/random';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';

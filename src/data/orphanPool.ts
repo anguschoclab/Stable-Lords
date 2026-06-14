@@ -13,7 +13,7 @@ import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/stat
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
 import { shuffled } from '@/utils/random';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService'; /**
+import { SeededRNGService } from '@/utils/random'; /**
                                                                         * Defines the shape of orphan warrior.
                                                                         */
 

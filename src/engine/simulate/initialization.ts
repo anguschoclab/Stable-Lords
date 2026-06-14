@@ -6,7 +6,7 @@ import { DEFAULT_LOADOUT, checkWeaponRequirements } from '@/data/equipment';
 import { getTrainerMods } from '../combat/mechanics/simulateHelpers';
 import { getWeatherEffect, resolveEffectiveWeather } from '../combat/mechanics/weatherEffects';
 import { getArenaById } from '@/data/arenas';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Trainer } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';

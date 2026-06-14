@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import type { GameState, Warrior, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { WarriorId, StableId } from '@/types/shared.types';

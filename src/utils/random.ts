@@ -182,3 +182,6 @@ export function shuffled<T>(arr: T[], rng: (() => number) | IRNGService): T[] {
   }
   return copy;
 }
+
+/** Backward-compatible alias — callers should migrate to {@link SeededRNG}. */
+export const SeededRNGService = SeededRNG;

@@ -4,7 +4,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { SeasonalRetirementService } from '@/engine/ai/seasonalRetirementService';
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 
 describe('SeasonalRetirementService', () => {

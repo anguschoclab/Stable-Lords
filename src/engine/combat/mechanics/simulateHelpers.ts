@@ -3,7 +3,7 @@ import type { FightOutcome } from '@/types/combat.types';
 import type { Trainer } from '@/types/state.types';
 import type { ResolutionContext, FighterState } from '@/engine/combat/resolution/types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { getTrainingBonus } from '@/engine/trainers';
 import { getSpecialtyMods } from '@/engine/trainerSpecialties'; /**
                                                                  * Create rng for context.

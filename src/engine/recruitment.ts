@@ -14,7 +14,7 @@ import { computeWarriorStats, rollLuckfactor } from './skillCalc';
 import { generatePotential } from './potential';
 import { generateFavorites } from './favorites';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import narrativeContent from '@/data/narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { TRAITS, generateTraits } from '@/engine/traits';

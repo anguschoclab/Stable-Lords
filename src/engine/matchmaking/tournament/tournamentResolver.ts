@@ -2,7 +2,7 @@ import type { GameState, Warrior, FightSummary, RivalStableData } from '@/types/
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { aiPlanForWarrior } from '@/engine/ai/plan';
 import { FightingStyle } from '@/types/shared.types';

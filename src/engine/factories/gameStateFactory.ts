@@ -7,7 +7,7 @@ import { type PoolWarrior } from '@/engine/recruitment';
 import narrativeContent from '@/data/narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types';
 import { FightingStyle, type StableId, type WarriorId } from '@/types/shared.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from './warriorFactory';
 import { generatePotential } from '@/engine/potential';
 import { BACKSTORY_IDS } from '@/data/backstories';

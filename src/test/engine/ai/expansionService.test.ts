@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ExpansionService } from '@/engine/ai/expansionService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import type { GameState } from '@/types/state.types';
 
 describe('ExpansionService', () => {

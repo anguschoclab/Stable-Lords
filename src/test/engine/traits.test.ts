@@ -4,7 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { TRAITS, generateTraits, getStaticTraitMods, getDynamicTraitMods } from '@/engine/traits';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import type { Warrior } from '@/types/warrior.types';
 
 function mockWarrior(traits: string[]): Warrior {

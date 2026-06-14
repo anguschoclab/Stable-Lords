@@ -3,7 +3,7 @@
  * Extracted from rivals.ts to follow SRP
  */
 import type { RivalStableData, Warrior } from '@/types/state.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { clamp } from '@/utils/math';
 import { filterActive } from '@/utils/roster';
 

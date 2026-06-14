@@ -5,7 +5,7 @@ import type { FightOutcome, FightSummary } from '@/types/combat.types';
 import { generateFightNarrative } from '@/engine/gazette/gazetteNarrative';
 import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts'; /**
                                                  * Handle death.
                                                  * @param s - S.

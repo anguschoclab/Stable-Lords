@@ -8,7 +8,7 @@ import { aiDraftFromPool } from '@/engine/draftService';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { hashStr } from '@/utils/random';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';

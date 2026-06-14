@@ -2,7 +2,7 @@ import type { GameState, RivalStableData, AIIntent, AIStrategy } from '@/types/s
 import { computeMetaDrift } from '../metaDrift';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { computePlayerThreatLevel } from './agentCore';
 import { filterActive } from '@/utils/roster';
 

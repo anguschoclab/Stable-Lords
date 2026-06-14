@@ -1,4 +1,4 @@
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { generatePotential } from '@/engine/potential';
 import { generateRivalStables } from '@/engine/rivals';

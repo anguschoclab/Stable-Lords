@@ -13,7 +13,7 @@
  * surprises on the player.
  */
 import type { AttributePotential } from '@/types/warrior.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { hashStr } from '@/utils/random';
 import { ATTRIBUTE_KEYS } from '@/types/shared.types';
 

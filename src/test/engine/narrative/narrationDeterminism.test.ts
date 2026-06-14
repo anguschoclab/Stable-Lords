@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { defaultPlanForWarrior, simulateFight } from '@/engine/simulate';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('Narration RNG isolation', () => {

@@ -1,6 +1,6 @@
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { generateRivalStables } from '../rivals';
 import { inheritCrest } from '../crest/crestGenerator';
 import { BACKSTORIES } from '@/data/backstories';

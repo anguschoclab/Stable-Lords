@@ -3,7 +3,7 @@ import type { WarriorId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { archiveWeekLogs } from '../adapters/opfsArchiver';
 import { computeMetaDrift } from '@/engine/metaDrift';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 

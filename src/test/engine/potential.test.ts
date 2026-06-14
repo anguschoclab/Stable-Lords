@@ -9,7 +9,7 @@ import {
 } from '@/engine/potential';
 import type { Attributes } from '@/types/shared.types';
 import type { AttributePotential } from '@/types/warrior.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 describe('Potential System', () => {
   const mockAttrs: Attributes = {

@@ -4,7 +4,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { computeMetaDrift } from './metaDrift';
 import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { META_RECRUIT_QUOTES } from '@/data/ownerData';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { filterActive } from '@/utils/roster';
 import { generateAIRecruit } from './ownerRoster/recruitGenerator';
 

@@ -12,7 +12,7 @@ import { getStyleDefaultLoadout } from '@/data/equipment';
 import { generateId } from '@/utils/idUtils';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 /**
  * Creates a new warrior with calculated stats and favorites.

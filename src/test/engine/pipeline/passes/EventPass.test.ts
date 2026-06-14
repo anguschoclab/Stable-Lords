@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { runEventPass } from '@/engine/pipeline/passes/EventPass';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts } from '@/engine/impacts';
 import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';

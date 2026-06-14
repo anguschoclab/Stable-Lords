@@ -8,7 +8,7 @@ import type { FightSummary } from '@/types/combat.types';
 import type { CrowdMoodType } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { styleName, t, MOOD_TONE } from './gazetteTemplateHelpers';
 import type { GazetteDetections } from './gazetteDetections';
 

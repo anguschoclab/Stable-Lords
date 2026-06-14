@@ -8,7 +8,7 @@ import { ArenaHistory } from '@/engine/history/arenaHistory';
 import { LoreArchive } from '@/lore/LoreArchive';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { commentatorFor, blurb, type AnnounceTone } from '@/lore/AnnouncerAI';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService'; /**
+import { SeededRNGService } from '@/utils/random'; /**
                                                                         * Handle reporting.
                                                                         * @param wA - W a.
                                                                         * @param wD - W d.

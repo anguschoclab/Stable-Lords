@@ -35,7 +35,7 @@ import { applyBackstoryToPlayer, type BackstoryId } from '@/data/backstories';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { resolveImpacts } from '@/engine/impacts';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import ColomseumArch from '@/components/startGame/ColomseumArch';
 import NewGameForm from '@/components/startGame/NewGameForm';
 import TitleScreenHero from '@/components/startGame/TitleScreenHero';

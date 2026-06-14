@@ -6,7 +6,7 @@ import { generateRivalStables } from '@/engine/rivals';
 import { generateRecruitPool } from '@/engine/recruitment';
 import { generateHiringPool } from '@/engine/trainers';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
 

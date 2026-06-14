@@ -4,7 +4,7 @@ import { type FightOutcome } from '@/types/combat.types';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { engineEventBus } from '@/engine/core/EventBus';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { hashStr } from '@/utils/random';
 import {

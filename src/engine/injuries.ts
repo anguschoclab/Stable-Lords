@@ -10,7 +10,7 @@
 import type { Warrior, InjuryData, InjurySeverity } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { rollRange } from '@/engine/core/rng/rollRange';
 import type { InjuryId } from '@/types/shared.types';
 

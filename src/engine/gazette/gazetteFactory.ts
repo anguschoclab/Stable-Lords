@@ -7,7 +7,7 @@ import type { CrowdMoodType } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GazetteStory } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { MOOD_TONE } from './gazetteTemplateHelpers';
 import {
   computeStreaks,

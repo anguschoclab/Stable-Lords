@@ -1,6 +1,6 @@
 import type { GameState, Season } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { RNGContext } from '@/engine/core/rng/RNGContext';
 import { StateImpact } from '@/engine/impacts';
 import { processHallOfFame, createYearlySnapshots } from '../core/hallOfFame';

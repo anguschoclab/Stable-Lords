@@ -1,5 +1,5 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import type { GameState, WeatherType, Season } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
 

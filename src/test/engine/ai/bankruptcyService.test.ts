@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import type { GameState } from '@/types/state.types';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 describe('BankruptcyService', () => {
   let state: GameState;

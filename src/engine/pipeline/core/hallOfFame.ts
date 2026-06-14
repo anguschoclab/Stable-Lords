@@ -2,7 +2,7 @@ import { type GameState, type AnnualAward, type RivalStableData } from '@/types/
 import type { Warrior } from '@/types/warrior.types';
 import { FightingStyle, type WarriorId, type StableId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts';
 /**
  * Process hall of fame awards for the completed year.

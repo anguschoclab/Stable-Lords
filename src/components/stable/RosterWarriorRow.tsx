@@ -1,4 +1,5 @@
 import { Crown, Star, Activity, ChevronRight } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { StatBadge, WarriorNameTag } from '@/components/ui/WarriorBadges';
@@ -152,26 +153,29 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                 </div>
               </div>
 
-              <div className="flex items-center gap-6 px-6 py-3 rounded-none bg-black/40 border border-white/5 group-hover:border-primary/10 transition-all">
-                <div className="text-center">
-                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
-                    Victory
-                  </span>
-                  <span className="font-mono font-black text-primary text-sm">{winRate}%</span>
-                </div>
-                <div className="h-8 w-px bg-white/5" />
-                <div className="text-center">
-                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
-                    Kills
-                  </span>
-                  <span
-                    className={cn(
-                      'font-mono font-black text-sm',
-                      warrior.career.kills > 0 ? 'text-destructive' : 'text-muted-foreground/40'
-                    )}
-                  >
-                    {warrior.career.kills}
-                  </span>
+              <div className="flex items-center gap-4">
+                <BookmarkButton entityType="warrior" entityId={warrior.id} size="sm" />
+                <div className="flex items-center gap-6 px-6 py-3 rounded-none bg-black/40 border border-white/5 group-hover:border-primary/10 transition-all">
+                  <div className="text-center">
+                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
+                      Victory
+                    </span>
+                    <span className="font-mono font-black text-primary text-sm">{winRate}%</span>
+                  </div>
+                  <div className="h-8 w-px bg-white/5" />
+                  <div className="text-center">
+                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 block mb-0.5">
+                      Kills
+                    </span>
+                    <span
+                      className={cn(
+                        'font-mono font-black text-sm',
+                        warrior.career.kills > 0 ? 'text-destructive' : 'text-muted-foreground/40'
+                      )}
+                    >
+                      {warrior.career.kills}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

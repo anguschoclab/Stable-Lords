@@ -14,6 +14,7 @@ import {
   Zap,
   MapPin,
 } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { isExhausted } from '@/utils/fatigueUtils';
 import { getFatigueStatus, getInjuryBadge, type RivalWarriorMap } from '../hooks/useBookingOffice';
 
@@ -84,13 +85,16 @@ export function OfferCard({
             </div>
           </div>
         </div>
-        <div className="text-right">
-          <div className="text-xl font-display font-black text-arena-gold leading-none">
-            {offer.purse}G
+        <div className="flex items-center gap-3">
+          <BookmarkButton entityType="boutOffer" entityId={offer.id} size="sm" />
+          <div className="text-right">
+            <div className="text-xl font-display font-black text-arena-gold leading-none">
+              {offer.purse}G
+            </div>
+            <p className="text-[8px] font-black uppercase text-muted-foreground/20 tracking-tighter mt-1">
+              ALLOCATED PURSE
+            </p>
           </div>
-          <p className="text-[8px] font-black uppercase text-muted-foreground/20 tracking-tighter mt-1">
-            ALLOCATED PURSE
-          </p>
         </div>
       </div>
 

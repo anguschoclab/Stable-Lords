@@ -2,6 +2,7 @@ import { Target, Swords } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import type { ScoutReportData, ScoutQuality } from '@/types/game';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { NoReportState } from './components/NoReportState';
 import { ReportHeader } from './components/ReportHeader';
 import { AttributeMatrix } from './components/AttributeMatrix';
@@ -53,7 +54,10 @@ export function ScoutReportDetails({
     >
       <div className="absolute top-0 left-0 w-1.5 h-full bg-primary" />
 
-      <ReportHeader report={report} />
+      <div className="flex items-center justify-between p-6 border-b border-white/5">
+        <ReportHeader report={report} />
+        <BookmarkButton entityType="scoutReport" entityId={report.id} size="sm" />
+      </div>
 
       <div className="p-8 space-y-8">
         <div className="grid grid-cols-2 gap-8">

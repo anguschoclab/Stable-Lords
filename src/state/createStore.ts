@@ -15,6 +15,7 @@ import { createEconomySlice } from './slices/economySlice';
 import { createRosterSlice } from './slices/rosterSlice';
 import { createWorldSlice } from './slices/worldSlice';
 import { createTournamentSlice } from './slices/tournamentSlice';
+import { createBookmarksSlice } from './slices/bookmarksSlice';
 
 export const useGameStore = create<GameStore>()(
   subscribeWithSelector(
@@ -24,6 +25,7 @@ export const useGameStore = create<GameStore>()(
       ...createRosterSlice(set, get, ...args),
       ...createWorldSlice(set, get, ...args),
       ...createTournamentSlice(set, get, ...args),
+      ...createBookmarksSlice(set, get, ...args),
 
       // ─── Core State ───
       activeSlotId: null,
@@ -101,6 +103,7 @@ export const useGameStore = create<GameStore>()(
           draft.pendingResolutionData = state.pendingResolutionData;
           draft.playerChallenges = state.playerChallenges || [];
           draft.playerAvoids = state.playerAvoids || [];
+          draft.bookmarks = state.bookmarks || [];
           draft.lastSimulationReport = state.lastSimulationReport as never;
 
           draft.activeSlotId = slotId;

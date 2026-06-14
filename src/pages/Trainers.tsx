@@ -36,19 +36,25 @@ import { LegacyMentorsTab } from '@/components/stable/LegacyMentorsTab';
 import { FallenLegendsTab } from '@/components/stable/FallenLegendsTab';
 
 import { toast } from 'sonner';
+import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 
 /**
  * Trainers.
  * @returns The result.
  */
 export default function Trainers() {
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
   // Flat destructuring from 1.0 store
-  const { trainers, hiringPool, week, retired, graveyard, treasury, setState, deductFunds } =
+  const { trainers, hiringPool, week, retired, graveyard, treasury, setState, deductFunds, isBookmarked } =
     useGameStore();
 
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 
-  const currentTrainers = useMemo(() => trainers ?? [], [trainers]);
+  const currentTrainers = useMemo(() => {
+    const all = trainers ?? [];
+    if (!showBookmarkedOnly) return all;
+    return all.filter((t) => isBookmarked('trainer', t.id));
+  }, [trainers, showBookmarkedOnly, isBookmarked]);
   const currentHiringPool = useMemo(() => hiringPool ?? [], [hiringPool]);
   const canHire = currentTrainers.length < TRAINER_MAX_PER_STABLE;
 
@@ -179,6 +185,12 @@ export default function Trainers() {
           value="current"
           className="mt-0 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500"
         >
+          <div className="flex justify-end">
+            <BookmarkFilterToggle
+              active={showBookmarkedOnly}
+              onToggle={() => setShowBookmarkedOnly((v) => !v)}
+            />
+          </div>
           <div className="grid grid-cols-1 gap-8">
             {currentTrainers.length === 0 ? (
               <Surface

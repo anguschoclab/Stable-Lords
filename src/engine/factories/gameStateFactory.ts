@@ -83,6 +83,7 @@ export function createFreshState(
     boutOffers: {},
     realmRankings: {},
     awards: [],
+    bookmarks: [],
   };
 
   // 2. Generate Initial Rivals (4 Stables) - Seeded selection

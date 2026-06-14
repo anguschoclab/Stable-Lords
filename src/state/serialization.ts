@@ -75,6 +75,7 @@ type GameStateValues = {
   playerChallenges: GameState['playerChallenges'];
   playerAvoids: GameState['playerAvoids'];
   lastSimulationReport: import('@/types/combat.types').FightOutcome | undefined;
+  bookmarks: import('@/types/bookmark.types').Bookmark[];
 };
 
 let lastResult: GameState | null = null;
@@ -138,6 +139,7 @@ export function reconstructGameState(store: GameStore): GameState {
     playerChallenges: store.playerChallenges,
     playerAvoids: store.playerAvoids,
     lastSimulationReport: store.lastSimulationReport,
+    bookmarks: store.bookmarks,
   };
 
   if (lastResult && lastStoreValues) {
@@ -166,6 +168,7 @@ export function reconstructGameState(store: GameStore): GameState {
     phase: store.phase || 'planning',
     playerChallenges: store.playerChallenges || [],
     playerAvoids: store.playerAvoids || [],
+    bookmarks: store.bookmarks || [],
     // Type assertion to handle FightOutcome vs SimulationReport mismatch
     // This preserves existing behavior while extracting the logic
     lastSimulationReport: store.lastSimulationReport as any, // eslint-disable-line @typescript-eslint/no-explicit-any

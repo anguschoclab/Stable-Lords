@@ -15,6 +15,7 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Trophy, Play, UserPlus, Settings2, Zap, AlertTriangle, Medal } from 'lucide-react';
+import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { audioManager } from '@/lib/AudioManager';
 import { engineProxy } from '@/engine/workerProxy';
 import { Link } from '@tanstack/react-router';
@@ -76,11 +77,13 @@ export default function Tournaments() {
     activeSlotId,
     loadGame,
     setSimulating,
+    isBookmarked,
   } = useGameStore();
 
   const [expandedBout, setExpandedBout] = useState<string | null>(null);
   const [isPrepOpen, setIsPrepOpen] = useState(false);
   const [hasShownPrep, setHasShownPrep] = useState(false);
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
   const currentTournament = useMemo(
     () => tournaments.find((t) => t.season === season && !t.completed),
@@ -96,8 +99,12 @@ export default function Tournaments() {
   }, [currentTournament, player]);
 
   const pastTournaments = useMemo(
-    () => tournaments.filter((t) => t.completed).reverse(),
-    [tournaments]
+    () => {
+      const all = tournaments.filter((t) => t.completed).reverse();
+      if (!showBookmarkedOnly) return all;
+      return all.filter((t) => isBookmarked('tournament', t.id));
+    },
+    [tournaments, showBookmarkedOnly, isBookmarked]
   );
 
   // 🌩️ Protocol Sync: Auto-open prep dialog if tournament is ready but not started
@@ -329,7 +336,13 @@ export default function Tournaments() {
       )}
 
       <div className="space-y-6 pt-12">
-        <SectionDivider label="Campaign Archives" />
+        <div className="flex items-center justify-between">
+          <SectionDivider label="Campaign Archives" />
+          <BookmarkFilterToggle
+            active={showBookmarkedOnly}
+            onToggle={() => setShowBookmarkedOnly((v) => !v)}
+          />
+        </div>
         <TournamentHistory
           pastTournaments={pastTournaments}
           seasonIcons={SEASON_ICONS}

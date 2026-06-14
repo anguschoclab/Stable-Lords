@@ -1,6 +1,7 @@
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Zap, Activity } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { MetaDriftWidget } from '@/components/widgets';
 import { STYLE_DISPLAY_NAMES, type FightingStyle, type RivalStableData } from '@/types/game';
 import { cn } from '@/lib/utils';
@@ -73,20 +74,23 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                       </span>
                     </div>
                   </div>
-                  <Badge
-                    className={cn(
-                      'text-[9px] font-black border-none uppercase tracking-widest px-2 py-0.5 shrink-0',
-                      rival.strategy?.intent === 'VENDETTA'
-                        ? 'bg-destructive/20 text-destructive'
-                        : rival.strategy?.intent === 'EXPANSION'
-                          ? 'bg-muted-foreground/20 text-muted-foreground'
-                          : rival.strategy?.intent === 'RECOVERY'
-                            ? 'bg-arena-blood/20 text-arena-blood'
-                            : 'bg-primary/20 text-primary'
-                    )}
-                  >
-                    {rival.strategy?.intent || 'STABLE'}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <BookmarkButton entityType="rival" entityId={rival.owner.id} size="sm" />
+                    <Badge
+                      className={cn(
+                        'text-[9px] font-black border-none uppercase tracking-widest px-2 py-0.5 shrink-0',
+                        rival.strategy?.intent === 'VENDETTA'
+                          ? 'bg-destructive/20 text-destructive'
+                          : rival.strategy?.intent === 'EXPANSION'
+                            ? 'bg-muted-foreground/20 text-muted-foreground'
+                            : rival.strategy?.intent === 'RECOVERY'
+                              ? 'bg-arena-blood/20 text-arena-blood'
+                              : 'bg-primary/20 text-primary'
+                      )}
+                    >
+                      {rival.strategy?.intent || 'STABLE'}
+                    </Badge>
+                  </div>
                 </div>
 
                 {/* Info grid */}

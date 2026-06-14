@@ -1,6 +1,7 @@
 import { Trophy } from 'lucide-react';
 import type { TournamentEntry } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
 
 interface TournamentHistoryProps {
@@ -81,9 +82,12 @@ export function TournamentHistory({
                           Wk {t.week}
                         </span>
                       </div>
-                      <span className="font-display font-black text-xs text-arena-gold uppercase tracking-tight">
-                        {t.champion ?? 'VACANT'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <BookmarkButton entityType="tournament" entityId={t.id} size="sm" />
+                        <span className="font-display font-black text-xs text-arena-gold uppercase tracking-tight">
+                          {t.champion ?? 'VACANT'}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>

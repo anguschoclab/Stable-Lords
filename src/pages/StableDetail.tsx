@@ -15,6 +15,7 @@ import {
   FileText,
   History,
 } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { Button } from '@/components/ui/button';
 import { StableCrest } from '@/components/crest/StableCrest';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -132,6 +133,7 @@ export default function StableDetail() {
         icon={Shield}
         actions={
           <div className="flex items-center gap-8">
+            <BookmarkButton entityType="rival" entityId={rival.owner.id} size="md" />
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
                 Institutional Fame

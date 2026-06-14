@@ -25,6 +25,7 @@ import {
   Coins,
   Crown,
 } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import SubNav, { type SubNavTab } from '@/components/SubNav';
 
 /** Personality configuration */
@@ -227,7 +228,9 @@ export default function PromoterDetail() {
             </div>
             <p className="text-sm opacity-80">{personality.description}</p>
           </div>
-          <div className={`p-4 rounded-none ${personality.bgColor} flex items-center gap-3`}>
+          <div className="flex items-center gap-3">
+            <BookmarkButton entityType="promoter" entityId={promoter.id} size="md" />
+            <div className={`p-4 rounded-none ${personality.bgColor} flex items-center gap-3`}>
             <div className={personality.color}>{personality.icon}</div>
             <div>
               <div className={`font-bold ${personality.color}`}>{personality.label}</div>
@@ -235,6 +238,7 @@ export default function PromoterDetail() {
             </div>
           </div>
         </div>
+      </div>
       </div>
 
       <SubNav tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />

@@ -11,6 +11,7 @@ import { type FightPlan } from '@/types/game';
 import type { Warrior } from '@/types/state.types';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Armchair, Target, ScrollText, User } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { defaultPlanForWarrior } from '@/engine/simulate';
 import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { isActive } from '@/engine/warriorStatus';
@@ -152,6 +153,7 @@ export default function WarriorDetail() {
         subtitle={`${STYLE_DISPLAY_NAMES[warrior.style as FightingStyle] || 'Unknown Style'} · ${warrior.status}`}
         actions={
           <div className="flex items-center gap-4">
+            <BookmarkButton entityType="warrior" entityId={warrior.id} size="md" />
             <div className="flex flex-col items-end px-4 border-r border-white/5">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
                 Career Record

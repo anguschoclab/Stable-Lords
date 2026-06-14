@@ -28,6 +28,7 @@ import {
 
 import { type Warrior, type DeathEvent } from './warrior.types';
 import { type CrestData } from './crest.types';
+import type { Bookmark } from './bookmark.types';
 
 export type {
   Warrior,
@@ -573,6 +574,7 @@ export interface GameState {
   warriorMap?: Map<WarriorId, import('@/types/warrior.types').Warrior>;
   warriorToStableMap?: Map<string, { stableId: string; isPlayer: boolean }>;
   rivalMap?: Map<string, import('@/types/state.types').RivalStableData>;
+  bookmarks: Bookmark[];
   deferredBoutLogs?: DeferredBoutLog[];
 } /**
    * Defines the shape of ui prefs.

@@ -1,9 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useWorldState, useGameStore } from '@/state/useGameStore';
 import { filterActive } from '@/utils/roster';
 import { Globe, Trophy, Swords, Brain } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { WorldStats } from '@/components/world/WorldStats';
 import { StableRankings } from '@/components/world/StableRankings';
 import { WarriorLeaderboard } from '@/components/world/WarriorLeaderboard';
@@ -40,6 +41,7 @@ type WarriorSortField =
  */
 export default function WorldOverview() {
   const state = useWorldState();
+  const isBookmarked = useGameStore((s) => s.isBookmarked);
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: 'asc' | 'desc' }>({
     field: 'fame',
     dir: 'desc',
@@ -49,6 +51,7 @@ export default function WorldOverview() {
     dir: 'desc',
   });
   const [syncing, setSyncing] = useState(true);
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setSyncing(false), 1800);
     return () => clearTimeout(t);
@@ -122,6 +125,11 @@ export default function WorldOverview() {
       return (va - vb) * dir;
     });
   }, [state, stableSort, templates]);
+
+  const filteredStableRows = useMemo(() => {
+    if (!showBookmarkedOnly) return stableRows;
+    return stableRows.filter((r) => isBookmarked('rival', r.id));
+  }, [stableRows, showBookmarkedOnly, isBookmarked]);
 
   const warriorRows = useMemo<WarriorRow[]>(() => {
     const mapWarrior = (
@@ -241,9 +249,13 @@ export default function WorldOverview() {
               LEAGUE RANKINGS
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
+            <BookmarkFilterToggle
+              active={showBookmarkedOnly}
+              onToggle={() => setShowBookmarkedOnly((v) => !v)}
+            />
           </div>
           <StableRankings
-            rows={stableRows}
+            rows={filteredStableRows}
             sort={stableSort}
             onSort={(field) =>
               setStableSort((prev) => ({

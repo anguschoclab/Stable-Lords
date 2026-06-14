@@ -1,9 +1,12 @@
+import { useState, useMemo } from 'react';
 import { useNavigate, Link } from '@tanstack/react-router';
 import { Surface } from '@/components/ui/Surface';
 import { Button } from '@/components/ui/button';
 import { Users, ChevronRight, Swords } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
+import { useGameStore } from '@/state/useGameStore';
+import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { RosterWarriorRow } from './RosterWarriorRow';
 
 function EmptyRosterState() {
@@ -38,6 +41,13 @@ function EmptyRosterState() {
 export function RosterWall() {
   const navigate = useNavigate();
   const sortedRoster = useActiveRoster();
+  const isBookmarked = useGameStore((s) => s.isBookmarked);
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
+
+  const filteredRoster = useMemo(() => {
+    if (!showBookmarkedOnly) return sortedRoster;
+    return sortedRoster.filter((w) => isBookmarked('warrior', w.id));
+  }, [sortedRoster, showBookmarkedOnly, isBookmarked]);
 
   return (
     <Surface variant="glass" padding="none" className="border-border/10 relative shadow-2xl">
@@ -61,20 +71,26 @@ export function RosterWall() {
           </div>
         </div>
 
-        <Link to="/ops/recruit">
-          <Button variant="outline" size="sm">
-            Initialize Recruitment <ChevronRight className="h-4 w-4" />
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <BookmarkFilterToggle
+            active={showBookmarkedOnly}
+            onToggle={() => setShowBookmarkedOnly((v) => !v)}
+          />
+          <Link to="/ops/recruit">
+            <Button variant="outline" size="sm">
+              Initialize Recruitment <ChevronRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="p-8">
-        {sortedRoster.length === 0 ? (
+        {filteredRoster.length === 0 ? (
           <EmptyRosterState />
         ) : (
           <div className="grid gap-6">
             <AnimatePresence mode="popLayout">
-              {sortedRoster.map((w, i) => (
+              {filteredRoster.map((w, i) => (
                 <motion.div
                   key={w.id}
                   initial={{ opacity: 0, y: 20 }}

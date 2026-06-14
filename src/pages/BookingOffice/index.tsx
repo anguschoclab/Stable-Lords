@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
@@ -6,6 +7,8 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Button } from '@/components/ui/button';
 import { Briefcase, Award, Target } from 'lucide-react';
+import { useGameStore } from '@/state/useGameStore';
+import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { useBookingOffice } from './hooks/useBookingOffice';
 import { OfferCard } from './components/OfferCard';
 import { AssetRegistry } from './components/AssetRegistry';
@@ -29,6 +32,15 @@ export default function BookingOffice() {
     handleResponse,
     acceptAllHonorable,
   } = useBookingOffice();
+  const isBookmarked = useGameStore((s) => s.isBookmarked);
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
+
+  const filteredThisWeek = showBookmarkedOnly
+    ? thisWeekOffers.filter((o) => isBookmarked('boutOffer', o.id))
+    : thisWeekOffers;
+  const filteredUpcoming = showBookmarkedOnly
+    ? upcomingOffers.filter((o) => isBookmarked('boutOffer', o.id))
+    : upcomingOffers;
 
   return (
     <PageFrame>
@@ -124,19 +136,25 @@ export default function BookingOffice() {
                   value="this-week"
                   className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
                 >
-                  Immediate Proposals [{thisWeekOffers.length}]
+                  Immediate Proposals [{filteredThisWeek.length}]
                 </TabsTrigger>
                 <TabsTrigger
                   value="upcoming"
                   className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
                 >
-                  Future Slates [{upcomingOffers.length}]
+                  Future Slates [{filteredUpcoming.length}]
                 </TabsTrigger>
               </TabsList>
             </div>
 
             <TabsContent value="this-week" className="mt-0 space-y-8">
-              {thisWeekOffers.length === 0 ? (
+              <div className="flex justify-end">
+                <BookmarkFilterToggle
+                  active={showBookmarkedOnly}
+                  onToggle={() => setShowBookmarkedOnly((v) => !v)}
+                />
+              </div>
+              {filteredThisWeek.length === 0 ? (
                 <Surface
                   variant="glass"
                   className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
@@ -155,7 +173,7 @@ export default function BookingOffice() {
                 </Surface>
               ) : (
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  {thisWeekOffers.map((o) => (
+                  {filteredThisWeek.map((o) => (
                     <OfferCard
                       key={o.id}
                       offer={o}
@@ -171,7 +189,7 @@ export default function BookingOffice() {
             </TabsContent>
 
             <TabsContent value="upcoming" className="mt-0 space-y-8">
-              {upcomingOffers.length === 0 ? (
+              {filteredUpcoming.length === 0 ? (
                 <Surface
                   variant="glass"
                   className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
@@ -190,7 +208,7 @@ export default function BookingOffice() {
                 </Surface>
               ) : (
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  {upcomingOffers.map((o) => (
+                  {filteredUpcoming.map((o) => (
                     <OfferCard
                       key={o.id}
                       offer={o}

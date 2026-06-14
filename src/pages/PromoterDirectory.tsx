@@ -3,8 +3,9 @@
  * Browse all promoters in the realm with their personalities,
  * booking history, and current capacity.
  */
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import type { Promoter, BoutOffer, PromoterPersonality } from '@/types/state.types';
 import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
@@ -14,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Users, Sword, History, ArrowRight, Building2, DollarSign } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 
 const TIER_COLORS: Record<Promoter['tier'], string> = {
   Local: 'bg-muted/40 text-muted-foreground border-border/40',
@@ -76,13 +78,16 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
               <span className="opacity-60">Age {promoter.age}</span>
             </div>
           </div>
-          <Badge
-            variant="outline"
-            className={`text-[10px] uppercase font-bold flex items-center gap-1 ${personality.color}`}
-          >
-            {personality.icon}
-            {personality.label}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <BookmarkButton entityType="promoter" entityId={promoter.id} size="sm" />
+            <Badge
+              variant="outline"
+              className={`text-[10px] uppercase font-bold flex items-center gap-1 ${personality.color}`}
+            >
+              {personality.icon}
+              {personality.label}
+            </Badge>
+          </div>
         </div>
       </CardHeader>
 
@@ -179,13 +184,16 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
  * @returns The result.
  */
 export default function PromoterDirectory() {
-  const { promoters, boutOffers, week } = useGameStore();
+  const { promoters, boutOffers, week, isBookmarked } = useGameStore();
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
-  const { sortedPromoters, stats } = useMemo(() => {
-    const promoterList = Object.values(promoters || {});
+  const { sortedPromoters, stats, bookmarkedCount } = useMemo(() => {
+    const allPromoters = Object.values(promoters || {});
+    const bookmarked = allPromoters.filter((p) => isBookmarked('promoter', p.id));
+    const list = showBookmarkedOnly ? bookmarked : allPromoters;
 
     // Sort by tier (Legendary first) then by legacy fame
-    const sorted = promoterList.sort((a, b) => {
+    const sorted = list.sort((a, b) => {
       const tierOrder = { Legendary: 4, National: 3, Regional: 2, Local: 1 };
       const tierDiff = tierOrder[b.tier] - tierOrder[a.tier];
       if (tierDiff !== 0) return tierDiff;
@@ -193,12 +201,12 @@ export default function PromoterDirectory() {
     });
 
     // Calculate aggregate stats
-    const totalPurse = promoterList.reduce((sum, p) => sum + (p.history?.totalPursePaid || 0), 0);
-    const totalNotableBouts = promoterList.reduce(
+    const totalPurse = allPromoters.reduce((sum, p) => sum + (p.history?.totalPursePaid || 0), 0);
+    const totalNotableBouts = allPromoters.reduce(
       (sum, p) => sum + (p.history?.notableBouts?.length || 0),
       0
     );
-    const totalCapacity = promoterList.reduce((sum, p) => sum + p.capacity, 0);
+    const totalCapacity = allPromoters.reduce((sum, p) => sum + p.capacity, 0);
     const totalActiveOffers = Object.values(boutOffers || {}).filter(
       (o) => o.status === 'Signed'
     ).length;
@@ -206,14 +214,15 @@ export default function PromoterDirectory() {
     return {
       sortedPromoters: sorted,
       stats: {
-        totalPromoters: promoterList.length,
+        totalPromoters: allPromoters.length,
         totalPurse,
         totalNotableBouts,
         totalCapacity,
         totalActiveOffers,
       },
+      bookmarkedCount: bookmarked.length,
     };
-  }, [promoters, boutOffers]);
+  }, [promoters, boutOffers, showBookmarkedOnly, isBookmarked]);
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
@@ -222,16 +231,23 @@ export default function PromoterDirectory() {
         title="Promoter Directory"
         subtitle={`OPS · PROMOTERS · WEEK ${week}`}
         actions={
-          <Button
-            asChild
-            variant="outline"
-            className="h-9 text-[11px] uppercase font-black tracking-widest gap-2"
-          >
-            <Link to="/ops/contracts">
-              <Calendar className="h-3.5 w-3.5" />
-              Booking Office
-            </Link>
-          </Button>
+          <div className="flex items-center gap-3">
+            <BookmarkFilterToggle
+              active={showBookmarkedOnly}
+              onToggle={() => setShowBookmarkedOnly((v) => !v)}
+              count={bookmarkedCount}
+            />
+            <Button
+              asChild
+              variant="outline"
+              className="h-9 text-[11px] uppercase font-black tracking-widest gap-2"
+            >
+              <Link to="/ops/contracts">
+                <Calendar className="h-3.5 w-3.5" />
+                Booking Office
+              </Link>
+            </Button>
+          </div>
         }
       />
 

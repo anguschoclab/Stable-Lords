@@ -29,6 +29,7 @@ import {
   ShieldAlert,
   BrainCircuit,
   UserPlus,
+  Bookmark,
 } from 'lucide-react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
@@ -85,6 +86,13 @@ export const HUBS = [
       { to: '/world/history', label: 'Hall of Fame', icon: Trophy },
       { to: '/world/graveyard', label: 'Graveyard', icon: Skull },
     ],
+  },
+  {
+    id: 'bookmarks',
+    label: 'Bookmarks',
+    icon: Bookmark,
+    to: '/bookmarks',
+    pages: [],
   },
 ] as const;
 

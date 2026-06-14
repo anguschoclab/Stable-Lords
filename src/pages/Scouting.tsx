@@ -7,6 +7,7 @@ import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { hashStr } from '@/utils/random';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
+import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { toast } from 'sonner';
 
 // Modular Components
@@ -26,9 +27,16 @@ import { ImperialRing } from '@/components/ui/ImperialRing'; /**
  * @returns The result.
  */
 export default function Scouting() {
-  const { treasury, week, rivals, scoutReports, roster, setState } = useGameStore();
+  const { treasury, week, rivals, scoutReports, roster, setState, isBookmarked } = useGameStore();
   const [selectedRivalId, setSelectedRivalId] = useState<string | null>(null);
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
+  const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
+
+  const filteredReports = useMemo(() => {
+    const all = scoutReports ?? [];
+    if (!showBookmarkedOnly) return all;
+    return all.filter((r) => isBookmarked('scoutReport', r.id));
+  }, [scoutReports, showBookmarkedOnly, isBookmarked]);
 
   const rivalMap = useMemo(
     () => new Map((rivals ?? []).map((r) => [r.owner.id as string, r])),
@@ -142,9 +150,15 @@ export default function Scouting() {
         </TabsList>
 
         <TabsContent value="scout" className="mt-0 focus-visible:outline-none">
+          <div className="flex justify-end mb-4">
+            <BookmarkFilterToggle
+              active={showBookmarkedOnly}
+              onToggle={() => setShowBookmarkedOnly((v) => !v)}
+            />
+          </div>
           <ScoutIntelTab
             rivals={rivals ?? []}
-            reports={scoutReports ?? []}
+            reports={filteredReports}
             selectedRivalId={selectedRivalId}
             onSelectRival={handleSelectRival}
             selectedWarriorId={selectedWarriorId}

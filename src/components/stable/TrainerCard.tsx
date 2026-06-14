@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Surface } from '@/components/ui/Surface';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { GraduationCap, UserMinus, Sparkles, Target, Trophy, Briefcase } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
 import { StatBattery } from '@/components/ui/StatBattery';
 import type { Trainer as TrainerData, TrainerFocus, TrainerTier } from '@/types/state.types';
@@ -108,6 +109,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
             </div>
 
             <div className="flex items-center gap-2">
+              <BookmarkButton entityType="trainer" entityId={trainer.id} size="sm" />
               {action}
               {owned && onFire && (
                 <Tooltip>

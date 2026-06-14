@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useWorldState } from '@/state/useGameStore';
-import { findWarrior } from '@/utils/historyResolver';
+import { findWarrior } from '@/engine/core/historyResolver';
 import type { WarriorId } from '@/types/shared.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

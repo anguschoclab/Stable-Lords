@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getOutcomeStyles } from '@/utils/combat';
+import { getOutcomeStyles } from '@/engine/combat/utils/outcomeStyles';
 import type { FightOutcomeBy } from '@/types/combat.types';
 
 describe('getOutcomeStyles', () => {

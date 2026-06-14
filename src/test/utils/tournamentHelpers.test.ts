@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isBronzeMatch, isChampionshipFinal, getRoundName, isByeMatch, getEstimatedWeek } from '@/utils/tournamentHelpers';
+import { isBronzeMatch, isChampionshipFinal, getRoundName, isByeMatch, getEstimatedWeek } from '@/engine/matchmaking/tournamentHelpers';
 import type { TournamentBout } from '@/types/game';
 
 describe('tournamentHelpers', () => {

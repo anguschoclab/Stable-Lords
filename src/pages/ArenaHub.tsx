@@ -4,7 +4,7 @@ import { generatePairings } from '@/engine/bout/core/pairings';
 import { isFightReady } from '@/engine/warriorStatus';
 import type { RivalStableData } from '@/types/game';
 import { useCombatExecution } from '@/hooks/useCombatExecution';
-import { calculateGlobalFameLeaderboard } from '@/utils/arenaLeaderboards';
+import { calculateGlobalFameLeaderboard } from '@/engine/core/leaderboards';
 import { filterActive } from '@/utils/roster';
 import { CombatExecutionPanel } from '@/components/arena/CombatExecutionPanel';
 import { useShallow } from 'zustand/react/shallow';

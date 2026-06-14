@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Medal, Crown } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
-import { resolveWarriorName } from '@/utils/historyResolver';
+import { resolveWarriorName } from '@/engine/core/historyResolver';
 import { useGameStore } from '@/state/useGameStore';
 import type { TournamentBout, FightSummary } from '@/types/game';
 import { BracketMatchNode } from './BracketMatchNode';

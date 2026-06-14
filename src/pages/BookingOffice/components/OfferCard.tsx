@@ -15,7 +15,7 @@ import {
   MapPin,
 } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
-import { isExhausted } from '@/utils/fatigueUtils';
+import { isExhausted } from '@/engine/core/fatigueUtils';
 import { getFatigueStatus, getInjuryBadge, type RivalWarriorMap } from '../hooks/useBookingOffice';
 
 interface OfferCardProps {

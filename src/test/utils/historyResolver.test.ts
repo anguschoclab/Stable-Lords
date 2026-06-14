@@ -5,7 +5,7 @@ import {
   findWarrior,
   findStableId,
   clearHistoryResolverCaches,
-} from '@/utils/historyResolver';
+} from '@/engine/core/historyResolver';
 
 describe('historyResolver', () => {
   const mockState: any = {

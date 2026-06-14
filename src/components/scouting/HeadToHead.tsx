@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Swords, History, Zap, Target } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import type { Warrior } from '@/types/game';
-import { resolveWarriorName } from '@/utils/historyResolver';
+import { resolveWarriorName } from '@/engine/core/historyResolver';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { useHeadToHeadData } from '@/hooks/scouting/useHeadToHeadData';

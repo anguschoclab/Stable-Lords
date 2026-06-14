@@ -6,7 +6,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Shield, Target, Search, Hammer } from 'lucide-react';
 import WarriorBuilder from '@/components/WarriorBuilder';
 import { RecruitCard } from '@/components/stable/RecruitCard';
-import { canTransact } from '@/utils/economyUtils';
+import { canTransact } from '@/engine/economy/utils';
 import { useRecruit } from './hooks/useRecruit';
 import { RecruitFilters } from './components/RecruitFilters';
 

@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStore';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
-import { filterAndSortOffers } from '@/utils/boutOfferFilters';
-import { isExhausted, FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/utils/fatigueUtils';
+import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
+import { isExhausted, FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fatigueUtils';
 import { toast } from 'sonner';
 import type { Warrior } from '@/types/state.types';
 import type { InjuryData } from '@/types/warrior.types';

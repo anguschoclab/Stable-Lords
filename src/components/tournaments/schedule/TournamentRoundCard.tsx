@@ -3,9 +3,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { NameResolutionState } from '@/utils/historyResolver';
+import type { NameResolutionState } from '@/engine/core/historyResolver';
 import type { TournamentBout } from '@/types/game';
-import { getRoundName, getEstimatedWeek } from '@/utils/tournamentHelpers';
+import { getRoundName, getEstimatedWeek } from '@/engine/matchmaking/tournamentHelpers';
 import { TournamentBoutRow } from './TournamentBoutRow';
 
 interface TournamentRoundCardProps {

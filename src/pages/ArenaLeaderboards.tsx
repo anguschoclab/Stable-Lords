@@ -5,7 +5,7 @@ import { getAllArenas } from '@/data/arenas';
 import {
   calculatePerArenaLeaderboards,
   type ArenaLeaderboardData,
-} from '@/utils/arenaLeaderboards';
+} from '@/engine/core/leaderboards';
 import { ARENA_SIZE_PROFILES } from '@/engine/combat/mechanics/distanceResolution';
 import { Surface } from '@/components/ui/Surface';
 import { PageFrame } from '@/components/ui/PageFrame';

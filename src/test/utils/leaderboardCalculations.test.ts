@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateLeaderboardData, calculateBestByStyle, calculateRisingStars } from '@/utils/leaderboardCalculations';
+import { calculateLeaderboardData, calculateBestByStyle, calculateRisingStars } from '@/engine/core/leaderboardCalculations';
 import type { FightSummary } from '@/types/game';
 
 describe('leaderboardCalculations', () => {

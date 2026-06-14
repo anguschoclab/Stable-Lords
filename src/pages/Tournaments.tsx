@@ -20,7 +20,7 @@ import { audioManager } from '@/lib/AudioManager';
 import { engineProxy } from '@/engine/workerProxy';
 import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/utils/fatigueUtils';
+import { FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fatigueUtils';
 
 // Modular Components
 import {

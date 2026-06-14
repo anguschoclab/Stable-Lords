@@ -9,7 +9,7 @@ import {
 
 // Re-export constants and utility for backwards compatibility during migration
 export { TRIGGER_OPTIONS, OFFENSIVE_TACTICS, DEFENSIVE_TACTICS } from '@/constants/planConditions';
-export { triggerDisplayValue } from '@/utils/planConditionUtils';
+export { triggerDisplayValue } from '@/engine/combat/planConditionUtils';
 
 interface ConditionItemProps {
   cond: PlanCondition;

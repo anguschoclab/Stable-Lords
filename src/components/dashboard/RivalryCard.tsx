@@ -1,6 +1,6 @@
 import { Skull } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { intensityLabel, intensityColor, intensityBgColor } from '@/utils/rivalryDisplay';
+import { intensityLabel, intensityColor, intensityBgColor } from '@/engine/rivals/rivalryDisplay';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 
 interface RivalryCardProps {

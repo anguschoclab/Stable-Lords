@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { intensityLabel, intensityColor, intensityBgColor } from '@/utils/rivalryDisplay';
+import { intensityLabel, intensityColor, intensityBgColor } from '@/engine/rivals/rivalryDisplay';
 
 describe('intensityLabel', () => {
   it('returns Simmering for negative values', () => {

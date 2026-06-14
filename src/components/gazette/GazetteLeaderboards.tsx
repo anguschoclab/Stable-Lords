@@ -25,7 +25,7 @@ import {
   calculateLeaderboardData,
   calculateBestByStyle,
   calculateRisingStars,
-} from '@/utils/leaderboardCalculations';
+} from '@/engine/core/leaderboardCalculations';
 
 interface LeaderboardProps {
   allFights: import('@/types/game').FightSummary[];

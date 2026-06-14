@@ -6,7 +6,7 @@ import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { hashStr } from '@/utils/random';
 import { fullRefreshPool, type PoolWarrior, type RecruitTier, REFRESH_COST } from '@/engine/recruitment';
-import { canTransact } from '@/utils/economyUtils';
+import { canTransact } from '@/engine/economy/utils';
 import { potentialRating } from '@/engine/potential';
 import { revealRecruitPotential, type PotentialScoutReport } from '@/engine/recruitScouting';
 import { STYLE_DISPLAY_NAMES } from '@/types/game';

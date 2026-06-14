@@ -2,8 +2,8 @@ import { Trophy, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TableRow, TableCell } from '@/components/ui/table';
-import { resolveStableName } from '@/utils/historyResolver';
-import type { NameResolutionState } from '@/utils/historyResolver';
+import { resolveStableName } from '@/engine/core/historyResolver';
+import type { NameResolutionState } from '@/engine/core/historyResolver';
 import type { FightSummary } from '@/types/game';
 
 interface BoutTableRowProps {

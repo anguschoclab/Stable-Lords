@@ -1,6 +1,6 @@
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
-import { isExhausted } from '@/utils/fatigueUtils';
+import { isExhausted } from '@/engine/core/fatigueUtils';
 import { filterActive } from '@/utils/roster';
 
 /**

@@ -1,6 +1,6 @@
 import type { PlanCondition, ConditionTriggerType } from '@/types/game';
 import { TRIGGER_OPTIONS } from '@/constants/planConditions';
-import { triggerDisplayValue } from '@/utils/planConditionUtils';
+import { triggerDisplayValue } from '@/engine/combat/planConditionUtils';
 
 interface ConditionTriggerSectionProps {
   cond: PlanCondition;

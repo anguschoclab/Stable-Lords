@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   calculateGlobalFameLeaderboard,
   type ArenaLeaderboardEntry,
-} from '@/utils/arenaLeaderboards';
+} from '@/engine/core/leaderboards';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData } from '@/types/game';

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getFatigueBand, isFatigued, isExhausted, FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/utils/fatigueUtils';
+import { getFatigueBand, isFatigued, isExhausted, FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fatigueUtils';
 
 describe('fatigueUtils', () => {
   describe('getFatigueBand', () => {

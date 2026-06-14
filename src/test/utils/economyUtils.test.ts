@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { canTransact } from '@/utils/economyUtils';
+import { canTransact } from '@/engine/economy/utils';
 
 describe('Economy Utility - canTransact', () => {
   it('returns true if treasury exceeds cost', () => {

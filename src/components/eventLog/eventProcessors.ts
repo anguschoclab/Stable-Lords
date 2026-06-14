@@ -1,4 +1,4 @@
-import { findWarrior } from '@/utils/historyResolver';
+import { findWarrior } from '@/engine/core/historyResolver';
 import { EVENT_ICONS } from './constants';
 import type { GameEvent, EventType } from '@/types/eventLog';
 import type {

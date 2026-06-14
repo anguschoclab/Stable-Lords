@@ -1,8 +1,8 @@
 import { Trophy, StepForward } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { resolveWarriorName } from '@/utils/historyResolver';
+import { resolveWarriorName } from '@/engine/core/historyResolver';
 import type { TournamentBout } from '@/types/game';
-import { isBronzeMatch, isChampionshipFinal } from '@/utils/tournamentHelpers';
+import { isBronzeMatch, isChampionshipFinal } from '@/engine/matchmaking/tournamentHelpers';
 
 interface WarriorSlotsProps {
   bout: TournamentBout;

@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { FormSparkline } from '@/components/charts/FormSparkline';
 import { STYLE_ABBREV } from '@/types/shared.types';
-import { isExhausted, isFatigued } from '@/utils/fatigueUtils';
+import { isExhausted, isFatigued } from '@/engine/core/fatigueUtils';
 import { filterActive } from '@/utils/roster';
 import { Swords, ChevronRight } from 'lucide-react';
 

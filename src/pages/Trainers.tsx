@@ -28,7 +28,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { Surface } from '@/components/ui/Surface';
 import { TrainerCard } from '@/components/stable/TrainerCard';
-import { canTransact } from '@/utils/economyUtils';
+import { canTransact } from '@/engine/economy/utils';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { VeteranReassignmentDialog } from '@/components/stable/VeteranReassignmentDialog';

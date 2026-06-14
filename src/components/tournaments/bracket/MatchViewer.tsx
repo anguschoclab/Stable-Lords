@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Surface } from '@/components/ui/Surface';
-import { resolveWarriorName } from '@/utils/historyResolver';
+import { resolveWarriorName } from '@/engine/core/historyResolver';
 import BoutViewer from '@/components/BoutViewer';
 import type { TournamentBout, FightSummary } from '@/types/game';
 

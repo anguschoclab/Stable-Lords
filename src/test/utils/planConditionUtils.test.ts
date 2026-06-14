@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { triggerDisplayValue } from '@/utils/planConditionUtils';
+import { triggerDisplayValue } from '@/engine/combat/planConditionUtils';
 import type { PlanCondition } from '@/types/game';
 
 describe('planConditionUtils', () => {

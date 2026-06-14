@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { TournamentBout, FightSummary } from '@/types/game';
-import { isBronzeMatch, isChampionshipFinal } from '@/utils/tournamentHelpers';
+import { isBronzeMatch, isChampionshipFinal } from '@/engine/matchmaking/tournamentHelpers';
 import {
   ConnectionLines,
   MatchCardHeader,

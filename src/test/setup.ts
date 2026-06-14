@@ -3,7 +3,7 @@ import { cleanup } from '@testing-library/react/pure';
 import { enableMapSet } from 'immer';
 import { clearWarriorCache as clearTournamentCache } from '@/engine/matchmaking/tournament/tournamentStateMutator';
 import { clearWarriorCache as clearSelectionCache } from '@/engine/matchmaking/tournamentSelection/utils';
-import { clearHistoryResolverCaches } from '@/utils/historyResolver';
+import { clearHistoryResolverCaches } from '@/engine/core/historyResolver';
 
 enableMapSet();
 

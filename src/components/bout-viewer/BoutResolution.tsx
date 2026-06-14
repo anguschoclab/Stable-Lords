@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { FightOutcomeBy } from '@/types/game';
-import { getOutcomeStyles } from '@/utils/combat';
+import { getOutcomeStyles } from '@/engine/combat/utils/outcomeStyles';
 import { Skull, Swords, Zap, Shield, Activity, Crosshair } from 'lucide-react';
 
 interface BoutResolutionProps {

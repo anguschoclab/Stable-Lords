@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Medal, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { TournamentBout } from '@/types/game';
-import { isBronzeMatch, isChampionshipFinal } from '@/utils/tournamentHelpers';
+import { isBronzeMatch, isChampionshipFinal } from '@/engine/matchmaking/tournamentHelpers';
 
 interface MatchCardHeaderProps {
   bout: TournamentBout;

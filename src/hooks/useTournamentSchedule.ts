@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { TournamentBout, TournamentEntry } from '@/types/game';
-import { isByeMatch } from '@/utils/tournamentHelpers';
+import { isByeMatch } from '@/engine/matchmaking/tournamentHelpers';
 import type { FilterStatus } from '@/components/tournaments/schedule';
 
 interface UseTournamentScheduleResult {

@@ -5,7 +5,7 @@
  */
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import { isTooInjuredToFight } from '@/engine/injuries';
-import { isExhausted } from '@/utils/fatigueUtils';
+import { isExhausted } from '@/engine/core/fatigueUtils';
 
 /** Whether a warrior is dead (killed in combat) */
 export function isDead(w: Pick<Warrior, 'status'>): boolean {

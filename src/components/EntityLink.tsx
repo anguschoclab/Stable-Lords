@@ -13,8 +13,8 @@ import { WarriorDossier } from '@/components/WarriorDossier';
 import { StableDossier } from '@/components/StableDossier';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, User, Landmark } from 'lucide-react';
-import type { NameResolutionState } from '@/utils/historyResolver';
-import { findWarrior, findStableId } from '@/utils/historyResolver';
+import type { NameResolutionState } from '@/engine/core/historyResolver';
+import { findWarrior, findStableId } from '@/engine/core/historyResolver';
 
 /**
  * Props for the WarriorLink component.

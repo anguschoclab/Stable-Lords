@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { filterAndSortOffers } from '@/utils/boutOfferFilters';
+import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
 import type { BoutOffer, Promoter, Warrior } from '@/types/state.types';
 import type { WarriorId, PromoterId, BoutOfferId } from '@/types/shared.types';
 

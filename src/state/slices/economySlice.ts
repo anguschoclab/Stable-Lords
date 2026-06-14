@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import { LedgerEntry, Promoter, BoutOffer, RankingEntry, AnnualAward } from '@/types/state.types';
-import { canTransact as _canTransact } from '@/utils/economyUtils';
+import { canTransact as _canTransact } from '@/engine/economy/utils';
 import type { GameStore } from '@/state/useGameStore';
 import { generateId } from '@/utils/idUtils';
 import {

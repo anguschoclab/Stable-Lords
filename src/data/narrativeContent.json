@@ -637,7 +637,12 @@
         "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!",
         "{{attacker}} stabs with {{possessive}} {{weapon}}, all his reach behind the blow!",
         "{{attacker}} raises {{possessive}} arm and drives {{weapon}} in a sudden thrust!",
-        "{{attacker}} snaps {{possessive}} wrist, turning the point of {{weapon}} into {{defender}}'s guard!"
+        "{{attacker}} snaps {{possessive}} wrist, turning the point of {{weapon}} into {{defender}}'s guard!",
+        "{{attacker}} lunges forward, driving the point of {{weapon}} deep into {{defender}}.",
+        "With clinical precision, {{attacker}} thrusts {{weapon}} toward {{defender}}'s vital spots.",
+        "A lightning-fast stab from {{attacker}} slips past {{defender}}'s guard.",
+        "{{attacker}} violently jabs {{weapon}} forward, puncturing {{defender}}'s defenses.",
+        "Darting in, {{attacker}} buries the tip of {{weapon}} into {{defender}} with lethal intent."
       ],
       "slashing": [
         "{{attacker}} slashes with {{possessive}} {{weapon}}!",
@@ -654,7 +659,12 @@
         "{{attacker}} sweeps {{possessive}} {{weapon}} in a brutal horizontal arc!",
         "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
         "{{attacker}} shifts {{possessive}} weight and cuts low with {{weapon}}!",
-        "{{attacker}} drops {{possessive}} shoulder and rips {{weapon}} through in a vicious diagonal slash!"
+        "{{attacker}} drops {{possessive}} shoulder and rips {{weapon}} through in a vicious diagonal slash!",
+        "{{attacker}} sweeps {{weapon}} in a wide, punishing arc, biting deeply into {{defender}}'s flesh.",
+        "A flashing horizontal cut from {{attacker}} catches {{defender}} off guard, drawing a spray of crimson.",
+        "{{attacker}} executes a brutal downward chop with {{weapon}}, shearing through {{defender}}'s defense.",
+        "With a savage snarl, {{attacker}} whips {{weapon}} across {{defender}}'s flank.",
+        "{{attacker}} dances forward, delivering a razor-sharp slash that leaves a bloody trail on {{defender}}."
       ],
       "bashing": [
         "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
@@ -669,7 +679,12 @@
         "{{attacker}} swings heavily with {{possessive}} {{weapon}}!",
         "{{attacker}} delivers a crushing blow using {{possessive}} {{weapon}}!",
         "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!",
-        "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!"
+        "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!",
+        "{{attacker}} steps into the blow, driving {{weapon}} into {{defender}} with bone-rattling force.",
+        "A massive, sweeping strike from {{attacker}}'s {{weapon}} crashes heavily against {{defender}}.",
+        "{{attacker}} brings {{weapon}} down in a thunderous overhead smash, staggering {{defender}}.",
+        "With a guttural roar, {{attacker}} hammers {{weapon}} directly into {{defender}}'s midsection.",
+        "{{attacker}} unleashes a crushing swing, the sheer weight of {{weapon}} bruising {{defender}} severely."
       ],
       "fist": [
         "{{attacker}} PUNCHES from the waist with unbelievable quickness!",
@@ -681,7 +696,12 @@
         "{{attacker}} attacks {{defender}} with a pinpoint-accurate ELBOW!",
         "{{attacker}} throws a piston-like SIDE KICK at {{defender}}!",
         "{{attacker}}'s HANDS flash forward jabbing fiercely at {{defender}}!",
-        "{{attacker}} launches a blistering combination at {{defender}}!"
+        "{{attacker}} launches a blistering combination at {{defender}}!",
+        "{{attacker}} closes the distance, delivering a devastating cross to {{defender}}'s jaw.",
+        "A flurry of heavy hooks from {{attacker}} pummels {{defender}} backward.",
+        "{{attacker}} steps inside {{defender}}'s reach and sinks a brutal uppercut into their chin.",
+        "With bare knuckles, {{attacker}} hammers a series of rapid strikes into {{defender}}'s ribs.",
+        "{{attacker}} unleashes a raw, haymaker swing that connects squarely with {{defender}}."
       ]
     },
     "hit_locations": {
@@ -942,7 +962,15 @@
           "With feline agility, {{defender}} sidesteps the incoming blow.",
           "{{defender}} pirouettes out of harm's way as the {{weapon}} whistles past.",
           "A masterful backstep by {{defender}} leaves {{attacker}} swinging at air.",
-          "{{defender}} dances out of reach, making {{attacker}} look slow and clumsy."
+          "{{defender}} dances out of reach, making {{attacker}} look slow and clumsy.",
+          "Desperation takes over as {{defender}} throws themselves wildly out of the path of {{attacker}}'s strike.",
+          "{{defender}} barely scrambles backward, eyes wide with panic as the blow sails past.",
+          "With terrifying calm, {{defender}} simply sways an inch backward, letting {{attacker}}'s weapon pass harmlessly.",
+          "{{defender}} side-steps with practiced arrogance, scoffing at {{attacker}}'s clumsy attempt.",
+          "A theatrical backflip from {{defender}} carries them out of harm's way, playing to the roaring crowd.",
+          "{{defender}} spins gracefully out of reach, capping the dodge with a mocking flourish.",
+          "Eyes grim and hollow, {{defender}} coldly pivots aside, wasting no excess motion.",
+          "{{defender}} ducks under the strike with a stoic, joyless efficiency."
         ],
         "tier3_high": [
           "{{defender}} twists impossibly away from the blow, amazing the spectators!",
@@ -991,7 +1019,15 @@
           "A masterful block! {{defender}} turns aside the deadly attack with practiced ease.",
           "With a defiant shout, {{defender}} halts the incoming weapon dead in its tracks.",
           "A grim smile crosses {{defender}}'s face as they violently bat the {{weapon}} aside.",
-          "With the desperation of a cornered beast, {{defender}} furiously bats the weapon away."
+          "With the desperation of a cornered beast, {{defender}} furiously bats the weapon away.",
+          "{{defender}} desperately throws up their guard, the clash ringing out as they barely hold the line.",
+          "Gritting their teeth, {{defender}} forces a shaky parry against {{attacker}}'s crushing blow.",
+          "With a confident sneer, {{defender}} swats {{attacker}}'s weapon aside like a nuisance.",
+          "{{defender}} effortlessly catches the strike on their guard, yawning dismissively.",
+          "A grand, sweeping parry from {{defender}} deflects the blow while drawing cheers from the stands.",
+          "{{defender}} meets the strike with a dramatic flourish, turning defense into spectacle.",
+          "{{defender}} coldly turns the blade aside, their expression completely unreadable.",
+          "Without a word, {{defender}} structurally dismantles the attack with a grim, iron-clad block."
         ]
       },
       "shield": {
@@ -1033,10 +1069,14 @@
         "{{name}} falls back, unable to take the punishment.",
         "{{name}} is driven to the sand by the force of the blow!",
         "{{name}} crumples under the onslaught!!",
-        "{{defender}}'s legs turn to water, crumpling to the blood-stained sand.",
-        "A heavy impact sends {{defender}} sprawling ungainly onto the dirt.",
-        "{{defender}} crashes down hard, eating a mouthful of arena dust.",
-        "Thrown entirely off balance, {{defender}} goes down in a clatter of gear."
+        "{{name}}'s legs turn to water, crumpling to the blood-stained sand.",
+        "A heavy impact sends {{name}} sprawling ungainly onto the dirt.",
+        "{{name}} crashes down hard, eating a mouthful of arena dust.",
+        "Thrown entirely off balance, {{name}} goes down in a clatter of gear.",
+        "The sheer force of the blow lifts {{name}} off {{possessive}} feet, slamming them brutally into the bloody sand.",
+        "{{name}}'s legs give way instantly, collapsing into an undignified heap in the center of the arena.",
+        "Like a felled tree, {{name}} crashes backward into the dirt, dust billowing around them.",
+        "The impact scrambles {{name}}'s senses, sending them tumbling hard across the pit."
       ],
       "recovery": [
         "{{name}} is standing once more!",
@@ -1044,15 +1084,20 @@
         "{{name}} drops to his knees, avoiding the attack, then leaps back up!",
         "{{name}} rises from the sand, refusing to stay down!",
         "{{name}} scrambles back to his feet!",
-        "{{defender}} scrambles backward like a cornered rat, desperately returning to their feet.",
-        "With a grimace of pain, {{defender}} rolls to one knee and rises.",
-        "Ignoring the dirt and blood, {{defender}} springs back up with surprising agility.",
-        "{{defender}} uses their weapon as a crutch, hauling themselves stubbornly back up.",
+        "{{name}} scrambles backward like a cornered rat, desperately returning to {{possessive}} feet.",
+        "With a grimace of pain, {{name}} rolls to one knee and rises.",
+        "Ignoring the dirt and blood, {{name}} springs back up with surprising agility.",
+        "{{name}} uses {{possessive}} weapon as a crutch, hauling {{reflexive}} stubbornly back up.",
         "{{name}} scrambles back to {{possessive}} feet.",
         "{{name}} pushes {{reflexive}} up hurriedly.",
         "{{name}} rolls and stands back up quickly.",
         "{{name}} rises unsteadily but determinedly.",
-        "{{name}} hops back to a fighting stance."
+        "{{name}} hops back to a fighting stance.",
+        "Coughing up blood, {{name}} violently forces {{reflexive}} back upright, eyes burning with sheer spite.",
+        "{{name}} springs back to {{possessive}} feet in an instant, moving with impossible, fluid speed.",
+        "Slowly, agonizingly, {{name}} crawls to a knee before pushing off the ground, refusing to stay down.",
+        "With a dramatic kip-up, {{name}} is back in the fight, soaking in the arena's roar.",
+        "{{name}} staggers to {{possessive}} feet, swaying dangerously but still gripping {{possessive}} weapon tight."
       ]
     },
     "epithets": {
@@ -1156,7 +1201,6 @@
           "{{name}} looks for a better position.",
           "They circle the arena, changing the angle of engagement.",
           "Footwork becomes key as they maneuver for position.",
-          "They circle the arena quickly, changing the angle of engagement.",
           "Footwork becomes key as they maneuver for a better position."
         ]
       },
@@ -1494,7 +1538,12 @@
       "The arena holds its breath as {{attacker}} knocks {{defender}}'s weapon aside, driving their own {{weapon}} straight through their heart.",
       "{{attacker}} plants a boot on {{defender}}'s chest, ripping the {{weapon}} free as the fallen gladiator exhales their last breath.",
       "A spray of crimson! {{attacker}} brings the {{weapon}} around in a horrifying arc that leaves {{defender}} in pieces on the sand.",
-      "{{defender}} stumbles, a fatal mistake! {{attacker}} capitalizes instantly, their {{weapon}} claiming another soul for the blood sands."
+      "{{defender}} stumbles, a fatal mistake! {{attacker}} capitalizes instantly, their {{weapon}} claiming another soul for the blood sands.",
+      "The light abruptly leaves {{defender}}'s eyes as {{attacker}} delivers a cold, merciless finishing blow.",
+      "A sickening crunch echoes through the silent arena as {{attacker}} ends {{defender}}'s struggle for good.",
+      "{{attacker}} stands over the broken body of {{defender}}, ending the bout with a swift, brutal final strike.",
+      "Blood pools rapidly in the sand as {{attacker}} ruthlessly dispatches {{defender}}, leaving no chance for mercy.",
+      "With grim finality, {{attacker}} executes {{defender}}, their expression devoid of any triumph or joy."
     ],
     "meta": {
       "popularity": {
@@ -2337,7 +2386,6 @@
       "Syldor",
       "Svenoun",
       "Dewy",
-      "Rhysmar",
       "Aelton",
       "Olafalf",
       "Fenric",
@@ -2366,7 +2414,6 @@
       "Lanulf",
       "Baelgosh",
       "Cadriel",
-      "Gwyndar",
       "Niavok",
       "Leifdar",
       "Garmon",
@@ -2374,14 +2421,12 @@
       "Drason",
       "Lany",
       "Rolric",
-      "Baelron",
       "Artild",
       "Roldar",
       "Cadmon",
       "Trisor",
       "Ewaien",
       "Leifwon",
-      "Trisdor",
       "Artur",
       "Dewgosh",
       "Draulf",
@@ -2393,7 +2438,6 @@
       "Huwmar",
       "Rhysvan",
       "Kayold",
-      "Bjornir",
       "Ewazon",
       "Olafron",
       "Trisdred",
@@ -2401,7 +2445,6 @@
       "Perrir",
       "Bjory",
       "Svenien",
-      "Olafulf",
       "Valalf",
       "Cadian",
       "Garvok",
@@ -2410,9 +2453,6 @@
       "Hrothey",
       "Branold",
       "Halgosh",
-      "Garethzon",
-      "Hrothwy",
-      "Rhysxon",
       "Korvon",
       "Perzon",
       "Halgon",
@@ -2426,13 +2466,11 @@
       "Svenuy",
       "Ithwon",
       "Gawey",
-      "Rhysson",
       "Tafor",
       "Baelay",
       "Erinir",
       "Huwgath",
       "Kayoy",
-      "Gwynxon",
       "Eririel",
       "Gwynwy",
       "Dagvan",
@@ -2443,7 +2481,6 @@
       "Olafvir",
       "Ithoy",
       "Gawvir",
-      "Leifgon",
       "Ewamar",
       "Kayalf",
       "Leifalf",
@@ -2463,7 +2500,6 @@
       "Harzon",
       "Niaoun",
       "Haroun",
-      "Hrothoy",
       "Garwy",
       "Artion",
       "Gawgar",

@@ -1,0 +1,86 @@
+[
+  {
+    "path": ".pbp.pacing.tempo.movement",
+    "removed": "They circle the arena quickly, changing the angle of engagement.",
+    "kept": "They circle the arena, changing the angle of engagement.",
+    "similarity": 0.875
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Bjornir",
+    "kept": "Bjorir",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Rhysmar",
+    "kept": "Rhysar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Gwyndar",
+    "kept": "Gwynmar",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Garethzon",
+    "kept": "Garethton",
+    "similarity": 0.8888888888888888
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Baelron",
+    "kept": "Baelmon",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Rhysxon",
+    "kept": "Rhyston",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Rhysson",
+    "kept": "Rhyston",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Olafulf",
+    "kept": "Olafalf",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Trisdor",
+    "kept": "Trisor",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Leifgon",
+    "kept": "Leifwon",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Hrothwy",
+    "kept": "Hrothey",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Hrothoy",
+    "kept": "Hrothey",
+    "similarity": 0.8571428571428571
+  },
+  {
+    "path": ".recruitment.names",
+    "removed": "Gwynxon",
+    "kept": "Gwynton",
+    "similarity": 0.8571428571428571
+  }
+]

@@ -2681,6 +2681,13 @@
     ]
   },
   "offseason_events": {
+    "chaos_rift": {
+      "title": "The Chaos Rift",
+      "effectType": "chaos_rift",
+      "newsletter": [
+        "A bizarre, swirling rift opened temporarily in the training yard. {{name}} bravely stepped inside and returned moments later, holding a glowing crystal and speaking in riddles. (+150 Gold, +25 XP, +15 Fame, Chaotic Insight)"
+      ]
+    },
     "tavern_brawl_surprise": {
       "title": "A Spontaneous Tavern Brawl",
       "effectType": "tavern_brawl_surprise",

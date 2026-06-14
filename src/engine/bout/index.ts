@@ -1,4 +1,4 @@
-export { generatePairings, type BoutPairing } from './bout/core/pairings';
+export { generatePairings, type BoutPairing } from './core/pairings';
 export {
   resolveBout,
   processWeekBouts,
@@ -6,4 +6,4 @@ export {
   type BoutImpact,
   type WeekBoutSummary,
   type BoutContext,
-} from './bout/services/boutProcessorService';
+} from './services/boutProcessorService';

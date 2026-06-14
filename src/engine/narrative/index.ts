@@ -1,6 +1,5 @@
 /**
- * Narrative PBP Module - Re-exports from split narrative modules
- * This file maintains backward compatibility while following SRP
+ * Narrative Module - Re-exports from split narrative modules
  */
 
 // Re-export from split modules
@@ -10,12 +9,12 @@ export {
   getFromArchive,
   richHitLocation,
   type CombatContext,
-} from './narrative/narrativePBPUtils';
+} from './narrativePBPUtils';
 export {
   generateWarriorIntro,
   battleOpener,
   type WarriorIntroData,
-} from './narrative/narrativeIntro';
+} from './narrativeIntro';
 export {
   narrateAttack,
   narratePassive,
@@ -25,14 +24,14 @@ export {
   narrateHit,
   narrateParryBreak,
   narrateInitiative,
-} from './narrative/narrativeCombat';
+} from './narrativeCombat';
 export {
   damageSeverityLine,
   stateChangeLine,
   fatigueLine,
   crowdReaction,
   minuteStatusLine,
-} from './narrative/narrativeStatus';
+} from './narrativeStatus';
 export {
   narrateBoutEnd,
   popularityLine,
@@ -41,7 +40,7 @@ export {
   stalemateLine,
   tauntLine,
   conservingLine,
-} from './narrative/narrativePostBout';
+} from './narrativePostBout';
 export {
   RANGE_NAMES,
   narrateRangeShift,
@@ -51,4 +50,4 @@ export {
   tacticStreakLine,
   pressingLine,
   narrateInsightHint,
-} from './narrative/narrativePositioning';
+} from './narrativePositioning';

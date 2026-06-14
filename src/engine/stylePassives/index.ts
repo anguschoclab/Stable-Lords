@@ -13,21 +13,21 @@ export type {
   StyleStrategy,
   StylePassiveContext,
   KillContext,
-} from './stylePassives/types';
+} from './types';
 export type {
   StyleVoice,
   AttackFreq,
   KillBias,
   FatigueBurn,
   StyleIdentity,
-} from './stylePassives/types';
-export type { MasteryTier, MasteryInfo } from './stylePassives/types';
-export { STYLE_IDENTITY, getStyleIdentity } from './stylePassives/identity';
-export { getMastery } from './stylePassives/mastery';
+} from './types';
+export type { MasteryTier, MasteryInfo } from './types';
+export { STYLE_IDENTITY, getStyleIdentity } from './identity';
+export { getMastery } from './mastery';
 export {
   getTempoBonus,
   getEnduranceMult,
   getStylePassive,
   getKillMechanic,
   getStyleAntiSynergy,
-} from './stylePassives/api';
+} from './api';

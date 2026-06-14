@@ -4,7 +4,7 @@ import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { aiPlanForWarrior } from '@/engine/ownerAI';
+import { aiPlanForWarrior } from '@/engine/ai/plan';
 import { FightingStyle } from '@/types/shared.types';
 import { findWarriorById } from './tournamentStateMutator';
 import { StateImpact, mergeImpacts, resolveImpacts } from '@/engine/impacts';

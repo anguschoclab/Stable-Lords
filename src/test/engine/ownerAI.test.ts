@@ -2,7 +2,7 @@
  * ownerAI tests.
  */
 import { describe, it, expect } from 'vitest';
-import { aiPlanForWarrior, getStyleMatchupMods } from '@/engine/ownerAI';
+import { aiPlanForWarrior, getStyleMatchupMods } from '@/engine/ai/plan';
 import { FightingStyle } from '@/types/game';
 
 describe('ownerAI - aiPlanForWarrior', () => {

@@ -102,7 +102,7 @@ export function WarriorFightHistory({
             >
               <button
                 className={cn(
-                  'w-full flex items-center justify-between py-2.5 px-3 transition-colors text-left',
+                  'w-full flex items-center justify-between py-2.5 px-3 transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
                   isExpanded ? 'bg-primary/5' : 'hover:bg-white/[0.02]'
                 )}
                 onClick={() => setExpandedId(isExpanded ? null : f.id)}

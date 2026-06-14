@@ -25,7 +25,7 @@ export function ConditionLabelInput({ cond, idx, onChange }: ConditionLabelInput
         maxLength={32}
         value={cond.label ?? ''}
         onChange={(e) => onChange(e.target.value || undefined)}
-        className="w-full bg-black/60 border border-white/10 text-[10px] font-bold text-foreground placeholder:text-muted-foreground/20 px-2 py-1.5 focus:outline-none focus:border-arena-gold/40"
+        className="w-full bg-black/60 border border-white/10 text-[10px] font-bold text-foreground placeholder:text-muted-foreground/20 px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
       />
     </div>
   );

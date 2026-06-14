@@ -30,7 +30,7 @@ export function ConditionTriggerSection({
         <select
           value={cond.trigger.type}
           onChange={(e) => onTriggerChange(e.target.value as ConditionTriggerType)}
-          className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus:outline-none focus:border-arena-gold/40 appearance-none"
+          className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
         >
           {TRIGGER_OPTIONS.map((o) => (
             <option key={o.type} value={o.type}>
@@ -43,7 +43,7 @@ export function ConditionTriggerSection({
           <select
             value={String(cond.trigger.value)}
             onChange={(e) => onValueChange(e.target.value)}
-            className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus:outline-none focus:border-arena-gold/40 appearance-none"
+            className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
           >
             <option value="Opening">Opening</option>
             <option value="Mid">Mid</option>
@@ -53,7 +53,7 @@ export function ConditionTriggerSection({
           <select
             value={String(cond.trigger.value)}
             onChange={(e) => onValueChange(e.target.value)}
-            className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus:outline-none focus:border-arena-gold/40 appearance-none"
+            className="bg-black/60 border border-white/10 text-[10px] font-black uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
           >
             <option value="1">1</option>
             <option value="2">2</option>
@@ -72,7 +72,7 @@ export function ConditionTriggerSection({
               step={5}
               value={Number(cond.trigger.value)}
               onChange={(e) => onValueChange(e.target.value)}
-              className="w-16 bg-black/60 border border-white/10 text-[10px] font-mono font-bold text-arena-gold px-2 py-1.5 focus:outline-none focus:border-arena-gold/40 text-center"
+              className="w-16 bg-black/60 border border-white/10 text-[10px] font-mono font-bold text-arena-gold px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset text-center"
             />
             <span className="text-[10px] text-muted-foreground/60 font-bold">%</span>
           </div>

@@ -117,7 +117,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
                     <button
                       onClick={onFire}
                       aria-label="Release Trainer"
-                      className="p-2.5 rounded-none bg-neutral-900 border border-white/5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-all group/fire"
+                      className="p-2.5 rounded-none bg-neutral-900 border border-white/5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-all group/fire focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                     >
                       <UserMinus className="h-4 w-4 group-hover/fire:scale-110 transition-transform" />
                     </button>

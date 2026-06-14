@@ -4,7 +4,12 @@ import type { WarriorId } from '@/types/shared.types';
 import { getRecentFights } from '@/engine/core/historyUtils';
 import type { DerivedRivalry } from '@/types/rivalry.types';
 
-function buildNameResolver(state: GameState): Map<WarriorId, string> {
+type RivalryStateSlice = Pick<
+  GameState,
+  'roster' | 'graveyard' | 'rivals' | 'arenaHistory' | 'week'
+>;
+
+function buildNameResolver(state: RivalryStateSlice): Map<WarriorId, string> {
   const map = new Map<WarriorId, string>();
   for (const w of state.roster ?? []) map.set(w.id, w.name);
   for (const w of state.graveyard ?? []) map.set(w.id, w.name);
@@ -18,7 +23,7 @@ function buildNameResolver(state: GameState): Map<WarriorId, string> {
 /**
  *
  */
-export function usePlayerRosterIds(state: GameState): Set<WarriorId> {
+export function usePlayerRosterIds(state: RivalryStateSlice): Set<WarriorId> {
   return useMemo(
     () =>
       new Set(
@@ -33,7 +38,7 @@ export function usePlayerRosterIds(state: GameState): Set<WarriorId> {
  *
  */
 export function useRivalWarriorStable(
-  state: GameState
+  state: RivalryStateSlice
 ): Map<WarriorId, { stableName: string; ownerId: string }> {
   return useMemo(() => {
     const m = new Map<WarriorId, { stableName: string; ownerId: string }>();
@@ -52,7 +57,7 @@ export function useRivalWarriorStable(
  *
  */
 export function useRivalriesList(
-  state: GameState,
+  state: RivalryStateSlice,
   rosterIds: Set<WarriorId>,
   rivalWarriorStable: Map<WarriorId, { stableName: string; ownerId: string }>
 ): DerivedRivalry[] {
@@ -130,7 +135,7 @@ export function useRivalriesList(
  *
  */
 export function useMostWantedRival(
-  state: GameState,
+  state: RivalryStateSlice,
   rosterIds: Set<WarriorId>,
   rivalWarriorStable: Map<WarriorId, { stableName: string; ownerId: string }>
 ) {

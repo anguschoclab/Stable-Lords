@@ -21,3 +21,6 @@
 ## 2024-05-19 - StableDossier Optimization
 **Learning:** `StableDossier` component was re-rendering unnecessarily on any global state change due to using `useWorldState()`. This was inefficient since it only needs access to `player`, `roster`, and `rivals`.
 **Action:** Replace `useWorldState()` with a narrowed `useGameStore(useShallow(...))` selector to improve performance by limiting re-renders.
+## 2025-02-12 - Replaced useWorldState() with Narrow useShallow Slice
+**Learning:** In Zustand stores, large full-state subscriptions like `useWorldState()` cause components to re-render anytime *any* property of the global state updates (e.g. week advancing, treasury changes). Using `useShallow` with narrowed selectors prevents this. However, passing these narrow state slices to downstream helper hooks (that previously expected the full `GameState` interface) using a type assertion (`state as GameState`) is an anti-pattern that can cause runtime crashes if the helper attempts to access un-sliced properties.
+**Action:** When extracting a narrow slice, always explicitly update the helper functions to accept the narrower interface (e.g. `Pick<GameState, 'roster' | 'week'>`) rather than using unsafe type casts. This ensures type safety and prevents hidden bugs.

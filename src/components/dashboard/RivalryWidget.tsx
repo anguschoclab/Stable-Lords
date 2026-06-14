@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
-import { GameState } from '@/types/game';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,15 +18,24 @@ import { MostWantedBanner } from './MostWantedBanner';
  *
  */
 export function RivalryWidget() {
-  const state = useWorldState();
-  const rosterIds = usePlayerRosterIds(state as GameState);
+  const state = useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      rivals: s.rivals,
+      arenaHistory: s.arenaHistory,
+      week: s.week,
+    }))
+  );
+
+  const rosterIds = usePlayerRosterIds(state);
   const rosterNames = useMemo(
     () => new Set((state.roster || []).map((w) => w.name)),
     [state.roster]
   );
-  const rivalWarriorStable = useRivalWarriorStable(state as GameState);
-  const rivalries = useRivalriesList(state as GameState, rosterIds, rivalWarriorStable);
-  const mostWanted = useMostWantedRival(state as GameState, rosterIds, rivalWarriorStable);
+  const rivalWarriorStable = useRivalWarriorStable(state);
+  const rivalries = useRivalriesList(state, rosterIds, rivalWarriorStable);
+  const mostWanted = useMostWantedRival(state, rosterIds, rivalWarriorStable);
 
   return (
     <Surface

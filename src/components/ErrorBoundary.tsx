@@ -68,7 +68,7 @@ export class ErrorBoundary extends Component<PropsWithChildren, State> {
         <button
           aria-label="Reboot System"
           onClick={() => this.setState({ hasError: false, error: null })}
-          className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="mt-4 px-6 py-2 border border-primary text-primary text-[10px] uppercase tracking-[0.4em] hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           Reboot System
         </button>

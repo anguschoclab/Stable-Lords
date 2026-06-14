@@ -1,7 +1,7 @@
 import type { GameState } from '@/types/state.types';
 import { archiveService } from '@/engine/storage/archiveService';
 import { truncateState } from '@/engine/storage/truncation';
-import { STORE_KEYS } from '@/constants/storeKeys';
+import { STORE_KEYS } from '@/constants/core/storeKeys';
 import { GameStateSchema, SaveSlotMetaSchema } from '@/schemas/gameStateSchema';
 
 /**

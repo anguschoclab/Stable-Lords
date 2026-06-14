@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
-import { processWeekBouts, type BoutResult } from '@/engine/boutProcessor';
+import { processWeekBouts, type BoutResult } from '@/engine/bout';
 import { runAutosim, type AutosimResult } from '@/engine/autosim';
 import type { GameState } from '@/types/state.types';
 

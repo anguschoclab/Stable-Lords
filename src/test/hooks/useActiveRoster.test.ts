@@ -4,7 +4,7 @@ import { renderHook } from '@testing-library/react';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
 import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 let storeOverride: any = {};
 

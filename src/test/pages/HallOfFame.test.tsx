@@ -6,7 +6,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/game';
 import type { GameState, FightSummary, NewsletterItem, Warrior } from '@/types/game';
 import type { FightSummary as FightSummaryType } from '@/types/combat.types';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 const isBun = (globalThis as any).__IS_BUN__;
 

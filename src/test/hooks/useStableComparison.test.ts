@@ -5,7 +5,7 @@ import { stableStats, useStableComparison } from '@/hooks/useScoutingStableCompa
 import type { RivalStableData, Warrior, OwnerGrudge } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import type { StableId, GrudgeId, WarriorId } from '@/types/shared.types';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 let storeOverride: any = {};
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ElectronArchiveService } from '@/engine/storage/electronArchive';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 function createMockElectronAPI(overrides?: Partial<typeof window.electronAPI>) {
   return {

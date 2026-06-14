@@ -1,9 +1,9 @@
 /**
  * Simulation Narrative - Intro, events, and bout end narration
  */
-import { generateWarriorIntro, battleOpener, conservingLine } from '../narrativePBP';
+import { generateWarriorIntro, battleOpener, conservingLine } from '../narrative';
 import { weatherOpeningLine } from '../combat/mechanics/weatherEffects';
-import { arenaIntroLine } from '../narrativePBP';
+import { arenaIntroLine } from '../narrative';
 import type { MinuteEvent } from '@/types/combat.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';

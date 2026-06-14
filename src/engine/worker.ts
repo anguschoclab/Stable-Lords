@@ -1,9 +1,9 @@
 import * as Comlink from 'comlink';
 import { advanceWeek } from './pipeline/services/weekPipelineService';
-import { advanceDay } from './dayPipeline';
+import { advanceDay } from './pipeline/tick/dayAdvance';
 import { createFreshState } from './factories/gameStateFactory';
 import { TournamentSelectionService } from './matchmaking/tournamentSelection';
-import { TickOrchestrator } from './tick/TickOrchestrator';
+import { TickOrchestrator } from './pipeline/tick/TickOrchestrator';
 
 /**
  * Stable Lords — Engine Worker

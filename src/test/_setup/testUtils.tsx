@@ -4,7 +4,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import type { GameState } from '@/types/game';
 import { useGameStore } from '@/state/useGameStore';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 /**
  * A helper to inject a mock state into the Zustand store before rendering.

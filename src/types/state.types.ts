@@ -517,7 +517,7 @@ export interface GameState {
     gazette: NewsletterItem[];
     injuries: string[];
     deaths: string[];
-    bouts: import('@/engine/boutProcessor').BoutResult[];
+    bouts: import('@/engine/bout').BoutResult[];
     promotions: string[];
   };
   ftueComplete: boolean;

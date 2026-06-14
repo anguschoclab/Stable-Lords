@@ -5,7 +5,7 @@ import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { getWeatherConfig } from '@/constants/weather';
+import { getWeatherConfig } from '@/constants/arena/weather';
 import type { WeatherType } from '@/types/shared.types';
 
 const WEATHER_STATS: Record<WeatherType, string> = {

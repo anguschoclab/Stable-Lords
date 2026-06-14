@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
-import { BASE_ROSTER_CAP } from '@/constants/roster';
+import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNGService } from '@/utils/random';
 import { hashStr } from '@/utils/random';

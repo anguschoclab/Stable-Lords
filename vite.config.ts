@@ -59,7 +59,7 @@ export default defineConfig(({ _mode }) => ({
           'vendor-ui': ['lucide-react', 'recharts', 'date-fns'],
           'engine-core': [
             path.resolve(__dirname, './src/engine/simulate.ts'),
-            path.resolve(__dirname, './src/engine/impacts.ts'),
+            path.resolve(__dirname, './src/engine/impacts/index.ts'),
             path.resolve(__dirname, './src/engine/recruitment.ts'),
           ],
         },

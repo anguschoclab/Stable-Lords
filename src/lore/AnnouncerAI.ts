@@ -3,7 +3,7 @@
  * Consolidated and Unified with the Bard Archive (narrativeContent.json).
  */
 
-import { getFromArchive, interpolateTemplate } from '@/engine/narrativePBP';
+import { getFromArchive, interpolateTemplate } from '@/engine/narrative';
 import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
                                                                    * Announce tone type.
                                                                    */

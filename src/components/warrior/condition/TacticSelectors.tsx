@@ -1,4 +1,4 @@
-import { OFFENSIVE_TACTICS, DEFENSIVE_TACTICS } from '@/constants/planConditions';
+import { OFFENSIVE_TACTICS, DEFENSIVE_TACTICS } from '@/constants/combat/planConditions';
 import type { PlanCondition } from '@/types/game';
 
 interface TacticSelectorsProps {

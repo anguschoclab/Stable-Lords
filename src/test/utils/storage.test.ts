@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { handleLocalStorageQuotaError } from '@/utils/storage';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 // Mock localStorage since we are running in Node
 const localStorageMock = (() => {

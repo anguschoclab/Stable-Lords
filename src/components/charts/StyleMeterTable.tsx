@@ -5,7 +5,7 @@
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
-import { WIN_RATE_THRESHOLDS } from '@/constants/ui';
+import { WIN_RATE_THRESHOLDS } from '@/constants/core/ui';
 import { STYLE_ABBREV } from '@/types/shared.types';
 
 interface StyleMeterTableProps {

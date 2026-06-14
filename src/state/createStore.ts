@@ -3,7 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
-import { type BoutResult } from '@/engine/boutProcessor';
+import { type BoutResult } from '@/engine/bout';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
 import { opfsArchive } from '@/engine/storage/opfsArchive';

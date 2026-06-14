@@ -3,7 +3,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Swords } from 'lucide-react';
 import BoutViewer from '@/components/BoutViewer';
-import type { BoutResult } from '@/engine/boutProcessor';
+import type { BoutResult } from '@/engine/bout';
 import narrativeContent from '@/data/narrativeContent.json';
 
 interface BoutsStepProps {

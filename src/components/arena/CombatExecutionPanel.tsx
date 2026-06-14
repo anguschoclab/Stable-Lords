@@ -11,7 +11,7 @@ import { AutosimConsole } from '@/components/run-round/AutosimConsole';
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData } from '@/types/game';
 import type { useCombatExecution } from '@/hooks/useCombatExecution';
-import type { BoutResult } from '@/engine/boutProcessor';
+import type { BoutResult } from '@/engine/bout';
 import type { AutosimResult } from '@/engine/autosim';
 
 /** A resolved player-vs-rival pairing rendered in the active manifest. */

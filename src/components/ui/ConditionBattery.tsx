@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { BATTERY_THRESHOLDS } from '@/constants/ui';
+import { BATTERY_THRESHOLDS } from '@/constants/core/ui';
 
 interface ConditionBatteryProps {
   value: number; // 0-100

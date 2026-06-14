@@ -1,6 +1,6 @@
 import { IRNGContext } from './IRNGContext';
 import { IRNGService } from './IRNGService';
-import { SeededRNGService } from './SeededRNGService';
+import { SeededRNGService } from '@/utils/random';
 
 /**
  * RNG Context Implementation

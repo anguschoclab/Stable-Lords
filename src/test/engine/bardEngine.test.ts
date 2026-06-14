@@ -3,7 +3,7 @@ import { SeededRNGService } from '@/utils/random';
 import { NarrativeTemplateEngine } from '@/engine/narrative/narrativeTemplateEngine';
 import { blurb, commentatorFor, recapLine } from '@/lore/AnnouncerAI';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
-import { interpolateTemplate } from '@/engine/narrativePBP';
+import { interpolateTemplate } from '@/engine/narrative';
 
 describe('Bard Narrative Engine', () => {
   const rng = new SeededRNGService(12345);

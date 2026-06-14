@@ -19,7 +19,7 @@ import {
   narrateRangeShift,
   narrateFeint,
   narrateZoneShift,
-} from '../../narrativePBP';
+} from '../../narrative';
 import { narrateKnockdown, narrateRecovery, getEpithet } from '../../narrative/combatNarrators';
 import type { NarrationContext } from './types';
 

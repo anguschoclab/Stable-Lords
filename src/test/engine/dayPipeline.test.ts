@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { advanceDay } from '@/engine/pipeline/tick/dayAdvance';
-import { TickOrchestrator } from '@/engine/tick/TickOrchestrator';
+import { TickOrchestrator } from '@/engine/pipeline/tick/TickOrchestrator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 describe('dayPipeline', () => {

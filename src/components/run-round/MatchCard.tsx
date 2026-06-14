@@ -3,7 +3,7 @@ import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
 import { LethalityBadge } from './LethalityBadge';
 import { StableLink } from '@/components/EntityLink';
 import { Badge } from '@/components/ui/badge';
-import type { BoutPairing as MatchPairing } from '@/engine/boutProcessor';
+import type { BoutPairing as MatchPairing } from '@/engine/bout';
 import { Surface } from '@/components/ui/Surface';
 
 interface MatchCardProps {

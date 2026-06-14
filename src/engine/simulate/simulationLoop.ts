@@ -15,7 +15,7 @@ import type {
 import type { FightPlan } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import { buildExchangeLogEntry } from './logging';
-import { minuteStatusLine, tacticStreakLine, narrateBoutEnd } from '../narrativePBP';
+import { minuteStatusLine, tacticStreakLine, narrateBoutEnd } from '../narrative';
 
 type Phase = 'OPENING' | 'MID' | 'LATE';
 

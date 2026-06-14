@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Bookmarks from '@/pages/Bookmarks';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 let mockNavigate = vi.fn();
 let mockStoreState: any = {

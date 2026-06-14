@@ -6,7 +6,7 @@ import { HallOfFights } from '@/lore/HallOfFights';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/game';
 import type { GameState, FightSummary } from '@/types/game';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 let storeOverride: any = {};
 

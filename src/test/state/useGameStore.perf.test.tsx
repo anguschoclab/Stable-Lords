@@ -7,7 +7,7 @@ import { useGameStore } from '@/state/useGameStore';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import React from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 /**
  * Mock component that tracks renders via ref for performance testing.

@@ -3,7 +3,7 @@ import type { FightSummary } from '@/types/combat.types';
 import type { RivalStableData } from '@/types/state.types';
 import { getAllArenas, getArenaById } from '@/data/arenas';
 import { getFightsForArena } from '@/engine/core/historyUtils';
-import { filterActive } from './roster';
+import { filterActive } from '@/utils/roster';
 
 // ─── Global Fame Leaderboard ────────────────────────────────────────────────
 

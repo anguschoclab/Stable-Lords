@@ -1,5 +1,5 @@
 import type { GameState } from '@/types/state.types';
-import type { BoutResult } from '@/engine/boutProcessor';
+import type { BoutResult } from '@/engine/bout';
 import type { EconomySlice } from './slices/economySlice';
 import type { RosterSlice } from './slices/rosterSlice';
 import type { WorldSlice } from './slices/worldSlice';

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { X, History, ChevronUp, ChevronDown } from 'lucide-react';
 import type { MinuteEvent } from '@/types/combat.types';
-import { COMBAT_LOG_TRUNCATION } from '@/constants/ui';
+import { COMBAT_LOG_TRUNCATION } from '@/constants/core/ui';
 import { classifyEvent } from '@/lib/boutUtils';
 
 interface MiniCombatLogProps {

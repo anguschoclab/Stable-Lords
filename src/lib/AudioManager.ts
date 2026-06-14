@@ -1,5 +1,5 @@
 import { Howl } from 'howler';
-import { STORE_KEYS } from '@/constants/storeKeys';
+import { STORE_KEYS } from '@/constants/core/storeKeys';
 
 /**
  * AudioManager — Central sound controller for the stable.

@@ -13,7 +13,7 @@ import {
   type FightId,
   type TournamentId,
 } from './shared.types';
-import type { BoutResult } from '@/engine/boutProcessor'; /**
+import type { BoutResult } from '@/engine/bout'; /**
                                                            * Weapon type type.
                                                            */
 

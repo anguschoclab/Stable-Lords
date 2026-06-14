@@ -3,7 +3,7 @@ import type { StableId, RivalryId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { MatchScoringService } from '../matchmakingServices';
-import { calculateRivalryScore } from '../ownerGrudges';
+import { calculateRivalryScore } from '../owner/grudges';
 import { getStablePairKey } from '@/utils/keyUtils';
 
 function getNamesFromTitle(title: string): { a: string; d: string } {

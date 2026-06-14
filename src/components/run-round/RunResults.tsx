@@ -1,4 +1,4 @@
-import type { BoutResult } from '@/engine/boutProcessor';
+import type { BoutResult } from '@/engine/bout';
 import { RunResultsSummary } from './RunResultsSummary';
 import { BoutRow } from './BoutRow';
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import { FightingStyle, type FightSummary } from '@/types/game';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 describe('ArenaHistory persistence error handling', () => {
   const createMockFight = (overrides: Partial<FightSummary>): FightSummary => ({

@@ -5,7 +5,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 // No longer uses DnD
 

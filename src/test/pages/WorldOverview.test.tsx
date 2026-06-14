@@ -5,7 +5,7 @@ import WorldOverview from '@/pages/WorldOverview';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FightingStyle } from '@/types/game';
 import type { Warrior, GameState } from '@/types/game';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 let storeOverride: any = {};
 

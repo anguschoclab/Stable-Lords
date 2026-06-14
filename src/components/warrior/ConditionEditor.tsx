@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 import type { PlanCondition, ConditionTriggerType } from '@/types/game';
-import { TRIGGER_OPTIONS } from '@/constants/planConditions';
+import { TRIGGER_OPTIONS } from '@/constants/combat/planConditions';
 import { ConditionItem } from './ConditionItem';
 
 interface ConditionEditorProps {

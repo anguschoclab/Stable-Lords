@@ -2,7 +2,7 @@
  * boutProcessor tests.
  */
 import { describe, it, expect } from 'vitest';
-import { resolveBout, generatePairings } from '@/engine/boutProcessor';
+import { resolveBout, generatePairings } from '@/engine/bout';
 import { FightingStyle } from '@/types/game';
 
 describe('boutProcessor - generatePairings', () => {

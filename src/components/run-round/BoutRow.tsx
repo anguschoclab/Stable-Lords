@@ -2,7 +2,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import BoutViewer from '@/components/BoutViewer';
 import { Badge } from '@/components/ui/badge';
-import type { BoutResult } from '@/engine/boutProcessor';
+import type { BoutResult } from '@/engine/bout';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { OutcomeIcon } from './OutcomeIcon';

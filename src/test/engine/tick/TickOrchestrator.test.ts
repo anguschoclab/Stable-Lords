@@ -13,7 +13,7 @@ vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
   advanceWeek: vi.fn((state) => ({ ...state, treasury: 999 })),
 }));
 
-vi.mock('@/engine/tick/TimeAdvanceService', () => ({
+vi.mock('@/engine/pipeline/tick/TimeAdvanceService', () => ({
   TimeAdvanceService: {
     advanceQuarter: vi.fn(async () => ({})),
     skipToQuarterEnd: vi.fn(async () => ({})),
@@ -27,7 +27,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { GameState } from '@/types/state.types';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';
-import { TimeAdvanceService } from '@/engine/tick/TimeAdvanceService';
+import { TimeAdvanceService } from '@/engine/pipeline/tick/TimeAdvanceService';
 
 let mockState: GameState;
 

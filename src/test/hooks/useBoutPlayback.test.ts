@@ -4,7 +4,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useBoutPlayback } from '@/hooks/useBoutPlayback';
 import { audioManager } from '@/lib/AudioManager';
 import type { MinuteEvent } from '@/types/game';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 vi.mock('@/lib/AudioManager', () => ({
   audioManager: {

@@ -22,7 +22,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { MobileNav } from '@/components/layout/MobileNav';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import type { WeatherType } from '@/types/state.types';
-import { getWeatherConfig } from '@/constants/weather';
+import { getWeatherConfig } from '@/constants/arena/weather';
 
 interface AppHeaderProps {
   week: number;

@@ -1,5 +1,5 @@
 import type { PlanCondition } from '@/types/game';
-import { TRIGGER_OPTIONS } from '@/constants/planConditions';
+import { TRIGGER_OPTIONS } from '@/constants/combat/planConditions';
 
 /**
  *

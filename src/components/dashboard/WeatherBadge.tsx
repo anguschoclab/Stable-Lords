@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { getWeatherConfig } from '@/constants/weather';
+import { getWeatherConfig } from '@/constants/arena/weather';
 import type { WeatherType } from '@/types/shared.types';
 
 interface WeatherBadgeProps {

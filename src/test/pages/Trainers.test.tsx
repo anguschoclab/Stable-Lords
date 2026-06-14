@@ -7,7 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import Trainers from '@/pages/Trainers';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { GameState, Trainer as TrainerData } from '@/types/state.types';
-import '@/test/setup';
+import '@/test/_setup/setup';
 
 let storeOverride: any = {
   trainers: [],

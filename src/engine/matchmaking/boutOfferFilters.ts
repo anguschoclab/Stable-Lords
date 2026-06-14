@@ -1,7 +1,7 @@
 import type { Warrior, BoutOffer } from '@/types/state.types';
 import type { Promoter } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
-import { filterActive } from './roster';
+import { filterActive } from '@/utils/roster';
 
 const TIER_RANK: Record<string, number> = {
   Local: 0,

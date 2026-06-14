@@ -1,4 +1,4 @@
-import { useStableComparison } from '@/hooks/scouting/useStableComparison';
+import { useStableComparison } from '@/hooks/useScoutingStableComparison';
 import { Surface } from '@/components/ui/Surface';
 import type { RivalStableData } from '@/types/game';
 import { ComparisonHeader } from './ComparisonHeader';

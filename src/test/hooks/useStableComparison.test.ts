@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { stableStats, useStableComparison } from '@/hooks/scouting/useStableComparison';
+import { stableStats, useStableComparison } from '@/hooks/useScoutingStableComparison';
 import type { RivalStableData, Warrior, OwnerGrudge } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import type { StableId, GrudgeId, WarriorId } from '@/types/shared.types';

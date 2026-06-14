@@ -6,7 +6,7 @@ import type { Warrior } from '@/types/game';
 import { resolveWarriorName } from '@/engine/core/historyResolver';
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
-import { useHeadToHeadData } from '@/hooks/scouting/useHeadToHeadData';
+import { useHeadToHeadData } from '@/hooks/useScoutingHeadToHead';
 
 interface HeadToHeadProps {
   nameA: string;

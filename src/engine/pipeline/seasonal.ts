@@ -151,14 +151,8 @@ function handleChaosRift(
       const fameGained = 15;
       const goldGained = 150;
 
-      ctx.treasuryDelta = (ctx.treasuryDelta || 0) + goldGained;
-      ctx.ledgerEntries.push({
-        id: rng.uuid('ledger'),
-        week: nextWeek,
-        description: 'Sold Chaos Crystal',
-        amount: goldGained,
-        category: 'other',
-      });
+      ctx.treasuryDelta += goldGained;
+      addLedger(ctx, rng, nextWeek, 'Sold Chaos Crystal', goldGained, 'other');
 
       ctx.rosterUpdates.set(chosen.id, {
         xp: (chosen.xp || 0) + xpGained,

@@ -6,8 +6,8 @@ import { StateImpact } from '@/engine/impacts';
 import { processHallOfFame, createYearlySnapshots } from '../core/hallOfFame';
 import { processTierProgression } from '../core/tierProgression';
 import { WorldManagementService } from '@/engine/ai/worldManagement';
-import { evolvePhilosophies } from '@/engine/ownerPhilosophy';
-import { generateOwnerNarratives } from '@/engine/ownerNarrative';
+import { evolvePhilosophies } from '@/engine/owner/philosophy';
+import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import { computeNextSeason } from './WorldPass';
 

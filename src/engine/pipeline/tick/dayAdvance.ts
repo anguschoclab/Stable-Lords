@@ -1,12 +1,11 @@
 import type { GameState } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { TickOrchestrator } from '@/engine/tick/TickOrchestrator';
+import { TickOrchestrator } from './TickOrchestrator';
 
 /**
- * Stable Lords — Daily Progression Pipeline
- * Thin wrapper around the Unified Tick Orchestrator.
+ * Stable Lords — Daily Progression
+ * Delegates to the Unified Tick Orchestrator.
  */
 export function advanceDay(state: GameState, _rng?: IRNGService): GameState {
-  // Use the unified orchestrator for consistent day/week/tournament logic
   return TickOrchestrator.advanceDay(state);
 }

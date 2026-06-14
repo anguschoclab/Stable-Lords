@@ -22,7 +22,7 @@ vi.mock('@/engine/tick/TimeAdvanceService', () => ({
   },
 }));
 
-import { TickOrchestrator } from '@/engine/tick/TickOrchestrator';
+import { TickOrchestrator } from '@/engine/pipeline/tick/TickOrchestrator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { GameState } from '@/types/state.types';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';

@@ -4,7 +4,7 @@ import { Surface } from '@/components/ui/Surface';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Terminal } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import ArenaSettings from '@/components/settings/ArenaSettings';
+import ArenaSettings from '@/components/layout/ArenaSettings';
 import { useAdminTools } from './hooks/useAdminTools';
 import { CategoryNav } from './components/CategoryNav';
 import { SystemPanel } from './components/SystemPanel';

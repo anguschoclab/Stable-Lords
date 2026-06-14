@@ -26,7 +26,7 @@ import {
   Crown,
 } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
-import SubNav, { type SubNavTab } from '@/components/SubNav';
+import SubNav, { type SubNavTab } from '@/components/layout/SubNav';
 
 /** Personality configuration */
 const PERSONALITY_CONFIG: Record<

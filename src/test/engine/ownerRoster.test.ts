@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { processAIRosterManagement } from '@/engine/ownerRoster';
+import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { RivalWarrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';

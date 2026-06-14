@@ -5,7 +5,7 @@ import { updateAIStrategy } from '@/engine/ai/intentEngine';
 import { processAIStable } from '@/engine/ai/stableManager';
 import { generateRivalStables } from '@/engine/rivals';
 import { aiDraftFromPool } from '@/engine/draftService';
-import { processAIRosterManagement } from '@/engine/ownerRoster';
+import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';

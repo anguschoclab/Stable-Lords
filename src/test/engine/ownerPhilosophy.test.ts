@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evolvePhilosophies } from '@/engine/ownerPhilosophy';
+import { evolvePhilosophies } from '@/engine/owner/philosophy';
 
 describe('ownerPhilosophy - evolvePhilosophies', () => {
   const mockState: any = {

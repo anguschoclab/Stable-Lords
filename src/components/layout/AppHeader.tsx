@@ -19,7 +19,7 @@ import { Separator } from '@/components/ui/separator';
 import { MOOD_ICONS, type CrowdMood } from '@/engine/crowdMood';
 import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { MobileNav } from '@/components/navigation/MobileNav';
+import { MobileNav } from '@/components/layout/MobileNav';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import type { WeatherType } from '@/types/state.types';
 import { getWeatherConfig } from '@/constants/weather';

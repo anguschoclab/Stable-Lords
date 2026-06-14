@@ -17,7 +17,7 @@ import { computeStreaks } from '@/engine/gazette/gazetteDetections';
 import { isActive } from '@/engine/warriorStatus';
 import { DEFAULT_LOADOUT, type EquipmentLoadout } from '@/data/equipment';
 import { toast } from 'sonner';
-import { type SubNavTab } from '@/components/SubNav';
+import { type SubNavTab } from '@/components/layout/SubNav';
 import { Separator } from '@/components/ui/separator';
 import { Trophy, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';

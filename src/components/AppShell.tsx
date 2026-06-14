@@ -6,10 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
 import { filterActive } from '@/utils/roster';
-import { LeftNav } from '@/components/navigation/LeftNav';
+import { LeftNav } from '@/components/layout/LeftNav';
 import { DeathModal } from '@/components/modals/DeathModal';
 import { CoachOverlay } from '@/components/ui/CoachOverlay';
-import { TacticalBar } from '@/components/navigation/TacticalBar';
+import { TacticalBar } from '@/components/layout/TacticalBar';
 import EventLog from '@/components/EventLog';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { ResetDialog } from '@/components/layout/ResetDialog';

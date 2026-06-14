@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateOwnerNarratives } from '@/engine/ownerNarrative';
+import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { FightSummary } from '@/types/combat.types';
 

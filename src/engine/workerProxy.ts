@@ -26,10 +26,10 @@ function buildProxy(): AsyncEngine {
         { TickOrchestrator },
       ] = await Promise.all([
         import('./pipeline/services/weekPipelineService'),
-        import('./dayPipeline'),
+        import('./pipeline/tick/dayAdvance'),
         import('./factories/gameStateFactory'),
         import('./matchmaking/tournamentSelection'),
-        import('./tick/TickOrchestrator'),
+        import('./pipeline/tick/TickOrchestrator'),
       ]);
       cached = {
         advanceWeek,

@@ -18,7 +18,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { WarriorTrainingCard } from '@/components/training/WarriorTrainingCard';
+import { WarriorTrainingCard } from '@/components/warrior/WarriorTrainingCard';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';

@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { LinkifiedText } from '@/components/text/LinkifiedText';
+import { LinkifiedText } from '@/components/ui/LinkifiedText';
 import type { GameEvent } from '@/types/eventLog';
 
 interface EventListItemProps {

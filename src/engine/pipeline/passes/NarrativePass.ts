@@ -3,7 +3,7 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/engine/core/rng/SeededRNGService';
 import { StateImpact } from '@/engine/impacts';
 import { generateWeeklyGazette } from '@/engine/gazette/gazetteFactory';
-import { processOwnerGrudges } from '@/engine/ownerGrudges';
+import { processOwnerGrudges } from '@/engine/owner/grudges';
 import { updateRivalriesFromBouts } from '@/engine/matchmaking/rivalryLogic';
 import { getFightsForWeek } from '@/engine/core/historyUtils';
 

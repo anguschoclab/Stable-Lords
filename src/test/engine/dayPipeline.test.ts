@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { advanceDay } from '@/engine/dayPipeline';
+import { advanceDay } from '@/engine/pipeline/tick/dayAdvance';
 import { TickOrchestrator } from '@/engine/tick/TickOrchestrator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 

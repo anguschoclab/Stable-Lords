@@ -2,7 +2,7 @@
  * ownerGrudges tests.
  */
 import { describe, it, expect } from 'vitest';
-import { processOwnerGrudges, calculateRivalryScore } from '@/engine/ownerGrudges';
+import { processOwnerGrudges, calculateRivalryScore } from '@/engine/owner/grudges';
 import { FightingStyle } from '@/types/game';
 
 describe('ownerGrudges - processOwnerGrudges', () => {

@@ -6,6 +6,7 @@ export const ARCHIVED_ORIGINS = [
 ];
 
 export const ARCHIVED_CHILDHOOD_TRAITS = [
+  'would dissect small animals to understand their anatomy', // Duplicative with 'learned the anatomy of survival by dissecting rats in the alleyways'
 ];
 
 export const ARCHIVED_DEFINING_MOMENTS = [

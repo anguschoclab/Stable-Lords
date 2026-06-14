@@ -324,14 +324,6 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.6,
     synergy: ['cunning'],
   },
-  vengeful: {
-    id: 'vengeful',
-    name: 'Vengeful',
-    description: '+1 riposte, +2 kill desire — driven by spite to return every blow with interest.',
-    effect: { ripMod: 1, fightPlanMod: { killDesire: 2 } },
-    weight: 0.7,
-    synergy: ['cunning', 'brutal'],
-  },
   cold_eyed: {
     id: 'cold_eyed',
     name: 'Cold-Eyed',
@@ -340,6 +332,23 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.6,
     synergy: ['cunning', 'tank'],
     antiSynergy: ['brutal'],
+  },
+  survivalist: {
+    id: 'survivalist',
+    name: 'Survivalist',
+    description: '+2 defense and +2 parry when bloodied (HP < 50%) — fights hardest when cornered.',
+    effect: { defModLowHp: 2, parModHighHp: 0, fightPlanMod: { AL: -2 } },
+    weight: 0.7,
+    synergy: ['tank', 'agile'],
+  },
+  death_marked: {
+    id: 'death_marked',
+    name: 'Death-Marked',
+    description: '+2 kill window bonus and +1 decisiveness — an eerie aura that makes their lethal strikes more likely to finish the job.',
+    effect: { killWindowBonus: 2, decMod: 1, fightPlanMod: { killDesire: 4 } },
+    weight: 0.5,
+    synergy: ['brutal', 'cunning'],
+    antiSynergy: ['tank'],
   },
 };
 

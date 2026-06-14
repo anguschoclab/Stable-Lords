@@ -285,6 +285,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-orange-500/20',
     description: 'Thick smoke reduces visibility and chokes the lungs.',
   },
+  'Gravity Anomaly': {
+    icon: Sparkles,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    description: 'The laws of physics break down, making combat wildly unpredictable.',
+  },
 };
 
 /**

@@ -72,6 +72,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Ember Rain': () => <EmberRainEffect />,
   Zephyr: () => <WindEffect strong={false} />,
   'Wildfire Smoke': () => <AshfallEffect />,
+  'Gravity Anomaly': () => <AetherStormEffect />,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

@@ -71,8 +71,9 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
     if (roll < 0.98) return 'Abyssal Gloom';
     if (roll < 0.985) return 'Blood Moon';
     if (roll < 0.99) return 'Eclipse';
-    if (roll < 0.995) return 'Meteor Shower';
-    if (roll < 0.998) return 'Aurora Borealis';
+    if (roll < 0.993) return 'Meteor Shower';
+    if (roll < 0.996) return 'Aurora Borealis';
+    if (roll < 0.998) return 'Gravity Anomaly';
     return 'Mana Surge';
   }
 
@@ -93,9 +94,10 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.97) return 'Arcane Storm';
   if (roll < 0.985) return 'Spooky Night';
   if (roll < 0.992) return 'Blood Rain';
-  if (roll < 0.995) return 'Aether Storm';
-  if (roll < 0.998) return 'Blood Moon';
-  if (roll < 0.999) return 'Eclipse';
+  if (roll < 0.993) return 'Aether Storm';
+  if (roll < 0.995) return 'Blood Moon';
+  if (roll < 0.997) return 'Eclipse';
+  if (roll < 0.999) return 'Gravity Anomaly';
   return 'Mana Surge';
 }
 

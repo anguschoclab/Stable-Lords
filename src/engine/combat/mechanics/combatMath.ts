@@ -123,6 +123,7 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   // Clear / Overcast / Rainy → 1.0 (default)
   'Aurora Borealis': 0.85, // 15% less stamina drain
   'Ember Rain': 1.3, // 30% more stamina drain
+  'Gravity Anomaly': 0.9, // 10% less stamina drain
 }; /**
     * Weather stamina modifier.
     * @param weather - Weather. (optional)

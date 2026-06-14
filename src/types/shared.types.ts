@@ -598,6 +598,7 @@ export type WeatherType =
   | 'Dense Fog'
   | 'Mist'
   | 'Thunderstorm'
+  | 'Gravity Anomaly'
   | 'Ashfall'
   | 'Acid Rain'
   | 'Mana Surge'

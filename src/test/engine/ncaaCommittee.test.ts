@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { populateTestState } from '@/test/testHelpers';
+import { populateTestState } from '@/test/_setup/testHelpers';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { GameState } from '@/types/state.types';

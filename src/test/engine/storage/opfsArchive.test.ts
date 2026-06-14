@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { ArchiveConflictError } from '@/engine/storage/ArchiveConflictError';
-import { setMockOPFSError, setMockOPFSFileText } from '@/test/setup';
+import { setMockOPFSError, setMockOPFSFileText } from '@/test/_setup/setup';
 
 describe('OPFS Archival System', () => {
   beforeEach(() => {

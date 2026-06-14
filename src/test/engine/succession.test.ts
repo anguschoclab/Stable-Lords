@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { populateTestState } from '@/test/testHelpers';
+import { populateTestState } from '@/test/_setup/testHelpers';
 import { GameState, Promoter } from '@/types/state.types';
 
 describe('Promoter Succession', () => {

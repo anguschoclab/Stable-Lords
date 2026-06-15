@@ -274,6 +274,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.9,
     description: 'Thick smoke chokes the lungs and stings the eyes, turning fights into desperate brawls.',
   },
+  'Blood Fog': {
+    staminaMult: 1.1,
+    initiativeMod: -6,
+    riposteMod: +6,
+    damageMult: 1.25,
+    description: 'A crimson fog obscures vision and incites a frantic, bloody panic.',
+  },
 };
 
 /**
@@ -341,6 +348,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Rainbow: 'A vibrant rainbow curves over the arena, bringing a moment of strange peace.',
   'Ember Rain': 'Glowing embers rain down from the sky, searing the sand and the fighters alike.',
   'Wildfire Smoke': 'A thick blanket of acrid smoke settles over the sands. Every breath burns.',
+  'Blood Fog': 'A thick, crimson fog rolls across the arena, smelling of rust and death.',
 };
 
 /**

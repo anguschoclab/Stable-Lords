@@ -50,7 +50,8 @@ interface OffseasonEventNarrative {
     | 'dreamweaver_visit'
     | 'abyssal_bargain'
     | 'goblin_raid'
-    | 'fey_trickster';
+    | 'fey_trickster'
+    | 'shadow_tournament';
   newsletter: string[];
 }
 
@@ -1043,6 +1044,58 @@ function handleMeteorShower(
   }
 }
 
+
+function handleShadowTournament(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const roll = rng.next();
+      let effectMsg: string;
+
+      if (roll < 0.5) {
+        // Success
+        const xpGained = 30 + Math.floor(rng.next() * 21);
+        const fameGained = 20 + Math.floor(rng.next() * 11);
+        ctx.rosterUpdates.set(chosen.id, {
+          xp: (chosen.xp || 0) + xpGained,
+          fame: (chosen.fame || 0) + fameGained,
+        });
+        effectMsg = `${t(e.newsletter[0] || '', { name: chosen.name, xp: xpGained, fame: fameGained })}`;
+      } else {
+        // Failure
+        const fameLost = 10 + Math.floor(rng.next() * 11);
+        const newInjury = makeInjury(rng, {
+          name: 'Shadow Bruises',
+          description: 'A lingering supernatural bruise from the shadow tournament.',
+          severity: 'Moderate',
+          weeksBase: 3,
+          weeksRange: 2,
+          penalties: { CN: -1, WL: -1 },
+        });
+        ctx.rosterUpdates.set(chosen.id, {
+          fame: Math.max(0, (chosen.fame || 0) - fameLost),
+          injuries: [...(chosen.injuries || []), newInjury],
+        });
+        effectMsg = `${t(e.newsletter[1] || '', { name: chosen.name, fame: fameLost })}`;
+      }
+
+      ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
+        week: nextWeek,
+        title: e.title,
+        items: [effectMsg],
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1082,6 +1135,7 @@ const EVENT_HANDLERS: Record<
   tavern_brawl_surprise: handleTavernBrawlSurprise,
   goblin_raid: handleGoblinRaid,
   fey_trickster: handleFeyTrickster,
+  shadow_tournament: handleShadowTournament,
 };
 
 /**

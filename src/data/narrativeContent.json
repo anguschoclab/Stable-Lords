@@ -2879,6 +2879,14 @@
       "newsletter": [
         "{{name}} was approached by a shadowed figure in the dead of night offering terrible power for a terrible price..."
       ]
+    },
+    "shadow_tournament": {
+      "title": "Shadow Tournament",
+      "effectType": "shadow_tournament",
+      "newsletter": [
+        "{{name}} participated in a secretive, brutal shadow tournament beneath the city streets. They emerged victorious, covered in strange bruises but carrying a hefty purse. (+{{xp}} XP, +{{fame}} Fame)",
+        "{{name}} snuck out to fight in an underground shadow tournament. They lost horribly to a masked opponent and limped back in disgrace. (-{{fame}} Fame, Moderate Injury)"
+      ]
     }
   },
   "crowd_reactions": {

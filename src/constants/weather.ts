@@ -285,6 +285,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-orange-500/20',
     description: 'Thick smoke reduces visibility and chokes the lungs.',
   },
+  'Blood Fog': {
+    icon: CloudFog,
+    colorClass: 'text-destructive',
+    bgClass: 'bg-destructive/10',
+    borderClass: 'border-destructive/20',
+    description: 'A crimson fog obscures vision and incites a frantic, bloody panic.',
+  },
 };
 
 /**

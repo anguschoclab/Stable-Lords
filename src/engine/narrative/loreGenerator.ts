@@ -62,6 +62,14 @@ const ORIGINS = [
   'The runt of a fighting pit, fed on raw meat and cruelty',
   'A nameless stowaway discovered half-drowned in a merchant ship\'s bilge',
   'Left bound and gagged at the crossroads, an offering to dark gods',
+  'Found shivering in a burnt-out alchemist\'s lab, clutching a glowing ember',
+  'Abandoned to the howling winds of the Jagged Peaks, raised by a solitary hermit',
+  'Washed ashore wrapped in the tattered sails of a notorious pirate galley',
+  'Unearthed alive from a shallow grave behind the old executioner\'s block',
+  'Discovered sleeping peacefully inside an empty gibbet cage in the lower wards',
+  'The final, desperate offering left at the steps of the forgotten Blood God\'s shrine',
+  'Surviving alone on the rat-infested decks of an abandoned plague ship',
+  'Found wandering the ash plains, their face stained with soot and silence',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -99,6 +107,10 @@ const CHILDHOOD_TRAITS = [
   'practiced the art of pain by holding hot coals without a sound',
   'would carve intricate tallies of imagined kills into the stone walls',
   'learned the anatomy of survival by dissecting rats in the alleyways',
+  'learned to read the flow of battle from watching the city watch\'s street brawls',
+  'could accurately predict rain by the throbbing of their many old fractures',
+  'spent their days meticulously mapping the blind spots of the local garrison',
+  'would purposefully endure beatings to learn how different bones break',
 ];
 
 const DEFINING_MOMENTS = [
@@ -132,6 +144,10 @@ const DEFINING_MOMENTS = [
   'understanding that the world only respects the edge of a blade',
   'carrying the cold certainty that everyone bleeds the same color',
   'waiting for the moment the crowd screams a name that was once forbidden',
+  'realizing the only undeniable truth in this world is the edge of a blade',
+  'until they watched their only friend die for a handful of copper coins',
+  'carrying a burning need to leave a scar upon the world that rejected them',
+  'waiting for the moment they can finally look their executioner in the eye',
 ];
 
 /**

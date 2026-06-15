@@ -341,6 +341,20 @@ export const TRAITS: Record<string, TraitDef> = {
     synergy: ['cunning', 'tank'],
     antiSynergy: ['brutal'],
   },
+  blood_scent: {
+    id: 'blood_scent',
+    name: 'Blood Scent',
+    description: '+1 attack when opponent is bloodied (HP < 50%).',
+    effect: { attModLowHp: 1 },
+    weight: 0.6,
+  },
+  shadow_step: {
+    id: 'shadow_step',
+    name: 'Shadow Step',
+    description: '+1 defense, −1 damage — favors elusive positioning over heavy strikes.',
+    effect: { defMod: 1, dmgBonus: -1 },
+    weight: 0.5,
+  },
 };
 
 export type TraitId = keyof typeof TRAITS;

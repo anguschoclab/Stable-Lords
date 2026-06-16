@@ -1,12 +1,31 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PatronTokenService } from '@/engine/tokens/patronTokenService';
-import type { GameState } from '@/types/state.types';
+import type { GameState, InsightToken, InsightTokenType } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import type { Warrior } from '@/types/warrior.types';
 
 describe('PatronTokenService', () => {
-  describe('awardToken', () => {
+  let mockState: GameState;
+  let mockRng: IRNGService;
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+
+    mockRng = {
+      uuid: vi.fn().mockImplementation((prefix) => (prefix ? `${prefix}-uuid` : 'mock-uuid')),
+      pick: vi.fn().mockImplementation((arr) => arr[0]),
+    } as unknown as IRNGService;
+
+    mockState = {
+      week: 10,
+      insightTokens: [],
+      newsletter: [],
+      roster: [],
+    } as unknown as GameState;
+  });
+
+  describe('awardToken (fresh state)', () => {
     it('awards a token when insightTokens is undefined', () => {
       const state = createFreshState('test-seed');
       state.insightTokens = undefined as any;
@@ -45,48 +64,18 @@ describe('PatronTokenService', () => {
 
     it('uses provided RNG service for token ID generation', () => {
       const state = createFreshState('test-seed');
-      const mockRng = {
+      const rng = {
         uuid: vi.fn().mockReturnValue('mock-uuid')
       } as unknown as IRNGService;
 
-      const newState = PatronTokenService.awardToken(state, 'Attribute', 'Source', mockRng);
+      const newState = PatronTokenService.awardToken(state, 'Attribute', 'Source', rng);
 
       expect(newState.insightTokens![0]!.id).toBe('mock-uuid');
       expect(newState.newsletter![0]!.id).toBe('mock-uuid');
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { PatronTokenService } from '@/engine/tokens/patronTokenService';
-import type { GameState, InsightToken, InsightTokenType } from '@/types/state.types';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { PatronTokenService } from '@/engine/tokens/patronTokenService';
-import type { GameState, InsightTokenType } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-
-describe('PatronTokenService', () => {
-  let mockRng: IRNGService;
-  let mockState: GameState;
-
-  beforeEach(() => {
-    vi.restoreAllMocks();
-
-    mockRng = {
-      uuid: vi.fn().mockImplementation((prefix) => (prefix ? `${prefix}-uuid` : 'mock-uuid')),
-      pick: vi.fn().mockImplementation((arr) => arr[0]),
-    } as unknown as IRNGService;
-
-  let mockState: GameState;
-  let mockRng: IRNGService;
-
-  beforeEach(() => {
-    mockState = {
-      week: 10,
-      insightTokens: [],
-      newsletter: [],
-      roster: [],
-    } as unknown as GameState;
+    });
   });
 
-  describe('awardToken', () => {
+  describe('awardToken (mock state)', () => {
     it('awards a token correctly using RNG', () => {
       const state = PatronTokenService.awardToken(mockState, 'Attribute' as InsightTokenType, 'Tourney', mockRng);
 
@@ -113,7 +102,7 @@ describe('PatronTokenService', () => {
       const state = PatronTokenService.awardToken(mockState, 'Weapon' as InsightTokenType, 'Event');
 
       expect(state.insightTokens).toHaveLength(1);
-      expect(state.insightTokens![0].type).toBe('Weapon');
+      expect(state.insightTokens![0]!.type).toBe('Weapon');
       expect(state.newsletter).toHaveLength(1);
     });
 
@@ -123,14 +112,8 @@ describe('PatronTokenService', () => {
 
       expect(state.insightTokens).toHaveLength(1);
       expect(state.newsletter).toHaveLength(1);
+    });
 
-    mockRng = {
-      uuid: vi.fn(() => 'mock-uuid'),
-      pick: vi.fn((arr) => arr[0]),
-    } as unknown as IRNGService;
-  });
-
-  describe('awardToken', () => {
     it('should award a new token to the state and add a newsletter item', () => {
       const result = PatronTokenService.awardToken(mockState, 'Weapon', 'Grand Tournament', mockRng);
 
@@ -145,9 +128,9 @@ describe('PatronTokenService', () => {
       });
 
       expect(result.newsletter?.length).toBe(1);
-      expect(result.newsletter?.[0].title).toBe('Patronage Awarded');
-      expect(result.newsletter?.[0].items[0]).toContain('Weapon');
-      expect(result.newsletter?.[0].items[0]).toContain('Grand Tournament');
+      expect(result.newsletter?.[0]!.title).toBe('Patronage Awarded');
+      expect(result.newsletter?.[0]!.items[0]).toContain('Weapon');
+      expect(result.newsletter?.[0]!.items[0]).toContain('Grand Tournament');
       expect(mockRng.uuid).toHaveBeenCalledTimes(2); // Once for token, once for newsletter
     });
 
@@ -156,12 +139,12 @@ describe('PatronTokenService', () => {
       const result = PatronTokenService.awardToken(emptyState, 'Style', 'Local Arena');
 
       expect(result.insightTokens?.length).toBe(1);
-      expect(result.insightTokens?.[0].type).toBe('Style');
+      expect(result.insightTokens?.[0]!.type).toBe('Style');
       expect(result.newsletter?.length).toBe(1);
     });
   });
 
-  describe('assignToken', () => {
+  describe('assignToken (fresh state)', () => {
     it('returns unmodified state if token is not found', () => {
       const state = createFreshState('test-seed');
       state.insightTokens = [];
@@ -231,12 +214,12 @@ describe('PatronTokenService', () => {
         attributes: { ST: 10, WT: 10, SP: 10, DF: 10 }
       } as unknown as Warrior];
 
-      const mockRng = {
+      const rng = {
         pick: vi.fn().mockReturnValue('WT'),
         uuid: vi.fn().mockReturnValue('mock-uuid-2')
       } as unknown as IRNGService;
 
-      const newState = PatronTokenService.assignToken(state, 't1', 'w1', mockRng);
+      const newState = PatronTokenService.assignToken(state, 't1', 'w1', rng);
 
       expect(newState.roster[0]!.attributes.WT).toBe(11);
       // The removed token doesn't get detail updated in state since it's removed
@@ -253,12 +236,12 @@ describe('PatronTokenService', () => {
         attributes: {}
       } as unknown as Warrior];
 
-      const mockRng = {
+      const rng = {
         pick: vi.fn().mockReturnValue('SP'),
         uuid: vi.fn().mockReturnValue('mock-uuid-3')
       } as unknown as IRNGService;
 
-      const newState = PatronTokenService.assignToken(state, 't1', 'w1', mockRng);
+      const newState = PatronTokenService.assignToken(state, 't1', 'w1', rng);
 
       expect(newState.roster[0]!.attributes.SP).toBe(11); // 10 + 1
     });
@@ -336,6 +319,10 @@ describe('PatronTokenService', () => {
       const newState = PatronTokenService.assignToken(state, 't1', 'w1');
 
       expect(newState.roster[0]!.flair).toEqual(['Tactical Insight']);
+    });
+  });
+
+  describe('assignToken (state with seeded token)', () => {
     let stateWithToken: GameState;
     let baseWarrior: Warrior;
     const tokenId = 'test-token-id';
@@ -383,72 +370,63 @@ describe('PatronTokenService', () => {
     });
 
     it('assigns a Weapon token correctly', () => {
-      stateWithToken.insightTokens![0].type = 'Weapon';
+      stateWithToken.insightTokens![0]!.type = 'Weapon';
       const state = PatronTokenService.assignToken(stateWithToken, tokenId, warriorId);
 
       expect(state.insightTokens).toHaveLength(0);
-      expect(state.roster[0].favorites!.discovered.weapon).toBe(true);
+      expect(state.roster[0]!.favorites!.discovered.weapon).toBe(true);
       expect(state.newsletter).toHaveLength(1);
     });
 
     it('assigns a Rhythm token correctly', () => {
-      stateWithToken.insightTokens![0].type = 'Rhythm';
+      stateWithToken.insightTokens![0]!.type = 'Rhythm';
       const state = PatronTokenService.assignToken(stateWithToken, tokenId, warriorId);
 
       expect(state.insightTokens).toHaveLength(0);
-      expect(state.roster[0].favorites!.discovered.rhythm).toBe(true);
+      expect(state.roster[0]!.favorites!.discovered.rhythm).toBe(true);
     });
 
     it('assigns an Attribute token correctly (uses pick logic)', () => {
       mockRng.pick = vi.fn().mockReturnValue('WT');
-      stateWithToken.insightTokens![0].type = 'Attribute';
+      stateWithToken.insightTokens![0]!.type = 'Attribute';
 
       const state = PatronTokenService.assignToken(stateWithToken, tokenId, warriorId, mockRng);
 
       expect(state.insightTokens).toHaveLength(0);
-      expect(state.roster[0].attributes.WT).toBe(11);
+      expect(state.roster[0]!.attributes.WT).toBe(11);
     });
 
     it('assigns an Attribute token correctly without RNG (fallback to first)', () => {
-      stateWithToken.insightTokens![0].type = 'Attribute';
+      stateWithToken.insightTokens![0]!.type = 'Attribute';
       const state = PatronTokenService.assignToken(stateWithToken, tokenId, warriorId);
 
-      expect(state.roster[0].attributes.ST).toBe(11); // Fallback is first which is 'ST'
+      expect(state.roster[0]!.attributes.ST).toBe(11); // Fallback is first which is 'ST'
     });
 
     it('assigns a Style token correctly', () => {
-      stateWithToken.insightTokens![0].type = 'Style';
+      stateWithToken.insightTokens![0]!.type = 'Style';
       const state = PatronTokenService.assignToken(stateWithToken, tokenId, warriorId);
 
-      expect(state.roster[0].baseSkills!.ATT).toBe(6);
+      expect(state.roster[0]!.baseSkills!.ATT).toBe(6);
     });
 
     it('assigns a Tactic token correctly', () => {
-      stateWithToken.insightTokens![0].type = 'Tactic';
+      stateWithToken.insightTokens![0]!.type = 'Tactic';
       const state = PatronTokenService.assignToken(stateWithToken, tokenId, warriorId);
 
-      expect(state.roster[0].flair).toContain('Tactical Insight');
+      expect(state.roster[0]!.flair).toContain('Tactical Insight');
     });
 
     it('handles assigning to a warrior without favorites or baseSkills initialized', () => {
-      const emptyWarrior = { id: warriorId, name: 'Empty', attributes: {}, favorites: {} } as unknown as Warrior;
-      stateWithToken.roster = [emptyWarrior];
-
-      stateWithToken.insightTokens![0].type = 'Weapon';
-      const state1 = PatronTokenService.assignToken(stateWithToken, tokenId, warriorId);
-      expect(state1.roster[0].favorites?.discovered?.weapon).toBe(true); // Should safely construct the nested objects or handle gracefully.
-      // Looking at the implementation of token assignation:
-      // if (updatedWarrior.favorites) {
-      //    updatedWarrior.favorites = { ...updatedWarrior.favorites, discovered: { ...updatedWarrior.favorites.discovered, weapon: true } };
-      // }
-      // This logic will fail if `discovered` does not exist. However, the logic handles if `flair` doesn't exist by providing an array fallback.
-
-      // Let's test the Tactic case specifically, as that was failing
       const reallyEmptyWarrior = { id: warriorId, name: 'Empty', attributes: {}, favorites: { discovered: {} } } as unknown as Warrior;
       stateWithToken.roster = [reallyEmptyWarrior];
-      stateWithToken.insightTokens![0].type = 'Tactic';
+      stateWithToken.insightTokens![0]!.type = 'Tactic';
       const state2 = PatronTokenService.assignToken(stateWithToken, tokenId, warriorId);
-      expect(state2.roster[0].flair).toContain('Tactical Insight');
+      expect(state2.roster[0]!.flair).toContain('Tactical Insight');
+    });
+  });
+
+  describe('assignToken (mock state roster)', () => {
     let warrior: Warrior;
 
     beforeEach(() => {
@@ -489,7 +467,7 @@ describe('PatronTokenService', () => {
       const updatedWarrior = result.roster.find(w => w.id === 'w-1');
       expect(updatedWarrior?.favorites?.discovered.weapon).toBe(true);
       expect(result.insightTokens?.find(t => t.id === 't-weapon')).toBeUndefined();
-      expect(result.newsletter?.[0].title).toBe('Patronage Internalized');
+      expect(result.newsletter?.[0]!.title).toBe('Patronage Internalized');
     });
 
     it('should assign a Rhythm token, updating favorites', () => {
@@ -531,7 +509,7 @@ describe('PatronTokenService', () => {
     });
 
     it('should handle assigning tokens to warrior with no flair array defined', () => {
-      delete warrior.flair;
+      delete (warrior as Partial<Warrior>).flair;
       const result = PatronTokenService.assignToken(mockState, 't-tactic', 'w-1', mockRng);
 
       const updatedWarrior = result.roster.find(w => w.id === 'w-1');
@@ -551,10 +529,10 @@ describe('PatronTokenService', () => {
     });
 
     it('should handle undefined newsletter array in assignToken', () => {
-      delete mockState.newsletter;
+      delete (mockState as Partial<GameState>).newsletter;
       const result = PatronTokenService.assignToken(mockState, 't-weapon', 'w-1');
       expect(result.newsletter?.length).toBe(1);
-      expect(result.newsletter?.[0].title).toBe('Patronage Internalized');
+      expect(result.newsletter?.[0]!.title).toBe('Patronage Internalized');
     });
   });
 });

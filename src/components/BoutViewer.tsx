@@ -12,6 +12,7 @@ import { isIndoorArena } from '@/data/arenas';
 import BoutHeader from './bout-viewer/BoutHeader';
 import BoutControls from './bout-viewer/BoutControls';
 import BoutResolution from './bout-viewer/BoutResolution';
+import { FightAnalysisPanel } from './bout-viewer/FightAnalysisPanel';
 
 interface BoutViewerProps {
   nameA: string;
@@ -27,6 +28,7 @@ interface BoutViewerProps {
   weather?: string;
   arenaId?: string;
   transcript?: string[];
+  analysis?: import('@/engine/narrative/fightAnalysis').FightAnalysis;
 } /**
    * Bout viewer.
    * @param  - {
@@ -77,6 +79,7 @@ export default function BoutViewer({
   arenaTier = 'standard',
   weather = 'Clear',
   arenaId,
+  analysis,
 }: BoutViewerProps) {
   const isIndoor = isIndoorArena(arenaId);
   const effectiveWeather = isIndoor ? 'Clear' : weather;
@@ -186,6 +189,9 @@ export default function BoutViewer({
             totalEvents={totalEvents}
             announcement={announcement}
           />
+
+          {/* Fight Analysis Panel */}
+          <FightAnalysisPanel analysis={analysis} nameA={nameA} nameD={nameD} />
         </div>
       )}
     </Surface>

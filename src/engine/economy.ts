@@ -17,13 +17,13 @@ import type { LedgerEntryId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import {
-  FIGHT_PURSE,
-  WIN_BONUS,
   FAME_DIVIDEND,
   WARRIOR_UPKEEP_BASE,
   TRAINING_COST,
   TRAINER_WEEKLY_SALARY,
+  computeFightEconomics,
 } from '@/constants/economy';
+import { getArenaById } from '@/data/arenas';
 
 /**
  * Represents the financial summary for a game week.
@@ -53,6 +53,17 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
 
   let fightCount = 0;
   let winCount = 0;
+  let scaledPurse = 0;
+  let scaledWinBonus = 0;
+
+  const arenaTier = (arenaId?: string): 1 | 2 | 3 => {
+    if (!arenaId) return 1;
+    try {
+      return getArenaById(arenaId).tier;
+    } catch {
+      return 1; // unknown/legacy arena id → treat as tier 1
+    }
+  };
 
   // ⚡ Bolt: Fast backward search in O(1) instead of an O(N) filter.
   // We can break early because `arenaHistory` is guaranteed chronological.
@@ -63,21 +74,31 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
 
     const aIsPlayer = playerWarriorIds.has(f.warriorIdA);
     const dIsPlayer = playerWarriorIds.has(f.warriorIdD);
+    const tier = arenaTier(f.arenaId);
+
     if (aIsPlayer) {
       fightCount++;
-      if (f.winner === 'A') winCount++;
+      const won = f.winner === 'A';
+      if (won) winCount++;
+      const { purse, winBonus } = computeFightEconomics({ fame: f.fameA ?? 0, arenaTier: tier, won });
+      scaledPurse += purse;
+      scaledWinBonus += winBonus;
     }
     if (dIsPlayer) {
       fightCount++;
-      if (f.winner === 'D') winCount++;
+      const won = f.winner === 'D';
+      if (won) winCount++;
+      const { purse, winBonus } = computeFightEconomics({ fame: f.fameD ?? 0, arenaTier: tier, won });
+      scaledPurse += purse;
+      scaledWinBonus += winBonus;
     }
   }
 
   const income: { label: string; amount: number }[] = [];
   if (fightCount > 0)
-    income.push({ label: `Fight purses (${fightCount})`, amount: fightCount * FIGHT_PURSE });
+    income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse });
   if (winCount > 0)
-    income.push({ label: `Win bonuses (${winCount})`, amount: winCount * WIN_BONUS });
+    income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus });
   if (state.fame > 0)
     income.push({ label: 'Fame dividends', amount: Math.round(state.fame * FAME_DIVIDEND) });
 

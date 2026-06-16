@@ -28,3 +28,8 @@
 **Vulnerability:** The Content-Security-Policy (CSP) in `index.html` allowed `'unsafe-eval'` in the `script-src` directive, potentially exposing the application to Cross-Site Scripting (XSS) via dynamic code execution.
 **Learning:** The application does not natively rely on `eval()` or similar functions. Including `'unsafe-eval'` in the CSP is an unnecessary risk, especially for an Electron application where XSS can have severe consequences even with `nodeIntegration` disabled.
 **Prevention:** Always follow the principle of least privilege in CSP configurations. Ensure `'unsafe-eval'` and `'unsafe-inline'` are omitted unless absolutely required by a specific, well-understood framework constraint.
+
+## 2026-06-16 - [HIGH] Remove 'unsafe-inline' from script-src CSP
+**Vulnerability:** The Content-Security-Policy allowed 'unsafe-inline' in script-src, creating an XSS attack vector. An inline script initialized HowlerGlobal, forcing the use of 'unsafe-inline'.
+**Learning:** Removing inline scripts and 'unsafe-inline' from script-src hardens the Electron renderer against XSS vulnerabilities.
+**Prevention:** Extract script initialization to a separate file so 'unsafe-inline' can be removed from script-src.

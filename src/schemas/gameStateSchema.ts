@@ -80,6 +80,7 @@ export const WeatherTypeSchema = z.enum([
   'Mirage',
   'Ember Rain',
   'Wildfire Smoke',
+  'Blood Fog',
 ]);
 
 /**

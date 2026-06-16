@@ -290,7 +290,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     colorClass: 'text-arena-fame',
     bgClass: 'bg-arena-fame/10',
     borderClass: 'border-arena-fame/20',
-    description: 'The laws of physics break down, making combat wildly unpredictable.',
+    description: 'The laws of physics break down, making combat wildly unpredictable.',,
+  'Blood Fog': {
+    icon: CloudFog,
+    colorClass: 'text-destructive',
+    bgClass: 'bg-destructive/10',
+    borderClass: 'border-destructive/20',
+    description: 'A crimson fog obscures vision and incites a frantic, bloody panic.',,
   },
 };
 

@@ -49,6 +49,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   Rainbow: null,
   'Wildfire Smoke': null,
   'Gravity Anomaly': 'ambience-eclipse',
+  'Blood Fog': 'ambience-blood-moon',
 }; /**
     * Weather audio.
     * @param - { weather, volume, enabled, arena id }.

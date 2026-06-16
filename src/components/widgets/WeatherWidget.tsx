@@ -46,6 +46,7 @@ const WEATHER_STATS: Record<WeatherType, string> = {
   'Ember Rain': 'STAMINA DRAIN 120% // INITIATIVE -3',
   'Wildfire Smoke': 'STAMINA DRAIN 135% // INITIATIVE -4 // RIPOSTE +2 // DAMAGE -10%',
   'Gravity Anomaly': 'STAMINA CONSERVATION 10% // INITIATIVE -3 // RIPOSTE +5 // DAMAGE +20%',
+  'Blood Fog': 'INITIATIVE -6 // RIPOSTE +6 // DAMAGE +25% // STAMINA DRAIN 110%',
 }; /**
     * Weather widget.
     * @returns The result.

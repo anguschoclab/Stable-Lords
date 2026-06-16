@@ -45,6 +45,7 @@ export function MatchViewer({ bout, fightSummary, gameState, onToggleExpand }: M
             winner={fightSummary.winner}
             by={fightSummary.by ?? null}
             isRivalry={fightSummary.isRivalry}
+            analysis={fightSummary.analysis}
           />
         </div>
         <Button

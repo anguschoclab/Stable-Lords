@@ -156,6 +156,7 @@ export function WarriorFightHistory({
                     winner={f.winner}
                     by={f.by}
                     isRivalry={f.isRivalry}
+                    analysis={f.analysis}
                   />
                 </div>
               )}

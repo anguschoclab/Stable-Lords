@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { Swords } from 'lucide-react';
 import BoutViewer from '@/components/BoutViewer';
 import type { BoutResult } from '@/engine/bout';
+import { buildFightAnalysis } from '@/engine/narrative/fightAnalysis';
 import narrativeContent from '@/data/narrativeContent.json';
 
 interface BoutsStepProps {
@@ -35,27 +36,47 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
       <ScrollArea className="flex-1 pr-4">
         {bouts.length > 0 ? (
           <div className="space-y-6">
-            {bouts.map((r: BoutResult, i: number) => (
-              <div key={`${r.a.name}-${r.d.name}-${i}`} className="space-y-2">
-                {r.isRivalry && (
-                  <div className="text-xs text-destructive font-semibold uppercase tracking-wider">
-                    Rivalry Bout
-                  </div>
-                )}
-                <BoutViewer
-                  nameA={r.a.name}
-                  nameD={r.d.name}
-                  styleA={r.a.style}
-                  styleD={r.d.style}
-                  log={r.outcome.log}
-                  winner={r.outcome.winner}
-                  by={r.outcome.by}
-                  announcement={r.announcement}
-                  isRivalry={r.isRivalry}
-                />
-                <Separator className="my-4" />
-              </div>
-            ))}
+            {bouts.map((r: BoutResult, i: number) => {
+              const analysis = buildFightAnalysis(
+                r.outcome,
+                {
+                  id: r.a.id,
+                  name: r.a.name,
+                  style: r.a.style,
+                  attributes: r.a.attributes as unknown as Record<string, number>,
+                  skills: r.a.baseSkills as unknown as Record<string, number>,
+                },
+                {
+                  id: r.d.id,
+                  name: r.d.name,
+                  style: r.d.style,
+                  attributes: r.d.attributes as unknown as Record<string, number>,
+                  skills: r.d.baseSkills as unknown as Record<string, number>,
+                }
+              );
+              return (
+                <div key={`${r.a.name}-${r.d.name}-${i}`} className="space-y-2">
+                  {r.isRivalry && (
+                    <div className="text-xs text-destructive font-semibold uppercase tracking-wider">
+                      Rivalry Bout
+                    </div>
+                  )}
+                  <BoutViewer
+                    nameA={r.a.name}
+                    nameD={r.d.name}
+                    styleA={r.a.style}
+                    styleD={r.d.style}
+                    log={r.outcome.log}
+                    winner={r.outcome.winner}
+                    by={r.outcome.by}
+                    announcement={r.announcement}
+                    isRivalry={r.isRivalry}
+                    analysis={analysis}
+                  />
+                  <Separator className="my-4" />
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="flex items-center justify-center h-full text-muted-foreground italic">

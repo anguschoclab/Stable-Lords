@@ -3,6 +3,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import BoutViewer from '@/components/BoutViewer';
 import { Badge } from '@/components/ui/badge';
 import type { BoutResult } from '@/engine/bout';
+import { buildFightAnalysis } from '@/engine/narrative/fightAnalysis';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { OutcomeIcon } from './OutcomeIcon';
@@ -20,6 +21,24 @@ interface BoutRowProps {
 export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
   const isWinnerA = res.outcome.winner === 'A';
   const isWinnerD = res.outcome.winner === 'D';
+
+  const analysis = buildFightAnalysis(
+    res.outcome,
+    {
+      id: res.a.id,
+      name: res.a.name,
+      style: res.a.style,
+      attributes: res.a.attributes as unknown as Record<string, number>,
+      skills: res.a.baseSkills as unknown as Record<string, number>,
+    },
+    {
+      id: res.d.id,
+      name: res.d.name,
+      style: res.d.style,
+      attributes: res.d.attributes as unknown as Record<string, number>,
+      skills: res.d.baseSkills as unknown as Record<string, number>,
+    }
+  );
 
   return (
     <Collapsible open={isExpanded} onOpenChange={() => onToggleExpand(isExpanded ? null : id)}>
@@ -120,6 +139,7 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
               winner={res.outcome.winner}
               by={res.outcome.by}
               isRivalry={res.isRivalry}
+              analysis={analysis}
             />
           </div>
         </CollapsibleContent>

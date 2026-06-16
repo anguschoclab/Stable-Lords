@@ -48,6 +48,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   Mirage: 'ambience-wind-gale',
   Rainbow: null,
   'Wildfire Smoke': null,
+  'Gravity Anomaly': 'ambience-eclipse',
 }; /**
     * Weather audio.
     * @param - { weather, volume, enabled, arena id }.

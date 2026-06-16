@@ -84,6 +84,7 @@ describe('weatherEffects', () => {
         'Dense Fog',
         'Mist',
         'Thunderstorm',
+        'Gravity Anomaly',
         'Ashfall',
         'Acid Rain',
         'Mana Surge',
@@ -105,6 +106,7 @@ describe('weatherEffects', () => {
         'Ember Rain',
         'Zephyr',
         'Wildfire Smoke',
+        'Gravity Anomaly',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);

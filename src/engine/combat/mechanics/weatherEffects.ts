@@ -274,6 +274,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 0.9,
     description: 'Thick smoke chokes the lungs and stings the eyes, turning fights into desperate brawls.',
   },
+  'Gravity Anomaly': {
+    staminaMult: 0.9,
+    initiativeMod: -3,
+    riposteMod: +5,
+    damageMult: 1.2,
+    description: 'Fluctuating gravity makes movements unpredictable, rewarding opportunistic counters and heavy strikes.',
+  },
 };
 
 /**
@@ -341,6 +348,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Rainbow: 'A vibrant rainbow curves over the arena, bringing a moment of strange peace.',
   'Ember Rain': 'Glowing embers rain down from the sky, searing the sand and the fighters alike.',
   'Wildfire Smoke': 'A thick blanket of acrid smoke settles over the sands. Every breath burns.',
+  'Gravity Anomaly': 'The very air feels unnaturally light, then crushingly heavy. The laws of physics are breaking down.',
 };
 
 /**

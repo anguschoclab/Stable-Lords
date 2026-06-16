@@ -97,10 +97,11 @@ describe('calculateStableStats', () => {
   it('should handle missing career or attribute data gracefully', () => {
     // Create a warrior directly to omit optional fields
     const partialWarrior: any = {
-      id: '1',
+      id: '1' as WarriorId,
       status: 'Active',
       style: 'Tricky',
       attributes: { ST: 10 }, // Missing other attributes
+      traits: [],
       // No career object
       // No fame
     };

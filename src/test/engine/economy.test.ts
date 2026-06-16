@@ -8,7 +8,7 @@ import { generateId } from '@/utils/idUtils';
 
 function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
   return {
-    id: generateId(undefined, 'w') as Warrior['id'],
+    id: overrides.id ?? (generateId(undefined, 'w') as Warrior['id']),
     name: 'TestWarrior',
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
@@ -21,6 +21,7 @@ function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
     champion: false,
     status: 'Active',
     age: 20,
+    traits: [],
     ...overrides,
   } as Warrior;
 }

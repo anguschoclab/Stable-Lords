@@ -47,7 +47,7 @@ function NameCell({ row }: { row: StableRow }) {
           <TooltipTrigger asChild>
             <div>
               {row.isPlayer ? (
-                <Link to="/ops/overview">{row.name}</Link>
+                <Link to="/stable/roster">{row.name}</Link>
               ) : (
                 <Link
                   to="/world/stable/$id"

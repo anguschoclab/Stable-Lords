@@ -64,7 +64,7 @@ const COACH_ROUTES: RouteEntry[] = [
 
   // ── Combat ──────────────────────────────────────────────────────────
   {
-    pattern: '/command/combat',
+    pattern: '/stable/arena',
     tips: [
       {
         id: 'round-first',
@@ -82,7 +82,7 @@ const COACH_ROUTES: RouteEntry[] = [
 
   // ── Personnel ────────────────────────────────────────────────────────────
   {
-    pattern: '/ops/personnel',
+    pattern: '/stable/trainers',
     tips: [
       {
         id: 'recruit-tip',
@@ -103,7 +103,7 @@ const COACH_ROUTES: RouteEntry[] = [
 
   // ── Personnel (Trainers tab) ──────────────────────────────────────────────────────────
   {
-    pattern: '/ops/personnel',
+    pattern: '/stable/trainers',
     tips: [
       {
         id: 'trainers-first',

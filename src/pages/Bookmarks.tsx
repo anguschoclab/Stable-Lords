@@ -122,7 +122,7 @@ export default function Bookmarks() {
           if (p) {
             name = p.name;
             subtitle = `${p.tier} · ${p.personality}`;
-            onClick = () => navigate({ to: '/ops/promoter/$id', params: { id: p.id } });
+            onClick = () => navigate({ to: '/stable/promoter/$id', params: { id: p.id } });
           } else {
             name = '[Entity Removed]';
           }
@@ -157,7 +157,7 @@ export default function Bookmarks() {
             );
             name = offer.id;
             subtitle = promoter ? `${promoter.name} · ${offer.purse}G` : `${offer.purse}G`;
-            onClick = () => navigate({ to: '/ops/contracts' });
+            onClick = () => navigate({ to: '/stable/bouts' });
           } else {
             name = '[Entity Removed]';
           }

@@ -128,7 +128,7 @@ export function processTrainingEvents(
         subtitle: isRecovery ? 'Active recovery from injuries' : 'Assigned to training grounds',
         icon: EVENT_ICONS[eventType].icon,
         iconColor: EVENT_ICONS[eventType].color,
-        linkTo: '/command/training',
+        linkTo: '/stable/training',
         entityNames: [w.name],
       } as GameEvent;
     })
@@ -150,7 +150,7 @@ export function processNewsletterEvents(newsletter: NewsletterItem[]): GameEvent
       subtitle: n.items[0]?.slice(0, 60) ?? '',
       icon: EVENT_ICONS[eventType].icon,
       iconColor: EVENT_ICONS[eventType].color,
-      linkTo: isEvent ? '/command/roster' : '/world/chronicle',
+      linkTo: isEvent ? '/stable/roster' : '/world/chronicle',
     } as GameEvent;
   });
 }

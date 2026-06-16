@@ -49,7 +49,7 @@ export default function TrainingPlanner() {
 
       <div className="flex items-center h-16 bg-white/[0.02] border border-white/5 p-1 rounded-none mb-12">
         <Link
-          to="/command/training"
+          to="/stable/training"
           className="flex-1 h-full flex items-center justify-center gap-3 font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground hover:text-foreground transition-all"
         >
           <Dumbbell className="h-3.5 w-3.5" />

@@ -120,7 +120,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Only check for "Orphan" status if we are in the main game loops
-    const exemptPaths = ['/welcome', '/ops/', '/admin', '/help'];
+    const exemptPaths = ['/welcome', '/stable/', '/admin', '/help'];
     if (exemptPaths.some((p) => activePath.startsWith(p))) return;
 
     if (filterActive(roster).length < 3) {
@@ -132,8 +132,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     // Strategic Route-Aware Event Log Toggling
     // We open the Event Log on the dashboard and high-stakes command screens.
     // We close it on management-heavy screens (Stable/World) to maximize workspace.
-    const autoOpenPaths = ['/', '/command/arena', '/command/tactics'];
-    const autoClosePaths = ['/ops', '/world', '/command/roster', '/command/training'];
+    const autoOpenPaths = ['/', '/stable/arena', '/stable/planner'];
+    const autoClosePaths = ['/stable', '/world', '/stable/roster', '/stable/training'];
 
     if (autoOpenPaths.includes(activePath)) {
       useGameStore.getState().setEventLogOpen(true);

@@ -47,7 +47,7 @@ export function TrainerTable() {
           variant="outline"
           className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-primary-foreground hover:bg-primary/20 px-3 py-1.5 rounded-none transition-all border border-primary/20 bg-transparent h-auto"
         >
-          <Link to="/ops/personnel" aria-label="Manage Staff">
+          <Link to="/stable/trainers" aria-label="Manage Staff">
             Manage Staff
           </Link>
         </Button>
@@ -66,7 +66,7 @@ export function TrainerTable() {
                 evolution.
               </p>
             </div>
-            <Link to="/ops/personnel" className="mt-4">
+            <Link to="/stable/trainers" className="mt-4">
               <Surface
                 variant="neon"
                 padding="sm"

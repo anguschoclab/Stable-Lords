@@ -193,7 +193,7 @@ export default function PromoterDetail() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
         <p className="text-muted-foreground">Promoter not found.</p>
-        <Link to="/ops/promoters">
+        <Link to="/stable/promoters">
           <Button variant="outline">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Directory
           </Button>
@@ -209,7 +209,7 @@ export default function PromoterDetail() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Link to="/ops/promoters">
+        <Link to="/stable/promoters">
           <Button variant="ghost" className="gap-2">
             <ArrowLeft className="h-4 w-4" /> Back to Directory
           </Button>

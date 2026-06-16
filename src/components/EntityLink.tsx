@@ -195,7 +195,7 @@ export function StableLink({ name, className, children }: StableLinkProps) {
                 title="View full stable"
                 aria-label="View full stable"
               >
-                <Link to="/ops/overview">
+                <Link to="/stable/roster">
                   <ExternalLink className="h-4 w-4" />
                 </Link>
               </Button>

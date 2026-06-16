@@ -167,7 +167,7 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
           className="flex-1 text-[10px] uppercase font-bold"
           asChild
         >
-          <Link to="/ops/promoter/$id" params={{ id: promoter.id }}>
+          <Link to="/stable/promoter/$id" params={{ id: promoter.id }}>
             View Profile <ArrowRight className="h-3 w-3 ml-1" />
           </Link>
         </Button>
@@ -242,7 +242,7 @@ export default function PromoterDirectory() {
               variant="outline"
               className="h-9 text-[11px] uppercase font-black tracking-widest gap-2"
             >
-              <Link to="/ops/contracts">
+              <Link to="/stable/bouts">
                 <Calendar className="h-3.5 w-3.5" />
                 Booking Office
               </Link>

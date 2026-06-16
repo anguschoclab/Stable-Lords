@@ -94,7 +94,8 @@
       "Bash(sed -n '40,90p' src/engine/combat/narrative/narrator.ts)",
       "Bash(mkdir -p docs/superpowers/plans)",
       "Bash(ls docs/superpowers/plans)",
-      "Bash(cd \"/Users/amauricia/Documents/GitHub/stable-lords\" && echo \"===who renders <BoutViewer \\(historical path\\)===\" && grep -rln \"<BoutViewer\" src --include=\"*.tsx\" | grep -v test && echo \"===does warrior/\\\\$id or any historical viewer pass analysis?===\" && grep -rn \"analysis\" src/routes/warrior/\\\\$id.tsx src/components/bout-viewer/BoutResolution.tsx 2>/dev/null)"
+      "Bash(cd \"/Users/amauricia/Documents/GitHub/stable-lords\" && echo \"===who renders <BoutViewer \\(historical path\\)===\" && grep -rln \"<BoutViewer\" src --include=\"*.tsx\" | grep -v test && echo \"===does warrior/\\\\$id or any historical viewer pass analysis?===\" && grep -rn \"analysis\" src/routes/warrior/\\\\$id.tsx src/components/bout-viewer/BoutResolution.tsx 2>/dev/null)",
+      "Bash(awk '{ for\\(i=1;i<=length\\($0\\);i++\\){c=substr\\($0,i,1\\); if\\(c==\"{\"\\)o++; if\\(c==\"}\"\\)o--} ; if\\(NR%40==0 || NR<5\\) print NR\": depth=\"o }' src/test/engine/tokens/patronTokenService.test.ts)"
     ]
   },
   "hooks": {

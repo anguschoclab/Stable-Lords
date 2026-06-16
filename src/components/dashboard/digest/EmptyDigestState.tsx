@@ -16,7 +16,7 @@ export function EmptyDigestState({ week, season }: EmptyDigestStateProps) {
       description="No activity recorded yet this week."
       className="py-6"
       action={
-        <Link to="/ops/contracts">
+        <Link to="/stable/bouts">
           <Button variant="outline" size="sm" className="text-[10px] uppercase">
             Browse Offers <ChevronRight className="h-3 w-3 ml-1" />
           </Button>

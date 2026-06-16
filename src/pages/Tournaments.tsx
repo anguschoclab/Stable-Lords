@@ -160,7 +160,7 @@ export default function Tournaments() {
         actions={
           <div className="flex items-center gap-3">
             {!currentTournament && activeWarriors.length < 2 && (
-              <Link to="/ops/recruit">
+              <Link to="/stable/recruit">
                 <Button
                   variant="outline"
                   className="h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all"

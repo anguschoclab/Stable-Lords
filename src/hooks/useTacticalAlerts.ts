@@ -54,7 +54,7 @@ export function useTacticalAlerts(): TacticalAlert[] {
         type: 'warning',
         icon: Dumbbell,
         message: `${unassigned.length} warrior${unassigned.length > 1 ? 's' : ''} need${unassigned.length === 1 ? 's' : ''} training assignment`,
-        action: { label: 'Assign', to: '/command/training' },
+        action: { label: 'Assign', to: '/stable/training' },
       });
     }
 
@@ -68,7 +68,7 @@ export function useTacticalAlerts(): TacticalAlert[] {
         type: 'info',
         icon: ScrollText,
         message: `${pendingOffers.length} bout offer${pendingOffers.length > 1 ? 's' : ''} pending response`,
-        action: { label: 'Review', to: '/ops/contracts' },
+        action: { label: 'Review', to: '/stable/bouts' },
       });
     }
 
@@ -81,7 +81,7 @@ export function useTacticalAlerts(): TacticalAlert[] {
         type: 'success',
         icon: Swords,
         message: `${fightReady.length} warriors ready for combat`,
-        action: { label: 'Execute', to: '/command/combat' },
+        action: { label: 'Execute', to: '/stable/arena' },
       });
     }
 

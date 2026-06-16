@@ -12,14 +12,14 @@ import { useNavigate } from '@tanstack/react-router';
 
 const NAV_ROUTES = [
   '/', // 1 — Command Hub
-  '/command/combat', // 2 — Combat
-  '/ops/overview', // 3 — Stable Overview
-  '/command/training', // 4 — Training
+  '/stable/arena', // 2 — Combat
+  '/stable/roster', // 3 — Stable Overview
+  '/stable/training', // 4 — Training
   '/world/intelligence', // 5 — Intelligence/Scouting
-  '/ops/equipment', // 6 — Equipment
+  '/stable/equipment', // 6 — Equipment
   '/world/tournaments', // 7 — Tournaments
   '/world/chronicle', // 8 — Chronicle
-  '/ops/finance', // 9 — Finance
+  '/stable/finance', // 9 — Finance
 ];
 
 interface UseKeyboardShortcutsOpts {
@@ -53,7 +53,7 @@ export function useKeyboardShortcuts({ onToggleSidebar }: UseKeyboardShortcutsOp
       // Space → go to Combat
       if (key === ' ') {
         e.preventDefault();
-        navigate({ to: '/command/combat' });
+        navigate({ to: '/stable/arena' });
         return;
       }
 

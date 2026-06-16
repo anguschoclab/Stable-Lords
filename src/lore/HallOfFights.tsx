@@ -117,7 +117,7 @@ export const HallOfFights: React.FC = () => {
                 <p className="text-muted-foreground">
                   No fights recorded yet. Run some rounds to fill the archives.
                 </p>
-                <Link to="/command/combat">
+                <Link to="/stable/arena">
                   <Button variant="outline" className="gap-2 mt-2">
                     <Zap className="h-4 w-4" /> Run a Round
                   </Button>

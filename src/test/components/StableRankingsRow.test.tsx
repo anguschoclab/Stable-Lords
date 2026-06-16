@@ -55,10 +55,10 @@ describe('StableRankingsRow', () => {
     expect(link).toHaveAttribute('href', '/world/stable/$id');
   });
 
-  it('renders player row with link to ops overview and ACTIVE PLAYER badge', () => {
+  it('renders player row with link to stable roster and ACTIVE PLAYER badge', () => {
     renderInTable(<StableRankingsRow row={makeRow({ isPlayer: true })} index={0} />);
     const link = screen.getByText('Test Stable').closest('a');
-    expect(link).toHaveAttribute('href', '/ops/overview');
+    expect(link).toHaveAttribute('href', '/stable/roster');
     expect(screen.getByText('ACTIVE PLAYER')).toBeInTheDocument();
   });
 

@@ -79,9 +79,9 @@ export function MobileNav({ className }: MobileNavProps) {
               activeHubId={activeHubId}
               alerts={alerts}
               alertLinks={{
-                command: '/command/training',
-                ops: '/ops/contracts',
+                stable: '/stable',
                 world: '/world/tournaments',
+                bookmarks: '/bookmarks',
               }}
               LinkComponent={SheetCloseLink}
               showChevron={true}

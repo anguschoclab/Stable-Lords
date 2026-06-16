@@ -75,14 +75,14 @@ export default function Offseason() {
                   variant: 'blood' as const,
                 },
                 {
-                  to: '/ops/personnel',
+                  to: '/stable/trainers',
                   label: 'Revise Staff',
                   sub: 'Personnel + Mentor review',
                   icon: GraduationCap,
                   variant: 'gold' as const,
                 },
                 {
-                  to: '/ops/finance',
+                  to: '/stable/finance',
                   label: 'Ledger Audit',
                   sub: 'Full fiscal retrospective',
                   icon: BookOpen,

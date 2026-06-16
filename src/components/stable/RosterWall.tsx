@@ -28,7 +28,7 @@ function EmptyRosterState() {
           recruitment terminal to enlist your first combatant asset.
         </p>
       </div>
-      <Link to="/ops/recruit" className="mt-4">
+      <Link to="/stable/recruit" className="mt-4">
         <Button>Initialize Sync</Button>
       </Link>
     </Surface>
@@ -76,7 +76,7 @@ export function RosterWall() {
             active={showBookmarkedOnly}
             onToggle={() => setShowBookmarkedOnly((v) => !v)}
           />
-          <Link to="/ops/recruit">
+          <Link to="/stable/recruit">
             <Button variant="outline" size="sm">
               Initialize Recruitment <ChevronRight className="h-4 w-4" />
             </Button>

@@ -18,7 +18,7 @@ export function EmptyContractState() {
           recruitment terminal to restore faculty operations.
         </p>
       </div>
-      <Link to="/ops/recruit" className="mt-4">
+      <Link to="/stable/recruit" className="mt-4">
         <Button>Access_Recruitment_Hub</Button>
       </Link>
     </div>

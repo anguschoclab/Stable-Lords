@@ -368,7 +368,7 @@ function HeaderActions({
   return (
     <div className="flex items-center gap-3">
       <Link
-        to="/command/combat"
+        to="/stable/arena"
         className={cn(
           'flex items-center gap-3 h-10 px-6 font-black text-[10px] uppercase tracking-[0.2em] transition-all duration-500 ease-[0.16,1,0.3,1]',
           isSimulating

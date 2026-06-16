@@ -44,7 +44,6 @@ import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './p
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias, type ResolvedTactics } from './tactics';
 import type { FighterState, ResolutionContext } from './types';
-import type { Warrior } from '@/types/warrior.types';
 import { getStyleWeatherModifier } from '@/constants/arena';
 
 // Re-export from split modules
@@ -94,12 +93,8 @@ function resolveInitiativePhase(
   const { rng, phase } = ctx;
   const stylePhase = phase as StylePhase;
 
-  const masteryIniA = fA.favorites
-    ? getFavoriteRhythmBonus(fA as unknown as Warrior, OE_A, AL_A)
-    : 0;
-  const masteryIniD = fD.favorites
-    ? getFavoriteRhythmBonus(fD as unknown as Warrior, OE_D, AL_D)
-    : 0;
+  const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA, OE_A, AL_A) : 0;
+  const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
 
   // Calculate style-weather modifiers
   const styleWeatherModA = getStyleWeatherModifier(
@@ -657,14 +652,8 @@ export function resolveExchange(
     endRatio: fD.endurance / fD.maxEndurance,
     consecutiveHits: fD.consecutiveHits,
   };
-  const dynTraitsA = getDynamicTraitMods(
-    fA.traits ? ({ traits: fA.traits } as unknown as Warrior) : undefined,
-    traitCtxA
-  );
-  const dynTraitsD = getDynamicTraitMods(
-    fD.traits ? ({ traits: fD.traits } as unknown as Warrior) : undefined,
-    traitCtxD
-  );
+  const dynTraitsA = getDynamicTraitMods(fA, traitCtxA);
+  const dynTraitsD = getDynamicTraitMods(fD, traitCtxD);
 
   // ── Spatial Sub-Phases ──
   const es = makeExchangeState();

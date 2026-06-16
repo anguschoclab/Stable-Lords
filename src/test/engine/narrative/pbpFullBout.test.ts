@@ -5,9 +5,10 @@ import { FightingStyle } from '@/types/shared.types';
 import { SeededRNGService } from '@/utils/random';
 
 const noRawTokens = (s: string) => !/\{\{|\}\}/.test(s);
+const noArticleErrors = (s: string) => !/\b a [AEIOUaeiou]/i.test(s);
 
 describe('PBP full-bout regression — no raw {{token}} leaks', () => {
-  it('scans 60 seeded fights for raw token leaks', () => {
+  it('scans 60 seeded fights for raw token leaks and article errors', () => {
     const leaks: string[] = [];
 
     for (let seed = 1; seed <= 60; seed++) {
@@ -38,7 +39,11 @@ describe('PBP full-bout regression — no raw {{token}} leaks', () => {
 
       for (const entry of out.log) {
         if (!noRawTokens(entry.text)) {
-          leaks.push(`seed ${seed}: ${entry.text}`);
+          leaks.push(`seed ${seed} [token]: ${entry.text}`);
+          if (leaks.length >= 10) break;
+        }
+        if (!noArticleErrors(entry.text)) {
+          leaks.push(`seed ${seed} [article]: ${entry.text}`);
           if (leaks.length >= 10) break;
         }
       }
@@ -46,6 +51,6 @@ describe('PBP full-bout regression — no raw {{token}} leaks', () => {
       if (leaks.length >= 10) break;
     }
 
-    expect(leaks, `Raw token leaks found:\n${leaks.join('\n')}`).toHaveLength(0);
+    expect(leaks, `PBP leaks found:\n${leaks.join('\n')}`).toHaveLength(0);
   });
 });

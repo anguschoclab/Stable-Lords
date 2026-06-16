@@ -133,6 +133,8 @@ export function createFreshState(
         generation: 0,
       },
       roster: [],
+      ledger: [],
+      trainingAssignments: [],
     };
   });
 

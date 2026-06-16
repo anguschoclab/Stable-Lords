@@ -13,7 +13,10 @@
  *  - Trainer salaries: by tier.
  *  - Training costs: TRAINING_COST per warrior in training.
  */
-import type { GameState, LedgerEntry } from '@/types/state.types';
+import type { LedgerEntry, TrainingAssignment } from '@/types/state.types';
+import type { FightSummary } from '@/types/combat.types';
+import type { Warrior } from '@/types/warrior.types';
+import type { Trainer, WeatherType } from '@/types/shared.types';
 import type { StateImpact } from '@/engine/impacts';
 import type { LedgerEntryId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -44,14 +47,29 @@ export interface WeeklyBreakdown {
 }
 
 /**
+ * Minimal subset of GameState that computeWeeklyBreakdown actually reads.
+ * Allows both the player (full GameState) and AI stables (rival-shaped
+ * objects) to use the same weekly economy math.
+ */
+export interface StableEconomyInput {
+  week: number;
+  roster: Warrior[];
+  fame: number;
+  weather: WeatherType;
+  arenaHistory: FightSummary[];
+  trainers: Trainer[];
+  trainingAssignments: TrainingAssignment[];
+}
+
+/**
  * Compute a projected breakdown for the current state (before advancing).
  *
- * @param state - The current game state
+ * @param input - The stable economy input (GameState or AI rival subset)
  * @returns A detailed breakdown of income and expenses
  */
-export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
-  const week = state.week;
-  const playerWarriorIds = new Set(state.roster.map((w) => w.id));
+export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdown {
+  const week = input.week;
+  const stableWarriorIds = new Set(input.roster.map((w) => w.id));
 
   let fightCount = 0;
   let winCount = 0;
@@ -69,16 +87,16 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
 
   // ⚡ Bolt: Fast backward search in O(1) instead of an O(N) filter.
   // We can break early because `arenaHistory` is guaranteed chronological.
-  for (let i = state.arenaHistory.length - 1; i >= 0; i--) {
-    const f = state.arenaHistory[i];
+  for (let i = input.arenaHistory.length - 1; i >= 0; i--) {
+    const f = input.arenaHistory[i];
     if (!f) break;
     if (f.week !== week) break;
 
-    const aIsPlayer = playerWarriorIds.has(f.warriorIdA);
-    const dIsPlayer = playerWarriorIds.has(f.warriorIdD);
+    const aIsStable = stableWarriorIds.has(f.warriorIdA);
+    const dIsStable = stableWarriorIds.has(f.warriorIdD);
     const tier = arenaTier(f.arenaId);
 
-    if (aIsPlayer) {
+    if (aIsStable) {
       fightCount++;
       const won = f.winner === 'A';
       if (won) winCount++;
@@ -86,7 +104,7 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
       scaledPurse += purse;
       scaledWinBonus += winBonus;
     }
-    if (dIsPlayer) {
+    if (dIsStable) {
       fightCount++;
       const won = f.winner === 'D';
       if (won) winCount++;
@@ -101,16 +119,16 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
     income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse });
   if (winCount > 0)
     income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus });
-  if (state.fame > 0)
-    income.push({ label: 'Fame dividends', amount: Math.round(state.fame * FAME_DIVIDEND) });
+  if (input.fame > 0)
+    income.push({ label: 'Fame dividends', amount: Math.round(input.fame * FAME_DIVIDEND) });
 
   // 🌩️ Weather Impact: Mana Surge Gift
-  if (state.weather === 'Mana Surge') {
+  if (input.weather === 'Mana Surge') {
     income.push({ label: 'Celestial Gift (Mana Surge)', amount: 250 });
   }
 
   // 🏛️ 1.0 Hardening: Noble Patronage (High-fame warriors attract wealthy sponsors)
-  const patronageIncome = state.roster.reduce((sum, w) => {
+  const patronageIncome = input.roster.reduce((sum, w) => {
     if ((w.fame || 0) > 40) {
       return sum + Math.floor(((w.fame || 0) - 40) / 10) * 25;
     }
@@ -120,24 +138,24 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
     income.push({ label: 'Noble Patronage Contribution', amount: patronageIncome });
 
   const expenses: { label: string; amount: number }[] = [];
-  if (state.roster.length > 0) {
+  if (input.roster.length > 0) {
     // 🏛️ 1.0 Hardening: Elite Maintenance (Legendary warriors demand luxury overhead)
-    const rosterUpkeep = state.roster.reduce((sum, w) => {
+    const rosterUpkeep = input.roster.reduce((sum, w) => {
       const famePremium = Math.floor((w.fame || 0) / 10) * 15; // Increased from 10 to 15 for 1.0 balance
       return sum + WARRIOR_UPKEEP_BASE + famePremium;
     }, 0);
-    expenses.push({ label: `Warrior upkeep (${state.roster.length})`, amount: rosterUpkeep });
+    expenses.push({ label: `Warrior upkeep (${input.roster.length})`, amount: rosterUpkeep });
 
     // Weather-specific ledger labels for clarity
-    if (state.weather === 'Sweltering') {
-      expenses.push({ label: 'Cooling & Ventilation Overhead', amount: state.roster.length * 5 });
+    if (input.weather === 'Sweltering') {
+      expenses.push({ label: 'Cooling & Ventilation Overhead', amount: input.roster.length * 5 });
     }
-    if (state.weather === 'Blizzard') {
-      expenses.push({ label: 'Insulation & Fuel Overhead', amount: state.roster.length * 10 });
+    if (input.weather === 'Blizzard') {
+      expenses.push({ label: 'Insulation & Fuel Overhead', amount: input.roster.length * 10 });
     }
   }
 
-  const { activeTrainerCount, trainerCost } = state.trainers.reduce(
+  const { activeTrainerCount, trainerCost } = input.trainers.reduce(
     (acc, t) => {
       if (t.contractWeeksLeft > 0) {
         acc.activeTrainerCount++;
@@ -151,7 +169,7 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
     expenses.push({ label: `Trainer salaries (${activeTrainerCount})`, amount: trainerCost });
   }
 
-  const trainingCount = (state.trainingAssignments ?? []).length;
+  const trainingCount = (input.trainingAssignments ?? []).length;
   if (trainingCount > 0)
     expenses.push({
       label: `Training fees (${trainingCount})`,
@@ -172,16 +190,16 @@ export function computeWeeklyBreakdown(state: GameState): WeeklyBreakdown {
  * @param rng - RNG service for generating transaction IDs (optional)
  * @returns The state impact containing treasury delta and ledger entries
  */
-export function computeEconomyImpact(state: GameState, rng?: IRNGService): StateImpact {
-  const breakdown = computeWeeklyBreakdown(state);
+export function computeEconomyImpact(input: StableEconomyInput, rng?: IRNGService): StateImpact {
+  const breakdown = computeWeeklyBreakdown(input);
   const entries: LedgerEntry[] = [];
 
-  const rngService = rng || new SeededRNGService(state.week * 31);
+  const rngService = rng || new SeededRNGService(input.week * 31);
 
   for (const i of breakdown.income) {
     entries.push({
       id: rngService.uuid() as LedgerEntryId,
-      week: state.week,
+      week: input.week,
       label: i.label,
       amount: i.amount,
       category: 'fight',
@@ -190,7 +208,7 @@ export function computeEconomyImpact(state: GameState, rng?: IRNGService): State
   for (const e of breakdown.expenses) {
     entries.push({
       id: rngService.uuid() as LedgerEntryId,
-      week: state.week,
+      week: input.week,
       label: e.label,
       amount: -e.amount,
       category: 'upkeep',

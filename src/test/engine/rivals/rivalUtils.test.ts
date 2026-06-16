@@ -22,7 +22,12 @@ describe('rivalUtils', () => {
       id,
       name: `Stable ${id}`,
       roster,
-    }) as RivalStableData;
+      owner: { id: `owner-${id}`, name: `Owner ${id}`, stableName: `Stable ${id}` } as any,
+      fame: 0,
+      treasury: 1000,
+      ledger: [],
+      trainingAssignments: [],
+    }) as unknown as RivalStableData;
 
   describe('pickRivalOpponent', () => {
     it('should return null if no rivals exist', () => {

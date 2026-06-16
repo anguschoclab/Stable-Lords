@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { processAIStable } from '@/engine/ai/stableManager';
 import type { GameState, RivalStableData, FightSummary } from '@/types/state.types';
+import { FightingStyle } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 
 describe('processAIStable', () => {
@@ -22,8 +23,12 @@ describe('processAIStable', () => {
         titles: 0,
       },
       fame: 0,
-      roster: [],
+      roster: [
+        { id: 'warA' as any, name: 'Warrior A', style: FightingStyle.StrikingAttack, fame: 0, status: 'Active', age: 20, injuries: [], attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } as any } as any,
+      ],
       treasury: 1000,
+      ledger: [],
+      trainingAssignments: [],
     };
 
     // Create a fight where this stable's warrior fought

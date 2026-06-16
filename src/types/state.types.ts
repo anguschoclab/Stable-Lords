@@ -318,6 +318,8 @@ export interface RivalStableData {
   tier?: 'Minor' | 'Established' | 'Major' | 'Legendary';
   crest?: CrestData;
   seasonalGrowth?: SeasonalGrowth[];
+  ledger: LedgerEntry[];
+  trainingAssignments: TrainingAssignment[];
 } /**
    * Defines the shape of scout report data.
    */

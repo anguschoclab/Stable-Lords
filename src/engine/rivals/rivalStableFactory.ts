@@ -177,6 +177,8 @@ export function generateRivalStables(
       },
       actionHistory: [],
       fame: iteration > 0 ? 50 + iteration * 100 : 0,
+      ledger: [],
+      trainingAssignments: [],
       crest,
     });
   }

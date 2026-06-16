@@ -31,6 +31,7 @@ describe('Owner Roster Worker', () => {
         favoredStyles: [],
       },
       treasury,
+      fame: 0,
       strategy: { intent: 'MAINTENANCE' },
       roster: roster.map((w, i) => ({
         id: `w-${i}`,
@@ -40,7 +41,9 @@ describe('Owner Roster Worker', () => {
         age: w.age || 20,
         ...w,
       })) as RivalWarrior[],
-    } as RivalStableData;
+      ledger: [],
+      trainingAssignments: [],
+    } as unknown as RivalStableData;
   };
 
   describe('Culling Logic', () => {

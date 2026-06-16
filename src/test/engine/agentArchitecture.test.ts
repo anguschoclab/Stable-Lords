@@ -14,6 +14,8 @@ describe('AI Agent Architecture - Skeptical Intent', () => {
     treasury: 500,
     roster: [{ status: 'Active' }, { status: 'Active' }, { status: 'Active' }] as any,
     strategy: { intent: 'VENDETTA', planWeeksRemaining: 5 },
+    ledger: [],
+    trainingAssignments: [],
   };
 
   it('should approve a valid plan', () => {

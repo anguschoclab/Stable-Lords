@@ -1,17 +1,11 @@
 import type { GameState, RivalStableData, Trainer, Warrior } from '@/types/state.types';
+import type { LedgerEntryId } from '@/types/shared.types';
 import { processStaff } from './workers/staffWorker';
 import { processRoster } from './workers/rosterWorker';
 import { consolidateAgentMemory, createAgentContext } from './agentCore';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
-import { filterActive } from '@/utils/roster';
-
-import {
-  FIGHT_PURSE,
-  WIN_BONUS,
-  FAME_DIVIDEND,
-  WARRIOR_UPKEEP_BASE,
-  TRAINER_WEEKLY_SALARY,
-} from '@/constants/economy';
+import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
+import { SeededRNGService } from '@/utils/random';
 
 /**
  * processAIStable - The Lead Agent Orchestrator for a Rival Stable.
@@ -50,34 +44,7 @@ export function processAIStable(
     return w;
   });
 
-  // 2. Calculate Weekly Income (Fights + Fame)
-  // NOTE on tick ordering: `weekPipelineService.runWeekPipeline` runs
-  // `BoutSimulationPass` → `resolveImpacts` to produce `settledState` before
-  // calling `RivalStrategyPass`. That means `state.arenaHistory` already
-  // reflects this week's bouts when we read it here — no stale N-1 income.
-  // FightSummary records the participants' stable identity in `stableIdA`/`stableIdD`
-  // (set by createFightSummary). The comparison should match the rival's `id` (StableId).
-  // Some parts of the codebase might still be using the old stable format or
-  // populated the 'owner.id' instead of the stable 'id' for the stable identifier,
-  // so we check both 'updatedRival.id' and 'updatedRival.owner.id' against the FightSummary stable.
-  let weeklyIncome = 0;
-  const weekFights = state.arenaHistory.filter((f) => f.week === state.week);
-  for (const f of weekFights) {
-    const stableA = f.stableIdA;
-    const stableD = f.stableIdD;
-    const isOwnerA = updatedRival.id === stableA || updatedRival.owner.id === stableA;
-    const isOwnerD = updatedRival.id === stableD || updatedRival.owner.id === stableD;
-    if (isOwnerA || isOwnerD) {
-      weeklyIncome += FIGHT_PURSE;
-      if ((isOwnerA && f.winner === 'A') || (isOwnerD && f.winner === 'D')) {
-        weeklyIncome += WIN_BONUS;
-      }
-    }
-  }
-  const fameDividend = Math.round((updatedRival.owner.fame || 0) * FAME_DIVIDEND);
-  weeklyIncome += fameDividend;
-
-  // 3. Delegate to Workers (Hierarchical Delegation)
+  // 2. Delegate to Workers (Hierarchical Delegation)
 
   // A) StaffWorker (Hiring/Firing)
   const staffResult = processStaff(updatedRival, state, currentHiringPool, context);
@@ -92,39 +59,51 @@ export function processAIStable(
   // dropped and has been removed. Agent context flows via `updatedRival` state.
   updatedRival = processRoster(updatedRival, state.week, state.season, rosterSeed);
 
-  // 4. Calculate Final Expenses
-  let weeklyExpenses = 0; // Removed 20g hidden tax for parity
+  // 3. Calculate Weekly Economy via shared player path
+  const economyInput: StableEconomyInput = {
+    week: state.week,
+    roster: updatedRival.roster,
+    fame: updatedRival.fame ?? updatedRival.owner.fame ?? 0,
+    weather: state.weather,
+    arenaHistory: state.arenaHistory.filter((f) => f.week === state.week),
+    trainers: updatedRival.trainers ?? [],
+    trainingAssignments: updatedRival.trainingAssignments ?? [],
+  };
 
-  // 🏛️ Unification: Fame-bracketed upkeep for AI
-  // Derived after workers run so newly-recruited or status-changed warriors are included.
-  const activeRoster = filterActive(updatedRival.roster);
-  const rosterUpkeep = activeRoster.reduce((sum, w) => {
-    const famePremium = Math.floor((w.fame || 0) / 10) * 10;
-    return sum + WARRIOR_UPKEEP_BASE + famePremium;
-  }, 0);
-  weeklyExpenses += rosterUpkeep;
+  const breakdown = computeWeeklyBreakdown(economyInput);
 
-  weeklyExpenses += (updatedRival.trainers || []).reduce(
-    (sum, t) => sum + (TRAINER_WEEKLY_SALARY[t.tier] || 10),
-    0
-  );
+  // Apply treasury delta
+  updatedRival.treasury += breakdown.net;
 
-  // 5. Update Treasury & Check Bankruptcy (Risk Control)
-  const treasuryDelta = weeklyIncome - weeklyExpenses;
-  const newTreasury = updatedRival.treasury + treasuryDelta;
-  // 🏛️ 1.0 Hardening: League Subsidy (Prevent economic death spiral)
-  // isBankrupt is always false: the subsidy floor prevents true bankruptcy.
-  const SUBSIDY_FLOOR = 500;
-  const isBankrupt = false;
-  if (newTreasury < SUBSIDY_FLOOR) {
-    const subsidy = SUBSIDY_FLOOR - (newTreasury < 0 ? 0 : newTreasury);
-    updatedRival.treasury = SUBSIDY_FLOOR;
-    gazetteItems.push(
-      `🏛️ SUBSIDY: ${updatedRival.owner.stableName} received ${subsidy}g from the League of Lords to maintain operations.`
-    );
-  } else {
-    updatedRival.treasury = newTreasury;
+  // Write ledger entries
+  const rngService = new SeededRNGService(state.week * 31 + updatedRival.id.length);
+  const newEntries: import('@/types/state.types').LedgerEntry[] = [];
+  for (const i of breakdown.income) {
+    newEntries.push({
+      id: rngService.uuid() as LedgerEntryId,
+      week: state.week,
+      label: i.label,
+      amount: i.amount,
+      category: 'fight',
+    });
   }
+  for (const e of breakdown.expenses) {
+    newEntries.push({
+      id: rngService.uuid() as LedgerEntryId,
+      week: state.week,
+      label: e.label,
+      amount: -e.amount,
+      category: 'upkeep',
+    });
+  }
+  updatedRival.ledger = [...(updatedRival.ledger || []), ...newEntries];
+
+  // Clear training assignments (mirrors player finalizeState)
+  updatedRival.trainingAssignments = [];
+
+  // 4. Bankruptcy check (aligned with player threshold)
+  const BANKRUPTCY_THRESHOLD = -500;
+  const isBankrupt = updatedRival.treasury < BANKRUPTCY_THRESHOLD;
 
   // Milestone detection — narrow parity with the player's own-stable gazette.
   // Fires once per threshold crossing this tick: fame (100, 250, 500), cumulative

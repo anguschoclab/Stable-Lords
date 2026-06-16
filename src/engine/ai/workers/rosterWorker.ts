@@ -1,6 +1,7 @@
 import { updateEntityInList } from '@/utils/stateUtils';
 import { filterActive } from '@/utils/roster';
-import type { GameState, RivalStableData, SeasonalGrowth } from '@/types/state.types';
+import type { GameState, RivalStableData, SeasonalGrowth, TrainingAssignment } from '@/types/state.types';
+import { TRAINING_COST } from '@/constants/economy';
 import type { Attributes, Season } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import { checkBudget } from './budgetWorker';
@@ -81,11 +82,9 @@ export function processRoster(
   const trainees = [...champions, ...nonChampions].slice(0, trainingLimit);
 
   for (const trainee of trainees) {
-    const trainingCost = 35;
-    const budgetReport = checkBudget(updatedRival, trainingCost, 'ROSTER');
+    const budgetReport = checkBudget(updatedRival, TRAINING_COST, 'ROSTER');
 
     if (budgetReport.isAffordable) {
-      updatedRival.treasury -= trainingCost;
       // With the `skillDrilling` feature flag on, roughly 1-in-4 AI training
       // weeks spend on skill drilling instead of attribute training — same
       // option surface the player has in the TrainingAssignment UI. Below the
@@ -96,8 +95,12 @@ export function processRoster(
         updatedRival.roster = updateEntityInList(updatedRival.roster, trainee.id, (w) =>
           performAISkillDrill(w, updatedRival, rngService)
         );
+        updatedRival.trainingAssignments = [
+          ...(updatedRival.trainingAssignments || []),
+          { warriorId: trainee.id, type: 'skillDrill' } as TrainingAssignment,
+        ];
       } else {
-        const { warrior, seasonalGrowth: nextGrowth } = performAITraining(
+        const { warrior, seasonalGrowth: nextGrowth, chosen } = performAITraining(
           trainee,
           updatedRival,
           season,
@@ -107,6 +110,12 @@ export function processRoster(
         );
         seasonalGrowth = nextGrowth;
         updatedRival.roster = updateEntityInList(updatedRival.roster, warrior.id, () => warrior);
+        if (chosen) {
+          updatedRival.trainingAssignments = [
+            ...(updatedRival.trainingAssignments || []),
+            { warriorId: trainee.id, type: 'attribute', attribute: chosen } as TrainingAssignment,
+          ];
+        }
       }
     }
   }
@@ -218,7 +227,7 @@ function performAITraining(
   seasonalGrowth: SeasonalGrowth[],
   rng: IRNGService,
   healingBonus: number = 0
-): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[] } {
+): { warrior: Warrior; seasonalGrowth: SeasonalGrowth[]; chosen?: keyof Attributes } {
   // 80% pre-gate — preserves the spec's AI-at-80%-effectiveness lever while
   // still routing through the full pipeline on the weeks it attempts.
   if (rng.next() >= AI_TRAINING_EFFECTIVENESS) return { warrior: w, seasonalGrowth };
@@ -272,7 +281,7 @@ function performAITraining(
     warrior = { ...warrior, baseSkills, derivedStats };
   }
 
-  return { warrior, seasonalGrowth: nextSeasonalGrowth };
+  return { warrior, seasonalGrowth: nextSeasonalGrowth, chosen };
 }
 
 /**

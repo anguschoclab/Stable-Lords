@@ -138,6 +138,8 @@ function makeRival(id: string = 'rival-1'): RivalStableData {
     roster: [makeWarrior('r1', 'Rival1')],
     treasury: 1000,
     tier: 'Established' as any,
+    ledger: [],
+    trainingAssignments: [],
   };
 }
 

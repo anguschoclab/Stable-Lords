@@ -56,6 +56,8 @@ function makeTestRival(
     treasury: 1000,
     tier: 'Established',
     strategy,
+    ledger: [],
+    trainingAssignments: [],
   };
 }
 

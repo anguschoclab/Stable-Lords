@@ -57,6 +57,8 @@ function createTestRival(
     roster: warriors,
     treasury: 1000,
     tier: 'Established',
+    ledger: [],
+    trainingAssignments: [],
   };
 }
 

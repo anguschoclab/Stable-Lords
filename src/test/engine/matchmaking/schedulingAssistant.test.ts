@@ -59,6 +59,8 @@ describe('Scheduling Assistant Engine', () => {
         fame: 0,
         roster: rivalWarriors,
         treasury: 1000,
+        ledger: [],
+        trainingAssignments: [],
       },
     ];
 

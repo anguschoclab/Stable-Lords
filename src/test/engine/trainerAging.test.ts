@@ -112,6 +112,8 @@ function makeRival(id: string, trainers?: Trainer[]): RivalStableData {
     treasury: 1000,
     roster: [],
     trainers,
+    ledger: [],
+    trainingAssignments: [],
   };
 }
 

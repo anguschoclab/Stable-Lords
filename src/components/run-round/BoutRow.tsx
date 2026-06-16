@@ -22,21 +22,22 @@ export function BoutRow({ res, id, isExpanded, onToggleExpand }: BoutRowProps) {
   const isWinnerA = res.outcome.winner === 'A';
   const isWinnerD = res.outcome.winner === 'D';
 
+  const zeroSkills = { ATT: 0, PAR: 0, DEF: 0, INI: 0, RIP: 0, DEC: 0 };
   const analysis = buildFightAnalysis(
     res.outcome,
     {
       id: res.a.id,
       name: res.a.name,
       style: res.a.style,
-      attributes: res.a.attributes as unknown as Record<string, number>,
-      skills: res.a.baseSkills as unknown as Record<string, number>,
+      attributes: res.a.attributes,
+      skills: res.a.baseSkills ?? zeroSkills,
     },
     {
       id: res.d.id,
       name: res.d.name,
       style: res.d.style,
-      attributes: res.d.attributes as unknown as Record<string, number>,
-      skills: res.d.baseSkills as unknown as Record<string, number>,
+      attributes: res.d.attributes,
+      skills: res.d.baseSkills ?? zeroSkills,
     }
   );
 

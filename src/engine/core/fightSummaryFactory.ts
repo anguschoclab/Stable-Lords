@@ -43,21 +43,22 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
   const transcript = outcome.log?.map((e) => e.text || '') || [];
 
   // Build fight analysis
+  const zeroSkills = { ATT: 0, PAR: 0, DEF: 0, INI: 0, RIP: 0, DEC: 0 };
   const analysis = buildFightAnalysis(
     outcome,
     {
       id: warriorA.id,
       name: warriorA.name,
       style: warriorA.style,
-      attributes: warriorA.attributes as unknown as Record<string, number>,
-      skills: warriorA.baseSkills as unknown as Record<string, number>,
+      attributes: warriorA.attributes,
+      skills: warriorA.baseSkills ?? zeroSkills,
     },
     {
       id: warriorD.id,
       name: warriorD.name,
       style: warriorD.style,
-      attributes: warriorD.attributes as unknown as Record<string, number>,
-      skills: warriorD.baseSkills as unknown as Record<string, number>,
+      attributes: warriorD.attributes,
+      skills: warriorD.baseSkills ?? zeroSkills,
     }
   );
 

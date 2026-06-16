@@ -5,7 +5,7 @@
  */
 import type { FightOutcome, ExchangeLogEntry } from '@/types/combat.types';
 import { getMatchupBonus } from '@/constants/combat/combat';
-import type { FightingStyle } from '@/types/shared.types';
+import type { FightingStyle, Attributes, BaseSkills } from '@/types/shared.types';
 
 /** A single ranked, human-readable reason the fight went the way it did. */
 export interface AnalysisFactor {
@@ -39,12 +39,12 @@ export interface FightAnalysis {
   factors: AnalysisFactor[];
 }
 
-interface AnalysisWarrior {
+export interface AnalysisWarrior {
   id: string;
   name: string;
   style: string;
-  attributes: Record<string, number>;
-  skills: Record<string, number>;
+  attributes: Attributes;
+  skills: BaseSkills;
 }
 
 function summarizeTale(log: ExchangeLogEntry[]) {
@@ -98,9 +98,11 @@ function findFatigueCrossover(log: ExchangeLogEntry[]): {
   return { fatiguedSide: null, crossoverExchange: null };
 }
 
+const SKILL_KEYS: (keyof BaseSkills)[] = ['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC'];
+
 function biggestSkillGap(a: AnalysisWarrior, d: AnalysisWarrior): { skill: string; gap: number; favored: 'A' | 'D' } {
   let best = { skill: 'ATT', gap: 0, favored: 'A' as 'A' | 'D' };
-  for (const k of Object.keys(a.skills)) {
+  for (const k of SKILL_KEYS) {
     const gap = (a.skills[k] ?? 0) - (d.skills[k] ?? 0);
     if (Math.abs(gap) > Math.abs(best.gap)) {
       best = { skill: k, gap: Math.abs(gap), favored: gap >= 0 ? 'A' : 'D' };

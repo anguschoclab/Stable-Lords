@@ -37,21 +37,22 @@ export function BoutsStep({ bouts }: BoutsStepProps) {
         {bouts.length > 0 ? (
           <div className="space-y-6">
             {bouts.map((r: BoutResult, i: number) => {
+              const zeroSkills = { ATT: 0, PAR: 0, DEF: 0, INI: 0, RIP: 0, DEC: 0 };
               const analysis = buildFightAnalysis(
                 r.outcome,
                 {
                   id: r.a.id,
                   name: r.a.name,
                   style: r.a.style,
-                  attributes: r.a.attributes as unknown as Record<string, number>,
-                  skills: r.a.baseSkills as unknown as Record<string, number>,
+                  attributes: r.a.attributes,
+                  skills: r.a.baseSkills ?? zeroSkills,
                 },
                 {
                   id: r.d.id,
                   name: r.d.name,
                   style: r.d.style,
-                  attributes: r.d.attributes as unknown as Record<string, number>,
-                  skills: r.d.baseSkills as unknown as Record<string, number>,
+                  attributes: r.d.attributes,
+                  skills: r.d.baseSkills ?? zeroSkills,
                 }
               );
               return (

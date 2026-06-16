@@ -620,7 +620,8 @@ export type WeatherType =
   | 'Ember Rain'
   | 'Zephyr'
   | 'Wildfire Smoke'
-  | 'Blood Fog';
+  | 'Blood Fog'
+  | 'Shimmering Heat';
 
 /**
  * Defines the shape of death event.

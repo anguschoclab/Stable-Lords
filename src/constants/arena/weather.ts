@@ -299,6 +299,13 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
     borderClass: 'border-destructive/20',
     description: 'A crimson fog obscures vision and incites a frantic, bloody panic.',
   },
+  'Shimmering Heat': {
+    icon: Sun,
+    colorClass: 'text-orange-400',
+    bgClass: 'bg-orange-400/10',
+    borderClass: 'border-orange-400/20',
+    description: 'A rippling heatwave blurs vision and exhausts combatants.',
+  },
 };
 
 /**

@@ -40,6 +40,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (season === 'Summer') {
     if (roll < 0.25) return 'Clear';
     if (roll < 0.3) return 'Mirage';
+    if (roll < 0.34) return 'Shimmering Heat';
     if (roll < 0.38) return 'Blazing Sun';
     if (roll < 0.45) return 'Scorching Wind';
     if (roll < 0.55) return 'Sweltering';

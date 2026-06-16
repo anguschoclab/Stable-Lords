@@ -132,8 +132,8 @@ export default function Orphanage() {
     });
     saveCurrentState();
 
-    // Navigate to command center after FTUE
-    navigate({ to: '/command' });
+    // Navigate to the Stable hub after FTUE
+    navigate({ to: '/stable' });
   }, [state, setState, selectedWarriors, boutResult, poolSeedValue, saveCurrentState, navigate]);
 
   // ─── Shell ──────────────────────────────────────────────────────────────────

@@ -1,15 +1,8 @@
-/**
- * Operations Hub - Personnel Page
- * Trainers and Recruitment unified
- */
-import { createFileRoute } from '@tanstack/react-router';
-import Trainers from '@/pages/Trainers'; /**
-                                          * Route.
-                                          */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/**
- * Route.
- */
 export const Route = createFileRoute('/ops/personnel')({
-  component: Trainers,
+  beforeLoad: () => {
+    throw redirect({ to: '/stable/trainers' });
+  },
+  component: () => null,
 });

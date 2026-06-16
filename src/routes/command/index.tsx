@@ -1,15 +1,8 @@
-/**
- * Command Hub - Overview Page
- * Merged Dashboard + Critical Alerts
- */
-import { createFileRoute } from '@tanstack/react-router';
-import ControlCenter from '@/pages/ControlCenter'; /**
-                                                    * Route.
-                                                    */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/**
- * Route.
- */
 export const Route = createFileRoute('/command/')({
-  component: ControlCenter,
+  beforeLoad: () => {
+    throw redirect({ to: '/stable' });
+  },
+  component: () => null,
 });

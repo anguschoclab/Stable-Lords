@@ -1,15 +1,8 @@
-/**
- * Operations Hub - Promoter Detail Page
- * Individual promoter profile and history
- */
-import { createFileRoute } from '@tanstack/react-router';
-import PromoterDetail from '@/pages/PromoterDetail'; /**
-                                                      * Route.
-                                                      */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/**
- * Route.
- */
 export const Route = createFileRoute('/ops/promoter/$id')({
-  component: PromoterDetail,
+  beforeLoad: ({ params }) => {
+    throw redirect({ to: '/stable/promoter/$id', params });
+  },
+  component: () => null,
 });

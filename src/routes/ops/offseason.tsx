@@ -1,15 +1,8 @@
-/**
- * Operations Hub - Offseason Page
- * Year-end retrospective + offseason transition flow.
- */
-import { createFileRoute } from '@tanstack/react-router';
-import Offseason from '@/pages/Offseason'; /**
-                                            * Route.
-                                            */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/**
- * Route.
- */
 export const Route = createFileRoute('/ops/offseason')({
-  component: Offseason,
+  beforeLoad: () => {
+    throw redirect({ to: '/stable/offseason' });
+  },
+  component: () => null,
 });

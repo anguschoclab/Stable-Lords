@@ -1,15 +1,8 @@
-/**
- * Command Hub - Training Page
- * Unified training management with Overview | Assignments | Analysis tabs
- */
-import { createFileRoute } from '@tanstack/react-router';
-import Training from '@/pages/Training'; /**
-                                          * Route.
-                                          */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/**
- * Route.
- */
 export const Route = createFileRoute('/command/training')({
-  component: Training,
+  beforeLoad: () => {
+    throw redirect({ to: '/stable/training' });
+  },
+  component: () => null,
 });

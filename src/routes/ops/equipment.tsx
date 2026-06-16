@@ -1,15 +1,8 @@
-/**
- * Operations Hub - Equipment Page
- * Armory and gear management
- */
-import { createFileRoute } from '@tanstack/react-router';
-import StableEquipment from '@/pages/StableEquipment'; /**
-                                                        * Route.
-                                                        */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/**
- * Route.
- */
 export const Route = createFileRoute('/ops/equipment')({
-  component: StableEquipment,
+  beforeLoad: () => {
+    throw redirect({ to: '/stable/equipment' });
+  },
+  component: () => null,
 });

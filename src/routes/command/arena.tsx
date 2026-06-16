@@ -1,15 +1,8 @@
-/**
- * Command Hub - Arena Page
- * Pre-bout arena overview: crowd mood, stats, matchups.
- */
-import { createFileRoute } from '@tanstack/react-router';
-import ArenaHub from '@/pages/ArenaHub'; /**
-                                          * Route.
-                                          */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/**
- * Route.
- */
 export const Route = createFileRoute('/command/arena')({
-  component: ArenaHub,
+  beforeLoad: () => {
+    throw redirect({ to: '/stable/arena' });
+  },
+  component: () => null,
 });

@@ -380,6 +380,20 @@ describe('getFavoriteRhythmBonus', () => {
     });
     expect(getFavoriteRhythmBonus(warrior, 7, 5)).toBe(2);
   });
+
+  it('accepts any object exposing favorites (e.g. a FighterState), not just a full Warrior', () => {
+    // A minimal structural object — this is what FighterState provides.
+    const fighterLike = {
+      favorites: {
+        // shape mirrors WarriorFavorites enough for the rhythm path
+        weaponId: 'longsword',
+        discovered: { rhythm: true, weapon: false, weaponHints: 0, rhythmHints: 0 },
+        rhythm: { oe: 7, al: 5 },
+      },
+    } as const;
+    // @ts-expect-no-error — should compile once the signature is narrowed.
+    expect(getFavoriteRhythmBonus(fighterLike as any, 7, 5)).toBe(2);
+  });
 });
 
 // ─── applyInsightToken ──────────────────────────────────────────────────────

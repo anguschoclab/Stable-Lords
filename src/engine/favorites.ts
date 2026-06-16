@@ -179,7 +179,7 @@ export function getFavoriteWeaponBonus(warrior: Warrior): number {
  * rewarding plans that exactly hit the warrior's natural rhythm.
  */
 export function getFavoriteRhythmBonus(
-  warrior: Warrior,
+  warrior: { favorites?: WarriorFavorites },
   currentOE: number,
   currentAL: number
 ): number {

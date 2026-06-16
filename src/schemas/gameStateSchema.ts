@@ -1054,6 +1054,42 @@ export const FightOutcomeSchema = z.object({
 });
 
 /**
+ * AnalysisFactor schema
+ */
+const analysisFactorSchema = z.object({
+  label: z.string(),
+  detail: z.string(),
+  favored: z.enum(['A', 'D']).nullable(),
+  weight: z.number(),
+});
+
+/**
+ * FightAnalysis schema
+ */
+export const fightAnalysisSchema = z.object({
+  styleMatchup: z.object({ styleA: z.string(), styleD: z.string(), edge: z.number() }),
+  decisiveExchange: z.object({
+    index: z.number().nullable(),
+    minute: z.number().nullable(),
+    reasonCodes: z.array(z.string()),
+    summary: z.string(),
+  }),
+  fatigue: z.object({
+    fatiguedSide: z.enum(['A', 'D']).nullable(),
+    crossoverExchange: z.number().nullable(),
+  }),
+  tale: z.object({
+    hitsA: z.number(),
+    hitsD: z.number(),
+    damageA: z.number(),
+    damageD: z.number(),
+    ripostesA: z.number(),
+    ripostesD: z.number(),
+  }),
+  factors: z.array(analysisFactorSchema),
+});
+
+/**
  * FightSummary schema
  */
 export const FightSummarySchema = z.object({
@@ -1093,6 +1129,7 @@ export const FightSummarySchema = z.object({
   isRivalry: z.boolean().optional(),
   arenaId: z.string().optional(),
   weather: WeatherTypeSchema.optional(),
+  analysis: fightAnalysisSchema.optional(),
 });
 
 /**

@@ -6,9 +6,8 @@ import type { Warrior } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { FightSummary } from '@/types/state.types';
 import type { FightId, TournamentId } from '@/types/shared.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
-                                                                   * Defines the shape of fight summary params.
-                                                                   */
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { buildFightAnalysis } from '@/engine/narrative/fightAnalysis';
 
 /**
  * Defines the shape of fight summary params.
@@ -43,6 +42,25 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
   // Extract transcript from outcome log
   const transcript = outcome.log?.map((e) => e.text || '') || [];
 
+  // Build fight analysis
+  const analysis = buildFightAnalysis(
+    outcome,
+    {
+      id: warriorA.id,
+      name: warriorA.name,
+      style: warriorA.style,
+      attributes: warriorA.attributes as unknown as Record<string, number>,
+      skills: warriorA.baseSkills as unknown as Record<string, number>,
+    },
+    {
+      id: warriorD.id,
+      name: warriorD.name,
+      style: warriorD.style,
+      attributes: warriorD.attributes as unknown as Record<string, number>,
+      skills: warriorD.baseSkills as unknown as Record<string, number>,
+    }
+  );
+
   return {
     id,
     week,
@@ -58,6 +76,7 @@ export function createFightSummary(params: FightSummaryParams): FightSummary {
     styleA: warriorA.style,
     styleD: warriorD.style,
     transcript,
+    analysis,
     createdAt: new Date(Date.UTC(2026, 0, 1) + (week - 1) * 7 * 24 * 60 * 60 * 1000).toISOString(),
   };
 }

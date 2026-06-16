@@ -1069,7 +1069,21 @@
         "{{attacker}} overwhelms {{defender}}'s parry with brute strength.",
         "{{attacker}} crushes {{defender}}'s guard completely.",
         "{{attacker}} shatters {{defender}}'s defensive stance."
-      ]
+      ],
+      "riposte": {
+        "success": [
+          "{{defender}} turns the block into a vicious counter-slash!",
+          "Deflecting the blow, {{defender}} lunges immediately in return.",
+          "A perfectly timed parry opens {{attacker}} up for a wicked counter.",
+          "{{defender}} uses the momentum to strike back instantly.",
+          "The block is just a setup for {{defender}}'s true attack.",
+          "{{defender}} sneers and thrusts immediately after parrying.",
+          "A dazzling counterattack follows {{defender}}'s effortless parry.",
+          "{{defender}} grimly strikes back through the opening.",
+          "With desperate speed, {{defender}} snaps a counter-strike.",
+          "The clang of the parry is followed by the hiss of {{defender}}'s counter."
+        ]
+      }
     },
     "knockdown": {
       "fall": [
@@ -1211,7 +1225,7 @@
           "{{name}} looks for a better position.",
           "They circle the arena, changing the angle of engagement.",
           "Footwork becomes key as they maneuver for position.",
-          "Footwork becomes key as they maneuver for a better position."
+          "{{attacker}} slides into a new stance, shifting the flow of battle."
         ]
       },
       "pressing": [

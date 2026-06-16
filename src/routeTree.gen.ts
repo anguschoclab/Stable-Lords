@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as World_rootRouteImport } from './routes/world/__root'
+import { Route as Stable_rootRouteImport } from './routes/stable/__root'
 import { Route as Ops_rootRouteImport } from './routes/ops/__root'
 import { Route as Command_rootRouteImport } from './routes/command/__root'
 import { Route as WelcomeRouteImport } from './routes/welcome'
@@ -33,12 +34,15 @@ import { Route as WarriorIdRouteImport } from './routes/warrior/$id'
 import { Route as ToolsPhysicalsSimulatorRouteImport } from './routes/tools/physicals-simulator'
 import { Route as StableTrainingRouteImport } from './routes/stable/training'
 import { Route as StableTrainersRouteImport } from './routes/stable/trainers'
+import { Route as StableRosterRouteImport } from './routes/stable/roster'
 import { Route as StableRecruitRouteImport } from './routes/stable/recruit'
+import { Route as StablePromotersRouteImport } from './routes/stable/promoters'
 import { Route as StablePlannerRouteImport } from './routes/stable/planner'
+import { Route as StableOffseasonRouteImport } from './routes/stable/offseason'
 import { Route as StableFinanceRouteImport } from './routes/stable/finance'
 import { Route as StableEquipmentRouteImport } from './routes/stable/equipment'
-import { Route as StableContractsRouteImport } from './routes/stable/contracts'
-import { Route as StableIdRouteImport } from './routes/stable/$id'
+import { Route as StableBoutsRouteImport } from './routes/stable/bouts'
+import { Route as StableArenaRouteImport } from './routes/stable/arena'
 import { Route as OpsRosterRouteImport } from './routes/ops/roster'
 import { Route as OpsRecruitRouteImport } from './routes/ops/recruit'
 import { Route as OpsPromotersRouteImport } from './routes/ops/promoters'
@@ -55,10 +59,15 @@ import { Route as CommandRosterRouteImport } from './routes/command/roster'
 import { Route as CommandCombatRouteImport } from './routes/command/combat'
 import { Route as CommandArenaRouteImport } from './routes/command/arena'
 import { Route as WorldStableIdRouteImport } from './routes/world/stable/$id'
+import { Route as StablePromoterIdRouteImport } from './routes/stable/promoter.$id'
 import { Route as OpsPromoterIdRouteImport } from './routes/ops/promoter.$id'
 
 const World_rootRoute = World_rootRouteImport.update({
   id: '/world/__root',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Stable_rootRoute = Stable_rootRouteImport.update({
+  id: '/stable/__root',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Ops_rootRoute = Ops_rootRouteImport.update({
@@ -174,14 +183,29 @@ const StableTrainersRoute = StableTrainersRouteImport.update({
   path: '/stable/trainers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StableRosterRoute = StableRosterRouteImport.update({
+  id: '/stable/roster',
+  path: '/stable/roster',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StableRecruitRoute = StableRecruitRouteImport.update({
   id: '/stable/recruit',
   path: '/stable/recruit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StablePromotersRoute = StablePromotersRouteImport.update({
+  id: '/stable/promoters',
+  path: '/stable/promoters',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StablePlannerRoute = StablePlannerRouteImport.update({
   id: '/stable/planner',
   path: '/stable/planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StableOffseasonRoute = StableOffseasonRouteImport.update({
+  id: '/stable/offseason',
+  path: '/stable/offseason',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StableFinanceRoute = StableFinanceRouteImport.update({
@@ -194,14 +218,14 @@ const StableEquipmentRoute = StableEquipmentRouteImport.update({
   path: '/stable/equipment',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StableContractsRoute = StableContractsRouteImport.update({
-  id: '/stable/contracts',
-  path: '/stable/contracts',
+const StableBoutsRoute = StableBoutsRouteImport.update({
+  id: '/stable/bouts',
+  path: '/stable/bouts',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StableIdRoute = StableIdRouteImport.update({
-  id: '/stable/$id',
-  path: '/stable/$id',
+const StableArenaRoute = StableArenaRouteImport.update({
+  id: '/stable/arena',
+  path: '/stable/arena',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OpsRosterRoute = OpsRosterRouteImport.update({
@@ -284,6 +308,11 @@ const WorldStableIdRoute = WorldStableIdRouteImport.update({
   path: '/world/stable/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StablePromoterIdRoute = StablePromoterIdRouteImport.update({
+  id: '/stable/promoter/$id',
+  path: '/stable/promoter/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OpsPromoterIdRoute = OpsPromoterIdRouteImport.update({
   id: '/ops/promoter/$id',
   path: '/ops/promoter/$id',
@@ -315,12 +344,16 @@ export interface FileRoutesByFullPath {
   '/ops/promoters': typeof OpsPromotersRoute
   '/ops/recruit': typeof OpsRecruitRoute
   '/ops/roster': typeof OpsRosterRoute
-  '/stable/$id': typeof StableIdRoute
-  '/stable/contracts': typeof StableContractsRoute
+  '/stable': typeof Stable_rootRoute
+  '/stable/arena': typeof StableArenaRoute
+  '/stable/bouts': typeof StableBoutsRoute
   '/stable/equipment': typeof StableEquipmentRoute
   '/stable/finance': typeof StableFinanceRoute
+  '/stable/offseason': typeof StableOffseasonRoute
   '/stable/planner': typeof StablePlannerRoute
+  '/stable/promoters': typeof StablePromotersRoute
   '/stable/recruit': typeof StableRecruitRoute
+  '/stable/roster': typeof StableRosterRoute
   '/stable/trainers': typeof StableTrainersRoute
   '/stable/training': typeof StableTrainingRoute
   '/tools/physicals-simulator': typeof ToolsPhysicalsSimulatorRoute
@@ -337,6 +370,7 @@ export interface FileRoutesByFullPath {
   '/stable/': typeof StableIndexRoute
   '/world/': typeof WorldIndexRoute
   '/ops/promoter/$id': typeof OpsPromoterIdRoute
+  '/stable/promoter/$id': typeof StablePromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRoutesByTo {
@@ -364,12 +398,16 @@ export interface FileRoutesByTo {
   '/ops/promoters': typeof OpsPromotersRoute
   '/ops/recruit': typeof OpsRecruitRoute
   '/ops/roster': typeof OpsRosterRoute
-  '/stable/$id': typeof StableIdRoute
-  '/stable/contracts': typeof StableContractsRoute
+  '/stable': typeof StableIndexRoute
+  '/stable/arena': typeof StableArenaRoute
+  '/stable/bouts': typeof StableBoutsRoute
   '/stable/equipment': typeof StableEquipmentRoute
   '/stable/finance': typeof StableFinanceRoute
+  '/stable/offseason': typeof StableOffseasonRoute
   '/stable/planner': typeof StablePlannerRoute
+  '/stable/promoters': typeof StablePromotersRoute
   '/stable/recruit': typeof StableRecruitRoute
+  '/stable/roster': typeof StableRosterRoute
   '/stable/trainers': typeof StableTrainersRoute
   '/stable/training': typeof StableTrainingRoute
   '/tools/physicals-simulator': typeof ToolsPhysicalsSimulatorRoute
@@ -381,8 +419,8 @@ export interface FileRoutesByTo {
   '/world/history': typeof WorldHistoryRoute
   '/world/intelligence': typeof WorldIntelligenceRoute
   '/world/tournaments': typeof WorldTournamentsRoute
-  '/stable': typeof StableIndexRoute
   '/ops/promoter/$id': typeof OpsPromoterIdRoute
+  '/stable/promoter/$id': typeof StablePromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRoutesById {
@@ -411,12 +449,16 @@ export interface FileRoutesById {
   '/ops/promoters': typeof OpsPromotersRoute
   '/ops/recruit': typeof OpsRecruitRoute
   '/ops/roster': typeof OpsRosterRoute
-  '/stable/$id': typeof StableIdRoute
-  '/stable/contracts': typeof StableContractsRoute
+  '/stable/__root': typeof Stable_rootRoute
+  '/stable/arena': typeof StableArenaRoute
+  '/stable/bouts': typeof StableBoutsRoute
   '/stable/equipment': typeof StableEquipmentRoute
   '/stable/finance': typeof StableFinanceRoute
+  '/stable/offseason': typeof StableOffseasonRoute
   '/stable/planner': typeof StablePlannerRoute
+  '/stable/promoters': typeof StablePromotersRoute
   '/stable/recruit': typeof StableRecruitRoute
+  '/stable/roster': typeof StableRosterRoute
   '/stable/trainers': typeof StableTrainersRoute
   '/stable/training': typeof StableTrainingRoute
   '/tools/physicals-simulator': typeof ToolsPhysicalsSimulatorRoute
@@ -433,6 +475,7 @@ export interface FileRoutesById {
   '/stable/': typeof StableIndexRoute
   '/world/': typeof WorldIndexRoute
   '/ops/promoter/$id': typeof OpsPromoterIdRoute
+  '/stable/promoter/$id': typeof StablePromoterIdRoute
   '/world/stable/$id': typeof WorldStableIdRoute
 }
 export interface FileRouteTypes {
@@ -462,12 +505,16 @@ export interface FileRouteTypes {
     | '/ops/promoters'
     | '/ops/recruit'
     | '/ops/roster'
-    | '/stable/$id'
-    | '/stable/contracts'
+    | '/stable'
+    | '/stable/arena'
+    | '/stable/bouts'
     | '/stable/equipment'
     | '/stable/finance'
+    | '/stable/offseason'
     | '/stable/planner'
+    | '/stable/promoters'
     | '/stable/recruit'
+    | '/stable/roster'
     | '/stable/trainers'
     | '/stable/training'
     | '/tools/physicals-simulator'
@@ -484,6 +531,7 @@ export interface FileRouteTypes {
     | '/stable/'
     | '/world/'
     | '/ops/promoter/$id'
+    | '/stable/promoter/$id'
     | '/world/stable/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -511,12 +559,16 @@ export interface FileRouteTypes {
     | '/ops/promoters'
     | '/ops/recruit'
     | '/ops/roster'
-    | '/stable/$id'
-    | '/stable/contracts'
+    | '/stable'
+    | '/stable/arena'
+    | '/stable/bouts'
     | '/stable/equipment'
     | '/stable/finance'
+    | '/stable/offseason'
     | '/stable/planner'
+    | '/stable/promoters'
     | '/stable/recruit'
+    | '/stable/roster'
     | '/stable/trainers'
     | '/stable/training'
     | '/tools/physicals-simulator'
@@ -528,8 +580,8 @@ export interface FileRouteTypes {
     | '/world/history'
     | '/world/intelligence'
     | '/world/tournaments'
-    | '/stable'
     | '/ops/promoter/$id'
+    | '/stable/promoter/$id'
     | '/world/stable/$id'
   id:
     | '__root__'
@@ -557,12 +609,16 @@ export interface FileRouteTypes {
     | '/ops/promoters'
     | '/ops/recruit'
     | '/ops/roster'
-    | '/stable/$id'
-    | '/stable/contracts'
+    | '/stable/__root'
+    | '/stable/arena'
+    | '/stable/bouts'
     | '/stable/equipment'
     | '/stable/finance'
+    | '/stable/offseason'
     | '/stable/planner'
+    | '/stable/promoters'
     | '/stable/recruit'
+    | '/stable/roster'
     | '/stable/trainers'
     | '/stable/training'
     | '/tools/physicals-simulator'
@@ -579,6 +635,7 @@ export interface FileRouteTypes {
     | '/stable/'
     | '/world/'
     | '/ops/promoter/$id'
+    | '/stable/promoter/$id'
     | '/world/stable/$id'
   fileRoutesById: FileRoutesById
 }
@@ -607,12 +664,16 @@ export interface RootRouteChildren {
   OpsPromotersRoute: typeof OpsPromotersRoute
   OpsRecruitRoute: typeof OpsRecruitRoute
   OpsRosterRoute: typeof OpsRosterRoute
-  StableIdRoute: typeof StableIdRoute
-  StableContractsRoute: typeof StableContractsRoute
+  Stable_rootRoute: typeof Stable_rootRoute
+  StableArenaRoute: typeof StableArenaRoute
+  StableBoutsRoute: typeof StableBoutsRoute
   StableEquipmentRoute: typeof StableEquipmentRoute
   StableFinanceRoute: typeof StableFinanceRoute
+  StableOffseasonRoute: typeof StableOffseasonRoute
   StablePlannerRoute: typeof StablePlannerRoute
+  StablePromotersRoute: typeof StablePromotersRoute
   StableRecruitRoute: typeof StableRecruitRoute
+  StableRosterRoute: typeof StableRosterRoute
   StableTrainersRoute: typeof StableTrainersRoute
   StableTrainingRoute: typeof StableTrainingRoute
   ToolsPhysicalsSimulatorRoute: typeof ToolsPhysicalsSimulatorRoute
@@ -629,6 +690,7 @@ export interface RootRouteChildren {
   StableIndexRoute: typeof StableIndexRoute
   WorldIndexRoute: typeof WorldIndexRoute
   OpsPromoterIdRoute: typeof OpsPromoterIdRoute
+  StablePromoterIdRoute: typeof StablePromoterIdRoute
   WorldStableIdRoute: typeof WorldStableIdRoute
 }
 
@@ -639,6 +701,13 @@ declare module '@tanstack/react-router' {
       path: '/world'
       fullPath: '/world'
       preLoaderRoute: typeof World_rootRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stable/__root': {
+      id: '/stable/__root'
+      path: '/stable'
+      fullPath: '/stable'
+      preLoaderRoute: typeof Stable_rootRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ops/__root': {
@@ -802,6 +871,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StableTrainersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stable/roster': {
+      id: '/stable/roster'
+      path: '/stable/roster'
+      fullPath: '/stable/roster'
+      preLoaderRoute: typeof StableRosterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stable/recruit': {
       id: '/stable/recruit'
       path: '/stable/recruit'
@@ -809,11 +885,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StableRecruitRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stable/promoters': {
+      id: '/stable/promoters'
+      path: '/stable/promoters'
+      fullPath: '/stable/promoters'
+      preLoaderRoute: typeof StablePromotersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stable/planner': {
       id: '/stable/planner'
       path: '/stable/planner'
       fullPath: '/stable/planner'
       preLoaderRoute: typeof StablePlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stable/offseason': {
+      id: '/stable/offseason'
+      path: '/stable/offseason'
+      fullPath: '/stable/offseason'
+      preLoaderRoute: typeof StableOffseasonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/stable/finance': {
@@ -830,18 +920,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StableEquipmentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/stable/contracts': {
-      id: '/stable/contracts'
-      path: '/stable/contracts'
-      fullPath: '/stable/contracts'
-      preLoaderRoute: typeof StableContractsRouteImport
+    '/stable/bouts': {
+      id: '/stable/bouts'
+      path: '/stable/bouts'
+      fullPath: '/stable/bouts'
+      preLoaderRoute: typeof StableBoutsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/stable/$id': {
-      id: '/stable/$id'
-      path: '/stable/$id'
-      fullPath: '/stable/$id'
-      preLoaderRoute: typeof StableIdRouteImport
+    '/stable/arena': {
+      id: '/stable/arena'
+      path: '/stable/arena'
+      fullPath: '/stable/arena'
+      preLoaderRoute: typeof StableArenaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ops/roster': {
@@ -956,6 +1046,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldStableIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stable/promoter/$id': {
+      id: '/stable/promoter/$id'
+      path: '/stable/promoter/$id'
+      fullPath: '/stable/promoter/$id'
+      preLoaderRoute: typeof StablePromoterIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ops/promoter/$id': {
       id: '/ops/promoter/$id'
       path: '/ops/promoter/$id'
@@ -991,12 +1088,16 @@ const rootRouteChildren: RootRouteChildren = {
   OpsPromotersRoute: OpsPromotersRoute,
   OpsRecruitRoute: OpsRecruitRoute,
   OpsRosterRoute: OpsRosterRoute,
-  StableIdRoute: StableIdRoute,
-  StableContractsRoute: StableContractsRoute,
+  Stable_rootRoute: Stable_rootRoute,
+  StableArenaRoute: StableArenaRoute,
+  StableBoutsRoute: StableBoutsRoute,
   StableEquipmentRoute: StableEquipmentRoute,
   StableFinanceRoute: StableFinanceRoute,
+  StableOffseasonRoute: StableOffseasonRoute,
   StablePlannerRoute: StablePlannerRoute,
+  StablePromotersRoute: StablePromotersRoute,
   StableRecruitRoute: StableRecruitRoute,
+  StableRosterRoute: StableRosterRoute,
   StableTrainersRoute: StableTrainersRoute,
   StableTrainingRoute: StableTrainingRoute,
   ToolsPhysicalsSimulatorRoute: ToolsPhysicalsSimulatorRoute,
@@ -1013,6 +1114,7 @@ const rootRouteChildren: RootRouteChildren = {
   StableIndexRoute: StableIndexRoute,
   WorldIndexRoute: WorldIndexRoute,
   OpsPromoterIdRoute: OpsPromoterIdRoute,
+  StablePromoterIdRoute: StablePromoterIdRoute,
   WorldStableIdRoute: WorldStableIdRoute,
 }
 export const routeTree = rootRouteImport

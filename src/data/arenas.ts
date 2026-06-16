@@ -324,6 +324,30 @@ export interface ArenaLoreEntry {
  */
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'standard_arena_first_blood',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The First Blood',
+    narrative:
+      'Though it is now the most common proving ground, the Standard Arena was once a grand amphitheater. Legend has it the very first match ended in a mutual strike that blinded both combatants, a testament to the brutal equality of the sands.',
+  },
+  {
+    id: 'walled_court_kings_gambit',
+    arenaId: 'walled_court_arena',
+    type: 'famous_death',
+    title: 'The King\'s Gambit',
+    narrative:
+      'A flamboyant duelist attempted a spinning strike off the tightly packed stone walls, only to slip on a patch of moss. The misstep allowed a hulking brute to pin them against the wall and deliver a slow, excruciating execution that lasted until the sun set.',
+  },
+  {
+    id: 'sunken_temple_drowned_prayers',
+    arenaId: 'sunken_temple',
+    type: 'architectural_quirk',
+    title: 'The Drowned Prayers',
+    narrative:
+      'The acoustics of the partially submerged temple are eerie. The splashing of water often sounds like the frantic, mumbled prayers of the priests who drowned when the temple first sank centuries ago.',
+  },
+  {
     id: 'bloodsands_massacre_thirty',
     arenaId: 'bloodsands_arena',
     type: 'historical_battle',

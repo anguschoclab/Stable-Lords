@@ -72,6 +72,14 @@ const ORIGINS = [
   'A former child beggar who learned to bite when corners were tight',
   'Grew up fighting for scraps behind the Grand Colosseum',
   'Left at the steps of the Temple of the Sun, but raised by the shadows',
+  'Found shivering in a burnt-out alchemist\'s lab, clutching a glowing ember',
+  'Abandoned to the howling winds of the Jagged Peaks, raised by a solitary hermit',
+  'Washed ashore wrapped in the tattered sails of a notorious pirate galley',
+  'Unearthed alive from a shallow grave behind the old executioner\'s block',
+  'Discovered sleeping peacefully inside an empty gibbet cage in the lower wards',
+  'The final, desperate offering left at the steps of the forgotten Blood God\'s shrine',
+  'Surviving alone on the rat-infested decks of an abandoned plague ship',
+  'Found wandering the ash plains, their face stained with soot and silence',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -113,6 +121,10 @@ const CHILDHOOD_TRAITS = [
   'developed a terrifyingly silent footstep to evade the night watchmen',
   'was known for biting older children who tried to steal their rations',
   'secretly practiced evasion by dodging the matron\'s cane',
+  'learned to read the flow of battle from watching the city watch\'s street brawls',
+  'could accurately predict rain by the throbbing of their many old fractures',
+  'spent their days meticulously mapping the blind spots of the local garrison',
+  'would purposefully endure beatings to learn how different bones break',
 ];
 
 const DEFINING_MOMENTS = [
@@ -151,6 +163,10 @@ const DEFINING_MOMENTS = [
   'carrying a deep-seated mistrust of authority figures',
   'with a feral hunger that only the arena can satisfy',
   'ready to turn years of neglect into a relentless, driving fury',
+  'realizing the only undeniable truth in this world is the edge of a blade',
+  'until they watched their only friend die for a handful of copper coins',
+  'carrying a burning need to leave a scar upon the world that rejected them',
+  'waiting for the moment they can finally look their executioner in the eye',
 ];
 
 /**

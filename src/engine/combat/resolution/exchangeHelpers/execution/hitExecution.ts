@@ -2,7 +2,6 @@
  * Hit Execution - Execute hit damage, momentum, and kill window logic
  */
 import type { CombatEvent } from '@/types/combat.types';
-import type { Warrior } from '@/types/warrior.types';
 import type { FighterState } from '../../types';
 import type { ResolutionContext } from '../../types';
 import { resolveEffectiveTactics } from '../../tactics';
@@ -231,7 +230,7 @@ export function executeHit(
         : (ctx.trainerModsD.killWindowBonus ?? 0)
       : 0;
     const attackerTraitKill = attacker.traits
-      ? getDynamicTraitMods({ traits: attacker.traits } as unknown as Warrior, {
+      ? getDynamicTraitMods(attacker, {
           phase: phase as 'OPENING' | 'MID' | 'LATE',
           hpRatio: attacker.hp / attacker.maxHp,
           endRatio: attacker.endurance / attacker.maxEndurance,

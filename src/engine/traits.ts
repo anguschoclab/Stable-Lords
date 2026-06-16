@@ -349,6 +349,7 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.5,
     synergy: ['brutal', 'cunning'],
     antiSynergy: ['tank'],
+  },
   blood_scent: {
     id: 'blood_scent',
     name: 'Blood Scent',

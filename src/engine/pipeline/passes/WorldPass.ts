@@ -96,12 +96,9 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.992) return 'Blood Rain';
   if (roll < 0.993) return 'Aether Storm';
   if (roll < 0.995) return 'Blood Moon';
-  if (roll < 0.995) return 'Aether Storm';
   if (roll < 0.997) return 'Eclipse';
-  if (roll < 0.998) return 'Blood Moon';
   if (roll < 0.9985) return 'Blood Fog';
   if (roll < 0.999) return 'Gravity Anomaly';
-  if (roll < 0.999) return 'Eclipse';
   return 'Mana Surge';
 }
 

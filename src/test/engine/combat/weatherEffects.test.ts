@@ -107,7 +107,7 @@ describe('weatherEffects', () => {
         'Zephyr',
         'Wildfire Smoke',
         'Gravity Anomaly',
-                'Blood Fog',,
+        'Blood Fog',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);

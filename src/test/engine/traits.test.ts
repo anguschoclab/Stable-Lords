@@ -120,5 +120,20 @@ describe('Warrior Traits', () => {
       const mods = getDynamicTraitMods(mockWarrior(['bloodthirsty']), baseCtx);
       expect(mods.killWindowBonus).toBeCloseTo(0.005);
     });
+
+    it('accepts any object exposing traits (e.g. a FighterState), not just a full Warrior', () => {
+      const fighterLike = { traits: ['berserker'] };
+      const bloodied = getDynamicTraitMods(fighterLike, {
+        ...baseCtx,
+        hpRatio: 0.3,
+      });
+      // berserker grants an attack bonus at low HP — same as the mockWarrior path
+      expect(bloodied.attMod).toBeGreaterThan(0);
+    });
+
+    it('returns the zero-mods accumulator for undefined input', () => {
+      const mods = getDynamicTraitMods(undefined, baseCtx);
+      expect(mods).toEqual({ attMod: 0, parMod: 0, defMod: 0, iniMod: 0, killWindowBonus: 0 });
+    });
   });
 });

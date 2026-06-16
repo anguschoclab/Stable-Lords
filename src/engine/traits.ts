@@ -494,7 +494,7 @@ export type DynamicTraitMods = {
  *
  */
 export function getDynamicTraitMods(
-  warrior: Warrior | undefined,
+  warrior: { traits?: string[] } | undefined,
   ctx: DynamicTraitContext
 ): DynamicTraitMods {
   const acc = { attMod: 0, parMod: 0, defMod: 0, iniMod: 0, killWindowBonus: 0 };

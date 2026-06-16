@@ -91,7 +91,9 @@
       "Bash(sed -n '/export function getStyleEquipmentTips/,/^}/p' src/engine/equipmentOptimizer.ts)",
       "WebFetch(domain:www.terrablood.com)",
       "Bash(sed -n '105,113p' src/engine/narrative/narrativePositioning.ts)",
-      "Bash(sed -n '40,90p' src/engine/combat/narrative/narrator.ts)"
+      "Bash(sed -n '40,90p' src/engine/combat/narrative/narrator.ts)",
+      "Bash(mkdir -p docs/superpowers/plans)",
+      "Bash(ls docs/superpowers/plans)"
     ]
   },
   "hooks": {

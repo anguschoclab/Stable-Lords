@@ -20,7 +20,7 @@ export function TacticSelectors({ cond, onTacticChange }: TacticSelectorsProps) 
         <select
           value={cond.override.offensiveTactic ?? 'none'}
           onChange={(e) => onTacticChange('offensiveTactic', e.target.value)}
-          className="w-full bg-black/60 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-foreground px-2 py-1.5 focus:outline-none focus:border-arena-blood/40 appearance-none"
+          className="w-full bg-black/60 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
         >
           {OFFENSIVE_TACTICS.map((t) => (
             <option key={t.value} value={t.value}>
@@ -36,7 +36,7 @@ export function TacticSelectors({ cond, onTacticChange }: TacticSelectorsProps) 
         <select
           value={cond.override.defensiveTactic ?? 'none'}
           onChange={(e) => onTacticChange('defensiveTactic', e.target.value)}
-          className="w-full bg-black/60 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-foreground px-2 py-1.5 focus:outline-none focus:border-arena-gold/40 appearance-none"
+          className="w-full bg-black/60 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-foreground px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset appearance-none"
         >
           {DEFENSIVE_TACTICS.map((t) => (
             <option key={t.value} value={t.value}>

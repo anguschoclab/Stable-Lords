@@ -329,10 +329,16 @@ Gold is the lifeblood of your stable. Running out means you can't train, can't r
 
 | Source                   | Amount                                        |
 | ------------------------ | --------------------------------------------- |
-| Fight purse (per bout)   | 240 gold                                      |
-| Win bonus (per victory)  | 100 gold                                      |
+| Fight purse (per bout)   | Base 90g, scaled by warrior fame and arena tier |
+| Win bonus (per victory)  | Base 35g, scaled by warrior fame and arena tier |
 | Fame dividend (per week) | Fame × 0.5 gold                               |
 | Noble patronage          | (Fame − 40) ÷ 10 × 25 gold per famous warrior |
+
+**Fight purse scaling:** Purses increase as your warriors gain fame and fight in higher-tier arenas.
+
+- **Rookie (fame 0)** in a tier-1 arena: 90g purse + 35g win bonus = **125g total**
+- **Star (fame 30)** in a tier-2 arena: 203g purse + 79g win bonus = **282g total**
+- **Legend (fame 60)** in a tier-3 arena: 405g purse + 158g win bonus = **563g total**
 
 Patronage only activates when a warrior's fame exceeds **40**. It scales significantly as warriors become arena legends.
 

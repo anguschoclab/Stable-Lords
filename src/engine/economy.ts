@@ -2,14 +2,16 @@
  * Economy engine — weekly income/expenses processed at week advance.
  *
  * Income sources:
- *  - Fight purses: 50g per fight participated
- *  - Win bonus: +30g per win
- *  - Fame bonus: fame × 2 per week
+ *  - Fight purses: base FIGHT_PURSE scaled by the warrior's fame and arena tier
+ *    (see computeFightEconomics in constants/economy).
+ *  - Win bonus: base WIN_BONUS, scaled the same way, on wins only.
+ *  - Fame dividend: fame × FAME_DIVIDEND per week.
+ *  - Noble patronage: high-fame warriors attract sponsors.
  *
  * Expenses:
- *  - Warrior upkeep: 20g per warrior per week
- *  - Trainer salaries: 35g per active trainer per week
- *  - Training costs: 15g per warrior in training
+ *  - Warrior upkeep: WARRIOR_UPKEEP_BASE + fame premium per warrior per week.
+ *  - Trainer salaries: by tier.
+ *  - Training costs: TRAINING_COST per warrior in training.
  */
 import type { GameState, LedgerEntry } from '@/types/state.types';
 import type { StateImpact } from '@/engine/impacts';

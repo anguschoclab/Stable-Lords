@@ -394,7 +394,9 @@ id: 'lantern_hall_architects_folly',
     title: 'The Grasp of the Blood Roots',
     narrative:
       'An overconfident agility fighter ignored the subtle shifting of the forest floor, only to have their foot caught in a sudden snare of roots. Their opponent leisurely approached and delivered the killing blow while the forest itself seemed to hold the victim in place.',
-id: 'crystal_cavern_shattered_echoes',
+  },
+  {
+    id: 'crystal_cavern_shattered_echoes',
     arenaId: 'crystal_cavern',
     type: 'architectural_quirk',
     title: 'The Shattered Echoes',
@@ -416,6 +418,30 @@ id: 'crystal_cavern_shattered_echoes',
     title: 'The Shadow Strike',
     narrative:
       'A cunning rogue bypassed a champion\'s legendary guard by timing their fatal thrust perfectly with a flickering torch, momentarily blinding their opponent in a sudden play of light and shadow.',
+  },
+  {
+    id: 'sundered_coliseum_blood_pact',
+    arenaId: 'sundered_coliseum',
+    type: 'historical_battle',
+    title: 'The Blood Pact of the Unbroken',
+    narrative:
+      'Two rival champions, exhausted and bleeding, refused to strike the final blow against each other. They stood back-to-back, defying the crowd\'s demands for blood until the arena guards were sent in to execute them both.',
+  },
+  {
+    id: 'lantern_hall_burning_shadow',
+    arenaId: 'lantern_hall_arena',
+    type: 'famous_death',
+    title: 'The Burning Shadow',
+    narrative:
+      'A notorious assassin attempted to use the flickering torchlight to obscure their movements, but misjudged the shadows. Their opponent, predicting the maneuver, impaled them on a wall sconce, leaving them to burn as a macabre spectacle.',
+  },
+  {
+    id: 'crystal_cavern_singing_shards',
+    arenaId: 'crystal_cavern',
+    type: 'architectural_quirk',
+    title: 'The Singing Shards',
+    narrative:
+      'Certain crystal formations in the cavern vibrate at a specific frequency when struck by steel. Skilled fighters use this to their advantage, creating a disorienting, high-pitched resonance that throws opponents off balance.',
   },
 ];
 

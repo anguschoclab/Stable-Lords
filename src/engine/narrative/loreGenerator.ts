@@ -62,6 +62,16 @@ const ORIGINS = [
   'The runt of a fighting pit, fed on raw meat and cruelty',
   'A nameless stowaway discovered half-drowned in a merchant ship\'s bilge',
   'Left bound and gagged at the crossroads, an offering to dark gods',
+  'Raised in the iron-barred nurseries of the Blackwood Workhouse',
+  'Survived the cullings at the Bleak House orphanage by hiding in the coal chute',
+  'Found abandoned at the gates of the Asylum for the Forgotten',
+  'A ward of the state who traded gruel for fistfights in the yard',
+  'Escaped the child-labor mills of the Iron Veil district',
+  'Raised by the strict matrons of the Sisters of Mercy Orphanage',
+  'Sole survivor of a workhouse fire in the lower slums',
+  'A former child beggar who learned to bite when corners were tight',
+  'Grew up fighting for scraps behind the Grand Colosseum',
+  'Left at the steps of the Temple of the Sun, but raised by the shadows',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -90,7 +100,6 @@ const CHILDHOOD_TRAITS = [
   'showed a terrifyingly high tolerance for pain during beatings',
   'would bite and claw older kids who tried to take their rations',
   'memorized the patrol routes of guards just for the challenge of evading them',
-'would dissect small animals to understand their anatomy',
   'never flinched when the master raised a hand',
   'was caught sharpening bone fragments into makeshift shivs',
   'could perfectly mimic the screams of dying men',
@@ -99,6 +108,11 @@ const CHILDHOOD_TRAITS = [
   'practiced the art of pain by holding hot coals without a sound',
   'would carve intricate tallies of imagined kills into the stone walls',
   'learned the anatomy of survival by dissecting rats in the alleyways',
+  'learned to sleep with one eye open after the workhouse riots',
+  'would hoard sharp stones and broken glass under their mattress',
+  'developed a terrifyingly silent footstep to evade the night watchmen',
+  'was known for biting older children who tried to steal their rations',
+  'secretly practiced evasion by dodging the matron\'s cane',
 ];
 
 const DEFINING_MOMENTS = [
@@ -132,6 +146,11 @@ const DEFINING_MOMENTS = [
   'understanding that the world only respects the edge of a blade',
   'carrying the cold certainty that everyone bleeds the same color',
   'waiting for the moment the crowd screams a name that was once forbidden',
+  'until the day they knocked out the orphanage bully with a single stone',
+  'now seeking vengeance on the system that abandoned them',
+  'carrying a deep-seated mistrust of authority figures',
+  'with a feral hunger that only the arena can satisfy',
+  'ready to turn years of neglect into a relentless, driving fury',
 ];
 
 /**

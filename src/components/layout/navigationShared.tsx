@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Swords,
-  Users,
   Globe,
   LayoutDashboard,
   BookUser,
@@ -42,34 +41,24 @@ import { useTacticalAlerts } from '@/hooks/useTacticalAlerts';
  */
 export const HUBS = [
   {
-    id: 'command',
-    label: 'Command',
-    icon: Swords,
-    to: '/command',
-    pages: [
-      { to: '/command', label: 'Overview', icon: LayoutDashboard, exact: true },
-      { to: '/command/roster', label: 'Roster', icon: BookUser },
-      { to: '/command/training', label: 'Training', icon: Dumbbell },
-      { to: '/command/tactics', label: 'Planner', icon: BrainCircuit },
-      { to: '/command/arena', label: 'Arena', icon: Flame },
-      { to: '/world/tournaments', label: 'Tournaments', icon: CalendarClock },
-    ],
-  },
-  {
-    id: 'ops',
+    id: 'stable',
     label: 'Stable',
-    icon: Users,
-    to: '/ops',
+    icon: Swords,
+    to: '/stable',
     pages: [
-      { to: '/ops/overview', label: 'Overview', icon: LayoutDashboard, exact: true },
-      { to: '/ops/roster', label: 'Roster', icon: BookUser },
-      { to: '/ops/equipment', label: 'Equipment', icon: Wrench },
-      { to: '/ops/contracts', label: 'Bouts', icon: ScrollText },
-      { to: '/ops/promoters', label: 'Promoters', icon: Building2 },
-      { to: '/ops/personnel', label: 'Trainers', icon: Dumbbell },
-      { to: '/ops/finance', label: 'Finance', icon: Coins },
-      { to: '/ops/recruit', label: 'Recruit', icon: UserPlus },
-      { to: '/ops/offseason', label: 'Offseason', icon: Sunset },
+      { to: '/stable', label: 'Overview', icon: LayoutDashboard, exact: true },
+      { to: '/stable/roster', label: 'Roster', icon: BookUser },
+      { to: '/stable/training', label: 'Training', icon: Dumbbell },
+      { to: '/stable/planner', label: 'Planner', icon: BrainCircuit },
+      { to: '/stable/arena', label: 'Arena', icon: Flame },
+      { to: '/stable/equipment', label: 'Equipment', icon: Wrench },
+      { to: '/stable/bouts', label: 'Bouts', icon: ScrollText },
+      { to: '/stable/promoters', label: 'Promoters', icon: Building2 },
+      { to: '/stable/trainers', label: 'Trainers', icon: Dumbbell },
+      { to: '/stable/finance', label: 'Finance', icon: Coins },
+      { to: '/stable/recruit', label: 'Recruit', icon: UserPlus },
+      { to: '/stable/offseason', label: 'Offseason', icon: Sunset },
+      { to: '/world/tournaments', label: 'Tournaments', icon: CalendarClock },
     ],
   },
   {
@@ -120,20 +109,14 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   );
   const alerts = useTacticalAlerts();
   const location = useLocation();
-  const onOpsSection = location.pathname.startsWith('/ops');
-  const onCommandSection = location.pathname.startsWith('/command');
+  const onStableSection = location.pathname.startsWith('/stable');
 
   // Track the week when user last visited each section — badge only shows for newer weeks
-  const lastSeenOpsWeek = useRef(trackWeek && onOpsSection ? week : -1);
-  const lastSeenCommandWeek = useRef(trackWeek && onCommandSection ? week : -1);
+  const lastSeenStableWeek = useRef(trackWeek && onStableSection ? week : -1);
 
   useEffect(() => {
-    if (trackWeek && onOpsSection) lastSeenOpsWeek.current = week;
-  }, [onOpsSection, week, trackWeek]);
-
-  useEffect(() => {
-    if (trackWeek && onCommandSection) lastSeenCommandWeek.current = week;
-  }, [onCommandSection, week, trackWeek]);
+    if (trackWeek && onStableSection) lastSeenStableWeek.current = week;
+  }, [onStableSection, week, trackWeek]);
 
   // Extract counts from tactical alerts
   const trainingAlert = alerts.find((a) => a.id === 'unassigned-training');
@@ -143,23 +126,20 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const offersAlert = alerts.find((a) => a.id === 'pending-offers');
   const pendingOffers = offersAlert ? parseInt(offersAlert.message.match(/\d+/)?.[0] || '0') : 0;
 
-  const showOpsAlert = trackWeek
-    ? pendingOffers > 0 && !onOpsSection && week > lastSeenOpsWeek.current
-    : pendingOffers > 0;
-  const showCommandAlert = trackWeek
-    ? untrainedCount > 0 && !onCommandSection && week > lastSeenCommandWeek.current
-    : untrainedCount > 0;
+  const showStableAlert = trackWeek
+    ? (untrainedCount > 0 || pendingOffers > 0) && !onStableSection && week > lastSeenStableWeek.current
+    : untrainedCount > 0 || pendingOffers > 0;
 
   return {
     counts: {
-      command: showCommandAlert ? untrainedCount : 0,
-      ops: showOpsAlert ? pendingOffers : 0,
+      stable: showStableAlert ? untrainedCount + pendingOffers : 0,
       world: isTournamentWeek ? 1 : 0,
+      bookmarks: 0,
     } as Record<HubId, number>,
     links: {
-      command: '/command/training',
-      ops: '/ops/contracts',
+      stable: '/stable',
       world: '/world/tournaments',
+      bookmarks: '/bookmarks',
     } as Record<HubId, string>,
   };
 }
@@ -356,20 +336,12 @@ export function AlertStrip({ alerts, LinkComponent = Link, itemClassName }: Aler
 
   const alertItems: { icon: React.ElementType; label: string; color: string; to: string }[] = [];
 
-  if (alerts.command > 0)
+  if (alerts.stable > 0)
     alertItems.push({
       icon: ShieldAlert,
-      label: `${alerts.command} unassigned`,
+      label: `${alerts.stable} alerts`,
       color: 'text-arena-gold',
-      to: '/command/training',
-    });
-
-  if (alerts.ops > 0)
-    alertItems.push({
-      icon: ScrollText,
-      label: `${alerts.ops} offers`,
-      color: 'text-arena-pop',
-      to: '/ops/contracts',
+      to: '/stable',
     });
 
   if (isTournamentWeek)

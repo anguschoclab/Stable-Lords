@@ -497,7 +497,12 @@
         "A clean thrust from {{attacker}} sinks into {{defender}}'s {{bodyPart}} with punishing accuracy!",
         "{{attacker}} lunges with sudden ferocity, the {{weapon}} finding {{defender}}'s {{bodyPart}}!",
         "{{attacker}} finds their mark, driving the tip of the {{weapon}} into the {{bodyPart}}.",
-        "A sharp, cruel thrust from {{attacker}} draws a spurt of blood."
+        "A sharp, cruel thrust from {{attacker}} draws a spurt of blood.",
+        "{{attacker}}'s {{weapon}} bites deep into the {{bodyPart}}!",
+        "{{attacker}} steps in and plants the {{weapon}} firmly in {{defender}}'s {{bodyPart}}.",
+        "With grim determination, {{attacker}} drives {{possessive}} {{weapon}} into {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} catches {{defender}} flat-footed and sinks the {{weapon}} into the {{bodyPart}}.",
+        "A solid hit! {{attacker}}'s {{weapon}} finds {{defender}}'s {{bodyPart}}."
       ],
       "mastery": [
         "{{attacker}}'s {{weapon}} finds the microscopic gap in {{defender}}'s defense, sliding effortlessly into the {{bodyPart}}.",
@@ -636,13 +641,13 @@
         "{{attacker}} lunges forward, {{possessive}} {{weapon}} seeking {{defender}}'s vitals!",
         "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!",
         "{{attacker}} stabs with {{possessive}} {{weapon}}, all his reach behind the blow!",
-        "{{attacker}} raises {{possessive}} arm and drives {{weapon}} in a sudden thrust!",
-        "{{attacker}} snaps {{possessive}} wrist, turning the point of {{weapon}} into {{defender}}'s guard!",
-        "{{attacker}} lunges forward, driving the point of {{weapon}} deep into {{defender}}.",
-        "With clinical precision, {{attacker}} thrusts {{weapon}} toward {{defender}}'s vital spots.",
+        "{{attacker}} raises {{possessive}} arm and drives {{possessive}} {{weapon}} in a sudden thrust!",
+        "{{attacker}} snaps {{possessive}} wrist, turning the point of {{possessive}} {{weapon}} into {{defender}}'s guard!",
+        "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} deep into {{defender}}.",
+        "With clinical precision, {{attacker}} thrusts {{possessive}} {{weapon}} toward {{defender}}'s vital spots.",
         "A lightning-fast stab from {{attacker}} slips past {{defender}}'s guard.",
-        "{{attacker}} violently jabs {{weapon}} forward, puncturing {{defender}}'s defenses.",
-        "Darting in, {{attacker}} buries the tip of {{weapon}} into {{defender}} with lethal intent."
+        "{{attacker}} violently jabs {{possessive}} {{weapon}} forward, puncturing {{defender}}'s defenses.",
+        "Darting in, {{attacker}} buries the tip of {{possessive}} {{weapon}} into {{defender}} with lethal intent."
       ],
       "slashing": [
         "{{attacker}} slashes with {{possessive}} {{weapon}}!",
@@ -658,12 +663,12 @@
         "{{attacker}} lashes out with {{possessive}} {{weapon}} in a lightning quick assault!",
         "{{attacker}} sweeps {{possessive}} {{weapon}} in a brutal horizontal arc!",
         "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
-        "{{attacker}} shifts {{possessive}} weight and cuts low with {{weapon}}!",
-        "{{attacker}} drops {{possessive}} shoulder and rips {{weapon}} through in a vicious diagonal slash!",
-        "{{attacker}} sweeps {{weapon}} in a wide, punishing arc, biting deeply into {{defender}}'s flesh.",
+        "{{attacker}} shifts {{possessive}} weight and cuts low with {{possessive}} {{weapon}}!",
+        "{{attacker}} drops {{possessive}} shoulder and rips {{possessive}} {{weapon}} through in a vicious diagonal slash!",
+        "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, punishing arc, biting deeply into {{defender}}'s flesh.",
         "A flashing horizontal cut from {{attacker}} catches {{defender}} off guard, drawing a spray of crimson.",
-        "{{attacker}} executes a brutal downward chop with {{weapon}}, shearing through {{defender}}'s defense.",
-        "With a savage snarl, {{attacker}} whips {{weapon}} across {{defender}}'s flank.",
+        "{{attacker}} executes a brutal downward chop with {{possessive}} {{weapon}}, shearing through {{defender}}'s defense.",
+        "With a savage snarl, {{attacker}} whips {{possessive}} {{weapon}} across {{defender}}'s flank.",
         "{{attacker}} dances forward, delivering a razor-sharp slash that leaves a bloody trail on {{defender}}."
       ],
       "bashing": [

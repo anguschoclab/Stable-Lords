@@ -119,3 +119,56 @@ export const TRAINER_WEEKLY_SALARY: Record<string, number> = {
   Seasoned: 25,
   Master: 75,
 };
+
+// ─── Income Scaling ────────────────────────────────────────────────────────
+/**
+ * Fame at/above which the purse multiplier stops growing.
+ * Keeps legend payouts bounded.
+ */
+export const FAME_PURSE_CAP = 60;
+
+/**
+ * Divisor that converts capped fame into the purse multiplier.
+ * fameMult = 1 + min(fame, FAME_PURSE_CAP) / FAME_PURSE_DIVISOR.
+ * With cap=60 and divisor=60, fame 0→1.0x and fame 60→2.0x.
+ */
+export const FAME_PURSE_DIVISOR = 60;
+
+/**
+ * Arena-tier purse/win multipliers. Tier 1 = common (no bonus),
+ * tier 2 = prestigious, tier 3 = special event.
+ */
+export const ARENA_TIER_PURSE_MULT: Record<1 | 2 | 3, number> = {
+  1: 1.0,
+  2: 1.5,
+  3: 2.25,
+};
+
+/**
+ * Inputs for a single fight's payout.
+ */
+export interface FightEconomicsInput {
+  /** Fame of the player's warrior in this bout. */
+  fame: number;
+  /** Tier of the arena the bout was fought in (defaults handled by caller). */
+  arenaTier: 1 | 2 | 3;
+  /** Whether the player's warrior won. */
+  won: boolean;
+}
+
+/**
+ * Pure scaler: maps a single fight's (fame, tier, result) to its payout.
+ * Base case (fame 0, tier 1) returns exactly FIGHT_PURSE / WIN_BONUS so the
+ * early game is unchanged.
+ */
+export function computeFightEconomics(input: FightEconomicsInput): {
+  purse: number;
+  winBonus: number;
+} {
+  const cappedFame = Math.min(Math.max(input.fame, 0), FAME_PURSE_CAP);
+  const fameMult = 1 + cappedFame / FAME_PURSE_DIVISOR;
+  const tierMult = ARENA_TIER_PURSE_MULT[input.arenaTier] ?? 1.0;
+  const purse = Math.round(FIGHT_PURSE * fameMult * tierMult);
+  const winBonus = input.won ? Math.round(WIN_BONUS * fameMult * tierMult) : 0;
+  return { purse, winBonus };
+}

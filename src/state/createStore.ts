@@ -127,8 +127,7 @@ export const useGameStore = create<GameStore>()(
       ) => {
         const store = get();
         const raw = processedState || reconstructGameState(store);
-        const state = import.meta.env.DEV ? JSON.parse(JSON.stringify(raw)) : raw;
-        const cleanState = stripNonSerializable(state) as GameState;
+        const cleanState = stripNonSerializable(raw) as GameState;
         const currentWeek = cleanState.week;
 
         set((draft) => {
@@ -185,8 +184,7 @@ export const useGameStore = create<GameStore>()(
       ) => {
         const store = get();
         const raw = processedState || reconstructGameState(store);
-        const state = import.meta.env.DEV ? JSON.parse(JSON.stringify(raw)) : raw;
-        const cleanState = stripNonSerializable(state) as GameState;
+        const cleanState = stripNonSerializable(raw) as GameState;
         const currentWeek = cleanState.week;
 
         set((draft) => {

@@ -33,13 +33,14 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
 
 /**
  * Applies a list of state impacts to the current game state.
+ * Since the state is already deep-cloned at the week boundary (in advanceWeek),
+ * this function mutates the state directly for performance.
  *
- * @param state - The current game state
+ * @param state - The current game state (already cloned)
  * @param impacts - An array of state impacts to apply
- * @returns A new game state with the impacts applied
+ * @returns The mutated game state with impacts applied
  */
 export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameState {
-  const newState = { ...state };
   for (let i = 0; i < impacts.length; i++) {
     const impact = impacts[i];
     if (!impact) continue;
@@ -50,13 +51,13 @@ export function resolveImpacts(state: GameState, impacts: StateImpact[]): GameSt
         if (value !== undefined) {
           const handler = impactHandlers[k];
           if (handler) {
-            handler(newState, value as never);
+            handler(state, value as never);
           }
         }
       }
     }
   }
-  return newState;
+  return state;
 }
 
 // Merge strategy configuration
@@ -158,34 +159,10 @@ const mergeStrategies: Record<
  * @param impacts - An array of state impacts to merge
  * @returns A single merged state impact
  */
-const MERGE_KEYS = Object.keys(MERGE_CONFIG) as Array<keyof StateImpact>;
-
-/**
- * Merges multiple state impacts into a single combined impact.
- * Uses specific merge strategies (accumulate, append, replace, etc.) for each field.
- *
- * @param impacts - An array of state impacts to merge
- * @returns A single merged state impact
- */
 export function mergeImpacts(impacts: StateImpact[]): StateImpact {
   const merged: StateImpact = {} as StateImpact;
 
-  // Initialize merged with default values using standard for loop
-  for (let i = 0; i < MERGE_KEYS.length; i++) {
-    const key = MERGE_KEYS[i]!;
-    const config = MERGE_CONFIG[key];
-    if (!config) continue;
-    const m = merged as Record<keyof StateImpact, unknown>;
-    if (Array.isArray(config.defaultValue)) {
-      m[key] = [...config.defaultValue];
-    } else if (config.defaultValue instanceof Map) {
-      m[key] = new Map(config.defaultValue as never);
-    } else {
-      m[key] = config.defaultValue;
-    }
-  }
-
-  // Iterate over actual impact objects
+  // Iterate over actual impact objects - sparse initialization
   for (let i = 0; i < impacts.length; i++) {
     const imp = impacts[i];
     if (!imp) continue;
@@ -197,6 +174,19 @@ export function mergeImpacts(impacts: StateImpact[]): StateImpact {
         if (!config) continue;
         const value = imp[key as keyof StateImpact];
         if (value === undefined || value === null) continue;
+
+        // Lazy initialization: only set default if key not yet in merged
+        const typedKey = key as keyof StateImpact;
+        const m = merged as Record<keyof StateImpact, unknown>;
+        if (m[typedKey] === undefined) {
+          if (Array.isArray(config.defaultValue)) {
+            m[typedKey] = [...config.defaultValue];
+          } else if (config.defaultValue instanceof Map) {
+            m[typedKey] = new Map(config.defaultValue as never);
+          } else {
+            m[typedKey] = config.defaultValue;
+          }
+        }
 
         const strategyFn = mergeStrategies[config.strategy];
         if (strategyFn) {

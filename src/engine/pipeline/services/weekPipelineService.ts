@@ -57,8 +57,20 @@ function prepareWeekContext(state: GameState): WeekContext {
   };
 }
 
-function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): GameState {
-  // Pre-build and cache maps so that generatePairings and bout resolution can use them O(1)
+/**
+ * Creates a mutable copy of the game state for the week pipeline.
+ * Uses structuredClone for deep cloning, allowing passes to mutate freely.
+ * This replaces the shallow-copy-then-mutate pattern in resolveImpacts.
+ */
+function createMutableWeekContext(state: GameState): GameState {
+  return structuredClone(state);
+}
+
+/**
+ * Builds warrior and rival maps once per week for O(1) lookups.
+ * Called at the start of advanceWeek and selectively invalidated when warriors die.
+ */
+function buildWeekCaches(state: GameState): void {
   const warriorMap = new Map<WarriorId, Warrior>();
   state.roster.forEach((w) => warriorMap.set(w.id, w));
   (state.rivals || []).forEach((r) => r.roster.forEach((w) => warriorMap.set(w.id, w)));
@@ -76,30 +88,33 @@ function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): G
   const rivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
   (state.rivals || []).forEach((r) => rivalMap.set(r.id, r));
   state.rivalMap = rivalMap;
+}
 
+/**
+ * Invalidates warrior caches for dead/retired warriors only.
+ * More efficient than rebuilding all maps from scratch.
+ */
+function invalidateDeadWarriors(state: GameState, deadIds: Set<WarriorId>): void {
+  if (deadIds.size === 0) return;
+
+  // Remove dead warriors from maps
+  deadIds.forEach((id) => {
+    state.warriorMap?.delete(id);
+    state.warriorToStableMap?.delete(id);
+  });
+}
+
+function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): GameState {
+  // Maps are already built by buildWeekCaches at the week boundary
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
   const boutImpact = runBoutSimulationPass(state, ctx.rootRng, headless);
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 
-  // Re-build maps on settledState for downstream passes (since some warriors might have died/retired)
-  const postWarriorMap = new Map<WarriorId, Warrior>();
-  settledState.roster.forEach((w) => postWarriorMap.set(w.id, w));
-  (settledState.rivals || []).forEach((r) => r.roster.forEach((w) => postWarriorMap.set(w.id, w)));
-  settledState.warriorMap = postWarriorMap;
-
-  const postWarriorToStableMap = new Map<string, { stableId: string; isPlayer: boolean }>();
-  settledState.roster.forEach((w) =>
-    postWarriorToStableMap.set(w.id, { stableId: settledState.player.id, isPlayer: true })
-  );
-  (settledState.rivals || []).forEach((r) =>
-    r.roster.forEach((w) => postWarriorToStableMap.set(w.id, { stableId: r.id, isPlayer: false }))
-  );
-  settledState.warriorToStableMap = postWarriorToStableMap;
-
-  const postRivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
-  (settledState.rivals || []).forEach((r) => postRivalMap.set(r.id, r));
-  settledState.rivalMap = postRivalMap;
+  // Collect dead warrior IDs for selective cache invalidation
+  const deadIds = new Set<WarriorId>();
+  (settledState.graveyard || []).forEach((w) => deadIds.add(w.id));
+  invalidateDeadWarriors(settledState, deadIds);
 
   return settledState;
 }
@@ -221,20 +236,23 @@ function finalizeState(
 export function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): GameState {
   const headless = opts?.headless;
 
-  const ctx = prepareWeekContext(state);
-  const settledState = runBoutPhase(state, ctx, headless);
+  // Deep clone state once at week boundary to allow safe mutation in all passes
+  const mutableState = createMutableWeekContext(state);
+  const ctx = prepareWeekContext(mutableState);
+
+  // Build caches once per week for O(1) lookups
+  buildWeekCaches(mutableState);
+
+  const settledState = runBoutPhase(mutableState, ctx, headless);
   const coreImpacts = collectCoreImpacts(settledState, ctx);
 
-  if (checkBankruptcy(settledState, coreImpacts)) {
-    return finalizeState(resolveImpacts(settledState, coreImpacts), state, ctx, {
-      deferArchives: opts?.deferArchives,
-    });
+  // Unified stop conditions: bankruptcy and roster-empty are checked every week
+  if (checkBankruptcy(settledState, coreImpacts) || settledState.roster.length === 0) {
+    return finalizeState(resolveImpacts(settledState, coreImpacts), state, ctx, opts);
   }
 
   // Stage the pipeline: apply core impacts BEFORE running remaining passes
   const stateAfterCore = resolveImpacts(settledState, coreImpacts);
   const remainingImpacts = collectRemainingImpacts(stateAfterCore, ctx, { headless });
-  return finalizeState(resolveImpacts(stateAfterCore, remainingImpacts), state, ctx, {
-    deferArchives: opts?.deferArchives,
-  });
+  return finalizeState(resolveImpacts(stateAfterCore, remainingImpacts), state, ctx, opts);
 }

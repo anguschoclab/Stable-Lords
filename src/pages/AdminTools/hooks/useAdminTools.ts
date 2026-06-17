@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
-import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
 import type { GameState, RivalStableData, Owner } from '@/types/state.types';
 import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { toast } from 'sonner';
+import { engineProxy } from '@/engine/workerProxy';
 
 export type AdminCategory = 'SYSTEM' | 'ECONOMY' | 'WORLD' | 'TELEMETRY' | 'PREFERENCES';
 
@@ -75,15 +75,18 @@ export function useAdminTools() {
     toast.success(`Advanced 1 Week`);
   }, [doAdvanceWeek]);
 
-  const skipSeason = useCallback(() => {
+  const skipSeason = useCallback(async () => {
     const store = useGameStore.getState();
-    let currentState = reconstructGameState(store);
-    for (let i = 0; i < 13; i++) {
-      currentState = advanceWeek(currentState);
+    const currentState = reconstructGameState(store);
+    try {
+      const result = await engineProxy.skipToQuarterEnd(currentState);
+      result.state.season = computeNextSeason(result.state.week);
+      store.loadGame(store.activeSlotId || 'autosave', result.state);
+      toast.success('Seasonal transition forced.');
+    } catch (err) {
+      console.error('Skip season failed:', err);
+      toast.error('Seasonal transition failed.');
     }
-    currentState.season = computeNextSeason(currentState.week);
-    store.loadGame(store.activeSlotId || 'autosave', currentState);
-    toast.success('Seasonal transition forced.');
   }, []);
 
   const skipFTUE = useCallback(() => {

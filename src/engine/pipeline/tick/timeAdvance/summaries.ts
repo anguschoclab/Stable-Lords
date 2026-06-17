@@ -2,16 +2,10 @@ import type { GameState } from '@/types/state.types';
 import type { WeekSummary, QuarterSummary, QuarterAdvanceResult, YearAdvanceResult } from './types';
 
 export function extractWeekSummary(state: GameState): WeekSummary {
-  const { bouts, deaths } = (state.arenaHistory || []).reduce(
-    (acc, f) => {
-      if (f.week === state.week) {
-        acc.bouts++;
-        if (f.by === 'Kill') acc.deaths++;
-      }
-      return acc;
-    },
-    { bouts: 0, deaths: 0 }
-  );
+  // Read from lastSimulationReport instead of scanning arenaHistory (O(1) vs O(n))
+  const report = state.lastSimulationReport;
+  const bouts = report?.bouts?.length || 0;
+  const deaths = report?.bouts?.filter((b) => b.by === 'Kill').length || 0;
 
   return {
     week: state.week,

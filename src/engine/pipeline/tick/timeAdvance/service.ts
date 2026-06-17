@@ -3,7 +3,7 @@ import {
   advanceWeek,
   type WeekAdvanceOptions,
 } from '@/engine/pipeline/services/weekPipelineService';
-import { flushDeferredArchives } from '@/engine/pipeline/adapters/opfsArchiver';
+import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
 import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/telemetry';
 import { truncateState } from '@/engine/storage/truncation';
 import type {
@@ -48,7 +48,7 @@ export const TimeAdvanceService = {
         const stopResult = evaluateStopConditions(currentState, opts.stopConditions);
         if (stopResult.shouldStop) {
           if (opts.deferArchives) {
-            await flushDeferredArchives(currentState);
+            flushDeferredArchivesOffThread(currentState);
           }
           currentState = truncateState(currentState);
 
@@ -78,7 +78,7 @@ export const TimeAdvanceService = {
     }
 
     if (opts?.deferArchives) {
-      await flushDeferredArchives(currentState);
+      flushDeferredArchivesOffThread(currentState);
     }
 
     currentState = truncateState(currentState);

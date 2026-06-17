@@ -4,6 +4,7 @@ import { advanceDay } from './pipeline/tick/dayAdvance';
 import { createFreshState } from './factories/gameStateFactory';
 import { TournamentSelectionService } from './matchmaking/tournamentSelection';
 import { TickOrchestrator } from './pipeline/tick/TickOrchestrator';
+import { runAutosim } from './autosim';
 
 /**
  * Stable Lords — Engine Worker
@@ -15,9 +16,12 @@ const engine = {
   skipToWeekEnd: TickOrchestrator.skipToWeekEnd,
   resolveTournamentRound: TournamentSelectionService.resolveRound.bind(TournamentSelectionService),
   createFreshState,
-}; /**
-    * Engine worker type.
-    */
+  advanceQuarter: TickOrchestrator.advanceQuarter,
+  advanceYear: TickOrchestrator.advanceYear,
+  skipToQuarterEnd: TickOrchestrator.skipToQuarterEnd,
+  skipToYearEnd: TickOrchestrator.skipToYearEnd,
+  runAutosim,
+};
 
 /**
  * Engine worker type.

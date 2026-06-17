@@ -198,7 +198,7 @@ describe('TimeAdvanceService methods', () => {
       return { ...state, week: state.week + 1, arenaHistory: [] };
     });
 
-    vi.spyOn(opfsArchiver, 'flushDeferredArchives').mockResolvedValue({} as GameState);
+    vi.spyOn(opfsArchiver, 'flushDeferredArchivesOffThread').mockImplementation((state) => state);
   });
 
   afterEach(() => {
@@ -247,7 +247,7 @@ describe('TimeAdvanceService methods', () => {
 
     it('should flush archives if deferArchives is true', async () => {
       await TimeAdvanceService.advanceQuarter(mockState, { deferArchives: true });
-      expect(opfsArchiver.flushDeferredArchives).toHaveBeenCalledTimes(1);
+      expect(opfsArchiver.flushDeferredArchivesOffThread).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -295,7 +295,7 @@ describe('TimeAdvanceService methods', () => {
       const result = await TimeAdvanceService.skipToQuarterEnd(mockState);
 
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(13);
-      expect(opfsArchiver.flushDeferredArchives).toHaveBeenCalledTimes(1);
+      expect(opfsArchiver.flushDeferredArchivesOffThread).toHaveBeenCalledTimes(1);
       expect(result.state.week).toBe(startWeek + 13);
     });
   });
@@ -306,7 +306,7 @@ describe('TimeAdvanceService methods', () => {
       const result = await TimeAdvanceService.skipToYearEnd(mockState);
 
       expect(weekPipelineService.advanceWeek).toHaveBeenCalledTimes(52);
-      expect(opfsArchiver.flushDeferredArchives).toHaveBeenCalledTimes(4);
+      expect(opfsArchiver.flushDeferredArchivesOffThread).toHaveBeenCalledTimes(4);
       expect(result.state.week).toBe(startWeek + 52);
     });
   });

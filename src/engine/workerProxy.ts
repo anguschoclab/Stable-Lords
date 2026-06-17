@@ -4,7 +4,9 @@ import type { EngineWorker } from './worker';
 type AsyncEngine = {
   [K in keyof EngineWorker]: (
     ...args: Parameters<EngineWorker[K]>
-  ) => Promise<ReturnType<EngineWorker[K]>>;
+  ) => ReturnType<EngineWorker[K]> extends Promise<infer T>
+    ? Promise<T>
+    : Promise<ReturnType<EngineWorker[K]>>;
 };
 
 /**
@@ -24,12 +26,14 @@ function buildProxy(): AsyncEngine {
         { createFreshState },
         { TournamentSelectionService },
         { TickOrchestrator },
+        { runAutosim },
       ] = await Promise.all([
         import('./pipeline/services/weekPipelineService'),
         import('./pipeline/tick/dayAdvance'),
         import('./factories/gameStateFactory'),
         import('./matchmaking/tournamentSelection'),
         import('./pipeline/tick/TickOrchestrator'),
+        import('./autosim'),
       ]);
       cached = {
         advanceWeek,
@@ -39,6 +43,11 @@ function buildProxy(): AsyncEngine {
         resolveTournamentRound: TournamentSelectionService.resolveRound.bind(
           TournamentSelectionService
         ),
+        advanceQuarter: TickOrchestrator.advanceQuarter,
+        advanceYear: TickOrchestrator.advanceYear,
+        skipToQuarterEnd: TickOrchestrator.skipToQuarterEnd,
+        skipToYearEnd: TickOrchestrator.skipToYearEnd,
+        runAutosim,
       };
       return cached;
     };
@@ -48,6 +57,11 @@ function buildProxy(): AsyncEngine {
       skipToWeekEnd: async (...args) => (await load()).skipToWeekEnd(...args),
       createFreshState: async (...args) => (await load()).createFreshState(...args),
       resolveTournamentRound: async (...args) => (await load()).resolveTournamentRound(...args),
+      advanceQuarter: async (...args) => (await load()).advanceQuarter(...args),
+      advanceYear: async (...args) => (await load()).advanceYear(...args),
+      skipToQuarterEnd: async (...args) => (await load()).skipToQuarterEnd(...args),
+      skipToYearEnd: async (...args) => (await load()).skipToYearEnd(...args),
+      runAutosim: async (...args) => (await load()).runAutosim(...args),
     };
   }
 

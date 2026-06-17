@@ -232,10 +232,14 @@ function collectBoutImpacts(
     state.weather
   );
   impacts.push({ arenaHistory: [summary] });
-  engineEventBus.emit({
-    type: 'BOUT_COMPLETED',
-    payload: { summary, transcript: summary.transcript },
-  });
+
+  // Only emit events in non-headless mode (UI context)
+  if (!ctx.headless) {
+    engineEventBus.emit({
+      type: 'BOUT_COMPLETED',
+      payload: { summary, transcript: summary.transcript },
+    });
+  }
 
   return { impacts, deathRes, injuryRes, announcement, summary };
 }

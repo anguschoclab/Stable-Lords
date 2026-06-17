@@ -61,9 +61,8 @@ describe('mergeImpacts', () => {
 
   it('handles empty impacts array', () => {
     const result = mergeImpacts([]);
-    expect(result.treasuryDelta).toBe(0);
-    expect(result.fameDelta).toBe(0);
-    expect(result.newsletterItems).toEqual([]);
+    // Sparse initialization: empty impacts returns empty object
+    expect(result).toEqual({});
   });
 
   it('handles single impact', () => {

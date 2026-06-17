@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
+
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: () => ({ roster: [] }),
+}));
+
 import PhysicalsSimulator from '@/pages/PhysicalsSimulator';
 
 // Mocking getBoundingClientRect for Radix UI select and slider

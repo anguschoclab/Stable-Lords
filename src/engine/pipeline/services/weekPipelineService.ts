@@ -248,7 +248,9 @@ export function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): GameSt
 
   // Unified stop conditions: bankruptcy and roster-empty are checked every week
   if (checkBankruptcy(settledState, coreImpacts) || settledState.roster.length === 0) {
-    return finalizeState(resolveImpacts(settledState, coreImpacts), state, ctx, opts);
+    // Always apply world pass so season/weather advance even on stop conditions
+    const stopImpacts: StateImpact[] = [...coreImpacts, runWorldPass(settledState, ctx.nextWeek, ctx.rootRng)];
+    return finalizeState(resolveImpacts(settledState, stopImpacts), state, ctx, opts);
   }
 
   // Stage the pipeline: apply core impacts BEFORE running remaining passes

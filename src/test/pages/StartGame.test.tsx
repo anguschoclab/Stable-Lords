@@ -31,7 +31,14 @@ vi.mock('sonner', () => ({
 }));
 
 vi.mock('@/engine/crest/crestGenerator', () => ({
-  generateCrest: vi.fn().mockReturnValue({}),
+  generateCrest: vi.fn().mockReturnValue({
+    shieldShape: 'heater',
+    fieldType: 'solid',
+    primaryColor: 'gules',
+    metalColor: 'or',
+    charge: { type: 'beast', name: 'Lion', count: 1 },
+    generation: 0,
+  }),
 }));
 
 vi.mock('@/components/startGame/ColomseumArch', () => ({

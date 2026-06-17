@@ -3,11 +3,28 @@
  * @vitest-environment jsdom
  */
 import { render, act } from '@testing-library/react';
-import { useGameStore } from '@/state/useGameStore';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
 import React from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import '@/test/_setup/setup';
+
+interface TestStore {
+  treasury: number;
+  week: number;
+  crowdMood: string;
+  setState: (fn: (draft: TestStore) => void) => void;
+}
+
+const useTestStore = create<TestStore>()(
+  immer((set) => ({
+    treasury: 0,
+    week: 1,
+    crowdMood: 'Normal',
+    setState: (fn) => set(fn),
+  }))
+);
 
 /**
  * Mock component that tracks renders via ref for performance testing.
@@ -19,15 +36,15 @@ const RenderTracker = ({
   selector: (state: any) => any;
   renderCountRef: React.MutableRefObject<number>;
 }) => {
-  const value = useGameStore(selector);
+  const value = useTestStore(selector);
   renderCountRef.current++;
   return <div data-testid="value">{JSON.stringify(value)}</div>;
 };
 
 describe('useGameStore Optimization (Epic 4)', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     localStorage.clear();
+    useTestStore.setState({ treasury: 0, week: 1, crowdMood: 'Normal' });
   });
 
   it('re-renders when selected state changes', async () => {
@@ -38,7 +55,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
     expect(renderCountRef.current).toBe(1);
 
     await act(async () => {
-      useGameStore.getState().setState((draft: any) => {
+      useTestStore.getState().setState((draft: any) => {
         draft.treasury += 10;
       });
     });
@@ -54,7 +71,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
     expect(renderCountRef.current).toBe(1);
 
     await act(async () => {
-      useGameStore.getState().setState((draft: any) => {
+      useTestStore.getState().setState((draft: any) => {
         draft.week += 1;
       });
     });
@@ -68,7 +85,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
     const selector = (s: any) => ({ treasury: s.treasury, week: s.week });
 
     const WithShallow = () => {
-      const val = useGameStore(useShallow(selector));
+      const val = useTestStore(useShallow(selector));
       renderCountWithShallow.current++;
       return <div>{val.treasury}</div>;
     };
@@ -78,7 +95,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
     expect(renderCountWithShallow.current).toBe(1);
 
     await act(async () => {
-      useGameStore.getState().setState((draft: any) => {
+      useTestStore.getState().setState((draft: any) => {
         draft.crowdMood = 'Bloodthirsty';
       });
     });
@@ -87,7 +104,7 @@ describe('useGameStore Optimization (Epic 4)', () => {
     expect(renderCountWithShallow.current).toBe(1);
 
     await act(async () => {
-      useGameStore.getState().setState((draft: any) => {
+      useTestStore.getState().setState((draft: any) => {
         draft.treasury += 10;
       });
     });

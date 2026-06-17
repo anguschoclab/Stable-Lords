@@ -9,18 +9,12 @@ vi.mock('@/engine/matchmaking/tournamentSelection', () => ({
   },
 }));
 
-vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
-  advanceWeek: vi.fn((state) => ({ ...state, treasury: 999 })),
-}));
+let spyAdvanceWeek: any;
 
-vi.mock('@/engine/pipeline/tick/TimeAdvanceService', () => ({
-  TimeAdvanceService: {
-    advanceQuarter: vi.fn(async () => ({})),
-    skipToQuarterEnd: vi.fn(async () => ({})),
-    advanceYear: vi.fn(async () => ({})),
-    skipToYearEnd: vi.fn(async () => ({})),
-  },
-}));
+let spyTimeAdvanceQuarter: any;
+let spyTimeAdvanceSkipQuarter: any;
+let spyTimeAdvanceYear: any;
+let spyTimeAdvanceSkipYear: any;
 
 import { TickOrchestrator } from '@/engine/pipeline/tick/TickOrchestrator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
@@ -35,6 +29,14 @@ describe('TickOrchestrator', () => {
   beforeEach(() => {
     mockState = createFreshState('test-seed');
     vi.clearAllMocks();
+    spyAdvanceWeek = vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation((state: any) => ({
+      ...state,
+      treasury: 999,
+    }));
+    spyTimeAdvanceQuarter = vi.spyOn(TimeAdvanceService, 'advanceQuarter').mockResolvedValue({} as any);
+    spyTimeAdvanceSkipQuarter = vi.spyOn(TimeAdvanceService, 'skipToQuarterEnd').mockResolvedValue({} as any);
+    spyTimeAdvanceYear = vi.spyOn(TimeAdvanceService, 'advanceYear').mockResolvedValue({} as any);
+    spyTimeAdvanceSkipYear = vi.spyOn(TimeAdvanceService, 'skipToYearEnd').mockResolvedValue({} as any);
   });
 
   describe('advanceDay', () => {
@@ -116,7 +118,7 @@ describe('TickOrchestrator', () => {
         }
       );
 
-      vi.mocked(weekPipelineService.advanceWeek).mockImplementation((state: any) => state);
+      spyAdvanceWeek.mockImplementation((state: any) => state);
 
       const nextState = TickOrchestrator.skipToWeekEnd(mockState);
 

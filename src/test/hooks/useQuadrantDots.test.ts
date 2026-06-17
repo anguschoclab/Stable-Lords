@@ -1,23 +1,28 @@
 // @vitest-environment jsdom
 import { renderHook } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useQuadrantDots } from '@/hooks/useQuadrantDots';
 import type { GameState, RivalStableData } from '@/types/state.types';
+import * as stableReputation from '@/engine/stableReputation';
 
-vi.mock('@/engine/stableReputation', () => ({
-  computeStableReputation: vi.fn((state: GameState) => ({
+beforeEach(() => {
+  vi.spyOn(stableReputation, 'computeStableReputation').mockImplementation((state: GameState) => ({
     fame: state.fame ?? 0,
     notoriety: 50,
     honor: 50,
     adaptability: 0,
-  })),
-  computeRivalReputation: vi.fn((roster: unknown[]) => ({
-    fame: roster.length * 10,
-    notoriety: roster.length * 5,
+  }));
+  vi.spyOn(stableReputation, 'computeRivalReputation').mockImplementation((roster: unknown[]) => ({
+    fame: (roster as unknown[]).length * 10,
+    notoriety: (roster as unknown[]).length * 5,
     honor: 50,
     adaptability: 0,
-  })),
-}));
+  }));
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 function createMockGameState(overrides: Partial<GameState> = {}): GameState {
   return {

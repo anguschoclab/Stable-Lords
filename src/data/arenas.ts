@@ -467,6 +467,30 @@ id: 'lantern_hall_architects_folly',
     narrative:
       'Certain crystal formations in the cavern vibrate at a specific frequency when struck by steel. Skilled fighters use this to their advantage, creating a disorienting, high-pitched resonance that throws opponents off balance.',
   },
+  {
+    id: 'standard_arena_kings_folly',
+    arenaId: 'standard_arena',
+    type: 'famous_death',
+    title: 'The King\'s Folly',
+    narrative:
+      'A minor lord disguised himself to fight for glory but stumbled on his own oversized scabbard. His unknown opponent granted him no quarter, decapitating him before the crowd even realized royal blood had been spilled.',
+  },
+  {
+    id: 'charnel_pits_breath_of_decay',
+    arenaId: 'charnel_pits',
+    type: 'architectural_quirk',
+    title: 'The Breath of Decay',
+    narrative:
+      'Deep vents occasionally release plumes of noxious, rusted gas from the pits below. Fights are often decided by who can hold their breath the longest while executing a flurry of strikes in the blinding fog.',
+  },
+  {
+    id: 'lantern_hall_blind_monk',
+    arenaId: 'lantern_hall_arena',
+    type: 'historical_battle',
+    title: 'The Blind Monk\'s Stand',
+    narrative:
+      'When all the lanterns were mysteriously extinguished midway through a championship bout, a blind ascetic monk defeated three armed gladiators in total darkness, guided only by the sound of their footfalls on the wooden floorboards.',
+  },
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

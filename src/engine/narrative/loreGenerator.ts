@@ -80,6 +80,13 @@ const ORIGINS = [
   'The final, desperate offering left at the steps of the forgotten Blood God\'s shrine',
   'Surviving alone on the rat-infested decks of an abandoned plague ship',
   'Found wandering the ash plains, their face stained with soot and silence',
+  'Pulled from the churning waters of the Black Sluice by a graverobber',
+  'Born in the shadow of the weeping gallows of Highridge',
+  'Left in a rusted iron cage outside the Crying Sister Orphanage',
+  'Found chewing on leather straps in the ruins of a gladiator pen',
+  'Abandoned during the long night of the Ashen Plague',
+  'Raised on the brutal scraps of the Iron Pits in the Lower Wards',
+  'Discovered half-starved, guarding the corpse of a massive hound',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -125,6 +132,10 @@ const CHILDHOOD_TRAITS = [
   'could accurately predict rain by the throbbing of their many old fractures',
   'spent their days meticulously mapping the blind spots of the local garrison',
   'would purposefully endure beatings to learn how different bones break',
+  'developed a terrifying habit of laughing whenever they drew blood',
+  'would break their own fingers just to see if they could set them straight',
+  'learned to predict a strike by watching the twitch of an opponent\'s jaw',
+  'slept on a bed of river stones to harden their spine',
 ];
 
 const DEFINING_MOMENTS = [
@@ -167,6 +178,10 @@ const DEFINING_MOMENTS = [
   'until they watched their only friend die for a handful of copper coins',
   'carrying a burning need to leave a scar upon the world that rejected them',
   'waiting for the moment they can finally look their executioner in the eye',
+  'until the day they dragged a dying mentor out of the bloody sands',
+  'realizing that a life in the shadows is merely a slow death',
+  'now burning with the cold clarity that only comes from true desperation',
+  'finding that their truest self is only revealed at the edge of a blade',
 ];
 
 /**

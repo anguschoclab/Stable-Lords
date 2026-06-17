@@ -17,3 +17,6 @@
 ## 2023-10-27 - [Focus Visible Standardization]
 **Learning:** Replaced `focus:outline-none` with `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` on many buttons and interactive elements. Using `focus-visible:` ensures keyboard navigation has clear focus states without triggering them on mouse clicks, improving both accessibility and visual design for pointer users.
 **Action:** When adding interactive elements, always consider keyboard focus states and prefer `focus-visible` over `focus` to reduce visual clutter for mouse users.
+## 2025-03-04 - Accessibility on native interactive elements
+**Learning:** Adding standard focus ring classes like `focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` combined with semantic `aria-` attributes (e.g. `aria-pressed`) to custom buttons effectively fixes a11y issues without causing the visual regressions seen when indiscriminately replacing them with Shadcn `<Button>` components (which enforce fixed size dimensions).
+**Action:** Always favor adding focus-visible classes and ARIA attributes to existing native elements when working in heavily styled layouts to prevent unintended structural shifts.

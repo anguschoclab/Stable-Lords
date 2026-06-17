@@ -10,7 +10,7 @@
     />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' wss: https://fonts.googleapis.com https://fonts.gstatic.com"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' wss: https://fonts.googleapis.com https://fonts.gstatic.com"
     />
     <meta name="theme-color" content="#b8962e" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -34,12 +34,7 @@
   </head>
   <body>
     <div id="root"></div>
-    <script>
-      // Initialize HowlerGlobal for Electron environment
-      if (typeof window.HowlerGlobal === 'undefined') {
-        window.HowlerGlobal = {};
-      }
-    </script>
+    <script src="/init-howler.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

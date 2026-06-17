@@ -2,7 +2,8 @@
  * ReputationQuadrant — 2D scatter: Fame (X) vs Notoriety (Y)
  * Shows player stable vs rival stables in reputation space.
  */
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useReputationState } from '@/state/selectors';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
@@ -15,7 +16,7 @@ import { QuadrantDotItem } from './QuadrantDot';
  *
  */
 export function ReputationQuadrant({ className }: { className?: string }) {
-  const worldState = useWorldState();
+  const worldState = useReputationState();
   const { rivals } = useGameStore(useShallow((s) => ({ rivals: s.rivals })));
   const dots = useQuadrantDots(worldState, rivals);
 

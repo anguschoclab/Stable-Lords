@@ -12,6 +12,8 @@ import { filterActive } from '@/utils/roster';
 /**
  * Defines the shape of stable reputation.
  */
+export type StableReputationInput = Pick<GameState, 'roster' | 'graveyard' | 'arenaHistory' | 'newsletter' | 'player' | 'fame' | 'trainingAssignments' | 'trainers'>;
+
 export interface StableReputation {
   fame: number; // 0-100: public acclaim
   notoriety: number; // 0-100: feared reputation
@@ -23,7 +25,7 @@ export interface StableReputation {
  * Calculate stable Fame based on top active warriors' fame and gazette mentions.
  */
 function calculateFame(
-  state: GameState,
+  state: StableReputationInput,
   activeWarriors: Warrior[],
   gazetteMentions: number
 ): number {
@@ -74,7 +76,7 @@ function calculateHonor(cleanBouts: number, totalKills: number): number {
 /**
  * Calculate stable Adaptability based on style diversity and training setups.
  */
-function calculateAdaptability(state: GameState, uniqueStyles: Set<string>): number {
+function calculateAdaptability(state: StableReputationInput, uniqueStyles: Set<string>): number {
   const trainingCount = (state.trainingAssignments ?? []).length;
   const adaptRaw = uniqueStyles.size * 8 + trainingCount * 3 + (state.trainers?.length ?? 0) * 2;
   return Math.min(100, Math.round(adaptRaw));
@@ -87,7 +89,7 @@ function calculateAdaptability(state: GameState, uniqueStyles: Set<string>): num
  * Honor = base 50 + yields - dishonorable acts
  * Adaptability = style diversity + meta drift participation
  */
-export function computeStableReputation(state: GameState): StableReputation {
+export function computeStableReputation(state: StableReputationInput): StableReputation {
   let totalKills = 0;
   let graveyardKills = 0;
   const uniqueStyles = new Set<string>();

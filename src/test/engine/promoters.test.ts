@@ -28,8 +28,8 @@ describe('updatePromoterHistory', () => {
 
     const newState = updatePromoterHistory(state, promoterId, purse, boutId);
 
-    expect(newState.promoters[promoterId].history.totalPursePaid).toBe(1500);
-    expect(newState.promoters[promoterId].history.notableBouts).toEqual([
+    expect(newState.promoters[promoterId]!.history.totalPursePaid).toBe(1500);
+    expect(newState.promoters[promoterId]!.history.notableBouts).toEqual([
       'old-bout' as FightId,
       boutId,
     ]);
@@ -59,9 +59,9 @@ describe('updatePromoterHistory', () => {
     const newBoutId = 'new-bout' as FightId;
     const newState = updatePromoterHistory(state, promoterId, 100, newBoutId);
 
-    const notableBouts = newState.promoters[promoterId].history.notableBouts;
+    const notableBouts = newState.promoters[promoterId]!.history.notableBouts;
     expect(notableBouts.length).toBe(10);
-    expect(notableBouts[9]).toBe(newBoutId);
+    expect(notableBouts[9]!).toBe(newBoutId);
     expect(notableBouts).not.toContain('bout-0' as FightId);
     expect(notableBouts).toContain('bout-1' as FightId);
   });
@@ -97,8 +97,8 @@ describe('updatePromoterHistory', () => {
 
     const newState = updatePromoterHistory(state, promoterId, 500, 'bout-1' as FightId);
 
-    expect(state.promoters[promoterId].history.totalPursePaid).toBe(1000);
-    expect(newState.promoters[promoterId].history.totalPursePaid).toBe(1500);
+    expect(state.promoters[promoterId]!.history.totalPursePaid).toBe(1000);
+    expect(newState.promoters[promoterId]!.history.totalPursePaid).toBe(1500);
     expect(newState).not.toBe(state);
     expect(newState.promoters).not.toBe(state.promoters);
     expect(newState.promoters[promoterId]).not.toBe(state.promoters[promoterId]);

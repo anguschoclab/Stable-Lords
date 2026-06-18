@@ -36,8 +36,8 @@ describe('runSeasonalPass', () => {
     expect(updates?.xp).toBe(25);
     expect(updates?.fame).toBe(15);
     expect(impact.insightTokens?.length).toBe(1);
-    expect(impact.insightTokens![0].type).toBe('Style');
-    expect(impact.insightTokens![0].origin).toBe('Chaos Rift');
+    expect(impact.insightTokens![0]!.type).toBe('Style');
+    expect(impact.insightTokens![0]!.origin).toBe('Chaos Rift');
     expect(impact.newsletterItems?.[0]?.title).toBe('The Chaos Rift');
   });
   it('should not do anything if nextWeek is not 1', () => {
@@ -866,13 +866,13 @@ describe('runSeasonalPass', () => {
     expect(update?.fame).toBe(10 + 15 + Math.floor(0.5 * 11)); // 10 base + 15 base gain + 5 from roll = 30
     expect(update?.injuries).toBeDefined();
     expect(update?.injuries!.length).toBe(1);
-    expect(update?.injuries![0].name).toBe('Tavern Bruises');
-    expect(update?.injuries![0].severity).toBe('Minor');
-    expect(update?.injuries![0].penalties?.SP).toBe(-1);
+    expect(update?.injuries![0]!.name).toBe('Tavern Bruises');
+    expect(update?.injuries![0]!.severity).toBe('Minor');
+    expect(update?.injuries![0]!.penalties?.SP).toBe(-1);
 
     expect(impact.newsletterItems).toBeDefined();
     expect(impact.newsletterItems!.length).toBe(1);
-    expect(impact.newsletterItems![0].title).toBe('A Spontaneous Tavern Brawl');
-    expect(impact.newsletterItems![0].items[0]).toContain('Spartacus');
+    expect(impact.newsletterItems![0]!.title).toBe('A Spontaneous Tavern Brawl');
+    expect(impact.newsletterItems![0]!.items[0]).toContain('Spartacus');
   });
 });

@@ -64,6 +64,6 @@ describe('WorldSlice', () => {
     // The 0th fight (oldest) should have NO transcript if we keep only last 20
     expect(history[0]!.transcript).toBeUndefined();
     // The 24th fight (newest) SHOULD have a transcript
-    expect(history[24].transcript).toBeDefined();
+    expect(history[24]!.transcript).toBeDefined();
   });
 });

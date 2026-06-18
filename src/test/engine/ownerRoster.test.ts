@@ -65,8 +65,8 @@ describe('Owner Roster Worker', () => {
 
       const { updatedRivals, gazetteItems } = processAIRosterManagement(mockState);
 
-      expect(updatedRivals[0].roster.length).toBe(1);
-      expect(updatedRivals[1].roster.length).toBe(1);
+      expect(updatedRivals[0]!.roster.length).toBe(1);
+      expect(updatedRivals[1]!.roster.length).toBe(1);
       expect(gazetteItems.length).toBe(2);
       expect(gazetteItems[0]).toContain('Not meeting expectations');
     });
@@ -88,7 +88,7 @@ describe('Owner Roster Worker', () => {
       mockState.rivals = [r1];
 
       const { updatedRivals } = processAIRosterManagement(mockState);
-      expect(updatedRivals[0].roster.length).toBe(1); // Not culled because of win streak
+      expect(updatedRivals[0]!.roster.length).toBe(1); // Not culled because of win streak
     });
 
     it('should cull killless older warriors for Aggressive personality', () => {
@@ -100,8 +100,8 @@ describe('Owner Roster Worker', () => {
       mockState.rivals = [r1];
       const { updatedRivals, gazetteItems } = processAIRosterManagement(mockState);
 
-      expect(updatedRivals[0].roster.length).toBe(0);
-      expect(gazetteItems[0]).toContain('No killer instinct');
+      expect(updatedRivals[0]!.roster.length).toBe(0);
+      expect(gazetteItems[0]!).toContain('No killer instinct');
     });
 
     it('should age-based retire older warriors occasionally', () => {
@@ -119,8 +119,8 @@ describe('Owner Roster Worker', () => {
       } as any;
 
       const { updatedRivals, gazetteItems } = processAIRosterManagement(mockState, mockRng);
-      expect(updatedRivals[0].roster.length).toBe(0);
-      expect(gazetteItems[0]).toContain('retires after a long career');
+      expect(updatedRivals[0]!.roster.length).toBe(0);
+      expect(gazetteItems[0]!).toContain('retires after a long career');
     });
   });
 
@@ -135,9 +135,9 @@ describe('Owner Roster Worker', () => {
       // Do not use the broken mockRng, let the method use its default SeededRNG
       const { updatedRivals, gazetteItems } = processAIRosterManagement(mockState);
 
-      expect(updatedRivals[0].roster.length).toBe(4);
-      expect(updatedRivals[0].treasury).toBe(400); // 500 - 100
-      expect(gazetteItems[0]).toContain('recruits');
+      expect(updatedRivals[0]!.roster.length).toBe(4);
+      expect(updatedRivals[0]!.treasury).toBe(400); // 500 - 100
+      expect(gazetteItems[0]!).toContain('recruits');
     });
 
     it('should not recruit if intent is RECOVERY', () => {
@@ -149,7 +149,7 @@ describe('Owner Roster Worker', () => {
       mockState.rivals = [r1];
       const { updatedRivals } = processAIRosterManagement(mockState);
 
-      expect(updatedRivals[0].roster.length).toBe(3); // No recruitment
+      expect(updatedRivals[0]!.roster.length).toBe(3); // No recruitment
     });
 
     it('should apply meta drift for intense rivalries during recruitment', () => {
@@ -165,7 +165,7 @@ describe('Owner Roster Worker', () => {
       ];
 
       const { updatedRivals } = processAIRosterManagement(mockState);
-      expect(updatedRivals[0].roster.length).toBe(2);
+      expect(updatedRivals[0]!.roster.length).toBe(2);
     });
   });
 
@@ -178,9 +178,9 @@ describe('Owner Roster Worker', () => {
       mockState.rivals = [r1];
 
       const { updatedRivals } = processAIRosterManagement(mockState);
-      if (updatedRivals[0].roster.length > 1) {
+      if (updatedRivals[0]!.roster.length > 1) {
          // Should either be favoredStyle or philosophy default. SeededRNG usually hits stable paths.
-         expect(updatedRivals[0].roster[1].style).toBeDefined();
+         expect(updatedRivals[0]!.roster[1]!.style).toBeDefined();
       }
     });
 
@@ -194,7 +194,7 @@ describe('Owner Roster Worker', () => {
       mockState.rivals = [r1];
 
       const { updatedRivals } = processAIRosterManagement(mockState);
-      expect(updatedRivals[0].roster.length).toBeGreaterThanOrEqual(1);
+      expect(updatedRivals[0]!.roster.length).toBeGreaterThanOrEqual(1);
     });
 
     it('Innovator should pick non-philosophy styles', () => {
@@ -205,7 +205,7 @@ describe('Owner Roster Worker', () => {
       mockState.rivals = [r1];
 
       const { updatedRivals } = processAIRosterManagement(mockState);
-      expect(updatedRivals[0].roster.length).toBeGreaterThanOrEqual(1);
+      expect(updatedRivals[0]!.roster.length).toBeGreaterThanOrEqual(1);
     });
   });
 });

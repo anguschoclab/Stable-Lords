@@ -182,7 +182,7 @@ describe('HallOfFights Component', () => {
 
     // Assert row stats for Lunger
     // Fought 2 times, won both, 100% win rate
-    const lungerRow = lungerText[0].closest('tr');
+    const lungerRow = lungerText[0]!.closest('tr');
     expect(lungerRow).toBeInTheDocument();
     if (!lungerRow) throw new Error('Lunger row not found');
     const lungerCells = within(lungerRow).getAllByRole('cell');

@@ -58,7 +58,7 @@ describe('TierProgression', () => {
 
       const impact = processTierProgression(mockState, 2, 1, mockRng);
       expect(impact.rivalsUpdates?.get('r1' as StableId)?.tier).toBe('Established');
-      expect(impact.newsletterItems?.[0].items[0]).toContain('risen to Established status');
+      expect(impact.newsletterItems?.[0]!.items[0]).toContain('risen to Established status');
     });
 
     it('should not promote if conditions are not met', () => {
@@ -94,7 +94,7 @@ describe('TierProgression', () => {
 
       const impact = processTierProgression(mockState, 2, 1, mockRng);
       expect(impact.rivalsUpdates?.get('r2' as StableId)?.tier).toBe('Major');
-      expect(impact.newsletterItems?.[0].items[0]).toContain('ascends to Major stable status');
+      expect(impact.newsletterItems?.[0]!.items[0]).toContain('ascends to Major stable status');
     });
 
     it('should demote to Minor if activeCount < 3', () => {
@@ -108,7 +108,7 @@ describe('TierProgression', () => {
 
       const impact = processTierProgression(mockState, 2, 1, mockRng);
       expect(impact.rivalsUpdates?.get('r2' as StableId)?.tier).toBe('Minor');
-      expect(impact.newsletterItems?.[0].items[0]).toContain('falls to Minor status');
+      expect(impact.newsletterItems?.[0]!.items[0]).toContain('falls to Minor status');
     });
 
     it('should not change tier if neither condition is met', () => {
@@ -139,7 +139,7 @@ describe('TierProgression', () => {
 
       const impact = processTierProgression(mockState, 2, 1, mockRng);
       expect(impact.rivalsUpdates?.get('r3' as StableId)?.tier).toBe('Established');
-      expect(impact.newsletterItems?.[0].items[0]).toContain('downgraded to Established');
+      expect(impact.newsletterItems?.[0]!.items[0]).toContain('downgraded to Established');
     });
 
     it('should stay Major if activeCount >= 4', () => {
@@ -197,7 +197,7 @@ describe('TierProgression', () => {
       const impact = processTierProgression(mockState, 2, 1);
 
       expect(impact.rivalsUpdates?.get('r1' as StableId)?.tier).toBe('Minor');
-      expect(impact.newsletterItems?.[0].id).toBeDefined();
+      expect(impact.newsletterItems?.[0]!.id).toBeDefined();
     });
 
     it('should handle undefined rivals list safely', () => {

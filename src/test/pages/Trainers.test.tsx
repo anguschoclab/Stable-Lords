@@ -181,7 +181,7 @@ describe('Trainers Component', () => {
 
     // Find the trainer card within that tab
     const rockies = within(hireTab).getAllByText('Coach Rocky');
-    const trainerCard = rockies[0].closest("[data-testid='trainer-card']");
+    const trainerCard = rockies[0]!.closest("[data-testid='trainer-card']");
     if (!trainerCard) throw new Error('Trainer card not found in hire tab');
 
     // Find and click the Secure Contract button.

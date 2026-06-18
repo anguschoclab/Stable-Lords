@@ -79,6 +79,20 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  feral_instinct: {
+    id: 'feral_instinct',
+    name: 'Feral Instinct',
+    description: '+1 initiative and +1 attack when bloodied (HP < 50%) — reverting to survival instincts learned in the gutters.',
+    effect: { iniMod: 1, attModLowHp: 1 },
+    weight: 0.8,
+  },
+  gutter_rat: {
+    id: 'gutter_rat',
+    name: 'Gutter Rat',
+    description: '+2 defense in LATE phase — accustomed to outlasting stronger opponents in grueling street fights.',
+    effect: { defModLate: 2 },
+    weight: 0.8,
+  },
   quick: {
     id: 'quick',
     name: 'Quick',

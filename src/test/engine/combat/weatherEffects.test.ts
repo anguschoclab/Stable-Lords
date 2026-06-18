@@ -109,6 +109,7 @@ describe('weatherEffects', () => {
         'Gravity Anomaly',
         'Blood Fog',
         'Shimmering Heat',
+        'Rain of Frogs',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -190,6 +191,7 @@ describe('weatherEffects', () => {
         'Wildfire Smoke',
         'Blood Fog',
         'Shimmering Heat',
+        'Rain of Frogs',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);

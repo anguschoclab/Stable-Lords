@@ -94,6 +94,7 @@ const WEATHER_STAMINA_MOD: Record<string, number> = {
   'Ember Rain': 1.3, // 30% more stamina drain
   'Gravity Anomaly': 0.9, // 10% less stamina drain
   'Shimmering Heat': 1.2, // 20% more stamina drain
+  'Rain of Frogs': 1.1, // 10% more stamina drain due to stress and uneven footing
 }; /**
  * Weather stamina modifier.
  * @param weather - Weather. (optional)

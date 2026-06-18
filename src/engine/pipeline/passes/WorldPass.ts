@@ -72,7 +72,8 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   if (roll < 0.35) return 'Clear';
   if (roll < 0.38) return 'Rainbow';
   if (roll < 0.4) return 'Zephyr';
-  if (roll < 0.5) return 'Overcast';
+  if (roll < 0.495) return 'Overcast';
+  if (roll < 0.5) return 'Rain of Frogs';
   if (roll < 0.6) return 'Rainy';
   if (roll < 0.65) return 'Mist';
   if (roll < 0.75) return 'Breezy';

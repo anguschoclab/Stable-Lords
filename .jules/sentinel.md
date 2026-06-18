@@ -28,4 +28,9 @@
 **Vulnerability:** The Content-Security-Policy (CSP) in `index.html` allowed `'unsafe-eval'` in the `script-src` directive, potentially exposing the application to Cross-Site Scripting (XSS) via dynamic code execution.
 **Learning:** The application does not natively rely on `eval()` or similar functions. Including `'unsafe-eval'` in the CSP is an unnecessary risk, especially for an Electron application where XSS can have severe consequences even with `nodeIntegration` disabled.
 **Prevention:** Always follow the principle of least privilege in CSP configurations. Ensure `'unsafe-eval'` and `'unsafe-inline'` are omitted unless absolutely required by a specific, well-understood framework constraint.
+## 2026-06-15 - [Remove 'unsafe-inline' from CSP script-src]
+**Vulnerability:** The Content-Security-Policy (CSP) in `index.html` allowed `'unsafe-inline'` in the `script-src` directive. This was required for a small inline initialization script for HowlerGlobal, but it broadly exposed the application to Cross-Site Scripting (XSS) via injected inline scripts.
+**Learning:** Even a tiny inline script necessitates opening up the CSP significantly. In an Electron context, XSS can lead to severe privilege escalation if the sandbox or context isolation is ever weakened.
+**Prevention:** Extract all inline scripts into separate JS files (e.g., `/init-howler.js`) and load them via `<script src="...">`. Then, strictly remove `'unsafe-inline'` from `script-src` to ensure only external scripts from approved sources can run.
+
 2024-06-17: When expanding game narrative systems (e.g., adding traits, lore, origins), always trace how the new properties physically hook into the simulation. A Trait without a handler in `getDynamicTraitMods()` is inert. Always cross-check the interface and the application layer.

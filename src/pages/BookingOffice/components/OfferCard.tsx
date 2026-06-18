@@ -17,6 +17,8 @@ import {
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { isExhausted } from '@/engine/core/fatigueUtils';
 import { getFatigueStatus, getInjuryBadge, type RivalWarriorMap } from '../hooks/useBookingOffice';
+import { buildFightForecast } from '@/engine/narrative/fightForecast';
+import { FightForecastPanel } from '@/components/bout-viewer/FightForecastPanel';
 
 interface OfferCardProps {
   offer: BoutOffer;
@@ -50,6 +52,10 @@ export function OfferCard({
   const fatigueStatus = getFatigueStatus(fatigue);
   const injuryBadge = getInjuryBadge(playerWarrior?.injuries || []);
   const isSigned = signedOfferIds.has(offer.id);
+
+  const forecast = playerWarrior
+    ? buildFightForecast(playerWarrior, opponent ?? null)
+    : undefined;
 
   return (
     <Surface
@@ -146,6 +152,12 @@ export function OfferCard({
             </div>
           </div>
         </div>
+
+        <FightForecastPanel
+          forecast={forecast}
+          nameA={playerWarrior?.name ?? 'Your fighter'}
+          nameD={opponent?.name ?? 'Opponent'}
+        />
 
         <div className="grid grid-cols-2 gap-8 py-6 border-y border-white/5">
           <div className="space-y-1">

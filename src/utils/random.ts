@@ -14,7 +14,6 @@ export class SeededRNG implements IRNGService {
 
   /**
    * Constructor.
-   * @param seed - Seed.
    */
   constructor(seed: number) {
     this.state = seed;

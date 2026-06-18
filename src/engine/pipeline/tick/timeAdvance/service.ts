@@ -6,12 +6,7 @@ import {
 import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
 import { telemetry, TelemetryEvents, TelemetryTags } from '@/engine/telemetry';
 import { truncateState } from '@/engine/storage/truncation';
-import type {
-  AdvanceOptions,
-  WeekSummary,
-  QuarterAdvanceResult,
-  YearAdvanceResult,
-} from './types';
+import type { AdvanceOptions, WeekSummary, QuarterAdvanceResult, YearAdvanceResult } from './types';
 import { evaluateStopConditions } from './stopConditions';
 import { extractWeekSummary, buildQuarterSummary, buildAnnualSummary } from './summaries';
 
@@ -61,7 +56,13 @@ export const TimeAdvanceService = {
           return {
             state: currentState,
             summaries: weekSummaries,
-            quarterSummary: buildQuarterSummary(currentState, startWeek, startYear, startTreasury, weekSummaries),
+            quarterSummary: buildQuarterSummary(
+              currentState,
+              startWeek,
+              startYear,
+              startTreasury,
+              weekSummaries
+            ),
             stopReason: stopResult.reason ?? 'unknown',
             weeksCompleted: i + 1,
           };
@@ -89,7 +90,13 @@ export const TimeAdvanceService = {
     return {
       state: currentState,
       summaries: weekSummaries,
-      quarterSummary: buildQuarterSummary(currentState, startWeek, startYear, startTreasury, weekSummaries),
+      quarterSummary: buildQuarterSummary(
+        currentState,
+        startWeek,
+        startYear,
+        startTreasury,
+        weekSummaries
+      ),
       stopReason: null,
       weeksCompleted: 13,
     };

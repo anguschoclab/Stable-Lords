@@ -19,15 +19,13 @@ interface StyleRow {
   losses: number;
   winRate: number;
 } /**
-   * Style meter table.
-   * @param - { class name }.
-   * @returns The result.
-   */
+ * Style meter table.
+ * @param - { class name }.
+ */
 
 /**
  * Style meter table.
  * @param - { class name }.
- * @returns The result.
  */
 export function StyleMeterTable({ className }: StyleMeterTableProps) {
   const styleStats = useGameStore((s) => {

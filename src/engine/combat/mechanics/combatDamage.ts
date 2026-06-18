@@ -16,4 +16,3 @@ export { WEAPON_DAMAGE_TYPE, applyArmorTypeMod } from './weaponArmor';
 export { applyProtectMod, applyShieldZoneMod } from './protectShield';
 
 export { computeHitDamage, calculateKillWindow } from './damageCalc';
-

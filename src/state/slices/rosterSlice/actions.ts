@@ -1,20 +1,14 @@
 import type { GameStore } from '@/state/useGameStore';
-import {
-  Warrior,
-  InsightToken,
-} from '@/types/state.types';
+import { Warrior, InsightToken } from '@/types/state.types';
 import { type WarriorId, type InsightId } from '@/types/shared.types';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { computeWarriorStats } from '@/engine/skillCalc';
 
-export function createRosterActions(
-  set: (fn: (state: GameStore) => Partial<GameStore>) => void
-) {
+export function createRosterActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
   return {
     setRoster: (roster: Warrior[]) => set(() => ({ roster })),
 
-    addWarrior: (warrior: Warrior) =>
-      set((state) => ({ roster: [...state.roster, warrior] })),
+    addWarrior: (warrior: Warrior) => set((state) => ({ roster: [...state.roster, warrior] })),
 
     killWarrior: (
       warriorId: WarriorId,

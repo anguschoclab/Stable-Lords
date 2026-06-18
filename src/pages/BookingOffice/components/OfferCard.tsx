@@ -7,13 +7,7 @@ import type { Warrior } from '@/types/state.types';
 import { PERSONALITY_CONFIG } from '@/data/promoterPersonalityConfig';
 import { getArenaById } from '@/data/arenas';
 import { describeArenaFit } from '@/engine/matchmaking/arenaFit';
-import {
-  Briefcase,
-  CheckCircle2,
-  Ban,
-  Zap,
-  MapPin,
-} from 'lucide-react';
+import { Briefcase, CheckCircle2, Ban, Zap, MapPin } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { isExhausted } from '@/engine/core/fatigueUtils';
 import { getFatigueStatus, getInjuryBadge, type RivalWarriorMap } from '../hooks/useBookingOffice';
@@ -53,9 +47,7 @@ export function OfferCard({
   const injuryBadge = getInjuryBadge(playerWarrior?.injuries || []);
   const isSigned = signedOfferIds.has(offer.id);
 
-  const forecast = playerWarrior
-    ? buildFightForecast(playerWarrior, opponent ?? null)
-    : undefined;
+  const forecast = playerWarrior ? buildFightForecast(playerWarrior, opponent ?? null) : undefined;
 
   return (
     <Surface

@@ -20,7 +20,6 @@ interface MiniCombatLogProps {
   class name,
   on close,
 }.
-   * @returns The result.
    */
 
 /**
@@ -32,7 +31,6 @@ interface MiniCombatLogProps {
   class name,
   on close,
 }.
- * @returns The result.
  */
 export default function MiniCombatLog({
   events,

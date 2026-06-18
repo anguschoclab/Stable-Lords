@@ -15,15 +15,13 @@ interface TrainerCardProps {
   owned: boolean;
   action?: ReactNode;
 } /**
-   * Trainer card.
-   * @param - { trainer, on fire, owned, action }.
-   * @returns The result.
-   */
+ * Trainer card.
+ * @param - { trainer, on fire, owned, action }.
+ */
 
 /**
  * Trainer card.
  * @param - { trainer, on fire, owned, action }.
- * @returns The result.
  */
 export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps) {
   const icon = FOCUS_ICONS[trainer.focus as TrainerFocus] ?? '📋';

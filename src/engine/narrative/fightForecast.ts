@@ -90,7 +90,7 @@ export function buildFightForecast(
     factors.push({
       label: opponent ? 'Even fight' : 'Unknown opponent',
       detail: opponent
-        ? `No decisive pre-fight edge — expect a close bout against ${opponent.name}.` 
+        ? `No decisive pre-fight edge — expect a close bout against ${opponent.name}.`
         : `Opponent details are CLASSIFIED. Scout them to forecast the matchup; ${player.name} appears fit to fight.`,
       favored: null,
       weight: 0.1,

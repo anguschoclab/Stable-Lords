@@ -100,7 +100,10 @@ function findFatigueCrossover(log: ExchangeLogEntry[]): {
 
 const SKILL_KEYS: (keyof BaseSkills)[] = ['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC'];
 
-function biggestSkillGap(a: AnalysisWarrior, d: AnalysisWarrior): { skill: string; gap: number; favored: 'A' | 'D' } {
+function biggestSkillGap(
+  a: AnalysisWarrior,
+  d: AnalysisWarrior
+): { skill: string; gap: number; favored: 'A' | 'D' } {
   let best = { skill: 'ATT', gap: 0, favored: 'A' as 'A' | 'D' };
   for (const k of SKILL_KEYS) {
     const gap = (a.skills[k] ?? 0) - (d.skills[k] ?? 0);
@@ -121,13 +124,14 @@ export function buildFightAnalysis(
 
   const fatalIdx = outcome.post?.fatalExchangeIndex ?? null;
   const decisiveEntry =
-    fatalIdx != null ? log.find((e) => e.exchangeIndex === fatalIdx) ?? null : null;
+    fatalIdx != null ? (log.find((e) => e.exchangeIndex === fatalIdx) ?? null) : null;
 
   const tale = summarizeTale(log);
   const fatigue = findFatigueCrossover(log);
   const skillGap = biggestSkillGap(warriorA, warriorD);
 
-  const winnerName = outcome.winner === 'A' ? warriorA.name : outcome.winner === 'D' ? warriorD.name : 'No one';
+  const winnerName =
+    outcome.winner === 'A' ? warriorA.name : outcome.winner === 'D' ? warriorD.name : 'No one';
 
   const decisiveExchange = {
     index: decisiveEntry?.exchangeIndex ?? null,
@@ -135,7 +139,7 @@ export function buildFightAnalysis(
     reasonCodes: decisiveEntry?.reasonCodes ?? [],
     summary:
       decisiveEntry != null
-        ? `The bout broke open at minute ${decisiveEntry.minute} (exchange ${decisiveEntry.exchangeIndex}).` 
+        ? `The bout broke open at minute ${decisiveEntry.minute} (exchange ${decisiveEntry.exchangeIndex}).`
         : `${winnerName} won by ${outcome.by ?? 'decision'}.`,
   };
 
@@ -166,7 +170,7 @@ export function buildFightAnalysis(
       label: 'Endurance',
       detail:
         fatigue.crossoverExchange != null
-          ? `${tiredName} began gassing out around exchange ${fatigue.crossoverExchange}.` 
+          ? `${tiredName} began gassing out around exchange ${fatigue.crossoverExchange}.`
           : `${tiredName} finished the more drained fighter.`,
       favored: fatigue.fatiguedSide === 'A' ? 'D' : 'A',
       weight: 0.5,

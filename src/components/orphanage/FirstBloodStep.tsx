@@ -17,15 +17,13 @@ interface FirstBloodStepProps {
   onBack: () => void;
   onNext: () => void;
 } /**
-   * First blood step.
-   * @param - { bout result, on back, on next }.
-   * @returns The result.
-   */
+ * First blood step.
+ * @param - { bout result, on back, on next }.
+ */
 
 /**
  * First blood step.
  * @param - { bout result, on back, on next }.
- * @returns The result.
  */
 export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloodStepProps) {
   return (

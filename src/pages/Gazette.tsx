@@ -166,15 +166,13 @@ function GazetteEmptyState() {
     </Surface>
   );
 } /**
-   * Gazette.
-   * @returns The result.
-   */
+ * Gazette.
+ */
 
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 
 /**
  * Gazette.
- * @returns The result.
  */
 export default function Gazette() {
   const state = useWorldState();

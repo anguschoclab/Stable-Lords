@@ -3,9 +3,7 @@ import { FightSummary } from '@/types/combat.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import { truncateArray } from '@/utils/stateUtils';
 
-export function createCombatActions(
-  set: (fn: (state: GameStore) => Partial<GameStore>) => void
-) {
+export function createCombatActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
   return {
     appendFight: (summary: FightSummary) => {
       set((state) => {

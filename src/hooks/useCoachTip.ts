@@ -8,8 +8,8 @@ import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
 import { filterActive } from '@/utils/roster';
 import type { GameState, Warrior } from '@/types/game'; /**
-                                                         * Defines the shape of coach tip.
-                                                         */
+ * Defines the shape of coach tip.
+ */
 
 /**
  * Defines the shape of coach tip.
@@ -50,8 +50,7 @@ const COACH_ROUTES: RouteEntry[] = [
         id: 'hub-recruit-more',
         message:
           '📢 Your stable is thin! Recruit more warriors to keep a healthy rotation and avoid burnout.',
-        condition: (s) =>
-          filterActive(s.roster).length === 1 && s.arenaHistory.length >= 2,
+        condition: (s) => filterActive(s.roster).length === 1 && s.arenaHistory.length >= 2,
       },
       {
         id: 'hub-tournament-ready',

@@ -95,7 +95,10 @@ export function AttributeRow({ attr }: AttributeRowProps) {
             style={{ left: `${potPct}%` }}
           />
         )}
-        <div className={cn('h-full transition-all duration-1000', colorClass)} style={{ width: `${pct}%` }} />
+        <div
+          className={cn('h-full transition-all duration-1000', colorClass)}
+          style={{ width: `${pct}%` }}
+        />
       </div>
 
       {isRecommended && (

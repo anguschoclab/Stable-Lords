@@ -8,30 +8,20 @@ import { StateImpact } from '@/engine/impacts';
  * Handles seasonal transitions and weather changes.
  */
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter']; /**
-                                                                   * Compute next season.
-                                                                   * @param newWeek - New week.
-                                                                   * @returns The result.
-                                                                   */
+ * Compute next season.
+ */
 
 /**
  * Compute next season.
- * @param newWeek - New week.
- * @returns The result.
  */
 export function computeNextSeason(newWeek: number): Season {
   return SEASONS[Math.floor((newWeek - 1) / 13) % 4]!;
 } /**
-   * Roll weather.
-   * @param rng - Rng.
-   * @param season - Season.
-   * @returns The result.
-   */
+ * Roll weather.
+ */
 
 /**
  * Roll weather.
- * @param rng - Rng.
- * @param season - Season.
- * @returns The result.
  */
 export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   const roll = rng.next();
@@ -81,7 +71,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   // Spring/Fall: Wet, windy, and unpredictable
   if (roll < 0.35) return 'Clear';
   if (roll < 0.38) return 'Rainbow';
-  if (roll < 0.40) return 'Zephyr';
+  if (roll < 0.4) return 'Zephyr';
   if (roll < 0.5) return 'Overcast';
   if (roll < 0.6) return 'Rainy';
   if (roll < 0.65) return 'Mist';
@@ -105,10 +95,7 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
 
 /**
  * Run world pass.
- * @param _state - _state.
- * @param nextWeek - Next week.
  * @param rng - Rng. (optional)
- * @returns The result.
  */
 export function runWorldPass(_state: GameState, nextWeek: number, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(nextWeek * 13);

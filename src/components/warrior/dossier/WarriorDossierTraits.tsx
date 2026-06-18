@@ -4,15 +4,13 @@ import type { Warrior } from '@/types/warrior.types';
 interface WarriorDossierTraitsProps {
   warrior: Warrior;
 } /**
-   * Warrior dossier traits.
-   * @param - { warrior }.
-   * @returns The result.
-   */
+ * Warrior dossier traits.
+ * @param - { warrior }.
+ */
 
 /**
  * Warrior dossier traits.
  * @param - { warrior }.
- * @returns The result.
  */
 export function WarriorDossierTraits({ warrior }: WarriorDossierTraitsProps) {
   if (!warrior.origin && (!warrior.traits || warrior.traits.length === 0)) {

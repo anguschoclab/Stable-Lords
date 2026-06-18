@@ -24,7 +24,10 @@ export function handleFameBoost(
     ctx.rosterUpdates.set(chosen.id, {
       fame: (chosen.fame || 0) + 25,
     });
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 25 });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: 25,
+    });
   }
 }
 
@@ -37,7 +40,9 @@ export function handleWinterChill(
 ) {
   const cost = rollRange(rng, 150, 100);
   ctx.treasuryDelta -= cost;
-  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other'));
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(rng, nextWeek, 'Winter Heating & Supplies', -cost, 'other')
+  );
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: cost });
 }
 
@@ -82,7 +87,9 @@ export function handleEpiphany(
       discoveredWeek: nextWeek,
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+    });
   }
 }
 
@@ -106,7 +113,10 @@ export function handleTavernBrawl(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: fameGained,
+    });
   }
 }
 
@@ -125,7 +135,10 @@ export function handleBardsSong(
     ctx.rosterUpdates.set(chosen.id, {
       fame: (chosen.fame || 0) + fameGained,
     });
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: fameGained,
+    });
   }
 }
 
@@ -149,7 +162,10 @@ export function handlePlagueOutbreak(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameLost });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: fameLost,
+    });
   }
 }
 
@@ -181,7 +197,9 @@ export function handleGrandFeast(
 ) {
   const goldCost = rollRange(rng, 200, 201);
   ctx.treasuryDelta -= goldCost;
-  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Grand Feast Expenses', -goldCost, 'other'));
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(rng, nextWeek, 'Grand Feast Expenses', -goldCost, 'other')
+  );
 
   const activeWarriors = getActiveWarriors(state);
   for (const w of activeWarriors) {
@@ -252,7 +270,11 @@ export function handleMysticVision(
       fame: (chosen.fame || 0) + 10,
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, xp: 15, fame: 10 });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      xp: 15,
+      fame: 10,
+    });
   }
 }
 
@@ -276,7 +298,10 @@ export function handleWildAnimalAttack(
       injuries: [...(chosen.injuries || []), newInjury],
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: fameGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      fame: fameGained,
+    });
   }
 }
 
@@ -298,7 +323,10 @@ export function handleStrangeDream(
       xp: (chosen.xp || 0) + xpGained,
     });
 
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: chosen.name, xp: xpGained });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: chosen.name,
+      xp: xpGained,
+    });
   }
 }
 
@@ -347,7 +375,9 @@ export function handleStreetPerformance(
       const goldGained = rollRange(rng, 50, 50);
       ctx.treasuryDelta += goldGained;
 
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Street Performance Tips', goldGained, 'other')
+      );
 
       const currentFlair = chosen.flair || [];
       const newFlair = currentFlair.includes('Local Hero')
@@ -423,9 +453,13 @@ export function handleMysteriousPatron(
   const goldGained = rollRange(rng, 100, 201);
   ctx.treasuryDelta += goldGained;
 
-  ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other'));
+  ctx.ledgerEntries.push(
+    makeLedgerEntry(rng, nextWeek, 'Mysterious Patron Donation', goldGained, 'other')
+  );
 
-  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: goldGained });
+  pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+    gold: goldGained,
+  });
 }
 
 export function handleMidnightFeast(
@@ -458,7 +492,12 @@ export function handleMidnightFeast(
       gold: cost,
     });
   } else {
-    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { name: 'Someone', xp: 0, fame: 0, gold: cost });
+    pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, {
+      name: 'Someone',
+      xp: 0,
+      fame: 0,
+      gold: cost,
+    });
   }
 }
 
@@ -531,7 +570,9 @@ export function handleGoblinRaid(
     if (chosen) {
       const goldLost = rollRange(rng, 20, 31);
       ctx.treasuryDelta -= goldLost;
-      ctx.ledgerEntries.push(makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other'));
+      ctx.ledgerEntries.push(
+        makeLedgerEntry(rng, nextWeek, 'Goblin Raid Loss', -goldLost, 'other')
+      );
 
       const newInjury = createOffseasonInjury(rng, 'goblinScratch');
 

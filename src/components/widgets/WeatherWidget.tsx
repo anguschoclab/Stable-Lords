@@ -49,9 +49,8 @@ const WEATHER_STATS: Record<WeatherType, string> = {
   'Blood Fog': 'INITIATIVE -6 // RIPOSTE +6 // DAMAGE +25% // STAMINA DRAIN 110%',
   'Shimmering Heat': 'STAMINA DRAIN 120% // INITIATIVE -2',
 }; /**
-    * Weather widget.
-    * @returns The result.
-    */
+ * Weather widget.
+ */
 export function WeatherWidget() {
   const state = useGameStore(
     useShallow((s) => ({

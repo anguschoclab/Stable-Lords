@@ -3,10 +3,7 @@ import { processAIStable } from '@/engine/ai/stableManager';
 import { computeWeeklyBreakdown } from '@/engine/economy';
 import type { RivalStableData, FightSummary } from '@/types/state.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import {
-  FIGHT_PURSE,
-  WIN_BONUS,
-} from '@/constants/economy';
+import { FIGHT_PURSE, WIN_BONUS } from '@/constants/economy';
 
 function makeRival(over: Partial<RivalStableData> = {}): RivalStableData {
   return {
@@ -65,7 +62,13 @@ describe('AI Economy Parity', () => {
     state.week = 5;
     const rival = makeRival({
       roster: [
-        { id: 'warA' as any, name: 'Warrior', style: 'StrikingAttack', fame: 0, status: 'Active' } as any,
+        {
+          id: 'warA' as any,
+          name: 'Warrior',
+          style: 'StrikingAttack',
+          fame: 0,
+          status: 'Active',
+        } as any,
       ],
     });
     state.arenaHistory = [makeFight(5, 'rival-1', { winner: 'A' })];
@@ -82,7 +85,13 @@ describe('AI Economy Parity', () => {
     state.week = 5;
     const rival = makeRival({
       roster: [
-        { id: 'warA' as any, name: 'Warrior', style: 'StrikingAttack', fame: 30, status: 'Active' } as any,
+        {
+          id: 'warA' as any,
+          name: 'Warrior',
+          style: 'StrikingAttack',
+          fame: 30,
+          status: 'Active',
+        } as any,
       ],
     });
     state.arenaHistory = [
@@ -205,8 +214,24 @@ describe('AI Economy Parity', () => {
     state.week = 5;
     const rival = makeRival({
       trainers: [
-        { id: 't1', name: 'Trainer A', tier: 'Novice', focus: 'Aggression', fame: 1, age: 40, contractWeeksLeft: 0 },
-        { id: 't2', name: 'Trainer B', tier: 'Master', focus: 'Defense', fame: 5, age: 50, contractWeeksLeft: 5 },
+        {
+          id: 't1',
+          name: 'Trainer A',
+          tier: 'Novice',
+          focus: 'Aggression',
+          fame: 1,
+          age: 40,
+          contractWeeksLeft: 0,
+        },
+        {
+          id: 't2',
+          name: 'Trainer B',
+          tier: 'Master',
+          focus: 'Defense',
+          fame: 5,
+          age: 50,
+          contractWeeksLeft: 5,
+        },
       ],
     });
 
@@ -222,7 +247,13 @@ describe('AI Economy Parity', () => {
     state.week = 5;
     const rival = makeRival({
       roster: [
-        { id: 'warA' as any, name: 'Warrior', style: 'StrikingAttack', fame: 0, status: 'Active' } as any,
+        {
+          id: 'warA' as any,
+          name: 'Warrior',
+          style: 'StrikingAttack',
+          fame: 0,
+          status: 'Active',
+        } as any,
       ],
     });
     state.arenaHistory = [makeFight(5, 'rival-1', { winner: 'A' })];

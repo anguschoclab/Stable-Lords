@@ -20,7 +20,6 @@ interface ActionButtonsProps {
   on new game,
   on import,
 }.
-   * @returns The result.
    */
 
 /**
@@ -33,7 +32,6 @@ interface ActionButtonsProps {
   on new game,
   on import,
 }.
- * @returns The result.
  */
 export default function ActionButtons({
   mostRecent,

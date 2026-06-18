@@ -11,15 +11,13 @@ interface MetaAnalyticsProps {
 }
 
 const TACTICAL_STYLES = ['Brawler', 'Technician', 'High-Flyer', 'Powerhouse', 'Grappler']; /**
-                                                                                            * Tactical style analysis.
-                                                                                            * @param - { all fights }.
-                                                                                            * @returns The result.
-                                                                                            */
+ * Tactical style analysis.
+ * @param - { all fights }.
+ */
 
 /**
  * Tactical style analysis.
  * @param - { all fights }.
- * @returns The result.
  */
 export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
   // ⚡ Bolt: Reduced O(S * N) repeated filter calls to O(N) single-pass aggregation and memoized result
@@ -135,15 +133,13 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
     </Surface>
   );
 } /**
-   * Style matchup heatmap.
-   * @param - { all fights }.
-   * @returns The result.
-   */
+ * Style matchup heatmap.
+ * @param - { all fights }.
+ */
 
 /**
  * Style matchup heatmap.
  * @param - { all fights }.
- * @returns The result.
  */
 export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
   // ⚡ Bolt: Reduced O(S^2 * N) nested filtering to O(N) single-pass aggregation and memoized result

@@ -6,15 +6,13 @@ import { Sparkles, Heart } from 'lucide-react';
 interface Props {
   warrior: Warrior;
 } /**
-   * Warrior dossier soul bond.
-   * @param - { warrior }.
-   * @returns The result.
-   */
+ * Warrior dossier soul bond.
+ * @param - { warrior }.
+ */
 
 /**
  * Warrior dossier soul bond.
  * @param - { warrior }.
- * @returns The result.
  */
 export default function WarriorDossierSoulBond({ warrior }: Props) {
   if (!(warrior as any).soulBond) return null;

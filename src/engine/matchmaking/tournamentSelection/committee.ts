@@ -12,11 +12,6 @@ import { filterActive } from '@/utils/roster';
 
 /**
  * Committee selection.
- * @param state - State.
- * @param tier - Tier.
- * @param seed - Seed.
- * @param lockedIds - Locked ids.
- * @returns The result.
  */
 export function committeeSelection(
   state: GameState,
@@ -89,25 +84,11 @@ export function committeeSelection(
 
   return { warriors: qualified.slice(0, 64), updatedLockedIds: newLocks };
 } /**
-   * Build tournament.
-   * @param tierId - Tier id.
-   * @param tierName - Tier name.
-   * @param warriors - Warriors.
-   * @param week - Week.
-   * @param season - Season.
-   * @param rng - Rng.
-   * @returns The result.
-   */
+ * Build tournament.
+ */
 
 /**
  * Build tournament.
- * @param tierId - Tier id.
- * @param tierName - Tier name.
- * @param warriors - Warriors.
- * @param week - Week.
- * @param season - Season.
- * @param rng - Rng.
- * @returns The result.
  */
 export function buildTournament(
   tierId: string,

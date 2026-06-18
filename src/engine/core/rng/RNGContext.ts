@@ -9,14 +9,12 @@ import { SeededRNGService } from '@/utils/random';
 export class RNGContext implements IRNGContext {
   /**
    * Constructor.
-   * @param baseSeed - Base seed.
    */
   constructor(private baseSeed: number) {}
 
   /**
    * Get rng.
    * @param seed - Seed. (optional)
-   * @returns The result.
    */
   getRNG(seed?: number): IRNGService {
     return new SeededRNGService(seed ?? this.baseSeed);
@@ -24,8 +22,6 @@ export class RNGContext implements IRNGContext {
 
   /**
    * Create child.
-   * @param seedOffset - Seed offset.
-   * @returns The result.
    */
   createChild(seedOffset: number): IRNGContext {
     return new RNGContext(this.baseSeed + seedOffset);
@@ -33,7 +29,6 @@ export class RNGContext implements IRNGContext {
 
   /**
    * Get base seed.
-   * @returns The result.
    */
   getBaseSeed(): number {
     return this.baseSeed;

@@ -52,12 +52,8 @@ export { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 export { DECISION_HIT_MARGIN, getMatchupBonus } from '@/constants/combat';
 export { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 export { applySpecialtyMods } from './specialtyMods'; /**
-                                                       * Resolve exchange.
-                                                       * @param ctx - Ctx.
-                                                       * @param fA - F a.
-                                                       * @param fD - F d.
-                                                       * @returns The result.
-                                                       */
+ * Resolve exchange.
+ */
 
 // ─── Phase Handlers ─────────────────────────────────────────────────────────
 
@@ -97,16 +93,8 @@ function resolveInitiativePhase(
   const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
 
   // Calculate style-weather modifiers
-  const styleWeatherModA = getStyleWeatherModifier(
-    fA.style,
-    ctx.weather,
-    ctx.arenaConfig.tags
-  );
-  const styleWeatherModD = getStyleWeatherModifier(
-    fD.style,
-    ctx.weather,
-    ctx.arenaConfig.tags
-  );
+  const styleWeatherModA = getStyleWeatherModifier(fA.style, ctx.weather, ctx.arenaConfig.tags);
+  const styleWeatherModD = getStyleWeatherModifier(fD.style, ctx.weather, ctx.arenaConfig.tags);
 
   const iniA =
     fA.skills.INI +
@@ -515,10 +503,6 @@ function resolveCombatOffenseDefense(
 
 /**
  * Resolve exchange.
- * @param ctx - Ctx.
- * @param fA - F a.
- * @param fD - F d.
- * @returns The result.
  */
 export function resolveExchange(
   ctx: ResolutionContext,

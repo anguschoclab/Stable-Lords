@@ -100,7 +100,11 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
       fightCount++;
       const won = f.winner === 'A';
       if (won) winCount++;
-      const { purse, winBonus } = computeFightEconomics({ fame: f.fameA ?? 0, arenaTier: tier, won });
+      const { purse, winBonus } = computeFightEconomics({
+        fame: f.fameA ?? 0,
+        arenaTier: tier,
+        won,
+      });
       scaledPurse += purse;
       scaledWinBonus += winBonus;
     }
@@ -108,17 +112,19 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
       fightCount++;
       const won = f.winner === 'D';
       if (won) winCount++;
-      const { purse, winBonus } = computeFightEconomics({ fame: f.fameD ?? 0, arenaTier: tier, won });
+      const { purse, winBonus } = computeFightEconomics({
+        fame: f.fameD ?? 0,
+        arenaTier: tier,
+        won,
+      });
       scaledPurse += purse;
       scaledWinBonus += winBonus;
     }
   }
 
   const income: { label: string; amount: number }[] = [];
-  if (fightCount > 0)
-    income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse });
-  if (winCount > 0)
-    income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus });
+  if (fightCount > 0) income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse });
+  if (winCount > 0) income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus });
   if (input.fame > 0)
     income.push({ label: 'Fame dividends', amount: Math.round(input.fame * FAME_DIVIDEND) });
 

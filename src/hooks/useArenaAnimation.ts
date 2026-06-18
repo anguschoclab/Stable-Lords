@@ -135,17 +135,11 @@ export function useArenaAnimation(
     updatePose,
   };
 } /**
-   * Set fighter names.
-   * @param a - A.
-   * @param d - D.
-   * @returns The result.
-   */
+ * Set fighter names.
+ */
 
 /**
  * Set fighter names.
- * @param a - A.
- * @param d - D.
- * @returns The result.
  */
 export function setFighterNames(a: string, d: string) {
   nameA = a.toLowerCase();

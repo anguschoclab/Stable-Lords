@@ -38,7 +38,6 @@ interface WarriorHeroHeaderProps {
   is player owned,
   insight tokens,
 }.
-   * @returns The result.
    */
 
 /**
@@ -52,7 +51,6 @@ interface WarriorHeroHeaderProps {
   is player owned,
   insight tokens,
 }.
- * @returns The result.
  */
 export function WarriorHeroHeader({
   warrior,

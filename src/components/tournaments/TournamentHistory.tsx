@@ -17,7 +17,6 @@ interface TournamentHistoryProps {
   season names,
   current season,
 }.
-   * @returns The result.
    */
 
 /**
@@ -28,7 +27,6 @@ interface TournamentHistoryProps {
   season names,
   current season,
 }.
- * @returns The result.
  */
 export function TournamentHistory({
   pastTournaments,

@@ -14,15 +14,13 @@ interface HeadToHeadProps {
   rosterA: Warrior[];
   rosterB: Warrior[];
 } /**
-   * Head to head.
-   * @param - { roster a, roster b }.
-   * @returns The result.
-   */
+ * Head to head.
+ * @param - { roster a, roster b }.
+ */
 
 /**
  * Head to head.
  * @param - { roster a, roster b }.
- * @returns The result.
  */
 export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' | 'nameB'>) {
   const state = useGameStore();

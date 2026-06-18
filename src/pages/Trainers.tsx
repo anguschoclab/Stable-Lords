@@ -40,13 +40,21 @@ import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggl
 
 /**
  * Trainers.
- * @returns The result.
  */
 export default function Trainers() {
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
   // Flat destructuring from 1.0 store
-  const { trainers, hiringPool, week, retired, graveyard, treasury, setState, deductFunds, isBookmarked } =
-    useGameStore();
+  const {
+    trainers,
+    hiringPool,
+    week,
+    retired,
+    graveyard,
+    treasury,
+    setState,
+    deductFunds,
+    isBookmarked,
+  } = useGameStore();
 
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 

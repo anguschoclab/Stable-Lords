@@ -10,13 +10,11 @@ import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { InsightManager } from '@/components/ledger';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider'; /**
-                                                                  * Stable hall.
-                                                                  * @returns The result.
-                                                                  */
+ * Stable hall.
+ */
 
 /**
  * Stable hall.
- * @returns The result.
  */
 export default function StableHall() {
   const { player, fame, insightTokens } = useGameStore();

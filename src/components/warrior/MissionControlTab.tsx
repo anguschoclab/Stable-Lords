@@ -24,7 +24,6 @@ interface MissionControlTabProps {
   on plan change,
   on equipment change,
 }.
-   * @returns The result.
    */
 
 /**
@@ -37,7 +36,6 @@ interface MissionControlTabProps {
   on plan change,
   on equipment change,
 }.
- * @returns The result.
  */
 export function MissionControlTab({
   warrior,

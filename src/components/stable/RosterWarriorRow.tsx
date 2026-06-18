@@ -6,7 +6,11 @@ import { StatBadge, WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { StatBattery } from '@/components/ui/StatBattery';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { potentialRating, potentialGrade } from '@/engine/potential';
-import { ATTRIBUTE_TRAINING, ATTRIBUTE_UI_THRESHOLDS, FAME_STAR_THRESHOLD } from '@/constants/training';
+import {
+  ATTRIBUTE_TRAINING,
+  ATTRIBUTE_UI_THRESHOLDS,
+  FAME_STAR_THRESHOLD,
+} from '@/constants/training';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type FightingStyle } from '@/types/game';
 import type { AttributePotential, CareerRecord } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';

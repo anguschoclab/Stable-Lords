@@ -24,13 +24,11 @@ export interface SpecialtyMods {
   riposteDamageMult: number; // multiplier on outgoing riposte damage
   fatiguePenaltyReduction: number; // fraction to reduce the fatigue skill penalty (0 = no change)
 } /**
-   * Default specialty mods.
-   * @returns The result.
-   */
+ * Default specialty mods.
+ */
 
 /**
  * Default specialty mods.
- * @returns The result.
  */
 export function defaultSpecialtyMods(): SpecialtyMods {
   return {
@@ -101,7 +99,10 @@ const SPECIALTY_HANDLERS: Record<TrainerSpecialty, SpecialtyHandlerFn> = {
   },
   RopeADope: (mods, _self, _opponent, _ctx, tier) => {
     // Reduce fatigue penalty (caps at 50% reduction)
-    mods.fatiguePenaltyReduction = Math.min(TRAINER_ROPEADOPE_CAP, mods.fatiguePenaltyReduction + 0.3 * tier);
+    mods.fatiguePenaltyReduction = Math.min(
+      TRAINER_ROPEADOPE_CAP,
+      mods.fatiguePenaltyReduction + 0.3 * tier
+    );
   },
 };
 

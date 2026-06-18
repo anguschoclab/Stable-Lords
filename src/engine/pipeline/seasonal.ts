@@ -1044,7 +1044,6 @@ function handleMeteorShower(
   }
 }
 
-
 function handleShadowTournament(
   state: GameState,
   nextWeek: number,

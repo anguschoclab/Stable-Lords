@@ -12,7 +12,6 @@ import { cn } from '@/lib/utils'; /**
   warrior name,
   arena history,
 }.
-                                   * @returns The result.
                                    */
 
 function getNamesFromTitle(title: string): { a: string; d: string } {
@@ -28,7 +27,6 @@ function getNamesFromTitle(title: string): { a: string; d: string } {
   warrior name,
   arena history,
 }.
- * @returns The result.
  */
 export function WarriorFightHistory({
   warriorId,

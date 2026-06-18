@@ -272,14 +272,16 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: -4,
     riposteMod: +2,
     damageMult: 0.9,
-    description: 'Thick smoke chokes the lungs and stings the eyes, turning fights into desperate brawls.',
+    description:
+      'Thick smoke chokes the lungs and stings the eyes, turning fights into desperate brawls.',
   },
   'Gravity Anomaly': {
     staminaMult: 0.9,
     initiativeMod: -3,
     riposteMod: +5,
     damageMult: 1.2,
-    description: 'Fluctuating gravity makes movements unpredictable, rewarding opportunistic counters and heavy strikes.',
+    description:
+      'Fluctuating gravity makes movements unpredictable, rewarding opportunistic counters and heavy strikes.',
   },
   'Blood Fog': {
     staminaMult: 1.1,
@@ -362,7 +364,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Rainbow: 'A vibrant rainbow curves over the arena, bringing a moment of strange peace.',
   'Ember Rain': 'Glowing embers rain down from the sky, searing the sand and the fighters alike.',
   'Wildfire Smoke': 'A thick blanket of acrid smoke settles over the sands. Every breath burns.',
-  'Gravity Anomaly': 'The very air feels unnaturally light, then crushingly heavy. The laws of physics are breaking down.',
+  'Gravity Anomaly':
+    'The very air feels unnaturally light, then crushingly heavy. The laws of physics are breaking down.',
   'Blood Fog': 'A thick, crimson fog rolls across the arena, smelling of rust and death.',
   'Shimmering Heat': 'The air ripples with shimmering heat, distorting every shape upon the sands.',
 };

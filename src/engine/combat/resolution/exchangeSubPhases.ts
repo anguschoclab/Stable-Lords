@@ -25,13 +25,11 @@ export interface ExchangeState {
   recoveryDebtToWriteD: number;
   events: CombatEvent[];
 } /**
-   * Make exchange state.
-   * @returns The result.
-   */
+ * Make exchange state.
+ */
 
 /**
  * Make exchange state.
- * @returns The result.
  */
 export function makeExchangeState(): ExchangeState {
   return {
@@ -47,29 +45,13 @@ export function makeExchangeState(): ExchangeState {
     events: [],
   };
 } /**
-   * Run approach.
-   * @param rng - Rng.
-   * @param fA - F a.
-   * @param fD - F d.
-   * @param OE_A - Oe_a.
-   * @param OE_D - Oe_d.
-   * @param ctx - Ctx.
-   * @param es - Es.
-   * @returns The result.
-   */
+ * Run approach.
+ */
 
 // ─── Approach Sub-Phase ───────────────────────────────────────────────────────
 
 /**
  * Run approach.
- * @param rng - Rng.
- * @param fA - F a.
- * @param fD - F d.
- * @param OE_A - Oe_a.
- * @param OE_D - Oe_d.
- * @param ctx - Ctx.
- * @param es - Es.
- * @returns The result.
  */
 export function runApproach(
   rng: () => number,
@@ -95,8 +77,8 @@ export function runApproach(
   es.events.push(...result.events);
   ctx.range = result.newRange;
 } /**
-   * Defines the shape of feint result.
-   */
+ * Defines the shape of feint result.
+ */
 
 // ─── Feint Sub-Phase ──────────────────────────────────────────────────────────
 
@@ -149,8 +131,8 @@ export function runFeint(rng: () => number, att: FighterState, def: FighterState
     events,
   };
 } /**
-   * Defines the shape of commit result.
-   */
+ * Defines the shape of commit result.
+ */
 
 // ─── Commit Sub-Phase ─────────────────────────────────────────────────────────
 

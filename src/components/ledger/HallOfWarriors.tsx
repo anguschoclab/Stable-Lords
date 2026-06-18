@@ -140,7 +140,6 @@ function RetiredWarriorRow({ warrior: w }: RetiredWarriorRowProps) {
 
 /**
  * Hall of warriors.
- * @returns The result.
  */
 export function HallOfWarriors() {
   // ⚡ Bolt: Narrowed state subscription to prevent re-renders on unrelated global state changes

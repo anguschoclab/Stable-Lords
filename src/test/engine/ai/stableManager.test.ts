@@ -24,7 +24,16 @@ describe('processAIStable', () => {
       },
       fame: 0,
       roster: [
-        { id: 'warA' as any, name: 'Warrior A', style: FightingStyle.StrikingAttack, fame: 0, status: 'Active', age: 20, injuries: [], attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } as any } as any,
+        {
+          id: 'warA' as any,
+          name: 'Warrior A',
+          style: FightingStyle.StrikingAttack,
+          fame: 0,
+          status: 'Active',
+          age: 20,
+          injuries: [],
+          attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 } as any,
+        } as any,
       ],
       treasury: 1000,
       ledger: [],

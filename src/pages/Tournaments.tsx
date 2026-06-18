@@ -57,13 +57,11 @@ function getFatigueLabel(fatigue: number | undefined): { label: string; color: s
   if (f < FATIGUE_ELEVATED) return { label: 'Tired', color: 'text-arena-gold' };
   return { label: 'Exhausted', color: 'text-destructive' };
 } /**
-   * Tournaments.
-   * @returns The result.
-   */
+ * Tournaments.
+ */
 
 /**
  * Tournaments.
- * @returns The result.
  */
 export default function Tournaments() {
   const {
@@ -98,14 +96,11 @@ export default function Tournaments() {
     return currentTournament.participants.filter((w) => w.stableId === player.id);
   }, [currentTournament, player]);
 
-  const pastTournaments = useMemo(
-    () => {
-      const all = tournaments.filter((t) => t.completed).reverse();
-      if (!showBookmarkedOnly) return all;
-      return all.filter((t) => isBookmarked('tournament', t.id));
-    },
-    [tournaments, showBookmarkedOnly, isBookmarked]
-  );
+  const pastTournaments = useMemo(() => {
+    const all = tournaments.filter((t) => t.completed).reverse();
+    if (!showBookmarkedOnly) return all;
+    return all.filter((t) => isBookmarked('tournament', t.id));
+  }, [tournaments, showBookmarkedOnly, isBookmarked]);
 
   // 🌩️ Protocol Sync: Auto-open prep dialog if tournament is ready but not started
   const isTournamentReadyToStart = useMemo(() => {

@@ -13,7 +13,6 @@ interface ImperialRingProps {
   size = 'md',
   variant = 'bronze',
 }.
-   * @returns The result.
    */
 
 /**
@@ -24,7 +23,6 @@ interface ImperialRingProps {
   size = 'md',
   variant = 'bronze',
 }.
- * @returns The result.
  */
 export function ImperialRing({
   children,

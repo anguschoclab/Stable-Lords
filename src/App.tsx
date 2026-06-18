@@ -64,7 +64,6 @@ function GameRoutes() {
 
 /**
  * Render the App component.
- * @returns The result.
  */
 const App = () => (
   <QueryClientProvider client={queryClient}>

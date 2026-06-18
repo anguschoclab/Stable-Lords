@@ -1,13 +1,20 @@
 import { describe, it, expect } from 'vitest';
-import { isBronzeMatch, isChampionshipFinal, getRoundName, isByeMatch, getEstimatedWeek } from '@/engine/matchmaking/tournamentHelpers';
+import {
+  isBronzeMatch,
+  isChampionshipFinal,
+  getRoundName,
+  isByeMatch,
+  getEstimatedWeek,
+} from '@/engine/matchmaking/tournamentHelpers';
 import type { TournamentBout } from '@/types/game';
 
 describe('tournamentHelpers', () => {
-  const t = (round: number, matchIndex: number, warriorIdD: string = 'w2'): TournamentBout => ({
-    round,
-    matchIndex,
-    warriorIdD
-  } as unknown as TournamentBout);
+  const t = (round: number, matchIndex: number, warriorIdD: string = 'w2'): TournamentBout =>
+    ({
+      round,
+      matchIndex,
+      warriorIdD,
+    }) as unknown as TournamentBout;
 
   describe('isBronzeMatch', () => {
     it('returns true when round is 6 and matchIndex is 1', () => {

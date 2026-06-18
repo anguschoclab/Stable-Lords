@@ -18,7 +18,6 @@ interface WeaponTrailProps {
   source y,
   class name,
 }.
-   * @returns The result.
    */
 
 /**
@@ -31,7 +30,6 @@ interface WeaponTrailProps {
   source y,
   class name,
 }.
- * @returns The result.
  */
 export default function WeaponTrail({
   trigger,

@@ -39,12 +39,10 @@ const TIER_CONFIG: Record<
 
 /**
  * Stable detail.
- * @returns The result.
  */
 
 /**
  * Stable detail.
- * @returns The result.
  */
 export default function StableDetail() {
   const { id } = useParams({ strict: false }) as { id: string };

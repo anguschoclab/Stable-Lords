@@ -16,7 +16,10 @@ export interface QuadrantDot {
 /**
  *
  */
-export function useQuadrantDots(worldState: StableReputationInput, rivals: RivalStableData[]): QuadrantDot[] {
+export function useQuadrantDots(
+  worldState: StableReputationInput,
+  rivals: RivalStableData[]
+): QuadrantDot[] {
   return useMemo<QuadrantDot[]>(() => {
     const playerRep = computeStableReputation(worldState);
     const result: QuadrantDot[] = [

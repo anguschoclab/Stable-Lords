@@ -5,7 +5,12 @@ import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNGService } from '@/utils/random';
 import { hashStr } from '@/utils/random';
-import { fullRefreshPool, type PoolWarrior, type RecruitTier, REFRESH_COST } from '@/engine/recruitment';
+import {
+  fullRefreshPool,
+  type PoolWarrior,
+  type RecruitTier,
+  REFRESH_COST,
+} from '@/engine/recruitment';
 import { canTransact } from '@/engine/economy/utils';
 import { potentialRating } from '@/engine/potential';
 import { revealRecruitPotential, type PotentialScoutReport } from '@/engine/recruitScouting';

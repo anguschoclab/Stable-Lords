@@ -4,7 +4,14 @@ import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { Progress } from '@/components/ui/progress';
 import { Swords, Heart, Zap, Eye, Brain, Dumbbell, Shield } from 'lucide-react';
-import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, ATTRIBUTE_MIN, ATTRIBUTE_MAX, ATTRIBUTE_TOTAL, type Attributes } from '@/types/game';
+import {
+  ATTRIBUTE_KEYS,
+  ATTRIBUTE_LABELS,
+  ATTRIBUTE_MIN,
+  ATTRIBUTE_MAX,
+  ATTRIBUTE_TOTAL,
+  type Attributes,
+} from '@/types/game';
 
 const ATTR_ICONS: Record<keyof Attributes, React.ReactNode> = {
   ST: <Dumbbell className="h-3.5 w-3.5" />,

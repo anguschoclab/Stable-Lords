@@ -9,15 +9,13 @@ interface PhaseOverridesProps {
   plan: FightPlan;
   onPlanChange: (plan: FightPlan) => void;
 } /**
-   * Phase overrides.
-   * @param - { plan, on plan change }.
-   * @returns The result.
-   */
+ * Phase overrides.
+ * @param - { plan, on plan change }.
+ */
 
 /**
  * Phase overrides.
  * @param - { plan, on plan change }.
- * @returns The result.
  */
 export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesProps) {
   const [phaseMode, setPhaseMode] = useState(!!plan.phases);

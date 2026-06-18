@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { cryptoRandom } from '@/utils/cryptoRandom';
 import { cn } from '@/lib/utils'; /**
-                                   * Particle type type.
-                                   */
+ * Particle type type.
+ */
 
 /**
  * Particle type type.
@@ -34,7 +34,6 @@ interface ParticleSystemProps {
   source y,
   class name,
 }.
-   * @returns The result.
    */
 
 /**
@@ -45,7 +44,6 @@ interface ParticleSystemProps {
   source y,
   class name,
 }.
- * @returns The result.
  */
 export default function ParticleSystem({
   trigger,

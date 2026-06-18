@@ -60,13 +60,13 @@ describe('idUtils', () => {
             arr[i] = Math.floor(Math.random() * 256);
           }
           return arr;
-        }
+        },
       };
 
       Object.defineProperty(globalThis, 'crypto', {
         value: mockCrypto,
         writable: true,
-        configurable: true
+        configurable: true,
       });
 
       const id = generateId();
@@ -80,7 +80,7 @@ describe('idUtils', () => {
       Object.defineProperty(globalThis, 'crypto', {
         value: originalCrypto,
         writable: true,
-        configurable: true
+        configurable: true,
       });
     });
 
@@ -91,7 +91,7 @@ describe('idUtils', () => {
       Object.defineProperty(globalThis, 'crypto', {
         value: undefined,
         writable: true,
-        configurable: true
+        configurable: true,
       });
 
       expect(() => {
@@ -102,7 +102,7 @@ describe('idUtils', () => {
       Object.defineProperty(globalThis, 'crypto', {
         value: originalCrypto,
         writable: true,
-        configurable: true
+        configurable: true,
       });
     });
   });

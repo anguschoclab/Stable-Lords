@@ -10,11 +10,7 @@ export {
   richHitLocation,
   type CombatContext,
 } from './narrativePBPUtils';
-export {
-  generateWarriorIntro,
-  battleOpener,
-  type WarriorIntroData,
-} from './narrativeIntro';
+export { generateWarriorIntro, battleOpener, type WarriorIntroData } from './narrativeIntro';
 export {
   narrateAttack,
   narratePassive,

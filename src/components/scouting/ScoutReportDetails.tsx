@@ -23,7 +23,6 @@ interface ScoutReportDetailsProps {
   treasury,
   on scout,
 }.
-   * @returns The result.
    */
 
 /**
@@ -34,7 +33,6 @@ interface ScoutReportDetailsProps {
   treasury,
   on scout,
 }.
- * @returns The result.
  */
 export function ScoutReportDetails({
   report,

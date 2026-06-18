@@ -6,27 +6,15 @@ import { generateInjury } from '@/engine/injuries';
 import { addRestState } from '@/engine/matchmaking/historyLogic';
 import { updateEntityInList } from '@/utils/stateUtils';
 import { StateImpact } from '@/engine/impacts'; /**
-                                                 * Handle injuries.
-                                                 * @param s - S.
-                                                 * @param wA - W a.
-                                                 * @param wD - W d.
-                                                 * @param outcome - Outcome.
-                                                 * @param week - Week.
-                                                 * @param rivalStableId - Rival stable id. (optional)
-                                                 * @param seed - Seed. (optional)
-                                                 * @returns The result.
-                                                 */
+ * Handle injuries.
+ * @param rivalStableId - Rival stable id. (optional)
+ * @param seed - Seed. (optional)
+ */
 
 /**
  * Handle injuries.
- * @param s - S.
- * @param wA - W a.
- * @param wD - W d.
- * @param outcome - Outcome.
- * @param week - Week.
  * @param rivalStableId - Rival stable id. (optional)
  * @param seed - Seed. (optional)
- * @returns The result.
  */
 export function handleInjuries(
   s: GameState,

@@ -69,7 +69,6 @@ function EventLogRail({ eventLogOpen, children }: EventLogRailProps) {
 /**
  * App shell.
  * @param - { children }.
- * @returns The result.
  */
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const {

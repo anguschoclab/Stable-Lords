@@ -21,12 +21,24 @@ export function DivisionalStandings({ rivals }: DivisionalStandingsProps) {
         <table className="w-full text-[10px]">
           <thead>
             <tr className="border-b border-white/5 bg-white/[0.02]">
-              <th className="px-5 py-2 text-left font-black uppercase tracking-widest text-muted-foreground/60">Stable</th>
-              <th className="px-4 py-2 text-left font-black uppercase tracking-widest text-muted-foreground/60">Doctrine</th>
-              <th className="px-4 py-2 text-center font-black uppercase tracking-widest text-muted-foreground/60">W</th>
-              <th className="px-4 py-2 text-center font-black uppercase tracking-widest text-muted-foreground/60">L</th>
-              <th className="px-4 py-2 text-center font-black uppercase tracking-widest text-muted-foreground/60">K</th>
-              <th className="px-4 py-2 text-right font-black uppercase tracking-widest text-muted-foreground/60">Win%</th>
+              <th className="px-5 py-2 text-left font-black uppercase tracking-widest text-muted-foreground/60">
+                Stable
+              </th>
+              <th className="px-4 py-2 text-left font-black uppercase tracking-widest text-muted-foreground/60">
+                Doctrine
+              </th>
+              <th className="px-4 py-2 text-center font-black uppercase tracking-widest text-muted-foreground/60">
+                W
+              </th>
+              <th className="px-4 py-2 text-center font-black uppercase tracking-widest text-muted-foreground/60">
+                L
+              </th>
+              <th className="px-4 py-2 text-center font-black uppercase tracking-widest text-muted-foreground/60">
+                K
+              </th>
+              <th className="px-4 py-2 text-right font-black uppercase tracking-widest text-muted-foreground/60">
+                Win%
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -41,11 +53,21 @@ export function DivisionalStandings({ rivals }: DivisionalStandingsProps) {
                     <span className="font-black text-foreground/80">{r.name}</span>
                   </div>
                 </td>
-                <td className="px-4 py-2.5 text-muted-foreground/60 font-bold">{r.philosophy ?? '—'}</td>
-                <td className="px-4 py-2.5 text-center font-mono font-black text-primary">{r.totalWins}</td>
-                <td className="px-4 py-2.5 text-center font-mono font-black text-destructive/70">{r.totalLosses}</td>
-                <td className="px-4 py-2.5 text-center font-mono font-black text-arena-blood">{r.totalKills}</td>
-                <td className="px-4 py-2.5 text-right font-mono font-black">{Math.round(r.winRate * 100)}%</td>
+                <td className="px-4 py-2.5 text-muted-foreground/60 font-bold">
+                  {r.philosophy ?? '—'}
+                </td>
+                <td className="px-4 py-2.5 text-center font-mono font-black text-primary">
+                  {r.totalWins}
+                </td>
+                <td className="px-4 py-2.5 text-center font-mono font-black text-destructive/70">
+                  {r.totalLosses}
+                </td>
+                <td className="px-4 py-2.5 text-center font-mono font-black text-arena-blood">
+                  {r.totalKills}
+                </td>
+                <td className="px-4 py-2.5 text-right font-mono font-black">
+                  {Math.round(r.winRate * 100)}%
+                </td>
               </tr>
             ))}
           </tbody>

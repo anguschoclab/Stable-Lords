@@ -20,15 +20,13 @@ interface TacticBankProps {
   plan?: FightPlan;
   onPlanChange?: (plan: FightPlan) => void;
 } /**
-   * Tactic bank.
-   * @param - { plan, on plan change }.
-   * @returns The result.
-   */
+ * Tactic bank.
+ * @param - { plan, on plan change }.
+ */
 
 /**
  * Tactic bank.
  * @param - { plan, on plan change }.
- * @returns The result.
  */
 export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {}) {
   const handleClick = (t: (typeof TACTIC_BANK)[number]) => {

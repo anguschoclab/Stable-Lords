@@ -15,8 +15,8 @@ import { filterActive } from '@/utils/roster';
  * Implements "Skeptical Memory" and "Hierarchical Delegation".
  */
 export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral'; /**
-                                                                      * Defines the shape of agent context.
-                                                                      */
+ * Defines the shape of agent context.
+ */
 
 /**
  * Defines the shape of agent context.
@@ -27,17 +27,11 @@ export interface AgentContext {
   meta: Record<string, number>;
   playerThreatLevel: PlayerThreatLevel;
 } /**
-   * Create agent context.
-   * @param rival - Rival.
-   * @param state - State.
-   * @returns The result.
-   */
+ * Create agent context.
+ */
 
 /**
  * Create agent context.
- * @param rival - Rival.
- * @param state - State.
- * @returns The result.
  */
 export function createAgentContext(rival: RivalStableData, state: GameState): AgentContext {
   // ⚡ Skeptical Memory: Initialize memory if missing

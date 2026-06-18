@@ -19,8 +19,8 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Archetype } from '@/data/names/archetypeNames'; /**
-                                                               * Defines the shape of trait effect.
-                                                               */
+ * Defines the shape of trait effect.
+ */
 
 /**
  * Defines the shape of trait effect.
@@ -54,8 +54,8 @@ export interface TraitEffect {
   fightPlanMod?: Partial<import('@/types/shared.types').FightPlan>;
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;
 } /**
-   * Defines the shape of trait def.
-   */
+ * Defines the shape of trait def.
+ */
 
 /**
  * Defines the shape of trait def.
@@ -72,8 +72,8 @@ export interface TraitDef {
   /** Archetypes this trait clashes with (0.3× pick weight). */
   antiSynergy?: Archetype[];
 } /**
-   * Traits.
-   */
+ * Traits.
+ */
 
 /**
  * Traits.
@@ -82,14 +82,16 @@ export const TRAITS: Record<string, TraitDef> = {
   feral_instinct: {
     id: 'feral_instinct',
     name: 'Feral Instinct',
-    description: '+1 initiative and +1 attack when bloodied (HP < 50%) — reverting to survival instincts learned in the gutters.',
+    description:
+      '+1 initiative and +1 attack when bloodied (HP < 50%) — reverting to survival instincts learned in the gutters.',
     effect: { iniMod: 1, attModLowHp: 1 },
     weight: 0.8,
   },
   gutter_rat: {
     id: 'gutter_rat',
     name: 'Gutter Rat',
-    description: '+2 defense in LATE phase — accustomed to outlasting stronger opponents in grueling street fights.',
+    description:
+      '+2 defense in LATE phase — accustomed to outlasting stronger opponents in grueling street fights.',
     effect: { defModLate: 2 },
     weight: 0.8,
   },
@@ -324,7 +326,8 @@ export const TRAITS: Record<string, TraitDef> = {
   blood_drunk: {
     id: 'blood_drunk',
     name: 'Blood Drunk',
-    description: '+2 attack and −2 defense when bloodied (HP < 50%) — loses all sense of self-preservation once injured.',
+    description:
+      '+2 attack and −2 defense when bloodied (HP < 50%) — loses all sense of self-preservation once injured.',
     effect: { attModLowHp: 2, defModLowHp: -2, fightPlanMod: { killDesire: 3 } },
     weight: 0.6,
     synergy: ['brutal', 'agile'],
@@ -333,7 +336,8 @@ export const TRAITS: Record<string, TraitDef> = {
   paranoid: {
     id: 'paranoid',
     name: 'Paranoid',
-    description: '+2 defense in OPENING phase, but −1 decisiveness overall — constantly expects ambushes.',
+    description:
+      '+2 defense in OPENING phase, but −1 decisiveness overall — constantly expects ambushes.',
     effect: { defModEarly: 2, decMod: -1, fightPlanMod: { AL: -2 } },
     weight: 0.6,
     synergy: ['cunning'],
@@ -341,7 +345,8 @@ export const TRAITS: Record<string, TraitDef> = {
   cold_eyed: {
     id: 'cold_eyed',
     name: 'Cold-Eyed',
-    description: '+1 initiative, +1 decisiveness — unnervingly calm, viewing combat purely as geometry and physics.',
+    description:
+      '+1 initiative, +1 decisiveness — unnervingly calm, viewing combat purely as geometry and physics.',
     effect: { iniMod: 1, decMod: 1, fightPlanMod: { feintTendency: 4, AL: 2 } },
     weight: 0.6,
     synergy: ['cunning', 'tank'],
@@ -358,7 +363,8 @@ export const TRAITS: Record<string, TraitDef> = {
   death_marked: {
     id: 'death_marked',
     name: 'Death-Marked',
-    description: '+2 kill window bonus and +1 decisiveness — an eerie aura that makes their lethal strikes more likely to finish the job.',
+    description:
+      '+2 kill window bonus and +1 decisiveness — an eerie aura that makes their lethal strikes more likely to finish the job.',
     effect: { killWindowBonus: 2, decMod: 1, fightPlanMod: { killDesire: 4 } },
     weight: 0.5,
     synergy: ['brutal', 'cunning'],
@@ -475,8 +481,8 @@ export function getStaticTraitMods(warrior?: Warrior): {
   }
   return acc;
 } /**
-   * Defines the shape of dynamic trait context.
-   */
+ * Defines the shape of dynamic trait context.
+ */
 
 /**
  * Defines the shape of dynamic trait context.

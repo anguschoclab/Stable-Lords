@@ -19,11 +19,7 @@ export {
 
 // Re-exports from eventNarrators (per-event-type narrators)
 export type { WarriorIntroData } from './eventNarrators';
-export {
-  generateWarriorIntro,
-  battleOpener,
-  narrateBoutEnd,
-} from './eventNarrators';
+export { generateWarriorIntro, battleOpener, narrateBoutEnd } from './eventNarrators';
 
 // Backward compatibility object
 import {

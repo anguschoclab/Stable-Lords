@@ -19,7 +19,6 @@ interface TournamentBracketProps {
   expanded bout,
   on toggle expand,
 }.
-   * @returns The result.
    */
 
 /**
@@ -30,7 +29,6 @@ interface TournamentBracketProps {
   expanded bout,
   on toggle expand,
 }.
- * @returns The result.
  */
 export function TournamentBracket({
   bouts,
@@ -111,7 +109,6 @@ interface ChampionDisplayProps {
   champion id,
   tournament name,
 }.
-   * @returns The result.
    */
 
 /**
@@ -121,7 +118,6 @@ interface ChampionDisplayProps {
   champion id,
   tournament name,
 }.
- * @returns The result.
  */
 export function ChampionDisplay({
   championName,
@@ -167,15 +163,13 @@ interface BronzeHighlightProps {
   thirdPlaceName: string;
   thirdPlaceId?: string;
 } /**
-   * Bronze highlight.
-   * @param - { third place name, third place id }.
-   * @returns The result.
-   */
+ * Bronze highlight.
+ * @param - { third place name, third place id }.
+ */
 
 /**
  * Bronze highlight.
  * @param - { third place name, third place id }.
- * @returns The result.
  */
 export function BronzeHighlight({ thirdPlaceName, thirdPlaceId }: BronzeHighlightProps) {
   const state = useGameStore();
@@ -219,7 +213,6 @@ interface TournamentProgressProps {
   completed matches,
   total matches,
 }.
-   * @returns The result.
    */
 
 /**
@@ -230,7 +223,6 @@ interface TournamentProgressProps {
   completed matches,
   total matches,
 }.
- * @returns The result.
  */
 export function TournamentProgress({
   currentRound,

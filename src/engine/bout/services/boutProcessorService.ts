@@ -246,9 +246,6 @@ function collectBoutImpacts(
 
 /**
  * Resolve bout.
- * @param state - State.
- * @param ctx - Ctx.
- * @returns The result.
  */
 export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
   const combatants = getValidatedCombatants(ctx);
@@ -291,8 +288,6 @@ export function resolveBout(state: GameState, ctx: BoutContext): BoutImpact {
 
 /**
  * Process week bouts.
- * @param state - State.
- * @returns The result.
  */
 export function processWeekBouts(
   state: GameState,

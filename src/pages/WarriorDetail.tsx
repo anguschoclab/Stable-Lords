@@ -39,13 +39,11 @@ const TABS: SubNavTab[] = [
   { id: 'mission', label: 'MISSION CONTROL', icon: <Target className="h-4 w-4" /> },
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
 ]; /**
-    * Warrior detail.
-    * @returns The result.
-    */
+ * Warrior detail.
+ */
 
 /**
  * Warrior detail.
- * @returns The result.
  */
 export default function WarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };

@@ -15,15 +15,13 @@ interface BiometricsTabProps {
   warrior: Warrior;
   displayWarrior: ObfuscatedWarrior;
 } /**
-   * Biometrics tab.
-   * @param - { warrior, display warrior }.
-   * @returns The result.
-   */
+ * Biometrics tab.
+ * @param - { warrior, display warrior }.
+ */
 
 /**
  * Biometrics tab.
  * @param - { warrior, display warrior }.
- * @returns The result.
  */
 export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
   return (

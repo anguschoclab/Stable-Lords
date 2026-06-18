@@ -15,10 +15,7 @@
  * @param data - Map of token name to substitution value.
  * @returns The interpolated string.
  */
-export function interpolateData(
-  template: string,
-  data: Record<string, string | number>
-): string {
+export function interpolateData(template: string, data: Record<string, string | number>): string {
   return template.replace(/\{\{\s*([^{}\s]+)\s*\}\}/g, (match, key) => {
     const value = data[key];
     return value !== undefined && Object.hasOwn(data, key) ? String(value) : match;

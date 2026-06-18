@@ -24,10 +24,12 @@ describe('TickOrchestrator', () => {
   beforeEach(() => {
     mockState = createFreshState('test-seed');
     vi.clearAllMocks();
-    spyAdvanceWeek = vi.spyOn(weekPipelineService, 'advanceWeek').mockImplementation((state: any) => ({
-      ...state,
-      treasury: 999,
-    }));
+    spyAdvanceWeek = vi
+      .spyOn(weekPipelineService, 'advanceWeek')
+      .mockImplementation((state: any) => ({
+        ...state,
+        treasury: 999,
+      }));
     // TickOrchestrator's quarter/year methods delegate to TimeAdvanceService;
     // spy on them so the delegation assertions have a spy to observe.
     vi.spyOn(TimeAdvanceService, 'advanceQuarter').mockResolvedValue({} as any);

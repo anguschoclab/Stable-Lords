@@ -212,7 +212,11 @@ export function computeTrainingImpact(
     seasonalGrowth = outcome.seasonalGrowth;
   }
 
-  return { updatedRoster: Array.from(currentRoster.values()), updatedSeasonalGrowth: seasonalGrowth, results };
+  return {
+    updatedRoster: Array.from(currentRoster.values()),
+    updatedSeasonalGrowth: seasonalGrowth,
+    results,
+  };
 }
 
 /**

@@ -3,7 +3,7 @@ import { collectAllKnownWarriors, buildWarriorMap } from '@/utils/warriorCollect
 import type { Warrior } from '@/types/warrior.types';
 
 describe('warriorCollection', () => {
-  const dummyWarrior = (id: string): Warrior => ({ id, name: id } as Warrior);
+  const dummyWarrior = (id: string): Warrior => ({ id, name: id }) as Warrior;
 
   const mockState = {
     roster: [dummyWarrior('p1')],
@@ -16,14 +16,14 @@ describe('warriorCollection', () => {
     it('collects warriors from all available sources', () => {
       const all = collectAllKnownWarriors(mockState);
       expect(all.length).toBe(4);
-      expect(all.map(w => w.id)).toEqual(['p1', 'g1', 'r1', 'rv1']);
+      expect(all.map((w) => w.id)).toEqual(['p1', 'g1', 'r1', 'rv1']);
     });
 
     it('handles missing rivals array safely', () => {
       const stateWithoutRivals = { ...mockState, rivals: undefined } as any;
       const all = collectAllKnownWarriors(stateWithoutRivals);
       expect(all.length).toBe(3);
-      expect(all.map(w => w.id)).toEqual(['p1', 'g1', 'r1']);
+      expect(all.map((w) => w.id)).toEqual(['p1', 'g1', 'r1']);
     });
   });
 
@@ -40,7 +40,7 @@ describe('warriorCollection', () => {
         roster: [dummyWarrior('dup')],
         graveyard: [],
         retired: [],
-        rivals: [{ roster: [{ ...dummyWarrior('dup'), name: 'latest_dup' } as Warrior] }]
+        rivals: [{ roster: [{ ...dummyWarrior('dup'), name: 'latest_dup' } as Warrior] }],
       } as any;
       const map = buildWarriorMap(duplicateState);
       expect(map.size).toBe(1);

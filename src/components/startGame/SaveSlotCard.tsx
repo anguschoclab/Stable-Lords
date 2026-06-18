@@ -17,7 +17,6 @@ interface SaveSlotCardProps {
   on delete,
   format date,
 }.
-   * @returns The result.
    */
 
 /**
@@ -29,7 +28,6 @@ interface SaveSlotCardProps {
   on delete,
   format date,
 }.
- * @returns The result.
  */
 export default function SaveSlotCard({
   slot,

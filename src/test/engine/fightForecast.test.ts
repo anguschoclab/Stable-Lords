@@ -26,7 +26,10 @@ describe('buildFightForecast', () => {
 
   it('surfaces the biggest skill edge favoring the stronger fighter', () => {
     const f = buildFightForecast(
-      mkWarrior({ name: 'Aulus', baseSkills: { ATT: 16, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 } }),
+      mkWarrior({
+        name: 'Aulus',
+        baseSkills: { ATT: 16, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 },
+      }),
       mkWarrior({ name: 'Bran', baseSkills: { ATT: 8, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 } })
     );
     const attFactor = f.factors.find((x: any) => x.label.includes('ATT'));
@@ -48,7 +51,10 @@ describe('buildFightForecast', () => {
       mkWarrior({ name: 'Aulus', injuries: [{ severity: 'Major', weeksRemaining: 2 }] }),
       mkWarrior({ name: 'Bran' })
     );
-    const risk = f.factors.find((x: any) => x.label.toLowerCase().includes('readiness') || x.label.toLowerCase().includes('injur'));
+    const risk = f.factors.find(
+      (x: any) =>
+        x.label.toLowerCase().includes('readiness') || x.label.toLowerCase().includes('injur')
+    );
     expect(risk).toBeDefined();
     expect(risk!.favored).toBe('D'); // injury favors the opponent
   });

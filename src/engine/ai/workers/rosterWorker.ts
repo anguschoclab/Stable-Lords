@@ -1,6 +1,11 @@
 import { updateEntityInList } from '@/utils/stateUtils';
 import { filterActive } from '@/utils/roster';
-import type { GameState, RivalStableData, SeasonalGrowth, TrainingAssignment } from '@/types/state.types';
+import type {
+  GameState,
+  RivalStableData,
+  SeasonalGrowth,
+  TrainingAssignment,
+} from '@/types/state.types';
 import { TRAINING_COST } from '@/constants/economy';
 import type { Attributes, Season } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -100,7 +105,11 @@ export function processRoster(
           { warriorId: trainee.id, type: 'skillDrill' } as TrainingAssignment,
         ];
       } else {
-        const { warrior, seasonalGrowth: nextGrowth, chosen } = performAITraining(
+        const {
+          warrior,
+          seasonalGrowth: nextGrowth,
+          chosen,
+        } = performAITraining(
           trainee,
           updatedRival,
           season,

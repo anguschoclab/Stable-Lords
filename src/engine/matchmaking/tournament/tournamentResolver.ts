@@ -77,10 +77,9 @@ export function resolveRound(
 
     // Select arena dynamically for tournament bout
     const bracketSize = tournament.bracket.length;
-    const tournamentArenaId = selectArenaForTournamentBout(
-      () => rngService.next(),
-      { bracketSize }
-    );
+    const tournamentArenaId = selectArenaForTournamentBout(() => rngService.next(), {
+      bracketSize,
+    });
 
     const outcome = simulateFight(
       planA,

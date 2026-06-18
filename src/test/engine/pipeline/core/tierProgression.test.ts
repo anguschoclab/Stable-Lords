@@ -186,11 +186,7 @@ describe('TierProgression', () => {
     });
 
     it('should create an internal RNG service if none provided', () => {
-       mockState.rivals = [
-        createRival('r1', 'Established', [
-          { status: 'Active' },
-        ]),
-      ];
+      mockState.rivals = [createRival('r1', 'Established', [{ status: 'Active' }])];
 
       // No mock RNG provided
       const impact = processTierProgression(mockState, 'Summer', 1);

@@ -13,15 +13,13 @@ interface RivalStableListProps {
   selectedRivalId: string | null;
   onSelectRival: (id: string) => void;
 } /**
-   * Rival stable list.
-   * @param - { rivals, selected rival id, on select rival }.
-   * @returns The result.
-   */
+ * Rival stable list.
+ * @param - { rivals, selected rival id, on select rival }.
+ */
 
 /**
  * Rival stable list.
  * @param - { rivals, selected rival id, on select rival }.
- * @returns The result.
  */
 export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: RivalStableListProps) {
   const ownerGrudges = useGameStore(useShallow((s) => s.ownerGrudges ?? []));

@@ -12,7 +12,6 @@ import {
 
 /**
  * Death modal.
- * @returns The result.
  */
 export function DeathModal() {
   const { unacknowledgedDeaths, graveyard, acknowledgeDeathAction } = useGameStore(

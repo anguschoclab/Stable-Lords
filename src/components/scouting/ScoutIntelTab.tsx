@@ -28,7 +28,6 @@ interface ScoutIntelTabProps {
   treasury,
   on scout,
 }.
-   * @returns The result.
    */
 
 /**
@@ -43,7 +42,6 @@ interface ScoutIntelTabProps {
   treasury,
   on scout,
 }.
- * @returns The result.
  */
 export function ScoutIntelTab({
   rivals,

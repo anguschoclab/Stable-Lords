@@ -19,7 +19,6 @@ interface WarriorSelectionStepProps {
   on back,
   on next,
 }.
-   * @returns The result.
    */
 
 /**
@@ -32,7 +31,6 @@ interface WarriorSelectionStepProps {
   on back,
   on next,
 }.
- * @returns The result.
  */
 export default function WarriorSelectionStep({
   orphanPool,

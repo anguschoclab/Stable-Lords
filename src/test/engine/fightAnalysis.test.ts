@@ -17,8 +17,22 @@ const outcome = (over: Partial<FightOutcome> = {}): FightOutcome => ({
   minutes: 7,
   log: [],
   exchangeLog: [
-    { exchangeIndex: 0, minute: 1, iniWinner: 'A', attResult: 'hit', damage: 4, endDeltas: { a: -3, d: -5 } },
-    { exchangeIndex: 1, minute: 2, iniWinner: 'A', attResult: 'hit', damage: 6, endDeltas: { a: -3, d: -6 } },
+    {
+      exchangeIndex: 0,
+      minute: 1,
+      iniWinner: 'A',
+      attResult: 'hit',
+      damage: 4,
+      endDeltas: { a: -3, d: -5 },
+    },
+    {
+      exchangeIndex: 1,
+      minute: 2,
+      iniWinner: 'A',
+      attResult: 'hit',
+      damage: 6,
+      endDeltas: { a: -3, d: -6 },
+    },
     {
       exchangeIndex: 2,
       minute: 3,
@@ -30,19 +44,35 @@ const outcome = (over: Partial<FightOutcome> = {}): FightOutcome => ({
       reasonCodes: ['AI_PUSH_FATIGUE'],
     },
   ],
-  post: { xpA: 10, xpD: 2, hitsA: 3, hitsD: 0, gotKillA: true, causeBucket: 'FATAL_DAMAGE', fatalExchangeIndex: 2 },
+  post: {
+    xpA: 10,
+    xpD: 2,
+    hitsA: 3,
+    hitsD: 0,
+    gotKillA: true,
+    causeBucket: 'FATAL_DAMAGE',
+    fatalExchangeIndex: 2,
+  },
   ...over,
 });
 
 describe('buildFightAnalysis', () => {
   it('identifies the decisive exchange from the fatal exchange index', () => {
-    const a = buildFightAnalysis(outcome(), baseWarrior({ id: 'A' }), baseWarrior({ id: 'D', style: 'Total Parry' }));
+    const a = buildFightAnalysis(
+      outcome(),
+      baseWarrior({ id: 'A' }),
+      baseWarrior({ id: 'D', style: 'Total Parry' })
+    );
     expect(a.decisiveExchange.index).toBe(2);
     expect(a.decisiveExchange.reasonCodes).toContain('AI_PUSH_FATIGUE');
   });
 
   it('reports the style matchup edge in favor of the winner', () => {
-    const a = buildFightAnalysis(outcome(), baseWarrior({ id: 'A', style: 'Lunging Attack' }), baseWarrior({ id: 'D', style: 'Total Parry' }));
+    const a = buildFightAnalysis(
+      outcome(),
+      baseWarrior({ id: 'A', style: 'Lunging Attack' }),
+      baseWarrior({ id: 'D', style: 'Total Parry' })
+    );
     expect(a.styleMatchup.styleA).toBe('Lunging Attack');
     expect(a.styleMatchup.styleD).toBe('Total Parry');
     expect(typeof a.styleMatchup.edge).toBe('number');
@@ -62,13 +92,21 @@ describe('buildFightAnalysis', () => {
   });
 
   it('returns a graceful empty-ish analysis when exchangeLog is absent', () => {
-    const a = buildFightAnalysis(outcome({ exchangeLog: undefined }), baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    const a = buildFightAnalysis(
+      outcome({ exchangeLog: undefined }),
+      baseWarrior({ id: 'A' }),
+      baseWarrior({ id: 'D' })
+    );
     expect(a.decisiveExchange.index).toBeNull();
     expect(a.factors.length).toBeGreaterThan(0); // still produces matchup + outcome factors
   });
 
   it('produces a ranked, human-readable factors list (3-5 items)', () => {
-    const a = buildFightAnalysis(outcome(), baseWarrior({ id: 'A' }), baseWarrior({ id: 'D', style: 'Total Parry' }));
+    const a = buildFightAnalysis(
+      outcome(),
+      baseWarrior({ id: 'A' }),
+      baseWarrior({ id: 'D', style: 'Total Parry' })
+    );
     expect(a.factors.length).toBeGreaterThanOrEqual(3);
     expect(a.factors.length).toBeLessThanOrEqual(5);
     a.factors.forEach((f: { label: string; detail: string }) => {

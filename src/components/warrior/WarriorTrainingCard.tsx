@@ -32,7 +32,6 @@ import { cn } from '@/lib/utils'; /**
   on assign recovery,
   on clear,
 }.
-                                   * @returns The result.
                                    */
 
 /**
@@ -46,7 +45,6 @@ import { cn } from '@/lib/utils'; /**
   on assign recovery,
   on clear,
 }.
- * @returns The result.
  */
 export function WarriorTrainingCard({
   warrior,
@@ -206,7 +204,10 @@ export function WarriorTrainingCard({
 
                       {/* Progress Bar */}
                       <div className="flex-1 relative">
-                        <Progress value={(val / ATTRIBUTE_TRAINING.MAX_VALUE) * 100} className="h-1 bg-white/5" />
+                        <Progress
+                          value={(val / ATTRIBUTE_TRAINING.MAX_VALUE) * 100}
+                          className="h-1 bg-white/5"
+                        />
                         {isRevealed && (
                           <div
                             className="absolute top-0 bottom-0 w-px bg-white/20 z-10"

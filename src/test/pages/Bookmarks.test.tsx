@@ -143,9 +143,7 @@ describe('Bookmarks Page', () => {
   });
 
   it('looks up trainers', () => {
-    mockStoreState.bookmarks = [
-      { entityType: 'trainer', entityId: 't1', createdAt: '2026-01-01' },
-    ];
+    mockStoreState.bookmarks = [{ entityType: 'trainer', entityId: 't1', createdAt: '2026-01-01' }];
     mockStoreState.trainers = [
       { id: 't1', name: 'Coach Steel', tier: 'Expert', focus: 'Strength' },
     ];
@@ -157,9 +155,7 @@ describe('Bookmarks Page', () => {
     mockStoreState.bookmarks = [
       { entityType: 'tournament', entityId: 'tr1', createdAt: '2026-01-01' },
     ];
-    mockStoreState.tournaments = [
-      { id: 'tr1', name: 'Spring Classic', season: 'Spring', week: 5 },
-    ];
+    mockStoreState.tournaments = [{ id: 'tr1', name: 'Spring Classic', season: 'Spring', week: 5 }];
     render(<Bookmarks />);
     expect(screen.getByText('Spring Classic')).toBeInTheDocument();
   });

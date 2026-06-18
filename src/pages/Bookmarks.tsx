@@ -1,7 +1,16 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useNavigate } from '@tanstack/react-router';
-import { Bookmark, Users, Shield, Building2, GraduationCap, Trophy, Briefcase, Target } from 'lucide-react';
+import {
+  Bookmark,
+  Users,
+  Shield,
+  Building2,
+  GraduationCap,
+  Trophy,
+  Briefcase,
+  Target,
+} from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
@@ -73,7 +82,10 @@ export default function Bookmarks() {
   const bookmarks = store.bookmarks;
 
   const grouped = useMemo(() => {
-    const groups: Record<BookmarkEntityType, { id: string; name: string; subtitle?: string; onClick?: () => void }[]> = {
+    const groups: Record<
+      BookmarkEntityType,
+      { id: string; name: string; subtitle?: string; onClick?: () => void }[]
+    > = {
       warrior: [],
       rival: [],
       promoter: [],
@@ -219,7 +231,8 @@ export default function Bookmarks() {
               No Bookmarks Established
             </p>
             <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic max-w-sm mx-auto">
-              Bookmark warriors, stables, promoters, and other entities from their detail pages to track them here.
+              Bookmark warriors, stables, promoters, and other entities from their detail pages to
+              track them here.
             </p>
           </div>
         </Surface>

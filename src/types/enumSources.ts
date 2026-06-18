@@ -62,7 +62,16 @@ export const TRAINER_SPECIALTIES = [
 
 export const SCOUT_QUALITIES = ['Basic', 'Detailed', 'Expert'] as const;
 
-export const ATTACK_TARGETS = ['Head', 'Chest', 'Abdomen', 'Right Arm', 'Left Arm', 'Right Leg', 'Left Leg', 'Any'] as const;
+export const ATTACK_TARGETS = [
+  'Head',
+  'Chest',
+  'Abdomen',
+  'Right Arm',
+  'Left Arm',
+  'Right Leg',
+  'Left Leg',
+  'Any',
+] as const;
 
 export const PROTECT_TARGETS = ['Head', 'Body', 'Arms', 'Legs', 'Any'] as const;
 
@@ -130,9 +139,23 @@ export const FIELD_TYPES = [
 
 export const METAL_COLORS = ['gold', 'silver'] as const;
 
-export const CHARGE_TYPES = ['beast', 'weapon', 'symbol', 'nature', 'celestial', 'mythical'] as const;
+export const CHARGE_TYPES = [
+  'beast',
+  'weapon',
+  'symbol',
+  'nature',
+  'celestial',
+  'mythical',
+] as const;
 
-export const BEAST_POSTURES = ['rampant', 'passant', 'sejant', 'couchant', 'statant', 'forcene'] as const;
+export const BEAST_POSTURES = [
+  'rampant',
+  'passant',
+  'sejant',
+  'couchant',
+  'statant',
+  'forcene',
+] as const;
 
 export const ARMOR_WEIGHTS = ['None', 'Light', 'Medium', 'Heavy', 'Ultra-Heavy'] as const;
 
@@ -140,7 +163,13 @@ export const WEAPON_TYPES = ['slashing', 'bashing', 'piercing', 'fist'] as const
 
 export const EQUIPMENT_SLOTS = ['weapon', 'armor', 'shield', 'helm'] as const;
 
-export const BOUT_OFFER_STATUSES = ['Proposed', 'Signed', 'Rejected', 'Canceled', 'Expired'] as const;
+export const BOUT_OFFER_STATUSES = [
+  'Proposed',
+  'Signed',
+  'Rejected',
+  'Canceled',
+  'Expired',
+] as const;
 
 export const BOUT_OFFER_RESPONSES = ['Pending', 'Accepted', 'Declined'] as const;
 
@@ -189,10 +218,27 @@ export const INJURY_LOCATIONS = [
   'General',
 ] as const;
 
-export const PROMOTER_PERSONALITIES = ['Greedy', 'Honorable', 'Sadistic', 'Flashy', 'Corporate'] as const;
+export const PROMOTER_PERSONALITIES = [
+  'Greedy',
+  'Honorable',
+  'Sadistic',
+  'Flashy',
+  'Corporate',
+] as const;
 
 export const PROMOTER_TIERS = ['Local', 'Regional', 'National', 'Legendary'] as const;
 
-export const OWNER_PERSONALITIES = ['Aggressive', 'Methodical', 'Showman', 'Pragmatic', 'Tactician'] as const;
+export const OWNER_PERSONALITIES = [
+  'Aggressive',
+  'Methodical',
+  'Showman',
+  'Pragmatic',
+  'Tactician',
+] as const;
 
-export const META_ADAPTATIONS = ['MetaChaser', 'Traditionalist', 'Opportunist', 'Innovator'] as const;
+export const META_ADAPTATIONS = [
+  'MetaChaser',
+  'Traditionalist',
+  'Opportunist',
+  'Innovator',
+] as const;

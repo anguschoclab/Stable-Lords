@@ -11,13 +11,11 @@ import { Surface } from '@/components/ui/Surface';
 import { WarriorLink } from '@/components/EntityLink';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion'; /**
-                                         * Graveyard.
-                                         * @returns The result.
-                                         */
+ * Graveyard.
+ */
 
 /**
  * Graveyard.
- * @returns The result.
  */
 export default function Graveyard() {
   const { graveyard, player, season } = useGameStore();

@@ -112,15 +112,13 @@ const TacticalLogEntry = memo(
     );
   }
 ); /**
-    * Tactical log view.
-    * @param - { log, visible count, class name }.
-    * @returns The result.
-    */
+ * Tactical log view.
+ * @param - { log, visible count, class name }.
+ */
 
 /**
  * Tactical log view.
  * @param - { log, visible count, class name }.
- * @returns The result.
  */
 export default function TacticalLogView({ log, visibleCount, className }: TacticalLogViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null);

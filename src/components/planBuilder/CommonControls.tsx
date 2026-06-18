@@ -7,15 +7,13 @@ interface CommonControlsProps {
   plan: FightPlan;
   onPlanChange: (plan: FightPlan) => void;
 } /**
-   * Common controls.
-   * @param - { plan, on plan change }.
-   * @returns The result.
-   */
+ * Common controls.
+ * @param - { plan, on plan change }.
+ */
 
 /**
  * Common controls.
  * @param - { plan, on plan change }.
- * @returns The result.
  */
 export default function CommonControls({ plan, onPlanChange }: CommonControlsProps) {
   return (

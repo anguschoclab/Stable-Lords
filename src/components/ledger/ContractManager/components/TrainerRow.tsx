@@ -1,7 +1,4 @@
-import {
-  TableRow,
-  TableCell,
-} from '@/components/ui/table';
+import { TableRow, TableCell } from '@/components/ui/table';
 import { Coins } from 'lucide-react';
 import type { Trainer } from '@/types/game';
 import { TrainerTierBadge } from './TrainerTierBadge';

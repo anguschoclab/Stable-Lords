@@ -16,13 +16,7 @@ import type {
   OwnerGrudge,
 } from '@/types/state.types';
 import { FightSummary } from '@/types/combat.types';
-import type {
-  WarriorId,
-  StableId,
-  PromoterId,
-  BoutOfferId,
-  FightId,
-} from '@/types/shared.types';
+import type { WarriorId, StableId, PromoterId, BoutOfferId, FightId } from '@/types/shared.types';
 
 export interface ArenaPreferences {
   defaultViewMode: 'log' | 'arena';

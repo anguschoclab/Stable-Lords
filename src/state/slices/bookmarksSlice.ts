@@ -22,9 +22,7 @@ export const createBookmarksSlice: StateCreator<GameStore, [], [], BookmarksSlic
       );
       if (existingIndex >= 0) {
         return {
-          bookmarks: state.bookmarks.filter(
-            (_b: Bookmark, i: number) => i !== existingIndex
-          ),
+          bookmarks: state.bookmarks.filter((_b: Bookmark, i: number) => i !== existingIndex),
         };
       }
       return {
@@ -41,9 +39,7 @@ export const createBookmarksSlice: StateCreator<GameStore, [], [], BookmarksSlic
   },
 
   isBookmarked: (type, id) => {
-    return get().bookmarks.some(
-      (b: Bookmark) => b.entityType === type && b.entityId === id
-    );
+    return get().bookmarks.some((b: Bookmark) => b.entityType === type && b.entityId === id);
   },
 
   getBookmarksByType: (type) => {

@@ -50,8 +50,22 @@ describe('fightSummaryFactory attaches analysis', () => {
       minutes: 7,
       log: [],
       exchangeLog: [
-        { exchangeIndex: 0, minute: 1, iniWinner: 'A', attResult: 'hit', damage: 4, endDeltas: { a: -3, d: -5 } },
-        { exchangeIndex: 1, minute: 2, iniWinner: 'A', attResult: 'hit', damage: 6, endDeltas: { a: -3, d: -6 } },
+        {
+          exchangeIndex: 0,
+          minute: 1,
+          iniWinner: 'A',
+          attResult: 'hit',
+          damage: 4,
+          endDeltas: { a: -3, d: -5 },
+        },
+        {
+          exchangeIndex: 1,
+          minute: 2,
+          iniWinner: 'A',
+          attResult: 'hit',
+          damage: 6,
+          endDeltas: { a: -3, d: -6 },
+        },
         {
           exchangeIndex: 2,
           minute: 3,
@@ -63,7 +77,15 @@ describe('fightSummaryFactory attaches analysis', () => {
           reasonCodes: ['AI_PUSH_FATIGUE'],
         },
       ],
-      post: { xpA: 10, xpD: 2, hitsA: 3, hitsD: 0, gotKillA: true, causeBucket: 'FATAL_DAMAGE', fatalExchangeIndex: 2 },
+      post: {
+        xpA: 10,
+        xpD: 2,
+        hitsA: 3,
+        hitsD: 0,
+        gotKillA: true,
+        causeBucket: 'FATAL_DAMAGE',
+        fatalExchangeIndex: 2,
+      },
     };
 
     const summary = createFightSummary({

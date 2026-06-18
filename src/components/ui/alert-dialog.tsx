@@ -61,7 +61,6 @@ AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName;
 /**
  * Alert dialog header.
  * @param - { class name, ...props }.
- * @returns The result.
  */
 const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
@@ -71,7 +70,6 @@ AlertDialogHeader.displayName = 'AlertDialogHeader';
 /**
  * Alert dialog footer.
  * @param - { class name, ...props }.
- * @returns The result.
  */
 const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div

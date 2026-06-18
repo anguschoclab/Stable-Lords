@@ -6,15 +6,13 @@ interface ConditionBatteryProps {
   className?: string;
   showText?: boolean;
 } /**
-   * Condition battery.
-   * @param - { value, class name, show text = false }.
-   * @returns The result.
-   */
+ * Condition battery.
+ * @param - { value, class name, show text = false }.
+ */
 
 /**
  * Condition battery.
  * @param - { value, class name, show text = false }.
- * @returns The result.
  */
 export function ConditionBattery({ value, className, showText = false }: ConditionBatteryProps) {
   // Determine color segment
@@ -38,9 +36,7 @@ export function ConditionBattery({ value, className, showText = false }: Conditi
           <span
             className={cn(
               'text-[9px] font-black uppercase tracking-widest',
-              value < BATTERY_THRESHOLDS.MEDIUM
-                ? 'text-destructive'
-                : 'text-muted-foreground/60'
+              value < BATTERY_THRESHOLDS.MEDIUM ? 'text-destructive' : 'text-muted-foreground/60'
             )}
           >
             Condition · {Math.round(value)}%

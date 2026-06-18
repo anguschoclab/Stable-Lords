@@ -7,15 +7,13 @@ interface SpeechBubbleProps {
   onDismiss: (id: string) => void;
   position?: 'left' | 'right';
 } /**
-   * Speech bubble.
-   * @param - { bubble, on dismiss, position = 'left' }.
-   * @returns The result.
-   */
+ * Speech bubble.
+ * @param - { bubble, on dismiss, position = 'left' }.
+ */
 
 /**
  * Speech bubble.
  * @param - { bubble, on dismiss, position = 'left' }.
- * @returns The result.
  */
 export default function SpeechBubble({ bubble, onDismiss, position = 'left' }: SpeechBubbleProps) {
   useEffect(() => {

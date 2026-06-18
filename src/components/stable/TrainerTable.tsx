@@ -10,13 +10,11 @@ import { Progress } from '@/components/ui/progress';
 import { GraduationCap, Target, Coins, Zap } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils'; /**
-                                   * Trainer table.
-                                   * @returns The result.
-                                   */
+ * Trainer table.
+ */
 
 /**
  * Trainer table.
- * @returns The result.
  */
 export function TrainerTable() {
   const state = useGameStore(

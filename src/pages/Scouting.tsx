@@ -18,13 +18,11 @@ import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing'; /**
-                                                              * Scouting.
-                                                              * @returns The result.
-                                                              */
+ * Scouting.
+ */
 
 /**
  * Scouting.
- * @returns The result.
  */
 export default function Scouting() {
   const { treasury, week, rivals, scoutReports, roster, setState, isBookmarked } = useGameStore();

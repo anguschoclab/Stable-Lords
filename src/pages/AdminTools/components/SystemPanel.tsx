@@ -60,8 +60,8 @@ export function SystemPanel({ onExport, onImport, onReset }: SystemPanelProps) {
           </div>
           <div className="p-8 space-y-6">
             <p className="text-[10px] text-primary/60 font-mono leading-relaxed">
-              WARNING: This bypasses all safety checks and nukes the local IndexedDB pool.
-              All progress will be lost.
+              WARNING: This bypasses all safety checks and nukes the local IndexedDB pool. All
+              progress will be lost.
             </p>
             <Button
               onClick={onReset}

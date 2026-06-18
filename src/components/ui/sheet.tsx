@@ -90,7 +90,6 @@ SheetContent.displayName = SheetPrimitive.Content.displayName;
 /**
  * Sheet header.
  * @param - { class name, ...props }.
- * @returns The result.
  */
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
@@ -100,7 +99,6 @@ SheetHeader.displayName = 'SheetHeader';
 /**
  * Sheet footer.
  * @param - { class name, ...props }.
- * @returns The result.
  */
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div

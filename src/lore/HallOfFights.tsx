@@ -18,7 +18,6 @@ import Graveyard from '@/pages/Graveyard';
 
 /**
  * Hall of fights.
- * @returns The result.
  */
 export const HallOfFights: React.FC = () => {
   const state = useWorldState();

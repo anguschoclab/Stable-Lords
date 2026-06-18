@@ -13,7 +13,6 @@ import { SimulatorResults } from '@/components/stable/SimulatorResults';
 
 /**
  * Physicals simulator.
- * @returns The result.
  */
 export default function PhysicalsSimulator() {
   const { roster } = useGameStore();

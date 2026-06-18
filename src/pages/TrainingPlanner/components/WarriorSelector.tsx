@@ -10,7 +10,12 @@ interface WarriorSelectorProps {
   trainers: Trainer[];
 }
 
-export function WarriorSelector({ warriors, selectedId, onSelect, trainers }: WarriorSelectorProps) {
+export function WarriorSelector({
+  warriors,
+  selectedId,
+  onSelect,
+  trainers,
+}: WarriorSelectorProps) {
   return (
     <div className="grid grid-cols-1 gap-3">
       {warriors.map((warrior) => {

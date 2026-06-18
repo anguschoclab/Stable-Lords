@@ -24,13 +24,11 @@ import { Surface } from '@/components/ui/Surface';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider'; /**
-                                                                  * Training.
-                                                                  * @returns The result.
-                                                                  */
+ * Training.
+ */
 
 /**
  * Training.
- * @returns The result.
  */
 export default function Training() {
   const navigate = useNavigate();
@@ -270,19 +268,18 @@ export default function Training() {
             </Surface>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2">
-              {filterActive(state.roster)
-                .map((warrior: Warrior) => (
-                  <WarriorTrainingCard
-                    key={warrior.id}
-                    warrior={warrior}
-                    assignment={assignmentMap.get(warrior.id)}
-                    seasonalGains={seasonalGainsMap.get(warrior.id) ?? {}}
-                    trainers={state.trainers ?? []}
-                    onAssign={(attr) => handleAssign(warrior.id, attr)}
-                    onAssignRecovery={() => handleAssignRecovery(warrior.id)}
-                    onClear={() => handleClear(warrior.id)}
-                  />
-                ))}
+              {filterActive(state.roster).map((warrior: Warrior) => (
+                <WarriorTrainingCard
+                  key={warrior.id}
+                  warrior={warrior}
+                  assignment={assignmentMap.get(warrior.id)}
+                  seasonalGains={seasonalGainsMap.get(warrior.id) ?? {}}
+                  trainers={state.trainers ?? []}
+                  onAssign={(attr) => handleAssign(warrior.id, attr)}
+                  onAssignRecovery={() => handleAssignRecovery(warrior.id)}
+                  onClear={() => handleClear(warrior.id)}
+                />
+              ))}
             </div>
           )}
         </div>

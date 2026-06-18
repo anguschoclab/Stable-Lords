@@ -40,8 +40,6 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Enqueue.
-   * @param task - Task.
-   * @returns The result.
    */
   private async enqueue<T>(task: () => Promise<T>): Promise<T> {
     const p = this.writeQueue.then(task);
@@ -51,7 +49,6 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Is supported.
-   * @returns The result.
    */
   isSupported(): boolean {
     return typeof window !== 'undefined' && window.electronAPI !== undefined;
@@ -59,9 +56,6 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Archive hot state.
-   * @param slotId - Slot id.
-   * @param stateData - State data.
-   * @returns The result.
    */
   async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
     return this.enqueue(async () => {
@@ -80,8 +74,6 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Retrieve hot state.
-   * @param slotId - Slot id.
-   * @returns The result.
    */
   async retrieveHotState(slotId: string): Promise<GameState | null> {
     if (!this.isSupported() || !window.electronAPI) return null;
@@ -100,12 +92,7 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Archive bout log.
-   * @param year - Year.
-   * @param season - Season.
-   * @param boutId - Bout id.
-   * @param logData - Log data.
    * @param _overwrite - _overwrite. (optional)
-   * @returns The result.
    */
   async archiveBoutLog(
     year: number,
@@ -130,10 +117,6 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Retrieve bout log.
-   * @param year - Year.
-   * @param season - Season.
-   * @param boutId - Bout id.
-   * @returns The result.
    */
   async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
     if (!this.isSupported() || !window.electronAPI) return null;
@@ -152,10 +135,6 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Archive gazette.
-   * @param season - Season.
-   * @param week - Week.
-   * @param markdown - Markdown.
-   * @returns The result.
    */
   async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
     return this.enqueue(async () => {
@@ -174,9 +153,6 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Retrieve gazette.
-   * @param season - Season.
-   * @param week - Week.
-   * @returns The result.
    */
   async retrieveGazette(season: number, week: number): Promise<string | null> {
     if (!this.isSupported() || !window.electronAPI) return null;
@@ -195,8 +171,6 @@ export class ElectronArchiveService implements ArchiveService {
 
   /**
    * Get archived bout ids for season.
-   * @param _season - _season.
-   * @returns The result.
    */
   async getArchivedBoutIdsForSeason(_season: number): Promise<string[]> {
     // This would require additional IPC handler to list bout IDs in a season

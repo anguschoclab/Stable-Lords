@@ -9,13 +9,11 @@ import { useShallow } from 'zustand/react/shallow';
 import { Surface } from '@/components/ui/Surface';
 import { Trophy, Skull, Coins, Swords, Users, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils'; /**
-                                   * Year end recap.
-                                   * @returns The result.
-                                   */
+ * Year end recap.
+ */
 
 /**
  * Year end recap.
- * @returns The result.
  */
 export function YearEndRecap() {
   const { roster, graveyard, retired, ledger, rivalries, season, week } = useGameStore();

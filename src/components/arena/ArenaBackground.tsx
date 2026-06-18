@@ -1,14 +1,14 @@
 import { cn } from '@/lib/utils';
 import { cryptoRandom } from '@/utils/cryptoRandom'; /**
-                                                      * Arena tier type.
-                                                      */
+ * Arena tier type.
+ */
 
 /**
  * Arena tier type.
  */
 export type ArenaTier = 'training' | 'standard' | 'championship' | 'grand'; /**
-                                                                             * Season type.
-                                                                             */
+ * Season type.
+ */
 
 /**
  * Season type.
@@ -113,7 +113,6 @@ const SEASON_MODIFIERS: Record<
   arena id,
   class name,
 }.
-    * @returns The result.
     */
 
 /**
@@ -125,7 +124,6 @@ const SEASON_MODIFIERS: Record<
   arena id,
   class name,
 }.
- * @returns The result.
  */
 export default function ArenaBackground({
   tier = 'standard',

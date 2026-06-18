@@ -335,7 +335,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     id: 'walled_court_kings_gambit',
     arenaId: 'walled_court_arena',
     type: 'famous_death',
-    title: 'The King\'s Gambit',
+    title: "The King's Gambit",
     narrative:
       'A flamboyant duelist attempted a spinning strike off the tightly packed stone walls, only to slip on a patch of moss. The misstep allowed a hulking brute to pin them against the wall and deliver a slow, excruciating execution that lasted until the sun set.',
   },
@@ -396,7 +396,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
       'A legendary champion met his end not from a weapon, but when a stray hammer throw struck a weakened marble pillar, collapsing it directly onto him and three of his challengers.',
   },
   {
-id: 'lantern_hall_architects_folly',
+    id: 'lantern_hall_architects_folly',
     arenaId: 'lantern_hall_arena',
     type: 'architectural_quirk',
     title: "The Architect's Folly",
@@ -441,7 +441,7 @@ id: 'lantern_hall_architects_folly',
     type: 'famous_death',
     title: 'The Shadow Strike',
     narrative:
-      'A cunning rogue bypassed a champion\'s legendary guard by timing their fatal thrust perfectly with a flickering torch, momentarily blinding their opponent in a sudden play of light and shadow.',
+      "A cunning rogue bypassed a champion's legendary guard by timing their fatal thrust perfectly with a flickering torch, momentarily blinding their opponent in a sudden play of light and shadow.",
   },
   {
     id: 'sundered_coliseum_blood_pact',
@@ -449,7 +449,7 @@ id: 'lantern_hall_architects_folly',
     type: 'historical_battle',
     title: 'The Blood Pact of the Unbroken',
     narrative:
-      'Two rival champions, exhausted and bleeding, refused to strike the final blow against each other. They stood back-to-back, defying the crowd\'s demands for blood until the arena guards were sent in to execute them both.',
+      "Two rival champions, exhausted and bleeding, refused to strike the final blow against each other. They stood back-to-back, defying the crowd's demands for blood until the arena guards were sent in to execute them both.",
   },
   {
     id: 'lantern_hall_burning_shadow',
@@ -471,7 +471,7 @@ id: 'lantern_hall_architects_folly',
     id: 'standard_arena_kings_folly',
     arenaId: 'standard_arena',
     type: 'famous_death',
-    title: 'The King\'s Folly',
+    title: "The King's Folly",
     narrative:
       'A minor lord disguised himself to fight for glory but stumbled on his own oversized scabbard. His unknown opponent granted him no quarter, decapitating him before the crowd even realized royal blood had been spilled.',
   },
@@ -487,7 +487,7 @@ id: 'lantern_hall_architects_folly',
     id: 'lantern_hall_blind_monk',
     arenaId: 'lantern_hall_arena',
     type: 'historical_battle',
-    title: 'The Blind Monk\'s Stand',
+    title: "The Blind Monk's Stand",
     narrative:
       'When all the lanterns were mysteriously extinguished midway through a championship bout, a blind ascetic monk defeated three armed gladiators in total darkness, guided only by the sound of their footfalls on the wooden floorboards.',
   },

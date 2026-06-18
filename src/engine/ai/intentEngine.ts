@@ -131,10 +131,7 @@ export function pickWeeklyIntent(
   const rivalExpanding = knownRivals.some((rivalId) => {
     const r = rivalsByOwnerId.get(rivalId);
     if (!r || !r.agentMemory?.seasonRecord) return false;
-    return (
-      filterActive(r.roster).length >
-      r.agentMemory.seasonRecord.rosterSizeAtSeasonStart + 1
-    );
+    return filterActive(r.roster).length > r.agentMemory.seasonRecord.rosterSizeAtSeasonStart + 1;
   });
   const expansionThreshold = rivalExpanding ? Math.floor(minSize * 0.8) : minSize;
   if (activeRoster.length < expansionThreshold && rival.treasury > 300) {
@@ -171,9 +168,7 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
 
   // Skepticism Tier 4: Environmental Hazard (Strategic Abort)
   const isRainy = state.weather === 'Rainy';
-  const precisionHeavy = filterActive(rival.roster).some(
-    (w) => w.style === 'LUNGING ATTACK'
-  );
+  const precisionHeavy = filterActive(rival.roster).some((w) => w.style === 'LUNGING ATTACK');
   if (
     isRainy &&
     (strategy.intent === 'VENDETTA' || strategy.intent === 'EXPANSION') &&

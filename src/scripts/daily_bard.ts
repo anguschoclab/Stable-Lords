@@ -33,8 +33,8 @@ const DefenseSchema = z.object({
   success: z.array(templateStringSchema),
   stumbling: z.array(templateStringSchema),
 }); /**
-     * Narrative schema.
-     */
+ * Narrative schema.
+ */
 
 /**
  * Narrative schema.

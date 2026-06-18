@@ -5,15 +5,13 @@ interface SectionDividerProps {
   className?: string;
   variant?: 'primary' | 'gold' | 'blood' | 'muted';
 } /**
-   * Section divider.
-   * @param - { label, class name, variant = 'muted' }.
-   * @returns The result.
-   */
+ * Section divider.
+ * @param - { label, class name, variant = 'muted' }.
+ */
 
 /**
  * Section divider.
  * @param - { label, class name, variant = 'muted' }.
- * @returns The result.
  */
 export function SectionDivider({ label, className, variant = 'muted' }: SectionDividerProps) {
   const variantClasses = {

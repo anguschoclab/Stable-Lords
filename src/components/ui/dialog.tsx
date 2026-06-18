@@ -72,7 +72,6 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
 /**
  * Dialog header.
  * @param - { class name, ...props }.
- * @returns The result.
  */
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)} {...props} />
@@ -82,7 +81,6 @@ DialogHeader.displayName = 'DialogHeader';
 /**
  * Dialog footer.
  * @param - { class name, ...props }.
- * @returns The result.
  */
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div

@@ -20,7 +20,6 @@ interface RivalWarriorListProps {
   reports,
   stable name,
 }.
-   * @returns The result.
    */
 
 /**
@@ -32,7 +31,6 @@ interface RivalWarriorListProps {
   reports,
   stable name,
 }.
- * @returns The result.
  */
 export function RivalWarriorList({
   warriors,

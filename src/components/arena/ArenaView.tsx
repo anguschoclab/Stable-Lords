@@ -56,7 +56,6 @@ interface ArenaViewProps {
   max hp d = 50,
   class name,
 }.
-   * @returns The result.
    */
 
 /**
@@ -80,7 +79,6 @@ interface ArenaViewProps {
   max hp d = 50,
   class name,
 }.
- * @returns The result.
  */
 export default function ArenaView({
   nameA,

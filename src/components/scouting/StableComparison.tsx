@@ -18,13 +18,11 @@ interface StableComparisonProps {
 /**
  * Stable comparison.
  * @param - { rivals }.
- * @returns The result.
  */
 
 /**
  * Stable comparison.
  * @param - { rivals }.
- * @returns The result.
  */
 export function StableComparison({ rivals }: StableComparisonProps) {
   const {
@@ -67,11 +65,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
               maxActive={maxRoster}
             />
 
-            <AverageAttributesSection
-              statsA={statsA}
-              statsB={statsB}
-              maxAttr={maxAttr}
-            />
+            <AverageAttributesSection statsA={statsA} statsB={statsB} maxAttr={maxAttr} />
           </div>
 
           <div className="grid grid-cols-2 gap-8">

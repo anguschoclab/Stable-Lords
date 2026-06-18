@@ -232,15 +232,13 @@ function ArenaLeaderboard() {
     </Surface>
   );
 } /**
-   * Arena hub.
-   * @returns The result.
-   */
+ * Arena hub.
+ */
 
 // ─── Main Hub Page ────────────────────────────────────────────────────────────
 
 /**
  * Arena hub.
- * @returns The result.
  */
 export default function ArenaHub() {
   const store = useGameStore();

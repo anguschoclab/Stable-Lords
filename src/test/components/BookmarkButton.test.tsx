@@ -64,7 +64,15 @@ describe('BookmarkButton', () => {
   });
 
   it('works for all entity types', () => {
-    const types = ['warrior', 'rival', 'promoter', 'trainer', 'tournament', 'boutOffer', 'scoutReport'] as const;
+    const types = [
+      'warrior',
+      'rival',
+      'promoter',
+      'trainer',
+      'tournament',
+      'boutOffer',
+      'scoutReport',
+    ] as const;
     types.forEach((type, i) => {
       mockToggle.mockClear();
       const { unmount } = render(<BookmarkButton entityType={type} entityId={`id-${i}`} />);

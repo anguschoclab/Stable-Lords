@@ -38,7 +38,6 @@ function bestFight(warrior: Warrior, fights: FightSummary[]): FightSummary | nul
 
 /**
  * Render the InducteeCard component.
- * @returns The result.
  */
 export function InducteeCard({
   warrior,

@@ -19,7 +19,10 @@ export function FighterBars({ hpPercent, fpPercent, isWinner }: FighterBarsProps
         />
       </div>
       <div className="h-1 bg-black/50 rounded-none overflow-hidden">
-        <div className="h-full bg-accent transition-all duration-300" style={{ width: `${fpPercent}%` }} />
+        <div
+          className="h-full bg-accent transition-all duration-300"
+          style={{ width: `${fpPercent}%` }}
+        />
       </div>
       {isWinner && <div className="absolute -inset-1 bg-arena-gold/30 blur-sm animate-pulse" />}
     </div>

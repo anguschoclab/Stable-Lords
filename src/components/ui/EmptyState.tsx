@@ -20,9 +20,7 @@ export function EmptyState({ icon: Icon, title, description, action, className }
         <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">
           {title}
         </p>
-        {description && (
-          <p className="text-xs text-muted-foreground/60 italic">{description}</p>
-        )}
+        {description && <p className="text-xs text-muted-foreground/60 italic">{description}</p>}
       </div>
       {action && <div className="mt-2">{action}</div>}
     </Surface>

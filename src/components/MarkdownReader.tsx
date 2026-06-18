@@ -4,15 +4,13 @@ import remarkGfm from 'remark-gfm';
 interface MarkdownReaderProps {
   content: string;
 } /**
-   * Markdown reader.
-   * @param - { content }.
-   * @returns The result.
-   */
+ * Markdown reader.
+ * @param - { content }.
+ */
 
 /**
  * Markdown reader.
  * @param - { content }.
- * @returns The result.
  */
 export function MarkdownReader({ content }: MarkdownReaderProps) {
   return (

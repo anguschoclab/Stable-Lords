@@ -7,13 +7,11 @@ import {
   ToastTitle,
   ToastViewport,
 } from '@/components/ui/toast'; /**
-                                 * Toaster.
-                                 * @returns The result.
-                                 */
+ * Toaster.
+ */
 
 /**
  * Toaster.
- * @returns The result.
  */
 export function Toaster() {
   const { toasts } = useToast();

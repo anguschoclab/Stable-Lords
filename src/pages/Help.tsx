@@ -7,13 +7,11 @@ import {
 } from '@/components/ui/accordion';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { BookOpen } from 'lucide-react'; /**
-                                          * Help.
-                                          * @returns The result.
-                                          */
+ * Help.
+ */
 
 /**
  * Help.
- * @returns The result.
  */
 export default function Help() {
   return (

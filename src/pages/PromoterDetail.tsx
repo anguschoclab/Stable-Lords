@@ -160,13 +160,11 @@ function calculateStats(
     totalHype,
   };
 } /**
-   * Promoter detail.
-   * @returns The result.
-   */
+ * Promoter detail.
+ */
 
 /**
  * Promoter detail.
- * @returns The result.
  */
 export default function PromoterDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
@@ -231,14 +229,14 @@ export default function PromoterDetail() {
           <div className="flex items-center gap-3">
             <BookmarkButton entityType="promoter" entityId={promoter.id} size="md" />
             <div className={`p-4 rounded-none ${personality.bgColor} flex items-center gap-3`}>
-            <div className={personality.color}>{personality.icon}</div>
-            <div>
-              <div className={`font-bold ${personality.color}`}>{personality.label}</div>
-              <div className="text-xs opacity-60">Personality</div>
+              <div className={personality.color}>{personality.icon}</div>
+              <div>
+                <div className={`font-bold ${personality.color}`}>{personality.label}</div>
+                <div className="text-xs opacity-60">Personality</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
 
       <SubNav tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />

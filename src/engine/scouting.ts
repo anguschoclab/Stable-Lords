@@ -53,15 +53,11 @@ const SCOUT_COST: Record<ScoutQuality, number> = {
   Detailed: 50,
   Expert: 100,
 }; /**
-    * Get scout cost.
-    * @param quality - Quality.
-    * @returns The result.
-    */
+ * Get scout cost.
+ */
 
 /**
  * Get scout cost.
- * @param quality - Quality.
- * @returns The result.
  */
 export function getScoutCost(quality: ScoutQuality): number {
   return SCOUT_COST[quality];
@@ -173,7 +169,8 @@ function discoverScoutTraits(warrior: Warrior, quality: ScoutQuality, rng: IRNGS
   if (traitRevealRoll < 0.65) {
     // Reveal 1 trait
     suspectedTraits.push(rng.pick(warrior.traits));
-  } else if (traitRevealRoll < 0.90) { // Slightly increased discovery weight for traits
+  } else if (traitRevealRoll < 0.9) {
+    // Slightly increased discovery weight for traits
     // Reveal 2 traits (if warrior has 2+)
     if (warrior.traits.length >= 2) {
       const shuffled = [...warrior.traits].sort(() => 0.5 - rng.next());

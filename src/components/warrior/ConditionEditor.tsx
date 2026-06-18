@@ -12,15 +12,13 @@ const DEFAULT_CONDITION: PlanCondition = {
   trigger: { type: 'HP_BELOW', value: 35 },
   override: { OE: 4 },
 }; /**
-    * Condition editor.
-    * @param - { conditions, on change }.
-    * @returns The result.
-    */
+ * Condition editor.
+ * @param - { conditions, on change }.
+ */
 
 /**
  * Condition editor.
  * @param - { conditions, on change }.
- * @returns The result.
  */
 export default function ConditionEditor({ conditions, onChange }: ConditionEditorProps) {
   function addCondition() {

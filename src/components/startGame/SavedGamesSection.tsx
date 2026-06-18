@@ -18,7 +18,6 @@ interface SavedGamesSectionProps {
   on delete,
   format date,
 }.
-   * @returns The result.
    */
 
 /**
@@ -31,7 +30,6 @@ interface SavedGamesSectionProps {
   on delete,
   format date,
 }.
- * @returns The result.
  */
 export default function SavedGamesSection({
   slots,

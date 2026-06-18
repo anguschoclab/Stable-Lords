@@ -3,20 +3,8 @@ import { Badge } from '@/components/ui/badge';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import {
-  Shield,
-  Swords,
-  HardHat,
-  Shirt,
-  HelpCircle,
-  AlertTriangle,
-} from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Shield, Swords, HardHat, Shirt, HelpCircle, AlertTriangle } from 'lucide-react';
 import { checkWeaponRequirements } from '@/data/equipment';
 import { GearRow } from './GearRow';
 import type { Warrior } from '@/types/state.types';
@@ -70,10 +58,7 @@ export function LoadoutCard({
       )}
     >
       <div
-        className={cn(
-          'p-6 space-y-4 flex-1 flex flex-col',
-          isTop ? 'bg-primary/5' : 'bg-black/20'
-        )}
+        className={cn('p-6 space-y-4 flex-1 flex flex-col', isTop ? 'bg-primary/5' : 'bg-black/20')}
       >
         <div className="flex items-center justify-between">
           <Badge className="bg-primary/20 text-primary border-primary/20 font-black uppercase text-[8px] tracking-[0.2em] px-2 py-0 border">
@@ -131,10 +116,7 @@ export function LoadoutCard({
             </div>
             <div className="flex flex-wrap gap-2">
               {reqCheck.failures.map(
-                (
-                  f: { stat: string; current: number; required: number },
-                  fi: number
-                ) => (
+                (f: { stat: string; current: number; required: number }, fi: number) => (
                   <div
                     key={fi}
                     className="text-[9px] font-mono font-black text-destructive/80 uppercase"
@@ -161,17 +143,15 @@ export function LoadoutCard({
                   side="top"
                   className="max-w-[240px] text-[10px] leading-relaxed space-y-1.5 p-3"
                 >
-                  <p className="font-black uppercase tracking-wider text-foreground">
-                    Encumbrance
+                  <p className="font-black uppercase tracking-wider text-foreground">Encumbrance</p>
+                  <p className="text-muted-foreground">
+                    Total weight of all equipped gear (weapon + armor + shield + helm). Exceeding a
+                    warrior&apos;s carry threshold reduces Speed (SP) and increases fatigue per
+                    bout.
                   </p>
                   <p className="text-muted-foreground">
-                    Total weight of all equipped gear (weapon + armor + shield + helm).
-                    Exceeding a warrior&apos;s carry threshold reduces Speed (SP) and
-                    increases fatigue per bout.
-                  </p>
-                  <p className="text-muted-foreground">
-                    High-ST warriors tolerate heavier loads. Recommended: keep under{' '}
-                    {carryCap} units for balanced fighters.
+                    High-ST warriors tolerate heavier loads. Recommended: keep under {carryCap}{' '}
+                    units for balanced fighters.
                   </p>
                 </TooltipContent>
               </Tooltip>

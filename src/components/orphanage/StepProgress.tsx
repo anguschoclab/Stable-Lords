@@ -11,15 +11,13 @@ interface StepProgressProps {
   step: number;
   total: number;
 } /**
-   * Step progress.
-   * @param - { step, total }.
-   * @returns The result.
-   */
+ * Step progress.
+ * @param - { step, total }.
+ */
 
 /**
  * Step progress.
  * @param - { step, total }.
- * @returns The result.
  */
 export default function StepProgress({ step, total }: StepProgressProps) {
   return (

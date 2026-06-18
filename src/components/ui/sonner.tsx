@@ -6,7 +6,6 @@ type ToasterProps = React.ComponentProps<typeof Sonner>;
 /**
  * Toaster.
  * @param - { ...props }.
- * @returns The result.
  */
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = 'system' } = useTheme();

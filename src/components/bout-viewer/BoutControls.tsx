@@ -29,7 +29,6 @@ interface BoutControlsProps {
   on toggle play,
   on skip to end,
 }.
-   * @returns The result.
    */
 
 /**
@@ -46,7 +45,6 @@ interface BoutControlsProps {
   on toggle play,
   on skip to end,
 }.
- * @returns The result.
  */
 export default function BoutControls({
   viewMode,

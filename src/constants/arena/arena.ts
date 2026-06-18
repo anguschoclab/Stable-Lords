@@ -59,12 +59,15 @@ export const TOURNAMENT_ARENA_DEFAULTS = {
 
 // ─── Style-Weather Modifiers ───────────────────────────────────────────────
 // Flat modifiers applied based on fighting style + weather combination
-export const STYLE_WEATHER_MODIFIERS: Record<string, {
-  initiativeMod?: number;
-  riposteMod?: number;
-  damageMult?: number;
-  description: string;
-}> = {
+export const STYLE_WEATHER_MODIFIERS: Record<
+  string,
+  {
+    initiativeMod?: number;
+    riposteMod?: number;
+    damageMult?: number;
+    description: string;
+  }
+> = {
   // Rain penalizes lungers (slippery footing for lunges)
   'Rainy:LungingAttack': {
     initiativeMod: -2,

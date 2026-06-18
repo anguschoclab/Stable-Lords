@@ -203,7 +203,6 @@ function SparklineSVG({
   height = 40,
   show label = true,
 }.
- * @returns The result.
  */
 export function TreasurySparkline({
   className,

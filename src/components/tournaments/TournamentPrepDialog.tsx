@@ -21,7 +21,6 @@ interface TournamentPrepDialogProps {
   season name,
   on start,
 }.
-   * @returns The result.
    */
 
 /**
@@ -33,7 +32,6 @@ interface TournamentPrepDialogProps {
   season name,
   on start,
 }.
- * @returns The result.
  */
 export function TournamentPrepDialog({
   isOpen,

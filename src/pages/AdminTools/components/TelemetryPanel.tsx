@@ -11,14 +11,18 @@ interface TelemetryPanelProps {
   player: Record<string, unknown>;
 }
 
-export function TelemetryPanel({ week, season, treasury, fame, rosterSize, player }: TelemetryPanelProps) {
+export function TelemetryPanel({
+  week,
+  season,
+  treasury,
+  fame,
+  rosterSize,
+  player,
+}: TelemetryPanelProps) {
   return (
     <div className="space-y-12">
       <SectionDivider label="Data Visualization" />
-      <Surface
-        variant="glass"
-        className="border-white/5 overflow-hidden font-mono text-[11px]"
-      >
+      <Surface variant="glass" className="border-white/5 overflow-hidden font-mono text-[11px]">
         <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4 text-muted-foreground/40 uppercase font-black tracking-widest">
           <Activity className="h-4 w-4" /> Protocol Dump // V2.4.0
         </div>

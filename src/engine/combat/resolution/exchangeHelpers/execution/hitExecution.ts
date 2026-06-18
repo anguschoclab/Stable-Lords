@@ -103,12 +103,12 @@ export function executeHit(
 
   // Apply weather damage multiplier
   const weatherDamageMult = ctx?.weatherEffect?.damageMult ?? 1.0;
-  
+
   // Apply style-weather and arena-tag damage multipliers
   const styleWeatherMod = ctx?.arenaConfig
     ? getStyleWeatherModifier(attacker.style, ctx.weather, ctx.arenaConfig.tags)
     : { damageMult: 1.0 };
-  
+
   const totalDamageMult = weatherDamageMult * styleWeatherMod.damageMult;
   rawDamage = Math.round(rawDamage * totalDamageMult);
 

@@ -16,17 +16,13 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Flashy',
   'Corporate',
 ]; /**
-    * Run promoter lifecycle pass.
-    * @param state - State.
-    * @param rng - Rng. (optional)
-    * @returns The result.
-    */
+ * Run promoter lifecycle pass.
+ * @param rng - Rng. (optional)
+ */
 
 /**
  * Run promoter lifecycle pass.
- * @param state - State.
  * @param rng - Rng. (optional)
- * @returns The result.
  */
 export function runPromoterLifecyclePass(state: GameState, rng?: IRNGService): StateImpact {
   const rngService = rng || new SeededRNGService(state.week * 777 + 1);

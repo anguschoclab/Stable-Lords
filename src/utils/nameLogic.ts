@@ -7,17 +7,11 @@ import { SeededRNGService } from '@/utils/random';
 
 const HONORIFICS = ['II', 'III', 'IV', 'Jr.', 'the Younger', 'the Heir', 'V'];
 const PREFIXES = ['Legacy of', 'Blood of', 'Protege of', 'Shadow of']; /**
-                                                                        * Generate dynastic name.
-                                                                        * @param originalName - Original name.
-                                                                        * @param seed - Seed.
-                                                                        * @returns The result.
-                                                                        */
+ * Generate dynastic name.
+ */
 
 /**
  * Generate dynastic name.
- * @param originalName - Original name.
- * @param seed - Seed.
- * @returns The result.
  */
 export function generateDynasticName(originalName: string, seed: number): string {
   const trimmed = originalName.trim().replace(/\s+/g, ' ');

@@ -153,7 +153,6 @@ function TacticalBarContent({ alerts }: TacticalBarContentProps) {
 
 /**
  * Tactical bar.
- * @returns The result.
  */
 export function TacticalBar() {
   const [expanded, setExpanded] = useState(false);

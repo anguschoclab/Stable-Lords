@@ -1,11 +1,5 @@
 import { cn } from '@/lib/utils';
-import {
-  Settings,
-  Zap,
-  FastForward,
-  Activity,
-  SlidersHorizontal,
-} from 'lucide-react';
+import { Settings, Zap, FastForward, Activity, SlidersHorizontal } from 'lucide-react';
 import type { AdminCategory } from '../hooks/useAdminTools';
 
 const CATEGORIES: { id: AdminCategory; icon: React.ElementType; label: string }[] = [

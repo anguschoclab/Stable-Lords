@@ -1,15 +1,15 @@
 import type { ReactNode } from 'react';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button'; /**
-                                                  * Sort dir type.
-                                                  */
+ * Sort dir type.
+ */
 
 /**
  * Sort dir type.
  */
 export type SortDir = 'asc' | 'desc'; /**
-                                       * Defines the shape of sort header props.
-                                       */
+ * Defines the shape of sort header props.
+ */
 
 /**
  * Defines the shape of sort header props.
@@ -20,15 +20,13 @@ export interface SortHeaderProps {
   dir?: SortDir;
   onClick: () => void;
 } /**
-   * Sort header.
-   * @param - { label, active, dir, on click }.
-   * @returns The result.
-   */
+ * Sort header.
+ * @param - { label, active, dir, on click }.
+ */
 
 /**
  * Sort header.
  * @param - { label, active, dir, on click }.
- * @returns The result.
  */
 export function SortHeader({ label, active, dir, onClick }: SortHeaderProps) {
   const ariaLabel = typeof label === 'string' ? `Sort by ${label}` : 'Sort table column';

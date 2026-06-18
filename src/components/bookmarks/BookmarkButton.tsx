@@ -16,9 +16,7 @@ export function BookmarkButton({
   size = 'sm',
   className,
 }: BookmarkButtonProps) {
-  const isBookmarked = useGameStore((s) =>
-    s.isBookmarked(entityType, entityId)
-  );
+  const isBookmarked = useGameStore((s) => s.isBookmarked(entityType, entityId));
   const toggleBookmark = useGameStore((s) => s.toggleBookmark);
 
   const iconSize = size === 'sm' ? 'h-4 w-4' : 'h-5 w-5';
@@ -38,11 +36,7 @@ export function BookmarkButton({
         className
       )}
     >
-      {isBookmarked ? (
-        <BookmarkCheck className={iconSize} />
-      ) : (
-        <Bookmark className={iconSize} />
-      )}
+      {isBookmarked ? <BookmarkCheck className={iconSize} /> : <Bookmark className={iconSize} />}
     </button>
   );
 }

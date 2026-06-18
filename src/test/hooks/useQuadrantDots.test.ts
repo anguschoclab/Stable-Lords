@@ -7,12 +7,14 @@ import * as stableReputation from '@/engine/stableReputation';
 import type { StableReputationInput } from '@/engine/stableReputation';
 
 beforeEach(() => {
-  vi.spyOn(stableReputation, 'computeStableReputation').mockImplementation((state: StableReputationInput) => ({
-    fame: state.fame ?? 0,
-    notoriety: 50,
-    honor: 50,
-    adaptability: 0,
-  }));
+  vi.spyOn(stableReputation, 'computeStableReputation').mockImplementation(
+    (state: StableReputationInput) => ({
+      fame: state.fame ?? 0,
+      notoriety: 50,
+      honor: 50,
+      adaptability: 0,
+    })
+  );
   vi.spyOn(stableReputation, 'computeRivalReputation').mockImplementation((roster: unknown[]) => ({
     fame: (roster as unknown[]).length * 10,
     notoriety: (roster as unknown[]).length * 5,

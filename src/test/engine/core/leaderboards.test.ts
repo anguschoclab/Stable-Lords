@@ -109,8 +109,12 @@ describe('calculateGlobalFameLeaderboard', () => {
     const roster = [createMockWarrior('p1', 10)];
     const rivals = [createMockRival('Iron Skulls', [createMockWarrior('r1', 20)])];
     const result = calculateGlobalFameLeaderboard(roster, rivals, 'Blood Hawks');
-    expect(result.find((e: ArenaLeaderboardEntry) => e.warrior.id === 'p1')!.stableName).toBe('Blood Hawks');
-    expect(result.find((e: ArenaLeaderboardEntry) => e.warrior.id === 'r1')!.stableName).toBe('Iron Skulls');
+    expect(result.find((e: ArenaLeaderboardEntry) => e.warrior.id === 'p1')!.stableName).toBe(
+      'Blood Hawks'
+    );
+    expect(result.find((e: ArenaLeaderboardEntry) => e.warrior.id === 'r1')!.stableName).toBe(
+      'Iron Skulls'
+    );
   });
 
   it('respects default limit of 10', () => {

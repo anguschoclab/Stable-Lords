@@ -66,11 +66,7 @@ export function protectCovers(protect?: string): string[] {
   return [];
 }
 
-export function rollHitLocation(
-  rng: () => number,
-  target?: string,
-  protect?: string
-): HitLocation {
+export function rollHitLocation(rng: () => number, target?: string, protect?: string): HitLocation {
   const covered = protectCovers(protect);
 
   if (target && target !== 'Any') {

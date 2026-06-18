@@ -1,10 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Surface } from '@/components/ui/Surface';
 import { TrendingDown, ShieldCheck } from 'lucide-react';
 import { useContractData } from './hooks/useContractData';

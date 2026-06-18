@@ -190,7 +190,6 @@ function ProgressTimeline({ minutes, totalEvents, visibleCount }: ProgressTimeli
   expanded,
   on toggle expanded,
 }.
- * @returns The result.
  */
 export default function BoutHeader({
   nameA,

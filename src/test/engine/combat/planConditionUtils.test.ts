@@ -10,12 +10,18 @@ describe('planConditionUtils', () => {
     });
 
     it('returns string value when inputType is phase', () => {
-      const cond: PlanCondition = { trigger: { type: 'PHASE_IS', value: 'mid' }, override: { AL: 3 } };
+      const cond: PlanCondition = {
+        trigger: { type: 'PHASE_IS', value: 'mid' },
+        override: { AL: 3 },
+      };
       expect(triggerDisplayValue(cond)).toBe('mid');
     });
 
     it('returns string value when no option is found', () => {
-      const cond = { trigger: { type: 'unknown_type', value: 'custom_val' }, override: { killDesire: 5 } } as unknown as PlanCondition;
+      const cond = {
+        trigger: { type: 'unknown_type', value: 'custom_val' },
+        override: { killDesire: 5 },
+      } as unknown as PlanCondition;
       expect(triggerDisplayValue(cond)).toBe('custom_val');
     });
   });

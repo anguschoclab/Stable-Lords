@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  computeFightEconomics,
-  FIGHT_PURSE,
-  WIN_BONUS,
-} from '@/constants/economy/economy';
+import { computeFightEconomics, FIGHT_PURSE, WIN_BONUS } from '@/constants/economy/economy';
 
 describe('computeFightEconomics', () => {
   it('returns base purse and win bonus for a fame-0 tier-1 winner', () => {

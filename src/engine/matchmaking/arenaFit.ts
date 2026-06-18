@@ -8,11 +8,7 @@ import {
   RANGE_ORDER,
 } from '@/engine/combat/mechanics/distanceResolution';
 import { getAllArenas, getArenaById } from '@/data/arenas';
-import {
-  ARENA_FIT,
-  ARENA_SELECTION,
-  ARENA_TAG_WEIGHTS,
-} from '@/constants/arena';
+import { ARENA_FIT, ARENA_SELECTION, ARENA_TAG_WEIGHTS } from '@/constants/arena';
 
 // ─── Style classification helpers ─────────────────────────────────────────────
 
@@ -65,7 +61,9 @@ export function scoreArenaFitForWarrior(
   if (prefIdx <= maxIdx) {
     // Preferred range is reachable — reward proximity to preference
     const distanceFromPref = Math.abs(prefIdx - startIdx);
-    score += ARENA_FIT.RANGE_FIT_MAX - Math.min(ARENA_FIT.RANGE_FIT_MAX, distanceFromPref * ARENA_FIT.RANGE_DISTANCE_PENALTY);
+    score +=
+      ARENA_FIT.RANGE_FIT_MAX -
+      Math.min(ARENA_FIT.RANGE_FIT_MAX, distanceFromPref * ARENA_FIT.RANGE_DISTANCE_PENALTY);
   } else {
     // Preferred range is beyond the cap — penalise
     const overshoot = prefIdx - maxIdx;

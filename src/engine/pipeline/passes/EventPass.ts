@@ -17,10 +17,7 @@ import { filterActive, filterHealthy } from '@/utils/roster';
 
 /**
  * Run event pass.
- * @param state - State.
- * @param nextWeek - Next week.
  * @param rootRng - Root rng. (optional)
- * @returns The result.
  */
 export function runEventPass(
   state: GameState,
@@ -57,7 +54,14 @@ export function runEventPass(
         });
 
         newsletterItems.push(
-          makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { name: brawler.name, fame: 5 }, 'event')
+          makeNewsletterItem(
+            brawlRng,
+            nextWeek,
+            e.title,
+            e.newsletter,
+            { name: brawler.name, fame: 5 },
+            'event'
+          )
         );
       }
     }
@@ -79,7 +83,14 @@ export function runEventPass(
         });
 
         newsletterItems.push(
-          makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 15, xp: 2 }, 'event')
+          makeNewsletterItem(
+            brawlRng,
+            nextWeek,
+            e.title,
+            e.newsletter,
+            { name: chosen.name, fame: 15, xp: 2 },
+            'event'
+          )
         );
       }
     }
@@ -100,7 +111,14 @@ export function runEventPass(
         });
 
         newsletterItems.push(
-          makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { name: chosen.name, fame: 10, xp: 5 }, 'event')
+          makeNewsletterItem(
+            brawlRng,
+            nextWeek,
+            e.title,
+            e.newsletter,
+            { name: chosen.name, fame: 10, xp: 5 },
+            'event'
+          )
         );
       }
     }
@@ -112,7 +130,9 @@ export function runEventPass(
     if (e) {
       const gold = rollRange(brawlRng, 100, 401); // 100-500 gold
       treasuryDelta += gold;
-      ledgerEntries.push(makeLedgerEntry(brawlRng, nextWeek, 'Mysterious Patron Donation', gold, 'other'));
+      ledgerEntries.push(
+        makeLedgerEntry(brawlRng, nextWeek, 'Mysterious Patron Donation', gold, 'other')
+      );
 
       newsletterItems.push(
         makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { gold }, 'event')
@@ -142,7 +162,14 @@ export function runEventPass(
         ledgerEntries.push(makeLedgerEntry(brawlRng, nextWeek, 'Goblin Merchant', -20, 'other'));
 
         newsletterItems.push(
-          makeNewsletterItem(brawlRng, nextWeek, e.title, e.newsletter, { name: chosen.name, xp: 5 }, 'event')
+          makeNewsletterItem(
+            brawlRng,
+            nextWeek,
+            e.title,
+            e.newsletter,
+            { name: chosen.name, xp: 5 },
+            'event'
+          )
         );
       }
     }

@@ -8,14 +8,16 @@ import { Link } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { ODDS_THRESHOLDS } from '@/constants/core/ui';
 import { ATTRIBUTE_KEYS } from '@/types/game';
-import { resolveWarriorName, resolveStableName, findWarrior } from '@/engine/core/historyResolver'; /**
-                                                                                               * Next bout widget.
-                                                                                               * @returns The result.
-                                                                                               */
+import {
+  resolveWarriorName,
+  resolveStableName,
+  findWarrior,
+} from '@/engine/core/historyResolver'; /**
+ * Next bout widget.
+ */
 
 /**
  * Next bout widget.
- * @returns The result.
  */
 export function NextBoutWidget() {
   const state = useGameStore();

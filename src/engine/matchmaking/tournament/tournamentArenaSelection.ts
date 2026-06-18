@@ -5,11 +5,7 @@
 
 import { getAllArenas } from '@/data/arenas';
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
-import {
-  ARENA_SELECTION,
-  ARENA_TAG_WEIGHTS,
-  TOURNAMENT_ARENA_DEFAULTS,
-} from '@/constants/arena';
+import { ARENA_SELECTION, ARENA_TAG_WEIGHTS, TOURNAMENT_ARENA_DEFAULTS } from '@/constants/arena';
 
 export interface TournamentArenaFilter {
   minTier?: 1 | 2 | 3;
@@ -23,9 +19,7 @@ export interface TournamentArenaFilter {
  * Get arenas eligible for tournament use.
  * Default: tier 2-3 arenas (prestigious), excludes cramped for large brackets.
  */
-export function getEligibleArenasForTournament(
-  filter: TournamentArenaFilter = {}
-): ArenaConfig[] {
+export function getEligibleArenasForTournament(filter: TournamentArenaFilter = {}): ArenaConfig[] {
   const {
     minTier = TOURNAMENT_ARENA_DEFAULTS.MIN_TIER,
     maxTier = TOURNAMENT_ARENA_DEFAULTS.MAX_TIER,

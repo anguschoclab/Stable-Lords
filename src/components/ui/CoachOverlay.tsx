@@ -15,13 +15,11 @@ interface CoachWarning {
   icon: LucideIcon;
   color: string;
 } /**
-   * Coach overlay.
-   * @returns The result.
-   */
+ * Coach overlay.
+ */
 
 /**
  * Coach overlay.
- * @returns The result.
  */
 export function CoachOverlay() {
   const state = useGameStore(

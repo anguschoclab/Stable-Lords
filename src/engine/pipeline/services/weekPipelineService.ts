@@ -160,11 +160,7 @@ function collectRemainingImpacts(
   return impacts;
 }
 
-function finalizeState(
-  state: GameState,
-  oldState: GameState,
-  ctx: WeekContext
-): GameState {
+function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext): GameState {
   state.week = ctx.nextWeek;
   state.year = ctx.nextYear;
   state.day = 0;
@@ -238,7 +234,10 @@ export function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): GameSt
   // Unified stop conditions: bankruptcy and roster-empty are checked every week
   if (checkBankruptcy(settledState, coreImpacts) || settledState.roster.length === 0) {
     // Always apply world pass so season/weather advance even on stop conditions
-    const stopImpacts: StateImpact[] = [...coreImpacts, runWorldPass(settledState, ctx.nextWeek, ctx.rootRng)];
+    const stopImpacts: StateImpact[] = [
+      ...coreImpacts,
+      runWorldPass(settledState, ctx.nextWeek, ctx.rootRng),
+    ];
     return finalizeState(resolveImpacts(settledState, stopImpacts), state, ctx);
   }
 

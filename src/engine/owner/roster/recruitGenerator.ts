@@ -146,7 +146,10 @@ export function generateAIRecruit(
   }
 
   // Recompute stats after trait attribute bonuses
-  const { baseSkills: finalBaseSkills, derivedStats: finalDerivedStats } = computeWarriorStats(attrs, style);
+  const { baseSkills: finalBaseSkills, derivedStats: finalDerivedStats } = computeWarriorStats(
+    attrs,
+    style
+  );
 
   // Use archetype-based naming like player recruits
   const namePool = [...ARCHETYPE_NAMES[archetype], ...ARCHETYPE_NAMES.tank];

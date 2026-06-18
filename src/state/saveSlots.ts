@@ -17,8 +17,8 @@ export interface SaveSlotMeta {
 }
 
 const STORAGE_KEY = STORE_KEYS.SAVE_SLOTS; /**
-                                            * Max_save_slots.
-                                            */
+ * Max_save_slots.
+ */
 
 /**
  * Max_save_slots.
@@ -81,30 +81,20 @@ async function setStoredMeta(meta: SaveSlotMeta[]) {
     }
   }
 } /**
-   * List save slots.
-   * @returns The result.
-   */
+ * List save slots.
+ */
 
 /**
  * List save slots.
- * @returns The result.
  */
 export async function listSaveSlots(): Promise<SaveSlotMeta[]> {
   return await getStoredMeta();
 } /**
-   * Save to slot.
-   * @param slotId - Slot id.
-   * @param name - Name.
-   * @param state - State.
-   * @returns The result.
-   */
+ * Save to slot.
+ */
 
 /**
  * Save to slot.
- * @param slotId - Slot id.
- * @param name - Name.
- * @param state - State.
- * @returns The result.
  */
 export async function saveToSlot(slotId: string, name: string, state: GameState) {
   const meta: SaveSlotMeta = {
@@ -131,28 +121,20 @@ export async function saveToSlot(slotId: string, name: string, state: GameState)
   const truncatedState = truncateState(state);
   await archiveService.archiveHotState(slotId, truncatedState);
 } /**
-   * Load from slot.
-   * @param slotId - Slot id.
-   * @returns The result.
-   */
+ * Load from slot.
+ */
 
 /**
  * Load from slot.
- * @param slotId - Slot id.
- * @returns The result.
  */
 export async function loadFromSlot(slotId: string): Promise<GameState | null> {
   return await archiveService.retrieveHotState(slotId);
 } /**
-   * Delete slot.
-   * @param slotId - Slot id.
-   * @returns The result.
-   */
+ * Delete slot.
+ */
 
 /**
  * Delete slot.
- * @param slotId - Slot id.
- * @returns The result.
  */
 export async function deleteSlot(slotId: string) {
   const currentMeta = await getStoredMeta();
@@ -168,26 +150,20 @@ export async function deleteSlot(slotId: string) {
     }
   }
 } /**
-   * New slot id.
-   * @returns The result.
-   */
+ * New slot id.
+ */
 
 /**
  * New slot id.
- * @returns The result.
  */
 export function newSlotId(): string {
   return `slot_${crypto.randomUUID()}`;
 } /**
-   * Export slot.
-   * @param slotId - Slot id.
-   * @returns The result.
-   */
+ * Export slot.
+ */
 
 /**
  * Export slot.
- * @param slotId - Slot id.
- * @returns The result.
  */
 export async function exportSlot(slotId: string): Promise<string | null> {
   const state = await loadFromSlot(slotId);
@@ -196,15 +172,11 @@ export async function exportSlot(slotId: string): Promise<string | null> {
   const truncatedState = truncateState(state);
   return JSON.stringify(truncatedState);
 } /**
-   * Import save to new slot.
-   * @param data - Data.
-   * @returns The result.
-   */
+ * Import save to new slot.
+ */
 
 /**
  * Import save to new slot.
- * @param data - Data.
- * @returns The result.
  */
 export async function importSaveToNewSlot(data: unknown): Promise<string | null> {
   try {

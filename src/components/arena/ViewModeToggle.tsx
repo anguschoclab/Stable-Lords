@@ -21,7 +21,6 @@ interface ViewModeToggleProps {
   disabled = false,
   class name,
 }.
-   * @returns The result.
    */
 
 /**
@@ -32,7 +31,6 @@ interface ViewModeToggleProps {
   disabled = false,
   class name,
 }.
- * @returns The result.
  */
 export default function ViewModeToggle({
   mode,

@@ -45,7 +45,6 @@ interface BoutViewerProps {
   weather = 'clear',
   arena id,
 }.
-   * @returns The result.
    */
 
 /**
@@ -64,7 +63,6 @@ interface BoutViewerProps {
   weather = 'clear',
   arena id,
 }.
- * @returns The result.
  */
 export default function BoutViewer({
   nameA,

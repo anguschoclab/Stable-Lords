@@ -1,7 +1,7 @@
 import { GameState, Warrior } from '@/types/state.types';
 import { buildWarriorMap } from '@/utils/roster'; /**
-                                                   * Defines the shape of bout pairing.
-                                                   */
+ * Defines the shape of bout pairing.
+ */
 
 /**
  * Defines the shape of bout pairing.
@@ -14,15 +14,11 @@ export interface BoutPairing {
   rivalStableId?: string;
   contractId?: string;
 } /**
-   * Generate pairings.
-   * @param state - State.
-   * @returns The result.
-   */
+ * Generate pairings.
+ */
 
 /**
  * Generate pairings.
- * @param state - State.
- * @returns The result.
  */
 export function generatePairings(state: GameState): BoutPairing[] {
   const currentWeek = state.week;

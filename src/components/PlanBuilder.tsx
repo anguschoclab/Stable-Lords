@@ -23,15 +23,13 @@ interface PlanBuilderProps {
   warrior?: Warrior;
   rivalStyle?: FightingStyle;
 } /**
-   * Plan builder.
-   * @param - { plan, on plan change, warrior, rival style }.
-   * @returns The result.
-   */
+ * Plan builder.
+ * @param - { plan, on plan change, warrior, rival style }.
+ */
 
 /**
  * Plan builder.
  * @param - { plan, on plan change, warrior, rival style }.
- * @returns The result.
  */
 export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }: PlanBuilderProps) {
   const matchupAdv = useMemo(() => {

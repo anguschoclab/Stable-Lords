@@ -323,32 +323,33 @@ describe('CombatNarrator', () => {
 
   describe('knockdown/recovery narration from resolution', () => {
     it('resolution emits KNOCKDOWN events on heavy hits to low-HP defenders', () => {
-      const makeFS = (label: 'A' | 'D') => ({
-        label,
-        style: FightingStyle.StrikingAttack,
-        attributes: { ST: 15, CN: 12, SZ: 14, WT: 12, WL: 12, SP: 14, DF: 12 },
-        skills: { ATT: 10, PAR: 10, DEF: 10, DEC: 10, INI: 10, RIP: 10 },
-        derived: { hp: 100, endurance: 100, damage: 8, encumbrance: 0 },
-        plan: { OE: 7, AL: 3, killDesire: 7, protect: 'Any' },
-        activePlan: { OE: 7, AL: 3, killDesire: 7, protect: 'Any' },
-        psychState: 'NORMAL' as const,
-        hp: 8,
-        maxHp: 40,
-        endurance: 50,
-        maxEndurance: 50,
-        hitsLanded: 3,
-        hitsTaken: 5,
-        ripostes: 0,
-        consecutiveHits: 0,
-        armHits: 0,
-        legHits: 2,
-        totalFights: 5,
-        momentum: 0,
-        committed: false,
-        survivalStrike: false,
-        recoveryDebt: 0,
-        weaponId: 'gladius',
-      } as any);
+      const makeFS = (label: 'A' | 'D') =>
+        ({
+          label,
+          style: FightingStyle.StrikingAttack,
+          attributes: { ST: 15, CN: 12, SZ: 14, WT: 12, WL: 12, SP: 14, DF: 12 },
+          skills: { ATT: 10, PAR: 10, DEF: 10, DEC: 10, INI: 10, RIP: 10 },
+          derived: { hp: 100, endurance: 100, damage: 8, encumbrance: 0 },
+          plan: { OE: 7, AL: 3, killDesire: 7, protect: 'Any' },
+          activePlan: { OE: 7, AL: 3, killDesire: 7, protect: 'Any' },
+          psychState: 'NORMAL' as const,
+          hp: 8,
+          maxHp: 40,
+          endurance: 50,
+          maxEndurance: 50,
+          hitsLanded: 3,
+          hitsTaken: 5,
+          ripostes: 0,
+          consecutiveHits: 0,
+          armHits: 0,
+          legHits: 2,
+          totalFights: 5,
+          momentum: 0,
+          committed: false,
+          survivalStrike: false,
+          recoveryDebt: 0,
+          weaponId: 'gladius',
+        }) as any;
 
       let knockdownSeen = false;
       for (let seed = 1; seed <= 200; seed++) {
@@ -388,33 +389,34 @@ describe('CombatNarrator', () => {
 
     it('RECOVERY fires in the exchange after KNOCKDOWN', () => {
       const svc = new SeededRNGService(42);
-      const makeFS = (label: 'A' | 'D') => ({
-        label,
-        style: FightingStyle.TotalParry,
-        attributes: { ST: 12, CN: 14, SZ: 12, WT: 12, WL: 14, SP: 12, DF: 14 },
-        skills: { ATT: 10, PAR: 12, DEF: 12, DEC: 8, INI: 10, RIP: 10 },
-        derived: { hp: 100, endurance: 100, damage: 6, encumbrance: 0 },
-        plan: { OE: 3, AL: 7, killDesire: 3, protect: 'Any' },
-        activePlan: { OE: 3, AL: 7, killDesire: 3, protect: 'Any' },
-        psychState: 'NORMAL' as const,
-        hp: 30,
-        maxHp: 40,
-        endurance: 50,
-        maxEndurance: 50,
-        hitsLanded: 0,
-        hitsTaken: 0,
-        ripostes: 0,
-        consecutiveHits: 0,
-        armHits: 0,
-        legHits: 0,
-        totalFights: 5,
-        momentum: 0,
-        committed: false,
-        survivalStrike: false,
-        recoveryDebt: 0,
-        weaponId: 'gladius',
-        knockedDown: true,
-      } as any);
+      const makeFS = (label: 'A' | 'D') =>
+        ({
+          label,
+          style: FightingStyle.TotalParry,
+          attributes: { ST: 12, CN: 14, SZ: 12, WT: 12, WL: 14, SP: 12, DF: 14 },
+          skills: { ATT: 10, PAR: 12, DEF: 12, DEC: 8, INI: 10, RIP: 10 },
+          derived: { hp: 100, endurance: 100, damage: 6, encumbrance: 0 },
+          plan: { OE: 3, AL: 7, killDesire: 3, protect: 'Any' },
+          activePlan: { OE: 3, AL: 7, killDesire: 3, protect: 'Any' },
+          psychState: 'NORMAL' as const,
+          hp: 30,
+          maxHp: 40,
+          endurance: 50,
+          maxEndurance: 50,
+          hitsLanded: 0,
+          hitsTaken: 0,
+          ripostes: 0,
+          consecutiveHits: 0,
+          armHits: 0,
+          legHits: 0,
+          totalFights: 5,
+          momentum: 0,
+          committed: false,
+          survivalStrike: false,
+          recoveryDebt: 0,
+          weaponId: 'gladius',
+          knockedDown: true,
+        }) as any;
 
       const fA = makeFS('A');
       const fD = makeFS('D');

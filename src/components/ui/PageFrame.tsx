@@ -5,15 +5,13 @@ interface PageFrameProps {
   className?: string;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
 } /**
-   * Page frame.
-   * @param - { children, class name, max width = 'xl' }.
-   * @returns The result.
-   */
+ * Page frame.
+ * @param - { children, class name, max width = 'xl' }.
+ */
 
 /**
  * Page frame.
  * @param - { children, class name, max width = 'xl' }.
- * @returns The result.
  */
 export function PageFrame({ children, className, maxWidth = 'xl' }: PageFrameProps) {
   const widthClasses = {

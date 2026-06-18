@@ -72,8 +72,5 @@ export function countActiveWarriors(state: GameState): number {
  * Collects only healthy active warriors (status === "Active" and no injuries)
  */
 export function collectHealthyWarriors(state: GameState): Warrior[] {
-  return collectAllWarriors(
-    state,
-    (w) => isActive(w) && (!w.injuries || w.injuries.length === 0)
-  );
+  return collectAllWarriors(state, (w) => isActive(w) && (!w.injuries || w.injuries.length === 0));
 }

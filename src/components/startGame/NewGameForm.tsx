@@ -37,7 +37,6 @@ interface NewGameFormProps {
   on submit,
   can create,
 }.
-   * @returns The result.
    */
 
 /**
@@ -55,7 +54,6 @@ interface NewGameFormProps {
   on submit,
   can create,
 }.
- * @returns The result.
  */
 export default function NewGameForm({
   ownerName,

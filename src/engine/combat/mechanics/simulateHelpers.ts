@@ -6,30 +6,24 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { getTrainingBonus } from '@/engine/trainers';
 import { getSpecialtyMods } from '@/engine/trainerSpecialties'; /**
-                                                                 * Create rng for context.
-                                                                 * @param seed - Seed.
-                                                                 * @param rng - Rng. (optional)
-                                                                 * @returns The result.
-                                                                 */
+ * Create rng for context.
+ * @param rng - Rng. (optional)
+ */
 
 /**
  * Create rng for context.
- * @param seed - Seed.
  * @param rng - Rng. (optional)
- * @returns The result.
  */
 export function createRNGForContext(seed: number, rng?: IRNGService): IRNGService {
   return rng || new SeededRNGService(seed);
 } /**
-   * Setup rng.
-   * @param providedRng - Provided rng. (optional)
-   * @returns The result.
-   */
+ * Setup rng.
+ * @param providedRng - Provided rng. (optional)
+ */
 
 /**
  * Setup rng.
  * @param providedRng - Provided rng. (optional)
- * @returns The result.
  */
 export function setupRng(providedRng?: (() => number) | number): () => number {
   if (typeof providedRng === 'function') {
@@ -40,23 +34,17 @@ export function setupRng(providedRng?: (() => number) | number): () => number {
   const sRng = new SeededRNGService(seed);
   return () => sRng.next();
 } /**
-   * Get trainer mods.
-   * @param trainers - Trainers.
-   * @param style - Style.
-   * @param fighter - Fighter. (optional)
-   * @param opponent - Opponent. (optional)
-   * @param ctx - Ctx. (optional)
-   * @returns The result.
-   */
-
-/**
  * Get trainer mods.
- * @param trainers - Trainers.
- * @param style - Style.
  * @param fighter - Fighter. (optional)
  * @param opponent - Opponent. (optional)
  * @param ctx - Ctx. (optional)
- * @returns The result.
+ */
+
+/**
+ * Get trainer mods.
+ * @param fighter - Fighter. (optional)
+ * @param opponent - Opponent. (optional)
+ * @param ctx - Ctx. (optional)
  */
 export function getTrainerMods(
   trainers: Trainer[] | undefined,
@@ -116,21 +104,11 @@ export function getTrainerMods(
     fatiguePenaltyReduction: 0,
   };
 } /**
-   * Process outcome tags.
-   * @param winner - Winner.
-   * @param by - By.
-   * @param fA - F a.
-   * @param fD - F d.
-   * @returns The result.
-   */
+ * Process outcome tags.
+ */
 
 /**
  * Process outcome tags.
- * @param winner - Winner.
- * @param by - By.
- * @param fA - F a.
- * @param fD - F d.
- * @returns The result.
  */
 export function processOutcomeTags(
   winner: 'A' | 'D',

@@ -29,7 +29,6 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   total events,
   announcement,
 }.
-    * @returns The result.
     */
 
 /**
@@ -43,7 +42,6 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   total events,
   announcement,
 }.
- * @returns The result.
  */
 export default function BoutResolution({
   isComplete,

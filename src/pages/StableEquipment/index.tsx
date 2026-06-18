@@ -53,7 +53,9 @@ export default function StableEquipment() {
               </label>
               <Select
                 value={selectedStyle}
-                onValueChange={(v) => handleStyleChange(v as import('@/types/shared.types').FightingStyle)}
+                onValueChange={(v) =>
+                  handleStyleChange(v as import('@/types/shared.types').FightingStyle)
+                }
               >
                 <SelectTrigger className="h-10 bg-black/40 border-white/10 font-black text-[10px] uppercase tracking-widest px-4">
                   <SelectValue />

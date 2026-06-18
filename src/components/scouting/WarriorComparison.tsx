@@ -13,15 +13,13 @@ interface WarriorComparisonProps {
   rivals: RivalStableData[];
   playerRoster: Warrior[];
 } /**
-   * Warrior comparison.
-   * @param - { rivals, player roster }.
-   * @returns The result.
-   */
+ * Warrior comparison.
+ * @param - { rivals, player roster }.
+ */
 
 /**
  * Warrior comparison.
  * @param - { rivals, player roster }.
- * @returns The result.
  */
 export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonProps) {
   const [wIdA, setWIdA] = useState<string | null>(null);

@@ -20,11 +20,17 @@ describe('facilityUpkeep', () => {
     it('should create new entry if none exists', () => {
       const result = updateSeasonalGains([], 'w1' as WarriorId, 'Spring', 'ST');
       expect(result).toHaveLength(1);
-      expect(result[0]).toMatchObject({ warriorId: 'w1' as WarriorId, season: 'Spring', gains: { ST: 1 } });
+      expect(result[0]).toMatchObject({
+        warriorId: 'w1' as WarriorId,
+        season: 'Spring',
+        gains: { ST: 1 },
+      });
     });
 
     it('should update existing entry', () => {
-      const growth: SeasonalGrowth[] = [{ warriorId: 'w1' as WarriorId, season: 'Spring', gains: { ST: 1 } }];
+      const growth: SeasonalGrowth[] = [
+        { warriorId: 'w1' as WarriorId, season: 'Spring', gains: { ST: 1 } },
+      ];
       const result = updateSeasonalGains(growth, 'w1' as WarriorId, 'Spring', 'ST');
       expect(result).toHaveLength(1);
       expect(result[0]!.gains.ST).toBe(2);

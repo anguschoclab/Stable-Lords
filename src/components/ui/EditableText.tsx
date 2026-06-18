@@ -19,7 +19,6 @@ interface EditableTextProps {
   input class name,
   label,
 }.
-   * @returns The result.
    */
 
 /**
@@ -31,7 +30,6 @@ interface EditableTextProps {
   input class name,
   label,
 }.
- * @returns The result.
  */
 export function EditableText({
   value,

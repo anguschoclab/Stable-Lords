@@ -12,7 +12,17 @@ import { filterActive } from '@/utils/roster';
 /**
  * Defines the shape of stable reputation.
  */
-export type StableReputationInput = Pick<GameState, 'roster' | 'graveyard' | 'arenaHistory' | 'newsletter' | 'player' | 'fame' | 'trainingAssignments' | 'trainers'>;
+export type StableReputationInput = Pick<
+  GameState,
+  | 'roster'
+  | 'graveyard'
+  | 'arenaHistory'
+  | 'newsletter'
+  | 'player'
+  | 'fame'
+  | 'trainingAssignments'
+  | 'trainers'
+>;
 
 export interface StableReputation {
   fame: number; // 0-100: public acclaim

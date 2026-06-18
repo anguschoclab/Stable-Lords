@@ -17,7 +17,12 @@ describe('Owner Roster Worker', () => {
     } as unknown as GameState;
   });
 
-  const createRival = (id: string, personality: string, treasury: number, roster: Partial<any>[]): RivalStableData => {
+  const createRival = (
+    id: string,
+    personality: string,
+    treasury: number,
+    roster: Partial<any>[]
+  ): RivalStableData => {
     return {
       id,
       owner: {
@@ -80,7 +85,12 @@ describe('Owner Roster Worker', () => {
       ];
 
       const r1 = createRival('r1', 'Methodical', 1000, [
-        { id: 'w-0', status: 'Active', age: 26, career: { wins: 4, losses: 11, kills: 0, highestRank: 0 } },
+        {
+          id: 'w-0',
+          status: 'Active',
+          age: 26,
+          career: { wins: 4, losses: 11, kills: 0, highestRank: 0 },
+        },
       ]);
       r1.strategy!.intent = 'RECOVERY';
 
@@ -114,7 +124,7 @@ describe('Owner Roster Worker', () => {
       const mockRng = {
         next: vi.fn(() => 0.1), // This makes retirement chance hit
         pick: vi.fn((a) => a[0]),
-        uuid: vi.fn(() => 'id')
+        uuid: vi.fn(() => 'id'),
       } as any;
 
       const { updatedRivals, gazetteItems } = processAIRosterManagement(mockState, mockRng);
@@ -127,7 +137,9 @@ describe('Owner Roster Worker', () => {
     it('should recruit if roster size is below min (guaranteed if < 4)', () => {
       // Showman min is 7. Current active is 3. Recruit chance should be 1.0.
       const r1 = createRival('r1', 'Showman', 500, [
-        { status: 'Active' }, { status: 'Active' }, { status: 'Active' }
+        { status: 'Active' },
+        { status: 'Active' },
+        { status: 'Active' },
       ]);
 
       mockState.rivals = [r1];
@@ -141,7 +153,9 @@ describe('Owner Roster Worker', () => {
 
     it('should not recruit if intent is RECOVERY', () => {
       const r1 = createRival('r1', 'Showman', 500, [
-        { status: 'Active' }, { status: 'Active' }, { status: 'Active' }
+        { status: 'Active' },
+        { status: 'Active' },
+        { status: 'Active' },
       ]);
       r1.strategy!.intent = 'RECOVERY';
 
@@ -155,7 +169,7 @@ describe('Owner Roster Worker', () => {
       const r1 = createRival('r1', 'Showman', 500, [{ status: 'Active' }]);
       mockState.rivals = [r1];
       mockState.rivalries = [
-        { stableIdA: 'player-1', stableIdB: 'r1', intensity: 3, id: 'rv-1' } as any
+        { stableIdA: 'player-1', stableIdB: 'r1', intensity: 3, id: 'rv-1' } as any,
       ];
       // Force history to show player using a lot of Strikers
       mockState.arenaHistory = [
@@ -178,14 +192,17 @@ describe('Owner Roster Worker', () => {
 
       const { updatedRivals } = processAIRosterManagement(mockState);
       if (updatedRivals[0]!.roster.length > 1) {
-         // Should either be favoredStyle or philosophy default. SeededRNG usually hits stable paths.
-         expect(updatedRivals[0]!.roster[1]!.style).toBeDefined();
+        // Should either be favoredStyle or philosophy default. SeededRNG usually hits stable paths.
+        expect(updatedRivals[0]!.roster[1]!.style).toBeDefined();
       }
     });
 
     it('MetaChaser should pick from top meta styles', () => {
       // Setup meta to favor BashingAttack
-      mockState.cachedMetaDrift = { [FightingStyle.BashingAttack]: 5, [FightingStyle.StrikingAttack]: 1 } as any;
+      mockState.cachedMetaDrift = {
+        [FightingStyle.BashingAttack]: 5,
+        [FightingStyle.StrikingAttack]: 1,
+      } as any;
 
       const r1 = createRival('r1', 'Pragmatic', 500, [{ status: 'Active' }]);
       r1.owner.metaAdaptation = 'MetaChaser';
@@ -197,7 +214,10 @@ describe('Owner Roster Worker', () => {
     });
 
     it('Innovator should pick non-philosophy styles', () => {
-      mockState.cachedMetaDrift = { [FightingStyle.BashingAttack]: 5, [FightingStyle.StrikingAttack]: 1 } as any;
+      mockState.cachedMetaDrift = {
+        [FightingStyle.BashingAttack]: 5,
+        [FightingStyle.StrikingAttack]: 1,
+      } as any;
       const r1 = createRival('r1', 'Pragmatic', 500, [{ status: 'Active' }]);
       r1.owner.metaAdaptation = 'Innovator';
 

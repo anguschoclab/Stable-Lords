@@ -14,13 +14,7 @@ export type {
   StylePassiveContext,
   KillContext,
 } from './types';
-export type {
-  StyleVoice,
-  AttackFreq,
-  KillBias,
-  FatigueBurn,
-  StyleIdentity,
-} from './types';
+export type { StyleVoice, AttackFreq, KillBias, FatigueBurn, StyleIdentity } from './types';
 export type { MasteryTier, MasteryInfo } from './types';
 export { STYLE_IDENTITY, getStyleIdentity } from './identity';
 export { getMastery } from './mastery';

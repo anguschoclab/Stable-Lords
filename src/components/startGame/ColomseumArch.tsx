@@ -1,6 +1,5 @@
 /**
  * Colomseum arch.
- * @returns The result.
  */
 export default function ColomseumArch() {
   return (

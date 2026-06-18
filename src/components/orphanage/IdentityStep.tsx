@@ -18,7 +18,6 @@ interface IdentityStepProps {
   on back,
   on submit,
 }.
-   * @returns The result.
    */
 
 /**
@@ -31,7 +30,6 @@ interface IdentityStepProps {
   on back,
   on submit,
 }.
- * @returns The result.
  */
 export default function IdentityStep({
   ownerInput,

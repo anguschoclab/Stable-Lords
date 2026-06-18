@@ -8,15 +8,13 @@ interface WorldStatsProps {
   killCount: number;
   topStable: string;
 } /**
-   * World stats.
-   * @param - { stable count, warrior count, kill count, top stable }.
-   * @returns The result.
-   */
+ * World stats.
+ * @param - { stable count, warrior count, kill count, top stable }.
+ */
 
 /**
  * World stats.
  * @param - { stable count, warrior count, kill count, top stable }.
- * @returns The result.
  */
 export function WorldStats({ stableCount, warriorCount, killCount, topStable }: WorldStatsProps) {
   const stats = [

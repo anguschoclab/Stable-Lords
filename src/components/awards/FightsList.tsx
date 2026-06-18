@@ -8,7 +8,6 @@ import type { FightSummary } from '@/types/game'; /**
   fights,
   get round,
 }.
-                                                   * @returns The result.
                                                    */
 
 /**
@@ -17,7 +16,6 @@ import type { FightSummary } from '@/types/game'; /**
   fights,
   get round,
 }.
- * @returns The result.
  */
 export default function FightsList({
   fights,

@@ -7,21 +7,15 @@ import { findWarriorById, clearWarriorCache } from '@/engine/core/warriorLookup'
 
 // Re-export for backward compatibility
 export { findWarriorById, clearWarriorCache }; /**
-                                                * Get ai plan.
-                                                * @param state - State.
-                                                * @param w - W.
-                                                * @param opponentStyle - Opponent style. (optional)
-                                                * @param opponentOwnerId - Opponent owner id. (optional)
-                                                * @returns The result.
-                                                */
+ * Get ai plan.
+ * @param opponentStyle - Opponent style. (optional)
+ * @param opponentOwnerId - Opponent owner id. (optional)
+ */
 
 /**
  * Get ai plan.
- * @param state - State.
- * @param w - W.
  * @param opponentStyle - Opponent style. (optional)
  * @param opponentOwnerId - Opponent owner id. (optional)
- * @returns The result.
  */
 export function getAIPlan(
   state: GameState,
@@ -53,19 +47,11 @@ export function getAIPlan(
     grudgeIntensity
   );
 } /**
-   * Generate freelancer.
-   * @param tier - Tier.
-   * @param index - Index.
-   * @param rng - Rng.
-   * @returns The result.
-   */
+ * Generate freelancer.
+ */
 
 /**
  * Generate freelancer.
- * @param tier - Tier.
- * @param index - Index.
- * @param rng - Rng.
- * @returns The result.
  */
 export function generateFreelancer(tier: string, index: number, rng: SeededRNG): Warrior {
   const styles = Object.values(FightingStyle);

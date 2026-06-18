@@ -6,11 +6,7 @@ import { isExhausted, FATIGUE_FRESH, FATIGUE_ELEVATED } from '@/engine/core/fati
 import { toast } from 'sonner';
 import type { Warrior } from '@/types/state.types';
 import type { InjuryData } from '@/types/warrior.types';
-import {
-  Heart,
-  Clock,
-  AlertTriangle,
-} from 'lucide-react';
+import { Heart, Clock, AlertTriangle } from 'lucide-react';
 
 export function getFatigueStatus(fatigue: number): {
   label: string;
@@ -124,7 +120,11 @@ export function useBookingOffice() {
     let accepted = 0;
     honorableOffers.forEach((offer) => {
       const warrior = roster.find((w) => offer.warriorIds.includes(w.id));
-      if (warrior && !isExhausted(warrior.fatigue ?? 0) && !getInjuryBadge(warrior.injuries || [])) {
+      if (
+        warrior &&
+        !isExhausted(warrior.fatigue ?? 0) &&
+        !getInjuryBadge(warrior.injuries || [])
+      ) {
         handleResponse(offer.id, warrior.id, 'Accepted');
         accepted++;
       }

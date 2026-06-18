@@ -4,8 +4,8 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import Gazette from '@/pages/Gazette'; /**
-                                        * Route.
-                                        */
+ * Route.
+ */
 
 /**
  * Route.

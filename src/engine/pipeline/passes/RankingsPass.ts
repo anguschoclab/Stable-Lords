@@ -19,15 +19,11 @@ interface WarriorScore {
 
 // Pre-allocated arrays for style buckets to avoid repeated allocations
 const STYLE_BUCKETS: FightingStyle[] = Object.values(FightingStyle); /**
-                                                                      * Run rankings pass.
-                                                                      * @param state - State.
-                                                                      * @returns The result.
-                                                                      */
+ * Run rankings pass.
+ */
 
 /**
  * Run rankings pass.
- * @param state - State.
- * @returns The result.
  */
 export function runRankingsPass(state: GameState): StateImpact {
   // 1. Gather all active warriors from player and rivals using utility

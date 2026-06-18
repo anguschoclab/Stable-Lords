@@ -17,7 +17,6 @@ const WORLD_MATCHMAKING = 'WORLD_MATCHMAKING' as PromoterId;
  * Plan world bouts.
  * @param state - The current game state.
  * @param rng - RNG service.
- * @returns The result.
  */
 export function planWorldBouts(state: GameState, rng: IRNGService): BoutOffer[] {
   const eligibleWarriors: { warrior: Warrior; stable: RivalStableData }[] = [];

@@ -67,7 +67,6 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
   show full name = false,
   class name,
 }.
-   * @returns The result.
    */
 
 // ─── StatBadge ────────────────────────────────────────────────────────────
@@ -81,7 +80,6 @@ export function TagBadge({ tag, type, className }: TagBadgeProps) {
   show full name = false,
   class name,
 }.
- * @returns The result.
  */
 export function StatBadge({
   styleName,
@@ -115,7 +113,6 @@ export function StatBadge({
   use crown = false,
   is dead = false,
 }.
-   * @returns The result.
    */
 
 // ─── WarriorNameTag ───────────────────────────────────────────────────────
@@ -130,7 +127,6 @@ export function StatBadge({
   use crown = false,
   is dead = false,
 }.
- * @returns The result.
  */
 export function WarriorNameTag({
   id,

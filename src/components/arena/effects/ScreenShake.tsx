@@ -16,7 +16,6 @@ interface ScreenShakeProps {
   class name,
   children,
 }.
-   * @returns The result.
    */
 
 /**
@@ -28,7 +27,6 @@ interface ScreenShakeProps {
   class name,
   children,
 }.
- * @returns The result.
  */
 export default function ScreenShake({
   trigger,

@@ -30,15 +30,13 @@ import {
 interface LeaderboardProps {
   allFights: import('@/types/game').FightSummary[];
 } /**
-   * Gazette leaderboard.
-   * @param - { all fights }.
-   * @returns The result.
-   */
+ * Gazette leaderboard.
+ * @param - { all fights }.
+ */
 
 /**
  * Gazette leaderboard.
  * @param - { all fights }.
- * @returns The result.
  */
 export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
   const leaderData = useMemo(() => calculateLeaderboardData(allFights), [allFights]);
@@ -157,15 +155,13 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
     </Surface>
   );
 } /**
-   * Best by style.
-   * @param - { all fights }.
-   * @returns The result.
-   */
+ * Best by style.
+ * @param - { all fights }.
+ */
 
 /**
  * Best by style.
  * @param - { all fights }.
- * @returns The result.
  */
 export function BestByStyle({ allFights }: LeaderboardProps) {
   const styles = useMemo(
@@ -227,15 +223,13 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
     </Surface>
   );
 } /**
-   * Rising stars.
-   * @param - { all fights }.
-   * @returns The result.
-   */
+ * Rising stars.
+ * @param - { all fights }.
+ */
 
 /**
  * Rising stars.
  * @param - { all fights }.
- * @returns The result.
  */
 export function RisingStars({ allFights }: LeaderboardProps) {
   const stars = useMemo(() => calculateRisingStars(allFights), [allFights]);

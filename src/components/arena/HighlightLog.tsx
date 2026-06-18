@@ -98,7 +98,6 @@ interface HighlightEntry extends Highlight {
 
 /**
  * Render the HighlightLog component.
- * @returns The result.
  */
 function HighlightLog({ log, visibleCount }: Props) {
   const allHighlights = useMemo<HighlightEntry[]>(() => {

@@ -44,15 +44,13 @@ import SavedGamesSection from '@/components/startGame/SavedGamesSection';
 import { formatDate } from '@/utils/dateUtils';
 
 type Screen = 'title' | 'newGame'; /**
-                                    * Start game.
-                                    * @returns The result.
-                                    */
+ * Start game.
+ */
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 /**
  * Start game.
- * @returns The result.
  */
 export default function StartGame() {
   const { loadGame } = useGameStore();

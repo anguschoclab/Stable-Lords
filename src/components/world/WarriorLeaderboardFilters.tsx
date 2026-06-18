@@ -18,6 +18,7 @@ function FilterToggleButton({ active, onClick, label, ariaLabel }: FilterToggleB
     <button
       onClick={onClick}
       aria-label={ariaLabel}
+      aria-pressed={active}
       className={cn(
         'text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border transition-colors flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
         active ? ACTIVE_CLASSES : INACTIVE_CLASSES

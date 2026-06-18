@@ -17,3 +17,7 @@
 ## 2023-10-27 - [Focus Visible Standardization]
 **Learning:** Replaced `focus:outline-none` with `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` on many buttons and interactive elements. Using `focus-visible:` ensures keyboard navigation has clear focus states without triggering them on mouse clicks, improving both accessibility and visual design for pointer users.
 **Action:** When adding interactive elements, always consider keyboard focus states and prefer `focus-visible` over `focus` to reduce visual clutter for mouse users.
+
+## 2026-06-18 - [Accessible Filter Toggles]
+**Learning:** Filter buttons that act as toggle switches (such as those in `WarriorLeaderboardFilters`) require `aria-pressed` to properly announce their active state to screen readers. Visual indicators (like active/inactive CSS classes) are insufficient for non-visual users.
+**Action:** Always include `aria-pressed={active}` when building custom toggle buttons or filter chips to ensure screen reader users receive proper state feedback.

@@ -1,0 +1,42 @@
+[
+  {
+    "category": "slashing",
+    "text": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!"
+  },
+  {
+    "category": "bashing",
+    "text": "{{attacker}} lashes out with {{possessive}} {{weapon}} in a lightning quick assault!"
+  },
+  {
+    "category": "abdomen",
+    "text": "SOLAR PLEXUS"
+  },
+  {
+    "category": "desperate",
+    "text": "{{name}} is on the verge of collapse."
+  },
+  {
+    "category": "panic",
+    "text": "{{name}} appears DESPERATE!"
+  },
+  {
+    "category": "panic",
+    "text": "{{name}} begins to panic and fights desperately!"
+  },
+  {
+    "category": "panic",
+    "text": "{{name}} fights with the cunning of desperation!"
+  },
+  {
+    "category": "panic",
+    "text": "{{name}} is becoming frantic!!!"
+  },
+  {
+    "category": "panic",
+    "text": "{{name}} is becoming frantically careless!!!"
+  },
+  {
+    "category": "tier3_high",
+    "text": "{{defender}} curves snakelike away from the blow at the last instant!"
+  }
+]

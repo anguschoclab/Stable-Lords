@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { processTierProgression } from '@/engine/pipeline/core/tierProgression';
-import { GameState, RivalStableData } from '@/types/game';
+import { GameState } from '@/types/game';
 
 describe('processTierProgression', () => {
   const mockState = {

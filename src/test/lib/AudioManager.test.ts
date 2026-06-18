@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { audioManager, AudioManager } from '@/lib/AudioManager';
+import { AudioManager } from '@/lib/AudioManager';
 import '@/test/_setup/setup';
 
 // Mock Howler globally before any imports

@@ -61,7 +61,7 @@ describe('ExpansionService', () => {
     it('should integrate legacy founders when provided', () => {
       const legacyCandidates = [{ name: 'Legend', stableName: "Legend's Academy" }];
 
-      const { updatedState, newStables } = ExpansionService.processExpansion(
+      const { newStables } = ExpansionService.processExpansion(
         state,
         new SeededRNGService(12345),
         8,

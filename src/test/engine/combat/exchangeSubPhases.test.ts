@@ -239,7 +239,6 @@ describe('runRecovery — zone transitions', () => {
     const fD = makeFighter();
     const ctx: any = { zone: 'Corner', pushedFighter: 'A' };
     const events: any[] = [{ type: 'HIT', actor: 'D', target: 'A', location: 'torso', value: 10 }];
-    const initialEventCount = events.length;
     runRecovery(fA, fD, 0, 0, events, ctx);
     expect(ctx.zone).toBe('Corner');
     // No ZONE_SHIFT emitted since zone didn't change

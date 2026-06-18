@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { processAIStable } from '@/engine/ai/stableManager';
 import { computeWeeklyBreakdown } from '@/engine/economy';
-import type { GameState, RivalStableData, FightSummary } from '@/types/state.types';
+import type { RivalStableData, FightSummary } from '@/types/state.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import {
   FIGHT_PURSE,

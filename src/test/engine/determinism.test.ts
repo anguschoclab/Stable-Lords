@@ -45,9 +45,6 @@ describe('Simulation Determinism', () => {
     delete (currentB as any).cachedMetaDrift;
 
     // Use toEqual for deep comparison and clear diffs in Vitest output
-    const objA = JSON.parse(JSON.stringify(currentA));
-    const objB = JSON.parse(JSON.stringify(currentB));
-
     expect(currentA).toEqual(currentB);
   });
 

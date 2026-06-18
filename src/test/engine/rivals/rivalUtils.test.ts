@@ -79,11 +79,10 @@ describe('rivalUtils', () => {
 
       const run1 = pickRivalOpponent(rivals, new Set(), 12345);
       const run2 = pickRivalOpponent(rivals, new Set(), 12345);
-      const run3 = pickRivalOpponent(rivals, new Set(), 67890); // Different seed
+      pickRivalOpponent(rivals, new Set(), 67890); // Different seed
 
       expect(run1).not.toBeNull();
       expect(run1?.warrior.id).toBe(run2?.warrior.id); // Same seed, same result
-      // While it's possible run3 gives the same result by chance, we just want to ensure run1 === run2
     });
   });
 

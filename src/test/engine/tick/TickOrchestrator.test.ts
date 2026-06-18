@@ -11,11 +11,6 @@ vi.mock('@/engine/matchmaking/tournamentSelection', () => ({
 
 let spyAdvanceWeek: any;
 
-let spyTimeAdvanceQuarter: any;
-let spyTimeAdvanceSkipQuarter: any;
-let spyTimeAdvanceYear: any;
-let spyTimeAdvanceSkipYear: any;
-
 import { TickOrchestrator } from '@/engine/pipeline/tick/TickOrchestrator';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { GameState } from '@/types/state.types';
@@ -33,10 +28,6 @@ describe('TickOrchestrator', () => {
       ...state,
       treasury: 999,
     }));
-    spyTimeAdvanceQuarter = vi.spyOn(TimeAdvanceService, 'advanceQuarter').mockResolvedValue({} as any);
-    spyTimeAdvanceSkipQuarter = vi.spyOn(TimeAdvanceService, 'skipToQuarterEnd').mockResolvedValue({} as any);
-    spyTimeAdvanceYear = vi.spyOn(TimeAdvanceService, 'advanceYear').mockResolvedValue({} as any);
-    spyTimeAdvanceSkipYear = vi.spyOn(TimeAdvanceService, 'skipToYearEnd').mockResolvedValue({} as any);
   });
 
   describe('advanceDay', () => {

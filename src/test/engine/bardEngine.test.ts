@@ -96,13 +96,6 @@ describe('Bard Narrative Engine', () => {
         rng: rng,
       });
 
-      const output2 = blurb({
-        tone: 'hype',
-        winner: 'Caesar',
-        loser: 'Pompey',
-        rng: rng,
-      });
-
       expect(output1).toBeDefined();
       expect(output1).toContain('Caesar');
     });

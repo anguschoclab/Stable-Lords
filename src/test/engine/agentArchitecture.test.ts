@@ -50,7 +50,7 @@ describe('AI Agent Architecture - Skeptical Intent', () => {
 });
 
 import { verifyBoutAcceptance } from '@/engine/ai/workers/competitionWorker';
-import { type Warrior, type WeatherType, FightingStyle } from '@/types/game';
+import { type Warrior, FightingStyle } from '@/types/game';
 
 describe('AI Agent Architecture - Weather Skepticism', () => {
   const lungeWarrior = {

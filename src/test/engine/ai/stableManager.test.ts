@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { processAIStable } from '@/engine/ai/stableManager';
-import type { GameState, RivalStableData, FightSummary } from '@/types/state.types';
+import type { RivalStableData, FightSummary } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 

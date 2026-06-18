@@ -25,14 +25,13 @@ describe('partialRefreshPool', () => {
     const pool = [...week1Pool];
     pool[0]!.addedWeek = 1;
     pool[1]!.addedWeek = 2;
-    pool[2].addedWeek = 3;
+    pool[2]!.addedWeek = 3;
     // Set rest to 3
     for (let i = 3; i < pool.length; i++) {
       pool[i]!.addedWeek = 3;
     }
 
     const nextWeek = 4;
-    const initialSize = pool.length;
 
     const refreshedPool = partialRefreshPool(pool, nextWeek, usedNames);
 

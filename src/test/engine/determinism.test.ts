@@ -5,9 +5,12 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { TimeAdvanceService } from '@/engine/pipeline/tick/TimeAdvanceService';
 import { truncateState } from '@/engine/storage/truncation';
 
-// Mock the archiver adapter (used by weekPipelineService) to avoid disk I/O during tests
+// Mock the archiver adapter to avoid disk I/O during tests
 vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({
-  archiveWeekLogs: (state: unknown) => state,
+  flushDeferredArchivesOffThread: (state: unknown) => {
+    (state as any).deferredBoutLogs = [];
+    return state;
+  },
 }));
 
 describe('Simulation Determinism', () => {

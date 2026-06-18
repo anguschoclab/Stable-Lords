@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
-import { useGameStore, type GameStore } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
 import { processWeekBouts, type BoutResult } from '@/engine/bout';
 import type { AutosimResult } from '@/engine/autosim';
 import type { GameState } from '@/types/state.types';
@@ -22,7 +22,7 @@ export function useCombatExecution({
   matchCardLength,
   fightReadyLength,
 }: UseCombatExecutionParams) {
-  const { setState, doAdvanceDay, doAdvanceWeek, setSimulating } = useGameStore();
+  const { doAdvanceDay, doAdvanceWeek, setSimulating, loadGame } = useGameStore();
 
   const [showCombat, setShowCombat] = useState(false);
   const [results, setResults] = useState<BoutResult[]>([]);
@@ -78,12 +78,10 @@ export function useCombatExecution({
           onProgress: (currentWeek: number) => {
             setAutosimProgress({ current: currentWeek, total: weeks });
           },
-          deferArchives: true,
         });
         setAutosimResult(result);
-        setState((draft: GameStore) => {
-          Object.assign(draft, result.finalState);
-        });
+        const store = useGameStore.getState();
+        loadGame(store.activeSlotId || 'autosave', result.finalState);
       } catch (err) {
         console.error('Autosim failed', err);
         toast.error('Auto-simulation encountered an archive corruption.');
@@ -92,7 +90,7 @@ export function useCombatExecution({
         setSimulating(false);
       }
     },
-    [gameState, setState, autosimming, setSimulating]
+    [gameState, loadGame, autosimming, setSimulating]
   );
 
   return {

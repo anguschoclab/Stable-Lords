@@ -245,8 +245,8 @@ describe('TimeAdvanceService methods', () => {
       expect(onProgress).toHaveBeenNthCalledWith(13, 13, 13);
     });
 
-    it('should flush archives if deferArchives is true', async () => {
-      await TimeAdvanceService.advanceQuarter(mockState, { deferArchives: true });
+    it('should always flush archives', async () => {
+      await TimeAdvanceService.advanceQuarter(mockState);
       expect(opfsArchiver.flushDeferredArchivesOffThread).toHaveBeenCalledTimes(1);
     });
   });
@@ -290,7 +290,7 @@ describe('TimeAdvanceService methods', () => {
   });
 
   describe('skipToQuarterEnd', () => {
-    it('should call advanceQuarter with headless and deferArchives options', async () => {
+    it('should call advanceQuarter with headless mode', async () => {
       const startWeek = mockState.week;
       const result = await TimeAdvanceService.skipToQuarterEnd(mockState);
 
@@ -301,7 +301,7 @@ describe('TimeAdvanceService methods', () => {
   });
 
   describe('skipToYearEnd', () => {
-    it('should call advanceYear with headless and deferArchives options', async () => {
+    it('should call advanceYear with headless mode', async () => {
       const startWeek = mockState.week;
       const result = await TimeAdvanceService.skipToYearEnd(mockState);
 

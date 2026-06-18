@@ -68,8 +68,6 @@ export interface AutosimOptions {
   onProgress?: (current: number, total: number) => void;
   /** Use batch (quarter/year) advancement for better performance. */
   useBatchMode?: boolean;
-  /** Defer OPFS archiving during simulation */
-  deferArchives?: boolean;
 }
 
 /**
@@ -136,18 +134,16 @@ function checkBankruptcy(state: GameState): boolean {
 async function runSequentialAutosim(
   initialState: GameState,
   weeksToSim: number,
-  onProgress?: (current: number, total: number) => void,
-  deferArchives?: boolean
+  onProgress?: (current: number, total: number) => void
 ): Promise<AutosimResult> {
   let state = initialState;
   let weeksSimmed = 0;
   const weekSummaries: AutosimWeekSummary[] = [];
 
   for (let i = 0; i < weeksToSim; i++) {
-    // 1. Advance Week with headless mode and optional deferred archives
+    // 1. Advance Week with headless mode
     state = advanceWeek(state, {
       headless: true,
-      deferArchives,
     });
 
     // 2. Auto-Respond to Player Contracts
@@ -198,8 +194,7 @@ async function runSequentialAutosim(
 async function runBatchAutosim(
   initialState: GameState,
   weeksToSim: number,
-  onProgress?: (current: number, total: number) => void,
-  deferArchives?: boolean
+  onProgress?: (current: number, total: number) => void
 ): Promise<AutosimResult> {
   let state = initialState;
   let weeksSimmed = 0;
@@ -215,9 +210,7 @@ async function runBatchAutosim(
     // Run quarter with stop conditions
     const result = await TimeAdvanceService.advanceQuarter(state, {
       headless: true,
-      deferArchives,
       stopConditions: DEFAULT_AUTOSIM_STOP_CONDITIONS,
-      checkpointInterval: 1,
       onProgress: onProgress
         ? (completed) => onProgress(weeksSimmed + completed, weeksToSim)
         : undefined,
@@ -271,8 +264,7 @@ async function runBatchAutosim(
     const sequentialResult = await runSequentialAutosim(
       state,
       remainingWeeks,
-      onProgress ? (c, _t) => onProgress(weeksSimmed + c, weeksToSim) : undefined,
-      deferArchives
+      onProgress ? (c, _t) => onProgress(weeksSimmed + c, weeksToSim) : undefined
     );
 
     return {
@@ -306,7 +298,6 @@ export async function runAutosim(
   let weeksToSim: number;
   let onProgress: ((current: number, total: number) => void) | undefined;
   let useBatchMode = false;
-  let deferArchives = false;
 
   if (typeof options === 'number') {
     weeksToSim = options;
@@ -315,14 +306,13 @@ export async function runAutosim(
     weeksToSim = options.weeksToSim;
     onProgress = options.onProgress;
     useBatchMode = options.useBatchMode ?? false;
-    deferArchives = options.deferArchives ?? false;
   }
 
   // Use batch mode if requested
   if (useBatchMode) {
-    return runBatchAutosim(initialState, weeksToSim, onProgress, deferArchives);
+    return runBatchAutosim(initialState, weeksToSim, onProgress);
   }
 
   // Default: sequential mode
-  return runSequentialAutosim(initialState, weeksToSim, onProgress, deferArchives);
+  return runSequentialAutosim(initialState, weeksToSim, onProgress);
 }

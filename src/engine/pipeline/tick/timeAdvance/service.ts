@@ -19,7 +19,6 @@ export const TimeAdvanceService = {
   advanceWeek(state: GameState, opts?: AdvanceOptions): GameState {
     const weekOpts: WeekAdvanceOptions = {
       headless: opts?.headless,
-      deferArchives: opts?.deferArchives,
     };
     return advanceWeek(state, weekOpts);
   },
@@ -38,7 +37,6 @@ export const TimeAdvanceService = {
     for (let i = 0; i < 13; i++) {
       const weekOpts: WeekAdvanceOptions = {
         headless: opts?.headless,
-        deferArchives: opts?.deferArchives,
       };
       currentState = advanceWeek(currentState, weekOpts);
 
@@ -47,9 +45,7 @@ export const TimeAdvanceService = {
       if (opts?.stopConditions && (i + 1) % checkpointInterval === 0) {
         const stopResult = evaluateStopConditions(currentState, opts.stopConditions);
         if (stopResult.shouldStop) {
-          if (opts.deferArchives) {
-            flushDeferredArchivesOffThread(currentState);
-          }
+          flushDeferredArchivesOffThread(currentState);
           currentState = truncateState(currentState);
 
           const duration = performance.now() - startTime;
@@ -77,9 +73,7 @@ export const TimeAdvanceService = {
       }
     }
 
-    if (opts?.deferArchives) {
-      flushDeferredArchivesOffThread(currentState);
-    }
+    flushDeferredArchivesOffThread(currentState);
 
     currentState = truncateState(currentState);
 
@@ -137,7 +131,6 @@ export const TimeAdvanceService = {
     return this.advanceQuarter(state, {
       ...opts,
       headless: true,
-      deferArchives: true,
     });
   },
 
@@ -148,7 +141,6 @@ export const TimeAdvanceService = {
     return this.advanceYear(state, {
       ...opts,
       headless: true,
-      deferArchives: true,
     });
   },
 };

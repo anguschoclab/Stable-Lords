@@ -5,12 +5,6 @@ import { runAutosim } from '@/engine/autosim';
 
 // Mock the archiver to avoid disk I/O during perf tests
 vi.mock('@/engine/pipeline/adapters/opfsArchiver', () => ({
-  archiveWeekLogs: (state: unknown) => state,
-  flushDeferredArchives: async (state: unknown) => {
-    // Actually clear the deferred logs like the real implementation
-    (state as any).deferredBoutLogs = [];
-    return state;
-  },
   flushDeferredArchivesOffThread: (state: unknown) => {
     (state as any).deferredBoutLogs = [];
     return state;
@@ -28,7 +22,6 @@ describe('Pipeline Performance Benchmarks', () => {
 
     const result = await TimeAdvanceService.advanceQuarter(state, {
       headless: true,
-      deferArchives: true,
     });
 
     const endTime = performance.now();
@@ -45,7 +38,6 @@ describe('Pipeline Performance Benchmarks', () => {
     const headlessStart = performance.now();
     await TimeAdvanceService.advanceQuarter(state, {
       headless: true,
-      deferArchives: true,
     });
     const headlessDuration = performance.now() - headlessStart;
 
@@ -63,7 +55,6 @@ describe('Pipeline Performance Benchmarks', () => {
     const result = await runAutosim(state, {
       weeksToSim,
       useBatchMode: true,
-      deferArchives: true,
     });
 
     const endTime = performance.now();
@@ -83,7 +74,6 @@ describe('Pipeline Performance Benchmarks', () => {
     for (let q = 0; q < 4; q++) {
       const result = await TimeAdvanceService.advanceQuarter(currentState, {
         headless: true,
-        deferArchives: true,
       });
       currentState = result.state;
 
@@ -135,7 +125,6 @@ describe('Long-running Simulation Stress Tests', () => {
     const result = await runAutosim(state, {
       weeksToSim: totalWeeks,
       useBatchMode: true,
-      deferArchives: true,
     });
 
     // Just verify it completed some weeks without crashing

@@ -17,7 +17,6 @@ export interface AdvanceOptions {
   checkpointInterval?: number;
   stopConditions?: SoftStopCondition[];
   onProgress?: (weeksCompleted: number, totalWeeks: number) => void;
-  deferArchives?: boolean;
 }
 
 export interface WeekSummary {

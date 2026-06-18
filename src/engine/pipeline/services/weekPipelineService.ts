@@ -1,7 +1,6 @@
 import type { GameState, Warrior, BoutOffer } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { archiveWeekLogs } from '../adapters/opfsArchiver';
 import { computeMetaDrift } from '@/engine/metaDrift';
 import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
@@ -13,8 +12,6 @@ import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 export interface WeekAdvanceOptions {
   /** Skip UI-facing content generation (newsletters, gazettes) for headless mode */
   headless?: boolean;
-  /** Defer OPFS archiving - accumulate logs in state instead of writing immediately */
-  deferArchives?: boolean;
 }
 
 // 🌩️ Modular Pipeline Passes
@@ -166,8 +163,7 @@ function collectRemainingImpacts(
 function finalizeState(
   state: GameState,
   oldState: GameState,
-  ctx: WeekContext,
-  opts?: WeekAdvanceOptions
+  ctx: WeekContext
 ): GameState {
   state.week = ctx.nextWeek;
   state.year = ctx.nextYear;
@@ -196,37 +192,30 @@ function finalizeState(
     state.seasonalGrowth = (state.seasonalGrowth ?? []).filter((sg) => sg.season === state.season);
   }
 
-  // Handle OPFS archiving
-  if (opts?.deferArchives) {
-    // In batch mode, defer archives to state for later flushing
-    // Accumulate bout logs in state.deferredBoutLogs
-    const pendingArchives: Array<{
-      year: number;
-      season: number;
-      boutId: string;
-      transcript: string[];
-    }> = [];
-    for (const summary of state.arenaHistory || []) {
-      if (summary.transcript && summary.transcript.length > 0 && summary.week === ctx.currentWeek) {
-        const seasonIdx = ['Spring', 'Summer', 'Fall', 'Winter'].indexOf(state.season);
-        pendingArchives.push({
-          year: state.year,
-          season: seasonIdx >= 0 ? seasonIdx : 0,
-          boutId: summary.id,
-          transcript: summary.transcript,
-        });
-        // Clear transcript to save memory
-        summary.transcript = undefined;
-      }
+  // Handle OPFS archiving — always defer to off-thread flush for consistency
+  const pendingArchives: Array<{
+    year: number;
+    season: number;
+    boutId: string;
+    transcript: string[];
+  }> = [];
+  for (const summary of state.arenaHistory || []) {
+    if (summary.transcript && summary.transcript.length > 0 && summary.week === ctx.currentWeek) {
+      const seasonIdx = ['Spring', 'Summer', 'Fall', 'Winter'].indexOf(state.season);
+      pendingArchives.push({
+        year: state.year,
+        season: seasonIdx >= 0 ? seasonIdx : 0,
+        boutId: summary.id,
+        transcript: summary.transcript,
+      });
+      // Clear transcript to save memory
+      summary.transcript = undefined;
     }
-
-    // Store in state for batch flushing
-    state.deferredBoutLogs = [...(state.deferredBoutLogs || []), ...pendingArchives];
-    return state;
   }
 
-  // Normal mode: archive immediately
-  return archiveWeekLogs(state);
+  // Store in state for batch flushing
+  state.deferredBoutLogs = [...(state.deferredBoutLogs || []), ...pendingArchives];
+  return state;
 }
 
 /**
@@ -250,11 +239,11 @@ export function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): GameSt
   if (checkBankruptcy(settledState, coreImpacts) || settledState.roster.length === 0) {
     // Always apply world pass so season/weather advance even on stop conditions
     const stopImpacts: StateImpact[] = [...coreImpacts, runWorldPass(settledState, ctx.nextWeek, ctx.rootRng)];
-    return finalizeState(resolveImpacts(settledState, stopImpacts), state, ctx, opts);
+    return finalizeState(resolveImpacts(settledState, stopImpacts), state, ctx);
   }
 
   // Stage the pipeline: apply core impacts BEFORE running remaining passes
   const stateAfterCore = resolveImpacts(settledState, coreImpacts);
   const remainingImpacts = collectRemainingImpacts(stateAfterCore, ctx, { headless });
-  return finalizeState(resolveImpacts(stateAfterCore, remainingImpacts), state, ctx, opts);
+  return finalizeState(resolveImpacts(stateAfterCore, remainingImpacts), state, ctx);
 }

@@ -7,6 +7,7 @@ import { type BoutResult } from '@/engine/bout';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
 import { opfsArchive } from '@/engine/storage/opfsArchive';
+import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
 import { stripNonSerializable, reconstructGameState } from './serialization';
 import type { GameStore } from './store.types';
 
@@ -146,6 +147,7 @@ export const useGameStore = create<GameStore>()(
             next = await Promise.race([engineProxy.advanceWeek(cleanState), timeout]);
           }
 
+          next = flushDeferredArchivesOffThread(next);
           next.phase = 'resolution';
           const resolutionPayload = {
             bouts: results || [],
@@ -192,8 +194,9 @@ export const useGameStore = create<GameStore>()(
         });
 
         try {
-          const next = await engineProxy.advanceDay(cleanState);
+          let next = await engineProxy.advanceDay(cleanState);
 
+          next = flushDeferredArchivesOffThread(next);
           next.phase = 'resolution';
           const resolutionPayload = {
             bouts: results || [],

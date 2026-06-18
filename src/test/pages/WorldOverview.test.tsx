@@ -41,7 +41,7 @@ const defaultStoreState = {
 vi.mock('@/state/useGameStore', () => {
   const isBookmarkedMock = vi.fn().mockReturnValue(false);
   return {
-    useGameStore: (selector) => {
+    useGameStore: (selector: any) => {
         const store = { ...defaultStoreState, ...storeOverride, isBookmarked: isBookmarkedMock };
         return selector ? selector(store) : store;
     },

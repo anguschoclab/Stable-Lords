@@ -48,9 +48,9 @@ const defaultStoreState = {
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: () => ({
+    isBookmarked: vi.fn().mockReturnValue(false),
     ...defaultStoreState,
     ...storeOverride,
-    isBookmarked: vi.fn().mockReturnValue(false),
     setState: vi.fn((fn: (draft: any) => void) => {
       fn(storeOverride);
     }),

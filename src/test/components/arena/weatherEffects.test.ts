@@ -7,7 +7,7 @@ import { WEATHER_VISUALS } from '@/components/arena/weatherEffects';
  * every weather has a particle/overlay effect except the deliberately-neutral
  * Clear and Overcast conditions.
  */
-const NEUTRAL_WEATHERS = ['Clear', 'Overcast', 'Rainbow'];
+const NEUTRAL_WEATHERS = ['Clear', 'Overcast', 'Rainbow', 'Blood Fog'];
 
 describe('WEATHER_VISUALS', () => {
   it('only Clear and Overcast are neutral (null)', () => {

@@ -10,7 +10,7 @@ describe('TierProgression', () => {
 
   beforeEach(() => {
     mockState = {
-      season: 1,
+      season: 'Spring',
       week: 1,
       meta: { createdAt: new Date(0).toISOString() },
       rivals: [],

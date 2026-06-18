@@ -8,9 +8,9 @@ import type { FightSummary } from '@/types/combat.types';
 
 const createTestStore = () =>
   create<WorldSlice & EconomySlice>()(
-    immer((set) => ({
-      ...createWorldSlice(set as any, {} as any, {} as any),
-      ...createEconomySlice(set as any, {} as any, {} as any),
+    immer((set, get, api) => ({
+      ...createWorldSlice(set as any, get as any, api as any),
+      ...createEconomySlice(set as any, get as any, api as any),
     })) as any
   ) as any;
 

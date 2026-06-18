@@ -7,8 +7,8 @@ import { act } from '@testing-library/react';
 // Mock store for testing the slice in isolation
 const createTestStore = () =>
   create<EconomySlice>()(
-    immer((set) => ({
-      ...createEconomySlice(set as any, {} as any, {} as any),
+    immer((set, get, api) => ({
+      ...createEconomySlice(set as any, get as any, api as any),
       // Mock the minimal state needed by the slice
       week: 1,
     })) as any

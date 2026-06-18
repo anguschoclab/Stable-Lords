@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { GameState, RivalStableData } from '@/types/state.types';
+import type { RivalStableData } from '@/types/state.types';
 import type { StableReputationInput } from '@/engine/stableReputation';
 import { computeStableReputation, computeRivalReputation } from '@/engine/stableReputation';
 

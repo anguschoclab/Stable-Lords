@@ -364,6 +364,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Wildfire Smoke': 'A thick blanket of acrid smoke settles over the sands. Every breath burns.',
   'Gravity Anomaly': 'The very air feels unnaturally light, then crushingly heavy. The laws of physics are breaking down.',
   'Blood Fog': 'A thick, crimson fog rolls across the arena, smelling of rust and death.',
+  'Shimmering Heat': 'The air ripples with shimmering heat, distorting every shape upon the sands.',
 };
 
 /**

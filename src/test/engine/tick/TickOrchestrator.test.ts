@@ -28,6 +28,12 @@ describe('TickOrchestrator', () => {
       ...state,
       treasury: 999,
     }));
+    // TickOrchestrator's quarter/year methods delegate to TimeAdvanceService;
+    // spy on them so the delegation assertions have a spy to observe.
+    vi.spyOn(TimeAdvanceService, 'advanceQuarter').mockResolvedValue({} as any);
+    vi.spyOn(TimeAdvanceService, 'skipToQuarterEnd').mockResolvedValue({} as any);
+    vi.spyOn(TimeAdvanceService, 'advanceYear').mockResolvedValue({} as any);
+    vi.spyOn(TimeAdvanceService, 'skipToYearEnd').mockResolvedValue({} as any);
   });
 
   describe('advanceDay', () => {

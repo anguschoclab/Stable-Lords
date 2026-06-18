@@ -4,9 +4,10 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useQuadrantDots } from '@/hooks/useQuadrantDots';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import * as stableReputation from '@/engine/stableReputation';
+import type { StableReputationInput } from '@/engine/stableReputation';
 
 beforeEach(() => {
-  vi.spyOn(stableReputation, 'computeStableReputation').mockImplementation((state: GameState) => ({
+  vi.spyOn(stableReputation, 'computeStableReputation').mockImplementation((state: StableReputationInput) => ({
     fame: state.fame ?? 0,
     notoriety: 50,
     honor: 50,

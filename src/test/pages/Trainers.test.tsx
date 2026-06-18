@@ -50,6 +50,7 @@ vi.mock('@/state/useGameStore', () => ({
   useGameStore: () => ({
     ...defaultStoreState,
     ...storeOverride,
+    isBookmarked: vi.fn().mockReturnValue(false),
     setState: vi.fn((fn: (draft: any) => void) => {
       fn(storeOverride);
     }),

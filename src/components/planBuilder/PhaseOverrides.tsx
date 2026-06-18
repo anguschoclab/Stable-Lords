@@ -42,7 +42,6 @@ export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesPro
                 </span>
                 {plan.phases?.[p] && (
                   <button
-                    aria-label="Remove phase override"
                     onClick={() => {
                       if (!plan.phases) return;
                       const { [p]: _, ...rest } = plan.phases;

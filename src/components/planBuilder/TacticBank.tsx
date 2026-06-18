@@ -59,7 +59,6 @@ export default function TacticBank({ plan, onPlanChange }: TacticBankProps = {})
                 ? 'bg-arena-blood/20 border-arena-blood/60 text-foreground'
                 : 'bg-white/5 border-white/10 text-muted-foreground hover:border-arena-gold/40 hover:text-foreground hover:scale-[1.02] hover:shadow-[0_4px_12px_rgba(189,138,36,0.15)] active:scale-[0.98] active:shadow-none'
             )}
-            aria-label={'Select tactic ' + t.label}
           >
             <t.icon className="w-4 h-4 shrink-0" />
             {t.label}

@@ -120,7 +120,6 @@ export default function SpatialControls({ plan, warrior, onPlanChange }: Spatial
                     ? 'bg-arena-steel/20 border-arena-steel/60 text-arena-steel'
                     : 'bg-black/40 border-white/10 text-muted-foreground hover:border-white/30'
                 )}
-                aria-label={'Set preferred distance to ' + r}
               >
                 {r}
                 {isNatural && (

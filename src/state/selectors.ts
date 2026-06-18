@@ -1,3 +1,4 @@
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from './useGameStore';
 import { reconstructGameState } from './serialization';
 
@@ -15,6 +16,20 @@ export const useTreasury = () => useGameStore((s) => s.treasury);
 export const useWeek = () => useGameStore((s) => s.week);
 
 export const useIsSimulating = () => useGameStore((s) => s.isSimulating);
+
+export const useReputationState = () =>
+  useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      arenaHistory: s.arenaHistory,
+      newsletter: s.newsletter,
+      player: s.player,
+      fame: s.fame,
+      trainingAssignments: s.trainingAssignments,
+      trainers: s.trainers,
+    }))
+  );
 
 /** --- Computed Selectors (Derived State) --- */
 interface StyleStatsRow {

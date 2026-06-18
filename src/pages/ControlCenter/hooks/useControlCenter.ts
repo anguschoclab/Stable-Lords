@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useReputationState } from '@/state/selectors';
 import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { computeStableReputation } from '@/engine/stableReputation';
@@ -59,7 +60,7 @@ export function useControlCenter() {
     return best;
   }, [roster, realmRankings]);
 
-  const worldState = useWorldState();
+  const worldState = useReputationState();
   const rep = useMemo(() => computeStableReputation(worldState), [worldState]);
 
   return {

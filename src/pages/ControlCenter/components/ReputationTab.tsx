@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
-import { useWorldState } from '@/state/useGameStore';
+import { useReputationState } from '@/state/selectors';
 import { computeStableReputation } from '@/engine/stableReputation';
 import { Star, Skull, Shield, Zap } from 'lucide-react';
 
 export function ReputationTab() {
-  const worldState = useWorldState();
+  const worldState = useReputationState();
   const rep = useMemo(() => computeStableReputation(worldState), [worldState]);
 
   const dims: {

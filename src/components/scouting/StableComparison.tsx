@@ -68,8 +68,6 @@ export function StableComparison({ rivals }: StableComparisonProps) {
             />
 
             <AverageAttributesSection
-              rivalA={rivalA}
-              rivalB={rivalB}
               statsA={statsA}
               statsB={statsB}
               maxAttr={maxAttr}

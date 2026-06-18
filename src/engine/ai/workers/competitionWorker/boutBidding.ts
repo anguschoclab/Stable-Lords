@@ -66,6 +66,7 @@ export function generateBoutBids(
     activeTournamentId: undefined,
     realmRankings: {},
     awards: [],
+    bookmarks: [],
   };
 
   for (const warrior of activeRoster) {

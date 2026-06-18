@@ -108,6 +108,7 @@ describe('weatherEffects', () => {
         'Wildfire Smoke',
         'Gravity Anomaly',
         'Blood Fog',
+        'Shimmering Heat',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -188,6 +189,7 @@ describe('weatherEffects', () => {
         'Zephyr',
         'Wildfire Smoke',
         'Blood Fog',
+        'Shimmering Heat',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);

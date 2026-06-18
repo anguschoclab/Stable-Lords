@@ -288,6 +288,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.25,
     description: 'A crimson fog obscures vision and incites a frantic, bloody panic.',
   },
+  'Shimmering Heat': {
+    staminaMult: 1.2,
+    initiativeMod: -2,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'A rippling heatwave blurs vision and exhausts combatants.',
+  },
 };
 
 /**

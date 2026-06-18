@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { fameFromTags } from '@/engine/fame';
-import { FightingStyle, type Warrior, type FightPlan } from '@/types/game';
+import { FightingStyle, type Warrior, type FightPlan, type WarriorId } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -19,7 +19,7 @@ function makeWarrior(
   const full = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10, ...attrs };
   const { baseSkills, derivedStats } = computeWarriorStats(full, style);
   return {
-    id: `test_${name}`,
+    id: `test_${name}` as WarriorId,
     name,
     style,
     attributes: full,
@@ -30,6 +30,7 @@ function makeWarrior(
     titles: [],
     injuries: [],
     flair: [],
+    traits: [],
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: 'Active',
@@ -277,14 +278,14 @@ describe('simulateFight — endurance and exhaustion', () => {
       makePlan(FightingStyle.StrikingAttack, { OE: 3, AL: 3 }),
       makePlan(FightingStyle.StrikingAttack, { OE: 3, AL: 3 }),
       w,
-      { ...w, id: 'test2', name: 'Test2' },
+      { ...w, id: 'test2' as WarriorId, name: 'Test2' },
       42
     );
     const rAggressive = simulateFight(
       makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }),
       makePlan(FightingStyle.StrikingAttack, { OE: 10, AL: 10 }),
       w,
-      { ...w, id: 'test2', name: 'Test2' },
+      { ...w, id: 'test2' as WarriorId, name: 'Test2' },
       42
     );
 

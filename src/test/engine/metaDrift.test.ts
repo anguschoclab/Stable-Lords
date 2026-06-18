@@ -5,19 +5,19 @@ import {
   getMetaLabel,
   getMetaColor,
 } from '@/engine/metaDrift';
-import { FightingStyle, type FightSummary } from '@/types/game';
+import { FightingStyle, type FightSummary, type FightId, type WarriorId } from '@/types/game';
 
 function makeFight(overrides: Partial<FightSummary>): FightSummary {
   return {
-    id: 'f1',
+    id: 'f1' as FightId,
     week: 1,
     title: 'Test Fight',
-    a: 'Warrior A',
-    d: 'Warrior D',
     winner: 'A',
     by: 'KO',
-    warriorIdA: 'w1',
-    warriorIdD: 'w2',
+    warriorIdA: 'w1' as WarriorId,
+    warriorIdD: 'w2' as WarriorId,
+    styleA: 'Striking',
+    styleD: 'Striking',
     createdAt: new Date().toISOString(),
     ...overrides,
   };

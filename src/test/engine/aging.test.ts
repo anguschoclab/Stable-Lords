@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { computeAgingImpact } from '@/engine/aging';
 import { resolveImpacts } from '@/engine/impacts';
-import type { GameState, Warrior, Attributes } from '@/types/game';
+import type { GameState, Warrior, Attributes, WarriorId } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import { SeededRNGService } from '@/utils/random';
@@ -22,7 +22,7 @@ function makeWarrior(id: string, age: number, attrs: Partial<Attributes> = {}): 
   const { baseSkills, derivedStats } = computeWarriorStats(fullAttrs, FightingStyle.StrikingAttack);
 
   return {
-    id,
+    id: id as WarriorId,
     name: `Warrior ${id}`,
     style: FightingStyle.StrikingAttack,
     attributes: fullAttrs,
@@ -33,6 +33,7 @@ function makeWarrior(id: string, age: number, attrs: Partial<Attributes> = {}): 
     titles: [],
     injuries: [],
     flair: [],
+    traits: [],
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: 'Active',

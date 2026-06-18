@@ -5,6 +5,7 @@
  */
 import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
+import type { WarriorId } from '@/types/game';
 
 // Mock localStorage for Vitest since autosim triggers stat rollup saves
 import { runAutosim } from '@/engine/autosim';
@@ -15,7 +16,7 @@ function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Wa
   const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
   return {
-    id,
+    id: id as WarriorId,
     name,
     style: FightingStyle.StrikingAttack,
     attributes: attrs,
@@ -26,6 +27,7 @@ function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Wa
     titles: [],
     injuries: [],
     flair: [],
+    traits: [],
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: 'Active',

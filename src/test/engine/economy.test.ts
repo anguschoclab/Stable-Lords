@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { computeWeeklyBreakdown, computeEconomyImpact } from '@/engine/economy';
 import { resolveImpacts } from '@/engine/impacts';
-import type { GameState, Warrior } from '@/types/game';
+import type { GameState, Warrior, WarriorId } from '@/types/game';
 import { FightingStyle, type FightSummary } from '@/types/game';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { generateId } from '@/utils/idUtils';
@@ -70,7 +70,7 @@ describe('Economy Engine', () => {
 
     it('should calculate correct income for fight purses, win bonuses, and fame', () => {
       const state = { ...baseState, week: 5, fame: 10 };
-      const w1 = makeTestWarrior({ name: 'Alice', id: 'p1' });
+      const w1 = makeTestWarrior({ name: 'Alice', id: 'p1' as WarriorId });
       state.roster = [w1];
 
       state.arenaHistory = [

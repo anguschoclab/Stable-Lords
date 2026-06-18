@@ -7,12 +7,13 @@ import {
   filterByStatus,
 } from '@/utils/roster';
 import type { GameState, Warrior } from '@/types/state.types';
+import type { WarriorId } from '@/types/game';
 import { FightingStyle } from '@/types/shared.types';
 
 // Helper to create minimal warrior for testing
 function createTestWarrior(id: string, name: string, status: string): Warrior {
   return {
-    id,
+    id: id as WarriorId,
     name,
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
@@ -23,6 +24,7 @@ function createTestWarrior(id: string, name: string, status: string): Warrior {
     titles: [],
     injuries: [],
     flair: [],
+    traits: [],
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: status as any,

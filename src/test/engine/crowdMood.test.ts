@@ -1,17 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { getMoodModifiers, computeCrowdMood } from '@/engine/crowdMood';
-import type { FightSummary } from '@/types/game';
+import type { FightSummary, FightId, WarriorId } from '@/types/game';
 
 // Helper to easily create a mocked FightSummary
 function createMockFight(overrides: Partial<FightSummary> = {}): FightSummary {
   return {
-    id: 'test-fight',
+    id: 'test-fight' as FightId,
     week: 1,
     title: 'Test Bout',
-    a: 'Warrior A',
-    d: 'Warrior B',
-    warriorIdA: 'wa-a',
-    warriorIdD: 'wa-d',
+    warriorIdA: 'wa-a' as WarriorId,
+    warriorIdD: 'wa-d' as WarriorId,
     winner: 'A',
     by: 'KO',
     styleA: 'Brawler' as any,

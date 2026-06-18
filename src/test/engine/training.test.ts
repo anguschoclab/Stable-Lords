@@ -98,7 +98,7 @@ function makeState(overrides?: Partial<GameState>): GameState {
     realmRankings: {},
     awards: [],
     ...overrides,
-  };
+  } as unknown as GameState;
 }
 
 describe('Training System', () => {

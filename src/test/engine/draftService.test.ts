@@ -56,7 +56,7 @@ function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {
     },
     lineage: { generation: 1, pedigree: 'Commoner' },
     ...overrides,
-  };
+  } as any;
 }
 
 function makeMinimalGameState(overrides: Partial<GameState> = {}): GameState {

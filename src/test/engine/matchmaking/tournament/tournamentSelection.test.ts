@@ -116,7 +116,7 @@ function makeBaseState(): GameState {
     coachDismissed: [],
     rivalMap: new Map(),
     warriorMap: new Map(),
-  } as GameState;
+  } as unknown as GameState;
 }
 
 function makeTestWarrior(

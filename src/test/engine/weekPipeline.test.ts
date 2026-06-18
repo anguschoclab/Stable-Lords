@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { processTierProgression } from '@/engine/pipeline/core/tierProgression';
 import { GameState } from '@/types/game';
+import { type StableId } from '@/types/shared.types';
 
 describe('processTierProgression', () => {
   const mockState = {
@@ -32,7 +33,7 @@ describe('processTierProgression', () => {
     expect(impact.rivalsUpdates).toBeInstanceOf(Map);
 
     // Should promote rival from Minor to Established
-    const rivalUpdate = impact.rivalsUpdates?.get('rival-1');
+    const rivalUpdate = impact.rivalsUpdates?.get('rival-1' as StableId);
     expect(rivalUpdate).toBeDefined();
     expect(rivalUpdate?.tier).toBe('Established');
 

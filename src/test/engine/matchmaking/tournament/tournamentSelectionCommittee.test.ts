@@ -6,7 +6,7 @@ import { committeeSelection } from '@/engine/matchmaking/tournamentSelection/com
 import { TOURNAMENT_TIERS } from '@/engine/matchmaking/tournamentSelection/core';
 import { resolveImpacts } from '@/engine/impacts';
 import { GameState } from '@/types/state.types';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type WarriorId } from '@/types/shared.types';
 
 describe('TournamentSelectionCommittee', () => {
   let state: GameState;
@@ -46,7 +46,7 @@ describe('TournamentSelectionCommittee', () => {
     it('should include the best ranked warrior', () => {
       const { warriors } = committeeSelection(state, 'Gold', 1, new Set());
       const bestRankedId = Object.keys(state.realmRankings).find(
-        (id) => state.realmRankings[id]?.overallRank === 1
+        (id) => state.realmRankings[id as WarriorId]?.overallRank === 1
       );
       if (!bestRankedId) {
         throw new Error('No best ranked warrior found');

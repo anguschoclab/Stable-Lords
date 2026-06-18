@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateTestState } from '@/test/_setup/testHelpers';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
+import { resolveImpacts } from '@/engine/impacts';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { GameState } from '@/types/state.types';
 
@@ -12,7 +13,8 @@ describe('NCAA-style Tournament Selection Committee', () => {
     state = createFreshState('test-seed');
     state = populateTestState(state);
     // Committee depends on rankings cache
-    state = runRankingsPass(state);
+    const rankingsImpact = runRankingsPass(state);
+    state = resolveImpacts(state, [rankingsImpact]);
     // Ensure roster and rivals exist
     if (!state.roster) state.roster = [];
     if (!state.rivals) state.rivals = [];

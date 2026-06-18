@@ -15,7 +15,7 @@ const localStorageMock = (() => {
       const newStore: Record<string, string> = {};
       for (const k in store) {
         if (k !== key) {
-          newStore[k] = store[k];
+          newStore[k] = store[k]!;
         }
       }
       store = newStore;

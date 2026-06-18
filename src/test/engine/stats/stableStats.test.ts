@@ -24,6 +24,7 @@ const createMockWarrior = (
     titles: [],
     injuries: [],
     flair: [],
+    traits: [],
     career: { wins, losses, kills: 0 },
     attributes: {
       ST: 10,

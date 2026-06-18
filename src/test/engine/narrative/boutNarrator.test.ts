@@ -17,7 +17,7 @@ describe('BoutNarrator', () => {
         height: 72,
       };
 
-      const lines = BoutNarrator.generateWarriorIntro(rng, data, 72);
+      const lines = BoutNarrator.generateWarriorIntro(rng, data as any, 72);
 
       expect(Array.isArray(lines)).toBe(true);
       expect(lines.length).toBeGreaterThan(0);

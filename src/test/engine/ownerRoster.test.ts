@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import type { GameState, RivalStableData } from '@/types/state.types';
-import type { RivalWarrior } from '@/types/warrior.types';
 import { FightingStyle } from '@/types/shared.types';
 
 describe('Owner Roster Worker', () => {
@@ -18,7 +17,7 @@ describe('Owner Roster Worker', () => {
     } as unknown as GameState;
   });
 
-  const createRival = (id: string, personality: string, treasury: number, roster: Partial<RivalWarrior>[]): RivalStableData => {
+  const createRival = (id: string, personality: string, treasury: number, roster: Partial<any>[]): RivalStableData => {
     return {
       id,
       owner: {
@@ -40,7 +39,7 @@ describe('Owner Roster Worker', () => {
         career: w.career || { wins: 0, losses: 0, kills: 0, highestRank: 0 },
         age: w.age || 20,
         ...w,
-      })) as RivalWarrior[],
+      })),
       ledger: [],
       trainingAssignments: [],
     } as unknown as RivalStableData;
@@ -185,8 +184,8 @@ describe('Owner Roster Worker', () => {
     });
 
     it('MetaChaser should pick from top meta styles', () => {
-      // Setup meta to favor Grappler
-      mockState.cachedMetaDrift = { [FightingStyle.Grappler]: 5, [FightingStyle.StrikingAttack]: 1 } as any;
+      // Setup meta to favor BashingAttack
+      mockState.cachedMetaDrift = { [FightingStyle.BashingAttack]: 5, [FightingStyle.StrikingAttack]: 1 } as any;
 
       const r1 = createRival('r1', 'Pragmatic', 500, [{ status: 'Active' }]);
       r1.owner.metaAdaptation = 'MetaChaser';
@@ -198,7 +197,7 @@ describe('Owner Roster Worker', () => {
     });
 
     it('Innovator should pick non-philosophy styles', () => {
-      mockState.cachedMetaDrift = { [FightingStyle.Grappler]: 5, [FightingStyle.StrikingAttack]: 1 } as any;
+      mockState.cachedMetaDrift = { [FightingStyle.BashingAttack]: 5, [FightingStyle.StrikingAttack]: 1 } as any;
       const r1 = createRival('r1', 'Pragmatic', 500, [{ status: 'Active' }]);
       r1.owner.metaAdaptation = 'Innovator';
 

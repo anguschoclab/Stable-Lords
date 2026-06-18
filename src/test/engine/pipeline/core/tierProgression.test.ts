@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { processTierProgression } from '@/engine/pipeline/core/tierProgression';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import type { RivalWarrior } from '@/types/warrior.types';
 import type { StableId } from '@/types/shared.types';
 
 describe('TierProgression', () => {
@@ -25,7 +24,7 @@ describe('TierProgression', () => {
   const createRival = (
     id: string,
     tier: RivalStableData['tier'],
-    roster: Partial<RivalWarrior>[]
+    roster: any[]
   ): RivalStableData => {
     return {
       id: id as StableId,
@@ -35,12 +34,12 @@ describe('TierProgression', () => {
         ...w,
         status: w.status || 'Active',
         career: w.career || { wins: 0, losses: 0, kills: 0, highestRank: 0 },
-      })) as RivalWarrior[],
+      })) as any[],
     } as RivalStableData;
   };
 
   it('should not process progression if season has not changed', () => {
-    const impact = processTierProgression(mockState, 1, 1, mockRng);
+    const impact = processTierProgression(mockState, 'Spring', 1, mockRng);
     expect(impact).toEqual({});
   });
 
@@ -56,7 +55,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.get('r1' as StableId)?.tier).toBe('Established');
       expect(impact.newsletterItems?.[0]!.items[0]).toContain('risen to Established status');
     });
@@ -72,7 +71,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.size).toBe(0);
       expect(impact.newsletterItems).toBeUndefined();
     });
@@ -92,7 +91,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.get('r2' as StableId)?.tier).toBe('Major');
       expect(impact.newsletterItems?.[0]!.items[0]).toContain('ascends to Major stable status');
     });
@@ -106,7 +105,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.get('r2' as StableId)?.tier).toBe('Minor');
       expect(impact.newsletterItems?.[0]!.items[0]).toContain('falls to Minor status');
     });
@@ -121,7 +120,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.size).toBe(0);
     });
   });
@@ -137,7 +136,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.get('r3' as StableId)?.tier).toBe('Established');
       expect(impact.newsletterItems?.[0]!.items[0]).toContain('downgraded to Established');
     });
@@ -152,7 +151,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.size).toBe(0);
     });
   });
@@ -165,7 +164,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.size).toBe(0);
     });
   });
@@ -182,7 +181,7 @@ describe('TierProgression', () => {
         ]),
       ];
 
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
       expect(impact.rivalsUpdates?.get('r_none' as StableId)?.tier).toBe('Established');
     });
 
@@ -194,15 +193,15 @@ describe('TierProgression', () => {
       ];
 
       // No mock RNG provided
-      const impact = processTierProgression(mockState, 2, 1);
+      const impact = processTierProgression(mockState, 'Summer', 1);
 
       expect(impact.rivalsUpdates?.get('r1' as StableId)?.tier).toBe('Minor');
       expect(impact.newsletterItems?.[0]!.id).toBeDefined();
     });
 
     it('should handle undefined rivals list safely', () => {
-      delete mockState.rivals;
-      const impact = processTierProgression(mockState, 2, 1, mockRng);
+      mockState.rivals = undefined as any;
+      const impact = processTierProgression(mockState, 'Summer', 1, mockRng);
 
       expect(impact.rivalsUpdates?.size).toBe(0);
       expect(impact.newsletterItems).toBeUndefined();

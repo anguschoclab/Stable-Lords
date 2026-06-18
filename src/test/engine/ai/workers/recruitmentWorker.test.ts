@@ -48,7 +48,7 @@ function makePoolWarrior(overrides: Partial<PoolWarrior> = {}): PoolWarrior {
     },
     lineage: { generation: 1, pedigree: 'Commoner' },
     ...overrides,
-  };
+  } as any;
 }
 
 describe('processRecruitment — warrior field propagation (Bug 1)', () => {

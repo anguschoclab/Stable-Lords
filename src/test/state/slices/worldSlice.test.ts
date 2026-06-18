@@ -8,11 +8,11 @@ import type { FightSummary } from '@/types/combat.types';
 
 const createTestStore = () =>
   create<WorldSlice & EconomySlice>()(
-    immer((set, get, ...args) => ({
-      ...createWorldSlice(set, get, ...args),
-      ...createEconomySlice(set, get, ...args),
-    }))
-  );
+    immer((set) => ({
+      ...createWorldSlice(set as any, {} as any, {} as any),
+      ...createEconomySlice(set as any, {} as any, {} as any),
+    })) as any
+  ) as any;
 
 describe('WorldSlice', () => {
   let useTestStore: ReturnType<typeof createTestStore>;

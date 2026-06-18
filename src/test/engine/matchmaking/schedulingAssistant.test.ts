@@ -68,6 +68,7 @@ describe('Scheduling Assistant Engine', () => {
       meta: { gameName: 'test', version: '1', createdAt: 'now' },
       ftueComplete: true,
       coachDismissed: [],
+      bookmarks: [],
       player: {
         id: 'p1' as any,
         name: 'Player',

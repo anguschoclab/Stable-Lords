@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { generateInjury, isTooInjuredToFight } from '@/engine/injuries';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { InjuryId } from '@/types/shared.types';
 
 describe('rollForInjury', () => {
   const mockWarrior: Warrior = {
-    id: 'test-warrior',
+    id: 'test-warrior' as WarriorId,
     name: 'Test Warrior',
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
@@ -18,6 +18,7 @@ describe('rollForInjury', () => {
     titles: [],
     injuries: [],
     flair: [],
+    traits: [],
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: 'Active',

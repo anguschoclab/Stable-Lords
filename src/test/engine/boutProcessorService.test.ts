@@ -80,7 +80,7 @@ function makeBaseState(): GameState {
     ftueStep: 0,
     coachDismissed: [],
     isFTUE: true,
-  } as GameState;
+  } as unknown as GameState;
 }
 
 describe('processWeekBouts — Minimum Viable Arena', () => {

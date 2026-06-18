@@ -4,7 +4,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { FightingStyle, type Warrior, type FightPlan } from '@/types/game';
+import { FightingStyle, type Warrior, type FightPlan, type WarriorId } from '@/types/game';
 import { computeWarriorStats } from '@/engine/skillCalc';
 
 // ─── Test Helpers ─────────────────────────────────────────────────────────
@@ -18,7 +18,7 @@ function makeWarrior(
   const full = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10, ...attrs };
   const { baseSkills, derivedStats } = computeWarriorStats(full, style);
   return {
-    id: `test_${name}`,
+    id: `test_${name}` as WarriorId,
     name,
     style,
     attributes: full,
@@ -29,6 +29,7 @@ function makeWarrior(
     titles: [],
     injuries: [],
     flair: [],
+    traits: [],
     career: { wins: 0, losses: 0, kills: 0 },
     champion: false,
     status: 'Active',
@@ -212,7 +213,7 @@ describe('simulateFight — tactic overuse penalty', () => {
       makePlan(FightingStyle.StrikingAttack, { OE: 7, offensiveTactic: 'Slash' }),
       makePlan(FightingStyle.StrikingAttack, { OE: 7, offensiveTactic: 'Slash' }),
       w,
-      { ...w, id: 'test2', name: 'Test2' },
+      { ...w, id: 'test2' as WarriorId, name: 'Test2' },
       42
     );
 

@@ -327,8 +327,8 @@ describe('CombatNarrator', () => {
         label,
         style: FightingStyle.StrikingAttack,
         attributes: { ST: 15, CN: 12, SZ: 14, WT: 12, WL: 12, SP: 14, DF: 12 },
-        skills: { ATT: 10, PAR: 10, DEF: 10, DEC: 10, INI: 10 },
-        derived: { attack: 10, defense: 10, damage: 8 },
+        skills: { ATT: 10, PAR: 10, DEF: 10, DEC: 10, INI: 10, RIP: 10 },
+        derived: { hp: 100, endurance: 100, damage: 8, encumbrance: 0 },
         plan: { OE: 7, AL: 3, killDesire: 7, protect: 'Any' },
         activePlan: { OE: 7, AL: 3, killDesire: 7, protect: 'Any' },
         psychState: 'NORMAL' as const,
@@ -348,7 +348,7 @@ describe('CombatNarrator', () => {
         survivalStrike: false,
         recoveryDebt: 0,
         weaponId: 'gladius',
-      });
+      } as any);
 
       let knockdownSeen = false;
       for (let seed = 1; seed <= 200; seed++) {
@@ -357,7 +357,7 @@ describe('CombatNarrator', () => {
         const fD = { ...makeFS('D'), hp: 14, maxHp: 40, legHits: 3 };
         const ctx = {
           rng: () => svc.next(),
-          phase: 'MID',
+          phase: 'MID' as const,
           exchange: 5,
           weather: 'Clear',
           weatherEffect: { damageMult: 1, initiativeMod: 0, riposteMod: 0 },
@@ -376,8 +376,8 @@ describe('CombatNarrator', () => {
           surfaceMod: { initiativeMod: 0, enduranceMod: 0 },
           maxRange: 'Extended',
           zoneStepBias: 0,
-        };
-        const events = resolveExchange(ctx, fA, fD);
+        } as any;
+        const events = resolveExchange(ctx as any, fA, fD);
         if (events.some((e) => e.type === 'KNOCKDOWN')) {
           knockdownSeen = true;
           break;
@@ -392,8 +392,8 @@ describe('CombatNarrator', () => {
         label,
         style: FightingStyle.TotalParry,
         attributes: { ST: 12, CN: 14, SZ: 12, WT: 12, WL: 14, SP: 12, DF: 14 },
-        skills: { ATT: 10, PAR: 12, DEF: 12, DEC: 8, INI: 10 },
-        derived: { attack: 8, defense: 12, damage: 6 },
+        skills: { ATT: 10, PAR: 12, DEF: 12, DEC: 8, INI: 10, RIP: 10 },
+        derived: { hp: 100, endurance: 100, damage: 6, encumbrance: 0 },
         plan: { OE: 3, AL: 7, killDesire: 3, protect: 'Any' },
         activePlan: { OE: 3, AL: 7, killDesire: 3, protect: 'Any' },
         psychState: 'NORMAL' as const,
@@ -414,13 +414,13 @@ describe('CombatNarrator', () => {
         recoveryDebt: 0,
         weaponId: 'gladius',
         knockedDown: true,
-      });
+      } as any);
 
       const fA = makeFS('A');
       const fD = makeFS('D');
       const ctx = {
         rng: () => svc.next(),
-        phase: 'MID',
+        phase: 'MID' as const,
         exchange: 6,
         weather: 'Clear',
         weatherEffect: { damageMult: 1, initiativeMod: 0, riposteMod: 0 },
@@ -439,8 +439,8 @@ describe('CombatNarrator', () => {
         surfaceMod: { initiativeMod: 0, enduranceMod: 0 },
         maxRange: 'Extended',
         zoneStepBias: 0,
-      };
-      const events = resolveExchange(ctx, fA, fD);
+      } as any;
+      const events = resolveExchange(ctx as any, fA, fD);
       expect(events.some((e) => e.type === 'RECOVERY')).toBe(true);
       expect(fA.knockedDown).toBe(false);
     });

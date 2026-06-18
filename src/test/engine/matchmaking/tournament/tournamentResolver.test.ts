@@ -558,8 +558,6 @@ describe('TournamentResolver', () => {
       tournament.bracket.push({
         round: 1,
         matchIndex: 32,
-        a: warriors[0]!.name,
-        d: '(bye)',
         warriorIdA: warriors[0]!.id,
         warriorIdD: 'bye' as any,
         winner: 'A', // Pre-set winner
@@ -574,7 +572,7 @@ describe('TournamentResolver', () => {
       const tour = afterRound1.tournaments![0]!;
 
       // Bye matches should have winner = "A"
-      const byeMatches = tour.bracket.filter((b: TournamentBout) => b.d === '(bye)');
+      const byeMatches = tour.bracket.filter((b: TournamentBout) => b.warriorIdD === 'bye' as any);
       expect(byeMatches.length).toBeGreaterThan(0);
       byeMatches.forEach((b: TournamentBout) => {
         expect(b.winner).toBe('A');

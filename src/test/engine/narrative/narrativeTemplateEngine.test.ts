@@ -91,23 +91,23 @@ describe('NarrativeTemplateEngine', () => {
 
   describe('getFromArchive', () => {
     it('should retrieve template from valid path', () => {
-      const template = NarrativeTemplateEngine.getFromArchive(() => 0.5, ['pbp', 'openers']);
+      const template = NarrativeTemplateEngine.getFromArchive({ next: () => 0.5 } as any, ['pbp', 'openers']);
       expect(template).toBeDefined();
       expect(typeof template).toBe('string');
     });
 
     it('should return fallback for invalid path', () => {
-      const template = NarrativeTemplateEngine.getFromArchive(() => 0.5, ['invalid', 'path']);
+      const template = NarrativeTemplateEngine.getFromArchive({ next: () => 0.5 } as any, ['invalid', 'path']);
       expect(template).toBe('A fierce exchange occurs.');
     });
 
     it('should return fallback for missing template', () => {
-      const template = NarrativeTemplateEngine.getFromArchive(() => 0.5, ['pbp', 'nonexistent']);
+      const template = NarrativeTemplateEngine.getFromArchive({ next: () => 0.5 } as any, ['pbp', 'nonexistent']);
       expect(template).toBe('A fierce exchange occurs.');
     });
 
     it('should handle empty path array', () => {
-      const template = NarrativeTemplateEngine.getFromArchive(() => 0.5, []);
+      const template = NarrativeTemplateEngine.getFromArchive({ next: () => 0.5 } as any, []);
       expect(template).toBe('A fierce exchange occurs.');
     });
   });

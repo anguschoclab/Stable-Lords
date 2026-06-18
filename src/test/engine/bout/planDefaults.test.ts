@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { defaultPlanForWarrior } from '@/engine/bout/planDefaults';
-import { FightingStyle } from '@/types/shared.types';
+import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import crypto from 'crypto';
 

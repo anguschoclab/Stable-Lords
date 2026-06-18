@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { FormSparkline } from '@/components/charts/FormSparkline';
 import { StatBadge } from '@/components/ui/WarriorBadges';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import type { Warrior } from '@/types/warrior.types';
 
 interface WarriorDossierHeaderProps {
@@ -35,7 +36,10 @@ export function WarriorDossierHeader({ warrior, record, rankings }: WarriorDossi
         </div>
       </div>
       <div className="flex flex-col items-end gap-2">
-        <StatBadge styleName={warrior.style} />
+        <div className="flex items-center gap-3">
+          <BookmarkButton entityType="warrior" entityId={warrior.id} size="sm" />
+          <StatBadge styleName={warrior.style} />
+        </div>
         {rankings && (
           <div className="flex items-center gap-2">
             <Badge

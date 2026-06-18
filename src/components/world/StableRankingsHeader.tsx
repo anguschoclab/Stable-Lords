@@ -72,6 +72,7 @@ export function StableRankingsHeader({ sort, onSort }: StableRankingsHeaderProps
             onClick={() => onSort('kills')}
           />
         </TableHead>
+        <TableHead className="w-10 text-center" />
       </TableRow>
     </TableHeader>
   );

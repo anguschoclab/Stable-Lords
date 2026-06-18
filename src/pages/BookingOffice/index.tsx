@@ -42,6 +42,10 @@ export default function BookingOffice() {
     ? upcomingOffers.filter((o) => isBookmarked('boutOffer', o.id))
     : upcomingOffers;
 
+  const bookmarkedCount =
+    thisWeekOffers.filter((o) => isBookmarked('boutOffer', o.id)).length +
+    upcomingOffers.filter((o) => isBookmarked('boutOffer', o.id)).length;
+
   return (
     <PageFrame>
       <PageHeader
@@ -152,6 +156,7 @@ export default function BookingOffice() {
                 <BookmarkFilterToggle
                   active={showBookmarkedOnly}
                   onToggle={() => setShowBookmarkedOnly((v) => !v)}
+                  count={bookmarkedCount}
                 />
               </div>
               {filteredThisWeek.length === 0 ? (

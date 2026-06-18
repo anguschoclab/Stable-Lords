@@ -1,13 +1,25 @@
 import { useGameStore } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
+import { toast } from 'sonner';
 import type { BookmarkEntityType } from '@/types/bookmark.types';
+
+const ENTITY_LABEL: Record<BookmarkEntityType, string> = {
+  warrior: 'Warrior',
+  rival: 'Rival Stable',
+  promoter: 'Promoter',
+  trainer: 'Trainer',
+  tournament: 'Tournament',
+  boutOffer: 'Bout Offer',
+  scoutReport: 'Scout Report',
+};
 
 interface BookmarkButtonProps {
   entityType: BookmarkEntityType;
   entityId: string;
   size?: 'sm' | 'md';
   className?: string;
+  label?: string;
 }
 
 export function BookmarkButton({
@@ -15,17 +27,23 @@ export function BookmarkButton({
   entityId,
   size = 'sm',
   className,
+  label,
 }: BookmarkButtonProps) {
   const isBookmarked = useGameStore((s) => s.isBookmarked(entityType, entityId));
   const toggleBookmark = useGameStore((s) => s.toggleBookmark);
 
   const iconSize = size === 'sm' ? 'h-4 w-4' : 'h-5 w-5';
+  const entityLabel = label || ENTITY_LABEL[entityType];
 
   return (
     <button
       onClick={(e) => {
         e.stopPropagation();
         toggleBookmark(entityType, entityId);
+        toast.success(
+          isBookmarked ? `Removed ${entityLabel} from watchlist` : `Added ${entityLabel} to watchlist`,
+          { duration: 1500 }
+        );
       }}
       aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
       className={cn(

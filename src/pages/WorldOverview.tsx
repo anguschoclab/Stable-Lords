@@ -131,6 +131,10 @@ export default function WorldOverview() {
     return stableRows.filter((r) => isBookmarked('rival', r.id));
   }, [stableRows, showBookmarkedOnly, isBookmarked]);
 
+  const stableBookmarkedCount = stableRows.filter((r) =>
+    isBookmarked('rival', r.id)
+  ).length;
+
   const warriorRows = useMemo<WarriorRow[]>(() => {
     const mapWarrior = (
       w: Warrior,
@@ -190,6 +194,15 @@ export default function WorldOverview() {
       return ((a[f as keyof WarriorRow] as number) - (b[f as keyof WarriorRow] as number)) * dir;
     });
   }, [state, warriorSort]);
+
+  const filteredWarriorRows = useMemo(() => {
+    if (!showBookmarkedOnly) return warriorRows;
+    return warriorRows.filter((r) => isBookmarked('warrior', r.id));
+  }, [warriorRows, showBookmarkedOnly, isBookmarked]);
+
+  const warriorBookmarkedCount = warriorRows.filter((r) =>
+    isBookmarked('warrior', r.id)
+  ).length;
 
   const totalWarriors = stableRows.reduce((s, r) => s + r.roster, 0);
   const totalKills = stableRows.reduce((s, r) => s + (r.kills || 0), 0);
@@ -252,6 +265,7 @@ export default function WorldOverview() {
             <BookmarkFilterToggle
               active={showBookmarkedOnly}
               onToggle={() => setShowBookmarkedOnly((v) => !v)}
+              count={stableBookmarkedCount}
             />
           </div>
           <StableRankings
@@ -272,9 +286,14 @@ export default function WorldOverview() {
               VANGUARD BOARD
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
+            <BookmarkFilterToggle
+              active={showBookmarkedOnly}
+              onToggle={() => setShowBookmarkedOnly((v) => !v)}
+              count={warriorBookmarkedCount}
+            />
           </div>
           <WarriorLeaderboard
-            rows={warriorRows}
+            rows={filteredWarriorRows}
             sort={warriorSort}
             onSort={(field) =>
               setWarriorSort((prev) => ({

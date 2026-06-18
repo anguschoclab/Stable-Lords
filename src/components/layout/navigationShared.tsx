@@ -101,10 +101,11 @@ interface UseNavAlertsOptions {
  */
 export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const { trackWeek = false } = options;
-  const { week, isTournamentWeek } = useGameStore(
+  const { week, isTournamentWeek, bookmarkCount } = useGameStore(
     useShallow((s) => ({
       week: s.week,
       isTournamentWeek: s.isTournamentWeek,
+      bookmarkCount: s.bookmarks.length,
     }))
   );
   const alerts = useTacticalAlerts();
@@ -136,7 +137,7 @@ export function useNavAlerts(options: UseNavAlertsOptions = {}) {
     counts: {
       stable: showStableAlert ? untrainedCount + pendingOffers : 0,
       world: isTournamentWeek ? 1 : 0,
-      bookmarks: 0,
+      bookmarks: bookmarkCount,
     } as Record<HubId, number>,
     links: {
       stable: '/stable',

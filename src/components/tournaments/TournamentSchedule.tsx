@@ -5,6 +5,7 @@
 import { useGameStore } from '@/state/useGameStore';
 import { useTournamentSchedule } from '@/hooks/useTournamentSchedule';
 import { TournamentStatsHeader, TournamentFilterBar, TournamentRoundCard } from './schedule';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import type { TournamentEntry } from '@/types/game';
 
 interface TournamentScheduleProps {
@@ -31,7 +32,10 @@ export function TournamentSchedule({ tournament, currentWeek }: TournamentSchedu
 
   return (
     <div className="space-y-4">
-      <TournamentStatsHeader stats={stats} />
+      <div className="flex items-center justify-between">
+        <TournamentStatsHeader stats={stats} />
+        <BookmarkButton entityType="tournament" entityId={tournament.id} size="sm" />
+      </div>
 
       <TournamentFilterBar
         filter={filter}

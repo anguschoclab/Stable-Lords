@@ -58,11 +58,13 @@ export default function Trainers() {
 
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 
+  const allTrainers = trainers ?? [];
   const currentTrainers = useMemo(() => {
-    const all = trainers ?? [];
-    if (!showBookmarkedOnly) return all;
-    return all.filter((t) => isBookmarked('trainer', t.id));
-  }, [trainers, showBookmarkedOnly, isBookmarked]);
+    if (!showBookmarkedOnly) return allTrainers;
+    return allTrainers.filter((t) => isBookmarked('trainer', t.id));
+  }, [allTrainers, showBookmarkedOnly, isBookmarked]);
+
+  const bookmarkedCount = allTrainers.filter((t) => isBookmarked('trainer', t.id)).length;
   const currentHiringPool = useMemo(() => hiringPool ?? [], [hiringPool]);
   const canHire = currentTrainers.length < TRAINER_MAX_PER_STABLE;
 
@@ -197,6 +199,7 @@ export default function Trainers() {
             <BookmarkFilterToggle
               active={showBookmarkedOnly}
               onToggle={() => setShowBookmarkedOnly((v) => !v)}
+              count={bookmarkedCount}
             />
           </div>
           <div className="grid grid-cols-1 gap-8">

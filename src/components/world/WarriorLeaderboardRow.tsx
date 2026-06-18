@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Crown, Skull } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
 import type { WarriorRow } from '@/types/leaderboard';
 
@@ -134,6 +135,14 @@ function KillsCell({ row }: { row: WarriorRow }) {
   );
 }
 
+function BookmarkCell({ row }: { row: WarriorRow }) {
+  return (
+    <TableCell className="text-center w-10">
+      <BookmarkButton entityType="warrior" entityId={row.id} size="sm" />
+    </TableCell>
+  );
+}
+
 /**
  *
  */
@@ -151,6 +160,7 @@ export function WarriorLeaderboardRow({ row, index, isFiltered }: WarriorLeaderb
       <StyleCell row={row} />
       <StatCells row={row} />
       <KillsCell row={row} />
+      <BookmarkCell row={row} />
     </TableRow>
   );
 }

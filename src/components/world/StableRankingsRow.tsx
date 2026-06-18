@@ -3,6 +3,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Skull } from 'lucide-react';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
 import { StatBattery } from '@/components/ui/StatBattery';
 import type { StableRow } from '@/types/leaderboard';
@@ -176,6 +177,14 @@ function KillsCell({ row }: { row: StableRow }) {
 /**
  *
  */
+function BookmarkCell({ row }: { row: StableRow }) {
+  return (
+    <TableCell className="text-center w-10">
+      <BookmarkButton entityType="rival" entityId={row.id} size="sm" />
+    </TableCell>
+  );
+}
+
 export function StableRankingsRow({ row, index }: StableRankingsRowProps) {
   return (
     <TableRow
@@ -192,6 +201,7 @@ export function StableRankingsRow({ row, index }: StableRankingsRowProps) {
       <LossesCell row={row} />
       <WinRateCell row={row} />
       <KillsCell row={row} />
+      <BookmarkCell row={row} />
     </TableRow>
   );
 }

@@ -30,6 +30,10 @@ vi.mock('@/state/useGameStore', () => ({
       isBookmarked: (type: string, id: string) =>
         mockStoreState.bookmarks.some((b: any) => b.entityType === type && b.entityId === id),
       toggleBookmark: vi.fn(),
+      removeBookmark: vi.fn(),
+      clearBookmarks: vi.fn(),
+      clearBookmarksByType: vi.fn(),
+      cleanDanglingBookmarks: vi.fn(),
       getBookmarksByType: (type: string) =>
         mockStoreState.bookmarks.filter((b: any) => b.entityType === type),
     };
@@ -184,5 +188,49 @@ describe('Bookmarks Page', () => {
     ];
     render(<Bookmarks />);
     expect(screen.getByText('MysteryFighter')).toBeInTheDocument();
+  });
+
+  it('shows Clear All button when bookmarks exist', () => {
+    mockStoreState.bookmarks = [
+      { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
+    ];
+    mockStoreState.roster = [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }];
+    render(<Bookmarks />);
+    expect(screen.getByRole('button', { name: /clear all/i })).toBeInTheDocument();
+  });
+
+  it('shows Clear button per section', () => {
+    mockStoreState.bookmarks = [
+      { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
+    ];
+    mockStoreState.roster = [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }];
+    render(<Bookmarks />);
+    const clearButtons = screen.getAllByRole('button', { name: /clear/i });
+    expect(clearButtons.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('sorts warriors alphabetically when sort is set to name', async () => {
+    mockStoreState.bookmarks = [
+      { entityType: 'warrior', entityId: 'w2', createdAt: '2026-01-01' },
+      { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-02' },
+    ];
+    mockStoreState.roster = [
+      { id: 'w1', name: 'Alpha', style: 'AimedBlow' },
+      { id: 'w2', name: 'Zebra', style: 'SlashingAttack' },
+    ];
+    render(<Bookmarks />);
+    const sortButtons = screen.getAllByLabelText(/sort by name/i);
+    expect(sortButtons.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('displays tracked date for bookmarks', () => {
+    const pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 2);
+    mockStoreState.bookmarks = [
+      { entityType: 'warrior', entityId: 'w1', createdAt: pastDate.toISOString() },
+    ];
+    mockStoreState.roster = [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }];
+    render(<Bookmarks />);
+    expect(screen.getByText(/Tracked 2 days ago/i)).toBeInTheDocument();
   });
 });

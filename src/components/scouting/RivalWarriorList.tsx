@@ -1,6 +1,7 @@
 import { Eye, Swords, Target, ChevronRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Surface } from '@/components/ui/Surface';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import type { Warrior, ScoutReportData } from '@/types/game';
 import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
 import { cn } from '@/lib/utils';
@@ -97,11 +98,14 @@ export function RivalWarriorList({
                         </div>
                       </div>
 
-                      {isSelected ? (
-                        <Target className="h-4 w-4 text-primary animate-pulse" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all" />
-                      )}
+                      <div className="flex items-center gap-2">
+                        <BookmarkButton entityType="warrior" entityId={w.id} size="sm" />
+                        {isSelected ? (
+                          <Target className="h-4 w-4 text-primary animate-pulse" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all" />
+                        )}
+                      </div>
                     </div>
                     {isSelected && (
                       <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />

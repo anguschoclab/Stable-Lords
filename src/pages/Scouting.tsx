@@ -30,11 +30,13 @@ export default function Scouting() {
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
+  const allReports = scoutReports ?? [];
   const filteredReports = useMemo(() => {
-    const all = scoutReports ?? [];
-    if (!showBookmarkedOnly) return all;
-    return all.filter((r) => isBookmarked('scoutReport', r.id));
-  }, [scoutReports, showBookmarkedOnly, isBookmarked]);
+    if (!showBookmarkedOnly) return allReports;
+    return allReports.filter((r) => isBookmarked('scoutReport', r.id));
+  }, [allReports, showBookmarkedOnly, isBookmarked]);
+
+  const bookmarkedCount = allReports.filter((r) => isBookmarked('scoutReport', r.id)).length;
 
   const rivalMap = useMemo(
     () => new Map((rivals ?? []).map((r) => [r.owner.id as string, r])),
@@ -152,6 +154,7 @@ export default function Scouting() {
             <BookmarkFilterToggle
               active={showBookmarkedOnly}
               onToggle={() => setShowBookmarkedOnly((v) => !v)}
+              count={bookmarkedCount}
             />
           </div>
           <ScoutIntelTab

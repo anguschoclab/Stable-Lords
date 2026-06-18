@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useNavigate } from '@tanstack/react-router';
 import {
@@ -10,6 +10,9 @@ import {
   Trophy,
   Briefcase,
   Target,
+  Trash2,
+  ArrowDownAZ,
+  ArrowUpDown,
 } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -17,6 +20,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Surface } from '@/components/ui/Surface';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { BookmarkEntityType } from '@/types/bookmark.types';
 
@@ -33,17 +37,31 @@ const ENTITY_CONFIG: Record<
   scoutReport: { label: 'Scout Reports', icon: Target, color: 'text-primary' },
 };
 
+function formatTrackedDate(iso: string): string {
+  const date = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (diffDays < 1) return 'Tracked today';
+  if (diffDays === 1) return 'Tracked yesterday';
+  if (diffDays < 7) return `Tracked ${diffDays} days ago`;
+  if (diffDays < 30) return `Tracked ${Math.floor(diffDays / 7)} weeks ago`;
+  return `Tracked ${date.toLocaleDateString()}`;
+}
+
 function BookmarkedEntityRow({
   type,
   id,
   name,
   subtitle,
+  createdAt,
   onClick,
 }: {
   type: BookmarkEntityType;
   id: string;
   name: string;
   subtitle?: string;
+  createdAt?: string;
   onClick?: () => void;
 }) {
   const cfg = ENTITY_CONFIG[type];
@@ -69,6 +87,11 @@ function BookmarkedEntityRow({
             {subtitle}
           </div>
         )}
+        {createdAt && (
+          <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/20 mt-0.5">
+            {formatTrackedDate(createdAt)}
+          </div>
+        )}
       </div>
       <BookmarkButton entityType={type} entityId={id} size="sm" />
     </div>
@@ -76,15 +99,42 @@ function BookmarkedEntityRow({
 }
 
 export default function Bookmarks() {
-  const store = useGameStore();
   const navigate = useNavigate();
 
-  const bookmarks = store.bookmarks;
+  const {
+    bookmarks,
+    roster,
+    graveyard,
+    retired,
+    rivals,
+    promoters,
+    trainers,
+    tournaments,
+    boutOffers,
+    scoutReports,
+    clearBookmarks,
+    clearBookmarksByType,
+  } = useGameStore((s) => ({
+    bookmarks: s.bookmarks,
+    roster: s.roster,
+    graveyard: s.graveyard,
+    retired: s.retired,
+    rivals: s.rivals,
+    promoters: s.promoters,
+    trainers: s.trainers,
+    tournaments: s.tournaments,
+    boutOffers: s.boutOffers,
+    scoutReports: s.scoutReports,
+    clearBookmarks: s.clearBookmarks,
+    clearBookmarksByType: s.clearBookmarksByType,
+  }));
+
+  const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
 
   const grouped = useMemo(() => {
     const groups: Record<
       BookmarkEntityType,
-      { id: string; name: string; subtitle?: string; onClick?: () => void }[]
+      { id: string; name: string; subtitle?: string; createdAt?: string; onClick?: () => void }[]
     > = {
       warrior: [],
       rival: [],
@@ -103,10 +153,10 @@ export default function Bookmarks() {
       switch (b.entityType) {
         case 'warrior': {
           const allWarriors = [
-            ...store.roster,
-            ...store.graveyard,
-            ...store.retired,
-            ...(store.rivals?.flatMap((r) => r.roster) ?? []),
+            ...roster,
+            ...graveyard,
+            ...retired,
+            ...(rivals?.flatMap((r) => r.roster) ?? []),
           ];
           const w = allWarriors.find((x) => x.id === b.entityId);
           if (w) {
@@ -119,7 +169,7 @@ export default function Bookmarks() {
           break;
         }
         case 'rival': {
-          const r = store.rivals?.find((x) => x.id === b.entityId || x.owner.id === b.entityId);
+          const r = rivals?.find((x) => x.id === b.entityId || x.owner.id === b.entityId);
           if (r) {
             name = r.owner.stableName;
             subtitle = r.owner.name;
@@ -130,7 +180,7 @@ export default function Bookmarks() {
           break;
         }
         case 'promoter': {
-          const p = Object.values(store.promoters || {}).find((x) => x.id === b.entityId);
+          const p = Object.values(promoters || {}).find((x) => x.id === b.entityId);
           if (p) {
             name = p.name;
             subtitle = `${p.tier} · ${p.personality}`;
@@ -141,17 +191,18 @@ export default function Bookmarks() {
           break;
         }
         case 'trainer': {
-          const t = store.trainers?.find((x) => x.id === b.entityId);
+          const t = trainers?.find((x) => x.id === b.entityId);
           if (t) {
             name = t.name;
             subtitle = `${t.tier} · ${t.focus}`;
+            onClick = () => navigate({ to: '/stable/trainers' });
           } else {
             name = '[Entity Removed]';
           }
           break;
         }
         case 'tournament': {
-          const tour = store.tournaments?.find((x) => x.id === b.entityId);
+          const tour = tournaments?.find((x) => x.id === b.entityId);
           if (tour) {
             name = tour.name;
             subtitle = `${tour.season} · Year ${tour.week}`;
@@ -162,13 +213,13 @@ export default function Bookmarks() {
           break;
         }
         case 'boutOffer': {
-          const offer = Object.values(store.boutOffers || {}).find((x) => x.id === b.entityId);
+          const offer = Object.values(boutOffers || {}).find((x) => x.id === b.entityId);
           if (offer) {
-            const promoter = Object.values(store.promoters || {}).find(
+            const promoter = Object.values(promoters || {}).find(
               (p) => p.id === offer.promoterId
             );
-            name = offer.id;
-            subtitle = promoter ? `${promoter.name} · ${offer.purse}G` : `${offer.purse}G`;
+            name = promoter ? `${promoter.name} · ${offer.purse}G` : `${offer.purse}G`;
+            subtitle = offer.id;
             onClick = () => navigate({ to: '/stable/bouts' });
           } else {
             name = '[Entity Removed]';
@@ -176,7 +227,7 @@ export default function Bookmarks() {
           break;
         }
         case 'scoutReport': {
-          const report = store.scoutReports?.find((x) => x.id === b.entityId);
+          const report = scoutReports?.find((x) => x.id === b.entityId);
           if (report) {
             name = report.warriorName;
             subtitle = `${report.quality} Intel · Week ${report.week}`;
@@ -188,11 +239,23 @@ export default function Bookmarks() {
         }
       }
 
-      groups[b.entityType].push({ id: b.entityId, name, subtitle, onClick });
+      groups[b.entityType].push({ id: b.entityId, name, subtitle, createdAt: b.createdAt, onClick });
     }
 
     return groups;
-  }, [bookmarks, store, navigate]);
+  }, [
+    bookmarks,
+    roster,
+    graveyard,
+    retired,
+    rivals,
+    promoters,
+    trainers,
+    tournaments,
+    boutOffers,
+    scoutReports,
+    navigate,
+  ]);
 
   const totalBookmarks = bookmarks.length;
   const hasBookmarks = totalBookmarks > 0;
@@ -205,7 +268,18 @@ export default function Bookmarks() {
         title="Bookmarks"
         subtitle="TRACKED ENTITIES · INTELLIGENCE REGISTRY"
         actions={
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
+            {hasBookmarks && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearBookmarks}
+                className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 rounded-none"
+              >
+                <Trash2 className="h-3 w-3 mr-1.5" />
+                Clear All
+              </Button>
+            )}
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
                 Tracked Assets
@@ -239,13 +313,41 @@ export default function Bookmarks() {
       ) : (
         <div className="space-y-12">
           {(Object.keys(grouped) as BookmarkEntityType[]).map((type) => {
-            const items = grouped[type];
+            let items = grouped[type];
             if (items.length === 0) return null;
             const cfg = ENTITY_CONFIG[type];
 
+            if (sortBy === 'name') {
+              items = [...items].sort((a, b) => a.name.localeCompare(b.name));
+            }
+
             return (
               <section key={type}>
-                <SectionDivider label={cfg.label} />
+                <div className="flex items-center justify-between">
+                  <SectionDivider label={cfg.label} />
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setSortBy((s) => (s === 'date' ? 'name' : 'date'))}
+                      aria-label={sortBy === 'date' ? 'Sort by name' : 'Sort by date'}
+                      className="p-1.5 rounded-none border border-white/5 text-muted-foreground/40 hover:text-primary hover:border-primary/20 transition-all"
+                    >
+                      {sortBy === 'date' ? (
+                        <ArrowDownAZ className="h-3 w-3" />
+                      ) : (
+                        <ArrowUpDown className="h-3 w-3" />
+                      )}
+                    </button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => clearBookmarksByType(type)}
+                      className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 rounded-none h-7 px-2"
+                    >
+                      <Trash2 className="h-3 w-3 mr-1.5" />
+                      Clear
+                    </Button>
+                  </div>
+                </div>
                 <div className="mt-6 space-y-2">
                   {items.map((item) => (
                     <BookmarkedEntityRow
@@ -254,6 +356,7 @@ export default function Bookmarks() {
                       id={item.id}
                       name={item.name}
                       subtitle={item.subtitle}
+                      createdAt={item.createdAt}
                       onClick={item.onClick}
                     />
                   ))}

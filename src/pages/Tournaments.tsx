@@ -96,11 +96,18 @@ export default function Tournaments() {
     return currentTournament.participants.filter((w) => w.stableId === player.id);
   }, [currentTournament, player]);
 
+  const allPastTournaments = useMemo(
+    () => tournaments.filter((t) => t.completed).reverse(),
+    [tournaments]
+  );
   const pastTournaments = useMemo(() => {
-    const all = tournaments.filter((t) => t.completed).reverse();
-    if (!showBookmarkedOnly) return all;
-    return all.filter((t) => isBookmarked('tournament', t.id));
-  }, [tournaments, showBookmarkedOnly, isBookmarked]);
+    if (!showBookmarkedOnly) return allPastTournaments;
+    return allPastTournaments.filter((t) => isBookmarked('tournament', t.id));
+  }, [allPastTournaments, showBookmarkedOnly, isBookmarked]);
+
+  const bookmarkedCount = allPastTournaments.filter((t) =>
+    isBookmarked('tournament', t.id)
+  ).length;
 
   // 🌩️ Protocol Sync: Auto-open prep dialog if tournament is ready but not started
   const isTournamentReadyToStart = useMemo(() => {
@@ -336,6 +343,7 @@ export default function Tournaments() {
           <BookmarkFilterToggle
             active={showBookmarkedOnly}
             onToggle={() => setShowBookmarkedOnly((v) => !v)}
+            count={bookmarkedCount}
           />
         </div>
         <TournamentHistory

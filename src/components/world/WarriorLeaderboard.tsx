@@ -23,6 +23,7 @@ const COLUMNS = [
   { key: 'wins', label: 'Wins', className: 'text-center' },
   { key: 'winRate', label: 'W%', className: 'text-center hidden sm:table-cell' },
   { key: 'kills', label: 'Kills', className: 'text-center' },
+  { key: 'bookmark', label: '', className: 'w-10 text-center' },
 ];
 
 /**

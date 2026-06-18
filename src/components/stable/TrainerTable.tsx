@@ -7,6 +7,7 @@ import { Surface } from '@/components/ui/Surface';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { GraduationCap, Target, Coins, Zap } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils'; /**
@@ -105,11 +106,14 @@ export function TrainerTable() {
                         {t.tier}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-mono font-black text-destructive">
-                        -{TRAINER_WEEKLY_SALARY[t.tier] ?? 35}G
-                      </span>
-                      <Coins className="h-3 w-3 text-arena-gold opacity-60" />
+                    <div className="flex items-center gap-2">
+                      <BookmarkButton entityType="trainer" entityId={t.id} size="sm" />
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] font-mono font-black text-destructive">
+                          -{TRAINER_WEEKLY_SALARY[t.tier] ?? 35}G
+                        </span>
+                        <Coins className="h-3 w-3 text-arena-gold opacity-60" />
+                      </div>
                     </div>
                   </div>
 

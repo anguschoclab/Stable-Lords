@@ -397,9 +397,11 @@ const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
  * Roll 0-2 traits at warrior creation, weighted by trait rarity.
  * Distribution targets ~25% no traits, ~55% one trait, ~20% two traits.
  *
- * When an archetype is provided, traits with matching synergy get 2× weight
- * and traits with matching antiSynergy get 0.3× weight. This makes thematic
+ * When an archetype is provided, traits with matching synergy get 3× weight
+ * and traits with matching antiSynergy get 0.10× weight. This makes thematic
  * fits ~60-70% likely while still allowing interesting against-type warriors.
+ * Traits amplify a fighter's identity and minimise cross-style swings that
+ * the balance matrix cannot see.
  *
  * @param rng - RNG service
  * @param archetype - Optional archetype to bias trait generation
@@ -421,8 +423,8 @@ export function generateTraits(rng: IRNGService, archetype?: Archetype): string[
       if (!t || picked.includes(id)) continue;
       let w = t.weight;
       if (archetype) {
-        if (t.synergy?.includes(archetype)) w *= 2.0;
-        if (t.antiSynergy?.includes(archetype)) w *= 0.3;
+        if (t.synergy?.includes(archetype)) w *= 3.0;
+        if (t.antiSynergy?.includes(archetype)) w *= 0.10;
       }
       weights.push({ id, w });
       totalWeight += w;

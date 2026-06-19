@@ -17,3 +17,6 @@
 ## 2023-10-27 - [Focus Visible Standardization]
 **Learning:** Replaced `focus:outline-none` with `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` on many buttons and interactive elements. Using `focus-visible:` ensures keyboard navigation has clear focus states without triggering them on mouse clicks, improving both accessibility and visual design for pointer users.
 **Action:** When adding interactive elements, always consider keyboard focus states and prefer `focus-visible` over `focus` to reduce visual clutter for mouse users.
+## 2026-06-19 - Focus Visible Standardization on BookmarkButton
+**Learning:** Replaced the generic border styling with `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary` on `BookmarkButton.tsx` to ensure a distinct and standard focus outline across the application.
+**Action:** When creating or modifying standalone utility buttons like bookmark toggles, always include explicit `focus-visible` utility classes for robust keyboard navigation support.

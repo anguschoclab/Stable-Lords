@@ -10,7 +10,7 @@ describe('Locust Swarm Feature', () => {
 
   it('should roll Locust Swarm weather when rng yields high enough value in Summer', () => {
     const rng = new SeededRNGService(123);
-    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.88);
+    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.77);
     const weather = rollWeather(rng, 'Summer');
     expect(weather).toBe('Locust Swarm');
     mock.mockRestore();

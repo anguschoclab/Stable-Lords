@@ -16,7 +16,7 @@ import {
 } from './simulate/initialization';
 import { runSimulationLoop } from './simulate/simulationLoop';
 import { generateIntroductions } from './simulate/narrative';
-import { generateOutcomeTags, buildPostFightStats, handleTimeLimit } from './simulate/resolution';
+import { processPostFight } from './simulate/postFight';
 
 export { defaultPlanForWarrior };
 
@@ -129,45 +129,21 @@ export function simulateFight(
 
   const log = headless ? [] : [...introLog, ...loopLog];
 
-  // 6. Handle time limit if no winner
-  if (!winner) {
-    const timeLimitResult = handleTimeLimit(fA, fD, nameA, nameD, rng, log, headless);
-    const finalMinutes = headless ? fightMinutes : Math.max(1, log[log.length - 1]?.minute ?? 1);
-    return {
-      winner: timeLimitResult.winner,
-      by: timeLimitResult.by,
-      minutes: finalMinutes,
-      log,
-      exchangeLog,
-      post: buildPostFightStats(
-        timeLimitResult.winner,
-        timeLimitResult.by,
-        fA,
-        fD,
-        generateOutcomeTags(timeLimitResult.winner, timeLimitResult.by, fA, fD, finalMinutes)
-      ),
-    };
-  }
-
-  // 7. Generate outcome tags and post-fight stats
-  const finalMinutes = headless ? fightMinutes : Math.max(1, log[log.length - 1]?.minute ?? 1);
-  const tags = generateOutcomeTags(winner, by, fA, fD, finalMinutes);
-
-  return {
+  // 6. Process post-fight: tags, stats, and final outcome assembly
+  return processPostFight(
     winner,
     by,
-    minutes: finalMinutes,
+    fA,
+    fD,
+    nameA,
+    nameD,
+    rng,
     log,
     exchangeLog,
-    post: buildPostFightStats(
-      winner,
-      by,
-      fA,
-      fD,
-      tags,
-      causeBucket,
-      fatalHitLocation,
-      fatalExchangeIndex
-    ),
-  };
+    headless,
+    fightMinutes,
+    causeBucket,
+    fatalHitLocation,
+    fatalExchangeIndex
+  );
 }

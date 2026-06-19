@@ -7,90 +7,150 @@ import { StateImpact } from '@/engine/impacts';
  * Stable Lords — World Pipeline Pass
  * Handles seasonal transitions and weather changes.
  */
-const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter']; /**
- * Compute next season.
- */
+const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
 
 /**
  * Compute next season.
  */
 export function computeNextSeason(newWeek: number): Season {
   return SEASONS[Math.floor((newWeek - 1) / 13) % 4]!;
-} /**
- * Roll weather.
- */
+}
+
+// ─── Seasonal Weather Buckets ──────────────────────────────────────────────
 
 /**
- * Roll weather.
+ * Weathers available in every season.
+ */
+const SHARED_WEATHER: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge'];
+
+/**
+ * Season-exclusive weather pools.  Every WeatherType must appear in exactly one
+ * seasonal bucket or in {@link SHARED_WEATHER}.  Adding a new weather is as
+ * simple as appending it to the appropriate array — `rollWeather` picks up the
+ * change automatically.
+ */
+const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
+  Spring: ['Rainy', 'Breezy', 'Zephyr', 'Rainbow', 'Mist', 'Arcane Storm', 'Blood Rain', 'Aether Storm'],
+  Summer: [
+    'Sweltering',
+    'Blazing Sun',
+    'Sandstorm',
+    'Tornado',
+    'Ashfall',
+    'Scorching Wind',
+    'Solar Flare',
+    'Locust Swarm',
+    'Mirage',
+    'Ember Rain',
+    'Wildfire Smoke',
+    'Shimmering Heat',
+    'Thunderstorm',
+  ],
+  Fall: ['Gale', 'Dense Fog', 'Chaotic Winds', 'Cursed Miasma', 'Acid Rain', 'Spooky Night', 'Blood Fog'],
+  Winter: ['Blizzard', 'Hailstorm', 'Abyssal Gloom', 'Meteor Shower', 'Aurora Borealis', 'Gravity Anomaly'],
+};
+
+/**
+ * Full weather pool per season (shared + exclusive).  Computed once at module
+ * load and exported for use by UI components and tests.
+ */
+export const SEASONAL_WEATHER: Record<Season, WeatherType[]> = {
+  Spring: [...SHARED_WEATHER, ...SEASON_EXCLUSIVE_WEATHER.Spring],
+  Summer: [...SHARED_WEATHER, ...SEASON_EXCLUSIVE_WEATHER.Summer],
+  Fall: [...SHARED_WEATHER, ...SEASON_EXCLUSIVE_WEATHER.Fall],
+  Winter: [...SHARED_WEATHER, ...SEASON_EXCLUSIVE_WEATHER.Winter],
+};
+
+/**
+ * Relative weights for each weather tier.  The actual probability of a weather
+ * is its weight divided by the total weight of all weathers in the season's
+ * bucket.  Shared weathers use the same weight in every season.
+ */
+const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
+  // Common (shared)
+  Clear: 25,
+  Overcast: 15,
+  // Rare (shared)
+  'Blood Moon': 1.5,
+  Eclipse: 0.5,
+  'Mana Surge': 0.5,
+
+  // Spring-exclusive
+  Rainy: 10,
+  Breezy: 8,
+  Zephyr: 3,
+  Rainbow: 3,
+  Mist: 5,
+  'Arcane Storm': 2,
+  'Blood Rain': 1,
+  'Aether Storm': 1,
+
+  // Summer-exclusive
+  Sweltering: 10,
+  'Blazing Sun': 4,
+  Sandstorm: 6,
+  Tornado: 3,
+  Ashfall: 3,
+  'Scorching Wind': 5,
+  'Solar Flare': 2,
+  'Locust Swarm': 3,
+  Mirage: 5,
+  'Ember Rain': 1,
+  'Wildfire Smoke': 1,
+  'Shimmering Heat': 4,
+  Thunderstorm: 10,
+
+  // Fall-exclusive
+  Gale: 5,
+  'Dense Fog': 4,
+  'Chaotic Winds': 3,
+  'Cursed Miasma': 3,
+  'Acid Rain': 5,
+  'Spooky Night': 1.5,
+  'Blood Fog': 1,
+
+  // Winter-exclusive
+  Blizzard: 15,
+  Hailstorm: 5,
+  'Abyssal Gloom': 2,
+  'Meteor Shower': 1,
+  'Aurora Borealis': 0.5,
+  'Gravity Anomaly': 0.5,
+};
+
+const DEFAULT_WEIGHT = 1;
+
+/**
+ * Roll weather using the seasonal bucket system.
+ *
+ * Builds a cumulative-weight table from {@link SEASONAL_WEATHER} for the given
+ * season, rolls once, and returns the selected weather.  Every weather in the
+ * bucket has a non-zero chance.
  */
 export function rollWeather(rng: IRNGService, season: Season): WeatherType {
-  const roll = rng.next();
+  const pool = SEASONAL_WEATHER[season];
+  const weights = pool.map((w) => WEATHER_WEIGHTS[w] ?? DEFAULT_WEIGHT);
+  const total = weights.reduce((sum, w) => sum + w, 0);
 
-  // Summer: Hot, dry, and storm-prone
-  if (season === 'Summer') {
-    if (roll < 0.25) return 'Clear';
-    if (roll < 0.3) return 'Mirage';
-    if (roll < 0.34) return 'Shimmering Heat';
-    if (roll < 0.38) return 'Blazing Sun';
-    if (roll < 0.45) return 'Scorching Wind';
-    if (roll < 0.55) return 'Sweltering';
-    if (roll < 0.65) return 'Overcast';
-    if (roll < 0.75) return 'Thunderstorm';
-    if (roll < 0.81) return 'Sandstorm';
-    if (roll < 0.84) return 'Tornado';
-    if (roll < 0.87) return 'Ashfall';
-    if (roll < 0.9) return 'Locust Swarm';
-    if (roll < 0.93) return 'Gale';
-    if (roll < 0.94) return 'Ember Rain';
-    if (roll < 0.95) return 'Wildfire Smoke';
-    if (roll < 0.97) return 'Solar Flare';
-    if (roll < 0.985) return 'Blood Moon';
-    if (roll < 0.995) return 'Eclipse';
-    return 'Mana Surge';
+  const roll = rng.next() * total;
+  let cumulative = 0;
+  for (let i = 0; i < pool.length; i++) {
+    cumulative += weights[i]!;
+    if (roll < cumulative) return pool[i]!;
   }
+  // Fallback (should never reach here due to float precision)
+  return pool[pool.length - 1]!;
+}
 
-  // Winter: Cold, dark, and frozen
-  if (season === 'Winter') {
-    if (roll < 0.25) return 'Clear';
-    if (roll < 0.5) return 'Overcast';
-    if (roll < 0.65) return 'Blizzard';
-    if (roll < 0.7) return 'Hailstorm';
-    if (roll < 0.78) return 'Rainy';
-    if (roll < 0.86) return 'Dense Fog';
-    if (roll < 0.92) return 'Gale';
-    if (roll < 0.96) return 'Breezy';
-    if (roll < 0.98) return 'Abyssal Gloom';
-    if (roll < 0.985) return 'Blood Moon';
-    if (roll < 0.99) return 'Eclipse';
-    if (roll < 0.993) return 'Meteor Shower';
-    if (roll < 0.996) return 'Aurora Borealis';
-    if (roll < 0.998) return 'Gravity Anomaly';
-    return 'Mana Surge';
+/**
+ * Returns the season a weather type belongs to, or `'All'` for shared weathers.
+ */
+export function getWeatherSeason(weather: WeatherType): Season | 'All' {
+  if (SHARED_WEATHER.includes(weather)) return 'All';
+  for (const season of SEASONS) {
+    if (SEASON_EXCLUSIVE_WEATHER[season].includes(weather)) return season;
   }
-
-  // Spring/Fall: Wet, windy, and unpredictable
-  if (roll < 0.35) return 'Clear';
-  if (roll < 0.38) return 'Rainbow';
-  if (roll < 0.4) return 'Zephyr';
-  if (roll < 0.5) return 'Overcast';
-  if (roll < 0.6) return 'Rainy';
-  if (roll < 0.65) return 'Mist';
-  if (roll < 0.75) return 'Breezy';
-  if (roll < 0.78) return 'Chaotic Winds';
-  if (roll < 0.8) return 'Dense Fog';
-  if (roll < 0.83) return 'Cursed Miasma';
-  if (roll < 0.88) return 'Thunderstorm';
-  if (roll < 0.93) return 'Acid Rain';
-  if (roll < 0.95) return 'Gale';
-  if (roll < 0.97) return 'Arcane Storm';
-  if (roll < 0.985) return 'Spooky Night';
-  if (roll < 0.992) return 'Blood Rain';
-  if (roll < 0.993) return 'Aether Storm';
-  if (roll < 0.995) return 'Blood Moon';
-  if (roll < 0.997) return 'Eclipse';
-  if (roll < 0.9985) return 'Blood Fog';
-  if (roll < 0.999) return 'Gravity Anomaly';
-  return 'Mana Surge';
+  return 'All';
 }
 
 /**

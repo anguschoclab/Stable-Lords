@@ -206,13 +206,6 @@ export const TRAIT_WEIGHTS = {
   HIGH_BONUS: 0.9,
 } as const;
 
-/**
- * Trait synergy multipliers
- */
-export const TRAIT_SYNERGY_MULTIPLIERS = {
-  SYNERGY: 2.0,
-  ANTI_SYNERGY: 0.3,
-} as const;
 
 /**
  * Trait selection roll thresholds

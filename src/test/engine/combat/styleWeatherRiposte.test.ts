@@ -5,7 +5,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import type { Warrior, WarriorId } from '@/types/shared.types';
+import type { Warrior, WarriorId } from '@/types/game';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { simulateFight } from '@/engine/simulate';
 import { computeWarriorStats } from '@/engine/skillCalc';

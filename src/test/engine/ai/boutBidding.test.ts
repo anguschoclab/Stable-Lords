@@ -5,8 +5,8 @@
  * Gap 8: weather modifiers cover only 8 of 35+ weather types
  */
 import { describe, it, expect, vi } from 'vitest';
-import { FightingStyle } from '@/types/shared.types';
-import type { Warrior, WarriorId } from '@/types/shared.types';
+import { FightingStyle, type WarriorId } from '@/types/shared.types';
+import type { Warrior } from '@/types/shared.types';
 import type { RivalStableData } from '@/types/state.types';
 import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
 

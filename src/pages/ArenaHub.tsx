@@ -1,15 +1,13 @@
 import { useMemo } from 'react';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { generatePairings } from '@/engine/bout/core/pairings';
-import { isFightReady } from '@/engine/warriorStatus';
 import type { RivalStableData } from '@/types/game';
-import { useCombatExecution } from '@/hooks/useCombatExecution';
+import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { calculateGlobalFameLeaderboard } from '@/engine/core/leaderboards';
 import { filterActive } from '@/utils/roster';
-import { CombatExecutionPanel } from '@/components/arena/CombatExecutionPanel';
-import { useShallow } from 'zustand/react/shallow';
+import { AutosimConsole } from '@/components/run-round/AutosimConsole';
+import { MatchCard } from '@/components/run-round/MatchCard';
 import { calculateStableStats } from '@/engine/stats/stableStats';
-import type { Warrior } from '@/types/warrior.types';
 import {
   MOOD_DESCRIPTIONS,
   MOOD_ICONS,
@@ -17,7 +15,6 @@ import {
   type CrowdMood,
 } from '@/engine/crowdMood';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import {
   Table,
@@ -32,7 +29,6 @@ import {
   Swords,
   Star,
   Skull,
-  Zap,
   Eye,
   TrendingUp,
   Activity,
@@ -243,16 +239,8 @@ function ArenaLeaderboard() {
 export default function ArenaHub() {
   const store = useGameStore();
   const { roster, player } = store;
-  const { week, isTournamentWeek } = useGameStore(
-    useShallow((s) => ({ week: s.week, isTournamentWeek: s.isTournamentWeek }))
-  );
-  // const navigate = useNavigate();
   const gameState = useMemo(() => reconstructGameState(store), [store]);
 
-  const fightReady = useMemo(
-    () => gameState.roster.filter((w: Warrior) => isFightReady(w)),
-    [gameState.roster]
-  );
   const matchCard = useMemo(
     () =>
       generatePairings(gameState).map((p) => ({
@@ -266,11 +254,8 @@ export default function ArenaHub() {
     [gameState]
   );
 
-  const combat = useCombatExecution({
-    gameState,
-    matchCardLength: matchCard.length,
-    fightReadyLength: fightReady.length,
-  });
+  const { handleStartAutosim, autosimming, autosimProgress, autosimResult, setAutosimResult } =
+    useWeekExecution();
 
   const lifetimeKills = useMemo(
     () => roster.reduce((s, w) => s + (w.career?.kills || 0), 0),
@@ -282,16 +267,16 @@ export default function ArenaHub() {
     <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
         icon={Swords}
-        eyebrow="Operational Command"
-        title="Arena Hub"
-        subtitle="SPECTACLE ENGINE · WORLD STATE MONITOR"
+        eyebrow="Combat Operations"
+        title="Arena"
+        subtitle="ARENA · BOUTS · RANKINGS"
         actions={
           <div className="flex gap-3">
             <Badge
               variant="outline"
               className="bg-primary/5 text-primary border-primary/20 font-black uppercase tracking-widest text-[9px] px-3 py-1 rounded-none"
             >
-              {filterActive(roster).length} UNITS ACTIVE
+              {filterActive(roster).length} WARRIORS ACTIVE
             </Badge>
           </div>
         }
@@ -299,39 +284,6 @@ export default function ArenaHub() {
 
       {/* Band 2 — Crowd Mood full-width strip */}
       <CrowdMoodWidget />
-
-      {/* Execute Week CTA */}
-      <Surface
-        variant="glass"
-        className="flex flex-row items-center gap-6 p-6 border-l-4 border-l-primary shadow-2xl"
-      >
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-              Fight Week
-            </span>
-            <div className="h-px w-8 bg-primary/30" />
-          </div>
-          <h2 className="font-display font-black text-2xl uppercase tracking-tight text-foreground">
-            {isTournamentWeek ? `Empire Day ${gameState.day + 1}` : `Week ${week}`}
-          </h2>
-          <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest mt-1">
-            Send your warriors to the arena and resolve all bouts
-          </p>
-        </div>
-        <Button
-          onClick={() => {
-            combat.setShowCombat(true);
-            combat.setResults([]);
-            combat.setAutosimResult(null);
-          }}
-          disabled={combat.showCombat}
-          className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] text-[11px] hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all duration-300 rounded-none shrink-0"
-        >
-          <Zap className="h-4 w-4 mr-3 fill-current" />
-          {isTournamentWeek ? 'EXECUTE DAY' : 'EXECUTE WEEK'}
-        </Button>
-      </Surface>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
         {/* Left Column: Command & Pairings */}
@@ -341,7 +293,7 @@ export default function ArenaHub() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col gap-4">
-              <SectionDivider label="Next Engagement" />
+              <SectionDivider label="Next Bout" />
               <NextBoutWidget />
             </div>
             <div className="flex flex-col gap-4">
@@ -356,7 +308,7 @@ export default function ArenaHub() {
           <SectionDivider label="Arena Conditions" />
           <WeatherWidget />
 
-          <SectionDivider label="Style Meta State" />
+          <SectionDivider label="Style Meta" />
           <MetaDriftWidget />
 
           <SectionDivider label="Arena Analytics" />
@@ -370,7 +322,7 @@ export default function ArenaHub() {
                   <BarChart3 className="h-3.5 w-3.5 text-primary" />
                 </ImperialRing>
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/80">
-                  Performance Feed
+                  Stable Stats
                 </span>
               </div>
               <Activity className="h-3.5 w-3.5 text-primary animate-pulse" />
@@ -405,7 +357,7 @@ export default function ArenaHub() {
 
             <div className="pt-6 border-t border-white/5">
               <p className="text-[9px] text-muted-foreground/30 leading-relaxed uppercase tracking-[0.2em] font-black italic">
-                Data stream synchronized with central registry.
+                Season record updated after each bout.
               </p>
             </div>
           </Surface>
@@ -417,28 +369,53 @@ export default function ArenaHub() {
       {/* Global Rankings Channel */}
       <ArenaLeaderboard />
 
-      {/* Operational Protocol Strip */}
+      {/* Arena Status Strip */}
       <div className="py-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-6 opacity-20 px-6 border-t border-white/5 mt-12 grayscale hover:grayscale-0 transition-all duration-700">
         <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
-          <Skull className="h-3.5 w-3.5 text-destructive" /> Protocols: V1.4
+          <Skull className="h-3.5 w-3.5 text-destructive" /> Codex: V1.4
         </div>
         <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
-          <TrendingUp className="h-3.5 w-3.5 text-primary" /> Drift: Sync
+          <TrendingUp className="h-3.5 w-3.5 text-primary" /> Meta: Live
         </div>
         <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
           <Star className="h-3.5 w-3.5 text-arena-gold" /> Fame: Active
         </div>
         <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] whitespace-nowrap">
-          <Shield className="h-3.5 w-3.5 text-accent" /> Hash: Verified
+          <Shield className="h-3.5 w-3.5 text-accent" /> Roster: Sealed
         </div>
       </div>
 
-      {/* ── Inline Combat Execution Panel ── */}
-      <CombatExecutionPanel
-        combat={combat}
-        fightReadyCount={fightReady.length}
-        matchCard={matchCard}
-        crowdMood={gameState.crowdMood}
+      {/* ── Fight Card Preview ── */}
+      {matchCard.length > 0 && (
+        <>
+          <SectionDivider label="This Week's Fight Card" variant="primary" />
+          <Surface variant="glass" className="p-6 space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              {matchCard.map((p, i) => (
+                <MatchCard
+                  key={i}
+                  pairing={{
+                    a: p.playerWarrior,
+                    d: p.rivalWarrior,
+                    rivalStable: p.rivalStable?.owner?.stableName || 'Rival Stable',
+                    isRivalry: p.isRivalryBout,
+                  }}
+                  crowdMood={gameState.crowdMood}
+                />
+              ))}
+            </div>
+          </Surface>
+        </>
+      )}
+
+      {/* ── Auto-Simulate Season ── */}
+      <SectionDivider label="Auto-Simulate Season" />
+      <AutosimConsole
+        isSimulating={autosimming}
+        progress={autosimProgress}
+        result={autosimResult}
+        onStart={handleStartAutosim}
+        onReset={() => setAutosimResult(null)}
       />
     </PageFrame>
   );

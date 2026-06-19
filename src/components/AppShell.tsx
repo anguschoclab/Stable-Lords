@@ -13,6 +13,8 @@ import { TacticalBar } from '@/components/layout/TacticalBar';
 import EventLog from '@/components/EventLog';
 import { AppHeader } from '@/components/layout/AppHeader';
 import { ResetDialog } from '@/components/layout/ResetDialog';
+import { ResultsBanner } from '@/components/layout/ResultsBanner';
+import { useWeekExecution } from '@/hooks/useWeekExecution';
 
 // ─── Loading Overlay Component ─────────────────────────────────────────────
 
@@ -110,6 +112,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const activePath = location.pathname;
   const [resetOpen, setResetOpen] = useState(false);
+  const { results, clearResults } = useWeekExecution();
 
   useRivalryAlerts();
 
@@ -167,6 +170,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <main className="flex-1 flex flex-col relative bg-[#0C0806] overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
 
+          <ResultsBanner week={week} results={results} onDismiss={clearResults} />
           <div className="flex-1 relative overflow-y-auto overflow-x-hidden p-6 md:p-10 pb-20 md:pb-20">
             <AnimatePresence mode="wait">
               <motion.div

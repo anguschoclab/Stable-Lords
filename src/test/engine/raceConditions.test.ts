@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import '@/test/_setup/setup';
 
 // ─── Module under test: OPFS archive service ──────────────────────────────
@@ -9,9 +9,6 @@ import { clearReconstructionCache, reconstructGameState } from '@/state/serializ
 
 // ─── Module under test: style rollups ─────────────────────────────────────
 import { StyleRollups } from '@/engine/stats/styleRollups';
-
-// ─── Module under test: AudioManager ──────────────────────────────────────
-import { AudioManager } from '@/lib/AudioManager';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 import type { GameState } from '@/types/state.types';
@@ -351,7 +348,7 @@ describe('#11 StyleRollups cache cleared on loadGame', () => {
 
     const week1 = StyleRollups.getWeekRollup(1);
     expect(week1['Gladiator']).toBeDefined();
-    expect(week1['Gladiator'].w).toBe(1);
+    expect(week1['Gladiator']?.w).toBe(1);
 
     StyleRollups._clearCaches();
 
@@ -379,10 +376,10 @@ describe('#12 handleStartAutosim isSimulating guard', () => {
   it('handleStartAutosim checks isSimulating from the store', async () => {
     const fs = await import('fs');
     const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../hooks/useCombatExecution.ts'),
+      require('path').resolve(__dirname, '../../hooks/useWeekExecution.ts'),
       'utf-8'
     );
-    // After fix, handleStartAutosim should check isSimulating
+    // useWeekExecution.handleStartAutosim guards against concurrent calls
     expect(source).toMatch(/handleStartAutosim[\s\S]*?isSimulating/);
   });
 });
@@ -447,16 +444,16 @@ describe('#15 AudioManager async init race', () => {
 // #2 — handleExecuteCycle must await doAdvanceWeek/doAdvanceDay
 // ═══════════════════════════════════════════════════════════════════════════
 
-describe('#2 handleExecuteCycle awaits async advancement', () => {
-  it('handleExecuteCycle is async and awaits doAdvanceWeek/doAdvanceDay', async () => {
+describe('#2 executeWeek awaits async advancement', () => {
+  it('executeWeek is async and awaits doAdvanceWeek/doAdvanceDay', async () => {
     const fs = await import('fs');
     const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../hooks/useCombatExecution.ts'),
+      require('path').resolve(__dirname, '../../hooks/useWeekExecution.ts'),
       'utf-8'
     );
-    // After fix, handleExecuteCycle should be async and await the advancement call
-    expect(source).toMatch(/handleExecuteCycle[\s\S]*?async/);
-    // Should have a finally block or await before setRunning(false)
+    // executeWeek is async and awaits advancement
+    expect(source).toMatch(/executeWeek[\s\S]*?async/);
+    // Should await doAdvanceWeek or doAdvanceDay
     expect(source).toMatch(/await\s+doAdvanceWeek|await\s+doAdvanceDay/);
   });
 });

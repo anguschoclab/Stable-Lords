@@ -11,8 +11,8 @@ import {
   VolumeX,
   Coins,
   Crown,
-  ChevronRight,
 } from 'lucide-react';
+import { ExecuteWeekButton } from '@/components/layout/ExecuteWeekButton';
 import { audioManager } from '@/lib/AudioManager';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -347,9 +347,6 @@ function ExitButton({ isSimulating, returnToTitle }: ExitButtonProps) {
 // ─── Header Actions Component ───────────────────────────────────────────────────
 
 interface HeaderActionsProps {
-  week: number;
-  day: number;
-  isTournamentWeek: boolean;
   isSimulating: boolean;
   lastSavedAt: string | null;
   onResetPrompt: () => void;
@@ -357,9 +354,6 @@ interface HeaderActionsProps {
 }
 
 function HeaderActions({
-  week,
-  day,
-  isTournamentWeek,
   isSimulating,
   lastSavedAt,
   onResetPrompt,
@@ -367,24 +361,7 @@ function HeaderActions({
 }: HeaderActionsProps) {
   return (
     <div className="flex items-center gap-3">
-      <Link
-        to="/stable/arena"
-        className={cn(
-          'flex items-center gap-3 h-10 px-6 font-black text-[10px] uppercase tracking-[0.2em] transition-all duration-500 ease-[0.16,1,0.3,1]',
-          isSimulating
-            ? 'bg-neutral-900 text-muted-foreground/20 pointer-events-none'
-            : 'bg-primary text-primary-foreground shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0'
-        )}
-      >
-        {isSimulating ? (
-          <span className="animate-pulse italic">Processing Cycle...</span>
-        ) : (
-          <>
-            {isTournamentWeek ? `EXECUTE DAY ${day + 1}` : `FINALIZE WEEK ${week}`}
-            <ChevronRight className="h-4 w-4" />
-          </>
-        )}
-      </Link>
+      <ExecuteWeekButton />
       <Separator orientation="vertical" className="h-6 bg-white/5" />
       <MuteButton />
       <SaveButton lastSavedAt={lastSavedAt} />
@@ -434,9 +411,6 @@ export function AppHeader({
       </div>
 
       <HeaderActions
-        week={week}
-        day={day}
-        isTournamentWeek={isTournamentWeek}
         isSimulating={isSimulating}
         lastSavedAt={lastSavedAt}
         onResetPrompt={onResetPrompt}

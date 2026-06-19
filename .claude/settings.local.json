@@ -99,7 +99,10 @@
       "Bash(awk '{n=NF-3; if\\(n>=3\\) real++; else junk++} END{print \"likely-real\\(>=3 desc words\\): \"real\"   likely-junk\\(<3\\): \"junk}')",
       "Bash(awk -F' - ' '{n=$1; sub\\(/@param /,\"\",n\\); d=tolower\\($2\\); gsub\\(/[^a-z0-9]/,\"\",d\\); ln=tolower\\(n\\); gsub\\(/[^a-z0-9]/,\"\",ln\\); if\\(d==ln\\) junk++} END{print \"junk @param remaining: \" junk+0}')",
       "Bash(xargs ls -la)",
-      "Bash(awk '/export function \\(rollWarriorTraits|generateTraits|rollTraits|assignTraits\\)/,/^}/' src/engine/traits.ts)"
+      "Bash(awk '/export function \\(rollWarriorTraits|generateTraits|rollTraits|assignTraits\\)/,/^}/' src/engine/traits.ts)",
+      "Bash(awk '/interface FighterState/,/^}/' src/types/combat.types.ts)",
+      "Bash(awk '/export interface FighterState/,/^}/' src/engine/combat/resolution/types.ts)",
+      "Bash(awk '/export function performAttackCheck/,/\\\\{/' src/engine/combat/resolution/exchangeHelpers/checks/attackCheck.ts)"
     ]
   },
   "hooks": {

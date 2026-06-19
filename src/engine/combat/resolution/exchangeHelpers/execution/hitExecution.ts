@@ -24,6 +24,8 @@ import { SHIELD_COVERAGE } from '@/data/equipment';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 import { CRIT_DAMAGE_MULT } from '@/constants/combat';
 import { getStyleWeatherModifier } from '@/constants/arena';
+import { accumulateGuardBreak } from '../../guardBreak';
+import { getMomentumDamageBonus, getWsAttritionBonus } from '../../tempoMechanics';
 
 /**
  * Execute hit.
@@ -110,9 +112,14 @@ export function executeHit(
     hitLoc
   );
 
-  // LU: momentum damage pressure on a landed hit
-  if (attacker.style === FightingStyle.LungingAttack && attacker.momentum > 0) {
-    preArmor += attacker.momentum * 0.5;
+  // Tempo: LU momentum damage — negated when the defender is Wall of Steel (immovable)
+  preArmor += getMomentumDamageBonus(attacker.style, attacker.momentum, defender.style);
+  // WS: immovable — steady attrition floor so the brick still closes fights
+  preArmor += getWsAttritionBonus(attacker.style);
+
+  // BA: guard-break — each landed hit erodes the defender's guard for the rest of the fight
+  if (attacker.style === FightingStyle.BashingAttack) {
+    defender.parDegrade = accumulateGuardBreak(defender.parDegrade ?? 0);
   }
 
   const postArmor = applyArmorTypeMod(preArmor, attacker.weaponId, defender.armorId);

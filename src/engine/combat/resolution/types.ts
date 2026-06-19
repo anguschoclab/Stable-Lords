@@ -56,10 +56,16 @@ export interface FighterState {
   desperate?: boolean;
   /** Momentum counter: −3 to +3. Builds on hits/parries, swings on ripostes. Gates kill window. */
   momentum: number;
+  /** Bashing Attack guard-break: accumulated parry/dodge penalty this fighter
+   *  suffers from landed BA hits taken. 0..BA_PARDEGRADE_CAP, persists for the fight. */
+  parDegrade?: number;
   /** True when fighter has committed (HP < 35%, high killDesire): +20% ATT/DMG, fully open. */
   committed: boolean;
   /** True when fighter survived a commit attack — grants a free riposte on next exchange. */
   survivalStrike: boolean;
+  /** Parry-Strike: true after a successful parry — grants an ATT bonus on this
+   *  fighter's next attack, then clears (spent on the attempt, hit or miss). */
+  counterstrikePrimed?: boolean;
   /**
    * Recovery debt from CommitLevel. 0–3.
    * Penalises the Approach sub-phase roll by 2 per point. Decays by 1 each exchange.

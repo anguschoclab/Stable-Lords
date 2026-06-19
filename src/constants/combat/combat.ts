@@ -241,6 +241,19 @@ export const MIRROR_MATCH_BAND = 0.15;
 export const ABSOLUTE_POWER_LOW = 0.40;
 export const ABSOLUTE_POWER_HIGH = 0.60;
 
+/** Damage per momentum point for Lunging Attack's first-strike pressure. Balance knob. */
+export const LU_MOMENTUM_DMG_COEFF = 0.5;
+/** Flat attrition damage on a Wall of Steel landed hit so the immovable brick still closes fights. */
+export const WS_ATTRITION_FLOOR = 0.5;
+
+/** Flat ATT bonus on a Parry-Strike fighter's next attack after a successful parry. Balance knob. */
+export const PS_COUNTERSTRIKE_ATT = 2;
+
+/** Parry/dodge penalty added to a defender per landed Bashing Attack hit. Balance knob. */
+export const BA_PARDEGRADE_PER_HIT = 0.5;
+/** Maximum accumulated guard-break penalty a defender can suffer in one fight. */
+export const BA_PARDEGRADE_CAP = 3;
+
 /**
  * Tolerance for matrix antisymmetry check
  * Pairs with |M[i][j] + M[j][i]| > tolerance leak absolute power into matchup layer

@@ -46,6 +46,7 @@ import { resolveEffectiveTactics, applyAggressionBias, type ResolvedTactics } fr
 import type { FighterState, ResolutionContext } from './types';
 import { FightingStyle } from '@/types/shared.types';
 import { getStyleWeatherModifier } from '@/constants/arena';
+import { getCounterstrikeAttBonus } from './counterstrike';
 
 // Re-export from split modules
 export type { FighterState, ResolutionContext } from './types';
@@ -210,8 +211,13 @@ export function styleRiposteBonus(def: FighterState, att: FighterState): { ripBo
     else if (endRatio < 0.5) { ripBonus += 2; dmgBonus += 1; }
   }
 
-  // PL: momentum-based riposte pressure (reactive tempo, not raw attack damage)
-  if (def.style === FightingStyle.ParryLunge && def.momentum > 0) {
+  // PL: momentum-based riposte pressure (reactive tempo, not raw attack damage).
+  // Negated when the target is Wall of Steel — WS is immovable to tempo snowballs.
+  if (
+    def.style === FightingStyle.ParryLunge &&
+    def.momentum > 0 &&
+    att.style !== FightingStyle.WallOfSteel
+  ) {
     ripBonus += def.momentum;
     dmgBonus += def.momentum * 0.5;
   }
@@ -296,7 +302,8 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
     s.feintDefBonus +
     defRangePenalty -
     s.defDynTraitPar -
-    s.defDynTraitDef;
+    s.defDynTraitDef +
+    (def.parDegrade ?? 0);
 
   const defCheck = performDefenseCheck(
     rng,
@@ -335,6 +342,10 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
             attNew: att.momentum,
           },
         });
+      }
+      // PS win condition: a successful parry primes a counterstrike on PS's next attack.
+      if (def.style === FightingStyle.ParryStrike) {
+        def.counterstrikePrimed = true;
       }
       const styleRip = styleRiposteBonus(def, att);
       const ripPostParry = performRiposteCheck(
@@ -456,6 +467,10 @@ function resolveCombatOffenseDefense(
   const attWeaponRangeMod = getWeaponRangeMod(att.weaponId, ctx.range);
   const defWeaponRangeMod = getWeaponRangeMod(def.weaponId, ctx.range);
   const attDynTraitAtt = aGoesFirst ? dynTraitsA.attMod : dynTraitsD.attMod;
+
+  // PS win condition: spend the primed counterstrike on this attack (hit or miss).
+  const counterstrikeAtt = getCounterstrikeAttBonus(att);
+  att.counterstrikePrimed = false; // window lapses on the attempt
   const defDynTraitPar = aGoesFirst ? dynTraitsD.parMod : dynTraitsA.parMod;
   const defDynTraitDef = aGoesFirst ? dynTraitsD.defMod : dynTraitsA.defMod;
 
@@ -477,7 +492,8 @@ function resolveCombatOffenseDefense(
       attCommit.attBonus +
       feintAttBonus +
       attWeaponRangeMod +
-      attDynTraitAtt
+      attDynTraitAtt +
+      counterstrikeAtt
   );
 
   const s: OffenseDefenseCtx = {

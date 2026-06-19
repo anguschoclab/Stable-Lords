@@ -195,6 +195,7 @@ export function createFighterState(
     armorId: equip.armor,
     shieldId: equip.shield,
     momentum: 0,
+    riposteStreak: 0,
     parDegrade: 0,
     committed: false,
     survivalStrike: false,

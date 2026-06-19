@@ -56,6 +56,8 @@ export interface FighterState {
   desperate?: boolean;
   /** Momentum counter: −3 to +3. Builds on hits/parries, swings on ripostes. Gates kill window. */
   momentum: number;
+  /** Parry-Riposte light chain: count of consecutive successful ripostes. Resets on a missed riposte. */
+  riposteStreak?: number;
   /** Bashing Attack guard-break: accumulated parry/dodge penalty this fighter
    *  suffers from landed BA hits taken. 0..BA_PARDEGRADE_CAP, persists for the fight. */
   parDegrade?: number;

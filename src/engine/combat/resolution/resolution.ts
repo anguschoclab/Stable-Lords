@@ -196,6 +196,7 @@ interface OffenseDefenseCtx {
   dynTraitsD: DynamicTraitMods;
   feintDefBonus: number;
   defCommit: CommitResult;
+  attCommit: CommitResult;
   phaseKey: 'opening' | 'mid' | 'late';
   stylePhase: StylePhase;
   events: CombatEvent[];
@@ -545,6 +546,7 @@ function resolveCombatOffenseDefense(
     dynTraitsA,
     dynTraitsD,
     feintDefBonus,
+    attCommit,
     defCommit,
     phaseKey,
     stylePhase,

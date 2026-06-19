@@ -12,6 +12,7 @@ import {
   applyArmorTypeMod,
 } from '../../../mechanics/combatDamage';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
+import { MOMENTUM_CAP, MOMENTUM_FLOOR } from '@/constants/combat';
 
 /**
  * Execute riposte.
@@ -53,8 +54,8 @@ export function executeRiposte(
   // Riposte swings momentum decisively
   const prevDefMom = defender.momentum;
   const prevAttMom = attacker.momentum;
-  defender.momentum = Math.min(3, defender.momentum + 1);
-  attacker.momentum = Math.max(-3, attacker.momentum - 1);
+  defender.momentum = Math.min(MOMENTUM_CAP, defender.momentum + 1);
+  attacker.momentum = Math.max(MOMENTUM_FLOOR, attacker.momentum - 1);
   if (defender.momentum !== prevDefMom || attacker.momentum !== prevAttMom) {
     events.push({
       type: 'MOMENTUM_SHIFT',

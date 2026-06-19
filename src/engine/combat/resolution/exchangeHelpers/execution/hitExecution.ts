@@ -22,7 +22,23 @@ import type { HitLocation } from '../../../mechanics/combatDamage';
 import { FightingStyle } from '@/types/shared.types';
 import { SHIELD_COVERAGE } from '@/data/equipment';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
-import { CRIT_DAMAGE_MULT, AB_ARMOR_BYPASS_MAX, AB_ARMOR_BYPASS_DF_DIVISOR } from '@/constants/combat';
+import {
+  CRIT_DAMAGE_MULT,
+  AB_ARMOR_BYPASS_MAX,
+  AB_ARMOR_BYPASS_DF_DIVISOR,
+  COMMIT_HP_THRESHOLD,
+  COMMIT_KILL_DESIRE,
+  COMMIT_DAMAGE_MULT,
+  KNOCKDOWN_HP_RATIO,
+  KNOCKDOWN_DAMAGE_RATIO,
+  KNOCKDOWN_CHANCE_CAP,
+  KNOCKDOWN_LEG_BONUS,
+  INSIGHT_CHANCE,
+  CRITICAL_CHAIN_HITS,
+  ARMOR_FAILURE_DMG_THRESHOLD,
+  MOMENTUM_CAP,
+  MOMENTUM_FLOOR,
+} from '@/constants/combat';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../guardBreak';
 import { accumulateBleed } from '../../bleed';
@@ -96,8 +112,8 @@ export function executeHit(
 
   // ── Commit mechanic: attacker at low HP with high kill desire commits ──
   const kdForCommit = attacker.activePlan.killDesire ?? attKD;
-  const isAtLowHp = attacker.hp / attacker.maxHp < 0.35;
-  if (!attacker.committed && isAtLowHp && kdForCommit >= 7) {
+  const isAtLowHp = attacker.hp / attacker.maxHp < COMMIT_HP_THRESHOLD;
+  if (!attacker.committed && isAtLowHp && kdForCommit >= COMMIT_KILL_DESIRE) {
     attacker.committed = true;
     events.push({ type: 'STATE_CHANGE', actor: attLabel, result: 'COMMIT' });
   }
@@ -158,7 +174,7 @@ export function executeHit(
 
   // Commit: +20% damage
   if (attacker.committed) {
-    rawDamage = Math.round(rawDamage * 1.2);
+    rawDamage = Math.round(rawDamage * COMMIT_DAMAGE_MULT);
   }
 
   // Apply specialty damage received reduction on the defender
@@ -222,9 +238,9 @@ export function executeHit(
   if (
     !defender.knockedDown &&
     defender.hp > 0 &&
-    hpRatioAfterHit < 0.4 &&
-    damageRatio >= 0.12 &&
-    rng() < Math.min(0.35, damageRatio + defender.legHits * 0.05)
+    hpRatioAfterHit < KNOCKDOWN_HP_RATIO &&
+    damageRatio >= KNOCKDOWN_DAMAGE_RATIO &&
+    rng() < Math.min(KNOCKDOWN_CHANCE_CAP, damageRatio + defender.legHits * KNOCKDOWN_LEG_BONUS)
   ) {
     defender.knockedDown = true;
     events.push({ type: 'KNOCKDOWN', actor: defLabel });
@@ -233,8 +249,8 @@ export function executeHit(
   // ── Momentum: hit shifts momentum toward attacker ──
   const prevAttMom = attacker.momentum;
   const prevDefMom = defender.momentum;
-  attacker.momentum = Math.min(3, attacker.momentum + 1);
-  defender.momentum = Math.max(-3, defender.momentum - 1);
+  attacker.momentum = Math.min(MOMENTUM_CAP, attacker.momentum + 1);
+  defender.momentum = Math.max(MOMENTUM_FLOOR, defender.momentum - 1);
   if (attacker.momentum !== prevAttMom || defender.momentum !== prevDefMom) {
     events.push({
       type: 'MOMENTUM_SHIFT',
@@ -251,7 +267,7 @@ export function executeHit(
     events.push({ type: 'STATE_CHANGE', actor: defLabel, result: 'SURVIVAL_STRIKE' });
   }
 
-  if (damage > 0 && rng() < 0.2) {
+  if (damage > 0 && rng() < INSIGHT_CHANCE) {
     const attrs = ['ST', 'SP', 'DF', 'WL'];
     events.push({
       type: 'INSIGHT',
@@ -305,11 +321,11 @@ export function executeHit(
     if (rng() < killThreshold) {
       defender.hp = 0;
       didKill = true;
-      if (attacker.consecutiveHits >= 3) {
+      if (attacker.consecutiveHits >= CRITICAL_CHAIN_HITS) {
         causeBucket = 'CRITICAL_CHAIN';
       } else {
         const wasCovered = !!defender.activePlan.protect && defender.activePlan.protect !== 'Any';
-        if (wasCovered && rawDamage >= 20) causeBucket = 'ARMOR_FAILURE';
+        if (wasCovered && rawDamage >= ARMOR_FAILURE_DMG_THRESHOLD) causeBucket = 'ARMOR_FAILURE';
       }
     }
   }

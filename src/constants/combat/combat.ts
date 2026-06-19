@@ -307,6 +307,52 @@ export const ST_CRIT_DAMAGE_BONUS = 0.2;
 export const ST_EXECUTE_HP_THRESHOLD = 0.3;
 export const ST_EXECUTE_BONUS = 2;
 
+// ─── Commit Mechanic ──────────────────────────────────────────────────────
+/** HP ratio below which a fighter is considered "at low HP" for commit triggering. */
+export const COMMIT_HP_THRESHOLD = 0.35;
+/** Kill desire required to trigger commit. */
+export const COMMIT_KILL_DESIRE = 7;
+/** Damage multiplier applied when a fighter has committed. */
+export const COMMIT_DAMAGE_MULT = 1.2;
+
+// ─── Knockdown ────────────────────────────────────────────────────────────
+/** Defender HP ratio (after hit) below which a knockdown can occur. */
+export const KNOCKDOWN_HP_RATIO = 0.4;
+/** Minimum damage-to-maxHP ratio required for a knockdown check. */
+export const KNOCKDOWN_DAMAGE_RATIO = 0.12;
+/** Cap on the knockdown probability per hit. */
+export const KNOCKDOWN_CHANCE_CAP = 0.35;
+/** Knockdown probability bonus per existing leg hit on the defender. */
+export const KNOCKDOWN_LEG_BONUS = 0.05;
+
+// ─── Hit Side-Effects ─────────────────────────────────────────────────────
+/** Chance per damaging hit to grant an insight token. */
+export const INSIGHT_CHANCE = 0.2;
+/** Consecutive hits required to classify a kill as a critical chain. */
+export const CRITICAL_CHAIN_HITS = 3;
+/** Raw damage threshold for classifying a kill as armor failure. */
+export const ARMOR_FAILURE_DMG_THRESHOLD = 20;
+
+// ─── Momentum ─────────────────────────────────────────────────────────────
+/** Momentum cap (maximum positive momentum). */
+export const MOMENTUM_CAP = 3;
+/** Momentum floor (minimum negative momentum). */
+export const MOMENTUM_FLOOR = -3;
+/** Multiplier applied to momentum when computing initiative bonus. */
+export const MOMENTUM_INI_MULT = 2;
+
+// ─── Whiff & Riposte ──────────────────────────────────────────────────────
+/** Endurance cost multiplier on a whiffed attack (fraction of normal cost). */
+export const WHIFF_ENDURANCE_COST_MULT = 0.5;
+/** Flat defense penalty subtracted from whiff-riposte check difficulty. */
+export const WHIFF_RIPOSTE_DEF_PENALTY = 4;
+
+// ─── Narrative & Feint ────────────────────────────────────────────────────
+/** Probability that a style passive narrative triggers an event. */
+export const PASSIVE_NARRATIVE_CHANCE = 0.4;
+/** Defense bonus granted to a defender when the attacker's feint fails. */
+export const FEINT_FAILED_DEF_BONUS = 2;
+
 /**
  * Tolerance for matrix antisymmetry check
  * Pairs with |M[i][j] + M[j][i]| > tolerance leak absolute power into matchup layer

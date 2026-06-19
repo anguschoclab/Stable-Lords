@@ -33,6 +33,13 @@ import {
   PR_COMMIT_PUNISH,
   PR_CHAIN_STEP,
   PR_CHAIN_CAP,
+  MOMENTUM_CAP,
+  MOMENTUM_FLOOR,
+  MOMENTUM_INI_MULT,
+  WHIFF_ENDURANCE_COST_MULT,
+  WHIFF_RIPOSTE_DEF_PENALTY,
+  PASSIVE_NARRATIVE_CHANCE,
+  FEINT_FAILED_DEF_BONUS,
 } from '@/constants/combat';
 import type { CommitLevel } from '@/types/shared.types';
 import {
@@ -124,7 +131,7 @@ function resolveInitiativePhase(
     masteryIniA -
     fA.legHits +
     psychA.iniMod +
-    fA.momentum * 2 +
+    fA.momentum * MOMENTUM_INI_MULT +
     (ctx.trainerModsA.iniMod ?? 0) +
     ctx.weatherEffect.initiativeMod +
     ctx.surfaceMod.initiativeMod +
@@ -143,7 +150,7 @@ function resolveInitiativePhase(
     masteryIniD -
     fD.legHits +
     psychD.iniMod +
-    fD.momentum * 2 +
+    fD.momentum * MOMENTUM_INI_MULT +
     (ctx.trainerModsD.iniMod ?? 0) +
     ctx.weatherEffect.initiativeMod +
     ctx.surfaceMod.initiativeMod +
@@ -260,7 +267,7 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
   events.push({ type: 'ATTACK', actor: attLabel, result: 'WHIFF' });
   att.consecutiveHits = 0;
   att.endurance -=
-    Math.max(1, Math.floor(enduranceCost(s.curAttOE, s.curAttAL, ctx.weather) * 0.5)) +
+    Math.max(1, Math.floor(enduranceCost(s.curAttOE, s.curAttAL, ctx.weather) * WHIFF_ENDURANCE_COST_MULT)) +
     s.curOffMods.endCost;
 
   const curAntiSynDef = getStyleAntiSynergy(
@@ -278,7 +285,7 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
     def,
     aGoesFirst ? ctx.matchupD : ctx.matchupA,
     aGoesFirst ? s.fatD : s.fatA,
-    s.curOffMods.defPenalty - 4 + styleRip.ripBonus,
+    s.curOffMods.defPenalty - WHIFF_RIPOSTE_DEF_PENALTY + styleRip.ripBonus,
     aGoesFirst ? s.passD : s.passA,
     curAntiSynDef
   );
@@ -362,8 +369,8 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
     if (!isDodge) {
       const prevDefMomParry = def.momentum;
       const prevAttMomParry = att.momentum;
-      def.momentum = Math.min(3, def.momentum + 1);
-      att.momentum = Math.max(-3, att.momentum - 1);
+      def.momentum = Math.min(MOMENTUM_CAP, def.momentum + 1);
+      att.momentum = Math.max(MOMENTUM_FLOOR, att.momentum - 1);
       if (def.momentum !== prevDefMomParry || att.momentum !== prevAttMomParry) {
         events.push({
           type: 'MOMENTUM_SHIFT',
@@ -503,7 +510,7 @@ function resolveCombatOffenseDefense(
     : Math.min(TACTIC_OVERUSE_CAP, ctx.tacticStreakD);
   const curAttWepReq = aGoesFirst ? ctx.weaponReqA : ctx.weaponReqD;
 
-  const attMomentumBonus = att.momentum * 2;
+  const attMomentumBonus = att.momentum * MOMENTUM_INI_MULT;
   const attPsychMod = aGoesFirst ? psychA.attMod : psychD.attMod;
   const attWeaponRangeMod = getWeaponRangeMod(att.weaponId, ctx.range);
   const defWeaponRangeMod = getWeaponRangeMod(def.weaponId, ctx.range);
@@ -701,10 +708,10 @@ export function resolveExchange(
     totalFights: fD.totalFights,
   });
 
-  if (passA.narrative && rng() < 0.4) {
+  if (passA.narrative && rng() < PASSIVE_NARRATIVE_CHANCE) {
     events.push({ type: 'PASSIVE', actor: 'A', result: passA.narrative });
   }
-  if (passD.narrative && rng() < 0.4) {
+  if (passD.narrative && rng() < PASSIVE_NARRATIVE_CHANCE) {
     events.push({ type: 'PASSIVE', actor: 'D', result: passD.narrative });
   }
 
@@ -760,7 +767,7 @@ export function resolveExchange(
   const feintResult = runFeint(rng, att, def);
   events.push(...feintResult.events);
   const feintAttBonus = feintResult.feintBonus;
-  const feintDefBonus = feintResult.feintFailed ? 2 : 0;
+  const feintDefBonus = feintResult.feintFailed ? FEINT_FAILED_DEF_BONUS : 0;
 
   // Sub-phase 3: Commit — determine CommitLevel for attacker and defender
   const attCommit = runCommit(att, aGoesFirst ? OE_A : OE_D);

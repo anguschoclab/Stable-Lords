@@ -79,4 +79,25 @@ export const Route = createRootRoute({
     );
   },
   notFoundComponent: () => <NotFound />,
+  errorComponent: ({ error }) => (
+    <div className="flex min-h-screen items-center justify-center bg-[#050506]">
+      <div className="text-center font-mono max-w-md p-8">
+        <div className="text-destructive text-[10px] uppercase tracking-[0.5em] mb-4 animate-pulse">
+          Critical Error
+        </div>
+        <h1 className="text-foreground text-4xl font-bold uppercase tracking-widest mb-4">
+          Archive Corrupted
+        </h1>
+        <p className="text-muted-foreground text-xs uppercase tracking-[0.3em] mb-8">
+          {error instanceof Error ? error.message : 'An unexpected error occurred'}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="text-primary text-[10px] uppercase tracking-[0.4em] border border-primary px-6 py-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+        >
+          Reload Archive
+        </button>
+      </div>
+    </div>
+  ),
 });

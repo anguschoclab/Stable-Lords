@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useGameStore, useWorldState, type GameStore } from '@/state/useGameStore';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { filterAndSortOffers } from '@/engine/matchmaking/boutOfferFilters';
@@ -73,11 +73,13 @@ export function useBookingOffice() {
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [trackedWeek, setTrackedWeek] = useState(week);
 
-  if (week !== trackedWeek) {
-    setTrackedWeek(week);
-    setSignedOfferIds(new Set());
-    setSelectedWarriorId(null);
-  }
+  useEffect(() => {
+    if (week !== trackedWeek) {
+      setTrackedWeek(week);
+      setSignedOfferIds(new Set());
+      setSelectedWarriorId(null);
+    }
+  }, [week, trackedWeek]);
 
   const rivalWarriorMap = useMemo<RivalWarriorMap>(() => {
     const map: RivalWarriorMap = {};

@@ -3,7 +3,7 @@
  * Non-blocking toast-based contextual tips keyed by page/state.
  * Supports exact routes and pattern-matched dynamic routes.
  */
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
 import { filterActive } from '@/utils/roster';
@@ -228,6 +228,10 @@ export function useCoachTip(pathname: string) {
   const state = useWorldState();
   const { setState } = useGameStore();
   const ftueComplete = state.ftueComplete;
+  const coachDismissed = state.coachDismissed;
+  const roster = state.roster;
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   useEffect(() => {
     if (!ftueComplete) return;
@@ -235,24 +239,24 @@ export function useCoachTip(pathname: string) {
     const entry = matchRoute(pathname);
     if (!entry) return;
 
-    // Use current store state for tip selection to avoid stale closure issues
-    // Note: while we access from 'state' here, tip.id is what we need for the timer
-    const dismissed = state.coachDismissed ?? [];
+    const dismissed = coachDismissed ?? [];
+    const currentState = stateRef.current;
 
     // Build context for dynamic routes
     const context: CoachContext = {};
     const warriorMatch = pathname.match(/^\/warrior\/(.+)/);
     if (warriorMatch) {
-      context.warrior = state.roster.find((w: Warrior) => w.id === warriorMatch[1]);
+      context.warrior = roster.find((w: Warrior) => w.id === warriorMatch[1]);
     }
 
     const tip = entry.tips.find(
-      (t) => !dismissed.includes(t.id) && (!t.condition || t.condition(state, context))
+      (t) => !dismissed.includes(t.id) && (!t.condition || t.condition(currentState, context))
     );
 
     if (!tip) return;
 
-    const message = typeof tip.message === 'function' ? tip.message(state, context) : tip.message;
+    const message =
+      typeof tip.message === 'function' ? tip.message(currentState, context) : tip.message;
 
     const timer = setTimeout(() => {
       toast(message, {
@@ -275,6 +279,5 @@ export function useCoachTip(pathname: string) {
     }, 1000);
 
     return () => clearTimeout(timer);
-    // We primarily want to trigger when the pathname or relevant state changes
-  }, [pathname, ftueComplete, state, setState]);
+  }, [pathname, ftueComplete, coachDismissed, roster, setState]);
 }

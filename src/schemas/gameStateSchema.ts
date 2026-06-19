@@ -637,6 +637,7 @@ export const WarriorSchema = z.object({
   attributes: AttributesSchema,
   potential: z.record(z.string(), z.number()).optional(),
   baseSkills: BaseSkillsSchema.optional(),
+  luckfactor: BaseSkillsSchema.optional(),
   derivedStats: DerivedStatsSchema.optional(),
   fame: z.number(),
   popularity: z.number(),
@@ -884,6 +885,8 @@ export const RivalStableDataSchema = z.object({
   tier: z.enum(['Minor', 'Established', 'Major', 'Legendary']).optional(),
   crest: CrestDataSchema.optional(),
   seasonalGrowth: z.array(SeasonalGrowthSchema).optional(),
+  ledger: z.array(LedgerEntrySchema),
+  trainingAssignments: z.array(TrainingAssignmentSchema),
 });
 
 /**
@@ -963,11 +966,12 @@ export const GazetteStorySchema = z.object({
  */
 export const InsightTokenSchema = z.object({
   id: z.string(),
-  type: z.enum(['Weapon', 'Rhythm', 'Style', 'Attribute', 'Tactic']),
+  type: z.enum(['Weapon', 'Rhythm', 'Style', 'Attribute', 'Tactic', 'Trait']),
   warriorId: z.string(),
   warriorName: z.string(),
   detail: z.string(),
   targetKey: z.string().optional(),
+  origin: z.string().optional(),
   discoveredWeek: z.number(),
 });
 
@@ -1182,6 +1186,25 @@ export const DeferredBoutLogSchema = z.object({
 });
 
 /**
+ * Bookmark schema
+ */
+export const BookmarkEntityTypeSchema = z.enum([
+  'warrior',
+  'rival',
+  'promoter',
+  'trainer',
+  'tournament',
+  'boutOffer',
+  'scoutReport',
+]);
+
+export const BookmarkSchema = z.object({
+  entityType: BookmarkEntityTypeSchema,
+  entityId: z.string(),
+  createdAt: z.string(),
+});
+
+/**
  * Trainer schema
  */
 export const TrainerSchema = z.object({
@@ -1312,6 +1335,7 @@ export const GameStateSchema = z
     warriorToStableMap: z.any().optional(), // Passthrough for Map field
     rivalMap: z.any().optional(), // Passthrough for Map field
     deferredBoutLogs: z.array(DeferredBoutLogSchema).optional(),
+    bookmarks: z.array(BookmarkSchema),
   })
   .strict();
 

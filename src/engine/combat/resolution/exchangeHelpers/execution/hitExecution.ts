@@ -25,6 +25,7 @@ import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 import { CRIT_DAMAGE_MULT, AB_ARMOR_BYPASS_MAX, AB_ARMOR_BYPASS_DF_DIVISOR } from '@/constants/combat';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../guardBreak';
+import { accumulateBleed } from '../../bleed';
 import { getMomentumDamageBonus, getWsAttritionBonus } from '../../tempoMechanics';
 import {
   getFrontloadMult,
@@ -126,6 +127,11 @@ export function executeHit(
   // BA: guard-break — each landed hit erodes the defender's guard for the rest of the fight
   if (attacker.style === FightingStyle.BashingAttack) {
     defender.parDegrade = accumulateGuardBreak(defender.parDegrade ?? 0);
+  }
+
+  // SL: flurry of cuts — each landed hit stacks bleed (damage-over-time) on the defender
+  if (attacker.style === FightingStyle.SlashingAttack) {
+    defender.bleedStacks = accumulateBleed(defender.bleedStacks ?? 0);
   }
 
   const postArmor = applyArmorTypeMod(preArmor, attacker.weaponId, defender.armorId);

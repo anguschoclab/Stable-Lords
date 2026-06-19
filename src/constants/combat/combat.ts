@@ -288,6 +288,15 @@ export const PR_COMMIT_PUNISH: Record<CommitLevel, number> = {
 export const PR_CHAIN_STEP = 0.5;
 export const PR_CHAIN_CAP = 1.5;
 
+/** Slashing Attack flurry: bleed stacks applied per landed SL hit. Balance knob. */
+export const SL_BLEED_STACKS_PER_HIT = 2;
+/** Maximum bleed stacks a fighter can carry. */
+export const SL_BLEED_CAP = 5;
+/** Damage per bleed stack per exchange tick. */
+export const SL_BLEED_TICK_DMG = 1;
+/** Bleed stacks shed per exchange (natural clotting). */
+export const SL_BLEED_DECAY = 1;
+
 /** Striking Attack front-load: damage multiplier at exchange 0, decaying to 1.0 over the window. */
 export const ST_FRONTLOAD_START = 1.3;
 export const ST_FRONTLOAD_WINDOW = 6;

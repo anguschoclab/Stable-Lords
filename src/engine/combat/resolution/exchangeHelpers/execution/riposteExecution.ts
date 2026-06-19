@@ -25,7 +25,8 @@ export function executeRiposte(
   defPassive: ReturnType<typeof getStylePassive>,
   attLabel: 'A' | 'D',
   defLabel: 'A' | 'D',
-  specialtyRiposteMult: number = 1.0
+  specialtyRiposteMult: number = 1.0,
+  extraDmg: number = 0
 ) {
   const ripLoc = rollHitLocation(rng, defTactics.target, attacker.activePlan.protect);
   let ripDmgRaw = computeHitDamage(
@@ -37,7 +38,7 @@ export function executeRiposte(
   );
   ripDmgRaw = applyArmorTypeMod(ripDmgRaw, defender.weaponId, attacker.armorId);
   ripDmgRaw = Math.round(ripDmgRaw * specialtyRiposteMult);
-  const ripDmg = applyProtectMod(ripDmgRaw, ripLoc, attacker.activePlan.protect);
+  const ripDmg = applyProtectMod(ripDmgRaw, ripLoc, attacker.activePlan.protect) + Math.round(extraDmg);
 
   events.push({ type: 'DEFENSE', actor: defLabel, result: 'RIPOSTE' });
   events.push({ type: 'HIT', actor: defLabel, target: attLabel, location: ripLoc, value: ripDmg });

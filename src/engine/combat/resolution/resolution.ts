@@ -44,6 +44,7 @@ import { evaluatePsychState, getPsychStateMods, handleDesperateState } from './p
 import { applySpecialtyMods } from './specialtyMods';
 import { resolveEffectiveTactics, applyAggressionBias, type ResolvedTactics } from './tactics';
 import type { FighterState, ResolutionContext } from './types';
+import { FightingStyle } from '@/types/shared.types';
 import { getStyleWeatherModifier } from '@/constants/arena';
 
 // Re-export from split modules
@@ -197,6 +198,27 @@ interface OffenseDefenseCtx {
   defDynTraitDef: number;
 }
 
+/** Per-style conditional riposte bonuses (TP fatigue-exploit, PL momentum pressure). */
+export function styleRiposteBonus(def: FighterState, att: FighterState): { ripBonus: number; dmgBonus: number } {
+  let ripBonus = 0;
+  let dmgBonus = 0;
+
+  // TP: fatigue-exploit counter — opponent's exhaustion feeds riposte chance and damage
+  if (def.style === FightingStyle.TotalParry) {
+    const endRatio = att.endurance / Math.max(1, att.maxEndurance);
+    if (endRatio < 0.25) { ripBonus += 5; dmgBonus += 2; }
+    else if (endRatio < 0.5) { ripBonus += 2; dmgBonus += 1; }
+  }
+
+  // PL: momentum-based riposte pressure (reactive tempo, not raw attack damage)
+  if (def.style === FightingStyle.ParryLunge && def.momentum > 0) {
+    ripBonus += def.momentum;
+    dmgBonus += def.momentum * 0.5;
+  }
+
+  return { ripBonus, dmgBonus };
+}
+
 /** Handles a whiffed attack: endurance cost plus the defender's riposte chance. */
 function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
   const { ctx, aGoesFirst, att, def, attLabel, defLabel, events } = s;
@@ -213,12 +235,13 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
     (aGoesFirst ? s.tactD : s.tactA).offTactic,
     (aGoesFirst ? s.tactD : s.tactA).defTactic
   );
+  const styleRip = styleRiposteBonus(def, att);
   const ripCheck = performRiposteCheck(
     rng,
     def,
     aGoesFirst ? ctx.matchupD : ctx.matchupA,
     aGoesFirst ? s.fatD : s.fatA,
-    s.curOffMods.defPenalty - 4,
+    s.curOffMods.defPenalty - 4 + styleRip.ripBonus,
     aGoesFirst ? s.passD : s.passA,
     curAntiSynDef
   );
@@ -231,7 +254,9 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
       aGoesFirst ? s.tactD : s.tactA,
       aGoesFirst ? s.passD : s.passA,
       attLabel,
-      defLabel
+      defLabel,
+      1.0,
+      styleRip.dmgBonus
     );
   }
 }
@@ -311,12 +336,13 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
           },
         });
       }
+      const styleRip = styleRiposteBonus(def, att);
       const ripPostParry = performRiposteCheck(
         rng,
         def,
         aGoesFirst ? ctx.matchupD : ctx.matchupA,
         aGoesFirst ? s.fatD : s.fatA,
-        (aGoesFirst ? s.defModsD : s.defModsA).ripBonus + ctx.weatherEffect.riposteMod,
+        (aGoesFirst ? s.defModsD : s.defModsA).ripBonus + ctx.weatherEffect.riposteMod + styleRip.ripBonus,
         curPassD,
         undefined
       );
@@ -333,7 +359,8 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
           aGoesFirst ? s.passD : s.passA,
           attLabel,
           defLabel,
-          specRiposteMult
+          specRiposteMult,
+          styleRip.dmgBonus
         );
       }
     }

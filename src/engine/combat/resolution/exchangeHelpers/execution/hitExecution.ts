@@ -16,7 +16,10 @@ import {
   applyArmorTypeMod,
   applyShieldZoneMod,
   calculateKillWindow,
+  HIT_LOCATIONS,
 } from '../../../mechanics/combatDamage';
+import type { HitLocation } from '../../../mechanics/combatDamage';
+import { FightingStyle } from '@/types/shared.types';
 import { SHIELD_COVERAGE } from '@/data/equipment';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
 import { CRIT_DAMAGE_MULT } from '@/constants/combat';
@@ -90,8 +93,15 @@ export function executeHit(
     events.push({ type: 'STATE_CHANGE', actor: attLabel, result: 'COMMIT' });
   }
 
-  const hitLoc = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
-  let rawDamage = computeHitDamage(
+  let hitLoc = rollHitLocation(rng, attTactics.target, defender.activePlan.protect);
+
+  // AB: precision targeting — shift one step toward higher-value locations (head side)
+  if (attacker.style === FightingStyle.AimedBlow) {
+    const locIdx = HIT_LOCATIONS.indexOf(hitLoc as HitLocation);
+    if (locIdx > 0) hitLoc = HIT_LOCATIONS[locIdx - 1] as HitLocation;
+  }
+
+  let preArmor = computeHitDamage(
     rng,
     attacker.derived.damage +
       attOffMods.dmgBonus +
@@ -99,7 +109,22 @@ export function executeHit(
       weaponDamageBonus(attacker.weaponId, attacker.style),
     hitLoc
   );
-  rawDamage = applyArmorTypeMod(rawDamage, attacker.weaponId, defender.armorId);
+
+  // LU: momentum damage pressure on a landed hit
+  if (attacker.style === FightingStyle.LungingAttack && attacker.momentum > 0) {
+    preArmor += attacker.momentum * 0.5;
+  }
+
+  const postArmor = applyArmorTypeMod(preArmor, attacker.weaponId, defender.armorId);
+
+  // AB: armor bypass — ignore DF-scaled fraction of armor mitigation
+  let rawDamage: number;
+  if (attacker.style === FightingStyle.AimedBlow) {
+    const bypass = Math.max(0, Math.min(0.4, attacker.attributes.DF / 50));
+    rawDamage = Math.round(postArmor + bypass * (preArmor - postArmor));
+  } else {
+    rawDamage = postArmor;
+  }
 
   // Apply weather damage multiplier
   const weatherDamageMult = ctx?.weatherEffect?.damageMult ?? 1.0;

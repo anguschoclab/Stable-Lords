@@ -10,6 +10,7 @@ import { FightingStyle, type Warrior } from '@/types/game';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import type { FightPlan } from '@/types/combat.types';
+import { findAntisymmetryViolations } from '@/constants/combat/combat';
 
 const ALL_STYLES = Object.values(FightingStyle);
 
@@ -39,6 +40,52 @@ function makeTestWarrior(style: FightingStyle, id: string): Warrior {
 }
 
 const FIGHTS_PER_MATCHUP = 100; // 100 per matchup × 100 matchups = 10k fights
+
+// ── Guardrail: Matrix antisymmetry ────────────────────────────────────────────
+describe('Matchup matrix is pure rock-paper-scissors', () => {
+  it('should be near-antisymmetric (tolerance 1) so it carries no absolute-power bias', () => {
+    const violations = findAntisymmetryViolations(1);
+    expect(
+      violations.length,
+      `\nMatrix pairs leaking absolute power (|M[i][j]+M[j][i]| > 1):\n  ${violations.join('\n  ')}`
+    ).toBe(0);
+  });
+});
+
+// ── Guardrail: Mirror-match drift (engine A/D bias) ───────────────────────────
+describe('Mirror-match drift (engine A/D bias)', () => {
+  it('every style mirror match should sit near 50% A-side wins', () => {
+    const BAND = 0.15; // tighten toward 0.05 as A/D bias is reduced (seeded to contain current reality: AB at 36%)
+    const problems: string[] = [];
+    for (const s of ALL_STYLES) {
+      const rate = matchupWins[s]![s]! / FIGHTS_PER_MATCHUP;
+      if (Math.abs(rate - 0.5) > BAND) {
+        problems.push(`${s}: ${(rate * 100).toFixed(1)}% (A-side)`);
+      }
+    }
+    expect(problems.length, `\nMirror matches off 50% by >${BAND * 100}pp:\n  ${problems.join('\n  ')}`).toBe(0);
+  });
+});
+
+// ── Guardrail: Absolute-power band (overall win rate per style) ──────────────
+describe('Absolute-power band (overall win rate per style)', () => {
+  // RATCHET: target is [0.40, 0.60] (50% ± 10pp). Seed these bounds to just
+  // contain the current measured spread (Task 1), then tighten in Task 3 as
+  // absolute power is moved from the matrix into STYLE_PENALTIES. Do NOT loosen.
+  // Task 1 measured: min=29.0% (PR), max=69.0% (WS) → spread=40pp
+  const LOW = 0.28;  // floor(29.0%) - 1pp buffer
+  const HIGH = 0.70; // ceil(69.0%) + 1pp buffer
+  it(`every style overall win rate should be within [${LOW}, ${HIGH}] (ratcheting toward 0.40–0.60)`, () => {
+    const problems: string[] = [];
+    for (const s of ALL_STYLES) {
+      const rate = styleWins[s]! / styleFights[s]!;
+      if (rate < LOW || rate > HIGH) {
+        problems.push(`${s}: ${(rate * 100).toFixed(1)}%`);
+      }
+    }
+    expect(problems.length, `\nStyles outside absolute-power band:\n  ${problems.join('\n  ')}`).toBe(0);
+  });
+});
 
 // ── Build cross-style matrix once ────────────────────────────────────────────
 const styleWins: Record<string, number> = {};

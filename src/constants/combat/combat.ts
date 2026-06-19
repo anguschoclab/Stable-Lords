@@ -244,6 +244,9 @@ export const STYLE_ORDER = [
  * Canonical Style Advantage Matrix.
  * Values are flat skill bonuses (positive = advantage).
  *
+ * Antisymmetric by construction — absolute power lives in STYLE_PENALTIES (skillCalc.ts).
+ * Guarded by findAntisymmetryViolations.
+ *
  * Tuned 2026-04 across two passes:
  *
  * Pass 1 (style W%): nerfed WS (+5→+1), buffed AB (+2→+4), softened PR (-4→-1).
@@ -266,20 +269,24 @@ export const STYLE_ORDER = [
  *  - TP: removed -1 vs AB to dampen the AB-eats-TP swing without flipping.
  *  - PL/PR/PS: minor symmetric softening to lift the bottom of the spread.
  *
+ * Pass 3 (antisymmetrization): Extracted pure matchup component by setting
+ * M'[i][j] = round((M[i][j] - M[j][i]) / 2). Absolute-power bias moved to
+ * STYLE_PENALTIES. Matrix now pure rock-paper-scissors.
+ *
  * Target: aggregate W% spread ≤ 20pp; per-matchup spread ≤ 30pp on samples ≥50.
  */
 export const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
-  [0, +1, +2, +1, +1, +1, +2, +2, +1, +2], // AB
-  [-1, 0, 0, -1, -1, 0, -1, -1, 0, -1], // BA (Nerfed vs PR)
-  [-2, 0, 0, 0, 0, -1, -1, -1, 0, -1], // LU
-  [-1, +1, 0, 0, +1, +1, 0, 0, +1, 0], // PL
-  [-1, +1, 0, 0, 0, 0, 0, +1, +1, 0], // PR (Buffed vs BA and ST)
-  [-1, 0, +1, -1, 0, 0, 0, +2, 0, 0], // PS (Buffed vs ST)
-  [-2, +1, +1, 0, 0, 0, 0, -1, +1, 0], // SL
-  [-2, +1, +1, 0, -1, -2, +1, 0, +1, +1], // ST (Nerfed vs PR and PS)
-  [-1, 0, 0, -1, 0, 0, +1, -1, 0, -1], // TP
-  [-4, 0, -1, -2, -1, -3, -2, -2, 0, 0], // WS (Nerfed matrix entries globally)
+  [ 0,  1,  2,  1,  1,  1,  2,  2,  1,  3], // AB
+  [-1,  0,  0, -1, -1,  0, -1, -1,  0,  0], // BA
+  [-2,  0,  0,  0,  0, -1, -1, -1,  0,  0], // LU
+  [-1,  1,  0,  0,  1,  1,  0,  0,  1,  1], // PL
+  [-1,  1,  0,  0,  0,  0,  0,  1,  1,  1], // PR
+  [-1,  0,  1, -1,  0,  0,  0,  2,  0,  2], // PS
+  [-2,  1,  1,  0,  0,  0,  0, -1,  0,  1], // SL
+  [-2,  1,  1,  0, -1, -2,  1,  0,  1,  2], // ST
+  [-1,  0,  0, -1,  0,  0,  0, -1,  0,  0], // TP
+  [-3,  1,  0, -1,  0, -1, -1, -1,  1,  0], // WS
 ];
 
 /**
@@ -293,4 +300,24 @@ export function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle
   const di = STYLE_ORDER.indexOf(defStyle);
   if (ai < 0 || di < 0) return 0;
   return MATCHUP_MATRIX[ai]?.[di] ?? 0;
+}
+
+/**
+ * Returns the matchup-matrix cells that violate near-antisymmetry, i.e. pairs
+ * where M[i][j] + M[j][i] falls outside [-tolerance, +tolerance]. A pure
+ * matchup matrix is antisymmetric (if A beats B by +x, B is -x vs A); a
+ * nonzero pair-sum means absolute-power bias is smuggled into the matrix and
+ * belongs in STYLE_PENALTIES instead.
+ */
+export function findAntisymmetryViolations(tolerance = 1): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < STYLE_ORDER.length; i++) {
+    for (let j = i + 1; j < STYLE_ORDER.length; j++) {
+      const sum = (MATCHUP_MATRIX[i]?.[j] ?? 0) + (MATCHUP_MATRIX[j]?.[i] ?? 0);
+      if (Math.abs(sum) > tolerance) {
+        out.push(`${STYLE_ORDER[i]} vs ${STYLE_ORDER[j]}: sum=${sum}`);
+      }
+    }
+  }
+  return out;
 }

@@ -151,7 +151,7 @@ export function RecruitCard({
               <div className="flex items-center gap-3">
                 <Eye className="h-4 w-4 text-primary" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-                  Intelligence Synchronized
+                  Scouted
                 </span>
               </div>
               <Badge className="bg-primary text-primary-foreground font-black text-[10px] rounded-none px-3">
@@ -169,7 +169,7 @@ export function RecruitCard({
             <div className="flex items-center gap-3 opacity-40">
               <Info className="h-4 w-4" />
               <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-                Personnel Intel Redacted
+                Potential Unknown
               </span>
             </div>
             <Button
@@ -179,7 +179,7 @@ export function RecruitCard({
               disabled={!canAffordScout}
               onClick={() => onScout(warrior)}
             >
-              Scout Profile [25G]
+              Scout [25G]
             </Button>
           </div>
         )}
@@ -195,7 +195,7 @@ export function RecruitCard({
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-white/[0.02] border border-white/5 space-y-1">
               <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">
-                Health Capacity
+                Health
               </span>
               <div className="flex items-center gap-3">
                 <Heart className="h-3.5 w-3.5 text-destructive" />
@@ -206,7 +206,7 @@ export function RecruitCard({
             </div>
             <div className="p-4 bg-white/[0.02] border border-white/5 space-y-1">
               <span className="text-[9px] font-black uppercase text-muted-foreground/40 tracking-widest">
-                Endurance Pool
+                Endurance
               </span>
               <div className="flex items-center gap-3">
                 <Zap className="h-3.5 w-3.5 text-arena-fame" />
@@ -230,7 +230,7 @@ export function RecruitCard({
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 pt-8 border-t border-white/5">
           <div className="flex flex-col">
             <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-              Contract Value
+              Cost
             </span>
             <div className="flex items-center gap-2">
               <Coins className="h-4 w-4 text-arena-gold" />
@@ -247,7 +247,7 @@ export function RecruitCard({
               onClick={() => onRecruit(warrior, false)}
             >
               <UserPlus className="h-4 w-4 mr-3" />
-              Contract Secure
+              Sign
             </Button>
             <Button
               variant="outline"

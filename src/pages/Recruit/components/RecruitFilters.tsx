@@ -36,13 +36,13 @@ export function RecruitFilters({
 }: RecruitFiltersProps) {
   return (
     <aside className="space-y-8">
-      <SectionDivider label="Filter Engine" />
+      <SectionDivider label="Filters" />
 
       <div className="space-y-8">
         {/* Tiers */}
         <div className="space-y-4">
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-            Market Tier Filter
+            Tier
           </label>
           <div className="grid grid-cols-1 gap-3">
             {(['Common', 'Promising', 'Exceptional', 'Prodigy'] as RecruitTier[]).map((tier) => {
@@ -82,17 +82,17 @@ export function RecruitFilters({
         {/* Style */}
         <div className="space-y-4">
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-            Tactical Archetype
+            Fighting Style
           </label>
           <Select
             value={activeStyle}
             onValueChange={(v) => setActiveStyle(v as unknown as FightingStyle | 'all')}
           >
             <SelectTrigger className="h-12 bg-white/[0.02] border-white/10 rounded-none font-black uppercase text-[10px] tracking-widest">
-              <SelectValue placeholder="All Archetypes" />
+              <SelectValue placeholder="All Styles" />
             </SelectTrigger>
             <SelectContent className="bg-neutral-950 border-white/10 rounded-none">
-              <SelectItem value="all">ALL ARCHETYPES</SelectItem>
+              <SelectItem value="all">ALL STYLES</SelectItem>
               {Object.entries(STYLE_DISPLAY_NAMES).map(([k, v]) => (
                 <SelectItem key={k} value={k}>
                   {v.toUpperCase()}
@@ -105,7 +105,7 @@ export function RecruitFilters({
         {/* Sort */}
         <div className="space-y-4">
           <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-            Registry Sequence
+            Sort By
           </label>
           <Select
             value={sortBy}
@@ -133,7 +133,7 @@ export function RecruitFilters({
         >
           <div className="flex items-center gap-4">
             <RefreshCw className="h-4 w-4 text-primary group-hover:rotate-180 transition-all duration-700" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Sync Registry</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">Refresh Pool</span>
           </div>
           <div className="flex items-center gap-2">
             <Coins className="h-3 w-3 text-arena-gold" />

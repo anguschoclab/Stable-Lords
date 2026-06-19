@@ -19,11 +19,11 @@ export function ContractPortfolioHeader({
         </div>
         <div>
           <h3 className="font-display text-base font-black uppercase tracking-tight">
-            Personnel_Contract_Ledger
+            Contract Ledger
           </h3>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
-              Faculty_Enlistment // Active_Staff: {activeCount}
+              Active Contracts: {activeCount}
             </span>
             <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
           </div>
@@ -33,7 +33,7 @@ export function ContractPortfolioHeader({
       <div className="flex items-center gap-8">
         <div className="flex flex-col items-end">
           <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-40">
-            Weekly_Payroll_Sync
+            Weekly Payroll
           </span>
           <span className="font-mono font-black text-destructive text-lg">
             -{totalWeeklyExpense.toLocaleString()}G
@@ -42,7 +42,7 @@ export function ContractPortfolioHeader({
         {expiringSoonCount > 0 && (
           <div className="flex flex-col items-end px-6 border-l border-white/5">
             <span className="text-[9px] font-black uppercase tracking-widest text-destructive opacity-40">
-              Impaired_Tenure
+              Expiring Soon
             </span>
             <div className="flex items-center gap-2 font-mono font-black text-destructive text-lg">
               <AlertTriangle className="h-4 w-4 animate-bounce" />

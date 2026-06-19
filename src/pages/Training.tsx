@@ -125,9 +125,9 @@ export default function Training() {
   return (
     <PageFrame>
       <PageHeader
-        eyebrow="STABLE_MANAGEMENT"
+        eyebrow="Stable Management"
         title="Training Grounds"
-        subtitle="DRILLS · RECOVERY · POTENTIAL_OPTIMIZATION"
+        subtitle="DRILLS · RECOVERY · DEVELOPMENT"
         icon={Dumbbell}
         actions={
           <div className="flex items-center gap-6">
@@ -135,13 +135,13 @@ export default function Training() {
               <div className="flex items-center gap-1.5">
                 <Activity className="h-3 w-3 text-primary" />
                 <span>
-                  SYNC_LOAD: {Math.round((trainingCount / (state.roster.length || 1)) * 100)}%
+                  Training: {Math.round((trainingCount / (state.roster.length || 1)) * 100)}%
                 </span>
               </div>
               <div className="h-3 w-px bg-border/40" />
               <div className="flex items-center gap-1.5">
                 <Heart className="h-3 w-3 text-destructive" />
-                <span>MED_BAY: {recoveryCount} UNITS</span>
+                <span>Recovery: {recoveryCount}</span>
               </div>
             </div>
             {assignedCount > 0 && (
@@ -151,7 +151,7 @@ export default function Training() {
                 onClick={handleClearAll}
                 className="h-8 text-[10px] font-black tracking-widest uppercase border-white/5 bg-white/5 hover:bg-white/10 rounded-none"
               >
-                RESET_ALL_ASSIGNMENTS
+                Reset All
               </Button>
             )}
           </div>
@@ -164,7 +164,7 @@ export default function Training() {
           <div className="flex items-center justify-between px-5 py-3 bg-primary/5 border-b border-white/5">
             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-primary">
               <TrendingUp className="h-3.5 w-3.5" />
-              PREVIOUS_CYCLE_REPORT
+              Last Week's Report
             </div>
             <button
               onClick={() => setDismissedWeek(state.week)}
@@ -263,7 +263,7 @@ export default function Training() {
                 className="mt-4 text-xs uppercase tracking-widest font-black text-primary"
                 onClick={() => navigate({ to: '/stable/recruit' })}
               >
-                ACCESS_RECRUITMENT_TERMINAL ›
+                Recruit Warriors ›
               </Button>
             </Surface>
           ) : (

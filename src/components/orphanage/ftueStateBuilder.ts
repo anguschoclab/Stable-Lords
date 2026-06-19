@@ -52,16 +52,10 @@ export function buildFTUEInitialState(
         const won =
           (wasA && boutResult.outcome.winner === 'A') ||
           (wasD && boutResult.outcome.winner === 'D');
-        const killed = boutResult.outcome.by === 'Kill' && won;
         return {
           ...w,
           fame: won ? 1 : 0,
           popularity: won ? 1 : 0,
-          career: {
-            wins: won ? 1 : 0,
-            losses: won ? 0 : 1,
-            kills: killed ? 1 : 0,
-          },
           flair: (boutResult.outcome.post?.tags ?? []).includes('Flashy') && won ? ['Flashy'] : [],
         };
       }

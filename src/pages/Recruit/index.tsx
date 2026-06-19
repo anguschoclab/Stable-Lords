@@ -36,8 +36,8 @@ export default function Recruit() {
   return (
     <PageFrame>
       <PageHeader
-        title="Personnel Acquisition"
-        subtitle="STABLE · CONTRACT_MARKET"
+        title="Recruitment"
+        subtitle="STABLE · CONTRACT MARKET"
         actions={
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end">
@@ -50,7 +50,7 @@ export default function Recruit() {
             </div>
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Available Credits
+                Available Gold
               </span>
               <span className="text-sm font-display font-black text-arena-gold">{treasury}G</span>
             </div>
@@ -68,10 +68,10 @@ export default function Recruit() {
           </ImperialRing>
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-destructive">
-              Roster Capacity Exhausted
+              Roster Full
             </p>
             <p className="text-[9px] text-muted-foreground/60 uppercase tracking-widest italic">
-              Protocol: Decommission active assets before acquiring new recruits.
+              Retire or release a warrior before signing new recruits.
             </p>
           </div>
         </Surface>
@@ -83,13 +83,13 @@ export default function Recruit() {
             value="scout"
             className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
           >
-            Personnel Registry
+            Scout Market
           </TabsTrigger>
           <TabsTrigger
             value="custom"
             className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
           >
-            Custom Specification
+            Custom Warrior
           </TabsTrigger>
         </TabsList>
 
@@ -113,7 +113,7 @@ export default function Recruit() {
                     <Target className="h-3 w-3" />
                   </ImperialRing>
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/40">
-                    Showing {filteredPool.length} of {recruitPool.length} Identified Candidates
+                    Showing {filteredPool.length} of {recruitPool.length} Available Recruits
                   </span>
                 </div>
               </div>
@@ -145,10 +145,10 @@ export default function Recruit() {
                   </ImperialRing>
                   <div className="space-y-2">
                     <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                      Zero Results Detected
+                      No Results
                     </p>
                     <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
-                      Broaden filtering parameters or synchronize registry.
+                      Broaden your filters or refresh the pool.
                     </p>
                   </div>
                 </Surface>
@@ -167,12 +167,12 @@ export default function Recruit() {
             </ImperialRing>
             <div className="space-y-2">
               <h3 className="text-lg font-black uppercase tracking-tight text-foreground leading-none">
-                Custom Specification Protocol
+                Custom Warrior
               </h3>
               <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest leading-relaxed">
                 Unit Cost: <span className="text-arena-gold font-display font-black">200G</span> ·
                 Allocation: <span className="text-foreground font-black">66 Attribute Points</span>{' '}
-                · Full tactical customization enabled.
+                · Full customization available.
               </p>
             </div>
           </Surface>

@@ -17,10 +17,10 @@ export function IntelligenceHubHeader({ totalCommCount }: IntelligenceHubHeaderP
         </div>
         <div>
           <h3 className="font-display text-base font-black uppercase tracking-tight">
-            Intelligence Hub
+            Arena Chronicle
           </h3>
           <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-            Tactical Comms Synchronizer
+            Arena News & Dispatches
           </p>
         </div>
       </div>
@@ -28,7 +28,7 @@ export function IntelligenceHubHeader({ totalCommCount }: IntelligenceHubHeaderP
         variant="outline"
         className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest uppercase"
       >
-        {totalCommCount.toString().padStart(2, '0')} ACTIVE STREAMS
+        {totalCommCount.toString().padStart(2, '0')} DISPATCHES
       </Badge>
     </div>
   );

@@ -308,15 +308,15 @@ export default function ArenaHub() {
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-              Mission Cycle
+              Fight Week
             </span>
             <div className="h-px w-8 bg-primary/30" />
           </div>
           <h2 className="font-display font-black text-2xl uppercase tracking-tight text-foreground">
-            {isTournamentWeek ? `Empire Day ${gameState.day + 1}` : `Cycle Week ${week}`}
+            {isTournamentWeek ? `Empire Day ${gameState.day + 1}` : `Week ${week}`}
           </h2>
           <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest mt-1">
-            Commit all pending pairings to the arena registry
+            Send your warriors to the arena and resolve all bouts
           </p>
         </div>
         <Button
@@ -336,7 +336,7 @@ export default function ArenaHub() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
         {/* Left Column: Command & Pairings */}
         <div className="lg:col-span-8 flex flex-col gap-8">
-          <SectionDivider label="Engagement Intelligence" variant="gold" />
+          <SectionDivider label="Arena Chronicle" variant="gold" />
           <IntelligenceHubWidget />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -353,7 +353,7 @@ export default function ArenaHub() {
 
         {/* Right Column: Environmental & Tactical Feed */}
         <div className="lg:col-span-4 flex flex-col gap-8">
-          <SectionDivider label="Atmospheric Conditions" />
+          <SectionDivider label="Arena Conditions" />
           <WeatherWidget />
 
           <SectionDivider label="Style Meta State" />

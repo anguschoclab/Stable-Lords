@@ -58,9 +58,16 @@ export function useTacticalAlerts(): TacticalAlert[] {
       });
     }
 
-    // Check for pending bout offers (boutOffers is Record<string, BoutOffer>)
+    // Check for pending bout offers — only those involving the player's own warriors
+    // where the player's warrior has NOT yet responded (response still 'Pending')
+    const playerWarriorIds = new Set(activeWarriors.map((w) => w.id));
     const offersArray = boutOffers ? Object.values(boutOffers) : [];
-    const pendingOffers = offersArray.filter((o) => o.status === 'Proposed');
+    const pendingOffers = offersArray.filter((o) => {
+      if (o.status !== 'Proposed') return false;
+      return o.warriorIds.some(
+        (id) => playerWarriorIds.has(id) && (o.responses[id] === 'Pending' || !o.responses[id])
+      );
+    });
 
     if (pendingOffers.length > 0) {
       result.push({

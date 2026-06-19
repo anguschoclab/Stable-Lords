@@ -60,13 +60,13 @@ export function IntelligenceHubWidget() {
                 value="briefing"
                 className="bg-transparent border-none p-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 data-[state=active]:text-arena-gold data-[state=active]:shadow-none relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-arena-gold after:scale-x-0 data-[state=active]:after:scale-x-100 after:transition-transform"
               >
-                Intelligence Reports
+                Scout Reports
               </TabsTrigger>
               <TabsTrigger
                 value="reasoning"
                 className="bg-transparent border-none p-0 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 data-[state=active]:text-primary data-[state=active]:shadow-none relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:scale-x-0 data-[state=active]:after:scale-x-100 after:transition-transform"
               >
-                Cognitive Sync
+                Rival AI
               </TabsTrigger>
             </TabsList>
           </div>

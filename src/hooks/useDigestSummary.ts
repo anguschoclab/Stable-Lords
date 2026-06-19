@@ -61,9 +61,13 @@ export function useDigestSummary({
 
     const { pending, signed, upcoming } = Object.values(boutOffers).reduce(
       (acc, o) => {
-        if (o.status === 'Proposed' && o.boutWeek >= currentWeek) acc.pending++;
-        if (o.status === 'Signed' && o.boutWeek === currentWeek) acc.signed++;
-        if (o.status === 'Signed' && o.boutWeek > currentWeek) acc.upcoming++;
+        const playerAwaitingResponse = o.warriorIds.some(
+          (id) => playerWarriorIds.has(id) && (o.responses[id] === 'Pending' || !o.responses[id])
+        );
+        if (o.status === 'Proposed' && o.boutWeek >= currentWeek && playerAwaitingResponse) acc.pending++;
+        const involvesPlayer = o.warriorIds.some((id) => playerWarriorIds.has(id));
+        if (o.status === 'Signed' && o.boutWeek === currentWeek && involvesPlayer) acc.signed++;
+        if (o.status === 'Signed' && o.boutWeek > currentWeek && involvesPlayer) acc.upcoming++;
         return acc;
       },
       { pending: 0, signed: 0, upcoming: 0 }

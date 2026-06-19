@@ -95,7 +95,7 @@ export function WeatherWidget() {
         />
         <div className="text-right">
           <div className="text-[8px] text-muted-foreground uppercase font-black tracking-widest mb-1">
-            Atmospheric Data
+            Conditions
           </div>
           <p className="text-[10px] text-muted-foreground italic leading-tight w-full max-w-36 border-r-2 border-primary/20 pr-3">
             {config.description}
@@ -109,7 +109,7 @@ export function WeatherWidget() {
             <TooltipTrigger asChild>
               <div className="rounded-none border border-white/5 p-2 bg-white/[0.02] cursor-help transition-all hover:bg-white/[0.05] hover:border-white/10 flex items-center justify-between">
                 <span className="text-[8px] text-muted-foreground uppercase font-black tracking-widest">
-                  Active Modifiers
+                  Combat Modifiers
                 </span>
                 <Info className="h-3 w-3 text-muted-foreground/40" />
               </div>

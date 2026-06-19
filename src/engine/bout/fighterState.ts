@@ -10,9 +10,11 @@ import {
 } from '@/data/equipment';
 import { getTrainingBonus } from '@/engine/trainers';
 import { getFavoriteWeaponBonus } from '@/engine/favorites';
+import { getMasteryBonus } from '@/engine/favorites/weaponMastery';
 import { getStaticTraitMods, getTraitFightPlanMods } from '@/engine/traits';
 import { getInjuryPenalties } from '@/engine/injuries';
 import { applyLuckfactor } from '@/engine/skillCalc';
+import { getVeteranDefBonus } from '@/engine/aging/veteranCompensation';
 import { type FighterState } from '../combat/resolution/types';
 
 /**
@@ -59,6 +61,8 @@ export function createFighterState(
   const trainerMods = trainers ? getTrainerMods(trainers, plan.style) : null;
   const favWeapon = warrior ? getFavoriteWeaponBonus(warrior) : 0;
   const isMastered = favWeapon > 0;
+  const mastery = getMasteryBonus(plan.style, isMastered);
+  const veteranDef = warrior ? getVeteranDefBonus(warrior.age ?? 18, attrs.WL) : 0;
 
   const getShieldBonus = (id: string) => {
     if (id === 'small_shield') return { def: 1, att: 0 };
@@ -97,7 +101,7 @@ export function createFighterState(
     ATT:
       skills.ATT +
       (trainerMods?.attMod ?? 0) +
-      favWeapon +
+      mastery.att +
       classicBonus +
       weaponReq.attPenalty +
       totalShieldAtt +
@@ -115,6 +119,8 @@ export function createFighterState(
       skills.DEF +
       (trainerMods?.defMod ?? 0) +
       totalShieldDef +
+      veteranDef +
+      mastery.def +
       (drills.DEF ?? 0) +
       traitMods.defMod +
       (injuryPenalties['DEF'] ?? 0),
@@ -122,10 +128,16 @@ export function createFighterState(
       skills.INI +
       (trainerMods?.iniMod ?? 0) +
       encumbranceIniPenalty +
+      mastery.ini +
       (drills.INI ?? 0) +
       traitMods.iniMod +
       (injuryPenalties['INI'] ?? 0),
-    RIP: skills.RIP + (drills.RIP ?? 0) + traitMods.ripMod + (injuryPenalties['RIP'] ?? 0),
+    RIP:
+      skills.RIP +
+      mastery.rip +
+      (drills.RIP ?? 0) +
+      traitMods.ripMod +
+      (injuryPenalties['RIP'] ?? 0),
     DEC:
       skills.DEC +
       (trainerMods?.decMod ?? 0) +
@@ -159,7 +171,7 @@ export function createFighterState(
     skills: effSkills,
     derived: {
       ...derived,
-      damage: derived.damage + (isMastered ? 1 : 0) + traitMods.dmgBonus,
+      damage: derived.damage + mastery.dmg + traitMods.dmgBonus,
     },
     plan: traitPlan,
     activePlan: { ...traitPlan },

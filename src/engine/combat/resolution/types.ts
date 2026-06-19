@@ -54,6 +54,9 @@ export interface FighterState {
   armorId?: string;
   shieldId?: string;
   desperate?: boolean;
+  /** Slashing Attack bleed: damage-over-time stacks this fighter is suffering.
+   *  0..SL_BLEED_CAP; ticks and decays each exchange in resolveExchange. */
+  bleedStacks?: number;
   /** Momentum counter: −3 to +3. Builds on hits/parries, swings on ripostes. Gates kill window. */
   momentum: number;
   /** Parry-Riposte light chain: count of consecutive successful ripostes. Resets on a missed riposte. */

@@ -16,10 +16,18 @@ export function EventListItem({ event, allWarriorNames, onClick }: EventListItem
   const Icon = event.icon;
 
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       aria-label={`View event details: ${event.title}${event.subtitle ? `. ${event.subtitle}` : ''}`}
       key={event.id}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       className={cn(
         'w-full text-left px-4 py-2.5 flex items-start gap-3 transition-colors border-b border-border/30',
         'hover:bg-secondary/60 cursor-pointer group'
@@ -39,6 +47,6 @@ export function EventListItem({ event, allWarriorNames, onClick }: EventListItem
         )}
       </div>
       <ChevronRight className="h-3 w-3 text-muted-foreground/0 group-hover:text-muted-foreground/60 transition-colors mt-0.5 shrink-0" />
-    </button>
+    </div>
   );
 }

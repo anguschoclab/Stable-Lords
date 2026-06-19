@@ -2,7 +2,9 @@
  * StyleMeterTable — win rate per fighting style for the player's roster.
  * Horizontal bar chart ranked by win rate.
  */
+import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { WIN_RATE_THRESHOLDS } from '@/constants/core/ui';
@@ -28,9 +30,11 @@ interface StyleRow {
  * @param - { class name }.
  */
 export function StyleMeterTable({ className }: StyleMeterTableProps) {
-  const styleStats = useGameStore((s) => {
+  const roster = useGameStore(useShallow((s) => s.roster));
+
+  const rows: StyleRow[] = useMemo(() => {
     const map = new Map<string, { wins: number; losses: number }>();
-    for (const w of s.roster) {
+    for (const w of roster) {
       const entry = map.get(w.style) ?? { wins: 0, losses: 0 };
       entry.wins += w.career?.wins ?? 0;
       entry.losses += w.career?.losses ?? 0;
@@ -43,13 +47,12 @@ export function StyleMeterTable({ className }: StyleMeterTableProps) {
         losses,
         winRate: wins + losses > 0 ? wins / (wins + losses) : 0,
       }))
-      .sort((a, b) => b.winRate - a.winRate);
-  });
-
-  const rows: StyleRow[] = styleStats.map((stat) => ({
-    ...stat,
-    abbrev: STYLE_ABBREV[stat.style as keyof typeof STYLE_ABBREV] ?? stat.style,
-  }));
+      .sort((a, b) => b.winRate - a.winRate)
+      .map((stat) => ({
+        ...stat,
+        abbrev: STYLE_ABBREV[stat.style as keyof typeof STYLE_ABBREV] ?? stat.style,
+      }));
+  }, [roster]);
 
   return (
     <Surface variant="glass" className={cn('p-4 flex flex-col gap-3', className)}>

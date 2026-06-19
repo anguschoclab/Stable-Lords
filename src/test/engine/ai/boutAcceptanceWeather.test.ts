@@ -110,6 +110,7 @@ describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
     // to be declined in Rainy weather (weather skepticism)
     const offer = result.boutOffers?.['offer-1'];
     expect(offer).toBeDefined();
+    if (!offer) return;
     expect(offer.responses[warrior.id]).toBe('Declined');
   });
 });

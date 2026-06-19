@@ -123,7 +123,7 @@ export function simulateFight(
     planA,
     planD,
     crowdMood,
-    headless,
+    headless ?? false,
     narRng
   );
 
@@ -140,7 +140,7 @@ export function simulateFight(
     rng,
     log,
     exchangeLog,
-    headless,
+    headless ?? false,
     fightMinutes,
     causeBucket,
     fatalHitLocation,

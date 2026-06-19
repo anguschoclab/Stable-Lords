@@ -115,7 +115,8 @@ function triggerScreenShake(intensity: number) {
 export function useRivalryAlerts() {
   const state = useWorldState();
 
-  const rosterIds = useGameStore(useShallow((s) => new Set<WarriorId>(s.roster.map((w) => w.id))));
+  const rosterRaw = useGameStore(useShallow((s) => s.roster));
+  const rosterIds = useMemo(() => new Set<WarriorId>((rosterRaw ?? []).map((w) => w.id)), [rosterRaw]);
 
   const allRosterIds = useMemo(
     () => new Set<WarriorId>([...rosterIds].concat(state.graveyard?.map((w) => w.id) ?? [])),

@@ -45,19 +45,17 @@ export default function EventLog() {
   );
   const navigate = useNavigate();
 
-  const rosterNames = useGameStore(useShallow((s) => s.roster.map((w) => w.name)));
-
   // Collect all known warrior names for linkification
   const allWarriorNames = useMemo(() => {
     const names = new Set<string>();
-    for (const w of rosterNames) names.add(w);
+    for (const w of state.roster ?? []) names.add(w.name);
     for (const w of state.graveyard) names.add(w.name);
     for (const w of state.retired ?? []) names.add(w.name);
     for (const r of state.rivals ?? []) {
       for (const w of r.roster) names.add(w.name);
     }
     return [...names];
-  }, [rosterNames, state.graveyard, state.retired, state.rivals]);
+  }, [state.roster, state.graveyard, state.retired, state.rivals]);
 
   const events = useMemo(() => {
     const all: GameEvent[] = [

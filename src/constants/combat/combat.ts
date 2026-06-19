@@ -222,6 +222,51 @@ export const TRAIT_SELECTION_THRESHOLDS = {
   MAX_ROLL: 0.8,
 } as const;
 
+// ─── Aging & Veteran Compensation ─────────────────────────────────────────────
+/**
+ * Age at which aging penalties begin (SP/DF loss)
+ */
+export const AGING_PENALTY_START = 28;
+
+/**
+ * DEF gained per attribute-point-lost × WL/15 for veteran compensation
+ * Tune via balance harness to keep aged INI styles viable without over-buffing
+ */
+export const VETERAN_WISDOM_FACTOR = 0.05;
+
+// ─── Balance Guardrails ───────────────────────────────────────────────────────
+/**
+ * Allowed deviation from 50% for mirror-match A-side win rates
+ * Engine A/D bias should be reduced toward 0.05 over time
+ */
+export const MIRROR_MATCH_BAND = 0.15;
+
+/**
+ * Target absolute-power band for overall style win rates (50% ± 10pp)
+ * Styles outside this band are globally over/under-tuned
+ */
+export const ABSOLUTE_POWER_LOW = 0.40;
+export const ABSOLUTE_POWER_HIGH = 0.60;
+
+/**
+ * Tolerance for matrix antisymmetry check
+ * Pairs with |M[i][j] + M[j][i]| > tolerance leak absolute power into matchup layer
+ */
+export const MATRIX_ANTISYMMETRY_TOLERANCE = 1;
+
+// ─── Trait Generation ───────────────────────────────────────────────────────
+/**
+ * Synergy multiplier for archetype-matching traits
+ * Amplifies identity by making thematic fits more likely
+ */
+export const TRAIT_SYNERGY_MULTIPLIER = 3.0;
+
+/**
+ * Anti-synergy multiplier for archetype-opposed traits
+ * Reduces cross-style noise by making against-type traits rare
+ */
+export const TRAIT_ANTI_SYNERGY_MULTIPLIER = 0.10;
+
 // ─── Style Matchup Matrix ──────────────────────────────────────────────────
 
 /**
@@ -309,7 +354,7 @@ export function getMatchupBonus(attStyle: FightingStyle, defStyle: FightingStyle
  * nonzero pair-sum means absolute-power bias is smuggled into the matrix and
  * belongs in STYLE_PENALTIES instead.
  */
-export function findAntisymmetryViolations(tolerance = 1): string[] {
+export function findAntisymmetryViolations(tolerance = MATRIX_ANTISYMMETRY_TOLERANCE): string[] {
   const out: string[] = [];
   for (let i = 0; i < STYLE_ORDER.length; i++) {
     for (let j = i + 1; j < STYLE_ORDER.length; j++) {

@@ -18,7 +18,8 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import type { Archetype } from '@/data/names/archetypeNames'; /**
+import type { Archetype } from '@/data/names/archetypeNames';
+import { TRAIT_SYNERGY_MULTIPLIER, TRAIT_ANTI_SYNERGY_MULTIPLIER } from '@/constants/combat/combat'; /**
  * Defines the shape of trait effect.
  */
 
@@ -423,8 +424,8 @@ export function generateTraits(rng: IRNGService, archetype?: Archetype): string[
       if (!t || picked.includes(id)) continue;
       let w = t.weight;
       if (archetype) {
-        if (t.synergy?.includes(archetype)) w *= 3.0;
-        if (t.antiSynergy?.includes(archetype)) w *= 0.10;
+        if (t.synergy?.includes(archetype)) w *= TRAIT_SYNERGY_MULTIPLIER;
+        if (t.antiSynergy?.includes(archetype)) w *= TRAIT_ANTI_SYNERGY_MULTIPLIER;
       }
       weights.push({ id, w });
       totalWeight += w;

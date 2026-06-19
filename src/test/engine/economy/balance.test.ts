@@ -10,7 +10,7 @@ import { FightingStyle, type Warrior } from '@/types/game';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import type { FightPlan } from '@/types/combat.types';
-import { findAntisymmetryViolations } from '@/constants/combat/combat';
+import { findAntisymmetryViolations, MIRROR_MATCH_BAND, ABSOLUTE_POWER_LOW, ABSOLUTE_POWER_HIGH } from '@/constants/combat/combat';
 
 const ALL_STYLES = Object.values(FightingStyle);
 
@@ -44,7 +44,7 @@ const FIGHTS_PER_MATCHUP = 100; // 100 per matchup × 100 matchups = 10k fights
 // ── Guardrail: Matrix antisymmetry ────────────────────────────────────────────
 describe('Matchup matrix is pure rock-paper-scissors', () => {
   it('should be near-antisymmetric (tolerance 1) so it carries no absolute-power bias', () => {
-    const violations = findAntisymmetryViolations(1);
+    const violations = findAntisymmetryViolations();
     expect(
       violations.length,
       `\nMatrix pairs leaking absolute power (|M[i][j]+M[j][i]| > 1):\n  ${violations.join('\n  ')}`
@@ -55,15 +55,14 @@ describe('Matchup matrix is pure rock-paper-scissors', () => {
 // ── Guardrail: Mirror-match drift (engine A/D bias) ───────────────────────────
 describe('Mirror-match drift (engine A/D bias)', () => {
   it('every style mirror match should sit near 50% A-side wins', () => {
-    const BAND = 0.15; // tighten toward 0.05 as A/D bias is reduced (seeded to contain current reality: AB at 36%)
     const problems: string[] = [];
     for (const s of ALL_STYLES) {
       const rate = matchupWins[s]![s]! / FIGHTS_PER_MATCHUP;
-      if (Math.abs(rate - 0.5) > BAND) {
+      if (Math.abs(rate - 0.5) > MIRROR_MATCH_BAND) {
         problems.push(`${s}: ${(rate * 100).toFixed(1)}% (A-side)`);
       }
     }
-    expect(problems.length, `\nMirror matches off 50% by >${BAND * 100}pp:\n  ${problems.join('\n  ')}`).toBe(0);
+    expect(problems.length, `\nMirror matches off 50% by >${MIRROR_MATCH_BAND * 100}pp:\n  ${problems.join('\n  ')}`).toBe(0);
   });
 });
 
@@ -72,13 +71,11 @@ describe('Absolute-power band (overall win rate per style)', () => {
   // RATCHET: target is [0.40, 0.60] (50% ± 10pp). Absolute power now lives in
   // STYLE_PENALTIES; the matrix is pure matchup (antisymmetric). All styles
   // tuned to within this band via penalty adjustments.
-  const LOW = 0.40;
-  const HIGH = 0.60;
-  it(`every style overall win rate should be within [${LOW}, ${HIGH}]`, () => {
+  it(`every style overall win rate should be within [${ABSOLUTE_POWER_LOW}, ${ABSOLUTE_POWER_HIGH}]`, () => {
     const problems: string[] = [];
     for (const s of ALL_STYLES) {
       const rate = styleWins[s]! / styleFights[s]!;
-      if (rate < LOW || rate > HIGH) {
+      if (rate < ABSOLUTE_POWER_LOW || rate > ABSOLUTE_POWER_HIGH) {
         problems.push(`${s}: ${(rate * 100).toFixed(1)}%`);
       }
     }

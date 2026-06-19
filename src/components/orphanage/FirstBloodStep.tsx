@@ -1,17 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { Swords, ArrowLeft, ArrowRight, Skull } from 'lucide-react';
-import type { Warrior, FightSummary } from '@/types/game';
+import type { Warrior, FightSummary, FightOutcome } from '@/types/game';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
+import TacticalLogView from '@/components/arena/TacticalLogView';
 
 interface FirstBloodStepProps {
   boutResult: {
     a: Warrior;
     d: Warrior;
-    outcome: {
-      winner: 'A' | 'D' | null;
-      by: string | null;
-      post?: { tags?: string[] };
-    };
+    outcome: FightOutcome;
     summary: FightSummary;
   };
   onBack: () => void;
@@ -77,6 +74,12 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
             </div>
           </div>
         </div>
+
+        <TacticalLogView
+          log={boutResult.outcome.log}
+          visibleCount={boutResult.outcome.log.length}
+          className="max-h-[280px] min-h-0"
+        />
 
         <div
           className="p-4 text-center"

@@ -27,6 +27,12 @@ import {
   AetherStormEffect,
   ChaoticWindsEffect,
   EmberRainEffect,
+  AuroraBorealisEffect,
+  MirageEffect,
+  GravityAnomalyEffect,
+  WildfireSmokeEffect,
+  BloodFogEffect,
+  RainbowEffect,
 } from './effects';
 
 /**
@@ -44,7 +50,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Blazing Sun': () => <HeatEffect />,
   Gale: () => <WindEffect strong />,
   'Blood Moon': () => <BloodMoonEffect />,
-  'Blood Fog': null,
+  'Blood Fog': () => <BloodFogEffect />,
   Eclipse: () => <EclipseEffect />,
   Sandstorm: () => <SandstormEffect />,
   Tornado: () => <TornadoEffect />,
@@ -65,15 +71,15 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Arcane Storm': () => <ArcaneStormEffect />,
   'Blood Rain': () => <BloodRainEffect />,
   'Locust Swarm': () => <LocustSwarmEffect />,
-  'Aurora Borealis': () => <ManaSurgeEffect />,
+  'Aurora Borealis': () => <AuroraBorealisEffect />,
   'Chaotic Winds': () => <ChaoticWindsEffect />,
   'Aether Storm': () => <AetherStormEffect />,
-  Mirage: () => <ScorchingWindEffect />,
-  Rainbow: null,
+  Mirage: () => <MirageEffect />,
+  Rainbow: () => <RainbowEffect />,
   'Ember Rain': () => <EmberRainEffect />,
   Zephyr: () => <WindEffect strong={false} />,
-  'Wildfire Smoke': () => <AshfallEffect />,
-  'Gravity Anomaly': () => <AetherStormEffect />,
+  'Wildfire Smoke': () => <WildfireSmokeEffect />,
+  'Gravity Anomaly': () => <GravityAnomalyEffect />,
   'Shimmering Heat': () => <HeatEffect />,
 };
 

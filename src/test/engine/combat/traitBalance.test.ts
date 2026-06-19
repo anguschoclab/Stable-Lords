@@ -110,7 +110,7 @@ const COMBAT_TRAITS = [
   'bloodthirsty',
   'agile',
   'precise',
-  'combo_artist',
+  'comboartist',
   'riposte_natural',
 ];
 const NEGATIVE_TRAITS = ['fragile', 'slow'];

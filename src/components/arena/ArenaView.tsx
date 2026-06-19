@@ -99,6 +99,13 @@ export default function ArenaView({
 }: ArenaViewProps) {
   const store = useGameStore();
   const arenaPrefs = store.arenaPreferences;
+  const season = store.season?.toLowerCase() as
+    | 'spring'
+    | 'summer'
+    | 'fall'
+    | 'winter'
+    | 'tournament'
+    | undefined;
 
   // Set fighter names for text matching
   useEffect(() => {
@@ -134,6 +141,7 @@ export default function ArenaView({
       {/* Arena Background */}
       <ArenaBackground
         tier={arenaTier}
+        season={season}
         weather={weather}
         arenaId={arenaId}
         className="absolute inset-0"

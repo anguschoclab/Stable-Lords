@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { WEATHER_VISUALS } from '@/components/arena/weatherEffects';
+import { WEATHER_VISUALS } from '@/components/arena/weather';
 
 /**
  * The TS `Record<WeatherType, …>` type already guarantees (at compile time)
@@ -7,7 +7,7 @@ import { WEATHER_VISUALS } from '@/components/arena/weatherEffects';
  * every weather has a particle/overlay effect except the deliberately-neutral
  * Clear and Overcast conditions.
  */
-const NEUTRAL_WEATHERS = ['Clear', 'Overcast', 'Rainbow', 'Blood Fog'];
+const NEUTRAL_WEATHERS = ['Clear', 'Overcast'];
 
 describe('WEATHER_VISUALS', () => {
   it('only Clear and Overcast are neutral (null)', () => {

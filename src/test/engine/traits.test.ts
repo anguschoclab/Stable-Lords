@@ -104,12 +104,12 @@ describe('Warrior Traits', () => {
     });
 
     it('Combo Artist: +1 ATT only when consecutiveHits >= 2', () => {
-      const cold = getDynamicTraitMods(mockWarrior(['combo_artist']), {
+      const cold = getDynamicTraitMods(mockWarrior(['comboartist']), {
         ...baseCtx,
         consecutiveHits: 1,
       });
       expect(cold.attMod).toBe(0);
-      const hot = getDynamicTraitMods(mockWarrior(['combo_artist']), {
+      const hot = getDynamicTraitMods(mockWarrior(['comboartist']), {
         ...baseCtx,
         consecutiveHits: 2,
       });

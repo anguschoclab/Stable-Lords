@@ -618,7 +618,6 @@ export type WeatherType =
   | 'Aether Storm'
   | 'Mirage'
   | 'Ember Rain'
-  | 'Zephyr'
   | 'Wildfire Smoke'
   | 'Blood Fog'
   | 'Shimmering Heat';

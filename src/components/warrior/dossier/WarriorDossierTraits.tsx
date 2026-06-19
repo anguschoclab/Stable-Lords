@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import type { Warrior } from '@/types/warrior.types';
+import { TRAITS } from '@/engine/traits';
 
 interface WarriorDossierTraitsProps {
   warrior: Warrior;
@@ -27,7 +28,7 @@ export function WarriorDossierTraits({ warrior }: WarriorDossierTraitsProps) {
               variant="secondary"
               className="text-[9px] font-black uppercase tracking-widest bg-arena-gold/10 text-arena-gold border-arena-gold/20"
             >
-              {t}
+              {TRAITS[t]?.name ?? t}
             </Badge>
           ))}
         </div>

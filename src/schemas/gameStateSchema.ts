@@ -74,6 +74,7 @@ export const WeatherTypeSchema = z.enum([
   'Hailstorm',
   'Arcane Storm',
   'Blood Rain',
+  'Locust Swarm',
   'Aurora Borealis',
   'Chaotic Winds',
   'Aether Storm',

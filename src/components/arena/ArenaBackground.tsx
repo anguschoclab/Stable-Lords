@@ -16,7 +16,7 @@ export type ArenaTier = 'training' | 'standard' | 'championship' | 'grand'; /**
 export type Season = 'spring' | 'summer' | 'fall' | 'winter' | 'tournament';
 
 import { isIndoorArena } from '@/data/arenas';
-import { WeatherOverlay } from '@/components/arena/weatherEffects';
+import { WeatherOverlay } from '@/components/arena/weather';
 
 interface ArenaBackgroundProps {
   tier?: ArenaTier;

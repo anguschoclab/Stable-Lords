@@ -67,7 +67,7 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 border border-arena-gold/30 bg-arena-gold/5 text-arena-gold cursor-help">
-                    {warrior.trait}
+                    {TRAIT_DATA[warrior.trait]?.name ?? warrior.trait}
                   </span>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="max-w-xs text-[10px]">

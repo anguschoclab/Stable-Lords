@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
-import { weatherStaminaModifier } from '@/engine/combat/mechanics/combatMath';
+import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { rollWeather } from '@/engine/pipeline/passes/WorldPass';
 import { SeededRNGService } from '@/utils/random';
 
 describe('Locust Swarm Feature', () => {
   it('should return a 1.2 multiplier for Locust Swarm stamina drain', () => {
-    expect(weatherStaminaModifier('Locust Swarm')).toBe(1.2);
+    expect(getWeatherEffect('Locust Swarm').staminaMult).toBe(1.2);
   });
 
   it('should roll Locust Swarm weather when rng yields high enough value in Summer', () => {

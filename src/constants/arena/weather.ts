@@ -30,7 +30,7 @@ export interface WeatherConfig {
   description: string;
 }
 
-export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
+export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
   Zephyr: {
     icon: Wind,
     colorClass: 'text-primary',
@@ -266,23 +266,23 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
   },
   Rainbow: {
     icon: Sparkles,
-    colorClass: 'text-yellow-300',
-    bgClass: 'bg-yellow-900/40',
-    borderClass: 'border-yellow-500/20',
+    colorClass: 'text-arena-gold',
+    bgClass: 'bg-arena-gold/10',
+    borderClass: 'border-arena-gold/20',
     description: 'A beautiful rainbow spans the sky. Spirits are high.',
   },
   'Ember Rain': {
     icon: Flame,
-    colorClass: 'text-orange-500',
-    bgClass: 'bg-orange-500/10',
-    borderClass: 'border-orange-500/20',
+    colorClass: 'text-arena-blood',
+    bgClass: 'bg-arena-blood/10',
+    borderClass: 'border-arena-blood/20',
     description: 'Glowing embers rain down from the sky, searing the sand and fighters alike.',
   },
   'Wildfire Smoke': {
     icon: Flame,
-    colorClass: 'text-orange-500',
-    bgClass: 'bg-orange-500/10',
-    borderClass: 'border-orange-500/20',
+    colorClass: 'text-arena-blood',
+    bgClass: 'bg-arena-blood/10',
+    borderClass: 'border-arena-blood/20',
     description: 'Thick smoke reduces visibility and chokes the lungs.',
   },
   'Gravity Anomaly': {
@@ -301,9 +301,9 @@ export const WEATHER_CONFIG: Record<string, WeatherConfig> = {
   },
   'Shimmering Heat': {
     icon: Sun,
-    colorClass: 'text-orange-400',
-    bgClass: 'bg-orange-400/10',
-    borderClass: 'border-orange-400/20',
+    colorClass: 'text-arena-blood',
+    bgClass: 'bg-arena-blood/10',
+    borderClass: 'border-arena-blood/20',
     description: 'A rippling heatwave blurs vision and exhausts combatants.',
   },
 };

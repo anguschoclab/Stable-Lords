@@ -166,8 +166,8 @@ export const TRAITS: Record<string, TraitDef> = {
     effect: { decMod: 1 },
     weight: 0.7,
   },
-  combo_artist: {
-    id: 'combo_artist',
+  comboartist: {
+    id: 'comboartist',
     name: 'Combo Artist',
     description: '+1 attack when on a hit-streak (≥2 consecutive hits).',
     effect: { attModConsecutiveHits: 1 },

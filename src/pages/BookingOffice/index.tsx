@@ -49,24 +49,24 @@ export default function BookingOffice() {
   return (
     <PageFrame>
       <PageHeader
-        title="Booking Intelligence"
-        subtitle={`OPS · CONTRACT_MANAGEMENT · WK ${week}`}
+        title="Bout Offers"
+        subtitle={`ARENA · FIGHT OFFERS · WK ${week}`}
         actions={
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Market Saturation
+                Open Offers
               </span>
               <span className="text-sm font-display font-black text-primary">
-                {thisWeekOffers.length + upcomingOffers.length} Live Proposals
+                {thisWeekOffers.length + upcomingOffers.length} Bout Offers
               </span>
             </div>
             <div className="flex flex-col items-end border-l border-white/5 pl-6">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Peak Valuation
+                Highest Purse
               </span>
               <span className="text-sm font-display font-black text-arena-gold">
-                {highestPurse.toLocaleString()}G CAP
+                {highestPurse.toLocaleString()}G
               </span>
             </div>
           </div>
@@ -79,14 +79,14 @@ export default function BookingOffice() {
             <Target className="h-4 w-4 text-primary" />
           </ImperialRing>
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-foreground">
-            Operational Overview
+            Roster Status
           </span>
         </div>
 
         <div className="flex items-center gap-10">
           <div className="flex flex-col">
             <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-widest mb-1">
-              Idle Assets
+              Unbooked Warriors
             </span>
             <span
               className={
@@ -100,7 +100,7 @@ export default function BookingOffice() {
           <div className="h-8 w-px bg-white/5" />
           <div className="flex flex-col">
             <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-widest mb-1">
-              Personnel Deployed
+              Warriors Booked
             </span>
             <span className="font-display font-black text-lg leading-none">
               {roster.length - idleWarriors.length} / {roster.length}
@@ -114,7 +114,7 @@ export default function BookingOffice() {
             className="h-10 px-6 rounded-none border-white/10 hover:bg-white/5 font-black uppercase text-[10px] tracking-widest flex items-center gap-3"
             onClick={acceptAllHonorable}
           >
-            <Award className="h-3.5 w-3.5 text-primary" /> Execute All Safe Protocols
+            <Award className="h-3.5 w-3.5 text-primary" /> Accept All Honorable Offers
           </Button>
         </div>
       </Surface>
@@ -122,7 +122,7 @@ export default function BookingOffice() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
         {/* Left Rail Asset Registry */}
         <aside className="space-y-8">
-          <SectionDivider label="Asset Registry" />
+          <SectionDivider label="Warrior Roster" />
           <AssetRegistry
             roster={roster}
             boutOffers={boutOffers}
@@ -140,13 +140,13 @@ export default function BookingOffice() {
                   value="this-week"
                   className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
                 >
-                  Immediate Proposals [{filteredThisWeek.length}]
+                  This Week [{filteredThisWeek.length}]
                 </TabsTrigger>
                 <TabsTrigger
                   value="upcoming"
                   className="flex-1 h-full rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground border-0"
                 >
-                  Future Slates [{filteredUpcoming.length}]
+                  Upcoming Bouts [{filteredUpcoming.length}]
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -169,10 +169,10 @@ export default function BookingOffice() {
                   </ImperialRing>
                   <div className="space-y-2">
                     <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                      Zero Proposals Found
+                      No Offers This Week
                     </p>
                     <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
-                      No immediate contract offers detected for the current window.
+                      No bout offers have arrived for this week yet.
                     </p>
                   </div>
                 </Surface>
@@ -204,10 +204,10 @@ export default function BookingOffice() {
                   </ImperialRing>
                   <div className="space-y-2">
                     <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                      Upcoming Slates Empty
+                      No Upcoming Bouts
                     </p>
                     <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
-                      No future engagement projections currently available.
+                      No fight offers are scheduled for future weeks.
                     </p>
                   </div>
                 </Surface>

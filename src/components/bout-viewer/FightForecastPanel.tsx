@@ -22,7 +22,7 @@ export function FightForecastPanel({ forecast, nameA, nameD }: FightForecastPane
   return (
     <div className="mt-2 rounded-none border border-white/10 bg-black/40 p-3 space-y-2">
       <h4 className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
-        Predicted Edge
+        Fight Forecast
       </h4>
       <ul className="space-y-1.5">
         {forecast.factors.map((f, i) => {

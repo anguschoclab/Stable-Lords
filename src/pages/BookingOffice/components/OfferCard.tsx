@@ -90,7 +90,7 @@ export function OfferCard({
               {offer.purse}G
             </div>
             <p className="text-[8px] font-black uppercase text-muted-foreground/20 tracking-tighter mt-1">
-              ALLOCATED PURSE
+              FIGHT PURSE
             </p>
           </div>
         </div>
@@ -100,7 +100,7 @@ export function OfferCard({
         <div className="flex items-center justify-between gap-6">
           <div className="flex-1 text-center space-y-2">
             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/40">
-              DEPLOYMENT
+              YOUR FIGHTER
             </span>
             <div className="text-xs font-display font-black uppercase text-foreground">
               {playerWarrior?.name}
@@ -134,10 +134,10 @@ export function OfferCard({
 
           <div className="flex-1 text-center space-y-2">
             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/20">
-              TARGET
+              OPPONENT
             </span>
             <div className="text-xs font-display font-black uppercase text-muted-foreground/80">
-              {opponent?.name || 'CLASSIFIED'}
+              {opponent?.name || 'UNKNOWN'}
             </div>
             <div className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-widest">
               {opponent?.stableName || 'UNKNOWN STABLE'}
@@ -154,15 +154,15 @@ export function OfferCard({
         <div className="grid grid-cols-2 gap-8 py-6 border-y border-white/5">
           <div className="space-y-1">
             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Temporal Window
+              Fight Week
             </span>
             <div className="text-[11px] font-display font-black uppercase">
-              Operation Week {offer.boutWeek}
+              Week {offer.boutWeek}
             </div>
           </div>
           <div className="space-y-1 text-right">
             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Projection Index
+              Crowd Hype
             </span>
             <div className="text-[11px] font-display font-black uppercase text-arena-gold">
               {offer.hype}% Expected Hype
@@ -193,7 +193,7 @@ export function OfferCard({
       <div className="p-4 bg-white/[0.02] flex gap-2">
         {isSigned ? (
           <div className="flex-1 h-12 flex items-center justify-center gap-3 border border-primary/20 bg-primary/5 text-primary font-black uppercase text-[10px] tracking-[0.2em]">
-            <CheckCircle2 className="h-4 w-4" /> Execution Confirmed
+            <CheckCircle2 className="h-4 w-4" /> Offer Accepted
           </div>
         ) : (
           <>
@@ -202,7 +202,7 @@ export function OfferCard({
               onClick={() => onResponse(offer.id, playerWarriorId, 'Accepted')}
               disabled={!!injuryBadge || isExhausted(fatigue)}
             >
-              Sign Protocol
+              Accept Offer
             </Button>
             <Button
               variant="outline"

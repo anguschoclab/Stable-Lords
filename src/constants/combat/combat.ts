@@ -4,6 +4,7 @@
  */
 
 import { FightingStyle } from '@/types/shared.types';
+import type { CommitLevel } from '@/types/shared.types';
 
 // ─── Global Combat Modifiers ────────────────────────────────────────────────
 /**
@@ -253,6 +254,49 @@ export const PS_COUNTERSTRIKE_ATT = 2;
 export const BA_PARDEGRADE_PER_HIT = 0.5;
 /** Maximum accumulated guard-break penalty a defender can suffer in one fight. */
 export const BA_PARDEGRADE_CAP = 3;
+
+/** Aimed Blow armor bypass: max fraction of armor mitigation ignored. Balance knob. */
+export const AB_ARMOR_BYPASS_MAX = 0.4;
+/** Aimed Blow armor bypass: DF divisor (bypass = min(AB_ARMOR_BYPASS_MAX, DF / this)). */
+export const AB_ARMOR_BYPASS_DF_DIVISOR = 50;
+
+/** Total Parry fatigue-exploit: endurance ratio below which the severe tier applies. */
+export const TP_FATIGUE_SEVERE_RATIO = 0.25;
+/** Total Parry fatigue-exploit: endurance ratio below which the moderate tier applies. */
+export const TP_FATIGUE_MODERATE_RATIO = 0.5;
+/** Total Parry fatigue-exploit: severe-tier riposte bonus. */
+export const TP_FATIGUE_SEVERE_RIP = 5;
+/** Total Parry fatigue-exploit: severe-tier damage bonus. */
+export const TP_FATIGUE_SEVERE_DMG = 2;
+/** Total Parry fatigue-exploit: moderate-tier riposte bonus. */
+export const TP_FATIGUE_MODERATE_RIP = 2;
+/** Total Parry fatigue-exploit: moderate-tier damage bonus. */
+export const TP_FATIGUE_MODERATE_DMG = 1;
+
+/** Parry-Lunge momentum-riposte damage coefficient (damage = momentum × this). Balance knob. */
+export const PL_MOMENTUM_RIPOSTE_DMG_COEFF = 0.5;
+
+/** Parry-Riposte counter-on-parry: riposte-chance bonus after a successful parry. Balance knob. */
+export const PR_COUNTER_ON_PARRY = 4;
+/** Parry-Riposte punish-commitment: riposte damage bonus by the attacker's commitment level. */
+export const PR_COMMIT_PUNISH: Record<CommitLevel, number> = {
+  Cautious: 0,
+  Standard: 1,
+  Full: 2,
+};
+/** Parry-Riposte light chain: riposte damage per consecutive prior riposte, and its cap. */
+export const PR_CHAIN_STEP = 0.5;
+export const PR_CHAIN_CAP = 1.5;
+
+/** Striking Attack front-load: damage multiplier at exchange 0, decaying to 1.0 over the window. */
+export const ST_FRONTLOAD_START = 1.3;
+export const ST_FRONTLOAD_WINDOW = 6;
+/** Striking Attack crit specialist: added crit chance and added crit-damage multiplier. */
+export const ST_CRIT_CHANCE_BONUS = 0.1;
+export const ST_CRIT_DAMAGE_BONUS = 0.2;
+/** Striking Attack execute: bonus damage when the target's HP ratio is below the threshold. */
+export const ST_EXECUTE_HP_THRESHOLD = 0.3;
+export const ST_EXECUTE_BONUS = 2;
 
 /**
  * Tolerance for matrix antisymmetry check

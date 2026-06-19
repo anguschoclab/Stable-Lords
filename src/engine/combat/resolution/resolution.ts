@@ -267,7 +267,11 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
     (aGoesFirst ? s.tactD : s.tactA).offTactic,
     (aGoesFirst ? s.tactD : s.tactA).defTactic
   );
-  const styleRip = styleRiposteBonus(def, att);
+  const styleRip = styleRiposteBonus(def, att, {
+    afterParry: false,
+    attCommitLevel: s.attCommit.level,
+    riposteStreak: def.riposteStreak ?? 0,
+  });
   const ripCheck = performRiposteCheck(
     rng,
     def,
@@ -277,6 +281,9 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
     aGoesFirst ? s.passD : s.passA,
     curAntiSynDef
   );
+  if (def.style === FightingStyle.ParryRiposte) {
+    def.riposteStreak = ripCheck ? (def.riposteStreak ?? 0) + 1 : 0;
+  }
   if (ripCheck) {
     executeRiposte(
       events,
@@ -373,7 +380,11 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
       if (def.style === FightingStyle.ParryStrike) {
         def.counterstrikePrimed = true;
       }
-      const styleRip = styleRiposteBonus(def, att);
+      const styleRip = styleRiposteBonus(def, att, {
+        afterParry: true,
+        attCommitLevel: s.attCommit.level,
+        riposteStreak: def.riposteStreak ?? 0,
+      });
       const ripPostParry = performRiposteCheck(
         rng,
         def,
@@ -386,6 +397,9 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
       const specRiposteMult = aGoesFirst
         ? (ctx.trainerModsD.riposteDamageMult ?? 1.0)
         : (ctx.trainerModsA.riposteDamageMult ?? 1.0);
+      if (def.style === FightingStyle.ParryRiposte) {
+        def.riposteStreak = ripPostParry ? (def.riposteStreak ?? 0) + 1 : 0;
+      }
       if (ripPostParry) {
         executeRiposte(
           events,

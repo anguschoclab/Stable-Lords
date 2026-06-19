@@ -323,10 +323,14 @@ describe('CombatNarrator', () => {
 
   describe('knockdown/recovery narration from resolution', () => {
     it('resolution emits KNOCKDOWN events on heavy hits to low-HP defenders', () => {
+      // BashingAttack: a heavy hitter whose win condition (guard-break) does not
+      // amplify per-hit damage. StrikingAttack's execute/crit bonuses make every
+      // heavy hit lethal to a <40%-HP defender, so a knockdown (which requires the
+      // defender to SURVIVE the hit) can never fire — see win-condition specs.
       const makeFS = (label: 'A' | 'D') =>
         ({
           label,
-          style: FightingStyle.StrikingAttack,
+          style: FightingStyle.BashingAttack,
           attributes: { ST: 15, CN: 12, SZ: 14, WT: 12, WL: 12, SP: 14, DF: 12 },
           skills: { ATT: 10, PAR: 10, DEF: 10, DEC: 10, INI: 10, RIP: 10 },
           derived: { hp: 100, endurance: 100, damage: 8, encumbrance: 0 },

@@ -114,22 +114,61 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
               {stats.derivedStats.hp}
             </span>
           </div>
-          <div className="flex items-center justify-end gap-1">
-            <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-              POT
-            </span>
-            <span
-              className={`text-[11px] font-mono font-black ${
-                potentialGrade(potentialRating(warrior.potential)) === 'S'
-                  ? 'text-accent'
-                  : potentialGrade(potentialRating(warrior.potential)) === 'A'
-                    ? 'text-arena-gold'
-                    : 'text-foreground/80'
-              }`}
-            >
-              {potentialGrade(potentialRating(warrior.potential))}
-            </span>
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center justify-end gap-1 cursor-help">
+                  <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+                    POT
+                  </span>
+                  <span
+                    className={`text-[11px] font-mono font-black ${
+                      potentialGrade(potentialRating(warrior.potential)) === 'S'
+                        ? 'text-accent'
+                        : potentialGrade(potentialRating(warrior.potential)) === 'A'
+                          ? 'text-arena-gold'
+                          : 'text-foreground/80'
+                    }`}
+                  >
+                    {potentialGrade(potentialRating(warrior.potential))}
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-xs text-[10px]">
+                <div className="space-y-1.5">
+                  <p className="font-bold border-b border-white/10 pb-1">Potential</p>
+                  <p className="italic text-muted-foreground">
+                    The ceiling each attribute can reach through training. Higher grade = more growth room.
+                  </p>
+                  <div className="space-y-0.5 pt-0.5">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-black text-accent w-4">S</span>
+                      <span className="text-muted-foreground">85+ · Elite — near-maximum ceiling</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-black text-arena-gold w-4">A</span>
+                      <span className="text-muted-foreground">70–84 · Exceptional upside</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-black text-foreground/80 w-4">B</span>
+                      <span className="text-muted-foreground">55–69 · Solid growth potential</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-black text-foreground/80 w-4">C</span>
+                      <span className="text-muted-foreground">40–54 · Limited ceiling</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-black text-foreground/80 w-4">D</span>
+                      <span className="text-muted-foreground">&lt;40 · Minimal room to develop</span>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground/70 pt-0.5">
+                    Per-attribute, hidden by default, revealed through scouting and fights.
+                  </p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </div>

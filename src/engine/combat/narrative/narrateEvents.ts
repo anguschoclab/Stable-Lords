@@ -34,6 +34,7 @@ export function narrateEvents(
   const getName = (actor: 'A' | 'D') => (actor === 'A' ? nameA : nameD);
   const getOpponentName = (actor: 'A' | 'D') => (actor === 'A' ? nameD : nameA);
   const getWeapon = (actor: 'A' | 'D') => (actor === 'A' ? weaponA : weaponD);
+  const getStyle = (actor: 'A' | 'D') => (actor === 'A' ? ctx.styleA : ctx.styleD);
   const getMaxHp = (actor: 'A' | 'D') => (actor === 'A' ? ctx.maxHpA : ctx.maxHpD);
   const getFame = (actor: 'A' | 'D') => (actor === 'A' ? ctx.fameA : ctx.fameD);
   const getIsFavorite = (actor: 'A' | 'D') => (actor === 'A' ? ctx.isFavoriteA : ctx.isFavoriteD);
@@ -69,11 +70,11 @@ export function narrateEvents(
         if (event.result === 'WHIFF') {
           log.push({
             minute,
-            text: narrateAttack(rng, displayName(event.actor), weapon, false, opponentName),
+            text: narrateAttack(rng, displayName(event.actor), weapon, false, opponentName, getStyle(event.actor)),
           });
           log.push({
             minute,
-            text: narrateDodge(rng, opponentName, getSpeed(event.actor === 'A' ? 'D' : 'A')),
+            text: narrateDodge(rng, opponentName, getSpeed(event.actor === 'A' ? 'D' : 'A'), displayName(event.actor)),
           });
         }
         break;
@@ -95,14 +96,15 @@ export function narrateEvents(
               getOpponentName(event.actor),
               getWeapon(event.actor === 'A' ? 'D' : 'A'),
               false,
-              actorName
+              actorName,
+              getStyle(event.actor === 'A' ? 'D' : 'A')
             ),
           });
-          log.push({ minute, text: narrateParry(rng, actorName, weapon) });
+          log.push({ minute, text: narrateParry(rng, actorName, weapon, opponentName) });
         } else if (event.result === 'DODGE') {
-          log.push({ minute, text: narrateDodge(rng, actorName, getSpeed(event.actor)) });
+          log.push({ minute, text: narrateDodge(rng, actorName, getSpeed(event.actor), opponentName) });
         } else if (event.result === 'RIPOSTE') {
-          log.push({ minute, text: narrateCounterstrike(rng, actorName) });
+          log.push({ minute, text: narrateCounterstrike(rng, actorName, opponentName) });
         }
         break;
 
@@ -122,12 +124,12 @@ export function narrateEvents(
           ) {
             log.push({
               minute,
-              text: narrateAttack(rng, displayName(event.actor), weapon, isMastery, opponentName),
+              text: narrateAttack(rng, displayName(event.actor), weapon, isMastery, opponentName, getStyle(event.actor)),
             });
           } else if (!events.some((e) => e.type === 'DEFENSE' && e.actor === event.target)) {
             log.push({
               minute,
-              text: narrateAttack(rng, displayName(event.actor), weapon, isMastery, opponentName),
+              text: narrateAttack(rng, displayName(event.actor), weapon, isMastery, opponentName, getStyle(event.actor)),
             });
           }
 
@@ -147,7 +149,8 @@ export function narrateEvents(
               getMaxHp(event.target as 'A' | 'D'),
               isFatal,
               getFame(event.actor as 'A' | 'D'),
-              getIsFavorite(event.actor as 'A' | 'D')
+              getIsFavorite(event.actor as 'A' | 'D'),
+              getStyle(event.actor as 'A' | 'D')
             ),
           });
 
@@ -159,7 +162,8 @@ export function narrateEvents(
             const sevLine = damageSeverityLine(
               rng,
               event.value,
-              getMaxHp(event.target as 'A' | 'D')
+              getMaxHp(event.target as 'A' | 'D'),
+              opponentName
             );
             if (sevLine) log.push({ minute, text: sevLine });
 

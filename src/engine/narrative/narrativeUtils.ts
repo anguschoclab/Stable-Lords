@@ -1,5 +1,6 @@
 import { getItemById, getItemByCode } from '@/data/equipment';
 import { type WeaponType } from '@/types/combat.types';
+import { FightingStyle } from '@/types/shared.types';
 import { randomPick } from '@/utils/random';
 import type { RNG } from './types';
 
@@ -30,16 +31,43 @@ export function getWeaponDisplayName(equipId?: string): string {
   return item?.name?.toUpperCase() ?? 'WEAPON';
 }
 
+/** Hybrid weapons that can be slashing or piercing depending on fighting style */
+const HYBRID_WEAPONS: Record<string, WeaponType[]> = {
+  halberd: ['slashing', 'piercing'],
+  short_sword: ['slashing', 'piercing'],
+  longsword: ['slashing', 'piercing'],
+};
+
+/** Map fighting style → preferred weapon type for hybrid weapons */
+const STYLE_TO_WEAPON_TYPE: Partial<Record<FightingStyle, WeaponType>> = {
+  [FightingStyle.SlashingAttack]: 'slashing',
+  [FightingStyle.LungingAttack]: 'piercing',
+  [FightingStyle.ParryLunge]: 'piercing',
+  [FightingStyle.AimedBlow]: 'piercing',
+  [FightingStyle.StrikingAttack]: 'slashing',
+  [FightingStyle.ParryStrike]: 'slashing',
+  [FightingStyle.ParryRiposte]: 'slashing',
+  [FightingStyle.BashingAttack]: 'slashing',
+  [FightingStyle.WallOfSteel]: 'slashing',
+  [FightingStyle.TotalParry]: 'slashing',
+};
+
 /** Determine weapon category for PBP verb mapping */
-export function getWeaponType(weaponId?: string): WeaponType {
+export function getWeaponType(weaponId?: string, style?: FightingStyle): WeaponType {
   if (!weaponId || weaponId === 'fists' || weaponId === 'none') return 'fist';
+
+  // Hybrid weapons: resolve via fighting style if available
+  if (HYBRID_WEAPONS[weaponId]) {
+    if (style && STYLE_TO_WEAPON_TYPE[style]) {
+      return STYLE_TO_WEAPON_TYPE[style]!;
+    }
+    return HYBRID_WEAPONS[weaponId][0]!; // default to first type
+  }
 
   const slashing = [
     'scimitar',
     'broadsword',
     'greatsword',
-    'longsword',
-    'short_sword',
     'hatchet',
     'battle_axe',
     'great_axe',
@@ -49,11 +77,13 @@ export function getWeaponType(weaponId?: string): WeaponType {
     'morning_star',
     'maul',
     'war_flail',
+    'war_hammer',
+    'quarterstaff',
     'large_shield',
     'medium_shield',
     'small_shield',
   ];
-  const piercing = ['epee', 'dagger', 'short_spear', 'halberd', 'quarterstaff'];
+  const piercing = ['epee', 'dagger', 'short_spear', 'long_spear'];
 
   if (slashing.includes(weaponId)) return 'slashing';
   if (bashing.includes(weaponId)) return 'bashing';

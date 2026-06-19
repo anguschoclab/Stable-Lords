@@ -23,11 +23,12 @@ export function narrateAttack(
   attackerName: string,
   weaponId?: string,
   _isMastery?: boolean,
-  defenderName?: string
+  defenderName?: string,
+  style?: FightingStyle
 ): string {
   const r = normalizeRng(rng);
   const wName = getWeaponDisplayName(weaponId);
-  const wType = getWeaponType(weaponId);
+  const wType = getWeaponType(weaponId, style);
 
   // Use weapon-type-specific attack patterns
   const template = getFromArchive(r, ['pbp', 'attacks', wType]);
@@ -57,7 +58,8 @@ export function narratePassive(
 export function narrateParry(
   rng: IRNGService | RNG,
   defenderName: string,
-  weaponId?: string
+  weaponId?: string,
+  attackerName?: string
 ): string {
   const r = normalizeRng(rng);
   const wName = getWeaponDisplayName(weaponId);
@@ -65,13 +67,18 @@ export function narrateParry(
   const type = isShield ? 'shield' : 'parry';
 
   const template = getFromArchive(r, ['pbp', 'defenses', type, 'success']);
-  return interpolateTemplate(template, { defender: defenderName, weapon: wName });
+  return interpolateTemplate(template, { defender: defenderName, weapon: wName, attacker: attackerName });
 }
 
 /**
  * Narrates a successful dodge with SP-based tiering.
  */
-export function narrateDodge(rng: IRNGService | RNG, defenderName: string, speed?: number): string {
+export function narrateDodge(
+  rng: IRNGService | RNG,
+  defenderName: string,
+  speed?: number,
+  attackerName?: string
+): string {
   const r = normalizeRng(rng);
 
   // Determine tier based on SP attribute
@@ -89,7 +96,7 @@ export function narrateDodge(rng: IRNGService | RNG, defenderName: string, speed
   }
 
   const template = getFromArchive(r, ['pbp', 'defenses', 'dodge', tier]);
-  return interpolateTemplate(template, { defender: defenderName });
+  return interpolateTemplate(template, { defender: defenderName, attacker: attackerName });
 }
 
 /**
@@ -237,11 +244,15 @@ export function narrateTaunt(
 /**
  * Narrates a counterstrike.
  */
-export function narrateCounterstrike(rng: IRNGService | RNG, name: string): string {
+export function narrateCounterstrike(
+  rng: IRNGService | RNG,
+  defenderName: string,
+  attackerName?: string
+): string {
   const r = normalizeRng(rng);
   const template =
-    getFromArchive(r, ['pbp', 'defenses', 'counterstrike']) || '{{attacker}} counters!';
-  return interpolateTemplate(template, { attacker: name });
+    getFromArchive(r, ['pbp', 'defenses', 'counterstrike']) || '{{defender}} counters!';
+  return interpolateTemplate(template, { defender: defenderName, attacker: attackerName });
 }
 
 /**
@@ -259,12 +270,13 @@ export function narrateHit(
   maxHp?: number,
   isFatal?: boolean,
   attackerFame?: number,
-  isFavorite?: boolean
+  isFavorite?: boolean,
+  style?: FightingStyle
 ): string {
   const r = normalizeRng(rng);
   const richLoc = richHitLocation(r, location);
   const wName = getWeaponDisplayName(weaponId);
-  const wType = getWeaponType(weaponId);
+  const wType = getWeaponType(weaponId, style);
 
   const severity = getStrikeSeverity(
     damage || 0,

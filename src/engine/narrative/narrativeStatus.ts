@@ -8,12 +8,29 @@ import type { RNG } from './types';
 /**
  * Generates damage severity line.
  */
-export function damageSeverityLine(rng: RNG, damage: number, maxHp: number): string | null {
+export function damageSeverityLine(
+  rng: RNG,
+  damage: number,
+  maxHp: number,
+  defenderName?: string
+): string | null {
   const ratio = damage / maxHp;
-  if (ratio >= 0.35) return getFromArchive(rng, ['pbp', 'damage_severity', 'deadly']);
-  if (ratio >= 0.25) return getFromArchive(rng, ['pbp', 'damage_severity', 'terrific']);
-  if (ratio >= 0.15) return getFromArchive(rng, ['pbp', 'damage_severity', 'powerful']);
-  if (ratio <= 0.05) return getFromArchive(rng, ['pbp', 'damage_severity', 'glancing']);
+  if (ratio >= 0.35)
+    return interpolateTemplate(getFromArchive(rng, ['pbp', 'damage_severity', 'deadly']), {
+      defender: defenderName,
+    });
+  if (ratio >= 0.25)
+    return interpolateTemplate(getFromArchive(rng, ['pbp', 'damage_severity', 'terrific']), {
+      defender: defenderName,
+    });
+  if (ratio >= 0.15)
+    return interpolateTemplate(getFromArchive(rng, ['pbp', 'damage_severity', 'powerful']), {
+      defender: defenderName,
+    });
+  if (ratio <= 0.05)
+    return interpolateTemplate(getFromArchive(rng, ['pbp', 'damage_severity', 'glancing']), {
+      defender: defenderName,
+    });
   return null;
 }
 
@@ -53,7 +70,7 @@ export function fatigueLine(_rng: RNG, name: string, endRatio: number): string |
 export function crowdReaction(
   rng: RNG,
   loserName: string,
-  _winnerName: string,
+  winnerName: string,
   hpRatio: number
 ): string | null {
   if (rng() > 0.25) return null;
@@ -66,7 +83,7 @@ export function crowdReaction(
       'reactions',
       mood === 'boo' ? 'negative' : mood === 'cheer' ? 'positive' : 'encourage',
     ]);
-  return interpolateTemplate(template, { name: loserName });
+  return interpolateTemplate(template, { name: loserName, attacker: winnerName });
 }
 
 /**

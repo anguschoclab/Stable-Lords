@@ -197,12 +197,15 @@ export function runSimulationLoop(
             ? nameA
             : nameD;
         const winnerStyle = boutEnd.actor === 'A' ? planA?.style : planD?.style;
+        const winnerWeapon = boutActorIsWinner
+          ? boutEnd.actor === 'A' ? weaponA : weaponD
+          : boutEnd.actor === 'A' ? weaponD : weaponA;
         const boutEndLines = narrateBoutEnd(
           flavorRng,
           by as string,
           narWinner,
           narLoser,
-          undefined,
+          winnerWeapon,
           {
             cause: causeBucket,
             style: winnerStyle,

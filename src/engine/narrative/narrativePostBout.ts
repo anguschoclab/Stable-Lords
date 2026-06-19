@@ -5,6 +5,7 @@
 import { getWeaponDisplayName, getWeaponType } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate, peekArchive } from './narrativePBPUtils';
 import { audioManager } from '@/lib/AudioManager';
+import { FightingStyle } from '@/types/shared.types';
 import type { RNG } from './types';
 
 /**
@@ -48,7 +49,7 @@ export function narrateBoutEnd(
   ctx: BoutEndContext = {}
 ): string[] {
   const wName = getWeaponDisplayName(weaponId);
-  const wType = getWeaponType(weaponId);
+  const wType = getWeaponType(weaponId, ctx.style as FightingStyle | undefined);
 
   const categoryMap: Record<string, string> = {
     Kill: 'Kill',
@@ -63,6 +64,7 @@ export function narrateBoutEnd(
     attacker: winnerName,
     defender: loserName,
     weapon: wName,
+    name: loserName,
   });
 
   if (cat === 'Kill') audioManager.play('death');
@@ -104,6 +106,7 @@ export function narrateBoutEnd(
       attacker: winnerName,
       defender: loserName,
       weapon: wName,
+      name: loserName,
     });
     return [fatalBlow, conclusion];
   }

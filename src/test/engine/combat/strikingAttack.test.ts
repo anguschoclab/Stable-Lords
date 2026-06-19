@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
 import {
   getFrontloadMult,
   getStCritChanceBonus,
@@ -13,6 +14,9 @@ import {
   ST_CRIT_DAMAGE_BONUS,
   ST_EXECUTE_BONUS,
 } from '@/constants/combat/combat';
+import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
+import { computeWarriorStats } from '@/engine/skillCalc';
+import type { Warrior } from '@/types/game';
 
 const ST = FightingStyle.StrikingAttack;
 const OTHER = FightingStyle.TotalParry;
@@ -52,5 +56,32 @@ describe('getExecuteBonus', () => {
   });
   it('is zero for non-ST styles even against a low-HP target', () => {
     expect(getExecuteBonus(OTHER, 20, 100)).toBe(0);
+  });
+});
+
+function mk(style: FightingStyle, id: string): Warrior {
+  const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
+  const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
+  return {
+    id: id as WarriorId, name: id, style,
+    attributes: attrs, baseSkills, derivedStats, fame: 0, popularity: 0,
+    titles: [], injuries: [], flair: [], career: { wins: 0, losses: 0, kills: 0 },
+    champion: false, status: 'Active', age: 20, traits: [],
+  };
+}
+
+describe('ST all-in (integration)', () => {
+  it('Striking Attack is a real threat against a mid-tier Parry-Lunge', () => {
+    const st = mk(FightingStyle.StrikingAttack, 'ST');
+    const pl = mk(FightingStyle.ParryLunge, 'PL');
+    let wins = 0;
+    const N = 400;
+    for (let i = 0; i < N; i++) {
+      const o = simulateFight(defaultPlanForWarrior(st), defaultPlanForWarrior(pl), st, pl, i * 9001 + 37);
+      if (o.winner === 'A') wins++;
+    }
+    const rate = wins / N;
+    // ST is a burst threat — it should be competitive, not a pushover.
+    expect(rate, `ST vs PL win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.40);
   });
 });

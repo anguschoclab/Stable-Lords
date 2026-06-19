@@ -6,7 +6,8 @@
  */
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import type { Warrior, WarriorId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
+import type { Warrior } from '@/types/game';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
@@ -171,7 +172,7 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
       weather: 'Rainy',
       rivals: [makeRival('rival-1', [lunger]), makeRival('rival-2', [basher])],
       promoters: {
-        'prom-1': {
+        ['prom-1' as any]: {
           id: 'prom-1' as any,
           name: 'Test Promoter',
           tier: 'Regional',
@@ -180,8 +181,8 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
         } as any,
       },
       realmRankings: {
-        [lunger.id]: { overallRank: 1, compositeScore: 100 },
-        [basher.id]: { overallRank: 1, compositeScore: 100 },
+        [lunger.id]: { overallRank: 1, compositeScore: 100, classRank: 1 },
+        [basher.id]: { overallRank: 1, compositeScore: 100, classRank: 1 },
       },
     });
 
@@ -205,7 +206,7 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
       weather: 'Clear',
       rivals: [makeRival('rival-1', [w1]), makeRival('rival-2', [w2])],
       promoters: {
-        'prom-1': {
+        ['prom-1' as any]: {
           id: 'prom-1' as any,
           name: 'Test Promoter',
           tier: 'Regional',
@@ -214,8 +215,8 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
         } as any,
       },
       realmRankings: {
-        [w1.id]: { overallRank: 1, compositeScore: 100 },
-        [w2.id]: { overallRank: 1, compositeScore: 100 },
+        [w1.id]: { overallRank: 1, compositeScore: 100, classRank: 1 },
+        [w2.id]: { overallRank: 1, compositeScore: 100, classRank: 1 },
       },
     });
 

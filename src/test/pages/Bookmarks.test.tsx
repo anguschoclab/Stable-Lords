@@ -18,13 +18,17 @@ let mockStoreState: any = {
   trainers: [],
 };
 
-import * as reactRouter from '@tanstack/react-router';
-import * as useGameStoreModule from '@/state/useGameStore';
 
-vi.spyOn(reactRouter, 'useNavigate').mockImplementation(() => mockNavigate as any);
-vi.spyOn(reactRouter, 'Link' as any).mockImplementation(({ to, children }: any) => <a href={to}>{children}</a>);
 
-vi.spyOn(useGameStoreModule, 'useGameStore').mockImplementation((selector?: any) => {
+
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => mockNavigate,
+  Link: ({ to, children }: any) => <a href={to}>{children}</a>,
+}));
+
+
+vi.mock('@/state/useGameStore', () => ({
+  useGameStore: (selector?: any) => {
     const state = {
       ...mockStoreState,
       isBookmarked: (type: string, id: string) =>
@@ -39,7 +43,8 @@ vi.spyOn(useGameStoreModule, 'useGameStore').mockImplementation((selector?: any)
     };
     if (selector) return selector(state);
     return state;
-});
+  },
+}));
 
 describe('Bookmarks Page', () => {
   beforeEach(() => {

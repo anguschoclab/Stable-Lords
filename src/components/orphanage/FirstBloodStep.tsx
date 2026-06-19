@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Swords, ArrowLeft, ArrowRight, Skull } from 'lucide-react';
 import type { Warrior, FightSummary, FightOutcome } from '@/types/game';
@@ -23,6 +24,8 @@ interface FirstBloodStepProps {
  * @param - { bout result, on back, on next }.
  */
 export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloodStepProps) {
+  const [highlightIndex, setHighlightIndex] = useState(0);
+
   return (
     <div className="space-y-4">
       <div
@@ -78,7 +81,10 @@ export default function FirstBloodStep({ boutResult, onBack, onNext }: FirstBloo
         <TacticalLogView
           log={boutResult.outcome.log}
           visibleCount={boutResult.outcome.log.length}
-          className="max-h-[280px] min-h-0"
+          className="max-h-[400px] min-h-0"
+          showStepControls
+          highlightIndex={highlightIndex}
+          onHighlightChange={setHighlightIndex}
         />
 
         <div

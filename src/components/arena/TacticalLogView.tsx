@@ -3,12 +3,15 @@ import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { MinuteEvent } from '@/types/combat.types';
 import { classifyEvent } from '@/lib/boutUtils';
-import { Swords, Zap, Skull, Shield, Target, Activity, MoveHorizontal } from 'lucide-react';
+import { Swords, Zap, Skull, Shield, Target, Activity, MoveHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface TacticalLogViewProps {
   log: MinuteEvent[];
   visibleCount: number;
   className?: string;
+  highlightIndex?: number | null;
+  onHighlightChange?: (index: number) => void;
+  showStepControls?: boolean;
 }
 
 function getEventIcon(type: ReturnType<typeof classifyEvent>) {
@@ -75,20 +78,26 @@ const TacticalLogEntry = memo(
     index,
     isLatest,
     type,
+    isHighlighted,
+    entryRef,
   }: {
     event: MinuteEvent;
     index: number;
     isLatest: boolean;
     type: ReturnType<typeof classifyEvent>;
+    isHighlighted?: boolean;
+    entryRef?: (el: HTMLDivElement | null) => void;
   }) => {
     return (
       <div
         key={index}
+        ref={entryRef}
         className={cn(
           'flex items-start gap-2 py-1.5 px-2 border-l-2 text-xs transition-all duration-300',
           getEventColor(type),
           isLatest && 'animate-in slide-in-from-left-2 duration-300',
-          isLatest && type === 'crit' && 'animate-pulse'
+          isLatest && type === 'crit' && 'animate-pulse',
+          isHighlighted && 'ring-1 ring-primary/40 bg-primary/5'
         )}
       >
         <div className="mt-0.5 shrink-0">{getEventIcon(type)}</div>
@@ -120,42 +129,116 @@ const TacticalLogEntry = memo(
  * Tactical log view.
  * @param - { log, visible count, class name }.
  */
-export default function TacticalLogView({ log, visibleCount, className }: TacticalLogViewProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+export default function TacticalLogView({
+  log,
+  visibleCount,
+  className,
+  highlightIndex,
+  onHighlightChange,
+  showStepControls,
+}: TacticalLogViewProps) {
+  const entryRefs = useRef<(HTMLDivElement | null)[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to latest event
+  // Auto-scroll to latest event (only when not in highlight mode)
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, [visibleCount]);
+    if (highlightIndex == null) {
+      endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [visibleCount, highlightIndex]);
+
+  // Scroll highlighted entry into view
+  useEffect(() => {
+    if (highlightIndex != null && entryRefs.current[highlightIndex]) {
+      entryRefs.current[highlightIndex]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [highlightIndex]);
 
   const visibleEvents = log.slice(0, visibleCount);
+  const hasHighlight = highlightIndex != null;
+  const currentIndex = highlightIndex ?? 0;
+  const isAtStart = currentIndex <= 0;
+  const isAtEnd = currentIndex >= log.length - 1;
 
   return (
-    <ScrollArea className={cn('h-full min-h-96 w-full', className)}>
-      <div ref={scrollRef} className="p-4 space-y-1">
-        {visibleEvents.length === 0 ? (
-          <div className="text-center text-muted-foreground text-sm py-8 italic">
-            The battle is about to begin...
-          </div>
-        ) : (
-          visibleEvents.map((event, index) => {
-            const type = classifyEvent(event);
-            const isLatest = index === visibleEvents.length - 1;
+    <>
+      <ScrollArea className={cn('h-full min-h-96 w-full', className)}>
+        <div className="p-4 space-y-1">
+          {visibleEvents.length === 0 ? (
+            <div className="text-center text-muted-foreground text-sm py-8 italic">
+              The battle is about to begin...
+            </div>
+          ) : (
+            visibleEvents.map((event, index) => {
+              const type = classifyEvent(event);
+              const isLatest = index === visibleEvents.length - 1;
 
-            return (
-              <TacticalLogEntry
-                key={index}
-                event={event}
-                index={index}
-                isLatest={isLatest}
-                type={type}
-              />
-            );
-          })
-        )}
-        <div ref={endRef} />
-      </div>
-    </ScrollArea>
+              return (
+                <TacticalLogEntry
+                  key={index}
+                  event={event}
+                  index={index}
+                  isLatest={isLatest}
+                  type={type}
+                  isHighlighted={hasHighlight && index === highlightIndex}
+                  entryRef={(el) => {
+                    entryRefs.current[index] = el;
+                  }}
+                />
+              );
+            })
+          )}
+          <div ref={endRef} />
+        </div>
+      </ScrollArea>
+
+      {showStepControls && (
+        <div
+          className="flex items-center justify-between px-4 py-2"
+          style={{
+            background: '#0A0705',
+            border: '1px solid rgba(60,42,22,0.8)',
+            borderTop: 'none',
+          }}
+        >
+          <button
+            onClick={() => onHighlightChange?.(Math.max(0, currentIndex - 1))}
+            disabled={isAtStart}
+            aria-label="Previous"
+            className={cn(
+              'flex items-center justify-center h-8 w-8 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              isAtStart
+                ? 'opacity-30 cursor-not-allowed'
+                : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
+            )}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          <div className="flex items-center gap-2 font-mono text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+            <span className="text-primary">{currentIndex + 1}</span>
+            <span className="opacity-20">/</span>
+            <span>{log.length}</span>
+          </div>
+
+          <button
+            onClick={() => onHighlightChange?.(Math.min(log.length - 1, currentIndex + 1))}
+            disabled={isAtEnd}
+            aria-label="Next"
+            className={cn(
+              'flex items-center justify-center h-8 w-8 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              isAtEnd
+                ? 'opacity-30 cursor-not-allowed'
+                : 'text-muted-foreground hover:text-foreground hover:bg-white/5'
+            )}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+    </>
   );
 }

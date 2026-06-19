@@ -31,6 +31,22 @@ export function verifyBoutAcceptance(
     return { accepted: false, reason: 'Zero visibility prevents lunging strategy.' };
   }
 
+  if (weather === 'Sandstorm' && (isLunger || warrior.style === FightingStyle.AimedBlow)) {
+    return { accepted: false, reason: 'Sandstorm blinds precision targeting.' };
+  }
+
+  if (weather === 'Gale' && (warrior.style === FightingStyle.StrikingAttack || isLunger)) {
+    return { accepted: false, reason: 'Gale-force winds disrupt attack accuracy.' };
+  }
+
+  if (weather === 'Tornado') {
+    return { accepted: false, reason: 'Tornado conditions make all combat unsafe.' };
+  }
+
+  if (weather === 'Hailstorm' && warrior.attributes.CN < 12) {
+    return { accepted: false, reason: 'Hailstorm drains stamina too fast for low-conditioning warriors.' };
+  }
+
   // Skeptical Check: RECOVERY agents refuse fights with "Killers"
   if (intent === 'RECOVERY') {
     if (opponent.career.kills > 0 || (opponent.fame || 0) > (warrior.fame || 0) + 100) {
@@ -65,11 +81,30 @@ export function evaluateBoutOffer(
   offer: BoutOffer,
   rival: RivalStableData,
   warrior: Warrior,
-  currentWeek: number
+  currentWeek: number,
+  weather: WeatherType = 'Clear'
 ): 'Accepted' | 'Declined' {
   // 0. Desperation Gate: if treasury is critically low, accept ANYTHING for the purse
   if (rival.treasury < 500) {
     return 'Accepted';
+  }
+
+  // 0.5 Weather Skepticism (Gap 5)
+  const isLunger = warrior.style === FightingStyle.LungingAttack;
+  if (weather === 'Rainy' && isLunger) {
+    return 'Declined';
+  }
+  if (weather === 'Sweltering' && warrior.attributes.CN < 12) {
+    return 'Declined';
+  }
+  if (weather === 'Dense Fog' && isLunger) {
+    return 'Declined';
+  }
+  if (weather === 'Blizzard' && (isLunger || warrior.attributes.CN < 12)) {
+    return 'Declined';
+  }
+  if (weather === 'Acid Rain') {
+    return 'Declined';
   }
 
   // Tournament Hunger

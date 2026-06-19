@@ -451,6 +451,18 @@ export const BaseSkillsSchema = z.object({
 });
 
 /**
+ * Luckfactor schema (allows negative ±4 deltas)
+ */
+export const LuckfactorSchema = z.object({
+  ATT: z.number(),
+  PAR: z.number(),
+  DEF: z.number(),
+  INI: z.number(),
+  RIP: z.number(),
+  DEC: z.number(),
+});
+
+/**
  * DerivedStats schema
  */
 export const DerivedStatsSchema = z.object({
@@ -637,7 +649,7 @@ export const WarriorSchema = z.object({
   attributes: AttributesSchema,
   potential: z.record(z.string(), z.number()).optional(),
   baseSkills: BaseSkillsSchema.optional(),
-  luckfactor: BaseSkillsSchema.optional(),
+  luckfactor: LuckfactorSchema.optional(),
   derivedStats: DerivedStatsSchema.optional(),
   fame: z.number(),
   popularity: z.number(),

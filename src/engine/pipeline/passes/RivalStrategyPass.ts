@@ -8,6 +8,7 @@ import { aiDraftFromPool } from '@/engine/draftService';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';
+import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { SeededRNGService } from '@/utils/random';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { hashStr } from '@/utils/random';
@@ -80,6 +81,18 @@ export function runRivalStrategyPass(
       boutOffersWithWorld[o.id] = o;
     });
   }
+
+  // 1.7. Generate bout bids for each rival (Gap 2: integrate generateBoutBids)
+  for (const rival of currentRivals) {
+    generateBoutBids(
+      rival,
+      nextWeek,
+      state.weather ?? 'Clear',
+      state.crowdMood ?? 'Calm',
+      currentRivals
+    );
+  }
+
   impacts.push({ boutOffers: boutOffersWithWorld });
 
   // 2. Draft from Recruitment Pool

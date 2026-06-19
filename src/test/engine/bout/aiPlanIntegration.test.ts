@@ -351,8 +351,8 @@ describe('Gap 1: runBoutSimulation uses aiPlanForWarrior for NPC warriors', () =
     const npcPlan = simulateSpy.mock.calls[0]![1] as any;
 
     // BashingAttack base OE=7, Pragmatic adds OE+0, Opportunist adds OE+0,
-    // matchup vs LungingAttack gives oe+2 → OE=9
+    // matchup vs LungingAttack gives oe+2, styleSuitabilityBias gives oe+2 → OE=10 (clamped from 11)
     // Without aiPlanForWarrior, defaultPlanForWarrior gives OE=7
-    expect(npcPlan.OE).toBe(9);
+    expect(npcPlan.OE).toBe(10);
   });
 });

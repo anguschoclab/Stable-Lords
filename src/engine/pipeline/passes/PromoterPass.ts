@@ -1,6 +1,7 @@
 import { GameState, Warrior } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts';
-import type { BoutOfferId } from '@/types/shared.types';
+import type { BoutOfferId, WeatherType } from '@/types/shared.types';
+import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { FIGHT_PURSE } from '@/constants/economy';
@@ -16,6 +17,22 @@ import {
 } from '@/engine/promoters/personalityScoring';
 import { calculateHype } from '@/engine/promoters/hypeCalculator';
 import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
+
+/**
+ * Returns true if the warrior's style is heavily penalized by the current weather,
+ * making them a poor choice for promoter matchmaking.
+ */
+function isWeatherDisadvantaged(warrior: Warrior, weather: WeatherType): boolean {
+  const isLunger = warrior.style === FightingStyle.LungingAttack;
+  if (weather === 'Rainy' && isLunger) return true;
+  if (weather === 'Dense Fog' && isLunger) return true;
+  if (weather === 'Blizzard' && (isLunger || warrior.attributes.CN < 12)) return true;
+  if (weather === 'Sandstorm' && (isLunger || warrior.style === FightingStyle.AimedBlow)) return true;
+  if (weather === 'Gale' && (warrior.style === FightingStyle.StrikingAttack || isLunger)) return true;
+  if (weather === 'Tornado') return true;
+  if (weather === 'Acid Rain') return true;
+  return false;
+}
 /**
  * Stable Lords — Promoter Pass
  * Phase 2: Promoters scan the world and dispatch bout offers.
@@ -70,6 +87,12 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
 
   const availableWarriors = allWarriors.filter((warrior) => !unavailableWarriorIds.has(warrior.id));
 
+  // Gap 10: Filter out warriors whose style is heavily penalized by current weather
+  const weather = (state.weather ?? 'Clear') as WeatherType;
+  const weatherSuitableWarriors = availableWarriors.filter(
+    (w) => !isWeatherDisadvantaged(w, weather)
+  );
+
   // Pre-build a set of player warrior ids for arena-selection favour weighting
   const playerWarriorIds = new Set((state.roster || []).map((w) => w.id));
 
@@ -78,8 +101,8 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
     const capacity = promoter.capacity;
     let generated = 0;
 
-    // Attempt to fill capacity
-    const shuffledWarriors = rngService.shuffle(availableWarriors);
+    // Attempt to fill capacity (use weather-suitable warriors)
+    const shuffledWarriors = rngService.shuffle(weatherSuitableWarriors);
 
     // Get personality-specific gap threshold
     const gapThreshold = PERSONALITY_GAP_THRESHOLDS[promoter.personality] ?? 0.25;

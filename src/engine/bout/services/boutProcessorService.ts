@@ -1,7 +1,8 @@
-import { GameState, Warrior, BoutOffer } from '@/types/state.types';
-import type { BoutOfferId } from '@/types/shared.types';
-import { type FightOutcome } from '@/types/combat.types';
+import { GameState, Warrior, BoutOffer, RivalStableData } from '@/types/state.types';
+import type { BoutOfferId, FightingStyle } from '@/types/shared.types';
+import { type FightOutcome, type FightPlan } from '@/types/combat.types';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
+import { aiPlanForWarrior } from '@/engine/ai/plan/coreGenerator';
 import { getMoodModifiers } from '@/engine/crowdMood';
 import { engineEventBus } from '@/engine/core/EventBus';
 import { SeededRNGService } from '@/utils/random';
@@ -116,6 +117,39 @@ function handleInvalidBout(ctx: BoutContext): BoutImpact {
   };
 }
 
+function getNPCPlan(
+  state: GameState,
+  w: Warrior,
+  opponentStyle: FightingStyle,
+  opponentOwnerId?: string
+): FightPlan {
+  const rival = state.rivalMap?.get(w.stableId as string);
+  if (!rival) return { ...defaultPlanForWarrior(w), killDesire: 7 };
+
+  let grudgeIntensity = 0;
+  if (opponentOwnerId) {
+    const grudge = state.ownerGrudges?.find(
+      (g) =>
+        (g.ownerIdA === rival.owner.id && g.ownerIdB === opponentOwnerId) ||
+        (g.ownerIdB === rival.owner.id && g.ownerIdA === opponentOwnerId)
+    );
+    grudgeIntensity = grudge?.intensity ?? 0;
+  }
+
+  return aiPlanForWarrior(
+    w,
+    rival.owner.personality || 'Pragmatic',
+    rival.philosophy || 'Opportunist',
+    opponentStyle,
+    rival.strategy?.intent,
+    grudgeIntensity
+  );
+}
+
+function isNPCWarrior(state: GameState, w: Warrior): boolean {
+  return !!state.rivalMap?.get(w.stableId as string);
+}
+
 function runBoutSimulation(
   state: GameState,
   _ctx: BoutContext,
@@ -129,9 +163,19 @@ function runBoutSimulation(
   const arenaId = _ctx.isTournamentBout
     ? 'bloodsands_arena'
     : (_ctx.contract?.arenaId ?? undefined);
+
+  // Determine plans: player warriors use w.plan or defaultPlanForWarrior;
+  // NPC warriors use aiPlanForWarrior with personality, philosophy, and matchup awareness.
+  const planA = isNPCWarrior(state, validCW)
+    ? getNPCPlan(state, validCW, validCO.style, _ctx.playerId)
+    : getDefaultPlan(validCW, defaultPlanForWarrior);
+  const planD = isNPCWarrior(state, validCO)
+    ? getNPCPlan(state, validCO, validCW.style, _ctx.playerId)
+    : getDefaultPlan(validCO, defaultPlanForWarrior);
+
   return simulateFight(
-    getDefaultPlan(validCW, defaultPlanForWarrior),
-    getDefaultPlan(validCO, defaultPlanForWarrior),
+    planA,
+    planD,
     validCW,
     validCO,
     boutSeed,

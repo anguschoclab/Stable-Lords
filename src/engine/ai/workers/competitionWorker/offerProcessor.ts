@@ -1,7 +1,7 @@
-import type { GameState, RivalStableData } from '@/types/state.types';
+import type { GameState, RivalStableData, WeatherType } from '@/types/state.types';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { StateImpact } from '@/engine/impacts';
-import { evaluateBoutOffer } from './boutAcceptance';
+import * as boutAcceptance from './boutAcceptance';
 
 export function processAllRivalsBoutOffers(
   state: GameState,
@@ -60,7 +60,33 @@ export function processAllRivalsBoutOffers(
         const rivalWarrior = state.warriorMap?.get(wId);
         if (!rivalWarrior) return;
 
-        const response = evaluateBoutOffer(trackedOffer, owningRival, rivalWarrior, state.week);
+        // Find the opponent for this offer
+        const opponentId = offer.warriorIds.find((id) => id !== wId);
+        const opponent = opponentId ? state.warriorMap?.get(opponentId) : undefined;
+
+        // Gap 3: Call verifyBoutAcceptance first for weather skepticism
+        if (opponent) {
+          const acceptance = boutAcceptance.verifyBoutAcceptance(
+            owningRival,
+            rivalWarrior,
+            opponent,
+            state.weather as WeatherType
+          );
+          if (!acceptance.accepted) {
+            const impact = respondToBoutOffer(
+              { ...state, boutOffers: currentOffers },
+              offer.id,
+              rivalWarrior.id,
+              'Declined'
+            );
+            if (impact.boutOffers) {
+              Object.assign(currentOffers, impact.boutOffers);
+            }
+            return;
+          }
+        }
+
+        const response = boutAcceptance.evaluateBoutOffer(trackedOffer, owningRival, rivalWarrior, state.week, state.weather as WeatherType);
 
         if (response === 'Accepted') {
           pickedWarriors.add(wId);

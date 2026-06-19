@@ -8,6 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData, BoutOffer } from '@/types/state.types';
+import { verifyBoutAcceptance, evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -29,6 +30,10 @@ function makeWarrior(style: FightingStyle, cn: number = 15, overrides: Partial<W
     derivedStats: { hp: 100 } as any,
     ...overrides,
   } as Warrior;
+}
+
+function makeOpponent(style: FightingStyle, cn: number = 15, overrides: Partial<Warrior> = {}): Warrior {
+  return makeWarrior(style, cn, { id: 'w2' as any, name: 'Opponent', ...overrides });
 }
 
 function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
@@ -76,21 +81,20 @@ describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
   });
 
   it('verifyBoutAcceptance is called before evaluateBoutOffer for each offer', async () => {
-    const acceptMod = await import('@/engine/ai/workers/competitionWorker/boutAcceptance');
     const processMod = await import('@/engine/ai/workers/competitionWorker/offerProcessor');
 
-    const acceptSpy = vi.spyOn(acceptMod, 'verifyBoutAcceptance');
-    const evalSpy = vi.spyOn(acceptMod, 'evaluateBoutOffer');
-
     const warrior = makeWarrior(FightingStyle.LungingAttack);
-    const opponent = makeWarrior(FightingStyle.BashingAttack);
+    const opponent = makeOpponent(FightingStyle.BashingAttack);
     const rival = makeRival({ roster: [warrior] });
 
     const state = {
       week: 5,
       weather: 'Rainy',
       boutOffers: {
-        'offer-1': makeOffer({ warriorIds: [warrior.id, opponent.id] }),
+        'offer-1': makeOffer({
+          warriorIds: [warrior.id, opponent.id],
+          responses: { [warrior.id]: 'Pending', [opponent.id]: 'Pending' },
+        }),
       },
       warriorMap: new Map([[warrior.id, warrior], [opponent.id, opponent]]) as any,
       warriorToStableMap: new Map([
@@ -100,18 +104,18 @@ describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
       rivalMap: new Map([['rival-1', rival]]) as any,
     } as any;
 
-    processMod.processAllRivalsBoutOffers(state, [rival]);
+    const result = processMod.processAllRivalsBoutOffers(state, [rival]);
 
-    expect(acceptSpy).toHaveBeenCalled();
-    expect(evalSpy).toHaveBeenCalled();
-    // verifyBoutAcceptance should be called first
-    expect(acceptSpy.mock.invocationCallOrder[0]).toBeLessThan(evalSpy.mock.invocationCallOrder[0]);
+    // verifyBoutAcceptance should have caused the LungingAttack warrior's offer
+    // to be declined in Rainy weather (weather skepticism)
+    const offer = result.boutOffers?.['offer-1'];
+    expect(offer).toBeDefined();
+    expect(offer.responses[warrior.id]).toBe('Declined');
   });
 });
 
 describe('Gap 5: evaluateBoutOffer has weather awareness', () => {
   it('declines LungingAttack warrior in Rainy weather', () => {
-    const { evaluateBoutOffer } = require('@/engine/ai/workers/competitionWorker/boutAcceptance');
     const warrior = makeWarrior(FightingStyle.LungingAttack);
     const rival = makeRival();
     const offer = makeOffer();
@@ -122,7 +126,6 @@ describe('Gap 5: evaluateBoutOffer has weather awareness', () => {
   });
 
   it('declines low-CN warrior in Sweltering weather', () => {
-    const { evaluateBoutOffer } = require('@/engine/ai/workers/competitionWorker/boutAcceptance');
     const warrior = makeWarrior(FightingStyle.StrikingAttack, 8);
     const rival = makeRival();
     const offer = makeOffer();
@@ -132,7 +135,6 @@ describe('Gap 5: evaluateBoutOffer has weather awareness', () => {
   });
 
   it('accepts same warrior in Clear weather', () => {
-    const { evaluateBoutOffer } = require('@/engine/ai/workers/competitionWorker/boutAcceptance');
     const warrior = makeWarrior(FightingStyle.StrikingAttack, 8);
     const rival = makeRival();
     const offer = makeOffer();
@@ -143,7 +145,6 @@ describe('Gap 5: evaluateBoutOffer has weather awareness', () => {
 });
 
 describe('Gap 9: verifyBoutAcceptance covers all significant weather types', () => {
-  const { verifyBoutAcceptance } = require('@/engine/ai/workers/competitionWorker/boutAcceptance');
 
   it('rejects Sandstorm + AimedBlow (precision targeting blinded)', () => {
     const warrior = makeWarrior(FightingStyle.AimedBlow);

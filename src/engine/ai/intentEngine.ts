@@ -30,16 +30,16 @@ export function pickWeeklyIntent(
   );
 
   // ⚡ Environmental Awareness
-  const isRainy = state.weather === 'Rainy';
+  const isHazardousWeather = ['Rainy', 'Blizzard', 'Sandstorm', 'Gale', 'Tornado', 'Dense Fog', 'Acid Rain'].includes(state.weather ?? 'Clear');
 
   // ⚡ Continuous Alignment: Meta-Drift Awareness (use cached if available)
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
   const favoredStyles = rival.owner.favoredStyles || [];
   const metaIsHostile = favoredStyles.some((s) => (meta[s] || 0) < -2);
 
-  // Weather Pivot: Avoid the arena if the stable is precision-heavy and it's raining
+  // Weather Pivot: Avoid the arena if the stable is precision-heavy and weather is hazardous
   const precisionHeavy = activeRoster.length === 0 || lungeCount / activeRoster.length >= 0.5;
-  if (isRainy && precisionHeavy && personality !== 'Aggressive') {
+  if (isHazardousWeather && precisionHeavy && personality !== 'Aggressive') {
     return 'RECOVERY';
   }
 
@@ -167,10 +167,10 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   }
 
   // Skepticism Tier 4: Environmental Hazard (Strategic Abort)
-  const isRainy = state.weather === 'Rainy';
+  const isHazardousWeather = ['Rainy', 'Blizzard', 'Sandstorm', 'Gale', 'Tornado', 'Dense Fog', 'Acid Rain'].includes(state.weather ?? 'Clear');
   const precisionHeavy = filterActive(rival.roster).some((w) => w.style === 'LUNGING ATTACK');
   if (
-    isRainy &&
+    isHazardousWeather &&
     (strategy.intent === 'VENDETTA' || strategy.intent === 'EXPANSION') &&
     precisionHeavy &&
     personality !== 'Aggressive'

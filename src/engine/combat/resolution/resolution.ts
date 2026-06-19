@@ -61,6 +61,7 @@ import type { FighterState, ResolutionContext } from './types';
 import { FightingStyle } from '@/types/shared.types';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { getCounterstrikeAttBonus } from './counterstrike';
+import { tickBleed } from './bleed';
 
 // Re-export from split modules
 export type { FighterState, ResolutionContext } from './types';
@@ -846,6 +847,24 @@ export function resolveExchange(
         : 0;
   ctx.lastOffTacticA = currTacticA;
   ctx.lastOffTacticD = currTacticD;
+
+  // SL bleed: damage-over-time tick on any bleeding fighter, then decay.
+  for (const fighter of [fA, fD]) {
+    const stacks = fighter.bleedStacks ?? 0;
+    if (stacks > 0) {
+      const { damage, next } = tickBleed(stacks);
+      fighter.hp -= damage;
+      fighter.bleedStacks = next;
+      events.push({
+        type: 'HIT',
+        actor: fighter.label === 'A' ? 'D' : 'A',
+        target: fighter.label,
+        value: damage,
+        location: 'Bleed',
+        metadata: { cause: 'BLEED', stacks: next },
+      });
+    }
+  }
 
   return events;
 }

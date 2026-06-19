@@ -182,9 +182,9 @@ describe('TP — fatigue-exploit counter', () => {
   });
 
   it('Non-TP style gets no fatigue-exploit bonus regardless of opponent endurance', () => {
-    const pr = makeMockFighter(FS.ParryRiposte, 50, 50);
+    const lu = makeMockFighter(FS.LungingAttack, 50, 50);
     const opp = makeMockFighter(FS.StrikingAttack, 5, 50); // 10%
-    const bonus = styleRiposteBonus(pr, opp);
+    const bonus = styleRiposteBonus(lu, opp);
     expect(bonus.ripBonus).toBe(0);
     expect(bonus.dmgBonus).toBe(0);
   });

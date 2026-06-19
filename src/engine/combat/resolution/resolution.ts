@@ -20,7 +20,21 @@ import {
 import type { StylePassiveResult } from '../../stylePassives';
 import { getFavoriteRhythmBonus } from '../../favorites';
 import { getDynamicTraitMods, type DynamicTraitContext, type DynamicTraitMods } from '../../traits';
-import { TACTIC_OVERUSE_CAP } from '@/constants/combat';
+import {
+  TACTIC_OVERUSE_CAP,
+  TP_FATIGUE_SEVERE_RATIO,
+  TP_FATIGUE_MODERATE_RATIO,
+  TP_FATIGUE_SEVERE_RIP,
+  TP_FATIGUE_SEVERE_DMG,
+  TP_FATIGUE_MODERATE_RIP,
+  TP_FATIGUE_MODERATE_DMG,
+  PL_MOMENTUM_RIPOSTE_DMG_COEFF,
+  PR_COUNTER_ON_PARRY,
+  PR_COMMIT_PUNISH,
+  PR_CHAIN_STEP,
+  PR_CHAIN_CAP,
+} from '@/constants/combat';
+import type { CommitLevel } from '@/types/shared.types';
 import {
   getOffensiveTacticMods,
   getDefensiveTacticMods,
@@ -199,16 +213,20 @@ interface OffenseDefenseCtx {
   defDynTraitDef: number;
 }
 
-/** Per-style conditional riposte bonuses (TP fatigue-exploit, PL momentum pressure). */
-export function styleRiposteBonus(def: FighterState, att: FighterState): { ripBonus: number; dmgBonus: number } {
+/** Per-style conditional riposte bonuses (TP fatigue-exploit, PL momentum pressure, PR riposte master). */
+export function styleRiposteBonus(
+  def: FighterState,
+  att: FighterState,
+  opts: { afterParry?: boolean; attCommitLevel?: CommitLevel; riposteStreak?: number } = {}
+): { ripBonus: number; dmgBonus: number } {
   let ripBonus = 0;
   let dmgBonus = 0;
 
   // TP: fatigue-exploit counter — opponent's exhaustion feeds riposte chance and damage
   if (def.style === FightingStyle.TotalParry) {
     const endRatio = att.endurance / Math.max(1, att.maxEndurance);
-    if (endRatio < 0.25) { ripBonus += 5; dmgBonus += 2; }
-    else if (endRatio < 0.5) { ripBonus += 2; dmgBonus += 1; }
+    if (endRatio < TP_FATIGUE_SEVERE_RATIO) { ripBonus += TP_FATIGUE_SEVERE_RIP; dmgBonus += TP_FATIGUE_SEVERE_DMG; }
+    else if (endRatio < TP_FATIGUE_MODERATE_RATIO) { ripBonus += TP_FATIGUE_MODERATE_RIP; dmgBonus += TP_FATIGUE_MODERATE_DMG; }
   }
 
   // PL: momentum-based riposte pressure (reactive tempo, not raw attack damage).
@@ -219,7 +237,14 @@ export function styleRiposteBonus(def: FighterState, att: FighterState): { ripBo
     att.style !== FightingStyle.WallOfSteel
   ) {
     ripBonus += def.momentum;
-    dmgBonus += def.momentum * 0.5;
+    dmgBonus += def.momentum * PL_MOMENTUM_RIPOSTE_DMG_COEFF;
+  }
+
+  // PR: riposte master — counter-on-parry (frequency), punish-commitment (damage), light chain
+  if (def.style === FightingStyle.ParryRiposte) {
+    if (opts.afterParry) ripBonus += PR_COUNTER_ON_PARRY;
+    dmgBonus += PR_COMMIT_PUNISH[opts.attCommitLevel ?? 'Standard'];
+    dmgBonus += Math.min(PR_CHAIN_CAP, (opts.riposteStreak ?? 0) * PR_CHAIN_STEP);
   }
 
   return { ripBonus, dmgBonus };

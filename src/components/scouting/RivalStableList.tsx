@@ -28,7 +28,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
     <div className="space-y-4">
       <div className="flex items-center gap-3 px-2">
         <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-          Rival Asset Inventory
+          Rival Stables
         </h3>
         <div className="h-px flex-1 bg-border/20" />
       </div>
@@ -136,7 +136,7 @@ export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: Riva
               >
                 <div className="space-y-1">
                   <p className="text-[10px] font-black uppercase tracking-widest text-primary">
-                    SELECT STABLE
+                    CHOOSE STABLE
                   </p>
                   {grudge && (
                     <p className="text-[9px] text-arena-blood/80 uppercase tracking-wider">

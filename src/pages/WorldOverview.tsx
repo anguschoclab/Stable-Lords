@@ -207,6 +207,7 @@ export default function WorldOverview() {
   const totalWarriors = stableRows.reduce((s, r) => s + r.roster, 0);
   const totalKills = stableRows.reduce((s, r) => s + (r.kills || 0), 0);
   const topStable = stableRows[0]?.name ?? '—';
+  const topStableId = stableRows[0]?.id ?? null;
 
   return (
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
@@ -232,6 +233,7 @@ export default function WorldOverview() {
         warriorCount={totalWarriors}
         killCount={totalKills}
         topStable={topStable}
+        topStableId={topStableId}
       />
 
       <Tabs defaultValue="stables" className="w-full">

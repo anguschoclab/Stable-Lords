@@ -16,12 +16,21 @@ import { cn } from '@/lib/utils'; /**
  * Year end recap.
  */
 export function YearEndRecap() {
-  const { roster, graveyard, retired, ledger, rivalries, season, week } = useGameStore();
+  const { roster, graveyard, retired, ledger, rivalries, season, week } = useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      ledger: s.ledger,
+      rivalries: s.rivalries,
+      season: s.season,
+      week: s.week,
+    }))
+  );
 
-  const rosterFameData = useGameStore(
-    useShallow((s) =>
-      s.roster.map((w) => ({ id: w.id, name: w.name, fame: w.fame, career: w.career }))
-    )
+  const rosterFameData = useMemo(
+    () => roster.map((w) => ({ id: w.id, name: w.name, fame: w.fame, career: w.career })),
+    [roster]
   );
 
   const recap = useMemo(() => {

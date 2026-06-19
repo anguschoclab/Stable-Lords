@@ -24,13 +24,13 @@ export function SeasonWidget() {
 
   const progress = (week / 13) * 100;
 
-  const phase = week <= 4 ? 'Initialization' : week <= 9 ? 'Mid Sequence' : 'Championship Peak';
+  const phase = week <= 4 ? 'Opening Rounds' : week <= 9 ? 'Mid Season' : 'Championship Run';
   const phaseDesc =
     week <= 4
-      ? 'Early season scouting and roster consolidation.'
+      ? 'Early season scouting and roster preparation.'
       : week <= 9
-        ? 'Intense divisional rivalries and meta-drift analysis.'
-        : 'Final championship qualification and legendary bouts.';
+        ? 'Intense rivalries and divisional combat heat up.'
+        : 'Final bouts and championship glory await.';
 
   const isOffseason = week === 1;
   const latestOffseasonEvent = state.newsletter
@@ -56,10 +56,10 @@ export function SeasonWidget() {
           </div>
           <div>
             <h3 className="font-display text-sm font-black uppercase tracking-[0.2em] text-carved">
-              Chronology Matrix
+              Season Chronicle
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Temporal Registry // WK {week.toString().padStart(2, '0')}
+              Arena Calendar // WK {week.toString().padStart(2, '0')}
             </p>
           </div>
         </div>
@@ -68,7 +68,7 @@ export function SeasonWidget() {
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">
-                CURRENT EPOCH
+                CURRENT SEASON
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-display font-black text-foreground uppercase tracking-tighter">
@@ -85,7 +85,7 @@ export function SeasonWidget() {
 
             <div className="text-right">
               <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 mb-1">
-                ARENA CYCLE
+                WEEK
               </span>
               <div className="text-xl font-mono font-black text-foreground/80">{week} / 13</div>
             </div>
@@ -112,7 +112,7 @@ export function SeasonWidget() {
               <TooltipTrigger asChild>
                 <div className="flex flex-col gap-1 cursor-help group/stat">
                   <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground opacity-40 group-hover/stat:text-primary transition-colors">
-                    Phase Identifier
+                    Season Phase
                   </span>
                   <span className="text-[10px] font-black uppercase tracking-widest text-foreground/80 flex items-center gap-2">
                     <Hexagon className="h-2.5 w-2.5 text-primary opacity-60" /> {phase}

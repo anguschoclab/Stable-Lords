@@ -32,12 +32,12 @@ export function DoctrineIntelligenceSection({
           <BrainCircuit className="h-3.5 w-3.5 text-arena-gold" />
         </div>
         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-arena-gold">
-          Doctrine Intelligence
+          Stable Doctrine
         </h3>
         {clashes && (
           <div className="ml-auto flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-arena-gold/70">
             <AlertTriangle className="h-3 w-3" />
-            Personality Clash Detected
+            Clash of Philosophies
           </div>
         )}
         {grudge && (

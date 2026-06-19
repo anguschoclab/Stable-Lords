@@ -79,10 +79,10 @@ export function ScoutIntelTab({
         <Search className="h-12 w-12 text-muted-foreground opacity-20" />
         <div className="space-y-1">
           <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">
-            No Rivals Signatures Detected
+            No Rival Stables Known
           </p>
           <p className="text-xs text-muted-foreground/60 italic">
-            Scan the arena or progress the season to establish rival signatures.
+            Advance the season to uncover rival stables in the arena.
           </p>
         </div>
       </Surface>
@@ -109,7 +109,7 @@ export function ScoutIntelTab({
         <div className="flex items-center gap-3 px-2">
           <div className="p-1 px-2 rounded-none bg-primary/10 border border-primary/20">
             <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">
-              Target Analysis
+              Warrior Dossier
             </span>
           </div>
           <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
@@ -130,7 +130,7 @@ export function ScoutIntelTab({
             <Target className="h-12 w-12 text-muted-foreground opacity-20" />
             <div className="space-y-1">
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/30">
-                Target Warrior Selection Required
+                Select a Warrior to Scout
               </p>
               <p className="text-[9px] text-muted-foreground/20 italic uppercase tracking-tighter">
                 Establish lock-on to proceed with deep scan

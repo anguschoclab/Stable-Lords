@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from '@tanstack/react-router';
 import {
   Bookmark,
@@ -114,7 +115,8 @@ export default function Bookmarks() {
     scoutReports,
     clearBookmarks,
     clearBookmarksByType,
-  } = useGameStore((s) => ({
+  } = useGameStore(
+    useShallow((s) => ({
     bookmarks: s.bookmarks,
     roster: s.roster,
     graveyard: s.graveyard,
@@ -127,7 +129,8 @@ export default function Bookmarks() {
     scoutReports: s.scoutReports,
     clearBookmarks: s.clearBookmarks,
     clearBookmarksByType: s.clearBookmarksByType,
-  }));
+    }))
+  );
 
   const [sortBy, setSortBy] = useState<'date' | 'name'>('date');
 
@@ -264,9 +267,9 @@ export default function Bookmarks() {
     <PageFrame maxWidth="xl">
       <PageHeader
         icon={Bookmark}
-        eyebrow="WATCHLIST"
+        eyebrow="MARKED FOR GLORY"
         title="Bookmarks"
-        subtitle="TRACKED ENTITIES · INTELLIGENCE REGISTRY"
+        subtitle="WARRIORS · STABLES · PROMOTERS · RIVALS"
         actions={
           <div className="flex items-center gap-4">
             {hasBookmarks && (
@@ -282,7 +285,7 @@ export default function Bookmarks() {
             )}
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Tracked Assets
+                Marked Entries
               </span>
               <span className="text-sm font-display font-black text-foreground">
                 {totalBookmarks}
@@ -302,11 +305,10 @@ export default function Bookmarks() {
           </ImperialRing>
           <div className="space-y-2">
             <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-              No Bookmarks Established
+              No Entries Marked
             </p>
             <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic max-w-sm mx-auto">
-              Bookmark warriors, stables, promoters, and other entities from their detail pages to
-              track them here.
+              Mark warriors, stables, promoters, and rivals from their detail pages to track them here.
             </p>
           </div>
         </Surface>

@@ -3,10 +3,11 @@ import { STYLE_DISPLAY_NAMES } from '@/types/game';
 import type { Warrior, FightSummary } from '@/types/game';
 import { CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Swords, Activity } from 'lucide-react';
+import { Swords, Activity, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Surface } from '@/components/ui/Surface';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 /* ── helpers ─────────────────────────────────────────────── */
 
@@ -88,7 +89,7 @@ export function InducteeCard({
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
                 <span>{STYLE_DISPLAY_NAMES[warrior.style]}</span>
                 <span className="opacity-40">·</span>
-                <span>AGE_{warrior.age ?? '??'}</span>
+                <span>AGE {warrior.age ?? '??'}</span>
               </div>
             </div>
             <Badge
@@ -122,9 +123,20 @@ export function InducteeCard({
           {/* Performance Sector */}
           <div className="space-y-2 py-2">
             <div className="flex items-center justify-between text-[10px] font-black tracking-[0.2em] text-muted-foreground/60">
-              <span className="flex items-center gap-1.5">
-                <Activity className="h-3 w-3" /> PERFORMANCE_RATIO
-              </span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="flex items-center gap-1.5 cursor-help">
+                      <Activity className="h-3 w-3" /> PERFORMANCE RATIO
+                      <Info className="h-2.5 w-2.5 text-muted-foreground/40" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[180px] text-center">
+                    <p className="text-[10px] font-black uppercase tracking-wider">Win Rate</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">Wins ÷ (Wins + Losses)</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <span className="font-mono text-foreground">{winRate}%</span>
             </div>
             <div className="h-1.5 bg-secondary/20 rounded-full overflow-hidden shadow-inner">

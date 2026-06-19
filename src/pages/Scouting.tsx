@@ -103,16 +103,16 @@ export default function Scouting() {
   return (
     <PageFrame>
       <PageHeader
-        title="Tactical Reconnaissance"
-        subtitle="WORLD · INTELLIGENCE · THREAT ANALYSIS"
+        title="Rival Intelligence"
+        subtitle="WORLD · RIVAL STABLES · SCOUTING REPORTS"
         actions={
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Active Protocols
+                Intel Reports
               </span>
               <span className="text-sm font-display font-black text-foreground">
-                {scoutReports?.length || 0} Synchronized
+                {scoutReports?.length || 0} Filed
               </span>
             </div>
             <div className="flex items-center gap-4 border-l border-white/5 pl-6">
@@ -120,7 +120,7 @@ export default function Scouting() {
                 <Radio className="h-3 w-3 text-primary" />
               </ImperialRing>
               <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">
-                Scanning Data Packets...
+                Spies in the Field...
               </span>
             </div>
           </div>

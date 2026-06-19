@@ -5,8 +5,8 @@ export function EmptyStateSurface() {
   return (
     <EmptyState
       icon={Shield}
-      title="Select Rival Stables for Analysis"
-      description="Choose two rival stables from the selector panels above to begin comparative analysis."
+      title="Select Two Stables to Compare"
+      description="Choose two rival stables to weigh their strength, doctrine, and warriors."
     />
   );
 }

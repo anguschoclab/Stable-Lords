@@ -21,7 +21,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
         <div className="flex items-center gap-3 px-2">
           <div className="p-1 px-2 rounded-none bg-primary/10 border border-primary/20">
             <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">
-              Asset Alpha
+              Stable Prime
             </span>
           </div>
           <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
@@ -31,7 +31,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
             <Tooltip key={r.owner.id}>
               <TooltipTrigger asChild>
                 <button
-                  aria-label={`Select ${r.owner.stableName} as Asset Alpha`}
+                  aria-label={`Select ${r.owner.stableName} as Stable Prime`}
                   onClick={() => setIdA(r.owner.id === idA ? null : r.owner.id)}
                   disabled={r.owner.id === idB}
                   className={cn(
@@ -74,7 +74,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                 side="left"
                 className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest"
               >
-                ASSIGN ALPHA
+                MARK PRIME
               </TooltipContent>
             </Tooltip>
           ))}
@@ -86,7 +86,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
           <div className="h-px flex-1 bg-gradient-to-l from-accent/20 via-border/20 to-transparent" />
           <div className="p-1 px-2 rounded-none bg-accent/10 border border-accent/20">
             <span className="text-[9px] font-black text-accent uppercase tracking-[0.2em]">
-              Asset Beta
+              Stable Challenger
             </span>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
             <Tooltip key={r.owner.id}>
               <TooltipTrigger asChild>
                 <button
-                  aria-label={`Select ${r.owner.stableName} as Asset Beta`}
+                  aria-label={`Select ${r.owner.stableName} as Stable Challenger`}
                   onClick={() => setIdB(r.owner.id === idB ? null : r.owner.id)}
                   disabled={r.owner.id === idA}
                   className={cn(
@@ -138,7 +138,7 @@ export function StableSelector({ rivals, idA, setIdA, idB, setIdB }: StableSelec
                 side="right"
                 className="bg-neutral-950 border-white/10 text-[9px] font-black uppercase tracking-widest"
               >
-                ASSIGN BETA
+                MARK CHALLENGER
               </TooltipContent>
             </Tooltip>
           ))}

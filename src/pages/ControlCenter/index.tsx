@@ -34,17 +34,17 @@ export default function ControlCenter() {
     <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
         icon={Swords}
-        eyebrow="Command & Strategy"
+        eyebrow="Stable Command"
         title={player?.stableName ?? 'Command Center'}
-        subtitle="HQ · CENTRAL OPERATIONAL ARCHIVE"
+        subtitle="STABLE HQ · SEASON STANDING · BATTLE RECORD"
         actions={
           <div className="flex items-center gap-4">
             <div className="flex flex-col items-end px-4 border-r border-white/5">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-                Operational Status
+                Arena Standing
               </span>
               <span className="text-[10px] font-black uppercase tracking-widest text-primary">
-                Active Cycle
+                Season Active
               </span>
             </div>
           </div>
@@ -57,7 +57,7 @@ export default function ControlCenter() {
           <KpiBar />
 
           <div className="space-y-6">
-            <SectionDivider label="Registry Intelligence" variant="gold" />
+            <SectionDivider label="Imperial Rankings" variant="gold" />
             <RankingsBar />
           </div>
 

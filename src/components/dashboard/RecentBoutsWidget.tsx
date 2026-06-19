@@ -57,10 +57,10 @@ export function RecentBoutsWidget() {
           </div>
           <div>
             <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Deployment History
+              Combat Record
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Recent Arena Engagements
+              Recent Bouts
             </p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export function RecentBoutsWidget() {
                 Week
               </TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">
-                Operative
+                Warrior
               </TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">
                 Outcome
@@ -112,7 +112,7 @@ export function RecentBoutsWidget() {
           to="/world/chronicle"
           className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
         >
-          Sync_Engagement_Chronicle{' '}
+          View Full Chronicle{' '}
           <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>

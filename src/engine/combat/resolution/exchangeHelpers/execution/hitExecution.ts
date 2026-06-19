@@ -22,10 +22,16 @@ import type { HitLocation } from '../../../mechanics/combatDamage';
 import { FightingStyle } from '@/types/shared.types';
 import { SHIELD_COVERAGE } from '@/data/equipment';
 import { weaponDamageBonus } from '../../../mechanics/weaponStats';
-import { CRIT_DAMAGE_MULT } from '@/constants/combat';
+import { CRIT_DAMAGE_MULT, AB_ARMOR_BYPASS_MAX, AB_ARMOR_BYPASS_DF_DIVISOR } from '@/constants/combat';
 import { getStyleWeatherModifier } from '@/constants/arena';
 import { accumulateGuardBreak } from '../../guardBreak';
 import { getMomentumDamageBonus, getWsAttritionBonus } from '../../tempoMechanics';
+import {
+  getFrontloadMult,
+  getStCritChanceBonus,
+  getStCritDamageBonus,
+  getExecuteBonus,
+} from '../../strikingAttack';
 
 /**
  * Execute hit.
@@ -127,7 +133,7 @@ export function executeHit(
   // AB: armor bypass — ignore DF-scaled fraction of armor mitigation
   let rawDamage: number;
   if (attacker.style === FightingStyle.AimedBlow) {
-    const bypass = Math.max(0, Math.min(0.4, attacker.attributes.DF / 50));
+    const bypass = Math.max(0, Math.min(AB_ARMOR_BYPASS_MAX, attacker.attributes.DF / AB_ARMOR_BYPASS_DF_DIVISOR));
     rawDamage = Math.round(postArmor + bypass * (preArmor - postArmor));
   } else {
     rawDamage = postArmor;
@@ -157,9 +163,15 @@ export function executeHit(
     : 1.0;
   rawDamage = Math.round(rawDamage * defSpecDamageMult);
 
-  const isCrit = attPassive.critChance > 0 && rng() < attPassive.critChance;
+  // ST front-load: early-exchange damage multiplier that decays over the fight
+  rawDamage = Math.round(rawDamage * getFrontloadMult(attacker.style, ctx?.exchange ?? 0));
+  // ST execute: bonus damage to finish a wounded target
+  rawDamage += getExecuteBonus(attacker.style, defender.hp, defender.maxHp);
+
+  const effectiveCritChance = attPassive.critChance + getStCritChanceBonus(attacker.style);
+  const isCrit = effectiveCritChance > 0 && rng() < effectiveCritChance;
   if (isCrit) {
-    rawDamage = Math.round(rawDamage * CRIT_DAMAGE_MULT);
+    rawDamage = Math.round(rawDamage * (CRIT_DAMAGE_MULT + getStCritDamageBonus(attacker.style)));
   }
 
   // Shield-zone mitigation is applied AFTER the event is pushed so that

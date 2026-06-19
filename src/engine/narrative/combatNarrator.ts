@@ -14,7 +14,6 @@ export {
   narrateContextLine,
   narrateCrowdReaction,
   narrateTaunt,
-  narrateInsightHint,
 } from './combatNarrators';
 
 // Re-exports from eventNarrators (per-event-type narrators)
@@ -37,7 +36,6 @@ import {
   narrateContextLine,
   narrateCrowdReaction,
   narrateTaunt,
-  narrateInsightHint,
 } from './combatNarrators';
 import { generateWarriorIntro, battleOpener, narrateBoutEnd } from './eventNarrators';
 
@@ -59,5 +57,4 @@ export const CombatNarrator = {
   narrateContextLine,
   narrateCrowdReaction,
   narrateTaunt,
-  narrateInsightHint,
 } as const;

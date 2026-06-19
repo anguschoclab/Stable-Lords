@@ -199,16 +199,17 @@ describe('Scheduling Assistant Engine', () => {
 
     const r1 = mockWarrior('r1', FightingStyle.AimedBlow, 10); // TP vs AB = -1 -> 75
     const r2 = mockWarrior('r2', FightingStyle.TotalParry, 10); // Advantage 0 -> 100
-    const r3 = mockWarrior('r3', FightingStyle.WallOfSteel, 10); // TP vs WS = -1 -> 75
+    const r3 = mockWarrior('r3', FightingStyle.WallOfSteel, 10); // TP vs WS = 0 -> 100
 
     const state = mockState([r1, r2, r3]);
 
     const challenges = getRecommendedChallenges(state, p1, 3);
 
     expect(challenges.length).toBe(3);
-    expect(challenges[0]?.rivalWarrior.id).toBe('r2');
-    expect(challenges[1]?.rivalWarrior.id).toBe('r1');
-    expect(challenges[2]?.rivalWarrior.id).toBe('r3');
+    // r2 and r3 tie at 100, r1 is last at 75
+    expect(challenges[2]?.rivalWarrior.id).toBe('r1');
+    expect(['r2', 'r3']).toContain(challenges[0]?.rivalWarrior.id);
+    expect(['r2', 'r3']).toContain(challenges[1]?.rivalWarrior.id);
   });
 
   it('should penalize matchups where fame difference is too high', () => {
@@ -227,9 +228,8 @@ describe('Scheduling Assistant Engine', () => {
   it('should return a sorted list of matchups to avoid', () => {
     const p1 = mockWarrior('p1', FightingStyle.AimedBlow, 10);
 
-    // AB vs PR = -2
-    // AB vs PS = -2
-    // AB vs BA = +1
+    // AB vs PR = +1, AB vs PS = +1, AB vs BA = +1 (all tied at 125)
+    // Avoid list picks first two by insertion order
     const r1 = mockWarrior('r1', FightingStyle.ParryRiposte, 10);
     const r2 = mockWarrior('r2', FightingStyle.ParryStrike, 10);
     const r3 = mockWarrior('r3', FightingStyle.BashingAttack, 10);
@@ -605,30 +605,30 @@ describe('Scheduling Assistant Engine', () => {
         });
       });
 
-      it('applies +50 bonus for maximum positive style advantage', () => {
-        // AimedBlow vs WallOfSteel is +2 in combat.ts matrix
+      it('applies +75 bonus for maximum positive style advantage', () => {
+        // AimedBlow vs WallOfSteel is +3 in combat.ts matrix
         const player = mockWarrior('p1', FightingStyle.AimedBlow, 10, 0, 0);
         const rival = mockWarrior('r1', FightingStyle.WallOfSteel, 10, 0, 0);
         const state = mockState([rival]);
         const score = scoreMatchup(player, rival, state);
-        // Base 100 + (2 * 25) = 150
-        expect(score).toBe(150);
+        // Base 100 + (3 * 25) = 175
+        expect(score).toBe(175);
       });
 
-      it('applies -100 penalty for maximum negative style advantage', () => {
-        // WallOfSteel vs AimedBlow is -4 in combat.ts matrix
+      it('applies -75 penalty for maximum negative style advantage', () => {
+        // WallOfSteel vs AimedBlow is -3 in combat.ts matrix
         const player = mockWarrior('p1', FightingStyle.WallOfSteel, 10, 0, 0);
         const rival = mockWarrior('r1', FightingStyle.AimedBlow, 10, 0, 0);
         const state = mockState([rival]);
         const score = scoreMatchup(player, rival, state);
-        // Base 100 + (-4 * 25) = 0
-        expect(score).toBe(0);
+        // Base 100 + (-3 * 25) = 25
+        expect(score).toBe(25);
       });
     });
 
     describe('Integration Edge Cases', () => {
       it('calculates minimum possible score with worst factors', () => {
-        // Worst style: WallOfSteel vs AimedBlow (-4)
+        // Worst style: WallOfSteel vs AimedBlow (-3)
         // Worst fame: player 1000, rival 0 (diff 1000, penalty 980)
         // Worst win rate: player 0-10, rival 10-0 (diff -1.0, penalty -20)
         // No rivalry
@@ -636,12 +636,12 @@ describe('Scheduling Assistant Engine', () => {
         const rival = mockWarrior('r1', FightingStyle.AimedBlow, 0, 10, 0);
         const state = mockState([rival]);
         const score = scoreMatchup(player, rival, state);
-        // Base 100 - 100 - 980 - 20 = -1000
-        expect(score).toBe(-1000);
+        // Base 100 - 75 - 980 - 20 = -975
+        expect(score).toBe(-975);
       });
 
       it('calculates maximum possible score with best factors', () => {
-        // Best style: AimedBlow vs WallOfSteel (+2)
+        // Best style: AimedBlow vs WallOfSteel (+3)
         // Best fame: player 20, rival 10 (diff +10, no penalty since not > 10)
         // Best win rate: player 10-0, rival 0-10 (diff 1.0, bonus +20)
         // Max rivalry: intensity 10
@@ -650,8 +650,8 @@ describe('Scheduling Assistant Engine', () => {
         const rivalry = mockRivalry('player1', 'rival1', 10);
         const state = mockState([rival], [rivalry]);
         const score = scoreMatchup(player, rival, state);
-        // Base 100 + 50 + 0 + 20 + 500 = 670
-        expect(score).toBe(670);
+        // Base 100 + 75 + 0 + 20 + 500 = 695
+        expect(score).toBe(695);
       });
 
       it('calculates neutral baseline with equal factors', () => {

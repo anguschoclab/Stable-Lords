@@ -235,25 +235,6 @@ export function narrateTaunt(
 }
 
 /**
- * Narrates insight hint with expanded attributes.
- */
-export function narrateInsightHint(
-  rng: IRNGService | RNG,
-  attribute: 'ST' | 'SP' | 'DF' | 'WL' | 'CN' | 'CT',
-  defenderName?: string
-): string | null {
-  const r = normalizeRng(rng);
-
-  // Fire ~25% of the time
-  if (r() > 0.25) return null;
-
-  const template = getFromArchive(r, ['pbp', 'insights', attribute]);
-  if (!template || template === 'A fierce exchange occurs.') return null;
-
-  return interpolateTemplate(template, { defender: defenderName });
-}
-
-/**
  * Narrates a counterstrike.
  */
 export function narrateCounterstrike(rng: IRNGService | RNG, name: string): string {

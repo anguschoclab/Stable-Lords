@@ -196,9 +196,9 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Proposed', boutWeek: 10 }),
-          'offer-2': makeOffer({ status: 'Proposed', boutWeek: 11 }),
-          'offer-3': makeOffer({ status: 'Proposed', boutWeek: 9 }),
+          'offer-1': makeOffer({ status: 'Proposed', boutWeek: 10, warriorIds: ['wa' as WarriorId], responses: {} }),
+          'offer-2': makeOffer({ status: 'Proposed', boutWeek: 11, warriorIds: ['wc' as WarriorId], responses: {} }),
+          'offer-3': makeOffer({ status: 'Proposed', boutWeek: 9, warriorIds: ['wa' as WarriorId], responses: {} }),
         },
         currentWeek,
         playerWarriorIds,
@@ -214,7 +214,7 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Proposed', boutWeek: 9 }),
+          'offer-1': makeOffer({ status: 'Proposed', boutWeek: 9, warriorIds: ['wa' as WarriorId], responses: {} }),
         },
         currentWeek,
         playerWarriorIds,
@@ -228,7 +228,7 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Signed', boutWeek: 10 }),
+          'offer-1': makeOffer({ status: 'Signed', boutWeek: 10, warriorIds: ['wa' as WarriorId], responses: {} }),
         },
         currentWeek,
         playerWarriorIds,
@@ -243,8 +243,8 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Signed', boutWeek: 12 }),
-          'offer-2': makeOffer({ status: 'Signed', boutWeek: 15 }),
+          'offer-1': makeOffer({ status: 'Signed', boutWeek: 12, warriorIds: ['wa' as WarriorId], responses: {} }),
+          'offer-2': makeOffer({ status: 'Signed', boutWeek: 15, warriorIds: ['wc' as WarriorId], responses: {} }),
         },
         currentWeek,
         playerWarriorIds,

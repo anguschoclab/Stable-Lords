@@ -61,8 +61,7 @@ describe('Bookmarks Page', () => {
 
   it('renders empty state when no bookmarks exist', () => {
     render(<Bookmarks />);
-    expect(screen.getByText(/No Bookmarks Established/i)).toBeInTheDocument();
-    expect(screen.getByText(/TRACKED ENTITIES/i)).toBeInTheDocument();
+    expect(screen.getByText(/No Entries Marked/i)).toBeInTheDocument();
   });
 
   it('renders bookmark count in header', () => {

@@ -149,5 +149,35 @@
     "kept": "{{attacker}} sweeps {{possessive}} {{weapon}} in a brutal horizontal arc!",
     "removed": "{{attacker}} sweeps {{possessive}} {{weapon}} in a deadly horizontal arc!",
     "similarity": 0.95
+  },
+  {
+    "timestamp": "2026-06-19T22:23:18.251Z",
+    "removed": [
+      {
+        "kept": "{{attacker}} feints low, catching {{defender}} off guard before severing their sword-arm at the elbow. The crowd erupts!",
+        "removed": "{{attacker}} feints low, catching {{defender}} off guard before severing their sword-arm at the elbow. The crowd erupts!",
+        "context": "fatal_damage vs executions duplicate"
+      },
+      {
+        "kept": "With a terrifying roar, {{attacker}} drives their {{weapon}} straight through {{defender}}'s sternum, ending it instantly.",
+        "removed": "With a terrifying roar, {{attacker}} drives their {{weapon}} straight through {{defender}}'s sternum, ending it instantly.",
+        "context": "fatal_damage vs executions duplicate"
+      },
+      {
+        "kept": "{{defender}} stumbles, and {{attacker}} capitalizes with a brutal decapitating swing. Blood sprays across the sand!",
+        "removed": "{{defender}} stumbles, and {{attacker}} capitalizes with a brutal decapitating swing. Blood sprays across the sand!",
+        "context": "fatal_damage vs executions duplicate"
+      },
+      {
+        "kept": "A sickening crunch echoes as {{attacker}}'s {{weapon}} caves in {{defender}}'s skull. It is over.",
+        "removed": "A sickening crunch echoes as {{attacker}}'s {{weapon}} caves in {{defender}}'s skull. It is over.",
+        "context": "fatal_damage vs executions duplicate"
+      },
+      {
+        "kept": "{{attacker}} sweeps {{defender}}'s legs out and delivers a final, merciless downward thrust.",
+        "removed": "{{attacker}} sweeps {{defender}}'s legs out and delivers a final, merciless downward thrust.",
+        "context": "fatal_damage vs executions duplicate"
+      }
+    ]
   }
 ]

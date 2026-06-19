@@ -69,13 +69,12 @@ describe('Mirror-match drift (engine A/D bias)', () => {
 
 // ── Guardrail: Absolute-power band (overall win rate per style) ──────────────
 describe('Absolute-power band (overall win rate per style)', () => {
-  // RATCHET: target is [0.40, 0.60] (50% ± 10pp). Seed these bounds to just
-  // contain the current measured spread (Task 1), then tighten in Task 3 as
-  // absolute power is moved from the matrix into STYLE_PENALTIES. Do NOT loosen.
-  // Task 1 measured: min=29.0% (PR), max=69.0% (WS) → spread=40pp
-  const LOW = 0.28;  // floor(29.0%) - 1pp buffer
-  const HIGH = 0.70; // ceil(69.0%) + 1pp buffer
-  it(`every style overall win rate should be within [${LOW}, ${HIGH}] (ratcheting toward 0.40–0.60)`, () => {
+  // RATCHET: target is [0.40, 0.60] (50% ± 10pp). Absolute power now lives in
+  // STYLE_PENALTIES; the matrix is pure matchup (antisymmetric). All styles
+  // tuned to within this band via penalty adjustments.
+  const LOW = 0.40;
+  const HIGH = 0.60;
+  it(`every style overall win rate should be within [${LOW}, ${HIGH}]`, () => {
     const problems: string[] = [];
     for (const s of ALL_STYLES) {
       const rate = styleWins[s]! / styleFights[s]!;

@@ -273,22 +273,22 @@ function szMod(table: Record<number, number>, sz: number): number {
 const STYLE_PENALTIES: Record<FightingStyle, [number, number, number, number, number, number]> = {
   //                                           ATT  PAR  DEF  INI  RIP  DEC
   // ── Cunning archetype (WT/DF/WL → high raw skills, needs steep penalty) ──
-  [FightingStyle.AimedBlow]: /*AB*/ [-13, -6, -10, -7, -5, +1], // was -52, now -40: +12 budget (ATT/PAR/DEF/INI/RIP)
-  [FightingStyle.ParryRiposte]: /*PR*/ [-14, -8, -15, -8, -2, -2], // was -38, now -49: identity = riposte king (RIP least penalised)
-  [FightingStyle.ParryStrike]: /*PS*/ [-12, -6, -12, -9, -4, -1], // was -42, now -44: minor INI nerf
-  [FightingStyle.ParryLunge]: /*PL*/ [-11, -7, -13, -7, -6, -1], // was -35, now -45: ATT/INI/RIP down
+  [FightingStyle.AimedBlow]: /*AB*/ [-15, -7, -11, -8, -6, +1], // deepened: -40 → -45 to bring 59.9% toward 50%
+  [FightingStyle.ParryRiposte]: /*PR*/ [-12, -6, -13, -6, -1, -1], // lightened: -49 → -39 to lift 29.0% toward 40%
+  [FightingStyle.ParryStrike]: /*PS*/ [-10, -5, -10, -7, -3, 0], // lightened: -44 → -35 to lift 29.7% toward 40%
+  [FightingStyle.ParryLunge]: /*PL*/ [-9, -5, -11, -5, -5, 0], // lightened: -45 → -35 to lift 40.4% toward 50%
 
   // ── Agile archetype (SP/DF/WT → massive breakpoint yields, heaviest penalty) ──
-  [FightingStyle.LungingAttack]: /*LU*/ [-10, -12, -13, -7, -7, -2], // was -30, now -51: massive nerf to all skills
-  [FightingStyle.SlashingAttack]: /*SL*/ [-12, -14, -15, -4, -7, -2], // was -34, now -54: INI kept as identity, everything else down
+  [FightingStyle.LungingAttack]: /*LU*/ [-6, -8, -9, -3, -3, 0], // lightened further: -40 → -29 to lift 38.3% toward 40%
+  [FightingStyle.SlashingAttack]: /*SL*/ [-12, -14, -15, -4, -7, -2], // unchanged: 48.0% is near target
 
   // ── Brutal archetype (ST/CN/SZ → low breakpoint yields, lightest penalty) ──
-  [FightingStyle.BashingAttack]: /*BA*/ [-4, -6, -10, 0, -2, +2], // was -35, now -20: +15 budget across all skills
-  [FightingStyle.StrikingAttack]: /*ST*/ [-7, -6, -9, -2, -2, +2], // was -41, now -24: +17 budget; still lower ATT than BA
+  [FightingStyle.BashingAttack]: /*BA*/ [-8, -10, -14, -2, -4, 0], // deepened further: -29 → -38 to bring 62.5% toward 60%
+  [FightingStyle.StrikingAttack]: /*ST*/ [-9, -7, -10, -3, -3, +1], // unchanged: 52.4% is within target
 
   // ── Tank archetype (CN/WL/SZ → endurance/HP, needs skill floor to compete) ──
-  [FightingStyle.TotalParry]: /*TP*/ [-12, +1, -9, -4, -2, 0], // was -41, now -26: PAR buff is identity; ATT stays low
-  [FightingStyle.WallOfSteel]: /*WS*/ [-4, -2, -9, 0, -2, 0], // was -13, now -17: ATT reduced, INI neutral; keeps defensive identity
+  [FightingStyle.TotalParry]: /*TP*/ [-15, -1, -12, -6, -4, -2], // deepened further: -32 → -40 to bring 56.5% toward 60%
+  [FightingStyle.WallOfSteel]: /*WS*/ [-8, -6, -13, -2, -4, -2], // deepened further: -26 → -35 to bring 59.9% toward 60%
 };
 
 // ─── Base Skill Computation ───────────────────────────────────────────────

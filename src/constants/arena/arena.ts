@@ -69,49 +69,49 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   }
 > = {
   // Rain penalizes lungers (slippery footing for lunges)
-  'Rainy:LungingAttack': {
+  'Rainy:LUNGING ATTACK': {
     initiativeMod: -2,
     description: 'Rain-slicked sand hinders lunging footwork',
   },
 
   // Dense Fog benefits riposters (close-quarters ambush)
-  'Dense Fog:ParryRiposte': {
+  'Dense Fog:PARRY-RIPOSTE': {
     riposteMod: +3,
     description: 'Fog favors counter-fighters hiding their movements',
   },
-  'Dense Fog:ParryLunge': {
+  'Dense Fog:PARRY-LUNGE': {
     riposteMod: +2,
     description: 'Fog aids the cunning counter-striker',
   },
 
   // Sandstorm penalizes aimed blows (can't aim)
-  'Sandstorm:AimedBlow': {
+  'Sandstorm:AIMED BLOW': {
     initiativeMod: -4,
     description: 'Dust blinds precision targeting',
   },
 
   // Blood Moon affects aggressive styles
-  'Blood Moon:BashingAttack': {
+  'Blood Moon:BASHING ATTACK': {
     damageMult: 1.1,
     description: 'Bloodlust amplifies brutal strikes',
   },
-  'Blood Moon:SlashingAttack': {
+  'Blood Moon:SLASHING ATTACK': {
     damageMult: 1.05,
     description: 'The crimson moon whets the blade',
   },
 
   // Blizzard affects high-mobility styles
-  'Blizzard:LungingAttack': {
+  'Blizzard:LUNGING ATTACK': {
     initiativeMod: -3,
     description: 'Freezing winds slow explosive movement',
   },
-  'Blizzard:StrikingAttack': {
+  'Blizzard:STRIKING ATTACK': {
     initiativeMod: -2,
     description: 'Snow drifts hamper rhythmic striking',
   },
 
   // Mana Surge benefits magical fighting styles
-  'Mana Surge:AimedBlow': {
+  'Mana Surge:AIMED BLOW': {
     damageMult: 1.15,
     description: 'Arcane focus sharpens precision strikes',
   },

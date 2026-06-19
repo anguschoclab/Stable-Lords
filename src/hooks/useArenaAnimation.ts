@@ -3,10 +3,6 @@ import type { FighterPose, SpeechBubble, ArenaState } from '@/types/arena.types'
 import type { MinuteEvent } from '@/types/combat.types';
 import { processArenaEvent } from './arenaAnimationUtils';
 
-// Fighter names for text matching (set by ArenaView)
-let nameA = '';
-let nameD = '';
-
 const DEFAULT_POSE_A: FighterPose = {
   x: 25,
   y: 0,
@@ -44,7 +40,9 @@ export function useArenaAnimation(
   maxHpA: number,
   maxHpD: number,
   winner: 'A' | 'D' | null,
-  isComplete: boolean
+  isComplete: boolean,
+  fighterNameA: string = '',
+  fighterNameD: string = ''
 ): UseArenaAnimationReturn {
   const [state, setState] = useState<ArenaState>({
     fighterA: { ...DEFAULT_POSE_A },
@@ -58,8 +56,8 @@ export function useArenaAnimation(
 
   // Process event and update poses
   const processEvent = useCallback((event: MinuteEvent, index: number) => {
-    setState((prev) => processArenaEvent(prev, event, index, nameA, nameD));
-  }, []);
+    setState((prev) => processArenaEvent(prev, event, index, fighterNameA.toLowerCase(), fighterNameD.toLowerCase()));
+  }, [fighterNameA, fighterNameD]);
 
   // Track visible event changes
   useEffect(() => {
@@ -134,14 +132,4 @@ export function useArenaAnimation(
     reset,
     updatePose,
   };
-} /**
- * Set fighter names.
- */
-
-/**
- * Set fighter names.
- */
-export function setFighterNames(a: string, d: string) {
-  nameA = a.toLowerCase();
-  nameD = d.toLowerCase();
-}
+  }

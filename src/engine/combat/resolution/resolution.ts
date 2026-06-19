@@ -280,12 +280,13 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
     attCommitLevel: s.attCommit.level,
     riposteStreak: def.riposteStreak ?? 0,
   });
+  const styleWeatherRipMod = getStyleWeatherModifier(def.style, ctx.weather, ctx.arenaConfig.tags).riposteMod;
   const ripCheck = performRiposteCheck(
     rng,
     def,
     aGoesFirst ? ctx.matchupD : ctx.matchupA,
     aGoesFirst ? s.fatD : s.fatA,
-    s.curOffMods.defPenalty - WHIFF_RIPOSTE_DEF_PENALTY + styleRip.ripBonus,
+    s.curOffMods.defPenalty - WHIFF_RIPOSTE_DEF_PENALTY + styleRip.ripBonus + ctx.weatherEffect.riposteMod + styleWeatherRipMod,
     aGoesFirst ? s.passD : s.passA,
     curAntiSynDef
   );
@@ -393,12 +394,13 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
         attCommitLevel: s.attCommit.level,
         riposteStreak: def.riposteStreak ?? 0,
       });
+      const styleWeatherRipMod = getStyleWeatherModifier(def.style, ctx.weather, ctx.arenaConfig.tags).riposteMod;
       const ripPostParry = performRiposteCheck(
         rng,
         def,
         aGoesFirst ? ctx.matchupD : ctx.matchupA,
         aGoesFirst ? s.fatD : s.fatA,
-        (aGoesFirst ? s.defModsD : s.defModsA).ripBonus + ctx.weatherEffect.riposteMod + styleRip.ripBonus,
+        (aGoesFirst ? s.defModsD : s.defModsA).ripBonus + ctx.weatherEffect.riposteMod + styleRip.ripBonus + styleWeatherRipMod,
         curPassD,
         undefined
       );

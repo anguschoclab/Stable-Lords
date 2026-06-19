@@ -57,35 +57,37 @@ export class OPFSArchiveService implements ArchiveService {
   }
 
   async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
-    assertSafeFileNamePart(slotId, 'slotId');
-    let writable: FileSystemWritableFileStream | null = null;
-    try {
-      const dirHandle = await this.getHotStateDirectory();
-      if (!dirHandle) return;
-      const fileName = `${slotId}.json`;
-      const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
-      writable = await fileHandle.createWritable();
-      await writable.write(JSON.stringify(stateData));
-    } catch (error) {
-      if ((error as Error)?.name === 'QuotaExceededError') {
-        console.error('OPFS Quota Exceeded during hot state archival', error);
-        if (typeof window !== 'undefined')
-          window.dispatchEvent(
-            new CustomEvent('OPFS_QUOTA_EXCEEDED', {
-              detail: 'Storage Quota Exceeded: Archival failed.',
-            })
-          );
-        return;
-      }
-    } finally {
-      if (writable) {
-        try {
-          await writable.close();
-        } catch (closeError) {
-          console.warn('Failed to close writable stream:', closeError);
+    return this.enqueue(async () => {
+      assertSafeFileNamePart(slotId, 'slotId');
+      let writable: FileSystemWritableFileStream | null = null;
+      try {
+        const dirHandle = await this.getHotStateDirectory();
+        if (!dirHandle) return;
+        const fileName = `${slotId}.json`;
+        const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
+        writable = await fileHandle.createWritable();
+        await writable.write(JSON.stringify(stateData));
+      } catch (error) {
+        if ((error as Error)?.name === 'QuotaExceededError') {
+          console.error('OPFS Quota Exceeded during hot state archival', error);
+          if (typeof window !== 'undefined')
+            window.dispatchEvent(
+              new CustomEvent('OPFS_QUOTA_EXCEEDED', {
+                detail: 'Storage Quota Exceeded: Archival failed.',
+              })
+            );
+          return;
+        }
+      } finally {
+        if (writable) {
+          try {
+            await writable.close();
+          } catch (closeError) {
+            console.warn('Failed to close writable stream:', closeError);
+          }
         }
       }
-    }
+    });
   }
 
   async retrieveHotState(slotId: string): Promise<GameState | null> {

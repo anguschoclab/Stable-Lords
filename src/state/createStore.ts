@@ -8,8 +8,9 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
 import { opfsArchive } from '@/engine/storage/opfsArchive';
 import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
-import { stripNonSerializable, reconstructGameState } from './serialization';
+import { stripNonSerializable, reconstructGameState, clearReconstructionCache } from './serialization';
 import type { GameStore } from './store.types';
+import { StyleRollups } from '@/engine/stats/styleRollups';
 
 // ─── Slices ────────────────────────────────────────────────────────────────
 import { createEconomySlice } from './slices/economySlice';
@@ -54,6 +55,8 @@ export const useGameStore = create<GameStore>()(
       },
 
       loadGame: (slotId: string, state: GameState) => {
+        clearReconstructionCache();
+        StyleRollups._clearCaches();
         set((draft) => {
           draft.treasury = state.treasury;
           draft.ledger = state.ledger;
@@ -126,6 +129,7 @@ export const useGameStore = create<GameStore>()(
         deaths?: string[],
         injuries?: string[]
       ) => {
+        if (get().isSimulating) return;
         const store = get();
         const raw = processedState || reconstructGameState(store);
         const cleanState = stripNonSerializable(raw) as GameState;
@@ -135,9 +139,10 @@ export const useGameStore = create<GameStore>()(
           draft.isSimulating = true;
         });
 
-        const timeout = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Worker timeout after 15s')), 15000)
-        );
+        let timerId: ReturnType<typeof setTimeout>;
+        const timeout = new Promise<never>((_, reject) => {
+          timerId = setTimeout(() => reject(new Error('Worker timeout after 15s')), 15000);
+        });
 
         try {
           let next: GameState;
@@ -146,6 +151,7 @@ export const useGameStore = create<GameStore>()(
           } else {
             next = await Promise.race([engineProxy.advanceWeek(cleanState), timeout]);
           }
+          clearTimeout(timerId!);
 
           next = flushDeferredArchivesOffThread(next);
           next.phase = 'resolution';
@@ -184,6 +190,7 @@ export const useGameStore = create<GameStore>()(
         deaths?: string[],
         injuries?: string[]
       ) => {
+        if (get().isSimulating) return;
         const store = get();
         const raw = processedState || reconstructGameState(store);
         const cleanState = stripNonSerializable(raw) as GameState;
@@ -193,8 +200,15 @@ export const useGameStore = create<GameStore>()(
           draft.isSimulating = true;
         });
 
+        let timerId: ReturnType<typeof setTimeout>;
+        const timeout = new Promise<never>((_, reject) => {
+          timerId = setTimeout(() => reject(new Error('Worker timeout after 15s')), 15000);
+        });
+
         try {
-          let next = await engineProxy.advanceDay(cleanState);
+          let next: GameState;
+          next = await Promise.race([engineProxy.advanceDay(cleanState), timeout]);
+          clearTimeout(timerId!);
 
           next = flushDeferredArchivesOffThread(next);
           next.phase = 'resolution';
@@ -237,13 +251,15 @@ export const useGameStore = create<GameStore>()(
       },
 
       doReset: () => {
+        clearReconstructionCache();
+        StyleRollups._clearCaches();
         const fresh = createFreshState('alpha-prime-10');
         get().loadGame('autosave', fresh);
         set({ atTitleScreen: true });
       },
 
-      returnToTitle: () => {
-        get().saveCurrentState();
+      returnToTitle: async () => {
+        await get().saveCurrentState();
         set((draft) => {
           draft.atTitleScreen = true;
           draft.activeSlotId = null;

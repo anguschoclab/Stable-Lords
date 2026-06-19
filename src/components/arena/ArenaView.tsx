@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useGameStore } from '@/state/useGameStore';
 import ArenaBackground from './ArenaBackground';
@@ -9,7 +8,7 @@ import MiniCombatLog from './MiniCombatLog';
 import ParticleSystem from './effects/ParticleSystem';
 import ScreenShake from './effects/ScreenShake';
 import CrowdReactions from './crowd/CrowdReactions';
-import { useArenaAnimation, setFighterNames } from '@/hooks/useArenaAnimation';
+import { useArenaAnimation } from '@/hooks/useArenaAnimation';
 import { useLastEventType, useCrowdState } from '@/hooks/useArenaEventEffects';
 import { calculateFighterStatuses } from './arenaUtils';
 import { DEFAULT_MAX_HP } from '@/constants/combat';
@@ -107,11 +106,6 @@ export default function ArenaView({
     | 'tournament'
     | undefined;
 
-  // Set fighter names for text matching
-  useEffect(() => {
-    setFighterNames(nameA, nameD);
-  }, [nameA, nameD]);
-
   // Arena animation state
   const { fighterA, fighterD, bubbles, hpA, hpD, fpA, fpD, removeBubble } = useArenaAnimation(
     log,
@@ -119,7 +113,9 @@ export default function ArenaView({
     maxHpA,
     maxHpD,
     winner,
-    isComplete
+    isComplete,
+    nameA,
+    nameD
   );
 
   // Extracted: Event tracking and crowd state

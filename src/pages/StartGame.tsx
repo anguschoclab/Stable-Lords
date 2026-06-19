@@ -100,26 +100,25 @@ export default function StartGame() {
     [loadGame]
   );
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = useCallback(async () => {
     if (!deleteTarget) return;
-    deleteSlot(deleteTarget.id);
+    await deleteSlot(deleteTarget.id);
     refreshSlots();
     setDeleteTarget(null);
   }, [deleteTarget, refreshSlots]);
 
-  const handleNewGame = useCallback(() => {
+  const handleNewGame = useCallback(async () => {
     if (!backstoryId) return;
     let fresh = createFreshState('alpha-prime-10');
     fresh.player.name = ownerName.trim();
     fresh.player.stableName = stableName.trim();
-    fresh.player.crest = playerCrest; // 🛡️ Store the selected heraldic crest
-    fresh.player.generation = 0; // Player is the original founder
+    fresh.player.crest = playerCrest;
+    fresh.player.generation = 0;
     const slotId = newSlotId();
     const identitySeed = slotId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
     applyBackstoryToPlayer(fresh, backstoryId, new SeededRNGService(identitySeed));
-    // Seed initial rankings and bout offers so Booking Office is populated from day 1
     fresh = resolveImpacts(fresh, [runRankingsPass(fresh), runPromoterPass(fresh)]);
-    saveToSlot(slotId, fresh.player.stableName, fresh);
+    await saveToSlot(slotId, fresh.player.stableName, fresh);
     loadGame(slotId, fresh);
   }, [ownerName, stableName, playerCrest, backstoryId, loadGame]);
 

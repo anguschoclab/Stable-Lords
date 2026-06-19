@@ -42,6 +42,10 @@ export function useInsightManager({
   const handleReveal = () => {
     if (!selectedToken || !selectedWarrior) return;
 
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
     setIsRevealing(true);
 
     timerRef.current = setTimeout(() => {

@@ -28,6 +28,7 @@ export class AudioManager {
   private static instance: AudioManager | undefined;
   private sfx: Map<SfxType, Howl> = new Map();
   private muted: boolean = false;
+  private ready: Promise<void>;
 
   /**
    * Constructor.
@@ -40,7 +41,7 @@ export class AudioManager {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Howler.js type incompatibility with Electron (external library)
       (window as any).HowlerGlobal = {};
     }
-    this.loadMuteState();
+    this.ready = this.loadMuteState();
   }
 
   /**
@@ -74,7 +75,8 @@ export class AudioManager {
    * Play a sound effect of the specified type.
    * @param type - The type of sound effect to play.
    */
-  public play(type: SfxType) {
+  public async play(type: SfxType) {
+    await this.ready;
     if (this.muted) return;
     const sound = this.sfx.get(type);
     if (sound) sound.play();

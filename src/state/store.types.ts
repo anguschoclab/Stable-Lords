@@ -35,7 +35,7 @@ export interface GameStoreActions {
   initialize: () => void;
   loadGame: (slotId: string, gameState: GameState) => void;
   doReset: () => void;
-  returnToTitle: () => void;
+  returnToTitle: () => Promise<void>;
   saveCurrentState: () => Promise<void>;
   setState: (fn: (state: GameStore) => void) => void;
 }

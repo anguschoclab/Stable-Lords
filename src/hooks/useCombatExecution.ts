@@ -35,7 +35,7 @@ export function useCombatExecution({
   const [autosimResult, setAutosimResult] = useState<AutosimResult | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const handleExecuteCycle = useCallback(() => {
+  const handleExecuteCycle = useCallback(async () => {
     if (running) return;
     setRunning(true);
     if (matchCardLength === 0 && fightReadyLength < 2) {
@@ -45,30 +45,33 @@ export function useCombatExecution({
     }
     const processed = processWeekBouts(gameState);
     setResults(processed.results);
-    if (gameState.isTournamentWeek) {
-      doAdvanceDay(
-        undefined,
-        processed.results,
-        processed.summary.deathNames,
-        processed.summary.injuryNames
-      );
-      toast.success(`Empire Day ${gameState.day + 1} concluded.`);
-    } else {
-      doAdvanceWeek(
-        undefined,
-        processed.results,
-        processed.summary.deathNames,
-        processed.summary.injuryNames
-      );
-      toast.success(`Week ${gameState.week} concluded.`);
+    try {
+      if (gameState.isTournamentWeek) {
+        await doAdvanceDay(
+          undefined,
+          processed.results,
+          processed.summary.deathNames,
+          processed.summary.injuryNames
+        );
+        toast.success(`Empire Day ${gameState.day + 1} concluded.`);
+      } else {
+        await doAdvanceWeek(
+          undefined,
+          processed.results,
+          processed.summary.deathNames,
+          processed.summary.injuryNames
+        );
+        toast.success(`Week ${gameState.week} concluded.`);
+      }
+    } finally {
+      setRunning(false);
+      setExpandedId(null);
     }
-    setRunning(false);
-    setExpandedId(null);
   }, [gameState, running, matchCardLength, fightReadyLength, doAdvanceDay, doAdvanceWeek]);
 
   const handleStartAutosim = useCallback(
     async (weeks: number) => {
-      if (autosimming) return;
+      if (autosimming || useGameStore.getState().isSimulating) return;
       setAutosimming(true);
       setSimulating(true);
       setAutosimResult(null);

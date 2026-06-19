@@ -1,4 +1,5 @@
 import { CombatNarrator } from './combatNarrator';
+import type { BoutEndContext } from './combatNarrator';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/game';
 
@@ -29,8 +30,9 @@ export const BoutNarrator = {
     by: string,
     winnerName: string,
     loserName: string,
-    weaponId?: string
+    weaponId?: string,
+    ctx?: BoutEndContext
   ): string[] {
-    return CombatNarrator.narrateBoutEnd(rng, by, winnerName, loserName, weaponId);
+    return CombatNarrator.narrateBoutEnd(rng, by, winnerName, loserName, weaponId, ctx);
   },
 } as const;

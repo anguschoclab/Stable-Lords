@@ -105,8 +105,10 @@ const TacticalLogEntry = memo(
           <span
             className={cn(
               'font-display',
-              type === 'crit' && 'font-bold text-destructive',
-              type === 'death' && 'font-bold text-arena-blood'
+              event.emphasis && 'font-bold',
+              type === 'crit' && 'text-destructive',
+              type === 'ko' && 'text-arena-gold',
+              type === 'death' && 'text-arena-blood'
             )}
           >
             {event.text}
@@ -163,6 +165,24 @@ export default function TacticalLogView({
   const isAtStart = currentIndex <= 0;
   const isAtEnd = currentIndex >= log.length - 1;
 
+  const currentMinute = log[currentIndex]?.minute ?? 0;
+  const prevPageIndex = (() => {
+    for (let i = currentIndex - 1; i >= 0; i--) {
+      if ((log[i]?.minute ?? currentMinute) < currentMinute) {
+        const targetMinute = log[i]?.minute ?? 0;
+        const first = log.findIndex((e) => e.minute === targetMinute);
+        return first >= 0 ? first : 0;
+      }
+    }
+    return 0;
+  })();
+  const nextPageIndex = (() => {
+    for (let i = currentIndex + 1; i < log.length; i++) {
+      if ((log[i]?.minute ?? currentMinute) > currentMinute) return i;
+    }
+    return log.length - 1;
+  })();
+
   return (
     <>
       <ScrollArea className={cn('h-full min-h-96 w-full', className)}>
@@ -205,7 +225,7 @@ export default function TacticalLogView({
           }}
         >
           <button
-            onClick={() => onHighlightChange?.(Math.max(0, currentIndex - 1))}
+            onClick={() => onHighlightChange?.(prevPageIndex)}
             disabled={isAtStart}
             aria-label="Previous"
             className={cn(
@@ -225,7 +245,7 @@ export default function TacticalLogView({
           </div>
 
           <button
-            onClick={() => onHighlightChange?.(Math.min(log.length - 1, currentIndex + 1))}
+            onClick={() => onHighlightChange?.(nextPageIndex)}
             disabled={isAtEnd}
             aria-label="Next"
             className={cn(

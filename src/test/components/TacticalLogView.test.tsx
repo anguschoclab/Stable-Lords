@@ -80,7 +80,7 @@ describe('TacticalLogView', () => {
     expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
   });
 
-  it('Next button calls onHighlightChange with incremented index', () => {
+  it('Next button calls onHighlightChange with first index of next minute', () => {
     const onHighlightChange = vi.fn();
     render(
       <TacticalLogView
@@ -95,7 +95,7 @@ describe('TacticalLogView', () => {
     expect(onHighlightChange).toHaveBeenCalledWith(3);
   });
 
-  it('Prev button calls onHighlightChange with decremented index', () => {
+  it('Prev button calls onHighlightChange with first index of previous minute', () => {
     const onHighlightChange = vi.fn();
     render(
       <TacticalLogView

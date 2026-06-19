@@ -144,6 +144,7 @@ export interface MinuteEvent {
   protectA?: string;
   protectD?: string;
   events?: CombatEvent[];
+  emphasis?: boolean;
 }
 
 /**

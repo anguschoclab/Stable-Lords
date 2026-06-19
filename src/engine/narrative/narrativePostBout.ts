@@ -7,6 +7,8 @@ import { getFromArchive, interpolateTemplate, peekArchive } from './narrativePBP
 import { audioManager } from '@/lib/AudioManager';
 import { FightingStyle } from '@/types/shared.types';
 import type { RNG } from './types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
+import { normalizeRng } from '@/engine/core/rng/normalize';
 
 /**
  * Narrates bout end.
@@ -41,13 +43,14 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
  * @param weaponId - Weapon id. (optional)
  */
 export function narrateBoutEnd(
-  rng: RNG,
+  rng: RNG | IRNGService,
   by: string,
   winnerName: string,
   loserName: string,
   weaponId?: string,
   ctx: BoutEndContext = {}
 ): string[] {
+  const rngFn = normalizeRng(rng);
   const wName = getWeaponDisplayName(weaponId);
   const wType = getWeaponType(weaponId, ctx.style as FightingStyle | undefined);
 
@@ -56,10 +59,12 @@ export function narrateBoutEnd(
     KO: 'KO',
     Stoppage: 'Stoppage',
     Exhaustion: 'Exhaustion',
+    Surrender: 'Surrender',
+    Incapacitated: 'Incapacitated',
   };
 
   const cat = categoryMap[by] || 'KO';
-  const conclusionTemplate = getFromArchive(rng, ['conclusions', cat]);
+  const conclusionTemplate = getFromArchive(rngFn, ['conclusions', cat]);
   const conclusion = interpolateTemplate(conclusionTemplate, {
     attacker: winnerName,
     defender: loserName,
@@ -96,7 +101,7 @@ export function narrateBoutEnd(
       // the tiered cause/style/mood cascade.
       const pool = peekArchive(path);
       if (pool && pool.length > 0) {
-        fatalBlowTemplate = getFromArchive(rng, path);
+        fatalBlowTemplate = getFromArchive(rngFn, path);
         if (fatalBlowTemplate && fatalBlowTemplate !== fallbackMarker) break;
       }
     }

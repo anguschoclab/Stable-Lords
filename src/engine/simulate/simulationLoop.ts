@@ -212,7 +212,7 @@ export function runSimulationLoop(
             mood: crowdMood,
           }
         );
-        boutEndLines.forEach((line) => log.push({ minute: min, text: line }));
+        boutEndLines.forEach((line) => log.push({ minute: min, text: line, emphasis: true }));
       }
       break;
     }

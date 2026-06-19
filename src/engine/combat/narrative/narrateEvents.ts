@@ -134,6 +134,9 @@ export function narrateEvents(
           }
 
           const isFatal = !!event.metadata?.lethal;
+          const isCrit = !!event.metadata?.crit;
+          const isHeavyHit =
+            isCrit || isFatal || (!!event.value && event.value / getMaxHp(event.target as 'A' | 'D') >= 0.15);
 
           log.push({
             minute,
@@ -152,10 +155,11 @@ export function narrateEvents(
               getIsFavorite(event.actor as 'A' | 'D'),
               getStyle(event.actor as 'A' | 'D')
             ),
+            emphasis: isHeavyHit,
           });
 
-          if (event.metadata?.crit) {
-            log.push({ minute, text: `💥 CRITICAL HIT! ${actorName} finds a vital weakness!` });
+          if (isCrit) {
+            log.push({ minute, text: `💥 CRITICAL HIT! ${actorName} finds a vital weakness!`, emphasis: true });
           }
 
           if (event.value) {

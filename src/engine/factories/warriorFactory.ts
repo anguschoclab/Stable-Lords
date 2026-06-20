@@ -41,6 +41,7 @@ export function makeWarrior(
   // them at creation so warriors carry inherent quirks. Tests/explicit
   // overrides win via the spread below.
   const traits = overrides?.traits ?? (rng ? generateTraits(rng, STYLE_ARCHETYPE[style]) : []);
+  const trainability = overrides?.trainability ?? (rng ? 0.4 + rng.next() * 0.5 : 0.65);
   // Seed equipment with the style's classic weapon so we no longer hand every
   // default-built warrior a broadsword (which silently buffed Striking Attack
   // and penalized everyone else via weapon-stat reqs / classic-weapon misses).
@@ -67,6 +68,7 @@ export function makeWarrior(
     age: 18 + Math.floor((rng ? rng.next() : 0.5) * 8),
     favorites,
     traits,
+    trainability,
     equipment,
     lore: overrides?.lore ?? '',
     origin: overrides?.origin ?? '',

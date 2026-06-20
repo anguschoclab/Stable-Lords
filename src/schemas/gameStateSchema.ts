@@ -681,6 +681,7 @@ export const WarriorSchema = z.object({
   yearlySnapshots: z.record(z.string(), CareerRecordSchema).optional(),
   awards: z.array(z.any()).optional(), // AnnualAward - using any for circular reference
   traits: z.array(z.string()),
+  trainability: z.number().optional(),
   lore: z.string().optional(),
   origin: z.string().optional(),
   lineage: WarriorLineageSchema.optional(),
@@ -814,9 +815,11 @@ export const TournamentEntrySchema = z.object({
  */
 export const TrainingAssignmentSchema = z.object({
   warriorId: z.string(),
-  type: z.enum(['attribute', 'recovery', 'skillDrill']),
+  type: z.enum(['attribute', 'recovery', 'skillDrill', 'trait']),
   attribute: z.enum(['ST', 'CN', 'SZ', 'WT', 'WL', 'SP', 'DF']).optional(),
   skill: z.enum(['ATT', 'PAR', 'DEF', 'INI', 'RIP', 'DEC']).optional(),
+  trainerId: z.string().optional(),
+  weeksRemaining: z.number().optional(),
 });
 
 /**

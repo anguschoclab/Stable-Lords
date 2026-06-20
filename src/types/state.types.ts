@@ -207,10 +207,14 @@ export interface TournamentEntry {
  */
 export interface TrainingAssignment {
   warriorId: WarriorId;
-  type: 'attribute' | 'recovery' | 'skillDrill';
+  type: 'attribute' | 'recovery' | 'skillDrill' | 'trait';
   attribute?: keyof Attributes;
   /** For skillDrill assignments — which combat skill to drill (ATT/PAR/DEF/INI/RIP/DEC). */
   skill?: keyof BaseSkills;
+  /** Trait training: which trainer is teaching (sets the tier ceiling + pool). */
+  trainerId?: string;
+  /** Trait training: weeks left before the outcome roll. Counts down each week. */
+  weeksRemaining?: number;
 } /**
  * Defines the shape of seasonal growth.
  */

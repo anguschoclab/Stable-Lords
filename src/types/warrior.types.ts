@@ -202,6 +202,8 @@ export interface Warrior {
   yearlySnapshots?: Record<number, CareerRecord>;
   awards?: AnnualAward[];
   traits: string[];
+  /** Hidden 0–1 aptitude for learning new traits, rolled at birth (like potential). */
+  trainability?: number;
   lore?: string;
   origin?: string;
   lineage?: WarriorLineage;

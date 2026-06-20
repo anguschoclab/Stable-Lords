@@ -17,3 +17,7 @@
 ## 2023-10-27 - [Focus Visible Standardization]
 **Learning:** Replaced `focus:outline-none` with `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` on many buttons and interactive elements. Using `focus-visible:` ensures keyboard navigation has clear focus states without triggering them on mouse clicks, improving both accessibility and visual design for pointer users.
 **Action:** When adding interactive elements, always consider keyboard focus states and prefer `focus-visible` over `focus` to reduce visual clutter for mouse users.
+
+## 2026-06-20 - Bookmark Button Keyboard Accessibility
+**Learning:** The native bookmark toggle button was missing keyboard focus indicators, making it invisible to keyboard/screen-reader users navigating the UI.
+**Action:** When styling custom icon-only buttons, explicitly include standard focus ring utility classes (e.g. `focus-visible:ring-2 focus-visible:ring-primary`) to ensure accessibility without relying on Shadcn components where styling deviates heavily.

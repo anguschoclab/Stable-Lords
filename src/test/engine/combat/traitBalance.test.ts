@@ -111,7 +111,6 @@ const COMBAT_TRAITS = [
   'agile',
   'precise',
   'comboartist',
-  'riposte_natural',
 ];
 const NEGATIVE_TRAITS = ['fragile', 'slow'];
 const PERSONALITY_TRAITS = [

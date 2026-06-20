@@ -19,6 +19,10 @@
 import type { Warrior } from '@/types/warrior.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Archetype } from '@/data/names/archetypeNames';
+import type { FightingStyle } from '@/types/shared.types';
+
+export type TraitTier = 'Common' | 'Notable' | 'Exceptional' | 'Signature' | 'Flaw';
+export type TraitSign = 'positive' | 'negative';
 import { TRAIT_SYNERGY_MULTIPLIER, TRAIT_ANTI_SYNERGY_MULTIPLIER } from '@/constants/combat/combat'; /**
  * Defines the shape of trait effect.
  */
@@ -72,6 +76,13 @@ export interface TraitDef {
   synergy?: Archetype[];
   /** Archetypes this trait clashes with (0.3× pick weight). */
   antiSynergy?: Archetype[];
+  /** Power-budget tier, mirroring potential's RecruitTier ladder. 'Flaw' ⇒ negative. */
+  tier: TraitTier;
+  /** Whether the net effect helps or hurts. Flaws are always 'negative'. */
+  sign: TraitSign;
+  /** If present, the trait is class-restricted: only warriors of these styles
+   *  can roll/train it, and it only appears in matching trainers' pools. */
+  styles?: FightingStyle[];
 } /**
  * Traits.
  */
@@ -87,6 +98,8 @@ export const TRAITS: Record<string, TraitDef> = {
       '+1 initiative and +1 attack when bloodied (HP < 50%) — reverting to survival instincts learned in the gutters.',
     effect: { iniMod: 1, attModLowHp: 1 },
     weight: 0.8,
+    tier: 'Notable',
+    sign: 'positive',
   },
   gutter_rat: {
     id: 'gutter_rat',
@@ -95,6 +108,8 @@ export const TRAITS: Record<string, TraitDef> = {
       '+2 defense in LATE phase — accustomed to outlasting stronger opponents in grueling street fights.',
     effect: { defModLate: 2 },
     weight: 0.8,
+    tier: 'Notable',
+    sign: 'positive',
   },
   quick: {
     id: 'quick',
@@ -102,6 +117,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 initiative — naturally fast on the draw.',
     effect: { iniMod: 1 },
     weight: 1.0,
+    tier: 'Common',
+    sign: 'positive',
   },
   patient: {
     id: 'patient',
@@ -109,6 +126,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+2 defense in OPENING phase — sizes up the foe before committing.',
     effect: { defModEarly: 2 },
     weight: 1.0,
+    tier: 'Notable',
+    sign: 'positive',
   },
   berserker: {
     id: 'berserker',
@@ -116,6 +135,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+2 attack when bloodied (HP < 50%).',
     effect: { attModLowHp: 2 },
     weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
   },
   stalwart: {
     id: 'stalwart',
@@ -123,6 +144,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+2 parry while still strong (HP > 75%).',
     effect: { parModHighHp: 2 },
     weight: 0.8,
+    tier: 'Notable',
+    sign: 'positive',
   },
   heavy_handed: {
     id: 'heavy_handed',
@@ -130,6 +153,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 damage on every successful hit.',
     effect: { dmgBonus: 1 },
     weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
   },
   disciplined: {
     id: 'disciplined',
@@ -137,6 +162,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 attack in LATE phase — endurance discipline pays off.',
     effect: { attModLate: 1, parMod: 1 },
     weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
   },
   ironlung: {
     id: 'ironlung',
@@ -144,6 +171,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '×0.92 endurance cost — efficient breathing.',
     effect: { enduranceMult: 0.92 },
     weight: 0.6,
+    tier: 'Notable',
+    sign: 'positive',
   },
   bloodthirsty: {
     id: 'bloodthirsty',
@@ -151,6 +180,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+0.005 to kill window — hungrier for the finish.',
     effect: { killWindowBonus: 0.005 },
     weight: 0.5,
+    tier: 'Common',
+    sign: 'positive',
   },
   agile: {
     id: 'agile',
@@ -158,6 +189,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 defense baseline — light on the feet.',
     effect: { defMod: 1 },
     weight: 0.9,
+    tier: 'Common',
+    sign: 'positive',
   },
   precise: {
     id: 'precise',
@@ -165,6 +198,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 decisiveness baseline — picks the right opening.',
     effect: { decMod: 1 },
     weight: 0.7,
+    tier: 'Common',
+    sign: 'positive',
   },
   comboartist: {
     id: 'comboartist',
@@ -172,13 +207,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 attack when on a hit-streak (≥2 consecutive hits).',
     effect: { attModConsecutiveHits: 1 },
     weight: 0.7,
-  },
-  riposte_natural: {
-    id: 'riposte_natural',
-    name: 'Natural Riposte',
-    description: '+1 riposte skill — counters come naturally.',
-    effect: { ripMod: 1 },
-    weight: 0.7,
+    tier: 'Common',
+    sign: 'positive',
   },
   fragile: {
     id: 'fragile',
@@ -186,6 +216,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '−2 defense baseline — drops guard easily.',
     effect: { defMod: -2 },
     weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
   },
   slow: {
     id: 'slow',
@@ -193,6 +225,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '−1 initiative — late on the draw.',
     effect: { iniMod: -1 },
     weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
   },
   iron_grip: {
     id: 'iron_grip',
@@ -200,6 +234,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 damage, −1 initiative — sacrifices speed for a crushing hold on their weapon.',
     effect: { dmgBonus: 1, iniMod: -1 },
     weight: 0.6,
+    tier: 'Notable',
+    sign: 'positive',
   },
   cornered_beast: {
     id: 'cornered_beast',
@@ -207,6 +243,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+2 defense when bloodied (HP < 50%) — fights harder when backed into a corner.',
     effect: { defModLowHp: 2 },
     weight: 0.6,
+    tier: 'Notable',
+    sign: 'positive',
   },
   perceptive: {
     id: 'perceptive',
@@ -214,6 +252,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 decisiveness, +1 initiative — reads the subtle tells of an opponent.',
     effect: { decMod: 1, iniMod: 1 },
     weight: 0.5,
+    tier: 'Notable',
+    sign: 'positive',
   },
   vengeful: {
     id: 'vengeful',
@@ -221,6 +261,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 damage when bloodied (HP < 50%) — pain only makes them angrier.',
     effect: { attModLowHp: 1, dmgBonus: 1 },
     weight: 0.6,
+    tier: 'Notable',
+    sign: 'positive',
   },
   stoic: {
     id: 'stoic',
@@ -228,6 +270,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 defense in LATE phase — ignores mounting fatigue and pain.',
     effect: { defModLate: 1, parModLate: 1 },
     weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
   },
   // ── Personality / Combat AI Traits ──
   aggressive: {
@@ -238,6 +282,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 1.0,
     synergy: ['brutal'],
     antiSynergy: ['tank'],
+    tier: 'Exceptional',
+    sign: 'positive',
   },
   disciplined_mind: {
     id: 'disciplined_mind',
@@ -246,6 +292,8 @@ export const TRAITS: Record<string, TraitDef> = {
     effect: { fightPlanMod: { AL: 3, OE: -1, feintTendency: 5 }, attrBonus: { DF: 1, WL: 1 } },
     weight: 1.0,
     synergy: ['cunning', 'tank'],
+    tier: 'Exceptional',
+    sign: 'positive',
   },
   cunning: {
     id: 'cunning',
@@ -258,6 +306,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 1.0,
     synergy: ['cunning', 'agile'],
     antiSynergy: ['brutal'],
+    tier: 'Exceptional',
+    sign: 'positive',
   },
   sturdy: {
     id: 'sturdy',
@@ -267,6 +317,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 1.0,
     synergy: ['tank'],
     antiSynergy: ['agile'],
+    tier: 'Exceptional',
+    sign: 'positive',
   },
   feral: {
     id: 'feral',
@@ -276,6 +328,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.6,
     synergy: ['brutal', 'agile'],
     antiSynergy: ['tank', 'cunning'],
+    tier: 'Signature',
+    sign: 'positive',
   },
   merciless: {
     id: 'merciless',
@@ -286,6 +340,8 @@ export const TRAITS: Record<string, TraitDef> = {
     effect: { fightPlanMod: { killDesire: 12, OE: 2 }, attrBonus: { ST: 1, WL: 1 } },
     weight: 0.6,
     synergy: ['brutal'],
+    tier: 'Signature',
+    sign: 'positive',
   },
   calculated: {
     id: 'calculated',
@@ -295,6 +351,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.8,
     synergy: ['cunning'],
     antiSynergy: ['brutal'],
+    tier: 'Exceptional',
+    sign: 'positive',
   },
   resilient: {
     id: 'resilient',
@@ -304,6 +362,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.8,
     synergy: ['tank'],
     antiSynergy: ['agile'],
+    tier: 'Exceptional',
+    sign: 'positive',
   },
   evasive: {
     id: 'evasive',
@@ -313,6 +373,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.8,
     synergy: ['agile'],
     antiSynergy: ['brutal', 'tank'],
+    tier: 'Signature',
+    sign: 'positive',
   },
   brutal: {
     id: 'brutal',
@@ -322,6 +384,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.8,
     synergy: ['brutal'],
     antiSynergy: ['cunning', 'tank'],
+    tier: 'Signature',
+    sign: 'positive',
   },
   // ── New Lore/Personality Traits ──
   blood_drunk: {
@@ -333,6 +397,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.6,
     synergy: ['brutal', 'agile'],
     antiSynergy: ['tank'],
+    tier: 'Signature',
+    sign: 'positive',
   },
   paranoid: {
     id: 'paranoid',
@@ -342,6 +408,8 @@ export const TRAITS: Record<string, TraitDef> = {
     effect: { defModEarly: 2, decMod: -1, fightPlanMod: { AL: -2 } },
     weight: 0.6,
     synergy: ['cunning'],
+    tier: 'Notable',
+    sign: 'positive',
   },
   cold_eyed: {
     id: 'cold_eyed',
@@ -352,6 +420,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.6,
     synergy: ['cunning', 'tank'],
     antiSynergy: ['brutal'],
+    tier: 'Notable',
+    sign: 'positive',
   },
   survivalist: {
     id: 'survivalist',
@@ -360,6 +430,8 @@ export const TRAITS: Record<string, TraitDef> = {
     effect: { defModLowHp: 2, parModHighHp: 0, fightPlanMod: { AL: -2 } },
     weight: 0.7,
     synergy: ['tank', 'agile'],
+    tier: 'Notable',
+    sign: 'positive',
   },
   death_marked: {
     id: 'death_marked',
@@ -370,6 +442,8 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.5,
     synergy: ['brutal', 'cunning'],
     antiSynergy: ['tank'],
+    tier: 'Exceptional',
+    sign: 'positive',
   },
   blood_scent: {
     id: 'blood_scent',
@@ -377,6 +451,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 attack when opponent is bloodied (HP < 50%).',
     effect: { attModLowHp: 1 },
     weight: 0.6,
+    tier: 'Common',
+    sign: 'positive',
   },
   shadow_step: {
     id: 'shadow_step',
@@ -384,6 +460,8 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 defense, −1 damage — favors elusive positioning over heavy strikes.',
     effect: { defMod: 1, dmgBonus: -1 },
     weight: 0.5,
+    tier: 'Common',
+    sign: 'positive',
   },
 };
 

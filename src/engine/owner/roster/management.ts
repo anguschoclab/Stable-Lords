@@ -7,6 +7,8 @@ import { META_RECRUIT_QUOTES } from '@/data/ownerData';
 import { SeededRNGService } from '@/utils/random';
 import { filterActive } from '@/utils/roster';
 import { generateAIRecruit } from './recruitGenerator';
+import { computeWarriorLiability } from '@/engine/warriorValue';
+import { policyFor } from '@/engine/ai/traitPolicy';
 
 /**
  * Manages the roster of AI owners by evaluating current warriors, recruiting talent,
@@ -86,6 +88,20 @@ export function processAIRosterManagement(
           `🗡️ ${r.owner.name} (${r.owner.stableName}) cuts ${c.name} — "No killer instinct."`
         );
       }
+    }
+
+    // Liability-based culling: release flaw-loaded warriors per personality threshold
+    const traitPolicy = policyFor(r.owner.personality);
+    const liabilityCandidates = filterActive(r.roster).filter(
+      (w) => !isOnWinStreak(w) && computeWarriorLiability(w).score >= traitPolicy.cutLiabilityThreshold
+    );
+    for (const c of liabilityCandidates.slice(0, 1)) {
+      c.status = 'Retired';
+      c.retiredWeek = state.week;
+      culledThisTick++;
+      gazetteItems.push(
+        `📋 ${r.owner.name} (${r.owner.stableName}) releases ${c.name} — too many flaws.`
+      );
     }
 
     // Age-based retirement

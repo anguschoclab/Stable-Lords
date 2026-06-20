@@ -372,6 +372,10 @@ export const TRAIT_SYNERGY_MULTIPLIER = 3.0;
  */
 export const TRAIT_ANTI_SYNERGY_MULTIPLIER = 0.10;
 
+/** Birth-trait distribution: most warriors are born blank; traits are developed. */
+export const BIRTH_BLANK_CHANCE = 0.68;
+export const BIRTH_FLAW_CHANCE = 0.07;
+
 // ─── Style Matchup Matrix ──────────────────────────────────────────────────
 
 /**

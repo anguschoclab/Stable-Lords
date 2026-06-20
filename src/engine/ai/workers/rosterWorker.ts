@@ -25,6 +25,9 @@ import {
   TOTAL_CAP,
 } from '@/engine/training/trainingGains';
 import { getHealingTrainerBonus } from '@/engine/training/coachLogic';
+import { rollTraitTraining } from '@/engine/training/trainingGains/traitTraining';
+import { policyFor } from '@/engine/ai/traitPolicy';
+import type { Trainer } from '@/types/shared.types';
 import {
   ATTRIBUTE_KEYS,
   ATTRIBUTE_MAX,
@@ -129,6 +132,32 @@ export function processRoster(
     }
   }
   updatedRival.seasonalGrowth = seasonalGrowth;
+
+  // 1b. Trait Development — per active warrior, with probability trainAppetite
+  // (gated by treasury), resolve one rollTraitTraining against a synthetic
+  // trainer at the policy ceiling. Produces both new traits and botched flaws,
+  // feeding the liability-based culling in processAIRosterManagement.
+  const traitPolicy = policyFor(updatedRival.owner.personality);
+  if ((updatedRival.treasury ?? 0) > 300) {
+    const aiTrainer: Trainer = {
+      id: 'ai',
+      name: 'AI Coach',
+      tier: traitPolicy.ceiling,
+      focus: 'Mind',
+      fame: 0,
+      age: 40,
+      contractWeeksLeft: 99,
+    };
+    updatedRival.roster = updatedRival.roster.map((w) => {
+      if (w.status !== 'Active') return w;
+      if (rngService.next() > traitPolicy.trainAppetite) return w;
+      const roll = rollTraitTraining(w, aiTrainer, rngService);
+      if (roll.outcome !== 'none' && roll.traitId) {
+        return { ...w, traits: [...(w.traits ?? []), roll.traitId] };
+      }
+      return w;
+    });
+  }
 
   // 2. Equipment (High Risk)
   // Champions always get gear consideration regardless of intent (treasury gate only).

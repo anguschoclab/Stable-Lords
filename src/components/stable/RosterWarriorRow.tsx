@@ -15,6 +15,7 @@ import {
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type FightingStyle } from '@/types/game';
 import type { AttributePotential, CareerRecord } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
+import { TraitBadge } from '@/components/warrior/traits/TraitBadge';
 
 interface RosterWarriorRowProps {
   warrior: {
@@ -190,6 +191,9 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                         </Tooltip>
                       );
                     })()}
+                  {warrior.traits?.slice(0, 3).map((t) => (
+                    <TraitBadge key={t} traitId={t} className="text-[8px]" />
+                  ))}
                 </div>
               </div>
 

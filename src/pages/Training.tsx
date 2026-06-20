@@ -97,8 +97,6 @@ export default function Training() {
     });
     toast.success('Trait training assigned — outcome in a few weeks.');
   };
-  // Exposed for the System 7 trait-training picker UI.
-  void handleAssignTraitTraining;
 
   const handleClear = (warriorId: WarriorId) => {
     setState((s: GameStore) => {
@@ -292,6 +290,7 @@ export default function Training() {
                   onAssign={(attr) => handleAssign(warrior.id, attr)}
                   onAssignRecovery={() => handleAssignRecovery(warrior.id)}
                   onClear={() => handleClear(warrior.id)}
+                  onAssignTraitTraining={(trainerId) => handleAssignTraitTraining(warrior.id, trainerId)}
                 />
               ))}
             </div>

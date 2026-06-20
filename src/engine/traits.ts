@@ -23,7 +23,12 @@ import type { FightingStyle } from '@/types/shared.types';
 
 export type TraitTier = 'Common' | 'Notable' | 'Exceptional' | 'Signature' | 'Flaw';
 export type TraitSign = 'positive' | 'negative';
-import { TRAIT_SYNERGY_MULTIPLIER, TRAIT_ANTI_SYNERGY_MULTIPLIER } from '@/constants/combat/combat'; /**
+import {
+  TRAIT_SYNERGY_MULTIPLIER,
+  TRAIT_ANTI_SYNERGY_MULTIPLIER,
+  BIRTH_BLANK_CHANCE,
+  BIRTH_FLAW_CHANCE,
+} from '@/constants/combat/combat'; /**
  * Defines the shape of trait effect.
  */
 
@@ -485,56 +490,53 @@ export type TraitId = keyof typeof TRAITS;
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 
 /**
- * Roll 0-2 traits at warrior creation, weighted by trait rarity.
- * Distribution targets ~25% no traits, ~55% one trait, ~20% two traits.
- */
-/**
- * Roll 0-2 traits at warrior creation, weighted by trait rarity.
- * Distribution targets ~25% no traits, ~55% one trait, ~20% two traits.
+ * Roll birth traits for a newly created warrior.
  *
- * When an archetype is provided, traits with matching synergy get 3× weight
- * and traits with matching antiSynergy get 0.10× weight. This makes thematic
- * fits ~60-70% likely while still allowing interesting against-type warriors.
- * Traits amplify a fighter's identity and minimise cross-style swings that
- * the balance matrix cannot see.
+ * Sparse distribution: ~68% blank, ~7% a single Flaw, ~25% one generic
+ * Common/Notable positive trait. Exceptional/Signature and class-restricted
+ * traits are never granted at birth — they are earned through training.
+ *
+ * When an archetype is provided, traits with matching synergy get a weight
+ * multiplier and anti-synergy traits are suppressed, biasing the positive
+ * pick toward the fighter's identity without leaking cross-style noise.
  *
  * @param rng - RNG service
  * @param archetype - Optional archetype to bias trait generation
- * @returns An array of trait IDs
+ * @returns An array of trait IDs (0 or 1)
  */
 export function generateTraits(rng: IRNGService, archetype?: Archetype): string[] {
-  const r1 = rng.next();
-  const numTraits = r1 < 0.25 ? 0 : r1 < 0.8 ? 1 : 2;
-  if (numTraits === 0) return [];
+  const roll = rng.next();
+  if (roll < BIRTH_BLANK_CHANCE) return [];
 
-  const picked: string[] = [];
+  const wantFlaw = roll < BIRTH_BLANK_CHANCE + BIRTH_FLAW_CHANCE;
 
-  for (let i = 0; i < numTraits; i++) {
-    // Compute archetype-adjusted weights
-    let totalWeight = 0;
-    const weights: { id: string; w: number }[] = [];
-    for (const id of TRAIT_IDS) {
-      const t = TRAITS[id];
-      if (!t || picked.includes(id)) continue;
-      let w = t.weight;
-      if (archetype) {
-        if (t.synergy?.includes(archetype)) w *= TRAIT_SYNERGY_MULTIPLIER;
-        if (t.antiSynergy?.includes(archetype)) w *= TRAIT_ANTI_SYNERGY_MULTIPLIER;
-      }
-      weights.push({ id, w });
-      totalWeight += w;
+  const eligible = TRAIT_IDS.filter((id) => {
+    const t = TRAITS[id];
+    if (!t) return false;
+    if (wantFlaw) return t.tier === 'Flaw';
+    return t.sign === 'positive' && !t.styles && (t.tier === 'Common' || t.tier === 'Notable');
+  });
+  if (eligible.length === 0) return [];
+
+  let total = 0;
+  const weights: { id: string; w: number }[] = [];
+  for (const id of eligible) {
+    const t = TRAITS[id]!;
+    let w = t.weight;
+    if (archetype) {
+      if (t.synergy?.includes(archetype)) w *= TRAIT_SYNERGY_MULTIPLIER;
+      if (t.antiSynergy?.includes(archetype)) w *= TRAIT_ANTI_SYNERGY_MULTIPLIER;
     }
-
-    let target = rng.next() * totalWeight;
-    for (const { id, w } of weights) {
-      target -= w;
-      if (target <= 0) {
-        picked.push(id);
-        break;
-      }
-    }
+    weights.push({ id, w });
+    total += w;
   }
-  return picked;
+
+  let target = rng.next() * total;
+  for (const { id, w } of weights) {
+    target -= w;
+    if (target <= 0) return [id];
+  }
+  return [];
 }
 
 /**

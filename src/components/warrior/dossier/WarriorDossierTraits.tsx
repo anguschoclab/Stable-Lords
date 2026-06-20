@@ -1,6 +1,5 @@
-import { Badge } from '@/components/ui/badge';
 import type { Warrior } from '@/types/warrior.types';
-import { TRAITS } from '@/engine/traits';
+import { TraitBadge } from '@/components/warrior/traits/TraitBadge';
 
 interface WarriorDossierTraitsProps {
   warrior: Warrior;
@@ -23,13 +22,7 @@ export function WarriorDossierTraits({ warrior }: WarriorDossierTraitsProps) {
       {warrior.traits && warrior.traits.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {warrior.traits.map((t) => (
-            <Badge
-              key={t}
-              variant="secondary"
-              className="text-[9px] font-black uppercase tracking-widest bg-arena-gold/10 text-arena-gold border-arena-gold/20"
-            >
-              {TRAITS[t]?.name ?? t}
-            </Badge>
+            <TraitBadge key={t} traitId={t} />
           ))}
         </div>
       )}

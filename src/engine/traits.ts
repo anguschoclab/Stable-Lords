@@ -465,6 +465,10 @@ export const TRAITS: Record<string, TraitDef> = {
   },
 };
 
+// Merge bulk data modules.
+import { NEW_FLAWS } from '@/engine/traitData/flaws';
+Object.assign(TRAITS, NEW_FLAWS);
+
 export type TraitId = keyof typeof TRAITS;
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 

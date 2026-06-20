@@ -32,6 +32,7 @@ export interface RosterSlice {
     deathEvent?: DeathEvent
   ) => void;
   retireWarrior: (warriorId: WarriorId) => void;
+  releaseWarrior: (warriorId: WarriorId, reason?: string) => void;
   consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => void;
   updateWarriorEquipment: (
     warriorId: WarriorId,

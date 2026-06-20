@@ -58,6 +58,24 @@ export function createRosterActions(set: (fn: (state: GameStore) => Partial<Game
       });
     },
 
+    releaseWarrior: (warriorId: WarriorId, _reason = 'Released') => {
+      set((state) => {
+        const warrior = state.roster.find((w: Warrior) => w.id === warriorId);
+        if (!warrior) return state;
+
+        const ret: Warrior = {
+          ...warrior,
+          status: 'Retired',
+          retiredWeek: state.week,
+        };
+
+        return {
+          roster: state.roster.filter((w: Warrior) => w.id !== warriorId),
+          retired: [...state.retired, ret],
+        };
+      });
+    },
+
     consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => {
       set((state) => {
         const token = state.insightTokens?.find((t: InsightToken) => t.id === tokenId);

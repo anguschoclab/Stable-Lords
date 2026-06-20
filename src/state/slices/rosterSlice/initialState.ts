@@ -6,6 +6,7 @@ export const defaultRosterState: Omit<
   | 'addWarrior'
   | 'killWarrior'
   | 'retireWarrior'
+  | 'releaseWarrior'
   | 'consumeInsightToken'
   | 'updateWarriorEquipment'
   | 'renameWarrior'

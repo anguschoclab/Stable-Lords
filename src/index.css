@@ -1141,6 +1141,11 @@
   .animate-wind,
   .animate-hail,
   .animate-spin-slow,
+  .animate-torch-flicker,
+  .animate-live-pulse,
+  .animate-pulse-glow,
+  .animate-screen-shake,
+  .animate-blood-flash,
   .animate-chaotic-drift {
     animation: none !important;
   }

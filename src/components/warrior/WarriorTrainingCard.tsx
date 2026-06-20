@@ -365,7 +365,7 @@ export function WarriorTrainingCard({
               <select
                 value={selectedTrainerId ?? ''}
                 onChange={(e) => setSelectedTrainerId(e.target.value || null)}
-                className="w-full bg-black/40 border border-white/10 text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-none focus:outline-none focus:border-primary/40"
+                className="w-full bg-black/40 border border-white/10 text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
               >
                 <option value=''>Select trainer for trait training…</option>
                 {trainers.map((t) => (

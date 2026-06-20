@@ -42,7 +42,7 @@ export function TournamentPrepDialog({
 }: TournamentPrepDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-neutral-950/90 backdrop-blur-xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] p-0 overflow-hidden">
+      <DialogContent aria-describedby={undefined} className="max-w-2xl bg-neutral-950/90 backdrop-blur-xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] p-0 overflow-hidden">
         <div className="bg-secondary/20 p-6 border-b border-white/5 flex items-center gap-3">
           <Shield className="h-5 w-5 text-primary" />
           <h2 className="font-display text-xl font-black uppercase tracking-tighter text-foreground">

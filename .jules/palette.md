@@ -17,3 +17,5 @@
 ## 2023-10-27 - [Focus Visible Standardization]
 **Learning:** Replaced `focus:outline-none` with `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` on many buttons and interactive elements. Using `focus-visible:` ensures keyboard navigation has clear focus states without triggering them on mouse clicks, improving both accessibility and visual design for pointer users.
 **Action:** When adding interactive elements, always consider keyboard focus states and prefer `focus-visible` over `focus` to reduce visual clutter for mouse users.
+- 2025-02-18: When using Radix UI or Shadcn components like `<DialogContent>` or `<SheetContent>` without a dedicated description element, explicitly set `aria-describedby={undefined}` to satisfy accessibility requirements and prevent console warnings.
+- 2025-02-18: When replacing custom arbitrary color values in interactive elements (e.g., hover or focus states), prioritize mapping them to the system's design tokens (like `accent`, `primary`, or semantic roles) rather than hardcoding new arbitrary hex codes.

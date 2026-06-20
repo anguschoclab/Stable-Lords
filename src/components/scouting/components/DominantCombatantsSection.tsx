@@ -21,7 +21,7 @@ export function DominantCombatantsSection({
           <Trophy className="h-3.5 w-3.5 text-arena-gold" />
         </div>
         <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
-          Dominant Combatants
+          Top Warriors
         </h3>
       </div>
 

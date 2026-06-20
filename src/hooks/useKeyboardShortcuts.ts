@@ -15,7 +15,7 @@ const NAV_ROUTES = [
   '/stable/arena', // 2 — Combat
   '/stable/roster', // 3 — Stable Overview
   '/stable/training', // 4 — Training
-  '/world/intelligence', // 5 — Intelligence/Scouting
+  '/world/scouting', // 5 — Scouting
   '/stable/equipment', // 6 — Equipment
   '/world/tournaments', // 7 — Tournaments
   '/world/chronicle', // 8 — Chronicle

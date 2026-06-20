@@ -21,7 +21,7 @@ function EmptyRegistry() {
     <div className="py-24 text-center opacity-30 group">
       <Landmark className="h-16 w-16 mx-auto mb-4 text-arena-gold/40 group-hover:scale-110 transition-transform duration-700" />
       <p className="text-sm font-display font-black uppercase tracking-[0.3em]">
-        Registry_Currently_Vacant
+        No Retired Warriors
       </p>
       <p className="text-[10px] lowercase italic font-medium mt-2">
         No warriors have earned retirement status through merit or tenure...
@@ -156,10 +156,10 @@ export function HallOfWarriors() {
           </div>
           <div>
             <h3 className="font-display text-lg font-black uppercase tracking-tight text-arena-gold">
-              Legends_Registry_Eminent
+              Hall of Legends
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Immortal_Status // Assets_Recovered: {safeRetired.length}
+              Retired Warriors: {safeRetired.length}
             </p>
           </div>
           <div className="h-px flex-1 bg-gradient-to-r from-arena-gold/20 via-border/5 to-transparent mx-8 hidden md:block" />
@@ -180,22 +180,22 @@ export function HallOfWarriors() {
                 <TableHeader className="bg-arena-gold/10 sticky top-0 z-10 backdrop-blur-md">
                   <TableRow className="hover:bg-transparent border-arena-gold/10">
                     <TableHead className="font-black uppercase text-[10px] tracking-widest pl-8 py-4 text-arena-gold/70">
-                      Legendary_Asset
+                      Warrior
                     </TableHead>
                     <TableHead className="font-black uppercase text-[10px] tracking-widest text-arena-gold/50 py-4">
-                      Martial_Discipline
+                      Style
                     </TableHead>
                     <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-arena-gold/50 py-4">
-                      Imperial_Medals
+                      Medals
                     </TableHead>
                     <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-arena-gold/50 py-4">
-                      Final_Record
+                      Record
                     </TableHead>
                     <TableHead className="font-black uppercase text-[10px] tracking-widest text-right text-arena-gold/50 py-4">
-                      Fame_Manifest
+                      Fame
                     </TableHead>
                     <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-8 py-4 text-arena-gold/50">
-                      Registry_Exit
+                      Retired
                     </TableHead>
                   </TableRow>
                 </TableHeader>

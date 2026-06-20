@@ -146,7 +146,7 @@ export default function WarriorDetail() {
     <PageFrame maxWidth="lg" className="pb-32">
       <PageHeader
         icon={User}
-        eyebrow={isPlayerOwned ? 'Registry Asset' : 'External Dossier'}
+        eyebrow={isPlayerOwned ? 'Your Warrior' : 'Rival Warrior'}
         title={displayWarrior.name}
         subtitle={`${STYLE_DISPLAY_NAMES[warrior.style as FightingStyle] || 'Unknown Style'} · ${warrior.status}`}
         actions={
@@ -165,7 +165,7 @@ export default function WarriorDetail() {
                 onClick={handleRetire}
                 className="gap-2 text-[10px] font-black uppercase tracking-widest h-10 px-6 rounded-none border-white/10 hover:bg-destructive hover:text-primary-foreground transition-all duration-300"
               >
-                <Armchair className="h-3.5 w-3.5" /> Decommission
+                <Armchair className="h-3.5 w-3.5" /> Retire
               </Button>
             )}
           </div>
@@ -224,7 +224,7 @@ export default function WarriorDetail() {
         </div>
 
         <div className="lg:col-span-4 space-y-8">
-          <SectionDivider label="Asset Valuation" />
+          <SectionDivider label="Value" />
           <Surface variant="glass" className="p-8 space-y-8 border-white/5">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-1">

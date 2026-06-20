@@ -51,12 +51,12 @@ function GlobalTreasuryMatrix({
           desc: 'Liquid capital available for operations and recruitment.',
         },
         {
-          label: 'Active Personnel',
+          label: 'Warriors',
           value: activeWarriorsCount,
           icon: Swords,
           color: 'text-primary',
           variant: 'glass' as const,
-          desc: 'Total combatant assets currently on active deployment.',
+          desc: 'Total warriors currently on your roster.',
         },
         {
           label: 'Total Wins',
@@ -184,7 +184,7 @@ function FiscalTrajectoryMonitor({ breakdown, week }: FiscalTrajectoryMonitorPro
           <div className="flex items-center gap-2">
             <ArrowDownRight className="h-3 w-3 text-destructive" />
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-              Operational Costs
+              Expenses
             </span>
             <div className="h-px flex-1 bg-white/5" />
           </div>
@@ -266,7 +266,7 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
           </div>
           <div>
             <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Ledger Registry
+              Transaction Log
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
               Audited Transaction History · {totalLedgerEntries} entries
@@ -286,10 +286,10 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
           <div className="h-full flex flex-col items-center justify-center p-12 text-center opacity-20 group">
             <Wallet className="h-16 w-16 mb-4 group-hover:scale-110 transition-transform duration-500" />
             <p className="text-sm font-display font-black uppercase tracking-[0.3em]">
-              Registry Empty
+              No Entries
             </p>
             <p className="text-[10px] lowercase italic opacity-80 mt-2 font-medium">
-              Bout engagement required for transaction logging...
+              Fight a bout to see transactions here...
             </p>
           </div>
         ) : (

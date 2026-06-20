@@ -54,7 +54,7 @@ export default function ArenaSettings() {
             </SelectTrigger>
             <SelectContent className="rounded-none">
               <SelectItem value="arena">Arena Replay</SelectItem>
-              <SelectItem value="log">Tactical Log</SelectItem>
+              <SelectItem value="log">Combat Log</SelectItem>
             </SelectContent>
           </Select>
         </div>

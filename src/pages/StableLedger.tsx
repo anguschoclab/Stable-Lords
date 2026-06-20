@@ -46,14 +46,14 @@ export default function StableLedger() {
     <PageFrame maxWidth="lg" className="pb-32">
       <PageHeader
         icon={BookOpen}
-        eyebrow="Registry Administration"
+        eyebrow="Finance"
         title="Stable Ledger"
-        subtitle={`FISCAL YEAR: 412 AE · SEASON: ${season} · Week: ${week}`}
+        subtitle={`YEAR 412 AE · SEASON: ${season} · Week: ${week}`}
         actions={
           <div className="flex items-center gap-6 px-6 py-3 bg-secondary/10 border border-white/5 backdrop-blur-2xl">
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-                Registry Balance
+                Gold
               </span>
               <span className="font-mono font-black text-arena-gold text-lg leading-none">
                 {(treasury ?? 0).toLocaleString()} <span className="text-[10px] opacity-40">G</span>
@@ -91,7 +91,7 @@ export default function StableLedger() {
           <div>
             <div className="flex items-center gap-3">
               <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
-                Operational Lifeline
+                Treasury Runway
               </span>
               {isEmergency && (
                 <Badge className="bg-destructive text-foreground text-[8px] font-black h-4 px-2 rounded-none">
@@ -137,7 +137,7 @@ export default function StableLedger() {
           {[
             { value: 'overview', icon: Coins, label: 'Ledger' },
             { value: 'tokens', icon: Sparkles, label: 'Vault' },
-            { value: 'contracts', icon: GraduationCap, label: 'Personnel' },
+            { value: 'contracts', icon: GraduationCap, label: 'Contracts' },
             { value: 'chronicle', icon: ScrollText, label: 'Archive' },
             { value: 'hall', icon: Skull, label: 'Monolith' },
             { value: 'year-end', icon: CalendarDays, label: 'Cycle End' },

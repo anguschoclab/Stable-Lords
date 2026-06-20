@@ -128,7 +128,7 @@ export function SchedulingWidget({ warrior }: SchedulingWidgetProps) {
       <div className="grid gap-12 md:grid-cols-2">
         {/* Recommendations */}
         <div className="space-y-6">
-          <SectionDivider label="Strategic Opportunities" />
+          <SectionDivider label="Upcoming Bouts" />
           <div className="space-y-4">
             {recommendations.length > 0 ? (
               recommendations.map((m) => (

@@ -11,12 +11,12 @@ export function IntelligenceHubFooter() {
         to="/world/chronicle"
         className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group"
       >
-        Sync Full Archive{' '}
+        Read All{' '}
         <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
       </Link>
       <Link
-        to="/world/intelligence"
-        title="Gather intel before booking bouts"
+        to="/world/scouting"
+        title="Scout rivals before booking bouts"
         className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-arena-gold/70 hover:text-arena-gold border border-arena-gold/20 hover:border-arena-gold/50 bg-arena-gold/5 hover:bg-arena-gold/10 px-3 py-1.5 transition-all group"
       >
         <Target className="h-3 w-3 shrink-0" />

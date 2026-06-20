@@ -31,7 +31,7 @@ export function MatchCard({ pairing, crowdMood }: MatchCardProps) {
         <div className="flex items-center gap-3">
           <Swords className="h-3.5 w-3.5 text-muted-foreground/60" />
           <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-            Engagement Matchup
+            Bout Matchup
           </span>
         </div>
         {isRivalryBout && (

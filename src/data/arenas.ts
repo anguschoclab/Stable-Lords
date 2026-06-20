@@ -329,7 +329,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'historical_battle',
     title: 'The First Blood',
     narrative:
-      'Though it is now the most common proving ground, the Standard Arena was once a grand amphitheater. Legend has it the very first match ended in a mutual strike that blinded both combatants, a testament to the brutal equality of the sands.',
+      'Though it is now the most common proving ground, the Standard Arena was once a grand amphitheater. Legend has it the very first match ended in a mutual strike that blinded both fighters, a testament to the brutal equality of the sands.',
   },
   {
     id: 'walled_court_kings_gambit',
@@ -401,7 +401,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'architectural_quirk',
     title: "The Architect's Folly",
     narrative:
-      'The original blueprints called for a vaulted ceiling entirely made of glass. During its maiden bout, the thunderous cheers shattered it, showering the combatants in lethal shards. The roof was rebuilt with heavy timber, but fighters still occasionally find glints of glass embedded in the packed sand.',
+      'The original blueprints called for a vaulted ceiling entirely made of glass. During its maiden bout, the thunderous cheers shattered it, showering the fighters in lethal shards. The roof was rebuilt with heavy timber, but fighters still occasionally find glints of glass embedded in the packed sand.',
   },
   {
     id: 'crystal_cavern_shattered_echo',
@@ -433,7 +433,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'historical_battle',
     title: 'The Crimson Bloom',
     narrative:
-      'During a particularly savage mid-summer festival, so much blood was spilled that the dormant blood-vines erupted into violent bloom, entangling and consuming half the remaining combatants.',
+      'During a particularly savage mid-summer festival, so much blood was spilled that the dormant blood-vines erupted into violent bloom, entangling and consuming half the remaining fighters.',
   },
   {
     id: 'lantern_hall_shadow_strike',

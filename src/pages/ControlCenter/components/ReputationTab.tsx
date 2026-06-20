@@ -46,7 +46,7 @@ export function ReputationTab() {
       label: 'Adaptability',
       color: 'text-arena-pop',
       icon: Zap,
-      desc: 'Strategic responsiveness to the shifting combat meta.',
+      desc: 'How well your stable adapts to the shifting combat meta.',
       effect: 'Earns higher hype bonuses in style-clash matchups.',
     },
   ];

@@ -1,7 +1,7 @@
 const STEP_LABELS = ['Establish Identity', 'Choose Warriors', 'First Blood', 'Your Story Begins'];
 
 const STEP_SUBTITLES = [
-  'Register your name in the Imperial Ledger',
+  'Register your name in the Arena Ledger',
   'Select three gladiators from the intake pool',
   'Witness the first trial of steel',
   'Your dynasty of blood begins now',

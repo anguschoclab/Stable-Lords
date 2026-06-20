@@ -29,7 +29,7 @@ export default function StableEquipment() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-20">
-      <PageHeader title="The Armory" subtitle="OPS · ARMORY · TACTICAL LOADOUTS" icon={Shield} />
+      <PageHeader title="The Armory" subtitle="ARMORY · LOADOUTS" icon={Shield} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Style & Tips (span-4) */}
@@ -39,10 +39,10 @@ export default function StableEquipment() {
               <Package className="h-4 w-4 text-primary" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                  Tactical Style
+                  Style
                 </span>
                 <span className="text-[8px] uppercase font-bold text-muted-foreground/60 tracking-widest mt-0.5">
-                  Optimize Methodology
+                  Recommendations
                 </span>
               </div>
             </div>
@@ -77,7 +77,7 @@ export default function StableEquipment() {
             {tips.length > 0 && (
               <div className="space-y-4 pt-4 border-t border-white/5">
                 <div className="flex items-center gap-2 text-[9px] font-black uppercase text-arena-gold tracking-[0.3em]">
-                  <Lightbulb className="h-3.5 w-3.5" /> Intelligence Feed
+                  <Lightbulb className="h-3.5 w-3.5" /> Tips
                 </div>
                 <ul className="space-y-3">
                   {tips.map((tip, i) => (

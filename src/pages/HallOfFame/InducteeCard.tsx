@@ -167,8 +167,8 @@ export function InducteeCard({
           {best && (
             <div className="bg-black/20 rounded-none p-4 border border-border/10 mt-auto">
               <div className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em] mb-3 flex items-center justify-between">
-                <span>CHRONICLE_PEAK</span>
-                <span>WK_{best.week}</span>
+                <span>Career Peak</span>
+                <span>Week {best.week}</span>
               </div>
               {(() => {
                 const n = getNamesFromTitle(best.title);

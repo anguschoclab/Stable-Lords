@@ -74,7 +74,7 @@ export default function StableDetail() {
             asChild
             className="h-12 px-8 font-black uppercase text-[10px] tracking-widest rounded-none border-white/10 hover:bg-white/5"
           >
-            <Link to="/world/intelligence">Return to Tactical Overview</Link>
+            <Link to="/world/scouting">Return to World Overview</Link>
           </Button>
         </div>
       </PageFrame>
@@ -116,25 +116,25 @@ export default function StableDetail() {
           className="hover:bg-transparent -ml-4 opacity-40 hover:opacity-100 transition-all"
         >
           <Link
-            to="/world/intelligence"
+            to="/world/scouting"
             className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest"
           >
-            <ArrowLeft className="h-3 w-3" /> Back to Intelligence
+            <ArrowLeft className="h-3 w-3" /> Back to Scouting
           </Link>
         </Button>
       </div>
 
       <PageHeader
-        eyebrow="STABLE_DOSSIER"
+        eyebrow="Rival Stable"
         title={rival.owner.stableName}
-        subtitle={`${(rival.owner.personality ?? '').toUpperCase()} · ${rival.tier?.toUpperCase() || 'MINOR'} CLASS ASSET`}
+        subtitle={`${(rival.owner.personality ?? '').toUpperCase()} · ${rival.tier?.toUpperCase() || 'MINOR'} CLASS`}
         icon={Shield}
         actions={
           <div className="flex items-center gap-8">
             <BookmarkButton entityType="rival" entityId={rival.owner.id} size="md" />
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-                Institutional Fame
+                Fame
               </span>
               <span className="text-xl font-display font-black text-arena-gold">
                 {rival.owner.fame}
@@ -285,7 +285,7 @@ export default function StableDetail() {
                 </div>
 
                 <section>
-                  <SectionDivider label="Asset Decommissioning" />
+                  <SectionDivider label="Retirement" />
                   <div className="mt-8">
                     {deadWarriors.length > 0 ? (
                       <div className="flex flex-wrap gap-3">

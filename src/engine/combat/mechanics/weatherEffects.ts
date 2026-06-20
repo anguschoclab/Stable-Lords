@@ -19,7 +19,7 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: 2,
     riposteMod: 0,
     damageMult: 1.0,
-    description: 'A gentle, otherworldly breeze that refreshes combatants.',
+    description: 'A gentle, otherworldly breeze that refreshes fighters.',
   },
   Clear: {
     staminaMult: 1.0,
@@ -229,7 +229,7 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     riposteMod: 1,
     damageMult: 0.95,
     description:
-      'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
+      'The sky dances with spectral light. Fighters feel a strange, invigorating calm.',
   },
   'Chaotic Winds': {
     staminaMult: 1.3,
@@ -295,7 +295,7 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: -2,
     riposteMod: 0,
     damageMult: 1.0,
-    description: 'A rippling heatwave blurs vision and exhausts combatants.',
+    description: 'A rippling heatwave blurs vision and exhausts fighters.',
   },
 };
 

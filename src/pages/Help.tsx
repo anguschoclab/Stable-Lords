@@ -19,7 +19,7 @@ export default function Help() {
       <PageHeader
         icon={BookOpen}
         title="Codex · Help"
-        subtitle="IMPERIAL · KNOWLEDGE · STRATEGY COMPENDIUM"
+        subtitle="RULES · STRATEGY · REFERENCE"
       />
 
       <Accordion
@@ -329,7 +329,7 @@ export default function Help() {
                 equipped weapon.
               </li>
               <li>
-                <strong>Rhythm Token</strong> 🥁 — Reveals a warrior's hidden tactical tendencies
+                <strong>Rhythm Token</strong> 🥁 — Reveals a warrior's hidden combat tendencies
                 (OE, AL, and KD).
               </li>
               <li>

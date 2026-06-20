@@ -52,14 +52,14 @@ export function BoutTableRow({ bout, playerStableId, state }: BoutTableRowProps)
             </div>
           </TooltipTrigger>
           <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-            {playerWon ? 'Combat objectives achieved.' : 'Strategic failure detected.'}
+            {playerWon ? 'Victory.' : 'Defeat.'}
           </TooltipContent>
         </Tooltip>
       </TableCell>
       <TableCell className="text-right pr-6 py-4">
         <div className="flex flex-col items-end">
           <span className="text-[10px] font-mono font-black text-muted-foreground/60 uppercase">
-            {bout.by || 'JUDICIAL_DECREE'}
+            {bout.by || 'Decision'}
           </span>
           <div className="h-0.5 w-8 bg-white/5 rounded-full mt-1 group-hover/row:bg-primary/40 transition-colors" />
         </div>

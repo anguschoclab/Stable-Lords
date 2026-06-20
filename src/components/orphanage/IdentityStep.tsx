@@ -51,7 +51,7 @@ export default function IdentityStep({
       <div>
         <h2 className="font-display text-xl font-bold text-foreground">Establish Your Identity</h2>
         <p className="text-xs text-muted-foreground/60 mt-1 leading-relaxed">
-          Your name and stable name will be recorded in the Imperial Ledger for all time.
+          Your name and stable name will be recorded in the Arena Ledger for all time.
         </p>
       </div>
 

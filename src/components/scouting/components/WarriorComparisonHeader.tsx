@@ -21,7 +21,7 @@ export function WarriorComparisonHeader({ warriorA, warriorB }: WarriorCompariso
 
       <div className="text-center flex-1 relative z-10 space-y-4">
         <h4 className="text-[10px] font-black tracking-[0.4em] text-primary uppercase leading-none opacity-60">
-          Combatant Alpha
+          Challenger
         </h4>
         <h3 className="font-display font-black uppercase text-2xl tracking-tighter text-foreground leading-none">
           {warriorA?.name || 'Not Selected'}
@@ -46,7 +46,7 @@ export function WarriorComparisonHeader({ warriorA, warriorB }: WarriorCompariso
 
       <div className="text-center flex-1 relative z-10 space-y-4">
         <h4 className="text-[10px] font-black tracking-[0.4em] text-accent uppercase leading-none opacity-60">
-          Combatant Beta
+          Defender
         </h4>
         <h3 className="font-display font-black uppercase text-2xl tracking-tighter text-foreground leading-none">
           {warriorB?.name || 'Not Selected'}

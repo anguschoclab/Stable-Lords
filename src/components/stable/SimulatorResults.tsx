@@ -34,7 +34,7 @@ export function SimulatorResults({ simulation }: SimulatorResultsProps) {
       <div className="bg-accent/10 px-6 py-4 border-b border-accent/20 flex items-center gap-2">
         <Zap className="h-4 w-4 text-accent" />
         <span className="text-[10px] font-black uppercase tracking-widest text-accent">
-          SIMULATION RESULTS (10 MINUTES ENGAGEMENT)
+          SIMULATION RESULTS (10 MINUTE BOUT)
         </span>
       </div>
 

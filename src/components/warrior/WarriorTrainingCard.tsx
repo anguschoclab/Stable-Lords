@@ -289,7 +289,7 @@ export function WarriorTrainingCard({
                         </p>
                       ) : seasonCapped ? (
                         <p className="text-[9px] leading-relaxed text-arena-gold italic">
-                          Metabolic fatigue detected. Warrior requires end-of-season recalibration
+                          Warrior is exhausted. Rest required before further training
                           to resume growth.
                         </p>
                       ) : (
@@ -299,10 +299,10 @@ export function WarriorTrainingCard({
                             : `Click to prioritize ${key} training this week.`}
                           {isRevealed &&
                             !nearCeiling &&
-                            ' Significant growth room identified before metabolic ceiling.'}
+                            ' Room to grow before reaching natural limits.'}
                           {nearCeiling &&
                             !ceilingHit &&
-                            ' Approaching genetic potential threshold. Diminishing returns in effect.'}
+                            ' Nearing natural limits. Diminishing returns ahead.'}
                         </p>
                       )}
                     </div>

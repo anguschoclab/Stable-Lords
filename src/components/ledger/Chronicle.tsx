@@ -22,11 +22,11 @@ function ChronicleEmptyState() {
       </div>
       <div className="space-y-2 relative z-10">
         <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">
-          Log_Stream_Null
+          No Events Yet
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
-          No historical data recovered. Your legacy begins once the first arena engagement is
-          concluded and finalized in the registry.
+          No history yet. Your legacy begins once the first bout is
+          fought.
         </p>
       </div>
     </Surface>
@@ -66,11 +66,11 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
               <h4>{item.title}</h4>
               <div className="flex items-center gap-3">
                 <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
-                  Entry_Registry_Sync
+                  Logged
                 </span>
                 <div className="h-1 w-1 rounded-full bg-white/10" />
                 <span className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40">
-                  Event_Type: SYSTEM_LOG
+                  System Event
                 </span>
               </div>
             </div>
@@ -80,7 +80,7 @@ function ChronicleTimelineItem({ item, index }: { item: NewsletterItem; index: n
                   variant="outline"
                   className="text-[10px] font-mono font-black border-primary/20 bg-primary/5 text-primary h-8 px-4 tracking-widest shadow-[0_0_10px_rgba(var(--primary-rgb),0.2)]"
                 >
-                  WK_{item.week.toString().padStart(2, '0')}
+                  Week {item.week}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">

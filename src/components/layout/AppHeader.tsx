@@ -78,12 +78,12 @@ function CycleStatus({ week, day, isTournamentWeek, isSimulating }: CycleStatusP
   return (
     <div className="flex flex-col px-4 border-l border-white/5">
       <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-        Temporal Cycle
+        Week
       </span>
       <div className="flex items-center gap-2">
         <span className="font-display font-black text-xs text-foreground uppercase tracking-tight">
           {isSimulating ? (
-            <span className="animate-pulse opacity-40 italic">Syncing Archive...</span>
+            <span className="animate-pulse opacity-40 italic">Simulating...</span>
           ) : (
             `Week ${week} · ${isTournamentWeek ? `Day ${day + 1}` : 'Planning Phase'}`
           )}
@@ -103,7 +103,7 @@ function TreasuryDisplay({ treasury }: TreasuryDisplayProps) {
   return (
     <div className="flex flex-col px-4 border-l border-white/5">
       <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-        Registry Balance
+        Gold
       </span>
       <span className="font-mono font-black text-xs text-arena-gold flex items-center gap-1.5">
         {(treasury ?? 0).toLocaleString()} <Coins className="h-3 w-3 opacity-40" />
@@ -122,7 +122,7 @@ function InfluenceDisplay({ fame }: InfluenceDisplayProps) {
   return (
     <div className="flex flex-col px-4 border-l border-white/5">
       <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-        Total Influence
+        Fame
       </span>
       <span className="font-mono font-black text-xs text-arena-fame flex items-center gap-1.5">
         {fame} <Crown className="h-3 w-3 opacity-40" />
@@ -142,7 +142,7 @@ function CrowdMoodDisplay({ crowdMood }: CrowdMoodDisplayProps) {
   return (
     <div className="flex flex-col px-4 border-l border-white/5">
       <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-        Arena Favor
+        Crowd Mood
       </span>
       <span className="font-mono font-black text-xs text-arena-pop flex items-center gap-1.5">
         {moodIcon} <Activity className="h-3 w-3 opacity-40" />
@@ -163,7 +163,7 @@ function WeatherDisplay({ weather }: WeatherDisplayProps) {
   return (
     <div className="flex flex-col px-4 border-l border-white/5">
       <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/50 mb-1">
-        Environment
+        Weather
       </span>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -182,7 +182,7 @@ function WeatherDisplay({ weather }: WeatherDisplayProps) {
           className="bg-[#0C0806] border-white/10 p-3 max-w-[220px] rounded-none"
         >
           <p className="text-[9px] font-black uppercase tracking-widest mb-1.5 text-primary">
-            Environmental Record
+            Weather Effect
           </p>
           <p className="text-[11px] text-muted-foreground leading-relaxed italic">
             {getWeatherEffect(weather).description}
@@ -226,7 +226,7 @@ function MuteButton() {
         side="bottom"
         className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10"
       >
-        Toggle Acoustic Signal ({isMuted ? 'Muted' : 'Active'})
+        Toggle Sound ({isMuted ? 'Muted' : 'Active'})
       </TooltipContent>
     </Tooltip>
   );
@@ -276,7 +276,7 @@ function SaveButton({ lastSavedAt }: SaveButtonProps) {
         side="bottom"
         className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10"
       >
-        {lastSavedAt ? `Auto-Saved: ${formatSaveTime(lastSavedAt)}` : 'Registry Idle'}
+        {lastSavedAt ? `Auto-Saved: ${formatSaveTime(lastSavedAt)}` : 'Not Saved'}
       </TooltipContent>
     </Tooltip>
   );
@@ -338,7 +338,7 @@ function ExitButton({ isSimulating, returnToTitle }: ExitButtonProps) {
         side="bottom"
         className="text-[10px] font-black uppercase tracking-widest bg-neutral-950 border-white/10"
       >
-        Exit to Command Center
+        Exit to Title
       </TooltipContent>
     </Tooltip>
   );

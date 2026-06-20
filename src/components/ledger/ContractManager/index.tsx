@@ -33,7 +33,7 @@ export function ContractManager() {
               <TableHeader className="bg-black/20 sticky top-0 z-10 backdrop-blur-md border-b border-white/5">
                 <TableRow className="hover:bg-transparent border-white/5">
                   <TableHead className="font-black uppercase text-[10px] tracking-widest pl-8 py-4">
-                    Personnel_Asset
+                    Trainer
                   </TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">
                     Classification
@@ -42,10 +42,10 @@ export function ContractManager() {
                     Specialization
                   </TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">
-                    Tenure_Stability
+                    Tenure
                   </TableHead>
                   <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-8 py-4">
-                    Weekly_Payroll
+                    Weekly Cost
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -64,17 +64,17 @@ export function ContractManager() {
           icon={TrendingDown}
           iconClass="bg-destructive/10 border-destructive/20 shadow-[0_0_15px_rgba(255,0,0,0.1)] group-hover:bg-destructive/20 text-destructive"
           borderClass="hover:border-destructive/30"
-          label="System_Fiscal_Impact"
+          label="Weekly Cost"
           value={`-${totalWeeklyExpense.toLocaleString()}G / Cycle`}
-          sublabel="Aggregated_Personnel_Maintenance"
+          sublabel="Total Payroll"
         />
         <SummaryCard
           icon={ShieldCheck}
           iconClass="bg-primary/10 border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)] group-hover:bg-primary/20 text-primary"
           borderClass="hover:border-primary/30"
-          label="Strategic_Operational_Status"
-          value="Martial_Optimization"
-          sublabel="Institutional_Efficiency_Synced"
+          label="Status"
+          value="Active"
+          sublabel="All contracts valid"
         />
       </div>
     </div>

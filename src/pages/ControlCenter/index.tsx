@@ -34,8 +34,8 @@ export default function ControlCenter() {
     <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
         icon={Swords}
-        eyebrow="Stable Command"
-        title={player?.stableName ?? 'Command Center'}
+        eyebrow="Your Stable"
+        title={player?.stableName ?? 'Stable Overview'}
         subtitle="STABLE HQ · SEASON STANDING · BATTLE RECORD"
         actions={
           <div className="flex items-center gap-4">
@@ -57,7 +57,7 @@ export default function ControlCenter() {
           <KpiBar />
 
           <div className="space-y-6">
-            <SectionDivider label="Imperial Rankings" variant="gold" />
+            <SectionDivider label="Rankings" variant="gold" />
             <RankingsBar />
           </div>
 

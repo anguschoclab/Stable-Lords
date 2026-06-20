@@ -594,11 +594,11 @@
   "pbp": {
     "openers": [
       "The stench of old blood rises as the fighters step onto the sand.",
-      "The crowd bays for blood as the combatants lock eyes.",
+      "The crowd bays for blood as the fighters lock eyes.",
       "Steel is drawn, and the roar of the coliseum becomes deafening!",
       "A hush falls. Then the ARENAMASTER drops his hand, and steel is drawn.",
       "The arena gates screech open, and the warriors step forth into the unforgiving light.",
-      "Sand crunching underfoot, the combatants measure each other before the first blow falls.",
+      "Sand crunching underfoot, the fighters measure each other before the first blow falls.",
       "The crowd's chanting swells to a roar as weapons are unsheathed and readied.",
       "Blood-stained sand awaits fresh tribute as the ARENAMASTER signals the start.",
       "{{attacker}} strides forward, weapon raised, demanding the crowd's attention before clashing with {{defender}}.",
@@ -622,7 +622,7 @@
       "Coins change hands in the stands as {{attacker}} levels a {{weapon}} at {{defender}}.",
       "{{attacker}} raises their {{weapon}} to the crowd, soaking in the cheers before the carnage begins.",
       "The heavy iron gates slam shut, and only one will leave these sands alive.",
-      "Anticipation hangs heavy as the combatants lock eyes across the blood-stained arena.",
+      "Anticipation hangs heavy as the fighters lock eyes across the blood-stained arena.",
       "A grim silence descends upon the coliseum before the clash of steel shatters it.",
       "The ARENAMASTER raises his gauntlet, and the crowd holds its collective breath.",
       "Sand swirls in the hot arena wind as {{attacker}} and {{defender}} ready for the slaughter.",
@@ -1073,7 +1073,7 @@
           "{{defender}} catches the strike on the edge of his {{weapon}}, turning it aside with ease.",
           "A grand, sweeping parry from {{defender}} deflects the blow while drawing cheers from the stands.",
           "The crowd cheers as {{defender}} demonstrates perfect defensive form.",
-          "Sparks shower the combatants as {{defender}} executes a textbook parry, leaving no opening.",
+          "Sparks shower the fighters as {{defender}} executes a textbook parry, leaving no opening.",
           "{{defender}} effortlessly catches the strike on their guard, yawning dismissively.",
           "{{name}} barely turns the blow, teeth gritted in a desperate struggle.",
           "A grim smile crosses {{defender}}'s face as they violently bat the {{weapon}} aside.",
@@ -1245,7 +1245,7 @@
         "the defensive wall",
         "the agile dancer",
         "the brutal brawler",
-        "the tactical master",
+        "the cunning master",
         "the wild berserker",
         "the precise duelist",
         "the cunning trickster"
@@ -1309,7 +1309,7 @@
           "{{name}} sidesteps, trying to throw {{possessive}} opponent off balance.",
           "{{name}} twists to the side, throwing {{possessive}} opponent off balance.",
           "{{name}} looks for a better position.",
-          "They circle the arena, changing the angle of engagement.",
+          "They circle the arena, changing the angle of attack.",
           "Footwork becomes key as they maneuver for position.",
           "{{attacker}} slides into a new stance, shifting the flow of battle."
         ]
@@ -1421,7 +1421,7 @@
         "A chorus of groans sweeps the arena.",
         "The audience demands a better show!",
         "Fruit is thrown from the stands in disgust.",
-        "A chorus of displeased jeers rains down upon the combatants.",
+        "A chorus of displeased jeers rains down upon the fighters.",
         "The crowd spits in disgust, demanding more brutal action!",
         "Boos echo loudly from the cheap seats, unhappy with the display.",
         "A chorus of deep, resonant boos echoes through the coliseum!",
@@ -1493,13 +1493,13 @@
       "With a sudden burst of speed, {{attacker}} seizes the opening!",
       "{{attacker}} dictating the pace of the exchange.",
       "Seizing the initiative, {{attacker}} launches an assault.",
-      "{{attacker}} moves first, taking control of the engagement.",
+      "{{attacker}} moves first, seizing the initiative.",
       "Exploding into action before {{defender}} can react, {{attacker}} strikes.",
       "{{attacker}} dictates the start of the clash.",
       "Taking the lead with a sudden, aggressive advance, {{attacker}} engages.",
       "{{attacker}} strikes preemptively, catching {{defender}} off guard.",
       "Winning the opening exchange of footwork, {{attacker}} strikes.",
-      "{{attacker}} forces the engagement on {{possessive}} own terms."
+      "{{attacker}} forces the fight on {{possessive}} own terms."
     ],
     "feints": [
       "{{attacker}} feints a high line, drawing {{defender}} out of position.",
@@ -1577,7 +1577,7 @@
       "CT": [
         "{{defender}} reads {{attacker}}'s intentions before the strike!",
         "{{defender}} anticipates {{attacker}}'s every move!",
-        "{{defender}}'s tactical mind controls this fight!",
+        "{{defender}}'s cunning mind controls this fight!",
         "{{defender}} thinks three moves ahead!",
         "{{defender}} exploits every mistake {{attacker}} makes!",
         "{{defender}}'s battle awareness is uncanny!",
@@ -1679,7 +1679,7 @@
           "The crowd watches {{name}} with standard interest.",
           "{{name}} draws a typical arena reaction.",
           "The fans appreciate {{name}}'s steady work.",
-          "{{name}} is a regular combatant in the eyes of the mob."
+          "{{name}} is a familiar face in the eyes of the mob."
         ]
       },
       "skill_learns": [
@@ -1752,7 +1752,7 @@
           "The precision fighter tries to slip past the solid parries.",
           "Aimed strikes test the defender's reliable guard.",
           "They look for gaps in the defensive wall.",
-          "A tactical game of finding the perfect angle past the blade.",
+          "A careful game of finding the perfect angle past the blade.",
           "The striker attempts to bypass the tight parrying defense.",
           "Careful thrusts against disciplined deflections.",
           "A game of inches, trying to score past the parry.",
@@ -3045,7 +3045,7 @@
     "Theatrical": [
       "Spectators shower the arena with roses, demanding more drama!",
       "The crowd gasps, utterly enthralled by the spectacle.",
-      "A wave of dramatic applause washes over the combatants.",
+      "A wave of dramatic applause washes over the fighters.",
       "The audience gasps in collective awe at the sheer spectacle of the violence unfolding.",
       "A wave of stunned silence is broken by scattered, rapturous applause for the macabre dance.",
       "The crowd appreciates the sheer artistry of the carnage, murmuring in dark approval.",

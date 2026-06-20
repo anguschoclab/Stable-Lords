@@ -44,7 +44,7 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
             {r.playerWins}W <span className="text-foreground/10 mx-0.5">/</span> {r.playerLosses}L
           </div>
           <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/30">
-            Engagement Ratio
+            Bout Record
           </span>
         </div>
       </div>

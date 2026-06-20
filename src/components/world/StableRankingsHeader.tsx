@@ -18,7 +18,7 @@ export function StableRankingsHeader({ sort, onSort }: StableRankingsHeaderProps
         </TableHead>
         <TableHead>
           <SortHeader
-            label="Commission Unit"
+            label="Stable"
             active={sort.field === 'name'}
             dir={sort.dir}
             onClick={() => onSort('name')}

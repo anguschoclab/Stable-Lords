@@ -22,7 +22,7 @@ export function WorldStats({ stableCount, warriorCount, killCount, topStable, to
   const stats = [
     {
       icon: Trophy,
-      label: 'COMMISSION STABLES',
+      label: 'REGISTERED STABLES',
       value: stableCount,
       color: 'text-arena-gold',
       glow: 'shadow-arena-gold/20',

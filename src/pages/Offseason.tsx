@@ -27,8 +27,8 @@ export default function Offseason() {
   return (
     <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
-        title="Offseason Protocol"
-        subtitle="YEAR-END · RETROSPECTIVE · INSTITUTIONAL TRANSITION"
+        title="Offseason"
+        subtitle="YEAR-END · RETROSPECTIVE"
         eyebrow="Chronicle Archive"
         icon={CalendarDays}
         actions={
@@ -38,7 +38,7 @@ export default function Offseason() {
                 Cycle Status
               </span>
               <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
-                Dormant Phase
+                Off-Season
               </span>
             </div>
           </div>
@@ -49,12 +49,12 @@ export default function Offseason() {
         {/* Left Column: Retrospective Analysis */}
         <div className="lg:col-span-8 space-y-12">
           <div className="space-y-6">
-            <SectionDivider label="Institutional Retrospective" variant="gold" />
+            <SectionDivider label="Season Recap" variant="gold" />
             <YearEndRecap />
           </div>
 
           <div className="space-y-6">
-            <SectionDivider label="Performance Synthesis" />
+            <SectionDivider label="Season Review" />
             <SeasonSynthesis />
           </div>
         </div>
@@ -62,20 +62,20 @@ export default function Offseason() {
         {/* Right Column: Operational Directives */}
         <div className="lg:col-span-4 space-y-12">
           <div className="space-y-6">
-            <SectionDivider label="Strategic Directives" />
+            <SectionDivider label="Season Actions" />
             <div className="flex flex-col gap-4">
               {[
                 {
                   to: '/stable/recruit',
                   label: 'Refresh Roster',
-                  sub: 'Scout new tactical assets',
+                  sub: 'Scout new warriors',
                   icon: UserPlus,
                   variant: 'blood' as const,
                 },
                 {
                   to: '/stable/trainers',
                   label: 'Revise Staff',
-                  sub: 'Personnel + Mentor review',
+                  sub: 'Review coaching staff',
                   icon: GraduationCap,
                   variant: 'gold' as const,
                 },
@@ -118,9 +118,9 @@ export default function Offseason() {
                   <History className="h-3 w-3 text-muted-foreground/40" />
                 </ImperialRing>
                 <div className="text-[10px] text-muted-foreground/60 leading-relaxed uppercase font-black tracking-tight">
-                  <span className="text-foreground">Dormancy Note:</span> The offseason period is
-                  the only window for primary personnel restructuring without service disruption.
-                  Asset depreciation is frozen during this cycle.
+                  <span className="text-foreground">Note:</span> The offseason is the only
+                  window for making roster changes without penalty. Aging is paused during this
+                  period.
                 </div>
               </div>
             </Surface>

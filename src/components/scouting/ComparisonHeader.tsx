@@ -26,7 +26,7 @@ export function ComparisonHeader({ rivalA, rivalB }: ComparisonHeaderProps) {
 
       <div className="text-center flex-1 relative z-10 space-y-4">
         <h4 className="text-[10px] font-black tracking-[0.4em] text-primary uppercase leading-none opacity-60">
-          Asset Alpha
+          Challenger
         </h4>
         <h3 className="font-display font-black uppercase text-2xl tracking-tighter text-foreground leading-none">
           {rivalA.owner.stableName}
@@ -52,7 +52,7 @@ export function ComparisonHeader({ rivalA, rivalB }: ComparisonHeaderProps) {
 
       <div className="text-center flex-1 relative z-10 space-y-4">
         <h4 className="text-[10px] font-black tracking-[0.4em] text-accent uppercase leading-none opacity-60">
-          Asset Beta
+          Defender
         </h4>
         <h3 className="font-display font-black uppercase text-2xl tracking-tighter text-foreground leading-none">
           {rivalB.owner.stableName}

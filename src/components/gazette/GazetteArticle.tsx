@@ -50,11 +50,11 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <Badge className="bg-primary/20 text-primary border-primary/30 font-mono font-black text-[10px] px-3 tracking-widest">
-                EDITION_SYNC: WK_{issue.week.toString().padStart(2, '0')}
+                Week {issue.week}
               </Badge>
               <div className="h-1 w-1 rounded-full bg-white/20" />
               <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em]">
-                SEASON_{season} // VOLUME_IV
+                Season {season}
               </span>
             </div>
             <h2>{issue.mainHeadline.replace('_', ' ')}</h2>
@@ -62,7 +62,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
 
           <div className="flex flex-col items-end gap-1 opacity-40 group-hover:opacity-80 transition-opacity">
             <span className="text-[9px] font-black uppercase tracking-[0.5em] text-muted-foreground">
-              PRESS_CERTIFIED
+              Certified
             </span>
             <div className="flex items-center gap-2">
               <Sparkles className="h-3 w-3 text-arena-gold" />
@@ -83,7 +83,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
             <div className="flex items-center gap-3">
               <div className="h-px w-8 bg-primary/40" />
               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
-                FEATURE_DISPATCH
+                Lead Story
               </span>
             </div>
 
@@ -102,7 +102,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                   ))}
                 </div>
                 <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">
-                  Contributed_By: ARCHIVE_BOTS
+                  Arena Chroniclers
                 </span>
               </div>
               <Button
@@ -110,7 +110,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
                 className="h-8 group/btn text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary/10 px-4"
                 aria-label="View Full Transcript"
               >
-                Full_Transcript{' '}
+                Full Story{' '}
                 <ArrowRight
                   aria-hidden="true"
                   className="ml-2 h-3 w-3 group-hover/btn:translate-x-1 transition-transform"
@@ -125,7 +125,7 @@ export function GazetteArticle({ issue, season }: GazetteArticleProps) {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40">
-                ARENA_SHORTS
+                In Brief
               </h4>
               <div className="h-1.5 w-1.5 rounded-full bg-arena-gold animate-pulse" />
             </div>

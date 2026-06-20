@@ -25,6 +25,7 @@ import { Route as StableIndexRouteImport } from './routes/stable/index'
 import { Route as OpsIndexRouteImport } from './routes/ops/index'
 import { Route as CommandIndexRouteImport } from './routes/command/index'
 import { Route as WorldTournamentsRouteImport } from './routes/world/tournaments'
+import { Route as WorldScoutingRouteImport } from './routes/world/scouting'
 import { Route as WorldIntelligenceRouteImport } from './routes/world/intelligence'
 import { Route as WorldHistoryRouteImport } from './routes/world/history'
 import { Route as WorldGraveyardRouteImport } from './routes/world/graveyard'
@@ -136,6 +137,11 @@ const CommandIndexRoute = CommandIndexRouteImport.update({
 const WorldTournamentsRoute = WorldTournamentsRouteImport.update({
   id: '/world/tournaments',
   path: '/world/tournaments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorldScoutingRoute = WorldScoutingRouteImport.update({
+  id: '/world/scouting',
+  path: '/world/scouting',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorldIntelligenceRoute = WorldIntelligenceRouteImport.update({
@@ -364,6 +370,7 @@ export interface FileRoutesByFullPath {
   '/world/graveyard': typeof WorldGraveyardRoute
   '/world/history': typeof WorldHistoryRoute
   '/world/intelligence': typeof WorldIntelligenceRoute
+  '/world/scouting': typeof WorldScoutingRoute
   '/world/tournaments': typeof WorldTournamentsRoute
   '/command/': typeof CommandIndexRoute
   '/ops/': typeof OpsIndexRoute
@@ -418,6 +425,7 @@ export interface FileRoutesByTo {
   '/world/graveyard': typeof WorldGraveyardRoute
   '/world/history': typeof WorldHistoryRoute
   '/world/intelligence': typeof WorldIntelligenceRoute
+  '/world/scouting': typeof WorldScoutingRoute
   '/world/tournaments': typeof WorldTournamentsRoute
   '/ops/promoter/$id': typeof OpsPromoterIdRoute
   '/stable/promoter/$id': typeof StablePromoterIdRoute
@@ -469,6 +477,7 @@ export interface FileRoutesById {
   '/world/graveyard': typeof WorldGraveyardRoute
   '/world/history': typeof WorldHistoryRoute
   '/world/intelligence': typeof WorldIntelligenceRoute
+  '/world/scouting': typeof WorldScoutingRoute
   '/world/tournaments': typeof WorldTournamentsRoute
   '/command/': typeof CommandIndexRoute
   '/ops/': typeof OpsIndexRoute
@@ -525,6 +534,7 @@ export interface FileRouteTypes {
     | '/world/graveyard'
     | '/world/history'
     | '/world/intelligence'
+    | '/world/scouting'
     | '/world/tournaments'
     | '/command/'
     | '/ops/'
@@ -579,6 +589,7 @@ export interface FileRouteTypes {
     | '/world/graveyard'
     | '/world/history'
     | '/world/intelligence'
+    | '/world/scouting'
     | '/world/tournaments'
     | '/ops/promoter/$id'
     | '/stable/promoter/$id'
@@ -629,6 +640,7 @@ export interface FileRouteTypes {
     | '/world/graveyard'
     | '/world/history'
     | '/world/intelligence'
+    | '/world/scouting'
     | '/world/tournaments'
     | '/command/'
     | '/ops/'
@@ -684,6 +696,7 @@ export interface RootRouteChildren {
   WorldGraveyardRoute: typeof WorldGraveyardRoute
   WorldHistoryRoute: typeof WorldHistoryRoute
   WorldIntelligenceRoute: typeof WorldIntelligenceRoute
+  WorldScoutingRoute: typeof WorldScoutingRoute
   WorldTournamentsRoute: typeof WorldTournamentsRoute
   CommandIndexRoute: typeof CommandIndexRoute
   OpsIndexRoute: typeof OpsIndexRoute
@@ -806,6 +819,13 @@ declare module '@tanstack/react-router' {
       path: '/world/tournaments'
       fullPath: '/world/tournaments'
       preLoaderRoute: typeof WorldTournamentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/world/scouting': {
+      id: '/world/scouting'
+      path: '/world/scouting'
+      fullPath: '/world/scouting'
+      preLoaderRoute: typeof WorldScoutingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/world/intelligence': {
@@ -1108,6 +1128,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorldGraveyardRoute: WorldGraveyardRoute,
   WorldHistoryRoute: WorldHistoryRoute,
   WorldIntelligenceRoute: WorldIntelligenceRoute,
+  WorldScoutingRoute: WorldScoutingRoute,
   WorldTournamentsRoute: WorldTournamentsRoute,
   CommandIndexRoute: CommandIndexRoute,
   OpsIndexRoute: OpsIndexRoute,

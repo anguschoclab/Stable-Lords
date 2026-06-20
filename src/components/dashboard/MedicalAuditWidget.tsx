@@ -68,7 +68,7 @@ export function MedicalAuditWidget() {
 
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center relative z-10 mt-auto">
         <div className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40 flex items-center gap-2">
-          Stable Biometrics Active <Activity className="h-3 w-3 text-destructive" />
+          Stable Health Active <Activity className="h-3 w-3 text-destructive" />
         </div>
       </div>
     </Surface>

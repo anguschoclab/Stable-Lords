@@ -213,14 +213,14 @@ export default function WorldOverview() {
     <div className="space-y-12 max-w-7xl mx-auto pb-20">
       <PageHeader
         title="World Overview"
-        subtitle={`WORLD \u00b7 ${state.season} \u00b7 NATIONAL COMMISSION ARCHIVE`}
+        subtitle={`WORLD · ${state.season} · RANKINGS`}
         icon={Globe}
         actions={
           <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.34em] text-muted-foreground opacity-60">
             <span>Lords Connected: {stableRows.length}</span>
             <div className="h-4 w-px bg-border/40" />
             {syncing ? (
-              <span className="text-primary italic animate-pulse">Syncing Arena Data...</span>
+              <span className="text-primary italic animate-pulse">Loading...</span>
             ) : (
               <span className="text-primary">Arena Data Live</span>
             )}
@@ -254,7 +254,7 @@ export default function WorldOverview() {
             value="intel"
             className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase tracking-widest text-[10px] font-black py-2 px-6"
           >
-            <Brain className="h-3 w-3 mr-2" /> Intelligence
+            <Brain className="h-3 w-3 mr-2" /> Scouting
           </TabsTrigger>
         </TabsList>
 
@@ -309,7 +309,7 @@ export default function WorldOverview() {
         <TabsContent value="intel" className="space-y-6">
           <div className="flex items-center gap-3 px-1">
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
-              RIVAL SURVEILLANCE
+              Rival Stables
             </span>
             <div className="h-px flex-1 bg-gradient-to-r from-primary/20 via-border/20 to-transparent" />
           </div>

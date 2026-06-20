@@ -40,7 +40,7 @@ export default function TrainingPlanner() {
                 Active Trainers
               </span>
               <span className="text-sm font-display font-black text-foreground">
-                {currentTrainers.filter((t) => t.contractWeeksLeft > 0).length} Personnel
+                {currentTrainers.filter((t) => t.contractWeeksLeft > 0).length} Staff
               </span>
             </div>
           </div>
@@ -53,17 +53,17 @@ export default function TrainingPlanner() {
           className="flex-1 h-full flex items-center justify-center gap-3 font-black uppercase text-[10px] tracking-[0.3em] text-muted-foreground hover:text-foreground transition-all"
         >
           <Dumbbell className="h-3.5 w-3.5" />
-          Personnel Assignments
+          Training
         </Link>
         <div className="flex-1 h-full flex items-center justify-center gap-3 font-black uppercase text-[10px] tracking-[0.3em] bg-primary text-primary-foreground">
           <Target className="h-3.5 w-3.5" />
-          Strategic Planning
+          Battle Plans
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
         <aside className="space-y-8">
-          <SectionDivider label="Asset Registry" />
+          <SectionDivider label="Warriors" />
           <WarriorSelector
             warriors={activeWarriors}
             selectedId={selectedId}

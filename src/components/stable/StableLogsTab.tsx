@@ -90,7 +90,7 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
                       won ? 'text-primary' : 'text-destructive/40'
                     )}
                   >
-                    {won ? 'Victory Confirmed' : 'Asset Defeat'}
+                    {won ? 'Victory' : 'Defeat'}
                   </span>
                 </div>
               </div>
@@ -98,7 +98,7 @@ export function StableLogsTab({ recentBouts, stableWarriorIds }: StableLogsTabPr
           })
         ) : (
           <div className="p-24 text-center text-muted-foreground/20 italic text-[10px] uppercase font-black tracking-widest">
-            No engagement logs found in current archive.
+            No bout logs recorded yet.
           </div>
         )}
       </div>

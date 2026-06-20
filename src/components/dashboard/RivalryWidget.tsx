@@ -54,10 +54,10 @@ export function RivalryWidget() {
           </div>
           <div>
             <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Vendetta Registry
+              Rivalries
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Inter-Stable Conflict Monitor
+              Stable Rivalries
             </p>
           </div>
         </div>

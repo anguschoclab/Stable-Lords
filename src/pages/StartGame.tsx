@@ -205,7 +205,7 @@ export default function StartGame() {
             Stable Lords v2.0
           </p>
           <p className="text-[8px] text-muted-foreground/20 italic">
-            All records stored in the Imperial Registry
+            All records saved locally
           </p>
         </div>
       </div>
@@ -223,7 +223,7 @@ export default function StartGame() {
             <AlertDialogTitle className="font-display text-lg">Erase this Record?</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground text-sm">
               The save for <strong className="text-foreground">{deleteTarget?.name}</strong> will be
-              permanently expunged from the Imperial Registry. This cannot be undone.
+              permanently deleted. This cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

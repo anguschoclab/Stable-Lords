@@ -41,7 +41,7 @@ function ExpandToggleButton({ expanded, onToggleExpanded }: ExpandToggleButtonPr
           </button>
         </TooltipTrigger>
         <TooltipContent className="bg-neutral-950 border-white/10 text-[10px] font-black uppercase tracking-widest">
-          {expanded ? 'MINIMIZE LOG' : 'REVEAL INTEL'}
+          {expanded ? 'MINIMIZE LOG' : 'SHOW DETAILS'}
         </TooltipContent>
       </Tooltip>
     </div>
@@ -102,7 +102,7 @@ function FighterPanel({
               accentClass
             )}
           >
-            <Trophy className="h-3 w-3" /> VICTOR_SYNC
+            <Trophy className="h-3 w-3" /> Victor
           </div>
         )}
       </div>
@@ -131,7 +131,7 @@ function TacticalInterlink({ isRivalry }: TacticalInterlinkProps) {
             className="animate-pulse shadow-[0_0_10px_rgba(var(--destructive-rgb),0.3)]"
           />
           <span className="text-[7px] font-black text-destructive uppercase tracking-widest opacity-40">
-            HIGH HOSTILITY SYNC
+            Rivalry
           </span>
         </div>
       )}
@@ -154,7 +154,7 @@ function ProgressTimeline({ minutes, totalEvents, visibleCount }: ProgressTimeli
           <Timer className="h-3 w-3" /> T-MIN 00
         </div>
         <div className="flex items-center gap-2">
-          FINAL_RESOLUTION <Timer className="h-3 w-3" /> {minutes.toString().padStart(2, '0')}
+          End <Timer className="h-3 w-3" /> {minutes.toString().padStart(2, '0')}
         </div>
       </div>
       <div className="relative h-1.5 w-full bg-black rounded-full overflow-hidden border border-white/5 shadow-inner">
@@ -213,7 +213,7 @@ export default function BoutHeader({
 
         <div className="flex items-center justify-between gap-12">
           <FighterPanel
-            label="ASSET ALPHA"
+            label="Challenger"
             name={nameA}
             style={styleA}
             isWinner={winner === 'A'}
@@ -225,7 +225,7 @@ export default function BoutHeader({
           <TacticalInterlink isRivalry={isRivalry} />
 
           <FighterPanel
-            label="ASSET BETA"
+            label="Defender"
             name={nameD}
             style={styleD}
             isWinner={winner === 'D'}

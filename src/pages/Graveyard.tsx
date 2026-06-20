@@ -28,7 +28,7 @@ export default function Graveyard() {
       <PageHeader
         icon={Skull}
         title="The Graveyard"
-        subtitle="IMPERIAL · FALLEN · MEMORIAL ARCHIVE"
+        subtitle="FALLEN WARRIORS"
         actions={
           <div className="flex items-center gap-4">
             <div className="flex flex-col items-end">
@@ -164,7 +164,7 @@ function FallenGrid({
                   {w.deathEvent?.deathSummary ||
                     w.causeOfDeath ||
                     w.deathCause ||
-                    'Fatal injury sustained during tactical engagement.'}
+                    'Killed in the arena.'}
                   "
                 </p>
                 <div className="space-y-3 border-t border-destructive/10 pt-4 mt-auto">
@@ -172,18 +172,18 @@ function FallenGrid({
                     <Crosshair className="w-3.5 h-3.5 text-destructive" />
                     {w.killedBy ? (
                       <>
-                        FATAL_STRIKE_BY: <span className="text-foreground">{w.killedBy}</span>
+                        Killed by: <span className="text-foreground">{w.killedBy}</span>
                       </>
                     ) : (
-                      <>KILLED_IN_ARENA_COMBAT</>
+                      <>Killed in the arena</>
                     )}
                   </div>
                   <div className="flex items-center justify-between text-[10px] font-mono font-black text-muted-foreground/30">
                     <span>
-                      SEASONAL_WK_{w.deathWeek || '??'} · {season?.toUpperCase()}
+                      Week {w.deathWeek || '??'} · {season?.toUpperCase()}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Activity className="h-3 w-3" /> CORPSE_RETRIEVED_PROTOCOL
+                      <Activity className="h-3 w-3" /> Recovered
                     </span>
                   </div>
                 </div>

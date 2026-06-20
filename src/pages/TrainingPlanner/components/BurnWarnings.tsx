@@ -17,7 +17,7 @@ export function BurnWarnings({ burns }: BurnWarningsProps) {
       <div className="flex items-center gap-3">
         <AlertTriangle className="h-4 w-4 text-primary" />
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-          Operational Constraints
+          Warnings
         </span>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -23,7 +23,7 @@ const INTENT_METRICS: Record<
   { label: string; icon: LucideIcon; color: string; description: string }
 > = {
   SURVIVAL: {
-    label: 'Survival Protocol',
+    label: 'Survival',
     icon: ShieldAlert,
     color: 'text-arena-gold',
     description: 'Prioritizing stable preservation and low-risk engagements.',
@@ -41,19 +41,19 @@ const INTENT_METRICS: Record<
     description: 'Actively seeking to eliminate rivals and seize regional fame.',
   },
   ROSTER_DIVERSITY: {
-    label: 'Talent Diversification',
+    label: 'Diversification',
     icon: Users,
     color: 'text-primary',
-    description: 'Broadening style coverage to counter local tactical shifts.',
+    description: 'Broadening style coverage to counter local meta shifts.',
   },
   EXPANSION: {
-    label: 'Strategic Expansion',
+    label: 'Expansion',
     icon: TrendingUp,
     color: 'text-arena-fame',
     description: 'Investing in new facilities and increased roster capacity.',
   },
   CONSOLIDATION: {
-    label: 'Operational Consolidation',
+    label: 'Consolidation',
     icon: Activity,
     color: 'text-arena-steel',
     description: 'Pruning underperforming assets to maintain a lean, elite roster.',
@@ -91,10 +91,10 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
           </div>
           <div>
             <CardTitle className="text-sm font-black uppercase tracking-widest">
-              Strategic Reasoning
+              AI Reasoning
             </CardTitle>
             <CardDescription className="text-[10px] font-mono uppercase tracking-tight opacity-40">
-              Simulation_Layer_v4.1 // Realtime_Inference
+              Rival decision-making
             </CardDescription>
           </div>
         </div>
@@ -123,7 +123,7 @@ export function AgentReasoningWidget({ rival }: AgentReasoningWidgetProps) {
         <ActionTimeline events={rival.actionHistory || []} />
 
         <div className="pt-2 flex items-center justify-between text-[8px] font-black uppercase tracking-widest text-muted-foreground/20">
-          <span>Targeting: {rival.strategy?.targetStableId || 'Global_Meta'}</span>
+          <span>Targeting: {rival.strategy?.targetStableId || 'All Rivals'}</span>
           <span>Confidence: 94.8%</span>
         </div>
       </CardContent>

@@ -1,15 +1,8 @@
-/**
- * World Hub - Intelligence Page
- * Scouting and rival analysis
- */
-import { createFileRoute } from '@tanstack/react-router';
-import Scouting from '@/pages/Scouting'; /**
- * Route.
- */
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/**
- * Route.
- */
 export const Route = createFileRoute('/world/intelligence')({
-  component: Scouting,
+  beforeLoad: () => {
+    throw redirect({ to: '/world/scouting' });
+  },
+  component: () => null,
 });

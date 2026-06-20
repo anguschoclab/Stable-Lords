@@ -54,12 +54,12 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
             <div className="space-y-1">
               <div className="text-sm font-display font-black uppercase">{favDisplay.rhythm}</div>
               <div className="text-[9px] font-black text-arena-gold uppercase tracking-widest">
-                Tactical Bonus: +2 INI / +2 DEF
+                Combat Bonus: +2 INI / +2 DEF
               </div>
             </div>
           ) : (
             <div className="text-[11px] text-muted-foreground/40 uppercase tracking-widest font-black italic">
-              {rhythmHints > 0 ? favDisplay.rhythmHint : 'Rhythm Classified'}
+              {rhythmHints > 0 ? favDisplay.rhythmHint : 'Unknown'}
             </div>
           )}
         </div>

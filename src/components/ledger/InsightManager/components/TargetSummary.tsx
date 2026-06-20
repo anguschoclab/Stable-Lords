@@ -24,7 +24,7 @@ export function TargetSummary({ warrior, canReveal, isRevealing, onReveal }: Tar
         <div>
           <p>{warrior?.name || 'Target Required'}</p>
           <p className="text-[9px] text-muted-foreground uppercase tracking-widest opacity-60">
-            Ready For Extraction
+            Ready to Reveal
           </p>
         </div>
       </div>

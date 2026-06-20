@@ -59,7 +59,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
           selectedId={wIdA}
           otherId={wIdB}
           onSelect={setWIdA}
-          label="Asset Alpha"
+          label="Challenger"
           colorVariant="primary"
         />
         <WarriorSelector
@@ -67,7 +67,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
           selectedId={wIdB}
           otherId={wIdA}
           onSelect={setWIdB}
-          label="Asset Beta"
+          label="Defender"
           colorVariant="accent"
         />
       </div>
@@ -92,10 +92,10 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
           <Crosshair className="h-12 w-12 text-muted-foreground opacity-20" />
           <div className="space-y-1">
             <p className="text-sm font-display font-black uppercase tracking-tight text-muted-foreground">
-              Target Acquisition Pending
+              Select Fighters
             </p>
             <p className="text-xs text-muted-foreground/60 italic">
-              Select two personnel markers from the tactile grid to establish engagement analysis.
+              Select two warriors to compare.
             </p>
           </div>
         </Surface>

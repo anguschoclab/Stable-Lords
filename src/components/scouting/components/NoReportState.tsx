@@ -29,12 +29,11 @@ export function NoReportState({ warriorName, treasury, onScout }: NoReportStateP
               <Terminal className="h-4 w-4 text-primary" />
             </div>
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary leading-none">
-              Scouting Protocol Pending
+              No Report Available
             </h4>
           </div>
           <p className="text-sm text-foreground/80 leading-relaxed font-display max-w-md">
-            Establish a tactical deep-scan on <span>{warriorName}</span> to uncover their combat
-            signatures and metabolic thresholds.
+            Scout <span>{warriorName}</span> to reveal their combat strengths and weaknesses.
           </p>
         </div>
 

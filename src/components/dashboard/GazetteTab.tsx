@@ -15,7 +15,7 @@ export function GazetteTab({ stories }: GazetteTabProps) {
       {stories.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 opacity-20">
           <Zap className="h-8 w-8 mb-4" />
-          <p className="text-[10px] font-black uppercase tracking-[0.4em]">No Dispatches Yet</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em]">No News Yet</p>
         </div>
       ) : (
         <div className="py-6 space-y-8">

@@ -233,8 +233,8 @@ export default function Bookmarks() {
           const report = scoutReports?.find((x) => x.id === b.entityId);
           if (report) {
             name = report.warriorName;
-            subtitle = `${report.quality} Intel · Week ${report.week}`;
-            onClick = () => navigate({ to: '/world/intelligence' });
+            subtitle = `${report.quality} Report · Week ${report.week}`;
+            onClick = () => navigate({ to: '/world/scouting' });
           } else {
             name = '[Entity Removed]';
           }

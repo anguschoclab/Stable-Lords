@@ -49,12 +49,12 @@ export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectio
             <div className="space-y-1">
               <div className="text-sm font-display font-black uppercase">{favDisplay.weapon}</div>
               <div className="text-[9px] font-black text-arena-gold uppercase tracking-widest">
-                Operational Bonus: +2 ACC / +1 DMG
+                Combat Bonus: +2 ACC / +1 DMG
               </div>
             </div>
           ) : (
             <div className="text-[11px] text-muted-foreground/40 uppercase tracking-widest font-black italic">
-              {weaponHints > 0 ? favDisplay.weaponHint : 'Pattern Unrecognized'}
+              {weaponHints > 0 ? favDisplay.weaponHint : 'Unknown'}
             </div>
           )}
         </div>
@@ -66,7 +66,7 @@ export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectio
               onClick={handleEquipFavoriteWeapon}
               className="h-8 px-4 border-arena-gold/20 hover:bg-arena-gold/10 text-arena-gold text-[9px] font-black uppercase rounded-none tracking-widest"
             >
-              Deploy
+              Equip
             </Button>
           )}
           {!isWeaponDiscovered && (

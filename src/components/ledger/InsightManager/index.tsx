@@ -39,9 +39,9 @@ export function InsightManager() {
           <Search className="h-5 w-5" />
         </div>
         <div>
-          <h3>Insight Intelligence Hub</h3>
+          <h3>Insight Vault</h3>
           <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-            Decrypting Asset Profiles // Tokens Available: {tokens.length}
+            Tokens Available: {tokens.length}
           </p>
         </div>
       </div>
@@ -74,7 +74,7 @@ export function InsightManager() {
         {/* Target Selection */}
         <div className="lg:col-span-8 space-y-4">
           <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">
-            Select Operational Target
+            Select Warrior
           </h4>
 
           <Surface variant="glass" className="p-6 border-white/5 bg-black/20">

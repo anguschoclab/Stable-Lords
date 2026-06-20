@@ -63,8 +63,8 @@ function TacticalBarHeader({
           variant="ghost"
           size="icon"
           className="h-6 w-6"
-          title={expanded ? 'Collapse tactical alerts' : 'Expand tactical alerts'}
-          aria-label={expanded ? 'Collapse tactical alerts' : 'Expand tactical alerts'}
+          title={expanded ? 'Collapse alerts' : 'Expand alerts'}
+          aria-label={expanded ? 'Collapse alerts' : 'Expand alerts'}
         >
           {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
         </Button>
@@ -139,7 +139,7 @@ function TacticalBarContent({ alerts }: TacticalBarContentProps) {
       <div className="p-4 space-y-2 max-h-48 overflow-y-auto">
         {alerts.length === 0 ? (
           <div className="text-center py-4 text-muted-foreground text-xs">
-            All systems operational. No alerts.
+            No alerts. All is well.
           </div>
         ) : (
           alerts.map((alert) => <AlertItem key={alert.id} alert={alert} />)

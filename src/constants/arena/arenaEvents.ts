@@ -35,7 +35,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
   falling_debris: {
     id: 'falling_debris',
     name: 'Falling Debris',
-    description: 'Ceiling fragments rain down on the combatants',
+    description: 'Ceiling fragments rain down on the fighters',
     requiredTags: ['ruins', 'indoor'],
     triggerCondition: 'random',
     triggerValue: 0.03, // 3% per exchange

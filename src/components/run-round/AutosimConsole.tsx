@@ -33,7 +33,7 @@ export function AutosimConsole({
       <CardHeader className="pb-3 border-b border-accent/10 bg-accent/5">
         <CardTitle className="font-display text-sm font-black uppercase tracking-widest flex items-center gap-2 text-accent">
           <FastForward className="h-4 w-4" />
-          Strategic Autosim Matrix
+          Auto-Advance
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">

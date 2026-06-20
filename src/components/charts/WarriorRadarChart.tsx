@@ -18,7 +18,7 @@ const chartConfig: ChartConfig = {
     color: 'hsl(var(--primary))',
   },
   potential: {
-    label: 'Genetic Potential',
+    label: 'Natural Potential',
     color: 'hsl(var(--muted-foreground))',
   },
 }; /**

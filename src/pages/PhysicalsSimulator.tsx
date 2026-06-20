@@ -123,7 +123,7 @@ export default function PhysicalsSimulator() {
         <aside className="lg:col-span-3 space-y-6 sticky top-6">
           <div className="px-1 flex items-center justify-between">
             <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em]">
-              DEPLOY PILOTS
+              Select Warriors
             </span>
           </div>
 
@@ -163,12 +163,12 @@ export default function PhysicalsSimulator() {
                   </div>
                   {inA && (
                     <Badge className="bg-primary/20 text-primary border-primary/30 text-[8px] font-black h-4 px-1">
-                      PILOT_A
+                      A
                     </Badge>
                   )}
                   {inB && (
                     <Badge className="bg-destructive/20 text-destructive border-destructive/30 text-[8px] font-black h-4 px-1">
-                      PILOT_B
+                      B
                     </Badge>
                   )}
                 </button>

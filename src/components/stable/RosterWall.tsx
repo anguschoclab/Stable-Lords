@@ -21,15 +21,15 @@ function EmptyRosterState() {
       </div>
       <div className="space-y-2">
         <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">
-          Roster Data Empty
+          No Warriors
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
-          Synchronization failed. All personnel berths are currently vacant. Proceed to the
-          recruitment terminal to enlist your first combatant asset.
+          Your roster is empty. Visit the
+          recruiting grounds to sign your first warrior.
         </p>
       </div>
       <Link to="/stable/recruit" className="mt-4">
-        <Button>Initialize Sync</Button>
+        <Button>Recruit Warriors</Button>
       </Link>
     </Surface>
   );
@@ -60,11 +60,11 @@ export function RosterWall() {
           </div>
           <div>
             <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Active Personnel Matrix
+              Roster
             </h3>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
-                Deployable Assets // Total Synced: {sortedRoster.length}
+                Warriors: {sortedRoster.length}
               </span>
               <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
             </div>

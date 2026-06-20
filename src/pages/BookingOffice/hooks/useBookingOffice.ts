@@ -112,7 +112,7 @@ export function useBookingOffice() {
         s.boutOffers = next.boutOffers;
       }
     });
-    toast.success(`Protocol ${response === 'Accepted' ? 'Initialized' : 'Terminated'}.`);
+    toast.success(`Bout ${response === 'Accepted' ? 'accepted' : 'declined'}.`);
   };
 
   const acceptAllHonorable = () => {
@@ -131,7 +131,7 @@ export function useBookingOffice() {
         accepted++;
       }
     });
-    toast.success(`Batch execution complete: ${accepted} protocols signed.`);
+    toast.success(`${accepted} bouts accepted.`);
   };
 
   return {

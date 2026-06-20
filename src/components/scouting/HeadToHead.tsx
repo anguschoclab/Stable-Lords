@@ -65,7 +65,7 @@ export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' |
               <div className="flex items-center justify-between font-display">
                 <div className="text-left">
                   <div className="text-[8px] font-black uppercase tracking-[0.3em] text-primary mb-1">
-                    Asset Alpha
+                    Challenger
                   </div>
                   <div className="text-lg font-black text-foreground leading-none">{winsA}W</div>
                 </div>
@@ -74,7 +74,7 @@ export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' |
                 </div>
                 <div className="text-right">
                   <div className="text-[8px] font-black uppercase tracking-[0.3em] text-accent mb-1">
-                    Asset Beta
+                    Defender
                   </div>
                   <div className="text-lg font-black text-foreground leading-none">{winsB}W</div>
                 </div>

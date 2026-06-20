@@ -15,7 +15,7 @@ interface WarriorLeaderboardProps {
 
 const COLUMNS = [
   { key: 'officialRank', label: 'Rank', className: 'w-16 text-center' },
-  { key: 'name', label: 'Combatant' },
+  { key: 'name', label: 'Warrior' },
   { key: 'stable', label: 'Patron Stable', className: 'hidden md:table-cell' },
   { key: 'style', label: 'Class', className: 'hidden lg:table-cell' },
   { key: 'compositeScore', label: 'Composite Pts', className: 'text-center' },

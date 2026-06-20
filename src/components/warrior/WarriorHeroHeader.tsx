@@ -72,7 +72,7 @@ export function WarriorHeroHeader({
         <div className="space-y-4">
           <div className="space-y-1">
             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60">
-              {isPlayerOwned ? 'Registry Asset // Internal' : 'External Dossier // Intelligence'}
+              {isPlayerOwned ? 'Your Warrior' : 'Rival Warrior'}
             </span>
             <div className="flex items-center gap-4">
               {isPlayerOwned && id ? (
@@ -82,7 +82,7 @@ export function WarriorHeroHeader({
                     store.renameWarrior(id as import('@/types/shared.types').WarriorId, newName)
                   }
                   className="text-4xl font-display font-black uppercase tracking-tight"
-                  label="Rename Asset"
+                  label="Rename"
                 />
               ) : (
                 <h1 className="text-4xl font-display font-black uppercase tracking-tight">
@@ -97,7 +97,7 @@ export function WarriorHeroHeader({
               <Shield className="h-3.5 w-3.5 text-muted-foreground/40" />
               <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                 {warrior.style === 'UNKNOWN'
-                  ? 'Classified Discipline'
+                  ? 'Unknown Style'
                   : STYLE_DISPLAY_NAMES[warrior.style as FightingStyle]}
               </span>
             </div>

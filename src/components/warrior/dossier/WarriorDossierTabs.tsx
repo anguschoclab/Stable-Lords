@@ -7,10 +7,10 @@ interface Props {
 }
 
 const TABS = [
-  { id: 'overview', label: 'Tactical Overview', icon: LayoutDashboard },
-  { id: 'stats', label: 'Combat Attributes', icon: Activity },
-  { id: 'history', label: 'Engagement Log', icon: Swords },
-  { id: 'biography', label: 'Subject History', icon: FileText },
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'stats', label: 'Attributes', icon: Activity },
+  { id: 'history', label: 'Fight Log', icon: Swords },
+  { id: 'biography', label: 'History', icon: FileText },
 ]; /**
  * Warrior dossier tabs.
  * @param - { active tab, set active tab }.

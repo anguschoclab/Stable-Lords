@@ -45,7 +45,7 @@ const REP_LABELS: {
     icon: Sparkles,
     color: 'text-arena-pop',
     glow: 'bg-arena-pop',
-    desc: 'Strategic responsiveness to the shifting combat meta. High adaptability allows your warriors to better capitalize on tactical openings.',
+    desc: 'How well your stable adapts to the shifting combat meta. High adaptability lets warriors capitalize on style matchups.',
   },
 ]; /**
  * Reputation sliders.

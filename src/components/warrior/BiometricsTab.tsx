@@ -27,7 +27,7 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
   return (
     <div className="grid gap-8 lg:grid-cols-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="lg:col-span-4 space-y-8">
-        <SectionDivider label="Physical Geometry" />
+        <SectionDivider label="Physical Profile" />
         <Surface variant="glass" className="border-white/5 overflow-hidden">
           <div className="p-8">
             <WarriorRadarChart warrior={warrior} />
@@ -49,12 +49,12 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
           </div>
         </Surface>
 
-        <SectionDivider label="Cognitive Imprint" />
+        <SectionDivider label="Preferences" />
         <FavoritesCard warrior={warrior} onUpdate={() => {}} />
       </div>
 
       <div className="lg:col-span-8 space-y-8">
-        <SectionDivider label="Metric Analysis" />
+        <SectionDivider label="Performance" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Surface variant="glass" className="border-white/5">
             <div className="p-6 border-b border-white/5 flex items-center gap-3 bg-white/[0.01]">
@@ -100,7 +100,7 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
                 <Eye className="h-3 w-3 text-muted-foreground" />
               </ImperialRing>
               <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                Registry Observation
+                Observations
               </span>
             </div>
             <div className="p-8 overflow-y-auto max-h-96 thin-scrollbar">

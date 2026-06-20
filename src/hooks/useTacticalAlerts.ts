@@ -88,7 +88,7 @@ export function useTacticalAlerts(): TacticalAlert[] {
         type: 'success',
         icon: Swords,
         message: `${fightReady.length} warriors ready for combat`,
-        action: { label: 'Execute', to: '/stable/arena' },
+        action: { label: 'Fight', to: '/stable/arena' },
       });
     }
 

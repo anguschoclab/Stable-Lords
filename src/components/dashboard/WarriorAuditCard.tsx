@@ -26,7 +26,7 @@ export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
             className="text-xs font-black uppercase tracking-tight text-foreground/80 hover:text-primary transition-colors"
           />
           <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
-            Operative ID: {warrior.id.slice(0, 8)}
+            ID: {warrior.id.slice(0, 8)}
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -36,7 +36,7 @@ export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
                 <Skull className="h-3.5 w-3.5 text-destructive animate-pulse cursor-help" />
               </TooltipTrigger>
               <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest text-destructive">
-                TRAUMATIC TISSUE FAILURE
+                Injured
               </TooltipContent>
             </Tooltip>
           )}

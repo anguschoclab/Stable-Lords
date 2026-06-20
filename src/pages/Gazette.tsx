@@ -48,7 +48,7 @@ function GazetteMasthead({ season, week }: { season: string; week: number }) {
           </Tooltip>
         </span>
         <span className="w-1 h-1 inline-block rounded-none bg-accent/40" />
-        <span>Imperial Press</span>
+        <span>Arena Press</span>
       </div>
 
       {/* Main title */}
@@ -65,7 +65,7 @@ function GazetteMasthead({ season, week }: { season: string; week: number }) {
       <div className="flex items-center justify-center gap-2 mt-1">
         <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" />
         <span className="text-[9px] font-black uppercase tracking-[0.35em] text-primary/50">
-          PRESS LINE SYNCHRONIZED
+          Latest Edition
         </span>
       </div>
 
@@ -160,7 +160,7 @@ function GazetteEmptyState() {
         </p>
         <p className="text-xs text-muted-foreground/35 italic max-w-sm mx-auto leading-relaxed">
           No arena records have been stylized by our chroniclers yet. Proceed to combat to generate
-          headlines and synchronize the archive.
+          headlines — check back after your next fight.
         </p>
       </div>
     </Surface>
@@ -201,9 +201,9 @@ export default function Gazette() {
         <section className="space-y-10">
           <GazetteSectionHeader
             icon={BarChart3}
-            title="Arena Intelligence Matrix"
-            subtitle="Tactical Telemetry // Historical Aggregates"
-            badge="LIVE FEED"
+            title="Arena Stats"
+            subtitle="Historical Aggregates"
+            badge="Live"
             badgeStyle="primary"
           />
 
@@ -250,9 +250,9 @@ export default function Gazette() {
       <section className="space-y-12">
         <GazetteSectionHeader
           icon={Radio}
-          title="Information Oracle"
-          subtitle="Editorial Registry // Stylized Archival"
-          badge="ARCHIVE SYNC"
+          title="News Archive"
+          subtitle="Weekly Chronicles"
+          badge="Archive"
           badgeStyle="gold"
         />
 
@@ -324,7 +324,7 @@ export default function Gazette() {
                     style={{ animation: 'livePulse 2s ease-in-out infinite' }}
                   />
                   <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                    Deep Storage Synchronization Ready
+                    All issues loaded
                   </span>
                 </div>
               </div>

@@ -19,7 +19,7 @@ export default function WarriorDossierSoulBond({ warrior }: Props) {
 
   return (
     <div className="space-y-8">
-      <SectionDivider label="Soul Bond Protocol" variant="primary" />
+      <SectionDivider label="Soul Bond" variant="primary" />
       <Surface
         variant="glass"
         className="p-8 border-primary/20 bg-primary/[0.02] relative overflow-hidden"
@@ -31,7 +31,7 @@ export default function WarriorDossierSoulBond({ warrior }: Props) {
         <div className="flex items-center gap-4 mb-6">
           <Heart className="h-5 w-5 text-primary animate-pulse" />
           <h3 className="text-lg font-display font-black uppercase tracking-tight text-foreground">
-            Synchronized with {(warrior as any).soulBond.partnerName}
+            Bonded with {(warrior as any).soulBond.partnerName}
           </h3>
         </div>
 
@@ -46,13 +46,13 @@ export default function WarriorDossierSoulBond({ warrior }: Props) {
             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
               Affinity Level
             </div>
-            <div className="text-xl font-display font-black text-primary">MAXIMUM_RESONANCE</div>
+            <div className="text-xl font-display font-black text-primary">Max</div>
           </div>
           <div className="p-4 bg-white/[0.02] border border-white/5">
             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
               Combat Bonus
             </div>
-            <div className="text-xl font-display font-black text-foreground">+25% SYNC_RATE</div>
+            <div className="text-xl font-display font-black text-foreground">+25% Bond Bonus</div>
           </div>
         </div>
       </Surface>

@@ -52,16 +52,16 @@ export function useAdminTools() {
           if (data && data.state) {
             const validatedState = GameStateSchema.parse(data.state) as GameState;
             loadGame('autosave', validatedState);
-            toast.success('Temporal state synchronization restored.');
+            toast.success('Save loaded successfully.');
           } else {
-            toast.error('Invalid save signature detected.');
+            toast.error('Invalid save file.');
           }
         } catch (err) {
           if (err instanceof Error && err.name === 'ZodError') {
             toast.error('Invalid save data: schema validation failed');
             console.error('Zod validation error:', err);
           } else {
-            toast.error(err instanceof Error ? err.message : 'Telemetry reconstruction failed.');
+            toast.error(err instanceof Error ? err.message : 'Failed to load save.');
           }
         }
       };

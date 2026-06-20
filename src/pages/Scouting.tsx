@@ -81,12 +81,12 @@ export default function Scouting() {
             hashStr(`${week}-${activeWarrior.name}-${quality}`)
           ) as import('@/types/shared.types').LedgerEntryId,
           week: week,
-          label: `Intelligence: ${activeWarrior.name} (${quality})`,
+          label: `Scouting: ${activeWarrior.name} (${quality})`,
           amount: -cost,
           category: 'other',
         });
       });
-      toast.success(`Intel established for ${activeWarrior.name}. (-${cost}g)`);
+      toast.success(`Report filed for ${activeWarrior.name}. (-${cost}g)`);
     },
     [treasury, week, scoutReports, setState, activeWarrior]
   );
@@ -103,13 +103,13 @@ export default function Scouting() {
   return (
     <PageFrame>
       <PageHeader
-        title="Rival Intelligence"
+        title="Rival Scouting"
         subtitle="WORLD · RIVAL STABLES · SCOUTING REPORTS"
         actions={
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Intel Reports
+                Scout Reports
               </span>
               <span className="text-sm font-display font-black text-foreground">
                 {scoutReports?.length || 0} Filed
@@ -120,7 +120,7 @@ export default function Scouting() {
                 <Radio className="h-3 w-3 text-primary" />
               </ImperialRing>
               <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">
-                Spies in the Field...
+                Scouts at work...
               </span>
             </div>
           </div>
@@ -133,7 +133,7 @@ export default function Scouting() {
             value="scout"
             className="flex-1 h-full font-black uppercase text-[10px] tracking-[0.3em] rounded-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
           >
-            Scout Intel
+            Reports
           </TabsTrigger>
           <TabsTrigger
             value="compare"
@@ -175,7 +175,7 @@ export default function Scouting() {
               <StableComparison rivals={rivals} />
             </div>
             <div className="space-y-8">
-              <SectionDivider label="Reputation Quadrant" />
+              <SectionDivider label="Reputation" />
               <ReputationQuadrant />
             </div>
           </div>

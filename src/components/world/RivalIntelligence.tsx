@@ -35,7 +35,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                   Rival Network
                 </h3>
                 <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-60">
-                  Neural Simulation Engine // Strategic Intel Registry
+                  Rival Stables Overview
                 </p>
               </div>
             </div>
@@ -125,7 +125,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                           : rival.treasury < 500
                             ? 'Depleted'
                             : rival.treasury < 1200
-                              ? 'Operational'
+                              ? 'Active'
                               : 'Surplus'}
                       </span>
                     </div>
@@ -171,14 +171,14 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
             </div>
             <div className="space-y-1">
               <h5 className="text-[10px] font-black uppercase tracking-widest text-primary">
-                Scouting Protocol Summary
+                Scout Summary
               </h5>
               <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">
                 Rival owners react to meta shifts with varying latency.{' '}
                 <span className="text-foreground font-black">Innovators</span> anticipate trends,
                 while <span className="text-foreground font-black">Traditionalists</span> provide
-                predictable matchups. Leverage neural intelligence to exploit doctrinal gaps in
-                future brackets.
+                predictable matchups. Study their patterns to exploit weaknesses in
+                future bouts.
               </p>
             </div>
           </div>

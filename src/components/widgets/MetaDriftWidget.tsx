@@ -117,8 +117,7 @@ export function MetaDriftWidget() {
 
         <div className="pt-6 border-t border-white/5">
           <p className="text-[9px] text-muted-foreground/40 leading-relaxed italic uppercase font-black tracking-tight">
-            Institutional meta-cycles occur every 20 engagements. Adaptive stables pivot training to
-            exploit declining tactical archetypes.
+            Meta shifts occur every 20 bouts. Adapt your training to exploit declining styles.
           </p>
         </div>
       </div>

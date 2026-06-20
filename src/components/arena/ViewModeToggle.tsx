@@ -55,11 +55,11 @@ export default function ViewModeToggle({
             : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
         )}
         disabled={disabled}
-        aria-label="Switch to Tactical Log view"
+        aria-label="Switch to Combat Log view"
         aria-pressed={mode === 'log'}
       >
         <ScrollText className="h-3.5 w-3.5" />
-        <span>Tactical Log</span>
+        <span>Combat Log</span>
       </button>
 
       <button

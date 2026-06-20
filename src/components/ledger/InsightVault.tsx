@@ -27,7 +27,7 @@ interface TokenSectionConfig {
 const TOKEN_SECTIONS: [TokenSectionConfig, TokenSectionConfig, TokenSectionConfig] = [
   {
     type: 'stat',
-    title: 'Personnel Intel',
+    title: 'Warrior Insights',
     icon: Shield,
     pulseColor: 'bg-primary',
     textColor: 'text-primary',
@@ -40,12 +40,12 @@ const TOKEN_SECTIONS: [TokenSectionConfig, TokenSectionConfig, TokenSectionConfi
   },
   {
     type: 'weapon',
-    title: 'Armament Telemetry',
+    title: 'Weapon Insights',
     icon: Target,
     pulseColor: 'bg-arena-gold',
     textColor: 'text-arena-gold',
     emptyIcon: Target,
-    emptyText: 'Armature Encrypted',
+    emptyText: 'None discovered',
     bgClass: 'bg-arena-gold/5',
     borderClass: 'border-arena-gold/20',
     hoverBorderClass: 'hover:border-arena-gold/50',
@@ -245,11 +245,11 @@ export function InsightVault() {
             <div className="flex items-center gap-3 mb-2">
               <h3>The Insight Vault</h3>
               <Badge className="bg-arena-gold/20 text-arena-gold border-arena-gold/30 font-mono font-black text-[10px] px-2">
-                ENCRYPTED SYNC ACTIVE
+                Active
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl font-medium">
-              Insights are fragments of tactical truth discovered amidst the chaos of the sands.
+              Insights are secrets discovered in the arena.
               When a warrior exhibits their preferred weapon or innate rhythm, these secrets
               surface. Reveal enough fragments to unlock permanent martial superiority and strategic
               dominance over your rivals.
@@ -264,7 +264,7 @@ export function InsightVault() {
         </div>
       </Surface>
 
-      {/* ─── Intel Synthesis Monitor ─── */}
+      {/* ─── Insight Summary ─── */}
       <Surface
         variant="glass"
         padding="none"
@@ -275,34 +275,34 @@ export function InsightVault() {
         <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/5">
           <StatItem
             icon={Search}
-            label="System Indexing"
+            label="Total"
             value={`${tokens.length}G`}
-            sublabel="Total Sync"
+            sublabel="Found"
             variant="default"
           />
           <StatItem
             icon={Box}
-            label="Armature Index"
+            label="Weapons"
             value={`${weaponTokens.length}S`}
-            sublabel="Verified Intel"
+            sublabel="Discovered"
             variant="gold"
           />
           <StatItem
             icon={Binary}
-            label="Tactical Flow"
+            label="Combat Flow"
             value={`${rhythmTokens.length}K`}
-            sublabel="Verified Intel"
+            sublabel="Discovered"
             variant="pop"
           />
           <div className="p-8 bg-secondary/5 flex flex-col justify-center relative overflow-hidden">
             <div className="absolute inset-0 bg-primary/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none" />
             <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4 opacity-40">
-              Intel Synthesis Status
+              Status
             </span>
             <div className="flex items-center gap-3">
               <Unlocked className="h-4 w-4 text-primary animate-pulse" />
               <span className="text-xs font-black uppercase tracking-widest text-primary drop-shadow-[0_0_5px_rgba(var(--primary-rgb),0.3)]">
-                SYNCHRONIZATION PENDING
+                Awaiting Discovery
               </span>
             </div>
           </div>

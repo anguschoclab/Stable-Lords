@@ -208,14 +208,14 @@ export default function Training() {
         {/* Sidebar: Analytics & Controls */}
         <aside className="lg:col-span-4 space-y-12">
           <section>
-            <SectionDivider label="Institutional Composition" />
+            <SectionDivider label="Style Breakdown" />
             <div className="mt-8">
               <StyleMeterTable />
             </div>
           </section>
 
           <section>
-            <SectionDivider label="Logistics Summary" />
+            <SectionDivider label="Summary" />
             <div className="mt-8 grid grid-cols-1 gap-4">
               <Surface variant="glass" className="p-6 border-white/5 bg-white/[0.01]">
                 <div className="flex items-center justify-between mb-4">
@@ -228,8 +228,7 @@ export default function Training() {
                   <span className="text-2xl font-display font-black">{trainingCount}</span>
                 </div>
                 <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
-                  Attribute synchronization in progress. Higher Intelligence (WT) increases gain
-                  probability.
+                  Training in progress. Higher Wits (WT) increases gain probability.
                 </p>
               </Surface>
 
@@ -242,21 +241,21 @@ export default function Training() {
                   <span className="text-2xl font-display font-black">{recoveryCount}</span>
                 </div>
                 <p className="text-[10px] text-muted-foreground/60 leading-relaxed">
-                  Units in active recovery heal injuries 100% faster than natural rest.
+                  Warriors in recovery heal injuries faster than natural rest.
                 </p>
               </Surface>
             </div>
           </section>
         </aside>
 
-        {/* Main: Personnel Registry */}
+        {/* Main: Roster */}
         <div className="lg:col-span-8 space-y-8">
-          <SectionDivider label={`Personnel Registry [${state.roster.length}]`} variant="primary" />
+          <SectionDivider label={`Roster [${state.roster.length}]`} variant="primary" />
 
           {state.roster.length === 0 ? (
             <Surface variant="glass" className="py-24 text-center border-dashed border-white/5">
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                No personnel detected · Please recruit warriors to commence training
+                No warriors · Recruit to begin training
               </p>
               <Button
                 variant="link"

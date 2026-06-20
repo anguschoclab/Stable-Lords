@@ -79,7 +79,7 @@ export function FallenGrid({ warriors, season, emptyTitle, emptyDesc }: FallenGr
                   {w.deathEvent?.deathSummary ||
                     w.causeOfDeath ||
                     w.deathCause ||
-                    'Fatal injury sustained during tactical engagement.'}
+                    'Killed in the arena.'}
                   &quot;
                 </p>
                 <div className="space-y-3 border-t border-destructive/10 pt-4 mt-auto">

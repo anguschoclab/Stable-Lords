@@ -62,10 +62,10 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
         </div>
         <div>
           <h3 className="font-display text-base font-black uppercase tracking-tight">
-            Combat_Flow_Analysis
+            Style Win Rates
           </h3>
           <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-            Style_Efficiency // Meta_Pulse
+            Meta Analysis
           </p>
         </div>
       </div>
@@ -125,10 +125,10 @@ export function TacticalStyleAnalysis({ allFights }: MetaAnalyticsProps) {
         <div className="flex items-center gap-2">
           <Search className="h-3 w-3" />
           <span className="text-[8px] font-black uppercase tracking-widest">
-            Global_Sample: {allFights.length} Bouts
+            Sample: {allFights.length} Bouts
           </span>
         </div>
-        <span className="text-[8px] font-black uppercase tracking-[0.3em]">SYNCHRONIZED_META</span>
+        <span className="text-[8px] font-black uppercase tracking-[0.3em]">Current Meta</span>
       </div>
     </Surface>
   );
@@ -177,10 +177,10 @@ export function StyleMatchupHeatmap({ allFights }: MetaAnalyticsProps) {
         </div>
         <div>
           <h3 className="font-display text-base font-black uppercase tracking-tight">
-            Matchup_Dynamic_Registry
+            Style Matchups
           </h3>
           <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-            Style_Interactions // Kinetic_Heatmap
+            Heatmap
           </p>
         </div>
       </div>

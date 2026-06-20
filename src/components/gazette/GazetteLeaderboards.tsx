@@ -58,10 +58,10 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
           </div>
           <div>
             <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Combatant_Efficiency_Registry
+              Warrior Leaderboard
             </h3>
             <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-              Elite_Performance // Ranking_Sync_Ready
+              Top Performers
             </p>
           </div>
         </div>
@@ -69,7 +69,7 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
           variant="outline"
           className="text-[9px] font-mono font-black border-white/10 bg-white/5 text-muted-foreground/60 h-7 px-3 tracking-widest"
         >
-          TOP_05_OPERATIVES
+          Top 5
         </Badge>
       </div>
 
@@ -78,19 +78,19 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
           <TableHeader className="bg-black/20">
             <TableRow className="hover:bg-transparent border-white/5">
               <TableHead className="font-black uppercase text-[10px] tracking-widest pl-8 py-4">
-                Operative_ID
+                Warrior
               </TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest text-muted-foreground/60 py-4">
-                Martial_Discipline
+                Style
               </TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest text-center text-muted-foreground/60 py-4">
-                Engagement_Record
+                Record
               </TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest text-right text-muted-foreground/60 py-4">
-                Efficiency_Index
+                Win Rate
               </TableHead>
               <TableHead className="font-black uppercase text-[10px] tracking-widest text-right pr-8 py-4">
-                Fame_Manifest
+                Fame
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -185,10 +185,10 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
         </div>
         <div>
           <h3 className="font-display text-base font-black uppercase tracking-tight">
-            Discipline_Vanguard
+            Best by Style
           </h3>
           <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-            Style_Excellence // Master_Registry
+            Style Champions
           </p>
         </div>
       </div>
@@ -249,10 +249,10 @@ export function RisingStars({ allFights }: LeaderboardProps) {
         </div>
         <div>
           <h3 className="font-display text-base font-black uppercase tracking-tight">
-            Emerging_Operatives
+            Rising Stars
           </h3>
           <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
-            Rising_Potential // Talent_Scan
+            New Talent
           </p>
         </div>
       </div>
@@ -261,7 +261,7 @@ export function RisingStars({ allFights }: LeaderboardProps) {
         {stars.length === 0 ? (
           <div className="py-12 text-center opacity-20 italic">
             <span className="text-[10px] uppercase tracking-widest">
-              No breakthrough signals detected...
+              No record-breakers yet...
             </span>
           </div>
         ) : (
@@ -278,7 +278,7 @@ export function RisingStars({ allFights }: LeaderboardProps) {
                     {s.name}
                   </span>
                   <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mt-0.5">
-                    ESTABLISHED: WK_{s.firstWeek}
+                    Joined Week {s.firstWeek}
                   </span>
                 </div>
                 <div className="flex flex-col items-end">

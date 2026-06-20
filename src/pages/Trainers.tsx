@@ -84,21 +84,21 @@ export default function Trainers() {
     setState((draft) => {
       draft.hiringPool = pool;
     });
-    toast.success('Personnel registry updated. New candidates available.');
+    toast.success('New trainers available.');
   }, [week, setState]);
 
   const hireTrainer = useCallback(
     (trainer: Trainer) => {
       const cost = TIER_COST[trainer.tier as TrainerTier] ?? 50;
-      if (!deductFunds(cost, `Acquisition: ${trainer.name}`, 'trainer')) {
-        toast.error(`Insufficient credits. Access to ${trainer.name} requires ${cost}G.`);
+      if (!deductFunds(cost, `Hire: ${trainer.name}`, 'trainer')) {
+        toast.error(`Not enough gold. ${trainer.name} costs ${cost}G.`);
         return;
       }
       setState((draft) => {
         draft.trainers.push(trainer);
         draft.hiringPool = draft.hiringPool.filter((t) => t.id !== trainer.id);
       });
-      toast.success(`${trainer.name} has signed with your stable. Personnel synchronized.`);
+      toast.success(`${trainer.name} has signed with your stable.`);
     },
     [deductFunds, setState]
   );
@@ -126,7 +126,7 @@ export default function Trainers() {
         draft.trainers.push(trainer);
       });
       toast.success(
-        `${warrior.name} confirmed for the retirement-to-trainer protocol. Tactical specialization: ${trainer.focus}.`
+        `${warrior.name} retired to coaching. Specialization: ${trainer.focus}.`
       );
       setConvertDialogOpen(false);
     },
@@ -137,9 +137,9 @@ export default function Trainers() {
     <PageFrame maxWidth="xl" className="pb-32">
       <PageHeader
         icon={Users}
-        eyebrow="Personnel Management"
-        title="Command Staff"
-        subtitle="TACTICAL MASTERY · TRAINING OPERATIONS"
+        eyebrow="Stable Staff"
+        title="Trainers"
+        subtitle="COACHING · DEVELOPMENT"
         actions={
           <div className="flex items-center gap-6 bg-white/[0.02] border border-white/5 px-6 py-3 rounded-none shadow-2xl">
             <div className="flex flex-col items-center border-r border-white/10 pr-6">
@@ -153,7 +153,7 @@ export default function Trainers() {
             </div>
             <div className="flex flex-col items-center">
               <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Personnel Budget
+                Budget
               </span>
               <span className="font-display font-black text-arena-gold text-xl flex items-center gap-2 leading-none">
                 {treasury.toLocaleString()}G
@@ -169,13 +169,13 @@ export default function Trainers() {
             value="current"
             className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
           >
-            <GraduationCap className="h-4 w-4" /> Operational Staff
+            <GraduationCap className="h-4 w-4" /> Current Staff
           </TabsTrigger>
           <TabsTrigger
             value="hire"
             className="gap-3 px-8 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all rounded-none font-black uppercase text-[11px] tracking-[0.2em]"
           >
-            <UserPlus className="h-4 w-4" /> Tactical Hire
+            <UserPlus className="h-4 w-4" /> Hire
           </TabsTrigger>
           <TabsTrigger
             value="mentors"
@@ -213,17 +213,16 @@ export default function Trainers() {
                 </ImperialRing>
                 <div className="space-y-2">
                   <h4 className="font-display font-black uppercase tracking-widest text-muted-foreground/60">
-                    Personnel Database Empty
+                    No Trainers
                   </h4>
                   <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] italic max-w-sm mx-auto">
-                    Establish your training core by recruiting specialists from the tactical hire
-                    registry.
+                    Hire specialists from the hiring pool to begin training your warriors.
                   </p>
                 </div>
               </Surface>
             ) : (
               <div className="space-y-6">
-                <SectionDivider label="Active Personnel" variant="primary" />
+                <SectionDivider label="Current Staff" variant="primary" />
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                   {currentTrainers.map((t) => (
                     <TrainerCard key={t.id} trainer={t} owned onFire={() => fireTrainer(t.id)} />
@@ -235,7 +234,7 @@ export default function Trainers() {
 
           {currentTrainers.length > 0 && (
             <div className="space-y-8">
-              <SectionDivider label="Aggregated System Bonuses" variant="gold" />
+              <SectionDivider label="Staff Bonuses" variant="gold" />
               <Surface
                 variant="glass"
                 padding="none"
@@ -292,10 +291,10 @@ export default function Trainers() {
                 </ImperialRing>
                 <div className="text-left">
                   <span className="text-[12px] font-black uppercase tracking-[0.3em] block mb-1">
-                    Veteran Reassignment Protocol
+                    Retire to Coach
                   </span>
                   <span className="text-[10px] text-muted-foreground/50 uppercase tracking-widest italic">
-                    {convertableRetired.length} Retired Assets Ready for Staff Transition
+                    {convertableRetired.length} retired warriors available to coach
                   </span>
                 </div>
               </Button>
@@ -314,10 +313,10 @@ export default function Trainers() {
               </ImperialRing>
               <div>
                 <h3 className="text-lg font-black uppercase tracking-tight text-foreground leading-none mb-1.5">
-                  Personnel Registry
+                  Available Trainers
                 </h3>
                 <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] leading-none">
-                  {currentHiringPool.length} Tactical Candidates Located
+                  {currentHiringPool.length} candidates available
                 </p>
               </div>
             </div>
@@ -327,7 +326,7 @@ export default function Trainers() {
               className="h-12 px-8 font-black uppercase text-[10px] tracking-widest gap-3 rounded-none border-white/10 hover:bg-white/5 transition-all"
             >
               <RefreshCw className="h-3.5 w-3.5 group-hover:rotate-180 transition-all duration-700" />
-              Update Registry
+              Refresh Pool
             </Button>
           </div>
 
@@ -341,7 +340,7 @@ export default function Trainers() {
                   <div className="flex items-center gap-4">
                     <div className="flex flex-col items-end">
                       <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                        Acquisition
+                        Cost
                       </span>
                       <span className="font-display font-black text-arena-gold text-lg leading-none">
                         {TIER_COST[t.tier as TrainerTier] ?? 50}G
@@ -356,7 +355,7 @@ export default function Trainers() {
                       className="h-12 px-8 bg-primary text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-none hover:shadow-[0_0_20px_rgba(135,34,40,0.3)] transition-all"
                     >
                       <UserPlus className="h-4 w-4 mr-3" />
-                      Secure Contract
+                      Hire
                     </Button>
                   </div>
                 }

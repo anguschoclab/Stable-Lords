@@ -236,7 +236,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
               </div>
               <div className="flex items-center gap-2 group/btn px-4 py-1.5 rounded-none bg-white/5 border border-white/5 hover:border-primary/50 transition-all">
                 <span className="text-[9px] font-black uppercase tracking-widest group-hover/btn:text-primary transition-colors">
-                  Tactical Report
+                  Fight Report
                 </span>
                 <ChevronRight className="h-3 w-3 opacity-20 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all" />
               </div>

@@ -86,7 +86,7 @@ export function CoachOverlay() {
       list.push({
         id: 'encumbrance_mismatch',
         type: 'WARNING',
-        label: 'Tactical Mismatch',
+        label: 'Style Mismatch',
         description: `${mismatchedSprints[0]?.name ?? 'A fighter'} loadout exceeds endurance. High fatigue penalties will apply.`,
         icon: Zap,
         color: 'text-arena-gold border-arena-gold/20 bg-arena-gold/10',

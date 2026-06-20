@@ -140,7 +140,7 @@ function getSuspectedPlanTendencies(
 function generateScoutReportNotes(warrior: Warrior, quality: ScoutQuality, record: string): string {
   const styleName = STYLE_DISPLAY_NAMES[warrior.style] ?? warrior.style;
   if (quality === 'Basic') {
-    return `${warrior.name} fights as a ${styleName}. Limited intel available.`;
+    return `${warrior.name} fights as a ${styleName}. Limited information available.`;
   }
   if (quality === 'Detailed') {
     return `${warrior.name} is a ${styleName} with ${record}. ${

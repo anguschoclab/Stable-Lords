@@ -11,15 +11,14 @@ export function EmptyContractState() {
       </div>
       <div className="space-y-2">
         <p className="text-sm font-display font-black uppercase tracking-[0.2em] text-muted-foreground">
-          The_Academy_Is_Offline
+          No Active Contracts
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
-          No specialists are currently under contract. Institutional growth is stagnant. Access the
-          recruitment terminal to restore faculty operations.
+          No trainers are currently under contract. Visit the hiring pool to recruit staff.
         </p>
       </div>
       <Link to="/stable/recruit" className="mt-4">
-        <Button>Access_Recruitment_Hub</Button>
+        <Button>Hire Trainers</Button>
       </Link>
     </div>
   );

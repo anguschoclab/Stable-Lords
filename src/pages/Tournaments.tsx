@@ -157,7 +157,7 @@ export default function Tournaments() {
       <PageHeader
         icon={Trophy}
         eyebrow="Seasonal Campaigns"
-        title="Imperial Tournaments"
+        title="Tournaments"
         subtitle={`${season.toUpperCase()} SEASON · YEAR ${year}`}
         actions={
           <div className="flex items-center gap-3">
@@ -167,7 +167,7 @@ export default function Tournaments() {
                   variant="outline"
                   className="h-10 px-6 font-black uppercase text-[10px] tracking-widest gap-2 rounded-none border-white/10 hover:bg-white/5 transition-all"
                 >
-                  <UserPlus className="h-3.5 w-3.5" /> RECRUIT UNITS
+                  <UserPlus className="h-3.5 w-3.5" /> Recruit Warriors
                 </Button>
               </Link>
             )}
@@ -178,7 +178,7 @@ export default function Tournaments() {
       {/* ── Pre-tournament readiness banner ── */}
       {currentTournament && playerWarriorsInTournament.length > 0 && (
         <div className="pt-4">
-          <SectionDivider label="Operative Readiness" />
+          <SectionDivider label="Warrior Readiness" />
           <Surface
             variant="glass"
             className="flex flex-col gap-6 p-6 border-l-4 border-l-primary shadow-xl"

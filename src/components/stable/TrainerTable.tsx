@@ -122,7 +122,7 @@ export function TrainerTable() {
                       <div className="flex items-center gap-1.5 opacity-60">
                         <Target className="h-3 w-3 text-primary" />
                         <span className="text-[9px] font-black uppercase tracking-widest">
-                          {t.focus} Registry
+                          {t.focus} Specialist
                         </span>
                       </div>
                       {t.styleBonusStyle && (

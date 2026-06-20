@@ -23,9 +23,9 @@ export default function StableHall() {
   return (
     <PageFrame>
       <PageHeader
-        eyebrow="INSTITUTIONAL_PROFILE"
+        eyebrow="Your Stable"
         title={player.stableName}
-        subtitle={`COMMANDER · ${player.name.toUpperCase()} · ESTABLISHED 410 AE`}
+        subtitle={`OWNER · ${player.name.toUpperCase()} · EST. 410 AE`}
         icon={Shield}
         actions={
           <div className="flex items-center gap-8">
@@ -68,7 +68,7 @@ export default function StableHall() {
           </section>
 
           <section>
-            <SectionDivider label="Institutional Creed" />
+            <SectionDivider label="Stable Creed" />
             <Surface
               variant="glass"
               className="mt-8 p-6 border-white/5 bg-white/[0.01] relative overflow-hidden"
@@ -87,14 +87,14 @@ export default function StableHall() {
         {/* Main: Roster & Staff */}
         <div className="lg:col-span-8 space-y-12">
           <section>
-            <SectionDivider label="Active Personnel Matrix" variant="primary" />
+            <SectionDivider label="Roster" variant="primary" />
             <div className="mt-8">
               <RosterWall />
             </div>
           </section>
 
           <section>
-            <SectionDivider label="Command Staff" variant="gold" />
+            <SectionDivider label="Trainers" variant="gold" />
             <div className="mt-8">
               <TrainerTable />
             </div>
@@ -105,7 +105,7 @@ export default function StableHall() {
               <SectionDivider label="Patronage Awards" className="flex-1" />
               {pendingTokens > 0 && (
                 <Badge className="bg-arena-gold/10 text-arena-gold border border-arena-gold/20 text-[9px] font-black rounded-none ml-4">
-                  {pendingTokens} TOKENS_PENDING
+                  {pendingTokens} pending
                 </Badge>
               )}
             </div>

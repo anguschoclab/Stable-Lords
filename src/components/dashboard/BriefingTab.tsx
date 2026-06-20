@@ -15,7 +15,7 @@ export function BriefingTab({ reports }: BriefingTabProps) {
       {reports.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 opacity-20">
           <Info className="h-8 w-8 mb-4 text-arena-gold" />
-          <p className="text-[10px] font-black uppercase tracking-[0.4em]">No Strategic Intel</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em]">No News</p>
         </div>
       ) : (
         <div className="py-6 space-y-8">
@@ -30,7 +30,7 @@ export function BriefingTab({ reports }: BriefingTabProps) {
                     <Zap className="h-3 w-3 text-arena-gold" />
                   </div>
                   <span className="text-[9px] font-mono font-black text-arena-gold opacity-60 uppercase tracking-widest">
-                    Wk {report.week} Strategic Update
+                    Week {report.week} Report
                   </span>
                 </div>
               </div>

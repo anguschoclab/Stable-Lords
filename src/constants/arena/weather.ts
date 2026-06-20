@@ -178,7 +178,7 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     bgClass: 'bg-arena-fame/10',
     borderClass: 'border-arena-fame/20',
     description:
-      'The sky dances with spectral light. Combatants feel a strange, invigorating calm.',
+      'The sky dances with spectral light. Fighters feel a strange, invigorating calm.',
   },
   'Aether Storm': {
     icon: Sparkles,
@@ -304,7 +304,7 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-arena-blood',
     bgClass: 'bg-arena-blood/10',
     borderClass: 'border-arena-blood/20',
-    description: 'A rippling heatwave blurs vision and exhausts combatants.',
+    description: 'A rippling heatwave blurs vision and exhausts fighters.',
   },
 };
 
@@ -312,5 +312,5 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
  *
  */
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {
-  return WEATHER_CONFIG[weather] ?? WEATHER_CONFIG.Clear!;
+  return WEATHER_CONFIG[weather as WeatherType] ?? WEATHER_CONFIG.Clear!;
 }

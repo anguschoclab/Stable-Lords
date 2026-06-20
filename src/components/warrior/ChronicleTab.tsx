@@ -76,7 +76,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
                   <Star className="h-3 w-3 text-primary" />
                 </ImperialRing>
                 <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                  Institutional Honors
+                  Honours
                 </span>
               </div>
               <div className="p-8 space-y-8">
@@ -105,7 +105,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
       </div>
 
       <div className="lg:col-span-8 space-y-8">
-        <SectionDivider label="Engagement Archive" />
+        <SectionDivider label="Fight History" />
         <Surface variant="glass" className="border-white/5 min-h-[700px] overflow-hidden">
           <div className="bg-white/[0.01] px-10 py-8 border-b border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-6">
@@ -115,7 +115,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
                   Service Record
                 </h2>
                 <p className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                  Chronicle // Historical Database Access
+                  Complete fight record
                 </p>
               </div>
             </div>

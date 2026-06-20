@@ -39,7 +39,7 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 flex items-center gap-2">
-          <Activity className="h-3 w-3" /> Bio-Rhythm
+          <Activity className="h-3 w-3" /> Combat Rhythm
         </div>
         {isRhythmDiscovered && (
           <span className="text-[8px] font-black uppercase text-arena-gold tracking-widest px-2 py-0.5 border border-arena-gold/20 bg-arena-gold/5">
@@ -76,7 +76,7 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
                 onClick={handleApplyRhythm}
                 className="h-8 px-4 border-arena-gold/20 hover:bg-arena-gold/10 text-arena-gold text-[9px] font-black uppercase rounded-none tracking-widest"
               >
-                Sync
+                Apply
               </Button>
             ))}
           {!isRhythmDiscovered && (

@@ -53,12 +53,12 @@ describe('ExecuteWeekButton', () => {
     });
   });
 
-  it('renders "EXECUTE WEEK 5" with correct week number', () => {
+  it('renders "ADVANCE WEEK 5" with correct week number', () => {
     render(<ExecuteWeekButton />);
-    expect(screen.getByText(/EXECUTE WEEK 5/i)).toBeTruthy();
+    expect(screen.getByText(/ADVANCE WEEK 5/i)).toBeTruthy();
   });
 
-  it('renders "EXECUTE DAY" label when isTournamentWeek=true', async () => {
+  it('renders "ADVANCE DAY" label when isTournamentWeek=true', async () => {
     const { useGameStore } = await import('@/state/useGameStore');
     vi.mocked(useGameStore).mockImplementation((selector?: any) => {
       const store = { week: 5, isTournamentWeek: true, day: 2, isSimulating: false };
@@ -66,7 +66,7 @@ describe('ExecuteWeekButton', () => {
       return store;
     });
     render(<ExecuteWeekButton />);
-    expect(screen.getByText(/EXECUTE DAY/i)).toBeTruthy();
+    expect(screen.getByText(/ADVANCE DAY/i)).toBeTruthy();
   });
 
   it('renders loading state when running=true', () => {

@@ -35,8 +35,8 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 
 const TABS: SubNavTab[] = [
-  { id: 'biometrics', label: 'BIOMETRICS', icon: <User className="h-4 w-4" /> },
-  { id: 'mission', label: 'MISSION CONTROL', icon: <Target className="h-4 w-4" /> },
+  { id: 'biometrics', label: 'PROFILE', icon: <User className="h-4 w-4" /> },
+  { id: 'mission', label: 'STRATEGY', icon: <Target className="h-4 w-4" /> },
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
 ]; /**
  * Warrior detail.

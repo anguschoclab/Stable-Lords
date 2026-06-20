@@ -310,7 +310,7 @@ export default function StableDetail() {
                       </div>
                     ) : (
                       <p className="text-[10px] text-muted-foreground/30 italic">
-                        No assets have been decommissioned to date.
+                        No warriors have been retired to date.
                       </p>
                     )}
                   </div>

@@ -25,8 +25,8 @@ export function ExecuteWeekButton() {
   const label = running
     ? 'Resolving Bouts…'
     : isTournamentWeek
-      ? `EXECUTE DAY ${day + 1}`
-      : `EXECUTE WEEK ${week}`;
+      ? `ADVANCE DAY ${day + 1}`
+      : `ADVANCE WEEK ${week}`;
 
   return (
     <Button

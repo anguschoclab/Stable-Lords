@@ -83,6 +83,8 @@ describe('Terminology compliance', () => {
       'No assets have been decommissioned',
       'disengage if',
       'CLASSIFIED',
+      'Hardware Authentication Required',
+      'target matching',
     ];
     const results: string[] = [];
     for (const term of bannedTerms) {

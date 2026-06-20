@@ -113,11 +113,10 @@ export function InsightManager() {
               <div className="py-20 text-center opacity-20">
                 <Target className="h-12 w-12 mx-auto mb-4" />
                 <p className="text-[10px] font-black uppercase tracking-[0.3em]">
-                  Hardware Authentication Required
+                  Select an Insight Token
                 </p>
                 <p className="text-[9px] lowercase mt-2 italic font-medium">
-                  Please select a physical insight token from your inventory to begin target
-                  matching.
+                  Choose a token from your vault, then pick a warrior to reveal their secret.
                 </p>
               </div>
             )}

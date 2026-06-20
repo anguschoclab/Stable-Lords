@@ -45,7 +45,7 @@ export default function SavedGamesSection({
     <div className="space-y-3">
       <div className="flex items-center gap-3">
         <span className="text-[9px] font-black uppercase tracking-[0.4em] text-accent/40 font-display">
-          IMPERIAL REGISTRY
+          SAVED GAMES
         </span>
         <div
           className="flex-1 h-px"

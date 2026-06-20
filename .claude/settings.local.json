@@ -104,7 +104,8 @@
       "Bash(awk '/export interface FighterState/,/^}/' src/engine/combat/resolution/types.ts)",
       "Bash(awk '/export function performAttackCheck/,/\\\\{/' src/engine/combat/resolution/exchangeHelpers/checks/attackCheck.ts)",
       "Bash(awk '/export interface ResolutionContext/,/^}/' src/engine/combat/resolution/types.ts)",
-      "Bash(awk 'NR>=575 && NR<=820' src/engine/combat/resolution/resolution.ts)"
+      "Bash(awk 'NR>=575 && NR<=820' src/engine/combat/resolution/resolution.ts)",
+      "Bash(awk '/interface TraitEffect/,/^}/' src/engine/traits.ts)"
     ]
   },
   "hooks": {

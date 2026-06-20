@@ -89,10 +89,10 @@ export default function TrainingPlanner() {
               </ImperialRing>
               <div className="space-y-2">
                 <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                  Zero Assets Selected
+                  No Warrior Selected
                 </p>
                 <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
-                  Select a combat asset from the registry to initialize planning.
+                  Select a warrior from the roster to begin training.
                 </p>
               </div>
             </Surface>

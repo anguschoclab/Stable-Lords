@@ -40,7 +40,7 @@ export function AutosimConsole({
         {!isSimulating && !result && (
           <div className="space-y-4">
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 leading-relaxed">
-              Execute multiple combat cycles autonomously. The simulation will disengage if
+              Run multiple weeks automatically. The simulation will stop if
               casualties or critical injuries are detected.
             </p>
             <div className="grid grid-cols-2 gap-3">

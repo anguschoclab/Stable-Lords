@@ -6,8 +6,8 @@
  */
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import type { Warrior, WarriorId } from '@/types/shared.types';
-import type { GameState, RivalStableData } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
+import type { GameState, RivalStableData, Warrior } from '@/types/state.types';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
 import { SeededRNGService } from '@/utils/random';
@@ -171,17 +171,20 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
       weather: 'Rainy',
       rivals: [makeRival('rival-1', [lunger]), makeRival('rival-2', [basher])],
       promoters: {
-        'prom-1': {
+        ['prom-1' as any]: {
           id: 'prom-1' as any,
           name: 'Test Promoter',
+          age: 40,
           tier: 'Regional',
-          personality: 'Pragmatic',
+          personality: 'Corporate',
           capacity: 5,
+          biases: [],
+          history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 }
         } as any,
       },
       realmRankings: {
-        [lunger.id]: { overallRank: 1, compositeScore: 100 },
-        [basher.id]: { overallRank: 1, compositeScore: 100 },
+        [lunger.id]: { overallRank: 1, classRank: 1, compositeScore: 100 },
+        [basher.id]: { overallRank: 1, classRank: 1, compositeScore: 100 },
       },
     });
 
@@ -205,17 +208,20 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
       weather: 'Clear',
       rivals: [makeRival('rival-1', [w1]), makeRival('rival-2', [w2])],
       promoters: {
-        'prom-1': {
+        ['prom-1' as any]: {
           id: 'prom-1' as any,
           name: 'Test Promoter',
+          age: 40,
           tier: 'Regional',
-          personality: 'Pragmatic',
+          personality: 'Corporate',
           capacity: 5,
+          biases: [],
+          history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 }
         } as any,
       },
       realmRankings: {
-        [w1.id]: { overallRank: 1, compositeScore: 100 },
-        [w2.id]: { overallRank: 1, compositeScore: 100 },
+        [w1.id]: { overallRank: 1, classRank: 1, compositeScore: 100 },
+        [w2.id]: { overallRank: 1, classRank: 1, compositeScore: 100 },
       },
     });
 

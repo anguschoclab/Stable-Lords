@@ -6,8 +6,8 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import type { Warrior, WarriorId } from '@/types/shared.types';
-import type { RivalStableData } from '@/types/state.types';
+import type { WarriorId } from '@/types/shared.types';
+import type { RivalStableData, Warrior } from '@/types/state.types';
 import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

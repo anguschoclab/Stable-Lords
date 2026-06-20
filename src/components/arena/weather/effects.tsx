@@ -874,7 +874,7 @@ export function RainbowEffect() {
               left: `${cryptoRandom() * 100}%`,
               top: `${cryptoRandom() * 60}%`,
               background: `hsl(${cryptoRandom() * 360}, 80%, 70%)`,
-              opacity: 0.4,
+              opacity: '0.4',
               '--tx': `${(cryptoRandom() - 0.5) * 40}px`,
               '--ty': `${(cryptoRandom() - 0.5) * 40}px`,
               animationDelay: `${cryptoRandom() * 4}s`,

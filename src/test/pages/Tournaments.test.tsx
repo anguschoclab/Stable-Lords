@@ -56,7 +56,7 @@ describe('Tournaments Page', () => {
     expect(getByText(/Seasonal Campaigns/)).toBeDefined();
 
     // Check Recruit Units button is present when tournament is null
-    const recruitBtn = getByRole('button', { name: /RECRUIT UNITS/i });
+    const recruitBtn = getByRole('button', { name: /RECRUIT WARRIORS/i });
     expect(recruitBtn).toBeDefined();
   });
 });

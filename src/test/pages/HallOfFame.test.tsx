@@ -216,9 +216,9 @@ describe('HallOfFame Component', () => {
     const reaperCard = (reaperElements[0] as HTMLElement).closest("[data-testid='inductee-card']");
     if (!reaperCard) throw new Error('Reaper card not found');
 
-    // Within the card, look for the 'Greatest Fight' section block
+    // Within the card, look for the 'Career Peak' section block
     const greatestFightSection = within(reaperCard as HTMLElement)
-      .getByText('CHRONICLE_PEAK')
+      .getByText('Career Peak')
       .closest('div')?.parentElement;
     expect(greatestFightSection).not.toBeUndefined();
 

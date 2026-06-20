@@ -23,18 +23,21 @@ function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
 }
 
 function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
+  const warriorIds = overrides.warriorIds ?? ['wa' as WarriorId];
+  const responses = overrides.responses ?? { 'wa': 'Pending' };
+
   return {
     id: 'offer-1' as BoutOfferId,
     promoterId: 'promoter-1' as PromoterId,
-    warriorIds: [] as WarriorId[],
+    warriorIds,
     boutWeek: 10,
     expirationWeek: 11,
     purse: 100,
     hype: 50,
     status: 'Proposed',
-    responses: {},
+    responses,
     ...overrides,
-  } as BoutOffer;
+  } as unknown as BoutOffer;
 }
 
 describe('useDigestSummary', () => {

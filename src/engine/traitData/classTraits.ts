@@ -14,9 +14,9 @@ export const CLASS_TRAITS: Record<string, TraitDef> = {
   // ── Bashing Attack ──
   heavy_swing: { id: 'heavy_swing', name: 'Heavy Swing', description: '+1 damage — every blow lands with weight.', effect: { dmgBonus: 1 }, weight: 0.7, tier: 'Common', sign: 'positive', styles: [S.BashingAttack] },
   relentless: { id: 'relentless', name: 'Relentless', description: '+1 attack in the late rounds — never lets up.', effect: { attModLate: 1 }, weight: 0.6, tier: 'Notable', sign: 'positive', styles: [S.BashingAttack] },
-  bonebreaker: { id: 'bonebreaker', name: 'Bonebreaker', description: '+1 damage, +1 late attack — wears the guard down.', effect: { dmgBonus: 1, attModLate: 1 }, weight: 0.6, tier: 'Notable', sign: 'positive', styles: [S.BashingAttack] },
-  juggernaut: { id: 'juggernaut', name: 'Juggernaut', description: '+1 damage, tireless — an unstoppable advance.', effect: { dmgBonus: 1, enduranceMult: 0.95 }, weight: 0.45, tier: 'Exceptional', sign: 'positive', styles: [S.BashingAttack] },
-  demolisher: { id: 'demolisher', name: 'Demolisher', description: '+2 damage, +1 late attack — shatters any defense.', effect: { dmgBonus: 2, attModLate: 1 }, weight: 0.3, tier: 'Signature', sign: 'positive', styles: [S.BashingAttack] },
+  bonebreaker: { id: 'bonebreaker', name: 'Bonebreaker', description: '+2 damage, +1 late attack — wears the guard down.', effect: { dmgBonus: 2, attModLate: 1 }, weight: 0.6, tier: 'Notable', sign: 'positive', styles: [S.BashingAttack] },
+  juggernaut: { id: 'juggernaut', name: 'Juggernaut', description: '+2 damage, tireless — an unstoppable advance.', effect: { dmgBonus: 2, enduranceMult: 0.95 }, weight: 0.45, tier: 'Exceptional', sign: 'positive', styles: [S.BashingAttack] },
+  demolisher: { id: 'demolisher', name: 'Demolisher', description: '+3 damage, +1 late attack — shatters any defense.', effect: { dmgBonus: 3, attModLate: 1 }, weight: 0.3, tier: 'Signature', sign: 'positive', styles: [S.BashingAttack] },
 
   // ── Lunging Attack ──
   quickdraw: { id: 'quickdraw', name: 'Quickdraw', description: '+1 initiative — first to the strike.', effect: { iniMod: 1 }, weight: 0.7, tier: 'Common', sign: 'positive', styles: [S.LungingAttack] },

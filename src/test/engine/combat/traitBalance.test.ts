@@ -281,3 +281,16 @@ describe('Combat Balance: Trait System', () => {
     });
   });
 });
+
+describe('Trained-loadout ceiling', () => {
+  it('a max class-trait loadout does not exceed a ~75% win rate vs an untraited peer', () => {
+    // Strongest realistic build: BA Signature + two BA class traits, on Bashing Attack.
+    const loadout = ['demolisher', 'juggernaut', 'bonebreaker'];
+    const { traited, drawCount } = runMirrorBouts(loadout, SAMPLE_SIZE, FightingStyle.BashingAttack);
+    const decidedBouts = SAMPLE_SIZE - drawCount;
+    const rate = decidedBouts > 0 ? traited.wins / decidedBouts : 0.5;
+    expect(rate, `max-loadout win rate ${(rate * 100).toFixed(1)}%`).toBeLessThanOrEqual(0.75);
+    // sanity: the loadout should actually help (not a no-op)
+    expect(rate, `max-loadout win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.55);
+  });
+});

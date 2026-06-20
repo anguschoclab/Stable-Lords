@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TRAITS } from '@/engine/traits';
+import { FightingStyle } from '@/types/shared.types';
 
 const VALID_TIERS = ['Common', 'Notable', 'Exceptional', 'Signature', 'Flaw'];
 
@@ -21,6 +22,26 @@ describe('trait invariants', () => {
     for (const [key, t] of Object.entries(TRAITS)) {
       expect(t.id, `key ${key}`).toBe(key);
       expect(t.name?.length ?? 0, `${t.id} name`).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe('class-trait coverage', () => {
+  const byStyle = (style: FightingStyle) =>
+    Object.values(TRAITS).filter((t) => t.styles?.includes(style));
+
+  it('every style has at least 5 class-specific traits', () => {
+    for (const style of Object.values(FightingStyle)) {
+      expect(byStyle(style).length, `${style} class traits`).toBeGreaterThanOrEqual(5);
+    }
+  });
+
+  it('class traits are styles-restricted and positive', () => {
+    for (const t of Object.values(TRAITS)) {
+      if (t.styles && t.styles.length > 0) {
+        expect(t.sign, `${t.id}`).toBe('positive');
+        expect(t.tier, `${t.id}`).not.toBe('Flaw');
+      }
     }
   });
 });

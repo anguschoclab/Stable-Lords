@@ -1,153 +1,362 @@
 [
   {
-    "path": [
-      "pbp",
-      "attacks",
-      "slashing"
-    ],
+    "path": "pbp.attacks.piercing",
+    "kept": "{{attacker}} lunges wielding {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} thrusts with {{possessive}} {{weapon}}!",
+    "similarity": 0.8411214953271028
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "kept": "{{attacker}} makes a piercing lunge with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} makes a brilliant twisting thrust with {{possessive}} {{weapon}}!",
+    "similarity": 0.8137931034482758
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "kept": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} deep into {{defender}}.",
+    "removed": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} straight at the heart!",
+    "similarity": 0.8020304568527918
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "kept": "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!",
+    "removed": "{{attacker}} extends {{possessive}} {{weapon}} in a lightning thrust!",
+    "similarity": 0.8235294117647058
+  },
+  {
+    "path": "pbp.attacks.slashing",
     "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
-    "removed": "{{attacker}} slashes with {{possessive}} {{weapon}}!",
-    "similarity": 0.9122807017543859
+    "removed": "{{attacker}} makes a downward cut with {{possessive}} {{weapon}}!",
+    "similarity": 0.8031496062992126
   },
   {
-    "path": [
-      "pbp",
-      "attacks",
-      "slashing"
-    ],
-    "kept": "{{attacker}} sweeps {{possessive}} {{weapon}} in a deadly horizontal arc!",
-    "removed": "{{attacker}} sweeps {{possessive}} {{weapon}} in a brutal horizontal arc!",
-    "similarity": 0.9452054794520548
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} slashes an arcing attack with {{possessive}} {{weapon}}!",
+    "similarity": 0.8396946564885496
   },
   {
-    "path": [
-      "pbp",
-      "attacks",
-      "bashing"
-    ],
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} shifts {{possessive}} weight and cuts low with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} drops {{possessive}} weight into a crushing hack with {{possessive}} {{weapon}}!",
+    "similarity": 0.8379888268156425
+  },
+  {
+    "path": "pbp.attacks.bashing",
     "kept": "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!",
-    "removed": "{{attacker}} attempts to smash {{defender}} with {{possessive}} {{weapon}}!",
-    "similarity": 0.8531468531468531
+    "removed": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
+    "similarity": 0.8253968253968254
   },
   {
-    "path": [
-      "pbp",
-      "epithets",
-      "race"
-    ],
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!",
+    "removed": "{{attacker}} brings {{possessive}} {{weapon}} crashing down like a meteor!",
+    "similarity": 0.8194444444444444
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} swings heavily with {{possessive}} {{weapon}}!",
+    "similarity": 0.8333333333333334
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} strikes using {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} delivers a crushing blow using {{possessive}} {{weapon}}!",
+    "similarity": 0.7967479674796748
+  },
+  {
+    "path": "pbp.hit_locations.right arm",
+    "kept": "RIGHT ARM",
+    "removed": "RIGHT FOREARM",
+    "similarity": 0.8181818181818182
+  },
+  {
+    "path": "pbp.hit_locations.left arm",
+    "kept": "LEFT ARM",
+    "removed": "LEFT FOREARM",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "kept": "RIGHT LEG",
+    "removed": "RIGHT ANKLE",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "kept": "RIGHT THIGH",
+    "removed": "RIGHT HIP",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "kept": "LEFT SHIN",
+    "removed": "LEFT HIP",
+    "similarity": 0.8235294117647058
+  },
+  {
+    "path": "pbp.status_changes.severe",
+    "kept": "{{name}} is severely hurt!!",
+    "removed": "{{name}} is severely wounded!!",
+    "similarity": 0.8421052631578947
+  },
+  {
+    "path": "pbp.status_changes.desperate",
+    "kept": "{{name}} is becoming frantic!!!",
+    "removed": "{{name}} is becoming frantically careless!!!",
+    "similarity": 0.8266666666666667
+  },
+  {
+    "path": "pbp.status_changes.panic",
+    "kept": "{{name}} is becoming frantic!!!",
+    "removed": "{{name}} is becoming frantically careless!!!",
+    "similarity": 0.8266666666666667
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "kept": "{{defender}} ducks left out of harm's way.",
+    "removed": "{{defender}} dodges right, out of harm's way.",
+    "similarity": 0.8275862068965517
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "kept": "{{defender}} ducks left out of harm's way.",
+    "removed": "{{defender}} pivots to the left out of harm's way.",
+    "similarity": 0.8260869565217391
+  },
+  {
+    "path": "pbp.defenses.parry.success",
+    "kept": "Sparks fly as {{defender}} cleanly deflects {{attacker}}'s powerful swing.",
+    "removed": "Sparks fly as {{defender}} intercepts {{attacker}}'s brutal swing.",
+    "similarity": 0.8142857142857143
+  },
+  {
+    "path": "pbp.defenses.parry_break",
+    "kept": "{{attacker}} batters aside {{defender}}'s defensive guard.",
+    "removed": "{{attacker}} shatters {{defender}}'s defensive stance.",
+    "similarity": 0.8392857142857143
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "kept": "{{name}} scrambles back to {{possessive}} feet.",
+    "removed": "{{name}} scrambles back to his feet!",
+    "similarity": 0.7951807228915663
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "kept": "The {{origin}}",
+    "removed": "The proud {{origin}}",
+    "similarity": 0.8235294117647058
+  },
+  {
+    "path": "pbp.epithets.race",
+    "kept": "Our lofty {{race}}",
+    "removed": "Our {{race}}",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.epithets.race",
     "kept": "The {{race}}",
-    "removed": "This {{race}}",
-    "similarity": 0.88
+    "removed": "The proud {{race}}",
+    "similarity": 0.8
   },
   {
-    "path": [
-      "gazette",
-      "fights",
-      "KO"
-    ],
-    "kept": "{{loser}} crumbled like a puppet with cut strings after enduring {{winner}}'s {{adj}} assault.",
-    "removed": "{{loser}} crumpled like a puppet with cut strings after {{winner}}'s {{adj}} blow.",
-    "similarity": 0.8863636363636364
+    "path": "pbp.epithets.style",
+    "kept": "the cunning master",
+    "removed": "the cunning trickster",
+    "similarity": 0.8205128205128205
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Balis",
-    "removed": "Balius",
-    "similarity": 0.9090909090909091
+    "path": "pbp.pacing.tempo.movement",
+    "kept": "{{name}} sidesteps, trying to throw {{possessive}} opponent off balance.",
+    "removed": "{{name}} twists to the side, throwing {{possessive}} opponent off balance.",
+    "similarity": 0.8082191780821918
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Nymius",
-    "removed": "Nymus",
-    "similarity": 0.9090909090909091
+    "path": "pbp.context.style_matchups.aimed_blow_vs_bashing",
+    "kept": "Precision meets power in this fascinating clash!",
+    "removed": "Precision meets raw power in this clash.",
+    "similarity": 0.7954545454545454
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Fenic",
-    "removed": "Fenric",
-    "similarity": 0.9090909090909091
+    "path": "pbp.attacks.piercing",
+    "kept": "{{attacker}} lunges wielding {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} thrusts with {{possessive}} {{weapon}}!",
+    "similarity": 0.8411214953271028
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Fenis",
-    "removed": "Fenius",
-    "similarity": 0.9090909090909091
+    "path": "pbp.attacks.piercing",
+    "kept": "{{attacker}} makes a piercing lunge with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} makes a brilliant twisting thrust with {{possessive}} {{weapon}}!",
+    "similarity": 0.8137931034482758
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Ithon",
-    "removed": "Ithwon",
-    "similarity": 0.9090909090909091
+    "path": "pbp.attacks.piercing",
+    "kept": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} deep into {{defender}}.",
+    "removed": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} straight at the heart!",
+    "similarity": 0.8020304568527918
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Nyma",
-    "removed": "Nymia",
-    "similarity": 0.8888888888888888
+    "path": "pbp.attacks.piercing",
+    "kept": "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!",
+    "removed": "{{attacker}} extends {{possessive}} {{weapon}} in a lightning thrust!",
+    "similarity": 0.8235294117647058
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Othius",
-    "removed": "Othus",
-    "similarity": 0.9090909090909091
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} makes a downward cut with {{possessive}} {{weapon}}!",
+    "similarity": 0.8031496062992126
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Aelor",
-    "removed": "Aelkor",
-    "similarity": 0.9090909090909091
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} slashes an arcing attack with {{possessive}} {{weapon}}!",
+    "similarity": 0.8396946564885496
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Svenmon",
-    "removed": "Svenoun",
-    "similarity": 0.8571428571428571
+    "path": "pbp.attacks.slashing",
+    "kept": "{{attacker}} shifts {{possessive}} weight and cuts low with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} drops {{possessive}} weight into a crushing hack with {{possessive}} {{weapon}}!",
+    "similarity": 0.8379888268156425
   },
   {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Gawar",
-    "removed": "Gawgar",
-    "similarity": 0.9090909090909091
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
+    "similarity": 0.8253968253968254
   },
   {
-    "path": [
-      "pbp",
-      "attacks",
-      "slashing",
-      "{{attacker}} sweeps {{possessive}} {{weapon}} in a deadly horizontal arc!"
-    ],
-    "kept": "{{attacker}} sweeps {{possessive}} {{weapon}} in a brutal horizontal arc!",
-    "removed": "{{attacker}} sweeps {{possessive}} {{weapon}} in a deadly horizontal arc!",
-    "similarity": 0.95
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!",
+    "removed": "{{attacker}} brings {{possessive}} {{weapon}} crashing down like a meteor!",
+    "similarity": 0.8194444444444444
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} swings heavily with {{possessive}} {{weapon}}!",
+    "similarity": 0.8333333333333334
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} strikes using {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} delivers a crushing blow using {{possessive}} {{weapon}}!",
+    "similarity": 0.7967479674796748
+  },
+  {
+    "path": "pbp.hit_locations.right arm",
+    "kept": "RIGHT ARM",
+    "removed": "RIGHT FOREARM",
+    "similarity": 0.8181818181818182
+  },
+  {
+    "path": "pbp.hit_locations.left arm",
+    "kept": "LEFT ARM",
+    "removed": "LEFT FOREARM",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "kept": "RIGHT LEG",
+    "removed": "RIGHT ANKLE",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "kept": "RIGHT THIGH",
+    "removed": "RIGHT HIP",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "kept": "LEFT SHIN",
+    "removed": "LEFT HIP",
+    "similarity": 0.8235294117647058
+  },
+  {
+    "path": "pbp.status_changes.severe",
+    "kept": "{{name}} is severely hurt!!",
+    "removed": "{{name}} is severely wounded!!",
+    "similarity": 0.8421052631578947
+  },
+  {
+    "path": "pbp.status_changes.desperate",
+    "kept": "{{name}} is becoming frantic!!!",
+    "removed": "{{name}} is becoming frantically careless!!!",
+    "similarity": 0.8266666666666667
+  },
+  {
+    "path": "pbp.status_changes.panic",
+    "kept": "{{name}} is becoming frantic!!!",
+    "removed": "{{name}} is becoming frantically careless!!!",
+    "similarity": 0.8266666666666667
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "kept": "{{defender}} ducks left out of harm's way.",
+    "removed": "{{defender}} dodges right, out of harm's way.",
+    "similarity": 0.8275862068965517
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "kept": "{{defender}} ducks left out of harm's way.",
+    "removed": "{{defender}} pivots to the left out of harm's way.",
+    "similarity": 0.8260869565217391
+  },
+  {
+    "path": "pbp.defenses.parry.success",
+    "kept": "Sparks fly as {{defender}} cleanly deflects {{attacker}}'s powerful swing.",
+    "removed": "Sparks fly as {{defender}} intercepts {{attacker}}'s brutal swing.",
+    "similarity": 0.8142857142857143
+  },
+  {
+    "path": "pbp.defenses.parry_break",
+    "kept": "{{attacker}} batters aside {{defender}}'s defensive guard.",
+    "removed": "{{attacker}} shatters {{defender}}'s defensive stance.",
+    "similarity": 0.8392857142857143
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "kept": "{{name}} scrambles back to {{possessive}} feet.",
+    "removed": "{{name}} scrambles back to his feet!",
+    "similarity": 0.7951807228915663
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "kept": "The {{origin}}",
+    "removed": "The proud {{origin}}",
+    "similarity": 0.8235294117647058
+  },
+  {
+    "path": "pbp.epithets.race",
+    "kept": "Our lofty {{race}}",
+    "removed": "Our {{race}}",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.epithets.race",
+    "kept": "The {{race}}",
+    "removed": "The proud {{race}}",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.epithets.style",
+    "kept": "the cunning master",
+    "removed": "the cunning trickster",
+    "similarity": 0.8205128205128205
+  },
+  {
+    "path": "pbp.pacing.tempo.movement",
+    "kept": "{{name}} sidesteps, trying to throw {{possessive}} opponent off balance.",
+    "removed": "{{name}} twists to the side, throwing {{possessive}} opponent off balance.",
+    "similarity": 0.8082191780821918
+  },
+  {
+    "path": "pbp.context.style_matchups.aimed_blow_vs_bashing",
+    "kept": "Precision meets power in this fascinating clash!",
+    "removed": "Precision meets raw power in this clash.",
+    "similarity": 0.7954545454545454
   }
 ]

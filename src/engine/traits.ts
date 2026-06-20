@@ -471,6 +471,16 @@ import { CLASS_TRAITS } from '@/engine/traitData/classTraits';
 Object.assign(TRAITS, NEW_FLAWS);
 Object.assign(TRAITS, CLASS_TRAITS);
 
+/** Class traits available to a given fighting style. */
+export function traitsForStyle(style: FightingStyle): TraitDef[] {
+  return Object.values(TRAITS).filter((t) => t.styles?.includes(style));
+}
+
+/** All traits of a given tier. */
+export function traitsByTier(tier: TraitTier): TraitDef[] {
+  return Object.values(TRAITS).filter((t) => t.tier === tier);
+}
+
 export type TraitId = keyof typeof TRAITS;
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 

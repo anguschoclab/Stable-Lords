@@ -22,7 +22,8 @@ interface RivalStableListProps {
  * @param - { rivals, selected rival id, on select rival }.
  */
 export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: RivalStableListProps) {
-  const ownerGrudges = useGameStore(useShallow((s) => s.ownerGrudges ?? []));
+  const ownerGrudgesStore = useGameStore((s) => s.ownerGrudges);
+  const ownerGrudges = ownerGrudgesStore ?? [];
 
   return (
     <div className="space-y-4">

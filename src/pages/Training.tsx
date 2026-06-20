@@ -23,7 +23,8 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { Surface } from '@/components/ui/Surface';
 import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { PageFrame } from '@/components/ui/PageFrame';
-import { SectionDivider } from '@/components/ui/SectionDivider'; /**
+import { SectionDivider } from '@/components/ui/SectionDivider';
+import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining'; /**
  * Training.
  */
 
@@ -84,6 +85,20 @@ export default function Training() {
     });
     toast.success(`${name ?? 'Warrior'} assigned to active recovery`);
   };
+
+  const handleAssignTraitTraining = (warriorId: WarriorId, trainerId: string) => {
+    setState((s: GameStore) => {
+      s.trainingAssignments = [
+        ...(s.trainingAssignments ?? []).filter(
+          (a: TrainingAssignment) => a.warriorId !== warriorId
+        ),
+        { warriorId, type: 'trait' as const, trainerId, weeksRemaining: TRAIT_TRAIN_WEEKS },
+      ];
+    });
+    toast.success('Trait training assigned — outcome in a few weeks.');
+  };
+  // Exposed for the System 7 trait-training picker UI.
+  void handleAssignTraitTraining;
 
   const handleClear = (warriorId: WarriorId) => {
     setState((s: GameStore) => {

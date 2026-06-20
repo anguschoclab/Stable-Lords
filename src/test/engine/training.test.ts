@@ -551,6 +551,7 @@ describe('Training System', () => {
         derivedStats: warrior.derivedStats,
         fatigue: 10,
         injuries: [],
+        traits: warrior.traits,
       });
     });
   });

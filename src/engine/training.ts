@@ -12,6 +12,8 @@ import {
   type TrainingResult,
 } from './training/trainingGains';
 import { getHealingTrainerBonus } from './training/coachLogic';
+import { rollTraitTraining } from './training/trainingGains/traitTraining';
+import { TRAITS } from '@/engine/traits';
 
 // ─── Exports for backward compatibility ───
 export { computeGainChance };
@@ -196,6 +198,30 @@ export function computeTrainingImpact(
       continue;
     }
 
+    // ── Trait Training (multi-week) ──
+    if (assignment.type === 'trait') {
+      const remaining = (assignment.weeksRemaining ?? 1) - 1;
+      if (remaining > 0) continue; // still training; survives finalizeState
+      const trainer = (state.trainers ?? []).find((t) => t.id === assignment.trainerId);
+      if (!trainer) continue;
+      const roll = rollTraitTraining(warrior, trainer, rng);
+      if (roll.outcome !== 'none' && roll.traitId) {
+        const updated = { ...warrior, traits: [...(warrior.traits ?? []), roll.traitId] };
+        currentRoster.set(warrior.id, updated);
+        results.push({
+          warriorId: warrior.id,
+          type: 'gain',
+          message:
+            roll.outcome === 'success'
+              ? `${warrior.name} learned a new trait: ${TRAITS[roll.traitId]?.name}.`
+              : `${warrior.name}'s training went wrong — gained a flaw: ${TRAITS[roll.traitId]?.name}.`,
+        });
+      } else {
+        results.push({ warriorId: warrior.id, type: 'gain', message: `${warrior.name}'s trait training yielded nothing.` });
+      }
+      continue;
+    }
+
     // ── Attribute Training ──
     const outcome = processAttributeAssignment(
       assignment,
@@ -246,6 +272,7 @@ export function trainingImpactToStateImpact(
         derivedStats: w.derivedStats,
         fatigue: w.fatigue ?? 0,
         injuries: w.injuries,
+        traits: w.traits,
       };
 
       rosterUpdates.set(w.id, delta);
@@ -271,7 +298,9 @@ export function trainingImpactToStateImpact(
               },
             ]
           : [],
-      trainingAssignments: [],
+      trainingAssignments: (state.trainingAssignments ?? []).filter(
+        (a) => a.type === 'trait'
+      ),
     },
     seasonalGrowth,
     results: impact.results,

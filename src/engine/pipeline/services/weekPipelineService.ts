@@ -164,7 +164,9 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
   state.week = ctx.nextWeek;
   state.year = ctx.nextYear;
   state.day = 0;
-  state.trainingAssignments = [];
+  state.trainingAssignments = (state.trainingAssignments ?? [])
+    .filter((a) => a.type === 'trait' && (a.weeksRemaining ?? 0) > 1)
+    .map((a) => ({ ...a, weeksRemaining: (a.weeksRemaining ?? 0) - 1 }));
 
   // 🧹 Bout offer cleanup — single source of truth for offer pruning.
   if (state.boutOffers) {

@@ -19,6 +19,8 @@ export interface ActiveRosterItem {
   career: CareerRecord;
   injuries?: any[];
   flair?: any[];
+  traits?: string[];
+  age?: number;
 }
 
 /**
@@ -42,6 +44,8 @@ export function useActiveRoster(): ActiveRosterItem[] {
           career: w.career,
           injuries: w.injuries,
           flair: w.flair,
+          traits: w.traits,
+          age: w.age,
         });
       }
     }

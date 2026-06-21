@@ -35,8 +35,8 @@ import {
   BIRTH_BLANK_CHANCE,
   BIRTH_FLAW_CHANCE,
 } from '@/constants/combat/combat'; /**
-                                     * Defines the shape of trait effect.
-                                     */
+ * Defines the shape of trait effect.
+ */
 
 /**
  * Defines the shape of trait effect.
@@ -70,8 +70,8 @@ export interface TraitEffect {
   fightPlanMod?: Partial<import('@/types/shared.types').FightPlan>;
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;
 } /**
-   * Defines the shape of trait def.
-   */
+ * Defines the shape of trait def.
+ */
 
 /**
  * Defines the shape of trait def.
@@ -95,8 +95,8 @@ export interface TraitDef {
    *  can roll/train it, and it only appears in matching trainers' pools. */
   styles?: FightingStyle[];
 } /**
-   * Traits.
-   */
+ * Traits.
+ */
 
 /**
  * Traits.
@@ -590,8 +590,8 @@ export function getStaticTraitMods(warrior?: Warrior): {
   }
   return acc;
 } /**
-   * Defines the shape of dynamic trait context.
-   */
+ * Defines the shape of dynamic trait context.
+ */
 
 /**
  * Defines the shape of dynamic trait context.

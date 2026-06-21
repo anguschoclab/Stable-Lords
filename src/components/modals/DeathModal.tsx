@@ -24,11 +24,10 @@ export function DeathModal() {
   const acknowledgeDeath = (id: WarriorId) => acknowledgeDeathAction(id);
 
   const safeDeaths = unacknowledgedDeaths ?? [];
-  const safeGraveyard = graveyard ?? [];
   const currentDeathId = safeDeaths[0];
   const warrior = useMemo(
-    () => safeGraveyard.find((w) => w.id === currentDeathId),
-    [safeGraveyard, currentDeathId]
+    () => (graveyard ?? []).find((w) => w.id === currentDeathId),
+    [graveyard, currentDeathId]
   );
 
   if (!warrior) return null;

@@ -99,6 +99,7 @@ interface UseNavAlertsOptions {
 /**
  *
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useNavAlerts(options: UseNavAlertsOptions = {}) {
   const { trackWeek = false } = options;
   const { week, isTournamentWeek, bookmarkCount } = useGameStore(

@@ -104,7 +104,7 @@ export function processContractPayouts(
   impacts.push({ promoters: updatedPromoters });
 
   // Close the contract
-  const { [contract.id]: _removed, ...remainingBoutOffers } = state.boutOffers; // eslint-disable-line @typescript-eslint/no-unused-vars
+  const { [contract.id]: _removed, ...remainingBoutOffers } = state.boutOffers;
   impacts.push({ boutOffers: remainingBoutOffers });
 
   return impacts;

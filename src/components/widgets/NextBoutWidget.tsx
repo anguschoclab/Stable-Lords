@@ -13,8 +13,8 @@ import {
   resolveStableName,
   findWarrior,
 } from '@/engine/core/historyResolver'; /**
-                                         * Next bout widget.
-                                         */
+ * Next bout widget.
+ */
 
 /**
  * Next bout widget.

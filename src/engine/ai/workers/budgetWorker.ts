@@ -5,8 +5,8 @@ import type { RivalStableData, AIEvent } from '@/types/state.types';
  * Implements "Risk-Tiered Execution" and "Blocking Budgets".
  */
 export type RiskLevel = 'Safe' | 'Speculative' | 'Reckless'; /**
-                                                              * Defines the shape of budget report.
-                                                              */
+ * Defines the shape of budget report.
+ */
 
 /**
  * Defines the shape of budget report.
@@ -16,8 +16,8 @@ export interface BudgetReport {
   riskTier: AIEvent['riskTier'];
   adjustedTreasury: number;
 } /**
-   * Check budget.
-   */
+ * Check budget.
+ */
 
 /**
  * Check budget.

@@ -6,16 +6,16 @@ import { Sparkles, Heart } from 'lucide-react';
 interface Props {
   warrior: Warrior;
 } /**
-   * Warrior dossier soul bond.
-   * @param - { warrior }.
-   */
+ * Warrior dossier soul bond.
+ * @param - { warrior }.
+ */
 
 /**
  * Warrior dossier soul bond.
  * @param - { warrior }.
  */
 export default function WarriorDossierSoulBond({ warrior }: Props) {
-  if (!(warrior as any).soulBond) return null;
+  if (!(warrior as Warrior & { soulBond?: unknown }).soulBond) return null;
 
   return (
     <div className="space-y-8">
@@ -31,7 +31,8 @@ export default function WarriorDossierSoulBond({ warrior }: Props) {
         <div className="flex items-center gap-4 mb-6">
           <Heart className="h-5 w-5 text-primary animate-pulse" />
           <h3 className="text-lg font-display font-black uppercase tracking-tight text-foreground">
-            Bonded with {(warrior as any).soulBond.partnerName}
+            Bonded with{' '}
+            {(warrior as Warrior & { soulBond?: { partnerName: string } }).soulBond?.partnerName}
           </h3>
         </div>
 

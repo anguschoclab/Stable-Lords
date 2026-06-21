@@ -94,7 +94,7 @@ export function useRecruit() {
         toast.success(`${w.name} has joined your stable! (-${totalCost}g)`);
       });
     },
-    [MAX_ROSTER, rosterFull, setState, deductFunds]
+    [rosterFull, setState, deductFunds]
   );
 
   const handleScout = useCallback(
@@ -152,7 +152,7 @@ export function useRecruit() {
         setTimeout(() => navigate({ to: `/warrior/${id}` }), 0);
       });
     },
-    [setState, navigate, MAX_ROSTER, rosterFull, deductFunds]
+    [setState, navigate, rosterFull, deductFunds]
   );
 
   const filteredPool = useMemo(() => {

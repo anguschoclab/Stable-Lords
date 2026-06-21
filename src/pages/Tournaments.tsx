@@ -57,8 +57,8 @@ function getFatigueLabel(fatigue: number | undefined): { label: string; color: s
   if (f < FATIGUE_ELEVATED) return { label: 'Tired', color: 'text-arena-gold' };
   return { label: 'Exhausted', color: 'text-destructive' };
 } /**
-   * Tournaments.
-   */
+ * Tournaments.
+ */
 
 /**
  * Tournaments.

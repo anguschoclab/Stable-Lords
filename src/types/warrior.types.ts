@@ -19,8 +19,8 @@ import {
 import { WARRIOR_STATUSES, INJURY_SEVERITIES, INJURY_LOCATIONS } from './enumSources';
 import type { AnnualAward } from './state.types';
 import type { EquipmentLoadout } from '@/data/equipment'; /**
-                                                           * Defines the shape of tag badge props.
-                                                           */
+ * Defines the shape of tag badge props.
+ */
 
 // ─── UI Prop Types ──────────────────────────────────────────────────────────
 
@@ -32,8 +32,8 @@ export interface TagBadgeProps {
   type: 'flair' | 'title' | 'injury';
   className?: string;
 } /**
-   * Defines the shape of stat badge props.
-   */
+ * Defines the shape of stat badge props.
+ */
 
 /**
  * Defines the shape of stat badge props.
@@ -45,8 +45,8 @@ export interface StatBadgeProps {
   showFullName?: boolean;
   className?: string;
 } /**
-   * Defines the shape of warrior name tag props.
-   */
+ * Defines the shape of warrior name tag props.
+ */
 
 /**
  * Defines the shape of warrior name tag props.
@@ -59,8 +59,8 @@ export interface WarriorNameTagProps {
   useCrown?: boolean;
   isDead?: boolean;
 } /**
-   * Defines the shape of career record.
-   */
+ * Defines the shape of career record.
+ */
 
 // ─── Warrior ────────────────────────────────────────────────────────────────
 
@@ -80,8 +80,8 @@ export interface CareerRecord {
   /** Per-arena cumulative breakdown. Key = arenaId. */
   byArena?: Record<string, { wins: number; losses: number; kills: number }>;
 } /**
-   * Warrior status type.
-   */
+ * Warrior status type.
+ */
 
 /**
  * Warrior status type.
@@ -102,8 +102,8 @@ export const INJURY_SEVERITY_WEEKS: Record<InjurySeverity, { min: number; max: n
 
 /** Body locations that can sustain injuries */
 export type InjuryLocation = (typeof INJURY_LOCATIONS)[number]; /**
-                                                                 * Defines the shape of injury data.
-                                                                 */
+ * Defines the shape of injury data.
+ */
 
 /**
  * Defines the shape of injury data.
@@ -118,15 +118,15 @@ export interface InjuryData {
   penalties: Partial<Record<keyof Attributes | keyof BaseSkills, number>>;
   permanent?: boolean;
 } /**
-   * Attribute potential type.
-   */
+ * Attribute potential type.
+ */
 
 /**
  * Attribute potential type.
  */
 export type AttributePotential = Record<keyof Attributes, number>; /**
-                                                                    * Defines the shape of warrior favorites.
-                                                                    */
+ * Defines the shape of warrior favorites.
+ */
 
 /**
  * Defines the shape of warrior favorites.
@@ -141,8 +141,8 @@ export interface WarriorFavorites {
     rhythmHints: number;
   };
 } /**
-   * Defines the shape of warrior lineage.
-   */
+ * Defines the shape of warrior lineage.
+ */
 
 /**
  * Defines the shape of warrior lineage.
@@ -154,8 +154,8 @@ export interface WarriorLineage {
   pedigree: 'Commoner' | 'Second Generation' | 'Legacy' | 'Noble Blood' | 'Exiled Legend';
   mentorName?: string;
 } /**
-   * Defines the shape of warrior.
-   */
+ * Defines the shape of warrior.
+ */
 
 /**
  * Defines the shape of warrior.

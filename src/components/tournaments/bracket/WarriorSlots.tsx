@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { resolveWarriorName } from '@/engine/core/historyResolver';
 import type { TournamentBout } from '@/types/game';
 import { isBronzeMatch, isChampionshipFinal } from '@/engine/matchmaking/tournamentHelpers';
+import type { GameState } from '@/types/state.types';
 
 interface WarriorSlotsProps {
   bout: TournamentBout;
@@ -11,7 +12,7 @@ interface WarriorSlotsProps {
   isAChosen: boolean;
   isDChosen: boolean;
   isBye: boolean;
-  gameState: any;
+  gameState: GameState;
   onToggleExpand: (key: string | null) => void;
   isExpanded: boolean;
 }

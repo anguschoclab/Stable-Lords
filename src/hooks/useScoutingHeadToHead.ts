@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { ArenaHistory } from '@/engine/history/arenaHistory';
 import type { Warrior } from '@/types/game';
+import type { FightSummary } from '@/types/combat.types';
 
 interface HeadToHeadDataProps {
   rosterA: Warrior[];
@@ -8,7 +9,7 @@ interface HeadToHeadDataProps {
 }
 
 interface HeadToHeadData {
-  h2hReversed: any[];
+  h2hReversed: FightSummary[];
   winsA: number;
   winsB: number;
   draws: number;

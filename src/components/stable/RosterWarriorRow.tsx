@@ -13,7 +13,7 @@ import {
   FAME_STAR_THRESHOLD,
 } from '@/constants/training';
 import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type FightingStyle } from '@/types/game';
-import type { AttributePotential, CareerRecord } from '@/types/warrior.types';
+import type { AttributePotential, CareerRecord, InjuryData, Warrior } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
 import { TraitBadge } from '@/components/warrior/traits/TraitBadge';
 
@@ -27,8 +27,8 @@ interface RosterWarriorRowProps {
     potential?: AttributePotential | null;
     attributes: Attributes;
     career: CareerRecord;
-    injuries?: any[];
-    flair?: any[];
+    injuries?: InjuryData[];
+    flair?: string[];
     traits?: string[];
     age?: number;
   };
@@ -160,7 +160,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                     })()}
                   {warrior.traits &&
                     (() => {
-                      const liab = computeWarriorLiability(warrior as any);
+                      const liab = computeWarriorLiability(warrior as Warrior);
                       if (liab.recommendation === 'Keep') return null;
                       const label =
                         liab.recommendation === 'Release' ? 'Consider releasing' : 'Watch';

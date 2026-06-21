@@ -7,9 +7,9 @@ import narrativeContent from '@/data/narrativeContent.json';
 interface GazetteStepProps {
   gazette: NewsletterItem[];
 } /**
-   * Gazette step.
-   * @param - { gazette }.
-   */
+ * Gazette step.
+ * @param - { gazette }.
+ */
 
 /**
  * Gazette step.

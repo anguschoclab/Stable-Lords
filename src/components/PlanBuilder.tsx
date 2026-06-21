@@ -23,9 +23,9 @@ interface PlanBuilderProps {
   warrior?: Warrior;
   rivalStyle?: FightingStyle;
 } /**
-   * Plan builder.
-   * @param - { plan, on plan change, warrior, rival style }.
-   */
+ * Plan builder.
+ * @param - { plan, on plan change, warrior, rival style }.
+ */
 
 /**
  * Plan builder.

@@ -58,7 +58,7 @@ export default function Trainers() {
 
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 
-  const allTrainers = trainers ?? [];
+  const allTrainers = useMemo(() => trainers ?? [], [trainers]);
   const currentTrainers = useMemo(() => {
     if (!showBookmarkedOnly) return allTrainers;
     return allTrainers.filter((t) => isBookmarked('trainer', t.id));

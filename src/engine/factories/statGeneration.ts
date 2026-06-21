@@ -3,8 +3,8 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { pick, shuffled } from '@/utils/random';
 
 type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank'; /**
-                                                           * Style_archetype.
-                                                           */
+ * Style_archetype.
+ */
 
 /**
  * Style_archetype.

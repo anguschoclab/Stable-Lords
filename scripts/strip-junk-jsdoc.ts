@@ -41,12 +41,6 @@ function isJunkReturns(line: string): boolean {
   return /^\s*\*\s*@returns\s+The result\.\s*$/.test(line);
 }
 
-/** A JSDoc content line that carries no information. */
-function isEmptyDocLine(line: string): boolean {
-  const t = line.trim();
-  return t === '*' || t === '/**' || t === '*/' || t === '/** */' || t === '';
-}
-
 let filesChanged = 0;
 let linesRemoved = 0;
 let blocksRemoved = 0;

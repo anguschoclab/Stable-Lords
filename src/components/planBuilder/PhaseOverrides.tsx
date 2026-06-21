@@ -9,9 +9,9 @@ interface PhaseOverridesProps {
   plan: FightPlan;
   onPlanChange: (plan: FightPlan) => void;
 } /**
-   * Phase overrides.
-   * @param - { plan, on plan change }.
-   */
+ * Phase overrides.
+ * @param - { plan, on plan change }.
+ */
 
 /**
  * Phase overrides.

@@ -9,8 +9,8 @@ import {
   type WarriorId,
   type LedgerEntryId,
 } from '@/types/shared.types'; /**
-                                * Defines the shape of economy slice.
-                                */
+ * Defines the shape of economy slice.
+ */
 
 /**
  * Defines the shape of economy slice.
@@ -28,8 +28,8 @@ export interface EconomySlice {
   addFunds: (amount: number, label: string, category: LedgerEntry['category']) => void;
   deductFunds: (amount: number, label: string, category: LedgerEntry['category']) => boolean;
 } /**
-   * Create economy slice.
-   */
+ * Create economy slice.
+ */
 
 /**
  * Create economy slice.

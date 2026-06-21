@@ -10,6 +10,7 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Eye, Heart, Zap, Quote, Star, Coins, Sword, Info, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const TIER_CONFIG: Record<
   RecruitTier,
   { border: string; text: string; bg: string; ring: 'bronze' | 'silver' | 'gold' | 'blood' }

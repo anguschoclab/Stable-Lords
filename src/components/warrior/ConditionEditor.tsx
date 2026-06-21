@@ -12,9 +12,9 @@ const DEFAULT_CONDITION: PlanCondition = {
   trigger: { type: 'HP_BELOW', value: 35 },
   override: { OE: 4 },
 }; /**
-    * Condition editor.
-    * @param - { conditions, on change }.
-    */
+ * Condition editor.
+ * @param - { conditions, on change }.
+ */
 
 /**
  * Condition editor.
@@ -68,7 +68,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
     const cond = conditions[idx];
     if (!cond) return;
     if (val === undefined) {
-      const { [key]: _removed, ...rest } = cond.override; // eslint-disable-line @typescript-eslint/no-unused-vars
+      const { [key]: _removed, ...rest } = cond.override;
       updateCondition(idx, { override: rest });
     } else {
       updateCondition(idx, { override: { ...cond.override, [key]: val } });
@@ -83,7 +83,7 @@ export default function ConditionEditor({ conditions, onChange }: ConditionEdito
     const cond = conditions[idx];
     if (!cond) return;
     if (val === 'none') {
-      const { [key]: _removed, ...rest } = cond.override; // eslint-disable-line @typescript-eslint/no-unused-vars
+      const { [key]: _removed, ...rest } = cond.override;
       updateCondition(idx, { override: rest });
     } else {
       updateCondition(idx, { override: { ...cond.override, [key]: val } });

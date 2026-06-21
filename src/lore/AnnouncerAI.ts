@@ -5,8 +5,8 @@
 
 import { getFromArchive, interpolateTemplate } from '@/engine/narrative';
 import type { IRNGService } from '@/engine/core/rng/IRNGService'; /**
-                                                                   * Announce tone type.
-                                                                   */
+ * Announce tone type.
+ */
 
 /**
  * Announce tone type.

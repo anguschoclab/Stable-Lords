@@ -23,7 +23,9 @@ const POSITIVE_VALUE: Record<TraitTier, number> = {
  * The churn signal: 2+ flaws reads as a cut candidate unless real value offsets it.
  */
 export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
-  const traits = (warrior.traits ?? []).map((id) => TRAITS[id]).filter((t): t is TraitDef => Boolean(t));
+  const traits = (warrior.traits ?? [])
+    .map((id) => TRAITS[id])
+    .filter((t): t is TraitDef => Boolean(t));
   const factors: { name: string; weight: number }[] = [];
 
   const flaws = traits.filter((t) => t.tier === 'Flaw');

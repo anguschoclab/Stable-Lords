@@ -87,9 +87,9 @@ export function SkillBar({
 }) {
   return <StatBattery label={label} value={value} max={max} />;
 } /**
-   * Render the WarriorStatementsPanel component.
-   * @param - { warrior }.
-   */
+ * Render the WarriorStatementsPanel component.
+ * @param - { warrior }.
+ */
 
 /**
  * Render the WarriorStatementsPanel component.

@@ -2,9 +2,21 @@ import { Trophy } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 
+interface TopWarrior {
+  id: string;
+  name: string;
+  isChampion: boolean;
+  injuryCount: number;
+  isDead: boolean;
+  career: { wins: number; losses: number };
+  age: number;
+  fame?: number;
+  status: string;
+}
+
 interface DominantCombatantsSectionProps {
-  topWarriorA: any;
-  topWarriorB: any;
+  topWarriorA: TopWarrior | null;
+  topWarriorB: TopWarrior | null;
 }
 
 /**

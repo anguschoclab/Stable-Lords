@@ -374,10 +374,7 @@ describe('#14 useInsightManager timer cleanup on re-reveal', () => {
   it('handleReveal clears previous timer before setting new one', async () => {
     const fs = await import('fs');
     const source = fs.readFileSync(
-      resolve(
-        __dirname,
-        '../../components/ledger/InsightManager/hooks/useInsightManager.ts'
-      ),
+      resolve(__dirname, '../../components/ledger/InsightManager/hooks/useInsightManager.ts'),
       'utf-8'
     );
     // After fix, handleReveal should clear the timer ref before setting a new one

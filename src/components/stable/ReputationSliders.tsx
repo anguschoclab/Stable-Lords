@@ -48,8 +48,8 @@ const REP_LABELS: {
     desc: 'How well your stable adapts to the shifting combat meta. High adaptability lets warriors capitalize on style matchups.',
   },
 ]; /**
-    * Reputation sliders.
-    */
+ * Reputation sliders.
+ */
 
 /**
  * Reputation sliders.

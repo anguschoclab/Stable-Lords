@@ -10,14 +10,35 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Promoter } from '@/types/state.types';
 import { defaultPlanForWarrior } from '@/engine';
 import { TRAIT_DATA } from '@/data/orphanPool';
+import type { FightingStyle } from '@/types/shared.types';
+import type { Attributes } from '@/types/shared.types';
+import type { AttributePotential } from '@/types/warrior.types';
+
+interface SelectedWarrior {
+  name: string;
+  style: FightingStyle;
+  attrs: Attributes;
+  age: number;
+  trait: string;
+  lore: string;
+  origin?: string;
+  potential?: AttributePotential;
+}
+
+interface BoutResult {
+  a: { name: string };
+  d: { name: string };
+  outcome: { winner: 'A' | 'D'; by: string; post?: { tags?: string[] } };
+  summary: unknown;
+}
 
 /**
  *
  */
 export function buildFTUEInitialState(
   baseState: GameState,
-  selectedWarriors: any[],
-  boutResult: any,
+  selectedWarriors: SelectedWarrior[],
+  boutResult: BoutResult | null,
   poolSeedValue: number
 ) {
   const finishRng = new SeededRNGService(poolSeedValue + 999);

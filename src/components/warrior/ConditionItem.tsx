@@ -13,6 +13,7 @@ export {
   OFFENSIVE_TACTICS,
   DEFENSIVE_TACTICS,
 } from '@/constants/combat/planConditions';
+// eslint-disable-next-line react-refresh/only-export-components
 export { triggerDisplayValue } from '@/engine/combat/planConditionUtils';
 
 interface ConditionItemProps {

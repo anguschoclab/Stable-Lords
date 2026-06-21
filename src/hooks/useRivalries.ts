@@ -119,15 +119,7 @@ export function useRivalriesList(
     }
 
     return [...map.values()].filter((r) => r.bouts > 0).sort((a, b) => b.intensity - a.intensity);
-  }, [
-    state.arenaHistory,
-    state.week,
-    rosterIds,
-    rivalWarriorStable,
-    state.roster,
-    state.graveyard,
-    state.rivals,
-  ]);
+  }, [state, rosterIds, rivalWarriorStable]);
 }
 
 // Custom Hook to calculate the most wanted rival
@@ -176,13 +168,5 @@ export function useMostWantedRival(
       }
     }
     return maxEntry;
-  }, [
-    state.arenaHistory,
-    state.week,
-    rosterIds,
-    rivalWarriorStable,
-    state.roster,
-    state.graveyard,
-    state.rivals,
-  ]);
+  }, [state, rosterIds, rivalWarriorStable]);
 }

@@ -679,7 +679,7 @@ app.on('web-contents-created', (event, contents) => {
           `Blocked attempt to open external URL with unsafe protocol: ${parsedUrl.protocol}`
         );
       }
-    } catch (e) {
+    } catch {
       console.error(`Invalid URL in windowOpenHandler: ${url}`);
     }
     return { action: 'deny' };

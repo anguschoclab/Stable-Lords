@@ -33,8 +33,8 @@ const DefenseSchema = z.object({
   success: z.array(templateStringSchema),
   stumbling: z.array(templateStringSchema),
 }); /**
-     * Narrative schema.
-     */
+ * Narrative schema.
+ */
 
 /**
  * Narrative schema.
@@ -126,8 +126,6 @@ async function request_bardic_inspiration(
   deficitPath: string,
   context: string = ''
 ): Promise<string> {
-  const [_root, _type, _leaf] = deficitPath.split('.');
-
   const systemPrompt = `You are the Bard of the Blood Sands, a brutal arena announcer.
 You generate high-fantasy combat and world descriptions for a text-based game.
 
@@ -154,8 +152,8 @@ Context: You are writing for ${deficitPath}. ${context}`;
         `${systemPrompt}\n\nGenerate 3 new templates for ${deficitPath}.`
       );
       return result.response.text();
-    } catch (error: any) {
-      console.error('Gemini API Error:', error.message);
+    } catch (error: unknown) {
+      console.error('Gemini API Error:', error instanceof Error ? error.message : String(error));
       return '{}';
     }
   } else {
@@ -189,11 +187,10 @@ async function validate_with_retry(deficitPath: string, retries = 3): Promise<st
       }
 
       return templates;
-    } catch (err: any) {
-      console.warn(
-        `Validation failed for ${deficitPath} (Attempt ${i + 1}/${retries}): ${err.message}`
-      );
-      errorContext = `Your previous response failed validation: ${err.message}. Fix the variables and regenerate. Ensure you only use %A, %D, %W, %BP.`;
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      console.warn(`Validation failed for ${deficitPath} (Attempt ${i + 1}/${retries}): ${errMsg}`);
+      errorContext = `Your previous response failed validation: ${errMsg}. Fix the variables and regenerate. Ensure you only use %A, %D, %W, %BP.`;
     }
   }
   return null;

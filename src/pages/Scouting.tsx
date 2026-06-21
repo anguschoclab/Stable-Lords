@@ -18,8 +18,8 @@ import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing'; /**
-                                                              * Scouting.
-                                                              */
+ * Scouting.
+ */
 
 /**
  * Scouting.
@@ -30,7 +30,7 @@ export default function Scouting() {
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
-  const allReports = scoutReports ?? [];
+  const allReports = useMemo(() => scoutReports ?? [], [scoutReports]);
   const filteredReports = useMemo(() => {
     if (!showBookmarkedOnly) return allReports;
     return allReports.filter((r) => isBookmarked('scoutReport', r.id));

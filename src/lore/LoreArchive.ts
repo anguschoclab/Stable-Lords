@@ -37,8 +37,8 @@ function saveArray<T>(key: string, arr: T[]) {
     }
   }
 } /**
-   * Lore archive.
-   */
+ * Lore archive.
+ */
 
 /**
  * Lore archive.
@@ -60,7 +60,7 @@ export const LoreArchive = {
     // Strip transcripts from older entries to save localstorage
     const cleaned = fights.map((fight, i, arr) => {
       if (arr.length - i > 20 && fight.transcript) {
-        const { transcript: _transcript, ...rest } = fight; // eslint-disable-line @typescript-eslint/no-unused-vars
+        const { transcript: _transcript, ...rest } = fight;
         return rest as FightSummary;
       }
       return fight;

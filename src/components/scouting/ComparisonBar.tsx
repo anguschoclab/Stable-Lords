@@ -9,9 +9,9 @@ interface ComparisonBarProps {
   colorA: string;
   colorB: string;
 } /**
-   * Comparison bar.
-   * @param - { label, val a, val b, max val, color a, color b }.
-   */
+ * Comparison bar.
+ * @param - { label, val a, val b, max val, color a, color b }.
+ */
 
 /**
  * Comparison bar.

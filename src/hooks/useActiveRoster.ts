@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { isActive } from '@/engine/warriorStatus';
-import type { CareerRecord, AttributePotential } from '@/types/warrior.types';
+import type { CareerRecord, AttributePotential, InjuryData } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
 
 /**
@@ -17,8 +17,8 @@ export interface ActiveRosterItem {
   potential?: AttributePotential | null;
   attributes: Attributes;
   career: CareerRecord;
-  injuries?: any[];
-  flair?: any[];
+  injuries?: InjuryData[];
+  flair?: string[];
   traits?: string[];
   age?: number;
 }

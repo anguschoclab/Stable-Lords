@@ -9,13 +9,13 @@ import { LoreArchive } from '@/lore/LoreArchive';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import { commentatorFor, blurb, type AnnounceTone } from '@/lore/AnnouncerAI';
 import { SeededRNGService } from '@/utils/random'; /**
-                                                    * Handle reporting.
-                                                    * @param _rivalStableId - _rival stable id. (optional)
-                                                    * @param isRivalry - Is rivalry. (optional)
-                                                    * @param rng - Rng. (optional)
-                                                    * @param arenaId - Arena id. (optional)
-                                                    * @param weather - Weather. (optional)
-                                                    */
+ * Handle reporting.
+ * @param _rivalStableId - _rival stable id. (optional)
+ * @param isRivalry - Is rivalry. (optional)
+ * @param rng - Rng. (optional)
+ * @param arenaId - Arena id. (optional)
+ * @param weather - Weather. (optional)
+ */
 
 /**
  * Handle reporting.

@@ -11,8 +11,8 @@ import { Surface } from '@/components/ui/Surface';
 import { WarriorLink } from '@/components/EntityLink';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion'; /**
-                                         * Graveyard.
-                                         */
+ * Graveyard.
+ */
 
 /**
  * Graveyard.

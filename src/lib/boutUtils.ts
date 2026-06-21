@@ -1,6 +1,6 @@
 import { MinuteEvent } from '@/types/game'; /**
-                                             * Classify event.
-                                             */
+ * Classify event.
+ */
 
 /**
  * Classify event.

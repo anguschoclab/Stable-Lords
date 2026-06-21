@@ -2,8 +2,8 @@ import { BaseSkills } from '@/types/shared.types';
 import { computeCoordination, computeActivityRating } from './terrabloodCharts';
 import narrativeContent from './narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types'; /**
-                                                                  * Defines the shape of warrior overview statements.
-                                                                  */
+ * Defines the shape of warrior overview statements.
+ */
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -94,8 +94,8 @@ function getQuicknessStatement(defBase: number, parBase: number, wt: number): st
 
   return qualifier ? `${speed}, ${qualifier}` : speed;
 } /**
-   * Generate warrior statements.
-   */
+ * Generate warrior statements.
+ */
 
 // ─── Generator ─────────────────────────────────────────────────────────────
 

@@ -11,7 +11,7 @@ export function truncateState(state: GameState): GameState {
   const arenaHistory = (state.arenaHistory || []).slice(-500).map((f, i, arr) => {
     // Keep transcripts only for the last 20 fights to save memory
     if (arr.length - i > 20 && f.transcript) {
-      const { transcript: _transcript, ...rest } = f; // eslint-disable-line @typescript-eslint/no-unused-vars
+      const { transcript: _transcript, ...rest } = f;
       return rest as FightSummary;
     }
     return f;

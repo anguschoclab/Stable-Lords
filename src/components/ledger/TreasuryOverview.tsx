@@ -354,8 +354,8 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
     </Surface>
   );
 } /**
-   * Treasury overview.
-   */
+ * Treasury overview.
+ */
 
 /**
  * Treasury overview.

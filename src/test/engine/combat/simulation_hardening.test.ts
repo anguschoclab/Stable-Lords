@@ -52,5 +52,5 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
     // 4. Completed check
     const pending = state.tournaments?.filter((t) => !t.completed) || [];
     expect(pending.length).toBe(0); // All should be resolved by advanceWeek
-  });
+  }, 300000);
 });

@@ -12,6 +12,12 @@ import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 export interface WeekAdvanceOptions {
   /** Skip UI-facing content generation (newsletters, gazettes) for headless mode */
   headless?: boolean;
+  /**
+   * Player is bankrupt or has an empty roster this week. World passes still run;
+   * only player-facing content passes (events, narrative) are skipped. Internal —
+   * set by advanceWeek, not by callers.
+   */
+  playerStopped?: boolean;
 }
 
 // 🌩️ Modular Pipeline Passes
@@ -150,8 +156,9 @@ function collectRemainingImpacts(
     runRivalStrategyPass(state, ctx.nextWeek, ctx.rootRng, opts?.headless),
   ];
 
-  // In headless mode, skip expensive content generation passes
-  if (!opts?.headless) {
+  // PLAYER-FACING content — skip in headless mode OR when the player is stopped
+  // (bankrupt / empty roster): no point generating the player's events & gazette.
+  if (!opts?.headless && !opts?.playerStopped) {
     impacts.push(runEventPass(state, ctx.nextWeek, ctx.rootRng));
     impacts.push(runNarrativePass(state, ctx.currentWeek, ctx.nextWeek, ctx.rootRng));
   }
@@ -233,18 +240,15 @@ export function advanceWeek(state: GameState, opts?: WeekAdvanceOptions): GameSt
   const settledState = runBoutPhase(mutableState, ctx, headless);
   const coreImpacts = collectCoreImpacts(settledState, ctx);
 
-  // Unified stop conditions: bankruptcy and roster-empty are checked every week
-  if (checkBankruptcy(settledState, coreImpacts) || settledState.roster.length === 0) {
-    // Always apply world pass so season/weather advance even on stop conditions
-    const stopImpacts: StateImpact[] = [
-      ...coreImpacts,
-      runWorldPass(settledState, ctx.nextWeek, ctx.rootRng),
-    ];
-    return finalizeState(resolveImpacts(settledState, stopImpacts), state, ctx);
-  }
+  // Player stop conditions gate PLAYER content only — the WORLD keeps evolving.
+  const playerStopped =
+    checkBankruptcy(settledState, coreImpacts) || settledState.roster.length === 0;
 
   // Stage the pipeline: apply core impacts BEFORE running remaining passes
   const stateAfterCore = resolveImpacts(settledState, coreImpacts);
-  const remainingImpacts = collectRemainingImpacts(stateAfterCore, ctx, { headless });
+  const remainingImpacts = collectRemainingImpacts(stateAfterCore, ctx, {
+    headless,
+    playerStopped,
+  });
   return finalizeState(resolveImpacts(stateAfterCore, remainingImpacts), state, ctx);
 }

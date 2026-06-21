@@ -4,8 +4,8 @@ interface State {
   hasError: boolean;
   error: Error | null;
 } /**
- * The ErrorBoundary class.
- */
+   * The ErrorBoundary class.
+   */
 
 /**
  * The ErrorBoundary class.

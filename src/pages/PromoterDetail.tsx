@@ -160,8 +160,8 @@ function calculateStats(
     totalHype,
   };
 } /**
- * Promoter detail.
- */
+   * Promoter detail.
+   */
 
 /**
  * Promoter detail.

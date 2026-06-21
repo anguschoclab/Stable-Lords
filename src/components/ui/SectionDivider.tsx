@@ -5,9 +5,9 @@ interface SectionDividerProps {
   className?: string;
   variant?: 'primary' | 'gold' | 'blood' | 'muted';
 } /**
- * Section divider.
- * @param - { label, class name, variant = 'muted' }.
- */
+   * Section divider.
+   * @param - { label, class name, variant = 'muted' }.
+   */
 
 /**
  * Section divider.

@@ -13,9 +13,9 @@ interface RivalStableListProps {
   selectedRivalId: string | null;
   onSelectRival: (id: string) => void;
 } /**
- * Rival stable list.
- * @param - { rivals, selected rival id, on select rival }.
- */
+   * Rival stable list.
+   * @param - { rivals, selected rival id, on select rival }.
+   */
 
 /**
  * Rival stable list.

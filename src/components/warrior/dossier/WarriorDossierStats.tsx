@@ -7,9 +7,9 @@ import { ATTRIBUTE_LABELS, ATTRIBUTE_KEYS } from '@/types/game';
 interface Props {
   warrior: Warrior;
 } /**
- * Warrior dossier stats.
- * @param - { warrior }.
- */
+   * Warrior dossier stats.
+   * @param - { warrior }.
+   */
 
 /**
  * Warrior dossier stats.

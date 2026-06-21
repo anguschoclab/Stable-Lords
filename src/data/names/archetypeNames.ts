@@ -41,8 +41,8 @@ export const NAMES_BRUTAL = [
   'GRIM',
   'BASTION',
 ]; /**
- * Names_agile.
- */
+    * Names_agile.
+    */
 
 /**
  * Names_agile.
@@ -87,8 +87,8 @@ export const NAMES_AGILE = [
   'ECHO',
   'GOSSAMER',
 ]; /**
- * Names_cunning.
- */
+    * Names_cunning.
+    */
 
 /**
  * Names_cunning.
@@ -133,8 +133,8 @@ export const NAMES_CUNNING = [
   'CIPHER',
   'VEIL',
 ]; /**
- * Names_mixed.
- */
+    * Names_mixed.
+    */
 
 /**
  * Names_mixed.
@@ -178,15 +178,15 @@ export const NAMES_MIXED = [
   'LEGION',
   'VANGUARD',
 ]; /**
- * Archetype type.
- */
+    * Archetype type.
+    */
 
 /**
  * Archetype type.
  */
 export type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank'; /**
- * Archetype_names.
- */
+                                                                  * Archetype_names.
+                                                                  */
 
 /**
  * Archetype_names.

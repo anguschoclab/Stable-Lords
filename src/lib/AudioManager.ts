@@ -18,8 +18,8 @@ export type SfxType =
   | 'recovery'
   | 'coin'
   | 'arena_ambient'; /**
- * The AudioManager class.
- */
+                      * The AudioManager class.
+                      */
 
 /**
  * The AudioManager class.
@@ -124,8 +124,8 @@ export class AudioManager {
     AudioManager.instance = undefined;
   }
 } /**
- * Audio manager.
- */
+   * Audio manager.
+   */
 
 /**
  * Audio manager.

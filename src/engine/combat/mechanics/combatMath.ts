@@ -7,8 +7,8 @@ type Phase = 'opening' | 'mid' | 'late';
 
 const PHASE_OPENING_THRESHOLD = 0.25;
 const PHASE_MID_THRESHOLD = 0.65; /**
- * Get phase.
- */
+                                   * Get phase.
+                                   */
 
 /**
  * Get phase.
@@ -20,8 +20,8 @@ export function getPhase(exchange: number, maxExchanges: number): Phase {
   if (ratio <= PHASE_MID_THRESHOLD) return 'mid';
   return 'late';
 } /**
- * Pick text.
- */
+   * Pick text.
+   */
 
 /**
  * Pick text.
@@ -31,8 +31,8 @@ export function pickText(rng: () => number, texts: string[]): string {
   const index = Math.floor(rng() * texts.length);
   return texts[index] ?? '';
 } /**
- * Skill check.
- */
+   * Skill check.
+   */
 
 /**
  * Skill check.
@@ -43,8 +43,8 @@ export function skillCheck(rng: () => number, skill: number, modifier: number = 
   const success = roll === 1 || (roll !== 20 && roll <= target);
   return success;
 } /**
- * Contest check.
- */
+   * Contest check.
+   */
 
 /**
  * Contest check.

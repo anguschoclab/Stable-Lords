@@ -37,8 +37,8 @@ function saveArray<T>(key: string, arr: T[]) {
     }
   }
 } /**
- * Lore archive.
- */
+   * Lore archive.
+   */
 
 /**
  * Lore archive.

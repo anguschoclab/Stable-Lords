@@ -98,7 +98,11 @@ export default function StableDetail() {
   const totalFights = totalWins + totalLosses;
   const winRate = totalFights > 0 ? Math.round((totalWins / totalFights) * 100) : 0;
 
-  const tierCfg = TIER_CONFIG[rival.tier ?? 'Minor'] ?? TIER_CONFIG.Minor ?? { color: 'muted' };
+  const tierCfg = TIER_CONFIG[rival.tier ?? 'Minor'] ?? TIER_CONFIG.Minor ?? {
+    label: 'Minor',
+    ring: 'bronze' as const,
+    text: 'text-muted-foreground',
+  };
 
   const stableWarriorIds = new Set(rival.roster.map((w) => w.id));
   const recentBouts = state.arenaHistory

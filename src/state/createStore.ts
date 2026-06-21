@@ -143,7 +143,7 @@ export const useGameStore = create<GameStore>()(
           draft.isSimulating = true;
         });
 
-        let timerId: ReturnType<typeof setTimeout>;
+        let timerId: ReturnType<typeof setTimeout> | undefined;
         const timeout = new Promise<never>((_, reject) => {
           timerId = setTimeout(() => reject(new Error('Worker timeout after 15s')), 15000);
         });
@@ -155,7 +155,7 @@ export const useGameStore = create<GameStore>()(
           } else {
             next = await Promise.race([engineProxy.advanceWeek(cleanState), timeout]);
           }
-          clearTimeout(timerId!);
+          if (timerId) clearTimeout(timerId);
 
           next = flushDeferredArchivesOffThread(next);
           next.phase = 'resolution';

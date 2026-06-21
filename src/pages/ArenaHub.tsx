@@ -228,8 +228,8 @@ function ArenaLeaderboard() {
     </Surface>
   );
 } /**
- * Arena hub.
- */
+   * Arena hub.
+   */
 
 // ─── Main Hub Page ────────────────────────────────────────────────────────────
 

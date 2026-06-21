@@ -12,9 +12,9 @@ const TABS = [
   { id: 'history', label: 'Fight Log', icon: Swords },
   { id: 'biography', label: 'History', icon: FileText },
 ]; /**
- * Warrior dossier tabs.
- * @param - { active tab, set active tab }.
- */
+    * Warrior dossier tabs.
+    * @param - { active tab, set active tab }.
+    */
 
 /**
  * Warrior dossier tabs.

@@ -20,9 +20,9 @@ interface TacticBankProps {
   plan?: FightPlan;
   onPlanChange?: (plan: FightPlan) => void;
 } /**
- * Tactic bank.
- * @param - { plan, on plan change }.
- */
+   * Tactic bank.
+   * @param - { plan, on plan change }.
+   */
 
 /**
  * Tactic bank.

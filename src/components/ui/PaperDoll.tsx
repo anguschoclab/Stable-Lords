@@ -1,13 +1,13 @@
 import { cn } from '@/lib/utils'; /**
- * Body part type.
- */
+                                   * Body part type.
+                                   */
 
 /**
  * Body part type.
  */
 export type BodyPart = 'Head' | 'Torso' | 'LeftArm' | 'RightArm' | 'Legs'; /**
- * Defines the shape of paper doll props.
- */
+                                                                            * Defines the shape of paper doll props.
+                                                                            */
 
 /**
  * Defines the shape of paper doll props.
@@ -16,9 +16,9 @@ export interface PaperDollProps {
   healthMap: Partial<Record<BodyPart, number>>;
   className?: string;
 } /**
- * Paper doll.
- * @param - { health map, class name }.
- */
+   * Paper doll.
+   * @param - { health map, class name }.
+   */
 
 /**
  * Paper doll.

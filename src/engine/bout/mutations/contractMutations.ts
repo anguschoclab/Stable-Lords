@@ -1,7 +1,7 @@
 import { GameState } from '@/types/state.types';
 import { StateImpact } from '@/engine/impacts'; /**
- * Respond to bout offer.
- */
+                                                 * Respond to bout offer.
+                                                 */
 
 /**
  * Respond to bout offer.

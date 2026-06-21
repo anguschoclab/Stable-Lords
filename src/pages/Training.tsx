@@ -25,8 +25,8 @@ import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining'; /**
- * Training.
- */
+                                                                                    * Training.
+                                                                                    */
 
 /**
  * Training.

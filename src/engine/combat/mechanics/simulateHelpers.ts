@@ -6,9 +6,9 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { getTrainingBonus } from '@/engine/trainers';
 import { getSpecialtyMods } from '@/engine/trainerSpecialties'; /**
- * Create rng for context.
- * @param rng - Rng. (optional)
- */
+                                                                 * Create rng for context.
+                                                                 * @param rng - Rng. (optional)
+                                                                 */
 
 /**
  * Create rng for context.
@@ -17,9 +17,9 @@ import { getSpecialtyMods } from '@/engine/trainerSpecialties'; /**
 export function createRNGForContext(seed: number, rng?: IRNGService): IRNGService {
   return rng || new SeededRNGService(seed);
 } /**
- * Setup rng.
- * @param providedRng - Provided rng. (optional)
- */
+   * Setup rng.
+   * @param providedRng - Provided rng. (optional)
+   */
 
 /**
  * Setup rng.
@@ -34,11 +34,11 @@ export function setupRng(providedRng?: (() => number) | number): () => number {
   const sRng = new SeededRNGService(seed);
   return () => sRng.next();
 } /**
- * Get trainer mods.
- * @param fighter - Fighter. (optional)
- * @param opponent - Opponent. (optional)
- * @param ctx - Ctx. (optional)
- */
+   * Get trainer mods.
+   * @param fighter - Fighter. (optional)
+   * @param opponent - Opponent. (optional)
+   * @param ctx - Ctx. (optional)
+   */
 
 /**
  * Get trainer mods.
@@ -104,8 +104,8 @@ export function getTrainerMods(
     fatiguePenaltyReduction: 0,
   };
 } /**
- * Process outcome tags.
- */
+   * Process outcome tags.
+   */
 
 /**
  * Process outcome tags.

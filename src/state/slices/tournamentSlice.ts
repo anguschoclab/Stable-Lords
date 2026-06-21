@@ -2,8 +2,8 @@ import { StateCreator } from 'zustand';
 import { TournamentEntry } from '@/types/state.types';
 import { type TournamentId } from '@/types/shared.types';
 import type { GameStore } from '@/state/useGameStore'; /**
- * Defines the shape of tournament slice.
- */
+                                                        * Defines the shape of tournament slice.
+                                                        */
 
 /**
  * Defines the shape of tournament slice.
@@ -16,8 +16,8 @@ export interface TournamentSlice {
   setTournamentWeek: (isTournamentWeek: boolean) => void;
   setActiveTournament: (id?: TournamentId) => void;
 } /**
- * Create tournament slice.
- */
+   * Create tournament slice.
+   */
 
 /**
  * Create tournament slice.

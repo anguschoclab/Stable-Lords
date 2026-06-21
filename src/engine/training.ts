@@ -138,7 +138,7 @@ function processAttributeAssignment(
     weather
   );
   if (injury && injuryResult) {
-    const w = currentRoster.get(warrior.id)!;
+    const w = currentRoster.get(warrior.id) ?? warrior;
     currentRoster.set(warrior.id, { ...w, injuries: [...w.injuries, injury] as InjuryData[] });
     results.push(injuryResult);
   }

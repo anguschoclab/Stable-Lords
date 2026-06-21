@@ -4,8 +4,8 @@ import { OPFSArchiveService } from '@/engine/storage/opfsArchive';
 import { archiveWorkerProxy } from '@/engine/storage/archiveWorkerProxy';
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter']; /**
- * Season to number.
- */
+                                                                   * Season to number.
+                                                                   */
 
 /**
  * Season to number.
@@ -55,8 +55,8 @@ export function flushDeferredArchivesOffThread(state: GameState): GameState {
   });
   return state;
 } /**
- * Archive week logs.
- */
+   * Archive week logs.
+   */
 
 /**
  * Archive week logs.

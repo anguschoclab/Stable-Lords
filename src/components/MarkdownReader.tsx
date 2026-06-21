@@ -4,9 +4,9 @@ import remarkGfm from 'remark-gfm';
 interface MarkdownReaderProps {
   content: string;
 } /**
- * Markdown reader.
- * @param - { content }.
- */
+   * Markdown reader.
+   * @param - { content }.
+   */
 
 /**
  * Markdown reader.

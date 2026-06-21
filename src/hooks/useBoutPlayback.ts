@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { audioManager } from '@/lib/AudioManager';
 import { MinuteEvent } from '@/types/game';
 import { classifyEvent } from '@/lib/boutUtils'; /**
- * React hook: use bout playback.
- */
+                                                  * React hook: use bout playback.
+                                                  */
 
 /**
  * React hook: use bout playback.

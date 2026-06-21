@@ -48,6 +48,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Wildfire Smoke',
   'Blood Fog',
   'Shimmering Heat',
+  'Rain of Frogs',
 ];
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
@@ -70,7 +71,7 @@ describe('Seasonal Weather Buckets', () => {
     }
   });
 
-  it('SEASONAL_WEATHER covers all 39 types with no gaps or duplicates across seasons', () => {
+  it('SEASONAL_WEATHER covers all 40 types with no gaps or duplicates across seasons', () => {
     const allListed: WeatherType[] = [];
     for (const season of SEASONS) {
       allListed.push(...SEASONAL_WEATHER[season]);

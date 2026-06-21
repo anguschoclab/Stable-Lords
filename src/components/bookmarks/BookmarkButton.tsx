@@ -41,7 +41,9 @@ export function BookmarkButton({
         e.stopPropagation();
         toggleBookmark(entityType, entityId);
         toast.success(
-          isBookmarked ? `Removed ${entityLabel} from watchlist` : `Added ${entityLabel} to watchlist`,
+          isBookmarked
+            ? `Removed ${entityLabel} from watchlist`
+            : `Added ${entityLabel} to watchlist`,
           { duration: 1500 }
         );
       }}

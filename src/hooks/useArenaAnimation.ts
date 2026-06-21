@@ -55,9 +55,20 @@ export function useArenaAnimation(
   });
 
   // Process event and update poses
-  const processEvent = useCallback((event: MinuteEvent, index: number) => {
-    setState((prev) => processArenaEvent(prev, event, index, fighterNameA.toLowerCase(), fighterNameD.toLowerCase()));
-  }, [fighterNameA, fighterNameD]);
+  const processEvent = useCallback(
+    (event: MinuteEvent, index: number) => {
+      setState((prev) =>
+        processArenaEvent(
+          prev,
+          event,
+          index,
+          fighterNameA.toLowerCase(),
+          fighterNameD.toLowerCase()
+        )
+      );
+    },
+    [fighterNameA, fighterNameD]
+  );
 
   // Track visible event changes
   useEffect(() => {
@@ -132,4 +143,4 @@ export function useArenaAnimation(
     reset,
     updatePose,
   };
-  }
+}

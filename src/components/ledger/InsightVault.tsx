@@ -249,10 +249,9 @@ export function InsightVault() {
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-3xl font-medium">
-              Insights are secrets discovered in the arena.
-              When a warrior exhibits their preferred weapon or innate rhythm, these secrets
-              surface. Reveal enough fragments to unlock permanent martial superiority and strategic
-              dominance over your rivals.
+              Insights are secrets discovered in the arena. When a warrior exhibits their preferred
+              weapon or innate rhythm, these secrets surface. Reveal enough fragments to unlock
+              permanent martial superiority and strategic dominance over your rivals.
             </p>
           </div>
         </div>

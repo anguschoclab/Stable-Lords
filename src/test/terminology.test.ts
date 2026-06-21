@@ -88,10 +88,9 @@ describe('Terminology compliance', () => {
     ];
     const results: string[] = [];
     for (const term of bannedTerms) {
-      const out = execSync(
-        `grep -rn "${term}" ${srcDir} --include="*.tsx" || true`,
-        { encoding: 'utf-8' }
-      ).trim();
+      const out = execSync(`grep -rn "${term}" ${srcDir} --include="*.tsx" || true`, {
+        encoding: 'utf-8',
+      }).trim();
       if (out) {
         const filtered = exemptFilter(out);
         if (filtered) results.push(filtered);

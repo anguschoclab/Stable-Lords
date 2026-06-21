@@ -36,10 +36,38 @@ function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
 function makeLungeRoster(): any[] {
   // 3 LungingAttack + 1 BashingAttack = 75% precision-heavy
   return [
-    { id: 'w1', name: 'L1', style: FightingStyle.LungingAttack, status: 'Active', injuries: [], attributes: { CN: 10 } },
-    { id: 'w2', name: 'L2', style: FightingStyle.LungingAttack, status: 'Active', injuries: [], attributes: { CN: 10 } },
-    { id: 'w3', name: 'L3', style: FightingStyle.LungingAttack, status: 'Active', injuries: [], attributes: { CN: 10 } },
-    { id: 'w4', name: 'B1', style: FightingStyle.BashingAttack, status: 'Active', injuries: [], attributes: { CN: 10 } },
+    {
+      id: 'w1',
+      name: 'L1',
+      style: FightingStyle.LungingAttack,
+      status: 'Active',
+      injuries: [],
+      attributes: { CN: 10 },
+    },
+    {
+      id: 'w2',
+      name: 'L2',
+      style: FightingStyle.LungingAttack,
+      status: 'Active',
+      injuries: [],
+      attributes: { CN: 10 },
+    },
+    {
+      id: 'w3',
+      name: 'L3',
+      style: FightingStyle.LungingAttack,
+      status: 'Active',
+      injuries: [],
+      attributes: { CN: 10 },
+    },
+    {
+      id: 'w4',
+      name: 'B1',
+      style: FightingStyle.BashingAttack,
+      status: 'Active',
+      injuries: [],
+      attributes: { CN: 10 },
+    },
   ];
 }
 
@@ -119,7 +147,11 @@ describe('Gap 7: verifyIntentSkepticism checks hazardous weather beyond Rainy', 
 
   it('does NOT disprove in Clear weather', () => {
     const rival = makeRival({
-      roster: [{ status: 'Active' } as any, { status: 'Active' } as any, { status: 'Active' } as any],
+      roster: [
+        { status: 'Active' } as any,
+        { status: 'Active' } as any,
+        { status: 'Active' } as any,
+      ],
       strategy: { intent: 'CONSOLIDATION', planWeeksRemaining: 3 },
       treasury: 500,
     });

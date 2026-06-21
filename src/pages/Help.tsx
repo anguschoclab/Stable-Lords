@@ -16,11 +16,7 @@ import { BookOpen } from 'lucide-react'; /**
 export default function Help() {
   return (
     <div className="space-y-6 max-w-3xl">
-      <PageHeader
-        icon={BookOpen}
-        title="Codex · Help"
-        subtitle="RULES · STRATEGY · REFERENCE"
-      />
+      <PageHeader icon={BookOpen} title="Codex · Help" subtitle="RULES · STRATEGY · REFERENCE" />
 
       <Accordion
         type="multiple"
@@ -329,8 +325,8 @@ export default function Help() {
                 equipped weapon.
               </li>
               <li>
-                <strong>Rhythm Token</strong> 🥁 — Reveals a warrior's hidden combat tendencies
-                (OE, AL, and KD).
+                <strong>Rhythm Token</strong> 🥁 — Reveals a warrior's hidden combat tendencies (OE,
+                AL, and KD).
               </li>
               <li>
                 <strong>Style Token</strong> 🥋 — Instantly identifies a warrior's core fighting

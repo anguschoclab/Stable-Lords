@@ -27,6 +27,7 @@
 ## Task 1: The personality → trait policy (TDD)
 
 **Files:**
+
 - Create: `src/engine/ai/traitPolicy.ts`
 - Create: `src/test/engine/ai/traitPolicy.test.ts`
 
@@ -54,8 +55,12 @@ describe('TRAIT_POLICY', () => {
   });
 
   it('Showman/Aggressive train more than Pragmatic', () => {
-    expect(TRAIT_POLICY.Showman.trainAppetite).toBeGreaterThan(TRAIT_POLICY.Pragmatic.trainAppetite);
-    expect(TRAIT_POLICY.Aggressive.trainAppetite).toBeGreaterThan(TRAIT_POLICY.Pragmatic.trainAppetite);
+    expect(TRAIT_POLICY.Showman.trainAppetite).toBeGreaterThan(
+      TRAIT_POLICY.Pragmatic.trainAppetite
+    );
+    expect(TRAIT_POLICY.Aggressive.trainAppetite).toBeGreaterThan(
+      TRAIT_POLICY.Pragmatic.trainAppetite
+    );
   });
 });
 ```
@@ -79,16 +84,20 @@ export interface TraitPolicy {
 }
 
 export const OWNER_PERSONALITIES_WITH_POLICY: OwnerPersonality[] = [
-  'Aggressive', 'Methodical', 'Showman', 'Pragmatic', 'Tactician',
+  'Aggressive',
+  'Methodical',
+  'Showman',
+  'Pragmatic',
+  'Tactician',
 ];
 
 /** Maps the 5 owner personalities onto the design's Ruthless/Loyal/Frugal/Prestige archetypes. */
 export const TRAIT_POLICY: Record<OwnerPersonality, TraitPolicy> = {
-  Aggressive: { cutLiabilityThreshold: 55, trainAppetite: 0.18, ceiling: 'Master' },   // ruthless, bold
-  Showman:    { cutLiabilityThreshold: 60, trainAppetite: 0.22, ceiling: 'Master' },   // prestige-chaser
-  Tactician:  { cutLiabilityThreshold: 62, trainAppetite: 0.12, ceiling: 'Seasoned' }, // strict, cautious
-  Pragmatic:  { cutLiabilityThreshold: 70, trainAppetite: 0.06, ceiling: 'Seasoned' }, // frugal
-  Methodical: { cutLiabilityThreshold: 78, trainAppetite: 0.10, ceiling: 'Seasoned' }, // loyal/developmental
+  Aggressive: { cutLiabilityThreshold: 55, trainAppetite: 0.18, ceiling: 'Master' }, // ruthless, bold
+  Showman: { cutLiabilityThreshold: 60, trainAppetite: 0.22, ceiling: 'Master' }, // prestige-chaser
+  Tactician: { cutLiabilityThreshold: 62, trainAppetite: 0.12, ceiling: 'Seasoned' }, // strict, cautious
+  Pragmatic: { cutLiabilityThreshold: 70, trainAppetite: 0.06, ceiling: 'Seasoned' }, // frugal
+  Methodical: { cutLiabilityThreshold: 78, trainAppetite: 0.1, ceiling: 'Seasoned' }, // loyal/developmental
 };
 
 export function policyFor(personality?: OwnerPersonality): TraitPolicy {
@@ -110,6 +119,7 @@ git commit -m "feat(ai): personality→trait policy (cut threshold, train appeti
 ## Task 2: Liability-based culling for rivals
 
 **Files:**
+
 - Modify: `src/engine/owner/roster/management.ts`
 
 `processAIRosterManagement` (line 19) already culls by win-rate/kills/age with win-streak protection (lines 36–101). Add a flaw-liability cut gated by the personality's threshold.
@@ -139,6 +149,7 @@ if (recentWins < 3 && liability.score >= policy.cutLiabilityThreshold) {
 - [ ] **Step 2: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/engine/owner/roster/management.ts"
 git commit -m "feat(ai): rivals cut flaw-loaded warriors per personality threshold"
@@ -149,9 +160,10 @@ git commit -m "feat(ai): rivals cut flaw-loaded warriors per personality thresho
 ## Task 3: Weekly trait development for rivals
 
 **Files:**
+
 - Modify: `src/engine/ai/workers/rosterWorker.ts`
 
-Rivals train attributes in `processRoster` (line 39). Add a trait-development step: per active warrior, with probability `trainAppetite` (gated by treasury), resolve one `rollTraitTraining` against a synthetic trainer at the policy ceiling, and apply the result. This naturally produces both new traits *and* botched flaws — feeding Task 2's culling.
+Rivals train attributes in `processRoster` (line 39). Add a trait-development step: per active warrior, with probability `trainAppetite` (gated by treasury), resolve one `rollTraitTraining` against a synthetic trainer at the policy ceiling, and apply the result. This naturally produces both new traits _and_ botched flaws — feeding Task 2's culling.
 
 - [ ] **Step 1: Add the trait-development pass**
 
@@ -182,6 +194,7 @@ if (canTrain) {
 - [ ] **Step 2: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/engine/ai/workers/rosterWorker.ts"
 git commit -m "feat(ai): rivals develop traits weekly per personality appetite (botches feed churn)"
@@ -192,6 +205,7 @@ git commit -m "feat(ai): rivals develop traits weekly per personality appetite (
 ## Task 4: Emergent-behavior integration test
 
 **Files:**
+
 - Create: `src/test/engine/ai/rivalTraitAI.integration.test.ts`
 
 - [ ] **Step 1: Show personalities diverge over a season**
@@ -205,9 +219,13 @@ import { populateInitialWorld } from '@/engine/core/worldSeeder';
 describe('rival trait AI (integration)', () => {
   it('over a season, rival rosters acquire traits and churn without crashing', () => {
     let state = populateInitialWorld(createFreshState('rival-ai'), 12345);
-    const before = state.rivals.flatMap((r) => r.roster).reduce((s, w) => s + (w.traits?.length ?? 0), 0);
+    const before = state.rivals
+      .flatMap((r) => r.roster)
+      .reduce((s, w) => s + (w.traits?.length ?? 0), 0);
     for (let i = 0; i < 26; i++) state = advanceWeek(state, { headless: true });
-    const after = state.rivals.flatMap((r) => r.roster).reduce((s, w) => s + (w.traits?.length ?? 0), 0);
+    const after = state.rivals
+      .flatMap((r) => r.roster)
+      .reduce((s, w) => s + (w.traits?.length ?? 0), 0);
     // Trait training over 26 weeks should have grown total trait count across rival rosters.
     expect(after).toBeGreaterThan(before);
     // No rival roster should be empty (churn cuts but recruitment refills).
@@ -223,6 +241,7 @@ Expected: PASS. (Match `advanceWeek`'s real signature from `simulation-harness.t
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
 Run: `npx vitest run 2>&1 | tail -4` → green.
+
 ```bash
 git add "src/test/engine/ai/rivalTraitAI.integration.test.ts"
 git commit -m "test(ai): rivals develop traits and churn over a season"
@@ -233,7 +252,7 @@ git commit -m "test(ai): rivals develop traits and churn over a season"
 ## Self-Review Notes
 
 - **Reuse, don't reinvent.** Culling reuses `computeWarriorLiability`; development reuses `rollTraitTraining` — both already unit-tested. This plan is mostly a policy table + two insertion points.
-- **Emergence is the point.** Aggressive/Showman stables churn fast and chase Signatures (and eat more botch-flaws); Methodical/Pragmatic carry flawed veterans and develop slowly. The integration test only asserts the system runs and grows; the *texture* is the payoff a player feels.
+- **Emergence is the point.** Aggressive/Showman stables churn fast and chase Signatures (and eat more botch-flaws); Methodical/Pragmatic carry flawed veterans and develop slowly. The integration test only asserts the system runs and grows; the _texture_ is the payoff a player feels.
 - **Rivals resolve per-week** rather than tracking multi-week assignments — simpler and keeps rival trait-gain pace tunable via `trainAppetite`, so they don't out-develop the player.
 - **Additive culling.** Liability is one more cut reason layered on the existing personality culls; it respects the same win-streak protection so a winning flawed warrior isn't dropped.
 
@@ -243,4 +262,7 @@ git commit -m "test(ai): rivals develop traits and churn over a season"
 2. `TRAIT_POLICY` covers all 5 personalities; Aggressive cuts sooner, Showman/Aggressive train more.
 3. Rivals acquire traits over a season and never empty their rosters.
 4. `bunx tsc …` → 0; full `npx vitest run` green; base `balance.test.ts` unaffected.
+
+```
+
 ```

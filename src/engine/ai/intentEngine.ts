@@ -30,7 +30,15 @@ export function pickWeeklyIntent(
   );
 
   // ⚡ Environmental Awareness
-  const isHazardousWeather = ['Rainy', 'Blizzard', 'Sandstorm', 'Gale', 'Tornado', 'Dense Fog', 'Acid Rain'].includes(state.weather ?? 'Clear');
+  const isHazardousWeather = [
+    'Rainy',
+    'Blizzard',
+    'Sandstorm',
+    'Gale',
+    'Tornado',
+    'Dense Fog',
+    'Acid Rain',
+  ].includes(state.weather ?? 'Clear');
 
   // ⚡ Continuous Alignment: Meta-Drift Awareness (use cached if available)
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory || []);
@@ -167,7 +175,15 @@ export function verifyIntentSkepticism(rival: RivalStableData, state: GameState)
   }
 
   // Skepticism Tier 4: Environmental Hazard (Strategic Abort)
-  const isHazardousWeather = ['Rainy', 'Blizzard', 'Sandstorm', 'Gale', 'Tornado', 'Dense Fog', 'Acid Rain'].includes(state.weather ?? 'Clear');
+  const isHazardousWeather = [
+    'Rainy',
+    'Blizzard',
+    'Sandstorm',
+    'Gale',
+    'Tornado',
+    'Dense Fog',
+    'Acid Rain',
+  ].includes(state.weather ?? 'Clear');
   const precisionHeavy = filterActive(rival.roster).some((w) => w.style === 'LUNGING ATTACK');
   if (
     isHazardousWeather &&

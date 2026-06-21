@@ -86,7 +86,13 @@ export function processAllRivalsBoutOffers(
           }
         }
 
-        const response = boutAcceptance.evaluateBoutOffer(trackedOffer, owningRival, rivalWarrior, state.week, state.weather as WeatherType);
+        const response = boutAcceptance.evaluateBoutOffer(
+          trackedOffer,
+          owningRival,
+          rivalWarrior,
+          state.week,
+          state.weather as WeatherType
+        );
 
         if (response === 'Accepted') {
           pickedWarriors.add(wId);

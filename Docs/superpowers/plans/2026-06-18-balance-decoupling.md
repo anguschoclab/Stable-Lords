@@ -8,9 +8,9 @@
 
 **Tech Stack:** TypeScript, Bun (`bun`/`bunx` — never npm/node), Vitest. Run a single test file with `npx vitest run <path>`.
 
-**Canon guardrails (do NOT touch):** The weapon-vs-style suitability matrix (CW/W/M/U) and mortality data are intentional Terrablood canon — leave them alone. All changes here live in *tunable* layers: `STYLE_PENALTIES`, `MATCHUP_MATRIX`, aging compensation, favorite payoff-shape, trait generation weighting. See memory `combat-balance-canon` and `terrablood-weapon-tables`.
+**Canon guardrails (do NOT touch):** The weapon-vs-style suitability matrix (CW/W/M/U) and mortality data are intentional Terrablood canon — leave them alone. All changes here live in _tunable_ layers: `STYLE_PENALTIES`, `MATCHUP_MATRIX`, aging compensation, favorite payoff-shape, trait generation weighting. See memory `combat-balance-canon` and `terrablood-weapon-tables`.
 
-**Scope note — this is one of two plans.** The original spec had five changes. Four of them (#1 layer-split, #3 aging-shift, #4 favorites, #5 trait-noise) are tunable-knob changes that share the same harness and belong together — they are this plan (Tasks 1–6). The fifth (#2 per-style *win conditions*: AB called-shot, TP clock, LU/PL tempo decay) introduces brand-new combat mechanics with large design degrees of freedom and must go through `superpowers:brainstorming` first. It is deferred to **Phase 2** (documented at the end) rather than specified with invented code here.
+**Scope note — this is one of two plans.** The original spec had five changes. Four of them (#1 layer-split, #3 aging-shift, #4 favorites, #5 trait-noise) are tunable-knob changes that share the same harness and belong together — they are this plan (Tasks 1–6). The fifth (#2 per-style _win conditions_: AB called-shot, TP clock, LU/PL tempo decay) introduces brand-new combat mechanics with large design degrees of freedom and must go through `superpowers:brainstorming` first. It is deferred to **Phase 2** (documented at the end) rather than specified with invented code here.
 
 ---
 
@@ -33,6 +33,7 @@
 You cannot set a regression gate without knowing where the engine sits today. This task only runs the harness and records numbers used to seed the guardrail bands in Task 2.
 
 **Files:**
+
 - Read-only: `src/test/engine/economy/balance.test.ts`
 
 - [ ] **Step 1: Run the existing balance suite and capture the per-style report**
@@ -46,20 +47,21 @@ The "should have no style with >75% overall win rate" test prints a `=== STYLE W
 Temporarily add this `it` at the end of the `Style Balance` describe in `balance.test.ts` (you will DELETE it before committing — it only dumps numbers):
 
 ```typescript
-  it('TEMP: dump baseline', () => {
-    const rows = ALL_STYLES.map((s) => {
-      const overall = ((styleWins[s]! / styleFights[s]!) * 100).toFixed(1);
-      const mirror = ((matchupWins[s]![s]! / FIGHTS_PER_MATCHUP) * 100).toFixed(1);
-      return `${s.padEnd(22)} overall=${overall}%  mirror(A)=${mirror}%`;
-    });
-    console.log('\n' + rows.join('\n'));
-    expect(true).toBe(true);
+it('TEMP: dump baseline', () => {
+  const rows = ALL_STYLES.map((s) => {
+    const overall = ((styleWins[s]! / styleFights[s]!) * 100).toFixed(1);
+    const mirror = ((matchupWins[s]![s]! / FIGHTS_PER_MATCHUP) * 100).toFixed(1);
+    return `${s.padEnd(22)} overall=${overall}%  mirror(A)=${mirror}%`;
   });
+  console.log('\n' + rows.join('\n'));
+  expect(true).toBe(true);
+});
 ```
 
 Run: `npx vitest run src/test/engine/economy/balance.test.ts -t "dump baseline" 2>&1 | grep -E "overall=|mirror"`
 
 Record the output. Expected shape (illustrative — use YOUR real numbers):
+
 ```
 AimedBlow              overall=31.2%  mirror(A)=49.5%
 BashingAttack          overall=63.8%  mirror(A)=50.6%
@@ -69,6 +71,7 @@ BashingAttack          overall=63.8%  mirror(A)=50.6%
 - [ ] **Step 3: Note the two spreads, then delete the TEMP test**
 
 From the recorded numbers compute:
+
 - **Overall-average spread** = max(overall) − min(overall) across styles. (Illustrative: 63.8 − 31.2 = 32.6pp.)
 - **Mirror max deviation** = max over styles of |mirror − 50|. (Illustrative: 0.6pp — mirror should already be tight because both sides are identical fighters.)
 
@@ -81,6 +84,7 @@ Delete the `TEMP: dump baseline` test. These two numbers seed the starting guard
 Add three guardrails. Set their bands to **just contain today's measured reality** (from Task 1) so the suite stays green, then Task 3 tightens them as absolute power moves to the penalty layer. This is the "manual whack-a-mole → regression-gated loop" conversion.
 
 **Files:**
+
 - Modify: `src/test/engine/economy/balance.test.ts`
 - Modify: `src/constants/combat/combat.ts`
 
@@ -159,7 +163,7 @@ The mirror cell `matchupWins[s][s] / FIGHTS_PER_MATCHUP` is the A-side win rate 
 ```typescript
 describe('Mirror-match drift (engine A/D bias)', () => {
   it('every style mirror match should sit near 50% A-side wins', () => {
-    const BAND = 0.10; // tighten toward 0.05 as A/D bias is reduced
+    const BAND = 0.1; // tighten toward 0.05 as A/D bias is reduced
     const problems: string[] = [];
     for (const s of ALL_STYLES) {
       const rate = matchupWins[s]![s]! / FIGHTS_PER_MATCHUP;
@@ -167,7 +171,10 @@ describe('Mirror-match drift (engine A/D bias)', () => {
         problems.push(`${s}: ${(rate * 100).toFixed(1)}% (A-side)`);
       }
     }
-    expect(problems.length, `\nMirror matches off 50% by >${BAND * 100}pp:\n  ${problems.join('\n  ')}`).toBe(0);
+    expect(
+      problems.length,
+      `\nMirror matches off 50% by >${BAND * 100}pp:\n  ${problems.join('\n  ')}`
+    ).toBe(0);
   });
 });
 ```
@@ -184,7 +191,7 @@ describe('Absolute-power band (overall win rate per style)', () => {
   // RATCHET: target is [0.40, 0.60] (50% ± 10pp). Seed these bounds to just
   // contain the current measured spread (Task 1), then tighten in Task 3 as
   // absolute power is moved from the matrix into STYLE_PENALTIES. Do NOT loosen.
-  const LOW = 0.30;  // ← replace with floor(min overall) from Task 1
+  const LOW = 0.3; // ← replace with floor(min overall) from Task 1
   const HIGH = 0.66; // ← replace with ceil(max overall) from Task 1
   it(`every style overall win rate should be within [${LOW}, ${HIGH}] (ratcheting toward 0.40–0.60)`, () => {
     const problems: string[] = [];
@@ -194,7 +201,10 @@ describe('Absolute-power band (overall win rate per style)', () => {
         problems.push(`${s}: ${(rate * 100).toFixed(1)}%`);
       }
     }
-    expect(problems.length, `\nStyles outside absolute-power band:\n  ${problems.join('\n  ')}`).toBe(0);
+    expect(
+      problems.length,
+      `\nStyles outside absolute-power band:\n  ${problems.join('\n  ')}`
+    ).toBe(0);
   });
 });
 ```
@@ -223,6 +233,7 @@ git commit -m "test(balance): add antisymmetry + mirror + abs-power guardrails; 
 Symmetrizing the matrix (Task 2) removed the matrix's absolute-power compensation, so some styles now sit further from 50%. This task moves that correction to where it belongs — `STYLE_PENALTIES` — and tightens the band step by step. This is empirical: the tests define "done," not prescribed numbers.
 
 **Files:**
+
 - Modify: `src/engine/skillCalc.ts` (the `STYLE_PENALTIES` table, lines ~273–299)
 - Modify: `src/test/engine/economy/balance.test.ts` (tighten `LOW`/`HIGH` only)
 
@@ -234,7 +245,7 @@ Re-add the `TEMP: dump baseline` test from Task 1 Step 2, run it, record each st
 
 For each over-performing style, deepen its penalties (more negative across `[ATT,PAR,DEF,INI,RIP,DEC]`, weighted toward the skills that define its win condition so identity is preserved — e.g. nerf BA's ATT, not its INI). For each under-performing style, lighten penalties. Move in **small steps (±1–2 per skill)**; the table comments already document each style's identity (e.g. PR's RIP is "least penalised" — keep that relative ordering intact).
 
-> Rule: never flip a style's relative skill profile. AB stays precision-shaped, ST stays ATT-heavy, TP stays PAR-heavy. You are shifting the *level*, not the *shape*.
+> Rule: never flip a style's relative skill profile. AB stays precision-shaped, ST stays ATT-heavy, TP stays PAR-heavy. You are shifting the _level_, not the _shape_.
 
 - [ ] **Step 3: Re-run the harness after each adjustment**
 
@@ -255,6 +266,7 @@ Expected: PASS — you only touched `STYLE_PENALTIES`, so the matrix is still pu
 - [ ] **Step 6: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/engine/skillCalc.ts" "src/test/engine/economy/balance.test.ts"
 git commit -m "balance: move absolute-power tuning from matrix into STYLE_PENALTIES; ratchet band to 40-60%"
@@ -264,9 +276,10 @@ git commit -m "balance: move absolute-power tuning from matrix into STYLE_PENALT
 
 ## Task 4: Aging shifts identity (veteran DEF compensation)
 
-Aging linearly drains SP/DF (`aging.ts:55`, `penalty = floor((age-28)/3)`), which disproportionately guts INI-dependent styles. Instead of soft-capping the loss, compensate it: a veteran trades lost speed for wisdom — WL-scaled DEF. The aged fighter stays viable as a *different* (patient) fighter.
+Aging linearly drains SP/DF (`aging.ts:55`, `penalty = floor((age-28)/3)`), which disproportionately guts INI-dependent styles. Instead of soft-capping the loss, compensate it: a veteran trades lost speed for wisdom — WL-scaled DEF. The aged fighter stays viable as a _different_ (patient) fighter.
 
 **Files:**
+
 - Create: `src/engine/aging/veteranCompensation.ts`
 - Test: `src/test/engine/aging/veteranCompensation.test.ts`
 - Modify: `src/engine/bout/fighterState.ts`
@@ -287,7 +300,7 @@ describe('getVeteranDefBonus', () => {
 
   it('grows with age past 28 (more lost speed -> more compensating wisdom)', () => {
     const young = getVeteranDefBonus(30, 15); // penalty 0 still (floor(2/3)=0)
-    const old = getVeteranDefBonus(34, 15);   // penalty 2 (floor(6/3)=2)
+    const old = getVeteranDefBonus(34, 15); // penalty 2 (floor(6/3)=2)
     expect(old).toBeGreaterThan(young);
   });
 
@@ -328,7 +341,7 @@ Create `src/engine/aging/veteranCompensation.ts`:
  * out-tanking their prime selves. Keep it < 1.0.
  */
 const AGING_PENALTY_START = 28; // mirrors aging.ts
-const WISDOM_FACTOR = 0.25;     // DEF gained per (attribute-point-lost × WL/15)
+const WISDOM_FACTOR = 0.25; // DEF gained per (attribute-point-lost × WL/15)
 
 /** SP+DF points lost to aging at a given age (matches aging.ts penalty). */
 function agingAttributeLoss(age: number): number {
@@ -382,10 +395,22 @@ function warrior(style: FightingStyle, age: number, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   return {
-    id: id as import('@/types/shared.types').WarriorId, name: id, style,
-    attributes: attrs, baseSkills, derivedStats, fame: 0, popularity: 0,
-    titles: [], injuries: [], flair: [], career: { wins: 0, losses: 0, kills: 0 },
-    champion: false, status: 'Active', age, traits: [],
+    id: id as import('@/types/shared.types').WarriorId,
+    name: id,
+    style,
+    attributes: attrs,
+    baseSkills,
+    derivedStats,
+    fame: 0,
+    popularity: 0,
+    titles: [],
+    injuries: [],
+    flair: [],
+    career: { wins: 0, losses: 0, kills: 0 },
+    champion: false,
+    status: 'Active',
+    age,
+    traits: [],
   };
 }
 
@@ -396,7 +421,13 @@ describe('Aged INI-style fighter stays viable', () => {
     let wins = 0;
     const N = 300;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(defaultPlanForWarrior(old), defaultPlanForWarrior(prime), old, prime, i * 5381 + 11);
+      const o = simulateFight(
+        defaultPlanForWarrior(old),
+        defaultPlanForWarrior(prime),
+        old,
+        prime,
+        i * 5381 + 11
+      );
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;
@@ -412,6 +443,7 @@ Expected: PASS after tuning `WISDOM_FACTOR`.
 - [ ] **Step 8: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/engine/aging/veteranCompensation.ts" "src/test/engine/aging/veteranCompensation.test.ts" "src/engine/bout/fighterState.ts"
 git commit -m "feat(aging): veterans trade lost speed for WL-scaled DEF (aging shifts identity, not just drains)"
@@ -424,6 +456,7 @@ git commit -m "feat(aging): veterans trade lost speed for WL-scaled DEF (aging s
 `getFavoriteWeaponBonus` returns a flat `+1 ATT` for every style (`favorites.ts:161`), applied as `favWeapon`/`isMastered` in `fighterState.ts:60`. Same budget, but route the `+1` to the axis that reinforces each style's identity: brutal→damage, agile→initiative, tank→defense, cunning→riposte.
 
 **Files:**
+
 - Create: `src/engine/favorites/weaponMastery.ts`
 - Test: `src/test/engine/favorites/weaponMastery.test.ts`
 - Modify: `src/engine/bout/fighterState.ts`
@@ -440,7 +473,11 @@ import { getMasteryBonus } from '@/engine/favorites/weaponMastery';
 describe('getMasteryBonus', () => {
   it('returns all-zero when the favorite weapon is not mastered', () => {
     expect(getMasteryBonus(FightingStyle.BashingAttack, false)).toEqual({
-      att: 0, dmg: 0, ini: 0, def: 0, rip: 0,
+      att: 0,
+      dmg: 0,
+      ini: 0,
+      def: 0,
+      rip: 0,
     });
   });
 
@@ -558,6 +595,7 @@ Expected: still green. The standard harness equips style-default loadouts and do
 - [ ] **Step 8: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/engine/favorites/weaponMastery.ts" "src/test/engine/favorites/weaponMastery.test.ts" "src/engine/bout/fighterState.ts"
 git commit -m "feat(favorites): route favorite-weapon mastery to a style-identity axis (same +1 budget)"
@@ -567,15 +605,16 @@ git commit -m "feat(favorites): route favorite-weapon mastery to a style-identit
 
 ## Task 6: Reduce trait noise without removing trait variety
 
-The balance harness runs trait-free (`traits: []`), so the matrix is tuned against a world where traits don't exist — yet real fighters carry traits whose OE/AL swings the matrix never sees. Two parts: (a) *measure* trait-induced spread, (b) tighten `generateTraits` gating so traits amplify identity instead of adding cross-style noise.
+The balance harness runs trait-free (`traits: []`), so the matrix is tuned against a world where traits don't exist — yet real fighters carry traits whose OE/AL swings the matrix never sees. Two parts: (a) _measure_ trait-induced spread, (b) tighten `generateTraits` gating so traits amplify identity instead of adding cross-style noise.
 
 **Files:**
+
 - Create: `src/test/engine/balance/traitNoise.test.ts`
 - Modify: `src/engine/traits.ts`
 
 - [ ] **Step 1: Write the trait-noise measurement test (characterization)**
 
-Create `src/test/engine/balance/traitNoise.test.ts`. It generates many warriors of one archetype, fights them against a fixed opponent, and asserts the *share of anti-synergy traits* stays low — the proxy for "traits that pull a fighter off its identity." Use the real generator:
+Create `src/test/engine/balance/traitNoise.test.ts`. It generates many warriors of one archetype, fights them against a fixed opponent, and asserts the _share of anti-synergy traits_ stays low — the proxy for "traits that pull a fighter off its identity." Use the real generator:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -613,10 +652,10 @@ Expected: likely FAIL at the 0.08 target (current anti-synergy multiplier 0.3× 
 In `src/engine/traits.ts` (`generateTraits`, ~line 424), strengthen identity bias:
 
 ```typescript
-      if (archetype) {
-        if (t.synergy?.includes(archetype)) w *= 3.0;       // was 2.0 — amplify identity
-        if (t.antiSynergy?.includes(archetype)) w *= 0.10;  // was 0.3 — suppress noise
-      }
+if (archetype) {
+  if (t.synergy?.includes(archetype)) w *= 3.0; // was 2.0 — amplify identity
+  if (t.antiSynergy?.includes(archetype)) w *= 0.1; // was 0.3 — suppress noise
+}
 ```
 
 Update the block comment above `generateTraits` (the `@param archetype` doc, ~line 400) to state the new multipliers and the intent: "traits amplify a fighter's identity and minimise cross-style swings that the balance matrix cannot see."
@@ -631,15 +670,15 @@ Expected: PASS (anti-synergy share < 8%). If still above, lower the anti-synergy
 Add to the same file a guard that the generator still produces a spread of distinct traits (identity ≠ monoculture):
 
 ```typescript
-  it('still produces varied traits (amplified, not collapsed to one)', () => {
-    const rng = new RNGService('variety-seed');
-    const seen = new Set<string>();
-    for (let i = 0; i < 2000; i++) {
-      for (const id of generateTraits(rng, 'brutal')) seen.add(id);
-    }
-    // A brutal fighter should still draw from a healthy palette, not 1-2 traits.
-    expect(seen.size, `distinct brutal traits seen: ${seen.size}`).toBeGreaterThanOrEqual(6);
-  });
+it('still produces varied traits (amplified, not collapsed to one)', () => {
+  const rng = new RNGService('variety-seed');
+  const seen = new Set<string>();
+  for (let i = 0; i < 2000; i++) {
+    for (const id of generateTraits(rng, 'brutal')) seen.add(id);
+  }
+  // A brutal fighter should still draw from a healthy palette, not 1-2 traits.
+  expect(seen.size, `distinct brutal traits seen: ${seen.size}`).toBeGreaterThanOrEqual(6);
+});
 ```
 
 Run: `npx vitest run src/test/engine/balance/traitNoise.test.ts`
@@ -674,17 +713,17 @@ Each answer becomes a separate TDD plan, validated against the **same guardrail 
 
 ## Self-Review Notes (for the implementer)
 
-- **The matrix and the penalty table are now orthogonal by test.** `findAntisymmetryViolations` fails if you ever put absolute power back in the matrix; the 40–60% band fails if a style is globally over/under-tuned. Tune *matchups* in `MATCHUP_MATRIX`, *power* in `STYLE_PENALTIES` — never cross them.
+- **The matrix and the penalty table are now orthogonal by test.** `findAntisymmetryViolations` fails if you ever put absolute power back in the matrix; the 40–60% band fails if a style is globally over/under-tuned. Tune _matchups_ in `MATCHUP_MATRIX`, _power_ in `STYLE_PENALTIES` — never cross them.
 - **Identity is shape, not level.** Tasks 3–6 change levels and payoff axes; none flips a style's relative skill profile. Preserve the orderings documented in the `STYLE_PENALTIES` comments.
 - **The standard harness is age-20, favorite-free, trait-free** — Tasks 4/5/6 are deliberately no-ops there and are validated by their own targeted tests. Do not "fix" the harness no-op; the prime-age baseline is what the guardrails protect.
-- **Magnitudes are knobs, mechanisms are code.** `WISDOM_FACTOR`, the mastery axes, and the trait multipliers are tuned empirically; the *tests* define done. Never hard-code a win rate.
+- **Magnitudes are knobs, mechanisms are code.** `WISDOM_FACTOR`, the mastery axes, and the trait multipliers are tuned empirically; the _tests_ define done. Never hard-code a win rate.
 - **Canon is off-limits:** weapon suitability (CW/W/M/U) and mortality data stay exactly as they are.
 
 ## Verification (done by reviewer after implementation)
 
 1. `npx vitest run src/test/engine/economy/balance.test.ts` → green, including: near-antisymmetric matrix, mirror within ±10pp, every style overall within [0.40, 0.60].
 2. `grep -n "findAntisymmetryViolations" src/constants/combat/combat.ts` exists and is consumed by the test.
-3. `STYLE_PENALTIES` skill-profile orderings unchanged in *shape* (AB precision, ST ATT-heavy, TP PAR-heavy, PR RIP-least-penalised).
+3. `STYLE_PENALTIES` skill-profile orderings unchanged in _shape_ (AB precision, ST ATT-heavy, TP PAR-heavy, PR RIP-least-penalised).
 4. `npx vitest run src/test/engine/aging/veteranCompensation.test.ts src/test/engine/favorites/weaponMastery.test.ts src/test/engine/balance/traitNoise.test.ts` → all green.
 5. `bunx tsc --noEmit --project tsconfig.app.json` → 0 errors; full `npx vitest run` unchanged elsewhere.
 6. No edits to weapon-suitability or mortality canon data.

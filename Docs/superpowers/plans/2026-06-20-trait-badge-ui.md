@@ -4,13 +4,13 @@
 
 **Goal:** A reusable, tier-colored `TraitBadge` that renders any trait with its name, tier color, a class tag when restricted, and a **tooltip showing the trait's description** — then drop it in wherever traits appear, so the ~98-trait roster is legible to players.
 
-**Architecture:** Combat values are computed elsewhere; this component only *displays* a trait honestly. A pure `traitDisplay.ts` maps a trait id to display metadata (name, tier, sign, class tag, description) and a tier→color class — unit-testable with no DOM. `TraitBadge.tsx` wraps the existing shadcn `Badge` + `Tooltip` primitives. The current flat rendering in `WarriorDossierTraits.tsx` is replaced with `TraitBadge`, and the component is reused on the roster and training screens.
+**Architecture:** Combat values are computed elsewhere; this component only _displays_ a trait honestly. A pure `traitDisplay.ts` maps a trait id to display metadata (name, tier, sign, class tag, description) and a tier→color class — unit-testable with no DOM. `TraitBadge.tsx` wraps the existing shadcn `Badge` + `Tooltip` primitives. The current flat rendering in `WarriorDossierTraits.tsx` is replaced with `TraitBadge`, and the component is reused on the roster and training screens.
 
 **Tech Stack:** TypeScript, React 18, Tailwind + shadcn/ui (`Badge`, `Tooltip`), Vitest + Testing Library. Bun (`bun`/`bunx` — never npm/node).
 
-**Scope:** System 7 of the trait redesign. **Depends on System 1** (`tier`/`sign`/`styles` on `TraitDef`). It does not compute anything new — every value maps to real trait data. (The roster *liability* badge is a separate component shipped in System 4.)
+**Scope:** System 7 of the trait redesign. **Depends on System 1** (`tier`/`sign`/`styles` on `TraitDef`). It does not compute anything new — every value maps to real trait data. (The roster _liability_ badge is a separate component shipped in System 4.)
 
-**Honesty rule (per the project's UI conventions):** the badge must show only what's true of the trait — name, real tier, real description, real class restriction. No invented flavor, no fake "rarity sparkle" beyond the tier color. A trait the player can't read is the problem we're fixing; a trait that *lies* is worse.
+**Honesty rule (per the project's UI conventions):** the badge must show only what's true of the trait — name, real tier, real description, real class restriction. No invented flavor, no fake "rarity sparkle" beyond the tier color. A trait the player can't read is the problem we're fixing; a trait that _lies_ is worse.
 
 ---
 
@@ -27,6 +27,7 @@
 ## Task 1: Pure display helpers (TDD)
 
 **Files:**
+
 - Create: `src/components/warrior/traits/traitDisplay.ts`
 - Create: `src/test/components/warrior/traitDisplay.test.ts`
 
@@ -90,9 +91,15 @@ export interface TraitBadgeMeta {
 }
 
 const STYLE_LABEL: Record<string, string> = {
-  AimedBlow: 'Aimed Blow', BashingAttack: 'Bashing', LungingAttack: 'Lunging',
-  ParryLunge: 'Parry-Lunge', ParryRiposte: 'Parry-Riposte', ParryStrike: 'Parry-Strike',
-  SlashingAttack: 'Slashing', StrikingAttack: 'Striking', TotalParry: 'Total Parry',
+  AimedBlow: 'Aimed Blow',
+  BashingAttack: 'Bashing',
+  LungingAttack: 'Lunging',
+  ParryLunge: 'Parry-Lunge',
+  ParryRiposte: 'Parry-Riposte',
+  ParryStrike: 'Parry-Strike',
+  SlashingAttack: 'Slashing',
+  StrikingAttack: 'Striking',
+  TotalParry: 'Total Parry',
   WallOfSteel: 'Wall of Steel',
 };
 
@@ -105,18 +112,25 @@ export function traitBadgeMeta(id: string): TraitBadgeMeta | null {
     tier: t.tier,
     description: t.description,
     isFlaw: t.tier === 'Flaw',
-    classTag: t.styles?.length ? STYLE_LABEL[t.styles[0] as string] ?? String(t.styles[0]) : undefined,
+    classTag: t.styles?.length
+      ? (STYLE_LABEL[t.styles[0] as string] ?? String(t.styles[0]))
+      : undefined,
   };
 }
 
 /** Tailwind classes per tier — mirrors the potential-grade colour ladder; Flaw is a warning. */
 export function traitTierColorClasses(tier: TraitTier): string {
   switch (tier) {
-    case 'Common':      return 'bg-white/10 text-foreground/80 border-white/15';
-    case 'Notable':     return 'bg-sky-500/10 text-sky-300 border-sky-500/25';
-    case 'Exceptional': return 'bg-arena-gold/10 text-arena-gold border-arena-gold/25';
-    case 'Signature':   return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
-    case 'Flaw':        return 'bg-destructive/15 text-destructive border-destructive/30';
+    case 'Common':
+      return 'bg-white/10 text-foreground/80 border-white/15';
+    case 'Notable':
+      return 'bg-sky-500/10 text-sky-300 border-sky-500/25';
+    case 'Exceptional':
+      return 'bg-arena-gold/10 text-arena-gold border-arena-gold/25';
+    case 'Signature':
+      return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
+    case 'Flaw':
+      return 'bg-destructive/15 text-destructive border-destructive/30';
   }
 }
 ```
@@ -137,6 +151,7 @@ git commit -m "feat(ui): pure trait display metadata + tier color helpers"
 ## Task 2: The `TraitBadge` component (render test)
 
 **Files:**
+
 - Create: `src/components/warrior/traits/TraitBadge.tsx`
 - Create: `src/test/components/warrior/TraitBadge.test.tsx`
 
@@ -213,7 +228,9 @@ export function TraitBadge({ traitId, className }: TraitBadgeProps) {
           {meta.name} <span className="opacity-60">— {meta.tier}</span>
         </p>
         <p className="text-[11px] text-muted-foreground">{meta.description}</p>
-        {meta.classTag && <p className="text-[10px] opacity-60 mt-1">Class trait: {meta.classTag}</p>}
+        {meta.classTag && (
+          <p className="text-[10px] opacity-60 mt-1">Class trait: {meta.classTag}</p>
+        )}
       </TooltipContent>
     </Tooltip>
   );
@@ -236,6 +253,7 @@ git commit -m "feat(ui): TraitBadge — tier-colored trait with description tool
 ## Task 3: Adopt TraitBadge in the dossier
 
 **Files:**
+
 - Modify: `src/components/warrior/dossier/WarriorDossierTraits.tsx`
 
 - [ ] **Step 1: Replace the flat badge mapping**
@@ -243,9 +261,9 @@ git commit -m "feat(ui): TraitBadge — tier-colored trait with description tool
 In `WarriorDossierTraits.tsx`, replace the `warrior.traits.map(...)` block (which renders a fixed-gold `<Badge>` with `TRAITS[t]?.name`) with:
 
 ```tsx
-{warrior.traits.map((t) => (
-  <TraitBadge key={t} traitId={t} />
-))}
+{
+  warrior.traits.map((t) => <TraitBadge key={t} traitId={t} />);
+}
 ```
 
 Add `import { TraitBadge } from '@/components/warrior/traits/TraitBadge';` and drop the now-unused `Badge`/`TRAITS` imports if nothing else in the file uses them.
@@ -268,6 +286,7 @@ git commit -m "feat(ui): dossier uses TraitBadge (tier color + description toolt
 ## Task 4: Reuse on roster and training screens
 
 **Files:**
+
 - Modify: `src/components/stable/RosterWarriorRow.tsx`
 - Modify: `src/pages/Training.tsx`
 
@@ -276,9 +295,11 @@ git commit -m "feat(ui): dossier uses TraitBadge (tier color + description toolt
 In `RosterWarriorRow.tsx`, near the existing badges (after the potential-grade badge, ~line 156), render the warrior's traits compactly:
 
 ```tsx
-{warrior?.traits?.slice(0, 3).map((t) => (
-  <TraitBadge key={t} traitId={t} className="text-[8px]" />
-))}
+{
+  warrior?.traits
+    ?.slice(0, 3)
+    .map((t) => <TraitBadge key={t} traitId={t} className="text-[8px]" />);
+}
 ```
 
 Import `TraitBadge` from `@/components/warrior/traits/TraitBadge`. (Cap at 3 = the trait cap, so it never overflows the row.)
@@ -288,9 +309,9 @@ Import `TraitBadge` from `@/components/warrior/traits/TraitBadge`. (Cap at 3 = t
 On the trait-training picker in `Training.tsx` (the UI that calls `handleAssignTraitTraining` from the System 3 plan), render the candidate pool with `TraitBadge` so the player sees what they might gain, e.g.:
 
 ```tsx
-{traitTrainingPool(warrior, selectedTrainer).map((t) => (
-  <TraitBadge key={t.id} traitId={t.id} />
-))}
+{
+  traitTrainingPool(warrior, selectedTrainer).map((t) => <TraitBadge key={t.id} traitId={t.id} />);
+}
 ```
 
 Import `traitTrainingPool` from `@/engine/training/trainingGains/traitTraining` (System 3). This makes the risk/reward legible: the player sees the tier spread and class traits the chosen trainer can reach.
@@ -299,6 +320,7 @@ Import `traitTrainingPool` from `@/engine/training/trainingGains/traitTraining` 
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
 Run: `npx vitest run 2>&1 | tail -4` → green.
+
 ```bash
 git add "src/components/stable/RosterWarriorRow.tsx" "src/pages/Training.tsx"
 git commit -m "feat(ui): reuse TraitBadge on roster rows and the trait-training picker"

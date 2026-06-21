@@ -13,19 +13,25 @@ beforeEach(() => {
   Element.prototype.scrollIntoView = vi.fn();
 });
 
-const warriorA: Warrior = makeWarrior(
-  'w1' as any,
-  'Aulus',
-  FightingStyle.LungingAttack,
-  { ST: 12, CN: 10, SZ: 8, WT: 14, WL: 12, SP: 15, DF: 11 }
-);
+const warriorA: Warrior = makeWarrior('w1' as any, 'Aulus', FightingStyle.LungingAttack, {
+  ST: 12,
+  CN: 10,
+  SZ: 8,
+  WT: 14,
+  WL: 12,
+  SP: 15,
+  DF: 11,
+});
 
-const warriorD: Warrior = makeWarrior(
-  'w2' as any,
-  'Bran',
-  FightingStyle.TotalParry,
-  { ST: 10, CN: 14, SZ: 12, WT: 10, WL: 16, SP: 8, DF: 14 }
-);
+const warriorD: Warrior = makeWarrior('w2' as any, 'Bran', FightingStyle.TotalParry, {
+  ST: 10,
+  CN: 14,
+  SZ: 12,
+  WT: 10,
+  WL: 16,
+  SP: 8,
+  DF: 14,
+});
 
 const mockOutcome: FightOutcome = {
   winner: 'A',
@@ -62,25 +68,19 @@ const mockBoutResult = {
 
 describe('FirstBloodStep', () => {
   it('renders both fighter names', () => {
-    render(
-      <FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />
-    );
+    render(<FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />);
     expect(screen.getByText('Aulus')).toBeInTheDocument();
     expect(screen.getByText('Bran')).toBeInTheDocument();
   });
 
   it('renders TacticalLogView with step controls (Prev and Next buttons)', () => {
-    render(
-      <FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />
-    );
+    render(<FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />);
     expect(screen.getByRole('button', { name: /previous/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /next/i })).toBeInTheDocument();
   });
 
   it('renders winner banner with winner name', () => {
-    render(
-      <FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />
-    );
+    render(<FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />);
     // "Aulus" appears in both fighter name and winner banner — use getAllByText
     const aulusMatches = screen.getAllByText(/Aulus/);
     expect(aulusMatches.length).toBeGreaterThanOrEqual(2);
@@ -90,17 +90,13 @@ describe('FirstBloodStep', () => {
   });
 
   it('renders Back and Continue navigation buttons', () => {
-    render(
-      <FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />
-    );
+    render(<FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />);
     expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /continue/i })).toBeInTheDocument();
   });
 
   it('clicking Next step button updates position indicator from 1/5 to 2/5', () => {
-    render(
-      <FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />
-    );
+    render(<FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />);
     // Initial position should show "1 / 5"
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('5')).toBeInTheDocument();
@@ -115,9 +111,7 @@ describe('FirstBloodStep', () => {
   });
 
   it('clicking Prev step button at index 0 keeps position at 1/5', () => {
-    render(
-      <FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />
-    );
+    render(<FirstBloodStep boutResult={mockBoutResult} onBack={vi.fn()} onNext={vi.fn()} />);
     // Prev is disabled at index 0, position stays "1 / 5"
     expect(screen.getByRole('button', { name: /previous/i })).toBeDisabled();
     expect(screen.getByText('1')).toBeInTheDocument();

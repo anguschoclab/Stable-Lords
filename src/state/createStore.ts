@@ -8,7 +8,11 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
 import { opfsArchive } from '@/engine/storage/opfsArchive';
 import { flushDeferredArchivesOffThread } from '@/engine/pipeline/adapters/opfsArchiver';
-import { stripNonSerializable, reconstructGameState, clearReconstructionCache } from './serialization';
+import {
+  stripNonSerializable,
+  reconstructGameState,
+  clearReconstructionCache,
+} from './serialization';
 import type { GameStore } from './store.types';
 import { StyleRollups } from '@/engine/stats/styleRollups';
 

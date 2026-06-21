@@ -191,18 +191,14 @@ describe('Bookmarks Page', () => {
   });
 
   it('shows Clear All button when bookmarks exist', () => {
-    mockStoreState.bookmarks = [
-      { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
-    ];
+    mockStoreState.bookmarks = [{ entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' }];
     mockStoreState.roster = [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }];
     render(<Bookmarks />);
     expect(screen.getByRole('button', { name: /clear all/i })).toBeInTheDocument();
   });
 
   it('shows Clear button per section', () => {
-    mockStoreState.bookmarks = [
-      { entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' },
-    ];
+    mockStoreState.bookmarks = [{ entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' }];
     mockStoreState.roster = [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }];
     render(<Bookmarks />);
     const clearButtons = screen.getAllByRole('button', { name: /clear/i });

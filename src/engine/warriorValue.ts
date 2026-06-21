@@ -8,7 +8,11 @@ export interface LiabilityResult {
 }
 
 const POSITIVE_VALUE: Record<TraitTier, number> = {
-  Common: 6, Notable: 10, Exceptional: 16, Signature: 24, Flaw: 0,
+  Common: 6,
+  Notable: 10,
+  Exceptional: 16,
+  Signature: 24,
+  Flaw: 0,
 };
 
 /**
@@ -21,9 +25,15 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
 
   const flaws = traits.filter((t) => t!.tier === 'Flaw');
   const flawBurden = flaws.length * 34;
-  if (flaws.length) factors.push({ name: `${flaws.length} flaw${flaws.length > 1 ? 's' : ''}`, weight: flawBurden });
+  if (flaws.length)
+    factors.push({
+      name: `${flaws.length} flaw${flaws.length > 1 ? 's' : ''}`,
+      weight: flawBurden,
+    });
 
-  const traitValue = traits.filter((t) => t!.sign === 'positive').reduce((s, t) => s + POSITIVE_VALUE[t!.tier], 0);
+  const traitValue = traits
+    .filter((t) => t!.sign === 'positive')
+    .reduce((s, t) => s + POSITIVE_VALUE[t!.tier], 0);
   if (traitValue) factors.push({ name: 'positive traits', weight: -traitValue });
 
   const c = warrior.career ?? { wins: 0, losses: 0, kills: 0 };
@@ -42,7 +52,11 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
   const score = Math.max(0, Math.min(100, raw + 20)); // baseline 20 so a clean warrior sits low-but-nonzero
 
   const recommendation: LiabilityResult['recommendation'] =
-    flaws.length >= 2 && score > 55 ? 'Release' : flaws.length >= 1 || score > 55 ? 'Monitor' : 'Keep';
+    flaws.length >= 2 && score > 55
+      ? 'Release'
+      : flaws.length >= 1 || score > 55
+        ? 'Monitor'
+        : 'Keep';
 
   return { score, factors, recommendation };
 }

@@ -327,12 +327,12 @@ Gold is the lifeblood of your stable. Running out means you can't train, can't r
 
 ### 8.1 Income
 
-| Source                   | Amount                                        |
-| ------------------------ | --------------------------------------------- |
+| Source                   | Amount                                          |
+| ------------------------ | ----------------------------------------------- |
 | Fight purse (per bout)   | Base 90g, scaled by warrior fame and arena tier |
 | Win bonus (per victory)  | Base 35g, scaled by warrior fame and arena tier |
-| Fame dividend (per week) | Fame × 0.5 gold                               |
-| Noble patronage          | (Fame − 40) ÷ 10 × 25 gold per famous warrior |
+| Fame dividend (per week) | Fame × 0.5 gold                                 |
+| Noble patronage          | (Fame − 40) ÷ 10 × 25 gold per famous warrior   |
 
 **Fight purse scaling:** Purses increase as your warriors gain fame and fight in higher-tier arenas.
 

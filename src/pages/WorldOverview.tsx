@@ -131,9 +131,7 @@ export default function WorldOverview() {
     return stableRows.filter((r) => isBookmarked('rival', r.id));
   }, [stableRows, showBookmarkedOnly, isBookmarked]);
 
-  const stableBookmarkedCount = stableRows.filter((r) =>
-    isBookmarked('rival', r.id)
-  ).length;
+  const stableBookmarkedCount = stableRows.filter((r) => isBookmarked('rival', r.id)).length;
 
   const warriorRows = useMemo<WarriorRow[]>(() => {
     const mapWarrior = (
@@ -200,9 +198,7 @@ export default function WorldOverview() {
     return warriorRows.filter((r) => isBookmarked('warrior', r.id));
   }, [warriorRows, showBookmarkedOnly, isBookmarked]);
 
-  const warriorBookmarkedCount = warriorRows.filter((r) =>
-    isBookmarked('warrior', r.id)
-  ).length;
+  const warriorBookmarkedCount = warriorRows.filter((r) => isBookmarked('warrior', r.id)).length;
 
   const totalWarriors = stableRows.reduce((s, r) => s + r.roster, 0);
   const totalKills = stableRows.reduce((s, r) => s + (r.kills || 0), 0);

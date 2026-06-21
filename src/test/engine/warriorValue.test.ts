@@ -26,7 +26,11 @@ describe('computeWarriorLiability', () => {
   it('strong positives soften the recommendation', () => {
     // Two flaws but also a Signature class trait + good record ⇒ not an automatic Release.
     const r = computeWarriorLiability(
-      w({ traits: ['fragile', 'living_wall'], fame: 80, career: { wins: 30, losses: 4, kills: 12 } })
+      w({
+        traits: ['fragile', 'living_wall'],
+        fame: 80,
+        career: { wins: 30, losses: 4, kills: 12 },
+      })
     );
     expect(['Monitor', 'Release']).toContain(r.recommendation);
     // value offsets some of the flaw penalty

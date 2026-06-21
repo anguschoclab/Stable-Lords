@@ -133,7 +133,9 @@ export function InducteeCard({
                   </TooltipTrigger>
                   <TooltipContent side="top" className="max-w-[180px] text-center">
                     <p className="text-[10px] font-black uppercase tracking-wider">Win Rate</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">Wins ÷ (Wins + Losses)</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">
+                      Wins ÷ (Wins + Losses)
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

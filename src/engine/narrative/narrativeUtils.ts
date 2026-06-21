@@ -64,14 +64,7 @@ export function getWeaponType(weaponId?: string, style?: FightingStyle): WeaponT
     return HYBRID_WEAPONS[weaponId][0]!; // default to first type
   }
 
-  const slashing = [
-    'scimitar',
-    'broadsword',
-    'greatsword',
-    'hatchet',
-    'battle_axe',
-    'great_axe',
-  ];
+  const slashing = ['scimitar', 'broadsword', 'greatsword', 'hatchet', 'battle_axe', 'great_axe'];
   const bashing = [
     'mace',
     'morning_star',

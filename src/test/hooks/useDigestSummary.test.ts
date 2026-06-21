@@ -32,7 +32,7 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
     purse: 100,
     hype: 50,
     status: 'Proposed',
-    responses: { 'wa': 'Pending' },
+    responses: { wa: 'Pending' },
     ...overrides,
   } as BoutOffer;
 }

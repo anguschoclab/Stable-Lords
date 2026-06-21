@@ -25,8 +25,7 @@ function ChronicleEmptyState() {
           No Events Yet
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
-          No history yet. Your legacy begins once the first bout is
-          fought.
+          No history yet. Your legacy begins once the first bout is fought.
         </p>
       </div>
     </Surface>

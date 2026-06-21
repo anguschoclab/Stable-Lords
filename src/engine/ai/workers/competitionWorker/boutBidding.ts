@@ -101,7 +101,11 @@ export function generateBoutBids(
     } else if (weather === 'Tornado') {
       weatherModifier = -5;
     } else if (weather === 'Blood Moon') {
-      if (warrior.style === FightingStyle.BashingAttack || warrior.style === FightingStyle.StrikingAttack) weatherModifier = +3;
+      if (
+        warrior.style === FightingStyle.BashingAttack ||
+        warrior.style === FightingStyle.StrikingAttack
+      )
+        weatherModifier = +3;
     } else if (weather === 'Hailstorm') {
       weatherModifier = -2;
       if (warrior.attributes.CN < 10) weatherModifier = -4;

@@ -24,6 +24,7 @@
 ## Task 1: The liability scorer (TDD)
 
 **Files:**
+
 - Create: `src/engine/warriorValue.ts`
 - Create: `src/test/engine/warriorValue.test.ts`
 
@@ -60,7 +61,11 @@ describe('computeWarriorLiability', () => {
   it('strong positives soften the recommendation', () => {
     // Two flaws but also a Signature class trait + good record ⇒ not an automatic Release.
     const r = computeWarriorLiability(
-      w({ traits: ['fragile', 'living_wall'], fame: 80, career: { wins: 30, losses: 4, kills: 12 } })
+      w({
+        traits: ['fragile', 'living_wall'],
+        fame: 80,
+        career: { wins: 30, losses: 4, kills: 12 },
+      })
     );
     expect(['Monitor', 'Release']).toContain(r.recommendation);
     // value offsets some of the flaw penalty
@@ -90,7 +95,11 @@ export interface LiabilityResult {
 }
 
 const POSITIVE_VALUE: Record<TraitTier, number> = {
-  Common: 6, Notable: 10, Exceptional: 16, Signature: 24, Flaw: 0,
+  Common: 6,
+  Notable: 10,
+  Exceptional: 16,
+  Signature: 24,
+  Flaw: 0,
 };
 
 /**
@@ -103,9 +112,15 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
 
   const flaws = traits.filter((t) => t!.tier === 'Flaw');
   const flawBurden = flaws.length * 34;
-  if (flaws.length) factors.push({ name: `${flaws.length} flaw${flaws.length > 1 ? 's' : ''}`, weight: flawBurden });
+  if (flaws.length)
+    factors.push({
+      name: `${flaws.length} flaw${flaws.length > 1 ? 's' : ''}`,
+      weight: flawBurden,
+    });
 
-  const traitValue = traits.filter((t) => t!.sign === 'positive').reduce((s, t) => s + POSITIVE_VALUE[t!.tier], 0);
+  const traitValue = traits
+    .filter((t) => t!.sign === 'positive')
+    .reduce((s, t) => s + POSITIVE_VALUE[t!.tier], 0);
   if (traitValue) factors.push({ name: 'positive traits', weight: -traitValue });
 
   const c = warrior.career ?? { wins: 0, losses: 0, kills: 0 };
@@ -124,7 +139,11 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
   const score = Math.max(0, Math.min(100, raw + 20)); // baseline 20 so a clean warrior sits low-but-nonzero
 
   const recommendation: LiabilityResult['recommendation'] =
-    flaws.length >= 2 && score > 55 ? 'Release' : flaws.length >= 1 || score > 55 ? 'Monitor' : 'Keep';
+    flaws.length >= 2 && score > 55
+      ? 'Release'
+      : flaws.length >= 1 || score > 55
+        ? 'Monitor'
+        : 'Keep';
 
   return { score, factors, recommendation };
 }
@@ -147,6 +166,7 @@ git commit -m "feat(churn): pure warrior liability scorer from flaw load + value
 ## Task 2: The `releaseWarrior` action
 
 **Files:**
+
 - Modify: `src/state/slices/rosterSlice/actions.ts`
 - Modify: `src/state/slices/rosterSlice/types.ts`
 
@@ -181,6 +201,7 @@ releaseWarrior: (warriorId, reason = 'Released') =>
 - [ ] **Step 3: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/state/slices/rosterSlice/actions.ts" "src/state/slices/rosterSlice/types.ts"
 git commit -m "feat(churn): add releaseWarrior roster action"
@@ -191,6 +212,7 @@ git commit -m "feat(churn): add releaseWarrior roster action"
 ## Task 3: Roster liability badge (System 7 increment)
 
 **Files:**
+
 - Modify: `src/components/stable/RosterWarriorRow.tsx`
 
 UI, not TDD — keep it minimal and honest (the badge must reflect the real score, no decoration).
@@ -200,19 +222,24 @@ UI, not TDD — keep it minimal and honest (the badge must reflect the real scor
 In `RosterWarriorRow.tsx`, after the existing potential-grade badge (~line 156), render a small badge only when the warrior is not a clear keep:
 
 ```tsx
-{warrior && (() => {
-  const liab = computeWarriorLiability(warrior);
-  if (liab.recommendation === 'Keep') return null;
-  const label = liab.recommendation === 'Release' ? 'Consider releasing' : 'Watch';
-  return (
-    <span
-      title={liab.factors.map((f) => `${f.name}: ${f.weight > 0 ? '+' : ''}${f.weight}`).join('\n')}
-      className={liab.recommendation === 'Release' ? 'badge-warning' : 'badge-muted'}
-    >
-      {label}
-    </span>
-  );
-})()}
+{
+  warrior &&
+    (() => {
+      const liab = computeWarriorLiability(warrior);
+      if (liab.recommendation === 'Keep') return null;
+      const label = liab.recommendation === 'Release' ? 'Consider releasing' : 'Watch';
+      return (
+        <span
+          title={liab.factors
+            .map((f) => `${f.name}: ${f.weight > 0 ? '+' : ''}${f.weight}`)
+            .join('\n')}
+          className={liab.recommendation === 'Release' ? 'badge-warning' : 'badge-muted'}
+        >
+          {label}
+        </span>
+      );
+    })();
+}
 ```
 
 Import `computeWarriorLiability` from `@/engine/warriorValue`. Use the project's existing badge classes (match the potential-grade badge's styling). The `title` gives a tooltip breakdown — honest, mapped to real factors.
@@ -220,6 +247,7 @@ Import `computeWarriorLiability` from `@/engine/warriorValue`. Use the project's
 - [ ] **Step 2: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/components/stable/RosterWarriorRow.tsx"
 git commit -m "feat(churn): roster liability badge with factor tooltip"
@@ -229,7 +257,7 @@ git commit -m "feat(churn): roster liability badge with factor tooltip"
 
 ## Self-Review Notes
 
-- **Liability is pure and explainable.** It returns `factors` so the badge tooltip shows *why* — no opaque score. Tune the `34`/`55` knobs against play, not vibes.
+- **Liability is pure and explainable.** It returns `factors` so the badge tooltip shows _why_ — no opaque score. Tune the `34`/`55` knobs against play, not vibes.
 - **Value offsets flaws.** A flawed-but-valuable warrior (Signature trait, strong record) is `Monitor`, not an auto-cut — that nuance is what keeps churn from being purely punishing.
 - **The churn loop closes itself.** `releaseWarrior` frees a slot; the existing recruitment refill handles the rest. No new economy wiring.
 - **Signal, not force.** The player always decides; the badge only advises (System 5 is where NPCs act automatically).

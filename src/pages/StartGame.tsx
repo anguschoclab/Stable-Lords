@@ -204,9 +204,7 @@ export default function StartGame() {
           <p className="text-[9px] font-black uppercase tracking-[0.35em] text-muted-foreground/25">
             Stable Lords v2.0
           </p>
-          <p className="text-[8px] text-muted-foreground/20 italic">
-            All records saved locally
-          </p>
+          <p className="text-[8px] text-muted-foreground/20 italic">All records saved locally</p>
         </div>
       </div>
 

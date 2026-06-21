@@ -136,7 +136,12 @@ describe('AB — inherent called shot (armor bypass)', () => {
 
 describe('TP — fatigue-exploit counter', () => {
   // ── Direct unit tests for styleRiposteBonus ──────────────────────────────
-  function makeMockFighter(style: FS, endurance: number, maxEndurance: number, momentum: number = 0): FighterState {
+  function makeMockFighter(
+    style: FS,
+    endurance: number,
+    maxEndurance: number,
+    momentum: number = 0
+  ): FighterState {
     return {
       label: 'D',
       style,
@@ -146,10 +151,16 @@ describe('TP — fatigue-exploit counter', () => {
       plan: {} as any,
       activePlan: {} as any,
       psychState: 'Neutral' as any,
-      hp: 20, maxHp: 20,
-      endurance, maxEndurance,
-      hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0,
-      armHits: 0, legHits: 0,
+      hp: 20,
+      maxHp: 20,
+      endurance,
+      maxEndurance,
+      hitsLanded: 0,
+      hitsTaken: 0,
+      ripostes: 0,
+      consecutiveHits: 0,
+      armHits: 0,
+      legHits: 0,
       momentum,
       committed: false,
       survivalStrike: false,
@@ -193,15 +204,33 @@ describe('TP — fatigue-exploit counter', () => {
   it('TP harness: TP wins more vs low-CN opponent (fast exhaustion) than vs high-CN opponent (slow exhaustion)', () => {
     // Low-CN opponent has less endurance → exhausts faster → TP's counter fires sooner
     const tpWarrior = makeWarrior('TP', FightingStyle.TotalParry, {
-      ST: 10, CN: 15, SZ: 12, WT: 10, WL: 15, SP: 8, DF: 10,
+      ST: 10,
+      CN: 15,
+      SZ: 12,
+      WT: 10,
+      WL: 15,
+      SP: 8,
+      DF: 10,
     });
 
     const lowCNWarrior = makeWarrior('LowCN', FightingStyle.BashingAttack, {
-      ST: 15, CN: 5, SZ: 12, WT: 8, WL: 8, SP: 10, DF: 8,
+      ST: 15,
+      CN: 5,
+      SZ: 12,
+      WT: 8,
+      WL: 8,
+      SP: 10,
+      DF: 8,
     });
 
     const highCNWarrior = makeWarrior('HighCN', FightingStyle.BashingAttack, {
-      ST: 15, CN: 18, SZ: 12, WT: 8, WL: 8, SP: 10, DF: 8,
+      ST: 15,
+      CN: 18,
+      SZ: 12,
+      WT: 8,
+      WL: 8,
+      SP: 10,
+      DF: 8,
     });
 
     const tpPlan = defaultPlanForWarrior(tpWarrior);
@@ -220,7 +249,12 @@ describe('TP — fatigue-exploit counter', () => {
 
 describe('LU / PL — decaying first-strike pressure (split)', () => {
   // ── Direct unit tests for PL momentum riposte bonus ──────────────────────
-  function makeMockFighter(style: FS, endurance: number, maxEndurance: number, momentum: number = 0): FighterState {
+  function makeMockFighter(
+    style: FS,
+    endurance: number,
+    maxEndurance: number,
+    momentum: number = 0
+  ): FighterState {
     return {
       label: 'D',
       style,
@@ -230,10 +264,16 @@ describe('LU / PL — decaying first-strike pressure (split)', () => {
       plan: {} as any,
       activePlan: {} as any,
       psychState: 'Neutral' as any,
-      hp: 20, maxHp: 20,
-      endurance, maxEndurance,
-      hitsLanded: 0, hitsTaken: 0, ripostes: 0, consecutiveHits: 0,
-      armHits: 0, legHits: 0,
+      hp: 20,
+      maxHp: 20,
+      endurance,
+      maxEndurance,
+      hitsLanded: 0,
+      hitsTaken: 0,
+      ripostes: 0,
+      consecutiveHits: 0,
+      armHits: 0,
+      legHits: 0,
       momentum,
       committed: false,
       survivalStrike: false,
@@ -284,14 +324,32 @@ describe('LU / PL — decaying first-strike pressure (split)', () => {
   // ── Harness: LU and PL remain distinct ───────────────────────────────────
   it('LU and PL produce different win profiles vs the same opponent (styles are distinct)', () => {
     const luWarrior = makeWarrior('LU', FightingStyle.LungingAttack, {
-      ST: 10, CN: 10, SZ: 10, WT: 12, WL: 10, SP: 18, DF: 15,
+      ST: 10,
+      CN: 10,
+      SZ: 10,
+      WT: 12,
+      WL: 10,
+      SP: 18,
+      DF: 15,
     });
     const plWarrior = makeWarrior('PL', FightingStyle.ParryLunge, {
-      ST: 10, CN: 10, SZ: 10, WT: 12, WL: 10, SP: 18, DF: 15,
+      ST: 10,
+      CN: 10,
+      SZ: 10,
+      WT: 12,
+      WL: 10,
+      SP: 18,
+      DF: 15,
     });
 
     const oppWarrior = makeWarrior('Opp', FightingStyle.StrikingAttack, {
-      ST: 15, CN: 10, SZ: 10, WT: 12, WL: 10, SP: 12, DF: 10,
+      ST: 15,
+      CN: 10,
+      SZ: 10,
+      WT: 12,
+      WL: 10,
+      SP: 12,
+      DF: 10,
     });
     const oppPlan: FightPlan = { ...defaultPlanForWarrior(oppWarrior), OE: 8, AL: 9 };
 

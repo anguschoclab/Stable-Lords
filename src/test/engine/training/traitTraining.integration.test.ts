@@ -20,7 +20,15 @@ describe('trait training (integration)', () => {
     );
     state.roster = [w];
     state.trainers = [
-      { id: 'm', name: 'Master', tier: 'Master', focus: 'Defense', fame: 0, age: 50, contractWeeksLeft: 99 } as any,
+      {
+        id: 'm',
+        name: 'Master',
+        tier: 'Master',
+        focus: 'Defense',
+        fame: 0,
+        age: 50,
+        contractWeeksLeft: 99,
+      } as any,
     ];
     state.trainingAssignments = [
       { warriorId: w.id, type: 'trait', trainerId: 'm', weeksRemaining: TRAIT_TRAIN_WEEKS },

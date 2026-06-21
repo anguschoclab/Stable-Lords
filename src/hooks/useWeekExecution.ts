@@ -36,10 +36,7 @@ export function useWeekExecution() {
     [gameState.roster]
   );
 
-  const matchCardLength = useMemo(
-    () => generatePairings(gameState).length,
-    [gameState]
-  );
+  const matchCardLength = useMemo(() => generatePairings(gameState).length, [gameState]);
 
   const executeWeek = useCallback(async () => {
     if (runningRef.current) return;

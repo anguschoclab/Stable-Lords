@@ -177,8 +177,7 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-arena-fame',
     bgClass: 'bg-arena-fame/10',
     borderClass: 'border-arena-fame/20',
-    description:
-      'The sky dances with spectral light. Fighters feel a strange, invigorating calm.',
+    description: 'The sky dances with spectral light. Fighters feel a strange, invigorating calm.',
   },
   'Aether Storm': {
     icon: Sparkles,

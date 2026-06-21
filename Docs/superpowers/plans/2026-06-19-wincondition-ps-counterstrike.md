@@ -10,7 +10,7 @@
 
 **Scope:** This is the first of six per-style win-condition plans from `docs/superpowers/specs/2026-06-19-winconditions-remaining-design.md` (build order PS → BA → WS → PR → ST → SL). Each is an independent slice; this plan delivers PS alone, working and tested.
 
-**Spec refinement (grounded in code):** The spec's default was "+2 ATT, +1 damage, one-exchange window." During grounding, the damage half was dropped: `executeHit` resolves damage only on a *landed* hit, which would not clear the flag on a miss and needs a signature change to thread a damage bonus. A pure **ATT** payoff consumes/clears cleanly at the single attack chokepoint and is exactly what low-ATT PS needs to *land* its counter. So PS's counterstrike is a flat ATT bonus on the next attack after a parry. Magnitude (`PS_COUNTERSTRIKE_ATT`) is a balance knob.
+**Spec refinement (grounded in code):** The spec's default was "+2 ATT, +1 damage, one-exchange window." During grounding, the damage half was dropped: `executeHit` resolves damage only on a _landed_ hit, which would not clear the flag on a miss and needs a signature change to thread a damage bonus. A pure **ATT** payoff consumes/clears cleanly at the single attack chokepoint and is exactly what low-ATT PS needs to _land_ its counter. So PS's counterstrike is a flat ATT bonus on the next attack after a parry. Magnitude (`PS_COUNTERSTRIKE_ATT`) is a balance knob.
 
 **Canon guardrails:** Mechanics layer only. Do NOT touch `MATCHUP_MATRIX` or weapon-suitability/mortality data. Phase-1 guardrails (antisymmetric matrix, 40–60% band) must stay green.
 
@@ -31,6 +31,7 @@
 ## Task 1: The pure counterstrike helper (TDD)
 
 **Files:**
+
 - Create: `src/engine/combat/resolution/counterstrike.ts`
 - Create: `src/test/engine/combat/counterstrike.test.ts`
 - Modify: `src/constants/combat/combat.ts`
@@ -124,6 +125,7 @@ git commit -m "feat(combat): add PS counterstrike ATT-bonus helper (pure, unit-t
 ## Task 2: Add the `counterstrikePrimed` flag to FighterState
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/types.ts`
 - Modify: `src/engine/bout/fighterState.ts`
 
@@ -162,6 +164,7 @@ git commit -m "feat(combat): add counterstrikePrimed flag to FighterState"
 ## Task 3: Set the flag on a PS parry
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/resolution.ts`
 
 - [ ] **Step 1: Confirm the FightingStyle import**
@@ -174,10 +177,10 @@ If `FightingStyle` is not already imported, add it: `import { FightingStyle } fr
 In `resolveContestedDefense` (`src/engine/combat/resolution/resolution.ts`), the successful-parry branch is `if (defCheck.success)` → `if (!isDodge)` (a parry, not a dodge), which currently updates `def.momentum` and runs the riposte check (around lines 322–365). Immediately after the momentum-shift block and before `const styleRip = styleRiposteBonus(def, att);`, add:
 
 ```typescript
-      // PS win condition: a successful parry primes a counterstrike on PS's next attack.
-      if (def.style === FightingStyle.ParryStrike) {
-        def.counterstrikePrimed = true;
-      }
+// PS win condition: a successful parry primes a counterstrike on PS's next attack.
+if (def.style === FightingStyle.ParryStrike) {
+  def.counterstrikePrimed = true;
+}
 ```
 
 - [ ] **Step 3: Typecheck**
@@ -197,6 +200,7 @@ git commit -m "feat(combat): prime PS counterstrike on a successful parry"
 ## Task 4: Consume + clear the flag at the attack-check site
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/resolution.ts`
 
 - [ ] **Step 1: Import the helper**
@@ -212,28 +216,27 @@ import { getCounterstrikeAttBonus } from './counterstrike';
 The attacker's offense runs through a single `performAttackCheck(...)` call (around line 462), whose final argument is an additive ATT sum (`attMomentumBonus + attPsychMod + … + attDynTraitAtt`). Just before that call (near where `attMomentumBonus` is computed, ~line 454), add:
 
 ```typescript
-  // PS win condition: spend the primed counterstrike on this attack (hit or miss).
-  const counterstrikeAtt = getCounterstrikeAttBonus(att);
-  att.counterstrikePrimed = false; // window lapses on the attempt
+// PS win condition: spend the primed counterstrike on this attack (hit or miss).
+const counterstrikeAtt = getCounterstrikeAttBonus(att);
+att.counterstrikePrimed = false; // window lapses on the attempt
 ```
 
 Then add `+ counterstrikeAtt` to the additive ATT argument of `performAttackCheck`. The argument currently reads:
 
 ```typescript
-    attMomentumBonus +
-      attPsychMod +
-      (aGoesFirst ? es.rangeModA : es.rangeModD) +
-      attCommit.attBonus +
-      feintAttBonus +
-      attWeaponRangeMod +
-      attDynTraitAtt
+attMomentumBonus +
+  attPsychMod +
+  (aGoesFirst ? es.rangeModA : es.rangeModD) +
+  attCommit.attBonus +
+  feintAttBonus +
+  attWeaponRangeMod +
+  attDynTraitAtt;
 ```
 
 Change the final line to:
 
 ```typescript
-      attDynTraitAtt +
-      counterstrikeAtt
+attDynTraitAtt + counterstrikeAtt;
 ```
 
 - [ ] **Step 3: Typecheck**
@@ -255,10 +258,22 @@ function mk(style: FightingStyle, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   return {
-    id: id as import('@/types/shared.types').WarriorId, name: id, style,
-    attributes: attrs, baseSkills, derivedStats, fame: 0, popularity: 0,
-    titles: [], injuries: [], flair: [], career: { wins: 0, losses: 0, kills: 0 },
-    champion: false, status: 'Active', age: 20, traits: [],
+    id: id as import('@/types/shared.types').WarriorId,
+    name: id,
+    style,
+    attributes: attrs,
+    baseSkills,
+    derivedStats,
+    fame: 0,
+    popularity: 0,
+    titles: [],
+    injuries: [],
+    flair: [],
+    career: { wins: 0, losses: 0, kills: 0 },
+    champion: false,
+    status: 'Active',
+    age: 20,
+    traits: [],
   };
 }
 
@@ -269,12 +284,18 @@ describe('PS counterstrike (integration)', () => {
     let wins = 0;
     const N = 400;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(defaultPlanForWarrior(ps), defaultPlanForWarrior(ba), ps, ba, i * 4099 + 17);
+      const o = simulateFight(
+        defaultPlanForWarrior(ps),
+        defaultPlanForWarrior(ba),
+        ps,
+        ba,
+        i * 4099 + 17
+      );
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;
     // Directional floor: with the counterstrike, PS should not be a free win for BA.
-    expect(rate, `PS vs BA win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.30);
+    expect(rate, `PS vs BA win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.3);
   });
 });
 ```
@@ -296,6 +317,7 @@ git commit -m "feat(combat): consume PS counterstrike at attack-check; integrati
 The counterstrike raises PS's effective power, so re-centre it in the Phase-1 band without touching the matrix.
 
 **Files:**
+
 - Modify (if needed): `src/engine/skillCalc.ts` (`STYLE_PENALTIES` — the PS row only)
 
 - [ ] **Step 1: Run the balance harness**
@@ -305,7 +327,7 @@ Expected: green. If the `Absolute-power band` test now flags PS as >0.60, PS ove
 
 - [ ] **Step 2: Nudge PS penalties (only if out of band)**
 
-In `src/engine/skillCalc.ts`, the `STYLE_PENALTIES` PS row is `[FightingStyle.ParryStrike]: /*PS*/ [-12, -6, -12, -9, -4, -1]`. Deepen the ATT penalty by 1 (e.g. `-12 → -13`) to offset the counterstrike's ATT gain — preserving PS's defensive *shape* (do not touch its PAR/DEF identity). Re-run Step 1. Repeat in steps of 1 until PS is within `[0.40, 0.60]`.
+In `src/engine/skillCalc.ts`, the `STYLE_PENALTIES` PS row is `[FightingStyle.ParryStrike]: /*PS*/ [-12, -6, -12, -9, -4, -1]`. Deepen the ATT penalty by 1 (e.g. `-12 → -13`) to offset the counterstrike's ATT gain — preserving PS's defensive _shape_ (do not touch its PAR/DEF identity). Re-run Step 1. Repeat in steps of 1 until PS is within `[0.40, 0.60]`.
 
 - [ ] **Step 3: Confirm the matrix never moved**
 
@@ -332,7 +354,7 @@ git commit -m "balance(PS): re-ratchet absolute power after counterstrike; guard
 - **One chokepoint, one flag.** The flag is set in exactly one place (PS parry branch) and consumed+cleared in exactly one place (the `performAttackCheck` site). The clear is unconditional on the attacker's turn, so the window correctly lapses on a miss.
 - **`getCounterstrikeAttBonus` is pure** — it reads only `style` + `counterstrikePrimed`. All style/primed gating lives there, so the resolution.ts edit is a two-line add.
 - **Mechanics layer only.** No matrix edit. The Task-5 ratchet touches only the PS row of `STYLE_PENALTIES`, preserving PS's defensive shape (PAR/DEF untouched).
-- **Magnitude is a knob.** `PS_COUNTERSTRIKE_ATT` and the PS penalty row are tuned against the harness; the *tests* define done.
+- **Magnitude is a knob.** `PS_COUNTERSTRIKE_ATT` and the PS penalty row are tuned against the harness; the _tests_ define done.
 
 ## Verification (done by reviewer after implementation)
 
@@ -342,4 +364,7 @@ git commit -m "balance(PS): re-ratchet absolute power after counterstrike; guard
 4. `npx vitest run src/test/engine/economy/balance.test.ts` → green, including `near-antisymmetric` and the 40–60% band (PS in band).
 5. `bunx tsc --noEmit --project tsconfig.app.json` → 0; full `npx vitest run` green.
 6. No edits to `MATCHUP_MATRIX` or canon data.
+
+```
+
 ```

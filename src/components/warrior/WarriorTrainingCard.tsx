@@ -11,7 +11,17 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Check, X, Heart, AlertTriangle, Lock, Zap, Gauge, ArrowUpRight, Sparkles } from 'lucide-react';
+import {
+  Check,
+  X,
+  Heart,
+  AlertTriangle,
+  Lock,
+  Zap,
+  Gauge,
+  ArrowUpRight,
+  Sparkles,
+} from 'lucide-react';
 import { computeGainChance } from '@/engine/training';
 import { canGrow } from '@/engine/potential';
 import {
@@ -24,7 +34,11 @@ import { WarriorNameTag } from '@/components/ui/WarriorBadges';
 import { Surface } from '@/components/ui/Surface';
 import { cn } from '@/lib/utils';
 import { TraitBadge } from '@/components/warrior/traits/TraitBadge';
-import { traitTrainingPool, canAcquireTrait, TRAIT_CAP } from '@/engine/training/trainingGains/traitTraining'; /**
+import {
+  traitTrainingPool,
+  canAcquireTrait,
+  TRAIT_CAP,
+} from '@/engine/training/trainingGains/traitTraining'; /**
                                    * Warrior training card.
                                    * @param  - {
   warrior,
@@ -73,7 +87,7 @@ export function WarriorTrainingCard({
   const traitCount = warrior.traits?.length ?? 0;
   const traitSlotsLeft = TRAIT_CAP - traitCount;
   const selectedTrainer = selectedTrainerId
-    ? trainers.find((t) => t.id === selectedTrainerId) ?? null
+    ? (trainers.find((t) => t.id === selectedTrainerId) ?? null)
     : null;
   const pool = selectedTrainer
     ? traitTrainingPool(warrior, selectedTrainer).filter((t) => canAcquireTrait(warrior, t.id))
@@ -304,8 +318,8 @@ export function WarriorTrainingCard({
                         </p>
                       ) : seasonCapped ? (
                         <p className="text-[9px] leading-relaxed text-arena-gold italic">
-                          Warrior is exhausted. Rest required before further training
-                          to resume growth.
+                          Warrior is exhausted. Rest required before further training to resume
+                          growth.
                         </p>
                       ) : (
                         <p className="text-[9px] leading-relaxed opacity-60">
@@ -367,7 +381,7 @@ export function WarriorTrainingCard({
                 onChange={(e) => setSelectedTrainerId(e.target.value || null)}
                 className="w-full bg-black/40 border border-white/10 text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-none focus:outline-none focus:border-primary/40"
               >
-                <option value=''>Select trainer for trait training…</option>
+                <option value="">Select trainer for trait training…</option>
                 {trainers.map((t) => (
                   <option key={t.id} value={t.id}>
                     {t.name} · {t.tier}

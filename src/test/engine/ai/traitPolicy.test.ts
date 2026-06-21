@@ -17,7 +17,11 @@ describe('TRAIT_POLICY', () => {
   });
 
   it('Showman/Aggressive train more than Pragmatic', () => {
-    expect(TRAIT_POLICY.Showman.trainAppetite).toBeGreaterThan(TRAIT_POLICY.Pragmatic.trainAppetite);
-    expect(TRAIT_POLICY.Aggressive.trainAppetite).toBeGreaterThan(TRAIT_POLICY.Pragmatic.trainAppetite);
+    expect(TRAIT_POLICY.Showman.trainAppetite).toBeGreaterThan(
+      TRAIT_POLICY.Pragmatic.trainAppetite
+    );
+    expect(TRAIT_POLICY.Aggressive.trainAppetite).toBeGreaterThan(
+      TRAIT_POLICY.Pragmatic.trainAppetite
+    );
   });
 });

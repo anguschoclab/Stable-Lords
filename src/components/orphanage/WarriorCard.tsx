@@ -138,12 +138,15 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
                 <div className="space-y-1.5">
                   <p className="font-bold border-b border-white/10 pb-1">Potential</p>
                   <p className="italic text-muted-foreground">
-                    The ceiling each attribute can reach through training. Higher grade = more growth room.
+                    The ceiling each attribute can reach through training. Higher grade = more
+                    growth room.
                   </p>
                   <div className="space-y-0.5 pt-0.5">
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-black text-accent w-4">S</span>
-                      <span className="text-muted-foreground">85+ · Elite — near-maximum ceiling</span>
+                      <span className="text-muted-foreground">
+                        85+ · Elite — near-maximum ceiling
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-black text-arena-gold w-4">A</span>
@@ -159,7 +162,9 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-black text-foreground/80 w-4">D</span>
-                      <span className="text-muted-foreground">&lt;40 · Minimal room to develop</span>
+                      <span className="text-muted-foreground">
+                        &lt;40 · Minimal room to develop
+                      </span>
                     </div>
                   </div>
                   <p className="text-muted-foreground/70 pt-0.5">

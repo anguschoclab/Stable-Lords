@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** A permanent long-horizon (104-week) headless-sim regression test that asserts the world stays *alive* — bouts keep happening, rival rosters don't collapse, mortality sits in a sane band, and traits keep emerging — so the "bankrupt player freezes the world" class of bug (and future freezes) can never ship undetected again. It also re-measures trait/churn dynamics on an *unfrozen* world, producing the numbers Plan 3 tunes against.
+**Goal:** A permanent long-horizon (104-week) headless-sim regression test that asserts the world stays _alive_ — bouts keep happening, rival rosters don't collapse, mortality sits in a sane band, and traits keep emerging — so the "bankrupt player freezes the world" class of bug (and future freezes) can never ship undetected again. It also re-measures trait/churn dynamics on an _unfrozen_ world, producing the numbers Plan 3 tunes against.
 
 **Architecture:** Extend the existing `SimPulse` metric snapshot (`src/engine/stats/simulationMetrics.ts`) with trait/mortality fields, then add a Vitest integration test that runs the existing headless harness (`runSimulation` in `src/scripts/simulation-harness.ts`) for 104 weeks with `ignoreBankruptcy: true` and asserts world-liveness invariants on the resulting pulses + final state. The harness and OPFS-mock pattern already exist (`src/scripts/simulation.test.ts`); we reuse them.
 
 **Tech Stack:** TypeScript, Bun (`bun`/`bunx` — never npm/node), Vitest. Tests: `npx vitest run <path>`. Typecheck: `bunx tsc --noEmit --project tsconfig.app.json`.
 
-**Scope:** Pure metrics extension + one integration test. **Depends on** the world-decouple fix (`2026-06-21-world-sim-decouple-from-player-stop.md`) being merged first — without it, the liveness assertions are *expected* to fail (that is the bug this harness guards). No production-behavior change.
+**Scope:** Pure metrics extension + one integration test. **Depends on** the world-decouple fix (`2026-06-21-world-sim-decouple-from-player-stop.md`) being merged first — without it, the liveness assertions are _expected_ to fail (that is the bug this harness guards). No production-behavior change.
 
 ---
 
@@ -23,6 +23,7 @@
 ## Task 1: Enrich `SimPulse` with trait & mortality metrics (TDD)
 
 **Files:**
+
 - Modify: `src/engine/stats/simulationMetrics.ts`
 - Modify: `src/test/engine/stats/simulationMetrics.test.ts`
 
@@ -189,9 +190,10 @@ git commit -m "feat(metrics): SimPulse tracks world-wide trait, flaw, class & si
 ## Task 2: 104-week world-liveness regression test
 
 **Files:**
+
 - Create: `src/test/engine/sim/worldLiveness.integration.test.ts`
 
-This is the guard. It runs the headless harness for 104 weeks with bankruptcy stops disabled, then asserts the world never froze and the population stayed healthy. The thresholds are deliberately *loose* (catch a freeze/collapse, not micro-balance — that's Plan 3's job).
+This is the guard. It runs the headless harness for 104 weeks with bankruptcy stops disabled, then asserts the world never froze and the population stayed healthy. The thresholds are deliberately _loose_ (catch a freeze/collapse, not micro-balance — that's Plan 3's job).
 
 - [ ] **Step 1: Write the test**
 
@@ -300,7 +302,7 @@ describe('world liveness over a long sim (104 weeks)', () => {
 });
 ```
 
-> Why `ignoreBankruptcy: true`: `runSimulation` (in `src/scripts/simulation-harness.ts`) has a stop condition that breaks the loop if the *player* goes bankrupt/empty; we disable it so the loop runs the full 104 weeks and we can observe the *world*. The harness's headless auto-accept of player offers is already built in.
+> Why `ignoreBankruptcy: true`: `runSimulation` (in `src/scripts/simulation-harness.ts`) has a stop condition that breaks the loop if the _player_ goes bankrupt/empty; we disable it so the loop runs the full 104 weeks and we can observe the _world_. The harness's headless auto-accept of player offers is already built in.
 
 - [ ] **Step 2: Run it**
 
@@ -341,6 +343,7 @@ describe('world liveness — measured baseline (diagnostic, no hard assert)', ()
 - [ ] **Step 4: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/test/engine/sim/worldLiveness.integration.test.ts"
 git commit -m "test(sim): 104-week world-liveness regression harness (freeze + collapse guard)"
@@ -367,9 +370,9 @@ git add -A && git commit -m "test(sim): verify suite green after liveness harnes
 
 ## Self-Review Notes
 
-- **Loose on purpose.** The asserts catch *freezes and collapses*, not balance. `end.totalBouts > mid.totalBouts` is the precise inverse of the observed bug (bouts froze at 843). The population floor (`> 150`) is well under a healthy standing population (~350) so normal churn never trips it.
+- **Loose on purpose.** The asserts catch _freezes and collapses_, not balance. `end.totalBouts > mid.totalBouts` is the precise inverse of the observed bug (bouts froze at 843). The population floor (`> 150`) is well under a healthy standing population (~350) so normal churn never trips it.
 - **Re-uses existing infra.** No new harness — `runSimulation` + the OPFS mock + the headless auto-accept already exist. We only enriched the pulse and added asserts.
-- **Feeds Plan 3.** The diagnostic log surfaces `classTraits`, `signature`, and `multiFlaw` on an *unfrozen* world. Plan 3 reads those to decide whether class/Signature reachability and multi-flaw churn need mechanism fixes, then tightens these asserts.
+- **Feeds Plan 3.** The diagnostic log surfaces `classTraits`, `signature`, and `multiFlaw` on an _unfrozen_ world. Plan 3 reads those to decide whether class/Signature reachability and multi-flaw churn need mechanism fixes, then tightens these asserts.
 - **Determinism.** Fixed seed (4242) makes the run reproducible; if it ever flakes, the harness — not the test — is non-deterministic and should be investigated.
 
 ## Verification

@@ -217,7 +217,11 @@ export function computeTrainingImpact(
               : `${warrior.name}'s training went wrong — gained a flaw: ${TRAITS[roll.traitId]?.name}.`,
         });
       } else {
-        results.push({ warriorId: warrior.id, type: 'gain', message: `${warrior.name}'s trait training yielded nothing.` });
+        results.push({
+          warriorId: warrior.id,
+          type: 'gain',
+          message: `${warrior.name}'s trait training yielded nothing.`,
+        });
       }
       continue;
     }
@@ -298,9 +302,7 @@ export function trainingImpactToStateImpact(
               },
             ]
           : [],
-      trainingAssignments: (state.trainingAssignments ?? []).filter(
-        (a) => a.type === 'trait'
-      ),
+      trainingAssignments: (state.trainingAssignments ?? []).filter((a) => a.type === 'trait'),
     },
     seasonalGrowth,
     results: impact.results,

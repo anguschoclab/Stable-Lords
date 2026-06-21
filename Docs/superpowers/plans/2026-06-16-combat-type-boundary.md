@@ -9,6 +9,7 @@
 **Tech Stack:** TypeScript, Vitest. Pure-function signature changes only; zero runtime behavior change.
 
 **Key existing facts (verified):**
+
 - `getFavoriteRhythmBonus(warrior: Warrior, currentOE, currentAL)` (`src/engine/favorites.ts:181`) reads only `warrior.favorites`.
 - `getDynamicTraitMods(warrior: Warrior | undefined, ctx)` (`src/engine/traits.ts:473`) reads only `warrior.traits`.
 - `FighterState` (`src/engine/combat/resolution/types.ts:23`) already has `favorites?: WarriorFavorites` (line 44) and `traits?: string[]` (line 47).
@@ -38,6 +39,7 @@
 ## Task 1: Narrow `getFavoriteRhythmBonus` to a structural parameter
 
 **Files:**
+
 - Modify: `src/engine/favorites.ts:181-193`
 - Test: `src/test/engine/favorites.test.ts`
 
@@ -46,22 +48,22 @@
 Add to `src/test/engine/favorites.test.ts` inside the `getFavoriteRhythmBonus` describe block (near line 328):
 
 ```typescript
-  it('accepts any object exposing favorites (e.g. a FighterState), not just a full Warrior', () => {
-    // A minimal structural object — this is what FighterState provides.
-    const fighterLike = {
-      favorites: {
-        // shape mirrors WarriorFavorites enough for the rhythm path
-        discovered: { rhythm: true, weapon: false },
-        rhythm: { oe: 7, al: 5 },
-        // other WarriorFavorites fields omitted intentionally
-      },
-    } as const;
-    // @ts-expect-no-error — should compile once the signature is narrowed.
-    expect(getFavoriteRhythmBonus(fighterLike as any, 7, 5)).toBe(2);
-  });
+it('accepts any object exposing favorites (e.g. a FighterState), not just a full Warrior', () => {
+  // A minimal structural object — this is what FighterState provides.
+  const fighterLike = {
+    favorites: {
+      // shape mirrors WarriorFavorites enough for the rhythm path
+      discovered: { rhythm: true, weapon: false },
+      rhythm: { oe: 7, al: 5 },
+      // other WarriorFavorites fields omitted intentionally
+    },
+  } as const;
+  // @ts-expect-no-error — should compile once the signature is narrowed.
+  expect(getFavoriteRhythmBonus(fighterLike as any, 7, 5)).toBe(2);
+});
 ```
 
-> Engineer note: the `as any` in the test exists only because the inline literal omits some `WarriorFavorites` fields; the *production* call sites pass a real `FighterState` whose `favorites` is a full `WarriorFavorites`, so they need no cast. The point of this test is behavioral coverage of the narrowed path, not type assertion. If you can build a complete `WarriorFavorites` literal easily, drop the `as any`.
+> Engineer note: the `as any` in the test exists only because the inline literal omits some `WarriorFavorites` fields; the _production_ call sites pass a real `FighterState` whose `favorites` is a full `WarriorFavorites`, so they need no cast. The point of this test is behavioral coverage of the narrowed path, not type assertion. If you can build a complete `WarriorFavorites` literal easily, drop the `as any`.
 
 - [ ] **Step 2: Run test to verify current behavior still passes (baseline)**
 
@@ -111,6 +113,7 @@ git commit -m "refactor(combat): narrow getFavoriteRhythmBonus to structural par
 ## Task 2: Narrow `getDynamicTraitMods` to a structural parameter
 
 **Files:**
+
 - Modify: `src/engine/traits.ts:473-480`
 - Test: `src/test/engine/traits.test.ts`
 
@@ -119,20 +122,20 @@ git commit -m "refactor(combat): narrow getFavoriteRhythmBonus to structural par
 Add to `src/test/engine/traits.test.ts` inside the `getDynamicTraitMods` describe block (near line 76):
 
 ```typescript
-    it('accepts any object exposing traits (e.g. a FighterState), not just a full Warrior', () => {
-      const fighterLike = { traits: ['berserker'] };
-      const bloodied = getDynamicTraitMods(fighterLike, {
-        ...baseCtx,
-        hpRatio: 0.3,
-      });
-      // berserker grants an attack bonus at low HP — same as the mockWarrior path
-      expect(bloodied.attMod).toBeGreaterThan(0);
-    });
+it('accepts any object exposing traits (e.g. a FighterState), not just a full Warrior', () => {
+  const fighterLike = { traits: ['berserker'] };
+  const bloodied = getDynamicTraitMods(fighterLike, {
+    ...baseCtx,
+    hpRatio: 0.3,
+  });
+  // berserker grants an attack bonus at low HP — same as the mockWarrior path
+  expect(bloodied.attMod).toBeGreaterThan(0);
+});
 
-    it('returns the zero-mods accumulator for undefined input', () => {
-      const mods = getDynamicTraitMods(undefined, baseCtx);
-      expect(mods).toEqual({ attMod: 0, parMod: 0, defMod: 0, iniMod: 0, killWindowBonus: 0 });
-    });
+it('returns the zero-mods accumulator for undefined input', () => {
+  const mods = getDynamicTraitMods(undefined, baseCtx);
+  expect(mods).toEqual({ attMod: 0, parMod: 0, defMod: 0, iniMod: 0, killWindowBonus: 0 });
+});
 ```
 
 > Engineer note: confirm `baseCtx` and the `berserker` trait's `attModLowHp` exist in this test file (they do per `traits.test.ts:80`). Adjust the trait id/assertion if the fixture differs.
@@ -185,6 +188,7 @@ git commit -m "refactor(combat): narrow getDynamicTraitMods to structural param"
 ## Task 3: Remove the casts in `resolution.ts`
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/resolution.ts:97-102` and `660-667`
 
 - [ ] **Step 1: Remove the favorite-rhythm casts (lines ~97-102)**
@@ -192,19 +196,15 @@ git commit -m "refactor(combat): narrow getDynamicTraitMods to structural param"
 Find:
 
 ```typescript
-  const masteryIniA = fA.favorites
-    ? getFavoriteRhythmBonus(fA as unknown as Warrior, OE_A, AL_A)
-    : 0;
-  const masteryIniD = fD.favorites
-    ? getFavoriteRhythmBonus(fD as unknown as Warrior, OE_D, AL_D)
-    : 0;
+const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA as unknown as Warrior, OE_A, AL_A) : 0;
+const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD as unknown as Warrior, OE_D, AL_D) : 0;
 ```
 
 Replace with:
 
 ```typescript
-  const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA, OE_A, AL_A) : 0;
-  const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
+const masteryIniA = fA.favorites ? getFavoriteRhythmBonus(fA, OE_A, AL_A) : 0;
+const masteryIniD = fD.favorites ? getFavoriteRhythmBonus(fD, OE_D, AL_D) : 0;
 ```
 
 - [ ] **Step 2: Remove the dynamic-trait casts (lines ~660-667)**
@@ -212,29 +212,31 @@ Replace with:
 Find:
 
 ```typescript
-  const dynTraitsA = getDynamicTraitMods(
-    fA.traits ? ({ traits: fA.traits } as unknown as Warrior) : undefined,
-    traitCtxA
-  );
-  const dynTraitsD = getDynamicTraitMods(
-    fD.traits ? ({ traits: fD.traits } as unknown as Warrior) : undefined,
-    traitCtxD
-  );
+const dynTraitsA = getDynamicTraitMods(
+  fA.traits ? ({ traits: fA.traits } as unknown as Warrior) : undefined,
+  traitCtxA
+);
+const dynTraitsD = getDynamicTraitMods(
+  fD.traits ? ({ traits: fD.traits } as unknown as Warrior) : undefined,
+  traitCtxD
+);
 ```
 
 Replace with (pass `fA`/`fD` directly — `getDynamicTraitMods` already guards on `warrior?.traits`):
 
 ```typescript
-  const dynTraitsA = getDynamicTraitMods(fA, traitCtxA);
-  const dynTraitsD = getDynamicTraitMods(fD, traitCtxD);
+const dynTraitsA = getDynamicTraitMods(fA, traitCtxA);
+const dynTraitsD = getDynamicTraitMods(fD, traitCtxD);
 ```
 
 - [ ] **Step 3: Drop the now-unused `Warrior` import if nothing else needs it**
 
 Run:
+
 ```bash
 grep -n "Warrior" src/engine/combat/resolution/resolution.ts | grep -v "FighterState\|warrior\|Warriors"
 ```
+
 If `Warrior` (the type) is no longer referenced anywhere else in the file, remove its import line (`import type { Warrior } from '@/types/warrior.types';`). If it IS still used (e.g. another cast or signature), leave the import.
 
 - [ ] **Step 4: Type-check + run combat tests**
@@ -254,6 +256,7 @@ git commit -m "refactor(combat): pass FighterState directly, drop Warrior casts 
 ## Task 4: Remove the cast in `hitExecution.ts`
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/exchangeHelpers/execution/hitExecution.ts:233-240`
 
 - [ ] **Step 1: Remove the cast**
@@ -261,35 +264,37 @@ git commit -m "refactor(combat): pass FighterState directly, drop Warrior casts 
 Find:
 
 ```typescript
-    const attackerTraitKill = attacker.traits
-      ? getDynamicTraitMods({ traits: attacker.traits } as unknown as Warrior, {
-          phase: phase as 'OPENING' | 'MID' | 'LATE',
-          hpRatio: attacker.hp / attacker.maxHp,
-          endRatio: attacker.endurance / attacker.maxEndurance,
-          consecutiveHits: attacker.consecutiveHits,
-        }).killWindowBonus
-      : 0;
+const attackerTraitKill = attacker.traits
+  ? getDynamicTraitMods({ traits: attacker.traits } as unknown as Warrior, {
+      phase: phase as 'OPENING' | 'MID' | 'LATE',
+      hpRatio: attacker.hp / attacker.maxHp,
+      endRatio: attacker.endurance / attacker.maxEndurance,
+      consecutiveHits: attacker.consecutiveHits,
+    }).killWindowBonus
+  : 0;
 ```
 
 Replace with (`attacker` is a `FighterState`, now directly assignable):
 
 ```typescript
-    const attackerTraitKill = attacker.traits
-      ? getDynamicTraitMods(attacker, {
-          phase: phase as 'OPENING' | 'MID' | 'LATE',
-          hpRatio: attacker.hp / attacker.maxHp,
-          endRatio: attacker.endurance / attacker.maxEndurance,
-          consecutiveHits: attacker.consecutiveHits,
-        }).killWindowBonus
-      : 0;
+const attackerTraitKill = attacker.traits
+  ? getDynamicTraitMods(attacker, {
+      phase: phase as 'OPENING' | 'MID' | 'LATE',
+      hpRatio: attacker.hp / attacker.maxHp,
+      endRatio: attacker.endurance / attacker.maxEndurance,
+      consecutiveHits: attacker.consecutiveHits,
+    }).killWindowBonus
+  : 0;
 ```
 
 - [ ] **Step 2: Drop unused `Warrior` import if applicable**
 
 Run:
+
 ```bash
 grep -n "Warrior" src/engine/combat/resolution/exchangeHelpers/execution/hitExecution.ts
 ```
+
 If the only reference was the removed cast, delete the `Warrior` import. Otherwise leave it.
 
 - [ ] **Step 3: Type-check + run tests**
@@ -311,9 +316,11 @@ git commit -m "refactor(combat): drop Warrior cast in hitExecution kill-window c
 - [ ] **Step 1: Verify no FighterState↔Warrior casts remain**
 
 Run:
+
 ```bash
 grep -rn "as unknown as Warrior\|as Warrior" src/engine/combat src/engine/bout --include="*.ts" | grep -v test
 ```
+
 Expected: NO output. (The out-of-scope `StableId`/`FightSummary` casts live in `reportingHandler.ts`/`mortalityHandler.ts` and are intentionally untouched — they will not match this grep.)
 
 - [ ] **Step 2: Run the full engine + integration suite to prove no behavior change**

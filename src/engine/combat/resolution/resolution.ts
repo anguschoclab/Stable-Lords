@@ -234,8 +234,13 @@ export function styleRiposteBonus(
   // TP: fatigue-exploit counter — opponent's exhaustion feeds riposte chance and damage
   if (def.style === FightingStyle.TotalParry) {
     const endRatio = att.endurance / Math.max(1, att.maxEndurance);
-    if (endRatio < TP_FATIGUE_SEVERE_RATIO) { ripBonus += TP_FATIGUE_SEVERE_RIP; dmgBonus += TP_FATIGUE_SEVERE_DMG; }
-    else if (endRatio < TP_FATIGUE_MODERATE_RATIO) { ripBonus += TP_FATIGUE_MODERATE_RIP; dmgBonus += TP_FATIGUE_MODERATE_DMG; }
+    if (endRatio < TP_FATIGUE_SEVERE_RATIO) {
+      ripBonus += TP_FATIGUE_SEVERE_RIP;
+      dmgBonus += TP_FATIGUE_SEVERE_DMG;
+    } else if (endRatio < TP_FATIGUE_MODERATE_RATIO) {
+      ripBonus += TP_FATIGUE_MODERATE_RIP;
+      dmgBonus += TP_FATIGUE_MODERATE_DMG;
+    }
   }
 
   // PL: momentum-based riposte pressure (reactive tempo, not raw attack damage).
@@ -267,8 +272,10 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
   events.push({ type: 'ATTACK', actor: attLabel, result: 'WHIFF' });
   att.consecutiveHits = 0;
   att.endurance -=
-    Math.max(1, Math.floor(enduranceCost(s.curAttOE, s.curAttAL, ctx.weather) * WHIFF_ENDURANCE_COST_MULT)) +
-    s.curOffMods.endCost;
+    Math.max(
+      1,
+      Math.floor(enduranceCost(s.curAttOE, s.curAttAL, ctx.weather) * WHIFF_ENDURANCE_COST_MULT)
+    ) + s.curOffMods.endCost;
 
   const curAntiSynDef = getStyleAntiSynergy(
     def.style,
@@ -280,13 +287,21 @@ function resolveWhiffRiposte(s: OffenseDefenseCtx): void {
     attCommitLevel: s.attCommit.level,
     riposteStreak: def.riposteStreak ?? 0,
   });
-  const styleWeatherRipMod = getStyleWeatherModifier(def.style, ctx.weather, ctx.arenaConfig.tags).riposteMod;
+  const styleWeatherRipMod = getStyleWeatherModifier(
+    def.style,
+    ctx.weather,
+    ctx.arenaConfig.tags
+  ).riposteMod;
   const ripCheck = performRiposteCheck(
     rng,
     def,
     aGoesFirst ? ctx.matchupD : ctx.matchupA,
     aGoesFirst ? s.fatD : s.fatA,
-    s.curOffMods.defPenalty - WHIFF_RIPOSTE_DEF_PENALTY + styleRip.ripBonus + ctx.weatherEffect.riposteMod + styleWeatherRipMod,
+    s.curOffMods.defPenalty -
+      WHIFF_RIPOSTE_DEF_PENALTY +
+      styleRip.ripBonus +
+      ctx.weatherEffect.riposteMod +
+      styleWeatherRipMod,
     aGoesFirst ? s.passD : s.passA,
     curAntiSynDef
   );
@@ -394,13 +409,20 @@ function resolveContestedDefense(s: OffenseDefenseCtx): void {
         attCommitLevel: s.attCommit.level,
         riposteStreak: def.riposteStreak ?? 0,
       });
-      const styleWeatherRipMod = getStyleWeatherModifier(def.style, ctx.weather, ctx.arenaConfig.tags).riposteMod;
+      const styleWeatherRipMod = getStyleWeatherModifier(
+        def.style,
+        ctx.weather,
+        ctx.arenaConfig.tags
+      ).riposteMod;
       const ripPostParry = performRiposteCheck(
         rng,
         def,
         aGoesFirst ? ctx.matchupD : ctx.matchupA,
         aGoesFirst ? s.fatD : s.fatA,
-        (aGoesFirst ? s.defModsD : s.defModsA).ripBonus + ctx.weatherEffect.riposteMod + styleRip.ripBonus + styleWeatherRipMod,
+        (aGoesFirst ? s.defModsD : s.defModsA).ripBonus +
+          ctx.weatherEffect.riposteMod +
+          styleRip.ripBonus +
+          styleWeatherRipMod,
         curPassD,
         undefined
       );

@@ -64,7 +64,8 @@ export function useDigestSummary({
         const playerAwaitingResponse = o.warriorIds.some(
           (id) => playerWarriorIds.has(id) && (o.responses[id] === 'Pending' || !o.responses[id])
         );
-        if (o.status === 'Proposed' && o.boutWeek >= currentWeek && playerAwaitingResponse) acc.pending++;
+        if (o.status === 'Proposed' && o.boutWeek >= currentWeek && playerAwaitingResponse)
+          acc.pending++;
         const involvesPlayer = o.warriorIds.some((id) => playerWarriorIds.has(id));
         if (o.status === 'Signed' && o.boutWeek === currentWeek && involvesPlayer) acc.signed++;
         if (o.status === 'Signed' && o.boutWeek > currentWeek && involvesPlayer) acc.upcoming++;

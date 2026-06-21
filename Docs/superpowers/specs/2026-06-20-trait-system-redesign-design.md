@@ -22,7 +22,7 @@ deepening attribute** that also becomes the engine for **roster churn** and
 
 Every trait ships with **tooltip text**. Magnitudes (training odds, weeks, tier
 difficulty, churn thresholds) are knobs tuned via the economy/oracle sim — the
-*tests and guardrails* define "done."
+_tests and guardrails_ define "done."
 
 ---
 
@@ -40,6 +40,7 @@ styles?: FightingStyle[];   // present ⇒ class-restricted
 ```
 
 Tier budget guide:
+
 - **Common** — one +1, single axis.
 - **Notable** — a +2 conditional, +1 dmg, or two +1s.
 - **Exceptional** — a `fightPlanMod` reshape + 1–2 attribute bonuses, or strong
@@ -59,20 +60,20 @@ trainer. Each class gets a 5-pack spread **Common · Notable · Notable · Excep
 `.claude/skills/combat-balance/references/style-identities.md`). Full effects +
 tooltips in **Appendix B**. Roster:
 
-| Class | Common | Notable | Notable | Exceptional | Signature |
-|---|---|---|---|---|---|
-| **AB** | steady_hand | called_shot | armor_chink | dead_aim | assassin |
-| **BA** | heavy_swing | relentless | bonebreaker | juggernaut | demolisher |
-| **LU** | quickdraw | fleet_footed | lightning_step | blitz | untouchable |
-| **PL** | counterlunge | fighting_rhythm | riposte_flow | duelist | whirlwind |
-| **PR** | riposte_natural* | vindicator | parry_master | nemesis | retribution |
-| **PS** | counterpuncher | opportunist | riposte_strike | counter_artist | perfect_counter |
-| **SL** | keen_edge | flurry | lacerate | hemorrhage | exsanguinate |
-| **ST** | crushing_blow | opener | executioner | berserker_rush | annihilator |
-| **TP** | enduring | stonewall | war_of_attrition | immovable_object | unbreakable |
-| **WS** | braced | bulwark | anchor | fortress | living_wall |
+| Class  | Common            | Notable         | Notable          | Exceptional      | Signature       |
+| ------ | ----------------- | --------------- | ---------------- | ---------------- | --------------- |
+| **AB** | steady_hand       | called_shot     | armor_chink      | dead_aim         | assassin        |
+| **BA** | heavy_swing       | relentless      | bonebreaker      | juggernaut       | demolisher      |
+| **LU** | quickdraw         | fleet_footed    | lightning_step   | blitz            | untouchable     |
+| **PL** | counterlunge      | fighting_rhythm | riposte_flow     | duelist          | whirlwind       |
+| **PR** | riposte_natural\* | vindicator      | parry_master     | nemesis          | retribution     |
+| **PS** | counterpuncher    | opportunist     | riposte_strike   | counter_artist   | perfect_counter |
+| **SL** | keen_edge         | flurry          | lacerate         | hemorrhage       | exsanguinate    |
+| **ST** | crushing_blow     | opener          | executioner      | berserker_rush   | annihilator     |
+| **TP** | enduring          | stonewall       | war_of_attrition | immovable_object | unbreakable     |
+| **WS** | braced            | bulwark         | anchor           | fortress         | living_wall     |
 
-(*`riposte_natural` reassigned from the generic pool to PR.) **First version** uses
+(\*`riposte_natural` reassigned from the generic pool to PR.) **First version** uses
 existing `TraitEffect` fields, themed + style-restricted (no new combat hooks).
 Mechanic-amplifying variants (e.g. `executioner` widening ST's execute, `hemorrhage`
 adding SL bleed stacks) are a noted follow-on requiring new `TraitEffect` fields.
@@ -97,7 +98,7 @@ Rewrite `generateTraits` (consumed at `src/engine/factories/warriorFactory.ts:43
 - **~7%** are born with a single **Flaw**.
 - Never exceed 1 trait at birth (the 3-slot cap is reached through play).
 
-Traits become something you *develop*. Existing archetype synergy weighting stays.
+Traits become something you _develop_. Existing archetype synergy weighting stays.
 
 ---
 
@@ -111,19 +112,19 @@ Pure logic lives in a new `src/engine/training/traitTraining.ts`, unit-tested.
 
 The trainer's **tier gates the max trait tier**:
 
-| Trainer tier | Max trait tier reachable |
-|---|---|
-| Novice (1) | Common |
-| Apprentice (2) | Common–Notable |
-| Skilled (3) | Notable |
-| Expert (4) | Exceptional |
-| Master (5) | Signature |
+| Trainer tier   | Max trait tier reachable |
+| -------------- | ------------------------ |
+| Novice (1)     | Common                   |
+| Apprentice (2) | Common–Notable           |
+| Skilled (3)    | Notable                  |
+| Expert (4)     | Exceptional              |
+| Master (5)     | Signature                |
 
 The **pool** of traits a session can yield = traits of tier ≤ the ceiling, themed
 to the trainer's specialty/archetype, plus any **class trait** of the warrior's
 style (high-tier class traits only from a matching-specialty or Master trainer).
 The result is **random from this pool** (archetype-weighted toward the warrior) —
-personality *emerges*; the player does not pick the specific trait.
+personality _emerges_; the player does not pick the specific trait.
 
 ### 3.2 Outcome roll (on completion)
 
@@ -136,6 +137,7 @@ aptitude = synergyBonus            // target synergistic with warrior archetype
 ```
 
 Three outcomes:
+
 - **Success** → gain a random positive trait from the pool (tier ≤ ceiling, weighted
   toward lower tiers; Signature is rare).
 - **No result** → weeks spent, nothing gained.
@@ -156,7 +158,7 @@ is free.
 ## System 4 — Caps, conflicts, permanence
 
 - **Hard cap: 3 trait slots total.** Any combination of positives and flaws.
-  Slots are scarce: a botched flaw permanently consumes one — this scarcity *is* the
+  Slots are scarce: a botched flaw permanently consumes one — this scarcity _is_ the
   churn pressure.
 - **Max 1 personality trait** (a `fightPlanMod` trait) per warrior — two big OE/AL
   reshapes produce incoherent fighters. The other slots are combat/class traits.
@@ -194,18 +196,18 @@ Each rival stable's personality maps to **trait-policy knobs**, so rivals behave
 visibly differently. Hooks into the existing rival-stable AI strategist/personality
 (confirm the exact structure during planning):
 
-| Personality | cut threshold | training appetite | risk tolerance | targets |
-|---|---|---|---|---|
-| **Ruthless / win-now** | low (cut fast) | high | bold (high-tier gambles) | Signature & class traits |
-| **Loyal / developmental** | high (keep, develop) | medium | cautious | safe Notables |
-| **Frugal** | medium | low (saves money) | low | rarely trains |
-| **Prestige-chaser** | low | very high | bold | Signature stars |
+| Personality               | cut threshold        | training appetite | risk tolerance           | targets                  |
+| ------------------------- | -------------------- | ----------------- | ------------------------ | ------------------------ |
+| **Ruthless / win-now**    | low (cut fast)       | high              | bold (high-tier gambles) | Signature & class traits |
+| **Loyal / developmental** | high (keep, develop) | medium            | cautious                 | safe Notables            |
+| **Frugal**                | medium               | low (saves money) | low                      | rarely trains            |
+| **Prestige-chaser**       | low                  | very high         | bold                     | Signature stars          |
 
 Each week/season, an NPC stable: (a) evaluates each warrior's liability vs its cut
 threshold and releases the worst; (b) per its training appetite + risk tolerance,
 assigns trait training to promising warriors targeting its preferred tiers. Emergent
 result: ruthless stables churn fast and field clean fighters; frugal/loyal stables
-carry flawed veterans; prestige stables mint occasional Signature stars *and* more
+carry flawed veterans; prestige stables mint occasional Signature stars _and_ more
 botch-flawed cuts. The player perceives rivals as having distinct philosophies.
 
 ---
@@ -231,8 +233,8 @@ and the roster liability badge.
 One system per implementation plan, in dependency order:
 
 1. **Trait foundation** — data-model fields, the 50 class traits + expanded flaws
-   (Appendices A/B), description contract, balance-guardrail extension. *Everything
-   depends on this.*
+   (Appendices A/B), description contract, balance-guardrail extension. _Everything
+   depends on this._
 2. **Sparse starts** — `generateTraits` rewrite.
 3. **Trait training** — `traitTraining.ts` + the training-assignment mode + trainer
    ceiling/pool.
@@ -246,14 +248,14 @@ screen with #3, the liability badge with #4).
 
 ## Appendix A — Existing 39 traits, bucketed
 
-| Tier | Traits |
-|---|---|
-| **Common** | quick, agile, precise, riposte_natural→(reassigned PR), bloodthirsty, comboartist |
-| **Notable** | patient, berserker, stalwart, disciplined, feral_instinct, gutter_rat, cornered_beast, perceptive, vengeful, stoic, heavy_handed, ironlung, cold_eyed; *volatile:* iron_grip, paranoid |
-| **Exceptional** | aggressive, disciplined_mind, cunning, sturdy, calculated, resilient |
-| **Signature** | feral, merciless, evasive, brutal, blood_drunk |
-| **Flaw (existing)** | fragile (−2 def), slow (−1 ini) |
-| **Flaw (new)** | glass_jaw (−2 par), hesitant (−1 dec), short_winded (×1.08 end), timid (`fightPlanMod` OE−3/kd−5), predictable (−rip, −feint), brittle (−1 def, −endurance), wild (−dec, erratic AL), coward (`fightPlanMod` killDesire−10), clumsy (−1 att), thin_skinned (defModLowHp −2) |
+| Tier                | Traits                                                                                                                                                                                                                                                                      |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Common**          | quick, agile, precise, riposte_natural→(reassigned PR), bloodthirsty, comboartist                                                                                                                                                                                           |
+| **Notable**         | patient, berserker, stalwart, disciplined, feral_instinct, gutter_rat, cornered_beast, perceptive, vengeful, stoic, heavy_handed, ironlung, cold_eyed; _volatile:_ iron_grip, paranoid                                                                                      |
+| **Exceptional**     | aggressive, disciplined_mind, cunning, sturdy, calculated, resilient                                                                                                                                                                                                        |
+| **Signature**       | feral, merciless, evasive, brutal, blood_drunk                                                                                                                                                                                                                              |
+| **Flaw (existing)** | fragile (−2 def), slow (−1 ini)                                                                                                                                                                                                                                             |
+| **Flaw (new)**      | glass_jaw (−2 par), hesitant (−1 dec), short_winded (×1.08 end), timid (`fightPlanMod` OE−3/kd−5), predictable (−rip, −feint), brittle (−1 def, −endurance), wild (−dec, erratic AL), coward (`fightPlanMod` killDesire−10), clumsy (−1 att), thin_skinned (defModLowHp −2) |
 
 Each retains its existing `description` (tooltip). New flaws get tooltips in
 implementation (effect + flavor).
@@ -282,18 +284,18 @@ plain effect + flavor. The implementation plan for System 1 enumerates the full
 - **PS (defend→strike):** counterpuncher `attModConsecutiveHits+1`; opportunist
   `attModHighHp-style via parModHighHp+1, attModConsecutiveHits+1`; riposte_strike
   `ripMod+1, attModConsecutiveHits+1`; counter_artist `parMod+1,
-  attModConsecutiveHits+2`; perfect_counter `parMod+1, ripMod+1,
-  attModConsecutiveHits+2`.
+attModConsecutiveHits+2`; perfect_counter `parMod+1, ripMod+1,
+attModConsecutiveHits+2`.
 - **SL (bleed):** keen_edge `dmgBonus+1`; flurry `attModConsecutiveHits+1`; lacerate
   `dmgBonus+1, attModConsecutiveHits+1`; hemorrhage `dmgBonus+1,
-  attModConsecutiveHits+2`; exsanguinate `dmgBonus+2, attModConsecutiveHits+1`.
+attModConsecutiveHits+2`; exsanguinate `dmgBonus+2, attModConsecutiveHits+1`.
 - **ST (burst):** crushing_blow `dmgBonus+1`; opener `attMod+1` (opening-weighted);
   executioner `attModLowHp+2`; berserker_rush `attModLowHp+2, dmgBonus+1`;
   annihilator `attModLowHp+3, dmgBonus+1, killWindowBonus+0.01`.
 - **TP (outlast):** enduring `enduranceMult 0.92`; stonewall `defModLate+2`;
   war_of_attrition `defModLate+2, enduranceMult 0.95`; immovable_object
   `defModLate+2, parModLate+1`; unbreakable `defModLate+2, parModLate+2,
-  enduranceMult 0.95`.
+enduranceMult 0.95`.
 - **WS (wall):** braced `parMod+1`; bulwark `parMod+1, defMod+1`; anchor `parMod+2`;
   fortress `parMod+2, defMod+1`; living_wall `parMod+2, defMod+2`.
 

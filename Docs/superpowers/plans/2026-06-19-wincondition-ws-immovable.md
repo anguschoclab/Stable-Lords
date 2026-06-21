@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Give Wall of Steel (WS) a win condition — it is *immovable*: the LU and PL initiative-snowball payoffs are negated when WS is on the receiving end, and WS gains a small steady-attrition floor so the brick still closes fights. Creates clean rock-paper-scissors (LU/PL snowball tempo, WS breaks it), validated against the Phase-1 balance harness.
+**Goal:** Give Wall of Steel (WS) a win condition — it is _immovable_: the LU and PL initiative-snowball payoffs are negated when WS is on the receiving end, and WS gains a small steady-attrition floor so the brick still closes fights. Creates clean rock-paper-scissors (LU/PL snowball tempo, WS breaks it), validated against the Phase-1 balance harness.
 
 **Architecture:** Spec 2a is already implemented: LU's momentum-damage lives inline in `executeHit` (`hitExecution.ts:114`), and PL's momentum-riposte lives in the exported `styleRiposteBonus()` (`resolution.ts:203`). This plan (1) extracts LU's momentum damage into a pure, WS-aware helper that returns 0 when the defender is WS, (2) adds a one-condition WS gate to the PL branch of `styleRiposteBonus`, and (3) adds a WS attrition floor via a second pure helper. No new matrix entries; WS's absolute power is re-centred in `STYLE_PENALTIES`.
 
@@ -29,6 +29,7 @@
 ## Task 1: Pure tempo helpers (TDD)
 
 **Files:**
+
 - Create: `src/engine/combat/resolution/tempoMechanics.ts`
 - Create: `src/test/engine/combat/tempoMechanics.test.ts`
 - Modify: `src/constants/combat/combat.ts`
@@ -51,25 +52,35 @@ Create `src/test/engine/combat/tempoMechanics.test.ts`:
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import { getMomentumDamageBonus, getWsAttritionBonus } from '@/engine/combat/resolution/tempoMechanics';
+import {
+  getMomentumDamageBonus,
+  getWsAttritionBonus,
+} from '@/engine/combat/resolution/tempoMechanics';
 import { LU_MOMENTUM_DMG_COEFF, WS_ATTRITION_FLOOR } from '@/constants/combat/combat';
 
 describe('getMomentumDamageBonus', () => {
   it('grants LU momentum damage vs a normal defender', () => {
-    expect(getMomentumDamageBonus(FightingStyle.LungingAttack, 3, FightingStyle.StrikingAttack))
-      .toBe(3 * LU_MOMENTUM_DMG_COEFF);
+    expect(
+      getMomentumDamageBonus(FightingStyle.LungingAttack, 3, FightingStyle.StrikingAttack)
+    ).toBe(3 * LU_MOMENTUM_DMG_COEFF);
   });
 
   it('is negated when the defender is Wall of Steel (immovable)', () => {
-    expect(getMomentumDamageBonus(FightingStyle.LungingAttack, 3, FightingStyle.WallOfSteel)).toBe(0);
+    expect(getMomentumDamageBonus(FightingStyle.LungingAttack, 3, FightingStyle.WallOfSteel)).toBe(
+      0
+    );
   });
 
   it('is zero for a non-LU attacker', () => {
-    expect(getMomentumDamageBonus(FightingStyle.BashingAttack, 3, FightingStyle.StrikingAttack)).toBe(0);
+    expect(
+      getMomentumDamageBonus(FightingStyle.BashingAttack, 3, FightingStyle.StrikingAttack)
+    ).toBe(0);
   });
 
   it('is zero when momentum is not positive', () => {
-    expect(getMomentumDamageBonus(FightingStyle.LungingAttack, 0, FightingStyle.StrikingAttack)).toBe(0);
+    expect(
+      getMomentumDamageBonus(FightingStyle.LungingAttack, 0, FightingStyle.StrikingAttack)
+    ).toBe(0);
   });
 });
 
@@ -137,6 +148,7 @@ git commit -m "feat(combat): add WS-aware tempo damage + WS attrition helpers (p
 ## Task 2: Wire the helpers into the landed-hit path
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/exchangeHelpers/execution/hitExecution.ts`
 
 `FightingStyle` is already imported here.
@@ -154,19 +166,19 @@ import { getMomentumDamageBonus, getWsAttritionBonus } from '../../tempoMechanic
 Find the existing LU block (lines ~113–116):
 
 ```typescript
-  // LU: momentum damage pressure on a landed hit
-  if (attacker.style === FightingStyle.LungingAttack && attacker.momentum > 0) {
-    preArmor += attacker.momentum * 0.5;
-  }
+// LU: momentum damage pressure on a landed hit
+if (attacker.style === FightingStyle.LungingAttack && attacker.momentum > 0) {
+  preArmor += attacker.momentum * 0.5;
+}
 ```
 
 Replace it entirely with:
 
 ```typescript
-  // Tempo: LU momentum damage — negated when the defender is Wall of Steel (immovable)
-  preArmor += getMomentumDamageBonus(attacker.style, attacker.momentum, defender.style);
-  // WS: immovable — steady attrition floor so the brick still closes fights
-  preArmor += getWsAttritionBonus(attacker.style);
+// Tempo: LU momentum damage — negated when the defender is Wall of Steel (immovable)
+preArmor += getMomentumDamageBonus(attacker.style, attacker.momentum, defender.style);
+// WS: immovable — steady attrition floor so the brick still closes fights
+preArmor += getWsAttritionBonus(attacker.style);
 ```
 
 - [ ] **Step 3: Typecheck**
@@ -193,6 +205,7 @@ git commit -m "feat(combat): WS negates LU momentum damage; add WS attrition flo
 ## Task 3: Gate the PL momentum-riposte against WS
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/resolution.ts`
 - Create: `src/test/engine/combat/wsImmovable.test.ts`
 
@@ -203,26 +216,26 @@ git commit -m "feat(combat): WS negates LU momentum damage; add WS attrition flo
 The current PL branch (lines ~214–218):
 
 ```typescript
-  // PL: momentum-based riposte pressure (reactive tempo, not raw attack damage)
-  if (def.style === FightingStyle.ParryLunge && def.momentum > 0) {
-    ripBonus += def.momentum;
-    dmgBonus += def.momentum * 0.5;
-  }
+// PL: momentum-based riposte pressure (reactive tempo, not raw attack damage)
+if (def.style === FightingStyle.ParryLunge && def.momentum > 0) {
+  ripBonus += def.momentum;
+  dmgBonus += def.momentum * 0.5;
+}
 ```
 
 Change the condition to negate it when the target is the immovable WS:
 
 ```typescript
-  // PL: momentum-based riposte pressure (reactive tempo, not raw attack damage).
-  // Negated when the target is Wall of Steel — WS is immovable to tempo snowballs.
-  if (
-    def.style === FightingStyle.ParryLunge &&
-    def.momentum > 0 &&
-    att.style !== FightingStyle.WallOfSteel
-  ) {
-    ripBonus += def.momentum;
-    dmgBonus += def.momentum * 0.5;
-  }
+// PL: momentum-based riposte pressure (reactive tempo, not raw attack damage).
+// Negated when the target is Wall of Steel — WS is immovable to tempo snowballs.
+if (
+  def.style === FightingStyle.ParryLunge &&
+  def.momentum > 0 &&
+  att.style !== FightingStyle.WallOfSteel
+) {
+  ripBonus += def.momentum;
+  dmgBonus += def.momentum * 0.5;
+}
 ```
 
 - [ ] **Step 2: Write the unit test (styleRiposteBonus is exported)**
@@ -261,6 +274,7 @@ Expected: PASS (both).
 - [ ] **Step 4: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/engine/combat/resolution/resolution.ts" "src/test/engine/combat/wsImmovable.test.ts"
 git commit -m "feat(combat): WS negates PL momentum-riposte snowball; unit test"
@@ -271,6 +285,7 @@ git commit -m "feat(combat): WS negates PL momentum-riposte snowball; unit test"
 ## Task 4: Directional integration test
 
 **Files:**
+
 - Modify: `src/test/engine/combat/wsImmovable.test.ts`
 
 - [ ] **Step 1: Add a WS-vs-LU fight test**
@@ -286,10 +301,22 @@ function mk(style: FightingStyle, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   return {
-    id: id as import('@/types/shared.types').WarriorId, name: id, style,
-    attributes: attrs, baseSkills, derivedStats, fame: 0, popularity: 0,
-    titles: [], injuries: [], flair: [], career: { wins: 0, losses: 0, kills: 0 },
-    champion: false, status: 'Active', age: 20, traits: [],
+    id: id as import('@/types/shared.types').WarriorId,
+    name: id,
+    style,
+    attributes: attrs,
+    baseSkills,
+    derivedStats,
+    fame: 0,
+    popularity: 0,
+    titles: [],
+    injuries: [],
+    flair: [],
+    career: { wins: 0, losses: 0, kills: 0 },
+    champion: false,
+    status: 'Active',
+    age: 20,
+    traits: [],
   };
 }
 
@@ -300,7 +327,13 @@ describe('WS immovable (integration)', () => {
     let wins = 0;
     const N = 400;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(defaultPlanForWarrior(ws), defaultPlanForWarrior(lu), ws, lu, i * 7177 + 29);
+      const o = simulateFight(
+        defaultPlanForWarrior(ws),
+        defaultPlanForWarrior(lu),
+        ws,
+        lu,
+        i * 7177 + 29
+      );
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;
@@ -311,7 +344,7 @@ describe('WS immovable (integration)', () => {
 ```
 
 Run: `npx vitest run src/test/engine/combat/wsImmovable.test.ts`
-Expected: PASS. If WS is below the floor, raise `WS_ATTRITION_FLOOR` to 0.75 and re-run; WS's *overall* level is the re-ratchet's job (Task 5).
+Expected: PASS. If WS is below the floor, raise `WS_ATTRITION_FLOOR` to 0.75 and re-run; WS's _overall_ level is the re-ratchet's job (Task 5).
 
 - [ ] **Step 2: Commit**
 
@@ -324,9 +357,10 @@ git commit -m "test(combat): WS resists LU tempo snowball (integration)"
 
 ## Task 5: Re-ratchet absolute power and confirm guardrails
 
-WS is one of the weakest styles; immunity + attrition lift it slightly. Re-centre it in the 40–60% band **without touching the matrix** — here that usually means *lightening* WS penalties, not deepening them.
+WS is one of the weakest styles; immunity + attrition lift it slightly. Re-centre it in the 40–60% band **without touching the matrix** — here that usually means _lightening_ WS penalties, not deepening them.
 
 **Files:**
+
 - Modify (if needed): `src/engine/skillCalc.ts` (`STYLE_PENALTIES` — the WS row only)
 
 - [ ] **Step 1: Run the balance harness**
@@ -336,7 +370,7 @@ Expected: if the `Absolute-power band` test flags WS as <0.40, proceed to Step 2
 
 - [ ] **Step 2: Lighten WS penalties (only if out of band)**
 
-In `src/engine/skillCalc.ts`, the WS row is `[FightingStyle.WallOfSteel]: /*WS*/ [-4, -2, -9, 0, -2, 0]`. Lighten the **DEF** penalty in steps of 1 (e.g. `-9 → -7`) to lift WS toward the band while preserving its defensive *shape* (keep INI at 0 — WS stays the slowest; do not turn it into an attacker). Re-run Step 1. Repeat until WS is within `[0.40, 0.60]` and no other style left the band.
+In `src/engine/skillCalc.ts`, the WS row is `[FightingStyle.WallOfSteel]: /*WS*/ [-4, -2, -9, 0, -2, 0]`. Lighten the **DEF** penalty in steps of 1 (e.g. `-9 → -7`) to lift WS toward the band while preserving its defensive _shape_ (keep INI at 0 — WS stays the slowest; do not turn it into an attacker). Re-run Step 1. Repeat until WS is within `[0.40, 0.60]` and no other style left the band.
 
 - [ ] **Step 3: Confirm the matrix never moved**
 
@@ -360,9 +394,9 @@ git commit -m "balance(WS): re-ratchet absolute power after immovable mechanic; 
 
 ## Self-Review Notes (for the implementer)
 
-- **Two gates, one floor.** WS-immunity is enforced in exactly two places: `getMomentumDamageBonus` (LU, defender = WS → 0) and the `styleRiposteBonus` PL branch (target = WS → no bonus). The attrition floor is the only thing WS *gains*.
+- **Two gates, one floor.** WS-immunity is enforced in exactly two places: `getMomentumDamageBonus` (LU, defender = WS → 0) and the `styleRiposteBonus` PL branch (target = WS → no bonus). The attrition floor is the only thing WS _gains_.
 - **The LU refactor is behaviour-preserving** for every non-WS defender — the `0.5` literal became `LU_MOMENTUM_DMG_COEFF` and the logic is identical except the new vs-WS short-circuit.
-- **Identity is shape, not level.** WS stays the slowest style (INI untouched). It does not gain tempo — it *denies* it. The Task-5 ratchet only lightens its defensive penalties to reach the band.
+- **Identity is shape, not level.** WS stays the slowest style (INI untouched). It does not gain tempo — it _denies_ it. The Task-5 ratchet only lightens its defensive penalties to reach the band.
 - **Dependency is real and satisfied** — this plan edits 2a's LU/PL code. If 2a were reverted, these gates would have nothing to gate; confirm `getMomentumDamageBonus`'s LU branch and the PL branch of `styleRiposteBonus` exist before starting.
 
 ## Verification (done by reviewer after implementation)
@@ -373,4 +407,7 @@ git commit -m "balance(WS): re-ratchet absolute power after immovable mechanic; 
 4. `npx vitest run src/test/engine/economy/balance.test.ts` → green, including `near-antisymmetric` and the 40–60% band (WS in band).
 5. `bunx tsc --noEmit --project tsconfig.app.json` → 0; full `npx vitest run` green.
 6. No edits to `MATCHUP_MATRIX` or canon data.
+
+```
+
 ```

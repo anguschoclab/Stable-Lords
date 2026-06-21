@@ -30,7 +30,16 @@ const SHARED_WEATHER: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclip
  * change automatically.
  */
 const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
-  Spring: ['Rainy', 'Breezy', 'Zephyr', 'Rainbow', 'Mist', 'Arcane Storm', 'Blood Rain', 'Aether Storm'],
+  Spring: [
+    'Rainy',
+    'Breezy',
+    'Zephyr',
+    'Rainbow',
+    'Mist',
+    'Arcane Storm',
+    'Blood Rain',
+    'Aether Storm',
+  ],
   Summer: [
     'Sweltering',
     'Blazing Sun',
@@ -46,8 +55,23 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Shimmering Heat',
     'Thunderstorm',
   ],
-  Fall: ['Gale', 'Dense Fog', 'Chaotic Winds', 'Cursed Miasma', 'Acid Rain', 'Spooky Night', 'Blood Fog'],
-  Winter: ['Blizzard', 'Hailstorm', 'Abyssal Gloom', 'Meteor Shower', 'Aurora Borealis', 'Gravity Anomaly'],
+  Fall: [
+    'Gale',
+    'Dense Fog',
+    'Chaotic Winds',
+    'Cursed Miasma',
+    'Acid Rain',
+    'Spooky Night',
+    'Blood Fog',
+  ],
+  Winter: [
+    'Blizzard',
+    'Hailstorm',
+    'Abyssal Gloom',
+    'Meteor Shower',
+    'Aurora Borealis',
+    'Gravity Anomaly',
+  ],
 };
 
 /**

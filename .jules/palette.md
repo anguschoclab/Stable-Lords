@@ -1,19 +1,26 @@
 ## 2024-06-03 - [Fix nested interactive elements]
+
 **Learning:** Found `<Button>` components nested inside `<Link>` elements, which creates invalid HTML (a `<button>` within an `<a>`) and causes accessibility issues for keyboard and screen-reader users.
 **Action:** Use the Shadcn UI `asChild` prop on `<Button>` to wrap `<Link>` elements instead (e.g., `<Button asChild><Link>...</Link></Button>`). This preserves styles while rendering a single valid interactive element.
+
 ## 2025-02-12 - Standardize Icon Button Accessibility in Controls
+
 **Learning:** Native `<button>` elements used in custom media/control bars (like `BoutControls.tsx`) often lack proper focus rings and hover states out of the box, failing keyboard accessibility checks and confusing mouse users.
 **Action:** When building or fixing icon-only control bars, immediately replace raw `<button>` elements with the standard `<Button variant="ghost" size="icon">` component from Shadcn to inherit robust `focus-visible` and hover interactions automatically. If replacing the element is not possible due to highly custom styling, strictly enforce the application of `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary` and explicit `hover:` classes.
 
 ## 2025-02-28 - Focus States on Custom Card Buttons
+
 **Learning:** Custom `<button>` elements embedded inside complex interactive cards (like `TokenCard` and `WarriorTargetCard`) often lack keyboard accessibility because their focus states are omitted or masked by surrounding card styles.
 **Action:** When implementing clickable areas inside full-bleed cards, explicitly add `focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` (using `ring-inset` keeps the ring within the card bounds) to ensure robust keyboard navigation accessibility. For stand-alone buttons inside panels, `focus-visible:ring-offset-2 focus-visible:ring-offset-black` helps maintain distinct focus visibility.
 2024-05-24: When updating Radix/Shadcn primitives (like Dialog, Sheet, or Toast) for accessibility, ensure default `focus:` utility classes are replaced with `focus-visible:` (e.g., `focus-visible:outline-none focus-visible:ring-2`) so focus rings only trigger on keyboard navigation, preventing unintended focus outlines during mouse clicks.
 2024-05-24: When formatting an execution plan, if previous tool outputs were truncated (e.g., `grep` or `cat`), do not guess or assume the names of classes, components, or line numbers. You must fetch the specific lines using `sed` to verify their exact existence before submitting the plan, otherwise it will be rejected for violating the Groundedness Rule.
 
 ## 2024-06-13 - [Keyboard Accessibility: Consistent Focus States on Custom Buttons]
+
 **Learning:** When using custom `<button>` elements instead of standard Shadcn UI primitives, the application lacked consistent keyboard focus outlines, rendering them invisible to users navigating via the Tab key. The established pattern in the project (from `button-utils.ts` and other updated components) is to use `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary` combined with `focus-visible:ring-offset-1 focus-visible:ring-offset-black` for dark interfaces, or `focus-visible:ring-inset` for buttons inside full-bleed cards.
 **Action:** Always append the appropriate `focus-visible:ring-2 focus-visible:ring-primary` utility classes when implementing custom interactive elements to ensure full WCAG keyboard navigation compliance. Avoid relying solely on hover states.
+
 ## 2023-10-27 - [Focus Visible Standardization]
+
 **Learning:** Replaced `focus:outline-none` with `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` on many buttons and interactive elements. Using `focus-visible:` ensures keyboard navigation has clear focus states without triggering them on mouse clicks, improving both accessibility and visual design for pointer users.
 **Action:** When adding interactive elements, always consider keyboard focus states and prefer `focus-visible` over `focus` to reduce visual clutter for mouse users.

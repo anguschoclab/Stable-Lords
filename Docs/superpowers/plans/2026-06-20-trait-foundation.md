@@ -28,6 +28,7 @@
 ## Task 1: Extend the trait data model
 
 **Files:**
+
 - Modify: `src/engine/traits.ts`
 
 - [ ] **Step 1: Add the tier/sign types and extend `TraitDef`**
@@ -59,13 +60,13 @@ Making `tier`/`sign` required will break `tsc` until Step 2 backfills — that i
 
 Add `tier:` and `sign:` to every existing entry in `TRAITS` per this mapping (from the spec's Appendix A). All are `sign: 'positive'` except the two flaws:
 
-| tier | trait ids |
-|---|---|
-| `Common` | quick, agile, precise, bloodthirsty, comboartist |
-| `Notable` | patient, berserker, stalwart, disciplined, feral_instinct, gutter_rat, cornered_beast, perceptive, vengeful, stoic, heavy_handed, ironlung, cold_eyed, iron_grip, paranoid |
-| `Exceptional` | aggressive, disciplined_mind, cunning, sturdy, calculated, resilient |
-| `Signature` | feral, merciless, evasive, brutal, blood_drunk |
-| `Flaw` | fragile *(sign: 'negative')*, slow *(sign: 'negative')* |
+| tier          | trait ids                                                                                                                                                                  |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Common`      | quick, agile, precise, bloodthirsty, comboartist                                                                                                                           |
+| `Notable`     | patient, berserker, stalwart, disciplined, feral_instinct, gutter_rat, cornered_beast, perceptive, vengeful, stoic, heavy_handed, ironlung, cold_eyed, iron_grip, paranoid |
+| `Exceptional` | aggressive, disciplined_mind, cunning, sturdy, calculated, resilient                                                                                                       |
+| `Signature`   | feral, merciless, evasive, brutal, blood_drunk                                                                                                                             |
+| `Flaw`        | fragile _(sign: 'negative')_, slow _(sign: 'negative')_                                                                                                                    |
 
 `riposte_natural` is intentionally **omitted** here — it is reassigned to PR in Task 3 (it moves to `classTraits.ts`). Delete its existing entry in this step.
 
@@ -100,6 +101,7 @@ git commit -m "feat(traits): add tier/sign/styles to TraitDef; tag existing trai
 ## Task 2: The well-formedness contract (TDD)
 
 **Files:**
+
 - Create: `src/test/engine/traits/traitInvariants.test.ts`
 
 - [ ] **Step 1: Write the contract test**
@@ -112,7 +114,9 @@ const VALID_TIERS = ['Common', 'Notable', 'Exceptional', 'Signature', 'Flaw'];
 
 describe('trait invariants', () => {
   it('every trait has a non-empty tooltip description', () => {
-    const missing = Object.values(TRAITS).filter((t) => !t.description || t.description.trim().length < 5);
+    const missing = Object.values(TRAITS).filter(
+      (t) => !t.description || t.description.trim().length < 5
+    );
     expect(missing.map((t) => t.id)).toEqual([]);
   });
 
@@ -150,6 +154,7 @@ git commit -m "test(traits): well-formedness + tooltip contract"
 ## Task 3: New flaws + reassign riposte_natural
 
 **Files:**
+
 - Create: `src/engine/traitData/flaws.ts`
 - Modify: `src/engine/traits.ts`
 
@@ -162,16 +167,96 @@ import type { TraitDef } from '@/engine/traits';
 
 /** New negative traits — the botch/bad-start pool. Each has a tooltip. */
 export const NEW_FLAWS: Record<string, TraitDef> = {
-  glass_jaw:     { id: 'glass_jaw',     name: 'Glass Jaw',     description: '−2 parry — a fragile guard that buckles under pressure.',           effect: { parMod: -2 },                       weight: 0.4, tier: 'Flaw', sign: 'negative' },
-  hesitant:      { id: 'hesitant',      name: 'Hesitant',      description: '−1 decisiveness — second-guesses the opening.',                     effect: { decMod: -1 },                       weight: 0.4, tier: 'Flaw', sign: 'negative' },
-  short_winded:  { id: 'short_winded',  name: 'Short-Winded',  description: '×1.08 endurance cost — tires quickly.',                             effect: { enduranceMult: 1.08 },              weight: 0.4, tier: 'Flaw', sign: 'negative' },
-  timid:         { id: 'timid',         name: 'Timid',         description: 'Fights cautiously — lower aggression and killing intent.',          effect: { fightPlanMod: { OE: -3, killDesire: -5 } }, weight: 0.4, tier: 'Flaw', sign: 'negative' },
-  predictable:   { id: 'predictable',   name: 'Predictable',   description: '−1 riposte — easy to read, slow to counter.',                       effect: { ripMod: -1 },                       weight: 0.4, tier: 'Flaw', sign: 'negative' },
-  brittle:       { id: 'brittle',       name: 'Brittle',       description: '−1 defense and tires faster — a body that takes a toll.',           effect: { defMod: -1, enduranceMult: 1.05 },  weight: 0.35, tier: 'Flaw', sign: 'negative' },
-  wild:          { id: 'wild',          name: 'Wild',          description: '−1 decisiveness — wastes openings on undisciplined swings.',         effect: { decMod: -1 },                       weight: 0.35, tier: 'Flaw', sign: 'negative' },
-  coward:        { id: 'coward',        name: 'Coward',        description: 'Avoids the kill — sharply lower killing intent.',                   effect: { fightPlanMod: { killDesire: -10 } }, weight: 0.3, tier: 'Flaw', sign: 'negative' },
-  clumsy:        { id: 'clumsy',        name: 'Clumsy',        description: '−1 attack — heavy-footed and imprecise.',                           effect: { attMod: -1 },                       weight: 0.4, tier: 'Flaw', sign: 'negative' },
-  thin_skinned:  { id: 'thin_skinned',  name: 'Thin-Skinned',  description: '−2 defense when bloodied — falls apart once hurt.',                 effect: { defModLowHp: -2 },                  weight: 0.35, tier: 'Flaw', sign: 'negative' },
+  glass_jaw: {
+    id: 'glass_jaw',
+    name: 'Glass Jaw',
+    description: '−2 parry — a fragile guard that buckles under pressure.',
+    effect: { parMod: -2 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  hesitant: {
+    id: 'hesitant',
+    name: 'Hesitant',
+    description: '−1 decisiveness — second-guesses the opening.',
+    effect: { decMod: -1 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  short_winded: {
+    id: 'short_winded',
+    name: 'Short-Winded',
+    description: '×1.08 endurance cost — tires quickly.',
+    effect: { enduranceMult: 1.08 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  timid: {
+    id: 'timid',
+    name: 'Timid',
+    description: 'Fights cautiously — lower aggression and killing intent.',
+    effect: { fightPlanMod: { OE: -3, killDesire: -5 } },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  predictable: {
+    id: 'predictable',
+    name: 'Predictable',
+    description: '−1 riposte — easy to read, slow to counter.',
+    effect: { ripMod: -1 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  brittle: {
+    id: 'brittle',
+    name: 'Brittle',
+    description: '−1 defense and tires faster — a body that takes a toll.',
+    effect: { defMod: -1, enduranceMult: 1.05 },
+    weight: 0.35,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  wild: {
+    id: 'wild',
+    name: 'Wild',
+    description: '−1 decisiveness — wastes openings on undisciplined swings.',
+    effect: { decMod: -1 },
+    weight: 0.35,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  coward: {
+    id: 'coward',
+    name: 'Coward',
+    description: 'Avoids the kill — sharply lower killing intent.',
+    effect: { fightPlanMod: { killDesire: -10 } },
+    weight: 0.3,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  clumsy: {
+    id: 'clumsy',
+    name: 'Clumsy',
+    description: '−1 attack — heavy-footed and imprecise.',
+    effect: { attMod: -1 },
+    weight: 0.4,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
+  thin_skinned: {
+    id: 'thin_skinned',
+    name: 'Thin-Skinned',
+    description: '−2 defense when bloodied — falls apart once hurt.',
+    effect: { defModLowHp: -2 },
+    weight: 0.35,
+    tier: 'Flaw',
+    sign: 'negative',
+  },
 };
 ```
 
@@ -209,6 +294,7 @@ git commit -m "feat(traits): add 10 flaws; reassign riposte_natural to class poo
 ## Task 4: The 50 class traits (TDD via coverage test)
 
 **Files:**
+
 - Create: `src/engine/traitData/classTraits.ts`
 - Modify: `src/engine/traits.ts`
 - Modify: `src/test/engine/traits/traitInvariants.test.ts`
@@ -256,11 +342,56 @@ const S = FightingStyle;
 
 export const CLASS_TRAITS: Record<string, TraitDef> = {
   // ── Aimed Blow (precision) ──
-  steady_hand: { id: 'steady_hand', name: 'Steady Hand', description: '+1 decisiveness — never rushes the shot.', effect: { decMod: 1 }, weight: 0.7, tier: 'Common', sign: 'positive', styles: [S.AimedBlow] },
-  called_shot: { id: 'called_shot', name: 'Called Shot', description: '+1 damage — picks the gap and drives through it.', effect: { dmgBonus: 1 }, weight: 0.6, tier: 'Notable', sign: 'positive', styles: [S.AimedBlow] },
-  armor_chink: { id: 'armor_chink', name: 'Armor Chink', description: '+1 damage — finds the seam in any plate.', effect: { dmgBonus: 1 }, weight: 0.6, tier: 'Notable', sign: 'positive', styles: [S.AimedBlow] },
-  dead_aim:    { id: 'dead_aim',    name: 'Dead Aim',    description: '+1 damage, +1 decisiveness — ruthless precision.', effect: { dmgBonus: 1, decMod: 1 }, weight: 0.45, tier: 'Exceptional', sign: 'positive', styles: [S.AimedBlow] },
-  assassin:    { id: 'assassin',    name: 'Assassin',    description: '+1 damage, +1 decisiveness, opens the kill window sooner.', effect: { dmgBonus: 1, decMod: 1, killWindowBonus: 0.01 }, weight: 0.3, tier: 'Signature', sign: 'positive', styles: [S.AimedBlow] },
+  steady_hand: {
+    id: 'steady_hand',
+    name: 'Steady Hand',
+    description: '+1 decisiveness — never rushes the shot.',
+    effect: { decMod: 1 },
+    weight: 0.7,
+    tier: 'Common',
+    sign: 'positive',
+    styles: [S.AimedBlow],
+  },
+  called_shot: {
+    id: 'called_shot',
+    name: 'Called Shot',
+    description: '+1 damage — picks the gap and drives through it.',
+    effect: { dmgBonus: 1 },
+    weight: 0.6,
+    tier: 'Notable',
+    sign: 'positive',
+    styles: [S.AimedBlow],
+  },
+  armor_chink: {
+    id: 'armor_chink',
+    name: 'Armor Chink',
+    description: '+1 damage — finds the seam in any plate.',
+    effect: { dmgBonus: 1 },
+    weight: 0.6,
+    tier: 'Notable',
+    sign: 'positive',
+    styles: [S.AimedBlow],
+  },
+  dead_aim: {
+    id: 'dead_aim',
+    name: 'Dead Aim',
+    description: '+1 damage, +1 decisiveness — ruthless precision.',
+    effect: { dmgBonus: 1, decMod: 1 },
+    weight: 0.45,
+    tier: 'Exceptional',
+    sign: 'positive',
+    styles: [S.AimedBlow],
+  },
+  assassin: {
+    id: 'assassin',
+    name: 'Assassin',
+    description: '+1 damage, +1 decisiveness, opens the kill window sooner.',
+    effect: { dmgBonus: 1, decMod: 1, killWindowBonus: 0.01 },
+    weight: 0.3,
+    tier: 'Signature',
+    sign: 'positive',
+    styles: [S.AimedBlow],
+  },
   // …transcribe the remaining 9 classes from the table in Step 3…
 };
 ```
@@ -379,6 +510,7 @@ git commit -m "feat(traits): add 50 class-specific traits (5 per style) + covera
 ## Task 5: Accessors
 
 **Files:**
+
 - Modify: `src/engine/traits.ts`
 - Create: `src/test/engine/traits/traitAccessors.test.ts`
 
@@ -392,7 +524,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { traitsForStyle, traitsByTier } from '@/engine/traits';
 
 describe('trait accessors', () => {
-  it('traitsForStyle returns only that style\'s class traits', () => {
+  it("traitsForStyle returns only that style's class traits", () => {
     const ab = traitsForStyle(FightingStyle.AimedBlow);
     expect(ab.length).toBeGreaterThanOrEqual(5);
     expect(ab.every((t) => t.styles?.includes(FightingStyle.AimedBlow))).toBe(true);
@@ -448,6 +580,7 @@ git commit -m "feat(traits): add traitsForStyle / traitsByTier accessors"
 ## Task 6: Bound trained power — max-loadout ceiling
 
 **Files:**
+
 - Modify: `src/test/engine/combat/traitBalance.test.ts`
 
 The existing battery mirror-matches a traited warrior against a baseline using
@@ -489,7 +622,7 @@ describe('Trained-loadout ceiling', () => {
 - [ ] **Step 2: Run it**
 
 Run: `npx vitest run src/test/engine/combat/traitBalance.test.ts -t "ceiling"`
-Expected: PASS. If the loadout exceeds 0.75, the class-trait magnitudes are too strong — reduce the Signature/Notable effect values in `classTraits.ts` (e.g. `living_wall` `parMod:2,defMod:2` → `parMod:2,defMod:1`) and re-run. If it is ≤0.55 (no effect), the loadout is too weak — nudge up. The *test* defines the bound.
+Expected: PASS. If the loadout exceeds 0.75, the class-trait magnitudes are too strong — reduce the Signature/Notable effect values in `classTraits.ts` (e.g. `living_wall` `parMod:2,defMod:2` → `parMod:2,defMod:1`) and re-run. If it is ≤0.55 (no effect), the loadout is too weak — nudge up. The _test_ defines the bound.
 
 - [ ] **Step 3: Full suite + typecheck**
 
@@ -510,7 +643,7 @@ git commit -m "test(traits): bound max trained-loadout win rate at ~75%"
 
 - **Tests are the content spec.** The invariant test forbids empty tooltips; the coverage test forces ≥5 class traits per style; the ceiling test bounds power. Fill data until they pass — don't hand-verify 98 entries.
 - **Bulk data lives in `traitData/`** so `traits.ts` stays readable. `Object.assign(TRAITS, …)` keeps one runtime map; consumers (`generateTraits`, future training) see all traits uniformly.
-- **`styles` is the only gate added here.** Generation/training *consumption* of `styles` is Systems 2/3 — this plan just defines the data and the accessors.
+- **`styles` is the only gate added here.** Generation/training _consumption_ of `styles` is Systems 2/3 — this plan just defines the data and the accessors.
 - **Magnitudes are knobs.** Class-trait effect values are starting points; Task 6's ceiling (and later the live oracle sim) tune them. Keep the tier ordering (Signature ≥ Notable ≥ Common budget) intact.
 - **No new combat hooks.** Every effect uses existing `TraitEffect` fields, so no `hitExecution`/`resolution` changes are needed — the mechanic-amplifier class traits are a deliberate future follow-on.
 

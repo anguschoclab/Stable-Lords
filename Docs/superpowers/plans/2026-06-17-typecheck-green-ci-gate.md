@@ -4,11 +4,12 @@
 
 **Goal:** Drive `npx tsc --noEmit --project tsconfig.app.json` from 134 errors to 0 — fixing 6 real production bugs first, then 128 test-fixture errors — and add a required CI gate so the type-check can never silently go red again.
 
-**Architecture:** Fix production errors individually (each is a genuine defect with an exact fix). Clear test-fixture errors in batches grouped by error *class* (unused vars, possibly-undefined index access, type mismatches) using a documented recipe per class, with `tsc` as the gate. Finally, wire `type-check` + `test` into the GitHub Actions workflow as a required check.
+**Architecture:** Fix production errors individually (each is a genuine defect with an exact fix). Clear test-fixture errors in batches grouped by error _class_ (unused vars, possibly-undefined index access, type mismatches) using a documented recipe per class, with `tsc` as the gate. Finally, wire `type-check` + `test` into the GitHub Actions workflow as a required check.
 
 **Tech Stack:** TypeScript (strict, `noUncheckedIndexedAccess`), Vitest, React 18, GitHub Actions.
 
 **Key existing facts (verified):**
+
 - Current count: **6 production errors + 128 test-file errors = 134** (`npx tsc --noEmit --project tsconfig.app.json`).
 - The 6 production errors are: 3 duplicate-`aria-label` bugs in the plan builder, 1 incomplete weather-icon map, 1 scouting prop mismatch, 1 AI-bidding `GameState` literal missing `bookmarks`.
 - `package.json` already defines `"type-check": "tsc --noEmit --project tsconfig.app.json"` and `"test": "npx vitest run"`.
@@ -33,6 +34,7 @@
 These are merge collisions — each `<button>` ended up with two `aria-label` attributes; React silently keeps the last and drops the first. Keep the attribute that matches the button's visible purpose; delete the other.
 
 **Files:**
+
 - Modify: `src/components/planBuilder/TacticBank.tsx:62`
 - Modify: `src/components/planBuilder/PhaseOverrides.tsx:45`
 - Modify: `src/components/planBuilder/SpatialControls.tsx:123`
@@ -44,9 +46,10 @@ Expected: three lines — `PhaseOverrides.tsx(55,21)`, `SpatialControls.tsx(123,
 
 - [ ] **Step 2: TacticBank — remove the second `aria-label`**
 
-In `src/components/planBuilder/TacticBank.tsx`, the `<button>` has `aria-label={\`Select Tactic: ${t.id}\`}` (line 52) and `aria-label={'Select tactic ' + t.label}` (line 62). Delete the line 62 duplicate:
+In `src/components/planBuilder/TacticBank.tsx`, the `<button>` has `aria-label={\`Select Tactic: ${t.id}\`}`(line 52) and`aria-label={'Select tactic ' + t.label}` (line 62). Delete the line 62 duplicate:
 
 Remove this line entirely:
+
 ```tsx
             aria-label={'Select tactic ' + t.label}
 ```
@@ -56,15 +59,17 @@ Remove this line entirely:
 In `src/components/planBuilder/PhaseOverrides.tsx`, the Clear `<button>` has `aria-label="Remove phase override"` (line 45) and `aria-label={\`Clear phase ${p}\`}` (line 55). The visible button text is "Clear", so keep the line 55 label and delete the line 45 one:
 
 Remove this line entirely:
+
 ```tsx
                     aria-label="Remove phase override"
 ```
 
 - [ ] **Step 4: SpatialControls — remove the second `aria-label`**
 
-In `src/components/planBuilder/SpatialControls.tsx`, the range `<button>` has `aria-label={\`Set Range Preference to ${r}\`}` (line 115) and `aria-label={'Set preferred distance to ' + r}` (line 123). Delete the line 123 duplicate:
+In `src/components/planBuilder/SpatialControls.tsx`, the range `<button>` has `aria-label={\`Set Range Preference to ${r}\`}`(line 115) and`aria-label={'Set preferred distance to ' + r}` (line 123). Delete the line 123 duplicate:
 
 Remove this line entirely:
+
 ```tsx
                 aria-label={'Set preferred distance to ' + r}
 ```
@@ -88,6 +93,7 @@ git commit -m "fix(plan-builder): remove duplicate aria-label attributes (merge 
 The `WEATHER_VISUALS` registry is typed `Record<WeatherType, …>` and is missing the `'Blood Fog'` weather (a `WeatherType` member at `src/types/shared.types.ts:623`), so that weather renders no overlay and the compiler errors.
 
 **Files:**
+
 - Modify: `src/components/arena/weather/index.tsx:38`
 
 - [ ] **Step 1: Confirm the error**
@@ -122,6 +128,7 @@ git commit -m "fix(weather): add missing Blood Fog entry to WEATHER_VISUALS"
 ## Task 3: Fix the scouting prop mismatch and the AI-bidding state literal
 
 **Files:**
+
 - Modify: `src/components/scouting/StableComparison.tsx:71`
 - Modify: `src/engine/ai/workers/competitionWorker/boutBidding.ts:20`
 
@@ -140,6 +147,7 @@ The error: a `GameState` object literal in `boutBidding.ts:20` is missing the re
 Open `src/components/scouting/StableComparison.tsx` (the error is at line 71, where it renders a child — likely `AverageAttributesSection`). Open that child component, read its `AverageAttributesSectionProps` interface, and pass **only** the props it declares. The error means the parent passes extra/wrong-typed props (e.g. `rivalA`/`rivalB` that the child doesn't accept). Remove the undeclared props or extend the child's interface to accept them — whichever matches how the child actually uses the data.
 
 Run to see the exact shape mismatch:
+
 ```bash
 bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep "StableComparison"
 ```
@@ -170,23 +178,28 @@ git commit -m "fix(types): scouting prop mismatch and AI-bidding state bookmarks
 ~29 errors are unused imports/variables in test files — pure deletes, no behavior change.
 
 **Files:**
+
 - Modify: every `src/test/**` file with a TS6133/TS6196 error (enumerate in Step 1).
 
 - [ ] **Step 1: Enumerate**
 
 Run:
+
 ```bash
 bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -E "TS6133|TS6196" | sort
 ```
+
 Each line names a file, position, and the unused identifier (e.g. `'foo' is declared but its value is never read`).
 
 - [ ] **Step 2: Delete each unused declaration**
 
 For each error, open the file at the given line and remove the unused identifier:
+
 - Unused **import**: delete it from the import list (or drop the whole `import` line if it becomes empty).
 - Unused **local variable**: delete the declaration; if it's a destructure (`const { a, b } = x` where `b` is unused), remove just `b`.
 
 Worked example — if the error is `src/test/engine/foo.test.ts(3,10): 'vi' is declared but its value is never read`:
+
 ```ts
 // before
 import { describe, it, expect, vi } from 'vitest';
@@ -218,11 +231,13 @@ git commit -m "chore(tests): remove unused declarations (TS6133/TS6196)"
 ~34 errors from `noUncheckedIndexedAccess`: indexing an array/record returns `T | undefined`, and the test then dereferences it. The fix is a non-null assertion on the index result (these are test fixtures with known-present elements).
 
 **Files:**
+
 - Modify: every `src/test/**` file with a TS2532 error (enumerate in Step 1).
 
 - [ ] **Step 1: Enumerate**
 
 Run:
+
 ```bash
 bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep "TS2532" | sort
 ```
@@ -232,6 +247,7 @@ bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep "TS2532" | sort
 For each error, add `!` to the index access that is being dereferenced. This is the exact recipe already used in `src/test/engine/tokens/patronTokenService.test.ts`.
 
 Worked examples:
+
 ```ts
 // before → after
 expect(result.roster[0].name).toBe('X');        →  expect(result.roster[0]!.name).toBe('X');
@@ -240,7 +256,7 @@ result.newsletter?.[0].title                       →  result.newsletter?.[0]!.
 const w = arr[2]; w.fame                           →  const w = arr[2]!; w.fame
 ```
 
-Rule: only the index result being **dereferenced** (`.prop` or assignment target) needs `!`. A value merely *passed* to `expect(...)` does not.
+Rule: only the index result being **dereferenced** (`.prop` or assignment target) needs `!`. A value merely _passed_ to `expect(...)` does not.
 
 - [ ] **Step 3: Verify the class is empty**
 
@@ -266,11 +282,13 @@ git commit -m "chore(tests): assert non-null on index access (TS2532)"
 Remaining classes: TS2345 (arg mismatch, ~25), TS2322 (type mismatch, ~22), TS2353 (unknown property), TS2339 (missing property), TS2305 (missing export), TS2820/TS2352/TS7053/TS2741. These are mostly incomplete or mistyped test fixtures.
 
 **Files:**
+
 - Modify: every `src/test/**` file with one of these errors (enumerate in Step 1).
 
 - [ ] **Step 1: Enumerate by class**
 
 Run:
+
 ```bash
 bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -E "TS2345|TS2322|TS2353|TS2339|TS2305|TS2820|TS2352|TS7053|TS2741" | sort
 ```
@@ -280,11 +298,13 @@ bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -E "TS2345|TS2322|TS23
 For each error, open the file and apply the matching recipe:
 
 - **TS2741 / TS2345 / TS2322 (incomplete or wrong fixture):** the fixture object is missing a required field or has the wrong type. Open the target type (the error message names it, e.g. `GameState`, `Warrior`) and add the missing field with a correct default. Worked example — `Property 'traits' is missing … in type 'Warrior'`:
+
   ```ts
   const w = makeTestWarrior({ /* … */ });   // before, fails if factory omits traits
   // fix the factory or the literal to include:
   traits: [],
   ```
+
   For branded-id fixtures (`Type 'string' is not assignable to 'WarriorId'`), cast at the fixture boundary: `id: 'p1' as WarriorId` (import the brand type), matching how production code mints ids.
 
 - **TS2353 (object literal has an unknown property):** remove the stray property, or — if the property is real and the type is stale — add it to the type. Prefer removing from the test (YAGNI) unless production code reads it.
@@ -319,6 +339,7 @@ git commit -m "chore(tests): complete fixtures and fix type mismatches (tsc gree
 ## Task 7: Add the CI gate so type-check and tests are required
 
 **Files:**
+
 - Modify or Create: `.github/workflows/ci.yml` (read the existing workflow directory first).
 
 - [ ] **Step 1: Inspect existing CI**
@@ -356,9 +377,11 @@ jobs:
 - [ ] **Step 3: Verify the workflow is valid locally**
 
 Run the two gate commands exactly as CI will:
+
 ```bash
 bunx tsc --noEmit --project tsconfig.app.json && npx vitest run
 ```
+
 Expected: both succeed (0 type errors, all tests pass).
 
 - [ ] **Step 4: Commit**

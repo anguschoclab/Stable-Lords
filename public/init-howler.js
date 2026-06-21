@@ -1,1 +1,3 @@
-if (typeof window.HowlerGlobal === 'undefined') { window.HowlerGlobal = {}; }
+if (typeof window.HowlerGlobal === 'undefined') {
+  window.HowlerGlobal = {};
+}

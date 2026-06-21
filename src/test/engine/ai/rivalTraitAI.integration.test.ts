@@ -6,9 +6,13 @@ import { populateInitialWorld } from '@/engine/core/worldSeeder';
 describe('rival trait AI (integration)', () => {
   it('over a season, rival rosters acquire traits and churn without crashing', () => {
     let state = populateInitialWorld(createFreshState('rival-ai'), 12345);
-    const before = state.rivals.flatMap((r) => r.roster).reduce((s, w) => s + (w.traits?.length ?? 0), 0);
+    const before = state.rivals
+      .flatMap((r) => r.roster)
+      .reduce((s, w) => s + (w.traits?.length ?? 0), 0);
     for (let i = 0; i < 26; i++) state = advanceWeek(state, { headless: true });
-    const after = state.rivals.flatMap((r) => r.roster).reduce((s, w) => s + (w.traits?.length ?? 0), 0);
+    const after = state.rivals
+      .flatMap((r) => r.roster)
+      .reduce((s, w) => s + (w.traits?.length ?? 0), 0);
     // Trait training over 26 weeks should have grown total trait count across rival rosters.
     expect(after).toBeGreaterThan(before);
     // No rival roster should be empty (churn cuts but recruitment refills).

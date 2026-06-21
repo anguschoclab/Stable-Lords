@@ -93,7 +93,8 @@ export function processAIRosterManagement(
     // Liability-based culling: release flaw-loaded warriors per personality threshold
     const traitPolicy = policyFor(r.owner.personality);
     const liabilityCandidates = filterActive(r.roster).filter(
-      (w) => !isOnWinStreak(w) && computeWarriorLiability(w).score >= traitPolicy.cutLiabilityThreshold
+      (w) =>
+        !isOnWinStreak(w) && computeWarriorLiability(w).score >= traitPolicy.cutLiabilityThreshold
     );
     for (const c of liabilityCandidates.slice(0, 1)) {
       c.status = 'Retired';

@@ -9,8 +9,7 @@ import {
 } from '@/engine/training/trainingGains/traitTraining';
 import { SeededRNGService } from '@/utils/random';
 
-const trainer = (tier: 'Novice' | 'Seasoned' | 'Master') =>
-  ({ id: 't', name: 'T', tier }) as any;
+const trainer = (tier: 'Novice' | 'Seasoned' | 'Master') => ({ id: 't', name: 'T', tier }) as any;
 const warrior = (over: any = {}) =>
   ({
     id: 'w',
@@ -38,7 +37,9 @@ describe('traitTrainingPool', () => {
     expect(pool.every((t) => t.sign === 'positive')).toBe(true);
     expect(
       pool.some(
-        (t) => t.styles?.includes(FightingStyle.AimedBlow) && !t.styles?.includes(FightingStyle.WallOfSteel)
+        (t) =>
+          t.styles?.includes(FightingStyle.AimedBlow) &&
+          !t.styles?.includes(FightingStyle.WallOfSteel)
       )
     ).toBe(false);
   });

@@ -6,7 +6,9 @@ const VALID_TIERS = ['Common', 'Notable', 'Exceptional', 'Signature', 'Flaw'];
 
 describe('trait invariants', () => {
   it('every trait has a non-empty tooltip description', () => {
-    const missing = Object.values(TRAITS).filter((t) => !t.description || t.description.trim().length < 5);
+    const missing = Object.values(TRAITS).filter(
+      (t) => !t.description || t.description.trim().length < 5
+    );
     expect(missing.map((t) => t.id)).toEqual([]);
   });
 

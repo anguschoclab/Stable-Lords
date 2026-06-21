@@ -285,9 +285,7 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
         {recentLedger.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center p-12 text-center opacity-20 group">
             <Wallet className="h-16 w-16 mb-4 group-hover:scale-110 transition-transform duration-500" />
-            <p className="text-sm font-display font-black uppercase tracking-[0.3em]">
-              No Entries
-            </p>
+            <p className="text-sm font-display font-black uppercase tracking-[0.3em]">No Entries</p>
             <p className="text-[10px] lowercase italic opacity-80 mt-2 font-medium">
               Fight a bout to see transactions here...
             </p>

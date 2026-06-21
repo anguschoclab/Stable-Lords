@@ -24,9 +24,7 @@ describe('ResultsBanner', () => {
   });
 
   it('renders null when results=[]', () => {
-    const { container } = render(
-      <ResultsBanner week={3} results={[]} onDismiss={vi.fn()} />
-    );
+    const { container } = render(<ResultsBanner week={3} results={[]} onDismiss={vi.fn()} />);
     expect(container.firstChild).toBeNull();
   });
 
@@ -43,18 +41,14 @@ describe('ResultsBanner', () => {
   });
 
   it('renders death names in red when deaths > 0', () => {
-    const results = [
-      makeResult({ outcome: { winner: 'w1', by: 'Kill', rounds: 5 } as any }),
-    ];
+    const results = [makeResult({ outcome: { winner: 'w1', by: 'Kill', rounds: 5 } as any })];
     render(<ResultsBanner week={5} results={results} onDismiss={vi.fn()} />);
     expect(screen.getByText(/Beta/i)).toBeTruthy();
   });
 
   it('auto-dismisses after 8 seconds', () => {
     const onDismiss = vi.fn();
-    render(
-      <ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />
-    );
+    render(<ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />);
     expect(onDismiss).not.toHaveBeenCalled();
     act(() => {
       vi.advanceTimersByTime(8000);
@@ -64,9 +58,7 @@ describe('ResultsBanner', () => {
 
   it('closes on X button click', () => {
     const onDismiss = vi.fn();
-    render(
-      <ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />
-    );
+    render(<ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />);
     const closeBtn = screen.getByRole('button', { name: /dismiss/i });
     fireEvent.click(closeBtn);
     expect(onDismiss).toHaveBeenCalledOnce();
@@ -74,9 +66,7 @@ describe('ResultsBanner', () => {
 
   it('onDismiss callback fires when dismissed', () => {
     const onDismiss = vi.fn();
-    render(
-      <ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />
-    );
+    render(<ResultsBanner week={3} results={[makeResult()]} onDismiss={onDismiss} />);
     act(() => {
       vi.advanceTimersByTime(8000);
     });

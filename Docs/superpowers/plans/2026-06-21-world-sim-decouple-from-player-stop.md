@@ -11,6 +11,7 @@
 **Scope:** One file of production change (`weekPipelineService.ts`) plus a new integration test. **Non-goal:** a player-recovery/receivership economy (a broke player can still climb out because promoters — a world pass — keep offering them bouts; building an explicit bailout is a separate feature, intentionally out of scope here). Game-over signalling already lives in `TimeAdvanceService.evaluateStopConditions` and is unchanged.
 
 **Pass classification (from code audit — do not re-derive):**
+
 - **WORLD (must always run):** `runWorldPass`, `runSystemPass`, `runRankingsPass`, `runPromoterPass`, `runPromoterLifecyclePass`, `runTrainerPass`, `runRivalStrategyPass`, `runSeasonalPass`.
 - **PLAYER-FACING (skip when player stopped OR headless):** `runEventPass`, `runNarrativePass`.
 - Rival warrior aging/retirement already runs in `runWarriorPass` (inside `collectCoreImpacts`), which executes on every path — leave it alone.
@@ -27,6 +28,7 @@
 ## Task 1: Failing regression test — world must evolve while the player is bankrupt/empty
 
 **Files:**
+
 - Create: `src/test/engine/pipeline/worldEvolvesWhenPlayerStopped.integration.test.ts`
 
 This test reproduces the 156-week sim finding: once the player is bankrupt, `state.arenaHistory` stops growing because rival-vs-rival world bouts (created in `runRivalStrategyPass`) never run. It must FAIL against current code and PASS after Task 2.
@@ -81,8 +83,7 @@ function reset() {
   NewsletterFeed.clear();
 }
 
-const totalRivalWarriors = (s: GameState) =>
-  s.rivals.reduce((acc, r) => acc + r.roster.length, 0);
+const totalRivalWarriors = (s: GameState) => s.rivals.reduce((acc, r) => acc + r.roster.length, 0);
 
 describe('world evolves while the player is stopped', () => {
   beforeEach(reset, 120000);
@@ -136,6 +137,7 @@ git commit -m "test(pipeline): world must keep evolving when player is bankrupt/
 ## Task 2: Always run world passes; gate only player-facing passes
 
 **Files:**
+
 - Modify: `src/engine/pipeline/services/weekPipelineService.ts`
 
 The current shape (for reference — lines ~223–250):
@@ -291,6 +293,7 @@ git commit -m "fix(pipeline): world passes always run; only player content gates
 
 Run: `npx vitest run 2>&1 | tail -6`
 Expected: no NEW failures versus the pre-existing baseline. Known-unrelated reds at the time of writing (do not attempt to fix here): `scouting.test.ts`, `Trainers.test.tsx`, `useDigestSummary.test.ts`, `Bookmarks.test.tsx`, `HallOfFame.test.tsx`, `Tournaments.test.tsx`. Everything else must be green, including:
+
 - `src/test/engine/ai/rivalTraitAI.integration.test.ts` (rivals develop traits over a season)
 - `src/test/engine/training/traitTraining.integration.test.ts`
 - `src/test/integration/weekAdvancement.test.ts`

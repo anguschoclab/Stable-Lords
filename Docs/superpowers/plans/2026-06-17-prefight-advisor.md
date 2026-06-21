@@ -2,13 +2,14 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Show the player a forecast of how a bout is likely to go — the decisive *predicted* factors (style matchup, skill/attribute edges, readiness/encumbrance) — on the bout-offer card, *before* they accept, turning the player from passive watcher into informed strategist.
+**Goal:** Show the player a forecast of how a bout is likely to go — the decisive _predicted_ factors (style matchup, skill/attribute edges, readiness/encumbrance) — on the bout-offer card, _before_ they accept, turning the player from passive watcher into informed strategist.
 
 **Architecture:** Add a pure `buildFightForecast(player, opponent?)` that mirrors the existing post-fight `buildFightAnalysis` but uses only pre-fight knowledge (no `exchangeLog`). Reuse the already-exported `AnalysisFactor` type and `getMatchupBonus`. Render the factors in a new `FightForecastPanel` mounted inside `OfferCard`, which already resolves both the player warrior and the (possibly-`null`/"CLASSIFIED") opponent.
 
 **Tech Stack:** TypeScript, React 18, Vitest, Tailwind/shadcn.
 
 **Key existing facts (verified):**
+
 - Post-fight analysis already exists: `buildFightAnalysis` and the exported `AnalysisFactor` type in `src/engine/narrative/fightAnalysis.ts`; `FightAnalysisPanel` in `src/components/bout-viewer/FightAnalysisPanel.tsx`.
 - `getMatchupBonus(attStyle, defStyle)` at `src/constants/combat/combat.ts:291`.
 - `OfferCard` (`src/pages/BookingOffice/components/OfferCard.tsx`) already computes `playerWarrior` (line 43) and `opponent` (line 46, from `rivalWarriorMap`, `null` when unscouted → renders "CLASSIFIED"). This is the mount point.
@@ -31,6 +32,7 @@
 ## Task 1: Build the pure `buildFightForecast` function
 
 **Files:**
+
 - Create: `src/engine/narrative/fightForecast.ts`
 - Test: `src/test/engine/fightForecast.test.ts`
 
@@ -66,7 +68,10 @@ describe('buildFightForecast', () => {
 
   it('surfaces the biggest skill edge favoring the stronger fighter', () => {
     const f = buildFightForecast(
-      mkWarrior({ name: 'Aulus', baseSkills: { ATT: 16, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 } }),
+      mkWarrior({
+        name: 'Aulus',
+        baseSkills: { ATT: 16, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 },
+      }),
       mkWarrior({ name: 'Bran', baseSkills: { ATT: 8, PAR: 8, DEF: 9, INI: 11, RIP: 6, DEC: 10 } })
     );
     const attFactor = f.factors.find((x) => x.label.includes('ATT'));
@@ -88,7 +93,9 @@ describe('buildFightForecast', () => {
       mkWarrior({ name: 'Aulus', injuries: [{ severity: 'Major', weeksRemaining: 2 }] }),
       mkWarrior({ name: 'Bran' })
     );
-    const risk = f.factors.find((x) => x.label.toLowerCase().includes('readiness') || x.label.toLowerCase().includes('injur'));
+    const risk = f.factors.find(
+      (x) => x.label.toLowerCase().includes('readiness') || x.label.toLowerCase().includes('injur')
+    );
     expect(risk).toBeDefined();
     expect(risk!.favored).toBe('D'); // injury favors the opponent
   });
@@ -238,6 +245,7 @@ git commit -m "feat(forecast): add pure buildFightForecast builder"
 ## Task 2: Build the `FightForecastPanel` component
 
 **Files:**
+
 - Create: `src/components/bout-viewer/FightForecastPanel.tsx`
 - Test: `src/test/components/FightForecastPanel.test.tsx`
 
@@ -359,6 +367,7 @@ git commit -m "feat(forecast): add FightForecastPanel component"
 ## Task 3: Mount the forecast in `OfferCard`
 
 **Files:**
+
 - Modify: `src/pages/BookingOffice/components/OfferCard.tsx`
 
 > Engineer note: `OfferCard` already computes `playerWarrior` (line ~43) and `opponent` (line ~46, may be `null`). Build the forecast from those and render the panel near the opponent block (around line ~142 where `opponent?.name || 'CLASSIFIED'` renders).
@@ -377,9 +386,7 @@ import { FightForecastPanel } from '@/components/bout-viewer/FightForecastPanel'
 After `playerWarrior` and `opponent` are resolved, add:
 
 ```tsx
-  const forecast = playerWarrior
-    ? buildFightForecast(playerWarrior, opponent ?? null)
-    : undefined;
+const forecast = playerWarrior ? buildFightForecast(playerWarrior, opponent ?? null) : undefined;
 ```
 
 > `playerWarrior`/`opponent` are full `Warrior` objects; `ForecastWarrior` is a structural subset, so they pass directly with no cast (same pattern as `buildFightAnalysis`).
@@ -389,11 +396,11 @@ After `playerWarrior` and `opponent` are resolved, add:
 Inside the offer card body, below the opponent name/stable block, add:
 
 ```tsx
-        <FightForecastPanel
-          forecast={forecast}
-          nameA={playerWarrior?.name ?? 'Your fighter'}
-          nameD={opponent?.name ?? 'Opponent'}
-        />
+<FightForecastPanel
+  forecast={forecast}
+  nameA={playerWarrior?.name ?? 'Your fighter'}
+  nameD={opponent?.name ?? 'Opponent'}
+/>
 ```
 
 - [ ] **Step 4: Type-check**

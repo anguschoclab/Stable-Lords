@@ -30,6 +30,7 @@
 ## Task 1: Data model — assignment timer + warrior trainability
 
 **Files:**
+
 - Modify: `src/types/state.types.ts`, `src/types/warrior.types.ts`, `src/engine/factories/warriorFactory.ts`
 
 - [ ] **Step 1: Extend `TrainingAssignment`**
@@ -63,7 +64,7 @@ In `src/types/warrior.types.ts`, in `interface Warrior`, near `traits`:
 In `src/engine/factories/warriorFactory.ts`, where the warrior object is built (near the `traits` assignment at line ~43), add a field to the returned warrior:
 
 ```typescript
-  const trainability = overrides?.trainability ?? (rng ? 0.4 + rng.next() * 0.5 : 0.65);
+const trainability = overrides?.trainability ?? (rng ? 0.4 + rng.next() * 0.5 : 0.65);
 ```
 
 and include `trainability` on the returned object. (Range 0.4–0.9; default 0.65 when no rng.)
@@ -71,6 +72,7 @@ and include `trainability` on the returned object. (Range 0.4–0.9; default 0.6
 - [ ] **Step 4: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/types/state.types.ts" "src/types/warrior.types.ts" "src/engine/factories/warriorFactory.ts"
 git commit -m "feat(traits): trait-training assignment fields + hidden trainability"
@@ -81,6 +83,7 @@ git commit -m "feat(traits): trait-training assignment fields + hidden trainabil
 ## Task 2: Pure trait-training logic (TDD)
 
 **Files:**
+
 - Create: `src/engine/training/trainingGains/traitTraining.ts`
 - Create: `src/test/engine/training/traitTraining.test.ts`
 
@@ -103,9 +106,13 @@ import { SeededRNGService } from '@/utils/random';
 const trainer = (tier: 'Novice' | 'Seasoned' | 'Master') => ({ id: 't', name: 'T', tier }) as any;
 const warrior = (over: any = {}) =>
   ({
-    id: 'w', style: FightingStyle.WallOfSteel, traits: [], age: 22,
+    id: 'w',
+    style: FightingStyle.WallOfSteel,
+    traits: [],
+    age: 22,
     attributes: { ST: 12, CN: 12, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 12 },
-    trainability: 0.7, ...over,
+    trainability: 0.7,
+    ...over,
   }) as any;
 
 describe('traitTrainingCeiling', () => {
@@ -117,13 +124,19 @@ describe('traitTrainingCeiling', () => {
 });
 
 describe('traitTrainingPool', () => {
-  it('includes the warrior\'s class traits and generic positives up to the ceiling, excluding owned', () => {
+  it("includes the warrior's class traits and generic positives up to the ceiling, excluding owned", () => {
     const pool = traitTrainingPool(warrior({ traits: ['braced'] }), trainer('Master'));
     expect(pool.some((t) => t.id === 'living_wall')).toBe(true); // WS Signature, Master ceiling
-    expect(pool.some((t) => t.id === 'braced')).toBe(false);     // already owned
+    expect(pool.some((t) => t.id === 'braced')).toBe(false); // already owned
     expect(pool.every((t) => t.sign === 'positive')).toBe(true);
     // a different class's trait must not appear
-    expect(pool.some((t) => t.styles?.includes(FightingStyle.AimedBlow) && !t.styles?.includes(FightingStyle.WallOfSteel))).toBe(false);
+    expect(
+      pool.some(
+        (t) =>
+          t.styles?.includes(FightingStyle.AimedBlow) &&
+          !t.styles?.includes(FightingStyle.WallOfSteel)
+      )
+    ).toBe(false);
   });
 
   it('a Novice trainer cannot reach Signature traits', () => {
@@ -151,12 +164,18 @@ describe('canAcquireTrait', () => {
 describe('rollTraitTraining', () => {
   it('a Master trainer + apt warrior mostly succeeds; results are valid traits or flaws', () => {
     const rng = new SeededRNGService('roll');
-    let success = 0, botch = 0, none = 0;
+    let success = 0,
+      botch = 0,
+      none = 0;
     for (let i = 0; i < 300; i++) {
       const r = rollTraitTraining(warrior(), trainer('Master'), rng);
-      if (r.outcome === 'success') { success++; expect(typeof r.traitId).toBe('string'); }
-      else if (r.outcome === 'botch') { botch++; expect(typeof r.traitId).toBe('string'); }
-      else none++;
+      if (r.outcome === 'success') {
+        success++;
+        expect(typeof r.traitId).toBe('string');
+      } else if (r.outcome === 'botch') {
+        botch++;
+        expect(typeof r.traitId).toBe('string');
+      } else none++;
     }
     expect(success).toBeGreaterThan(botch); // apt + Master ⇒ success-weighted
     expect(success + botch + none).toBe(300);
@@ -237,14 +256,18 @@ export function canAcquireTrait(warrior: Warrior, traitId: string): boolean {
 
 function aptitude(warrior: Warrior, trainer: Trainer): number {
   const a = warrior.attributes;
-  const mind = (a.WT + a.WL) / 50;                 // ~0.3–0.7
+  const mind = (a.WT + a.WL) / 50; // ~0.3–0.7
   const youth = Math.max(0, (30 - (warrior.age ?? 24)) / 30); // younger ⇒ higher
   const train = warrior.trainability ?? 0.6;
-  return mind * 0.4 + youth * 0.3 + train * 0.3;   // ~0–1
+  return mind * 0.4 + youth * 0.3 + train * 0.3; // ~0–1
 }
 
 const TIER_DIFFICULTY: Record<TraitTier, number> = {
-  Common: 0, Notable: 0.1, Exceptional: 0.25, Signature: 0.4, Flaw: 0,
+  Common: 0,
+  Notable: 0.1,
+  Exceptional: 0.25,
+  Signature: 0.4,
+  Flaw: 0,
 };
 
 /** Resolve a completed trait-training session. Pure given the rng. */
@@ -259,13 +282,21 @@ export function rollTraitTraining(
   // Pick a candidate (weighted toward lower tiers so Signature is rare).
   const candidate = pickWeighted(pool, rng);
   const apt = aptitude(warrior, trainer);
-  const successChance = Math.max(0.05, Math.min(0.9, 0.35 + apt * 0.5 - TIER_DIFFICULTY[candidate.tier]));
-  const botchChance = Math.max(0.02, Math.min(0.4, 0.2 - apt * 0.15 + TIER_DIFFICULTY[candidate.tier]));
+  const successChance = Math.max(
+    0.05,
+    Math.min(0.9, 0.35 + apt * 0.5 - TIER_DIFFICULTY[candidate.tier])
+  );
+  const botchChance = Math.max(
+    0.02,
+    Math.min(0.4, 0.2 - apt * 0.15 + TIER_DIFFICULTY[candidate.tier])
+  );
 
   const r = rng.next();
   if (r < successChance) return { outcome: 'success', traitId: candidate.id };
   if (r > 1 - botchChance) {
-    const flaws = Object.values(TRAITS).filter((t) => t.tier === 'Flaw' && canAcquireTrait(warrior, t.id));
+    const flaws = Object.values(TRAITS).filter(
+      (t) => t.tier === 'Flaw' && canAcquireTrait(warrior, t.id)
+    );
     if (flaws.length === 0) return { outcome: 'none' };
     return { outcome: 'botch', traitId: pickWeighted(flaws, rng).id };
   }
@@ -274,11 +305,24 @@ export function rollTraitTraining(
 
 function pickWeighted(pool: TraitDef[], rng: IRNGService): TraitDef {
   // Lower tiers more likely; weight = trait.weight × tier-rarity factor.
-  const tierFactor: Record<TraitTier, number> = { Common: 1, Notable: 0.7, Exceptional: 0.4, Signature: 0.2, Flaw: 1 };
+  const tierFactor: Record<TraitTier, number> = {
+    Common: 1,
+    Notable: 0.7,
+    Exceptional: 0.4,
+    Signature: 0.2,
+    Flaw: 1,
+  };
   let total = 0;
-  const w = pool.map((t) => { const x = (t.weight ?? 0.5) * tierFactor[t.tier]; total += x; return x; });
+  const w = pool.map((t) => {
+    const x = (t.weight ?? 0.5) * tierFactor[t.tier];
+    total += x;
+    return x;
+  });
   let target = rng.next() * total;
-  for (let i = 0; i < pool.length; i++) { target -= w[i]!; if (target <= 0) return pool[i]!; }
+  for (let i = 0; i < pool.length; i++) {
+    target -= w[i]!;
+    if (target <= 0) return pool[i]!;
+  }
   return pool[pool.length - 1]!;
 }
 ```
@@ -302,6 +346,7 @@ git commit -m "feat(traits): pure trait-training roll, pool, ceiling, and acquis
 ## Task 3: Wire into the weekly training pipeline
 
 **Files:**
+
 - Modify: `src/engine/training.ts`
 - Modify: `src/engine/pipeline/services/weekPipelineService.ts`
 
@@ -310,28 +355,32 @@ git commit -m "feat(traits): pure trait-training roll, pool, ceiling, and acquis
 In `src/engine/training.ts`, inside the `for (const assignment of state.trainingAssignments)` loop (around line 174, alongside the recovery/skillDrill/attribute branches), add **before** the attribute branch:
 
 ```typescript
-    if (assignment.type === 'trait') {
-      const remaining = (assignment.weeksRemaining ?? 1) - 1;
-      if (remaining > 0) continue; // still training; the assignment survives finalizeState (Step 2)
-      const trainer = (state.trainers ?? []).find((t) => t.id === assignment.trainerId);
-      if (!trainer) continue;
-      const roll = rollTraitTraining(warrior, trainer, rng);
-      if (roll.outcome !== 'none' && roll.traitId) {
-        const updated = { ...warrior, traits: [...(warrior.traits ?? []), roll.traitId] };
-        currentRoster.set(warrior.id, updated);
-        results.push({
-          warriorId: warrior.id,
-          type: 'gain',
-          message:
-            roll.outcome === 'success'
-              ? `${warrior.name} learned a new trait: ${TRAITS[roll.traitId]?.name}.`
-              : `${warrior.name}'s training went wrong — gained a flaw: ${TRAITS[roll.traitId]?.name}.`,
-        });
-      } else {
-        results.push({ warriorId: warrior.id, type: 'gain', message: `${warrior.name}'s trait training yielded nothing.` });
-      }
-      continue;
-    }
+if (assignment.type === 'trait') {
+  const remaining = (assignment.weeksRemaining ?? 1) - 1;
+  if (remaining > 0) continue; // still training; the assignment survives finalizeState (Step 2)
+  const trainer = (state.trainers ?? []).find((t) => t.id === assignment.trainerId);
+  if (!trainer) continue;
+  const roll = rollTraitTraining(warrior, trainer, rng);
+  if (roll.outcome !== 'none' && roll.traitId) {
+    const updated = { ...warrior, traits: [...(warrior.traits ?? []), roll.traitId] };
+    currentRoster.set(warrior.id, updated);
+    results.push({
+      warriorId: warrior.id,
+      type: 'gain',
+      message:
+        roll.outcome === 'success'
+          ? `${warrior.name} learned a new trait: ${TRAITS[roll.traitId]?.name}.`
+          : `${warrior.name}'s training went wrong — gained a flaw: ${TRAITS[roll.traitId]?.name}.`,
+    });
+  } else {
+    results.push({
+      warriorId: warrior.id,
+      type: 'gain',
+      message: `${warrior.name}'s trait training yielded nothing.`,
+    });
+  }
+  continue;
+}
 ```
 
 Add imports at the top of `training.ts`: `import { rollTraitTraining } from '@/engine/training/trainingGains/traitTraining';` and `import { TRAITS } from '@/engine/traits';` (if not already imported). Confirm the `TrainingResult` shape accepts `type: 'gain'` + `message` (grep `interface TrainingResult`).
@@ -341,12 +390,12 @@ Add imports at the top of `training.ts`: `import { rollTraitTraining } from '@/e
 In `src/engine/pipeline/services/weekPipelineService.ts`, `finalizeState` currently does `state.trainingAssignments = [];`. Replace with a filter that retains decremented trait assignments:
 
 ```typescript
-  state.trainingAssignments = (state.trainingAssignments ?? [])
-    .filter((a) => a.type === 'trait' && (a.weeksRemaining ?? 0) > 1)
-    .map((a) => ({ ...a, weeksRemaining: (a.weeksRemaining ?? 0) - 1 }));
+state.trainingAssignments = (state.trainingAssignments ?? [])
+  .filter((a) => a.type === 'trait' && (a.weeksRemaining ?? 0) > 1)
+  .map((a) => ({ ...a, weeksRemaining: (a.weeksRemaining ?? 0) - 1 }));
 ```
 
-> This decrements the *survivor* copy here while `computeTrainingImpact` (Step 1) reads the pre-decrement value to detect completion (`remaining = weeksRemaining − 1`, completes at 0). Keep the two in sync: an assignment created with `weeksRemaining = TRAIT_TRAIN_WEEKS` completes after exactly that many weeks.
+> This decrements the _survivor_ copy here while `computeTrainingImpact` (Step 1) reads the pre-decrement value to detect completion (`remaining = weeksRemaining − 1`, completes at 0). Keep the two in sync: an assignment created with `weeksRemaining = TRAIT_TRAIN_WEEKS` completes after exactly that many weeks.
 
 - [ ] **Step 3: Typecheck**
 
@@ -364,6 +413,7 @@ git commit -m "feat(traits): process multi-week trait training in the weekly pip
 ## Task 4: Assignment-creation action
 
 **Files:**
+
 - Modify: `src/pages/Training.tsx`
 
 - [ ] **Step 1: Add the assign handler**
@@ -387,6 +437,7 @@ Import `TRAIT_TRAIN_WEEKS` from `@/engine/training/trainingGains/traitTraining`.
 - [ ] **Step 2: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
+
 ```bash
 git add "src/pages/Training.tsx"
 git commit -m "feat(traits): expose trait-training assignment action"
@@ -397,6 +448,7 @@ git commit -m "feat(traits): expose trait-training assignment action"
 ## Task 5: Integration test + full suite
 
 **Files:**
+
 - Create: `src/test/engine/training/traitTraining.integration.test.ts`
 
 - [ ] **Step 1: Drive a full training cycle**
@@ -414,10 +466,28 @@ describe('trait training (integration)', () => {
   it('a blank warrior assigned to a Master trainer resolves after N weeks', () => {
     let state = createFreshState('train-int');
     const rng = new SeededRNGService('w');
-    const w = makeWarrior(rng.uuid() as any, 'Tyro', FightingStyle.WallOfSteel, { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 14, SP: 12, DF: 12 }, { traits: [], age: 20 });
+    const w = makeWarrior(
+      rng.uuid() as any,
+      'Tyro',
+      FightingStyle.WallOfSteel,
+      { ST: 12, CN: 12, SZ: 10, WT: 14, WL: 14, SP: 12, DF: 12 },
+      { traits: [], age: 20 }
+    );
     state.roster = [w];
-    state.trainers = [{ id: 'm', name: 'Master', tier: 'Master', focus: 'Defense', fame: 0, age: 50, contractWeeksLeft: 99 } as any];
-    state.trainingAssignments = [{ warriorId: w.id, type: 'trait', trainerId: 'm', weeksRemaining: TRAIT_TRAIN_WEEKS }];
+    state.trainers = [
+      {
+        id: 'm',
+        name: 'Master',
+        tier: 'Master',
+        focus: 'Defense',
+        fame: 0,
+        age: 50,
+        contractWeeksLeft: 99,
+      } as any,
+    ];
+    state.trainingAssignments = [
+      { warriorId: w.id, type: 'trait', trainerId: 'm', weeksRemaining: TRAIT_TRAIN_WEEKS },
+    ];
 
     for (let i = 0; i < TRAIT_TRAIN_WEEKS; i++) state = advanceWeek(state);
 
@@ -436,6 +506,7 @@ Expected: PASS. (If `advanceWeek`'s signature differs, match the call used in `s
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`
 Run: `npx vitest run 2>&1 | tail -4` → green.
+
 ```bash
 git add "src/test/engine/training/traitTraining.integration.test.ts"
 git commit -m "test(traits): trait-training end-to-end weekly cycle"

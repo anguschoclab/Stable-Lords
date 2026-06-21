@@ -12,7 +12,11 @@ import { computeWarriorStats } from '@/engine/skillCalc';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(name: string, style: FightingStyle, overrides: Partial<Record<string, number>> = {}): Warrior {
+function makeWarrior(
+  name: string,
+  style: FightingStyle,
+  overrides: Partial<Record<string, number>> = {}
+): Warrior {
   const full = { ST: 12, CN: 15, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 15, ...overrides };
   const { baseSkills, derivedStats } = computeWarriorStats(full, style);
   return {
@@ -36,7 +40,17 @@ function makeWarrior(name: string, style: FightingStyle, overrides: Partial<Reco
 }
 
 function makePlan(style: FightingStyle, overrides: Partial<any> = {}): any {
-  return { style, OE: 7, AL: 6, killDesire: 5, target: 'Any', protect: 'Any', offensiveTactic: 'none', defensiveTactic: 'none', ...overrides };
+  return {
+    style,
+    OE: 7,
+    AL: 6,
+    killDesire: 5,
+    target: 'Any',
+    protect: 'Any',
+    offensiveTactic: 'none',
+    defensiveTactic: 'none',
+    ...overrides,
+  };
 }
 
 function countRipostes(outcome: any): number {
@@ -72,9 +86,23 @@ describe('Gap 4: getStyleWeatherModifier returns riposteMod for known combinatio
 
 describe('Gap 4: style-weather riposteMod is applied in combat resolution', () => {
   it('ParryRiposte in Dense Fog gets more ripostes than in Clear weather', () => {
-    const defender = makeWarrior('Riposter', FightingStyle.ParryRiposte, { DF: 17, CN: 20, WL: 15 });
-    const attacker = makeWarrior('Basher', FightingStyle.BashingAttack, { ST: 8, CN: 20, SP: 6, DF: 5 });
-    const planD = makePlan(FightingStyle.ParryRiposte, { OE: 3, AL: 5, killDesire: 1, defensiveTactic: 'Parry' });
+    const defender = makeWarrior('Riposter', FightingStyle.ParryRiposte, {
+      DF: 17,
+      CN: 20,
+      WL: 15,
+    });
+    const attacker = makeWarrior('Basher', FightingStyle.BashingAttack, {
+      ST: 8,
+      CN: 20,
+      SP: 6,
+      DF: 5,
+    });
+    const planD = makePlan(FightingStyle.ParryRiposte, {
+      OE: 3,
+      AL: 5,
+      killDesire: 1,
+      defensiveTactic: 'Parry',
+    });
     const planA = makePlan(FightingStyle.BashingAttack, { OE: 5, AL: 3, killDesire: 1 });
 
     let fogRipostes = 0;
@@ -82,8 +110,24 @@ describe('Gap 4: style-weather riposteMod is applied in combat resolution', () =
     const seeds = [42, 100, 200, 300, 500, 700, 1000, 1500, 2000, 3000];
 
     for (const seed of seeds) {
-      const fogOutcome = simulateFight(planA, planD, attacker, defender, seed, undefined, 'Dense Fog');
-      const clearOutcome = simulateFight(planA, planD, attacker, defender, seed, undefined, 'Clear');
+      const fogOutcome = simulateFight(
+        planA,
+        planD,
+        attacker,
+        defender,
+        seed,
+        undefined,
+        'Dense Fog'
+      );
+      const clearOutcome = simulateFight(
+        planA,
+        planD,
+        attacker,
+        defender,
+        seed,
+        undefined,
+        'Clear'
+      );
 
       fogRipostes += countRipostes(fogOutcome);
       clearRipostes += countRipostes(clearOutcome);
@@ -95,9 +139,23 @@ describe('Gap 4: style-weather riposteMod is applied in combat resolution', () =
   });
 
   it('ParryLunge in Dense Fog gets more ripostes than in Clear weather', () => {
-    const defender = makeWarrior('ParryLunger', FightingStyle.ParryLunge, { DF: 17, CN: 20, WL: 15 });
-    const attacker = makeWarrior('Basher', FightingStyle.BashingAttack, { ST: 8, CN: 20, SP: 6, DF: 5 });
-    const planD = makePlan(FightingStyle.ParryLunge, { OE: 3, AL: 5, killDesire: 1, defensiveTactic: 'Parry' });
+    const defender = makeWarrior('ParryLunger', FightingStyle.ParryLunge, {
+      DF: 17,
+      CN: 20,
+      WL: 15,
+    });
+    const attacker = makeWarrior('Basher', FightingStyle.BashingAttack, {
+      ST: 8,
+      CN: 20,
+      SP: 6,
+      DF: 5,
+    });
+    const planD = makePlan(FightingStyle.ParryLunge, {
+      OE: 3,
+      AL: 5,
+      killDesire: 1,
+      defensiveTactic: 'Parry',
+    });
     const planA = makePlan(FightingStyle.BashingAttack, { OE: 5, AL: 3, killDesire: 1 });
 
     let fogRipostes = 0;
@@ -105,8 +163,24 @@ describe('Gap 4: style-weather riposteMod is applied in combat resolution', () =
     const seeds = [42, 100, 200, 300, 500, 700, 1000, 1500, 2000, 3000];
 
     for (const seed of seeds) {
-      const fogOutcome = simulateFight(planA, planD, attacker, defender, seed, undefined, 'Dense Fog');
-      const clearOutcome = simulateFight(planA, planD, attacker, defender, seed, undefined, 'Clear');
+      const fogOutcome = simulateFight(
+        planA,
+        planD,
+        attacker,
+        defender,
+        seed,
+        undefined,
+        'Dense Fog'
+      );
+      const clearOutcome = simulateFight(
+        planA,
+        planD,
+        attacker,
+        defender,
+        seed,
+        undefined,
+        'Clear'
+      );
 
       fogRipostes += countRipostes(fogOutcome);
       clearRipostes += countRipostes(clearOutcome);
@@ -117,9 +191,23 @@ describe('Gap 4: style-weather riposteMod is applied in combat resolution', () =
   });
 
   it('style-weather riposteMod stacks with weatherEffect.riposteMod', () => {
-    const defender = makeWarrior('Riposter', FightingStyle.ParryRiposte, { DF: 17, CN: 20, WL: 15 });
-    const attacker = makeWarrior('Basher', FightingStyle.BashingAttack, { ST: 8, CN: 20, SP: 6, DF: 5 });
-    const planD = makePlan(FightingStyle.ParryRiposte, { OE: 3, AL: 5, killDesire: 1, defensiveTactic: 'Parry' });
+    const defender = makeWarrior('Riposter', FightingStyle.ParryRiposte, {
+      DF: 17,
+      CN: 20,
+      WL: 15,
+    });
+    const attacker = makeWarrior('Basher', FightingStyle.BashingAttack, {
+      ST: 8,
+      CN: 20,
+      SP: 6,
+      DF: 5,
+    });
+    const planD = makePlan(FightingStyle.ParryRiposte, {
+      OE: 3,
+      AL: 5,
+      killDesire: 1,
+      defensiveTactic: 'Parry',
+    });
     const planA = makePlan(FightingStyle.BashingAttack, { OE: 5, AL: 3, killDesire: 1 });
 
     // Overcast has riposteMod 0 and no style-weather modifier for ParryRiposte
@@ -128,8 +216,24 @@ describe('Gap 4: style-weather riposteMod is applied in combat resolution', () =
     const seeds = [42, 100, 200, 300, 500, 700, 1000, 1500, 2000, 3000];
 
     for (const seed of seeds) {
-      const fogOutcome = simulateFight(planA, planD, attacker, defender, seed, undefined, 'Dense Fog');
-      const overcastOutcome = simulateFight(planA, planD, attacker, defender, seed, undefined, 'Overcast');
+      const fogOutcome = simulateFight(
+        planA,
+        planD,
+        attacker,
+        defender,
+        seed,
+        undefined,
+        'Dense Fog'
+      );
+      const overcastOutcome = simulateFight(
+        planA,
+        planD,
+        attacker,
+        defender,
+        seed,
+        undefined,
+        'Overcast'
+      );
 
       fogRipostes += countRipostes(fogOutcome);
       overcastRipostes += countRipostes(overcastOutcome);

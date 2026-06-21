@@ -27,8 +27,10 @@ function isWeatherDisadvantaged(warrior: Warrior, weather: WeatherType): boolean
   if (weather === 'Rainy' && isLunger) return true;
   if (weather === 'Dense Fog' && isLunger) return true;
   if (weather === 'Blizzard' && (isLunger || warrior.attributes.CN < 12)) return true;
-  if (weather === 'Sandstorm' && (isLunger || warrior.style === FightingStyle.AimedBlow)) return true;
-  if (weather === 'Gale' && (warrior.style === FightingStyle.StrikingAttack || isLunger)) return true;
+  if (weather === 'Sandstorm' && (isLunger || warrior.style === FightingStyle.AimedBlow))
+    return true;
+  if (weather === 'Gale' && (warrior.style === FightingStyle.StrikingAttack || isLunger))
+    return true;
   if (weather === 'Tornado') return true;
   if (weather === 'Acid Rain') return true;
   return false;

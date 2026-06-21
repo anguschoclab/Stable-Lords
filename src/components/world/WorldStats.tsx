@@ -18,7 +18,13 @@ interface WorldStatsProps {
  * World stats.
  * @param - { stable count, warrior count, kill count, top stable }.
  */
-export function WorldStats({ stableCount, warriorCount, killCount, topStable, topStableId }: WorldStatsProps) {
+export function WorldStats({
+  stableCount,
+  warriorCount,
+  killCount,
+  topStable,
+  topStableId,
+}: WorldStatsProps) {
   const stats = [
     {
       icon: Trophy,
@@ -77,7 +83,9 @@ export function WorldStats({ stableCount, warriorCount, killCount, topStable, to
               <p
                 className={cn(
                   'font-display font-black truncate drop-shadow-md',
-                  item.smallValue ? 'text-sm uppercase tracking-tight' : 'text-3xl tracking-tighter',
+                  item.smallValue
+                    ? 'text-sm uppercase tracking-tight'
+                    : 'text-3xl tracking-tighter',
                   item.color
                 )}
               >

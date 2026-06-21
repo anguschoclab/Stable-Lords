@@ -9,6 +9,7 @@
 **Tech Stack:** TypeScript, React 18, Vitest, Zod (state schema), TanStack Router, Tailwind/shadcn UI.
 
 **Key existing facts (verified):**
+
 - `FightOutcome` (`src/types/combat.types.ts:198`) already carries `exchangeLog?: ExchangeLogEntry[]` and `post?` (xp, hits, kill flags, `causeBucket`, `fatalExchangeIndex`).
 - `ExchangeLogEntry` (`src/types/combat.types.ts:158`) carries `iniWinner`, `attResult`, `damage`, `killWindow`, `executionFlag`, `reasonCodes`, `momentumShift`, `endDeltas`.
 - `getMatchupBonus(attStyle, defStyle)` exists at `src/constants/combat/combat.ts:291`.
@@ -36,6 +37,7 @@
 ## Task 1: Define `FightAnalysis` type and the pure builder
 
 **Files:**
+
 - Create: `src/engine/narrative/fightAnalysis.ts`
 - Test: `src/test/engine/fightAnalysis.test.ts`
 
@@ -62,8 +64,22 @@ const outcome = (over: Partial<FightOutcome> = {}): FightOutcome => ({
   minutes: 7,
   log: [],
   exchangeLog: [
-    { exchangeIndex: 0, minute: 1, iniWinner: 'A', attResult: 'hit', damage: 4, endDeltas: { a: -3, d: -5 } },
-    { exchangeIndex: 1, minute: 2, iniWinner: 'A', attResult: 'hit', damage: 6, endDeltas: { a: -3, d: -6 } },
+    {
+      exchangeIndex: 0,
+      minute: 1,
+      iniWinner: 'A',
+      attResult: 'hit',
+      damage: 4,
+      endDeltas: { a: -3, d: -5 },
+    },
+    {
+      exchangeIndex: 1,
+      minute: 2,
+      iniWinner: 'A',
+      attResult: 'hit',
+      damage: 6,
+      endDeltas: { a: -3, d: -6 },
+    },
     {
       exchangeIndex: 2,
       minute: 3,
@@ -75,19 +91,35 @@ const outcome = (over: Partial<FightOutcome> = {}): FightOutcome => ({
       reasonCodes: ['AI_PUSH_FATIGUE'],
     },
   ],
-  post: { xpA: 10, xpD: 2, hitsA: 3, hitsD: 0, gotKillA: true, causeBucket: 'trauma', fatalExchangeIndex: 2 },
+  post: {
+    xpA: 10,
+    xpD: 2,
+    hitsA: 3,
+    hitsD: 0,
+    gotKillA: true,
+    causeBucket: 'trauma',
+    fatalExchangeIndex: 2,
+  },
   ...over,
 });
 
 describe('buildFightAnalysis', () => {
   it('identifies the decisive exchange from the fatal exchange index', () => {
-    const a = buildFightAnalysis(outcome(), baseWarrior({ id: 'A' }), baseWarrior({ id: 'D', style: 'Total Parry' }));
+    const a = buildFightAnalysis(
+      outcome(),
+      baseWarrior({ id: 'A' }),
+      baseWarrior({ id: 'D', style: 'Total Parry' })
+    );
     expect(a.decisiveExchange.index).toBe(2);
     expect(a.decisiveExchange.reasonCodes).toContain('AI_PUSH_FATIGUE');
   });
 
   it('reports the style matchup edge in favor of the winner', () => {
-    const a = buildFightAnalysis(outcome(), baseWarrior({ id: 'A', style: 'Lunging Attack' }), baseWarrior({ id: 'D', style: 'Total Parry' }));
+    const a = buildFightAnalysis(
+      outcome(),
+      baseWarrior({ id: 'A', style: 'Lunging Attack' }),
+      baseWarrior({ id: 'D', style: 'Total Parry' })
+    );
     expect(a.styleMatchup.styleA).toBe('Lunging Attack');
     expect(a.styleMatchup.styleD).toBe('Total Parry');
     expect(typeof a.styleMatchup.edge).toBe('number');
@@ -107,13 +139,21 @@ describe('buildFightAnalysis', () => {
   });
 
   it('returns a graceful empty-ish analysis when exchangeLog is absent', () => {
-    const a = buildFightAnalysis(outcome({ exchangeLog: undefined }), baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
+    const a = buildFightAnalysis(
+      outcome({ exchangeLog: undefined }),
+      baseWarrior({ id: 'A' }),
+      baseWarrior({ id: 'D' })
+    );
     expect(a.decisiveExchange.index).toBeNull();
     expect(a.factors.length).toBeGreaterThan(0); // still produces matchup + outcome factors
   });
 
   it('produces a ranked, human-readable factors list (3-5 items)', () => {
-    const a = buildFightAnalysis(outcome(), baseWarrior({ id: 'A' }), baseWarrior({ id: 'D', style: 'Total Parry' }));
+    const a = buildFightAnalysis(
+      outcome(),
+      baseWarrior({ id: 'A' }),
+      baseWarrior({ id: 'D', style: 'Total Parry' })
+    );
     expect(a.factors.length).toBeGreaterThanOrEqual(3);
     expect(a.factors.length).toBeLessThanOrEqual(5);
     a.factors.forEach((f) => {
@@ -232,7 +272,10 @@ function findFatigueCrossover(log: ExchangeLogEntry[]): {
   return { fatiguedSide: null, crossoverExchange: null };
 }
 
-function biggestSkillGap(a: AnalysisWarrior, d: AnalysisWarrior): { skill: string; gap: number; favored: 'A' | 'D' } {
+function biggestSkillGap(
+  a: AnalysisWarrior,
+  d: AnalysisWarrior
+): { skill: string; gap: number; favored: 'A' | 'D' } {
   let best = { skill: 'ATT', gap: 0, favored: 'A' as 'A' | 'D' };
   for (const k of Object.keys(a.skills)) {
     const gap = (a.skills[k] ?? 0) - (d.skills[k] ?? 0);
@@ -253,13 +296,14 @@ export function buildFightAnalysis(
 
   const fatalIdx = outcome.post?.fatalExchangeIndex ?? null;
   const decisiveEntry =
-    fatalIdx != null ? log.find((e) => e.exchangeIndex === fatalIdx) ?? null : null;
+    fatalIdx != null ? (log.find((e) => e.exchangeIndex === fatalIdx) ?? null) : null;
 
   const tale = summarizeTale(log);
   const fatigue = findFatigueCrossover(log);
   const skillGap = biggestSkillGap(warriorA, warriorD);
 
-  const winnerName = outcome.winner === 'A' ? warriorA.name : outcome.winner === 'D' ? warriorD.name : 'No one';
+  const winnerName =
+    outcome.winner === 'A' ? warriorA.name : outcome.winner === 'D' ? warriorD.name : 'No one';
 
   const decisiveExchange = {
     index: decisiveEntry?.exchangeIndex ?? null,
@@ -352,6 +396,7 @@ git commit -m "feat(analysis): add pure buildFightAnalysis builder"
 ## Task 2: Add `analysis` to the `FightSummary` type and zod schema
 
 **Files:**
+
 - Modify: `src/types/combat.types.ts:225-260` (the `FightSummary` interface)
 - Modify: `src/schemas/gameStateSchema.ts` (the `FightSummary` schema)
 - Test: `src/test/engine/fightSummarySchema.test.ts` (create)
@@ -475,6 +520,7 @@ git commit -m "feat(analysis): persist FightAnalysis on FightSummary"
 ## Task 3: Populate `analysis` when a FightSummary is built from a BoutResult
 
 **Files:**
+
 - Modify: `src/engine/core/fightSummaryFactory.ts`
 - Test: `src/test/engine/fightSummaryFactory.test.ts` (create or extend)
 
@@ -559,6 +605,7 @@ git commit -m "feat(analysis): attach FightAnalysis in fightSummaryFactory"
 ## Task 4: Build the `FightAnalysisPanel` presentational component
 
 **Files:**
+
 - Create: `src/components/bout-viewer/FightAnalysisPanel.tsx`
 - Test: `src/test/components/FightAnalysisPanel.test.tsx`
 
@@ -688,6 +735,7 @@ git commit -m "feat(analysis): add FightAnalysisPanel component"
 ## Task 5: Thread `analysis` into BoutViewer and mount the panel
 
 **Files:**
+
 - Modify: `src/components/BoutViewer.tsx` (props interface + render)
 - Modify: `src/components/bout-viewer/BoutResolution.tsx` (mount point)
 
@@ -731,6 +779,7 @@ git commit -m "feat(analysis): render FightAnalysisPanel inside BoutViewer"
 ## Task 6: Pass `analysis` from both call sites (live reveal + historical viewer)
 
 **Files:**
+
 - Modify: live reveal path — `src/components/resolution-reveal/BoutsStep.tsx` and/or `src/components/ResolutionReveal.tsx`
 - Modify: historical path — `src/routes/warrior/$id.tsx` (warrior detail fight history → BoutViewer)
 

@@ -9,6 +9,7 @@
 **Tech Stack:** TanStack React Router (file-based routing, `routeTree.gen.ts` auto-generated), React 18, Vitest, Tailwind.
 
 **Key existing facts (verified):**
+
 - Live hubs are defined in `src/components/layout/navigationShared.tsx:43` (`HUBS`): `command`, `ops` (labeled "Stable"), `world`, `bookmarks`.
 - `/command/roster`, `/ops/roster`, and `/ops/overview` all render the **same** `StableHall` component — true duplication.
 - The legacy `/stable/*` tree (`src/routes/stable/*.tsx`: index, training, trainers, recruit, planner, finance, equipment, contracts, `$id`) is NOT referenced by `HUBS` and is dead, except confirm `$id`/warrior-detail usage before deleting (warrior detail is actually `/warrior/$id`; rival stable detail is `/world/stable/$id`).
@@ -17,21 +18,21 @@
 
 ### Canonical page map (target `/stable/*`)
 
-| New path | Component | Old path(s) it replaces |
-|---|---|---|
-| `/stable` (index) | `ControlCenter` | `/command` |
-| `/stable/roster` | `StableHall` | `/command/roster`, `/ops/roster`, `/ops/overview` |
-| `/stable/training` | `Training` | `/command/training` |
-| `/stable/planner` | `TrainingPlanner` | `/command/tactics` |
-| `/stable/arena` | `ArenaHub` | `/command/arena`, `/command/combat` |
-| `/stable/equipment` | `StableEquipment` | `/ops/equipment` |
-| `/stable/bouts` | `BookingOffice` | `/ops/contracts` |
-| `/stable/promoters` | `PromoterDirectory` | `/ops/promoters` |
-| `/stable/promoter/$id` | `PromoterDetail` | `/ops/promoter/$id` |
-| `/stable/trainers` | `Trainers` | `/ops/personnel` |
-| `/stable/finance` | `StableLedger` | `/ops/finance` |
-| `/stable/recruit` | `Recruit` | `/ops/recruit` |
-| `/stable/offseason` | `Offseason` | `/ops/offseason` |
+| New path               | Component           | Old path(s) it replaces                           |
+| ---------------------- | ------------------- | ------------------------------------------------- |
+| `/stable` (index)      | `ControlCenter`     | `/command`                                        |
+| `/stable/roster`       | `StableHall`        | `/command/roster`, `/ops/roster`, `/ops/overview` |
+| `/stable/training`     | `Training`          | `/command/training`                               |
+| `/stable/planner`      | `TrainingPlanner`   | `/command/tactics`                                |
+| `/stable/arena`        | `ArenaHub`          | `/command/arena`, `/command/combat`               |
+| `/stable/equipment`    | `StableEquipment`   | `/ops/equipment`                                  |
+| `/stable/bouts`        | `BookingOffice`     | `/ops/contracts`                                  |
+| `/stable/promoters`    | `PromoterDirectory` | `/ops/promoters`                                  |
+| `/stable/promoter/$id` | `PromoterDetail`    | `/ops/promoter/$id`                               |
+| `/stable/trainers`     | `Trainers`          | `/ops/personnel`                                  |
+| `/stable/finance`      | `StableLedger`      | `/ops/finance`                                    |
+| `/stable/recruit`      | `Recruit`           | `/ops/recruit`                                    |
+| `/stable/offseason`    | `Offseason`         | `/ops/offseason`                                  |
 
 `Tournaments` stays in the World hub (`/world/tournaments`). `World` and `Bookmarks` hubs are unchanged.
 
@@ -52,21 +53,26 @@
 ## Task 1: Delete the dead legacy `/stable/*` tree
 
 **Files:**
+
 - Delete: `src/routes/stable/index.tsx`, `training.tsx`, `trainers.tsx`, `recruit.tsx`, `planner.tsx`, `finance.tsx`, `equipment.tsx`, `contracts.tsx`, `$id.tsx`
 - Test: confirm no live links break
 
 - [ ] **Step 1: Verify the tree is truly unreferenced**
 
 Run:
+
 ```bash
 grep -rnE "to=[\"'\`]/stable/(index|training|trainers|recruit|planner|finance|equipment|contracts)" src --include="*.tsx" --include="*.ts" | grep -v routeTree.gen
 ```
+
 Expected: NO output (these paths are not linked anywhere). If any line appears, note it — that link must be repointed in Task 5 instead of assumed dead.
 
 Also confirm warrior detail and rival stable detail live elsewhere:
+
 ```bash
 grep -rn "to=\"/warrior/\|to=\"/world/stable/" src --include="*.tsx" | head
 ```
+
 Expected: warrior detail uses `/warrior/$id`, rival stable uses `/world/stable/$id` — so deleting `src/routes/stable/$id.tsx` is safe.
 
 - [ ] **Step 2: Delete the files**
@@ -92,6 +98,7 @@ git commit -m "chore(ia): delete dead legacy /stable route tree"
 ## Task 2: Create the unified `/stable/*` hub routes
 
 **Files:**
+
 - Create: `src/routes/stable/__root.tsx`
 - Create: `src/routes/stable/index.tsx`, `roster.tsx`, `training.tsx`, `planner.tsx`, `arena.tsx`, `equipment.tsx`, `bouts.tsx`, `promoters.tsx`, `promoter.$id.tsx`, `trainers.tsx`, `finance.tsx`, `recruit.tsx`, `offseason.tsx`
 
@@ -138,6 +145,7 @@ export const Route = createFileRoute('/stable/roster')({
 ```
 
 Repeat for:
+
 - `training.tsx` → `Training` from `@/pages/Training`, path `/stable/training`
 - `planner.tsx` → `TrainingPlanner` from `@/pages/TrainingPlanner`, path `/stable/planner`
 - `arena.tsx` → `ArenaHub` from `@/pages/ArenaHub`, path `/stable/arena`
@@ -173,6 +181,7 @@ git commit -m "feat(ia): add unified /stable hub routes"
 ## Task 3: Convert old `/command/*` and `/ops/*` routes to redirects
 
 **Files:**
+
 - Rewrite: every file in `src/routes/command/` and `src/routes/ops/` (except `__root.tsx` — see note)
 
 > Engineer note: keep the `__root.tsx` files for now ONLY if deleting them would orphan the redirect children in TanStack's file routing. Simplest correct approach: turn each leaf route into a `beforeLoad` redirect and leave `__root.tsx` as a pass-through `<Outlet/>` layout. After verifying redirects work, `__root.tsx` for command/ops can be simplified to a bare outlet.
@@ -194,6 +203,7 @@ export const Route = createFileRoute('/command/roster')({
 ```
 
 Apply the full mapping:
+
 - `/command/` → `/stable`
 - `/command/roster` → `/stable/roster`
 - `/command/training` → `/stable/training`
@@ -247,6 +257,7 @@ git commit -m "feat(ia): redirect legacy /command and /ops paths to /stable"
 ## Task 4: Collapse `HUBS` to two management hubs
 
 **Files:**
+
 - Modify: `src/components/layout/navigationShared.tsx:43-97`
 
 - [ ] **Step 1: Write/adjust a nav test**
@@ -318,6 +329,7 @@ Leave the `world` and `bookmarks` hub objects unchanged.
 - [ ] **Step 4: Fix the other references in navigationShared.tsx**
 
 Search the rest of the file for the hardcoded hub-default paths seen at lines ~160, ~364, ~372 (`command: '/command/training'`, `ops: '/ops/contracts'`, etc.) and any `HubId`-keyed maps. Repoint them to `/stable/*` and collapse the `command`/`ops` keys into a single `stable` key. Specifically:
+
 - `command: '/command/training'` and `ops: '/ops/contracts'` default-target maps → replace with the single `stable: '/stable'` (or remove if now unused).
 - Any `to: '/command/training'` / `to: '/ops/contracts'` fallback links → `/stable/training` / `/stable/bouts`.
 
@@ -345,19 +357,23 @@ git commit -m "feat(ia): collapse Command+Ops nav into single Stable hub"
 ## Task 5: Repoint internal links across the app
 
 **Files:**
+
 - Modify: all non-route files containing `/command/*` or `/ops/*` link strings (~26 files, enumerate in Step 1)
 
 - [ ] **Step 1: Enumerate the files**
 
 Run:
+
 ```bash
 grep -rlE "[\"'\`]/(command|ops)/" src --include="*.tsx" --include="*.ts" | grep -v routeTree.gen | grep -v "src/routes/"
 ```
+
 Record the list. These are the files to edit.
 
 - [ ] **Step 2: Apply the path mapping**
 
 For each file, replace link targets per this exact mapping (same as Task 3):
+
 - `/command` → `/stable`
 - `/command/roster` → `/stable/roster`
 - `/command/training` → `/stable/training`
@@ -380,9 +396,11 @@ For each file, replace link targets per this exact mapping (same as Task 3):
 - [ ] **Step 3: Confirm no stale internal links remain**
 
 Run:
+
 ```bash
 grep -rnE "to=[\"'\`]/(command|ops)/" src --include="*.tsx" --include="*.ts" | grep -v routeTree.gen | grep -v "beforeLoad"
 ```
+
 Expected: NO output except the redirect routes themselves (which legitimately mention old paths in `createFileRoute`).
 
 - [ ] **Step 4: Type-check (catches typed router link errors)**
@@ -437,7 +455,7 @@ git commit -m "test(ia): update e2e specs for /stable routes"
 
 ## Verification (done by reviewer after implementation)
 
-1. `grep -rnE "to=[\"'\`]/(command|ops)/" src --include="*.tsx" | grep -v beforeLoad | grep -v routeTree.gen` → only redirect route definitions, no live links.
+1. `grep -rnE "to=[\"'\`]/(command|ops)/" src --include="\*.tsx" | grep -v beforeLoad | grep -v routeTree.gen` → only redirect route definitions, no live links.
 2. `npx tsc --noEmit --project tsconfig.app.json` → clean.
 3. `npx vitest run src/test/components/navigationHubs.test.ts` → pass.
 4. Manual: every Stable-hub nav item resolves; 3 legacy URLs redirect correctly.

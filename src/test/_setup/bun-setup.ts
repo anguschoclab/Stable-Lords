@@ -48,15 +48,21 @@ Object.defineProperty(globalThis, 'navigator', {
 (globalThis as any).DocumentFragment = dom.window.DocumentFragment;
 (globalThis as any).getComputedStyle = dom.window.getComputedStyle.bind(dom.window);
 (globalThis as any).SVGElement = dom.window.SVGElement;
-(globalThis as any).requestAnimationFrame = dom.window.requestAnimationFrame?.bind(dom.window) ?? ((cb: FrameRequestCallback) => setTimeout(() => cb(Date.now()), 0));
-(globalThis as any).cancelAnimationFrame = dom.window.cancelAnimationFrame?.bind(dom.window) ?? ((id: number) => clearTimeout(id));
-(globalThis as any).getSelection = dom.window.getSelection?.bind(dom.window) ?? (() => ({ rangeCount: 0, toString: () => '' }));
+(globalThis as any).requestAnimationFrame =
+  dom.window.requestAnimationFrame?.bind(dom.window) ??
+  ((cb: FrameRequestCallback) => setTimeout(() => cb(Date.now()), 0));
+(globalThis as any).cancelAnimationFrame =
+  dom.window.cancelAnimationFrame?.bind(dom.window) ?? ((id: number) => clearTimeout(id));
+(globalThis as any).getSelection =
+  dom.window.getSelection?.bind(dom.window) ?? (() => ({ rangeCount: 0, toString: () => '' }));
 
 // FileReader: proxy global to dom.window so test overrides via window.FileReader work
 if (!(globalThis as any).FileReader) {
   Object.defineProperty(globalThis, 'FileReader', {
     get: () => dom.window.FileReader,
-    set: (v) => { dom.window.FileReader = v; },
+    set: (v) => {
+      dom.window.FileReader = v;
+    },
     configurable: true,
   });
 }

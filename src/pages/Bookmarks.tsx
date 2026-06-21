@@ -117,18 +117,18 @@ export default function Bookmarks() {
     clearBookmarksByType,
   } = useGameStore(
     useShallow((s) => ({
-    bookmarks: s.bookmarks,
-    roster: s.roster,
-    graveyard: s.graveyard,
-    retired: s.retired,
-    rivals: s.rivals,
-    promoters: s.promoters,
-    trainers: s.trainers,
-    tournaments: s.tournaments,
-    boutOffers: s.boutOffers,
-    scoutReports: s.scoutReports,
-    clearBookmarks: s.clearBookmarks,
-    clearBookmarksByType: s.clearBookmarksByType,
+      bookmarks: s.bookmarks,
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      promoters: s.promoters,
+      trainers: s.trainers,
+      tournaments: s.tournaments,
+      boutOffers: s.boutOffers,
+      scoutReports: s.scoutReports,
+      clearBookmarks: s.clearBookmarks,
+      clearBookmarksByType: s.clearBookmarksByType,
     }))
   );
 
@@ -218,9 +218,7 @@ export default function Bookmarks() {
         case 'boutOffer': {
           const offer = Object.values(boutOffers || {}).find((x) => x.id === b.entityId);
           if (offer) {
-            const promoter = Object.values(promoters || {}).find(
-              (p) => p.id === offer.promoterId
-            );
+            const promoter = Object.values(promoters || {}).find((p) => p.id === offer.promoterId);
             name = promoter ? `${promoter.name} · ${offer.purse}G` : `${offer.purse}G`;
             subtitle = offer.id;
             onClick = () => navigate({ to: '/stable/bouts' });
@@ -242,7 +240,13 @@ export default function Bookmarks() {
         }
       }
 
-      groups[b.entityType].push({ id: b.entityId, name, subtitle, createdAt: b.createdAt, onClick });
+      groups[b.entityType].push({
+        id: b.entityId,
+        name,
+        subtitle,
+        createdAt: b.createdAt,
+        onClick,
+      });
     }
 
     return groups;
@@ -308,7 +312,8 @@ export default function Bookmarks() {
               No Entries Marked
             </p>
             <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic max-w-sm mx-auto">
-              Mark warriors, stables, promoters, and rivals from their detail pages to track them here.
+              Mark warriors, stables, promoters, and rivals from their detail pages to track them
+              here.
             </p>
           </div>
         </Surface>

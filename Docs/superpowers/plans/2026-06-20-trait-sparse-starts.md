@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make most warriors born blank — rewrite `generateTraits` so ~68% start with no traits, ~25% with one Common/Notable *generic* trait (never Exceptional/Signature, never class-restricted), and ~7% with a single Flaw.
+**Goal:** Make most warriors born blank — rewrite `generateTraits` so ~68% start with no traits, ~25% with one Common/Notable _generic_ trait (never Exceptional/Signature, never class-restricted), and ~7% with a single Flaw.
 
 **Architecture:** `generateTraits(rng, archetype?)` (`src/engine/traits.ts:411`) is the single chokepoint for birth traits (consumed at `warriorFactory.ts:43` for both player and rival warriors). We make it **tier-aware** using the `tier`/`styles` fields from System 1: it rolls a category (blank / positive / flaw) then picks from the appropriate filtered, archetype-weighted pool.
 
 **Tech Stack:** TypeScript, Bun (`bun`/`bunx` — never npm/node), Vitest.
 
-**Scope:** System 2 of the trait redesign. **Depends on System 1** (the `tier`/`styles` fields and the Flaw pool must exist). Class traits and Exceptional/Signature are *earned*, never granted at birth — this plan enforces that.
+**Scope:** System 2 of the trait redesign. **Depends on System 1** (the `tier`/`styles` fields and the Flaw pool must exist). Class traits and Exceptional/Signature are _earned_, never granted at birth — this plan enforces that.
 
 ---
 
@@ -22,6 +22,7 @@
 ## Task 1: Sparse, tier-aware `generateTraits` (TDD)
 
 **Files:**
+
 - Modify: `src/engine/traits.ts`
 - Create: `src/test/engine/traits/generateTraits.test.ts`
 
@@ -31,8 +32,8 @@ In `src/engine/traits.ts`, near the existing `TRAIT_SYNERGY_MULTIPLIER` constant
 
 ```typescript
 /** Birth-trait distribution: most warriors are born blank; traits are developed. */
-export const BIRTH_BLANK_CHANCE = 0.68;   // 0 traits
-export const BIRTH_FLAW_CHANCE = 0.07;    // a single Flaw (after the blank roll)
+export const BIRTH_BLANK_CHANCE = 0.68; // 0 traits
+export const BIRTH_FLAW_CHANCE = 0.07; // a single Flaw (after the blank roll)
 // remaining ~0.25 → one Common/Notable generic positive trait
 ```
 
@@ -72,7 +73,8 @@ describe('generateTraits (sparse, tier-aware)', () => {
 
   it('a minority are born with a single Flaw', () => {
     const rolls = sample(3000);
-    const flawed = rolls.filter((r) => r.some((id) => TRAITS[id]!.tier === 'Flaw')).length / rolls.length;
+    const flawed =
+      rolls.filter((r) => r.some((id) => TRAITS[id]!.tier === 'Flaw')).length / rolls.length;
     expect(flawed, `flaw rate ${(flawed * 100).toFixed(1)}%`).toBeGreaterThan(0.03);
     expect(flawed).toBeLessThan(0.12);
   });

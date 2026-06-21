@@ -9,6 +9,7 @@
 **Tech Stack:** TypeScript, Vitest. Pure functions only — no React changes required (the Ledger UI already renders whatever `computeWeeklyBreakdown` returns).
 
 **Key existing facts (verified):**
+
 - `computeWeeklyBreakdown()` (`src/engine/economy.ts:50`) currently aggregates flat: `fightCount * FIGHT_PURSE` and `winCount * WIN_BONUS`, walking `arenaHistory` backward over the current week.
 - Base constants live in `src/constants/economy/economy.ts`: `FIGHT_PURSE = 90`, `WIN_BONUS = 35`, `WARRIOR_UPKEEP_BASE = 60`.
 - Each stored fight (`FightSummary`, `src/types/combat.types.ts:225`) has `warriorIdA`, `warriorIdD`, `winner`, `fameA?`, `fameD?`, `arenaId?`.
@@ -26,6 +27,7 @@ purse(fame, tier, won):
 ```
 
 Worked examples (with FAME_PURSE_CAP=60, FAME_PURSE_DIVISOR=60 → fameMult 1.0..2.0):
+
 - Rookie (fame 0) in a tier-1 arena, win: purse 90 + bonus 35 = **125** (unchanged from today).
 - Star (fame 30) in a tier-2 arena, win: fameMult 1.5, tierMult 1.5 → purse 203 + bonus 79 = **282**.
 - Legend (fame 60) in a tier-3 arena, win: fameMult 2.0, tierMult 2.25 → purse 405 + bonus 158 = **563**.
@@ -44,6 +46,7 @@ Worked examples (with FAME_PURSE_CAP=60, FAME_PURSE_DIVISOR=60 → fameMult 1.0.
 ## Task 1: Add scaling constants and the pure `computeFightEconomics()`
 
 **Files:**
+
 - Modify: `src/constants/economy/economy.ts`
 - Test: `src/test/engine/fightEconomics.test.ts` (create)
 
@@ -52,11 +55,7 @@ Worked examples (with FAME_PURSE_CAP=60, FAME_PURSE_DIVISOR=60 → fameMult 1.0.
 ```typescript
 // src/test/engine/fightEconomics.test.ts
 import { describe, it, expect } from 'vitest';
-import {
-  computeFightEconomics,
-  FIGHT_PURSE,
-  WIN_BONUS,
-} from '@/constants/economy/economy';
+import { computeFightEconomics, FIGHT_PURSE, WIN_BONUS } from '@/constants/economy/economy';
 
 describe('computeFightEconomics', () => {
   it('returns base purse and win bonus for a fame-0 tier-1 winner', () => {
@@ -178,6 +177,7 @@ git commit -m "feat(economy): add fame+tier purse scaler computeFightEconomics"
 ## Task 2: Use per-fight scaled payouts in `computeWeeklyBreakdown`
 
 **Files:**
+
 - Modify: `src/engine/economy.ts:54-80` (the fight-count loop and income push)
 - Test: `src/test/engine/economyScaling.test.ts` (create)
 
@@ -274,52 +274,50 @@ import { getArenaById } from '@/data/arenas';
 2. Replace the `fightCount`/`winCount` accumulation loop (lines ~54-74) and the flat income pushes (lines ~76-80) with a scaled accumulation:
 
 ```typescript
-  let fightCount = 0;
-  let winCount = 0;
-  let scaledPurse = 0;
-  let scaledWinBonus = 0;
+let fightCount = 0;
+let winCount = 0;
+let scaledPurse = 0;
+let scaledWinBonus = 0;
 
-  const arenaTier = (arenaId?: string): 1 | 2 | 3 => {
-    if (!arenaId) return 1;
-    try {
-      return getArenaById(arenaId).tier;
-    } catch {
-      return 1; // unknown/legacy arena id → treat as tier 1
-    }
-  };
-
-  for (let i = state.arenaHistory.length - 1; i >= 0; i--) {
-    const f = state.arenaHistory[i];
-    if (!f) break;
-    if (f.week !== week) break;
-
-    const aIsPlayer = playerWarriorIds.has(f.warriorIdA);
-    const dIsPlayer = playerWarriorIds.has(f.warriorIdD);
-    const tier = arenaTier(f.arenaId);
-
-    if (aIsPlayer) {
-      fightCount++;
-      const won = f.winner === 'A';
-      if (won) winCount++;
-      const { purse, winBonus } = computeFightEconomics({ fame: f.fameA ?? 0, arenaTier: tier, won });
-      scaledPurse += purse;
-      scaledWinBonus += winBonus;
-    }
-    if (dIsPlayer) {
-      fightCount++;
-      const won = f.winner === 'D';
-      if (won) winCount++;
-      const { purse, winBonus } = computeFightEconomics({ fame: f.fameD ?? 0, arenaTier: tier, won });
-      scaledPurse += purse;
-      scaledWinBonus += winBonus;
-    }
+const arenaTier = (arenaId?: string): 1 | 2 | 3 => {
+  if (!arenaId) return 1;
+  try {
+    return getArenaById(arenaId).tier;
+  } catch {
+    return 1; // unknown/legacy arena id → treat as tier 1
   }
+};
 
-  const income: { label: string; amount: number }[] = [];
-  if (fightCount > 0)
-    income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse });
-  if (winCount > 0)
-    income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus });
+for (let i = state.arenaHistory.length - 1; i >= 0; i--) {
+  const f = state.arenaHistory[i];
+  if (!f) break;
+  if (f.week !== week) break;
+
+  const aIsPlayer = playerWarriorIds.has(f.warriorIdA);
+  const dIsPlayer = playerWarriorIds.has(f.warriorIdD);
+  const tier = arenaTier(f.arenaId);
+
+  if (aIsPlayer) {
+    fightCount++;
+    const won = f.winner === 'A';
+    if (won) winCount++;
+    const { purse, winBonus } = computeFightEconomics({ fame: f.fameA ?? 0, arenaTier: tier, won });
+    scaledPurse += purse;
+    scaledWinBonus += winBonus;
+  }
+  if (dIsPlayer) {
+    fightCount++;
+    const won = f.winner === 'D';
+    if (won) winCount++;
+    const { purse, winBonus } = computeFightEconomics({ fame: f.fameD ?? 0, arenaTier: tier, won });
+    scaledPurse += purse;
+    scaledWinBonus += winBonus;
+  }
+}
+
+const income: { label: string; amount: number }[] = [];
+if (fightCount > 0) income.push({ label: `Fight purses (${fightCount})`, amount: scaledPurse });
+if (winCount > 0) income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus });
 ```
 
 > Keep the `FAME_DIVIDEND`, Mana Surge, and Noble Patronage income pushes exactly as they are below this block. Remove the now-unused `FIGHT_PURSE` / `WIN_BONUS` imports from `economy.ts` only if nothing else in the file references them (grep first).
@@ -351,6 +349,7 @@ git commit -m "feat(economy): scale weekly purses by warrior fame and arena tier
 ## Task 3: Update the stale economy doc-comment and the manual
 
 **Files:**
+
 - Modify: `src/engine/economy.ts:1-13` (the file header comment, which currently states wrong flat numbers like "50g per fight")
 - Modify: `Docs/USER_MANUAL.md` §8.1 Income table
 

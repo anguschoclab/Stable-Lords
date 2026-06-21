@@ -29,7 +29,9 @@ export function TraitBadge({ traitId, className }: TraitBadgeProps) {
           {meta.name} <span className="opacity-60">— {meta.tier}</span>
         </p>
         <p className="text-[11px] text-muted-foreground">{meta.description}</p>
-        {meta.classTag && <p className="text-[10px] opacity-60 mt-1">Class trait: {meta.classTag}</p>}
+        {meta.classTag && (
+          <p className="text-[10px] opacity-60 mt-1">Class trait: {meta.classTag}</p>
+        )}
       </TooltipContent>
     </Tooltip>
   );

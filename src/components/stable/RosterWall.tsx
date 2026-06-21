@@ -24,8 +24,7 @@ function EmptyRosterState() {
           No Warriors
         </p>
         <p className="text-xs text-muted-foreground/60 italic max-w-sm mx-auto leading-relaxed">
-          Your roster is empty. Visit the
-          recruiting grounds to sign your first warrior.
+          Your roster is empty. Visit the recruiting grounds to sign your first warrior.
         </p>
       </div>
       <Link to="/stable/recruit" className="mt-4">
@@ -59,9 +58,7 @@ export function RosterWall() {
             <Users className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h3 className="font-display text-base font-black uppercase tracking-tight">
-              Roster
-            </h3>
+            <h3 className="font-display text-base font-black uppercase tracking-tight">Roster</h3>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60">
                 Warriors: {sortedRoster.length}

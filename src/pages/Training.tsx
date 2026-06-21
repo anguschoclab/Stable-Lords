@@ -290,7 +290,9 @@ export default function Training() {
                   onAssign={(attr) => handleAssign(warrior.id, attr)}
                   onAssignRecovery={() => handleAssignRecovery(warrior.id)}
                   onClear={() => handleClear(warrior.id)}
-                  onAssignTraitTraining={(trainerId) => handleAssignTraitTraining(warrior.id, trainerId)}
+                  onAssignTraitTraining={(trainerId) =>
+                    handleAssignTraitTraining(warrior.id, trainerId)
+                  }
                 />
               ))}
             </div>

@@ -12,16 +12,24 @@ const f = (style: FightingStyle, momentum = 0) =>
 
 describe('styleRiposteBonus — PR riposte master', () => {
   it('counter-on-parry adds riposte frequency only after a parry', () => {
-    const afterParry = styleRiposteBonus(f(FightingStyle.ParryRiposte), f(FightingStyle.BashingAttack), {
-      afterParry: true,
-      attCommitLevel: 'Standard',
-    });
+    const afterParry = styleRiposteBonus(
+      f(FightingStyle.ParryRiposte),
+      f(FightingStyle.BashingAttack),
+      {
+        afterParry: true,
+        attCommitLevel: 'Standard',
+      }
+    );
     expect(afterParry.ripBonus).toBe(PR_COUNTER_ON_PARRY);
 
-    const onWhiff = styleRiposteBonus(f(FightingStyle.ParryRiposte), f(FightingStyle.BashingAttack), {
-      afterParry: false,
-      attCommitLevel: 'Standard',
-    });
+    const onWhiff = styleRiposteBonus(
+      f(FightingStyle.ParryRiposte),
+      f(FightingStyle.BashingAttack),
+      {
+        afterParry: false,
+        attCommitLevel: 'Standard',
+      }
+    );
     expect(onWhiff.ripBonus).toBe(0);
   });
 
@@ -65,10 +73,22 @@ function mk(style: FightingStyle, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   return {
-    id: id as WarriorId, name: id, style,
-    attributes: attrs, baseSkills, derivedStats, fame: 0, popularity: 0,
-    titles: [], injuries: [], flair: [], career: { wins: 0, losses: 0, kills: 0 },
-    champion: false, status: 'Active', age: 20, traits: [],
+    id: id as WarriorId,
+    name: id,
+    style,
+    attributes: attrs,
+    baseSkills,
+    derivedStats,
+    fame: 0,
+    popularity: 0,
+    titles: [],
+    injuries: [],
+    flair: [],
+    career: { wins: 0, losses: 0, kills: 0 },
+    champion: false,
+    status: 'Active',
+    age: 20,
+    traits: [],
   };
 }
 
@@ -79,11 +99,17 @@ describe('PR riposte master (integration)', () => {
     let wins = 0;
     const N = 400;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(defaultPlanForWarrior(pr), defaultPlanForWarrior(st), pr, st, i * 8209 + 31);
+      const o = simulateFight(
+        defaultPlanForWarrior(pr),
+        defaultPlanForWarrior(st),
+        pr,
+        st,
+        i * 8209 + 31
+      );
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;
     // PR is the brawler-counter: it should hold its own against an aggressive ST.
-    expect(rate, `PR vs ST win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.40);
+    expect(rate, `PR vs ST win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.4);
   });
 });

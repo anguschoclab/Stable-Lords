@@ -51,8 +51,8 @@ export function TournamentPrepDialog({
         </div>
         <div className="p-8 space-y-8">
           <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 p-5 bg-white/[0.02] border-l-2 border-primary/40 leading-relaxed italic">
-            Review your roster before entering the seasonal tournament. Once locked in, your
-            lineup cannot be changed for the duration of the campaign.
+            Review your roster before entering the seasonal tournament. Once locked in, your lineup
+            cannot be changed for the duration of the campaign.
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto pr-3 thin-scrollbar">

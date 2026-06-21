@@ -1,6 +1,6 @@
 # Stable Lords
 
-**Stable Lords** is a tactical gladiator-management game inspired by the classic play-by-mail game *Duelmasters / Duel II*. You own a stable of warriors — recruit them, train their attributes and fighting styles, equip them, and send them into the arena. Combat is **simulated, not twitch-based**: you plan tactics and loadouts, then watch a deep exchange-by-exchange engine resolve the fight using canonical Duel II skill tables, hit locations, fatigue, fighting-style matchups, weather, aging, and permadeath.
+**Stable Lords** is a tactical gladiator-management game inspired by the classic play-by-mail game _Duelmasters / Duel II_. You own a stable of warriors — recruit them, train their attributes and fighting styles, equip them, and send them into the arena. Combat is **simulated, not twitch-based**: you plan tactics and loadouts, then watch a deep exchange-by-exchange engine resolve the fight using canonical Duel II skill tables, hit locations, fatigue, fighting-style matchups, weather, aging, and permadeath.
 
 > This is a management/strategy game. Success comes from matching warriors to the right style, scouting opponents, managing a fragile economy, and surviving the deaths.
 
@@ -11,7 +11,7 @@ Each week: review your roster and finances → assign training → equip warrior
 ## Features
 
 - **Deep combat simulation** — 10 fighting styles, tactics, weapon suitability, hit locations, fatigue, psychological states, weather, and a per-exchange resolution engine.
-- **Post-fight & pre-fight analysis** — see *why* a bout went the way it did, and a predicted-edge forecast before you commit.
+- **Post-fight & pre-fight analysis** — see _why_ a bout went the way it did, and a predicted-edge forecast before you commit.
 - **Living world** — rival stables with their own AI strategists, promoters, crowd moods, meta drift, tournaments, a Hall of Fame, and a graveyard.
 - **Stable management** — recruiting, trainers, equipment, a scaling fame/tier economy, aging, and injuries.
 

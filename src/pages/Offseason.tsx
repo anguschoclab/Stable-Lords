@@ -118,9 +118,8 @@ export default function Offseason() {
                   <History className="h-3 w-3 text-muted-foreground/40" />
                 </ImperialRing>
                 <div className="text-[10px] text-muted-foreground/60 leading-relaxed uppercase font-black tracking-tight">
-                  <span className="text-foreground">Note:</span> The offseason is the only
-                  window for making roster changes without penalty. Aging is paused during this
-                  period.
+                  <span className="text-foreground">Note:</span> The offseason is the only window
+                  for making roster changes without penalty. Aging is paused during this period.
                 </div>
               </div>
             </Surface>

@@ -70,11 +70,23 @@ export function narrateEvents(
         if (event.result === 'WHIFF') {
           log.push({
             minute,
-            text: narrateAttack(rng, displayName(event.actor), weapon, false, opponentName, getStyle(event.actor)),
+            text: narrateAttack(
+              rng,
+              displayName(event.actor),
+              weapon,
+              false,
+              opponentName,
+              getStyle(event.actor)
+            ),
           });
           log.push({
             minute,
-            text: narrateDodge(rng, opponentName, getSpeed(event.actor === 'A' ? 'D' : 'A'), displayName(event.actor)),
+            text: narrateDodge(
+              rng,
+              opponentName,
+              getSpeed(event.actor === 'A' ? 'D' : 'A'),
+              displayName(event.actor)
+            ),
           });
         }
         break;
@@ -102,7 +114,10 @@ export function narrateEvents(
           });
           log.push({ minute, text: narrateParry(rng, actorName, weapon, opponentName) });
         } else if (event.result === 'DODGE') {
-          log.push({ minute, text: narrateDodge(rng, actorName, getSpeed(event.actor), opponentName) });
+          log.push({
+            minute,
+            text: narrateDodge(rng, actorName, getSpeed(event.actor), opponentName),
+          });
         } else if (event.result === 'RIPOSTE') {
           log.push({ minute, text: narrateCounterstrike(rng, actorName, opponentName) });
         }
@@ -124,19 +139,35 @@ export function narrateEvents(
           ) {
             log.push({
               minute,
-              text: narrateAttack(rng, displayName(event.actor), weapon, isMastery, opponentName, getStyle(event.actor)),
+              text: narrateAttack(
+                rng,
+                displayName(event.actor),
+                weapon,
+                isMastery,
+                opponentName,
+                getStyle(event.actor)
+              ),
             });
           } else if (!events.some((e) => e.type === 'DEFENSE' && e.actor === event.target)) {
             log.push({
               minute,
-              text: narrateAttack(rng, displayName(event.actor), weapon, isMastery, opponentName, getStyle(event.actor)),
+              text: narrateAttack(
+                rng,
+                displayName(event.actor),
+                weapon,
+                isMastery,
+                opponentName,
+                getStyle(event.actor)
+              ),
             });
           }
 
           const isFatal = !!event.metadata?.lethal;
           const isCrit = !!event.metadata?.crit;
           const isHeavyHit =
-            isCrit || isFatal || (!!event.value && event.value / getMaxHp(event.target as 'A' | 'D') >= 0.15);
+            isCrit ||
+            isFatal ||
+            (!!event.value && event.value / getMaxHp(event.target as 'A' | 'D') >= 0.15);
 
           log.push({
             minute,
@@ -159,7 +190,11 @@ export function narrateEvents(
           });
 
           if (isCrit) {
-            log.push({ minute, text: `💥 CRITICAL HIT! ${actorName} finds a vital weakness!`, emphasis: true });
+            log.push({
+              minute,
+              text: `💥 CRITICAL HIT! ${actorName} finds a vital weakness!`,
+              emphasis: true,
+            });
           }
 
           if (event.value) {

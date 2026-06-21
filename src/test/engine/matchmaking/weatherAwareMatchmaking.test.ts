@@ -14,7 +14,12 @@ import { SeededRNGService } from '@/utils/random';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(name: string, style: FightingStyle, stableId: string, fame: number = 100): Warrior {
+function makeWarrior(
+  name: string,
+  style: FightingStyle,
+  stableId: string,
+  fame: number = 100
+): Warrior {
   return {
     id: `w_${name}` as WarriorId,
     name,
@@ -79,7 +84,14 @@ function makeBaseState(overrides: Partial<GameState> = {}): GameState {
     scoutReports: [],
     hallOfFame: [],
     retired: [],
-    player: { id: 'player-1' as any, name: 'Player', stableName: 'Player', fame: 0, renown: 0, titles: 0 } as any,
+    player: {
+      id: 'player-1' as any,
+      name: 'Player',
+      stableName: 'Player',
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    } as any,
     moodHistory: [],
     tournaments: [],
     trainingAssignments: [],

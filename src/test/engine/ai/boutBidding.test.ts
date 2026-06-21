@@ -67,7 +67,14 @@ describe('Gap 6: matchup scoring evaluates all opponents, not just first', () =>
     // it will score against the neutral opponent and miss the favorable one.
     const otherRival = {
       id: 'rival-2' as any,
-      owner: { id: 'owner-2' as any, name: 'Other', stableName: 'Other Stable', fame: 100, renown: 50, titles: 0 },
+      owner: {
+        id: 'owner-2' as any,
+        name: 'Other',
+        stableName: 'Other Stable',
+        fame: 100,
+        renown: 50,
+        titles: 0,
+      },
       roster: [neutralOpp, favorOpp],
       treasury: 1000,
       fame: 100,
@@ -207,11 +214,24 @@ describe('Gap 2: generateBoutBids is called from RivalStrategyPass', () => {
       recruitPool: [],
       hiringPool: [],
       trainers: [],
-      player: { id: 'player-1' as any, name: 'Player', stableName: 'Player Stable', fame: 0, renown: 0, titles: 0 },
+      player: {
+        id: 'player-1' as any,
+        name: 'Player',
+        stableName: 'Player Stable',
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
       realmRankings: {},
       promoters: {},
-      rivalMap: new Map([['rival-1', rival1], ['rival-2', rival2]]) as any,
-      warriorMap: new Map([[warrior1.id, warrior1], [warrior2.id, warrior2]]) as any,
+      rivalMap: new Map([
+        ['rival-1', rival1],
+        ['rival-2', rival2],
+      ]) as any,
+      warriorMap: new Map([
+        [warrior1.id, warrior1],
+        [warrior2.id, warrior2],
+      ]) as any,
       warriorToStableMap: new Map([
         [warrior1.id, { stableId: 'rival-1', isPlayer: false }],
         [warrior2.id, { stableId: 'rival-2', isPlayer: false }],

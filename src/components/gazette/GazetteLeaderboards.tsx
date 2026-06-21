@@ -260,9 +260,7 @@ export function RisingStars({ allFights }: LeaderboardProps) {
       <div className="space-y-4 relative z-10">
         {stars.length === 0 ? (
           <div className="py-12 text-center opacity-20 italic">
-            <span className="text-[10px] uppercase tracking-widest">
-              No record-breakers yet...
-            </span>
+            <span className="text-[10px] uppercase tracking-widest">No record-breakers yet...</span>
           </div>
         ) : (
           stars.map((s) => (

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Give Striking Attack (ST) a three-part win condition — (1) *front-load*: a damage multiplier that decays with the exchange count; (2) *crit specialist*: raised crit chance and crit damage; (3) *execute*: bonus damage versus low-HP targets — making ST the high-variance glass cannon (terrifying early, fades late, prey to TP/WS), validated against the Phase-1 balance harness.
+**Goal:** Give Striking Attack (ST) a three-part win condition — (1) _front-load_: a damage multiplier that decays with the exchange count; (2) _crit specialist_: raised crit chance and crit damage; (3) _execute_: bonus damage versus low-HP targets — making ST the high-variance glass cannon (terrifying early, fades late, prey to TP/WS), validated against the Phase-1 balance harness.
 
 **Architecture:** All three effects live in the landed-hit path `executeHit` (`hitExecution.ts`), where the damage pipeline already applies weather/commit/crit multipliers. Each effect is a pure, style-gated helper (returns the no-op value for non-ST) so it is unit-testable in isolation: `getFrontloadMult(style, exchange)` reads `ctx.exchange`; `getStCritChanceBonus`/`getStCritDamageBonus` fold into the existing crit roll; `getExecuteBonus(style, hp, maxHp)` reads the defender's HP ratio.
 
@@ -27,6 +27,7 @@
 ## Task 1: Pure ST helpers (TDD)
 
 **Files:**
+
 - Create: `src/engine/combat/resolution/strikingAttack.ts`
 - Create: `src/test/engine/combat/strikingAttack.test.ts`
 - Modify: `src/constants/combat/combat.ts`
@@ -173,6 +174,7 @@ git commit -m "feat(combat): add ST front-load/crit/execute helpers (pure, unit-
 ## Task 2: Wire the helpers into the damage pipeline
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/exchangeHelpers/execution/hitExecution.ts`
 
 `FightingStyle` is already imported here. The pipeline computes `rawDamage` through weather/commit multipliers, then a crit block (`hitExecution.ts:160-162`).
@@ -195,19 +197,19 @@ import {
 The existing crit block reads:
 
 ```typescript
-  const isCrit = attPassive.critChance > 0 && rng() < attPassive.critChance;
-  if (isCrit) {
-    rawDamage = Math.round(rawDamage * CRIT_DAMAGE_MULT);
-  }
+const isCrit = attPassive.critChance > 0 && rng() < attPassive.critChance;
+if (isCrit) {
+  rawDamage = Math.round(rawDamage * CRIT_DAMAGE_MULT);
+}
 ```
 
 Immediately **before** it, insert front-load (a multiplier on `ctx.exchange`) and execute (a flat bonus vs a low-HP defender):
 
 ```typescript
-  // ST front-load: early-exchange damage multiplier that decays over the fight
-  rawDamage = Math.round(rawDamage * getFrontloadMult(attacker.style, ctx?.exchange ?? 0));
-  // ST execute: bonus damage to finish a wounded target
-  rawDamage += getExecuteBonus(attacker.style, defender.hp, defender.maxHp);
+// ST front-load: early-exchange damage multiplier that decays over the fight
+rawDamage = Math.round(rawDamage * getFrontloadMult(attacker.style, ctx?.exchange ?? 0));
+// ST execute: bonus damage to finish a wounded target
+rawDamage += getExecuteBonus(attacker.style, defender.hp, defender.maxHp);
 ```
 
 - [ ] **Step 3: Fold the ST crit bonuses into the crit block**
@@ -215,11 +217,11 @@ Immediately **before** it, insert front-load (a multiplier on `ctx.exchange`) an
 Replace the existing crit block with the ST-aware version:
 
 ```typescript
-  const effectiveCritChance = attPassive.critChance + getStCritChanceBonus(attacker.style);
-  const isCrit = effectiveCritChance > 0 && rng() < effectiveCritChance;
-  if (isCrit) {
-    rawDamage = Math.round(rawDamage * (CRIT_DAMAGE_MULT + getStCritDamageBonus(attacker.style)));
-  }
+const effectiveCritChance = attPassive.critChance + getStCritChanceBonus(attacker.style);
+const isCrit = effectiveCritChance > 0 && rng() < effectiveCritChance;
+if (isCrit) {
+  rawDamage = Math.round(rawDamage * (CRIT_DAMAGE_MULT + getStCritDamageBonus(attacker.style)));
+}
 ```
 
 > The second `if (isCrit)` block later in the function (crit metadata/event) is unaffected — `isCrit` keeps the same meaning.
@@ -241,6 +243,7 @@ git commit -m "feat(combat): wire ST front-load, execute, and crit bonuses into 
 ## Task 3: Directional integration test
 
 **Files:**
+
 - Modify: `src/test/engine/combat/strikingAttack.test.ts`
 
 - [ ] **Step 1: Add an ST fight test**
@@ -256,10 +259,22 @@ function mk(style: FightingStyle, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   return {
-    id: id as import('@/types/shared.types').WarriorId, name: id, style,
-    attributes: attrs, baseSkills, derivedStats, fame: 0, popularity: 0,
-    titles: [], injuries: [], flair: [], career: { wins: 0, losses: 0, kills: 0 },
-    champion: false, status: 'Active', age: 20, traits: [],
+    id: id as import('@/types/shared.types').WarriorId,
+    name: id,
+    style,
+    attributes: attrs,
+    baseSkills,
+    derivedStats,
+    fame: 0,
+    popularity: 0,
+    titles: [],
+    injuries: [],
+    flair: [],
+    career: { wins: 0, losses: 0, kills: 0 },
+    champion: false,
+    status: 'Active',
+    age: 20,
+    traits: [],
   };
 }
 
@@ -270,18 +285,24 @@ describe('ST all-in (integration)', () => {
     let wins = 0;
     const N = 400;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(defaultPlanForWarrior(st), defaultPlanForWarrior(pl), st, pl, i * 9001 + 37);
+      const o = simulateFight(
+        defaultPlanForWarrior(st),
+        defaultPlanForWarrior(pl),
+        st,
+        pl,
+        i * 9001 + 37
+      );
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;
     // ST is a burst threat — it should be competitive, not a pushover.
-    expect(rate, `ST vs PL win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.40);
+    expect(rate, `ST vs PL win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.4);
   });
 });
 ```
 
 Run: `npx vitest run src/test/engine/combat/strikingAttack.test.ts`
-Expected: PASS. ST's *overall* level is the re-ratchet's job (Task 4); do not over-tune the constants to hit this floor.
+Expected: PASS. ST's _overall_ level is the re-ratchet's job (Task 4); do not over-tune the constants to hit this floor.
 
 - [ ] **Step 2: Commit**
 
@@ -297,6 +318,7 @@ git commit -m "test(combat): ST is a burst threat vs PL (integration)"
 ST is already strong; front-load + crit + execute push it up. Re-centre it in the 40–60% band **without touching the matrix** — the anti-power-creep step.
 
 **Files:**
+
 - Modify (if needed): `src/engine/skillCalc.ts` (`STYLE_PENALTIES` — the ST row only)
 
 - [ ] **Step 1: Run the balance harness**
@@ -306,7 +328,7 @@ Expected: the `Absolute-power band` test likely flags ST as >0.60. If green, ski
 
 - [ ] **Step 2: Deepen ST penalties (only if out of band)**
 
-In `src/engine/skillCalc.ts`, the ST row is `[FightingStyle.StrikingAttack]: /*ST*/ [-7, -6, -9, -2, -2, +2]`. Deepen the **ATT** penalty in steps of 1–2 (e.g. `-7 → -9`) to pay for the new offensive payoff while keeping ST's damage-dealer *shape* (it remains ATT-led; do not touch INI/DEC identity). Re-run Step 1 until ST is within `[0.40, 0.60]` and no other style left the band.
+In `src/engine/skillCalc.ts`, the ST row is `[FightingStyle.StrikingAttack]: /*ST*/ [-7, -6, -9, -2, -2, +2]`. Deepen the **ATT** penalty in steps of 1–2 (e.g. `-7 → -9`) to pay for the new offensive payoff while keeping ST's damage-dealer _shape_ (it remains ATT-led; do not touch INI/DEC identity). Re-run Step 1 until ST is within `[0.40, 0.60]` and no other style left the band.
 
 - [ ] **Step 3: Confirm the matrix never moved**
 
@@ -331,9 +353,9 @@ git commit -m "balance(ST): re-ratchet absolute power after all-in mechanics; gu
 ## Self-Review Notes (for the implementer)
 
 - **Three pure helpers, one wiring site.** Front-load (multiplier), execute (flat), and crit bonuses (folded into the existing crit roll) are each style-gated and return no-ops for non-ST — so the `hitExecution` edit is additive and touches no other style's damage.
-- **Order matters for variance.** Front-load and execute apply *before* crit, so a crit on a front-loaded finisher is enormous — the intended high-variance "all-in" feel. This is deliberate.
+- **Order matters for variance.** Front-load and execute apply _before_ crit, so a crit on a front-loaded finisher is enormous — the intended high-variance "all-in" feel. This is deliberate.
 - **`ctx?.exchange ?? 0`** — `ctx` is optional in `executeHit`; defaulting to exchange 0 gives the max front-load only in the (rare, test-only) ctx-less path. Real fights always pass `ctx`.
-- **Identity is shape.** The Task-4 ratchet deepens ST's ATT penalty only — ST stays the ATT-led damage dealer; do not flatten its INI/DEC profile. Front-load is what makes it *fade*, the design's built-in counterplay (TP/WS outlast it).
+- **Identity is shape.** The Task-4 ratchet deepens ST's ATT penalty only — ST stays the ATT-led damage dealer; do not flatten its INI/DEC profile. Front-load is what makes it _fade_, the design's built-in counterplay (TP/WS outlast it).
 
 ## Verification (done by reviewer after implementation)
 
@@ -342,4 +364,7 @@ git commit -m "balance(ST): re-ratchet absolute power after all-in mechanics; gu
 3. `npx vitest run src/test/engine/economy/balance.test.ts` → green, including `near-antisymmetric` and the 40–60% band (ST in band).
 4. `bunx tsc --noEmit --project tsconfig.app.json` → 0; full `npx vitest run` green.
 5. No edits to `MATCHUP_MATRIX` or canon data.
+
+```
+
 ```

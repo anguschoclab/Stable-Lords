@@ -43,8 +43,7 @@ function reset() {
   NewsletterFeed.clear();
 }
 
-const totalRivalWarriors = (s: GameState) =>
-  s.rivals.reduce((acc, r) => acc + r.roster.length, 0);
+const totalRivalWarriors = (s: GameState) => s.rivals.reduce((acc, r) => acc + r.roster.length, 0);
 
 describe('world evolves while the player is stopped', () => {
   beforeEach(reset, 120000);

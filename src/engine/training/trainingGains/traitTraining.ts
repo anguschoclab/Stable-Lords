@@ -82,13 +82,21 @@ export function rollTraitTraining(
 
   const candidate = pickWeighted(pool, rng);
   const apt = aptitude(warrior, trainer);
-  const successChance = Math.max(0.05, Math.min(0.9, 0.35 + apt * 0.5 - TIER_DIFFICULTY[candidate.tier]));
-  const botchChance = Math.max(0.02, Math.min(0.4, 0.2 - apt * 0.15 + TIER_DIFFICULTY[candidate.tier]));
+  const successChance = Math.max(
+    0.05,
+    Math.min(0.9, 0.35 + apt * 0.5 - TIER_DIFFICULTY[candidate.tier])
+  );
+  const botchChance = Math.max(
+    0.02,
+    Math.min(0.4, 0.2 - apt * 0.15 + TIER_DIFFICULTY[candidate.tier])
+  );
 
   const r = rng.next();
   if (r < successChance) return { outcome: 'success', traitId: candidate.id };
   if (r > 1 - botchChance) {
-    const flaws = Object.values(TRAITS).filter((t) => t.tier === 'Flaw' && canAcquireTrait(warrior, t.id));
+    const flaws = Object.values(TRAITS).filter(
+      (t) => t.tier === 'Flaw' && canAcquireTrait(warrior, t.id)
+    );
     if (flaws.length === 0) return { outcome: 'none' };
     return { outcome: 'botch', traitId: pickWeighted(flaws, rng).id };
   }

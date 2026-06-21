@@ -67,7 +67,11 @@ export function narrateParry(
   const type = isShield ? 'shield' : 'parry';
 
   const template = getFromArchive(r, ['pbp', 'defenses', type, 'success']);
-  return interpolateTemplate(template, { defender: defenderName, weapon: wName, attacker: attackerName });
+  return interpolateTemplate(template, {
+    defender: defenderName,
+    weapon: wName,
+    attacker: attackerName,
+  });
 }
 
 /**

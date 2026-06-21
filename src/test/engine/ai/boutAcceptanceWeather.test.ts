@@ -8,11 +8,18 @@ import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData, BoutOffer } from '@/types/state.types';
-import { verifyBoutAcceptance, evaluateBoutOffer } from '@/engine/ai/workers/competitionWorker/boutAcceptance';
+import {
+  verifyBoutAcceptance,
+  evaluateBoutOffer,
+} from '@/engine/ai/workers/competitionWorker/boutAcceptance';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(style: FightingStyle, cn: number = 15, overrides: Partial<Warrior> = {}): Warrior {
+function makeWarrior(
+  style: FightingStyle,
+  cn: number = 15,
+  overrides: Partial<Warrior> = {}
+): Warrior {
   return {
     id: 'w1' as any,
     name: 'Test Warrior',
@@ -32,7 +39,11 @@ function makeWarrior(style: FightingStyle, cn: number = 15, overrides: Partial<W
   } as Warrior;
 }
 
-function makeOpponent(style: FightingStyle, cn: number = 15, overrides: Partial<Warrior> = {}): Warrior {
+function makeOpponent(
+  style: FightingStyle,
+  cn: number = 15,
+  overrides: Partial<Warrior> = {}
+): Warrior {
   return makeWarrior(style, cn, { id: 'w2' as any, name: 'Opponent', ...overrides });
 }
 
@@ -92,7 +103,10 @@ describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
           responses: { [warrior.id]: 'Pending', [opponent.id]: 'Pending' },
         }),
       },
-      warriorMap: new Map([[warrior.id, warrior], [opponent.id, opponent]]) as any,
+      warriorMap: new Map([
+        [warrior.id, warrior],
+        [opponent.id, opponent],
+      ]) as any,
       warriorToStableMap: new Map([
         [warrior.id, { stableId: 'rival-1', isPlayer: false }],
         [opponent.id, { stableId: 'player-1', isPlayer: true }],
@@ -141,7 +155,6 @@ describe('Gap 5: evaluateBoutOffer has weather awareness', () => {
 });
 
 describe('Gap 9: verifyBoutAcceptance covers all significant weather types', () => {
-
   it('rejects Sandstorm + AimedBlow (precision targeting blinded)', () => {
     const warrior = makeWarrior(FightingStyle.AimedBlow);
     const opponent = makeWarrior(FightingStyle.BashingAttack);

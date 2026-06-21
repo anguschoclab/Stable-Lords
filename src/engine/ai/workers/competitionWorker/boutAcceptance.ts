@@ -44,7 +44,10 @@ export function verifyBoutAcceptance(
   }
 
   if (weather === 'Hailstorm' && warrior.attributes.CN < 12) {
-    return { accepted: false, reason: 'Hailstorm drains stamina too fast for low-conditioning warriors.' };
+    return {
+      accepted: false,
+      reason: 'Hailstorm drains stamina too fast for low-conditioning warriors.',
+    };
   }
 
   // Skeptical Check: RECOVERY agents refuse fights with "Killers"

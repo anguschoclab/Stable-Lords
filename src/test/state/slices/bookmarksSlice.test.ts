@@ -180,7 +180,9 @@ describe('BookmarksSlice', () => {
     useTestStore.getState().toggleBookmark('rival', 'r1');
     useTestStore.getState().toggleBookmark('promoter', 'p1');
 
-    const validIds: Partial<Record<import('@/types/bookmark.types').BookmarkEntityType, Set<string>>> = {
+    const validIds: Partial<
+      Record<import('@/types/bookmark.types').BookmarkEntityType, Set<string>>
+    > = {
       warrior: new Set(['w1']),
       rival: new Set(['r1']),
     };
@@ -197,7 +199,9 @@ describe('BookmarksSlice', () => {
   it('cleanDanglingBookmarks should be a no-op when all bookmarks are valid', () => {
     useTestStore.getState().toggleBookmark('warrior', 'w1');
 
-    const validIds: Partial<Record<import('@/types/bookmark.types').BookmarkEntityType, Set<string>>> = {
+    const validIds: Partial<
+      Record<import('@/types/bookmark.types').BookmarkEntityType, Set<string>>
+    > = {
       warrior: new Set(['w1']),
     };
 

@@ -39,7 +39,8 @@ export function executeRiposte(
   );
   ripDmgRaw = applyArmorTypeMod(ripDmgRaw, defender.weaponId, attacker.armorId);
   ripDmgRaw = Math.round(ripDmgRaw * specialtyRiposteMult);
-  const ripDmg = applyProtectMod(ripDmgRaw, ripLoc, attacker.activePlan.protect) + Math.round(extraDmg);
+  const ripDmg =
+    applyProtectMod(ripDmgRaw, ripLoc, attacker.activePlan.protect) + Math.round(extraDmg);
 
   events.push({ type: 'DEFENSE', actor: defLabel, result: 'RIPOSTE' });
   events.push({ type: 'HIT', actor: defLabel, target: attLabel, location: ripLoc, value: ripDmg });

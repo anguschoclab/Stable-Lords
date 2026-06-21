@@ -96,9 +96,11 @@ describe('Emergent behavior report', () => {
       Object.values(state.boutOffers || {}).forEach((offer) => {
         if (offer.status !== 'Proposed') return;
         if (!offer.warriorIds.some((id) => playerIds.has(id))) return;
-        offer.warriorIds.filter((id) => playerIds.has(id)).forEach((id) => {
-          offer.responses[id] = 'Accepted';
-        });
+        offer.warriorIds
+          .filter((id) => playerIds.has(id))
+          .forEach((id) => {
+            offer.responses[id] = 'Accepted';
+          });
         if (offer.warriorIds.every((wid) => offer.responses[wid] !== 'Pending')) {
           offer.status = 'Signed';
         }
@@ -159,13 +161,17 @@ describe('Emergent behavior report', () => {
     );
 
     const R: string[] = [];
-    R.push('\n================ EMERGENT BEHAVIOR REPORT (156 weeks / 3 yrs, seed 4242) ================');
+    R.push(
+      '\n================ EMERGENT BEHAVIOR REPORT (156 weeks / 3 yrs, seed 4242) ================'
+    );
     R.push('\n--- TIMELINE (yearly-ish snapshots) ---');
     R.push(header);
     R.push(rows.join('\n'));
 
     R.push('\n--- WORLD POPULATION (final) ---');
-    R.push(`Total living warriors: ${all.length}  (player ${state.roster.length}, rivals ${all.length - state.roster.length})`);
+    R.push(
+      `Total living warriors: ${all.length}  (player ${state.roster.length}, rivals ${all.length - state.roster.length})`
+    );
     R.push(`Graveyard (dead): ${state.graveyard.length}   Retired: ${state.retired.length}`);
     R.push(`Total bouts fought: ${state.arenaHistory.length}`);
     R.push(`Avg warrior age: ${avgAge}  (min ${Math.min(...ages)}, max ${Math.max(...ages)})`);
@@ -177,20 +183,32 @@ describe('Emergent behavior report', () => {
     R.push(`Rival roster sizes (end):   [${rivalRosterSizes.join(', ')}]`);
     R.push(`Rival treasuries (end, sorted): [${rivalTreasuries.join(', ')}]`);
     R.push(`Personality mix (end): ${JSON.stringify(personaCount)}`);
-    R.push(`Personality mix (start): ${JSON.stringify(seededRivalOwners.reduce((m: Record<string, number>, p) => ((m[p] = (m[p] ?? 0) + 1), m), {}))}`);
+    R.push(
+      `Personality mix (start): ${JSON.stringify(seededRivalOwners.reduce((m: Record<string, number>, p) => ((m[p] = (m[p] ?? 0) + 1), m), {}))}`
+    );
 
     R.push('\n--- TRAIT EMERGENCE (the new systems) ---');
-    R.push(`Warriors carrying >=1 trait: ${hist.withTrait}/${hist.count} (${pct(hist.withTrait, hist.count)})`);
-    R.push(`  player roster: ${playerHist.withTrait}/${playerHist.count} (${pct(playerHist.withTrait, playerHist.count)})`);
-    R.push(`Total traits in world: ${hist.totalTraits}  (avg ${(hist.totalTraits / hist.count).toFixed(2)}/warrior)`);
+    R.push(
+      `Warriors carrying >=1 trait: ${hist.withTrait}/${hist.count} (${pct(hist.withTrait, hist.count)})`
+    );
+    R.push(
+      `  player roster: ${playerHist.withTrait}/${playerHist.count} (${pct(playerHist.withTrait, playerHist.count)})`
+    );
+    R.push(
+      `Total traits in world: ${hist.totalTraits}  (avg ${(hist.totalTraits / hist.count).toFixed(2)}/warrior)`
+    );
     R.push(`Tier distribution: ${JSON.stringify(hist.tier)}`);
     R.push(`Class-restricted traits earned: ${hist.classTraits}`);
-    R.push(`Flaw instances: ${hist.flaws}  | warriors with >=1 flaw: ${flawCarriers.length}  | with >=2 flaws (cut candidates): ${multiFlaw.length}`);
+    R.push(
+      `Flaw instances: ${hist.flaws}  | warriors with >=1 flaw: ${flawCarriers.length}  | with >=2 flaws (cut candidates): ${multiFlaw.length}`
+    );
 
     R.push('\n--- STYLE SPREAD (final, all warriors) ---');
     R.push(JSON.stringify(styleCount));
 
-    R.push('\n========================================================================================\n');
+    R.push(
+      '\n========================================================================================\n'
+    );
     console.log(R.join('\n'));
 
     expect(state.week).toBeGreaterThan(WEEKS - 5);

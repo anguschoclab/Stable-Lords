@@ -10,7 +10,12 @@ import { FightingStyle, type Warrior } from '@/types/game';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
 import { computeWarriorStats } from '@/engine/skillCalc';
 import type { FightPlan } from '@/types/combat.types';
-import { findAntisymmetryViolations, MIRROR_MATCH_BAND, ABSOLUTE_POWER_LOW, ABSOLUTE_POWER_HIGH } from '@/constants/combat/combat';
+import {
+  findAntisymmetryViolations,
+  MIRROR_MATCH_BAND,
+  ABSOLUTE_POWER_LOW,
+  ABSOLUTE_POWER_HIGH,
+} from '@/constants/combat/combat';
 
 const ALL_STYLES = Object.values(FightingStyle);
 
@@ -62,7 +67,10 @@ describe('Mirror-match drift (engine A/D bias)', () => {
         problems.push(`${s}: ${(rate * 100).toFixed(1)}% (A-side)`);
       }
     }
-    expect(problems.length, `\nMirror matches off 50% by >${MIRROR_MATCH_BAND * 100}pp:\n  ${problems.join('\n  ')}`).toBe(0);
+    expect(
+      problems.length,
+      `\nMirror matches off 50% by >${MIRROR_MATCH_BAND * 100}pp:\n  ${problems.join('\n  ')}`
+    ).toBe(0);
   });
 });
 
@@ -79,7 +87,10 @@ describe('Absolute-power band (overall win rate per style)', () => {
         problems.push(`${s}: ${(rate * 100).toFixed(1)}%`);
       }
     }
-    expect(problems.length, `\nStyles outside absolute-power band:\n  ${problems.join('\n  ')}`).toBe(0);
+    expect(
+      problems.length,
+      `\nStyles outside absolute-power band:\n  ${problems.join('\n  ')}`
+    ).toBe(0);
   });
 });
 

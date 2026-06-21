@@ -24,16 +24,16 @@ spaces in double quotes.
 
 ## The one idea: two orthogonal layers
 
-| Concern | Lives in | Means |
-|---|---|---|
-| **Absolute power** — is a style globally over/under-tuned? | `STYLE_PENALTIES` in `src/engine/skillCalc.ts` (`[ATT,PAR,DEF,INI,RIP,DEC]` per style) | how strong a style is *on average* |
-| **Matchup identity** — who counters whom? | `MATCHUP_MATRIX` in `src/constants/combat/combat.ts` | the rock-paper-scissors edges |
+| Concern                                                    | Lives in                                                                               | Means                              |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------- |
+| **Absolute power** — is a style globally over/under-tuned? | `STYLE_PENALTIES` in `src/engine/skillCalc.ts` (`[ATT,PAR,DEF,INI,RIP,DEC]` per style) | how strong a style is _on average_ |
+| **Matchup identity** — who counters whom?                  | `MATCHUP_MATRIX` in `src/constants/combat/combat.ts`                                   | the rock-paper-scissors edges      |
 
 The matrix is kept **near-antisymmetric** (if A beats B by +x, B is −x vs A). Its
-job is *only* relative matchups. The moment you encode "style X is weak" by making
+job is _only_ relative matchups. The moment you encode "style X is weak" by making
 its whole matrix row negative, you have smuggled absolute power into the wrong
-layer — and every later matchup tune fights that distortion. Fix *power* in
-`STYLE_PENALTIES`; fix *matchups* in the matrix. Never cross them.
+layer — and every later matchup tune fights that distortion. Fix _power_ in
+`STYLE_PENALTIES`; fix _matchups_ in the matrix. Never cross them.
 
 A guardrail enforces this: `findAntisymmetryViolations()` in `combat.ts` fails the
 build if any matrix pair sums outside ±1. If you change the matrix and it trips,
@@ -52,9 +52,10 @@ attributes per style, then asserts:
 These bands are tunable constants in `combat.ts` (`ABSOLUTE_POWER_LOW/HIGH`,
 `MIRROR_MATCH_BAND`, `MATRIX_ANTISYMMETRY_TOLERANCE`). "Balanced" is not a vibe —
 it is this file passing. There is also a live `src/scripts/simulation-harness.ts`
-+ daily balance report; prefer measuring over guessing.
 
-## Identity is *shape*, not *level*
+- daily balance report; prefer measuring over guessing.
+
+## Identity is _shape_, not _level_
 
 When you buff or nerf a style, change its **level** (how often it wins) via the
 re-ratchet — never flip its **shape** (its relative skill profile). The
@@ -66,9 +67,9 @@ slowest (INI low), SL keeps INI. Preserve those orderings. See
 ## Win conditions: payoff, not penalty (anti-flatten)
 
 A weak style whose identity is expressed as a raw penalty feels bad and drags its
-matrix row. The fix that *deepens* variety instead of flattening it: give the
+matrix row. The fix that _deepens_ variety instead of flattening it: give the
 style a **conditional payoff** — a mechanic that rewards its identity under the
-right conditions. Each style then wins on a *different axis* (precision / attrition
+right conditions. Each style then wins on a _different axis_ (precision / attrition
 / tempo / counter / DPS / DoT), so balance is a Pareto frontier of viable
 strategies, not one number equalized ten ways. Every style already has such a
 mechanic; `references/style-identities.md` lists them.
@@ -102,10 +103,10 @@ it keeps changes small, testable, and reversible:
 
 ## Verification discipline — the gate that gets skipped
 
-The recurring failure mode in this codebase is shipping with only the *targeted*
+The recurring failure mode in this codebase is shipping with only the _targeted_
 tests green. It bit us twice: symmetrizing the matrix silently broke
 `schedulingAssistant.test.ts` (it asserts on matrix-derived scores), and ST's
-lethality broke a knockdown-narration test (heavy hits now *kill* low-HP
+lethality broke a knockdown-narration test (heavy hits now _kill_ low-HP
 defenders instead of knocking them down). Both would have been caught by the full
 suite.
 

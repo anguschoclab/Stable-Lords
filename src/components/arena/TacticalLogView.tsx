@@ -3,7 +3,17 @@ import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { MinuteEvent } from '@/types/combat.types';
 import { classifyEvent } from '@/lib/boutUtils';
-import { Swords, Zap, Skull, Shield, Target, Activity, MoveHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Swords,
+  Zap,
+  Skull,
+  Shield,
+  Target,
+  Activity,
+  MoveHorizontal,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 
 interface TacticalLogViewProps {
   log: MinuteEvent[];

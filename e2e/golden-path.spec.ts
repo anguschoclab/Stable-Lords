@@ -30,7 +30,13 @@ test('golden path: new game → navigate all pages → fight → advance week', 
 
   // Pick the first backstory option
   // BackstoryPicker buttons are <button> elements inside a grid
-  const backstoryOption = page.locator('button[type="button"]').filter({ hasText: /Former|Mercenary|Noble|Gladiator|Scholar|Thief|Priest|Merchant|Soldier|Hunter|Sailor|Blacksmith|Innkeeper|Farmer|Healer|Beggar/ }).first();
+  const backstoryOption = page
+    .locator('button[type="button"]')
+    .filter({
+      hasText:
+        /Former|Mercenary|Noble|Gladiator|Scholar|Thief|Priest|Merchant|Soldier|Hunter|Sailor|Blacksmith|Innkeeper|Farmer|Healer|Beggar/,
+    })
+    .first();
   await backstoryOption.click();
 
   // Click "ENTER THE ORPHANAGE"
@@ -140,7 +146,9 @@ test('golden path: new game → navigate all pages → fight → advance week', 
   // Click through all resolution steps: gazette → injuries → bouts → math → (memorial) → close
   // The button text changes: "Next Report", "Acknowledge & Begin Planning", or "Honor the Fallen"
   for (let i = 0; i < 6; i++) {
-    const nextBtn = page.getByRole('button', { name: /Next Report|Acknowledge & Begin Planning|Honor the Fallen/ });
+    const nextBtn = page.getByRole('button', {
+      name: /Next Report|Acknowledge & Begin Planning|Honor the Fallen/,
+    });
     const count = await nextBtn.count();
     if (count === 0) break;
     await nextBtn.click();

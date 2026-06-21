@@ -5,9 +5,7 @@ vi.mock('@/engine/bout/services/boutProcessorService', () => ({
 }));
 
 vi.mock('@/engine/bout/core/pairings', () => ({
-  generatePairings: vi.fn(() => [
-    { a: { id: 'w1' }, d: { id: 'w2' }, isRivalry: false },
-  ]),
+  generatePairings: vi.fn(() => [{ a: { id: 'w1' }, d: { id: 'w2' }, isRivalry: false }]),
 }));
 
 vi.mock('@/engine/warriorStatus', () => ({
@@ -51,7 +49,7 @@ vi.mock('@/state/useGameStore', () => {
   const useGameStore = vi.fn((selector?: (s: typeof store) => unknown) => {
     if (typeof selector === 'function') return selector(store);
     return store;
-  }) as unknown as (typeof vi.fn) & { getState: () => typeof store };
+  }) as unknown as typeof vi.fn & { getState: () => typeof store };
 
   (useGameStore as any).getState = () => store;
 

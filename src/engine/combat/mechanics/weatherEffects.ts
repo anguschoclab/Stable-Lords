@@ -228,8 +228,7 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     initiativeMod: 2,
     riposteMod: 1,
     damageMult: 0.95,
-    description:
-      'The sky dances with spectral light. Fighters feel a strange, invigorating calm.',
+    description: 'The sky dances with spectral light. Fighters feel a strange, invigorating calm.',
   },
   'Chaotic Winds': {
     staminaMult: 1.3,

@@ -32,6 +32,7 @@
 ## Task 1: Pure bleed helpers (TDD)
 
 **Files:**
+
 - Create: `src/engine/combat/resolution/bleed.ts`
 - Create: `src/test/engine/combat/bleed.test.ts`
 - Modify: `src/constants/combat/combat.ts`
@@ -158,6 +159,7 @@ git commit -m "feat(combat): add SL bleed subsystem helpers (pure, unit-tested)"
 ## Task 2: Add the `bleedStacks` field to FighterState
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/types.ts`
 - Modify: `src/engine/bout/fighterState.ts`
 
@@ -182,6 +184,7 @@ In `src/engine/bout/fighterState.ts`, in the returned object literal (near `mome
 - [ ] **Step 3: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0`.
+
 ```bash
 git add "src/engine/combat/resolution/types.ts" "src/engine/bout/fighterState.ts"
 git commit -m "feat(combat): add bleedStacks field to FighterState"
@@ -192,6 +195,7 @@ git commit -m "feat(combat): add bleedStacks field to FighterState"
 ## Task 3: Apply bleed on a landed SL hit
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/exchangeHelpers/execution/hitExecution.ts`
 
 `executeHit` is the landed-hit path; `FightingStyle` is already imported. Add an SL block alongside the existing AB/LU/BA style blocks.
@@ -209,15 +213,16 @@ import { accumulateBleed } from '../../bleed';
 Near the other style-specific landed-hit blocks (after the LU/BA blocks, before the armor step), add:
 
 ```typescript
-  // SL: flurry of cuts — each landed hit stacks bleed (damage-over-time) on the defender
-  if (attacker.style === FightingStyle.SlashingAttack) {
-    defender.bleedStacks = accumulateBleed(defender.bleedStacks ?? 0);
-  }
+// SL: flurry of cuts — each landed hit stacks bleed (damage-over-time) on the defender
+if (attacker.style === FightingStyle.SlashingAttack) {
+  defender.bleedStacks = accumulateBleed(defender.bleedStacks ?? 0);
+}
 ```
 
 - [ ] **Step 3: Typecheck + commit**
 
 Run: `bunx tsc --noEmit --project tsconfig.app.json 2>&1 | grep -c "error TS"` → `0` (accumulates but nothing ticks yet — no behaviour change).
+
 ```bash
 git add "src/engine/combat/resolution/exchangeHelpers/execution/hitExecution.ts"
 git commit -m "feat(combat): SL applies bleed stacks on landed hits"
@@ -228,6 +233,7 @@ git commit -m "feat(combat): SL applies bleed stacks on landed hits"
 ## Task 4: Tick bleed at the end of each exchange
 
 **Files:**
+
 - Modify: `src/engine/combat/resolution/resolution.ts`
 - Create: (integration test) `src/test/engine/combat/bleed.test.ts` (append)
 
@@ -246,23 +252,23 @@ import { tickBleed } from './bleed';
 Immediately before `return events;` at the end of `resolveExchange`, add:
 
 ```typescript
-  // SL bleed: damage-over-time tick on any bleeding fighter, then decay.
-  for (const fighter of [fA, fD]) {
-    const stacks = fighter.bleedStacks ?? 0;
-    if (stacks > 0) {
-      const { damage, next } = tickBleed(stacks);
-      fighter.hp -= damage;
-      fighter.bleedStacks = next;
-      events.push({
-        type: 'HIT',
-        actor: fighter.label === 'A' ? 'D' : 'A',
-        target: fighter.label,
-        value: damage,
-        location: 'Bleed',
-        metadata: { cause: 'BLEED', stacks: next },
-      });
-    }
+// SL bleed: damage-over-time tick on any bleeding fighter, then decay.
+for (const fighter of [fA, fD]) {
+  const stacks = fighter.bleedStacks ?? 0;
+  if (stacks > 0) {
+    const { damage, next } = tickBleed(stacks);
+    fighter.hp -= damage;
+    fighter.bleedStacks = next;
+    events.push({
+      type: 'HIT',
+      actor: fighter.label === 'A' ? 'D' : 'A',
+      target: fighter.label,
+      value: damage,
+      location: 'Bleed',
+      metadata: { cause: 'BLEED', stacks: next },
+    });
   }
+}
 ```
 
 > Bleed can reduce `hp` to 0 — the simulation loop's post-exchange HP check (`simulationLoop.ts`) ends the fight, so no extra death handling is needed here. Whether a bleed-out is attributed as a "kill" is validated indirectly by the harness kill-rate test (Task 5).
@@ -285,10 +291,22 @@ function mk(style: FightingStyle, id: string): Warrior {
   const attrs = { ST: 15, CN: 15, SZ: 15, WT: 15, WL: 15, SP: 15, DF: 15 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, style);
   return {
-    id: id as import('@/types/shared.types').WarriorId, name: id, style,
-    attributes: attrs, baseSkills, derivedStats, fame: 0, popularity: 0,
-    titles: [], injuries: [], flair: [], career: { wins: 0, losses: 0, kills: 0 },
-    champion: false, status: 'Active', age: 20, traits: [],
+    id: id as import('@/types/shared.types').WarriorId,
+    name: id,
+    style,
+    attributes: attrs,
+    baseSkills,
+    derivedStats,
+    fame: 0,
+    popularity: 0,
+    titles: [],
+    injuries: [],
+    flair: [],
+    career: { wins: 0, losses: 0, kills: 0 },
+    champion: false,
+    status: 'Active',
+    age: 20,
+    traits: [],
   };
 }
 
@@ -299,18 +317,24 @@ describe('SL bleed (integration)', () => {
     let wins = 0;
     const N = 400;
     for (let i = 0; i < N; i++) {
-      const o = simulateFight(defaultPlanForWarrior(sl), defaultPlanForWarrior(ps), sl, ps, i * 10009 + 41);
+      const o = simulateFight(
+        defaultPlanForWarrior(sl),
+        defaultPlanForWarrior(ps),
+        sl,
+        ps,
+        i * 10009 + 41
+      );
       if (o.winner === 'A') wins++;
     }
     const rate = wins / N;
     // Bleed rewards sustained engagement — SL should hold its own.
-    expect(rate, `SL vs PS win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.40);
+    expect(rate, `SL vs PS win rate ${(rate * 100).toFixed(1)}%`).toBeGreaterThan(0.4);
   });
 });
 ```
 
 Run: `npx vitest run src/test/engine/combat/bleed.test.ts`
-Expected: PASS. If SL is below the floor, raise `SL_BLEED_STACKS_PER_HIT` to 3 or `SL_BLEED_TICK_DMG` to 1.5; SL's *overall* level is the re-ratchet's job (Task 5).
+Expected: PASS. If SL is below the floor, raise `SL_BLEED_STACKS_PER_HIT` to 3 or `SL_BLEED_TICK_DMG` to 1.5; SL's _overall_ level is the re-ratchet's job (Task 5).
 
 - [ ] **Step 5: Commit**
 
@@ -326,6 +350,7 @@ git commit -m "feat(combat): tick SL bleed each exchange; integration test"
 Bleed adds sustained damage, raising SL's power and possibly the global kill rate. Re-centre SL in the 40–60% band **without touching the matrix**, and confirm kills stay in range.
 
 **Files:**
+
 - Modify (if needed): `src/engine/skillCalc.ts` (`STYLE_PENALTIES` — the SL row only)
 
 - [ ] **Step 1: Run the balance harness**
@@ -372,4 +397,7 @@ git commit -m "balance(SL): re-ratchet absolute power + kill rate after bleed; g
 3. `npx vitest run src/test/engine/economy/balance.test.ts` → green, including `near-antisymmetric`, the 40–60% band (SL in band), and `Kill Rate` (4.5–16%).
 4. `bunx tsc --noEmit --project tsconfig.app.json` → 0; full `npx vitest run` green.
 5. No edits to `MATCHUP_MATRIX` or canon data.
+
+```
+
 ```

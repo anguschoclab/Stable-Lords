@@ -3,7 +3,7 @@ import { FightingStyle } from '@/types/shared.types';
 import { traitsForStyle, traitsByTier } from '@/engine/traits';
 
 describe('trait accessors', () => {
-  it('traitsForStyle returns only that style\'s class traits', () => {
+  it("traitsForStyle returns only that style's class traits", () => {
     const ab = traitsForStyle(FightingStyle.AimedBlow);
     expect(ab.length).toBeGreaterThanOrEqual(5);
     expect(ab.every((t) => t.styles?.includes(FightingStyle.AimedBlow))).toBe(true);

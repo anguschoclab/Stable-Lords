@@ -177,8 +177,7 @@ export function RivalIntelligence({ rivals }: RivalIntelligenceProps) {
                 Rival owners react to meta shifts with varying latency.{' '}
                 <span className="text-foreground font-black">Innovators</span> anticipate trends,
                 while <span className="text-foreground font-black">Traditionalists</span> provide
-                predictable matchups. Study their patterns to exploit weaknesses in
-                future bouts.
+                predictable matchups. Study their patterns to exploit weaknesses in future bouts.
               </p>
             </div>
           </div>

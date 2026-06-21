@@ -5,7 +5,11 @@ import { getMasteryBonus } from '@/engine/favorites/weaponMastery';
 describe('getMasteryBonus', () => {
   it('returns all-zero when the favorite weapon is not mastered', () => {
     expect(getMasteryBonus(FightingStyle.BashingAttack, false)).toEqual({
-      att: 0, dmg: 0, ini: 0, def: 0, rip: 0,
+      att: 0,
+      dmg: 0,
+      ini: 0,
+      def: 0,
+      rip: 0,
     });
   });
 

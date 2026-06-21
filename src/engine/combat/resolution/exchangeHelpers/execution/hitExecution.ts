@@ -155,7 +155,10 @@ export function executeHit(
   // AB: armor bypass — ignore DF-scaled fraction of armor mitigation
   let rawDamage: number;
   if (attacker.style === FightingStyle.AimedBlow) {
-    const bypass = Math.max(0, Math.min(AB_ARMOR_BYPASS_MAX, attacker.attributes.DF / AB_ARMOR_BYPASS_DF_DIVISOR));
+    const bypass = Math.max(
+      0,
+      Math.min(AB_ARMOR_BYPASS_MAX, attacker.attributes.DF / AB_ARMOR_BYPASS_DF_DIVISOR)
+    );
     rawDamage = Math.round(postArmor + bypass * (preArmor - postArmor));
   } else {
     rawDamage = postArmor;

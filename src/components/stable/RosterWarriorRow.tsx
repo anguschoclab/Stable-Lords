@@ -162,7 +162,8 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                     (() => {
                       const liab = computeWarriorLiability(warrior as any);
                       if (liab.recommendation === 'Keep') return null;
-                      const label = liab.recommendation === 'Release' ? 'Consider releasing' : 'Watch';
+                      const label =
+                        liab.recommendation === 'Release' ? 'Consider releasing' : 'Watch';
                       const color =
                         liab.recommendation === 'Release'
                           ? 'text-arena-gold border-arena-gold/40'
@@ -184,7 +185,8 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                           <TooltipContent>
                             {liab.factors.map((f) => (
                               <div key={f.name} className="text-[9px] font-mono">
-                                {f.name}: {f.weight > 0 ? '+' : ''}{f.weight}
+                                {f.name}: {f.weight > 0 ? '+' : ''}
+                                {f.weight}
                               </div>
                             ))}
                           </TooltipContent>

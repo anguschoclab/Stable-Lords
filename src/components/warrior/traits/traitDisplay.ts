@@ -21,7 +21,7 @@ export function traitBadgeMeta(id: string): TraitBadgeMeta | null {
     description: t.description,
     isFlaw: t.tier === 'Flaw',
     classTag: t.styles?.length
-      ? STYLE_DISPLAY_NAMES[t.styles[0] as FightingStyle] ?? String(t.styles[0])
+      ? (STYLE_DISPLAY_NAMES[t.styles[0] as FightingStyle] ?? String(t.styles[0]))
       : undefined,
   };
 }
@@ -29,10 +29,15 @@ export function traitBadgeMeta(id: string): TraitBadgeMeta | null {
 /** Tailwind classes per tier — mirrors the potential-grade colour ladder; Flaw is a warning. */
 export function traitTierColorClasses(tier: TraitTier): string {
   switch (tier) {
-    case 'Common':      return 'bg-white/10 text-foreground/80 border-white/15';
-    case 'Notable':     return 'bg-sky-500/10 text-sky-300 border-sky-500/25';
-    case 'Exceptional': return 'bg-arena-gold/10 text-arena-gold border-arena-gold/25';
-    case 'Signature':   return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
-    case 'Flaw':        return 'bg-destructive/15 text-destructive border-destructive/30';
+    case 'Common':
+      return 'bg-white/10 text-foreground/80 border-white/15';
+    case 'Notable':
+      return 'bg-sky-500/10 text-sky-300 border-sky-500/25';
+    case 'Exceptional':
+      return 'bg-arena-gold/10 text-arena-gold border-arena-gold/25';
+    case 'Signature':
+      return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
+    case 'Flaw':
+      return 'bg-destructive/15 text-destructive border-destructive/30';
   }
 }

@@ -207,7 +207,6 @@ export const TRAIT_WEIGHTS = {
   HIGH_BONUS: 0.9,
 } as const;
 
-
 /**
  * Trait selection roll thresholds
  */
@@ -239,8 +238,8 @@ export const MIRROR_MATCH_BAND = 0.15;
  * Target absolute-power band for overall style win rates (50% ± 10pp)
  * Styles outside this band are globally over/under-tuned
  */
-export const ABSOLUTE_POWER_LOW = 0.40;
-export const ABSOLUTE_POWER_HIGH = 0.60;
+export const ABSOLUTE_POWER_LOW = 0.4;
+export const ABSOLUTE_POWER_HIGH = 0.6;
 
 /** Damage per momentum point for Lunging Attack's first-strike pressure. Balance knob. */
 export const LU_MOMENTUM_DMG_COEFF = 0.5;
@@ -370,7 +369,7 @@ export const TRAIT_SYNERGY_MULTIPLIER = 3.0;
  * Anti-synergy multiplier for archetype-opposed traits
  * Reduces cross-style noise by making against-type traits rare
  */
-export const TRAIT_ANTI_SYNERGY_MULTIPLIER = 0.10;
+export const TRAIT_ANTI_SYNERGY_MULTIPLIER = 0.1;
 
 /** Birth-trait distribution: most warriors are born blank; traits are developed. */
 export const BIRTH_BLANK_CHANCE = 0.68;
@@ -431,16 +430,16 @@ export const STYLE_ORDER = [
  */
 export const MATCHUP_MATRIX: number[][] = [
   //AB  BA  LU  PL  PR  PS  SL  ST  TP  WS
-  [ 0,  1,  2,  1,  1,  1,  2,  2,  1,  3], // AB
-  [-1,  0,  0, -1, -1,  0, -1, -1,  0,  0], // BA
-  [-2,  0,  0,  0,  0, -1, -1, -1,  0,  0], // LU
-  [-1,  1,  0,  0,  1,  1,  0,  0,  1,  1], // PL
-  [-1,  1,  0,  0,  0,  0,  0,  1,  1,  1], // PR
-  [-1,  0,  1, -1,  0,  0,  0,  2,  0,  2], // PS
-  [-2,  1,  1,  0,  0,  0,  0, -1,  0,  1], // SL
-  [-2,  1,  1,  0, -1, -2,  1,  0,  1,  2], // ST
-  [-1,  0,  0, -1,  0,  0,  0, -1,  0,  0], // TP
-  [-3,  1,  0, -1,  0, -1, -1, -1,  1,  0], // WS
+  [0, 1, 2, 1, 1, 1, 2, 2, 1, 3], // AB
+  [-1, 0, 0, -1, -1, 0, -1, -1, 0, 0], // BA
+  [-2, 0, 0, 0, 0, -1, -1, -1, 0, 0], // LU
+  [-1, 1, 0, 0, 1, 1, 0, 0, 1, 1], // PL
+  [-1, 1, 0, 0, 0, 0, 0, 1, 1, 1], // PR
+  [-1, 0, 1, -1, 0, 0, 0, 2, 0, 2], // PS
+  [-2, 1, 1, 0, 0, 0, 0, -1, 0, 1], // SL
+  [-2, 1, 1, 0, -1, -2, 1, 0, 1, 2], // ST
+  [-1, 0, 0, -1, 0, 0, 0, -1, 0, 0], // TP
+  [-3, 1, 0, -1, 0, -1, -1, -1, 1, 0], // WS
 ];
 
 /**

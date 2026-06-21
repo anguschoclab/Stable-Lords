@@ -125,9 +125,7 @@ export default function Trainers() {
       setState((draft) => {
         draft.trainers.push(trainer);
       });
-      toast.success(
-        `${warrior.name} retired to coaching. Specialization: ${trainer.focus}.`
-      );
+      toast.success(`${warrior.name} retired to coaching. Specialization: ${trainer.focus}.`);
       setConvertDialogOpen(false);
     },
     [retired, setState]

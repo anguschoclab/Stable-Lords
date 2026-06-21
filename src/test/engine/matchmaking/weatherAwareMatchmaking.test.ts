@@ -184,8 +184,8 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
       weather: 'Rainy',
       rivals: [makeRival('rival-1', [lunger]), makeRival('rival-2', [basher])],
       promoters: {
-        'prom-1': {
-          id: 'prom-1' as any,
+        'promoter-1': {
+          id: 'promoter-1' as any,
           name: 'Test Promoter',
           tier: 'Regional',
           personality: 'Pragmatic',
@@ -218,8 +218,8 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
       weather: 'Clear',
       rivals: [makeRival('rival-1', [w1]), makeRival('rival-2', [w2])],
       promoters: {
-        'prom-1': {
-          id: 'prom-1' as any,
+        'promoter-1': {
+          id: 'promoter-1' as any,
           name: 'Test Promoter',
           tier: 'Regional',
           personality: 'Pragmatic',

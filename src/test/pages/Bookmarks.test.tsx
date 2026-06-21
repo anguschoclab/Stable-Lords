@@ -63,6 +63,7 @@ describe('Bookmarks Page', () => {
     render(<Bookmarks />);
     expect(screen.getByText(/No Entries Marked/i)).toBeInTheDocument();
     expect(screen.getByText(/Marked Entries/i)).toBeInTheDocument();
+    expect(screen.getByText(/MARKED FOR GLORY/i)).toBeInTheDocument();
   });
 
   it('renders bookmark count in header', () => {

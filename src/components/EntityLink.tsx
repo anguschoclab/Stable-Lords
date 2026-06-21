@@ -76,7 +76,7 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
           <p className="text-[10px] font-black uppercase tracking-widest">View Warrior Dossier</p>
         </TooltipContent>
       </Tooltip>
-      <SheetContent className="sm:max-w-md border-l-primary/20 bg-card/95 backdrop-blur-md">
+      <SheetContent aria-describedby={undefined} className="sm:max-w-md border-l-primary/20 bg-card/95 backdrop-blur-md">
         <SheetHeader className="pb-4 border-b">
           <SheetTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export function StableLink({ name, className, children }: StableLinkProps) {
           <p className="text-[10px] font-black uppercase tracking-widest">View Stable Records</p>
         </TooltipContent>
       </Tooltip>
-      <SheetContent className="sm:max-w-md border-l-arena-gold/20 bg-card/95 backdrop-blur-md">
+      <SheetContent aria-describedby={undefined} className="sm:max-w-md border-l-arena-gold/20 bg-card/95 backdrop-blur-md">
         <SheetHeader className="pb-4 border-b">
           <SheetTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">

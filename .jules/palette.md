@@ -32,3 +32,6 @@
 ## 2026-06-20 - Bookmark Button Keyboard Accessibility
 **Learning:** The native bookmark toggle button was missing keyboard focus indicators, making it invisible to keyboard/screen-reader users navigating the UI.
 **Action:** When styling custom icon-only buttons, explicitly include standard focus ring utility classes (e.g. `focus-visible:ring-2 focus-visible:ring-primary`) to ensure accessibility without relying on Shadcn components where styling deviates heavily.
+
+- 2025-02-18: When using Radix UI or Shadcn components like `<DialogContent>` or `<SheetContent>` without a dedicated description element, explicitly set `aria-describedby={undefined}` to satisfy accessibility requirements and prevent console warnings.
+- 2025-02-18: When replacing custom arbitrary color values in interactive elements (e.g., hover or focus states), prioritize mapping them to the system's design tokens (like `accent`, `primary`, or semantic roles) rather than hardcoding new arbitrary hex codes.

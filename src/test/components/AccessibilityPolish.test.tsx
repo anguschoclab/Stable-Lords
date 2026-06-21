@@ -5,13 +5,15 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
-import { SelectTrigger } from '@/components/ui/select';
+import { Select, SelectTrigger } from '@/components/ui/select';
 import { ToastAction, ToastClose } from '@/components/ui/toast';
 
 describe('Accessibility polish — focus-visible classes', () => {
   it('SelectTrigger uses focus-visible (not focus:)', () => {
     const { container } = render(
-      <SelectTrigger className="test-trigger">Test</SelectTrigger>
+      <Select>
+        <SelectTrigger className="test-trigger">Test</SelectTrigger>
+      </Select>
     );
     const trigger = container.querySelector('[class*="test-trigger"]') ?? container.querySelector('button');
     expect(trigger?.className).toMatch(/focus-visible:/);

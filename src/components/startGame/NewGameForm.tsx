@@ -187,7 +187,7 @@ export default function NewGameForm({
                   onChange={(e) => setOwnerName(e.target.value)}
                   maxLength={24}
                   autoFocus
-                  className="flex-1 h-10 text-sm bg-[#0A0705] border-[rgba(60,42,22,0.8)] focus:border-accent/40 focus:ring-accent/20"
+                  className="flex-1 h-10 text-sm bg-[#0A0705] border-[rgba(60,42,22,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 "
                 />
                 <Button
                   variant="outline"
@@ -217,7 +217,7 @@ export default function NewGameForm({
                   value={stableName}
                   onChange={(e) => setStableName(e.target.value)}
                   maxLength={30}
-                  className="flex-1 h-10 text-sm bg-[#0A0705] border-[rgba(60,42,22,0.8)] focus:border-accent/40 focus:ring-accent/20"
+                  className="flex-1 h-10 text-sm bg-[#0A0705] border-[rgba(60,42,22,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 "
                 />
                 <Button
                   variant="outline"

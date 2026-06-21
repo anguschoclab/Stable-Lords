@@ -82,7 +82,7 @@ export function EditableText({
           onKeyDown={handleKeyDown}
           onBlur={handleSave}
           className={cn(
-            'h-8 bg-neutral-900/60 border-primary/50 focus:ring-1 focus:ring-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]',
+            'h-8 bg-neutral-900/60 border-primary/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]',
             inputClassName
           )}
         />

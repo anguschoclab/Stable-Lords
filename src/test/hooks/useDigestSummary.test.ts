@@ -24,7 +24,7 @@ function makeFight(overrides: Partial<FightSummary> = {}): FightSummary {
 
 function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
   const warriorIds = overrides.warriorIds ?? ['wa' as WarriorId];
-  const responses = overrides.responses ?? { 'wa': 'Pending' };
+  const responses = overrides.responses ?? { wa: 'Pending' };
 
   return {
     id: 'offer-1' as BoutOfferId,
@@ -199,9 +199,21 @@ describe('useDigestSummary', () => {
       useDigestSummary({
         arenaHistory: [],
         boutOffers: {
-          'offer-1': makeOffer({ status: 'Proposed', boutWeek: 10, warriorIds: ['wa' as WarriorId] }),
-          'offer-2': makeOffer({ status: 'Proposed', boutWeek: 11, warriorIds: ['wc' as WarriorId] }),
-          'offer-3': makeOffer({ status: 'Proposed', boutWeek: 9, warriorIds: ['wa' as WarriorId] }),
+          'offer-1': makeOffer({
+            status: 'Proposed',
+            boutWeek: 10,
+            warriorIds: ['wa' as WarriorId],
+          }),
+          'offer-2': makeOffer({
+            status: 'Proposed',
+            boutWeek: 11,
+            warriorIds: ['wc' as WarriorId],
+          }),
+          'offer-3': makeOffer({
+            status: 'Proposed',
+            boutWeek: 9,
+            warriorIds: ['wa' as WarriorId],
+          }),
         },
         currentWeek,
         playerWarriorIds,

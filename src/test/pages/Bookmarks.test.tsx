@@ -18,14 +18,10 @@ let mockStoreState: any = {
   trainers: [],
 };
 
-
-
-
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   Link: ({ to, children }: any) => <a href={to}>{children}</a>,
 }));
-
 
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: any) => {

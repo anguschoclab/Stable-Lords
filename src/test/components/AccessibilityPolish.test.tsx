@@ -15,7 +15,8 @@ describe('Accessibility polish — focus-visible classes', () => {
         <SelectTrigger className="test-trigger">Test</SelectTrigger>
       </Select>
     );
-    const trigger = container.querySelector('[class*="test-trigger"]') ?? container.querySelector('button');
+    const trigger =
+      container.querySelector('[class*="test-trigger"]') ?? container.querySelector('button');
     expect(trigger?.className).toMatch(/focus-visible:/);
   });
 
@@ -30,9 +31,7 @@ describe('Accessibility polish — focus-visible classes', () => {
   });
 
   it('ToastClose has focus-visible:opacity-100 (not focus:opacity-100)', () => {
-    const { container } = render(
-      <ToastClose className="test-close" />
-    );
+    const { container } = render(<ToastClose className="test-close" />);
     const close = container.querySelector('[class*="test-close"]');
     expect(close?.className).toMatch(/focus-visible:opacity-100/);
   });

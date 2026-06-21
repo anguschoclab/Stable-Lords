@@ -27,13 +27,17 @@ function FilterToggleButton({ active, onClick, label, ariaLabel }: FilterToggleB
 
 describe('FilterToggleButton aria-pressed', () => {
   it('sets aria-pressed to true when active', () => {
-    render(<FilterToggleButton active={true} onClick={() => {}} label="Test" ariaLabel="Test filter" />);
+    render(
+      <FilterToggleButton active={true} onClick={() => {}} label="Test" ariaLabel="Test filter" />
+    );
     const btn = screen.getByRole('button', { name: 'Test filter' });
     expect(btn).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('sets aria-pressed to false when inactive', () => {
-    render(<FilterToggleButton active={false} onClick={() => {}} label="Test" ariaLabel="Test filter" />);
+    render(
+      <FilterToggleButton active={false} onClick={() => {}} label="Test" ariaLabel="Test filter" />
+    );
     const btn = screen.getByRole('button', { name: 'Test filter' });
     expect(btn).toHaveAttribute('aria-pressed', 'false');
   });
@@ -54,7 +58,9 @@ describe('FilterToggleButton aria-pressed', () => {
 
   it('calls onClick when clicked', () => {
     const onClick = vi.fn();
-    render(<FilterToggleButton active={false} onClick={onClick} label="Test" ariaLabel="Test filter" />);
+    render(
+      <FilterToggleButton active={false} onClick={onClick} label="Test" ariaLabel="Test filter" />
+    );
     fireEvent.click(screen.getByRole('button'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });

@@ -64,9 +64,7 @@ describe('useShallow memoization', () => {
 
   describe('useAtRiskWarriors', () => {
     it('returns referentially stable result when roster is unchanged', () => {
-      const roster = [
-        createMockWarrior('w1', { fatigue: 80, injuries: [] }),
-      ];
+      const roster = [createMockWarrior('w1', { fatigue: 80, injuries: [] })];
       storeOverride = { roster };
 
       const { result, rerender } = renderHook(() => useAtRiskWarriors());

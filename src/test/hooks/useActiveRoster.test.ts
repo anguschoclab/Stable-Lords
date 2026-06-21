@@ -96,10 +96,7 @@ describe('useActiveRoster', () => {
 
   it('returns referentially stable result across re-renders with same roster', () => {
     storeOverride = {
-      roster: [
-        createMockWarrior('w1', { fame: 100 }),
-        createMockWarrior('w2', { fame: 50 }),
-      ],
+      roster: [createMockWarrior('w1', { fame: 100 }), createMockWarrior('w2', { fame: 50 })],
     };
     const { result, rerender } = renderHook(() => useActiveRoster());
     const first = result.current;

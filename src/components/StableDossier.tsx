@@ -24,7 +24,11 @@ interface StableDossierProps {
  * @returns The rendered stable dossier or a "not found" message.
  */
 export function StableDossier({ stableId, stableName }: StableDossierProps) {
-  const { player, roster: stateRoster, rivals: stateRivals } = useGameStore(
+  const {
+    player,
+    roster: stateRoster,
+    rivals: stateRivals,
+  } = useGameStore(
     useShallow((s) => ({
       player: s.player,
       roster: s.roster,

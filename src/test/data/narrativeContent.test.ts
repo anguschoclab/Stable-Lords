@@ -5,7 +5,10 @@
 import { describe, it, expect } from 'vitest';
 import narrativeContent from '@/data/narrativeContent.json';
 
-function collectEntries(obj: any, path: string = ''): { text: string; min: number; path: string }[] {
+function collectEntries(
+  obj: any,
+  path: string = ''
+): { text: string; min: number; path: string }[] {
   const entries: { text: string; min: number; path: string }[] = [];
 
   if (Array.isArray(obj)) {

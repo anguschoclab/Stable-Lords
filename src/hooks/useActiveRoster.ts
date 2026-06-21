@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { isActive } from '@/engine/warriorStatus';
 import type { CareerRecord, AttributePotential, InjuryData } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
@@ -27,7 +26,7 @@ export interface ActiveRosterItem {
  *
  */
 export function useActiveRoster(): ActiveRosterItem[] {
-  const roster = useGameStore(useShallow((s) => s.roster));
+  const roster = useGameStore((s) => s.roster);
 
   return useMemo(() => {
     const result: ActiveRosterItem[] = [];

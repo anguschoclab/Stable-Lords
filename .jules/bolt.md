@@ -48,3 +48,7 @@
 ## 2025-02-12 - useShallow Anti-Patterns (Array fallbacks and mapping)
 **Learning:** Using `?? []` fallbacks or creating new references like `new Set()` or `.map()` inside `useShallow` selectors completely breaks memoization because Zustand calls selectors on *every* update, creating a new reference each time.
 **Action:** Always extract the raw property (e.g. `s.roster`) inside `useShallow` and apply `?? []` or data transformations (like mapping/Set creation) outside of the store subscription hook, preferably wrapped in `useMemo`.
+
+## 2024-05-19 - Zustand useShallow Inline Fallbacks Break Equality
+**Learning:** Returning inline array fallbacks (e.g. `s.roster ?? []`) or instantiating objects (e.g. `new Set()`) inside a `useShallow` selector breaks Zustand's shallow equality check. When `s.roster` is undefined, `[]` creates a new reference in memory on every store change, causing the component to re-render for completely unrelated state updates (like the week advancing or treasury ticking).
+**Action:** Always extract the raw optional property via the selector (`useGameStore((s) => s.roster)`) and apply the fallback array or `useMemo` computation *outside* the hook in the component body (e.g., `const roster = stateRoster ?? [];`).

@@ -5,7 +5,6 @@ import type { RivalStableData } from '@/types/game';
 import { cn } from '@/lib/utils';
 import { StableCrest } from '@/components/crest/StableCrest';
 import { useGameStore } from '@/state/useGameStore';
-import { useShallow } from 'zustand/react/shallow';
 import { filterActive } from '@/utils/roster';
 
 interface RivalStableListProps {
@@ -22,8 +21,8 @@ interface RivalStableListProps {
  * @param - { rivals, selected rival id, on select rival }.
  */
 export function RivalStableList({ rivals, selectedRivalId, onSelectRival }: RivalStableListProps) {
-  const ownerGrudgesRaw = useGameStore(useShallow((s) => s.ownerGrudges));
-  const ownerGrudges = ownerGrudgesRaw ?? [];
+  const ownerGrudgesStore = useGameStore((s) => s.ownerGrudges);
+  const ownerGrudges = ownerGrudgesStore ?? [];
 
   return (
     <div className="space-y-4">

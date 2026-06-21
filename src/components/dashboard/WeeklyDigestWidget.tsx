@@ -1,4 +1,4 @@
-import React from "react";
+import { useMemo } from 'react';
 /**
  * Weekly Digest Dashboard Widget
  * Summary of weekly events, match results, and upcoming bouts
@@ -36,10 +36,8 @@ export function WeeklyDigestWidget({
   boutOffers,
   currentWeek,
 }: WeeklyDigestProps) {
-  const rosterRaw = useGameStore(useShallow((s) => s.roster));
-  const playerWarriorIds = React.useMemo(() => {
-    return new Set<WarriorId>((rosterRaw ?? []).map((w) => w.id));
-  }, [rosterRaw]);
+  const rosterIds = useGameStore(useShallow((s) => s.roster.map((w) => w.id)));
+  const playerWarriorIds = useMemo(() => new Set<WarriorId>(rosterIds), [rosterIds]);
 
   const summary = useDigestSummary({
     arenaHistory,

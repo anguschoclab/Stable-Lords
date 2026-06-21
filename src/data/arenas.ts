@@ -324,6 +324,22 @@ export interface ArenaLoreEntry {
  */
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'walled_court_shattered_shield',
+    arenaId: 'walled_court_arena',
+    type: 'historical_battle',
+    title: 'The Shattered Shield',
+    narrative:
+      'In a desperate final stand, a lone defender used the tightly packed stone walls to brace their shield against three attackers simultaneously. The shield eventually burst into splinters, but the distraction lasted just long enough for the match timer to run out, cementing a legendary draw.',
+  },
+  {
+    id: 'flooded_drowning_chorus',
+    arenaId: 'flooded_vault_arena',
+    type: 'architectural_quirk',
+    title: 'The Drowning Chorus',
+    narrative:
+      'When the tide rolls in, the water passing through the iron grates produces a low, mournful hum. Fighters claim it sounds exactly like the last breaths of the drowned prisoners the vault was built over.',
+  },
+  {
     id: 'standard_arena_first_blood',
     arenaId: 'standard_arena',
     type: 'historical_battle',
@@ -418,14 +434,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     title: 'The Grasp of the Blood Roots',
     narrative:
       'An overconfident agility fighter ignored the subtle shifting of the forest floor, only to have their foot caught in a sudden snare of roots. Their opponent leisurely approached and delivered the killing blow while the forest itself seemed to hold the victim in place.',
-  },
-  {
-    id: 'crystal_cavern_shattered_echoes',
-    arenaId: 'crystal_cavern',
-    type: 'architectural_quirk',
-    title: 'The Shattered Echoes',
-    narrative:
-      'The crystalline structure of the cavern captures the sound of snapping bone and amplifies it into a deafening roar. Veterans use this effect to strike terror into unseasoned recruits.',
   },
   {
     id: 'flesh_gardens_crimson_bloom',

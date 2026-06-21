@@ -81,6 +81,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Wildfire Smoke': () => <WildfireSmokeEffect />,
   'Gravity Anomaly': () => <GravityAnomalyEffect />,
   'Shimmering Heat': () => <HeatEffect />,
+  'Rain of Frogs': () => <RainEffect />,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

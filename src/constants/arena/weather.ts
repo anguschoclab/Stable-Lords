@@ -305,6 +305,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-arena-blood/20',
     description: 'A rippling heatwave blurs vision and exhausts fighters.',
   },
+  'Rain of Frogs': {
+    icon: CloudRain,
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
+    description: 'An absurd rain of frogs causes widespread confusion and slippery footing.',
+  },
 };
 
 /**

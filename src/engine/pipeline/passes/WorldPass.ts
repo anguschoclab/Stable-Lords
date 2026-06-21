@@ -39,6 +39,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Arcane Storm',
     'Blood Rain',
     'Aether Storm',
+    'Rain of Frogs',
   ],
   Summer: [
     'Sweltering',
@@ -63,6 +64,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Acid Rain',
     'Spooky Night',
     'Blood Fog',
+    'Rain of Frogs',
   ],
   Winter: [
     'Blizzard',
@@ -132,6 +134,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   'Acid Rain': 5,
   'Spooky Night': 1.5,
   'Blood Fog': 1,
+  'Rain of Frogs': 0.5,
 
   // Winter-exclusive
   Blizzard: 15,

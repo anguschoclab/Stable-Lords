@@ -17,6 +17,9 @@ interface TokenIconProps {
   type: InsightTokenType;
 }
 
+/**
+ *
+ */
 export function TokenIcon({ type }: TokenIconProps) {
   const cfg = TOKEN_CFG[type] ?? TOKEN_CFG.Weapon;
   const Icon = cfg.Icon;

@@ -5,6 +5,9 @@ interface FighterNamePlateProps {
   isWinner?: boolean;
 }
 
+/**
+ *
+ */
 export function FighterNamePlate({ name, isWinner }: FighterNamePlateProps) {
   return (
     <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">

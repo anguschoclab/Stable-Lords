@@ -4,6 +4,9 @@ import { type WarriorId, type InsightId } from '@/types/shared.types';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { computeWarriorStats } from '@/engine/skillCalc';
 
+/**
+ *
+ */
 export function createRosterActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
   return {
     setRoster: (roster: Warrior[]) => set(() => ({ roster })),

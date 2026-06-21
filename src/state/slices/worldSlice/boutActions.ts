@@ -4,6 +4,9 @@ import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import { respondToBoutOffer as engineRespondToBoutOffer } from '@/state/mutations/contractMutations';
 import type { WorldSlice } from './types';
 
+/**
+ *
+ */
 export function createBoutActions(
   set: (fn: (state: WorldSlice) => Partial<GameStore> | WorldSlice) => void
 ) {

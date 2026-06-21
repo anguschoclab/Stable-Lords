@@ -7,9 +7,9 @@ interface ComparisonHeaderProps {
   rivalA: RivalStableData;
   rivalB: RivalStableData;
 } /**
- * Comparison header.
- * @param - { rival a, rival b }.
- */
+   * Comparison header.
+   * @param - { rival a, rival b }.
+   */
 
 /**
  * Comparison header.

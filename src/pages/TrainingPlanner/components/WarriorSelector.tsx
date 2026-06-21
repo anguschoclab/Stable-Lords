@@ -10,6 +10,9 @@ interface WarriorSelectorProps {
   trainers: Trainer[];
 }
 
+/**
+ *
+ */
 export function WarriorSelector({
   warriors,
   selectedId,

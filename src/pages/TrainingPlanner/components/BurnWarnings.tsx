@@ -8,6 +8,9 @@ interface BurnWarningsProps {
   burns: BurnWarning[];
 }
 
+/**
+ *
+ */
 export function BurnWarnings({ burns }: BurnWarningsProps) {
   const visibleBurns = burns.filter((b) => b.severity !== 'low');
   if (visibleBurns.length === 0) return null;

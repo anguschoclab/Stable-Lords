@@ -24,6 +24,9 @@ interface RecruitFiltersProps {
   canRefresh: boolean;
 }
 
+/**
+ *
+ */
 export function RecruitFilters({
   activeTiers,
   toggleTier,

@@ -2,6 +2,9 @@ import type { GameState } from '@/types/state.types';
 import { isFightReady } from '@/engine/warriorStatus';
 import type { SoftStopCondition } from './types';
 
+/**
+ *
+ */
 export function evaluateStopConditions(
   state: GameState,
   conditions: SoftStopCondition[]

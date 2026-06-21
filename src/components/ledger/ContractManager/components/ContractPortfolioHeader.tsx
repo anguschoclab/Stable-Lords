@@ -6,6 +6,9 @@ interface ContractPortfolioHeaderProps {
   expiringSoonCount: number;
 }
 
+/**
+ *
+ */
 export function ContractPortfolioHeader({
   activeCount,
   totalWeeklyExpense,

@@ -7,6 +7,9 @@ interface HeaderMetricDisplayProps {
   className?: string;
 }
 
+/**
+ *
+ */
 export function HeaderMetricDisplay({
   title,
   subtitle,

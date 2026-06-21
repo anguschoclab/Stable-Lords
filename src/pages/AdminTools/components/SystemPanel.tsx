@@ -10,6 +10,9 @@ interface SystemPanelProps {
   onReset: () => void;
 }
 
+/**
+ *
+ */
 export function SystemPanel({ onExport, onImport, onReset }: SystemPanelProps) {
   return (
     <div className="space-y-12">

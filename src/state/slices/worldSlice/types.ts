@@ -18,6 +18,9 @@ import type {
 import { FightSummary } from '@/types/combat.types';
 import type { WarriorId, StableId, PromoterId, BoutOfferId, FightId } from '@/types/shared.types';
 
+/**
+ *
+ */
 export interface ArenaPreferences {
   defaultViewMode: 'log' | 'arena';
   audioEnabled: boolean;
@@ -26,6 +29,9 @@ export interface ArenaPreferences {
   screenShakeIntensity: 'off' | 'low' | 'medium' | 'high';
 }
 
+/**
+ *
+ */
 export interface WorldSlice {
   year: number;
   week: number;

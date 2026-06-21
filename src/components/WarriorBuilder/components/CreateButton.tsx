@@ -8,6 +8,9 @@ interface CreateButtonProps {
   remaining: number;
 }
 
+/**
+ *
+ */
 export function CreateButton({ disabled, onClick, status, remaining }: CreateButtonProps) {
   return (
     <Button onClick={onClick} disabled={disabled} size="lg" className="w-full gap-2">

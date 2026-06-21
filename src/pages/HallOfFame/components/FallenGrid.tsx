@@ -14,6 +14,9 @@ interface FallenGridProps {
   emptyDesc: string;
 }
 
+/**
+ *
+ */
 export function FallenGrid({ warriors, season, emptyTitle, emptyDesc }: FallenGridProps) {
   if (warriors.length === 0) {
     return (

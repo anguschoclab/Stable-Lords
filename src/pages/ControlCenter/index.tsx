@@ -26,6 +26,9 @@ const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
   { id: 'rep', label: 'Reputation', icon: Crown },
 ];
 
+/**
+ *
+ */
 export default function ControlCenter() {
   const { activeTab, setActiveTab, player, week, season, arenaHistory, boutOffers } =
     useControlCenter();

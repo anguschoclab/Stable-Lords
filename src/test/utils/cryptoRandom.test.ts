@@ -4,7 +4,6 @@ import { cryptoRandom, cryptoRandomInt } from '@/utils/cryptoRandom';
 describe('cryptoRandom', () => {
   it('cryptoRandom falls back to Math.random when crypto is not available', () => {
     const originalCrypto = globalThis.crypto;
-    // @ts-ignore
     Object.defineProperty(globalThis, 'crypto', { value: undefined, configurable: true });
     const mathSpy = vi.spyOn(Math, 'random').mockReturnValue(0.5);
 

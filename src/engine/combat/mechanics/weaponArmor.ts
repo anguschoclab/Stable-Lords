@@ -42,6 +42,9 @@ const ARMOR_TYPE_MULT: Record<string, Partial<Record<DamageType, number>>> = {
   plate_armor: { slash: 0.8, bash: 0.8, pierce: 0.8 },
 };
 
+/**
+ *
+ */
 export function applyArmorTypeMod(damage: number, weaponId?: string, armorId?: string): number {
   if (!weaponId || !armorId) return damage;
   const dtype = WEAPON_DAMAGE_TYPE[weaponId];

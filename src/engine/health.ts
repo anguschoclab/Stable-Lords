@@ -50,8 +50,8 @@ export function computeHealthImpact(state: GameState, rngService?: IRNGService):
         : [],
   };
 } /**
- * Apply health updates.
- */
+   * Apply health updates.
+   */
 
 /**
  * Apply health updates.

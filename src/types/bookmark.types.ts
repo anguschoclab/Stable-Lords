@@ -2,6 +2,9 @@
  * Bookmark types — player-managed watchlist for any game entity.
  */
 
+/**
+ *
+ */
 export type BookmarkEntityType =
   | 'warrior'
   | 'rival'
@@ -11,6 +14,9 @@ export type BookmarkEntityType =
   | 'boutOffer'
   | 'scoutReport';
 
+/**
+ *
+ */
 export interface Bookmark {
   entityType: BookmarkEntityType;
   entityId: string;

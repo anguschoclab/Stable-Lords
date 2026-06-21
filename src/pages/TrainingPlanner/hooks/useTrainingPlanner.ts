@@ -5,6 +5,9 @@ import type { Attributes } from '@/types/shared.types';
 import type { SeasonalGrowth } from '@/types/state.types';
 import { computeTrainability } from '@/engine/training/burnAnalysis';
 
+/**
+ *
+ */
 export function useTrainingPlanner() {
   const { roster, trainers, seasonalGrowth, season } = useGameStore();
   const activeWarriors = filterActive(roster);

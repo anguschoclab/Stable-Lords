@@ -7,6 +7,9 @@ import { protectCovers, type HitLocation } from './hitLocation';
 const PROTECT_DAMAGE_REDUCTION = 0.75;
 const PROTECT_DAMAGE_PENALTY = 1.1;
 
+/**
+ *
+ */
 export function applyProtectMod(damage: number, location: HitLocation, protect?: string): number {
   const covered = protectCovers(protect);
   if (covered.includes(location)) {
@@ -27,6 +30,9 @@ const SHIELD_ZONE_MITIGATION: Record<'LOW' | 'MEDIUM' | 'HIGH', number> = {
   HIGH: 0.85,
 };
 
+/**
+ *
+ */
 export function applyShieldZoneMod(
   damage: number,
   location: HitLocation,

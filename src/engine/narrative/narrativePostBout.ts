@@ -34,9 +34,9 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
   RIVALRY_FINISH: 'rivalry_finish',
   FATAL_DAMAGE: 'fatal_damage',
 }; /**
- * Narrate bout end.
- * @param weaponId - Weapon id. (optional)
- */
+    * Narrate bout end.
+    * @param weaponId - Weapon id. (optional)
+    */
 
 /**
  * Narrate bout end.

@@ -5,6 +5,9 @@ import { ArenaHistory } from '@/engine/history/arenaHistory';
 import type { AnnualAward } from '@/types/game';
 import type { UpsetEntry } from '@/components/awards/UpsetsList';
 
+/**
+ *
+ */
 export function useHallOfFame() {
   const { roster, graveyard, retired, rivals, awards, year, player, season } = useGameStore();
   const allFights = useMemo(() => ArenaHistory.all(), []);

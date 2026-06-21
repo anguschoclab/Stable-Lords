@@ -33,6 +33,9 @@ interface LoadoutCardProps {
   disabled: boolean;
 }
 
+/**
+ *
+ */
 export function LoadoutCard({
   rec,
   index,

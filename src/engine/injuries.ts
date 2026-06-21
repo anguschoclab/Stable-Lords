@@ -315,6 +315,9 @@ export const OFFSEASON_INJURY_TEMPLATES = {
   },
 } as const;
 
+/**
+ *
+ */
 export type OffseasonInjuryKey = keyof typeof OFFSEASON_INJURY_TEMPLATES;
 
 /**

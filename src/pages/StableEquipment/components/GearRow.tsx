@@ -9,6 +9,9 @@ interface GearRowProps {
   high?: boolean;
 }
 
+/**
+ *
+ */
 export function GearRow({ icon: Icon, name, weight, error, blocked, high }: GearRowProps) {
   return (
     <div

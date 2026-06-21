@@ -16,16 +16,16 @@ import type {
   WeaponReqCheck,
   LoadoutIssue,
 } from './equipment.types'; /**
- * All_equipment.
- */
+                             * All_equipment.
+                             */
 
 // Combined all equipment for convenience
 /**
  * All_equipment.
  */
 export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS, ...HELMS]; /**
- * Get item by id.
- */
+                                                                                              * Get item by id.
+                                                                                              */
 
 /**
  * Get item by id.
@@ -33,8 +33,8 @@ export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS
 export function getItemById(id: string): EquipmentItem | undefined {
   return ALL_EQUIPMENT.find((item) => item.id === id);
 } /**
- * Get item by code.
- */
+   * Get item by code.
+   */
 
 /**
  * Get item by code.
@@ -42,8 +42,8 @@ export function getItemById(id: string): EquipmentItem | undefined {
 export function getItemByCode(code: string): EquipmentItem | undefined {
   return ALL_EQUIPMENT.find((item) => item.code === code);
 } /**
- * Get available items.
- */
+   * Get available items.
+   */
 
 /**
  * Get available items.
@@ -53,8 +53,8 @@ export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): Eq
     slot === 'weapon' ? WEAPONS : slot === 'armor' ? ARMORS : slot === 'shield' ? SHIELDS : HELMS;
   return pool.filter((item) => !item.restrictedStyles?.includes(style));
 } /**
- * Is preferred weapon.
- */
+   * Is preferred weapon.
+   */
 
 /**
  * Is preferred weapon.
@@ -62,8 +62,8 @@ export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): Eq
 export function isPreferredWeapon(item: EquipmentItem, style: FightingStyle): boolean {
   return item.preferredStyles?.includes(style) ?? false;
 } /**
- * Default_loadout.
- */
+   * Default_loadout.
+   */
 
 /**
  * Default_loadout.
@@ -94,8 +94,8 @@ export function getStyleDefaultLoadout(style: FightingStyle): EquipmentLoadout {
     helm: 'leather_cap',
   };
 } /**
- * Get loadout weight.
- */
+   * Get loadout weight.
+   */
 
 /**
  * Get loadout weight.
@@ -185,8 +185,8 @@ export function checkWeaponRequirements(
     endurancePenalty: 1 + totalDeficit * 0.1,
   };
 } /**
- * Is over encumbered.
- */
+   * Is over encumbered.
+   */
 
 /**
  * Is over encumbered.

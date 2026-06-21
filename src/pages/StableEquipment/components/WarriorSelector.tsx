@@ -8,6 +8,9 @@ interface WarriorSelectorProps {
   onSelect: (id: string) => void;
 }
 
+/**
+ *
+ */
 export function WarriorSelector({ warriors, selectedId, onSelect }: WarriorSelectorProps) {
   if (warriors.length === 0) {
     return (

@@ -12,6 +12,9 @@ const STANCE_ANIMATION_CLASSES: Record<FighterPose['stance'], string> = {
   defeated: 'animate-defeated',
 };
 
+/**
+ *
+ */
 export function getStanceAnimationClass(stance: FighterPose['stance']): string {
   return STANCE_ANIMATION_CLASSES[stance] ?? '';
 }
@@ -23,6 +26,9 @@ interface UseFighterStylesParams {
   className?: string;
 }
 
+/**
+ *
+ */
 export function useFighterStyles({ pose, isDead, isActive, className }: UseFighterStylesParams) {
   const containerClassName = cn('absolute transition-all duration-300', className);
 

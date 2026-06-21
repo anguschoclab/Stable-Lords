@@ -10,6 +10,9 @@ interface WorldPanelProps {
   onSkipFTUE: () => void;
 }
 
+/**
+ *
+ */
 export function WorldPanel({ onSkipWeek, onSkipSeason, onSkipFTUE }: WorldPanelProps) {
   return (
     <div className="space-y-12">

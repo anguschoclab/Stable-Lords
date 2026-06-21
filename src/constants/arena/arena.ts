@@ -166,6 +166,9 @@ export const ARENA_EVENT_CONSTANTS = {
 // ─── Helper Functions ──────────────────────────────────────────────────────
 import type { FightingStyle, WeatherType } from '@/types/shared.types';
 
+/**
+ *
+ */
 export function getStyleWeatherModifier(
   style: FightingStyle,
   weather: WeatherType,

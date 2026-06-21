@@ -99,6 +99,9 @@ function BookmarkedEntityRow({
   );
 }
 
+/**
+ *
+ */
 export default function Bookmarks() {
   const navigate = useNavigate();
 

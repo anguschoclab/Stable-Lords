@@ -11,6 +11,9 @@ interface SummaryCardProps {
   sublabel: string;
 }
 
+/**
+ *
+ */
 export function SummaryCard({
   icon: Icon,
   iconClass,

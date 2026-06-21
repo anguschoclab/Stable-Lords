@@ -6,6 +6,9 @@ interface FighterBarsProps {
   isWinner?: boolean;
 }
 
+/**
+ *
+ */
 export function FighterBars({ hpPercent, fpPercent, isWinner }: FighterBarsProps) {
   return (
     <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-24">

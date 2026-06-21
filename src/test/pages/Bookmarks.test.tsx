@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import Bookmarks from '@/pages/Bookmarks';
 import '@/test/_setup/setup';
 
-let mockNavigate = vi.fn();
+const mockNavigate = vi.fn();
 let mockStoreState: any = {
   bookmarks: [],
   roster: [],

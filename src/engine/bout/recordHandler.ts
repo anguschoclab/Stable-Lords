@@ -13,9 +13,9 @@ function isTournamentParticipant(state: GameState, warriorId: string): boolean {
     (t) => !t.completed && t.participants?.some((p) => p.id === warriorId)
   );
 } /**
- * Apply records.
- * @param rivalStableId - Rival stable id. (optional)
- */
+   * Apply records.
+   * @param rivalStableId - Rival stable id. (optional)
+   */
 
 /**
  * Apply records.

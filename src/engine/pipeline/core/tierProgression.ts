@@ -47,9 +47,9 @@ const tierRules: Record<NonNullable<RivalStableData['tier']>, TierRule[]> = {
   ],
   Legendary: [],
 }; /**
- * Process tier progression.
- * @param rng - Rng. (optional)
- */
+    * Process tier progression.
+    * @param rng - Rng. (optional)
+    */
 
 /**
  * Process tier progression.

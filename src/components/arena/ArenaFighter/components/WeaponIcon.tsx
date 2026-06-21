@@ -7,6 +7,9 @@ interface WeaponIconProps {
   y: number;
 }
 
+/**
+ *
+ */
 export function WeaponIcon({ category, pose, x, y }: WeaponIconProps) {
   const rotation =
     {

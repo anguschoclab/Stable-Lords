@@ -19,6 +19,9 @@ const variantStyles: Record<StatCardVariant, { label: string; value: string }> =
   accent: { label: 'text-muted-foreground/50', value: 'text-accent' },
 };
 
+/**
+ *
+ */
 export function StatCard({
   label,
   value,

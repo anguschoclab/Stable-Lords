@@ -5,8 +5,14 @@ import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { computeStableReputation } from '@/engine/stableReputation';
 
+/**
+ *
+ */
 export type TabId = 'overview' | 'roster' | 'rep';
 
+/**
+ *
+ */
 export function useControlCenter() {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
 

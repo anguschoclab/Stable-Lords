@@ -5,8 +5,8 @@
  */
 
 import type { ChargeType } from '@/types/crest.types'; /**
- * Defines the shape of charge path.
- */
+                                                        * Defines the shape of charge path.
+                                                        */
 
 /**
  * Defines the shape of charge path.
@@ -16,8 +16,8 @@ export interface ChargePath {
   viewBox: string;
   name: string;
 } /**
- * Beast_paths.
- */
+   * Beast_paths.
+   */
 
 // BEAST CHARGES
 /**
@@ -97,8 +97,8 @@ export const BEAST_PATHS: Record<string, ChargePath> = {
     name: 'Dragon',
   },
 }; /**
- * Weapon_paths.
- */
+    * Weapon_paths.
+    */
 
 // WEAPON CHARGES
 /**
@@ -171,8 +171,8 @@ export const WEAPON_PATHS: Record<string, ChargePath> = {
     name: 'Scourge',
   },
 }; /**
- * Symbol_paths.
- */
+    * Symbol_paths.
+    */
 
 // SYMBOL CHARGES
 /**
@@ -250,8 +250,8 @@ export const SYMBOL_PATHS: Record<string, ChargePath> = {
     name: 'Tower',
   },
 }; /**
- * Nature_paths.
- */
+    * Nature_paths.
+    */
 
 // NATURE CHARGES
 /**
@@ -329,8 +329,8 @@ export const NATURE_PATHS: Record<string, ChargePath> = {
     name: 'Mushroom',
   },
 }; /**
- * Celestial_paths.
- */
+    * Celestial_paths.
+    */
 
 // CELESTIAL CHARGES
 /**
@@ -378,8 +378,8 @@ export const CELESTIAL_PATHS: Record<string, ChargePath> = {
     name: 'Constellation',
   },
 }; /**
- * Mythical_paths.
- */
+    * Mythical_paths.
+    */
 
 // MYTHICAL CHARGES
 /**
@@ -447,8 +447,8 @@ export const MYTHICAL_PATHS: Record<string, ChargePath> = {
     name: 'Pegasus',
   },
 }; /**
- * Get charge paths by type.
- */
+    * Get charge paths by type.
+    */
 
 // Helper to get all charge paths by type
 /**
@@ -472,8 +472,8 @@ export function getChargePathsByType(type: ChargeType): Record<string, ChargePat
       return BEAST_PATHS;
   }
 } /**
- * Get random charge.
- */
+   * Get random charge.
+   */
 
 // Helper to get a random charge from a type
 /**

@@ -20,6 +20,9 @@ interface IdentitySectionProps {
   setStyle: (s: FightingStyle) => void;
 }
 
+/**
+ *
+ */
 export function IdentitySection({ name, setName, style, setStyle }: IdentitySectionProps) {
   return (
     <Card>

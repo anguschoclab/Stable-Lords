@@ -24,6 +24,9 @@ export type StableReputationInput = Pick<
   | 'trainers'
 >;
 
+/**
+ *
+ */
 export interface StableReputation {
   fame: number; // 0-100: public acclaim
   notoriety: number; // 0-100: feared reputation

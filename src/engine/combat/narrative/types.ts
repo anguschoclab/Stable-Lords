@@ -1,5 +1,8 @@
 import { type FightingStyle } from '@/types/shared.types';
 
+/**
+ *
+ */
 export interface NarrationContext {
   rng: () => number;
   nameA: string;

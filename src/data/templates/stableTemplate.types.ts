@@ -4,8 +4,8 @@
 
 import { FightingStyle, OwnerPersonality, MetaAdaptation } from '@/types/game';
 import type { BackstoryId } from '@/data/backstories'; /**
- * Defines the shape of stable template.
- */
+                                                        * Defines the shape of stable template.
+                                                        */
 
 /**
  * Defines the shape of stable template.
@@ -37,15 +37,15 @@ export interface StableTemplate {
   /** Who the owner was before founding the stable. Orthogonal to stable archetype. */
   backstoryId: BackstoryId;
 } /**
- * Stable tier type.
- */
+   * Stable tier type.
+   */
 
 /**
  * Stable tier type.
  */
 export type StableTier = 'Minor' | 'Established' | 'Major' | 'Legendary'; /**
- * Stable philosophy type.
- */
+                                                                           * Stable philosophy type.
+                                                                           */
 
 /**
  * Stable philosophy type.

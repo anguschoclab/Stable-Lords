@@ -10,6 +10,9 @@ import { pushNewsletterItem } from '@/engine/narrative/newsletterHelpers';
 import { getActiveWarriors } from './helpers';
 import type { OffseasonEventNarrative, OffseasonEventContext } from './types';
 
+/**
+ *
+ */
 export function handleFameBoost(
   state: GameState,
   nextWeek: number,
@@ -31,6 +34,9 @@ export function handleFameBoost(
   }
 }
 
+/**
+ *
+ */
 export function handleWinterChill(
   _state: GameState,
   nextWeek: number,
@@ -46,6 +52,9 @@ export function handleWinterChill(
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: cost });
 }
 
+/**
+ *
+ */
 export function handleMerchantBlessing(
   _state: GameState,
   nextWeek: number,
@@ -59,6 +68,9 @@ export function handleMerchantBlessing(
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold });
 }
 
+/**
+ *
+ */
 export function handleEpiphany(
   state: GameState,
   nextWeek: number,
@@ -93,6 +105,9 @@ export function handleEpiphany(
   }
 }
 
+/**
+ *
+ */
 export function handleTavernBrawl(
   state: GameState,
   nextWeek: number,
@@ -120,6 +135,9 @@ export function handleTavernBrawl(
   }
 }
 
+/**
+ *
+ */
 export function handleBardsSong(
   state: GameState,
   nextWeek: number,
@@ -142,6 +160,9 @@ export function handleBardsSong(
   }
 }
 
+/**
+ *
+ */
 export function handlePlagueOutbreak(
   state: GameState,
   nextWeek: number,
@@ -169,6 +190,9 @@ export function handlePlagueOutbreak(
   }
 }
 
+/**
+ *
+ */
 export function handleBlackMarketRaid(
   state: GameState,
   nextWeek: number,
@@ -188,6 +212,9 @@ export function handleBlackMarketRaid(
   });
 }
 
+/**
+ *
+ */
 export function handleGrandFeast(
   state: GameState,
   nextWeek: number,
@@ -211,6 +238,9 @@ export function handleGrandFeast(
   pushNewsletterItem(ctx.newsletterItems, rng, nextWeek, e.title, e.newsletter, { gold: goldCost });
 }
 
+/**
+ *
+ */
 export function handleWanderingHealer(
   state: GameState,
   nextWeek: number,
@@ -253,6 +283,9 @@ export function handleWanderingHealer(
   }
 }
 
+/**
+ *
+ */
 export function handleMysticVision(
   state: GameState,
   nextWeek: number,
@@ -278,6 +311,9 @@ export function handleMysticVision(
   }
 }
 
+/**
+ *
+ */
 export function handleWildAnimalAttack(
   state: GameState,
   nextWeek: number,
@@ -305,6 +341,9 @@ export function handleWildAnimalAttack(
   }
 }
 
+/**
+ *
+ */
 export function handleStrangeDream(
   state: GameState,
   nextWeek: number,
@@ -330,6 +369,9 @@ export function handleStrangeDream(
   }
 }
 
+/**
+ *
+ */
 export function handleLoyalStray(
   state: GameState,
   nextWeek: number,
@@ -360,6 +402,9 @@ export function handleLoyalStray(
   }
 }
 
+/**
+ *
+ */
 export function handleStreetPerformance(
   state: GameState,
   nextWeek: number,
@@ -398,6 +443,9 @@ export function handleStreetPerformance(
   }
 }
 
+/**
+ *
+ */
 export function handleChaoticSpells(
   state: GameState,
   nextWeek: number,
@@ -443,6 +491,9 @@ export function handleChaoticSpells(
   }
 }
 
+/**
+ *
+ */
 export function handleMysteriousPatron(
   _state: GameState,
   nextWeek: number,
@@ -462,6 +513,9 @@ export function handleMysteriousPatron(
   });
 }
 
+/**
+ *
+ */
 export function handleMidnightFeast(
   state: GameState,
   nextWeek: number,
@@ -501,6 +555,9 @@ export function handleMidnightFeast(
   }
 }
 
+/**
+ *
+ */
 export function handleShadowTraining(
   state: GameState,
   nextWeek: number,
@@ -529,6 +586,9 @@ export function handleShadowTraining(
   }
 }
 
+/**
+ *
+ */
 export function handleGladiatorOlympics(
   state: GameState,
   nextWeek: number,
@@ -557,6 +617,9 @@ export function handleGladiatorOlympics(
   }
 }
 
+/**
+ *
+ */
 export function handleGoblinRaid(
   state: GameState,
   nextWeek: number,
@@ -588,6 +651,9 @@ export function handleGoblinRaid(
   }
 }
 
+/**
+ *
+ */
 export function handleUndergroundPitFight(
   state: GameState,
   nextWeek: number,
@@ -616,6 +682,9 @@ export function handleUndergroundPitFight(
   }
 }
 
+/**
+ *
+ */
 export function handleDreamweaverVisit(
   state: GameState,
   nextWeek: number,
@@ -651,6 +720,9 @@ export function handleDreamweaverVisit(
   }
 }
 
+/**
+ *
+ */
 export function handleTavernBrawlSurprise(
   state: GameState,
   nextWeek: number,
@@ -679,6 +751,9 @@ export function handleTavernBrawlSurprise(
   }
 }
 
+/**
+ *
+ */
 export function handleAbyssalBargain(
   state: GameState,
   nextWeek: number,
@@ -725,6 +800,9 @@ export function handleAbyssalBargain(
   }
 }
 
+/**
+ *
+ */
 export function handleRogueAlchemist(
   state: GameState,
   nextWeek: number,
@@ -768,6 +846,9 @@ export function handleRogueAlchemist(
   }
 }
 
+/**
+ *
+ */
 export function handleMeteorShower(
   state: GameState,
   nextWeek: number,

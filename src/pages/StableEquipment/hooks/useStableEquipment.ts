@@ -5,6 +5,9 @@ import { filterActive } from '@/utils/roster';
 import { generateRecommendations, getStyleEquipmentTips } from '@/engine/equipmentOptimizer';
 import { toast } from 'sonner';
 
+/**
+ *
+ */
 export function useStableEquipment() {
   const { roster, updateWarriorEquipment } = useGameStore();
   const activeWarriors = filterActive(roster);

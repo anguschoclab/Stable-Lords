@@ -12,6 +12,9 @@ import { WorldPanel } from './components/WorldPanel';
 import { EconomyPanel } from './components/EconomyPanel';
 import { TelemetryPanel } from './components/TelemetryPanel';
 
+/**
+ *
+ */
 export default function AdminTools() {
   const {
     activeCategory,

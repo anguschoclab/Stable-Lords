@@ -16,6 +16,9 @@ import {
 } from './constants';
 import type { TrainingResult } from './types';
 
+/**
+ *
+ */
 export function computeGainChance(
   warrior: Warrior,
   attribute: keyof Attributes,
@@ -34,6 +37,9 @@ export function computeGainChance(
   return Math.max(GAIN_CHANCE_MIN, Math.min(GAIN_CHANCE_MAX, raw));
 }
 
+/**
+ *
+ */
 export function processAttributeTraining(
   warrior: Warrior,
   attr: keyof Attributes,

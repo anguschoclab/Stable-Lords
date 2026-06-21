@@ -21,7 +21,13 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Archetype } from '@/data/names/archetypeNames';
 import type { FightingStyle } from '@/types/shared.types';
 
+/**
+ *
+ */
 export type TraitTier = 'Common' | 'Notable' | 'Exceptional' | 'Signature' | 'Flaw';
+/**
+ *
+ */
 export type TraitSign = 'positive' | 'negative';
 import {
   TRAIT_SYNERGY_MULTIPLIER,
@@ -29,8 +35,8 @@ import {
   BIRTH_BLANK_CHANCE,
   BIRTH_FLAW_CHANCE,
 } from '@/constants/combat/combat'; /**
- * Defines the shape of trait effect.
- */
+                                     * Defines the shape of trait effect.
+                                     */
 
 /**
  * Defines the shape of trait effect.
@@ -64,8 +70,8 @@ export interface TraitEffect {
   fightPlanMod?: Partial<import('@/types/shared.types').FightPlan>;
   attrBonus?: Partial<import('@/types/shared.types').Attributes>;
 } /**
- * Defines the shape of trait def.
- */
+   * Defines the shape of trait def.
+   */
 
 /**
  * Defines the shape of trait def.
@@ -89,8 +95,8 @@ export interface TraitDef {
    *  can roll/train it, and it only appears in matching trainers' pools. */
   styles?: FightingStyle[];
 } /**
- * Traits.
- */
+   * Traits.
+   */
 
 /**
  * Traits.
@@ -486,6 +492,9 @@ export function traitsByTier(tier: TraitTier): TraitDef[] {
   return Object.values(TRAITS).filter((t) => t.tier === tier);
 }
 
+/**
+ *
+ */
 export type TraitId = keyof typeof TRAITS;
 const TRAIT_IDS = Object.keys(TRAITS) as TraitId[];
 
@@ -580,8 +589,8 @@ export function getStaticTraitMods(warrior?: Warrior): {
   }
   return acc;
 } /**
- * Defines the shape of dynamic trait context.
- */
+   * Defines the shape of dynamic trait context.
+   */
 
 /**
  * Defines the shape of dynamic trait context.

@@ -7,6 +7,9 @@ import { getAllArenas } from '@/data/arenas';
 import type { ArenaConfig, ArenaTag } from '@/types/shared.types';
 import { ARENA_SELECTION, ARENA_TAG_WEIGHTS, TOURNAMENT_ARENA_DEFAULTS } from '@/constants/arena';
 
+/**
+ *
+ */
 export interface TournamentArenaFilter {
   minTier?: 1 | 2 | 3;
   maxTier?: 1 | 2 | 3;

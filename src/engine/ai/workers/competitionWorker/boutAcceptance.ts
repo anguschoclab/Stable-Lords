@@ -1,6 +1,9 @@
 import type { Warrior, RivalStableData, WeatherType, BoutOffer } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 
+/**
+ *
+ */
 export function verifyBoutAcceptance(
   rival: RivalStableData,
   warrior: Warrior,
@@ -80,6 +83,9 @@ export function verifyBoutAcceptance(
 const BLOCKING_INJURY_SEVERITIES = ['Moderate', 'Severe', 'Critical', 'Permanent'] as const;
 type BlockingSeverity = (typeof BLOCKING_INJURY_SEVERITIES)[number];
 
+/**
+ *
+ */
 export function evaluateBoutOffer(
   offer: BoutOffer,
   rival: RivalStableData,

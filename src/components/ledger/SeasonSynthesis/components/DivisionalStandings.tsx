@@ -6,6 +6,9 @@ interface DivisionalStandingsProps {
   rivals: RivalPerformance[];
 }
 
+/**
+ *
+ */
 export function DivisionalStandings({ rivals }: DivisionalStandingsProps) {
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">

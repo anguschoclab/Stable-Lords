@@ -6,6 +6,9 @@ interface TrainerTierBadgeProps {
   tier: Trainer['tier'];
 }
 
+/**
+ *
+ */
 export function TrainerTierBadge({ tier }: TrainerTierBadgeProps) {
   return (
     <Badge

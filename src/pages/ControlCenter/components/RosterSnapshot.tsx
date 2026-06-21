@@ -10,6 +10,9 @@ import { isExhausted, isFatigued } from '@/engine/core/fatigueUtils';
 import { filterActive } from '@/utils/roster';
 import { Swords, ChevronRight } from 'lucide-react';
 
+/**
+ *
+ */
 export function RosterSnapshot() {
   const { roster } = useGameStore(useShallow((s) => ({ roster: s.roster })));
   const active = useMemo(() => filterActive(roster), [roster]);

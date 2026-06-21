@@ -3,6 +3,9 @@ import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { StateImpact } from '@/engine/impacts';
 import * as boutAcceptance from './boutAcceptance';
 
+/**
+ *
+ */
 export function processAllRivalsBoutOffers(
   state: GameState,
   rivals: RivalStableData[]

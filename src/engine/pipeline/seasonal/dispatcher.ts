@@ -75,6 +75,9 @@ const EVENT_HANDLERS: Record<
   goblin_raid: handleGoblinRaid,
 };
 
+/**
+ *
+ */
 export function runSeasonalPass(
   state: GameState,
   nextWeek: number,

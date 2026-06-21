@@ -21,9 +21,9 @@ const FATIGUE_HEAVY_THRESHOLD = 0.25;
 // Fatigue penalties (reduced to avoid disproportionately punishing aggressive styles)
 const FATIGUE_MODERATE_PENALTY = -4;
 const FATIGUE_HEAVY_PENALTY = -8; /**
- * Endurance cost.
- * @param weather - Weather. (optional)
- */
+                                   * Endurance cost.
+                                   * @param weather - Weather. (optional)
+                                   */
 
 /**
  * Endurance cost.

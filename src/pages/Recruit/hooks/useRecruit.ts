@@ -21,6 +21,9 @@ import { toast } from 'sonner';
 
 const CUSTOM_COST = 200;
 
+/**
+ *
+ */
 export function useRecruit() {
   const store = useGameStore();
   const { roster, treasury, rosterBonus, recruitPool, setState, deductFunds } = store;

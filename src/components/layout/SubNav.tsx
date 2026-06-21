@@ -3,8 +3,8 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'; /**
- * Defines the shape of sub nav tab.
- */
+                                                                                    * Defines the shape of sub nav tab.
+                                                                                    */
 
 /**
  * Defines the shape of sub nav tab.
@@ -20,9 +20,9 @@ interface SubNavProps {
   activeTab: string;
   onTabChange: (tabId: string) => void;
 } /**
- * Sub nav.
- * @param - { tabs, active tab, on tab change }.
- */
+   * Sub nav.
+   * @param - { tabs, active tab, on tab change }.
+   */
 
 /**
  * Sub nav.

@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export function Mantling({ color }: { color: string }): React.ReactNode {
   return (
     <g>

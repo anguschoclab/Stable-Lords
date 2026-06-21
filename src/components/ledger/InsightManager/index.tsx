@@ -8,6 +8,9 @@ import { WarriorTargetCard } from './components/WarriorTargetCard';
 import { TargetSummary } from './components/TargetSummary';
 import { RevealModal } from './components/RevealModal';
 
+/**
+ *
+ */
 export function InsightManager() {
   const { insightTokens, roster, consumeInsightToken } = useGameStore(
     useShallow((s) => ({

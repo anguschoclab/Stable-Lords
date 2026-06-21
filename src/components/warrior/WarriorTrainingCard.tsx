@@ -39,8 +39,8 @@ import {
   canAcquireTrait,
   TRAIT_CAP,
 } from '@/engine/training/trainingGains/traitTraining'; /**
-                                   * Warrior training card.
-                                   * @param  - {
+                                                         * Warrior training card.
+                                                         * @param  - {
   warrior,
   assignment,
   seasonal gains,
@@ -49,7 +49,7 @@ import {
   on assign recovery,
   on clear,
 }.
-                                   */
+                                                         */
 
 /**
  * Warrior training card.

@@ -9,6 +9,9 @@ import { useTrainingPlanner } from './hooks/useTrainingPlanner';
 import { WarriorSelector } from './components/WarriorSelector';
 import { WarriorPlannerCard } from './components/WarriorPlannerCard';
 
+/**
+ *
+ */
 export default function TrainingPlanner() {
   const {
     activeWarriors,

@@ -11,9 +11,9 @@ interface StepProgressProps {
   step: number;
   total: number;
 } /**
- * Step progress.
- * @param - { step, total }.
- */
+   * Step progress.
+   * @param - { step, total }.
+   */
 
 /**
  * Step progress.

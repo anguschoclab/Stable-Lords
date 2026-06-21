@@ -5,6 +5,9 @@ import { scoreMatchup } from '@/engine/schedulingAssistant';
 import { filterActive } from '@/utils/roster';
 import type { BoutBid } from './types';
 
+/**
+ *
+ */
 export function generateBoutBids(
   rival: RivalStableData,
   currentWeek: number,

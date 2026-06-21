@@ -5,6 +5,9 @@
 
 import type { ArenaTag } from '@/types/shared.types';
 
+/**
+ *
+ */
 export interface ArenaEventConfig {
   id: string;
   name: string;
@@ -130,12 +133,18 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
 
 // ─── Helper Functions ──────────────────────────────────────────────────────
 
+/**
+ *
+ */
 export function getEventsForArena(tags: ArenaTag[]): ArenaEventConfig[] {
   return Object.values(ARENA_EVENTS).filter((event) =>
     event.requiredTags.every((tag) => tags.includes(tag))
   );
 }
 
+/**
+ *
+ */
 export function shouldTriggerEvent(
   event: ArenaEventConfig,
   exchange: number,

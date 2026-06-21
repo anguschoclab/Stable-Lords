@@ -5,6 +5,9 @@ interface FighterBodyPartProps {
   part: 'head' | 'torso' | 'abdomen' | 'leftArm' | 'rightArm' | 'leftLeg' | 'rightLeg';
 }
 
+/**
+ *
+ */
 export function FighterBodyPart({ isDead, part }: FighterBodyPartProps) {
   const deadFill = {
     head: 'fill-gray-400/80',

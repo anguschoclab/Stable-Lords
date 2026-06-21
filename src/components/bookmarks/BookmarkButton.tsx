@@ -22,6 +22,9 @@ interface BookmarkButtonProps {
   label?: string;
 }
 
+/**
+ *
+ */
 export function BookmarkButton({
   entityType,
   entityId,

@@ -5,6 +5,9 @@ import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Trophy, Star } from 'lucide-react';
 
+/**
+ *
+ */
 export function RankingsBar() {
   const { roster, fame, rivals, realmRankings } = useGameStore(
     useShallow((s) => ({

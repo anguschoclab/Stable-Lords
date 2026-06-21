@@ -6,6 +6,9 @@ import type { WorldSlice } from './slices/worldSlice';
 import type { TournamentSlice } from './slices/tournamentSlice';
 import type { BookmarksSlice } from './slices/bookmarksSlice';
 
+/**
+ *
+ */
 export interface GameStoreState {
   atTitleScreen: boolean;
   lastSavedAt: string | null;
@@ -16,6 +19,9 @@ export interface GameStoreState {
   eventLogOpen: boolean;
 }
 
+/**
+ *
+ */
 export interface GameStoreActions {
   setSimulating: (simulating: boolean) => void;
   toggleEventLog: () => void;
@@ -40,6 +46,9 @@ export interface GameStoreActions {
   setState: (fn: (state: GameStore) => void) => void;
 }
 
+/**
+ *
+ */
 export type GameStore = GameStoreState &
   GameStoreActions &
   EconomySlice &

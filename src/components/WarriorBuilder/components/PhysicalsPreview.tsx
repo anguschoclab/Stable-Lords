@@ -7,6 +7,9 @@ interface PhysicalsPreviewProps {
   encumbrance: number;
 }
 
+/**
+ *
+ */
 export function PhysicalsPreview({ hp, endurance, damage, encumbrance }: PhysicalsPreviewProps) {
   return (
     <Card>

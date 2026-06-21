@@ -5,6 +5,9 @@ interface SeasonDeclarationsProps {
   seasonGazette: string[];
 }
 
+/**
+ *
+ */
 export function SeasonDeclarations({ seasonGazette }: SeasonDeclarationsProps) {
   if (seasonGazette.length === 0) return null;
 

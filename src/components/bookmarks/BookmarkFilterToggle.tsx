@@ -7,6 +7,9 @@ interface BookmarkFilterToggleProps {
   count?: number;
 }
 
+/**
+ *
+ */
 export function BookmarkFilterToggle({ active, onToggle, count }: BookmarkFilterToggleProps) {
   return (
     <button

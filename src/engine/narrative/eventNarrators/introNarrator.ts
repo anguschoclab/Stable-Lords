@@ -4,6 +4,9 @@ import { NarrativeTemplateEngine } from '../narrativeTemplateEngine';
 import { szToHeight, getWeaponDisplayName } from '../narrativeUtils';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
+/**
+ *
+ */
 export interface WarriorIntroData {
   name: string;
   style: FightingStyle;
@@ -13,6 +16,9 @@ export interface WarriorIntroData {
   height?: number;
 }
 
+/**
+ *
+ */
 export function generateWarriorIntro(
   rng: IRNGService,
   data: WarriorIntroData,

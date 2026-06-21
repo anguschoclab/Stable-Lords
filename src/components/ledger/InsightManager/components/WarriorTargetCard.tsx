@@ -10,6 +10,9 @@ interface WarriorTargetCardProps {
   onSelect: () => void;
 }
 
+/**
+ *
+ */
 export function WarriorTargetCard({
   warrior,
   isSelected,

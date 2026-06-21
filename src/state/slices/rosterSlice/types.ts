@@ -10,6 +10,9 @@ import {
 } from '@/types/state.types';
 import { type WarriorId, type InsightId } from '@/types/shared.types';
 
+/**
+ *
+ */
 export interface RosterSlice {
   roster: Warrior[];
   graveyard: Warrior[];

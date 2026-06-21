@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export function assertSafeFileNamePart(value: string, label: string): void {
   if (!/^[a-zA-Z0-9_.-]+$/.test(value) || value.includes('..')) {
     throw new TypeError(

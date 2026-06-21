@@ -5,18 +5,39 @@ import { reconstructGameState } from './serialization';
 /** --- Fine-Grained Selectors --- */
 export const useWorldState = () => useGameStore(reconstructGameState);
 
+/**
+ *
+ */
 export const usePlayer = () => useGameStore((s) => s.player);
 
+/**
+ *
+ */
 export const useRoster = () => useGameStore((s) => s.roster);
 
+/**
+ *
+ */
 export const useRivals = () => useGameStore((s) => s.rivals);
 
+/**
+ *
+ */
 export const useTreasury = () => useGameStore((s) => s.treasury);
 
+/**
+ *
+ */
 export const useWeek = () => useGameStore((s) => s.week);
 
+/**
+ *
+ */
 export const useIsSimulating = () => useGameStore((s) => s.isSimulating);
 
+/**
+ *
+ */
 export const useReputationState = () =>
   useGameStore(
     useShallow((s) => ({
@@ -39,6 +60,9 @@ interface StyleStatsRow {
   winRate: number;
 }
 
+/**
+ *
+ */
 export const useStyleStats = (): StyleStatsRow[] =>
   useGameStore(
     useShallow((s) => {

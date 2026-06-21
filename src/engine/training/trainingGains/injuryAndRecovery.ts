@@ -10,6 +10,9 @@ import {
 } from './constants';
 import type { TrainingResult } from './types';
 
+/**
+ *
+ */
 export function rollForTrainingInjury(
   warrior: Warrior,
   healingBonus: number,
@@ -58,6 +61,9 @@ export function rollForTrainingInjury(
   return { injury: null, result: null };
 }
 
+/**
+ *
+ */
 export function processRecovery(
   warrior: Warrior,
   healingBonus: number

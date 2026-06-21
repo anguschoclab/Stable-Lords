@@ -7,6 +7,9 @@ import { createPromoterActions } from './promoterActions';
 import { createCombatActions } from './combatActions';
 import { createPlayerActions } from './playerActions';
 
+/**
+ *
+ */
 export const createWorldSlice: StateCreator<GameStore, [], [], WorldSlice> = (set, _get) => ({
   ...defaultWorldState,
   ...createBoutActions(set),

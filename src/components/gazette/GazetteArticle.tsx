@@ -25,9 +25,9 @@ interface GazetteArticleProps {
   issue: GazetteIssue;
   season: string;
 } /**
- * Gazette article.
- * @param - { issue, season }.
- */
+   * Gazette article.
+   * @param - { issue, season }.
+   */
 
 /**
  * Gazette article.

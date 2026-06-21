@@ -2,6 +2,9 @@ import { StateCreator } from 'zustand';
 import type { Bookmark, BookmarkEntityType } from '@/types/bookmark.types';
 import type { GameStore } from '@/state/useGameStore';
 
+/**
+ *
+ */
 export interface BookmarksSlice {
   bookmarks: Bookmark[];
   toggleBookmark: (type: BookmarkEntityType, id: string) => void;
@@ -15,6 +18,9 @@ export interface BookmarksSlice {
   getBookmarksByType: (type: BookmarkEntityType) => Bookmark[];
 }
 
+/**
+ *
+ */
 export const createBookmarksSlice: StateCreator<GameStore, [], [], BookmarksSlice> = (
   set,
   get

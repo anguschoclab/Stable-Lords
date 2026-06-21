@@ -17,6 +17,9 @@ interface UseWarriorBuilderStateDeps {
   currentRosterSize: number;
 }
 
+/**
+ *
+ */
 export function useWarriorBuilderState({
   onCreateWarrior,
   maxRoster,

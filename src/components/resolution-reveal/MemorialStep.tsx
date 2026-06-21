@@ -7,9 +7,9 @@ import narrativeContent from '@/data/narrativeContent.json';
 interface MemorialStepProps {
   deadWarriors: (Warrior | undefined)[];
 } /**
- * Memorial step.
- * @param - { dead warriors }.
- */
+   * Memorial step.
+   * @param - { dead warriors }.
+   */
 
 /**
  * Memorial step.

@@ -3,12 +3,18 @@ import type { InsightId, WarriorId } from '@/types/shared.types';
 import type { InsightToken } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 
+/**
+ *
+ */
 export interface UseInsightManagerDeps {
   consumeInsightToken: (tokenId: InsightId, warriorId: WarriorId) => void;
   insightTokens: InsightToken[];
   roster: Warrior[];
 }
 
+/**
+ *
+ */
 export function useInsightManager({
   consumeInsightToken,
   insightTokens,

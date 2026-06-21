@@ -11,6 +11,9 @@ import {
 } from './constants';
 import type { TrainingResult } from './types';
 
+/**
+ *
+ */
 export function computeSkillDrillChance(
   warrior: Warrior,
   skill: keyof BaseSkills,
@@ -36,6 +39,9 @@ export function computeSkillDrillChance(
   return Math.max(SKILL_DRILL_GAIN_MIN, Math.min(SKILL_DRILL_GAIN_MAX, raw));
 }
 
+/**
+ *
+ */
 export function processSkillDrillTraining(
   warrior: Warrior,
   skill: keyof BaseSkills,

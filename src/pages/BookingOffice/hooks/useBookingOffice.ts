@@ -8,6 +8,9 @@ import type { Warrior } from '@/types/state.types';
 import type { InjuryData } from '@/types/warrior.types';
 import { Heart, Clock, AlertTriangle } from 'lucide-react';
 
+/**
+ *
+ */
 export function getFatigueStatus(fatigue: number): {
   label: string;
   color: string;
@@ -32,6 +35,9 @@ export function getFatigueStatus(fatigue: number): {
   };
 }
 
+/**
+ *
+ */
 export function getInjuryBadge(
   injuries: InjuryData[]
 ): { label: string; color: string; count: number } | null {
@@ -60,10 +66,16 @@ export function getInjuryBadge(
   };
 }
 
+/**
+ *
+ */
 export interface RivalWarriorMap {
   [warriorId: string]: Warrior & { stableName: string };
 }
 
+/**
+ *
+ */
 export function useBookingOffice() {
   const state = useWorldState();
   const { setState } = useGameStore();

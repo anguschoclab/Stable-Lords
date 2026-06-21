@@ -7,6 +7,9 @@ import { EmptyContractState } from './components/EmptyContractState';
 import { TrainerRow } from './components/TrainerRow';
 import { SummaryCard } from './components/SummaryCard';
 
+/**
+ *
+ */
 export function ContractManager() {
   const { activeTrainers, totalWeeklyExpense, expiringSoonCount } = useContractData();
 

@@ -7,6 +7,9 @@ interface RevealModalProps {
   onClose: () => void;
 }
 
+/**
+ *
+ */
 export function RevealModal({ data, onClose }: RevealModalProps) {
   if (!data) return null;
 

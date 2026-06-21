@@ -9,6 +9,9 @@ interface EmptyStateProps {
   className?: string;
 }
 
+/**
+ *
+ */
 export function EmptyState({ icon: Icon, title, description, action, className }: EmptyStateProps) {
   return (
     <Surface

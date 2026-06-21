@@ -163,9 +163,9 @@ interface BronzeHighlightProps {
   thirdPlaceName: string;
   thirdPlaceId?: string;
 } /**
- * Bronze highlight.
- * @param - { third place name, third place id }.
- */
+   * Bronze highlight.
+   * @param - { third place name, third place id }.
+   */
 
 /**
  * Bronze highlight.

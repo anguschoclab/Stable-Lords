@@ -9,6 +9,9 @@ interface GraveyardTabsProps {
   season: string;
 }
 
+/**
+ *
+ */
 export function GraveyardTabs({ myFallen, graveyard, season }: GraveyardTabsProps) {
   return (
     <Tabs defaultValue="memorial" className="w-full">

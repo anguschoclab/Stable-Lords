@@ -5,6 +5,9 @@ import { useReputationState } from '@/state/selectors';
 import { computeStableReputation } from '@/engine/stableReputation';
 import { Star, Skull, Shield, Zap } from 'lucide-react';
 
+/**
+ *
+ */
 export function ReputationTab() {
   const worldState = useReputationState();
   const rep = useMemo(() => computeStableReputation(worldState), [worldState]);

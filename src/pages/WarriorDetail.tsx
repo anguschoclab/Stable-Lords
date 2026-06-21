@@ -39,8 +39,8 @@ const TABS: SubNavTab[] = [
   { id: 'mission', label: 'STRATEGY', icon: <Target className="h-4 w-4" /> },
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
 ]; /**
- * Warrior detail.
- */
+    * Warrior detail.
+    */
 
 /**
  * Warrior detail.

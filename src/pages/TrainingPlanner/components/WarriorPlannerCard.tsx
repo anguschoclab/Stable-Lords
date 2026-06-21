@@ -18,6 +18,9 @@ interface WarriorPlannerCardProps {
   seasonalGains: Partial<Record<keyof Attributes, number>>;
 }
 
+/**
+ *
+ */
 export function WarriorPlannerCard({ warrior, trainers, seasonalGains }: WarriorPlannerCardProps) {
   const burns = useMemo(() => assessBurnRisks(warrior, trainers), [warrior, trainers]);
   const trainability = useMemo(() => computeTrainability(warrior, trainers), [warrior, trainers]);

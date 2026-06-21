@@ -4,6 +4,9 @@ import { ArchiveConflictError } from './types';
 import { assertSafeFileNamePart } from './validation';
 import type { ArchiveService } from './types';
 
+/**
+ *
+ */
 export class OPFSArchiveService implements ArchiveService {
   private writeQueue: Promise<void> = Promise.resolve();
 
@@ -13,6 +16,9 @@ export class OPFSArchiveService implements ArchiveService {
     return p;
   }
 
+  /**
+   *
+   */
   isSupported(): boolean {
     return (
       typeof navigator !== 'undefined' &&
@@ -56,6 +62,9 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
+  /**
+   *
+   */
   async archiveHotState(slotId: string, stateData: GameState): Promise<void> {
     return this.enqueue(async () => {
       assertSafeFileNamePart(slotId, 'slotId');
@@ -90,6 +99,9 @@ export class OPFSArchiveService implements ArchiveService {
     });
   }
 
+  /**
+   *
+   */
   async retrieveHotState(slotId: string): Promise<GameState | null> {
     assertSafeFileNamePart(slotId, 'slotId');
     try {
@@ -113,6 +125,9 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
+  /**
+   *
+   */
   async archiveBoutLog(
     year: number,
     season: number,
@@ -174,6 +189,9 @@ export class OPFSArchiveService implements ArchiveService {
     });
   }
 
+  /**
+   *
+   */
   async retrieveBoutLog(year: number, season: number, boutId: string): Promise<string[] | null> {
     assertSafeFileNamePart(boutId, 'boutId');
     try {
@@ -199,6 +217,9 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
+  /**
+   *
+   */
   async archiveGazette(season: number, week: number, markdown: string): Promise<void> {
     return this.enqueue(async () => {
       assertSafeFileNamePart(String(week), 'week');
@@ -234,6 +255,9 @@ export class OPFSArchiveService implements ArchiveService {
     });
   }
 
+  /**
+   *
+   */
   async retrieveGazette(season: number, week: number): Promise<string | null> {
     assertSafeFileNamePart(String(week), 'week');
     try {
@@ -257,6 +281,9 @@ export class OPFSArchiveService implements ArchiveService {
     }
   }
 
+  /**
+   *
+   */
   async getArchivedBoutIdsForSeason(season: number): Promise<string[]> {
     try {
       const dirHandle = await this.getDirectory(season, 'bouts');

@@ -5,6 +5,9 @@ interface SkillsPreviewProps {
   baseSkills: Record<string, number> | object;
 }
 
+/**
+ *
+ */
 export function SkillsPreview({ baseSkills }: SkillsPreviewProps) {
   return (
     <Card>

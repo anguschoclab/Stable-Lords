@@ -12,6 +12,9 @@ interface FighterFigureProps {
   pose: FighterPose;
 }
 
+/**
+ *
+ */
 export function FighterFigure({ isDead, weaponCategory, shieldInfo, pose }: FighterFigureProps) {
   return (
     <svg

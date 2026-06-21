@@ -2,10 +2,16 @@ import { useGameStore } from '@/state/useGameStore';
 import { TRAINER_WEEKLY_SALARY } from '@/engine/trainers';
 import type { Trainer } from '@/types/game';
 
+/**
+ *
+ */
 export function getSalary(tier: Trainer['tier']): number {
   return TRAINER_WEEKLY_SALARY[tier] ?? 35;
 }
 
+/**
+ *
+ */
 export function useContractData() {
   const trainers = useGameStore((s) => s.trainers);
   const safeTrainers = trainers ?? [];

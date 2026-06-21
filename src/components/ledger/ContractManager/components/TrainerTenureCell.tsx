@@ -5,6 +5,9 @@ interface TrainerTenureCellProps {
   weeksLeft: number;
 }
 
+/**
+ *
+ */
 export function TrainerTenureCell({ weeksLeft }: TrainerTenureCellProps) {
   const pct = Math.min((weeksLeft / 52) * 100, 100);
   const isExpiring = weeksLeft <= 4;

@@ -9,6 +9,9 @@ interface StyleOfTheSeasonProps {
   topStyle: [string, number] | null;
 }
 
+/**
+ *
+ */
 export function StyleOfTheSeason({ metaEntries, topStyle }: StyleOfTheSeasonProps) {
   return (
     <Surface variant="glass" padding="none" className="border-accent/10 overflow-hidden">

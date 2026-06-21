@@ -1,5 +1,8 @@
 import { Crown, Shield, Trophy, Star } from 'lucide-react';
 
+/**
+ *
+ */
 export function AwardIcon({ type }: { type: string }) {
   switch (type) {
     case 'WARRIOR_OF_YEAR':

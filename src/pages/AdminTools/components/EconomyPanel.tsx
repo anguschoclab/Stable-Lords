@@ -9,6 +9,9 @@ interface EconomyPanelProps {
   onResetRivals: () => void;
 }
 
+/**
+ *
+ */
 export function EconomyPanel({ onForceMastery, onResetRivals }: EconomyPanelProps) {
   return (
     <div className="space-y-12">

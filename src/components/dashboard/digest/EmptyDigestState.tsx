@@ -3,11 +3,17 @@ import { Calendar, ChevronRight } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { EmptyState } from '@/components/ui/EmptyState';
 
+/**
+ *
+ */
 export interface EmptyDigestStateProps {
   week: number;
   season: string;
 }
 
+/**
+ *
+ */
 export function EmptyDigestState({ week, season }: EmptyDigestStateProps) {
   return (
     <EmptyState

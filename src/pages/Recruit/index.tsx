@@ -10,6 +10,9 @@ import { canTransact } from '@/engine/economy/utils';
 import { useRecruit } from './hooks/useRecruit';
 import { RecruitFilters } from './components/RecruitFilters';
 
+/**
+ *
+ */
 export default function Recruit() {
   const {
     roster,

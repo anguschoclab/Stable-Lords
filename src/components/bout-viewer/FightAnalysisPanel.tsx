@@ -17,6 +17,9 @@ function favoredName(favored: 'A' | 'D' | null, nameA: string, nameD: string): s
   return null;
 }
 
+/**
+ *
+ */
 export function FightAnalysisPanel({ analysis, nameA, nameD }: FightAnalysisPanelProps) {
   if (!analysis) return null;
 

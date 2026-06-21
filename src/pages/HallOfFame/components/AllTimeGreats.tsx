@@ -8,6 +8,9 @@ interface AllTimeGreatsProps {
   fights: Parameters<typeof InducteeCard>[0]['fights'];
 }
 
+/**
+ *
+ */
 export function AllTimeGreats({ warriors, fights }: AllTimeGreatsProps) {
   return (
     <div className="space-y-6">

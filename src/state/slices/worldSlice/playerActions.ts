@@ -2,6 +2,9 @@ import type { GameStore } from '@/state/useGameStore';
 import { STARTING_TREASURY } from '@/constants/economy';
 import type { ArenaPreferences } from './types';
 
+/**
+ *
+ */
 export function createPlayerActions(set: (fn: (state: GameStore) => Partial<GameStore>) => void) {
   return {
     setWeek: (week: number) => set(() => ({ week })),

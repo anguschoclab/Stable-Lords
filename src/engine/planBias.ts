@@ -5,15 +5,15 @@ import { FightingStyle } from '@/types/shared.types';
 import type { FightPlan } from '@/types/combat.types';
 import { getItemById } from '@/data/equipment';
 import type { EquipmentLoadout } from '@/data/equipment'; /**
- * Bias type.
- */
+                                                           * Bias type.
+                                                           */
 
 /**
  * Bias type.
  */
 export type Bias = 'head-hunt' | 'hamstring' | 'gut' | 'guard-break' | 'balanced'; /**
- * Auto tune from bias.
- */
+                                                                                    * Auto tune from bias.
+                                                                                    */
 
 /**
  * Auto tune from bias.

@@ -7,6 +7,9 @@ interface GrudgeNetworkProps {
   rivalMap: Map<string, string>;
 }
 
+/**
+ *
+ */
 export function GrudgeNetwork({ grudges, rivalMap }: GrudgeNetworkProps) {
   return (
     <Surface variant="glass" padding="none" className="border-arena-blood/20 overflow-hidden">

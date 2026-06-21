@@ -33,6 +33,9 @@ const MASTERY_AXIS: Record<FightingStyle, keyof MasteryBonus> = {
   [FightingStyle.AimedBlow]: 'att', // precision: keeps ATT until #2 gives it a called-shot edge
 };
 
+/**
+ *
+ */
 export function getMasteryBonus(style: FightingStyle, mastered: boolean): MasteryBonus {
   if (!mastered) return { ...ZERO };
   const axis = MASTERY_AXIS[style] ?? 'att';

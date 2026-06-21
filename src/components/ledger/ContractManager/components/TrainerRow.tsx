@@ -5,6 +5,9 @@ import { TrainerTierBadge } from './TrainerTierBadge';
 import { TrainerTenureCell } from './TrainerTenureCell';
 import { getSalary } from '../hooks/useContractData';
 
+/**
+ *
+ */
 export function TrainerRow({ trainer: t }: { trainer: Trainer }) {
   return (
     <TableRow key={t.id} className="border-white/5 group hover:bg-white/2 transition-colors">

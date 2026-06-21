@@ -23,6 +23,9 @@ interface ArenaFighterProps {
   size?: number;
 }
 
+/**
+ *
+ */
 export default function ArenaFighter({
   name,
   pose,

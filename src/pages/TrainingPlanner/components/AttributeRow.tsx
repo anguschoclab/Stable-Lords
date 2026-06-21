@@ -16,6 +16,9 @@ interface AttributeRowProps {
   };
 }
 
+/**
+ *
+ */
 export function AttributeRow({ attr }: AttributeRowProps) {
   const chancePct = Math.round(attr.chance * 100);
   const isRecommended = !attr.capped && !attr.seasonCapped && attr.chance >= 0.4;

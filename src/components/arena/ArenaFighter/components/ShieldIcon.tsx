@@ -4,6 +4,9 @@ interface ShieldIconProps {
   y: number;
 }
 
+/**
+ *
+ */
 export function ShieldIcon({ size, x, y }: ShieldIconProps) {
   const radius = size === 'large' ? 14 : size === 'small' ? 8 : 11;
 

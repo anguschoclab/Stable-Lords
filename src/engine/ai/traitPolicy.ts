@@ -1,6 +1,9 @@
 import type { OwnerPersonality } from '@/types/state.types';
 import type { TrainerTier } from '@/types/shared.types';
 
+/**
+ *
+ */
 export interface TraitPolicy {
   /** Release a warrior whose liability score (System 4) reaches this. Lower = cuts faster. */
   cutLiabilityThreshold: number;
@@ -27,6 +30,9 @@ export const TRAIT_POLICY: Record<OwnerPersonality, TraitPolicy> = {
   Methodical: { cutLiabilityThreshold: 78, trainAppetite: 0.1, ceiling: 'Seasoned' },
 };
 
+/**
+ *
+ */
 export function policyFor(personality?: OwnerPersonality): TraitPolicy {
   return TRAIT_POLICY[personality ?? 'Pragmatic'];
 }

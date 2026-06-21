@@ -27,6 +27,9 @@ interface OfferCardProps {
   ) => void;
 }
 
+/**
+ *
+ */
 export function OfferCard({
   offer,
   promoters,

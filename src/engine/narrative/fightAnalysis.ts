@@ -19,6 +19,9 @@ export interface AnalysisFactor {
   weight: number;
 }
 
+/**
+ *
+ */
 export interface FightAnalysis {
   styleMatchup: { styleA: string; styleD: string; edge: number };
   decisiveExchange: {
@@ -39,6 +42,9 @@ export interface FightAnalysis {
   factors: AnalysisFactor[];
 }
 
+/**
+ *
+ */
 export interface AnalysisWarrior {
   id: string;
   name: string;
@@ -114,6 +120,9 @@ function biggestSkillGap(
   return best;
 }
 
+/**
+ *
+ */
 export function buildFightAnalysis(
   outcome: FightOutcome,
   warriorA: AnalysisWarrior,

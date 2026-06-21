@@ -1,6 +1,9 @@
 import type { GameState } from '@/types/state.types';
 import type { WeekSummary, QuarterSummary, QuarterAdvanceResult, YearAdvanceResult } from './types';
 
+/**
+ *
+ */
 export function extractWeekSummary(state: GameState): WeekSummary {
   // Read from lastSimulationReport instead of scanning arenaHistory (O(1) vs O(n))
   const report = state.lastSimulationReport;
@@ -17,6 +20,9 @@ export function extractWeekSummary(state: GameState): WeekSummary {
   };
 }
 
+/**
+ *
+ */
 export function buildQuarterSummary(
   state: GameState,
   startWeek: number,
@@ -34,6 +40,9 @@ export function buildQuarterSummary(
   };
 }
 
+/**
+ *
+ */
 export function buildAnnualSummary(
   state: GameState,
   startYear: number,

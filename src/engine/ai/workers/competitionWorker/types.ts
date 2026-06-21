@@ -1,3 +1,6 @@
+/**
+ *
+ */
 export interface BoutBid {
   proposingWarriorId: string;
   targetStableId?: string; // Specific ID for VENDETTA

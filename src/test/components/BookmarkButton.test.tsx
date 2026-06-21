@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 
-let bookmarkedIds = new Set<string>();
+const bookmarkedIds = new Set<string>();
 const mockToggle = vi.fn();
 
 vi.mock('@/state/useGameStore', () => ({

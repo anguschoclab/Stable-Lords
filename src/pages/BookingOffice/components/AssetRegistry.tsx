@@ -10,6 +10,9 @@ interface AssetRegistryProps {
   onSelect: (id: string | null) => void;
 }
 
+/**
+ *
+ */
 export function AssetRegistry({
   roster,
   boutOffers,

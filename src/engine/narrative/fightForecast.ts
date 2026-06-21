@@ -7,6 +7,9 @@ import type { AnalysisFactor } from '@/engine/narrative/fightAnalysis';
 import { getMatchupBonus } from '@/constants/combat/combat';
 import type { FightingStyle, Attributes, BaseSkills } from '@/types/shared.types';
 
+/**
+ *
+ */
 export interface FightForecast {
   opponentKnown: boolean;
   styleMatchup: { styleA: string; styleD: string | null; edge: number };
@@ -51,6 +54,9 @@ function readinessRisk(w: ForecastWarrior): AnalysisFactor | null {
   };
 }
 
+/**
+ *
+ */
 export function buildFightForecast(
   player: ForecastWarrior,
   opponent: ForecastWarrior | null

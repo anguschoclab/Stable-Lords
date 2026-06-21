@@ -1,6 +1,9 @@
 import { Users } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
 
+/**
+ *
+ */
 export function EmptyWarriorState() {
   return (
     <EmptyState

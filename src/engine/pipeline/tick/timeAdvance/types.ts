@@ -1,5 +1,8 @@
 import type { GameState } from '@/types/state.types';
 
+/**
+ *
+ */
 export type SoftStopCondition =
   | { type: 'rosterEmpty' }
   | { type: 'playerDeath' }
@@ -12,6 +15,9 @@ export const DEFAULT_AUTOSIM_STOPS: SoftStopCondition[] = [
   { type: 'noPairings' },
 ];
 
+/**
+ *
+ */
 export interface AdvanceOptions {
   headless?: boolean;
   checkpointInterval?: number;
@@ -19,6 +25,9 @@ export interface AdvanceOptions {
   onProgress?: (weeksCompleted: number, totalWeeks: number) => void;
 }
 
+/**
+ *
+ */
 export interface WeekSummary {
   week: number;
   year: number;
@@ -28,6 +37,9 @@ export interface WeekSummary {
   deaths: number;
 }
 
+/**
+ *
+ */
 export interface QuarterSummary {
   startWeek: number;
   endWeek: number;
@@ -37,6 +49,9 @@ export interface QuarterSummary {
   weekSummaries: WeekSummary[];
 }
 
+/**
+ *
+ */
 export interface QuarterAdvanceResult {
   state: GameState;
   summaries: WeekSummary[];
@@ -45,6 +60,9 @@ export interface QuarterAdvanceResult {
   weeksCompleted: number;
 }
 
+/**
+ *
+ */
 export interface YearAdvanceResult {
   state: GameState;
   quarterResults: QuarterAdvanceResult[];

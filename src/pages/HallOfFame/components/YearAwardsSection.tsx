@@ -20,6 +20,9 @@ interface YearAwardsSectionProps {
   yearUpsets: UpsetEntry[];
 }
 
+/**
+ *
+ */
 export function YearAwardsSection({
   year,
   awards,

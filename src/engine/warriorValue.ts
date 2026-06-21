@@ -1,6 +1,9 @@
 import type { Warrior } from '@/types/warrior.types';
 import { TRAITS, type TraitTier } from '@/engine/traits';
 
+/**
+ *
+ */
 export interface LiabilityResult {
   score: number; // 0–100, higher = more of a liability
   factors: { name: string; weight: number }[];

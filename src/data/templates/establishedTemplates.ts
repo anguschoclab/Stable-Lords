@@ -5,8 +5,8 @@
 
 import { FightingStyle } from '@/types/game';
 import type { StableTemplate } from './stableTemplate.types'; /**
- * Established_templates.
- */
+                                                               * Established_templates.
+                                                               */
 
 /**
  * Established_templates.

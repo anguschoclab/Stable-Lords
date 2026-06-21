@@ -3,6 +3,9 @@ import { ArchiveConflictError } from '../ArchiveConflictError';
 
 export { ArchiveConflictError };
 
+/**
+ *
+ */
 export interface ArchiveService {
   isSupported: () => boolean;
 

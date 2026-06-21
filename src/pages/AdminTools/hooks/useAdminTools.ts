@@ -7,8 +7,14 @@ import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { toast } from 'sonner';
 import { engineProxy } from '@/engine/workerProxy';
 
+/**
+ *
+ */
 export type AdminCategory = 'SYSTEM' | 'ECONOMY' | 'WORLD' | 'TELEMETRY' | 'PREFERENCES';
 
+/**
+ *
+ */
 export function useAdminTools() {
   const {
     setState,

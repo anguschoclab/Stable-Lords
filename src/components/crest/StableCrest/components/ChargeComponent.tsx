@@ -20,6 +20,9 @@ function getPostureTransform(posture?: CrestData['charge']['posture']): string {
   }
 }
 
+/**
+ *
+ */
 export function ChargeComponent({
   charge,
   metal,

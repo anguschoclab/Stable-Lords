@@ -5,8 +5,8 @@
 
 import { FightingStyle } from '@/types/game';
 import type { EquipmentItem } from './equipment.types'; /**
- * Weapons.
- */
+                                                         * Weapons.
+                                                         */
 
 /**
  * Weapons.
@@ -580,15 +580,15 @@ export const WEAPONS: EquipmentItem[] = [
     ],
   },
 ]; /**
- * Shield_item_ids.
- */
+    * Shield_item_ids.
+    */
 
 /**
  * Shield_item_ids.
  */
 export const SHIELD_ITEM_IDS = ['small_shield', 'medium_shield', 'large_shield'] as const; /**
- * Shield_coverage.
- */
+                                                                                            * Shield_coverage.
+                                                                                            */
 
 /**
  * Shield_coverage.

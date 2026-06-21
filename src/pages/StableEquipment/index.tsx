@@ -12,6 +12,9 @@ import { useStableEquipment } from './hooks/useStableEquipment';
 import { WarriorSelector } from './components/WarriorSelector';
 import { LoadoutCard } from './components/LoadoutCard';
 
+/**
+ *
+ */
 export default function StableEquipment() {
   const {
     activeWarriors,

@@ -9,6 +9,9 @@ const DAMAGE_BASE_MIN = 4;
 const DAMAGE_VARIANCE_MIN = 0.7;
 const DAMAGE_VARIANCE_MAX = 1.3;
 
+/**
+ *
+ */
 export function computeHitDamage(
   rng: () => number,
   damageClass: number,
@@ -20,6 +23,9 @@ export function computeHitDamage(
   return Math.max(1, Math.round(base * locMult * variance));
 }
 
+/**
+ *
+ */
 export function calculateKillWindow(
   hpRatio: number,
   enduranceRatio: number,

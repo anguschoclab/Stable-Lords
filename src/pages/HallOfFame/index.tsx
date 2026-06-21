@@ -10,6 +10,9 @@ import { YearAwardsSection } from './components/YearAwardsSection';
 import { AllTimeGreats } from './components/AllTimeGreats';
 import { GraveyardTabs } from './components/GraveyardTabs';
 
+/**
+ *
+ */
 export default function HallOfFame() {
   const {
     year,

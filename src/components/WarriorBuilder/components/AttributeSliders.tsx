@@ -30,6 +30,9 @@ interface AttributeSlidersProps {
   remaining: number;
 }
 
+/**
+ *
+ */
 export function AttributeSliders({ attrs, updateAttr, total, remaining }: AttributeSlidersProps) {
   return (
     <Card>

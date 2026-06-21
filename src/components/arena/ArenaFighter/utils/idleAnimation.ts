@@ -13,6 +13,9 @@ const IDLE_ANIMATION_MAP: Record<FightingStyle, string> = {
   [FightingStyle.StrikingAttack]: 'animate-idle-striking',
 };
 
+/**
+ *
+ */
 export function getIdleAnimation(style: FightingStyle): string {
   return IDLE_ANIMATION_MAP[style] ?? 'animate-idle-balanced';
 }

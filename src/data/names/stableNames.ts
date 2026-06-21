@@ -69,8 +69,8 @@ export const STABLE_PREFIXES = [
   'The Ironbound',
   'The Sanguine',
 ]; /**
- * Stable_suffixes.
- */
+    * Stable_suffixes.
+    */
 
 /**
  * Stable_suffixes.
@@ -138,8 +138,8 @@ export const STABLE_SUFFIXES = [
   'Vanguards',
   'Desolators',
 ]; /**
- * Stable_alt.
- */
+    * Stable_alt.
+    */
 
 /**
  * Stable_alt.

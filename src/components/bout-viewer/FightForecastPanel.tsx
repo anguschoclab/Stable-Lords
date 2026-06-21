@@ -16,6 +16,9 @@ function favoredName(favored: 'A' | 'D' | null, nameA: string, nameD: string): s
   return null;
 }
 
+/**
+ *
+ */
 export function FightForecastPanel({ forecast, nameA, nameD }: FightForecastPanelProps) {
   if (!forecast) return null;
 

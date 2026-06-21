@@ -21,8 +21,8 @@ import { TRAITS, generateTraits } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
 import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator'; /**
- * Recruit tier type.
- */
+                                                                                  * Recruit tier type.
+                                                                                  */
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -30,8 +30,8 @@ import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
  * Recruit tier type.
  */
 export type RecruitTier = 'Common' | 'Promising' | 'Exceptional' | 'Prodigy'; /**
- * Defines the shape of pool warrior.
- */
+                                                                               * Defines the shape of pool warrior.
+                                                                               */
 
 /**
  * Defines the shape of pool warrior.
@@ -69,8 +69,8 @@ export const TIER_COST: Record<RecruitTier, number> = {
   Exceptional: (narrativeContent as NarrativeContent).recruitment.tiers.Exceptional?.cost ?? 0,
   Prodigy: (narrativeContent as NarrativeContent).recruitment.tiers.Prodigy?.cost ?? 0,
 }; /**
- * Tier_stars.
- */
+    * Tier_stars.
+    */
 
 /**
  * Tier_stars.

@@ -4,6 +4,9 @@ import { useShallow } from 'zustand/react/shallow';
 import { calculateStableStats } from '@/engine/stats/stableStats';
 import { computeMetaDrift } from '@/engine/metaDrift';
 
+/**
+ *
+ */
 export interface RivalPerformance {
   id: string;
   name: string;
@@ -14,6 +17,9 @@ export interface RivalPerformance {
   totalKills: number;
 }
 
+/**
+ *
+ */
 export function useSeasonData() {
   const { rivals, ownerGrudges, newsletter, arenaHistory, season } = useGameStore(
     useShallow((s) => ({

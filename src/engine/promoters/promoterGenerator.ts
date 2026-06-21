@@ -80,9 +80,9 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Flashy',
   'Corporate',
 ]; /**
- * Generate promoters.
- * @param rng - Rng. (optional)
- */
+    * Generate promoters.
+    * @param rng - Rng. (optional)
+    */
 
 /**
  * Generate promoters.

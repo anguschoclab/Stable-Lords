@@ -10,8 +10,8 @@ import { StyleMeterTable } from '@/components/charts/StyleMeterTable';
 import { InsightManager } from '@/components/ledger';
 import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider'; /**
- * Stable hall.
- */
+                                                                  * Stable hall.
+                                                                  */
 
 /**
  * Stable hall.

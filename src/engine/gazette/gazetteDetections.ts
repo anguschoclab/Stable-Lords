@@ -4,8 +4,8 @@
  */
 import type { FightSummary } from '@/types/combat.types';
 import type { WarriorId } from '@/types/shared.types'; /**
- * Defines the shape of gazette detections.
- */
+                                                        * Defines the shape of gazette detections.
+                                                        */
 
 /**
  * Extract warrior display names from the FightSummary title.

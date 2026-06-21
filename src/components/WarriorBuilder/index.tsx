@@ -23,6 +23,9 @@ interface WarriorBuilderProps {
   currentRosterSize?: number;
 }
 
+/**
+ *
+ */
 export default function WarriorBuilder({
   onCreateWarrior,
   maxRoster = 10,

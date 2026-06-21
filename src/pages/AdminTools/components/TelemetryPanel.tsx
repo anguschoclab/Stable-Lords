@@ -11,6 +11,9 @@ interface TelemetryPanelProps {
   player: Record<string, unknown>;
 }
 
+/**
+ *
+ */
 export function TelemetryPanel({
   week,
   season,

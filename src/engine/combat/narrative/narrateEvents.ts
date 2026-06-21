@@ -23,6 +23,9 @@ import {
 import { narrateKnockdown, narrateRecovery, getEpithet } from '../../narrative/combatNarrators';
 import type { NarrationContext } from './types';
 
+/**
+ *
+ */
 export function narrateEvents(
   events: CombatEvent[],
   ctx: NarrationContext,

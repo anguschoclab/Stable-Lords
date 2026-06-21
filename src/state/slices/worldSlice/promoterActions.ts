@@ -4,6 +4,9 @@ import type { PromoterId, FightId } from '@/types/shared.types';
 import { updatePromoterHistory as engineUpdatePromoterHistory } from '@/engine/promoters';
 import type { WorldSlice } from './types';
 
+/**
+ *
+ */
 export function createPromoterActions(
   set: (fn: (state: WorldSlice) => Partial<GameStore> | WorldSlice) => void
 ) {

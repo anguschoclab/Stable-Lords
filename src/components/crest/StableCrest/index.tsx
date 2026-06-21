@@ -34,6 +34,9 @@ const SHIELD_PATHS: Record<ShieldShape, string> = {
   lozenge: 'M50,10 l40,40 l-40,40 l-40,-40 z',
 };
 
+/**
+ *
+ */
 export function StableCrest({
   crest,
   size = 'md',

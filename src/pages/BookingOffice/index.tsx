@@ -13,6 +13,9 @@ import { useBookingOffice } from './hooks/useBookingOffice';
 import { OfferCard } from './components/OfferCard';
 import { AssetRegistry } from './components/AssetRegistry';
 
+/**
+ *
+ */
 export default function BookingOffice() {
   const {
     week,

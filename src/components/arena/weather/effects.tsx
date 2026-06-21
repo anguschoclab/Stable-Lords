@@ -2,6 +2,9 @@ import type { CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 import { cryptoRandom } from '@/utils/cryptoRandom';
 
+/**
+ *
+ */
 export function RainEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -20,6 +23,9 @@ export function RainEffect() {
   );
 }
 
+/**
+ *
+ */
 export function BloodRainEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -40,6 +46,9 @@ export function BloodRainEffect() {
   );
 }
 
+/**
+ *
+ */
 export function MistEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -57,6 +66,9 @@ export function MistEffect() {
   );
 }
 
+/**
+ *
+ */
 export function HeatEffect() {
   return (
     <div
@@ -69,6 +81,9 @@ export function HeatEffect() {
   );
 }
 
+/**
+ *
+ */
 export function SolarFlareEffect() {
   return (
     <div
@@ -82,6 +97,9 @@ export function SolarFlareEffect() {
   );
 }
 
+/**
+ *
+ */
 export function AbyssalGloomEffect() {
   return (
     <div
@@ -94,6 +112,9 @@ export function AbyssalGloomEffect() {
   );
 }
 
+/**
+ *
+ */
 export function CursedMiasmaEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -111,6 +132,9 @@ export function CursedMiasmaEffect() {
   );
 }
 
+/**
+ *
+ */
 export function WindEffect({ strong }: { strong: boolean }) {
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -131,6 +155,9 @@ export function WindEffect({ strong }: { strong: boolean }) {
   );
 }
 
+/**
+ *
+ */
 export function EclipseEffect() {
   return (
     <div
@@ -142,6 +169,9 @@ export function EclipseEffect() {
   );
 }
 
+/**
+ *
+ */
 export function BloodMoonEffect() {
   return (
     <div
@@ -154,6 +184,9 @@ export function BloodMoonEffect() {
   );
 }
 
+/**
+ *
+ */
 export function SpookyNightEffect() {
   return (
     <div
@@ -166,6 +199,9 @@ export function SpookyNightEffect() {
   );
 }
 
+/**
+ *
+ */
 export function SandstormEffect() {
   return (
     <div
@@ -179,6 +215,9 @@ export function SandstormEffect() {
   );
 }
 
+/**
+ *
+ */
 export function BlizzardEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -200,6 +239,9 @@ export function BlizzardEffect() {
   );
 }
 
+/**
+ *
+ */
 export function DenseFogEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -217,6 +259,9 @@ export function DenseFogEffect() {
   );
 }
 
+/**
+ *
+ */
 export function ThunderstormEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -238,6 +283,9 @@ export function ThunderstormEffect() {
   );
 }
 
+/**
+ *
+ */
 export function AshfallEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -257,6 +305,9 @@ export function AshfallEffect() {
   );
 }
 
+/**
+ *
+ */
 export function MeteorShowerEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -277,6 +328,9 @@ export function MeteorShowerEffect() {
   );
 }
 
+/**
+ *
+ */
 export function AcidRainEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -298,6 +352,9 @@ export function AcidRainEffect() {
   );
 }
 
+/**
+ *
+ */
 export function ManaSurgeEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -329,6 +386,9 @@ export function ManaSurgeEffect() {
   );
 }
 
+/**
+ *
+ */
 export function LocustSwarmEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -352,6 +412,9 @@ export function LocustSwarmEffect() {
   );
 }
 
+/**
+ *
+ */
 export function TornadoEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -398,6 +461,9 @@ export function TornadoEffect() {
   );
 }
 
+/**
+ *
+ */
 export function ScorchingWindEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -426,6 +492,9 @@ export function ScorchingWindEffect() {
   );
 }
 
+/**
+ *
+ */
 export function HailstormEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -446,6 +515,9 @@ export function HailstormEffect() {
   );
 }
 
+/**
+ *
+ */
 export function ArcaneStormEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -481,6 +553,9 @@ export function ArcaneStormEffect() {
   );
 }
 
+/**
+ *
+ */
 export function AetherStormEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -537,6 +612,9 @@ export function AetherStormEffect() {
   );
 }
 
+/**
+ *
+ */
 export function ChaoticWindsEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -604,6 +682,9 @@ export function ChaoticWindsEffect() {
   );
 }
 
+/**
+ *
+ */
 export function EmberRainEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -644,6 +725,9 @@ export function EmberRainEffect() {
   );
 }
 
+/**
+ *
+ */
 export function AuroraBorealisEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -680,6 +764,9 @@ export function AuroraBorealisEffect() {
   );
 }
 
+/**
+ *
+ */
 export function MirageEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -726,6 +813,9 @@ export function MirageEffect() {
   );
 }
 
+/**
+ *
+ */
 export function GravityAnomalyEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -770,6 +860,9 @@ export function GravityAnomalyEffect() {
   );
 }
 
+/**
+ *
+ */
 export function WildfireSmokeEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -816,6 +909,9 @@ export function WildfireSmokeEffect() {
   );
 }
 
+/**
+ *
+ */
 export function BloodFogEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -853,6 +949,9 @@ export function BloodFogEffect() {
   );
 }
 
+/**
+ *
+ */
 export function RainbowEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">

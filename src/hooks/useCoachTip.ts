@@ -8,8 +8,8 @@ import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
 import { filterActive } from '@/utils/roster';
 import type { GameState, Warrior } from '@/types/game'; /**
- * Defines the shape of coach tip.
- */
+                                                         * Defines the shape of coach tip.
+                                                         */
 
 /**
  * Defines the shape of coach tip.

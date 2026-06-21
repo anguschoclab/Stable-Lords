@@ -35,3 +35,4 @@
 
 - 2025-02-18: When using Radix UI or Shadcn components like `<DialogContent>` or `<SheetContent>` without a dedicated description element, explicitly set `aria-describedby={undefined}` to satisfy accessibility requirements and prevent console warnings.
 - 2025-02-18: When replacing custom arbitrary color values in interactive elements (e.g., hover or focus states), prioritize mapping them to the system's design tokens (like `accent`, `primary`, or semantic roles) rather than hardcoding new arbitrary hex codes.
+2024-05-24: Fixed missing prefers-reduced-motion fallback classes in index.css, replaced raw colors in WarriorTrainingCard.tsx and traitDisplay.ts with arena tokens, and added aria-describedby={props['aria-describedby'] || undefined} to Radix primitives to suppress missing description warnings while ensuring accessibility.

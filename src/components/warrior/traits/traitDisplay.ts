@@ -38,11 +38,11 @@ export function traitTierColorClasses(tier: TraitTier): string {
     case 'Common':
       return 'bg-white/10 text-foreground/80 border-white/15';
     case 'Notable':
-      return 'bg-sky-500/10 text-sky-300 border-sky-500/25';
+      return 'bg-arena-pop/10 text-arena-pop border-arena-pop/25';
     case 'Exceptional':
       return 'bg-arena-gold/10 text-arena-gold border-arena-gold/25';
     case 'Signature':
-      return 'bg-purple-500/15 text-purple-300 border-purple-500/30';
+      return 'bg-arena-fame/15 text-arena-fame border-arena-fame/30';
     case 'Flaw':
       return 'bg-destructive/15 text-destructive border-destructive/30';
   }

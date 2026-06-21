@@ -6,7 +6,8 @@
  */
 import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
-import type { Warrior, WarriorId } from '@/types/shared.types';
+import type { WarriorId } from '@/types/shared.types';
+import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
 import { planWorldBouts } from '@/engine/matchmaking/worldMatchmaking';
 import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
@@ -190,11 +191,11 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
           personality: 'Pragmatic',
           capacity: 5,
         } as any,
-      },
+      } as any,
       realmRankings: {
-        [lunger.id]: { overallRank: 1, compositeScore: 100 },
-        [basher.id]: { overallRank: 1, compositeScore: 100 },
-      },
+        [lunger.id]: { overallRank: 1, classRank: 1, compositeScore: 100 },
+        [basher.id]: { overallRank: 1, classRank: 1, compositeScore: 100 },
+      } as any,
     });
 
     const impact = runPromoterPass(state);
@@ -224,11 +225,11 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
           personality: 'Pragmatic',
           capacity: 5,
         } as any,
-      },
+      } as any,
       realmRankings: {
-        [w1.id]: { overallRank: 1, compositeScore: 100 },
-        [w2.id]: { overallRank: 1, compositeScore: 100 },
-      },
+        [w1.id]: { overallRank: 1, classRank: 1, compositeScore: 100 },
+        [w2.id]: { overallRank: 1, classRank: 1, compositeScore: 100 },
+      } as any,
     });
 
     const impact = runPromoterPass(state);

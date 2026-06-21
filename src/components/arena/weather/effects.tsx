@@ -321,7 +321,7 @@ export function ManaSurgeEffect() {
               '--tx': `${(cryptoRandom() - 0.5) * 100}px`,
               '--ty': `${(cryptoRandom() - 0.5) * 100}px`,
               animationDelay: `${cryptoRandom() * 4}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -344,7 +344,7 @@ export function LocustSwarmEffect() {
               '--tx': `${(cryptoRandom() - 0.5) * 80}px`,
               '--ty': `${(cryptoRandom() - 0.5) * 80}px`,
               animationDelay: `${cryptoRandom() * 3}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -390,7 +390,7 @@ export function TornadoEffect() {
               '--tx': `${(cryptoRandom() - 0.5) * 70}px`,
               '--ty': `${(cryptoRandom() - 0.5) * 70}px`,
               animationDelay: `${cryptoRandom() * 3}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -473,7 +473,7 @@ export function ArcaneStormEffect() {
               '--tx': `${(cryptoRandom() - 0.5) * 140}px`,
               '--ty': `${(cryptoRandom() - 0.5) * 140}px`,
               animationDelay: `${cryptoRandom() * 3}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -512,7 +512,7 @@ export function AetherStormEffect() {
               '--ty': `${(cryptoRandom() - 0.5) * 160}px`,
               animationDelay: `${cryptoRandom() * 4}s`,
               animationDuration: `${2 + cryptoRandom() * 2}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -529,7 +529,7 @@ export function AetherStormEffect() {
               '--ty': `${(cryptoRandom() - 0.5) * 120}px`,
               animationDelay: `${cryptoRandom() * 3}s`,
               animationDuration: `${2.5 + cryptoRandom() * 2}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -596,7 +596,7 @@ export function ChaoticWindsEffect() {
               '--ty': `${(cryptoRandom() - 0.5) * 60}px`,
               animationDelay: `${cryptoRandom() * 3}s`,
               animationDuration: `${2 + cryptoRandom() * 2}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -636,7 +636,7 @@ export function EmberRainEffect() {
               '--ty': `-${100 + cryptoRandom() * 100}px`,
               animationDelay: `${cryptoRandom() * 4}s`,
               animationDuration: `${3 + cryptoRandom() * 3}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -718,7 +718,7 @@ export function MirageEffect() {
               '--ty': `-${80 + cryptoRandom() * 60}px`,
               animationDelay: `${cryptoRandom() * 3}s`,
               animationDuration: `${2 + cryptoRandom() * 2}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -750,7 +750,7 @@ export function GravityAnomalyEffect() {
               '--ty': `-${100 + cryptoRandom() * 120}px`,
               animationDelay: `${cryptoRandom() * 4}s`,
               animationDuration: `${3 + cryptoRandom() * 3}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -791,7 +791,7 @@ export function WildfireSmokeEffect() {
               '--ty': `-${120 + cryptoRandom() * 80}px`,
               animationDelay: `${cryptoRandom() * 5}s`,
               animationDuration: `${4 + cryptoRandom() * 4}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -808,7 +808,7 @@ export function WildfireSmokeEffect() {
               '--ty': `-${80 + cryptoRandom() * 60}px`,
               animationDelay: `${cryptoRandom() * 3}s`,
               animationDuration: `${2 + cryptoRandom() * 2}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}
@@ -879,7 +879,7 @@ export function RainbowEffect() {
               '--ty': `${(cryptoRandom() - 0.5) * 40}px`,
               animationDelay: `${cryptoRandom() * 4}s`,
               animationDuration: `${3 + cryptoRandom() * 3}s`,
-            } as CSSProperties & Record<string, string>
+            } as unknown as CSSProperties & Record<string, string>
           }
         />
       ))}

@@ -33,10 +33,14 @@ const defaultHookValue = () => ({
   running: false,
   results: [],
   clearResults: vi.fn(),
+  fightReadyCount: 0,
+  matchCardLength: 0,
   handleStartAutosim: (...args: any[]) => mockHandleStartAutosim(...args),
   autosimming: false,
   autosimProgress: null,
   autosimResult: null,
+  setAutosimResult: vi.fn(),
+  gameState: {} as any,
 });
 
 describe('ExecuteWeekButton', () => {
@@ -75,10 +79,14 @@ describe('ExecuteWeekButton', () => {
       running: true,
       results: [],
       clearResults: vi.fn(),
+      fightReadyCount: 0,
+      matchCardLength: 0,
       handleStartAutosim: mockHandleStartAutosim,
       autosimming: false,
       autosimProgress: null,
       autosimResult: null,
+      setAutosimResult: vi.fn(),
+      gameState: {} as any,
     });
     render(<ExecuteWeekButton />);
     expect(screen.getByText(/Resolving/i)).toBeTruthy();
@@ -90,10 +98,14 @@ describe('ExecuteWeekButton', () => {
       running: true,
       results: [],
       clearResults: vi.fn(),
+      fightReadyCount: 0,
+      matchCardLength: 0,
       handleStartAutosim: mockHandleStartAutosim,
       autosimming: false,
       autosimProgress: null,
       autosimResult: null,
+      setAutosimResult: vi.fn(),
+      gameState: {} as any,
     });
     render(<ExecuteWeekButton />);
     const btn = screen.getByRole('button');

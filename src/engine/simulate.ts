@@ -140,7 +140,7 @@ export function simulateFight(
     rng,
     log,
     exchangeLog,
-    headless,
+    headless ?? false,
     fightMinutes,
     causeBucket,
     fatalHitLocation,

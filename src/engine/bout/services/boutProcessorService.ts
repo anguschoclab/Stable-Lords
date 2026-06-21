@@ -1,4 +1,4 @@
-import { GameState, Warrior, BoutOffer, RivalStableData } from '@/types/state.types';
+import { GameState, Warrior, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, FightingStyle } from '@/types/shared.types';
 import { type FightOutcome, type FightPlan } from '@/types/combat.types';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';

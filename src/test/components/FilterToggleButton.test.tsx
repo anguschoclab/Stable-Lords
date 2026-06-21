@@ -2,7 +2,7 @@
  * FilterToggleButton — verifies aria-pressed reflects active state.
  */
 // @vitest-environment jsdom
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 interface FilterToggleButtonProps {

@@ -24,6 +24,7 @@ vi.mock('@/state/useGameStore', () => ({
     trainers: [],
     trainingAssignments: [],
     fame: 0,
+    isBookmarked: vi.fn(() => false),
     player: {
       id: 'p1',
       name: 'Player',

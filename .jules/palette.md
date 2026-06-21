@@ -35,3 +35,7 @@
 
 - 2025-02-18: When using Radix UI or Shadcn components like `<DialogContent>` or `<SheetContent>` without a dedicated description element, explicitly set `aria-describedby={undefined}` to satisfy accessibility requirements and prevent console warnings.
 - 2025-02-18: When replacing custom arbitrary color values in interactive elements (e.g., hover or focus states), prioritize mapping them to the system's design tokens (like `accent`, `primary`, or semantic roles) rather than hardcoding new arbitrary hex codes.
+
+## 2026-06-21 - Bookmark Button Inset Focus Ring
+**Learning:** The `BookmarkButton` is often rendered inside full-bleed interactive cards and table rows. Using `focus-visible:ring-offset-2 focus-visible:ring-offset-black` caused the focus ring to be clipped or look jarring against varied backgrounds within these containers.
+**Action:** When a button is used strictly within confined card structures, prefer `focus-visible:ring-inset` to ensure the focus ring draws inwards and is never clipped by parent `overflow: hidden` contexts.

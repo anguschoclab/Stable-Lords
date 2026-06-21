@@ -15,9 +15,9 @@ interface BiometricsTabProps {
   warrior: Warrior;
   displayWarrior: ObfuscatedWarrior;
 } /**
-   * Biometrics tab.
-   * @param - { warrior, display warrior }.
-   */
+ * Biometrics tab.
+ * @param - { warrior, display warrior }.
+ */
 
 /**
  * Biometrics tab.

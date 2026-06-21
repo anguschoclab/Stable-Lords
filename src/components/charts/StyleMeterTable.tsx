@@ -21,9 +21,9 @@ interface StyleRow {
   losses: number;
   winRate: number;
 } /**
-   * Style meter table.
-   * @param - { class name }.
-   */
+ * Style meter table.
+ * @param - { class name }.
+ */
 
 /**
  * Style meter table.

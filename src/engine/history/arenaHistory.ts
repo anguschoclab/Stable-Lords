@@ -42,8 +42,8 @@ function save(arr: FightSummary[]) {
     }
   }
 } /**
-   * Arena history.
-   */
+ * Arena history.
+ */
 
 /**
  * Arena history.
@@ -74,7 +74,7 @@ export const ArenaHistory = {
     if (opts.week != null) arr = arr.filter((f) => f.week === opts.week);
     if (opts.warriorName) {
       arr = arr.filter((f) => {
-        const base = f.title.split(' (')[0]!;
+        const base = f.title.split(' (')[0] ?? '';
         const names = base.split(' vs ');
         return names[0] === opts.warriorName || names[1] === opts.warriorName;
       });

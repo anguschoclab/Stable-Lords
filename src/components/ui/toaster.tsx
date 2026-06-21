@@ -7,8 +7,8 @@ import {
   ToastTitle,
   ToastViewport,
 } from '@/components/ui/toast'; /**
-                                 * Toaster.
-                                 */
+ * Toaster.
+ */
 
 /**
  * Toaster.

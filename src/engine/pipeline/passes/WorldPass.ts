@@ -13,7 +13,7 @@ const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
  * Compute next season.
  */
 export function computeNextSeason(newWeek: number): Season {
-  return SEASONS[Math.floor((newWeek - 1) / 13) % 4]!;
+  return SEASONS[Math.floor((newWeek - 1) / 13) % 4] ?? 'Spring';
 }
 
 // ─── Seasonal Weather Buckets ──────────────────────────────────────────────
@@ -159,11 +159,16 @@ export function rollWeather(rng: IRNGService, season: Season): WeatherType {
   const roll = rng.next() * total;
   let cumulative = 0;
   for (let i = 0; i < pool.length; i++) {
-    cumulative += weights[i]!;
-    if (roll < cumulative) return pool[i]!;
+    cumulative += weights[i] ?? 0;
+    if (roll < cumulative) {
+      const picked = pool[i];
+      if (picked) return picked;
+    }
   }
   // Fallback (should never reach here due to float precision)
-  return pool[pool.length - 1]!;
+  const fallback = pool[pool.length - 1];
+  if (fallback) return fallback;
+  throw new Error('Weighted pick pool is empty');
 }
 
 /**

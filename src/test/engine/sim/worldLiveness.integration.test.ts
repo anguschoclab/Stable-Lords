@@ -111,7 +111,7 @@ describe('world liveness — measured baseline (diagnostic, no hard assert)', ()
     });
     const end = pulses[pulses.length - 1]!;
     const all = [...finalState.roster, ...finalState.rivals.flatMap((r) => r.roster)];
-     
+
     console.log(
       `[liveness] week=${end.week} bouts=${end.totalBouts} dead=${end.deadCount} ` +
         `traited=${end.traitedWarriors}/${all.length} totalTraits=${end.totalTraits} ` +

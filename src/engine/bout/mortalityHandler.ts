@@ -7,9 +7,9 @@ import { engineEventBus } from '@/engine/core/EventBus';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { SeededRNGService } from '@/utils/random';
 import { StateImpact } from '@/engine/impacts'; /**
-                                                 * Handle death.
-                                                 * @param rivalStableId - Rival stable id. (optional)
-                                                 */
+ * Handle death.
+ * @param rivalStableId - Rival stable id. (optional)
+ */
 
 /**
  * Handle death.

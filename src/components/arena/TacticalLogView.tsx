@@ -133,9 +133,9 @@ const TacticalLogEntry = memo(
     );
   }
 ); /**
-    * Tactical log view.
-    * @param - { log, visible count, class name }.
-    */
+ * Tactical log view.
+ * @param - { log, visible count, class name }.
+ */
 
 /**
  * Tactical log view.

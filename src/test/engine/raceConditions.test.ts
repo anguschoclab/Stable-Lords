@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { resolve } from 'path';
 import '@/test/_setup/setup';
 
 // ─── Module under test: OPFS archive service ──────────────────────────────
@@ -120,10 +121,7 @@ describe('#3 doAdvanceWeek isSimulating guard', () => {
     // After the fix, the guard `if (get().isSimulating) return;` should be present.
     // We verify by checking the source code contains the guard.
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../state/createStore.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../state/createStore.ts'), 'utf-8');
     expect(source).toMatch(/if\s*\(\s*get\(\)\.isSimulating\s*\)\s*return/);
   });
 });
@@ -136,7 +134,7 @@ describe('#4 loadGame archiveHotState safety', () => {
   it('OPFS archiveHotState uses enqueue (making fire-and-forget safe)', async () => {
     const fs = await import('fs');
     const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../engine/storage/opfsArchive/service.ts'),
+      resolve(__dirname, '../../engine/storage/opfsArchive/service.ts'),
       'utf-8'
     );
     // After fix, archiveHotState should contain this.enqueue
@@ -151,10 +149,7 @@ describe('#4 loadGame archiveHotState safety', () => {
 describe('#5 handleNewGame awaits saveToSlot', () => {
   it('handleNewGame is async and awaits saveToSlot', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../pages/StartGame.tsx'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../pages/StartGame.tsx'), 'utf-8');
     // After fix, handleNewGame should be async and await saveToSlot
     expect(source).toMatch(/handleNewGame[\s\S]*?async/);
     expect(source).toMatch(/await\s+saveToSlot/);
@@ -168,10 +163,7 @@ describe('#5 handleNewGame awaits saveToSlot', () => {
 describe('#6 handleDelete awaits deleteSlot', () => {
   it('handleDelete is async and awaits deleteSlot', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../pages/StartGame.tsx'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../pages/StartGame.tsx'), 'utf-8');
     expect(source).toMatch(/handleDelete[\s\S]*?async/);
     expect(source).toMatch(/await\s+deleteSlot/);
   });
@@ -184,10 +176,7 @@ describe('#6 handleDelete awaits deleteSlot', () => {
 describe('#7 returnToTitle awaits saveCurrentState', () => {
   it('returnToTitle awaits saveCurrentState before clearing state', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../state/createStore.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../state/createStore.ts'), 'utf-8');
     // After fix, returnToTitle should await saveCurrentState
     expect(source).toMatch(/returnToTitle[\s\S]*?await.*saveCurrentState/);
   });
@@ -200,19 +189,13 @@ describe('#7 returnToTitle awaits saveCurrentState', () => {
 describe('#8 reconstructGameState cache cleared on loadGame', () => {
   it('loadGame calls clearReconstructionCache', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../state/createStore.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../state/createStore.ts'), 'utf-8');
     expect(source).toMatch(/clearReconstructionCache/);
   });
 
   it('doReset calls clearReconstructionCache', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../state/createStore.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../state/createStore.ts'), 'utf-8');
     // doReset should also clear the cache
     expect(source).toMatch(/doReset[\s\S]*?clearReconstructionCache/);
   });
@@ -288,10 +271,7 @@ describe('#8 reconstructGameState cache cleared on loadGame', () => {
 describe('#9 doAdvanceWeek timeout timer cleanup', () => {
   it('doAdvanceWeek clears the timeout timer after race settles', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../state/createStore.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../state/createStore.ts'), 'utf-8');
     expect(source).toMatch(/clearTimeout/);
   });
 });
@@ -303,10 +283,7 @@ describe('#9 doAdvanceWeek timeout timer cleanup', () => {
 describe('#10 useArenaAnimation module-level mutable state', () => {
   it('does not export setFighterNames with module-level nameA/nameD', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../hooks/useArenaAnimation.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../hooks/useArenaAnimation.ts'), 'utf-8');
     // After fix, there should be no module-level `let nameA` or `let nameD`
     expect(source).not.toMatch(/^let\s+nameA\s*=/m);
     expect(source).not.toMatch(/^let\s+nameD\s*=/m);
@@ -330,10 +307,7 @@ describe('#11 StyleRollups cache cleared on loadGame', () => {
 
   it('loadGame calls StyleRollups._clearCaches', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../state/createStore.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../state/createStore.ts'), 'utf-8');
     expect(source).toMatch(/StyleRollups.*_clearCaches|_clearCaches.*StyleRollups/);
   });
 
@@ -360,10 +334,7 @@ describe('#11 StyleRollups cache cleared on loadGame', () => {
 
   it('doReset calls StyleRollups._clearCaches', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../state/createStore.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../state/createStore.ts'), 'utf-8');
     expect(source).toMatch(/doReset[\s\S]*?StyleRollups.*_clearCaches|doReset[\s\S]*?_clearCaches/);
   });
 });
@@ -375,10 +346,7 @@ describe('#11 StyleRollups cache cleared on loadGame', () => {
 describe('#12 handleStartAutosim isSimulating guard', () => {
   it('handleStartAutosim checks isSimulating from the store', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../hooks/useWeekExecution.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../hooks/useWeekExecution.ts'), 'utf-8');
     // useWeekExecution.handleStartAutosim guards against concurrent calls
     expect(source).toMatch(/handleStartAutosim[\s\S]*?isSimulating/);
   });
@@ -391,10 +359,7 @@ describe('#12 handleStartAutosim isSimulating guard', () => {
 describe('#13 doAdvanceDay worker timeout', () => {
   it('doAdvanceDay uses Promise.race with a timeout', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../state/createStore.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../state/createStore.ts'), 'utf-8');
     // Extract the doAdvanceDay function body up to the first await
     const dayFnMatch = source.match(/doAdvanceDay[\s\S]*?await\s+Promise\.race/);
     expect(dayFnMatch).not.toBeNull();
@@ -427,10 +392,7 @@ describe('#14 useInsightManager timer cleanup on re-reveal', () => {
 describe('#15 AudioManager async init race', () => {
   it('play() awaits ready promise or loadMuteState is synchronous', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../lib/AudioManager.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../lib/AudioManager.ts'), 'utf-8');
     // After fix, either:
     // 1. play() is async and awaits a ready promise, OR
     // 2. loadMuteState is synchronous (no await inside)
@@ -447,10 +409,7 @@ describe('#15 AudioManager async init race', () => {
 describe('#2 executeWeek awaits async advancement', () => {
   it('executeWeek is async and awaits doAdvanceWeek/doAdvanceDay', async () => {
     const fs = await import('fs');
-    const source = fs.readFileSync(
-      require('path').resolve(__dirname, '../../hooks/useWeekExecution.ts'),
-      'utf-8'
-    );
+    const source = fs.readFileSync(resolve(__dirname, '../../hooks/useWeekExecution.ts'), 'utf-8');
     // executeWeek is async and awaits advancement
     expect(source).toMatch(/executeWeek[\s\S]*?async/);
     // Should await doAdvanceWeek or doAdvanceDay

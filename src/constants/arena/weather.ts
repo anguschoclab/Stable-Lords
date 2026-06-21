@@ -311,5 +311,5 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
  *
  */
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {
-  return WEATHER_CONFIG[weather as WeatherType] ?? WEATHER_CONFIG.Clear!;
+  return WEATHER_CONFIG[weather as WeatherType] ?? WEATHER_CONFIG.Clear;
 }

@@ -1,6 +1,6 @@
 import { Swords, Star } from 'lucide-react'; /**
-                                              * Title screen hero.
-                                              */
+ * Title screen hero.
+ */
 
 /**
  * Title screen hero.

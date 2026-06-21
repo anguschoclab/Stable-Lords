@@ -58,10 +58,11 @@ export function getWeaponType(weaponId?: string, style?: FightingStyle): WeaponT
 
   // Hybrid weapons: resolve via fighting style if available
   if (HYBRID_WEAPONS[weaponId]) {
-    if (style && STYLE_TO_WEAPON_TYPE[style]) {
-      return STYLE_TO_WEAPON_TYPE[style]!;
+    if (style) {
+      const styleType = STYLE_TO_WEAPON_TYPE[style];
+      if (styleType) return styleType;
     }
-    return HYBRID_WEAPONS[weaponId][0]!; // default to first type
+    return HYBRID_WEAPONS[weaponId][0] ?? 'fist';
   }
 
   const slashing = ['scimitar', 'broadsword', 'greatsword', 'hatchet', 'battle_axe', 'great_axe'];

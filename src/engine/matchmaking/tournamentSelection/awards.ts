@@ -2,8 +2,8 @@ import type { GameState, Warrior, TournamentEntry, InsightTokenType } from '@/ty
 import { SeededRNG } from '@/utils/random';
 import { PatronTokenService } from '@/engine/tokens/patronTokenService';
 import { findWarriorById } from './utils'; /**
-                                            * Award tournament prizes.
-                                            */
+ * Award tournament prizes.
+ */
 
 /**
  * Standalone helper to process and apply tournament rewards for a specific place finish.
@@ -44,8 +44,8 @@ function processTournamentPlaceAward(
   };
   const placeLabel = place === 1 ? '🥇' : place === 2 ? '🥈' : '🥉';
   const source = `${tournament.name} (${placeLabel})`;
-  const tokens =
-    ((tokenMap[tier] ?? tokenMap.IRON)![place as keyof typeof tokenMap.IRON] as string[]) ?? [];
+  const tierTokens = tokenMap[tier] ?? tokenMap.IRON;
+  const tokens = (tierTokens[place as 1 | 2 | 3] as string[] | undefined) ?? [];
 
   if (isPlayer) {
     updatedState.treasury += prizeGold;
@@ -163,8 +163,8 @@ export function awardTournamentPrizes(tournament: TournamentEntry, state: GameSt
 
   return updatedState;
 } /**
-   * Modify warrior.
-   */
+ * Modify warrior.
+ */
 
 /**
  * Modify warrior.

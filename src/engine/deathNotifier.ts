@@ -12,8 +12,8 @@
  */
 import { engineEventBus, type EngineEvent } from '@/engine/core/EventBus';
 import { logger } from '@/utils/logger'; /**
-                                          * Defines the shape of death notification.
-                                          */
+ * Defines the shape of death notification.
+ */
 
 /**
  * Defines the shape of death notification.
@@ -22,8 +22,8 @@ export interface DeathNotification {
   warriorId: string;
   name: string;
 } /**
-   * Death handler type.
-   */
+ * Death handler type.
+ */
 
 /**
  * Death handler type.

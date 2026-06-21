@@ -2,8 +2,8 @@ import { BaseSkills } from '@/types/shared.types';
 import { computeCoordination, computeActivityRating } from './terrabloodCharts';
 import narrativeContent from './narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types'; /**
-                                                                  * Defines the shape of warrior overview statements.
-                                                                  */
+ * Defines the shape of warrior overview statements.
+ */
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -33,7 +33,8 @@ function pickFromArchive(entries: StatementEntry[] | undefined, witValue: number
   for (const e of sorted) {
     if (witValue >= e.min) return e.text;
   }
-  return entries[entries.length - 1]!.text;
+  const last = entries[entries.length - 1];
+  return last?.text ?? '';
 }
 
 function getQuicknessStatement(defBase: number, parBase: number, wt: number): string {
@@ -93,8 +94,8 @@ function getQuicknessStatement(defBase: number, parBase: number, wt: number): st
 
   return qualifier ? `${speed}, ${qualifier}` : speed;
 } /**
-   * Generate warrior statements.
-   */
+ * Generate warrior statements.
+ */
 
 // ─── Generator ─────────────────────────────────────────────────────────────
 

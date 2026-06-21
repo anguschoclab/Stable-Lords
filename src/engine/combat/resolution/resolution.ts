@@ -76,8 +76,8 @@ export { resolveEffectiveTactics, applyAggressionBias } from './tactics';
 export { DECISION_HIT_MARGIN, getMatchupBonus } from '@/constants/combat';
 export { evaluatePsychState, getPsychStateMods, handleDesperateState } from './psychState';
 export { applySpecialtyMods } from './specialtyMods'; /**
-                                                       * Resolve exchange.
-                                                       */
+ * Resolve exchange.
+ */
 
 // ─── Phase Handlers ─────────────────────────────────────────────────────────
 

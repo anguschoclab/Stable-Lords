@@ -52,9 +52,9 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Blood Fog': 'ambience-blood-moon',
   'Shimmering Heat': null,
 }; /**
-    * Weather audio.
-    * @param - { weather, volume, enabled, arena id }.
-    */
+ * Weather audio.
+ * @param - { weather, volume, enabled, arena id }.
+ */
 export default function WeatherAudio({ weather, volume, enabled, arenaId }: WeatherAudioProps) {
   const currentWeatherRef = useRef<WeatherType | null>(null);
   const isIndoor = isIndoorArena(arenaId);

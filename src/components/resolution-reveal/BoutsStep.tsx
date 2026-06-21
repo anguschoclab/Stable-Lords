@@ -10,9 +10,9 @@ import narrativeContent from '@/data/narrativeContent.json';
 interface BoutsStepProps {
   bouts: BoutResult[];
 } /**
-   * Bouts step.
-   * @param - { bouts }.
-   */
+ * Bouts step.
+ * @param - { bouts }.
+ */
 
 /**
  * Bouts step.

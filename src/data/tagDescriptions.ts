@@ -4,29 +4,29 @@
  * Decoupled from hardcoded strings and migrated to narrativeContent.json.
  */
 import narrativeContent from '@/data/narrativeContent.json'; /**
-                                                              * Flair_descriptions.
-                                                              */
+ * Flair_descriptions.
+ */
 
 /**
  * Flair_descriptions.
  */
 export const FLAIR_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.flair; /**
-                                                                                        * Title_descriptions.
-                                                                                        */
+ * Title_descriptions.
+ */
 
 /**
  * Title_descriptions.
  */
 export const TITLE_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.title; /**
-                                                                                        * Injury_descriptions.
-                                                                                        */
+ * Injury_descriptions.
+ */
 
 /**
  * Injury_descriptions.
  */
 export const INJURY_DESCRIPTIONS: Record<string, string> = narrativeContent.meta.injury; /**
-                                                                                          * Status_descriptions.
-                                                                                          */
+ * Status_descriptions.
+ */
 
 /**
  * Status_descriptions.

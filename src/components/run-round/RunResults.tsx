@@ -7,9 +7,9 @@ interface RunResultsProps {
   expandedId: string | null;
   onToggleExpand: (id: string | null) => void;
 } /**
-   * Run results.
-   * @param - { results, expanded id, on toggle expand }.
-   */
+ * Run results.
+ * @param - { results, expanded id, on toggle expand }.
+ */
 
 /**
  * Run results.

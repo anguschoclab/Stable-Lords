@@ -1,5 +1,5 @@
 import type { Warrior } from '@/types/warrior.types';
-import { TRAITS, type TraitTier } from '@/engine/traits';
+import { TRAITS, type TraitTier, type TraitDef } from '@/engine/traits';
 
 /**
  *
@@ -23,10 +23,10 @@ const POSITIVE_VALUE: Record<TraitTier, number> = {
  * The churn signal: 2+ flaws reads as a cut candidate unless real value offsets it.
  */
 export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
-  const traits = (warrior.traits ?? []).map((id) => TRAITS[id]).filter(Boolean);
+  const traits = (warrior.traits ?? []).map((id) => TRAITS[id]).filter((t): t is TraitDef => Boolean(t));
   const factors: { name: string; weight: number }[] = [];
 
-  const flaws = traits.filter((t) => t!.tier === 'Flaw');
+  const flaws = traits.filter((t) => t.tier === 'Flaw');
   const flawBurden = flaws.length * 34;
   if (flaws.length)
     factors.push({
@@ -35,8 +35,8 @@ export function computeWarriorLiability(warrior: Warrior): LiabilityResult {
     });
 
   const traitValue = traits
-    .filter((t) => t!.sign === 'positive')
-    .reduce((s, t) => s + POSITIVE_VALUE[t!.tier], 0);
+    .filter((t) => t.sign === 'positive')
+    .reduce((s, t) => s + POSITIVE_VALUE[t.tier], 0);
   if (traitValue) factors.push({ name: 'positive traits', weight: -traitValue });
 
   const c = warrior.career ?? { wins: 0, losses: 0, kills: 0 };

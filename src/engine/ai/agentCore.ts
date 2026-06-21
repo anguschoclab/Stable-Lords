@@ -15,8 +15,8 @@ import { filterActive } from '@/utils/roster';
  * Implements "Skeptical Memory" and "Hierarchical Delegation".
  */
 export type PlayerThreatLevel = 'Dominant' | 'Moderate' | 'Neutral'; /**
-                                                                      * Defines the shape of agent context.
-                                                                      */
+ * Defines the shape of agent context.
+ */
 
 /**
  * Defines the shape of agent context.
@@ -27,8 +27,8 @@ export interface AgentContext {
   meta: Record<string, number>;
   playerThreatLevel: PlayerThreatLevel;
 } /**
-   * Create agent context.
-   */
+ * Create agent context.
+ */
 
 /**
  * Create agent context.
@@ -146,7 +146,9 @@ export function computePlayerThreatLevel(state: GameState): PlayerThreatLevel {
   // This changes complexity from O(total realm rankings) to O(player roster size)
   // and avoids allocating a large array of key-value pairs per tick.
   for (let i = 0; i < roster.length; i++) {
-    const entry = rankings[roster[i]!.id];
+    const warrior = roster[i];
+    if (!warrior) continue;
+    const entry = rankings[warrior.id];
     if (entry && (playerBestRank === null || entry.overallRank < playerBestRank)) {
       playerBestRank = entry.overallRank;
     }

@@ -12,9 +12,9 @@ const DEFAULT_CONDITION: PlanCondition = {
   trigger: { type: 'HP_BELOW', value: 35 },
   override: { OE: 4 },
 }; /**
-    * Condition editor.
-    * @param - { conditions, on change }.
-    */
+ * Condition editor.
+ * @param - { conditions, on change }.
+ */
 
 /**
  * Condition editor.

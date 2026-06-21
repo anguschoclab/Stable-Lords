@@ -4,8 +4,8 @@
  */
 import type { Warrior } from '@/types/warrior.types';
 import type { WarriorStatus, CareerRecord } from '@/types/warrior.types'; /**
-                                                                           * Defines the shape of career update input.
-                                                                           */
+ * Defines the shape of career update input.
+ */
 
 /**
  * Defines the shape of career update input.
@@ -19,8 +19,8 @@ export interface CareerUpdateInput {
   /** If true, skip fatigue accrual (for tournament participants during tournament week) */
   skipFatigue?: boolean;
 } /**
-   * Defines the shape of career update result.
-   */
+ * Defines the shape of career update result.
+ */
 
 /**
  * Defines the shape of career update result.

@@ -7,10 +7,10 @@ import { findWarriorById, clearWarriorCache } from '@/engine/core/warriorLookup'
 
 // Re-export for backward compatibility
 export { findWarriorById, clearWarriorCache }; /**
-                                                * Get ai plan.
-                                                * @param opponentStyle - Opponent style. (optional)
-                                                * @param opponentOwnerId - Opponent owner id. (optional)
-                                                */
+ * Get ai plan.
+ * @param opponentStyle - Opponent style. (optional)
+ * @param opponentOwnerId - Opponent owner id. (optional)
+ */
 
 /**
  * Get ai plan.
@@ -47,8 +47,8 @@ export function getAIPlan(
     grudgeIntensity
   );
 } /**
-   * Generate freelancer.
-   */
+ * Generate freelancer.
+ */
 
 /**
  * Generate freelancer.

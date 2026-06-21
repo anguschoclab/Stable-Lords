@@ -39,7 +39,7 @@ function processRecoveryAssignment(
   const { updatedInjuries, message } = processRecovery(warrior, healingBonus);
   results.push({ type: 'recovery', warriorId: warrior.id, message });
   currentRoster.set(warrior.id, {
-    ...currentRoster.get(warrior.id)!,
+    ...(currentRoster.get(warrior.id) ?? warrior),
     injuries: updatedInjuries as InjuryData[],
   });
   return currentRoster;
@@ -80,7 +80,7 @@ function processSkillDrillAssignment(
     weather
   );
   if (injury && injuryResult) {
-    const w = currentRoster.get(warrior.id)!;
+    const w = currentRoster.get(warrior.id) ?? warrior;
     currentRoster.set(warrior.id, { ...w, injuries: [...w.injuries, injury] as InjuryData[] });
     results.push(injuryResult);
   }

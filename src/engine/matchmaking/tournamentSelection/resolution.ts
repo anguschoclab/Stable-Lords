@@ -7,8 +7,8 @@ import { awardTournamentPrizes } from './awards';
 import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate'; /**
-                                                                               * Resolve round.
-                                                                               */
+ * Resolve round.
+ */
 
 /**
  * Resolve round.
@@ -168,8 +168,8 @@ export function resolveRound(
       isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${tournament.name}!`] : [],
   };
 } /**
-   * Resolve complete tournament.
-   */
+ * Resolve complete tournament.
+ */
 
 /**
  * Resolve complete tournament.
@@ -191,9 +191,9 @@ export function resolveCompleteTournament(
   }
   return current;
 } /**
-   * Apply bout results.
-   * @param skipFatigue - Skip fatigue. (optional)
-   */
+ * Apply bout results.
+ * @param skipFatigue - Skip fatigue. (optional)
+ */
 
 /**
  * Apply bout results.

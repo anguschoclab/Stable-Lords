@@ -57,8 +57,8 @@ function getFatigueLabel(fatigue: number | undefined): { label: string; color: s
   if (f < FATIGUE_ELEVATED) return { label: 'Tired', color: 'text-arena-gold' };
   return { label: 'Exhausted', color: 'text-destructive' };
 } /**
-   * Tournaments.
-   */
+ * Tournaments.
+ */
 
 /**
  * Tournaments.
@@ -226,7 +226,7 @@ export default function Tournaments() {
                           <AlertTriangle className="h-2.5 w-2.5" />
                           <span className="text-[8px] font-black uppercase tracking-widest">
                             {w.injuries.length === 1
-                              ? w.injuries[0]!.severity
+                              ? w.injuries[0]?.severity
                               : `${w.injuries.length} INJURIES`}
                           </span>
                         </div>

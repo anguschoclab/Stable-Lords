@@ -30,9 +30,9 @@ import {
 interface LeaderboardProps {
   allFights: import('@/types/game').FightSummary[];
 } /**
-   * Gazette leaderboard.
-   * @param - { all fights }.
-   */
+ * Gazette leaderboard.
+ * @param - { all fights }.
+ */
 
 /**
  * Gazette leaderboard.
@@ -155,9 +155,9 @@ export function GazetteLeaderboard({ allFights }: LeaderboardProps) {
     </Surface>
   );
 } /**
-   * Best by style.
-   * @param - { all fights }.
-   */
+ * Best by style.
+ * @param - { all fights }.
+ */
 
 /**
  * Best by style.
@@ -223,9 +223,9 @@ export function BestByStyle({ allFights }: LeaderboardProps) {
     </Surface>
   );
 } /**
-   * Rising stars.
-   * @param - { all fights }.
-   */
+ * Rising stars.
+ * @param - { all fights }.
+ */
 
 /**
  * Rising stars.

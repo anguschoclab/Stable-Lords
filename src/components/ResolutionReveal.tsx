@@ -12,8 +12,8 @@ import narrativeContent from '@/data/narrativeContent.json';
 import { GazetteStep, InjuriesStep, BoutsStep, MathStep, MemorialStep } from './resolution-reveal';
 
 type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial'; /**
-                                                                           * Resolution reveal.
-                                                                           */
+ * Resolution reveal.
+ */
 
 /**
  * Resolution reveal.

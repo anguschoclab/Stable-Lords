@@ -125,8 +125,13 @@ function pickWeighted(pool: TraitDef[], rng: IRNGService): TraitDef {
   });
   let target = rng.next() * total;
   for (let i = 0; i < pool.length; i++) {
-    target -= w[i]!;
-    if (target <= 0) return pool[i]!;
+    target -= w[i] ?? 0;
+    if (target <= 0) {
+      const picked = pool[i];
+      if (picked) return picked;
+    }
   }
-  return pool[pool.length - 1]!;
+  const fallback = pool[pool.length - 1];
+  if (fallback) return fallback;
+  throw new Error('Trait pool is empty');
 }

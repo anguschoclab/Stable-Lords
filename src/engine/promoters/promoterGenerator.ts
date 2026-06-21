@@ -80,9 +80,9 @@ const PERSONALITIES: PromoterPersonality[] = [
   'Flashy',
   'Corporate',
 ]; /**
-    * Generate promoters.
-    * @param rng - Rng. (optional)
-    */
+ * Generate promoters.
+ * @param rng - Rng. (optional)
+ */
 
 /**
  * Generate promoters.
@@ -103,7 +103,7 @@ export function generatePromoters(count: number, seed: number, rng?: IRNGService
     const id = rngService.uuid();
     const firstName = rngService.pick(PROMOTER_FIRST_NAMES);
     const lastName = rngService.pick(PROMOTER_LAST_NAMES);
-    const tier = tiers[i % tiers.length]!;
+    const tier = tiers[i % tiers.length] ?? 'Local';
 
     promoters.push({
       id: id as import('@/types/shared.types').PromoterId,

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { cryptoRandom } from '@/utils/cryptoRandom';
 import type { ArenaTier } from '../ArenaBackground'; /**
-                                                      * Crowd state type.
-                                                      */
+ * Crowd state type.
+ */
 
 /**
  * Crowd state type.
@@ -15,9 +15,9 @@ interface CrowdReactionsProps {
   state: CrowdState;
   className?: string;
 } /**
-   * Crowd reactions.
-   * @param - { tier, state, class name }.
-   */
+ * Crowd reactions.
+ * @param - { tier, state, class name }.
+ */
 
 /**
  * Crowd reactions.

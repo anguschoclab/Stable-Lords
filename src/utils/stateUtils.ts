@@ -24,7 +24,7 @@ export function updateEntityInList<T extends { id: string }>(
   const index = list.findIndex((item) => item.id === id);
   if (index === -1) return list;
   const newList = [...list];
-  newList[index] = updater(newList[index]!);
+  newList[index] = updater(newList[index] as T);
   return newList;
 }
 

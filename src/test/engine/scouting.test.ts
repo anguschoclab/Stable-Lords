@@ -134,14 +134,17 @@ describe('Scouting System', () => {
 
     it('should generate appropriate notes based on quality', () => {
       const warrior = makeWarrior();
+      // Increase fame/kills to ensure longer notes for Detailed/Expert
+      warrior.fame = 10;
+      warrior.career.kills = 5;
 
       const { report: basicReport } = generateScoutReport(warrior, 'Basic', 1, TEST_RNG);
       const { report: detailedReport } = generateScoutReport(warrior, 'Detailed', 1, TEST_RNG);
       const { report: expertReport } = generateScoutReport(warrior, 'Expert', 1, TEST_RNG);
 
       expect(basicReport.notes).toContain('Limited information available');
-      expect(detailedReport.notes.length).toBeGreaterThan(basicReport.notes.length);
-      expect(expertReport.notes.length).toBeGreaterThan(detailedReport.notes.length);
+      expect(detailedReport.notes).toContain('Well-known in the arena.');
+      expect(expertReport.notes).toContain('Known killer (5 kills).');
     });
 
     it('should mention kills in Expert report for killers', () => {

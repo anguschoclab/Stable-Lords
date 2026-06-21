@@ -123,7 +123,7 @@ export function simulateFight(
     planA,
     planD,
     crowdMood,
-    headless,
+    headless ?? false,
     narRng
   );
 

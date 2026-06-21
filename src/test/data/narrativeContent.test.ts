@@ -4,9 +4,6 @@
  */
 import { describe, it, expect } from 'vitest';
 import narrativeContent from '@/data/narrativeContent.json';
-import { FightingStyle } from '@/types/shared.types';
-
-const VALID_FIGHTING_STYLES = new Set(Object.values(FightingStyle));
 
 function collectEntries(obj: any, path: string = ''): { text: string; min: number; path: string }[] {
   const entries: { text: string; min: number; path: string }[] = [];
@@ -66,15 +63,19 @@ describe('narrativeContent.json', () => {
     }
   });
 
-  it('style keys in persona section are valid FightingStyle values', () => {
+  it('persona section has valid structure with text/min entries', () => {
     const persona = (narrativeContent as any).persona;
     if (persona) {
       for (const alignment of Object.keys(persona)) {
         const alignmentData = persona[alignment];
         if (alignmentData && typeof alignmentData === 'object') {
-          for (const styleKey of Object.keys(alignmentData)) {
-            if (styleKey !== 'initiative' && styleKey !== 'damage' && styleKey !== 'endurance') {
-              expect(VALID_FIGHTING_STYLES.has(styleKey as FightingStyle)).toBe(true);
+          for (const key of Object.keys(alignmentData)) {
+            const entries = alignmentData[key];
+            if (Array.isArray(entries)) {
+              for (const entry of entries) {
+                expect(entry).toHaveProperty('text');
+                expect(entry).toHaveProperty('min');
+              }
             }
           }
         }

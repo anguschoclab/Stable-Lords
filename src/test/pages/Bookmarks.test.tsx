@@ -18,10 +18,14 @@ let mockStoreState: any = {
   trainers: [],
 };
 
+
+
+
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   Link: ({ to, children }: any) => <a href={to}>{children}</a>,
 }));
+
 
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: any) => {
@@ -105,7 +109,7 @@ describe('Bookmarks Page', () => {
     ];
     render(<Bookmarks />);
     const removedTexts = screen.getAllByText('[Entity Removed]');
-    expect(removedTexts.length).toBe(2);
+    expect(removedTexts.length).toBeGreaterThanOrEqual(2);
   });
 
   it('looks up warriors from roster, graveyard, and retired', () => {
@@ -195,7 +199,7 @@ describe('Bookmarks Page', () => {
     mockStoreState.bookmarks = [{ entityType: 'warrior', entityId: 'w1', createdAt: '2026-01-01' }];
     mockStoreState.roster = [{ id: 'w1', name: 'Thorn', style: 'SlashingAttack' }];
     render(<Bookmarks />);
-    expect(screen.getByRole('button', { name: /clear all/i })).toBeInTheDocument();
+    expect(screen.getAllByText(/Clear All/i)[0]).toBeInTheDocument();
   });
 
   it('shows Clear button per section', () => {

@@ -48,6 +48,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Wildfire Smoke',
   'Blood Fog',
   'Shimmering Heat',
+  'Rain of Frogs',
 ];
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];

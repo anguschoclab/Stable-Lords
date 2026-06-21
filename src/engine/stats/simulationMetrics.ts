@@ -1,6 +1,5 @@
-import type { GameState } from '@/types/state.types'; /**
- * Defines the shape of sim pulse.
- */
+import type { GameState } from '@/types/state.types';
+import { TRAITS } from '@/engine/traits';
 
 /**
  * Defines the shape of sim pulse.
@@ -14,6 +13,13 @@ export interface SimPulse {
   rivalCount: number;
   avgRivalTreasury: number;
   totalBouts: number;
+  // ─── Trait / churn emergence (world-wide: player + all rivals) ───
+  traitedWarriors: number;
+  totalTraits: number;
+  flawInstances: number;
+  multiFlawWarriors: number;
+  classTraitInstances: number;
+  signatureInstances: number;
 }
 
 /**
@@ -26,6 +32,32 @@ export function collectPulse(state: GameState): SimPulse {
       ? activeRivals.reduce((sum, r) => sum + r.treasury, 0) / activeRivals.length
       : 0;
 
+  // World-wide trait accounting: player roster + every rival roster.
+  const allWarriors = [...state.roster, ...activeRivals.flatMap((r) => r.roster ?? [])];
+  let traitedWarriors = 0;
+  let totalTraits = 0;
+  let flawInstances = 0;
+  let multiFlawWarriors = 0;
+  let classTraitInstances = 0;
+  let signatureInstances = 0;
+  for (const w of allWarriors) {
+    const ids = w.traits ?? [];
+    if (ids.length > 0) traitedWarriors++;
+    totalTraits += ids.length;
+    let flawsOnW = 0;
+    for (const id of ids) {
+      const t = TRAITS[id];
+      if (!t) continue;
+      if (t.tier === 'Flaw') {
+        flawInstances++;
+        flawsOnW++;
+      }
+      if (t.tier === 'Signature') signatureInstances++;
+      if (t.styles && t.styles.length > 0) classTraitInstances++;
+    }
+    if (flawsOnW >= 2) multiFlawWarriors++;
+  }
+
   return {
     week: state.week,
     playerTreasury: state.treasury,
@@ -35,6 +67,12 @@ export function collectPulse(state: GameState): SimPulse {
     rivalCount: activeRivals.length,
     avgRivalTreasury: Math.round(avgRivalTreasury),
     totalBouts: state.arenaHistory.length,
+    traitedWarriors,
+    totalTraits,
+    flawInstances,
+    multiFlawWarriors,
+    classTraitInstances,
+    signatureInstances,
   };
 }
 

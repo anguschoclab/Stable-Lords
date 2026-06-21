@@ -5,6 +5,15 @@ import type { GameState, RivalStableData } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
 
+const ZERO_TRAIT_FIELDS = {
+  traitedWarriors: 0,
+  totalTraits: 0,
+  flawInstances: 0,
+  multiFlawWarriors: 0,
+  classTraitInstances: 0,
+  signatureInstances: 0,
+} as const;
+
 describe('simulationMetrics', () => {
   let mockState: GameState;
 
@@ -39,6 +48,7 @@ describe('simulationMetrics', () => {
         rivalCount: 3,
         avgRivalTreasury: 2000,
         totalBouts: 2,
+        ...ZERO_TRAIT_FIELDS,
       });
     });
 
@@ -90,6 +100,7 @@ describe('simulationMetrics', () => {
         rivalCount: 2,
         avgRivalTreasury: 3000,
         totalBouts: 5,
+        ...ZERO_TRAIT_FIELDS,
       };
 
       const result = formatPulseTable([pulse]);
@@ -114,6 +125,7 @@ describe('simulationMetrics', () => {
           rivalCount: 4,
           avgRivalTreasury: 1500,
           totalBouts: 0,
+          ...ZERO_TRAIT_FIELDS,
         },
         {
           week: 100,
@@ -124,6 +136,7 @@ describe('simulationMetrics', () => {
           rivalCount: 3,
           avgRivalTreasury: 4200,
           totalBouts: 50,
+          ...ZERO_TRAIT_FIELDS,
         },
       ];
 
@@ -138,5 +151,38 @@ describe('simulationMetrics', () => {
 
       expect(result).toBe(expectedLines.join('\n'));
     });
+  });
+});
+
+describe('collectPulse trait/mortality metrics', () => {
+  it('counts traited warriors, total traits, flaws, and multi-flaw warriors world-wide', () => {
+    const state = {
+      week: 5,
+      treasury: 1000,
+      roster: [
+        { id: 'p1', traits: ['quick'] },
+        { id: 'p2', traits: ['fragile', 'slow'] }, // 2 flaws
+      ],
+      graveyard: [],
+      retired: [],
+      arenaHistory: [{}, {}, {}],
+      rivals: [
+        { treasury: 2000, roster: [{ id: 'r1', traits: ['living_wall'] }] },
+        { treasury: 500, roster: [{ id: 'r2', traits: [] }] },
+      ],
+    } as unknown as GameState;
+
+    const p = collectPulse(state);
+    // player p1(quick) + p2(fragile,slow) + rival r1(living_wall) = 3 traited
+    expect(p.traitedWarriors).toBe(3);
+    // 1 + 2 + 1 = 4 total trait instances
+    expect(p.totalTraits).toBe(4);
+    // fragile + slow are flaws → 2 flaw instances
+    expect(p.flawInstances).toBe(2);
+    // p2 has 2 flaws → 1 multi-flaw warrior
+    expect(p.multiFlawWarriors).toBe(1);
+    // living_wall is a class-restricted (styles) trait → 1 class trait, Signature tier
+    expect(p.classTraitInstances).toBeGreaterThanOrEqual(1);
+    expect(p.signatureInstances).toBeGreaterThanOrEqual(1);
   });
 });

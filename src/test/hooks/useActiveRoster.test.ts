@@ -93,4 +93,17 @@ describe('useActiveRoster', () => {
     expect(item.career).toEqual({ wins: 5, losses: 2, kills: 1 });
     expect(item.attributes).toEqual({ ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 });
   });
+
+  it('returns referentially stable result across re-renders with same roster', () => {
+    storeOverride = {
+      roster: [
+        createMockWarrior('w1', { fame: 100 }),
+        createMockWarrior('w2', { fame: 50 }),
+      ],
+    };
+    const { result, rerender } = renderHook(() => useActiveRoster());
+    const first = result.current;
+    rerender();
+    expect(result.current).toBe(first);
+  });
 });

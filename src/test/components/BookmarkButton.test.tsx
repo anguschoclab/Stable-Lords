@@ -82,4 +82,10 @@ describe('BookmarkButton', () => {
       unmount();
     });
   });
+
+  it('has focus-visible:ring classes for keyboard accessibility', () => {
+    const { container } = render(<BookmarkButton entityType="warrior" entityId="w1" />);
+    const btn = container.querySelector('button');
+    expect(btn?.className).toMatch(/focus-visible:ring/);
+  });
 });

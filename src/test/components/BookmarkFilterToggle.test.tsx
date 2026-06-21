@@ -34,4 +34,14 @@ describe('BookmarkFilterToggle', () => {
     render(<BookmarkFilterToggle active={false} onToggle={vi.fn()} />);
     expect(screen.queryByText('5')).not.toBeInTheDocument();
   });
+
+  it('sets aria-pressed to reflect active state', () => {
+    const { rerender } = render(<BookmarkFilterToggle active={false} onToggle={vi.fn()} />);
+    let btn = screen.getByRole('button');
+    expect(btn).toHaveAttribute('aria-pressed', 'false');
+
+    rerender(<BookmarkFilterToggle active={true} onToggle={vi.fn()} />);
+    btn = screen.getByRole('button');
+    expect(btn).toHaveAttribute('aria-pressed', 'true');
+  });
 });

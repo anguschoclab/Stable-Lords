@@ -108,6 +108,7 @@ describe('weatherEffects', () => {
         'Wildfire Smoke',
         'Blood Fog',
         'Shimmering Heat',
+        'Rain of Frogs',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -119,6 +120,14 @@ describe('weatherEffects', () => {
         expect(typeof effect.staminaMult).toBe('number');
         expect(typeof effect.description).toBe('string');
       }
+    });
+
+    it('returns Rain of Frogs effect with correct modifiers', () => {
+      const effect = getWeatherEffect('Rain of Frogs' as WeatherType);
+      expect(effect.staminaMult).toBe(1.1);
+      expect(effect.initiativeMod).toBe(-4);
+      expect(effect.riposteMod).toBe(-2);
+      expect(effect.damageMult).toBe(0.9);
     });
   });
 
@@ -209,6 +218,7 @@ describe('weatherEffects', () => {
         'Wildfire Smoke',
         'Blood Fog',
         'Shimmering Heat',
+        'Rain of Frogs',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);

@@ -33,7 +33,6 @@ vi.mock('@/state/useGameStore', () => ({
       renown: 0,
       titles: 0,
     },
-    isBookmarked: () => false,
   }),
 }));
 

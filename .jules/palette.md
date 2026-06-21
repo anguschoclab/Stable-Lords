@@ -28,3 +28,7 @@
 ## 2026-06-18 - [Accessible Filter Toggles]
 **Learning:** Filter buttons that act as toggle switches (such as those in `WarriorLeaderboardFilters`) require `aria-pressed` to properly announce their active state to screen readers. Visual indicators (like active/inactive CSS classes) are insufficient for non-visual users.
 **Action:** Always include `aria-pressed={active}` when building custom toggle buttons or filter chips to ensure screen reader users receive proper state feedback.
+
+## 2026-06-20 - Bookmark Button Keyboard Accessibility
+**Learning:** The native bookmark toggle button was missing keyboard focus indicators, making it invisible to keyboard/screen-reader users navigating the UI.
+**Action:** When styling custom icon-only buttons, explicitly include standard focus ring utility classes (e.g. `focus-visible:ring-2 focus-visible:ring-primary`) to ensure accessibility without relying on Shadcn components where styling deviates heavily.

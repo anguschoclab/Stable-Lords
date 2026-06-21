@@ -187,9 +187,12 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
         'promoter-1': {
           id: 'promoter-1' as any,
           name: 'Test Promoter',
+          age: 40,
           tier: 'Regional',
-          personality: 'Pragmatic',
+          personality: 'Corporate',
           capacity: 5,
+          biases: [],
+          history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 }
         } as any,
       } as any,
       realmRankings: {
@@ -221,9 +224,12 @@ describe('Gap 10: runPromoterPass considers weather in matchup quality', () => {
         'promoter-1': {
           id: 'promoter-1' as any,
           name: 'Test Promoter',
+          age: 40,
           tier: 'Regional',
-          personality: 'Pragmatic',
+          personality: 'Corporate',
           capacity: 5,
+          biases: [],
+          history: { totalPursePaid: 0, notableBouts: [], legacyFame: 0 }
         } as any,
       } as any,
       realmRankings: {

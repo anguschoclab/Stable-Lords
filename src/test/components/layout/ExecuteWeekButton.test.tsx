@@ -75,18 +75,8 @@ describe('ExecuteWeekButton', () => {
 
   it('renders loading state when running=true', () => {
     vi.mocked(useWeekExecution).mockReturnValue({
-      executeWeek: mockExecuteWeek,
+      ...defaultHookValue(),
       running: true,
-      results: [],
-      clearResults: vi.fn(),
-      fightReadyCount: 0,
-      matchCardLength: 0,
-      handleStartAutosim: mockHandleStartAutosim,
-      autosimming: false,
-      autosimProgress: null,
-      autosimResult: null,
-      setAutosimResult: vi.fn(),
-      gameState: {} as any,
     });
     render(<ExecuteWeekButton />);
     expect(screen.getByText(/Resolving/i)).toBeTruthy();
@@ -94,18 +84,8 @@ describe('ExecuteWeekButton', () => {
 
   it('button is disabled when running=true', () => {
     vi.mocked(useWeekExecution).mockReturnValue({
-      executeWeek: mockExecuteWeek,
+      ...defaultHookValue(),
       running: true,
-      results: [],
-      clearResults: vi.fn(),
-      fightReadyCount: 0,
-      matchCardLength: 0,
-      handleStartAutosim: mockHandleStartAutosim,
-      autosimming: false,
-      autosimProgress: null,
-      autosimResult: null,
-      setAutosimResult: vi.fn(),
-      gameState: {} as any,
     });
     render(<ExecuteWeekButton />);
     const btn = screen.getByRole('button');

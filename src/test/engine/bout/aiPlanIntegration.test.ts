@@ -4,7 +4,7 @@
  * (with personality, philosophy, intent, matchup awareness) while preserving
  * player warrior plans and tournament bout behavior.
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { GameState, RivalStableData } from '@/types/state.types';
@@ -170,10 +170,6 @@ function setupStateWithOffer(
 
 describe('Gap 1: runBoutSimulation uses aiPlanForWarrior for NPC warriors', () => {
   let simulateSpy: any;
-
-  beforeEach(() => {
-    vi.resetModules();
-  });
 
   it('NPC warrior gets aiPlanForWarrior plan with personality mods, not defaultPlanForWarrior', async () => {
     const mod = await import('@/engine/bout/services/boutProcessorService');

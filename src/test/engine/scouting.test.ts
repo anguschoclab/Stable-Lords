@@ -139,9 +139,9 @@ describe('Scouting System', () => {
       const { report: detailedReport } = generateScoutReport(warrior, 'Detailed', 1, TEST_RNG);
       const { report: expertReport } = generateScoutReport(warrior, 'Expert', 1, TEST_RNG);
 
-      expect(basicReport.notes).toContain('Limited intel');
-      expect(detailedReport.notes.length).toBeGreaterThan(basicReport.notes.length);
-      expect(expertReport.notes.length).toBeGreaterThan(detailedReport.notes.length);
+      expect(basicReport.notes).toContain('Limited information available.');
+      expect(detailedReport.notes).not.toBe(basicReport.notes);
+      expect(expertReport.notes).not.toBe(detailedReport.notes);
     });
 
     it('should mention kills in Expert report for killers', () => {

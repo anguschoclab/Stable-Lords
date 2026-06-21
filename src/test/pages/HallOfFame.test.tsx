@@ -218,7 +218,7 @@ describe('HallOfFame Component', () => {
 
     // Within the card, look for the 'Greatest Fight' section block
     const greatestFightSection = within(reaperCard as HTMLElement)
-      .getByText('CHRONICLE_PEAK')
+      .getByText('Career Peak')
       .closest('div')?.parentElement;
     expect(greatestFightSection).not.toBeUndefined();
 

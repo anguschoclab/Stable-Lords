@@ -26,13 +26,13 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
   return {
     id: 'offer-1' as BoutOfferId,
     promoterId: 'promoter-1' as PromoterId,
-    warriorIds: [] as WarriorId[],
+    warriorIds: ['wa' as WarriorId, 'wd' as WarriorId],
     boutWeek: 10,
     expirationWeek: 11,
     purse: 100,
     hype: 50,
     status: 'Proposed',
-    responses: {},
+    responses: { 'wa': 'Pending' },
     ...overrides,
   } as BoutOffer;
 }

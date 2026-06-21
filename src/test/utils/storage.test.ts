@@ -1,10 +1,11 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from 'vitest';
 import { handleLocalStorageQuotaError } from '@/utils/storage';
 import '@/test/_setup/setup';
 
 // Mock localStorage since we are running in Node
+let store: Record<string, string> = {};
+
 const localStorageMock = (() => {
-  let store: Record<string, string> = {};
   return {
     getItem: vi.fn((key: string) => store[key] || null),
     setItem: vi.fn((key: string, value: string) => {
@@ -26,9 +27,12 @@ const localStorageMock = (() => {
   };
 })();
 
+const originalLocalStorage = global.localStorage;
+
 Object.defineProperty(global, 'localStorage', {
   value: localStorageMock,
   writable: true,
+  configurable: true,
 });
 
 describe('handleLocalStorageQuotaError', () => {
@@ -40,6 +44,18 @@ describe('handleLocalStorageQuotaError', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    // Reset setItem to default implementation to prevent quota error leak
+    (localStorage.setItem as any).mockImplementation((key: string, value: string) => {
+      store[key] = value.toString();
+    });
+  });
+
+  afterAll(() => {
+    Object.defineProperty(global, 'localStorage', {
+      value: originalLocalStorage,
+      writable: true,
+      configurable: true,
+    });
   });
 
   it('saves data successfully when quota is available', () => {

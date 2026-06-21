@@ -186,7 +186,7 @@ describe('Trainers Component', () => {
     if (!trainerCard) throw new Error('Trainer card not found in hire tab');
 
     // Find and click the Secure Contract button.
-    const hireBtn = within(trainerCard as HTMLElement).getByText(/Secure Contract/i);
+    const hireBtn = within(trainerCard as HTMLElement).getByText(/Hire/i);
     fireEvent.click(hireBtn);
 
     // Verify the hire mutation occurred: trainer moved from hiringPool to trainers

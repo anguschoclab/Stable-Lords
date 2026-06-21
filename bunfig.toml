@@ -1,2 +1,3 @@
 [test]
 preload = ["./src/test/_setup/bun-setup.ts"]
+pathIgnorePatterns = ["e2e/**"]

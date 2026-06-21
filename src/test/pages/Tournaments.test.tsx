@@ -32,6 +32,7 @@ vi.mock('@/state/useGameStore', () => ({
       renown: 0,
       titles: 0,
     },
+    isBookmarked: () => false,
   }),
 }));
 
@@ -56,7 +57,7 @@ describe('Tournaments Page', () => {
     expect(getByText(/Seasonal Campaigns/)).toBeDefined();
 
     // Check Recruit Units button is present when tournament is null
-    const recruitBtn = getByRole('button', { name: /RECRUIT UNITS/i });
+    const recruitBtn = getByRole('button', { name: /Recruit Warriors/i });
     expect(recruitBtn).toBeDefined();
   });
 });

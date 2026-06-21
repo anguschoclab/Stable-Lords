@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { NewsletterFeed } from '@/engine/newsletter/feed';
 import type { FightCard } from '@/engine/newsletter/feed';
 // import type { FightSummary } from '@/types/combat.types';
@@ -9,6 +9,10 @@ describe('NewsletterFeed', () => {
   beforeEach(() => {
     NewsletterFeed.clear();
     setMockIdGenerator(() => 'mock-id');
+  });
+
+  afterEach(() => {
+    setMockIdGenerator(null);
   });
 
   const createMockCard = (overrides: any = {}): FightCard => ({

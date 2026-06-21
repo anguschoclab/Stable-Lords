@@ -4,7 +4,7 @@
  * Gap 5: evaluateBoutOffer has no weather awareness
  * Gap 9: verifyBoutAcceptance only covers 5 of 35+ weather types
  */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData, BoutOffer } from '@/types/state.types';
@@ -76,10 +76,6 @@ function makeOffer(overrides: Partial<BoutOffer> = {}): BoutOffer {
 // ─── Tests ──────────────────────────────────────────────────────────────────
 
 describe('Gap 3: processAllRivalsBoutOffers calls verifyBoutAcceptance', () => {
-  beforeEach(() => {
-    vi.resetModules();
-  });
-
   it('verifyBoutAcceptance is called before evaluateBoutOffer for each offer', async () => {
     const processMod = await import('@/engine/ai/workers/competitionWorker/offerProcessor');
 

@@ -211,6 +211,8 @@ describe('Emergent behavior report', () => {
     );
     console.log(R.join('\n'));
 
+    // Sometimes the sim stops slightly earlier if everyone goes bankrupt or logic diverges
+    // It's acceptable for it to finish the loop, but state.week might not increment if it halts
     expect(state.week).toBeGreaterThan(0);
   }, 600000);
 });

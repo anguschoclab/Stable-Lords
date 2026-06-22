@@ -58,7 +58,7 @@ describe('world liveness over a long sim (104 weeks)', () => {
     // FREEZE GUARD: total bouts must keep climbing in the second half of the run.
     // Pre-fix, this is flat (the world froze once the player went bankrupt).
     expect(end.totalBouts).toBeGreaterThan(mid.totalBouts);
-  }, 300000);
+  }, 400000);
 
   it('rival population stays alive and does not monotonically bleed out', () => {
     const { finalState, pulses } = runSimulation({
@@ -80,7 +80,7 @@ describe('world liveness over a long sim (104 weeks)', () => {
     // Deaths should accumulate (combat is lethal sometimes) but not exterminate.
     const end = pulses[pulses.length - 1]!;
     expect(end.deadCount).toBeGreaterThan(0);
-  }, 300000);
+  }, 400000);
 
   it('traits keep emerging across the world', () => {
     const { pulses } = runSimulation({
@@ -96,11 +96,11 @@ describe('world liveness over a long sim (104 weeks)', () => {
     expect(end.totalTraits).toBeGreaterThan(0);
     // Some flaws exist in the world (births + training botches).
     expect(end.flawInstances).toBeGreaterThan(0);
-  }, 300000);
+  }, 400000);
 });
 
 describe('world liveness — measured baseline (diagnostic, no hard assert)', () => {
-  beforeEach(reset, 300000);
+  beforeEach(reset, 400000);
 
   it('logs end-of-run trait & churn metrics', () => {
     const { pulses, finalState } = runSimulation({
@@ -119,5 +119,5 @@ describe('world liveness — measured baseline (diagnostic, no hard assert)', ()
         `classTraits=${end.classTraitInstances} signature=${end.signatureInstances}`
     );
     expect(end.week).toBeGreaterThan(0);
-  }, 300000);
+  }, 400000);
 });

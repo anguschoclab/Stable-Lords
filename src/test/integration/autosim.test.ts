@@ -121,7 +121,7 @@ describe('Autosim Integration', () => {
   });
 
   describe('Stop Conditions', () => {
-    it('should stop when no valid pairings available', async () => {
+    it('should keep running with roster floor when roster is empty', async () => {
       const state = {
         ...initialState,
         roster: [],
@@ -129,8 +129,10 @@ describe('Autosim Integration', () => {
 
       const result = await runAutosim(state, 10, () => {});
 
-      expect(result.stopReason).toBe('no_pairings');
-      expect(result.weeksSimmed).toBeLessThan(10);
+      // Roster floor refills during advanceWeek, so sim runs to max weeks
+      expect(result.stopReason).toBe('max_weeks');
+      expect(result.weeksSimmed).toBe(10);
+      expect(result.finalState.roster.length).toBeGreaterThan(0);
     });
 
     it('should provide stop details', async () => {
@@ -274,7 +276,7 @@ describe('Autosim Integration', () => {
   });
 
   describe('Edge Cases', () => {
-    it('should handle empty roster gracefully', async () => {
+    it('should handle empty roster gracefully with roster floor', async () => {
       const state = {
         ...initialState,
         roster: [],
@@ -283,7 +285,8 @@ describe('Autosim Integration', () => {
       const result = await runAutosim(state, 5, () => {});
 
       expect(result).toBeDefined();
-      expect(result.stopReason).toBe('no_pairings');
+      expect(result.stopReason).toBe('max_weeks');
+      expect(result.finalState.roster.length).toBeGreaterThan(0);
     });
 
     it('should handle zero weeks to advance', async () => {

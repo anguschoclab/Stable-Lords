@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { lazy, Suspense, useMemo, useState } from 'react';
 import { useWorldState } from '@/state/useGameStore';
 import { findWarrior } from '@/engine/core/historyResolver';
 import type { WarriorId } from '@/types/shared.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { WarriorRadarChart } from '@/components/charts/WarriorRadarChart';
+const WarriorRadarChart = lazy(() =>
+  import('@/components/charts/WarriorRadarChart').then((m) => ({ default: m.WarriorRadarChart }))
+);
 
 // Child components
 import { WarriorDossierHeader } from './warrior/dossier/WarriorDossierHeader';
@@ -65,7 +67,9 @@ export const WarriorDossier = React.memo(function WarriorDossier({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <WarriorRadarChart warrior={warrior} />
+              <Suspense fallback={<div className="w-full aspect-square max-w-md mx-auto animate-pulse rounded-none bg-white/5" />}>
+                <WarriorRadarChart warrior={warrior} />
+              </Suspense>
             </CardContent>
           </Card>
           <WarriorDossierSoulBond warrior={warrior} />

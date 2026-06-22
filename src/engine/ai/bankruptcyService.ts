@@ -1,6 +1,12 @@
 import type { GameState, Warrior, NewsletterItem } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { StateImpact } from '@/engine/impacts';
+import {
+  BANKRUPTCY_THRESHOLD,
+  MIN_BANKRUPTCY_ROSTER,
+  DEBT_FLOOR,
+  EMERGENCY_LOAN,
+} from '@/constants/economy';
 
 /**
  * BankruptcyService - Handles bankruptcy detection and processing.
@@ -15,7 +21,6 @@ export const BankruptcyService = {
     state: GameState,
     _rng: IRNGService
   ): { updatedState: GameState; bankruptStables: string[] } {
-    const BANKRUPTCY_THRESHOLD = -500;
     const updatedState = { ...state };
     const bankruptStables: string[] = [];
 
@@ -39,61 +44,67 @@ export const BankruptcyService = {
     state: GameState,
     rng: IRNGService
   ): { bankrupt: boolean; impact: StateImpact; soldWarrior?: Warrior } {
-    const BANKRUPTCY_THRESHOLD = -500;
-
     if (state.treasury >= BANKRUPTCY_THRESHOLD) {
       return { bankrupt: false, impact: {} };
     }
 
     const impact: StateImpact = {};
 
-    // Find highest-fame warrior to sell
-    const highestFameWarrior = state.roster.reduce((highest: Warrior | null, warrior: Warrior) => {
-      if (!highest || (warrior.fame || 0) > (highest.fame || 0)) {
-        return warrior;
+    if (state.roster.length > MIN_BANKRUPTCY_ROSTER) {
+      const highestFameWarrior = state.roster.reduce((highest: Warrior | null, warrior: Warrior) => {
+        if (!highest || (warrior.fame || 0) > (highest.fame || 0)) {
+          return warrior;
+        }
+        return highest;
+      }, null);
+
+      if (highestFameWarrior) {
+        impact.rosterRemovals = [highestFameWarrior.id];
+        const sellValue = (highestFameWarrior.fame || 0) * 10;
+
+        const newsletterItem: NewsletterItem = {
+          id: rng.uuid('newsletter'),
+          week: state.week,
+          title: 'Bankruptcy Crisis',
+          items: [
+            `Your stable has gone bankrupt with treasury at ${state.treasury}g.`,
+            `${highestFameWarrior.name} has been sold for ${sellValue}g to cover debts.`,
+            `Your reputation has suffered (-50 popularity).`,
+          ],
+        };
+
+        impact.treasuryDelta = sellValue;
+        impact.popularityDelta = -50;
+        impact.newsletterItems = [newsletterItem];
+
+        return { bankrupt: true, impact, soldWarrior: highestFameWarrior };
       }
-      return highest;
-    }, null);
-
-    if (highestFameWarrior) {
-      // Remove warrior from roster
-      impact.rosterRemovals = [highestFameWarrior.id];
-
-      // Add to treasury (sell value = fame * 10)
-      const sellValue = (highestFameWarrior.fame || 0) * 10;
-
-      // Reduce reputation by 50
-      const popularityDelta = -50;
-
-      // Generate newsletter item
-      const newsletterItem: NewsletterItem = {
-        id: rng.uuid('newsletter'),
-        week: state.week,
-        title: 'Bankruptcy Crisis',
-        items: [
-          `Your stable has gone bankrupt with treasury at ${state.treasury}g.`,
-          `${highestFameWarrior.name} has been sold for ${sellValue}g to cover debts.`,
-          `Your reputation has suffered (-50 popularity).`,
-        ],
-      };
-
-      impact.treasuryDelta = sellValue;
-      impact.popularityDelta = popularityDelta;
-      impact.newsletterItems = [newsletterItem];
-
-      return { bankrupt: true, impact, soldWarrior: highestFameWarrior };
     }
 
-    // No warriors to sell - just reduce reputation
+    // At roster floor: inject capped emergency loan toward threshold
+    const needed = BANKRUPTCY_THRESHOLD - state.treasury;
+    const loanAmount = Math.min(needed, EMERGENCY_LOAN);
+    // Ensure treasury doesn't fall below DEBT_FLOOR
+    const minLoan = Math.max(0, DEBT_FLOOR - state.treasury);
+    const finalLoan = Math.max(loanAmount, minLoan);
+
+    const newsletterItems: string[] = [
+      `Your stable has gone bankrupt with treasury at ${state.treasury}g.`,
+      `Your reputation has suffered (-50 popularity).`,
+    ];
+
+    if (finalLoan > 0) {
+      impact.treasuryDelta = finalLoan;
+      newsletterItems.push(
+        `An emergency loan of ${finalLoan}g has been granted to keep your stable afloat.`
+      );
+    }
+
     const newsletterItem: NewsletterItem = {
       id: rng.uuid('newsletter'),
       week: state.week,
       title: 'Bankruptcy Crisis',
-      items: [
-        `Your stable has gone bankrupt with treasury at ${state.treasury}g.`,
-        `With no warriors to sell, your reputation has suffered (-50 popularity).`,
-        `Consider taking a loan to avoid future bankruptcy.`,
-      ],
+      items: newsletterItems,
     };
 
     impact.popularityDelta = -50;

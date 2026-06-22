@@ -6,6 +6,7 @@ import { consolidateAgentMemory, createAgentContext } from './agentCore';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
 import { SeededRNGService } from '@/utils/random';
+import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 
 /**
  * processAIStable - The Lead Agent Orchestrator for a Rival Stable.
@@ -68,6 +69,7 @@ export function processAIStable(
     arenaHistory: state.arenaHistory.filter((f) => f.week === state.week),
     trainers: updatedRival.trainers ?? [],
     trainingAssignments: updatedRival.trainingAssignments ?? [],
+    applyStipend: (state.rivals || []).length <= 45,
   };
 
   const breakdown = computeWeeklyBreakdown(economyInput);
@@ -102,7 +104,6 @@ export function processAIStable(
   updatedRival.trainingAssignments = [];
 
   // 4. Bankruptcy check (aligned with player threshold)
-  const BANKRUPTCY_THRESHOLD = -500;
   const isBankrupt = updatedRival.treasury < BANKRUPTCY_THRESHOLD;
 
   // Milestone detection — narrow parity with the player's own-stable gazette.

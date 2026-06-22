@@ -1,5 +1,4 @@
 import { type GameState } from '@/types/state.types';
-import type { Warrior } from '@/types/warrior.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { populateInitialWorld } from '@/engine/core/worldSeeder';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
@@ -79,18 +78,10 @@ export function runSimulation(config: SimulationConfig): SimulationResult {
       pulses.push(collectPulse(state));
     }
 
-    // Auto-recruit if empty roster (to keep the simulation running)
-    if (state.roster.length === 0) {
-      if (state.recruitPool.length > 0) {
-        state.roster.push({ ...state.recruitPool[0] } as Warrior);
-        state.recruitPool.shift();
-      }
-    }
-
     // Stop Conditions (Optional)
     if (!config.ignoreBankruptcy) {
-      if (state.treasury < -5000 || (state.roster.length === 0 && state.treasury < 100)) {
-        console.warn(`[Sim] Failure at week ${w}: Stable Bankrupt/Empty.`);
+      if (state.treasury < -5000) {
+        console.warn(`[Sim] Failure at week ${w}: Stable Bankrupt.`);
         break;
       }
     }

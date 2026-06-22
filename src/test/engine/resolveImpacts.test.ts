@@ -215,6 +215,17 @@ describe('resolveImpacts', () => {
     expect(state.roster).toHaveLength(1);
   });
 
+  it('handles rosterAdditions - appends new warriors to roster', () => {
+    const state = makeInitialState();
+    const newWarrior = makeWarrior('w3', 'Charlie');
+    const impact: StateImpact = { rosterAdditions: [newWarrior] };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.roster).toHaveLength(3);
+    expect(newState.roster[2]?.id).toBe('w3');
+    expect(newState.roster[2]?.name).toBe('Charlie');
+  });
+
   it('handles rosterRemovals - empty array', () => {
     const state = makeInitialState();
     const impact: StateImpact = { rosterRemovals: [] };

@@ -27,7 +27,7 @@ export const FAME_DIVIDEND = 0.5;
 /**
  * Warrior upkeep base cost
  */
-export const WARRIOR_UPKEEP_BASE = 60;
+export const WARRIOR_UPKEEP_BASE = 45;
 
 /**
  * Training cost per session
@@ -44,6 +44,14 @@ export const SCOUT_COST = 25;
  * Bankruptcy threshold (treasury below this triggers bankruptcy)
  */
 export const BANKRUPTCY_THRESHOLD = -500;
+
+export const MIN_BANKRUPTCY_ROSTER = 2;
+
+export const DEBT_FLOOR = -800;
+
+export const EMERGENCY_LOAN = 300;
+
+export const IDLE_STIPEND = 25;
 
 // ─── AI Treasury Thresholds ───────────────────────────────────────────────
 /**

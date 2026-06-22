@@ -10,6 +10,13 @@ import { evolvePhilosophies } from '@/engine/owner/philosophy';
 import { generateOwnerNarratives } from '@/engine/owner/narrative';
 import { BankruptcyService } from '@/engine/ai/bankruptcyService';
 import { computeNextSeason } from './WorldPass';
+import { makeWarrior } from '@/engine/factories/warriorFactory';
+import { generateArchetypeAttrs } from '@/engine/factories/statGeneration';
+import { getStyleDefaultLoadout } from '@/data/equipment';
+import { FightingStyle } from '@/types/shared.types';
+import type { Warrior } from '@/types/warrior.types';
+import type { PoolWarrior } from '@/engine/recruitment';
+import type { WarriorId } from '@/types/shared.types';
 
 /**
  * Stable Lords — System & Season Pipeline Pass
@@ -119,6 +126,46 @@ function applyWeeklyPrestigeDecay(state: GameState, impact: StateImpact): void {
 }
 
 /**
+ * Materialize a floor recruit: convert a PoolWarrior to a full Warrior, or
+ * generate one from scratch if the recruit pool is empty.
+ */
+function materializeFloorRecruit(
+  state: GameState,
+  rng: IRNGService
+): { warrior: Warrior; updatedPool?: PoolWarrior[] } | null {
+  if (state.recruitPool && state.recruitPool.length > 0) {
+    const poolWarrior = state.recruitPool[0]!;
+    const warrior: Warrior = {
+      ...poolWarrior,
+      id: poolWarrior.id as WarriorId,
+      fame: 0,
+      popularity: 0,
+      titles: [],
+      injuries: [],
+      flair: [],
+      career: { wins: 0, losses: 0, kills: 0 },
+      champion: false,
+      status: 'Active',
+      equipment: getStyleDefaultLoadout(poolWarrior.style),
+      stableId: state.player?.id,
+    } as unknown as Warrior;
+    return { warrior, updatedPool: state.recruitPool.slice(1) };
+  }
+
+  const style = rng.pick(Object.values(FightingStyle));
+  const attrs = generateArchetypeAttrs(style, rng);
+  const warrior = makeWarrior(
+    rng.uuid() as WarriorId,
+    `Floor Recruit ${rng.uuid().slice(-4)}`,
+    style,
+    attrs,
+    {},
+    rng
+  );
+  return { warrior };
+}
+
+/**
  * Stable Lords — System & Season Pipeline Pass
  * Bundles systemic updates like Hall of Fame, Tier Progression, and AI Seasonal Churn.
  */
@@ -134,6 +181,20 @@ export function runSystemPass(state: GameState, rootRng?: IRNGService): StateImp
   const bankruptcyResult = BankruptcyService.processPlayerBankruptcy(state, rng);
   if (bankruptcyResult.bankrupt) {
     Object.assign(impact, bankruptcyResult.impact);
+  }
+
+  // 2b. Player Roster Floor — auto-recruit if effective roster is empty
+  const bankruptcyRemovals = bankruptcyResult.impact.rosterRemovals?.length ?? 0;
+  const effectiveRosterSize = state.roster.length - bankruptcyRemovals;
+  if (effectiveRosterSize < 1) {
+    const floorRng = new SeededRNGService(state.week * 6151 + 29);
+    const recruit = materializeFloorRecruit(state, floorRng);
+    if (recruit) {
+      impact.rosterAdditions = [...(impact.rosterAdditions ?? []), recruit.warrior];
+      if (recruit.updatedPool) {
+        impact.recruitPool = recruit.updatedPool;
+      }
+    }
   }
 
   // 3. Seasonal Churn & AI Philosophy Evolution

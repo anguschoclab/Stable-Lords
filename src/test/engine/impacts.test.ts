@@ -59,6 +59,17 @@ describe('mergeImpacts', () => {
     expect(result.weather).toBe('Sunny');
   });
 
+  it('merges rosterAdditions by appending', () => {
+    const impacts: StateImpact[] = [
+      { rosterAdditions: [{ id: 'w1' as any, name: 'A' } as any] },
+      { rosterAdditions: [{ id: 'w2' as any, name: 'B' } as any] },
+    ];
+    const result = mergeImpacts(impacts);
+    expect(result.rosterAdditions).toHaveLength(2);
+    expect(result.rosterAdditions![0]!.id).toBe('w1');
+    expect(result.rosterAdditions![1]!.id).toBe('w2');
+  });
+
   it('handles empty impacts array', () => {
     const result = mergeImpacts([]);
     // Sparse initialization: empty impacts returns empty object

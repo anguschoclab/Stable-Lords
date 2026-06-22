@@ -61,11 +61,13 @@ describe('Economy Engine', () => {
       const breakdown = computeWeeklyBreakdown(state as GameState);
 
       // Expenses (from economyConstants.ts):
-      // Warriors: 2 * (60 + 0 fame premium) = 120
+      // Warriors: 2 * (45 + 0 fame premium) = 90
       // Trainers: 1 * 10 = 10
       // Training: 1 * 20 = 20
-      // Total expenses: 150
-      expect(breakdown.totalExpenses).toBe(150);
+      // Total expenses: 120
+      expect(breakdown.totalExpenses).toBe(120);
+      // Idle stipend applies (0 fights, ≥1 warrior)
+      expect(breakdown.totalIncome).toBe(25);
     });
 
     it('should calculate correct income for fight purses, win bonuses, and fame', () => {
@@ -94,6 +96,52 @@ describe('Economy Engine', () => {
 
       // Income calculation may have changed, just verify it's positive
       expect(breakdown.totalIncome).toBeGreaterThan(0);
+    });
+
+    it('should NOT add idle stipend when fights occurred', () => {
+      const state = { ...baseState, week: 5, fame: 0 };
+      const w1 = makeTestWarrior({ name: 'Alice', id: 'p1' as WarriorId, fame: 0 });
+      state.roster = [w1];
+      state.arenaHistory = [
+        {
+          id: 'f1',
+          week: 5,
+          warriorIdA: 'p1',
+          warriorIdD: 'e1',
+          winner: 'A',
+        } as FightSummary,
+      ];
+
+      const breakdown = computeWeeklyBreakdown(state as GameState);
+      expect(breakdown.income.some((i) => i.label === 'Idle Stipend')).toBe(false);
+    });
+
+    it('should NOT add idle stipend when roster is empty', () => {
+      const state = { ...baseState, week: 1, roster: [], arenaHistory: [] };
+      const breakdown = computeWeeklyBreakdown(state as GameState);
+      expect(breakdown.totalIncome).toBe(0);
+    });
+
+    it('should respect applyStipend=false', () => {
+      const state = {
+        ...baseState,
+        week: 1,
+        roster: [makeTestWarrior({ name: 'Alice', fame: 0 })],
+        arenaHistory: [],
+        applyStipend: false,
+      };
+      const breakdown = computeWeeklyBreakdown(state as GameState);
+      expect(breakdown.income.some((i) => i.label === 'Idle Stipend')).toBe(false);
+    });
+
+    it('idle stable still trends negative (upkeep > stipend)', () => {
+      const state = { ...baseState, week: 1, fame: 0 };
+      state.roster = [makeTestWarrior({ name: 'Alice', fame: 0 })];
+      state.arenaHistory = [];
+
+      const breakdown = computeWeeklyBreakdown(state as GameState);
+      // Income: stipend 25. Expenses: upkeep 45. Net = -20.
+      expect(breakdown.net).toBe(-20);
     });
   });
 

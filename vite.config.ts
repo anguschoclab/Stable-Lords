@@ -56,7 +56,7 @@ export default defineConfig(({ _mode }) => ({
       output: {
         manualChunks: {
           'vendor-core': ['react', 'react-dom', 'framer-motion'],
-          'vendor-ui': ['lucide-react', 'recharts', 'date-fns'],
+          'vendor-ui': ['lucide-react', 'date-fns'],
           'engine-core': [
             path.resolve(__dirname, './src/engine/simulate.ts'),
             path.resolve(__dirname, './src/engine/impacts/index.ts'),

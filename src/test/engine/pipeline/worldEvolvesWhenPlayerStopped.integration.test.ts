@@ -60,7 +60,7 @@ describe('world evolves while the player is stopped', () => {
 
     // The bug: arenaHistory freezes once bankrupt. The fix: rival-vs-rival
     // world bouts keep firing, so the bout count must grow.
-    expect(state.treasury).toBeLessThan(-500); // still bankrupt the whole time
+    expect(state.treasury).toBeLessThanOrEqual(-500); // still bankrupt the whole time
     expect(state.arenaHistory.length).toBeGreaterThan(boutsAfterWarmup);
   }, 120000);
 

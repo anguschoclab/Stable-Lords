@@ -26,6 +26,7 @@ import {
   WARRIOR_UPKEEP_BASE,
   TRAINING_COST,
   TRAINER_WEEKLY_SALARY,
+  IDLE_STIPEND,
   computeFightEconomics,
 } from '@/constants/economy';
 import { getArenaById } from '@/data/arenas';
@@ -59,6 +60,7 @@ export interface StableEconomyInput {
   arenaHistory: FightSummary[];
   trainers: Trainer[];
   trainingAssignments: TrainingAssignment[];
+  applyStipend?: boolean;
 }
 
 /**
@@ -127,6 +129,10 @@ export function computeWeeklyBreakdown(input: StableEconomyInput): WeeklyBreakdo
   if (winCount > 0) income.push({ label: `Win bonuses (${winCount})`, amount: scaledWinBonus });
   if (input.fame > 0)
     income.push({ label: 'Fame dividends', amount: Math.round(input.fame * FAME_DIVIDEND) });
+
+  if (input.applyStipend !== false && fightCount === 0 && input.roster.length > 0) {
+    income.push({ label: 'Idle Stipend', amount: IDLE_STIPEND });
+  }
 
   // 🌩️ Weather Impact: Mana Surge Gift
   if (input.weather === 'Mana Surge') {

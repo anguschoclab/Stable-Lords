@@ -1,6 +1,9 @@
+import { lazy, Suspense } from 'react';
 import { Activity, Eye, TrendingUp } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { WarriorRadarChart } from '@/components/charts/WarriorRadarChart';
+const WarriorRadarChart = lazy(() =>
+  import('@/components/charts/WarriorRadarChart').then((m) => ({ default: m.WarriorRadarChart }))
+);
 import { FormSparkline } from '@/components/charts/FormSparkline';
 import { FavoritesCard } from '@/components/warrior/FavoritesCard';
 import { AttrBar, SkillBar, WarriorStatementsPanel } from '@/components/warrior/WarriorStats';
@@ -30,7 +33,9 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
         <SectionDivider label="Physical Profile" />
         <Surface variant="glass" className="border-white/5 overflow-hidden">
           <div className="p-8">
-            <WarriorRadarChart warrior={warrior} />
+            <Suspense fallback={<div className="w-full aspect-square max-w-md mx-auto animate-pulse rounded-none bg-white/5" />}>
+              <WarriorRadarChart warrior={warrior} />
+            </Suspense>
             <div className="mt-12 space-y-6">
               <div className="flex items-center justify-between">
                 <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.3em]">

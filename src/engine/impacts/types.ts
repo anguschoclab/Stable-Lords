@@ -51,6 +51,7 @@ export interface StateImpact {
   // Warriors
   rosterUpdates?: Map<WarriorId, Partial<Warrior>>;
   rosterRemovals?: WarriorId[];
+  rosterAdditions?: Warrior[];
   graveyard?: Warrior[];
   retired?: Warrior[];
 

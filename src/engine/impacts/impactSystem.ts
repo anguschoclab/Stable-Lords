@@ -91,6 +91,7 @@ const MERGE_CONFIG: MergeConfig = {
   unacknowledgedDeaths: { strategy: 'append', defaultValue: [] },
   seasonalGrowth: { strategy: 'replace', defaultValue: [] },
   rosterRemovals: { strategy: 'append', defaultValue: [] },
+  rosterAdditions: { strategy: 'append', defaultValue: [] },
   tournaments: { strategy: 'replace', defaultValue: undefined },
   recruitPool: { strategy: 'replace', defaultValue: undefined },
   realmRankings: { strategy: 'replace', defaultValue: undefined },

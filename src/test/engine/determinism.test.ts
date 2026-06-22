@@ -165,16 +165,15 @@ describe('Quarter/Year Advancement Determinism', () => {
   it('should stop early when stop condition is met', async () => {
     const state = createFreshState('stop-condition-test', '2026-04-11T09:00:00Z');
 
-    // Empty roster should trigger stop
-    state.roster = [];
-
+    // Custom stop condition: treasury below starting value (1000)
+    // Roster floor adds a warrior → upkeep > stipend → treasury drops
     const result = await TimeAdvanceService.advanceQuarter(state, {
-      stopConditions: [{ type: 'rosterEmpty' }],
+      stopConditions: [{ type: 'custom', check: (s) => s.treasury < 1000 }],
       checkpointInterval: 1,
     });
 
-    expect(result.stopReason).toBe('roster_empty');
-    expect(result.weeksCompleted).toBe(1); // Stopped after first checkpoint
+    expect(result.stopReason).toBe('custom_condition');
+    expect(result.weeksCompleted).toBe(2); // Week 1: roster floor adds warrior (no upkeep yet). Week 2: upkeep drops treasury below 1000.
   });
 
   it('should provide week summaries for each week advanced', async () => {

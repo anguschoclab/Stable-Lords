@@ -167,16 +167,6 @@ async function runSequentialAutosim(
         weekSummaries,
       };
     }
-
-    if (state.roster.length === 0) {
-      return {
-        finalState: state,
-        weeksSimmed,
-        stopReason: 'no_pairings',
-        stopDetail: 'No warriors left to fight',
-        weekSummaries,
-      };
-    }
   }
 
   return {

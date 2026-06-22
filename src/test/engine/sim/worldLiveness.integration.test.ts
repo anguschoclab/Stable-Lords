@@ -97,6 +97,28 @@ describe('world liveness over a long sim (104 weeks)', () => {
     // Some flaws exist in the world (births + training botches).
     expect(end.flawInstances).toBeGreaterThan(0);
   }, 300000);
+
+  it('class identity and Signatures emerge, with acquisition in a sane band', () => {
+    const { pulses, finalState } = runSimulation({
+      weeks: 104,
+      seed: 4242,
+      logFrequency: 4,
+      ignoreBankruptcy: true,
+    });
+    const end = pulses[pulses.length - 1]!;
+    const allWarriors = [...finalState.roster, ...finalState.rivals.flatMap((r) => r.roster)];
+
+    // Class-restricted traits now reachable: at least a few exist world-wide.
+    expect(end.classTraitInstances).toBeGreaterThan(0);
+    // The top tier shows up at least once across the world over a season.
+    expect(end.signatureInstances).toBeGreaterThan(0);
+
+    // Acquisition does not saturate: the traited share stays in a sane band,
+    // not runaway-everyone (the pre-fix trajectory shot to 60%+ fast).
+    const traitedShare = end.traitedWarriors / Math.max(1, allWarriors.length);
+    expect(traitedShare).toBeGreaterThan(0.2);
+    expect(traitedShare).toBeLessThan(0.85);
+  }, 300000);
 });
 
 describe('world liveness — measured baseline (diagnostic, no hard assert)', () => {

@@ -117,7 +117,23 @@ describe('world liveness over a long sim (104 weeks)', () => {
     // hard cap — the soft-cap guard in rivalTraitAI.integration.test.ts checks
     // that < 25% reach 3 traits. Here we only assert presence + a floor.
     const traitedShare = end.traitedWarriors / Math.max(1, allWarriors.length);
-    expect(traitedShare).toBeGreaterThan(0.2);
+    expect(traitedShare).toBeGreaterThan(0.2); // traits do emerge
+    expect(traitedShare).toBeLessThan(0.8); // …but the world is NOT saturated (was 0.99)
+    const blankShare = 1 - traitedShare;
+    expect(blankShare).toBeGreaterThan(0.18); // a real population stays permanently blank
+  }, 300000);
+
+  it('multi-flaw warriors occur during the run, feeding the Release cull', () => {
+    const { pulses } = runSimulation({
+      weeks: 104,
+      seed: 4242,
+      logFrequency: 2, // sample often so transient multi-flaw warriors are caught
+      ignoreBankruptcy: true,
+    });
+    const peakMultiFlaw = Math.max(...pulses.map((p) => p.multiFlawWarriors));
+    // Flaw exposure pushes some struggling/flawed warriors to 2 flaws before the
+    // liability cull releases them — so we must see at least one across the run.
+    expect(peakMultiFlaw).toBeGreaterThan(0);
   }, 300000);
 });
 

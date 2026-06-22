@@ -25,7 +25,13 @@ import {
   TOTAL_CAP,
 } from '@/engine/training/trainingGains';
 import { getHealingTrainerBonus } from '@/engine/training/coachLogic';
-import { rollTraitTraining } from '@/engine/training/trainingGains/traitTraining';
+import { rollTraitTraining, TRAIT_CAP } from '@/engine/training/trainingGains/traitTraining';
+import {
+  traitCapacity,
+  meritsTraitDevelopment,
+  countFlaws,
+  pickExposureFlaw,
+} from '@/engine/training/trainingGains/traitCapacity';
 import { policyFor } from '@/engine/ai/traitPolicy';
 import type { Trainer } from '@/types/shared.types';
 import {
@@ -150,11 +156,26 @@ export function processRoster(
     };
     updatedRival.roster = updatedRival.roster.map((w) => {
       if (w.status !== 'Active') return w;
-      if ((w.traits ?? []).length >= RIVAL_DEV_TRAIT_SOFT_CAP) return w;
-      if (rngService.next() > traitPolicy.trainAppetite) return w;
-      const roll = rollTraitTraining(w, aiTrainer, rngService);
-      if (roll.outcome !== 'none' && roll.traitId) {
-        return { ...w, traits: [...(w.traits ?? []), roll.traitId] };
+      const traits = w.traits ?? [];
+      if (traits.length >= TRAIT_CAP) return w; // hard cap reached, nothing more
+
+      // (1) Merit gate + (2) aptitude capacity: only earned, capable warriors develop.
+      const canDevelop = meritsTraitDevelopment(w) && traits.length < traitCapacity(w);
+      if (canDevelop) {
+        if (rngService.next() > traitPolicy.trainAppetite) return w;
+        const roll = rollTraitTraining(w, aiTrainer, rngService);
+        if (roll.outcome !== 'none' && roll.traitId) {
+          return { ...w, traits: [...traits, roll.traitId] };
+        }
+        return w;
+      }
+
+      // Flaw exposure: warriors who are struggling (losing record) or already
+      // carry a flaw risk picking up a further flaw — feeding multi-flaw churn.
+      const struggling = (w.career?.losses ?? 0) > (w.career?.wins ?? 0);
+      if ((struggling || countFlaws(w) >= 1) && rngService.next() < FLAW_EXPOSURE_CHANCE) {
+        const flawId = pickExposureFlaw(w, rngService);
+        if (flawId) return { ...w, traits: [...traits, flawId] };
       }
       return w;
     });
@@ -258,7 +279,9 @@ function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
  */
 const AI_TRAINING_EFFECTIVENESS = 0.8;
 
-export const RIVAL_DEV_TRAIT_SOFT_CAP = 2;
+/** Weekly chance that a struggling or already-flawed warrior picks up a (further)
+ *  flaw even when not developing positively — keeps multi-flaw churn alive. Knob. */
+export const FLAW_EXPOSURE_CHANCE = 0.02;
 
 /** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
 function performAITraining(

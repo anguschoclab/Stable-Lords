@@ -24,5 +24,11 @@ describe('rival trait AI (integration)', () => {
       (w) => (w.traits ?? []).length >= 3
     ).length;
     expect(atOrAboveHardCap / Math.max(1, allRivalWarriors.length)).toBeLessThan(0.25);
+
+    const blank = allRivalWarriors.filter((w) => (w.traits ?? []).length === 0).length;
+    const blankShare = blank / Math.max(1, allRivalWarriors.length);
+    // De-saturation: development is earned + capacity-gated, so a meaningful slice
+    // of the world stays permanently blank (low-aptitude / unproven warriors).
+    expect(blankShare).toBeGreaterThan(0.15);
   });
 });

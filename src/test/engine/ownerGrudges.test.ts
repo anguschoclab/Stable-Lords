@@ -58,6 +58,72 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     expect(grudges[0]!.intensity).toBe(3);
     expect(gazetteItems[0]).toContain('GRUDGE DEEPENS');
   });
+
+  it('should not decay grudges if lastEscalation is recent', () => {
+    const existingGrudge = {
+      id: 'g1',
+      ownerIdA: 'o3',
+      ownerIdB: 'o4',
+      intensity: 3,
+      reason: 'Old feud',
+      startWeek: 1,
+      lastEscalation: 8, // state.week is 10, difference is 2 <= 4
+    };
+
+    const { grudges } = processOwnerGrudges(mockState, [existingGrudge as any]);
+
+    expect(grudges[0]!.intensity).toBe(3);
+  });
+
+  it('should decay grudges if lastEscalation is old', () => {
+    const existingGrudge = {
+      id: 'g1',
+      ownerIdA: 'o3',
+      ownerIdB: 'o4',
+      intensity: 3,
+      reason: 'Old feud',
+      startWeek: 1,
+      lastEscalation: 5, // state.week is 10, difference is 5 > 4
+    };
+
+    const { grudges } = processOwnerGrudges(mockState, [existingGrudge as any]);
+
+    expect(grudges[0]!.intensity).toBe(2);
+  });
+
+  it('should trigger season feud event when intensity crosses 4 threshold', () => {
+    const existingGrudge = {
+      id: 'g1',
+      ownerIdA: 'o1',
+      ownerIdB: 'o2',
+      intensity: 3,
+      reason: 'Old feud',
+      startWeek: 1,
+      lastEscalation: 1,
+    };
+
+    const { grudges, gazetteItems } = processOwnerGrudges(mockState, [existingGrudge as any]);
+
+    expect(grudges[0]!.intensity).toBe(4);
+    expect(gazetteItems[1]).toContain('SEASON FEUD');
+  });
+
+  it('should not trigger season feud if intensity was already 4 or higher', () => {
+    const existingGrudge = {
+      id: 'g1',
+      ownerIdA: 'o1',
+      ownerIdB: 'o2',
+      intensity: 4,
+      reason: 'Old feud',
+      startWeek: 1,
+      lastEscalation: 1,
+    };
+
+    const { grudges, gazetteItems } = processOwnerGrudges(mockState, [existingGrudge as any]);
+
+    expect(grudges[0]!.intensity).toBe(5);
+    expect(gazetteItems.some(i => i.includes('SEASON FEUD'))).toBe(false);
+  });
 });
 
 describe('ownerGrudges - calculateRivalryScore', () => {

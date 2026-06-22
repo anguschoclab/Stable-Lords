@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { skillCheck, getPhase } from '@/engine/combat/mechanics/combatMath';
+import { skillCheck, getPhase, pickText, contestCheck } from '@/engine/combat/mechanics/combatMath';
 
 describe('combatMath engine', () => {
   describe('skillCheck', () => {
@@ -65,6 +65,53 @@ describe('combatMath engine', () => {
     it("returns 'late' when ratio is above the mid threshold (> 0.65)", () => {
       expect(getPhase(7, 10)).toBe('late');
       expect(getPhase(10, 10)).toBe('late');
+    });
+  });
+  describe('pickText', () => {
+    it('returns empty string when array is empty', () => {
+      const rng = vi.fn().mockReturnValue(0.5);
+      expect(pickText(rng, [])).toBe('');
+    });
+    it('returns element based on rng', () => {
+      const texts = ['a', 'b', 'c'];
+      let rng = vi.fn().mockReturnValue(0);
+      expect(pickText(rng, texts)).toBe('a');
+      rng = vi.fn().mockReturnValue(0.99);
+      expect(pickText(rng, texts)).toBe('c');
+      rng = vi.fn().mockReturnValue(0.4);
+      expect(pickText(rng, texts)).toBe('b');
+    });
+    it('returns empty string when array contains undefined', () => {
+      const rng = vi.fn().mockReturnValue(0.5);
+      // @ts-expect-error testing invalid input
+      expect(pickText(rng, [undefined])).toBe('');
+    });
+  });
+
+  describe('contestCheck', () => {
+    it('returns true if rollA > rollD', () => {
+      const rng = vi.fn()
+        .mockReturnValueOnce(0.99) // rollA = 20
+        .mockReturnValueOnce(0.0); // rollD = 1
+      expect(contestCheck(rng, 10, 10)).toBe(true);
+    });
+    it('returns false if rollA <= rollD', () => {
+      const rng = vi.fn()
+        .mockReturnValueOnce(0.0) // rollA = 1
+        .mockReturnValueOnce(0.99); // rollD = 20
+      expect(contestCheck(rng, 10, 10)).toBe(false);
+    });
+    it('handles equal stats with tie (returns false)', () => {
+      const rng = vi.fn()
+        .mockReturnValueOnce(0.5) // rollA = 11
+        .mockReturnValueOnce(0.5); // rollD = 11
+      expect(contestCheck(rng, 10, 10)).toBe(false);
+    });
+    it('incorporates modifiers correctly', () => {
+      const rng = vi.fn()
+        .mockReturnValueOnce(0.5) // rollA = 11 + 5 = 16
+        .mockReturnValueOnce(0.5); // rollD = 11 + 5 = 16
+      expect(contestCheck(rng, 5, 10, 5, -5)).toBe(true); // 11+5+5=21 vs 11+10-5=16 -> 21 > 16 -> true
     });
   });
 });

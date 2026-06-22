@@ -50,7 +50,10 @@ describe('tournamentHelpers', () => {
 
     it('returns predefined names for early rounds', () => {
       expect(getRoundName(1, 6)).toBe('Round of 64');
+      expect(getRoundName(2, 6)).toBe('Round of 32');
+      expect(getRoundName(3, 6)).toBe('Round of 16');
       expect(getRoundName(4, 6)).toBe('Quarter-finals');
+      expect(getRoundName(5, 6)).toBe('Semi-finals');
       expect(getRoundName(6, 7)).toBe('Finals & Bronze');
     });
 

@@ -55,4 +55,11 @@ describe('BookmarkButton accessibility', () => {
     fireEvent.click(btn);
     expect(mockToggle).toHaveBeenCalledWith('warrior', 'w1');
   });
+
+  it('uses ring-inset (not ring-offset) for focus ring', () => {
+    const { container } = render(<BookmarkButton entityType="warrior" entityId="w1" />);
+    const btn = container.querySelector('button');
+    expect(btn?.className).toContain('ring-inset');
+    expect(btn?.className).not.toContain('ring-offset');
+  });
 });

@@ -369,7 +369,10 @@ export function TreasuryOverview() {
       fame: s.fame,
       weather: s.weather,
       arenaHistory: s.arenaHistory,
+      trainers: s.trainers,
+      trainingAssignments: s.trainingAssignments,
       treasury: s.treasury,
+      ledger: s.ledger,
     }))
   );
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);

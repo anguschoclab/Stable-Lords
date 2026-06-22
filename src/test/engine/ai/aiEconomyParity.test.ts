@@ -68,6 +68,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 0,
           status: 'Active',
+          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },
         } as any,
       ],
     });
@@ -91,6 +92,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 30,
           status: 'Active',
+          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },
         } as any,
       ],
     });
@@ -119,6 +121,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 30,
           status: 'Active',
+          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },
         } as any,
       ],
     });
@@ -154,6 +157,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 0,
           status: 'Active',
+          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },
         } as any,
       ],
     });
@@ -176,6 +180,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 0,
           status: 'Active',
+          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },
         } as any,
       ],
     });
@@ -197,6 +202,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 50,
           status: 'Active',
+          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },
         } as any,
       ],
     });
@@ -253,6 +259,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 0,
           status: 'Active',
+          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },
         } as any,
       ],
     });
@@ -276,6 +283,7 @@ describe('AI Economy Parity', () => {
           style: 'StrikingAttack',
           fame: 0,
           status: 'Active',
+          attributes: { WT: 15, WL: 15, STR: 10, AGI: 10, END: 10, SPD: 10, DF: 10 },
         } as any,
       ],
       trainingAssignments: [{ warriorId: 'w1' as any, type: 'attribute', attribute: 'ST' }],

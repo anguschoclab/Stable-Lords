@@ -80,27 +80,27 @@
       "initiative": {
         "high": [
           {
-            "min": 32,
+            "min": 31,
             "text": "Summons a storm of steel that leaves no room to breathe"
           },
           {
-            "min": 31,
+            "min": 30,
             "text": "A terrifying maestro of battle tempo, dictating every bloody exchange"
           },
           {
-            "min": 30,
+            "min": 29,
             "text": "Bends the chaos of the pit to his will, forcing foes to fight on his terms"
           },
           {
-            "min": 29,
+            "min": 28,
             "text": "Drowns his opponent in a relentless tide of crushing aggression"
           },
           {
-            "min": 28,
+            "min": 27,
             "text": "Forces a suffocating, lethal rhythm onto the blood-soaked sands"
           },
           {
-            "min": 14,
+            "min": 13,
             "text": "Steals the center of the pit and refuses to yield a single step"
           },
           {
@@ -413,7 +413,13 @@
         "Blood sprays wildly as the slash hits a major artery!",
         "The sheer force of the cut nearly dismembers {{defender}}!",
         "A devastating gash is opened across {{defender}}, a life-threatening wound!",
-        "{{attacker}} lands a terrifying slash that leaves {{defender}} visibly mangled!"
+        "{{attacker}} lands a terrifying slash that leaves {{defender}} visibly mangled!",
+        "A devastating gash opens across {{defender}} as {{attacker}}'s slash hits true!",
+        "{{attacker}} executes a flawless, flesh-rending slash against {{defender}}!",
+        "{{attacker}} finds a critical opening, carving a deep wound into {{defender}}!",
+        "With terrifying precision, {{attacker}}'s slash leaves {{defender}} staggered and bleeding!",
+        "{{attacker}}'s blade dances, delivering a devastating, surgical cut to {{defender}}!",
+        "A masterful, vicious slash from {{attacker}} rips right through {{defender}}'s defenses!"
       ],
       "critical_supernatural": [
         "The air shudders as {{attacker}}'s {{weapon}} hums with a spectral light, cleaving through {{defender}}'s {{bodyPart}} and the very air itself.",
@@ -508,7 +514,13 @@
         "Internal organs are ruptured by the brutal, blunt force trauma!",
         "{{defender}} spits blood as the devastating bash shatters bone!",
         "The massive strike crumples {{defender}} in a heap of broken limbs!",
-        "A horrifying crunch echoes across the arena as the bash lands!"
+        "A horrifying crunch echoes across the arena as the bash lands!",
+        "A bone-shattering blow from {{attacker}} sends shockwaves through {{defender}}'s frame!",
+        "{{attacker}} delivers a crushing strike that leaves {{defender}} reeling!",
+        "With explosive force, {{attacker}} smashes into {{defender}}, denting armor and breaking bone!",
+        "{{defender}} staggers violently as {{attacker}} lands a terrifyingly heavy bash!",
+        "The sickening crunch of bone echoes as {{attacker}} batters {{defender}} with a critical blow!",
+        "A merciless, heavy swing from {{attacker}} leaves {{defender}} completely winded and bruised!"
       ],
       "critical_supernatural": [
         "Gravity itself seems to bow to {{attacker}}'s {{weapon}}, creating a localized shockwave on the {{bodyPart}}.",
@@ -600,7 +612,13 @@
         "{{defender}} gasps in agony as the deep stab collapses a lung!",
         "The vicious piercing strike hits an artery, causing massive blood loss!",
         "{{weapon}} drives deep into the gut, a truly grievous and fatal-looking wound!",
-        "The sheer force of the thrust nearly pins {{defender}} to the arena floor!"
+        "The sheer force of the thrust nearly pins {{defender}} to the arena floor!",
+        "{{attacker}} thrusts with deadly accuracy, punching straight through {{defender}}'s guard!",
+        "A lightning-fast lunge from {{attacker}} buries deep into {{defender}}'s flesh!",
+        "{{defender}} gasps in pain as {{attacker}} lands a critical, puncturing strike!",
+        "{{attacker}} finds the gap in {{defender}}'s armor, delivering a surgical and bloody thrust!",
+        "With a terrifyingly precise strike, {{attacker}} impales {{defender}} deeply!",
+        "A brutal, armor-piercing thrust from {{attacker}} leaves {{defender}} bleeding heavily!"
       ],
       "critical_supernatural": [
         "{{possessive}} {{weapon}} hums a low, deathly note, bypassing reality to hit the {{bodyPart}} with cold light.",
@@ -687,7 +705,13 @@
         "Bones break as the feral, bare-knuckle strike lands with maximum prejudice!",
         "The sheer kinetic force of the punch causes severe concussive trauma!",
         "A haymaker from hell knocks teeth loose and sends {{defender}} reeling!",
-        "The savage body blow visibly cracks ribs, leaving {{defender}} gasping for air!"
+        "The savage body blow visibly cracks ribs, leaving {{defender}} gasping for air!",
+        "{{attacker}} delivers a sickening, jaw-cracking hook to {{defender}}!",
+        "A brutal, bare-knuckle smash from {{attacker}} leaves {{defender}} seeing stars!",
+        "{{defender}} reels from a devastating flurry of blows delivered by {{attacker}}!",
+        "{{attacker}} steps inside {{defender}}'s guard and lands a crushing, heavy punch!",
+        "With explosive power, {{attacker}}'s strike crumples {{defender}}'s defenses!",
+        "A bone-rattling uppercut from {{attacker}} nearly lifts {{defender}} off their feet!"
       ],
       "critical_supernatural": [
         "A golden light follows {{attacker}}'s strike, shattering the air as the {{bodyPart}} is struck by 'The Enlightened Hand'.",
@@ -1226,7 +1250,13 @@
           "With theatrical flair, {{defender}} pirouettes away from the deadly strike.",
           "A desperate, undignified dive saves {{defender}} from a lethal blow.",
           "{{defender}} steps into the void, showing absolute confidence as the strike whiffs past.",
-          "{{defender}} pirouettes away from the strike, blowing a kiss to the jeering crowd."
+          "{{defender}} pirouettes away from the strike, blowing a kiss to the jeering crowd.",
+          "With a desperate, frantic scramble, {{name}} barely evades the deadly strike!",
+          "{{name}} confidently sidesteps the attack, a smug smirk on their face.",
+          "In a theatrical display of acrobatics, {{name}} vaults out of harm's way!",
+          "{{name}} simply ghosts out of the attack's path, their grim expression unchanged.",
+          "{{name}} drops low, narrowly dodging the blow with a panicked gasp!",
+          "With an arrogant sway, {{name}} watches the strike sail past harmlessly."
         ],
         "tier4_supernatural": [
           "{{defender}} contorts her body inhumanly as she unbelievably dodges the blow!",
@@ -1286,11 +1316,16 @@
           "{{name}} blocks with theatrical flair, winking at the crowd as sparks fly.",
           "{{name}} meets the blow grimly, their face an unreadable mask of determination.",
           "{{name}} desperately throws up a block, shaking from the impact.",
-          "{{name}} parries with a theatrical flourish, inviting the crowd's cheer.",
+          "{{name}} parries with a theatrical flourish, inviting the crowd's applause!",
           "{{name}} meets the blow with grim, unyielding resistance.",
           "{{name}} casually swats the attack aside, supremely confident.",
           "{{name}} intercepts the strike with a cold, calculated parry.",
-          "{{name}} barely manages to deflect the blow in a frantic block."
+          "{{name}} barely manages to deflect the blow in a frantic block.",
+          "{{name}} throws up a desperate block, steel ringing harshly against the attack!",
+          "With casual confidence, {{name}} swats the attack aside.",
+          "A grim, heavy block from {{name}} absorbs the blow with a bone-jarring thud.",
+          "{{name}} desperately deflects the blow, pushed back by the sheer force!",
+          "An arrogant flick of the wrist from {{name}} sends the attack wide."
         ]
       },
       "shield": {
@@ -1353,7 +1388,13 @@
           "{{name}} twirls past the attack and ripostes with theatrical flair!",
           "{{name}} parries heavily and delivers a grim, silent counterstrike.",
           "{{name}} sneers, turning the blocked attack into a flawless, confident riposte.",
-          "{{name}} brutally forces an opening and counters with grim intent."
+          "{{name}} brutally forces an opening and counters with grim intent.",
+          "A desperate block turns into a wild, flailing counterattack by {{name}}!",
+          "{{name}} confidently deflects and thrusts back in one fluid motion.",
+          "With a dramatic spin, {{name}} parries and strikes back, playing to the crowd!",
+          "{{name}} grimly absorbs the impact and coldly returns the favor with a brutal counter.",
+          "{{name}} scrambles to block, then lashes out blindly in retaliation!",
+          "A smooth, practiced counterstrike from {{name}} catches the opponent off guard."
         ]
       }
     },
@@ -1390,7 +1431,13 @@
         "{{name}}'s legs give out, collapsing in a heap as the crowd gasps.",
         "{{name}} is violently thrown to the ground in a cloud of dust!",
         "Losing all balance, {{name}} crashes heavily to the blood-stained earth.",
-        "{{name}} crumples like a puppet with cut strings, hitting the dirt hard."
+        "{{name}} crumples like a puppet with cut strings, hitting the dirt hard.",
+        "The impact hits like a thunderbolt, instantly dropping {{name}} to the sand!",
+        "{{name}} stumbles backward, feet tangling before they crash down hard.",
+        "A slow, agonizing collapse sees {{name}} hit the dirt, utterly overwhelmed.",
+        "{{name}} is swept off their feet in a sudden blur of motion, hitting the ground with a sickening thud.",
+        "{{name}} crumples like a ragdoll, thrown violently to the arena floor!",
+        "The sheer force of the blow sends {{name}} flying into the dirt!"
       ],
       "recovery": [
         "{{name}} staggers to {{possessive}} feet, swaying dangerously but still gripping {{possessive}} weapon tight.",
@@ -1428,7 +1475,13 @@
         "Slowly, painfully, {{name}} pushes up from the dirt, refusing to stay down.",
         "{{name}} kips up with athletic grace, ready for more.",
         "Using their weapon as a crutch, {{name}} heavily rises back to their feet.",
-        "{{name}} bounds back up almost immediately, fueled by adrenaline."
+        "{{name}} bounds back up almost immediately, fueled by adrenaline.",
+        "In a flash of adrenaline, {{name}} springs right back to their feet, ready for more!",
+        "{{name}} groggily pushes up off the bloodstained sand, swaying unsteadily.",
+        "With grim determination, {{name}} slowly drags themselves upright, refusing to stay down.",
+        "A frantic scramble sees {{name}} back on their feet, kicking up dust in their panic.",
+        "{{name}} staggers upward, shaking their head to clear the cobwebs.",
+        "A triumphant roar erupts as {{name}} surges back to their feet!"
       ]
     },
     "epithets": {
@@ -2992,7 +3045,13 @@
       "{{defender}} breathes their last, the light fading under the unforgiving sun.",
       "With a theatrical flourish, {{attacker}} executes {{defender}}, soaking up the adulation of the mob.",
       "{{attacker}} ends it efficiently. Another body for the pyre, another victory won.",
-      "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault."
+      "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
+      "{{attacker}} delivers a cold, clinical finishing blow, ending {{defender}}'s life without hesitation.",
+      "The arena falls into a stunned silence as {{attacker}} brutally executes {{defender}}.",
+      "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
+      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
+      "{{attacker}} stands over {{defender}}, delivering a final, merciless strike to end the suffering.",
+      "The crowd gasps as {{attacker}} ruthlessly finishes {{defender}}, leaving nothing to chance."
     ],
     "critical_chain": [
       "A relentless flurry! {{attacker}} strings together a blinding series of strikes, the final one separating {{defender}} from their life.",

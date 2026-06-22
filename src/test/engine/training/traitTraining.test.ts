@@ -7,6 +7,7 @@ import {
   rollTraitTraining,
   TRAIT_TRAIN_WEEKS,
 } from '@/engine/training/trainingGains/traitTraining';
+import { TRAITS } from '@/engine/traits';
 import { SeededRNGService } from '@/utils/random';
 
 const trainer = (tier: 'Novice' | 'Seasoned' | 'Master') => ({ id: 't', name: 'T', tier }) as any;
@@ -87,5 +88,32 @@ describe('rollTraitTraining', () => {
 
   it('exposes the standard training duration', () => {
     expect(TRAIT_TRAIN_WEEKS).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe('rollTraitTraining surfaces class & Signature traits for a styled warrior', () => {
+  it('a WallOfSteel warrior under a Master trainer can earn class-restricted and Signature traits', () => {
+    const rng = new SeededRNGService(777);
+    const earnedClass = new Set<string>();
+    const earnedSignature = new Set<string>();
+
+    for (let i = 0; i < 1500; i++) {
+      const roll = rollTraitTraining(
+        warrior({ trainability: 0.9 }),
+        trainer('Master'),
+        rng
+      );
+      if (roll.outcome === 'success' && roll.traitId) {
+        const t = TRAITS[roll.traitId]!;
+        if (t.styles && t.styles.length > 0) earnedClass.add(roll.traitId);
+        if (t.tier === 'Signature') earnedSignature.add(roll.traitId);
+      }
+    }
+
+    expect(earnedClass.size).toBeGreaterThan(0);
+    expect(earnedSignature.size).toBeGreaterThan(0);
+    for (const id of earnedClass) {
+      expect(TRAITS[id]!.styles).toContain(FightingStyle.WallOfSteel);
+    }
   });
 });

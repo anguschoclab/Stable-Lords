@@ -6,6 +6,8 @@ import { TRAITS, type TraitDef, type TraitTier } from '@/engine/traits';
 export const TRAIT_TRAIN_WEEKS = 4;
 export const TRAIT_CAP = 3;
 
+export const CLASS_TRAIT_WEIGHT_BONUS = 5;
+
 const CEILING: Record<TrainerTier, TraitTier> = {
   Novice: 'Notable',
   Seasoned: 'Exceptional',
@@ -86,7 +88,7 @@ export function rollTraitTraining(
   const pool = traitTrainingPool(warrior, trainer).filter((t) => canAcquireTrait(warrior, t.id));
   if (pool.length === 0) return { outcome: 'none' };
 
-  const candidate = pickWeighted(pool, rng);
+  const candidate = pickTraitCandidate(pool, rng);
   const apt = aptitude(warrior, trainer);
   const successChance = Math.max(
     0.05,
@@ -107,6 +109,22 @@ export function rollTraitTraining(
     return { outcome: 'botch', traitId: pickWeighted(flaws, rng).id };
   }
   return { outcome: 'none' };
+}
+
+function pickTraitCandidate(pool: TraitDef[], rng: IRNGService): TraitDef {
+  let total = 0;
+  const weighted = pool.map((t) => {
+    const base = t.weight ?? 1;
+    const w = t.styles && t.styles.length > 0 ? base * CLASS_TRAIT_WEIGHT_BONUS : base;
+    total += w;
+    return { t, w };
+  });
+  let target = rng.next() * total;
+  for (const entry of weighted) {
+    target -= entry.w;
+    if (target <= 0) return entry.t;
+  }
+  return weighted[weighted.length - 1]!.t;
 }
 
 function pickWeighted(pool: TraitDef[], rng: IRNGService): TraitDef {

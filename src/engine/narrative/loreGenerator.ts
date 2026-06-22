@@ -2,6 +2,11 @@ import { pick } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Found abandoned by the rusted gates of the Blackwood Orphanage in the dead of winter',
+  'Raised by silent wardens in the soot-stained cloisters of St. Jude',
+  'A forgotten child of the Pyre, left in a burnt-out orphanage cellar',
+  'Bred for labor in the iron nurseries of the under-city',
+  'Left bound on the steps of the asylum, traded to recruiters for a handful of silver',
   'Found as an infant in the collapsed mines beneath Ironveil',
   'Survived alone in the Ashwood after bandits razed a village',
   'Pulled from the wreckage of a merchant caravan on the Dread Road',
@@ -75,7 +80,6 @@ const ORIGINS = [
   "Found shivering in a burnt-out alchemist's lab, clutching a glowing ember",
   'Abandoned to the howling winds of the Jagged Peaks, raised by a solitary hermit',
   'Washed ashore wrapped in the tattered sails of a notorious pirate galley',
-  "Unearthed alive from a shallow grave behind the old executioner's block",
   'Discovered sleeping peacefully inside an empty gibbet cage in the lower wards',
   "The final, desperate offering left at the steps of the forgotten Blood God's shrine",
   'Surviving alone on the rat-infested decks of an abandoned plague ship',
@@ -90,6 +94,9 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would bite the hands of the matrons who tried to wash them',
+  'learned to map out exit routes the moment they entered a new room',
+  'was caught hoarding rusty nails under the floorboards',
   'was known for stealing bread from the temple kitchen',
   'spent nights watching the stars from the orphanage roof',
   'often got into fights with the older boys and won',
@@ -139,6 +146,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until the day they crushed a street enforcer\'s windpipe in a brawl over coppers',
+  'knowing that the only thing worse than dying in the pit is dying forgotten outside of it',
+  'understanding early that fear is just a weakness waiting to be exploited',
   'until a recruiter saw them handle a practice sword with natural grace',
   'but everything changed when they saved the Headmistress from a fire',
   "growing into a restless youth with a hunger for the arena's glory",

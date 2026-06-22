@@ -474,6 +474,25 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Common',
     sign: 'positive',
   },
+  pit_born: {
+    id: 'pit_born',
+    name: 'Pit-Born',
+    description: '+10% Endurance — raised in the cramped, airless fighting pits, they never seem to tire.',
+    effect: { enduranceMult: 1.1 },
+    weight: 0.7,
+    tier: 'Common',
+    sign: 'positive',
+  },
+  ashen_lungs: {
+    id: 'ashen_lungs',
+    name: 'Ashen Lungs',
+    description: '−10% Endurance, +1 Damage — hacking coughs hide a desperate, brutal strength honed in the soot mines.',
+    effect: { enduranceMult: 0.9, dmgBonus: 1 },
+    weight: 0.6,
+    synergy: ['brutal'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

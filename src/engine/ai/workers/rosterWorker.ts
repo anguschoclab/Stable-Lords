@@ -150,6 +150,7 @@ export function processRoster(
     };
     updatedRival.roster = updatedRival.roster.map((w) => {
       if (w.status !== 'Active') return w;
+      if ((w.traits ?? []).length >= RIVAL_DEV_TRAIT_SOFT_CAP) return w;
       if (rngService.next() > traitPolicy.trainAppetite) return w;
       const roll = rollTraitTraining(w, aiTrainer, rngService);
       if (roll.outcome !== 'none' && roll.traitId) {
@@ -256,6 +257,8 @@ function applyGearUpgrade(w: Warrior, _rng: IRNGService): Warrior {
  * which matches the spec's multiplicative-effectiveness intent.
  */
 const AI_TRAINING_EFFECTIVENESS = 0.8;
+
+export const RIVAL_DEV_TRAIT_SOFT_CAP = 2;
 
 /** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
 function performAITraining(

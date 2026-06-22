@@ -17,5 +17,12 @@ describe('rival trait AI (integration)', () => {
     expect(after).toBeGreaterThan(before);
     // No rival roster should be empty (churn cuts but recruitment refills).
     expect(state.rivals.every((r) => r.roster.length > 0)).toBe(true);
+
+    // Soft cap: development must not drive the whole world to the trait cap.
+    const allRivalWarriors = state.rivals.flatMap((r) => r.roster);
+    const atOrAboveHardCap = allRivalWarriors.filter(
+      (w) => (w.traits ?? []).length >= 3
+    ).length;
+    expect(atOrAboveHardCap / Math.max(1, allRivalWarriors.length)).toBeLessThan(0.25);
   });
 });

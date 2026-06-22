@@ -51,7 +51,9 @@ export function DominantCombatantsSection({
             borderColor: 'border-accent/20',
             bgColor: 'bg-accent/5',
           },
-        ].map(({ warrior, color, borderColor, bgColor }) => (
+        ].map(({ warrior, color, borderColor, bgColor }) => {
+          if (!warrior) return null;
+          return (
           <div key={warrior.id} className={`p-4 border rounded-none ${borderColor} ${bgColor}`}>
             <div className="space-y-3">
               <div
@@ -89,7 +91,8 @@ export function DominantCombatantsSection({
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </Surface>
   );

@@ -112,7 +112,7 @@ export default function Orphanage() {
     const result = buildFTUEInitialState(
       state as unknown as GameState,
       selectedWarriors,
-      boutResult,
+      boutResult as Parameters<typeof buildFTUEInitialState>[2],
       poolSeedValue
     );
 
@@ -123,7 +123,7 @@ export default function Orphanage() {
       draft.graveyard = [...state.graveyard, ...result.deadWarriors];
       draft.rivals = result.rivals;
       draft.recruitPool = result.recruitPool;
-      draft.arenaHistory = result.arenaHistory;
+      draft.arenaHistory = result.arenaHistory as FightSummary[];
       draft.promoters = result.promoters;
       draft.boutOffers = result.boutOffers;
       draft.realmRankings = result.realmRankings;

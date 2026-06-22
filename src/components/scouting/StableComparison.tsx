@@ -113,8 +113,8 @@ export function StableComparison({ rivals }: StableComparisonProps) {
           />
 
           <DominantCombatantsSection
-            topWarriorA={statsA.topWarrior}
-            topWarriorB={statsB.topWarrior}
+            topWarriorA={statsA.topWarrior ? { ...statsA.topWarrior, isChampion: statsA.topWarrior.champion, injuryCount: statsA.topWarrior.injuries.length, isDead: statsA.topWarrior.isDead ?? false } : null}
+            topWarriorB={statsB.topWarrior ? { ...statsB.topWarrior, isChampion: statsB.topWarrior.champion, injuryCount: statsB.topWarrior.injuries.length, isDead: statsB.topWarrior.isDead ?? false } : null}
           />
 
           <HeadToHead rosterA={rivalA.roster} rosterB={rivalB.roster} />

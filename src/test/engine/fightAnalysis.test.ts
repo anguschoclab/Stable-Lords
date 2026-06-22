@@ -179,7 +179,7 @@ describe('buildFightAnalysis', () => {
   it('handles Winner is No one (draw/timeout)', () => {
     const customOutcome = outcome({
       winner: null as any,
-      by: 'Timeout',
+      by: 'Timeout' as import('@/types/combat.types').FightOutcomeBy,
       post: undefined, // no fatalExchangeIndex
     });
     const a = buildFightAnalysis(customOutcome, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));

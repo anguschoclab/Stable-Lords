@@ -4,12 +4,12 @@ import { Surface } from '@/components/ui/Surface';
 import { resolveWarriorName } from '@/engine/core/historyResolver';
 import BoutViewer from '@/components/BoutViewer';
 import type { TournamentBout, FightSummary } from '@/types/game';
-import type { GameState } from '@/types/state.types';
+import type { GameStore } from '@/state/store.types';
 
 interface MatchViewerProps {
   bout: TournamentBout;
   fightSummary: FightSummary;
-  gameState: GameState;
+  gameState: GameStore;
   onToggleExpand: (key: string | null) => void;
 }
 

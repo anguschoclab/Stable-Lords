@@ -8,7 +8,7 @@ import {
   MatchActions,
   MatchViewer,
 } from './bracket';
-import type { GameState } from '@/types/state.types';
+import type { GameStore } from '@/state/store.types';
 
 interface BracketMatchNodeProps {
   bout: TournamentBout;
@@ -19,7 +19,7 @@ interface BracketMatchNodeProps {
   rIdx: number;
   bIdx: number;
   totalRounds: number;
-  gameState: GameState;
+  gameState: GameStore;
 }
 
 /**

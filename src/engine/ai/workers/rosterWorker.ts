@@ -162,7 +162,8 @@ export function processRoster(
       // (1) Merit gate + (2) aptitude capacity: only earned, capable warriors develop.
       const canDevelop = meritsTraitDevelopment(w) && traits.length < traitCapacity(w);
       if (canDevelop) {
-        if (rngService.next() > traitPolicy.trainAppetite) return w;
+        const devChance = Math.max(traitPolicy.trainAppetite, QUALIFIED_DEV_APPETITE);
+        if (rngService.next() > devChance) return w;
         const roll = rollTraitTraining(w, aiTrainer, rngService);
         if (roll.outcome !== 'none' && roll.traitId) {
           return { ...w, traits: [...traits, roll.traitId] };
@@ -282,6 +283,12 @@ const AI_TRAINING_EFFECTIVENESS = 0.8;
 /** Weekly chance that a struggling or already-flawed warrior picks up a (further)
  *  flaw even when not developing positively — keeps multi-flaw churn alive. Knob. */
 export const FLAW_EXPOSURE_CHANCE = 0.02;
+
+/** Per-week development chance for a *qualified* warrior (merit + under capacity).
+ *  Merit + aptitude already keep most of the world blank, so the small qualified
+ *  pool should develop *richly* — climbing to capacity and reaching their class
+ *  Signature — rather than thinly. Floors the personality trainAppetite. Knob. */
+export const QUALIFIED_DEV_APPETITE = 0.5;
 
 /** SeasonalGrowth is shared across a stable's roster, so we thread it through the loop. */
 function performAITraining(

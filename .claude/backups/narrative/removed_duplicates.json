@@ -31,16 +31,6 @@
   },
   {
     "path": [
-      "pbp",
-      "epithets",
-      "race"
-    ],
-    "kept": "The {{race}}",
-    "removed": "This {{race}}",
-    "similarity": 0.88
-  },
-  {
-    "path": [
       "gazette",
       "fights",
       "KO"
@@ -48,96 +38,6 @@
     "kept": "{{loser}} crumbled like a puppet with cut strings after enduring {{winner}}'s {{adj}} assault.",
     "removed": "{{loser}} crumpled like a puppet with cut strings after {{winner}}'s {{adj}} blow.",
     "similarity": 0.8863636363636364
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Balis",
-    "removed": "Balius",
-    "similarity": 0.9090909090909091
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Nymius",
-    "removed": "Nymus",
-    "similarity": 0.9090909090909091
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Fenic",
-    "removed": "Fenric",
-    "similarity": 0.9090909090909091
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Fenis",
-    "removed": "Fenius",
-    "similarity": 0.9090909090909091
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Ithon",
-    "removed": "Ithwon",
-    "similarity": 0.9090909090909091
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Nyma",
-    "removed": "Nymia",
-    "similarity": 0.8888888888888888
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Othius",
-    "removed": "Othus",
-    "similarity": 0.9090909090909091
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Aelor",
-    "removed": "Aelkor",
-    "similarity": 0.9090909090909091
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Svenmon",
-    "removed": "Svenoun",
-    "similarity": 0.8571428571428571
-  },
-  {
-    "path": [
-      "recruitment",
-      "names"
-    ],
-    "kept": "Gawar",
-    "removed": "Gawgar",
-    "similarity": 0.9090909090909091
   },
   {
     "path": [
@@ -185,5 +85,23 @@
     "kept": "{{name}} scrambles back to {{possessive}} feet.",
     "removed": "{{name}} scrambles back to his feet!",
     "similarity": "0.85"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "kept": "{{attacker}} delivers a brutal, looping strike with {{possessive}} {{weapon}}.",
+    "removed": "{{attacker}} delivers a piston-like strike with {{possessive}} {{weapon}}!",
+    "similarity": 0.8333333333333334
+  },
+  {
+    "path": "pbp.defenses.parry.success",
+    "kept": "{{name}} parries with a theatrical flourish, inviting the crowd's applause!",
+    "removed": "{{name}} parries with a theatrical flourish, inviting the crowd's cheer.",
+    "similarity": 0.88
+  },
+  {
+    "path": "pbp.defenses.parry.success",
+    "kept": "{{name}} parries with a theatrical flourish, inviting the crowd's applause!",
+    "removed": "{{name}} parries with a theatrical flourish, inviting the crowd's cheer.",
+    "similarity": 0.88
   }
 ]

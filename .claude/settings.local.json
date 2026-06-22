@@ -114,7 +114,8 @@
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\amauricia\\\\documents\\\\github\\\\stable-lords\\\\src\" -Recurse -Directory | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\('C:\\\\Users\\\\amauricia\\\\documents\\\\github\\\\stable-lords\\\\', ''\\) } | Sort-Object)",
       "Bash(xargs wc -l)",
       "Bash(xargs head -40)",
-      "PowerShell(npm run *)"
+      "PowerShell(npm run *)",
+      "Bash(git commit -m 'fix\\(traits\\): restore high-tier emergence after de-saturation *)"
     ]
   },
   "hooks": {

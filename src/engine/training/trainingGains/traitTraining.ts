@@ -64,7 +64,7 @@ export function canAcquireTrait(warrior: Warrior, traitId: string): boolean {
 }
 
 function aptitude(warrior: Warrior, _trainer: Trainer): number {
-  const a = warrior.attributes;
+  const a = warrior.attributes || { WT: 15, WL: 15, ST: 15, AG: 15, EN: 15 };
   const mind = (a.WT + a.WL) / 50;
   const youth = Math.max(0, (30 - (warrior.age ?? 24)) / 30);
   const train = warrior.trainability ?? 0.6;

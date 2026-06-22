@@ -44,5 +44,6 @@ export function pickExposureFlaw(w: Warrior, rng: IRNGService): string | null {
   );
   if (flaws.length === 0) return null;
   const idx = Math.floor(rng.next() * flaws.length);
-  return flaws[Math.min(idx, flaws.length - 1)]!.id;
+  const flaw = flaws[Math.min(idx, flaws.length - 1)];
+  return flaw ? flaw.id : null;
 }

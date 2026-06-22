@@ -107,7 +107,14 @@
       "Bash(awk 'NR>=575 && NR<=820' src/engine/combat/resolution/resolution.ts)",
       "Bash(awk '/interface TraitEffect/,/^}/' src/engine/traits.ts)",
       "Bash(ls src/engine/training/trainingGains/traitCapacity.ts)",
-      "Bash(grep -n \"export function traitCapacity\\\\|export function meritsTraitDevelopment\\\\|export function countFlaws\\\\|export function pickExposureFlaw\\\\|CAPACITY_T1\\\\|WINS_FOR_MERIT\\\\|FAME_FOR_MERIT\" src/engine/training/trainingGains/traitCapacity.ts)"
+      "Bash(grep -n \"export function traitCapacity\\\\|export function meritsTraitDevelopment\\\\|export function countFlaws\\\\|export function pickExposureFlaw\\\\|CAPACITY_T1\\\\|WINS_FOR_MERIT\\\\|FAME_FOR_MERIT\" src/engine/training/trainingGains/traitCapacity.ts)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\amauricia\\\\documents\\\\github\\\\stable-lords\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(Sort-Object PSIsContainer -Descending)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\amauricia\\\\documents\\\\github\\\\stable-lords\\\\src\" -Recurse -Directory | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\('C:\\\\Users\\\\amauricia\\\\documents\\\\github\\\\stable-lords\\\\', ''\\) } | Sort-Object)",
+      "Bash(xargs wc -l)",
+      "Bash(xargs head -40)",
+      "PowerShell(npm run *)"
     ]
   },
   "hooks": {

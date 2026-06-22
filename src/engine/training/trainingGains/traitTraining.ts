@@ -124,7 +124,11 @@ function pickTraitCandidate(pool: TraitDef[], rng: IRNGService): TraitDef {
     target -= entry.w;
     if (target <= 0) return entry.t;
   }
-  return weighted[weighted.length - 1]!.t;
+  const lastEntry = weighted[weighted.length - 1];
+  if (!lastEntry) {
+    throw new Error('pickTraitCandidate: empty candidate pool');
+  }
+  return lastEntry.t;
 }
 
 function pickWeighted(pool: TraitDef[], rng: IRNGService): TraitDef {

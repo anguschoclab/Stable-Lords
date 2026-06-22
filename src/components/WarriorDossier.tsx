@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { findWarrior } from '@/engine/core/historyResolver';
 import type { WarriorId } from '@/types/shared.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -30,7 +31,16 @@ interface WarriorDossierProps {
 export const WarriorDossier = React.memo(function WarriorDossier({
   warriorId,
 }: WarriorDossierProps) {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      player: s.player,
+      rivals: s.rivals,
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      realmRankings: s.realmRankings,
+    }))
+  );
   const [activeTab, setActiveTab] = useState('overview');
 
   // Use fine-grained selector to find the warrior

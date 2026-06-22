@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { computeWeeklyBreakdown } from '@/engine/economy';
 import { filterActive } from '@/utils/roster';
 import { Surface } from '@/components/ui/Surface';
@@ -361,7 +362,16 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
  * Treasury overview.
  */
 export function TreasuryOverview() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      week: s.week,
+      roster: s.roster,
+      fame: s.fame,
+      weather: s.weather,
+      arenaHistory: s.arenaHistory,
+      treasury: s.treasury,
+    }))
+  );
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);
   const gold = state.treasury ?? 0;
 

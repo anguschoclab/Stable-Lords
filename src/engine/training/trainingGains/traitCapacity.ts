@@ -23,8 +23,8 @@ export function traitCapacity(w: Warrior): number {
 }
 
 /** Traits are earned: only warriors with a winning record or real fame develop. */
-export const WINS_FOR_MERIT = 2;
-export const FAME_FOR_MERIT = 25;
+export const WINS_FOR_MERIT = 1;
+export const FAME_FOR_MERIT = 5;
 
 export function meritsTraitDevelopment(w: Warrior): boolean {
   const wins = w.career?.wins ?? 0;

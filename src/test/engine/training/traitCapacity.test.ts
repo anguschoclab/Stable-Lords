@@ -31,8 +31,8 @@ describe('traitCapacity', () => {
 
 describe('meritsTraitDevelopment', () => {
   it('gates development behind a winning record or real fame', () => {
-    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 4, kills: 0 }, fame: 5 }))).toBe(false);
-    expect(meritsTraitDevelopment(w({ career: { wins: 4, losses: 1, kills: 0 }, fame: 5 }))).toBe(true);
+    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 4, kills: 0 }, fame: 4 }))).toBe(false);
+    expect(meritsTraitDevelopment(w({ career: { wins: 4, losses: 1, kills: 0 }, fame: 4 }))).toBe(true);
     expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 0, kills: 0 }, fame: 40 }))).toBe(true);
   });
 });

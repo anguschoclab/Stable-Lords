@@ -105,7 +105,9 @@
       "Bash(awk '/export function performAttackCheck/,/\\\\{/' src/engine/combat/resolution/exchangeHelpers/checks/attackCheck.ts)",
       "Bash(awk '/export interface ResolutionContext/,/^}/' src/engine/combat/resolution/types.ts)",
       "Bash(awk 'NR>=575 && NR<=820' src/engine/combat/resolution/resolution.ts)",
-      "Bash(awk '/interface TraitEffect/,/^}/' src/engine/traits.ts)"
+      "Bash(awk '/interface TraitEffect/,/^}/' src/engine/traits.ts)",
+      "Bash(ls src/engine/training/trainingGains/traitCapacity.ts)",
+      "Bash(grep -n \"export function traitCapacity\\\\|export function meritsTraitDevelopment\\\\|export function countFlaws\\\\|export function pickExposureFlaw\\\\|CAPACITY_T1\\\\|WINS_FOR_MERIT\\\\|FAME_FOR_MERIT\" src/engine/training/trainingGains/traitCapacity.ts)"
     ]
   },
   "hooks": {

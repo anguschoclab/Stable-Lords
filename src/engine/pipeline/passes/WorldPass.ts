@@ -39,7 +39,6 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Arcane Storm',
     'Blood Rain',
     'Aether Storm',
-    'Rain of Frogs',
   ],
   Summer: [
     'Sweltering',

@@ -39,3 +39,5 @@
 ## 2026-06-21 - Bookmark Button Inset Focus Ring
 **Learning:** The `BookmarkButton` is often rendered inside full-bleed interactive cards and table rows. Using `focus-visible:ring-offset-2 focus-visible:ring-offset-black` caused the focus ring to be clipped or look jarring against varied backgrounds within these containers.
 **Action:** When a button is used strictly within confined card structures, prefer `focus-visible:ring-inset` to ensure the focus ring draws inwards and is never clipped by parent `overflow: hidden` contexts.
+
+2024-05-24: Fixed missing prefers-reduced-motion fallback classes in index.css, replaced raw colors in WarriorTrainingCard.tsx and traitDisplay.ts with arena tokens, and added aria-describedby={props['aria-describedby'] || undefined} to Radix primitives to suppress missing description warnings while ensuring accessibility.

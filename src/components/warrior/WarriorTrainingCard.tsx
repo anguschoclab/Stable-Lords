@@ -355,14 +355,14 @@ export function WarriorTrainingCard({
       {onAssignTraitTraining && !isRecovery && traitSlotsLeft > 0 && (
         <div className="p-4 border-t border-white/5 space-y-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-3.5 w-3.5 text-purple-400" />
+            <Sparkles className="h-3.5 w-3.5 text-arena-fame" />
             <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
               Trait Training · {traitCount}/{TRAIT_CAP}
             </span>
           </div>
           {isTraitTraining ? (
-            <div className="flex items-center justify-between bg-purple-500/10 border border-purple-500/20 px-3 py-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-purple-300">
+            <div className="flex items-center justify-between bg-arena-fame/10 border border-arena-fame/20 px-3 py-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-arena-fame">
                 In Progress · {assignment?.weeksRemaining ?? 0}w left
               </span>
               <Button
@@ -400,7 +400,7 @@ export function WarriorTrainingCard({
                   variant="outline"
                   size="sm"
                   onClick={() => onAssignTraitTraining(selectedTrainer.id)}
-                  className="w-full h-8 text-[9px] font-black uppercase tracking-widest border-purple-500/30 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 rounded-none"
+                  className="w-full h-8 text-[9px] font-black uppercase tracking-widest border-arena-fame/30 bg-arena-fame/10 hover:bg-arena-fame/20 text-arena-fame rounded-none"
                 >
                   Begin Trait Training with {selectedTrainer.name}
                 </Button>

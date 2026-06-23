@@ -49,24 +49,16 @@ vi.mock('@/state/useGameStore', () => {
     loadGame,
   };
 
-  const useGameStore = vi.fn((selector?: (s: typeof store) => unknown) => {
+  const useGameStore = vi.fn((selector) => {
     if (typeof selector === 'function') return selector(store);
     return store;
-  }) as unknown as typeof vi.fn & { getState: () => typeof store };
-
-  (useGameStore as any).getState = () => store;
+  });
+  useGameStore.getState = () => store;
 
   return {
     useGameStore,
-    reconstructGameState: vi.fn((s) => ({
-      ...s,
-      week: s.week,
-      day: s.day,
-      isTournamentWeek: s.isTournamentWeek,
-      roster: s.roster ?? [],
-      rivals: s.rivals ?? [],
-      boutOffers: s.boutOffers ?? {},
-    })),
+    useWorldState: vi.fn(() => store),
+    useBookmarks: vi.fn(() => ({})),
   };
 });
 

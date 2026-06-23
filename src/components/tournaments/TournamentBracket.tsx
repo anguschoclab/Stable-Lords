@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Medal, Crown } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import { resolveWarriorName } from '@/engine/core/historyResolver';
-import { useGameStore } from '@/state/useGameStore';
+import { useWarriorNameState } from '@/state/useGameStore';
 import type { TournamentBout, FightSummary } from '@/types/game';
 import { BracketMatchNode } from './BracketMatchNode';
 
@@ -36,7 +36,7 @@ export function TournamentBracket({
   expandedBout,
   onToggleExpand,
 }: TournamentBracketProps) {
-  const state = useGameStore();
+  const state = useWarriorNameState();
 
   const roundsMap = new Map<number, TournamentBout[]>();
   bouts.forEach((b) => {
@@ -124,7 +124,7 @@ export function ChampionDisplay({
   championId,
   tournamentName,
 }: ChampionDisplayProps) {
-  const state = useGameStore();
+  const state = useWarriorNameState();
   const displayName = championId
     ? resolveWarriorName(state, championId, championName)
     : championName;
@@ -172,7 +172,7 @@ interface BronzeHighlightProps {
  * @param - { third place name, third place id }.
  */
 export function BronzeHighlight({ thirdPlaceName, thirdPlaceId }: BronzeHighlightProps) {
-  const state = useGameStore();
+  const state = useWarriorNameState();
   const displayName = thirdPlaceId
     ? resolveWarriorName(state, thirdPlaceId, thirdPlaceName)
     : thirdPlaceName;

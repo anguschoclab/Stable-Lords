@@ -226,7 +226,7 @@ function matchRoute(pathname: string): RouteEntry | undefined {
  */
 export function useCoachTip(pathname: string) {
   const state = useWorldState();
-  const { setState } = useGameStore();
+  const setState = useGameStore((s) => s.setState);
   const ftueComplete = state.ftueComplete;
   const coachDismissed = state.coachDismissed;
   const roster = state.roster;

@@ -4,6 +4,7 @@ import type { Warrior } from '@/types/warrior.types';
 import { isTooInjuredToFight } from './injuries';
 import { getMatchupBonus } from '@/constants/combat';
 import { filterActive } from '@/utils/roster';
+import { getStablePairKey } from '@/utils/keyUtils';
 
 /**
  * Defines the shape of head-to-head record.
@@ -73,16 +74,16 @@ export function scoreMatchup(
   score += (pWinRate - rWinRate) * 20;
 
   // Rivalry multiplier for grudge matches
-  const rivalries = state.rivalries || [];
   const playerStableId = playerWarrior.stableId || state.player?.id;
   const rivalStableId = rivalWarrior.stableId;
 
   if (playerStableId && rivalStableId) {
-    const rivalry = rivalries.find(
-      (r) =>
-        (r.stableIdA === playerStableId && r.stableIdB === rivalStableId) ||
-        (r.stableIdB === playerStableId && r.stableIdA === rivalStableId)
-    );
+    const rivalry = state.rivalryMap?.get(getStablePairKey(playerStableId, rivalStableId))
+      ?? (state.rivalries || []).find(
+        (r) =>
+          (r.stableIdA === playerStableId && r.stableIdB === rivalStableId) ||
+          (r.stableIdB === playerStableId && r.stableIdA === rivalStableId)
+      );
     if (rivalry) {
       score += rivalry.intensity * 50; // Grudge match!
     }

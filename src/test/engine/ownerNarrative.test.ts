@@ -340,4 +340,91 @@ describe('generateOwnerNarratives', () => {
     const result = generateOwnerNarratives(state, 'Summer', failingRng);
     expect(result).toEqual([]);
   });
+
+  it('generates blood feud taunt with reversed stable ID order in rivalry', () => {
+    const state = createMockState({
+      season: 'Spring',
+      player: { id: 'player-stable', stableName: "Dragon's Hearth" },
+      rivals: [
+        {
+          owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
+        },
+      ],
+      arenaHistory: [createMockFight({ week: 10, a: 'WarriorA', d: 'Other', winner: 'D' })],
+      rivalries: [
+        {
+          id: 'riv1',
+          stableIdA: 'r1',
+          stableIdB: 'player-stable',
+          intensity: 4,
+          reason: 'Feud',
+          startWeek: 1,
+        },
+      ],
+    });
+    const result = generateOwnerNarratives(state, 'Summer', mockRng);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toBe(
+      `"Dragon's Hearth is a disgrace to the sands. I will see them bleed," vows Rival (Rival Stable).`
+    );
+  });
+
+  it('matches only the correct rivalry among multiple rivalries', () => {
+    const state = createMockState({
+      season: 'Spring',
+      player: { id: 'player-stable', stableName: "Dragon's Hearth" },
+      rivals: [
+        {
+          owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
+        },
+        {
+          owner: { id: 'r2', name: 'Other', stableName: 'Other Stable', personality: 'Aggressive' },
+          roster: [{ id: 'w-warriorb', name: 'WarriorB' }],
+        },
+      ],
+      arenaHistory: [createMockFight({ week: 10, a: 'WarriorA', d: 'Other', winner: 'D' })],
+      rivalries: [
+        {
+          id: 'riv1',
+          stableIdA: 'player-stable',
+          stableIdB: 'r1',
+          intensity: 4,
+          reason: 'Feud',
+          startWeek: 1,
+        },
+        {
+          id: 'riv2',
+          stableIdA: 'r2',
+          stableIdB: 'some-other-stable',
+          intensity: 5,
+          reason: 'Other Feud',
+          startWeek: 1,
+        },
+      ],
+    });
+    const result = generateOwnerNarratives(state, 'Summer', mockRng);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toBe(
+      `"Dragon's Hearth is a disgrace to the sands. I will see them bleed," vows Rival (Rival Stable).`
+    );
+  });
+
+  it('generates no taunts when rivalries array is empty', () => {
+    const state = createMockState({
+      season: 'Spring',
+      player: { id: 'player-stable', stableName: "Dragon's Hearth" },
+      rivals: [
+        {
+          owner: { id: 'r1', name: 'Rival', stableName: 'Rival Stable', personality: 'Aggressive' },
+          roster: [{ id: 'w-warriora', name: 'WarriorA' }],
+        },
+      ],
+      arenaHistory: [createMockFight({ week: 10, a: 'WarriorA', d: 'Other', winner: 'D' })],
+      rivalries: [],
+    });
+    const result = generateOwnerNarratives(state, 'Summer', mockRng);
+    expect(result).toEqual([]);
+  });
 });

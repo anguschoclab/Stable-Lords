@@ -535,5 +535,87 @@ describe('CompetitionWorker', () => {
       // Should handle gracefully
       expect(result).toBeDefined();
     });
+
+    it('should process offers for 10 rivals without cross-talk', () => {
+      const manyRivals: RivalStableData[] = [];
+      for (let i = 0; i < 10; i++) {
+        const w = makeWarrior(
+          generateId(undefined, 'warrior') as WarriorId,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }
+        );
+        manyRivals.push(createTestRival(`rival_${i}`, `Stable ${i}`, [w]));
+      }
+
+      state.warriorToStableMap = new Map();
+      state.rivalMap = new Map();
+      state.warriorMap = new Map();
+      for (const r of manyRivals) {
+        state.rivalMap!.set(r.id, r);
+        for (const w of r.roster) {
+          state.warriorToStableMap!.set(w.id, { stableId: r.id, isPlayer: false });
+          state.warriorMap!.set(w.id, w);
+        }
+      }
+
+      const offers: Record<string, BoutOffer> = {};
+      for (let i = 0; i < 10; i++) {
+        const wid = manyRivals[i]!.roster[0]!.id as string;
+        const offer = createTestOffer(
+          state,
+          'p_local',
+          [wid],
+          100,
+          100
+        );
+        offer.responses[wid as WarriorId] = 'Pending';
+        offers[offer.id] = offer;
+      }
+      state.boutOffers = offers;
+
+      const result = processAllRivalsBoutOffers(state, manyRivals);
+      expect(result).toBeDefined();
+
+      const updatedOffers = result.boutOffers || {};
+      let processedCount = 0;
+      for (const offer of Object.values(updatedOffers)) {
+        for (const resp of Object.values(offer.responses || {})) {
+          if (resp === 'Accepted' || resp === 'Declined') processedCount++;
+        }
+      }
+      expect(processedCount).toBeGreaterThan(0);
+    });
+
+    it('should skip offers for rival ID not in rivals array', () => {
+      const w = makeWarrior(
+        generateId(undefined, 'warrior') as WarriorId,
+        'Test Warrior',
+        FightingStyle.StrikingAttack,
+        { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }
+      );
+      const realRival = createTestRival('real_rival', 'Real Stable', [w]);
+      const ghostW = makeWarrior(
+        generateId(undefined, 'warrior') as WarriorId,
+        'Ghost Warrior',
+        FightingStyle.StrikingAttack,
+        { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 }
+      );
+      const realOffer = createTestOffer(state, 'p_local', [w.id as string], 100, 100);
+      const ghostOffer = createTestOffer(state, 'p_local', [ghostW.id as string], 100, 100);
+      state.boutOffers = {
+        [realOffer.id]: realOffer,
+        [ghostOffer.id]: ghostOffer,
+      };
+
+      const result = processAllRivalsBoutOffers(state, [realRival]);
+      expect(result).toBeDefined();
+
+      const updatedOffers = result.boutOffers || {};
+      const ghostResult = updatedOffers[ghostOffer.id];
+      expect(ghostResult?.responses).toBeDefined();
+      const ghostResponses = Object.values(ghostResult?.responses || {});
+      expect(ghostResponses).not.toContain('Accepted');
+    });
   });
 });

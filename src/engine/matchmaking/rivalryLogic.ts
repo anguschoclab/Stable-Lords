@@ -81,12 +81,11 @@ function processRivalryUpdates(
   week: number,
   rng: IRNGService
 ): void {
+  const rivalryMap = new Map(
+    rivalries.map((rv) => [getStablePairKey(rv.stableIdA, rv.stableIdB), rv])
+  );
   for (const [, data] of pairs.entries()) {
-    const existing = rivalries.find(
-      (r) =>
-        (r.stableIdA === data.stableIdA && r.stableIdB === data.stableIdB) ||
-        (r.stableIdB === data.stableIdA && r.stableIdA === data.stableIdB)
-    );
+    const existing = rivalryMap.get(getStablePairKey(data.stableIdA, data.stableIdB));
 
     const rawDelta = calculateRivalryScore(data.bouts, data.deaths, data.upsets);
     const intensityDelta =
@@ -115,14 +114,16 @@ function processRivalryUpdates(
       }
     } else if (data.bouts >= 1) {
       // Any clash can start a rivalry
-      rivalries.push({
+      const newRivalry: Rivalry = {
         id: rng.uuid('rivalry') as RivalryId,
         stableIdA: data.stableIdA,
         stableIdB: data.stableIdB,
         intensity: Math.min(5, intensityDelta + (rawDelta - 1)),
         reason: data.lastReason || `Clashed in the arena`,
         startWeek: week,
-      });
+      };
+      rivalries.push(newRivalry);
+      rivalryMap.set(getStablePairKey(newRivalry.stableIdA, newRivalry.stableIdB), newRivalry);
     }
   }
 }

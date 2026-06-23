@@ -5,6 +5,7 @@ import {
   removeFromRoster,
   filterActive,
   filterByStatus,
+  filterHealthy,
 } from '@/utils/roster';
 import type { GameState, Warrior } from '@/types/state.types';
 import type { WarriorId } from '@/types/game';
@@ -161,5 +162,59 @@ describe('filterByStatus', () => {
     const retired = filterByStatus(roster, 'Retired');
     expect(retired.length).toBe(1);
     expect(retired[0]!.status).toBe('Retired');
+  });
+});
+
+describe('filterHealthy', () => {
+  it('filters to active warriors with no injuries', () => {
+    const roster = [
+      createTestWarrior('w1', 'Warrior 1', 'Active'),
+      createTestWarrior('w2', 'Warrior 2', 'Active'),
+    ];
+    const healthy = filterHealthy(roster);
+    expect(healthy.length).toBe(2);
+  });
+
+  it('excludes active warriors with injuries', () => {
+    const w1 = createTestWarrior('w1', 'Warrior 1', 'Active');
+    w1.injuries = [{ id: 'i1' as any, name: 'cut', description: 'cut', severity: 'Minor', weeksRemaining: 2, penalties: {} }];
+    const w2 = createTestWarrior('w2', 'Warrior 2', 'Active');
+    const healthy = filterHealthy([w1, w2]);
+    expect(healthy.length).toBe(1);
+    expect(healthy[0]!.id).toBe('w2');
+  });
+
+  it('excludes non-active warriors', () => {
+    const roster = [
+      createTestWarrior('w1', 'Warrior 1', 'Retired'),
+      createTestWarrior('w2', 'Warrior 2', 'Injured'),
+      createTestWarrior('w3', 'Warrior 3', 'Active'),
+    ];
+    const healthy = filterHealthy(roster);
+    expect(healthy.length).toBe(1);
+    expect(healthy[0]!.id).toBe('w3');
+  });
+
+  it('handles warriors with undefined injuries field', () => {
+    const w1 = createTestWarrior('w1', 'Warrior 1', 'Active');
+    w1.injuries = undefined as any;
+    const healthy = filterHealthy([w1]);
+    expect(healthy.length).toBe(1);
+  });
+
+  it('handles warriors with empty injuries array', () => {
+    const w1 = createTestWarrior('w1', 'Warrior 1', 'Active');
+    w1.injuries = [];
+    const healthy = filterHealthy([w1]);
+    expect(healthy.length).toBe(1);
+  });
+
+  it('returns empty for all-injured roster', () => {
+    const w1 = createTestWarrior('w1', 'Warrior 1', 'Active');
+    w1.injuries = [{ id: 'i1' as any, name: 'cut', description: 'cut', severity: 'Minor', weeksRemaining: 2, penalties: {} }];
+    const w2 = createTestWarrior('w2', 'Warrior 2', 'Active');
+    w2.injuries = [{ id: 'i2' as any, name: 'bruise', description: 'bruise', severity: 'Minor', weeksRemaining: 1, penalties: {} }];
+    const healthy = filterHealthy([w1, w2]);
+    expect(healthy.length).toBe(0);
   });
 });

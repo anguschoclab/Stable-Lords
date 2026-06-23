@@ -227,4 +227,41 @@ describe('Owner Roster Worker', () => {
       expect(updatedRivals[0]!.roster.length).toBeGreaterThanOrEqual(1);
     });
   });
+
+  describe('Rivalry Lookup with Reversed IDs', () => {
+    it('should apply meta drift for intense rivalries with reversed stable ID order', () => {
+      const r1 = createRival('r1', 'Showman', 500, [{ status: 'Active' }]);
+      mockState.rivals = [r1];
+      mockState.rivalries = [
+        { stableIdA: 'r1', stableIdB: 'player-1', intensity: 3, id: 'rv-1' } as any,
+      ];
+      mockState.arenaHistory = [
+        { week: 9, winner: 'A', warriorIdA: 'player-w', warriorIdD: 'other' } as any,
+        { week: 8, winner: 'D', warriorIdD: 'player-w', warriorIdA: 'other' } as any,
+      ];
+
+      const { updatedRivals } = processAIRosterManagement(mockState);
+      expect(updatedRivals[0]!.roster.length).toBe(2);
+    });
+
+    it('should match only the correct rival among multiple rivals with rivalries', () => {
+      const r1 = createRival('r1', 'Showman', 500, [{ status: 'Active' }]);
+      const r2 = createRival('r2', 'Showman', 500, [{ status: 'Active' }]);
+      const r3 = createRival('r3', 'Showman', 500, [{ status: 'Active' }]);
+      mockState.rivals = [r1, r2, r3];
+      mockState.rivalries = [
+        { stableIdA: 'player-1', stableIdB: 'r2', intensity: 4, id: 'rv-1' } as any,
+      ];
+      mockState.arenaHistory = [
+        { week: 9, winner: 'A', warriorIdA: 'player-w', warriorIdD: 'other' } as any,
+        { week: 8, winner: 'D', warriorIdD: 'player-w', warriorIdA: 'other' } as any,
+      ];
+
+      const { updatedRivals } = processAIRosterManagement(mockState);
+      expect(updatedRivals).toHaveLength(3);
+      for (const r of updatedRivals) {
+        expect(r.roster.length).toBeGreaterThanOrEqual(1);
+      }
+    });
+  });
 });

@@ -580,6 +580,7 @@ export interface GameState {
   warriorMap?: Map<WarriorId, import('@/types/warrior.types').Warrior>;
   warriorToStableMap?: Map<string, { stableId: string; isPlayer: boolean }>;
   rivalMap?: Map<string, import('@/types/state.types').RivalStableData>;
+  rivalryMap?: Map<string, Rivalry>;
   bookmarks: Bookmark[];
   deferredBoutLogs?: DeferredBoutLog[];
 } /**

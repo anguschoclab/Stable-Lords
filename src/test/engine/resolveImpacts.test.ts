@@ -787,6 +787,181 @@ describe('resolveImpacts', () => {
     expect(newState.tournaments).toHaveLength(1);
   });
 
+  it('handles tournaments - bulk merge (25 updates + 25 new)', () => {
+    const state = makeInitialState();
+    const existing: TournamentEntry[] = [];
+    for (let i = 0; i < 50; i++) {
+      existing.push({
+        id: `t${i}` as any,
+        season: 'Spring',
+        week: 1,
+        tierId: 'regional',
+        name: `Tournament ${i}`,
+        bracket: [],
+        participants: [],
+        completed: false,
+      });
+    }
+    state.tournaments = existing;
+    const value: TournamentEntry[] = [];
+    for (let i = 0; i < 50; i++) {
+      value.push({
+        id: `t${i}` as any,
+        season: 'Spring',
+        week: 1,
+        tierId: 'regional',
+        name: `Tournament ${i} Updated`,
+        bracket: [],
+        participants: [],
+        completed: true,
+      });
+    }
+    for (let i = 50; i < 75; i++) {
+      value.push({
+        id: `t${i}` as any,
+        season: 'Spring',
+        week: 2,
+        tierId: 'national',
+        name: `Tournament ${i}`,
+        bracket: [],
+        participants: [],
+        completed: false,
+      });
+    }
+    const impact: StateImpact = { tournaments: value };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.tournaments).toHaveLength(75);
+    for (let i = 0; i < 50; i++) {
+      expect(newState.tournaments[i]?.name).toBe(`Tournament ${i} Updated`);
+      expect(newState.tournaments[i]?.completed).toBe(true);
+    }
+    for (let i = 50; i < 75; i++) {
+      expect(newState.tournaments[i]?.name).toBe(`Tournament ${i}`);
+    }
+  });
+
+  it('handles tournaments - all new (no overlap)', () => {
+    const state = makeInitialState();
+    state.tournaments = [
+      {
+        id: 't1' as any,
+        season: 'Spring',
+        week: 1,
+        tierId: 'regional',
+        name: 'Existing',
+        bracket: [],
+        participants: [],
+        completed: false,
+      },
+    ];
+    const value: TournamentEntry[] = [
+      {
+        id: 't2' as any,
+        season: 'Spring',
+        week: 2,
+        tierId: 'national',
+        name: 'New 1',
+        bracket: [],
+        participants: [],
+        completed: false,
+      },
+      {
+        id: 't3' as any,
+        season: 'Spring',
+        week: 3,
+        tierId: 'national',
+        name: 'New 2',
+        bracket: [],
+        participants: [],
+        completed: false,
+      },
+    ];
+    const impact: StateImpact = { tournaments: value };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.tournaments).toHaveLength(3);
+    expect(newState.tournaments[0]?.id).toBe('t1');
+    expect(newState.tournaments[1]?.id).toBe('t2');
+    expect(newState.tournaments[2]?.id).toBe('t3');
+  });
+
+  it('handles tournaments - all updates (100% overlap)', () => {
+    const state = makeInitialState();
+    state.tournaments = [
+      {
+        id: 't1' as any,
+        season: 'Spring',
+        week: 1,
+        tierId: 'regional',
+        name: 'Original 1',
+        bracket: [],
+        participants: [],
+        completed: false,
+      },
+      {
+        id: 't2' as any,
+        season: 'Spring',
+        week: 2,
+        tierId: 'national',
+        name: 'Original 2',
+        bracket: [],
+        participants: [],
+        completed: false,
+      },
+    ];
+    const value: TournamentEntry[] = [
+      {
+        id: 't1' as any,
+        season: 'Spring',
+        week: 1,
+        tierId: 'regional',
+        name: 'Updated 1',
+        bracket: [],
+        participants: [],
+        completed: true,
+      },
+      {
+        id: 't2' as any,
+        season: 'Spring',
+        week: 2,
+        tierId: 'national',
+        name: 'Updated 2',
+        bracket: [],
+        participants: [],
+        completed: true,
+      },
+    ];
+    const impact: StateImpact = { tournaments: value };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.tournaments).toHaveLength(2);
+    expect(newState.tournaments[0]?.name).toBe('Updated 1');
+    expect(newState.tournaments[1]?.name).toBe('Updated 2');
+    expect(newState.tournaments[0]?.completed).toBe(true);
+  });
+
+  it('handles tournaments - empty value array (early return)', () => {
+    const state = makeInitialState();
+    state.tournaments = [
+      {
+        id: 't1' as any,
+        season: 'Spring',
+        week: 1,
+        tierId: 'regional',
+        name: 'Existing',
+        bracket: [],
+        participants: [],
+        completed: false,
+      },
+    ];
+    const impact: StateImpact = { tournaments: [] };
+    const newState = resolveImpacts(state, [impact]);
+
+    expect(newState.tournaments).toHaveLength(1);
+    expect(newState.tournaments[0]?.name).toBe('Existing');
+  });
+
   // Phase 4: Edge Cases & Integration
   it('handles empty impacts array', () => {
     const state = makeInitialState();

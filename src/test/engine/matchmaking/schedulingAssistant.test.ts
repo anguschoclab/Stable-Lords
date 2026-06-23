@@ -13,6 +13,7 @@ import {
   getRecommendedChallenges,
   getMatchupsToAvoid,
 } from '@/engine/schedulingAssistant';
+import { getStablePairKey } from '@/utils/keyUtils';
 
 describe('Scheduling Assistant Engine', () => {
   // Helper to generate minimal mock warrior
@@ -523,6 +524,31 @@ describe('Scheduling Assistant Engine', () => {
         const state = mockState([rival], [rivalry]);
         const score = scoreMatchup(player, rival, state);
         // Base 100 + (5 * 50) = 350 (self-rivalry allowed)
+        expect(score).toBe(350);
+      });
+
+      it('applies bonus with reversed rivalry stable ID order', () => {
+        const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 0, 0, 'player1');
+        const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 0, 0, 'rival1');
+        const rivalry = mockRivalry('rival1', 'player1', 5);
+
+        const state = mockState([rival], [rivalry]);
+        const score = scoreMatchup(player, rival, state);
+        // Base 100 + (5 * 50) = 350 (reversed order still matches)
+        expect(score).toBe(350);
+      });
+
+      it('uses rivalryMap when available on state', () => {
+        const player = mockWarrior('p1', FightingStyle.TotalParry, 10, 0, 0, 'player1');
+        const rival = mockWarrior('r1', FightingStyle.TotalParry, 10, 0, 0, 'rival1');
+        const rivalry = mockRivalry('player1', 'rival1', 5);
+
+        const state = mockState([rival], []);
+        (state as any).rivalryMap = new Map([
+          [getStablePairKey('player1', 'rival1'), rivalry],
+        ]);
+        const score = scoreMatchup(player, rival, state);
+        // Base 100 + (5 * 50) = 350 (rivalryMap used instead of rivalries array)
         expect(score).toBe(350);
       });
     });

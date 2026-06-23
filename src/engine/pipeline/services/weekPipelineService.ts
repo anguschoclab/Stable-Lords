@@ -5,6 +5,7 @@ import { computeMetaDrift } from '@/engine/metaDrift';
 import { SeededRNGService } from '@/utils/random';
 import { resolveImpacts, StateImpact } from '@/engine/impacts';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
+import { getStablePairKey } from '@/utils/keyUtils';
 
 /**
  * Options for week advancement
@@ -91,6 +92,12 @@ function buildWeekCaches(state: GameState): void {
   const rivalMap = new Map<string, import('@/types/state.types').RivalStableData>();
   (state.rivals || []).forEach((r) => rivalMap.set(r.id, r));
   state.rivalMap = rivalMap;
+
+  const rivalryMap = new Map<string, import('@/types/state.types').Rivalry>();
+  (state.rivalries || []).forEach((rv) =>
+    rivalryMap.set(getStablePairKey(rv.stableIdA, rv.stableIdB), rv)
+  );
+  state.rivalryMap = rivalryMap;
 }
 
 /**

@@ -4,7 +4,7 @@
  */
 
 import { FightingStyle } from '@/types/game';
-import { WEAPONS } from './weapons';
+import { WEAPONS, SHIELD_ITEM_IDS } from './weapons';
 import { ARMORS } from './armor';
 import { SHIELDS } from './shields';
 import { HELMS } from './helms';
@@ -23,6 +23,8 @@ import type {
 /**
  * All_equipment.
  */
+const SHIELD_ID_SET = new Set<string>(SHIELD_ITEM_IDS);
+
 export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS, ...HELMS]; /**
  * Get item by id.
  */
@@ -50,7 +52,10 @@ export function getItemByCode(code: string): EquipmentItem | undefined {
  */
 export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): EquipmentItem[] {
   const pool =
-    slot === 'weapon' ? WEAPONS : slot === 'armor' ? ARMORS : slot === 'shield' ? SHIELDS : HELMS;
+    slot === 'weapon' ? WEAPONS :
+    slot === 'armor' ? ARMORS :
+    slot === 'shield' ? [...SHIELDS, ...WEAPONS.filter((w) => SHIELD_ID_SET.has(w.id))] :
+    HELMS;
   return pool.filter((item) => !item.restrictedStyles?.includes(style));
 } /**
  * Is preferred weapon.

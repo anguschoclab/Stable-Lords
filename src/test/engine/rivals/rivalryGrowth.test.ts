@@ -99,4 +99,169 @@ describe('Stable Lords 1.0 Rivalry Growth Audit', () => {
     );
     expect(bloodFeud?.intensity).toBe(5);
   });
+
+  it('matches existing rivalry with reversed stable ID order', () => {
+    const existingRivalries: Rivalry[] = [
+      {
+        id: 'rv-1' as any,
+        stableIdA: 'StableB' as any,
+        stableIdB: 'StableA' as any,
+        intensity: 2,
+        reason: 'Initial clash',
+        startWeek: 1,
+      },
+    ];
+
+    const fights: FightSummary[] = [
+      {
+        id: 'f1' as any,
+        title: 'Bout',
+        createdAt: new Date().toISOString(),
+        warriorIdA: 'w1' as any,
+        warriorIdD: 'w2' as any,
+        stableIdA: 'StableA' as any,
+        stableIdD: 'StableB' as any,
+        winner: 'A',
+        by: 'KO',
+        styleA: 'BA',
+        styleD: 'TP',
+        fameA: 50,
+        fameD: 50,
+        week: 2,
+      },
+    ];
+
+    const rng = new SeededRNGService(999);
+    const result = updateRivalriesFromBouts(existingRivalries, fights, 2, rng);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]!.intensity).toBeGreaterThan(2);
+  });
+
+  it('updates only correct rivalries when multiple exist', () => {
+    const existingRivalries: Rivalry[] = [
+      {
+        id: 'rv-1' as any,
+        stableIdA: 'StableA' as any,
+        stableIdB: 'StableB' as any,
+        intensity: 1,
+        reason: 'Clash A-B',
+        startWeek: 1,
+      },
+      {
+        id: 'rv-2' as any,
+        stableIdA: 'StableC' as any,
+        stableIdB: 'StableD' as any,
+        intensity: 1,
+        reason: 'Clash C-D',
+        startWeek: 1,
+      },
+      {
+        id: 'rv-3' as any,
+        stableIdA: 'StableE' as any,
+        stableIdB: 'StableF' as any,
+        intensity: 1,
+        reason: 'Clash E-F',
+        startWeek: 1,
+      },
+    ];
+
+    const fights: FightSummary[] = [
+      {
+        id: 'f1' as any,
+        title: 'Bout',
+        createdAt: new Date().toISOString(),
+        warriorIdA: 'w1' as any,
+        warriorIdD: 'w2' as any,
+        stableIdA: 'StableA' as any,
+        stableIdD: 'StableB' as any,
+        winner: 'A',
+        by: 'KO',
+        styleA: 'BA',
+        styleD: 'TP',
+        fameA: 50,
+        fameD: 50,
+        week: 2,
+      },
+      {
+        id: 'f2' as any,
+        title: 'Bout',
+        createdAt: new Date().toISOString(),
+        warriorIdA: 'w3' as any,
+        warriorIdD: 'w4' as any,
+        stableIdA: 'StableC' as any,
+        stableIdD: 'StableD' as any,
+        winner: 'A',
+        by: 'KO',
+        styleA: 'BA',
+        styleD: 'TP',
+        fameA: 50,
+        fameD: 50,
+        week: 2,
+      },
+    ];
+
+    const rng = new SeededRNGService(777);
+    const result = updateRivalriesFromBouts(existingRivalries, fights, 2, rng);
+
+    expect(result).toHaveLength(3);
+    const ab = result.find((r) => r.stableIdA === 'StableA' && r.stableIdB === 'StableB');
+    const cd = result.find((r) => r.stableIdA === 'StableC' && r.stableIdB === 'StableD');
+    const ef = result.find((r) => r.stableIdA === 'StableE' && r.stableIdB === 'StableF');
+    expect(ab?.intensity).toBeGreaterThan(1);
+    expect(cd?.intensity).toBeGreaterThan(1);
+    expect(ef?.intensity).toBe(1);
+  });
+
+  it('updates existing rivalry on subsequent call without creating duplicate', () => {
+    let rivalries: Rivalry[] = [];
+
+    const fight1: FightSummary[] = [
+      {
+        id: 'f1' as any,
+        title: 'Bout',
+        createdAt: new Date().toISOString(),
+        warriorIdA: 'w1' as any,
+        warriorIdD: 'w2' as any,
+        stableIdA: 'Alpha' as any,
+        stableIdD: 'Beta' as any,
+        winner: 'A',
+        by: 'KO',
+        styleA: 'BA',
+        styleD: 'TP',
+        fameA: 50,
+        fameD: 50,
+        week: 1,
+      },
+    ];
+
+    const rng1 = new SeededRNGService(111);
+    rivalries = updateRivalriesFromBouts(rivalries, fight1, 1, rng1);
+    expect(rivalries).toHaveLength(1);
+    const intensityAfterFirst = rivalries[0]!.intensity;
+
+    const fight2: FightSummary[] = [
+      {
+        id: 'f2' as any,
+        title: 'Bout',
+        createdAt: new Date().toISOString(),
+        warriorIdA: 'w3' as any,
+        warriorIdD: 'w4' as any,
+        stableIdA: 'Alpha' as any,
+        stableIdD: 'Beta' as any,
+        winner: 'D',
+        by: 'KO',
+        styleA: 'BA',
+        styleD: 'TP',
+        fameA: 50,
+        fameD: 50,
+        week: 2,
+      },
+    ];
+
+    const rng2 = new SeededRNGService(222);
+    rivalries = updateRivalriesFromBouts(rivalries, fight2, 2, rng2);
+    expect(rivalries).toHaveLength(1);
+    expect(rivalries[0]!.intensity).toBeGreaterThanOrEqual(intensityAfterFirst);
+  });
 });

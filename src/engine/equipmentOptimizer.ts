@@ -121,13 +121,13 @@ export function generateRecommendations(
   const armors = getAvailableItems('armor', style);
   const shields = getAvailableItems('shield', style);
   const helms = getAvailableItems('helm', style);
+  const noShield = shields.find((s) => s.id === 'none_shield');
 
   return profiles.map((profile) => {
     const weapon = bestItem(weapons, (w) => scoreWeapon(w, style, profile));
     const isTwoHanded = weapon.twoHanded ?? false;
     const armor = bestItem(armors, (a) => scoreArmor(a, profile));
     const helm = bestItem(helms, (h) => scoreHelm(h, profile));
-    const noShield = shields.find((s) => s.id === 'none_shield');
     const shield = isTwoHanded
       ? (noShield ?? shields[0])
       : bestItem(shields, (s) => scoreShield(s, profile));

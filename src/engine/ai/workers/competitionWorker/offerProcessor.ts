@@ -35,8 +35,9 @@ export function processAllRivalsBoutOffers(
   });
 
   // Process each rival's slate
+  const rivalMap = new Map(rivals.map((r) => [r.id, r]));
   offersByRival.forEach((rivalOffers, rivalId) => {
-    const owningRival = rivals.find((r) => r.id === rivalId);
+    const owningRival = rivalMap.get(rivalId as import('@/types/shared.types').StableId);
     if (!owningRival) return;
 
     // Track warriors already committed this week

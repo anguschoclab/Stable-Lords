@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SeededRNG, randomPick, stringToSeed, hashStr } from '@/utils/random';
+import { SeededRNG, randomPick, stringToSeed, hashStr, shuffled, pick } from '@/utils/random';
 
 describe('SeededRNG', () => {
   it('produces deterministic results for the same seed', () => {
@@ -102,5 +102,167 @@ describe('hashStr', () => {
     const hash = hashStr('any string');
     expect(hash).toBeGreaterThanOrEqual(0);
     expect(hash).toBeLessThan(Math.pow(2, 32));
+  });
+});
+
+describe('SeededRNG.next', () => {
+  it('returns float in [0, 1) over many iterations', () => {
+    const rng = new SeededRNG(99);
+    for (let i = 0; i < 1000; i++) {
+      const val = rng.next();
+      expect(val).toBeGreaterThanOrEqual(0);
+      expect(val).toBeLessThan(1);
+    }
+  });
+
+  it('is deterministic for same seed', () => {
+    const rng1 = new SeededRNG(77);
+    const rng2 = new SeededRNG(77);
+    for (let i = 0; i < 10; i++) {
+      expect(rng1.next()).toBe(rng2.next());
+    }
+  });
+});
+
+describe('SeededRNG.shuffle', () => {
+  it('returns a new array (not same reference)', () => {
+    const rng = new SeededRNG(42);
+    const arr = [1, 2, 3, 4, 5];
+    const result = rng.shuffle(arr);
+    expect(result).not.toBe(arr);
+  });
+
+  it('preserves all elements (same multiset)', () => {
+    const rng = new SeededRNG(42);
+    const arr = [1, 2, 3, 4, 5];
+    const result = rng.shuffle(arr);
+    expect(result.sort()).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it('is deterministic for same seed', () => {
+    const rng1 = new SeededRNG(42);
+    const rng2 = new SeededRNG(42);
+    expect(rng1.shuffle([1, 2, 3, 4, 5])).toEqual(rng2.shuffle([1, 2, 3, 4, 5]));
+  });
+
+  it('handles single-element array', () => {
+    const rng = new SeededRNG(42);
+    expect(rng.shuffle([1])).toEqual([1]);
+  });
+
+  it('handles empty array', () => {
+    const rng = new SeededRNG(42);
+    expect(rng.shuffle([])).toEqual([]);
+  });
+});
+
+describe('SeededRNG.uuid', () => {
+  it('returns 12-char hex string', () => {
+    const rng = new SeededRNG(42);
+    const id = rng.uuid();
+    expect(id).toMatch(/^[0-9a-f]{12}$/);
+  });
+
+  it('with prefix returns prefixed hex string', () => {
+    const rng = new SeededRNG(42);
+    const id = rng.uuid('warrior');
+    expect(id).toMatch(/^warrior-[0-9a-f]{12}$/);
+  });
+
+  it('is deterministic for same seed', () => {
+    const rng1 = new SeededRNG(42);
+    const rng2 = new SeededRNG(42);
+    expect(rng1.uuid()).toBe(rng2.uuid());
+  });
+});
+
+describe('SeededRNG.clone', () => {
+  it('clone produces same sequence initially', () => {
+    const rng = new SeededRNG(42);
+    const clone = rng.clone();
+    expect(clone.next()).toBe(rng.next());
+  });
+
+  it('clone is independent from original', () => {
+    const rng = new SeededRNG(42);
+    const clone = rng.clone();
+    clone.next();
+    // After advancing clone, original should not be affected
+    const rngVal = rng.next();
+    const cloneVal = clone.next();
+    // They should differ because clone was advanced one extra time
+    expect(rngVal).not.toBe(cloneVal);
+  });
+});
+
+describe('SeededRNG.pickWeighted', () => {
+  it('picks items proportional to weights', () => {
+    const rng = new SeededRNG(42);
+    const items = ['a', 'b'];
+    const weights = [0, 100];
+    // With all weight on 'b', should always pick 'b'
+    for (let i = 0; i < 20; i++) {
+      expect(rng.pickWeighted(items, weights)).toBe('b');
+    }
+  });
+
+  it('throws on length mismatch', () => {
+    const rng = new SeededRNG(42);
+    expect(() => rng.pickWeighted(['a', 'b'], [1])).toThrow(
+      'Items and weights must have same length'
+    );
+  });
+
+  it('throws on empty arrays', () => {
+    const rng = new SeededRNG(42);
+    expect(() => rng.pickWeighted([], [])).toThrow('Cannot pick from empty array');
+  });
+
+  it('picks last item when all weight is on last', () => {
+    const rng = new SeededRNG(42);
+    const items = ['x', 'y', 'z'];
+    const weights = [0, 0, 50];
+    expect(rng.pickWeighted(items, weights)).toBe('z');
+  });
+});
+
+describe('SeededRNG.pick', () => {
+  it('throws on empty array', () => {
+    const rng = new SeededRNG(42);
+    expect(() => rng.pick([])).toThrow('Cannot pick from empty array');
+  });
+});
+
+describe('shuffled', () => {
+  it('works with function-based RNG', () => {
+    let counter = 0;
+    const rng = () => (counter++ % 3) / 3;
+    const result = shuffled([1, 2, 3], rng);
+    expect(result.sort()).toEqual([1, 2, 3]);
+  });
+
+  it('works with IRNGService', () => {
+    const rng = new SeededRNG(42);
+    const result = shuffled([1, 2, 3, 4, 5], rng);
+    expect(result.sort()).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it('returns a new array', () => {
+    const rng = new SeededRNG(42);
+    const arr = [1, 2, 3];
+    expect(shuffled(arr, rng)).not.toBe(arr);
+  });
+
+  it('preserves all elements', () => {
+    const rng = new SeededRNG(42);
+    const arr = [1, 2, 3, 4, 5];
+    const result = shuffled(arr, rng);
+    expect(result.sort()).toEqual([1, 2, 3, 4, 5]);
+  });
+});
+
+describe('pick (alias)', () => {
+  it('is the same function as randomPick', () => {
+    expect(pick).toBe(randomPick);
   });
 });

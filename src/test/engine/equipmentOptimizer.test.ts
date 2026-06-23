@@ -135,4 +135,110 @@ describe('Equipment Optimizer', () => {
       expect(balancedRec?.loadout.armor).toBe('leather');
     });
   });
+
+  describe('shield pool and dual-wield recommendations', () => {
+    const ALL_STYLES = Object.values(FightingStyle);
+
+    it('two-handed weapon forces none_shield with blocked: true', () => {
+      const recs = generateRecommendations(FightingStyle.AimedBlow, 10);
+      // AimedBlow profiles: ['speed', 'balanced'] — balanced is index 1
+      // Balanced selects quarterstaff (two-handed, CW)
+      expect(recs[1]?.loadout.shield).toBe('none_shield');
+      expect(recs[1]?.breakdown.shield.blocked).toBe(true);
+    });
+
+    it('one-handed weapon does not set blocked', () => {
+      const recs = generateRecommendations(FightingStyle.AimedBlow, 10);
+      // Speed profile (index 0) selects a one-handed weapon
+      expect(recs[0]?.breakdown.shield.blocked).toBe(false);
+    });
+
+    it('all 10 styles produce valid recommendations with defined shields', () => {
+      for (const style of ALL_STYLES) {
+        const recs = generateRecommendations(style, 12);
+        for (const rec of recs) {
+          expect(rec.loadout.shield).toBeTruthy();
+          expect(rec.breakdown.shield.item).toBeTruthy();
+        }
+      }
+    });
+
+    it('TotalParry tank recommends a real shield in offhand', () => {
+      const recs = generateRecommendations(FightingStyle.TotalParry, 30);
+      // TotalParry profiles: ['tank', 'balanced'] — tank is index 0
+      const tankRec = recs[0];
+      expect(['small_shield', 'medium_shield', 'large_shield']).toContain(tankRec?.loadout.shield);
+      expect(tankRec?.breakdown.shield.blocked).toBe(false);
+    });
+
+    it('ParryRiposte balanced recommends small_shield in offhand', () => {
+      const recs = generateRecommendations(FightingStyle.ParryRiposte, 15);
+      // ParryRiposte profiles: ['balanced', 'speed'] — balanced is index 0
+      // small_shield: balanced score 15 > none_shield score 5; not restricted
+      expect(recs[0]?.loadout.shield).toBe('small_shield');
+    });
+
+    it('AimedBlow cannot get medium_shield or large_shield', () => {
+      const recs = generateRecommendations(FightingStyle.AimedBlow, 20);
+      for (const rec of recs) {
+        expect(rec.loadout.shield).not.toBe('medium_shield');
+        expect(rec.loadout.shield).not.toBe('large_shield');
+      }
+    });
+
+    it('speed profile always prefers none_shield', () => {
+      // Styles that have a speed profile
+      const speedStyles = [
+        FightingStyle.AimedBlow,      // ['speed', 'balanced']
+        FightingStyle.LungingAttack,  // ['speed', 'balanced']
+        FightingStyle.ParryLunge,     // ['balanced', 'speed']
+        FightingStyle.ParryRiposte,   // ['balanced', 'speed']
+      ];
+      for (const style of speedStyles) {
+        const recs = generateRecommendations(style, 12);
+        const profiles = style === FightingStyle.AimedBlow || style === FightingStyle.LungingAttack
+          ? [0]  // speed is index 0
+          : [1]; // speed is index 1
+        for (const idx of profiles) {
+          expect(recs[idx]?.loadout.shield, `speed rec for ${style}`).toBe('none_shield');
+        }
+      }
+    });
+
+    it('totalWeight includes shield weight when real shield is recommended', () => {
+      const recs = generateRecommendations(FightingStyle.TotalParry, 30);
+      const tankRec = recs[0];
+      expect(tankRec?.totalWeight).toBe(getLoadoutWeight(tankRec!.loadout));
+    });
+
+    it('synergy score remains in [0, 100] across all styles', () => {
+      for (const style of ALL_STYLES) {
+        const recs = generateRecommendations(style, 12);
+        for (const rec of recs) {
+          expect(rec.synergy).toBeGreaterThanOrEqual(0);
+          expect(rec.synergy).toBeLessThanOrEqual(100);
+        }
+      }
+    });
+
+    it('TotalParry tank may select shield as weapon (dual shields)', () => {
+      const recs = generateRecommendations(FightingStyle.TotalParry, 30);
+      const tankRec = recs[0];
+      // TotalParry CW weapons are shields: medium_shield, large_shield
+      expect(['medium_shield', 'large_shield']).toContain(tankRec?.loadout.weapon);
+      // Shields are not two-handed, so shield slot is not blocked
+      expect(tankRec?.breakdown.shield.blocked).toBe(false);
+    });
+
+    it('all blocked: true recs have loadout.shield === none_shield', () => {
+      for (const style of ALL_STYLES) {
+        const recs = generateRecommendations(style, 12);
+        for (const rec of recs) {
+          if (rec.breakdown.shield.blocked) {
+            expect(rec.loadout.shield, `blocked rec for ${style}`).toBe('none_shield');
+          }
+        }
+      }
+    });
+  });
 });

@@ -6,6 +6,7 @@ import { getRecentFightsForWarrior } from '@/engine/core/historyUtils';
 import { META_RECRUIT_QUOTES } from '@/data/ownerData';
 import { SeededRNGService } from '@/utils/random';
 import { filterActive } from '@/utils/roster';
+import { getStablePairKey } from '@/utils/keyUtils';
 import { generateAIRecruit } from './recruitGenerator';
 import { computeWarriorLiability } from '@/engine/warriorValue';
 import { policyFor } from '@/engine/ai/traitPolicy';
@@ -25,6 +26,9 @@ export function processAIRosterManagement(
   const rngSnapshot = rng || new SeededRNGService(state.week * 7919 + 101);
   const meta = state.cachedMetaDrift || computeMetaDrift(state.arenaHistory, 20);
   const gazetteItems: string[] = [];
+  const rivalryMap = new Map(
+    (state.rivalries || []).map((rv) => [getStablePairKey(rv.stableIdA, rv.stableIdB), rv])
+  );
   const updatedRivals = (state.rivals || []).map((rival) => {
     const r = {
       ...rival,
@@ -150,11 +154,7 @@ export function processAIRosterManagement(
 
       // Special handling for rivalries: counter player's favorite style
       if (state.rivalries) {
-        const rivalry = state.rivalries.find(
-          (rv) =>
-            (rv.stableIdA === state.player.id && rv.stableIdB === r.owner.id) ||
-            (rv.stableIdB === state.player.id && rv.stableIdA === r.owner.id)
-        );
+        const rivalry = rivalryMap.get(getStablePairKey(state.player.id, r.owner.id));
         if (rivalry && rivalry.intensity >= 3 && adaptation !== 'Traditionalist') {
           const playerMeta = computeMetaDrift(
             getRecentFightsForWarrior(state.arenaHistory, state.player.id, 10),

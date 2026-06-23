@@ -225,7 +225,7 @@ export const AGING_PENALTY_START = 28;
  * DEF gained per attribute-point-lost × WL/15 for veteran compensation
  * Tune via balance harness to keep aged INI styles viable without over-buffing
  */
-export const VETERAN_WISDOM_FACTOR = 0.05;
+export const VETERAN_WISDOM_FACTOR = 0.25;
 
 // ─── Balance Guardrails ───────────────────────────────────────────────────────
 /**

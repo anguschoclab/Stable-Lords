@@ -3,6 +3,7 @@ import { type CrowdMood } from '@/engine/crowdMood';
 import { FightingStyle } from '@/types/shared.types';
 import { scoreMatchup } from '@/engine/schedulingAssistant';
 import { filterActive } from '@/utils/roster';
+import { DEFAULT_PROGRESSION } from '@/constants/progression';
 import type { BoutBid } from './types';
 
 /**
@@ -70,6 +71,7 @@ export function generateBoutBids(
     realmRankings: {},
     awards: [],
     bookmarks: [],
+    progression: structuredClone(DEFAULT_PROGRESSION),
   };
 
   for (const warrior of activeRoster) {

@@ -61,6 +61,21 @@ const COACH_ROUTES: RouteEntry[] = [
     ],
   },
 
+  // ── Stable Hub ───────────────────────────────────────────────────────────
+  {
+    pattern: '/stable',
+    tips: [
+      {
+        id: 'stable-first-round',
+        message:
+          "⚔️ You have bout offers waiting! Head to 'Run Round' to send your warriors into the arena and advance the week.",
+        condition: (s) =>
+          s.arenaHistory.length <= 1 &&
+          Object.keys(s.boutOffers ?? {}).length > 0,
+      },
+    ],
+  },
+
   // ── Combat ──────────────────────────────────────────────────────────
   {
     pattern: '/stable/arena',

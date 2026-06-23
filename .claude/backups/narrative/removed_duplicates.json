@@ -103,5 +103,41 @@
     "kept": "{{name}} parries with a theatrical flourish, inviting the crowd's applause!",
     "removed": "{{name}} parries with a theatrical flourish, inviting the crowd's cheer.",
     "similarity": 0.88
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "removed": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} straight at the heart!",
+    "kept": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} deep into {{defender}}.",
+    "reason": "fuzzy (0.81)"
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "removed": "{{attacker}} jabs high, then thrusts low with {{possessive}} {{weapon}}.",
+    "kept": "{{attacker}} feints low, then thrusts high with {{possessive}} {{weapon}}!",
+    "reason": "fuzzy (0.81)"
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, singing arc!",
+    "kept": "{{attacker}} sweeps {{possessive}} {{weapon}} in a deadly horizontal arc!",
+    "reason": "fuzzy (0.81)"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
+    "reason": "fuzzy (0.82)"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} delivers a brutal, looping strike with {{possessive}} {{weapon}}.",
+    "kept": "{{attacker}} delivers a piston-like strike with {{possessive}} {{weapon}}!",
+    "reason": "fuzzy (0.83)"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} brings {{possessive}} {{weapon}} down with the force of an avalanche.",
+    "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with the thud of a falling oak.",
+    "reason": "fuzzy (0.82)"
   }
 ]

@@ -1,9 +1,15 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({ roster: [] }),
-}));
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useWorldState: () => ({ roster: Object.assign([], { filter: () => [] }) }),
+    useBookmarks: () => [],
+    useGameStore: () => ({ roster: [] }),
+  };
+});
 
 import PhysicalsSimulator from '@/pages/PhysicalsSimulator';
 

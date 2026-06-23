@@ -23,7 +23,9 @@ vi.mock('@/engine/workerProxy', () => ({
   },
 }));
 
-vi.mock('@/state/useGameStore', () => {
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+
   const doAdvanceWeek = vi.fn().mockResolvedValue(undefined);
   const doAdvanceDay = vi.fn().mockResolvedValue(undefined);
   const setSimulating = vi.fn();

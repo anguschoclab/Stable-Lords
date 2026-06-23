@@ -38,13 +38,21 @@ const defaultStoreState = {
 };
 
 // Mock useGameStore to avoid store initialization issues
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+  useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
+  useBookmarks: () => [],
   useGameStore: (selector?: any) => {
     const state = { ...defaultStoreState, ...storeOverride, isBookmarked: () => false };
     return selector ? selector(state) : state;
   },
-  useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
-}));
+  clearStoreOverride: () => {
+    storeOverride = {};
+  }
+  };
+});
 
 // Mock the router components
 vi.mock('@tanstack/react-router', () => ({

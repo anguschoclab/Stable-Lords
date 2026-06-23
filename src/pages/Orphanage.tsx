@@ -11,7 +11,7 @@ import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { simulateFight, defaultPlanForWarrior } from '@/engine';
 import type { GameState } from '@/types/state.types';
-import type { Warrior, FightSummary, WarriorId } from '@/types/game';
+import type { Warrior, FightSummary, WarriorId, FightPlan } from '@/types/game';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { generateId } from '@/utils/idUtils';
 import { generateOrphanPool } from '@/data/orphanPool';
@@ -22,6 +22,7 @@ import IdentityStep from '@/components/orphanage/IdentityStep';
 import WarriorSelectionStep from '@/components/orphanage/WarriorSelectionStep';
 import FirstBloodStep from '@/components/orphanage/FirstBloodStep';
 import StoryBeginsStep from '@/components/orphanage/StoryBeginsStep';
+import PlanStep from '@/components/orphanage/PlanStep';
 
 // ─── Animation variants for step transitions ────────────────────────────────
 
@@ -74,6 +75,9 @@ export default function Orphanage() {
     summary: FightSummary;
   } | null>(null);
 
+  const [playerPlan, setPlayerPlan] = useState<FightPlan | null>(null);
+  const [boutSeed] = useState(() => cryptoRandomInt(0, 0x7fffffff));
+
   const rerollPool = useCallback(() => {
     setPoolSeedValue((prev) => (prev * 1103515245 + 12345) & 0x7fffffff);
     setSelected(new Set());
@@ -96,6 +100,13 @@ export default function Orphanage() {
     [selected, orphanPool]
   );
 
+  const planWarrior = useMemo(() => {
+    if (selectedWarriors.length < 1) return null;
+    const poolA = selectedWarriors[0];
+    if (!poolA) return null;
+    return makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
+  }, [selectedWarriors]);
+
   const runTutorialBout = useCallback(() => {
     if (selectedWarriors.length < 2) return;
     const poolA = selectedWarriors[0];
@@ -103,9 +114,9 @@ export default function Orphanage() {
     if (!poolA || !poolB) return;
     const wA = makeWarrior(poolA.id as WarriorId, poolA.name, poolA.style, poolA.attrs);
     const wB = makeWarrior(poolB.id as WarriorId, poolB.name, poolB.style, poolB.attrs);
-    const planA = defaultPlanForWarrior(wA);
+    const planA = playerPlan ?? defaultPlanForWarrior(wA);
     const planB = defaultPlanForWarrior(wB);
-    const outcome = simulateFight(planA, planB, wA, wB);
+    const outcome = simulateFight(planA, planB, wA, wB, boutSeed);
     const tags = outcome.post?.tags ?? [];
 
     const summary = createBoutSummary(wA, wB, outcome, 1, {
@@ -116,7 +127,7 @@ export default function Orphanage() {
     summary.fameDeltaD = outcome.winner === 'D' ? 1 : 0;
 
     setBoutResult({ a: wA, d: wB, outcome, summary });
-  }, [selectedWarriors]);
+  }, [selectedWarriors, playerPlan, boutSeed]);
 
   const finishFTUE = useCallback(() => {
     const result = buildFTUEInitialState(
@@ -171,7 +182,7 @@ export default function Orphanage() {
 
       <div className="relative z-10 w-full max-w-xl space-y-6">
         {/* Progress */}
-        <StepProgress step={step} total={4} />
+        <StepProgress step={step} total={5} />
 
         {/* ── Step Content with AnimatePresence ─────────────────────────────────── */}
         <AnimatePresence mode="wait">
@@ -216,15 +227,40 @@ export default function Orphanage() {
                 onRerollPool={rerollPool}
                 onBack={() => setStep(0)}
                 onNext={() => {
+                  if (planWarrior) {
+                    setPlayerPlan(defaultPlanForWarrior(planWarrior));
+                  }
                   setStep(2);
-                  runTutorialBout();
                 }}
               />
             </motion.div>
           )}
 
-          {/* ── Step 2: First Blood ──────────────────────────────────────────────── */}
-          {step === 2 && boutResult && (
+          {/* ── Step 2: Set the Plan ─────────────────────────────────────────────── */}
+          {step === 2 && planWarrior && playerPlan && (
+            <motion.div
+              key="set-the-plan"
+              variants={stepVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={stepTransition}
+            >
+              <PlanStep
+                warrior={planWarrior}
+                plan={playerPlan}
+                onPlanChange={setPlayerPlan}
+                onBack={() => setStep(1)}
+                onNext={() => {
+                  runTutorialBout();
+                  setStep(3);
+                }}
+              />
+            </motion.div>
+          )}
+
+          {/* ── Step 3: First Blood ──────────────────────────────────────────────── */}
+          {step === 3 && boutResult && (
             <motion.div
               key="first-blood"
               variants={stepVariants}
@@ -235,14 +271,14 @@ export default function Orphanage() {
             >
               <FirstBloodStep
                 boutResult={boutResult}
-                onBack={() => setStep(1)}
-                onNext={() => setStep(3)}
+                onBack={() => setStep(2)}
+                onNext={() => setStep(4)}
               />
             </motion.div>
           )}
 
-          {/* ── Step 3: Your Story Begins ────────────────────────────────────────── */}
-          {step === 3 && (
+          {/* ── Step 4: Your Story Begins ────────────────────────────────────────── */}
+          {step === 4 && (
             <motion.div
               key="story-begins"
               variants={stepVariants}

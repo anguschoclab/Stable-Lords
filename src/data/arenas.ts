@@ -324,6 +324,20 @@ export interface ArenaLoreEntry {
  */
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'charnel_pits_silent_night',
+    arenaId: 'charnel_pits',
+    type: 'historical_battle',
+    title: 'The Silent Night of Skulls',
+    narrative: 'In 948, a brutal gang war spilled into the pits. For three days, gladiators fought alongside their owners against an invading mercenary band. The fighting was so fierce that even the crowd took up arms.',
+  },
+  {
+    id: 'lantern_hall_glass_rain',
+    arenaId: 'lantern_hall_arena',
+    type: 'architectural_quirk',
+    title: 'The Glass Rain',
+    narrative: 'When the great chandelier of the Lantern Hall fell in 962 during an explosive magical duel, the arena floor was seeded with thousands of lethal glass shards that are still occasionally unearthed by a careless footstep.',
+  },
+  {
     id: 'walled_court_shattered_shield',
     arenaId: 'walled_court_arena',
     type: 'historical_battle',

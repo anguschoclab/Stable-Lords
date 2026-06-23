@@ -399,6 +399,40 @@ export const TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
   },
   // ── New Lore/Personality Traits ──
+
+  // ── New Lore/Personality Traits ──
+  silent_one: {
+    id: 'silent_one',
+    name: 'Silent One',
+    description: '+1 defense, +1 decisiveness — unnervingly quiet, they waste no breath on roars or taunts.',
+    effect: { defMod: 1, decMod: 1, fightPlanMod: { feintTendency: -2 } },
+    weight: 0.6,
+    synergy: ['cunning'],
+    antiSynergy: ['brutal'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  orphan_rage: {
+    id: 'orphan_rage',
+    name: 'Orphan\'s Rage',
+    description: '+2 attack when bloodied (HP < 50%) — channeling years of abuse into a final, frantic assault.',
+    effect: { attModLowHp: 2, fightPlanMod: { killDesire: 2 } },
+    weight: 0.7,
+    synergy: ['brutal', 'agile'],
+    tier: 'Common',
+    sign: 'positive',
+  },
+  pit_rat: {
+    id: 'pit_rat',
+    name: 'Pit Rat',
+    description: '+1 initiative — survived by always being the first to move.',
+    effect: { iniMod: 1 },
+    weight: 0.6,
+    synergy: ['agile'],
+    antiSynergy: ['tank'],
+    tier: 'Common',
+    sign: 'positive',
+  },
   blood_drunk: {
     id: 'blood_drunk',
     name: 'Blood Drunk',

@@ -1,4 +1,4 @@
-import { useGameStore } from '@/state/useGameStore';
+import { useArenaPreferences, useGameStore } from '@/state/useGameStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -18,8 +18,8 @@ import { Swords, ScrollText, Volume2, Sparkles, Activity } from 'lucide-react'; 
  * Arena settings.
  */
 export default function ArenaSettings() {
-  const store = useGameStore();
-  const prefs = store.arenaPreferences;
+  const prefs = useArenaPreferences();
+  const setArenaPreferences = useGameStore((s) => s.setArenaPreferences);
 
   return (
     <Card className="rounded-none border-border/50">
@@ -46,7 +46,7 @@ export default function ArenaSettings() {
           <Select
             value={prefs.defaultViewMode}
             onValueChange={(value: 'log' | 'arena') =>
-              store.setArenaPreferences({ defaultViewMode: value })
+              setArenaPreferences({ defaultViewMode: value })
             }
           >
             <SelectTrigger className="w-40 rounded-none">
@@ -72,7 +72,7 @@ export default function ArenaSettings() {
           </div>
           <Switch
             checked={prefs.audioEnabled}
-            onCheckedChange={(checked) => store.setArenaPreferences({ audioEnabled: checked })}
+            onCheckedChange={(checked) => setArenaPreferences({ audioEnabled: checked })}
           />
         </div>
 
@@ -92,7 +92,7 @@ export default function ArenaSettings() {
             min={0}
             max={1}
             step={0.1}
-            onValueChange={([value]) => store.setArenaPreferences({ audioVolume: value })}
+            onValueChange={([value]) => setArenaPreferences({ audioVolume: value })}
             disabled={!prefs.audioEnabled}
           />
         </div>
@@ -110,7 +110,7 @@ export default function ArenaSettings() {
           </div>
           <Switch
             checked={prefs.effectsEnabled}
-            onCheckedChange={(checked) => store.setArenaPreferences({ effectsEnabled: checked })}
+            onCheckedChange={(checked) => setArenaPreferences({ effectsEnabled: checked })}
           />
         </div>
 
@@ -125,7 +125,7 @@ export default function ArenaSettings() {
           <Select
             value={prefs.screenShakeIntensity}
             onValueChange={(value: 'off' | 'low' | 'medium' | 'high') =>
-              store.setArenaPreferences({ screenShakeIntensity: value })
+              setArenaPreferences({ screenShakeIntensity: value })
             }
             disabled={!prefs.effectsEnabled}
           >

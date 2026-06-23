@@ -78,7 +78,7 @@ export interface RivalWarriorMap {
  */
 export function useBookingOffice() {
   const state = useWorldState();
-  const { setState } = useGameStore();
+  const setState = useGameStore((s) => s.setState);
   const { promoters, boutOffers, roster, week, rivals } = state;
   const [activeTab, setActiveTab] = useState('this-week');
   const [signedOfferIds, setSignedOfferIds] = useState<Set<string>>(new Set());

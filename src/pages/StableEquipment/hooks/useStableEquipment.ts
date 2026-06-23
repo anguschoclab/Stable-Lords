@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/shared.types';
 import { filterActive } from '@/utils/roster';
@@ -9,7 +10,9 @@ import { toast } from 'sonner';
  *
  */
 export function useStableEquipment() {
-  const { roster, updateWarriorEquipment } = useGameStore();
+  const { roster, updateWarriorEquipment } = useGameStore(
+    useShallow((s) => ({ roster: s.roster, updateWarriorEquipment: s.updateWarriorEquipment }))
+  );
   const activeWarriors = filterActive(roster);
 
   const [selectedStyle, setSelectedStyle] = useState<FightingStyle>(

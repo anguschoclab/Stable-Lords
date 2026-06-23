@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { MinuteEvent, FightOutcomeBy, FightingStyle } from '@/types/game';
 import { Surface } from '@/components/ui/Surface';
 import { useBoutPlayback } from '@/hooks/useBoutPlayback';
-import { useGameStore } from '@/state/useGameStore';
+import { useArenaPreferences, useGameStore } from '@/state/useGameStore';
 import ArenaView from './arena/ArenaView';
 import TacticalLogView from './arena/TacticalLogView';
 import HighlightLog from './arena/HighlightLog';
@@ -81,8 +81,8 @@ export default function BoutViewer({
 }: BoutViewerProps) {
   const isIndoor = isIndoorArena(arenaId);
   const effectiveWeather = isIndoor ? 'Clear' : weather;
-  const store = useGameStore();
-  const arenaPrefs = store.arenaPreferences;
+  const arenaPrefs = useArenaPreferences();
+  const setArenaPreferences = useGameStore((s) => s.setArenaPreferences);
   const [expanded, setExpanded] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>(arenaPrefs.defaultViewMode);
   const logEndRef = useRef<HTMLDivElement>(null);
@@ -140,7 +140,7 @@ export default function BoutViewer({
             onViewModeChange={(mode) => {
               setViewMode(mode);
               // Persist as new default if user explicitly changes
-              store.setArenaPreferences({ defaultViewMode: mode });
+              setArenaPreferences({ defaultViewMode: mode });
             }}
             isPlaying={isPlaying}
             speed={speed}

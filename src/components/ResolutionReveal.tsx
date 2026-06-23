@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useGameStore, reconstructGameState, type GameStore } from '@/state/useGameStore';
+import { useWorldState, useGameStore, type GameStore } from '@/state/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,9 +19,8 @@ type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial'; /**
  * Resolution reveal.
  */
 export default function ResolutionReveal() {
-  const store = useGameStore();
-  const state = reconstructGameState(store);
-  const setState = store.setState;
+  const state = useWorldState();
+  const setState = useGameStore((s) => s.setState);
   const [step, setStep] = useState<RevealStep>('gazette');
 
   const latestFight = state.arenaHistory?.[state.arenaHistory.length - 1];

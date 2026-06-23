@@ -61,7 +61,7 @@ export function WarriorHeroHeader({
   isPlayerOwned,
   insightTokens,
 }: WarriorHeroHeaderProps) {
-  const store = useGameStore();
+  const renameWarrior = useGameStore((s) => s.renameWarrior);
   const warriorInsightTokens = insightTokens?.filter((token) => token.warriorId === id) || [];
 
   return (
@@ -79,7 +79,7 @@ export function WarriorHeroHeader({
                 <EditableText
                   value={warrior.name}
                   onSave={(newName) =>
-                    store.renameWarrior(id as import('@/types/shared.types').WarriorId, newName)
+                    renameWarrior(id as import('@/types/shared.types').WarriorId, newName)
                   }
                   className="text-4xl font-display font-black uppercase tracking-tight"
                   label="Rename"

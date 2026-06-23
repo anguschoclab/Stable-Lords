@@ -1,6 +1,7 @@
 /**
  * Stable Lords — Graveyard & Retired Warriors
  */
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skull, Zap } from 'lucide-react';
@@ -14,7 +15,9 @@ import { VirtualizedFallenGrid } from '@/components/fallen/VirtualizedFallenGrid
  * Graveyard.
  */
 export default function Graveyard() {
-  const { graveyard, player, season } = useGameStore();
+  const { graveyard, player, season } = useGameStore(
+    useShallow((s) => ({ graveyard: s.graveyard, player: s.player, season: s.season }))
+  );
 
   const myFallen = graveyard.filter((w) => w.stableId === player.id);
   const worldFallen = graveyard;

@@ -6,6 +6,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { simulateFight, defaultPlanForWarrior } from '@/engine';
@@ -44,7 +45,16 @@ const stepTransition = {
  */
 export default function Orphanage() {
   const navigate = useNavigate();
-  const state = useGameStore();
+  const state = useGameStore(
+    useShallow((s) => ({
+      player: s.player,
+      graveyard: s.graveyard,
+      initializeStable: s.initializeStable,
+      setState: s.setState,
+      returnToTitle: s.returnToTitle,
+      saveCurrentState: s.saveCurrentState,
+    }))
+  );
   const { initializeStable, setState, returnToTitle, saveCurrentState } = state;
 
   const initialStep = !state.player.stableName ? 0 : 1;

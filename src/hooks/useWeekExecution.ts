@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { useGameStore, reconstructGameState } from '@/state/useGameStore';
-import { processWeekBouts, type BoutResult } from '@/engine/bout';
+import { useShallow } from 'zustand/react/shallow';
+import { useGameStore, useWorldState } from '@/state/useGameStore';
+import type { BoutResult } from '@/engine/bout';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { isFightReady } from '@/engine/warriorStatus';
 import { engineProxy } from '@/engine/workerProxy';
@@ -15,10 +16,16 @@ import type { Warrior } from '@/types/warrior.types';
  * running bouts, advancing time, and running autosim.
  */
 export function useWeekExecution() {
-  const store = useGameStore();
-  const { doAdvanceDay, doAdvanceWeek, setSimulating, loadGame } = store;
+  const { doAdvanceDay, doAdvanceWeek, setSimulating, loadGame } = useGameStore(
+    useShallow((s) => ({
+      doAdvanceDay: s.doAdvanceDay,
+      doAdvanceWeek: s.doAdvanceWeek,
+      setSimulating: s.setSimulating,
+      loadGame: s.loadGame,
+    }))
+  );
 
-  const gameState = useMemo(() => reconstructGameState(store), [store]);
+  const gameState = useWorldState();
 
   const [running, setRunning] = useState(false);
   const runningRef = useRef(false);
@@ -50,26 +57,30 @@ export function useWeekExecution() {
     setRunning(true);
     setResults([]);
 
-    const processed = processWeekBouts(gameState);
-    setResults(processed.results);
-
     try {
       if (gameState.isTournamentWeek) {
-        await doAdvanceDay(
-          undefined,
-          processed.results,
-          processed.summary.deathNames,
-          processed.summary.injuryNames
-        );
+        await doAdvanceDay();
         toast.success(`Empire Day ${gameState.day + 1} — Week ${gameState.week} concluded.`);
       } else {
-        await doAdvanceWeek(
-          undefined,
-          processed.results,
-          processed.summary.deathNames,
-          processed.summary.injuryNames
-        );
+        await doAdvanceWeek();
         toast.success(`Week ${gameState.week} concluded.`);
+      }
+
+      // Populate results from store after advance completes
+      const storeState = useGameStore.getState();
+      if (storeState.lastWeekBoutDisplay?.results) {
+        setResults(storeState.lastWeekBoutDisplay.results);
+      }
+
+      // Emit death toasts from lastWeekBoutDisplay (replaces engineEventBus-based toasts
+      // that only worked when processWeekBouts ran on the main thread)
+      if (storeState.lastWeekBoutDisplay?.deathNames) {
+        storeState.lastWeekBoutDisplay.deathNames.forEach((name) => {
+          toast(`${name} has fallen in the arena.`, {
+            description: 'The stands fall briefly silent.',
+            duration: 6000,
+          });
+        });
       }
     } finally {
       runningRef.current = false;

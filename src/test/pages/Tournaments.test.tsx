@@ -6,34 +6,38 @@ import '@/test/_setup/setup';
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({
-    roster: [],
-    newsletter: [],
-    ledger: [],
-    matchHistory: [],
-    moodHistory: [],
-    graveyard: [],
-    retired: [],
-    week: 1,
-    season: 'Spring',
-    year: 1,
-    treasury: 500,
-    tournaments: [],
-    rivals: [],
-    arenaHistory: [],
-    trainers: [],
-    trainingAssignments: [],
-    fame: 0,
-    isBookmarked: vi.fn(() => false),
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: "Dragon's Hearth",
+  useGameStore: (selector?: any) => {
+    const state = {
+      roster: [],
+      newsletter: [],
+      ledger: [],
+      matchHistory: [],
+      moodHistory: [],
+      graveyard: [],
+      retired: [],
+      week: 1,
+      season: 'Spring',
+      year: 1,
+      treasury: 500,
+      tournaments: [],
+      rivals: [],
+      arenaHistory: [],
+      trainers: [],
+      trainingAssignments: [],
       fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-  }),
+      bookmarks: [],
+      isBookmarked: vi.fn(() => false),
+      player: {
+        id: 'p1',
+        name: 'Player',
+        stableName: "Dragon's Hearth",
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
+    };
+    return selector ? selector(state) : state;
+  },
 }));
 
 // We mock @tanstack/react-router to avoid setting up a full router context

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Users, ChevronRight, Swords } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useActiveRoster } from '@/hooks/useActiveRoster';
-import { useGameStore } from '@/state/useGameStore';
+import { useGameStore, useBookmarks } from '@/state/useGameStore';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { RosterWarriorRow } from './RosterWarriorRow';
 
@@ -41,12 +41,13 @@ export function RosterWall() {
   const navigate = useNavigate();
   const sortedRoster = useActiveRoster();
   const isBookmarked = useGameStore((s) => s.isBookmarked);
+  const bookmarks = useBookmarks();
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
   const filteredRoster = useMemo(() => {
     if (!showBookmarkedOnly) return sortedRoster;
     return sortedRoster.filter((w) => isBookmarked('warrior', w.id));
-  }, [sortedRoster, showBookmarkedOnly, isBookmarked]);
+  }, [sortedRoster, showBookmarkedOnly, isBookmarked, bookmarks]);
 
   return (
     <Surface variant="glass" padding="none" className="border-border/10 relative shadow-2xl">

@@ -1,9 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/engine/bout/services/boutProcessorService', () => ({
-  processWeekBouts: vi.fn(),
-}));
-
 vi.mock('@/engine/bout/core/pairings', () => ({
   generatePairings: vi.fn(() => [{ a: { id: 'w1' }, d: { id: 'w2' }, isRivalry: false }]),
 }));
@@ -16,6 +12,8 @@ vi.mock('sonner', () => ({
   toast: {
     success: vi.fn(),
     error: vi.fn(),
+    // Support toast() function call for death notifications
+    default: vi.fn(),
   },
 }));
 
@@ -40,6 +38,11 @@ vi.mock('@/state/useGameStore', () => {
     roster: [],
     rivals: [],
     boutOffers: {},
+    lastWeekBoutDisplay: {
+      results: [{ a: { id: 'w1', name: 'Alpha' }, d: { id: 'w2', name: 'Beta' }, outcome: { winner: 'w1', by: 'KO', rounds: 3 }, isRivalry: false }],
+      deathNames: [],
+      injuryNames: [],
+    },
     doAdvanceWeek,
     doAdvanceDay,
     setSimulating,
@@ -69,20 +72,10 @@ vi.mock('@/state/useGameStore', () => {
 
 import { renderHook, act } from '@testing-library/react';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
-import { processWeekBouts } from '@/engine/bout/services/boutProcessorService';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { toast } from 'sonner';
 import { engineProxy } from '@/engine/workerProxy';
 import { useGameStore } from '@/state/useGameStore';
-
-function makeMinimalBoutResult() {
-  return {
-    a: { id: 'w1', name: 'Alpha' } as any,
-    d: { id: 'w2', name: 'Beta' } as any,
-    outcome: { winner: 'w1', by: 'KO', rounds: 3 } as any,
-    isRivalry: false,
-  };
-}
 
 describe('useWeekExecution', () => {
   beforeEach(() => {
@@ -91,27 +84,6 @@ describe('useWeekExecution', () => {
     const store = useGameStore() as any;
     store.doAdvanceWeek.mockResolvedValue(undefined);
     store.doAdvanceDay.mockResolvedValue(undefined);
-    vi.mocked(processWeekBouts).mockReturnValue({
-      impact: {} as any,
-      results: [makeMinimalBoutResult()],
-      summary: {
-        bouts: 1,
-        deaths: 0,
-        injuries: 0,
-        deathNames: [],
-        injuryNames: [],
-        hadPlayerDeath: false,
-        hadRivalryEscalation: false,
-      },
-    });
-  });
-
-  it('calls processWeekBouts with current game state', async () => {
-    const { result } = renderHook(() => useWeekExecution());
-    await act(async () => {
-      await result.current.executeWeek();
-    });
-    expect(processWeekBouts).toHaveBeenCalledOnce();
   });
 
   it('calls doAdvanceWeek when not tournament week', async () => {
@@ -144,21 +116,30 @@ describe('useWeekExecution', () => {
     await act(async () => {
       await result.current.executeWeek();
     });
-    // processWeekBouts was called — execution ran
-    expect(processWeekBouts).toHaveBeenCalledOnce();
+    // doAdvanceWeek was called — execution ran
+    const store = useGameStore() as any;
+    expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
     // running resets to false when done
     expect(result.current.running).toBe(false);
   });
 
   it('is a no-op if already running', async () => {
+    let resolveAdvance: () => void = () => {};
+    const pendingPromise = new Promise<void>((resolve) => {
+      resolveAdvance = resolve;
+    });
+    const store = useGameStore() as any;
+    store.doAdvanceWeek.mockReturnValue(pendingPromise);
+
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       // Fire two concurrent calls
       const p1 = result.current.executeWeek();
       const p2 = result.current.executeWeek();
+      resolveAdvance();
       await Promise.all([p1, p2]);
     });
-    expect(processWeekBouts).toHaveBeenCalledOnce();
+    expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
   });
 
   it('posts error toast when 0 eligible fighters (matchCard=0, fightReady<2)', async () => {
@@ -178,11 +159,12 @@ describe('useWeekExecution', () => {
     expect(toast.success).toHaveBeenCalledWith(expect.stringContaining('3'));
   });
 
-  it('stores BoutResult[] in results after execution', async () => {
+  it('populates results from store after advance completes', async () => {
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.executeWeek();
     });
+    // Results come from store.lastWeekBoutDisplay.results
     expect(result.current.results).toHaveLength(1);
   });
 

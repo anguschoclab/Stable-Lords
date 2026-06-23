@@ -494,7 +494,36 @@ export interface AnnualAward {
   style?: FightingStyle;
   value: number; // e.g. 15 wins, 5 kills
   reason: string;
-} /**
+}
+
+export type ObjectiveId =
+  | 'TOP_10_STABLE'
+  | 'TOP_3_STABLE'
+  | 'FIRST_TOURNAMENT_WIN'
+  | 'HALL_OF_FAMER'
+  | 'REALM_CHAMPION';
+
+export interface ProgressionObjective {
+  id: ObjectiveId;
+  label: string;
+  description: string;
+  completed: boolean;
+  completedWeek?: number;
+  completedYear?: number;
+}
+
+export type ProgressionStatus = 'active' | 'won' | 'continued';
+
+export interface ProgressionState {
+  status: ProgressionStatus;
+  stableStanding: number;
+  totalStables: number;
+  objectives: ProgressionObjective[];
+  wonYear?: number;
+  wonWeek?: number;
+  acknowledgedWin?: boolean;
+}
+/**
  * Defines the shape of deferred bout log.
  */
 
@@ -525,6 +554,11 @@ export interface GameState {
     deaths: string[];
     bouts: import('@/engine/bout').BoutResult[];
     promotions: string[];
+  };
+  lastWeekBoutDisplay?: {
+    results: import('@/engine/bout').BoutResult[];
+    deathNames: string[];
+    injuryNames: string[];
   };
   ftueComplete: boolean;
   ftueStep?: number;
@@ -583,6 +617,7 @@ export interface GameState {
   rivalryMap?: Map<string, Rivalry>;
   bookmarks: Bookmark[];
   deferredBoutLogs?: DeferredBoutLog[];
+  progression: ProgressionState;
 } /**
  * Defines the shape of ui prefs.
  */

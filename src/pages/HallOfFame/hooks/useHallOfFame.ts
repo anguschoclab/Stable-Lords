@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { collectAllKnownWarriors, buildWarriorMap } from '@/utils/warriorCollection';
 import { ArenaHistory } from '@/engine/history/arenaHistory';
@@ -9,7 +10,18 @@ import type { UpsetEntry } from '@/components/awards/UpsetsList';
  *
  */
 export function useHallOfFame() {
-  const { roster, graveyard, retired, rivals, awards, year, player, season } = useGameStore();
+  const { roster, graveyard, retired, rivals, awards, year, player, season } = useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      awards: s.awards,
+      year: s.year,
+      player: s.player,
+      season: s.season,
+    }))
+  );
   const allFights = useMemo(() => ArenaHistory.all(), []);
 
   const allWarriors = useMemo(

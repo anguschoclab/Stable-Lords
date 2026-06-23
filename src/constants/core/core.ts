@@ -7,6 +7,11 @@
 export const ERA_START_YEAR = 2026;
 
 /**
+ * Save state version — used as a tripwire in isPlausibleGameState and stamped into meta.version.
+ */
+export const SAVE_STATE_VERSION = '2.1.0-hardened';
+
+/**
  * Weeks per season
  */
 export const WEEKS_PER_SEASON = 13;

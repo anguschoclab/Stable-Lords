@@ -3,7 +3,6 @@ import { immer } from 'zustand/middleware/immer';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { GameState } from '@/types/state.types';
 import type { WarriorId } from '@/types/shared.types';
-import { type BoutResult } from '@/engine/bout';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { engineProxy } from '@/engine/workerProxy';
 import { opfsArchive } from '@/engine/storage/opfsArchive';
@@ -22,6 +21,8 @@ import { createRosterSlice } from './slices/rosterSlice';
 import { createWorldSlice } from './slices/worldSlice';
 import { createTournamentSlice } from './slices/tournamentSlice';
 import { createBookmarksSlice } from './slices/bookmarksSlice';
+import { createProgressionSlice } from './slices/progressionSlice';
+import { DEFAULT_PROGRESSION } from '@/constants/progression';
 
 export const useGameStore = create<GameStore>()(
   subscribeWithSelector(
@@ -32,6 +33,7 @@ export const useGameStore = create<GameStore>()(
       ...createWorldSlice(set, get, ...args),
       ...createTournamentSlice(set, get, ...args),
       ...createBookmarksSlice(set, get, ...args),
+      ...createProgressionSlice(set, get, ...args),
 
       // ─── Core State ───
       activeSlotId: null,
@@ -109,9 +111,11 @@ export const useGameStore = create<GameStore>()(
           draft.ownerGrudges = state.ownerGrudges || [];
           draft.phase = state.phase || 'planning';
           draft.pendingResolutionData = state.pendingResolutionData;
+          draft.lastWeekBoutDisplay = state.lastWeekBoutDisplay;
           draft.playerChallenges = state.playerChallenges || [];
           draft.playerAvoids = state.playerAvoids || [];
           draft.bookmarks = state.bookmarks || [];
+          draft.progression = state.progression || DEFAULT_PROGRESSION;
           draft.lastSimulationReport = state.lastSimulationReport as never;
 
           draft.activeSlotId = slotId;
@@ -129,9 +133,6 @@ export const useGameStore = create<GameStore>()(
 
       doAdvanceWeek: async (
         processedState?: GameState,
-        results?: BoutResult[],
-        deaths?: string[],
-        injuries?: string[]
       ) => {
         if (get().isSimulating) return;
         const store = get();
@@ -159,10 +160,11 @@ export const useGameStore = create<GameStore>()(
 
           next = flushDeferredArchivesOffThread(next);
           next.phase = 'resolution';
+          const display = next.lastWeekBoutDisplay;
           const resolutionPayload = {
-            bouts: results || [],
-            deaths: deaths || [],
-            injuries: injuries || [],
+            bouts: display?.results ?? [],
+            deaths: display?.deathNames ?? [],
+            injuries: display?.injuryNames ?? [],
             promotions: [],
             gazette: next.newsletter.filter((n) => n.week === currentWeek),
           };
@@ -190,9 +192,6 @@ export const useGameStore = create<GameStore>()(
 
       doAdvanceDay: async (
         processedState?: GameState,
-        results?: BoutResult[],
-        deaths?: string[],
-        injuries?: string[]
       ) => {
         if (get().isSimulating) return;
         const store = get();
@@ -216,10 +215,11 @@ export const useGameStore = create<GameStore>()(
 
           next = flushDeferredArchivesOffThread(next);
           next.phase = 'resolution';
+          const display = next.lastWeekBoutDisplay;
           const resolutionPayload = {
-            bouts: results || [],
-            deaths: deaths || [],
-            injuries: injuries || [],
+            bouts: display?.results ?? [],
+            deaths: display?.deathNames ?? [],
+            injuries: display?.injuryNames ?? [],
             promotions: [],
             gazette: next.newsletter.filter((n) => n.week === currentWeek),
           };

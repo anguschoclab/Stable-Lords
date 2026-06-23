@@ -11,6 +11,8 @@ import { SeededRNGService } from '@/utils/random';
 import { makeWarrior } from './warriorFactory';
 import { generatePotential } from '@/engine/potential';
 import { BACKSTORY_IDS } from '@/data/backstories';
+import { DEFAULT_PROGRESSION } from '@/constants/progression';
+import { SAVE_STATE_VERSION } from '@/constants/core';
 
 /**
  * Creates the initial, deterministic game state for a new game.
@@ -26,7 +28,7 @@ export function createFreshState(
   const state: GameState = {
     meta: {
       gameName: 'Stable Lords',
-      version: '2.1.0-hardened',
+      version: SAVE_STATE_VERSION,
       createdAt,
     },
     ftueComplete: false,
@@ -84,6 +86,7 @@ export function createFreshState(
     realmRankings: {},
     awards: [],
     bookmarks: [],
+    progression: DEFAULT_PROGRESSION,
   };
 
   // 2. Generate Initial Rivals (4 Stables) - Seeded selection

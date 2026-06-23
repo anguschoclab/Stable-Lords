@@ -4,6 +4,7 @@
  * booking history, and current capacity.
  */
 import { useMemo, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import type { Promoter, BoutOffer, PromoterPersonality } from '@/types/state.types';
@@ -182,7 +183,15 @@ function PromoterCard({ promoter, offers, currentWeek }: PromoterCardProps) {
  * Promoter directory.
  */
 export default function PromoterDirectory() {
-  const { promoters, boutOffers, week, isBookmarked } = useGameStore();
+  const { promoters, boutOffers, week, isBookmarked, bookmarks } = useGameStore(
+    useShallow((s) => ({
+      promoters: s.promoters,
+      boutOffers: s.boutOffers,
+      week: s.week,
+      isBookmarked: s.isBookmarked,
+      bookmarks: s.bookmarks,
+    }))
+  );
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
   const { sortedPromoters, stats, bookmarkedCount } = useMemo(() => {
@@ -220,7 +229,7 @@ export default function PromoterDirectory() {
       },
       bookmarkedCount: bookmarked.length,
     };
-  }, [promoters, boutOffers, showBookmarkedOnly, isBookmarked]);
+  }, [promoters, boutOffers, showBookmarkedOnly, isBookmarked, bookmarks]);
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">

@@ -10,6 +10,7 @@ import { narrativeHandlers } from './narrative';
 import { rivalsHandlers } from './rivals';
 import { socialHandlers } from './social';
 import { awardsHandlers } from './awards';
+import { progressionHandlers } from './progression';
 
 // Re-export types for backward compatibility
 export type { StateImpact, ImpactHandler } from './types';
@@ -29,6 +30,7 @@ const impactHandlers: { [K in keyof StateImpact]-?: ImpactHandler<K> } = {
   ...rivalsHandlers,
   ...socialHandlers,
   ...awardsHandlers,
+  ...progressionHandlers,
 };
 
 /**
@@ -111,6 +113,7 @@ const MERGE_CONFIG: MergeConfig = {
   season: { strategy: 'replace', defaultValue: undefined },
   weather: { strategy: 'replace', defaultValue: undefined },
   crowdMood: { strategy: 'replace', defaultValue: undefined },
+  progression: { strategy: 'replace', defaultValue: undefined },
 };
 
 // 🌩️ Pure helpers for merging strategies (Strategy Pattern)

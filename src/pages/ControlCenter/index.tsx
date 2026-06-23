@@ -12,6 +12,7 @@ import { RecentBoutsWidget } from '@/components/dashboard/RecentBoutsWidget';
 import { WeeklyDigestWidget } from '@/components/dashboard/WeeklyDigestWidget';
 import { RivalryWidget } from '@/components/dashboard/RivalryWidget';
 import { MetaDriftWidget } from '@/components/widgets';
+import { ObjectivesWidget } from '@/components/dashboard/ObjectivesWidget';
 import { ReputationQuadrant } from '@/components/charts/ReputationQuadrant';
 import { Swords, Activity, Users, Crown } from 'lucide-react';
 import { useControlCenter, type TabId } from './hooks/useControlCenter';
@@ -30,7 +31,7 @@ const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
  *
  */
 export default function ControlCenter() {
-  const { activeTab, setActiveTab, player, week, season, arenaHistory, boutOffers } =
+  const { activeTab, setActiveTab, player, week, season, arenaHistory, boutOffers, progression } =
     useControlCenter();
 
   return (
@@ -47,7 +48,11 @@ export default function ControlCenter() {
                 Arena Standing
               </span>
               <span className="text-[10px] font-black uppercase tracking-widest text-primary">
-                Season Active
+                {progression && (progression.status === 'won' || progression.status === 'continued')
+                  ? 'Realm Champion'
+                  : progression && progression.totalStables > 0
+                    ? `#${progression.stableStanding} of ${progression.totalStables}`
+                    : 'Season Active'}
               </span>
             </div>
           </div>
@@ -87,6 +92,7 @@ export default function ControlCenter() {
               {activeTab === 'overview' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <SeasonWidget />
+                  <ObjectivesWidget />
                   <WeeklyDigestWidget
                     week={week}
                     season={season}

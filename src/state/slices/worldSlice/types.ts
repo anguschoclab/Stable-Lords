@@ -61,6 +61,7 @@ export interface WorldSlice {
   ownerGrudges: OwnerGrudge[];
   phase: 'planning' | 'resolution';
   pendingResolutionData?: GameState['pendingResolutionData'];
+  lastWeekBoutDisplay?: GameState['lastWeekBoutDisplay'];
   setWeek: (week: number) => void;
   setArenaPreferences: (prefs: Partial<ArenaPreferences>) => void;
   initializeStable: (name: string, stableName: string) => void;

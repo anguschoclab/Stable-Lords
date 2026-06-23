@@ -7,7 +7,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Button } from '@/components/ui/button';
 import { Briefcase, Award, Target } from 'lucide-react';
-import { useGameStore } from '@/state/useGameStore';
+import { useGameStore, useBookmarks } from '@/state/useGameStore';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { useBookingOffice } from './hooks/useBookingOffice';
 import { OfferCard } from './components/OfferCard';
@@ -36,6 +36,7 @@ export default function BookingOffice() {
     acceptAllHonorable,
   } = useBookingOffice();
   const isBookmarked = useGameStore((s) => s.isBookmarked);
+  useBookmarks(); // trigger re-render on bookmark changes
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
 
   const filteredThisWeek = showBookmarkedOnly

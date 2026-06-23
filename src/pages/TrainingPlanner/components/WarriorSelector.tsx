@@ -1,29 +1,22 @@
 import { cn } from '@/lib/utils';
 import type { Warrior } from '@/types/state.types';
-import type { Trainer } from '@/types/shared.types';
-import { computeTrainability } from '@/engine/training/burnAnalysis';
 
 interface WarriorSelectorProps {
   warriors: Warrior[];
   selectedId: string | null;
   onSelect: (id: string) => void;
-  trainers: Trainer[];
 }
 
-/**
- *
- */
 export function WarriorSelector({
   warriors,
   selectedId,
   onSelect,
-  trainers,
 }: WarriorSelectorProps) {
   return (
     <div className="grid grid-cols-1 gap-3">
       {warriors.map((warrior) => {
         const isSelected = warrior.id === selectedId;
-        const trainability = computeTrainability(warrior, trainers);
+        const hasPlan = !!warrior.plan;
         return (
           <button
             key={warrior.id}
@@ -43,8 +36,13 @@ export function WarriorSelector({
             >
               {warrior.name}
             </span>
-            <span className="text-[9px] font-black text-primary uppercase tracking-tighter">
-              {trainability}% Growth Potential
+            <span
+              className={cn(
+                'text-[9px] font-black uppercase tracking-tighter',
+                hasPlan ? 'text-primary' : 'text-muted-foreground/40'
+              )}
+            >
+              {hasPlan ? 'Plan Set' : 'No Plan'}
             </span>
           </button>
         );

@@ -1191,6 +1191,31 @@ export const AnnualAwardSchema = z.object({
   reason: z.string(),
 });
 
+export const ProgressionObjectiveSchema = z.object({
+  id: z.enum([
+    'TOP_10_STABLE',
+    'TOP_3_STABLE',
+    'FIRST_TOURNAMENT_WIN',
+    'HALL_OF_FAMER',
+    'REALM_CHAMPION',
+  ]),
+  label: z.string(),
+  description: z.string(),
+  completed: z.boolean(),
+  completedWeek: z.number().optional(),
+  completedYear: z.number().optional(),
+});
+
+export const ProgressionStateSchema = z.object({
+  status: z.enum(['active', 'won', 'continued']),
+  stableStanding: z.number(),
+  totalStables: z.number(),
+  objectives: z.array(ProgressionObjectiveSchema),
+  wonYear: z.number().optional(),
+  wonWeek: z.number().optional(),
+  acknowledgedWin: z.boolean().optional(),
+});
+
 /**
  * DeferredBoutLog schema
  */
@@ -1298,6 +1323,13 @@ export const GameStateSchema = z
         promotions: z.array(z.string()),
       })
       .optional(),
+    lastWeekBoutDisplay: z
+      .object({
+        results: z.array(z.any()), // BoutResult - using any
+        deathNames: z.array(z.string()),
+        injuryNames: z.array(z.string()),
+      })
+      .optional(),
     ftueComplete: z.boolean(),
     ftueStep: z.number().optional(),
     coachDismissed: z.array(z.string()),
@@ -1352,6 +1384,7 @@ export const GameStateSchema = z
     rivalMap: z.any().optional(), // Passthrough for Map field
     deferredBoutLogs: z.array(DeferredBoutLogSchema).optional(),
     bookmarks: z.array(BookmarkSchema),
+    progression: ProgressionStateSchema.optional(),
   })
   .strict();
 

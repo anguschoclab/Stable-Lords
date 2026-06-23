@@ -3,6 +3,7 @@
  * Modularized for better maintainability and strict type safety.
  */
 import React, { useState, useCallback, useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { filterActive } from '@/utils/roster';
@@ -76,7 +77,23 @@ export default function Tournaments() {
     loadGame,
     setSimulating,
     isBookmarked,
-  } = useGameStore();
+    bookmarks,
+  } = useGameStore(
+    useShallow((s) => ({
+      tournaments: s.tournaments,
+      season: s.season,
+      roster: s.roster,
+      week: s.week,
+      year: s.year,
+      arenaHistory: s.arenaHistory,
+      player: s.player,
+      activeSlotId: s.activeSlotId,
+      loadGame: s.loadGame,
+      setSimulating: s.setSimulating,
+      isBookmarked: s.isBookmarked,
+      bookmarks: s.bookmarks,
+    }))
+  );
 
   const [expandedBout, setExpandedBout] = useState<string | null>(null);
   const [isPrepOpen, setIsPrepOpen] = useState(false);
@@ -103,7 +120,7 @@ export default function Tournaments() {
   const pastTournaments = useMemo(() => {
     if (!showBookmarkedOnly) return allPastTournaments;
     return allPastTournaments.filter((t) => isBookmarked('tournament', t.id));
-  }, [allPastTournaments, showBookmarkedOnly, isBookmarked]);
+  }, [allPastTournaments, showBookmarkedOnly, isBookmarked, bookmarks]);
 
   const bookmarkedCount = allPastTournaments.filter((t) => isBookmarked('tournament', t.id)).length;
 

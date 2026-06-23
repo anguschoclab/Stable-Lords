@@ -27,6 +27,7 @@ export function useControlCenter() {
     fame,
     rivals,
     realmRankings,
+    progression,
   } = useGameStore(
     useShallow((s) => ({
       player: s.player,
@@ -39,6 +40,7 @@ export function useControlCenter() {
       fame: s.fame,
       rivals: s.rivals,
       realmRankings: s.realmRankings,
+      progression: s.progression,
     }))
   );
 
@@ -46,11 +48,7 @@ export function useControlCenter() {
   const totalBouts = arenaHistory.length;
   const killRate = totalBouts > 0 ? Math.round((stats.totalKills / totalBouts) * 100) : 0;
 
-  const stableRank = useMemo(() => {
-    if (!rivals || rivals.length === 0) return null;
-    const higherCount = rivals.filter((r) => (r.fame ?? 0) > (fame ?? 0)).length;
-    return higherCount + 1;
-  }, [rivals, fame]);
+  const stableRank = progression?.stableStanding || null;
 
   const topWarriorRank = useMemo(() => {
     if (!realmRankings || Object.keys(realmRankings).length === 0) return null;
@@ -87,5 +85,6 @@ export function useControlCenter() {
     rep,
     treasury,
     fame,
+    progression,
   };
 }

@@ -58,4 +58,5 @@ export const defaultWorldState: Omit<
   ownerGrudges: [],
   phase: 'planning',
   pendingResolutionData: undefined,
+  lastWeekBoutDisplay: undefined,
 };

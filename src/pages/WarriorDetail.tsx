@@ -5,6 +5,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from '@tanstack/react-router';
 import { obfuscateWarrior } from '@/lib/obfuscation';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { buildWarriorMap } from '@/utils/warriorCollection';
 import { type FightPlan } from '@/types/game';
@@ -49,8 +50,6 @@ export default function WarriorDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
   const navigate = useNavigate();
 
-  // Use the unified store hook
-  const store = useGameStore();
   const {
     roster,
     graveyard,
@@ -60,7 +59,18 @@ export default function WarriorDetail() {
     insightTokens,
     setState,
     retireWarrior,
-  } = store;
+  } = useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      graveyard: s.graveyard,
+      retired: s.retired,
+      rivals: s.rivals,
+      arenaHistory: s.arenaHistory,
+      insightTokens: s.insightTokens,
+      setState: s.setState,
+      retireWarrior: s.retireWarrior,
+    }))
+  );
 
   const [activeTab, setActiveTab] = useState('biometrics');
 

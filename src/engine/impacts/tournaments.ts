@@ -11,7 +11,10 @@ import type { TournamentId } from '@/types/shared.types';
 export const tournaments = (state: GameState, value: TournamentEntry[]) => {
   if (!value || value.length === 0) return;
   const existing = state.tournaments || [];
-  const valueMap = new Map(value.map((v) => [v.id, v]));
+  const valueMap = new Map<typeof value[0]['id'], typeof value[0]>();
+  for (const v of value) {
+    if (!valueMap.has(v.id)) valueMap.set(v.id, v);
+  }
   const existingIds = new Set(existing.map((e) => e.id));
   const updated = existing.map((t) => valueMap.get(t.id) ?? t);
   const newTournaments = value.filter((v) => !existingIds.has(v.id));

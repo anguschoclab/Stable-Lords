@@ -1,10 +1,8 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = (await importOriginal()) as any;
+vi.mock('@/state/useGameStore', () => {
   return {
-    ...actual,
     useWorldState: () => ({ roster: [] }),
     useBookmarks: () => [],
     useGameStore: () => ({ roster: [] }),

@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: () => ({ roster: [] }),
+  useWorldState: () => ({ roster: [] }),
 }));
 
 import PhysicalsSimulator from '@/pages/PhysicalsSimulator';

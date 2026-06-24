@@ -44,6 +44,7 @@ vi.mock('@/state/useGameStore', () => ({
     return selector ? selector(state) : state;
   },
   useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
+  useBookmarks: () => [],
 }));
 
 // Mock the router components

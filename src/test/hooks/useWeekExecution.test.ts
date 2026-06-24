@@ -58,6 +58,8 @@ vi.mock('@/state/useGameStore', () => {
 
   return {
     useGameStore,
+    useWorldState: vi.fn(() => store),
+    useBookmarks: vi.fn(() => []),
     reconstructGameState: vi.fn((s) => ({
       ...s,
       week: s.week,

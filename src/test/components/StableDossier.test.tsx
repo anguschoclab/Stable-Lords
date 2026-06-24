@@ -79,7 +79,9 @@ const mockRivals: RivalStableData[] = [
 ];
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: vi.fn((selector?: any) => {
+  useBookmarks: vi.fn(() => []),
+  useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: vi.fn((selector?: any) => {
     const store = { player: mockPlayer, roster: mockRoster, rivals: mockRivals };
     return selector ? selector(store) : store;
   }),

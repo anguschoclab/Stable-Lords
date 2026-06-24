@@ -59,7 +59,6 @@ vi.mock('@/state/useGameStore', () => {
   return {
     useGameStore,
     useWorldState: vi.fn(() => store),
-    useBookmarks: vi.fn(() => []),
     reconstructGameState: vi.fn((s) => ({
       ...s,
       week: s.week,
@@ -105,9 +104,6 @@ describe('useWeekExecution', () => {
       if (typeof selector === 'function') return selector(s);
       return s;
     });
-    const { useWorldState } = await import('@/state/useGameStore');
-    vi.mocked(useWorldState).mockImplementation(() => ({ ...store, isTournamentWeek: true }) as any);
-
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.executeWeek();

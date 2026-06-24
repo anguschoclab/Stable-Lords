@@ -40,7 +40,8 @@ const defaultStoreState = {
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
+  useBookmarks: vi.fn(() => []),
+    useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
   useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
 }));
 

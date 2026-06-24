@@ -10,7 +10,9 @@ let mockAlerts: TacticalAlert[] = [];
 let mockPathname = '/world';
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: vi.fn((selector?: any) => (selector ? selector(mockStore) : mockStore)),
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: vi.fn((selector?: any) => (selector ? selector(mockStore) : mockStore)),
 }));
 
 vi.mock('zustand/react/shallow', () => ({

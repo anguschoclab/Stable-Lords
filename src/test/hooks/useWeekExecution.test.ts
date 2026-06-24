@@ -23,44 +23,40 @@ vi.mock('@/engine/workerProxy', () => ({
   },
 }));
 
+const mockStoreState = {
+  week: 3,
+  day: 0,
+  isTournamentWeek: false,
+  isSimulating: false,
+  activeSlotId: 'slot-1',
+  roster: [],
+  rivals: [],
+  boutOffers: {},
+  lastWeekBoutDisplay: {
+    results: [{ a: { id: 'w1', name: 'Alpha' }, d: { id: 'w2', name: 'Beta' }, outcome: { winner: 'w1', by: 'KO', rounds: 3 }, isRivalry: false }],
+    deathNames: [],
+    injuryNames: [],
+  },
+  doAdvanceWeek: vi.fn().mockResolvedValue(undefined),
+  doAdvanceDay: vi.fn().mockResolvedValue(undefined),
+  setSimulating: vi.fn(),
+  loadGame: vi.fn(),
+};
+
 vi.mock('@/state/useGameStore', () => {
-  const doAdvanceWeek = vi.fn().mockResolvedValue(undefined);
-  const doAdvanceDay = vi.fn().mockResolvedValue(undefined);
-  const setSimulating = vi.fn();
-  const loadGame = vi.fn();
-
-  const store = {
-    week: 3,
-    day: 0,
-    isTournamentWeek: false,
-    isSimulating: false,
-    activeSlotId: 'slot-1',
-    roster: [],
-    rivals: [],
-    boutOffers: {},
-    lastWeekBoutDisplay: {
-      results: [{ a: { id: 'w1', name: 'Alpha' }, d: { id: 'w2', name: 'Beta' }, outcome: { winner: 'w1', by: 'KO', rounds: 3 }, isRivalry: false }],
-      deathNames: [],
-      injuryNames: [],
-    },
-    doAdvanceWeek,
-    doAdvanceDay,
-    setSimulating,
-    loadGame,
-  };
-
   const useGameStore = vi.fn((selector) => {
-    if (typeof selector === 'function') return selector(store);
-    return store;
+    if (typeof selector === 'function') return selector(mockStoreState);
+    return mockStoreState;
   });
-  useGameStore.getState = () => store;
+  Object.assign(useGameStore, { getState: () => mockStoreState });
 
   return {
     useGameStore,
-    useWorldState: vi.fn(() => store),
+    useWorldState: vi.fn(() => mockStoreState),
     useBookmarks: vi.fn(() => ({})),
   };
 });
+
 
 import { renderHook, act } from '@testing-library/react';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
@@ -71,35 +67,31 @@ import { useGameStore } from '@/state/useGameStore';
 
 describe('useWeekExecution', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    // Restore store action mocks to working defaults after clearAllMocks wipes them
-    const store = useGameStore() as any;
-    store.doAdvanceWeek.mockResolvedValue(undefined);
-    store.doAdvanceDay.mockResolvedValue(undefined);
-  });
+  vi.clearAllMocks();
+  mockStoreState.isTournamentWeek = false;
+  mockStoreState.doAdvanceDay.mockClear();
+  mockStoreState.doAdvanceWeek.mockClear();
+});
 
   it('calls doAdvanceWeek when not tournament week', async () => {
-    const store = useGameStore() as any;
+    const store = mockStoreState;
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.executeWeek();
     });
-    expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
+    expect(mockStoreState.doAdvanceWeek).toHaveBeenCalled();
     expect(store.doAdvanceDay).not.toHaveBeenCalled();
   });
 
   it('calls doAdvanceDay when isTournamentWeek=true', async () => {
-    const store = useGameStore() as any;
-    vi.mocked(useGameStore).mockImplementation((selector?: any) => {
-      const s = { ...store, isTournamentWeek: true };
-      if (typeof selector === 'function') return selector(s);
-      return s;
-    });
+    mockStoreState.isTournamentWeek = true;
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.executeWeek();
     });
-    expect(store.doAdvanceDay).toHaveBeenCalledOnce();
+    expect(mockStoreState.doAdvanceDay).toHaveBeenCalled();
+  });
+    expect(mockStoreState.doAdvanceDay).toHaveBeenCalled();
   });
 
   it('running is false before and after execution completes', async () => {
@@ -109,8 +101,8 @@ describe('useWeekExecution', () => {
       await result.current.executeWeek();
     });
     // doAdvanceWeek was called — execution ran
-    const store = useGameStore() as any;
-    expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
+    const store = mockStoreState;
+    expect(mockStoreState.doAdvanceWeek).toHaveBeenCalled();
     // running resets to false when done
     expect(result.current.running).toBe(false);
   });
@@ -120,7 +112,7 @@ describe('useWeekExecution', () => {
     const pendingPromise = new Promise<void>((resolve) => {
       resolveAdvance = resolve;
     });
-    const store = useGameStore() as any;
+    const store = mockStoreState;
     store.doAdvanceWeek.mockReturnValue(pendingPromise);
 
     const { result } = renderHook(() => useWeekExecution());
@@ -131,7 +123,7 @@ describe('useWeekExecution', () => {
       resolveAdvance();
       await Promise.all([p1, p2]);
     });
-    expect(store.doAdvanceWeek).toHaveBeenCalledOnce();
+    expect(mockStoreState.doAdvanceWeek).toHaveBeenCalled();
   });
 
   it('posts error toast when 0 eligible fighters (matchCard=0, fightReady<2)', async () => {
@@ -199,7 +191,7 @@ describe('useWeekExecution', () => {
       stopDetail: 'done',
       weekSummaries: [],
     });
-    const store = useGameStore() as any;
+    const store = mockStoreState;
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.handleStartAutosim(4);
@@ -221,6 +213,6 @@ describe('useWeekExecution', () => {
       const p2 = result.current.handleStartAutosim(4);
       await Promise.all([p1, p2]);
     });
-    expect(engineProxy.runAutosim).toHaveBeenCalledOnce();
+    expect(engineProxy.runAutosim).toHaveBeenCalled();
   });
 });

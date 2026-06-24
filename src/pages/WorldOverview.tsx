@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useWorldState, useGameStore } from '@/state/useGameStore';
+import { useWorldState, useGameStore, useBookmarks } from '@/state/useGameStore';
 import { filterActive } from '@/utils/roster';
 import { Globe, Trophy, Swords, Brain } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -42,6 +42,7 @@ type WarriorSortField =
 export default function WorldOverview() {
   const state = useWorldState();
   const isBookmarked = useGameStore((s) => s.isBookmarked);
+  const bookmarks = useBookmarks();
   const [stableSort, setStableSort] = useState<{ field: SortField; dir: 'asc' | 'desc' }>({
     field: 'fame',
     dir: 'desc',
@@ -129,7 +130,7 @@ export default function WorldOverview() {
   const filteredStableRows = useMemo(() => {
     if (!showBookmarkedOnly) return stableRows;
     return stableRows.filter((r) => isBookmarked('rival', r.id));
-  }, [stableRows, showBookmarkedOnly, isBookmarked]);
+  }, [stableRows, showBookmarkedOnly, isBookmarked, bookmarks]);
 
   const stableBookmarkedCount = stableRows.filter((r) => isBookmarked('rival', r.id)).length;
 
@@ -196,7 +197,7 @@ export default function WorldOverview() {
   const filteredWarriorRows = useMemo(() => {
     if (!showBookmarkedOnly) return warriorRows;
     return warriorRows.filter((r) => isBookmarked('warrior', r.id));
-  }, [warriorRows, showBookmarkedOnly, isBookmarked]);
+  }, [warriorRows, showBookmarkedOnly, isBookmarked, bookmarks]);
 
   const warriorBookmarkedCount = warriorRows.filter((r) => isBookmarked('warrior', r.id)).length;
 

@@ -15,7 +15,7 @@ import { SimulatorResults } from '@/components/stable/SimulatorResults';
  * Physicals simulator.
  */
 export default function PhysicalsSimulator() {
-  const { roster } = useGameStore();
+  const roster = useGameStore((s) => s.roster);
   const activeWarriors = filterActive(roster);
 
   const [styleA, setStyleA] = useState<FightingStyle>(FightingStyle.BashingAttack);

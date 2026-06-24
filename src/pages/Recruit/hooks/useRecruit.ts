@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { BASE_ROSTER_CAP } from '@/constants/economy/roster';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
@@ -25,8 +26,18 @@ const CUSTOM_COST = 200;
  *
  */
 export function useRecruit() {
-  const store = useGameStore();
-  const { roster, treasury, rosterBonus, recruitPool, setState, deductFunds } = store;
+  const { roster, treasury, rosterBonus, recruitPool, setState, deductFunds, week } =
+    useGameStore(
+      useShallow((s) => ({
+        roster: s.roster,
+        treasury: s.treasury,
+        rosterBonus: s.rosterBonus,
+        recruitPool: s.recruitPool,
+        setState: s.setState,
+        deductFunds: s.deductFunds,
+        week: s.week,
+      }))
+    );
   const navigate = useNavigate();
   const MAX_ROSTER = BASE_ROSTER_CAP + (rosterBonus ?? 0);
 
@@ -104,11 +115,11 @@ export function useRecruit() {
         return;
       }
       setScoutedIds((s) => new Set(s).add(w.id));
-      const report = revealRecruitPotential(w.id, store.week, w.potential);
+      const report = revealRecruitPotential(w.id, week, w.potential);
       setScoutReports((prev) => ({ ...prev, [w.id]: report }));
       toast.success(`Scouted potential for ${w.name}! (-25g)`);
     },
-    [deductFunds, store.week]
+    [deductFunds, week]
   );
 
   const handleRefresh = useCallback(() => {
@@ -186,7 +197,6 @@ export function useRecruit() {
   };
 
   return {
-    store,
     roster,
     treasury,
     MAX_ROSTER,

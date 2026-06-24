@@ -8,7 +8,7 @@ import {
   MatchActions,
   MatchViewer,
 } from './bracket';
-import type { GameStore } from '@/state/store.types';
+import type { NameResolutionState } from '@/engine/core/historyResolver';
 
 interface BracketMatchNodeProps {
   bout: TournamentBout;
@@ -19,7 +19,7 @@ interface BracketMatchNodeProps {
   rIdx: number;
   bIdx: number;
   totalRounds: number;
-  gameState: GameStore;
+  gameState: NameResolutionState;
 }
 
 /**

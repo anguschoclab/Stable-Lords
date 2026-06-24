@@ -26,7 +26,7 @@ function RouterHooks() {
 
 function RootComponent() {
   const state = useWorldState();
-  const { atTitleScreen } = useGameStore();
+  const atTitleScreen = useGameStore((s) => s.atTitleScreen);
 
   // App-wide death ping — subscribes once, cleans up on unmount.
   useDeathNotifications();

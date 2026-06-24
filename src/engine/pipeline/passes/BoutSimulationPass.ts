@@ -2,7 +2,7 @@ import type { GameState } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { FightId, SimulationReportId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { processWeekBouts } from '@/engine/bout/services/boutProcessorService';
+import { processWeekBouts, type BoutResult, type WeekBoutSummary } from '@/engine/bout/services/boutProcessorService';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
 
@@ -14,10 +14,10 @@ export function runBoutSimulationPass(
   state: GameState,
   _rng: IRNGService,
   headless?: boolean
-): StateImpact {
+): { impact: StateImpact; results: BoutResult[]; summary: WeekBoutSummary } {
   // Although processWeekBouts uses its own deterministic seeds via hashStr,
   // we wrap it here to maintain pipeline consistency for the 1.0 release.
-  const { impact: boutImpact, results } = processWeekBouts(state, headless);
+  const { impact: boutImpact, results, summary } = processWeekBouts(state, headless);
 
   // Attach the results to the state for telemetry
   const boutSummaries: FightSummary[] = results.map((r) => ({
@@ -52,5 +52,5 @@ export function runBoutSimulationPass(
     bouts: boutSummaries,
   };
 
-  return boutImpact;
+  return { impact: boutImpact, results, summary };
 }

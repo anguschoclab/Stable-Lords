@@ -1,4 +1,5 @@
 import { useMemo, useCallback, useState, useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import type { Trainer } from '@/types/shared.types';
@@ -54,7 +55,21 @@ export default function Trainers() {
     setState,
     deductFunds,
     isBookmarked,
-  } = useGameStore();
+    bookmarks,
+  } = useGameStore(
+    useShallow((s) => ({
+      trainers: s.trainers,
+      hiringPool: s.hiringPool,
+      week: s.week,
+      retired: s.retired,
+      graveyard: s.graveyard,
+      treasury: s.treasury,
+      setState: s.setState,
+      deductFunds: s.deductFunds,
+      isBookmarked: s.isBookmarked,
+      bookmarks: s.bookmarks,
+    }))
+  );
 
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
 
@@ -62,7 +77,7 @@ export default function Trainers() {
   const currentTrainers = useMemo(() => {
     if (!showBookmarkedOnly) return allTrainers;
     return allTrainers.filter((t) => isBookmarked('trainer', t.id));
-  }, [allTrainers, showBookmarkedOnly, isBookmarked]);
+  }, [allTrainers, showBookmarkedOnly, isBookmarked, bookmarks]);
 
   const bookmarkedCount = allTrainers.filter((t) => isBookmarked('trainer', t.id)).length;
   const currentHiringPool = useMemo(() => hiringPool ?? [], [hiringPool]);

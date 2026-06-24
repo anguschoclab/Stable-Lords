@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useGameStore, reconstructGameState } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
+import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import type { RivalStableData } from '@/types/game';
 import { useWeekExecution } from '@/hooks/useWeekExecution';
@@ -53,7 +54,7 @@ import { WeatherWidget } from '@/components/widgets/WeatherWidget';
 // ─── Crowd Mood Meter ──────────────────────────────────────────────────────
 
 function CrowdMoodWidget() {
-  const { crowdMood } = useGameStore();
+  const crowdMood = useGameStore((s) => s.crowdMood);
   const mood = crowdMood as CrowdMood;
   const mods = getMoodModifiers(mood);
 
@@ -143,7 +144,9 @@ function CrowdMoodWidget() {
 // ─── Arena Leaderboard ────────────────────────────────────────────────────
 
 function ArenaLeaderboard() {
-  const { roster, rivals, player } = useGameStore();
+  const { roster, rivals, player } = useGameStore(
+    useShallow((s) => ({ roster: s.roster, rivals: s.rivals, player: s.player }))
+  );
 
   const allWarriors = useMemo(
     () => calculateGlobalFameLeaderboard(roster, rivals, player.stableName),
@@ -237,9 +240,10 @@ function ArenaLeaderboard() {
  * Arena hub.
  */
 export default function ArenaHub() {
-  const store = useGameStore();
-  const { roster, player } = store;
-  const gameState = useMemo(() => reconstructGameState(store), [store]);
+  const { roster, player } = useGameStore(
+    useShallow((s) => ({ roster: s.roster, player: s.player }))
+  );
+  const gameState = useWorldState();
 
   const matchCard = useMemo(
     () =>

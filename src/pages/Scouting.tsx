@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, type GameStore } from '@/state/useGameStore';
 import { generateScoutReport, getScoutCost, type ScoutQuality } from '@/engine/scouting';
 import { type ScoutReportData, type Warrior } from '@/types/game';
@@ -25,7 +26,19 @@ import { ImperialRing } from '@/components/ui/ImperialRing'; /**
  * Scouting.
  */
 export default function Scouting() {
-  const { treasury, week, rivals, scoutReports, roster, setState, isBookmarked } = useGameStore();
+  const { treasury, week, rivals, scoutReports, roster, setState, isBookmarked, bookmarks } =
+    useGameStore(
+      useShallow((s) => ({
+        treasury: s.treasury,
+        week: s.week,
+        rivals: s.rivals,
+        scoutReports: s.scoutReports,
+        roster: s.roster,
+        setState: s.setState,
+        isBookmarked: s.isBookmarked,
+        bookmarks: s.bookmarks,
+      }))
+    );
   const [selectedRivalId, setSelectedRivalId] = useState<string | null>(null);
   const [selectedWarriorId, setSelectedWarriorId] = useState<string | null>(null);
   const [showBookmarkedOnly, setShowBookmarkedOnly] = useState(false);
@@ -34,7 +47,7 @@ export default function Scouting() {
   const filteredReports = useMemo(() => {
     if (!showBookmarkedOnly) return allReports;
     return allReports.filter((r) => isBookmarked('scoutReport', r.id));
-  }, [allReports, showBookmarkedOnly, isBookmarked]);
+  }, [allReports, showBookmarkedOnly, isBookmarked, bookmarks]);
 
   const bookmarkedCount = allReports.filter((r) => isBookmarked('scoutReport', r.id)).length;
 

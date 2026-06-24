@@ -27,6 +27,7 @@ import type {
   ScoutReportData,
   InsightToken,
   TournamentEntry,
+  ProgressionState,
 } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { FightSummary } from '@/types/combat.types';
@@ -107,6 +108,9 @@ export interface StateImpact {
 
   // Awards
   awards?: AnnualAward[];
+
+  // Progression
+  progression?: ProgressionState;
 }
 
 /**

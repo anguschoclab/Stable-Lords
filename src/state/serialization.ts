@@ -4,6 +4,7 @@
  */
 import type { GameState } from '@/types/state.types';
 import type { GameStore } from './useGameStore';
+import { SAVE_STATE_VERSION } from '@/constants/core';
 
 /**
  * Helper to strip non-serializable fields before worker transfer.
@@ -76,6 +77,7 @@ type GameStateValues = {
   playerAvoids: GameState['playerAvoids'];
   lastSimulationReport: import('@/types/combat.types').FightOutcome | undefined;
   bookmarks: import('@/types/bookmark.types').Bookmark[];
+  progression: GameState['progression'];
 };
 
 let lastResult: GameState | null = null;
@@ -140,6 +142,7 @@ export function reconstructGameState(store: GameStore): GameState {
     playerAvoids: store.playerAvoids,
     lastSimulationReport: store.lastSimulationReport,
     bookmarks: store.bookmarks,
+    progression: store.progression,
   };
 
   if (lastResult && lastStoreValues) {
@@ -157,7 +160,7 @@ export function reconstructGameState(store: GameStore): GameState {
   const result: GameState = {
     meta: {
       gameName: 'Stable Lords',
-      version: '2.1.0-hardened',
+      version: SAVE_STATE_VERSION,
       createdAt: store.lastSavedAt || new Date().toISOString(),
     },
     ...currentValues,

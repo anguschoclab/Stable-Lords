@@ -9,7 +9,8 @@ import {
   AlertCircle,
   Hourglass,
 } from 'lucide-react';
-import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
+import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -34,11 +35,11 @@ import { cn } from '@/lib/utils'; /**
  * Stable ledger.
  */
 export default function StableLedger() {
-  const store = useGameStore();
-  const { season, week, treasury } = store;
-  const breakdown = computeWeeklyBreakdown(
-    store as unknown as import('@/types/state.types').GameState
+  const gameState = useWorldState();
+  const { season, week, treasury } = useGameStore(
+    useShallow((s) => ({ season: s.season, week: s.week, treasury: s.treasury }))
   );
+  const breakdown = computeWeeklyBreakdown(gameState);
   const runway = breakdown.totalExpenses > 0 ? Math.floor(treasury / breakdown.totalExpenses) : 99;
   const isEmergency = runway < 4;
 

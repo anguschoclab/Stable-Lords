@@ -10,4 +10,8 @@ export {
   useWeek,
   useIsSimulating,
   useStyleStats,
+  useArenaPreferences,
+  useBookmarks,
+  useWarriorNameState,
+  useReputationState,
 } from './selectors';

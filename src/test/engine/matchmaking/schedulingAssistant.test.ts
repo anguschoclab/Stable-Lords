@@ -14,6 +14,7 @@ import {
   getMatchupsToAvoid,
 } from '@/engine/schedulingAssistant';
 import { getStablePairKey } from '@/utils/keyUtils';
+import { DEFAULT_PROGRESSION } from '@/constants/progression';
 
 describe('Scheduling Assistant Engine', () => {
   // Helper to generate minimal mock warrior
@@ -120,6 +121,7 @@ describe('Scheduling Assistant Engine', () => {
       boutOffers: {},
       realmRankings: {},
       awards: [],
+      progression: structuredClone(DEFAULT_PROGRESSION),
     };
   };
 

@@ -5,6 +5,7 @@ import { createFreshState } from './factories/gameStateFactory';
 import { TournamentSelectionService } from './matchmaking/tournamentSelection';
 import { TickOrchestrator } from './pipeline/tick/TickOrchestrator';
 import { runAutosim } from './autosim';
+import { processWeekBouts } from './bout/services/boutProcessorService';
 
 /**
  * Stable Lords — Engine Worker
@@ -21,6 +22,7 @@ const engine = {
   skipToQuarterEnd: TickOrchestrator.skipToQuarterEnd,
   skipToYearEnd: TickOrchestrator.skipToYearEnd,
   runAutosim,
+  processWeekBouts,
 };
 
 /**

@@ -2,7 +2,7 @@
  * Tournament Schedule Component
  * Displays upcoming matches organized by round with filtering and sorting
  */
-import { useGameStore } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { useTournamentSchedule } from '@/hooks/useTournamentSchedule';
 import { TournamentStatsHeader, TournamentFilterBar, TournamentRoundCard } from './schedule';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
@@ -17,7 +17,7 @@ interface TournamentScheduleProps {
  *
  */
 export function TournamentSchedule({ tournament, currentWeek }: TournamentScheduleProps) {
-  const state = useGameStore();
+  const state = useWorldState();
   const {
     filter,
     setFilter,

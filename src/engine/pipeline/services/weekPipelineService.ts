@@ -37,6 +37,7 @@ import { runRivalStrategyPass } from '../passes/RivalStrategyPass';
 import { runEventPass } from '../passes/EventPass';
 import { runNarrativePass } from '../passes/NarrativePass';
 import { runSeasonalPass } from '../seasonal';
+import { runProgressionPass } from '../passes/ProgressionPass';
 
 interface WeekContext {
   currentWeek: number;
@@ -117,9 +118,16 @@ function invalidateDeadWarriors(state: GameState, deadIds: Set<WarriorId>): void
 function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): GameState {
   // Maps are already built by buildWeekCaches at the week boundary
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
-  const boutImpact = runBoutSimulationPass(state, ctx.rootRng, headless);
+  const { impact: boutImpact, results, summary } = runBoutSimulationPass(state, ctx.rootRng, headless);
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
+
+  // Stash bout display data for the main thread to build pendingResolutionData
+  settledState.lastWeekBoutDisplay = {
+    results,
+    deathNames: summary.deathNames,
+    injuryNames: summary.injuryNames,
+  };
 
   // Collect dead warrior IDs for selective cache invalidation
   const deadIds = new Set<WarriorId>();
@@ -157,6 +165,7 @@ function collectRemainingImpacts(
     runWorldPass(state, ctx.nextWeek, ctx.rootRng),
     runSystemPass(state, ctx.rootRng),
     runRankingsPass(state),
+    runProgressionPass(state, ctx.nextWeek, ctx.nextYear),
     runPromoterPass(state),
     runPromoterLifecyclePass(state, ctx.rootRng),
     runTrainerPass(state, ctx.rootRng),

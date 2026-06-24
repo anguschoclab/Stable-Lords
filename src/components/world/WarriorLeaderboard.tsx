@@ -1,5 +1,7 @@
+import { useRef } from 'react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { Surface } from '@/components/ui/Surface';
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { SortHeader } from '@/components/ui/sort-header';
 import { useWarriorLeaderboard } from '@/hooks/useWarriorLeaderboard';
 import { WarriorLeaderboardFilters } from './WarriorLeaderboardFilters';
@@ -26,9 +28,6 @@ const COLUMNS = [
   { key: 'bookmark', label: '', className: 'w-10 text-center' },
 ];
 
-/**
- *
- */
 export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardProps) {
   const {
     classes,
@@ -42,6 +41,18 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
     isFiltered,
     clearFilters,
   } = useWarriorLeaderboard(rows);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const virtualizer = useVirtualizer({
+    count: filtered.length,
+    estimateSize: () => 48,
+    overscan: 10,
+    getScrollElement: () => scrollRef.current,
+  });
+
+  const items = virtualizer.getVirtualItems();
+  const useFallback = items.length === 0 && filtered.length > 0;
 
   return (
     <Surface variant="glass" padding="none" className="border-border/40 overflow-hidden">
@@ -60,9 +71,9 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
         clearFilters={clearFilters}
       />
 
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
+      <div ref={scrollRef} className="max-h-[70vh] overflow-auto overflow-x-auto">
+        <table className="w-full caption-bottom text-sm" aria-rowcount={filtered.length}>
+          <TableHeader className="sticky top-0 z-10">
             <TableRow className="hover:bg-transparent border-white/5 bg-black/20">
               {COLUMNS.map((col) => (
                 <TableHead key={col.key} className={col.className}>
@@ -77,11 +88,39 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.slice(0, 100).map((row, i) => (
-              <WarriorLeaderboardRow key={row.id} row={row} index={i} isFiltered={isFiltered} />
-            ))}
+            {useFallback ? (
+              filtered.map((row, i) => (
+                <WarriorLeaderboardRow key={row.id} row={row} index={i} isFiltered={isFiltered} />
+              ))
+            ) : (
+              <>
+                {items[0] && (
+                  <tr style={{ height: items[0].start }}>
+                    <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />
+                  </tr>
+                )}
+                {items.map((vi) => (
+                  <WarriorLeaderboardRow
+                    key={filtered[vi.index]!.id}
+                    row={filtered[vi.index]!}
+                    index={vi.index}
+                    isFiltered={isFiltered}
+                  />
+                ))}
+                {items[items.length - 1] && (
+                  <tr
+                    style={{
+                      height:
+                        virtualizer.getTotalSize() - items[items.length - 1]!.end,
+                    }}
+                  >
+                    <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />
+                  </tr>
+                )}
+              </>
+            )}
           </TableBody>
-        </Table>
+        </table>
       </div>
     </Surface>
   );

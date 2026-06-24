@@ -4,7 +4,7 @@ import { Swords, History, Zap, Target } from 'lucide-react';
 import { Surface } from '@/components/ui/Surface';
 import type { Warrior } from '@/types/game';
 import { resolveWarriorName } from '@/engine/core/historyResolver';
-import { useGameStore } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { cn } from '@/lib/utils';
 import { useHeadToHeadData } from '@/hooks/useScoutingHeadToHead';
 
@@ -23,7 +23,7 @@ interface HeadToHeadProps {
  * @param - { roster a, roster b }.
  */
 export function HeadToHead({ rosterA, rosterB }: Omit<HeadToHeadProps, 'nameA' | 'nameB'>) {
-  const state = useGameStore();
+  const state = useWorldState();
   const { h2hReversed, winsA, winsB, draws, h2hLength } = useHeadToHeadData({ rosterA, rosterB });
   const idsA = useMemo(() => new Set(rosterA.map((w) => w.id)), [rosterA]);
   const idsB = useMemo(() => new Set(rosterB.map((w) => w.id)), [rosterB]);

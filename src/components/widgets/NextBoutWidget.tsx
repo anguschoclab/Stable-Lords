@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGameStore } from '@/state/useGameStore';
+import { useWorldState } from '@/state/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Swords, Trophy, Target, ChevronRight } from 'lucide-react';
@@ -20,7 +20,7 @@ import {
  * Next bout widget.
  */
 export function NextBoutWidget() {
-  const state = useGameStore();
+  const state = useWorldState();
 
   const nextBout = useMemo(() => {
     // Check tournaments first

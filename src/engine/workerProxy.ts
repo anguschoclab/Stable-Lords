@@ -27,6 +27,7 @@ function buildProxy(): AsyncEngine {
         { TournamentSelectionService },
         { TickOrchestrator },
         { runAutosim },
+        { processWeekBouts },
       ] = await Promise.all([
         import('./pipeline/services/weekPipelineService'),
         import('./pipeline/tick/dayAdvance'),
@@ -34,6 +35,7 @@ function buildProxy(): AsyncEngine {
         import('./matchmaking/tournamentSelection'),
         import('./pipeline/tick/TickOrchestrator'),
         import('./autosim'),
+        import('./bout/services/boutProcessorService'),
       ]);
       cached = {
         advanceWeek,
@@ -48,6 +50,7 @@ function buildProxy(): AsyncEngine {
         skipToQuarterEnd: TickOrchestrator.skipToQuarterEnd,
         skipToYearEnd: TickOrchestrator.skipToYearEnd,
         runAutosim,
+        processWeekBouts,
       };
       return cached;
     };
@@ -62,6 +65,7 @@ function buildProxy(): AsyncEngine {
       skipToQuarterEnd: async (...args) => (await load()).skipToQuarterEnd(...args),
       skipToYearEnd: async (...args) => (await load()).skipToYearEnd(...args),
       runAutosim: async (...args) => (await load()).runAutosim(...args),
+      processWeekBouts: async (...args) => (await load()).processWeekBouts(...args),
     };
   }
 

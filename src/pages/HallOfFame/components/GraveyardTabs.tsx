@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Zap, Skull } from 'lucide-react';
-import { FallenGrid } from './FallenGrid';
+import { VirtualizedFallenGrid } from '@/components/fallen/VirtualizedFallenGrid';
 import type { Warrior } from '@/types/game';
 
 interface GraveyardTabsProps {
@@ -30,7 +30,7 @@ export function GraveyardTabs({ myFallen, graveyard, season }: GraveyardTabsProp
         </TabsTrigger>
       </TabsList>
       <TabsContent value="memorial">
-        <FallenGrid
+        <VirtualizedFallenGrid
           warriors={myFallen}
           season={season}
           emptyTitle="The Soil is Unbroken"
@@ -38,7 +38,7 @@ export function GraveyardTabs({ myFallen, graveyard, season }: GraveyardTabsProp
         />
       </TabsContent>
       <TabsContent value="world">
-        <FallenGrid
+        <VirtualizedFallenGrid
           warriors={graveyard}
           season={season}
           emptyTitle="Sands of Peace"

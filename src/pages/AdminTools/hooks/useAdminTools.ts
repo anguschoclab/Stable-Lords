@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore, reconstructGameState } from '@/state/useGameStore';
 import { cryptoRandomInt } from '@/utils/cryptoRandom';
 import { computeNextSeason } from '@/engine/pipeline/passes/WorldPass';
@@ -28,7 +29,21 @@ export function useAdminTools() {
     roster,
     player,
     ftueComplete,
-  } = useGameStore();
+  } = useGameStore(
+    useShallow((s) => ({
+      setState: s.setState,
+      doReset: s.doReset,
+      doAdvanceWeek: s.doAdvanceWeek,
+      loadGame: s.loadGame,
+      treasury: s.treasury,
+      fame: s.fame,
+      week: s.week,
+      season: s.season,
+      roster: s.roster,
+      player: s.player,
+      ftueComplete: s.ftueComplete,
+    }))
+  );
 
   const [activeCategory, setActiveCategory] = useState<AdminCategory>('SYSTEM');
 

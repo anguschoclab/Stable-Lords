@@ -4,6 +4,7 @@
  */
 import React, { useMemo, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import type { Promoter, PromoterPersonality, BoutOffer } from '@/types/state.types';
 import { STYLE_DISPLAY_NAMES } from '@/types/shared.types';
@@ -168,7 +169,9 @@ function calculateStats(
  */
 export default function PromoterDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
-  const { promoters, boutOffers, week } = useGameStore();
+  const { promoters, boutOffers, week } = useGameStore(
+    useShallow((s) => ({ promoters: s.promoters, boutOffers: s.boutOffers, week: s.week }))
+  );
   const [activeTab, setActiveTab] = useState('overview');
 
   const promoter = useMemo(() => {

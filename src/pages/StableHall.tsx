@@ -1,3 +1,4 @@
+import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/state/useGameStore';
 import { Shield, Crown, Star, Quote } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
@@ -17,7 +18,9 @@ import { SectionDivider } from '@/components/ui/SectionDivider'; /**
  * Stable hall.
  */
 export default function StableHall() {
-  const { player, fame, insightTokens } = useGameStore();
+  const { player, fame, insightTokens } = useGameStore(
+    useShallow((s) => ({ player: s.player, fame: s.fame, insightTokens: s.insightTokens }))
+  );
   const pendingTokens = (insightTokens ?? []).length;
 
   return (

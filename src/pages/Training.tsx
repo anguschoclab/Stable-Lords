@@ -34,7 +34,7 @@ import { TRAIT_TRAIN_WEEKS } from '@/engine/training/trainingGains/traitTraining
 export default function Training() {
   const navigate = useNavigate();
   const state = useWorldState();
-  const { setState } = useGameStore();
+  const setState = useGameStore((s) => s.setState);
 
   const assignmentMap = useMemo(() => {
     const map = new Map<string, TrainingAssignment>();

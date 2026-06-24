@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { useGameStore } from '@/state/useGameStore';
+import { useGameStore, useArenaPreferences } from '@/state/useGameStore';
 import ArenaBackground from './ArenaBackground';
 import ArenaAudio from './ArenaAudio';
 import SpeechBubbles from './SpeechBubbles';
@@ -96,9 +96,8 @@ export default function ArenaView({
   maxHpD = DEFAULT_MAX_HP,
   className,
 }: ArenaViewProps) {
-  const store = useGameStore();
-  const arenaPrefs = store.arenaPreferences;
-  const season = store.season?.toLowerCase() as
+  const arenaPrefs = useArenaPreferences();
+  const season = useGameStore((s) => s.season?.toLowerCase()) as
     | 'spring'
     | 'summer'
     | 'fall'

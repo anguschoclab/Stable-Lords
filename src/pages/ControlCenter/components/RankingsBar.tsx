@@ -9,20 +9,16 @@ import { Trophy, Star } from 'lucide-react';
  *
  */
 export function RankingsBar() {
-  const { roster, fame, rivals, realmRankings } = useGameStore(
+  const { roster, rivals, realmRankings, progression } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
-      fame: s.fame,
       rivals: s.rivals,
       realmRankings: s.realmRankings,
+      progression: s.progression,
     }))
   );
 
-  const stableRank = useMemo(() => {
-    if (!rivals || rivals.length === 0) return null;
-    const higherCount = rivals.filter((r) => (r.fame ?? 0) > (fame ?? 0)).length;
-    return higherCount + 1;
-  }, [rivals, fame]);
+  const stableRank = progression?.stableStanding || null;
 
   const topWarriorRank = useMemo(() => {
     if (!realmRankings || Object.keys(realmRankings).length === 0) return null;
@@ -45,7 +41,7 @@ export function RankingsBar() {
       icon: Trophy,
       color: stableRank === 1 ? 'text-arena-gold' : 'text-arena-fame',
       glow: stableRank === 1 ? 'shadow-[0_0_10px_rgba(212,175,55,0.15)]' : '',
-      sub: stableRank !== null ? `of ${rivals.length + 1} stables` : 'No rivals yet',
+      sub: stableRank !== null ? `of ${progression?.totalStables || rivals.length + 1} stables` : 'No rivals yet',
     },
     {
       label: 'Top Warrior Rank',

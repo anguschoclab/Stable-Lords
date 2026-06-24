@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { Link } from '@tanstack/react-router';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageFrame } from '@/components/ui/PageFrame';
@@ -7,43 +8,53 @@ import { ImperialRing } from '@/components/ui/ImperialRing';
 import { Dumbbell, Target } from 'lucide-react';
 import { useTrainingPlanner } from './hooks/useTrainingPlanner';
 import { WarriorSelector } from './components/WarriorSelector';
-import { WarriorPlannerCard } from './components/WarriorPlannerCard';
+import PlanBuilder from '@/components/PlanBuilder';
+import { defaultPlanForWarrior } from '@/engine/simulate';
+import type { FightPlan, Warrior } from '@/types/game';
 
-/**
- *
- */
 export default function TrainingPlanner() {
   const {
     activeWarriors,
     selectedId,
     setSelectedId,
     selectedWarrior,
-    currentTrainers,
-    seasonalGainsMap,
-    avgTrainability,
+    setState,
+    plansSetCount,
   } = useTrainingPlanner();
+
+  const handlePlanChange = useCallback(
+    (newPlan: FightPlan) => {
+      if (!selectedWarrior) return;
+      setState((draft) => {
+        const index = draft.roster.findIndex((w: Warrior) => w.id === selectedWarrior.id);
+        const found = draft.roster[index];
+        if (found) found.plan = newPlan;
+      });
+    },
+    [selectedWarrior, setState]
+  );
 
   return (
     <PageFrame>
       <PageHeader
-        title="Training Logistics"
-        subtitle="STABLE · DEVELOPMENT_PLANNER"
+        title="Battle Plans"
+        subtitle="STABLE · STRATEGY"
         actions={
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Stable Trainability
+                Plans Set
               </span>
               <span className="text-sm font-display font-black text-primary">
-                {avgTrainability}% Aggregate
+                {plansSetCount} of {activeWarriors.length}
               </span>
             </div>
             <div className="flex flex-col items-end border-l border-white/5 pl-6">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Active Trainers
+                Unassigned
               </span>
               <span className="text-sm font-display font-black text-foreground">
-                {currentTrainers.filter((t) => t.contractWeeksLeft > 0).length} Staff
+                {activeWarriors.length - plansSetCount} warriors
               </span>
             </div>
           </div>
@@ -71,16 +82,15 @@ export default function TrainingPlanner() {
             warriors={activeWarriors}
             selectedId={selectedId}
             onSelect={setSelectedId}
-            trainers={currentTrainers}
           />
         </aside>
 
         <div className="lg:col-span-3">
           {selectedWarrior ? (
-            <WarriorPlannerCard
+            <PlanBuilder
               warrior={selectedWarrior}
-              trainers={currentTrainers}
-              seasonalGains={seasonalGainsMap.get(selectedWarrior.id) ?? {}}
+              plan={selectedWarrior.plan ?? defaultPlanForWarrior(selectedWarrior)}
+              onPlanChange={handlePlanChange}
             />
           ) : (
             <Surface
@@ -88,14 +98,14 @@ export default function TrainingPlanner() {
               className="py-48 text-center border-dashed border-white/10 flex flex-col items-center gap-6"
             >
               <ImperialRing size="lg" variant="bronze" className="opacity-20">
-                <Dumbbell className="h-8 w-8" />
+                <Target className="h-8 w-8" />
               </ImperialRing>
               <div className="space-y-2">
                 <p className="text-[12px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
                   No Warrior Selected
                 </p>
                 <p className="text-[9px] text-muted-foreground/20 uppercase tracking-widest italic">
-                  Select a warrior from the roster to begin training.
+                  Select a warrior from the roster to configure battle plans.
                 </p>
               </div>
             </Surface>

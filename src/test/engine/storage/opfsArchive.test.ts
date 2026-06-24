@@ -305,4 +305,111 @@ describe('OPFS Archival System', () => {
       consoleSpy.mockRestore();
     });
   });
+
+  describe('Suite 13: retrieveHotState with plausibility check', () => {
+    const minimalState = {
+      meta: { gameName: 'Test', version: '1.0', createdAt: '2024-01-01T00:00:00.000Z' },
+      ftueComplete: true,
+      isFTUE: false,
+      isTournamentWeek: false,
+      week: 1,
+      year: 1,
+      fame: 0,
+      popularity: 0,
+      treasury: 100,
+      rosterBonus: 0,
+      day: 0,
+      phase: 'planning',
+      season: 'Spring',
+      weather: 'Clear',
+      crowdMood: 'Calm',
+      player: { id: 'p1', name: 'P', stableName: 'S', fame: 0, renown: 0, titles: 0 },
+      promoters: {},
+      boutOffers: {},
+      realmRankings: {},
+      progression: { status: 'active', stableStanding: 0, totalStables: 0, objectives: [] },
+      roster: [],
+      graveyard: [],
+      retired: [],
+      arenaHistory: [],
+      newsletter: [],
+      gazettes: [],
+      hallOfFame: [],
+      tournaments: [],
+      trainers: [],
+      hiringPool: [],
+      trainingAssignments: [],
+      seasonalGrowth: [],
+      rivals: [],
+      scoutReports: [],
+      restStates: [],
+      rivalries: [],
+      matchHistory: [],
+      playerChallenges: [],
+      playerAvoids: [],
+      recruitPool: [],
+      ownerGrudges: [],
+      insightTokens: [],
+      moodHistory: [],
+      unacknowledgedDeaths: [],
+      awards: [],
+      bookmarks: [],
+      coachDismissed: [],
+      ledger: [],
+    };
+
+    it('Test 13.1: Valid plausible JSON → returns parsed object', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSFileText(JSON.stringify(minimalState));
+      // Suppress dev safeParse noise since minimal fixture may not pass full schema
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const result = await service.retrieveHotState('slot-valid');
+      expect(result).not.toBeNull();
+      expect(result?.week).toBe(1);
+      expect(result?.player?.id).toBe('p1');
+
+      consoleSpy.mockRestore();
+    });
+
+    it('Test 13.2: Valid JSON but implausible shape → returns null + logs error', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSFileText(JSON.stringify({ foo: 'bar' }));
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const result = await service.retrieveHotState('slot-implausible');
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'corrupt/incompatible save: failed plausibility check',
+        expect.objectContaining({ slotId: 'slot-implausible' })
+      );
+
+      consoleSpy.mockRestore();
+    });
+
+    it('Test 13.3: Valid JSON, plausible but missing optional fields → returns parsed object', async () => {
+      const service = new OPFSArchiveService();
+      const stateWithoutOptional = { ...minimalState };
+      setMockOPFSFileText(JSON.stringify(stateWithoutOptional));
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const result = await service.retrieveHotState('slot-no-optional');
+      expect(result).not.toBeNull();
+      expect(result?.pendingResolutionData).toBeUndefined();
+
+      consoleSpy.mockRestore();
+    });
+
+    it('Test 13.4: Existing Test 12.1 behavior unchanged (invalid JSON → null + warn)', async () => {
+      const service = new OPFSArchiveService();
+      setMockOPFSFileText('not-valid-json');
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const result = await service.retrieveHotState('slot-bad-json-13');
+      expect(result).toBeNull();
+      expect(consoleSpy).toHaveBeenCalledWith('Error retrieving hot state:', expect.any(Error));
+
+      consoleSpy.mockRestore();
+    });
+  });
 });

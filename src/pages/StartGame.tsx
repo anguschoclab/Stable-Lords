@@ -53,7 +53,7 @@ type Screen = 'title' | 'newGame'; /**
  * Start game.
  */
 export default function StartGame() {
-  const { loadGame } = useGameStore();
+  const loadGame = useGameStore((s) => s.loadGame);
   const [screen, setScreen] = useState<Screen>('title');
   const [slots, setSlots] = useState<SaveSlotMeta[]>([]);
   const [deleteTarget, setDeleteTarget] = useState<SaveSlotMeta | null>(null);

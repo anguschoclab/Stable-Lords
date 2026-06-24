@@ -8,6 +8,7 @@ import { useRivalryAlerts } from '@/hooks/useRivalryAlerts';
 import { filterActive } from '@/utils/roster';
 import { LeftNav } from '@/components/layout/LeftNav';
 import { DeathModal } from '@/components/modals/DeathModal';
+import { WinScreen } from '@/components/progression/WinScreen';
 import { CoachOverlay } from '@/components/ui/CoachOverlay';
 import { TacticalBar } from '@/components/layout/TacticalBar';
 import EventLog from '@/components/EventLog';
@@ -202,6 +203,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       <DeathModal />
+      <WinScreen />
 
       <ResetDialog open={resetOpen} onOpenChange={setResetOpen} onConfirm={doReset} />
     </div>

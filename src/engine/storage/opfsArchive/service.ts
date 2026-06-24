@@ -1,8 +1,8 @@
 import type { GameState } from '@/types/state.types';
-import { GameStateSchema } from '@/schemas/gameStateSchema';
 import { ArchiveConflictError } from './types';
 import { assertSafeFileNamePart } from './validation';
 import type { ArchiveService } from './types';
+import { isPlausibleGameState } from './plausibility';
 
 /**
  *
@@ -112,8 +112,19 @@ export class OPFSArchiveService implements ArchiveService {
       const file = await fileHandle.getFile();
       if (typeof file.text === 'function') {
         const text = await file.text();
-        const parsed = JSON.parse(text);
-        return GameStateSchema.parse(parsed) as GameState;
+        const parsed: unknown = JSON.parse(text);
+        if (!isPlausibleGameState(parsed)) {
+          console.error('corrupt/incompatible save: failed plausibility check', { slotId });
+          return null;
+        }
+        if (import.meta.env.DEV) {
+          const { GameStateSchema } = await import('@/schemas/gameStateSchema');
+          const r = GameStateSchema.safeParse(parsed);
+          if (!r.success) {
+            console.error('dev schema drift in retrieveHotState', r.error.issues);
+          }
+        }
+        return parsed as GameState;
       }
       return null;
     } catch (error) {

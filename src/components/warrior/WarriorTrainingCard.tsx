@@ -126,7 +126,7 @@ export function WarriorTrainingCard({
                   side="left"
                   className="text-[10px] font-mono bg-neutral-900 border-white/10 uppercase tracking-widest"
                 >
-                  {warrior.injuries.map((i) => (typeof i === 'string' ? i : i.name)).join(' // ')}
+                  {warrior.injuries.map((i) => (typeof i === 'string' ? i : i.name)).join(' | ')}
                 </TooltipContent>
               </Tooltip>
             )}

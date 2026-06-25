@@ -82,11 +82,12 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: vi.fn((selector?: any) => {
+    useGameStore: vi.fn((selector?: any) => {
     const store = { player: mockPlayer, roster: mockRoster, rivals: mockRivals };
     return selector ? selector(store) : store;
   }),
-}));
+};
+});
 
 vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: any) => fn,

@@ -43,9 +43,10 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
+    useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
   useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
-}));
+};
+});
 
 // Must mock the module before importing it inside components
 vi.mock('@/lore/LoreArchive', () => {

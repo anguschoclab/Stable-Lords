@@ -9,7 +9,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: () => ({
+    useGameStore: () => ({
     roster: [],
     newsletter: [],
     ledger: [],
@@ -41,7 +41,8 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
     doReset: vi.fn(),
   }),
   reconstructGameState: vi.fn((s: any) => s),
-}));
+};
+});
 
 describe('AdminTools Page', () => {
   beforeEach(() => {

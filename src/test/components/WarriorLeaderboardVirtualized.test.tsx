@@ -7,14 +7,14 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: (selector?: any) => {
+    useGameStore: (selector?: any) => {
     const state = {
       isBookmarked: () => false,
       toggleBookmark: vi.fn(),
     };
     return selector ? selector(state) : state;
-  },
-}));
+    },
+});
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),

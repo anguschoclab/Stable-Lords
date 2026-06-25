@@ -13,14 +13,15 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: (selector: any) => {
+    useGameStore: (selector: any) => {
     const state = {
       isBookmarked: (_type: string, id: string) => bookmarkedIds.has(id),
       toggleBookmark: mockToggle,
     };
     return selector(state);
   },
-}));
+  };
+});
 
 describe('BookmarkButton accessibility', () => {
   beforeEach(() => {

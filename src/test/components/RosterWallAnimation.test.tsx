@@ -21,7 +21,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: (selector?: any) => {
+    useGameStore: (selector?: any) => {
     const state = {
       isBookmarked: () => false,
       roster: mockRoster,
@@ -39,7 +39,8 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
     retired: [],
     graveyard: [],
   }),
-}));
+};
+});
 
 vi.mock('@/hooks/useActiveRoster', () => ({
   useActiveRoster: () => mockRoster,

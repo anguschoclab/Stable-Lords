@@ -46,7 +46,8 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   return {
     ...actual,
   useWorldState: vi.fn(() => mockState),
-}));
+};
+});
 
 vi.mock('@/engine/core/historyResolver', () => ({
   findWarrior: vi.fn((_state: any, warriorId: string) =>

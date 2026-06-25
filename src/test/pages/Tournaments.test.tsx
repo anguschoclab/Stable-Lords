@@ -9,7 +9,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: (selector?: any) => {
+    useGameStore: (selector?: any) => {
     const state = {
       roster: [],
       newsletter: [],
@@ -40,8 +40,8 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
       },
     };
     return selector ? selector(state) : state;
-  },
-}));
+    },
+});
 
 // We mock @tanstack/react-router to avoid setting up a full router context
 vi.mock('@tanstack/react-router', () => ({

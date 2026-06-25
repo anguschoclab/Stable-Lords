@@ -9,10 +9,11 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: () => ({
+    useGameStore: () => ({
     loadGame: vi.fn(),
   }),
-}));
+};
+});
 
 vi.mock('@/state/saveSlots', () => ({
   listSaveSlots: vi.fn().mockResolvedValue([]),

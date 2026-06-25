@@ -5,8 +5,9 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: () => ({ roster: [] }),
-}));
+    useGameStore: () => ({ roster: [] }),
+};
+});
 
 import PhysicalsSimulator from '@/pages/PhysicalsSimulator';
 

@@ -42,12 +42,13 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: (selector?: any) => {
+    useGameStore: (selector?: any) => {
     const state = { ...defaultStoreState, ...storeOverride, isBookmarked: () => false };
     return selector ? selector(state) : state;
   },
   useWorldState: () => ({ ...defaultStoreState, ...storeOverride }),
-}));
+};
+});
 
 // Mock the router components
 vi.mock('@tanstack/react-router', () => ({

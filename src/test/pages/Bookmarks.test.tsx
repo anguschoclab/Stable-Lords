@@ -27,7 +27,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: (selector?: any) => {
+    useGameStore: (selector?: any) => {
     const state = {
       ...mockStoreState,
       isBookmarked: (type: string, id: string) =>
@@ -42,8 +42,8 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
     };
     if (selector) return selector(state);
     return state;
-  },
-}));
+    },
+});
 
 describe('Bookmarks Page', () => {
   beforeEach(() => {

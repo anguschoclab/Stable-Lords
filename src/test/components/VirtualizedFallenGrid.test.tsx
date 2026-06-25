@@ -8,7 +8,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-  useGameStore: (selector?: any) => {
+    useGameStore: (selector?: any) => {
     const state = {
       player: { id: 'p1', name: 'Player', stableName: "Dragon's Hearth", fame: 0, renown: 0, titles: 0 },
       rivals: [],
@@ -26,7 +26,8 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
     retired: [],
   }),
   useShallow: (fn: any) => fn,
-}));
+};
+});
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),

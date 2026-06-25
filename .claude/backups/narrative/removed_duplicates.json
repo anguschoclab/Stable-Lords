@@ -99,27 +99,9 @@
     "similarity": 0.88
   },
   {
-    "path": "pbp.attacks.piercing",
-    "text": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} straight at the heart!"
-  },
-  {
-    "path": "pbp.attacks.piercing",
-    "text": "{{attacker}} jabs high, then thrusts low with {{possessive}} {{weapon}}."
-  },
-  {
-    "path": "pbp.attacks.slashing",
-    "text": "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, singing arc!"
-  },
-  {
-    "path": "pbp.attacks.bashing",
-    "text": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!"
-  },
-  {
-    "path": "pbp.attacks.bashing",
-    "text": "{{attacker}} delivers a brutal, looping strike with {{possessive}} {{weapon}}."
-  },
-  {
-    "path": "pbp.attacks.bashing",
-    "text": "{{attacker}} brings {{possessive}} {{weapon}} down with the force of an avalanche."
+    "path": "pbp.defenses.parry.success",
+    "kept": "{{name}} parries with a theatrical flourish, inviting the crowd's applause!",
+    "removed": "{{name}} parries with a theatrical flourish, inviting the crowd's cheer.",
+    "similarity": 0.88
   }
 ]

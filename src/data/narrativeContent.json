@@ -106,6 +106,62 @@
           {
             "min": 0,
             "text": "Has learned how to keep his foe in trouble"
+          },
+          {
+            "min": 31,
+            "text": "Summons a storm of steel that leaves no room to breathe"
+          },
+          {
+            "min": 30,
+            "text": "A terrifying maestro of battle tempo, dictating every bloody exchange"
+          },
+          {
+            "min": 29,
+            "text": "Bends the chaos of the pit to his will, forcing foes to fight on his terms"
+          },
+          {
+            "min": 28,
+            "text": "Drowns his opponent in a relentless tide of crushing aggression"
+          },
+          {
+            "min": 27,
+            "text": "Forces a suffocating, lethal rhythm onto the blood-soaked sands"
+          },
+          {
+            "min": 13,
+            "text": "Steals the center of the pit and refuses to yield a single step"
+          },
+          {
+            "min": 0,
+            "text": "Has learned how to keep his foe in trouble"
+          },
+          {
+            "min": 31,
+            "text": "Summons a storm of steel that leaves no room to breathe"
+          },
+          {
+            "min": 29,
+            "text": "A terrifying maestro of battle tempo, dictating every bloody exchange"
+          },
+          {
+            "min": 28,
+            "text": "Bends the chaos of the pit to his will, forcing foes to fight on his terms"
+          },
+          {
+            "min": 27,
+            "text": "Drowns his opponent in a relentless tide of crushing aggression"
+          },
+          {
+            "min": 26,
+            "text": "Forces a suffocating, lethal rhythm onto the blood-soaked sands"
+          },
+          {
+            "min": 13,
+            "text": "Steals the center of the pit and refuses to yield a single step"
+          },
+          {
+            "min": 0,
+            "text": "Has learned how to keep his foe in trouble"
           }
         ],
         "low": [
@@ -115,6 +171,38 @@
           },
           {
             "min": 24,
+            "text": "Fights with a hungry, restless aggression"
+          },
+          {
+            "min": 14,
+            "text": "With a very aggressive and clever fighting style"
+          },
+          {
+            "min": 0,
+            "text": "Has learned how to be decisive and quick"
+          },
+          {
+            "min": 25,
+            "text": "Lunges from the shadows before the opponent is ready"
+          },
+          {
+            "min": 24,
+            "text": "Fights with a hungry, restless aggression"
+          },
+          {
+            "min": 14,
+            "text": "With a very aggressive and clever fighting style"
+          },
+          {
+            "min": 0,
+            "text": "Has learned how to be decisive and quick"
+          },
+          {
+            "min": 25,
+            "text": "Lunges from the shadows before the opponent is ready"
+          },
+          {
+            "min": 22,
             "text": "Fights with a hungry, restless aggression"
           },
           {
@@ -144,9 +232,65 @@
           {
             "min": 0,
             "text": "Makes good dueling decisions"
+          },
+          {
+            "min": 24,
+            "text": "Baits their opponent into a fatal trap of their own making"
+          },
+          {
+            "min": 23,
+            "text": "Turns the opponent's strength into their execution"
+          },
+          {
+            "min": 14,
+            "text": "Makes the most of his enemy's mistakes"
+          },
+          {
+            "min": 0,
+            "text": "Makes good dueling decisions"
+          },
+          {
+            "min": 24,
+            "text": "Baits their opponent into a fatal trap of their own making"
+          },
+          {
+            "min": 21,
+            "text": "Turns the opponent's strength into their execution"
+          },
+          {
+            "min": 14,
+            "text": "Makes the most of his enemy's mistakes"
+          },
+          {
+            "min": 0,
+            "text": "Makes good dueling decisions"
           }
         ],
         "low": [
+          {
+            "min": 21,
+            "text": "Twists an enemy's assault into a sudden, bloody end"
+          },
+          {
+            "min": 14,
+            "text": "Does a lot of little things well"
+          },
+          {
+            "min": 0,
+            "text": "Cleverly controls his foe's actions"
+          },
+          {
+            "min": 21,
+            "text": "Twists an enemy's assault into a sudden, bloody end"
+          },
+          {
+            "min": 14,
+            "text": "Does a lot of little things well"
+          },
+          {
+            "min": 0,
+            "text": "Cleverly controls his foe's actions"
+          },
           {
             "min": 21,
             "text": "Twists an enemy's assault into a sudden, bloody end"
@@ -178,9 +322,65 @@
           {
             "min": 0,
             "text": "He lands blows on less protected areas"
+          },
+          {
+            "min": 35,
+            "text": "Obliterates opponents with god-like, merciless precision"
+          },
+          {
+            "min": 28,
+            "text": "Hunts for the vital organs with terrifying precision"
+          },
+          {
+            "min": 14,
+            "text": "Makes very clever attacks"
+          },
+          {
+            "min": 0,
+            "text": "He lands blows on less protected areas"
+          },
+          {
+            "min": 35,
+            "text": "Obliterates opponents with god-like, merciless precision"
+          },
+          {
+            "min": 27,
+            "text": "Hunts for the vital organs with terrifying precision"
+          },
+          {
+            "min": 14,
+            "text": "Makes very clever attacks"
+          },
+          {
+            "min": 0,
+            "text": "He lands blows on less protected areas"
           }
         ],
         "low": [
+          {
+            "min": 24,
+            "text": "Transforms every meager opening into a harrowing bloodbath"
+          },
+          {
+            "min": 14,
+            "text": "Has an unusual fighting style that confuses many opponents"
+          },
+          {
+            "min": 0,
+            "text": "Makes clever attacks"
+          },
+          {
+            "min": 24,
+            "text": "Transforms every meager opening into a harrowing bloodbath"
+          },
+          {
+            "min": 14,
+            "text": "Has an unusual fighting style that confuses many opponents"
+          },
+          {
+            "min": 0,
+            "text": "Makes clever attacks"
+          },
           {
             "min": 24,
             "text": "Transforms every meager opening into a harrowing bloodbath"
@@ -208,9 +408,57 @@
           {
             "min": 0,
             "text": "Is gifted at parrying"
+          },
+          {
+            "min": 23,
+            "text": "An impenetrable wall of iron, turning aside the deadliest steel"
+          },
+          {
+            "min": 14,
+            "text": "Parrys very intelligently"
+          },
+          {
+            "min": 0,
+            "text": "Is gifted at parrying"
+          },
+          {
+            "min": 23,
+            "text": "An impenetrable wall of iron, turning aside the deadliest steel"
+          },
+          {
+            "min": 14,
+            "text": "Parrys very intelligently"
+          },
+          {
+            "min": 0,
+            "text": "Is gifted at parrying"
           }
         ],
         "low": [
+          {
+            "min": 21,
+            "text": "Denies the killing stroke with grim, practiced resolve"
+          },
+          {
+            "min": 14,
+            "text": "Rarely makes mistakes"
+          },
+          {
+            "min": 0,
+            "text": "Parrys intelligently"
+          },
+          {
+            "min": 21,
+            "text": "Denies the killing stroke with grim, practiced resolve"
+          },
+          {
+            "min": 14,
+            "text": "Rarely makes mistakes"
+          },
+          {
+            "min": 0,
+            "text": "Parrys intelligently"
+          },
           {
             "min": 21,
             "text": "Denies the killing stroke with grim, practiced resolve"
@@ -238,9 +486,57 @@
           {
             "min": 0,
             "text": "Is gifted at avoiding a blow"
+          },
+          {
+            "min": 30,
+            "text": "Displays a chilling level of situational dominance"
+          },
+          {
+            "min": 14,
+            "text": "Is always thinking ahead"
+          },
+          {
+            "min": 0,
+            "text": "Is gifted at avoiding a blow"
+          },
+          {
+            "min": 30,
+            "text": "Displays a chilling level of situational dominance"
+          },
+          {
+            "min": 14,
+            "text": "Is always thinking ahead"
+          },
+          {
+            "min": 0,
+            "text": "Is gifted at avoiding a blow"
           }
         ],
         "low": [
+          {
+            "min": 21,
+            "text": "Weaves through the carnage with grim efficiency"
+          },
+          {
+            "min": 14,
+            "text": "Avoids blows well"
+          },
+          {
+            "min": 0,
+            "text": "Makes few mistakes"
+          },
+          {
+            "min": 21,
+            "text": "Weaves through the carnage with grim efficiency"
+          },
+          {
+            "min": 14,
+            "text": "Avoids blows well"
+          },
+          {
+            "min": 0,
+            "text": "Makes few mistakes"
+          },
           {
             "min": 21,
             "text": "Weaves through the carnage with grim efficiency"
@@ -268,9 +564,57 @@
           {
             "min": 0,
             "text": "Can conserve his endurance past what might normally be expected"
+          },
+          {
+            "min": 24,
+            "text": "A tireless engine of destruction, grinding foes to bloody paste"
+          },
+          {
+            "min": 14,
+            "text": "Rarely wastes his endurance needlessly"
+          },
+          {
+            "min": 0,
+            "text": "Can conserve his endurance past what might normally be expected"
+          },
+          {
+            "min": 24,
+            "text": "A tireless engine of destruction, grinding foes to bloody paste"
+          },
+          {
+            "min": 14,
+            "text": "Rarely wastes his endurance needlessly"
+          },
+          {
+            "min": 0,
+            "text": "Can conserve his endurance past what might normally be expected"
           }
         ],
         "low": [
+          {
+            "min": 22,
+            "text": "Refuses to empty his lungs until the slaughter is completely finished"
+          },
+          {
+            "min": 14,
+            "text": "He plans out every move he makes, seldom wasting any effort"
+          },
+          {
+            "min": 0,
+            "text": "Seldom wastes his endurance needlessly"
+          },
+          {
+            "min": 22,
+            "text": "Refuses to empty his lungs until the slaughter is completely finished"
+          },
+          {
+            "min": 14,
+            "text": "He plans out every move he makes, seldom wasting any effort"
+          },
+          {
+            "min": 0,
+            "text": "Seldom wastes his endurance needlessly"
+          },
           {
             "min": 22,
             "text": "Refuses to empty his lungs until the slaughter is completely finished"
@@ -296,9 +640,41 @@
           {
             "min": 0,
             "text": "He needs time to think things through before he can act"
+          },
+          {
+            "min": 17,
+            "text": "Surrenders the momentum to the butcher immediately, standing completely helpless"
+          },
+          {
+            "min": 0,
+            "text": "He needs time to think things through before he can act"
+          },
+          {
+            "min": 17,
+            "text": "Surrenders the momentum to the butcher immediately, standing completely helpless"
+          },
+          {
+            "min": 0,
+            "text": "He needs time to think things through before he can act"
           }
         ],
         "low": [
+          {
+            "min": 24,
+            "text": "Moves with the urgency of a stone sinking in mud"
+          },
+          {
+            "min": 0,
+            "text": "He stands around slack-jawed"
+          },
+          {
+            "min": 24,
+            "text": "Moves with the urgency of a stone sinking in mud"
+          },
+          {
+            "min": 0,
+            "text": "He stands around slack-jawed"
+          },
           {
             "min": 24,
             "text": "Moves with the urgency of a stone sinking in mud"
@@ -318,9 +694,41 @@
           {
             "min": 0,
             "text": "He makes a lot of mistakes"
+          },
+          {
+            "min": 17,
+            "text": "Telegraphs every swing so heavily it practically invites his own death"
+          },
+          {
+            "min": 0,
+            "text": "He makes a lot of mistakes"
+          },
+          {
+            "min": 17,
+            "text": "Telegraphs every swing so heavily it practically invites his own death"
+          },
+          {
+            "min": 0,
+            "text": "He makes a lot of mistakes"
           }
         ],
         "low": [
+          {
+            "min": 26,
+            "text": "Telegraphs every swing like a lumbering ox"
+          },
+          {
+            "min": 0,
+            "text": "He makes stupid feints that fool no one"
+          },
+          {
+            "min": 26,
+            "text": "Telegraphs every swing like a lumbering ox"
+          },
+          {
+            "min": 0,
+            "text": "He makes stupid feints that fool no one"
+          },
           {
             "min": 26,
             "text": "Telegraphs every swing like a lumbering ox"
@@ -462,7 +870,12 @@
         "A masterful, sweeping cut from {{attacker}} bites deep into bone!",
         "Blood flows like a river as {{attacker}}'s slash finds its mark on {{defender}}'s {{bodyPart}}!",
         "{{attacker}} executes a perfect draw-cut, leaving a devastating wound!",
-        "With unnatural speed, {{attacker}}'s blade carves through {{defender}}'s defenses and flesh alike!"
+        "With unnatural speed, {{attacker}}'s blade carves through {{defender}}'s defenses and flesh alike!",
+        "{{attacker}} executes a terrifyingly precise slice, carving through armor and flesh alike!",
+        "A blindingly fast slash from {{attacker}} leaves a horrific, gaping wound on {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} channels raw fury into a devastating horizontal sweep, nearly cleaving {{defender}} in twain!",
+        "With clinical efficiency, {{attacker}}'s blade finds a critical gap, laying open {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} delivers a masterful, singing cut that bites deep into {{defender}}'s {{bodyPart}} with a shower of gore!"
       ]
     },
     "bashing": {
@@ -556,6 +969,13 @@
         "The sheer concussive force of {{attacker}}'s {{weapon}} demolishes {{defender}}'s {{bodyPart}}.",
         "{{defender}} collapses as {{attacker}} delivers a crushing strike that caves in their {{bodyPart}}.",
         "{{attacker}} brings {{possessive}} {{weapon}} down like a thunderbolt, obliterating {{defender}}'s {{bodyPart}}."
+      ],
+      "critical": [
+        "With bone-shattering force, {{attacker}} delivers a crushing blow that echoes across the arena!",
+        "{{attacker}} brings their {{weapon}} down like a judge's gavel, smashing {{defender}}'s {{bodyPart}}.",
+        "A sickening crunch fills the air as {{attacker}}'s heavy strike caves in {{defender}}'s defenses.",
+        "{{attacker}} puts their entire weight into a brutal, looping smash that connects perfectly.",
+        "The sheer blunt force of {{attacker}}'s swing shatters bone and splinters armor on impact!"
       ]
     },
     "piercing": {
@@ -654,6 +1074,13 @@
         "With a sharp gasp, {{defender}} falls, {{attacker}}'s {{weapon}} buried firmly in their {{bodyPart}}.",
         "The tip of {{possessive}} {{weapon}} finds flesh, and {{attacker}} drives it ruthlessly into {{defender}}'s {{bodyPart}}.",
         "{{attacker}} punches through {{defender}}'s defenses, spearing their {{bodyPart}} with deadly intent."
+      ],
+      "critical": [
+        "Like a viper striking, {{attacker}} drives their point deep into a vital organ!",
+        "{{attacker}} lunges with terrifying speed, threading the needle through {{defender}}'s armor.",
+        "A masterful thrust from {{attacker}} impales {{defender}}, drawing a gasp from the crowd.",
+        "{{attacker}} finds the fatal gap, sinking their {{weapon}} deep into {{defender}}'s {{bodyPart}}.",
+        "With clinical precision, {{attacker}} punctures {{defender}}'s defenses, leaving a lethal wound."
       ]
     },
     "fist": {
@@ -737,6 +1164,13 @@
         "With an explosive surge of strength, {{attacker}} drives their fist into {{defender}}'s {{bodyPart}}, delivering a final, lethal strike.",
         "The final punch is a lethal execution, snapping {{defender}}'s neck.",
         "A devastating blow crushes the skull, instantly ending {{defender}}'s life."
+      ],
+      "critical": [
+        "A devastating haymaker from {{attacker}} lands flush, rattling {{defender}}'s skull!",
+        "{{attacker}} channels raw brutality into a piston-like punch that crunches bone.",
+        "With frightening velocity, {{attacker}}'s bare fist connects perfectly, dropping {{defender}} to their knees.",
+        "A flurry of violence culminates in a vicious uppercut from {{attacker}} that nearly lifts {{defender}} off the ground.",
+        "{{attacker}} delivers a bare-knuckle strike with the force of a swinging anvil!"
       ]
     }
   },
@@ -804,6 +1238,7 @@
         "{{attacker}} stabs brutally upward, throwing all {{possessive}} weight behind {{possessive}} {{weapon}}!",
         "{{attacker}} extends {{possessive}} {{weapon}} in a lightning thrust!",
         "A lightning-fast stab from {{attacker}} slips past {{defender}}'s guard.",
+        "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} straight at the heart!",
         "{{attacker}} thrusts with {{possessive}} {{weapon}}!",
         "{{attacker}} snaps {{possessive}} wrist, turning the point of {{possessive}} {{weapon}} into {{defender}}'s guard!",
         "{{attacker}} drives {{possessive}} {{weapon}} straight at {{defender}}!",
@@ -820,6 +1255,7 @@
         "{{attacker}} twists their grip, driving {{possessive}} {{weapon}} in a deep thrust.",
         "{{attacker}} extends fully, aiming a vicious puncture with {{possessive}} {{weapon}}.",
         "{{attacker}} stabs relentlessly, forcing {{defender}} on the back foot.",
+        "{{attacker}} jabs high, then thrusts low with {{possessive}} {{weapon}}.",
         "Seeking vital organs, {{attacker}} launches a deadly lunge.",
         "{{attacker}} slides past the guard, thrusting with {{possessive}} {{weapon}}.",
         "{{attacker}} executes a calculated, piercing strike with {{possessive}} {{weapon}}.",
@@ -858,6 +1294,7 @@
         "{{attacker}} executes a chillingly precise horizontal sweep with {{possessive}} {{weapon}}.",
         "{{attacker}} unleashes a wild, theatrical spin-slash, to the crowd's immense delight!",
         "{{attacker}} chops viciously at {{defender}}'s hamstrings, a desperate bid to end it.",
+        "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, singing arc!",
         "{{attacker}} steps into a heavy diagonal slash with {{possessive}} {{weapon}}.",
         "{{attacker}} snaps a vicious horizontal cut at {{defender}} using {{possessive}} {{weapon}}.",
         "Whirling {{possessive}} {{weapon}}, {{attacker}} initiates a flurry of slashes!",
@@ -895,6 +1332,7 @@
         "{{attacker}} swings heavily with {{possessive}} {{weapon}}!",
         "{{attacker}} cleverly tries to break {{defender}}'s defense with {{possessive}} {{weapon}}!",
         "{{attacker}} delivers a crushing blow using {{possessive}} {{weapon}}!",
+        "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
         "With a guttural roar, {{attacker}} hammers {{possessive}} {{weapon}} directly into {{defender}}'s midsection.",
         "{{attacker}} brings {{possessive}} {{weapon}} crashing down like a meteor!",
         "{{attacker}} brings {{possessive}} {{weapon}} down with the thud of a falling oak.",
@@ -903,11 +1341,13 @@
         "{{attacker}} heaves {{possessive}} {{weapon}} in a crushing overhead blow!",
         "{{attacker}} swings {{possessive}} {{weapon}} like a battering ram.",
         "Putting full body weight behind it, {{attacker}} smashes with {{possessive}} {{weapon}}.",
+        "{{attacker}} delivers a brutal, looping strike with {{possessive}} {{weapon}}.",
         "{{attacker}} winds up for a devastating bash against {{defender}}.",
         "{{attacker}} chops down heavily, trying to shatter {{defender}}'s defense.",
         "With bone-breaking intent, {{attacker}} swings {{possessive}} {{weapon}} wildly.",
         "{{attacker}} hammers at {{defender}} with methodical, heavy blows.",
         "{{attacker}} steps forward, crashing {{possessive}} {{weapon}} in a sweeping arc.",
+        "{{attacker}} brings {{possessive}} {{weapon}} down with the force of an avalanche.",
         "{{attacker}} heaves {{possessive}} {{weapon}} into a bone-shattering overhead smash.",
         "Like a falling boulder, {{attacker}} brings {{possessive}} {{weapon}} crashing down with horrific force."
       ],
@@ -1214,7 +1654,12 @@
           "{{defender}} frantically throws themselves backward, escaping the blow by a hair's breadth.",
           "{{defender}} sidesteps with a lazy, arrogant smirk.",
           "{{defender}} flinches backward desperately, barely avoiding the steel.",
-          "With theatrical flair, {{defender}} twirls out of the path of danger."
+          "With theatrical flair, {{defender}} twirls out of the path of danger.",
+          "With a frantic, desperate scramble, {{name}} just barely avoids the whistling steel!",
+          "{{name}} laughs confidently, weaving out of the way with insulting ease.",
+          "A theatrical backflip sees {{name}} clear of danger, much to the crowd's delight!",
+          "{{name}} grimly side-steps the blow, eyes dead and unblinking.",
+          "Panic flashes in {{name}}'s eyes as they desperately throw themselves out of the weapon's path."
         ],
         "tier2_medium": [
           "{{defender}} gracefully dodges the blow.",
@@ -1336,7 +1781,12 @@
           "An arrogant flick of the wrist from {{name}} sends the attack wide.",
           "{{defender}} meets the blow with a thunderous clash of steel, staring down {{attacker}} with grim resolve.",
           "A desperate block! {{defender}}'s weapon shudders under the immense force.",
-          "{{defender}} stylishly deflects the strike, winking at the crowd as sparks fly."
+          "{{defender}} stylishly deflects the strike, winking at the crowd as sparks fly.",
+          "A desperate clash of steel! {{name}} throws their weapon up just in time to stop the killing blow.",
+          "With an arrogant smirk, {{name}} swats the attack aside like a nuisance.",
+          "{{name}} catches the blow with a flamboyant flourish, turning the defense into a performance.",
+          "A heavy, grim parry from {{name}} stops the attack dead, sending shockwaves through the arena.",
+          "Barely surviving the exchange, {{name}}'s desperate block leaves their arms shaking."
         ]
       },
       "shield": {
@@ -1408,7 +1858,12 @@
           "A smooth, practiced counterstrike from {{name}} catches the opponent off guard.",
           "{{defender}} brutally turns the deflection into a lethal, plunging counter-thrust.",
           "With alarming calmness, {{defender}} redirects the attack and instantly strikes back.",
-          "{{defender}} laughs maniacally as they bat the weapon aside and launch a vicious counter!"
+          "{{defender}} laughs maniacally as they bat the weapon aside and launch a vicious counter!",
+          "A wild, desperate counterattack! {{name}} blindly strikes back the moment the blades clash.",
+          "With casual disdain, {{name}} turns the attack into a flawless, confident riposte.",
+          "{{name}} spins the parry into a dazzling, theatrical counter that draws roars from the crowd!",
+          "A brutal, efficient riposte from {{name}} punishes the attacker with grim finality.",
+          "Fueled by raw terror, {{name}} throws a desperate riposte to buy a second of breathing room."
         ]
       }
     },
@@ -1454,7 +1909,12 @@
         "The sheer force of the blow sends {{name}} flying into the dirt!",
         "The impact folds {{name}} like cheap parchment, sending them crashing into the dust.",
         "{{name}} staggers back three heavy steps before their legs betray them completely.",
-        "Thrown totally off-balance, {{name}} plummets face-first into the bloodied sand."
+        "Thrown totally off-balance, {{name}} plummets face-first into the bloodied sand.",
+        "A thunderous impact! {{name}} is sent flying backward, slamming into the unforgiving sand.",
+        "{{name}} crumples like a ragdoll, hitting the ground with a sickening thud.",
+        "The force of the blow sweeps {{name}} entirely off their feet in a dramatic, slow-motion arc.",
+        "With a heavy groan, {{name}} is driven down into the blood-soaked dirt.",
+        "{{name}} trips over their own feet, sprawling messily onto the arena floor."
       ],
       "recovery": [
         "{{name}} staggers to {{possessive}} feet, swaying dangerously but still gripping {{possessive}} weapon tight.",
@@ -1501,7 +1961,12 @@
         "A triumphant roar erupts as {{name}} surges back to their feet!",
         "In a terrifying display of resilience, {{name}} immediately springs back upright without a word.",
         "Spitting blood and cursing violently, {{name}} drags themselves slowly to their feet.",
-        "{{name}} rolls to safety and rises in a flash, eyes wide with frantic desperation."
+        "{{name}} rolls to safety and rises in a flash, eyes wide with frantic desperation.",
+        "Spitting blood, {{name}} slowly and deliberately pushes themselves back up, refusing to stay down.",
+        "With a burst of adrenaline, {{name}} kips up off the sand in a flash of motion!",
+        "{{name}} scrambles back to their feet in a blind panic, desperately seeking their weapon.",
+        "Shaking off the cobwebs, {{name}} staggers upright, their balance visibly compromised.",
+        "A slow, theatrical rise from {{name}} as they wipe the sand from their face, glaring at their foe."
       ]
     },
     "epithets": {
@@ -3084,7 +3549,12 @@
       "{{attacker}} strings together a brutal combination, each hit more punishing than the last, completely obliterating {{defender}}.",
       "With terrifying fluidity, {{attacker}} links one fatal strike into another, a storm of steel that tears {{defender}} apart.",
       "{{defender}} is overwhelmed by a flawless chain of precision strikes, {{attacker}} dismantling them with cold perfection.",
-      "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}."
+      "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
+      "A whirlwind of steel! {{attacker}} delivers blow after blow until {{defender}}'s battered body finally yields to the void.",
+      "{{defender}} is caught in a meatgrinder of attacks. The final strike from {{attacker}} simply ends the suffering.",
+      "Strike, parry, strike! {{attacker}} breaks down every defense, culminating in a vicious execution combo.",
+      "An unrelenting barrage leaves {{defender}} nowhere to run. The final, fatal blow from {{attacker}} is an act of sheer brutality.",
+      "{{attacker}} unleashes a rapid-fire symphony of carnage, the final note being {{defender}}'s death rattle."
     ],
     "armor_failure": [
       "{{defender}}'s armor gives way! {{attacker}}'s {{weapon}} punches through the compromised defenses for a lethal blow.",
@@ -3097,7 +3567,12 @@
       "{{attacker}} finds the critical structural flaw in {{defender}}'s battered gear, punching through the sundered plating for the kill.",
       "Sparks fly as {{defender}}'s armor finally catastrophically fails, allowing {{attacker}} to deliver the execution stroke.",
       "{{attacker}} capitalizes on the ruined state of {{defender}}'s armor, driving a lethal strike straight through the exposed weakness.",
-      "The last remnants of {{defender}}'s armor buckle and break. {{attacker}} doesn't hesitate, delivering a brutal killing blow through the gap."
+      "The last remnants of {{defender}}'s armor buckle and break. {{attacker}} doesn't hesitate, delivering a brutal killing blow through the gap.",
+      "A sickening rending of metal! {{defender}}'s armor collapses inward as {{attacker}}'s fatal strike finds a home.",
+      "Sparks shower the sand as {{attacker}}'s weapon punches clean through {{defender}}'s compromised plate.",
+      "Leather tears and mail shatters! {{defender}}'s ruined gear offers no protection against {{attacker}}'s lethal blow.",
+      "With a catastrophic structural failure, {{defender}}'s breastplate caves, allowing {{attacker}} to pierce the heart.",
+      "The final blow exploits a ruined pauldron, burying deep into {{defender}}'s vitals as their gear betrays them."
     ],
     "fatigue_collapse": [
       "Exhaustion claims its toll. As {{defender}} drops their guard, gasping for air, {{attacker}} drives home a mercifully quick death.",
@@ -3110,7 +3585,12 @@
       "With nothing left in the tank, {{defender}} can only watch helplessly as {{attacker}} effortlessly ends their suffering.",
       "Utterly spent, {{defender}} collapses to their knees. {{attacker}} obliges them with a swift, clean execution.",
       "Fatigue finally breaks {{defender}}'s will to fight, leaving them entirely vulnerable to {{attacker}}'s finishing strike.",
-      "{{defender}}'s lungs burn and their muscles fail. {{attacker}} takes full advantage of their total exhaustion to claim the life."
+      "{{defender}}'s lungs burn and their muscles fail. {{attacker}} takes full advantage of their total exhaustion to claim the life.",
+      "Gasping for air, {{defender}} stumbles, utterly spent. {{attacker}} delivers the deathblow with chilling calmness.",
+      "Exhaustion drags {{defender}}'s weapon down. {{attacker}} takes the opening to end their life with a swift strike.",
+      "Legs trembling and lungs burning, {{defender}} offers no resistance to {{attacker}}'s final, merciful execution.",
+      "The toll of the arena proves too much. As {{defender}} collapses from fatigue, {{attacker}} seals their fate.",
+      "Too weary to raise a shield, {{defender}} simply awaits the end. {{attacker}} obliges with a fatal, crushing blow."
     ],
     "rivalry_finish": [
       "Years of bad blood culminate in a single, hateful strike. {{attacker}} stands triumphant over their slain rival, {{defender}}.",

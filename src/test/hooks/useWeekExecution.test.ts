@@ -58,6 +58,16 @@ vi.mock('@/state/useGameStore', () => {
 
   return {
     useGameStore,
+    useWorldState: vi.fn(() => ({
+      week: store.week,
+      day: store.day,
+      isTournamentWeek: store.isTournamentWeek,
+      roster: store.roster ?? [],
+      rivals: store.rivals ?? [],
+      boutOffers: store.boutOffers ?? {},
+      lastWeekBoutDisplay: store.lastWeekBoutDisplay,
+    })),
+    useBookmarks: vi.fn(() => []),
     reconstructGameState: vi.fn((s) => ({
       ...s,
       week: s.week,
@@ -75,7 +85,7 @@ import { useWeekExecution } from '@/hooks/useWeekExecution';
 import { generatePairings } from '@/engine/bout/core/pairings';
 import { toast } from 'sonner';
 import { engineProxy } from '@/engine/workerProxy';
-import { useGameStore } from '@/state/useGameStore';
+import { useGameStore, useWorldState } from '@/state/useGameStore';
 
 describe('useWeekExecution', () => {
   beforeEach(() => {
@@ -98,11 +108,12 @@ describe('useWeekExecution', () => {
 
   it('calls doAdvanceDay when isTournamentWeek=true', async () => {
     const store = useGameStore() as any;
+    const tournamentState = { ...store, isTournamentWeek: true };
     vi.mocked(useGameStore).mockImplementation((selector?: any) => {
-      const s = { ...store, isTournamentWeek: true };
-      if (typeof selector === 'function') return selector(s);
-      return s;
+      if (typeof selector === 'function') return selector(tournamentState);
+      return tournamentState;
     });
+    vi.mocked(useWorldState).mockReturnValue(tournamentState);
     const { result } = renderHook(() => useWeekExecution());
     await act(async () => {
       await result.current.executeWeek();

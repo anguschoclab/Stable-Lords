@@ -109,6 +109,7 @@ describe('weatherEffects', () => {
         'Blood Fog',
         'Shimmering Heat',
         'Rain of Frogs',
+        'Crystal Rain',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -120,6 +121,16 @@ describe('weatherEffects', () => {
         expect(typeof effect.staminaMult).toBe('number');
         expect(typeof effect.description).toBe('string');
       }
+    });
+
+    it('returns Crystal Rain effect with correct modifiers', () => {
+      const effect = getWeatherEffect('Crystal Rain' as WeatherType);
+      expect(effect.staminaMult).toBe(1.1);
+      expect(effect.initiativeMod).toBe(-3);
+      expect(effect.riposteMod).toBe(0);
+      expect(effect.damageMult).toBe(1.2);
+      expect(typeof effect.description).toBe('string');
+      expect(effect.description.length).toBeGreaterThan(0);
     });
 
     it('returns Rain of Frogs effect with correct modifiers', () => {
@@ -219,6 +230,7 @@ describe('weatherEffects', () => {
         'Blood Fog',
         'Shimmering Heat',
         'Rain of Frogs',
+        'Crystal Rain',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);

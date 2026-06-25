@@ -23,6 +23,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Locust Swarm', 'Aurora Borealis', 'Chaotic Winds', 'Aether Storm',
   'Mirage', 'Ember Rain', 'Wildfire Smoke', 'Blood Fog',
   'Shimmering Heat', 'Rain of Frogs',
+  'Crystal Rain',
 ];
 
 describe('Weather season exclusivity', () => {
@@ -64,6 +65,15 @@ describe('Weather season exclusivity', () => {
       if (w === 'Rain of Frogs') found = true;
     }
     expect(found).toBe(true);
+  });
+
+  it('Crystal Rain is in Winter, NOT in Spring', () => {
+    expect(SEASONAL_WEATHER.Winter).toContain('Crystal Rain');
+    expect(SEASONAL_WEATHER.Spring).not.toContain('Crystal Rain');
+  });
+
+  it('getWeatherSeason returns Winter for Crystal Rain', () => {
+    expect(getWeatherSeason('Crystal Rain')).toBe('Winter');
   });
 
   it('rollWeather does NOT produce Rain of Frogs in Spring', () => {

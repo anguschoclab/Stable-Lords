@@ -150,6 +150,18 @@ describe('filterActive', () => {
     expect(active.length).toBe(2);
     expect(active.every((w) => w.status === 'Active')).toBe(true);
   });
+
+  it('returns empty array for null input', () => {
+    expect(filterActive(null as any)).toEqual([]);
+  });
+
+  it('returns empty array for undefined input', () => {
+    expect(filterActive(undefined as any)).toEqual([]);
+  });
+
+  it('returns empty array for non-array input', () => {
+    expect(filterActive({} as any)).toEqual([]);
+  });
 });
 
 describe('filterByStatus', () => {

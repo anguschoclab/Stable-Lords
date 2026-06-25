@@ -79,4 +79,100 @@ describe('new traits from lore expansion', () => {
       expect(t.description.trim().length).toBeGreaterThan(5);
     });
   });
+
+  describe('silent_one', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.silent_one).toBeDefined();
+    });
+
+    it('has correct metadata', () => {
+      const t = TRAITS.silent_one!;
+      expect(t.tier).toBe('Notable');
+      expect(t.sign).toBe('positive');
+      expect(t.name).toBe('Silent One');
+    });
+
+    it('has effect defMod 1 and decMod 1', () => {
+      const t = TRAITS.silent_one!;
+      expect(t.effect.defMod).toBe(1);
+      expect(t.effect.decMod).toBe(1);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.silent_one!;
+      expect(t.id).toBe('silent_one');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
+
+  describe('blood_drunk', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.blood_drunk).toBeDefined();
+    });
+
+    it('has effect attModLowHp 2 and defModLowHp -2', () => {
+      const t = TRAITS.blood_drunk!;
+      expect(t.effect.attModLowHp).toBe(2);
+      expect(t.effect.defModLowHp).toBe(-2);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.blood_drunk!;
+      expect(t.id).toBe('blood_drunk');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
+
+  describe('paranoid', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.paranoid).toBeDefined();
+    });
+
+    it('has effect defModEarly 2 and decMod -1', () => {
+      const t = TRAITS.paranoid!;
+      expect(t.effect.defModEarly).toBe(2);
+      expect(t.effect.decMod).toBe(-1);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.paranoid!;
+      expect(t.id).toBe('paranoid');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
+
+  describe('cold_eyed', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.cold_eyed).toBeDefined();
+    });
+
+    it('has effect iniMod 1 and decMod 1', () => {
+      const t = TRAITS.cold_eyed!;
+      expect(t.effect.iniMod).toBe(1);
+      expect(t.effect.decMod).toBe(1);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.cold_eyed!;
+      expect(t.id).toBe('cold_eyed');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
+
+  describe('survivalist', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.survivalist).toBeDefined();
+    });
+
+    it('has effect defModLowHp 2', () => {
+      const t = TRAITS.survivalist!;
+      expect(t.effect.defModLowHp).toBe(2);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.survivalist!;
+      expect(t.id).toBe('survivalist');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
 });

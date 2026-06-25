@@ -621,6 +621,7 @@ export type WeatherType =
   | 'Wildfire Smoke'
   | 'Blood Fog'
   | 'Shimmering Heat'
+  | 'Crystal Rain'
   | 'Rain of Frogs';
 
 /**

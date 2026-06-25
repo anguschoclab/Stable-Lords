@@ -108,6 +108,7 @@ describe('weatherEffects', () => {
         'Wildfire Smoke',
         'Blood Fog',
         'Shimmering Heat',
+        'Crystal Rain',
         'Rain of Frogs',
       ];
       for (const weather of allWeatherTypes) {
@@ -218,6 +219,7 @@ describe('weatherEffects', () => {
         'Wildfire Smoke',
         'Blood Fog',
         'Shimmering Heat',
+        'Crystal Rain',
         'Rain of Frogs',
       ];
       for (const weather of allWeatherTypes) {

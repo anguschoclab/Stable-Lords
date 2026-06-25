@@ -305,6 +305,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-arena-blood/20',
     description: 'A rippling heatwave blurs vision and exhausts fighters.',
   },
+  'Crystal Rain': {
+    icon: Sparkles,
+    colorClass: 'text-blue-300',
+    bgClass: 'bg-blue-300/10',
+    borderClass: 'border-blue-300/20',
+    description: 'Sharp, shimmering crystals fall from the sky. Cuts armor, drains stamina.',
+  },
   'Rain of Frogs': {
     icon: CloudRain,
     colorClass: 'text-primary',

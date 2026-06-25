@@ -47,3 +47,9 @@
 **Prevention:** Extract all inline scripts into separate JS files (e.g., `/init-howler.js`) and load them via `<script src="...">`. Then, strictly remove `'unsafe-inline'` from `script-src` to ensure only external scripts from approved sources can run.
 
 2024-06-17: When expanding game narrative systems (e.g., adding traits, lore, origins), always trace how the new properties physically hook into the simulation. A Trait without a handler in `getDynamicTraitMods()` is inert. Always cross-check the interface and the application layer.
+
+## 2026-06-25 - [CRITICAL] Prevent Arbitrary Permission Requests in Electron
+
+**Vulnerability:** The Electron main process did not configure a default permission request handler. This allows web contents to potentially prompt for or silently acquire permissions (such as camera, microphone, or geolocation) depending on the OS or other configurations.
+**Learning:** By default, Electron will defer to Chromium's permission logic, but in a sandboxed/desktop environment, applications often do not need these browser permissions. Explicitly denying them reduces the attack surface and prevents unauthorized access to sensitive device hardware.
+**Prevention:** Always set a default handler using `session.defaultSession.setPermissionRequestHandler()` to deny all permission requests unless specifically required by a feature.

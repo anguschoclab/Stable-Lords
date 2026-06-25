@@ -31,8 +31,17 @@ function TacticalBarHeader({
 }: TacticalBarHeaderProps) {
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-expanded={expanded}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
       className={cn(
-        'flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors',
+        'flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:bg-white/10',
         expanded && 'border-b border-white/5'
       )}
       onClick={onToggle}
@@ -65,6 +74,7 @@ function TacticalBarHeader({
           className="h-6 w-6"
           title={expanded ? 'Collapse alerts' : 'Expand alerts'}
           aria-label={expanded ? 'Collapse alerts' : 'Expand alerts'}
+          aria-expanded={expanded}
         >
           {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
         </Button>

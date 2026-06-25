@@ -47,7 +47,8 @@ export default function BackstoryPicker({ value, onChange, onRandomize }: Backst
               type="button"
               onClick={() => onChange(b.id)}
               title={b.lore}
-              className={`p-3 text-left transition-all duration-150 border border-solid ${
+              aria-pressed={selected}
+              className={`p-3 text-left transition-all duration-150 border border-solid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${
                 selected
                   ? 'border-accent/70 bg-accent/5'
                   : 'border-[rgba(60,42,22,0.8)] bg-[#0A0705] hover:border-accent/40 hover:bg-accent/5'

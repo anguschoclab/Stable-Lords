@@ -41,6 +41,7 @@
 **Action:** When a button is used strictly within confined card structures, prefer `focus-visible:ring-inset` to ensure the focus ring draws inwards and is never clipped by parent `overflow: hidden` contexts.
 
 2024-05-24: Fixed missing prefers-reduced-motion fallback classes in index.css, replaced raw colors in WarriorTrainingCard.tsx and traitDisplay.ts with arena tokens, and added aria-describedby={props['aria-describedby'] || undefined} to Radix primitives to suppress missing description warnings while ensuring accessibility.
-## 2026-06-24 - Refined custom button keyboard focus states
-**Learning:** Custom button elements embedded inside interactive containers (like cards or toolbars) with `focus-visible:ring-offset-2` cause visual clipping and layout shifts when focused, breaking the UI bounds.
-**Action:** Replaced `focus-visible:ring-offset-2` with `focus-visible:ring-inset` on deeply nested interactive elements to ensure the focus ring remains contained within the component's visible footprint.
+## 2025-03-01 - [Keyboard Accessibility on Backstory Buttons]
+
+**Learning:** The `BackstoryPicker` component used native `<button>` elements for its selection grid without explicitly defined `focus-visible` styles or `aria-pressed` states, making keyboard navigation difficult and screen reader feedback inaccurate.
+**Action:** When implementing custom button grids or toggle-like selections, always apply `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset` (using `ring-inset` for flush borders) and ensure `aria-pressed={selected}` is passed to communicate the active state clearly.

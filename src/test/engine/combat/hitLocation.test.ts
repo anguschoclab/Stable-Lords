@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { protectCovers, rollHitLocation, HIT_LOCATIONS } from '@/engine/combat/mechanics/hitLocation';
+import { protectCovers, rollHitLocation } from '@/engine/combat/mechanics/hitLocation';
 
 describe('hitLocation', () => {
   describe('protectCovers', () => {
@@ -81,7 +81,7 @@ describe('hitLocation', () => {
 
     it('ignores exposed if all are covered (impossible in game, but testable)', () => {
       // Mock protectCovers to cover everything
-      const rng = vi.fn()
+      vi.fn()
         .mockReturnValueOnce(0.2) // aims for exposed, but none are exposed
         .mockReturnValueOnce(0.0); // picks first from all ('head')
       // To test this we'd have to mock protectCovers, or just pass something that doesn't cover all but check logic

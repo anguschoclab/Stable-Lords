@@ -120,11 +120,11 @@ describe('damageCalc', () => {
     });
 
     it('incorporates various bonuses (killDesire, momentum, specialtyBonus)', () => {
-      const base = calculateKillWindow(
+      calculateKillWindow(
           1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0); // 0.012 * 3.5 = 0.042 -> 0.04 (clamp)
 
       // Need a smaller base to see the effect
-      const smallBase = calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0); // 0.012 * 0.1 = 0.0012
+      calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0); // 0.012 * 0.1 = 0.0012
 
       // Momentum 2 (+0.004)
       expect(
@@ -148,7 +148,7 @@ describe('damageCalc', () => {
     });
 
     it('incorporates attOE, attAL, matchupBonus, decSkill, phaseLevel', () => {
-      const smallBase = calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0); // 0.0012
+      calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0); // 0.0012
 
       // attOE + attAL > 10
       expect(

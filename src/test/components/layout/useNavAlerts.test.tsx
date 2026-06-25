@@ -10,7 +10,7 @@ let mockAlerts: TacticalAlert[] = [];
 let mockPathname = '/world';
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal() as object;
   return {
     ...actual,
     useGameStore: vi.fn((selector?: any) => (selector ? selector(mockStore) : mockStore)),

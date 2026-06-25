@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import type { WarriorRow } from '@/types/leaderboard';
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal() as object;
   return {
     ...actual,
     useGameStore: (selector?: any) => {
@@ -14,6 +14,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
     };
     return selector ? selector(state) : state;
     },
+  };
 });
 
 vi.mock('@tanstack/react-router', () => ({

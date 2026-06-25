@@ -134,7 +134,8 @@ function materializeFloorRecruit(
   rng: IRNGService
 ): { warrior: Warrior; updatedPool?: PoolWarrior[] } | null {
   if (state.recruitPool && state.recruitPool.length > 0) {
-    const poolWarrior = state.recruitPool[0]!;
+    const poolWarrior = state.recruitPool[0];
+    if (!poolWarrior) return null;
     const warrior: Warrior = {
       ...poolWarrior,
       id: poolWarrior.id as WarriorId,

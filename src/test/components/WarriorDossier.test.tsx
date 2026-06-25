@@ -42,7 +42,7 @@ vi.mock('@/components/warrior/dossier/WarriorDossierMedicalReport', () => ({
 }));
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal() as object;
   return {
     ...actual,
   useWorldState: vi.fn(() => mockState),

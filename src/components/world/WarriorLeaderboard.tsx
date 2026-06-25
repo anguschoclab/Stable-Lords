@@ -99,19 +99,23 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                     <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />
                   </tr>
                 )}
-                {items.map((vi) => (
-                  <WarriorLeaderboardRow
-                    key={filtered[vi.index]!.id}
-                    row={filtered[vi.index]!}
-                    index={vi.index}
-                    isFiltered={isFiltered}
-                  />
-                ))}
+                {items.map((vi) => {
+                  const row = filtered[vi.index];
+                  if (!row) return null;
+                  return (
+                    <WarriorLeaderboardRow
+                      key={row.id}
+                      row={row}
+                      index={vi.index}
+                      isFiltered={isFiltered}
+                    />
+                  );
+                })}
                 {items[items.length - 1] && (
                   <tr
                     style={{
                       height:
-                        virtualizer.getTotalSize() - items[items.length - 1]!.end,
+                        virtualizer.getTotalSize() - (items[items.length - 1]?.end ?? 0),
                     }}
                   >
                     <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />

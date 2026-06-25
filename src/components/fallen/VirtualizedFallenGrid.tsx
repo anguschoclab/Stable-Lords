@@ -116,7 +116,7 @@ function VirtualizedInner({
             }}
           >
             <div className={colsClass}>
-              {rows[virtualRow.index]!.map((w) => (
+              {rows[virtualRow.index]?.map((w) => (
                 <FallenCard key={w.id} warrior={w} season={season} />
               ))}
             </div>

@@ -10,7 +10,7 @@ const bookmarkedIds = new Set<string>();
 const mockToggle = vi.fn();
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal() as object;
   return {
     ...actual,
     useGameStore: (selector: any) => {

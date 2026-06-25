@@ -5,7 +5,7 @@ import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal();
+  const actual = await importOriginal() as object;
   return {
     ...actual,
     useGameStore: (selector?: any) => {

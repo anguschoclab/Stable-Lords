@@ -103,5 +103,75 @@
     "kept": "{{name}} parries with a theatrical flourish, inviting the crowd's applause!",
     "removed": "{{name}} parries with a theatrical flourish, inviting the crowd's cheer.",
     "similarity": 0.88
+  },
+  {
+    "path": [
+      "pbp",
+      "attacks",
+      "piercing"
+    ],
+    "kept": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} straight at the heart!",
+    "removed": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} deep into {{defender}}.",
+    "similarity": 0.8080808080808081
+  },
+  {
+    "path": [
+      "pbp",
+      "attacks",
+      "piercing"
+    ],
+    "kept": "{{attacker}} jabs high, then thrusts low with {{possessive}} {{weapon}}.",
+    "removed": "{{attacker}} feints low, then thrusts high with {{possessive}} {{weapon}}!",
+    "similarity": 0.8108108108108109
+  },
+  {
+    "path": [
+      "pbp",
+      "attacks",
+      "slashing"
+    ],
+    "kept": "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, singing arc!",
+    "removed": "{{attacker}} sweeps {{possessive}} {{weapon}} in a deadly horizontal arc!",
+    "similarity": 0.8082191780821918
+  },
+  {
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
+    "kept": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
+    "similarity": 0.819672131147541
+  },
+  {
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
+    "kept": "{{attacker}} delivers a brutal, looping strike with {{possessive}} {{weapon}}.",
+    "removed": "{{attacker}} delivers a piston-like strike with {{possessive}} {{weapon}}!",
+    "similarity": 0.8333333333333334
+  },
+  {
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
+    "kept": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
+    "removed": "{{attacker}} swings heavily with {{possessive}} {{weapon}}!",
+    "similarity": 0.8135593220338984
+  },
+  {
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
+    "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with the force of an avalanche.",
+    "removed": "{{attacker}} brings {{possessive}} {{weapon}} down with the thud of a falling oak.",
+    "similarity": 0.8170731707317073
   }
 ]

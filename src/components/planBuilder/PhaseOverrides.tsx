@@ -48,7 +48,7 @@ export default function PhaseOverrides({ plan, onPlanChange }: PhaseOverridesPro
                         phases: Object.keys(rest).length ? rest : undefined,
                       });
                     }}
-                    className="text-[9px] font-black uppercase text-arena-blood hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm px-1"
+                    className="text-[9px] font-black uppercase text-arena-blood hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-sm px-1"
                     aria-label={`Clear phase ${p}`}
                   >
                     Clear

@@ -4,7 +4,10 @@ import { render, screen } from '@testing-library/react';
 import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useGameStore: (selector?: any) => {
     const state = {
       player: { id: 'p1', name: 'Player', stableName: "Dragon's Hearth", fame: 0, renown: 0, titles: 0 },

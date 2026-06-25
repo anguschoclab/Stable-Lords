@@ -8,7 +8,10 @@ import type { TacticalAlert } from '@/hooks/useTacticalAlerts';
 let mockAlerts: TacticalAlert[] = [];
 let mockPathname = '/stable';
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useGameStore: vi.fn((selector?: any) => {
     const store = { week: 7 };
     return selector ? selector(store) : store;

@@ -12,7 +12,10 @@ const defaultStoreState = {
   roster: [] as Warrior[],
 };
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useGameStore: (selector?: (state: any) => any) => {
     const state = { ...defaultStoreState, ...storeOverride };
     return selector ? selector(state) : state;

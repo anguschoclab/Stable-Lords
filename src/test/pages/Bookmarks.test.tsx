@@ -23,7 +23,10 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: any) => <a href={to}>{children}</a>,
 }));
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useGameStore: (selector?: any) => {
     const state = {
       ...mockStoreState,

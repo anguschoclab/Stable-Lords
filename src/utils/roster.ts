@@ -42,6 +42,7 @@ export function removeFromRoster(roster: Warrior[], ids: string[]): Warrior[] {
  * Filters roster to only active warriors
  */
 export function filterActive(roster: Warrior[]): Warrior[] {
+  if (!Array.isArray(roster)) return [];
   return roster.filter((w) => w.status === 'Active');
 }
 

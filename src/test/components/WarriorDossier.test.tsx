@@ -41,7 +41,10 @@ vi.mock('@/components/warrior/dossier/WarriorDossierMedicalReport', () => ({
   WarriorDossierMedicalReport: () => <div data-testid="dossier-medical" />,
 }));
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useWorldState: vi.fn(() => mockState),
 }));
 

@@ -8,7 +8,10 @@ vi.mock('@/hooks/useWeekExecution', () => ({
   useWeekExecution: vi.fn(),
 }));
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useGameStore: vi.fn((selector?: any) => {
     const store = {
       week: 5,

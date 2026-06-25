@@ -78,7 +78,10 @@ const mockRivals: RivalStableData[] = [
   },
 ];
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useGameStore: vi.fn((selector?: any) => {
     const store = { player: mockPlayer, roster: mockRoster, rivals: mockRivals };
     return selector ? selector(store) : store;

@@ -6,7 +6,10 @@ import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 const bookmarkedIds = new Set<string>();
 const mockToggle = vi.fn();
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useGameStore: (selector: any) => {
     const state = {
       isBookmarked: (_type: string, id: string) => bookmarkedIds.has(id),

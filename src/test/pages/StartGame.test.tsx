@@ -5,7 +5,10 @@ import * as saveSlots from '@/state/saveSlots';
 import { toast } from 'sonner';
 
 // Mock everything
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useGameStore: () => ({
     loadGame: vi.fn(),
   }),

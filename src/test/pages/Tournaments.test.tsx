@@ -41,6 +41,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
     };
     return selector ? selector(state) : state;
     },
+  };
 });
 
 // We mock @tanstack/react-router to avoid setting up a full router context

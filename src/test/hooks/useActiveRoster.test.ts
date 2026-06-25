@@ -17,9 +17,10 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
   return {
     ...actual,
     useGameStore: (selector?: (state: any) => any) => {
-    const state = { ...defaultStoreState, ...storeOverride };
-    return selector ? selector(state) : state;
+      const state = { ...defaultStoreState, ...storeOverride };
+      return selector ? selector(state) : state;
     },
+  };
 });
 
 function createMockWarrior(id: string, overrides?: Partial<Warrior>): Warrior {

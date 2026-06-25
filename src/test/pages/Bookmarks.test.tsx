@@ -43,6 +43,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
     if (selector) return selector(state);
     return state;
     },
+  };
 });
 
 describe('Bookmarks Page', () => {

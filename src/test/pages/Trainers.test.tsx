@@ -63,6 +63,7 @@ vi.mock('@/state/useGameStore', async (importOriginal) => {
     };
     return selector ? selector(state) : state;
     },
+  };
 });
 // Mock the router components
 vi.mock('@tanstack/react-router', () => ({

@@ -39,7 +39,7 @@ describe('Stable Lords 1.0 Simulation Hardening Audit', () => {
     expect(finalRivalCount).toBeGreaterThanOrEqual(30);
     expect(finalRivalCount).toBeLessThanOrEqual(45);
 
-    // 2. Mortality: Should be around the 10% target (allowing for variance 0% - 20%)
+    // 2. Mortality: Should be around the 10% target (allowing for variance 0% - 25%)
     // Note: 0 deaths is acceptable for this seed - game balance may vary
     expect(annualDeathRate).toBeGreaterThanOrEqual(0);
     expect(annualDeathRate).toBeLessThan(0.25);

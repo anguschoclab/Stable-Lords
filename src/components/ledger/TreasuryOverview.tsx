@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { computeWeeklyBreakdown } from '@/engine/economy';
 import { filterActive } from '@/utils/roster';
 import { Surface } from '@/components/ui/Surface';
@@ -345,7 +346,7 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
       <div className="p-4 border-t border-white/5 bg-black/40 flex justify-center">
         <button
           aria-label="Access Full Archive"
-          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-none"
+          className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground hover:text-primary transition-colors opacity-40 hover:opacity-100 flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-none"
         >
           Access Full Archive{' '}
           <ArrowDownRight className="h-3 w-3 group-hover:translate-y-0.5 transition-transform" />
@@ -361,7 +362,19 @@ function LedgerRegistry({ recentLedger, totalLedgerEntries }: LedgerRegistryProp
  * Treasury overview.
  */
 export function TreasuryOverview() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s) => ({
+      week: s.week,
+      roster: s.roster,
+      fame: s.fame,
+      weather: s.weather,
+      arenaHistory: s.arenaHistory,
+      trainers: s.trainers,
+      trainingAssignments: s.trainingAssignments,
+      treasury: s.treasury,
+      ledger: s.ledger,
+    }))
+  );
   const breakdown = useMemo(() => computeWeeklyBreakdown(state), [state]);
   const gold = state.treasury ?? 0;
 

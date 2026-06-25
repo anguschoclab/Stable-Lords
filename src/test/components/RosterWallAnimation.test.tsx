@@ -17,8 +17,10 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: (selector?: any) => {
     const state = {
       isBookmarked: () => false,
@@ -37,7 +39,8 @@ vi.mock('@/state/useGameStore', () => ({
     retired: [],
     graveyard: [],
   }),
-}));
+};
+});
 
 vi.mock('@/hooks/useActiveRoster', () => ({
   useActiveRoster: () => mockRoster,

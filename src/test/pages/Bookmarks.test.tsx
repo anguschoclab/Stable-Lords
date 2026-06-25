@@ -23,9 +23,10 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: any) => <a href={to}>{children}</a>,
 }));
 
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
-    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: (selector?: any) => {
     const state = {
       ...mockStoreState,
@@ -41,8 +42,8 @@ vi.mock('@/state/useGameStore', () => ({
     };
     if (selector) return selector(state);
     return state;
-  },
-}));
+    },
+});
 
 describe('Bookmarks Page', () => {
   beforeEach(() => {

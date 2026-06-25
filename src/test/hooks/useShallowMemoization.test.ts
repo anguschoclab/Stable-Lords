@@ -13,14 +13,15 @@ import '@/test/_setup/setup';
 
 let storeOverride: any = {};
 
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
-    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: (selector?: (state: any) => any) => {
     const state = { ...defaultStoreState, ...storeOverride };
     return selector ? selector(state) : state;
-  },
-}));
+    },
+});
 
 const defaultStoreState = {
   roster: [] as Warrior[],

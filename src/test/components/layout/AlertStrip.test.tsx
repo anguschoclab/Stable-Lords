@@ -7,13 +7,15 @@ import type { HubId } from '@/components/layout/navigationShared';
 
 let mockIsTournamentWeek = false;
 
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
-    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: vi.fn((selector?: any) =>
     selector ? selector({ isTournamentWeek: mockIsTournamentWeek }) : { isTournamentWeek: mockIsTournamentWeek }
   ),
-}));
+};
+});
 
 vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: any) => fn,

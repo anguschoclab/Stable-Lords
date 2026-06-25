@@ -3,17 +3,18 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import type { WarriorRow } from '@/types/leaderboard';
 
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
-    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: (selector?: any) => {
     const state = {
       isBookmarked: () => false,
       toggleBookmark: vi.fn(),
     };
     return selector ? selector(state) : state;
-  },
-}));
+    },
+});
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),

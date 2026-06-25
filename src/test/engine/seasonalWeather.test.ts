@@ -48,6 +48,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Wildfire Smoke',
   'Blood Fog',
   'Shimmering Heat',
+  'Crystal Rain',
   'Rain of Frogs',
   'Crystal Rain',
 ];

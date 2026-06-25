@@ -4,8 +4,10 @@ import { render, screen } from '@testing-library/react';
 import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: (selector?: any) => {
     const state = {
       player: { id: 'p1', name: 'Player', stableName: "Dragon's Hearth", fame: 0, renown: 0, titles: 0 },
@@ -24,7 +26,8 @@ vi.mock('@/state/useGameStore', () => ({
     retired: [],
   }),
   useShallow: (fn: any) => fn,
-}));
+};
+});
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),

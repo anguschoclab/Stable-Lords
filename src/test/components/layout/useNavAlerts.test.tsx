@@ -9,11 +9,13 @@ let mockStore: any = { week: 5, isTournamentWeek: false, bookmarks: [] };
 let mockAlerts: TacticalAlert[] = [];
 let mockPathname = '/world';
 
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
-    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: vi.fn((selector?: any) => (selector ? selector(mockStore) : mockStore)),
-}));
+};
+});
 
 vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: any) => fn,

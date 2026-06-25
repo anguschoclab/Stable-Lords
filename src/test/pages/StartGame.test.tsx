@@ -5,13 +5,15 @@ import * as saveSlots from '@/state/saveSlots';
 import { toast } from 'sonner';
 
 // Mock everything
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
-    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: () => ({
     loadGame: vi.fn(),
   }),
-}));
+};
+});
 
 vi.mock('@/state/saveSlots', () => ({
   listSaveSlots: vi.fn().mockResolvedValue([]),

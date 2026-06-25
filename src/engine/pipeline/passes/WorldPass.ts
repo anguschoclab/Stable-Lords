@@ -68,6 +68,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
   Winter: [
     'Blizzard',
     'Hailstorm',
+    'Crystal Rain',
     'Abyssal Gloom',
     'Meteor Shower',
     'Aurora Borealis',
@@ -137,6 +138,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
 
   // Winter-exclusive
   Blizzard: 15,
+  'Crystal Rain': 3,
   Hailstorm: 5,
   'Abyssal Gloom': 2,
   'Meteor Shower': 1,

@@ -41,9 +41,13 @@ vi.mock('@/components/warrior/dossier/WarriorDossierMedicalReport', () => ({
   WarriorDossierMedicalReport: () => <div data-testid="dossier-medical" />,
 }));
 
-vi.mock('@/state/useGameStore', () => ({
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
   useWorldState: vi.fn(() => mockState),
-}));
+};
+});
 
 vi.mock('@/engine/core/historyResolver', () => ({
   findWarrior: vi.fn((_state: any, warriorId: string) =>

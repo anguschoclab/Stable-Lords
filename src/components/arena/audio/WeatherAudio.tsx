@@ -51,6 +51,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Gravity Anomaly': 'ambience-eclipse',
   'Blood Fog': 'ambience-blood-moon',
   'Shimmering Heat': null,
+  'Crystal Rain': 'ambience-rain',
   'Rain of Frogs': 'ambience-rain',
 }; /**
  * Weather audio.

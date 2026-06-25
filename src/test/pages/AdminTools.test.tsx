@@ -5,9 +5,10 @@ import AdminTools from '@/pages/AdminTools';
 import '@/test/_setup/setup';
 
 // Mock useGameStore to avoid store initialization issues
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
-    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: () => ({
     roster: [],
     newsletter: [],
@@ -40,7 +41,8 @@ vi.mock('@/state/useGameStore', () => ({
     doReset: vi.fn(),
   }),
   reconstructGameState: vi.fn((s: any) => s),
-}));
+};
+});
 
 describe('AdminTools Page', () => {
   beforeEach(() => {

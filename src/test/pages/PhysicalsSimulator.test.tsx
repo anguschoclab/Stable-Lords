@@ -1,11 +1,13 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
-vi.mock('@/state/useGameStore', () => ({
-  useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
-    useGameStore: (selector) => { const s = { roster: [] }; return typeof selector === 'function' ? selector(s) : s; },
-  useBookmarks: () => ([]),
-}));
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useGameStore: () => ({ roster: [] }),
+};
+});
 
 import PhysicalsSimulator from '@/pages/PhysicalsSimulator';
 

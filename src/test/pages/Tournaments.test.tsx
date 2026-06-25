@@ -5,9 +5,10 @@ import Tournaments from '@/pages/Tournaments';
 import '@/test/_setup/setup';
 
 // Mock useGameStore to avoid store initialization issues
-vi.mock('@/state/useGameStore', () => ({
-  useBookmarks: vi.fn(() => []),
-    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+vi.mock('@/state/useGameStore', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
     useGameStore: (selector?: any) => {
     const state = {
       roster: [],
@@ -39,8 +40,8 @@ vi.mock('@/state/useGameStore', () => ({
       },
     };
     return selector ? selector(state) : state;
-  },
-}));
+    },
+});
 
 // We mock @tanstack/react-router to avoid setting up a full router context
 vi.mock('@tanstack/react-router', () => ({

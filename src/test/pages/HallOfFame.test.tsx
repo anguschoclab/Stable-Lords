@@ -41,7 +41,9 @@ const defaultStoreState = {
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
 }));
 
 // Must mock the module before importing it inside components

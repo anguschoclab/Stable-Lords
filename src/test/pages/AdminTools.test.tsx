@@ -6,7 +6,9 @@ import '@/test/_setup/setup';
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: () => ({
     roster: [],
     newsletter: [],
     ledger: [],

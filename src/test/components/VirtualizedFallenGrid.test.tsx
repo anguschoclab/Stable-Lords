@@ -5,7 +5,8 @@ import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector?: any) => {
+  useBookmarks: vi.fn(() => []),
+    useGameStore: (selector?: any) => {
     const state = {
       player: { id: 'p1', name: 'Player', stableName: "Dragon's Hearth", fame: 0, renown: 0, titles: 0 },
       rivals: [],

@@ -8,7 +8,9 @@ import type { HubId } from '@/components/layout/navigationShared';
 let mockIsTournamentWeek = false;
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: vi.fn((selector?: any) =>
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: vi.fn((selector?: any) =>
     selector ? selector({ isTournamentWeek: mockIsTournamentWeek }) : { isTournamentWeek: mockIsTournamentWeek }
   ),
 }));

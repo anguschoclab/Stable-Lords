@@ -24,7 +24,9 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector?: any) => {
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: (selector?: any) => {
     const state = {
       ...mockStoreState,
       isBookmarked: (type: string, id: string) =>

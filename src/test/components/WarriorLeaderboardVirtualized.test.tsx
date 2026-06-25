@@ -4,7 +4,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import type { WarriorRow } from '@/types/leaderboard';
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector?: any) => {
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: (selector?: any) => {
     const state = {
       isBookmarked: () => false,
       toggleBookmark: vi.fn(),

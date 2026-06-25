@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({ roster: [] }),
-  useWorldState: () => ({ roster: [] }),
+  useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: (selector) => { const s = { roster: [] }; return typeof selector === 'function' ? selector(s) : s; },
+  useBookmarks: () => ([]),
 }));
 
 import PhysicalsSimulator from '@/pages/PhysicalsSimulator';

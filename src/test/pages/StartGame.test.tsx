@@ -6,7 +6,9 @@ import { toast } from 'sonner';
 
 // Mock everything
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: () => ({
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: () => ({
     loadGame: vi.fn(),
   }),
 }));

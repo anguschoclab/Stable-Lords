@@ -10,7 +10,9 @@ const bookmarkedIds = new Set<string>();
 const mockToggle = vi.fn();
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector: any) => {
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: (selector: any) => {
     const state = {
       isBookmarked: (_type: string, id: string) => bookmarkedIds.has(id),
       toggleBookmark: mockToggle,

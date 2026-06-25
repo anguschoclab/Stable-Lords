@@ -13,7 +13,9 @@ const defaultStoreState = {
 };
 
 vi.mock('@/state/useGameStore', () => ({
-  useGameStore: (selector?: (state: any) => any) => {
+  useBookmarks: vi.fn(() => []),
+    useWorldState: vi.fn(() => ({ roster: [], isTournamentWeek: false })),
+    useGameStore: (selector?: (state: any) => any) => {
     const state = { ...defaultStoreState, ...storeOverride };
     return selector ? selector(state) : state;
   },

@@ -1383,6 +1383,7 @@ export const GameStateSchema = z
     warriorMap: z.any().optional(), // Passthrough for Map field
     warriorToStableMap: z.any().optional(), // Passthrough for Map field
     rivalMap: z.any().optional(), // Passthrough for Map field
+    warriorToOfferIds: z.any().optional(), // Passthrough for Map field
     deferredBoutLogs: z.array(DeferredBoutLogSchema).optional(),
     bookmarks: z.array(BookmarkSchema),
     progression: ProgressionStateSchema.optional(),

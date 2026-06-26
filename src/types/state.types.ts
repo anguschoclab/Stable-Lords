@@ -615,6 +615,7 @@ export interface GameState {
   warriorToStableMap?: Map<string, { stableId: string; isPlayer: boolean }>;
   rivalMap?: Map<string, import('@/types/state.types').RivalStableData>;
   rivalryMap?: Map<string, Rivalry>;
+  warriorToOfferIds?: Map<WarriorId, BoutOfferId[]>;
   bookmarks: Bookmark[];
   deferredBoutLogs?: DeferredBoutLog[];
   progression: ProgressionState;

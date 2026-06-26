@@ -1,5 +1,5 @@
 import type { GameState, Warrior, BoutOffer } from '@/types/state.types';
-import type { WarriorId } from '@/types/shared.types';
+import type { WarriorId, BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { computeMetaDrift } from '@/engine/metaDrift';
 import { SeededRNGService } from '@/utils/random';
@@ -208,6 +208,20 @@ function finalizeState(state: GameState, oldState: GameState, ctx: WeekContext):
     });
     state.boutOffers = cleanedOffers;
   }
+
+  // Build warrior→offerIds index for O(1) lookup in autosim
+  const warriorToOfferIds = new Map<WarriorId, BoutOfferId[]>();
+  for (const offer of Object.values(state.boutOffers || {})) {
+    for (const wId of offer.warriorIds) {
+      let list = warriorToOfferIds.get(wId as WarriorId);
+      if (!list) {
+        list = [];
+        warriorToOfferIds.set(wId as WarriorId, list);
+      }
+      list.push(offer.id);
+    }
+  }
+  state.warriorToOfferIds = warriorToOfferIds;
 
   if (state.season !== oldState.season) {
     state.seasonalGrowth = (state.seasonalGrowth ?? []).filter((sg) => sg.season === state.season);

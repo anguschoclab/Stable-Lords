@@ -1,4 +1,4 @@
-import type { GameState, Warrior, TournamentBout, FightSummary } from '@/types/state.types';
+import type { GameState, Warrior, TournamentBout, TournamentEntry, FightSummary } from '@/types/state.types';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { simulateFight } from '@/engine/simulate';
@@ -6,7 +6,8 @@ import { findWarriorById, getAIPlan } from './utils';
 import { awardTournamentPrizes } from './awards';
 import type { FightOutcome } from '@/types/combat.types';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
-import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate'; /**
+import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
+import { findCurrentRoundBouts } from '../tournament/bracketUtils'; /**
  * Resolve round.
  */
 
@@ -17,28 +18,24 @@ export function resolveRound(
   state: GameState,
   tournamentId: string,
   seed: number,
-  headless?: boolean
-): { updatedState: GameState; roundResults: string[] } {
+  headless?: boolean,
+  tournament?: TournamentEntry
+): { updatedState: GameState; roundResults: string[]; isComplete: boolean } {
   const rng = new SeededRNG(seed);
   let updatedState = { ...state };
-  const tournament = (updatedState.tournaments || []).find((t) => t.id === tournamentId);
-  if (!tournament || tournament.completed) return { updatedState, roundResults: [] };
+  const resolvedTournament = tournament ?? (updatedState.tournaments || []).find((t) => t.id === tournamentId);
+  if (!resolvedTournament || resolvedTournament.completed) return { updatedState, roundResults: [], isComplete: false };
 
-  const bracket = [...tournament.bracket];
-  const currentRound = bracket.reduce<number | null>((min, b) => {
-    if (b.winner !== undefined) return min;
-    return min === null || b.round < min ? b.round : min;
-  }, null);
-  if (currentRound === null) return { updatedState, roundResults: [] };
-
-  const roundBouts = bracket.filter((b) => b.winner === undefined && b.round === currentRound);
+  const bracket = [...resolvedTournament.bracket];
+  const { currentRound, roundBouts } = findCurrentRoundBouts(bracket);
+  if (currentRound === null) return { updatedState, roundResults: [], isComplete: false };
   const winners: { id: WarriorId; name: string; stableId?: StableId }[] = [];
   const losers: { id: WarriorId; name: string; stableId?: StableId }[] = [];
 
   for (const bout of roundBouts) {
     if (bout.warriorIdD === 'bye') {
       bout.winner = 'A';
-      const wABye = findWarriorById(updatedState, bout.warriorIdA, tournament);
+      const wABye = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
       winners.push({
         id: bout.warriorIdA,
         name: wABye?.name ?? 'Unknown',
@@ -47,8 +44,8 @@ export function resolveRound(
       continue;
     }
 
-    const wA = findWarriorById(updatedState, bout.warriorIdA, tournament);
-    const wD = findWarriorById(updatedState, bout.warriorIdD, tournament);
+    const wA = findWarriorById(updatedState, bout.warriorIdA, resolvedTournament);
+    const wD = findWarriorById(updatedState, bout.warriorIdD, resolvedTournament);
 
     if (!wA || !wD) {
       bout.winner = wA ? 'A' : 'D';
@@ -96,8 +93,8 @@ export function resolveRound(
       wA,
       wD,
       outcome,
-      tournament.id,
-      tournament.name,
+      resolvedTournament.id,
+      resolvedTournament.name,
       rng
     );
   }
@@ -159,13 +156,14 @@ export function resolveRound(
   );
 
   if (isComplete && champion) {
-    updatedState = awardTournamentPrizes(tournament, updatedState);
+    updatedState = awardTournamentPrizes(resolvedTournament, updatedState);
   }
 
   return {
     updatedState,
     roundResults:
-      isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${tournament.name}!`] : [],
+      isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`] : [],
+    isComplete,
   };
 } /**
  * Resolve complete tournament.
@@ -185,8 +183,9 @@ export function resolveCompleteTournament(
   while (safety < 10) {
     const tour = (current.tournaments || []).find((t) => t.id === tournamentId);
     if (!tour || tour.completed) break;
-    const result = resolveRound(current, tournamentId, seed + safety, headless);
+    const result = resolveRound(current, tournamentId, seed + safety, headless, tour);
     current = result.updatedState;
+    if (result.isComplete) break;
     safety++;
   }
   return current;

@@ -329,4 +329,75 @@ describe('Autosim Integration', () => {
       expect(result.stopDetail?.length).toBeGreaterThan(0);
     });
   });
+
+  describe('warriorToOfferIds index', () => {
+    it('index is populated after advanceWeek', async () => {
+      const result = await runAutosim(initialState, 1, () => {});
+      expect(result.finalState.warriorToOfferIds).toBeInstanceOf(Map);
+    });
+
+    it('index maps warrior IDs to correct offer IDs', async () => {
+      const result = await runAutosim(initialState, 1, () => {});
+      const index = result.finalState.warriorToOfferIds;
+      expect(index).toBeDefined();
+      if (!index) return;
+
+      for (const offer of Object.values(result.finalState.boutOffers)) {
+        for (const wId of offer.warriorIds) {
+          const offerIds = index.get(wId);
+          expect(offerIds).toBeDefined();
+          expect(offerIds).toContain(offer.id);
+        }
+      }
+    });
+
+    it('index excludes pruned offers', async () => {
+      const state = createFreshState('test-seed');
+      state.treasury = 5000;
+      state.roster = [
+        makeWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 }),
+      ];
+      // Add an expired offer that should be pruned by finalizeState
+      const expiredOfferId = 'expired_offer_1';
+      (state as any).boutOffers = {
+        [expiredOfferId]: {
+          id: expiredOfferId,
+          promoterId: 'p1',
+          warriorIds: ['w1', 'rival1'],
+          boutWeek: 0,
+          expirationWeek: 0,
+          purse: 100,
+          hype: 50,
+          status: 'Proposed',
+          responses: { w1: 'Pending', rival1: 'Pending' },
+          conditions: [],
+        },
+      };
+
+      const result = await runAutosim(state, 1, () => {});
+      const index = result.finalState.warriorToOfferIds;
+      expect(index).toBeDefined();
+      if (!index) return;
+
+      const w1Offers = index.get('w1' as WarriorId);
+      if (w1Offers) {
+        expect(w1Offers).not.toContain(expiredOfferId);
+      }
+    });
+
+    it('index is consistent with boutOffers after multi-week sim', async () => {
+      const result = await runAutosim(initialState, 3, () => {});
+      const index = result.finalState.warriorToOfferIds;
+      expect(index).toBeDefined();
+      if (!index) return;
+
+      for (const offer of Object.values(result.finalState.boutOffers)) {
+        for (const wId of offer.warriorIds) {
+          const offerIds = index.get(wId);
+          expect(offerIds).toBeDefined();
+          expect(offerIds).toContain(offer.id);
+        }
+      }
+    });
+  });
 });

@@ -1,4 +1,5 @@
 import { type GameState } from '@/types/state.types';
+import type { BoutOfferId } from '@/types/shared.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
@@ -73,7 +74,29 @@ export interface AutosimOptions {
 /**
  * Process player bout offers after week advancement
  */
-function processPlayerOffers(state: GameState): GameState {
+export function processPlayerOffers(state: GameState): GameState {
+  const index = state.warriorToOfferIds;
+  if (!index) return processPlayerOffersScan(state);
+
+  const seen = new Set<string>();
+  for (const warrior of state.roster) {
+    const offerIds = index.get(warrior.id);
+    if (!offerIds) continue;
+    for (const offerId of offerIds) {
+      if (seen.has(offerId)) continue;
+      seen.add(offerId);
+      const offer = state.boutOffers[offerId as BoutOfferId];
+      if (!offer || offer.status !== 'Proposed') continue;
+      if (offer.hype > 100 || offer.purse > 200) {
+        const impact = respondToBoutOffer(state, offer.id, warrior.id, 'Accepted');
+        state = resolveImpacts(state, [impact]);
+      }
+    }
+  }
+  return state;
+}
+
+function processPlayerOffersScan(state: GameState): GameState {
   const playerIds = new Set(state.roster.map((w) => w.id));
   const playerOffers = Object.values(state.boutOffers).filter(
     (o) => o.status === 'Proposed' && o.warriorIds.some((id) => playerIds.has(id))
@@ -82,7 +105,6 @@ function processPlayerOffers(state: GameState): GameState {
   playerOffers.forEach((offer) => {
     const playerWarriorId = offer.warriorIds.find((id) => playerIds.has(id));
     if (!playerWarriorId) return;
-    // Auto-accept logical offers (Hype > 100 or Purse > 200)
     if (offer.hype > 100 || offer.purse > 200) {
       const impact = respondToBoutOffer(state, offer.id, playerWarriorId, 'Accepted');
       state = resolveImpacts(state, [impact]);
@@ -101,21 +123,22 @@ function getNamesFromTitle(title: string): { a: string; d: string } {
   return { a: parts[0] || 'Unknown', d: parts[1] || 'Unknown' };
 }
 
-function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
+export function extractWeekSummary(state: GameState, weekNumber: number): AutosimWeekSummary {
   const boutSummaries = state.lastSimulationReport?.bouts ?? [];
-  const deathNames = boutSummaries.reduce<string[]>((acc, b) => {
+  const deathNames: string[] = [];
+  for (let i = 0; i < boutSummaries.length; i++) {
+    const b = boutSummaries[i]!;
     if (b.by === 'Kill') {
       const n = getNamesFromTitle(b.title);
-      acc.push(b.winner === 'A' ? n.d : n.a);
+      deathNames.push(b.winner === 'A' ? n.d : n.a);
     }
-    return acc;
-  }, []);
+  }
 
   return {
     week: weekNumber,
     bouts: boutSummaries.length,
     deaths: deathNames.length,
-    injuries: 0, // Injuries not tracked per-week currently
+    injuries: 0,
     deathNames,
     injuryNames: [],
   };

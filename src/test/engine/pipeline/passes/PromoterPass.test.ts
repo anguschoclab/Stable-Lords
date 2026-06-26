@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateTestState } from '@/test/_setup/testHelpers';
-import { runPromoterPass } from '@/engine/pipeline/passes/PromoterPass';
+import { runPromoterPass, lowerBound, upperBound } from '@/engine/pipeline/passes/PromoterPass';
 import { runRankingsPass } from '@/engine/pipeline/passes/RankingsPass';
 import { FightingStyle } from '@/types/shared.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
-import type { GameState, Promoter, TournamentEntry, Warrior } from '@/types/state.types';
+import type { GameState, Promoter, TournamentEntry, Warrior, BoutOffer } from '@/types/state.types';
 import type { WarriorId, InjuryId, TournamentId } from '@/types/shared.types';
 import { generateId } from '@/utils/idUtils';
 import { resolveImpacts } from '@/engine/impacts';
@@ -677,5 +677,320 @@ describe('PromoterPass', () => {
         expect(preservedOffer.status).toBe('Signed');
       }
     });
+  });
+});
+
+// ─── Binary search helper tests ──────────────────────────────────────────────
+
+describe('lowerBound / upperBound', () => {
+  it('finds correct window for normal case', () => {
+    const scores = [10, 20, 30, 40, 50];
+    expect(lowerBound(scores, 25)).toBe(2);
+    expect(upperBound(scores, 35)).toBe(3);
+  });
+
+  it('includes all elements when window covers full range', () => {
+    const scores = [10, 20, 30, 40, 50];
+    expect(lowerBound(scores, 0)).toBe(0);
+    expect(upperBound(scores, 100)).toBe(5);
+  });
+
+  it('returns empty range when no elements in window', () => {
+    const scores = [10, 20, 30, 40, 50];
+    expect(lowerBound(scores, 60)).toBe(5);
+    expect(upperBound(scores, 70)).toBe(5);
+  });
+
+  it('handles exact boundary match', () => {
+    const scores = [10, 20, 30, 40, 50];
+    expect(lowerBound(scores, 30)).toBe(2);
+    expect(upperBound(scores, 30)).toBe(3);
+  });
+
+  it('handles single element array', () => {
+    const scores = [42];
+    expect(lowerBound(scores, 40)).toBe(0);
+    expect(upperBound(scores, 45)).toBe(1);
+  });
+
+  it('handles empty array', () => {
+    const scores: number[] = [];
+    expect(lowerBound(scores, 25)).toBe(0);
+    expect(upperBound(scores, 35)).toBe(0);
+  });
+
+  it('handles duplicate scores', () => {
+    const scores = [10, 20, 20, 20, 30];
+    expect(lowerBound(scores, 20)).toBe(1);
+    expect(upperBound(scores, 20)).toBe(4);
+  });
+});
+
+// ─── Matched-warrior exclusion tests ─────────────────────────────────────────
+
+describe('Matched-warrior exclusion', () => {
+  let state: GameState;
+
+  beforeEach(() => {
+    state = createFreshState('test-seed');
+    state = populateTestState(state);
+    state.rivals = [];
+    const rankingsImpact = runRankingsPass(state);
+    state = resolveImpacts(state, [rankingsImpact]);
+  });
+
+  it('should not place a warrior in more than one offer per promoter', () => {
+    (state as any).promoters = {
+      ['big_cap' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+        'big_cap',
+        'Big Cap',
+        'Corporate',
+        'Local',
+        50
+      ),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+
+    const warriorOfferCount = new Map<string, number>();
+    for (const offer of offers) {
+      for (const wid of offer.warriorIds) {
+        const id = wid as string;
+        warriorOfferCount.set(id, (warriorOfferCount.get(id) || 0) + 1);
+      }
+    }
+
+    for (const [, count] of warriorOfferCount) {
+      expect(count).toBe(1);
+    }
+  });
+
+  it('should generate at most floor(N/2) offers when capacity >= N', () => {
+    const eligibleCount = state.roster.length;
+    (state as any).promoters = {
+      ['unlimited' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+        'unlimited',
+        'Unlimited',
+        'Corporate',
+        'Local',
+        eligibleCount
+      ),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+
+    expect(offers.length).toBeLessThanOrEqual(Math.floor(eligibleCount / 2));
+  });
+});
+
+// ─── Score-window matching correctness ───────────────────────────────────────
+
+describe('Score-window matching', () => {
+  function makeStateWithWarriors(
+    scores: { id: string; score: number; style?: FightingStyle }[]
+  ): GameState {
+    const warriors: Warrior[] = scores.map((s) => {
+      const w = makeWarrior(
+        s.id as WarriorId,
+        `Warrior ${s.id}`,
+        s.style ?? FightingStyle.StrikingAttack,
+        { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        { fame: s.score }
+      );
+      w.id = s.id as WarriorId;
+      return w;
+    });
+
+    const realmRankings: Record<string, any> = {};
+    for (const s of scores) {
+      realmRankings[s.id] = { overallRank: 1, classRank: 1, compositeScore: s.score };
+    }
+
+    return {
+      meta: { gameName: '', version: '', createdAt: '' },
+      week: 5,
+      year: 1,
+      season: 'Spring',
+      weather: 'Clear',
+      treasury: 1000,
+      fame: 0,
+      roster: warriors,
+      rivals: [],
+      promoters: {},
+      boutOffers: {},
+      realmRankings,
+    } as unknown as GameState;
+  }
+
+  it('warrior with score 30 and gap 0.25 should not match score 20 or 40', () => {
+    const state = makeStateWithWarriors([
+      { id: 'w10', score: 10 },
+      { id: 'w20', score: 20 },
+      { id: 'w30', score: 30 },
+      { id: 'w40', score: 40 },
+      { id: 'w50', score: 50 },
+    ]);
+
+    (state as any).promoters = {
+      ['p' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+        'p',
+        'Test',
+        'Corporate',
+        'Local',
+        10
+      ),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+
+    // Warrior w30 (score 30, maxScoreA=30, gap 0.2 for Corporate):
+    // window = [30 - 0.2*30, 30 + 0.2*30] = [24, 36]
+    // Only score 30 is in range, but self is excluded → no match for w30
+    const w30Offers = offers.filter((o) => o.warriorIds.includes('w30' as WarriorId));
+    expect(w30Offers.length).toBe(0);
+  });
+
+  it('warriors with close scores should match each other', () => {
+    const state = makeStateWithWarriors([
+      { id: 'w100a', score: 100 },
+      { id: 'w100b', score: 100 },
+    ]);
+
+    (state as any).promoters = {
+      ['p' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+        'p',
+        'Test',
+        'Corporate',
+        'Local',
+        10
+      ),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+
+    expect(offers.length).toBe(1);
+    const offer = offers[0]!;
+    expect(offer.warriorIds).toContain('w100a' as WarriorId);
+    expect(offer.warriorIds).toContain('w100b' as WarriorId);
+  });
+
+  it('all score-0 warriors should match (maxScoreA = max(1, 0) = 1)', () => {
+    const state = makeStateWithWarriors([
+      { id: 'w0a', score: 0 },
+      { id: 'w0b', score: 0 },
+      { id: 'w0c', score: 0 },
+      { id: 'w0d', score: 0 },
+    ]);
+
+    (state as any).promoters = {
+      ['p' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+        'p',
+        'Test',
+        'Corporate',
+        'Local',
+        10
+      ),
+    };
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+
+    // 4 warriors, all score 0 → maxScoreA=1, gap 0.2, window [-0.2, 0.2]
+    // All 4 are in range of each other → 2 offers (matched exclusion)
+    expect(offers.length).toBe(2);
+  });
+});
+
+// ─── Edge cases ──────────────────────────────────────────────────────────────
+
+describe('Edge cases for optimized matching', () => {
+  it('should generate 0 offers with a single eligible warrior', () => {
+    const state = {
+      meta: { gameName: '', version: '', createdAt: '' },
+      week: 5,
+      year: 1,
+      season: 'Spring',
+      weather: 'Clear',
+      treasury: 1000,
+      fame: 0,
+      roster: [
+        makeWarrior(
+          'solo' as WarriorId,
+          'Solo',
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          { fame: 50 }
+        ),
+      ],
+      rivals: [],
+      promoters: {
+        ['p' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+          'p',
+          'Test',
+          'Corporate',
+          'Local',
+          5
+        ),
+      } as any,
+      boutOffers: {},
+      realmRankings: {
+        solo: { overallRank: 1, classRank: 1, compositeScore: 50 },
+      } as any,
+    } as unknown as GameState;
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+    expect(offers.length).toBe(0);
+  });
+
+  it('should handle large pool without timeout (500 warriors)', () => {
+    const warriors: Warrior[] = [];
+    const realmRankings: Record<string, any> = {};
+    for (let i = 0; i < 500; i++) {
+      const id = `w_${i}`;
+      const w = makeWarrior(
+        id as WarriorId,
+        `Warrior ${i}`,
+        FightingStyle.StrikingAttack,
+        { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        { fame: 50 + (i % 20) * 5 }
+      );
+      w.id = id as WarriorId;
+      warriors.push(w);
+      realmRankings[id] = { overallRank: i + 1, classRank: 1, compositeScore: 50 + (i % 20) * 5 };
+    }
+
+    const state = {
+      meta: { gameName: '', version: '', createdAt: '' },
+      week: 5,
+      year: 1,
+      season: 'Spring',
+      weather: 'Clear',
+      treasury: 1000,
+      fame: 0,
+      roster: warriors,
+      rivals: [],
+      promoters: {
+        ['p' as import('@/types/shared.types').PromoterId]: createTestPromoter(
+          'p',
+          'Test',
+          'Corporate',
+          'Local',
+          50
+        ),
+      } as any,
+      boutOffers: {},
+      realmRankings,
+    } as unknown as GameState;
+
+    const result = runPromoterPass(state);
+    const offers = Object.values(result.boutOffers || {}) as BoutOffer[];
+
+    expect(offers.length).toBeGreaterThan(0);
+    expect(offers.length).toBeLessThanOrEqual(250);
   });
 });

@@ -32,6 +32,13 @@ describe('gameStoreSecurity', () => {
       expect(result).toHaveProperty('kept', true);
     });
 
+    it('removes warriorToOfferIds from state', () => {
+      const state = { warriorToOfferIds: new Map(), kept: true } as any;
+      const result = stripNonSerializable(state);
+      expect(result).not.toHaveProperty('warriorToOfferIds');
+      expect(result).toHaveProperty('kept', true);
+    });
+
     it('preserves other fields', () => {
       const state = {
         warriorMap: new Map(),

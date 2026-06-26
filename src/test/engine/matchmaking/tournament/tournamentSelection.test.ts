@@ -1134,3 +1134,146 @@ describe('generateFreelancer', () => {
     expect(goldTotal).toBeGreaterThan(ironTotal);
   });
 });
+
+// ─── resolveRound — tournament param and isComplete ───
+
+describe('resolveRound — tournament param and isComplete (resolution.ts)', () => {
+  it('accepts optional tournament param and uses it directly', () => {
+    const warriors: Warrior[] = [];
+    for (let i = 0; i < 4; i++) {
+      warriors.push(
+        makeTestWarrior(
+          `w${i}`,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+        )
+      );
+    }
+
+    const state = makeBaseState();
+    state.roster = warriors.filter((_, i) => i % 2 === 0);
+    state.rivals = [
+      {
+        id: RIVAL_ID,
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+        roster: warriors.filter((_, i) => i % 2 === 1),
+        treasury: 500,
+        fame: 0,
+      } as any,
+    ];
+
+    const tournament = makeTournamentWithR1(warriors);
+    state.tournaments = [tournament];
+
+    // Use fresh deep-copied brackets since resolveRound mutates bout objects in-place
+    const state1 = { ...state, tournaments: [{ ...tournament, bracket: tournament.bracket.map((b) => ({ ...b })) }] };
+    const state2 = { ...state, tournaments: [{ ...tournament, bracket: tournament.bracket.map((b) => ({ ...b })) }] };
+
+    // Pass the tournament directly — should produce the same result
+    const result1 = resolveRound(state1, tournament.id, 1, undefined, state1.tournaments[0]);
+    const result2 = resolveRound(state2, tournament.id, 1);
+    expect(result1.roundResults).toEqual(result2.roundResults);
+    expect(result1.updatedState.tournaments[0]!.bracket).toEqual(
+      result2.updatedState.tournaments[0]!.bracket
+    );
+  });
+
+  it('returns isComplete flag in the result', () => {
+    const warriors: Warrior[] = [];
+    for (let i = 0; i < 4; i++) {
+      warriors.push(
+        makeTestWarrior(
+          `w${i}`,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          i % 2 === 0 ? PLAYER_ID : RIVAL_ID
+        )
+      );
+    }
+
+    const state = makeBaseState();
+    state.roster = warriors.filter((_, i) => i % 2 === 0);
+    state.rivals = [
+      {
+        id: RIVAL_ID,
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+        roster: warriors.filter((_, i) => i % 2 === 1),
+        treasury: 500,
+        fame: 0,
+      } as any,
+    ];
+
+    const tournament = makeTournamentWithR1(warriors);
+    state.tournaments = [tournament];
+
+    // Round 1 of 7 — should not be complete
+    const result = resolveRound(state, tournament.id, 1);
+    expect(result).toHaveProperty('isComplete');
+    expect(result.isComplete).toBe(false);
+  });
+
+  it('resolveCompleteTournament uses returned isComplete', () => {
+    const w1 = makeTestWarrior('w1', 'A', FightingStyle.StrikingAttack, PLAYER_ID);
+    const w2 = makeTestWarrior('w2', 'B', FightingStyle.StrikingAttack, RIVAL_ID);
+
+    const state = makeBaseState();
+    state.roster = [w1];
+    state.rivals = [
+      {
+        id: RIVAL_ID,
+        owner: {
+          id: RIVAL_ID,
+          name: 'Rival',
+          stableName: 'Rival Stable',
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+        roster: [w2],
+        treasury: 500,
+        fame: 0,
+      } as any,
+    ];
+
+    const tournament: TournamentEntry = {
+      id: 't-gold-spring-1' as TournamentId,
+      season: 'Spring',
+      week: 1,
+      tierId: 'Gold',
+      name: 'Imperial Gold Cup',
+      bracket: [
+        {
+          round: 7,
+          matchIndex: 0,
+          warriorIdA: w1.id,
+          warriorIdD: w2.id,
+          stableIdA: w1.stableId,
+          stableIdD: w2.stableId,
+        },
+      ],
+      participants: [w1, w2],
+      completed: false,
+    };
+
+    state.tournaments = [tournament];
+
+    const updated = resolveCompleteTournament(state, tournament.id, 1);
+    expect(updated.tournaments[0]!.completed).toBe(true);
+    expect(updated.tournaments[0]!.champion).toBeDefined();
+  });
+});

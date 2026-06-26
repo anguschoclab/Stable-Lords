@@ -626,4 +626,97 @@ describe('TournamentResolver', () => {
       expect(tournamentFights.length).toBeGreaterThan(0);
     });
   });
+
+  describe('resolveRound — tournament param and isComplete', () => {
+    it('accepts optional tournament param and uses it directly', () => {
+      const rng = new SeededRNGService(12345);
+      const warriors = Array.from({ length: 64 }, (_, i) =>
+        makeWarrior(
+          undefined,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          {},
+          rng
+        )
+      );
+
+      const tournament = buildTournament({
+        tierId: 'Gold',
+        tierName: 'Test Cup',
+        warriors,
+        week: 1,
+        season: 'Spring',
+        rng,
+      } as any);
+
+      state.tournaments = [tournament];
+
+      // Pass the tournament directly — should produce the same result
+      const result1 = resolveRound(state, tournament.id, 12345, undefined, tournament as any);
+      const result2 = resolveRound(state, tournament.id, 12345);
+      expect(result1.roundResults).toEqual(result2.roundResults);
+    });
+
+    it('returns isComplete flag in the result', () => {
+      const rng = new SeededRNGService(12345);
+      const warriors = Array.from({ length: 64 }, (_, i) =>
+        makeWarrior(
+          undefined,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          {},
+          rng
+        )
+      );
+
+      const tournament = buildTournament({
+        tierId: 'Gold',
+        tierName: 'Test Cup',
+        warriors,
+        week: 1,
+        season: 'Spring',
+        rng,
+      } as any);
+
+      state.tournaments = [tournament];
+
+      // Round 1 of 7 — should not be complete
+      const result = resolveRound(state, tournament.id, 12345);
+      expect(result).toHaveProperty('isComplete');
+      expect(result.isComplete).toBe(false);
+    });
+
+    it('resolveCompleteTournament uses returned isComplete (no .find() after first iteration)', () => {
+      const rng = new SeededRNGService(12345);
+      const warriors = Array.from({ length: 64 }, (_, i) =>
+        makeWarrior(
+          undefined,
+          `Warrior ${i}`,
+          FightingStyle.StrikingAttack,
+          { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+          {},
+          rng
+        )
+      );
+
+      const tournament = buildTournament({
+        tierId: 'Gold',
+        tierName: 'Test Cup',
+        warriors,
+        week: 1,
+        season: 'Spring',
+        rng,
+      } as any);
+
+      state.tournaments = [tournament];
+
+      const impact = resolveCompleteTournament(state, tournament.id, 12345);
+      const updatedState = resolveImpacts(state, [impact]);
+
+      expect(updatedState.tournaments![0]!.completed).toBe(true);
+      expect(updatedState.tournaments![0]!.champion).toBeDefined();
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import type { GameState, Warrior, FightSummary, RivalStableData } from '@/types/state.types';
+import type { GameState, Warrior, FightSummary, RivalStableData, TournamentEntry } from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
@@ -11,6 +11,7 @@ import { StateImpact, mergeImpacts, resolveImpacts } from '@/engine/impacts';
 import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
 import { selectArenaForTournamentBout } from './tournamentArenaSelection';
+import { findCurrentRoundBouts } from './bracketUtils';
 
 /**
  * Defines the shape of round resolution result.
@@ -18,6 +19,7 @@ import { selectArenaForTournamentBout } from './tournamentArenaSelection';
 export interface RoundResolutionResult {
   impact: StateImpact;
   roundResults: string[];
+  isComplete: boolean;
 }
 
 /**
@@ -28,20 +30,16 @@ export function resolveRound(
   state: GameState,
   tournamentId: string,
   seed: number,
-  rng?: IRNGService
+  rng?: IRNGService,
+  tournament?: TournamentEntry
 ): RoundResolutionResult {
   const rngService = rng || new SeededRNGService(seed);
-  const tournament = (state.tournaments || []).find((t) => t.id === tournamentId);
-  if (!tournament || tournament.completed) return { impact: {}, roundResults: [] };
+  const resolvedTournament = tournament ?? (state.tournaments || []).find((t) => t.id === tournamentId);
+  if (!resolvedTournament || resolvedTournament.completed) return { impact: {}, roundResults: [], isComplete: false };
 
-  const bracket = [...tournament.bracket];
-  const currentRound = bracket.reduce<number | null>((min, b) => {
-    if (b.winner !== undefined) return min;
-    return min === null || b.round < min ? b.round : min;
-  }, null);
-  if (currentRound === null) return { impact: {}, roundResults: [] };
-
-  const roundBouts = bracket.filter((b) => b.winner === undefined && b.round === currentRound);
+  const bracket = [...resolvedTournament.bracket];
+  const { currentRound, roundBouts } = findCurrentRoundBouts(bracket);
+  if (currentRound === null) return { impact: {}, roundResults: [], isComplete: false };
   const winners: { id: WarriorId; name: string; stableId?: StableId }[] = [];
   const losers: { id: WarriorId; name: string; stableId?: StableId }[] = [];
   const impacts: StateImpact[] = [];
@@ -49,7 +47,7 @@ export function resolveRound(
   for (const bout of roundBouts) {
     if (bout.warriorIdD === 'bye') {
       bout.winner = 'A';
-      const wABye = findWarriorById(state, bout.warriorIdA, tournament);
+      const wABye = findWarriorById(state, bout.warriorIdA, resolvedTournament);
       winners.push({
         id: bout.warriorIdA,
         name: wABye?.name ?? 'Unknown',
@@ -58,8 +56,8 @@ export function resolveRound(
       continue;
     }
 
-    const wA = findWarriorById(state, bout.warriorIdA, tournament);
-    const wD = findWarriorById(state, bout.warriorIdD, tournament);
+    const wA = findWarriorById(state, bout.warriorIdA, resolvedTournament);
+    const wD = findWarriorById(state, bout.warriorIdD, resolvedTournament);
 
     if (!wA || !wD) {
       bout.winner = wA ? 'A' : 'D';
@@ -76,7 +74,7 @@ export function resolveRound(
     const planD = wD.plan || getAIPlan(state, wD, wA.style, wA.stableId);
 
     // Select arena dynamically for tournament bout
-    const bracketSize = tournament.bracket.length;
+    const bracketSize = resolvedTournament.bracket.length;
     const tournamentArenaId = selectArenaForTournamentBout(() => rngService.next(), {
       bracketSize,
     });
@@ -112,8 +110,8 @@ export function resolveRound(
       wA,
       wD,
       outcome,
-      tournament.id,
-      tournament.name,
+      resolvedTournament.id,
+      resolvedTournament.name,
       rngService
     );
     impacts.push(boutImpact);
@@ -179,7 +177,8 @@ export function resolveRound(
   return {
     impact: mergedImpact,
     roundResults:
-      isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${tournament.name}!`] : [],
+      isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`] : [],
+    isComplete,
   };
 }
 
@@ -200,12 +199,13 @@ export function resolveCompleteTournament(
     const tour = (currentState.tournaments || []).find((t) => t.id === tournamentId);
     if (!tour || tour.completed) break;
 
-    const result = resolveRound(currentState, tournamentId, seed + safety);
+    const result = resolveRound(currentState, tournamentId, seed + safety, undefined, tour);
     impacts.push(result.impact);
 
     // Apply impact to state for next round
     currentState = resolveImpacts(currentState, [result.impact]);
 
+    if (result.isComplete) break;
     safety++;
   }
 

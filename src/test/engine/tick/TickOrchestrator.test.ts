@@ -112,7 +112,7 @@ describe('TickOrchestrator', () => {
         (state: any, _tId: any, seed: any) => {
           return {
             updatedState: { ...state, fame: (state.fame || 0) + 10 },
-            roundResults: [`Result for seed ${seed}`],
+            roundResults: [`Result for seed ${seed}`], isComplete: false
           };
         }
       );

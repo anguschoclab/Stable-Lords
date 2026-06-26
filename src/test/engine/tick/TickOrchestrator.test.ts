@@ -5,6 +5,7 @@ vi.mock('@/engine/matchmaking/tournamentSelection', () => ({
     resolveRound: vi.fn(() => ({
       updatedState: { ...mockState, treasury: 500 },
       roundResults: ['Fighter A beat Fighter B'],
+      isComplete: false,
     })),
   },
 }));
@@ -113,6 +114,7 @@ describe('TickOrchestrator', () => {
           return {
             updatedState: { ...state, fame: (state.fame || 0) + 10 },
             roundResults: [`Result for seed ${seed}`],
+            isComplete: false,
           };
         }
       );

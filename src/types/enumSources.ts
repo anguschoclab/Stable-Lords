@@ -40,10 +40,15 @@ export const WEATHER_TYPES = [
   'Chaotic Winds',
   'Aether Storm',
   'Locust Swarm',
+  'Gravity Anomaly',
   'Mirage',
   'Ember Rain',
   'Zephyr',
   'Wildfire Smoke',
+  'Blood Fog',
+  'Shimmering Heat',
+  'Crystal Rain',
+  'Rain of Frogs',
 ] as const;
 
 export const TRAINER_TIERS = ['Novice', 'Seasoned', 'Master'] as const;

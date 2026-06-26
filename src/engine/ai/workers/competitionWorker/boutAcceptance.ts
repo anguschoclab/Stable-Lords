@@ -98,7 +98,7 @@ export function evaluateBoutOffer(
     return 'Accepted';
   }
 
-  // 0.5 Weather Skepticism (Gap 5)
+  // 0.5 Weather Skepticism
   const isLunger = warrior.style === FightingStyle.LungingAttack;
   if (weather === 'Rainy' && isLunger) {
     return 'Declined';

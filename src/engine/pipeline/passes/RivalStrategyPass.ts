@@ -8,7 +8,7 @@ import { aiDraftFromPool } from '@/engine/draftService';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';
-import { generateBoutBids } from '@/engine/ai/workers/competitionWorker/boutBidding';
+import { generateBoutBids, convertBidsToOffers } from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { SeededRNGService } from '@/utils/random';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { hashStr } from '@/utils/random';
@@ -82,15 +82,42 @@ export function runRivalStrategyPass(
     });
   }
 
-  // 1.7. Generate bout bids for each rival (Gap 2: integrate generateBoutBids)
+  // 1.7. Generate bout bids for each rival and convert to offers
+  const allBids: { bid: import('@/engine/ai/workers/competitionWorker/types').BoutBid; rivalId: string }[] = [];
   for (const rival of currentRivals) {
-    generateBoutBids(
+    const { bids } = generateBoutBids(
       rival,
       nextWeek,
       state.weather ?? 'Clear',
       state.crowdMood ?? 'Calm',
       currentRivals
     );
+    for (const bid of bids) {
+      allBids.push({ bid, rivalId: rival.id as string });
+    }
+  }
+
+  // Build set of warrior IDs already in pending offers to prevent double-booking
+  const existingOfferWarriorIds = new Set<string>();
+  for (const offer of Object.values(boutOffersWithWorld)) {
+    if (offer && offer.status === 'Proposed') {
+      for (const wId of offer.warriorIds) {
+        existingOfferWarriorIds.add(wId as string);
+      }
+    }
+  }
+
+  const bidOffers = convertBidsToOffers(
+    allBids,
+    currentRivals,
+    { ...state, boutOffers: boutOffersWithWorld },
+    rng,
+    nextWeek,
+    existingOfferWarriorIds
+  );
+
+  for (const offer of bidOffers) {
+    boutOffersWithWorld[offer.id] = offer;
   }
 
   impacts.push({ boutOffers: boutOffersWithWorld });

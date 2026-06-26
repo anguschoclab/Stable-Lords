@@ -68,7 +68,7 @@ export function processAllRivalsBoutOffers(
         const opponentId = offer.warriorIds.find((id) => id !== wId);
         const opponent = opponentId ? state.warriorMap?.get(opponentId) : undefined;
 
-        // Gap 3: Call verifyBoutAcceptance first for weather skepticism
+        // Call verifyBoutAcceptance first for weather skepticism
         if (opponent) {
           const acceptance = boutAcceptance.verifyBoutAcceptance(
             owningRival,

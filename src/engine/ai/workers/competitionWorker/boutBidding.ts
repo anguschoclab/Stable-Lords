@@ -1,10 +1,15 @@
-import type { GameState, RivalStableData, WeatherType } from '@/types/state.types';
+import type { GameState, RivalStableData, WeatherType, BoutOffer } from '@/types/state.types';
+import type { BoutOfferId, PromoterId, WarriorId } from '@/types/shared.types';
 import { type CrowdMood } from '@/engine/crowdMood';
 import { FightingStyle } from '@/types/shared.types';
 import { scoreMatchup } from '@/engine/schedulingAssistant';
+import { selectArenaForMatchup } from '@/engine/matchmaking/arenaFit';
 import { filterActive } from '@/utils/roster';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { BoutBid } from './types';
+
+export const BID_MATCHMAKING_ID = 'BID_MATCHMAKING' as PromoterId;
 
 /**
  *
@@ -195,4 +200,103 @@ export function generateBoutBids(
   }
 
   return { bids, updatedRival: rival };
+}
+
+/**
+ * Convert bids from all rivals into actual BoutOffer objects.
+ * Sorts by priority (descending), finds matching opponents based on bid criteria,
+ * and prevents double-booking warriors already in existing offers.
+ */
+export function convertBidsToOffers(
+  allBids: { bid: BoutBid; rivalId: string }[],
+  rivals: RivalStableData[],
+  state: GameState,
+  rng: IRNGService,
+  nextWeek: number,
+  existingOfferWarriorIds: Set<string>
+): BoutOffer[] {
+  const sorted = [...allBids].sort((a, b) => b.bid.priority - a.bid.priority);
+  const paired = new Set<string>(existingOfferWarriorIds);
+  const rivalMap = new Map(rivals.map((r) => [r.id as string, r]));
+  const offers: BoutOffer[] = [];
+
+  for (const { bid } of sorted) {
+    if (paired.has(bid.proposingWarriorId)) continue;
+
+    const proposer = state.warriorMap?.get(bid.proposingWarriorId as WarriorId);
+    if (!proposer) continue;
+
+    const proposerStable = state.warriorToStableMap?.get(bid.proposingWarriorId as WarriorId);
+    if (!proposerStable) continue;
+
+    // Find candidate opponents based on bid criteria
+    let candidates: { warrior: typeof proposer; stableId: string }[] = [];
+
+    if (bid.targetStableId) {
+      // VENDETTA: target a specific stable
+      const targetRival = rivalMap.get(bid.targetStableId);
+      if (targetRival) {
+        candidates = filterActive(targetRival.roster).map((w) => ({
+          warrior: w,
+          stableId: targetRival.id as string,
+        }));
+      }
+    } else {
+      // All other intents: search all rival stables
+      for (const rival of rivals) {
+        if (rival.id === proposerStable.stableId) continue;
+        for (const w of filterActive(rival.roster)) {
+          candidates.push({ warrior: w, stableId: rival.id as string });
+        }
+      }
+    }
+
+    // Apply fame filters
+    candidates = candidates.filter((c) => {
+      if (paired.has(c.warrior.id)) return false;
+      if (bid.maxFame !== undefined && (c.warrior.fame ?? 0) > bid.maxFame) return false;
+      if (bid.minFame !== undefined && (c.warrior.fame ?? 0) < bid.minFame) return false;
+      return true;
+    });
+
+    if (candidates.length === 0) continue;
+
+    // Pick the best matchup opponent
+    let bestCandidate = candidates[0]!;
+    let bestScore = -Infinity;
+    for (const candidate of candidates) {
+      const score = scoreMatchup(proposer, candidate.warrior, state);
+      if (score > bestScore) {
+        bestScore = score;
+        bestCandidate = candidate;
+      }
+    }
+
+    const opponent = bestCandidate.warrior;
+    const arenaId = selectArenaForMatchup(proposer, opponent, rng);
+    const offerId = `bid_${rng.uuid()}` as BoutOfferId;
+
+    const offer: BoutOffer = {
+      id: offerId,
+      promoterId: BID_MATCHMAKING_ID,
+      proposerStableId: proposerStable.stableId as any,
+      warriorIds: [bid.proposingWarriorId as WarriorId, opponent.id as WarriorId],
+      boutWeek: nextWeek,
+      expirationWeek: nextWeek,
+      purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
+      hype: Math.max(40, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) + bid.priority * 5),
+      status: 'Proposed',
+      responses: {
+        [bid.proposingWarriorId as WarriorId]: 'Accepted',
+        [opponent.id as WarriorId]: 'Pending',
+      },
+      arenaId,
+    };
+
+    offers.push(offer);
+    paired.add(bid.proposingWarriorId);
+    paired.add(opponent.id);
+  }
+
+  return offers;
 }

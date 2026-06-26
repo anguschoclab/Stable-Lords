@@ -1,8 +1,7 @@
 /**
- * Gaps 2, 6, 8 — Bout bidding system issues.
- * Gap 2: generateBoutBids is dead code, never called from pipeline
- * Gap 6: matchup scoring break exits after first opponent
- * Gap 8: weather modifiers cover only 8 of 35+ weather types
+ * Bout bidding integration tests.
+ * Covers matchup scoring, weather modifiers, RECOVERY weather gating,
+ * and pipeline invocation via RivalStrategyPass.
  */
 import { describe, it, expect, vi } from 'vitest';
 import { FightingStyle } from '@/types/shared.types';
@@ -56,7 +55,7 @@ function makeRival(overrides: Partial<RivalStableData> = {}): RivalStableData {
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
 
-describe('Gap 6: matchup scoring evaluates all opponents, not just first', () => {
+describe('matchup scoring evaluates all opponents, not just first', () => {
   it('matchupModifier reflects best matchup, not just first opponent found', () => {
     // ParryLunge vs BashingAttack is a favorable matchup (matrix +1)
     // ParryLunge vs LungingAttack is a neutral matchup (matrix 0)
@@ -64,8 +63,8 @@ describe('Gap 6: matchup scoring evaluates all opponents, not just first', () =>
     const favorOpp = makeWarrior('Basher', FightingStyle.BashingAttack);
     const neutralOpp = makeWarrior('Lunger', FightingStyle.LungingAttack);
 
-    // Put the neutral opponent FIRST in the roster — if the break bug exists,
-    // it will score against the neutral opponent and miss the favorable one.
+    // Put the neutral opponent FIRST in the roster — this verifies that
+    // scoring evaluates the full roster, not just the first entry.
     const otherRival = {
       id: 'rival-2' as any,
       owner: {
@@ -87,9 +86,8 @@ describe('Gap 6: matchup scoring evaluates all opponents, not just first', () =>
     const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [otherRival]);
 
     expect(bids.length).toBeGreaterThan(0);
-    // The priority should reflect the favorable matchup, not the neutral one.
-    // With the bug (break after first), matchupModifier would be 0 (from LungingAttack).
-    // Without the bug, it should find the favorable BashingAttack matchup.
+    // The favorable BashingAttack matchup yields a positive modifier,
+    // so priority must exceed the base of 4.
     // Standard bout base priority = 4 + weatherMod(0) + moodMod(0) + matchupMod
     // Favorable matchup: (125-100)/20 = 1.25 → priority = 5.25 > 4
     const bid = bids[0]!;
@@ -97,7 +95,7 @@ describe('Gap 6: matchup scoring evaluates all opponents, not just first', () =>
   });
 });
 
-describe('Gap 8: weather modifiers cover all significant weather types', () => {
+describe('weather modifiers cover all significant weather types', () => {
   it('applies weather modifier for Gale', () => {
     const warrior = makeWarrior('Striker', FightingStyle.StrikingAttack);
     const rival = makeRival({ roster: [warrior] });
@@ -161,7 +159,7 @@ describe('Gap 8: weather modifiers cover all significant weather types', () => {
   });
 });
 
-describe('Gap 8: RECOVERY intent skips bids when weather modifier is severe', () => {
+describe('RECOVERY intent skips bids when weather modifier is severe', () => {
   it('RECOVERY skips warriors with severe weather penalty', () => {
     const warrior = makeWarrior('Lunger', FightingStyle.LungingAttack);
     const rival = makeRival({
@@ -189,7 +187,7 @@ describe('Gap 8: RECOVERY intent skips bids when weather modifier is severe', ()
   });
 });
 
-describe('Gap 2: generateBoutBids is called from RivalStrategyPass', () => {
+describe('generateBoutBids is called from RivalStrategyPass', () => {
   it('RivalStrategyPass generates bids for active rival warriors', async () => {
     const { runRivalStrategyPass } = await import('@/engine/pipeline/passes/RivalStrategyPass');
     const biddingMod = await import('@/engine/ai/workers/competitionWorker/boutBidding');

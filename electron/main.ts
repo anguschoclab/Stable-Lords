@@ -8,6 +8,7 @@ import {
   Tray,
   nativeImage,
   Notification,
+  session,
 } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs/promises';
@@ -632,6 +633,12 @@ function registerIPCHandlers() {
   });
 }
 app.whenReady().then(async () => {
+  // Deny arbitrary permission requests by default to reduce attack surface
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    console.warn(`Blocked permission request for: ${permission}`);
+    callback(false);
+  });
+
   // Initialize config path now that app is ready
   configPath = path.join(app.getPath('userData'), 'config.json');
   await loadConfig();

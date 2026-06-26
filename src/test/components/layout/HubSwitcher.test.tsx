@@ -30,11 +30,7 @@ describe('HubSwitcher', () => {
 
   it('renders all 3 hubs (Stable, World, Bookmarks) as links with correct href', () => {
     render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={defaultAlerts}
-        alertLinks={defaultAlertLinks}
-      />
+      <HubSwitcher activeHubId="stable" alerts={defaultAlerts} alertLinks={defaultAlertLinks} />
     );
     expect(screen.getByRole('link', { name: /Stable/i })).toHaveAttribute('href', '/stable');
     expect(screen.getByRole('link', { name: /World/i })).toHaveAttribute('href', '/world');
@@ -43,11 +39,7 @@ describe('HubSwitcher', () => {
 
   it('renders hub labels as text', () => {
     render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={defaultAlerts}
-        alertLinks={defaultAlertLinks}
-      />
+      <HubSwitcher activeHubId="stable" alerts={defaultAlerts} alertLinks={defaultAlertLinks} />
     );
     expect(screen.getByText('Stable')).toBeInTheDocument();
     expect(screen.getByText('World')).toBeInTheDocument();
@@ -56,11 +48,7 @@ describe('HubSwitcher', () => {
 
   it('applies active styling (text-primary bg-primary/10) to active hub', () => {
     render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={defaultAlerts}
-        alertLinks={defaultAlertLinks}
-      />
+      <HubSwitcher activeHubId="stable" alerts={defaultAlerts} alertLinks={defaultAlertLinks} />
     );
     const stableLink = screen.getByText('Stable').closest('a');
     expect(stableLink?.className).toMatch(/text-primary/);
@@ -69,11 +57,7 @@ describe('HubSwitcher', () => {
 
   it('applies inactive styling (text-muted-foreground/60) to non-active hubs', () => {
     render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={defaultAlerts}
-        alertLinks={defaultAlertLinks}
-      />
+      <HubSwitcher activeHubId="stable" alerts={defaultAlerts} alertLinks={defaultAlertLinks} />
     );
     const worldLink = screen.getByText('World').closest('a');
     expect(worldLink?.className).toMatch(/text-muted-foreground\/60/);
@@ -81,11 +65,7 @@ describe('HubSwitcher', () => {
 
   it('shows ChevronRight icon only on active hub when showChevron=true (default)', () => {
     render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={defaultAlerts}
-        alertLinks={defaultAlertLinks}
-      />
+      <HubSwitcher activeHubId="stable" alerts={defaultAlerts} alertLinks={defaultAlertLinks} />
     );
     // Active hub (Stable) should have chevron — check by counting SVGs
     // Each hub has an icon SVG. Active hub with chevron has 2 SVGs, inactive have 1.
@@ -124,48 +104,26 @@ describe('HubSwitcher', () => {
 
   it('renders alert badge button when alertCount > 0', () => {
     const alerts = { ...defaultAlerts, stable: 3 };
-    render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={alerts}
-        alertLinks={defaultAlertLinks}
-      />
-    );
+    render(<HubSwitcher activeHubId="stable" alerts={alerts} alertLinks={defaultAlertLinks} />);
     expect(screen.getByLabelText('3 alerts for Stable')).toBeInTheDocument();
   });
 
   it('does NOT render alert badge when alertCount = 0', () => {
     render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={defaultAlerts}
-        alertLinks={defaultAlertLinks}
-      />
+      <HubSwitcher activeHubId="stable" alerts={defaultAlerts} alertLinks={defaultAlertLinks} />
     );
     expect(screen.queryByRole('button')).toBeNull();
   });
 
   it('alert badge shows correct count number', () => {
     const alerts = { ...defaultAlerts, world: 5 };
-    render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={alerts}
-        alertLinks={defaultAlertLinks}
-      />
-    );
+    render(<HubSwitcher activeHubId="stable" alerts={alerts} alertLinks={defaultAlertLinks} />);
     expect(screen.getByText('5')).toBeInTheDocument();
   });
 
   it('alert badge has correct aria-label="{count} alerts for {hub.label}"', () => {
     const alerts = { ...defaultAlerts, world: 2 };
-    render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={alerts}
-        alertLinks={defaultAlertLinks}
-      />
-    );
+    render(<HubSwitcher activeHubId="stable" alerts={alerts} alertLinks={defaultAlertLinks} />);
     expect(screen.getByLabelText('2 alerts for World')).toBeInTheDocument();
   });
 
@@ -186,13 +144,7 @@ describe('HubSwitcher', () => {
 
   it('calls navigate({ to: alertLink }) when alert badge clicked and no onAlertClick', () => {
     const alerts = { ...defaultAlerts, stable: 1 };
-    render(
-      <HubSwitcher
-        activeHubId="stable"
-        alerts={alerts}
-        alertLinks={defaultAlertLinks}
-      />
-    );
+    render(<HubSwitcher activeHubId="stable" alerts={alerts} alertLinks={defaultAlertLinks} />);
     fireEvent.click(screen.getByLabelText('1 alerts for Stable'));
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/stable' });
   });
@@ -261,11 +213,7 @@ describe('HubSwitcher', () => {
 
   it('renders all hubs even when activeHubId is null (no active hub styling)', () => {
     render(
-      <HubSwitcher
-        activeHubId={null}
-        alerts={defaultAlerts}
-        alertLinks={defaultAlertLinks}
-      />
+      <HubSwitcher activeHubId={null} alerts={defaultAlerts} alertLinks={defaultAlertLinks} />
     );
     expect(screen.getByText('Stable')).toBeInTheDocument();
     expect(screen.getByText('World')).toBeInTheDocument();

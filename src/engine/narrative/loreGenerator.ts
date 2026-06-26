@@ -101,7 +101,7 @@ const ORIGINS = [
 const CHILDHOOD_TRAITS = [
   'was known for sharpening rusted iron scraps during sermons',
   'learned early that a broken glass bottle commands more respect than tears',
-  'would endure the matrons\' beatings without making a single sound',
+  "would endure the matrons' beatings without making a single sound",
   'would bite the hands of the matrons who tried to wash them',
   'learned to map out exit routes the moment they entered a new room',
   'was caught hoarding rusty nails under the floorboards',
@@ -157,7 +157,7 @@ const DEFINING_MOMENTS = [
   'realizing that the only true law of the streets was written in blood',
   'until the day they dragged a larger bully into the shadowed alleys and emerged alone',
   'waiting for the moment the arena doors would open and swallow their past',
-  'until the day they crushed a street enforcer\'s windpipe in a brawl over coppers',
+  "until the day they crushed a street enforcer's windpipe in a brawl over coppers",
   'knowing that the only thing worse than dying in the pit is dying forgotten outside of it',
   'understanding early that fear is just a weakness waiting to be exploited',
   'until a recruiter saw them handle a practice sword with natural grace',

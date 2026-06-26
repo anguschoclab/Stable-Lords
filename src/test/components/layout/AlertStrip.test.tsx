@@ -8,13 +8,15 @@ import type { HubId } from '@/components/layout/navigationShared';
 let mockIsTournamentWeek = false;
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: vi.fn((selector?: any) =>
-    selector ? selector({ isTournamentWeek: mockIsTournamentWeek }) : { isTournamentWeek: mockIsTournamentWeek }
-  ),
-};
+      selector
+        ? selector({ isTournamentWeek: mockIsTournamentWeek })
+        : { isTournamentWeek: mockIsTournamentWeek }
+    ),
+  };
 });
 
 vi.mock('zustand/react/shallow', () => ({
@@ -74,7 +76,10 @@ describe('AlertStrip', () => {
   it('tournament week item links to /world/tournaments', () => {
     mockIsTournamentWeek = true;
     render(<AlertStrip alerts={defaultAlerts} />);
-    expect(screen.getByText('Tournament week').closest('a')).toHaveAttribute('href', '/world/tournaments');
+    expect(screen.getByText('Tournament week').closest('a')).toHaveAttribute(
+      'href',
+      '/world/tournaments'
+    );
   });
 
   it('renders both items when both conditions are true', () => {

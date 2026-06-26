@@ -24,24 +24,24 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: (selector?: any) => {
-    const state = {
-      ...mockStoreState,
-      isBookmarked: (type: string, id: string) =>
-        mockStoreState.bookmarks.some((b: any) => b.entityType === type && b.entityId === id),
-      toggleBookmark: vi.fn(),
-      removeBookmark: vi.fn(),
-      clearBookmarks: vi.fn(),
-      clearBookmarksByType: vi.fn(),
-      cleanDanglingBookmarks: vi.fn(),
-      getBookmarksByType: (type: string) =>
-        mockStoreState.bookmarks.filter((b: any) => b.entityType === type),
-    };
-    if (selector) return selector(state);
-    return state;
+      const state = {
+        ...mockStoreState,
+        isBookmarked: (type: string, id: string) =>
+          mockStoreState.bookmarks.some((b: any) => b.entityType === type && b.entityId === id),
+        toggleBookmark: vi.fn(),
+        removeBookmark: vi.fn(),
+        clearBookmarks: vi.fn(),
+        clearBookmarksByType: vi.fn(),
+        cleanDanglingBookmarks: vi.fn(),
+        getBookmarksByType: (type: string) =>
+          mockStoreState.bookmarks.filter((b: any) => b.entityType === type),
+      };
+      if (selector) return selector(state);
+      return state;
     },
   };
 });

@@ -17,9 +17,7 @@ const mockPlayer: Owner = {
   generation: 0,
 };
 
-function makeWarrior(
-  overrides: Record<string, any> = {}
-): Warrior {
+function makeWarrior(overrides: Record<string, any> = {}): Warrior {
   return {
     id: (overrides.id ?? 'w1') as any,
     name: overrides.name ?? 'Spartacus',
@@ -79,14 +77,14 @@ const mockRivals: RivalStableData[] = [
 ];
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: vi.fn((selector?: any) => {
-    const store = { player: mockPlayer, roster: mockRoster, rivals: mockRivals };
-    return selector ? selector(store) : store;
-  }),
-};
+      const store = { player: mockPlayer, roster: mockRoster, rivals: mockRivals };
+      return selector ? selector(store) : store;
+    }),
+  };
 });
 
 vi.mock('zustand/react/shallow', () => ({
@@ -94,15 +92,11 @@ vi.mock('zustand/react/shallow', () => ({
 }));
 
 vi.mock('@/components/crest', () => ({
-  StableCrest: ({ crest }: any) => (
-    <div data-testid="stable-crest">{crest.charge.name}</div>
-  ),
+  StableCrest: ({ crest }: any) => <div data-testid="stable-crest">{crest.charge.name}</div>,
 }));
 
 vi.mock('@/components/ui/WarriorBadges', () => ({
-  StatBadge: ({ styleName }: any) => (
-    <span data-testid="stat-badge">{styleName}</span>
-  ),
+  StatBadge: ({ styleName }: any) => <span data-testid="stat-badge">{styleName}</span>,
 }));
 
 import { StableDossier } from '@/components/StableDossier';

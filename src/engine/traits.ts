@@ -404,7 +404,8 @@ export const TRAITS: Record<string, TraitDef> = {
   silent_one: {
     id: 'silent_one',
     name: 'Silent One',
-    description: '+1 defense, +1 decisiveness — unnervingly quiet, they waste no breath on roars or taunts.',
+    description:
+      '+1 defense, +1 decisiveness — unnervingly quiet, they waste no breath on roars or taunts.',
     effect: { defMod: 1, decMod: 1, fightPlanMod: { feintTendency: -2 } },
     weight: 0.6,
     synergy: ['cunning'],
@@ -414,8 +415,9 @@ export const TRAITS: Record<string, TraitDef> = {
   },
   orphan_rage: {
     id: 'orphan_rage',
-    name: 'Orphan\'s Rage',
-    description: '+2 attack when bloodied (HP < 50%) — channeling years of abuse into a final, frantic assault.',
+    name: "Orphan's Rage",
+    description:
+      '+2 attack when bloodied (HP < 50%) — channeling years of abuse into a final, frantic assault.',
     effect: { attModLowHp: 2, fightPlanMod: { killDesire: 2 } },
     weight: 0.7,
     synergy: ['brutal', 'agile'],
@@ -511,7 +513,8 @@ export const TRAITS: Record<string, TraitDef> = {
   pit_born: {
     id: 'pit_born',
     name: 'Pit-Born',
-    description: '+10% Endurance — raised in the cramped, airless fighting pits, they never seem to tire.',
+    description:
+      '+10% Endurance — raised in the cramped, airless fighting pits, they never seem to tire.',
     effect: { enduranceMult: 1.1 },
     weight: 0.7,
     tier: 'Common',
@@ -520,7 +523,8 @@ export const TRAITS: Record<string, TraitDef> = {
   ashen_lungs: {
     id: 'ashen_lungs',
     name: 'Ashen Lungs',
-    description: '−10% Endurance, +1 Damage — hacking coughs hide a desperate, brutal strength honed in the soot mines.',
+    description:
+      '−10% Endurance, +1 Damage — hacking coughs hide a desperate, brutal strength honed in the soot mines.',
     effect: { enduranceMult: 0.9, dmgBonus: 1 },
     weight: 0.6,
     synergy: ['brutal'],

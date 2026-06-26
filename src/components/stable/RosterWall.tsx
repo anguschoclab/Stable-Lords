@@ -87,20 +87,20 @@ export function RosterWall() {
           <EmptyRosterState />
         ) : (
           <div className="grid gap-6">
-              {filteredRoster.map((w, i) => (
-                <motion.div
-                  key={w.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: Math.min(i, 8) * 0.05, duration: 0.5 }}
-                >
-                  <RosterWarriorRow
-                    warrior={w}
-                    rankIndex={i}
-                    onClick={() => navigate({ to: '/warrior/$id', params: { id: w.id } })}
-                  />
-                </motion.div>
-              ))}
+            {filteredRoster.map((w, i) => (
+              <motion.div
+                key={w.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(i, 8) * 0.05, duration: 0.5 }}
+              >
+                <RosterWarriorRow
+                  warrior={w}
+                  rankIndex={i}
+                  onClick={() => navigate({ to: '/warrior/$id', params: { id: w.id } })}
+                />
+              </motion.div>
+            ))}
           </div>
         )}
       </div>

@@ -8,12 +8,7 @@ export interface ProgressionSlice {
   acknowledgeWin: () => void;
 }
 
-export const createProgressionSlice: StateCreator<
-  GameStore,
-  [],
-  [],
-  ProgressionSlice
-> = (set) => ({
+export const createProgressionSlice: StateCreator<GameStore, [], [], ProgressionSlice> = (set) => ({
   progression: DEFAULT_PROGRESSION,
   acknowledgeWin: () =>
     set((state) => ({

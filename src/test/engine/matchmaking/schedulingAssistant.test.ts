@@ -546,9 +546,7 @@ describe('Scheduling Assistant Engine', () => {
         const rivalry = mockRivalry('player1', 'rival1', 5);
 
         const state = mockState([rival], []);
-        (state as any).rivalryMap = new Map([
-          [getStablePairKey('player1', 'rival1'), rivalry],
-        ]);
+        (state as any).rivalryMap = new Map([[getStablePairKey('player1', 'rival1'), rivalry]]);
         const score = scoreMatchup(player, rival, state);
         // Base 100 + (5 * 50) = 350 (rivalryMap used instead of rivalries array)
         expect(score).toBe(350);

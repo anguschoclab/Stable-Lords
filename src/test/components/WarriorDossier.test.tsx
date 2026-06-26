@@ -42,16 +42,17 @@ vi.mock('@/components/warrior/dossier/WarriorDossierMedicalReport', () => ({
 }));
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
-  useWorldState: vi.fn(() => mockState),
-};
+    useWorldState: vi.fn(() => mockState),
+  };
 });
 
 vi.mock('@/engine/core/historyResolver', () => ({
-  findWarrior: vi.fn((_state: any, warriorId: string) =>
-    mockState.roster.find((w: any) => w.id === warriorId) ?? null
+  findWarrior: vi.fn(
+    (_state: any, warriorId: string) =>
+      mockState.roster.find((w: any) => w.id === warriorId) ?? null
   ),
 }));
 

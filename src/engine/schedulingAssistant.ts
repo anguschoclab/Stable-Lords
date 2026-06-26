@@ -78,8 +78,9 @@ export function scoreMatchup(
   const rivalStableId = rivalWarrior.stableId;
 
   if (playerStableId && rivalStableId) {
-    const rivalry = state.rivalryMap?.get(getStablePairKey(playerStableId, rivalStableId))
-      ?? (state.rivalries || []).find(
+    const rivalry =
+      state.rivalryMap?.get(getStablePairKey(playerStableId, rivalStableId)) ??
+      (state.rivalries || []).find(
         (r) =>
           (r.stableIdA === playerStableId && r.stableIdB === rivalStableId) ||
           (r.stableIdB === playerStableId && r.stableIdA === rivalStableId)

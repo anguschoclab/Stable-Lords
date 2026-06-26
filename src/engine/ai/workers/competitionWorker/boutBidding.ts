@@ -284,7 +284,10 @@ export function convertBidsToOffers(
       boutWeek: nextWeek,
       expirationWeek: nextWeek,
       purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
-      hype: Math.max(40, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) + bid.priority * 5),
+      hype: Math.max(
+        40,
+        Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) + bid.priority * 5
+      ),
       status: 'Proposed',
       responses: {
         [bid.proposingWarriorId as WarriorId]: 'Accepted',

@@ -98,11 +98,7 @@ describe('rollTraitTraining surfaces class & Signature traits for a styled warri
     const earnedSignature = new Set<string>();
 
     for (let i = 0; i < 1500; i++) {
-      const roll = rollTraitTraining(
-        warrior({ trainability: 0.9 }),
-        trainer('Master'),
-        rng
-      );
+      const roll = rollTraitTraining(warrior({ trainability: 0.9 }), trainer('Master'), rng);
       if (roll.outcome === 'success' && roll.traitId) {
         const t = TRAITS[roll.traitId]!;
         if (t.styles && t.styles.length > 0) earnedClass.add(roll.traitId);

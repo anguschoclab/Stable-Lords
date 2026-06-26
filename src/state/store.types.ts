@@ -27,12 +27,8 @@ export interface GameStoreActions {
   setSimulating: (simulating: boolean) => void;
   toggleEventLog: () => void;
   setEventLogOpen: (open: boolean) => void;
-  doAdvanceWeek: (
-    processedState?: GameState,
-  ) => Promise<void>;
-  doAdvanceDay: (
-    processedState?: GameState,
-  ) => Promise<void>;
+  doAdvanceWeek: (processedState?: GameState) => Promise<void>;
+  doAdvanceDay: (processedState?: GameState) => Promise<void>;
   initialize: () => void;
   loadGame: (slotId: string, gameState: GameState) => void;
   doReset: () => void;

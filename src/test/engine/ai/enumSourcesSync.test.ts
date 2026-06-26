@@ -6,15 +6,47 @@ import type { WeatherType } from '@/types/shared.types';
 describe('enumSources sync with WeatherType', () => {
   const schemaOptions = WeatherTypeSchema.options;
   const weatherTypeSet = new Set<WeatherType>([
-    'Clear', 'Rainy', 'Sweltering', 'Breezy', 'Overcast', 'Blazing Sun',
-    'Gale', 'Blood Moon', 'Eclipse', 'Sandstorm', 'Zephyr', 'Tornado',
-    'Blizzard', 'Dense Fog', 'Mist', 'Thunderstorm', 'Gravity Anomaly',
-    'Ashfall', 'Acid Rain', 'Mana Surge', 'Rainbow', 'Scorching Wind',
-    'Spooky Night', 'Meteor Shower', 'Solar Flare', 'Abyssal Gloom',
-    'Cursed Miasma', 'Hailstorm', 'Arcane Storm', 'Blood Rain',
-    'Locust Swarm', 'Aurora Borealis', 'Chaotic Winds', 'Aether Storm',
-    'Mirage', 'Ember Rain', 'Wildfire Smoke', 'Blood Fog',
-    'Shimmering Heat', 'Crystal Rain', 'Rain of Frogs',
+    'Clear',
+    'Rainy',
+    'Sweltering',
+    'Breezy',
+    'Overcast',
+    'Blazing Sun',
+    'Gale',
+    'Blood Moon',
+    'Eclipse',
+    'Sandstorm',
+    'Zephyr',
+    'Tornado',
+    'Blizzard',
+    'Dense Fog',
+    'Mist',
+    'Thunderstorm',
+    'Gravity Anomaly',
+    'Ashfall',
+    'Acid Rain',
+    'Mana Surge',
+    'Rainbow',
+    'Scorching Wind',
+    'Spooky Night',
+    'Meteor Shower',
+    'Solar Flare',
+    'Abyssal Gloom',
+    'Cursed Miasma',
+    'Hailstorm',
+    'Arcane Storm',
+    'Blood Rain',
+    'Locust Swarm',
+    'Aurora Borealis',
+    'Chaotic Winds',
+    'Aether Storm',
+    'Mirage',
+    'Ember Rain',
+    'Wildfire Smoke',
+    'Blood Fog',
+    'Shimmering Heat',
+    'Crystal Rain',
+    'Rain of Frogs',
   ]);
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {
@@ -41,10 +73,9 @@ describe('enumSources sync with WeatherType', () => {
 
     expect(weatherTypesSet.size).toBe(schemaSet.size);
     for (const entry of WEATHER_TYPES) {
-      expect(
-        schemaSet.has(entry),
-        `${entry} in WEATHER_TYPES but not in WeatherTypeSchema`
-      ).toBe(true);
+      expect(schemaSet.has(entry), `${entry} in WEATHER_TYPES but not in WeatherTypeSchema`).toBe(
+        true
+      );
     }
   });
 });

@@ -1,4 +1,10 @@
-import type { GameState, Warrior, TournamentBout, TournamentEntry, FightSummary } from '@/types/state.types';
+import type {
+  GameState,
+  Warrior,
+  TournamentBout,
+  TournamentEntry,
+  FightSummary,
+} from '@/types/state.types';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import { SeededRNG } from '@/utils/random';
 import { simulateFight } from '@/engine/simulate';
@@ -23,8 +29,10 @@ export function resolveRound(
 ): { updatedState: GameState; roundResults: string[]; isComplete: boolean } {
   const rng = new SeededRNG(seed);
   let updatedState = { ...state };
-  const resolvedTournament = tournament ?? (updatedState.tournaments || []).find((t) => t.id === tournamentId);
-  if (!resolvedTournament || resolvedTournament.completed) return { updatedState, roundResults: [], isComplete: false };
+  const resolvedTournament =
+    tournament ?? (updatedState.tournaments || []).find((t) => t.id === tournamentId);
+  if (!resolvedTournament || resolvedTournament.completed)
+    return { updatedState, roundResults: [], isComplete: false };
 
   const bracket = [...resolvedTournament.bracket];
   const { currentRound, roundBouts } = findCurrentRoundBouts(bracket);
@@ -162,7 +170,9 @@ export function resolveRound(
   return {
     updatedState,
     roundResults:
-      isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`] : [],
+      isComplete && champion
+        ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`]
+        : [],
     isComplete,
   };
 } /**

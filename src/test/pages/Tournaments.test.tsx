@@ -6,40 +6,40 @@ import '@/test/_setup/setup';
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: (selector?: any) => {
-    const state = {
-      roster: [],
-      newsletter: [],
-      ledger: [],
-      matchHistory: [],
-      moodHistory: [],
-      graveyard: [],
-      retired: [],
-      week: 1,
-      season: 'Spring',
-      year: 1,
-      treasury: 500,
-      tournaments: [],
-      rivals: [],
-      arenaHistory: [],
-      trainers: [],
-      trainingAssignments: [],
-      fame: 0,
-      bookmarks: [],
-      isBookmarked: vi.fn(() => false),
-      player: {
-        id: 'p1',
-        name: 'Player',
-        stableName: "Dragon's Hearth",
+      const state = {
+        roster: [],
+        newsletter: [],
+        ledger: [],
+        matchHistory: [],
+        moodHistory: [],
+        graveyard: [],
+        retired: [],
+        week: 1,
+        season: 'Spring',
+        year: 1,
+        treasury: 500,
+        tournaments: [],
+        rivals: [],
+        arenaHistory: [],
+        trainers: [],
+        trainingAssignments: [],
         fame: 0,
-        renown: 0,
-        titles: 0,
-      },
-    };
-    return selector ? selector(state) : state;
+        bookmarks: [],
+        isBookmarked: vi.fn(() => false),
+        player: {
+          id: 'p1',
+          name: 'Player',
+          stableName: "Dragon's Hearth",
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+      };
+      return selector ? selector(state) : state;
     },
   };
 });

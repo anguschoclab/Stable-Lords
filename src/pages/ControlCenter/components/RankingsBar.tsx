@@ -41,7 +41,10 @@ export function RankingsBar() {
       icon: Trophy,
       color: stableRank === 1 ? 'text-arena-gold' : 'text-arena-fame',
       glow: stableRank === 1 ? 'shadow-[0_0_10px_rgba(212,175,55,0.15)]' : '',
-      sub: stableRank !== null ? `of ${progression?.totalStables || rivals.length + 1} stables` : 'No rivals yet',
+      sub:
+        stableRank !== null
+          ? `of ${progression?.totalStables || rivals.length + 1} stables`
+          : 'No rivals yet',
     },
     {
       label: 'Top Warrior Rank',

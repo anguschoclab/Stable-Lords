@@ -8,7 +8,10 @@ import { aiDraftFromPool } from '@/engine/draftService';
 import { processAIRosterManagement } from '@/engine/owner/roster/management';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import { processAllRivalsBoutOffers } from '@/engine/ai/workers/competitionWorker';
-import { generateBoutBids, convertBidsToOffers } from '@/engine/ai/workers/competitionWorker/boutBidding';
+import {
+  generateBoutBids,
+  convertBidsToOffers,
+} from '@/engine/ai/workers/competitionWorker/boutBidding';
 import { SeededRNGService } from '@/utils/random';
 import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { hashStr } from '@/utils/random';
@@ -83,7 +86,10 @@ export function runRivalStrategyPass(
   }
 
   // 1.7. Generate bout bids for each rival and convert to offers
-  const allBids: { bid: import('@/engine/ai/workers/competitionWorker/types').BoutBid; rivalId: string }[] = [];
+  const allBids: {
+    bid: import('@/engine/ai/workers/competitionWorker/types').BoutBid;
+    rivalId: string;
+  }[] = [];
   for (const rival of currentRivals) {
     const { bids } = generateBoutBids(
       rival,

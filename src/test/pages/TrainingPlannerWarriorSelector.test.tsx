@@ -31,26 +31,20 @@ describe('WarriorSelector (Battle Plans)', () => {
   it('renders warrior names', () => {
     const w1 = makeTestWarrior('w1', 'Alpha');
     const w2 = makeTestWarrior('w2', 'Beta');
-    render(
-      <WarriorSelector warriors={[w1, w2]} selectedId="w1" onSelect={vi.fn()} />
-    );
+    render(<WarriorSelector warriors={[w1, w2]} selectedId="w1" onSelect={vi.fn()} />);
     expect(screen.getByText('Alpha')).toBeInTheDocument();
     expect(screen.getByText('Beta')).toBeInTheDocument();
   });
 
   it('shows "Plan Set" for warriors with a plan', () => {
     const w1 = makeTestWarrior('w1', 'Alpha', { plan: makePlan() });
-    render(
-      <WarriorSelector warriors={[w1]} selectedId="w1" onSelect={vi.fn()} />
-    );
+    render(<WarriorSelector warriors={[w1]} selectedId="w1" onSelect={vi.fn()} />);
     expect(screen.getByText('Plan Set')).toBeInTheDocument();
   });
 
   it('shows "No Plan" for warriors without a plan', () => {
     const w1 = makeTestWarrior('w1', 'Alpha');
-    render(
-      <WarriorSelector warriors={[w1]} selectedId="w1" onSelect={vi.fn()} />
-    );
+    render(<WarriorSelector warriors={[w1]} selectedId="w1" onSelect={vi.fn()} />);
     expect(screen.getByText('No Plan')).toBeInTheDocument();
   });
 
@@ -58,9 +52,7 @@ describe('WarriorSelector (Battle Plans)', () => {
     const w1 = makeTestWarrior('w1', 'Alpha');
     const w2 = makeTestWarrior('w2', 'Beta');
     const onSelect = vi.fn();
-    render(
-      <WarriorSelector warriors={[w1, w2]} selectedId="w1" onSelect={onSelect} />
-    );
+    render(<WarriorSelector warriors={[w1, w2]} selectedId="w1" onSelect={onSelect} />);
     fireEvent.click(screen.getByText('Beta'));
     expect(onSelect).toHaveBeenCalledWith('w2');
   });
@@ -79,9 +71,7 @@ describe('WarriorSelector (Battle Plans)', () => {
   it('does not accept trainers prop (removed from interface)', () => {
     const w1 = makeTestWarrior('w1', 'Alpha');
     // TypeScript would error on this at compile time, but verify it renders without trainers
-    render(
-      <WarriorSelector warriors={[w1]} selectedId="w1" onSelect={vi.fn()} />
-    );
+    render(<WarriorSelector warriors={[w1]} selectedId="w1" onSelect={vi.fn()} />);
     expect(screen.getByText('Alpha')).toBeInTheDocument();
   });
 

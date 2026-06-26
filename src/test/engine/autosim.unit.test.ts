@@ -31,11 +31,7 @@ function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Wa
   };
 }
 
-function makeOffer(
-  id: string,
-  warriorIds: string[],
-  opts?: Partial<BoutOffer>
-): BoutOffer {
+function makeOffer(id: string, warriorIds: string[], opts?: Partial<BoutOffer>): BoutOffer {
   return {
     id: id as BoutOfferId,
     promoterId: 'promoter-1' as any,
@@ -57,11 +53,7 @@ function makeState(overrides?: Partial<GameState>): GameState {
   return { ...state, ...overrides };
 }
 
-function makeFightSummary(
-  title: string,
-  winner: 'A' | 'D' | null,
-  by: string
-): FightSummary {
+function makeFightSummary(title: string, winner: 'A' | 'D' | null, by: string): FightSummary {
   return {
     id: 'fight-1' as any,
     week: 1,
@@ -86,7 +78,9 @@ describe('processPlayerOffers', () => {
     state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = processPlayerOffers(state);
-    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe('Accepted');
+    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
+      'Accepted'
+    );
   });
 
   it('accepts high-purse offer via index', () => {
@@ -97,7 +91,9 @@ describe('processPlayerOffers', () => {
     state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = processPlayerOffers(state);
-    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe('Accepted');
+    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
+      'Accepted'
+    );
   });
 
   it('skips low-value offer', () => {
@@ -108,7 +104,9 @@ describe('processPlayerOffers', () => {
     state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = processPlayerOffers(state);
-    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe('Pending');
+    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
+      'Pending'
+    );
   });
 
   it('skips non-Proposed offer', () => {
@@ -119,7 +117,9 @@ describe('processPlayerOffers', () => {
     state.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = processPlayerOffers(state);
-    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe('Pending');
+    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
+      'Pending'
+    );
   });
 
   it('skips offer with no player warrior in index', () => {
@@ -133,7 +133,9 @@ describe('processPlayerOffers', () => {
     ]);
 
     const result = processPlayerOffers(state);
-    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['rival1' as WarriorId]).toBe('Pending');
+    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['rival1' as WarriorId]).toBe(
+      'Pending'
+    );
   });
 
   it('deduplicates offer with two player warriors', () => {
@@ -158,25 +160,34 @@ describe('processPlayerOffers', () => {
     const state = makeState({ roster: [w1] });
     const offer1 = makeOffer('offer1', ['w1', 'rival1'], { hype: 200 });
     const offer2 = makeOffer('offer2', ['w1', 'rival2'], { hype: 200 });
-    (state as any).boutOffers = { ['offer1' as BoutOfferId]: offer1, ['offer2' as BoutOfferId]: offer2 };
+    (state as any).boutOffers = {
+      ['offer1' as BoutOfferId]: offer1,
+      ['offer2' as BoutOfferId]: offer2,
+    };
     state.warriorToOfferIds = new Map([
       ['w1' as WarriorId, ['offer1' as BoutOfferId, 'offer2' as BoutOfferId]],
     ]);
 
     const result = processPlayerOffers(state);
-    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe('Accepted');
-    expect(result.boutOffers['offer2' as BoutOfferId]!.responses['w1' as WarriorId]).toBe('Accepted');
+    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
+      'Accepted'
+    );
+    expect(result.boutOffers['offer2' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
+      'Accepted'
+    );
   });
 
   it('handles empty roster', () => {
     const state = makeState({ roster: [] });
-    (state as any).boutOffers = { ['offer1' as BoutOfferId]: makeOffer('offer1', ['rival1', 'rival2'], { hype: 200 }) };
-    state.warriorToOfferIds = new Map([
-      ['rival1' as WarriorId, ['offer1' as BoutOfferId]],
-    ]);
+    (state as any).boutOffers = {
+      ['offer1' as BoutOfferId]: makeOffer('offer1', ['rival1', 'rival2'], { hype: 200 }),
+    };
+    state.warriorToOfferIds = new Map([['rival1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const result = processPlayerOffers(state);
-    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['rival1' as WarriorId]).toBe('Pending');
+    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['rival1' as WarriorId]).toBe(
+      'Pending'
+    );
   });
 
   it('handles no offers with index', () => {
@@ -197,7 +208,9 @@ describe('processPlayerOffers', () => {
     state.warriorToOfferIds = undefined;
 
     const result = processPlayerOffers(state);
-    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe('Accepted');
+    expect(result.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
+      'Accepted'
+    );
   });
 
   it('fallback produces same result as indexed path', () => {
@@ -210,9 +223,7 @@ describe('processPlayerOffers', () => {
 
     const indexedState = makeState({ roster: [w1, w2] });
     (indexedState as any).boutOffers = { ['offer1' as BoutOfferId]: { ...offer } };
-    indexedState.warriorToOfferIds = new Map([
-      ['w1' as WarriorId, ['offer1' as BoutOfferId]],
-    ]);
+    indexedState.warriorToOfferIds = new Map([['w1' as WarriorId, ['offer1' as BoutOfferId]]]);
 
     const scanState = makeState({ roster: [w1, w2] });
     (scanState as any).boutOffers = { ['offer1' as BoutOfferId]: { ...offer } };
@@ -221,8 +232,9 @@ describe('processPlayerOffers', () => {
     const indexedResult = processPlayerOffers(indexedState);
     const scanResult = processPlayerOffers(scanState);
 
-    expect(indexedResult.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId])
-      .toBe(scanResult.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]);
+    expect(indexedResult.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]).toBe(
+      scanResult.boutOffers['offer1' as BoutOfferId]!.responses['w1' as WarriorId]
+    );
   });
 });
 

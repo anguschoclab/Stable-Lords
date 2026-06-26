@@ -79,9 +79,7 @@ describe('SubPageList', () => {
   });
 
   it('renders page icons (SVG elements)', () => {
-    const { container } = render(
-      <SubPageList activeHubId="stable" currentPath="/stable" />
-    );
+    const { container } = render(<SubPageList activeHubId="stable" currentPath="/stable" />);
     const svgs = container.querySelectorAll('svg');
     expect(svgs.length).toBeGreaterThan(0);
   });
@@ -92,20 +90,12 @@ describe('SubPageList', () => {
         {children}
       </span>
     );
-    render(
-      <SubPageList
-        activeHubId="stable"
-        currentPath="/stable"
-        LinkComponent={CustomLink}
-      />
-    );
+    render(<SubPageList activeHubId="stable" currentPath="/stable" LinkComponent={CustomLink} />);
     expect(screen.getAllByTestId('custom-page-link')).toHaveLength(13);
   });
 
   it('renders motion indicator div when useMotionIndicator=true (default) and page is active', () => {
-    render(
-      <SubPageList activeHubId="stable" currentPath="/stable" />
-    );
+    render(<SubPageList activeHubId="stable" currentPath="/stable" />);
     // The motion indicator is a div with class containing "bg-primary" and "w-0.5"
     const activeLink = screen.getByText('Overview').closest('a');
     const indicator = activeLink?.querySelector('.bg-primary.w-0\\.5');
@@ -113,13 +103,7 @@ describe('SubPageList', () => {
   });
 
   it('renders static indicator div when useMotionIndicator=false and page is active', () => {
-    render(
-      <SubPageList
-        activeHubId="stable"
-        currentPath="/stable"
-        useMotionIndicator={false}
-      />
-    );
+    render(<SubPageList activeHubId="stable" currentPath="/stable" useMotionIndicator={false} />);
     const activeLink = screen.getByText('Overview').closest('a');
     // Static indicator is a plain div (not motion.div), still has bg-primary w-0.5
     const indicator = activeLink?.querySelector('.bg-primary.w-0\\.5');

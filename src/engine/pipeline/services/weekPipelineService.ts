@@ -118,7 +118,11 @@ function invalidateDeadWarriors(state: GameState, deadIds: Set<WarriorId>): void
 function runBoutPhase(state: GameState, ctx: WeekContext, headless?: boolean): GameState {
   // Maps are already built by buildWeekCaches at the week boundary
   const metaDrift = computeMetaDrift(state.arenaHistory || []);
-  const { impact: boutImpact, results, summary } = runBoutSimulationPass(state, ctx.rootRng, headless);
+  const {
+    impact: boutImpact,
+    results,
+    summary,
+  } = runBoutSimulationPass(state, ctx.rootRng, headless);
   const settledState = resolveImpacts(state, [boutImpact]);
   settledState.cachedMetaDrift = metaDrift;
 

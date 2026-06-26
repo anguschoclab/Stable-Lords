@@ -39,9 +39,7 @@ export function countFlaws(w: Warrior): number {
 
 /** Pick an acquirable Flaw (respects hard cap + conflicts), or null if none fit. */
 export function pickExposureFlaw(w: Warrior, rng: IRNGService): string | null {
-  const flaws = Object.values(TRAITS).filter(
-    (t) => t.tier === 'Flaw' && canAcquireTrait(w, t.id)
-  );
+  const flaws = Object.values(TRAITS).filter((t) => t.tier === 'Flaw' && canAcquireTrait(w, t.id));
   if (flaws.length === 0) return null;
   const idx = Math.floor(rng.next() * flaws.length);
   const flaw = flaws[Math.min(idx, flaws.length - 1)];

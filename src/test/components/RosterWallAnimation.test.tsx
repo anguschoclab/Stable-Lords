@@ -18,28 +18,42 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: (selector?: any) => {
-    const state = {
-      isBookmarked: () => false,
-      roster: mockRoster,
-      player: { id: 'p1', name: 'Player', stableName: "Dragon's Hearth", fame: 0, renown: 0, titles: 0 },
+      const state = {
+        isBookmarked: () => false,
+        roster: mockRoster,
+        player: {
+          id: 'p1',
+          name: 'Player',
+          stableName: "Dragon's Hearth",
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+        rivals: [],
+        retired: [],
+        graveyard: [],
+      };
+      return selector ? selector(state) : state;
+    },
+    useWorldState: () => ({
+      player: {
+        id: 'p1',
+        name: 'Player',
+        stableName: "Dragon's Hearth",
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
       rivals: [],
+      roster: mockRoster,
       retired: [],
       graveyard: [],
-    };
-    return selector ? selector(state) : state;
-  },
-  useWorldState: () => ({
-    player: { id: 'p1', name: 'Player', stableName: "Dragon's Hearth", fame: 0, renown: 0, titles: 0 },
-    rivals: [],
-    roster: mockRoster,
-    retired: [],
-    graveyard: [],
-  }),
-};
+    }),
+  };
 });
 
 vi.mock('@/hooks/useActiveRoster', () => ({
@@ -68,23 +82,27 @@ vi.mock('@/components/stable/RosterWarriorRow', () => ({
 }));
 
 function makeRosterItems(n: number): Warrior[] {
-  return Array.from({ length: n }, (_, i) => ({
-    id: `w${i}` as any,
-    name: `RosterWarrior${i}`,
-    style: FightingStyle.AimedBlow,
-    age: 20 + i,
-    attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
-    fame: 50 + i,
-    popularity: 0,
-    career: { wins: i, losses: 5, kills: 0 },
-    titles: [],
-    injuries: [],
-    flair: [],
-    champion: i === 0,
-    status: 'Active',
-    traits: [],
-    potential: null,
-  } as unknown as Warrior));
+  return Array.from(
+    { length: n },
+    (_, i) =>
+      ({
+        id: `w${i}` as any,
+        name: `RosterWarrior${i}`,
+        style: FightingStyle.AimedBlow,
+        age: 20 + i,
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+        fame: 50 + i,
+        popularity: 0,
+        career: { wins: i, losses: 5, kills: 0 },
+        titles: [],
+        injuries: [],
+        flair: [],
+        champion: i === 0,
+        status: 'Active',
+        traits: [],
+        potential: null,
+      }) as unknown as Warrior
+  );
 }
 
 describe('RosterWall animation fix', () => {

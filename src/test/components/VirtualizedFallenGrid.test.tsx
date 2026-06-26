@@ -5,28 +5,42 @@ import type { Warrior } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: (selector?: any) => {
-    const state = {
-      player: { id: 'p1', name: 'Player', stableName: "Dragon's Hearth", fame: 0, renown: 0, titles: 0 },
+      const state = {
+        player: {
+          id: 'p1',
+          name: 'Player',
+          stableName: "Dragon's Hearth",
+          fame: 0,
+          renown: 0,
+          titles: 0,
+        },
+        rivals: [],
+        roster: [],
+        graveyard: [],
+        retired: [],
+      };
+      return selector ? selector(state) : state;
+    },
+    useWorldState: () => ({
+      player: {
+        id: 'p1',
+        name: 'Player',
+        stableName: "Dragon's Hearth",
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
       rivals: [],
       roster: [],
       graveyard: [],
       retired: [],
-    };
-    return selector ? selector(state) : state;
-  },
-  useWorldState: () => ({
-    player: { id: 'p1', name: 'Player', stableName: "Dragon's Hearth", fame: 0, renown: 0, titles: 0 },
-    rivals: [],
-    roster: [],
-    graveyard: [],
-    retired: [],
-  }),
-  useShallow: (fn: any) => fn,
-};
+    }),
+    useShallow: (fn: any) => fn,
+  };
 });
 
 vi.mock('@tanstack/react-router', () => ({

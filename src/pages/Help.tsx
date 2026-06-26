@@ -346,36 +346,36 @@ export default function Help() {
           </AccordionTrigger>
           <AccordionContent className="space-y-2 text-sm text-muted-foreground">
             <p>
-              Your stable progresses through a series of objectives culminating in the
-              Realm Champion title — awarded to the #1 stable at year's end.
+              Your stable progresses through a series of objectives culminating in the Realm
+              Champion title — awarded to the #1 stable at year's end.
             </p>
             <p>Objectives are tracked automatically each week:</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                <strong className="text-foreground">Reach Top 10</strong> — Rank among the
-                top 10 stables by fame.
+                <strong className="text-foreground">Reach Top 10</strong> — Rank among the top 10
+                stables by fame.
               </li>
               <li>
-                <strong className="text-foreground">Reach Top 3</strong> — Rank among the
-                top 3 stables by fame.
+                <strong className="text-foreground">Reach Top 3</strong> — Rank among the top 3
+                stables by fame.
               </li>
               <li>
-                <strong className="text-foreground">Tournament Victor</strong> — Win a
-                tournament with one of your warriors.
+                <strong className="text-foreground">Tournament Victor</strong> — Win a tournament
+                with one of your warriors.
               </li>
               <li>
-                <strong className="text-foreground">Hall of Famer</strong> — Have a warrior
-                win Warrior of the Year or Killer of the Year.
+                <strong className="text-foreground">Hall of Famer</strong> — Have a warrior win
+                Warrior of the Year or Killer of the Year.
               </li>
               <li>
-                <strong className="text-foreground">Realm Champion</strong> — Finish a year
-                as the #1 stable in the realm.
+                <strong className="text-foreground">Realm Champion</strong> — Finish a year as the
+                #1 stable in the realm.
               </li>
             </ul>
             <p>
-              Stable standing is determined by fame, with ties broken by titles won. When
-              you achieve Realm Champion status, a victory screen appears. You may continue
-              playing in legacy mode or start a new game.
+              Stable standing is determined by fame, with ties broken by titles won. When you
+              achieve Realm Champion status, a victory screen appears. You may continue playing in
+              legacy mode or start a new game.
             </p>
           </AccordionContent>
         </AccordionItem>

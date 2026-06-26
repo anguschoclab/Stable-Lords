@@ -133,11 +133,7 @@ describe('buildFightAnalysis', () => {
         },
       ],
     });
-    const a = buildFightAnalysis(
-      customOutcome,
-      baseWarrior({ id: 'A' }),
-      baseWarrior({ id: 'D' })
-    );
+    const a = buildFightAnalysis(customOutcome, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
     expect(a.tale.hitsD).toBe(1);
     expect(a.tale.damageD).toBe(5);
     expect(a.tale.ripostesA).toBe(1); // D had init, so A riposted
@@ -157,20 +153,32 @@ describe('buildFightAnalysis', () => {
   });
 
   it('handles tied or no skill gaps correctly without adding it to factors', () => {
-    const warriorA = baseWarrior({ id: 'A', skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } });
-    const warriorD = baseWarrior({ id: 'D', skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } });
+    const warriorA = baseWarrior({
+      id: 'A',
+      skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    });
+    const warriorD = baseWarrior({
+      id: 'D',
+      skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    });
 
     const a = buildFightAnalysis(outcome(), warriorA, warriorD);
-    const skillFactor = a.factors.find(f => f.label.includes('edge'));
+    const skillFactor = a.factors.find((f) => f.label.includes('edge'));
     expect(skillFactor).toBeUndefined();
   });
 
   it('identifies biggest skill gap properly even when negative (opponent favored)', () => {
-    const warriorA = baseWarrior({ id: 'A', skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 } });
-    const warriorD = baseWarrior({ id: 'D', skills: { ATT: 10, PAR: 15, DEF: 10, INI: 10, RIP: 10, DEC: 10 } }); // 5 point PAR advantage for D
+    const warriorA = baseWarrior({
+      id: 'A',
+      skills: { ATT: 10, PAR: 10, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    });
+    const warriorD = baseWarrior({
+      id: 'D',
+      skills: { ATT: 10, PAR: 15, DEF: 10, INI: 10, RIP: 10, DEC: 10 },
+    }); // 5 point PAR advantage for D
 
     const a = buildFightAnalysis(outcome(), warriorA, warriorD);
-    const skillFactor = a.factors.find(f => f.label.includes('PAR edge'));
+    const skillFactor = a.factors.find((f) => f.label.includes('PAR edge'));
     expect(skillFactor).toBeDefined();
     expect(skillFactor?.favored).toBe('D');
     expect(skillFactor?.detail).toContain('5-point PAR advantage');
@@ -183,7 +191,7 @@ describe('buildFightAnalysis', () => {
       post: undefined, // no fatalExchangeIndex
     });
     const a = buildFightAnalysis(customOutcome, baseWarrior({ id: 'A' }), baseWarrior({ id: 'D' }));
-    const outcomeFactor = a.factors.find(f => f.label === 'Outcome');
+    const outcomeFactor = a.factors.find((f) => f.label === 'Outcome');
     expect(outcomeFactor?.detail).toContain('No one won by Timeout');
   });
 });

@@ -1,4 +1,10 @@
-import type { GameState, Warrior, FightSummary, RivalStableData, TournamentEntry } from '@/types/state.types';
+import type {
+  GameState,
+  Warrior,
+  FightSummary,
+  RivalStableData,
+  TournamentEntry,
+} from '@/types/state.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { FightId, WarriorId, StableId } from '@/types/shared.types';
 import type { FightOutcome } from '@/types/combat.types';
@@ -34,8 +40,10 @@ export function resolveRound(
   tournament?: TournamentEntry
 ): RoundResolutionResult {
   const rngService = rng || new SeededRNGService(seed);
-  const resolvedTournament = tournament ?? (state.tournaments || []).find((t) => t.id === tournamentId);
-  if (!resolvedTournament || resolvedTournament.completed) return { impact: {}, roundResults: [], isComplete: false };
+  const resolvedTournament =
+    tournament ?? (state.tournaments || []).find((t) => t.id === tournamentId);
+  if (!resolvedTournament || resolvedTournament.completed)
+    return { impact: {}, roundResults: [], isComplete: false };
 
   const bracket = [...resolvedTournament.bracket];
   const { currentRound, roundBouts } = findCurrentRoundBouts(bracket);
@@ -177,7 +185,9 @@ export function resolveRound(
   return {
     impact: mergedImpact,
     roundResults:
-      isComplete && champion ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`] : [],
+      isComplete && champion
+        ? [`🏆 CHAMPION: ${champion} has won the ${resolvedTournament.name}!`]
+        : [],
     isComplete,
   };
 }

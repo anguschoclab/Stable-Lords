@@ -39,7 +39,14 @@ vi.mock('@/state/useGameStore', async () => {
     rivals: [],
     boutOffers: {},
     lastWeekBoutDisplay: {
-      results: [{ a: { id: 'w1', name: 'Alpha' }, d: { id: 'w2', name: 'Beta' }, outcome: { winner: 'w1', by: 'KO', rounds: 3 }, isRivalry: false }],
+      results: [
+        {
+          a: { id: 'w1', name: 'Alpha' },
+          d: { id: 'w2', name: 'Beta' },
+          outcome: { winner: 'w1', by: 'KO', rounds: 3 },
+          isRivalry: false,
+        },
+      ],
       deathNames: [],
       injuryNames: [],
     },

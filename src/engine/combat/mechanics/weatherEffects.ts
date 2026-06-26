@@ -382,7 +382,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'The very air feels unnaturally light, then crushingly heavy. The laws of physics are breaking down.',
   'Blood Fog': 'A thick, crimson fog rolls across the arena, smelling of rust and death.',
   'Shimmering Heat': 'The air ripples with shimmering heat, distorting every shape upon the sands.',
-  'Crystal Rain': 'Sharp, shimmering crystals plummet from the sky. Blood will undoubtedly be drawn.',
+  'Crystal Rain':
+    'Sharp, shimmering crystals plummet from the sky. Blood will undoubtedly be drawn.',
   'Rain of Frogs':
     'The sky darkens and an absurd, writhing rain of frogs begins to fall, confusing everyone.',
 };

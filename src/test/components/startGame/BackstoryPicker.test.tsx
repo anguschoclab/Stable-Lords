@@ -15,7 +15,9 @@ vi.mock('@/state/useGameStore', () => ({
 
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, ...props }: any) => (
-    <button {...props} onClick={onClick}>{children}</button>
+    <button {...props} onClick={onClick}>
+      {children}
+    </button>
   ),
 }));
 

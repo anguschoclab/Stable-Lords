@@ -51,12 +51,15 @@ export const BankruptcyService = {
     const impact: StateImpact = {};
 
     if (state.roster.length > MIN_BANKRUPTCY_ROSTER) {
-      const highestFameWarrior = state.roster.reduce((highest: Warrior | null, warrior: Warrior) => {
-        if (!highest || (warrior.fame || 0) > (highest.fame || 0)) {
-          return warrior;
-        }
-        return highest;
-      }, null);
+      const highestFameWarrior = state.roster.reduce(
+        (highest: Warrior | null, warrior: Warrior) => {
+          if (!highest || (warrior.fame || 0) > (highest.fame || 0)) {
+            return warrior;
+          }
+          return highest;
+        },
+        null
+      );
 
       if (highestFameWarrior) {
         impact.rosterRemovals = [highestFameWarrior.id];

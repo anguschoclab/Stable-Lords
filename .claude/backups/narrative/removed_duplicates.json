@@ -173,5 +173,25 @@
     "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with the force of an avalanche.",
     "removed": "{{attacker}} brings {{possessive}} {{weapon}} down with the thud of a falling oak.",
     "similarity": 0.8170731707317073
+  },
+  {
+    "path": "strikes.piercing.critical",
+    "item": "A sudden thrust from {{attacker}} impales {{defender}}, drawing a gasp from the crowd.",
+    "reason": "duplicate",
+    "similarTo": "A masterful thrust from {{attacker}} impales {{defender}}, drawing a gasp from the crowd.",
+    "similarity": 0.9101123595505618
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "item": "{{name}} leans back, barely avoiding the strike.",
+    "reason": "duplicate",
+    "similarTo": "{{name}} leans back, narrowly avoiding the strike.",
+    "similarity": 0.92
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "item": "{{name}} leans back, narrowly avoiding the strike.",
+    "reason": "consolidated",
+    "replacedBy": "{{name}} leans backward, narrowly avoiding the strike."
   }
 ]

@@ -127,7 +127,7 @@ export function extractWeekSummary(state: GameState, weekNumber: number): Autosi
   const boutSummaries = state.lastSimulationReport?.bouts ?? [];
   const deathNames: string[] = [];
   for (let i = 0; i < boutSummaries.length; i++) {
-    const b = boutSummaries[i]!;
+    const b = boutSummaries[i]; if (!b) continue;
     if (b.by === 'Kill') {
       const n = getNamesFromTitle(b.title);
       deathNames.push(b.winner === 'A' ? n.d : n.a);

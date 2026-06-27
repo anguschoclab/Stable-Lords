@@ -27,7 +27,7 @@ export function lowerBound(arr: number[], target: number): number {
   let hi = arr.length;
   while (lo < hi) {
     const mid = (lo + hi) >>> 1;
-    if (arr[mid]! < target) {
+    if ((arr[mid] || 0) < target) {
       lo = mid + 1;
     } else {
       hi = mid;
@@ -45,7 +45,7 @@ export function upperBound(arr: number[], target: number): number {
   let hi = arr.length;
   while (lo < hi) {
     const mid = (lo + hi) >>> 1;
-    if (arr[mid]! <= target) {
+    if ((arr[mid] || 0) <= target) {
       lo = mid + 1;
     } else {
       hi = mid;
@@ -180,11 +180,11 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
       let bestScore = -Infinity;
 
       for (let i = lo; i < hi; i++) {
-        const candidate = sortedByScore[i]!;
+        const candidate = sortedByScore[i]; if (!candidate) continue;
         if (candidate.id === warriorA.id) continue;
         if (matchedIds.has(candidate.id)) continue;
 
-        const scoreB = sortedScores[i]!;
+        const scoreB = sortedScores[i]; if (scoreB === undefined) continue;
         const gap = Math.abs(scoreA - scoreB) / maxScoreA;
 
         const personalityScore = calculatePersonalityMatchScore(warriorA, candidate, promoter);

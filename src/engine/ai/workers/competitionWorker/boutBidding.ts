@@ -262,7 +262,7 @@ export function convertBidsToOffers(
     if (candidates.length === 0) continue;
 
     // Pick the best matchup opponent
-    let bestCandidate = candidates[0]!;
+    let bestCandidate = candidates[0]; if (!bestCandidate) continue;
     let bestScore = -Infinity;
     for (const candidate of candidates) {
       const score = scoreMatchup(proposer, candidate.warrior, state);

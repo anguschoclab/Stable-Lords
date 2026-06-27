@@ -1,15 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import { enduranceCost, fatiguePenalty } from '@/engine/combat/mechanics/combatFatigue';
-import { WeatherType } from '@/types/shared.types';
-
-vi.mock('@/engine/combat/mechanics/weatherEffects', () => ({
-  getWeatherEffect: vi.fn((weather: WeatherType | string) => {
-    if (weather === 'Clear') return { staminaMult: 1.0 };
-    if (weather === 'Sweltering') return { staminaMult: 1.3 };
-    if (weather === 'Breezy') return { staminaMult: 0.9 };
-    return { staminaMult: 1.0 };
-  }),
-}));
 
 describe('combatFatigue mechanics', () => {
   describe('enduranceCost', () => {

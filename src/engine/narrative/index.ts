@@ -20,7 +20,13 @@ export {
   narrateHit,
   narrateParryBreak,
   narrateInitiative,
-} from './narrativeCombat';
+  narrateKnockdown,
+  narrateRecovery,
+  getEpithet,
+  narrateContextLine,
+  narrateCrowdReaction,
+  narrateTaunt,
+} from './combatNarrators';
 export {
   damageSeverityLine,
   stateChangeLine,

@@ -17,7 +17,7 @@ import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { GameState } from '@/types/state.types';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
 import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';
-import { TimeAdvanceService } from '@/engine/pipeline/tick/TimeAdvanceService';
+import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance';
 
 let mockState: GameState;
 

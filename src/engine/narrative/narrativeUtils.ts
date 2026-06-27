@@ -1,20 +1,10 @@
 import { getItemById, getItemByCode } from '@/data/equipment';
 import { type WeaponType } from '@/types/combat.types';
 import { FightingStyle } from '@/types/shared.types';
-import { randomPick } from '@/utils/random';
-import type { RNG } from './types';
 
 /**
  * Stable Lords — Narrative Helpers
  */
-
-/**
- * Pick a random element from an array using the provided RNG.
- * @deprecated Use randomPick from @/utils/random instead
- */
-export function pick<T>(arr: T[], rng: RNG): T {
-  return randomPick(arr, rng);
-}
 
 /** Approximate DM-style heights from SZ attribute */
 export function szToHeight(sz: number): string {

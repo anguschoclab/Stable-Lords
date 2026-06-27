@@ -64,8 +64,8 @@ export function narrateEvents(
 
     switch (event.type) {
       case 'INITIATIVE':
-        if (rng() < 0.3) {
-          log.push({ minute, text: narrateInitiative(rng, actorName, rng() < 0.3, opponentName) });
+        if (rng.next() < 0.3) {
+          log.push({ minute, text: narrateInitiative(rng, actorName, rng.next() < 0.3, opponentName) });
         }
         break;
 
@@ -295,7 +295,7 @@ export function narrateEvents(
             CRUISING: `${actorName} looks almost comfortable — controlling this fight with ease.`,
           };
           const line = psychLines[state];
-          if (line && rng() < 0.5) log.push({ minute, text: line });
+          if (line && rng.next() < 0.5) log.push({ minute, text: line });
         }
         break;
       }

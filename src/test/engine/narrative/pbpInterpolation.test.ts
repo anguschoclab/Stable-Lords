@@ -63,14 +63,14 @@ describe('PBP interpolation — no raw {{token}} leaks', () => {
 
   it('battleOpener interpolates both fighter names (no raw tokens)', () => {
     for (let seed = 1; seed <= 40; seed++) {
-      const line = battleOpener(new SeededRNGService(seed) as any, 'Garath', 'Vellis');
+      const line = battleOpener(new SeededRNGService(seed), 'Garath', 'Vellis');
       expect(noRawTokens(line), `seed ${seed}: ${line}`).toBe(true);
     }
   });
 
   it('narrateFeint resolves {{defender}} via the passed opponent name', () => {
     for (let seed = 1; seed <= 40; seed++) {
-      const line = narrateFeint(new SeededRNGService(seed) as any, 'Garath', true, 'Vellis');
+      const line = narrateFeint(new SeededRNGService(seed), 'Garath', true, 'Vellis');
       expect(noRawTokens(line), `seed ${seed}: ${line}`).toBe(true);
     }
   });
@@ -80,8 +80,7 @@ describe('PBP interpolation — no raw {{token}} leaks', () => {
     for (let seed = 1; seed <= 60; seed++) {
       for (const attr of attrs) {
         const svc = new SeededRNGService(seed);
-        const rng = () => svc.next();
-        const hint = narrateInsightHint(rng, attr, 'Garath', 'Vellis');
+        const hint = narrateInsightHint(svc, attr, 'Garath', 'Vellis');
         if (hint !== null) {
           expect(noRawTokens(hint), `seed ${seed} attr ${attr}: ${hint}`).toBe(true);
         }

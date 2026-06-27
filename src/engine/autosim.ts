@@ -3,7 +3,7 @@ import type { BoutOfferId } from '@/types/shared.types';
 import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
 import { respondToBoutOffer } from '@/engine/bout/mutations/contractMutations';
 import { resolveImpacts } from './impacts';
-import { TimeAdvanceService, type SoftStopCondition } from './pipeline/tick/TimeAdvanceService';
+import { TimeAdvanceService, type SoftStopCondition } from './pipeline/tick/timeAdvance';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy'; /**
  * Defines the shape of autosim week summary.
  */

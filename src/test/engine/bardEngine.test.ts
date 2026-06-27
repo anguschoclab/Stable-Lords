@@ -1,9 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { SeededRNGService } from '@/utils/random';
-import { NarrativeTemplateEngine } from '@/engine/narrative/narrativeTemplateEngine';
+import { getFromArchive, interpolateTemplate } from '@/engine/narrative';
 import { blurb, commentatorFor, recapLine } from '@/lore/AnnouncerAI';
 import { TournamentSelectionService } from '@/engine/matchmaking/tournamentSelection';
-import { interpolateTemplate } from '@/engine/narrative';
 
 describe('Bard Narrative Engine', () => {
   const rng = new SeededRNGService(12345);
@@ -17,19 +16,19 @@ describe('Bard Narrative Engine', () => {
         weapon: 'GLADIUS',
         bodyPart: 'CHEST',
       };
-      const result = NarrativeTemplateEngine.interpolateTemplate(template, ctx);
+      const result = interpolateTemplate(template, ctx);
       expect(result).toBe('Warrior A strikes Warrior D with GLADIUS in the CHEST.');
     });
 
     it('interpolates %H (hits/minutes) token', () => {
       const template = 'The bout lasted %H minutes.';
-      const result = NarrativeTemplateEngine.interpolateTemplate(template, { hits: 15 });
+      const result = interpolateTemplate(template, { hits: 15 });
       expect(result).toBe('The bout lasted 15 minutes.');
     });
 
     it('falls back to generic names for missing context', () => {
       const template = '%A attacks %D.';
-      const result = NarrativeTemplateEngine.interpolateTemplate(template, {});
+      const result = interpolateTemplate(template, {});
       expect(result).toBe('The warrior attacks the opponent.');
     });
 
@@ -71,18 +70,18 @@ describe('Bard Narrative Engine', () => {
 
   describe('Archive Lookup', () => {
     it('successfully retrieves migrated blurbs', () => {
-      const template = NarrativeTemplateEngine.getFromArchive(rng, ['blurbs', 'neutral']);
+      const template = getFromArchive(rng, ['blurbs', 'neutral']);
       expect(template).toBeDefined();
       expect(template).toContain('%A');
     });
 
     it('retrieves commentary by tag', () => {
-      const template = NarrativeTemplateEngine.getFromArchive(rng, ['commentary', 'KO']);
+      const template = getFromArchive(rng, ['commentary', 'KO']);
       expect(typeof template).toBe('string');
     });
 
     it('returns ultimate fallback for missing paths', () => {
-      const template = NarrativeTemplateEngine.getFromArchive(rng, ['invalid', 'path']);
+      const template = getFromArchive(rng, ['invalid', 'path']);
       expect(template).toBe('A fierce exchange occurs.');
     });
   });
@@ -114,7 +113,7 @@ describe('Bard Narrative Engine', () => {
 
   describe('Severity Mapping (Strike tiers)', () => {
     it('handles flashy/supernatural tiers via getStrikeSeverity logic', () => {
-      const criticalTemplate = NarrativeTemplateEngine.getFromArchive(rng, [
+      const criticalTemplate = getFromArchive(rng, [
         'strikes',
         'slashing',
         'critical_supernatural',

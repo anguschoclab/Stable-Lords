@@ -132,12 +132,6 @@ export function randomPick<T>(arr: T[], rng: (() => number) | IRNGService): T {
 }
 
 /**
- * Legacy pick alias for backward compatibility.
- * @deprecated Use randomPick instead.
- */
-export const pick = randomPick;
-
-/**
  * Converts a string to a numeric seed using character code reduction.
  */
 export function stringToSeed(str: string): number {

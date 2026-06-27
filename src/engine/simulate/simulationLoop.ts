@@ -13,6 +13,7 @@ import type {
   ExchangeLogEntry,
 } from '@/types/combat.types';
 import type { FightPlan } from '@/types/combat.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import type { Warrior } from '@/types/warrior.types';
 import { buildExchangeLogEntry } from './logging';
 import { minuteStatusLine, tacticStreakLine, narrateBoutEnd } from '../narrative';
@@ -40,13 +41,13 @@ export function runSimulationLoop(
   nameD: string,
   weaponA: string,
   weaponD: string,
-  warriorA?: Warrior,
-  warriorD?: Warrior,
-  planA?: FightPlan,
-  planD?: FightPlan,
-  crowdMood?: string,
-  headless?: boolean,
-  narRng?: () => number
+  warriorA: Warrior | undefined,
+  warriorD: Warrior | undefined,
+  planA: FightPlan | undefined,
+  planD: FightPlan | undefined,
+  crowdMood: string | undefined,
+  headless: boolean,
+  narRng: IRNGService
 ): {
   log: MinuteEvent[];
   exchangeLog: ExchangeLogEntry[];
@@ -57,7 +58,7 @@ export function runSimulationLoop(
   fatalExchangeIndex: number | undefined;
   fightMinutes: number;
 } {
-  const flavorRng = narRng ?? resCtx.rng;
+  const flavorRng = narRng;
   const log: MinuteEvent[] = [];
   const exchangeLog: ExchangeLogEntry[] = [];
   let prevHpRatioA = 1.0;

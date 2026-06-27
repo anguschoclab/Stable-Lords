@@ -7,7 +7,7 @@ import {
   type QuarterAdvanceResult,
   type YearAdvanceResult,
   type AdvanceOptions,
-} from './TimeAdvanceService';
+} from './timeAdvance';
 
 /**
  * Stable Lords — Unified Tick Orchestrator

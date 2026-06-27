@@ -52,7 +52,6 @@ export function simulateFight(
   // Narration-only RNG — isolated from combat resolution so flavor
   // draws never shift the mechanical outcome stream.
   const narRngService = new SeededRNGService(boutSeed ^ 0x5f3759df);
-  const narRng = () => narRngService.next();
 
   const nameA = warriorA?.name ?? 'Attacker';
   const nameD = warriorD?.name ?? 'Defender';
@@ -88,7 +87,7 @@ export function simulateFight(
   const introLog = headless
     ? []
     : generateIntroductions(
-        narRng,
+        narRngService,
         nameA,
         nameD,
         planA,
@@ -124,7 +123,7 @@ export function simulateFight(
     planD,
     crowdMood,
     headless ?? false,
-    narRng
+    narRngService
   );
 
   const log = headless ? [] : [...introLog, ...loopLog];

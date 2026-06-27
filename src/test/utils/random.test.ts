@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SeededRNG, randomPick, stringToSeed, hashStr, shuffled, pick } from '@/utils/random';
+import { SeededRNG, randomPick, stringToSeed, hashStr, shuffled } from '@/utils/random';
 
 describe('SeededRNG', () => {
   it('produces deterministic results for the same seed', () => {
@@ -258,11 +258,5 @@ describe('shuffled', () => {
     const arr = [1, 2, 3, 4, 5];
     const result = shuffled(arr, rng);
     expect(result.sort()).toEqual([1, 2, 3, 4, 5]);
-  });
-});
-
-describe('pick (alias)', () => {
-  it('is the same function as randomPick', () => {
-    expect(pick).toBe(randomPick);
   });
 });

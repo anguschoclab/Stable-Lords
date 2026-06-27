@@ -3,7 +3,7 @@ import {
   evaluateStopConditions,
   SoftStopCondition,
   TimeAdvanceService,
-} from '@/engine/pipeline/tick/TimeAdvanceService';
+} from '@/engine/pipeline/tick/timeAdvance';
 import type { GameState } from '@/types/state.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import * as weekPipelineService from '@/engine/pipeline/services/weekPipelineService';

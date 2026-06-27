@@ -8,6 +8,7 @@ import type { MinuteEvent } from '@/types/combat.types';
 import type { FightPlan } from '@/types/combat.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { WeatherType } from '@/types/shared.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { DEFAULT_LOADOUT } from '@/data/equipment';
 
 /**
@@ -22,7 +23,7 @@ export interface ArenaConfig {
  * Generate introduction narrative for both fighters.
  */
 export function generateIntroductions(
-  rng: () => number,
+  rng: IRNGService,
   nameA: string,
   nameD: string,
   planA: FightPlan,

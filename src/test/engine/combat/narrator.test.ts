@@ -5,10 +5,11 @@ import { describe, it, expect } from 'vitest';
 import { narrateEvents, type NarrationContext } from '@/engine/combat/narrative/narrator';
 import type { CombatEvent } from '@/types/combat.types';
 import type { FightingStyle } from '@/types/shared.types';
+import { SeededRNG } from '@/utils/random';
 
 describe('narrator', () => {
   const createMockContext = (overrides: Partial<NarrationContext> = {}): NarrationContext => ({
-    rng: () => 0.5,
+    rng: new SeededRNG(42),
     nameA: 'Thunderstrike',
     nameD: 'Lightning',
     weaponA: 'broadsword',
@@ -169,8 +170,8 @@ describe('narrator', () => {
 
   describe('flavor variation', () => {
     it('produces different text with different RNG seeds', () => {
-      const ctx1 = createMockContext({ rng: () => 0.1 });
-      const ctx2 = createMockContext({ rng: () => 0.9 });
+      const ctx1 = createMockContext({ rng: new SeededRNG(1) });
+      const ctx2 = createMockContext({ rng: new SeededRNG(999) });
       const events: CombatEvent[] = [{ type: 'ATTACK', actor: 'A' }];
 
       const result1 = narrateEvents(events, ctx1, 1);

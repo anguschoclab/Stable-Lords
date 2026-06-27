@@ -1,4 +1,3 @@
-import { pick } from '@/utils/random';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
@@ -212,9 +211,8 @@ const DEFINING_MOMENTS = [
  * @returns A formatted lore string.
  */
 export function generateLore(name: string, rng: IRNGService): string {
-  const r = () => rng.next();
-  const childhood = pick(CHILDHOOD_TRAITS, r);
-  const defining = pick(DEFINING_MOMENTS, r);
+  const childhood = rng.pick(CHILDHOOD_TRAITS);
+  const defining = rng.pick(DEFINING_MOMENTS);
   return `${name} ${childhood}, ${defining}.`;
 }
 
@@ -224,5 +222,5 @@ export function generateLore(name: string, rng: IRNGService): string {
  * @returns An origin string from the ORIGINS pool.
  */
 export function generateOrigin(rng: IRNGService): string {
-  return pick(ORIGINS, () => rng.next());
+  return rng.pick(ORIGINS);
 }

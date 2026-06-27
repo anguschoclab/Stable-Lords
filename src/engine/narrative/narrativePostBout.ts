@@ -6,9 +6,7 @@ import { getWeaponDisplayName, getWeaponType } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate, peekArchive } from './narrativePBPUtils';
 import { audioManager } from '@/lib/AudioManager';
 import { FightingStyle } from '@/types/shared.types';
-import type { RNG } from './types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { normalizeRng } from '@/engine/core/rng/normalize';
 
 /**
  * Narrates bout end.
@@ -43,14 +41,13 @@ const CAUSE_ARCHIVE_PATH: Record<string, string> = {
  * @param weaponId - Weapon id. (optional)
  */
 export function narrateBoutEnd(
-  rng: RNG | IRNGService,
+  rng: IRNGService,
   by: string,
   winnerName: string,
   loserName: string,
   weaponId?: string,
   ctx: BoutEndContext = {}
 ): string[] {
-  const rngFn = normalizeRng(rng);
   const wName = getWeaponDisplayName(weaponId);
   const wType = getWeaponType(weaponId, ctx.style as FightingStyle | undefined);
 
@@ -64,7 +61,7 @@ export function narrateBoutEnd(
   };
 
   const cat = categoryMap[by] || 'KO';
-  const conclusionTemplate = getFromArchive(rngFn, ['conclusions', cat]);
+  const conclusionTemplate = getFromArchive(rng, ['conclusions', cat]);
   const conclusion = interpolateTemplate(conclusionTemplate, {
     attacker: winnerName,
     defender: loserName,
@@ -101,7 +98,7 @@ export function narrateBoutEnd(
       // the tiered cause/style/mood cascade.
       const pool = peekArchive(path);
       if (pool && pool.length > 0) {
-        fatalBlowTemplate = getFromArchive(rngFn, path);
+        fatalBlowTemplate = getFromArchive(rng, path);
         if (fatalBlowTemplate && fatalBlowTemplate !== fallbackMarker) break;
       }
     }
@@ -122,7 +119,7 @@ export function narrateBoutEnd(
 /**
  * Generates popularity line.
  */
-export function popularityLine(rng: RNG, name: string, popDelta: number): string | null {
+export function popularityLine(rng: IRNGService, name: string, popDelta: number): string | null {
   const cat = popDelta >= 3 ? 'great' : popDelta >= 1 ? 'normal' : '';
   if (!cat) return null;
   const template = getFromArchive(rng, ['pbp', 'meta', 'popularity', cat]);
@@ -132,7 +129,7 @@ export function popularityLine(rng: RNG, name: string, popDelta: number): string
 /**
  * Generates skill learn line.
  */
-export function skillLearnLine(rng: RNG, name: string): string {
+export function skillLearnLine(rng: IRNGService, name: string): string {
   const template = getFromArchive(rng, ['pbp', 'meta', 'skill_learns']);
   return interpolateTemplate(template, { attacker: name });
 }
@@ -140,25 +137,25 @@ export function skillLearnLine(rng: RNG, name: string): string {
 /**
  * Generates trading blows line.
  */
-export function tradingBlowsLine(rng: RNG): string {
+export function tradingBlowsLine(rng: IRNGService): string {
   return getFromArchive(rng, ['pbp', 'pacing', 'trading_blows']);
 }
 
 /**
  * Generates stalemate line.
  */
-export function stalemateLine(rng: RNG): string {
+export function stalemateLine(rng: IRNGService): string {
   return getFromArchive(rng, ['pbp', 'pacing', 'stalemate']);
 }
 
 /**
  * Generates taunt line.
  */
-export function tauntLine(rng: RNG, name: string, isWinner: boolean): string | null {
+export function tauntLine(rng: IRNGService, name: string, isWinner: boolean): string | null {
   // Fire ~40% of the time (was 20%) — taunts are flavour, not signal, so they
   // should feel present rather than rare. Winners taunt more than losers.
   const threshold = isWinner ? 0.45 : 0.3;
-  if (rng() > threshold) return null;
+  if (rng.next() > threshold) return null;
   const cat = isWinner ? 'winner' : 'loser';
   const template = getFromArchive(rng, ['pbp', 'taunts', cat]);
   return interpolateTemplate(template, { attacker: name });

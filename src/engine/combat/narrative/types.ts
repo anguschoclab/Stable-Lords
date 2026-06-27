@@ -1,10 +1,11 @@
 import { type FightingStyle } from '@/types/shared.types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
  *
  */
 export interface NarrationContext {
-  rng: () => number;
+  rng: IRNGService;
   nameA: string;
   nameD: string;
   weaponA: string;

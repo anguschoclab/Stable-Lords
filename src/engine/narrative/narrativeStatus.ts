@@ -3,13 +3,13 @@
  * Extracted from narrativePBP.ts to follow SRP
  */
 import { getFromArchive, interpolateTemplate } from './narrativePBPUtils';
-import type { RNG } from './types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
  * Generates damage severity line.
  */
 export function damageSeverityLine(
-  rng: RNG,
+  rng: IRNGService,
   damage: number,
   maxHp: number,
   defenderName?: string
@@ -38,7 +38,7 @@ export function damageSeverityLine(
  * Generates state change line.
  */
 export function stateChangeLine(
-  rng: RNG,
+  rng: IRNGService,
   name: string,
   hpRatio: number,
   prevHpRatio: number
@@ -58,7 +58,7 @@ export function stateChangeLine(
 /**
  * Generates fatigue line.
  */
-export function fatigueLine(_rng: RNG, name: string, endRatio: number): string | null {
+export function fatigueLine(_rng: IRNGService, name: string, endRatio: number): string | null {
   if (endRatio <= 0.15) return `${name} is tired and barely able to defend himself!`;
   if (endRatio <= 0.3) return `${name} is breathing heavily.`;
   return null;
@@ -68,14 +68,14 @@ export function fatigueLine(_rng: RNG, name: string, endRatio: number): string |
  * Generates crowd reaction line.
  */
 export function crowdReaction(
-  rng: RNG,
+  rng: IRNGService,
   loserName: string,
   winnerName: string,
   hpRatio: number
 ): string | null {
-  if (rng() > 0.25) return null;
+  if (rng.next() > 0.25) return null;
   const isDeadly = hpRatio <= 0.1;
-  const mood = isDeadly ? 'gasp' : hpRatio <= 0.3 ? 'encourage' : rng() < 0.5 ? 'boo' : 'cheer';
+  const mood = isDeadly ? 'gasp' : hpRatio <= 0.3 ? 'encourage' : rng.next() < 0.5 ? 'boo' : 'cheer';
   const template =
     getFromArchive(rng, ['pbp', 'reactions', mood]) ||
     getFromArchive(rng, [
@@ -90,7 +90,7 @@ export function crowdReaction(
  * Generates minute status line.
  */
 export function minuteStatusLine(
-  rng: RNG,
+  rng: IRNGService,
   _minute: number,
   nameA: string,
   nameD: string,

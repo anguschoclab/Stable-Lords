@@ -7,7 +7,7 @@ import { getItemById, checkWeaponRequirements, type EquipmentItem } from '@/data
 import type { Attributes } from '@/types/shared.types';
 import { szToHeight, getWeaponDisplayName } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate } from './narrativePBPUtils';
-import type { RNG } from './types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
  * Defines the shape of warrior intro data.
@@ -30,7 +30,7 @@ export interface WarriorIntroData {
 /**
  * Generates warrior introduction text.
  */
-export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: number): string[] {
+export function generateWarriorIntro(rng: IRNGService, data: WarriorIntroData, sz?: number): string[] {
   const lines: string[] = [];
   const n = data.name;
 
@@ -41,9 +41,9 @@ export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: numb
     ? data.handedness === 'ambidextrous'
       ? 'ambidextrous'
       : `${data.handedness} handed`
-    : rng() < 0.85
+    : rng.next() < 0.85
       ? 'right handed'
-      : rng() < 0.5
+      : rng.next() < 0.5
         ? 'left handed'
         : 'ambidextrous';
   lines.push(`${n} is ${hand}.`);
@@ -104,7 +104,7 @@ export function generateWarriorIntro(rng: RNG, data: WarriorIntroData, sz?: numb
  * Generates battle opener text, interpolating the two fighters' names so the
  * archive's {{attacker}}/{{defender}} tokens resolve (rather than leaking raw).
  */
-export function battleOpener(rng: RNG, attackerName?: string, defenderName?: string): string {
+export function battleOpener(rng: IRNGService, attackerName?: string, defenderName?: string): string {
   const template = getFromArchive(rng, ['pbp', 'openers']);
   return interpolateTemplate(template, { attacker: attackerName, defender: defenderName });
 }

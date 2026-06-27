@@ -2,10 +2,9 @@
  * Narrative Positioning - Range and zone narration functions
  * Extracted from narrativePBP.ts to follow SRP
  */
-import { pick } from './narrativeUtils';
 import { getFromArchive, interpolateTemplate } from './narrativePBPUtils';
 
-import type { RNG } from './types';
+import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 /**
  * Range_names.
@@ -20,7 +19,7 @@ export const RANGE_NAMES: Record<string, string> = {
 /**
  * Narrates range shift.
  */
-export function narrateRangeShift(rng: RNG, moverName: string, newRange: string): string {
+export function narrateRangeShift(rng: IRNGService, moverName: string, newRange: string): string {
   const rangeName = RANGE_NAMES[newRange] ?? newRange.toLowerCase();
   const templates = [
     `%A forces the fight to ${rangeName}.`,
@@ -29,14 +28,14 @@ export function narrateRangeShift(rng: RNG, moverName: string, newRange: string)
     `%A seizes the spacing advantage, pulling into ${rangeName}.`,
     `%A controls the range — the fight moves to ${rangeName}.`,
   ];
-  return interpolateTemplate(pick(templates, rng), { attacker: moverName });
+  return interpolateTemplate(rng.pick(templates), { attacker: moverName });
 }
 
 /**
  * Narrates feint attempt.
  */
 export function narrateFeint(
-  rng: RNG,
+  rng: IRNGService,
   attackerName: string,
   succeeded: boolean,
   defenderName?: string
@@ -51,35 +50,35 @@ export function narrateFeint(
       `%A tries to deceive, but their opponent sees through it instantly.`,
       `%A's misdirection fools no one — the opponent doesn't bite.`,
     ];
-    return interpolateTemplate(pick(templates, rng), { attacker: attackerName });
+    return interpolateTemplate(rng.pick(templates), { attacker: attackerName });
   }
 }
 
 /**
  * Narrates zone shift.
  */
-export function narrateZoneShift(rng: RNG, pushedName: string, zone: string): string {
+export function narrateZoneShift(rng: IRNGService, pushedName: string, zone: string): string {
   if (zone === 'Corner') {
     const templates = [
       `%A is backed into a corner — options shrinking fast.`,
       `%A finds the wall at their back, hemmed in with nowhere to go.`,
       `%A is driven into the corner — pressure becoming desperate.`,
     ];
-    return interpolateTemplate(pick(templates, rng), { attacker: pushedName });
+    return interpolateTemplate(rng.pick(templates), { attacker: pushedName });
   } else if (zone === 'Edge') {
     const templates = [
       `%A gives ground, retreating to the edge of the arena.`,
       `%A is pushed to the boundary — the pressure is mounting.`,
       `%A cedes the center, falling back toward the perimeter.`,
     ];
-    return interpolateTemplate(pick(templates, rng), { attacker: pushedName });
+    return interpolateTemplate(rng.pick(templates), { attacker: pushedName });
   } else {
     const templates = [
       `%A recovers ground, reclaiming the center of the arena.`,
       `%A finds space to breathe — pushing away from the wall.`,
       `%A wrestles back to open ground.`,
     ];
-    return interpolateTemplate(pick(templates, rng), { attacker: pushedName });
+    return interpolateTemplate(rng.pick(templates), { attacker: pushedName });
   }
 }
 
@@ -102,7 +101,7 @@ export function tacticStreakLine(name: string, tactic: string, streak: number): 
 /**
  * Generates pressing line.
  */
-export function pressingLine(rng: RNG, name: string): string {
+export function pressingLine(rng: IRNGService, name: string): string {
   const template = getFromArchive(rng, ['pbp', 'pacing', 'pressing']);
   return interpolateTemplate(template, { attacker: name });
 }
@@ -111,7 +110,7 @@ export function pressingLine(rng: RNG, name: string): string {
  * Narrates insight hint.
  */
 export function narrateInsightHint(
-  rng: RNG,
+  rng: IRNGService,
   attribute: string,
   attackerName?: string,
   defenderName?: string

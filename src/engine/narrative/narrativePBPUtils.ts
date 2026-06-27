@@ -5,8 +5,6 @@
 import narrativeContent from '@/data/narrativeContent.json';
 import type { NarrativeContent } from '@/types/narrative.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { pick } from './narrativeUtils';
-import type { RNG } from './types';
 
 /**
  * Defines the shape of combat context.
@@ -127,9 +125,8 @@ export function peekArchive(path: string[]): string[] | null {
 
 /**
  * Safely picks a template from the JSON archive or returns a generic fallback.
- * Supports both RNG function and IRNGService objects.
  */
-export function getFromArchive(rng: RNG | IRNGService, path: string[]): string {
+export function getFromArchive(rng: IRNGService, path: string[]): string {
   try {
     let current: unknown = narrativeContent;
     for (const key of path) {
@@ -140,8 +137,7 @@ export function getFromArchive(rng: RNG | IRNGService, path: string[]): string {
       }
     }
     if (Array.isArray(current) && current.length > 0) {
-      const rngFn = typeof rng === 'function' ? rng : () => rng.next();
-      return pick(current, rngFn);
+      return rng.pick(current);
     }
   } catch {
     console.error(`Narrative Archive Error: Missing path ${path.join('.')}`);
@@ -152,10 +148,10 @@ export function getFromArchive(rng: RNG | IRNGService, path: string[]): string {
 /**
  * Gets rich hit location description.
  */
-export function richHitLocation(rng: RNG, location: string): string {
+export function richHitLocation(rng: IRNGService, location: string): string {
   const hitLocations = (narrativeContent as NarrativeContent).pbp.hit_locations;
   const key = location.toLowerCase() as keyof typeof hitLocations;
   const variants = hitLocations[key];
   if (!variants) return location.toUpperCase();
-  return pick(variants, rng);
+  return rng.pick(variants);
 }

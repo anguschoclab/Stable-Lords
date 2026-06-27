@@ -1,6 +1,6 @@
 import { FightingStyle, type Attributes, ATTRIBUTE_KEYS } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { pick, shuffled } from '@/utils/random';
+import { shuffled } from '@/utils/random';
 
 type Archetype = 'brutal' | 'agile' | 'cunning' | 'tank'; /**
  * Style_archetype.
@@ -70,7 +70,7 @@ export function generateArchetypeAttrs(style: FightingStyle, rng: IRNGService): 
   }
 
   while (pool > 0) {
-    const key = pick(ATTRIBUTE_KEYS as unknown as (keyof Attributes)[], r);
+    const key = rng.pick(ATTRIBUTE_KEYS as unknown as (keyof Attributes)[]);
     if (attrs[key] < 25) {
       attrs[key]++;
       pool--;

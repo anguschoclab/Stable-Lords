@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { protectCovers, rollHitLocation, HIT_LOCATIONS } from '@/engine/combat/mechanics/hitLocation';
+import { protectCovers, rollHitLocation } from '@/engine/combat/mechanics/hitLocation';
 
 describe('hitLocation mechanics', () => {
   describe('protectCovers', () => {

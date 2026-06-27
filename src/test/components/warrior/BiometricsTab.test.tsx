@@ -82,19 +82,19 @@ describe('BiometricsTab', () => {
   const warrior = makeWarrior();
   const displayWarrior = makeDisplayWarrior(warrior);
 
-  it('renders WarriorRadarChart inside Suspense with correct warrior', () => {
+  it('renders WarriorRadarChart inside Suspense with correct warrior', async () => {
     render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
-    expect(screen.getByTestId('radar-chart')).toBeInTheDocument();
+    expect(await screen.findByTestId('radar-chart')).toBeInTheDocument();
   });
 
-  it('renders WarriorRadarChart inside Suspense', () => {
+  it('renders WarriorRadarChart inside Suspense', async () => {
     render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
-    expect(screen.getByTestId('radar-chart')).toBeInTheDocument();
+    expect(await screen.findByTestId('radar-chart')).toBeInTheDocument();
   });
 
-  it('passes the correct warrior to WarriorRadarChart', () => {
+  it('passes the correct warrior to WarriorRadarChart', async () => {
     render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
-    const chart = screen.getByTestId('radar-chart');
+    const chart = await screen.findByTestId('radar-chart');
     expect(chart.getAttribute('data-warrior')).toBe('w1');
   });
 

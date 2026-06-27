@@ -34,17 +34,17 @@ function TacticalBarHeader({
       role="button"
       tabIndex={0}
       aria-expanded={expanded}
+      className={cn(
+        'flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        expanded && 'border-b border-white/5'
+      )}
+      onClick={onToggle}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onToggle();
         }
       }}
-      className={cn(
-        'flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:bg-white/10',
-        expanded && 'border-b border-white/5'
-      )}
-      onClick={onToggle}
     >
       <div className="flex items-center gap-3">
         {hasAlerts ? (
@@ -68,16 +68,12 @@ function TacticalBarHeader({
 
       <div className="flex items-center gap-2">
         <span className="text-[10px] text-muted-foreground uppercase tracking-wider">W{week}</span>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6"
-          title={expanded ? 'Collapse alerts' : 'Expand alerts'}
-          aria-label={expanded ? 'Collapse alerts' : 'Expand alerts'}
-          aria-expanded={expanded}
+        <div
+          className="h-6 w-6 flex items-center justify-center text-muted-foreground"
+          aria-hidden="true"
         >
           {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-        </Button>
+        </div>
       </div>
     </div>
   );
@@ -113,21 +109,20 @@ function AlertItem({ alert }: AlertItemProps) {
       </div>
 
       {alert.action && (
-        <Link to={alert.action.to}>
-          <Button
-            size="sm"
-            variant="outline"
-            className={cn(
-              'h-7 text-[10px] font-black uppercase tracking-wider',
-              alert.type === 'warning' && 'border-arena-gold/30 hover:bg-arena-gold/20',
-              alert.type === 'info' && 'border-border/30 hover:bg-muted/20',
-              alert.type === 'urgent' && 'border-destructive/30 hover:bg-destructive/20',
-              alert.type === 'success' && 'border-primary/30 hover:bg-primary/20'
-            )}
-          >
-            {alert.action.label}
-          </Button>
-        </Link>
+        <Button
+          asChild
+          size="sm"
+          variant="outline"
+          className={cn(
+            'h-7 text-[10px] font-black uppercase tracking-wider',
+            alert.type === 'warning' && 'border-arena-gold/30 hover:bg-arena-gold/20',
+            alert.type === 'info' && 'border-border/30 hover:bg-muted/20',
+            alert.type === 'urgent' && 'border-destructive/30 hover:bg-destructive/20',
+            alert.type === 'success' && 'border-primary/30 hover:bg-primary/20'
+          )}
+        >
+          <Link to={alert.action.to}>{alert.action.label}</Link>
+        </Button>
       )}
     </div>
   );

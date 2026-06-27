@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from './useGameStore';
 import { reconstructGameState } from './serialization';
@@ -84,23 +85,23 @@ interface StyleStatsRow {
 /**
  *
  */
-export const useStyleStats = (): StyleStatsRow[] =>
-  useGameStore(
-    useShallow((s) => {
-      const map = new Map<string, { wins: number; losses: number }>();
-      for (const w of s.roster) {
-        const entry = map.get(w.style) ?? { wins: 0, losses: 0 };
-        entry.wins += w.career?.wins ?? 0;
-        entry.losses += w.career?.losses ?? 0;
-        map.set(w.style, entry);
-      }
-      return Array.from(map.entries())
-        .map(([style, { wins, losses }]) => ({
-          style,
-          wins,
-          losses,
-          winRate: wins + losses > 0 ? wins / (wins + losses) : 0,
-        }))
-        .sort((a, b) => b.winRate - a.winRate);
-    })
-  );
+export const useStyleStats = (): StyleStatsRow[] => {
+  const roster = useGameStore((s) => s.roster);
+  return useMemo(() => {
+    const map = new Map<string, { wins: number; losses: number }>();
+    for (const w of roster) {
+      const entry = map.get(w.style) ?? { wins: 0, losses: 0 };
+      entry.wins += w.career?.wins ?? 0;
+      entry.losses += w.career?.losses ?? 0;
+      map.set(w.style, entry);
+    }
+    return Array.from(map.entries())
+      .map(([style, { wins, losses }]) => ({
+        style,
+        wins,
+        losses,
+        winRate: wins + losses > 0 ? wins / (wins + losses) : 0,
+      }))
+      .sort((a, b) => b.winRate - a.winRate);
+  }, [roster]);
+};

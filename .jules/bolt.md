@@ -52,3 +52,7 @@
 ## 2024-05-19 - Zustand useShallow Inline Fallbacks Break Equality
 **Learning:** Returning inline array fallbacks (e.g. `s.roster ?? []`) or instantiating objects (e.g. `new Set()`) inside a `useShallow` selector breaks Zustand's shallow equality check. When `s.roster` is undefined, `[]` creates a new reference in memory on every store change, causing the component to re-render for completely unrelated state updates (like the week advancing or treasury ticking).
 **Action:** Always extract the raw optional property via the selector (`useGameStore((s) => s.roster)`) and apply the fallback array or `useMemo` computation *outside* the hook in the component body (e.g., `const roster = stateRoster ?? [];`).
+
+## 2023-10-27 - Zustand useShallow Arrays Performance Trap
+**Learning:** Returning dynamically instantiated arrays or objects from a `useShallow` selector creates a new reference on every state evaluation, entirely defeating memoization and triggering an infinite re-render loop or excessive re-renders across all consumer components.
+**Action:** When extracting arrays/objects inside `useShallow`, always return the direct reference from the store (e.g. `s.roster`). Use a separate `useMemo` block inside the component or hook to perform the `.map`, `.filter`, or derived array instantiations based on the shallow-selected raw array reference. Note: using `.map` with primitive values works with `useShallow`, but objects/arrays do not.

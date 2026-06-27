@@ -51,7 +51,8 @@ interface OffseasonEventNarrative {
     | 'abyssal_bargain'
     | 'goblin_raid'
     | 'fey_trickster'
-    | 'shadow_tournament';
+    | 'shadow_tournament'
+    | 'wandering_fortune_teller';
   newsletter: string[];
 }
 
@@ -1044,6 +1045,45 @@ function handleMeteorShower(
   }
 }
 
+function handleWanderingFortuneTeller(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const cost = 30;
+  ctx.treasuryDelta -= cost;
+  addLedger(ctx, rng, nextWeek, 'Fortune Teller Reading', -cost, 'other');
+
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 15;
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight') as InsightId,
+        type: 'Style',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'Discovered a hidden rhythm in their fighting style.',
+        origin: 'Wandering Fortune Teller',
+        discoveredWeek: nextWeek,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        gold: cost,
+      });
+    }
+  }
+}
+
 function handleShadowTournament(
   state: GameState,
   nextWeek: number,
@@ -1135,6 +1175,7 @@ const EVENT_HANDLERS: Record<
   goblin_raid: handleGoblinRaid,
   fey_trickster: handleFeyTrickster,
   shadow_tournament: handleShadowTournament,
+  wandering_fortune_teller: handleWanderingFortuneTeller,
 };
 
 /**

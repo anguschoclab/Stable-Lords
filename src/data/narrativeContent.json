@@ -3481,6 +3481,13 @@
         "{{name}} participated in a secretive, brutal shadow tournament beneath the city streets. They emerged victorious, covered in strange bruises but carrying a hefty purse. (+{{xp}} XP, +{{fame}} Fame)",
         "{{name}} snuck out to fight in an underground shadow tournament. They lost horribly to a masked opponent and limped back in disgrace. (-{{fame}} Fame, Moderate Injury)"
       ]
+    },
+    "wandering_fortune_teller": {
+      "title": "The Wandering Fortune Teller",
+      "effectType": "wandering_fortune_teller",
+      "newsletter": [
+        "A mysterious fortune teller visited the camp. {{name}} parted with {{gold}} gold to have their fortune read, uncovering cryptic advice about their fighting style. (-{{gold}} Gold, +15 XP, Style Insight)"
+      ]
     }
   },
   "crowd_reactions": {

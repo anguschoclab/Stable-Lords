@@ -82,9 +82,9 @@ describe('BiometricsTab', () => {
   const warrior = makeWarrior();
   const displayWarrior = makeDisplayWarrior(warrior);
 
-  it('renders "Physical Profile" section divider', () => {
+  it('renders WarriorRadarChart inside Suspense with correct warrior', () => {
     render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
-    expect(screen.getByText('Physical Profile')).toBeInTheDocument();
+    expect(screen.getByTestId('radar-chart')).toBeInTheDocument();
   });
 
   it('renders WarriorRadarChart inside Suspense', () => {
@@ -109,10 +109,10 @@ describe('BiometricsTab', () => {
     expect(bars[4]?.textContent).toBe('Size');
   });
 
-  it('renders "Performance" and "Specialized Disciplines" section dividers', () => {
+  it('renders FormSparkline with correct warrior', () => {
     render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
-    expect(screen.getByText('Performance')).toBeInTheDocument();
-    expect(screen.getByText('Specialized Disciplines')).toBeInTheDocument();
+    const sparkline = screen.getByTestId('form-sparkline');
+    expect(sparkline.getAttribute('data-warrior')).toBe('w1');
   });
 
   it('renders FormSparkline', () => {
@@ -120,8 +120,38 @@ describe('BiometricsTab', () => {
     expect(screen.getByTestId('form-sparkline')).toBeInTheDocument();
   });
 
-  it('renders "Preferences" section divider', () => {
+  it('renders "Combat Affinities" section divider (replaces "Preferences")', () => {
     render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
-    expect(screen.getByText('Preferences')).toBeInTheDocument();
+    expect(screen.getByText('Combat Affinities')).toBeInTheDocument();
+  });
+
+  it('renders "Physique" section divider (replaces "Physical Profile")', () => {
+    render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
+    expect(screen.getByText('Physique')).toBeInTheDocument();
+  });
+
+  it('renders "Arena Form" label (replaces "Historical Form")', () => {
+    render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
+    expect(screen.getByText('Arena Form')).toBeInTheDocument();
+  });
+
+  it('renders "Combat Vitals" section divider (replaces "Performance")', () => {
+    render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
+    expect(screen.getByText('Combat Vitals')).toBeInTheDocument();
+  });
+
+  it('renders "Body" card header (replaces "Primary Vitals")', () => {
+    render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
+    expect(screen.getByText('Body')).toBeInTheDocument();
+  });
+
+  it('renders "Assessments" card header (replaces "Observations")', () => {
+    render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
+    expect(screen.getByText('Assessments')).toBeInTheDocument();
+  });
+
+  it('renders "Trained Arts" section divider (replaces "Specialized Disciplines")', () => {
+    render(<BiometricsTab warrior={warrior} displayWarrior={displayWarrior} />);
+    expect(screen.getByText('Trained Arts')).toBeInTheDocument();
   });
 });

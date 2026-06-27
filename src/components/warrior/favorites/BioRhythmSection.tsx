@@ -39,11 +39,11 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 flex items-center gap-2">
-          <Activity className="h-3 w-3" /> Combat Rhythm
+          <Activity className="h-3 w-3" /> Fighting Rhythm
         </div>
         {isRhythmDiscovered && (
           <span className="text-[8px] font-black uppercase text-arena-gold tracking-widest px-2 py-0.5 border border-arena-gold/20 bg-arena-gold/5">
-            OPTIMIZED
+            ATTUNED
           </span>
         )}
       </div>
@@ -67,7 +67,7 @@ export function BioRhythmSection({ warrior, actions }: BioRhythmSectionProps) {
           {isRhythmDiscovered &&
             (alreadyApplied ? (
               <span className="text-[8px] font-black uppercase text-primary tracking-widest px-2 py-0.5 border border-primary/20 bg-primary/5">
-                ACTIVE
+                IN EFFECT
               </span>
             ) : (
               <Button

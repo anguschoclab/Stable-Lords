@@ -47,7 +47,7 @@ export function MissionControlTab({
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <SectionDivider label="Bout Settings" />
+        <SectionDivider label="Pre-Fight Orders" />
         <Surface variant="glass" className="border-white/5 overflow-hidden">
           <div className="bg-white/[0.01] px-8 py-6 border-b border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -55,11 +55,11 @@ export function MissionControlTab({
                 <Crosshair className="h-4 w-4 text-arena-gold" />
               </ImperialRing>
               <span className="font-display font-black uppercase tracking-[0.2em] text-[11px]">
-                Fight Strategy
+                Battle Doctrine
               </span>
             </div>
             <div className="flex items-center gap-2 px-3 py-1 border border-primary/20 bg-primary/5 text-primary text-[8px] font-black uppercase tracking-widest">
-              <Settings2 className="h-3 w-3" /> Custom Orders
+              <Settings2 className="h-3 w-3" /> Custom Mandate
             </div>
           </div>
           <div className="p-10">
@@ -70,14 +70,14 @@ export function MissionControlTab({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div className="space-y-8">
-          <SectionDivider label="Physical Configuration" />
+          <SectionDivider label="Arming" />
           <Surface variant="glass" className="border-white/5 overflow-hidden">
             <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
               <ImperialRing size="xs" variant="silver">
                 <Shield className="h-3 w-3 text-muted-foreground" />
               </ImperialRing>
               <span className="font-display font-black uppercase tracking-widest text-[10px]">
-                Armory Allocation
+                Issued Arms
               </span>
             </div>
             <div className="p-8">
@@ -93,14 +93,14 @@ export function MissionControlTab({
         </div>
 
         <div className="space-y-8">
-          <SectionDivider label="Scouting" />
+          <SectionDivider label="Intelligence" />
           <Surface variant="glass" className="border-white/5 overflow-hidden">
             <div className="bg-white/[0.01] px-6 py-4 border-b border-white/5 flex items-center gap-4">
               <ImperialRing size="xs" variant="bronze">
                 <Target className="h-3 w-3 text-muted-foreground" />
               </ImperialRing>
               <span className="font-display font-black uppercase tracking-widest text-[10px]">
-                Scout Reports
+                Dispatches
               </span>
             </div>
             <div className="p-2 h-full overflow-y-auto max-h-[600px] thin-scrollbar">

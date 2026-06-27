@@ -22,7 +22,7 @@ export function WarriorDossierMedicalReport({ warrior }: WarriorDossierMedicalRe
   return (
     <div className="space-y-2">
       <h3 className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold flex items-center gap-1">
-        <Activity className="h-3 w-3 text-destructive" /> Medical Report
+        <Activity className="h-3 w-3 text-destructive" /> Wounds & Ailments
       </h3>
       <div className="grid gap-2">
         {warrior.injuries.map((inj: InjuryData) => {

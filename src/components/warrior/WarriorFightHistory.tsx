@@ -70,7 +70,7 @@ export function WarriorFightHistory({
   if (fights.length === 0) {
     return (
       <Surface variant="glass" className="py-8 text-center text-muted-foreground rounded-none">
-        No recorded bouts yet.
+        No blood yet shed in the arena.
       </Surface>
     );
   }
@@ -78,7 +78,7 @@ export function WarriorFightHistory({
   return (
     <div className="space-y-3">
       <h3 className="font-display text-lg font-semibold flex items-center gap-2">
-        <Swords className="h-5 w-5 text-arena-gold" /> Fight History
+        <Swords className="h-5 w-5 text-arena-gold" /> Arena Record
       </h3>
       {fights
         .slice(-10)

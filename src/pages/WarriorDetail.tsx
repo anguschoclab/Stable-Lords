@@ -36,8 +36,8 @@ import { PageFrame } from '@/components/ui/PageFrame';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 
 const TABS: SubNavTab[] = [
-  { id: 'biometrics', label: 'PROFILE', icon: <User className="h-4 w-4" /> },
-  { id: 'mission', label: 'STRATEGY', icon: <Target className="h-4 w-4" /> },
+  { id: 'biometrics', label: 'DOSSIER', icon: <User className="h-4 w-4" /> },
+  { id: 'mission', label: 'WAR PLAN', icon: <Target className="h-4 w-4" /> },
   { id: 'chronicle', label: 'CHRONICLE', icon: <ScrollText className="h-4 w-4" /> },
 ]; /**
  * Warrior detail.
@@ -108,7 +108,7 @@ export default function WarriorDetail() {
   const handleRetire = useCallback(() => {
     if (!warrior) return;
     retireWarrior(warrior.id);
-    toast.success(`${warrior.name} has been retired with honor.`);
+    toast.success(`${warrior.name} has been granted the rudis — free at last.`);
     navigate({ to: '/' });
   }, [warrior, retireWarrior, navigate]);
 
@@ -129,10 +129,10 @@ export default function WarriorDetail() {
   if (!warrior || !displayWarrior) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
-        <p className="text-muted-foreground">Warrior not found.</p>
+        <p className="text-muted-foreground">No gladiator bears this mark.</p>
         <Link to="/">
           <Button variant="outline">
-            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
+            <ArrowLeft className="h-4 w-4 mr-2" /> Return to the Ludus
           </Button>
         </Link>
       </div>
@@ -147,16 +147,16 @@ export default function WarriorDetail() {
   const streakVal = streakMap.get(warrior.id) ?? 0;
   const streakLabel =
     streakVal > 0
-      ? `${streakVal}W Streak`
+      ? `${streakVal}-Bout Reign`
       : streakVal < 0
-        ? `${Math.abs(streakVal)}L Streak`
+        ? `${Math.abs(streakVal)}-Bout Slump`
         : null;
 
   return (
     <PageFrame maxWidth="lg" className="pb-32">
       <PageHeader
         icon={User}
-        eyebrow={isPlayerOwned ? 'Your Warrior' : 'Rival Warrior'}
+        eyebrow={isPlayerOwned ? 'Your Gladiator' : 'Rival Gladiator'}
         title={displayWarrior.name}
         subtitle={`${STYLE_DISPLAY_NAMES[warrior.style as FightingStyle] || 'Unknown Style'} · ${warrior.status}`}
         actions={
@@ -164,7 +164,7 @@ export default function WarriorDetail() {
             <BookmarkButton entityType="warrior" entityId={warrior.id} size="md" />
             <div className="flex flex-col items-end px-4 border-r border-white/5">
               <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-                Career Record
+                Scroll of Deeds
               </span>
               <span className="font-mono font-black text-foreground text-sm">{record}</span>
             </div>
@@ -175,7 +175,7 @@ export default function WarriorDetail() {
                 onClick={handleRetire}
                 className="gap-2 text-[10px] font-black uppercase tracking-widest h-10 px-6 rounded-none border-white/10 hover:bg-destructive hover:text-primary-foreground transition-all duration-300"
               >
-                <Armchair className="h-3.5 w-3.5" /> Retire
+                <Armchair className="h-3.5 w-3.5" /> Grant Rudis
               </Button>
             )}
           </div>
@@ -234,12 +234,12 @@ export default function WarriorDetail() {
         </div>
 
         <div className="lg:col-span-4 space-y-8">
-          <SectionDivider label="Value" />
+          <SectionDivider label="Standing" />
           <Surface variant="glass" className="p-8 space-y-8 border-white/5">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-1">
                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Fame Quotient
+                  Renown
                 </span>
                 <span className="font-display font-black text-3xl text-arena-fame leading-none">
                   {displayWarrior.fame}
@@ -255,7 +255,7 @@ export default function WarriorDetail() {
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-1">
                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Public Resonance
+                  Crowd Favor
                 </span>
                 <span className="font-display font-black text-3xl text-arena-pop leading-none">
                   {displayWarrior.popularity}
@@ -267,12 +267,12 @@ export default function WarriorDetail() {
             </div>
           </Surface>
 
-          <SectionDivider label="Service History" />
+          <SectionDivider label="Blood Ledger" />
           <Surface variant="glass" className="p-8 space-y-6 border-white/5">
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-1">
                 <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                  Engagements
+                  Bouts Fought
                 </span>
                 <p className="text-sm font-display font-black">
                   {displayWarrior.career.wins + displayWarrior.career.losses}
@@ -280,7 +280,7 @@ export default function WarriorDetail() {
               </div>
               <div className="space-y-1 text-right">
                 <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-                  Fatalities
+                  Slain
                 </span>
                 <p className="text-sm font-display font-black text-primary">
                   {displayWarrior.career.kills}
@@ -303,7 +303,7 @@ export default function WarriorDetail() {
 
             {warrior.champion && (
               <div className="p-3 text-center border border-arena-gold/20 bg-arena-gold/10 text-arena-gold font-black uppercase text-[10px] tracking-[0.2em]">
-                Standard Bearer / Champion
+                Champion of the Arena
               </div>
             )}
           </Surface>

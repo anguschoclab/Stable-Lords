@@ -38,7 +38,7 @@ export function WeaponAffinitySection({ warrior, actions }: WeaponAffinitySectio
         </div>
         {isWeaponDiscovered && (
           <span className="text-[8px] font-black uppercase text-arena-gold tracking-widest px-2 py-0.5 border border-arena-gold/20 bg-arena-gold/5">
-            DISCOVERED
+            REVEALED
           </span>
         )}
       </div>

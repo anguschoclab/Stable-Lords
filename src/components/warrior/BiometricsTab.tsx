@@ -30,7 +30,7 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
   return (
     <div className="grid gap-8 lg:grid-cols-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="lg:col-span-4 space-y-8">
-        <SectionDivider label="Physical Profile" />
+        <SectionDivider label="Physique" />
         <Surface variant="glass" className="border-white/5 overflow-hidden">
           <div className="p-8">
             <Suspense fallback={<div className="w-full aspect-square max-w-md mx-auto animate-pulse rounded-none bg-white/5" />}>
@@ -39,7 +39,7 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
             <div className="mt-12 space-y-6">
               <div className="flex items-center justify-between">
                 <span className="text-[8px] font-black uppercase text-muted-foreground/40 tracking-[0.3em]">
-                  Historical Form
+                  Arena Form
                 </span>
                 <FormSparkline warriorId={warrior.id} />
               </div>
@@ -54,12 +54,12 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
           </div>
         </Surface>
 
-        <SectionDivider label="Preferences" />
+        <SectionDivider label="Combat Affinities" />
         <FavoritesCard warrior={warrior} onUpdate={() => {}} />
       </div>
 
       <div className="lg:col-span-8 space-y-8">
-        <SectionDivider label="Performance" />
+        <SectionDivider label="Combat Vitals" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Surface variant="glass" className="border-white/5">
             <div className="p-6 border-b border-white/5 flex items-center gap-3 bg-white/[0.01]">
@@ -67,7 +67,7 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
                 <Activity className="h-3 w-3 text-muted-foreground" />
               </ImperialRing>
               <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                Primary Vitals
+                Body
               </span>
             </div>
             <div className="p-8 space-y-6">
@@ -105,7 +105,7 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
                 <Eye className="h-3 w-3 text-muted-foreground" />
               </ImperialRing>
               <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                Observations
+                Assessments
               </span>
             </div>
             <div className="p-8 overflow-y-auto max-h-96 thin-scrollbar">
@@ -114,7 +114,7 @@ export function BiometricsTab({ warrior, displayWarrior }: BiometricsTabProps) {
           </Surface>
         </div>
 
-        <SectionDivider label="Specialized Disciplines" />
+        <SectionDivider label="Trained Arts" />
         <Surface variant="glass" className="border-white/5 overflow-hidden">
           <div className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">

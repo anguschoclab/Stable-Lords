@@ -10,7 +10,7 @@ import { resolveImpacts } from '@/engine/impacts';
 import type { GameState, Promoter } from '@/types/state.types';
 import { defaultPlanForWarrior } from '@/engine';
 import { TRAIT_DATA } from '@/data/orphanPool';
-import type { FightingStyle } from '@/types/shared.types';
+import type { FightingStyle, FightPlan } from '@/types/shared.types';
 import type { Attributes } from '@/types/shared.types';
 import type { AttributePotential } from '@/types/warrior.types';
 
@@ -39,18 +39,22 @@ export function buildFTUEInitialState(
   baseState: GameState,
   selectedWarriors: SelectedWarrior[],
   boutResult: BoutResult | null,
-  poolSeedValue: number
+  poolSeedValue: number,
+  playerPlan?: FightPlan | null
 ) {
   const finishRng = new SeededRNGService(poolSeedValue + 999);
 
-  const warriors = selectedWarriors.map((pw) => {
+  const warriors = selectedWarriors.map((pw, idx) => {
     // Use the orphan's pre-generated potential (or regenerate if somehow missing)
     const potential = pw.potential ?? generatePotential(pw.attrs, 'Common', finishRng);
     // Build base plan and merge trait-based modifiers
     const basePlan = defaultPlanForWarrior(makeWarrior(undefined, pw.name, pw.style, pw.attrs));
     const traitData = TRAIT_DATA[pw.trait];
     const traitMods = traitData?.effect.fightPlanMod ?? {};
-    const plan = { ...basePlan, ...traitMods };
+    // warrior[0] is the plan warrior — apply player's custom plan if provided
+    const plan = idx === 0 && playerPlan
+      ? { ...playerPlan, ...traitMods }
+      : { ...basePlan, ...traitMods };
     const w = makeWarrior(
       finishRng.uuid() as import('@/types/shared.types').WarriorId,
       pw.name,

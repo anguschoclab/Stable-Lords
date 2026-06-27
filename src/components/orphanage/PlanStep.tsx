@@ -1,15 +1,19 @@
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { ArrowLeft, Swords, Zap, Shield, Activity, Target } from 'lucide-react';
+import { ArrowLeft, Swords, Zap, Shield, Activity, Target, Flame, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { STYLE_DISPLAY_NAMES, FightingStyle } from '@/types/game';
 import type { Warrior, FightPlan, OffensiveTactic, DefensiveTactic } from '@/types/game';
 
 const PLAN_TACTICS = [
   { id: 'Lunge', type: 'offensive' as const, label: 'Lunge', icon: Zap },
+  { id: 'Slash', type: 'offensive' as const, label: 'Slash', icon: Swords },
   { id: 'Bash', type: 'offensive' as const, label: 'Bash', icon: Shield },
+  { id: 'Decisiveness', type: 'offensive' as const, label: 'DEC', icon: Target },
   { id: 'Dodge', type: 'defensive' as const, label: 'Dodge', icon: Activity },
-  { id: 'Parry', type: 'defensive' as const, label: 'Parry', icon: Target },
+  { id: 'Parry', type: 'defensive' as const, label: 'Parry', icon: Shield },
+  { id: 'Riposte', type: 'defensive' as const, label: 'Riposte', icon: Flame },
+  { id: 'Responsiveness', type: 'defensive' as const, label: 'RESP', icon: Clock },
 ];
 
 interface PlanStepProps {
@@ -56,7 +60,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
           <Swords className="h-4 w-4 text-muted-foreground/30" />
         </div>
 
-        {/* Aggression Slider */}
+        {/* Offensive Effort Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-widest text-arena-gold">
@@ -74,6 +78,48 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
           <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
             <span>Cautious</span>
             <span>Reckless</span>
+          </div>
+        </div>
+
+        {/* Activity Level Slider */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black uppercase tracking-widest text-arena-fame">
+              Activity Level
+            </span>
+            <span className="text-sm font-mono font-bold text-arena-fame">{plan.AL ?? 5}</span>
+          </div>
+          <Slider
+            value={[plan.AL ?? 5]}
+            onValueChange={([v]) => onPlanChange({ ...plan, AL: v ?? 5 })}
+            min={1}
+            max={10}
+            step={1}
+          />
+          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
+            <span>Passive</span>
+            <span>Active</span>
+          </div>
+        </div>
+
+        {/* Kill Desire Slider */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-black uppercase tracking-widest text-destructive">
+              Kill Desire
+            </span>
+            <span className="text-sm font-mono font-bold text-destructive">{plan.killDesire ?? 5}</span>
+          </div>
+          <Slider
+            value={[plan.killDesire ?? 5]}
+            onValueChange={([v]) => onPlanChange({ ...plan, killDesire: v ?? 5 })}
+            min={1}
+            max={10}
+            step={1}
+          />
+          <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-muted-foreground/30">
+            <span>Mercy</span>
+            <span>Kill</span>
           </div>
         </div>
 

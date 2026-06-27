@@ -134,7 +134,8 @@ export default function Orphanage() {
       state as unknown as GameState,
       selectedWarriors,
       boutResult as Parameters<typeof buildFTUEInitialState>[2],
-      poolSeedValue
+      poolSeedValue,
+      playerPlan
     );
 
     setState((draft: GameStore) => {

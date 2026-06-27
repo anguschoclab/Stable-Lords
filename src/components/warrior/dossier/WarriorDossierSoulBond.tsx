@@ -45,13 +45,13 @@ export default function WarriorDossierSoulBond({ warrior }: Props) {
         <div className="mt-8 grid grid-cols-2 gap-4">
           <div className="p-4 bg-white/[0.02] border border-white/5">
             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-              Affinity Level
+              Bond Strength
             </div>
             <div className="text-xl font-display font-black text-primary">Max</div>
           </div>
           <div className="p-4 bg-white/[0.02] border border-white/5">
             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">
-              Combat Bonus
+              Combat Boon
             </div>
             <div className="text-xl font-display font-black text-foreground">+25% Bond Bonus</div>
           </div>

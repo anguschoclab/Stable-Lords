@@ -23,25 +23,25 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
     <div className="grid gap-12 lg:grid-cols-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="lg:col-span-4 space-y-12">
         <div className="space-y-8">
-          <SectionDivider label="Service Timeline" />
+          <SectionDivider label="Path of Blood" />
           <CareerTimeline warrior={warrior} arenaHistory={arenaHistory} />
         </div>
 
         <div className="space-y-8">
-          <SectionDivider label="Hall of Records" />
+          <SectionDivider label="Annals" />
           <Surface variant="glass" className="border-white/5">
             <div className="p-6 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
               <ImperialRing size="xs" variant="gold">
                 <Trophy className="h-3 w-3 text-arena-gold" />
               </ImperialRing>
               <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                Statistical Milestone
+                Chronicle of Merit
               </span>
             </div>
             <div className="p-8 space-y-6">
               <div className="flex justify-between items-center">
                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Peak Valuation
+                  Highest Renown
                 </span>
                 <span className="text-sm font-display font-black text-foreground">
                   {warrior.fame} PT
@@ -49,7 +49,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Major Titles
+                  Laurels Won
                 </span>
                 <span className="text-sm font-display font-black text-foreground">
                   {warrior.career.wins > 10 ? 1 : 0}
@@ -57,7 +57,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-                  Aggregated Yield
+                  Purse Earned
                 </span>
                 <span className="text-sm font-display font-black text-arena-gold">
                   {(warrior.career.wins * 150).toLocaleString()}G
@@ -69,14 +69,14 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
 
         {warrior.awards && warrior.awards.length > 0 && (
           <div className="space-y-8">
-            <SectionDivider label="Accolades" />
+            <SectionDivider label="Honors" />
             <Surface variant="glass" className="border-white/5">
               <div className="p-6 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
                 <ImperialRing size="sm" variant="blood">
                   <Star className="h-3 w-3 text-primary" />
                 </ImperialRing>
                 <span className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                  Honours
+                  Distinctions
                 </span>
               </div>
               <div className="p-8 space-y-8">
@@ -85,7 +85,7 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
                         <span className="text-[8px] font-black uppercase text-primary tracking-[0.3em]">
-                          Cycle {award.year}
+                          Year {award.year}
                         </span>
                         <div className="text-[11px] font-black uppercase tracking-widest text-foreground">
                           {award.type.replace(/_/g, ' ')}
@@ -105,17 +105,17 @@ export function ChronicleTab({ warrior, arenaHistory }: ChronicleTabProps) {
       </div>
 
       <div className="lg:col-span-8 space-y-8">
-        <SectionDivider label="Fight History" />
+        <SectionDivider label="Arena Record" />
         <Surface variant="glass" className="border-white/5 min-h-[700px] overflow-hidden">
           <div className="bg-white/[0.01] px-10 py-8 border-b border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-6">
               <History className="h-6 w-6 text-muted-foreground/20" />
               <div className="space-y-1">
                 <h2 className="font-display font-black uppercase text-3xl tracking-tight text-foreground">
-                  Service Record
+                  Blood Record
                 </h2>
                 <p className="text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground/40">
-                  Complete fight record
+                  Every bout, every wound
                 </p>
               </div>
             </div>

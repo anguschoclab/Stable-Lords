@@ -33,7 +33,7 @@ export function CareerTimeline({
     if (firstBout) {
       events.push({
         week: firstBout.week,
-        label: 'First Bout',
+        label: 'First Blood',
         icon: <Swords className="h-3.5 w-3.5" />,
         color: 'bg-primary',
       });
@@ -46,7 +46,7 @@ export function CareerTimeline({
     if (firstWin) {
       events.push({
         week: firstWin.week,
-        label: 'First Victory',
+        label: 'First Triumph',
         icon: <Trophy className="h-3.5 w-3.5" />,
         color: 'bg-arena-gold',
       });
@@ -83,7 +83,7 @@ export function CareerTimeline({
     if (warrior.status === 'Retired' && warrior.retiredWeek) {
       events.push({
         week: warrior.retiredWeek,
-        label: 'Retired',
+        label: 'Granted Rudis',
         icon: <Armchair className="h-3.5 w-3.5" />,
         color: 'bg-muted-foreground',
       });
@@ -114,7 +114,7 @@ export function CareerTimeline({
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="font-display text-lg flex items-center gap-2">
-          <History className="h-5 w-5 text-primary" /> Career Timeline
+          <History className="h-5 w-5 text-primary" /> Saga
         </CardTitle>
       </CardHeader>
       <CardContent>

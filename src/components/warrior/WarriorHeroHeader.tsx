@@ -72,7 +72,7 @@ export function WarriorHeroHeader({
         <div className="space-y-4">
           <div className="space-y-1">
             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60">
-              {isPlayerOwned ? 'Your Warrior' : 'Rival Warrior'}
+              {isPlayerOwned ? 'Your Gladiator' : 'Rival Gladiator'}
             </span>
             <div className="flex items-center gap-4">
               {isPlayerOwned && id ? (
@@ -114,7 +114,7 @@ export function WarriorHeroHeader({
                 <div className="flex items-center gap-2 text-primary">
                   <Eye className="h-3.5 w-3.5" />
                   <span className="text-[10px] font-black uppercase tracking-widest">
-                    {warriorInsightTokens.length} Insights Detected
+                    {warriorInsightTokens.length} Intel Acquired
                   </span>
                 </div>
               </>
@@ -141,7 +141,7 @@ export function WarriorHeroHeader({
               <Zap className="h-5 w-5 text-primary" />
             </ImperialRing>
             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Status
+              Condition
             </span>
           </div>
           <div className="flex flex-col items-center gap-2">
@@ -149,7 +149,7 @@ export function WarriorHeroHeader({
               <Heart className="h-5 w-5 text-muted-foreground/60" />
             </ImperialRing>
             <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
-              Vitals
+              Wounds
             </span>
           </div>
         </div>

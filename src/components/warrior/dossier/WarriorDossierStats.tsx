@@ -18,7 +18,7 @@ interface Props {
 export default function WarriorDossierStats({ warrior }: Props) {
   return (
     <div className="space-y-8">
-      <SectionDivider label="Core Attributes" />
+      <SectionDivider label="Physique" />
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {ATTRIBUTE_KEYS.map((k) => {
           const val = warrior.attributes[k];
@@ -46,12 +46,12 @@ export default function WarriorDossierStats({ warrior }: Props) {
         })}
       </div>
 
-      <SectionDivider label="Derived Stats" />
+      <SectionDivider label="Combat Measures" />
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { label: 'Health Reserve', value: warrior.derivedStats?.hp, sub: 'Hit Points' },
-          { label: 'Max Endurance', value: warrior.derivedStats?.endurance, sub: 'Stamina' },
-          { label: 'Base Speed', value: warrior.attributes?.SP, sub: 'Reflexes' },
+          { label: 'Vitality', value: warrior.derivedStats?.hp, sub: 'Hit Points' },
+          { label: 'Stamina', value: warrior.derivedStats?.endurance, sub: 'Endurance' },
+          { label: 'Swiftness', value: warrior.attributes?.SP, sub: 'Reflexes' },
         ].map((stat) => (
           <Surface key={stat.label} variant="glass" className="p-6 border-white/5">
             <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40 mb-1">

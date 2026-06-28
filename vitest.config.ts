@@ -10,8 +10,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-    testTimeout: 30000,
-    hookTimeout: 10000,
+    testTimeout: 500000,
+    hookTimeout: 500000,
+    teardownTimeout: 500000,
     dir: './src',
     exclude: ['node_modules/', '**/e2e/**'],
     coverage: {

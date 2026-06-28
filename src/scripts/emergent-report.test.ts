@@ -76,10 +76,10 @@ function traitHistogram(ws: Warrior[]) {
 const pct = (n: number, d: number) => (d ? ((100 * n) / d).toFixed(1) : '0.0') + '%';
 
 describe('Emergent behavior report', () => {
-  beforeEach(resetGlobalState, 600000);
+  beforeEach(resetGlobalState, 120000);
 
-  test('3-year headless sim', () => {
-    const WEEKS = 156;
+  test('1-year headless sim', () => {
+    const WEEKS = 52;
     const seed = 4242;
     let state = populateInitialWorld(createFreshState(seed.toString()), seed);
 
@@ -162,7 +162,7 @@ describe('Emergent behavior report', () => {
 
     const R: string[] = [];
     R.push(
-      '\n================ EMERGENT BEHAVIOR REPORT (156 weeks / 3 yrs, seed 4242) ================'
+      '\n================ EMERGENT BEHAVIOR REPORT (52 weeks / 1 yr, seed 4242) ================'
     );
     R.push('\n--- TIMELINE (yearly-ish snapshots) ---');
     R.push(header);

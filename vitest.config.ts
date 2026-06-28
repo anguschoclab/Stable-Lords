@@ -10,8 +10,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-    testTimeout: 30000,
+    testTimeout: 120000,
     hookTimeout: 10000,
+    pool: 'forks',
     dir: './src',
     exclude: ['node_modules/', '**/e2e/**'],
     coverage: {

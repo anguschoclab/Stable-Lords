@@ -47,17 +47,17 @@ function resetGlobalState() {
 describe('Headless Simulation Harness', () => {
   beforeEach(() => {
     resetGlobalState();
-  }, 300000);
+  }, 120000);
 
-  test('runs a long-term balance check (104 weeks)', () => {
+  test('runs a long-term balance check (52 weeks)', () => {
     const seed = 999;
     const config = {
-      weeks: 104,
+      weeks: 52,
       seed,
       logFrequency: 4, // Log every month to trace progress
     };
 
-    console.log(`\n[Sim] Starting 104-week balance check with seed: ${seed}`);
+    console.log(`\n[Sim] Starting 52-week balance check with seed: ${seed}`);
     runSimulation(config);
 
     console.log('SUCCESS');

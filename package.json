@@ -19,7 +19,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "test": "bun test --isolate",
+    "test": "npx vitest run",
     "test:watch": "npx vitest",
     "test:bun": "bun test --isolate",
     "test:coverage": "vitest run --coverage",

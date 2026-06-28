@@ -37,8 +37,12 @@ describe('PhysicalsSimulator Page', () => {
     expect(screen.getByText('Physicals Simulator')).toBeDefined();
 
     // Check if both fighters are listed
-    expect(screen.getByText('Fighter A')).toBeDefined();
-    expect(screen.getByText('Fighter B')).toBeDefined();
+    const isCardTitle = (content: string, element: Element | null) =>
+      element?.tagName === 'H3' && content === 'Fighter A';
+    const isCardTitleB = (content: string, element: Element | null) =>
+      element?.tagName === 'H3' && content === 'Fighter B';
+    expect(screen.getByText(isCardTitle)).toBeDefined();
+    expect(screen.getByText(isCardTitleB)).toBeDefined();
 
     // Check if simulation results area exists
     expect(screen.getByText(/SIMULATION RESULTS/i)).toBeDefined();

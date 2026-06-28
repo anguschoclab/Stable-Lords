@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WeatherBadge } from './WeatherBadge';
 import { SeasonProgressBar } from './SeasonProgressBar';
+import { SeasonPhaseTicks } from './SeasonPhaseTicks';
 
 /**
  *
@@ -106,6 +107,8 @@ export function SeasonWidget() {
           )}
 
           <SeasonProgressBar progress={progress} />
+
+          <SeasonPhaseTicks currentWeek={week} className="mt-6 pt-1" />
 
           <div className="pt-6 border-t border-white/5 grid grid-cols-2 gap-4">
             <Tooltip>

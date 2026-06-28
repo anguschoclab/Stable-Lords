@@ -1,7 +1,7 @@
 import { Surface } from '@/components/ui/Surface';
 import { Badge } from '@/components/ui/badge';
 import { Zap, Swords, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { FaceoffBar } from './FaceoffBar';
 
 interface SimulatorResultsProps {
   simulation: {
@@ -106,53 +106,20 @@ export function SimulatorResults({ simulation }: SimulatorResultsProps) {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-white/10 grid grid-cols-2 gap-12">
-          <div className="space-y-4">
-            <div className="flex justify-between items-end">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Ending HP
-              </span>
-              <span
-                className={cn(
-                  'font-display font-black text-xl',
-                  simulation.hpA <= 0 ? 'text-destructive' : 'text-primary'
-                )}
-              >
-                {simulation.hpA}/{simulation.calcA.hp}
-              </span>
-            </div>
-            <div className="h-1.5 bg-white/5 rounded-none overflow-hidden">
-              <div
-                className="h-full bg-primary"
-                style={{
-                  width: `${Math.max(0, (simulation.hpA / simulation.calcA.hp) * 100)}%`,
-                }}
-              />
-            </div>
+        <div className="mt-8 pt-8 border-t border-white/10">
+          <div className="mb-3">
+            <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
+              Ending HP — Face-off
+            </span>
           </div>
-          <div className="space-y-4">
-            <div className="flex justify-between items-end">
-              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">
-                Ending HP
-              </span>
-              <span
-                className={cn(
-                  'font-display font-black text-xl',
-                  simulation.hpB <= 0 ? 'text-destructive' : 'text-primary'
-                )}
-              >
-                {simulation.hpB}/{simulation.calcB.hp}
-              </span>
-            </div>
-            <div className="h-1.5 bg-white/5 rounded-none overflow-hidden">
-              <div
-                className="h-full bg-destructive"
-                style={{
-                  width: `${Math.max(0, (simulation.hpB / simulation.calcB.hp) * 100)}%`,
-                }}
-              />
-            </div>
-          </div>
+          <FaceoffBar
+            hpA={simulation.hpA}
+            maxA={simulation.calcA.hp}
+            hpB={simulation.hpB}
+            maxB={simulation.calcB.hp}
+            labelA="Fighter A"
+            labelB="Fighter B"
+          />
         </div>
       </div>
     </Surface>

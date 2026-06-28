@@ -8,6 +8,8 @@ import { useActiveRoster } from '@/hooks/useActiveRoster';
 import { useGameStore, useBookmarks } from '@/state/useGameStore';
 import { BookmarkFilterToggle } from '@/components/bookmarks/BookmarkFilterToggle';
 import { RosterWarriorRow } from './RosterWarriorRow';
+import { StyleCompositionDonut } from './StyleCompositionDonut';
+import type { FightingStyle } from '@/types/shared.types';
 
 function EmptyRosterState() {
   return (
@@ -49,6 +51,11 @@ export function RosterWall() {
     return sortedRoster.filter((w) => isBookmarked('warrior', w.id));
   }, [sortedRoster, showBookmarkedOnly, isBookmarked, bookmarks]);
 
+  const rosterStyles = useMemo(
+    () => sortedRoster.map((w) => w.style as FightingStyle),
+    [sortedRoster]
+  );
+
   return (
     <Surface variant="glass" padding="none" className="border-border/10 relative shadow-2xl">
       <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/40 via-arena-gold/40 to-primary/40 opacity-30" />
@@ -65,6 +72,9 @@ export function RosterWall() {
                 Warriors: {sortedRoster.length}
               </span>
               <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
+              {sortedRoster.length > 0 && (
+                <StyleCompositionDonut styles={rosterStyles} size={28} className="ml-1 opacity-70 hover:opacity-100 transition-opacity" />
+              )}
             </div>
           </div>
         </div>

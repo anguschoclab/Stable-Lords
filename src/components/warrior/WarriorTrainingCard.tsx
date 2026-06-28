@@ -232,14 +232,36 @@ export function WarriorTrainingCard({
                       </div>
 
                       {/* Progress Bar */}
-                      <div className="flex-1 relative">
+                      <div
+                        className="flex-1 relative"
+                        data-testid={`training-bar-${key}`}
+                        data-chance-class={
+                          chance === 0
+                            ? 'muted'
+                            : chance < 40
+                              ? 'arena-gold'
+                              : chance < 70
+                                ? 'primary'
+                                : 'arena-fame'
+                        }
+                      >
                         <Progress
                           value={(val / ATTRIBUTE_TRAINING.MAX_VALUE) * 100}
-                          className="h-1 bg-white/5"
+                          className={cn(
+                            'h-1 bg-white/5',
+                            chance === 0
+                              ? '[&>div]:bg-muted-foreground/30'
+                              : chance < 40
+                                ? '[&>div]:bg-arena-gold'
+                                : chance < 70
+                                  ? '[&>div]:bg-primary'
+                                  : '[&>div]:bg-arena-fame'
+                          )}
                         />
                         {isRevealed && (
                           <div
-                            className="absolute top-0 bottom-0 w-px bg-white/20 z-10"
+                            data-testid={`ceiling-marker-${key}`}
+                            className="absolute top-0 bottom-0 w-px bg-arena-gold/60 z-10"
                             style={{ left: `${(potVal / ATTRIBUTE_TRAINING.MAX_VALUE) * 100}%` }}
                             title="Potential Ceiling"
                           />

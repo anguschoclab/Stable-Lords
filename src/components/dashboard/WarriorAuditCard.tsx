@@ -1,5 +1,5 @@
 import { Skull } from 'lucide-react';
-import { StatBattery } from '@/components/ui/StatBattery';
+import { VitalityRing } from '@/components/ui/VitalityRing';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WarriorLink } from '@/components/EntityLink';
 import type { AtRiskWarrior } from '@/hooks/useAtRiskWarriors';
@@ -43,14 +43,17 @@ export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
         </div>
       </div>
 
-      <StatBattery
-        label="VIT"
-        value={condition}
-        max={100}
-        labelValue={`${condition}%`}
-        colorClass={condition < 40 ? 'bg-destructive' : 'bg-arena-gold'}
-        className="mt-1 w-full"
-      />
+      <div className="mt-2 flex items-center gap-3">
+        <VitalityRing value={condition} size={36} strokeWidth={3} />
+        <div className="flex flex-col">
+          <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
+            Vitality
+          </span>
+          <span className="text-[10px] font-mono font-black text-foreground/80">
+            {condition}%
+          </span>
+        </div>
+      </div>
 
       {isInjured && (
         <div className="mt-2 flex flex-wrap gap-1.5 pl-1 border-l border-destructive/30 ml-0.5">

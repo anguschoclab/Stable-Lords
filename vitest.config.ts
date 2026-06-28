@@ -12,7 +12,7 @@ export default defineConfig({
     },
     testTimeout: 120000,
     hookTimeout: 10000,
-    pool: 'forks',
+    pool: 'threads',
     dir: './src',
     exclude: ['node_modules/', '**/e2e/**'],
     coverage: {

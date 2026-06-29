@@ -527,6 +527,28 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
+  alley_stalker: {
+    id: 'alley_stalker',
+    name: 'Alley Stalker',
+    description: '+1 Initiative, +1 Kill Window Bonus — honed senses from a life of ambushing marks in the shadowed alleys.',
+    effect: { iniMod: 1, killWindowBonus: 1, fightPlanMod: { AL: 2 } },
+    weight: 0.6,
+    synergy: ['agile', 'cunning'],
+    antiSynergy: ['tank'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  iron_vein: {
+    id: 'iron_vein',
+    name: 'Iron Vein',
+    description: '+1 Defense, +10% Endurance — raised in the deep mines, with bones hardened by labor and scarcity.',
+    effect: { defMod: 1, enduranceMult: 1.1, fightPlanMod: { OE: -1 } },
+    weight: 0.6,
+    synergy: ['tank', 'brutal'],
+    antiSynergy: ['agile'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

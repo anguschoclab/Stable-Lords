@@ -95,6 +95,11 @@ const ORIGINS = [
   'Abandoned during the long night of the Ashen Plague',
   'Raised on the brutal scraps of the Iron Pits in the Lower Wards',
   'Discovered half-starved, guarding the corpse of a massive hound',
+  'Left shivering in a discarded coal sack near the Silent Keep',
+  'Torn from a smuggling ring that traded orphans for obsidian blades',
+  'Raised among the nameless urchins who scrub the blood from the colosseum floors',
+  'Abandoned at the edge of the Murkwood with only a rusty iron pendant',
+  'Discovered hiding in the hollowed chest cavity of a slain wyvern in the Bone Wastes',
 ];
 
 const CHILDHOOD_TRAITS = [
@@ -150,6 +155,9 @@ const CHILDHOOD_TRAITS = [
   'would break their own fingers just to see if they could set them straight',
   "learned to predict a strike by watching the twitch of an opponent's jaw",
   'slept on a bed of river stones to harden their spine',
+  'was known for collecting the teeth of feral dogs slain in the alleys',
+  'developed a grim fascination with watching executioners hone their axes',
+  'learned to fashion razor-sharp shivs from the rusted iron rungs of their crib',
 ];
 
 const DEFINING_MOMENTS = [
@@ -202,6 +210,9 @@ const DEFINING_MOMENTS = [
   'realizing that a life in the shadows is merely a slow death',
   'now burning with the cold clarity that only comes from true desperation',
   'finding that their truest self is only revealed at the edge of a blade',
+  'until they strangled a corrupted guard with the very chains meant to bind them',
+  'carrying the heavy burden of a massacre they alone survived in the Lower Wards',
+  'now seeking the arena not for glory, but for a public stage to exact a terrible revenge',
 ];
 
 /**

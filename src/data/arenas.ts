@@ -513,6 +513,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'When all the lanterns were mysteriously extinguished midway through a championship bout, a blind ascetic monk defeated three armed gladiators in total darkness, guided only by the sound of their footfalls on the wooden floorboards.',
   },
+  {
+    id: 'flooded_vault_rusting_tide',
+    arenaId: 'flooded_vault_arena',
+    type: 'famous_death',
+    title: 'The Rusting Tide',
+    narrative:
+      'A heavily armored tank ignored warnings about the rising waters and became hopelessly bogged down. Unable to swing their massive maul, they were slowly drowned by a nimble rogue who simply stood back and watched the ironclad warrior sink.',
+  },
+  {
+    id: 'highplain_howling_gale',
+    arenaId: 'highplain_arena',
+    type: 'architectural_quirk',
+    title: 'The Howling Gale',
+    narrative:
+      'Due to a peculiar geological formation, the high plains winds funnel directly across the arena center at dusk, creating a torrential crosswind. Archers and thrown-weapon specialists actively avoid fighting here, as even heavy axes have been blown off course.',
+  },
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

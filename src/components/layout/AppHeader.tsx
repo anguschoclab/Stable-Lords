@@ -267,7 +267,7 @@ function SaveButton({ lastSavedAt }: SaveButtonProps) {
             'h-9 w-9 rounded-none transition-all',
             saveFlash ? 'bg-primary/20 text-primary scale-110' : 'hover:bg-white/5'
           )}
-          aria-label="Save status"
+          aria-label={lastSavedAt ? `Auto-Saved: ${formatSaveTime(lastSavedAt)}` : 'Not Saved'}
         >
           <Save className="h-4 w-4" />
         </Button>
@@ -295,7 +295,7 @@ function ResetButton({ onResetPrompt }: ResetButtonProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors"
+          className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-destructive focus-visible:outline-none"
           onClick={onResetPrompt}
           aria-label="Expunge Ledger"
         >

@@ -24,8 +24,17 @@ export default function WarriorCard({ warrior, isSelected, canSelect, onClick }:
 
   return (
     <div
+      role="button"
+      tabIndex={!canSelect && !isSelected ? -1 : 0}
+      onKeyDown={(e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && (canSelect || isSelected)) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      aria-pressed={isSelected}
       onClick={onClick}
-      className={`relative cursor-pointer transition-all duration-200 group ${
+      className={`relative cursor-pointer transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
         !canSelect && !isSelected ? 'opacity-50 pointer-events-none' : ''
       }`}
       style={{

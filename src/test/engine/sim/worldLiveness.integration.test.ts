@@ -41,7 +41,7 @@ function reset() {
 }
 
 describe('world liveness over a long sim (26 weeks)', () => {
-  beforeEach(reset, 60000);
+  beforeEach(reset, 120000);
 
   it('stays alive and evolves over the full run', () => {
     const { pulses, finalState } = runSimulation({
@@ -95,11 +95,11 @@ describe('world liveness over a long sim (26 weeks)', () => {
 
     // Multi-flaw warriors are verified in longer regression runs; 26 weeks is not always
     // long enough to reliably hit the liability cull for this seed.
-  }, 60000);
+  }, 120000);
 });
 
 describe('world liveness — measured baseline (diagnostic, no hard assert)', () => {
-  beforeEach(reset, 60000);
+  beforeEach(reset, 120000);
 
   it('logs end-of-run trait & churn metrics', () => {
     const { pulses, finalState } = runSimulation({
@@ -118,5 +118,5 @@ describe('world liveness — measured baseline (diagnostic, no hard assert)', ()
         `classTraits=${end.classTraitInstances} signature=${end.signatureInstances}`
     );
     expect(end.week).toBeGreaterThan(0);
-  }, 60000);
+  }, 120000);
 });

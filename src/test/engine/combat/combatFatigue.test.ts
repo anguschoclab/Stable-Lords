@@ -59,4 +59,32 @@ describe('combatFatigue mechanics', () => {
       expect(fatiguePenalty(0, 0)).toBe(-8); // ratio = 0/1 = 0 <= 0.25
     });
   });
+
+  // ─── Phase 4: Edge cases ─────────────────────────────────────────────────────
+
+  describe('enduranceCost edge cases', () => {
+    it('defaults unknown weather string to Clear (staminaMult = 1.0)', () => {
+      const baseCost = 5 * 0.18 + 5 * 0.09;
+      expect(enduranceCost(5, 5, 'UnknownWeather')).toBeCloseTo(baseCost, 2);
+    });
+
+    it('defaults undefined weather to Clear (staminaMult = 1.0)', () => {
+      const baseCost = 5 * 0.18 + 5 * 0.09;
+      expect(enduranceCost(5, 5, undefined)).toBeCloseTo(baseCost, 2);
+    });
+  });
+
+  describe('fatiguePenalty edge cases', () => {
+    it('returns 0 when penaltyReduction = 1.0 (full reduction)', () => {
+      // base = -8, penaltyReduction = 1.0 → ceil(-8 * (1 - 1.0)) = ceil(-0) = -0
+      // Normalize -0 to +0 for comparison
+      expect(fatiguePenalty(10, 100, 1.0) + 0).toBe(0);
+    });
+
+    it('returns 0 when base penalty is 0 regardless of penaltyReduction', () => {
+      // base = 0 (endurance ratio > 0.45), penaltyReduction = 0.5
+      // base === 0 → returns base (0) immediately
+      expect(fatiguePenalty(50, 100, 0.5)).toBe(0);
+    });
+  });
 });

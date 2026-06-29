@@ -60,5 +60,75 @@ describe('weaponArmor', () => {
       expect(WEAPON_DAMAGE_TYPE['mace']).toBe('bash');
       expect(WEAPON_DAMAGE_TYPE['small_shield']).toBe('none');
     });
+
+    it('all shields return none damage type', () => {
+      expect(WEAPON_DAMAGE_TYPE['small_shield']).toBe('none');
+      expect(WEAPON_DAMAGE_TYPE['medium_shield']).toBe('none');
+      expect(WEAPON_DAMAGE_TYPE['large_shield']).toBe('none');
+    });
+
+    it('all weapon entries have valid damage types (slash, bash, pierce, or none)', () => {
+      const validTypes = new Set(['slash', 'bash', 'pierce', 'none']);
+      for (const [id, dtype] of Object.entries(WEAPON_DAMAGE_TYPE)) {
+        expect(validTypes.has(dtype), `invalid damage type for ${id}: ${dtype}`).toBe(true);
+      }
+    });
+  });
+
+  describe('applyArmorTypeMod additional armor types', () => {
+    it('applies studded_leather multipliers for slash and pierce', () => {
+      // longsword = slash, studded_leather = slash: 0.88
+      expect(applyArmorTypeMod(100, 'longsword', 'studded_leather')).toBe(88);
+      // dagger = pierce, studded_leather = pierce: 1.05
+      expect(applyArmorTypeMod(100, 'dagger', 'studded_leather')).toBe(105);
+    });
+
+    it('applies ring_mail multipliers for slash, pierce, and bash', () => {
+      // longsword = slash, ring_mail = slash: 0.9
+      expect(applyArmorTypeMod(100, 'longsword', 'ring_mail')).toBe(90);
+      // dagger = pierce, ring_mail = pierce: 0.9
+      expect(applyArmorTypeMod(100, 'dagger', 'ring_mail')).toBe(90);
+      // mace = bash, ring_mail = bash: 1.1
+      expect(applyArmorTypeMod(100, 'mace', 'ring_mail')).toBe(110);
+    });
+
+    it('applies scale_mail multipliers for slash and pierce', () => {
+      // longsword = slash, scale_mail = slash: 0.8
+      expect(applyArmorTypeMod(100, 'longsword', 'scale_mail')).toBe(80);
+      // dagger = pierce, scale_mail = pierce: 1.15
+      expect(applyArmorTypeMod(100, 'dagger', 'scale_mail')).toBe(115);
+    });
+
+    it('applies plate_mail multipliers for slash, bash, and pierce', () => {
+      // longsword = slash, plate_mail = slash: 0.85
+      expect(applyArmorTypeMod(100, 'longsword', 'plate_mail')).toBe(85);
+      // mace = bash, plate_mail = bash: 0.85
+      expect(applyArmorTypeMod(100, 'mace', 'plate_mail')).toBe(85);
+      // dagger = pierce, plate_mail = pierce: 0.85
+      expect(applyArmorTypeMod(100, 'dagger', 'plate_mail')).toBe(85);
+    });
+
+    it('applies plate_armor multipliers for slash, bash, and pierce', () => {
+      // longsword = slash, plate_armor = slash: 0.8
+      expect(applyArmorTypeMod(100, 'longsword', 'plate_armor')).toBe(80);
+      // mace = bash, plate_armor = bash: 0.8
+      expect(applyArmorTypeMod(100, 'mace', 'plate_armor')).toBe(80);
+      // dagger = pierce, plate_armor = pierce: 0.8
+      expect(applyArmorTypeMod(100, 'dagger', 'plate_armor')).toBe(80);
+    });
+
+    it('returns unmodified damage for unknown armorId', () => {
+      expect(applyArmorTypeMod(100, 'dagger', 'unknown_armor')).toBe(100);
+    });
+
+    it('returns 0 for damage = 0 regardless of multiplier', () => {
+      expect(applyArmorTypeMod(0, 'dagger', 'leather')).toBe(0);
+      expect(applyArmorTypeMod(0, 'longsword', 'chain_mail')).toBe(0);
+    });
+
+    it('returns unmodified damage for bash vs chain_mail (no bash entry)', () => {
+      // chain_mail has pierce: 0.8 and slash: 1.1, but no bash entry → defaults to 1.0
+      expect(applyArmorTypeMod(100, 'mace', 'chain_mail')).toBe(100);
+    });
   });
 });

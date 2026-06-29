@@ -97,4 +97,36 @@ describe('weaponStats', () => {
       }
     });
   });
+
+  // ─── Phase 4: Edge cases ─────────────────────────────────────────────────────
+
+  describe('weaponDamageBonus edge cases', () => {
+    it('fist (weight 0) has negative heft', () => {
+      // heft = round((0 - 3) * 0.8) = round(-2.4) = -2
+      expect(weaponDamageBonus('fist')).toBe(-2);
+    });
+
+    it('CW suitability adds +1 to heft for broadsword + StrikingAttack', () => {
+      const heft = weaponDamageBonus('broadsword'); // no style
+      expect(weaponDamageBonus('broadsword', FightingStyle.StrikingAttack)).toBe(heft + 1);
+    });
+
+    it('undefined style returns heft only (no suitability mod)', () => {
+      // broadsword weight = 4, heft = round((4-3)*0.8) = round(0.8) = 1
+      expect(weaponDamageBonus('broadsword', undefined)).toBe(1);
+    });
+  });
+
+  describe('getWeaponInitiativeMod edge cases', () => {
+    it('fist (weight 0) has positive initiative', () => {
+      // init = -round((0 - 3) * 0.5) = -round(-1.5) = -(-1) = 1
+      // Math.round(-1.5) = -1 (rounds toward +Infinity for .5)
+      expect(getWeaponInitiativeMod('fist')).toBe(1);
+    });
+
+    it('weight-3 weapon (longsword) has zero initiative mod', () => {
+      // init = -round((3 - 3) * 0.5) = -round(0) = -0
+      expect(getWeaponInitiativeMod('longsword')).toBe(-0);
+    });
+  });
 });

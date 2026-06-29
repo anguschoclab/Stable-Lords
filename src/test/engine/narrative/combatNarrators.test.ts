@@ -15,6 +15,7 @@ import {
   narrateCrowdReaction,
   narrateTaunt,
 } from '@/engine/narrative/combatNarrators';
+import { peekArchive } from '@/engine/narrative/narrativePBPUtils';
 import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 
@@ -69,6 +70,38 @@ describe('combatNarrators', () => {
       const rng = new SeededRNG(1);
       const result = narrateCounterstrike(rng, 'Rex', 'Vellis');
       expect(noRawTokens(result)).toBe(true);
+    });
+
+    it('returns a counterstrike-specific line, not the generic fallback', () => {
+      const rng = new SeededRNG(1);
+      const result = narrateCounterstrike(rng, 'Rex', 'Vellis');
+      expect(result).not.toBe('A fierce exchange occurs.');
+      expect(result.length).toBeGreaterThan(10);
+    });
+
+    it('is deterministic with same seed', () => {
+      const r1 = new SeededRNG(42);
+      const r2 = new SeededRNG(42);
+      expect(narrateCounterstrike(r1, 'Rex', 'Vellis')).toBe(
+        narrateCounterstrike(r2, 'Rex', 'Vellis')
+      );
+    });
+  });
+
+  describe('narrateDodge expanded content', () => {
+    it('tier1_low has at least 31 entries', () => {
+      const pool = peekArchive(['pbp', 'defenses', 'dodge', 'tier1_low']);
+      expect(pool).not.toBeNull();
+      expect(pool!.length).toBeGreaterThanOrEqual(31);
+    });
+
+    it('has persona-keyed categories (desperate, confident, theatrical, grim)', () => {
+      const keys = ['desperate', 'confident', 'theatrical', 'grim'] as const;
+      for (const key of keys) {
+        const pool = peekArchive(['pbp', 'defenses', 'dodge', key]);
+        expect(pool).not.toBeNull();
+        expect(pool!.length).toBeGreaterThan(0);
+      }
     });
   });
 

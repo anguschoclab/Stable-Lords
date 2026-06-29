@@ -296,4 +296,105 @@ describe('tacticResolution', () => {
       expect(al).toBe(5);
     });
   });
+
+  // ─── Phase 4: Edge cases ─────────────────────────────────────────────────────
+
+  describe('oeAttMod edge cases', () => {
+    it('OE=5 with aggressive style gives base 0 + 1 = 1', () => {
+      expect(oeAttMod(5, FightingStyle.BashingAttack)).toBe(1);
+    });
+
+    it('OE=6 boundary with aggressive style gives floor(0.85) + 1 = 0 + 1 = 1', () => {
+      expect(oeAttMod(6, FightingStyle.BashingAttack)).toBe(1);
+    });
+
+    it('OE=5 with non-aggressive style gives 0', () => {
+      expect(oeAttMod(5, FightingStyle.TotalParry)).toBe(0);
+    });
+  });
+
+  describe('getOffensiveTacticMods suitability scaling', () => {
+    it('Lunge with U-rated style (BashingAttack) scales by 0.3', () => {
+      // BashingAttack + Lunge = U → mult = 0.3
+      // attBonus = round(2 * 0.3) = round(0.6) = 1
+      // defPenalty = round(1 * 0.3) = round(0.3) = 0
+      const mods = getOffensiveTacticMods('Lunge', FightingStyle.BashingAttack);
+      expect(mods.attBonus).toBe(1);
+      expect(mods.defPenalty).toBe(0);
+      expect(mods.endCost).toBe(2);
+    });
+
+    it('Slash with WS-rated style (SlashingAttack) scales by 1.0', () => {
+      // SlashingAttack + Slash = WS → mult = 1.0
+      const mods = getOffensiveTacticMods('Slash', FightingStyle.SlashingAttack);
+      expect(mods.dmgBonus).toBe(2);
+      expect(mods.parryBypass).toBe(2);
+    });
+
+    it('Decisiveness with S-rated style (LungingAttack) scales by 0.6', () => {
+      // LungingAttack + Decisiveness = S → mult = 0.6
+      // decBonus = round(3 * 0.6) = round(1.8) = 2
+      const mods = getOffensiveTacticMods('Decisiveness', FightingStyle.LungingAttack);
+      expect(mods.decBonus).toBe(2);
+    });
+
+    it('Bash with WS-rated style (BashingAttack) scales by 1.0', () => {
+      const mods = getOffensiveTacticMods('Bash', FightingStyle.BashingAttack);
+      expect(mods.attBonus).toBe(1);
+      expect(mods.dmgBonus).toBe(1);
+      expect(mods.defPenalty).toBe(2);
+      expect(mods.parryBypass).toBe(4);
+    });
+  });
+
+  describe('getDefensiveTacticMods suitability scaling', () => {
+    it('Parry with U-rated style (BashingAttack) scales by 0.3', () => {
+      // BashingAttack + Parry = U → mult = 0.3
+      // parBonus = round(3 * 0.3) = round(0.9) = 1
+      // ripBonus = -round(1 * 0.3) = -round(0.3) = -0
+      const mods = getDefensiveTacticMods('Parry', FightingStyle.BashingAttack);
+      expect(mods.parBonus).toBe(1);
+      expect(mods.ripBonus).toBe(-0);
+    });
+
+    it('Dodge with WS-rated style (AimedBlow) scales by 1.0', () => {
+      const mods = getDefensiveTacticMods('Dodge', FightingStyle.AimedBlow);
+      expect(mods.defBonus).toBe(3);
+      expect(mods.parBonus).toBe(-1);
+    });
+
+    it('Riposte with WS-rated style (ParryRiposte) scales by 1.0', () => {
+      const mods = getDefensiveTacticMods('Riposte', FightingStyle.ParryRiposte);
+      expect(mods.ripBonus).toBe(3);
+      expect(mods.parBonus).toBe(1);
+    });
+
+    it('Responsiveness with WS-rated style (ParryStrike) scales by 1.0', () => {
+      const mods = getDefensiveTacticMods('Responsiveness', FightingStyle.ParryStrike);
+      expect(mods.iniBonus).toBe(2);
+    });
+  });
+
+  describe('calculateFinalOEAL edge cases', () => {
+    const basePlan: FightPlan = {
+      style: FightingStyle.StrikingAttack,
+      OE: 5,
+      AL: 5,
+      killDesire: 5,
+    };
+
+    it('Measured openingMove applies no modifier', () => {
+      const plan: FightPlan = { ...basePlan, openingMove: 'Measured' };
+      const [oe, al] = calculateFinalOEAL(5, 5, plan, 100, 100, 100, 100, 1);
+      expect(oe).toBe(5);
+      expect(al).toBe(5);
+    });
+
+    it('None fallbackCondition applies no fallback', () => {
+      const plan: FightPlan = { ...basePlan, fallbackCondition: 'None' };
+      const [oe, al] = calculateFinalOEAL(5, 5, plan, 10, 100, 10, 100, 5);
+      expect(oe).toBe(5);
+      expect(al).toBe(5);
+    });
+  });
 });

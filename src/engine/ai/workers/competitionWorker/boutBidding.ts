@@ -154,19 +154,36 @@ export function generateBoutBids(
     if (crowdMood === 'Theatrical' && personality === 'Showman') moodModifier = +3;
 
     // Scheduling Assistant: Matchup scoring
-    let matchupModifier = 0;
-    if (intent !== 'VENDETTA') {
+    let matchupModifier = -Infinity;
+    let foundOpponent = false;
+    if (intent === 'VENDETTA' && rival.strategy?.targetStableId) {
+      const targetRival = mockState.rivals.find(
+        (r) => r.id === rival.strategy?.targetStableId
+      );
+      if (targetRival) {
+        for (const opponent of targetRival.roster) {
+          if (opponent.status === 'Active') {
+            const matchupScore = scoreMatchup(warrior, opponent, mockState);
+            const score = Math.max(-5, Math.min(5, (matchupScore - 100) / 20));
+            matchupModifier = Math.max(matchupModifier, score);
+            foundOpponent = true;
+          }
+        }
+      }
+    } else if (intent !== 'VENDETTA') {
       for (const otherRival of mockState.rivals) {
+        if (otherRival.id === rival.id) continue;
         for (const opponent of otherRival.roster) {
           if (opponent.status === 'Active') {
             const matchupScore = scoreMatchup(warrior, opponent, mockState);
             const score = Math.max(-5, Math.min(5, (matchupScore - 100) / 20));
-            // Track the best (highest) matchup modifier across all opponents
             matchupModifier = Math.max(matchupModifier, score);
+            foundOpponent = true;
           }
         }
       }
     }
+    if (!foundOpponent) matchupModifier = 0;
 
     if (intent === 'VENDETTA' && rival.strategy?.targetStableId) {
       bids.push({
@@ -175,6 +192,8 @@ export function generateBoutBids(
         priority: Math.max(1, 10 + weatherModifier + moodModifier + matchupModifier),
         description: `Vendetta target. ${weatherModifier < 0 ? '(Weather caution)' : weatherModifier > 0 ? '(Weather advantage)' : ''} ${matchupModifier > 0 ? '(Favorable matchup)' : matchupModifier < 0 ? '(Unfavorable matchup)' : ''}`,
       });
+    } else if (intent === 'VENDETTA') {
+      continue;
     } else if (intent === 'RECOVERY') {
       if (weatherModifier < -2) continue;
       bids.push({

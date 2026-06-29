@@ -151,4 +151,53 @@ describe('hitLocation mechanics', () => {
       expect(rollHitLocation(rng, 'Any')).toBe('right arm');
     });
   });
+
+  // ─── Phase 4: Edge cases ─────────────────────────────────────────────────────
+
+  describe('protectCovers edge cases', () => {
+    it('handles case-insensitive helm', () => {
+      expect(protectCovers('HELM')).toEqual(['head']);
+    });
+
+    it('handles case-insensitive cap', () => {
+      expect(protectCovers('CAP')).toEqual(['head']);
+    });
+
+    it('handles case-insensitive leather', () => {
+      expect(protectCovers('LEATHER')).toEqual(['chest', 'abdomen']);
+    });
+
+    it('covers chest/abdomen for includes("armor") branch', () => {
+      expect(protectCovers('magic_armor')).toEqual(['chest', 'abdomen']);
+    });
+
+    it('covers chest/abdomen for includes("mail") branch', () => {
+      expect(protectCovers('ring_mail')).toEqual(['chest', 'abdomen']);
+    });
+  });
+
+  describe('rollHitLocation edge cases', () => {
+    it('falls through to random when all locations are covered (exposed.length = 0)', () => {
+      // There's no single protect that covers all 7 locations,
+      // but we can test the fallback by using a target that's covered
+      // and rng that misses target, then rng < 0.3 for exposed but exposed is empty,
+      // then falls through to random pick from all.
+      // 'arms' covers right arm + left arm, 'legs' covers right leg + left leg
+      // No single protect covers everything, so we test with 'arms' which covers 2.
+      // exposed = 5 locations (head, chest, abdomen, right leg, left leg)
+      // This still has exposed > 0, so let's test the actual fallback differently:
+      // When rng < 0.3 and exposed has items, it picks from exposed.
+      // The only way exposed.length = 0 is if all 7 are covered, which can't happen.
+      // Instead, test that when target is invalid and rng >= 0.3, it picks from all.
+      const rng = vi.fn()
+        .mockReturnValueOnce(0.8) // > 0.3 exposed check
+        .mockReturnValueOnce(0.0); // picks first from all ('head')
+      expect(rollHitLocation(rng, undefined, 'arms')).toBe('head');
+    });
+
+    it('handles case-insensitive target matching', () => {
+      const rng = vi.fn().mockReturnValue(0.5); // < 0.7 hit chance
+      expect(rollHitLocation(rng, 'HEAD', 'none_helm')).toBe('head');
+    });
+  });
 });

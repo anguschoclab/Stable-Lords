@@ -114,4 +114,36 @@ describe('combatMath engine', () => {
       expect(contestCheck(rng, 5, 10, 5, -5)).toBe(true); // 11+5+5=21 vs 11+10-5=16 -> 21 > 16 -> true
     });
   });
+
+  // ─── Phase 4: Edge cases ─────────────────────────────────────────────────────
+
+  describe('getPhase edge cases', () => {
+    it("returns 'opening' for exchange = 0", () => {
+      expect(getPhase(0, 10)).toBe('opening');
+    });
+
+    it("returns 'late' for maxExchanges = 1 with exchange = 1", () => {
+      // ratio = 1/1 = 1.0 > 0.65 → late
+      expect(getPhase(1, 1)).toBe('late');
+    });
+  });
+
+  describe('skillCheck edge cases', () => {
+    it('clamps target to 1 when skill = 0 and no modifier', () => {
+      // target = max(1, min(19, floor(0) + 0)) = max(1, min(19, 0)) = 1
+      // roll = 1 (rng = 0) → auto-success
+      const rng = vi.fn().mockReturnValue(0.0);
+      expect(skillCheck(rng, 0)).toBe(true);
+    });
+
+    it('clamps target to 19 when modifier pushes it above 19', () => {
+      // target = max(1, min(19, floor(15) + 10)) = max(1, min(19, 25)) = 19
+      // roll = 19 (rng = 0.9) → 19 <= 19 → success
+      const rng = vi.fn().mockReturnValue(0.9);
+      expect(skillCheck(rng, 15, 10)).toBe(true);
+      // roll = 20 (rng = 0.99) → auto-fail
+      const rng2 = vi.fn().mockReturnValue(0.99);
+      expect(skillCheck(rng2, 15, 10)).toBe(false);
+    });
+  });
 });

@@ -350,4 +350,288 @@ describe('conditionEngine', () => {
       expect(mods.enduranceCostMult).toBeLessThan(1.0);
     });
   });
+
+  // ─── Untested trigger types ──────────────────────────────────────────────────
+
+  describe('evaluateConditions untested triggers', () => {
+    it('applies override for MOMENTUM_LEAD trigger', () => {
+      const fighter = createMockFighter({
+        momentum: 3,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'MOMENTUM_LEAD', value: 2 }, override: { OE: 8 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(8);
+    });
+
+    it('does not apply MOMENTUM_LEAD override when momentum is below value', () => {
+      const fighter = createMockFighter({
+        momentum: 1,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'MOMENTUM_LEAD', value: 2 }, override: { OE: 8 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(5);
+    });
+
+    it('applies override for MOMENTUM_DEFICIT trigger', () => {
+      const fighter = createMockFighter({
+        momentum: -3,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'MOMENTUM_DEFICIT', value: 2 }, override: { OE: 2 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(2);
+    });
+
+    it('does not apply MOMENTUM_DEFICIT override when momentum is not negative enough', () => {
+      const fighter = createMockFighter({
+        momentum: -1,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'MOMENTUM_DEFICIT', value: 2 }, override: { OE: 2 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(5);
+    });
+
+    it('applies override for HP_ABOVE trigger', () => {
+      const fighter = createMockFighter({
+        hp: 80,
+        maxHp: 100,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'HP_ABOVE', value: 0.7 }, override: { OE: 9 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(9);
+    });
+
+    it('does not apply HP_ABOVE override when HP is not above threshold', () => {
+      const fighter = createMockFighter({
+        hp: 60,
+        maxHp: 100,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'HP_ABOVE', value: 0.7 }, override: { OE: 9 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(5);
+    });
+
+    it('applies override for ENDURANCE_BELOW trigger', () => {
+      const fighter = createMockFighter({
+        endurance: 20,
+        maxEndurance: 100,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'ENDURANCE_BELOW', value: 0.3 }, override: { AL: 8 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.AL).toBe(8);
+    });
+
+    it('does not apply ENDURANCE_BELOW override when endurance is above threshold', () => {
+      const fighter = createMockFighter({
+        endurance: 50,
+        maxEndurance: 100,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'ENDURANCE_BELOW', value: 0.3 }, override: { AL: 8 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.AL).toBe(5);
+    });
+
+    it('applies PHASE_IS override for opening (lowercase)', () => {
+      const fighter = createMockFighter({
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'PHASE_IS', value: 'opening' }, override: { OE: 7 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ phase: 'OPENING' });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(7);
+    });
+
+    it('applies PHASE_IS override for mid (lowercase)', () => {
+      const fighter = createMockFighter({
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'PHASE_IS', value: 'mid' }, override: { OE: 7 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ phase: 'MID' });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(7);
+    });
+
+    it('evaluates every 5 exchanges when WT < 4', () => {
+      const fighter = createMockFighter({
+        hp: 40,
+        maxHp: 100,
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 3, WL: 10, SP: 10, DF: 10 },
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'HP_BELOW', value: 0.5 }, override: { OE: 10 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      // Exchange 1: 1 % 5 !== 0 → should NOT evaluate, returns activePlan
+      const ctx1 = createMockContext({ exchange: 1 });
+      const result1 = evaluateConditions(fighter, opponent, ctx1, 3);
+      expect(result1.newPlan).toBe(fighter.activePlan);
+      // Exchange 5: 5 % 5 === 0 → should evaluate
+      const ctx5 = createMockContext({ exchange: 5 });
+      const result5 = evaluateConditions(fighter, opponent, ctx5, 3);
+      expect(result5.newPlan.OE).toBe(10);
+    });
+
+    it('reverts to base plan when conditions exist but none match', () => {
+      const fighter = createMockFighter({
+        hp: 80,
+        maxHp: 100,
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [{ trigger: { type: 'HP_BELOW', value: 0.3 }, override: { OE: 10 } }],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan.OE).toBe(5);
+    });
+
+    it('reverts to base plan when conditions array is empty', () => {
+      const fighter = createMockFighter({
+        plan: {
+          style: 'StrikingAttack' as import('@/types/shared.types').FightingStyle,
+          OE: 5,
+          AL: 5,
+          killDesire: 5,
+          conditions: [],
+        },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      const ctx = createMockContext({ exchange: 1 });
+      const result = evaluateConditions(fighter, opponent, ctx, 10);
+      expect(result.newPlan).toBe(fighter.plan);
+    });
+  });
+
+  // ─── derivePsychState boundary tests ─────────────────────────────────────────
+
+  describe('derivePsychState boundary tests', () => {
+    it('does not trigger FatiguePanic at exactly 10% endurance', () => {
+      const fighter = createMockFighter({
+        hp: 100,
+        endurance: 10,
+        maxEndurance: 100,
+        attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      // endRatio = 0.1, not < 0.1, falls through to hpRatio check
+      expect(derivePsychState(fighter, opponent)).toBe('Neutral');
+    });
+
+    it('does not trigger Desperate at exactly 30% HP', () => {
+      const fighter = createMockFighter({
+        hp: 30,
+        maxHp: 100,
+        endurance: 100,
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      // hpRatio = 0.3, not < 0.3, falls through
+      expect(derivePsychState(fighter, opponent)).toBe('Neutral');
+    });
+
+    it('triggers InTheZone at momentum=2 with hpRatio > 0.7', () => {
+      const fighter = createMockFighter({
+        momentum: 2,
+        hp: 71,
+        maxHp: 100,
+        hitsLanded: 5,
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      expect(derivePsychState(fighter, opponent)).toBe('InTheZone');
+    });
+
+    it('does not trigger Cruising when hitsLanded < 3', () => {
+      const fighter = createMockFighter({
+        hitsLanded: 2,
+        hitsTaken: 0,
+        endurance: 80,
+        maxEndurance: 100,
+      });
+      const opponent = createMockFighter({ label: 'D' });
+      // hitsLanded > hitsTaken * 1.5 (2 > 0) and endRatio > 0.6, but hitsLanded < 3
+      expect(derivePsychState(fighter, opponent)).not.toBe('Cruising');
+    });
+  });
 });

@@ -95,6 +95,151 @@ describe('matchup scoring evaluates all opponents, not just first', () => {
   });
 });
 
+describe('matchup scoring excludes own stablemates', () => {
+  it('matchupModifier does not score against own stablemates', () => {
+    // ParryLunge vs BashingAttack is favorable (matrix +1 → score 125 → mod +1.25)
+    // ParryLunge vs LungingAttack is neutral (matrix 0 → score 100 → mod 0)
+    const warrior = makeWarrior('Parrier', FightingStyle.ParryLunge);
+    const ownStablemate = makeWarrior('OwnBasher', FightingStyle.BashingAttack);
+    const neutralOpp = makeWarrior('Lunger', FightingStyle.LungingAttack);
+
+    const rival = makeRival({
+      id: 'rival-1' as any,
+      roster: [warrior, ownStablemate],
+    });
+    const otherRival = {
+      id: 'rival-2' as any,
+      owner: {
+        id: 'owner-2' as any,
+        name: 'Other',
+        stableName: 'Other Stable',
+        fame: 100,
+        renown: 50,
+        titles: 0,
+      },
+      roster: [neutralOpp],
+      treasury: 1000,
+      fame: 100,
+      ledger: [],
+      trainingAssignments: [],
+    } as any;
+
+    // Mimic production: rivals array includes the bidding rival itself
+    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [rival, otherRival]);
+
+    expect(bids.length).toBeGreaterThan(0);
+    const bid = bids.find((b) => b.proposingWarriorId === warrior.id);
+    expect(bid).toBeDefined();
+    // Without the fix, ownStablemate (BashingAttack, favorable +1.25) would inflate
+    // the modifier. With the fix, only neutralOpp (LungingAttack, mod 0) is scored,
+    // so priority should be exactly 4 (base + 0 weather + 0 mood + 0 matchup).
+    expect(bid!.priority).toBe(4);
+  });
+});
+
+describe('matchupModifier goes negative for unfavorable matchups', () => {
+  it('matchupModifier reflects negative score when all opponents are unfavorable', () => {
+    // WallOfSteel vs AimedBlow: matrix -3 → score 25 → (25-100)/20 = -3.75
+    const warrior = makeWarrior('Wall', FightingStyle.WallOfSteel);
+    const opponent = makeWarrior('Aimer', FightingStyle.AimedBlow);
+
+    const rival = makeRival({ roster: [warrior] });
+    const otherRival = {
+      id: 'rival-2' as any,
+      owner: {
+        id: 'owner-2' as any,
+        name: 'Other',
+        stableName: 'Other Stable',
+        fame: 100,
+        renown: 50,
+        titles: 0,
+      },
+      roster: [opponent],
+      treasury: 1000,
+      fame: 100,
+      ledger: [],
+      trainingAssignments: [],
+    } as any;
+
+    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [otherRival]);
+
+    expect(bids.length).toBeGreaterThan(0);
+    // Without the fix, modifier stays at 0 → priority = 4.
+    // With the fix, modifier = -3.75 → priority = max(1, 4 - 3.75) = 0.25 < 4.
+    expect(bids[0]!.priority).toBeLessThan(4);
+  });
+
+  it('matchupModifier stays 0 when no opponents exist', () => {
+    const warrior = makeWarrior('Loner', FightingStyle.StrikingAttack);
+    const rival = makeRival({ roster: [warrior] });
+
+    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+
+    expect(bids.length).toBeGreaterThan(0);
+    // No opponents → modifier defaults to 0 → priority = 4
+    expect(bids[0]!.priority).toBe(4);
+  });
+});
+
+describe('VENDETTA without targetStableId', () => {
+  it('VENDETTA without target does not generate standard training bout bids', () => {
+    const warrior = makeWarrior('Vindicator', FightingStyle.StrikingAttack);
+    const rival = makeRival({
+      roster: [warrior],
+      strategy: { intent: 'VENDETTA', planWeeksRemaining: 4 } as any,
+    });
+
+    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', []);
+
+    // Without the fix, VENDETTA without target falls through to the else block
+    // and generates "Standard training bout." bids. With the fix, no bids are
+    // generated for VENDETTA without a target.
+    expect(bids.length).toBe(0);
+  });
+});
+
+describe('VENDETTA bid description reflects matchup against target stable', () => {
+  it('VENDETTA bid description contains Favorable matchup when target has disadvantaged style', () => {
+    // ParryLunge vs BashingAttack: matrix +1 → favorable
+    const warrior = makeWarrior('Parrier', FightingStyle.ParryLunge);
+    const target = makeWarrior('Basher', FightingStyle.BashingAttack);
+
+    const rival = makeRival({
+      id: 'rival-1' as any,
+      roster: [warrior],
+      strategy: {
+        intent: 'VENDETTA',
+        targetStableId: 'rival-2' as any,
+        planWeeksRemaining: 4,
+      },
+    });
+    const targetRival = {
+      id: 'rival-2' as any,
+      owner: {
+        id: 'owner-2' as any,
+        name: 'Target',
+        stableName: 'Target Stable',
+        fame: 100,
+        renown: 50,
+        titles: 0,
+      },
+      roster: [target],
+      treasury: 1000,
+      fame: 100,
+      ledger: [],
+      trainingAssignments: [],
+    } as any;
+
+    const { bids } = generateBoutBids(rival, 5, 'Clear', 'Calm', [targetRival]);
+
+    expect(bids.length).toBeGreaterThan(0);
+    // Without the fix, matchupModifier is always 0 for VENDETTA so description
+    // never contains "Favorable matchup". With the fix, the VENDETTA scoring
+    // loop evaluates the target stable and finds the favorable matchup.
+    expect(bids[0]!.description).toContain('Favorable matchup');
+  });
+});
+
 describe('weather modifiers cover all significant weather types', () => {
   it('applies weather modifier for Gale', () => {
     const warrior = makeWarrior('Striker', FightingStyle.StrikingAttack);

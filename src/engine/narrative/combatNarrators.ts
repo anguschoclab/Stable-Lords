@@ -237,7 +237,7 @@ export function narrateCounterstrike(
   attackerName?: string
 ): string {
   const template =
-    getFromArchive(rng, ['pbp', 'defenses', 'counterstrike']) || '{{defender}} counters!';
+    getFromArchive(rng, ['pbp', 'defenses', 'counterstrike', 'success']) || '{{defender}} counters!';
   return interpolateTemplate(template, { defender: defenderName, attacker: attackerName });
 }
 

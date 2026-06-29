@@ -3696,6 +3696,13 @@
       "newsletter": [
         "A mysterious fortune teller visited the camp. {{name}} parted with {{gold}} gold to have their fortune read, uncovering cryptic advice about their fighting style. (-{{gold}} Gold, +15 XP, Style Insight)"
       ]
+    },
+    "chaos_weaver_visit": {
+      "title": "A Visit from the Chaos Weaver",
+      "effectType": "chaos_weaver_visit",
+      "newsletter": [
+        "The enigmatic Chaos Weaver materialized in the barracks last night. They whispered forbidden knowledge to {{name}} before dissolving into probability itself. (+{{xp}} XP, +{{fame}} Fame, Chaotic Insight)"
+      ]
     }
   },
   "crowd_reactions": {

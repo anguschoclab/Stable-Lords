@@ -319,6 +319,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-primary/20',
     description: 'An absurd rain of frogs causes widespread confusion and slippery footing.',
   },
+  'Chaos Storm': {
+    icon: Sparkles,
+    colorClass: 'text-fuchsia-500',
+    bgClass: 'bg-fuchsia-500/10',
+    borderClass: 'border-fuchsia-500/20',
+    description: 'Probability collapses. 20% stamina conservation. +50% Damage, incredible Riposte, awful Initiative.',
+  },
 };
 
 /**

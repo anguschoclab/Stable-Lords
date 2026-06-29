@@ -622,7 +622,8 @@ export type WeatherType =
   | 'Blood Fog'
   | 'Shimmering Heat'
   | 'Crystal Rain'
-  | 'Rain of Frogs';
+  | 'Rain of Frogs'
+  | 'Chaos Storm';
 
 /**
  * Defines the shape of death event.

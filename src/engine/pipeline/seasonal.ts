@@ -52,7 +52,8 @@ interface OffseasonEventNarrative {
     | 'goblin_raid'
     | 'fey_trickster'
     | 'shadow_tournament'
-    | 'wandering_fortune_teller';
+    | 'wandering_fortune_teller'
+    | 'chaos_weaver_visit';
   newsletter: string[];
 }
 
@@ -1045,6 +1046,44 @@ function handleMeteorShower(
   }
 }
 
+function handleChaosWeaverVisit(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 30 + Math.floor(rng.next() * 21);
+      const fameGained = 15 + Math.floor(rng.next() * 11);
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        fame: (chosen.fame || 0) + fameGained,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight') as InsightId,
+        type: 'Style',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'The Chaos Weaver revealed truths that should not be known.',
+        origin: 'Chaos Weaver',
+        discoveredWeek: nextWeek,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+        fame: fameGained,
+      });
+    }
+  }
+}
+
 function handleWanderingFortuneTeller(
   state: GameState,
   nextWeek: number,
@@ -1176,6 +1215,7 @@ const EVENT_HANDLERS: Record<
   fey_trickster: handleFeyTrickster,
   shadow_tournament: handleShadowTournament,
   wandering_fortune_teller: handleWanderingFortuneTeller,
+  chaos_weaver_visit: handleChaosWeaverVisit,
 };
 
 /**

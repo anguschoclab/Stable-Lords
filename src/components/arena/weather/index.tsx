@@ -83,6 +83,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   'Shimmering Heat': () => <HeatEffect />,
   'Crystal Rain': () => <RainEffect />,
   'Rain of Frogs': () => <RainEffect />,
+  'Chaos Storm': () => <ArcaneStormEffect />,
 };
 
 /** Renders the registered weather effect for `weather`, or nothing. */

@@ -111,6 +111,7 @@ describe('weatherEffects', () => {
         'Crystal Rain',
         'Rain of Frogs',
         'Crystal Rain',
+        'Chaos Storm',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -233,6 +234,7 @@ describe('weatherEffects', () => {
         'Crystal Rain',
         'Rain of Frogs',
         'Crystal Rain',
+        'Chaos Storm',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);

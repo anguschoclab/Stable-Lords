@@ -193,5 +193,10 @@
     "item": "{{name}} leans back, narrowly avoiding the strike.",
     "reason": "consolidated",
     "replacedBy": "{{name}} leans backward, narrowly avoiding the strike."
+  },
+  {
+    "path": "gazette.headlines.win_streak",
+    "original": "Week {{week}}: A TRAIL OF BODIES! {{name}}'s win streak hits {{streak}}!",
+    "duplicate": "Week {{week}}: A TRAIL OF BODIES: {{name}} EXTENDS WINNING STREAK TO {{streak}}"
   }
 ]

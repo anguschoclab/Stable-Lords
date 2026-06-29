@@ -176,6 +176,10 @@ export interface DodgeTiers {
   tier2_medium: string[];
   tier3_high: string[];
   tier4_supernatural: string[];
+  desperate?: string[];
+  confident?: string[];
+  theatrical?: string[];
+  grim?: string[];
 }
 
 /**
@@ -184,7 +188,7 @@ export interface DodgeTiers {
 export interface Defenses {
   counterstrike: { success: string[] };
   dodge: DodgeTiers;
-  parry: { success: string[] };
+  parry: { success: string[]; desperate?: string[]; confident?: string[]; theatrical?: string[]; grim?: string[] };
   shield: { success: string[] };
   parry_break: string[];
 } /**

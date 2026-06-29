@@ -48,10 +48,6 @@ const TIER_CONFIG: Record<
 export default function StableDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
 
-  // ⚡ Bolt: Replaced useWorldState() with useGameStore and useShallow
-  // 💡 What: Narrowed global state subscription to only extract 'rivals' and 'arenaHistory'.
-  // 🎯 Why: useWorldState() caused StableDetail to re-render on any unrelated game state change.
-  // 📊 Impact: Prevents O(N) wasteful re-renders on the StableDetail view.
   const state = useGameStore(
     useShallow((s) => ({
       rivals: s.rivals,

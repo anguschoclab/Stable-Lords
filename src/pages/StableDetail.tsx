@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useParams, Link } from '@tanstack/react-router';
-import { useWorldState } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
+import { useGameStore } from '@/state/useGameStore';
 import { isActive, isDead } from '@/engine/warriorStatus';
 import { Badge } from '@/components/ui/badge';
 import { WarriorLink } from '@/components/EntityLink';
@@ -46,7 +47,17 @@ const TIER_CONFIG: Record<
  */
 export default function StableDetail() {
   const { id } = useParams({ strict: false }) as { id: string };
-  const state = useWorldState();
+
+  // ⚡ Bolt: Replaced useWorldState() with useGameStore and useShallow
+  // 💡 What: Narrowed global state subscription to only extract 'rivals' and 'arenaHistory'.
+  // 🎯 Why: useWorldState() caused StableDetail to re-render on any unrelated game state change.
+  // 📊 Impact: Prevents O(N) wasteful re-renders on the StableDetail view.
+  const state = useGameStore(
+    useShallow((s) => ({
+      rivals: s.rivals,
+      arenaHistory: s.arenaHistory,
+    }))
+  );
   const [activeTab, setActiveTab] = useState<'OVERVIEW' | 'ROSTER' | 'LOGS'>('OVERVIEW');
 
   const rivalMap = useMemo(

@@ -1148,9 +1148,4 @@
     animation: none !important;
   }
 
-  /* Keep opacity transitions for state changes but disable transforms */
-  .transition-all,
-  .transition-transform {
-    transform: none !important;
-  }
 }

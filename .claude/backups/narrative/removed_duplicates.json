@@ -99,12 +99,6 @@
     "similarity": 0.88
   },
   {
-    "path": "pbp.defenses.parry.success",
-    "kept": "{{name}} parries with a theatrical flourish, inviting the crowd's applause!",
-    "removed": "{{name}} parries with a theatrical flourish, inviting the crowd's cheer.",
-    "similarity": 0.88
-  },
-  {
     "path": [
       "pbp",
       "attacks",

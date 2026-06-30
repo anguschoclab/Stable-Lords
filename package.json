@@ -30,6 +30,7 @@
     "type-check": "tsc --noEmit --project tsconfig.app.json",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "oracle:daily": "bun run src/scripts/daily_oracle.ts",
+    "narrative-validate": "bun run src/scripts/narrative_validate.ts",
     "bard:daily": "bunx tsx src/scripts/daily_bard.ts"
   },
   "dependencies": {

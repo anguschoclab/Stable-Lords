@@ -513,6 +513,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'When all the lanterns were mysteriously extinguished midway through a championship bout, a blind ascetic monk defeated three armed gladiators in total darkness, guided only by the sound of their footfalls on the wooden floorboards.',
   },
+  {
+    id: 'lantern_hall_forgotten_chains',
+    arenaId: 'lantern_hall_arena',
+    type: 'architectural_quirk',
+    title: 'The Forgotten Chains',
+    narrative:
+      'Hidden beneath the shifting sands are the rusted iron chains of the old slave pens. Unlucky fighters occasionally find their feet snagged by these grim reminders of the arena\'s past, leading to sudden and brutal shifts in momentum.',
+  },
+  {
+    id: 'charnel_pits_blind_executioner',
+    arenaId: 'charnel_pits',
+    type: 'famous_death',
+    title: 'The Blind Executioner',
+    narrative:
+      'A massive brute whose helm had fused to his face in a terrible accident fought his final battle here. Blinded, he relied entirely on the shrieking winds of the pits to locate his prey, culminating in a horrific double-decapitation of two agility fighters who failed to walk silently.',
+  },
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

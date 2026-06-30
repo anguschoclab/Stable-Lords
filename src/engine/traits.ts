@@ -527,6 +527,26 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
+  gutter_snipe: {
+    id: 'gutter_snipe',
+    name: 'Gutter Snipe',
+    description: '+1 Initiative, +1 Attack when bloodied (HP < 50%) — raised in the alleys, they fight dirtiest when bleeding.',
+    effect: { iniMod: 1, attModLowHp: 1 },
+    weight: 0.6,
+    synergy: ['agile', 'cunning'],
+    tier: 'Common',
+    sign: 'positive',
+  },
+  gallows_humor: {
+    id: 'gallows_humor',
+    name: 'Gallows Humor',
+    description: '+1 Decisiveness, +1 Defense in the LATE phase — laughs in the face of exhaustion and death.',
+    effect: { decMod: 1, defModLate: 1 },
+    weight: 0.5,
+    synergy: ['tank'],
+    tier: 'Notable',
+    sign: 'positive',
+  },
 };
 
 // Merge bulk data modules.

@@ -8,5 +8,9 @@
     "file": "src/engine/narrative/loreGenerator.ts",
     "content": "Unearthed alive from a shallow grave behind the old executioner's block",
     "duplicateOf": "Raised in the shadow of the executioner's block"
+  },
+  {
+    "path": "narrativeContent.pbp.knockdown.fall",
+    "item": "The sheer force of the blow sends {{name}} flying into the dirt!"
   }
 ]

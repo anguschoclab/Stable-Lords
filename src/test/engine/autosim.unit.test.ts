@@ -417,10 +417,14 @@ describe('runAutosim', () => {
       stopReason: undefined,
       summaries: Array.from({ length: 13 }, (_, i) => ({
         week: state.week + i,
+        year: 1,
+        treasury: 5000,
+        rosterSize: 1,
         bouts: 2,
         deaths: 0,
       })),
-    }));
+      quarterSummary: { startWeek: 1, endWeek: 13, startYear: 1, endYear: 1, treasuryDelta: 0, weekSummaries: [] },
+    } as any));
 
     vi.mocked(advanceWeek).mockImplementation((state) => ({ ...state, week: state.week + 1 }));
 
@@ -445,10 +449,14 @@ describe('runAutosim', () => {
       stopReason: undefined,
       summaries: Array.from({ length: 13 }, (_, i) => ({
         week: state.week + i,
+        year: 1,
+        treasury: 5000,
+        rosterSize: 1,
         bouts: 2,
         deaths: 0,
       })),
-    }));
+      quarterSummary: { startWeek: 1, endWeek: 13, startYear: 1, endYear: 1, treasuryDelta: 0, weekSummaries: [] },
+    } as any));
 
     const result = await runAutosim(baseState, { weeksToSim: 26, useBatchMode: true });
 
@@ -466,10 +474,14 @@ describe('runAutosim', () => {
       stopReason: undefined,
       summaries: Array.from({ length: 13 }, (_, i) => ({
         week: state.week + i,
+        year: 1,
+        treasury: 5000,
+        rosterSize: 1,
         bouts: 2,
         deaths: 0,
       })),
-    }));
+      quarterSummary: { startWeek: 1, endWeek: 13, startYear: 1, endYear: 1, treasuryDelta: 0, weekSummaries: [] },
+    } as any));
 
     vi.mocked(advanceWeek).mockImplementation((state) => ({ ...state, week: state.week + 1 }));
 
@@ -488,10 +500,14 @@ describe('runAutosim', () => {
       stopReason: undefined,
       summaries: Array.from({ length: 13 }, (_, i) => ({
         week: state.week + i,
+        year: 1,
+        treasury: 5000,
+        rosterSize: 1,
         bouts: 0,
         deaths: 0,
       })),
-    }));
+      quarterSummary: { startWeek: 1, endWeek: 13, startYear: 1, endYear: 1, treasuryDelta: 0, weekSummaries: [] },
+    } as any));
 
     const result = await runAutosim(baseState, { weeksToSim: 26, useBatchMode: true });
 
@@ -508,10 +524,14 @@ describe('runAutosim', () => {
       stopReason: 'roster_empty',
       summaries: Array.from({ length: 5 }, (_, i) => ({
         week: state.week + i,
+        year: 1,
+        treasury: 5000,
+        rosterSize: 1,
         bouts: 0,
         deaths: 0,
       })),
-    }));
+      quarterSummary: { startWeek: 1, endWeek: 13, startYear: 1, endYear: 1, treasuryDelta: 0, weekSummaries: [] },
+    } as any));
 
     const result = await runAutosim(baseState, { weeksToSim: 13, useBatchMode: true });
 
@@ -527,10 +547,14 @@ describe('runAutosim', () => {
       stopReason: 'custom_condition',
       summaries: Array.from({ length: 5 }, (_, i) => ({
         week: state.week + i,
+        year: 1,
+        treasury: 5000,
+        rosterSize: 1,
         bouts: 0,
         deaths: 0,
       })),
-    }));
+      quarterSummary: { startWeek: 1, endWeek: 13, startYear: 1, endYear: 1, treasuryDelta: 0, weekSummaries: [] },
+    } as any));
 
     const result = await runAutosim(baseState, { weeksToSim: 13, useBatchMode: true });
 
@@ -546,10 +570,14 @@ describe('runAutosim', () => {
       stopReason: 'something_weird',
       summaries: Array.from({ length: 5 }, (_, i) => ({
         week: state.week + i,
+        year: 1,
+        treasury: 5000,
+        rosterSize: 1,
         bouts: 0,
         deaths: 0,
       })),
-    }));
+      quarterSummary: { startWeek: 1, endWeek: 13, startYear: 1, endYear: 1, treasuryDelta: 0, weekSummaries: [] },
+    } as any));
 
     const result = await runAutosim(baseState, { weeksToSim: 13, useBatchMode: true });
 

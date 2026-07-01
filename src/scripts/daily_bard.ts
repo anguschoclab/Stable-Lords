@@ -61,7 +61,11 @@ export const NarrativeSchema = z.object({
 type ValidatedJSON = z.infer<typeof NarrativeSchema>;
 
 // Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'mock-key');
+if (!process.env.GEMINI_API_KEY) {
+  console.error('GEMINI_API_KEY environment variable is required.');
+  process.exit(1);
+}
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
   model: 'gemini-3-flash',
   generationConfig: { responseMimeType: 'application/json' },

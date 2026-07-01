@@ -21,6 +21,8 @@
     "preview": "vite preview",
     "test": "npx vitest run",
     "test:watch": "npx vitest",
+    "test:slow": "npx vitest run --config vitest.config.slow.ts",
+    "test:all": "npx vitest run --config vitest.config.all.ts",
     "test:bun": "bun test --isolate",
     "test:coverage": "vitest run --coverage",
     "e2e": "playwright test",

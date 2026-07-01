@@ -242,4 +242,23 @@ describe('useWeekExecution', () => {
     });
     expect(engineProxy.runAutosim).toHaveBeenCalledOnce();
   });
+
+  // #12 — handleStartAutosim must check isSimulating from the store
+  it('handleStartAutosim no-ops when store isSimulating is already true', async () => {
+    vi.mocked(engineProxy.runAutosim).mockResolvedValue({
+      finalState: {} as any,
+      weeksSimmed: 4,
+      stopReason: 'max_weeks',
+      stopDetail: 'done',
+      weekSummaries: [],
+    });
+    const store = useGameStore() as any;
+    store.isSimulating = true;
+    const { result } = renderHook(() => useWeekExecution());
+    await act(async () => {
+      await result.current.handleStartAutosim(4);
+    });
+    expect(engineProxy.runAutosim).not.toHaveBeenCalled();
+    store.isSimulating = false;
+  });
 });

@@ -14,7 +14,7 @@ export default defineConfig({
     hookTimeout: 10000,
     pool: 'threads',
     dir: './src',
-    exclude: ['node_modules/', '**/e2e/**', '**/*.slow.test.ts'],
+    exclude: ['node_modules/', '**/e2e/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

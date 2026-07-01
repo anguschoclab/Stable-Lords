@@ -10,15 +10,11 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-    testTimeout: 120000,
-    hookTimeout: 10000,
+    testTimeout: 600000,
+    hookTimeout: 30000,
     pool: 'threads',
     dir: './src',
-    exclude: ['node_modules/', '**/e2e/**', '**/*.slow.test.ts'],
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/', 'src/test/', '*.test.ts', '*.test.tsx'],
-    },
+    include: ['src/test/**/*.slow.test.ts'],
+    exclude: ['node_modules/', '**/e2e/**'],
   },
 });

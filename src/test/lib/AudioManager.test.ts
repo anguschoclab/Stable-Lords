@@ -55,4 +55,20 @@ describe('AudioManager', () => {
     // Internal implementation check would require deeper mocking of the singleton's private Map,
     // but the public contract of the abstraction is verified.
   });
+
+  // #15 — play() must await mute state initialization (async init race)
+  it('play() does not throw when called before init completes', async () => {
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    // Call play() immediately after construction, before loadMuteState resolves
+    await expect(manager.play('hit')).resolves.not.toThrow();
+  });
+
+  it('play() succeeds after init completes', async () => {
+    AudioManager.resetForTesting();
+    const manager = AudioManager.getInstance();
+    // Wait for init to complete
+    await new Promise((r) => setTimeout(r, 50));
+    await expect(manager.play('hit')).resolves.not.toThrow();
+  });
 });

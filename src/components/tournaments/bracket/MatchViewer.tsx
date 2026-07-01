@@ -51,7 +51,7 @@ export function MatchViewer({ bout, fightSummary, gameState, onToggleExpand }: M
         <Button
           variant="ghost"
           size="sm"
-          className="w-full rounded-none border-t border-white/5 h-10 text-[9px] font-black uppercase tracking-widest hover:bg-primary/5"
+          className="w-full rounded-none border-t border-white/5 h-10 text-[9px] font-black uppercase tracking-widest hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
           onClick={() => onToggleExpand(null)}
         >
           Deactivate Archive

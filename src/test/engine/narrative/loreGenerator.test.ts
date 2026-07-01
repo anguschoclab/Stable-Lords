@@ -70,4 +70,57 @@ describe('loreGenerator', () => {
     const unique = new Set(moments);
     expect(unique.size, `${moments.length - unique.size} duplicate defining moments`).toBe(moments.length);
   });
+
+  it('ORIGINS contains new entries from both narrative branches', () => {
+    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const origins = extractStringArray(source, 'ORIGINS');
+    const expectedNew = [
+      'Left shivering in a discarded coal sack near the Silent Keep',
+      'Torn from a smuggling ring that traded orphans for obsidian blades',
+      'Tossed into the corpse-carts during the Red Fever, only to crawl back out days later',
+      'Raised by the silent, scarred monks of the Obsidian Spire who communicate only in blows',
+      'Discovered hiding in the hollowed chest cavity of a slain wyvern in the Bone Wastes',
+    ];
+    for (const entry of expectedNew) {
+      expect(origins, `missing origin: ${entry}`).toContain(entry);
+    }
+  });
+
+  it('CHILDHOOD_TRAITS contains new entries from both narrative branches', () => {
+    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
+    const expectedNew = [
+      'was known for collecting the teeth of feral dogs slain in the alleys',
+      'developed a terrifyingly serene smile right before physical conflict erupted',
+      'was caught repeatedly catching scorpions with their bare hands',
+      'learned to fashion razor-sharp shivs from the rusted iron rungs of their crib',
+    ];
+    for (const entry of expectedNew) {
+      expect(traits, `missing childhood trait: ${entry}`).toContain(entry);
+    }
+  });
+
+  it('DEFINING_MOMENTS contains new entries from both narrative branches', () => {
+    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const moments = extractStringArray(source, 'DEFINING_MOMENTS');
+    const expectedNew = [
+      'until they strangled a corrupted guard with the very chains meant to bind them',
+      'carrying the heavy chains of their past not as a burden, but as a weapon',
+      'now seeking the arena not for glory, but for a public stage to exact a terrible revenge',
+      'realizing that pain is simply the currency demanded by the gods of the arena',
+    ];
+    for (const entry of expectedNew) {
+      expect(moments, `missing defining moment: ${entry}`).toContain(entry);
+    }
+  });
+
+  it('ORIGINS array uses only single-quoted strings (no double quotes)', () => {
+    const source = fs.readFileSync(LORE_FILE, 'utf-8');
+    const originsBlock = source.match(/const ORIGINS = \[([\s\S]*?)\];/);
+    expect(originsBlock).not.toBeNull();
+    if (!originsBlock || !originsBlock[1]) return;
+    const block: string = originsBlock[1];
+    const doubleQuoted = block.match(/"[^"]*"/g);
+    expect(doubleQuoted, `found double-quoted strings in ORIGINS`).toBeNull();
+  });
 });

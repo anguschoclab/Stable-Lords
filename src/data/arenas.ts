@@ -354,6 +354,22 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
       'When the tide rolls in, the water passing through the iron grates produces a low, mournful hum. Fighters claim it sounds exactly like the last breaths of the drowned prisoners the vault was built over.',
   },
   {
+    id: 'flooded_vault_rusting_tide',
+    arenaId: 'flooded_vault_arena',
+    type: 'architectural_quirk',
+    title: 'The Rusting Tide',
+    narrative:
+      'The iron grates that line the vault floor have corroded for centuries, leaving jagged edges that catch the unwary. Fighters who fall near the grates often rise with rust-red streaks across their armor, as though the arena itself has drawn blood.',
+  },
+  {
+    id: 'highplain_howling_gale',
+    arenaId: 'highplain_arena',
+    type: 'environmental_hazard',
+    title: 'The Howling Gale',
+    narrative:
+      'The exposed plateau offers no shelter from the relentless winds. During the Great Storm of 971, three bouts were cancelled when fighters could not remain standing. The howling is said to carry the voices of warriors lost to the wind.',
+  },
+  {
     id: 'standard_arena_first_blood',
     arenaId: 'standard_arena',
     type: 'historical_battle',

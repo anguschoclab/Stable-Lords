@@ -53,6 +53,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Shimmering Heat': null,
   'Crystal Rain': 'ambience-rain',
   'Rain of Frogs': 'ambience-rain',
+  'Chaos Storm': 'ambience-arcane-storm',
 }; /**
  * Weather audio.
  * @param - { weather, volume, enabled, arena id }.

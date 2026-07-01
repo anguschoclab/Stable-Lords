@@ -319,6 +319,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-primary/20',
     description: 'An absurd rain of frogs causes widespread confusion and slippery footing.',
   },
+  'Chaos Storm': {
+    icon: Sparkles,
+    colorClass: 'text-purple-400',
+    bgClass: 'bg-purple-400/10',
+    borderClass: 'border-purple-400/20',
+    description: 'A swirling vortex of raw chaos drains stamina and amplifies damage unpredictably.',
+  },
 };
 
 /**

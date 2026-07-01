@@ -22,10 +22,22 @@ interface WarriorCardProps {
 export default function WarriorCard({ warrior, isSelected, canSelect, onClick }: WarriorCardProps) {
   const stats = computeWarriorStats(warrior.attrs, warrior.style);
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div
-      onClick={onClick}
-      className={`relative cursor-pointer transition-all duration-200 group ${
+      role="button"
+      tabIndex={canSelect ? 0 : -1}
+      aria-label={`Select warrior ${warrior.name}`}
+      aria-pressed={isSelected}
+      onClick={canSelect ? onClick : undefined}
+      onKeyDown={handleKeyDown}
+      className={`relative cursor-pointer transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black ${
         !canSelect && !isSelected ? 'opacity-50 pointer-events-none' : ''
       }`}
       style={{

@@ -24,6 +24,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Mirage', 'Ember Rain', 'Wildfire Smoke', 'Blood Fog',
   'Shimmering Heat', 'Rain of Frogs',
   'Crystal Rain',
+  'Chaos Storm',
 ];
 
 describe('Weather season exclusivity', () => {
@@ -37,7 +38,7 @@ describe('Weather season exclusivity', () => {
   });
 
   it('no weather type appears in more than one SEASON_EXCLUSIVE_WEATHER bucket', () => {
-    const SHARED: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge'];
+    const SHARED: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge', 'Chaos Storm'];
     for (const w of ALL_WEATHER_TYPES) {
       if (SHARED.includes(w)) continue;
       const seasonsContaining = SEASONS.filter((s) => SEASONAL_WEATHER[s].includes(w));
@@ -56,6 +57,16 @@ describe('Weather season exclusivity', () => {
     for (const w of ALL_WEATHER_TYPES) {
       expect(allListed.has(w), `${w} not in any seasonal bucket`).toBe(true);
     }
+  });
+
+  it('Chaos Storm is in SHARED weather (all 4 seasons)', () => {
+    for (const s of SEASONS) {
+      expect(SEASONAL_WEATHER[s]).toContain('Chaos Storm');
+    }
+  });
+
+  it('getWeatherSeason returns All for Chaos Storm', () => {
+    expect(getWeatherSeason('Chaos Storm')).toBe('All');
   });
 
   it('rollWeather can produce Rain of Frogs in Fall', () => {

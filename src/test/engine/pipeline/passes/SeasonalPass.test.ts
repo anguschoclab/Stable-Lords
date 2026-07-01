@@ -907,4 +907,38 @@ describe('runSeasonalPass', () => {
     expect(impact.newsletterItems![0]!.title).toBe('A Spontaneous Tavern Brawl');
     expect(impact.newsletterItems![0]!.items[0]).toContain('Spartacus');
   });
+
+  it('should trigger the chaos_weaver_visit offseason event, granting a random trait and insight token', () => {
+    const rng = new SeededRNGService(99);
+    const originalNext = rng.next.bind(rng);
+    let callCount = 0;
+    const mockNext = () => {
+      callCount++;
+      if (callCount === 1)
+        return (
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('chaos_weaver_visit') + 0.5) /
+          eventCount
+        );
+      return originalNext();
+    };
+    rng.next = mockNext;
+    const warriorId = 'w-cw' as WarriorId;
+    const state: Partial<GameState> = {
+      year: 1,
+      roster: [{ id: warriorId, name: 'TestWarrior', status: 'Active', traits: [] } as any],
+      newsletter: [],
+      treasury: 1000,
+    };
+    const impact = runSeasonalPass(state as GameState, 1, rng);
+    expect(impact.insightTokens).toBeDefined();
+    expect(impact.insightTokens!.length).toBe(1);
+    expect(impact.insightTokens![0]!.origin).toBe('Chaos Weaver');
+    expect(impact.rosterUpdates).toBeDefined();
+    const update = impact.rosterUpdates!.get(warriorId);
+    expect(update).toBeDefined();
+    expect(update?.traits).toBeDefined();
+    expect(update!.traits!.length).toBeGreaterThan(0);
+    expect(impact.newsletterItems).toBeDefined();
+    expect(impact.newsletterItems!.length).toBe(1);
+  });
 });

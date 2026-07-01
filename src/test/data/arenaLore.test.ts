@@ -33,4 +33,26 @@ describe('Arena lore integrity', () => {
     const ids = ARENA_LORE.map((e) => e.id);
     expect(ids).toContain('flooded_drowning_chorus');
   });
+
+  it('flooded_vault_rusting_tide IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('flooded_vault_rusting_tide');
+  });
+
+  it('highplain_howling_gale IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('highplain_howling_gale');
+  });
+
+  it('flooded_vault_rusting_tide references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'flooded_vault_rusting_tide');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('flooded_vault_arena');
+  });
+
+  it('highplain_howling_gale references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'highplain_howling_gale');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('highplain_arena');
+  });
 });

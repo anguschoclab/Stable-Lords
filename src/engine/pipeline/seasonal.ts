@@ -13,6 +13,7 @@ import {
 import type { InsightToken } from '@/types/state.types';
 import type { NewsletterItem } from '@/types/shared.types';
 import { interpolateData as t } from '@/engine/narrative/templateHelpers';
+import { TRAITS, type TraitDef } from '@/engine/traits';
 
 /**
  * Stable Lords — Seasonal Pipeline Pass (Offseason)
@@ -52,7 +53,8 @@ interface OffseasonEventNarrative {
     | 'goblin_raid'
     | 'fey_trickster'
     | 'shadow_tournament'
-    | 'wandering_fortune_teller';
+    | 'wandering_fortune_teller'
+    | 'chaos_weaver_visit';
   newsletter: string[];
 }
 
@@ -1135,6 +1137,46 @@ function handleShadowTournament(
   }
 }
 
+function handleChaosWeaverVisit(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const positiveTraits = Object.values(TRAITS).filter(
+        (td): td is TraitDef => td !== undefined && td.sign === 'positive'
+      );
+      const grantedTrait = rng.pick(positiveTraits);
+      if (grantedTrait) {
+        const currentTraits = chosen.traits || [];
+        ctx.rosterUpdates.set(chosen.id, {
+          traits: [...currentTraits, grantedTrait.id],
+        });
+
+        ctx.insightTokens.push({
+          id: rng.uuid('insight') as InsightId,
+          type: 'Style' as InsightToken['type'],
+          warriorId: chosen.id,
+          warriorName: chosen.name,
+          detail: `Touched by the Chaos Weaver — gained ${grantedTrait.name}.`,
+          origin: 'Chaos Weaver',
+          discoveredWeek: nextWeek,
+        });
+
+        pushNarrative(ctx, rng, nextWeek, e, {
+          name: chosen.name,
+          trait: grantedTrait.name,
+        });
+      }
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1176,6 +1218,7 @@ const EVENT_HANDLERS: Record<
   fey_trickster: handleFeyTrickster,
   shadow_tournament: handleShadowTournament,
   wandering_fortune_teller: handleWanderingFortuneTeller,
+  chaos_weaver_visit: handleChaosWeaverVisit,
 };
 
 /**

@@ -376,4 +376,101 @@ describe('Autosim Integration', () => {
       }
     });
   });
+
+  describe('Batch Mode', () => {
+    it('should advance weeks using batch mode (useBatchMode: true)', async () => {
+      const result = await runAutosim(initialState, { weeksToSim: 5, useBatchMode: true });
+
+      expect(result.finalState).toBeDefined();
+      expect(result.finalState.week).toBeGreaterThan(initialState.week);
+      expect(result.weeksSimmed).toBeGreaterThan(0);
+      expect(result.weeksSimmed).toBeLessThanOrEqual(5);
+    });
+
+    it('should produce week summaries in batch mode', async () => {
+      const result = await runAutosim(initialState, { weeksToSim: 13, useBatchMode: true });
+
+      expect(result.weekSummaries).toBeDefined();
+      expect(Array.isArray(result.weekSummaries)).toBe(true);
+      expect(result.weekSummaries.length).toBeGreaterThan(0);
+    });
+
+    it('should call progress callback in batch mode', async () => {
+      const progressCalls: number[] = [];
+      const result = await runAutosim(initialState, {
+        weeksToSim: 13,
+        useBatchMode: true,
+        onProgress: (current, total) => {
+          progressCalls.push(current);
+          expect(total).toBe(13);
+        },
+      });
+
+      expect(progressCalls.length).toBeGreaterThan(0);
+      expect(result.weeksSimmed).toBeGreaterThan(0);
+    });
+
+    it('should handle full quarter (13 weeks) in batch mode', async () => {
+      const result = await runAutosim(initialState, { weeksToSim: 13, useBatchMode: true });
+
+      expect(result.weeksSimmed).toBeGreaterThan(0);
+      expect(result.weeksSimmed).toBeLessThanOrEqual(13);
+      expect(result.stopReason).toBeDefined();
+    });
+
+    it('should handle multiple quarters (26 weeks) in batch mode', async () => {
+      const result = await runAutosim(initialState, { weeksToSim: 26, useBatchMode: true });
+
+      expect(result.weeksSimmed).toBeGreaterThan(0);
+      expect(result.finalState.week).toBeGreaterThan(initialState.week);
+    });
+
+    it('should handle non-quarter remainder (20 weeks = 13 + 7) in batch mode', async () => {
+      const result = await runAutosim(initialState, { weeksToSim: 20, useBatchMode: true });
+
+      expect(result.weeksSimmed).toBeGreaterThan(0);
+      expect(result.weeksSimmed).toBeLessThanOrEqual(20);
+    });
+
+    it('should maintain state consistency in batch mode', async () => {
+      const result = await runAutosim(initialState, { weeksToSim: 13, useBatchMode: true });
+
+      expect(result.finalState).toBeDefined();
+      const totalWarriors =
+        (result.finalState.roster || []).length +
+        (result.finalState.graveyard || []).length +
+        (result.finalState.retired || []).length;
+      expect(totalWarriors).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should produce valid stop reason in batch mode', async () => {
+      const result = await runAutosim(initialState, { weeksToSim: 13, useBatchMode: true });
+
+      expect([
+        'death',
+        'player_death',
+        'injury',
+        'rivalry_escalation',
+        'tournament_week',
+        'max_weeks',
+        'no_pairings',
+        'bankrupt',
+      ]).toContain(result.stopReason);
+    });
+
+    it('should handle zero weeks in batch mode', async () => {
+      const result = await runAutosim(initialState, { weeksToSim: 0, useBatchMode: true });
+
+      expect(result.weeksSimmed).toBe(0);
+      expect(result.finalState.week).toBe(initialState.week);
+    });
+
+    it('should handle empty roster in batch mode with roster floor', async () => {
+      const state = { ...initialState, roster: [] };
+      const result = await runAutosim(state, { weeksToSim: 13, useBatchMode: true });
+
+      expect(result).toBeDefined();
+      expect(result.finalState.roster.length).toBeGreaterThan(0);
+    });
+  });
 });

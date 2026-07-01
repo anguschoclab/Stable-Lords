@@ -110,7 +110,7 @@ describe('weatherEffects', () => {
         'Shimmering Heat',
         'Crystal Rain',
         'Rain of Frogs',
-        'Crystal Rain',
+        'Chaos Storm',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -140,6 +140,16 @@ describe('weatherEffects', () => {
       expect(effect.initiativeMod).toBe(-4);
       expect(effect.riposteMod).toBe(-2);
       expect(effect.damageMult).toBe(0.9);
+    });
+
+    it('returns Chaos Storm effect with correct modifiers', () => {
+      const effect = getWeatherEffect('Chaos Storm' as WeatherType);
+      expect(effect.staminaMult).toBe(0.8);
+      expect(effect.initiativeMod).toBe(-5);
+      expect(effect.riposteMod).toBe(10);
+      expect(effect.damageMult).toBe(1.5);
+      expect(typeof effect.description).toBe('string');
+      expect(effect.description.length).toBeGreaterThan(0);
     });
   });
 
@@ -232,12 +242,19 @@ describe('weatherEffects', () => {
         'Shimmering Heat',
         'Crystal Rain',
         'Rain of Frogs',
-        'Crystal Rain',
+        'Chaos Storm',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);
         expect(line === null || typeof line === 'string').toBe(true);
       }
+    });
+
+    it('returns descriptive string for Chaos Storm', () => {
+      const line = weatherOpeningLine('Chaos Storm' as WeatherType);
+      expect(line).not.toBeNull();
+      expect(typeof line).toBe('string');
+      expect(line!.length).toBeGreaterThan(0);
     });
 
     it('atmospheric weather returns non-null lines', () => {

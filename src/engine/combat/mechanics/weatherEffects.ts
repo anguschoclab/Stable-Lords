@@ -311,6 +311,14 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'A bizarre rain of frogs covers the arena, causing widespread confusion and making footing treacherous.',
   },
+  'Chaos Storm': {
+    staminaMult: 0.8,
+    initiativeMod: -5,
+    riposteMod: 10,
+    damageMult: 1.5,
+    description:
+      'A swirling vortex of raw chaos tears across the arena, draining stamina, scrambling timing, and amplifying every blow with unpredictable violence.',
+  },
 };
 
 /**
@@ -385,6 +393,8 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   'Crystal Rain': 'Sharp, shimmering crystals plummet from the sky. Blood will undoubtedly be drawn.',
   'Rain of Frogs':
     'The sky darkens and an absurd, writhing rain of frogs begins to fall, confusing everyone.',
+  'Chaos Storm':
+    'A swirling vortex of raw chaos descends upon the arena. Reality itself seems to fracture as the storm intensifies.',
 };
 
 /**

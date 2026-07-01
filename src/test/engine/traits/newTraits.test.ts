@@ -175,4 +175,156 @@ describe('new traits from lore expansion', () => {
       expect(t.description.trim().length).toBeGreaterThan(5);
     });
   });
+
+  describe('alley_stalker', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.alley_stalker).toBeDefined();
+    });
+
+    it('has correct metadata', () => {
+      const t = TRAITS.alley_stalker!;
+      expect(t.tier).toBe('Notable');
+      expect(t.sign).toBe('positive');
+      expect(t.weight).toBe(0.6);
+      expect(t.name).toBe('Alley Stalker');
+    });
+
+    it('has effect iniMod 1, killWindowBonus 1, fightPlanMod AL 2', () => {
+      const t = TRAITS.alley_stalker!;
+      expect(t.effect.iniMod).toBe(1);
+      expect(t.effect.killWindowBonus).toBe(1);
+      expect(t.effect.fightPlanMod?.AL).toBe(2);
+    });
+
+    it('synergy includes agile and cunning, antiSynergy includes tank', () => {
+      const t = TRAITS.alley_stalker!;
+      expect(t.synergy).toContain('agile');
+      expect(t.synergy).toContain('cunning');
+      expect(t.antiSynergy).toContain('tank');
+    });
+
+    it('getStaticTraitMods returns iniMod 1', () => {
+      const mods = getStaticTraitMods(mockWarrior(['alley_stalker']));
+      expect(mods.iniMod).toBe(1);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.alley_stalker!;
+      expect(t.id).toBe('alley_stalker');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
+
+  describe('iron_vein', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.iron_vein).toBeDefined();
+    });
+
+    it('has correct metadata', () => {
+      const t = TRAITS.iron_vein!;
+      expect(t.tier).toBe('Notable');
+      expect(t.sign).toBe('positive');
+      expect(t.weight).toBe(0.6);
+      expect(t.name).toBe('Iron Vein');
+    });
+
+    it('has effect defMod 1, enduranceMult 1.1, fightPlanMod OE -1', () => {
+      const t = TRAITS.iron_vein!;
+      expect(t.effect.defMod).toBe(1);
+      expect(t.effect.enduranceMult).toBeCloseTo(1.1);
+      expect(t.effect.fightPlanMod?.OE).toBe(-1);
+    });
+
+    it('synergy includes tank and brutal, antiSynergy includes agile', () => {
+      const t = TRAITS.iron_vein!;
+      expect(t.synergy).toContain('tank');
+      expect(t.synergy).toContain('brutal');
+      expect(t.antiSynergy).toContain('agile');
+    });
+
+    it('getStaticTraitMods returns defMod 1 and enduranceMult ~1.1', () => {
+      const mods = getStaticTraitMods(mockWarrior(['iron_vein']));
+      expect(mods.defMod).toBe(1);
+      expect(mods.enduranceMult).toBeCloseTo(1.1);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.iron_vein!;
+      expect(t.id).toBe('iron_vein');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
+
+  describe('gutter_snipe', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.gutter_snipe).toBeDefined();
+    });
+
+    it('has correct metadata', () => {
+      const t = TRAITS.gutter_snipe!;
+      expect(t.tier).toBe('Common');
+      expect(t.sign).toBe('positive');
+      expect(t.weight).toBe(0.6);
+      expect(t.name).toBe('Gutter Snipe');
+    });
+
+    it('has effect iniMod 1, attModLowHp 1', () => {
+      const t = TRAITS.gutter_snipe!;
+      expect(t.effect.iniMod).toBe(1);
+      expect(t.effect.attModLowHp).toBe(1);
+    });
+
+    it('synergy includes agile and cunning', () => {
+      const t = TRAITS.gutter_snipe!;
+      expect(t.synergy).toContain('agile');
+      expect(t.synergy).toContain('cunning');
+    });
+
+    it('getStaticTraitMods returns iniMod 1', () => {
+      const mods = getStaticTraitMods(mockWarrior(['gutter_snipe']));
+      expect(mods.iniMod).toBe(1);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.gutter_snipe!;
+      expect(t.id).toBe('gutter_snipe');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
+
+  describe('gallows_humor', () => {
+    it('is registered in TRAITS', () => {
+      expect(TRAITS.gallows_humor).toBeDefined();
+    });
+
+    it('has correct metadata', () => {
+      const t = TRAITS.gallows_humor!;
+      expect(t.tier).toBe('Notable');
+      expect(t.sign).toBe('positive');
+      expect(t.weight).toBe(0.5);
+      expect(t.name).toBe('Gallows Humor');
+    });
+
+    it('has effect decMod 1, defModLate 1', () => {
+      const t = TRAITS.gallows_humor!;
+      expect(t.effect.decMod).toBe(1);
+      expect(t.effect.defModLate).toBe(1);
+    });
+
+    it('synergy includes tank', () => {
+      const t = TRAITS.gallows_humor!;
+      expect(t.synergy).toContain('tank');
+    });
+
+    it('getStaticTraitMods returns decMod 1', () => {
+      const mods = getStaticTraitMods(mockWarrior(['gallows_humor']));
+      expect(mods.decMod).toBe(1);
+    });
+
+    it('id matches key and has non-empty description', () => {
+      const t = TRAITS.gallows_humor!;
+      expect(t.id).toBe('gallows_humor');
+      expect(t.description.trim().length).toBeGreaterThan(5);
+    });
+  });
 });

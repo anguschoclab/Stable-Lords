@@ -210,7 +210,7 @@ function MuteButton() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-none hover:bg-white/5 transition-colors"
+          className="h-9 w-9 rounded-none hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
           onClick={toggleMute}
           aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
           aria-pressed={!isMuted}
@@ -264,7 +264,7 @@ function SaveButton({ lastSavedAt }: SaveButtonProps) {
           variant="ghost"
           size="icon"
           className={cn(
-            'h-9 w-9 rounded-none transition-all',
+            'h-9 w-9 rounded-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black',
             saveFlash ? 'bg-primary/20 text-primary scale-110' : 'hover:bg-white/5'
           )}
           aria-label="Save status"
@@ -295,7 +295,7 @@ function ResetButton({ onResetPrompt }: ResetButtonProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors"
+          className="h-9 w-9 rounded-none hover:bg-destructive/10 hover:text-destructive transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-1 focus-visible:ring-offset-black"
           onClick={onResetPrompt}
           aria-label="Expunge Ledger"
         >
@@ -326,7 +326,7 @@ function ExitButton({ isSimulating, returnToTitle }: ExitButtonProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="h-9 w-9 rounded-none hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-30"
+          className="h-9 w-9 rounded-none hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black"
           onClick={returnToTitle}
           disabled={isSimulating}
           aria-label="Exit to title"

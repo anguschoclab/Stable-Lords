@@ -1,8 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import {
   calculateGlobalFameLeaderboard,
+  calculatePerArenaLeaderboards,
+  calculateArenaLeaderboard,
   type ArenaLeaderboardEntry,
 } from '@/engine/core/leaderboards';
+import { getAllArenas, STANDARD_ARENA } from '@/data/arenas';
 import { FightingStyle } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
 import type { RivalStableData } from '@/types/game';
@@ -190,5 +193,216 @@ describe('calculateGlobalFameLeaderboard', () => {
     expect(result[2]!.warrior.id).toBe('w47');
     expect(result[3]!.warrior.id).toBe('w46');
     expect(result[4]!.warrior.id).toBe('w45');
+  });
+});
+
+function createArenaWarrior(
+  id: string,
+  arenaId: string,
+  wins: number,
+  losses: number,
+  kills: number,
+  overrides: Partial<Warrior> = {}
+): Warrior {
+  return {
+    ...createMockWarrior(id, 0, 'Active'),
+    career: {
+      wins: 0,
+      losses: 0,
+      kills: 0,
+      byArena: {
+        [arenaId]: { wins, losses, kills },
+      },
+    },
+    ...overrides,
+  } as Warrior;
+}
+
+describe('calculatePerArenaLeaderboards', () => {
+  it('returns one ArenaLeaderboardData per registered arena', () => {
+    const arenas = getAllArenas();
+    const result = calculatePerArenaLeaderboards([], 'Player Stable', [], []);
+    expect(result).toHaveLength(arenas.length);
+  });
+
+  it('filters out non-active warriors (Dead/Retired excluded)', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const active = createArenaWarrior('active', arenaId, 5, 2, 1);
+    const dead = createArenaWarrior('dead', arenaId, 10, 0, 5, { status: 'Dead' });
+    const retired = createArenaWarrior('retired', arenaId, 10, 0, 5, { status: 'Retired' });
+    const result = calculatePerArenaLeaderboards([active, dead, retired], 'Player Stable', [], []);
+    const stdArena = result.find((a) => a.arenaId === arenaId);
+    expect(stdArena).toBeDefined();
+    expect(stdArena!.topWarriors).toHaveLength(1);
+    expect(stdArena!.topWarriors[0]!.warriorId).toBe('active');
+  });
+
+  it('filters out warriors with isDead: true', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const alive = createArenaWarrior('alive', arenaId, 3, 1, 0);
+    const deadFlag = createArenaWarrior('deadflag', arenaId, 10, 0, 5, { isDead: true } as any);
+    const result = calculatePerArenaLeaderboards([alive, deadFlag], 'Player Stable', [], []);
+    const stdArena = result.find((a) => a.arenaId === arenaId);
+    expect(stdArena!.topWarriors).toHaveLength(1);
+    expect(stdArena!.topWarriors[0]!.warriorId).toBe('alive');
+  });
+
+  it('only includes warriors who have fought at that arena (wins + losses > 0)', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const fought = createArenaWarrior('fought', arenaId, 3, 2, 1);
+    const noFights = createArenaWarrior('nofights', arenaId, 0, 0, 0);
+    const result = calculatePerArenaLeaderboards([fought, noFights], 'Player Stable', [], []);
+    const stdArena = result.find((a) => a.arenaId === arenaId);
+    expect(stdArena!.topWarriors).toHaveLength(1);
+    expect(stdArena!.topWarriors[0]!.warriorId).toBe('fought');
+  });
+
+  it('sorts topWarriors by wins desc, then winRate desc, then kills desc', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const w1 = createArenaWarrior('w1', arenaId, 5, 5, 0); // 50% rate
+    const w2 = createArenaWarrior('w2', arenaId, 5, 3, 2); // 62.5% rate, more kills
+    const w3 = createArenaWarrior('w3', arenaId, 5, 0, 0); // 100% rate
+    const result = calculatePerArenaLeaderboards([w1, w2, w3], 'Player Stable', [], []);
+    const stdArena = result.find((a) => a.arenaId === arenaId);
+    // All have 5 wins, so sort by winRate: w3 (100%), w2 (62.5%), w1 (50%)
+    expect(stdArena!.topWarriors.map((e) => e.warriorId)).toEqual(['w3', 'w2', 'w1']);
+  });
+
+  it('sorts topKillers by kills desc, then wins desc', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const w1 = createArenaWarrior('w1', arenaId, 2, 0, 5);
+    const w2 = createArenaWarrior('w2', arenaId, 10, 0, 3);
+    const result = calculatePerArenaLeaderboards([w1, w2], 'Player Stable', [], []);
+    const stdArena = result.find((a) => a.arenaId === arenaId);
+    expect(stdArena!.topKillers[0]!.warriorId).toBe('w1');
+    expect(stdArena!.topKillers[1]!.warriorId).toBe('w2');
+  });
+
+  it('topKillers excludes warriors with 0 kills', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const killer = createArenaWarrior('killer', arenaId, 5, 0, 3);
+    const noKills = createArenaWarrior('nokills', arenaId, 5, 0, 0);
+    const result = calculatePerArenaLeaderboards([killer, noKills], 'Player Stable', [], []);
+    const stdArena = result.find((a) => a.arenaId === arenaId);
+    expect(stdArena!.topKillers).toHaveLength(1);
+    expect(stdArena!.topKillers[0]!.warriorId).toBe('killer');
+  });
+
+  it('respects custom limit parameter', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const warriors = Array.from({ length: 10 }, (_, i) =>
+      createArenaWarrior(`w${i}`, arenaId, i + 1, 0, 0)
+    );
+    const result = calculatePerArenaLeaderboards(warriors, 'Player Stable', [], [], 3);
+    const stdArena = result.find((a) => a.arenaId === arenaId);
+    expect(stdArena!.topWarriors).toHaveLength(3);
+    // Highest wins: w9 (9), w8 (8), w7 (7)
+    expect(stdArena!.topWarriors[0]!.warriorId).toBe('w9');
+    expect(stdArena!.topWarriors[2]!.warriorId).toBe('w7');
+  });
+
+  it('uses rival.owner.name for rival stableName', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const rivalW = createArenaWarrior('r1', arenaId, 3, 1, 0);
+    const rival = createMockRival('Iron Skulls', [rivalW]);
+    // createMockRival sets owner.name to `Owner Iron Skulls`
+    const result = calculatePerArenaLeaderboards([], 'Player Stable', [rival], []);
+    const stdArena = result.find((a) => a.arenaId === arenaId);
+    expect(stdArena!.topWarriors[0]!.stableName).toBe('Owner Iron Skulls');
+  });
+
+  it('returns empty topWarriors and topKillers for arena with no fight records', () => {
+    const result = calculatePerArenaLeaderboards(
+      [createMockWarrior('p1', 0)],
+      'Player Stable',
+      [],
+      []
+    );
+    const stdArena = result.find((a) => a.arenaId === STANDARD_ARENA.id);
+    expect(stdArena!.topWarriors).toEqual([]);
+    expect(stdArena!.topKillers).toEqual([]);
+  });
+
+  it('handles empty roster and empty rivals', () => {
+    const result = calculatePerArenaLeaderboards([], 'Player Stable', [], []);
+    expect(result).toHaveLength(getAllArenas().length);
+    for (const arena of result) {
+      expect(arena.topWarriors).toEqual([]);
+      expect(arena.topKillers).toEqual([]);
+    }
+  });
+});
+
+describe('calculateArenaLeaderboard', () => {
+  it('returns data for a single arena', () => {
+    const result = calculateArenaLeaderboard(STANDARD_ARENA.id, [], 'Player Stable', [], []);
+    expect(result.arenaId).toBe(STANDARD_ARENA.id);
+    expect(result.arenaName).toBe(STANDARD_ARENA.name);
+  });
+
+  it('falls back to STANDARD_ARENA name for unknown arena id', () => {
+    const result = calculateArenaLeaderboard('nonexistent_arena', [], 'Player Stable', [], []);
+    // arenaId is the input; arenaName falls back to STANDARD_ARENA.name
+    expect(result.arenaId).toBe('nonexistent_arena');
+    expect(result.arenaName).toBe(STANDARD_ARENA.name);
+  });
+
+  it('filters non-active and dead warriors', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const active = createArenaWarrior('active', arenaId, 5, 2, 1);
+    const dead = createArenaWarrior('dead', arenaId, 10, 0, 5, { status: 'Dead' });
+    const result = calculateArenaLeaderboard(arenaId, [active, dead], 'Player Stable', [], []);
+    expect(result.topWarriors).toHaveLength(1);
+    expect(result.topWarriors[0]!.warriorId).toBe('active');
+  });
+
+  it('only includes warriors with fights at that arena', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const fought = createArenaWarrior('fought', arenaId, 3, 2, 1);
+    const noFights = createArenaWarrior('nofights', arenaId, 0, 0, 0);
+    const result = calculateArenaLeaderboard(arenaId, [fought, noFights], 'Player Stable', [], []);
+    expect(result.topWarriors).toHaveLength(1);
+    expect(result.topWarriors[0]!.warriorId).toBe('fought');
+  });
+
+  it('sorts topWarriors and topKillers correctly', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const w1 = createArenaWarrior('w1', arenaId, 3, 0, 0);
+    const w2 = createArenaWarrior('w2', arenaId, 10, 0, 5);
+    const result = calculateArenaLeaderboard(arenaId, [w1, w2], 'Player Stable', [], []);
+    expect(result.topWarriors[0]!.warriorId).toBe('w2');
+    expect(result.topKillers[0]!.warriorId).toBe('w2');
+  });
+
+  it('respects custom limit', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const warriors = Array.from({ length: 10 }, (_, i) =>
+      createArenaWarrior(`w${i}`, arenaId, i + 1, 0, 0)
+    );
+    const result = calculateArenaLeaderboard(arenaId, warriors, 'Player Stable', [], [], 3);
+    expect(result.topWarriors).toHaveLength(3);
+  });
+
+  it('handles empty roster and rivals', () => {
+    const result = calculateArenaLeaderboard(STANDARD_ARENA.id, [], 'Player Stable', [], []);
+    expect(result.topWarriors).toEqual([]);
+    expect(result.topKillers).toEqual([]);
+  });
+
+  it('includes rival warriors in the leaderboard', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const rivalW = createArenaWarrior('r1', arenaId, 5, 1, 2);
+    const rival = createMockRival('Rival Stable', [rivalW]);
+    const result = calculateArenaLeaderboard(arenaId, [], 'Player Stable', [rival], []);
+    expect(result.topWarriors).toHaveLength(1);
+    expect(result.topWarriors[0]!.warriorId).toBe('r1');
+    expect(result.topWarriors[0]!.isPlayer).toBe(false);
+  });
+
+  it('sets isPlayer: true for player warriors', () => {
+    const arenaId = STANDARD_ARENA.id;
+    const pw = createArenaWarrior('p1', arenaId, 3, 1, 0);
+    const result = calculateArenaLeaderboard(arenaId, [pw], 'Player Stable', [], []);
+    expect(result.topWarriors[0]!.isPlayer).toBe(true);
   });
 });

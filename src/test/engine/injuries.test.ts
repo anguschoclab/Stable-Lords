@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { generateInjury, isTooInjuredToFight } from '@/engine/injuries';
+import { computeHealthImpact } from '@/engine/health';
 import { FightingStyle, type WarriorId } from '@/types/shared.types';
 import type { Warrior, InjuryData } from '@/types/warrior.types';
 import type { FightOutcome } from '@/types/combat.types';
 import type { InjuryId } from '@/types/shared.types';
+import type { GameState } from '@/types/game';
 
 describe('rollForInjury', () => {
   const mockWarrior: Warrior = {
@@ -138,5 +140,48 @@ describe('isTooInjuredToFight', () => {
       const injuries = [makeInjury('Severe', 10), makeInjury('Severe', 1)];
       expect(isTooInjuredToFight(injuries)).toBe(true);
     });
+  });
+});
+
+describe('Health System Boundary Testing', () => {
+  it('should handle warrior health / injuries correctly at boundaries', () => {
+    const mockInjury: InjuryData = {
+      id: 'i1' as InjuryId,
+      name: 'cut',
+      description: 'cut',
+      severity: 'Minor',
+      weeksRemaining: -1,
+      penalties: {},
+    };
+
+    const mockInjury2: InjuryData = {
+      id: 'i2' as InjuryId,
+      name: 'bruise',
+      description: 'bruise',
+      severity: 'Minor',
+      weeksRemaining: 0,
+      penalties: {},
+    };
+
+    const mockState = {
+      week: 5,
+      roster: [
+        { id: 'w1', name: 'Warrior 1', injuries: [mockInjury] },
+        { id: 'w2', name: 'Warrior 2', injuries: [mockInjury2] },
+      ],
+      restStates: [],
+    } as any as GameState;
+
+    const impact = computeHealthImpact(mockState);
+
+    expect(
+      impact.rosterUpdates?.get('w1' as WarriorId)?.injuries
+    ).toEqual([]);
+    expect(
+      impact.rosterUpdates?.get('w2' as WarriorId)?.injuries
+    ).toEqual([]);
+
+    expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 1 recovered from cut.');
+    expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 2 recovered from bruise.');
   });
 });

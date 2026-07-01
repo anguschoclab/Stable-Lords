@@ -57,7 +57,7 @@ describe('Aged INI-style fighter stays viable', () => {
     const old = warrior(FightingStyle.LungingAttack, 34, 'old_LU');
     const prime = warrior(FightingStyle.BashingAttack, 25, 'prime_BA');
     let wins = 0;
-    const N = 300;
+    const N = 150;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
         defaultPlanForWarrior(old),

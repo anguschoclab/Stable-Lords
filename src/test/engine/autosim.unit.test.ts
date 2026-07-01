@@ -4,32 +4,7 @@ import type { GameState, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
-import { FightingStyle, type Warrior } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
-
-function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Warrior {
-  const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
-  return {
-    id: id as WarriorId,
-    name,
-    style: FightingStyle.StrikingAttack,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    age: 20,
-    ...overrides,
-  };
-}
+import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 
 function makeOffer(
   id: string,
@@ -78,8 +53,8 @@ function makeFightSummary(
 
 describe('processPlayerOffers', () => {
   it('accepts high-hype offer via index', () => {
-    const w1 = makeWarrior('w1', 'Alice');
-    const w2 = makeWarrior('w2', 'Bob');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
+    const w2 = makeAutosimWarrior('w2', 'Bob');
     const state = makeState({ roster: [w1, w2] });
     const offer = makeOffer('offer1', ['w1', 'rival1'], { hype: 150, purse: 50 });
     (state as any).boutOffers = { ['offer1' as BoutOfferId]: offer };
@@ -90,7 +65,7 @@ describe('processPlayerOffers', () => {
   });
 
   it('accepts high-purse offer via index', () => {
-    const w1 = makeWarrior('w1', 'Alice');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
     const state = makeState({ roster: [w1] });
     const offer = makeOffer('offer1', ['w1', 'rival1'], { hype: 50, purse: 250 });
     (state as any).boutOffers = { ['offer1' as BoutOfferId]: offer };
@@ -101,7 +76,7 @@ describe('processPlayerOffers', () => {
   });
 
   it('skips low-value offer', () => {
-    const w1 = makeWarrior('w1', 'Alice');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
     const state = makeState({ roster: [w1] });
     const offer = makeOffer('offer1', ['w1', 'rival1'], { hype: 50, purse: 50 });
     (state as any).boutOffers = { ['offer1' as BoutOfferId]: offer };
@@ -112,7 +87,7 @@ describe('processPlayerOffers', () => {
   });
 
   it('skips non-Proposed offer', () => {
-    const w1 = makeWarrior('w1', 'Alice');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
     const state = makeState({ roster: [w1] });
     const offer = makeOffer('offer1', ['w1', 'rival1'], { hype: 200, status: 'Signed' });
     (state as any).boutOffers = { ['offer1' as BoutOfferId]: offer };
@@ -123,7 +98,7 @@ describe('processPlayerOffers', () => {
   });
 
   it('skips offer with no player warrior in index', () => {
-    const w1 = makeWarrior('w1', 'Alice');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
     const state = makeState({ roster: [w1] });
     const offer = makeOffer('offer1', ['rival1', 'rival2'], { hype: 200 });
     (state as any).boutOffers = { ['offer1' as BoutOfferId]: offer };
@@ -137,8 +112,8 @@ describe('processPlayerOffers', () => {
   });
 
   it('deduplicates offer with two player warriors', () => {
-    const w1 = makeWarrior('w1', 'Alice');
-    const w2 = makeWarrior('w2', 'Bob');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
+    const w2 = makeAutosimWarrior('w2', 'Bob');
     const state = makeState({ roster: [w1, w2] });
     const offer = makeOffer('offer1', ['w1', 'w2'], { hype: 200 });
     (state as any).boutOffers = { ['offer1' as BoutOfferId]: offer };
@@ -154,7 +129,7 @@ describe('processPlayerOffers', () => {
   });
 
   it('processes multiple offers for same warrior', () => {
-    const w1 = makeWarrior('w1', 'Alice');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
     const state = makeState({ roster: [w1] });
     const offer1 = makeOffer('offer1', ['w1', 'rival1'], { hype: 200 });
     const offer2 = makeOffer('offer2', ['w1', 'rival2'], { hype: 200 });
@@ -180,7 +155,7 @@ describe('processPlayerOffers', () => {
   });
 
   it('handles no offers with index', () => {
-    const w1 = makeWarrior('w1', 'Alice');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
     const state = makeState({ roster: [w1] });
     (state as any).boutOffers = {};
     state.warriorToOfferIds = new Map();
@@ -190,7 +165,7 @@ describe('processPlayerOffers', () => {
   });
 
   it('falls back to scan when index is missing', () => {
-    const w1 = makeWarrior('w1', 'Alice');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
     const state = makeState({ roster: [w1] });
     const offer = makeOffer('offer1', ['w1', 'rival1'], { hype: 200 });
     (state as any).boutOffers = { ['offer1' as BoutOfferId]: offer };
@@ -201,8 +176,8 @@ describe('processPlayerOffers', () => {
   });
 
   it('fallback produces same result as indexed path', () => {
-    const w1 = makeWarrior('w1', 'Alice');
-    const w2 = makeWarrior('w2', 'Bob');
+    const w1 = makeAutosimWarrior('w1', 'Alice');
+    const w2 = makeAutosimWarrior('w2', 'Bob');
 
     const offer = makeOffer('offer1', ['w1', 'rival1'], { hype: 150, purse: 50 });
     const baseState = makeState({ roster: [w1, w2] });

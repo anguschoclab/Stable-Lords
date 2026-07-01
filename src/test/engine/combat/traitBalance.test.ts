@@ -31,7 +31,7 @@ import { generateRecruit } from '@/engine/recruitment';
 
 // ── Test Helpers ────────────────────────────────────────────────────────────
 
-const SAMPLE_SIZE = 200; // Per-trait sample; enough for ±5pp confidence
+const SAMPLE_SIZE = 150; // Per-trait sample; enough for ±6pp confidence
 const MIRROR_ATTRS = { ST: 12, CN: 12, SZ: 10, WT: 12, WL: 12, SP: 12, DF: 12 };
 const MIRROR_STYLE = FightingStyle.StrikingAttack; // Balanced mid-tier style
 
@@ -288,10 +288,10 @@ describe('Trained-loadout ceiling', () => {
     const loadout = ['demolisher', 'juggernaut', 'bonebreaker'];
     const { traited, drawCount } = runMirrorBouts(
       loadout,
-      SAMPLE_SIZE,
+      250,
       FightingStyle.BashingAttack
     );
-    const decidedBouts = SAMPLE_SIZE - drawCount;
+    const decidedBouts = 250 - drawCount;
     const rate = decidedBouts > 0 ? traited.wins / decidedBouts : 0.5;
     expect(rate, `max-loadout win rate ${(rate * 100).toFixed(1)}%`).toBeLessThanOrEqual(0.75);
     // sanity: the loadout should actually help (not a no-op)

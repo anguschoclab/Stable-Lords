@@ -9,32 +9,8 @@ import type { WarriorId } from '@/types/game';
 
 // Mock localStorage for Vitest since autosim triggers stat rollup saves
 import { runAutosim } from '@/engine/autosim';
-import { FightingStyle, type GameState, type Warrior } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
-
-function makeWarrior(id: string, name: string, overrides?: Partial<Warrior>): Warrior {
-  const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
-  const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
-  return {
-    id: id as WarriorId,
-    name,
-    style: FightingStyle.StrikingAttack,
-    attributes: attrs,
-    baseSkills,
-    derivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    age: 20,
-    ...overrides,
-  };
-}
+import { type GameState } from '@/types/game';
+import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
 
 describe('Autosim Integration', () => {
   let originalLocalStorage: any;
@@ -77,10 +53,10 @@ describe('Autosim Integration', () => {
     initialState = createFreshState('test-seed');
     initialState.treasury = 5000;
     initialState.roster = [
-      makeWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 }),
-      makeWarrior('w2', 'Test Warrior 2', { fame: 10, popularity: 5 }),
-      makeWarrior('w3', 'Test Warrior 3', { fame: 10, popularity: 5 }),
-      makeWarrior('w4', 'Test Warrior 4', { fame: 10, popularity: 5 }),
+      makeAutosimWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 }),
+      makeAutosimWarrior('w2', 'Test Warrior 2', { fame: 10, popularity: 5 }),
+      makeAutosimWarrior('w3', 'Test Warrior 3', { fame: 10, popularity: 5 }),
+      makeAutosimWarrior('w4', 'Test Warrior 4', { fame: 10, popularity: 5 }),
     ];
   });
 
@@ -167,7 +143,7 @@ describe('Autosim Integration', () => {
     });
 
     it('should preserve warrior data during simulation', async () => {
-      const uniqueWarrior = makeWarrior('unique_1', 'Unique Name', {
+      const uniqueWarrior = makeAutosimWarrior('unique_1', 'Unique Name', {
         fame: 10,
         popularity: 5,
       });
@@ -192,7 +168,7 @@ describe('Autosim Integration', () => {
 
     it('should accumulate newsletter entries', async () => {
       // Force an event that creates newsletter entries by giving high attributes
-      const uniqueWarrior = makeWarrior('unique_1', 'Unique Name', {
+      const uniqueWarrior = makeAutosimWarrior('unique_1', 'Unique Name', {
         fame: 10,
         popularity: 5,
       });
@@ -355,7 +331,7 @@ describe('Autosim Integration', () => {
       const state = createFreshState('test-seed');
       state.treasury = 5000;
       state.roster = [
-        makeWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 }),
+        makeAutosimWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 }),
       ];
       // Add an expired offer that should be pruned by finalizeState
       const expiredOfferId = 'expired_offer_1';

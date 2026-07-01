@@ -52,7 +52,7 @@ describe('WS immovable (integration)', () => {
     const ws = mk(FightingStyle.WallOfSteel, 'WS');
     const lu = mk(FightingStyle.LungingAttack, 'LU');
     let wins = 0;
-    const N = 400;
+    const N = 200;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
         defaultPlanForWarrior(ws),

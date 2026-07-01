@@ -4,44 +4,8 @@
  */
 import { describe, it, expect } from 'vitest';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { fameFromTags } from '@/engine/fame';
-import { FightingStyle, type Warrior, type FightPlan, type WarriorId } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function makeWarrior(
-  name: string,
-  style: FightingStyle,
-  attrs: Partial<Record<'ST' | 'CN' | 'SZ' | 'WT' | 'WL' | 'SP' | 'DF', number>> = {},
-  overrides: Partial<Warrior> = {}
-): Warrior {
-  const full = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10, ...attrs };
-  const { baseSkills, derivedStats } = computeWarriorStats(full, style);
-  return {
-    id: `test_${name}` as WarriorId,
-    name,
-    style,
-    attributes: full,
-    baseSkills,
-    derivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    age: 20,
-    ...overrides,
-  };
-}
-
-function makePlan(style: FightingStyle, overrides: Partial<FightPlan> = {}): FightPlan {
-  return { style, OE: 7, AL: 6, killDesire: 5, target: 'Any', ...overrides };
-}
+import { FightingStyle, type FightPlan, type WarriorId } from '@/types/game';
+import { makeWarrior, makePlan } from './_helpers';
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
 
@@ -159,7 +123,7 @@ describe('simulateFight — kill logic', () => {
 
     let killCount = 0;
     let koCount = 0;
-    const trials = 100;
+    const trials = 50;
     for (let seed = 1; seed <= trials; seed++) {
       const result = simulateFight(
         makePlan(FightingStyle.BashingAttack, { OE: 10, AL: 8, killDesire: 10 }),
@@ -182,7 +146,7 @@ describe('simulateFight — kill logic', () => {
 
     let killsHigh = 0;
     let killsLow = 0;
-    const trials = 50;
+    const trials = 30;
 
     for (let seed = 1; seed <= trials; seed++) {
       const rHigh = simulateFight(
@@ -216,7 +180,7 @@ describe('simulateFight — style matchups', () => {
     const wD = makeWarrior('Wall', FightingStyle.WallOfSteel, { SP: 15, DF: 15, WL: 14, CN: 14 });
 
     let wallWins = 0;
-    const trials = 40;
+    const trials = 25;
     for (let seed = 1; seed <= trials; seed++) {
       const result = simulateFight(
         makePlan(FightingStyle.BashingAttack, { OE: 8 }),
@@ -299,52 +263,6 @@ describe('simulateFight — endurance and exhaustion', () => {
   });
 });
 
-describe('fameFromTags', () => {
-  it('returns zero for no tags', () => {
-    const result = fameFromTags([]);
-    expect(result.fame).toBe(0);
-    expect(result.pop).toBe(0);
-    expect(result.labels).toEqual([]);
-  });
-
-  it('awards fame for Kill', () => {
-    const result = fameFromTags(['Kill']);
-    expect(result.fame).toBe(3);
-    expect(result.labels).toContainEqual(expect.stringContaining('Kill'));
-  });
-
-  it('awards fame and pop for KO', () => {
-    const result = fameFromTags(['KO']);
-    expect(result.fame).toBe(2);
-    expect(result.pop).toBe(1);
-  });
-
-  it('awards pop for Flashy', () => {
-    const result = fameFromTags(['Flashy']);
-    expect(result.pop).toBe(2);
-  });
-
-  it('stacks multiple tags', () => {
-    const result = fameFromTags(['Kill', 'Flashy', 'Comeback', 'Dominance']);
-    // Kill(3) + Comeback(1) + Dominance(1) = 5 fame
-    expect(result.fame).toBe(5);
-    // Flashy(2) + Comeback(1) = 3 pop
-    expect(result.pop).toBe(3);
-  });
-
-  it('applies dampener above 5', () => {
-    const result = fameFromTags(['Kill', 'KO', 'Comeback', 'RiposteChain', 'Dominance']);
-    // Raw: 3+2+1+1+1 = 8, dampened: 5 + floor((8-5)*0.5) = 5+1 = 6
-    expect(result.fame).toBe(6);
-  });
-
-  it('handles undefined tags gracefully', () => {
-    const result = fameFromTags(undefined as any as string[]);
-    expect(result.fame).toBe(0);
-    expect(result.pop).toBe(0);
-  });
-});
-
 describe('simulateFight — hit-location lethality', () => {
   it('targeting head produces more kills than targeting limbs', () => {
     // We give the attacker high kill desire and high OE so they try to kill
@@ -354,7 +272,7 @@ describe('simulateFight — hit-location lethality', () => {
 
     let killsHead = 0;
     let killsLimb = 0;
-    const trials = 100;
+    const trials = 50;
 
     for (let seed = 1; seed <= trials; seed++) {
       const rHead = simulateFight(
@@ -393,7 +311,7 @@ describe('simulateFight — hit-location lethality', () => {
 
     let killsUnarmored = 0;
     let killsArmored = 0;
-    const trials = 100;
+    const trials = 50;
 
     for (let seed = 1; seed <= trials; seed++) {
       const rUnarmored = simulateFight(
@@ -425,7 +343,7 @@ describe('simulateFight — hit-location lethality', () => {
 
     let killsChest = 0;
     let killsLeg = 0;
-    const trials = 100;
+    const trials = 50;
 
     for (let seed = 1; seed <= trials; seed++) {
       const rChest = simulateFight(

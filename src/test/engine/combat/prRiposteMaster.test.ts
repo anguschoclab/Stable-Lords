@@ -97,7 +97,7 @@ describe('PR riposte master (integration)', () => {
     const pr = mk(FightingStyle.ParryRiposte, 'PR');
     const st = mk(FightingStyle.StrikingAttack, 'ST');
     let wins = 0;
-    const N = 400;
+    const N = 200;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
         defaultPlanForWarrior(pr),

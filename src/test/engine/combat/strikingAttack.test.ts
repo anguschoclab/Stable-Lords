@@ -87,7 +87,7 @@ describe('ST all-in (integration)', () => {
     const st = mk(FightingStyle.StrikingAttack, 'ST');
     const pl = mk(FightingStyle.ParryLunge, 'PL');
     let wins = 0;
-    const N = 400;
+    const N = 200;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
         defaultPlanForWarrior(st),

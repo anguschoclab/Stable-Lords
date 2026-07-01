@@ -8,7 +8,7 @@ import { SeededRNGService } from '@/utils/random';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const LORE_FILE = path.resolve(__dirname, '../../engine/narrative/loreGenerator.ts');
+const LORE_FILE = path.resolve(__dirname, '../../../engine/narrative/loreGenerator.ts');
 
 function extractStringArray(source: string, varName: string): string[] {
   const regex = new RegExp(`const ${varName} = \\[([\\s\\S]*?)\\];`);

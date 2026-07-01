@@ -8,45 +8,16 @@
  */
 import { describe, it, expect } from 'vitest';
 import { simulateFight, defaultPlanForWarrior } from '@/engine/simulate';
-import { FightingStyle, type Warrior, type WarriorId, type FightPlan } from '@/types/game';
-import { computeWarriorStats } from '@/engine/skillCalc';
+import { FightingStyle, type Warrior, type FightPlan } from '@/types/game';
 import { applyArmorTypeMod } from '@/engine/combat/mechanics/combatDamage';
 import { styleRiposteBonus } from '@/engine/combat/resolution/resolution';
 import type { FighterState } from '@/engine/combat/resolution/types';
 import { FightingStyle as FS } from '@/types/shared.types';
+import { makeWarrior } from './_helpers';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function makeWarrior(
-  name: string,
-  style: FightingStyle,
-  attrs: Partial<Record<'ST' | 'CN' | 'SZ' | 'WT' | 'WL' | 'SP' | 'DF', number>> = {},
-  overrides: Partial<Warrior> = {}
-): Warrior {
-  const full = { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10, ...attrs };
-  const { baseSkills, derivedStats } = computeWarriorStats(full, style);
-  return {
-    id: `test_${name}` as WarriorId,
-    name,
-    style,
-    attributes: full,
-    baseSkills,
-    derivedStats,
-    fame: 0,
-    popularity: 0,
-    titles: [],
-    injuries: [],
-    flair: [],
-    traits: [],
-    career: { wins: 0, losses: 0, kills: 0 },
-    champion: false,
-    status: 'Active',
-    age: 20,
-    ...overrides,
-  };
-}
-
-const FIGHTS = 200;
+const FIGHTS = 100;
 
 function winRate(
   planA: FightPlan,

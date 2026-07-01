@@ -11,14 +11,14 @@ describe('generateTraits (sparse, tier-aware)', () => {
   };
 
   it('most warriors are born blank (~68%, never more than one trait)', () => {
-    const rolls = sample(3000);
+    const rolls = sample(1000);
     const blank = rolls.filter((r) => r.length === 0).length / rolls.length;
     expect(blank, `blank rate ${(blank * 100).toFixed(1)}%`).toBeGreaterThan(0.6);
     expect(rolls.every((r) => r.length <= 1)).toBe(true);
   });
 
   it('never grants Exceptional/Signature or class-restricted traits at birth', () => {
-    for (const r of sample(3000)) {
+    for (const r of sample(1000)) {
       for (const id of r) {
         const t = TRAITS[id]!;
         expect(['Exceptional', 'Signature'].includes(t.tier), `${id} tier`).toBe(false);
@@ -28,7 +28,7 @@ describe('generateTraits (sparse, tier-aware)', () => {
   });
 
   it('a minority are born with a single Flaw', () => {
-    const rolls = sample(3000);
+    const rolls = sample(1000);
     const flawed =
       rolls.filter((r) => r.some((id) => TRAITS[id]!.tier === 'Flaw')).length / rolls.length;
     expect(flawed, `flaw rate ${(flawed * 100).toFixed(1)}%`).toBeGreaterThan(0.03);

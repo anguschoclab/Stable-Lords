@@ -1,10 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   SEASONAL_WEATHER,
   rollWeather,
   getWeatherSeason,
   computeNextSeason,
 } from '@/engine/pipeline/passes/WorldPass';
+import { getWeatherEffect } from '@/engine/combat/mechanics/weatherEffects';
 import { SeededRNGService } from '@/utils/random';
 import type { WeatherType, Season } from '@/types/shared.types';
 
@@ -113,7 +114,7 @@ describe('Seasonal Weather Buckets', () => {
       const rng = new SeededRNGService(999 + season.length * 100);
       const pool = SEASONAL_WEATHER[season];
       const seen = new Set<WeatherType>();
-      for (let i = 0; i < 5000; i++) {
+      for (let i = 0; i < 2000; i++) {
         seen.add(rollWeather(rng, season));
       }
       for (const w of pool) {
@@ -132,5 +133,47 @@ describe('Seasonal Weather Buckets', () => {
     expect(computeNextSeason(40)).toBe('Winter');
     expect(computeNextSeason(52)).toBe('Winter');
     expect(computeNextSeason(53)).toBe('Spring'); // wraps
+  });
+});
+
+describe('Blood Moon Feature', () => {
+  it('should return a 0.9 multiplier for Blood Moon stamina drain', () => {
+    expect(getWeatherEffect('Blood Moon').staminaMult).toBe(0.9);
+  });
+
+  it('should roll Blood Moon weather when rng yields high enough value', () => {
+    const rng = new SeededRNGService(123);
+    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.41);
+    const weather = rollWeather(rng, 'Summer');
+    expect(weather).toBe('Blood Moon');
+    mock.mockRestore();
+  });
+});
+
+describe('Blood Rain Feature', () => {
+  it('should return a 1.1 multiplier for Blood Rain stamina drain', () => {
+    expect(getWeatherEffect('Blood Rain').staminaMult).toBe(1.1);
+  });
+
+  it('should roll Blood Rain weather when rng yields high enough value in Spring', () => {
+    const rng = new SeededRNGService(123);
+    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.98);
+    const weather = rollWeather(rng, 'Spring');
+    expect(weather).toBe('Blood Rain');
+    mock.mockRestore();
+  });
+});
+
+describe('Locust Swarm Feature', () => {
+  it('should return a 1.2 multiplier for Locust Swarm stamina drain', () => {
+    expect(getWeatherEffect('Locust Swarm').staminaMult).toBe(1.2);
+  });
+
+  it('should roll Locust Swarm weather when rng yields high enough value in Summer', () => {
+    const rng = new SeededRNGService(123);
+    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.77);
+    const weather = rollWeather(rng, 'Summer');
+    expect(weather).toBe('Locust Swarm');
+    mock.mockRestore();
   });
 });

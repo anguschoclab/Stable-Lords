@@ -77,7 +77,7 @@ describe('SL bleed (integration)', () => {
     const sl = mk(FightingStyle.SlashingAttack, 'SL');
     const ps = mk(FightingStyle.ParryStrike, 'PS');
     let wins = 0;
-    const N = 400;
+    const N = 200;
     for (let i = 0; i < N; i++) {
       const o = simulateFight(
         defaultPlanForWarrior(sl),

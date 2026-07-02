@@ -268,7 +268,7 @@ export default function PromoterDirectory() {
             <div className="text-2xl font-black font-mono">{stats.totalPromoters}</div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-amber-500/5 to-transparent">
+        <Card className="bg-gradient-to-br from-arena-gold/5 to-transparent">
           <CardContent className="p-4 space-y-1">
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
               <DollarSign className="h-3 w-3" /> Total Purse Paid
@@ -276,7 +276,7 @@ export default function PromoterDirectory() {
             <div className="text-2xl font-black font-mono">{formatNumber(stats.totalPurse)}</div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-violet-500/5 to-transparent">
+        <Card className="bg-gradient-to-br from-arena-fame/5 to-transparent">
           <CardContent className="p-4 space-y-1">
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
               <History className="h-3 w-3" /> Notable Bouts
@@ -284,7 +284,7 @@ export default function PromoterDirectory() {
             <div className="text-2xl font-black font-mono">{stats.totalNotableBouts}</div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-emerald-500/5 to-transparent">
+        <Card className="bg-gradient-to-br from-arena-pop/5 to-transparent">
           <CardContent className="p-4 space-y-1">
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-1">
               <Users className="h-3 w-3" /> Total Capacity

@@ -47,9 +47,9 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
   },
   Rainy: {
     icon: CloudRain,
-    colorClass: 'text-stone-400',
-    bgClass: 'bg-stone-400/10',
-    borderClass: 'border-stone-400/20',
+    colorClass: 'text-muted-foreground',
+    bgClass: 'bg-muted/10',
+    borderClass: 'border-muted/20',
     description: 'Poor visibility and slick ground penalize initiative and attack.',
   },
   Overcast: {
@@ -307,9 +307,9 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
   },
   'Crystal Rain': {
     icon: Sparkles,
-    colorClass: 'text-blue-300',
-    bgClass: 'bg-blue-300/10',
-    borderClass: 'border-blue-300/20',
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
     description: 'Sharp, shimmering crystals fall from the sky. Cuts armor, drains stamina.',
   },
   'Rain of Frogs': {
@@ -321,9 +321,9 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
   },
   'Chaos Storm': {
     icon: Sparkles,
-    colorClass: 'text-purple-400',
-    bgClass: 'bg-purple-400/10',
-    borderClass: 'border-purple-400/20',
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
     description: 'A swirling vortex of raw chaos drains stamina and amplifies damage unpredictably.',
   },
 };

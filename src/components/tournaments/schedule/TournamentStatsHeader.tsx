@@ -19,7 +19,7 @@ export function TournamentStatsHeader({ stats }: TournamentStatsHeaderProps) {
           <div className="text-xl font-black font-mono mt-1">{stats.total}</div>
         </CardContent>
       </Card>
-      <Card className="bg-gradient-to-br from-emerald-500/5 to-transparent">
+      <Card className="bg-gradient-to-br from-primary/5 to-transparent">
         <CardContent className="p-3">
           <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase font-bold">
             <Trophy className="h-3.5 w-3.5" /> Completed

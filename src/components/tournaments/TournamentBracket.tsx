@@ -132,7 +132,7 @@ export function ChampionDisplay({
   return (
     <Surface
       variant="gold"
-      className="bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-transparent border-arena-gold/50 shadow-[0_0_30px_-10px_rgba(255,215,0,0.5)]"
+      className="bg-gradient-to-br from-arena-gold/20 via-arena-gold/10 to-transparent border-arena-gold/50 shadow-[0_0_30px_-10px_rgba(255,215,0,0.5)]"
     >
       <div className="p-8 text-center space-y-4">
         <div className="flex flex-col items-center gap-4">
@@ -242,7 +242,7 @@ export function TournamentProgress({
       </div>
       <div className="h-2 bg-muted rounded-full overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-primary to-amber-500 rounded-full transition-all duration-500"
+          className="h-full bg-gradient-to-r from-primary to-arena-gold rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>

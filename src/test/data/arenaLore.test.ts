@@ -55,4 +55,40 @@ describe('Arena lore integrity', () => {
     expect(entry).toBeDefined();
     expect(entry!.arenaId).toBe('highplain_arena');
   });
+
+  it('lantern_hall_forgotten_chains IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('lantern_hall_forgotten_chains');
+  });
+
+  it('charnel_pits_blind_executioner IS present (new entry)', () => {
+    const ids = ARENA_LORE.map((e) => e.id);
+    expect(ids).toContain('charnel_pits_blind_executioner');
+  });
+
+  it('lantern_hall_forgotten_chains references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'lantern_hall_forgotten_chains');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('lantern_hall_arena');
+  });
+
+  it('charnel_pits_blind_executioner references valid arenaId', () => {
+    const entry = ARENA_LORE.find((e) => e.id === 'charnel_pits_blind_executioner');
+    expect(entry).toBeDefined();
+    expect(entry!.arenaId).toBe('charnel_pits');
+  });
+
+  it('both new entries have valid type, title, and narrative', () => {
+    const chains = ARENA_LORE.find((e) => e.id === 'lantern_hall_forgotten_chains');
+    expect(chains).toBeDefined();
+    expect(chains!.type).toBeTruthy();
+    expect(chains!.title).toBeTruthy();
+    expect(chains!.narrative.length).toBeGreaterThan(20);
+
+    const executioner = ARENA_LORE.find((e) => e.id === 'charnel_pits_blind_executioner');
+    expect(executioner).toBeDefined();
+    expect(executioner!.type).toBeTruthy();
+    expect(executioner!.title).toBeTruthy();
+    expect(executioner!.narrative.length).toBeGreaterThan(20);
+  });
 });

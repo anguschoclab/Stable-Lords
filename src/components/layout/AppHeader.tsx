@@ -267,7 +267,7 @@ function SaveButton({ lastSavedAt }: SaveButtonProps) {
             'h-9 w-9 rounded-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-black',
             saveFlash ? 'bg-primary/20 text-primary scale-110' : 'hover:bg-white/5'
           )}
-          aria-label="Save status"
+          aria-label={lastSavedAt ? `Auto-Saved at ${formatSaveTime(lastSavedAt)}` : 'Not Saved'}
         >
           <Save className="h-4 w-4" />
         </Button>

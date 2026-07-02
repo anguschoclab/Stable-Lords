@@ -1,10 +1,17 @@
-import { describe, it, expect } from 'vitest';
-import { processPlayerOffers, extractWeekSummary } from '@/engine/autosim';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { processPlayerOffers, extractWeekSummary, runAutosim } from '@/engine/autosim';
+import { advanceWeek } from '@/engine/pipeline/services/weekPipelineService';
+import { TimeAdvanceService } from '@/engine/pipeline/tick/timeAdvance';
+import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
 import type { GameState, BoutOffer } from '@/types/state.types';
 import type { BoutOfferId, WarriorId } from '@/types/shared.types';
 import type { FightSummary } from '@/types/combat.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { makeAutosimWarrior } from '@/test/_setup/testHelpers';
+
+vi.mock('@/engine/pipeline/services/weekPipelineService', () => ({
+  advanceWeek: vi.fn((state: GameState) => state),
+}));
 
 function makeOffer(
   id: string,
@@ -298,5 +305,209 @@ describe('extractWeekSummary', () => {
 
     const summary = extractWeekSummary(state, 42);
     expect(summary.week).toBe(42);
+  });
+
+  it('handles missing vs in title', () => {
+    const state = makeState();
+    state.lastSimulationReport = {
+      id: 'report-1' as any,
+      week: 5,
+      treasuryChange: 0,
+      trainingGains: [],
+      agingEvents: [],
+      healthEvents: [],
+      bouts: [
+        makeFightSummary('Alice versus Bob', 'A', 'Kill'),
+      ],
+    };
+
+    const summary = extractWeekSummary(state, 5);
+    expect(summary.deaths).toBe(1);
+    expect(summary.deathNames).toHaveLength(1);
+    expect(summary.deathNames).toContain('Unknown');
+  });
+});
+
+const mockQuarterSummary = {
+  startWeek: 1,
+  endWeek: 13,
+  startYear: 1,
+  endYear: 1,
+  treasuryDelta: 0,
+  weekSummaries: [],
+};
+
+describe('runAutosim', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('runs sequentially up to weeksToSim', async () => {
+    const spy = vi.mocked(advanceWeek);
+    spy.mockImplementation((state: GameState) => state);
+
+    const state = makeState();
+    const onProgress = vi.fn();
+    const result = await runAutosim(state, { weeksToSim: 3, onProgress });
+
+    expect(result.weeksSimmed).toBe(3);
+    expect(result.stopReason).toBe('max_weeks');
+    expect(onProgress).toHaveBeenCalledTimes(3);
+    expect(spy).toHaveBeenCalledTimes(3);
+  });
+
+  it('supports legacy options signature', async () => {
+    const spy = vi.mocked(advanceWeek);
+    spy.mockImplementation((state: GameState) => state);
+
+    const state = makeState();
+    const onProgress = vi.fn();
+    const result = await runAutosim(state, 2, onProgress);
+
+    expect(result.weeksSimmed).toBe(2);
+    expect(result.stopReason).toBe('max_weeks');
+    expect(onProgress).toHaveBeenCalledTimes(2);
+  });
+
+  it('stops on bankruptcy (sequential)', async () => {
+    const spy = vi.mocked(advanceWeek);
+    let callCount = 0;
+    spy.mockImplementation((state: GameState) => {
+      callCount++;
+      if (callCount === 2) {
+        return { ...state, treasury: BANKRUPTCY_THRESHOLD - 1 };
+      }
+      return state;
+    });
+
+    const state = makeState();
+    const result = await runAutosim(state, { weeksToSim: 10 });
+
+    expect(result.weeksSimmed).toBe(2);
+    expect(result.stopReason).toBe('bankrupt');
+  });
+
+  it('runs batch mode for full quarters and remaining weeks', async () => {
+    const weekSpy = vi.mocked(advanceWeek);
+    weekSpy.mockImplementation((state: GameState) => state);
+
+    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
+    quarterSpy.mockResolvedValue({
+      state: makeState(),
+      weeksCompleted: 13,
+      summaries: [],
+      quarterSummary: mockQuarterSummary,
+      stopReason: null,
+    });
+
+    const state = makeState();
+    const result = await runAutosim(state, { weeksToSim: 15, useBatchMode: true });
+
+    expect(result.weeksSimmed).toBe(15);
+    expect(quarterSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('stops on max_weeks when running full quarters exactly (no remainder)', async () => {
+    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
+    quarterSpy.mockResolvedValue({
+      state: makeState(),
+      weeksCompleted: 13,
+      summaries: [],
+      quarterSummary: mockQuarterSummary,
+      stopReason: null,
+    });
+
+    const state = makeState();
+    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
+
+    expect(result.weeksSimmed).toBe(26);
+    expect(result.stopReason).toBe('max_weeks');
+    expect(quarterSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('runs batch mode without onProgress', async () => {
+    const weekSpy = vi.mocked(advanceWeek);
+    weekSpy.mockImplementation((state: GameState) => state);
+
+    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
+    quarterSpy.mockResolvedValue({
+      state: makeState(),
+      weeksCompleted: 13,
+      summaries: [],
+      quarterSummary: mockQuarterSummary,
+      stopReason: null,
+    });
+
+    const state = makeState();
+    const result = await runAutosim(state, { weeksToSim: 13, useBatchMode: true });
+
+    expect(result.weeksSimmed).toBe(13);
+    expect(result.stopReason).toBe('max_weeks');
+  });
+
+  it('stops on bankruptcy (batch mode) after a quarter', async () => {
+    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
+    quarterSpy.mockResolvedValue({
+      state: { ...makeState(), treasury: BANKRUPTCY_THRESHOLD - 1 },
+      weeksCompleted: 13,
+      summaries: [],
+      quarterSummary: mockQuarterSummary,
+      stopReason: null,
+    });
+
+    const state = makeState();
+    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
+
+    expect(result.weeksSimmed).toBe(13);
+    expect(result.stopReason).toBe('bankrupt');
+  });
+
+  it('stops on internal TimeAdvanceService condition', async () => {
+    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
+    quarterSpy.mockResolvedValue({
+      state: makeState(),
+      weeksCompleted: 5,
+      summaries: [],
+      quarterSummary: mockQuarterSummary,
+      stopReason: 'roster_empty',
+    });
+
+    const state = makeState();
+    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
+
+    expect(result.weeksSimmed).toBe(5);
+    expect(result.stopReason).toBe('no_pairings');
+  });
+
+  it('maps custom_condition to injury stop reason', async () => {
+    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
+    quarterSpy.mockResolvedValue({
+      state: makeState(),
+      weeksCompleted: 3,
+      summaries: [],
+      quarterSummary: mockQuarterSummary,
+      stopReason: 'custom_condition',
+    });
+
+    const state = makeState();
+    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
+
+    expect(result.stopReason).toBe('injury');
+  });
+
+  it('maps unknown condition to max_weeks', async () => {
+    const quarterSpy = vi.spyOn(TimeAdvanceService, 'advanceQuarter');
+    quarterSpy.mockResolvedValue({
+      state: makeState(),
+      weeksCompleted: 3,
+      summaries: [],
+      quarterSummary: mockQuarterSummary,
+      stopReason: 'some_unknown_reason',
+    });
+
+    const state = makeState();
+    const result = await runAutosim(state, { weeksToSim: 26, useBatchMode: true });
+
+    expect(result.stopReason).toBe('max_weeks');
   });
 });

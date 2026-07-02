@@ -21,7 +21,7 @@ export function computeNextSeason(newWeek: number): Season {
 /**
  * Weathers available in every season.
  */
-const SHARED_WEATHER: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge', 'Chaos Storm'];
+const SHARED_WEATHER: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge', 'Chaos Storm', 'Chaos Squall'];
 
 /**
  * Season-exclusive weather pools.  Every WeatherType must appear in exactly one
@@ -101,6 +101,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   Eclipse: 0.5,
   'Mana Surge': 0.5,
   'Chaos Storm': 0.1,
+  'Chaos Squall': 0.5,
 
   // Spring-exclusive
   Rainy: 10,

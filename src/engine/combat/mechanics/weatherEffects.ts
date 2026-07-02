@@ -319,6 +319,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'A swirling vortex of raw chaos tears across the arena, draining stamina, scrambling timing, and amplifying every blow with unpredictable violence.',
   },
+  'Chaos Squall': {
+    staminaMult: 0.85,
+    initiativeMod: 3,
+    riposteMod: -2,
+    damageMult: 1.1,
+    description: 'Unpredictable bursts of raw energy whip through the arena, empowering strikes but punishing mistakes.',
+  },
 };
 
 /**
@@ -395,6 +402,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'The sky darkens and an absurd, writhing rain of frogs begins to fall, confusing everyone.',
   'Chaos Storm':
     'A swirling vortex of raw chaos descends upon the arena. Reality itself seems to fracture as the storm intensifies.',
+  'Chaos Squall': 'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
 };
 
 /**

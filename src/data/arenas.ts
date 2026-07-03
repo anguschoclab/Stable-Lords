@@ -324,6 +324,20 @@ export interface ArenaLoreEntry {
  */
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'flesh_gardens_thorny_path',
+    arenaId: 'flesh_gardens',
+    type: 'architectural_quirk',
+    title: 'The Thorny Path',
+    narrative: 'Due to the overgrowth of mutated flora in the Flesh Gardens, the outer edges of the pit are laced with razor-sharp vines. Fighters pushed to the perimeter often suffer lacerations before a weapon ever strikes them.',
+  },
+  {
+    id: 'walled_court_kings_fall',
+    arenaId: 'walled_court_arena',
+    type: 'historical_battle',
+    title: 'The Fall of the Mad King',
+    narrative: 'In 981, a disgraced noble challenged the reigning champion in the Walled Court. The battle lasted less than a minute, ending with the noble\'s severed head rolling into the royal viewing box, a stark reminder of the arena\'s brutal equality.',
+  },
+  {
     id: 'charnel_pits_silent_night',
     arenaId: 'charnel_pits',
     type: 'historical_battle',

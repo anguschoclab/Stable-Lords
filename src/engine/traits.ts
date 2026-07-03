@@ -102,6 +102,33 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  blood_scent: {
+    id: 'blood_scent',
+    name: 'Blood Scent',
+    description: '+1 attack against low HP opponents — they can smell the end.',
+    effect: { attModLowHp: 1 },
+    weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  clutch_fighter: {
+    id: 'clutch_fighter',
+    name: 'Clutch Fighter',
+    description: '+1 attack in LATE phase — they thrive when the crowd thinks it\'s over.',
+    effect: { attModLate: 1 },
+    weight: 0.6,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+  eager_blood: {
+    id: 'eager_blood',
+    name: 'Eager Blood',
+    description: '+1 initiative while fresh — their adrenaline spikes right out of the gate.',
+    effect: { iniModFresh: 1 },
+    weight: 0.8,
+    tier: 'Common',
+    sign: 'positive',
+  },
   feral_instinct: {
     id: 'feral_instinct',
     name: 'Feral Instinct',

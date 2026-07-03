@@ -51,7 +51,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Shimmering Heat',
   'Crystal Rain',
   'Rain of Frogs',
-  'Chaos Storm',
+  'Chaos Storm', 'Chaos Squall',
 ];
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];

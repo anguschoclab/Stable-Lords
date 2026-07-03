@@ -4,7 +4,7 @@
  */
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import * as fs from 'fs';
 import * as path from 'path';
 import { vi } from 'vitest';

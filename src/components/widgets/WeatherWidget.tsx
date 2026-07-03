@@ -51,6 +51,7 @@ const WEATHER_STATS: Record<WeatherType, string> = {
   'Crystal Rain': 'INITIATIVE -3 | DAMAGE +20% | STAMINA DRAIN 110%',
   'Rain of Frogs': 'INITIATIVE -4 | RIPOSTE -2 | DAMAGE -10% | STAMINA DRAIN 110%',
   'Chaos Storm': 'STAMINA DRAIN 125% | INITIATIVE -5 | RIPOSTE +10 | DAMAGE +50%',
+  'Chaos Squall': 'STAMINA DRAIN 115% | INITIATIVE +3 | RIPOSTE -2 | DAMAGE +10%',
 }; /**
  * Weather widget.
  */

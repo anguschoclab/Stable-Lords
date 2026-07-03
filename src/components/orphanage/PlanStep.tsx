@@ -138,6 +138,7 @@ export default function PlanStep({ warrior, plan, onPlanChange, onBack, onNext }
                 <button
                   key={t.id}
                   onClick={() => handleTactic(t)}
+                  aria-label={`Select Tactic: ${t.label}`}
                   className={cn(
                     'flex items-center gap-2 p-3 text-xs font-bold uppercase tracking-wider border transition-all duration-200 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
                     isActive

@@ -180,7 +180,7 @@ export function BronzeHighlight({ thirdPlaceName, thirdPlaceId }: BronzeHighligh
   return (
     <Surface
       variant="glass"
-      className="bg-gradient-to-br from-amber-600/10 to-transparent border-arena-gold/30"
+      className="bg-gradient-to-br from-arena-gold/10 to-transparent border-arena-gold/30"
     >
       <div className="p-5 text-center">
         <div className="flex items-center justify-center gap-4">

@@ -111,6 +111,7 @@ describe('weatherEffects', () => {
         'Crystal Rain',
         'Rain of Frogs',
         'Chaos Storm',
+        'Chaos Squall',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -148,6 +149,16 @@ describe('weatherEffects', () => {
       expect(effect.initiativeMod).toBe(-5);
       expect(effect.riposteMod).toBe(10);
       expect(effect.damageMult).toBe(1.5);
+      expect(typeof effect.description).toBe('string');
+      expect(effect.description.length).toBeGreaterThan(0);
+    });
+
+    it('returns Chaos Squall effect with correct modifiers', () => {
+      const effect = getWeatherEffect('Chaos Squall' as WeatherType);
+      expect(effect.staminaMult).toBe(0.85);
+      expect(effect.initiativeMod).toBe(3);
+      expect(effect.riposteMod).toBe(-2);
+      expect(effect.damageMult).toBe(1.1);
       expect(typeof effect.description).toBe('string');
       expect(effect.description.length).toBeGreaterThan(0);
     });
@@ -243,6 +254,7 @@ describe('weatherEffects', () => {
         'Crystal Rain',
         'Rain of Frogs',
         'Chaos Storm',
+        'Chaos Squall',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);
@@ -252,6 +264,13 @@ describe('weatherEffects', () => {
 
     it('returns descriptive string for Chaos Storm', () => {
       const line = weatherOpeningLine('Chaos Storm' as WeatherType);
+      expect(line).not.toBeNull();
+      expect(typeof line).toBe('string');
+      expect(line!.length).toBeGreaterThan(0);
+    });
+
+    it('returns descriptive string for Chaos Squall', () => {
+      const line = weatherOpeningLine('Chaos Squall' as WeatherType);
       expect(line).not.toBeNull();
       expect(typeof line).toBe('string');
       expect(line!.length).toBeGreaterThan(0);

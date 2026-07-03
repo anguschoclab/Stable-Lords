@@ -24,7 +24,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Mirage', 'Ember Rain', 'Wildfire Smoke', 'Blood Fog',
   'Shimmering Heat', 'Rain of Frogs',
   'Crystal Rain',
-  'Chaos Storm',
+  'Chaos Storm', 'Chaos Squall',
 ];
 
 describe('Weather season exclusivity', () => {
@@ -38,7 +38,7 @@ describe('Weather season exclusivity', () => {
   });
 
   it('no weather type appears in more than one SEASON_EXCLUSIVE_WEATHER bucket', () => {
-    const SHARED: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge', 'Chaos Storm'];
+    const SHARED: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge', 'Chaos Storm', 'Chaos Squall'];
     for (const w of ALL_WEATHER_TYPES) {
       if (SHARED.includes(w)) continue;
       const seasonsContaining = SEASONS.filter((s) => SEASONAL_WEATHER[s].includes(w));
@@ -46,7 +46,7 @@ describe('Weather season exclusivity', () => {
     }
   });
 
-  it('all 40 WeatherType values are covered across seasonal buckets', () => {
+  it('all 41 WeatherType values are covered across seasonal buckets', () => {
     const allListed = new Set<WeatherType>();
     for (const s of SEASONS) {
       for (const w of SEASONAL_WEATHER[s]) {

@@ -198,5 +198,251 @@
     "path": "gazette.headlines.win_streak",
     "original": "Week {{week}}: A TRAIL OF BODIES! {{name}}'s win streak hits {{streak}}!",
     "duplicate": "Week {{week}}: A TRAIL OF BODIES: {{name}} EXTENDS WINNING STREAK TO {{streak}}"
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "bites deep into {{defender}}'s {{bodyPart}}",
+    "kept": "strikes cleanly against {{defender}}'s {{bodyPart}}",
+    "similarity": 0.7058823529411764
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "leaves a brutal wound on {{defender}}'s {{bodyPart}}",
+    "kept": "leaves a sickening, pulsing wound on {{defender}}'s {{bodyPart}}",
+    "similarity": 0.734375
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "tears flesh from {{defender}}'s {{bodyPart}}",
+    "kept": "finds its mark on {{defender}}'s {{bodyPart}}",
+    "similarity": 0.7111111111111111
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "smashes sickeningly into {{defender}}'s {{bodyPart}}",
+    "kept": "strikes cleanly against {{defender}}'s {{bodyPart}}",
+    "similarity": 0.7115384615384616
+  },
+  {
+    "path": "strikes.slashing.fatal",
+    "removed": "{{attacker}} feints low, catching {{defender}} off guard before severing their {{bodyPart}} with a clinical strike. The crowd erupts!",
+    "kept": "{{attacker}} feints low, catching {{defender}} off guard before severing their {{bodyPart}} at the joint.",
+    "similarity": 0.7518796992481203
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "removed": "{{attacker}} steps in and plants {{possessive}} {{weapon}} firmly in {{defender}}'s {{bodyPart}}.",
+    "kept": "{{attacker}} lunges with sudden ferocity, {{possessive}} {{weapon}} finding {{defender}}'s {{bodyPart}}!",
+    "similarity": 0.7307692307692308
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "removed": "{{attacker}} drives {{possessive}} {{weapon}} straight through {{defender}}'s guard and into the {{bodyPart}}!",
+    "kept": "{{attacker}} drives {{possessive}} {{weapon}} home — {{defender}} is struck on the {{bodyPart}}!",
+    "similarity": 0.7454545454545455
+  },
+  {
+    "path": "strikes.fist.critical_human",
+    "removed": "A brutal, bare-knuckle smash from {{attacker}} leaves {{defender}} seeing stars!",
+    "kept": "A devastating blow from {{attacker}} leaves {{defender}} seeing stars.",
+    "similarity": 0.7125
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "removed": "{{attacker}} makes a piercing lunge with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} lunges wielding {{possessive}} {{weapon}}!",
+    "similarity": 0.7014925373134329
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "removed": "{{attacker}} makes a brilliant twisting thrust with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} delivers a rapid series of thrusts with {{possessive}} {{weapon}}!",
+    "similarity": 0.7215189873417722
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "removed": "{{attacker}} extends {{possessive}} {{weapon}} in a lightning thrust!",
+    "kept": "{{attacker}} whips {{possessive}} {{weapon}} in a deceptive thrust!",
+    "similarity": 0.7971014492753623
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "removed": "{{attacker}} thrusts with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} lunges wielding {{possessive}} {{weapon}}!",
+    "similarity": 0.7818181818181819
+  },
+  {
+    "path": "pbp.attacks.piercing",
+    "removed": "{{attacker}} slides past the guard, thrusting with {{possessive}} {{weapon}}.",
+    "kept": "{{attacker}} delivers a rapid series of thrusts with {{possessive}} {{weapon}}!",
+    "similarity": 0.7088607594936709
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} makes a downward cut with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
+    "similarity": 0.7230769230769231
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} whirls and strikes backhandedly with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
+    "similarity": 0.7105263157894737
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} slashes an arcing attack with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
+    "similarity": 0.7971014492753623
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} drops {{possessive}} weight into a crushing hack with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} shifts {{possessive}} weight and cuts low with {{possessive}} {{weapon}}!",
+    "similarity": 0.7849462365591398
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} unleashes a ragged, tearing swing with {{possessive}} {{weapon}}.",
+    "kept": "{{attacker}} delivers a wide, decapitating swing with {{possessive}} {{weapon}}!",
+    "similarity": 0.75
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} delivers a crisp, rising cut with {{possessive}} {{weapon}}.",
+    "kept": "{{attacker}} delivers a wide, decapitating swing with {{possessive}} {{weapon}}!",
+    "similarity": 0.775
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} delivers a crushing blow using {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} steps into a crushing horizontal blow with {{possessive}} {{weapon}}!",
+    "similarity": 0.7073170731707317
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
+    "kept": "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!",
+    "similarity": 0.75
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} brings {{possessive}} {{weapon}} crashing down like a meteor!",
+    "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!",
+    "similarity": 0.7297297297297297
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} swings {{possessive}} {{weapon}} like a battering ram.",
+    "kept": "{{attacker}} swings {{possessive}} {{weapon}} in a wide, bone-breaking arc!",
+    "similarity": 0.72
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} delivers a brutal, looping strike with {{possessive}} {{weapon}}.",
+    "kept": "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!",
+    "similarity": 0.717948717948718
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} brings {{possessive}} {{weapon}} down with the force of an avalanche.",
+    "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!",
+    "similarity": 0.7439024390243902
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "{{attacker}} heaves {{possessive}} {{weapon}} into a bone-shattering overhead smash.",
+    "kept": "{{attacker}} heaves {{possessive}} {{weapon}} in a crushing overhead blow!",
+    "similarity": 0.7857142857142857
+  },
+  {
+    "path": "pbp.attacks.fist",
+    "removed": "{{attacker}} steps inside and unleashes a flurry of heavy hooks.",
+    "kept": "{{attacker}} steps inside and unleashes a flurry of vicious body blows!",
+    "similarity": 0.7887323943661972
+  },
+  {
+    "path": "pbp.status_changes.severe",
+    "removed": "{{name}} is severely wounded!!",
+    "kept": "{{name}} is severely hurt!!",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.status_changes.desperate",
+    "removed": "{{name}} is becoming frantically careless!!!",
+    "kept": "{{name}} is becoming frantic!!!",
+    "similarity": 0.7045454545454546
+  },
+  {
+    "path": "pbp.status_changes.panic",
+    "removed": "{{name}} is becoming frantically careless!!!",
+    "kept": "{{name}} is becoming frantic!!!",
+    "similarity": 0.7045454545454546
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "removed": "{{defender}} dodges right, out of harm's way.",
+    "kept": "{{defender}} ducks left out of harm's way.",
+    "similarity": 0.8
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "removed": "{{defender}} jerks out of the way just in time.",
+    "kept": "{{defender}} ducks out of the way of the attack.",
+    "similarity": 0.7083333333333333
+  },
+  {
+    "path": "pbp.defenses.dodge.tier1_low",
+    "removed": "{{defender}} pivots to the left out of harm's way.",
+    "kept": "{{defender}} ducks left out of harm's way.",
+    "similarity": 0.76
+  },
+  {
+    "path": "pbp.defenses.parry.success",
+    "removed": "Sparks fly as {{defender}} intercepts {{attacker}}'s brutal swing.",
+    "kept": "Sparks fly as {{defender}} cleanly deflects {{attacker}}'s powerful swing.",
+    "similarity": 0.7567567567567568
+  },
+  {
+    "path": "pbp.defenses.parry_break",
+    "removed": "{{attacker}} shatters {{defender}}'s defensive stance.",
+    "kept": "{{attacker}} batters aside {{defender}}'s defensive guard.",
+    "similarity": 0.7758620689655172
+  },
+  {
+    "path": "pbp.knockdown.fall",
+    "removed": "The sheer force of the blow sends {{name}} flying into the dirt!",
+    "kept": "The sheer force of the blow sends {{name}} sprawling onto the arena sand.",
+    "similarity": 0.7534246575342466
+  },
+  {
+    "path": "pbp.pacing.tempo.movement",
+    "removed": "{{name}} twists to the side, throwing {{possessive}} opponent off balance.",
+    "kept": "{{name}} sidesteps, trying to throw {{possessive}} opponent off balance.",
+    "similarity": 0.7432432432432432
+  },
+  {
+    "path": "pbp.taunts.rivalry_winner",
+    "removed": "{{attacker}} screams 'Vengeance is MINE!'",
+    "kept": "{{attacker}} screams 'The feud ends HERE!'",
+    "similarity": 0.7142857142857143
+  },
+  {
+    "path": "pbp.initiative",
+    "removed": "{{attacker}} dictates the start of the clash.",
+    "kept": "{{attacker}} dictating the pace of the exchange.",
+    "similarity": 0.7291666666666667
+  },
+  {
+    "path": "recap",
+    "removed": "{{attacker}} bested {{defender}} after {{hits}} minutes of combat.",
+    "kept": "{{attacker}} defeated {{defender}} in {{hits}} minutes.",
+    "similarity": 0.7121212121212122
+  },
+  {
+    "path": "recap",
+    "removed": "{{attacker}} emerged victorious over {{defender}} in {{hits}} minutes.",
+    "kept": "{{attacker}} defeated {{defender}} in {{hits}} minutes.",
+    "similarity": 0.7285714285714286
   }
 ]

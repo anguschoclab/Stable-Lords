@@ -89,10 +89,10 @@ describe('combatNarrators', () => {
   });
 
   describe('narrateDodge expanded content', () => {
-    it('tier1_low has at least 31 entries', () => {
+    it('tier1_low has at least 28 entries', () => {
       const pool = peekArchive(['pbp', 'defenses', 'dodge', 'tier1_low']);
       expect(pool).not.toBeNull();
-      expect(pool!.length).toBeGreaterThanOrEqual(31);
+      expect(pool!.length).toBeGreaterThanOrEqual(28);
     });
 
     it('has persona-keyed categories (desperate, confident, theatrical, grim)', () => {

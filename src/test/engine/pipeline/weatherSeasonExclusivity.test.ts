@@ -17,7 +17,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Clear', 'Rainy', 'Sweltering', 'Breezy', 'Overcast', 'Blazing Sun',
   'Gale', 'Blood Moon', 'Eclipse', 'Sandstorm', 'Zephyr', 'Tornado',
   'Blizzard', 'Dense Fog', 'Mist', 'Thunderstorm', 'Gravity Anomaly',
-  'Ashfall', 'Acid Rain', 'Mana Surge', 'Rainbow', 'Scorching Wind',
+  'Ashfall', 'Acid Rain', 'Mana Surge', 'Rainbow', 'Scorching Wind', 'Wild Magic',
   'Spooky Night', 'Meteor Shower', 'Solar Flare', 'Abyssal Gloom',
   'Cursed Miasma', 'Hailstorm', 'Arcane Storm', 'Blood Rain',
   'Locust Swarm', 'Aurora Borealis', 'Chaotic Winds', 'Aether Storm',

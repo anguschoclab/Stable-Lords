@@ -69,6 +69,7 @@ export const WeatherTypeSchema = z.enum([
   'Spooky Night',
   'Meteor Shower',
   'Solar Flare',
+  'Wild Magic',
   'Abyssal Gloom',
   'Cursed Miasma',
   'Hailstorm',

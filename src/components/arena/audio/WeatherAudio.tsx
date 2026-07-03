@@ -14,6 +14,7 @@ interface WeatherAudioProps {
 const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   Zephyr: 'ambience-wind-breezy',
   'Ember Rain': null,
+  'Wild Magic': 'ambience-blood-moon',
   Clear: null,
   Overcast: null,
   Rainy: 'ambience-rain',

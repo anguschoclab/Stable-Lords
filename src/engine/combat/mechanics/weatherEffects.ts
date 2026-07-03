@@ -21,6 +21,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.0,
     description: 'A gentle, otherworldly breeze that refreshes fighters.',
   },
+  'Wild Magic': {
+    staminaMult: 1.0,
+    initiativeMod: 0,
+    riposteMod: 0,
+    damageMult: 1.1,
+    description: 'Unpredictable magical surges empower strikes.',
+  },
   Clear: {
     staminaMult: 1.0,
     initiativeMod: 0,
@@ -350,6 +357,7 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',
+  'Wild Magic': 'Crackling energy arcs through the arena. Magic is in the air.',
   Clear: null,
   Overcast: null,
   Rainy: 'Rain slicks the sand — footwork will be treacherous today.',

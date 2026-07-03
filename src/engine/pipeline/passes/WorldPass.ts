@@ -39,6 +39,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Arcane Storm',
     'Blood Rain',
     'Aether Storm',
+    'Wild Magic',
   ],
   Summer: [
     'Sweltering',
@@ -96,6 +97,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   // Common (shared)
   Clear: 25,
   Overcast: 15,
+  'Wild Magic': 5,
   // Rare (shared)
   'Blood Moon': 1.5,
   Eclipse: 0.5,

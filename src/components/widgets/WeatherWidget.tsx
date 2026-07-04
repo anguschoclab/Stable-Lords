@@ -29,6 +29,7 @@ const WEATHER_STATS: Record<WeatherType, string> = {
   Ashfall: 'STAMINA DRAIN 140% | INITIATIVE -3',
   'Acid Rain': 'STAMINA DRAIN 130% | RIPOSTE -6 | DAMAGE +20%',
   'Mana Surge': 'STAMINA CONSERVATION 30% | INITIATIVE +10 | RIPOSTE +10 | DAMAGE +50%',
+  'Astral Dust': 'STAMINA DRAIN 120% | INITIATIVE +3 | DAMAGE -10%',
   'Scorching Wind': 'STAMINA DRAIN 130% | INITIATIVE +1',
   'Spooky Night': 'STAMINA DRAIN 110% | INITIATIVE -2 | RIPOSTE -2',
   'Meteor Shower': 'INITIATIVE -3 | RIPOSTE -3 | DAMAGE +15%',

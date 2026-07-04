@@ -155,6 +155,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.5,
     description: 'Raw magical energy empowers every strike and movement.',
   },
+  'Astral Dust': {
+    staminaMult: 1.2,
+    initiativeMod: +3,
+    riposteMod: 0,
+    damageMult: 0.9,
+    description: 'Shimmering star dust makes movements erratic and draining.',
+  },
   'Scorching Wind': {
     staminaMult: 1.3,
     initiativeMod: +1,
@@ -376,6 +383,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Ashfall: 'Gray ash falls like snow. The air itself tastes of death.',
   'Acid Rain': 'Hissing rain burns the skin. This fight will be short and brutal.',
   'Mana Surge': 'The air crackles with power. The fighters move with impossible speed.',
+  'Astral Dust': 'Shimmering astral dust falls from the sky, making movements erratic.',
   'Scorching Wind': 'A hot, dry wind sweeps the arena, parching throats and sapping strength.',
   'Spooky Night':
     'An unnatural chill settles over the arena, and shadows seem to move on their own.',

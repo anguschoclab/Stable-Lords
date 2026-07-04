@@ -409,14 +409,14 @@ function handleWanderingHealer(
       id: rng.uuid('newsletter'),
       week: nextWeek,
       title: e.title,
-      items: [t(e.newsletter[0] || '', { name: chosen.name, gold: goldCost })],
+      items: [t(e.newsletter[1] || '', { name: chosen.name, gold: goldCost })],
     });
   } else {
     ctx.newsletterItems.push({
       id: rng.uuid('newsletter'),
       week: nextWeek,
       title: e.title,
-      items: [t(e.newsletter[1] || '', { gold: goldCost })],
+      items: [t(e.newsletter[0] || '', { gold: goldCost })],
     });
   }
 }

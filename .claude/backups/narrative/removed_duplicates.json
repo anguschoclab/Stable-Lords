@@ -444,5 +444,23 @@
     "removed": "{{attacker}} emerged victorious over {{defender}} in {{hits}} minutes.",
     "kept": "{{attacker}} defeated {{defender}} in {{hits}} minutes.",
     "similarity": 0.7285714285714286
-  }
+  },
+  "{{attacker}}'s {{weapon}} bites deep into the {{bodyPart}}!",
+  "A stiff jab pops {{defender}}'s head back.",
+  "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, singing arc!",
+  "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!",
+  "RIGHT ARM",
+  "LEFT ARM",
+  "RIGHT LEG",
+  "LEFT LEG",
+  "{{defender}} gracefully dodges the blow.",
+  "{{defender}} throws up their weapon in a blind panic, somehow managing a block.",
+  "{{defender}} catches the blow on their SHIELD.",
+  "{{attacker}} smashes right through {{defender}}'s attempted parry!",
+  "{{name}} hops back to a fighting stance.",
+  "It feels like an eternity as {{defender}} crumbles to the arena floor.",
+  "A blur of motion on the ground!",
+  "A collective gasp echoes through the coliseum.",
+  "Precision meets raw power in this clash.",
+  "The crowd howls for a brutal finish!"
 ]

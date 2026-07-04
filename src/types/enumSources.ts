@@ -28,6 +28,7 @@ export const WEATHER_TYPES = [
   'Mana Surge',
   'Rainbow',
   'Scorching Wind',
+  'Wild Magic',
   'Spooky Night',
   'Meteor Shower',
   'Solar Flare',

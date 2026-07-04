@@ -32,6 +32,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Mana Surge',
   'Rainbow',
   'Scorching Wind',
+  'Wild Magic',
   'Spooky Night',
   'Meteor Shower',
   'Solar Flare',
@@ -158,7 +159,7 @@ describe('Blood Rain Feature', () => {
 
   it('should roll Blood Rain weather when rng yields high enough value in Spring', () => {
     const rng = new SeededRNGService(123);
-    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.98);
+    const mock = vi.spyOn(rng, 'next').mockReturnValue(0.92);
     const weather = rollWeather(rng, 'Spring');
     expect(weather).toBe('Blood Rain');
     mock.mockRestore();

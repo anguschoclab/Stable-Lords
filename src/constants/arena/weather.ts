@@ -38,6 +38,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-primary/20',
     description: '15% less stamina drain in combat. Fighters feel refreshed.',
   },
+  'Wild Magic': {
+    icon: Sparkles,
+    colorClass: 'text-arena-pop',
+    bgClass: 'bg-arena-pop/10',
+    borderClass: 'border-arena-pop/20',
+    description: '10% more damage across the board due to wild magic.',
+  },
   Clear: {
     icon: Sun,
     colorClass: 'text-arena-gold',

@@ -1,12 +1,181 @@
 [
   {
-    "file": "src/data/arenas.ts",
-    "content": "The Shattered Echoes",
-    "duplicateOf": "The Shattered Echo"
-  },
-  {
     "file": "src/engine/narrative/loreGenerator.ts",
     "content": "Unearthed alive from a shallow grave behind the old executioner's block",
     "duplicateOf": "Raised in the shadow of the executioner's block"
+  },
+  {
+    "path": "strikes.generic",
+    "removed": "savagely connects with {{defender}}'s {{bodyPart}}",
+    "kept": "{{defender}} grunts as {{attacker}}'s strike connects solidly with the {{bodyPart}}.",
+    "similarity": "0.83"
+  },
+  {
+    "path": "strikes.bashing.fatal",
+    "removed": "{{attacker}} brings {{possessive}} {{weapon}} down like a thunderbolt, obliterating {{defender}}'s {{bodyPart}}.",
+    "kept": "{{attacker}} heaves {{possessive}} {{weapon}} overhead and brings it down like a falling mountain, smashing {{defender}}'s {{bodyPart}} into pulp.",
+    "similarity": "0.83"
+  },
+  {
+    "path": "strikes.piercing.solid",
+    "removed": "{{attacker}}'s {{weapon}} bites deep into the {{bodyPart}}!",
+    "kept": "{{attacker}}'s {{weapon}} punches through {{defender}}'s guard and bites into the {{bodyPart}}!",
+    "similarity": "0.88"
+  },
+  {
+    "path": "strikes.fist.solid",
+    "removed": "A stiff jab pops {{defender}}'s head back.",
+    "kept": "A stiff jab from {{attacker}} snaps {{defender}}'s head back.",
+    "similarity": "0.88"
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} hacks wildly with {{possessive}} {{weapon}}, a flurry of relentless slashes!",
+    "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
+    "similarity": "0.83"
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, singing arc!",
+    "kept": "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, punishing arc, biting deeply into {{defender}}'s flesh.",
+    "similarity": "0.89"
+  },
+  {
+    "path": "pbp.attacks.slashing",
+    "removed": "{{attacker}} carves a brutal crescent through the air with {{possessive}} {{weapon}}.",
+    "kept": "{{attacker}} carves the air with a brutal downward slash from {{possessive}} {{weapon}}!",
+    "similarity": "0.82"
+  },
+  {
+    "path": "pbp.attacks.bashing",
+    "removed": "Like a falling boulder, {{attacker}} brings {{possessive}} {{weapon}} crashing down with horrific force.",
+    "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!",
+    "similarity": "0.88"
+  },
+  {
+    "path": "pbp.hit_locations.right arm",
+    "removed": "RIGHT UPPER ARM",
+    "kept": "RIGHT ARM",
+    "similarity": "1.00"
+  },
+  {
+    "path": "pbp.hit_locations.left arm",
+    "removed": "LEFT UPPER ARM",
+    "kept": "LEFT ARM",
+    "similarity": "1.00"
+  },
+  {
+    "path": "pbp.hit_locations.right leg",
+    "removed": "RIGHT LOWER LEG",
+    "kept": "RIGHT LEG",
+    "similarity": "1.00"
+  },
+  {
+    "path": "pbp.hit_locations.left leg",
+    "removed": "LEFT LOWER LEG",
+    "kept": "LEFT LEG",
+    "similarity": "1.00"
+  },
+  {
+    "path": "pbp.defenses.dodge.tier2_medium",
+    "removed": "{{defender}} makes it look easy as he gracefully dodges the blow.",
+    "kept": "{{defender}} gracefully dodges the blow.",
+    "similarity": "1.00"
+  },
+  {
+    "path": "pbp.defenses.parry.desperate",
+    "removed": "{{defender}} throws up their weapon in a blind panic, somehow managing a block.",
+    "kept": "{{defender}} throws up their weapon in a blind panic, somehow managing to deflect the blow!",
+    "similarity": "0.85"
+  },
+  {
+    "path": "pbp.defenses.parry.confident",
+    "removed": "With a flick of the wrist, {{defender}} confidently deflects the strike.",
+    "kept": "With a flick of the wrist, {{defender}} effortlessly turns the heavy strike aside.",
+    "similarity": "0.82"
+  },
+  {
+    "path": "pbp.defenses.shield.success",
+    "removed": "{{defender}} catches the blow on {{possessive}} shield rim.",
+    "kept": "{{defender}} catches the blow on their SHIELD.",
+    "similarity": "0.86"
+  },
+  {
+    "path": "pbp.defenses.parry_break",
+    "removed": "{{attacker}} smashes right through {{defender}}'s attempted parry!",
+    "kept": "{{attacker}} smashes straight through {{defender}}'s attempted parry.",
+    "similarity": "0.94"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} scrambles back to {{possessive}} feet.",
+    "kept": "{{name}} springs back to {{possessive}} feet in an instant, moving with impossible, fluid speed.",
+    "similarity": "0.83"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} springs back to {{possessive}} feet in an instant, refusing to show weakness!",
+    "kept": "{{name}} scrambles back to {{possessive}} feet.",
+    "similarity": "0.83"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} scrambles backward like a cornered rat, desperately returning to {{possessive}} feet.",
+    "kept": "{{name}} scrambles back to {{possessive}} feet.",
+    "similarity": "0.83"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} scrambles back to their feet in a blind panic, desperately seeking their weapon.",
+    "kept": "{{name}} scrambles back to {{possessive}} feet.",
+    "similarity": "0.83"
+  },
+  {
+    "path": "pbp.knockdown.recovery",
+    "removed": "{{name}} uses {{possessive}} weapon as a crutch to drag {{reflexive}} back into a fighting stance.",
+    "kept": "{{name}} hops back to a fighting stance.",
+    "similarity": "0.86"
+  },
+  {
+    "path": "pbp.knockdown.pacing.slow",
+    "removed": "It feels like an eternity as {{defender}} crumbles to the arena floor.",
+    "kept": "It feels like an eternity as {{defender}} crumples to the arena floor.",
+    "similarity": "0.99"
+  },
+  {
+    "path": "pbp.knockdown.pacing.fast",
+    "removed": "A blur of motion on the ground!",
+    "kept": "In a blur of motion, {{defender}} is violently hurled to the ground!",
+    "similarity": "0.86"
+  },
+  {
+    "path": "pbp.pacing.tempo.equal",
+    "removed": "The warriors appear equal in overall abilities.",
+    "kept": "The warriors appear equal in skill.",
+    "similarity": "0.83"
+  },
+  {
+    "path": "pbp.reactions.gasp",
+    "removed": "A collective gasp ripples through the coliseum as the brutal reality of the strike sets in.",
+    "kept": "A collective gasp echoes through the coliseum.",
+    "similarity": "0.86"
+  },
+  {
+    "path": "pbp.context.style_matchups.aimed_blow_vs_bashing",
+    "removed": "Precision meets raw power in this clash.",
+    "kept": "Precision meets power in this fascinating clash!",
+    "similarity": "0.86"
+  },
+  {
+    "path": "conclusions.Incapacitated",
+    "removed": "The ARENAMASTER halts the bout! {{defender}} cannot continue. {{attacker}} is the victor!",
+    "kept": "{{defender}} motions to the ARENAMASTER that {{pronoun}} cannot continue! {{attacker}} is the victor of the match!",
+    "similarity": "0.83"
+  },
+  {
+    "path": "crowd_reactions.Bloodthirsty",
+    "removed": "The crowd howls for a brutal execution, their bloodlust practically vibrating the arena stones!",
+    "kept": "The crowd howls for a brutal finish!",
+    "similarity": "0.86"
   }
 ]

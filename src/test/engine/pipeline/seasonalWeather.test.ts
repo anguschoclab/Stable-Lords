@@ -52,6 +52,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Shimmering Heat',
   'Crystal Rain',
   'Rain of Frogs',
+  'Astral Dust',
   'Chaos Storm', 'Chaos Squall',
 ];
 

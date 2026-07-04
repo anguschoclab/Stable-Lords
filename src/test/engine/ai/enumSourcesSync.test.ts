@@ -14,7 +14,7 @@ describe('enumSources sync with WeatherType', () => {
     'Cursed Miasma', 'Hailstorm', 'Arcane Storm', 'Blood Rain',
     'Locust Swarm', 'Aurora Borealis', 'Chaotic Winds', 'Aether Storm',
     'Mirage', 'Ember Rain', 'Wildfire Smoke', 'Blood Fog',
-    'Shimmering Heat', 'Crystal Rain', 'Rain of Frogs', 'Chaos Storm', 'Chaos Squall',
+    'Shimmering Heat', 'Crystal Rain', 'Rain of Frogs', 'Chaos Storm', 'Chaos Squall', 'Astral Dust',
   ]);
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {

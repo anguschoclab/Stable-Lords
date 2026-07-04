@@ -23,7 +23,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Locust Swarm', 'Aurora Borealis', 'Chaotic Winds', 'Aether Storm',
   'Mirage', 'Ember Rain', 'Wildfire Smoke', 'Blood Fog',
   'Shimmering Heat', 'Rain of Frogs',
-  'Crystal Rain',
+  'Crystal Rain', 'Astral Dust',
   'Chaos Storm', 'Chaos Squall',
 ];
 

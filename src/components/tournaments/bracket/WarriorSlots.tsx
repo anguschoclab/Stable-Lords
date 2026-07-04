@@ -39,8 +39,11 @@ export function WarriorSlots({
     <div className="p-3 space-y-1">
       {/* Warrior A */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={`Select ${resolveWarriorName(gameState, bout.warriorIdA, 'Unknown')}`}
         className={cn(
-          'flex items-center justify-between p-2 rounded-none transition-colors',
+          'flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
           isAChosen
             ? 'bg-primary/10 text-primary font-bold shadow-inner'
             : isDChosen
@@ -50,6 +53,12 @@ export function WarriorSlots({
           isAChosen && championship && 'bg-arena-gold/20 text-arena-gold'
         )}
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
       >
         <div className="flex items-center gap-2 truncate">
           <div
@@ -94,8 +103,11 @@ export function WarriorSlots({
 
       {/* Warrior D */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label={isBye ? 'Bye' : `Select ${resolveWarriorName(gameState, bout.warriorIdD, 'Unknown')}`}
         className={cn(
-          'flex items-center justify-between p-2 rounded-none transition-colors',
+          'flex items-center justify-between p-2 rounded-none transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
           isDChosen
             ? 'bg-primary/10 text-primary font-bold shadow-inner'
             : isAChosen
@@ -104,6 +116,12 @@ export function WarriorSlots({
           isBye && 'opacity-50 italic text-muted-foreground'
         )}
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
       >
         <div className="flex items-center gap-2 truncate">
           <div

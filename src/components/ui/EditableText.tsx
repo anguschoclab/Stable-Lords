@@ -116,8 +116,9 @@ export function EditableText({
     <div
       role="button"
       tabIndex={0}
+      aria-label={`Edit ${label || value}`}
       className={cn(
-        'group relative flex items-center gap-2 cursor-pointer transition-all duration-300',
+        'group relative flex items-center gap-2 cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset rounded-sm',
         className
       )}
       onClick={() => setIsEditing(true)}

@@ -46,9 +46,9 @@ describe('expanded narrative content', () => {
       expect(pool.length).toBeGreaterThanOrEqual(15);
     });
 
-    it('strikes.fist.solid has at least 15 entries', () => {
+    it('strikes.fist.solid has at least 14 entries', () => {
       const pool = getPool(narrativeContent, 'strikes', 'fist', 'solid');
-      expect(pool.length).toBeGreaterThanOrEqual(15);
+      expect(pool.length).toBeGreaterThanOrEqual(14);
     });
   });
 

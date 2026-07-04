@@ -52,3 +52,7 @@
 **Vulnerability:** Arbitrary permission requests (camera, microphone, geolocation) can be made by web contents.
 **Learning:** Electron does not deny permissions by default, which can expose the application if a webview or malicious script requests them.
 **Prevention:** Implement session.defaultSession.setPermissionRequestHandler to explicitly deny unneeded permissions by default.
+## 2026-07-04 - [Add bounds to IPC Handlers]
+**Vulnerability:** Unbounded input strings and numbers in Electron IPC Handlers (DoS/resource exhaustion risk)
+**Learning:** The renderer process shouldn't be fully trusted; unbounded parameters passed to fs.writeFile or Notification could cause memory issues.
+**Prevention:** Always implement explicit maximum bounds (lengths for strings/arrays, max values for numbers) on all parameters accepted from IPC.

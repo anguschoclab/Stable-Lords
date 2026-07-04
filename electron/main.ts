@@ -369,12 +369,12 @@ function createTray() {
 function registerIPCHandlers() {
   // Validate slot ID format
   function validateSlotId(slotId: string): boolean {
-    return typeof slotId === 'string' && slotId.length > 0 && /^[a-zA-Z0-9_-]+$/.test(slotId);
+    return typeof slotId === 'string' && slotId.length > 0 && slotId.length <= 64 && /^[a-zA-Z0-9_-]+$/.test(slotId);
   }
 
   // Validate season and week numbers
   function validateSeasonWeek(value: number): boolean {
-    return typeof value === 'number' && Number.isInteger(value) && value >= 0;
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= 1000;
   }
 
   // Validate year
@@ -384,7 +384,7 @@ function registerIPCHandlers() {
 
   // Validate bout ID
   function validateBoutId(boutId: string): boolean {
-    return typeof boutId === 'string' && boutId.length > 0 && /^[a-zA-Z0-9_-]+$/.test(boutId);
+    return typeof boutId === 'string' && boutId.length > 0 && boutId.length <= 64 && /^[a-zA-Z0-9_-]+$/.test(boutId);
   }
 
   ipcMain.handle('save-game', async (_event, slotId, state) => {
@@ -532,8 +532,8 @@ function registerIPCHandlers() {
       if (!validateSeasonWeek(week)) {
         return { success: false, error: 'Invalid week' };
       }
-      if (typeof markdown !== 'string') {
-        return { success: false, error: 'Invalid markdown format' };
+      if (typeof markdown !== 'string' || markdown.length > 100000) {
+        return { success: false, error: 'Invalid markdown format or size too large' };
       }
       await ensureSaveDirectory();
       const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'gazettes');
@@ -581,14 +581,14 @@ function registerIPCHandlers() {
 
   // IPC Handlers for store
   ipcMain.handle('store-get', async (_event, key) => {
-    if (typeof key !== 'string' || key.length === 0) {
+    if (typeof key !== 'string' || key.length === 0 || key.length > 255) {
       return null;
     }
     return store.get(key);
   });
 
   ipcMain.handle('store-set', async (_event, key, value) => {
-    if (typeof key !== 'string' || key.length === 0) {
+    if (typeof key !== 'string' || key.length === 0 || key.length > 255) {
       return { success: false, error: 'Invalid key' };
     }
     store.set(key, value);
@@ -597,7 +597,7 @@ function registerIPCHandlers() {
   });
 
   ipcMain.handle('store-delete', async (_event, key) => {
-    if (typeof key !== 'string' || key.length === 0) {
+    if (typeof key !== 'string' || key.length === 0 || key.length > 255) {
       return { success: false, error: 'Invalid key' };
     }
     store.delete(key);
@@ -619,10 +619,10 @@ function registerIPCHandlers() {
     if (!options || typeof options !== 'object') {
       return { success: false, error: 'Invalid options' };
     }
-    if (typeof options.title !== 'string' || options.title.length === 0) {
+    if (typeof options.title !== 'string' || options.title.length === 0 || options.title.length > 255) {
       return { success: false, error: 'Invalid notification title' };
     }
-    if (typeof options.body !== 'string' || options.body.length === 0) {
+    if (typeof options.body !== 'string' || options.body.length === 0 || options.body.length > 1000) {
       return { success: false, error: 'Invalid notification body' };
     }
     new Notification({

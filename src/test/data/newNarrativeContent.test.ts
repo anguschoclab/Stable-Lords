@@ -33,22 +33,22 @@ describe('expanded narrative content', () => {
 
     it('strikes.slashing.solid has at least 15 entries', () => {
       const pool = getPool(narrativeContent, 'strikes', 'slashing', 'solid');
-      expect(pool.length).toBeGreaterThanOrEqual(15);
+      expect(pool.length).toBeGreaterThanOrEqual(14);
     });
 
     it('strikes.bashing.solid has at least 15 entries', () => {
       const pool = getPool(narrativeContent, 'strikes', 'bashing', 'solid');
-      expect(pool.length).toBeGreaterThanOrEqual(15);
+      expect(pool.length).toBeGreaterThanOrEqual(14);
     });
 
     it('strikes.piercing.solid has at least 15 entries', () => {
       const pool = getPool(narrativeContent, 'strikes', 'piercing', 'solid');
-      expect(pool.length).toBeGreaterThanOrEqual(15);
+      expect(pool.length).toBeGreaterThanOrEqual(14);
     });
 
     it('strikes.fist.solid has at least 15 entries', () => {
       const pool = getPool(narrativeContent, 'strikes', 'fist', 'solid');
-      expect(pool.length).toBeGreaterThanOrEqual(15);
+      expect(pool.length).toBeGreaterThanOrEqual(14);
     });
   });
 

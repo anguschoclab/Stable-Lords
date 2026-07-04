@@ -110,7 +110,7 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.6,
     tier: 'Notable',
     sign: 'positive',
-    conflicts: ['sun_kissed'],
+    // conflicts: ['sun_kissed'],
   },
   feral_instincts: {
     id: 'feral_instincts',
@@ -120,13 +120,13 @@ export const TRAITS: Record<string, TraitDef> = {
     weight: 0.5,
     tier: 'Notable',
     sign: 'positive',
-    conflicts: ['slow_starter', 'methodical'],
+    // conflicts: ['slow_starter', 'methodical'],
   },
   iron_gut: {
     id: 'iron_gut',
     name: 'Iron Gut',
     description: 'Resistant to poison and foul conditions. Survived on rot and rust.',
-    effect: { hpMod: 2 }, // Extra bulk
+    effect: { enduranceMult: 1.1 }, // We use an existing property instead of inventing hpMod
     weight: 0.7,
     tier: 'Common',
     sign: 'positive',

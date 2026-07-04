@@ -1,6 +1,12 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Torn from the suffocating grasp of the sunken asylum of Dross',
+  'Surviving the Night of Ash by hiding beneath the floorboards of a ruined cathedral',
+  'Raised among the stray hounds that roam the forgotten plague wards',
+  'Discovered half-starved in the rusted cages of the Black Iron Orphanage',
+  'Emerging from the smoke-choked alleys where the unwanted are left to the rats',
+  'Found wandering the silent, frozen catacombs below the city',
   'Discovered half-frozen beneath the whispering gargoyles of Blackwood Orphanage',
   'Raised in the sunless undercrofts where the city discards its unwanted',
   'Surviving the Crimson Winter by huddling near the slag heaps of the ironworks',
@@ -110,6 +116,10 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would systematically dissect caught rodents to understand their anatomy',
+  'learned to sleep with a clenched fist and one eye open',
+  'was infamous for throwing blinding dust into the eyes of older bullies',
+  'would practice parrying strikes with a splintered table leg in the dark',
   'was known for sharpening rusted iron scraps during sermons',
   'learned early that a broken glass bottle commands more respect than tears',
   'would endure the matrons\' beatings without making a single sound',
@@ -172,6 +182,10 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until the day they dragged their abuser into the light and left them broken',
+  'realizing that mercy in the undercity is just an invitation to be killed',
+  'waiting for the moment the gates would close and the true test would begin',
+  'knowing that the only escape from the gutters was paved in blood',
   'realizing that the only true law of the streets was written in blood',
   'until the day they dragged a larger bully into the shadowed alleys and emerged alone',
   'waiting for the moment the arena doors would open and swallow their past',

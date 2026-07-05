@@ -48,7 +48,7 @@ export function TrainerCard({ trainer, onFire, owned, action }: TrainerCardProps
             trainer.tier === 'Master'
               ? 'bg-arena-gold'
               : trainer.tier === 'Seasoned'
-                ? 'bg-stone-500'
+                ? 'bg-neutral-500'
                 : 'bg-neutral-800'
           )}
         />

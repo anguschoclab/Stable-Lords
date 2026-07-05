@@ -289,11 +289,11 @@ export function ThunderstormEffect() {
 export function AshfallEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute inset-0 bg-stone-900/10 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-neutral-900/10 mix-blend-multiply" />
       {Array.from({ length: 40 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1 bg-stone-500/40 animate-ash-fall"
+          className="absolute w-1 h-1 bg-neutral-500/40 animate-ash-fall"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 5}s`,
@@ -334,11 +334,11 @@ export function MeteorShowerEffect() {
 export function AcidRainEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute inset-0 bg-lime-900/5 mix-blend-color" />
+      <div className="absolute inset-0 bg-arena-pop/5 mix-blend-color" />
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-px h-5 bg-lime-400/30 animate-rain"
+          className="absolute w-px h-5 bg-arena-pop/30 animate-rain"
           style={{
             left: `${cryptoRandom() * 100}%`,
             animationDelay: `${cryptoRandom() * 2}s`,
@@ -347,7 +347,7 @@ export function AcidRainEffect() {
         />
       ))}
       {/* Acid sizzle glow on floor */}
-      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-lime-500/5 blur-xl animate-pulse" />
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-arena-pop/5 blur-xl animate-pulse" />
     </div>
   );
 }
@@ -370,7 +370,7 @@ export function ManaSurgeEffect() {
       {Array.from({ length: 25 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1.5 h-1.5 bg-fuchsia-400/40 rounded-full animate-mana-spark"
+          className="absolute w-1.5 h-1.5 bg-arena-pop/40 rounded-full animate-mana-spark"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -392,11 +392,11 @@ export function ManaSurgeEffect() {
 export function LocustSwarmEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 bg-amber-950/10 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-arena-gold/10 mix-blend-multiply" />
       {Array.from({ length: 60 }).map((_, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1 bg-stone-800/70 rounded-full animate-mana-spark"
+          className="absolute w-1 h-1 bg-neutral-800/70 rounded-full animate-mana-spark"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -432,7 +432,7 @@ export function TornadoEffect() {
       {Array.from({ length: 30 }).map((_, i) => (
         <div
           key={i}
-          className="absolute h-px w-20 bg-stone-300/25 animate-wind"
+          className="absolute h-px w-20 bg-neutral-300/25 animate-wind"
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: '-20%',
@@ -445,7 +445,7 @@ export function TornadoEffect() {
       {Array.from({ length: 25 }).map((_, i) => (
         <div
           key={`d${i}`}
-          className="absolute w-1 h-1 bg-stone-600/60 rounded-sm animate-mana-spark"
+          className="absolute w-1 h-1 bg-neutral-600/60 rounded-sm animate-mana-spark"
           style={
             {
               left: `${30 + cryptoRandom() * 40}%`,
@@ -479,7 +479,7 @@ export function ScorchingWindEffect() {
       {Array.from({ length: 22 }).map((_, i) => (
         <div
           key={i}
-          className="absolute h-px w-24 bg-gradient-to-r from-transparent via-amber-300/30 to-transparent animate-wind"
+          className="absolute h-px w-24 bg-gradient-to-r from-transparent via-arena-gold/30 to-transparent animate-wind"
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: '-20%',
@@ -619,13 +619,13 @@ export function ChaoticWindsEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Hazy sand atmosphere */}
-      <div className="absolute inset-0 bg-amber-900/10 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-arena-gold/10 mix-blend-multiply" />
 
       {/* Bi-directional wind streaks - left to right */}
       {Array.from({ length: 25 }).map((_, i) => (
         <div
           key={`lr-${i}`}
-          className="absolute h-px bg-gradient-to-r from-transparent via-amber-400/25 to-transparent animate-wind"
+          className="absolute h-px bg-gradient-to-r from-transparent via-arena-gold/25 to-transparent animate-wind"
           style={{
             top: `${cryptoRandom() * 100}%`,
             left: '-20%',
@@ -640,7 +640,7 @@ export function ChaoticWindsEffect() {
       {Array.from({ length: 25 }).map((_, i) => (
         <div
           key={`rl-${i}`}
-          className="absolute h-px bg-gradient-to-l from-transparent via-stone-400/20 to-transparent"
+          className="absolute h-px bg-gradient-to-l from-transparent via-neutral-400/20 to-transparent"
           style={{
             top: `${cryptoRandom() * 100}%`,
             right: '-20%',
@@ -665,7 +665,7 @@ export function ChaoticWindsEffect() {
       {Array.from({ length: 35 }).map((_, i) => (
         <div
           key={`d-${i}`}
-          className="absolute w-0.5 h-0.5 bg-amber-600/50 rounded-full animate-chaotic-drift"
+          className="absolute w-0.5 h-0.5 bg-arena-gold/50 rounded-full animate-chaotic-drift"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -708,7 +708,7 @@ export function EmberRainEffect() {
       {Array.from({ length: 15 }).map((_, i) => (
         <div
           key={`smoke-${i}`}
-          className="absolute w-16 h-16 bg-stone-500/10 rounded-full blur-xl animate-chaotic-drift"
+          className="absolute w-16 h-16 bg-neutral-500/10 rounded-full blur-xl animate-chaotic-drift"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -831,7 +831,7 @@ export function GravityAnomalyEffect() {
       {Array.from({ length: 30 }).map((_, i) => (
         <div
           key={`debris-${i}`}
-          className="absolute w-1 h-1 bg-stone-400/60 rounded-sm animate-chaotic-drift"
+          className="absolute w-1 h-1 bg-neutral-400/60 rounded-sm animate-chaotic-drift"
           style={
             {
               left: `${cryptoRandom() * 100}%`,
@@ -867,7 +867,7 @@ export function WildfireSmokeEffect() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Dark smoky haze */}
-      <div className="absolute inset-0 bg-stone-900/30 mix-blend-multiply" />
+      <div className="absolute inset-0 bg-neutral-900/30 mix-blend-multiply" />
       {/* Billowing smoke clouds — large, slow, rising */}
       {Array.from({ length: 12 }).map((_, i) => (
         <div

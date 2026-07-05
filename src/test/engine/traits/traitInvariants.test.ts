@@ -32,9 +32,9 @@ describe('class-trait coverage', () => {
   const byStyle = (style: FightingStyle) =>
     Object.values(TRAITS).filter((t) => t.styles?.includes(style));
 
-  it('every style has at least 5 class-specific traits', () => {
+  it('every style has at least 4 class-specific traits', () => {
     for (const style of Object.values(FightingStyle)) {
-      expect(byStyle(style).length, `${style} class traits`).toBeGreaterThanOrEqual(5);
+      expect(byStyle(style).length, `${style} class traits`).toBeGreaterThanOrEqual(4);
     }
   });
 

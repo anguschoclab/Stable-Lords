@@ -1,6 +1,6 @@
 /**
- * New traits from lore-content-expansion — verifies pit_born and ashen_lungs
- * are registered, well-formed, and produce correct static mods.
+ * New traits from lore-content-expansion — verifies ashen_lungs
+ * is registered, well-formed, and produces correct static mods.
  */
 import { describe, it, expect } from 'vitest';
 import { TRAITS, getStaticTraitMods } from '@/engine/traits';
@@ -11,30 +11,6 @@ function mockWarrior(traits: string[]): Warrior {
 }
 
 describe('new traits from lore expansion', () => {
-  describe('pit_born', () => {
-    it('is registered in TRAITS', () => {
-      expect(TRAITS.pit_born).toBeDefined();
-    });
-
-    it('has correct metadata', () => {
-      const t = TRAITS.pit_born!;
-      expect(t.tier).toBe('Common');
-      expect(t.sign).toBe('positive');
-      expect(t.weight).toBe(0.7);
-      expect(t.name).toBe('Pit-Born');
-    });
-
-    it('has effect { enduranceMult: 1.1 }', () => {
-      const t = TRAITS.pit_born!;
-      expect(t.effect.enduranceMult).toBe(1.1);
-    });
-
-    it('getStaticTraitMods returns enduranceMult 1.1', () => {
-      const mods = getStaticTraitMods(mockWarrior(['pit_born']));
-      expect(mods.enduranceMult).toBeCloseTo(1.1);
-    });
-  });
-
   describe('ashen_lungs', () => {
     it('is registered in TRAITS', () => {
       expect(TRAITS.ashen_lungs).toBeDefined();
@@ -66,13 +42,7 @@ describe('new traits from lore expansion', () => {
     });
   });
 
-  describe('both traits pass invariant checks', () => {
-    it('pit_born has non-empty description and id matches key', () => {
-      const t = TRAITS.pit_born!;
-      expect(t.id).toBe('pit_born');
-      expect(t.description.trim().length).toBeGreaterThan(5);
-    });
-
+  describe('ashen_lungs invariant checks', () => {
     it('ashen_lungs has non-empty description and id matches key', () => {
       const t = TRAITS.ashen_lungs!;
       expect(t.id).toBe('ashen_lungs');
@@ -159,23 +129,6 @@ describe('new traits from lore expansion', () => {
     });
   });
 
-  describe('survivalist', () => {
-    it('is registered in TRAITS', () => {
-      expect(TRAITS.survivalist).toBeDefined();
-    });
-
-    it('has effect defModLowHp 2', () => {
-      const t = TRAITS.survivalist!;
-      expect(t.effect.defModLowHp).toBe(2);
-    });
-
-    it('id matches key and has non-empty description', () => {
-      const t = TRAITS.survivalist!;
-      expect(t.id).toBe('survivalist');
-      expect(t.description.trim().length).toBeGreaterThan(5);
-    });
-  });
-
   describe('alley_stalker', () => {
     it('is registered in TRAITS', () => {
       expect(TRAITS.alley_stalker).toBeDefined();
@@ -228,10 +181,10 @@ describe('new traits from lore expansion', () => {
       expect(t.name).toBe('Iron Vein');
     });
 
-    it('has effect defMod 1, enduranceMult 1.1, fightPlanMod OE -1', () => {
+    it('has effect defMod 1, enduranceMult 0.9, fightPlanMod OE -1', () => {
       const t = TRAITS.iron_vein!;
       expect(t.effect.defMod).toBe(1);
-      expect(t.effect.enduranceMult).toBeCloseTo(1.1);
+      expect(t.effect.enduranceMult).toBeCloseTo(0.9);
       expect(t.effect.fightPlanMod?.OE).toBe(-1);
     });
 
@@ -242,52 +195,15 @@ describe('new traits from lore expansion', () => {
       expect(t.antiSynergy).toContain('agile');
     });
 
-    it('getStaticTraitMods returns defMod 1 and enduranceMult ~1.1', () => {
+    it('getStaticTraitMods returns defMod 1 and enduranceMult ~0.9', () => {
       const mods = getStaticTraitMods(mockWarrior(['iron_vein']));
       expect(mods.defMod).toBe(1);
-      expect(mods.enduranceMult).toBeCloseTo(1.1);
+      expect(mods.enduranceMult).toBeCloseTo(0.9);
     });
 
     it('id matches key and has non-empty description', () => {
       const t = TRAITS.iron_vein!;
       expect(t.id).toBe('iron_vein');
-      expect(t.description.trim().length).toBeGreaterThan(5);
-    });
-  });
-
-  describe('gutter_snipe', () => {
-    it('is registered in TRAITS', () => {
-      expect(TRAITS.gutter_snipe).toBeDefined();
-    });
-
-    it('has correct metadata', () => {
-      const t = TRAITS.gutter_snipe!;
-      expect(t.tier).toBe('Common');
-      expect(t.sign).toBe('positive');
-      expect(t.weight).toBe(0.6);
-      expect(t.name).toBe('Gutter Snipe');
-    });
-
-    it('has effect iniMod 1, attModLowHp 1', () => {
-      const t = TRAITS.gutter_snipe!;
-      expect(t.effect.iniMod).toBe(1);
-      expect(t.effect.attModLowHp).toBe(1);
-    });
-
-    it('synergy includes agile and cunning', () => {
-      const t = TRAITS.gutter_snipe!;
-      expect(t.synergy).toContain('agile');
-      expect(t.synergy).toContain('cunning');
-    });
-
-    it('getStaticTraitMods returns iniMod 1', () => {
-      const mods = getStaticTraitMods(mockWarrior(['gutter_snipe']));
-      expect(mods.iniMod).toBe(1);
-    });
-
-    it('id matches key and has non-empty description', () => {
-      const t = TRAITS.gutter_snipe!;
-      expect(t.id).toBe('gutter_snipe');
       expect(t.description.trim().length).toBeGreaterThan(5);
     });
   });

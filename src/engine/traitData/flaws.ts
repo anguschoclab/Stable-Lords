@@ -56,15 +56,6 @@ export const NEW_FLAWS: Record<string, TraitDef> = {
     tier: 'Flaw',
     sign: 'negative',
   },
-  wild: {
-    id: 'wild',
-    name: 'Wild',
-    description: '−1 decisiveness — wastes openings on undisciplined swings.',
-    effect: { decMod: -1 },
-    weight: 0.35,
-    tier: 'Flaw',
-    sign: 'negative',
-  },
   coward: {
     id: 'coward',
     name: 'Coward',

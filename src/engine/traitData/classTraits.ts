@@ -25,16 +25,6 @@ export const CLASS_TRAITS: Record<string, TraitDef> = {
     sign: 'positive',
     styles: [S.AimedBlow],
   },
-  armor_chink: {
-    id: 'armor_chink',
-    name: 'Armor Chink',
-    description: '+1 damage — finds the seam in any plate.',
-    effect: { dmgBonus: 1 },
-    weight: 0.6,
-    tier: 'Notable',
-    sign: 'positive',
-    styles: [S.AimedBlow],
-  },
   dead_aim: {
     id: 'dead_aim',
     name: 'Dead Aim',

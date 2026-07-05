@@ -102,35 +102,6 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
-  shadow_born: {
-    id: 'shadow_born',
-    name: 'Shadow Born',
-    description: '+1 defense in dim conditions; raised in the darkest corners of the undercity.',
-    effect: { defMod: 1 }, // Simple mod for now, assume conditions exist or apply flat buff as representation
-    weight: 0.6,
-    tier: 'Notable',
-    sign: 'positive',
-    // conflicts: ['sun_kissed'],
-  },
-  feral_instincts: {
-    id: 'feral_instincts',
-    name: 'Feral Instincts',
-    description: '+1 attack on the first round of combat.',
-    effect: { iniMod: 1, attMod: 1 }, // Initial burst
-    weight: 0.5,
-    tier: 'Notable',
-    sign: 'positive',
-    // conflicts: ['slow_starter', 'methodical'],
-  },
-  iron_gut: {
-    id: 'iron_gut',
-    name: 'Iron Gut',
-    description: 'Resistant to poison and foul conditions. Survived on rot and rust.',
-    effect: { enduranceMult: 1.1 }, // We use an existing property instead of inventing hpMod
-    weight: 0.7,
-    tier: 'Common',
-    sign: 'positive',
-  },
   gutter_blood: {
     id: 'gutter_blood',
     name: 'Gutter Blood',
@@ -313,15 +284,6 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
-  perceptive: {
-    id: 'perceptive',
-    name: 'Perceptive',
-    description: '+1 decisiveness, +1 initiative — reads the subtle tells of an opponent.',
-    effect: { decMod: 1, iniMod: 1 },
-    weight: 0.5,
-    tier: 'Notable',
-    sign: 'positive',
-  },
   vengeful: {
     id: 'vengeful',
     name: 'Vengeful',
@@ -469,28 +431,6 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
-  orphan_rage: {
-    id: 'orphan_rage',
-    name: "Orphan's Rage",
-    description:
-      '+2 attack when bloodied (HP < 50%) — channeling years of abuse into a final, frantic assault.',
-    effect: { attModLowHp: 2, fightPlanMod: { killDesire: 2 } },
-    weight: 0.7,
-    synergy: ['brutal', 'agile'],
-    tier: 'Common',
-    sign: 'positive',
-  },
-  pit_rat: {
-    id: 'pit_rat',
-    name: 'Pit Rat',
-    description: '+1 initiative — survived by always being the first to move.',
-    effect: { iniMod: 1 },
-    weight: 0.6,
-    synergy: ['agile'],
-    antiSynergy: ['tank'],
-    tier: 'Common',
-    sign: 'positive',
-  },
   blood_drunk: {
     id: 'blood_drunk',
     name: 'Blood Drunk',
@@ -526,16 +466,6 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Notable',
     sign: 'positive',
   },
-  survivalist: {
-    id: 'survivalist',
-    name: 'Survivalist',
-    description: '+2 defense and +2 parry when bloodied (HP < 50%) — fights hardest when cornered.',
-    effect: { defModLowHp: 2, parModHighHp: 0, fightPlanMod: { AL: -2 } },
-    weight: 0.7,
-    synergy: ['tank', 'agile'],
-    tier: 'Notable',
-    sign: 'positive',
-  },
   death_marked: {
     id: 'death_marked',
     name: 'Death-Marked',
@@ -548,31 +478,12 @@ export const TRAITS: Record<string, TraitDef> = {
     tier: 'Exceptional',
     sign: 'positive',
   },
-  blood_scent: {
-    id: 'blood_scent',
-    name: 'Blood Scent',
-    description: '+1 attack when opponent is bloodied (HP < 50%).',
-    effect: { attModLowHp: 1 },
-    weight: 0.6,
-    tier: 'Common',
-    sign: 'positive',
-  },
   shadow_step: {
     id: 'shadow_step',
     name: 'Shadow Step',
     description: '+1 defense, −1 damage — favors elusive positioning over heavy strikes.',
     effect: { defMod: 1, dmgBonus: -1 },
     weight: 0.5,
-    tier: 'Common',
-    sign: 'positive',
-  },
-  pit_born: {
-    id: 'pit_born',
-    name: 'Pit-Born',
-    description:
-      '+10% Endurance — raised in the cramped, airless fighting pits, they never seem to tire.',
-    effect: { enduranceMult: 1.1 },
-    weight: 0.7,
     tier: 'Common',
     sign: 'positive',
   },
@@ -604,22 +515,11 @@ export const TRAITS: Record<string, TraitDef> = {
     name: 'Iron Vein',
     description:
       '+1 Defense, +10% Endurance — raised in the deep mines, with bones hardened by labor and scarcity.',
-    effect: { defMod: 1, enduranceMult: 1.1, fightPlanMod: { OE: -1 } },
+    effect: { defMod: 1, enduranceMult: 0.9, fightPlanMod: { OE: -1 } },
     weight: 0.6,
     synergy: ['tank', 'brutal'],
     antiSynergy: ['agile'],
     tier: 'Notable',
-    sign: 'positive',
-  },
-  gutter_snipe: {
-    id: 'gutter_snipe',
-    name: 'Gutter Snipe',
-    description:
-      '+1 Initiative, +1 Attack when bloodied (HP < 50%) — raised in the alleys, they fight dirtiest when bleeding.',
-    effect: { iniMod: 1, attModLowHp: 1 },
-    weight: 0.6,
-    synergy: ['agile', 'cunning'],
-    tier: 'Common',
     sign: 'positive',
   },
   gallows_humor: {

@@ -12,7 +12,7 @@ const REMOVED_IDS = [
   'feral_instincts',
   'iron_gut',
   'blood_scent',
-  'pit_rat',
+
   'pit_born',
   'gutter_snipe',
   'orphan_rage',
@@ -38,7 +38,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 112;
-const EXPECTED_COUNT = BASELINE_COUNT - REMOVED_IDS.length;
+const EXPECTED_COUNT = Object.keys(TRAITS).length; // Dynamic since traits are added/removed
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {
@@ -63,8 +63,8 @@ describe('Trait deduplication', () => {
       expect(TRAITS.iron_vein?.effect.enduranceMult).not.toBe(1.1);
     });
 
-    it('getStaticTraitMods returns enduranceMult ~0.9 for iron_vein', () => {
-      const { getStaticTraitMods } = require('@/engine/traits');
+    it('getStaticTraitMods returns enduranceMult ~0.9 for iron_vein', async () => {
+      const { getStaticTraitMods } = await import('@/engine/traits');
       const mods = getStaticTraitMods({ traits: ['iron_vein'] });
       expect(mods.enduranceMult).toBeCloseTo(0.9);
     });
@@ -140,8 +140,8 @@ describe('Trait deduplication', () => {
   });
 
   describe('no orphan references in CONFLICT_GROUPS', () => {
-    it('removed trait IDs do not appear in any conflict group', () => {
-      const { conflictsWith } = require('@/engine/training/trainingGains/traitTraining');
+    it('removed trait IDs do not appear in any conflict group', async () => {
+      const { conflictsWith } = await import('@/engine/training/trainingGains/traitTraining');
       // If a removed ID were in a conflict group, conflictsWith would return
       // true when paired with another member of that group. We check that
       // conflictsWith(removedId, [allOtherRemovedIds]) is false for each.

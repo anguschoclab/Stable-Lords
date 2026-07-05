@@ -316,12 +316,12 @@ describe('runRivalStrategyPass successor integration', () => {
     vi.restoreAllMocks();
   });
 
-  it('retired warrior with fame > 200 and matching stableId → successor name in gazette', () => {
+  it('retired warrior with fame > 200 and matching stableId → successor name in gazette', async () => {
     // Force SeededRNG.next() to return 0.1 so succession triggers (0.1 < 0.2 for age 80)
     vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.1);
 
     vi.spyOn(
-      require('@/engine/matchmaking/worldMatchmaking'),
+      await import('@/engine/matchmaking/worldMatchmaking'),
       'planWorldBouts'
     ).mockReturnValue([]);
 
@@ -345,11 +345,11 @@ describe('runRivalStrategyPass successor integration', () => {
     expect(allGazetteText).toContain('Legendary Fighter');
   });
 
-  it('retired warrior with fame <= 200 → generic Lord name in gazette', () => {
+  it('retired warrior with fame <= 200 → generic Lord name in gazette', async () => {
     vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.1);
 
     vi.spyOn(
-      require('@/engine/matchmaking/worldMatchmaking'),
+      await import('@/engine/matchmaking/worldMatchmaking'),
       'planWorldBouts'
     ).mockReturnValue([]);
 

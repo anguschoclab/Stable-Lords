@@ -167,7 +167,6 @@ export function generateRecruit(
   const attributes = generateArchetypeAttrs(style, rng);
 
   // Trait generation — unified TRAITS registry with archetype-aware weighting.
-  // This implicitly includes all newly added lore/personality traits.
   // Uses snake_case IDs that the combat engine (traits.ts) recognises.
   const traits = generateTraits(rng, archetype);
 

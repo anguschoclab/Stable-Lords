@@ -584,28 +584,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     narrative:
       'A massive brute whose helm had fused to his face in a terrible accident fought his final battle here. Blinded, he relied entirely on the shrieking winds of the pits to locate his prey, culminating in a horrific double-decapitation of two agility fighters who failed to walk silently.',
   },
-
-  {
-    id: 'charnel_pits_bone_dust',
-    arenaId: 'charnel_pits',
-    type: 'architectural_quirk',
-    title: 'The Bone Dust',
-    narrative: 'Generations of fallen gladiators have left the very air thick with white, calcified dust. Fighters must learn to breathe shallowly, lest their lungs fill with the remains of their predecessors during an exhausting bout.',
-  },
-  {
-    id: 'underpit_the_blind_riot',
-    arenaId: 'underpit_arena',
-    type: 'historical_battle',
-    title: 'The Blind Riot',
-    narrative: 'When the torches mysteriously extinguished during a fifty-man brawl, chaos reigned. The resulting pitch-black massacre left only one survivor, who emerged the next morning completely deafened but clutching the heads of three champions.',
-  },
-  {
-    id: 'flooded_vault_crimson_tide',
-    arenaId: 'flooded_vault_arena',
-    type: 'famous_death',
-    title: 'The Crimson Tide',
-    narrative: 'A legendary defender stood their ground against six challengers as the tide rapidly rose. Though they slew them all, the sheer weight of their heavy armor dragged the victorious champion to a watery grave before the gates could be opened.',
-  },
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────

@@ -99,6 +99,12 @@ function buildWeekCaches(state: GameState): void {
     rivalryMap.set(getStablePairKey(rv.stableIdA, rv.stableIdB), rv)
   );
   state.rivalryMap = rivalryMap;
+
+  const grudgeMap = new Map<string, import('@/types/state.types').OwnerGrudge>();
+  (state.ownerGrudges || []).forEach((g) =>
+    grudgeMap.set(getStablePairKey(g.ownerIdA, g.ownerIdB), g)
+  );
+  state.grudgeMap = grudgeMap;
 }
 
 /**

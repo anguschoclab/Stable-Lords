@@ -18,6 +18,7 @@ import { createFightSummary } from '@/engine/core/fightSummaryFactory';
 import { updateWarriorFromBoutOutcome } from '@/engine/warrior/careerUpdate';
 import { selectArenaForTournamentBout } from './tournamentArenaSelection';
 import { findCurrentRoundBouts } from './bracketUtils';
+import { getPairKey } from '@/utils/keyUtils';
 
 /**
  * Defines the shape of round resolution result.
@@ -236,11 +237,7 @@ function getAIPlan(
 
   let grudgeIntensity = 0;
   if (opponentOwnerId) {
-    const grudge = state.ownerGrudges?.find(
-      (g) =>
-        (g.ownerIdA === rival.owner.id && g.ownerIdB === opponentOwnerId) ||
-        (g.ownerIdB === rival.owner.id && g.ownerIdA === opponentOwnerId)
-    );
+    const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, opponentOwnerId));
     grudgeIntensity = grudge?.intensity ?? 0;
   }
 

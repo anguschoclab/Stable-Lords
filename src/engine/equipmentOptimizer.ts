@@ -7,6 +7,7 @@ import {
   type EquipmentItem,
   type EquipmentLoadout,
   getAvailableItems,
+  getItemById,
   getLoadoutWeight,
 } from '@/data/equipment';
 import { getWeaponSuitability, type WeaponSuitability } from '@/engine/weaponSuitability';
@@ -121,7 +122,7 @@ export function generateRecommendations(
   const armors = getAvailableItems('armor', style);
   const shields = getAvailableItems('shield', style);
   const helms = getAvailableItems('helm', style);
-  const noShield = shields.find((s) => s.id === 'none_shield');
+  const noShield = getItemById('none_shield');
 
   return profiles.map((profile) => {
     const weapon = bestItem(weapons, (w) => scoreWeapon(w, style, profile));

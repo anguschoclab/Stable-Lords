@@ -19,16 +19,32 @@ export function stripNonSerializable<
     cachedMetaDrift?: unknown;
     warriorToStableMap?: unknown;
     rivalMap?: unknown;
+    rivalryMap?: unknown;
+    grudgeMap?: unknown;
     warriorToOfferIds?: unknown;
   },
 >(
   state: T
 ): Omit<
   T,
-  'warriorMap' | 'cachedMetaDrift' | 'warriorToStableMap' | 'rivalMap' | 'warriorToOfferIds'
+  | 'warriorMap'
+  | 'cachedMetaDrift'
+  | 'warriorToStableMap'
+  | 'rivalMap'
+  | 'rivalryMap'
+  | 'grudgeMap'
+  | 'warriorToOfferIds'
 > {
-  const { warriorMap, cachedMetaDrift, warriorToStableMap, rivalMap, warriorToOfferIds, ...rest } =
-    state;
+  const {
+    warriorMap,
+    cachedMetaDrift,
+    warriorToStableMap,
+    rivalMap,
+    rivalryMap,
+    grudgeMap,
+    warriorToOfferIds,
+    ...rest
+  } = state;
   return rest;
 }
 

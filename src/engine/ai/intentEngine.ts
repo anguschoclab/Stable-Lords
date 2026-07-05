@@ -67,7 +67,7 @@ export function pickWeeklyIntent(
   }
 
   // 2. VENDETTA: If there is a high-intensity grudge, or the player is dominant
-  const hasGrudge = state.ownerGrudges?.some(
+  const hasGrudge = Array.from(state.grudgeMap?.values() ?? []).some(
     (g) => (g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id) && g.intensity >= 3
   );
 
@@ -223,7 +223,7 @@ export function updateAIStrategy(
 
     let targetStableId = undefined;
     if (intent === 'VENDETTA') {
-      const g = state.ownerGrudges?.find(
+      const g = Array.from(state.grudgeMap?.values() ?? []).find(
         (g) => (g.ownerIdA === rival.owner.id || g.ownerIdB === rival.owner.id) && g.intensity >= 3
       );
       targetStableId = g?.ownerIdA === rival.owner.id ? g?.ownerIdB : g?.ownerIdA;

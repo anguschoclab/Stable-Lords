@@ -4,6 +4,7 @@ import { SeededRNG } from '@/utils/random';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { aiPlanForWarrior, defaultPlanForWarrior } from '@/engine';
 import { findWarriorById, clearWarriorCache } from '@/engine/core/warriorLookup';
+import { getPairKey } from '@/utils/keyUtils';
 
 // Re-export for backward compatibility
 export { findWarriorById, clearWarriorCache }; /**
@@ -29,12 +30,7 @@ export function getAIPlan(
 
   let grudgeIntensity = 0;
   if (opponentOwnerId) {
-    // 🛡️ 1.0 Hardening: Correctly identify grudge between owner and opponent
-    const grudge = state.ownerGrudges?.find(
-      (g) =>
-        (g.ownerIdA === rival.owner.id && g.ownerIdB === opponentOwnerId) ||
-        (g.ownerIdB === rival.owner.id && g.ownerIdA === opponentOwnerId)
-    );
+    const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, opponentOwnerId));
     grudgeIntensity = grudge?.intensity ?? 0;
   }
 

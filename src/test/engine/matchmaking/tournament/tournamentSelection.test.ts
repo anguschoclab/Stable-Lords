@@ -9,6 +9,7 @@ import {
 } from '@/types/shared.types';
 import { makeWarrior } from '@/engine/factories/warriorFactory';
 import { SeededRNG } from '@/utils/random';
+import { getPairKey } from '@/utils/keyUtils';
 // ─── Mock simulateFight before importing resolution ───
 vi.mock('@/engine/simulate', () => ({
   simulateFight: vi.fn(() => ({
@@ -1091,8 +1092,7 @@ describe('getAIPlan', () => {
         } as any,
       ],
     ]);
-    state.ownerGrudges = [
-      {
+    const grudge = {
         id: 'g1' as any,
         ownerIdA: 'owner-rival' as any,
         ownerIdB: PLAYER_ID,
@@ -1100,8 +1100,11 @@ describe('getAIPlan', () => {
         reason: 'test',
         startWeek: 1,
         lastEscalation: 1,
-      },
-    ];
+      };
+    state.ownerGrudges = [grudge];
+    state.grudgeMap = new Map([
+      [getPairKey('owner-rival', PLAYER_ID), grudge],
+    ]);
 
     const plan = getAIPlan(state, w, FightingStyle.StrikingAttack, PLAYER_ID);
 

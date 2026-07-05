@@ -1,4 +1,5 @@
 import { GameState, RivalStableData } from '@/types/state.types';
+import type { Warrior } from '@/types/warrior.types';
 import type { StableId, BoutOfferId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { updateAIStrategy } from '@/engine/ai/intentEngine';
@@ -30,6 +31,9 @@ export function runRivalStrategyPass(
   const impacts: StateImpact[] = [];
   const globalGazetteItems: string[] = [];
 
+  // 0. Build successor index: maps stableId → first famous retired warrior (fame > 200)
+  const successorByStable = buildSuccessorIndex(state.retired);
+
   // 1. Process Individual Rival Stables (Economy/Strategy)
   let currentRivals = (state.rivals || []).map((rival, index) => {
     const strategySeed = nextWeek * 31 + index * 997 + (rival.owner.id || '').length;
@@ -39,9 +43,9 @@ export function runRivalStrategyPass(
     const { updatedRival: rivalWithLifecycle, gazetteItems: lifecycleGazette } =
       handleOwnerLifecycle(
         { ...rival, strategy },
-        state,
         nextWeek,
-        new SeededRNGService(strategySeed + 123)
+        new SeededRNGService(strategySeed + 123),
+        successorByStable
       );
     globalGazetteItems.push(...lifecycleGazette);
 
@@ -184,13 +188,29 @@ export function runRivalStrategyPass(
 }
 
 /**
+ * Builds an index mapping stableId → first famous retired warrior (fame > 200).
+ * Replaces per-rival O(N) find() scans with O(1) map lookups.
+ */
+export function buildSuccessorIndex(
+  retired: Warrior[] | undefined
+): Map<StableId, Warrior> {
+  const index = new Map<StableId, Warrior>();
+  for (const w of retired || []) {
+    if ((w.fame || 0) > 200 && w.stableId && !index.has(w.stableId)) {
+      index.set(w.stableId, w);
+    }
+  }
+  return index;
+}
+
+/**
  * 🎂 Owner Lifecycle: Handles annual aging and generational succession.
  */
-function handleOwnerLifecycle(
+export function handleOwnerLifecycle(
   rival: RivalStableData,
-  state: GameState,
   nextWeek: number,
-  rng: IRNGService
+  rng: IRNGService,
+  successorByStable: Map<StableId, Warrior>
 ): { updatedRival: RivalStableData; gazetteItems: string[] } {
   const updatedRival = { ...rival, owner: { ...rival.owner } };
   const gazetteItems: string[] = [];
@@ -208,10 +228,8 @@ function handleOwnerLifecycle(
     const generation = (updatedRival.owner.generation || 0) + 1;
     const oldName = updatedRival.owner.name;
 
-    // 🏆 Successor Hunt: Look for a famous retired warrior from THIS stable
-    const successorCandidate = (state.retired || []).find(
-      (w) => w.stableId === updatedRival.id && (w.fame || 0) > 200
-    );
+    // 🏆 Successor Hunt: O(1) lookup via pre-built index
+    const successorCandidate = successorByStable.get(updatedRival.id);
 
     const newName = successorCandidate
       ? successorCandidate.name

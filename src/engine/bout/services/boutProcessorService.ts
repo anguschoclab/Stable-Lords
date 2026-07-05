@@ -24,6 +24,7 @@ import { generatePairings } from '../core/pairings';
 import { finalizeWeekSideEffectsToImpact } from './WeekFinalizationService';
 import { accumulateWeekStats, createWeekBoutSummary } from './WeekStatsService';
 import { buildWarriorMap } from '@/utils/roster';
+import { getPairKey } from '@/utils/keyUtils';
 
 import { isFightReady } from '@/engine/warriorStatus';
 
@@ -128,11 +129,7 @@ function getNPCPlan(
 
   let grudgeIntensity = 0;
   if (opponentOwnerId) {
-    const grudge = state.ownerGrudges?.find(
-      (g) =>
-        (g.ownerIdA === rival.owner.id && g.ownerIdB === opponentOwnerId) ||
-        (g.ownerIdB === rival.owner.id && g.ownerIdA === opponentOwnerId)
-    );
+    const grudge = state.grudgeMap?.get(getPairKey(rival.owner.id, opponentOwnerId));
     grudgeIntensity = grudge?.intensity ?? 0;
   }
 

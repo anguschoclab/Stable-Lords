@@ -25,24 +25,28 @@ import type {
  */
 const SHIELD_ID_SET = new Set<string>(SHIELD_ITEM_IDS);
 
-export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS, ...HELMS]; /**
- * Get item by id.
- */
+export const ALL_EQUIPMENT: EquipmentItem[] = [...WEAPONS, ...ARMORS, ...SHIELDS, ...HELMS];
+
+const ITEM_BY_ID = new Map<string, EquipmentItem>(
+  ALL_EQUIPMENT.map((item) => [item.id, item])
+);
+
+const ITEM_BY_CODE = new Map<string, EquipmentItem>(
+  ALL_EQUIPMENT.filter((item) => item.code !== '').map((item) => [item.code, item])
+);
 
 /**
  * Get item by id.
  */
 export function getItemById(id: string): EquipmentItem | undefined {
-  return ALL_EQUIPMENT.find((item) => item.id === id);
-} /**
- * Get item by code.
- */
+  return ITEM_BY_ID.get(id);
+}
 
 /**
  * Get item by code.
  */
 export function getItemByCode(code: string): EquipmentItem | undefined {
-  return ALL_EQUIPMENT.find((item) => item.code === code);
+  return ITEM_BY_CODE.get(code);
 } /**
  * Get available items.
  */

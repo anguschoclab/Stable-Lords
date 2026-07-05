@@ -78,6 +78,68 @@ describe('leaderboardCalculations', () => {
       expect(data[0]?.name).toBe('No Data');
       expect(data[0]?.wins).toBe(0);
     });
+
+    it('breaks ties by selecting the first warrior to reach max wins', () => {
+      const tieFights = [
+        f('T1', 'X1', 'A', 'Decision', 'Power', 'Other', 1), // T1 gets 1 win
+        f('T2', 'X2', 'A', 'Decision', 'Power', 'Other', 2), // T2 gets 1 win
+        f('T1', 'X3', 'A', 'Decision', 'Power', 'Other', 3), // T1 gets 2 wins
+        f('T2', 'X4', 'A', 'Decision', 'Power', 'Other', 4), // T2 gets 2 wins
+      ];
+      const data = calculateBestByStyle(tieFights, ['Power']);
+      expect(data[0]?.wins).toBe(2);
+      expect(data[0]?.name).toBe('T1');
+    });
+
+    it('skips fights where winner is null', () => {
+      const nullWinnerFights = [
+        f('W1', 'W2', 'A', 'Kill', 'Power', 'Agility', 1),
+        { ...f('W1', 'W2', 'A', 'Decision', 'Power', 'Agility', 2), winner: null } as FightSummary,
+      ];
+      const data = calculateBestByStyle(nullWinnerFights, ['Power']);
+      expect(data[0]?.name).toBe('W1');
+      expect(data[0]?.wins).toBe(1);
+    });
+
+    it('returns empty array for empty styles', () => {
+      const data = calculateBestByStyle(fights, []);
+      expect(data).toEqual([]);
+    });
+
+    it('returns No Data for all styles when allFights is empty', () => {
+      const data = calculateBestByStyle([], ['Power', 'Agility']);
+      expect(data).toHaveLength(2);
+      expect(data[0]).toEqual({ style: 'Power', name: 'No Data', wins: 0 });
+      expect(data[1]).toEqual({ style: 'Agility', name: 'No Data', wins: 0 });
+    });
+
+    it('ignores styles not in the input set', () => {
+      const data = calculateBestByStyle(fights, ['Power']);
+      expect(data).toHaveLength(1);
+      expect(data[0]?.style).toBe('Power');
+      // Agility wins exist in fights but are not tracked
+    });
+
+    it('tracks 3+ styles correctly in a single pass', () => {
+      const multiStyleFights = [
+        f('P1', 'X1', 'A', 'Decision', 'Power', 'Other', 1),
+        f('P1', 'X2', 'A', 'Decision', 'Power', 'Other', 2),
+        f('A1', 'X3', 'A', 'Decision', 'Agility', 'Other', 3),
+        f('A1', 'X4', 'A', 'Decision', 'Agility', 'Other', 4),
+        f('A1', 'X5', 'A', 'Decision', 'Agility', 'Other', 5),
+        f('B1', 'X6', 'A', 'Decision', 'Balanced', 'Other', 6),
+      ];
+      const data = calculateBestByStyle(multiStyleFights, ['Power', 'Agility', 'Balanced']);
+      const power = data.find((d) => d.style === 'Power')!;
+      const agility = data.find((d) => d.style === 'Agility')!;
+      const balanced = data.find((d) => d.style === 'Balanced')!;
+      expect(power.name).toBe('P1');
+      expect(power.wins).toBe(2);
+      expect(agility.name).toBe('A1');
+      expect(agility.wins).toBe(3);
+      expect(balanced.name).toBe('B1');
+      expect(balanced.wins).toBe(1);
+    });
   });
 
   describe('calculateRisingStars', () => {

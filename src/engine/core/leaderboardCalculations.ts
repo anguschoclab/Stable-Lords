@@ -133,33 +133,46 @@ export function calculateBestByStyle(
   allFights: FightSummary[],
   styles: string[]
 ): BestByStyleEntry[] {
+  if (styles.length === 0) return [];
   const nameMap = buildNameMap(allFights);
+  const styleSet = new Set(styles);
+  const byStyle = new Map<string, Map<WarriorId, number>>();
+
+  for (let i = 0; i < allFights.length; i++) {
+    const f = allFights[i];
+    if (!f) continue;
+
+    let wStyle: string | null = null;
+    let wId: WarriorId | null = null;
+    if (f.winner === 'A') {
+      wStyle = f.styleA;
+      wId = f.warriorIdA;
+    } else if (f.winner === 'D') {
+      wStyle = f.styleD;
+      wId = f.warriorIdD;
+    }
+
+    if (wStyle && wId && styleSet.has(wStyle)) {
+      let styleMap = byStyle.get(wStyle);
+      if (!styleMap) {
+        styleMap = new Map<WarriorId, number>();
+        byStyle.set(wStyle, styleMap);
+      }
+      styleMap.set(wId, (styleMap.get(wId) ?? 0) + 1);
+    }
+  }
+
   return styles.map((style) => {
-    const warriors: Record<WarriorId, number> = {};
-    for (let i = 0; i < allFights.length; i++) {
-      const f = allFights[i];
-      if (!f) continue;
-      let wStyle: string | null = null;
-      let wId: WarriorId | null = null;
-
-      if (f.winner === 'A') {
-        wStyle = f.styleA;
-        wId = f.warriorIdA;
-      } else if (f.winner === 'D') {
-        wStyle = f.styleD;
-        wId = f.warriorIdD;
-      }
-
-      if (wStyle === style && wId) {
-        warriors[wId] = (warriors[wId] || 0) + 1;
-      }
+    const styleMap = byStyle.get(style);
+    if (!styleMap) {
+      return { style, name: 'No Data', wins: 0 };
     }
     let topId: WarriorId | null = null;
     let topWins = 0;
-    for (const [id, wins] of Object.entries(warriors)) {
+    for (const [id, wins] of styleMap) {
       if (wins > topWins) {
         topWins = wins;
-        topId = id as WarriorId;
+        topId = id;
       }
     }
     return { style, name: topId ? nameMap.get(topId) || 'Unknown' : 'No Data', wins: topWins };

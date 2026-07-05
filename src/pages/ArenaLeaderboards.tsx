@@ -150,18 +150,17 @@ export default function ArenaLeaderboards() {
   const arenas = useMemo(() => getAllArenas(), []);
   const [selectedArenaId, setSelectedArenaId] = useState<string>(arenas[0]?.id ?? '');
 
-  const { roster, rivals, player, arenaHistory } = useGameStore(
+  const { roster, rivals, player } = useGameStore(
     useShallow((s) => ({
       roster: s.roster,
       rivals: s.rivals,
       player: s.player,
-      arenaHistory: s.arenaHistory,
     }))
   );
 
   const allLeaderboards = useMemo(
-    () => calculatePerArenaLeaderboards(roster, player.stableName, rivals, arenaHistory),
-    [roster, rivals, player.stableName, arenaHistory]
+    () => calculatePerArenaLeaderboards(roster, player.stableName, rivals),
+    [roster, rivals, player.stableName]
   );
 
   const currentLB = allLeaderboards.find((lb) => lb.arenaId === selectedArenaId);

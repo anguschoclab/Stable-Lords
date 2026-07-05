@@ -1,10 +1,6 @@
 import type { Warrior } from '@/types/warrior.types';
-import type { FightSummary } from '@/types/combat.types';
 import type { RivalStableData } from '@/types/state.types';
 import { getAllArenas, getArenaById } from '@/data/arenas';
-import { getFightsForArena } from '@/engine/core/historyUtils';
-import { filterActive } from '@/utils/roster';
-
 // ─── Global Fame Leaderboard ────────────────────────────────────────────────
 
 /** A single ranked warrior row in the global arena leaderboard. */
@@ -12,6 +8,27 @@ export interface ArenaLeaderboardEntry {
   warrior: Warrior;
   stableName: string;
   isPlayer: boolean;
+}
+
+function collectActiveWarriorEntries(
+  playerRoster: Warrior[],
+  playerStableName: string,
+  rivals: RivalStableData[] | undefined
+): ArenaLeaderboardEntry[] {
+  const entries: ArenaLeaderboardEntry[] = [];
+  for (const w of playerRoster) {
+    if (w.status === 'Active' && !w.isDead) {
+      entries.push({ warrior: w, stableName: playerStableName, isPlayer: true });
+    }
+  }
+  for (const r of rivals ?? []) {
+    for (const w of r.roster) {
+      if (w.status === 'Active' && !w.isDead) {
+        entries.push({ warrior: w, stableName: r.owner.stableName, isPlayer: false });
+      }
+    }
+  }
+  return entries;
 }
 
 /**
@@ -49,20 +66,7 @@ export function calculateGlobalFameLeaderboard(
     }
   };
 
-  const allActive: ArenaLeaderboardEntry[] = [
-    ...filterActive(roster).map((w) => ({
-      warrior: w,
-      stableName: playerStableName,
-      isPlayer: true as const,
-    })),
-    ...(rivals ?? []).flatMap((r) =>
-      filterActive(r.roster).map((w) => ({
-        warrior: w,
-        stableName: r.owner.stableName,
-        isPlayer: false as const,
-      }))
-    ),
-  ];
+  const allActive = collectActiveWarriorEntries(roster, playerStableName, rivals);
 
   for (const entry of allActive) {
     insert(entry);
@@ -123,37 +127,25 @@ function buildEntry(
  * @param playerRoster  - Player's active warriors
  * @param playerStableName - Display name of the player's stable
  * @param rivals - All rival stables (with their rosters)
- * @param arenaHistory - Recent fight history (used only by sub-utilities)
  * @param limit - Number of entries per leaderboard (default 10)
  */
 export function calculatePerArenaLeaderboards(
   playerRoster: Warrior[],
   playerStableName: string,
   rivals: RivalStableData[],
-  _arenaHistory: FightSummary[],
   limit = 10
 ): ArenaLeaderboardData[] {
   const arenas = getAllArenas();
 
-  // Collect all warriors with their stable context once
-  const allEntries: { warrior: Warrior; stableName: string; isPlayer: boolean }[] = [
-    ...filterActive(playerRoster)
-      .filter((w) => !w.isDead)
-      .map((w) => ({ warrior: w, stableName: playerStableName, isPlayer: true })),
-    ...rivals.flatMap((rival) =>
-      filterActive(rival.roster)
-        .filter((w) => !w.isDead)
-        .map((w) => ({ warrior: w, stableName: rival.owner.name, isPlayer: false }))
-    ),
-  ];
+  const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
 
   return arenas.map((arena) => {
     const arenaId = arena.id;
-    const entries = allEntries
-      .map(({ warrior, stableName, isPlayer }) =>
-        buildEntry(warrior, stableName, isPlayer, arenaId)
-      )
-      .filter((e) => e.wins + e.losses > 0); // Only warriors who have fought here
+    const entries: ArenaWarriorEntry[] = [];
+    for (const { warrior, stableName, isPlayer } of allEntries) {
+      const entry = buildEntry(warrior, stableName, isPlayer, arenaId);
+      if (entry.wins + entry.losses > 0) entries.push(entry);
+    }
 
     // Top warriors: by wins then win-rate then kills
     const topWarriors = [...entries]
@@ -178,24 +170,16 @@ export function calculateArenaLeaderboard(
   playerRoster: Warrior[],
   playerStableName: string,
   rivals: RivalStableData[],
-  arenaHistory: FightSummary[],
   limit = 10
 ): ArenaLeaderboardData {
   const arena = getArenaById(arenaId);
-  const allEntries: { warrior: Warrior; stableName: string; isPlayer: boolean }[] = [
-    ...filterActive(playerRoster)
-      .filter((w) => !w.isDead)
-      .map((w) => ({ warrior: w, stableName: playerStableName, isPlayer: true })),
-    ...rivals.flatMap((rival) =>
-      filterActive(rival.roster)
-        .filter((w) => !w.isDead)
-        .map((w) => ({ warrior: w, stableName: rival.owner.name, isPlayer: false }))
-    ),
-  ];
+  const allEntries = collectActiveWarriorEntries(playerRoster, playerStableName, rivals);
 
-  const entries = allEntries
-    .map(({ warrior, stableName, isPlayer }) => buildEntry(warrior, stableName, isPlayer, arenaId))
-    .filter((e) => e.wins + e.losses > 0);
+  const entries: ArenaWarriorEntry[] = [];
+  for (const { warrior, stableName, isPlayer } of allEntries) {
+    const entry = buildEntry(warrior, stableName, isPlayer, arenaId);
+    if (entry.wins + entry.losses > 0) entries.push(entry);
+  }
 
   const topWarriors = [...entries]
     .sort((a, b) => b.wins - a.wins || b.winRate - a.winRate || b.kills - a.kills)
@@ -205,16 +189,6 @@ export function calculateArenaLeaderboard(
     .filter((e) => e.kills > 0)
     .sort((a, b) => b.kills - a.kills || b.wins - a.wins)
     .slice(0, limit);
-
-  // Recent kills from arenaHistory (rolling window detail)
-  const recentFights = getFightsForArena(arenaHistory, arenaId);
-  const recentKillers = new Map<string, number>();
-  for (const f of recentFights) {
-    if (f.by === 'Kill') {
-      const killerId = f.winner === 'A' ? f.warriorIdA : f.winner === 'D' ? f.warriorIdD : null;
-      if (killerId) recentKillers.set(killerId, (recentKillers.get(killerId) ?? 0) + 1);
-    }
-  }
 
   return {
     arenaId,

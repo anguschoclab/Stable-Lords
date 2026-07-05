@@ -99,12 +99,6 @@
     "similarity": 0.88
   },
   {
-    "path": "pbp.defenses.parry.success",
-    "kept": "{{name}} parries with a theatrical flourish, inviting the crowd's applause!",
-    "removed": "{{name}} parries with a theatrical flourish, inviting the crowd's cheer.",
-    "similarity": 0.88
-  },
-  {
     "path": [
       "pbp",
       "attacks",
@@ -462,5 +456,41 @@
   "A blur of motion on the ground!",
   "A collective gasp echoes through the coliseum.",
   "Precision meets raw power in this clash.",
-  "The crowd howls for a brutal finish!"
+  "The crowd howls for a brutal finish!",
+  {
+    "path": "pbp.hit_locations.right arm",
+    "content": "RIGHT FOREARM GUARD",
+    "reason": "Duplicate of: RIGHT FOREARM",
+    "similarity": 1
+  },
+  {
+    "path": "pbp.hit_locations.right arm",
+    "content": "RIGHT SHOULDER JOINT",
+    "reason": "Duplicate of: RIGHT SHOULDER",
+    "similarity": 1
+  },
+  {
+    "path": "pbp.hit_locations.right arm",
+    "content": "RIGHT WRIST GUARD",
+    "reason": "Duplicate of: RIGHT WRIST",
+    "similarity": 1
+  },
+  {
+    "path": "pbp.hit_locations.left arm",
+    "content": "LEFT FOREARM GUARD",
+    "reason": "Duplicate of: LEFT FOREARM",
+    "similarity": 1
+  },
+  {
+    "path": "pbp.hit_locations.left arm",
+    "content": "LEFT SHOULDER JOINT",
+    "reason": "Duplicate of: LEFT SHOULDER",
+    "similarity": 1
+  },
+  {
+    "path": "pbp.hit_locations.left arm",
+    "content": "LEFT WRIST GUARD",
+    "reason": "Duplicate of: LEFT WRIST",
+    "similarity": 1
+  }
 ]

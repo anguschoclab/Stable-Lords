@@ -324,6 +324,27 @@ export interface ArenaLoreEntry {
  */
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'flesh_gardens_the_crimson_bloom',
+    arenaId: 'flesh_gardens',
+    type: 'historical_battle',
+    title: 'The Crimson Bloom',
+    narrative: 'In 962, a gladiator known only as The Scythe fought off twelve feral beasts simultaneously. The blood spilled that day caused a rare species of blood-lily to bloom across the arena floor, a phenomenon that has never occurred since.',
+  },
+  {
+    id: 'walled_court_hidden_grates',
+    arenaId: 'walled_court_arena',
+    type: 'architectural_quirk',
+    title: 'The Whispering Grates',
+    narrative: 'Beneath the polished stone of the Walled Court lie ancient drainage grates. Fighters with sharp ears claim they can hear the murmurs of past champions warning them of unseen attacks from below.',
+  },
+  {
+    id: 'charnel_pits_the_last_stand_of_korr',
+    arenaId: 'charnel_pits',
+    type: 'famous_death',
+    title: 'The Last Stand of Korr',
+    narrative: 'Korr the Unbroken met his end in the Charnel Pits, not by the blade of a foe, but when the unstable ground gave way beneath him, swallowing him into the toxic depths. His final defiant roar is said to still echo in the pits.',
+  },
+  {
     id: 'flesh_gardens_thorny_path',
     arenaId: 'flesh_gardens',
     type: 'architectural_quirk',

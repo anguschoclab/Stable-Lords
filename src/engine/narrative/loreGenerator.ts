@@ -1,6 +1,14 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Abandoned at the rusted gates of the Weeping Mother Orphanage',
+  'Survived the Cinder Plague by hiding in the cathedral catacombs',
+  'Raised by feral dogs in the shadow of the Black Iron Foundry',
+  'Sold for a handful of copper coins to a traveling beast-tamer',
+  'Scavenged for scraps among the cursed ruins of Old Dross',
+  'Escaped the fighting pits of the Undercity during a bloody riot',
+  'Born in the sunless depths of the Sunken Asylum',
+  'Found wandering the ash-choked plains with no memory of their name',
   'Torn from the suffocating grasp of the sunken asylum of Dross',
   'Surviving the Night of Ash by hiding beneath the floorboards of a ruined cathedral',
   'Raised among the stray hounds that roam the forgotten plague wards',
@@ -116,6 +124,10 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would collect shattered teeth from the fighting pits as grim trophies',
+  'learned to recognize the smell of poisoned food before taking a bite',
+  'was known for setting traps in the orphanage cellars to catch rats and worse',
+  'would sit motionless for hours watching spiders weave their deadly webs',
   'would systematically dissect caught rodents to understand their anatomy',
   'learned to sleep with a clenched fist and one eye open',
   'was infamous for throwing blinding dust into the eyes of older bullies',
@@ -182,6 +194,10 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'strangled a corrupt guard with their own rusted chains to escape confinement',
+  'won their first real fight by blinding their opponent with a handful of crushed glass',
+  'survived a brutal ambush by playing dead among the corpses for three days',
+  'stole a broken sword from a fallen gladiator and taught themselves to kill',
   'until the day they dragged their abuser into the light and left them broken',
   'realizing that mercy in the undercity is just an invitation to be killed',
   'waiting for the moment the gates would close and the true test would begin',

@@ -27,7 +27,7 @@ describe('buildWeekCaches populates grudgeMap', () => {
     const g2 = makeGrudge('ownerC', 'ownerD', 5);
 
     const grudgeMap = new Map<string, OwnerGrudge>();
-    [g1, g2].forEach((g) => grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g));
+    [g1, g2].forEach((g: OwnerGrudge) => grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g));
 
     expect(grudgeMap.get(getPairKey('ownerA', 'ownerB'))).toBe(g1);
     expect(grudgeMap.get(getPairKey('ownerB', 'ownerA'))).toBe(g1);
@@ -37,14 +37,14 @@ describe('buildWeekCaches populates grudgeMap', () => {
 
   it('empty ownerGrudges produces empty grudgeMap', () => {
     const grudgeMap = new Map<string, OwnerGrudge>();
-    ([] as OwnerGrudge[]).forEach((g) => grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g));
+    ([] as OwnerGrudge[]).forEach((g: OwnerGrudge) => grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g));
     expect(grudgeMap.size).toBe(0);
   });
 
   it('undefined ownerGrudges produces empty grudgeMap (guarded with || [])', () => {
     const grudges: OwnerGrudge[] | undefined = undefined;
     const grudgeMap = new Map<string, OwnerGrudge>();
-    (grudges || []).forEach((g) => grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g));
+    (grudges || []).forEach((g: OwnerGrudge) => grudgeMap.set(getPairKey(g.ownerIdA, g.ownerIdB), g));
     expect(grudgeMap.size).toBe(0);
   });
 
@@ -71,7 +71,7 @@ describe('getNPCPlan uses grudgeMap', () => {
   });
 
   it('returns undefined when grudgeMap is undefined (graceful fallback)', () => {
-    const grudgeMap: Map<string, OwnerGrudge> | undefined = undefined;
+    const grudgeMap: Map<string, OwnerGrudge> | undefined = (undefined as any);
     expect(grudgeMap?.get(getPairKey('ownerRival', 'ownerOpp'))).toBeUndefined();
   });
 });
@@ -92,7 +92,7 @@ describe('getAIPlan (tournamentSelection) uses grudgeMap', () => {
   });
 
   it('returns undefined when grudgeMap is undefined', () => {
-    const grudgeMap: Map<string, OwnerGrudge> | undefined = undefined;
+    const grudgeMap: Map<string, OwnerGrudge> | undefined = (undefined as any);
     expect(grudgeMap?.get(getPairKey('ownerRival', 'ownerOpp'))).toBeUndefined();
   });
 });
@@ -120,7 +120,7 @@ describe('pickWeeklyIntent uses grudgeMap.values()', () => {
     const grudge = makeGrudge('owner-1', 'owner-2', 4);
     const grudgeMap = new Map<string, OwnerGrudge>([[getPairKey('owner-1', 'owner-2'), grudge]]);
     const hasGrudge = Array.from(grudgeMap.values()).some(
-      (g) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
+      (g: OwnerGrudge) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
     );
     expect(hasGrudge).toBe(true);
   });
@@ -129,15 +129,15 @@ describe('pickWeeklyIntent uses grudgeMap.values()', () => {
     const grudge = makeGrudge('owner-1', 'owner-2', 2);
     const grudgeMap = new Map<string, OwnerGrudge>([[getPairKey('owner-1', 'owner-2'), grudge]]);
     const hasGrudge = Array.from(grudgeMap.values()).some(
-      (g) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
+      (g: OwnerGrudge) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
     );
     expect(hasGrudge).toBe(false);
   });
 
   it('returns no grudge when grudgeMap is undefined', () => {
-    const grudgeMap: Map<string, OwnerGrudge> | undefined = undefined;
+    const grudgeMap: Map<string, OwnerGrudge> | undefined = (undefined as any);
     const hasGrudge = Array.from(grudgeMap?.values() ?? []).some(
-      (g) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
+      (g: OwnerGrudge) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
     );
     expect(hasGrudge).toBe(false);
   });
@@ -150,7 +150,7 @@ describe('updateAIStrategy uses grudgeMap.values()', () => {
     const grudge = makeGrudge('owner-1', 'owner-2', 4);
     const grudgeMap = new Map<string, OwnerGrudge>([[getPairKey('owner-1', 'owner-2'), grudge]]);
     const g = Array.from(grudgeMap.values()).find(
-      (g) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
+      (g: OwnerGrudge) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
     );
     const targetStableId = g?.ownerIdA === 'owner-1' ? g?.ownerIdB : g?.ownerIdA;
     expect(targetStableId).toBe('owner-2');
@@ -159,15 +159,15 @@ describe('updateAIStrategy uses grudgeMap.values()', () => {
   it('falls back when no grudge found in grudgeMap', () => {
     const grudgeMap = new Map<string, OwnerGrudge>();
     const g = Array.from(grudgeMap.values()).find(
-      (g) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
+      (g: OwnerGrudge) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
     );
     expect(g).toBeUndefined();
   });
 
   it('falls back when grudgeMap is undefined', () => {
-    const grudgeMap: Map<string, OwnerGrudge> | undefined = undefined;
+    const grudgeMap: Map<string, OwnerGrudge> | undefined = (undefined as any);
     const g = Array.from(grudgeMap?.values() ?? []).find(
-      (g) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
+      (g: OwnerGrudge) => (g.ownerIdA === 'owner-1' || g.ownerIdB === 'owner-1') && g.intensity >= 3
     );
     expect(g).toBeUndefined();
   });

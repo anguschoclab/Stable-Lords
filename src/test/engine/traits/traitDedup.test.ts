@@ -4,6 +4,8 @@
  * no duplicate effects remain in the generic positive pool.
  */
 import { describe, it, expect } from 'vitest';
+import { getStaticTraitMods } from '@/engine/traits';
+import { conflictsWith } from '@/engine/training/trainingGains/traitTraining';
 import { TRAITS, generateTraits } from '@/engine/traits';
 import { SeededRNGService } from '@/utils/random';
 
@@ -64,8 +66,7 @@ describe('Trait deduplication', () => {
     });
 
     it('getStaticTraitMods returns enduranceMult ~0.9 for iron_vein', () => {
-      const { getStaticTraitMods } = require('@/engine/traits');
-      const mods = getStaticTraitMods({ traits: ['iron_vein'] });
+      const mods = getStaticTraitMods({ traits: ['iron_vein'] } as any);
       expect(mods.enduranceMult).toBeCloseTo(0.9);
     });
   });
@@ -141,7 +142,6 @@ describe('Trait deduplication', () => {
 
   describe('no orphan references in CONFLICT_GROUPS', () => {
     it('removed trait IDs do not appear in any conflict group', () => {
-      const { conflictsWith } = require('@/engine/training/trainingGains/traitTraining');
       // If a removed ID were in a conflict group, conflictsWith would return
       // true when paired with another member of that group. We check that
       // conflictsWith(removedId, [allOtherRemovedIds]) is false for each.

@@ -686,7 +686,7 @@ export const WarriorSchema = z.object({
   causeOfDeath: z.string().optional(),
   yearlySnapshots: z.record(z.string(), CareerRecordSchema).optional(),
   awards: z.array(z.any()).optional(), // AnnualAward - using any for circular reference
-  traits: z.array(z.string()),
+  traits: z.array(z.string()), // Serializes any registered TraitId
   trainability: z.number().optional(),
   lore: z.string().optional(),
   origin: z.string().optional(),

@@ -177,5 +177,14 @@
     "removed": "The crowd howls for a brutal execution, their bloodlust practically vibrating the arena stones!",
     "kept": "The crowd howls for a brutal finish!",
     "similarity": "0.86"
+  },
+  {
+    "timestamp": "2026-07-05T22:37:27.830Z",
+    "removed": {
+      "ORIGINS": [],
+      "CHILDHOOD_TRAITS": [],
+      "DEFINING_MOMENTS": [],
+      "arenas": []
+    }
   }
 ]

@@ -37,7 +37,7 @@ export interface ScoutReport {
   knownInjuries: string[];
   suspectedOE?: string; // "Low" | "Medium" | "High"
   suspectedAL?: string;
-  /** Traits suspected/discovered during scouting */
+  /** Traits suspected/discovered during scouting (including dynamic ones like pit_rat) */
   suspectedTraits?: string[];
   notes: string;
 }

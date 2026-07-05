@@ -4,7 +4,7 @@ import { Surface } from '@/components/ui/Surface';
 import { filterActive } from '@/utils/roster';
 import type { RivalStableData, Warrior } from '@/types/game';
 import { WarriorSelector } from './components/WarriorSelector';
-import { WarriorComparisonHeader } from './components/WarriorComparisonHeader';
+import { ComparisonHeader } from './ComparisonHeader';
 import { AttributeComparison } from './components/AttributeComparison';
 import { CareerComparison } from './components/CareerComparison';
 import { EmptyWarriorState } from './components/EmptyWarriorState';
@@ -74,7 +74,7 @@ export function WarriorComparison({ rivals, playerRoster }: WarriorComparisonPro
 
       {entryA && entryB && (
         <div className="space-y-6">
-          <WarriorComparisonHeader warriorA={entryA?.warrior} warriorB={entryB?.warrior} />
+          <ComparisonHeader kind="warrior" warriorA={entryA?.warrior} warriorB={entryB?.warrior} />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <AttributeComparison warriorA={entryA.warrior} warriorB={entryB.warrior} />

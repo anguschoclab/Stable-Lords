@@ -51,7 +51,7 @@ export function StableComparison({ rivals }: StableComparisonProps) {
 
       {statsA && statsB && rivalA && rivalB && (
         <div className="space-y-6">
-          <ComparisonHeader rivalA={rivalA} rivalB={rivalB} />
+          <ComparisonHeader kind="stable" rivalA={rivalA} rivalB={rivalB} />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <KeyMetricsSection

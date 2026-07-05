@@ -76,8 +76,9 @@ function renderRow(key: keyof Attributes, warrior = makeWarrior(), props = {}) {
 
 describe('AttributeRow', () => {
   beforeEach(() => {
-    vi.mocked(computeGainChance).mockReturnValue(0);
     vi.clearAllMocks();
+    vi.mocked(computeGainChance).mockReturnValue(0);
+    vi.mocked(canGrow).mockReturnValue(true);
   });
 
   it('renders data-testid="training-bar-{key}" with correct data-chance-class for muted', () => {

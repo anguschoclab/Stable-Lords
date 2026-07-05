@@ -70,30 +70,6 @@ if (!(globalThis as any).FileReader) {
 // Now that jsdom is initialized, load the standard vitest setup
 import './setup';
 
-// Ensure localStorage has custom test helpers (Bun may provide its own localStorage)
-if (typeof localStorage !== 'undefined') {
-  const ls = localStorage as any;
-  if (!ls._setQuotaExceeded) {
-    ls._setQuotaExceeded = (exceeded: boolean) => {
-      (ls as any).__quotaExceeded = exceeded;
-      const origSetItem = ls.setItem.bind(ls);
-      ls.setItem = (key: string, value: string) => {
-        if ((ls as any).__quotaExceeded) {
-          const err = new Error('QuotaExceededError');
-          (err as any).name = 'QuotaExceededError';
-          throw err;
-        }
-        return origSetItem(key, value);
-      };
-    };
-  }
-  if (!ls._resetQuota) {
-    ls._resetQuota = () => {
-      (ls as any).__quotaExceeded = false;
-    };
-  }
-}
-
 // Monkey-patch @testing-library/dom screen if it was loaded before document existed
 // (Bun may cache the module before the preload runs)
 import { getQueriesForElement } from '@testing-library/dom';

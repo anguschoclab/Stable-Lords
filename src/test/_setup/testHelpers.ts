@@ -84,33 +84,6 @@ export function populateTestState(state: GameState): GameState {
   return newState;
 }
 
-/**
- * Helper function to simulate localStorage quota exceeded error in tests
- */
-export function simulateLocalStorageQuotaError() {
-  if (typeof localStorage !== 'undefined' && (localStorage as any)._setQuotaExceeded) {
-    (localStorage as any)._setQuotaExceeded(true);
-  }
-}
-
-/**
- * Helper function to reset localStorage quota error simulation in tests
- */
-export function resetLocalStorageQuotaError() {
-  if (typeof localStorage !== 'undefined' && (localStorage as any)._setQuotaExceeded) {
-    (localStorage as any)._setQuotaExceeded(false);
-  }
-}
-
-/**
- * Helper function to clear all localStorage in tests
- */
-export function clearTestLocalStorage() {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.clear();
-  }
-}
-
 export function makeAutosimWarrior(
   id: string,
   name: string,

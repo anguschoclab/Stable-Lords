@@ -22,7 +22,6 @@ describe('ArenaHistory persistence error handling', () => {
 
   beforeEach(() => {
     localStorage.clear();
-    (localStorage as any)._resetQuota?.();
     vi.restoreAllMocks();
   });
 

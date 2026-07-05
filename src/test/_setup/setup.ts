@@ -13,7 +13,6 @@ enableMapSet();
  */
 const localStorageMock = (function () {
   let store: Record<string, string> = {};
-  let quotaExceeded = false;
 
   return {
     /**
@@ -28,14 +27,8 @@ const localStorageMock = (function () {
      * Set an item in the mock storage.
      * @param key - The key to set.
      * @param value - The value to store.
-     * @throws If quota is exceeded.
      */
     setItem: function (key: string, value: string) {
-      if (quotaExceeded) {
-        const error = new Error('QuotaExceededError');
-        (error as any).name = 'QuotaExceededError';
-        throw error;
-      }
       store[key] = value.toString();
     },
     /**
@@ -51,26 +44,6 @@ const localStorageMock = (function () {
      */
     clear: function () {
       store = {};
-    },
-    /**
-     * Set whether quota should be exceeded for testing.
-     * @param exceeded - Whether to simulate quota exceeded state.
-     */
-    _setQuotaExceeded: function (exceeded: boolean) {
-      quotaExceeded = exceeded;
-    },
-    /**
-     * Get all keys in the mock storage.
-     * @returns Array of all keys.
-     */
-    _getAllKeys: function () {
-      return Object.keys(store);
-    },
-    /**
-     * Reset the quota exceeded state to false.
-     */
-    _resetQuota: function () {
-      quotaExceeded = false;
     },
   };
 })();
@@ -109,14 +82,6 @@ function throwIfTargeted(target: OPFSOp) {
  */
 export function setMockOPFSError(name: string, target: OPFSOp | 'all' = 'all'): void {
   mockOpfsError = { name, target };
-}
-
-/**
- * Clear any configured OPFS error so subsequent operations succeed.
- */
-export function clearMockOPFSError(): void {
-  mockOpfsError = null;
-  mockOpfsFileText = null;
 }
 
 /**
@@ -190,9 +155,9 @@ Object.defineProperty(global.navigator, 'storage', {
 beforeEach(() => {
   if (typeof localStorage !== 'undefined') {
     localStorage.clear();
-    (localStorage as any)._resetQuota?.();
   }
-  clearMockOPFSError();
+  mockOpfsError = null;
+  mockOpfsFileText = null;
   // Bun resets navigator between test files, so re-apply the storage mock in beforeEach
   if (typeof navigator !== 'undefined' && !navigator.storage) {
     Object.defineProperty(navigator, 'storage', {

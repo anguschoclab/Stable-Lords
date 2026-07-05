@@ -19,7 +19,6 @@ describe('AudioManager', () => {
     AudioManager.resetForTesting();
     vi.clearAllMocks();
     localStorage.clear();
-    (localStorage as any)._resetQuota?.();
   });
 
   it('should be able to set and get muted state', () => {

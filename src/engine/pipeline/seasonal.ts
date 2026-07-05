@@ -1137,6 +1137,38 @@ function handleShadowTournament(
   }
 }
 
+function handleTravelingCircus(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 20 + Math.floor(rng.next() * 21);
+      const fameGained = 15 + Math.floor(rng.next() * 11);
+      const cost = 25;
+
+      ctx.treasuryDelta -= cost;
+      addLedger(ctx, rng, nextWeek, 'Traveling Circus Distraction', -cost, 'other');
+
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+        fame: (chosen.fame || 0) + fameGained,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        xp: xpGained,
+        fame: fameGained,
+      });
+    }
+  }
+}
+
 function handleChaosWeaverVisit(
   state: GameState,
   nextWeek: number,
@@ -1219,6 +1251,7 @@ const EVENT_HANDLERS: Record<
   shadow_tournament: handleShadowTournament,
   wandering_fortune_teller: handleWanderingFortuneTeller,
   chaos_weaver_visit: handleChaosWeaverVisit,
+  traveling_circus: handleTravelingCircus,
 };
 
 /**

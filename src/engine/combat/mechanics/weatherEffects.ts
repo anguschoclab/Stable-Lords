@@ -35,6 +35,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.0,
     description: 'Ideal conditions. No advantage given.',
   },
+  'Crimson Snow': {
+    staminaMult: 1.4,
+    initiativeMod: -3,
+    riposteMod: +2,
+    damageMult: 1.15,
+    description: 'Red snow numbs the limbs and hides the true amount of blood spilled.',
+  },
   Rainy: {
     staminaMult: 1.1,
     initiativeMod: -3,
@@ -367,6 +374,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',
   'Wild Magic': 'Crackling energy arcs through the arena. Magic is in the air.',
   Clear: null,
+  'Crimson Snow': 'Blood-red snow falls silently, covering the arena in a thick, terrifying blanket of crimson.',
   Overcast: null,
   Rainy: 'Rain slicks the sand — footwork will be treacherous today.',
   Sweltering: 'The air hangs thick and hot. Stamina will be the deciding factor.',

@@ -3955,6 +3955,13 @@
       "newsletter": [
         "A figure wreathed in swirling chaos energy appeared in the camp. {{name}} was touched by the Chaos Weaver and emerged fundamentally changed, gaining the {{trait}} trait."
       ]
+    },
+    "traveling_circus": {
+      "title": "A Traveling Circus Arrives",
+      "effectType": "traveling_circus",
+      "newsletter": [
+        "A traveling circus set up camp near the stable. {{name}} spent the week learning acrobatic tricks and mesmerizing the locals. (+{{fame}} Fame, +{{xp}} XP, Minor Treasury Cost)"
+      ]
     }
   },
   "crowd_reactions": {

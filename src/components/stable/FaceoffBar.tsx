@@ -1,12 +1,14 @@
 import { cn } from '@/lib/utils';
 
+export interface FighterHp {
+  hp: number;
+  max: number;
+  label?: string;
+}
+
 interface FaceoffBarProps {
-  hpA: number;
-  maxA: number;
-  hpB: number;
-  maxB: number;
-  labelA?: string;
-  labelB?: string;
+  fighterA: FighterHp;
+  fighterB: FighterHp;
   className?: string;
 }
 
@@ -15,14 +17,12 @@ interface FaceoffBarProps {
  * Each side occupies 50% of the total width, proportional to remaining HP.
  */
 export function FaceoffBar({
-  hpA,
-  maxA,
-  hpB,
-  maxB,
-  labelA = 'A',
-  labelB = 'B',
+  fighterA,
+  fighterB,
   className,
 }: FaceoffBarProps) {
+  const { hp: hpA, max: maxA, label: labelA = 'A' } = fighterA;
+  const { hp: hpB, max: maxB, label: labelB = 'B' } = fighterB;
   const pctA = maxA > 0 ? Math.min(50, Math.max(0, (hpA / maxA) * 50)) : 0;
   const pctB = maxB > 0 ? Math.min(50, Math.max(0, (hpB / maxB) * 50)) : 0;
 

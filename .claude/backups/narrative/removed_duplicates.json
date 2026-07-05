@@ -1,24 +1,40 @@
 [
   {
-    "path": ["pbp", "attacks", "slashing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "slashing"
+    ],
     "kept": "{{attacker}} slashes viciously with {{possessive}} {{weapon}}!",
     "removed": "{{attacker}} slashes with {{possessive}} {{weapon}}!",
     "similarity": 0.9122807017543859
   },
   {
-    "path": ["pbp", "attacks", "slashing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "slashing"
+    ],
     "kept": "{{attacker}} sweeps {{possessive}} {{weapon}} in a deadly horizontal arc!",
     "removed": "{{attacker}} sweeps {{possessive}} {{weapon}} in a brutal horizontal arc!",
     "similarity": 0.9452054794520548
   },
   {
-    "path": ["pbp", "attacks", "bashing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
     "kept": "{{attacker}} attempts a brutal smash with {{possessive}} {{weapon}}!",
     "removed": "{{attacker}} attempts to smash {{defender}} with {{possessive}} {{weapon}}!",
     "similarity": 0.8531468531468531
   },
   {
-    "path": ["gazette", "fights", "KO"],
+    "path": [
+      "gazette",
+      "fights",
+      "KO"
+    ],
     "kept": "{{loser}} crumbled like a puppet with cut strings after enduring {{winner}}'s {{adj}} assault.",
     "removed": "{{loser}} crumpled like a puppet with cut strings after {{winner}}'s {{adj}} blow.",
     "similarity": 0.8863636363636364
@@ -89,43 +105,71 @@
     "similarity": 0.88
   },
   {
-    "path": ["pbp", "attacks", "piercing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "piercing"
+    ],
     "kept": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} straight at the heart!",
     "removed": "{{attacker}} lunges forward, driving the point of {{possessive}} {{weapon}} deep into {{defender}}.",
     "similarity": 0.8080808080808081
   },
   {
-    "path": ["pbp", "attacks", "piercing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "piercing"
+    ],
     "kept": "{{attacker}} jabs high, then thrusts low with {{possessive}} {{weapon}}.",
     "removed": "{{attacker}} feints low, then thrusts high with {{possessive}} {{weapon}}!",
     "similarity": 0.8108108108108109
   },
   {
-    "path": ["pbp", "attacks", "slashing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "slashing"
+    ],
     "kept": "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, singing arc!",
     "removed": "{{attacker}} sweeps {{possessive}} {{weapon}} in a deadly horizontal arc!",
     "similarity": 0.8082191780821918
   },
   {
-    "path": ["pbp", "attacks", "bashing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
     "kept": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
     "removed": "{{attacker}} smashes downward with {{possessive}} {{weapon}}!",
     "similarity": 0.819672131147541
   },
   {
-    "path": ["pbp", "attacks", "bashing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
     "kept": "{{attacker}} delivers a brutal, looping strike with {{possessive}} {{weapon}}.",
     "removed": "{{attacker}} delivers a piston-like strike with {{possessive}} {{weapon}}!",
     "similarity": 0.8333333333333334
   },
   {
-    "path": ["pbp", "attacks", "bashing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
     "kept": "{{attacker}} takes a swipe with {{possessive}} {{weapon}}!",
     "removed": "{{attacker}} swings heavily with {{possessive}} {{weapon}}!",
     "similarity": 0.8135593220338984
   },
   {
-    "path": ["pbp", "attacks", "bashing"],
+    "path": [
+      "pbp",
+      "attacks",
+      "bashing"
+    ],
     "kept": "{{attacker}} brings {{possessive}} {{weapon}} down with the force of an avalanche.",
     "removed": "{{attacker}} brings {{possessive}} {{weapon}} down with the thud of a falling oak.",
     "similarity": 0.8170731707317073
@@ -400,5 +444,23 @@
     "removed": "{{attacker}} emerged victorious over {{defender}} in {{hits}} minutes.",
     "kept": "{{attacker}} defeated {{defender}} in {{hits}} minutes.",
     "similarity": 0.7285714285714286
-  }
+  },
+  "{{attacker}}'s {{weapon}} bites deep into the {{bodyPart}}!",
+  "A stiff jab pops {{defender}}'s head back.",
+  "{{attacker}} sweeps {{possessive}} {{weapon}} in a wide, singing arc!",
+  "{{attacker}} brings {{possessive}} {{weapon}} down with immense force!",
+  "RIGHT ARM",
+  "LEFT ARM",
+  "RIGHT LEG",
+  "LEFT LEG",
+  "{{defender}} gracefully dodges the blow.",
+  "{{defender}} throws up their weapon in a blind panic, somehow managing a block.",
+  "{{defender}} catches the blow on their SHIELD.",
+  "{{attacker}} smashes right through {{defender}}'s attempted parry!",
+  "{{name}} hops back to a fighting stance.",
+  "It feels like an eternity as {{defender}} crumbles to the arena floor.",
+  "A blur of motion on the ground!",
+  "A collective gasp echoes through the coliseum.",
+  "Precision meets raw power in this clash.",
+  "The crowd howls for a brutal finish!"
 ]

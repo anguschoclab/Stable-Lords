@@ -16,9 +16,17 @@ interface TreasurySparklineProps {
   showLabel?: boolean;
 }
 
+export interface Viewport {
+  min: number;
+  range: number;
+  H: number;
+  W: number;
+  PAD: number;
+}
+
 // ─── Pure helpers ─────────────────────────────────────────────────────────────
 
-function buildWeeklyPoints(
+export function buildWeeklyPoints(
   ledger: LedgerEntry[],
   week: number,
   treasury: number
@@ -54,15 +62,12 @@ function buildWeeklyPoints(
   return series.slice(-12); // last 12 weeks
 }
 
-function buildSparklinePath(
+export function buildSparklinePath(
   points: { week: number; value: number }[],
-  min: number,
-  range: number,
-  H: number,
-  W: number,
-  PAD: number
+  vp: Viewport
 ): string {
   if (points.length < 2) return '';
+  const { min, range, H, W, PAD } = vp;
   return points
     .map((p, i) => {
       const x = PAD + (i / (points.length - 1)) * (W - PAD * 2);
@@ -111,15 +116,12 @@ function SparklineLabel({ treasury, delta, isUp }: SparklineLabelProps) {
 
 interface SparklineDotProps {
   points: { week: number; value: number }[];
-  min: number;
-  range: number;
-  H: number;
-  W: number;
-  PAD: number;
+  vp: Viewport;
   isUp: boolean;
 }
 
-function SparklineDot({ points, min, range, H, W, PAD, isUp }: SparklineDotProps) {
+function SparklineDot({ points, vp, isUp }: SparklineDotProps) {
+  const { min, range, H, W, PAD } = vp;
   const last = points[points.length - 1];
   if (!last || points.length === 0) return null;
   const i = points.length - 1;
@@ -142,11 +144,7 @@ interface SparklineSVGProps {
   pathD: string;
   areaD: string;
   points: { week: number; value: number }[];
-  min: number;
-  range: number;
-  H: number;
-  W: number;
-  PAD: number;
+  vp: Viewport;
   isUp: boolean;
   height: number;
 }
@@ -155,14 +153,11 @@ function SparklineSVG({
   pathD,
   areaD,
   points,
-  min,
-  range,
-  H,
-  W,
-  PAD,
+  vp,
   isUp,
   height,
 }: SparklineSVGProps) {
+  const { H, W } = vp;
   const strokeColor = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';
   const gradientColor = isUp ? 'hsl(var(--primary))' : 'hsl(var(--destructive))';
 
@@ -189,7 +184,7 @@ function SparklineSVG({
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <SparklineDot points={points} min={min} range={range} H={H} W={W} PAD={PAD} isUp={isUp} />
+      <SparklineDot points={points} vp={vp} isUp={isUp} />
     </svg>
   );
 }
@@ -227,10 +222,12 @@ export function TreasurySparkline({
   const W = 200;
   const H = height;
   const PAD = 4;
+  const vp: Viewport = { min, range, H, W, PAD };
 
   const pathD = useMemo(
-    () => buildSparklinePath(points, min, range, H, W, PAD),
-    [points, min, range, H, W]
+    () => buildSparklinePath(points, vp),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [points, min, range, H, W, PAD]
   );
 
   const areaD = pathD
@@ -251,11 +248,7 @@ export function TreasurySparkline({
           pathD={pathD}
           areaD={areaD}
           points={points}
-          min={min}
-          range={range}
-          H={H}
-          W={W}
-          PAD={PAD}
+          vp={vp}
           isUp={isUp}
           height={height}
         />

@@ -113,12 +113,8 @@ export function SimulatorResults({ simulation }: SimulatorResultsProps) {
             </span>
           </div>
           <FaceoffBar
-            hpA={simulation.hpA}
-            maxA={simulation.calcA.hp}
-            hpB={simulation.hpB}
-            maxB={simulation.calcB.hp}
-            labelA="Fighter A"
-            labelB="Fighter B"
+            fighterA={{ hp: simulation.hpA, max: simulation.calcA.hp, label: 'Fighter A' }}
+            fighterB={{ hp: simulation.hpB, max: simulation.calcB.hp, label: 'Fighter B' }}
           />
         </div>
       </div>

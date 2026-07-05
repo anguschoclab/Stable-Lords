@@ -35,6 +35,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   Ashfall: null,
   'Acid Rain': 'ambience-acid-rain',
   'Mana Surge': 'ambience-mana-surge',
+  'Astral Dust': 'ambience-arcane-storm',
   'Abyssal Gloom': 'ambience-eclipse',
   'Cursed Miasma': 'ambience-acid-rain',
   Hailstorm: 'ambience-acid-rain',

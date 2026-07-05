@@ -56,6 +56,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Shimmering Heat',
   'Rain of Frogs',
   'Crystal Rain',
+  'Astral Dust',
   'Chaos Storm',
   'Chaos Squall',
 ];
@@ -89,7 +90,7 @@ describe('Weather season exclusivity', () => {
     }
   });
 
-  it('all 41 WeatherType values are covered across seasonal buckets', () => {
+  it('all WeatherType values are covered across seasonal buckets', () => {
     const allListed = new Set<WeatherType>();
     for (const s of SEASONS) {
       for (const w of SEASONAL_WEATHER[s]) {

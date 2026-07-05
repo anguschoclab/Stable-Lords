@@ -27,6 +27,7 @@ export const WEATHER_TYPES = [
   'Acid Rain',
   'Mana Surge',
   'Rainbow',
+  'Astral Dust',
   'Scorching Wind',
   'Wild Magic',
   'Spooky Night',

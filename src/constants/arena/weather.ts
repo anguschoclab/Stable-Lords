@@ -179,6 +179,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-arena-fame/20',
     description: 'Magical energy surges through the arena, enhancing special abilities.',
   },
+  'Astral Dust': {
+    icon: Sparkles,
+    colorClass: 'text-primary',
+    bgClass: 'bg-primary/10',
+    borderClass: 'border-primary/20',
+    description: 'Shimmering star dust makes movements erratic and draining.',
+  },
   'Aurora Borealis': {
     icon: Sparkles,
     colorClass: 'text-arena-fame',

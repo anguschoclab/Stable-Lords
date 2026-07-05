@@ -603,6 +603,7 @@ export type WeatherType =
   | 'Acid Rain'
   | 'Mana Surge'
   | 'Rainbow'
+  | 'Astral Dust'
   | 'Scorching Wind'
   | 'Spooky Night'
   | 'Meteor Shower'

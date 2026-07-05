@@ -62,6 +62,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   Ashfall: () => <AshfallEffect />,
   'Acid Rain': () => <AcidRainEffect />,
   'Mana Surge': () => <ManaSurgeEffect />,
+  'Astral Dust': () => <MistEffect />,
   'Scorching Wind': () => <ScorchingWindEffect />,
   'Spooky Night': () => <SpookyNightEffect />,
   'Meteor Shower': () => <MeteorShowerEffect />,

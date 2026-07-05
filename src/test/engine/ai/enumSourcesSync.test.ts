@@ -50,6 +50,7 @@ describe('enumSources sync with WeatherType', () => {
     'Rain of Frogs',
     'Chaos Storm',
     'Chaos Squall',
+    'Astral Dust',
   ]);
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {

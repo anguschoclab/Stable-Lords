@@ -330,9 +330,7 @@ describe('Autosim Integration', () => {
     it('index excludes pruned offers', async () => {
       const state = createFreshState('test-seed');
       state.treasury = 5000;
-      state.roster = [
-        makeAutosimWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 }),
-      ];
+      state.roster = [makeAutosimWarrior('w1', 'Test Warrior 1', { fame: 10, popularity: 5 })];
       // Add an expired offer that should be pruned by finalizeState
       const expiredOfferId = 'expired_offer_1';
       (state as any).boutOffers = {

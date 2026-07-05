@@ -38,11 +38,7 @@ export function narrateAttack(
 /**
  * Narrates a passive ability activation.
  */
-export function narratePassive(
-  rng: IRNGService,
-  style: FightingStyle,
-  actorName: string
-): string {
+export function narratePassive(rng: IRNGService, style: FightingStyle, actorName: string): string {
   const template = getFromArchive(rng, ['passives', style]);
   return interpolateTemplate(template, { attacker: actorName });
 }
@@ -237,7 +233,8 @@ export function narrateCounterstrike(
   attackerName?: string
 ): string {
   const template =
-    getFromArchive(rng, ['pbp', 'defenses', 'counterstrike', 'success']) || '{{defender}} counters!';
+    getFromArchive(rng, ['pbp', 'defenses', 'counterstrike', 'success']) ||
+    '{{defender}} counters!';
   return interpolateTemplate(template, { defender: defenderName, attacker: attackerName });
 }
 
@@ -287,7 +284,8 @@ export function narrateHit(
 
   if (!template || template === 'A fierce exchange occurs.') {
     template =
-      getFromArchive(rng, ['strikes', 'generic']) || getFromArchive(rng, ['pbp', 'hits', 'generic']);
+      getFromArchive(rng, ['strikes', 'generic']) ||
+      getFromArchive(rng, ['pbp', 'hits', 'generic']);
   }
 
   return interpolateTemplate(template, {

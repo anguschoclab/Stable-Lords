@@ -45,7 +45,13 @@ function makeCtx(overrides: Partial<ResolutionContext> = {}): ResolutionContext 
     phase: 'OPENING',
     exchange: 0,
     weather: 'Clear' as WeatherType,
-    weatherEffect: { staminaMult: 1, initiativeMod: 0, riposteMod: 0, damageMult: 1, description: '' },
+    weatherEffect: {
+      staminaMult: 1,
+      initiativeMod: 0,
+      riposteMod: 0,
+      damageMult: 1,
+      description: '',
+    },
     matchupA: 0,
     matchupD: 0,
     trainerModsA: {},
@@ -261,7 +267,11 @@ describe('applyEnduranceCosts — surfaceMod.enduranceMult', () => {
 describe('applyEnduranceCosts — full multiplicative chain', () => {
   it('style enduranceMult applies: TP (0.9) drains less than PR (1.04)', () => {
     const tp = run({ fAStyle: FightingStyle.TotalParry, fAWeaponPenalty: 10, fDWeaponPenalty: 10 });
-    const pr = run({ fAStyle: FightingStyle.ParryRiposte, fAWeaponPenalty: 10, fDWeaponPenalty: 10 });
+    const pr = run({
+      fAStyle: FightingStyle.ParryRiposte,
+      fAWeaponPenalty: 10,
+      fDWeaponPenalty: 10,
+    });
     const tpDrain = 1000 - tp.fA.endurance;
     const prDrain = 1000 - pr.fA.endurance;
     expect(tpDrain).toBe(expectedAttDrain({ ...BASE, style: FightingStyle.TotalParry }));
@@ -446,9 +456,7 @@ describe('applyEnduranceCosts — exhaustion / BOUT_END events', () => {
   });
 
   it('no BOUT_END when Kill already in events', () => {
-    const preEvents: CombatEvent[] = [
-      { type: 'BOUT_END', actor: 'A', result: 'Kill' },
-    ];
+    const preEvents: CombatEvent[] = [{ type: 'BOUT_END', actor: 'A', result: 'Kill' }];
     const { events } = run({
       enduranceA: 1,
       enduranceD: 1,
@@ -505,8 +513,6 @@ describe('applyEnduranceCosts — edge cases', () => {
     });
     expect(1000 - fA.endurance).toBe(attExp);
     // Verify both multipliers stack: Sweltering staminaMult=1.3, arena=1.25
-    expect(attExp).toBe(
-      Math.round(enduranceCost(10, 10, 'Sweltering') * 10 * 1.25)
-    );
+    expect(attExp).toBe(Math.round(enduranceCost(10, 10, 'Sweltering') * 10 * 1.25));
   });
 });

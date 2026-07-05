@@ -209,7 +209,9 @@ beforeEach(() => {
 
 // Clear vi mocks after each test to prevent state pollution
 afterEach(() => {
-  if (typeof vi !== "undefined") { vi.restoreAllMocks(); }
+  if (typeof vi !== 'undefined') {
+    vi.restoreAllMocks();
+  }
 });
 
 // Clear module-level WeakMap caches to prevent state pollution across tests
@@ -227,7 +229,9 @@ afterEach(() => {
 afterEach(() => {
   try {
     // Clear OPFS-related modules that may have cached state
-    if (typeof vi !== "undefined") { vi.unmock('@/engine/storage/opfsArchive'); }
+    if (typeof vi !== 'undefined') {
+      vi.unmock('@/engine/storage/opfsArchive');
+    }
   } catch (e) {
     // Ignore if module doesn't exist
   }

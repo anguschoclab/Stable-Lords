@@ -11,10 +11,13 @@ import type { Warrior } from '@/types/warrior.types';
 
 const w = (over: Partial<Warrior> = {}): Warrior =>
   ({
-    id: 'x', traits: [], trainability: 0.65,
-    fame: 0, career: { wins: 0, losses: 0, kills: 0 },
+    id: 'x',
+    traits: [],
+    trainability: 0.65,
+    fame: 0,
+    career: { wins: 0, losses: 0, kills: 0 },
     ...over,
-  } as unknown as Warrior);
+  }) as unknown as Warrior;
 
 describe('traitCapacity', () => {
   it('scales the personal trait ceiling with trainability across the [0.4,0.9] range', () => {
@@ -31,9 +34,15 @@ describe('traitCapacity', () => {
 
 describe('meritsTraitDevelopment', () => {
   it('gates development behind a winning record or real fame', () => {
-    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 4, kills: 0 }, fame: 4 }))).toBe(false);
-    expect(meritsTraitDevelopment(w({ career: { wins: 4, losses: 1, kills: 0 }, fame: 4 }))).toBe(true);
-    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 0, kills: 0 }, fame: 40 }))).toBe(true);
+    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 4, kills: 0 }, fame: 4 }))).toBe(
+      false
+    );
+    expect(meritsTraitDevelopment(w({ career: { wins: 4, losses: 1, kills: 0 }, fame: 4 }))).toBe(
+      true
+    );
+    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 0, kills: 0 }, fame: 40 }))).toBe(
+      true
+    );
   });
 });
 

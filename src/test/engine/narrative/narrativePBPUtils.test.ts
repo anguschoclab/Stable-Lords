@@ -21,9 +21,9 @@ describe('narrativePBPUtils', () => {
     });
 
     it('replaces %W with weapon name', () => {
-      expect(interpolateTemplate('%A strikes with %W.', { attacker: 'Thor', weapon: 'HAMMER' })).toBe(
-        'Thor strikes with HAMMER.'
-      );
+      expect(
+        interpolateTemplate('%A strikes with %W.', { attacker: 'Thor', weapon: 'HAMMER' })
+      ).toBe('Thor strikes with HAMMER.');
     });
 
     it('replaces %BP with body part', () => {
@@ -80,9 +80,9 @@ describe('narrativePBPUtils', () => {
     });
 
     it('resolves {{possessive}} (defaults to "their")', () => {
-      expect(interpolateTemplate('{{attacker}} raises {{possessive}} blade.', { attacker: 'A' })).toBe(
-        'A raises their blade.'
-      );
+      expect(
+        interpolateTemplate('{{attacker}} raises {{possessive}} blade.', { attacker: 'A' })
+      ).toBe('A raises their blade.');
     });
 
     it('resolves {{pronoun}} (defaults to "he")', () => {

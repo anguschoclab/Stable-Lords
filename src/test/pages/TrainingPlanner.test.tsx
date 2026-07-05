@@ -42,7 +42,11 @@ function renderPlanner(roster: Warrior[]) {
   state.roster = roster;
   useGameStore.getState().loadGame('test-slot', state as GameState);
   useGameStore.setState({ atTitleScreen: false, isInitialized: true });
-  return render(<TooltipProvider><TrainingPlanner /></TooltipProvider>);
+  return render(
+    <TooltipProvider>
+      <TrainingPlanner />
+    </TooltipProvider>
+  );
 }
 
 describe('TrainingPlanner (Battle Plans)', () => {

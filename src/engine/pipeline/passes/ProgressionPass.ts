@@ -1,4 +1,9 @@
-import type { GameState, ProgressionState, NewsletterItem, GazetteStory } from '@/types/state.types';
+import type {
+  GameState,
+  ProgressionState,
+  NewsletterItem,
+  GazetteStory,
+} from '@/types/state.types';
 import type { StateImpact } from '@/engine/impacts';
 import { DEFAULT_PROGRESSION } from '@/constants/progression';
 

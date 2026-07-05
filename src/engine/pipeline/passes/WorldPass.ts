@@ -21,7 +21,15 @@ export function computeNextSeason(newWeek: number): Season {
 /**
  * Weathers available in every season.
  */
-const SHARED_WEATHER: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge', 'Chaos Storm', 'Chaos Squall'];
+const SHARED_WEATHER: WeatherType[] = [
+  'Clear',
+  'Overcast',
+  'Blood Moon',
+  'Eclipse',
+  'Mana Surge',
+  'Chaos Storm',
+  'Chaos Squall',
+];
 
 /**
  * Season-exclusive weather pools.  Every WeatherType must appear in exactly one

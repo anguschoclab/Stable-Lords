@@ -122,7 +122,7 @@ describe('ownerGrudges - processOwnerGrudges', () => {
     const { grudges, gazetteItems } = processOwnerGrudges(mockState, [existingGrudge as any]);
 
     expect(grudges[0]!.intensity).toBe(5);
-    expect(gazetteItems.some(i => i.includes('SEASON FEUD'))).toBe(false);
+    expect(gazetteItems.some((i) => i.includes('SEASON FEUD'))).toBe(false);
   });
 });
 

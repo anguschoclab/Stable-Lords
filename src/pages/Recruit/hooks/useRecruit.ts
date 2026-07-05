@@ -26,18 +26,17 @@ const CUSTOM_COST = 200;
  *
  */
 export function useRecruit() {
-  const { roster, treasury, rosterBonus, recruitPool, setState, deductFunds, week } =
-    useGameStore(
-      useShallow((s) => ({
-        roster: s.roster,
-        treasury: s.treasury,
-        rosterBonus: s.rosterBonus,
-        recruitPool: s.recruitPool,
-        setState: s.setState,
-        deductFunds: s.deductFunds,
-        week: s.week,
-      }))
-    );
+  const { roster, treasury, rosterBonus, recruitPool, setState, deductFunds, week } = useGameStore(
+    useShallow((s) => ({
+      roster: s.roster,
+      treasury: s.treasury,
+      rosterBonus: s.rosterBonus,
+      recruitPool: s.recruitPool,
+      setState: s.setState,
+      deductFunds: s.deductFunds,
+      week: s.week,
+    }))
+  );
   const navigate = useNavigate();
   const MAX_ROSTER = BASE_ROSTER_CAP + (rosterBonus ?? 0);
 

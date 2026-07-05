@@ -18,7 +18,9 @@ function makeStyles(counts: Partial<Record<FightingStyle, number>>): FightingSty
 describe('StyleCompositionDonut', () => {
   it('renders an SVG element', () => {
     const { container } = render(
-      <StyleCompositionDonut styles={makeStyles({ [FightingStyle.StrikingAttack]: 3, [FightingStyle.BashingAttack]: 2 })} />
+      <StyleCompositionDonut
+        styles={makeStyles({ [FightingStyle.StrikingAttack]: 3, [FightingStyle.BashingAttack]: 2 })}
+      />
     );
     const svg = container.querySelector('svg');
     expect(svg).toBeInTheDocument();
@@ -26,7 +28,13 @@ describe('StyleCompositionDonut', () => {
 
   it('renders one arc path per distinct style', () => {
     const { container } = render(
-      <StyleCompositionDonut styles={makeStyles({ [FightingStyle.StrikingAttack]: 3, [FightingStyle.BashingAttack]: 2, [FightingStyle.TotalParry]: 1 })} />
+      <StyleCompositionDonut
+        styles={makeStyles({
+          [FightingStyle.StrikingAttack]: 3,
+          [FightingStyle.BashingAttack]: 2,
+          [FightingStyle.TotalParry]: 1,
+        })}
+      />
     );
     const paths = container.querySelectorAll('[data-testid^="style-arc-"]');
     expect(paths).toHaveLength(3);
@@ -48,7 +56,9 @@ describe('StyleCompositionDonut', () => {
 
   it('each arc path has a title element containing style name', () => {
     const { container } = render(
-      <StyleCompositionDonut styles={makeStyles({ [FightingStyle.StrikingAttack]: 3, [FightingStyle.BashingAttack]: 2 })} />
+      <StyleCompositionDonut
+        styles={makeStyles({ [FightingStyle.StrikingAttack]: 3, [FightingStyle.BashingAttack]: 2 })}
+      />
     );
     const paths = container.querySelectorAll('[data-testid^="style-arc-"]');
     paths.forEach((p) => {
@@ -59,12 +69,18 @@ describe('StyleCompositionDonut', () => {
 
   it('majority style arc has larger sweep than minority', () => {
     const { container } = render(
-      <StyleCompositionDonut styles={makeStyles({ [FightingStyle.StrikingAttack]: 6, [FightingStyle.BashingAttack]: 2 })} />
+      <StyleCompositionDonut
+        styles={makeStyles({ [FightingStyle.StrikingAttack]: 6, [FightingStyle.BashingAttack]: 2 })}
+      />
     );
     const strikerKey = FightingStyle.StrikingAttack.replace(/\s+/g, '-');
     const basherKey = FightingStyle.BashingAttack.replace(/\s+/g, '-');
-    const majorArc = container.querySelector(`[data-testid="style-arc-${strikerKey}"]`) as SVGPathElement;
-    const minorArc = container.querySelector(`[data-testid="style-arc-${basherKey}"]`) as SVGPathElement;
+    const majorArc = container.querySelector(
+      `[data-testid="style-arc-${strikerKey}"]`
+    ) as SVGPathElement;
+    const minorArc = container.querySelector(
+      `[data-testid="style-arc-${basherKey}"]`
+    ) as SVGPathElement;
     expect(majorArc).toBeInTheDocument();
     expect(minorArc).toBeInTheDocument();
     const majorSweep = parseFloat(majorArc.getAttribute('data-sweep') ?? '0');

@@ -9,10 +9,7 @@ import {
 import type { GameState, Warrior, RivalStableData, BoutOffer } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 
-function makeWarrior(
-  id: string,
-  overrides: Partial<Warrior> = {}
-): Warrior {
+function makeWarrior(id: string, overrides: Partial<Warrior> = {}): Warrior {
   return {
     id: id as Warrior['id'],
     name: `Warrior ${id}`,
@@ -59,7 +56,14 @@ function makeState(
     meta: { gameName: 'test', version: '1', createdAt: '2024-01-01' },
     ftueComplete: true,
     coachDismissed: [],
-    player: { id: 'p1' as any, name: 'Player', stableName: 'Player Stable', fame: 0, renown: 0, titles: 0 },
+    player: {
+      id: 'p1' as any,
+      name: 'Player',
+      stableName: 'Player Stable',
+      fame: 0,
+      renown: 0,
+      titles: 0,
+    },
     fame: 0,
     popularity: 0,
     treasury: 0,
@@ -333,7 +337,16 @@ describe('warriorCollection', () => {
       const w1 = makeWarrior('p1', { status: 'Active', injuries: [] });
       const w2 = makeWarrior('p2', {
         status: 'Active',
-        injuries: [{ id: 'inj1' as any, name: 'Broken Arm', description: '', severity: 'Minor', weeksRemaining: 2, penalties: {} }],
+        injuries: [
+          {
+            id: 'inj1' as any,
+            name: 'Broken Arm',
+            description: '',
+            severity: 'Minor',
+            weeksRemaining: 2,
+            penalties: {},
+          },
+        ],
       });
       const state = makeState([w1, w2]);
       const result = collectHealthyWarriors(state);

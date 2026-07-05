@@ -2,20 +2,21 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Stop the rival world from saturating every warrior with traits (a 104-week sim ends with **375/378 = 99.2%** of warriors traited, ~2.0 each), and make the multi-flaw churn signal actually fire (currently `multiFlawWarriors = 0` forever). After the fix the standing world should show a *spread* — a meaningful share of permanently blank warriors, fewer fully-loaded ones — and 2+-flaw warriors should occur and get culled.
+**Goal:** Stop the rival world from saturating every warrior with traits (a 104-week sim ends with **375/378 = 99.2%** of warriors traited, ~2.0 each), and make the multi-flaw churn signal actually fire (currently `multiFlawWarriors = 0` forever). After the fix the standing world should show a _spread_ — a meaningful share of permanently blank warriors, fewer fully-loaded ones — and 2+-flaw warriors should occur and get culled.
 
-**Architecture:** The saturation comes from `rosterWorker.ts`'s trait-development pass rolling for *every* active warrior *every* week until a flat soft-cap of 2 — so over a multi-year career P(reaching the cap) → ~1. We replace the flat cap with **two combined gates**: (1) a **merit gate** — only warriors who've earned it (winning record or real fame) develop traits; (2) an **aptitude capacity cap** — each warrior's personal trait ceiling scales with their hidden `trainability` (rolled in [0.4, 0.9] at birth), so low-aptitude warriors permanently plateau at 0–1 traits. Separately, a small **flaw-exposure** roll lets already-flawed or losing warriors pick up a *further* flaw (up to the hard `TRAIT_CAP` of 3) even when they aren't developing positively — so 2-flaw warriors occur and the existing `recommendation === 'Release'` cull churns them.
+**Architecture:** The saturation comes from `rosterWorker.ts`'s trait-development pass rolling for _every_ active warrior _every_ week until a flat soft-cap of 2 — so over a multi-year career P(reaching the cap) → ~1. We replace the flat cap with **two combined gates**: (1) a **merit gate** — only warriors who've earned it (winning record or real fame) develop traits; (2) an **aptitude capacity cap** — each warrior's personal trait ceiling scales with their hidden `trainability` (rolled in [0.4, 0.9] at birth), so low-aptitude warriors permanently plateau at 0–1 traits. Separately, a small **flaw-exposure** roll lets already-flawed or losing warriors pick up a _further_ flaw (up to the hard `TRAIT_CAP` of 3) even when they aren't developing positively — so 2-flaw warriors occur and the existing `recommendation === 'Release'` cull churns them.
 
 **Tech Stack:** TypeScript, Bun (`bun`/`bunx` — never npm/node), Vitest. Tests: `npx vitest run <path>`. Typecheck: `bunx tsc --noEmit --project tsconfig.app.json`.
 
 **Scope:** Pacing/churn knobs in the rival development pass + a new pure capacity/merit module. **Depends on** the three 2026-06-21 plans (world-decouple, liveness harness, trait tuning) being merged. **Non-goal:** changing player (manual) trait training, birth trait rates (`generateTraits` stays 68% blank / 7% flaw), or any combat math (`balance.test.ts` must stay green).
 
 **Grounded facts (from code audit — do not re-derive):**
+
 - Saturation source: `src/engine/ai/workers/rosterWorker.ts` lines ~140–161 — per active warrior, gated only by `treasury > 300`, `traits.length >= RIVAL_DEV_TRAIT_SOFT_CAP` (=2), and `rng.next() <= trainAppetite` (0.06–0.22). No merit gate, no per-warrior capacity.
 - `trainability?: number` on `Warrior` (`src/types/warrior.types.ts:206`), generated as `0.4 + rng.next() * 0.5` → range **[0.4, 0.9]** (`src/engine/factories/warriorFactory.ts:44`), used for both player and rival warriors via `makeWarrior`.
 - `canAcquireTrait(warrior, traitId)` (`src/engine/training/trainingGains/traitTraining.ts:57`) already enforces `TRAIT_CAP` (=3), uniqueness, single-personality, and conflict groups — reuse it for flaw exposure.
 - The botch flaw pool pattern already exists in `rollTraitTraining` (lines ~105–109): `Object.values(TRAITS).filter((t) => t.tier === 'Flaw' && canAcquireTrait(warrior, t.id))` then `pickWeighted(flaws, rng)`.
-- The liability cull already honors `recommendation === 'Release'` (`src/engine/owner/roster/management.ts:100`); a 2-flaw warrior scores ~88, recommendation `Release` — so once 2-flaw warriors *exist*, they get cut.
+- The liability cull already honors `recommendation === 'Release'` (`src/engine/owner/roster/management.ts:100`); a 2-flaw warrior scores ~88, recommendation `Release` — so once 2-flaw warriors _exist_, they get cut.
 - The liveness harness ceiling was dropped to a floor-only assert (`src/test/engine/sim/worldLiveness.integration.test.ts:120` asserts only `traitedShare > 0.2`).
 
 ---
@@ -33,6 +34,7 @@
 ## Task 1: Pure capacity, merit & flaw-exposure helpers (TDD)
 
 **Files:**
+
 - Create: `src/engine/training/trainingGains/traitCapacity.ts`
 - Create: `src/test/engine/training/traitCapacity.test.ts`
 
@@ -54,10 +56,13 @@ import type { Warrior } from '@/types/warrior.types';
 
 const w = (over: Partial<Warrior> = {}): Warrior =>
   ({
-    id: 'x', traits: [], trainability: 0.65,
-    fame: 0, career: { wins: 0, losses: 0, kills: 0 },
+    id: 'x',
+    traits: [],
+    trainability: 0.65,
+    fame: 0,
+    career: { wins: 0, losses: 0, kills: 0 },
     ...over,
-  } as unknown as Warrior);
+  }) as unknown as Warrior;
 
 describe('traitCapacity', () => {
   it('scales the personal trait ceiling with trainability across the [0.4,0.9] range', () => {
@@ -74,9 +79,15 @@ describe('traitCapacity', () => {
 
 describe('meritsTraitDevelopment', () => {
   it('gates development behind a winning record or real fame', () => {
-    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 4, kills: 0 }, fame: 5 }))).toBe(false);
-    expect(meritsTraitDevelopment(w({ career: { wins: 4, losses: 1, kills: 0 }, fame: 5 }))).toBe(true);
-    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 0, kills: 0 }, fame: 40 }))).toBe(true);
+    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 4, kills: 0 }, fame: 5 }))).toBe(
+      false
+    );
+    expect(meritsTraitDevelopment(w({ career: { wins: 4, losses: 1, kills: 0 }, fame: 5 }))).toBe(
+      true
+    );
+    expect(meritsTraitDevelopment(w({ career: { wins: 0, losses: 0, kills: 0 }, fame: 40 }))).toBe(
+      true
+    );
   });
 });
 
@@ -149,9 +160,7 @@ export function countFlaws(w: Warrior): number {
 
 /** Pick an acquirable Flaw (respects hard cap + conflicts), or null if none fit. */
 export function pickExposureFlaw(w: Warrior, rng: IRNGService): string | null {
-  const flaws = Object.values(TRAITS).filter(
-    (t) => t.tier === 'Flaw' && canAcquireTrait(w, t.id)
-  );
+  const flaws = Object.values(TRAITS).filter((t) => t.tier === 'Flaw' && canAcquireTrait(w, t.id));
   if (flaws.length === 0) return null;
   const idx = Math.floor(rng.next() * flaws.length);
   return flaws[Math.min(idx, flaws.length - 1)]!.id;
@@ -174,6 +183,7 @@ git commit -m "feat(traits): per-warrior trait capacity, merit gate, and flaw-ex
 ## Task 2: Rewire the rival development pass — merit + capacity + flaw exposure
 
 **Files:**
+
 - Modify: `src/engine/ai/workers/rosterWorker.ts`
 
 - [ ] **Step 1: Add the flaw-exposure constant + imports**
@@ -205,31 +215,31 @@ export const FLAW_EXPOSURE_CHANCE = 0.02;
 Replace the trait-development block (lines ~150–161, the `updatedRival.roster = updatedRival.roster.map(...)` that uses `RIVAL_DEV_TRAIT_SOFT_CAP`) with:
 
 ```typescript
-    updatedRival.roster = updatedRival.roster.map((w) => {
-      if (w.status !== 'Active') return w;
-      const traits = w.traits ?? [];
-      if (traits.length >= TRAIT_CAP) return w; // hard cap reached, nothing more
+updatedRival.roster = updatedRival.roster.map((w) => {
+  if (w.status !== 'Active') return w;
+  const traits = w.traits ?? [];
+  if (traits.length >= TRAIT_CAP) return w; // hard cap reached, nothing more
 
-      // (1) Merit gate + (2) aptitude capacity: only earned, capable warriors develop.
-      const canDevelop = meritsTraitDevelopment(w) && traits.length < traitCapacity(w);
-      if (canDevelop) {
-        if (rngService.next() > traitPolicy.trainAppetite) return w;
-        const roll = rollTraitTraining(w, aiTrainer, rngService);
-        if (roll.outcome !== 'none' && roll.traitId) {
-          return { ...w, traits: [...traits, roll.traitId] };
-        }
-        return w;
-      }
+  // (1) Merit gate + (2) aptitude capacity: only earned, capable warriors develop.
+  const canDevelop = meritsTraitDevelopment(w) && traits.length < traitCapacity(w);
+  if (canDevelop) {
+    if (rngService.next() > traitPolicy.trainAppetite) return w;
+    const roll = rollTraitTraining(w, aiTrainer, rngService);
+    if (roll.outcome !== 'none' && roll.traitId) {
+      return { ...w, traits: [...traits, roll.traitId] };
+    }
+    return w;
+  }
 
-      // Flaw exposure: warriors who are struggling (losing record) or already
-      // carry a flaw risk picking up a further flaw — feeding multi-flaw churn.
-      const struggling = (w.career?.losses ?? 0) > (w.career?.wins ?? 0);
-      if ((struggling || countFlaws(w) >= 1) && rngService.next() < FLAW_EXPOSURE_CHANCE) {
-        const flawId = pickExposureFlaw(w, rngService);
-        if (flawId) return { ...w, traits: [...traits, flawId] };
-      }
-      return w;
-    });
+  // Flaw exposure: warriors who are struggling (losing record) or already
+  // carry a flaw risk picking up a further flaw — feeding multi-flaw churn.
+  const struggling = (w.career?.losses ?? 0) > (w.career?.wins ?? 0);
+  if ((struggling || countFlaws(w) >= 1) && rngService.next() < FLAW_EXPOSURE_CHANCE) {
+    const flawId = pickExposureFlaw(w, rngService);
+    if (flawId) return { ...w, traits: [...traits, flawId] };
+  }
+  return w;
+});
 ```
 
 > The synthetic `aiTrainer` and `traitPolicy` are already in scope from the surrounding `if ((updatedRival.treasury ?? 0) > 300) { … }` block — keep that treasury gate wrapping this map. Only the map body changes.
@@ -255,6 +265,7 @@ git commit -m "feat(traits): merit+aptitude-gated rival development with flaw ex
 ## Task 3: De-saturation assertions in the rival-AI integration test
 
 **Files:**
+
 - Modify: `src/test/engine/ai/rivalTraitAI.integration.test.ts`
 
 This test currently asserts traits grow over a season and `< 25%` reach 3 traits. Update it to the new model: traits still grow, but a real share of warriors remain **blank** (proving de-saturation), and the `RIVAL_DEV_TRAIT_SOFT_CAP` reference (if any) is removed.
@@ -268,12 +279,12 @@ Open `src/test/engine/ai/rivalTraitAI.integration.test.ts`. Note the variable ho
 After the existing post-season assertions, add (adapt `state` to the file's actual variable name):
 
 ```typescript
-    const allRivalWarriors = state.rivals.flatMap((r) => r.roster);
-    const blank = allRivalWarriors.filter((w) => (w.traits ?? []).length === 0).length;
-    const blankShare = blank / Math.max(1, allRivalWarriors.length);
-    // De-saturation: development is earned + capacity-gated, so a meaningful slice
-    // of the world stays permanently blank (low-aptitude / unproven warriors).
-    expect(blankShare).toBeGreaterThan(0.15);
+const allRivalWarriors = state.rivals.flatMap((r) => r.roster);
+const blank = allRivalWarriors.filter((w) => (w.traits ?? []).length === 0).length;
+const blankShare = blank / Math.max(1, allRivalWarriors.length);
+// De-saturation: development is earned + capacity-gated, so a meaningful slice
+// of the world stays permanently blank (low-aptitude / unproven warriors).
+expect(blankShare).toBeGreaterThan(0.15);
 ```
 
 - [ ] **Step 3: Run it**
@@ -293,6 +304,7 @@ git commit -m "test(traits): rival world keeps a blank share (de-saturation guar
 ## Task 4: Reinstate the liveness harness saturation ceiling + multi-flaw guard
 
 **Files:**
+
 - Modify: `src/test/engine/sim/worldLiveness.integration.test.ts`
 
 The harness ceiling was dropped to a floor-only assert. Reinstate a ceiling proving the world no longer saturates, and assert multi-flaw warriors actually occur during the run (churn is live).
@@ -302,11 +314,11 @@ The harness ceiling was dropped to a floor-only assert. Reinstate a ceiling prov
 In the test `class identity and Signatures emerge, with acquisition in a sane band`, replace the single floor assert (currently `expect(traitedShare).toBeGreaterThan(0.2)`) with a real band + blank floor:
 
 ```typescript
-    const traitedShare = end.traitedWarriors / Math.max(1, allWarriors.length);
-    expect(traitedShare).toBeGreaterThan(0.2); // traits do emerge
-    expect(traitedShare).toBeLessThan(0.8); // …but the world is NOT saturated (was 0.99)
-    const blankShare = 1 - traitedShare;
-    expect(blankShare).toBeGreaterThan(0.18); // a real population stays permanently blank
+const traitedShare = end.traitedWarriors / Math.max(1, allWarriors.length);
+expect(traitedShare).toBeGreaterThan(0.2); // traits do emerge
+expect(traitedShare).toBeLessThan(0.8); // …but the world is NOT saturated (was 0.99)
+const blankShare = 1 - traitedShare;
+expect(blankShare).toBeGreaterThan(0.18); // a real population stays permanently blank
 ```
 
 - [ ] **Step 2: Add a live-churn assertion**
@@ -314,18 +326,18 @@ In the test `class identity and Signatures emerge, with acquisition in a sane ba
 Add a new test that tracks whether any pulse during the run observed a multi-flaw warrior (they get culled, so check the max across pulses, not just the end):
 
 ```typescript
-  it('multi-flaw warriors occur during the run, feeding the Release cull', () => {
-    const { pulses } = runSimulation({
-      weeks: 104,
-      seed: 4242,
-      logFrequency: 2, // sample often so transient multi-flaw warriors are caught
-      ignoreBankruptcy: true,
-    });
-    const peakMultiFlaw = Math.max(...pulses.map((p) => p.multiFlawWarriors));
-    // Flaw exposure pushes some struggling/flawed warriors to 2 flaws before the
-    // liability cull releases them — so we must see at least one across the run.
-    expect(peakMultiFlaw).toBeGreaterThan(0);
-  }, 300000);
+it('multi-flaw warriors occur during the run, feeding the Release cull', () => {
+  const { pulses } = runSimulation({
+    weeks: 104,
+    seed: 4242,
+    logFrequency: 2, // sample often so transient multi-flaw warriors are caught
+    ignoreBankruptcy: true,
+  });
+  const peakMultiFlaw = Math.max(...pulses.map((p) => p.multiFlawWarriors));
+  // Flaw exposure pushes some struggling/flawed warriors to 2 flaws before the
+  // liability cull releases them — so we must see at least one across the run.
+  expect(peakMultiFlaw).toBeGreaterThan(0);
+}, 300000);
 ```
 
 - [ ] **Step 3: Run it**
@@ -365,7 +377,7 @@ git add -A && git commit -m "test: verify suite green after saturation + churn f
 
 ## Self-Review Notes
 
-- **Both gates, as chosen.** Merit (`meritsTraitDevelopment`) caps *how many* warriors ever develop; aptitude (`traitCapacity`) caps *how far* each one can — together they replace the flat soft-cap that merely relocated saturation from 3 to 2.
+- **Both gates, as chosen.** Merit (`meritsTraitDevelopment`) caps _how many_ warriors ever develop; aptitude (`traitCapacity`) caps _how far_ each one can — together they replace the flat soft-cap that merely relocated saturation from 3 to 2.
 - **Blanks are guaranteed, not incidental.** Capacity-0 warriors (`trainability < 0.52`, ~24% of the [0.4,0.9] range) never develop, so the world keeps a permanent blank slice regardless of career length — that's the spread.
 - **Churn is now live.** Flaw exposure targets struggling/already-flawed warriors, so 2-flaw warriors occur and the existing `Release` cull (`management.ts:100`) churns them — closing the `multiFlaw = 0` gap without flaw-flooding healthy warriors.
 - **Knobs are named + harness-gated.** `CAPACITY_T1..T3`, `WINS_FOR_MERIT`, `FAME_FOR_MERIT`, `FLAW_EXPOSURE_CHANCE` are exported constants; the liveness band and blank-floor are the acceptance gate, so tuning is measured, not vibes.

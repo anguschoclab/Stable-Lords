@@ -1,5 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
-import { setupRng, getTrainerMods, processOutcomeTags, createRNGForContext } from '@/engine/combat/mechanics/simulateHelpers';
+import {
+  setupRng,
+  getTrainerMods,
+  processOutcomeTags,
+  createRNGForContext,
+} from '@/engine/combat/mechanics/simulateHelpers';
 import { FightingStyle } from '@/types/shared.types';
 import type { FighterState, ResolutionContext } from '@/engine/combat/resolution/types';
 import type { Trainer } from '@/types/state.types';
@@ -36,8 +41,13 @@ describe('simulateHelpers mechanics', () => {
       // Mock global crypto to ensure it works
       const originalCrypto = globalThis.crypto;
       Object.defineProperty(globalThis, 'crypto', {
-        value: { getRandomValues: (arr: Uint32Array) => { arr[0] = 999; return arr; } },
-        configurable: true
+        value: {
+          getRandomValues: (arr: Uint32Array) => {
+            arr[0] = 999;
+            return arr;
+          },
+        },
+        configurable: true,
       });
 
       const fn = setupRng();
@@ -69,7 +79,12 @@ describe('simulateHelpers mechanics', () => {
     it('returns mods combined with specialtyMods if full context is provided', () => {
       // We'll give them a specialty that modifies mods
       // CounterFighter amplifies riposte damage
-      const t1 = { focus: 'Aggression', tier: 'Seasoned', contractWeeksLeft: 10, specialty: 'CounterFighter' } as Trainer;
+      const t1 = {
+        focus: 'Aggression',
+        tier: 'Seasoned',
+        contractWeeksLeft: 10,
+        specialty: 'CounterFighter',
+      } as Trainer;
       // Seasoned tier = 2
       // attMod = 2
       // CounterFighter riposteDamageMult += 0.15 * tier -> +0.3

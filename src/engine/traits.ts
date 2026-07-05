@@ -114,7 +114,7 @@ export const TRAITS: Record<string, TraitDef> = {
   clutch_survivor: {
     id: 'clutch_survivor',
     name: 'Clutch Survivor',
-    description: '+1 attack in LATE phase — they thrive when the crowd thinks it\'s over.',
+    description: "+1 attack in LATE phase — they thrive when the crowd thinks it's over.",
     effect: { attModLate: 1 },
     weight: 0.6,
     tier: 'Exceptional',
@@ -431,7 +431,8 @@ export const TRAITS: Record<string, TraitDef> = {
   silent_one: {
     id: 'silent_one',
     name: 'Silent One',
-    description: '+1 defense, +1 decisiveness — unnervingly quiet, they waste no breath on roars or taunts.',
+    description:
+      '+1 defense, +1 decisiveness — unnervingly quiet, they waste no breath on roars or taunts.',
     effect: { defMod: 1, decMod: 1, fightPlanMod: { feintTendency: -2 } },
     weight: 0.6,
     synergy: ['cunning'],
@@ -441,8 +442,9 @@ export const TRAITS: Record<string, TraitDef> = {
   },
   orphan_rage: {
     id: 'orphan_rage',
-    name: 'Orphan\'s Rage',
-    description: '+2 attack when bloodied (HP < 50%) — channeling years of abuse into a final, frantic assault.',
+    name: "Orphan's Rage",
+    description:
+      '+2 attack when bloodied (HP < 50%) — channeling years of abuse into a final, frantic assault.',
     effect: { attModLowHp: 2, fightPlanMod: { killDesire: 2 } },
     weight: 0.7,
     synergy: ['brutal', 'agile'],
@@ -538,7 +540,8 @@ export const TRAITS: Record<string, TraitDef> = {
   pit_born: {
     id: 'pit_born',
     name: 'Pit-Born',
-    description: '+10% Endurance — raised in the cramped, airless fighting pits, they never seem to tire.',
+    description:
+      '+10% Endurance — raised in the cramped, airless fighting pits, they never seem to tire.',
     effect: { enduranceMult: 1.1 },
     weight: 0.7,
     tier: 'Common',
@@ -547,7 +550,8 @@ export const TRAITS: Record<string, TraitDef> = {
   ashen_lungs: {
     id: 'ashen_lungs',
     name: 'Ashen Lungs',
-    description: '−10% Endurance, +1 Damage — hacking coughs hide a desperate, brutal strength honed in the soot mines.',
+    description:
+      '−10% Endurance, +1 Damage — hacking coughs hide a desperate, brutal strength honed in the soot mines.',
     effect: { enduranceMult: 0.9, dmgBonus: 1 },
     weight: 0.6,
     synergy: ['brutal'],
@@ -557,7 +561,8 @@ export const TRAITS: Record<string, TraitDef> = {
   alley_stalker: {
     id: 'alley_stalker',
     name: 'Alley Stalker',
-    description: '+1 Initiative, +1 Kill Window Bonus — honed senses from a life of ambushing marks in the shadowed alleys.',
+    description:
+      '+1 Initiative, +1 Kill Window Bonus — honed senses from a life of ambushing marks in the shadowed alleys.',
     effect: { iniMod: 1, killWindowBonus: 1, fightPlanMod: { AL: 2 } },
     weight: 0.6,
     synergy: ['agile', 'cunning'],
@@ -568,7 +573,8 @@ export const TRAITS: Record<string, TraitDef> = {
   iron_vein: {
     id: 'iron_vein',
     name: 'Iron Vein',
-    description: '+1 Defense, +10% Endurance — raised in the deep mines, with bones hardened by labor and scarcity.',
+    description:
+      '+1 Defense, +10% Endurance — raised in the deep mines, with bones hardened by labor and scarcity.',
     effect: { defMod: 1, enduranceMult: 1.1, fightPlanMod: { OE: -1 } },
     weight: 0.6,
     synergy: ['tank', 'brutal'],
@@ -579,7 +585,8 @@ export const TRAITS: Record<string, TraitDef> = {
   gutter_snipe: {
     id: 'gutter_snipe',
     name: 'Gutter Snipe',
-    description: '+1 Initiative, +1 Attack when bloodied (HP < 50%) — raised in the alleys, they fight dirtiest when bleeding.',
+    description:
+      '+1 Initiative, +1 Attack when bloodied (HP < 50%) — raised in the alleys, they fight dirtiest when bleeding.',
     effect: { iniMod: 1, attModLowHp: 1 },
     weight: 0.6,
     synergy: ['agile', 'cunning'],
@@ -589,7 +596,8 @@ export const TRAITS: Record<string, TraitDef> = {
   gallows_humor: {
     id: 'gallows_humor',
     name: 'Gallows Humor',
-    description: '+1 Decisiveness, +1 Defense in the LATE phase — laughs in the face of exhaustion and death.',
+    description:
+      '+1 Decisiveness, +1 Defense in the LATE phase — laughs in the face of exhaustion and death.',
     effect: { decMod: 1, defModLate: 1 },
     weight: 0.5,
     synergy: ['tank'],

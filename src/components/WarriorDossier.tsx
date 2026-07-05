@@ -77,7 +77,11 @@ export const WarriorDossier = React.memo(function WarriorDossier({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Suspense fallback={<div className="w-full aspect-square max-w-md mx-auto animate-pulse rounded-none bg-white/5" />}>
+              <Suspense
+                fallback={
+                  <div className="w-full aspect-square max-w-md mx-auto animate-pulse rounded-none bg-white/5" />
+                }
+              >
                 <WarriorRadarChart warrior={warrior} />
               </Suspense>
             </CardContent>

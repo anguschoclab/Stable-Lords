@@ -6,8 +6,16 @@
  * and PASS after the wild-magic-weather branch is merged.
  */
 import { describe, it, expect } from 'vitest';
-import { getWeatherEffect, weatherOpeningLine, resolveEffectiveWeather } from '@/engine/combat/mechanics/weatherEffects';
-import { SEASONAL_WEATHER, rollWeather, getWeatherSeason } from '@/engine/pipeline/passes/WorldPass';
+import {
+  getWeatherEffect,
+  weatherOpeningLine,
+  resolveEffectiveWeather,
+} from '@/engine/combat/mechanics/weatherEffects';
+import {
+  SEASONAL_WEATHER,
+  rollWeather,
+  getWeatherSeason,
+} from '@/engine/pipeline/passes/WorldPass';
 import { WEATHER_CONFIG } from '@/constants/arena/weather';
 import { WEATHER_TYPES } from '@/types/enumSources';
 import { WeatherTypeSchema } from '@/schemas/gameStateSchema';

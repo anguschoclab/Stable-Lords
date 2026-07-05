@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { generateWarriorIntro, battleOpener, type WarriorIntroData } from '@/engine/narrative/narrativeIntro';
+import {
+  generateWarriorIntro,
+  battleOpener,
+  type WarriorIntroData,
+} from '@/engine/narrative/narrativeIntro';
 import { SeededRNG } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
 
@@ -89,7 +93,9 @@ describe('narrativeIntro', () => {
     it('is deterministic with same seed', () => {
       const r1 = new SeededRNG(42);
       const r2 = new SeededRNG(42);
-      expect(generateWarriorIntro(r1, baseData, 12)).toEqual(generateWarriorIntro(r2, baseData, 12));
+      expect(generateWarriorIntro(r1, baseData, 12)).toEqual(
+        generateWarriorIntro(r2, baseData, 12)
+      );
     });
   });
 

@@ -1174,8 +1174,14 @@ describe('resolveRound — tournament param and isComplete (resolution.ts)', () 
     state.tournaments = [tournament];
 
     // Use fresh deep-copied brackets since resolveRound mutates bout objects in-place
-    const state1 = { ...state, tournaments: [{ ...tournament, bracket: tournament.bracket.map((b) => ({ ...b })) }] };
-    const state2 = { ...state, tournaments: [{ ...tournament, bracket: tournament.bracket.map((b) => ({ ...b })) }] };
+    const state1 = {
+      ...state,
+      tournaments: [{ ...tournament, bracket: tournament.bracket.map((b) => ({ ...b })) }],
+    };
+    const state2 = {
+      ...state,
+      tournaments: [{ ...tournament, bracket: tournament.bracket.map((b) => ({ ...b })) }],
+    };
 
     // Pass the tournament directly — should produce the same result
     const result1 = resolveRound(state1, tournament.id, 1, undefined, state1.tournaments[0]);

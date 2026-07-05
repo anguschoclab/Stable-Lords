@@ -6,13 +6,13 @@ import { toast } from 'sonner';
 
 // Mock everything
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: () => ({
-    loadGame: vi.fn(),
-  }),
-};
+      loadGame: vi.fn(),
+    }),
+  };
 });
 
 vi.mock('@/state/saveSlots', () => ({

@@ -55,7 +55,15 @@ describe('CareerTimeline', () => {
 
   it('renders "Saga" card title when milestones exist', () => {
     mockFights = [
-      { id: 'f1', week: 1, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'KO', title: 'Spartacus vs Other' },
+      {
+        id: 'f1',
+        week: 1,
+        warriorIdA: 'w1',
+        warriorIdD: 'w2',
+        winner: 'A',
+        by: 'KO',
+        title: 'Spartacus vs Other',
+      },
     ];
     render(<CareerTimeline warrior={makeWarrior()} arenaHistory={[]} />);
     expect(screen.getByText('Saga')).toBeInTheDocument();
@@ -63,7 +71,15 @@ describe('CareerTimeline', () => {
 
   it('renders "First Blood" milestone for first fight', () => {
     mockFights = [
-      { id: 'f1', week: 1, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'KO', title: 'Spartacus vs Other' },
+      {
+        id: 'f1',
+        week: 1,
+        warriorIdA: 'w1',
+        warriorIdD: 'w2',
+        winner: 'A',
+        by: 'KO',
+        title: 'Spartacus vs Other',
+      },
     ];
     render(<CareerTimeline warrior={makeWarrior()} arenaHistory={[]} />);
     expect(screen.getByText('First Blood')).toBeInTheDocument();
@@ -71,7 +87,15 @@ describe('CareerTimeline', () => {
 
   it('renders "First Triumph" milestone for first win', () => {
     mockFights = [
-      { id: 'f1', week: 1, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'KO', title: 'Spartacus vs Other' },
+      {
+        id: 'f1',
+        week: 1,
+        warriorIdA: 'w1',
+        warriorIdD: 'w2',
+        winner: 'A',
+        by: 'KO',
+        title: 'Spartacus vs Other',
+      },
     ];
     render(<CareerTimeline warrior={makeWarrior()} arenaHistory={[]} />);
     expect(screen.getByText('First Triumph')).toBeInTheDocument();
@@ -79,7 +103,15 @@ describe('CareerTimeline', () => {
 
   it('renders "Granted Rudis" milestone when warrior status is Retired', () => {
     mockFights = [
-      { id: 'f1', week: 1, warriorIdA: 'w1', warriorIdD: 'w2', winner: 'A', by: 'KO', title: 'Spartacus vs Other' },
+      {
+        id: 'f1',
+        week: 1,
+        warriorIdA: 'w1',
+        warriorIdD: 'w2',
+        winner: 'A',
+        by: 'KO',
+        title: 'Spartacus vs Other',
+      },
     ];
     const retired = makeWarrior({ status: 'Retired', retiredWeek: 5 } as any);
     render(<CareerTimeline warrior={retired} arenaHistory={[]} />);

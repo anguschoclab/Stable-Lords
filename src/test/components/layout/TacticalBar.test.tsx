@@ -29,9 +29,7 @@ vi.mock('@/hooks/useTacticalAlerts', () => ({
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, ...props }: any) => (
-    <button {...props}>{children}</button>
-  ),
+  Button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
 }));
 
 import { TacticalBar } from '@/components/layout/TacticalBar';
@@ -90,11 +88,7 @@ describe('TacticalBar', () => {
   });
 
   it('shows "3 Alerts" (plural) when 3 alerts', () => {
-    mockAlerts = [
-      makeAlert({ id: 'a1' }),
-      makeAlert({ id: 'a2' }),
-      makeAlert({ id: 'a3' }),
-    ];
+    mockAlerts = [makeAlert({ id: 'a1' }), makeAlert({ id: 'a2' }), makeAlert({ id: 'a3' })];
     vi.mocked(useTacticalAlerts).mockImplementation(() => mockAlerts);
     render(<TacticalBar />);
     expect(screen.getByText('3 Alerts')).toBeInTheDocument();

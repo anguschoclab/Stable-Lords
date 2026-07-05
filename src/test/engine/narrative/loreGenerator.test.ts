@@ -61,14 +61,18 @@ describe('loreGenerator', () => {
     const source = fs.readFileSync(LORE_FILE, 'utf-8');
     const traits = extractStringArray(source, 'CHILDHOOD_TRAITS');
     const unique = new Set(traits);
-    expect(unique.size, `${traits.length - unique.size} duplicate childhood traits`).toBe(traits.length);
+    expect(unique.size, `${traits.length - unique.size} duplicate childhood traits`).toBe(
+      traits.length
+    );
   });
 
   it('DEFINING_MOMENTS array has no duplicate entries', () => {
     const source = fs.readFileSync(LORE_FILE, 'utf-8');
     const moments = extractStringArray(source, 'DEFINING_MOMENTS');
     const unique = new Set(moments);
-    expect(unique.size, `${moments.length - unique.size} duplicate defining moments`).toBe(moments.length);
+    expect(unique.size, `${moments.length - unique.size} duplicate defining moments`).toBe(
+      moments.length
+    );
   });
 
   it('ORIGINS contains new entries from both narrative branches', () => {

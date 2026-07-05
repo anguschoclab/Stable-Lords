@@ -49,9 +49,7 @@ export function WarriorAuditCard({ warrior }: WarriorAuditCardProps) {
           <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground/40">
             Vitality
           </span>
-          <span className="text-[10px] font-mono font-black text-foreground/80">
-            {condition}%
-          </span>
+          <span className="text-[10px] font-mono font-black text-foreground/80">{condition}%</span>
         </div>
       </div>
 

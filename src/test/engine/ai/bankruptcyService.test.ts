@@ -5,11 +5,7 @@ import type { GameState } from '@/types/state.types';
 import type { Warrior } from '@/types/warrior.types';
 import { SeededRNGService } from '@/utils/random';
 import { FightingStyle } from '@/types/shared.types';
-import {
-  MIN_BANKRUPTCY_ROSTER,
-  DEBT_FLOOR,
-  EMERGENCY_LOAN,
-} from '@/constants/economy';
+import { MIN_BANKRUPTCY_ROSTER, DEBT_FLOOR, EMERGENCY_LOAN } from '@/constants/economy';
 import { generateId } from '@/utils/idUtils';
 
 function makeTestWarrior(overrides: Partial<Warrior> = {}): Warrior {
@@ -164,7 +160,9 @@ describe('BankruptcyService', () => {
       expect(result.impact.treasuryDelta).toBe(EMERGENCY_LOAN);
       expect(result.impact.popularityDelta).toBe(-50);
       expect(result.impact.newsletterItems).toHaveLength(1);
-      expect(result.impact.newsletterItems![0]!.items.some((i) => i.includes('emergency loan'))).toBe(true);
+      expect(
+        result.impact.newsletterItems![0]!.items.some((i) => i.includes('emergency loan'))
+      ).toBe(true);
     });
 
     it('fires partial loan when at floor but treasury above DEBT_FLOOR', () => {

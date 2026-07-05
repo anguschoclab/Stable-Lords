@@ -52,7 +52,8 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Shimmering Heat',
   'Crystal Rain',
   'Rain of Frogs',
-  'Chaos Storm', 'Chaos Squall',
+  'Chaos Storm',
+  'Chaos Squall',
 ];
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
@@ -79,7 +80,14 @@ describe('Seasonal Weather Buckets', () => {
   });
 
   it('shared weathers appear in all 4 seasons', () => {
-    const shared: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge', 'Chaos Storm'];
+    const shared: WeatherType[] = [
+      'Clear',
+      'Overcast',
+      'Blood Moon',
+      'Eclipse',
+      'Mana Surge',
+      'Chaos Storm',
+    ];
     for (const w of shared) {
       for (const season of SEASONS) {
         expect(SEASONAL_WEATHER[season]).toContain(w);

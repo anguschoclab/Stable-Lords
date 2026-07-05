@@ -15,9 +15,7 @@ vi.mock('recharts', () => {
     RadarChart: Stub,
     Radar: Stub,
     PolarGrid: Stub,
-    PolarAngleAxis: ({ dataKey }: any) => (
-      <div data-testid="polar-angle-axis" data-key={dataKey} />
-    ),
+    PolarAngleAxis: ({ dataKey }: any) => <div data-testid="polar-angle-axis" data-key={dataKey} />,
     PolarRadiusAxis: () => <div data-testid="polar-radius-axis" />,
   };
 });

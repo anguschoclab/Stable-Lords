@@ -286,11 +286,7 @@ describe('Trained-loadout ceiling', () => {
   it('a max class-trait loadout does not exceed a ~75% win rate vs an untraited peer', () => {
     // Strongest realistic build: BA Signature + two BA class traits, on Bashing Attack.
     const loadout = ['demolisher', 'juggernaut', 'bonebreaker'];
-    const { traited, drawCount } = runMirrorBouts(
-      loadout,
-      250,
-      FightingStyle.BashingAttack
-    );
+    const { traited, drawCount } = runMirrorBouts(loadout, 250, FightingStyle.BashingAttack);
     const decidedBouts = 250 - drawCount;
     const rate = decidedBouts > 0 ? traited.wins / decidedBouts : 0.5;
     expect(rate, `max-loadout win rate ${(rate * 100).toFixed(1)}%`).toBeLessThanOrEqual(0.75);

@@ -152,7 +152,9 @@ describe('Tournament design token fixes', () => {
   it('TournamentBracket subdirectory has focus-visible styles', () => {
     const bracketDir = path.join(COMPONENTS_DIR, 'tournaments', 'bracket');
     const files = fs.readdirSync(bracketDir).filter((f) => f.endsWith('.tsx'));
-    const allSource = files.map((f) => fs.readFileSync(path.join(bracketDir, f), 'utf-8')).join('\n');
+    const allSource = files
+      .map((f) => fs.readFileSync(path.join(bracketDir, f), 'utf-8'))
+      .join('\n');
     expect(allSource).toMatch(/focus-visible/);
   });
 });

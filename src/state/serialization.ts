@@ -21,8 +21,14 @@ export function stripNonSerializable<
     rivalMap?: unknown;
     warriorToOfferIds?: unknown;
   },
->(state: T): Omit<T, 'warriorMap' | 'cachedMetaDrift' | 'warriorToStableMap' | 'rivalMap' | 'warriorToOfferIds'> {
-  const { warriorMap, cachedMetaDrift, warriorToStableMap, rivalMap, warriorToOfferIds, ...rest } = state;
+>(
+  state: T
+): Omit<
+  T,
+  'warriorMap' | 'cachedMetaDrift' | 'warriorToStableMap' | 'rivalMap' | 'warriorToOfferIds'
+> {
+  const { warriorMap, cachedMetaDrift, warriorToStableMap, rivalMap, warriorToOfferIds, ...rest } =
+    state;
   return rest;
 }
 

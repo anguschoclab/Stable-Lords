@@ -75,7 +75,13 @@ export function crowdReaction(
 ): string | null {
   if (rng.next() > 0.25) return null;
   const isDeadly = hpRatio <= 0.1;
-  const mood = isDeadly ? 'gasp' : hpRatio <= 0.3 ? 'encourage' : rng.next() < 0.5 ? 'boo' : 'cheer';
+  const mood = isDeadly
+    ? 'gasp'
+    : hpRatio <= 0.3
+      ? 'encourage'
+      : rng.next() < 0.5
+        ? 'boo'
+        : 'cheer';
   const template =
     getFromArchive(rng, ['pbp', 'reactions', mood]) ||
     getFromArchive(rng, [

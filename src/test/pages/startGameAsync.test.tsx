@@ -59,12 +59,32 @@ vi.mock('@/components/startGame/ColomseumArch', () => ({
 }));
 
 vi.mock('@/components/startGame/NewGameForm', () => ({
-  default: ({ onSubmit, ownerName, setOwnerName, stableName, setStableName, canCreate, setBackstoryId }: any) => (
+  default: ({
+    onSubmit,
+    ownerName,
+    setOwnerName,
+    stableName,
+    setStableName,
+    canCreate,
+    setBackstoryId,
+  }: any) => (
     <div>
-      <input aria-label="Owner Name" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
-      <input aria-label="Stable Name" value={stableName} onChange={(e) => setStableName(e.target.value)} />
-      <button onClick={() => setBackstoryId('orphan')} aria-label="Select Backstory">Orphan</button>
-      <button onClick={onSubmit} disabled={!canCreate} aria-label="Create Game">Create</button>
+      <input
+        aria-label="Owner Name"
+        value={ownerName}
+        onChange={(e) => setOwnerName(e.target.value)}
+      />
+      <input
+        aria-label="Stable Name"
+        value={stableName}
+        onChange={(e) => setStableName(e.target.value)}
+      />
+      <button onClick={() => setBackstoryId('orphan')} aria-label="Select Backstory">
+        Orphan
+      </button>
+      <button onClick={onSubmit} disabled={!canCreate} aria-label="Create Game">
+        Create
+      </button>
     </div>
   ),
 }));
@@ -75,7 +95,9 @@ vi.mock('@/components/startGame/TitleScreenHero', () => ({
 
 vi.mock('@/components/startGame/ActionButtons', () => ({
   default: ({ onNewGame }: any) => (
-    <button onClick={onNewGame} aria-label="New Game">New Game</button>
+    <button onClick={onNewGame} aria-label="New Game">
+      New Game
+    </button>
   ),
 }));
 

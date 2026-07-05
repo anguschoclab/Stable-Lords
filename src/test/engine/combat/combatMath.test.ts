@@ -90,25 +90,29 @@ describe('combatMath engine', () => {
 
   describe('contestCheck', () => {
     it('returns true if rollA > rollD', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.99) // rollA = 20
         .mockReturnValueOnce(0.0); // rollD = 1
       expect(contestCheck(rng, 10, 10)).toBe(true);
     });
     it('returns false if rollA <= rollD', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.0) // rollA = 1
         .mockReturnValueOnce(0.99); // rollD = 20
       expect(contestCheck(rng, 10, 10)).toBe(false);
     });
     it('handles equal stats with tie (returns false)', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.5) // rollA = 11
         .mockReturnValueOnce(0.5); // rollD = 11
       expect(contestCheck(rng, 10, 10)).toBe(false);
     });
     it('incorporates modifiers correctly', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.5) // rollA = 11 + 5 = 16
         .mockReturnValueOnce(0.5); // rollD = 11 + 5 = 16
       expect(contestCheck(rng, 5, 10, 5, -5)).toBe(true); // 11+5+5=21 vs 11+10-5=16 -> 21 > 16 -> true

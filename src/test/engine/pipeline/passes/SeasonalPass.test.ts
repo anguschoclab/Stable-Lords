@@ -48,7 +48,10 @@ describe('runSeasonalPass', () => {
       callCount++;
       if (callCount === 1)
         return (
-          (Object.keys((narrativeContent as any).offseason_events).indexOf('wandering_fortune_teller') + 0.5) /
+          (Object.keys((narrativeContent as any).offseason_events).indexOf(
+            'wandering_fortune_teller'
+          ) +
+            0.5) /
           eventCount
         );
       return originalNext();
@@ -916,7 +919,8 @@ describe('runSeasonalPass', () => {
       callCount++;
       if (callCount === 1)
         return (
-          (Object.keys((narrativeContent as any).offseason_events).indexOf('chaos_weaver_visit') + 0.5) /
+          (Object.keys((narrativeContent as any).offseason_events).indexOf('chaos_weaver_visit') +
+            0.5) /
           eventCount
         );
       return originalNext();

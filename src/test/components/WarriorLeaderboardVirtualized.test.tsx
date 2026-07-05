@@ -4,15 +4,15 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import type { WarriorRow } from '@/types/leaderboard';
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: (selector?: any) => {
-    const state = {
-      isBookmarked: () => false,
-      toggleBookmark: vi.fn(),
-    };
-    return selector ? selector(state) : state;
+      const state = {
+        isBookmarked: () => false,
+        toggleBookmark: vi.fn(),
+      };
+      return selector ? selector(state) : state;
     },
   };
 });
@@ -79,9 +79,7 @@ describe('WarriorLeaderboard (virtualized)', () => {
     const { WarriorLeaderboard } = await import('@/components/world/WarriorLeaderboard');
     const rows = makeWarriorRows(5);
     const sort = { field: 'fame', dir: 'desc' as const };
-    const { container } = render(
-      <WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />
-    );
+    const { container } = render(<WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />);
     const scrollContainer = container.querySelector('[class*="max-h"][class*="overflow-auto"]');
     expect(scrollContainer).not.toBeNull();
   });
@@ -90,9 +88,7 @@ describe('WarriorLeaderboard (virtualized)', () => {
     const { WarriorLeaderboard } = await import('@/components/world/WarriorLeaderboard');
     const rows = makeWarriorRows(220);
     const sort = { field: 'fame', dir: 'desc' as const };
-    render(
-      <WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />
-    );
+    render(<WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />);
     expect(screen.getAllByText(/Warrior\d+/).length).toBeGreaterThan(0);
   });
 
@@ -112,9 +108,7 @@ describe('WarriorLeaderboard (virtualized)', () => {
     const { WarriorLeaderboard } = await import('@/components/world/WarriorLeaderboard');
     const rows = makeWarriorRows(5);
     const sort = { field: 'fame', dir: 'desc' as const };
-    render(
-      <WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />
-    );
+    render(<WarriorLeaderboard rows={rows} sort={sort} onSort={vi.fn()} />);
     const playerRow = screen.getByText('Warrior0').closest('tr');
     expect(playerRow).not.toBeNull();
     expect(playerRow!.className).toContain('bg-primary');

@@ -331,14 +331,16 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     colorClass: 'text-arena-fame',
     bgClass: 'bg-arena-fame/10',
     borderClass: 'border-arena-fame/20',
-    description: 'A swirling vortex of raw chaos drains stamina and amplifies damage unpredictably.',
+    description:
+      'A swirling vortex of raw chaos drains stamina and amplifies damage unpredictably.',
   },
   'Chaos Squall': {
     icon: Sparkles,
     colorClass: 'text-purple-300',
     bgClass: 'bg-purple-300/10',
     borderClass: 'border-purple-300/20',
-    description: 'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
+    description:
+      'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
   },
 };
 

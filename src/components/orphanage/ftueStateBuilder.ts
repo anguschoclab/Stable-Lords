@@ -52,9 +52,8 @@ export function buildFTUEInitialState(
     const traitData = TRAIT_DATA[pw.trait];
     const traitMods = traitData?.effect.fightPlanMod ?? {};
     // warrior[0] is the plan warrior — apply player's custom plan if provided
-    const plan = idx === 0 && playerPlan
-      ? { ...playerPlan, ...traitMods }
-      : { ...basePlan, ...traitMods };
+    const plan =
+      idx === 0 && playerPlan ? { ...playerPlan, ...traitMods } : { ...basePlan, ...traitMods };
     const w = makeWarrior(
       finishRng.uuid() as import('@/types/shared.types').WarriorId,
       pw.name,

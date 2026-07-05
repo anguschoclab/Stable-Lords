@@ -50,7 +50,8 @@ describe('hitLocation mechanics', () => {
     });
 
     it('misses target if not covered and rng >= 0.7', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.7) // Misses target
         .mockReturnValueOnce(0.4) // Doesn't aim for exposed
         .mockReturnValueOnce(0.0); // Picks first from all ('head')
@@ -63,7 +64,8 @@ describe('hitLocation mechanics', () => {
     });
 
     it('misses target if covered and rng >= 0.3', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.3) // Misses target
         .mockReturnValueOnce(0.4) // Doesn't aim for exposed
         .mockReturnValueOnce(0.0); // Picks first from all ('head')
@@ -71,28 +73,32 @@ describe('hitLocation mechanics', () => {
     });
 
     it('ignores invalid targets', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.0) // rng < 0.3, aims for exposed
         .mockReturnValueOnce(0.0); // Picks first exposed ('head')
       expect(rollHitLocation(rng, 'invalid_target', 'none_armor')).toBe('head');
     });
 
     it('aims for exposed if rng < 0.3 and misses target', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.2) // aims for exposed
         .mockReturnValueOnce(0.0); // picks first exposed (head, since head is not covered by leather)
       expect(rollHitLocation(rng, undefined, 'leather')).toBe('head');
     });
 
     it('ignores exposed if all are covered (impossible in game, but testable)', () => {
-      const rngFallback = vi.fn()
+      const rngFallback = vi
+        .fn()
         .mockReturnValueOnce(0.4) // Doesn't aim for exposed
         .mockReturnValueOnce(0.0); // Picks first from all
       expect(rollHitLocation(rngFallback, undefined, 'none_armor')).toBe('head');
     });
 
     it('picks randomly from all if target missed and not aiming for exposed', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.4) // Doesn't aim for exposed
         .mockReturnValueOnce(0.99); // Picks last from all ('left leg')
       expect(rollHitLocation(rng, undefined, 'none_armor')).toBe('left leg');
@@ -123,7 +129,8 @@ describe('hitLocation mechanics', () => {
     });
 
     it('targets exposed locations if target is missed and rng < 0.3 - test-smith', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.9) // misses target
         .mockReturnValueOnce(0.2) // exposed check (< 0.3)
         .mockReturnValueOnce(0.5); // selects from exposed
@@ -135,7 +142,8 @@ describe('hitLocation mechanics', () => {
     });
 
     it('defaults to fully random location if no target or target missed, and exposed check missed - test-smith', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.8) // > 0.3 exposed check
         .mockReturnValueOnce(0.5); // random from all locations
 
@@ -144,7 +152,8 @@ describe('hitLocation mechanics', () => {
     });
 
     it('handles Any target as no specific target - test-smith', () => {
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.8) // > 0.3 exposed check
         .mockReturnValueOnce(0.5); // random from all locations
 
@@ -189,7 +198,8 @@ describe('hitLocation mechanics', () => {
       // When rng < 0.3 and exposed has items, it picks from exposed.
       // The only way exposed.length = 0 is if all 7 are covered, which can't happen.
       // Instead, test that when target is invalid and rng >= 0.3, it picks from all.
-      const rng = vi.fn()
+      const rng = vi
+        .fn()
         .mockReturnValueOnce(0.8) // > 0.3 exposed check
         .mockReturnValueOnce(0.0); // picks first from all ('head')
       expect(rollHitLocation(rng, undefined, 'arms')).toBe('head');

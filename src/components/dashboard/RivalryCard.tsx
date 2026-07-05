@@ -68,31 +68,32 @@ export function RivalryCard({ rivalry, rosterNames }: RivalryCardProps) {
         </div>
       </div>
 
-      {r.bouts > 0 && (() => {
-        const draws = Math.max(0, r.bouts - r.playerWins - r.playerLosses);
-        const playerPct = (r.playerWins / r.bouts) * 100;
-        const drawPct = (draws / r.bouts) * 100;
-        const rivalPct = (r.playerLosses / r.bouts) * 100;
-        return (
-          <div data-testid="h2h-bar" className="flex h-1 rounded-none overflow-hidden gap-px">
-            <div
-              data-testid="h2h-player"
-              className="bg-primary transition-all duration-500"
-              style={{ width: `${playerPct}%` }}
-            />
-            <div
-              data-testid="h2h-draw"
-              className="bg-muted-foreground/20 transition-all duration-500"
-              style={{ width: `${drawPct}%` }}
-            />
-            <div
-              data-testid="h2h-rival"
-              className="bg-destructive transition-all duration-500"
-              style={{ width: `${rivalPct}%` }}
-            />
-          </div>
-        );
-      })()}
+      {r.bouts > 0 &&
+        (() => {
+          const draws = Math.max(0, r.bouts - r.playerWins - r.playerLosses);
+          const playerPct = (r.playerWins / r.bouts) * 100;
+          const drawPct = (draws / r.bouts) * 100;
+          const rivalPct = (r.playerLosses / r.bouts) * 100;
+          return (
+            <div data-testid="h2h-bar" className="flex h-1 rounded-none overflow-hidden gap-px">
+              <div
+                data-testid="h2h-player"
+                className="bg-primary transition-all duration-500"
+                style={{ width: `${playerPct}%` }}
+              />
+              <div
+                data-testid="h2h-draw"
+                className="bg-muted-foreground/20 transition-all duration-500"
+                style={{ width: `${drawPct}%` }}
+              />
+              <div
+                data-testid="h2h-rival"
+                className="bg-destructive transition-all duration-500"
+                style={{ width: `${rivalPct}%` }}
+              />
+            </div>
+          );
+        })()}
 
       {r.kills.length > 0 && (
         <div className="space-y-1.5">

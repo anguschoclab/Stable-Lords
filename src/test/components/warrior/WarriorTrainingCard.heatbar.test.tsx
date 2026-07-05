@@ -94,7 +94,7 @@ describe('WarriorTrainingCard heat-tint bar', () => {
   });
 
   it('uses arena-fame color class when chance = 80', () => {
-    vi.mocked(computeGainChance).mockReturnValue(0.80);
+    vi.mocked(computeGainChance).mockReturnValue(0.8);
     const { container } = renderCard();
     const bars = container.querySelectorAll('[data-testid^="training-bar-"]');
     expect(bars[0]?.getAttribute('data-chance-class')).toContain('arena-fame');

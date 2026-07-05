@@ -10,7 +10,10 @@ describe('narrative_validate script', () => {
   it('validates narrativeContent.json without errors', () => {
     expect(fs.existsSync(CONTENT_PATH)).toBe(true);
     expect(fs.existsSync(SCRIPT_PATH)).toBe(true);
-    const result = execSync('npx tsx ' + SCRIPT_PATH, { encoding: 'utf-8', cwd: path.resolve(__dirname, '../..') });
+    const result = execSync('npx tsx ' + SCRIPT_PATH, {
+      encoding: 'utf-8',
+      cwd: path.resolve(__dirname, '../..'),
+    });
     expect(result).toContain('passed');
   });
 });

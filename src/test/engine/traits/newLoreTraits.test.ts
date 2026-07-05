@@ -7,11 +7,7 @@
  * PASS after the jules-lore-expansion branch is merged.
  */
 import { describe, it, expect } from 'vitest';
-import {
-  TRAITS,
-  getDynamicTraitMods,
-  type DynamicTraitContext,
-} from '@/engine/traits';
+import { TRAITS, getDynamicTraitMods, type DynamicTraitContext } from '@/engine/traits';
 import { traitTrainingPool } from '@/engine/training/trainingGains/traitTraining';
 import type { Warrior } from '@/types/warrior.types';
 import type { Trainer } from '@/types/shared.types';

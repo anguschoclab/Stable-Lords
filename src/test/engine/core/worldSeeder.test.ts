@@ -122,7 +122,9 @@ describe('populateInitialWorld', () => {
     expect(result.roster).toHaveLength(4);
     // With custom RNG, player roster attributes should be deterministic from seed 12345
     const expected = populateInitialWorld(baseState, 42, new SeededRNGService(12345));
-    expect(result.roster.map((w) => w.attributes)).toEqual(expected.roster.map((w) => w.attributes));
+    expect(result.roster.map((w) => w.attributes)).toEqual(
+      expected.roster.map((w) => w.attributes)
+    );
   });
 
   it('preserves base state fields from input (player, meta spread through)', () => {

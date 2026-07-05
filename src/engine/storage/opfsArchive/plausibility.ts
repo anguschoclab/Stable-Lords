@@ -43,10 +43,18 @@ export function isPlausibleGameState(value: unknown): value is GameState {
 
   // Object fields (non-null, non-array)
   if (typeof v.player !== 'object' || v.player === null || Array.isArray(v.player)) return false;
-  if (typeof v.promoters !== 'object' || v.promoters === null || Array.isArray(v.promoters)) return false;
-  if (typeof v.boutOffers !== 'object' || v.boutOffers === null || Array.isArray(v.boutOffers)) return false;
-  if (typeof v.realmRankings !== 'object' || v.realmRankings === null || Array.isArray(v.realmRankings)) return false;
-  if (typeof v.progression !== 'object' || v.progression === null || Array.isArray(v.progression)) return false;
+  if (typeof v.promoters !== 'object' || v.promoters === null || Array.isArray(v.promoters))
+    return false;
+  if (typeof v.boutOffers !== 'object' || v.boutOffers === null || Array.isArray(v.boutOffers))
+    return false;
+  if (
+    typeof v.realmRankings !== 'object' ||
+    v.realmRankings === null ||
+    Array.isArray(v.realmRankings)
+  )
+    return false;
+  if (typeof v.progression !== 'object' || v.progression === null || Array.isArray(v.progression))
+    return false;
 
   // Array fields
   if (!Array.isArray(v.roster)) return false;

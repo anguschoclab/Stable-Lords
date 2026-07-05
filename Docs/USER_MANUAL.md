@@ -125,17 +125,18 @@ There are **52 weeks per in-game year**. At year-end, annual awards are given, w
 
 Your stable progresses through a series of **objectives** tracked automatically each week:
 
-| Objective | Requirement |
-|-----------|-------------|
-| Reach Top 10 | Rank among the top 10 stables by fame |
-| Reach Top 3 | Rank among the top 3 stables by fame |
-| Tournament Victor | Win a tournament with one of your warriors |
-| Hall of Famer | Have a warrior win Warrior of the Year or Killer of the Year |
-| Realm Champion | Finish a year as the #1 stable in the realm |
+| Objective         | Requirement                                                  |
+| ----------------- | ------------------------------------------------------------ |
+| Reach Top 10      | Rank among the top 10 stables by fame                        |
+| Reach Top 3       | Rank among the top 3 stables by fame                         |
+| Tournament Victor | Win a tournament with one of your warriors                   |
+| Hall of Famer     | Have a warrior win Warrior of the Year or Killer of the Year |
+| Realm Champion    | Finish a year as the #1 stable in the realm                  |
 
 Stable standing is determined by **fame**, with ties broken by **titles won**. The Realm Champion objective is only evaluated at the **year boundary** (week 52 → week 1).
 
 When you achieve Realm Champion status, a **victory screen** appears. You may:
+
 - **Continue Legacy** — Keep playing in endless mode with your objectives completed
 - **New Game** — Start a fresh game
 

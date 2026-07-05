@@ -9,20 +9,20 @@ vi.mock('@/hooks/useWeekExecution', () => ({
 }));
 
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: vi.fn((selector?: any) => {
-    const store = {
-      week: 5,
-      isTournamentWeek: false,
-      day: 0,
-      isSimulating: false,
-    };
-    if (typeof selector === 'function') return selector(store);
-    return store;
-  }),
-};
+      const store = {
+        week: 5,
+        isTournamentWeek: false,
+        day: 0,
+        isSimulating: false,
+      };
+      if (typeof selector === 'function') return selector(store);
+      return store;
+    }),
+  };
 });
 
 vi.mock('zustand/react/shallow', () => ({

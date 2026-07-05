@@ -8,14 +8,20 @@ describe('getAvailableItems — shield pool', () => {
   it('shield pool includes none_shield for all styles', () => {
     for (const style of ALL_STYLES) {
       const pool = getAvailableItems('shield', style);
-      expect(pool.some((s) => s.id === 'none_shield'), `none_shield missing for ${style}`).toBe(true);
+      expect(
+        pool.some((s) => s.id === 'none_shield'),
+        `none_shield missing for ${style}`
+      ).toBe(true);
     }
   });
 
   it('shield pool includes small_shield for all styles', () => {
     for (const style of ALL_STYLES) {
       const pool = getAvailableItems('shield', style);
-      expect(pool.some((s) => s.id === 'small_shield'), `small_shield missing for ${style}`).toBe(true);
+      expect(
+        pool.some((s) => s.id === 'small_shield'),
+        `small_shield missing for ${style}`
+      ).toBe(true);
     }
   });
 
@@ -32,7 +38,10 @@ describe('getAvailableItems — shield pool', () => {
     ];
     for (const style of restricted) {
       const pool = getAvailableItems('shield', style);
-      expect(pool.some((s) => s.id === 'large_shield'), `large_shield should be excluded for ${style}`).toBe(false);
+      expect(
+        pool.some((s) => s.id === 'large_shield'),
+        `large_shield should be excluded for ${style}`
+      ).toBe(false);
     }
   });
 
@@ -44,7 +53,10 @@ describe('getAvailableItems — shield pool', () => {
     ];
     for (const style of nonRestricted) {
       const pool = getAvailableItems('shield', style);
-      expect(pool.some((s) => s.id === 'medium_shield'), `medium_shield missing for ${style}`).toBe(true);
+      expect(
+        pool.some((s) => s.id === 'medium_shield'),
+        `medium_shield missing for ${style}`
+      ).toBe(true);
     }
   });
 
@@ -56,7 +68,10 @@ describe('getAvailableItems — shield pool', () => {
     ];
     for (const style of nonRestricted) {
       const pool = getAvailableItems('shield', style);
-      expect(pool.some((s) => s.id === 'large_shield'), `large_shield missing for ${style}`).toBe(true);
+      expect(
+        pool.some((s) => s.id === 'large_shield'),
+        `large_shield missing for ${style}`
+      ).toBe(true);
     }
   });
 

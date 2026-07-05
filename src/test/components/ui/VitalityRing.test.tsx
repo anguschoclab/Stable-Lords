@@ -48,8 +48,12 @@ describe('VitalityRing', () => {
     const { container: c50 } = render(<VitalityRing value={50} />);
     const arc100 = c100.querySelector('[data-testid="vitality-arc"]') as SVGCircleElement;
     const arc50 = c50.querySelector('[data-testid="vitality-arc"]') as SVGCircleElement;
-    const offset100 = parseFloat(arc100.style.strokeDashoffset || arc100.getAttribute('stroke-dashoffset') || '0');
-    const offset50 = parseFloat(arc50.style.strokeDashoffset || arc50.getAttribute('stroke-dashoffset') || '0');
+    const offset100 = parseFloat(
+      arc100.style.strokeDashoffset || arc100.getAttribute('stroke-dashoffset') || '0'
+    );
+    const offset50 = parseFloat(
+      arc50.style.strokeDashoffset || arc50.getAttribute('stroke-dashoffset') || '0'
+    );
     expect(offset100).toBeLessThan(offset50);
   });
 });

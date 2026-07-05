@@ -188,7 +188,13 @@ export interface DodgeTiers {
 export interface Defenses {
   counterstrike: { success: string[] };
   dodge: DodgeTiers;
-  parry: { success: string[]; desperate?: string[]; confident?: string[]; theatrical?: string[]; grim?: string[] };
+  parry: {
+    success: string[];
+    desperate?: string[];
+    confident?: string[];
+    theatrical?: string[];
+    grim?: string[];
+  };
   shield: { success: string[] };
   parry_break: string[];
 } /**

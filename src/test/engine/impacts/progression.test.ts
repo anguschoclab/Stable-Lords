@@ -24,10 +24,7 @@ describe('Progression impact handler', () => {
     const first: ProgressionState = { ...DEFAULT_PROGRESSION, stableStanding: 3 };
     const second: ProgressionState = { ...DEFAULT_PROGRESSION, stableStanding: 7 };
 
-    const result = resolveImpacts(state, [
-      { progression: first },
-      { progression: second },
-    ]);
+    const result = resolveImpacts(state, [{ progression: first }, { progression: second }]);
 
     expect(result.progression.stableStanding).toBe(7);
   });

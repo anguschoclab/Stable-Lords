@@ -15,7 +15,10 @@ describe('Arena lore integrity', () => {
   it('all ARENA_LORE entries reference a valid arenaId', () => {
     const validArenaIds = new Set(getAllArenas().map((a) => a.id));
     for (const entry of ARENA_LORE) {
-      expect(validArenaIds.has(entry.arenaId), `${entry.id} references unknown arenaId ${entry.arenaId}`).toBe(true);
+      expect(
+        validArenaIds.has(entry.arenaId),
+        `${entry.id} references unknown arenaId ${entry.arenaId}`
+      ).toBe(true);
     }
   });
 

@@ -114,8 +114,7 @@ export function WarriorLeaderboard({ rows, sort, onSort }: WarriorLeaderboardPro
                 {items[items.length - 1] && (
                   <tr
                     style={{
-                      height:
-                        virtualizer.getTotalSize() - (items[items.length - 1]?.end ?? 0),
+                      height: virtualizer.getTotalSize() - (items[items.length - 1]?.end ?? 0),
                     }}
                   >
                     <td colSpan={COLUMNS.length} style={{ padding: 0, border: 'none' }} />

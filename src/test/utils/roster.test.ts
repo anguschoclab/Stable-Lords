@@ -189,7 +189,16 @@ describe('filterHealthy', () => {
 
   it('excludes active warriors with injuries', () => {
     const w1 = createTestWarrior('w1', 'Warrior 1', 'Active');
-    w1.injuries = [{ id: 'i1' as any, name: 'cut', description: 'cut', severity: 'Minor', weeksRemaining: 2, penalties: {} }];
+    w1.injuries = [
+      {
+        id: 'i1' as any,
+        name: 'cut',
+        description: 'cut',
+        severity: 'Minor',
+        weeksRemaining: 2,
+        penalties: {},
+      },
+    ];
     const w2 = createTestWarrior('w2', 'Warrior 2', 'Active');
     const healthy = filterHealthy([w1, w2]);
     expect(healthy.length).toBe(1);
@@ -223,9 +232,27 @@ describe('filterHealthy', () => {
 
   it('returns empty for all-injured roster', () => {
     const w1 = createTestWarrior('w1', 'Warrior 1', 'Active');
-    w1.injuries = [{ id: 'i1' as any, name: 'cut', description: 'cut', severity: 'Minor', weeksRemaining: 2, penalties: {} }];
+    w1.injuries = [
+      {
+        id: 'i1' as any,
+        name: 'cut',
+        description: 'cut',
+        severity: 'Minor',
+        weeksRemaining: 2,
+        penalties: {},
+      },
+    ];
     const w2 = createTestWarrior('w2', 'Warrior 2', 'Active');
-    w2.injuries = [{ id: 'i2' as any, name: 'bruise', description: 'bruise', severity: 'Minor', weeksRemaining: 1, penalties: {} }];
+    w2.injuries = [
+      {
+        id: 'i2' as any,
+        name: 'bruise',
+        description: 'bruise',
+        severity: 'Minor',
+        weeksRemaining: 1,
+        penalties: {},
+      },
+    ];
     const healthy = filterHealthy([w1, w2]);
     expect(healthy.length).toBe(0);
   });

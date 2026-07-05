@@ -180,11 +180,13 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
       let bestScore = -Infinity;
 
       for (let i = lo; i < hi; i++) {
-        const candidate = sortedByScore[i]; if (!candidate) continue;
+        const candidate = sortedByScore[i];
+        if (!candidate) continue;
         if (candidate.id === warriorA.id) continue;
         if (matchedIds.has(candidate.id)) continue;
 
-        const scoreB = sortedScores[i]; if (scoreB === undefined) continue;
+        const scoreB = sortedScores[i];
+        if (scoreB === undefined) continue;
         const gap = Math.abs(scoreA - scoreB) / maxScoreA;
 
         const personalityScore = calculatePersonalityMatchScore(warriorA, candidate, promoter);

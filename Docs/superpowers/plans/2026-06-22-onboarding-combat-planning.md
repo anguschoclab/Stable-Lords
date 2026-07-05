@@ -1,6 +1,7 @@
 # Plan 8 — Deepen onboarding to teach combat planning
 
 ## Problem (confirmed)
+
 FTUE (`Orphanage.tsx`) is a 4-step wizard; `runTutorialBout` (`:89-109`) calls
 `defaultPlanForWarrior` + `simulateFight` (`:96-98`) with **no player decisions and no seed**
 (currently nondeterministic per re-run). After step 4 it dumps to `/stable` (`:134`). It teaches
@@ -9,6 +10,7 @@ route-keyed, wired in `__root.tsx:20`, gated on `ftueComplete`) — but `COACH_R
 `/stable` entry**, which is exactly the landing route. First real action route is `/stable/bouts`.
 
 ## New ordering (4→5)
+
 0. Identity
 1. Choose Warriors
 2. **Set the Plan (NEW)**
@@ -16,6 +18,7 @@ route-keyed, wired in `__root.tsx:20`, gated on `ftueComplete`) — but `COACH_R
 4. Your Story Begins
 
 ## Simplified plan model (warrior A only)
+
 Two decisions seeded from `defaultPlanForWarrior(wA)` (everything else stays valid): an
 **Aggression** slider → `plan.OE` (leave `AL`/`killDesire` at default to avoid accidental
 tutorial deaths; couple `AL` only if the OE swing isn't visible enough), and a **Tactic** (2-3
@@ -31,6 +34,7 @@ onNext }`).
 **Modify** `StepProgress.tsx` (grow both label/subtitle arrays to 5, insert at index 2).
 
 **Modify** `Orphanage.tsx`:
+
 - Add `playerPlan` state + fixed `boutSeed` (`cryptoRandomInt` once)
 - `total={5}`
 - In WarriorSelection `onNext` set `playerPlan=defaultPlanForWarrior(wA)` and `setStep(2)` (don't run bout yet)
@@ -43,17 +47,20 @@ onNext }`).
 conditioned on `arenaHistory.length <= 1` and `boutOffers`).
 
 ## Verification
+
 New game → 5-segment progress + "Set the Plan"; aggression 1 + defensive vs aggression 10 +
 aggressive (same seed) → First Blood **changes**; finish → `/stable` coach toast appears,
 dismiss permanent; "5/5" with no `undefined` label.
 
 ## Risks
+
 Overwhelm (one slider + 2-3 buttons only); deterministic bout (the fix — fixed seed makes the
 choice causal; today's unseeded bout hides it); accidental tutorial death (leave killDesire at
 default); plan not persisted to week 1 (optional thread); step-renumber bugs (every `setStep`/
 guard/array must shift); coach tip gating (`ftueComplete`, exact `/stable`, `boutOffers` seeded).
 
 ## Critical files
+
 `src/pages/Orphanage.tsx`; `src/components/orphanage/PlanStep.tsx` (new);
 `src/components/orphanage/StepProgress.tsx`; `src/hooks/useCoachTip.ts`;
 `src/components/planBuilder/CommonControls.tsx` (reference).

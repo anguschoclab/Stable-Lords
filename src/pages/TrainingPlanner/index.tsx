@@ -13,14 +13,8 @@ import { defaultPlanForWarrior } from '@/engine/simulate';
 import type { FightPlan, Warrior } from '@/types/game';
 
 export default function TrainingPlanner() {
-  const {
-    activeWarriors,
-    selectedId,
-    setSelectedId,
-    selectedWarrior,
-    setState,
-    plansSetCount,
-  } = useTrainingPlanner();
+  const { activeWarriors, selectedId, setSelectedId, selectedWarrior, setState, plansSetCount } =
+    useTrainingPlanner();
 
   const handlePlanChange = useCallback(
     (newPlan: FightPlan) => {

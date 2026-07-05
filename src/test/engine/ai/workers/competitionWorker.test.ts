@@ -562,13 +562,7 @@ describe('CompetitionWorker', () => {
       const offers: Record<string, BoutOffer> = {};
       for (let i = 0; i < 10; i++) {
         const wid = manyRivals[i]!.roster[0]!.id as string;
-        const offer = createTestOffer(
-          state,
-          'p_local',
-          [wid],
-          100,
-          100
-        );
+        const offer = createTestOffer(state, 'p_local', [wid], 100, 100);
         offer.responses[wid as WarriorId] = 'Pending';
         offers[offer.id] = offer;
       }

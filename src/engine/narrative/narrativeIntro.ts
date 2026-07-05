@@ -30,7 +30,11 @@ export interface WarriorIntroData {
 /**
  * Generates warrior introduction text.
  */
-export function generateWarriorIntro(rng: IRNGService, data: WarriorIntroData, sz?: number): string[] {
+export function generateWarriorIntro(
+  rng: IRNGService,
+  data: WarriorIntroData,
+  sz?: number
+): string[] {
   const lines: string[] = [];
   const n = data.name;
 
@@ -104,7 +108,11 @@ export function generateWarriorIntro(rng: IRNGService, data: WarriorIntroData, s
  * Generates battle opener text, interpolating the two fighters' names so the
  * archive's {{attacker}}/{{defender}} tokens resolve (rather than leaking raw).
  */
-export function battleOpener(rng: IRNGService, attackerName?: string, defenderName?: string): string {
+export function battleOpener(
+  rng: IRNGService,
+  attackerName?: string,
+  defenderName?: string
+): string {
   const template = getFromArchive(rng, ['pbp', 'openers']);
   return interpolateTemplate(template, { attacker: attackerName, defender: defenderName });
 }

@@ -46,14 +46,7 @@ export function VirtualizedFallenGrid({
     rows.push(warriors.slice(i, i + cols));
   }
 
-  return (
-    <VirtualizedInner
-      rows={rows}
-      cols={cols}
-      season={season}
-      parentRef={parentRef}
-    />
-  );
+  return <VirtualizedInner rows={rows} cols={cols} season={season} parentRef={parentRef} />;
 }
 
 function VirtualizedInner({
@@ -166,10 +159,7 @@ function FallenCard({ warrior: w, season }: { warrior: Warrior; season: string }
           <Skull className="absolute top-3 right-3 w-12 h-12 text-destructive/5 pointer-events-none" />
           <p className="text-xs text-foreground/90 italic font-medium leading-relaxed mb-4 pr-8">
             &quot;
-            {w.deathEvent?.deathSummary ||
-              w.causeOfDeath ||
-              w.deathCause ||
-              'Killed in the arena.'}
+            {w.deathEvent?.deathSummary || w.causeOfDeath || w.deathCause || 'Killed in the arena.'}
             &quot;
           </p>
           <div className="space-y-3 border-t border-destructive/10 pt-4 mt-auto">

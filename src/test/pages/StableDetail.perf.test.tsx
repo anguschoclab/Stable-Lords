@@ -31,11 +31,7 @@ const useTestStore = create<TestStore>()(
   }))
 );
 
-const RenderTracker = ({
-  renderCountRef,
-}: {
-  renderCountRef: React.MutableRefObject<number>;
-}) => {
+const RenderTracker = ({ renderCountRef }: { renderCountRef: React.MutableRefObject<number> }) => {
   const { rivals, arenaHistory } = useTestStore(
     useShallow((s) => ({ rivals: s.rivals, arenaHistory: s.arenaHistory }))
   );

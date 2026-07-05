@@ -75,7 +75,18 @@ describe('expanded narrative content', () => {
             for (const token of tokens) {
               const inner = token.replace(/\{\{|\}\}/g, '');
               expect(
-                ['attacker', 'defender', 'weapon', 'bodyPart', 'possessive', 'pronoun', 'reflexive', 'winner', 'loser', 'name'].includes(inner),
+                [
+                  'attacker',
+                  'defender',
+                  'weapon',
+                  'bodyPart',
+                  'possessive',
+                  'pronoun',
+                  'reflexive',
+                  'winner',
+                  'loser',
+                  'name',
+                ].includes(inner),
                 `Unknown token {{${inner}}} in strikes.${wtype}.${sev}: "${entry.substring(0, 50)}..."`
               ).toBe(true);
             }
@@ -90,7 +101,9 @@ describe('expanded narrative content', () => {
               weapon: 'longsword',
               bodyPart: 'chest',
             });
-            expect(noRawTokens(result), `Raw token leaked: "${result.substring(0, 60)}..."`).toBe(true);
+            expect(noRawTokens(result), `Raw token leaked: "${result.substring(0, 60)}..."`).toBe(
+              true
+            );
           }
         });
       }

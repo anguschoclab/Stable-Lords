@@ -41,11 +41,11 @@ const defaultStoreState = {
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: () => ({ ...defaultStoreState, ...storeOverride }),
-};
+  };
 });
 
 // Must mock the module before importing it inside components

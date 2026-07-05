@@ -6,42 +6,42 @@ import '@/test/_setup/setup';
 
 // Mock useGameStore to avoid store initialization issues
 vi.mock('@/state/useGameStore', async (importOriginal) => {
-  const actual = await importOriginal() as object;
+  const actual = (await importOriginal()) as object;
   return {
     ...actual,
     useGameStore: () => ({
-    roster: [],
-    newsletter: [],
-    ledger: [],
-    matchHistory: [],
-    moodHistory: [],
-    graveyard: [],
-    retired: [],
-    week: 1,
-    season: 'Spring',
-    year: 1,
-    treasury: 500,
-    tournaments: [],
-    rivals: [],
-    arenaHistory: [],
-    trainers: [],
-    trainingAssignments: [],
-    fame: 0,
-    ftueComplete: false,
-    player: {
-      id: 'p1',
-      name: 'Player',
-      stableName: "Dragon's Hearth",
+      roster: [],
+      newsletter: [],
+      ledger: [],
+      matchHistory: [],
+      moodHistory: [],
+      graveyard: [],
+      retired: [],
+      week: 1,
+      season: 'Spring',
+      year: 1,
+      treasury: 500,
+      tournaments: [],
+      rivals: [],
+      arenaHistory: [],
+      trainers: [],
+      trainingAssignments: [],
       fame: 0,
-      renown: 0,
-      titles: 0,
-    },
-    setState: vi.fn(),
-    doAdvanceWeek: vi.fn().mockResolvedValue(undefined),
-    doReset: vi.fn(),
-  }),
-  reconstructGameState: vi.fn((s: any) => s),
-};
+      ftueComplete: false,
+      player: {
+        id: 'p1',
+        name: 'Player',
+        stableName: "Dragon's Hearth",
+        fame: 0,
+        renown: 0,
+        titles: 0,
+      },
+      setState: vi.fn(),
+      doAdvanceWeek: vi.fn().mockResolvedValue(undefined),
+      doReset: vi.fn(),
+    }),
+    reconstructGameState: vi.fn((s: any) => s),
+  };
 });
 
 describe('AdminTools Page', () => {

@@ -131,9 +131,7 @@ export const useGameStore = create<GameStore>()(
         });
       },
 
-      doAdvanceWeek: async (
-        processedState?: GameState,
-      ) => {
+      doAdvanceWeek: async (processedState?: GameState) => {
         if (get().isSimulating) return;
         const store = get();
         const raw = processedState || reconstructGameState(store);
@@ -190,9 +188,7 @@ export const useGameStore = create<GameStore>()(
         }
       },
 
-      doAdvanceDay: async (
-        processedState?: GameState,
-      ) => {
+      doAdvanceDay: async (processedState?: GameState) => {
         if (get().isSimulating) return;
         const store = get();
         const raw = processedState || reconstructGameState(store);

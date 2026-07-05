@@ -38,95 +38,91 @@ describe('damageCalc mechanics', () => {
 
   describe('calculateKillWindow', () => {
     it('returns 0 if momentum < 0', () => {
-      expect(
-        calculateKillWindow(
-          1.0, 1.0, 'left arm', 5, 1, 5, 5, 0, 10, -1, 0, 0
-        )
-      ).toBe(0);
+      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 1, 5, 5, 0, 10, -1, 0, 0)).toBe(0);
     });
 
     it('returns 0 if threshold evaluates to < 0', () => {
-      expect(
-        calculateKillWindow(
-          1.0, 1.0, 'left arm', 0, 0, 5, 5, 0, 10, 0, 0, 0
-        )
-      ).toBe(0);
+      expect(calculateKillWindow(1.0, 1.0, 'left arm', 0, 0, 5, 5, 0, 10, 0, 0, 0)).toBe(0);
     });
 
     it('adds hpRatio modifiers', () => {
-      expect(
-        calculateKillWindow(
-          0.2, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0
-        )
-      ).toBeGreaterThan(
-        calculateKillWindow(
-          0.4, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0
-        )
+      expect(calculateKillWindow(0.2, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeGreaterThan(
+        calculateKillWindow(0.4, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)
       );
 
-      expect(
-        calculateKillWindow(
-          0.4, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0
-        )
-      ).toBeGreaterThan(
-        calculateKillWindow(
-          0.6, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0
-        )
+      expect(calculateKillWindow(0.4, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeGreaterThan(
+        calculateKillWindow(0.6, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)
       );
     });
 
     it('adds enduranceRatio modifiers', () => {
-      expect(
+      expect(calculateKillWindow(1.0, 0.1, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBeGreaterThan(
         calculateKillWindow(
-          1.0, 0.1, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0
-        )
-      ).toBeGreaterThan(
-        calculateKillWindow(
-          1.0, KILL_WINDOW_ENDURANCE - 0.01, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0
+          1.0,
+          KILL_WINDOW_ENDURANCE - 0.01,
+          'left arm',
+          5,
+          0,
+          5,
+          5,
+          0,
+          10,
+          0,
+          0,
+          0
         )
       );
 
       expect(
         calculateKillWindow(
-          1.0, KILL_WINDOW_ENDURANCE - 0.01, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0
+          1.0,
+          KILL_WINDOW_ENDURANCE - 0.01,
+          'left arm',
+          5,
+          0,
+          5,
+          5,
+          0,
+          10,
+          0,
+          0,
+          0
         )
-      ).toBeGreaterThan(
-        calculateKillWindow(
-          1.0, 0.5, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0
-        )
-      );
+      ).toBeGreaterThan(calculateKillWindow(1.0, 0.5, 'left arm', 5, 0, 5, 5, 0, 10, 0, 0, 0));
     });
 
     it('incorporates various bonuses (killDesire, momentum, specialtyBonus)', () => {
-      expect(
-        calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 2, 0, 0)
-      ).toBeCloseTo(0.0052, 5);
+      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 2, 0, 0)).toBeCloseTo(
+        0.0052,
+        5
+      );
 
-      expect(
-        calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 3, 0, 0)
-      ).toBeCloseTo(0.0087, 5);
+      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 0, 10, 3, 0, 0)).toBeCloseTo(
+        0.0087,
+        5
+      );
     });
 
     it('incorporates attOE, attAL, matchupBonus, decSkill, phaseLevel', () => {
-      expect(
-        calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 10, 5, 0, 10, 0, 0, 0)
-      ).toBeCloseTo(0.00245, 5);
+      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 10, 5, 0, 10, 0, 0, 0)).toBeCloseTo(
+        0.00245,
+        5
+      );
 
-      expect(
-        calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 5, 10, 0, 0, 0)
-      ).toBeCloseTo(0.0062, 5);
+      expect(calculateKillWindow(1.0, 1.0, 'left arm', 5, 0, 5, 5, 5, 10, 0, 0, 0)).toBeCloseTo(
+        0.0062,
+        5
+      );
     });
 
     it('falls back to 1.0 locMult if location missing in LOCATION_KILL_MULT', () => {
-      expect(
-        calculateKillWindow(1.0, 1.0, 'unknown' as any, 5, 0, 5, 5, 0, 10, 0, 0, 0)
-      ).toBe(0.012);
+      expect(calculateKillWindow(1.0, 1.0, 'unknown' as any, 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBe(
+        0.012
+      );
     });
 
     it('clamps to max 0.04', () => {
-      expect(
-        calculateKillWindow(1.0, 1.0, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0)
-      ).toBe(0.04);
+      expect(calculateKillWindow(1.0, 1.0, 'head', 5, 0, 5, 5, 0, 10, 0, 0, 0)).toBe(0.04);
     });
 
     it('applies modifiers and boundary thresholds correctly', () => {
@@ -168,13 +164,13 @@ describe('damageCalc mechanics', () => {
     it('computes damage correctly for all 7 HitLocation values', () => {
       const rng = vi.fn().mockReturnValue(0.5); // Variance = 1.0
       // base = 10 + 4 = 14, variance = 1.0 → round(14 * locMult * 1.0)
-      expect(computeHitDamage(rng, 10, 'head')).toBe(21);       // 1.5
-      expect(computeHitDamage(rng, 10, 'chest')).toBe(17);      // 1.2
-      expect(computeHitDamage(rng, 10, 'abdomen')).toBe(15);    // 1.1
-      expect(computeHitDamage(rng, 10, 'right arm')).toBe(14);  // 1.0
-      expect(computeHitDamage(rng, 10, 'left arm')).toBe(14);   // 1.0
-      expect(computeHitDamage(rng, 10, 'right leg')).toBe(14);  // 1.0
-      expect(computeHitDamage(rng, 10, 'left leg')).toBe(14);   // 1.0
+      expect(computeHitDamage(rng, 10, 'head')).toBe(21); // 1.5
+      expect(computeHitDamage(rng, 10, 'chest')).toBe(17); // 1.2
+      expect(computeHitDamage(rng, 10, 'abdomen')).toBe(15); // 1.1
+      expect(computeHitDamage(rng, 10, 'right arm')).toBe(14); // 1.0
+      expect(computeHitDamage(rng, 10, 'left arm')).toBe(14); // 1.0
+      expect(computeHitDamage(rng, 10, 'right leg')).toBe(14); // 1.0
+      expect(computeHitDamage(rng, 10, 'left leg')).toBe(14); // 1.0
     });
 
     it('scales linearly with high damageClass = 50', () => {

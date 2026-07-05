@@ -52,10 +52,13 @@ export function getItemByCode(code: string): EquipmentItem | undefined {
  */
 export function getAvailableItems(slot: EquipmentSlot, style: FightingStyle): EquipmentItem[] {
   const pool =
-    slot === 'weapon' ? WEAPONS :
-    slot === 'armor' ? ARMORS :
-    slot === 'shield' ? [...SHIELDS, ...WEAPONS.filter((w) => SHIELD_ID_SET.has(w.id))] :
-    HELMS;
+    slot === 'weapon'
+      ? WEAPONS
+      : slot === 'armor'
+        ? ARMORS
+        : slot === 'shield'
+          ? [...SHIELDS, ...WEAPONS.filter((w) => SHIELD_ID_SET.has(w.id))]
+          : HELMS;
   return pool.filter((item) => !item.restrictedStyles?.includes(style));
 } /**
  * Is preferred weapon.

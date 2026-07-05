@@ -157,9 +157,7 @@ export function generateBoutBids(
     let matchupModifier = -Infinity;
     let foundOpponent = false;
     if (intent === 'VENDETTA' && rival.strategy?.targetStableId) {
-      const targetRival = mockState.rivals.find(
-        (r) => r.id === rival.strategy?.targetStableId
-      );
+      const targetRival = mockState.rivals.find((r) => r.id === rival.strategy?.targetStableId);
       if (targetRival) {
         for (const opponent of targetRival.roster) {
           if (opponent.status === 'Active') {
@@ -281,7 +279,8 @@ export function convertBidsToOffers(
     if (candidates.length === 0) continue;
 
     // Pick the best matchup opponent
-    let bestCandidate = candidates[0]; if (!bestCandidate) continue;
+    let bestCandidate = candidates[0];
+    if (!bestCandidate) continue;
     let bestScore = -Infinity;
     for (const candidate of candidates) {
       const score = scoreMatchup(proposer, candidate.warrior, state);
@@ -303,7 +302,10 @@ export function convertBidsToOffers(
       boutWeek: nextWeek,
       expirationWeek: nextWeek,
       purse: Math.max(50, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50))),
-      hype: Math.max(40, Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) + bid.priority * 5),
+      hype: Math.max(
+        40,
+        Math.floor((proposer.fame ?? 50) + (opponent.fame ?? 50)) + bid.priority * 5
+      ),
       status: 'Proposed',
       responses: {
         [bid.proposingWarriorId as WarriorId]: 'Accepted',

@@ -111,7 +111,11 @@ export function clearTestLocalStorage() {
   }
 }
 
-export function makeAutosimWarrior(id: string, name: string, overrides?: Partial<Warrior>): Warrior {
+export function makeAutosimWarrior(
+  id: string,
+  name: string,
+  overrides?: Partial<Warrior>
+): Warrior {
   const attrs = { ST: 12, CN: 12, SZ: 12, WT: 12, WL: 12, SP: 12, DF: 12 };
   const { baseSkills, derivedStats } = computeWarriorStats(attrs, FightingStyle.StrikingAttack);
   return {

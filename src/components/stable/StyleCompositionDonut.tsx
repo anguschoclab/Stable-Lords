@@ -40,7 +40,11 @@ function describeArc(cx: number, cy: number, r: number, startDeg: number, endDeg
  * Miniature donut SVG showing roster fighting-style composition as arc segments.
  * Each distinct style gets one path. Empty roster renders nothing.
  */
-export function StyleCompositionDonut({ styles, size = 44, className }: StyleCompositionDonutProps) {
+export function StyleCompositionDonut({
+  styles,
+  size = 44,
+  className,
+}: StyleCompositionDonutProps) {
   const segments = useMemo(() => {
     if (styles.length === 0) return [];
     const counts = new Map<FightingStyle, number>();
@@ -73,7 +77,14 @@ export function StyleCompositionDonut({ styles, size = 44, className }: StyleCom
       className={cn('shrink-0', className)}
       aria-label="Roster style composition"
     >
-      <circle cx={cx} cy={cy} r={r} fill="none" className="stroke-white/5" strokeWidth={strokeWidth} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r}
+        fill="none"
+        className="stroke-white/5"
+        strokeWidth={strokeWidth}
+      />
       {segments.map(({ style, count, sweep, start, index }) => {
         const key = style.replace(/\s+/g, '-');
         const gapDeg = segments.length > 1 ? 2 : 0;
@@ -90,7 +101,9 @@ export function StyleCompositionDonut({ styles, size = 44, className }: StyleCom
             strokeWidth={strokeWidth}
             strokeLinecap="butt"
           >
-            <title>{STYLE_DISPLAY_NAMES[style]}: {count}</title>
+            <title>
+              {STYLE_DISPLAY_NAMES[style]}: {count}
+            </title>
           </path>
         );
       })}

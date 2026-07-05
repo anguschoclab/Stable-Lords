@@ -174,12 +174,8 @@ describe('Health System Boundary Testing', () => {
 
     const impact = computeHealthImpact(mockState);
 
-    expect(
-      impact.rosterUpdates?.get('w1' as WarriorId)?.injuries
-    ).toEqual([]);
-    expect(
-      impact.rosterUpdates?.get('w2' as WarriorId)?.injuries
-    ).toEqual([]);
+    expect(impact.rosterUpdates?.get('w1' as WarriorId)?.injuries).toEqual([]);
+    expect(impact.rosterUpdates?.get('w2' as WarriorId)?.injuries).toEqual([]);
 
     expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 1 recovered from cut.');
     expect(impact.newsletterItems?.[0]!.items).toContain('Warrior 2 recovered from bruise.');

@@ -33,9 +33,7 @@ export function ObjectivesWidget() {
             key={obj.id}
             className={cn(
               'flex items-start gap-3 px-3 py-2 border-l-2 transition-colors',
-              obj.completed
-                ? 'border-primary bg-primary/5'
-                : 'border-white/10 bg-transparent'
+              obj.completed ? 'border-primary bg-primary/5' : 'border-white/10 bg-transparent'
             )}
           >
             {obj.completed ? (

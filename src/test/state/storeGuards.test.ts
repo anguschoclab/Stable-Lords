@@ -202,9 +202,7 @@ describe('store guards — behavioral tests', () => {
   describe('#13 doAdvanceDay worker timeout', () => {
     it('resets isSimulating when worker stalls beyond 15s timeout', async () => {
       vi.useFakeTimers();
-      vi.mocked(engineProxy.advanceDay).mockImplementation(
-        () => new Promise(() => {})
-      );
+      vi.mocked(engineProxy.advanceDay).mockImplementation(() => new Promise(() => {}));
       const state = makeMinimalState({ week: 1 });
       useGameStore.getState().loadGame('test-slot', state);
       const promise = useGameStore.getState().doAdvanceDay();
@@ -213,7 +211,11 @@ describe('store guards — behavioral tests', () => {
       // The timeout fires and isSimulating is reset even on failure
       expect(useGameStore.getState().isSimulating).toBe(false);
       vi.useRealTimers();
-      vi.mocked(engineProxy.advanceDay).mockResolvedValue({ week: 1, day: 1, phase: 'planning' } as any);
+      vi.mocked(engineProxy.advanceDay).mockResolvedValue({
+        week: 1,
+        day: 1,
+        phase: 'planning',
+      } as any);
     });
   });
 });

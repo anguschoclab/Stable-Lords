@@ -189,16 +189,17 @@ describe('Equipment Optimizer', () => {
     it('speed profile always prefers none_shield', () => {
       // Styles that have a speed profile
       const speedStyles = [
-        FightingStyle.AimedBlow,      // ['speed', 'balanced']
-        FightingStyle.LungingAttack,  // ['speed', 'balanced']
-        FightingStyle.ParryLunge,     // ['balanced', 'speed']
-        FightingStyle.ParryRiposte,   // ['balanced', 'speed']
+        FightingStyle.AimedBlow, // ['speed', 'balanced']
+        FightingStyle.LungingAttack, // ['speed', 'balanced']
+        FightingStyle.ParryLunge, // ['balanced', 'speed']
+        FightingStyle.ParryRiposte, // ['balanced', 'speed']
       ];
       for (const style of speedStyles) {
         const recs = generateRecommendations(style, 12);
-        const profiles = style === FightingStyle.AimedBlow || style === FightingStyle.LungingAttack
-          ? [0]  // speed is index 0
-          : [1]; // speed is index 1
+        const profiles =
+          style === FightingStyle.AimedBlow || style === FightingStyle.LungingAttack
+            ? [0] // speed is index 0
+            : [1]; // speed is index 1
         for (const idx of profiles) {
           expect(recs[idx]?.loadout.shield, `speed rec for ${style}`).toBe('none_shield');
         }

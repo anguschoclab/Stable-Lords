@@ -2,7 +2,11 @@ import type { GameState } from '@/types/state.types';
 import type { FightSummary } from '@/types/combat.types';
 import type { FightId, SimulationReportId } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
-import { processWeekBouts, type BoutResult, type WeekBoutSummary } from '@/engine/bout/services/boutProcessorService';
+import {
+  processWeekBouts,
+  type BoutResult,
+  type WeekBoutSummary,
+} from '@/engine/bout/services/boutProcessorService';
 import { generateId } from '@/utils/idUtils';
 import { StateImpact } from '@/engine/impacts';
 

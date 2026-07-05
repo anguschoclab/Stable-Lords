@@ -14,17 +14,50 @@ import type { WeatherType, Season } from '@/types/shared.types';
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];
 
 const ALL_WEATHER_TYPES: WeatherType[] = [
-  'Clear', 'Rainy', 'Sweltering', 'Breezy', 'Overcast', 'Blazing Sun',
-  'Gale', 'Blood Moon', 'Eclipse', 'Sandstorm', 'Zephyr', 'Tornado',
-  'Blizzard', 'Dense Fog', 'Mist', 'Thunderstorm', 'Gravity Anomaly',
-  'Ashfall', 'Acid Rain', 'Mana Surge', 'Rainbow', 'Scorching Wind', 'Wild Magic',
-  'Spooky Night', 'Meteor Shower', 'Solar Flare', 'Abyssal Gloom',
-  'Cursed Miasma', 'Hailstorm', 'Arcane Storm', 'Blood Rain',
-  'Locust Swarm', 'Aurora Borealis', 'Chaotic Winds', 'Aether Storm',
-  'Mirage', 'Ember Rain', 'Wildfire Smoke', 'Blood Fog',
-  'Shimmering Heat', 'Rain of Frogs',
+  'Clear',
+  'Rainy',
+  'Sweltering',
+  'Breezy',
+  'Overcast',
+  'Blazing Sun',
+  'Gale',
+  'Blood Moon',
+  'Eclipse',
+  'Sandstorm',
+  'Zephyr',
+  'Tornado',
+  'Blizzard',
+  'Dense Fog',
+  'Mist',
+  'Thunderstorm',
+  'Gravity Anomaly',
+  'Ashfall',
+  'Acid Rain',
+  'Mana Surge',
+  'Rainbow',
+  'Scorching Wind',
+  'Wild Magic',
+  'Spooky Night',
+  'Meteor Shower',
+  'Solar Flare',
+  'Abyssal Gloom',
+  'Cursed Miasma',
+  'Hailstorm',
+  'Arcane Storm',
+  'Blood Rain',
+  'Locust Swarm',
+  'Aurora Borealis',
+  'Chaotic Winds',
+  'Aether Storm',
+  'Mirage',
+  'Ember Rain',
+  'Wildfire Smoke',
+  'Blood Fog',
+  'Shimmering Heat',
+  'Rain of Frogs',
   'Crystal Rain',
-  'Chaos Storm', 'Chaos Squall',
+  'Chaos Storm',
+  'Chaos Squall',
 ];
 
 describe('Weather season exclusivity', () => {
@@ -38,11 +71,21 @@ describe('Weather season exclusivity', () => {
   });
 
   it('no weather type appears in more than one SEASON_EXCLUSIVE_WEATHER bucket', () => {
-    const SHARED: WeatherType[] = ['Clear', 'Overcast', 'Blood Moon', 'Eclipse', 'Mana Surge', 'Chaos Storm', 'Chaos Squall'];
+    const SHARED: WeatherType[] = [
+      'Clear',
+      'Overcast',
+      'Blood Moon',
+      'Eclipse',
+      'Mana Surge',
+      'Chaos Storm',
+      'Chaos Squall',
+    ];
     for (const w of ALL_WEATHER_TYPES) {
       if (SHARED.includes(w)) continue;
       const seasonsContaining = SEASONS.filter((s) => SEASONAL_WEATHER[s].includes(w));
-      expect(seasonsContaining.length, `${w} appears in ${seasonsContaining.length} seasons`).toBe(1);
+      expect(seasonsContaining.length, `${w} appears in ${seasonsContaining.length} seasons`).toBe(
+        1
+      );
     }
   });
 

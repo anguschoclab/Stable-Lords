@@ -20,11 +20,7 @@ describe('findCurrentRoundBouts', () => {
   });
 
   it('returns null round and empty array when all bouts are resolved', () => {
-    const bracket = [
-      makeBout(1, 0, 'A'),
-      makeBout(1, 1, 'D'),
-      makeBout(2, 0, 'A'),
-    ];
+    const bracket = [makeBout(1, 0, 'A'), makeBout(1, 1, 'D'), makeBout(2, 0, 'A')];
     const result = findCurrentRoundBouts(bracket);
     expect(result.currentRound).toBeNull();
     expect(result.roundBouts).toEqual([]);
@@ -39,23 +35,14 @@ describe('findCurrentRoundBouts', () => {
   });
 
   it('collects all unresolved bouts in the same round', () => {
-    const bracket = [
-      makeBout(1, 0),
-      makeBout(1, 1),
-      makeBout(1, 2),
-    ];
+    const bracket = [makeBout(1, 0), makeBout(1, 1), makeBout(1, 2)];
     const result = findCurrentRoundBouts(bracket);
     expect(result.currentRound).toBe(1);
     expect(result.roundBouts).toHaveLength(3);
   });
 
   it('returns only the minimum round bouts when multiple rounds are unresolved', () => {
-    const bracket = [
-      makeBout(2, 0),
-      makeBout(3, 0),
-      makeBout(2, 1),
-      makeBout(4, 0),
-    ];
+    const bracket = [makeBout(2, 0), makeBout(3, 0), makeBout(2, 1), makeBout(4, 0)];
     const result = findCurrentRoundBouts(bracket);
     expect(result.currentRound).toBe(2);
     expect(result.roundBouts).toHaveLength(2);
@@ -63,11 +50,7 @@ describe('findCurrentRoundBouts', () => {
   });
 
   it('handles non-monotonic round order (e.g. [r3, r1, r2])', () => {
-    const bracket = [
-      makeBout(3, 0),
-      makeBout(1, 0),
-      makeBout(2, 0),
-    ];
+    const bracket = [makeBout(3, 0), makeBout(1, 0), makeBout(2, 0)];
     const result = findCurrentRoundBouts(bracket);
     expect(result.currentRound).toBe(1);
     expect(result.roundBouts).toHaveLength(1);
@@ -75,11 +58,7 @@ describe('findCurrentRoundBouts', () => {
   });
 
   it('skips resolved bouts and only considers unresolved ones', () => {
-    const bracket = [
-      makeBout(1, 0, 'A'),
-      makeBout(1, 1),
-      makeBout(2, 0),
-    ];
+    const bracket = [makeBout(1, 0, 'A'), makeBout(1, 1), makeBout(2, 0)];
     const result = findCurrentRoundBouts(bracket);
     expect(result.currentRound).toBe(1);
     expect(result.roundBouts).toHaveLength(1);

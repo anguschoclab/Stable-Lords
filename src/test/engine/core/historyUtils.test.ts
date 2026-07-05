@@ -37,7 +37,6 @@ function createMockFight(
 }
 
 describe('getRecentFightsForWarrior', () => {
-
   it('returns empty array when history is empty', () => {
     const history: FightSummary[] = [];
     const result = getRecentFightsForWarrior(history, 'Hero' as WarriorId);
@@ -155,10 +154,7 @@ describe('getFightsForWeek', () => {
   });
 
   it('returns empty array when no fights match the target week', () => {
-    const history: FightSummary[] = [
-      createMockFight({ week: 1 }),
-      createMockFight({ week: 2 }),
-    ];
+    const history: FightSummary[] = [createMockFight({ week: 1 }), createMockFight({ week: 2 })];
     expect(getFightsForWeek(history, 99)).toEqual([]);
   });
 
@@ -210,10 +206,7 @@ describe('getRecentFights', () => {
   });
 
   it('returns empty array when all fights are before minWeek', () => {
-    const history: FightSummary[] = [
-      createMockFight({ week: 1 }),
-      createMockFight({ week: 2 }),
-    ];
+    const history: FightSummary[] = [createMockFight({ week: 1 }), createMockFight({ week: 2 })];
     expect(getRecentFights(history, 10)).toEqual([]);
   });
 
@@ -276,9 +269,7 @@ describe('getAllFightsForWarrior', () => {
   });
 
   it('returns empty array when warrior not in any fight', () => {
-    const history: FightSummary[] = [
-      createMockFight({ warriorIdA: 'A', warriorIdD: 'B' }),
-    ];
+    const history: FightSummary[] = [createMockFight({ warriorIdA: 'A', warriorIdD: 'B' })];
     expect(getAllFightsForWarrior(history, 'Nobody' as WarriorId)).toEqual([]);
   });
 });

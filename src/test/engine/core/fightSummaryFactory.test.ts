@@ -254,7 +254,9 @@ describe('createFightSummary field mapping', () => {
       rng: { uuid: () => 'test-id' },
     });
     // Week 10 = Jan 1 + 9*7 days = Jan 1 + 63 days = Mar 5
-    expect(summary.createdAt).toBe(new Date(Date.UTC(2026, 0, 1) + 9 * 7 * 24 * 60 * 60 * 1000).toISOString());
+    expect(summary.createdAt).toBe(
+      new Date(Date.UTC(2026, 0, 1) + 9 * 7 * 24 * 60 * 60 * 1000).toISOString()
+    );
   });
 
   it('maps warriorIdA and warriorIdD from warrior objects', () => {
@@ -354,13 +356,9 @@ describe('createBoutSummary', () => {
   });
 
   it('does not set tournamentId (non-tournament bout)', () => {
-    const summary = createBoutSummary(
-      makeWarriorA(),
-      makeWarriorD(),
-      makeOutcome(),
-      1,
-      { uuid: () => 'bout-id' }
-    );
+    const summary = createBoutSummary(makeWarriorA(), makeWarriorD(), makeOutcome(), 1, {
+      uuid: () => 'bout-id',
+    });
     expect(summary.tournamentId).toBeUndefined();
   });
 });
@@ -369,38 +367,23 @@ describe('createBoutSummary', () => {
 
 describe('createMinimalFightSummary', () => {
   it('generates id via rng.uuid', () => {
-    const summary = createMinimalFightSummary(
-      makeWarriorA(),
-      makeWarriorD(),
-      'A',
-      'Kill',
-      1,
-      { uuid: (prefix?: string) => `min-${prefix}` }
-    );
+    const summary = createMinimalFightSummary(makeWarriorA(), makeWarriorD(), 'A', 'Kill', 1, {
+      uuid: (prefix?: string) => `min-${prefix}`,
+    });
     expect(summary.id).toBe('min-bout' as any);
   });
 
   it('builds title without tournament context', () => {
-    const summary = createMinimalFightSummary(
-      makeWarriorA(),
-      makeWarriorD(),
-      'A',
-      'Kill',
-      1,
-      { uuid: () => 'min-id' }
-    );
+    const summary = createMinimalFightSummary(makeWarriorA(), makeWarriorD(), 'A', 'Kill', 1, {
+      uuid: () => 'min-id',
+    });
     expect(summary.title).toBe('Aulus vs Bran');
   });
 
   it('has empty transcript and no analysis field', () => {
-    const summary = createMinimalFightSummary(
-      makeWarriorA(),
-      makeWarriorD(),
-      'D',
-      'KO',
-      5,
-      { uuid: () => 'min-id' }
-    );
+    const summary = createMinimalFightSummary(makeWarriorA(), makeWarriorD(), 'D', 'KO', 5, {
+      uuid: () => 'min-id',
+    });
     expect(summary.transcript).toEqual([]);
     expect(summary.analysis).toBeUndefined();
   });

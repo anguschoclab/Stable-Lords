@@ -51,12 +51,14 @@ export function VitalityRing({ value, size = 40, strokeWidth = 4, className }: V
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeLinecap="butt"
-          style={{ strokeDashoffset: offset, transform: 'rotate(-90deg)', transformOrigin: 'center' }}
+          style={{
+            strokeDashoffset: offset,
+            transform: 'rotate(-90deg)',
+            transformOrigin: 'center',
+          }}
         />
       </svg>
-      <span className="absolute text-[9px] font-mono font-black text-foreground/70">
-        {clamped}
-      </span>
+      <span className="absolute text-[9px] font-mono font-black text-foreground/70">{clamped}</span>
     </div>
   );
 }

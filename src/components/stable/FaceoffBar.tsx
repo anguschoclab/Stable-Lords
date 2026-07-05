@@ -14,7 +14,15 @@ interface FaceoffBarProps {
  * Symmetric face-off bar: Fighter A fills left-from-center, Fighter B fills right-from-center.
  * Each side occupies 50% of the total width, proportional to remaining HP.
  */
-export function FaceoffBar({ hpA, maxA, hpB, maxB, labelA = 'A', labelB = 'B', className }: FaceoffBarProps) {
+export function FaceoffBar({
+  hpA,
+  maxA,
+  hpB,
+  maxB,
+  labelA = 'A',
+  labelB = 'B',
+  className,
+}: FaceoffBarProps) {
   const pctA = maxA > 0 ? Math.min(50, Math.max(0, (hpA / maxA) * 50)) : 0;
   const pctB = maxB > 0 ? Math.min(50, Math.max(0, (hpB / maxB) * 50)) : 0;
 

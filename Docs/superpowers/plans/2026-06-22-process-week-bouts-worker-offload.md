@@ -1,6 +1,7 @@
 # Plan 4 — Move `processWeekBouts` off the main thread
 
 ## Key finding — changes the fix
+
 The main-thread `processWeekBouts(gameState)` at `useWeekExecution.ts:53` is **NOT
 authoritative**. `doAdvanceWeek` passes `undefined` as `processedState` (`createStore.ts:130-189`)
 and `engineProxy.advanceWeek` runs `processWeekBouts` **again inside the worker** via
@@ -25,6 +26,7 @@ spinner (`ExecuteWeekButton.tsx:23`, `running || isSimulating`) already covers t
 **A3.** Bonus: drops `@/engine/bout` from the eager main graph.
 
 ## Option B (literal request, fallback)
+
 Expose `processWeekBouts` on `worker.ts` (add to the `engine` object) and `workerProxy.ts`
 (mirror in the dev `Promise.all` + cached + proxy map), then
 `await engineProxy.processWeekBouts(stripNonSerializable(gameState))` in the hook. Works, but
@@ -32,12 +34,14 @@ keeps a ~2x sim cost and **the dev proxy runs on the main thread — the freeze 
 a production build** (`npm run build && npm run preview`). Same caveat as autosim today.
 
 ## Serialization
+
 `stripNonSerializable` (`serialization.ts:15-25`) removes the Maps/caches; `processWeekBouts`
 rebuilds `warriorMap` via `buildWarriorMap`. `BoutResult`/`WeekBoutSummary`/`FightOutcome.log`
 are plain data → clone-safe (same path autosim results cross). No `Comlink.proxy()` needed
 (no callbacks).
 
 ## Verification
+
 Dev: full slate → ResolutionReveal correct, deterministic (reload save, re-run → identical),
 autosim still works. **Responsiveness MUST be checked in `npm run build && npm run preview`**
 (real Worker) — interact during resolution, no frozen frame; Option A: `processWeekBouts` fires
@@ -45,6 +49,7 @@ once, inside the worker. `type-check`/`lint`; `boutProcessorService.test.ts`,
 `integration/autosim.test.ts`.
 
 ## Risks
+
 Determinism mismatch if two runs get different inputs (Option A avoids by construction);
 clone failures (strip Maps); rapid-click race (existing `runningRef` + `isSimulating` guards);
 dev shows no fix (state in PR); removing `results` local state may break `AppShell.tsx:115`
@@ -52,6 +57,7 @@ dev shows no fix (state in PR); removing `results` local state may break `AppShe
 populate display payload — the subtlest part of Option A.
 
 ## Critical files
+
 `src/hooks/useWeekExecution.ts`; `src/state/createStore.ts`;
 `src/engine/pipeline/passes/BoutSimulationPass.ts`; `src/engine/worker.ts` + `workerProxy.ts`
 (Option B); `src/components/ResolutionReveal.tsx`.

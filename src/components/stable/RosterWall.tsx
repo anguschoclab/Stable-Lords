@@ -73,7 +73,11 @@ export function RosterWall() {
               </span>
               <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
               {sortedRoster.length > 0 && (
-                <StyleCompositionDonut styles={rosterStyles} size={28} className="ml-1 opacity-70 hover:opacity-100 transition-opacity" />
+                <StyleCompositionDonut
+                  styles={rosterStyles}
+                  size={28}
+                  className="ml-1 opacity-70 hover:opacity-100 transition-opacity"
+                />
               )}
             </div>
           </div>
@@ -97,20 +101,20 @@ export function RosterWall() {
           <EmptyRosterState />
         ) : (
           <div className="grid gap-6">
-              {filteredRoster.map((w, i) => (
-                <motion.div
-                  key={w.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: Math.min(i, 8) * 0.05, duration: 0.5 }}
-                >
-                  <RosterWarriorRow
-                    warrior={w}
-                    rankIndex={i}
-                    onClick={() => navigate({ to: '/warrior/$id', params: { id: w.id } })}
-                  />
-                </motion.div>
-              ))}
+            {filteredRoster.map((w, i) => (
+              <motion.div
+                key={w.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(i, 8) * 0.05, duration: 0.5 }}
+              >
+                <RosterWarriorRow
+                  warrior={w}
+                  rankIndex={i}
+                  onClick={() => navigate({ to: '/warrior/$id', params: { id: w.id } })}
+                />
+              </motion.div>
+            ))}
           </div>
         )}
       </div>

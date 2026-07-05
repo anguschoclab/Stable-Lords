@@ -25,16 +25,23 @@ describe('combatNarrators', () => {
   describe('narrateAttack', () => {
     it('produces no-raw-token text', () => {
       const rng = new SeededRNG(1);
-      const result = narrateAttack(rng, 'Rex', 'longsword', false, 'Vellis', FightingStyle.SlashingAttack);
+      const result = narrateAttack(
+        rng,
+        'Rex',
+        'longsword',
+        false,
+        'Vellis',
+        FightingStyle.SlashingAttack
+      );
       expect(noRawTokens(result)).toBe(true);
     });
 
     it('is deterministic with same seed', () => {
       const r1 = new SeededRNG(42);
       const r2 = new SeededRNG(42);
-      expect(narrateAttack(r1, 'Rex', 'longsword', false, 'Vellis', FightingStyle.SlashingAttack)).toBe(
-        narrateAttack(r2, 'Rex', 'longsword', false, 'Vellis', FightingStyle.SlashingAttack)
-      );
+      expect(
+        narrateAttack(r1, 'Rex', 'longsword', false, 'Vellis', FightingStyle.SlashingAttack)
+      ).toBe(narrateAttack(r2, 'Rex', 'longsword', false, 'Vellis', FightingStyle.SlashingAttack));
     });
   });
 
@@ -108,13 +115,41 @@ describe('combatNarrators', () => {
   describe('narrateHit', () => {
     it('produces no-raw-token text for non-fatal hit', () => {
       const rng = new SeededRNG(1);
-      const result = narrateHit(rng, 'Vellis', 'chest', false, false, 'Rex', 'longsword', 10, 100, false, 50, false, FightingStyle.SlashingAttack);
+      const result = narrateHit(
+        rng,
+        'Vellis',
+        'chest',
+        false,
+        false,
+        'Rex',
+        'longsword',
+        10,
+        100,
+        false,
+        50,
+        false,
+        FightingStyle.SlashingAttack
+      );
       expect(noRawTokens(result)).toBe(true);
     });
 
     it('produces no-raw-token text for fatal hit', () => {
       const rng = new SeededRNG(1);
-      const result = narrateHit(rng, 'Vellis', 'head', false, false, 'Rex', 'longsword', 100, 100, true, 50, false, FightingStyle.SlashingAttack);
+      const result = narrateHit(
+        rng,
+        'Vellis',
+        'head',
+        false,
+        false,
+        'Rex',
+        'longsword',
+        100,
+        100,
+        true,
+        50,
+        false,
+        FightingStyle.SlashingAttack
+      );
       expect(noRawTokens(result)).toBe(true);
     });
   });

@@ -15,6 +15,19 @@ vi.mock('@/engine/potential', () => ({
   canGrow: vi.fn(() => true),
 }));
 
+vi.mock('@/components/ui/progress', () => ({
+  Progress: ({ value }: { value: number }) => (
+    <div data-testid="progress" data-value={value} />
+  ),
+}));
+
+vi.mock('@/components/ui/tooltip', () => ({
+  TooltipProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  TooltipContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
+
 import { computeGainChance } from '@/engine/training';
 import { canGrow } from '@/engine/potential';
 import { AttributeRow } from '@/components/warrior/AttributeRow';

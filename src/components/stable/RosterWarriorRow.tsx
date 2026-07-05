@@ -1,21 +1,18 @@
-import { Crown, Star, Activity, ChevronRight } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { BookmarkButton } from '@/components/bookmarks/BookmarkButton';
 import { cn } from '@/lib/utils';
 import { Surface } from '@/components/ui/Surface';
 import { StatBadge, WarriorNameTag } from '@/components/ui/WarriorBadges';
-import { StatBattery } from '@/components/ui/StatBattery';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { potentialRating, potentialGrade } from '@/engine/potential';
-import { computeWarriorLiability } from '@/engine/warriorValue';
-import {
-  ATTRIBUTE_TRAINING,
-  ATTRIBUTE_UI_THRESHOLDS,
-  FAME_STAR_THRESHOLD,
-} from '@/constants/training';
-import { ATTRIBUTE_KEYS, ATTRIBUTE_LABELS, type FightingStyle } from '@/types/game';
+import { FAME_STAR_THRESHOLD } from '@/constants/training';
+import { type FightingStyle } from '@/types/game';
 import type { AttributePotential, CareerRecord, InjuryData, Warrior } from '@/types/warrior.types';
 import type { Attributes } from '@/types/shared.types';
 import { TraitBadge } from '@/components/warrior/traits/TraitBadge';
+import { RankStrip } from './RankStrip';
+import { PotentialBadge } from './PotentialBadge';
+import { LiabilityBadge } from './LiabilityBadge';
+import { AttributeMatrix } from './AttributeMatrix';
+import { TacticalSummary } from './TacticalSummary';
 
 interface RosterWarriorRowProps {
   warrior: {
@@ -36,9 +33,6 @@ interface RosterWarriorRowProps {
   onClick: () => void;
 }
 
-/**
- *
- */
 export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorRowProps) {
   const fights = warrior.career.wins + warrior.career.losses;
   const winRate = fights > 0 ? Math.round((warrior.career.wins / fights) * 100) : 0;
@@ -63,31 +57,7 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
         padding="none"
         className="flex flex-col md:flex-row items-stretch border border-white/5 bg-neutral-900/60 transition-all duration-500 group-hover:border-primary/40 group-hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.1)]"
       >
-        {/* Ranking Vertical Strip */}
-        <div
-          className={cn(
-            'w-full md:w-20 shrink-0 flex flex-row md:flex-col items-center justify-center p-4 md:p-0 gap-4 border-b md:border-b-0 md:border-r border-white/5 relative',
-            rankIndex === 0 ? 'bg-arena-gold/5' : rankIndex === 1 ? 'bg-primary/5' : 'bg-white/2'
-          )}
-        >
-          <div className="absolute top-0 left-0 w-full md:w-1 h-1 md:h-full bg-primary opacity-40 group-hover:opacity-100 transition-all duration-500" />
-          <span className="text-[9px] font-black uppercase tracking-[0.3em] opacity-40 md:mb-1">
-            RANK
-          </span>
-          <span
-            className={cn(
-              'text-4xl font-display font-black tracking-tighter leading-none',
-              rankIndex === 0
-                ? 'text-arena-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.3)]'
-                : rankIndex === 1
-                  ? 'text-primary'
-                  : 'text-muted-foreground/40'
-            )}
-          >
-            {rankIndex + 1}
-          </span>
-          {rankIndex === 0 && <Crown className="h-4 w-4 mt-1 text-arena-gold animate-bounce" />}
-        </div>
+        <RankStrip rankIndex={rankIndex} />
 
         {/* Main Body */}
         <div className="flex-1 p-6 flex flex-col md:flex-row gap-8">
@@ -124,75 +94,8 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
                       {warrior.fame}G
                     </span>
                   </div>
-                  {warrior.potential &&
-                    (() => {
-                      const grade = potentialGrade(potentialRating(warrior.potential));
-                      const color =
-                        grade === 'S'
-                          ? 'text-arena-gold border-arena-gold/40'
-                          : grade === 'A'
-                            ? 'text-primary border-primary/40'
-                            : grade === 'B'
-                              ? 'text-primary border-primary/40'
-                              : grade === 'C'
-                                ? 'text-muted-foreground border-white/10'
-                                : 'text-muted-foreground/60 border-white/5';
-                      return (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div
-                              className={cn(
-                                'flex items-center gap-1 px-2 py-0.5 rounded-none bg-black border opacity-80 group-hover:opacity-100 transition-all',
-                                color
-                              )}
-                            >
-                              <span className="text-[8px] font-black uppercase tracking-widest opacity-60">
-                                POT
-                              </span>
-                              <span className="text-[10px] font-mono font-black">{grade}</span>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            Potential grade — ceiling for training gains.
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    })()}
-                  {warrior.traits &&
-                    (() => {
-                      const liab = computeWarriorLiability(warrior as Warrior);
-                      if (liab.recommendation === 'Keep') return null;
-                      const label =
-                        liab.recommendation === 'Release' ? 'Consider releasing' : 'Watch';
-                      const color =
-                        liab.recommendation === 'Release'
-                          ? 'text-arena-gold border-arena-gold/40'
-                          : 'text-muted-foreground border-white/10';
-                      return (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div
-                              className={cn(
-                                'flex items-center gap-1 px-2 py-0.5 rounded-none bg-black border opacity-80 group-hover:opacity-100 transition-all',
-                                color
-                              )}
-                            >
-                              <span className="text-[9px] font-black uppercase tracking-widest">
-                                {label}
-                              </span>
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {liab.factors.map((f) => (
-                              <div key={f.name} className="text-[9px] font-mono">
-                                {f.name}: {f.weight > 0 ? '+' : ''}
-                                {f.weight}
-                              </div>
-                            ))}
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    })()}
+                  <PotentialBadge potential={warrior.potential} />
+                  {warrior.traits && <LiabilityBadge warrior={warrior as Warrior} />}
                   {warrior.traits?.slice(0, 3).map((t) => (
                     <TraitBadge key={t} traitId={t} className="text-[8px]" />
                   ))}
@@ -226,64 +129,10 @@ export function RosterWarriorRow({ warrior, rankIndex, onClick }: RosterWarriorR
               </div>
             </div>
 
-            {/* Attribute Matrix Overlay */}
-            <div className="grid grid-cols-7 gap-2 pt-2">
-              {ATTRIBUTE_KEYS.map((k) => {
-                const val = warrior.attributes?.[k as keyof typeof warrior.attributes] ?? 0;
-                return (
-                  <Tooltip key={k}>
-                    <TooltipTrigger asChild>
-                      <StatBattery
-                        label={k}
-                        value={val}
-                        max={ATTRIBUTE_TRAINING.MAX_VALUE}
-                        colorClass={
-                          val >= ATTRIBUTE_UI_THRESHOLDS.EXCELLENT
-                            ? 'bg-arena-gold shadow-[0_0_10px_rgba(255,215,0,0.5)] group-hover:animate-pulse'
-                            : val >= ATTRIBUTE_UI_THRESHOLDS.GOOD
-                              ? 'bg-primary group-hover:animate-pulse'
-                              : 'bg-neutral-800'
-                        }
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-neutral-950 border-white/10 text-[9px] font-black tracking-widest">
-                      {ATTRIBUTE_LABELS[k]}: {val} / {ATTRIBUTE_TRAINING.MAX_VALUE}
-                    </TooltipContent>
-                  </Tooltip>
-                );
-              })}
-            </div>
+            <AttributeMatrix attributes={warrior.attributes} />
           </div>
 
-          {/* Tactical Summary Vertical */}
-          <div className="w-full md:w-32 shrink-0 flex flex-col justify-center gap-1 border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0 md:pl-8">
-            <div className="flex items-center justify-between md:flex-col md:items-start md:gap-4">
-              <div>
-                <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest opacity-40 block">
-                  Condition
-                </span>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <Activity
-                    className={cn('h-3 w-3', injuryCount > 0 ? 'text-destructive' : 'text-primary')}
-                  />
-                  <span
-                    className={cn(
-                      'text-[9px] font-black uppercase tracking-widest',
-                      injuryCount > 0 ? 'text-destructive' : 'text-primary'
-                    )}
-                  >
-                    {injuryCount > 0 ? 'Compromised' : 'Nominal'}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 group/btn px-4 py-1.5 rounded-none bg-white/5 border border-white/5 hover:border-primary/50 transition-all">
-                <span className="text-[9px] font-black uppercase tracking-widest group-hover/btn:text-primary transition-colors">
-                  Fight Report
-                </span>
-                <ChevronRight className="h-3 w-3 opacity-20 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all" />
-              </div>
-            </div>
-          </div>
+          <TacticalSummary injuryCount={injuryCount} />
         </div>
       </Surface>
     </div>

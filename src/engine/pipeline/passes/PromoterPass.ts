@@ -227,6 +227,7 @@ export function runPromoterPass(state: GameState, rng?: IRNGService): StateImpac
         const otherWarrior = isWarriorAPlayer ? opponentB : warriorA;
         const arenaId = selectArenaForMatchup(favorWarrior, otherWarrior, rngService, {
           favorWeight: 1.2,
+          arenaPool: promoter.arenaPool,
           planA: favorWarrior.plan ?? undefined,
           planB: otherWarrior.plan ?? undefined,
         });

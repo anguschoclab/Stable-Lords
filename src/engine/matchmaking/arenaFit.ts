@@ -103,6 +103,15 @@ export function scoreArenaFitForWarrior(
         score += ARENA_FIT.REACH_BONUS * tagConfig.weight;
       }
       // Penalty for initiative styles in uneven arenas
+
+      // Penalty for low-endurance fighters in elevated arenas
+      if (tag === 'elevated') {
+        const cn = warrior.attributes?.CN ?? 12;
+        if (cn < ARENA_FIT.CN_BASELINE) {
+          score -= (ARENA_FIT.CN_BASELINE - cn) * 0.1 * tagConfig.weight;
+        }
+      }
+
       if (tag === 'uneven' && INITIATIVE_STYLES.has(warrior.style)) {
         score -= ARENA_FIT.UNEVEN_INITIATIVE_PENALTY * tagConfig.weight;
       }
@@ -131,11 +140,14 @@ export function selectArenaForMatchup(
   favorWarrior: Warrior,
   otherWarrior: Warrior,
   rng: IRNGService,
-  opts?: { favorWeight?: number; planA?: FightPlan; planB?: FightPlan }
+  opts?: { favorWeight?: number; planA?: FightPlan; planB?: FightPlan; arenaPool?: string[] }
 ): string {
   const favorWeight = opts?.favorWeight ?? ARENA_SELECTION.FAVOR_WEIGHT_DEFAULT;
   const excludedIds = new Set<string>(ARENA_SELECTION.EXCLUDED_ARENA_IDS);
-  const arenas = getAllArenas().filter((a) => !excludedIds.has(a.id));
+
+  const allAvailable = opts?.arenaPool ? opts.arenaPool.map(getArenaById) : getAllArenas();
+  const arenas = allAvailable.filter((a) => !excludedIds.has(a.id));
+
 
   if (arenas.length === 0) return 'standard_arena';
 

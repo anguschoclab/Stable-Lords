@@ -322,6 +322,33 @@ export interface ArenaLoreEntry {
 /**
  * Historical events, famous deaths, and architectural quirks for arenas.
  */
+
+// Outdoor, cramped, uneven — brutal gutter pit
+export const GUTTER_PIT: ArenaConfig = {
+  id: 'gutter_pit',
+  name: 'The Gutter Pit',
+  tags: ['outdoor', 'cramped', 'uneven'],
+  tier: 1,
+  size: 'cramped',
+  description: 'A miserable, uneven pit. Tight quarters and broken ground punish lungers and favor dirty fighting.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, enduranceMult: 1.1, riposteMod: 0 },
+  startingZone: 'Center',
+};
+
+// Outdoor, elevated, open — stormy terrace
+export const STORMTOP_TERRACE: ArenaConfig = {
+  id: 'stormtop_terrace',
+  name: 'Stormtop Terrace',
+  tags: ['outdoor', 'elevated', 'open'],
+  tier: 2,
+  size: 'open',
+  description: 'An open terrace high above the city. The thin air and open space heavily penalize low-endurance fighters.',
+  zoneDef: { Edge: -2, Corner: -4 },
+  surfaceMod: { initiativeMod: 1, enduranceMult: 1.15, riposteMod: 0 },
+  startingZone: 'Center',
+};
+
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
     id: 'flesh_gardens_the_crimson_bloom',
@@ -603,4 +630,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   WHISPERING_GROVE,
   CHARNEL_PITS,
   FLESH_GARDENS,
+  GUTTER_PIT,
+  STORMTOP_TERRACE,
 ].forEach(registerArena);

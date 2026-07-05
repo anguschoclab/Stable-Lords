@@ -1,3 +1,4 @@
+import { WEATHER_PENALTIES } from './weather';
 /**
  * Arena System Constants
  * Tag weights, style-weather interactions, and selection parameters.
@@ -70,49 +71,49 @@ export const STYLE_WEATHER_MODIFIERS: Record<
 > = {
   // Rain penalizes lungers (slippery footing for lunges)
   'Rainy:LUNGING ATTACK': {
-    initiativeMod: -2,
+    initiativeMod: WEATHER_PENALTIES.RAIN_LUNGE_INITIATIVE,
     description: 'Rain-slicked sand hinders lunging footwork',
   },
 
   // Dense Fog benefits riposters (close-quarters ambush)
   'Dense Fog:PARRY-RIPOSTE': {
-    riposteMod: +3,
+    riposteMod: WEATHER_PENALTIES.DENSE_FOG_RIPOSTE_BONUS,
     description: 'Fog favors counter-fighters hiding their movements',
   },
   'Dense Fog:PARRY-LUNGE': {
-    riposteMod: +2,
+    riposteMod: WEATHER_PENALTIES.DENSE_FOG_LUNGE_BONUS,
     description: 'Fog aids the cunning counter-striker',
   },
 
   // Sandstorm penalizes aimed blows (can't aim)
   'Sandstorm:AIMED BLOW': {
-    initiativeMod: -4,
+    initiativeMod: WEATHER_PENALTIES.SANDSTORM_AIMED_INITIATIVE,
     description: 'Dust blinds precision targeting',
   },
 
   // Blood Moon affects aggressive styles
   'Blood Moon:BASHING ATTACK': {
-    damageMult: 1.1,
+    damageMult: WEATHER_PENALTIES.BLOOD_MOON_BASHING_DAMAGE,
     description: 'Bloodlust amplifies brutal strikes',
   },
   'Blood Moon:SLASHING ATTACK': {
-    damageMult: 1.05,
+    damageMult: WEATHER_PENALTIES.BLOOD_MOON_SLASHING_DAMAGE,
     description: 'The crimson moon whets the blade',
   },
 
   // Blizzard affects high-mobility styles
   'Blizzard:LUNGING ATTACK': {
-    initiativeMod: -3,
+    initiativeMod: WEATHER_PENALTIES.BLIZZARD_LUNGE_INITIATIVE,
     description: 'Freezing winds slow explosive movement',
   },
   'Blizzard:STRIKING ATTACK': {
-    initiativeMod: -2,
+    initiativeMod: WEATHER_PENALTIES.BLIZZARD_STRIKING_INITIATIVE,
     description: 'Snow drifts hamper rhythmic striking',
   },
 
   // Mana Surge benefits magical fighting styles
   'Mana Surge:AIMED BLOW': {
-    damageMult: 1.15,
+    damageMult: WEATHER_PENALTIES.MANA_SURGE_AIMED_DAMAGE,
     description: 'Arcane focus sharpens precision strikes',
   },
 

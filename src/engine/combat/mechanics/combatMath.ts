@@ -1,3 +1,4 @@
+import { getStyleWeatherModifier } from '@/constants/arena';
 /**
  * Combat Math — RNG, phase detection, skill/contest checks.
  * Single source of truth for combat math utilities used by simulate.ts.
@@ -59,4 +60,15 @@ export function contestCheck(
   const rollA = Math.floor(rng() * 20) + 1 + a + modA;
   const rollD = Math.floor(rng() * 20) + 1 + d + modD;
   return rollA > rollD;
+}
+
+/**
+ * Calculate combat modifier from weather and arena tags
+ */
+export function calculateWeatherCombatMod(
+  style: import('@/types/shared.types').FightingStyle,
+  weather: import('@/types/shared.types').WeatherType,
+  tags: string[]
+) {
+  return getStyleWeatherModifier(style, weather, tags);
 }

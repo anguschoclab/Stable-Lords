@@ -120,6 +120,31 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
   },
 
   // ─── Water Events ───────────────────────────────────────────────────────
+
+  // ─── Premium Events ────────────────────────────────────────────────────
+  crowd_riot: {
+    id: 'crowd_riot',
+    name: 'Crowd Riot',
+    description: 'The wealthy patrons demand blood and throw debris',
+    requiredTags: ['premium'],
+    triggerCondition: 'heavy_hit',
+    triggerValue: 15,
+    narrativeText: 'The crowd riots in a frenzy, throwing debris into the arena!',
+    mechanicalEffect: { type: 'damage', value: 2 }
+  },
+
+  // ─── Blood Moon Lighting ─────────────────────────────────────────────
+  blood_moon_lighting: {
+    id: 'blood_moon_lighting',
+    name: 'Blood Moon Lighting',
+    description: 'The cursed ground glows ominously under the blood moon',
+    requiredTags: ['cursed'],
+    triggerCondition: 'weather_combo',
+    triggerValue: 1, // With Blood Moon
+    narrativeText: 'The blood moon illuminates the cursed ground, driving fighters mad!',
+    mechanicalEffect: { type: 'damage', value: 1.3 }
+  },
+
   deepening_muck: {
     id: 'deepening_muck',
     name: 'Deepening Muck',

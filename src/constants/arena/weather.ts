@@ -357,3 +357,16 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
 export function getWeatherConfig(weather: WeatherType | string): WeatherConfig {
   return WEATHER_CONFIG[weather as WeatherType] ?? WEATHER_CONFIG.Clear;
 }
+
+
+export const WEATHER_PENALTIES = {
+  RAIN_LUNGE_INITIATIVE: -2,
+  DENSE_FOG_RIPOSTE_BONUS: 3,
+  DENSE_FOG_LUNGE_BONUS: 2,
+  SANDSTORM_AIMED_INITIATIVE: -4,
+  BLOOD_MOON_BASHING_DAMAGE: 1.1,
+  BLOOD_MOON_SLASHING_DAMAGE: 1.05,
+  BLIZZARD_LUNGE_INITIATIVE: -3,
+  BLIZZARD_STRIKING_INITIATIVE: -2,
+  MANA_SURGE_AIMED_DAMAGE: 1.15
+} as const;

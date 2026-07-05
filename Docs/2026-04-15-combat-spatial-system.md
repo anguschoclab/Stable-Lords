@@ -1387,8 +1387,11 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
 
   > **Note:** Surface endurance mult is a minor effect. For this implementation, apply it as a post-hoc adjustment: after `applyEnduranceCosts`, adjust endurance by the delta:
 
+  > **The post-hoc workaround below was NOT applied.** The proper integration was used instead — `applyEnduranceCosts` already accepts `ctx: ResolutionContext` (which carries `surfaceMod`) and multiplies `ctx.surfaceMod.enduranceMult` into both the attacker and defender cost chains inside the single `Math.round`. No `// TODO(spatial)` marker or post-hoc adjustment was needed. See `src/engine/combat/resolution/exchangeHelpers/mechanics/enduranceCosts.ts:33,44,57`. The code block is retained below as historical context.
+
   ```ts
   // Apply surface endurance multiplier (minor adjustment after base cost)
+  // NOT APPLIED — proper integration used instead (see note above)
   if (ctx.surfaceMod.enduranceMult !== 1.0) {
     const mult = ctx.surfaceMod.enduranceMult - 1.0;
     fA.endurance = Math.max(0, fA.endurance - Math.round(Math.abs(fA.endurance * mult)));
@@ -1396,7 +1399,7 @@ This task wires the new sub-phases into `resolveExchange` and patches `simulate.
   }
   ```
 
-  > **Warning:** This is a rough approximation. A follow-up task can pass surfaceMod into `applyEnduranceCosts` properly. Mark with `// TODO(spatial): pass surfaceMod into applyEnduranceCosts for precision`.
+  > **Done:** The follow-up task is complete. `applyEnduranceCosts` reads `ctx.surfaceMod.enduranceMult` and multiplies it into both cost chains inside the single `Math.round`, so no post-hoc approximation or `TODO(spatial)` marker was needed. Regression tests are in `src/test/engine/combat/enduranceCosts.test.ts`.
 
 - [ ] **Step 3: Run full test suite to verify nothing broke**
 

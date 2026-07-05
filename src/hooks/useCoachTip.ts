@@ -3,7 +3,7 @@
  * Non-blocking toast-based contextual tips keyed by page/state.
  * Supports exact routes and pattern-matched dynamic routes.
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useGameStore, useWorldState } from '@/state/useGameStore';
 import { toast } from 'sonner';
 import { filterActive } from '@/utils/roster';
@@ -243,6 +243,10 @@ export function useCoachTip(pathname: string) {
   const ftueComplete = state.ftueComplete;
   const coachDismissed = state.coachDismissed;
   const roster = state.roster;
+  const rosterMap = useMemo(
+    () => new Map(roster.map((w) => [w.id, w])),
+    [roster]
+  );
   const stateRef = useRef(state);
   stateRef.current = state;
 
@@ -258,8 +262,8 @@ export function useCoachTip(pathname: string) {
     // Build context for dynamic routes
     const context: CoachContext = {};
     const warriorMatch = pathname.match(/^\/warrior\/(.+)/);
-    if (warriorMatch) {
-      context.warrior = roster.find((w: Warrior) => w.id === warriorMatch[1]);
+    if (warriorMatch?.[1]) {
+      context.warrior = rosterMap.get(warriorMatch[1] as Warrior['id']);
     }
 
     const tip = entry.tips.find(
@@ -292,5 +296,5 @@ export function useCoachTip(pathname: string) {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [pathname, ftueComplete, coachDismissed, roster, setState]);
+  }, [pathname, ftueComplete, coachDismissed, rosterMap, setState]);
 }

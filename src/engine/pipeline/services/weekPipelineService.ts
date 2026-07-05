@@ -160,10 +160,12 @@ function collectCoreImpacts(state: GameState, ctx: WeekContext): StateImpact[] {
   ];
 }
 
-function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): boolean {
-  const economyImpact = coreImpacts.find((i) => i.treasuryDelta !== undefined);
-  const estimatedTreasury = state.treasury + (economyImpact?.treasuryDelta || 0);
-  return estimatedTreasury < BANKRUPTCY_THRESHOLD;
+export function checkBankruptcy(state: GameState, coreImpacts: StateImpact[]): boolean {
+  const netTreasuryDelta = coreImpacts.reduce(
+    (sum, i) => sum + (i.treasuryDelta ?? 0),
+    0
+  );
+  return state.treasury + netTreasuryDelta < BANKRUPTCY_THRESHOLD;
 }
 
 function collectRemainingImpacts(

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import * as worldMatchmaking from '@/engine/matchmaking/worldMatchmaking';
 import { FightingStyle } from '@/types/shared.types';
 import type { WarriorId, StableId } from '@/types/shared.types';
 import type { Warrior } from '@/types/warrior.types';
@@ -320,10 +321,7 @@ describe('runRivalStrategyPass successor integration', () => {
     // Force SeededRNG.next() to return 0.1 so succession triggers (0.1 < 0.2 for age 80)
     vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.1);
 
-    vi.spyOn(
-      require('@/engine/matchmaking/worldMatchmaking'),
-      'planWorldBouts'
-    ).mockReturnValue([]);
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
 
     const successor = makeWarrior('w_succ', 'Legendary Fighter', {
       fame: 350,
@@ -348,10 +346,7 @@ describe('runRivalStrategyPass successor integration', () => {
   it('retired warrior with fame <= 200 → generic Lord name in gazette', () => {
     vi.spyOn(SeededRNG.prototype, 'next').mockReturnValue(0.1);
 
-    vi.spyOn(
-      require('@/engine/matchmaking/worldMatchmaking'),
-      'planWorldBouts'
-    ).mockReturnValue([]);
+    vi.spyOn(worldMatchmaking, 'planWorldBouts').mockReturnValue([]);
 
     const nonSuccessor = makeWarrior('w_low', 'Low Fame Fighter', {
       fame: 150,

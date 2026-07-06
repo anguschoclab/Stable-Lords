@@ -5,9 +5,8 @@ import type { Warrior, GameState } from '@/types/game';
 import { FightingStyle } from '@/types/game';
 import '@/test/_setup/setup';
 
-const toastSpy = vi.fn();
 vi.mock('sonner', () => ({
-  toast: toastSpy,
+  toast: vi.fn(),
 }));
 
 let storeState: any = {};
@@ -59,10 +58,11 @@ function setStore(overrides: Partial<GameState> = {}) {
 
 // Import after mocks are declared
 import { useCoachTip } from '@/hooks/useCoachTip';
+import { toast } from 'sonner';
 
 describe('useCoachTip', () => {
   beforeEach(() => {
-    toastSpy.mockClear();
+    (toast as any).mockClear();
     setStateSpy.mockClear();
     vi.useFakeTimers();
   });
@@ -80,8 +80,8 @@ describe('useCoachTip', () => {
     await Promise.resolve();
 
     // The warrior-equipment tip should fire because w50 has no equipment
-    expect(toastSpy).toHaveBeenCalled();
-    const message = toastSpy.mock.calls[0]?.[0];
+    expect(toast).toHaveBeenCalled();
+    const message = (toast as any).mock.calls[0]?.[0];
     expect(message).toContain('Equip');
   });
 
@@ -98,7 +98,7 @@ describe('useCoachTip', () => {
     vi.advanceTimersByTime(1100);
     await Promise.resolve();
 
-    expect(toastSpy).toHaveBeenCalled();
+    expect(toast).toHaveBeenCalled();
   });
 
   it('falls through when warrior ID is not found in roster', async () => {
@@ -110,8 +110,8 @@ describe('useCoachTip', () => {
 
     // warrior-equipment and warrior-strategy conditions fail (no warrior),
     // but warrior-first-visit has no condition and should fire
-    expect(toastSpy).toHaveBeenCalled();
-    const message = toastSpy.mock.calls[0]?.[0];
+    expect(toast).toHaveBeenCalled();
+    const message = (toast as any).mock.calls[0]?.[0];
     expect(message).toContain("warrior's detail page");
   });
 
@@ -124,7 +124,7 @@ describe('useCoachTip', () => {
 
     // /stable route has stable-first-round tip, but it requires boutOffers
     // With empty boutOffers, no tip fires
-    expect(toastSpy).not.toHaveBeenCalled();
+    expect(toast).not.toHaveBeenCalled();
   });
 
   it('rebuilds rosterMap when roster reference changes', async () => {
@@ -137,10 +137,10 @@ describe('useCoachTip', () => {
 
     vi.advanceTimersByTime(1100);
     await Promise.resolve();
-    expect(toastSpy).toHaveBeenCalled();
+    expect(toast).toHaveBeenCalled();
 
     // Change roster reference — new array with same warrior
-    toastSpy.mockClear();
+    (toast as any).mockClear();
     const roster2 = [createMockWarrior('w1', { name: 'Updated' })];
     setStore({ roster: roster2 });
     rerender({ path: '/warrior/w1' });
@@ -148,7 +148,7 @@ describe('useCoachTip', () => {
     vi.advanceTimersByTime(1100);
     await Promise.resolve();
     // Should fire again with the new roster
-    expect(toastSpy).toHaveBeenCalled();
+    expect(toast).toHaveBeenCalled();
   });
 
   it('does not fire tips when ftueComplete is false', async () => {
@@ -158,6 +158,6 @@ describe('useCoachTip', () => {
     vi.advanceTimersByTime(1100);
     await Promise.resolve();
 
-    expect(toastSpy).not.toHaveBeenCalled();
+    expect(toast).not.toHaveBeenCalled();
   });
 });

@@ -53,6 +53,7 @@ export const WEATHER_TYPES = [
   'Rain of Frogs',
   'Chaos Storm',
   'Chaos Squall',
+  'Crimson Snow',
 ] as const;
 
 export const TRAINER_TIERS = ['Novice', 'Seasoned', 'Master'] as const;

@@ -54,7 +54,8 @@ interface OffseasonEventNarrative {
     | 'fey_trickster'
     | 'shadow_tournament'
     | 'wandering_fortune_teller'
-    | 'chaos_weaver_visit';
+    | 'chaos_weaver_visit'
+    | 'traveling_circus';
   newsletter: string[];
 }
 

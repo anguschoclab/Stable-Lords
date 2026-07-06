@@ -179,22 +179,22 @@ export function OfferCard({
                   {getArenaById(offer.arenaId).name}
                 </div>
                 {playerWarrior && (
+                  <>
                   <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">
-
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {getArenaById(offer.arenaId).tags.map(tag => (
-                      <span key={tag} className="px-1.5 py-0.5 rounded-sm bg-primary/10 text-primary text-[8px] uppercase tracking-wider font-bold">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
                     {describeArenaFit(
                       playerWarrior,
                       offer.arenaId,
                       playerWarrior.plan ?? undefined
                     )}
                   </div>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {getArenaById(offer.arenaId).tags.map(tag => (
+                      <span key={tag} className="px-1.5 py-0.5 rounded-none bg-primary/10 text-primary text-[8px] uppercase tracking-wider font-bold">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  </>
                 )}
               </div>
             </div>

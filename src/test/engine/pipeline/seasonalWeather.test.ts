@@ -55,6 +55,7 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Astral Dust',
   'Chaos Storm',
   'Chaos Squall',
+  'Crimson Snow',
 ];
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];

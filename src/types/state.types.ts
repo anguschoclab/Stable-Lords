@@ -117,7 +117,7 @@ export interface Promoter {
   tier: 'Local' | 'Regional' | 'National' | 'Legendary';
   capacity: number; // Max bouts per week
   biases: FightingStyle[];
-  arenaPool: string[];
+  arenaPool?: string[];
   history: {
     totalPursePaid: number;
     notableBouts: FightId[];

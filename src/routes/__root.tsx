@@ -25,7 +25,8 @@ function RouterHooks() {
 }
 
 function RootComponent() {
-  const state = useWorldState();
+  // ⚡ Bolt: Prevent massive global re-renders by selecting only ftueComplete instead of full useWorldState
+  const ftueComplete = useGameStore((s) => s.ftueComplete);
   const atTitleScreen = useGameStore((s) => s.atTitleScreen);
 
   // App-wide death ping — subscribes once, cleans up on unmount.
@@ -41,7 +42,7 @@ function RootComponent() {
   }
 
   // FTUE not complete → Orphanage flow (stable already named on start page)
-  if (!state.ftueComplete) {
+  if (!ftueComplete) {
     return (
       <Suspense fallback={darkFallback}>
         <Orphanage />

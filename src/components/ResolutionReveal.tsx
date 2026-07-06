@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useWorldState, useGameStore, type GameStore } from '@/state/useGameStore';
+import { useGameStore, type GameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,18 +20,26 @@ type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial'; /**
  * Resolution reveal.
  */
 export default function ResolutionReveal() {
-  const state = useWorldState();
+  // ⚡ Bolt: Narrowed selector to prevent full app re-renders
+  const { arenaHistory, graveyard, week, lastSimulationReport } = useGameStore(
+    useShallow((s) => ({
+      arenaHistory: s.arenaHistory,
+      graveyard: s.graveyard,
+      week: s.week,
+      lastSimulationReport: s.lastSimulationReport,
+    }))
+  );
   const setState = useGameStore((s) => s.setState);
   const [step, setStep] = useState<RevealStep>('gazette');
 
-  const latestFight = state.arenaHistory?.[state.arenaHistory.length - 1];
+  const latestFight = arenaHistory?.[arenaHistory.length - 1];
   const data = latestFight?.pendingResolutionData;
 
   const deadWarriors = React.useMemo(() => {
     if (!data) return [];
-    const graveyardByName = new Map((state.graveyard ?? []).map((w) => [w.name, w]));
+    const graveyardByName = new Map((graveyard ?? []).map((w) => [w.name, w]));
     return data.deaths.map((name: string) => graveyardByName.get(name)).filter(Boolean);
-  }, [data, state.graveyard]);
+  }, [data, graveyard]);
 
   if (!data) return null;
 
@@ -68,7 +77,7 @@ export default function ResolutionReveal() {
               <CardTitle className="text-2xl font-display font-bold">
                 {narrativeContent.fanfare.resolution_title}
               </CardTitle>
-              <CardDescription>Week {state.week - 1} Results</CardDescription>
+              <CardDescription>Week {week - 1} Results</CardDescription>
             </div>
             <div className="flex gap-2">
               <Badge variant={step === 'gazette' ? 'default' : 'secondary'}>1. The Gazette</Badge>
@@ -94,7 +103,7 @@ export default function ResolutionReveal() {
             {step === 'gazette' && <GazetteStep gazette={data.gazette} />}
             {step === 'injuries' && <InjuriesStep injuries={data.injuries} deaths={data.deaths} />}
             {step === 'bouts' && <BoutsStep bouts={data.bouts} />}
-            {step === 'math' && <MathStep lastSimulationReport={state.lastSimulationReport} />}
+            {step === 'math' && <MathStep lastSimulationReport={lastSimulationReport} />}
             {step === 'memorial' && deadWarriors.length > 0 && (
               <MemorialStep deadWarriors={deadWarriors} />
             )}

@@ -26,7 +26,7 @@ export default function ResolutionReveal() {
       arenaHistory: s.arenaHistory,
       graveyard: s.graveyard,
       week: s.week,
-      lastSimulationReport: s.lastSimulationReport,
+      lastSimulationReport: s.lastSimulationReport as any, // Type coercion due to store mismatch
     }))
   );
   const setState = useGameStore((s) => s.setState);

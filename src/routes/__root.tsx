@@ -4,7 +4,7 @@ import AppShell from '@/components/AppShell';
 import NotFound from '@/pages/NotFound';
 import { useCoachTip } from '@/hooks/useCoachTip';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { useGameStore, useWorldState } from '@/state/useGameStore';
+import { useGameStore } from '@/state/useGameStore';
 import { useDeathNotifications } from '@/hooks/useDeathNotifications';
 
 const StartGame = lazy(() => import('@/pages/StartGame'));

@@ -11,7 +11,7 @@ vi.mock('@/engine/ai/plan/strategyValidator', () => ({
 
 describe('coreGenerator', () => {
   const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior => ({
-    id: 'w1',
+    id: 'w1' as any,
     name: 'Test Warrior',
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },

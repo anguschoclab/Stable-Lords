@@ -63,7 +63,7 @@ import { useCoachTip } from '@/hooks/useCoachTip';
 
 describe('useCoachTip', () => {
   beforeEach(() => {
-    toast.mockClear();
+    (toast as any).mockClear();
     setStateSpy.mockClear();
     vi.useFakeTimers();
   });
@@ -82,7 +82,7 @@ describe('useCoachTip', () => {
 
     // The warrior-equipment tip should fire because w50 has no equipment
     expect(toast).toHaveBeenCalled();
-    const message = toast.mock.calls[0]?.[0];
+    const message = (toast as any).mock.calls[0]?.[0];
     expect(message).toContain('Equip');
   });
 
@@ -112,7 +112,7 @@ describe('useCoachTip', () => {
     // warrior-equipment and warrior-strategy conditions fail (no warrior),
     // but warrior-first-visit has no condition and should fire
     expect(toast).toHaveBeenCalled();
-    const message = toast.mock.calls[0]?.[0];
+    const message = (toast as any).mock.calls[0]?.[0];
     expect(message).toContain("warrior's detail page");
   });
 
@@ -141,7 +141,7 @@ describe('useCoachTip', () => {
     expect(toast).toHaveBeenCalled();
 
     // Change roster reference — new array with same warrior
-    toast.mockClear();
+    (toast as any).mockClear();
     const roster2 = [createMockWarrior('w1', { name: 'Updated' })];
     setStore({ roster: roster2 });
     rerender({ path: '/warrior/w1' });

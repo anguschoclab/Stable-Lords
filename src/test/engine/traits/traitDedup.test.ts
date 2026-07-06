@@ -65,7 +65,7 @@ describe('Trait deduplication', () => {
 
     it('getStaticTraitMods returns enduranceMult ~0.9 for iron_vein', async () => {
       const { getStaticTraitMods } = await import('@/engine/traits');
-      const mods = getStaticTraitMods({ traits: ['iron_vein'] });
+      const mods = getStaticTraitMods({ traits: ['iron_vein'] } as any);
       expect(mods.enduranceMult).toBeCloseTo(0.9);
     });
   });

@@ -177,14 +177,14 @@ describe('updateAIStrategy uses grudgeMap.values()', () => {
 
 describe('stripNonSerializable removes grudgeMap and rivalryMap', () => {
   it('removes grudgeMap from state', () => {
-    const state = { grudgeMap: new Map(), other: 'value' } as any;
+    const state = { grudgeMap: new Map<string, any>(), other: 'value' } as any;
     const result = stripNonSerializable(state);
     expect(result).not.toHaveProperty('grudgeMap');
     expect(result).toHaveProperty('other', 'value');
   });
 
   it('removes rivalryMap from state', () => {
-    const state = { rivalryMap: new Map(), kept: true } as any;
+    const state = { rivalryMap: new Map<string, any>(), kept: true } as any;
     const result = stripNonSerializable(state);
     expect(result).not.toHaveProperty('rivalryMap');
     expect(result).toHaveProperty('kept', true);

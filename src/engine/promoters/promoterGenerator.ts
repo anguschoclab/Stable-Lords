@@ -1,3 +1,4 @@
+import { getArenasByTier } from '@/data/arenas';
 import { Promoter, PromoterPersonality } from '@/types/state.types';
 import { FightingStyle } from '@/types/shared.types';
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
@@ -113,6 +114,7 @@ export function generatePromoters(count: number, seed: number, rng?: IRNGService
       tier,
       capacity: tier === 'Legendary' ? 2 : tier === 'National' ? 4 : tier === 'Regional' ? 6 : 10,
       biases: rngService.shuffle(Object.values(FightingStyle)).slice(0, 2),
+      arenaPool: getArenasByTier(tier === 'Local' ? 1 : tier === 'Regional' ? 2 : 3).map(a => a.id),
       history: {
         totalPursePaid: 0,
         notableBouts: [],

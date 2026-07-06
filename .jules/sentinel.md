@@ -57,3 +57,8 @@
 **Vulnerability:** Unbounded input strings and numbers in Electron IPC Handlers (DoS/resource exhaustion risk)
 **Learning:** The renderer process shouldn't be fully trusted; unbounded parameters passed to fs.writeFile or Notification could cause memory issues.
 **Prevention:** Always implement explicit maximum bounds (lengths for strings/arrays, max values for numbers) on all parameters accepted from IPC.
+
+## 2024-05-15 - Electron IPC Memory Exhaustion
+**Vulnerability:** IPC handlers blindly trusted renderer payloads without maximum bounds, allowing a compromised renderer to pass massive strings or arrays, causing main process OOM (Denial of Service).
+**Learning:** The renderer process in Electron is fundamentally untrustworthy. You must explicitly bound lengths and memory footprints of incoming arguments.
+**Prevention:** Always implement explicit maximum size checks (string lengths, array bounds, serialized payload limits) on all parameters in IPC handlers before filesystem or OS operations.

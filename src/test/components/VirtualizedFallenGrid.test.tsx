@@ -215,7 +215,7 @@ describe('VirtualizedFallenGrid', () => {
       name: 'NoMedals',
       career: { wins: 5, losses: 20, kills: 0 } as any,
     });
-    const { container } = render(
+    render(
       <VirtualizedFallenGrid
         warriors={[warrior]}
         season="Spring"

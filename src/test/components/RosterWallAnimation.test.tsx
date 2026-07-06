@@ -70,6 +70,7 @@ vi.mock('@/components/ui/tooltip', () => ({
 vi.mock('@/components/ui/sheet', () => ({
   Sheet: ({ children }: any) => <div>{children}</div>,
   SheetContent: ({ children }: any) => <div>{children}</div>,
+  SheetDescription: ({ children }: any) => <div>{children}</div>,
   SheetHeader: ({ children }: any) => <div>{children}</div>,
   SheetTitle: ({ children }: any) => <div>{children}</div>,
   SheetTrigger: ({ children, ...props }: any) => <button {...props}>{children}</button>,

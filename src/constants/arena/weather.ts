@@ -52,6 +52,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-arena-gold/20',
     description: 'Standard atmospheric conditions.',
   },
+  'Crimson Snow': {
+    icon: CloudSnow,
+    colorClass: 'text-destructive',
+    bgClass: 'bg-destructive/10',
+    borderClass: 'border-destructive/20',
+    description: 'Red snow numbs the limbs and increases bloodthirst.',
+  },
   Rainy: {
     icon: CloudRain,
     colorClass: 'text-muted-foreground',

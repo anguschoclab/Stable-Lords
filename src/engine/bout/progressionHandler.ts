@@ -56,7 +56,6 @@ export function handleProgressions(
   outcome: FightOutcome,
   tags: string[],
   week: number,
-  rivalStableId?: string,
   rng?: IRNGService
 ): StateImpact {
   const rosterUpdates = new Map<WarriorId, Partial<Warrior>>();
@@ -116,8 +115,6 @@ export function handleProgressions(
       );
     }
   }
-  // Suppress the unused-import lint while keeping the marker for future use
-  void rivalStableId;
 
   const impact: StateImpact = { rosterUpdates, rivalsUpdates };
   if (newsletterItems.length > 0) impact.newsletterItems = newsletterItems;

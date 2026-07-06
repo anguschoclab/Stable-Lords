@@ -57,3 +57,68 @@ describe('PlanBuilder Matchup Rendering', () => {
     expect(screen.queryByText('MATCHUP PENALTY')).not.toBeInTheDocument();
   });
 });
+
+describe('PlanBuilder Bias Presets', () => {
+  const mockPlan = {
+    style: FightingStyle.AimedBlow,
+    OE: 5,
+    AL: 5,
+    killDesire: 5,
+    target: 'Any' as any,
+    offensiveTactic: 'none' as any,
+    defensiveTactic: 'none' as any,
+  };
+
+  it('renders bias preset buttons', () => {
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.getByText('HEAD-HUNT')).toBeInTheDocument();
+    expect(screen.getByText('HAMSTRING')).toBeInTheDocument();
+    expect(screen.getByText('GUT')).toBeInTheDocument();
+    expect(screen.getByText('GUARD-BREAK')).toBeInTheDocument();
+    expect(screen.getByText('BALANCED')).toBeInTheDocument();
+  });
+
+  it('calls onPlanChange with head target when head-hunt preset clicked', () => {
+    const onPlanChange = vi.fn();
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={onPlanChange} />
+      </TooltipProvider>
+    );
+
+    screen.getByText('HEAD-HUNT').click();
+    expect(onPlanChange).toHaveBeenCalledTimes(1);
+    const updated = onPlanChange.mock.calls[0]![0];
+    expect(updated.target).toBe('Head');
+    expect(updated.killDesire).toBeGreaterThanOrEqual(7);
+  });
+
+  it('calls onPlanChange with Any target when balanced preset clicked', () => {
+    const onPlanChange = vi.fn();
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={onPlanChange} />
+      </TooltipProvider>
+    );
+
+    screen.getByText('BALANCED').click();
+    expect(onPlanChange).toHaveBeenCalledTimes(1);
+    const updated = onPlanChange.mock.calls[0]![0];
+    expect(updated.target).toBe('Any');
+  });
+
+  it('does not render fake Simulation Accuracy metric', () => {
+    render(
+      <TooltipProvider>
+        <PlanBuilder plan={mockPlan} onPlanChange={vi.fn()} />
+      </TooltipProvider>
+    );
+
+    expect(screen.queryByText(/Simulation Accuracy/)).not.toBeInTheDocument();
+  });
+});

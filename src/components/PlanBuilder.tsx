@@ -6,6 +6,7 @@ import type { FightPlan, Warrior } from '@/types/game';
 import { FightingStyle, STYLE_DISPLAY_NAMES } from '@/types/game';
 import { getMatchupBonus } from '@/constants/combat';
 import { computeStrategyScore, getScoreColor } from '@/engine/strategyAnalysis';
+import { autoTuneFromBias, type Bias } from '@/engine/planBias';
 import TacticBank from './planBuilder/TacticBank';
 import CommonControls from './planBuilder/CommonControls';
 import SpatialControls from './planBuilder/SpatialControls';
@@ -39,6 +40,18 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
 
   const score = useMemo(() => computeStrategyScore(plan, warrior), [plan, warrior]);
   const warnings = useMemo(() => validateStrategy(plan, warrior), [plan, warrior]);
+
+  const biasPresets: { label: string; bias: Bias }[] = [
+    { label: 'HEAD-HUNT', bias: 'head-hunt' },
+    { label: 'HAMSTRING', bias: 'hamstring' },
+    { label: 'GUT', bias: 'gut' },
+    { label: 'GUARD-BREAK', bias: 'guard-break' },
+    { label: 'BALANCED', bias: 'balanced' },
+  ];
+
+  const applyBias = (bias: Bias) => {
+    onPlanChange({ ...plan, ...autoTuneFromBias(plan, bias) });
+  };
 
   return (
     <Card className="bg-[#0a0a0b] border-arena-blood/20 shadow-2xl relative overflow-hidden">
@@ -138,9 +151,24 @@ export default function PlanBuilder({ plan, onPlanChange, warrior, rivalStyle }:
           </div>
         </div>
 
-        <div className="pt-6 border-t border-white/5 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
-          <span>Simulation Accuracy: 94.2%</span>
-          <span>Targeting: Optimized for {plan.target || 'Any'}</span>
+        <div className="pt-6 border-t border-white/5 space-y-4">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mr-2">
+              Presets
+            </span>
+            {biasPresets.map((preset) => (
+              <button
+                key={preset.label}
+                onClick={() => applyBias(preset.bias)}
+                className="text-[10px] font-black uppercase tracking-widest px-3 py-1 border border-white/10 hover:border-arena-blood/40 hover:text-arena-blood text-muted-foreground/60 transition-colors"
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 italic">
+            <span>Targeting: Optimized for {plan.target || 'Any'}</span>
+          </div>
         </div>
       </CardContent>
     </Card>

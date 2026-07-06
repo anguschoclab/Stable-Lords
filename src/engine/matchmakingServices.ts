@@ -1,6 +1,3 @@
-import type { Warrior } from '@/types/state.types';
-import type { IRNGService } from '@/engine/core/rng/IRNGService';
-
 /**
  * Matchmaking Scoring Service - handles the weights and logic for pairing warriors.
  */
@@ -72,69 +69,5 @@ export const MatchScoringService = {
     score += Math.floor(rng() * 16);
 
     return score;
-  },
-};
-
-/**
- * AI Bout Service - handles automatic background resolution of rival-vs-rival fights.
- */
-export const AIBoutService = {
-  /**
-   * Updates a rival warrior's record after a background bout.
-   * This is a pure-ish helper that returns the updated roster.
-   */
-  updateWarriorRecord(
-    roster: Warrior[],
-    wId: string,
-    won: boolean,
-    killed: boolean,
-    arenaId?: string
-  ): Warrior[] {
-    return roster.map((w) => {
-      if (w.id !== wId) return w;
-      const prevByArena = w.career.byArena ?? {};
-      const arenaRecord = arenaId
-        ? (prevByArena[arenaId] ?? { wins: 0, losses: 0, kills: 0 })
-        : null;
-      const byArena =
-        arenaId && arenaRecord
-          ? {
-              ...prevByArena,
-              [arenaId]: {
-                wins: arenaRecord.wins + (won ? 1 : 0),
-                losses: arenaRecord.losses + (won ? 0 : 1),
-                kills: arenaRecord.kills + (killed ? 1 : 0),
-              },
-            }
-          : prevByArena;
-      return {
-        ...w,
-        career: {
-          wins: w.career.wins + (won ? 1 : 0),
-          losses: w.career.losses + (won ? 0 : 1),
-          kills: w.career.kills + (killed ? 1 : 0),
-          byArena,
-        },
-        fame: Math.max(0, w.fame + (won ? (killed ? 3 : 1) : 0)),
-      };
-    });
-  },
-
-  /**
-   * Generates a narrative line for a rival rivalry bout.
-   */
-  generateRivalryNarrative(
-    stableA: string,
-    stableB: string,
-    warriorA: string,
-    warriorB: string,
-    rng: IRNGService
-  ): string {
-    const templates = [
-      `RIVALRY REPORT: The feud between ${stableA} and ${stableB} rages on — ${warriorA} faced ${warriorB} in a grudge match!`,
-      `VENDETTA IN THE PITS: ${stableA} vs ${stableB} — ${warriorA} and ${warriorB} settled scores in the arena!`,
-      `BAD BLOOD: ${stableA} and ${stableB} clashed again as ${warriorA} took on ${warriorB}!`,
-    ];
-    return rng.pick(templates);
   },
 };

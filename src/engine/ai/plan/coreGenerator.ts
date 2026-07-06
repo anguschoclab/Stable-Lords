@@ -24,6 +24,7 @@ import {
   getAIOpeningMove,
   getAIRangePreference,
 } from '@/engine/ai/plan/levers';
+import { reconcileGearTwoHanded } from '@/engine/planBias';
 
 /**
  * Generate a personality-, philosophy-, meta-, and matchup-aware fight plan for an AI warrior.
@@ -131,6 +132,11 @@ export function aiPlanForWarrior(
   plan.ownerPersonality = personality;
   const adaptations = getPersonalityAdaptations(personality, plan, intent);
   plan.conditions = [...universalConditions, ...(plan.conditions ?? []), ...adaptations];
+
+  // Reconcile two-handed weapon + shield conflict
+  if (w.equipment) {
+    reconcileGearTwoHanded(plan, w.equipment);
+  }
 
   return plan;
 }

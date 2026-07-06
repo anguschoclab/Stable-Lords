@@ -249,7 +249,7 @@ function collectBoutImpacts(
   impacts.push(
     deathRes.impact,
     injuryRes.impact,
-    handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, ctx.rivalStableId, rng)
+    handleProgressions(state, validCW, validCO, outcome, tags, ctx.week, rng)
   );
 
   const resolvedArenaId = ctx.isTournamentBout

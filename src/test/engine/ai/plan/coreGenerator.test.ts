@@ -10,13 +10,14 @@ vi.mock('@/engine/ai/plan/strategyValidator', () => ({
 }));
 
 describe('coreGenerator', () => {
-  const createMockWarrior = (): Warrior => ({
+  const createMockWarrior = (overrides: Partial<Warrior> = {}): Warrior => ({
     id: 'w1',
     name: 'Test Warrior',
     style: FightingStyle.StrikingAttack,
     attributes: { ST: 10, CN: 10, SZ: 10, WT: 10, WL: 10, SP: 10, DF: 10 },
     skills: { INI: 10, ATT: 10, DEF: 10, PAR: 10, DMG: 10, DEC: 10, END: 10, HEA: 10 },
     favorites: {},
+    ...overrides,
   }) as Warrior;
 
   describe('aiPlanForWarrior', () => {
@@ -109,6 +110,39 @@ describe('coreGenerator', () => {
     it('exports getStyleMatchupMods correctly', async () => {
       const { getStyleMatchupMods } = await import('@/engine/ai/plan/coreGenerator');
       expect(typeof getStyleMatchupMods).toBe('function');
+    });
+
+    it('removes shield from plan equipment when warrior has a two-handed weapon', () => {
+      const w = createMockWarrior({
+        equipment: {
+          weapon: 'greatsword' as any,
+          armor: 'leather' as any,
+          shield: 'kite_shield' as any,
+          helm: 'none_helm' as any,
+        },
+      });
+      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced');
+      expect(plan.equipment?.shield).toBe('none_shield');
+    });
+
+    it('preserves shield when warrior has a one-handed weapon', () => {
+      const w = createMockWarrior({
+        equipment: {
+          weapon: 'broadsword' as any,
+          armor: 'leather' as any,
+          shield: 'kite_shield' as any,
+          helm: 'none_helm' as any,
+        },
+      });
+      const plan = aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced');
+      // reconcileGearTwoHanded only overrides equipment when there's a conflict;
+      // with a one-handed weapon, no override happens so plan.equipment stays undefined
+      expect(plan.equipment?.shield).not.toBe('none_shield');
+    });
+
+    it('does not crash when warrior has no equipment', () => {
+      const w = createMockWarrior();
+      expect(() => aiPlanForWarrior(w, 'Pragmatic' as OwnerPersonality, 'Balanced')).not.toThrow();
     });
   });
 });

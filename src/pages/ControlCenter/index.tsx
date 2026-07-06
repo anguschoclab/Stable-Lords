@@ -10,6 +10,7 @@ import { SectionDivider } from '@/components/ui/SectionDivider';
 import { SeasonWidget } from '@/components/dashboard/SeasonWidget';
 import { RecentBoutsWidget } from '@/components/dashboard/RecentBoutsWidget';
 import { WeeklyDigestWidget } from '@/components/dashboard/WeeklyDigestWidget';
+import { WeeklyDigestMini } from '@/components/dashboard/WeeklyDigestMini';
 import { RivalryWidget } from '@/components/dashboard/RivalryWidget';
 import { MetaDriftWidget } from '@/components/widgets';
 import { ObjectivesWidget } from '@/components/dashboard/ObjectivesWidget';
@@ -118,6 +119,7 @@ export default function ControlCenter() {
 
         {/* Right Column: Active Monitoring */}
         <div className="lg:col-span-4 flex flex-col gap-10">
+          <WeeklyDigestMini />
           <div className="space-y-6">
             <SectionDivider label="Metagame & Rivalries" />
             <RivalryWidget />

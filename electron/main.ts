@@ -487,17 +487,6 @@ function registerIPCHandlers() {
         return { success: false, error: 'Log data size exceeds limit' };
       }
 
-      let totalLength = 0;
-      for (const log of logData) {
-        if (typeof log !== 'string') {
-          return { success: false, error: 'Invalid log data format' };
-        }
-        totalLength += log.length;
-        if (totalLength > 10485760) { // 10MB limit
-          return { success: false, error: 'Log data size exceeds limit' };
-        }
-      }
-
       await ensureSaveDirectory();
       const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'bouts');
       try {

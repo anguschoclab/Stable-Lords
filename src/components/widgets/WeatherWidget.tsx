@@ -26,6 +26,7 @@ const WEATHER_STATS: Record<WeatherType, string> = {
   Blizzard: 'STAMINA DRAIN 150% | INITIATIVE -4 | DAMAGE -20%',
   'Dense Fog': 'INITIATIVE -8 | RIPOSTE +12 | DAMAGE +10%',
   Mist: 'INITIATIVE -2 | RIPOSTE +2',
+  'Glittering Frost': 'STAMINA DRAIN 110% | INITIATIVE -2 | DAMAGE +10%',
   Thunderstorm: 'STAMINA DRAIN 120% | INITIATIVE -2 | DAMAGE +25%',
   Ashfall: 'STAMINA DRAIN 140% | INITIATIVE -3',
   'Acid Rain': 'STAMINA DRAIN 130% | RIPOSTE -6 | DAMAGE +20%',

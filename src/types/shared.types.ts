@@ -598,6 +598,7 @@ export type WeatherType =
   | 'Blizzard'
   | 'Dense Fog'
   | 'Mist'
+  | 'Glittering Frost'
   | 'Thunderstorm'
   | 'Gravity Anomaly'
   | 'Ashfall'

@@ -134,6 +134,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     damageMult: 1.0,
     description: 'A light mist obscures the arena, making initial strikes trickier.',
   },
+  'Glittering Frost': {
+    staminaMult: 1.1,
+    initiativeMod: -2,
+    riposteMod: 0,
+    damageMult: 1.1,
+    description: 'A beautiful, sharp glittering frost covers the arena. The air bites the lungs.',
+  },
   Thunderstorm: {
     staminaMult: 1.2,
     initiativeMod: -2,
@@ -388,6 +395,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
   Blizzard: 'A brutal blizzard freezes the arena. Survival is the only goal.',
   'Dense Fog': 'A thick mist swallows the fighters. Every shadow is a threat.',
   Mist: 'A light mist rolls across the sand, clinging to the fighters.',
+  'Glittering Frost': 'A beautiful, sharp glittering frost covers the arena. The air bites the lungs.',
   Thunderstorm: 'Thunder shakes the ground while lightning splits the sky.',
   Ashfall: 'Gray ash falls like snow. The air itself tastes of death.',
   'Acid Rain': 'Hissing rain burns the skin. This fight will be short and brutal.',

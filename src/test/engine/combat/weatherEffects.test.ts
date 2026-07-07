@@ -115,6 +115,7 @@ describe('weatherEffects', () => {
         'Chaos Storm',
         'Chaos Squall',
         'Crimson Snow',
+        'Glittering Frost',
       ];
       for (const weather of allWeatherTypes) {
         const effect = getWeatherEffect(weather);
@@ -261,6 +262,7 @@ describe('weatherEffects', () => {
         'Chaos Storm',
         'Chaos Squall',
         'Crimson Snow',
+        'Glittering Frost',
       ];
       for (const weather of allWeatherTypes) {
         const line = weatherOpeningLine(weather);

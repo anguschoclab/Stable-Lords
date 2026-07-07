@@ -59,6 +59,7 @@ export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = 
   Blizzard: () => <BlizzardEffect />,
   'Dense Fog': () => <DenseFogEffect />,
   Mist: () => <MistEffect />,
+  'Glittering Frost': () => <BlizzardEffect />,
   Thunderstorm: () => <ThunderstormEffect />,
   Ashfall: () => <AshfallEffect />,
   'Acid Rain': () => <AcidRainEffect />,

@@ -129,6 +129,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     borderClass: 'border-stone-300/20',
     description: 'Reduced visibility makes initial strikes trickier.',
   },
+  'Glittering Frost': {
+    icon: CloudSnow,
+    colorClass: 'text-arena-steel',
+    bgClass: 'bg-arena-steel/10',
+    borderClass: 'border-arena-steel/20',
+    description: 'Sharp frost increases damage but bites the lungs.',
+  },
   'Scorching Wind': {
     icon: Wind,
     colorClass: 'text-destructive',

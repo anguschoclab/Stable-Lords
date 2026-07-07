@@ -57,3 +57,8 @@
 **Vulnerability:** Unbounded input strings and numbers in Electron IPC Handlers (DoS/resource exhaustion risk)
 **Learning:** The renderer process shouldn't be fully trusted; unbounded parameters passed to fs.writeFile or Notification could cause memory issues.
 **Prevention:** Always implement explicit maximum bounds (lengths for strings/arrays, max values for numbers) on all parameters accepted from IPC.
+
+## 2026-07-07 - [CRITICAL/HIGH] Enforce Payload Bounds for IPC Messages
+**Vulnerability:** IPC handlers like save-game and archive-bout-log accepted unbounded payloads from renderer processes, allowing malicious scripts to exhaust main process memory or disk space (DoS).
+**Learning:** The Electron main process must explicitly limit the size of all parameters received over IPC to mitigate memory and disk consumption risks before processing or persisting data.
+**Prevention:** Introduce explicit length checks on arrays, strings, and stringified JSON objects coming from IPC immediately within handlers, returning safe errors if limits are exceeded.

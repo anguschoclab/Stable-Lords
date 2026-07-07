@@ -85,4 +85,44 @@ describe('narrativeContent.json', () => {
       }
     }
   });
+
+  it('has expanded attack description pools (>= 8 entries each)', () => {
+    const attacks = (narrativeContent as any).pbp.attacks;
+    expect(attacks).toBeDefined();
+    for (const category of ['slash', 'bludgeon', 'thrust', 'punch']) {
+      if (attacks[category]) {
+        for (const tier of Object.keys(attacks[category])) {
+          if (Array.isArray(attacks[category][tier])) {
+            expect(attacks[category][tier].length).toBeGreaterThanOrEqual(8);
+          }
+        }
+      }
+    }
+  });
+
+  it('has expanded dodge defense tiers (>= 20 desperate entries)', () => {
+    const dodge = (narrativeContent as any).pbp.defenses.dodge;
+    expect(dodge).toBeDefined();
+    expect(dodge.desperate.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it('new attack entries use valid template variables', () => {
+    const attacks = (narrativeContent as any).pbp.attacks;
+    const validVars = ['attacker', 'defender', 'weapon', 'bodyPart', 'name', 'possessive'];
+    for (const category of Object.keys(attacks)) {
+      for (const tier of Object.keys(attacks[category])) {
+        const entries = attacks[category][tier];
+        if (!Array.isArray(entries)) continue;
+        for (const entry of entries) {
+          if (typeof entry === 'string') {
+            const matches = entry.match(/\{\{(\w+)\}\}/g) || [];
+            for (const m of matches) {
+              const varName = m.slice(2, -2);
+              expect(validVars).toContain(varName);
+            }
+          }
+        }
+      }
+    }
+  });
 });

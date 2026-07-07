@@ -492,5 +492,17 @@
     "content": "LEFT WRIST GUARD",
     "reason": "Duplicate of: LEFT WRIST",
     "similarity": 1
+  },
+  {
+    "item": "RIGHT BICEP",
+    "duplicateOf": "RIGHT BICEPS",
+    "similarity": 0.9,
+    "path": "pbp.hit_locations.right arm"
+  },
+  {
+    "item": "LEFT BICEP",
+    "duplicateOf": "LEFT BICEPS",
+    "similarity": 0.9,
+    "path": "pbp.hit_locations.left arm"
   }
 ]

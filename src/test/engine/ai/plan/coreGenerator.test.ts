@@ -18,7 +18,7 @@ describe('coreGenerator', () => {
     skills: { INI: 10, ATT: 10, DEF: 10, PAR: 10, DMG: 10, DEC: 10, END: 10, HEA: 10 },
     favorites: {},
     ...overrides,
-  }) as Warrior;
+  }) as unknown as Warrior;
 
   describe('aiPlanForWarrior', () => {
     it('generates a base plan with personality and philosophy modifiers', () => {

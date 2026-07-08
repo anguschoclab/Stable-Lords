@@ -116,7 +116,7 @@ export default function ParticleSystem({
             p.type === 'blood' && 'bg-arena-blood',
             p.type === 'spark' && 'bg-arena-gold',
             p.type === 'dust' && 'bg-arena-bone/60',
-            p.type === 'sweat' && 'bg-blue-300/40'
+            p.type === 'sweat' && 'bg-arena-pop/40'
           )}
           style={{
             left: `${p.x}%`,

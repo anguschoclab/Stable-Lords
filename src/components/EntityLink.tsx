@@ -7,7 +7,7 @@ import { Link } from '@tanstack/react-router';
 import { useGameStore } from '@/state/useGameStore';
 import { useShallow } from 'zustand/react/shallow';
 import { cn } from '@/lib/utils';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import {  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger , SheetDescription } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WarriorDossier } from '@/components/WarriorDossier';
 import { StableDossier } from '@/components/StableDossier';
@@ -77,9 +77,10 @@ export function WarriorLink({ name, id, className, children }: WarriorLinkProps)
         </TooltipContent>
       </Tooltip>
       <SheetContent
-        aria-describedby={undefined}
+
         className="sm:max-w-md border-l-primary/20 bg-card/95 backdrop-blur-md"
       >
+        <SheetDescription className="sr-only">Details pane</SheetDescription>
         <SheetHeader className="pb-4 border-b">
           <SheetTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -183,9 +184,10 @@ export function StableLink({ name, className, children }: StableLinkProps) {
         </TooltipContent>
       </Tooltip>
       <SheetContent
-        aria-describedby={undefined}
+
         className="sm:max-w-md border-l-arena-gold/20 bg-card/95 backdrop-blur-md"
       >
+        <SheetDescription className="sr-only">Details pane</SheetDescription>
         <SheetHeader className="pb-4 border-b">
           <SheetTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">

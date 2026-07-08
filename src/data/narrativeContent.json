@@ -1478,7 +1478,11 @@
           "{{defender}} barely flinches away, eyes wide as the {{weapon}} whistles past.",
           "A clumsy but effective sprawl saves {{defender}} from certain death.",
           "{{defender}} throws themselves sideways in a blind panic.",
-          "{{defender}} scrambles wildly backward, stumbling but surviving."
+          "{{defender}} scrambles wildly backward, stumbling but surviving.",
+          "{{defender}} trips backwards, narrowly avoiding the lethal strike.",
+          "Flailing wildly, {{defender}} somehow evades the attack.",
+          "{{defender}} rolls clumsily out of the way just in time.",
+          "A split-second panic allows {{defender}} to dodge the incoming blow."
         ],
         "confident": [
           "Without breaking a sweat, {{defender}} shifts their weight and lets the blow pass harmlessly.",

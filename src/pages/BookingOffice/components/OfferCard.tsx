@@ -178,6 +178,14 @@ export function OfferCard({
                 <div className="text-[11px] font-display font-black uppercase text-foreground/80">
                   {getArenaById(offer.arenaId).name}
                 </div>
+                <div className="flex gap-1 mt-1">
+                  {getArenaById(offer.arenaId).tags.map(tag => (
+                    <span key={tag} className="text-[8px] font-black tracking-widest uppercase px-1.5 py-0.5 rounded-sm border border-white/10 bg-white/5 text-muted-foreground">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
                 {playerWarrior && (
                   <>
                   <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 mt-0.5">

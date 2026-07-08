@@ -9,13 +9,13 @@ export const ARENA_TAG_WEIGHTS = {
   // Tag presence multipliers for arena selection scoring
   cramped: { weight: 1.0, description: 'Tight quarters favor close weapons' },
   open: { weight: 1.0, description: 'Open ground favors reach weapons' },
-  uneven: { weight: 0.9, description: 'Uneven footing penalizes lungers' },
+  uneven: { weight: 0.95, description: 'Uneven footing penalizes lungers' },
   ruins: { weight: 1.0, description: 'Ancient structures may shift' },
   magical: { weight: 1.1, description: 'Arcane resonance aids counters' },
   living: { weight: 0.95, description: 'Reactive environment affects movement' },
   cursed: { weight: 1.05, description: 'Dark energy amplifies lethality' },
   water: { weight: 0.9, description: 'Wet conditions slow footwork' },
-  elevated: { weight: 1.0, description: 'High altitude affects stamina' },
+  elevated: { weight: 1.05, description: 'High altitude affects stamina' },
   outdoor: { weight: 1.0, description: 'Exposed to weather effects' },
   indoor: { weight: 1.0, description: 'Sheltered from weather' },
   premium: { weight: 1.2, description: 'Prestigious venue' },
@@ -72,6 +72,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   // Rain penalizes lungers (slippery footing for lunges)
   'Rainy:LUNGING ATTACK': {
     initiativeMod: WEATHER_PENALTIES.RAIN_LUNGE_INITIATIVE,
+    damageMult: 1 + WEATHER_PENALTIES.RAIN_LUNGE_PENALTY,
     description: 'Rain-slicked sand hinders lunging footwork',
   },
 
@@ -86,6 +87,10 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   },
 
   // Sandstorm penalizes aimed blows (can't aim)
+  'Sandstorm:PARRY-RIPOSTE': {
+    damageMult: 1 + WEATHER_PENALTIES.DUST_RIPOSTE_PENALTY,
+    description: 'Dust in the eyes hampers counter-strikes',
+  },
   'Sandstorm:AIMED BLOW': {
     initiativeMod: WEATHER_PENALTIES.SANDSTORM_AIMED_INITIATIVE,
     description: 'Dust blinds precision targeting',

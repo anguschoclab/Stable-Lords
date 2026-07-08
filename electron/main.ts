@@ -395,9 +395,13 @@ function registerIPCHandlers() {
       if (!state || typeof state !== 'object') {
         return { success: false, error: 'Invalid state data' };
       }
+      const stateStr = JSON.stringify(state, null, 2);
+      if (stateStr.length > 10 * 1024 * 1024) {
+        return { success: false, error: 'State payload size exceeds limit' };
+      }
       await ensureSaveDirectory();
       const filePath = path.join(getSaveDirectory(), 'hot_state', `${slotId}.json`);
-      await fs.writeFile(filePath, JSON.stringify(state, null, 2));
+      await fs.writeFile(filePath, stateStr);
       return { success: true };
     } catch (error) {
       console.error('Error saving game:', error);
@@ -476,6 +480,9 @@ function registerIPCHandlers() {
       }
       if (!Array.isArray(logData)) {
         return { success: false, error: 'Invalid log data format' };
+      }
+      if (logData.length > 50000) {
+        return { success: false, error: 'Log data size exceeds limit' };
       }
       await ensureSaveDirectory();
       const seasonDir = path.join(getSaveDirectory(), 'seasons', `season_${season}`, 'bouts');
@@ -590,6 +597,10 @@ function registerIPCHandlers() {
   ipcMain.handle('store-set', async (_event, key, value) => {
     if (typeof key !== 'string' || key.length === 0 || key.length > 255) {
       return { success: false, error: 'Invalid key' };
+    }
+    const valueStr = typeof value === 'string' ? value : JSON.stringify(value);
+    if (valueStr && valueStr.length > 1024 * 1024) {
+      return { success: false, error: 'Value size exceeds limit' };
     }
     store.set(key, value);
     saveConfig();

@@ -64,18 +64,18 @@ vi.mock('@/hooks/useDeathNotifications', () => ({
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line prefer-const
 let useTestStore: any;
 
 // Mock useGameStore
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: any) => {
-    if (!useTestStore) return undefined;
-    if (typeof selector === 'function') return useTestStore(selector);
-    return useTestStore();
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useTestStore ? (typeof selector === 'function' ? useTestStore(selector) : useTestStore()) : undefined;
   },
   useWorldState: () => {
-    if (!useTestStore) return {};
-    return useTestStore();
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useTestStore ? useTestStore() : {};
   },
 }));
 

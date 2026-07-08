@@ -1456,7 +1456,23 @@
           "{{defender}} barely flinches away, eyes wide as the {{weapon}} whistles past.",
           "A clumsy but effective sprawl saves {{defender}} from certain death.",
           "{{defender}} throws themselves sideways in a blind panic.",
-          "{{defender}} scrambles wildly backward, stumbling but surviving."
+          "{{defender}} scrambles wildly backward, stumbling but surviving.",
+          {
+            "text": "{{defender}} narrowly evades {{attacker}}'s desperate lunge",
+            "min": 25
+          },
+          {
+            "text": "{{defender}} miraculously dodges {{attacker}}'s vicious strike",
+            "min": 35
+          },
+          {
+            "text": "{{defender}} throws themselves out of the way of {{attacker}}'s attack",
+            "min": 15
+          },
+          {
+            "text": "{{defender}} barely avoids {{attacker}}'s deadly swing",
+            "min": 45
+          }
         ],
         "confident": [
           "Without breaking a sweat, {{defender}} shifts their weight and lets the blow pass harmlessly.",

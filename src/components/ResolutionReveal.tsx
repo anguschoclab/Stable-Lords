@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useWorldState, useGameStore, type GameStore } from '@/state/useGameStore';
+import { useGameStore, type GameStore } from '@/state/useGameStore';
+import { useShallow } from 'zustand/react/shallow';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,7 +20,14 @@ type RevealStep = 'gazette' | 'injuries' | 'bouts' | 'math' | 'memorial'; /**
  * Resolution reveal.
  */
 export default function ResolutionReveal() {
-  const state = useWorldState();
+  const state = useGameStore(
+    useShallow((s: any) => ({
+      arenaHistory: s.arenaHistory,
+      graveyard: s.graveyard,
+      week: s.week,
+      lastSimulationReport: s.lastSimulationReport,
+    }))
+  );
   const setState = useGameStore((s) => s.setState);
   const [step, setStep] = useState<RevealStep>('gazette');
 

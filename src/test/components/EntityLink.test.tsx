@@ -67,27 +67,27 @@ vi.mock('@/engine/core/historyResolver', () => ({
 
 describe('EntityLink accessibility', () => {
   it('WarriorLink renders SheetDescription with sr-only class', () => {
-    const { getByTestId } = render(<WarriorLink name="Test Warrior" id="w1" />);
+    render(<WarriorLink name="Test Warrior" id="w1" />);
     // const desc = getByTestId("sheet-description");
     // expect(desc).toBeInTheDocument();
     // expect(desc.className).toContain("sr-only");
   });
 
   it('StableLink renders SheetDescription with sr-only class', () => {
-    const { getByTestId } = render(<StableLink name="Rival Stable" />);
+    render(<StableLink name="Rival Stable" />);
     // const desc = getByTestId("sheet-description");
     // expect(desc).toBeInTheDocument();
     // expect(desc.className).toContain("sr-only");
   });
 
   it('WarriorLink does not use aria-describedby={undefined}', () => {
-    const { getByTestId } = render(<WarriorLink name="Test Warrior" id="w1" />);
+    render(<WarriorLink name="Test Warrior" id="w1" />);
     const content = getByTestId('sheet-content');
     expect(content).not.toHaveAttribute('aria-describedby', 'undefined');
   });
 
   it('StableLink does not use aria-describedby={undefined}', () => {
-    const { getByTestId } = render(<StableLink name="Rival Stable" />);
+    render(<StableLink name="Rival Stable" />);
     const content = getByTestId('sheet-content');
     expect(content).not.toHaveAttribute('aria-describedby', 'undefined');
   });

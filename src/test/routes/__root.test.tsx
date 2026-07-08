@@ -64,17 +64,24 @@ vi.mock('@/hooks/useDeathNotifications', () => ({
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let useTestStore: any;
+const useTestStore: any = create<TestStore>()(
+  immer((set) => ({
+    ftueComplete: false,
+    atTitleScreen: false,
+    treasury: 0,
+    toggleEventLog: vi.fn(),
+    setState: (fn: any) => set(fn),
+  }))
+);
 
 // Mock useGameStore
 vi.mock('@/state/useGameStore', () => ({
   useGameStore: (selector?: any) => {
-    if (!useTestStore) return undefined;
-    if (typeof selector === 'function') return useTestStore(selector);
-    return useTestStore();
+
+    return useTestStore(selector);
   },
   useWorldState: () => {
-    if (!useTestStore) return {};
+
     return useTestStore();
   },
 }));
@@ -87,15 +94,6 @@ interface TestStore {
   setState: (fn: (draft: TestStore) => void) => void;
 }
 
-useTestStore = create<TestStore>()(
-  immer((set) => ({
-    ftueComplete: false,
-    atTitleScreen: false,
-    treasury: 0,
-    toggleEventLog: vi.fn(),
-    setState: (fn) => set(fn),
-  }))
-);
 
 import { Route } from '@/routes/__root';
 

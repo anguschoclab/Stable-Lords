@@ -152,22 +152,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
 };
 
 // ─── Arena Event Constants ─────────────────────────────────────────────────
-export const ARENA_EVENT_CONSTANTS = {
-  // Collapsing pillars (ruins tag)
-  COLLAPSING_PILLAR_TRIGGER_CHANCE: 0.05, // 5% per heavy hit
-  COLLAPSING_PILLAR_DAMAGE_MIN: 2,
-  COLLAPSING_PILLAR_DAMAGE_MAX: 5,
 
-  // Blood moon lighting (cursed tag + Blood Moon weather)
-  BLOOD_MOON_CURSED_DAMAGE_MULT: 1.3, // +30% damage (replaces base 1.2)
-
-  // Crowd riots (premium tag + specific crowd moods)
-  CROWD_RIOT_MOMENTUM_SHIFT: 1,
-
-  // Crystal resonance (magical tag)
-  CRYSTAL_RESONANCE_RIPOSTE_BONUS: 2,
-  CRYSTAL_RESONANCE_EXCHANGE_INTERVAL: 5, // Every 5 exchanges
-} as const;
 
 // ─── Helper Functions ──────────────────────────────────────────────────────
 import type { FightingStyle, WeatherType } from '@/types/shared.types';

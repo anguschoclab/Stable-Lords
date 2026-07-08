@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { getArenaById, getAllArenas } from '@/data/arenas';
+import { getArenaById } from '@/data/arenas';
 import { generatePromoters } from '@/engine/promoters/promoterGenerator';
-import { SeededRNGService } from '@/utils/random';
 
 describe('New Arenas System Integration', () => {
   it('should successfully register and retrieve GLACIAL_RIFT, SKY_PLATFORM, and MISTY_VALLEY', () => {
@@ -25,9 +24,9 @@ describe('New Arenas System Integration', () => {
     let foundMisty = false;
 
     promoters.forEach(p => {
-      if (p.arenaPool.includes('glacial_rift')) foundGlacial = true;
-      if (p.arenaPool.includes('sky_platform')) foundSky = true;
-      if (p.arenaPool.includes('misty_valley')) foundMisty = true;
+      if (p.arenaPool?.includes('glacial_rift')) foundGlacial = true;
+      if (p.arenaPool?.includes('sky_platform')) foundSky = true;
+      if (p.arenaPool?.includes('misty_valley')) foundMisty = true;
     });
 
     expect(foundGlacial).toBe(true);

@@ -340,6 +340,13 @@ const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
     description:
       'A swirling vortex of raw chaos tears across the arena, draining stamina, scrambling timing, and amplifying every blow with unpredictable violence.',
   },
+  'Whispering Winds': {
+    staminaMult: 1.0,
+    initiativeMod: -1,
+    riposteMod: 2,
+    damageMult: 0.95,
+    description: 'Strange voices carried by the wind distract fighters, slightly lowering initiative but heightening paranoia and riposte chances.',
+  },
   'Chaos Squall': {
     staminaMult: 0.85,
     initiativeMod: 3,
@@ -428,6 +435,7 @@ const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
     'The sky darkens and an absurd, writhing rain of frogs begins to fall, confusing everyone.',
   'Chaos Storm':
     'A swirling vortex of raw chaos descends upon the arena. Reality itself seems to fracture as the storm intensifies.',
+  'Whispering Winds': 'Unseen voices murmur through the arena. The fighters glance around nervously.',
   'Chaos Squall':
     'A chaotic squall of purple energy descends upon the arena, making every shadow twitch.',
 };

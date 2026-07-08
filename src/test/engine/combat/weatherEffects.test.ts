@@ -114,6 +114,7 @@ describe('weatherEffects', () => {
         'Rain of Frogs',
         'Chaos Storm',
         'Chaos Squall',
+        'Whispering Winds',
         'Crimson Snow',
       ];
       for (const weather of allWeatherTypes) {
@@ -260,6 +261,7 @@ describe('weatherEffects', () => {
         'Rain of Frogs',
         'Chaos Storm',
         'Chaos Squall',
+        'Whispering Winds',
         'Crimson Snow',
       ];
       for (const weather of allWeatherTypes) {

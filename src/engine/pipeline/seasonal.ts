@@ -55,7 +55,8 @@ interface OffseasonEventNarrative {
     | 'shadow_tournament'
     | 'wandering_fortune_teller'
     | 'chaos_weaver_visit'
-    | 'traveling_circus';
+    | 'traveling_circus'
+    | 'bounty_hunter_visit';
   newsletter: string[];
 }
 
@@ -1210,6 +1211,36 @@ function handleChaosWeaverVisit(
   }
 }
 
+
+function handleBountyHunterVisit(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const goldGained = 150 + Math.floor(rng.next() * 101);
+      ctx.treasuryDelta += goldGained;
+      addLedger(ctx, rng, nextWeek, 'Bounty Information Payout', goldGained, 'other');
+
+      const fameGained = 10;
+      ctx.rosterUpdates.set(chosen.id, {
+        fame: (chosen.fame || 0) + fameGained,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        gold: goldGained,
+        fame: fameGained,
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1253,6 +1284,7 @@ const EVENT_HANDLERS: Record<
   wandering_fortune_teller: handleWanderingFortuneTeller,
   chaos_weaver_visit: handleChaosWeaverVisit,
   traveling_circus: handleTravelingCircus,
+  bounty_hunter_visit: handleBountyHunterVisit,
 };
 
 /**

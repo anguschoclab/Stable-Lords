@@ -37,9 +37,6 @@ vi.mock('@/components/ui/sheet', () => ({
   ),
   SheetHeader: ({ children }: any) => <div>{children}</div>,
   SheetTitle: ({ children }: any) => <div>{children}</div>,
-  SheetDescription: ({ children, className }: any) => (
-    <div data-testid="sheet-description" className={className}>{children}</div>
-  ),
   SheetTrigger: ({ children, ...props }: any) => <button {...props}>{children}</button>,
 }));
 

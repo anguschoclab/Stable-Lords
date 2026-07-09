@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { processAIStable } from '@/engine/ai/stableManager';
 import { computeWeeklyBreakdown } from '@/engine/economy';
+import { getFightsForWeek } from '@/engine/core/historyUtils';
 import type { RivalStableData, FightSummary } from '@/types/state.types';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { FIGHT_PURSE, WIN_BONUS } from '@/constants/economy';
@@ -339,7 +340,7 @@ describe('AI Economy Parity', () => {
       roster: rival.roster,
       fame: rival.fame,
       weather: state.weather,
-      arenaHistory: state.arenaHistory.filter((f) => f.week === state.week),
+      arenaHistory: getFightsForWeek(state.arenaHistory, state.week),
       trainers: rival.trainers ?? [],
       trainingAssignments: rival.trainingAssignments,
     };

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { FightSummary, WarriorId } from '@/types/game';
 import type { BoutOffer } from '@/types/state.types';
+import { getFightsForWeek } from '@/engine/core/historyUtils';
 
 /**
  *
@@ -34,7 +35,8 @@ export function useDigestSummary({
   playerWarriorIds,
 }: UseDigestSummaryOptions): DigestSummary {
   return useMemo(() => {
-    const thisWeekFights = arenaHistory.filter((f) => f.week === currentWeek);
+    // ⚡ Bolt: Replaced O(N) .filter with O(K) getFightsForWeek which loops backward and breaks early.
+    const thisWeekFights = getFightsForWeek(arenaHistory, currentWeek);
 
     let wins = 0;
     let losses = 0;

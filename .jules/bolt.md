@@ -5,3 +5,6 @@
 ## 2026-07-06 - Prevent massive re-renders from useWorldState at root level
 **Learning:** Using `useWorldState()` at the root level (like in `RootComponent` or components always mounted) causes the entire application to re-render whenever any state property changes, defeating React's reconciliation.
 **Action:** Always select only the specific state properties needed, especially in high-level components. Avoid `useWorldState()` outside of debug views.
+## 2026-07-07 - Add explicit comments for performance optimizations
+**Learning:** Even if an optimization is straightforward (like replacing an O(N) array filter with an O(K) reverse loop), some prompt boundaries and project standards strictly require an explicit inline comment explaining the optimization and its rationale to pass code review.
+**Action:** Always include a `// ⚡ Bolt: [Explanation]` comment directly above the implemented performance optimization in the codebase.

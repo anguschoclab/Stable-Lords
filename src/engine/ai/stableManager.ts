@@ -7,6 +7,7 @@ import { StateImpact, mergeImpacts } from '@/engine/impacts';
 import { computeWeeklyBreakdown, type StableEconomyInput } from '@/engine/economy';
 import { SeededRNGService } from '@/utils/random';
 import { BANKRUPTCY_THRESHOLD } from '@/constants/economy';
+import { getFightsForWeek } from '@/engine/core/historyUtils';
 
 /**
  * processAIStable - The Lead Agent Orchestrator for a Rival Stable.
@@ -66,7 +67,8 @@ export function processAIStable(
     roster: updatedRival.roster,
     fame: updatedRival.fame ?? updatedRival.owner.fame ?? 0,
     weather: state.weather,
-    arenaHistory: state.arenaHistory.filter((f) => f.week === state.week),
+    // ⚡ Bolt: Replaced O(N) .filter with O(K) getFightsForWeek which loops backward and breaks early.
+    arenaHistory: getFightsForWeek(state.arenaHistory, state.week),
     trainers: updatedRival.trainers ?? [],
     trainingAssignments: updatedRival.trainingAssignments ?? [],
     applyStipend: (state.rivals || []).length <= 45,

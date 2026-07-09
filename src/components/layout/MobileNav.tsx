@@ -21,7 +21,7 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetClose,
-} from '@/components/ui/sheet';
+  SheetDescription } from '@/components/ui/sheet';
 import { Swords, Menu } from 'lucide-react';
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -73,10 +73,11 @@ export function MobileNav({ className }: MobileNavProps) {
           </Button>
         </SheetTrigger>
         <SheetContent
-          aria-describedby={undefined}
+
           side="left"
           className="w-72 bg-[#0C0806] border-r border-white/5 p-0"
         >
+        <SheetDescription className="sr-only">Details pane</SheetDescription>
           <SheetHeader className="p-4 border-b border-white/5">
             <SheetTitle className="font-display text-sm font-black uppercase tracking-widest text-foreground flex items-center gap-3">
               <Swords className="h-4 w-4 text-primary" />

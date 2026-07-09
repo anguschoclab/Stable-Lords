@@ -50,6 +50,7 @@ export function BookmarkButton({
           { duration: 1500 }
         );
       }}
+      title={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
       aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
       title={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
       className={cn(

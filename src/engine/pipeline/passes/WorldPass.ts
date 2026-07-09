@@ -74,6 +74,7 @@ const SEASON_EXCLUSIVE_WEATHER: Record<Season, WeatherType[]> = {
     'Spooky Night',
     'Blood Fog',
     'Rain of Frogs',
+    'Whispering Winds',
   ],
   Winter: [
     'Blizzard',
@@ -114,6 +115,7 @@ const WEATHER_WEIGHTS: Partial<Record<WeatherType, number>> = {
   'Mana Surge': 0.5,
   'Chaos Storm': 0.1,
   'Chaos Squall': 0.5,
+  'Whispering Winds': 3,
 
   // Spring-exclusive
   Rainy: 10,

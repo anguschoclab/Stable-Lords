@@ -4066,6 +4066,13 @@
       "newsletter": [
         "A traveling circus set up camp near the stable. {{name}} spent the week learning acrobatic tricks and mesmerizing the locals. (+{{fame}} Fame, +{{xp}} XP, Minor Treasury Cost)"
       ]
+    },
+    "bounty_hunter_visit": {
+      "title": "Bounty Hunter Visit",
+      "effectType": "bounty_hunter_visit",
+      "newsletter": [
+        "A wandering bounty hunter visited looking for someone who sounded a lot like {{name}}. They paid handsomely for information. (+{{gold}} Gold, +{{fame}} Fame)"
+      ]
     }
   },
   "crowd_reactions": {

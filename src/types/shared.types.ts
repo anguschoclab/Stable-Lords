@@ -627,7 +627,8 @@ export type WeatherType =
   | 'Crystal Rain'
   | 'Rain of Frogs'
   | 'Chaos Storm'
-  | 'Chaos Squall';
+  | 'Chaos Squall'
+  | 'Whispering Winds';
 
 /**
  * Defines the shape of death event.

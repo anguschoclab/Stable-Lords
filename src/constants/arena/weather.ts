@@ -348,6 +348,13 @@ export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
     description:
       'A swirling vortex of raw chaos drains stamina and amplifies damage unpredictably.',
   },
+  'Whispering Winds': {
+    icon: Wind,
+    colorClass: 'text-arena-pop',
+    bgClass: 'bg-arena-pop/10',
+    borderClass: 'border-arena-pop/20',
+    description: 'Strange voices carried by the wind heighten paranoia and riposte chances.',
+  },
   'Chaos Squall': {
     icon: Sparkles,
     colorClass: 'text-purple-300',

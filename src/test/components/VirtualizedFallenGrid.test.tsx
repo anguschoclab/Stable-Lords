@@ -56,6 +56,7 @@ vi.mock('@/components/ui/sheet', () => ({
   SheetContent: ({ children }: any) => <div>{children}</div>,
   SheetHeader: ({ children }: any) => <div>{children}</div>,
   SheetTitle: ({ children }: any) => <div>{children}</div>,
+  SheetDescription: ({ children }: any) => <div>{children}</div>,
   SheetTrigger: ({ children, ...props }: any) => <button {...props}>{children}</button>,
 }));
 
@@ -223,6 +224,8 @@ describe('VirtualizedFallenGrid', () => {
         emptyDesc="None"
       />
     );
-    expect(container.querySelector('[class*="GOLD"]')).toBeNull();
+    expect(screen.queryByText(/GOLD/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/SILVER/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/BRONZE/i)).not.toBeInTheDocument();
   });
 });

@@ -51,6 +51,7 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 
 vi.mock('@/components/ui/sheet', () => ({
+  SheetDescription: ({ children }: any) => <div>{children}</div>,
   Sheet: ({ children }: any) => <div>{children}</div>,
   SheetContent: ({ children }: any) => <div>{children}</div>,
   SheetHeader: ({ children }: any) => <div>{children}</div>,

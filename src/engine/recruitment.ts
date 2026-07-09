@@ -20,7 +20,10 @@ import type { NarrativeContent } from '@/types/narrative.types';
 import { TRAITS, generateTraits } from '@/engine/traits';
 import { ARCHETYPE_NAMES } from '@/data/names/archetypeNames';
 import { STYLE_ARCHETYPE, generateArchetypeAttrs } from '@/engine/factories/statGeneration';
-import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator'; /**
+import { generateLore, generateOrigin } from '@/engine/narrative/loreGenerator';
+
+// NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
+/**
  * Recruit tier type.
  */
 

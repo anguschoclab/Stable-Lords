@@ -6,6 +6,8 @@ import type { IRNGService } from '@/engine/core/rng/IRNGService';
 import { getStyleDefaultLoadout } from '@/data/equipment';
 import { filterActive } from '@/utils/roster';
 
+// NARRATIVE AUDIT 2026: Origin string generation and lore traits are dynamically sourced from registries. No manual wiring needed for new additions to populate AI stable pools and scouting reports.
+
 /**
  * RecruitmentWorker: Handles drafting warriors from the pool.
  * Implements "Context Isolation" and "Risk-Tiered Execution".

@@ -102,6 +102,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  pit_scarred: {
+    id: 'pit_scarred',
+    name: 'Pit Scarred',
+    description: '+1 defense when HP is low — forged in the crucible of near-death.',
+    effect: { defModLowHp: 1 },
+    weight: 0.5,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  gutter_cunning: {
+    id: 'gutter_cunning',
+    name: 'Gutter Cunning',
+    description: '+1 attack during early phase — strikes fast before the guards arrive.',
+    effect: { attModEarly: 1 },
+    weight: 0.5,
+    tier: 'Notable',
+    sign: 'positive',
+  },
   gutter_blood: {
     id: 'gutter_blood',
     name: 'Gutter Blood',

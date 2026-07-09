@@ -1,11 +1,14 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
-  'Abandoned at the rusted gates of the Weeping Mother Orphanage',
+  'Abandoned in the dripping undercrofts of the Silent Sisters',
+  'Raised by debt-collectors in the squalor of the Brass District',
+  'Survived the Ashfall by hiding in a forgotten ossuary',
+  'Sold to a pit-fighter trainer for a flask of watered wine',
+  'Scavenged for broken weapons in the wake of the Iron March',
   'Survived the Cinder Plague by hiding in the cathedral catacombs',
   'Raised by feral dogs in the shadow of the Black Iron Foundry',
   'Sold for a handful of copper coins to a traveling beast-tamer',
-  'Scavenged for scraps among the cursed ruins of Old Dross',
   'Escaped the fighting pits of the Undercity during a bloody riot',
   'Born in the sunless depths of the Sunken Asylum',
   'Found wandering the ash-choked plains with no memory of their name',
@@ -124,9 +127,10 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
-  'would collect shattered teeth from the fighting pits as grim trophies',
+  'would trace the flight paths of throwing knives with unsettling focus',
+  'learned to stitch their own wounds with horsehair and rusty needles',
+  'was notorious for hoarding shattered teeth as currency',
   'learned to recognize the smell of poisoned food before taking a bite',
-  'was known for setting traps in the orphanage cellars to catch rats and worse',
   'would sit motionless for hours watching spiders weave their deadly webs',
   'would systematically dissect caught rodents to understand their anatomy',
   'learned to sleep with a clenched fist and one eye open',
@@ -194,6 +198,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until they drove a rusted spike through a slaver\'s boot and walked free',
+  'knowing that the roar of the crowd is the only lullaby they ever needed',
+  'waiting for the moment the iron portcullis rises on their destiny',
   'strangled a corrupt guard with their own rusted chains to escape confinement',
   'won their first real fight by blinding their opponent with a handful of crushed glass',
   'survived a brutal ambush by playing dead among the corpses for three days',
@@ -203,10 +210,8 @@ const DEFINING_MOMENTS = [
   'waiting for the moment the gates would close and the true test would begin',
   'knowing that the only escape from the gutters was paved in blood',
   'realizing that the only true law of the streets was written in blood',
-  'until the day they dragged a larger bully into the shadowed alleys and emerged alone',
   'waiting for the moment the arena doors would open and swallow their past',
   'until the day they crushed a street enforcer\'s windpipe in a brawl over coppers',
-  'knowing that the only thing worse than dying in the pit is dying forgotten outside of it',
   'understanding early that fear is just a weakness waiting to be exploited',
   'until a recruiter saw them handle a practice sword with natural grace',
   'but everything changed when they saved the Headmistress from a fire',

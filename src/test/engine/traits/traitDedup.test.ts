@@ -39,7 +39,7 @@ const RETAINED_IDS = [
   'iron_vein',
 ] as const;
 
-const BASELINE_COUNT = 112;
+const BASELINE_COUNT = 114;
 const EXPECTED_COUNT = BASELINE_COUNT - REMOVED_IDS.length;
 
 describe('Trait deduplication', () => {

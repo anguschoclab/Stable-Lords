@@ -388,6 +388,20 @@ export const MISTY_VALLEY: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'standard_arena_first_blood',
+    arenaId: 'standard_arena',
+    type: 'historical_battle',
+    title: 'The First Blood',
+    narrative: 'According to legend, the first ever sanctioned fight occurred on these very sands, ending in a mutual draw that established the foundation of modern arena combat.'
+  },
+  {
+    id: 'mudpit_arena_drowning',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Drowning of Valerius',
+    narrative: 'In 981, Champion Valerius was not killed by a blade, but rather drowned in a particularly deep pocket of mud while pinned by a lesser gladiator.'
+  },
+  {
     id: 'flesh_gardens_the_crimson_bloom',
     arenaId: 'flesh_gardens',
     type: 'historical_battle',

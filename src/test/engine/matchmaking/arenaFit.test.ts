@@ -433,7 +433,7 @@ describe('scoreArenaFitForWarrior — Tag Scoring', () => {
     // range: standard start=Striking, no weapon → Striking, distanceFromPref=0 → 1.5
     // initiative: initiativeMod=0 → no contribution
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(1.5 - 0.2 * 0.9, 4);
+    expect(score).toBeCloseTo(1.5 - 0.2 * 0.95, 4);
   });
 
   it('uneven tag + non-initiative style → no penalty', () => {
@@ -454,7 +454,7 @@ describe('scoreArenaFitForWarrior — Tag Scoring', () => {
     // uneven tag: LungingAttack is initiative → -0.18
     // initiative: initiativeMod=0 → 0
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(1.5 + 0.3 - 0.18, 4);
+    expect(score).toBeCloseTo(1.5 + 0.3 - 0.19, 4);
   });
 
   it('tag not in ARENA_TAG_WEIGHTS → no effect', () => {

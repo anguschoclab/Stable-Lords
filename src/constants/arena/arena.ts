@@ -9,13 +9,13 @@ export const ARENA_TAG_WEIGHTS = {
   // Tag presence multipliers for arena selection scoring
   cramped: { weight: 1.0, description: 'Tight quarters favor close weapons' },
   open: { weight: 1.0, description: 'Open ground favors reach weapons' },
-  uneven: { weight: 0.9, description: 'Uneven footing penalizes lungers' },
+  uneven: { weight: 0.95, description: 'Uneven footing penalizes lungers' },
   ruins: { weight: 1.0, description: 'Ancient structures may shift' },
   magical: { weight: 1.1, description: 'Arcane resonance aids counters' },
   living: { weight: 0.95, description: 'Reactive environment affects movement' },
   cursed: { weight: 1.05, description: 'Dark energy amplifies lethality' },
   water: { weight: 0.9, description: 'Wet conditions slow footwork' },
-  elevated: { weight: 1.0, description: 'High altitude affects stamina' },
+  elevated: { weight: 1.05, description: 'High altitude affects stamina' },
   outdoor: { weight: 1.0, description: 'Exposed to weather effects' },
   indoor: { weight: 1.0, description: 'Sheltered from weather' },
   premium: { weight: 1.2, description: 'Prestigious venue' },
@@ -72,6 +72,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   // Rain penalizes lungers (slippery footing for lunges)
   'Rainy:LUNGING ATTACK': {
     initiativeMod: WEATHER_PENALTIES.RAIN_LUNGE_INITIATIVE,
+    damageMult: 1 + WEATHER_PENALTIES.RAIN_LUNGE_PENALTY,
     description: 'Rain-slicked sand hinders lunging footwork',
   },
 
@@ -86,6 +87,10 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   },
 
   // Sandstorm penalizes aimed blows (can't aim)
+  'Sandstorm:PARRY-RIPOSTE': {
+    damageMult: 1 + WEATHER_PENALTIES.DUST_RIPOSTE_PENALTY,
+    description: 'Dust in the eyes hampers counter-strikes',
+  },
   'Sandstorm:AIMED BLOW': {
     initiativeMod: WEATHER_PENALTIES.SANDSTORM_AIMED_INITIATIVE,
     description: 'Dust blinds precision targeting',
@@ -147,22 +152,7 @@ export const STYLE_WEATHER_MODIFIERS: Record<
 };
 
 // ─── Arena Event Constants ─────────────────────────────────────────────────
-export const ARENA_EVENT_CONSTANTS = {
-  // Collapsing pillars (ruins tag)
-  COLLAPSING_PILLAR_TRIGGER_CHANCE: 0.05, // 5% per heavy hit
-  COLLAPSING_PILLAR_DAMAGE_MIN: 2,
-  COLLAPSING_PILLAR_DAMAGE_MAX: 5,
 
-  // Blood moon lighting (cursed tag + Blood Moon weather)
-  BLOOD_MOON_CURSED_DAMAGE_MULT: 1.3, // +30% damage (replaces base 1.2)
-
-  // Crowd riots (premium tag + specific crowd moods)
-  CROWD_RIOT_MOMENTUM_SHIFT: 1,
-
-  // Crystal resonance (magical tag)
-  CRYSTAL_RESONANCE_RIPOSTE_BONUS: 2,
-  CRYSTAL_RESONANCE_EXCHANGE_INTERVAL: 5, // Every 5 exchanges
-} as const;
 
 // ─── Helper Functions ──────────────────────────────────────────────────────
 import type { FightingStyle, WeatherType } from '@/types/shared.types';

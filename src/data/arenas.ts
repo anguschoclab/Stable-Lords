@@ -349,6 +349,43 @@ export const STORMTOP_TERRACE: ArenaConfig = {
   startingZone: 'Center',
 };
 
+
+export const GLACIAL_RIFT: ArenaConfig = {
+  id: 'glacial_rift',
+  name: 'The Glacial Rift',
+  tags: ['outdoor', 'cramped', 'uneven'],
+  tier: 2,
+  size: 'cramped',
+  description: 'A frozen, narrow crevasse where footing is treacherous and space is tight.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -1, enduranceMult: 1.1, riposteMod: 1 },
+  startingZone: 'Center',
+};
+
+export const SKY_PLATFORM: ArenaConfig = {
+  id: 'sky_platform',
+  name: 'The Sky Platform',
+  tags: ['outdoor', 'elevated', 'open'],
+  tier: 3,
+  size: 'open',
+  description: 'A floating stone platform high above the clouds. Thin air and high winds challenge stamina and precision.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: 1, enduranceMult: 1.2, riposteMod: 0 },
+  startingZone: 'Center',
+};
+
+export const MISTY_VALLEY: ArenaConfig = {
+  id: 'misty_valley',
+  name: 'The Misty Valley',
+  tags: ['outdoor', 'open', 'magical'],
+  tier: 1,
+  size: 'open',
+  description: 'A wide valley filled with shifting, magically infused mists. Perfect for those who rely on reflexes over raw sight.',
+  zoneDef: { Edge: -1, Corner: -3 },
+  surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 },
+  startingZone: 'Center',
+};
+
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
     id: 'flesh_gardens_the_crimson_bloom',
@@ -632,4 +669,7 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   FLESH_GARDENS,
   GUTTER_PIT,
   STORMTOP_TERRACE,
+  GLACIAL_RIFT,
+  SKY_PLATFORM,
+  MISTY_VALLEY,
 ].forEach(registerArena);

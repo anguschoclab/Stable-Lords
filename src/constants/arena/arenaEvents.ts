@@ -22,6 +22,15 @@ export interface ArenaEventConfig {
   };
 }
 
+
+export const ARENA_EVENT_CONSTANTS = {
+  COLLAPSING_PILLAR_TRIGGER: 15,
+  CROWD_RIOT_TRIGGER: 15,
+  CROWD_RIOT_DAMAGE: 2,
+  BLOOD_MOON_LIGHTING_TRIGGER: 1,
+  BLOOD_MOON_LIGHTING_DAMAGE: 1.3,
+} as const;
+
 export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
   // ─── Ruins Events ─────────────────────────────────────────────────────────
   collapsing_pillar: {
@@ -30,7 +39,7 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     description: 'Ancient stonework crumbles under the impact of combat',
     requiredTags: ['ruins'],
     triggerCondition: 'heavy_hit',
-    triggerValue: 15, // Damage threshold
+    triggerValue: ARENA_EVENT_CONSTANTS.COLLAPSING_PILLAR_TRIGGER, // Damage threshold
     narrativeText: 'A nearby pillar cracks and collapses in a cloud of dust!',
     // mechanicalEffect deferred to v2
   },
@@ -128,9 +137,9 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     description: 'The wealthy patrons demand blood and throw debris',
     requiredTags: ['premium'],
     triggerCondition: 'heavy_hit',
-    triggerValue: 15,
+    triggerValue: ARENA_EVENT_CONSTANTS.CROWD_RIOT_TRIGGER,
     narrativeText: 'The crowd riots in a frenzy, throwing debris into the arena!',
-    mechanicalEffect: { type: 'damage', value: 2 }
+    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.CROWD_RIOT_DAMAGE }
   },
 
   // ─── Blood Moon Lighting ─────────────────────────────────────────────
@@ -140,9 +149,9 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     description: 'The cursed ground glows ominously under the blood moon',
     requiredTags: ['cursed'],
     triggerCondition: 'weather_combo',
-    triggerValue: 1, // With Blood Moon
+    triggerValue: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_TRIGGER, // With Blood Moon
     narrativeText: 'The blood moon illuminates the cursed ground, driving fighters mad!',
-    mechanicalEffect: { type: 'damage', value: 1.3 }
+    mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_DAMAGE }
   },
 
   deepening_muck: {

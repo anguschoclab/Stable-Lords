@@ -57,6 +57,7 @@ export interface TraitEffect {
   defModLowHp?: number; // defender HP < 0.5
   parModHighHp?: number; // own HP > 0.75
   defModEarly?: number; // OPENING phase
+  attModEarly?: number; // OPENING phase
   defModLate?: number; // LATE phase
   attModLate?: number; // LATE phase
   parModLate?: number; // LATE phase

@@ -56,6 +56,8 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Chaos Storm',
   'Chaos Squall',
   'Crimson Snow',
+  'Whispering Winds',
+  'Glittering Frost',
 ];
 
 const SEASONS: Season[] = ['Spring', 'Summer', 'Fall', 'Winter'];

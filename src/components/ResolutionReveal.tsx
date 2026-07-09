@@ -36,7 +36,7 @@ export default function ResolutionReveal() {
 
   const deadWarriors = React.useMemo(() => {
     if (!data) return [];
-    const graveyardByName = new Map((state.graveyard ?? []).map((w) => [w.name, w]));
+    const graveyardByName = new Map((state.graveyard ?? []).map((w: { name: string }) => [w.name, w] as [string, typeof w]));
     return data.deaths.map((name: string) => graveyardByName.get(name)).filter(Boolean);
   }, [data, state.graveyard]);
 

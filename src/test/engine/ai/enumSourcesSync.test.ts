@@ -52,6 +52,8 @@ describe('enumSources sync with WeatherType', () => {
     'Chaos Squall',
     'Astral Dust',
     'Crimson Snow',
+    'Whispering Winds',
+    'Glittering Frost',
   ]);
 
   it('WEATHER_TYPES contains every WeatherType union member', () => {

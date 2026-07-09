@@ -60,6 +60,8 @@ const ALL_WEATHER_TYPES: WeatherType[] = [
   'Chaos Storm',
   'Chaos Squall',
   'Crimson Snow',
+  'Whispering Winds',
+  'Glittering Frost',
 ];
 
 describe('Weather season exclusivity', () => {

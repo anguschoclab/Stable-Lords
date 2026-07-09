@@ -51,7 +51,6 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 
 vi.mock('@/components/ui/sheet', () => ({
-  SheetDescription: ({ children }: any) => <div>{children}</div>,
   Sheet: ({ children }: any) => <div>{children}</div>,
   SheetContent: ({ children }: any) => <div>{children}</div>,
   SheetHeader: ({ children }: any) => <div>{children}</div>,
@@ -216,7 +215,7 @@ describe('VirtualizedFallenGrid', () => {
       name: 'NoMedals',
       career: { wins: 5, losses: 20, kills: 0 } as any,
     });
-    const { container } = render(
+    render(
       <VirtualizedFallenGrid
         warriors={[warrior]}
         season="Spring"

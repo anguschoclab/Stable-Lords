@@ -52,7 +52,6 @@ export function BookmarkButton({
       }}
       title={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
       aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
-      title={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
       className={cn(
         'p-1.5 rounded-none border transition-all duration-200 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
         isBookmarked

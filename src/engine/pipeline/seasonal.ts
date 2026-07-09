@@ -56,7 +56,8 @@ interface OffseasonEventNarrative {
     | 'wandering_fortune_teller'
     | 'chaos_weaver_visit'
     | 'traveling_circus'
-    | 'bounty_hunter_visit';
+    | 'bounty_hunter_visit'
+    | 'loyal_stray_dog';
   newsletter: string[];
 }
 
@@ -1241,6 +1242,29 @@ function handleBountyHunterVisit(
   }
 }
 
+function handleLoyalStrayDog(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const xpGained = 10;
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1285,6 +1309,7 @@ const EVENT_HANDLERS: Record<
   chaos_weaver_visit: handleChaosWeaverVisit,
   traveling_circus: handleTravelingCircus,
   bounty_hunter_visit: handleBountyHunterVisit,
+  loyal_stray_dog: handleLoyalStrayDog,
 };
 
 /**

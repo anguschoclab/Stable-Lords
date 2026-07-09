@@ -3860,6 +3860,13 @@
         "A sudden goblin raid on the stable! {{name}} fought them off but took a nasty scratch. The stable lost {{gold}} gold in the chaos. (-{{gold}} Gold, Minor Injury)"
       ]
     },
+    "loyal_stray_dog": {
+      "title": "A Loyal Stray",
+      "effectType": "loyal_stray_dog",
+      "newsletter": [
+        "A scruffy stray dog wandered into the training yard and has taken a liking to {{name}}. The gladiator's spirits are lifted! (+10 XP)"
+      ]
+    },
     "strange_dream": {
       "title": "A Strange Dream",
       "effectType": "strange_dream",

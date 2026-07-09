@@ -61,6 +61,7 @@ export const WeatherTypeSchema = z.enum([
   'Blizzard',
   'Dense Fog',
   'Mist',
+  'Glittering Frost',
   'Thunderstorm',
   'Gravity Anomaly',
   'Ashfall',

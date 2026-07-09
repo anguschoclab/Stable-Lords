@@ -30,7 +30,7 @@ export function VeteranReassignmentDialog({
 
         className="bg-neutral-950/95 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-none"
       >
-        <DialogDescription className="sr-only">Dialog description</DialogDescription>
+        <DialogDescription className="sr-only">Assign veterans as staff</DialogDescription>
         <div className="p-10 border-b border-white/5 bg-primary/5">
           <h3 className="font-display text-3xl font-black uppercase tracking-tight flex items-center gap-6">
             <ImperialRing size="lg" variant="blood">

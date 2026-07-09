@@ -64,7 +64,7 @@ vi.mock('@/hooks/useDeathNotifications', () => ({
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let useTestStore: any = create<TestStore>()(immer((set) => ({ alertQueue: [], addAlert: (a: any) => {}, removeAlert: (id: any) => {}, setState: (fn: any) => set(fn) })));
+let useTestStore: any = create<TestStore>()(immer((set) => ({ ftueComplete: false, atTitleScreen: false, treasury: 0, toggleEventLog: () => {}, alertQueue: [], addAlert: (a: any) => {}, removeAlert: (id: any) => {}, setState: (fn: any) => set(fn) })));
 
 // Mock useGameStore
 vi.mock('@/state/useGameStore', () => ({

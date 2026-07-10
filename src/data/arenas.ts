@@ -99,6 +99,31 @@ export const STANDARD_ARENA: ArenaConfig = {
 /**
  * Sunken, rain-soaked arena with treacherous footing.
  */
+
+export const BRASS_RING: ArenaConfig = {
+  id: 'brass_ring',
+  name: 'The Brass Ring',
+  tags: ['outdoor', 'cramped', 'uneven'],
+  tier: 1,
+  size: 'cramped',
+  description: 'A tiny, brutal ring with uneven stones that penalize lunging and favor close-quarters brawling.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -2, enduranceMult: 1.1, riposteMod: 1 },
+  startingZone: 'Center',
+};
+
+export const NARROW_BRIDGE: ArenaConfig = {
+  id: 'narrow_bridge',
+  name: 'The Narrow Bridge',
+  tags: ['outdoor', 'cramped', 'elevated'],
+  tier: 2,
+  size: 'cramped',
+  description: 'A dizzying span where low endurance fighters struggle to breathe and long weapons are useless.',
+  zoneDef: { Edge: -5, Corner: -6 },
+  surfaceMod: { initiativeMod: 0, enduranceMult: 1.2, riposteMod: 0 },
+  startingZone: 'Center',
+};
+
 export const MUDPIT_ARENA: ArenaConfig = {
   id: 'mudpit_arena',
   name: 'The Mudpit',
@@ -672,4 +697,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   GLACIAL_RIFT,
   SKY_PLATFORM,
   MISTY_VALLEY,
+  BRASS_RING,
+  NARROW_BRIDGE,
 ].forEach(registerArena);

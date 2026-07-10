@@ -29,6 +29,7 @@ export const ARENA_EVENT_CONSTANTS = {
   CROWD_RIOT_DAMAGE: 2,
   BLOOD_MOON_LIGHTING_TRIGGER: 1,
   BLOOD_MOON_LIGHTING_DAMAGE: 1.3,
+  GEYSER_ERUPTION_TRIGGER: 6,
 } as const;
 
 export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
@@ -152,6 +153,17 @@ export const ARENA_EVENTS: Record<string, ArenaEventConfig> = {
     triggerValue: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_TRIGGER, // With Blood Moon
     narrativeText: 'The blood moon illuminates the cursed ground, driving fighters mad!',
     mechanicalEffect: { type: 'damage', value: ARENA_EVENT_CONSTANTS.BLOOD_MOON_LIGHTING_DAMAGE }
+  },
+
+
+  geyser_eruption: {
+    id: 'geyser_eruption',
+    name: 'Geyser Eruption',
+    description: 'Scalding water erupts from the ground',
+    requiredTags: ['water', 'uneven'],
+    triggerCondition: 'exchange_interval',
+    triggerValue: ARENA_EVENT_CONSTANTS.GEYSER_ERUPTION_TRIGGER,
+    narrativeText: 'A hidden geyser erupts, blasting scalding water into the air!',
   },
 
   deepening_muck: {

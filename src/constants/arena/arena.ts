@@ -117,6 +117,14 @@ export const STYLE_WEATHER_MODIFIERS: Record<
   },
 
   // Mana Surge benefits magical fighting styles
+  'Mist:BASHING ATTACK': {
+    damageMult: WEATHER_PENALTIES.MIST_BASHING_DAMAGE,
+    description: 'Reduced visibility weakens heavy blows',
+  },
+  'Gale:LUNGING ATTACK': {
+    initiativeMod: WEATHER_PENALTIES.GALE_LUNGE_INITIATIVE,
+    description: 'Strong winds disrupt lunging footwork',
+  },
   'Mana Surge:AIMED BLOW': {
     damageMult: WEATHER_PENALTIES.MANA_SURGE_AIMED_DAMAGE,
     description: 'Arcane focus sharpens precision strikes',

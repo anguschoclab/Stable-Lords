@@ -1287,9 +1287,11 @@ function handleMoonlightDuel(
         .replace(/\{\{gold\}\}/g, String(gold));
 
       ctx.newsletterItems.push({
+        id: rng.uuid('newsletter'),
         week: nextWeek,
-        text: text,
-        type: 'event',
+        title: 'Moonlight Duel',
+        items: [text],
+        category: 'event',
       });
       ctx.ledgerEntries.push({
         id: rng.uuid('ledger') as LedgerEntryId,

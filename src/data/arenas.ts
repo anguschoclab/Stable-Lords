@@ -389,14 +389,14 @@ export const MISTY_VALLEY: ArenaConfig = {
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
     id: 'blood_pit_the_iron_rebellion',
-    arenaId: 'the_blood_pit',
+    arenaId: 'gutter_pit',
     type: 'historical_battle',
     title: 'The Iron Rebellion',
     narrative: 'In 948, a mass breakout attempt by chained gladiators was brutally suppressed here. The gouge marks from their rusted shackles can still be seen on the southern pillars.',
   },
   {
     id: 'shattered_coliseum_falling_statue',
-    arenaId: 'shattered_coliseum',
+    arenaId: 'sundered_coliseum',
     type: 'famous_death',
     title: 'The Fall of Oros',
     narrative: 'The legendary champion Oros the Unbroken met his end not by a blade, but when a crumbling stone gargoyle dislodged during a thunderous crowd cheer and crushed him instantly.',

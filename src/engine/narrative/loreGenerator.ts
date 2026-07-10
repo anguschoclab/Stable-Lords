@@ -1,7 +1,12 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
-  'Abandoned at the rusted gates of the Weeping Mother Orphanage',
+  'Abandoned at the heavy iron doors of the Weeping Mother Orphanage during a blood moon',
+  'Raised in the overcrowded squalor of St. Jude\'s Home for the Forgotten',
+  'Surviving on rats and rain in the crumbling attic of the Sisters of Mercy',
+  'Taught to pick pockets and slit purses by the matron of the Cinderhouse Orphanage',
+  'Flogged daily at the Blackwood Boys Home until they learned to strike back',
+  'Traded to a fighting pit master by the corrupt warden of the Iron Cage Orphanage',
   'Survived the Cinder Plague by hiding in the cathedral catacombs',
   'Raised by feral dogs in the shadow of the Black Iron Foundry',
   'Sold for a handful of copper coins to a traveling beast-tamer',
@@ -70,8 +75,8 @@ const ORIGINS = [
   'Discovered starving but fiercely guarding a pile of silver coins',
   'Uncovered beneath the foundations of a ruined asylum',
   'Born during the red comet, abandoned to the howling winds',
-  'A runaway from the deep mines, eyes unused to the sun',
   'Raised in the shadow of the executioner\'s block',
+  'A runaway from the deep mines, eyes unused to the sun',
   'Found wandering the salt flats with no memory of their past',
   'Sole survivor of a cult sacrifice in the forgotten catacombs',
   'Taken from a raided nomadic tribe in the far deserts',
@@ -124,6 +129,10 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would meticulously collect and sharpen shattered glass from the streets',
+  'learned to anticipate the exact moment a drunkard would throw a punch',
+  'was known for an unnerving, unblinking stare that made older boys back down',
+  'would spend nights mapping the patrol routes of the city guard for fun',
   'would collect shattered teeth from the fighting pits as grim trophies',
   'learned to recognize the smell of poisoned food before taking a bite',
   'was known for setting traps in the orphanage cellars to catch rats and worse',
@@ -194,6 +203,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'watched their only friend bleed out in the gutter and swore never to be weak again',
+  'fought off three armed thugs with nothing but a rusted iron spike',
+  'stole a discarded combat manual from a dead gladiator and memorized every stance',
   'strangled a corrupt guard with their own rusted chains to escape confinement',
   'won their first real fight by blinding their opponent with a handful of crushed glass',
   'survived a brutal ambush by playing dead among the corpses for three days',

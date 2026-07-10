@@ -126,6 +126,7 @@ function rollTier(rng: IRNGService): RecruitTier {
  * @param legacyCandidates - Optional list of former warriors for lineage generation
  * @returns A new PoolWarrior object
  */
+// Include new origins/traits in generateRecruit() pools. No manual wiring needed due to dynamic nature.
 export function generateRecruit(
   rng: IRNGService,
   usedNames: Set<string>,

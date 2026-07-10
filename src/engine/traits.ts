@@ -102,6 +102,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  orphan_resilience: {
+    id: 'orphan_resilience',
+    name: 'Orphan Resilience',
+    description: '+1 defense when HP is low — forged in the streets.',
+    effect: { defModLowHp: 1 },
+    weight: 0.8,
+    tier: 'Common',
+    sign: 'positive',
+  },
+  street_rat_cunning: {
+    id: 'street_rat_cunning',
+    name: 'Street Rat Cunning',
+    description: '+1 initiative — always ready to run or strike first.',
+    effect: { iniModFresh: 1, decMod: 1 },
+    weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
+  },
   gutter_blood: {
     id: 'gutter_blood',
     name: 'Gutter Blood',

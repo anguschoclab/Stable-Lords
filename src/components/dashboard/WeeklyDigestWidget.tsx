@@ -36,8 +36,9 @@ export function WeeklyDigestWidget({
   boutOffers,
   currentWeek,
 }: WeeklyDigestProps) {
-  const rosterIds = useGameStore(useShallow((s) => s.roster.map((w) => w.id)));
-  const playerWarriorIds = useMemo(() => new Set<WarriorId>(rosterIds), [rosterIds]);
+  // ⚡ Bolt: Prevent array recreation inside useShallow to fix memoization
+  const roster = useGameStore(useShallow((s) => s.roster));
+  const playerWarriorIds = useMemo(() => new Set<WarriorId>(roster.map((w) => w.id)), [roster]);
 
   const summary = useDigestSummary({
     arenaHistory,

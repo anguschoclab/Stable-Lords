@@ -31,6 +31,14 @@ export interface WeatherConfig {
 }
 
 export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
+  'Moonlight Duel': {
+    icon: Moon,
+    colorClass: 'text-arena-pop',
+    bgClass: 'bg-arena-pop/10',
+    borderClass: 'border-arena-pop/20',
+    description: 'A secret midnight challenge. 10% more stamina drain in combat.',
+  },
+
   Zephyr: {
     icon: Wind,
     colorClass: 'text-primary',

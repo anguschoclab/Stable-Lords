@@ -14,6 +14,14 @@ export interface WeatherEffect {
 }
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+  'Moonlight Duel': {
+    staminaMult: 1.1,
+    initiativeMod: +1,
+    riposteMod: 0,
+    damageMult: 1.0,
+    description: 'A secret midnight challenge. 10% more stamina drain in combat.',
+  },
+
   Zephyr: {
     staminaMult: 0.85,
     initiativeMod: 2,
@@ -385,6 +393,8 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  'Moonlight Duel': 'The arena is silent save for the clash of steel under the pale moonlight.',
+
   Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',
   'Wild Magic': 'Crackling energy arcs through the arena. Magic is in the air.',
   Clear: null,

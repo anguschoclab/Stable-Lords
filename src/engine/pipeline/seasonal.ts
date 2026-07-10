@@ -57,7 +57,8 @@ interface OffseasonEventNarrative {
     | 'chaos_weaver_visit'
     | 'traveling_circus'
     | 'bounty_hunter_visit'
-    | 'loyal_stray_dog';
+    | 'loyal_stray_dog'
+    | 'moonlight_duel';
   newsletter: string[];
 }
 
@@ -1265,6 +1266,42 @@ function handleLoyalStrayDog(
   }
 }
 
+
+function handleMoonlightDuel(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const gold = 150 + Math.floor(rng.next() * 150);
+      ctx.treasuryDelta += gold;
+
+      const rawText = rng.pick(e.newsletter) || e.newsletter[0] || '';
+      const text = rawText
+        .replace(/\{\{name\}\}/g, chosen.name)
+        .replace(/\{\{gold\}\}/g, String(gold));
+
+      ctx.newsletterItems.push({
+        week: nextWeek,
+        message: text,
+        type: 'event',
+      });
+      ctx.ledgerEntries.push({
+        id: rng.uuid('ledger') as LedgerEntryId,
+        week: nextWeek,
+        label: 'Moonlight Duel Winnings',
+        amount: gold,
+        category: 'other',
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1310,6 +1347,7 @@ const EVENT_HANDLERS: Record<
   traveling_circus: handleTravelingCircus,
   bounty_hunter_visit: handleBountyHunterVisit,
   loyal_stray_dog: handleLoyalStrayDog,
+  moonlight_duel: handleMoonlightDuel,
 };
 
 /**

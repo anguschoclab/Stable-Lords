@@ -583,6 +583,7 @@ export type ScoutQuality = 'Basic' | 'Detailed' | 'Expert'; /**
  */
 export type WeatherType =
   | 'Clear'
+  | 'Moonlight Duel'
   | 'Crimson Snow'
   | 'Rainy'
   | 'Sweltering'

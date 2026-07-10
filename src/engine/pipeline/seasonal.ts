@@ -1288,7 +1288,7 @@ function handleMoonlightDuel(
 
       ctx.newsletterItems.push({
         week: nextWeek,
-        message: text,
+        text: text,
         type: 'event',
       });
       ctx.ledgerEntries.push({

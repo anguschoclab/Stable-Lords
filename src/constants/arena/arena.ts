@@ -11,9 +11,9 @@ export const ARENA_TAG_WEIGHTS = {
   open: { weight: 1.0, description: 'Open ground favors reach weapons' },
   uneven: { weight: 0.95, description: 'Uneven footing penalizes lungers' },
   ruins: { weight: 1.0, description: 'Ancient structures may shift' },
-  magical: { weight: 1.1, description: 'Arcane resonance aids counters' },
+  magical: { weight: 0.9, description: 'Arcane resonance aids counters' },
   living: { weight: 0.95, description: 'Reactive environment affects movement' },
-  cursed: { weight: 1.05, description: 'Dark energy amplifies lethality' },
+  cursed: { weight: 0.85, description: 'Dark energy amplifies lethality' },
   water: { weight: 0.9, description: 'Wet conditions slow footwork' },
   elevated: { weight: 1.05, description: 'High altitude affects stamina' },
   outdoor: { weight: 1.0, description: 'Exposed to weather effects' },
@@ -29,7 +29,7 @@ export const ARENA_FIT = {
   RANGE_OVERSHOOT_PENALTY: 0.5,
 
   // Style-surface mod multipliers
-  RIPOSTE_MOD_MULTIPLIER: 0.5, // ±0.5 per riposteMod point
+  RIPOSTE_MOD_MULTIPLIER: 0.2, // ±0.2 per riposteMod point
   INITIATIVE_MOD_MULTIPLIER: 0.25, // ±0.25 per initiativeMod point
 
   // Endurance/drain calculations
@@ -69,6 +69,15 @@ export const STYLE_WEATHER_MODIFIERS: Record<
     description: string;
   }
 > = {
+  'Rainy:SLASHING ATTACK': {
+    damageMult: 1 + WEATHER_PENALTIES.RAIN_SLASHING_PENALTY,
+    description: 'Rain softens slashing impacts',
+  },
+  'Sandstorm:BASHING ATTACK': {
+    damageMult: 1 + WEATHER_PENALTIES.SANDSTORM_BASHING_BONUS,
+    description: 'Sandstorm winds carry bashing momentum',
+  },
+
   // Rain penalizes lungers (slippery footing for lunges)
   'Rainy:LUNGING ATTACK': {
     initiativeMod: WEATHER_PENALTIES.RAIN_LUNGE_INITIATIVE,

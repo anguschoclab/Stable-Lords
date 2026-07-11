@@ -386,6 +386,31 @@ export const MISTY_VALLEY: ArenaConfig = {
   startingZone: 'Center',
 };
 
+
+export const THE_MEAT_GRINDER: ArenaConfig = {
+  id: 'the_meat_grinder',
+  name: 'The Meat Grinder',
+  tags: ['cramped', 'uneven', 'outdoor', 'cursed'],
+  tier: 2,
+  size: 'cramped',
+  description: 'A terrifying, tight, uneven cursed pit.',
+  zoneDef: { Edge: -3, Corner: -5 },
+  surfaceMod: { initiativeMod: -2, enduranceMult: 1.2, riposteMod: 1 },
+  startingZone: 'Center',
+};
+
+export const THE_ABYSSAL_PIT: ArenaConfig = {
+  id: 'the_abyssal_pit',
+  name: 'The Abyssal Pit',
+  tags: ['indoor', 'elevated', 'magical', 'cramped'],
+  tier: 3,
+  size: 'cramped',
+  description: 'An elevated, magical indoor platform where space is tight.',
+  zoneDef: { Edge: -4, Corner: -6 },
+  surfaceMod: { initiativeMod: 1, enduranceMult: 1.1, riposteMod: 2 },
+  startingZone: 'Center',
+};
+
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
     id: 'flesh_gardens_the_crimson_bloom',
@@ -672,4 +697,6 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
   GLACIAL_RIFT,
   SKY_PLATFORM,
   MISTY_VALLEY,
+  THE_MEAT_GRINDER,
+  THE_ABYSSAL_PIT,
 ].forEach(registerArena);

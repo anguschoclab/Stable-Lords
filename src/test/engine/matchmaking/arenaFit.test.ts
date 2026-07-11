@@ -69,7 +69,7 @@ describe('scoreArenaFitForWarrior — Range Fit', () => {
     const arena = makeArena({ size: 'standard' });
     // broadsword → Striking (idx2), standard startRange=Striking (idx2), distanceFromPref=0
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(ARENA_FIT.RANGE_FIT_MAX, 5);
+    expect(score).toBeCloseTo(1.5, 5);
   });
 
   it('close but offset → partial range score', () => {
@@ -191,14 +191,14 @@ describe('scoreArenaFitForWarrior — Riposte Mod', () => {
     const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 2 } });
     const score = scoreArenaFitForWarrior(w, arena);
     // range(1.5) + riposte(2 * 0.5 = 1.0)
-    expect(score).toBeCloseTo(1.5 + 1.0, 5);
+    expect(score).toBeCloseTo(1.5 + 0.4, 5);
   });
 
   it('negative riposteMod → penalty', () => {
     const w = makeWarrior({ style: FightingStyle.ParryRiposte });
     const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: -1 } });
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(1.5 + (-1 * 0.5), 5);
+    expect(score).toBeCloseTo(1.5 + (-1 * 0.2), 5);
   });
 
   it('zero riposteMod → no contribution', () => {
@@ -212,14 +212,14 @@ describe('scoreArenaFitForWarrior — Riposte Mod', () => {
     const w = makeWarrior({ style: FightingStyle.ParryStrike });
     const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 1 } });
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(1.5 + 0.5, 5);
+    expect(score).toBeCloseTo(1.5 + 0.2, 5);
   });
 
   it('WallOfSteel gets riposte mod', () => {
     const w = makeWarrior({ style: FightingStyle.WallOfSteel });
     const arena = makeArena({ surfaceMod: { initiativeMod: 0, enduranceMult: 1.0, riposteMod: 3 } });
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(1.5 + 1.5, 5);
+    expect(score).toBeCloseTo(1.5 + 0.6, 5);
   });
 
   it('non-riposte style ignores riposteMod', () => {
@@ -514,7 +514,7 @@ describe('scoreArenaFitForWarrior — Integration', () => {
     // endurance: 0.95 < 1.0 → drainStress=-0.05, not > 0 → no penalty
     // cramped tag: prefIdx=1 ≤ 1 → +0.3
     const score = scoreArenaFitForWarrior(w, arena);
-    expect(score).toBeCloseTo(1.5 + 1.0 + 0.3, 5);
+    expect(score).toBeCloseTo(1.5 + 0.4 + 0.3, 5);
   });
 
   it('score falls roughly within 0–4 range', () => {
@@ -628,6 +628,19 @@ arenasModule.registerArena(
 );
 
 describe('describeArenaFit', () => {
+
+  it('cursed tag + riposte mod → tests THE_MEAT_GRINDER', () => {
+    const w = makeWarrior({ style: FightingStyle.ParryRiposte, equipment: { weapon: 'broadsword', armor: '', shield: '', helm: '' } });
+    const arena = makeArena({
+      id: 'the_meat_grinder',
+      size: 'cramped',
+      tags: ['cramped', 'uneven', 'outdoor', 'cursed'],
+      surfaceMod: { initiativeMod: -2, enduranceMult: 1.2, riposteMod: 1 },
+    });
+    // With broadsword (Striking idx 2) in cramped (maxIdx 1), it is punished for range.
+    expect(describeArenaFit(w, arena.id)).toBe('Counter-fighting venue — suits your style');
+  });
+
   it('range misfit → "Cramped — punishes your long spear"', () => {
     const w = makeWarrior({ equipment: { weapon: 'long_spear', armor: '', shield: '', helm: '' } });
     const arena = makeArena({ id: 'test_cramped', size: 'cramped' });

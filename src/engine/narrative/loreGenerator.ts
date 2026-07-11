@@ -1,6 +1,11 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Left wrapped in bloodied rags on the steps of the Silent Brothers monastery',
+  'Found hiding inside a hollowed-out iron furnace during the Great Purge',
+  'Raised in the hidden fighting rings beneath the Crying Slums',
+  'Abandoned at the iron grates of the Dross Orphanage during a thunderstorm',
+  'Surviving the plague by sleeping among the dead in the open charnel pits',
   'Abandoned at the rusted gates of the Weeping Mother Orphanage',
   'Survived the Cinder Plague by hiding in the cathedral catacombs',
   'Raised by feral dogs in the shadow of the Black Iron Foundry',
@@ -20,16 +25,14 @@ const ORIGINS = [
   'Surviving the Crimson Winter by huddling near the slag heaps of the ironworks',
   'Abandoned at the steps of an asylum during a blood-red eclipse',
   'A product of the soot-stained cloisters, traded for a handful of copper',
-  'Found abandoned by the rusted gates of the Blackwood Orphanage in the dead of winter',
-  'Raised by silent wardens in the soot-stained cloisters of St. Jude',
+    'Raised by silent wardens in the soot-stained cloisters of St. Jude',
   'A forgotten child of the Pyre, left in a burnt-out orphanage cellar',
   'Bred for labor in the iron nurseries of the under-city',
   'Left bound on the steps of the asylum, traded to recruiters for a handful of silver',
   'Found as an infant in the collapsed mines beneath Ironveil',
   'Survived alone in the Ashwood after bandits razed a village',
   'Pulled from the wreckage of a merchant caravan on the Dread Road',
-  'Abandoned at the orphanage gates during the Crimson Winter',
-  'A dock rat from the harbor slums of Port Kethara',
+    'A dock rat from the harbor slums of Port Kethara',
   'Discovered wandering the battlefield after the Siege of Thornwall',
   'Born in a debtors\' prison, raised by the wardens\' charity',
   'The sole survivor of a plague ship that washed ashore near Gulltown',
@@ -53,8 +56,7 @@ const ORIGINS = [
   'Raised by a retired trainer in a remote fishing village',
   'Found adrift on a raft in the middle of the Great Sea',
   'Discovered in the heart of a hedge maze, silent and watchful',
-  'Whispers of madness from the Asylum for Foundling Wretches',
-  'Sold by starving parents to the Salt Syndicate at age four',
+    'Sold by starving parents to the Salt Syndicate at age four',
   'Survived the Bone Orchard plague pits by eating the dead',
   'Born in a fighting pit, the afterbirth washed into the sand',
   'Discovered chained in a debtor\'s basement, fed through a grate',
@@ -71,9 +73,7 @@ const ORIGINS = [
   'Uncovered beneath the foundations of a ruined asylum',
   'Born during the red comet, abandoned to the howling winds',
   'A runaway from the deep mines, eyes unused to the sun',
-  'Raised in the shadow of the executioner\'s block',
-  'Found wandering the salt flats with no memory of their past',
-  'Sole survivor of a cult sacrifice in the forgotten catacombs',
+      'Sole survivor of a cult sacrifice in the forgotten catacombs',
   'Taken from a raided nomadic tribe in the far deserts',
   'A forgotten child of the Silent Order, marked by their shadow-brands',
   'Surviving the collapse of the Blackwater Sluice through sheer, grim stubbornness',
@@ -124,6 +124,9 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'learned to mask their fear by laughing manically when struck',
+  'would systematically break the fingers of thieves who tried to steal their food',
+  'perfected the art of striking from the shadows of the orphanage dormitories',
   'would collect shattered teeth from the fighting pits as grim trophies',
   'learned to recognize the smell of poisoned food before taking a bite',
   'was known for setting traps in the orphanage cellars to catch rats and worse',
@@ -194,6 +197,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until they drowned a corrupt overseer in a vat of boiling lye',
+  'realizing that mercy only rewards the weak with an early grave',
+  'waiting for the day they could turn the arena sands into a river of red',
   'strangled a corrupt guard with their own rusted chains to escape confinement',
   'won their first real fight by blinding their opponent with a handful of crushed glass',
   'survived a brutal ambush by playing dead among the corpses for three days',

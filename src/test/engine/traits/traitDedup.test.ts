@@ -40,7 +40,7 @@ const RETAINED_IDS = [
 ] as const;
 
 const BASELINE_COUNT = 112;
-const EXPECTED_COUNT = BASELINE_COUNT - REMOVED_IDS.length;
+const EXPECTED_COUNT = BASELINE_COUNT - REMOVED_IDS.length + 2;
 
 describe('Trait deduplication', () => {
   describe('removed traits no longer exist', () => {

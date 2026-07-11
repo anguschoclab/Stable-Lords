@@ -5,3 +5,6 @@
 ## 2026-07-06 - Prevent massive re-renders from useWorldState at root level
 **Learning:** Using `useWorldState()` at the root level (like in `RootComponent` or components always mounted) causes the entire application to re-render whenever any state property changes, defeating React's reconciliation.
 **Action:** Always select only the specific state properties needed, especially in high-level components. Avoid `useWorldState()` outside of debug views.
+## 2024-11-20 - Use O(K) reverse lookups instead of O(N) array filtering for arenaHistory
+**Learning:** In heavily populated lists like `arenaHistory` which grow continuously over simulated weeks, scanning the entire array via `.filter(f => f.week === currentWeek)` creates performance bottlenecks and O(N) GC pressure. Since `arenaHistory` is chronologically sorted, reversing from the end bounds the operation to O(K) where K is just that week's matches.
+**Action:** Use `getFightsForWeek(arenaHistory, week)` and `getRecentFights(arenaHistory, minWeek)` from `@/engine/core/historyUtils` instead of `.filter()` across the codebase when fetching recent fights.

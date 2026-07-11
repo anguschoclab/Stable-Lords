@@ -200,7 +200,7 @@ const CHILDHOOD_TRAITS = [
 const DEFINING_MOMENTS = [
   'until they drove a rusted spike through a slaver\'s boot and walked free',
   'knowing that the roar of the crowd was the only lullaby they ever needed',
-  'waiting for the moment the iron portcullis rises on their destiny',
+  'waiting for the moment the iron portcullis would rise on their destiny',
   'strangled a corrupt guard with their own rusted chains to escape confinement',
   'won their first real fight by blinding their opponent with a handful of crushed glass',
   'survived a brutal ambush by playing dead among the corpses for three days',

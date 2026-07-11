@@ -1283,15 +1283,9 @@ function handleMoonlightDuel(
 
       const rawText = rng.pick(e.newsletter) || e.newsletter[0] || '';
       const text = rawText
-        .replace(/\{\{name\}\}/g, chosen.name)
-        .replace(/\{\{gold\}\}/g, String(gold));
-
-      ctx.newsletterItems.push({
-        id: rng.uuid('newsletter'),
-        week: nextWeek,
-        title: 'Moonlight Duel',
-        items: [text],
-        category: 'event',
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        gold,
       });
       ctx.ledgerEntries.push({
         id: rng.uuid('ledger') as LedgerEntryId,

@@ -65,6 +65,7 @@ export const WeatherTypeSchema = z.enum([
   'Thunderstorm',
   'Gravity Anomaly',
   'Ashfall',
+  z.literal('Eldritch Eclipse'),
   'Acid Rain',
   'Mana Surge',
   'Rainbow',

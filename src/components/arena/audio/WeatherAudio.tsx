@@ -16,6 +16,7 @@ const WEATHER_AMBIENCE: Record<WeatherType, string | null> = {
   'Ember Rain': null,
   'Wild Magic': 'ambience-blood-moon',
   Clear: null,
+  'Eldritch Eclipse': 'ambience-blood-moon',
   'Crimson Snow': 'ambience-wind-gale',
   Overcast: null,
   Rainy: 'ambience-rain',

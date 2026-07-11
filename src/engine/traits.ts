@@ -59,6 +59,7 @@ export interface TraitEffect {
   defModEarly?: number; // OPENING phase
   defModLate?: number; // LATE phase
   attModLate?: number; // LATE phase
+  iniModLate?: number; // LATE phase
   parModLate?: number; // LATE phase
   iniModFresh?: number; // own endurance > 0.7
   killWindowBonus?: number; // adds directly to kill threshold

@@ -57,7 +57,8 @@ interface OffseasonEventNarrative {
     | 'chaos_weaver_visit'
     | 'traveling_circus'
     | 'bounty_hunter_visit'
-    | 'loyal_stray_dog';
+    | 'loyal_stray_dog'
+    | 'midnight_market';
   newsletter: string[];
 }
 
@@ -1265,6 +1266,45 @@ function handleLoyalStrayDog(
   }
 }
 
+
+function handleMidnightMarket(
+  state: GameState,
+  nextWeek: number,
+  e: OffseasonEventNarrative,
+  rng: IRNGService,
+  ctx: OffseasonEventContext
+) {
+  const activeWarriors = getActiveWarriors(state);
+  if (activeWarriors.length > 0) {
+    const chosen = rng.pick(activeWarriors);
+    if (chosen) {
+      const cost = 40;
+      ctx.treasuryDelta -= cost;
+      addLedger(ctx, rng, nextWeek, 'Midnight Market Elixirs', -cost, 'other');
+
+      const xpGained = 20;
+      ctx.rosterUpdates.set(chosen.id, {
+        xp: (chosen.xp || 0) + xpGained,
+      });
+
+      ctx.insightTokens.push({
+        id: rng.uuid('insight') as InsightId,
+        type: 'Tactic',
+        warriorId: chosen.id,
+        warriorName: chosen.name,
+        detail: 'Whispers from the Midnight Market revealed a new tactic.',
+        origin: 'Midnight Market',
+        discoveredWeek: nextWeek,
+      });
+
+      pushNarrative(ctx, rng, nextWeek, e, {
+        name: chosen.name,
+        gold: cost,
+      });
+    }
+  }
+}
+
 const EVENT_HANDLERS: Record<
   string,
   (
@@ -1310,6 +1350,7 @@ const EVENT_HANDLERS: Record<
   traveling_circus: handleTravelingCircus,
   bounty_hunter_visit: handleBountyHunterVisit,
   loyal_stray_dog: handleLoyalStrayDog,
+  midnight_market: handleMidnightMarket,
 };
 
 /**

@@ -14,6 +14,14 @@ export interface WeatherEffect {
 }
 
 const WEATHER_EFFECTS: Record<WeatherType, WeatherEffect> = {
+  'Eldritch Eclipse': {
+    staminaMult: 0.9,
+    initiativeMod: 4,
+    riposteMod: 4,
+    damageMult: 1.4,
+    description: 'An otherworldly eclipse that drives fighters to the brink of madness.',
+  },
+
   Zephyr: {
     staminaMult: 0.85,
     initiativeMod: 2,
@@ -385,6 +393,8 @@ export function getWeatherEffect(weather: WeatherType): WeatherEffect {
  * null entries (Clear/Overcast) suppress the line entirely.
  */
 const WEATHER_OPENING_LINES: Record<WeatherType, string | null> = {
+  'Eldritch Eclipse': 'The sky turns a sickening purple as an Eldritch Eclipse blocks the sun. Madness descends.',
+
   Zephyr: 'A soothing zephyr sweeps across the sands, bringing a momentary peace.',
   'Wild Magic': 'Crackling energy arcs through the arena. Magic is in the air.',
   Clear: null,

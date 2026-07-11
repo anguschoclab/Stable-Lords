@@ -1,0 +1,86 @@
+[
+  {
+    "path": "strikes.bashing.glancing",
+    "text": "The bash slides off {{defender}}'s armor with a hollow clang."
+  },
+  {
+    "path": "strikes.bashing.solid",
+    "text": "{{attacker}}'s heavy blow connects with a sickening thud against {{defender}}."
+  },
+  {
+    "path": "strikes.fist.glancing",
+    "text": "{{attacker}} throws a wild punch that barely clips {{defender}}."
+  },
+  {
+    "path": "pbp.defenses.parry.success",
+    "text": "{{defender}} meets the {{weapon}} with a resounding clash of steel!"
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "text": "The warrior from {{origin}}"
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "text": "The proud {{origin}}"
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "text": "the foreigner"
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "text": "the wanderer"
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "text": "the local champion"
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "text": "the exile"
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "text": "the outlander"
+  },
+  {
+    "path": "pbp.epithets.origin",
+    "text": "the stranger"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "Our {{race}}"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "The proud {{race}}"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "the fierce one"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "the relentless fighter"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "the primal warrior"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "the proud kin"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "the ancient blood"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "the savage"
+  },
+  {
+    "path": "pbp.epithets.race",
+    "text": "the pureblood"
+  }
+]

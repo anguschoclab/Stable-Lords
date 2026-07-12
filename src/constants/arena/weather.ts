@@ -31,6 +31,15 @@ export interface WeatherConfig {
 }
 
 export const WEATHER_CONFIG: Record<WeatherType, WeatherConfig> = {
+  'Eldritch Eclipse': {
+    icon: Moon,
+    colorClass: 'text-arena-fame',
+    bgClass: 'bg-arena-fame/10',
+    borderClass: 'border-arena-fame/20',
+    extraClass: 'glow-neon-purple',
+    description: 'An otherworldly eclipse that drives fighters to the brink of madness.',
+  },
+
   Zephyr: {
     icon: Wind,
     colorClass: 'text-primary',

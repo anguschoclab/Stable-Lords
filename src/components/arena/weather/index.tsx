@@ -44,6 +44,7 @@ import {
 export const WEATHER_VISUALS: Record<WeatherType, (() => JSX.Element) | null> = {
   'Wild Magic': () => <EclipseEffect />,
   Clear: null,
+  'Eldritch Eclipse': () => <EclipseEffect />,
   'Crimson Snow': () => <BlizzardEffect />,
   Overcast: null,
   Rainy: () => <RainEffect />,

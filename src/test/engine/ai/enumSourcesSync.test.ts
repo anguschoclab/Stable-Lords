@@ -24,6 +24,7 @@ describe('enumSources sync with WeatherType', () => {
     'Thunderstorm',
     'Gravity Anomaly',
     'Ashfall',
+    'Eldritch Eclipse',
     'Acid Rain',
     'Mana Surge',
     'Rainbow',

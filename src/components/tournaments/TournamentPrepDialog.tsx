@@ -1,4 +1,4 @@
-import {  Dialog, DialogContent , DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Shield, Trophy, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WarriorNameTag, StatBadge } from '@/components/ui/WarriorBadges';
@@ -42,10 +42,8 @@ export function TournamentPrepDialog({
 }: TournamentPrepDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent
-
-        className="max-w-2xl bg-neutral-950/90 backdrop-blur-xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] p-0 overflow-hidden"
-      >
+      <DialogContent className="max-w-2xl bg-neutral-950/90 backdrop-blur-xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] p-0 overflow-hidden">
+        <DialogTitle className="sr-only">Tournament Preparation</DialogTitle>
         <DialogDescription className="sr-only">Prepare for the tournament</DialogDescription>
         <div className="bg-secondary/20 p-6 border-b border-white/5 flex items-center gap-3">
           <Shield className="h-5 w-5 text-primary" />

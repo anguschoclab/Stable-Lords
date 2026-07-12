@@ -1,4 +1,4 @@
-import {  Dialog, DialogContent , DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatBadge } from '@/components/ui/WarriorBadges';
@@ -26,10 +26,8 @@ export function VeteranReassignmentDialog({
 }: VeteranReassignmentDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-
-        className="bg-neutral-950/95 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-none"
-      >
+      <DialogContent className="bg-neutral-950/95 backdrop-blur-2xl border-white/10 sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-none">
+        <DialogTitle className="sr-only">Veteran Reassignment</DialogTitle>
         <DialogDescription className="sr-only">Assign veterans as staff</DialogDescription>
         <div className="p-10 border-b border-white/5 bg-primary/5">
           <h3 className="font-display text-3xl font-black uppercase tracking-tight flex items-center gap-6">

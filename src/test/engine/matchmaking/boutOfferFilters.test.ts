@@ -68,7 +68,7 @@ describe('filterAndSortOffers', () => {
       status: 'Proposed',
       boutWeek: 3,
     });
-    const result = filterAndSortOffers({ o1: offer }, [w1], 1, {}, new Set(), null);
+    const result = filterAndSortOffers({ ['o1' as BoutOfferId]: offer }, [w1], 1, {}, new Set(), null);
     expect(result.thisWeekOffers).toHaveLength(1);
     expect(result.thisWeekOffers[0]!.id).toBe('o1');
   });
@@ -81,7 +81,7 @@ describe('filterAndSortOffers', () => {
       status: 'Proposed',
       boutWeek: 3,
     });
-    const result = filterAndSortOffers({ o1: offer }, [w1], 1, {}, new Set(), null);
+    const result = filterAndSortOffers({ ['o1' as BoutOfferId]: offer }, [w1], 1, {}, new Set(), null);
     expect(result.thisWeekOffers).toHaveLength(0);
     expect(result.highestPurse).toBe(0);
   });

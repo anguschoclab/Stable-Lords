@@ -1,3 +1,4 @@
+import type { BoutOfferId } from '@/types/shared.types';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { createFreshState } from '@/engine/factories/gameStateFactory';
 import { populateTestState } from '@/test/_setup/testHelpers';
@@ -642,7 +643,7 @@ describe('PromoterPass', () => {
       const result = runPromoterPass(state);
 
       // Expired offer should be removed
-      expect(result.boutOffers!['expired_test']).toBeUndefined();
+      expect(result.boutOffers!['expired_test' as BoutOfferId]).toBeUndefined();
     });
 
     it('should preserve signed offers for current week', () => {
@@ -671,7 +672,7 @@ describe('PromoterPass', () => {
       const result = runPromoterPass(state);
 
       // Signed offer should be preserved
-      const preservedOffer = result.boutOffers?.['signed_test'];
+      const preservedOffer = result.boutOffers?.['signed_test' as BoutOfferId];
       expect(preservedOffer).toBeDefined();
       if (preservedOffer) {
         expect(preservedOffer.status).toBe('Signed');

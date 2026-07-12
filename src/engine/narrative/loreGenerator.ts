@@ -225,7 +225,6 @@ const CHILDHOOD_TRAITS = [
 const DEFINING_MOMENTS = [
   'until they garroted a corrupt slaver with a stolen rosary',
   'realizing that mercy in the fighting pits is merely a slow suicide',
-  'waiting for the day they could turn the arena sands into a river of red',
   'until they drowned a corrupt overseer in a vat of boiling lye',
   'realizing that mercy only rewards the weak with an early grave',
   'waiting for the day they could turn the arena sands into a river of red',

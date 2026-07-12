@@ -290,6 +290,7 @@ describe('useRivalriesList', () => {
 });
 
 function useRivalWarriorStableResult(state: RivalryStateSlice) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { result } = renderHook(() => useRivalWarriorStable(state));
   return result.current;
 }

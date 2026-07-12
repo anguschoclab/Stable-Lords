@@ -76,11 +76,9 @@ vi.mock('@/state/useGameStore', () => ({
       return useTestStore ? useTestStore((s: any) => selector(s)) : undefined;
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useTestStore
-      ? typeof selector === 'function'
-        ? useTestStore(selector)
-        : useTestStore()
-      : undefined;
+    if (!useTestStore) return undefined;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return typeof selector === 'function' ? useTestStore(selector) : useTestStore();
   },
   useWorldState: () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks

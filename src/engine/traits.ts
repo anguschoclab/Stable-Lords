@@ -115,8 +115,8 @@ export const TRAITS: Record<string, TraitDef> = {
   street_scrapper: {
     id: 'street_scrapper',
     name: 'Street Scrapper',
-    description: '+1 initiative in LATE phase — they excel when things get dirty.',
-    effect: { iniModLate: 1 },
+    description: '+1 defense in LATE phase — they excel when things get dirty.',
+    effect: { defModLate: 1 },
     weight: 0.7,
     tier: 'Notable',
     sign: 'positive',

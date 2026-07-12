@@ -57,6 +57,7 @@ export interface TraitEffect {
   defModLowHp?: number; // defender HP < 0.5
   parModHighHp?: number; // own HP > 0.75
   defModEarly?: number; // OPENING phase
+  attModEarly?: number; // OPENING phase
   defModLate?: number; // LATE phase
   attModLate?: number; // LATE phase
   parModLate?: number; // LATE phase
@@ -117,6 +118,15 @@ export const TRAITS: Record<string, TraitDef> = {
     description: '+1 defense in LATE phase — they excel when things get dirty.',
     effect: { defModLate: 1 },
     weight: 0.7,
+    tier: 'Notable',
+    sign: 'positive',
+  },
+  gutter_cunning: {
+    id: 'gutter_cunning',
+    name: 'Gutter Cunning',
+    description: '+1 attack during early phase — strikes fast before the guards arrive.',
+    effect: { attModEarly: 1 },
+    weight: 0.5,
     tier: 'Notable',
     sign: 'positive',
   },
@@ -713,6 +723,7 @@ export function getDynamicTraitMods(
     if (e.defModLowHp != null && ctx.hpRatio < 0.5) acc.defMod += e.defModLowHp;
     if (e.parModHighHp != null && ctx.hpRatio > 0.75) acc.parMod += e.parModHighHp;
     if (e.defModEarly != null && ctx.phase === 'OPENING') acc.defMod += e.defModEarly;
+    if (e.attModEarly != null && ctx.phase === 'OPENING') acc.attMod += e.attModEarly;
     if (e.attModLate != null && ctx.phase === 'LATE') acc.attMod += e.attModLate;
     if (e.defModLate != null && ctx.phase === 'LATE') acc.defMod += e.defModLate;
     if (e.parModLate != null && ctx.phase === 'LATE') acc.parMod += e.parModLate;

@@ -440,6 +440,13 @@ export const THE_ABYSSAL_PIT: ArenaConfig = {
 
 export const ARENA_LORE: ArenaLoreEntry[] = [
   {
+    id: 'mudpit_arena_drowning',
+    arenaId: 'mudpit_arena',
+    type: 'famous_death',
+    title: 'The Drowning of Valerius',
+    narrative: 'In 981, Champion Valerius was not killed by a blade, but rather drowned in a particularly deep pocket of mud while pinned by a lesser gladiator.'
+  },
+  {
     id: 'flesh_gardens_the_crimson_bloom',
     arenaId: 'flesh_gardens',
     type: 'historical_battle',

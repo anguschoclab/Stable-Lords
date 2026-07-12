@@ -1,10 +1,27 @@
 [
   {
-    "kept": "RIGHT BICEPS",
-    "removed": "RIGHT BICEP"
+    "content": "{{attacker}} lands a heavy hook on {{defender}}.",
+    "archivedAt": "2026-07-10T22:40:49.561Z",
+    "reason": "Consolidated duplicate via fuzzy string matching"
   },
   {
-    "kept": "LEFT BICEPS",
-    "removed": "LEFT BICEP"
+    "content": "{{defender}} parries with a spin and counters with breathtaking flair!",
+    "archivedAt": "2026-07-10T22:40:49.561Z",
+    "reason": "Consolidated duplicate via fuzzy string matching"
+  },
+  {
+    "content": "The {{origin}}",
+    "archivedAt": "2026-07-10T22:40:49.561Z",
+    "reason": "Consolidated duplicate via fuzzy string matching"
+  },
+  {
+    "content": "Our {{race}}",
+    "archivedAt": "2026-07-10T22:40:49.561Z",
+    "reason": "Consolidated duplicate via fuzzy string matching"
+  },
+  {
+    "content": "The {{race}}",
+    "archivedAt": "2026-07-10T22:40:49.561Z",
+    "reason": "Consolidated duplicate via fuzzy string matching"
   }
 ]

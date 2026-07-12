@@ -1,7 +1,7 @@
 {
   "ux_metadata": {
     "version": "3.0.0",
-    "description": "Unified Bard 1.0 \u2014 Universal Narrative Archive",
+    "description": "Unified Bard 1.0 — Universal Narrative Archive",
     "mood_tone": {
       "Calm": {
         "adjectives": [
@@ -418,10 +418,7 @@
         "{{attacker}}'s blade grazes {{defender}}'s armor, leaving a shallow scratch.",
         "A sweeping slash from {{attacker}} meets resistance, glancing off {{defender}}.",
         "{{attacker}}'s {{weapon}} barely scores {{defender}}'s armor, leaving a superficial scratch.",
-        "A hasty slash from {{attacker}} catches nothing but the wind and a loose thread on {{defender}}.",
-        "{{attacker}}'s blade merely grazes {{defender}}'s armor.",
-        "A shallow cut across {{defender}}'s surface, drawn by {{attacker}}.",
-        "{{attacker}} scores a negligible nick on {{defender}}."
+        "A hasty slash from {{attacker}} catches nothing but the wind and a loose thread on {{defender}}."
       ],
       "solid": [
         "{{attacker}} unleashes a blinding flurry of cuts with {{possessive}} {{weapon}}, biting into the {{bodyPart}}!",
@@ -450,16 +447,13 @@
         "A flash of steel as {{attacker}} aims a wide, shearing cut.",
         "{{attacker}} drops low, sweeping the blade in a vicious rising slash.",
         "With a vicious backhand, {{attacker}} drives {{possessive}} {{weapon}} deeply into {{defender}}'s {{bodyPart}}.",
-        "Blood sprays as {{attacker}}'s {{weapon}} finds purchase across {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} carves a ragged trench across {{defender}}'s exposed flesh.",
-        "A heavy cleave by {{attacker}} bites deeply into {{defender}}.",
-        "{{attacker}}'s swing connects with a wet tearing sound, wounding {{defender}}."
+        "Blood sprays as {{attacker}}'s {{weapon}} finds purchase across {{defender}}'s {{bodyPart}}."
       ],
       "mastery": [
         "{{attacker}}'s {{weapon}} moves like an extension of {{attacker}}'s own soul, carving a perfect line across the {{bodyPart}}.",
         "In a blur of practiced rhythm, {{attacker}}'s {{weapon}} flows through {{defender}}'s guard to find the {{bodyPart}}.",
         "{{attacker}} turns the blade with frightening precision, finding a gap in the armor.",
-        "A maestro's stroke\u2014{{attacker}} leaves a perfect, bleeding line across {{defender}}.",
+        "A maestro's stroke—{{attacker}} leaves a perfect, bleeding line across {{defender}}.",
         "A textbook slashing technique from {{attacker}}, carving a clean, devastating arc.",
         "The crowd marvels as {{attacker}}'s blade sings through flesh with terrible grace.",
         "A masterful cut perfectly exploits the smallest opening in {{defender}}'s stance.",
@@ -551,7 +545,11 @@
         "{{attacker}} opens a ghastly, arterial wound in {{defender}}!",
         "Flesh parts like paper as {{attacker}}'s blade eviscerates {{defender}}!",
         "A devastating horizontal arc from {{attacker}} completely bypasses {{defender}}'s guard, cleaving into their {{bodyPart}}!",
-        "{{attacker}} channels pure fury, {{possessive}} {{weapon}} tearing a gruesome gash through {{defender}}'s {{bodyPart}}."
+        "{{attacker}} channels pure fury, {{possessive}} {{weapon}} tearing a gruesome gash through {{defender}}'s {{bodyPart}}.",
+        "{{attacker}} unleashes a devastating arc, severely rending {{defender}}!",
+        "Blood sprays as {{attacker}}'s masterful slash opens a brutal wound on {{defender}}!",
+        "{{defender}} staggers, outmatched by the savage, sweeping cut from {{attacker}}!",
+        "A horrific, gaping wound is left behind by {{attacker}}'s flawless blade work on {{defender}}!"
       ]
     },
     "bashing": {
@@ -561,6 +559,7 @@
         "{{attacker}}'s {{weapon}} bounces off the {{bodyPart}} with a hollow clang.",
         "{{attacker}}'s heavy swing loses momentum, merely bruising {{defender}}.",
         "{{weapon}} thuds dully against {{defender}}'s guard, lacking power.",
+        "The bash slides off {{defender}}'s armor with a hollow clang.",
         "{{weapon}} delivers a glancing knock to {{defender}}'s side.",
         "The blunt force slides off {{defender}}'s evasive pivot.",
         "{{defender}} absorbs the weak bash with barely a flinch.",
@@ -574,9 +573,8 @@
         "A clunky swing from {{attacker}} rattles off {{defender}}'s guard.",
         "{{attacker}} swings {{possessive}} {{weapon}} heavily, but it merely grazes {{defender}}'s shoulder.",
         "The crushing force of {{attacker}}'s {{weapon}} is largely deflected by {{defender}}'s hurried block.",
-        "{{attacker}}'s heavy strike slides harmlessly off {{defender}}.",
-        "A clumsy swing from {{attacker}} merely rattles {{defender}}'s gear.",
-        "{{defender}} absorbs {{attacker}}'s blunt force without much trouble."
+        "{{attacker}}'s blunt force merely grazes {{defender}}'s guard.",
+        "The concussive strike from {{attacker}} connects, but lacks serious momentum against {{defender}}."
       ],
       "solid": [
         "{{attacker}} roars, bringing {{possessive}} {{weapon}} down like an executioner's maul on the {{bodyPart}}!",
@@ -596,6 +594,7 @@
         "{{attacker}} lands a heavy, bone-jarring blow.",
         "A dull, sickening thud echoes as bone meets unyielding metal.",
         "A concussive strike that visibly rattles the teeth in their skull.",
+        "{{attacker}}'s heavy blow connects with a sickening thud against {{defender}}.",
         "Bones rattle as {{attacker}} smashes into {{defender}}.",
         "{{attacker}} brings {{weapon}} down like a judge's gavel.",
         "A guttural roar escapes {{attacker}} as they swing their heavy {{weapon}}.",
@@ -605,9 +604,7 @@
         "The air hums as {{attacker}} throws a massive, sweeping bludgeon.",
         "A thunderous blow from {{attacker}}'s {{weapon}} connects solidly with {{defender}}'s {{bodyPart}}.",
         "{{attacker}} steps into the swing, bringing {{possessive}} {{weapon}} down hard on {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} drives their weight into a bruising blow against {{defender}}.",
-        "A sickening crunch echoes as {{attacker}} batters {{defender}}.",
-        "{{defender}} reels as {{attacker}} lands a punishing bludgeon."
+        "{{attacker}} brings down a crushing blow meant to shatter {{defender}}'s defense."
       ],
       "mastery": [
         "{{attacker}} catches {{defender}} in a perfect orbit of weight, hammering the {{bodyPart}} with crushing precision.",
@@ -727,10 +724,7 @@
         "{{attacker}}'s thrust catches only the fabric of {{defender}}'s attire.",
         "A quick jab from {{attacker}} deflects harmlessly off {{defender}}.",
         "A quick thrust by {{attacker}} is easily sidestepped by {{defender}}, resulting in a minor scrape.",
-        "{{attacker}}'s {{weapon}} darts forward, but only catches the edge of {{defender}}'s defenses.",
-        "{{attacker}}'s thrust catches a glancing blow on {{defender}}.",
-        "A quick jab by {{attacker}} barely scratches {{defender}}.",
-        "{{defender}} shifts, turning {{attacker}}'s stab into a mere scrape."
+        "{{attacker}}'s {{weapon}} darts forward, but only catches the edge of {{defender}}'s defenses."
       ],
       "solid": [
         "With practiced precision, {{attacker}} slips {{possessive}} {{weapon}} past {{defender}}'s defenses, striking the {{bodyPart}}!",
@@ -741,7 +735,7 @@
         "With grim determination, {{attacker}} drives {{possessive}} {{weapon}} into {{defender}}'s {{bodyPart}}.",
         "{{attacker}} catches {{defender}} flat-footed and sinks {{possessive}} {{weapon}} into the {{bodyPart}}.",
         "{{attacker}} finds their mark, driving the tip of {{possessive}} {{weapon}} into the {{bodyPart}}.",
-        "{{attacker}} drives {{possessive}} {{weapon}} home \u2014 {{defender}} is struck on the {{bodyPart}}!",
+        "{{attacker}} drives {{possessive}} {{weapon}} home — {{defender}} is struck on the {{bodyPart}}!",
         "A clean thrust from {{attacker}} sinks into {{defender}}'s {{bodyPart}} with punishing accuracy!",
         "{{attacker}}'s {{weapon}} punches through {{defender}}'s guard and bites into the {{bodyPart}}!",
         "A deadly thrust! {{attacker}}'s {{weapon}} punches cleanly into {{defender}}'s {{bodyPart}}!",
@@ -761,9 +755,10 @@
         "With pinpoint accuracy, {{attacker}} darts forward to puncture.",
         "{{attacker}} lunges forward, sinking {{possessive}} {{weapon}} cleanly into {{defender}}'s {{bodyPart}}.",
         "A precise, clinical thrust from {{attacker}} punctures {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} sinks their point deeply into {{defender}}'s guard.",
-        "A swift, cruel puncture from {{attacker}} leaves {{defender}} gasping.",
-        "{{attacker}}'s thrust finds its mark, driving deep into {{defender}}."
+        "{{attacker}} thrusts with precision, finding a gap in {{defender}}'s defense.",
+        "A clean, penetrating strike from {{attacker}} draws first blood from {{defender}}.",
+        "{{defender}} recoils as {{attacker}} drives a sharp point home.",
+        "{{attacker}}'s lunge connects squarely, piercing {{defender}}'s resolve."
       ],
       "mastery": [
         "{{attacker}}'s {{weapon}} finds the microscopic gap in {{defender}}'s defense, sliding effortlessly into the {{bodyPart}}.",
@@ -883,17 +878,15 @@
         "The fist meets armor and slides off, doing no harm.",
         "A misjudged swing only slaps against {{defender}}.",
         "The punch barely grazes {{defender}}'s cheek.",
+        "{{attacker}} throws a wild punch that barely clips {{defender}}.",
         "A quick jab from {{attacker}} meets {{defender}}'s block.",
         "{{attacker}} throws a wild haymaker that merely brushes {{defender}}'s jaw.",
-        "A quick jab from {{attacker}} glances off {{defender}}'s raised guard.",
-        "{{attacker}} throws a wild haymaker that barely clips {{defender}}.",
-        "A glancing knuckle scrape from {{attacker}} against {{defender}}.",
-        "{{defender}} easily shrugs off a weak blow from {{attacker}}."
+        "A quick jab from {{attacker}} glances off {{defender}}'s raised guard."
       ],
       "solid": [
         "{{attacker}} steps inside the guard and unleashes a horrific combination on the {{bodyPart}}!",
         "{{attacker}} snaps a vicious combination into {{defender}}'s {{bodyPart}} with precision!",
-        "{{attacker}}'s fist connects with {{defender}}'s {{bodyPart}} \u2014 a punishing blow!",
+        "{{attacker}}'s fist connects with {{defender}}'s {{bodyPart}} — a punishing blow!",
         "A bone-crunching impact as {{attacker}} hammers {{defender}}'s {{bodyPart}}!",
         "{{attacker}} steps into the punch, burying their knuckles into {{defender}}.",
         "{{attacker}} drives a devastating strike into {{defender}}'s {{bodyPart}}!",
@@ -902,12 +895,11 @@
         "A stiff jab from {{attacker}} snaps {{defender}}'s head back.",
         "A clean straight punch finds its mark on {{defender}}.",
         "{{attacker}} connects with a firm, bruising hook.",
-        "{{attacker}} lands a heavy hook on {{defender}}.",
+        "{{attacker}} lands a solid, bruising hook on {{defender}}.",
         "The solid punch lands with a satisfying thwack.",
         "The blow leaves a red mark and a stinging ache.",
         "A bare-knuckle hook that snaps their head back with bone-jarring force.",
         "A piston-like straight punch that caves in the solar plexus.",
-        "{{attacker}} lands a solid, bruising hook on {{defender}}.",
         "A heavy cross from {{attacker}} cracks against {{defender}}.",
         "{{attacker}} throws a brutal, looping overhand right.",
         "A piston-like straight punch shoots out from {{attacker}}.",
@@ -917,9 +909,8 @@
         "With savage force, {{attacker}} delivers a crushing backfist.",
         "{{attacker}} steps inside {{defender}}'s reach and delivers a punishing cross to the {{bodyPart}}.",
         "A heavy, calculated punch from {{attacker}} slams into {{defender}}'s {{bodyPart}}.",
-        "{{attacker}} steps into a brutal hook, smashing {{defender}}.",
-        "A heavy cross from {{attacker}} lands square on {{defender}}.",
-        "{{attacker}} batters {{defender}} with a rapid flurry of crushing blows."
+        "{{attacker}} steps in and strikes {{defender}}'s guard with a brutal punch.",
+        "{{attacker}} delivers a solid blow that stops {{defender}} in their tracks."
       ],
       "mastery": [
         "{{attacker}}'s limbs are a blur of technical perfection, striking the {{bodyPart}} with rhythmic violence.",
@@ -932,7 +923,7 @@
         "With boxer-like perfection, the strike lands flush on the absolute weak point.",
         "The blow is delivered with cold, mechanical perfection and devastating timing.",
         "{{attacker}} slips inside the guard to deliver a textbook, staggering cross.",
-        "A master martial artist's strike\u2014{{attacker}} hits the exact pressure point.",
+        "A master martial artist's strike—{{attacker}} hits the exact pressure point.",
         "The punch is a masterpiece of kinetic linking, transferring maximum force.",
         "A clinic in unarmed combat; the punch exploits a millimeter of an opening.",
         "A textbook, flawless punch perfectly dismantles {{defender}}'s guard.",
@@ -1010,7 +1001,9 @@
         "{{attacker}} unleashes a devastating haymaker, nearly decapitating {{defender}}!",
         "With brutal momentum, {{attacker}} lands a skull-rattling strike on {{defender}}!",
         "{{attacker}} unleashes a brutal, unyielding combo, culminating in an uppercut that devastates {{defender}}'s {{bodyPart}}!",
-        "Putting their entire weight behind the blow, {{attacker}} shatters {{defender}}'s {{bodyPart}} with a monstrous hook."
+        "Putting their entire weight behind the blow, {{attacker}} shatters {{defender}}'s {{bodyPart}} with a monstrous hook.",
+        "A devastating hook from {{attacker}} snaps {{defender}}'s head back with sickening force.",
+        "{{defender}} crumbles, staggered by {{attacker}}'s unyielding flurry of fists."
       ]
     }
   },
@@ -1282,10 +1275,7 @@
         "RIGHT KNEE",
         "RIGHT SHIN",
         "RIGHT CALF",
-        "RIGHT HIP",
-        "right knee",
-        "right thigh",
-        "right calf"
+        "RIGHT HIP"
       ],
       "left leg": [
         "LEFT HAMSTRING",
@@ -1295,10 +1285,7 @@
         "LEFT KNEE",
         "LEFT SHIN",
         "LEFT CALF",
-        "LEFT HIP",
-        "left knee",
-        "left thigh",
-        "left calf"
+        "LEFT HIP"
       ]
     },
     "damage_severity": {
@@ -1357,12 +1344,12 @@
         "With ruthless efficiency, {{attacker}} extinguishes {{defender}}'s light in a single stroke.",
         "The crowd falls dead silent as {{attacker}}'s strike abruptly ends {{defender}}'s life.",
         "{{defender}}'s eyes widen in shock as {{attacker}}'s {{weapon}} parts flesh and soul.",
-        "There is no recovery from that\u2014{{attacker}} has sent {{defender}} to the ancestors.",
+        "There is no recovery from that—{{attacker}} has sent {{defender}} to the ancestors.",
         "{{attacker}} stands victorious, {{defender}} dead before they even hit the ground.",
         "{{attacker}} executes a flawless, mortal strike, leaving no hope for {{defender}}.",
         "Blood sprays across the sands as {{attacker}} delivers the final, fatal judgment.",
         "A brutal, uncompromising blow by {{attacker}} shatters {{defender}} completely.",
-        "{{attacker}} executes a merciless coup de gr\u00e2ce, ending {{defender}}'s misery.",
+        "{{attacker}} executes a merciless coup de grâce, ending {{defender}}'s misery.",
         "{{attacker}} roars in triumph over the broken, lifeless form of {{defender}}.",
         "A catastrophic hit that instantly fells {{defender}} like a toppled statue.",
         "A devastating blow that shatters bone and splatters blood across the sand.",
@@ -1586,8 +1573,10 @@
           "Flailing wildly, {{defender}} somehow evades the attack.",
           "{{defender}} rolls clumsily out of the way just in time.",
           "A split-second panic allows {{defender}} to dodge the incoming blow.",
-          "{{defender}} barely twists away, eyes wide with raw panic as the blow grazes past.",
-          "Stumbling backward, {{defender}} haphazardly avoids the strike by pure luck."
+          "{{defender}} throws themselves wildly to the dirt to avoid {{attacker}}'s strike.",
+          "Panic flashes across {{defender}}'s face as they barely contort away from {{attacker}}.",
+          "Stumbling backward, {{defender}} narrowly escapes {{attacker}}'s reach in a chaotic scramble.",
+          "{{defender}} flails out of the path of {{attacker}}'s blow, sacrificing all grace."
         ],
         "confident": [
           "Without breaking a sweat, {{defender}} shifts their weight and lets the blow pass harmlessly.",
@@ -1611,8 +1600,10 @@
           "With a cool shift of their shoulders, {{defender}} lets the blow slip past.",
           "{{defender}} leans back lazily, letting the attack pass through empty space.",
           "With a smirk, {{defender}} smoothly weaves out of danger.",
-          "{{defender}} sidesteps the attack smoothly, barely sparing {{attacker}} a glance.",
-          "With a dismissive chuckle, {{defender}} easily weaves out of the weapon's path."
+          "{{defender}} smoothly sways back, watching {{attacker}}'s strike miss by an inch.",
+          "With an arrogant smirk, {{defender}} sidesteps {{attacker}} completely.",
+          "{{attacker}} attacks, but {{defender}} is already not there, perfectly anticipating the move.",
+          "{{defender}} casually pivots, letting {{attacker}}'s momentum carry them past."
         ],
         "theatrical": [
           "{{defender}} executes a flawless backflip, landing perfectly as the crowd roars at the near-miss.",
@@ -1636,8 +1627,10 @@
           "With a flourishing bow, {{defender}} ducks under the deadly attack.",
           "{{defender}} springs into a spectacular handspring, landing with a dramatic flourish.",
           "A dramatic twist of the hips carries {{defender}} out of harm's way.",
-          "{{defender}} evades the strike with an exaggerated bow, playing entirely to the roaring crowd.",
-          "Spinning dramatically on their heel, {{defender}} avoids the hit with acrobatic flair."
+          "{{defender}} executes a dramatic cartwheel to avoid {{attacker}}'s attack.",
+          "With a dramatic flourish, {{defender}} spins elegantly out of {{attacker}}'s path.",
+          "{{defender}} bows mockingly as {{attacker}}'s strike sails harmlessly overhead.",
+          "A spectacular somersault carries {{defender}} away from {{attacker}}'s impending blow."
         ],
         "grim": [
           "{{defender}} moves only as much as necessary, their eyes locked intensely on {{attacker}}.",
@@ -1661,8 +1654,10 @@
           "A calculated half-step is all the emotionless {{defender}} gives in evasion.",
           "{{defender}} evades, their face an unreadable mask of absolute focus.",
           "Coldly, {{defender}} shifts their weight, letting the strike whistle past.",
-          "{{defender}} shifts just an inch, eyes cold as the deadly blow whistles past.",
-          "Without breaking eye contact, {{defender}} mechanically steps out of harm's way."
+          "{{defender}} silently shifts their weight, a ghost escaping {{attacker}}'s wrath.",
+          "Eyes dead and cold, {{defender}} leans just far enough to let {{attacker}} miss.",
+          "{{defender}} ignores the near-miss from {{attacker}}, moving with mechanical efficiency.",
+          "A soulless step backward allows {{defender}} to evade {{attacker}}'s lethal intent."
         ]
       },
       "parry": {
@@ -1717,6 +1712,7 @@
           "{{name}} parries with a loud clang, sneering confidently at their foe.",
           "The crowd cheers as {{defender}} demonstrates perfect defensive form.",
           "{{name}} turns the blow aside with an arrogant sneer, barely moving.",
+          "{{defender}} meets the {{weapon}} with a resounding clash of steel!",
           "An arrogant flick of the wrist from {{name}} sends the attack wide.",
           "With cool detachment, {{name}} turns aside the strike effortlessly.",
           "A resounding CLANG echoes as {{defender}} parries the heavy blow.",
@@ -1753,8 +1749,10 @@
           "A panicked clatter as {{defender}} barely manages to intercept.",
           "{{defender}} intercepts the blow, stumbling backward from the sheer force.",
           "Teeth gritted, {{defender}} barely halts the incoming steel.",
-          "{{defender}} brings up their guard just in time, staggering under the sheer force.",
-          "A frantic parry saves {{defender}}'s life, though their arms tremble from the impact."
+          "Trembling, {{defender}} brings their guard up just in time to intercept {{attacker}}.",
+          "{{defender}} intercepts the strike with a desperate, flailing block.",
+          "In sheer panic, {{defender}} slaps {{attacker}}'s weapon away.",
+          "{{defender}} barely manages to deflect the blow, nearly dropping their guard."
         ],
         "confident": [
           "A clinical, textbook parry by {{defender}} completely neutralizes the offensive momentum.",
@@ -1777,8 +1775,10 @@
           "A solid, authoritative block from {{defender}} halts the attack cold.",
           "{{defender}} catches the strike perfectly, completely unfazed.",
           "With mechanical precision, {{defender}} dismisses the assault.",
-          "{{defender}} casually swats the blow aside, as if swatting an annoying fly.",
-          "With perfect form, {{defender}} effortlessly redirects the brutal strike."
+          "{{defender}} catches {{attacker}}'s strike with casual ease.",
+          "An arrogant flick of the wrist allows {{defender}} to deflect {{attacker}}'s strike.",
+          "{{defender}} meets {{attacker}}'s force squarely, completely unbothered.",
+          "Without blinking, {{defender}} swats {{attacker}}'s attack aside."
         ],
         "theatrical": [
           "{{defender}} catches the strike with a dramatic flourish, spinning their weapon in defiance!",
@@ -1802,8 +1802,10 @@
           "A ringing parry from {{defender}} sends sparks dancing through the air.",
           "{{defender}} catches the strike, turning the block into a beautiful sweeping motion.",
           "With dramatic flair, {{defender}} knocks the attack aside.",
-          "{{defender}} catches the strike with a flourish, twirling their weapon in showy defiance.",
-          "A ringing parry, executed with such pomp that the front rows erupt in cheers."
+          "{{defender}} twirls their weapon, catching {{attacker}}'s strike in a shower of sparks.",
+          "A sweeping, dramatic block from {{defender}} halts {{attacker}}'s momentum.",
+          "{{defender}} parries with excessive flair, posing as they deflect {{attacker}}'s blow.",
+          "With a stylish spin, {{defender}} bats away {{attacker}}'s incoming blow."
         ],
         "grim": [
           "{{defender}} blocks the blow with a bone-jarring thud, their expression locked in a death stare.",
@@ -1819,7 +1821,7 @@
           "A heavy, joyless block from {{defender}}, a purely mechanical act of survival.",
           "The weapons clash with a dull clang; {{defender}} doesn't even blink.",
           "{{defender}} absorbs the impact with a stoic, unreadable expression.",
-          "No flair, no panic\u2014just a heavy, joyless parry from {{defender}}.",
+          "No flair, no panic—just a heavy, joyless parry from {{defender}}.",
           "{{defender}} meets the strike with brutal, silent efficiency.",
           "{{defender}} blocks the blow with mechanical, bone-chilling efficiency.",
           "{{defender}} absorbs the impact wordlessly, eyes fixed on their prey.",
@@ -1827,8 +1829,10 @@
           "A joyless, utilitarian parry from {{defender}} does exactly what it must.",
           "{{defender}} meets the force brutally, their expression entirely blank.",
           "A brutal, shuddering clash as {{defender}} stonewalls the attack.",
-          "{{defender}} blocks the blow with brutal efficiency, offering no quarter.",
-          "The weapons lock with a harsh clang; {{defender}}'s face remains an impassive mask."
+          "{{defender}} blocks {{attacker}}'s strike with cold, unyielding precision.",
+          "A joyless, mechanical block stops {{attacker}} dead in their tracks.",
+          "{{defender}} effortlessly deflects the blow, their face a mask of apathy.",
+          "Without a sound, {{defender}} turns aside {{attacker}}'s lethal strike."
         ]
       },
       "shield": {
@@ -1937,8 +1941,10 @@
           "Off-balance, {{defender}} hurls a wild counter-swing.",
           "{{defender}} forces the attack away and hacks back desperately.",
           "A stumbling, frantic counterattack erupts from {{defender}}.",
-          "In a blind panic, {{defender}} deflects and wildly counters, hoping to land a hit.",
-          "Reeling from the assault, {{defender}} throws a frantic counterstrike in sheer desperation."
+          "{{defender}} flails out a frantic counter after barely dodging {{attacker}}'s blow.",
+          "A desperate block turns into a wild, panicked swing from {{defender}} at {{attacker}}.",
+          "Stumbling, {{defender}} manages to lash out blindly at {{attacker}} in return.",
+          "{{defender}} survives by the skin of their teeth and launches a frantic counterattack."
         ],
         "confident": [
           "With absolute control, {{defender}} parries the strike and slides their blade back in a lethal counter.",
@@ -1962,8 +1968,10 @@
           "A flawless deflection turns into a lightning-fast counter from {{defender}}.",
           "{{defender}} redirects the force perfectly, striking back in the same motion.",
           "With contemptuous ease, {{defender}} parries and counters.",
-          "{{defender}} parries effortlessly, immediately punishing the mistake with a swift counter.",
-          "A calculated deflection leaves {{attacker}} open, and {{defender}} strikes with arrogant ease."
+          "{{defender}} smirks, turning the deflection into a punishing lesson for {{attacker}}.",
+          "With a condescending laugh, {{defender}} counters {{attacker}} effortlessly.",
+          "{{defender}} casually bats the attack aside and delivers a pinpoint counterstrike.",
+          "{{attacker}}'s mistake is instantly punished by {{defender}}'s arrogant riposte."
         ],
         "theatrical": [
           "With a grand twirl of steel, {{defender}} blocks and spins into a magnificent, crowd-pleasing counter!",
@@ -1981,14 +1989,15 @@
           "{{defender}} turns the defensive maneuver into a dramatic, soaring riposte.",
           "A dramatic, sweeping counterstrike from {{defender}} follows the block.",
           "{{defender}} bows mockingly before executing a stylish riposte.",
-          "{{defender}} parries with a spin and counters with breathtaking flair!",
           "{{defender}} deflects and replies with a strike straight out of a bard's tale!",
           "{{defender}} catches the blade, spins, and counters with magnificent style.",
           "{{defender}} turns the block into a dazzling display, countering with breathtaking speed.",
           "{{defender}} turns the block into a dance, slicing back gracefully.",
           "With a boastful shout, {{defender}} parries and strikes back.",
-          "{{defender}} spins off the block, delivering a dazzling counter that stuns the crowd.",
-          "With a dramatic flourish, {{defender}} turns the parry into a breathtaking riposte."
+          "{{defender}} spins out of the block, delivering a dazzling counter to {{attacker}}.",
+          "A dramatic flourish accompanies {{defender}}'s blinding riposte against {{attacker}}.",
+          "{{defender}} turns defense into art, striking back at {{attacker}} with flair.",
+          "With a bow and a flourish, {{defender}} repays {{attacker}} with a spectacular counter."
         ],
         "grim": [
           "{{defender}} blocks the blow violently, immediately driving a brutal, joyless counterstrike forward.",
@@ -1999,9 +2008,9 @@
           "With a stoic grimace, {{defender}} blocks the blow and pushes a brutal riposte into the fray.",
           "A sickening crunch of steel as {{defender}} parries, followed by a cold, murderous riposte.",
           "{{defender}} swats the attack away like an insect, delivering a cold, heavy counterstrike.",
-          "No wasted movement\u2014{{defender}} parries and strikes back with chilling, silent precision.",
+          "No wasted movement—{{defender}} parries and strikes back with chilling, silent precision.",
           "With ruthless efficiency, {{defender}} turns the strike aside and steps in for the kill.",
-          "No hesitation, no emotion\u2014just a savage, mechanical riposte from {{defender}}.",
+          "No hesitation, no emotion—just a savage, mechanical riposte from {{defender}}.",
           "{{defender}} brutally shoves the blade aside and chops back in stony silence.",
           "A heavy, merciless riposte immediately follows {{defender}}'s rigid block.",
           "{{defender}} absorbs the impact and coldly thrusts back, aiming to maim.",
@@ -2012,8 +2021,10 @@
           "A brutal parry leads instantly to a merciless riposte from {{defender}}.",
           "{{defender}} shoves the attack aside and steps in for the kill.",
           "Silently, {{defender}} turns defense into a deadly, focused offense.",
-          "{{defender}} coldly turns the strike aside and counters with mechanical, lethal precision.",
-          "A silent, brutal deflection followed instantly by a merciless counter from {{defender}}."
+          "{{defender}} absorbs the blow silently, immediately answering {{attacker}} with lethal intent.",
+          "A soulless, hyper-efficient counterstrike from {{defender}} targets {{attacker}}.",
+          "{{defender}} deflects and counters in one seamless, emotionless motion.",
+          "Eyes cold, {{defender}} turns the attack back onto {{attacker}} mercilessly."
         ]
       }
     },
@@ -2083,8 +2094,10 @@
         "The sheer force of the impact knocks {{name}} off their feet.",
         "{{name}}'s legs buckle, and they collapse heavily to the ground.",
         "Thrown completely off balance, {{name}} hits the floor hard.",
-        "The impact sweeps {{name}} entirely off their feet, crashing violently into the arena dust.",
-        "{{name}}'s legs give way, folding under the crushing force of the blow."
+        "The sheer force sends {{name}} crashing heavily into the blood-soaked sand.",
+        "{{name}}'s legs give out, dropping them unceremoniously to the arena floor.",
+        "A sickening thud echoes as {{name}} is driven straight into the dirt.",
+        "{{name}} is knocked off their feet, landing in a heap of dust and defeat."
       ],
       "recovery": [
         "{{name}} staggers to {{possessive}} feet, swaying dangerously but still gripping {{possessive}} weapon tight.",
@@ -2155,8 +2168,9 @@
         "{{name}} rolls backwards and springs up, refusing to stay down.",
         "Using their weapon for support, {{name}} drags themselves upright.",
         "{{name}} shakes off the dizziness and rises, glaring at their opponent.",
-        "Spitting blood, {{name}} sluggishly forces themselves back upright.",
-        "With an unnatural quickness, {{name}} springs back to their feet."
+        "{{name}} drags themselves back up, spitting blood onto the ground.",
+        "With a defiant roar, {{name}} scrambles back to their feet.",
+        "{{name}} pushes off the dirt, eyes burning with newfound malice."
       ],
       "pacing": {
         "slow": [
@@ -2229,13 +2243,27 @@
     },
     "epithets": {
       "origin": [
-        "The {{origin}}",
+        "The warrior from {{origin}}",
         "Our {{origin}}",
-        "This {{origin}} fighter"
+        "This {{origin}} fighter",
+        "The proud {{origin}}",
+        "the foreigner",
+        "the wanderer",
+        "the local champion",
+        "the exile",
+        "the outlander",
+        "the stranger"
       ],
       "race": [
         "Our lofty {{race}}",
-        "The {{race}}"
+        "The proud {{race}}",
+        "the fierce one",
+        "the relentless fighter",
+        "the primal warrior",
+        "the proud kin",
+        "the ancient blood",
+        "the savage",
+        "the pureblood"
       ],
       "style": [
         "This {{style}}",
@@ -2541,7 +2569,7 @@
       ],
       "SP": [
         "{{defender}} moves with blinding speed, leaving {{attacker}} swinging at shadows.",
-        "{{attacker}}'s attacks find only empty air \u2014 {{defender}} is too fast!",
+        "{{attacker}}'s attacks find only empty air — {{defender}} is too fast!",
         "{{attacker}}'s weapon whistles past as {{defender}} dances away!",
         "{{defender}} is a blur, striking before {{attacker}} can react!",
         "{{defender}} strikes and fades before {{attacker}} can respond!",
@@ -2553,11 +2581,11 @@
       ],
       "DF": [
         "{{defender}} clumsily overextends, leaving {{reflexive}} wide open.",
-        "{{defender}} blocks too late \u2014 {{pronoun}}'s out of position!",
+        "{{defender}} blocks too late — {{pronoun}}'s out of position!",
         "{{defender}} leaves {{reflexive}} exposed with every strike!",
         "{{defender}}'s footwork is sloppy and predictable!",
         "{{defender}}'s defenses prove surprisingly porous!",
-        "{{defender}} telegraphs every move \u2014 easy to read!",
+        "{{defender}} telegraphs every move — easy to read!",
         "{{defender}}'s shield drops at crucial moments!",
         "Gaps in {{defender}}'s guard are plain to see!",
         "{{defender}} parries wildly, wasting energy!",
@@ -2628,15 +2656,15 @@
         "{{defender}} winces as {{attacker}}'s {{weapon}} scores a clean hit to the {{bodyPart}}.",
         "{{defender}} cannot stop the blow; {{attacker}}'s strike hammers the {{bodyPart}} hard.",
         "A sickening thud echoes as the {{weapon}} connects with {{defender}}'s {{bodyPart}}.",
-        "The {{weapon}} lands with authority on {{defender}}'s {{bodyPart}} \u2014 a telling hit.",
-        "A sharp crack \u2014 {{attacker}}'s {{weapon}} finds {{defender}}'s {{bodyPart}} clean.",
+        "The {{weapon}} lands with authority on {{defender}}'s {{bodyPart}} — a telling hit.",
+        "A sharp crack — {{attacker}}'s {{weapon}} finds {{defender}}'s {{bodyPart}} clean.",
         "The crowd roars as {{attacker}} draws first blood on {{defender}}'s {{bodyPart}}.",
         "{{attacker}} exploits a gap in {{defender}}'s guard, punishing the {{bodyPart}}."
       ]
     },
     "executions": [
       "With a terrifying war-cry, {{attacker}} tackles {{defender}} to the sand, repeatedly battering them with the pommel of their {{weapon}} until the crowd goes silent.",
-      "The final blow is almost gentle \u2014 {{attacker}} lowers {{defender}} to the sand before driving the {{weapon}} through their heart with quiet efficiency.",
+      "The final blow is almost gentle — {{attacker}} lowers {{defender}} to the sand before driving the {{weapon}} through their heart with quiet efficiency.",
       "{{attacker}} hooks their {{weapon}} around {{defender}}'s ankle, ripping them to the dirt before driving a killing blow straight through their visor.",
       "{{defender}} stumbles, and {{attacker}} capitalizes instantly, sweeping their legs out and bringing the {{weapon}} down on their exposed throat.",
       "{{attacker}} drops their stance, letting {{defender}} lunge into empty air, before delivering a brutal execution strike to the back of the neck.",
@@ -2662,7 +2690,7 @@
       "A whirlwind of steel! {{attacker}} delivers a flurry of blows that leaves {{defender}} unrecognizable on the blood-soaked sand.",
       "No mercy! {{attacker}} stands over a broken {{defender}} and delivers a gruesome, theatrical execution for the screaming fans.",
       "{{attacker}} seizes {{defender}}'s weapon arm, twisting it behind their back before driving a killing strike through the ribs.",
-      "With a thunderous overhead strike, {{attacker}} splits {{defender}}'s guard \u2014 and their skull \u2014 in a single, devastating blow.",
+      "With a thunderous overhead strike, {{attacker}} splits {{defender}}'s guard — and their skull — in a single, devastating blow.",
       "{{attacker}} wrenches {{defender}}'s head back by the hair, drawing a blade across their throat in a grim, theatrical finale.",
       "With a savage roar, {{attacker}} hacks into {{defender}}'s collarbone, burying the {{weapon}} deep before wrenching it free.",
       "{{attacker}} parries {{defender}}'s desperate final lunge, redirecting the blade into its owner's heart with cruel irony.",
@@ -2836,11 +2864,11 @@
     ],
     "KO": [
       "{{defender}} drops, legs gone, and does not rise. {{attacker}} is declared the winner.",
-      "The arena holds its breath, then roars \u2014 {{defender}} is out. {{attacker}} wins by KO!",
+      "The arena holds its breath, then roars — {{defender}} is out. {{attacker}} wins by KO!",
       "The ARENAMASTER steps in the instant {{defender}} goes limp. Victory to {{attacker}}!",
       "The ARENAMASTER waves it off. {{defender}} is out cold. {{attacker}} takes the bout!",
       "The crowd erupts as {{defender}} hits the sand and does not stir. {{attacker}} wins!",
-      "A clinical finish. {{defender}} is out cold \u2014 {{attacker}} claims the knockout.",
+      "A clinical finish. {{defender}} is out cold — {{attacker}} claims the knockout.",
       "{{defender}} collapses into the sand, unconscious. {{attacker}} is the victor.",
       "{{attacker}} stands over the prone form of {{defender}}. The bout is over.",
       "{{defender}} crumbles to the sand. {{attacker}} raises a fist in victory.",
@@ -2850,13 +2878,13 @@
       "Seeing the one-sided carnage, the officials rush in to save {{defender}} from further ruin.",
       "The arbiters signal the end as {{defender}}'s injuries become too severe to continue.",
       "The bout is stopped. {{defender}} has taken too much punishment. {{attacker}} wins!",
-      "{{defender}} cannot answer \u2014 the ARENAMASTER calls it. {{attacker}} is the victor.",
+      "{{defender}} cannot answer — the ARENAMASTER calls it. {{attacker}} is the victor.",
       "Mercy from the officials saves {{defender}} further punishment. {{attacker}} wins.",
       "It is called off. {{defender}} is done. {{attacker}} takes the stoppage victory.",
       "The ARENAMASTER steps in. {{defender}} is done. {{attacker}} is victorious!",
       "Seeing enough, the officials halt the bout. {{attacker}} wins on stoppage.",
       "The match is called. {{defender}} cannot continue. {{attacker}} wins!",
-      "{{defender}} is waved off \u2014 {{attacker}} claims the stoppage victory."
+      "{{defender}} is waved off — {{attacker}} claims the stoppage victory."
     ],
     "Exhaustion": [
       "Gasping for air, {{defender}} falls to their knees, their body refusing to fight on.",
@@ -2864,9 +2892,9 @@
       "{{attacker}} conserved just enough to take the decision. A hard-earned win.",
       "Both warriors are spent, but {{attacker}} is awarded the victory on merit.",
       "A war of attrition ends in favour of {{attacker}} on the officials' cards.",
-      "Two spent warriors, one decision \u2014 it goes to {{attacker}} on control.",
+      "Two spent warriors, one decision — it goes to {{attacker}} on control.",
       "Neither fighter could finish it, but the judges favour {{attacker}}.",
-      "Legs gone, breath gone \u2014 the judges award the bout to {{attacker}}.",
+      "Legs gone, breath gone — the judges award the bout to {{attacker}}.",
       "The crowd applauds the effort, but only {{attacker}} gets the nod.",
       "The bout is decided on exhaustion. {{attacker}} edges it out."
     ],
@@ -3135,20 +3163,20 @@
         "Week {{week}}: CAN ANYONE STOP THEM? {{name}} Smashes Their Way to {{streak}} Wins!",
         "Week {{week}}: BLOOD AND SAND! {{name}} Paints the Arena Red with {{streak}} Wins!",
         "Week {{week}}: THE CROWD'S DARLING! {{name}} is Undefeated in {{streak}} Matches!",
-        "Week {{week}}: {{name}} Is On Fire \u2014 {{streak}} Consecutive Victories!",
-        "Week {{week}}: THE CROWD GOES WILD FOR {{name}} \u2014 {{streak}} Wins!"
+        "Week {{week}}: {{name}} Is On Fire — {{streak}} Consecutive Victories!",
+        "Week {{week}}: THE CROWD GOES WILD FOR {{name}} — {{streak}} Wins!"
       ],
       "Streak": [
         "Week {{week}}: {{name}} Continues to Climb With {{streak}} Consecutive Wins!",
         "Week {{week}}: {{name}} Rides a {{streak}}-Win Streak Into Glory!",
-        "Week {{week}}: {{name}} Builds Momentum \u2014 {{streak}} Victories!"
+        "Week {{week}}: {{name}} Builds Momentum — {{streak}} Victories!"
       ],
       "LegacyRivalry": [
         "Week {{week}}: BAD BLOOD BOILS OVER! {{a}} Meets {{b}} in Chapter {{count}} of Their Vicious Feud!",
         "Week {{week}}: THE ARENA DIVIDED! Fans Riot as {{a}} Faces {{b}} for the {{count}}{{suffix}} Time!",
         "Week {{week}}: ETERNAL FOES! {{a}} and {{b}} Clash in Chapter {{count}} of Their Saga!",
         "Week {{week}}: THE GRUDGE MATCH OF THE CENTURY! {{a}} vs {{b}} (Chapter {{count}})",
-        "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} \u2014 Chapter {{count}}!"
+        "Week {{week}}: RIVALRY ERUPTS! {{a}} vs {{b}} — Chapter {{count}}!"
       ],
       "Rivalry": [
         "Week {{week}}: BITTER ENEMIES MEET! {{a}} and {{b}} Trade Blows Again!",
@@ -3298,7 +3326,7 @@
       "headline": "{{season}} Season in Review: {{total}} Bouts, {{kills}} Deaths",
       "body": [
         "The {{season}} season concludes with {{total}} bouts fought and a {{killRate}}% fatality rate.",
-        "It was a particularly deadly season \u2014 many promising careers cut short.",
+        "It was a particularly deadly season — many promising careers cut short.",
         "The arena turns its gaze to the next season. What legends will emerge?",
         "{{style}} dominated the meta with {{wins}} victories."
       ]
@@ -3809,7 +3837,7 @@
   },
   "meta": {
     "flair": {
-      "Flashy": "Crowd favorite \u2014 earns +2 Popularity per flashy fight.",
+      "Flashy": "Crowd favorite — earns +2 Popularity per flashy fight.",
       "Local Hero": "Loved by the locals. Their presence brings a touch more fame."
     },
     "title": {
@@ -3829,7 +3857,7 @@
       "{{attacker}} studies the opponent's rhythm, waiting for the perfect opening."
     ],
     "BASHING ATTACK": [
-      "{{attacker}} hammers through the defensive stance \u2014 raw power overwhelms technique!"
+      "{{attacker}} hammers through the defensive stance — raw power overwhelms technique!"
     ],
     "LUNGING ATTACK": [
       "{{attacker}} overextends with a desperate lunge, trading balance for lethal reach."
@@ -3882,7 +3910,7 @@
       "{{attacker}} casually wipes the blood from their {{weapon}} as {{defender}} twitches their last.",
       "With dark finality, {{attacker}} claims another soul for the sands, leaving {{defender}} broken.",
       "The brutal saga of {{defender}} concludes here, shattered by {{attacker}}'s relentless assault.",
-      "A grim, efficient execution by {{attacker}}\u2014a stark reminder of the arena's unforgiving nature.",
+      "A grim, efficient execution by {{attacker}}—a stark reminder of the arena's unforgiving nature.",
       "The crowd gasps as {{attacker}} ruthlessly finishes {{defender}}, leaving nothing to chance.",
       "A quiet, somber kill. {{attacker}} ends the fight quickly, offering a final nod of respect.",
       "With theatrical flair, {{attacker}} delivers a magnificent, fatal blow to finish the bout.",
@@ -3899,9 +3927,11 @@
       "{{attacker}} delivers a grand, sweeping strike that ends {{defender}}'s life in a spray of theatrical crimson.",
       "{{attacker}} casually dismantles the remaining defenses, ending it with a dark chuckle and a precise thrust.",
       "{{attacker}} ruthlessly beats {{defender}} into the dirt until they simply stop moving, a bleak display of raw survival.",
-      "{{attacker}} delivers a cold, methodical coup de gr\u00e2ce.",
+      "{{attacker}} delivers a cold, methodical coup de grâce.",
       "With clinical precision, {{attacker}} ends {{defender}}'s suffering.",
-      "There is no mercy in {{attacker}}'s eyes as they strike the final blow."
+      "There is no mercy in {{attacker}}'s eyes as they strike the final blow.",
+      "{{defender}} looks up in horror as {{attacker}} brings the executioner's strike down.",
+      "The crowd goes silent as {{attacker}} slowly, methodically extinguishes {{defender}}'s life."
     ],
     "critical_chain": [
       "Like a machine built for slaughter, {{attacker}} executes a continuous, unbroken chain of critical hits, spelling doom for {{defender}}.",
@@ -3922,9 +3952,7 @@
       "Strike, parry, strike! {{attacker}} breaks down every defense, culminating in a vicious execution combo.",
       "{{attacker}} unleashes a continuous storm of violence, leaving {{defender}} utterly broken.",
       "{{attacker}} overwhelms {{defender}} in a beautiful, horrific flurry of death.",
-      "The final strike in {{attacker}}'s unbroken combo splinters {{defender}}'s resolve.",
-      "A devastating sequence of brutal strikes from {{attacker}} leaves {{defender}} utterly broken and lifeless.",
-      "{{attacker}} unleashes a relentless tempest of steel, butchering {{defender}} before the crowd's horrified gaze."
+      "The final strike in {{attacker}}'s unbroken combo splinters {{defender}}'s resolve."
     ],
     "armor_failure": [
       "{{defender}}'s armor finally gives way under the relentless assault, {{attacker}} driving their weapon through the splintered ruin to end it.",
@@ -3986,7 +4014,11 @@
       "The bitter feud ends here, with {{defender}}'s blood soaking the sand.",
       "With the feud finally settled, {{attacker}} watches their fallen rival grow still.",
       "Years of bad blood culminate in {{attacker}} driving the fatal blow into {{defender}}.",
-      "A bitter feud reaches its bloody conclusion as {{attacker}} ends {{defender}}."
+      "A bitter feud reaches its bloody conclusion as {{attacker}} ends {{defender}}.",
+      "{{attacker}} whispers something only {{defender}} can hear before landing the fatal blow.",
+      "This was personal. {{attacker}} destroys {{defender}} with an intimately brutal finisher.",
+      "{{defender}}'s eyes lock with {{attacker}}'s in mutual hatred, right until the end.",
+      "Decades of bad blood end here, as {{attacker}} violently concludes {{defender}}'s story."
     ],
     "fatal_damage": [
       "The sheer kinetic energy of {{attacker}}'s strike pulverizes {{defender}}'s insides. A catastrophic and instantaneous death.",
@@ -4010,9 +4042,7 @@
       "The body hits the floor with a heavy, final thud. The contest is over.",
       "The devastating wound proves too much; {{defender}} slumps over, lifeless.",
       "Blood flows freely as the catastrophic injury finally claims {{defender}}'s life.",
-      "A mortal wound brings {{defender}}'s journey to a brutal, abrupt end.",
-      "{{attacker}} delivers the final, sickening blow, reducing {{defender}} to a motionless heap on the crimson sands.",
-      "Life leaves {{defender}}'s eyes as {{attacker}}'s ruthless execution finds its bloody mark."
+      "A mortal wound brings {{defender}}'s journey to a brutal, abrupt end."
     ]
   },
   "offseason_events": {

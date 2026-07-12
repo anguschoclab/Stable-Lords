@@ -1,5 +1,4 @@
 
-import { ARENA_TAG_WEIGHTS } from '@/constants/arena';
 /**
  * Combat Math — RNG, phase detection, skill/contest checks.
  * Single source of truth for combat math utilities used by simulate.ts.
@@ -63,9 +62,3 @@ export function contestCheck(
   return rollA > rollD;
 }
 
-/**
- * Arena tag modifier scale check
- */
-export function getArenaTagModifier(tag: keyof typeof ARENA_TAG_WEIGHTS): number {
-  return ARENA_TAG_WEIGHTS[tag]?.weight ?? 1.0;
-}

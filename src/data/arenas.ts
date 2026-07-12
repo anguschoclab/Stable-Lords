@@ -97,9 +97,8 @@ export const STANDARD_ARENA: ArenaConfig = {
 };
 
 /**
- * Sunken, rain-soaked arena with treacherous footing.
+ * Tiny, brutal ring with uneven stones. Penalizes lunging and favors close-quarters brawling.
  */
-
 export const BRASS_RING: ArenaConfig = {
   id: 'brass_ring',
   name: 'The Brass Ring',
@@ -112,6 +111,9 @@ export const BRASS_RING: ArenaConfig = {
   startingZone: 'Center',
 };
 
+/**
+ * Dizzying elevated span where low endurance fighters struggle and long weapons are useless.
+ */
 export const NARROW_BRIDGE: ArenaConfig = {
   id: 'narrow_bridge',
   name: 'The Narrow Bridge',

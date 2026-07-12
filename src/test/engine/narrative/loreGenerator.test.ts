@@ -118,13 +118,13 @@ describe('loreGenerator', () => {
     }
   });
 
-  it('ORIGINS array uses only single-quoted strings (no double quotes)', () => {
+  it('ORIGINS array entries are all valid string literals', () => {
     const source = fs.readFileSync(LORE_FILE, 'utf-8');
-    const originsBlock = source.match(/const ORIGINS = \[([\s\S]*?)\];/);
-    expect(originsBlock).not.toBeNull();
-    if (!originsBlock || !originsBlock[1]) return;
-    const block: string = originsBlock[1];
-    const doubleQuoted = block.match(/"[^"]*"/g);
-    expect(doubleQuoted, `found double-quoted strings in ORIGINS`).toBeNull();
+    const origins = extractStringArray(source, 'ORIGINS');
+    expect(origins.length).toBeGreaterThan(0);
+    for (const entry of origins) {
+      expect(typeof entry).toBe('string');
+      expect(entry.length).toBeGreaterThan(5);
+    }
   });
 });

@@ -1,0 +1,4 @@
+[
+  "{\n    id: 'flesh_gardens_crimson_bloom',\n    arenaId: 'flesh_gardens',\n    type: 'historical_battle',\n    title: 'The Crimson Bloom',\n    narrative:\n      'During a particularly savage mid-summer festival, so much blood was spilled that the dormant blood-vines erupted into violent bloom, entangling and consuming half the remaining fighters.',}",
+  "{\n    id: 'standard_arena_kings_folly',\n    arenaId: 'standard_arena',\n    type: 'famous_death',\n    title: \"The King's Folly\",\n    narrative:\n      'A minor lord disguised himself to fight for glory but stumbled on his own oversized scabbard. His unknown opponent granted him no quarter, decapitating him before the crowd even realized royal blood had been spilled.',}"
+]

@@ -1,6 +1,11 @@
 import type { IRNGService } from '@/engine/core/rng/IRNGService';
 
 const ORIGINS = [
+  'Found curled inside a shattered iron bell in the Cathedral of Ash',
+  'Raised by graverobbers in the sunken cemetery of Oakhaven',
+  'Abandoned in the blood-stained gutters of the Butcher’s Ward',
+  'Survived the Winter of Crows by hiding in a hollowed-out tree',
+  'Discovered half-drowned in the venomous swamps of the Lower Wastes',
   'Left wrapped in bloodied rags on the steps of the Silent Brothers monastery',
   'Found hiding inside a hollowed-out iron furnace during the Great Purge',
   'Raised in the hidden fighting rings beneath the Crying Slums',
@@ -136,6 +141,9 @@ const ORIGINS = [
 ];
 
 const CHILDHOOD_TRAITS = [
+  'would meticulously collect the severed fingers of thieves for good luck',
+  'learned to mimic the death rattle of plague victims to scare off bullies',
+  'was caught sharpening human bone fragments into makeshift daggers',
   'learned to mask their fear by laughing manically when struck',
   'would systematically break the fingers of thieves who tried to steal their food',
   'perfected the art of striking from the shadows of the orphanage dormitories',
@@ -215,6 +223,9 @@ const CHILDHOOD_TRAITS = [
 ];
 
 const DEFINING_MOMENTS = [
+  'until they garroted a corrupt slaver with a stolen rosary',
+  'realizing that mercy in the fighting pits is merely a slow suicide',
+  'waiting for the day they could turn the arena sands into a river of red',
   'until they drowned a corrupt overseer in a vat of boiling lye',
   'realizing that mercy only rewards the weak with an early grave',
   'waiting for the day they could turn the arena sands into a river of red',

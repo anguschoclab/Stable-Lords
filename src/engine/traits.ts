@@ -103,6 +103,24 @@ export interface TraitDef {
  * Traits.
  */
 export const TRAITS: Record<string, TraitDef> = {
+  orphan_fury: {
+    id: 'orphan_fury',
+    name: 'Orphan Fury',
+    description: '+1 attack when bloodied.',
+    effect: { attModLowHp: 1 },
+    weight: 0.8,
+    tier: 'Exceptional',
+    sign: 'positive',
+  },
+  asylum_survivor: {
+    id: 'asylum_survivor',
+    name: 'Asylum Survivor',
+    description: '+1 defense during early phase.',
+    effect: { defModEarly: 1 },
+    weight: 0.8,
+    tier: 'Notable',
+    sign: 'positive',
+  },
   asylum_born: {
     id: 'asylum_born',
     name: 'Asylum Born',

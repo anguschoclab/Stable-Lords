@@ -449,304 +449,267 @@ export const ARENA_LORE: ArenaLoreEntry[] = [
     type: 'famous_death',
     title: 'The Drowning of Valerius',
     narrative:
-      'In 981, Champion Valerius was not killed by a blade, but rather drowned in a particularly deep pocket of mud while pinned by a lesser gladiator.',
-  },
+      'In 981, Champion Valerius was not killed by a blade, but rather drowned in a particularly deep pocket of mud while pinned by a lesser gladiator.',},
   {
     id: 'blood_pit_the_iron_rebellion',
     arenaId: 'gutter_pit',
     type: 'historical_battle',
     title: 'The Iron Rebellion',
     narrative:
-      'In 948, a mass breakout attempt by chained gladiators was brutally suppressed here. The gouge marks from their rusted shackles can still be seen on the southern pillars.',
-  },
+      'In 948, a mass breakout attempt by chained gladiators was brutally suppressed here. The gouge marks from their rusted shackles can still be seen on the southern pillars.',},
   {
     id: 'shattered_coliseum_falling_statue',
     arenaId: 'sundered_coliseum',
     type: 'famous_death',
     title: 'The Fall of Oros',
     narrative:
-      'The legendary champion Oros the Unbroken met his end not by a blade, but when a crumbling stone gargoyle dislodged during a thunderous crowd cheer and crushed him instantly.',
-  },
+      'The legendary champion Oros the Unbroken met his end not by a blade, but when a crumbling stone gargoyle dislodged during a thunderous crowd cheer and crushed him instantly.',},
   {
     id: 'flesh_gardens_the_crimson_bloom',
     arenaId: 'flesh_gardens',
     type: 'historical_battle',
     title: 'The Crimson Bloom',
     narrative:
-      'In 962, a gladiator known only as The Scythe fought off twelve feral beasts simultaneously. The blood spilled that day caused a rare species of blood-lily to bloom across the arena floor, a phenomenon that has never occurred since.',
-  },
+      'In 962, a gladiator known only as The Scythe fought off twelve feral beasts simultaneously. The blood spilled that day caused a rare species of blood-lily to bloom across the arena floor, a phenomenon that has never occurred since.',},
   {
     id: 'charnel_pits_plague_surge',
     arenaId: 'charnel_pits',
     type: 'historical_battle',
     title: 'The Plague Surge',
     narrative:
-      'In 992, during a bout between two rival houses, a subterranean pipe burst and flooded the arena with toxic waste. The fighters ignored the danger, continuing the battle until both succumbed to the fumes.',
-  },
+      'In 992, during a bout between two rival houses, a subterranean pipe burst and flooded the arena with toxic waste. The fighters ignored the danger, continuing the battle until both succumbed to the fumes.',},
   {
     id: 'lantern_hall_the_blind_champ',
     arenaId: 'lantern_hall_arena',
     type: 'famous_death',
     title: 'The Blind Champion',
     narrative:
-      'A famous warrior known for fighting blindfolded was finally bested here when their opponent shattered a glass lantern, using the cacophony to mask their fatal strike.',
-  },
+      'A famous warrior known for fighting blindfolded was finally bested here when their opponent shattered a glass lantern, using the cacophony to mask their fatal strike.',},
   {
     id: 'walled_court_hidden_grates',
     arenaId: 'walled_court_arena',
     type: 'architectural_quirk',
     title: 'The Whispering Grates',
     narrative:
-      'Beneath the polished stone of the Walled Court lie ancient drainage grates. Fighters with sharp ears claim they can hear the murmurs of past champions warning them of unseen attacks from below.',
-  },
+      'Beneath the polished stone of the Walled Court lie ancient drainage grates. Fighters with sharp ears claim they can hear the murmurs of past champions warning them of unseen attacks from below.',},
   {
     id: 'charnel_pits_the_last_stand_of_korr',
     arenaId: 'charnel_pits',
     type: 'famous_death',
     title: 'The Last Stand of Korr',
     narrative:
-      'Korr the Unbroken met his end in the Charnel Pits, not by the blade of a foe, but when the unstable ground gave way beneath him, swallowing him into the toxic depths. His final defiant roar is said to still echo in the pits.',
-  },
+      'Korr the Unbroken met his end in the Charnel Pits, not by the blade of a foe, but when the unstable ground gave way beneath him, swallowing him into the toxic depths. His final defiant roar is said to still echo in the pits.',},
   {
     id: 'flesh_gardens_thorny_path',
     arenaId: 'flesh_gardens',
     type: 'architectural_quirk',
     title: 'The Thorny Path',
     narrative:
-      'Due to the overgrowth of mutated flora in the Flesh Gardens, the outer edges of the pit are laced with razor-sharp vines. Fighters pushed to the perimeter often suffer lacerations before a weapon ever strikes them.',
-  },
+      'Due to the overgrowth of mutated flora in the Flesh Gardens, the outer edges of the pit are laced with razor-sharp vines. Fighters pushed to the perimeter often suffer lacerations before a weapon ever strikes them.',},
   {
     id: 'walled_court_kings_fall',
     arenaId: 'walled_court_arena',
     type: 'historical_battle',
     title: 'The Fall of the Mad King',
     narrative:
-      "In 981, a disgraced noble challenged the reigning champion in the Walled Court. The battle lasted less than a minute, ending with the noble's severed head rolling into the royal viewing box, a stark reminder of the arena's brutal equality.",
-  },
+      "In 981, a disgraced noble challenged the reigning champion in the Walled Court. The battle lasted less than a minute, ending with the noble's severed head rolling into the royal viewing box, a stark reminder of the arena's brutal equality.",},
   {
     id: 'charnel_pits_silent_night',
     arenaId: 'charnel_pits',
     type: 'historical_battle',
     title: 'The Silent Night of Skulls',
     narrative:
-      'In 948, a brutal gang war spilled into the pits. For three days, gladiators fought alongside their owners against an invading mercenary band. The fighting was so fierce that even the crowd took up arms.',
-  },
+      'In 948, a brutal gang war spilled into the pits. For three days, gladiators fought alongside their owners against an invading mercenary band. The fighting was so fierce that even the crowd took up arms.',},
   {
     id: 'lantern_hall_glass_rain',
     arenaId: 'lantern_hall_arena',
     type: 'architectural_quirk',
     title: 'The Glass Rain',
     narrative:
-      'When the great chandelier of the Lantern Hall fell in 962 during an explosive magical duel, the arena floor was seeded with thousands of lethal glass shards that are still occasionally unearthed by a careless footstep.',
-  },
+      'When the great chandelier of the Lantern Hall fell in 962 during an explosive magical duel, the arena floor was seeded with thousands of lethal glass shards that are still occasionally unearthed by a careless footstep.',},
   {
     id: 'walled_court_shattered_shield',
     arenaId: 'walled_court_arena',
     type: 'historical_battle',
     title: 'The Shattered Shield',
     narrative:
-      'In a desperate final stand, a lone defender used the tightly packed stone walls to brace their shield against three attackers simultaneously. The shield eventually burst into splinters, but the distraction lasted just long enough for the match timer to run out, cementing a legendary draw.',
-  },
+      'In a desperate final stand, a lone defender used the tightly packed stone walls to brace their shield against three attackers simultaneously. The shield eventually burst into splinters, but the distraction lasted just long enough for the match timer to run out, cementing a legendary draw.',},
   {
     id: 'flooded_drowning_chorus',
     arenaId: 'flooded_vault_arena',
     type: 'architectural_quirk',
     title: 'The Drowning Chorus',
     narrative:
-      'When the tide rolls in, the water passing through the iron grates produces a low, mournful hum. Fighters claim it sounds exactly like the last breaths of the drowned prisoners the vault was built over.',
-  },
+      'When the tide rolls in, the water passing through the iron grates produces a low, mournful hum. Fighters claim it sounds exactly like the last breaths of the drowned prisoners the vault was built over.',},
   {
     id: 'flooded_vault_rusting_tide',
     arenaId: 'flooded_vault_arena',
     type: 'architectural_quirk',
     title: 'The Rusting Tide',
     narrative:
-      'The iron grates that line the vault floor have corroded for centuries, leaving jagged edges that catch the unwary. Fighters who fall near the grates often rise with rust-red streaks across their armor, as though the arena itself has drawn blood.',
-  },
+      'The iron grates that line the vault floor have corroded for centuries, leaving jagged edges that catch the unwary. Fighters who fall near the grates often rise with rust-red streaks across their armor, as though the arena itself has drawn blood.',},
   {
     id: 'highplain_howling_gale',
     arenaId: 'highplain_arena',
     type: 'architectural_quirk',
     title: 'The Howling Gale',
     narrative:
-      'The exposed plateau offers no shelter from the relentless winds. During the Great Storm of 971, three bouts were cancelled when fighters could not remain standing. The howling is said to carry the voices of warriors lost to the wind.',
-  },
+      'The exposed plateau offers no shelter from the relentless winds. During the Great Storm of 971, three bouts were cancelled when fighters could not remain standing. The howling is said to carry the voices of warriors lost to the wind.',},
   {
     id: 'standard_arena_first_blood',
     arenaId: 'standard_arena',
     type: 'historical_battle',
     title: 'The First Blood',
     narrative:
-      'Though it is now the most common proving ground, the Standard Arena was once a grand amphitheater. Legend has it the very first match ended in a mutual strike that blinded both fighters, a testament to the brutal equality of the sands.',
-  },
+      'Though it is now the most common proving ground, the Standard Arena was once a grand amphitheater. Legend has it the very first match ended in a mutual strike that blinded both fighters, a testament to the brutal equality of the sands.',},
   {
     id: 'walled_court_kings_gambit',
     arenaId: 'walled_court_arena',
     type: 'famous_death',
     title: "The King's Gambit",
     narrative:
-      'A flamboyant duelist attempted a spinning strike off the tightly packed stone walls, only to slip on a patch of moss. The misstep allowed a hulking brute to pin them against the wall and deliver a slow, excruciating execution that lasted until the sun set.',
-  },
+      'A flamboyant duelist attempted a spinning strike off the tightly packed stone walls, only to slip on a patch of moss. The misstep allowed a hulking brute to pin them against the wall and deliver a slow, excruciating execution that lasted until the sun set.',},
   {
     id: 'sunken_temple_drowned_prayers',
     arenaId: 'sunken_temple',
     type: 'architectural_quirk',
     title: 'The Drowned Prayers',
     narrative:
-      'The acoustics of the partially submerged temple are eerie. The splashing of water often sounds like the frantic, mumbled prayers of the priests who drowned when the temple first sank centuries ago.',
-  },
+      'The acoustics of the partially submerged temple are eerie. The splashing of water often sounds like the frantic, mumbled prayers of the priests who drowned when the temple first sank centuries ago.',},
   {
     id: 'bloodsands_massacre_thirty',
     arenaId: 'bloodsands_arena',
     type: 'historical_battle',
     title: 'The Massacre of the Thirty',
     narrative:
-      'Three hundred warriors died in a single day when a riot broke out during a mass execution bout. The sand was so saturated with blood that arena workers had to replace it three times.',
-  },
+      'Three hundred warriors died in a single day when a riot broke out during a mass execution bout. The sand was so saturated with blood that arena workers had to replace it three times.',},
   {
     id: 'underpit_whispering_stones',
     arenaId: 'underpit_arena',
     type: 'architectural_quirk',
     title: 'The Whispering Stones',
     narrative:
-      'Ancient limestone walls carry sound in impossible ways. Fighters report hearing confessions from warriors long dead echoing from the stones during quiet moments.',
-  },
+      'Ancient limestone walls carry sound in impossible ways. Fighters report hearing confessions from warriors long dead echoing from the stones during quiet moments.',},
   {
     id: 'flooded_drowning_seat',
     arenaId: 'flooded_vault_arena',
     type: 'famous_death',
     title: 'The Drowning Seat',
     narrative:
-      "A submerged stone chair where condemned prisoners were once chained to await the rising tide. Now it serves as the referee's station during bouts.",
-  },
+      "A submerged stone chair where condemned prisoners were once chained to await the rising tide. Now it serves as the referee's station during bouts.",},
   {
     id: 'mudpit_bone_harvest',
     arenaId: 'mudpit_arena',
     type: 'historical_battle',
     title: 'The Bone Harvest',
     narrative:
-      'After an abnormally long monsoon season, a fifty-man battle royale turned into a slog through waist-deep mud. The final survivor collapsed and drowned in a puddle just moments after the final bell.',
-  },
+      'After an abnormally long monsoon season, a fifty-man battle royale turned into a slog through waist-deep mud. The final survivor collapsed and drowned in a puddle just moments after the final bell.',},
   {
     id: 'charnel_pits_screaming_winds',
     arenaId: 'charnel_pits',
     type: 'architectural_quirk',
     title: 'The Screaming Winds',
     narrative:
-      'Gaps in the ancient stonework catch the wind perfectly, causing a sound identical to a chorus of shrieking men. Many new fighters find their morale breaking before a blow is even struck.',
-  },
+      'Gaps in the ancient stonework catch the wind perfectly, causing a sound identical to a chorus of shrieking men. Many new fighters find their morale breaking before a blow is even struck.',},
   {
     id: 'sundered_coliseum_fallen_pillar',
     arenaId: 'sundered_coliseum',
     type: 'famous_death',
     title: 'The Fallen Pillar',
     narrative:
-      'A legendary champion met his end not from a weapon, but when a stray hammer throw struck a weakened marble pillar, collapsing it directly onto him and three of his challengers.',
-  },
+      'A legendary champion met his end not from a weapon, but when a stray hammer throw struck a weakened marble pillar, collapsing it directly onto him and three of his challengers.',},
   {
     id: 'lantern_hall_architects_folly',
     arenaId: 'lantern_hall_arena',
     type: 'architectural_quirk',
     title: "The Architect's Folly",
     narrative:
-      'The original blueprints called for a vaulted ceiling entirely made of glass. During its maiden bout, the thunderous cheers shattered it, showering the fighters in lethal shards. The roof was rebuilt with heavy timber, but fighters still occasionally find glints of glass embedded in the packed sand.',
-  },
+      'The original blueprints called for a vaulted ceiling entirely made of glass. During its maiden bout, the thunderous cheers shattered it, showering the fighters in lethal shards. The roof was rebuilt with heavy timber, but fighters still occasionally find glints of glass embedded in the packed sand.',},
   {
     id: 'crystal_cavern_shattered_echo',
     arenaId: 'crystal_cavern',
     type: 'historical_battle',
     title: 'The Shattered Echo',
     narrative:
-      'In a furious exchange of maces, two colossal basher archetypes struck the central crystal spire simultaneously. The resulting harmonic blast deafened everyone in attendance and ruptured the eardrums of both fighters. The match was declared a draw when neither could find their footing again.',
-  },
+      'In a furious exchange of maces, two colossal basher archetypes struck the central crystal spire simultaneously. The resulting harmonic blast deafened everyone in attendance and ruptured the eardrums of both fighters. The match was declared a draw when neither could find their footing again.',},
   {
     id: 'whispering_grove_blood_roots',
     arenaId: 'whispering_grove',
     type: 'famous_death',
     title: 'The Grasp of the Blood Roots',
     narrative:
-      'An overconfident agility fighter ignored the subtle shifting of the forest floor, only to have their foot caught in a sudden snare of roots. Their opponent leisurely approached and delivered the killing blow while the forest itself seemed to hold the victim in place.',
-  },
-  {
-    id: 'flesh_gardens_crimson_bloom',
-    arenaId: 'flesh_gardens',
-    type: 'historical_battle',
-    title: 'The Crimson Bloom',
-    narrative:
-      'During a particularly savage mid-summer festival, so much blood was spilled that the dormant blood-vines erupted into violent bloom, entangling and consuming half the remaining fighters.',
-  },
+      'An overconfident agility fighter ignored the subtle shifting of the forest floor, only to have their foot caught in a sudden snare of roots. Their opponent leisurely approached and delivered the killing blow while the forest itself seemed to hold the victim in place.',},
   {
     id: 'lantern_hall_shadow_strike',
     arenaId: 'lantern_hall_arena',
     type: 'famous_death',
     title: 'The Shadow Strike',
     narrative:
-      "A cunning rogue bypassed a champion's legendary guard by timing their fatal thrust perfectly with a flickering torch, momentarily blinding their opponent in a sudden play of light and shadow.",
-  },
+      "A cunning rogue bypassed a champion's legendary guard by timing their fatal thrust perfectly with a flickering torch, momentarily blinding their opponent in a sudden play of light and shadow.",},
   {
     id: 'sundered_coliseum_blood_pact',
     arenaId: 'sundered_coliseum',
     type: 'historical_battle',
     title: 'The Blood Pact of the Unbroken',
     narrative:
-      "Two rival champions, exhausted and bleeding, refused to strike the final blow against each other. They stood back-to-back, defying the crowd's demands for blood until the arena guards were sent in to execute them both.",
-  },
+      "Two rival champions, exhausted and bleeding, refused to strike the final blow against each other. They stood back-to-back, defying the crowd's demands for blood until the arena guards were sent in to execute them both.",},
   {
     id: 'lantern_hall_burning_shadow',
     arenaId: 'lantern_hall_arena',
     type: 'famous_death',
     title: 'The Burning Shadow',
     narrative:
-      'A notorious assassin attempted to use the flickering torchlight to obscure their movements, but misjudged the shadows. Their opponent, predicting the maneuver, impaled them on a wall sconce, leaving them to burn as a macabre spectacle.',
-  },
+      'A notorious assassin attempted to use the flickering torchlight to obscure their movements, but misjudged the shadows. Their opponent, predicting the maneuver, impaled them on a wall sconce, leaving them to burn as a macabre spectacle.',},
   {
     id: 'crystal_cavern_singing_shards',
     arenaId: 'crystal_cavern',
     type: 'architectural_quirk',
     title: 'The Singing Shards',
     narrative:
-      'Certain crystal formations in the cavern vibrate at a specific frequency when struck by steel. Skilled fighters use this to their advantage, creating a disorienting, high-pitched resonance that throws opponents off balance.',
-  },
-  {
-    id: 'standard_arena_kings_folly',
-    arenaId: 'standard_arena',
-    type: 'famous_death',
-    title: "The King's Folly",
-    narrative:
-      'A minor lord disguised himself to fight for glory but stumbled on his own oversized scabbard. His unknown opponent granted him no quarter, decapitating him before the crowd even realized royal blood had been spilled.',
-  },
+      'Certain crystal formations in the cavern vibrate at a specific frequency when struck by steel. Skilled fighters use this to their advantage, creating a disorienting, high-pitched resonance that throws opponents off balance.',},
   {
     id: 'charnel_pits_breath_of_decay',
     arenaId: 'charnel_pits',
     type: 'architectural_quirk',
     title: 'The Breath of Decay',
     narrative:
-      'Deep vents occasionally release plumes of noxious, rusted gas from the pits below. Fights are often decided by who can hold their breath the longest while executing a flurry of strikes in the blinding fog.',
-  },
+      'Deep vents occasionally release plumes of noxious, rusted gas from the pits below. Fights are often decided by who can hold their breath the longest while executing a flurry of strikes in the blinding fog.',},
   {
     id: 'lantern_hall_blind_monk',
     arenaId: 'lantern_hall_arena',
     type: 'historical_battle',
     title: "The Blind Monk's Stand",
     narrative:
-      'When all the lanterns were mysteriously extinguished midway through a championship bout, a blind ascetic monk defeated three armed gladiators in total darkness, guided only by the sound of their footfalls on the wooden floorboards.',
-  },
+      'When all the lanterns were mysteriously extinguished midway through a championship bout, a blind ascetic monk defeated three armed gladiators in total darkness, guided only by the sound of their footfalls on the wooden floorboards.',},
   {
     id: 'lantern_hall_forgotten_chains',
     arenaId: 'lantern_hall_arena',
     type: 'architectural_quirk',
     title: 'The Forgotten Chains',
     narrative:
-      "Hidden beneath the shifting sands are the rusted iron chains of the old slave pens. Unlucky fighters occasionally find their feet snagged by these grim reminders of the arena's past, leading to sudden and brutal shifts in momentum.",
-  },
+      "Hidden beneath the shifting sands are the rusted iron chains of the old slave pens. Unlucky fighters occasionally find their feet snagged by these grim reminders of the arena's past, leading to sudden and brutal shifts in momentum.",},
   {
     id: 'charnel_pits_blind_executioner',
     arenaId: 'charnel_pits',
     type: 'famous_death',
     title: 'The Blind Executioner',
     narrative:
-      'A massive brute whose helm had fused to his face in a terrible accident fought his final battle here. Blinded, he relied entirely on the shrieking winds of the pits to locate his prey, culminating in a horrific double-decapitation of two agility fighters who failed to walk silently.',
+      'A massive brute whose helm had fused to his face in a terrible accident fought his final battle here. Blinded, he relied entirely on the shrieking winds of the pits to locate his prey, culminating in a horrific double-decapitation of two agility fighters who failed to walk silently.',},
+
+  {
+    id: 'gutter_pit_the_iron_rebellion_2',
+    arenaId: 'gutter_pit',
+    type: 'famous_death',
+    title: 'The Fall of the Iron King',
+    narrative: 'In 974, the notorious underground champion known as the Iron King was finally slain when a rookie gladiator impaled him on a rusted spike protruding from the southern wall.'
   },
+  {
+    id: 'flesh_gardens_thorny_path_2',
+    arenaId: 'flesh_gardens',
+    type: 'architectural_quirk',
+    title: 'The Bleeding Vines',
+    narrative: 'Due to the mutated flora in the Flesh Gardens, the outer edges are laced with razor-sharp vines. It is said they actively crawl toward spilled blood during a long match.'
+  }
 ];
 
 // ─── Auto-register ────────────────────────────────────────────────────────────
